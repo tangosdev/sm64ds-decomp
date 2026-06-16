@@ -40,6 +40,9 @@ def main():
     ap.add_argument("--addr", type=lambda x: int(x, 0), default=None)
     ap.add_argument("--size", type=lambda x: int(x, 0), default=None)
     ap.add_argument("--quiet", action="store_true", help="summary line only")
+    ap.add_argument("--track", default=None,
+                    help="checkpoint prefix: keep <prefix>.best.c at the lowest "
+                         "mismatch count ever seen, so a near-miss is never lost")
     a = ap.parse_args()
 
     target = target_from_args(a)
@@ -60,6 +63,17 @@ def main():
     ok, ndiff = M.compare(target, code, relocs, verbose=not a.quiet)
     words = max(len(target), len(code)) // 4
     print(f"RESULT match={ok} mismatches={ndiff}/{words}")
+
+    if a.track:
+        score_p = pathlib.Path(a.track + ".best.score")
+        best_p = pathlib.Path(a.track + ".best.c")
+        prev = int(score_p.read_text()) if score_p.exists() else 10 ** 9
+        if ndiff < prev:
+            best_p.write_text(src, encoding="utf-8")
+            score_p.write_text(str(ndiff))
+            print(f"NEW BEST {ndiff} (was {prev if prev < 10**9 else 'none'}) -> {best_p}")
+        else:
+            print(f"not improved (best so far {prev})")
 
 
 if __name__ == "__main__":
