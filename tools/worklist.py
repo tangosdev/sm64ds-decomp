@@ -32,6 +32,7 @@ import sweep
 import knowledge as KB
 import demangle as DM
 
+REPO_SRC = pathlib.Path(__file__).resolve().parent.parent / "src"
 PCREL = re.compile(r"\[pc,#(0x[0-9a-fA-F]+|\d+)\]")
 BRANCH = re.compile(r"b(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)?$")   # b<cond>, not bl/blx/bx
 
@@ -49,6 +50,65 @@ def is_easy(ins):
         if m and int(m.group(1), 0) <= i.address:          # backward branch == loop
             return False
     return branches <= 2
+
+
+def mnem_key(ins):
+    """A function's instruction-mnemonic sequence, ignoring operands. Functions
+    that share this are almost always the same idiom, so an already-matched one
+    is a strong few-shot example for cracking the rest."""
+    return tuple(i.mnemonic for i in ins)
+
+
+def read_src_text(name):
+    for ext in ("c", "cpp"):
+        p = REPO_SRC / f"{name}.{ext}"
+        if p.exists():
+            return p.read_text(encoding="utf-8")
+    return None
+
+
+def callee_set(addr, ins, relocs, syms):
+    """Frozenset of resolved bl/blx callee names for a function."""
+    out = set()
+    for i in ins:
+        if i.mnemonic in ("bl", "blx"):
+            e = relocs.get(addr + i.address)
+            if e:
+                out.add(R.name_of(e[1], syms))
+    return frozenset(out)
+
+
+def build_example_index(done, gsyms, size_cap, per_key=4):
+    """Two indexes of matched functions for few-shot lookup: by mnemonic
+    sequence (precise, same idiom) and by resolved callee set (catches the same
+    library-call idiom across overlays even when offsets differ). Built once."""
+    mnem_idx, callee_idx = {}, {}
+    for mod in MOD.modules():
+        label = "arm9" if mod["name"] == "main" else mod["name"]
+        relocs = R.load_relocs_file(mod["relocs"])
+        data = mod["bin"].read_bytes()
+        for name, addr, size in sweep.funcs(mod):
+            if size > size_cap or (label, addr) not in done:
+                continue
+            ins = list(S.md.disasm(data[addr - mod["base"]:addr - mod["base"] + size], 0))
+            if not ins:
+                continue
+            src = None
+            mk = mnem_key(ins)
+            mb = mnem_idx.setdefault(mk, [])
+            if len(mb) < per_key:
+                src = read_src_text(name)
+                if src:
+                    mb.append((name, src))
+            ck = callee_set(addr, ins, relocs, gsyms)
+            if ck:
+                cb = callee_idx.setdefault(ck, [])
+                if len(cb) < per_key:
+                    if src is None:
+                        src = read_src_text(name)
+                    if src:
+                        cb.append((name, src))
+    return mnem_idx, callee_idx
 
 
 def has_template(name, ins, tgt, addr, relocs, syms):
@@ -111,11 +171,16 @@ def main():
     ap.add_argument("--list-classes", action="store_true",
                     help="print unmatched-function counts per C++ class, then exit")
     ap.add_argument("--pretty", action="store_true")
+    ap.add_argument("--examples", type=int, default=2,
+                    help="attach up to N verified sibling sources (same mnemonic "
+                         "sequence) as few-shot examples per record; 0 disables")
     args = ap.parse_args()
 
     done = sweep.load_done()
     gsyms = R.load_all_syms()
     kb = KB.build_kb()
+    ex_mnem, ex_callee = (build_example_index(done, gsyms, args.max)
+                          if args.examples > 0 else ({}, {}))
 
     if args.list_classes:
         import collections
@@ -143,6 +208,10 @@ def main():
                 print(ln)
             for c in rec["callees"]:
                 print(f"  callee {c}: {rec['signatures'].get(c, '(unknown sig)')}")
+            for ex in rec.get("examples", []):
+                print(f"  example (same shape) {ex['name']}:")
+                for ln in ex["c_source"].splitlines():
+                    print(f"    {ln}")
             print()
         else:
             print(json.dumps(rec))
@@ -183,6 +252,21 @@ def main():
             rec = {"module": label, "name": name, "addr": f"0x{addr:08x}",
                    "size": f"0x{size:x}", "target_hex": tgt.hex(), "self": KB.sig_for(name, kb),
                    "callees": callees, "signatures": sigs, "pool": pool, "disasm": lines}
+            if args.examples > 0:
+                # prefer same mnemonic sequence (precise), then same callee set
+                cands = list(ex_mnem.get(mnem_key(ins), []))
+                if callees:
+                    cands += ex_callee.get(frozenset(callees), [])
+                seen, ex = set(), []
+                for en, es in cands:
+                    if en == name or en in seen:
+                        continue
+                    seen.add(en)
+                    ex.append({"name": en, "c_source": es})
+                    if len(ex) >= args.examples:
+                        break
+                if ex:
+                    rec["examples"] = ex
             if label not in buckets:
                 buckets[label] = []
                 order.append(label)
