@@ -116,9 +116,6 @@ matching-decompilation toolchain on my machine. Do these in order:
    push, so no one else grinds the same functions. Work only inside that claimed range.
 7. Pick an unmatched function from the claimed range, help me write matching C for it,
    and verify with tools/match.py that it compiles to the same bytes as the ROM.
-8. Optional, only if I want to rebuild the full ROM later: install the dsd toolkit
-   (github.com/AetiasHax/ds-decomp). It needs the Rust toolchain and is not required for
-   matching individual functions, so skip it for now unless I ask.
 Use only my own legally dumped ROM. Never commit the ROM or anything extracted from it.
 ```
 
