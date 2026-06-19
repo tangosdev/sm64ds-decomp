@@ -144,6 +144,10 @@ Symbol names and struct knowledge build on community reverse-engineering work. S
 symbol names and field offsets, but all C must be written from scratch against your own
 ROM.
 
+Tooling contributions: [webhead2oo9](https://github.com/webhead2oo9) made the relocation
+symbol resolver module-aware, fixing wrong-overlay symbol picks where overlay address
+ranges overlap.
+
 ## License
 
 The original work in this repo (the C, the tooling, the notes) is released under the MIT
