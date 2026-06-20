@@ -610,6 +610,24 @@ def is_thunk(ins):
     return any(i.mnemonic == "bx" and squash(i.op_str) != "lr" for i in ins)
 
 
+def code_insns(ins):
+    """Trim the trailing literal pool. A symbol's size includes its pool words, which
+    decode as junk (andeq/andseq...). Real code ends at the LAST return instruction
+    (bx lr / pop ..pc / ldm ..pc / mov pc,lr); everything after is pool. Use this
+    before taking a mnemonic shape or scanning for register use, or the pool pollutes
+    the result."""
+    last = -1
+    for i, x in enumerate(ins):
+        op = squash(x.op_str)
+        if x.mnemonic == "bx" and op in ("lr", "ip", "r12", "r14"):
+            last = i
+        elif x.mnemonic in ("pop", "ldm", "ldmia", "ldmfd") and "pc" in op:
+            last = i
+        elif x.mnemonic == "mov" and op == "pc,lr":
+            last = i
+    return ins[:last + 1] if last >= 0 else ins
+
+
 # ----------------------------------------------------------------------------- reloc-aware rules
 # These need the function's address + the reloc/symbol tables, so they take a
 # wider signature than the leaf rules. They resolve `bl` targets to real names.

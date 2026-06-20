@@ -32,6 +32,7 @@ def shape_of(mod, addr, size):
     ins = list(S.md.disasm(tgt, 0))
     if not ins or S.is_thunk(ins):
         return None
+    ins = S.code_insns(ins)              # drop the trailing literal pool
     return " ".join(i.mnemonic for i in ins)
 
 
