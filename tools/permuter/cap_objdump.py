@@ -57,6 +57,17 @@ def main():
     else:
         code = data
         relocs = {}
+        # reloc offsets for a raw-bytes target: from a "<path>.relocs" sidecar
+        # (one "offset[,type]" per line) and/or the CAP_OBJDUMP_RELOCS env var.
+        sidecar = path + ".relocs"
+        if os.path.exists(sidecar):
+            for line in open(sidecar):
+                line = line.split("#", 1)[0].strip()
+                if not line:
+                    continue
+                parts = line.split(",")
+                off = int(parts[0], 0)
+                relocs[off] = int(parts[1], 0) if len(parts) > 1 else 28
         env = os.environ.get("CAP_OBJDUMP_RELOCS", "")
         for tok in filter(None, env.split(",")):
             relocs[int(tok, 0)] = 28  # treat as R_ARM_CALL by default
@@ -65,14 +76,13 @@ def main():
     out = ["cap_objdump: file format elf32-littlearm", "", "00000000 <func>:"]
     for ins in _md.disasm(code, 0):
         # Format: "<addr>:\t<rawhex>\t<mnemonic>\t<args>"  (addr+rawhex are discarded).
-        raw = ins.bytes.hex()
-        args = ins.op_str
-        line = f"{ins.address:8x}:\t{raw}\t{ins.mnemonic}\t{args}"
-        out.append(line)
-        rtype = relocs.get(ins.address)
-        if rtype is not None:
-            rstr = _ARM_RELOC.get(rtype, "R_ARM_ABS32")
-            out.append(f"\t\t\t{ins.address:x}: {rstr}\tsym")
+        if ins.address in relocs:
+            # Reloc slot: emit a CANONICAL placeholder so the target's real value and
+            # the candidate's reloc-zero compare equal (wildcarded, like our oracle).
+            # Covers bl call targets and pc-relative pool-address words alike.
+            out.append(f"{ins.address:8x}:\t00000000\treloc\t")
+        else:
+            out.append(f"{ins.address:8x}:\t{ins.bytes.hex()}\t{ins.mnemonic}\t{ins.op_str}")
 
     sys.stdout.write("\n".join(out) + "\n")
 

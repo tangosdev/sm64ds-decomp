@@ -32,11 +32,13 @@ End-to-end pipeline runs on our mwccarm toolchain, native Windows, no external o
   `settings.toml`) runs via `permuter.py <dir> --stop-on-zero -j N`. Confirmed it compiles,
   scores, and hill-climbs (35 -> 20 on the toy function; tiny leafs have little permutation
   surface -- real gains are on medium functions).
-- [ ] **Target from ROM bytes** (next): for a real (unmatched) target, feed `cap_objdump`
-  the raw ROM bytes; reloc offsets via `CAP_OBJDUMP_RELOCS=off1,off2` so relocated operands
-  are wildcarded. Build a small `import` helper that, given (module,addr), writes target.o
-  (raw bytes) + base.c (the LLM/m2c draft) + settings.toml.
-- [ ] **LLM <-> permuter loop** (later): run the permuter as a BACKGROUND job that only
+- [x] **Import helper** (`import_func.py`): given `--module/--addr` (or `--name`) and a
+  `--base` seed, writes target.o (raw ROM bytes), target.o.relocs (offsets derived from the
+  seed's own `.rel.text` -- authoritative, incl. data-pool relocs that config omits),
+  compile.sh, base.c, and settings.toml. **PROVEN: cracked a real unmatched function** --
+  `OAM::EnableSubOAM` (0x020219f0), base score 20 -> 0, the permuter found `G[0]=(long)0`
+  (the cast shifts regalloc to match the ROM), independently oracle-verified and banked.
+- [ ] **LLM <-> permuter loop** (next): run the permuter as a BACKGROUND job that only
   reports back on a perfect match (score 0). Do NOT feed half-mutated candidates to the
   LLM -- that causes the "doom loop / token burn" others have reported.
 
@@ -52,6 +54,8 @@ End-to-end pipeline runs on our mwccarm toolchain, native Windows, no external o
    - `src/main.py`: skip the Unix executable-bit check on Windows.
    - `src/preprocess.py`: use the in-process `pcpp` preprocessor instead of the external
      `cpp` binary (absent on Windows).
+   - `src/objdump.py` (`get_arch`): default to ARM32 for a non-ELF file, so a raw-bytes
+     `target.o` (ROM slice) is accepted.
 4. Per-function: a dir with `compile.sh` (-> `mwccarm_compile.sh`), `target.o`, `base.c`,
    and `settings.toml` setting `compiler_type="mwcc"`, `func_name`, and
    `objdump_command = "python <repo>/tools/permuter/cap_objdump.py"`.
