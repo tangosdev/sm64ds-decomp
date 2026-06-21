@@ -1,4 +1,4 @@
-/* func_02005064 (true start 0x02005060; task says addr=0x02005064 size=52 but first instruction is at 0x02005060) */
+/* func_02005064 (true start 0x02005060) */
 
 typedef unsigned int u32;
 typedef unsigned short u16;
