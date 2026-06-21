@@ -170,23 +170,40 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
   and it is currently UNMATCHABLE from C when the access is zero-offset. Leave it for a future model
   or a permuter pass that learns this transform.
 
-### The "human method" (real struct types) was tested directly and does NOT crack these
+### Materialization IS reproducible -- the triggers (mined from oracle-verified matches)
 
-The community advice is "use real struct types + the permuter." Tested both head-on against three
-representative materialization misses (ResetStart, func_ov020_021112b0, func_ov026_02111cb4):
-- Real nested member access (`p->pos.x`, `c->fl.f`), C++ references, whole-struct copy (`tmp = *ps`),
-  struct-literal assignment, address-of-member -- each produces a DIFFERENT instruction shape, but
-  none reproduces the ROM's. Member access tends to FOLD to direct `[base,#off]`; struct copy emits
-  `ldm/stm` (wrong); the pointer form gives first-access-direct, rest-via-base.
-- The split is a pure mwccarm scheduling/selection quirk. On func_ov020 the loads were already PERFECT
-  (all via the materialized base) in the original near-miss; the ONLY divergence was an `add` emitted
-  one slot too early because the base pointer was computed before the null-guard. Moving it after the
-  guard fixes the `add` position but then splits the loads. The two reachable source positions give
-  the two bad outcomes; the ROM's (add-after-guard AND loads-via-base) is not reachable from C.
-- Permuter confirmed unable: 90s on a 1-divergence struct-typed seed, stuck (no source-AST mutation
-  changes backend instruction selection).
+The materialized base (`add rX, base, #OFF`) is NOT random. Reproduced examples from the matched
+corpus show exactly what makes mwccarm emit it instead of folding:
+- ARGUMENT MATERIALIZATION (func_02022b04, func_0200762c): passing `&obj->field` or `(T*)(base+OFF)`
+  as a POINTER ARGUMENT to a call emits `add rX, base, #OFF`. Dereferencing the same expression
+  (`*(T*)(base+OFF)`) stays folded `[base,#OFF]`. So `f(&this->sub)` materializes; `this->sub.x` folds.
+- LIVE-ACROSS-CALL (_ZN18SolidHeapAllocatorC1EPvj): a base pointer that is used both before and after
+  a `bl` is forced into a callee-saved register and kept materialized; all post-add accesses go via it.
+- CONSECUTIVE NON-ZERO indices on an OPAQUE base (func_020080b0-style `r=call(); r[0x17];r[0x18]`):
+  materializes `add rX,r,#0x5c` then `[rX],[rX,#4],[rX,#8]`.
+- LOAD/STORE ORDER is controlled by OPERAND and STATEMENT order (func_0201adac "reversed load order":
+  `lo | (hi<<8)` loads `lo` first). Reordering the field copies flips which offset loads first AND
+  whether the base materializes before the first load vs folds it.
 
-Conclusion: real types reduce the FREQUENCY of these (and help other buckets a lot), but they do not
-crack the residual scheduling-locked cases. These are the same functions human decompilers frequently
-leave NonMatching. The competitive edge is automating the ~70% of misses that ARE source-controllable
-(logic/idiom/regalloc/constant), not grinding the ~30% backend-locked residue.
+### The hard floor: first-access-fold (tested exhaustively, NOT source-controllable)
+
+Even when materialization fires correctly, one residual instruction often stays locked: the FIRST
+access through the materialized base folds to direct `[base,#OFF]` while later accesses use the
+register. Example (constructor, div=1): ROM `str r0,[r4]` vs ours `str r0,[r5,#0x24]` -- r4=fl=c+0x24,
+r5=c, same address, mwccarm picks the folded form for the first store only. Confirmed unreachable by:
+- every field/statement order, struct-copy, nested-member, reference, address-of form;
+- all 10 compiler versions (1.2 base..sp4, 2.0 base..sp1p6) and opt flags (noprop/nocse/nopeep/
+  noschedule/levels) -- bytediff never improves;
+- the permuter (div=1 seed, produced no improvement -- no source-AST mutation changes this backend
+  instruction-selection choice).
+
+Same floor blocks the forward-interleaved Vec3-copy shape (func_ov020/ov026): ROM materializes the
+copy-source base and reads forward (0,4,8) interleaved with arg setup; no source order reproduces it
+(forward folds the first read; reverse reads 8,4,0). NOTE: the corpus's own func_020080b0 has this
+exact shape, was banked `opus-hand`, but does NOT reproduce under any config -- evidence this specific
+schedule defeated prior hand-matching too. (Flag for a corpus re-verification sweep.)
+
+Conclusion: the materialization triggers above DO crack the subset of misses that fit them (arg-pass,
+live-across-call, consecutive-index, order-sensitive). The residual first-access-fold / forward-
+interleaved-copy schedule is a true backend floor -- the same cases human decompilers leave
+NonMatching. The edge is automating everything source-controllable, not grinding this residue.
