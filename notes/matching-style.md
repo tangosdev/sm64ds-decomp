@@ -169,3 +169,24 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
   This is the single most common residual blocker (1-2 instructions) on otherwise-matched functions,
   and it is currently UNMATCHABLE from C when the access is zero-offset. Leave it for a future model
   or a permuter pass that learns this transform.
+
+### The "human method" (real struct types) was tested directly and does NOT crack these
+
+The community advice is "use real struct types + the permuter." Tested both head-on against three
+representative materialization misses (ResetStart, func_ov020_021112b0, func_ov026_02111cb4):
+- Real nested member access (`p->pos.x`, `c->fl.f`), C++ references, whole-struct copy (`tmp = *ps`),
+  struct-literal assignment, address-of-member -- each produces a DIFFERENT instruction shape, but
+  none reproduces the ROM's. Member access tends to FOLD to direct `[base,#off]`; struct copy emits
+  `ldm/stm` (wrong); the pointer form gives first-access-direct, rest-via-base.
+- The split is a pure mwccarm scheduling/selection quirk. On func_ov020 the loads were already PERFECT
+  (all via the materialized base) in the original near-miss; the ONLY divergence was an `add` emitted
+  one slot too early because the base pointer was computed before the null-guard. Moving it after the
+  guard fixes the `add` position but then splits the loads. The two reachable source positions give
+  the two bad outcomes; the ROM's (add-after-guard AND loads-via-base) is not reachable from C.
+- Permuter confirmed unable: 90s on a 1-divergence struct-typed seed, stuck (no source-AST mutation
+  changes backend instruction selection).
+
+Conclusion: real types reduce the FREQUENCY of these (and help other buckets a lot), but they do not
+crack the residual scheduling-locked cases. These are the same functions human decompilers frequently
+leave NonMatching. The competitive edge is automating the ~70% of misses that ARE source-controllable
+(logic/idiom/regalloc/constant), not grinding the ~30% backend-locked residue.
