@@ -45,7 +45,10 @@ def run_one(rec, secs, jobs):
     found = IMP.find_func(rec["module"], int(rec["addr"], 0), rec["name"])
     if not found:
         return "nochange"
-    out, name, addr, size, _ = IMP.setup_dir(found, rec["c_source"])
+    # A //cpp near-miss whose body is C-compatible is converted to plain C so the
+    # C-only permuter parser can mutate it (byte-identical, verified in permutable_base).
+    base_src = IMP.permutable_base(rec["c_source"], rec["name"])
+    out, name, addr, size, _ = IMP.setup_dir(found, base_src)
     # Popen + tree-kill on timeout: the permuter spawns -j worker PROCESSES that a plain
     # timeout would orphan (they pile up and eat RAM). taskkill /T kills the whole tree.
     p = subprocess.Popen(
