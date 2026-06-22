@@ -52,16 +52,20 @@ def main():
     ap.add_argument("--max", default="0x48")
     ap.add_argument("--limit", type=int, default=120)
     ap.add_argument("--pool", type=int, default=500, help="raw pool size to draw from")
+    ap.add_argument("--module", default=None, help="target one module (use 'main' for arm9) "
+                    "instead of spreading across all modules -- aims at a rich vein")
     ap.add_argument("--out", default="progress/wl.jsonl")
     ap.add_argument("--floor-out", default=None, help="also write the filtered floor funcs here")
     args = ap.parse_args()
 
-    # draw a spread pool from the existing worklist generator (does callee/pool resolution)
+    # draw a pool from the existing worklist generator (does callee/pool resolution).
+    # --module targets one rich module; otherwise --spread round-robins all modules.
+    cmd = [sys.executable, str(REPO / "tools" / "worklist.py"), "--no-template",
+           "--min", args.min, "--max", args.max, "--limit", str(args.pool)]
+    cmd += ["--module", args.module] if args.module else ["--spread"]
     pool_path = REPO / "progress" / "_hpool.jsonl"
     with open(pool_path, "w") as f:
-        subprocess.run([sys.executable, str(REPO / "tools" / "worklist.py"),
-                        "--no-template", "--min", args.min, "--max", args.max,
-                        "--limit", str(args.pool), "--spread"], stdout=f, check=True)
+        subprocess.run(cmd, stdout=f, check=True)
     rows = [json.loads(l) for l in open(pool_path) if l.strip()]
     pool_path.unlink(missing_ok=True)
 

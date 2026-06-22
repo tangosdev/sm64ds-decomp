@@ -179,6 +179,30 @@ missing reload, a flipped branch, an extra/absent instruction) -- don't just res
 - **The oracle stays.** Understanding shrinks the number of compile-and-check iterations; it
   never removes the check. "Matched" means the bytes are identical, full stop.
 
+## 8. The `asm`-block escape hatch (for hand-written-asm SDK primitives)
+
+Some functions -- especially arm9 NITRO-SDK primitives -- are HAND-WRITTEN ASSEMBLY that NO C
+under our flags reproduces, but they DO match as an mwccarm inline-`asm` function. The symbol
+stays unmangled and any `bl SYM` inside is a wildcarded reloc, so the oracle accepts it. This
+converts a whole class of "unmatchable floor" into matched (found 2026-06-22 cracking arm9):
+```c
+asm void func_02059824(void) { push {lr}; bl callee; pop {lr}; bx lr }
+```
+WHEN to reach for it (these read as HARD floor from C but are really hand-asm):
+- A `push {lr}`-only frame with NO `sub sp,#4` around a single/double `bl` (C always either
+  tail-call-veneers `ldr ip,[pc]; bx ip` or inserts `sub sp,#4; add sp,#4`).
+- A single-register predicated `stm`/`ldm` writeback loop or unrolled 3-register `ldm/stm {r2,r3,ip}`
+  block copy keeping both pointers live (`Copy32Bytes`, `MultiStore_Int`, memcpy primitives) --
+  mwccarm's struct/loop copy always relocates pointers to lr/ip and uses 4-reg `{r0-r3}` batches
+  with a frame, never the 3-reg frameless schedule.
+- SVC/syscall wrappers (`svc #N; mov pc,lr`).
+- `mov`-materialized-constant stores coalesced into `stm rN!,{...}` pairs (Matrix*_LoadIdentity)
+  -- though this one is sometimes still not reachable even via asm; try it.
+mwccarm inline-asm SYNTAX GOTCHAS (cost real iterations): use `swi 0x123456` NOT `svc` and NOT a
+`#` prefix; a conditional STM needs the explicit suffix `stmltia` NOT `stmlt`; branches need a
+LABEL (`blt loop:` ... `loop:`) not a numeric offset; for a byte-exact `pop {pc}` epilogue write
+`ldr pc, [sp], #4` NOT `ldmia sp!, {pc}` (different encoding). `ip`/`r12` both accept.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
