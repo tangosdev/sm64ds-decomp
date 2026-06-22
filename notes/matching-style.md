@@ -207,3 +207,51 @@ Conclusion: the materialization triggers above DO crack the subset of misses tha
 live-across-call, consecutive-index, order-sensitive). The residual first-access-fold / forward-
 interleaved-copy schedule is a true backend floor -- the same cases human decompilers leave
 NonMatching. The edge is automating everything source-controllable, not grinding this residue.
+
+## Reference-decomp ground truth + corrected understanding (2026-06-21)
+
+Cloned and studied pret/pokediamond + pret/pokeplatinum (same mwccarm family). Key corrections
+to the claims above, and the levers humans actually use. (Clones at ../\_ref_pokediamond,
+../\_ref_pokeplatinum.)
+
+**Humans DO match these -- the "humans leave it NonMatching" line above is mostly WRONG.**
+pokeplatinum is ~100% matched with ZERO non-matching escape hatches. pokediamond has 6
+hand-written-asm functions in the whole game. So the floor is real but TINY (our 35/121
+materialization near-misses are the same residual; only a handful are truly unbeatable). The
+bulk of every "near-miss" is closeable -- it just takes the right source structure.
+
+**The levers humans use (validated in the reference source, quoted idioms):**
+- LOCAL DECLARATION ORDER + C89 scoping is the #1 lever. `// must declare i first to match
+  (regswap)`, `// must declare C89-style to match`, `// must maintain this declaration order`
+  recur dozens of times. Reordering/ re-scoping locals shifts register allocation.
+- VARIABLE TYPE/WIDTH: `u32 heapID = ...; // using HeapID enum causes regalloc fuckery`. Keep
+  the plain int/u32 instead of an enum/narrower type to flip allocation.
+- VARIABLE REUSE: reuse one local for two roles to force the same register (`// must reuse side
+  var to match`).
+- `volatile` on a plain local (not just MMIO) to pin load/store placement.
+- DEAD-VALUE RETENTION: keep an unused computed value the original kept (`// unused, but must be
+  kept to match`) -- it holds a register or forces an instruction.
+- `void *` LAUNDERING of pointer arithmetic (`// MUST be cast to void * to match`).
+- `== TRUE` to force a materialized boolean; an empty branch to force a compare.
+These are UNIVERSAL mwcc levers (apply to our 1.2). Two reference levers are version-specific and
+do NOT apply to us: `-ipa file` global-base materialization (text.c:251) and static-inline helper
+reconstruction (driven by `-inline on,noauto`) -- both are 2.0-series; SM64DS is 1.2 (no -ipa).
+
+**HONEST CAVEAT proven by hand this session: these levers CASCADE.** mwcc allocation is
+NON-LOCAL, so applying a lever to an existing near-miss usually makes it WORSE, not better
+(func_ov020 div 2->9 moving one assignment; func_ov026 div 2->8). The near-miss structure is
+often already the closest EASY reach; the last 1-2 instructions need the EXACT original C
+structure, which is a search, not a single edit. So:
+- Use these levers to write FRESH functions right the first time (no cascade baggage).
+- For an existing near-miss, the lever is a SEARCH (permuter / many manual tries), not a fix.
+
+**Workflow the references use:** decomp.me single-function scratch + objdump diff + skilled
+manual iteration. NO permuter, NO objdiff, NO m2c. Our permuter/oracle/diff-oracle stack is
+AHEAD of theirs on tooling -- the gap is the manual structure-search patience, not the tools.
+
+**The near-miss DB breakdown (tools/categorize_misses.py): of 121,** ~47 different-op/idiom,
+35 base-materialization (the real floor), 18 regalloc, 7+7 missing/extra logic, 6 push-set.
+So ~60-85 are addressable (not floor) -- but each needs the structure search above. Grinding
+them is low-ROI vs the COVERAGE GAP: 6,850 unmatched funcs, 1,248 small (<0x40), many easy and
+UNTRIED (proven: func_0206165c, a 24-byte global-pointer setter, matches at canonical with
+`(G+i)[5]=v` but no template covers the shape). Harvest those first.

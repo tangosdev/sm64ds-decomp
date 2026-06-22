@@ -69,7 +69,9 @@ End-to-end pipeline runs on our mwccarm toolchain, native Windows, no external o
 2. `python -m pip install toml pcpp pycparser capstone pyelftools`
 3. Windows-compat patches to the cloned permuter (all small, marked
    `# Windows-compat (sm64ds-decomp)`):
-   - `src/compiler.py`: route `compile.sh` through `bash` on Windows.
+   - `src/compiler.py`: route `compile.sh` through `bash` on Windows; AND, when a `cc.txt`
+     sidecar exists next to it, call `mwccarm.exe` DIRECTLY (no bash) -- git-bash startup is
+     ~400ms/candidate, direct ~140ms (~3x throughput). `import_func.setup_dir` writes `cc.txt`.
    - `src/main.py`: skip the Unix executable-bit check on Windows.
    - `src/preprocess.py`: use the in-process `pcpp` preprocessor instead of the external
      `cpp` binary (absent on Windows).

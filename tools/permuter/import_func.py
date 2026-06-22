@@ -21,7 +21,9 @@ A score of 0 means the permuter found C that compiles byte-identical to the ROM;
 and bank it with the normal oracle (tools/match.py / swarm.oracle_ok) before committing.
 """
 import argparse
+import json
 import pathlib
+import re
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -37,6 +39,48 @@ import sweep
 PERM_DIR = REPO / "vendor" / "decomp-permuter"
 WRAPPER = REPO / "tools" / "permuter" / "mwccarm_compile.sh"
 CAP = REPO / "tools" / "permuter" / "cap_objdump.py"
+# Direct compile (no bash): git-bash startup is ~400ms/candidate on Windows; calling
+# mwccarm.exe directly is ~140ms (~4x). The permuter's compiler.py reads cc.txt.
+MWCC = REPO / "tools" / "mwccarm" / "1.2" / "sp2p3" / "mwccarm.exe"
+LICENSE = REPO / "tools" / "mwccarm" / "license.dat"
+CFLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc".split()
+
+
+def cpp_to_c(src):
+    """Strip a `//cpp` + single `extern "C" { ... }` wrapper to plain C so the C-only
+    permuter parser (pycparser) can mutate it. The mangled names are valid C identifiers.
+    Returns None when the source is real C++ (member fns / virtuals / multiple wrappers)
+    that doesn't fit the simple pattern."""
+    if not src.startswith("//cpp"):
+        return None
+    m = re.match(r'//cpp\s*\n\s*extern\s*"C"\s*\{(.*)\}\s*$', src, re.DOTALL)
+    return (m.group(1).strip() + "\n") if m else None
+
+
+def permutable_base(src, name):
+    """Return a permuter-parseable base source. For a `//cpp` near-miss, return its
+    C-converted form ONLY when it compiles byte-IDENTICALLY (so mutating it is faithful);
+    otherwise return the original (the permuter will skip a real-C++ source as before)."""
+    if not src.startswith("//cpp"):
+        return src
+    c = cpp_to_c(src)
+    if not c:
+        return src
+    import match as M, swarm as S
+
+    def _b(s, cpp):
+        flags = S.CPP_FLAGS if cpp else M.DEFAULT_FLAGS
+        with tempfile.TemporaryDirectory() as td:
+            cf = pathlib.Path(td) / ("c.cpp" if cpp else "c.c")
+            cf.write_text(s)
+            o = M.compile_c(cf, "1.2/sp2p3", flags)
+        if o is None:
+            return None
+        code, _ = M.extract_func(o, name)
+        return code
+
+    a, b = _b(src, True), _b(c, False)
+    return c if (a is not None and a == b) else src
 
 
 def candidate_reloc_offsets(base_c_path):
@@ -101,6 +145,10 @@ def setup_dir(found, base_src, out=None):
     (out / "compile.sh").write_text(
         f'#!/bin/bash\nexec "{to_posix(WRAPPER)}" "$@"\n')
     (out / "compile.sh").chmod(0o755)
+    # Direct-compile sidecar: the permuter's compiler.py uses this to call mwccarm.exe
+    # without spawning bash (~4x faster per candidate). Mirrors the wrapper's flags.
+    (out / "cc.txt").write_text(json.dumps(
+        {"cmd": [to_win(MWCC), *CFLAGS, "-c"], "license": to_win(LICENSE)}))
     (out / "base.c").write_text(base_src)
     (out / "target.o").write_bytes(tgt)
 

@@ -168,6 +168,7 @@ def main():
     banked = 0
     for mod, label, name, addr, size, tgt, seed in pile[:args.limit]:
         print(f"\n=== permuting {label} {name} @ 0x{addr:08x} (budget {args.secs}s) ===")
+        seed = IMP.permutable_base(seed, name)   # convert C-compatible //cpp seeds to C
         out, _, _, _, nrel = IMP.setup_dir((mod, label, name, addr, size), seed)
         src = run_permuter(out, args.secs)
         if not src:
