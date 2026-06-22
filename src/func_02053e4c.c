@@ -1,0 +1,13 @@
+int func_02053e4c(int x) {
+    int r = 0;
+    if (x & 0x1)   r += 0x20000;
+    if (x & 0x2)   r += 0x20000;
+    if (x & 0x4)   r += 0x20000;
+    if (x & 0x8)   r += 0x20000;
+    if (x & 0x10)  r += 0x10000;
+    if (x & 0x20)  r += 0x4000;
+    if (x & 0x40)  r += 0x4000;
+    if (x & 0x80)  r += 0x8000;
+    if (x & 0x100) r += 0x4000;
+    return r;
+}
