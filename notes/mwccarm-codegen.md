@@ -216,9 +216,18 @@ WHEN to reach for it (these read as HARD floor from C but are really hand-asm):
 - `mov`-materialized-constant stores coalesced into `stm rN!,{...}` pairs (Matrix*_LoadIdentity)
   -- though this one is sometimes still not reachable even via asm; try it.
 mwccarm inline-asm SYNTAX GOTCHAS (cost real iterations): use `swi 0x123456` NOT `svc` and NOT a
-`#` prefix; a conditional STM needs the explicit suffix `stmltia` NOT `stmlt`; branches need a
-LABEL (`blt loop:` ... `loop:`) not a numeric offset; for a byte-exact `pop {pc}` epilogue write
-`ldr pc, [sp], #4` NOT `ldmia sp!, {pc}` (different encoding). `ip`/`r12` both accept.
+`#` prefix; a conditional STM needs the explicit suffix `stmltia` NOT `stmlt`; an unconditional
+multi-store needs the addressing suffix too: write `stmia r0,{...}` NOT bare `stm r0,{...}` (bare
+`stm` = "unknown mnemonic"); branches use a BARE label name and the label is defined with a
+trailing colon on its own line: `beq L2c` ... `L2c:` (NOT `beq L2c:` -- a colon in the branch is
+"end of line expected"); a conditional half-word store is `strneh r1,[r0],#2` (width AFTER the
+cond: str+ne+h), NOT `strhne`; for a byte-exact `pop {pc}` epilogue write `ldr pc, [sp], #4` NOT
+`ldmia sp!, {pc}` (different encoding). `ip`/`r12` both accept in operands, but a `mov ip,#0` line
+sometimes parses while the surrounding bare-`stm` does not -- fix the `stm` first.
+A genuine-asm tell confirmed 2026-06-22: a leaf that does `mov`-zero then the SAME no-writeback
+`stm rN,{...}` repeated dozens of times (func_020553c0, 32x identical `stm r0,{r1,r2,r3,ip}`) -- no
+C emits repeated identical no-writeback stores; asm-hatch it. Same for SDK memset/fill with
+alignment prologue + multiple mid-function `bx lr` exits and predicated `strneh`/`bics` (func_0205a588).
 
 ---
 
