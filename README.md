@@ -5,8 +5,8 @@ A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
 ## Progress
 
 ```
-Functions  █████████████████░░░░░░░░░░░░░  55.6%   6,329 / 11,390
-Code size  ██████░░░░░░░░░░░░░░░░░░░░░░░░  20.9%   467,508 / 2,234,028 bytes
+Functions  ██████████████████░░░░░░░░░░░░  59.6%   6,789 / 11,390
+Code size  ███████░░░░░░░░░░░░░░░░░░░░░░░  24.9%   555,976 / 2,234,028 bytes
 ```
 
 Every arm-mode function in the game, drawn as a treemap. Each rectangle is one
