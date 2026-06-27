@@ -1,0 +1,1 @@
+//cpp class ActorBase { public:     void MarkForDestruction(); };  class Actor { public:     void KillAndTrackInDeathTable(); };  extern "C" void func_ov084_02129498(char *r0) {     if ((*(unsigned char *)(r0 + 0x113) & 0xf) < 6) {         ((ActorBase *)r0)->MarkForDestruction();     } else {         ((Actor *)r0)->KillAndTrackInDeathTable();     } }
