@@ -1,0 +1,1 @@
+//cpp struct CylinderClsn;  struct Actor {     void UpdatePos(CylinderClsn *); };  extern "C" int func_ov085_02129ebc(int *self, void *clsn); extern "C" int func_ov085_02129f8c(char *c);  extern "C" int func_ov085_0212a0b8(char *c) {     ((Actor *)c)->UpdatePos((CylinderClsn *)(c + 0x160));     func_ov085_02129ebc((int *)c, c + 0x194);     func_ov085_02129f8c(c);     return 1; }
