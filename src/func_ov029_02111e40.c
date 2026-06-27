@@ -1,0 +1,1 @@
+void func_ov029_02111e40(char *a, char *b) {     int cond = *(unsigned short*)(b + 0xc);     cond = (cond == 0xbf);     if (cond) {         *(a + 0x32a) = 1;     } }
