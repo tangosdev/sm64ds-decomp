@@ -162,6 +162,20 @@ virtual methods are fine - we only `-c` compile, never link; only the vtable lay
   These cluster hard - one cracked representative teaches the whole family.
 - **Destructor chains** (`func_ovNN_...` returning this): a vtable install, several
   `SubObjectD1(this+off)` calls in reverse construction order, then `Deallocate`.
+- **Angle -> sin/cos table index** is a double-cast then a shift:
+  `(unsigned short)(short)(angle + 0x8000) >> 4` reproduces the lsl16/asr16 then lsl16/lsr16
+  sequence, indexing an `s16[]` table as `tbl[i*2]` (x) / `tbl[i*2+1]` (z) for a paired lookup
+  (`func_ov002_020d8d10`, 2026-06-27).
+- **Compiler-generated `__sinit_*` static initializers are matchable.** They are a straight
+  sequence of registration calls; the constant-pool layout is reproduced by emitting the
+  integer constants in source order - an ARM-encodable immediate (e.g. `0x21c` = `mov #0x21c`)
+  stays inline while a non-encodable one (`0x21a`/`0x21b`) takes a pool word, so the order
+  matters. Keep the trailing pool words in the target size (`__sinit_ov006_0212fc7c`).
+- **Parallel-array "twin" getters.** Many overlay predicate/getter functions are byte-twins
+  differing only in a gating global and one callee. Grep `src/` for the matched twin first and
+  copy its struct model: e.g. three `struct { unsigned char b; unsigned char pad[3]; }` arrays
+  read in lockstep at offset 0, with a fourth field as `unsigned char[i*4]`
+  (`func_ov006_020f8154` twin of `func_ov006_020f9bec`, 2026-06-27).
 
 ## 6b. Logic is necessary but NOT sufficient -- match the codegen SHAPE
 
@@ -192,6 +206,48 @@ C that compiles to a different instruction SHAPE. The recurring structural misse
   register and add/move the guard (`func_020584d0`, `func_020719ec`, 2026-06-22).
 On a FALSE, diff your candidate's shape against the disasm and fix the FIRST divergence (a
 missing reload, a flipped branch, an extra/absent instruction) -- don't just reshuffle.
+
+## 6c. Boolean materialization & predicated-select shapes
+
+How a boolean is *spelled* in C decides whether the compiler folds it into a compare or
+materializes a 0/1 into a register. Getting this wrong is the most common near-miss on
+guard-heavy overlay code (off by ~4 instructions), and there is a reliable knob for each.
+
+- **Materialized bool (the verbose form).** ROM sequence
+  `cmp rX,#k; moveq r0,#1; movne r0,#0; cmp r0,#0; beq` means the source stored the comparison
+  in a NAMED integer, then tested it:
+  ```c
+  int t = (field == k);
+  if (t != false) { ... }
+  ```
+  A plain `if (field == k)`, `t != 0`, `t == 1`, `?1:0`, an inline helper, and a real `bool`
+  all FOLD to a direct `cmp/bne` (~4 instrs shorter). The suffix matters: `t != false` emits
+  the needed `cmp r0,#0; beq`; `t == true` instead emits `cmp r0,#1`
+  (cracked `func_ov002_020ba568`, 2026-06-27).
+
+- **Predicated select -- use the override form, not the ternary.** ROM
+  `mov r,DEFAULT; movne r,OTHER` for a `cond ? A : B` select comes from an explicit
+  default-then-override statement, NOT a ternary:
+  ```c
+  int x = A;             /* default  -> mov r,A   */
+  if (!cond) x = B;      /* override -> movne r,B */
+  ```
+  A real ternary constant-folds when A/B are 0/1, and a nested if-else range-merges two
+  consecutive `==` into `movls`. Only the override statement reproduces the default +
+  single predicated-move pair (cracked the `id2 != 0x16 && id2 != 0x17` select in
+  `func_ov007_020b45b0`, 2026-06-27).
+
+- **The access EXPRESSION shifts coloring (extends the section-2 lever).** Re-dereferencing
+  the original argument each use (`**(unsigned short**)t`) instead of caching it in a local
+  (`*p`) moved the long-lived pointer into `ip`/r12 and reproduced the ROM coloring. Worth a
+  try when a select/guard is byte-identical except a consistent register rename.
+
+- **Arg-builder temp ORDER sets the argument registers.** When a function builds a small
+  struct of fields and passes its components to a call, the DECLARATION ORDER of the named
+  temps decides which arg register each lands in. Declaring `pos` temps in `z, y, x` order
+  produced x=r0/y=r1/z=r2 for the call; the natural x,y,z order mis-assigned them. Permute the
+  temp declarations to match the disasm's arg-register assignment (the `Actor::Spawn` builder
+  loop in `LoadDoorObjects`, 2026-06-27).
 
 ## 7. Workflow implications
 
