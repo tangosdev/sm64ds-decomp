@@ -31,7 +31,9 @@ NEARMISS = REPO / "progress" / "nearmiss.jsonl"
 
 def load_wins(result_path):
     obj = json.loads(pathlib.Path(result_path).read_text())
-    wins = obj.get("result", obj).get("wins", obj.get("wins"))
+    inner = obj.get("result", obj)
+    # accept both schemas: older "wins" and the current fan-out's "matches"
+    wins = inner.get("wins") or inner.get("matches")
     if wins is None and isinstance(obj, list):
         wins = obj
     return wins or []
