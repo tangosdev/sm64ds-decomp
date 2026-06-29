@@ -19,8 +19,8 @@ void func_02030aa4(int arg)
         data_0209fc5c[i] = 0;
         data_0209fc64[i] = -1;
     }
-    data_0209fc58[0] = 0;
     data_0209fc50[0] = 0;
+    data_0209fc58[0] = 0;
     if (arg == 3)
         data_0209fc68 = 1;
     else

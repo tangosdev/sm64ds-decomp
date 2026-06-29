@@ -1,12 +1,12 @@
 struct P2 { int a, b; };
-extern struct P2 data_ov002_02108b6c;
-extern struct P2 data_ov002_02108b5c;
-extern struct P2 data_ov002_02108b74;
-extern struct P2 data_ov002_02108b64;
-extern struct P2 data_ov002_0210dd30[4];
+extern struct P2 data_ov070_021233ec;
+extern struct P2 data_ov070_021233fc;
+extern struct P2 data_ov070_021233f4;
+extern struct P2 data_ov070_02123404;
+extern struct P2 data_ov070_021236ec[4];
 void __sinit_ov070_02123030(void){
-  data_ov002_0210dd30[0] = data_ov002_02108b6c;
-  data_ov002_0210dd30[1] = data_ov002_02108b5c;
-  data_ov002_0210dd30[2] = data_ov002_02108b74;
-  data_ov002_0210dd30[3] = data_ov002_02108b64;
+  data_ov070_021236ec[0] = data_ov070_021233ec;
+  data_ov070_021236ec[1] = data_ov070_021233fc;
+  data_ov070_021236ec[2] = data_ov070_021233f4;
+  data_ov070_021236ec[3] = data_ov070_02123404;
 }

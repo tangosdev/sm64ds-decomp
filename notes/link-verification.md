@@ -29,19 +29,30 @@ These are reported BENIGN, not WRONG. The check reads the trampoline/twin from t
 it is best-effort across overlapping overlays; a few benign cases it cannot confirm stay in
 WRONG conservatively.
 
-## Corpus result (7,180 banked matches, 2026-06-29, after the first fix pass)
+## Corpus result (6,317 banked matches, 2026-06-29, after the second fix pass)
 
 | verdict | count | meaning |
 |---|---:|---|
-| VERIFIED | 5,320 | every reloc resolved and the linked bytes equal the ROM |
-| BENIGN | 19 | only veneer/twin diffs; source is correct |
-| BLIND | 1,784 | a reloc targets an invented name with no address, unverifiable |
-| WRONG | 57 | a resolved reloc links to bytes that differ from the ROM |
+| VERIFIED | 4,587 | every reloc resolved and the linked bytes equal the ROM |
+| BENIGN | 16 | only veneer/twin diffs; source is correct |
+| BLIND | 1,701 | a reloc targets an invented name with no address, unverifiable |
+| WRONG | 12 | a resolved reloc links to bytes that differ from the ROM |
+| NO-REPRO | 1 | source no longer reproduces ROM bytes (pre-existing) |
 
-An initial pass fixed 53 genuine wrong destinations (repoint the reference at the address
-the ROM uses; matched bytes unchanged). Of the remaining 57 WRONG, 35 are genuine and still
-need fixing (a tail where the swap changes codegen, plus `__sinit` initializers with several
-wrong data pointers), and 22 are veneer/twin cases the tool could not auto-confirm.
+The second pass fixed 39 more WRONG destinations (51 → 12). The fixes were: wrong overlay
+prefix in `data_ovXXX_ADDR` symbol names (`__sinit` initializers and overlay-local
+globals), swapped 4th/5th arguments to `func_020733a8` ctor/dtor pair (pool constant
+ordering), and swapped argument lines in `func_02030aa4`.
+
+## Remaining 12 WRONG entries
+
+| name | reason |
+|---|---|
+| `_ZN14BlendModelAnimD1Ev` | `_ZdlPv` → different `operator delete` variant; likely veneer unconfirmed |
+| 6× `_ZThn80_N9Animation{D0,D1}Ev` | call `_ZN9AnimationD1Ev` but ROM uses `ModelAnim2` D1; class name mismatch in nearmiss DB |
+| `func_0206a318`, `func_0206a3a4`, `func_0206a5c0` | BL→BLX false positive: `WaitByLoop`/`CpuSet` are Thumb; linkcheck encodes BL but ROM has BLX |
+| `func_ov005_020c0250` | `data_020a0de8` accessed as struct array; ROM has byte-offset symbols `+1/+2/+3` |
+| `func_ov098_02137eec` | `data_ov098_0213c380[idx2].b/.c` — ROM pool constants are `base+4`/`base+8`; struct layout differs |
 
 ## The residual blind spot
 
@@ -61,7 +72,15 @@ python tools/linkcheck.py --json out.json
 
 ## Next
 
-Review the 129 WRONG matches (`linkcheck.py` prints the per-slot detail). The common
-shapes are C++ destructor variants (D0/D1/D2), data symbols whose name resolves to the
-wrong overlay address, and `__sinit` initializers registering the wrong data pointers.
-Fix or re-match them so the headline count stays honest.
+The 12 residual WRONG entries fall into three categories:
+
+1. **Animation thunks** — `_ZThn80_N9AnimationD{0,1}Ev` thunks call `_ZN9AnimationD1Ev`
+   but ROM calls a `ModelAnim2` destructor. Fix requires changing the class name from
+   `Animation` to `ModelAnim2` in the nearmiss DB (`nearmiss/db.jsonl`).
+2. **BL→BLX false positives** — `func_0206a318/a3a4/a5c0` call `WaitByLoop`/`CpuSet`
+   (Thumb entry points). The candidate object emits a `BL` placeholder but the linker
+   writes a `BLX`; `link_function()` keeps the source `0xEB` upper byte, ROM has `0xFA/0xFB`.
+   These are not genuine wrong matches — fix requires `linkcheck` to handle the ARM→Thumb
+   BL→BLX H-bit rewrite in `link_function()`.
+3. **Struct layout / byte-offset** — `func_ov005_020c0250` and `func_ov098_02137eec` need
+   source restructuring to generate the exact pool constants the ROM uses.

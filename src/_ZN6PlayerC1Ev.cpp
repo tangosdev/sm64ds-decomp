@@ -18,9 +18,9 @@ void* _ZN6PlayerC1Ev(void* c){
   *(int*)p=(int)data_ov002_0210a83c;
   _ZN9ModelAnimC1Ev(r4+0x14);
   _ZN9ModelAnimC1Ev(r4+0x98);
-  func_020733a8(r4+0x100,4,0x14,(void*)_ZN15TextureSequenceD1Ev,(void*)_ZN15TextureSequenceC1Ev);
-  func_020733a8(r4+0x150,2,0x14,(void*)_ZN15MaterialChangerD1Ev,(void*)_ZN15MaterialChangerC1Ev);
-  func_020733a8(r4+0x178,2,0x14,(void*)_ZN15TextureSequenceD1Ev,(void*)_ZN15TextureSequenceC1Ev);
+  func_020733a8(r4+0x100,4,0x14,(void*)_ZN15TextureSequenceC1Ev,(void*)_ZN15TextureSequenceD1Ev);
+  func_020733a8(r4+0x150,2,0x14,(void*)_ZN15MaterialChangerC1Ev,(void*)_ZN15MaterialChangerD1Ev);
+  func_020733a8(r4+0x178,2,0x14,(void*)_ZN15TextureSequenceC1Ev,(void*)_ZN15TextureSequenceD1Ev);
   _ZN11ShadowModelC1Ev(p+0x2ac);
   _ZN25MovingCylinderClsnWithPosC1Ev(p+0x2d4);
   _ZN25MovingCylinderClsnWithPosC1Ev(p+0x314);

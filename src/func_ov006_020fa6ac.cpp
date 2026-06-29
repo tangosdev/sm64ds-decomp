@@ -16,7 +16,7 @@ extern "C" void* func_ov006_020fa6ac(void){
     _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
     *(int*)p = (int)&data_ov006_0213d7e8;
     func_ov006_020c1d80(p + 0x4f38);
-    func_020733a8(p + 0x51a8, 0x28, 0x30, (void*)func_ov006_020f8ff0, (void*)func_ov006_020fa740);
+    func_020733a8(p + 0x51a8, 0x28, 0x30, (void*)func_ov006_020fa740, (void*)func_ov006_020f8ff0);
   }
   return p;
 }
