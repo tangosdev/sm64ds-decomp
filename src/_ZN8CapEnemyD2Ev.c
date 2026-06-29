@@ -19,13 +19,13 @@ extern void *_ZTV8CapEnemy[];
 
 extern void _ZN7CapIconD2Ev(void *icon);             /* 0x020ab3a0 */
 extern void *_ZN5ModelD1Ev(void *model);             /* 0x02016d20 */
-extern void *_ZN5EnemyD2Ev(struct CapEnemy *thiz);   /* 0x020aed18 */
+extern void *func_ov002_020aed18(struct CapEnemy *thiz);   /* 0x020aed18 */
 
 struct CapEnemy *_ZN8CapEnemyD2Ev(struct CapEnemy *thiz)
 {
     thiz->vtable = (void **)_ZTV8CapEnemy;
     _ZN7CapIconD2Ev(thiz->capIcon);
     _ZN5ModelD1Ev(thiz->capModel);
-    _ZN5EnemyD2Ev(thiz);
+    func_ov002_020aed18(thiz);
     return thiz;
 }

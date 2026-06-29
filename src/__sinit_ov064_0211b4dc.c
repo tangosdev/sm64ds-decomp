@@ -1,9 +1,9 @@
 struct S2 { int w[2]; };
-extern struct S2 data_ov034_0211442c;
-extern struct S2 data_ov022_02114424;
+extern struct S2 data_ov064_0211c2e4;
+extern struct S2 data_ov064_0211c2dc;
 struct S4 { struct S2 a; struct S2 b; };
-extern struct S4 data_ov034_02114690;
+extern struct S4 data_ov064_0211c934;
 void __sinit_ov064_0211b4dc(void){
-  data_ov034_02114690.a=data_ov034_0211442c;
-  data_ov034_02114690.b=data_ov022_02114424;
+  data_ov064_0211c934.a=data_ov064_0211c2e4;
+  data_ov064_0211c934.b=data_ov064_0211c2dc;
 }

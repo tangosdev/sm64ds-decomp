@@ -3,8 +3,8 @@ extern void func_0203da2c(int v);
 extern void func_0203da4c(void);
 extern u8 data_0209fc5c[];
 extern char data_0209fc64[];
-extern u8 data_0209fc58[];
 extern u8 data_0209fc50[];
+extern u8 data_0209fc58[];
 extern int data_0209fc68;
 extern int data_0209fc60;
 extern u8 data_0209fc54;
@@ -19,8 +19,8 @@ void func_02030aa4(int arg)
         data_0209fc5c[i] = 0;
         data_0209fc64[i] = -1;
     }
-    data_0209fc58[0] = 0;
     data_0209fc50[0] = 0;
+    data_0209fc58[0] = 0;
     if (arg == 3)
         data_0209fc68 = 1;
     else

@@ -7,7 +7,7 @@ extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, const Vector3& vec);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
-int func_ov002_020bae9c(void* self);
+int _ZN9ActorBase18MarkForDestructionEv(void* self);
 }
 
 extern "C" int func_ov079_02126e58(char* self);
@@ -26,5 +26,5 @@ int func_ov079_02126e58(char* self) {
     ((int*)&vec2)[2] = ((int*)&vec)[2];
     _ZN5Actor19DisappearPoofDustAtERK7Vector3(self, vec2);
     _ZN5Sound9PlayBank3EjRK7Vector3(0xf, *(Vector3*)(self + 0x74));
-    return func_ov002_020bae9c(self);
+    return _ZN9ActorBase18MarkForDestructionEv(self);
 }

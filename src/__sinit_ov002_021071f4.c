@@ -5,12 +5,12 @@
 
 typedef struct { int a, b; } Pair;
 
-extern Pair data_ov002_02109758;
-extern Pair data_ov002_02109768;
-extern Pair data_ov002_02109750;
-extern Pair data_ov002_02109748;
-extern Pair data_ov002_02109740;
-extern Pair data_ov002_02109760;
+extern Pair data_ov002_0210aed0;
+extern Pair data_ov002_0210aee8;
+extern Pair data_ov002_0210aed8;
+extern Pair data_ov002_0210aef8;
+extern Pair data_ov002_0210aef0;
+extern Pair data_ov002_0210aee0;
 
 struct Dest {
     Pair p0;   // 0x00
@@ -25,10 +25,10 @@ struct Dest {
 extern struct Dest data_ov002_021097bc;
 
 void __sinit_ov002_021071f4(void) {
-    data_ov002_021097bc.p0 = data_ov002_02109758;
-    data_ov002_021097bc.p1 = data_ov002_02109768;
-    data_ov002_021097bc.p2 = data_ov002_02109750;
-    data_ov002_021097bc.p3 = data_ov002_02109748;
-    data_ov002_021097bc.p4 = data_ov002_02109740;
-    data_ov002_021097bc.p5 = data_ov002_02109760;
+    data_ov002_021097bc.p0 = data_ov002_0210aed0;
+    data_ov002_021097bc.p1 = data_ov002_0210aee8;
+    data_ov002_021097bc.p2 = data_ov002_0210aed8;
+    data_ov002_021097bc.p3 = data_ov002_0210aef8;
+    data_ov002_021097bc.p4 = data_ov002_0210aef0;
+    data_ov002_021097bc.p5 = data_ov002_0210aee0;
 }

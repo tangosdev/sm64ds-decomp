@@ -18,7 +18,7 @@ void __sinit_ov072_02122350(void)
   int new_var;
   func_02017acc(data_ov072_02122c40, 0x2ad);
   func_020731dc(data_ov072_02122c40, func_02017ab4, data_ov072_02122c88);
-  func_02017934(data_ov072_02122c48, 0x2af);
+  func_02017acc(data_ov072_02122c48, 0x2af);
   func_020731dc(data_ov072_02122c48, func_02017ab4, data_ov072_02122c7c);
   func_02017934(data_ov072_02122c50, 0x2b0);
   func_020731dc(data_ov072_02122c50, func_0201791c, data_ov072_02122c58);
