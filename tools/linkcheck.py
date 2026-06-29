@@ -47,6 +47,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import match as M            # noqa: E402
 import reloc_audit as RA     # noqa: E402
+import modules as MOD        # noqa: E402
 
 # ARM relocation types we know how to link.
 R_ARM_PC24 = 1
@@ -54,6 +55,61 @@ R_ARM_ABS32 = 2
 R_ARM_CALL = 28
 R_ARM_JUMP24 = 29
 BRANCH_TYPES = {R_ARM_PC24, R_ARM_CALL, R_ARM_JUMP24}
+
+# Two reasons a slot can differ from the ROM yet still be correct source:
+#  - veneer: the ROM reloc points at a 12-byte interworking trampoline
+#    (LDR ip,[pc]; BX ip; .word real) that jumps to the address the source names.
+#    The linker inserts the veneer; the source naming the real symbol is right.
+#  - twin: the ROM target and the candidate's target hold byte-identical code
+#    (a duplicate function), so calling either is behaviorally identical.
+_RANGES = None
+
+
+def _ranges():
+    global _RANGES
+    if _RANGES is None:
+        _RANGES = []
+        for m in MOD.modules():
+            data = m["bin"].read_bytes()
+            _RANGES.append((m["name"], m["base"], m["base"] + len(data), data))
+    return _RANGES
+
+
+def read_at(rom_addr, n, prefer=()):
+    """Read n bytes at an absolute address, trying the preferred module images first
+    (overlays overlap in address space, so order matters). Returns None if not found."""
+    pref = [("main" if p == "arm9" else p) for p in prefer]
+    rs = _ranges()
+    for want in pref + [r[0] for r in rs]:
+        for nm, base, end, data in rs:
+            if nm == want and base <= rom_addr and rom_addr + n <= end:
+                return data[rom_addr - base:rom_addr - base + n]
+    return None
+
+
+def rom_target(target, o, rtype, func_addr):
+    """The address the ROM's slot at offset o points to, decoded from the ROM bytes."""
+    w = int.from_bytes(target[o:o + 4], "little")
+    if rtype == R_ARM_ABS32:
+        return w
+    imm = w & 0xFFFFFF
+    if imm & 0x800000:
+        imm -= 0x1000000
+    return (func_addr + o + 8 + (imm << 2)) & 0xFFFFFFFF
+
+
+def is_benign(rom_t, cand_t, prefer):
+    """True if the ROM target is a veneer to cand_t, or a byte-identical twin of it."""
+    if cand_t is None:
+        return False
+    vb = read_at(rom_t, 12, prefer)
+    if vb and int.from_bytes(vb[0:4], "little") == 0xe59fc000 \
+            and int.from_bytes(vb[4:8], "little") == 0xe12fff1c \
+            and int.from_bytes(vb[8:12], "little") == cand_t:
+        return True
+    a = read_at(rom_t, 16, prefer)
+    b = read_at(cand_t, 16, prefer)
+    return a is not None and b is not None and a == b
 
 
 def func_relocs_typed(obj, func, name_index):
@@ -116,18 +172,27 @@ def linkcheck(name, addr, size, mod, name_index):
                 "reason": "len-mismatch", "diffs": [], "blind": 0}
     relocs = func_relocs_typed(obj, sym, name_index)
     linked, blind = link_function(code, addr, relocs)
+    by_off = {rl["off"] & ~3: rl for rl in relocs}
     diffs = [i for i in range(0, len(target), 4)
              if i not in blind and linked[i:i + 4] != target[i:i + 4]]
     if diffs:
-        # annotate each diff with the offending reloc's intended target, if any
-        by_off = {rl["off"] & ~3: rl for rl in relocs}
-        detail = []
+        prefer = (mod, "arm9")
+        genuine, benign = [], 0
         for i in diffs:
             rl = by_off.get(i)
-            detail.append({"off": f"+0x{i:x}", "sym": rl["sym"] if rl else None,
-                           "target": (f"0x{rl['addr']:08x}" if rl and rl["addr"] is not None else None)})
-        return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "WRONG",
-                "diffs": detail, "blind": len(blind)}
+            if rl is not None:
+                rt = rom_target(target, i, rl["type"], addr)
+                if is_benign(rt, rl["addr"], prefer):
+                    benign += 1
+                    continue
+            genuine.append({"off": f"+0x{i:x}", "sym": rl["sym"] if rl else None,
+                            "target": (f"0x{rl['addr']:08x}" if rl and rl["addr"] is not None else None)})
+        if genuine:
+            return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "WRONG",
+                    "diffs": genuine, "blind": len(blind)}
+        if benign:
+            return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "BENIGN",
+                    "diffs": [], "blind": len(blind)}
     if blind:
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": f"BLIND-{len(blind)}", "diffs": [], "blind": len(blind)}
@@ -177,7 +242,7 @@ def main():
         return "BLIND" if v.startswith("BLIND") else v
     cat = Counter(bucket(r["verdict"]) for r in results)
     print("\n=== link-based verification ===")
-    for k in ["VERIFIED", "BLIND", "WRONG", "NO-REPRO", "NO-SYM"]:
+    for k in ["VERIFIED", "BENIGN", "BLIND", "WRONG", "NO-REPRO", "NO-SYM"]:
         if cat.get(k):
             print(f"  {k:10} {cat[k]}")
     wrong = [r for r in results if r["verdict"] == "WRONG"]
