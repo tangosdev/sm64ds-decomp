@@ -20,3 +20,6 @@ it is fair to take over: ping the claimant first.
 | Range | Who | Claimed | Status |
 |---|---|---|---|
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
+| arm9 main 0x02005000-0x02072000 | andrewboudreau | 2026-06-28 | Claimed |
+| ov002 0x020ad000-0x020fd000 | andrewboudreau | 2026-06-28 | Claimed |
+| ov006 0x020c0000-0x0212a000 | andrewboudreau | 2026-06-28 | Claimed |
