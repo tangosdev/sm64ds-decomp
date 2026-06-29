@@ -133,7 +133,19 @@ def main():
                     help="override target binary (e.g. an overlay) instead of arm9_dec.bin")
     ap.add_argument("--base", default=None, type=lambda x: int(x, 0),
                     help="load address of --bin (required with --bin)")
+    ap.add_argument("--strict-relocs", action="store_true",
+                    help="beyond the byte compare, verify each reloc slot points at the "
+                         "destination config/<module>/relocs.txt records (catches wrong "
+                         "callee/global the wildcard would otherwise hide)")
+    ap.add_argument("--module", default="arm9",
+                    help="module name for --strict-relocs config lookup (arm9, ov006, ...)")
     args = ap.parse_args()
+
+    strict = None
+    if args.strict_relocs:
+        import reloc_audit as RA
+        import relocs as RL
+        strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
 
     cfile = pathlib.Path(args.c)
     if args.bin:
@@ -166,6 +178,18 @@ def main():
         if not args.brief:
             print(f"\n=== mwccarm {v} ===")
         ok, ndiff = compare(tgt, code, relocs, verbose=not args.brief)
+        if ok and strict is not None:
+            RA, name_index, config_relocs, sym_index = strict
+            rows, missing = RA.check_destinations(obj, args.func, args.addr, args.size,
+                                                  args.module, name_index, config_relocs, sym_index)
+            bad = [r for r in (rows or []) if r["verdict"] == "WRONG-DEST"]
+            if bad:
+                ok = False
+                print(f"  {v}: bytes match but {len(bad)} reloc destination(s) WRONG -- "
+                      f"not a real match:")
+                for r in bad:
+                    print(f"      {r['off']:6} cand {r['cand']} ({r['cand_addr']}) "
+                          f"!= config {r['cfg']}")
         if ok:
             matched.append(v)
             if args.brief:
