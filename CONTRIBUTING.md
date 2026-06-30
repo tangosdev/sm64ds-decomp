@@ -64,6 +64,12 @@ codegen-identical) with flags:
    until the bytes are identical.
 5. **Promote** the matched C into `src/`, commit, and open a PR.
 
+For a batch of banked matches, also run `python tools/linkcheck.py` before or after
+opening the PR when you have the local progress files available. The normal match gate
+compares unlinked objects and must wildcard relocation slots; `linkcheck` reconstructs
+the linked bytes and catches wrong relocation destinations that would otherwise hide in
+those slots. See [`notes/link-verification.md`](notes/link-verification.md).
+
 Before you start writing C, skim [`notes/mwccarm-codegen.md`](notes/mwccarm-codegen.md) - it
 documents how this exact compiler turns C into bytes (struct copies, bitfield shifts, C++
 virtual/PMF dispatch, the register-allocation wall, and the common idiom families). Writing

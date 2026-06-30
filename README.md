@@ -59,6 +59,11 @@ as much as possible before any manual effort:
    each attempt until it is byte-identical. A decompiler such as Ghidra is useful for
    reading the function, though its output never matches on its own.
 
+For already-banked matches, `tools/linkcheck.py` performs the stronger relocation
+destination check: it reconstructs each function's linked bytes and compares them to
+the ROM, catching wrong callees or globals that the normal unlinked byte diff would
+wildcard. See [notes/link-verification.md](notes/link-verification.md).
+
 ## Setup
 
 You supply your own cartridge dump. Full setup (Python dependencies, the proprietary
@@ -156,7 +161,8 @@ floor entries, plus a pass of placeholder-to-resolved callee renames across the 
 Tooling contributions: [webheadvr](https://github.com/webheadvr) made the relocation
 symbol resolver module-aware, fixing wrong-overlay symbol picks where overlay address
 ranges overlap. [andrewboudreau](https://github.com/andrewboudreau) added a relocation
-destination audit and an opt-in strict-relocs check to the verify path (PR #47).
+destination audit, an opt-in strict-relocs check to the verify path (PR #47), and the
+link-based match verifier used to catch wrong relocation destinations.
 
 ## License
 

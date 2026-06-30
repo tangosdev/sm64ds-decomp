@@ -1,14 +1,20 @@
 # Relocation-destination verification gap
 
-**Status:** measured, fix prototyped (opt-in). Decision needed on rollout.
-**Tools:** `tools/reloc_audit.py` (measurement), `tools/match.py --strict-relocs` (gate fix).
+**Status:** historical measurement note. The stronger fix now exists as
+`tools/linkcheck.py`; see [`notes/link-verification.md`](link-verification.md) for the
+current workflow and corpus result.
+**Tools:** `tools/linkcheck.py` (current linked-byte verification),
+`tools/reloc_audit.py` (older destination audit), `tools/match.py --strict-relocs`
+(opt-in gate check).
 
 ## TL;DR
 
-The match gate wildcards every relocated word without checking *where* the
-relocation points, so a function can be banked as "matched" while its source
-calls the wrong callee or reads the wrong global. I built an audit that checks
-every banked match's reloc destinations against `config/**/relocs.txt`.
+The match gate wildcards every relocated word without checking *where* the relocation
+points, so a function can be banked as "matched" while its source calls the wrong
+callee or reads the wrong global. This note documents the original audit that measured
+that gap. Since then, `tools/linkcheck.py` has superseded the audit for day-to-day
+verification by reconstructing each candidate's linked bytes and comparing them to the
+ROM.
 
 Corpus result (6,316 banked matches, all of which still reproduce):
 
@@ -25,10 +31,10 @@ interworking veneers (both behaviorally harmless), **83 are genuine concerns**
 (68 of them same-module, high-confidence). That's ~1.8% of the 4,625 matches
 whose destinations are checkable, ~1.3% of the corpus.
 
-**The reviewer's theoretical gap is real and confirmed. The empirical blast
-radius is moderate (tens of genuinely-wrong matches), not catastrophic — but it
-is unmeasurable by the existing gate, and 1,701 matches sit in a permanent blind
-spot that only a link-based check could close.**
+**The reviewer's theoretical gap was real and confirmed.** The audit measured the
+problem; `linkcheck.py` is the link-based check that now closes it as far as the
+symbol table allows. Its remaining BLIND verdicts are symbol-coverage gaps, not a
+missing verifier implementation.
 
 ## The gap
 
@@ -100,9 +106,10 @@ earlier revision was wrong.
   `operator delete` (`_ZdlPv`).
 - **UNRESOLVED (1,701)** — the source declares the target with an *invented*
   name (`someFunc`, `ApproachLinear`, `CAM_DEF_A`, `Camera_vtable`, …) that
-  isn't in `symbols.txt` and encodes no address. No static tool can verify these
-  — not the gate, not reverify, not this audit. They are the true residual blind
-  spot; only linking the object and comparing linked bytes would cover them.
+  isn't in `symbols.txt` and encodes no address. The audit could not verify these.
+  `linkcheck.py` narrows this by linking every resolvable destination, but symbols
+  that still cannot resolve to an address remain BLIND until the symbol table is
+  improved.
 
 **The correction worth flagging:** an earlier version of the audit also emitted a
 `WRONG-MODULE` verdict (~110 matches) when a candidate's address matched config
@@ -121,7 +128,7 @@ unverifiable, the rest clean. The genuine cases cluster on two C++ ABI hazards �
 destructor variants (D0/D1/D2) and `operator delete` — plus a tail of wrong-data
 and wrong-callee references in `func_*` source.
 
-## The fix (prototyped, opt-in)
+## The opt-in gate check
 
 `tools/match.py --strict-relocs` adds destination verification on top of the
 byte compare, reusing the audit's checker (`reloc_audit.check_destinations`).
@@ -141,27 +148,30 @@ A clean function still reports MATCH. Default behavior is unchanged unless
 **What it covers:** every reloc whose candidate target resolves to an address
 (canonical names and `func_<addr>`/`data_<addr>` names) — the same set the audit
 can see (CLEAN covers 4,472 of 6,316 matches fully).
-**What it does NOT cover:** the UNRESOLVED invented-name slots. Closing those
-needs the heavier fix below.
+**What it does NOT cover:** the UNRESOLVED invented-name slots.
 
-**The complete fix** (not built): link the candidate object against the module's
-symbol table and compare *linked* bytes to the ROM. That checks every
-destination including invented names, models veneers correctly, and removes the
-wildcard entirely. It's a bigger change (needs a linker step / address binding
-for the local symbol set) and is the right long-term direction if false matches
-are deemed worth eliminating wholesale.
+## The current linkcheck workflow
+
+`tools/linkcheck.py` is the stronger follow-up to this audit. It recompiles each
+banked match, applies the candidate object's relocations with linker-accurate encodings
+where the destination can be resolved, and byte-compares those reconstructed linked
+bytes to the ROM. That catches wrong destination, relocation type, and addend mistakes
+that an address-only audit or unlinked byte compare can miss.
+
+Run it after harvest batches:
+
+```
+python tools/linkcheck.py
+python tools/linkcheck.py --module ov006 -j 10
+python tools/linkcheck.py --json out.json
+```
+
+See [`notes/link-verification.md`](link-verification.md) for the current verdicts,
+known benign cases, and the remaining documented residual.
 
 ## Recommendation
 
-1. **Adopt `--strict-relocs` in reverify** as a reporting pass first (don't
-   relabel the ledger yet): run the audit, review the 83 genuine cases, fix or
-   re-bank them. Several are likely quick (wrong destructor variant, off-by-one
-   data symbol).
-2. **Decide on the 1,701 UNRESOLVED.** They are matches whose correctness rests
-   entirely on the author having declared the right thing, with zero automated
-   check. If byte-exact link reproduction is a project goal, the link-based fix
-   is the only thing that closes this.
-3. Relative to the other two review items: the progress-ledger and
-   `ingest_batch` issues are hygiene/dead-code; **this is the one that affects
-   whether the headline match count can be trusted.** The measurement now exists
-   — the open question is policy, not detection.
+1. Use `tools/linkcheck.py` as the regular corpus/batch reporting pass.
+2. Keep `tools/reloc_audit.py` and `tools/match.py --strict-relocs` as targeted
+   diagnostics when reviewing a specific destination mismatch.
+3. Reduce BLIND by giving invented names real symbol-table addresses where possible.
