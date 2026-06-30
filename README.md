@@ -161,8 +161,7 @@ floor entries, plus a pass of placeholder-to-resolved callee renames across the 
 Tooling contributions: [webheadvr](https://github.com/webheadvr) made the relocation
 symbol resolver module-aware, fixing wrong-overlay symbol picks where overlay address
 ranges overlap. [andrewboudreau](https://github.com/andrewboudreau) added a relocation
-destination audit, an opt-in strict-relocs check to the verify path (PR #47), and the
-link-based match verifier used to catch wrong relocation destinations.
+destination audit and an opt-in strict-relocs check to the verify path (PR #47).
 
 ## License
 
