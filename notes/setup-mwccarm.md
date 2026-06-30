@@ -13,18 +13,13 @@ Discord servers (pokediamond/pokeheartgold) have the same pinned files.
 1. **`mwccarm.zip`**, the whole set of CodeWarrior ARM compiler versions. It contains
    subfolders like `1.2/`, `2.0/` with service-pack subdirs (e.g. `sp1`, `sp2p2`),
    each holding `mwccarm.exe`, `mwldarm.exe`, `mwasmarm.exe`.
-2. **`license.dat`**, the CodeWarrior license file (often bundled in the same zip or a
-   sibling `.rar`).
-3. A **NITRO-SDK** archive if pinned (e.g. `NitroSDK-*.7z`), needed later for SDK
+2. A **NITRO-SDK** archive if pinned (e.g. `NitroSDK-*.7z`), needed later for SDK
    library headers/objects. Not required just to start matching game functions.
 
 ## Where to put it
 - Extract `mwccarm.zip` to: `tools/mwccarm/` in this repo
   (so paths look like `tools/mwccarm/2.0/sp2p2/mwccarm.exe`).
   This folder is gitignored (proprietary, not redistributable).
-- Set a Windows environment variable so the compiler finds its license:
-  `LM_LICENSE_FILE` = full path to `license.dat`.
-  (System Settings -> Environment Variables, or `setx LM_LICENSE_FILE "C:\...\license.dat"`)
 - Windows bonus: `mwccarm.exe` is a native Windows binary, so no Wine needed.
 
 ## Which version do we actually need?
@@ -35,4 +30,4 @@ with each mwccarm version, and byte-diff against the ROM in objdiff/decomp.me un
 matches. That match pins the version for the whole project.
 
 ## .gitignore
-`tools/mwccarm/` and `license.dat` must never be committed.
+`tools/mwccarm/` must never be committed.

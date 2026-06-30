@@ -70,7 +70,7 @@ Short version:
 
 ```
 pip install ndspy capstone pyelftools
-# get mwccarm + license.dat per notes/setup-mwccarm.md, then:
+# get mwccarm per notes/setup-mwccarm.md, then:
 python tools/unpack.py "path/to/your-own-sm64ds.nds"
 ```
 
@@ -103,10 +103,10 @@ Clone https://github.com/bmanus2-dotcom/sm64ds-decomp and set up the Super Mario
 matching-decompilation toolchain on my machine. Do these in order:
 1. Read CONTRIBUTING.md and notes/setup-mwccarm.md in the repo.
 2. Install the Python dependencies: ndspy, capstone, pyelftools.
-3. mwccarm and license.dat cannot be downloaded automatically: they are in the DS-decomp
+3. mwccarm cannot be downloaded automatically: it is in the DS-decomp
    Discord (https://discord.com/invite/gwN6M3HQrA, resources channel, mwccarm.zip) and I
-   have to fetch them by hand. Wait for me to do that, then help me place them under
-   tools/mwccarm/ and set the LM_LICENSE_FILE environment variable.
+   have to fetch it by hand. Wait for me to do that, then help me place it under
+   tools/mwccarm/.
 4. Unpack my own SM64DS cartridge dump with tools/unpack.py. This writes the ARM9, ARM7,
    and overlay binaries into extracted/ (gitignored), including both the compressed
    arm9.bin and the decompressed arm9_dec.bin. Use the decompressed image for disassembly.
