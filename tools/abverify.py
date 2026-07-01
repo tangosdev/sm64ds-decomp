@@ -46,7 +46,33 @@ if code is None:
 
 target = bytes.fromhex(hexstr)
 if len(code) != len(target):
-    print(f"NOMATCH size: compiled {len(code)} bytes vs target {len(target)}"); sys.exit(1)
+    # sizes differ (missing/extra instruction) - show an ALIGNED instruction diff so
+    # the caller can see WHAT is missing/extra, not just the byte counts. Divergence
+    # count here uses the same aligned semantics as nearmiss_db.evaluate.
+    import difflib
+    import nearmiss_db as NM
+    c = NM._disasm(code, relocs)
+    t = NM._disasm(target, relocs)
+    print(f"size differs: compiled {len(code)} bytes vs target {len(target)} - "
+          f"aligned diff ('-' = absent on that side):")
+    sm = difflib.SequenceMatcher(a=c, b=t, autojunk=False)
+    div = shown = 0
+    for op, i1, i2, j1, j2 in sm.get_opcodes():
+        if op == "equal":
+            continue
+        n = max(i2 - i1, j2 - j1)
+        div += n
+        for k in range(n):
+            if shown >= 24:
+                continue
+            cs = c[i1 + k] if i1 + k < i2 else "-"
+            ts = t[j1 + k] if j1 + k < j2 else "-"
+            print(f"  insn {j1 + k:3} | target: {ts:28} | yours: {cs}")
+            shown += 1
+    if div > shown:
+        print(f"  ... {div - shown} more diverging instructions")
+    print(f"NOMATCH divergences={div}/{len(target)//4} (aligned; sizes differ)")
+    sys.exit(1)
 
 MAXLINES = 32
 shown = ndiff = 0

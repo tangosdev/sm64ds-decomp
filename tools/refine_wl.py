@@ -46,6 +46,9 @@ def main():
 
     rows = [json.loads(l) for l in (REPO / "nearmiss" / "db.jsonl")
             .read_text(encoding="utf-8").splitlines() if l.strip()]
+    for r in rows:                       # addr/size are hex strings in some records
+        r["addr"] = int(r["addr"], 0) if isinstance(r["addr"], str) else r["addr"]
+        r["size"] = int(r["size"], 0) if isinstance(r["size"], str) else r["size"]
 
     parked = set()
     nmfile = REPO / "progress" / "nonmatching.jsonl"
@@ -53,7 +56,9 @@ def main():
         for l in nmfile.read_text(encoding="utf-8").splitlines():
             if l.strip():
                 r = json.loads(l)
-                parked.add((r.get("module", "arm9"), r["addr"]))
+                a = r["addr"]
+                parked.add((r.get("module", "arm9"),
+                            int(a, 0) if isinstance(a, str) else a))
     attempted = set()
     if ATTEMPTED.exists():
         attempted = {l.strip() for l in ATTEMPTED.read_text().splitlines() if l.strip()}
