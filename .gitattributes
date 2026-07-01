@@ -1,0 +1,7 @@
+# Workflow scripts must stay LF: the Claude Code Workflow launcher rejects files
+# with CR control characters. Keep all text predictable across contributors' OSes.
+* text=auto
+*.js text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.jsonl text eol=lf -diff
