@@ -221,6 +221,25 @@ def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym
     return rows, missing
 
 
+_GATE_IDX = None
+
+
+def gate_wrong_dests(obj, sym, addr, size, mod):
+    """Bank-gate wrapper around check_destinations: WRONG-DEST rows only, with the
+    three config indexes built once and cached for the process. Returns [] when the
+    object's reloc destinations agree with config, None when the symbol is absent
+    from the object (callers treat that as a verification failure)."""
+    global _GATE_IDX
+    if _GATE_IDX is None:
+        _GATE_IDX = (build_name_index(), build_config_relocs(), R.load_all_syms())
+    name_index, config_relocs, sym_index = _GATE_IDX
+    rows, _missing = check_destinations(obj, sym, addr, size, mod,
+                                        name_index, config_relocs, sym_index)
+    if rows is None:
+        return None
+    return [r for r in rows if r["verdict"] == "WRONG-DEST"]
+
+
 def audit_entry(entry, name_index, config_relocs, sym_index):
     name = entry["name"]
     addr = int(entry["addr"], 16) if isinstance(entry["addr"], str) else entry["addr"]

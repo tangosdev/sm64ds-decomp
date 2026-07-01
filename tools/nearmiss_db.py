@@ -35,6 +35,13 @@ LOCKDIR = REPO / "nearmiss" / ".lock"
 REG = re.compile(r"\b(r\d+|sb|sl|fp|ip|sp|lr|pc)\b")
 
 
+def norm_addr(a):
+    """Canonical '0x%08x' form for an addr that may arrive as int or hex string.
+    Workflow results and older DB rows mixed the two, which made (module, addr)
+    keys silently miss each other."""
+    return f"0x{(int(a, 0) if isinstance(a, str) else int(a)):08x}"
+
+
 class locked:
     """Cross-process mutex (atomic mkdir) so multiple cruncher instances can safely
     read-modify-write the DB and ledger. Hold it only for the brief write, never while
@@ -108,14 +115,20 @@ def load_db():
         for l in DB.read_text(encoding="utf-8").splitlines():
             if l.strip():
                 r = json.loads(l)
+                r["addr"] = norm_addr(r["addr"])
                 db[(r["module"], r["addr"])] = r
     return db
 
 
 def save_db(db):
+    """Atomic rewrite (temp + replace): the DB is committed work; a crash mid-write
+    must not truncate it."""
+    import os
     DB.parent.mkdir(parents=True, exist_ok=True)
     items = sorted(db.values(), key=lambda r: (r.get("divergences") if r.get("divergences") is not None else 1e9))
-    DB.write_text("".join(json.dumps(r) + "\n" for r in items), encoding="utf-8")
+    tmp = DB.with_suffix(".jsonl.tmp")
+    tmp.write_text("".join(json.dumps(r) + "\n" for r in items), encoding="utf-8")
+    os.replace(tmp, DB)
 
 
 def load_meta(worklist):
@@ -129,11 +142,10 @@ def load_meta(worklist):
 
 
 _NAME_IDX = None
+_AMBIG = set()
 
 
-def resolve_name(name):
-    """Find a function's (addr_hex, size, module, target_hex) by name across all modules.
-    Lets us backfill near-misses whose original worklist is gone."""
+def _build_name_idx():
     global _NAME_IDX
     if _NAME_IDX is None:
         import modules as MOD
@@ -143,9 +155,28 @@ def resolve_name(name):
             label = "arm9" if mod["name"] == "main" else mod["name"]
             data = mod["bin"].read_bytes()
             for fn, addr, size in sweep.funcs(mod):
-                _NAME_IDX[fn] = (f"0x{addr:08x}", size, label,
-                                 data[addr - mod["base"]:addr - mod["base"] + size].hex())
-    return _NAME_IDX.get(name)
+                rec = (f"0x{addr:08x}", size, label,
+                       data[addr - mod["base"]:addr - mod["base"] + size].hex())
+                if fn in _NAME_IDX and _NAME_IDX[fn][:3] != rec[:3]:
+                    _AMBIG.add(fn)
+                _NAME_IDX[fn] = rec
+    return _NAME_IDX
+
+
+def resolve_name(name):
+    """Find a function's (addr_hex, size, module, target_hex) by name across all modules.
+    Lets us backfill near-misses whose original worklist is gone. For a name defined
+    in more than one module this returns the LAST module's entry -- check
+    is_ambiguous() before trusting the module attribution (bank paths must)."""
+    return _build_name_idx().get(name)
+
+
+def is_ambiguous(name):
+    """True if the name is defined at different (addr, module) in multiple modules.
+    Banking such a name by resolve_name() alone risks overwriting a same-named
+    sibling's src/ file with a different function's source."""
+    _build_name_idx()
+    return name in _AMBIG
 
 
 def _done_set():
@@ -154,7 +185,7 @@ def _done_set():
         for l in LEDGER.read_text().splitlines():
             if l.strip():
                 d = json.loads(l)
-                done.add((d["module"], d["addr"]))
+                done.add((d["module"], norm_addr(d["addr"])))
     return done
 
 
@@ -185,6 +216,7 @@ def ingest(args):
             if not ex:
                 continue
             addr, size, mod, thex = ex["addr"], ex["size"], ex["module"], ex["target_hex"]
+        addr = norm_addr(addr)
         key = (mod, addr)
         if key in done:                 # already matched -- not a pending near-miss
             db.pop(key, None)
@@ -267,10 +299,24 @@ def export_close(args):
 def bank_matches(args):
     """Re-evaluate every entry; bank any that now byte-match (score 0)."""
     db = load_db()
-    banked = 0
+    banked = skipped = 0
     for key, r in list(db.items()):
         div, ok = evaluate(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
         if ok:
+            if is_ambiguous(r["name"]):
+                print(f"  SKIP {r['name']}: name exists in multiple modules -- bank by hand")
+                skipped += 1
+                continue
+            if not getattr(args, "no_strict", False):
+                import reloc_audit as RA
+                _, obj = S.oracle_check(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
+                bad = RA.gate_wrong_dests(obj, r["name"], int(r["addr"], 0),
+                                          r["size"], r["module"]) if obj else None
+                if bad:
+                    print(f"  SKIP {r['name']}: bytes match but {len(bad)} reloc "
+                          f"destination(s) WRONG (e.g. {bad[0]['cand']} != {bad[0]['cfg']})")
+                    skipped += 1
+                    continue
             ext = r["lang"]
             (SRC / f"{r['name']}.{ext}").write_text(
                 r["c_source"] if r["c_source"].endswith("\n") else r["c_source"] + "\n")
@@ -282,7 +328,7 @@ def bank_matches(args):
         elif div is not None:
             r["divergences"] = div
     save_db(db)
-    print(f"banked {banked} now-matching entries; DB now {len(db)}.")
+    print(f"banked {banked} now-matching entries; skipped {skipped}; DB now {len(db)}.")
 
 
 def main():
@@ -298,7 +344,10 @@ def main():
                    help="comma list of category substrings to keep (e.g. "
                         "'register allocation,instruction reorder' for permuter seeds)")
     p.set_defaults(fn=export_close)
-    p = sub.add_parser("bank-matches"); p.set_defaults(fn=bank_matches)
+    p = sub.add_parser("bank-matches")
+    p.add_argument("--no-strict", action="store_true",
+                   help="skip the reloc-destination gate (bytes-only banking)")
+    p.set_defaults(fn=bank_matches)
     args = ap.parse_args()
     args.fn(args)
 

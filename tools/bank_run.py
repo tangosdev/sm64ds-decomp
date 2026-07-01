@@ -63,11 +63,13 @@ def main():
             for n in miss:
                 r = rows.get(n)
                 if r:
+                    rec = {"addr": r["addr"], "name": n,
+                           "size": int(r["size"], 16), "module": r["module"],
+                           "reason": f"fan-out miss ({res.get('model','?')} {res.get('tokensPerLanded')}/landed)"}
                     d = divs.get(n)
-                    f.write(json.dumps({"addr": r["addr"], "name": n,
-                                        "size": int(r["size"], 16), "module": r["module"],
-                                        "divergences": d if d is not None else 2,
-                                        "reason": f"fan-out miss ({res.get('model','?')} {res.get('tokensPerLanded')}/landed)"}) + "\n")
+                    if d is not None:   # only record a divergence count we actually measured
+                        rec["divergences"] = d
+                    f.write(json.dumps(rec) + "\n")
         print(f"parked {len(miss)} misses -> progress/nonmatching.jsonl")
 
     # ingest near-misses into the committed DB (standing rule: never discard a close attempt).

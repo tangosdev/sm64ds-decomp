@@ -1802,20 +1802,27 @@ RULES = [rule_empty, rule_ret_const, rule_ret_arg, rule_load, rule_load_mask,
 CPP_FLAGS = M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++")
 
 
-def oracle_ok(c_source, name, target):
-    """Compile candidate C/C++ and relocation-aware byte-diff against the ROM."""
+def oracle_check(c_source, name, target):
+    """Compile candidate C/C++ and relocation-aware byte-diff against the ROM.
+    Returns (ok, obj) so callers can also audit the object's relocation
+    destinations -- the byte compare wildcards reloc slots."""
     cpp = c_source.startswith("//cpp")
     with tempfile.TemporaryDirectory() as td:
         cfile = pathlib.Path(td) / ("cand.cpp" if cpp else "cand.c")
         cfile.write_text(c_source)
         obj = M.compile_c(cfile, M.CANONICAL, CPP_FLAGS if cpp else M.DEFAULT_FLAGS)
     if obj is None:
-        return False
+        return False, None
     code, relocs = M.extract_func(obj, name)
     if code is None:
-        return False
+        return False, obj
     ok, _ = M.compare(target, code, relocs, verbose=False)
-    return ok
+    return ok, obj
+
+
+def oracle_ok(c_source, name, target):
+    """Compile candidate C/C++ and relocation-aware byte-diff against the ROM."""
+    return oracle_check(c_source, name, target)[0]
 
 
 # ----------------------------------------------------------------------------- main
