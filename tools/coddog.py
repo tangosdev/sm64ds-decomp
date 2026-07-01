@@ -43,10 +43,34 @@ def jaccard(a, b):
     return len(a & b) / len(a | b) if (a or b) else 0.0
 
 
-def build_corpus(done):
+def load_parked():
+    """(module, addr) pairs to keep out of the target pool: NONMATCHING floor and the
+    near-miss backlog. nearmiss/db.jsonl is committed (shared); nonmatching.jsonl is
+    local -- both are used if present."""
+    parked = set()
+    files = [REPO / "progress" / "nonmatching.jsonl", REPO / "nearmiss" / "db.jsonl"]
+    for p in files:
+        if not p.is_file():
+            continue
+        for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+                a = r["addr"]
+                a = int(a, 0) if isinstance(a, str) else a
+                parked.add((r.get("module", "arm9"), a))
+            except Exception:
+                pass
+    return parked
+
+
+def build_corpus():
     """Return (matched, unmatched, relocs_by_mod). Each entry:
-    {name,module,addr,size,ops,opset,tgt,mod}. matched entries additionally require
-    a readable src file (they must serve as examples)."""
+    {name,module,addr,size,ops,opset,tgt,src?}. A function counts as MATCHED (example-
+    eligible) iff it has a committed src/ file -- that is the SHARED source of truth in
+    the repo, unlike the gitignored matched.jsonl, so this works on any fresh clone."""
+    parked = load_parked()
     matched, unmatched, relocs_by_mod = [], [], {}
     for mod in MOD.modules():
         label = "arm9" if mod["name"] == "main" else mod["name"]
@@ -59,10 +83,11 @@ def build_corpus(done):
                 continue
             rec = {"name": name, "module": label, "addr": addr, "size": size,
                    "ops": ops, "opset": frozenset(ops), "tgt": tgt}
-            if (label, addr) in done:
-                if WL.read_src_text(name):
-                    matched.append(rec)
-            elif not S.is_thunk(list(S.md.disasm(tgt, 0))):
+            src = WL.read_src_text(name)
+            if src is not None:
+                rec["src"] = src
+                matched.append(rec)
+            elif (label, addr) not in parked and not S.is_thunk(list(S.md.disasm(tgt, 0))):
                 unmatched.append(rec)
     return matched, unmatched, relocs_by_mod
 
@@ -104,10 +129,9 @@ def main():
     args = ap.parse_args()
 
     t0 = time.time()
-    done = sweep.load_done()
     gsyms = R.load_all_syms()
     kb = KB.build_kb()
-    matched, unmatched, mods = build_corpus(done)
+    matched, unmatched, mods = build_corpus()
     sys.stderr.write(f"corpus: {len(matched)} matched(w/ src)  {len(unmatched)} unmatched  "
                      f"({time.time()-t0:.1f}s)\n")
 
@@ -172,7 +196,7 @@ def main():
                    "siblings": [{"name": m["name"], "sim": round(r, 3)} for r, m in sibs]}
             ex = []
             for r, m in sibs:
-                src = WL.read_src_text(m["name"])
+                src = m.get("src") or WL.read_src_text(m["name"])
                 if src:
                     ex.append({"name": m["name"], "c_source": src})
             if ex:
