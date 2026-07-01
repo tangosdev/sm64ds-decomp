@@ -70,7 +70,9 @@ def main():
     n, tb, per = totals()
     done = matched()
     done_n = len(done)
-    done_b = sum(int(o.get("size", 0)) for o in done.values())
+    # ledger sizes drift between int and hex-string across writers; accept both
+    done_b = sum(int(s, 0) if isinstance(s := o.get("size", 0), str) else int(s)
+                 for o in done.values())
 
     if "--bar" in sys.argv:
         # ready-to-paste README "## Progress" block; reconfigure stdout so the
