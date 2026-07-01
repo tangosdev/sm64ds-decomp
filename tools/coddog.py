@@ -85,8 +85,14 @@ def build_corpus():
                    "ops": ops, "opset": frozenset(ops), "tgt": tgt}
             src = WL.read_src_text(name)
             if src is not None:
-                rec["src"] = src
-                matched.append(rec)
+                # A committed src file is only an example-eligible byte-match if it is NOT a
+                # "// NONMATCHING" hatch (a decompiled-but-unmatchable wall). The banner is in
+                # the committed src, so this is portable and does not need nonmatching.jsonl.
+                # A hatch is excluded from BOTH pools: it is neither a valid sibling nor a fresh
+                # target (it is a known wall). Fixes #61.
+                if "// NONMATCHING" not in src[:200]:
+                    rec["src"] = src
+                    matched.append(rec)
             elif (label, addr) not in parked and not S.is_thunk(list(S.md.disasm(tgt, 0))):
                 unmatched.append(rec)
     return matched, unmatched, relocs_by_mod
