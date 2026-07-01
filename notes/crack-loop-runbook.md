@@ -89,12 +89,22 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
 ## Reading the hit rate (why it decays, what to do)
 
 coddog front-loads the best-scaffolded functions, so hit rate falls as a band drains:
-observed this session 71% -> 88% (__sinit vein) -> 60% -> 57% -> 43%, tokens/landed
-25K -> 176K. When a band floors (~40% and dropping), do NOT re-grind it -- **pivot to a
-fresh size band** coddog has not touched (e.g. 0x200-0x400), which resurfaces high-similarity
-clusters (the larger __sinit initializers were still a rich vein at 0x200-0x400). When even
-fresh bands come in low, the accessible vein is worked: switch to the free tiers
-(clone/paramclone, recurring.py -> new templates) and hand-fix, and stop the paid fan-out.
+observed 71% -> 88% (__sinit vein) -> 60% -> 57% -> 43%, tokens/landed 25K -> 176K.
+**2026-07-01 continuation: the 0x100-0x280 band is DRAINED** - 4/24 (17%) at ~265K/landed,
+median coddog sim of the batch only 0.53 (the good scaffolds are gone). When a band floors
+(~40% and dropping), do NOT re-grind it -- **pivot to a fresh size band** coddog has not
+touched (e.g. 0x280-0x400), which resurfaces high-similarity clusters (the larger __sinit
+initializers were still a rich vein at 0x200-0x400). When even fresh bands come in low, the
+accessible vein is worked: switch to the free tiers (clone/paramclone, recurring.py -> new
+templates), the REFINE tier below, and hand-fix, and stop the paid fresh fan-out.
+
+Measured same day, same model (Sonnet 5): the refine tier converted 5/16 (31%) of the
+STUCK near-miss backlog at ~107K tok/landed - 2.5x cheaper per landed function than fresh
+fan-out on the drained band, and its misses come back with precise floor diagnoses that
+feed the DB and the codegen notes. At this stage of the project run refine batches first,
+and save fresh fan-out for genuinely fresh bands. The category-routed permuter crunch
+(tools/permuter/crunch.py --category "register allocation,instruction reorder") added
+1/19 for free on the same day - keep it running when the PC is idle.
 
 ## The floor (do not grind)
 
