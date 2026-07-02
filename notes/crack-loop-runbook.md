@@ -66,6 +66,14 @@ value was fabricated by the old bank_run; ~33 retryable functions were parked th
   notes/mwccarm-codegen.md (the full idiom catalogue) before giving up - on-demand,
   so easy functions never pay that context cost.
 
+## Two-stage retry (bank first, then retry the misses)
+
+Measured by the coworker on PR #66's PMF family: Sonnet first pass 6/15, then bank
+those 6, THEN retry the 9 misses - the retry agents find the freshly-banked twins in
+src/ and copy the working idiom (4/9 recovered at the same cost/landed). Retrying
+BEFORE banking would have re-proven "walls". When a batch has same-family misses,
+land it, then immediately re-prep the misses as their own batch.
+
 ## The refine tier (near-miss backlog -> matches)
 
 When fresh bands run dry, the committed near-miss DB is the other paid vein: stored

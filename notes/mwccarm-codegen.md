@@ -298,6 +298,12 @@ permuter's ~8k iterations) had exhausted. The working levers, in order of genera
 - **A named partial-sum local + nested ifs flips bounds-check coloring.** Rewriting
   `if (cur + size > end) Crash();` as nested ifs with the sum in its own named local
   moved an r1/r2 coloring swap into place (FS_LoadOverlay, mid-band batch).
+- **PMF argument liveness pins the coloring in member-fn-pointer dispatch** (found by
+  andrewboudreau, PR #66, proven 7x): when the ROM's PMF-table dispatch uses r2/r3/ip
+  for the address temps, declare the PMF WITH its int parameter and forward the index -
+  `void (C::*)(int)` and `(c->*table[idx].pmf)(i)` - keeping `i` live in r1 through the
+  blx forces the temps up. Zero-arg PMF variants of the same family (nothing to pin r1)
+  remain floor.
 - **STATEMENT order of first demand, not just declaration order, colors temps.**
   Reordering the statements that first USE each temp (store-before-load in an else,
   direct-global accesses instead of cached) let the scheduler re-emit ROM order with
