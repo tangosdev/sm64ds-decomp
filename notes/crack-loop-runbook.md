@@ -203,6 +203,17 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   floor-labeled misses at div<=8 too - they are 97-99% matched and Fable's 60+-attempt
   grind cracked 2/2 of them; park only deep cascades (div 27/32/91 all stayed parked).
   Fable promotion tier record so far: 9/9 across two batches.
+- **Post-merge wide-band rescan: 12/12 CLEAN SWEEP (2026-07-02, 0x40-0x800 after the
+  big upstream merge): Opus 7/12 at 42K/landed — the cheapest Opus pass measured —
+  then Fable retry 5/5 at 25K/landed** (3 agents died on API connection errors; the
+  workflow-resume path re-ran exactly those 3, cached the 2 done — re-lock claims
+  first, land releases them). The rescan works because corpus growth resurfaces
+  FIRST-TIER scaffolds (sims 0.65-1.00) in already-worked bands: run it after every
+  big upstream merge before opening a fresh band. New levers from the sweep: empty
+  inline dtor blocks DSE (//cpp write-only stack object), volatile+(void)& retains
+  phantom dead-local frame slots, //cpp front end materializes bools C99 folds,
+  NitroSDK CP MMIO as volatile u64/u16 stores (all in mwccarm-codegen).
+  Fable promotion tier record: 14/14 lifetime — promote-all-non-cascade holds.
 - **WRONG-DEST salvage (2026-07-02, func_ov066_02119ce8):** when the land link-gate
   rejects an agent MATCH with `WRONG-DEST reloc` and the function stores/loads two
   same-shaped globals (e.g. two zero-stores), the agent likely swapped the symbols -
