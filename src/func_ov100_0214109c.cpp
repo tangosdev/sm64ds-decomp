@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12;
 struct Vector3 { int x,y,z; };
 struct Vector3_16 { short x,y,z; };
@@ -25,7 +22,7 @@ void func_ov100_0214109c(void *t) {
         return;
     }
     if (st <= 0x14) return;
-    *(int*)(c+0x3e0) += 0x40;
+    (*(int *)(((int)c + 0x3e0) & 0xFFFFFFFFFFFFFFFF)) += 0x40;
     if (*(int*)(c+0x3e0) < 0x800) return;
     Actor_SetRanges(c, 0x32000, 0x32000, 0x1000000, 0x320000);
     *(short*)(c+0x3ee) = 0;
