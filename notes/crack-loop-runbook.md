@@ -124,6 +124,13 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   (same wl_refine.jsonl, `{names:[...], model:"fable", effort:"high"}`). What Fable
   also could not move (7/12): first-access-fold materialization, pre-indexed writeback,
   pure register-coloring swaps, store-emission order - that is the REAL floor.
+- **THE MID-BAND SHAPE WALL IS FABLE TERRITORY (measured 2026-07-01): 9/12 (75%) at
+  ~45K tok/landed** in 0x80-0x140, the band every pre-Fable model floored at ~5% -
+  including first-try matches at coddog sim 0.28 and 0.43 (whole-function structure
+  reasoning, the documented "reverse-engineer the original author's C" wall). Cost per
+  landed is at parity with Sonnet on easy fresh bands. The 3 misses were all retired
+  floor classes. Default for mid-band batches is now `model:"fable"`; the remaining
+  mid-band residue is open again.
 
 ## Reading the hit rate (why it decays, what to do)
 

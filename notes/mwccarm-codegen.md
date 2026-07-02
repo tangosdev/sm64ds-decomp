@@ -295,6 +295,15 @@ permuter's ~8k iterations) had exhausted. The working levers, in order of genera
   remaining gap is first-access-fold). Source-level, committable.
 - **`volatile` array retains stack slots** that plain locals/structs lose to scalar
   replacement or rematerialization (func_ov102_0214953c).
+- **A named partial-sum local + nested ifs flips bounds-check coloring.** Rewriting
+  `if (cur + size > end) Crash();` as nested ifs with the sum in its own named local
+  moved an r1/r2 coloring swap into place (FS_LoadOverlay, mid-band batch).
+- **STATEMENT order of first demand, not just declaration order, colors temps.**
+  Reordering the statements that first USE each temp (store-before-load in an else,
+  direct-global accesses instead of cached) let the scheduler re-emit ROM order with
+  the right colors: first-demanded gets the highest-numbered register, descending to
+  r0 (func_02040bb0). When declaration-order permutation stalls, permute statement
+  order of first use.
 
 Still floor after this pass (7/12): zero-offset first-access-fold materialization,
 pre-indexed writeback from plain C, pure register-coloring swaps (~150 variants tried
