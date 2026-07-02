@@ -443,6 +443,21 @@ func_ov004_020b3cb8, Opus):** `v = K - x` const-folds to `rsb`; writing
 Both cracks took the agent 60+ attempts - on promoted div<=8 drafts the long grind
 can pay (Fable, effort high, retry tier only); do not extend this to fresh fan-out.
 
+**Empty inline dtor blocks DSE on a write-only stack object (2026-07-02, wide-band
+retry, func_ov065_021177e4, Fable 6 attempts):** a write-only dead stack Vector3 the
+ROM emits as batched `ldr y/z/x` + `str x/y/z` was only reproducible as a //cpp object
+with an inline ctor AND an EMPTY INLINE DTOR — the dtor blocks mwcc's DSE/scalarization
+at zero code cost. Plain struct, volatile, union, escaped array, laundered, const-ref,
+comma-&, and pragma forms all failed (12–29 div); ctor without dtor got to div 3.
+This is the C++ counterpart of the escaped-array lever — when writes to a dead local
+must survive in a //cpp file, give the type an empty `~T() {}`.
+
+**Phantom stack frame retained by volatile + (void)& (2026-07-02, same batch,
+func_ov085_0212d8ec):** body matched but the target frame was 0x1c vs our 4 — dead
+locals whose slots the ROM keeps. `volatile Vector3 look, pos; (void)&look; (void)&pos;`
+retains the dead slots at -O4 (plain locals, volatile-only, and dead-call escapes were
+all reclaimed). Use for pure frame-size residuals when the body already matches.
+
 **The "pool-load of an immediate-encodable constant" class (6d) was a MISDIAGNOSIS**
 (2026-07-02, func_0201a614): the pool slot is not a constant - it is a SYMBOL ADDRESS
 (a reloc; `(int)&overlay_75`), whose unrelocated low byte read as 0x4b. When a diff
