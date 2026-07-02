@@ -16,6 +16,7 @@ const A = typeof args === 'string' ? JSON.parse(args) : args
 const names = Array.isArray(A) ? A : A.names
 const MODEL = (Array.isArray(A) ? null : A.model) || 'sonnet'
 const EFFORT = (Array.isArray(A) ? null : A.effort) || 'xhigh'
+const WL = (Array.isArray(A) ? null : A.wl) || 'progress/wl_ab.jsonl'
 
 const SCHEMA = {
   type: 'object', additionalProperties: false,
@@ -36,7 +37,7 @@ function prompt(name) {
 FUNCTION: ${name}
 
 STEP 1 - read the resolved context (annotated disasm, callee sigs, pool slots, and the CLOSEST already-matched sibling(s) by opcode similarity - use the sibling as your scaffold, it was picked because it is structurally near-identical):
-  python tools/abrow.py --name ${name}
+  python tools/abrow.py --name ${name} --wl ${WL}
 
 COMPILER: mwccarm 1.2/sp2p3. Flags (C): -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 If the name starts with _Z (C++ mangled), write C++ and make the FIRST LINE exactly //cpp . Else write C.
@@ -44,7 +45,7 @@ If the name starts with _Z (C++ mangled), write C++ and make the FIRST LINE exac
 WRITE your candidate to _abwork/${name}.src   (run: mkdir -p _abwork)
 
 VERIFY:
-  python tools/abverify.py --name ${name} --src _abwork/${name}.src
+  python tools/abverify.py --name ${name} --src _abwork/${name}.src --wl ${WL}
 MATCH = done. On NOMATCH it prints the exact mismatching instructions (target vs yours) then "NOMATCH divergences=N/words" - fix ONLY those instructions and re-verify. Up to 6 attempts, but STOP EARLY if divergences do not improve for 2 consecutive attempts. Keep whichever attempt had the LOWEST divergences in _abwork/${name}.src (re-write it if a later attempt was worse) and report that one - a close near-miss is banked and valuable, never discard it.
 If you are within ~6 divergences and stalled, read notes/pret-idioms.md and notes/mwccarm-codegen.md (full idiom catalogue) before giving up.
 KNOWN FLOOR - stop, do not grind: residuals that are pure instruction ORDERING (load/store batching order, cond-move polarity) or a re-materialized base address folded into the first access. Those are documented compiler-floor walls; report the near-miss and finish.

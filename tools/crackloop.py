@@ -37,15 +37,23 @@ def run(script, *args, check=True):
     return subprocess.run(cmd, check=check).returncode
 
 
+def _paths(tag):
+    """(worklist, claims_active) paths for a batch tag; 'ab' keeps legacy names."""
+    wl = REPO / "progress" / (f"wl_{tag}.jsonl")
+    ca = REPO / "progress" / ("claims_active.json" if tag == "ab"
+                              else f"claims_active_{tag}.json")
+    return wl, ca
+
+
 def prep(a):
-    active = REPO / "progress" / "claims_active.json"
+    wl, active = _paths(a.tag)
     if active.exists():
-        print("a batch appears to be in flight (progress/claims_active.json exists).\n"
+        print(f"a '{a.tag}' batch appears to be in flight ({active.name} exists).\n"
               "Regenerating the worklist now would swap target bytes under running agents.\n"
-              "Land it first (crackloop.py land) or release: python tools/claims.py release-active")
+              f"Land it first (crackloop.py land --tag {a.tag}) or release the claims.")
         sys.exit(1)
     cd = ["--min", hex(a.min), "--max", hex(a.max), "--limit", str(a.limit),
-          "--out", str(WL)]
+          "--out", str(wl)]
     if a.module:
         cd += ["--module", a.module]
     if not a.no_spread:
@@ -54,21 +62,21 @@ def prep(a):
         cd += ["--draft"]
     run("coddog.py", *cd)
 
-    rows = [json.loads(l) for l in WL.read_text(encoding="utf-8").splitlines() if l.strip()]
+    rows = [json.loads(l) for l in wl.read_text(encoding="utf-8").splitlines() if l.strip()]
     if not rows:
         print("worklist is empty - nothing to do"); sys.exit(1)
 
     try:
         sys.path.insert(0, str(TOOLS))
         import claims
-        held = claims.lock_worklist(str(WL))   # trims conflicted rows from the file itself
-        (REPO / "progress" / "claims_active.json").write_text(json.dumps(held))
+        held = claims.lock_worklist(str(wl))   # trims conflicted rows from the file itself
+        active.write_text(json.dumps(held))
     except ImportError:
         print("tools/claims.py not present (public clone) - skipping the lock step; "
               "coordinate via CLAIMS.md")
 
     # re-read: the lock step drops conflicted rows from the worklist file in place
-    rows = [json.loads(l) for l in WL.read_text(encoding="utf-8").splitlines() if l.strip()]
+    rows = [json.loads(l) for l in wl.read_text(encoding="utf-8").splitlines() if l.strip()]
     if not rows:
         print("no lockable candidates left - either another agent holds this band "
               "(re-run with a different band or a higher --limit for slack) or the "
@@ -76,8 +84,11 @@ def prep(a):
         sys.exit(1)
 
     names = [r["name"] for r in rows]
+    launch = {"names": names}
+    if a.tag != "ab":
+        launch["wl"] = f"progress/wl_{a.tag}.jsonl"
     print(f"\n{len(names)} functions ready. Launch:")
-    print(f'Workflow({{ scriptPath: "tools/sched_run.js", args: {json.dumps(names)} }})')
+    print(f'Workflow({{ scriptPath: "tools/sched_run.js", args: {json.dumps(launch)} }})')
 
 
 def refine(a):
@@ -108,7 +119,7 @@ def refine(a):
 
 
 def land(a):
-    wl = str(REPO / "progress" / ("wl_refine.jsonl" if a.refine else "wl_ab.jsonl"))
+    wl = str(REPO / "progress" / ("wl_refine.jsonl" if a.refine else f"wl_{a.tag}.jsonl"))
     bank = ["--output", a.output, "--wl", a.wl or wl]
     if a.refine:
         bank.append("--no-park")
@@ -133,7 +144,14 @@ def land(a):
                 p.unlink()
                 print("released refine claims")
         else:
-            subprocess.run([sys.executable, str(TOOLS / "claims.py"), "release-active"], check=False)
+            _, active = _paths(a.tag)
+            if active.exists():
+                ids = json.loads(active.read_text())
+                for mod, v in ids.items():
+                    for cid in (v if isinstance(v, list) else [v]):
+                        claims.release(cid)
+                active.unlink()
+                print(f"released '{a.tag}' claims")
     except ImportError:
         pass
     run("progress.py", check=False)
@@ -155,6 +173,9 @@ def main():
                    help="attach m2c semantic drafts to scaffold-less rows "
                         "(coddog_sim < 0.5, size > 0x300); use for LARGE bands. "
                         "Needs vendor/m2c (notes/m2c-setup.md)")
+    p.add_argument("--tag", default="ab",
+                   help="batch tag: distinct worklist + claims files so several "
+                        "fresh batches can run in parallel (default 'ab')")
     p.set_defaults(fn=prep)
     p = sub.add_parser("refine", help="export closest fixable near-misses for refine_run.js")
     p.add_argument("--max-div", type=int, default=6)
@@ -165,6 +186,7 @@ def main():
     p.add_argument("--refine", action="store_true",
                    help="refine batch: use wl_refine.jsonl, no parking, no claims")
     p.add_argument("--wl", default=None, help="explicit worklist override")
+    p.add_argument("--tag", default="ab", help="batch tag used at prep time")
     p.set_defaults(fn=land)
     a = ap.parse_args()
     a.fn(a)
