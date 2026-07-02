@@ -7,6 +7,14 @@ so the call/data targets may differ). When that holds, the verified source of th
 matched function, retargeted to the clone's name, matches the clone too. No model
 is involved: we retarget and re-run the oracle, banking only what passes.
 
+One more check, because the oracle wildcards reloc slots: the retargeted source
+still names the TEMPLATE's callees and globals, so the clone only genuinely
+matches when config/**/relocs.txt records the SAME destination at every slot for
+both functions. Byte-identical PMF/table dispatchers fail exactly there (each
+sibling reads its own table) -- 24 of them byte-passed and banked wrong across
+two machines on 2026-07-02. The gate compares the two config reloc maps directly
+(no compile) and rejects mismatches before the oracle ever runs.
+
 This compounds: every function the LLM loop lands becomes a template for its
 byte-clones, so re-running clone.py after each bank harvests the new clones for
 free. Run it as the cheap first pass before spending tokens on a fan-out.
@@ -93,22 +101,34 @@ def main():
             ins = list(S.md.disasm(raw, 0))
             if not ins or S.is_thunk(ins):
                 continue
+            # config-recorded destination address at each reloc slot, in slot
+            # order (k[2] slots exist in the map by norm_key construction)
+            dests = tuple(relocs[addr + o][1] for o in k[2])
             if (label, addr) in matched_keys:
                 if k not in matched:
                     src = read_src(name)
                     if src:
-                        matched[k] = (name, src, raw)
+                        matched[k] = (name, src, raw, dests)
             elif (label, addr) not in done:
-                unmatched.append((k, label, addr, size, name, raw))
+                unmatched.append((k, label, addr, size, name, raw, dests))
 
     print(f"matched templates: {len(matched)}   unmatched in range: {len(unmatched)}")
 
     passed, rejects = [], []
-    for k, label, addr, size, name, tb in unmatched:
+    for k, label, addr, size, name, tb, dests in unmatched:
         tpl = matched.get(k)
         if not tpl:
             continue
-        old_name, old_src, _ = tpl
+        old_name, old_src, _, tpl_dests = tpl
+        if dests != tpl_dests:
+            # the retargeted source would link to the template's destinations,
+            # not this function's -- byte-"match" with wrong relocs. Refuse.
+            bad = next((o, d, td) for o, d, td in
+                       zip(k[2], dests, tpl_dests) if d != td)
+            rejects.append((name, f"wrong-dest vs template {old_name}: "
+                                  f"+0x{bad[0]:x} needs 0x{bad[1]:08x}, "
+                                  f"template links 0x{bad[2]:08x}"))
+            continue
         cand = retarget(old_src, old_name, name)
         try:
             ok = S.oracle_ok(cand, name, tb)

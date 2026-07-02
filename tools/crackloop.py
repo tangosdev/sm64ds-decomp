@@ -119,18 +119,64 @@ def refine(a):
 
 
 def land(a):
+    # snapshot the done-set so the link-gate sweep below can tell exactly what
+    # this run banked, whichever tier banked it
+    try:
+        sys.path.insert(0, str(TOOLS))
+        import ledger as L
+        pre = L.matched_set()
+    except Exception:
+        pre = None
     wl = str(REPO / "progress" / ("wl_refine.jsonl" if a.refine else f"wl_{a.tag}.jsonl"))
     bank = ["--output", a.output, "--wl", a.wl or wl]
     if a.refine:
         bank.append("--no-park")
     run("bank_run.py", *bank, check=False)
-    # Free tiers run DRY (report only) until the blocking reloc-destination gate
-    # (PR #64) is in ledger.bank: clone/paramclone retarget byte-identical siblings
-    # but can carry the source's reloc symbols - 14 wrong-table PMF clones banked
-    # 2026-07-02 that only linkcheck caught (all reverted). Bank clone candidates
-    # by hand only after linkcheck verifies them.
-    run("clone.py", check=False)
-    run("paramclone.py", check=False)
+    # Free tiers bank again: clone/paramclone now refuse a template whose config
+    # reloc destinations differ from the candidate's (PR #64) - the wrong-symbol
+    # class that put 24 wrong-table PMF clones in two trees on 2026-07-02. They
+    # stay dry-run by default, so land passes --apply explicitly.
+    run("clone.py", "--apply", check=False)
+    run("paramclone.py", "--apply", check=False)
+    # Whole-run link gate: sweep EVERYTHING banked in this run, whichever tier
+    # banked it. bank_run linkchecks only its own sources; this is the backstop
+    # that catches any banker the source-level gates miss (decision on PR #64).
+    if pre is not None:
+        try:
+            import ledger as L
+            import linkcheck as LC
+            import reloc_audit as RA
+            new_rows, seen = [], set()
+            for r in L.read_records(L.MATCHED):
+                try:
+                    key = L.key_of(r)
+                except Exception:
+                    continue
+                if key in pre or key in seen:
+                    continue
+                seen.add(key)
+                new_rows.append(r)
+            if new_rows:
+                print('\n'
+                      f"link-gate sweep: {len(new_rows)} function(s) banked this run")
+                ni = RA.build_name_index()
+                wrong = []
+                for r in new_rows:
+                    mod, addr = L.key_of(r)
+                    size = r["size"] if isinstance(r["size"], int) else int(r["size"], 0)
+                    v = LC.linkcheck(r["name"], addr, size, mod, ni)
+                    print(f"  {v['verdict']:>10}  {mod}  {r['name']}")
+                    if v["verdict"] == "WRONG":
+                        wrong.append(r["name"])
+                        for d in v["diffs"]:
+                            print(f"        {d['off']}: {d['sym']} -> {d['target']}")
+                if wrong:
+                    print('\n'
+                          f"*** LINK GATE: {len(wrong)} WRONG bank(s) this run: "
+                          f"{', '.join(wrong)} -- unbank (remove src/<name>.c[pp] and "
+                          f"the matched.jsonl rows) before committing ***")
+        except Exception as e:
+            print(f"link-gate sweep failed ({e}); run tools/linkcheck.py by hand")
     try:
         sys.path.insert(0, str(TOOLS))
         import claims

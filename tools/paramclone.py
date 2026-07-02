@@ -9,7 +9,11 @@ by substituting M's immediates with U's and re-checks against the ROM.
 The immediates that vary across an idiom family are field offsets, shift amounts,
 and non-relocation pool constants -- exactly what distinguishes, say, one actor's
 cleanup from another's. Relocation slots (call/data symbol references) are already
-wildcarded by the oracle, so symbol names need no substitution.
+wildcarded by the oracle, so symbol names need no substitution -- which is exactly
+why the rewritten source can name a WRONG callee or table and still byte-pass.
+Before compiling, a template is skipped unless config/**/relocs.txt records the
+same destination at every reloc slot the two functions share (the clone.py gate,
+same incident: 24 wrong-table PMF paramclones on 2026-07-02).
 
 Nothing is trusted: every rewritten candidate is compiled and byte-compared. A bad
 substitution simply fails the oracle and is dropped, so the pass is always safe.
@@ -132,21 +136,27 @@ def main():
             if not ins or S.is_thunk(ins):
                 continue
             skel, vals = analyze(addr, ins, raw, relocs)
+            # config-recorded reloc destinations, keyed by slot offset
+            rd = {o: relocs[addr + o][1] for o in range(0, size, 4)
+                  if (addr + o) in relocs}
             if (label, addr) in matched_keys:
                 bucket = templates.setdefault(skel, [])
                 if len(bucket) < args.per_skel:
                     src = CL.read_src(name)
                     if src:
-                        bucket.append((name, src, vals))
+                        bucket.append((name, src, vals, rd))
             elif (label, addr) not in done:
-                unmatched.append((skel, vals, label, addr, size, name, raw))
+                unmatched.append((skel, vals, label, addr, size, name, raw, rd))
 
     print(f"skeleton templates: {len(templates)}   unmatched in range: {len(unmatched)}")
 
-    passed, tried = [], 0
-    for skel, uvals, label, addr, size, name, tb in unmatched:
-        for old_name, old_src, mvals in templates.get(skel, []):
+    passed, tried, gated = [], 0, 0
+    for skel, uvals, label, addr, size, name, tb, rd in unmatched:
+        for old_name, old_src, mvals, mrd in templates.get(skel, []):
             if len(mvals) != len(uvals):
+                continue
+            if any(mrd[o] != d for o, d in rd.items() if o in mrd):
+                gated += 1     # template links a different destination: skip it
                 continue
             cand = substitute(old_src, mvals, uvals)
             if cand is None:
@@ -160,7 +170,8 @@ def main():
             except Exception:
                 continue
 
-    print(f"parameterized clones VERIFIED {len(passed)} (candidates tried {tried})")
+    print(f"parameterized clones VERIFIED {len(passed)} (candidates tried {tried}, "
+          f"dest-gated {gated})")
     if not do_apply:
         for name, addr, size, mod, _ in passed[:30]:
             print(f"  would bank {mod} {name} (0x{size:x})")
