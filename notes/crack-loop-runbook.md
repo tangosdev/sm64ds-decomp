@@ -186,6 +186,14 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   lane. The u64 laundering idiom carried 6 of 16; one agent reached for asm{} on a
   pooled-offset RMW and pure C (laundering + encoding-forced split) reproduced it -
   no asm needed, repo stays asm-free for game logic.
+- **Opus→Fable two-stage on 0x140-0x280 round 3 (2026-07-02, third pass, sims
+  0.54-0.75): Opus 4/12 (33%) at 162K/landed, then Fable on the 5 non-floor misses
+  = 5/5 (100%) at 30K/landed** - div 3/4/11/20/28 all cracked, including two new
+  levers (laundering mask placement, escaped-array pre-indexed writeback - see
+  mwccarm-codegen 6g 2026-07-02). Triage rule that produced the 5/5: promote
+  materialization/source-shape residuals, leave coloring/ordering/tail-merge
+  diagnoses in the DB. The Fable retry is now the cheapest paid tier measured;
+  the expensive part is the Opus first pass on a thrice-drained band.
 
 ## Reading the hit rate (why it decays, what to do)
 
