@@ -7,10 +7,14 @@ session or the coworker can run it straight from a clone.
 ## One batch = three commands
 
 ```sh
-# 1. Prep: coddog worklist (fuzzy opcode similarity, ~30s, no LLM cost) + claim the
-#    module spans + trim to what we locked. Rebuild EVERY batch (the matched corpus
-#    changes as functions land, which changes the best siblings). Prints the launch line.
+# 1. Prep: coddog worklist (fuzzy opcode similarity, ~30s, no LLM cost) + claim
+#    function ranges if a claims key is configured, trimming only true conflicts.
+#    Without a key, the worklist is left intact; coordinate via CLAIMS.md. Rebuild
+#    EVERY batch (the matched corpus changes as functions land, which changes the
+#    best siblings). Prints the launch line.
 python tools/crackloop.py prep --min 0x100 --max 0x280 --limit 30
+# For low-sim large rows, add --draft after installing vendor/m2c; prep now warns
+# when draft-worthy rows (coddog_sim < 0.5, size > 0x300) have no m2c scaffold.
 
 # 2. Fan out (self-verifying). Default Sonnet 5; model:"fable" for a capability push.
 #    In Claude Code: Workflow({ scriptPath: "tools/sched_run.js", args: <names[]> })
@@ -33,8 +37,8 @@ Ledger reads/writes go through tools/ledger.py: one canonical (module, addr) key
 locked atomic appends with an under-lock duplicate check, and bank refusals when a
 src/<name>.* file belongs to a different function.
 tools/claims.py is committed; its API key is NOT (CLAIMS_API_KEY env var or the
-gitignored tools/claims_key.txt). Without a key, claim checks still work read-only -
-coordinate via CLAIMS.md.
+gitignored tools/claims_key.txt). Without a key, claim checks still work read-only
+and prep leaves the generated worklist intact; coordinate via CLAIMS.md.
 ALWAYS run `land` (or at minimum `python tools/claims.py release-active`) even on a
 stopped or failed batch, so claims do not go stale.
 
@@ -70,9 +74,10 @@ with the next launch:
   `NOMATCH divergences=N/words` line. Agents converge on the exact wall instead of
   guessing blind; before this they only got a byte count.
 - **The fan-out prompt enforces early stop**: if divergences do not improve for 2
-  consecutive attempts, the agent reports its best attempt and quits. Floor residuals
-  (pure ordering, base-materialization) are named in the prompt so agents do not grind
-  them. This is what keeps tokens/landed down as a band drains.
+  consecutive attempts, the agent reports its best attempt and quits. Confirmed floor
+  residuals are named in the prompt so agents do not grind them, but materialized-base
+  diffs now get the u64-mask laundering lever before they are classified as floor.
+  This is what keeps tokens/landed down as a band drains.
 - **Near-misses are captured end to end**: the schema requires the lowest-divergence
   source + its divergence count from every agent, sched_run returns them as
   `nearMisses`, and bank_run ingests them into nearmiss/db.jsonl and writes real
@@ -109,14 +114,15 @@ python tools/crackloop.py land --output <task.output> --refine
 
 Routing (tools/refine_wl.py, cached in progress/nm_categories.json): structural
 categories -> refine agents; "register allocation" / "instruction reorder" -> permuter
-(tools/permuter); "base materialization / addressing" -> floor, skipped. One refine shot
-per draft (progress/refine_attempted.txt); improved drafts flow back into the DB for the
-permuter / hand-fix tiers. Do NOT run refine on a fresh fan-out's leftovers - measured
-zero lift there (high-effort fan-out already captures what refine would).
-
-**"base materialization / addressing" is RETIRED from refine** (2026-07-01 recheck:
-0/16 with agents armed with the sec 6g triggers; the floor bound held case-by-case).
-refine_wl skips the category by default - do not --only-category it again.
+(tools/permuter). "base materialization / addressing" is skipped by default because
+the 2026-07-01 broad recheck was 0/16, but the 2026-07-02 u64-mask laundering idiom
+lifted part of that class. Run a targeted u64 sweep or an intentional
+`--only-category "base materialization"` recheck after new materialization levers
+land; do not deep-refine the residuals that still fail those levers.
+One refine shot per draft (progress/refine_attempted.txt); improved drafts flow back
+into the DB for the permuter / hand-fix tiers. Do NOT run refine on a fresh fan-out's
+leftovers - measured zero lift there (high-effort fan-out already captures what refine
+would).
 
 **Refine ONLY the head of the backlog.** Measured 2026-07-01, back-to-back same model:
 batch 1 (the 16 closest, mostly div 1-4) = 5/16 (31%) at ~107K/landed; batch 2 (the next
@@ -127,14 +133,15 @@ So: run ONE refine batch on the closest drafts after fresh batches replenish the
 stop - depth does not pay. The consolation prize of a deep batch is diagnosis: misses come
 back floor-labeled and several drafts get improved in place.
 
-## LARGE functions (0x400+): m2c semantic drafts (2026-07-01)
+## LARGE / low-sim functions: m2c semantic drafts (2026-07-01)
 
-The 0x400+ tier (221 functions) rarely has a close matched sibling, so its rows arrive
-scaffold-less (coddog_sim < 0.5). `--draft` on prep attaches a free m2c semantic C
-draft to exactly those rows and abrow.py prints it to the agent ("m2c semantic
-draft" block). The draft is gcc-flavored pseudo-C - control flow, resolved callees,
-field offsets - a comprehension scaffold, NOT a matching candidate. Zero tokens,
-~1s/function, validated 25/25 on an unmatched 0x400-0x113c sample.
+The measured 0x400+ tier (221 functions) rarely has a close matched sibling, and
+low-sim rows above 0x300 are also expensive cold starts. `--draft` on prep attaches
+a free m2c semantic C draft to rows with `coddog_sim < 0.5` and `size > 0x300`;
+abrow.py prints it to the agent ("m2c semantic draft" block). The draft is
+gcc-flavored pseudo-C - control flow, resolved callees, field offsets - a
+comprehension scaffold, NOT a matching candidate. Zero tokens, ~1s/function,
+validated 25/25 on an unmatched 0x400-0x113c sample.
 
 ```sh
 python tools/crackloop.py prep --min 0x400 --max 0x800 --limit 24 --draft
@@ -162,8 +169,9 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   (now in notes/mwccarm-codegen.md sec 6e and the refine_run.js prompt). STANDING TIER:
   after a Sonnet refine batch drains the head, run a **Fable mop-up** on its misses
   (same wl_refine.jsonl, `{names:[...], model:"fable", effort:"high"}`). What Fable
-  also could not move (7/12): first-access-fold materialization, pre-indexed writeback,
-  pure register-coloring swaps, store-emission order - that is the REAL floor.
+  also could not move (7/12): pre-indexed writeback, pure register-coloring swaps,
+  store-emission order, and materialization cases that still fail the u64/encoding/
+  arg-pass levers - that is the REAL floor.
 - **THE MID-BAND SHAPE WALL IS FABLE TERRITORY (measured 2026-07-01): 9/12 (75%) at
   ~45K tok/landed** in 0x80-0x140, the band every pre-Fable model floored at ~5% -
   including first-try matches at coddog sim 0.28 and 0.43 (whole-function structure
@@ -219,7 +227,10 @@ and save fresh fan-out for genuinely fresh bands. The category-routed permuter c
 
 ## The floor (do not grind)
 
-Misses parked in nonmatching.jsonl are the codegen floor: base-materialization RMW,
-instruction-ordering / scheduling, and value-numbering CSE residues. Documented unreachable
-from C across compiler versions and the permuter. See [[sm64ds-materialization]],
-[[sm64ds-ordering-floor]]. Route these to hand-fix, never the permuter.
+Misses parked in nonmatching.jsonl are the codegen floor only after the cheap levers
+have been tried. For materialized-base RMW, check the current rules in
+notes/mwccarm-codegen.md first: u64-mask laundering, encoding-forced halfword/byte
+splits, and pointer-as-value/call-arg materialization are all source-controllable.
+The remaining floors are pure store-emission/order residuals, pre-indexed writeback
+from plain C, pure register-coloring swaps, and value-numbering/CSE residues. Route
+confirmed leftovers to hand-fix, not the permuter.

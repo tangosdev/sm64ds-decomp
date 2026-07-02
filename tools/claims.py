@@ -11,7 +11,8 @@ the OS username -- the API key is what proves identity. Endpoints:
 
 The API key is NOT in this file: it comes from the CLAIMS_API_KEY env var or the
 gitignored tools/claims_key.txt. Without a key, check() still works read-only;
-lock/renew/release will 401 (coordinate via CLAIMS.md instead).
+lock/renew/release will 401. lock-worklist leaves the worklist unchanged and tells
+you to coordinate via CLAIMS.md instead.
 
 CLI:
   python tools/claims.py check    --module ov006 --start 0x020f0000 --end 0x020f0100
@@ -57,6 +58,11 @@ def _default_handle():
 
 HANDLE = _default_handle()
 API_KEY = _load_local("CLAIMS_API_KEY", "claims_key.txt")
+
+
+def can_write():
+    """True when API writes can be attempted."""
+    return bool(API_KEY)
 
 
 def _req(path, payload=None, method="GET"):
@@ -108,11 +114,28 @@ def lock_worklist(path, handle=None, note=None):
     deterministic scheduler produce overlapping spans constantly, and a span skip
     throws away every function in the module for one conflict (a live 20-candidate
     batch locked 0/20 that way). try-lock is the atomic acquire; no check() first."""
+    if not can_write():
+        print("claims: no API key configured; leaving worklist unchanged.")
+        print("claims: coordinate this batch manually via CLAIMS.md, or set "
+              "CLAIMS_API_KEY / tools/claims_key.txt to use live locks.")
+        return None
     handle = handle or HANDLE
     import pathlib
     wl = pathlib.Path(path)
     rows = [json.loads(l) for l in wl.read_text(encoding="utf-8").splitlines() if l.strip()]
     held, kept, dropped = {}, [], []
+
+    def abort(reason):
+        print(f"claims: live lock unavailable ({reason}); leaving worklist unchanged.")
+        if held:
+            print("claims: releasing partial locks acquired before the failure.")
+            for mod, ids in held.items():
+                for cid in ids:
+                    print(f"  release {mod} {cid}: {release(cid)}")
+        print("claims: coordinate this batch manually via CLAIMS.md, or retry when "
+              "the claims API/key is available.")
+        return None
+
     for r in rows:
         a = int(r["addr"], 16) if isinstance(r["addr"], str) else r["addr"]
         sz = int(r["size"], 16) if isinstance(r["size"], str) else r["size"]
@@ -122,13 +145,19 @@ def lock_worklist(path, handle=None, note=None):
         if cid:
             held.setdefault(r["module"], []).append(cid)
             kept.append(r)
-        else:
+        elif st == 409:
             who = "?"
             if isinstance(res, dict):
                 cs = res.get("conflicts") or ([res["claim"]] if res.get("claim") else [])
                 if cs:
                     who = cs[0].get("handle", "?")
             dropped.append((r["name"], who))
+        elif st in (401, 403, 429) or st is None:
+            err = res.get("error") if isinstance(res, dict) else res
+            return abort(f"{st or 'network'} {err or ''}".strip())
+        else:
+            err = res.get("error") if isinstance(res, dict) else res
+            return abort(f"unexpected response {st}: {err or res}")
     if dropped:
         wl.write_text("".join(json.dumps(r) + "\n" for r in kept), encoding="utf-8")
         for name, who in dropped:
@@ -159,8 +188,11 @@ def main():
     elif cmd == "lock-worklist":
         import pathlib
         ids = lock_worklist(a[2])
-        pathlib.Path("progress/claims_active.json").write_text(json.dumps(ids))
-        print("CLAIM_IDS " + json.dumps(ids))
+        if ids is not None:
+            pathlib.Path("progress/claims_active.json").write_text(json.dumps(ids))
+            print("CLAIM_IDS " + json.dumps(ids))
+        else:
+            print("CLAIM_IDS {} (lock skipped)")
     elif cmd == "release-active":
         import pathlib
         p = pathlib.Path("progress/claims_active.json")

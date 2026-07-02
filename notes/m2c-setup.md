@@ -42,6 +42,10 @@ python tools/m2c_draft.py --name X --dump-asm 2>x.s
 python tools/coddog.py --min 0x400 --max 0x800 --limit 24 --draft --out progress/wl_ab.jsonl
 ```
 
+`tools/crackloop.py prep` prints a non-fatal warning when the locked worklist
+contains low-sim large rows without `m2c_draft`; install `vendor/m2c` and rerun
+prep with `--draft` before launching those rows when token cost matters.
+
 ## How the converter works (tools/m2c_draft.py)
 
 m2c consumes GAS-style assembly text; our functions are ROM bytes. The

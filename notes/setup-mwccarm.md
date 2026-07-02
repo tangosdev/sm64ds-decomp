@@ -31,3 +31,17 @@ matches. That match pins the version for the whole project.
 
 ## .gitignore
 `tools/mwccarm/` must never be committed.
+
+## Optional AI-batch helper: m2c drafts
+
+For large or low-similarity fan-out batches, install m2c as a local, gitignored
+semantic-draft helper:
+
+```sh
+git clone https://github.com/matt-kempster/m2c vendor/m2c
+```
+
+Then run `tools/crackloop.py prep ... --draft`. Rows with `coddog_sim < 0.5`
+and `size > 0x300` get a free pseudo-C scaffold printed by `tools/abrow.py`.
+This is not a matching candidate; it is context to reduce LLM cold-start cost.
+Details and caveats live in `notes/m2c-setup.md`.

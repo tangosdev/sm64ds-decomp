@@ -140,7 +140,12 @@ WRITE args in natural order; arg5 -> `str [sp]`, arg6 -> `str [sp,#4]`, with `su
 **Chain bitfield extract in one expression to keep it in r0.** WRITE `((Call()>>8)&0x3f)+0xaa` as one expression -> `lsr r0,#8; and r0,#0x3f; add r1,r0,#0xaa`. Intermediate locals perturb the r0/r1 allocation.
 
 ### Not source-controllable (don't waste cycles; hand to permuter)
-- **Base-address materialization** (`add r2,r5,#OFF; ldr [r2]` vs `ldr [r5,#OFF]`): pointer locals, sub-object access, volatile all still fold to `[base,#off]`. Permuter territory.
+- **Base-address materialization, plain C forms only** (`add r2,r5,#OFF; ldr [r2]`
+  vs `ldr [r5,#OFF]`): pointer locals, sub-object access, and volatile all still
+  fold to `[base,#off]`. This older note is superseded by
+  `notes/mwccarm-codegen.md` section 6g for current practice: try u64-mask
+  laundering, encoding-forced halfword/byte splits, and pointer-as-value/call-arg
+  materialization before calling it floor.
 - **Large-offset base split**: offset beyond ARM rotated-immediate range (e.g. 0x418, or `strh` past its smaller range) forces `ldr [pc];add` or `add base; strh [#small]`. Encoding-forced, not source-driven â€” leave it.
 ## Hand-crack validated rules (2026-06-20, high-effort hand-cracking + diff-oracle)
 
@@ -157,6 +162,14 @@ These were proven by hand-cracking real functions and watching the divergence co
 
 ## The base-address materialization wall (precise characterization)
 
+**Status update (2026-07-02): this section is historical for plain C forms.**
+The current authoritative materialization guidance is in
+`notes/mwccarm-codegen.md` section 6g. The u64-mask laundering idiom can force
+previously blocked zero-offset materialized-base accesses:
+`*(int *)(((int)base + 0xOFF) & 0xFFFFFFFFFFFFFFFF)`. Keep the older findings
+below as evidence for which ordinary source forms fold, not as a blanket
+"unmatchable" rule.
+
 mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where direct
 `[base,#OFF]` would do. From the corpus + hand-cracking:
 - It IS reproducible when a base is reused at CONSECUTIVE NON-ZERO offsets: `int* p = (int*)(c+OFF);
@@ -166,9 +179,9 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
   (`q[0]`, `*f`, `o->flags[0]`, a single-address read-modify-write): C always folds the zero-offset
   access to direct `[base,#OFF]`. Tried pointer locals, sub-objects, volatile, real struct array
   members -- all fold. The permuter cannot reach it either (it has no "materialize a base" mutation).
-  This is the single most common residual blocker (1-2 instructions) on otherwise-matched functions,
-  and it is currently UNMATCHABLE from C when the access is zero-offset. Leave it for a future model
-  or a permuter pass that learns this transform.
+  This was the single most common residual blocker (1-2 instructions) on otherwise-matched functions.
+  At the time, ordinary C forms made zero-offset first access look unmatchable; the 2026-07-02
+  u64-mask laundering finding supersedes that blanket conclusion.
 
 ### Materialization IS reproducible -- the triggers (mined from oracle-verified matches)
 
@@ -185,7 +198,7 @@ corpus show exactly what makes mwccarm emit it instead of folding:
   `lo | (hi<<8)` loads `lo` first). Reordering the field copies flips which offset loads first AND
   whether the base materializes before the first load vs folds it.
 
-### The hard floor: first-access-fold (tested exhaustively, NOT source-controllable)
+### Historical hard floor: first-access-fold in ordinary source forms
 
 Even when materialization fires correctly, one residual instruction often stays locked: the FIRST
 access through the materialized base folds to direct `[base,#OFF]` while later accesses use the
@@ -203,10 +216,10 @@ copy-source base and reads forward (0,4,8) interleaved with arg setup; no source
 exact shape, was banked `opus-hand`, but does NOT reproduce under any config -- evidence this specific
 schedule defeated prior hand-matching too. (Flag for a corpus re-verification sweep.)
 
-Conclusion: the materialization triggers above DO crack the subset of misses that fit them (arg-pass,
-live-across-call, consecutive-index, order-sensitive). The residual first-access-fold / forward-
-interleaved-copy schedule is a true backend floor -- the same cases human decompilers leave
-NonMatching. The edge is automating everything source-controllable, not grinding this residue.
+Current conclusion: the materialization triggers above crack the subset of misses that fit them,
+and u64-mask laundering cracks additional first-access-fold cases that ordinary source forms did
+not. If u64 laundering, encoding-forced access width, and pointer-as-value/call-arg forms still
+miss, treat the residual as a confirmed floor and preserve the best near-miss rather than grinding.
 
 ## Reference-decomp ground truth + corrected understanding (2026-06-21)
 
@@ -250,7 +263,7 @@ manual iteration. NO permuter, NO objdiff, NO m2c. Our permuter/oracle/diff-orac
 AHEAD of theirs on tooling -- the gap is the manual structure-search patience, not the tools.
 
 **The near-miss DB breakdown (tools/categorize_misses.py): of 121,** ~47 different-op/idiom,
-35 base-materialization (the real floor), 18 regalloc, 7+7 missing/extra logic, 6 push-set.
+35 base-materialization (then believed to be the real floor), 18 regalloc, 7+7 missing/extra logic, 6 push-set.
 So ~60-85 are addressable (not floor) -- but each needs the structure search above. Grinding
 them is low-ROI vs the COVERAGE GAP: 6,850 unmatched funcs, 1,248 small (<0x40), many easy and
 UNTRIED (proven: func_0206165c, a 24-byte global-pointer setter, matches at canonical with

@@ -148,7 +148,7 @@ def main():
         "different op / idiom": "YES -- match the exact mul/shift/op the disasm shows",
         "constant / value": "YES -- a wrong immediate/offset; fix the number",
         "push-set / frame": "PARTLY -- restructure values-live-across-calls",
-        "base materialization / addressing": "HARD -- compiler addressing quirk; permuter can't, needs exact struct types or future model",
+        "base materialization / addressing": "TRY -- u64-mask laundering / encoding-forced width / pointer arg; residuals are hard",
         "won't-compile": "YES -- fix the C so it compiles",
         "matches-now": "BANK IT (re-check with oracle)",
         "error": "-- investigate",

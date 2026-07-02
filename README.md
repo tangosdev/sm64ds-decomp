@@ -4,10 +4,12 @@ A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
 
 ## Progress
 
+<!-- progress:start -->
 ```
-Functions  ████████████████████░░░░░░░░░░  68.0%   7,742 / 11,390
-Code size  ███████████░░░░░░░░░░░░░░░░░░░  37.1%   828,212 / 2,234,028 bytes
+Functions  ████████████████████░░░░░░░░░░  68.2%   7,772 / 11,390
+Code size  ███████████░░░░░░░░░░░░░░░░░░░  37.3%   833,108 / 2,234,028 bytes
 ```
+<!-- progress:end -->
 
 Every arm-mode function in the game, drawn as a treemap. Each rectangle is one
 function sized by its byte count, green for matched and gray for unmatched, grouped
@@ -119,8 +121,10 @@ matching-decompilation toolchain on my machine. Do these in order:
 5. Confirm the toolchain runs: re-match a function we have already landed (any file in
    src/) with tools/match.py and check that it still reports identical bytes.
 6. Before matching, read CLAIMS.md and pick a module or address range that nobody has
-   claimed. Add a row claiming it (range, my handle, date), commit it on its own, and
-   push, so no one else grinds the same functions. Work only inside that claimed range.
+   claimed. A live claims API key is optional for first-run setup and local trial
+   batches; without one, add a manual row claiming the range (range, my handle, date),
+   commit it on its own, and push, so no one else grinds the same functions. Work only
+   inside that claimed range.
 7. Pick an unmatched function from the claimed range, help me write matching C for it,
    and verify with tools/match.py that it compiles to the same bytes as the ROM.
 Use only my own legally dumped ROM. Never commit the ROM or anything extracted from it.

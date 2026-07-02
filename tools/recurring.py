@@ -1,9 +1,9 @@
-"""Find idioms worth templatizing: shapes the LLM tier already cracked that still
+"""Find idioms worth templatizing: shapes the agent tier already cracked that still
 have many UNMATCHED siblings (especially on fresh modules). Every such sibling is a
 function we would otherwise pay the LLM to re-derive -- turning the shape into a
 free swarm.py template claws that spend back across the whole remainder.
 
-For each agent-llm-matched function we take its mnemonic shape, then count how many
+For each agent-cracked function we take its mnemonic shape, then count how many
 still-unmatched functions share that exact shape. Shapes with a high unmatched
 count and a representative src example are the best templatization candidates.
 
@@ -24,6 +24,7 @@ import ledger as L
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SRC = REPO / "src"
+AGENT_TAGS = {"agent-llm", "harvest"}
 
 
 def shape_of(mod, addr, size):
@@ -41,13 +42,14 @@ def main():
     args = ap.parse_args()
 
     by_label = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
-    # which (module,addr) were matched by the LLM tier
+    # which (module,addr) were matched by the agent tier. "agent-llm" is the
+    # older bank.py tag; "harvest" is the current coddog/bank_harvest path.
     agent_keys = set()
     for o in L.read_records(L.MATCHED):
-        if "agent-llm" in o.get("versions", []):
+        if AGENT_TAGS.intersection(o.get("versions", [])):
             agent_keys.add(L.key_of(o))
 
-    # shapes the LLM cracked, with a src example
+    # shapes the agent tier cracked, with a src example
     agent_shapes = {}
     for label, addr in agent_keys:
         mod = by_label.get(label)

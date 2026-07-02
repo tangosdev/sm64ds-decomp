@@ -3,7 +3,9 @@ worklist for the refine specialist (tools/refine_run.js).
 
 Routing (validated, see notes/crack-loop-runbook.md): structural miss categories go
 to the refine agents; "register allocation" / "instruction reorder" go to the
-permuter; "base materialization / addressing" is the compiler floor and is skipped.
+permuter. "base materialization / addressing" is skipped by default because broad
+refine batches did not pay, but can be targeted when a new materialization lever
+(such as u64-mask laundering) needs a focused recheck.
 Classification compiles each candidate, so results are cached in
 progress/nm_categories.json keyed by (module, addr, divergences) - a re-ingested
 better draft reclassifies automatically.
@@ -45,7 +47,7 @@ def main():
                     help="skip category routing (take everything under --max-div)")
     ap.add_argument("--only-category", default=None,
                     help="substring filter: take ONLY drafts whose category matches "
-                         "(e.g. 'base materialization' for a 6g-trigger recheck batch)")
+                         "(e.g. 'base materialization' for a targeted u64-lever recheck)")
     args = ap.parse_args()
 
     rows = [json.loads(l) for l in (REPO / "nearmiss" / "db.jsonl")

@@ -4,6 +4,22 @@ Claim a module or address range here before you start matching, so two people (o
 two AI sessions) do not grind the same functions. The batch tools are range-scoped,
 so one claimed range per worker keeps everyone on disjoint work by construction.
 
+## First run / no API key
+
+You do **not** need a live claims API key just to set up the repo, try the tools,
+or run a first local batch. If you do not have a key from the Discord claims bot,
+coordinate manually in this file:
+
+1. Add a claim row for the module/range or batch you are about to try.
+2. Commit/push it, or open a small PR if you cannot push directly.
+3. Run your local work only inside that claimed range.
+
+`tools/crackloop.py prep` will try the live API only when a key is configured. If no
+key is present, it leaves the generated worklist intact and prints the Workflow
+launch line; the manual row in this file is your coordination mechanism. The live
+API is still preferred for serious concurrent AI batches because it can lock exact
+function ranges without git races.
+
 ## How to claim
 
 1. Pick a free module or address range that is not listed below.

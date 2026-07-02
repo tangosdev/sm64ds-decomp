@@ -3,9 +3,10 @@ batch is exactly three steps: prep -> Workflow -> land.
 
   python tools/crackloop.py prep --min 0x100 --max 0x280 --limit 30
       coddog-schedules a fresh spread worklist to progress/wl_ab.jsonl, locks the
-      module spans via the claims service (skipped gracefully on a public clone
-      without tools/claims.py), trims the worklist to the modules actually locked,
-      and prints the names array to paste into the Workflow launch:
+      function ranges via the claims service when an API key is configured, trims
+      the worklist to the ranges actually locked, and prints the names array to
+      paste into the Workflow launch. Without an API key, the lock step is skipped
+      and the worklist is left intact; coordinate manually via CLAIMS.md:
         Workflow({ scriptPath: "tools/sched_run.js", args: <names> })
 
   python tools/crackloop.py land --output <the Workflow task .output file>
@@ -45,6 +46,33 @@ def _paths(tag):
     return wl, ca
 
 
+def _warn_missing_m2c_drafts(rows, used_draft):
+    """Non-fatal prep guidance: low-sim large rows are costly without m2c."""
+    cold = []
+    for r in rows:
+        try:
+            sim = float(r.get("coddog_sim", 1.0))
+            size = int(r["size"], 16) if isinstance(r["size"], str) else int(r["size"])
+        except Exception:
+            continue
+        if sim < 0.5 and size > 0x300 and not r.get("m2c_draft"):
+            cold.append(r)
+    if not cold:
+        return
+    m2c = REPO / "vendor" / "m2c" / "m2c.py"
+    state = "vendor/m2c is installed" if m2c.is_file() else "vendor/m2c is NOT installed"
+    sample = ", ".join(r["name"] for r in cold[:5])
+    more = "" if len(cold) <= 5 else f", ... +{len(cold) - 5} more"
+    reason = "but no drafts were attached" if used_draft else "and prep was run without --draft"
+    print("\nNOTE: "
+          f"{len(cold)} low-similarity large row(s) {reason}; {state}.")
+    print("      These rows are expensive cold starts. Install with:")
+    print("        git clone https://github.com/matt-kempster/m2c vendor/m2c")
+    print("      Then re-run prep with --draft when targeting this band "
+          "(see notes/m2c-setup.md).")
+    print(f"      Draft-worthy examples: {sample}{more}")
+
+
 def prep(a):
     wl, active = _paths(a.tag)
     if active.exists():
@@ -70,7 +98,10 @@ def prep(a):
         sys.path.insert(0, str(TOOLS))
         import claims
         held = claims.lock_worklist(str(wl))   # trims conflicted rows from the file itself
-        active.write_text(json.dumps(held))
+        if held is not None:
+            active.write_text(json.dumps(held))
+        else:
+            print("claims lock skipped; no claims_active file was written.")
     except ImportError:
         print("tools/claims.py not present (public clone) - skipping the lock step; "
               "coordinate via CLAIMS.md")
@@ -82,6 +113,7 @@ def prep(a):
               "(re-run with a different band or a higher --limit for slack) or the "
               "claims service is unreachable (python tools/claims.py check ...)")
         sys.exit(1)
+    _warn_missing_m2c_drafts(rows, a.draft)
 
     names = [r["name"] for r in rows]
     launch = {"names": names}
@@ -104,7 +136,10 @@ def refine(a):
         import claims
         if wlr.exists() and wlr.read_text(encoding="utf-8").strip():
             held = claims.lock_worklist(str(wlr))   # both sides refine the shared DB head
-            active.write_text(json.dumps(held))
+            if held is not None:
+                active.write_text(json.dumps(held))
+            else:
+                print("claims lock skipped; no refine claims_active file was written.")
             rows = [json.loads(l) for l in wlr.read_text(encoding="utf-8").splitlines() if l.strip()]
             if not rows:
                 print("every refine draft conflicted with an active claim - the other "
