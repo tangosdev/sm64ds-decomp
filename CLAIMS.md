@@ -22,4 +22,7 @@ it is fair to take over: ping the claimant first.
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
+| ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
+| ov002 func_ov002_020ec0a4 (0x020ec0a4, size 0x134) | Cursor/Grok | 2026-07-02 | done |
+| arm9 func_02008080 (0x02008080, size 0x30) | Cursor/Grok | 2026-07-02 | done |
 | ov085 func_ov085_0212aaec (0x0212aaec, size 0x150) | Cursor/Grok | 2026-07-02 | done |
