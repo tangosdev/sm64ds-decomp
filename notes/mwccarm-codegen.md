@@ -176,6 +176,12 @@ virtual methods are fine - we only `-c` compile, never link; only the vtable lay
   integer constants in source order - an ARM-encodable immediate (e.g. `0x21c` = `mov #0x21c`)
   stays inline while a non-encodable one (`0x21a`/`0x21b`) takes a pool word, so the order
   matters. Keep the trailing pool words in the target size (`__sinit_ov006_0212fc7c`).
+- **NitroSDK hardware-register save/restore (CP math context).** Functions touching the DS
+  divider/sqrt MMIO block match as plain volatile-typed raw-pointer stores in address order:
+  `*(volatile u64*)0x4000290 = s->div_numer;` (DIV_NUMER), `0x4000298` (DIV_DENOM),
+  `*(volatile u16*)0x4000280 = s->div_mode;` (DIVCNT), `0x40002b8` (SQRT_PARAM),
+  `*(volatile u16*)0x40002b0 = s->sqrt_mode;` (SQRTCNT). The u64 loads/stores pair into
+  ldm/ldrd-shaped sequences on their own — no asm needed (`ARMMathLoadState`, 2026-07-02).
 - **Parallel-array "twin" getters.** Many overlay predicate/getter functions are byte-twins
   differing only in a gating global and one callee. Grep `src/` for the matched twin first and
   copy its struct model: e.g. three `struct { unsigned char b; unsigned char pad[3]; }` arrays
@@ -241,6 +247,14 @@ guard-heavy overlay code (off by ~4 instructions), and there is a reliable knob 
   consecutive `==` into `movls`. Only the override statement reproduces the default +
   single predicated-move pair (cracked the `id2 != 0x16 && id2 != 0x17` select in
   `func_ov007_020b45b0`, 2026-06-27).
+
+- **//cpp front end materializes bools that C99 folds (2026-07-02, `func_ov002_020d7030`).**
+  The same `int flag = (x & MASK) != 0; if (flag) ...` spelling folds to a direct
+  `tst/bne` under `-lang c99` but keeps the materialized
+  `mov r0,#0; ... movne r0,#1; cmp r0,#0` shape when the file is compiled as C++ (`//cpp`).
+  If the ROM shows a materialized guard bool and every C spelling folds it, switch the
+  translation unit to //cpp (wrap externs in `extern "C"`) before calling it a wall — the
+  front-end difference alone can be the whole residual.
 
 - **The access EXPRESSION shifts coloring (extends the section-2 lever).** Re-dereferencing
   the original argument each use (`**(unsigned short**)t`) instead of caching it in a local
