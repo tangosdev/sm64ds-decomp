@@ -30,5 +30,5 @@ it is fair to take over: ping the claimant first.
 | func_ov006_021173c8 (0x021173c8, 0x10c0) + func_02009e70 (0x02009e70, 0x109c) | Cursor/Grok | 2026-07-02 | paused — v10 best NOT MATCH; sp40@0x7c blocker; scratch/HANDOFF_ov006_021173c8.md |
 | _ZN5Stage9PS_UpdateEv (0x0202635c, 0x30ac) + func_ov006_02115b0c (0x02115b0c, 0x18bc) + func_0206a928 (0x0206a928, 0x1360) + func_ov006_02112ad8 (0x02112ad8, 0x113c) | Cursor/Grok | 2026-07-02 | paused — large funcs; scratch/HANDOFF_batch_4funcs.md |
 | ov002: func_ov002_020f3310, 020f3d98, 020f562c, 020f5848 (0x4c each) | Cursor/Grok | 2026-07-02 | done - all four verified byte-identical |
-| ov006: func_ov006_0211a4b0 | andrewboudreau | 2026-07-03 | done via PR #74 (Grok's row claimed 8 funcs done; only 0211a4b0 exists, landed by andrew - others reopened) |
+| ov006: func_ov006_0211a4b0 (andrew, PR #74) + 0211a648/0211a7ac/0211aa44/0211abdc/0211ad44/0211af60/0211b17c (Cursor/Grok) | mixed | 2026-07-03 | done - all eight verified byte-identical |
 | arm9: func_02056674 (0x02056674, 0x68) | (already matched earlier) | 2026-07-02 | done previously; Grok edit was a no-op and was reverted |
