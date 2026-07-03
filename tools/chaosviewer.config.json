@@ -1,0 +1,14 @@
+{
+  "name": "sm64ds-decomp",
+  "title": "Chaos Viewer",
+  "tagline": "matching C from the chaos",
+  "github": "https://github.com/bmanus2-dotcom/sm64ds-decomp",
+  "language": "C",
+  "compiler": "mwccarm 1.2/sp2p3. Flags (C): -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc",
+  "cppNote": "If a name starts with _Z (C++ mangled), write C++ with the FIRST LINE exactly //cpp",
+  "setup": "clone {github} and follow CONTRIBUTING.md (python deps + mwccarm from the DS-decomp Discord + tools/unpack.py on YOUR OWN cartridge dump).",
+  "verifyCommand": "python tools/match.py --c yourfile.c --func {name} --addr 0x{addrHex} --size 0x{sizeHex} --version 1.2/sp2p3",
+  "readFirst": "notes/mwccarm-codegen.md (esp. sec 6e-6g levers: u64-mask laundering for materialized bases, declaration/statement order for register coloring, //cpp dummy-vtable dispatch, struct-copy interleave) and notes/pret-idioms.md. Coordinate via CLAIMS.md.",
+  "rules": "only your own legally dumped ROM; never commit the ROM or anything extracted from it; import struct/field knowledge (see CREDITS.md) but write all C from scratch.",
+  "discord": "https://discord.gg/JXckvdARc"
+}
