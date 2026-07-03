@@ -176,12 +176,6 @@ virtual methods are fine - we only `-c` compile, never link; only the vtable lay
   integer constants in source order - an ARM-encodable immediate (e.g. `0x21c` = `mov #0x21c`)
   stays inline while a non-encodable one (`0x21a`/`0x21b`) takes a pool word, so the order
   matters. Keep the trailing pool words in the target size (`__sinit_ov006_0212fc7c`).
-- **NitroSDK hardware-register save/restore (CP math context).** Functions touching the DS
-  divider/sqrt MMIO block match as plain volatile-typed raw-pointer stores in address order:
-  `*(volatile u64*)0x4000290 = s->div_numer;` (DIV_NUMER), `0x4000298` (DIV_DENOM),
-  `*(volatile u16*)0x4000280 = s->div_mode;` (DIVCNT), `0x40002b8` (SQRT_PARAM),
-  `*(volatile u16*)0x40002b0 = s->sqrt_mode;` (SQRTCNT). The u64 loads/stores pair into
-  ldm/ldrd-shaped sequences on their own — no asm needed (`ARMMathLoadState`, 2026-07-02).
 - **Parallel-array "twin" getters.** Many overlay predicate/getter functions are byte-twins
   differing only in a gating global and one callee. Grep `src/` for the matched twin first and
   copy its struct model: e.g. three `struct { unsigned char b; unsigned char pad[3]; }` arrays
@@ -247,14 +241,6 @@ guard-heavy overlay code (off by ~4 instructions), and there is a reliable knob 
   consecutive `==` into `movls`. Only the override statement reproduces the default +
   single predicated-move pair (cracked the `id2 != 0x16 && id2 != 0x17` select in
   `func_ov007_020b45b0`, 2026-06-27).
-
-- **//cpp front end materializes bools that C99 folds (2026-07-02, `func_ov002_020d7030`).**
-  The same `int flag = (x & MASK) != 0; if (flag) ...` spelling folds to a direct
-  `tst/bne` under `-lang c99` but keeps the materialized
-  `mov r0,#0; ... movne r0,#1; cmp r0,#0` shape when the file is compiled as C++ (`//cpp`).
-  If the ROM shows a materialized guard bool and every C spelling folds it, switch the
-  translation unit to //cpp (wrap externs in `extern "C"`) before calling it a wall — the
-  front-end difference alone can be the whole residual.
 
 - **The access EXPRESSION shifts coloring (extends the section-2 lever).** Re-dereferencing
   the original argument each use (`**(unsigned short**)t`) instead of caching it in a local
@@ -443,76 +429,11 @@ func_ov004_020b3cb8, Opus):** `v = K - x` const-folds to `rsb`; writing
 Both cracks took the agent 60+ attempts - on promoted div<=8 drafts the long grind
 can pay (Fable, effort high, retry tier only); do not extend this to fresh fan-out.
 
-**Empty inline dtor blocks DSE on a write-only stack object (2026-07-02, wide-band
-retry, func_ov065_021177e4, Fable 6 attempts):** a write-only dead stack Vector3 the
-ROM emits as batched `ldr y/z/x` + `str x/y/z` was only reproducible as a //cpp object
-with an inline ctor AND an EMPTY INLINE DTOR — the dtor blocks mwcc's DSE/scalarization
-at zero code cost. Plain struct, volatile, union, escaped array, laundered, const-ref,
-comma-&, and pragma forms all failed (12–29 div); ctor without dtor got to div 3.
-This is the C++ counterpart of the escaped-array lever — when writes to a dead local
-must survive in a //cpp file, give the type an empty `~T() {}`.
-
-**Phantom stack frame retained by volatile + (void)& (2026-07-02, same batch,
-func_ov085_0212d8ec):** body matched but the target frame was 0x1c vs our 4 — dead
-locals whose slots the ROM keeps. `volatile Vector3 look, pos; (void)&look; (void)&pos;`
-retains the dead slots at -O4 (plain locals, volatile-only, and dead-call escapes were
-all reclaimed). Use for pure frame-size residuals when the body already matches.
-
 **The "pool-load of an immediate-encodable constant" class (6d) was a MISDIAGNOSIS**
 (2026-07-02, func_0201a614): the pool slot is not a constant - it is a SYMBOL ADDRESS
 (a reloc; `(int)&overlay_75`), whose unrelocated low byte read as 0x4b. When a diff
 shows a pool load where you wrote a small constant, check whether the slot is a reloc
 in the target and pass an address instead.
-
-## 6h. Large-function levers from the 0x800+ band (2026-07-02, Sonnet+Fable two-stage)
-
-The first batch in 0x800-0x4000 (24 huge functions, avg ~2.5KB). What worked, credited:
-
-- **Fold call+offset into a pointer temp's INITIALIZER to kill the post-`bl` copy.**
-  When the ROM keeps a callee's return value directly in r0 for immediate +offset math
-  but your build inserts `mov rX, r0` first, write `T *p = f(...) + k;` (the call inside
-  the initializer) instead of `r = f(...); p = r + k;`. Combined with unnamed temps this
-  took func_0201f32c from 62 div to MATCH (Fable).
-- **Unnamed compiler temps allocate registers BEFORE named vars.** Replacing named
-  locals with inline expressions (loop bound `divisor-1` written inline, direct global
-  read inside the `if`) fixes coloring swaps that decl-order permutation cannot reach
-  (func_0201f32c). The converse also fires: a ONE-READ named local of a global base
-  (`char *g8 = data_x;` then direct `g8+0x1324` accesses) lets the compiler CSE the
-  +0x1000 half of the offset in-place in r0 (func_02069994 MATCH).
-- **Distinct laundering SPELLINGS defeat cross-site CSE of the same address.** Two
-  sites needing the SAME materialized address must not launder it identically - the
-  compiler CSEs identical laundering expressions back into one register. Vary the
-  spelling per site: `(int)` vs `(unsigned)` vs completed-address mask placement
-  (func_ov006_020d3ba0, 154 -> 9 div, Fable).
-- **Set-then-conditionally-clear beats compute-then-store for guard flags.**
-  `v = 1; *p = 1; if (cond) v = 0;` colored v into r2 and fixed constant scheduling
-  where `v = cond ? 0 : 1; *p = ...` did not (func_02069994).
-- **`unsigned char` arrays give plain `ldrb`** (signed char gives ldrsb); mwcc never
-  eliminates the dead `< 0` check on an int derived from an unsigned byte, so the
-  ROM's shape survives (func_ov006_020d1ba0, Sonnet).
-- **Explicit `ok = 1/0; if (ok != 0)` materialization blocks jump-threading.** A bare
-  `if (cond)` right after computing cond gets jump-threaded past the materialization;
-  the ROM materialized the bool. Same lever as 6c but the jump-threading trigger is new
-  (func_ov006_020d1ba0).
-- **An explicit `case 0:` forces jump-table codegen** where dropping it lets mwcc pick
-  a sequential-compare chain (func_ov006_020d3ba0).
-- **`(void*)` casts on self-address args stop CSE across calls** - passing
-  `(void*)func_x` (not `(int)func_x`) as an argument several times keeps each
-  materialization separate like the ROM (func_02069994).
-- **PVec empty-ctor/dtor blocks position scalarization** - extends the 6g empty-inline-
-  dtor DSE lever to vector temporaries in //cpp (St_YoshiPower, 575 -> 4 div).
-
-NEW FLOOR CLASS - **spilled-first-param stack-slot homing order**: on 0x800+ functions
-with heavy spilling, mwcc homes the spilled first param LAST ([sp,#0x30]) where the ROM
-homes it FIRST ([sp,#0]); 15+ source shapes (alias, K&R, register kw, sret, laundering)
-all coalesce to the same layout, and the slot shift cascades every scalar+aggregate
-offset (func_ov006_020d01e0, 277 div residual). Stop early on this shape.
-
-Economics note: Sonnet went 3/24 on this band (the __sinit vein stays ~100%; big LOGIC
-functions land ~5% for Sonnet even with m2c drafts). The Fable retry ON THE STORED
-NEAR-MISS DRAFTS (attach `draft`/`draft_divergences` to the wl rows) went 2/7 with the
-misses driven to 4-37 div. Route 0x800+ logic straight to Fable-on-draft; do not grind
-Sonnet there.
 
 ## 7. Workflow implications
 

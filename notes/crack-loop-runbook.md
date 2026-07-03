@@ -203,31 +203,6 @@ SFA-decomp pragma technique does not transfer; the ordering floor stays hand-fix
   floor-labeled misses at div<=8 too - they are 97-99% matched and Fable's 60+-attempt
   grind cracked 2/2 of them; park only deep cascades (div 27/32/91 all stayed parked).
   Fable promotion tier record so far: 9/9 across two batches.
-- **Post-merge wide-band rescan: 12/12 CLEAN SWEEP (2026-07-02, 0x40-0x800 after the
-  big upstream merge): Opus 7/12 at 42K/landed — the cheapest Opus pass measured —
-  then Fable retry 5/5 at 25K/landed** (3 agents died on API connection errors; the
-  workflow-resume path re-ran exactly those 3, cached the 2 done — re-lock claims
-  first, land releases them). The rescan works because corpus growth resurfaces
-  FIRST-TIER scaffolds (sims 0.65-1.00) in already-worked bands: run it after every
-  big upstream merge before opening a fresh band. New levers from the sweep: empty
-  inline dtor blocks DSE (//cpp write-only stack object), volatile+(void)& retains
-  phantom dead-local frame slots, //cpp front end materializes bools C99 folds,
-  NitroSDK CP MMIO as volatile u64/u16 stores (all in mwccarm-codegen).
-  Fable promotion tier record: 14/14 lifetime — promote-all-non-cascade holds.
-- **0x800-0x4000 first batch (2026-07-02): Sonnet 3/24 at 1.38M tok/landed — the big
-  __sinit initializers still land (2/3, incl. a 0xc18 monster) but 0x800+ LOGIC is
-  ~5% for Sonnet even with m2c drafts.** The misses all compile, most at exact target
-  size, div 10-1054: this band's real product is the near-miss DB seed (~200KB of
-  90-98% drafts). Then **Fable retry ON THE STORED DRAFTS = 2/7 at 449K/landed**
-  (div-10 and div-62 drafts to MATCH; misses crushed 43→9, 154→9, 575→4, 151→37) —
-  attach each near-miss to its wl row (`draft`/`draft_divergences` fields, abrow prints
-  it) and pass `wl:"progress/wl_retry.jsonl"` to sched_run. ROUTING: in 0x800+ run
-  Sonnet only on the __sinit rows; the div<=9 Fable leftovers are one coloring/ordering
-  word from MATCH — permuter/hand-fix tier, not another paid pass. New levers in
-  mwccarm-codegen 6h (call-in-initializer kills post-bl mov, unnamed-temps-color-first,
-  per-site laundering spellings, set-then-clear guard flags, unsigned-char ldrb,
-  jump-threading vs bool materialization, case-0 jump-table forcing); new floor class:
-  spilled-first-param stack-slot homing order on spill-heavy 0x800+ functions.
 - **WRONG-DEST salvage (2026-07-02, func_ov066_02119ce8):** when the land link-gate
   rejects an agent MATCH with `WRONG-DEST reloc` and the function stores/loads two
   same-shaped globals (e.g. two zero-stores), the agent likely swapped the symbols -
