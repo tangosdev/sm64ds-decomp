@@ -33,6 +33,10 @@ PY = sys.executable
 BASE_URL = os.environ.get("GLM_BASE_URL", "https://api.z.ai/api/anthropic")
 MODEL = os.environ.get("GLM_MODEL", "glm-5.2")
 API_KEY = os.environ.get("GLM_API_KEY", "")
+if not API_KEY:  # fallback: first line of ~/.glm_key (never commit or paste the key)
+    _kf = pathlib.Path.home() / ".glm_key"
+    if _kf.is_file():
+        API_KEY = _kf.read_text(encoding="utf-8").strip().splitlines()[0].strip()
 
 _print_lock = threading.Lock()
 
