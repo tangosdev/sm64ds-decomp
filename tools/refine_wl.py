@@ -59,11 +59,17 @@ def main():
     if ATTEMPTED.exists():
         attempted = {l.strip() for l in ATTEMPTED.read_text().splitlines() if l.strip()}
 
+    def unmatched(name):
+        # a src file only disqualifies a candidate if it is a real byte-match;
+        # a "// NONMATCHING" hatch (PR #84 draft bank) is still fair game
+        text = WL.read_src_text(name)
+        return text is None or "NONMATCHING" in text[:200]
+
     pool = [r for r in rows
             if r.get("divergences") and 0 < r["divergences"] <= args.max_div
             and r["name"] not in attempted
             and (r["module"], r["addr"]) not in parked
-            and WL.read_src_text(r["name"]) is None]
+            and unmatched(r["name"])]
     pool.sort(key=lambda r: r["divergences"])
 
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
