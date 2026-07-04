@@ -46,6 +46,9 @@ def main():
     ap.add_argument("--only-category", default=None,
                     help="substring filter: take ONLY drafts whose category matches "
                          "(e.g. 'base materialization' for a 6g-trigger recheck batch)")
+    ap.add_argument("--include-attempted", action="store_true",
+                    help="do not skip names in refine_attempted.txt (mass sweeps by a "
+                         "DIFFERENT model tier that never saw them)")
     args = ap.parse_args()
 
     rows = [json.loads(l) for l in (REPO / "nearmiss" / "db.jsonl")
@@ -56,7 +59,7 @@ def main():
 
     parked = L.nonmatching_set()
     attempted = set()
-    if ATTEMPTED.exists():
+    if ATTEMPTED.exists() and not args.include_attempted:
         attempted = {l.strip() for l in ATTEMPTED.read_text().splitlines() if l.strip()}
 
     def unmatched(name):
@@ -120,9 +123,10 @@ def main():
                 "disasm": lines, "draft": r["c_source"],
                 "draft_divergences": r["divergences"], "category": r["category"],
             }) + "\n")
-    with ATTEMPTED.open("a", encoding="utf-8") as f:
-        for r in chosen:
-            f.write(r["name"] + "\n")
+    if not args.include_attempted:  # off-tier mass sweeps must not consume the pool
+        with ATTEMPTED.open("a", encoding="utf-8") as f:
+            for r in chosen:
+                f.write(r["name"] + "\n")
     names = [r["name"] for r in chosen]
     sys.stderr.write(f"wrote {len(names)} rows -> {args.out}\n")
     print(f'Workflow({{ scriptPath: "tools/refine_run.js", args: {json.dumps(names)} }})')

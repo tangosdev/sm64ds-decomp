@@ -203,6 +203,9 @@ def main():
     ap.add_argument("--attempts", type=int, default=6)
     ap.add_argument("--limit", type=int, default=0, help="cap names (0 = all)")
     ap.add_argument("--out", default=str(REPO / "progress" / "glm_refine.output"))
+    ap.add_argument("--chunk", type=int, default=25,
+                    help="claim-lock and work this many functions at a time, so a "
+                         "mass sweep never hogs the pool from other tiers/contributors")
     ap.add_argument("--dry-run", action="store_true",
                     help="build one prompt, print sizes, no API call")
     args = ap.parse_args()
@@ -222,18 +225,72 @@ def main():
     if not API_KEY:
         sys.exit("set GLM_API_KEY (coding-plan key from z.ai)")
 
-    t0 = time.time()
-    results, tin, tout = [], 0, 0
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        futs = {ex.submit(crack_one, r["name"], args.wl, args.attempts, r): r["name"]
-                for r in rows}
-        for f in concurrent.futures.as_completed(futs):
-            res, i_tok, o_tok = f.result()
-            tin += i_tok; tout += o_tok
-            results.append(res)
-            log(f"[{len(results)}/{len(rows)}] {res['name']}: "
-                f"{'MATCH' if res['matched'] else 'div=' + str(res['divergences'])}")
+    sys.path.insert(0, str(REPO / "tools"))
+    import claims  # belongto.us lock service; per-chunk try-lock/release
 
+    def addr_int(r):
+        a = r["addr"]
+        return int(a, 0) if isinstance(a, str) else a
+
+    def size_int(r):
+        s = r["size"]
+        return int(s, 0) if isinstance(s, str) else s
+
+    t0 = time.time()
+    results, tin, tout, skipped = [], 0, 0, 0
+    for c0 in range(0, len(rows), args.chunk):
+        chunk = rows[c0:c0 + args.chunk]
+        locked = []           # (row, claim_id)
+        for r in chunk:
+            try:
+                a, sz = addr_int(r), size_int(r)
+                st, res = claims.try_lock(r["module"], f"0x{a:08x}", f"0x{a + sz:08x}",
+                                          note=f"glm-5.2 sweep: {r['name'][:60]}")
+                if st is None:
+                    sys.exit(f"claims service unreachable ({res.get('error')}) - "
+                             f"refusing to run unlocked; fix and rerun")
+                if st == 401:
+                    sys.exit("claims key expired/invalid (401) - refusing to run "
+                             "unlocked; refresh tools/claims_key.txt and rerun")
+                cid = claims._claim_id(res)
+                if cid is None:
+                    skipped += 1   # conflict: someone else holds it - skip
+                    continue
+                locked.append((r, cid))
+            except SystemExit:
+                raise
+            except Exception as e:
+                sys.exit(f"claims lock failed ({e}) - refusing to run unlocked")
+        if not locked:
+            continue
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
+                futs = {ex.submit(crack_one, r["name"], args.wl, args.attempts, r): r
+                        for r, _ in locked}
+                for f in concurrent.futures.as_completed(futs):
+                    res, i_tok, o_tok = f.result()
+                    tin += i_tok; tout += o_tok
+                    results.append(res)
+                    log(f"[{len(results)}/{len(rows)}] {res['name']}: "
+                        f"{'MATCH' if res['matched'] else 'div=' + str(res['divergences'])}")
+        finally:
+            for _, cid in locked:
+                try:
+                    claims.release(cid)
+                except Exception:
+                    pass  # claim TTL expires on its own; do not sink the sweep
+        _write_output(args.out, results, tin, tout)   # partial results survive a crash
+
+    landed = [r for r in results if r["matched"]]
+    mins = (time.time() - t0) / 60
+    print(f"\n{MODEL}: landed {len(landed)}/{len(results)} "
+          f"({skipped} skipped as claim-locked elsewhere) in {mins:.0f}m; "
+          f"in={tin} out={tout} tok"
+          + (f" ({round(tout / len(landed))} out/landed)" if landed else ""))
+    print(f"land with: python tools/crackloop.py land --output {args.out} --refine")
+
+
+def _write_output(path, results, tin, tout):
     landed = [r for r in results if r["matched"]]
     out = {
         "model": MODEL,
@@ -249,12 +306,7 @@ def main():
         "nearMisses": [{"name": r["name"], "c_source": r["c_source"]}
                        for r in results if not r["matched"] and r["c_source"]],
     }
-    pathlib.Path(args.out).write_text(json.dumps(out, indent=1), encoding="utf-8")
-    mins = (time.time() - t0) / 60
-    print(f"\n{MODEL}: landed {len(landed)}/{len(results)} in {mins:.0f}m; "
-          f"in={tin} out={tout} tok"
-          + (f" ({round(tout / len(landed))} out/landed)" if landed else ""))
-    print(f"land with: python tools/crackloop.py land --output {args.out} --refine")
+    pathlib.Path(path).write_text(json.dumps(out, indent=1), encoding="utf-8")
 
 
 if __name__ == "__main__":
