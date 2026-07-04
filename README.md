@@ -6,8 +6,8 @@ A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
 
 <!-- progress:start -->
 ```
-Functions  █████████████████████░░░░░░░░░  69.5%   7,920 / 11,390
-Code size  █████████████░░░░░░░░░░░░░░░░░  42.1%   939,848 / 2,234,028 bytes
+Functions  █████████████████████░░░░░░░░░  69.7%   7,943 / 11,390
+Code size  █████████████░░░░░░░░░░░░░░░░░  42.3%   943,908 / 2,234,028 bytes
 ```
 <!-- progress:end -->
 
