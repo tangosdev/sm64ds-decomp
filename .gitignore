@@ -22,6 +22,7 @@ __pycache__/
 venv/
 .idea/
 .vscode/
+.vs/
 Thumbs.db
 desktop.ini
 
@@ -66,3 +67,5 @@ _abwork/
 # AI-session draft area (Cursor/Grok and friends): unverified candidates live
 # here, never in src/ - src/ is oracle-verified matches only
 /scratch/
+.agents/
+.codex/
