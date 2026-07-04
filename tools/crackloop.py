@@ -69,7 +69,7 @@ def prep(a):
     if a.no_claims:
         print("--no-claims: skipping the lock step (coordinate via CLAIMS.md); "
               "use when the local claims key is expired")
-        active.write_text("[]")
+        active.write_text("{}")
     else:
         try:
             sys.path.insert(0, str(TOOLS))
@@ -106,7 +106,7 @@ def refine(a):
     wlr = REPO / "progress" / "wl_refine.jsonl"
     if a.no_claims:
         print("--no-claims: skipping the lock step (coordinate via CLAIMS.md)")
-        active.write_text("[]")
+        active.write_text("{}")
         rows = [__import__("json").loads(l) for l in wlr.read_text(encoding="utf-8").splitlines() if l.strip()]
         names = [r["name"] for r in rows]
         print(f"\n{len(names)} drafts ready. Launch:")
