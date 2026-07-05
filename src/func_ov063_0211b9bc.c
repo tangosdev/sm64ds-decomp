@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=45). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int LoadKeyModels();
 extern int _ZN9Animation8LoadFileER13SharedFilePtr();
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii();
@@ -40,8 +37,6 @@ extern int data_ov063_0211e1ec[];
 struct H { int w[16]; };
 extern struct H data_020a0e68;
 
-struct Flags1 { unsigned short bit0 : 1; };
-
 #define U8(o)  (*(unsigned char *)(c + (o)))
 #define S8(o)  (*(signed char *)(c + (o)))
 #define U16(o) (*(unsigned short *)(c + (o)))
@@ -50,7 +45,7 @@ struct Flags1 { unsigned short bit0 : 1; };
 #define S32(o) (*(int *)(c + (o)))
 #define PTR(o) (*(char **)(c + (o)))
 #define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL))
-#define FLAGS16P ((struct Flags1 *)((long long)(c + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL))
+#define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c & 0xFFFFFFFFFFFFFFFFLL) + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL))
 
 int func_ov063_0211b9bc(char *c)
 {
@@ -118,7 +113,7 @@ int func_ov063_0211b9bc(char *c)
         }
         _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
         if (data_0209f2f8 == 0xc && S32(0x5c) == 0xbb8000 && S8(0xcc) == 2) {
-            FLAGS16P->bit0 = 1;
+            FLAGS16 = (FLAGS16 & ~1) | 1;
         }
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
     }
@@ -242,21 +237,21 @@ int func_ov063_0211b9bc(char *c)
             S8(0xcc) = -1;
             pp = (void *)_ZN5Actor13ClosestPlayerEv(c);
             if (pp != 0 && *(int *)((char *)pp + 0x64) > (int)0xffaec000) {
-                U16(0x5d4) |= 0x10;
+                FLAGS16T |= 0x10;
             }
         }
     } else {
         if ((unsigned)U8(0x5cf) < 0xc) {
-            S32(0x19c) |= 1;
+            *(int *)((long long)(c + 0x19c) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
         }
         if (U8(0x5cf) == 4) {
             S8(0xcc) = -1;
             pp = (void *)_ZN5Actor13ClosestPlayerEv(c);
             if (pp != 0 && *(int *)((char *)pp + 0x64) > (int)0xffaec000) {
-                U16(0x5d4) |= 0x10;
+                FLAGS16T |= 0x10;
             }
         } else if (U8(0x5cf) == 7) {
-            U16(0x5d4) |= 2;
+            FLAGS16T |= 2;
             U16(0x4a0) = 0x120;
         } else if (U8(0x5cf) == 0xe) {
             S8(0xcc) = -1;
