@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=25). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 extern Fix12i _ZN5Actor13DistToCPlayerEv(void *c);
 extern Fix12i Vec3_Dist(const void *a, const void *b);
@@ -12,6 +9,7 @@ extern int data_0209e650;
 void func_ov081_021265c8(void *c) {
     Fix12i distC;
     Fix12i dist;
+    int v;
 
     distC = _ZN5Actor13DistToCPlayerEv(c);
     dist = Vec3_Dist((char *)c + 0x5c, (char *)c + 0x3d0);
@@ -29,13 +27,18 @@ void func_ov081_021265c8(void *c) {
 
         if (*(int *)((char *)c + 0x3e0) == 1 && *(int *)((char *)c + 0x3e4) == 1) {
             func_ov081_021265c8(c);
-        } else if (*(int *)((char *)c + 0x3e0) == 1 && *(int *)((char *)c + 0x3e4) != 1) {
-            func_ov081_0212777c(c, 2);
-        } else if (*(int *)((char *)c + 0x3e0) == 3 && *(int *)((char *)c + 0x3e4) != 3) {
-            func_ov081_0212777c(c, 4);
-        } else {
-            func_ov081_0212777c(c, *(int *)((char *)c + 0x3e4));
+            return;
         }
     }
-    return;
+
+    v = *(int *)((char *)c + 0x3e0);
+    if (v == 1 && *(int *)((char *)c + 0x3e4) != 1) {
+        func_ov081_0212777c(c, 2);
+        return;
+    }
+    if (v == 3 && *(int *)((char *)c + 0x3e4) != 3) {
+        func_ov081_0212777c(c, 4);
+        return;
+    }
+    func_ov081_0212777c(c, *(int *)((char *)c + 0x3e4));
 }

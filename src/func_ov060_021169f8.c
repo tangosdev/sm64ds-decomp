@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=26). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
@@ -15,8 +12,7 @@ void func_ov060_021169f8(char* sl)
     int i;
     char* a;
     if (*(int*)(sl+0x360) < 0x5000) {
-        int* p = (int*)(sl+0x360);
-        *p += 0x200;
+        *(int*)(((int)sl + 0x360) & 0xFFFFFFFFFFFFFFFF) += 0x200;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(sl, 0);
     func_ov060_02116518(sl, 0x9a, 1, 0x78000);

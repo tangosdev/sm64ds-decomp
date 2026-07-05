@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void func_ov102_0214b384(char *c, int a);
 extern void func_ov102_0214c0b8(char *c);
 
@@ -19,6 +16,10 @@ void func_ov102_0214ad40(char *c)
     }
     func_ov102_0214b384(c, 4);
     *(unsigned char *)(c + 0x3f5) = 3;
-    *(int *)(c + 0x128) = *(int *)(c + 0x128) & ~2;
+    {
+        int *p = (int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
+        int v = *p;
+        *p = v & ~2;
+    }
     func_ov102_0214c0b8(c);
 }

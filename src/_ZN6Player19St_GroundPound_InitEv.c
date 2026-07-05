@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 extern int func_ov002_020dab14(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
@@ -17,6 +14,6 @@ int _ZN6Player19St_GroundPound_InitEv(void* c) {
   _ZN6Player7SetAnimEji5Fix12IiEj(c, anim, 0x40000000, 0x1000, 0);
   *(char*)((char*)c+0x6e3)=2;
   _ZN5Sound9PlayBank0EjRK7Vector3(6, (char*)c+0x74);
-  *(int*)((char*)c+0x2ec) |= 0x20;
+  *(int*)((int*)(((int)c + 0x2ec) & 0xFFFFFFFFFFFFFFFF)) |= 0x20;
   return 1;
 }

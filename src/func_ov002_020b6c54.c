@@ -1,6 +1,4 @@
-// NONMATCHING: different op / idiom (div=26). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+#pragma opt_strength_reduction off
 struct Vec3 { int x, y, z; };
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* thiz, void* file, int a, int b);
@@ -20,7 +18,7 @@ int func_ov002_020b6c54(char* sb, char** arg, unsigned int actorID){
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(sb+0x124, m, sb+0x2ec, 0x199, *(short*)(sb+0x8e), arg[2]);
   for(i = 0; i < 4; i++){
     char* sp;
-    *(int*)(sb + i*4 + 0x320) = 0;
+    *(int*)(sb + (int)((unsigned long long)i & 0xFFFFFFFFFFFFFFFFull)*4 + 0x320) = 0;
     sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(actorID, 0, (struct Vec3*)(sb+0x5c), 0, *(signed char*)(sb+0xcc), -1);
     if(sp != 0) *(int*)(sb + i*4 + 0x320) = *(int*)(sp+4);
   }

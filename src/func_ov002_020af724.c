@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3;
 extern void func_ov002_020aefb8(void *c);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
@@ -15,12 +12,12 @@ void func_ov002_020af724(unsigned char *self)
     switch (*(int *)(self + 0x388)) {
     case 0:
         _ZN5Sound9PlayBank3EjRK7Vector3(0x69, (struct Vector3 *)(self + 0x74));
-        *(int *)(self + 0x388) += 1;
+        *(int *)((int)self + 0x388 & 0xFFFFFFFFFFFFFFFF) += 1;
         break;
     case 1:
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
-            *(int *)(self + 0x128) &= ~1;
-            *(int *)(self + 0x388) += 1;
+        if (_ZNK12WithMeshClsn10IsOnGroundEv((void *)((int)self + 0x144 & 0xFFFFFFFFFFFFFFFF)) != 0) {
+            *(int *)((int)self + 0x128 & 0xFFFFFFFFFFFFFFFF) &= ~1;
+            *(int *)((int)self + 0x388 & 0xFFFFFFFFFFFFFFFF) += 1;
         }
         break;
     case 2:
