@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 extern void* _ZN9ActorBasenwEj(unsigned int);
 extern void _ZN9ActorBaseC1Ev(void*);
@@ -18,7 +15,7 @@ void* func_ov003_020b04f0(void){
     _ZN9ActorBaseC1Ev(p);
     *(void***)p = (void**)data_0208e4b8;
     *(void***)p = (void**)data_02092680;
-    unsigned char* fl = (unsigned char*)(p+0x13);
+    unsigned char* fl = (unsigned char*)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF);
     *fl |= 1;
     *fl |= 4;
     *(void***)p = (void**)data_ov003_020b1704;

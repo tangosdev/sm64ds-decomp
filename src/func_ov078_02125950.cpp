@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct Player { int GetTalkState(); };
 
@@ -16,12 +13,14 @@ extern void *data_ov078_0212701c;
 extern "C" int func_ov078_02125950(char *c)
 {
     char *r5 = *(char **)(c + 0x430);
+    int *src = (int *)(((int)(r5) + 0x5c) & 0xFFFFFFFFFFFFFFFF);
     Vector3 v;
-    int *src = (int *)(r5 + 0x5c);
-    v.x = src[0];
+    int t = src[0];
+    Vector3 *arg0 = (Vector3 *)(c + 0x5c);
+    v.x = t;
     v.y = src[1];
     v.z = src[2];
-    short ang = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &v);
+    short ang = Vec3_HorzAngle(arg0, &v);
     ApproachLinear(*(short *)(c + 0x8e), ang, 0x800);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e);
     if (((Player *)r5)->GetTalkState() == -1) {

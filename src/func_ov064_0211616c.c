@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int Fix12;
 typedef struct { short x, y, z; } Vector3_16f;
@@ -12,13 +9,23 @@ int func_ov064_0211616c(char* c) {
         _ZN9ActorBase18MarkForDestructionEv(c);
         return 1;
     }
-    int *p = (int*)(c + 0x60);
+    int *p = (int*)((((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFULL));
     *p = *p - 0x5000;
     *(void**)(c + 0x334) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        0, *(u32*)(*(char**)(c + 0x330) + 0x30), *(Fix12*)(c + 0x3a8), *(Fix12*)(c + 0x3ac),
-        *(Fix12*)(c + 0x3b0), (const Vector3_16f*)0, (struct Callback*)0);
+        *(u32*)(c + 0x334),
+        *(u32*)(*(char**)(c + 0x330) + 0x30),
+        *(Fix12*)(c + 0x3a8),
+        *(Fix12*)(c + 0x3ac),
+        *(Fix12*)(c + 0x3b0),
+        (const Vector3_16f*)0,
+        (struct Callback*)0);
     *(void**)(c + 0x338) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        0, *(u32*)(*(char**)(c + 0x330) + 0x30) + 1, *(Fix12*)(c + 0x3a8), *(Fix12*)(c + 0x3ac),
-        *(Fix12*)(c + 0x3b0), (const Vector3_16f*)0, (struct Callback*)0);
+        *(u32*)(c + 0x338),
+        *(u32*)(*(char**)(c + 0x330) + 0x30) + 1,
+        *(Fix12*)(c + 0x3a8),
+        *(Fix12*)(c + 0x3ac),
+        *(Fix12*)(c + 0x3b0),
+        (const Vector3_16f*)0,
+        (struct Callback*)0);
     return 0;
 }

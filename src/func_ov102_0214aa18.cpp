@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct CylinderClsn { void Clear(); void Update(); };
 struct WithMeshClsn;
 struct Actor { void UpdatePos(CylinderClsn *c); };
@@ -37,7 +34,7 @@ extern "C" int func_ov102_0214aa18(Actor *self)
         }
         if (((WithMeshClsn2*)(s + 0x144))->IsOnGround() == 0)
             return 1;
-        int *fl = (int*)(s + 0x128);
+        int *fl = (int*)(((int)s + 0x128) & 0xFFFFFFFFFFFFFFFF);
         *fl = *fl & ~2;
         *(unsigned char*)(s + 0x3f5) = 3;
         func_ov102_0214c0b8(s);

@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=3). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -38,7 +35,7 @@ void func_0203f714(struct S* s)
     r = func_0203f818((u16)(v + 1));
     if (r == 1) {
         int n = func_02059640();
-        int idx = __aeabi_idiv(n, data_020a0ef4);
+        int idx = n % data_020a0ef4;
         data_020a0f18 = data_020a0fd0[idx];
         func_0203f6e8(data_020a0f18);
     } else if (r == 2) {

@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" void *Model_LoadFile(void *fp);
 extern "C" void ModelBase_SetFile(void *self, void *bmd, int a, int b);
 extern "C" void *Animation_LoadFile(void *fp);
@@ -26,17 +23,15 @@ extern void *data_ov019_0211277c[];
 extern "C" int func_ov019_021123d4(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
-    void *t;
     int i;
-    int j;
 
     ModelBase_SetFile(c + 0xd4, Model_LoadFile(&data_ov019_02113498), 1, 1);
 
     for (i = 0; i < 7; i++)
         Animation_LoadFile(data_ov019_02112788[i]);
 
-    for (j = 0; j < 3; j++) {
-        t = data_ov019_0211277c[j];
+    for (int j = 0; j < 3; j++) {
+        void *t = data_ov019_0211277c[j];
         TextureSequence_LoadFile(t);
         TextureSequence_Prepare((&data_ov019_02113498)[1], *(void **)((char *)t + 4));
     }

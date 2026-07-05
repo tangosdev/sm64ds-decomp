@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=8). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int func_0205c864(void *s);
 extern void func_0205c7e4(void *s);
 
@@ -27,7 +24,7 @@ int func_0205c91c(S *s)
     if (((s->f10 & 2) ? 1 : 0) != 0) {
         ret = func_0205c864(s);
         if (((s->f10 & 4) ? 1 : 0) != 0) {
-            s->f10 &= ~4u;
+            *(unsigned int *)(((int)&s->f10) & 0xFFFFFFFFFFFFFFFFu) &= ~4u;
             r = s->f38;
             s->f38 = 0;
             s->f20 = s->f30;

@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Node { struct Node* next; struct Node* prev; };
 struct List { struct Node* head; int count; };
 struct Node* func_0204d8e8(struct List* l, struct Node* n){
@@ -16,6 +13,7 @@ struct Node* func_0204d8e8(struct List* l, struct Node* n){
       n->prev->next = n->next;
     }
   }
-  l->count = l->count - 1;
+  int* pCnt = (int*)(((int)l + 4) & 0xFFFFFFFFFFFFFFFF);
+  *pCnt = *pCnt - 1;
   return n;
 }

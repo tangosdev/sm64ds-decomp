@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 struct BCA_File;
 struct ModelAnim {
@@ -23,8 +20,8 @@ int func_ov030_02113a80(char* c)
             *(unsigned char*)(p + 0x6ff) != 0) {
             *(unsigned char*)(c + 0x3c7) = 4;
         } else {
-            unsigned char* f = (unsigned char*)(c + 0x3c8);
             *(unsigned char*)(c + 0x3c7) = 0;
+            unsigned char* f = (unsigned char*)(((unsigned long long)((int)(c) + 0x3c8)) & 0xFFFFFFFFFFFFFFFFULL);
             *f ^= 1;
         }
     }

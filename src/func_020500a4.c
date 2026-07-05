@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int data_020a55fc;
 extern int data_020a55f8;
 extern int data_020a5600;
@@ -45,6 +42,9 @@ void func_020500a4(struct T *thiz)
         _ZN4CP1519InvalidateDataCacheEjj(e5, quot);
         thiz->f30(e6, e5, quot, thiz->f8, thiz->f34);
     }
-    thiz->f18 = thiz->f18 + 1;
-    if (thiz->f18 >= thiz->f2c) thiz->f18 = 0;
+    {
+        int *pf18 = (int *)((int)&thiz->f18 & 0xFFFFFFFFFFFFFFFF);
+        *pf18 = *pf18 + 1;
+        if (thiz->f18 >= thiz->f2c) thiz->f18 = 0;
+    }
 }

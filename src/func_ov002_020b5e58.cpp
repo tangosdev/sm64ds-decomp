@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -61,10 +58,12 @@ extern "C" int func_ov002_020b5e58(char *self, char *fp)
         vy = *(int *)(self + 0x60);
         vz = *(int *)(self + 0x64);
         vx = *(int *)(self + 0x5c);
-        vy = vy + 0x50000;
-        v.x = vx;
-        v.y = vy;
-        v.z = vz;
+        {
+            int t = vy + 0x50000;
+            v.x = vx;
+            v.y = t;
+            v.z = vz;
+        }
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, self);
         if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
             *(int *)(self + 0x344) = rg.f44 + 0x3e000;
