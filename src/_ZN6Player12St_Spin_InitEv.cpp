@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 typedef int Fix12i;
 struct Camera;
@@ -22,8 +19,12 @@ int _ZN6Player12St_Spin_InitEv(char* c){
     *(int*)(c+0xa8) = 0x50000;
     func_ov002_020e25f0(c, 2);
   }
-  *(int*)(c+0x2ec) |= 0x20;
-  func_0200d678((Camera*)data_0209f318, *(unsigned char*)(c+0x6d8));
+  int* p = (int*)(((int)c + 0x2ec) & 0xFFFFFFFFFFFFFFFFull);
+  int old = *p;
+  int** cam_ptr_ptr = &data_0209f318;
+  *p = old | 0x20;
+  unsigned char pid = *(unsigned char*)(c+0x6d8);
+  func_0200d678((Camera*)*cam_ptr_ptr, pid);
   return 1;
 }
 }

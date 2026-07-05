@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int e);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
@@ -17,7 +14,7 @@ void func_ov095_02136178(char* c)
 
     _Z14ApproachLinearRiii((int*)(c + 0xa8), -0xa000, -0x2000);
     {
-        int* p = (int*)((void*)(c + 0x60));
+        int* p = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
         int v = *p + *(int*)(c + 0xa8);
         *p = v;
     }

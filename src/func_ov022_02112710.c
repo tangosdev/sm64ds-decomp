@@ -1,20 +1,19 @@
-// NONMATCHING: base materialization / addressing (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 
 int func_ov022_02112710(char *c)
 {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
-    int *p98 = (int *)(c + 0x98);
-    int *pa8 = (int *)(c + 0xa8);
+    int *p98;
+    int *pa8;
     *(short *)(c + 0x110) = 0x3c;
     *(short *)(c + 0x94) = (short)((r & 0xf) << 0xc);
-    *p98 = (r & 0x1f) + 0x14;
+    *(int *)(c + 0x98) = (r & 0x1f) + 0x14;
+    p98 = (int *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFULL);
     *p98 = *p98 << 0xc;
     *(int *)(c + 0x9c) = -0x4000;
-    *pa8 = (r & 0x3f) + 0x28;
+    *(int *)(c + 0xa8) = (r & 0x3f) + 0x28;
+    pa8 = (int *)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFFULL);
     *pa8 = *pa8 << 0xc;
     return 1;
 }

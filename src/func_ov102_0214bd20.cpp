@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int a, int b, unsigned int u);
 void func_ov102_0214b384(void* c, int i);
@@ -17,7 +14,7 @@ extern "C" void func_ov102_0214bd20(char* c)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, (void*)data_ov102_0214e9c8.w[1], 0, 0x1000, 0);
     func_ov102_0214b384(c, 0x96);
     {
-        int* p = (int*)(c + 0x128);
+        int* p = (int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
         *p = *p | 2;
         *p = *p & ~4;
     }

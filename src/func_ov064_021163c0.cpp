@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=3). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12;
 struct BCA_File;
 struct WithMeshClsn { int IsOnGround() const; };
@@ -13,7 +10,7 @@ extern "C" void func_ov064_021163c0(char *c)
 {
     if (*(unsigned short *)(c + 0x100) == 0) {
         if (((WithMeshClsn *)(c + 0x174))->IsOnGround()) {
-            *(short *)(c + 0x94) = (short)((*(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF)) + 0x8000);
+            *(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) = (short)((*(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF)) + 0x8000);
         }
     }
     *(int *)(c + 0x98) = 0x5000;
