@@ -45,7 +45,7 @@ If the draft starts with //cpp keep that exact first line (C++).
 
 WRITE the draft verbatim to _abwork/${name}.src (mkdir -p _abwork), then verify to see the current gap:
   python tools/abverify.py --name ${name} --src _abwork/${name}.src --wl ${WL}
-NOMATCH prints the exact mismatching instructions (target vs yours) then "NOMATCH divergences=N/words". Edit toward zero. Up to 8 attempts, but STOP EARLY if divergences do not improve for 2 consecutive attempts; keep the LOWEST-divergence version in the file and report it.
+NOMATCH prints the exact mismatching instructions (target vs yours) then "NOMATCH divergences=N/words". Edit toward zero. HIGH-DIV TRIAGE: a large N with a size gap ("sizes differ") is usually ONE missing/elided or extra instruction near the FIRST diff whose presence shifts every downstream branch offset - fix the earliest real divergence and the rest often collapse at once; do NOT treat all N as independent problems (func_ov079_02123804: div 22 -> 0 from a single volatile reload). Up to 8 attempts, but STOP EARLY if divergences do not improve for 2 consecutive attempts; keep the LOWEST-divergence version in the file and report it.
 
 STRUCTURAL LEVERS (these fix what the permuter cannot; pick by what the diff shows):
 - branch/store ORDER inside an if/else: move a store or call into/out of an arm; swap then/else bodies by inverting the condition
@@ -55,6 +55,7 @@ STRUCTURAL LEVERS (these fix what the permuter cannot; pick by what the diff sho
 - load width/signedness: u8/s8/u16/s16 local or cast flips ldrb/ldrsb/ldrh/ldrsh
 - push-set / frame off by a register: change how many locals straddle calls - reuse a var, re-emit a global/field inline instead of hoisting it, or reorder the top-of-block C89 declarations (mwccarm allocates in DECLARATION ORDER)
 - register coloring: *(T*)&G vs G[0] access form; materialize a bool (int b=(x==k); if(b)) for movne/moveq
+- CSE-elided reload before an adjacent store: if the ROM re-loads a field right before storing to a neighbouring field but mwcc reuses a value it still has live in a guard/compare register, force the fresh ldr with a volatile-qualified load: *(int*)(p+0x3b4) = *(volatile int*)(p+0x3b0);
 - two-word copy batching (ld,ld,st,st): int temps + a fake dependency 'dst_a = b ? a : a;' pins the load order without changing the value
 - prologue order (vptr load before homing this): compile as //cpp and call through a REAL vtable struct with dummy virtual slots - C fn-ptr casts always home first
 - blocked narrowing: reassign before the call ('dh = (s16)(h - dh);' as a statement) to stop copy-propagation folding the cast into the arg

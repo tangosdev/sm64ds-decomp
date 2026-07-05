@@ -39,6 +39,17 @@ ATTEMPTED = REPO / "progress" / "refine_attempted.txt"
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-div", type=int, default=6)
+    ap.add_argument("--min-div", type=int, default=0,
+                    help="lower divergence bound (exclusive of 0); default 0")
+    ap.add_argument("--high-div", action="store_true",
+                    help="target the WINNABLE-STRUCTURAL upper band (div 13-25 by "
+                         "default) instead of the div<=6 head, sorted hardest-first, "
+                         "capped 2/module so families don't dominate. Measured "
+                         "2026-07-05: 11/12 @ ~23K tok/landed on Fable, the cheapest "
+                         "paid tier yet. Category routing still drops floor/permuter "
+                         "drafts, so only genuinely reachable structural misses ship.")
+    ap.add_argument("--per-module", type=int, default=0,
+                    help="cap drafts per module (0 = no cap; --high-div defaults to 2)")
     ap.add_argument("--limit", type=int, default=20)
     ap.add_argument("--out", default=str(REPO / "progress" / "wl_refine.jsonl"))
     ap.add_argument("--include-all-cats", action="store_true",
@@ -50,6 +61,16 @@ def main():
                     help="do not skip names in refine_attempted.txt (mass sweeps by a "
                          "DIFFERENT model tier that never saw them)")
     args = ap.parse_args()
+    # --high-div presets: flip the band to the winnable-structural upper tail and
+    # cap per module. Explicit --min-div/--max-div/--per-module still override.
+    if args.high_div:
+        if args.min_div == 0:
+            args.min_div = 13
+        if args.max_div == 6:
+            args.max_div = 25
+        if args.per_module == 0:
+            args.per_module = 2
+    hardest_first = args.high_div
 
     rows = [json.loads(l) for l in (REPO / "nearmiss" / "db.jsonl")
             .read_text(encoding="utf-8").splitlines() if l.strip()]
@@ -69,17 +90,19 @@ def main():
         return text is None or "NONMATCHING" in text[:200]
 
     pool = [r for r in rows
-            if r.get("divergences") and 0 < r["divergences"] <= args.max_div
+            if r.get("divergences") and args.min_div < r["divergences"] <= args.max_div
             and r["name"] not in attempted
             and (r["module"], r["addr"]) not in parked
             and unmatched(r["name"])]
-    pool.sort(key=lambda r: r["divergences"])
+    pool.sort(key=lambda r: -r["divergences"] if hardest_first else r["divergences"])
 
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
-    chosen, checked = [], 0
+    chosen, checked, per_mod = [], 0, {}
     for r in pool:
         if len(chosen) >= args.limit:
             break
+        if args.per_module and per_mod.get(r["module"], 0) >= args.per_module:
+            continue
         checked += 1
         key = f"{r['module']}:{r['addr']}:{r['divergences']}"
         cat = cache.get(key)
@@ -91,11 +114,11 @@ def main():
                 cat = "error"
             cache[key] = cat
         r["category"] = cat
-        if args.only_category:
-            if args.only_category.lower() in cat.lower():
-                chosen.append(r)
-        elif args.include_all_cats or cat in REFINE_CATS:
+        take = (args.only_category.lower() in cat.lower() if args.only_category
+                else (args.include_all_cats or cat in REFINE_CATS))
+        if take:
             chosen.append(r)
+            per_mod[r["module"]] = per_mod.get(r["module"], 0) + 1
     CACHE.parent.mkdir(exist_ok=True)
     CACHE.write_text(json.dumps(cache))
     sys.stderr.write(f"pool {len(pool)} candidates, classified {checked}, "

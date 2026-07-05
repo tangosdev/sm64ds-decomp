@@ -107,6 +107,32 @@ python tools/crackloop.py refine --max-div 6 --limit 20   # category-routed expo
 python tools/crackloop.py land --output <task.output> --refine
 ```
 
+### The HIGH-DIV refine tier (2026-07-05, the cheapest paid vein measured)
+
+Tango's steer - "point it at the ones with the highest divs since they're the worst
+to crack" - measured out as the best paid tier in the project: **Fable 11/12 @ ~23K
+tok/landed** on div 19-25 winnable-STRUCTURAL drafts (vs ~100K on the div<=6 refine
+head, ~45-160K on fresh fan-out). The default `--max-div 6` never touches this band;
+`refine_wl.py --high-div` targets it (div 13-25, sorted hardest-first, capped 2/module,
+category routing still drops floor/permuter drafts so only reachable misses ship).
+
+```sh
+python tools/refine_wl.py --high-div --limit 12 --out progress/wl_refine.jsonl
+python tools/claims.py lock-worklist progress/wl_refine.jsonl   # then write CLAIM_IDS -> progress/claims_active_refine.json
+# Workflow({ scriptPath: "tools/refine_run.js", args: {names:[...], model:"fable", effort:"max"} })
+python tools/crackloop.py land --output <task.output> --refine
+```
+
+Why it works: a div-22 draft is almost never 22 independent problems - it is usually
+ONE missing/elided instruction near the first diff whose absence shifts every downstream
+branch offset (the triage rule now in refine_run.js). Fix the earliest real divergence
+and the rest collapse. Per-category conversion on the measured batch: `different op/idiom`
+6/6, `missing logic` 2/2, `push-set/frame` 2/2, `constant` 1/1; the lone miss was
+`extra logic` walling on a real r0/r1 allocator swap (permuter tier). Dominant lever:
+u64-mask laundering to force address materialization. Note `--high-div` does NOT exclude
+ov002/006/007 - the per-function claims lock is the collision guard; check active claims
+first (a third bot "Cursor/Grok" works those modules).
+
 Routing (tools/refine_wl.py, cached in progress/nm_categories.json): structural
 categories -> refine agents; "register allocation" / "instruction reorder" -> permuter
 (tools/permuter); "base materialization / addressing" -> floor, skipped. One refine shot

@@ -428,6 +428,18 @@ func_ov006_020c68f4):** when the target reloads a value in each arm that mwcc wa
 to CSE from the `if` compare, a volatile read in the condition forces every arm to
 re-load (`[dst+0x20]` reloaded per arm, no reuse of the cmp value).
 
+**volatile-qualified load defeats guard-register CSE before an adjacent store
+(2026-07-05, Fable, func_ov079_02123804 — FIRST high-div refine win, div 22->0):**
+the ROM reloads `[self+0x3b0]` fresh right before `str ...,[self+0x3b4]`, but mwcc
+had that value live in a guard register from the earlier `if(r1==1||r1==2||...)`
+dispatch chain and reused it. `*(int*)(self+0x3b4) = *(volatile int*)(self+0x3b0);`
+forces the fresh `ldr`. This was the ONLY real gap in a 22-divergence draft — the
+other 21 were pure alignment shift cascading off the one missing load. Lesson for
+high-div triage: a big divergence count with a size gap is often ONE missing/elided
+instruction whose absence shifts every downstream branch offset, NOT 22 independent
+problems. Validates Tango's "point it at the highest divs" steer — the structural
+category (`different op / idiom`, `missing logic`) at div 15-25 is reachable.
+
 **Mutable-variable subtraction beats the rsb const-fold (2026-07-02, same batch,
 func_ov004_020b3cb8, Opus):** `v = K - x` const-folds to `rsb`; writing
 `int v = K; v -= x;` forces the ROM's `mov rX,#K; sub` pair.
