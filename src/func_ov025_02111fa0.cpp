@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=23). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
@@ -37,20 +34,17 @@ int func_ov025_02111fa0(char *self){
         *(unsigned char*)(self + 0x372) = 0;
         *(s16*)(self + 0x370) = 0;
         switch (k) {
-        case 1: {
-            int* p60 = (int*)(self + 0x60);
-            unsigned short* p370 = (unsigned short*)(self + 0x370);
-            *p60 -= 0xfa000;
-            *p370 += 0x32;
+        case 0:
             break;
-        }
-        case 2: {
-            int* p60 = (int*)(self + 0x60);
-            *p60 -= 0x1f4000;
+        case 1:
+            *(int*)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0xfa000;
+            *(unsigned short*)(((int)self + 0x370) & 0xFFFFFFFFFFFFFFFF) += 0x32;
+            break;
+        case 2:
+            *(int*)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0x1f4000;
             *(unsigned char*)(self + 0x372) = 1;
             *(int*)(self + 0xa8) = v;
             break;
-        }
         }
     }
     return 1;

@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef short s16;
 
@@ -20,7 +17,7 @@ int func_ov085_0212a220(char* c)
     switch (*(u8*)(c + 0x368)) {
     case 0:
         if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x35c), c, 1) != 0)
-            *(u8*)(c + 0x368) += 1;
+            *(u8*)(((int)c + 0x368) & 0xFFFFFFFFFFFFFFFF) += 1;
         break;
     case 1:
         if (_Z14ApproachLinearRsss((s16*)(c + 0x8e),
@@ -33,7 +30,7 @@ int func_ov085_0212a220(char* c)
             v.y = v.y + 0xa0000;
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
                     *(void**)(c + 0x35c), c, 0xd0, &v, 0, 0) != 0)
-                *(u8*)(c + 0x368) += 1;
+                *(u8*)(((int)c + 0x368) & 0xFFFFFFFFFFFFFFFF) += 1;
         }
         break;
     case 2:

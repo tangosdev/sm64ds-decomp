@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=23). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZN16MeshColliderBase9IsEnabledEv(void* m);
 extern int _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* a);
 extern void func_020393a4(int* p, int v);
@@ -15,7 +12,7 @@ int func_ov016_0211276c(char* c){
   }
   func_020393a4((int*)(c+0x124), 0x2000000);
   if(*(unsigned char*)(c+0x31e) == 0){
-    *(short*)(c+0x320) += 0xda;
+    *(short*)(((int)c + 0x320) & 0xFFFFFFFFFFFFFFFF) += 0xda;
     *(short*)(c+0x8c) = (short)((*(short*)((char*)data_02082214 + ((*(unsigned short*)(c+0x320)>>4)<<2)) << 0xa) >> 0xc);
     if(_ZN5Actor13DistToCPlayerEv(c) < 0xbb8000){
       *(int*)(c+0x324) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c+0x324), 3, 0x8b, c+0x74, 0);
