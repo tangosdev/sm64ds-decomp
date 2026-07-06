@@ -32,4 +32,4 @@ it is fair to take over: ping the claimant first.
 | ov002: func_ov002_020f3310, 020f3d98, 020f562c, 020f5848 (0x4c each) | Cursor/Grok | 2026-07-02 | done - all four verified byte-identical |
 | ov006: func_ov006_0211a4b0 (andrew, PR #74) + 0211a648/0211a7ac/0211aa44/0211abdc/0211ad44/0211af60/0211b17c (Cursor/Grok) | mixed | 2026-07-03 | done - all eight verified byte-identical |
 | arm9: func_02056674 (0x02056674, 0x68) | (already matched earlier) | 2026-07-02 | done previously; Grok edit was a no-op and was reverted |
-| ov001 func_ov001_020ab110 (0x020ab110, size 0x118) | lunavyqo | 2026-07-06 | done - verified byte-identical |
+| arm9 _ZN5Stage9PS_UpdateEv (0x0202635c, 0x30ac) | ruspecial (Claude-assisted) | 2026-07-06 | NONMATCHING div=1170 from-scratch decomp (prior stub div=3032); 16/20 cases byte-identical; claims API was 401 so locked via this row only — taking over the paused Cursor/Grok row above |
