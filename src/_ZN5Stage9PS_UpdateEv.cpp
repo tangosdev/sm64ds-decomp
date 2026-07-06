@@ -35,6 +35,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef signed char s8;
 typedef short s16;
+typedef signed int s32;
 typedef unsigned int u32;
 
 extern "C" {
@@ -131,6 +132,15 @@ struct Stage {
 
 void Stage::PS_Update()
 {
+    register u8 var_sl;
+    register u8 var_fp;
+    s32 sp0;
+    s32 sp4;
+    s32 sp8;
+    s32 spC;
+    s32 sp10;
+    s32 var_r0;
+
     if (data_0209f210 != 0) {
         data_0209f210 = data_0209f210 - data_0208ee44;
         if (data_0209f210 == 0)
@@ -320,74 +330,65 @@ void Stage::PS_Update()
         if (data_0209f2f0 != 0)
             return;
         {
-            int done = 0;
-            int scrolled = 0;
-            int f1z = 0;
-            int f2z = 0;
-            int wrapz = 0;
-            u8 maxv = 0xf;
-            u8 onev = 1;
-            u8 twov = 2;
-            int sndUp = 0x51;
-            int sndDown = 0x52;
+            register u8 *de8_sb;
+            var_sl = 0;
+            var_fp = var_sl;
+            (void)(u32)&data_0209f2c8;
+            (void)(u32)&data_020a0de8;
+            (void)(u32)&data_0209f238;
+            sp4 = var_sl;
+            sp8 = var_sl;
+            sp0 = var_sl;
+            sp10 = 0x52;
+            spC = 0x51;
             do {
-                u8 slot = data_020a0e40;
-                int touched = f1z;
-                if (data_020a0de8[slot * 4] != 0) {
-                    if (data_020a0de8[slot * 4 + 1] != 0)
-                        touched = onev;
+                s32 de_off;
+                var_r0 = sp0;
+                de_off = data_020a0e40 * 4;
+                if ((data_020a0de8[de_off] != 0) && (data_020a0de8[de_off + 1] != 0)) {
+                    var_r0 = 1;
                 }
-                if (touched != 0) {
-                    u8 *t = &data_020a0de8[slot * 4];
-                    u8 x = t[2];
-                    if (x < 0x38 && t[3] < 0x20) {
-                        data_0209f238 = onev;
-                        scrolled = onev;
-                        data_0209f2c8 = data_0209f2c8 - 1;
-                        if (data_0209f2c8 == 0xff)
-                            data_0209f2c8 = maxv;
-                        if ((u8)x < 0x38) {
-                            data_0209f210 = data_0208ee44 * 3;
-                        } else {
-                            data_0209f210 = data_0208ee44 * 3;
-                        }
-                        goto arrows_common;
+                if ((var_r0 != 0) && ((u32)data_020a0de8[de_off + 2] < 0x38U) && ((u32)data_020a0de8[de_off + 3] < 0x20U)) {
+                    data_0209f238 = 1;
+                    var_fp = 1;
+                    data_0209f2c8 = (u8)(data_0209f2c8 - 1);
+                    if (data_0209f2c8 == 0xFF) {
+                        data_0209f2c8 = 0xF;
                     }
-                }
-                {
-                    int touched2 = f2z;
-                    if (data_020a0de8[slot * 4] != 0) {
-                        if (data_020a0de8[slot * 4 + 1] != 0)
-                            touched2 = onev;
+                    data_0209f210 = (u8)(data_0208ee44 * 3);
+                } else {
+                    s32 var_r0_2;
+                    if ((data_020a0de8[de_off] != 0) && (data_020a0de8[de_off + 1] != 0)) {
+                        var_r0_2 = 1;
+                    } else {
+                        var_r0_2 = sp4;
                     }
-                    if (touched2 != 0) {
-                        u8 *t2 = &data_020a0de8[slot * 4];
-                        if ((u8)(t2[2] - 0xc8) < 0x38 && t2[3] < 0x20) {
-                            data_0209f238 = twov;
-                            scrolled = onev;
-                            data_0209f2c8 = data_0209f2c8 + 1;
-                            if (data_0209f2c8 == 0x10)
-                                data_0209f2c8 = wrapz;
-                            data_0209f210 = data_0208ee44 * 3;
+                    if (var_r0_2 != 0) {
+                        if (((u32)(u8)(data_020a0de8[de_off + 2] - 0xC8) < 0x38U) && ((u32)data_020a0de8[de_off + 3] < 0x20U)) {
+                            data_0209f238 = 2;
+                            var_fp = 1;
+                            data_0209f2c8 = (u8)(data_0209f2c8 + 1);
+                            if (data_0209f2c8 == 0x10) {
+                                data_0209f2c8 = (u8)sp8;
+                            }
+                            data_0209f210 = (u8)(data_0208ee44 * 3);
                         }
                     }
                 }
-            arrows_common:
-                if (data_0209f2c8 == 0xf ||
-                    CountStarsCollectedInLevelToDisplay(data_0209f2c8) != 0) {
-                    done = onev;
+                if ((data_0209f2c8 == 0xF) || (CountStarsCollectedInLevelToDisplay(data_0209f2c8) != 0)) {
+                    var_sl = 1;
                     if (data_0209f238 == 1) {
-                        func_02012790(sndUp);
+                        func_02012790(spC);
                     } else if (data_0209f238 == 2) {
-                        func_02012790(sndDown);
+                        func_02012790(sp10);
                     }
                 }
-            } while (done == 0);
-            if (scrolled == 0)
-                return;
-            _ZN7Message11DisplayTextEt(data_020756d0[data_0209f2c8]);
-            return;
+            } while (var_sl == 0);
         }
+        if (var_fp == 0)
+            return;
+        _ZN7Message11DisplayTextEt(data_020756d0[data_0209f2c8]);
+        return;
     }
     case 2: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
