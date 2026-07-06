@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=82). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -68,16 +65,15 @@ void func_ov001_020aa420(void) {
 
     for (; i < 3; i++) {
         best = 0;
-        handled = (int)best;
-
         node = data_ov001_020ad634[i];
+        handled = (int)best;
         flagByte = &data_ov001_020ad628[i];
         reqFlag = data_ov001_020ad628[i];
 
         if (reqFlag == 0) {
             if (node != 0) {
                 do {
-                    node->flags.b1 = 0;
+                    *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
                     if (node->field19 == 1) {
                         *flagByte = 1;
                     }
@@ -91,7 +87,7 @@ void func_ov001_020aa420(void) {
             }
         }
 
-        node = data_ov001_020ad634[i];
+        node = *(CapNode *volatile *)&data_ov001_020ad634[i];
 
         if (func_ov001_020aa79c(i) != 0) continue;
         if (*flagByte == 2) continue;
@@ -100,11 +96,11 @@ void func_ov001_020aa420(void) {
         if (node != 0) {
             do {
                 found = _ZN5Actor10FindWithIDEj(node->field8);
-                if (found != 0 || node->field4 != 0) {
+                if (found != 0 || (int)found != node->field4) {
                     if (node->flags.b0) {
                         if (node->soundHandle == -1) {
                             node->soundHandle = func_0202a8e0(node->field4, node->field18);
-                            node->flags.b1 = 1;
+                            *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
                             func_ov001_020aa6b0(node, 1);
                         }
                         handled = 1;
@@ -118,7 +114,7 @@ void func_ov001_020aa420(void) {
                         if (node->flags.b3) {
                             best = node;
                         } else {
-                            node->flags.b3 = 1;
+                            *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 8;
                         }
                     }
                 } else {
@@ -129,7 +125,7 @@ void func_ov001_020aa420(void) {
         }
 
         if (func_ov001_020aa7b8(i, best) != 0) {
-            best->flags.b1 = 1;
+            *(u8 *)(((long long)(int)((char *)best + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
             best->soundHandle = func_0202a8e0(best->field4, best->field18);
             func_ov001_020aa6b0(best, 1);
             func_ov001_020aa6e4(i, best->field19, best);
