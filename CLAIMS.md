@@ -32,5 +32,4 @@ it is fair to take over: ping the claimant first.
 | ov002: func_ov002_020f3310, 020f3d98, 020f562c, 020f5848 (0x4c each) | Cursor/Grok | 2026-07-02 | done - all four verified byte-identical |
 | ov006: func_ov006_0211a4b0 (andrew, PR #74) + 0211a648/0211a7ac/0211aa44/0211abdc/0211ad44/0211af60/0211b17c (Cursor/Grok) | mixed | 2026-07-03 | done - all eight verified byte-identical |
 | arm9: func_02056674 (0x02056674, 0x68) | (already matched earlier) | 2026-07-02 | done previously; Grok edit was a no-op and was reverted |
-| batch3 matched: func_ov078_02125c98, func_ov060_021146d0, func_ov004_020b7cd0, _ZN3HUD15RenderCoinCountEv | ruspecial (Claude-assisted) | 2026-07-06 | done - 4 verified byte-identical |
-| batch3 NONMATCHING near-misses: func_ov079_02126a84 (div2), func_ov095_021365d8 (div3) | ruspecial (Claude-assisted) | 2026-07-06 | scheduling residuals (arg-setup / store-hoist emission order) |
+| ov001 func_ov001_020aadac (0x020aadac-0x020aaf40) | lunavyqo | 2026-07-06 | done - verified byte-identical |
