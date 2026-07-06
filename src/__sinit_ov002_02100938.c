@@ -1,22 +1,22 @@
 struct Pair { int a, b; };
 
-extern struct Pair data_ov060_0211a794;
-extern struct Pair data_ov060_0211a78c;
-extern struct Pair data_ov060_0211a76c;
-extern struct Pair data_ov060_0211a77c;
-extern struct Pair data_ov060_0211a764;
-extern struct Pair data_ov060_0211a774;
-extern struct Pair data_ov060_0211a744;
-extern struct Pair data_ov060_0211a784;
+extern struct Pair data_ov002_021081b8;
+extern struct Pair data_ov002_02108150;
+extern struct Pair data_ov002_02108168;
+extern struct Pair data_ov002_02108160;
+extern struct Pair data_ov002_02108158;
+extern struct Pair data_ov002_02108170;
+extern struct Pair data_ov002_02108140;
+extern struct Pair data_ov002_021081a0;
 
-extern struct Pair data_ov060_0211a75c;
-extern struct Pair data_ov060_0211a754;
-extern struct Pair data_ov060_0211a73c;
-extern struct Pair data_ov060_0211a74c;
-extern struct Pair data_ov060_0211a734;
-extern struct Pair data_ov060_0211a7ac;
-extern struct Pair data_ov060_0211a7a4;
-extern struct Pair data_ov060_0211a79c;
+extern struct Pair data_ov002_021081b0;
+extern struct Pair data_ov002_021081a8;
+extern struct Pair data_ov002_02108148;
+extern struct Pair data_ov002_02108198;
+extern struct Pair data_ov002_02108190;
+extern struct Pair data_ov002_02108188;
+extern struct Pair data_ov002_02108180;
+extern struct Pair data_ov002_02108178;
 
 struct Dst {
     struct Pair p0;
@@ -28,25 +28,25 @@ struct Dst {
     struct Pair p6;
     struct Pair p7;
 };
-extern struct Dst data_ov060_0211afb4;
-extern struct Dst data_ov060_0211af74;
+extern struct Dst data_ov002_0210db80;
+extern struct Dst data_ov002_0210dbc0;
 
 void __sinit_ov002_02100938(void)
 {
-    data_ov060_0211afb4.p0 = data_ov060_0211a794;
-    data_ov060_0211afb4.p1 = data_ov060_0211a78c;
-    data_ov060_0211afb4.p2 = data_ov060_0211a76c;
-    data_ov060_0211afb4.p3 = data_ov060_0211a77c;
-    data_ov060_0211afb4.p4 = data_ov060_0211a764;
-    data_ov060_0211afb4.p5 = data_ov060_0211a774;
-    data_ov060_0211afb4.p6 = data_ov060_0211a744;
-    data_ov060_0211afb4.p7 = data_ov060_0211a784;
-    data_ov060_0211af74.p0 = data_ov060_0211a75c;
-    data_ov060_0211af74.p1 = data_ov060_0211a754;
-    data_ov060_0211af74.p2 = data_ov060_0211a73c;
-    data_ov060_0211af74.p3 = data_ov060_0211a74c;
-    data_ov060_0211af74.p4 = data_ov060_0211a734;
-    data_ov060_0211af74.p5 = data_ov060_0211a7ac;
-    data_ov060_0211af74.p6 = data_ov060_0211a7a4;
-    data_ov060_0211af74.p7 = data_ov060_0211a79c;
+    data_ov002_0210db80.p0 = data_ov002_021081b8;
+    data_ov002_0210db80.p1 = data_ov002_02108150;
+    data_ov002_0210db80.p2 = data_ov002_02108168;
+    data_ov002_0210db80.p3 = data_ov002_02108160;
+    data_ov002_0210db80.p4 = data_ov002_02108158;
+    data_ov002_0210db80.p5 = data_ov002_02108170;
+    data_ov002_0210db80.p6 = data_ov002_02108140;
+    data_ov002_0210db80.p7 = data_ov002_021081a0;
+    data_ov002_0210dbc0.p0 = data_ov002_021081b0;
+    data_ov002_0210dbc0.p1 = data_ov002_021081a8;
+    data_ov002_0210dbc0.p2 = data_ov002_02108148;
+    data_ov002_0210dbc0.p3 = data_ov002_02108198;
+    data_ov002_0210dbc0.p4 = data_ov002_02108190;
+    data_ov002_0210dbc0.p5 = data_ov002_02108188;
+    data_ov002_0210dbc0.p6 = data_ov002_02108180;
+    data_ov002_0210dbc0.p7 = data_ov002_02108178;
 }

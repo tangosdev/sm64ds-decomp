@@ -8,7 +8,7 @@ struct System {
 };
 extern "C" {
 extern void func_ov006_020c9024(char *o);
-extern void func_ov006_020c8ecc(char *o);
+extern void func_ov006_020cafdc(char *o);
 extern int data_ov006_0214059c;
 }
 System* System::New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f*, Callback*);
@@ -41,6 +41,6 @@ extern "C" void func_ov006_020cb030(char *o) {
                 *(int*)(o + 0x24) << 3, 0, 0);
         }
     }
-    func_ov006_020c8ecc(o);
+    func_ov006_020cafdc(o);
     ((Animation*)(o + 0xbc))->Advance();
 }

@@ -20,7 +20,7 @@ void __sinit_ov014_02113118(void)
 {
     func_02017acc(&g_968, 0x9c02);
     func_020731dc(&g_968, func_02017ab4, &g_988);
-    _ZN13SharedFilePtr9ConstructEj(&g_978, 0x9c01);
+    func_02017acc(&g_978, 0x9c01);
     func_020731dc(&g_978, func_02017ab4, &g_994);
     _ZN13SharedFilePtr9ConstructEj(&g_980, 0x9c04);
     func_020731dc(&g_980, func_02017984, &g_9a0);

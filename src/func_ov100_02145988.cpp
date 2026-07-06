@@ -15,8 +15,8 @@ extern "C" void Vec3_RotateYAndTranslate(V3 *out, void *m, short angle, V3 *in);
 extern unsigned char data_0209f250;
 extern Camera *data_0209f318;
 extern char data_ov100_02148974;
-extern char data_ov100_02148948;
-extern V3 data_020a0ebc;
+extern char data_020a0ebc;
+extern V3 data_ov100_02148948;
 
 extern "C" int func_ov100_02145988(char *self, char *arg1)
 {
@@ -51,12 +51,12 @@ extern "C" int func_ov100_02145988(char *self, char *arg1)
     }
 
     vd = *(int *)(self + 0x98);
-    gy = data_020a0ebc.y;
-    gz = data_020a0ebc.z;
-    data_020a0ebc.x = vd;
+    gy = data_ov100_02148948.y;
+    gz = data_ov100_02148948.z;
+    data_ov100_02148948.x = vd;
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((V3 *)(self + 0xa4), &data_ov100_02148948, *(short *)(self + 0x8e), &vec);
+    Vec3_RotateYAndTranslate((V3 *)(self + 0xa4), &data_020a0ebc, *(short *)(self + 0x8e), &vec);
     return 1;
 }
