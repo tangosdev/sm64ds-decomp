@@ -343,6 +343,19 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
   arrays 2 bytes apart) where the draft uses one base + folded offsets. Restructuring to
   two externs changes codegen (worse); class is parked for hand-modeling
   (func_ov007_020b8ec0, needs 0x0208eeec AND 0x0208eeee pooled).
+- **By-value small struct arg pins a frame pointer the ROM lacks (2026-07-06).** In C
+  mode, passing a small struct (e.g. a V2 vec2) BY VALUE to a callee makes mwccarm split
+  it across r3/[sp] with a dynamic sp adjustment at the call site, which forces a
+  `mov fp, sp` frame pointer and pulls fp into the push set. The ROM has no fp. Fix: pass
+  a POINTER to a caller-local copy instead - `V2 tmp = pos[j]; f(p,c,j,&tmp);`. Killing
+  the fp collapsed ~1649 divergences / +140 bytes to a full match on a 1583-insn function
+  (func_ov006_02115b0c, Fable, from PR #104 draft). Diagnostic tell: target `sub sp,#N`
+  with NO `mov fp, sp` while your build emits both a smaller `sub sp` and `mov fp, sp`,
+  and the whole function is register-skewed downstream - that is ONE systemic fp defect,
+  not N independent coloring problems. Companion levers that landed the same function:
+  u64-mask laundering on the pooled spawn-slot stores, volatile vtable stores to defeat
+  function-wide CSE of a shared base pointer, inline volatile-RMW counter increments, and
+  block-scoping every loop counter (`for (int i=...)`) to stabilize the per-loop reg set.
 
 ## 6f. The pragma space, exhaustively characterized (2026-07-01)
 
