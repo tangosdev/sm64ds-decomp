@@ -1,34 +1,36 @@
 //cpp
-// NONMATCHING: 16/20 switch cases byte-identical; residuals: case1 star-scroll loop shape (-11 insn), case8/0xa controller+options touch handlers (-8/-13 insn, plus whole-block register rotations), case7 d45c/d454 RMW pair coloring (8), case0x11 block coloring (41). (div=1170 aligned)
+// NONMATCHING: 16/20 switch cases byte-identical (jump-table-anchored region compare, total region div=690); global aligned div=1239 - the global aligner is anchor-sensitive across the residual -0x9c size skew, the region measure is the honest one. Residuals: case1 star-scroll loop (-11 insn), case8/0xa language-arm lsl hoist + mode-block index rematerialization (-5/-13 insn), case7 d45c/d454 RMW pair coloring (8), case0x11 whole-block coloring (41), and case0xa's mid-case 47-word literal pool which cannot align until all preceding sizes are exact.
 /* Stage::PS_Update at 0x0202635c (arm9), size 0x30ac (12,460 bytes, 3115 insns)
  * Compiler mwccarm 1.2/sp2p3, flags:
  * -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  *
  * Full decompilation of the pause-screen state machine: 6 timer blocks +
- * a 20-case switch on data_0209f248. Verified relocation-aware against the
- * ROM bytes per region (jump-table-extracted, independently aligned):
- *   div=0 (byte-identical): prologue+timers, jump table, cases 0,2,3,4,5,6,
- *          9,0xb,0xc,0xd,0xe,0xf,0x10,0x12,0x13 and the shared tail.
- *   case 1  (0x3b8): star-scroll arrow loop is -11 insns; the ROM spills five
- *          named constant locals ([sp..sp+0x10] = 0,0,0,0x51,0x52) and keeps
- *          0xf/1/2 in r7/r8/r6; the first-arm dead re-check (and+cmp of the
- *          x coordinate) resists every merged-arms spelling tried.
- *   case 7 (0x1340): matches except the d45c/d454 interleaved RMW pair
- *          colors r2/r3 swapped (predicated-pair regperm).
- *   case 8/0xa (0x15ac/0x1db4): touch-region handlers; structure right,
- *          -8/-13 insns in the t-flag chains + whole-block register
- *          rotation (slot/tx/idx land one register lower than ROM).
- *   case 0x11 (0x2d68): size-exact, whole-block coloring rotation only.
+ * a 20-case switch on data_0209f248. Byte-identical regions: prologue,
+ * timers, jump table, cases 0,2,3,4,5,6,9,0xb,0xc,0xd,0xe,0xf,0x10,0x12,
+ * 0x13 and the shared tail.
  *
  * Working notes for the refine tier:
- * - The dead compare tails after each button-select (`ldrb;sub;and;cmp` right
- *   before pop) come from `if ((u8)(dea[...]-K) < N) return; return;` - the
- *   tail-merge keeps the cmp. Bare expression statements get DCE'd.
- * - data_020a0e40/dea/deb behave volatile (fresh loads); de8/de9 do NOT
- *   (values reused across blocks in the ROM), hence the mixed extern decls.
- * - Sizes: candidate 0x3008 vs 0x30ac; closing case1/8/0xa's missing insns
- *   should snap the global register pressure (and the case-0x11/8 colorings)
- *   into place. */
+ * - Dead compare tails after each button-select come from
+ *   `if ((u8)(dea[...]-K) < N) return; return;` (tail-merge keeps the cmp;
+ *   bare expressions and empty ifs are DCE'd; identical-arms if/else inside
+ *   a loop merges WITHOUT the cmp - that is case 1's remaining dead-cmp).
+ * - data_020a0e40/dea/deb behave volatile; de8/de9 do not (ROM reuses their
+ *   loads across blocks). Mixed extern decls below reflect that.
+ * - Case 8/0xa wall: the ROM's language arms are 6 insns (no lsl); slot*4
+ *   is materialized once at the join and REMATERIALIZED per mode block
+ *   (r0 at the join, fresh lsl inside each block after calls clobber it).
+ *   Every spelling tried (idx var before/after ty, no idx var, int slot,
+ *   per-arm slot locals+merge) hoists one lsl into each language arm and
+ *   keeps a long-lived idx register instead. 3 extra insns x 2 cases, and
+ *   it perturbs the whole-case register rotation.
+ * - Case 8 mode blocks decoded: `if (a==0) goto change; t=1;
+ *   if (!(a && de9[idx])) t=0; if (t==0) goto keep;
+ *   if (f2dc != MODE) goto keep; change: ... keep: ...` - this shape now
+ *   matches the ROM's control flow exactly (cmp/beq/cmp/beq chain).
+ * - Frame is 0x14: five named constant locals (0,0,0,0x51,0x52) in case 1
+ *   spill to [sp..sp+0x10]; 0xf/1/2 live in r7/r8/r6. Restructuring case-1
+ *   temps can silently drop spill slots and shift every add sp - check
+ *   `sub sp,#0x14` first after any case-1 edit. */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef signed char s8;
@@ -699,8 +701,8 @@ void Stage::PS_Update()
             tx = data_020a0dea[slot * 4];
             relx = (u8)(tx - 0x4c);
         }
-        idx = slot * 4;
         ty = data_020a0deb[slot * 4];
+        idx = slot * 4;
         if ((u8)(ty - 0x1e) < 0x24) {
             if ((u8)(ty - 0x20) >= 0x20)
                 return;
@@ -719,14 +721,15 @@ void Stage::PS_Update()
             {
                 int t = 1;
                 u8 a = data_020a0de8[slot * 4];
-                if (a != 0) {
-                    if (a != 0 && data_020a0de9[idx] != 0)
-                        t = 1;
-                    else
-                        t = 0;
-                    if (t != 0 && data_0209f2dc != 0)
-                        goto mode0_keep;
-                }
+                if (a == 0)
+                    goto mode0_change;
+                if (!(a != 0 && data_020a0de9[idx] != 0))
+                    t = 0;
+                if (t == 0)
+                    goto mode0_keep;
+                if (data_0209f2dc != 0)
+                    goto mode0_keep;
+            mode0_change:
                 data_0209f2dc = 0;
                 SetControllerMode(0);
                 data_0209f22c = data_0208ee44 << 3;
@@ -761,14 +764,15 @@ void Stage::PS_Update()
             {
                 int t = 1;
                 u8 a = data_020a0de8[slot * 4];
-                if (a != 0) {
-                    if (a != 0 && data_020a0de9[idx] != 0)
-                        t = 1;
-                    else
-                        t = 0;
-                    if (t != 0 && data_0209f2dc == 1)
-                        goto mode1_keep;
-                }
+                if (a == 0)
+                    goto mode1_change;
+                if (!(a != 0 && data_020a0de9[idx] != 0))
+                    t = 0;
+                if (t == 0)
+                    goto mode1_keep;
+                if (data_0209f2dc != 1)
+                    goto mode1_keep;
+            mode1_change:
                 data_0209f2dc = 1;
                 SetControllerMode(1);
                 data_0209f22c = data_0208ee44 << 3;
@@ -803,14 +807,15 @@ void Stage::PS_Update()
             {
                 int t = 1;
                 u8 a = data_020a0de8[slot * 4];
-                if (a != 0) {
-                    if (a != 0 && data_020a0de9[idx] != 0)
-                        t = 1;
-                    else
-                        t = 0;
-                    if (t != 0 && data_0209f2dc == 2)
-                        goto mode2_keep;
-                }
+                if (a == 0)
+                    goto mode2_change;
+                if (!(a != 0 && data_020a0de9[idx] != 0))
+                    t = 0;
+                if (t == 0)
+                    goto mode2_keep;
+                if (data_0209f2dc != 2)
+                    goto mode2_keep;
+            mode2_change:
                 data_0209f2dc = 2;
                 SetControllerMode(2);
                 data_0209f22c = data_0208ee44 << 3;
