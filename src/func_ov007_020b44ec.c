@@ -1,7 +1,4 @@
-// NONMATCHING: register allocation (div=25). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern int func_ov007_020b58e4(void);
+extern int func_ov007_020b58e4(void* t);
 extern void func_ov007_020ae834(void* t);
 extern int func_ov007_020b5068(void* t);
 extern void func_ov007_020b50e8(void* t);
@@ -13,7 +10,7 @@ void func_ov007_020b44ec(void* self) {
     if (*(unsigned short*)p24 == 0xa) return;
     void* p4 = *(void**)((char*)o + 4);
     if (*(int*)((char*)p4 + 4) == 0xff) return;
-    short r = (short)func_ov007_020b58e4();
+    short r = (short)func_ov007_020b58e4(self);
     p4 = *(void**)((char*)o + 4);
     *(short*)((char*)p4 + 2) = r;
     func_ov007_020ae834(o);
@@ -22,6 +19,9 @@ void func_ov007_020b44ec(void* self) {
         case 0:
             func_ov007_020b5068(self);
             break;
+        case 2:
+            func_ov007_020b50e8(self);
+            break;
         case 1:
         case 3:
         case 4:
@@ -29,12 +29,7 @@ void func_ov007_020b44ec(void* self) {
         case 6:
         case 7:
             break;
-        case 2:
-            func_ov007_020b50e8(self);
-            if (*(int*)((char*)o + 0x20) != 0)
-                func_ov007_020b5bf0(self);
-            break;
-        default:
-            break;
     }
+    if (*(int*)((char*)o + 0x20) == 0) return;
+    func_ov007_020b5bf0(self);
 }
