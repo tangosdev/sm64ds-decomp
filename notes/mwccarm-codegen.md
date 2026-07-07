@@ -356,6 +356,26 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
   u64-mask laundering on the pooled spawn-slot stores, volatile vtable stores to defeat
   function-wide CSE of a shared base pointer, inline volatile-RMW counter increments, and
   block-scoping every loop counter (`for (int i=...)`) to stabilize the per-loop reg set.
+- **`#pragma opt_common_subs off` = EBB-local CSE = per-block rematerialization (2026-07-07,
+  MASTER lever on LARGE multi-EBB functions).** On a big switch/state-machine function the
+  ROM computes a shared index like `slot*4` ONCE per extended basic block and rematerializes
+  it fresh after each call clobbers the reg, folding array accesses into `[base, idx, lsl #2]`
+  with NO long-lived lsl. mwccarm's default GLOBAL CSE instead hoists one `lsl`/index into a
+  callee-saved reg and keeps it live function-wide - the classic "lsl hoist / long-lived CSE"
+  wall. `#pragma opt_common_subs off` switches the backend to EBB-local CSE, which IS the ROM
+  shape. Under the pragma the control inverts and becomes a precise tool: a **named local**
+  (`int idxa = slot*4;`) acts as MANUAL long-lived CSE for values the ROM genuinely shares
+  across blocks, while an **inline expression** (`arr[slot*4]`) rematerializes per EBB. Two
+  companion idioms are needed because the pragma also re-enables jump-threading of two-valued
+  bools: (a) declare `int t = 0;` BEFORE the load that feeds it (early-init `mov`+`movne`, no
+  threading); (b) a SINGLE reused `int` scratch temp reassigned per range check (not separate
+  `rel0`/`rel1` as m2c renders them) reproduces the ROM's stale-temp reads - a later block that
+  reads `(u8)tmpv` gets the LAST assignment, matching the ROM's register reuse. On
+  Stage::PS_Update (0x0202635c, 3115 insns) this took case 8 from 213 div to byte-exact incl.
+  the language arms, placed cases 1 & 0xa's mid-case literal pools exactly, and cut global div
+  916->756 / region 690->180 (16->17 cases byte-identical). Pair with per-site u64-mask
+  laundering (sec 6e/6g) for the struct-style `add base,idx,lsl#2`+`[rX,#k]` accesses.
+  **This corrects 6f's "inert" verdict - see the scope note there.**
 - **`bics rX,rX,#0` — force BIC by hiding the mask behind a non-const local (2026-07-07).**
   Target emits `bics rX,rX,#0` (a `x & ~m` with `m` materialized to 0), but every *literal*
   spelling (`x & ~0`, `x & 0xFFFFFFFF`, `x & ~0u`) folds to identity / `cmp` at parse time
@@ -382,6 +402,13 @@ Swept 20 CodeWarrior pragmas x all 96 div<=4 near-misses (1,920 compiles). Verdi
   opt_unroll_loops off, optimization_level 1/2/3, optimize_for_size off, pool_data
   on/off, global_optimizer off, auto_inline off, inline_depth(0), ipa off, common on -
   zero divergence changes anywhere. scheduling/peephole are silently ignored (6d).
+  **SCOPE CORRECTION (2026-07-07): this "inert" verdict is SIZE-SCOPED to the div<=4
+  small-function backlog, which has no cross-block common subexpression to eliminate.**
+  On LARGE multi-EBB functions with a genuine function-wide shared CSE (e.g. a slot-address
+  reused across many switch cases), `opt_common_subs off` is a MASTER lever, not inert - it
+  flips global CSE to EBB-local rematerialization, the ROM's shape. See 6e (2026-07-07,
+  Stage::PS_Update). Do NOT skip this pragma on a big function just because the small-batch
+  sweep found it inert. `opt_propagation off` is likewise live on large functions (6e 07-05).
 
 ## 6g. The materialization "floor", precisely bounded (2026-07-01 corpus search)
 
