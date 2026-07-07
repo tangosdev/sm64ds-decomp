@@ -65,6 +65,24 @@ def src_authors() -> dict[str, str]:
     return authors
 
 
+def attribution_overrides() -> dict[str, str]:
+    """Manual {'src/name.c': github_login} for matches the git-add author gets wrong -- e.g. a
+    contributor's work that landed via a maintainer's consolidating PR/squash, which records the
+    maintainer (not the matcher) as the commit author. Applied with HIGHEST priority. Lives in
+    attribution.json at the repo root: {"overrides": {"src/x.c": "login", ...}}."""
+    p = REPO / "attribution.json"
+    if not p.is_file():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        ov = data.get("overrides", {}) if isinstance(data, dict) else {}
+        return {k: v for k, v in ov.items()
+                if isinstance(k, str) and k.startswith("src/") and isinstance(v, str) and v}
+    except Exception as e:
+        print(f"  (attribution.json skipped: {e})")
+        return {}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="chaos-db.json")
@@ -83,6 +101,7 @@ def main():
                     continue
 
     authors = src_authors()
+    overrides = attribution_overrides()  # manual fixes, highest priority
 
     functions = []
     total_b = matched_b = matched_n = 0
@@ -108,8 +127,10 @@ def main():
                    "addr": addr, "size": size, "matched": matched}
             if src_path:
                 rec["srcPath"] = src_path
-                if matched and src_path in authors:
-                    rec["author"] = authors[src_path]
+                if matched:
+                    a = overrides.get(src_path) or authors.get(src_path)
+                    if a:
+                        rec["author"] = a
             if matched:
                 matched_b += size
                 matched_n += 1

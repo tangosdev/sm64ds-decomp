@@ -1,0 +1,13 @@
+{
+  "note": "Manual match-author overrides for the contributor chart, applied by tools/chaos_db_ci.py with top priority. Use this when the git-add author is wrong -- e.g. a contributor's work landed via a maintainer's consolidating PR/squash, which records the maintainer as the commit author instead of the actual matcher.",
+  "overrides": {
+    "src/func_02035860.c": "ruspecial",
+    "src/func_ov002_020aefa4.c": "ruspecial",
+    "src/func_ov006_02114fd0.c": "ruspecial",
+    "src/func_ov006_02114fec.c": "ruspecial",
+    "src/func_ov006_02115008.c": "ruspecial",
+    "src/func_ov006_02115024.c": "ruspecial",
+    "src/func_ov006_02115060.c": "ruspecial",
+    "src/func_ov071_0211f6f8.cpp": "ruspecial"
+  }
+}
