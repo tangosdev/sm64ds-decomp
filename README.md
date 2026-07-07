@@ -1,6 +1,11 @@
 # sm64ds-decomp
 
+[![Discord](https://img.shields.io/badge/Discord-join%20the%20chat-5865F2?logo=discord&logoColor=white)](https://discord.gg/JXckvdARc)
+
 A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
+
+New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**, coordinate work in
+**[CLAIMS.md](CLAIMS.md)**, and if you review or merge PRs read **[MERGE.md](MERGE.md)**.
 
 ## Progress
 
