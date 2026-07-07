@@ -1,15 +1,10 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern int data_ov001_020ad470;
+// NONMATCHING: materialized byte-RMW tail has r1/r0 where ROM uses r2/r1 (div=4).
+extern int data_ov001_020ad470[];
 
-void func_ov001_020ab3c4(void *r0) {
-    char *ptr = (char *)r0;
-    *(int *)ptr = (int)&data_ov001_020ad470;
-    *(int *)(ptr + 0xc) = 0;
-    *(int *)(ptr + 0x10) = 0;
-    
-    char *r2 = &ptr[0x1b];
-    unsigned char r1 = *r2;
-    *r2 = r1 | 4;
+void func_ov001_020ab3c4(char *c)
+{
+    *(int **)c = data_ov001_020ad470;
+    *(int *)(c + 0xc) = 0;
+    *(int *)(c + 0x10) = 0;
+    *(unsigned char *)(((long long)(int)(c + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 4;
 }
