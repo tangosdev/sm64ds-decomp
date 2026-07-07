@@ -1,10 +1,11 @@
 //cpp
-// NONMATCHING: different op / idiom (div=40). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 
 struct Player {
+    char pad[0x5c];
+    Vector3 pos;
+    char pad2[0x6f9 - 0x68];
+    unsigned char flag6f9;
     void EnterWhirlpool();
 };
 struct Actor {
@@ -26,11 +27,9 @@ extern "C" int func_ov026_02111d4c(char* c)
 {
     Player* pl = ((Actor*)c)->ClosestPlayer();
     if (pl != 0) {
-        int* q = (int*)((char*)pl + 0x5c);
         Vector3 v;
-        v.x = q[0];
-        v.y = q[1];
-        v.z = q[2];
+        Vector3* p0 = (Vector3*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+        v = *p0;
 
         if (Vec3_HorzDist((Vector3*)(c + 0x1a8), &v) <= 0x12c000) {
             int e = *(int*)(c + 0x1ac) - v.y;
@@ -42,37 +41,32 @@ extern "C" int func_ov026_02111d4c(char* c)
             }
         }
 
-        if (*(unsigned char*)((char*)pl + 0x6f9) == 0) {
+        if (pl->flag6f9 == 0) {
             int dd = Vec3_Dist((Vector3*)(c + 0x1a8), &v);
             if (dd < 0x44c000) {
                 Vector3 m;
+                Vector3 out;
+                int q;
+                q = 0x44c000;
+                q -= dd;
+                q = q / 35;
                 m.x = 0;
                 m.y = 0;
-                m.z = (0x44c000 - dd) / 35;
-
-                Vector3 out;
+                m.z = q;
                 out.x = 0;
                 out.y = 0;
                 out.z = 0;
 
-                int ang = ((Actor*)c)->HorzAngleToCPlayer();
-                Matrix4x3_FromRotationY(&data_020a0e68, (short)(ang + 0x8000));
+                Matrix4x3_FromRotationY(&data_020a0e68, (short)(((Actor*)c)->HorzAngleToCPlayer() + 0x8000));
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
                 MulVec3Mat4x3(&m, &data_020a0e68, &out);
 
-                int* r = (int*)((char*)pl + 0x5c);
-                m.x = r[0];
-                int nx = r[0] + out.x;
-                m.y = r[1];
-                int ny = r[1] + out.y;
-                m.z = r[2];
-                int nz = r[2] + out.z;
-                m.y = ny;
-                m.z = nz;
-                m.x = nx;
-                r[0] = nx;
-                r[1] = ny;
-                r[2] = nz;
+                Vector3* p1 = (Vector3*)(((int)(((int)pl) & 0xFFFFFFFFFFFFFFFFull) + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+                m = *p1;
+                m.x += out.x;
+                m.y += out.y;
+                m.z += out.z;
+                pl->pos = m;
             }
         }
     }
