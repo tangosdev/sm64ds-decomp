@@ -356,6 +356,16 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
   u64-mask laundering on the pooled spawn-slot stores, volatile vtable stores to defeat
   function-wide CSE of a shared base pointer, inline volatile-RMW counter increments, and
   block-scoping every loop counter (`for (int i=...)`) to stabilize the per-loop reg set.
+- **`bics rX,rX,#0` — force BIC by hiding the mask behind a non-const local (2026-07-07).**
+  Target emits `bics rX,rX,#0` (a `x & ~m` with `m` materialized to 0), but every *literal*
+  spelling (`x & ~0`, `x & 0xFFFFFFFF`, `x & ~0u`) folds to identity / `cmp` at parse time
+  because mwccarm constant-propagates before instruction selection. Feed the mask through a
+  non-const local or a tiny inline helper (`static inline int clr(int x,int m){return x&~m;}`
+  called with a runtime-looking `m` that is provably 0) so selection runs on `x & ~m` and
+  picks BIC *before* the value-numbering pass proves `m==0`. Cracked _ZN5Stage8BehaviorEv
+  (Fable, div 49→0) and the same residual on the Stage::PS_Update near-miss. Pairs with
+  `#pragma opt_common_subs off` + a named manual-CSE local (the EBB-CSE master lever) which
+  carried the rest of that 444-insn C++ dispatcher.
 
 ## 6f. The pragma space, exhaustively characterized (2026-07-01)
 
