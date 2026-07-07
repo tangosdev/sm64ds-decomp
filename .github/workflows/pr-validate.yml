@@ -82,8 +82,10 @@ jobs:
             const marker = '<!-- pr-link-validation -->';
             let body = `${marker}\n### ${icon} PR link validation — ${STATUS}\n\n${SUMMARY || ''}`;
             if (DETAILS && DETAILS.trim()) {
-              body += `\n\n<details><summary>details</summary>\n\n\`\`\`\n${DETAILS}\n\`\`\`\n</details>`;
+              // DETAILS is a pre-rendered markdown table from pr_linkcheck --md; drop it in as-is.
+              body += `\n\n${DETAILS.trim()}`;
             }
+            body += `\n\n<sub>Each changed \`src/*.c|*.cpp\` is compiled and its relocated bytes compared to the binary data on a private build box. Passing requires every changed file to reproduce the ROM byte-for-byte with correct relocation targets — this catches WRONG-DEST relocations and non-reproducing near-misses that ledger-scoped linkcheck skips.</sub>`;
             const { owner, repo } = context.repo;
             const issue_number = context.payload.pull_request.number;
             const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
