@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: 16/20 switch cases byte-identical (jump-table-anchored region compare, total region div=690); global aligned div=1239 - the global aligner is anchor-sensitive across the residual -0x9c size skew, the region measure is the honest one. Residuals: case1 star-scroll loop (-11 insn), case8/0xa language-arm lsl hoist + mode-block index rematerialization (-5/-13 insn), case7 d45c/d454 RMW pair coloring (8), case0x11 whole-block coloring (41), and case0xa's mid-case 47-word literal pool which cannot align until all preceding sizes are exact.
+// NONMATCHING: 17/20 switch cases byte-identical (jump-table-anchored region compare, region div=180; global aligned div=756, was 916). KEY UNLOCK: #pragma opt_common_subs off switches mwccarm to EBB-local CSE = the ROM's per-block slot*4 rematerialization (case 8 now BYTE-EXACT incl. language arms; mid-case 47-word pools in cases 1 and 0xa now placed exactly as ROM). Named locals = manual long-lived CSE under the pragma (int idxa = slot*4 for cross-block reuse); inline exprs remat per EBB. Shared reused int temp (tmpv/rel/rely - ONE variable reassigned per range check, m2c shows them as separate rel0/rel1) reproduces the ROM's stale-temp reads (case 0xa bl_toggle entry tests (u8)tmpv NOT relx - ROM reads the stale temp; opt_okback in 0xa is || not &&). Residuals: case 1 (45: dead-cmp-no-branch cell at loop arm A - branch removal keeps and+cmp, every guarded-dead-code spelling either keeps the bhs or DCEs the cmp too; -2 insns), case 0xa (111: pure reg rotation slot r6/tx r3/ty2 r2 vs mine r2/r1/r0, size EXACT), case 0x11 (24: same rotation class, size exact). The two rotations survive decl-order + register-kw permutation and may be coupled to case 1's residual via function-wide allocation.
 /* Stage::PS_Update at 0x0202635c (arm9), size 0x30ac (12,460 bytes, 3115 insns)
  * Compiler mwccarm 1.2/sp2p3, flags:
  * -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
@@ -123,6 +123,7 @@ extern u8 data_020a0de9[]; /* touch: pressed  [slot*4]   */
 extern volatile u8 data_020a0dea[]; /* touch: x        [slot*4]   */
 extern volatile u8 data_020a0deb[]; /* touch: y        [slot*4]   */
 
+#define DE8P(off) ((u8 *)((long long)(int)(data_020a0de8 + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
 
@@ -130,6 +131,7 @@ struct Stage {
     static void PS_Update();
 };
 
+#pragma opt_common_subs off
 void Stage::PS_Update()
 {
     register u8 var_sl;
@@ -234,10 +236,12 @@ void Stage::PS_Update()
         if (data_0209f300 != 0)
             return;
         {
-            u8 slot = data_020a0e40;
             int touched = 0;
-            if (data_020a0de8[slot * 4] != 0 && data_020a0de9[slot * 4] != 0)
-                touched = 1;
+            u8 slot = data_020a0e40;
+            if (data_020a0de8[slot * 4] != 0) {
+                if (data_020a0de9[slot * 4] != 0)
+                    touched = 1;
+            }
             if (!touched) {
                 if (IsButtonInputValid() == 0)
                     return;
@@ -333,9 +337,9 @@ void Stage::PS_Update()
             register u8 *de8_sb;
             var_sl = 0;
             var_fp = var_sl;
-            (void)(u32)&data_0209f2c8;
-            (void)(u32)&data_020a0de8;
             (void)(u32)&data_0209f238;
+            (void)(u32)&data_020a0de8;
+            (void)(u32)&data_0209f2c8;
             sp4 = var_sl;
             sp8 = var_sl;
             sp0 = var_sl;
@@ -343,31 +347,38 @@ void Stage::PS_Update()
             spC = 0x51;
             do {
                 s32 de_off;
+                u8 sl2;
+                u8 a;
+                u8 vx;
                 var_r0 = sp0;
-                de_off = data_020a0e40 * 4;
-                if ((data_020a0de8[de_off] != 0) && (data_020a0de8[de_off + 1] != 0)) {
+                sl2 = data_020a0e40;
+                de_off = sl2 * 4;
+                a = data_020a0de8[sl2 * 4];
+                if ((a != 0) && (DE8P(de_off)[1] != 0)) {
                     var_r0 = 1;
                 }
-                if ((var_r0 != 0) && ((u32)data_020a0de8[de_off + 2] < 0x38U) && ((u32)data_020a0de8[de_off + 3] < 0x20U)) {
+                if ((var_r0 != 0) && ((u32)(vx = DE8P(sl2 * 4)[2]) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
+                    data_0209f2c8 = (u8)(data_0209f2c8 - 1);
                     data_0209f238 = 1;
                     var_fp = 1;
-                    data_0209f2c8 = (u8)(data_0209f2c8 - 1);
-                    if (data_0209f2c8 == 0xFF) {
-                        data_0209f2c8 = 0xF;
+                    if (((u32)vx & 0xffU) < 0x38U) {
+                        if (data_0209f2c8 == 0xFF) {
+                            data_0209f2c8 = 0xF;
+                        }
                     }
                     data_0209f210 = (u8)(data_0208ee44 * 3);
                 } else {
                     s32 var_r0_2;
-                    if ((data_020a0de8[de_off] != 0) && (data_020a0de8[de_off + 1] != 0)) {
+                    if ((a != 0) && (DE8P(sl2 * 4)[1] != 0)) {
                         var_r0_2 = 1;
                     } else {
                         var_r0_2 = sp4;
                     }
                     if (var_r0_2 != 0) {
-                        if (((u32)(u8)(data_020a0de8[de_off + 2] - 0xC8) < 0x38U) && ((u32)data_020a0de8[de_off + 3] < 0x20U)) {
+                        if (((u32)(u8)(DE8P(sl2 * 4)[2] - 0xC8) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
+                            data_0209f2c8 = (u8)(data_0209f2c8 + 1);
                             data_0209f238 = 2;
                             var_fp = 1;
-                            data_0209f2c8 = (u8)(data_0209f2c8 + 1);
                             if (data_0209f2c8 == 0x10) {
                                 data_0209f2c8 = (u8)sp8;
                             }
@@ -420,10 +431,12 @@ void Stage::PS_Update()
         if (data_0209f300 != 0)
             return;
         {
-            u8 slot = data_020a0e40;
             int touched = 0;
-            if (data_020a0de8[slot * 4] != 0 && data_020a0de9[slot * 4] != 0)
-                touched = 1;
+            u8 slot = data_020a0e40;
+            if (data_020a0de8[slot * 4] != 0) {
+                if (data_020a0de9[slot * 4] != 0)
+                    touched = 1;
+            }
             if (!touched) {
                 if (IsButtonInputValid() == 0)
                     return;
@@ -540,10 +553,12 @@ void Stage::PS_Update()
         if (data_0209f300 != 0)
             return;
         {
-            u8 slot = data_020a0e40;
             int touched = 0;
-            if (data_020a0de8[slot * 4] != 0 && data_020a0de9[slot * 4] != 0)
-                touched = 1;
+            u8 slot = data_020a0e40;
+            if (data_020a0de8[slot * 4] != 0) {
+                if (data_020a0de9[slot * 4] != 0)
+                    touched = 1;
+            }
             if (!touched) {
                 if (IsButtonInputValid() == 0)
                     return;
@@ -668,18 +683,18 @@ void Stage::PS_Update()
         _ZN5Stage25PS_UpdateOkAndBackButtonsEb(1);
         SetBg2Offset(0, 0);
         data_0209d45c &= ~2;
-        data_0209d454 |= 3;
         data_0209d45c |= 4;
         data_0209d45c &= ~8;
+        data_0209d454 |= 3;
         return;
     }
     case 8: {
         u8 slot;
+        u8 ty;
         u8 tx;
         u8 relx;
         u8 firstw;
-        u8 ty;
-        int idx;
+        int idxa;
         if (data_0209f300 != 0)
             return;
         if (data_020a0de8[data_020a0e40 * 4] == 0) {
@@ -702,15 +717,15 @@ void Stage::PS_Update()
             tx = data_020a0dea[slot * 4];
             relx = (u8)(tx - 0x4c);
         }
+        idxa = slot * 4;
         ty = data_020a0deb[slot * 4];
-        idx = slot * 4;
         if ((u8)(ty - 0x1e) < 0x24) {
             if ((u8)(ty - 0x20) >= 0x20)
                 return;
             if (data_0209f2a4 == 1) {
                 int t = 0;
-                if (data_020a0de8[slot * 4] != 0) {
-                    if (data_020a0de9[idx] != 0)
+                if (data_020a0de8[idxa] != 0) {
+                    if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -724,7 +739,7 @@ void Stage::PS_Update()
                 u8 a = data_020a0de8[slot * 4];
                 if (a == 0)
                     goto mode0_change;
-                if (!(a != 0 && data_020a0de9[idx] != 0))
+                if (!(a != 0 && data_020a0de9[slot * 4] != 0))
                     t = 0;
                 if (t == 0)
                     goto mode0_keep;
@@ -752,8 +767,8 @@ void Stage::PS_Update()
                 return;
             if (data_0209f2a4 == 2) {
                 int t = 0;
-                if (data_020a0de8[slot * 4] != 0) {
-                    if (data_020a0de9[idx] != 0)
+                if (data_020a0de8[idxa] != 0) {
+                    if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -763,12 +778,11 @@ void Stage::PS_Update()
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xe10;
             data_0209f244 = data_0208ee44 << 2;
             {
-                int t = 1;
+                int t;
                 u8 a = data_020a0de8[slot * 4];
                 if (a == 0)
                     goto mode1_change;
-                if (!(a != 0 && data_020a0de9[idx] != 0))
-                    t = 0;
+                t = (a != 0 && data_020a0de9[slot * 4] != 0);
                 if (t == 0)
                     goto mode1_keep;
                 if (data_0209f2dc != 1)
@@ -795,8 +809,8 @@ void Stage::PS_Update()
                 return;
             if (data_0209f2a4 == 3) {
                 int t = 0;
-                if (data_020a0de8[slot * 4] != 0) {
-                    if (data_020a0de9[idx] != 0)
+                if (data_020a0de8[idxa] != 0) {
+                    if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
@@ -806,12 +820,11 @@ void Stage::PS_Update()
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xf10;
             data_0209f244 = data_0208ee44 << 2;
             {
-                int t = 1;
+                int t;
                 u8 a = data_020a0de8[slot * 4];
                 if (a == 0)
                     goto mode2_change;
-                if (!(a != 0 && data_020a0de9[idx] != 0))
-                    t = 0;
+                t = (a != 0 && data_020a0de9[slot * 4] != 0);
                 if (t == 0)
                     goto mode2_keep;
                 if (data_0209f2dc != 2)
@@ -834,32 +847,32 @@ void Stage::PS_Update()
                 return;
             }
         } else {
-            u8 a0 = data_020a0de8[slot * 4];
             int t = 0;
+            u8 a0 = data_020a0de8[idxa];
             if (a0 != 0) {
-                if (data_020a0de9[idx] != 0)
+                if (data_020a0de9[idxa] != 0)
                     t = 1;
             }
-            if (t != 0 && relx < firstw && (u8)(ty - 0x98) < 0x20)
+            if (t == 0)
+                goto chk218;
+            if (relx >= firstw)
+                goto chk218;
+            if ((u8)(ty - 0x98) < 0x20)
                 goto okback;
+        chk218:
             if (data_0209f218 == 0) {
                 int t2;
-                if (a0 == 0) {
-                    t2 = 0;
-                } else if (data_020a0de9[idx] != 0) {
-                    t2 = 1;
-                } else {
-                    t2 = 0;
-                }
-                if (t2 != 0 &&
-                    (u8)(tx - 0xd8) < 0x20 &&
-                    (u8)(ty - 0x98) < 0x20)
+                t2 = (a0 != 0 && data_020a0de9[slot * 4] != 0);
+                if (t2 == 0)
+                    goto biv8;
+                if ((u8)(tx - 0xd8) >= 0x20)
+                    goto biv8;
+                if ((u8)(ty - 0x98) < 0x20)
                     goto okback;
             }
-            if (IsButtonInputValid() == 0) {
-                data_0209f2a4 = 0;
-                return;
-            }
+        biv8:
+            if (IsButtonInputValid() == 0)
+                goto fail8;
         okback:
             if (relx < firstw) {
                 u8 slot2 = data_020a0e40;
@@ -895,6 +908,9 @@ void Stage::PS_Update()
                 data_0209f1ec = 2;
             }
             return;
+        fail8:
+            data_0209f2a4 = 0;
+            return;
         }
     }
     case 9: {
@@ -922,6 +938,7 @@ void Stage::PS_Update()
     }
     case 0xa: {
         u8 slot;
+        u8 ty;
         u8 tx;
         u8 relx;
         u8 firstw;
@@ -946,7 +963,7 @@ void Stage::PS_Update()
             relx = (u8)(tx - 0x50);
         }
         if ((u8)(tx - 0x5a) < 0x14) {
-            u8 ty = data_020a0deb[slot * 4];
+            ty = data_020a0deb[slot * 4];
             if ((u8)(ty - 0x2e) < 0x14) {
                 if ((u8)(tx - 0x5c) >= 0x10)
                     return;
@@ -980,6 +997,8 @@ void Stage::PS_Update()
         }
         {
             u8 ty2;
+            int t6;
+            int tmpv;
             if ((u8)(tx - 0xea) < 0x14) {
                 ty2 = data_020a0deb[slot * 4];
                 if ((u8)(ty2 - 0x2e) < 0x14)
@@ -990,12 +1009,13 @@ void Stage::PS_Update()
                 if ((u8)(ty2 - 0x26) < 0x24)
                     goto snd_next;
             }
-            if ((u8)(tx - 6) < 0x3c) {
+            t6 = tx - 6;
+            if ((u8)t6 < 0x3c) {
                 ty2 = data_020a0deb[slot * 4];
                 if ((u8)(ty2 - 0x26) < 0x24)
-                    goto backlight_on;
+                    goto snd_next;
             }
-            goto chk_bl_off;
+            goto backlight_on;
         snd_next:
             if ((u8)(tx - 0xec) < 0x10) {
                 if ((u8)(ty2 - 0x30) < 0x10)
@@ -1047,10 +1067,14 @@ void Stage::PS_Update()
                 return;
             }
         backlight_on:
-            if ((u8)(ty2 - 0x56) < 0x24) {
-                if ((u8)(tx - 0x70) >= 0x38)
+            if ((u8)t6 < 0x3c) {
+                u8 ty2b = data_020a0deb[slot * 4];
+                if ((u8)(ty2b - 0x56) < 0x24) {
+                tmpv = tx - 0x70;
+                if ((u8)tmpv >= 0x38)
                     return;
-                if ((u8)(ty2 - 0x58) >= 0x20)
+                tmpv = ty2b - 0x58;
+                if ((u8)tmpv >= 0x20)
                     return;
                 if (data_0209f2a4 == 3) {
                     int t = 0;
@@ -1075,15 +1099,17 @@ void Stage::PS_Update()
                 if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x70) < 0x38)
                     return;
                 return;
+                }
             }
-            goto chk_bl_off2;
         chk_bl_off:
             if ((u8)(tx - 0xae) < 0x3c) {
                 u8 ty3 = data_020a0deb[slot * 4];
                 if ((u8)(ty3 - 0x56) < 0x24) {
-                    if ((u8)(tx - 0xb0) >= 0x38)
+                    tmpv = tx - 0xb0;
+                    if ((u8)tmpv >= 0x38)
                         return;
-                    if ((u8)(ty3 - 0x58) >= 0x20)
+                    tmpv = ty3 - 0x58;
+                    if ((u8)tmpv >= 0x20)
                         return;
                     if (data_0209f2a4 == 4) {
                         int t = 0;
@@ -1111,12 +1137,14 @@ void Stage::PS_Update()
                 }
             }
         chk_bl_off2:
-            if (relx < 0x4c) {
+            if ((u8)tmpv < 0x4c) {
                 u8 ty4 = data_020a0deb[slot * 4];
                 if ((u8)(ty4 - 0x56) < 0x24) {
-                    if ((u8)(tx - 8) >= 0x48)
+                    tmpv = tx - 8;
+                    if ((u8)tmpv >= 0x48)
                         return;
-                    if ((u8)(ty4 - 0x58) >= 0x20)
+                    tmpv = ty4 - 0x58;
+                    if ((u8)tmpv >= 0x20)
                         return;
                     if (data_0209f2a4 == 5) {
                         int t = 0;
@@ -1150,25 +1178,30 @@ void Stage::PS_Update()
                     if (data_020a0de9[slot * 4] != 0)
                         t = 1;
                 }
-                if (t != 0) {
-                    if (relx < firstw &&
-                        (u8)(data_020a0deb[slot * 4] - 0x98) < 0x20)
+                if (t == 0)
+                    goto biv_a;
+                if (relx >= firstw)
+                    goto chk_dx;
+                if ((u8)(data_020a0deb[slot * 4] - 0x98) < 0x20)
+                    goto opt_okback;
+            chk_dx:
+                if ((u8)(tx - 0xd8) < 0x20) {
+                    if ((u8)(data_020a0deb[slot * 4] - 0x98) < 0x20)
                         goto opt_okback;
-                    if ((u8)(tx - 0xd8) < 0x20) {
-                        if ((u8)(data_020a0deb[slot * 4] - 0x98) < 0x20)
-                            goto opt_okback;
-                    }
                 }
+            biv_a:
                 if (IsButtonInputValid() == 0)
                     return;
             opt_okback:
                 if (relx < firstw) {
                     u8 s4 = data_020a0e40;
-                    if ((u8)(data_020a0deb[s4 * 4] - 0x98) < 0x20 &&
-                        IsButtonInputValid() != 0) {
-                        data_0209f29c = 0;
-                        goto opt_go;
-                    }
+                    if ((u8)(data_020a0deb[s4 * 4] - 0x98) < 0x20)
+                        goto set29c;
+                }
+                if (IsButtonInputValid() != 0) {
+                set29c:
+                    data_0209f29c = 0;
+                    goto opt_go;
                 }
                 {
                     u8 s4 = data_020a0e40;
@@ -1229,10 +1262,12 @@ void Stage::PS_Update()
     }
     case 0xd: {
         {
-            u8 slot = data_020a0e40;
             int touched = 0;
-            if (data_020a0de8[slot * 4] != 0 && data_020a0de9[slot * 4] != 0)
-                touched = 1;
+            u8 slot = data_020a0e40;
+            if (data_020a0de8[slot * 4] != 0) {
+                if (data_020a0de9[slot * 4] != 0)
+                    touched = 1;
+            }
             if (!touched) {
                 if (IsButtonInputValid() == 0)
                     return;
@@ -1342,25 +1377,29 @@ void Stage::PS_Update()
     }
     case 0x11: {
         {
-            u8 slot = data_020a0e40;
             int touched = 0;
-            if (data_020a0de8[slot * 4] != 0 && data_020a0de9[slot * 4] != 0)
-                touched = 1;
+            u8 slot = data_020a0e40;
+            if (data_020a0de8[slot * 4] != 0) {
+                if (data_020a0de9[slot * 4] != 0)
+                    touched = 1;
+            }
             if (!touched) {
                 if (IsButtonInputValid() == 0)
                     return;
             }
         }
         {
+            int rely;
+            int rel;
             u8 slot = data_020a0e40;
             u8 tx = data_020a0dea[slot * 4];
-            int rel0 = tx - 0x28;
-            if ((u8)rel0 < 0x50) {
-                int rely = data_020a0deb[slot * 4] - 0x98;
+            rel = tx - 0x28;
+            if ((u8)rel < 0x50) {
+                rely = data_020a0deb[slot * 4] - 0x98;
                 if ((u8)rely < 0x20) {
                     if (data_0209f2e0 == 0)
                         data_0209f244 = data_0208ee44 << 2;
-                    if ((u8)rel0 < 0x50 && (u8)rely < 0x20) {
+                    if ((u8)rel < 0x50 && (u8)rely < 0x20) {
                         data_0209f22c = data_0208ee44 << 3;
                         data_0209f1ec = 0x12;
                         func_02012790(0x60);
@@ -1373,16 +1412,16 @@ void Stage::PS_Update()
                 }
             }
             {
-                int rel1 = tx - 0x88;
-                if ((u8)rel1 >= 0x50)
+                rel = tx - 0x88;
+                if ((u8)rel >= 0x50)
                     return;
                 {
-                    int rely2 = data_020a0deb[slot * 4] - 0x98;
-                    if ((u8)rely2 >= 0x20)
+                    rely = data_020a0deb[slot * 4] - 0x98;
+                    if ((u8)rely >= 0x20)
                         return;
                     if (data_0209f2e0 == 1)
                         data_0209f244 = data_0208ee44 << 2;
-                    if ((u8)rel1 < 0x50 && (u8)rely2 < 0x20) {
+                    if ((u8)rel < 0x50 && (u8)rely < 0x20) {
                         data_0209f22c = data_0208ee44 << 3;
                         data_0209f1ec = 0x12;
                         func_02012790(3);
