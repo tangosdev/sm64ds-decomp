@@ -1,7 +1,8 @@
-# Regenerate the Chaos Viewer atlas data (chaos-db.json on the chaos-data
-# branch) from committed data whenever matches land on main, so the hosted
-# viewer's modules and percentages update on their own. details/ chunks on the
-# branch are preserved (they need the ROM; refreshed by local regens).
+# On every push to main, regenerate all the derived progress views from committed
+# data and land them in ONE commit (README bar + treemap + contributions.json on
+# main; chaos-db.json on the chaos-data branch), so the hosted viewer and charts
+# self-update without spamming the #github channel with a commit per file. details/
+# chunks on the chaos-data branch are preserved (they need the ROM; refreshed locally).
 name: update-chaos-data
 
 on:
@@ -50,17 +51,21 @@ jobs:
           git add chaos-db.json
           git commit -m "Refresh Chaos Viewer data from $(git -C .. rev-parse --short HEAD)"
           git push origin chaos-data
+      - name: Refresh README progress bar
+        run: python tools/progress.py --write-readme
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
-      - name: Commit treemap + contributions if changed
-        # safe from retrigger loops: no workflow watches docs/** or contributions.json
+      - name: Commit progress refresh if changed
+        # README bar + treemap + contributions in ONE commit, to keep the #github channel
+        # from filling with a separate refresh commit per generated file.
+        # safe from retrigger loops: no workflow watches README.md, docs/**, or contributions.json
         run: |
-          if git diff --quiet -- docs/index.html docs/progress-treemap.svg contributions.json; then
-            echo "treemap + contributions unchanged"; exit 0
+          if git diff --quiet -- README.md docs/index.html docs/progress-treemap.svg contributions.json; then
+            echo "progress unchanged"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/progress-treemap.svg contributions.json
-          git commit -m "Refresh progress treemap + contributions"
+          git add README.md docs/index.html docs/progress-treemap.svg contributions.json
+          git commit -m "Refresh progress (README, treemap, contributions)"
           git pull --rebase origin main
           git push origin main
