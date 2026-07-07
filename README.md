@@ -2,6 +2,11 @@
 
 A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
 
+[![Discord Server][discord-badge]][discord]
+
+[discord]: https://discord.gg/JXckvdARc
+[discord-badge]: https://img.shields.io/discord/1520811338568569112?color=7289DA&logo=discord&logoColor=ffffff
+
 ## Progress
 
 <!-- progress:start -->
