@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN9Animation7AdvanceEv(char* t);
@@ -26,7 +23,7 @@ int func_ov017_021112c4(char* c) {
         if (d < 0x92e000) {
             int* q;
             *(int*)(c+0x33c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c+0x33c), 3, 0x96, c+0x74, 0);
-            q = (int*)(c+0x60);
+            q = (int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
             *q -= 0x5000;
         }
     }
