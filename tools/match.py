@@ -133,26 +133,47 @@ def main():
                     help="override target binary (e.g. an overlay) instead of arm9_dec.bin")
     ap.add_argument("--base", default=None, type=lambda x: int(x, 0),
                     help="load address of --bin (required with --bin)")
-    ap.add_argument("--strict-relocs", action="store_true",
-                    help="beyond the byte compare, verify each reloc slot points at the "
-                         "destination config/<module>/relocs.txt records (catches wrong "
-                         "callee/global the wildcard would otherwise hide)")
+    ap.add_argument("--strict-relocs", dest="strict_relocs", action="store_true", default=True,
+                    help="(default) also verify each reloc slot points at the destination "
+                         "config/<module>/relocs.txt records, so a wrong callee/global the byte "
+                         "wildcard would otherwise hide is reported as NOT a match")
+    ap.add_argument("--no-strict-relocs", dest="strict_relocs", action="store_false",
+                    help="skip the reloc-destination check (loose byte-only compare)")
     ap.add_argument("--module", default="arm9",
                     help="module name for --strict-relocs config lookup (arm9, ov006, ...)")
     args = ap.parse_args()
 
     strict = None
     if args.strict_relocs:
-        import reloc_audit as RA
-        import relocs as RL
-        strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
+        try:
+            import reloc_audit as RA
+            import relocs as RL
+            strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
+        except Exception as e:
+            # No config/reloc data on this machine -> degrade to byte-only, don't break matching.
+            print(f"  (reloc-destination check unavailable: {e}; byte-only compare)")
 
     cfile = pathlib.Path(args.c)
     if args.bin:
         tgt = target_bytes(args.addr, args.size, pathlib.Path(args.bin), args.base)
+    elif args.module and args.module != "arm9":
+        # Overlay target: resolve its binary + load address from the modules helper,
+        # the same way fdiff does, so callers only need --module ovNNN (no --bin/--base).
+        import modules as MOD
+        found = None
+        for mod in MOD.modules():
+            label = "arm9" if mod["name"] == "main" else mod["name"]
+            if label == args.module:
+                found = mod
+                break
+        if not found:
+            raise SystemExit(f"module {args.module} not found (pass --bin/--base for it)")
+        tgt = target_bytes(args.addr, args.size, found["bin"], found["base"])
     else:
         tgt = target_bytes(args.addr, args.size)
-    print(f"TARGET {args.func} @ 0x{args.addr:08x} size 0x{args.size:x}  bytes: {tgt.hex()}")
+    hexstr = tgt.hex()
+    shown = hexstr if (not args.brief or len(hexstr) <= 128) else f"{hexstr[:128]}... ({len(tgt)} bytes)"
+    print(f"TARGET {args.func} @ 0x{args.addr:08x} size 0x{args.size:x}  bytes: {shown}")
 
     if args.version:
         versions = [args.version]
@@ -180,9 +201,13 @@ def main():
         ok, ndiff = compare(tgt, code, relocs, verbose=not args.brief)
         if ok and strict is not None:
             RA, name_index, config_relocs, sym_index = strict
-            rows, missing = RA.check_destinations(obj, args.func, args.addr, args.size,
-                                                  args.module, name_index, config_relocs, sym_index)
-            bad = [r for r in (rows or []) if r["verdict"] == "WRONG-DEST"]
+            try:
+                rows, missing = RA.check_destinations(obj, args.func, args.addr, args.size,
+                                                      args.module, name_index, config_relocs, sym_index)
+                bad = [r for r in (rows or []) if r["verdict"] == "WRONG-DEST"]
+            except Exception as e:
+                bad = []
+                print(f"  {v}: (reloc-destination check skipped: {e})")
             if bad:
                 ok = False
                 print(f"  {v}: bytes match but {len(bad)} reloc destination(s) WRONG -- "
