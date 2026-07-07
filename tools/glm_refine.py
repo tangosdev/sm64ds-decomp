@@ -150,6 +150,7 @@ def verify(name, wl):
 
 def crack_one(name, wl, attempts, row):
     t_in = t_out = 0
+    att_log = []  # per-attempt lines, printed by the caller BELOW the result header
     try:
         ctx = run_tool(["tools/abrow.py", "--name", name, "--wl", wl])
         draft = row.get("draft") or ""
@@ -159,7 +160,8 @@ def crack_one(name, wl, attempts, row):
         best_src = draft
         if best_div == 0:
             return {"name": name, "matched": True, "c_source": draft, "attempts": 0,
-                    "divergences": 0, "note": "stored draft already matches"}, 0, 0
+                    "divergences": 0, "note": "stored draft already matches",
+                    "log": att_log}, 0, 0
 
         messages = [{"role": "user", "content":
                      f"{INSTRUCTIONS}\n\nFUNCTION: {name}\n\n=== CONTEXT (annotated target "
@@ -179,14 +181,15 @@ def crack_one(name, wl, attempts, row):
                 continue
             (_WORKDIR / f"{name}.src").write_text(src, encoding="utf-8", newline="\n")
             div, vout = verify(name, wl)
-            log(f"  [{name}] attempt {att}: div={div} (best {best_div})")
+            att_log.append(f"attempt {att}: div={div} (best {min(best_div, div)})")
             if div < best_div:
                 best_div, best_src, stale = div, src, 0
             else:
                 stale += 1
             if div == 0:
                 return {"name": name, "matched": True, "c_source": src, "attempts": att,
-                        "divergences": 0, "note": note or "matched"}, t_in, t_out
+                        "divergences": 0, "note": note or "matched",
+                        "log": att_log}, t_in, t_out
             if floor or stale >= 2:
                 break
             messages.append({"role": "assistant", "content": reply})
@@ -196,11 +199,11 @@ def crack_one(name, wl, attempts, row):
         (_WORKDIR / f"{name}.src").write_text(best_src, encoding="utf-8", newline="\n")
         return {"name": name, "matched": False, "c_source": best_src,
                 "attempts": attempts, "divergences": best_div,
-                "note": note or "no improvement"}, t_in, t_out
+                "note": note or "no improvement", "log": att_log}, t_in, t_out
     except Exception as e:  # one function failing must not sink the batch
         return {"name": name, "matched": False, "c_source": row.get("draft") or "",
                 "attempts": 0, "divergences": 999,
-                "note": f"driver error: {e}"[:300]}, t_in, t_out
+                "note": f"driver error: {e}"[:300], "log": att_log}, t_in, t_out
 
 
 def main():
@@ -297,8 +300,13 @@ def main():
                     res, i_tok, o_tok = f.result()
                     tin += i_tok; tout += o_tok
                     results.append(res)
-                    log(f"[{len(results)}/{len(rows)}] {res['name']}: "
-                        f"{'MATCH' if res['matched'] else 'div=' + str(res['divergences'])}")
+                    # Result-first block: header (index, name, final div) then this
+                    # function's attempts indented below, so each function reads as one
+                    # tidy unit and a new header means the previous one finished.
+                    status = 'MATCH' if res['matched'] else 'div=' + str(res['divergences'])
+                    lines = [f"({len(results)}/{len(rows)}) {res['name']}: {status}"]
+                    lines += [f"    {ln}" for ln in res.get('log', [])]
+                    log("\n".join(lines))
         finally:
             if claims is not None:
                 for _, cid in locked:
