@@ -1,19 +1,15 @@
-//cpp
-// NONMATCHING: different op / idiom (div=30). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern "C" int DecIfAbove0_Short(char *p);
-extern "C" int RandomIntInternal(char *p);
-extern "C" void func_020393a4(int *p, int v);
-extern "C" void func_02039394(int *p, int v);
-extern "C" void func_ov035_021118a8(char *t);
-extern "C" int func_ov035_02111798(char *c);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+extern int DecIfAbove0_Short(char *p);
+extern int RandomIntInternal(char *p);
+extern void func_020393a4(int *p, int v);
+extern void func_02039394(int *p, int v);
+extern void func_ov035_021118a8(char *t);
+extern int func_ov035_02111798(char *c);
+extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
+extern void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
 extern unsigned char data_0209f2c0[];
 extern short data_ov035_02112b80[];
 extern int data_0209e650[];
-extern "C" int func_ov035_0211195c(char *c) {
+int func_ov035_0211195c(char *c) {
     unsigned char idx = data_0209f2c0[0];
     *(short*)(c+0x92) = data_ov035_02112b80[idx];
     if (idx == 2) {
@@ -24,18 +20,18 @@ extern "C" int func_ov035_0211195c(char *c) {
             *(short*)(c+0x320) = (short)((r % 4 + 1) * 0x1e);
             *(unsigned short*)(c+0x322) = *(unsigned short*)(c+0x320);
         } else {
-            if ((int)*(unsigned short*)(c+0x320) >= (int)*(unsigned short*)(c+0x322) - 5) {
-                *(short*)(c+0x92) = 0;
-            } else {
-                short *q = (short*)(c+0x92);
+            if ((int)*(unsigned short*)(c+0x320) < (int)*(unsigned short*)(c+0x322) - 5) {
+                short *q = (short*)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFF);
                 *q = (short)(*q * *(signed char*)(c+0x31e));
+            } else {
+                *(short*)(c+0x92) = 0;
             }
         }
     }
     func_020393a4((int*)(c+0x124), 0x180000);
     func_02039394((int*)(c+0x124), 0x1000);
     {
-        short *s = (short*)(c+0x8c);
+        short *s = (short*)(((int)c + 0x8c) & 0xFFFFFFFFFFFFFFFF);
         *s = (short)(*s + *(short*)(c+0x92));
     }
     func_ov035_021118a8(c);
