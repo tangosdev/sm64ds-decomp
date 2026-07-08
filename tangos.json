@@ -357,7 +357,8 @@
       "args": [
         { "name": "max_div", "type": "integer", "flag": "--max-div", "description": "Max divergence to include." },
         { "name": "limit", "type": "integer", "flag": "--limit" },
-        { "name": "out", "type": "string", "flag": "--out", "description": "Output worklist path." }
+        { "name": "out", "type": "string", "flag": "--out", "description": "Output worklist path." },
+        { "name": "include_attempted", "type": "boolean", "flag": "--include-attempted", "description": "Also schedule near-misses already in the attempted ledger (keeps a driven refiner fed instead of drying up to 1 target after a pass)." }
       ]
     },
     {

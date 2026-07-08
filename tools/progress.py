@@ -128,15 +128,51 @@ def write_readme(done_n, n, done_b, tb):
     return False
 
 
+def from_db(path):
+    """Read counts from chaos-db.json - the canonical source the Atlas and treemap also read - so
+    every progress surface reports ONE number. Returns (done_n, done_b, n, tb, per_module_totals)."""
+    db = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    fns = db["functions"] if isinstance(db, dict) else db
+    st = db.get("stats", {}) if isinstance(db, dict) else {}
+    n = st.get("totalFunctions") or len(fns)
+    done_n = st.get("matchedFunctions")
+    if done_n is None:
+        done_n = sum(1 for f in fns if f.get("matched"))
+    tb = st.get("totalBytes") or sum(int(f.get("size", 0)) for f in fns)
+    done_b = st.get("matchedBytes")
+    if done_b is None:
+        done_b = sum(int(f.get("size", 0)) for f in fns if f.get("matched"))
+    per = {}
+    for f in fns:
+        mod = f.get("module", "?")
+        mn, mb = per.get(mod, (0, 0))
+        per[mod] = (mn + 1, mb + int(f.get("size", 0)))
+    return done_n, done_b, n, tb, per
+
+
+def _db_path():
+    """--from-db PATH if given & present; else chaos-db.json at the repo root; else None (fall back
+    to the committed-data scan)."""
+    if "--from-db" in sys.argv:
+        i = sys.argv.index("--from-db")
+        if i + 1 < len(sys.argv):
+            p = pathlib.Path(sys.argv[i + 1])
+            return p if p.is_file() else None
+    p = REPO / "chaos-db.json"
+    return p if p.is_file() else None
+
+
 def main():
+    dbp = _db_path()  # ONE source of truth: chaos-db.json (the Atlas/treemap read the same file)
+
     if "--write-readme" in sys.argv:
-        done_n, done_b, n, tb = synced_from_src()
+        done_n, done_b, n, tb = (from_db(dbp)[:4] if dbp else synced_from_src())
         changed = write_readme(done_n, n, done_b, tb)
         print(f"README.md {'updated' if changed else 'already up to date'}")
         return
 
     if "--bar" in sys.argv:
-        done_n, done_b, n, tb = synced_from_src()
+        done_n, done_b, n, tb = (from_db(dbp)[:4] if dbp else synced_from_src())
         # ready-to-paste README "## Progress" block; reconfigure stdout so the
         # block characters print on a Windows (cp1252) console
         try:
@@ -147,12 +183,15 @@ def main():
         print(bar_block(done_n, n, done_b, tb))
         return
 
-    n, tb, per = totals()
-    done = matched()
-    done_n = len(done)
-    # ledger sizes drift between int and hex-string across writers; accept both
-    done_b = sum(int(s, 0) if isinstance(s := o.get("size", 0), str) else int(s)
-                 for o in done.values())
+    if dbp:
+        done_n, done_b, n, tb, per = from_db(dbp)
+    else:
+        n, tb, per = totals()
+        done = matched()
+        done_n = len(done)
+        # ledger sizes drift between int and hex-string across writers; accept both
+        done_b = sum(int(s, 0) if isinstance(s := o.get("size", 0), str) else int(s)
+                     for o in done.values())
 
     print("=== SM64DS decomp progress ===")
     print(f"  functions : {done_n:,} / {n:,}  ({100*done_n/n:.4f}%)")

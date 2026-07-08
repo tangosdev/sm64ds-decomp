@@ -52,7 +52,7 @@ jobs:
           git commit -m "Refresh Chaos Viewer data from $(git -C .. rev-parse --short HEAD)"
           git push origin chaos-data
       - name: Refresh README progress bar
-        run: python tools/progress.py --write-readme
+        run: python tools/progress.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
       - name: Commit progress refresh if changed
