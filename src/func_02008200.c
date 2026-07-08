@@ -3,7 +3,7 @@ typedef unsigned short u16;
 extern struct Actor *func_0200e6d8(unsigned int arg0);
 extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 
-extern u16 data_0209b274;
+extern u16 KS_FRAME_COUNTER;
 
 typedef struct Actor {
     char pad60[0x60];
@@ -23,7 +23,7 @@ int func_02008200(Self *self, int dummy, int arg2)
 {
     Actor *a;
     int diff, val, target;
-    if (arg2 == data_0209b274)
+    if (arg2 == KS_FRAME_COUNTER)
         self->fb4 = 0x190000;
     a = func_0200e6d8(0);
     diff = a->f60 - a->f644;

@@ -1,7 +1,7 @@
 //cpp
 struct Vector3 { int x,y,z; };
 extern "C" {
-extern int data_ov002_021100f4[];
+extern int _ZN6Player12ST_BURN_LAVAE[];
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int func_ov006_020e3078(void*,int*);
 extern int func_ov002_020d91e0(void*,int,int);
@@ -17,7 +17,7 @@ int _ZN6Player16St_BurnLava_InitEv(char* c){
   *(int*)(c+0xa8)=0x64000;
   *(char*)(c+0x6e5)=0;
   *(char*)(c+0x6e3)=0;
-  if(func_ov006_020e3078(c,data_ov002_021100f4)==0){
+  if(func_ov006_020e3078(c,_ZN6Player12ST_BURN_LAVAE)==0){
     *(char*)(c+0x70c)=0;
   }
   func_ov002_020d91e0(c,0x300,1);

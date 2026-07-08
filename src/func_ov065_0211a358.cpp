@@ -19,7 +19,7 @@ extern "C" void func_020393d4(int *p, int v);
 
 extern struct SharedFilePtr data_ov065_0211d88c;
 extern struct SharedFilePtr data_ov065_0211d894;
-extern unsigned char data_0209f2c0;
+extern unsigned char LEVEL_SPECIFIC_SETTING;
 extern short data_ov065_0211c0b0[];
 extern int func_02112198;
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
@@ -32,7 +32,7 @@ extern "C" int func_ov065_0211a358(char *self) {
     _ZN11ShadowModel10InitCuboidEv((void *)(self + 0x330));
 
     *(short *)(self + 0x31e) = 1;
-    *(short *)(self + 0x320) = data_ov065_0211c0b0[data_0209f2c0];
+    *(short *)(self + 0x320) = data_ov065_0211c0b0[LEVEL_SPECIFIC_SETTING];
     *(short *)(self + 0x322) = 0x1964;
     *(short *)(self + 0x90) = *(short *)(self + 0x322);
 
@@ -47,7 +47,7 @@ extern "C" int func_ov065_0211a358(char *self) {
     func_020393a4((int *)(self + 0x124), 0x300000);
     func_02039394((int *)(self + 0x124), -0x200000);
 
-    if (data_0209f2c0 != 3) {
+    if (LEVEL_SPECIFIC_SETTING != 3) {
         func_020393d4((int *)(self + 0x124),
             (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     }

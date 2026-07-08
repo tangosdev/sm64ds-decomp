@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 extern u8 data_ov007_0210342c[];
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern int _ZN4cstd3modEii(int, int);
 extern int _ZN4cstd3divEii(int, int);
 
@@ -40,7 +40,7 @@ void func_ov007_020ae2d0(char *c)
         m = (-n) * 0xffff;
         m = (int)(((unsigned)(m << 4)) >> 0x10);
         arrIdx = m >> 4;
-        idx = data_02082214[arrIdx * 2];
+        idx = SINE_TABLE[arrIdx * 2];
         q = *(int**)c;
         base = *(short*)((char*)*(int**)((char*)q + 0x24) + 4);
         *(int*)((char*)q + 0xc) = idx * 3 + (base << 12);

@@ -21,9 +21,9 @@ extern "C" void _ZN9Animation7AdvanceEv(void* self);
 extern "C" void _ZN12CylinderClsn5ClearEv(void* self);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-extern void* data_0209f318;
-extern Mtx43 data_020a0e68;
-extern unsigned char data_0209d684;
+extern void* CAMERA;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
+extern unsigned char MESSAGE_RESULT;
 
 extern "C" int func_ov030_02113324(void* thiz)
 {
@@ -72,7 +72,7 @@ skip_raycast:
             if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x3a8), c, 1) != 0) {
                 Vector3 camPos;
                 {
-                    Vector3 *src = (Vector3*)((char*)data_0209f318 + 0x8c);
+                    Vector3 *src = (Vector3*)((char*)CAMERA + 0x8c);
                     camPos.x = src->x;
                     camPos.y = src->y;
                     camPos.z = src->z;
@@ -80,15 +80,15 @@ skip_raycast:
                 short ang = Vec3_HorzAngle(&camPos, (Vector3*)((char*)(*(void**)(c + 0x3a8)) + 0x5c));
                 {
                     Vector3 *op = (Vector3*)((char*)(*(void**)(c + 0x3a8)) + 0x5c);
-                    Matrix4x3_FromTranslation(&data_020a0e68, op->x, op->y, op->z);
+                    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, op->x, op->y, op->z);
                 }
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, ang);
-                Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);
+                Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, ang);
+                Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, 0, -0x64000);
 
                 Vector3 msgPos;
-                msgPos.x = data_020a0e68.a[9];
-                msgPos.y = data_020a0e68.a[10];
-                msgPos.z = data_020a0e68.a[11];
+                msgPos.x = MATRIX_SCRATCH_PAPER.a[9];
+                msgPos.y = MATRIX_SCRATCH_PAPER.a[10];
+                msgPos.z = MATRIX_SCRATCH_PAPER.a[11];
                 msgPos.y = *(int*)(c + 0x60) + 0x64000;
 
                 if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
@@ -104,7 +104,7 @@ skip_raycast:
         break;
     case 1:
         if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x3a8)) == -1) {
-            unsigned char g = data_0209d684;
+            unsigned char g = MESSAGE_RESULT;
             if (g == 1) {
                 _ZN6Player9DropActorEv(*(void**)(c + 0x3a8));
                 func_ov030_021141a8(c, 8);

@@ -1,5 +1,5 @@
 //cpp
-extern "C" { extern int data_0209caa0; }
+extern "C" { extern int SAVE_DATA; }
 
 struct Sub {
     virtual void v0();
@@ -14,7 +14,7 @@ struct Sub {
 extern "C" int func_ov102_0214a2ac(char* c) {
     if (*(int*)(c + 0x3e8) == 2)
         goto done;
-    if ((*(int*)((char*)&data_0209caa0 + 4) & 0x80000000) == 0) {
+    if ((*(int*)((char*)&SAVE_DATA + 4) & 0x80000000) == 0) {
         int b = (*(unsigned short*)(c + 0xc) == 0x14);
         if (b != 0) {
             Sub* s = (Sub*)(c + 0x320);

@@ -32,7 +32,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thiz);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *rc);
 
 extern int data_ov091_021344e8[];
-extern char data_020a0e68[];
+extern char MATRIX_SCRATCH_PAPER[];
 extern char data_ov091_02134cdc[];
 
 int func_ov091_02131468(char *c)
@@ -139,11 +139,11 @@ int func_ov091_02131468(char *c)
     if (r4 < 0) {
         r4 = 9;
     }
-    Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x8e));
     MulVec3Mat4x3(data_ov091_02134cdc + *(u8 *)(c + 0x395) * 0x78 + *(u8 *)(c + 0x394) * 0xc,
-                  data_020a0e68, &sp10);
+                  MATRIX_SCRATCH_PAPER, &sp10);
     MulVec3Mat4x3(data_ov091_02134cdc + *(u8 *)(c + 0x395) * 0x78 + r4 * 0xc,
-                  data_020a0e68, &sp1C);
+                  MATRIX_SCRATCH_PAPER, &sp1C);
     Vec3_Add(&sp34, (Vec3 *)(c + 0x388), &sp10);
     Vec3_Sub(&sp28, (Vec3 *)(c + 0x5c), &sp34);
     Vec3_Sub(&sp40, &sp10, &sp1C);

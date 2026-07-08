@@ -10,7 +10,7 @@ namespace Clipper { void Func_020156DC(void *a, int b, int c, int d, int e); }
 
 extern "C" short data_02082614[];
 extern "C" int data_ov075_0211c660;
-extern "C" int data_0209f43c;
+extern "C" int GLOBAL_CLIPPER;
 
 extern "C" void func_ov075_021152d4(char *self)
 {
@@ -20,5 +20,5 @@ extern "C" void func_ov075_021152d4(char *self)
     G3i::LookAt_((Vector3*)(self + 0xf28), (Vector3*)&data_ov075_0211c660,
                  (Vector3*)(self + 0xf34), true, &view);
     _Z13CopyToViewMatPK9Matrix4x3(&view);
-    Clipper::Func_020156DC(&data_0209f43c, 0x1555, 0x105b, 0x1000, 0x1388000);
+    Clipper::Func_020156DC(&GLOBAL_CLIPPER, 0x1555, 0x105b, 0x1000, 0x1388000);
 }

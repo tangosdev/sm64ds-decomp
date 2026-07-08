@@ -27,13 +27,13 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern "C" void func_ov071_02120c90(char *c);
 extern "C" void _ZN13RaycastGroundD1Ev(void *self);
 
-extern SharedFilePtr data_ov002_0210da38;
+extern SharedFilePtr BUBBLE_MODEL_PTR;
 extern SharedFilePtr data_ov071_02123050;
 extern SharedFilePtr *data_ov071_021226a4[2];
 extern SharedFilePtr data_ov071_021226a0;
 extern SharedFilePtr data_ov071_02123048;
 extern SharedFilePtr data_ov071_02123038;
-extern char data_02082128;
+extern char _ZN9Matrix3x38IDENTITYE;
 
 struct M48 { int w[12]; };
 
@@ -42,7 +42,7 @@ extern "C" int func_ov071_02121734(char *c)
     BMD_File *bmd;
     LoadBlueCoinModel();
 
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da38);
+    _ZN5Model8LoadFileER13SharedFilePtr(BUBBLE_MODEL_PTR);
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov071_02123050);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, bmd, 1, 1);
 
@@ -104,7 +104,7 @@ extern "C" int func_ov071_02121734(char *c)
     *(int *)(c + 0x1ec) = 0;
     *(unsigned char *)(c + 0x216) = 0x2e;
 
-    *(M48 *)(c + 0x1b4) = *(M48 *)&data_02082128;
+    *(M48 *)(c + 0x1b4) = *(M48 *)&_ZN9Matrix3x38IDENTITYE;
 
     char rg[0x50];
     _ZN13RaycastGroundC1Ev(rg);

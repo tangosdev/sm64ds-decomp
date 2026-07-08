@@ -5,7 +5,7 @@
 extern int data_ov004_020bf9ec;
 extern int data_ov004_020bfa18;
 extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[][4];
+extern unsigned char TOUCH_INPUT_ARR[][4];
 extern unsigned char data_020a0de9[][4];
 extern unsigned char data_020a0dea[][4];
 extern unsigned char data_020a0deb[][4];
@@ -21,7 +21,7 @@ void func_ov004_020b65e4(void) {
 
     if (data_ov004_020bf9ec == 0 && data_ov004_020bfa18 != 0) {
         int idx = data_020a0e40;
-        int flag = data_020a0de8[idx][0] != 0 && data_020a0de9[idx][0] != 0;
+        int flag = TOUCH_INPUT_ARR[idx][0] != 0 && data_020a0de9[idx][0] != 0;
         if (flag) {
             int a = data_020a0dea[idx][0];
             int b = data_020a0deb[idx][0];

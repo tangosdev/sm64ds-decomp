@@ -19,7 +19,7 @@ extern int _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *p);
 extern void _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(void *p);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 
-extern u8 data_0209caa0[];
+extern u8 SAVE_DATA[];
 extern u8 data_0209cae4[];
 
 u8 func_ov007_020cc600(s32 arg)
@@ -38,43 +38,43 @@ u8 func_ov007_020cc600(s32 arg)
         TurnBacklightOff();
     } else if (arg == 8) {
         _ZN8SaveData13EraseSaveFileEjPc(0, (char *)func_ov007_020cc0cc(0));
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)SAVE_DATA);
     } else if (arg == 9) {
         _ZN8SaveData13EraseSaveFileEjPc(1, (char *)func_ov007_020cc0cc(1));
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)SAVE_DATA);
     } else if (arg == 10) {
         _ZN8SaveData13EraseSaveFileEjPc(2, (char *)func_ov007_020cc0cc(2));
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)SAVE_DATA);
     } else if (arg == 11) {
         struct E *p = func_ov007_020cc0cc(0);
         if (func_02013c84(0, p, 1, func_ov007_020cc0cc(1)) == 0)
             r = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)SAVE_DATA);
     } else if (arg == 12) {
         struct E *p = func_ov007_020cc0cc(0);
         if (func_02013c84(0, p, 2, func_ov007_020cc0cc(2)) == 0)
             r = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)SAVE_DATA);
     } else if (arg == 13) {
         struct E *p = func_ov007_020cc0cc(1);
         if (func_02013c84(1, p, 0, func_ov007_020cc0cc(0)) == 0)
             r = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)SAVE_DATA);
     } else if (arg == 14) {
         struct E *p = func_ov007_020cc0cc(1);
         if (func_02013c84(1, p, 2, func_ov007_020cc0cc(2)) == 0)
             r = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)data_0209caa0);
+        func_02013c84(2, func_ov007_020cc0cc(2), -1, (void *)SAVE_DATA);
     } else if (arg == 15) {
         struct E *p = func_ov007_020cc0cc(2);
         if (func_02013c84(2, p, 0, func_ov007_020cc0cc(0)) == 0)
             r = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)data_0209caa0);
+        func_02013c84(0, func_ov007_020cc0cc(0), -1, (void *)SAVE_DATA);
     } else if (arg == 16) {
         struct E *p = func_ov007_020cc0cc(2);
         if (func_02013c84(2, p, 1, func_ov007_020cc0cc(1)) == 0)
             r = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)data_0209caa0);
+        func_02013c84(1, func_ov007_020cc0cc(1), -1, (void *)SAVE_DATA);
     } else if (arg == 17) {
         func_ov007_020cc118(0x37, 8);
     } else if (arg == 18) {
@@ -86,7 +86,7 @@ u8 func_ov007_020cc600(s32 arg)
         for (i = 0; (s32)i < 3; i++, sb += 0x44) {
             if (_ZN8SaveData12ReadFileDataEjP12FileSaveData(i, sb) == 0)
                 r = 1;
-            func_02013c84(i, sb, -1, (void *)data_0209caa0);
+            func_02013c84(i, sb, -1, (void *)SAVE_DATA);
             func_ov007_020cc168(i);
         }
     } else if (arg == 21) {
@@ -104,6 +104,6 @@ u8 func_ov007_020cc600(s32 arg)
     } else if (arg == 19) {
         _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
     }
-    func_ov007_020cc168(data_0209caa0[0x328]);
+    func_ov007_020cc168(SAVE_DATA[0x328]);
     return r;
 }

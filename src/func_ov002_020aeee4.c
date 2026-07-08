@@ -12,7 +12,7 @@ struct Callback;
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 id, u32 a, int x, int y, int z, const struct Vector3_16f* rot, struct Callback* cb);
 
-extern u8 data_0209f2d8;
+extern u8 CURRENT_GAMEMODE;
 
 void func_ov002_020aeee4(char* c)
 {
@@ -25,7 +25,7 @@ void func_ov002_020aeee4(char* c)
     if (flag != 0) id = 0x108;
 
     if ((int)((*(int*)(c + 0xb0) & 8) != 0) != 0) {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(CURRENT_GAMEMODE == 1);
         if (b == 0) return;
     }
 

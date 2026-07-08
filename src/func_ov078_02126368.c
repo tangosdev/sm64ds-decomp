@@ -23,7 +23,7 @@ extern SharedFilePtr data_ov078_02126ee8;
 extern SharedFilePtr data_ov078_02126f28;
 extern SharedFilePtr data_ov078_02126ef8;
 extern Vector3 data_ov078_02126e00;
-extern int data_0209e650;
+extern int RNG_STATE;
 extern PMF data_ov078_0212710c;
 
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
@@ -84,7 +84,7 @@ int func_ov078_02126368(char* c) {
         *(unsigned char*)(c+0x42c+i) = i;
         *(int*)(c+0x424+i*4) = i;
     }
-    *(int*)(c+0x4a0) = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
+    *(int*)(c+0x4a0) = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 0x1e) & 1;
     *(int*)(c+0x4a0) = *(int*)(c+0x4a0) + 1;
     *(short*)(c+0x400+0xf8) = *(short*)(c+0x8e);
     func_ov078_02125c48(c, &data_ov078_0212710c);

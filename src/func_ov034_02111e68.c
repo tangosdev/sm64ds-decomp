@@ -12,7 +12,7 @@ extern void func_ov034_021125b8(char* c, int i);
 struct Ent { int pad; struct BCA_File* f; };
 extern struct Ent* data_ov034_02113888[];
 extern struct Ent* data_ov034_02113874[];
-extern char* data_0209f318;
+extern char* CAMERA;
 
 void func_ov034_02111e68(char* c) {
     int i1, i2, i3, n;
@@ -55,7 +55,7 @@ void func_ov034_02111e68(char* c) {
         char* g;
         *(int*)(c+0xa8) = 0x41000 - ((st - 2) * 0xa << 0xc);
         *(int*)(c+0x9c) = -0x4000;
-        g = (char*)data_0209f318 + 0x154;
+        g = (char*)CAMERA + 0x154;
         *(int*)g &= ~8;
         *(unsigned char*)(c+0x8e1) = 0;
         func_ov034_021125b8(c, 4);

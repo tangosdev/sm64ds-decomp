@@ -2,7 +2,7 @@ extern void func_02012790(int x);
 extern void func_ov004_020b0aa0(int arg);
 extern void func_ov004_020b7460(void* c);
 extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 struct P2 { int a, b; };
 extern struct P2 data_02086b58;
@@ -14,7 +14,7 @@ void func_ov004_020b6f88(char* c) {
   idx = data_020a0e40;
   ok = 0;
   i = idx * 4;
-  if (data_020a0de8[i] != 0) {
+  if (TOUCH_INPUT_ARR[i] != 0) {
     if (data_020a0de9[i] != 0) ok = 1;
   }
   if (ok == 0) return;

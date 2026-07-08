@@ -12,7 +12,7 @@ void MulVec3Mat4x3(const Vector3* in, const void* m, Vector3* out);
 
 extern int data_ov065_0211d700;
 extern int data_ov065_0211d6f0;
-extern int data_020a0e68;
+extern int MATRIX_SCRATCH_PAPER;
 }
 
 extern "C" int func_ov065_02117404(unsigned char* thiz)
@@ -51,8 +51,8 @@ skip:
     ApproachAngle((short*)(thiz + 0x92), 0, 0xa, 0x200, 0x100);
     ApproachAngle((short*)(thiz + 0x94), *(short*)(thiz + 0x434), 0xa, 0x200, 0x100);
     v.z = 0xa000;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(thiz + 0x8e));
-    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3*)(thiz + 0xa4));
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(thiz + 0x8e));
+    MulVec3Mat4x3(&v, &MATRIX_SCRATCH_PAPER, (Vector3*)(thiz + 0xa4));
     if (*(unsigned short*)(thiz + 0x100) == 0) {
         func_ov065_02117944(thiz, &data_ov065_0211d6f0);
     }

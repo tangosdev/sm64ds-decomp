@@ -29,14 +29,14 @@ extern "C" {
     void func_ov002_020e9464(char* c);
 }
 
-extern u8 data_0209f2d8;
-extern u8 data_0209f228;
-extern u8 data_0209f2ac;
-extern signed char data_0209f2f8;
-extern s16 data_0209f358[];
-extern u8 data_0209f208;
-extern u32 data_0209b454;
-extern u8 data_0209d684;
+extern u8 CURRENT_GAMEMODE;
+extern u8 STAR_OBTAINED;
+extern u8 NEW_STAR_COLLECTED;
+extern signed char LEVEL_ID;
+extern s16 NUM_COINS[];
+extern u8 NUM_VS_STARS_COLLECTED;
+extern u32 NEXT_ACTOR_UPDATE_FLAGS;
+extern u8 MESSAGE_RESULT;
 
 extern "C" int func_ov002_020e8ef0(char* c, void* p)
 {
@@ -73,7 +73,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
     r4 = func_ov002_020e73ac(c);
     {
         if (r4 != 0) {
-            int t1 = (data_0209f2d8 == 1);
+            int t1 = (CURRENT_GAMEMODE == 1);
             if (!t1) {
                 int t2 = (*(u16*)(c + 0xc) == 0xb3);
                 if (!t2) {
@@ -102,7 +102,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         }
 
         {
-            int b1 = (data_0209f2d8 == 1);
+            int b1 = (CURRENT_GAMEMODE == 1);
             if (!b1) {
                 _ZN5Event6SetBitEj(0x1e);
             } else {
@@ -114,16 +114,16 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         }
 
         {
-        int b2 = (data_0209f2d8 == 1);
+        int b2 = (CURRENT_GAMEMODE == 1);
         int b3;
         if (!b2 && !(b3 = (*(u16*)(c + 0xc) == 0xb3)) &&
             *(u8*)(c + 0x49d) < 8 &&
             *(u32*)(c + 0x444) != 9) {
-            data_0209f228 = *(u8*)(c + 0x49d);
+            STAR_OBTAINED = *(u8*)(c + 0x49d);
             if (IsStarCollectedInCurLevel(*(u8*)(c + 0x49d)) != 0) {
-                data_0209f2ac = 0;
+                NEW_STAR_COLLECTED = 0;
             } else {
-                data_0209f2ac = 1;
+                NEW_STAR_COLLECTED = 1;
             }
             CollectStarInCurLevel(*(u8*)(c + 0x49d));
             if (r5 != 0) {
@@ -131,13 +131,13 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
                 if ((((u32)(*(u16*)(c + 0x4a2) << 0x13)) >> 0x1f) != 0 && found != 0) {
                     _ZN5Actor17TrackInDeathTableEv(found);
                 }
-                lvl = SublevelToLevel((signed char)data_0209f2f8);
+                lvl = SublevelToLevel((signed char)LEVEL_ID);
                 if (lvl <= 0xe) {
                     int rec = _ZN8SaveData13GetCoinRecordEj(lvl);
                     if (rec < NumCoins()) {
                         _ZN8SaveData21SetCoinRecordIfHigherEah(
                             lvl,
-                            (u8)(data_0209f358[*(u8*)((char*)p + 0x6d8)] & 0xff));
+                            (u8)(NUM_COINS[*(u8*)((char*)p + 0x6d8)] & 0xff));
                     }
                 }
             }
@@ -146,18 +146,18 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
     }
 
     if (*(u32*)(c + 0x444) == 9) {
-        data_0209f208++;
+        NUM_VS_STARS_COLLECTED++;
     }
     func_02012790(0x2d);
     *(u32*)(c + 0x440) = 5;
     *(void**)(c + 0x438) = p;
     {
-        int b4 = (data_0209f2d8 == 1);
+        int b4 = (CURRENT_GAMEMODE == 1);
         if (!b4) {
             void* pp = *(void**)(c + 0x438);
             *(u32*)(((int)pp + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
             *(u32*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
-            data_0209b454 |= 0x4000000;
+            NEXT_ACTOR_UPDATE_FLAGS |= 0x4000000;
         }
     }
     *(u32*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
@@ -169,7 +169,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         }
     }
     func_ov002_020e9464(c);
-    data_0209d684 = 0;
+    MESSAGE_RESULT = 0;
     return 1;
 ret0:
     return 0;

@@ -4,7 +4,7 @@ extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern unsigned int RandomIntInternal(int *seed);
 extern void func_ov081_021265c8(void *c);
 extern void func_ov081_0212777c(void *c, int v);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov081_021265c8(void *c) {
     Fix12i distC;
@@ -20,7 +20,7 @@ void func_ov081_021265c8(void *c) {
     } else if (distC < 0x1f4000) {
         *(int *)((char *)c + 0x3e4) = 3;
     } else {
-        if (RandomIntInternal(&data_0209e650) % 10 < 7)
+        if (RandomIntInternal(&RNG_STATE) % 10 < 7)
             *(int *)((char *)c + 0x3e4) = 3;
         else
             *(int *)((char *)c + 0x3e4) = 1;

@@ -5,7 +5,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef long long s64;
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 extern u16 DecIfAbove0_Short(u16* p);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, int a, int b);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(char* c);
@@ -18,7 +18,7 @@ int func_ov002_020b6494(char* c){
   }
   *(u16*)(c+0x328) += 0x100;
   {
-    s16 a = data_02082214[((u16)*(s16*)(c+0x328) >> 4) * 2];
+    s16 a = SINE_TABLE[((u16)*(s16*)(c+0x328) >> 4) * 2];
     *(int*)(c+0x60) = *(int*)(c+0x60) - (int)((((s64)*(int*)(c+0x324) * a) + 0x800) >> 0xc);
   }
   {

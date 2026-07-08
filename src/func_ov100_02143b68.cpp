@@ -6,7 +6,7 @@ void Matrix4x3_FromRotationXYZExt(void* m, int x, int y, int z);
 void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
 }
 struct Mtx { int w[12]; };
-extern Mtx data_02082128;
+extern Mtx _ZN9Matrix3x38IDENTITYE;
 
 extern "C" void func_ov100_02143b68(char* c) {
   Mtx tmp;
@@ -20,7 +20,7 @@ extern "C" void func_ov100_02143b68(char* c) {
   *(int*)(c+0x350) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x354) = *(int*)(c+0x64) >> 3;
   _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c+0x640, c+0x328, 0x15e000, 0x1f4000, 0xf);
-  tmp = data_02082128;
+  tmp = _ZN9Matrix3x38IDENTITYE;
   i = 0;
   mdst = c + 0x370;
   rd = c;

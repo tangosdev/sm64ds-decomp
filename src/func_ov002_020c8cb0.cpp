@@ -3,10 +3,10 @@ extern "C" {
 extern int _ZN6Player12FinishedAnimEv(void*);
 extern void func_ov002_020ca108(char* c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
-extern signed char data_02092110;
+extern signed char NEXT_LEVEL_ID;
 int func_ov002_020c8cb0(char* c){
   if (_ZN6Player12FinishedAnimEv(c)) {
-    if (data_02092110 >= 0)
+    if (NEXT_LEVEL_ID >= 0)
       *(unsigned char*)(c+0x70b) = 1;
     func_ov002_020ca108(c);
     *(unsigned char*)(c+0x743) = 0;

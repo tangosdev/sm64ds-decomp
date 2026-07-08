@@ -13,7 +13,7 @@ extern int Vec3_HorzDist(Vector3* a, Vector3* b);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void func_ov071_021223c8(void* c, int i);
 
-extern void* data_020a0e68;
+extern void* MATRIX_SCRATCH_PAPER;
 
 void func_ov071_021221bc(void* self) {
     char* c = (char*)self;
@@ -34,8 +34,8 @@ void func_ov071_021221bc(void* self) {
 
         vin.x = 0; vin.y = 0; vin.z = -0xc8000;
         vout.x = 0; vout.y = 0; vout.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-        MulVec3Mat4x3(&vin, &data_020a0e68, &vout);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+        MulVec3Mat4x3(&vin, &MATRIX_SCRATCH_PAPER, &vout);
         AddVec3(&vout, (Vector3*)(c + 0x5c), &vout);
         ld.x = vout.x; ld.y = vout.y; ld.z = vout.z;
         _ZN5Actor13LandingDustAtER7Vector3b(self, &ld, 1);
@@ -51,8 +51,8 @@ void func_ov071_021221bc(void* self) {
         pp.z = plp->z;
         din.x = 0; din.y = 0x64000; din.z = -0xc8000;
         dout.x = 0; dout.y = 0; dout.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-        MulVec3Mat4x3(&din, &data_020a0e68, &dout);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+        MulVec3Mat4x3(&din, &MATRIX_SCRATCH_PAPER, &dout);
         AddVec3(&dout, (Vector3*)(c + 0x5c), &dout);
         if (Vec3_HorzDist(&dout, &pp) >= 0x12c000)
             return;

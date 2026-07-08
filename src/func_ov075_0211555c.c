@@ -14,14 +14,14 @@ extern void func_ov075_021151b4(void* self, int x);
 extern int _ZN9Animation7AdvanceEv(void* a);
 extern void func_ov075_0211b418(void* c);
 
-extern u8 data_0209fc5c;
+extern u8 IS_PLAYER_ACTIVE;
 
 int func_ov075_0211555c(char* c)
 {
     if (*(u8*)(c + 0xf44) == 0) {
         int z = 0;
         char* ee = c + 0xe80;
-        u8* g = &data_0209fc5c;
+        u8* g = &IS_PLAYER_ACTIVE;
         char* p = c;
         char* base = c + 0x920;
         int i = 0;
@@ -43,7 +43,7 @@ int func_ov075_0211555c(char* c)
         }
 
         if (*(u8*)(c + 0xf41) == 1 && fp != 0) {
-            u8* g2 = &data_0209fc5c;
+            u8* g2 = &IS_PLAYER_ACTIVE;
             char* b2 = c + 0x920;
             int j;
             for (j = 0; j < 4; j++) {

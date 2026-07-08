@@ -25,8 +25,8 @@ extern void func_ov006_020d604c(void *p);
 extern void func_ov004_020b04d0(int v);
 extern void func_ov004_020adb1c(int v);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 int func_ov006_020d9244(void *arg0)
 {
@@ -36,7 +36,7 @@ int func_ov006_020d9244(void *arg0)
     int f;
     int r5;
 
-    data_0209d45c |= 8;
+    TOP_SCREEN_RELATED |= 8;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 2;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
@@ -52,7 +52,7 @@ int func_ov006_020d9244(void *arg0)
     func_02056314((void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    data_0209d45c |= 4;
+    TOP_SCREEN_RELATED |= 4;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
 
@@ -63,7 +63,7 @@ int func_ov006_020d9244(void *arg0)
     func_020563d4((const void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    data_0209d45c |= 1;
+    TOP_SCREEN_RELATED |= 1;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3);
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x5610;
 
@@ -82,7 +82,7 @@ int func_ov006_020d9244(void *arg0)
     DecompressLZ16(r5, (void *)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)f, 0, 0x100);
 
-    data_0209d454 |= 8;
+    BOTTOM_SCREEN_RELATED |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
 

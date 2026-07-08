@@ -5,7 +5,7 @@ extern int func_0202a8e0(int a, unsigned char b);
 extern void func_ov001_020aa6e4(int idx, unsigned r1, int* obj);
 extern void func_ov001_020ab110(int* r0);
 
-extern char* data_0209f394;
+extern char* PLAYER_ARR;
 extern int data_0209f3e8[];
 extern unsigned char data_ov001_020ad62c[];
 extern int* data_ov001_020ad634[];
@@ -13,7 +13,7 @@ extern int* data_ov001_020ad634[];
 #define LAUNDER_U8_PTR(p) ((unsigned char*)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
 
 void func_ov001_020aadac(void) {
-    char* fp = data_0209f394;
+    char* fp = PLAYER_ARR;
     int* sl;
     unsigned i1, i2;
 

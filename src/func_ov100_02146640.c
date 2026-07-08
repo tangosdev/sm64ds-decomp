@@ -11,7 +11,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, 
 extern void Vec3_Sub(struct Vec* out, struct Vec* a, struct Vec* b);
 extern int Vec3_HorzLen(struct Vec* v);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 extern void* data_ov100_021489cc[];
 extern void** data_ov100_021473b0[];
 
@@ -20,9 +20,9 @@ void func_ov100_02146640(char* c)
     struct Vec d;
     int st = *(int*)(c + 0x150);
     if (st == 0) {
-        unsigned r = RandomIntInternal(&data_0209e650);
+        unsigned r = RandomIntInternal(&RNG_STATE);
         *(int*)(c + 0x98) = ((r >> 15) & 0x1fff) + 0x3000;
-        r = RandomIntInternal(&data_0209e650);
+        r = RandomIntInternal(&RNG_STATE);
         *(int*)(c + 0x148) = ((r % 500) + 0x96) << 0xc;
         *(int*)(c + 0x130) = 0x2000;
     } else if (st == 0xa) {

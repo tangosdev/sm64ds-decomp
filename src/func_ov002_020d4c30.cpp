@@ -5,7 +5,7 @@ typedef int Fix12i;
 extern "C" unsigned int func_02022d00(unsigned int uniqueID, unsigned int effectID,
                                       Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern "C" void func_0201251c(int a, int b, int c, int d);
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 extern int data_0208e430;
 
 struct Sound {
@@ -45,7 +45,7 @@ extern "C" void func_ov002_020d4c30(Obj *self)
 {
     int id;
     if (self->b707) {
-        self->p628 = func_02022d00(self->p628, 0xde, self->p5c, data_0209f32c,
+        self->p628 = func_02022d00(self->p628, 0xde, self->p5c, WATER_HEIGHT,
                                    self->p64, 0);
     }
     if (self->p68c > 0x32000) {

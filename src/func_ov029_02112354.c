@@ -14,8 +14,8 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *pos, u32
 extern void func_ov029_021122b4(char *c);
 extern void func_ov029_02112250(char *c);
 extern void _ZN9Animation7AdvanceEv(void *a);
-extern s16 data_02082214[];
-extern int data_0209f32c;
+extern s16 SINE_TABLE[];
+extern int WATER_HEIGHT;
 
 int func_ov029_02112354(char *c)
 {
@@ -57,9 +57,9 @@ int func_ov029_02112354(char *c)
         int i;
         *q = (s16)(*q + 0x200);
         i = (u16)*(s16*)(c + 0x300 + 0x42) >> 4;
-        *(int*)(c + 0x344) = (int)data_02082214[i * 2] * 0xf + *(int*)(c + 0x60);
+        *(int*)(c + 0x344) = (int)SINE_TABLE[i * 2] * 0xf + *(int*)(c + 0x60);
     }
-    data_0209f32c = *(int*)(c + 0x344);
+    WATER_HEIGHT = *(int*)(c + 0x344);
     func_ov029_021122b4(c);
     func_ov029_02112250(c);
     *(int*)(c + 0x32c) = 0x1000;

@@ -16,7 +16,7 @@ extern "C" void Vec3_LslInPlace(void* v, int sh);
 extern "C" void Vec3_Asr(void* d, void* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 struct VObj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -41,13 +41,13 @@ extern "C" void func_ov077_02123d40(char* c)
     *(int*)(c + 0x11c) = *(int*)(c + 0x64) >> 3;
 
     if (*(int*)(c + 0x3f4) == 4) {
-        data_020a0e68 = *(Mtx43*)(c + 0xf0);
+        MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0xf0);
         int y1 = ((VObj*)c)->m29() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16*)(c + 0x8c));
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8c));
         int y2 = (-((VObj*)c)->m29()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        *(Mtx43*)(c + 0xf0) = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y2, 0);
+        *(Mtx43*)(c + 0xf0) = MATRIX_SCRATCH_PAPER;
     }
 
     *(int*)(c + 0x3e4) = *(int*)(c + 0x5c) >> 3;
@@ -71,20 +71,20 @@ extern "C" void func_ov077_02123d40(char* c)
     lv.t[1] = 0x1800;
     lv.t[2] = 0x1000;
 
-    data_020a0e68 = *(Mtx43*)(c + 0xf0);
-    MulMat4x3Mat4x3(*(char**)(c + 0xe8) + 0x90, &data_020a0e68, &data_020a0e68);
+    MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0xf0);
+    MulMat4x3Mat4x3(*(char**)(c + 0xe8) + 0x90, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
 
-    *(int*)(c + 0x404) = data_020a0e68.w[9];
-    *(int*)(c + 0x408) = data_020a0e68.w[10];
-    *(int*)(c + 0x40c) = data_020a0e68.w[11];
+    *(int*)(c + 0x404) = MATRIX_SCRATCH_PAPER.w[9];
+    *(int*)(c + 0x408) = MATRIX_SCRATCH_PAPER.w[10];
+    *(int*)(c + 0x40c) = MATRIX_SCRATCH_PAPER.w[11];
 
     Vec3_LslInPlace(c + 0x404, 3);
 
     Vec3_Asr(lv.v, c + 0x404, 3);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, lv.v[0], lv.v[1], lv.v[2]);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, lv.t[0], lv.t[1], lv.t[2]);
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, lv.v[0], lv.v[1], lv.v[2]);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+    Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, lv.t[0], lv.t[1], lv.t[2]);
 
-    *(Mtx43*)(c + 0x154) = data_020a0e68;
+    *(Mtx43*)(c + 0x154) = MATRIX_SCRATCH_PAPER;
 }

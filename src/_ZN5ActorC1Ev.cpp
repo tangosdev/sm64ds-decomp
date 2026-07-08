@@ -4,26 +4,26 @@ void _ZN9ActorBaseC1Ev(void* self);
 void func_0203b244(void* l, void* n);
 void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 }
-extern void* data_0208e4b8;
-extern void* data_0208e3a4;
-extern void* data_0209b468;
-extern void* data_0209b460;
-extern void* data_0209b45c;
+extern void* _ZTV12ActorDerived;
+extern void* _ZTV5Actor;
+extern void* FIRST_ACTOR_LIST_NODE;
+extern void* POS_AT_SPAWN;
+extern void* ROT_AT_SPAWN;
 extern signed char data_0209b44c;
 extern short data_0208e378;
-extern void* data_020a4bb8;
-extern unsigned char data_0209f2d8;
+extern void* ACTOR_SPAWN_INFO_TABLE_PTR;
+extern unsigned char CURRENT_GAMEMODE;
 
 extern "C" void* _ZN5ActorC1Ev(char* c) {
   _ZN9ActorBaseC1Ev(c);
-  *(void**)c = &data_0208e4b8;
-  *(void**)c = &data_0208e3a4;
+  *(void**)c = &_ZTV12ActorDerived;
+  *(void**)c = &_ZTV5Actor;
   *(int*)(c+0x50) = 0;
   *(int*)(c+0x54) = 0;
   *(void**)(c+0x58) = c;
-  func_0203b244(&data_0209b468, c+0x50);
+  func_0203b244(&FIRST_ACTOR_LIST_NODE, c+0x50);
   {
-    int* p = (int*)data_0209b460;
+    int* p = (int*)POS_AT_SPAWN;
     if (p) {
       *(int*)(c+0x5c) = p[0];
       *(int*)(c+0x60) = p[1];
@@ -31,12 +31,12 @@ extern "C" void* _ZN5ActorC1Ev(char* c) {
     }
   }
   {
-    short* q = (short*)data_0209b45c;
+    short* q = (short*)ROT_AT_SPAWN;
     if (q) {
       *(short*)(c+0x8c) = q[0];
       *(short*)(c+0x8e) = q[1];
       *(short*)(c+0x90) = q[2];
-      q = (short*)data_0209b45c;
+      q = (short*)ROT_AT_SPAWN;
       *(short*)(c+0x92) = q[0];
       *(short*)(c+0x94) = q[1];
       *(short*)(c+0x96) = q[2];
@@ -45,12 +45,12 @@ extern "C" void* _ZN5ActorC1Ev(char* c) {
   *(signed char*)(c+0xcc) = data_0209b44c;
   *(short*)(c+0xce) = data_0208e378;
   {
-    void** base = *(void***)&data_020a4bb8;
+    void** base = *(void***)&ACTOR_SPAWN_INFO_TABLE_PTR;
     int idx = *(unsigned short*)(c+0xc);
     char* s = (char*)base[idx];
     *(int*)(c+0xb0) = *(int*)(s+8);
     {
-      int b = (data_0209f2d8 == 2);
+      int b = (CURRENT_GAMEMODE == 2);
       int r3;
       int d = *(int*)(s+0x18);
       if (b) r3 = *(int*)(s+0x14) + 0x7d0000;

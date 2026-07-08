@@ -15,13 +15,13 @@ void* _ZN5Actor13ClosestPlayerEv(void* self);
 void func_ov002_020c3e8c(void);
 void func_ov085_0212e728(void* c, void* p);
 }
-extern void* data_0209f318;
-extern int data_0209caa0[];
+extern void* CAMERA;
+extern int SAVE_DATA[];
 extern int data_ov085_021307e0;
 
 extern "C" int func_ov085_0212d5dc(char* c) {
   Range r;
-  void* cam = *(void**)&data_0209f318;
+  void* cam = *(void**)&CAMERA;
   _ZN6Camera9SetFlag_3Ev(cam);
   r.a = -0x4b0000;
   r.b = 0x19f000;
@@ -46,7 +46,7 @@ extern "C" int func_ov085_0212d5dc(char* c) {
       *(short*)(c+0x8c) = 0;
       if (_ZN5Actor13ClosestPlayerEv(c) != 0) {
         func_ov002_020c3e8c();
-        data_0209caa0[2] |= 0x80;
+        SAVE_DATA[2] |= 0x80;
       }
       func_ov085_0212e728(c, &data_ov085_021307e0);
     }

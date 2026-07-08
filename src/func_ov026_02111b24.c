@@ -10,7 +10,7 @@ extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vec3* v, Vec3* target, int 
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern void KillPlayer(void);
 
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 
 int func_ov026_02111b24(char* self)
 {
@@ -28,8 +28,8 @@ int func_ov026_02111b24(char* self)
     v1.z = *(int*)(self + 0x198);
     player = (char*)_ZN5Actor13ClosestPlayerEv(self);
     if (player) {
-        Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x1b4));
-        MulVec3Mat4x3(&v1, &data_020a0e68, &v2);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x1b4));
+        MulVec3Mat4x3(&v1, &MATRIX_SCRATCH_PAPER, &v2);
         v1.x = *(int*)(self + 0x1a8);
         v1.y = *(int*)(self + 0x1ac);
         v1.z = *(int*)(self + 0x1b0);

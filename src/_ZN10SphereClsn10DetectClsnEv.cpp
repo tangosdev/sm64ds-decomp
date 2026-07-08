@@ -14,7 +14,7 @@ void func_02037a38(void *o);
 int Vec3_Dist(const void *a, const void *b);
 }
 
-extern void *data_020a0c80[];
+extern void *ACTIVE_MESH_COLLIDERS[];
 
 class C {
 public:
@@ -49,7 +49,7 @@ int SphereClsn::DetectClsn()
 {
     int result = 0;
     int mask;
-    char *e = (char *)data_020a0c80[0];
+    char *e = (char *)ACTIVE_MESH_COLLIDERS[0];
     if (e != 0) {
         if (func_02035354(this, (void *)func_020393b4(e)) == 0) {
             mask = ((C *)e)->v8(this);
@@ -69,7 +69,7 @@ int SphereClsn::DetectClsn()
     e = (char *)this + 0x3c;
     int threshold = *(int *)((char *)this + 0x48) + 0x1000;
     for (int i = 1; i < 0x18; i++) {
-        C *o = (C *)data_020a0c80[i];
+        C *o = (C *)ACTIVE_MESH_COLLIDERS[i];
         if (o == 0) continue;
         Info *info = (Info *)func_020393b4(o);
         if (func_02035354(this, info) != 0) continue;

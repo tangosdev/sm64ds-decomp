@@ -30,11 +30,11 @@ extern SharedFilePtr data_ov090_02134480;
 extern SharedFilePtr data_ov090_02134490;
 extern SharedFilePtr data_ov090_02134498;
 extern Vector3 data_ov090_0213412c;
-extern unsigned char data_0209f2d8;
-extern signed char data_0209f2f8;
+extern unsigned char CURRENT_GAMEMODE;
+extern signed char LEVEL_ID;
 extern PMF data_ov090_021344f4;
-extern int data_02092138;
-extern int data_0209e650;
+extern int STAR_CAP_MIN_POS_Y;
+extern int RNG_STATE;
 extern PMF data_ov090_021344e4;
 }
 
@@ -74,8 +74,8 @@ extern "C" int func_ov090_0213235c(char* c)
 
     {
         int b = 1;
-        if (data_0209f2d8 != 2) b = 0;
-        if (b != 0 && data_0209f2f8 == 0x12) {
+        if (CURRENT_GAMEMODE != 2) b = 0;
+        if (b != 0 && LEVEL_ID == 0x12) {
             *(int*)(c+0x3ac) = *(int*)(c+0x60);
             *(int*)(c+0x374) = *(int*)(c+0x5c);
             *(int*)(c+0x378) = *(int*)(c+0x60);
@@ -99,7 +99,7 @@ extern "C" int func_ov090_0213235c(char* c)
             pos.z = pz;
         }
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, (Actor*)c);
-        *(int*)(c+0x3a8) = data_02092138;
+        *(int*)(c+0x3a8) = STAR_CAP_MIN_POS_Y;
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             if (func_02037e78(rg.detect) != 0) {
                 *(unsigned char*)(c+0x39c) = 1;
@@ -122,7 +122,7 @@ extern "C" int func_ov090_0213235c(char* c)
         }
 
         {
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&RNG_STATE);
             short ang = (short)((((unsigned int)r >> 8) & 0xf) << 12);
             *(short*)(c+0x300+0x9a) = ang;
             *(short*)(c+0x94) = *(short*)(c+0x300+0x9a);

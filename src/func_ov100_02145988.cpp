@@ -12,10 +12,10 @@ extern "C" void ChangeArea(int areaID);
 struct V3 { int x, y, z; };
 extern "C" void Vec3_RotateYAndTranslate(V3 *out, void *m, short angle, V3 *in);
 
-extern unsigned char data_0209f250;
-extern Camera *data_0209f318;
+extern unsigned char CURR_PLAYER_ID;
+extern Camera *CAMERA;
 extern char data_ov100_02148974;
-extern char data_020a0ebc;
+extern char _ZN7Vector38IDENTITYE;
 extern V3 data_ov100_02148948;
 
 extern "C" int func_ov100_02145988(char *self, char *arg1)
@@ -33,7 +33,7 @@ extern "C" int func_ov100_02145988(char *self, char *arg1)
                 *(int *)(self + 0xa0) = 0;
                 func_02012694(0x4f, self + 0x74, 0);
             } else if (*(unsigned char *)(self + 0x114) == 8) {
-                _ZN6Camera14GoBehindPlayerEj(data_0209f318, data_0209f250);
+                _ZN6Camera14GoBehindPlayerEj(CAMERA, CURR_PLAYER_ID);
             }
         } else if (r5 != 0) {
             func_ov100_02145f68(self, &data_ov100_02148974, (int)arg1);
@@ -57,6 +57,6 @@ extern "C" int func_ov100_02145988(char *self, char *arg1)
     vec.x = vd;
     vec.z = gz;
     vec.y = gy;
-    Vec3_RotateYAndTranslate((V3 *)(self + 0xa4), &data_020a0ebc, *(short *)(self + 0x8e), &vec);
+    Vec3_RotateYAndTranslate((V3 *)(self + 0xa4), &_ZN7Vector38IDENTITYE, *(short *)(self + 0x8e), &vec);
     return 1;
 }

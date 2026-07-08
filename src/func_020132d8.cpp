@@ -15,26 +15,26 @@ extern u8 data_0209b480;
 extern int data_0208e430;
 extern signed char data_0209b470;
 extern int data_0209b494;
-extern int data_0209b49c;
+extern int MESSAGE_SOUND_VOLUME_LSL_12;
 extern int data_0209b4b0;
-extern int data_0209b4a0;
+extern int _ZN5Sound7FileRef5PTR_0E;
 extern int data_0209b53c;
 extern "C" void func_020132d8(void) {
     if (data_0209b480 == 0) return;
     func_02012d64();
     if (data_0208e430 >= 0) {
-        ApproachLinear(data_0209b49c, data_0209b470 << 0xc, data_0209b494);
-        func_02013524(&data_0209b4b0, data_0209b49c >> 0xc, 0);
-        if (data_0209b49c == 0) {
+        ApproachLinear(MESSAGE_SOUND_VOLUME_LSL_12, data_0209b470 << 0xc, data_0209b494);
+        func_02013524(&data_0209b4b0, MESSAGE_SOUND_VOLUME_LSL_12 >> 0xc, 0);
+        if (MESSAGE_SOUND_VOLUME_LSL_12 == 0) {
             data_0208e430 = -1;
             func_0204fa2c(&data_0209b4b0, 0);
         }
     }
     int s = func_02013078();
     if (s >= 0) {
-        func_020494cc(&data_0209b4a0, s);
+        func_020494cc(&_ZN5Sound7FileRef5PTR_0E, s);
     }
-    func_020490b0(&data_0209b4a0);
+    func_020490b0(&_ZN5Sound7FileRef5PTR_0E);
     func_0204f03c();
     func_020119c8(&data_0209b53c);
 }

@@ -15,7 +15,7 @@ extern void Vec3_Lsl(Vec3* d, Vec3* s, int sh);
 extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vec3& v, bool b);
 extern int _ZN9Animation8FinishedEv(void* a);
 extern void func_ov078_02125c48(char* c, void* p);
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 extern int data_ov078_0212703c;
 
 extern "C" int func_ov078_02125790(char* self)
@@ -31,11 +31,11 @@ extern "C" int func_ov078_02125790(char* self)
     s.x = 0;
     s.y = 0;
     s.z = 0;
-    data_020a0e68 = *(Mtx43*)(self + 0x2e8);
-    MulMat4x3Mat4x3((char*)*(void**)(self + 0x2e0) + 0x120, &data_020a0e68, &data_020a0e68);
-    s.x = data_020a0e68.m[9];
-    s.y = data_020a0e68.m[10];
-    s.z = data_020a0e68.m[11];
+    MATRIX_SCRATCH_PAPER = *(Mtx43*)(self + 0x2e8);
+    MulMat4x3Mat4x3((char*)*(void**)(self + 0x2e0) + 0x120, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+    s.x = MATRIX_SCRATCH_PAPER.m[9];
+    s.y = MATRIX_SCRATCH_PAPER.m[10];
+    s.z = MATRIX_SCRATCH_PAPER.m[11];
     Vec3_Lsl(&d, &s, 3);
     {
       Vec3 v;

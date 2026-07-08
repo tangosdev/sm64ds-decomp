@@ -16,7 +16,7 @@ void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern unsigned int data_ov006_0213c5fc[];
 extern unsigned int data_ov006_0213c5e8[];
 extern unsigned int data_ov006_0213c610[];
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 void func_ov006_020e72c0(char *c) {
   *(int*)(c + 0x4660) = func_02053ea0();
@@ -36,7 +36,7 @@ void func_ov006_020e72c0(char *c) {
     *p = *p & ~0x40;
   }
   SetSubBg1Offset(0, 0);
-  data_0209d454 &= ~2;
+  BOTTOM_SCREEN_RELATED &= ~2;
   {
     s32 i = func_ov004_020ad674();
     LoadCompressedFileAt(data_ov006_0213c610[i], (void*)func_02054e88());

@@ -3,13 +3,13 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern "C" {
-extern int* data_0209f5bc[];
+extern int* SCENE_FADER[];
 extern unsigned char data_0209b304[];
 extern short data_0209d494[];
 extern short data_0209d474[];
 
 void func_ov005_020c0140(char* c) {
-    int* g = data_0209f5bc[0];
+    int* g = SCENE_FADER[0];
     if ((*(int(***)(int*))g)[0x14/4](g) == 0) return;
     if (*(unsigned char*)(c + 0xac) != 0) return;
     if (*(int*)(c + 0x90) > 0) return;

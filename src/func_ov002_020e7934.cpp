@@ -8,7 +8,7 @@ extern void _ZN6Camera6SetPosERK7Vector3(void* cam, const Vector3* v);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 }
 
 struct RaycastLine {
@@ -53,16 +53,16 @@ extern "C" void func_ov002_020e7934(char* self, void* cam)
         if (flag) {
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)(self + 0x46c));
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x = data_02082214[k * 2] * 1000 + vec[0].x;
-            vec[0].z = data_02082214[k * 2 + 1] * 1000 + vec[0].z;
+            vec[0].x = SINE_TABLE[k * 2] * 1000 + vec[0].x;
+            vec[0].z = SINE_TABLE[k * 2 + 1] * 1000 + vec[0].z;
             _ZN6Camera6SetPosERK7Vector3(cam, &vec[0]);
         } else {
             if (!IsAreaShowing(*(signed char*)(self + 0xcc)))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)(self + 0x46c));
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x += (int)(((long long)dist * data_02082214[k * 2] + 0x800) >> 12);
-            vec[0].z += (int)(((long long)dist * data_02082214[k * 2 + 1] + 0x800) >> 12);
+            vec[0].x += (int)(((long long)dist * SINE_TABLE[k * 2] + 0x800) >> 12);
+            vec[0].z += (int)(((long long)dist * SINE_TABLE[k * 2 + 1] + 0x800) >> 12);
             _ZN6Camera6SetPosERK7Vector3(cam, &vec[0]);
         }
 

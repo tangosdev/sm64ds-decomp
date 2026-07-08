@@ -28,8 +28,8 @@ extern unsigned char data_0209f1e0;
 extern int data_0209b340[];
 extern int data_0209d524;
 extern int data_0209d6fc;
-extern int data_0209d4a8;
-extern int data_0208ee44;
+extern int SCENE_RELATED;
+extern int GAME_SPEED_RELATED;
 extern int data_ov007_02103260;
 extern int data_ov007_02103290;
 
@@ -52,9 +52,9 @@ extern "C" int func_ov007_020cc4c0(char *self)
     *(unsigned int *)0x4001000 |= 0x10000;
     Enable3dEngines();
     Initialise3dGraphics(0);
-    data_0209d4a8 = (int)(self + 0x50);
+    SCENE_RELATED = (int)(self + 0x50);
     ((Scene *)(self + 0x54))->SetFaders((FaderBrightness *)(self + 0x50));
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;
     func_ov007_020b7138(&data_ov007_02103290, data_0209b340);

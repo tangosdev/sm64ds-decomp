@@ -9,7 +9,7 @@ extern int func_0201267c(unsigned int a, void* b);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN9ActorBase18MarkForDestructionEv(char* t);
 extern int RandomIntInternal(void* rng);
-extern int data_0209e650;
+extern int RNG_STATE;
 void func_ov009_021115d8(char* c) {
     if (*(unsigned char*)(c+0x180) != 0) {
         char* p2 = _ZN5Actor13ClosestPlayerEv();
@@ -33,7 +33,7 @@ void func_ov009_021115d8(char* c) {
         }
         if (*(int*)(p+0x17c) != 3) return;
     }
-    *(short*)(c+0x92) = 5000 - (unsigned int)RandomIntInternal(&data_0209e650) % 4000;
+    *(short*)(c+0x92) = 5000 - (unsigned int)RandomIntInternal(&RNG_STATE) % 4000;
     *(int*)(c+0x174) = 0x28000;
     *(int*)(c+0x17c) = 3;
     *(int*)(c+0xb0) &= ~0x10000;

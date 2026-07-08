@@ -1,9 +1,9 @@
 
-extern unsigned char data_0209f250;
+extern unsigned char CURR_PLAYER_ID;
 extern void func_02012790(int);
 int func_0200d0ac(int a, unsigned int b)
 {
-  if (b == data_0209f250)
+  if (b == CURR_PLAYER_ID)
   {
     unsigned short v = *((unsigned short *) (((unsigned char *) (*((unsigned int **) (a + 0x140)))) + 0x26));
     if (v & 1)

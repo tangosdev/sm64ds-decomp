@@ -28,7 +28,7 @@ extern char data_ov016_02114d28[];
 extern struct V3 data_ov016_02114d4c;
 extern void* data_ov016_02114d8c;
 extern void* data_ov016_02114dbc;
-extern unsigned char data_0209f220[];
+extern unsigned char STAR_ID[];
 
 int func_ov016_021121c0(char* c)
 {
@@ -76,7 +76,7 @@ int func_ov016_021121c0(char* c)
     *(int*)(c + 0x49c) = 0;
     *(int*)(c + 0x3ac) = 0x1000;
 
-    if (data_0209f220[0] == 1) goto branch2;
+    if (STAR_ID[0] == 1) goto branch2;
     if (IsStarCollected(SublevelToLevel(8), 1) != 0) goto done0;
     if (*(int*)(c + 0x408) != 2) goto done0;
     rm = (int*)(c + 0x3f4);
@@ -90,7 +90,7 @@ done0:
     return 0;
 
 branch2:
-    if (data_0209f220[0] == 2) goto branch3;
+    if (STAR_ID[0] == 2) goto branch3;
     if (IsStarCollected(SublevelToLevel(8), 2) != 0) goto done1;
     if (*(int*)(c + 0x408) != 1) goto done1;
     {

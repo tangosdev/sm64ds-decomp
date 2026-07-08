@@ -11,7 +11,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern int func_ov100_021451c4(char* c, void* r1, char* r4);
 extern void _ZN6Player11OpenBigDoorEv(void* p);
 
-extern unsigned char data_0209caa0[];
+extern unsigned char SAVE_DATA[];
 extern unsigned char data_ov100_021480d0[];
 extern unsigned char data_ov100_02148704[];
 extern int data_ov100_021488f4[];
@@ -23,7 +23,7 @@ int func_ov100_02144528(char* c, char* pl)
         if (*(unsigned char*)(c + 0x145) == 0) {
             if (*(int*)(c + 8) != 0xd) {
                 unsigned int ch = data_ov100_021480d0[*(signed char*)(c + 0x144) - 1];
-                if (ch == data_0209caa0[0x41])
+                if (ch == SAVE_DATA[0x41])
                     ch = 3;
                 _ZN6Player16SetRealCharacterEj(pl, ch);
                 if (data_ov100_02148704[0] != 0) {

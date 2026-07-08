@@ -7,9 +7,9 @@ extern u8 data_0209fca0;
 extern u8 data_0209fc88;
 extern u8 data_0209fcd8;
 extern u8 data_02092818[];
-extern u16 data_02075d14[];
+extern u16 UTF16_TO_FONT_TABLE[];
 extern u16 data_02075b14[];
-extern u8 data_0208f074[];
+extern u8 TALK_FONT_CHAR_WIDTHS[];
 extern u8 data_0208f174[];
 extern void *func_0203d8a0(int idx);
 inline int inline_fn(u16 arg0, u16 arg1)
@@ -38,7 +38,7 @@ void func_02031028(int arg)
   {
     val = (p + i)[1];
     j = 0;
-    while ((inline_fn(data_02075b14[j], val) && inline_fn(data_02075d14[j], val)) && (j < 0x100))
+    while ((inline_fn(data_02075b14[j], val) && inline_fn(UTF16_TO_FONT_TABLE[j], val)) && (j < 0x100))
     {
       j++;
     }
@@ -55,7 +55,7 @@ void func_02031028(int arg)
     {
       if (arg == 0)
       {
-        data_0209fc88 += data_0208f074[*out];
+        data_0209fc88 += TALK_FONT_CHAR_WIDTHS[*out];
       }
       else
       {

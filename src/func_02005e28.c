@@ -1,7 +1,7 @@
 struct Actor;
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 extern unsigned char data_0208a0e0;
-extern void *data_0209f394[];
+extern void *PLAYER_ARR[];
 extern int *_ZN5Actor13ClosestPlayerEv(void *self);
 
 int func_02005e28(unsigned char *self)
@@ -9,11 +9,11 @@ int func_02005e28(unsigned char *self)
     int b;
     int i;
     int n;
-    b = (int)(data_0209f2d8 == 1);
+    b = (int)(CURRENT_GAMEMODE == 1);
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
-            int *p = (int*)data_0209f394[i];
+            int *p = (int*)PLAYER_ARR[i];
             if (p != 0) {
                 if (p[2] == self[0x113]) return 1;
             }

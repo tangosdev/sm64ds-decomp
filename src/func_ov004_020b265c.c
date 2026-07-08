@@ -24,12 +24,12 @@ extern void func_ov004_020b0d30(void);
 extern void func_ov004_020b0aa0(int arg);
 
 extern int data_ov004_020beb6c;
-extern u8 data_0209d45c;
+extern u8 TOP_SCREEN_RELATED;
 extern int data_ov004_020bbfe4[];
 extern int data_ov004_020beb74[];
-extern u8 data_0209d454;
-extern void **data_0209d4a8;
-extern int data_0208ee44;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern void **SCENE_RELATED;
+extern int GAME_SPEED_RELATED;
 
 void func_ov004_020b265c(char *obj)
 {
@@ -49,7 +49,7 @@ void func_ov004_020b265c(char *obj)
     *(vu32 *)0x4000000u &= ~0x38000000u;
     _ZN2GX12SetBankForBGEt(3);
     _ZN2GX13SetBankForOBJEt(0x10);
-    data_0209d45c = 0x10;
+    TOP_SCREEN_RELATED = 0x10;
     _ZN2GX15SetBankForSubBGEt(4);
     _ZN2GX16SetBankForSubOBJEt(8);
     p = func_ov004_020adc68(data_ov004_020bbfe4[func_ov004_020ad674()]);
@@ -67,10 +67,10 @@ void func_ov004_020b265c(char *obj)
     _ZN2GX11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
     _ZN3GXS11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
     func_ov004_020adc5c(p);
-    data_0209d454 = 0x10;
+    BOTTOM_SCREEN_RELATED = 0x10;
     data_ov004_020beb74[1] = (int)obj;
-    data_0209d4a8 = (void **)data_ov004_020beb74;
+    SCENE_RELATED = (void **)data_ov004_020beb74;
     func_ov004_020b0d30();
     func_ov004_020b0aa0(0x1d);
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
 }

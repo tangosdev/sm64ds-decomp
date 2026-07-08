@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern unsigned short data_0209fce8;
-extern unsigned char data_0209fc9c;
+extern unsigned char CONNECTION_ERROR;
 extern unsigned char data_0209fc94;
 extern unsigned char data_0209fc78;
 extern unsigned char data_0209fcdc;
@@ -17,7 +17,7 @@ void _ZN7Message17DisplayVsExitTextEt(unsigned short n) {
     volatile unsigned short ls;
     int p, s;
     data_0209fce8 = n;
-    data_0209fc9c = 0;
+    CONNECTION_ERROR = 0;
     func_02034504();
     data_0209fc94 = 1;
     data_0209fc78 = 0;

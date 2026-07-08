@@ -20,8 +20,8 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 
-extern void* data_0209f318;
-extern int data_020a0e68[];
+extern void* CAMERA;
+extern int MATRIX_SCRATCH_PAPER[];
 extern unsigned char data_ov066_0211abe0;
 extern unsigned char data_ov066_0211ae0c;
 extern void* data_ov066_0211b0cc;
@@ -33,7 +33,7 @@ int func_ov066_0211903c(char* self) {
 
     if (*(unsigned short*)(self + 0x4d2)) return 1;
 
-    cam = data_0209f318;
+    cam = CAMERA;
     if (*(int*)(self + 0x4a0) == 0) {
         _ZN6Camera9SetFlag_3Ev(cam);
         *(void**)(self + 0x490) = _ZN5Actor13ClosestPlayerEv(self);
@@ -66,8 +66,8 @@ int func_ov066_0211903c(char* self) {
             in.y = 0x32000;
             in.z = -0x32000;
 
-            Matrix4x3_FromRotationY(data_020a0e68, 0);
-            MulVec3Mat4x3(&in, data_020a0e68, &out);
+            Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, 0);
+            MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
 
             out.x += *(int*)(self + 0x5c);
             out.y += *(int*)(self + 0x60);

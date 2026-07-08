@@ -13,7 +13,7 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void* m, s16 angY);
 extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 struct Vec3i { int x, y, z; };
 extern Vec3i data_ov081_02128ef8;
@@ -43,18 +43,18 @@ extern "C" void func_ov081_02126a20(char* c)
     _ZN9ModelBase12ApplyOpacityEj(c + 0xd4, *(u8*)(c + 0x3f0), 0);
 
     if (*(s16*)(c + 0x8c) != 0) {
-        data_020a0e68 = *(Mtx43*)(c + 0xf0);
+        MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0xf0);
         int y1 = ((VObj*)c)->m29() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16*)(c + 0x8c));
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8c));
         int y2 = (-((VObj*)c)->m29()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        *(Mtx43*)(c + 0xf0) = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y2, 0);
+        *(Mtx43*)(c + 0xf0) = MATRIX_SCRATCH_PAPER;
     } else {
-        data_020a0e68 = *(Mtx43*)(c + 0xf0);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov081_02128ef8.x, data_ov081_02128ef8.y, data_ov081_02128ef8.z);
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x3ec));
-        *(Mtx43*)(c + 0x154) = data_020a0e68;
+        MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0xf0);
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, data_ov081_02128ef8.x, data_ov081_02128ef8.y, data_ov081_02128ef8.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x3ec));
+        *(Mtx43*)(c + 0x154) = MATRIX_SCRATCH_PAPER;
     }
 
     _ZN9ModelBase12ApplyOpacityEj(c + 0x138, (0x20 - *(u8*)(c + 0x3f0)) & 0xff, 0);

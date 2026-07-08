@@ -7,7 +7,7 @@ typedef int Fix12i;
 typedef short s16;
 typedef unsigned short u16;
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 struct Callback;
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, Fix12i x, Fix12i y, Fix12i z, const void* rot, struct Callback* cb);
@@ -20,9 +20,9 @@ void func_ov002_020d8d10(struct Self* self, struct Vec* pos)
 {
     struct Vector3_16f vec;
 
-    vec.x = data_02082214[((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2];
+    vec.x = SINE_TABLE[((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2];
     vec.y = 0;
-    vec.z = data_02082214[(((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2) + 1];
+    vec.z = SINE_TABLE[(((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2) + 1];
 
     if (self->state != 2) {
         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

@@ -11,11 +11,11 @@ extern "C" {
 struct NestedHeapIterator {
     unsigned char *Next(HeapAllocator *a);
 };
-extern unsigned char data_020a4d6c[];
+extern unsigned char _ZN5Sound7PLAYERSE[];
 
 extern "C" void *func_0204f63c(void **p, int idx, int r7)
 {
-    void *node = &data_020a4d6c[idx * 0x1c];
+    void *node = &_ZN5Sound7PLAYERSE[idx * 0x1c];
     void *prev = p[0];
     void **r5;
     if (prev != 0) func_0204f934(p);

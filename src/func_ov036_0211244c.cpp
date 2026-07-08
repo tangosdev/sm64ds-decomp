@@ -10,12 +10,12 @@ int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
 void func_020393d4(void* p, void* v);
 void func_020efaf0(void* c);
-extern int data_ov002_0210d9f0[];
+extern int SNUFIT_BULLET_MODEL_PTR[];
 extern int data_ov036_02113f58[];
 extern int data_ov036_0211419c[];
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 int func_ov036_0211244c(char* c){
-  _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9f0);
+  _ZN5Model8LoadFileER13SharedFilePtr(SNUFIT_BULLET_MODEL_PTR);
   int m = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov036_02113f58[0]);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x450, m, 1, -1);
   _ZN9Animation8LoadFileER13SharedFilePtr(data_ov036_0211419c);

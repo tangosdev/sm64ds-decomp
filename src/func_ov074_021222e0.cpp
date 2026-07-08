@@ -7,7 +7,7 @@ extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void _ZN15MaterialChanger6UpdateER15ModelComponents(void*, void*);
-extern M48 data_020a0e68;
+extern M48 MATRIX_SCRATCH_PAPER;
 }
 
 struct Obj210 {
@@ -23,11 +23,11 @@ extern "C" int func_ov074_021222e0(char* c)
 {
     Vec3 v;
     Vec3_Asr(&v, (Vec3*)(c + 0x5c), 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
-    *(M48*)(c + 0x22c) = data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, 0x6400, 0);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
+    Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, -0x6400, 0);
+    *(M48*)(c + 0x22c) = MATRIX_SCRATCH_PAPER;
 
     if (*(unsigned char*)(c + 0x60a) == 0) return 1;
 

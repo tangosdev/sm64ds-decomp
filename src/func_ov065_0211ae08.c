@@ -11,23 +11,23 @@ extern int RandomIntInternal(int* seed);
 extern void func_ov065_0211ad70(char* c);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 
-extern s16 data_02082214[];
-extern u8 data_0209f2c0;
-extern int data_0209e650;
+extern s16 SINE_TABLE[];
+extern u8 LEVEL_SPECIFIC_SETTING;
+extern int RNG_STATE;
 
 #define I32(off) (*(int*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 #define I8(off)  (*(u8*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 
 int func_ov065_0211ae08(char* c)
 {
-    if (data_0209f2c0 == 3) {
+    if (LEVEL_SPECIFIC_SETTING == 3) {
         int ang;
         ang = *(u16*)(c + 0x94);
         *(int*)(c + 0x5c) = *(int*)(c + 0x320) +
-            (int)(((long long)data_02082214[(ang >> 4) << 1] * 0xfa000 + 0x800) >> 12);
+            (int)(((long long)SINE_TABLE[(ang >> 4) << 1] * 0xfa000 + 0x800) >> 12);
         ang = *(u16*)(c + 0x94);
         *(int*)(c + 0x64) = *(int*)(c + 0x328) +
-            (int)(((long long)data_02082214[((ang >> 4) << 1) + 1] * 0xfa000 + 0x800) >> 12);
+            (int)(((long long)SINE_TABLE[((ang >> 4) << 1) + 1] * 0xfa000 + 0x800) >> 12);
         _ZN8Platform21UpdateModelPosAndRotYEv(c);
         func_ov065_0211ac0c(c);
         if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
@@ -41,8 +41,8 @@ int func_ov065_0211ae08(char* c)
     switch (*(u8*)(c + 0x336)) {
     case 0:
         if (DecIfAbove0_Short((u16*)(c + 0x334)) != 0) goto Lend;
-        if (data_0209f2c0 == 2) {
-            int v = (u16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
+        if (LEVEL_SPECIFIC_SETTING == 2) {
+            int v = (u16)((unsigned)RandomIntInternal(&RNG_STATE) >> 16);
             if (v % 2 == 0) {
                 *(s16*)(c + 0x334) = v % 100 + 20;
             }
@@ -88,10 +88,10 @@ int func_ov065_0211ae08(char* c)
             else
                 delta = (int)(((long long)m * 0x2599 + 0x800) >> 12);
             I32(0x98) += delta;
-            if (data_0209f2c0 != 2) goto Lend;
+            if (LEVEL_SPECIFIC_SETTING != 2) goto Lend;
         }
         if ((int)(((long long)*(int*)(c + 0x32c) * *(int*)(c + 0x330) + 0x800) >> 12) >= 0) goto Lend;
-        if ((RandomIntInternal(&data_0209e650) & 3) != 0) goto Lend;
+        if ((RandomIntInternal(&RNG_STATE) & 3) != 0) goto Lend;
         func_ov065_0211ad70(c);
         goto Lend;
     }

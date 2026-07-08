@@ -1,2 +1,2 @@
-extern int data_0209d3bc;
-void *func_02017e34(void *c){ data_0209d3bc=*(unsigned short*)c; return c; }
+extern int LAST_USED_FILE_ID;
+void *func_02017e34(void *c){ LAST_USED_FILE_ID=*(unsigned short*)c; return c; }

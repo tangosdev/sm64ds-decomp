@@ -20,17 +20,17 @@ struct Obj2v {
   virtual int m18(int a);                  /* +0x4c */
 };
 extern "C" {
-extern Obj* data_0209f5bc;
+extern Obj* SCENE_FADER;
 extern Obj2v* data_ov004_020beb68;
 extern void func_ov004_020b0aa0(int arg);
 extern void func_ov004_020b29a0(void* c, int arg);
 
 void func_ov004_020b841c(char* c) {
-  if (data_0209f5bc->v6() != 0) {
+  if (SCENE_FADER->v6() != 0) {
     Obj2v* r5 = data_ov004_020beb68;
     if (r5 == 0) return;
     if (r5->m18(*(int*)(c + 0x18)) == 0) return;
-    data_0209f5bc->v3(0x1e, 0);
+    SCENE_FADER->v3(0x1e, 0);
     func_ov004_020b0aa0(0x1d);
     func_ov004_020b29a0(r5, *(int*)(c + 0x18));
     *(int*)(c + 0x1c) = 0;
@@ -39,8 +39,8 @@ void func_ov004_020b841c(char* c) {
     *(int*)(c + 0x24) = 0;
   } else {
     if (*(int*)(c + 0x1c) != 0) return;
-    if (data_0209f5bc->v7() != 0) return;
-    data_0209f5bc->v4(0x1e, 0);
+    if (SCENE_FADER->v7() != 0) return;
+    SCENE_FADER->v4(0x1e, 0);
   }
 }
 }

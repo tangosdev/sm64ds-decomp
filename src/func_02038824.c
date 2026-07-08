@@ -36,7 +36,7 @@ extern "C" void func_020379d0(char *c, int i, int d, struct B *e, struct A *f);
 extern "C" void func_0203799c(char *c, int i, int d, struct B *e, struct A *f);
 extern "C" void func_02037968(char *c, int i, int d, struct B *e, struct A *f);
 extern "C" void func_02037a38(char *o);
-extern "C" struct A *data_020a0c80[];
+extern "C" struct A *ACTIVE_MESH_COLLIDERS[];
 
 extern "C" int func_02038824(char *self)
 {
@@ -46,7 +46,7 @@ extern "C" int func_02038824(char *self)
     int one = 1;
     int i;
     for (i = 1; i < 0x18; i++) {
-        struct A *o = data_020a0c80[i];
+        struct A *o = ACTIVE_MESH_COLLIDERS[i];
         if (o == 0) continue;
         struct B *sl = func_020393b4(o);
         if (func_02035354(self, sl) != 0) continue;

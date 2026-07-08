@@ -24,7 +24,7 @@ extern "C" {
     extern void func_ov004_020adb1c(int self);
     
     extern unsigned char data_020a0e40[];
-    extern unsigned char data_020a0de8[];
+    extern unsigned char TOUCH_INPUT_ARR[];
     extern unsigned char data_020a0de9[];
     extern unsigned char data_020a0dea[];
     extern unsigned char data_020a0deb[];
@@ -88,7 +88,7 @@ struct VObj {
         case 4: {
             int ok = 0;
             int idx0 = data_020a0e40[0] * 4;
-            if (data_020a0de8[idx0] != 0 && data_020a0de9[idx0] != 0) {
+            if (TOUCH_INPUT_ARR[idx0] != 0 && data_020a0de9[idx0] != 0) {
                 ok = 1;
             }
             if (ok != 0 && func_ov006_020da834(c + 0x51a8) != 0 && data_ov006_02141768 == 0) {

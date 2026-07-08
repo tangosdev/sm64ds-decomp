@@ -22,7 +22,7 @@ extern void AddVec3(void *, void *, void *);
 extern void *_ZN5Actor10FindWithIDEj(u32);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *, const Vector3 *, u32, int, u32, u32, u32);
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 typedef struct {
     u8 _pad[0x9e];
@@ -69,10 +69,10 @@ void func_ov020_02112b00(char *c)
                     Vec3_Sub(&diff, &playerPos, (Vector3 *)(c + 0x5c));
                     *(s16 *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
                     *(s16 *)(c + 0x92) = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen(&diff)) * -1;
-                    r = (s32)(((long long)data_02082214[(A92 >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
-                    *(s32 *)(c + 0xa4) = (s32)(((long long)r * data_02082214[(A94 >> 4) * 2] + 0x800) >> 12);
-                    *(s32 *)(c + 0xa8) = (s32)(((long long)data_02082214[(A92 >> 4) * 2] * -0x32000 + 0x800) >> 12);
-                    *(s32 *)(c + 0xac) = (s32)(((long long)r * data_02082214[(A94 >> 4) * 2 + 1] + 0x800) >> 12);
+                    r = (s32)(((long long)SINE_TABLE[(A92 >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
+                    *(s32 *)(c + 0xa4) = (s32)(((long long)r * SINE_TABLE[(A94 >> 4) * 2] + 0x800) >> 12);
+                    *(s32 *)(c + 0xa8) = (s32)(((long long)SINE_TABLE[(A92 >> 4) * 2] * -0x32000 + 0x800) >> 12);
+                    *(s32 *)(c + 0xac) = (s32)(((long long)r * SINE_TABLE[(A94 >> 4) * 2 + 1] + 0x800) >> 12);
                 }
             } else {
                 if (ST->timer > 0x14) {

@@ -8,15 +8,15 @@ extern void func_02012718(void *a, int b);
 extern u8 data_020a0e40;
 
 struct Row { u8 a, b, c, d; };
-extern struct Row data_020a0de8[];
+extern struct Row TOUCH_INPUT_ARR[];
 
 void func_ov006_020e4ed4(char *this)
 {
     int i = data_020a0e40;
     int ok = 0;
     char *s;
-    if (data_020a0de8[i].a != 0) {
-        if (data_020a0de8[i].b != 0) ok = 1;
+    if (TOUCH_INPUT_ARR[i].a != 0) {
+        if (TOUCH_INPUT_ARR[i].b != 0) ok = 1;
     }
     if (ok == 0) return;
 
@@ -24,8 +24,8 @@ void func_ov006_020e4ed4(char *this)
     {
         int x = *(int *)(s + 0x584);
         int y = *(int *)(s + 0x588);
-        *(int *)(s + 0x594) = ((x >> 0xc) - data_020a0de8[i].c) << 0xc;
-        *(int *)(s + 0x598) = ((y >> 0xc) - data_020a0de8[i].d) << 0xc;
+        *(int *)(s + 0x594) = ((x >> 0xc) - TOUCH_INPUT_ARR[i].c) << 0xc;
+        *(int *)(s + 0x598) = ((y >> 0xc) - TOUCH_INPUT_ARR[i].d) << 0xc;
     }
     *(u8 *)(s + 0x5b8) = 1;
     *(u16 *)(this + 0x5500 + 0xb2) = 0xc000;

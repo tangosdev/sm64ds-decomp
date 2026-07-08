@@ -5,13 +5,13 @@ extern Elem data_ov100_02148204[];
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void* p);
 extern void UnloadKeyModels(int i);
-extern void* data_ov100_02148744;
+extern void* DOOR_OPEN_ANIM_PTR;
 int func_ov100_0214542c(char* c) {
   int idx = *(int*)(c + 8);
   Elem* e = &data_ov100_02148204[idx];
   V* obj;
   _ZN13SharedFilePtr7ReleaseEv(e->a);
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov100_02148744);
+  _ZN13SharedFilePtr7ReleaseEv(&DOOR_OPEN_ANIM_PTR);
   obj = (V*)*(void**)(c + 0x138);
   if (obj != 0) {
     if (obj != 0) obj->v1();

@@ -8,7 +8,7 @@ extern void func_ov006_020ec9c0(void *self, int arg);
 extern void func_ov006_020ec84c(void *self, int arg);
 extern void func_ov006_020ec4dc(void *self, int arg);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 extern short data_ov006_02141fd8;
 
 void func_ov006_020ecdb8(char *self, int arg1, int arg2)
@@ -20,7 +20,7 @@ void func_ov006_020ecdb8(char *self, int arg1, int arg2)
     *(int *)(self + 0x70) = 1;
     *(int *)(self + 0x64) = arg1;
     *(short *)(self + 0x8c) = 0;
-    *(short *)(self + 0x84) = (short)(RandomIntInternal(&data_0209e650) & 0xfff0);
+    *(short *)(self + 0x84) = (short)(RandomIntInternal(&RNG_STATE) & 0xfff0);
     *(short *)(self + 0x86) = 0x600;
     *(unsigned char *)(self + 0x93) = 0;
     *(unsigned char *)(self + 0x94) = 0;

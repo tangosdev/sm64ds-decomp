@@ -33,7 +33,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mF, s16 angX);
 extern void MulVec3Mat4x3(const Vector3 *v, const Matrix4x3 *m, Vector3 *res);
 extern void ApproachLinear(int *a, int b, int c);
 extern void func_ov085_0212d268(C *c, void *p);
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern char data_ov085_0213072c;
 
 int func_ov085_0212d108(C *c) {
@@ -59,9 +59,9 @@ int func_ov085_0212d108(C *c) {
     c->field_94 = Vec3_HorzAngle(&c->pos, &pp);
     c->field_92 = Vec3_VertAngle(&c->pos, &pp);
     v.z = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, c->field_94);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->field_92);
-    MulVec3Mat4x3(&v, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, c->field_94);
+    Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, c->field_92);
+    MulVec3Mat4x3(&v, &MATRIX_SCRATCH_PAPER, &out);
     ApproachLinear(&c->field_a4, out.x, 0x1000);
     ApproachLinear(&c->field_a8, out.y, 0x1000);
     ApproachLinear(&c->field_ac, out.z, 0x1000);

@@ -20,7 +20,7 @@ extern int data_ov075_0211cc44;
 extern int data_ov075_0211cc4c;
 extern int data_ov075_0211cc54;
 extern int data_ov075_0211cc5c;
-extern u8 data_0209d454;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 void func_ov075_021188b4(char *c)
 {
@@ -57,7 +57,7 @@ void func_ov075_021188b4(char *c)
 
     func_020331fc(0x40, 0x20, func_0203da9c() << 24 >> 24);
 
-    data_0209d454 |= 1;
+    BOTTOM_SCREEN_RELATED |= 1;
 
     func_02020304();
 

@@ -16,8 +16,8 @@ extern "C" int IsStarCollectedInCurLevel(int a);
 extern void *data_ov102_0214e188[];
 extern void *data_ov102_0214e18c[];
 extern void *data_ov102_0214e190[];
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 
 extern "C" int func_ov102_02148c94(void *thiz)
 {
@@ -57,8 +57,8 @@ extern "C" int func_ov102_02148c94(void *thiz)
 
     {
         int b31 = (int)(*(unsigned short *)(c + 0xc) == 0x31);
-        if (b31 != 0 && data_0209f2f8 == 7) {
-            if (data_0209f220 != 1) {
+        if (b31 != 0 && LEVEL_ID == 7) {
+            if (STAR_ID != 1) {
                 if (IsStarCollectedInCurLevel(1) != 0)
                     goto ret1;
             }

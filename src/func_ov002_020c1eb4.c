@@ -8,7 +8,7 @@ typedef int Fix12i;
 
 extern "C" void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *origin,
                                          int angle, const Vector3 *offset);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 struct Sound {
     static void PlayBank0(unsigned int id, const Vector3 &v);
@@ -18,7 +18,7 @@ struct Player {
     struct State;
     void ChangeState(State &s);
 };
-extern Player::State data_ov002_02110094;
+extern Player::State _ZN6Player7ST_HURTE;
 
 namespace Particle {
     struct Callback;
@@ -74,7 +74,7 @@ extern "C" void func_ov002_020c1eb4(Obj *self, int dmg)
         *p = *p | 0x20;
     }
     self->p674 = 0;
-    ((Player *)self)->ChangeState(data_ov002_02110094);
+    ((Player *)self)->ChangeState(_ZN6Player7ST_HURTE);
 
     offset.x = 0;
     offset.y = 0x32000;
@@ -83,8 +83,8 @@ extern "C" void func_ov002_020c1eb4(Obj *self, int dmg)
 
     {
         int idx = ((unsigned short)dmg >> 4);
-        vec.x = data_02082214[idx * 2];
-        vec.z = data_02082214[idx * 2 + 1];
+        vec.x = SINE_TABLE[idx * 2];
+        vec.z = SINE_TABLE[idx * 2 + 1];
         vec.y = 0;
         Particle::System::New(0, 0xc8, out.x, out.y, out.z, &vec, 0);
     }

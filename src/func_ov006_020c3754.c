@@ -4,7 +4,7 @@
 extern int data_ov006_021402e0;
 extern int data_ov006_021402e4;
 extern int data_ov006_021402f0[3];
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int data_02092768[4];
 extern void func_020731dc(int a, int b, void **node);
 extern void func_020072c0(void);
@@ -36,7 +36,7 @@ void func_ov006_020c3754(int *r6, int *r5, int *r4)
     r6[9] = data_ov006_021402f0[0];
     r6[10] = data_ov006_021402f0[1];
     r6[11] = data_ov006_021402f0[2];
-    func_0203cd80((char *)r6 + 0x24, (short)RandomIntInternal(&data_0209e650));
+    func_0203cd80((char *)r6 + 0x24, (short)RandomIntInternal(&RNG_STATE));
     r6[12] = data_02092768[0];
     r6[13] = data_02092768[1];
     r6[14] = data_02092768[2];

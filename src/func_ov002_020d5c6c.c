@@ -4,7 +4,7 @@
 // Counts as decompiled, not matched.
 extern "C" {
 struct State;
-extern State data_ov002_02110034;
+extern State _ZN6Player14ST_YOSHI_POWERE;
 extern int func_ov002_020d600c(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, State* st);
 int func_ov002_020d5c6c(char* c){
@@ -16,7 +16,7 @@ int func_ov002_020d5c6c(char* c){
   *(unsigned short*)(c + 0x6ce) &= ~2;
   return 0;
 change:
-  _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110034);
+  _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player14ST_YOSHI_POWERE);
   return 1;
 }
 }

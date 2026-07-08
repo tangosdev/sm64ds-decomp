@@ -24,7 +24,7 @@ struct RaycastGround {
 extern "C" char data_ov065_0211d904;
 extern "C" char data_ov065_0211d90c;
 extern "C" char func_02112258;
-extern "C" unsigned char data_0209f2c0;
+extern "C" unsigned char LEVEL_SPECIFIC_SETTING;
 extern "C" short data_ov065_0211c0c8;
 extern "C" void UpdatePosWithTransformSym();
 
@@ -47,7 +47,7 @@ extern "C" int func_ov065_0211b1d4(char *self)
     *(int*)(self + 0x320) = *(int*)(self + 0x5c);
     *(int*)(self + 0x324) = *(int*)(self + 0x60);
     *(int*)(self + 0x328) = *(int*)(self + 0x64);
-    *(short*)(self + 0x334) = (&data_ov065_0211c0c8)[data_0209f2c0];
+    *(short*)(self + 0x334) = (&data_ov065_0211c0c8)[LEVEL_SPECIFIC_SETTING];
 
     V3 v;
     v.x = *(int*)(self + 0x5c);

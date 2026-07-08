@@ -8,11 +8,11 @@ extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, void* st);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(void* thiz);
 extern void func_ov002_020eedc0(void* c, void* arg);
 extern void func_ov002_020c1eb4(void* self, int arg);
-extern char data_ov002_021105bc;
-extern char data_ov002_0211031c;
-extern char data_ov002_02110334;
-extern char data_ov002_0211055c;
-extern char data_ov002_02110214;
+extern char _ZN6Player7ST_DIVEE;
+extern char _ZN6Player16ST_STOMACH_SLIDEE;
+extern char _ZN6Player13ST_BUTT_SLIDEE;
+extern char _ZN6Player12ST_LONG_JUMPE;
+extern char _ZN6Player6ST_FLYE;
 
 int func_ov002_020c200c(char* self, int arg)
 {
@@ -22,12 +22,12 @@ int func_ov002_020c200c(char* self, int arg)
     if (*(unsigned char*)(self + 0x709))
         return 0;
 
-    if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_021105bc) ||
-        _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211031c) ||
-        _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110334) ||
-        _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211055c) ||
+    if (_ZN6Player7IsStateERNS_5StateE(self, &_ZN6Player7ST_DIVEE) ||
+        _ZN6Player7IsStateERNS_5StateE(self, &_ZN6Player16ST_STOMACH_SLIDEE) ||
+        _ZN6Player7IsStateERNS_5StateE(self, &_ZN6Player13ST_BUTT_SLIDEE) ||
+        _ZN6Player7IsStateERNS_5StateE(self, &_ZN6Player12ST_LONG_JUMPE) ||
         _ZN6Player22IsBeingShotOutOfCannonEv(self) ||
-        _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110214))
+        _ZN6Player7IsStateERNS_5StateE(self, &_ZN6Player6ST_FLYE))
     {
         if (*(int*)(self + 0x98) <= 0x10000)
             return 0;

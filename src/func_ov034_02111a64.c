@@ -10,7 +10,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ac
 extern void func_0201267c(int a, void* p);
 extern void func_ov034_021125b8(void* c, int i);
 
-extern void* data_0209f318[];
+extern void* CAMERA[];
 extern short data_ov034_02113820[];
 
 struct Vec3 { int x, y, z; };
@@ -31,7 +31,7 @@ void func_ov034_02111a64(char* c)
     if (!_ZN6Player9StartTalkER9ActorBaseb(talk, c, 1))
         return;
 
-    _ZN6Camera9SetFlag_3Ev(data_0209f318[0]);
+    _ZN6Camera9SetFlag_3Ev(CAMERA[0]);
     *(unsigned char*)(c + 0x8e1) = 1;
 
     _Z14ApproachLinearRsss((short*)(*(char**)(c + 0x8c8) + 0x8e),

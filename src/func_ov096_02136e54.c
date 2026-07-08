@@ -2,7 +2,7 @@ typedef int s32;
 typedef unsigned short u16;
 typedef signed short s16;
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 void func_ov096_02136e54(void* c, int a)
 {
@@ -11,7 +11,7 @@ void func_ov096_02136e54(void* c, int a)
     s16* pw = (s16*)(((long long)(int)(cc + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL);
 
     u16 idx = *(u16*)(cc + 0x35a);
-    s16 d = data_02082214[(idx >> 4) * 2 + 1];
+    s16 d = SINE_TABLE[(idx >> 4) * 2 + 1];
     s32 r6 = (d + 0x1000) >> 1;
     s32 fp = (s32)(((long long)a * 0x666 + 0x800) >> 12);
     s32 t2 = (s32)(((long long)r6 * 0x4cc + 0x800) >> 12);
@@ -19,7 +19,7 @@ void func_ov096_02136e54(void* c, int a)
     *(s32*)(cc + 0x80) = (s32)(((long long)t3 * fp + 0x800) >> 12);
 
     u16 idx2 = *(u16*)(cc + 0x35a);
-    s16 d2 = data_02082214[(idx2 >> 4) * 2 + 1];
+    s16 d2 = SINE_TABLE[(idx2 >> 4) * 2 + 1];
     s32 u = ((0x1000 - d2) >> 2) + 0x800;
     *(s32*)(cc + 0x84) = (s32)(((long long)u * fp + 0x800) >> 12);
 

@@ -7,7 +7,7 @@ extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
 extern void _ZN5ActorD1Ev(void* p);
 extern int func_0207328c(void* p, int a, int b, void* fn);
 extern int data_ov066_0211ad64[];
-extern int data_ov002_0210ae38[];
+extern int _ZTV8Platform[];
 extern int func_020072c0[];
 void* func_ov066_02115ee0(char* c) {
     *(void**)c = data_ov066_0211ad64;
@@ -18,7 +18,7 @@ void* func_ov066_02115ee0(char* c) {
     _ZN5ModelD1Ev(c+0x3d0);
     _ZN14BlendModelAnimD1Ev(c+0x360);
     _ZN25MovingCylinderClsnWithPosD1Ev(c+0x320);
-    *(void**)c = data_ov002_0210ae38;
+    *(void**)c = _ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev(c+0x124);
     _ZN5ModelD1Ev(c+0xd4);
     _ZN5ActorD1Ev(c);

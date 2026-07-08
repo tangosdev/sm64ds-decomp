@@ -5,13 +5,13 @@
 extern "C" {
 int func_ov006_020e6e3c(int a, int b);
 void func_ov006_020c4d3c(char* c);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 }
 
 extern "C" void func_ov006_020c4e8c(char* c) {
     if (*(short*)(c + 0xea) < 0x4000) {
         *(short*)(c + 0xea) = *(short*)(c + 0xea) + 0x400;
-        short* tbl = data_02082214;
+        short* tbl = SINE_TABLE;
         int ang = *(unsigned short*)(c + 0xea) >> 4;
         int r0 = (int)(((long long)((tbl[ang * 2] >> 1) + 0x1000) * (long long)0x1400 + 0x800) >> 0xc);
         *(int*)(c + 0xcc) = r0;

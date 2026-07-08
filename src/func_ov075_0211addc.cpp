@@ -4,7 +4,7 @@ extern "C" short func_ov075_0211aeb8(char* c, int x);
 extern "C" int func_ov075_0211aea4(int unused, int a);
 namespace cstd { int fdiv(int, int); }
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern "C" int func_ov075_0211addc(char *self, int x)
 {
@@ -23,6 +23,6 @@ extern "C" int func_ov075_0211addc(char *self, int x)
     if (r2 < 0)
         r2 = 0;
     idx = (unsigned short)a >> 4;
-    t = *(short*)((char*)data_02082214 + idx * 4);
+    t = *(short*)((char*)SINE_TABLE + idx * 4);
     return (int)((((s64)t * r2) + 0x800) >> 12);
 }

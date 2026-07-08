@@ -5,7 +5,7 @@ void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 struct M48 { int w[12]; };
-extern M48 data_020a0e68;
+extern M48 MATRIX_SCRATCH_PAPER;
 }
 struct Base {
   virtual void v0();
@@ -44,13 +44,13 @@ extern "C" void func_ov077_021251d0(void* c)
   char* r4 = (char*)c;
   int v[3];
   Vec3_Asr(v, r4+0x5c, 3);
-  Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+  Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v[0], v[1], v[2]);
   Base* b = (Base*)c;
   int r = b->m();
-  Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, r >> 3, 0);
-  Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
+  Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, r >> 3, 0);
+  Matrix4x3_ApplyInPlaceToRotationZXYExt(&MATRIX_SCRATCH_PAPER,
       *(short*)(r4+0x8c), *(short*)(r4+0x8e), *(short*)(r4+0x90));
   int r2 = b->m();
-  Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-r2) >> 3, 0);
-  *(M48*)(r4+0x140) = data_020a0e68;
+  Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, (-r2) >> 3, 0);
+  *(M48*)(r4+0x140) = MATRIX_SCRATCH_PAPER;
 }

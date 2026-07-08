@@ -10,22 +10,22 @@ struct Camera {
     unsigned char f6e5;   // 0x6e5
 };
 
-extern volatile int data_0209f318;
-extern int data_0209f32c;
+extern volatile int CAMERA;
+extern int WATER_HEIGHT;
 
 extern void func_0200d768(struct Camera *thiz, unsigned char playerID);
 extern void func_0200d72c(struct Camera *thiz, unsigned char playerID);
 
 void func_ov002_020ceb7c(struct Camera *c)
 {
-    (void)data_0209f318;
+    (void)CAMERA;
     if (c->f6e5 & 2) {
-        if (data_0209f32c - 0x50000 - c->f60 >= 0x64000)
+        if (WATER_HEIGHT - 0x50000 - c->f60 >= 0x64000)
             return;
         func_0200d768(c, c->f6d8);
         *(unsigned char *)((char *)c + 0x6e5) ^= 2;
     } else {
-        if (data_0209f32c - 0x50000 - c->f60 <= 0x12c000)
+        if (WATER_HEIGHT - 0x50000 - c->f60 <= 0x12c000)
             return;
         func_0200d72c(c, c->f6d8);
         *(unsigned char *)((char *)c + 0x6e5) |= 2;

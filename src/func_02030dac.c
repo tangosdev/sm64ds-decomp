@@ -4,21 +4,21 @@
 extern int func_0203d890(void);
 
 typedef unsigned char u8;
-extern u8 data_0209fc5c[];
+extern u8 IS_PLAYER_ACTIVE[];
 extern u8 data_0209fc64[];
-extern u8 data_0209fc50;
+extern u8 NUM_PLAYERS_2;
 
 void func_02030dac(void)
 {
     int n = func_0203d890();
     int i;
     for (i = 0; i < n; i++) {
-        data_0209fc5c[i] = 1;
+        IS_PLAYER_ACTIVE[i] = 1;
         data_0209fc64[i] = (u8)i;
     }
     for (i = n; i < 4; i++) {
-        data_0209fc5c[i] = 0;
+        IS_PLAYER_ACTIVE[i] = 0;
         data_0209fc64[i] = (u8)-1;
     }
-    data_0209fc50 = (u8)n;
+    NUM_PLAYERS_2 = (u8)n;
 }

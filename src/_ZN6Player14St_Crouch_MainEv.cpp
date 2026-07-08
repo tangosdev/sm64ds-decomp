@@ -23,9 +23,9 @@ extern void func_ov002_020bedd4(void* c);
 extern u16 data_0209f49c[];
 extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
-extern int data_ov002_021101b4[];
-extern int data_ov002_02110514[];
-extern int data_ov002_0211013c[];
+extern int _ZN6Player7ST_FALLE[];
+extern int _ZN6Player8ST_CRAWLE[];
+extern int _ZN6Player7ST_WALKE[];
 }
 
 extern "C" int _ZN6Player14St_Crouch_MainEv(char* c)
@@ -35,7 +35,7 @@ extern "C" int _ZN6Player14St_Crouch_MainEv(char* c)
     if (*(u8*)(c + 0x6de) != 0) {
         int d = *(int*)(c + 0x60) - *(int*)(c + 0x644);
         if (d >= 0x32000) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_FALLE);
             return 1;
         }
     }
@@ -60,7 +60,7 @@ extern "C" int _ZN6Player14St_Crouch_MainEv(char* c)
             } else {
                 if (*(u8*)(c + 0x703) == 0) {
                     if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) >= 0x200) {
-                        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110514);
+                        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player8ST_CRAWLE);
                         return 1;
                     }
                 }
@@ -81,7 +81,7 @@ extern "C" int _ZN6Player14St_Crouch_MainEv(char* c)
         break;
     case 2:
         if (_ZN6Player6IsAnimEj(c, 0x2e) && _ZN6Player12FinishedAnimEv(c)) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_WALKE);
             *(u16*)(c + 0x6b0) = 0xa;
         } else {
             func_ov002_020d1204(c);

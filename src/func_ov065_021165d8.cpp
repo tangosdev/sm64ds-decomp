@@ -9,7 +9,7 @@ extern void Matrix4x3_FromRotationY(void*,short);
 extern void MulVec3Mat4x3(void*,void*,void*);
 extern void ApproachAngle(void*,short,int,int,int);
 extern int func_ov065_0211691c(void*,void*);
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 extern int data_ov075_0211d650[];
 int func_ov065_021165d8(char*c){
   short r4=0;
@@ -25,8 +25,8 @@ int func_ov065_021165d8(char*c){
       *(int*)(c+0xa4)=0;*(int*)(c+0xa8)=0;*(int*)(c+0xac)=0;
     } else {
       v.z=0; v.z=-0x1000; v.x=0; v.y=0;
-      Matrix4x3_FromRotationY(data_020a0e68,*(short*)(c+0x8e));
-      MulVec3Mat4x3(&v,data_020a0e68,c+0xa4);
+      Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER,*(short*)(c+0x8e));
+      MulVec3Mat4x3(&v,MATRIX_SCRATCH_PAPER,c+0xa4);
     }
   } else {
     *(short*)(c+0x100)=r4;

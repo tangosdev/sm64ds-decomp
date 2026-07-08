@@ -2,7 +2,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, Vector3* v);
-extern void* data_0209f318;
+extern void* CAMERA;
 extern int data_ov085_02130840[];
 int func_ov085_0212d8ec(char* c) {
   volatile Vector3 look, pos; (void)&look; (void)&pos;
@@ -11,7 +11,7 @@ int func_ov085_0212d8ec(char* c) {
   *(int*)(c + 0x2c8) = 0;
   *(int*)(c + 0x2cc) = 0;
   *(int*)(c + 0x2e0) = 0;
-  cam = data_0209f318;
+  cam = CAMERA;
   _ZN6Camera9SetFlag_3Ev(cam);
   *(int*)(c+0x2b0)=0xffc67000;
   *(int*)(c+0x2b4)=0x6ea000;

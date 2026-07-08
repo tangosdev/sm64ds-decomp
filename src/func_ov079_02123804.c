@@ -6,7 +6,7 @@ typedef unsigned int u32;
 
 struct Vector3 { int x, y, z; };
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 extern int* data_ov079_021275ec[];
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
@@ -29,8 +29,8 @@ void func_ov079_02123804(char* self, char* other)
     }
 
     idx = *(u16*)(other + 0x94) >> 4;
-    cosv = data_02082214[idx * 2];
-    sinv = data_02082214[idx * 2 + 1];
+    cosv = SINE_TABLE[idx * 2];
+    sinv = SINE_TABLE[idx * 2 + 1];
     v.x = v.x - cosv * 0x50;
     v.z = v.z - sinv * 0x50;
 

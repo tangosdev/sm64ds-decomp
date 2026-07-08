@@ -1,7 +1,7 @@
 //cpp
 extern "C" unsigned char data_ov002_020ff240[];
-extern "C" unsigned char data_0209f2fc;
-extern "C" int data_ov002_021104b4;
+extern "C" unsigned char PREV_RETURN_STATE;
+extern "C" int _ZN6Player14ST_LEVEL_ENTERE;
 
 struct State;
 struct Player {
@@ -15,7 +15,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(Player* p, struct State* s);
 extern "C" void func_ov002_020c7dd0(Player* p, int i) {
     unsigned char g;
     *(unsigned char*)((char*)p + 0x6e3) = data_ov002_020ff240[i];
-    g = data_0209f2fc;
+    g = PREV_RETURN_STATE;
     if (g == 2) {
         unsigned char s = *(unsigned char*)((char*)p + 0x6e3);
         switch (s) {
@@ -36,5 +36,5 @@ extern "C" void func_ov002_020c7dd0(Player* p, int i) {
             *(unsigned char*)((char*)p + 0x6e3) = 0xf;
         }
     }
-    _ZN6Player11ChangeStateERNS_5StateE(p, (struct State*)&data_ov002_021104b4);
+    _ZN6Player11ChangeStateERNS_5StateE(p, (struct State*)&_ZN6Player14ST_LEVEL_ENTERE);
 }

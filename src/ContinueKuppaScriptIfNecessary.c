@@ -1,9 +1,9 @@
-extern int data_0209fc4c;
-extern int data_02089608;
-extern int data_0209f2d8;
-extern int data_0209caa0[];
-extern int data_02087c00;
-extern int data_0209fc48;
+extern int SAVED_KUPPA_SCRIPT;
+extern int FALL_IN_FRONT_OF_CASTLE_CUTSCENE;
+extern int CURRENT_GAMEMODE;
+extern int SAVE_DATA[];
+extern int BOB_CREDITS_CUTSCENE;
+extern int RUNNING_KUPPA_SCRIPT;
 
 extern void Sound_LoadInitialGroup(int);
 extern void CollectStarInLevel(signed char levelID, int starID);
@@ -12,19 +12,19 @@ extern void RunKuppaScript(int);
 
 int ContinueKuppaScriptIfNecessary(void)
 {
-    int g = data_0209fc4c;
+    int g = SAVED_KUPPA_SCRIPT;
     if (g == 0) return 0;
-    if (g == (int)&data_02089608) {
-        *(unsigned char *)&data_0209f2d8 = 2;
+    if (g == (int)&FALL_IN_FRONT_OF_CASTLE_CUTSCENE) {
+        *(unsigned char *)&CURRENT_GAMEMODE = 2;
         Sound_LoadInitialGroup(0x26);
-        data_0209caa0[1] &= ~0x204;
+        SAVE_DATA[1] &= ~0x204;
         CollectStarInLevel(7, 1);
         CollectStarInLevel(8, 1);
-    } else if (g == (int)&data_02087c00) {
+    } else if (g == (int)&BOB_CREDITS_CUTSCENE) {
         DisableSoundPlayersForCredits();
     }
-    data_0209fc48 = 0;
-    RunKuppaScript(data_0209fc4c);
-    data_0209fc4c = 0;
+    RUNNING_KUPPA_SCRIPT = 0;
+    RunKuppaScript(SAVED_KUPPA_SCRIPT);
+    SAVED_KUPPA_SCRIPT = 0;
     return 1;
 }

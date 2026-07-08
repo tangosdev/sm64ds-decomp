@@ -1,7 +1,7 @@
 typedef unsigned char u8;
-extern u8 data_0209f5bc[];
+extern u8 SCENE_FADER[];
 extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern u8 data_020a0de9[];
 extern u8 data_0209b304[];
 extern u8 data_020a0dea[];
@@ -12,7 +12,7 @@ extern void func_02012790(int);
 void func_ov005_020c06cc(char *c)
 {
     int (**vt)(void*);
-    void *obj = *(void**)data_0209f5bc;
+    void *obj = *(void**)SCENE_FADER;
     vt = *(int(***)(void*))obj;
     if (vt[5](obj) == 0) return;
     if (*(u8*)(c+0xac) != 0) return;
@@ -26,7 +26,7 @@ void func_ov005_020c06cc(char *c)
         u8 idx = data_020a0e40[0];
         int off = idx*4;
         int has = 0;
-        if (data_020a0de8[off]) {
+        if (TOUCH_INPUT_ARR[off]) {
             if (data_020a0de9[off]) has = 1;
         }
         if (has == 0) return;

@@ -7,7 +7,7 @@ extern "C" void _ZN6Camera9SetFlag_3Ev(void*);
 extern "C" void _ZN6Camera9SetLookAtERK7Vector3(void*, const Vector3*);
 extern "C" void _ZN6Camera6SetPosERK7Vector3(void*, const Vector3*);
 
-extern void* data_0209f318;
+extern void* CAMERA;
 
 extern "C" int func_ov085_0212df84(char* c)
 {
@@ -22,7 +22,7 @@ extern "C" int func_ov085_0212df84(char* c)
         *(short*)(c + 0x2d4) = *(short*)((char*)player + 0x8e);
         func_ov002_020d228c(player);
     }
-    cam = data_0209f318;
+    cam = CAMERA;
     _ZN6Camera9SetFlag_3Ev(cam);
     look.x = 0xff883000;
     look.y = 0x2ef000;

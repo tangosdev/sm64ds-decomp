@@ -10,7 +10,7 @@ extern "C" void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(char* w);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(char* c);
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 
 extern "C" int func_ov091_02133c6c(char* c){
   Vector3 v;
@@ -19,9 +19,9 @@ extern "C" int func_ov091_02133c6c(char* c){
   v.x = 0;
   v.y = 0;
   *a = *a - 0x80;
-  Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c+0x94));
-  Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short*)(c+0x92));
-  MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)(c+0xa4));
+  Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c+0x94));
+  Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, *(short*)(c+0x92));
+  MulVec3Mat4x3(&v, MATRIX_SCRATCH_PAPER, (Vector3*)(c+0xa4));
   if (*(unsigned short*)(c+0x100) != 0
       && _ZNK12WithMeshClsn10IsOnGroundEv(c+0x144) == 0
       && _ZNK12WithMeshClsn8IsOnWallEv(c+0x144) == 0

@@ -8,9 +8,9 @@ extern int func_ov063_0211dd84(int unused, int* c);
 extern void func_ov063_0211ddac(void* c, int i);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 
-extern unsigned char data_0209f21c;
-extern void* data_0209f394[];
-extern short data_02082214[];
+extern unsigned char NUM_PLAYERS;
+extern void* PLAYER_ARR[];
+extern short SINE_TABLE[];
 
 #pragma opt_strength_reduction off
 void func_ov063_0211dbb8(char* self) {
@@ -22,8 +22,8 @@ void func_ov063_0211dbb8(char* self) {
     int len;
 
     best = 0x7fffffff;
-    for (i = 0; i < data_0209f21c; i++) {
-        obj = data_0209f394[i];
+    for (i = 0; i < NUM_PLAYERS; i++) {
+        obj = PLAYER_ARR[i];
         if (obj == 0) continue;
         Vec3_Sub(&v, (Vec3*)(self + 0x5c), (Vec3*)((char*)obj + 0x5c));
         len = LenVec3(&v);
@@ -45,10 +45,10 @@ void func_ov063_0211dbb8(char* self) {
         z = *(int*)(self + 0x64);
         tmp.z = z;
         {
-            int s0 = data_02082214[(*(volatile u16*)(self + 0x8e) >> 4) * 2];
+            int s0 = SINE_TABLE[(*(volatile u16*)(self + 0x8e) >> 4) * 2];
             tmp.x = x + (int)(((s64)s0 * 0x24000 + 0x800) >> 12);
         }
-        tmp.z = z + (int)(((s64)data_02082214[(*(volatile u16*)(self + 0x8e) >> 4) * 2 + 1] * 0x24000 + 0x800) >> 12);
+        tmp.z = z + (int)(((s64)SINE_TABLE[(*(volatile u16*)(self + 0x8e) >> 4) * 2 + 1] * 0x24000 + 0x800) >> 12);
 
         *(int*)(self + 0x4c0) = *(volatile int*)(self + 0x5c);
         *(int*)(self + 0x4c4) = *(volatile int*)(self + 0x60);

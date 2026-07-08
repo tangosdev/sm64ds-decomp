@@ -18,7 +18,7 @@ extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 struct Block48 { int w[12]; };
 
 extern void* data_ov072_02122b20;
-extern Block48 data_02082128;
+extern Block48 _ZN9Matrix3x38IDENTITYE;
 
 extern "C" int func_ov072_0211fd54(char* self) {
     RaycastGround rc;
@@ -52,7 +52,7 @@ extern "C" int func_ov072_0211fd54(char* self) {
     *(unsigned char*)(self + 0x3a4) = 0x5a;
     func_ov072_0211fcb0(self, 0);
     *(int*)(self + 0x390) = 0;
-    *(Block48*)(self + 0x350) = data_02082128;
+    *(Block48*)(self + 0x350) = _ZN9Matrix3x38IDENTITYE;
     func_ov072_0211f3e4(self);
     _ZN7PathPtr6FromIDEj(self + 0x380, *(unsigned int*)(self + 8) & 0xff);
     _ZN13RaycastGroundD1Ev(&rc);

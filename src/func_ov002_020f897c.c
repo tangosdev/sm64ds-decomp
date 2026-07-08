@@ -16,12 +16,12 @@ extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
     u32 actorID, u32 param1, const struct Vector3* pos,
     const struct Vector3_16* rot, s32 areaID, s32 deathTableID);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov002_020f897c(void* self)
 {
     char* sl = (char*)self;
-    u8 n = (u8)(((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10);
+    u8 n = (u8)(((u32)RandomIntInternal(&RNG_STATE) >> 0x10) % 10);
     if (n >= 4) {
         if (_ZN5Actor18ClosestWithActorIDEj(sl, 0xfe) != 0) return;
     }
@@ -40,7 +40,7 @@ void func_ov002_020f897c(void* self)
                 }
             }
             do {
-                idx = ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 3;
+                idx = ((u32)RandomIntInternal(&RNG_STATE) >> 0x10) % 3;
             } while ((mask & (1 << idx)) == 0);
             if (_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, (idx << 8) | 0xb,
                     (struct Vector3*)(sl + 0x5c), (struct Vector3_16*)(sl + 0x8c),

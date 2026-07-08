@@ -1,6 +1,6 @@
 //cpp
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 struct Sub {
   virtual void v00(); virtual void v04(); virtual void v08(); virtual void v0c();
   virtual void v10(); virtual void m14(int arg);
@@ -10,7 +10,7 @@ struct Obj {
   Sub sub;
 };
 extern "C" int func_ov002_020bc9f4(Obj* c){
-  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)c + 8) & 0xff) == 1)
+  if (LEVEL_ID == 6 && STAR_ID == 1 && (*(int*)((char*)c + 8) & 0xff) == 1)
     return 1;
   if (*(unsigned char*)((char*)c + 0x32e) != 0)
     return 1;

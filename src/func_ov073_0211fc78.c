@@ -15,8 +15,8 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ac
 extern void func_02012694(int a, void* p);
 extern int func_ov073_0212157c(void* c, void* p);
 
-extern void* data_0209f318;
-extern int data_020a0e68[];
+extern void* CAMERA;
+extern int MATRIX_SCRATCH_PAPER[];
 extern void* data_ov073_02123410;
 
 int func_ov073_0211fc78(char* c) {
@@ -37,7 +37,7 @@ int func_ov073_0211fc78(char* c) {
         msgpos[0].y = *(int*)(pv + 4);
         msgpos[0].z = *(int*)(pv + 8);
     }
-    cam = data_0209f318;
+    cam = CAMERA;
     msgpos[1].x = *(int*)(c + 0x5c);
     msgpos[1].y = *(int*)(c + 0x60);
     msgpos[1].z = *(int*)(c + 0x64);
@@ -57,8 +57,8 @@ int func_ov073_0211fc78(char* c) {
     la.y -= 0x300000;
     in.z = -0x55e000;
 
-    Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c + 0x8e));
-    MulVec3Mat4x3(&in, data_020a0e68, &out);
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
+    MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
 
     ps.x = ps.x + out.x;
     ps.y = ps.y + 0x200000;

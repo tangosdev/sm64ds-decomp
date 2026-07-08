@@ -1,5 +1,5 @@
-extern unsigned int data_02092134;
+extern unsigned int STAR_CAMERA_SETTINGS;
 unsigned char GetStarCameraSetting(int idx)
 {
-    return (data_02092134 >> (idx * 4)) & 0xf;
+    return (STAR_CAMERA_SETTINGS >> (idx * 4)) & 0xf;
 }

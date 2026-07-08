@@ -10,9 +10,9 @@ extern void func_02020124(void);
 
 extern unsigned char data_0209fc58;
 extern int data_ov075_0211d870[];
-extern unsigned char data_0209d45c;
+extern unsigned char TOP_SCREEN_RELATED;
 extern int data_02086b58[];
-extern unsigned char data_02092778;
+extern unsigned char DAT_02092778;
 
 struct W2 { int a, b; };
 
@@ -27,11 +27,11 @@ void func_ov075_02117e84(void* c)
         func_02020190();
         func_020200e0();
         func_02030994();
-        data_0209d45c = data_0209d45c & ~0xe;
+        TOP_SCREEN_RELATED = TOP_SCREEN_RELATED & ~0xe;
         *(unsigned char*)((char*)c + 0x287) = 0;
         *(struct W2*)((char*)c + 0x64) = *(struct W2*)data_02086b58;
         _ZN5Scene14StartSceneFadeEjjt(6, 2, 0);
-        data_02092778 = 1;
+        DAT_02092778 = 1;
         return;
     }
     if (func_0203d9b4() == 0)

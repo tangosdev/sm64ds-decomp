@@ -6,7 +6,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*, void*, int, int, int, unsigned short);
 
-extern struct Matrix4x3 data_020a0e68;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern void* data_ov062_0211e104[];
 
 int func_ov062_0211c594(char *c) {
@@ -21,9 +21,9 @@ int func_ov062_0211c594(char *c) {
         in.x = 0; in.y = 0; in.z = 0;
         out.x = 0; out.y = 0; out.z = 0;
         in.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(c + 0x8e));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, -0x4000);
+        MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
         *(int*)(c + 0xa8) = out.y;
         *(unsigned short*)(c + 0x100) = 0x3c;
     }

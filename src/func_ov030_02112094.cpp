@@ -17,7 +17,7 @@ extern void MulMat4x3Mat4x3(void* a, void* b, void* out);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern char data_ov030_02115ddc[];
-extern M4x3 data_020a0e68;
+extern M4x3 MATRIX_SCRATCH_PAPER;
 void func_ov030_02112094(void* self);
 }
 
@@ -70,13 +70,13 @@ void func_ov030_02112094(void* self)
     bnd.rot.y = 0;
     bnd.rot.z = -0x4000;
 
-    data_020a0e68 = *(M4x3*)(c + 0xf0);
-    MulMat4x3Mat4x3(*(char**)(c + 0xe8) + 0xf0, &data_020a0e68, &data_020a0e68);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
+    MATRIX_SCRATCH_PAPER = *(M4x3*)(c + 0xf0);
+    MulMat4x3Mat4x3(*(char**)(c + 0xe8) + 0xf0, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+    Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER,
         *(volatile int*)&bnd.trans.x, *(volatile int*)&bnd.trans.y, *(volatile int*)&bnd.trans.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&MATRIX_SCRATCH_PAPER,
         *(volatile short*)&bnd.rot.x, *(volatile short*)&bnd.rot.y, *(volatile short*)&bnd.rot.z);
-    *(M4x3*)(c + 0x350) = data_020a0e68;
+    *(M4x3*)(c + 0x350) = MATRIX_SCRATCH_PAPER;
 
     *(int*)((char*)obj + 0xc8) = (int)(c + 0x350);
     *(int*)((char*)obj + 0x5c) = *(int*)(c + 0x5c);

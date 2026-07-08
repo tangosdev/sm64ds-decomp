@@ -21,7 +21,7 @@ void func_ov077_02126528(char *c);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 void _ZN9Animation7AdvanceEv(void *self);
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 extern char data_ov077_02127cd8[];
 }
 
@@ -32,7 +32,7 @@ extern "C" int func_ov077_02126e88(char *c)
     int r5;
     M *m;
 
-    if (*(int *)(c + 0x60) < data_0209f32c) {
+    if (*(int *)(c + 0x60) < WATER_HEIGHT) {
         *(int *)(c + 0x5c) = *(int *)(c + 0x404);
         *(int *)(c + 0x60) = *(int *)(c + 0x408);
         *(int *)(c + 0x64) = *(int *)(c + 0x40c);

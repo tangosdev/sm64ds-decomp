@@ -13,7 +13,7 @@ extern void Vec3_Asr(void *d, void *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 }
 
 struct VC {
@@ -52,21 +52,21 @@ extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
         *(short*)(c + 0x8e) += *(short*)(c + 0xee);
         *(short*)(c + 0x90) += *(short*)(c + 0xf0);
         Vec3_Asr(v, c + 0x5c, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+        Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v[0], v[1], v[2]);
 
         {
             VC *o = (VC*)c;
             int r = o->slot29();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, r >> 3, 0);
+            Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, r >> 3, 0);
         }
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&MATRIX_SCRATCH_PAPER,
             *(short*)(c + 0x8c), *(short*)(c + 0x8e), *(short*)(c + 0x90));
         {
             VC *o = (VC*)c;
             int r = o->slot29();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-r) >> 3, 0);
+            Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, (-r) >> 3, 0);
         }
-        *(M48*)(r5 + 0x1c) = *(M48*)&data_020a0e68;
+        *(M48*)(r5 + 0x1c) = *(M48*)&MATRIX_SCRATCH_PAPER;
     }
     return 1;
 }

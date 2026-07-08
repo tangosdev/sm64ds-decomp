@@ -2,7 +2,7 @@ typedef short s16;
 typedef unsigned short u16;
 typedef long long s64;
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern void* data_ov007_0210342c;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
@@ -80,7 +80,7 @@ void func_ov007_020b0da0(void* arg0) {
 
             {
                 int angle1 = (u16)((var_r4 * 0xffff) >> 12);
-                out.y = data_02082214[(angle1 >> 4) * 2] >> 2;
+                out.y = SINE_TABLE[(angle1 >> 4) * 2] >> 2;
             }
 
             {
@@ -98,9 +98,9 @@ void func_ov007_020b0da0(void* arg0) {
 
                 {
                     int angleA = (u16)(((var_r8 * 2 + 0x800) * 0xffff) >> 12);
-                    int valA = data_02082214[(angleA >> 4) * 2];
+                    int valA = SINE_TABLE[(angleA >> 4) * 2];
                     int angleB = (u16)((var_r8 * 0xffff) >> 12);
-                    int valB = data_02082214[(angleB >> 4) * 2];
+                    int valB = SINE_TABLE[(angleB >> 4) * 2];
 
                     int valBhalf = (valB + 0x2000) / 2;
                     int term = (int)(((s64)valA * 0x82 + 0x800) >> 12);

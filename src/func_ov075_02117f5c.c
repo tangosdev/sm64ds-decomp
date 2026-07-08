@@ -1,4 +1,4 @@
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern unsigned char data_0209fc58;
 extern int data_ov075_0211d71c[];
 extern void func_ov075_02116028(void* p, int v);
@@ -7,10 +7,10 @@ extern void func_020201c0(void);
 extern void func_02020304(void);
 extern void func_02012790(int x);
 void func_ov075_02117f5c(char* c){
-  data_0209d454 &= ~1;
+  BOTTOM_SCREEN_RELATED &= ~1;
   func_ov075_02116028(data_ov075_0211d71c, 6);
   func_020338b0(0x145, 0xb0, 0x1d, -1);
-  data_0209d454 |= 5;
+  BOTTOM_SCREEN_RELATED |= 5;
   *(unsigned char*)(c+0x280) = 0;
   if(data_0209fc58 == 0){
     func_020201c0();

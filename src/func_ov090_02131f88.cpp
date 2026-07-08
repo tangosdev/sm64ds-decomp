@@ -33,7 +33,7 @@ void func_020aea30(void* self, void* p, int n);
 u16  DecIfAbove0_Short(u16* p);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov090_021310b4(void* c);
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 }
 
 extern "C" int func_ov090_02131f88(void* self)
@@ -85,7 +85,7 @@ extern "C" int func_ov090_02131f88(void* self)
         *(s32*)(c + 0x98) = 0;
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
         func_ov090_02131378(c);
-        if (data_0209f2f8 == 0x15 && *(signed char*)(c + 0xcc) == 1) {
+        if (LEVEL_ID == 0x15 && *(signed char*)(c + 0xcc) == 1) {
             _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
             if (func_02035638((u8*)(c + 0x150))) {
                 *(s32*)(c + 0x9c) = 0;
@@ -110,7 +110,7 @@ extern "C" int func_ov090_02131f88(void* self)
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
     if (*(s32*)(c + 0x60) <= *(s32*)(c + 0x3ac))
         *(s32*)(c + 0x60) = *(s32*)(c + 0x3ac);
-    if (data_0209f2f8 == 0x15 && *(signed char*)(c + 0xcc) == 1 && func_02035638((u8*)(c + 0x150))) {
+    if (LEVEL_ID == 0x15 && *(signed char*)(c + 0xcc) == 1 && func_02035638((u8*)(c + 0x150))) {
         *(s32*)(c + 0x9c) = 0;
         *(s32*)(c + 0xa4) = 0;
         *(s32*)(c + 0xa8) = 0;

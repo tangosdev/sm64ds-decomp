@@ -6,7 +6,7 @@ struct Mtx43 { int m[12]; };
 
 extern void Vec3_Asr(struct Vec3 *d, struct Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);
-extern struct Mtx43 data_020a0e68;
+extern struct Mtx43 MATRIX_SCRATCH_PAPER;
 
 struct Sub { char pad[0x158]; };
 
@@ -19,6 +19,6 @@ void func_ov075_021151b4(char *c, int idx)
     v.y = src->y + 0x32000;
     v.z = src->z;
     Vec3_Asr(&out, &v, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, out.x, out.y, out.z);
-    *(struct Mtx43 *)(c + 0x8d8) = data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, out.x, out.y, out.z);
+    *(struct Mtx43 *)(c + 0x8d8) = MATRIX_SCRATCH_PAPER;
 }

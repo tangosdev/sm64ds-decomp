@@ -15,14 +15,14 @@ extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(char* self, st
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, struct Vector3* v, int r, int h, u32 f1, u32 f2);
 extern void func_ov064_02119ecc(char* c, void* p);
 
-extern char data_ov002_0210da10[];
+extern char WATER_RING_MODEL_PTR[];
 extern char data_ov002_0210d6dc[];
 extern int data_ov064_0211c3d0[3];
 extern char data_ov064_0211c954[];
 
 int func_ov064_0211a090(char* c)
 {
-    struct BMD_File* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da10);
+    struct BMD_File* f = _ZN5Model8LoadFileER13SharedFilePtr(WATER_RING_MODEL_PTR);
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x30c, f, 1, -1) == 0)
         return 0;
 
@@ -32,7 +32,7 @@ int func_ov064_0211a090(char* c)
         *(int*)(c + 0x37c) = 0;
     }
 
-    _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(struct BMD_File**)(data_ov002_0210da10 + 4), (struct BTA_File*)data_ov002_0210d6dc);
+    _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(struct BMD_File**)(WATER_RING_MODEL_PTR + 4), (struct BTA_File*)data_ov002_0210d6dc);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(c + 0x35c, (struct BTA_File*)data_ov002_0210d6dc, 0, 0x1000, 0);
 
     *(int*)(c + 0x368) = 0x1000;

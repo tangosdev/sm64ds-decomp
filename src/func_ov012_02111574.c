@@ -10,8 +10,8 @@ extern void _ZN7Minimap19UpdateLevelSpecificEv(void);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
 extern void _ZN9Animation7AdvanceEv(void* thiz);
-extern int data_0209caa0[];
-extern int data_0209f32c;
+extern int SAVE_DATA[];
+extern int WATER_HEIGHT;
 
 int func_ov012_02111574(char* c)
 {
@@ -19,7 +19,7 @@ int func_ov012_02111574(char* c)
         _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (unsigned short*)(c + 0x33c));
     if (*(int*)(c + 0x60) <= *(int*)(c + 0x334)) {
         *(int*)(c + 0x60) = *(int*)(c + 0x334);
-    } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {
+    } else if (*(int*)((char*)SAVE_DATA + 8) & 0x80000) {
         *(unsigned int*)(c + 0x338) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
             *(unsigned int*)(c + 0x338), 3, 0x96, *(Vector3*)(c + 0x74), 0);
         *(int*)(c + 0x60) -= 0x5000;
@@ -29,7 +29,7 @@ int func_ov012_02111574(char* c)
             _ZN7Minimap19UpdateLevelSpecificEv();
         }
     }
-    *(int*)&data_0209f32c = *(int*)(c + 0x60);
+    *(int*)&WATER_HEIGHT = *(int*)(c + 0x60);
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
     *(int*)(c + 0x32c) = 0x1000;

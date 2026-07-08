@@ -13,9 +13,9 @@ extern "C" u32 _ZNK6Player14GetBodyModelIDEjb(void *self, u32 a, bool b);
 extern "C" void _ZN10ModelAnim24CopyERKS_Pcj(void *self, void *src, char *p, u32 n);
 extern "C" void _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(void *self, u32 a, int b, int c, unsigned short d);
 
-extern SharedFilePtr *data_ov002_020ff480[];
-extern u8 data_02092128[];
-extern u8 data_0209caa0[];
+extern SharedFilePtr *_ZN6Player9ANIM_PTRSE[];
+extern u8 NEXT_HAT_CHARACTER_ARR[];
+extern u8 SAVE_DATA[];
 
 extern "C" void _ZN6Player16SetRealCharacterEj(char *self, u32 chr)
 {
@@ -23,13 +23,13 @@ extern "C" void _ZN6Player16SetRealCharacterEj(char *self, u32 chr)
     u32 base = *(u32 *)(self + 0x63c);
     u32 m1, m2;
 
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[base + (cur & 3)]);
+    _ZN13SharedFilePtr7ReleaseEv(_ZN6Player9ANIM_PTRSE[base + (cur & 3)]);
     _ZN6Player18SetNewHatCharacterEjjb(self, chr, 0, 1);
     *(u32 *)(self + 8) = chr;
     *(u8 *)(self + 0x6d9) = (u8)chr;
-    data_02092128[*(u8 *)(self + 0x6d8)] = (u8)*(u32 *)(self + 8);
-    data_0209caa0[0x41] = (u8)*(u32 *)(self + 8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(*data_ov002_020ff480[*(u32 *)(self + 0x63c) + (*(u32 *)(self + 8) & 3)]);
+    NEXT_HAT_CHARACTER_ARR[*(u8 *)(self + 0x6d8)] = (u8)*(u32 *)(self + 8);
+    SAVE_DATA[0x41] = (u8)*(u32 *)(self + 8);
+    _ZN9Animation8LoadFileER13SharedFilePtr(*_ZN6Player9ANIM_PTRSE[*(u32 *)(self + 0x63c) + (*(u32 *)(self + 8) & 3)]);
     func_ov002_020e6330(self);
     _ZN6Player4HealEi(self, 0x880);
     *(unsigned short *)(self + 0x73c) = 0;
@@ -39,10 +39,10 @@ extern "C" void _ZN6Player16SetRealCharacterEj(char *self, u32 chr)
     _ZN10ModelAnim24CopyERKS_Pcj(
         *(void **)(self + m1 * 4 + 0xdc),
         *(void **)(self + m2 * 4 + 0xdc),
-        *(char **)((char *)data_ov002_020ff480[*(u32 *)(self + 0x63c) + chr] + 4),
+        *(char **)((char *)_ZN6Player9ANIM_PTRSE[*(u32 *)(self + 0x63c) + chr] + 4),
         0);
     m1 = _ZNK6Player14GetBodyModelIDEjb(self, chr, 0);
     _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(
         *(void **)(self + m1 * 4 + 0xdc),
-        *(int *)((char *)data_ov002_020ff480[chr + 0xc4] + 4), 0, 0x1000, 0);
+        *(int *)((char *)_ZN6Player9ANIM_PTRSE[chr + 0xc4] + 4), 0, 0x1000, 0);
 }

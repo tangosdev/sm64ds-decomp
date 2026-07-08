@@ -32,7 +32,7 @@ extern CapNode *data_ov001_020ad634[];
 extern u8 data_ov001_020ad628[];
 extern u8 data_ov001_020ad630[];
 extern u8 data_0208a0e0;
-extern CapRequest *data_0209f394[];
+extern CapRequest *PLAYER_ARR[];
 
 extern int func_ov001_020aa79c(int x);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
@@ -136,7 +136,7 @@ void func_ov001_020aa420(void) {
 
         cnt = data_0208a0e0;
         for (idx = spC; idx < cnt; idx++) {
-            player = data_0209f394[idx];
+            player = PLAYER_ARR[idx];
             if (i == player->field8) break;
             player = 0;
         }

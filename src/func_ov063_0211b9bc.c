@@ -27,15 +27,15 @@ extern struct G data_ov063_0211edf4;
 extern struct G data_ov063_0211eddc;
 extern struct G data_ov063_0211edc4;
 extern struct G data_ov063_0211edec;
-extern struct G data_ov002_0210d9c8;
-extern struct G data_ov002_0210d9f8;
-extern struct G data_ov002_0210d9b8;
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f264;
+extern struct G COIN_BLUE_POLY32_MODEL_PTR;
+extern struct G COIN_RED_POLY32_MODEL_PTR;
+extern struct G COIN_YELLOW_POLY32_MODEL_PTR;
+extern signed char LEVEL_ID;
+extern unsigned char LAST_ENTRANCE_ID;
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e1ec[];
 struct H { int w[16]; };
-extern struct H data_020a0e68;
+extern struct H MATRIX_SCRATCH_PAPER;
 
 #define U8(o)  (*(unsigned char *)(c + (o)))
 #define S8(o)  (*(signed char *)(c + (o)))
@@ -112,7 +112,7 @@ int func_ov063_0211b9bc(char *c)
             S32(0x594) = 0x64;
         }
         _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
-        if (data_0209f2f8 == 0xc && S32(0x5c) == 0xbb8000 && S8(0xcc) == 2) {
+        if (LEVEL_ID == 0xc && S32(0x5c) == 0xbb8000 && S8(0xcc) == 2) {
             FLAGS16 = (FLAGS16 & ~1) | 1;
         }
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
@@ -215,7 +215,7 @@ int func_ov063_0211b9bc(char *c)
             _ZN9ActorBase18MarkForDestructionEv(c);
             return 1;
         }
-        if (data_0209f264 == 0) {
+        if (LAST_ENTRANCE_ID == 0) {
             spawned = (void *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
             if (spawned != 0) {
                 *(unsigned char *)((char *)spawned + 0x37e) = 1;
@@ -227,11 +227,11 @@ int func_ov063_0211b9bc(char *c)
     } else if (U8(0x5cf) == 0 || U8(0x5cf) == 1 || U8(0x5cf) == 2 || U8(0x5cf) == 6 || (unsigned)(unsigned char)(U8(0x5cf) + 0xf8) <= 3) {
         unsigned short t = U16(0x4a0);
         if (t == 0x122) {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, data_ov002_0210d9c8.w[1], 1, -1);
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, COIN_BLUE_POLY32_MODEL_PTR.w[1], 1, -1);
         } else if (t == 0x121) {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, data_ov002_0210d9f8.w[1], 1, -1);
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, COIN_RED_POLY32_MODEL_PTR.w[1], 1, -1);
         } else {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, data_ov002_0210d9b8.w[1], 1, -1);
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3e4, COIN_YELLOW_POLY32_MODEL_PTR.w[1], 1, -1);
         }
         if (U8(0x5cf) == 0xb) {
             S8(0xcc) = -1;
@@ -261,11 +261,11 @@ int func_ov063_0211b9bc(char *c)
     S32(0x540) = 0;
     S32(0x544) = 0;
     S32(0x548) = 0;
-    Matrix4x3_FromTranslation(&data_020a0e68, S32(0x5c), S32(0x60), S32(0x64));
-    MulMat4x3Mat4x3(S32(0x394), &data_020a0e68, &data_020a0e68);
-    S32(0x540) = data_020a0e68.w[9];
-    S32(0x544) = data_020a0e68.w[10];
-    S32(0x548) = data_020a0e68.w[11];
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, S32(0x5c), S32(0x60), S32(0x64));
+    MulMat4x3Mat4x3(S32(0x394), &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+    S32(0x540) = MATRIX_SCRATCH_PAPER.w[9];
+    S32(0x544) = MATRIX_SCRATCH_PAPER.w[10];
+    S32(0x548) = MATRIX_SCRATCH_PAPER.w[11];
     SubVec3(c + 0x540, c + 0x5c, c + 0x540);
     U8(0x5d1) = 0;
     S16(0x5bc) = S16(0x94);

@@ -6,8 +6,8 @@ extern void _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
     void* m, void* v, void* a, int fix, void* b);
 extern void func_0201251c(int a, int b, void* c, int d);
 extern int data_ov075_0211d424[];
-extern int data_0209f43c[];
-extern int data_0209b3ec[];
+extern int GLOBAL_CLIPPER[];
+extern int VIEW_MATRIX_ASR_3[];
 
 void func_ov075_02114010(char* c){
     if(*(int*)(c+0x13c) < *(int*)(c+0x140) / 2){
@@ -21,6 +21,6 @@ void func_ov075_02114010(char* c){
     }
     int sp8[3];
     _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-        data_0209f43c, data_0209b3ec, c+0x118, 0, sp8);
+        GLOBAL_CLIPPER, VIEW_MATRIX_ASR_3, c+0x118, 0, sp8);
     func_0201251c(0, 0x20, sp8, *(int*)(c+0x13c));
 }

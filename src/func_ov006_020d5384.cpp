@@ -68,9 +68,9 @@ extern "C" {
     void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
     void func_ov006_020d3ba0(void *self);
 
-    extern s32 data_0208ee44;
-    extern u8 data_0209d45c;
-    extern u8 data_0209d454;
+    extern s32 GAME_SPEED_RELATED;
+    extern u8 TOP_SCREEN_RELATED;
+    extern u8 BOTTOM_SCREEN_RELATED;
 }
 
 extern "C" int func_ov006_020d5384(Obj *c)
@@ -90,7 +90,7 @@ extern "C" int func_ov006_020d5384(Obj *c)
         *(int *)((char *)c + 0x53e4) = 2;
     }
 
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x3218;
     *(volatile u16 *)0x4000008 &= ~0x40;
     *(volatile s32 *)0x4000010 = 0;
@@ -147,8 +147,8 @@ extern "C" int func_ov006_020d5384(Obj *c)
         _ZN3GXS10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
         Deallocate(f);
         LoadCompressedFileAt(0x1e, _ZN3G2S12GetBG3ScrPtrEv());
-        data_0209d45c |= 9;
-        data_0209d454 |= 9;
+        TOP_SCREEN_RELATED |= 9;
+        BOTTOM_SCREEN_RELATED |= 9;
     } else {
         LoadCompressedFileAt(0x1a, _ZN3G2S13GetBG3CharPtrEv());
         f = (void *)LoadFile(0x1b);
@@ -158,8 +158,8 @@ extern "C" int func_ov006_020d5384(Obj *c)
         LoadCompressedFileAt(0x18, _ZN3G2S12GetBG3ScrPtrEv());
         *(volatile s16 *)0x4000050 = 0;
         _ZN3G2x13SetBlendAlphaEPVttttt((void *)0x4001050, 4, 8, 6, 0x10);
-        data_0209d45c |= 9;
-        data_0209d454 |= 0xd;
+        TOP_SCREEN_RELATED |= 9;
+        BOTTOM_SCREEN_RELATED |= 0xd;
     }
 
     if (c->v90() != 0) {

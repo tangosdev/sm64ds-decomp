@@ -12,9 +12,9 @@ extern int IsStarCollectedInCurLevel(int a);
 extern struct SharedFilePtr data_ov079_02128300;
 extern struct SharedFilePtr data_ov079_021282f0;
 extern int data_ov079_02127f64[];
-extern signed char data_0209f2f8;
-extern int data_0209caa0[];
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern int SAVE_DATA[];
+extern unsigned char STAR_ID;
 int func_ov079_02127090(void *self);
 }
 
@@ -37,12 +37,12 @@ int func_ov079_02127090(void *self)
 
     *(int*)(c + 0x320) = 0;
 
-    st = data_0209f2f8;
+    st = LEVEL_ID;
     if (st == 0x12) {
-        if (data_0209caa0[1] & 0x204) return 0;
+        if (SAVE_DATA[1] & 0x204) return 0;
     }
     if (st == 7) {
-        if (data_0209f220 != 1) {
+        if (STAR_ID != 1) {
             if (IsStarCollectedInCurLevel(1) != 0) goto ret1;
         }
         if (*(int*)(c + 0x60) >= 0xdac000) return 0;

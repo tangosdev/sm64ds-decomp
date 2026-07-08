@@ -20,9 +20,9 @@ extern void *data_ov002_0210eb20;
 extern void *data_ov002_0210e8d0;
 extern void *data_ov002_0210ebd8;
 extern void *data_ov002_0210eaa0;
-extern int data_020a0e68;
-extern unsigned char data_0209f250;
-extern int data_0209f394[];
+extern int MATRIX_SCRATCH_PAPER;
+extern unsigned char CURR_PLAYER_ID;
+extern int PLAYER_ARR[];
 extern void *data_ov055_02111b70;
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b68;
@@ -51,13 +51,13 @@ extern "C" int func_ov055_02111674(void *thiz)
     ModelAnim_SetAnim(c + 0xd4, Animation_LoadFile(&data_ov002_0210eaa0), 0, 0x1000, 0);
 
     Vec3_Asr(t, c + 0x5c, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short *)(c + 0x8e));
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, t[0], t[1], t[2]);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(short *)(c + 0x8e));
 
-    *(M48 *)(c + 0xf0) = *(M48 *)&data_020a0e68;
-    *(M48 *)(c + 0x154) = *(M48 *)&data_020a0e68;
+    *(M48 *)(c + 0xf0) = *(M48 *)&MATRIX_SCRATCH_PAPER;
+    *(M48 *)(c + 0x154) = *(M48 *)&MATRIX_SCRATCH_PAPER;
 
-    func_ov055_021112c4(c, &data_ov055_02111b70, data_0209f394[data_0209f250]);
+    func_ov055_021112c4(c, &data_ov055_02111b70, PLAYER_ARR[CURR_PLAYER_ID]);
 
     data_ov055_02111b68 = 0;
     data_ov055_02111a90 = 0x1ffff;

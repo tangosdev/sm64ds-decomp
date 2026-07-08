@@ -17,12 +17,12 @@ struct MsgTextChar {
     u8 base;     /* 6 */
 };
 
-extern struct MsgTextChar* data_0209d6f4;
-extern u8 data_0208ee74[];
-extern u16 data_0208ee64[];
+extern struct MsgTextChar* CURR_MSG_TEXT_CHAR;
+extern u8 DIGIT_ENC_ARR[];
+extern u16 POWERS_OF_TEN[];
 
 void func_0201aca4(void) {
-    struct MsgTextChar* state = data_0209d6f4;
+    struct MsgTextChar* state = CURR_MSG_TEXT_CHAR;
     u16 idx = state->indexLo | (state->indexHi << 8);
     switch (idx) {
         case 0: {
@@ -37,12 +37,12 @@ void func_0201aca4(void) {
                 case 2: num = base - _ZN8SaveData22NumGlowingRabbitsFoundEv(); break;
             }
             for (i = 0; i < 3; i++) {
-                int q = __aeabi_idiv(num, data_0208ee64[i]);
+                int q = __aeabi_idiv(num, POWERS_OF_TEN[i]);
                 if (q != 0 || leading != 0 || i == 2) {
-                    _ZN7Message7AddCharEc(data_0208ee74[q]);
+                    _ZN7Message7AddCharEc(DIGIT_ENC_ARR[q]);
                     leading = 1;
                 }
-                num = num % data_0208ee64[i];
+                num = num % POWERS_OF_TEN[i];
             }
             break;
         }

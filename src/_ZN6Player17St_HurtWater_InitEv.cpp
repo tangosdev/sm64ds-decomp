@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern int data_ov002_02109fe4[];
-extern int data_0209f318[];
+extern int CAMERA[];
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
 extern void func_ov002_020d93ac(void*);
 extern void func_ov002_020d94cc(void*);
@@ -22,7 +22,7 @@ int _ZN6Player17St_HurtWater_InitEv(char* c){
       func_ov002_020d94cc(c);
     }
   }
-  func_0200d89c(*(char**)data_0209f318);
+  func_0200d89c(*(char**)CAMERA);
   return 1;
 }
 }

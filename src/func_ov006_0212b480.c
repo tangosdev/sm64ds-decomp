@@ -21,9 +21,9 @@ extern void func_ov006_0212a764(void *arg);
 extern void func_ov006_020c3d88(char *c);
 extern void func_ov006_020c3b2c(void *arg);
 
-extern int data_0208ee44;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern int GAME_SPEED_RELATED;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern int data_ov006_021401d0;
 extern int data_ov006_021401f4;
 extern int data_ov006_02140218;
@@ -44,7 +44,7 @@ int func_ov006_0212b480(void *arg0)
 
     *(int *)(c + 0x5ff0) = func_ov004_020ad8b8();
 
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1414;
     *(volatile u16 *)0x400000c &= ~0x40;
@@ -91,8 +91,8 @@ int func_ov006_0212b480(void *arg0)
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 
-    data_0209d45c |= 4;
-    data_0209d454 |= 0xc;
+    TOP_SCREEN_RELATED |= 4;
+    BOTTOM_SCREEN_RELATED |= 0xc;
 
     h = (int)func_020adc74(&data_ov006_021402a8);
     DecompressLZ16(h, (void *)0x6400000);
@@ -115,7 +115,7 @@ int func_ov006_0212b480(void *arg0)
     *(int *)(c + 0x5fe4) = 0;
     func_ov006_0212a764(c);
 
-    data_0209d45c |= 1;
+    TOP_SCREEN_RELATED |= 1;
     *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
     func_ov006_020c3d88(c + 0x51f8);
     func_ov006_020c3b2c(c + 0x4660);

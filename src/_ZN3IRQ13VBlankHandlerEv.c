@@ -5,7 +5,7 @@
 typedef unsigned int u32;
 typedef unsigned char u8;
 extern int data_0209d514;
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 extern u8 data_0209d4f0;
 extern int data_0209d500;
 extern int data_0209d4fc;
@@ -19,7 +19,7 @@ void _ZN3IRQ13VBlankHandlerEv(void)
 {
   int *new_var;
   data_0209d514 = data_0209d514 + 1;
-  if ((data_0209d514 >= data_0208ee44) && (data_0209d4f0 != 0))
+  if ((data_0209d514 >= GAME_SPEED_RELATED) && (data_0209d4f0 != 0))
   {
     func_0205807c(&data_0209d500);
     data_0209d514 = 0;

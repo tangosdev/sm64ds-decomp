@@ -8,7 +8,7 @@ extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned int u);
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 extern int data_ov073_021233b0[];
 extern int data_ov073_021233e0[];
 extern int data_ov073_02123410[];
@@ -27,21 +27,21 @@ void func_ov073_021215cc(char* c)
     char* q;
 
     Vec3_Asr(&v, (Vec3*)(c + 0x5c), 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, *(s16*)(c + 0x8c), *(s16*)(c + 0x8e), *(s16*)(c + 0x90));
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8c), *(s16*)(c + 0x8e), *(s16*)(c + 0x90));
 
     p = (Vec3*)(c + 0x4d4);
-    *(Mtx43*)(c + 0x328) = data_020a0e68;
+    *(Mtx43*)(c + 0x328) = MATRIX_SCRATCH_PAPER;
     saved = (Mtx43*)(c + 0x328);
     sh = 3;
     i = 0;
     q = c;
     for (; i < 2; i++) {
-        data_020a0e68 = *saved;
-        MulMat4x3Mat4x3(*(Mtx43**)(c + 0x320) + (i + 2), &data_020a0e68, &data_020a0e68);
-        p->x = data_020a0e68.t.x;
-        p->y = data_020a0e68.t.y;
-        p->z = data_020a0e68.t.z;
+        MATRIX_SCRATCH_PAPER = *saved;
+        MulMat4x3Mat4x3(*(Mtx43**)(c + 0x320) + (i + 2), &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+        p->x = MATRIX_SCRATCH_PAPER.t.x;
+        p->y = MATRIX_SCRATCH_PAPER.t.y;
+        p->z = MATRIX_SCRATCH_PAPER.t.z;
         Vec3_Lsl(&out, p, sh);
         *(int*)(q + 0x4d4) = out.x;
         *(int*)(q + 0x4d8) = out.y;
@@ -57,8 +57,8 @@ void func_ov073_021215cc(char* c)
     if (m == (void*)data_ov073_021233f0) return;
     if (m == (void*)data_ov073_02123370) return;
 
-    Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c) >> 3, (*(int*)(c + 0x60) - 0xa000) >> 3, *(int*)(c + 0x64) >> 3);
-    *(Mtx43*)(c + 0x3a8) = data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, *(int*)(c + 0x5c) >> 3, (*(int*)(c + 0x60) - 0xa000) >> 3, *(int*)(c + 0x64) >> 3);
+    *(Mtx43*)(c + 0x3a8) = MATRIX_SCRATCH_PAPER;
     _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x380, c + 0x3a8, 0x12c000, 0x3e8000, 0xf);
 }

@@ -10,7 +10,7 @@ extern int func_ov100_021451c4(void* a, void* p, void* b);
 
 extern signed char data_ov100_02148204[];
 typedef struct GlobCaa0 { int w0; unsigned int flags; unsigned int w2; } GlobCaa0;
-extern GlobCaa0 data_0209caa0;
+extern GlobCaa0 SAVE_DATA;
 extern char data_ov100_021488c4[];
 extern char data_ov100_021488d4[];
 extern char data_ov100_021488e4[];
@@ -23,7 +23,7 @@ int func_ov100_02144cf8(char* a, char* b) {
     if (func_ov100_021452e4(a, b)) {
         entry = data_ov100_02148204 + *(int*)(a + 8) * 16;
         if (entry[8] >= 0) {
-            if (data_0209caa0.flags & (0x8000 << entry[0xa])) goto L240;
+            if (SAVE_DATA.flags & (0x8000 << entry[0xa])) goto L240;
             if (NumStars() < entry[8]) {
                 if (func_ov100_02144f84() == 0) return 1;
                 if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(b, a, *(short*)(entry + 0xc), a + 0xa4, 0, 2) == 0) goto L240;
@@ -38,7 +38,7 @@ int func_ov100_02144cf8(char* a, char* b) {
             int e9 = entry[9];
             int val;
             if (e9 < 0) goto L240;
-            val = data_0209caa0.flags;
+            val = SAVE_DATA.flags;
             if (val & (0x100 << entry[0xa])) goto L240;
             if (val & (2 << e9)) goto L210;
             if (func_ov100_02144f84() == 0) return 1;
@@ -51,7 +51,7 @@ int func_ov100_02144cf8(char* a, char* b) {
                     int sel = 1;
                     int inRange = (unsigned)idx2 >= 9 && (unsigned)idx2 <= 0xb;
                     if (!inRange) {
-                        if (!(data_0209caa0.flags & 0xbe)) sel = 0;
+                        if (!(SAVE_DATA.flags & 0xbe)) sel = 0;
                     }
                     msg = sel ? *(short*)(entry + 0xc) : 0x17;
                 }
@@ -59,7 +59,7 @@ int func_ov100_02144cf8(char* a, char* b) {
             }
             func_ov100_021453d8(a, data_ov100_021488c4, b);
             if (entry[9] == 5)
-                data_0209caa0.w2 |= 0x10000;
+                SAVE_DATA.w2 |= 0x10000;
             return 1;
         L210:
             if (_ZN6Player16TryTalkToKeyDoorEv(b) == 0) goto L240;

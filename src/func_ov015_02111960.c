@@ -12,9 +12,9 @@ typedef struct RaycastGround {
 extern int data_ov015_0211497c;
 extern int data_ov015_02114974;
 extern int data_ov015_02113574;
-extern int data_020a0e68;
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern int MATRIX_SCRATCH_PAPER;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
@@ -57,8 +57,8 @@ int func_ov015_02111960(char* self)
     b.x = 0;
     b.y = 0;
     b.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(self + 0x8e));
-    MulVec3Mat4x3(&a, &data_020a0e68, &b);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(self + 0x8e));
+    MulVec3Mat4x3(&a, &MATRIX_SCRATCH_PAPER, &b);
     Vec3_Add(&c, &b, (Vec3*)(self + 0x5c));
     c.y += 0x14000;
     _ZN13RaycastGroundC1Ev(&rg);
@@ -74,8 +74,8 @@ int func_ov015_02111960(char* self)
     b.x = 0;
     b.y = 0;
     b.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(self + 0x8e));
-    MulVec3Mat4x3(&a, &data_020a0e68, &b);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(self + 0x8e));
+    MulVec3Mat4x3(&a, &MATRIX_SCRATCH_PAPER, &b);
     Vec3_Add(&d, &b, (Vec3*)(self + 0x5c));
     *(int*)(self + 0x378) = d.x;
     *(int*)(self + 0x37c) = d.y;
@@ -83,7 +83,7 @@ int func_ov015_02111960(char* self)
     *(int*)(self + 0x388) = *(int*)(self + 0x60);
     *(unsigned char*)(self + 0x396) = 1;
 
-    if (data_0209f2f8 == 7 && (data_0209f220 == 1 || !IsStarCollectedInCurLevel())
+    if (LEVEL_ID == 7 && (STAR_ID == 1 || !IsStarCollectedInCurLevel())
         && *(int*)(self + 0x60) >= 0xdac000)
     {
         _ZN13RaycastGroundD1Ev(&rg);

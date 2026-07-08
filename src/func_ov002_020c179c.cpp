@@ -8,7 +8,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void*
 extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern void _ZN13RaycastGroundD1Ev(void* self);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 int func_ov002_020c179c(char* self, int angle) {
     char rg[0x50];
@@ -18,8 +18,8 @@ int func_ov002_020c179c(char* self, int angle) {
     int y1 = *(int*)(self + 0x60);
     int y2 = y1;
     idx >>= 4;
-    short dx = data_02082214[idx * 2];
-    short dy = data_02082214[idx * 2 + 1];
+    short dx = SINE_TABLE[idx * 2];
+    short dy = SINE_TABLE[idx * 2 + 1];
     int ox = dx * 5;
     int oy = dy * 5;
     _ZN13RaycastGroundC1Ev(rg);

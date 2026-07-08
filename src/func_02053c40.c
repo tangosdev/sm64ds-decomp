@@ -1,4 +1,4 @@
-extern int data_02099fd0;
+extern int RENDER_DMA_CHANNEL;
 void func_02053d9c(void);
 void DMASyncFillTransfer(int a0, int a1, int a2, int a3);
 void MultiStore_Int(int val, int *dst, int len);
@@ -15,10 +15,10 @@ void func_02053c40(void)
     *(volatile unsigned short *)0x4000004 = 0;
     *(volatile int *)0x4000000 = 0;
 
-    if ((&data_02099fd0)[0] != -1) {
-        DMASyncFillTransfer((&data_02099fd0)[0], 0x4000008, 0, 0x60);
+    if ((&RENDER_DMA_CHANNEL)[0] != -1) {
+        DMASyncFillTransfer((&RENDER_DMA_CHANNEL)[0], 0x4000008, 0, 0x60);
         *(volatile unsigned short *)0x400006c = 0;
-        DMASyncFillTransfer((&data_02099fd0)[0], 0x4001000, 0, 0x70);
+        DMASyncFillTransfer((&RENDER_DMA_CHANNEL)[0], 0x4001000, 0, 0x70);
     } else {
         volatile int a = 0;
         volatile int b;

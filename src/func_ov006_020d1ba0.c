@@ -13,7 +13,7 @@ extern void func_ov006_020d3668(void *a);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
 
 extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
@@ -31,7 +31,7 @@ void func_ov006_020d1ba0(void *arg0)
     oldX = *(int*)(p+0x46f0);
     oldY = *(int*)(p+0x46f4);
 
-    if (data_020a0de8[data_020a0e40[0]*4] != 0) {
+    if (TOUCH_INPUT_ARR[data_020a0e40[0]*4] != 0) {
         int newX = data_020a0dea[data_020a0e40[0]*4];
         int newY = data_020a0deb[data_020a0e40[0]*4];
         if (newX < 0) return;
@@ -60,7 +60,7 @@ void func_ov006_020d1ba0(void *arg0)
         return;
     } else {
       int cond;
-      if (data_020a0de8[data_020a0e40[0]*4] == 0 && data_020a0de9[data_020a0e40[0]*4] != 0) {
+      if (TOUCH_INPUT_ARR[data_020a0e40[0]*4] == 0 && data_020a0de9[data_020a0e40[0]*4] != 0) {
           cond = 1;
       } else {
           cond = 0;

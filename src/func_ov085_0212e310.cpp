@@ -14,7 +14,7 @@ extern void _Z14ApproachLinearRsss(short *cur, short tgt, short step);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int func_ov085_0212e728(void *c, void *p);
 
-extern struct Matrix4x3 data_020a0e68;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern char data_ov085_02130810[];
 
 int func_ov085_0212e310(char *c)
@@ -45,8 +45,8 @@ int func_ov085_0212e310(char *c)
     out.y = 0;
     out.z = 0;
     in.z = 0xc8000;
-    Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, 0);
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
     out.x += *(int *)(p + 0x5c);
     out.y += *(int *)(p + 0x60) + 0x70000;
     out.z += *(int *)(p + 0x64);

@@ -4,7 +4,7 @@
 extern int func_02053200(int x);
 extern void func_ov004_020b1c68(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov004_020b1cf0(int a, int b, int c, int sel, int e);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern int data_ov006_021346bc;
 
 struct L4 { int a, b, cc, d; };
@@ -16,7 +16,7 @@ void func_ov004_020b410c(char* c)
     short* p;
     int x = *(int*)(c + 0x24);
     int idx = (int)(((unsigned int)x << 15) >> 16) >> 4;
-    short s = *(short*)((char*)data_02082214 + (idx << 2));
+    short s = *(short*)((char*)SINE_TABLE + (idx << 2));
     int v = func_02053200((int)((((long long)s << 11) + 0x800) >> 12) + 0x1000);
 
     local.a = 0;

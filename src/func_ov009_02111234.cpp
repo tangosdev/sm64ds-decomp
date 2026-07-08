@@ -19,7 +19,7 @@ extern "C" {
     void _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
 }
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern "C" void func_ov009_02111234(void* self)
 {
@@ -66,13 +66,13 @@ extern "C" void func_ov009_02111234(void* self)
     {
         u16 a = *(u16*)(c+0x92);
         s32 t = *(s32*)(c+0x174);
-        s16 s = data_02082214[((a>>4)<<1)+1];
+        s16 s = SINE_TABLE[((a>>4)<<1)+1];
         *(s32*)(c+0x98) = (s32)(((s64)t * s + 0x800) >> 12);
     }
     {
         u16 a = *(u16*)(c+0x92);
         s32 t = *(s32*)(c+0x174);
-        s16 s = data_02082214[(a>>4)<<1];
+        s16 s = SINE_TABLE[(a>>4)<<1];
         *(s32*)(c+0xa8) = (s32)(((s64)t * s + 0x800) >> 12);
     }
 }

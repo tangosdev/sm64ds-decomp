@@ -1,6 +1,6 @@
 typedef struct { int x, y, z; } V3;
 extern V3 data_ov094_02136a1c;
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 extern int data_ov094_02136b70;
 extern int _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, V3* v);
 extern int _ZN5Actor10FindWithIDEj(unsigned id);
@@ -24,7 +24,7 @@ void func_ov094_021357a4(char* c){
   st[1] = 0;
   st[2] = 0;
   st[1] = 0x1838000;
-  if(data_0209f2f8 == 0x16) st[1] = 0x1194000;
+  if(LEVEL_ID == 0x16) st[1] = 0x1194000;
   *(int*)(c+0xa4) = 0;
   *(int*)(c+0xa8) = 0;
   *(int*)(c+0xac) = 0;

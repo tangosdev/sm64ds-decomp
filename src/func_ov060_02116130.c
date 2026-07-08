@@ -20,7 +20,7 @@ extern int data_ov060_0211ac78[];
 extern int data_ov060_021192dc[];
 extern int data_ov060_0211927c[];
 extern int data_ov060_0211b208[];
-extern int data_ov089_02132c50[];
+extern int BOWSER_KEY_MODEL_PTR[];
 extern int data_ov060_0211ac28[];
 
 int func_ov060_02116130(char *c)
@@ -40,7 +40,7 @@ int func_ov060_02116130(char *c)
         _ZN15TextureSequence8LoadFileER13SharedFilePtr((void *)data_ov060_0211927c[i]);
 
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov060_0211b208);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov089_02132c50);
+    _ZN5Model8LoadFileER13SharedFilePtr(BOWSER_KEY_MODEL_PTR);
 
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x308) == 0)
         return 0;

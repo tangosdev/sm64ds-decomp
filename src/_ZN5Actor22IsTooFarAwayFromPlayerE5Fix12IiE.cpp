@@ -7,11 +7,11 @@ struct Actor {
 };
 
 extern "C" int _ZN5Actor13DistToCPlayerEv(Actor *self);
-extern int data_0209fc68;
+extern int DP_STATE;
 
 extern "C" int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *self, Fix12 threshold)
 {
-    if (data_0209fc68 == 0) {
+    if (DP_STATE == 0) {
         int b = (self->field_b0 & 8) != 0;
         if (b != 0) {
             if (_ZN5Actor13DistToCPlayerEv(self) >= threshold)

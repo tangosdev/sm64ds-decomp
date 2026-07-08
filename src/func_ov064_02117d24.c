@@ -6,7 +6,7 @@ struct C;
 typedef void (C::*PMF)();
 struct Entry { PMF pmf; };
 extern Entry data_ov064_0211c750[];
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern "C" {
 extern int _Z14ApproachLinearRiii(int* a, int b, int c);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
@@ -23,7 +23,7 @@ int func_ov064_02117d24(char* c) {
     }
     if (_Z14ApproachLinearRiii((int*)(c + 0x320), *(unsigned char*)(c + 0x33a) ? -0x28000 : 0, 0x5000)) {
         *(short*)(c + 0x328) += 0xa00;
-        *(int*)(c + 0x324) = data_02082214[(*(unsigned short*)((c + 0x300) + 0x28) >> 4) * 2] * (short)0xa;
+        *(int*)(c + 0x324) = SINE_TABLE[(*(unsigned short*)((c + 0x300) + 0x28) >> 4) * 2] * (short)0xa;
     }
     saved = *(int*)(c + 0x60);
     *(int*)(c + 0x60) = *(int*)(c + 0x324) + (*(int*)(c + 0x330) + *(int*)(c + 0x320));

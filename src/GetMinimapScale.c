@@ -1,9 +1,9 @@
-extern unsigned char data_0209f25c;
-extern short *data_0209f348;
+extern unsigned char NUM_MINIMAP_SCALE_OBJS;
+extern short *MINIMAP_SCALE_OBJS_PTR;
 
 int GetMinimapScale(int idx) {
     if (idx >= 0) {
-        if (idx < (int)data_0209f25c) return data_0209f348[idx];
+        if (idx < (int)NUM_MINIMAP_SCALE_OBJS) return MINIMAP_SCALE_OBJS_PTR[idx];
     }
     return 0xa00;
 }

@@ -21,7 +21,7 @@ struct Enemy : Actor {
 
 extern "C" int RandomIntInternal(int *seed);
 extern u16 data_ov002_020ff014;
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void Enemy::SpawnCoin()
 {
@@ -39,8 +39,8 @@ void Enemy::SpawnCoin()
                 (&data_ov002_020ff014)[*(u8 *)(t + 0x108) - 1],
                 0xf2, v, 0, *(s8 *)(t + 0xcc), -1);
             if (coin != 0) {
-                int rnd1 = RandomIntInternal(&data_0209e650);
-                int rnd2 = RandomIntInternal(&data_0209e650);
+                int rnd1 = RandomIntInternal(&RNG_STATE);
+                int rnd2 = RandomIntInternal(&RNG_STATE);
                 int a = (int)((u32)rnd1 >> 16 << 27) >> 16;
                 u32 b = (u32)rnd2 >> 16;
                 *(s16 *)((char *)coin + 0x92) = 0;

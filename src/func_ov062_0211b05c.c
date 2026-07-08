@@ -5,7 +5,7 @@ extern void _ZN9Animation7AdvanceEv(void *a);
 extern void func_ov062_0211afbc(char *t);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
 extern void _ZN12CylinderClsn6UpdateEv(void *c);
-extern char data_0209d4c8[];
+extern char TIME_TIMER[];
 
 int func_ov062_0211b05c(char *c)
 {
@@ -22,7 +22,7 @@ int func_ov062_0211b05c(char *c)
                 b = b == 0xBF;
                 if (b) {
                     *(unsigned char *)(c + 0x16E) = 1;
-                    _ZN5Timer9StopTimerEv(data_0209d4c8);
+                    _ZN5Timer9StopTimerEv(TIME_TIMER);
                     *(short *)(c + 0x16C) = 1;
                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x14, 0x7F, 0x6B000, 0);
                 }

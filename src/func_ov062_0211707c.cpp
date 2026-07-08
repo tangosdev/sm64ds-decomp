@@ -19,7 +19,7 @@ void _ZN9Animation7AdvanceEv(void* self);
 void func_ov062_02116d28(char* c);
 void func_ov062_02116e80(void* c);
 void func_ov062_02116dbc(char* c);
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 extern char data_ov062_0211dea0[];
 extern char data_ov062_0211dec0[];
 extern char data_ov062_0211de70[];
@@ -53,7 +53,7 @@ extern "C" int func_ov062_0211707c(char* c)
         if (*(void**)(c + 0x364) != (void*)data_ov062_0211dec0
             && *(void**)(c + 0x364) != (void*)data_ov062_0211de70) {
             int r2 = 0;
-            signed char t = data_0209f2f8;
+            signed char t = LEVEL_ID;
             if (t == 0x16) {
                 if (*(int*)(c + 0x5c) > (int)0xff95c000)
                     r2 = 1;

@@ -11,7 +11,7 @@ extern void func_ov002_020da9d4(void*);
 extern int _ZN6Player12FinishedAnimEv(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern void func_ov002_020bedd4(void*);
-extern int data_ov002_0211013c[];
+extern int _ZN6Player7ST_WALKE[];
 
 int _ZN6Player13St_Throw_MainEv(char* c){
   if(*(unsigned char*)(c+0x6de)==0){
@@ -48,7 +48,7 @@ int _ZN6Player13St_Throw_MainEv(char* c){
     }
   }
   if(_ZN6Player12FinishedAnimEv(c))
-    _ZN6Player11ChangeStateERNS_5StateE(c,data_ov002_0211013c);
+    _ZN6Player11ChangeStateERNS_5StateE(c,_ZN6Player7ST_WALKE);
   func_ov002_020bedd4(c);
   return 1;
 }

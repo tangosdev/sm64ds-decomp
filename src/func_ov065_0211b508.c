@@ -10,22 +10,22 @@ extern void func_ov065_0211b40c(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
 
-extern unsigned char data_0209f2c0;
+extern unsigned char LEVEL_SPECIFIC_SETTING;
 extern s16 data_ov065_0211d334;
-extern int data_0209e650;
+extern int RNG_STATE;
 
 int func_ov065_0211b508(void *c) {
     int rv;
 
-    switch (data_0209f2c0) {
+    switch (LEVEL_SPECIFIC_SETTING) {
     case 0:
     case 1:
-        *(s16 *)((char *)c + 0x96) = (&data_ov065_0211d334)[data_0209f2c0];
+        *(s16 *)((char *)c + 0x96) = (&data_ov065_0211d334)[LEVEL_SPECIFIC_SETTING];
         break;
     case 2:
         if (_Z14ApproachLinearRsss((s16 *)((char *)c + 0x96),
                                    *(s16 *)((char *)c + 0x92), 0x32) != 0) {
-            rv = (int)(unsigned short)(RandomIntInternal(&data_0209e650) >> 16);
+            rv = (int)(unsigned short)(RandomIntInternal(&RNG_STATE) >> 16);
             *(s16 *)((char *)c + 0x92) = (s16)((rv % 7) * 0xc8);
             if ((unsigned int)rv >= 0x7fff) {
                 s16 *p = (s16 *)((char *)c + 0x92);

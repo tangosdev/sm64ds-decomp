@@ -7,7 +7,7 @@ extern u32 LoadCompressedFileAt(u16 fileID, void* target);
 extern int func_0203da9c(void);
 extern int func_0203d974(void);
 extern void func_02012790(int id);
-extern unsigned char data_0209d454[];
+extern unsigned char BOTTOM_SCREEN_RELATED[];
 
 void func_ov075_0211919c(char* self)
 {
@@ -15,7 +15,7 @@ void func_ov075_0211919c(char* self)
     int i;
     u16* p;
     u32 v;
-    data_0209d454[0] &= ~5;
+    BOTTOM_SCREEN_RELATED[0] &= ~5;
     if (func_0200f0bc() == 0)
         LoadCompressedFileAt(0x840a, _ZN3G2S12GetBG2ScrPtrEv());
     else
@@ -29,7 +29,7 @@ void func_ov075_0211919c(char* self)
         }
         p += 0x40 / 2;
     }
-    data_0209d454[0] |= 4;
+    BOTTOM_SCREEN_RELATED[0] |= 4;
     self[0x280] = 0;
     *(int*)(self + 0x264) = 0xb4;
     if (func_0203d974() != 0) {

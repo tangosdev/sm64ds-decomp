@@ -2,7 +2,7 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 struct Quad { unsigned char b0, b1, b2, b3; };
-extern struct Quad data_020a0de8[];
+extern struct Quad TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0e40[];
 extern void *data_ov006_021428c8;
 extern int func_ov006_02108650(void);
@@ -29,15 +29,15 @@ void func_ov006_02108d28(struct Obj *o)
 
     idx = data_020a0e40[0];
     flag = 0;
-    if (data_020a0de8[idx].b0 != 0) {
-        if (data_020a0de8[idx].b1 != 0) flag = 1;
+    if (TOUCH_INPUT_ARR[idx].b0 != 0) {
+        if (TOUCH_INPUT_ARR[idx].b1 != 0) flag = 1;
     }
     if (flag == 0) return;
 
     if (o->x32 != 1) return;
 
-    dx = (o->x0 >> 12) - data_020a0de8[idx].b2;
-    dy = (o->x4 >> 12) - data_020a0de8[idx].b3;
+    dx = (o->x0 >> 12) - TOUCH_INPUT_ARR[idx].b2;
+    dy = (o->x4 >> 12) - TOUCH_INPUT_ARR[idx].b3;
     if (o->x2c != 0x25) return;
 
     if (func_ov006_02108650() == 0x25) return;

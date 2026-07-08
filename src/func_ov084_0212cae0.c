@@ -4,8 +4,8 @@
 struct Vec3 { int x, y, z; };
 struct Mtx43 { int m[12]; };
 
-extern char *data_0209f318;
-extern struct Mtx43 data_020a0e68;
+extern char *CAMERA;
+extern struct Mtx43 MATRIX_SCRATCH_PAPER;
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -29,7 +29,7 @@ int func_ov084_0212cae0(char *self)
     int ok1;
     int ok2;
 
-    cam = data_0209f318;
+    cam = CAMERA;
     if (*(unsigned int *)(self + 0x198) != 0)
     {
         actor = _ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x198));
@@ -50,8 +50,8 @@ body:
     vC.y = ok1;
     vC.z = ok1;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(actor + 0x8e));
-    MulVec3Mat4x3(&vA, &data_020a0e68, &vC);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short *)(actor + 0x8e));
+    MulVec3Mat4x3(&vA, &MATRIX_SCRATCH_PAPER, &vC);
     Vec3_Add(&vD, (struct Vec3 *)(actor + 0x5c), &vC);
     vC.x = ok1;
     vA.x = vD.x;
@@ -60,7 +60,7 @@ body:
     vC.z = ok1;
     vA.z = vD.z;
 
-    MulVec3Mat4x3(&vB, &data_020a0e68, &vC);
+    MulVec3Mat4x3(&vB, &MATRIX_SCRATCH_PAPER, &vC);
     Vec3_Add(&vE, (struct Vec3 *)(actor + 0x5c), &vC);
     vB.y = vE.y;
     vB.x = vE.x;

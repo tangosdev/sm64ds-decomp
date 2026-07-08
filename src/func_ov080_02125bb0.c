@@ -9,7 +9,7 @@ extern int func_ov080_02125cd4(void *c, int n);
 extern Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 extern int __aeabi_idiv(int a, int b);
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 int func_ov080_02125bb0(void *self, int arg1)
 {
@@ -45,7 +45,7 @@ int func_ov080_02125bb0(void *self, int arg1)
         sum = 0;
 
     idx = (unsigned short)r5res >> 4;
-    tv = *(short *)((char *)data_02082214 + (idx << 2));
+    tv = *(short *)((char *)SINE_TABLE + (idx << 2));
     prod = (long long)tv * (long long)sum;
     return (int)((prod + 0x800) >> 12);
 }

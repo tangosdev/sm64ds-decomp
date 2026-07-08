@@ -12,7 +12,7 @@ extern "C" void MulVec3Mat4x3(void* a, void* m, void* b);
 extern "C" int _ZN9Animation8FinishedEv(void* self);
 extern "C" void func_ov081_02125488(void* c, void* p);
 
-extern "C" int data_020a0e68[];
+extern "C" int MATRIX_SCRATCH_PAPER[];
 extern "C" void* data_ov081_02128e14;
 
 extern "C" int func_ov081_02124b98(char* c) {
@@ -41,10 +41,10 @@ extern "C" int func_ov081_02124b98(char* c) {
                     v[0].y = v[1].y - *(int*)(c + 0x438);
                     v[0].z = v[1].z - *(int*)(c + 0x43c);
                     angle = _ZN4cstd5atan2E5Fix12IiES1_(v[0].x, v[0].z);
-                    Matrix4x3_FromRotationY(data_020a0e68, angle);
-                    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68,
+                    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, angle);
+                    Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER,
                         (short)(-_ZN4cstd5atan2E5Fix12IiES1_(v[0].y, Vec3_HorzLen(&v[0]))));
-                    MulVec3Mat4x3(&in, data_020a0e68, &out);
+                    MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
                 }
                 out.y += 0x14000;
                 *(int*)((char*)target + 0xa4) = out.x;

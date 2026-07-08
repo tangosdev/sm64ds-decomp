@@ -4,7 +4,7 @@
 struct VT { void *v0, *v1, *v2, *v3, *v4; int (*m_14)(void *); };
 struct Obj { struct VT *vt; };
 
-extern struct Obj *data_0209f5bc;
+extern struct Obj *SCENE_FADER;
 
 extern void func_ov003_020b060c(void *self);
 extern int IsButtonInputValid(void);
@@ -15,15 +15,15 @@ extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned s
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
 
 extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 
 int func_ov003_020b0894(unsigned char *self)
 {
-    struct Obj *o = data_0209f5bc;
+    struct Obj *o = SCENE_FADER;
 
     if (o->vt->m_14(o) == 0)
         goto end;
@@ -43,7 +43,7 @@ state0:
         {
             unsigned char idx = data_020a0e40;
             int b = 0;
-            if (data_020a0de8[idx * 4] != 0)
+            if (TOUCH_INPUT_ARR[idx * 4] != 0)
                 b = (data_020a0de9[idx * 4] != 0);
             if (!b) {
                 if (!IsButtonInputValid())
@@ -63,10 +63,10 @@ state0:
             goto right_check;
     left:
         if (self[0x91] == 0)
-            self[0x93] = (unsigned char)(data_0208ee44 << 3);
+            self[0x93] = (unsigned char)(GAME_SPEED_RELATED << 3);
         self[0x91] = 0;
         func_ov003_020b0730(self, 0);
-        self[0x92] = (unsigned char)(data_0208ee44 << 4);
+        self[0x92] = (unsigned char)(GAME_SPEED_RELATED << 4);
         func_02012790(0x9a);
         self[0x90] = 1;
         goto end;
@@ -85,22 +85,22 @@ state0:
             goto end;
     right:
         if (self[0x91] == 1)
-            self[0x93] = (unsigned char)(data_0208ee44 << 3);
+            self[0x93] = (unsigned char)(GAME_SPEED_RELATED << 3);
         self[0x91] = 1;
         func_ov003_020b0730(self, 0);
-        self[0x92] = (unsigned char)(data_0208ee44 << 4);
+        self[0x92] = (unsigned char)(GAME_SPEED_RELATED << 4);
         func_02012790(0x9b);
         self[0x90] = 1;
         goto end;
 
 state1:
         if (self[0x93] != 0) {
-            self[0x93] -= data_0208ee44;
+            self[0x93] -= GAME_SPEED_RELATED;
             if (self[0x93] == 0)
                 func_ov003_020b0730(self, 0);
         }
         if (self[0x92] != 0) {
-            self[0x92] -= data_0208ee44;
+            self[0x92] -= GAME_SPEED_RELATED;
             if (self[0x92] == 0) {
                 if (self[0x91] == 0)
                     func_0202ae74();

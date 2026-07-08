@@ -1,5 +1,5 @@
 struct E { unsigned char d[0xe]; };
-extern struct E *data_0209f354;
+extern struct E *VIEW_ARR_PTR;
 struct E *GetViewObj(int idx) {
-    return &data_0209f354[idx];
+    return &VIEW_ARR_PTR[idx];
 }

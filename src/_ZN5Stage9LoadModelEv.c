@@ -1,11 +1,11 @@
 // NONMATCHING: different op / idiom (div=13). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
-extern char data_0209f340[];
-extern int data_0209f320;
+extern char LEVEL_FILE[];
+extern int LEVEL_MODEL_DATA;
 extern void _ZN5Model14LoadAndSetFileEtii(char* model, unsigned short id, int b, int c);
 void _ZN5Stage9LoadModelEv(char* self) {
-    _ZN5Model14LoadAndSetFileEtii(self + 0x86c, *(unsigned short*)(*(char**)data_0209f340 + 8), 1, -1);
+    _ZN5Model14LoadAndSetFileEtii(self + 0x86c, *(unsigned short*)(*(char**)LEVEL_FILE + 8), 1, -1);
     unsigned int i = 0;
     char* p = self + 0x874;
     char* node = ((char**)p)[1];
@@ -18,5 +18,5 @@ void _ZN5Stage9LoadModelEv(char* self) {
         }
         node += 0x30;
     }
-    data_0209f320 = (int)p;
+    LEVEL_MODEL_DATA = (int)p;
 }

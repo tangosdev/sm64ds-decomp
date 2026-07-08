@@ -22,11 +22,11 @@ extern "C" void func_0203799c(void *c, int b, int d, int e, struct A *f);
 extern "C" void func_02037968(void *c, int b, int d, int e, struct A *f);
 extern "C" void func_02037a38(void *o);
 
-extern "C" struct A *data_020a0c80;
+extern "C" struct A *ACTIVE_MESH_COLLIDERS;
 
 extern "C" int func_02038a38(void *arg0)
 {
-    struct A *o = data_020a0c80;
+    struct A *o = ACTIVE_MESH_COLLIDERS;
     int ret = 0;
     int flags;
     if (o != 0 && func_02035354(arg0, func_020393b4(o)) == 0

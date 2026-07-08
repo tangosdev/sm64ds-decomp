@@ -1,10 +1,10 @@
-extern unsigned char data_0209f21c;
-extern unsigned char data_0209f498[];
+extern unsigned char NUM_PLAYERS;
+extern unsigned char INPUT_ARR[];
 
 void SetTouchScreenDelay(void){
-    unsigned char* p = data_0209f498;
+    unsigned char* p = INPUT_ARR;
     int i;
-    for (i = 0; i < data_0209f21c; i++) {
+    for (i = 0; i < NUM_PLAYERS; i++) {
         p[0x12] = 5;
         p += 0x18;
     }

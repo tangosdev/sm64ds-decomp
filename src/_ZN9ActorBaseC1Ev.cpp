@@ -3,21 +3,21 @@ extern "C" {
 void _ZN9ActorBase9SceneNodeC1Ev(void);
 int func_0203b438(void);
 int func_02043810(void);
-extern int data_02099edc;
-extern int data_02099e70;
-extern int data_020a4b60;
-extern int data_020a4b54;
+extern int _ZTV9ActorBase;
+extern int NEXT_UNIQUE_ACTOR_ID;
+extern int ACTOR_PARAM1;
+extern int ACTOR_ACTOR_ID;
 extern int data_020a4b64;
-extern int data_020a4b48;
+extern int ACTOR_UNKNOWN12_ID;
 extern int data_020a4b6c;
-extern int data_020a4bb8;
+extern int ACTOR_SPAWN_INFO_TABLE_PTR;
 }
 
 extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
     stmdb sp!, {r4, r5, lr}
     sub sp, sp, #4
     mov r4, r0
-    ldr r1, =data_02099edc
+    ldr r1, =_ZTV9ActorBase
     add r5, r4, #0x14
     mov r0, r5
     str r1, [r4]
@@ -36,8 +36,8 @@ extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
     str r4, [r0, #8]
     strh r2, [r0, #0xc]
     strh r2, [r0, #0xe]
-    ldr r1, =data_02099e70
-    ldr r0, =data_020a4b60
+    ldr r1, =NEXT_UNIQUE_ACTOR_ID
+    ldr r0, =ACTOR_PARAM1
     ldr r2, [r1]
     str r2, [r4, #4]
     ldr r3, [r1]
@@ -45,10 +45,10 @@ extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
     add r0, r3, #1
     str r0, [r1]
     str r2, [r4, #8]
-    ldr r0, =data_020a4b54
+    ldr r0, =ACTOR_ACTOR_ID
     ldr r2, =data_020a4b64
     ldrh r1, [r0]
-    ldr r0, =data_020a4b48
+    ldr r0, =ACTOR_UNKNOWN12_ID
     strh r1, [r4, #0xc]
     ldrb r3, [r0]
     ldr r0, =data_020a4b6c
@@ -56,7 +56,7 @@ extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
     strb r3, [r4, #0x12]
     ldr r2, [r2]
     bl func_0203b438
-    ldr r0, =data_020a4bb8
+    ldr r0, =ACTOR_SPAWN_INFO_TABLE_PTR
     ldrh r1, [r4, #0xc]
     ldr r0, [r0]
     add r2, r4, #0x28

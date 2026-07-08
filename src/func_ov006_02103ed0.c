@@ -24,8 +24,8 @@ extern void func_ov006_021024e0(int c);
 extern void func_ov006_020fffec(char *c);
 extern void func_ov004_020b04d0(int v);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 int func_ov006_02103ed0(void *arg0)
 {
@@ -41,7 +41,7 @@ int func_ov006_02103ed0(void *arg0)
     int y;
     int x;
 
-    data_0209d45c |= 8;
+    TOP_SCREEN_RELATED |= 8;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e &= ~0x40;
     *(volatile u32 *)0x400001c = 0;
@@ -64,7 +64,7 @@ int func_ov006_02103ed0(void *arg0)
     DecompressLZ16(sp4, (void *)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)sp8, 0, 0x100);
 
-    data_0209d454 |= 0xd;
+    BOTTOM_SCREEN_RELATED |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;

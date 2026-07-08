@@ -7,7 +7,7 @@ extern u8 func_0202027c(int bit);
 extern int func_0203da9c(void);
 extern void func_02030790(void);
 
-extern u8 data_0209fc5c[];
+extern u8 IS_PLAYER_ACTIVE[];
 extern u8 data_0209fc58;
 
 void func_02030b58(void) {
@@ -22,15 +22,15 @@ void func_02030b58(void) {
     }
     int i;
     for (i = 0; i < 4; i++) {
-        if (data_0209fc5c[i] != 0) {
+        if (IS_PLAYER_ACTIVE[i] != 0) {
             if (func_0202027c(i) == 0) {
                 data_0209fc58 = (u8)(data_0209fc58 | (1 << i));
-                data_0209fc5c[i] = 0;
+                IS_PLAYER_ACTIVE[i] = 0;
             }
         }
     }
-    if (data_0209fc5c[0] == 0) return;
-    if (data_0209fc5c[func_0203da9c()] != 0) return;
+    if (IS_PLAYER_ACTIVE[0] == 0) return;
+    if (IS_PLAYER_ACTIVE[func_0203da9c()] != 0) return;
     data_0209fc58 |= 0xf;
     func_02030790();
 }

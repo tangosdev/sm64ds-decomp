@@ -1,4 +1,4 @@
-extern unsigned char data_020755a0[];
+extern unsigned char _ZN3OAM8objWidthE[];
 unsigned char _ZN3OAM11GetObjWidthEii(int a, int b){
-  return *(unsigned char*)&((int*)((char*)data_020755a0 + b))[a];
+  return *(unsigned char*)&((int*)((char*)_ZN3OAM8objWidthE + b))[a];
 }

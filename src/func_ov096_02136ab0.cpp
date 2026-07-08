@@ -16,7 +16,7 @@ extern void* data_ov096_02137b28;
 
 struct Block48 { int w[12]; };
 struct Block3 { int w[3]; };
-extern Block48 data_02082128;
+extern Block48 _ZN9Matrix3x38IDENTITYE;
 
 extern "C" int func_ov096_02136ab0(char* c)
 {
@@ -76,7 +76,7 @@ extern "C" int func_ov096_02136ab0(char* c)
     }
 
     func_ov096_02136928(c, 1);
-    *(Block48*)(c + 0x33c) = data_02082128;
+    *(Block48*)(c + 0x33c) = _ZN9Matrix3x38IDENTITYE;
     func_ov096_02135efc(c);
     return 1;
 }

@@ -8,10 +8,10 @@ typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 
-extern s8 data_0209f2f8;
-extern s8 data_02092120;
-extern int data_0209caa0[];
-extern void* data_0209f33c;
+extern s8 LEVEL_ID;
+extern s8 AREA_ID;
+extern int SAVE_DATA[];
+extern void* CASTLE_KEY_RABBIT;
 extern char data_ov085_021305c0;
 extern char data_ov085_0213068c;
 extern char data_ov085_021306ac;
@@ -47,9 +47,9 @@ int func_ov085_0212c230(void* arg0)
     char* c = (char*)arg0;
     void* r0p;
 
-    if (data_0209f2f8 != 0x32) {
+    if (LEVEL_ID != 0x32) {
         if (*(u8*)(c + 0x428) == 1) {
-            if (data_0209caa0[2] & 0x20000)
+            if (SAVE_DATA[2] & 0x20000)
                 *(u8*)(c + 0x428) = 0;
             return 1;
         }
@@ -57,15 +57,15 @@ int func_ov085_0212c230(void* arg0)
         r0p = _ZN5Actor13ClosestPlayerEv(c);
         if (r0p == 0)
             return 1;
-        if (!(data_0209caa0[2] & 0x20000) || *(s32*)(c + 0x440) != *(u8*)((char*)r0p + 0x6d9)) {
+        if (!(SAVE_DATA[2] & 0x20000) || *(s32*)(c + 0x440) != *(u8*)((char*)r0p + 0x6d9)) {
             *(u8*)(c + 0x428) = 1;
             return 1;
         }
         *(u8*)(c + 0x428) = 0;
     }
 
-    if (*(s32*)(c + 0x43c) == 7 && !(data_0209caa0[1] & 0x40))
-        data_0209f33c = c;
+    if (*(s32*)(c + 0x43c) == 7 && !(SAVE_DATA[1] & 0x40))
+        CASTLE_KEY_RABBIT = c;
 
     if (*(u8*)(c + 0x429) != 0) {
         volatile Vector3 pv;
@@ -188,7 +188,7 @@ int func_ov085_0212c230(void* arg0)
             func_ov085_0212bcc8(c);
     }
 
-    if (data_0209f2f8 == 5 && data_02092120 == 3)
+    if (LEVEL_ID == 5 && AREA_ID == 3)
         func_ov085_0212bedc(c);
 
     {

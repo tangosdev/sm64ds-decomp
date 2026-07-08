@@ -10,8 +10,8 @@ extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, int x, int
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int a, int b, unsigned int g);
 
-extern struct Matrix4x3 data_020a0e68;
-extern struct Matrix4x3 data_02082128;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
+extern struct Matrix4x3 _ZN9Matrix3x38IDENTITYE;
 
 void func_ov085_021295bc(char *c)
 {
@@ -25,10 +25,10 @@ void func_ov085_021295bc(char *c)
     *(int*)(c + 0x14c) = (*(int*)(c + 0x60) + 0x4000) >> 3;
     *(int*)(c + 0x150) = *(int*)(c + 0x64) >> 3;
 
-    data_020a0e68 = *(struct Matrix4x3*)(*(char**)(c + 0x11c) + 0xf0);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c + 0x200));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short*)(c + 0x204));
-    *(struct Matrix4x3*)(*(char**)(c + 0x11c) + 0xf0) = data_020a0e68;
+    MATRIX_SCRATCH_PAPER = *(struct Matrix4x3*)(*(char**)(c + 0x11c) + 0xf0);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x200));
+    Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x204));
+    *(struct Matrix4x3*)(*(char**)(c + 0x11c) + 0xf0) = MATRIX_SCRATCH_PAPER;
 
     id = *(unsigned int*)(c + 0x1f4);
     if (id != 0) {
@@ -40,14 +40,14 @@ void func_ov085_021295bc(char *c)
             dst = (struct Matrix4x3*)(*(char**)(c + 0x11c) + 0xf0);
             MulMat4x3Mat4x3(dst, c + 0x124, c + 0x194);
 
-            data_020a0e68 = *(struct Matrix4x3*)(c + 0x194);
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x4000, -0xa00);
-            Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x1000, 0, 0);
-            *(struct Matrix4x3*)(c + 0x194) = data_020a0e68;
+            MATRIX_SCRATCH_PAPER = *(struct Matrix4x3*)(c + 0x194);
+            Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, 0x4000, -0xa00);
+            Matrix4x3_ApplyInPlaceToRotationXYZExt(&MATRIX_SCRATCH_PAPER, -0x1000, 0, 0);
+            *(struct Matrix4x3*)(c + 0x194) = MATRIX_SCRATCH_PAPER;
 
-            vx = data_020a0e68.m[9];
-            vy = data_020a0e68.m[10];
-            vz = data_020a0e68.m[11];
+            vx = MATRIX_SCRATCH_PAPER.m[9];
+            vy = MATRIX_SCRATCH_PAPER.m[10];
+            vz = MATRIX_SCRATCH_PAPER.m[11];
             vy <<= 3;
             vx <<= 3;
             vz <<= 3;
@@ -58,7 +58,7 @@ void func_ov085_021295bc(char *c)
         }
     }
 
-    *(struct Matrix4x3*)(c + 0x1c4) = data_02082128;
+    *(struct Matrix4x3*)(c + 0x1c4) = _ZN9Matrix3x38IDENTITYE;
     *(int*)(c + 0x1e8) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x1ec) = (*(int*)(c + 0x60) - 0x8000) >> 3;
     *(int*)(c + 0x1f0) = *(int*)(c + 0x64) >> 3;

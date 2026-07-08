@@ -26,12 +26,12 @@ extern void InitialiseVramGlobals(void);
 extern void func_ov004_020b0aa0(int arg);
 
 extern int func_020beb6c;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern int data_ov006_0213e42c[];
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 extern int data_020beb74[];
-extern void **data_0209d4a8;
+extern void **SCENE_RELATED;
 
 void func_ov006_0210a708(char *obj)
 {
@@ -41,8 +41,8 @@ void func_ov006_0210a708(char *obj)
     func_020beb6c = 0;
     func_ov004_020b290c();
     func_ov004_020b2980();
-    data_0209d45c = 0x10;
-    data_0209d454 = 0x10;
+    TOP_SCREEN_RELATED = 0x10;
+    BOTTOM_SCREEN_RELATED = 0x10;
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
     _ZN2GX12SetBankForBGEt(2);
@@ -69,12 +69,12 @@ void func_ov006_0210a708(char *obj)
     _ZN3GXS11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
     func_ov004_020adc5c(p);
     func_ov004_020b0d30();
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
     func_ov004_020b0aa0(0x1d);
     data_020beb74[1] = (int)obj;
-    data_0209d4a8 = (void **)data_020beb74;
+    SCENE_RELATED = (void **)data_020beb74;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }

@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 extern u8 GetControllerMode(int a0);
 extern void func_0205a588(void *a, int b, int c);
-extern u8 data_0209f21c;
+extern u8 NUM_PLAYERS;
 
 struct Ctrl {
     char pad[0x12];
@@ -11,16 +11,16 @@ struct Ctrl {
     char pad3[0x18 - 0x17];
 };
 
-extern struct Ctrl data_0209f498[];
-extern u8 data_0209f2d8;
+extern struct Ctrl INPUT_ARR[];
+extern u8 CURRENT_GAMEMODE;
 
 void ResetInput(void)
 {
-    struct Ctrl *p = data_0209f498;
+    struct Ctrl *p = INPUT_ARR;
     int i;
-    for (i = 0; i < data_0209f21c; i++) {
+    for (i = 0; i < NUM_PLAYERS; i++) {
         u8 mode;
-        int m = (int)(data_0209f2d8 == 1);
+        int m = (int)(CURRENT_GAMEMODE == 1);
         if (m == 0)
             mode = p->f16;
         else

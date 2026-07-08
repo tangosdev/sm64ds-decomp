@@ -12,8 +12,8 @@ extern void func_ov004_020b682c(void);
 extern int func_ov004_020ad8b8(void);
 extern int func_ov004_020ad878(void);
 extern int data_ov006_0213d5b4[];
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern void *func_020beb68;
 }
 namespace GXS { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
@@ -40,8 +40,8 @@ extern "C" int func_ov006_020f8d08(char *c)
     Deallocate(a);
     Deallocate(b);
 
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    TOP_SCREEN_RELATED = 0x11;
+    BOTTOM_SCREEN_RELATED = 0x18;
     *(unsigned short *)0x4000008 = (*(unsigned short *)0x4000008 & ~3) | 1;
     *(unsigned short *)0x400100a = *(unsigned short *)0x400100a & ~3;
     func_ov006_020c0aa8(c + 0x4660);

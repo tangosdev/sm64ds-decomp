@@ -11,7 +11,7 @@ extern int data_ov100_02148054[];
 extern void func_02011508();
 extern void func_020072c0();
 extern void _ZN5ModelD1Ev();
-extern int data_020a0eac[];
+extern int _ZN6Memory11gameHeapPtrE[];
 void* func_ov100_02143290(char* c){
   *(int**)c = data_ov100_02148054;
   func_0207328c(c+0x768, 6, 6, (void*)func_02011508);
@@ -24,7 +24,7 @@ void* func_ov100_02143290(char* c){
   _ZN12WithMeshClsnD1Ev(c+0x150);
   _ZN25MovingCylinderClsnWithPosD1Ev(c+0x110);
   func_ov002_020aed18(c);
-  _ZN6Memory10DeallocateEPvP4Heap(c, (void*)data_020a0eac[0]);
+  _ZN6Memory10DeallocateEPvP4Heap(c, (void*)_ZN6Memory11gameHeapPtrE[0]);
   return c;
 }
 }

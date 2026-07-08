@@ -20,7 +20,7 @@ extern "C" {
 
 struct SharedFilePtr { void* file; void* bmd; };
 extern SharedFilePtr data_ov021_02114a50;
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern "C" int func_ov021_02112b2c(void* self)
 {
@@ -58,8 +58,8 @@ extern "C" int func_ov021_02112b2c(void* self)
             *(s32*)(c+0x9c) = -0x4000;
             *(s32*)(c+0xa0) = -0x28000;
             *(s32*)(c+0x98) = 0x1e000;
-            *(s32*)(c+0xa4) = data_02082214[(*(u16*)(c+0x94)>>4)<<1] * 0x1e;
-            *(s32*)(c+0xac) = data_02082214[((*(u16*)(c+0x94)>>4)<<1)+1] * 0x1e;
+            *(s32*)(c+0xa4) = SINE_TABLE[(*(u16*)(c+0x94)>>4)<<1] * 0x1e;
+            *(s32*)(c+0xac) = SINE_TABLE[((*(u16*)(c+0x94)>>4)<<1)+1] * 0x1e;
         }
     } else {
         if (*(u8*)(c+0x3be) == 1) {

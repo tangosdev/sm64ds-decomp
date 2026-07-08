@@ -16,19 +16,19 @@ extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void func_ov002_020b9704(char *c, int i);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 
-extern void *data_ov002_0210d9d0[];
-extern void *data_ov002_0210d9b0[];
+extern void *POWER_FLOWER_CLOSED_MODEL_PTR[];
+extern void *POWER_FLOWER_OPEN_MODEL_PTR[];
 
 int func_ov002_020b9c00(char *c) {
     struct Vector3 pos;
     char ray[0x54];
     short *angp;
 
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9d0);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9b0);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x124, data_ov002_0210d9b0[1], 1, -1) == 0)
+    _ZN5Model8LoadFileER13SharedFilePtr(POWER_FLOWER_CLOSED_MODEL_PTR);
+    _ZN5Model8LoadFileER13SharedFilePtr(POWER_FLOWER_OPEN_MODEL_PTR);
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x124, POWER_FLOWER_OPEN_MODEL_PTR[1], 1, -1) == 0)
         return 0;
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, data_ov002_0210d9d0[1], 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, POWER_FLOWER_CLOSED_MODEL_PTR[1], 1, -1) == 0)
         return 0;
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x174) == 0)
         return 0;

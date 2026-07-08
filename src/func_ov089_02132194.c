@@ -22,7 +22,7 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cyl);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 extern char data_ov089_02132c40;
 extern char data_ov089_02132b40;
 extern char data_ov089_02132ca4;
@@ -51,12 +51,12 @@ extern "C" int func_ov089_02132194(char* c)
                 *(short*)(c + 0x8e) = *(short*)(*(char**)(c + 0x110) + 0x8e);
             }
             if (!_ZN9Animation8FinishedEv(c + 0x164)) {
-                Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c + 0x8e));
-                MulMat4x3Mat4x3(*(void**)(c + 0x128), &data_020a0e68, &data_020a0e68);
-                vec[0] = *(int*)(&data_020a0e68 + 0x24);
-                vec[1] = *(int*)(&data_020a0e68 + 0x28);
-                vec[2] = *(int*)(&data_020a0e68 + 0x2c);
+                Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
+                Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
+                MulMat4x3Mat4x3(*(void**)(c + 0x128), &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+                vec[0] = *(int*)(&MATRIX_SCRATCH_PAPER + 0x24);
+                vec[1] = *(int*)(&MATRIX_SCRATCH_PAPER + 0x28);
+                vec[2] = *(int*)(&MATRIX_SCRATCH_PAPER + 0x2c);
                 SubVec3(vec, c + 0x5c, vec);
                 Vec3_LslInPlace(vec, 3);
                 AddVec3(vec, c + 0x5c, vec);

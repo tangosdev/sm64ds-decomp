@@ -21,7 +21,7 @@ extern int data_0209b498;
 extern char data_0208e498[];
 extern char data_0209d574[];
 extern char data_0209b4b4[];
-extern int data_0209b4a0;
+extern int _ZN5Sound7FileRef5PTR_0E;
 extern int data_0209b4b0;
 extern int data_0209b4a4;
 extern char data_0209b53c[];
@@ -41,7 +41,7 @@ void func_020133bc(void)
         func_020134d8(1, data_0209b498);
         func_0201a9fc(data_0209d574);
     }
-    func_0204f94c(&data_0209b4a0);
+    func_0204f94c(&_ZN5Sound7FileRef5PTR_0E);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);
     func_02011a28(data_0209b53c);

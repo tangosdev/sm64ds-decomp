@@ -9,7 +9,7 @@ extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_
 extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* self, void* sm, void* mtx, int fx, int t1, int t2, unsigned int u);
 
-extern struct Vec3 data_020a0e68;
+extern struct Vec3 MATRIX_SCRATCH_PAPER;
 
 void func_ov063_0211d5f4(char* self)
 {
@@ -21,8 +21,8 @@ void func_ov063_0211d5f4(char* self)
     out.y = 0;
     out.z = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x8e));
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x8e));
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
     AddVec3(&out, (struct Vec3*)(self + 0x5c), &out);
     Matrix4x3_FromRotationY(self + 0x45c, *(s16*)(self + 0x8e));
     *(int*)(self + 0x480) = out.x >> 3;
@@ -35,8 +35,8 @@ void func_ov063_0211d5f4(char* self)
     in.y = 0;
     in.z = 0;
     in.x = -0x60000;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x8e));
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x8e));
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
     AddVec3(&out, (struct Vec3*)(self + 0x5c), &out);
     Matrix4x3_FromRotationY(self + 0x3fc, *(s16*)(self + 0x8e));
     *(int*)(self + 0x420) = out.x >> 3;
@@ -49,8 +49,8 @@ void func_ov063_0211d5f4(char* self)
     in.x = 0;
     in.y = 0;
     in.z = -0x10000;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x8e));
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x8e));
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
     AddVec3(&out, (struct Vec3*)(self + 0x5c), &out);
     Matrix4x3_FromRotationY(self + 0x42c, *(s16*)(self + 0x8e));
     *(int*)(self + 0x450) = out.x >> 3;

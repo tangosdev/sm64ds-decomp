@@ -5,13 +5,13 @@ extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* thiz);
 extern void func_ov078_02125c24(void* c, int n);
 extern void func_0200fa8c(void* t, int a);
 extern void func_02012694(int a, void* v);
-extern int data_02092138;
+extern int STAR_CAP_MIN_POS_Y;
 extern int data_ov078_021270bc[];
 
 int func_ov078_02124bc4(char* c)
 {
     if (*(unsigned short*)(c + 0x100) != 0) return 1;
-    if (*(int*)&data_02092138 > *(int*)(c + 0x60)) {
+    if (*(int*)&STAR_CAP_MIN_POS_Y > *(int*)(c + 0x60)) {
         func_ov078_02125c48(c, data_ov078_021270bc);
         return 1;
     }

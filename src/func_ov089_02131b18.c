@@ -7,8 +7,8 @@ typedef unsigned int u32;
 struct V3 { int x, y, z; };
 
 extern void func_020383fc(char *p);
-extern char *data_0209f318;
-extern char *data_0209b454;
+extern char *CAMERA;
+extern char *NEXT_ACTOR_UPDATE_FLAGS;
 extern void Camera_SetFlag_3(char *cam);
 extern void Camera_SetLookAt(char *cam, struct V3 *v);
 extern void Camera_SetPos(char *cam, struct V3 *v);
@@ -21,7 +21,7 @@ extern void func_ov089_02131df4(char *thiz);
 
 void func_ov089_02131b18(char *c)
 {
-    char *cam = *(char **)&data_0209f318;
+    char *cam = *(char **)&CAMERA;
     struct V3 v;
 
     func_020383fc(c + 0x260);
@@ -33,7 +33,7 @@ void func_ov089_02131b18(char *c)
         int *s2 = (int *)(cam + 0x8c);
         int *b0 = (int *)(c + 0xb0);
         *b0 |= 0x4000000;
-        *(int *)&data_0209b454 |= 0x4000000;
+        *(int *)&NEXT_ACTOR_UPDATE_FLAGS |= 0x4000000;
         *(int *)(c + 0x44c) = s1[0];
         *(int *)(c + 0x450) = s1[1];
         *(int *)(c + 0x454) = s1[2];
@@ -73,7 +73,7 @@ void func_ov089_02131b18(char *c)
         Camera_SetPos(cam, (struct V3 *)(c + 0x458));
         *(int *)(cam + 0x154) &= ~8;
         *(int *)(c + 0xb0) &= ~0x4000000;
-        *(int *)&data_0209b454 &= ~0x4000000;
+        *(int *)&NEXT_ACTOR_UPDATE_FLAGS &= ~0x4000000;
         *(u8 *)(c + 0x442) += 1;
         *(int *)(c + 0x238) &= ~1;
         *(char **)(c + 0x464) = 0;

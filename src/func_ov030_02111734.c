@@ -7,8 +7,8 @@ extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void* m, 
 extern void _ZN11RaycastLineD1Ev(void* self);
 extern void func_ov030_02112094(void* c);
 
-extern char data_0209f43c;
-extern char data_0209b3ec;
+extern char GLOBAL_CLIPPER;
+extern char VIEW_MATRIX_ASR_3;
 
 struct Vec3 { int x, y, z; };
 
@@ -39,7 +39,7 @@ void func_ov030_02111734(char* c)
 
     Vec3_Asr(&asr, c + 0x380, 3);
 
-    if (_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(&data_0209f43c, &data_0209b3ec, &asr, 0x1f400, &out) <= 0xc350000)
+    if (_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(&GLOBAL_CLIPPER, &VIEW_MATRIX_ASR_3, &asr, 0x1f400, &out) <= 0xc350000)
         goto done;
 
     *(int*)(c + 0x5c) = *(int*)(c + 0x380);

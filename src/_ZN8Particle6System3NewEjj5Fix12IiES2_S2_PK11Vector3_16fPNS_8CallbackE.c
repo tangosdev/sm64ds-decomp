@@ -8,7 +8,7 @@ struct System;
 extern struct System *_ZNK8Particle10SysTracker8Contents8FindDataEj(void *contents, unsigned int type);
 extern void *func_02021a74(void *table, int u, void *args, const void *pos, void *cb);
 
-extern void **data_0209ee74;
+extern void **PARTICLE_SYS_TRACKER;
 
 struct Vec3 { short x; short y; short z; };
 
@@ -41,7 +41,7 @@ int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int type, unsigned int u, int a, int b, int c,
     const struct Vec3 *pos, void *cb)
 {
-    void *contents = (char *)(*data_0209ee74) + 8;
+    void *contents = (char *)(*PARTICLE_SYS_TRACKER) + 8;
     struct System *sys;
     struct Args3 args;
 

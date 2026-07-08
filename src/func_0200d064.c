@@ -1,9 +1,9 @@
 
-extern unsigned char data_0209f250;
+extern unsigned char CURR_PLAYER_ID;
 extern void func_02012790(int);
 void func_0200d064(int param_1, unsigned int param_2)
 {
-  unsigned char tmp = data_0209f250;
+  unsigned char tmp = CURR_PLAYER_ID;
   if (param_2 == tmp)
   {
     volatile int dummy;

@@ -7,7 +7,7 @@ extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Mtx43 *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Mtx43 *m, short ang);
 extern void MulVec3Mat4x3(struct Vec3 *v, struct Mtx43 *m, struct Vec3 *res);
-extern struct Mtx43 data_020a0e68;
+extern struct Mtx43 MATRIX_SCRATCH_PAPER;
 
 int func_02009138(int *thiz, int arg)
 {
@@ -20,9 +20,9 @@ int func_02009138(int *thiz, int arg)
     v.x = 0;
     v.y = 0;
     v.z = len;
-    Matrix4x3_FromTranslation(&data_020a0e68, thiz[0x20], thiz[0x21], thiz[0x22]);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)((char*)thiz + 0x17c));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short*)((char*)thiz + 0x17e));
-    MulVec3Mat4x3(&v, &data_020a0e68, (struct Vec3*)((char*)thiz + 0x8c));
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, thiz[0x20], thiz[0x21], thiz[0x22]);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(short*)((char*)thiz + 0x17c));
+    Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short*)((char*)thiz + 0x17e));
+    MulVec3Mat4x3(&v, &MATRIX_SCRATCH_PAPER, (struct Vec3*)((char*)thiz + 0x8c));
     return (r == 0) ? 1 : 0;
 }

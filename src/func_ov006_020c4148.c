@@ -9,7 +9,7 @@ extern char* data_ov006_02140324;    /* base pointer */
 extern int data_ov006_0213afc8;      /* compare struct {a, b} */
 extern char data_ov006_0212ccf0;     /* second array base */
 extern int data_ov006_02140304;      /* ApproachLinear target */
-extern int data_0209e650;            /* rand seed */
+extern int RNG_STATE;            /* rand seed */
 
 extern int RandomIntInternal(int* seed);
 extern void func_ov006_020c68f4(char* a, char* b);
@@ -27,8 +27,8 @@ void func_ov006_020c4148(void) {
         if (p[0] == marker) {
             if (p[1] == (&data_ov006_0213afc8)[1] ||
                 *(int*)(e + 0x30) == 0) {
-                int r1 = RandomIntInternal(&data_0209e650);
-                int r2 = RandomIntInternal(&data_0209e650);
+                int r1 = RandomIntInternal(&RNG_STATE);
+                int r2 = RandomIntInternal(&RNG_STATE);
                 u32 v = (u32)(r1 & 0x7fffffff) >> 0x13;
                 u32 u = (u32)(r2 & 0x7fffffff) >> 0x13;
                 func_ov006_020c68f4(

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-struct State; extern State data_ov002_02110034;
+struct State; extern State _ZN6Player14ST_YOSHI_POWERE;
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,State*);
 extern int func_ov002_020c9e40(void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
@@ -13,7 +13,7 @@ int _ZN6Player15St_Swallow_InitEv(char* c){
     }
     int eq = *(unsigned short*)(*(char**)(c+0x360)+0xc)==0xbf;
     if(eq!=0){
-      _ZN6Player11ChangeStateERNS_5StateE(c,&data_ov002_02110034);
+      _ZN6Player11ChangeStateERNS_5StateE(c,&_ZN6Player14ST_YOSHI_POWERE);
       return 1;
     }
   }

@@ -26,7 +26,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 }
 
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 MATRIX_SCRATCH_PAPER;
 
 struct Obj {
     char pad0[0x5c];
@@ -63,8 +63,8 @@ extern "C" int func_ov010_02111ae0(Obj* thiz)
         vMid.x = 0;
         vMid.y = 0;
         vMid.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, thiz->angle_8e);
-        MulVec3Mat4x3(&vIn, &data_020a0e68, &vMid);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, thiz->angle_8e);
+        MulVec3Mat4x3(&vIn, &MATRIX_SCRATCH_PAPER, &vMid);
         Vec3_Add(&vRes, &thiz->pos, &vMid);
 
         switch (_ZN6Player12GetTalkStateEv(p)) {
@@ -108,8 +108,8 @@ extern "C" int func_ov010_02111ae0(Obj* thiz)
     vMid2.x = 0;
     vMid2.y = 0;
     vMid2.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, thiz->angle_8e);
-    MulVec3Mat4x3(&vIn2, &data_020a0e68, &vMid2);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, thiz->angle_8e);
+    MulVec3Mat4x3(&vIn2, &MATRIX_SCRATCH_PAPER, &vMid2);
     Vec3_Add(&vRes2, &thiz->pos, &vMid2);
     thiz->vec_158.x = vRes2.x;
     thiz->vec_158.y = vRes2.y;

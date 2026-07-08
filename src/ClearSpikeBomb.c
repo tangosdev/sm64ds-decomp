@@ -1,6 +1,6 @@
-extern int data_0209f3a4[];
+extern int BOWSER_SPIKE_BOMBS[];
 void ClearSpikeBomb(int idx)
 {
     if (idx < 0) return;
-    if (idx < 8) data_0209f3a4[idx] = 0;
+    if (idx < 8) BOWSER_SPIKE_BOMBS[idx] = 0;
 }

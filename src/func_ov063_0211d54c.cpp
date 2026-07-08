@@ -11,8 +11,8 @@ extern "C" void _ZN5ActorD1Ev(void *thiz);
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *p, struct Heap *h);
 extern "C" void _ZN25MovingCylinderClsnWithPosD1Ev(void *thiz);
 extern void *data_ov063_0211ed34[];
-extern void *data_ov002_0210ae38[];
-extern struct Heap *data_020a0eac;
+extern void *_ZTV8Platform[];
+extern struct Heap *_ZN6Memory11gameHeapPtrE;
 
 extern "C" void *func_ov063_0211d54c(void *thiz)
 {
@@ -24,10 +24,10 @@ extern "C" void *func_ov063_0211d54c(void *thiz)
     _ZN11ShadowModelD1Ev(c + 0x3ac);
     _ZN11ShadowModelD1Ev(c + 0x384);
     _ZN9ModelAnimD1Ev(c + 0x320);
-    *(void **)c = data_ov002_0210ae38;
+    *(void **)c = _ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev(c + 0x124);
     _ZN5ModelD1Ev(c + 0xd4);
     _ZN5ActorD1Ev(c);
-    _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(c, _ZN6Memory11gameHeapPtrE);
     return c;
 }

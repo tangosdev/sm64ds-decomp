@@ -8,7 +8,7 @@ int func_020393cc(void *p);
 int func_02038298(void *p);
 int func_020393b4(void *p);
 }
-extern void *data_020a0c80[];
+extern void *ACTIVE_MESH_COLLIDERS[];
 
 struct Obj {
     virtual void m0();
@@ -29,9 +29,9 @@ extern "C" void func_02038324(void *arg, int b, int c, int d)
     Obj *obj;
     if (func_02037fc0(arg) == 0) return;
     idx = func_02037f54(arg);
-    obj = (Obj *)data_020a0c80[idx];
+    obj = (Obj *)ACTIVE_MESH_COLLIDERS[idx];
     if (obj == 0) return;
     if (func_020393cc(obj) == 0) return;
     if (func_02038298(arg) == 0) return;
-    obj->m9(arg, func_020393b4(data_020a0c80[idx]), b, c, d);
+    obj->m9(arg, func_020393b4(ACTIVE_MESH_COLLIDERS[idx]), b, c, d);
 }

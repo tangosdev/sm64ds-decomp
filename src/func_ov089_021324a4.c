@@ -10,7 +10,7 @@ extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* thiz);
 extern void _ZN5Event8ClearBitEj(unsigned int n);
 
 extern char data_ov002_02110964;
-extern char data_ov002_0211094c;
+extern char POWER_STAR_MODEL_PTR;
 extern char data_ov089_02132b40;
 extern char data_ov089_02132c60;
 extern char data_ov089_02132c40;
@@ -19,7 +19,7 @@ extern char data_ov089_02132c48;
 extern int data_ov089_02132894[];
 extern int data_ov089_021328b4[];
 extern char data_ov089_02132ca4;
-extern int data_0209cef0;
+extern int DAT_0209cef0;
 
 int func_ov089_021324a4(char* c)
 {
@@ -31,7 +31,7 @@ int func_ov089_021324a4(char* c)
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov002_02110964);
 
     if (*(int*)(c + 0x444) == 7) {
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, *(void**)(&data_ov002_0211094c + 4), 1, 1) == 0)
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, *(void**)(&POWER_STAR_MODEL_PTR + 4), 1, 1) == 0)
             return 0;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x114, *(void**)(&data_ov002_02110964 + 4), 0x40000000, 0x1000, 0);
         *(int*)(c + 0x80) = 0x2000;
@@ -88,7 +88,7 @@ int func_ov089_021324a4(char* c)
     *(int*)(c + 0x46c) = 0;
     *(int*)(c + 0x468) = *(int*)(c + 0x46c);
     *(int*)(c + 0x464) = *(int*)(c + 0x468);
-    if (data_0209cef0 == 0)
+    if (DAT_0209cef0 == 0)
         _ZN5Event8ClearBitEj(0x1d);
     return 1;
 }

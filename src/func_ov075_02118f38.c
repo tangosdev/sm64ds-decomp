@@ -11,8 +11,8 @@ extern void func_ov075_02115e8c(char *self, int a, int b, short c, short e);
 extern void func_02020334(void);
 extern void func_020200e0(void);
 
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern int data_ov075_0211d71c;
 extern unsigned char data_0209b2e4;
 
@@ -22,8 +22,8 @@ void func_ov075_02118f38(void *c) {
     char *p;
     char *q;
 
-    data_0209d45c &= ~4;
-    data_0209d454 &= ~5;
+    TOP_SCREEN_RELATED &= ~4;
+    BOTTOM_SCREEN_RELATED &= ~5;
     func_ov075_02116028(&data_ov075_0211d71c, 1);
     func_ov075_02116030(&data_ov075_0211d71c, LoadFile(0x8409));
     LoadCompressedFileAt(0x8407, _ZN3G2S12GetBG3ScrPtrEv());
@@ -33,7 +33,7 @@ void func_ov075_02118f38(void *c) {
     else
         func_020338b0(0x225, 0xb0, 0x1d, -1);
 
-    data_0209d454 |= 5;
+    BOTTOM_SCREEN_RELATED |= 5;
 
     p = (char *)c + 0x70;
     q = (char *)c;

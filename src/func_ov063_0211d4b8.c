@@ -7,7 +7,7 @@ extern void _ZN18MovingMeshColliderD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ActorD1Ev(void*);
 extern void* data_ov063_0211ed34;
-extern void* data_ov002_0210ae38;
+extern void* _ZTV8Platform;
 void* func_ov063_0211d4b8(void* c) {
   *(void**)c = &data_ov063_0211ed34;
   _ZN12WithMeshClsnD1Ev((char*)c+0x50c);
@@ -16,7 +16,7 @@ void* func_ov063_0211d4b8(void* c) {
   _ZN11ShadowModelD1Ev((char*)c+0x3ac);
   _ZN11ShadowModelD1Ev((char*)c+0x384);
   _ZN9ModelAnimD1Ev((char*)c+0x320);
-  *(void**)c = &data_ov002_0210ae38;
+  *(void**)c = &_ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev((char*)c+0x124);
   _ZN5ModelD1Ev((char*)c+0xd4);
   _ZN5ActorD1Ev(c);

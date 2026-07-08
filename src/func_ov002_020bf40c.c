@@ -8,7 +8,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGro
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* r);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* r);
 extern struct Vec3 data_ov002_0210a590;
-extern void* data_0209f318;
+extern void* CAMERA;
 int func_ov002_020bf40c(char* c){
   struct Vec3 pos;
   struct Vec3 off;
@@ -18,7 +18,7 @@ int func_ov002_020bf40c(char* c){
     off.x = data_ov002_0210a590.x;
     off.y = data_ov002_0210a590.y;
     off.z = data_ov002_0210a590.z;
-    func_0200d858(data_0209f318, &off);
+    func_0200d858(CAMERA, &off);
     _ZN13RaycastGroundC1Ev(&rg);
     {
       int py = *(int*)(c+0x60);

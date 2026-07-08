@@ -9,7 +9,7 @@ extern void Matrix4x3_FromRotationY(void* m, int ang);
 extern void MulVec3Mat4x3(void* in, void* m, void* out);
 extern int func_ov065_0211691c(void* c, void* p);
 extern char* _ZN5Actor22ClosestNonVanishPlayerEv(void* self);
-extern char data_020a0e68[];
+extern char MATRIX_SCRATCH_PAPER[];
 extern char data_ov065_0211d670[];
 extern char data_ov065_0211d680[];
 int func_ov065_02116744(char* c) {
@@ -26,8 +26,8 @@ int func_ov065_02116744(char* c) {
             ApproachAngle(c+0x94, *(short*)(c+0x3e0), 0xa, 0x200, 0x100);
             ApproachAngle(c+0x92, 0, 1, 0x500, 0x500);
             sp4[2] = 0xa000;
-            Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c+0x8e));
-            MulVec3Mat4x3(sp4, data_020a0e68, c+0xa4);
+            Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c+0x8e));
+            MulVec3Mat4x3(sp4, MATRIX_SCRATCH_PAPER, c+0xa4);
             if (*(unsigned short*)(c+0x100) == 0) {
                 func_ov065_0211691c(c, data_ov065_0211d670);
             }

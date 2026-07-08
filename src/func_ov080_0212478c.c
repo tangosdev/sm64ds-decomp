@@ -4,7 +4,7 @@ typedef struct BMD_File BMD_File;
 typedef struct BCA_File BCA_File;
 typedef struct Actor Actor;
 extern SharedFilePtr* data_ov080_0212766c[];
-extern SharedFilePtr data_ov002_0210d9d8;
+extern SharedFilePtr ONE_UP_MUSHROOM_MODEL_PTR;
 extern SharedFilePtr data_ov080_021283c8;
 extern SharedFilePtr data_ov080_021283c0;
 extern int data_ov080_021283d8[];
@@ -16,7 +16,7 @@ extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor
 int func_ov080_0212478c(char* c) {
     int i;
     for (i = 0; i < 4; i++) _ZN9Animation8LoadFileER13SharedFilePtr(data_ov080_0212766c[i]);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
+    _ZN5Model8LoadFileER13SharedFilePtr(&ONE_UP_MUSHROOM_MODEL_PTR);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov080_021283c8);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov080_021283c0), 1, -1);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, (BCA_File*)data_ov080_021283d8[1], 0, 0x1000, 0);

@@ -9,7 +9,7 @@ extern void func_020072c0(void);
 extern void _ZN15TextureSequenceD1Ev(void);
 extern void _ZN15MaterialChangerD1Ev(void);
 extern void _ZN9ModelAnimD1Ev(void);
-extern void *data_020a0eac;
+extern void *_ZN6Memory11gameHeapPtrE;
 int func_ov034_021112b0(char *c){
   *(void**)c = data_ov034_021144bc;
   _ZN12WithMeshClsnD1Ev(c+0x708);
@@ -22,6 +22,6 @@ int func_ov034_021112b0(char *c){
   func_0207328c(c+0x304, 5, 0x14, (void*)_ZN15MaterialChangerD1Ev);
   func_0207328c(c+0x110, 5, 0x64, (void*)_ZN9ModelAnimD1Ev);
   func_ov002_020aed18((int*)c);
-  _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
+  _ZN6Memory10DeallocateEPvP4Heap(c, _ZN6Memory11gameHeapPtrE);
   return (int)c;
 }

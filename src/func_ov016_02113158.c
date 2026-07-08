@@ -4,7 +4,7 @@ typedef unsigned char u8;
 
 struct Vector3 { int x, y, z; };
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
@@ -50,15 +50,15 @@ int func_ov016_02113158(char *a)
         *(s16 *)(a + 0x8e) = src[1];
         *(s16 *)(a + 0x90) = src[2];
         *(s16 *)(a + 0x94) = *(s16 *)(a + 0x8e);
-        *(int *)(a + 0x98) = data_02082214[(*(u16 *)(a + 0x8c) >> 4) * 2] * 0x8c;
+        *(int *)(a + 0x98) = SINE_TABLE[(*(u16 *)(a + 0x8c) >> 4) * 2] * 0x8c;
         *(int *)(((int)a + 0x4ec) & 0xFFFFFFFFFFFFFFFF) += *(int *)(a + 0x98);
         spd = *(int *)(a + 0x4ec);
         if (spd >= 0x4ff000)
             *(int *)(a + 0x4ec) = 0x4ff000;
         else if (spd < -0x32000)
             *(int *)(a + 0x4ec) = -0x32000;
-        *(int *)(a + 0x5c) = *(int *)(a + 0x4e0) + (int)(((long long)*(int *)(a + 0x4ec) * data_02082214[(*(u16 *)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
-        *(int *)(a + 0x64) = *(int *)(a + 0x4e8) + (int)(((long long)*(int *)(a + 0x4ec) * data_02082214[(*(u16 *)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
+        *(int *)(a + 0x5c) = *(int *)(a + 0x4e0) + (int)(((long long)*(int *)(a + 0x4ec) * SINE_TABLE[(*(u16 *)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
+        *(int *)(a + 0x64) = *(int *)(a + 0x4e8) + (int)(((long long)*(int *)(a + 0x4ec) * SINE_TABLE[(*(u16 *)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         *(int *)(a + 0x98) = 0;
         _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
         func_020383fc(a + 0x324);

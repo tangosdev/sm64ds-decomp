@@ -2,7 +2,7 @@ typedef short s16;
 typedef unsigned char u8;
 
 extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
@@ -23,7 +23,7 @@ void func_ov006_020f5f0c(char *self, int idx)
 
     i = data_020a0e40;
     ok = 0;
-    if (data_020a0de8[i * 4] != 0) {
+    if (TOUCH_INPUT_ARR[i * 4] != 0) {
         if (data_020a0de9[i * 4] != 0) {
             ok = 1;
         }

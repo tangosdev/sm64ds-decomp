@@ -7,7 +7,7 @@ struct Actor {
 };
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void func_02012790(int x);
-extern "C" int data_0209e650;
+extern "C" int RNG_STATE;
 
 extern "C" int func_ov081_0212479c(char *self)
 {
@@ -21,7 +21,7 @@ extern "C" int func_ov081_0212479c(char *self)
         if (a != 0) {
             char *t = (char*)a;
             *(int*)(t + 0x9c) = -0x2000;
-            int rv = ((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 0xf;
+            int rv = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 8) & 0xf;
             *(short*)(t + 0x92) = 0;
             *(short*)(t + 0x94) = rv << 0xc;
             *(short*)(t + 0x96) = 0;

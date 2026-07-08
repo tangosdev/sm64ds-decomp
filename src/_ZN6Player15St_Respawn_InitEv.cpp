@@ -3,8 +3,8 @@ struct Player;
 extern "C" void func_ov002_020c9e40(Player*);
 extern "C" void func_02035860(void*, void*);
 extern "C" void func_0200cf40(char*);
-extern unsigned char data_0209f250;
-extern char* data_0209f318;
+extern unsigned char CURR_PLAYER_ID;
+extern char* CAMERA;
 
 struct Player {
     int dummy;
@@ -30,8 +30,8 @@ int _ZN6Player15St_Respawn_InitEv(Player* thiz) {
     *(short*)(self + 0x8e) = *(short*)(self + 0x94);
     *(unsigned char*)(self + 0x713) = 1;
     *(unsigned char*)(self + 0x716) = 0;
-    if (*(unsigned char*)(self + 0x6d8) == data_0209f250) {
-        func_0200cf40(*(char**)((int)&data_0209f318 & 0xFFFFFFFFFFFFFFFF));
+    if (*(unsigned char*)(self + 0x6d8) == CURR_PLAYER_ID) {
+        func_0200cf40(*(char**)((int)&CAMERA & 0xFFFFFFFFFFFFFFFF));
     }
     thiz->SetAnim(0x54, 0x40000000, 0x1000, 0);
     *(unsigned char*)(self + 0x6e3) = 0;

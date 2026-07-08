@@ -12,7 +12,7 @@ extern void* data_ov016_021149d4[];
 extern void* data_ov016_021136e4[];
 extern void* data_ov016_021136dc[];
 extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
-extern unsigned char data_0209f220;
+extern unsigned char STAR_ID;
 int func_ov016_0211283c(char* c) {
     void* sp8[2];
     unsigned int idx;
@@ -37,7 +37,7 @@ int func_ov016_0211283c(char* c) {
     _ZN16MeshColliderBase6EnableEP5Actor(c+0x124, c);
     *(int*)(c+0x324) = 0;
     *(unsigned short*)(c+0x328) = 0;
-    if (data_0209f220 > 1) {
+    if (STAR_ID > 1) {
         if (IsStarCollected(SublevelToLevel(8), 1) != 0) {
             if (*(unsigned char*)(c+0x31e) == 0) goto ret1;
             return 0;

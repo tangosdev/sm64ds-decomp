@@ -27,7 +27,7 @@ int Enemy::UpdateKillByInvincibleChar(WithMeshClsn&, ModelAnim&, unsigned);
 
 extern "C" {
 extern int RandomIntInternal(void* seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int func_ov064_02116d1c(void* thiz);
 }
 
@@ -42,7 +42,7 @@ extern "C" int func_ov064_02117310(char* self) {
         pos.x = *(int*)(self + 0x5c);
         pos.y = py + 0x136000;
         pos.z = pz;
-        int r = RandomIntInternal(&data_0209e650);
+        int r = RandomIntInternal(&RNG_STATE);
         Vector3_16 rot;
         rot.y = (s16)(*(s16*)(self + 0x94) + 0x8000 + (((unsigned)r >> 8) & 0x3ff));
         rot.x = 0;

@@ -4,21 +4,21 @@ extern "C" void LoadOverlay(int id);
 void LoadOrUnloadObjectOverlays(void (*load)(int), int level);
 
 extern unsigned char data_0209f278;
-extern int data_02092130;
-extern int data_020758c8[];
+extern int LOADED_LEVEL_OVL_ID;
+extern int LEVEL_OVL_MAP[];
 
 void LoadLevelOverlays(int level)
 {
     if (data_0209f278) {
-        if (data_02092130 != data_020758c8[level])
+        if (LOADED_LEVEL_OVL_ID != LEVEL_OVL_MAP[level])
             Crash();
         data_0209f278 = 0;
         return;
     }
-    int ov = data_020758c8[level];
+    int ov = LEVEL_OVL_MAP[level];
     if (ov != -1) {
         LoadOverlay(ov);
-        data_02092130 = ov;
+        LOADED_LEVEL_OVL_ID = ov;
     }
     LoadOrUnloadObjectOverlays(LoadOverlay, level);
 }

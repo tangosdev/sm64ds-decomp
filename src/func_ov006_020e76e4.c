@@ -6,7 +6,7 @@ extern void func_ov004_020b29c0(void*);
 extern void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern int data_ov006_0213c8c4;
 extern int data_ov006_0213e448;
-extern void* data_020a0eac;
+extern void* _ZN6Memory11gameHeapPtrE;
 void* func_ov006_020e76e4(char* p){
   *(int*)p = (int)&data_ov006_0213c8c4;
   _ZN18TextureTransformerD1Ev(p + 0x51f4);
@@ -16,6 +16,6 @@ void* func_ov006_020e76e4(char* p){
   *(int*)p = (int)&data_ov006_0213e448;
   _ZN8Particle10SysTrackerD1Ev(p + 0x471c);
   func_ov004_020b29c0(p);
-  _ZN6Memory10DeallocateEPvP4Heap(p, data_020a0eac);
+  _ZN6Memory10DeallocateEPvP4Heap(p, _ZN6Memory11gameHeapPtrE);
   return p;
 }

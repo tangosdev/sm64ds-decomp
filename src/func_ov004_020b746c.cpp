@@ -19,17 +19,17 @@ extern "C" void func_ov004_020b0aa0(int arg);
 extern "C" void func_ov004_020ae20c(void);
 extern "C" void func_ov004_020ae2c8(void);
 extern "C" void func_ov004_020b29a0(Base* c, void* arg);
-extern Obj* data_0209f5bc;
+extern Obj* SCENE_FADER;
 extern Base* data_ov004_020beb68;
 
 extern "C" void func_ov004_020b746c(char* c){
-  if (data_0209f5bc->m_18()) {
+  if (SCENE_FADER->m_18()) {
     Base* r5 = data_ov004_020beb68;
     if (r5 == 0)
       return;
     if (r5->m_4c(*(void**)(c + 0x18)) == 0)
       return;
-    data_0209f5bc->m_c(0x1e, 0);
+    SCENE_FADER->m_c(0x1e, 0);
     func_ov004_020b0aa0(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
@@ -41,7 +41,7 @@ extern "C" void func_ov004_020b746c(char* c){
   } else {
     if (*(int*)(c + 0x1c) != 0)
       return;
-    if (data_0209f5bc->m_1c() == 0)
-      data_0209f5bc->m_10(0x1e, 0);
+    if (SCENE_FADER->m_1c() == 0)
+      SCENE_FADER->m_10(0x1e, 0);
   }
 }

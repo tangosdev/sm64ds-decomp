@@ -15,7 +15,7 @@ extern "C" void func_ov002_020e28d4(void* c, int a, int b);
 extern "C" void func_ov002_020bedd4(char* self);
 extern "C" int __aeabi_idiv(int a, int b);
 
-extern State data_ov002_021105bc;
+extern State _ZN6Player7ST_DIVEE;
 
 int Player::St_WindCarry_Main()
 {
@@ -23,7 +23,7 @@ int Player::St_WindCarry_Main()
 
     if (*(u8*)(c + 0x6de) == 0) {
         func_ov002_020c2f64(c);
-        ChangeState(data_ov002_021105bc);
+        ChangeState(_ZN6Player7ST_DIVEE);
         SetAnim(0x43, 0x40000000, 0x1000, 0);
         *(int*)(c + 0xa8) = 0;
         return 1;

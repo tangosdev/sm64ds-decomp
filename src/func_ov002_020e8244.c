@@ -13,7 +13,7 @@ extern void SubVec3(struct V3* a, struct V3* b, struct V3* c);
 extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(struct V3* a, struct V3* b, struct V3* c);
 
-extern struct M48 data_020a0e68;
+extern struct M48 MATRIX_SCRATCH_PAPER;
 
 void func_ov002_020e8244(int* out, char* b)
 {
@@ -28,13 +28,13 @@ void func_ov002_020e8244(int* out, char* b)
         out[2] = *(int*)(b + 0x4b0);
         return;
     }
-    Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(b + 0x5c), *(int*)(b + 0x60), *(int*)(b + 0x64));
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(b + 0x94));
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, *(int*)(b + 0x5c), *(int*)(b + 0x60), *(int*)(b + 0x64));
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(b + 0x94));
     local = *(struct M48*)(*(char**)(b + 0x320));
-    MulMat4x3Mat4x3(&local, &data_020a0e68, &data_020a0e68);
-    *(int*)(b + 0x4a8) = data_020a0e68.w[9];
-    *(int*)(b + 0x4ac) = data_020a0e68.w[10];
-    *(int*)(b + 0x4b0) = data_020a0e68.w[11];
+    MulMat4x3Mat4x3(&local, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+    *(int*)(b + 0x4a8) = MATRIX_SCRATCH_PAPER.w[9];
+    *(int*)(b + 0x4ac) = MATRIX_SCRATCH_PAPER.w[10];
+    *(int*)(b + 0x4b0) = MATRIX_SCRATCH_PAPER.w[11];
     SubVec3((struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8), (struct V3*)(b + 0x4a8));
     Vec3_LslInPlace((void*)(b + 0x4a8), 3);
     AddVec3((struct V3*)(b + 0x4a8), (struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8));

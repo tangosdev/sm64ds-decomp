@@ -19,7 +19,7 @@ extern SharedFilePtr data_ov020_02114aa8;
 extern SharedFilePtr data_ov020_02114ab0;
 
 struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct M48 _ZN9Matrix3x38IDENTITYE;
 
 int func_ov020_021124e4(char* c)
 {
@@ -51,7 +51,7 @@ int func_ov020_021124e4(char* c)
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x174, (struct BMD_File*)data_ov020_02114ab8.w[1], 1, -1) == 0)
         return 0;
 
-    *(struct M48*)(c+0x1ec) = data_02082128;
+    *(struct M48*)(c+0x1ec) = _ZN9Matrix3x38IDENTITYE;
     *(char*)(c+0x450) = 0;
     *(short*)(c+0x8e) = *(short*)(c+0x8e) + 0x8000;
     *(int*)(c+0x44c) = 0x800;

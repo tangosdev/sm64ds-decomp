@@ -3,7 +3,7 @@ typedef signed short s16;
 typedef unsigned int u32;
 
 struct SomeGlobal { char pad[4]; void* p; };
-extern SomeGlobal* data_0209ee74;
+extern SomeGlobal* PARTICLE_SYS_TRACKER;
 
 extern void func_02049d60(void* x);
 
@@ -25,5 +25,5 @@ void Particle::SimpleCallback::SpawnParticles(System& sys)
 {
     *(u32*)(((int)&sys + 0x1c) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
     sys.field_3a = this->field_4;
-    func_02049d60(data_0209ee74->p);
+    func_02049d60(PARTICLE_SYS_TRACKER->p);
 }

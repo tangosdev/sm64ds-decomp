@@ -1,6 +1,6 @@
 extern void func_ov002_020ba4d8(char* c, int i);
 extern int func_02012310(int, int, int);
-extern int data_0209b454;
+extern int NEXT_ACTOR_UPDATE_FLAGS;
 
 void func_ov002_020ba1ac(char* self) {
     int diff;
@@ -12,7 +12,7 @@ void func_ov002_020ba1ac(char* self) {
         }
     }
     diff = *(unsigned short*)(self + 0x33a) - *(unsigned short*)(self + 0x338);
-    if (!(data_0209b454 & 0x4000000)) {
+    if (!(NEXT_ACTOR_UPDATE_FLAGS & 0x4000000)) {
         if (diff == 0x2d) {
             *(int*)(self + 0x330) = 0;
         } else if (diff < 0x2d) {

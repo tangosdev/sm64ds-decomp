@@ -9,7 +9,7 @@ struct Vector3 { int x, y, z; };
 
 struct Bits3ae { u8 lo : 2; u8 field : 3; u8 hi : 3; };
 
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 extern "C" {
 void func_ov002_020b1ad4(char* self);
@@ -31,12 +31,12 @@ extern "C" void func_ov002_020b1ad4(char* self) {
     if (((Bits3ae*)(self + 0x3ae))->field == 0) {
         player = _ZN5Actor13ClosestPlayerEv();
         if (player == 0) return;
-        r6 = (data_0209f2f8 == 0xb) ? 0x258000 : 0x4b0000;
+        r6 = (LEVEL_ID == 0xb) ? 0x258000 : 0x4b0000;
         if (Vec3_Dist((Vector3*)(self + 0x5c), (Vector3*)(player + 0x5c)) > r6) return;
         v = *(int*)(player + 0x98);
         if (v < 0x14000) v = 0x14000;
         else if (v > 0x28000) v = 0x28000;
-        if (data_0209f2f8 == 0xb) v <<= 1;
+        if (LEVEL_ID == 0xb) v <<= 1;
         *(int*)(self + 0x98) = v;
         *(int*)(self + 0xa8) = 0x14000;
         ((Bits3ae*)(self + 0x3ae))->field++;

@@ -10,7 +10,7 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* f, int a, 
 extern int RandomIntInternal(int* seed);
 
 extern int data_ov063_0211edcc[];
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov063_0211873c(char* self)
 {
@@ -64,7 +64,7 @@ void func_ov063_0211873c(char* self)
     func_02012694(0x159, self + 0x74);
     ModelAnim_SetAnim(self + 0x380, (void*)data_ov063_0211edcc[1], 0x40000000, 0x1000, 0);
     {
-        unsigned int rnd = (unsigned int)RandomIntInternal(&data_0209e650);
+        unsigned int rnd = (unsigned int)RandomIntInternal(&RNG_STATE);
         *(u8*)(self + 0x5d2) = (u8)((rnd >> 0x10) % 3);
     }
     *(int*)(self + 0x98) = 0;

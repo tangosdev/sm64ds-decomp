@@ -16,7 +16,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* 
 extern void func_02012694(int a, void* b);
 extern int func_ov078_02125c48(char* c, void* p);
 
-extern unsigned char data_0209f220;
+extern unsigned char STAR_ID;
 extern void* data_ov078_0212700c;
 extern void* data_ov078_0212701c;
 
@@ -64,7 +64,7 @@ int func_ov078_021259ec(char* c)
 
                 if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x430), c, 1)) {
                     _ZN7Message11PrepareTalkEv();
-                    b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(*(int*)((char*)player + 8) + 0x96);
+                    b = (STAR_ID != 1) ? 0x93 : (unsigned int)(short)(*(int*)((char*)player + 8) + 0x96);
                     if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(player, c, b, &v, 0, 0)) {
                         func_02012694(0x12a, c + 0x74);
                         *(unsigned char*)(c + 0x508) = 1;

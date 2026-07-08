@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern short data_0209d6d4;
+extern short CURR_MSG_ID;
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
@@ -19,15 +19,15 @@ void func_0201e220(int arg) {
     MultiStore16(ls, s, 0x800);
     if (arg == 0) {
         func_0201d6a0(0x160, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        CURR_MSG_ID = CURR_MSG_ID + 1;
         func_0201d6a0(0x200, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        CURR_MSG_ID = CURR_MSG_ID + 1;
         func_0201d6a0(0xc0, 0x20);
     } else {
         func_0201d6a0(0xc0, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        CURR_MSG_ID = CURR_MSG_ID + 1;
         func_0201d6a0(0x160, 0x20);
-        data_0209d6d4 = data_0209d6d4 + 1;
+        CURR_MSG_ID = CURR_MSG_ID + 1;
         func_0201d6a0(0x200, 0x20);
     }
 }

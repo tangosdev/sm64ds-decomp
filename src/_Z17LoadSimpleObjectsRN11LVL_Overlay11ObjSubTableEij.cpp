@@ -16,7 +16,7 @@ struct ObjSubTable {
   Entry* entries;       // 4
 };
 
-extern short data_ov002_0211118c;
+extern short NEXT_DEATH_TABLE_ID;
 extern unsigned short data_ov002_0210cbf4[];
 
 extern "C" {
@@ -44,8 +44,8 @@ void _Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij(ObjSubTable& tbl, int 
     if (masked == 0x1ff) {
       _Z23LoadMinimapChangeObjecti5Fix12IiEh(p2, yy, (signed char)(param & 0xf));
     } else {
-      short old = data_ov002_0211118c;
-      data_ov002_0211118c = (short)(old + 1);
+      short old = NEXT_DEATH_TABLE_ID;
+      NEXT_DEATH_TABLE_ID = (short)(old + 1);
       _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
         data_ov002_0210cbf4[masked], param, &v, 0, p2, old);
     }

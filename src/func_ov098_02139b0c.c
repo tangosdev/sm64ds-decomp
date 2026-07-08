@@ -6,7 +6,7 @@ struct Vector3 { int x, y, z; };
 
 enum Bool { FALSE, TRUE };
 
-extern u32 data_0209b454;
+extern u32 NEXT_ACTOR_UPDATE_FLAGS;
 extern void _ZN6Player9DropActorEv(void* self);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern int _ZN5Actor13DistToCPlayerEv(void* self);
@@ -28,7 +28,7 @@ int func_ov098_02139b0c(char* self)
     int x, y, z;
 
     b1 = (enum Bool)((*(u32*)(self + 0xb0) & 0x4000000) != 0);
-    if (b1 != FALSE && (data_0209b454 & 0x4000000) && *(void**)(self + 0x5e4)) {
+    if (b1 != FALSE && (NEXT_ACTOR_UPDATE_FLAGS & 0x4000000) && *(void**)(self + 0x5e4)) {
         _ZN6Player9DropActorEv(*(void**)(self + 0x5e4));
     }
 

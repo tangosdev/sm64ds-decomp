@@ -4,15 +4,15 @@
 struct Vec3 { int x, y, z; };
 extern int Vec3_Dist(const struct Vec3* a, const struct Vec3* b);
 extern void func_ov002_020dd8f4(char* p);
-extern unsigned char data_0209f2d8;
-extern unsigned char data_0209f21c;
-extern char* data_0209f394[];
+extern unsigned char CURRENT_GAMEMODE;
+extern unsigned char NUM_PLAYERS;
+extern char* PLAYER_ARR[];
 void func_ov002_020dd908(char* sb){
   int i;
   struct Vec3 v;
-  if((int)(data_0209f2d8 == 1) == 0) return;
-  for(i = 0; i < data_0209f21c; i++){
-    char* o = data_0209f394[i];
+  if((int)(CURRENT_GAMEMODE == 1) == 0) return;
+  for(i = 0; i < NUM_PLAYERS; i++){
+    char* o = PLAYER_ARR[i];
     int* p;
     if(o == 0) continue;
     if(*(int*)(o+0x37c) == 0) continue;

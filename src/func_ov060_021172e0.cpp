@@ -20,7 +20,7 @@ extern "C" {
         const struct Vector3_16* rot, s32 areaID, s32 deathTableID);
 }
 
-extern int data_0209e650;
+extern int RNG_STATE;
 
 extern "C" void func_ov060_021172e0(void* self)
 {
@@ -30,7 +30,7 @@ extern "C" void func_ov060_021172e0(void* self)
         0x9f, *(Fix12i*)(sl + 0x5c), *(Fix12i*)(sl + 0x60), *(Fix12i*)(sl + 0x64));
     _ZN9ActorBase18MarkForDestructionEv(sl);
 
-    if ((((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10) >= 2) {
+    if ((((u32)RandomIntInternal(&RNG_STATE) >> 0x10) % 10) >= 2) {
         return;
     }
 
@@ -49,7 +49,7 @@ extern "C" void func_ov060_021172e0(void* self)
                 }
             }
             do {
-                idx = ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 3;
+                idx = ((u32)RandomIntInternal(&RNG_STATE) >> 0x10) % 3;
             } while ((mask & (1 << idx)) == 0);
             {
                 void* r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(

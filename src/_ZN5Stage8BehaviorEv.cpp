@@ -19,39 +19,39 @@ extern "C" {
     int IsLevelInsideCastle(int level);
     int IsLevelTinyHugeIslandOutside(int level);
 
-    extern u32 data_0209b454;
-    extern u32 data_0209b464;
-    extern u16 data_0209f300;
-    extern u8 data_0209f2c4;
-    extern u8 data_0209f22c;
-    extern u8 data_0209f2d8;
-    extern u8 data_0209fc9c;
+    extern u32 NEXT_ACTOR_UPDATE_FLAGS;
+    extern u32 ACTOR_UPDATE_FLAGS;
+    extern u16 STAGE_TIMER;
+    extern u8 GAME_PAUSED;
+    extern u8 PAUSE_MENU_TIMER;
+    extern u8 CURRENT_GAMEMODE;
+    extern u8 CONNECTION_ERROR;
     extern u8 data_0209fcc8;
-    extern s32 data_0209fc68;
-    extern char* data_0209f394[];
-    extern u8 data_0209fc50;
-    extern u16 data_0209f304;
-    extern u8 data_0209f2bc;
-    extern s32 data_0208ee44;
-    extern u16 data_ov002_02111188;
-    extern u8 data_0209f204;
-    extern s8 data_02092110;
-    extern s32 data_0209d4b0;
-    extern u8 data_0209f294;
-    extern u8 data_0209f290;
-    extern u8 data_02092778;
-    extern s8 data_0209f2f8;
-    extern s8 data_02092118;
-    extern u8 data_0209f268;
-    extern u8 data_0209f20c;
+    extern s32 DP_STATE;
+    extern char* PLAYER_ARR[];
+    extern u8 NUM_PLAYERS_2;
+    extern u16 VS_MODE_COUNTDOWN_TIMER;
+    extern u8 VS_MODE_COUNTDOWN;
+    extern s32 GAME_SPEED_RELATED;
+    extern u16 VS_MODE_TIMER_TIMER;
+    extern u8 VS_TIME_UP;
+    extern s8 NEXT_LEVEL_ID;
+    extern s32 KS_FADER;
+    extern u8 GAME_FROZEN;
+    extern u8 VS_MODE_EXIT_STATE;
+    extern u8 DAT_02092778;
+    extern s8 LEVEL_ID;
+    extern s8 CHECKPOINT_LEVEL_ID;
+    extern u8 NEXT_ENTRANCE_ID;
+    extern u8 PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE;
     extern u8 data_020a0e40;
-    extern u16 data_020a0e58[];
+    extern u16 BUTTON_INPUT_ARR[];
     extern u16 data_020a0e5a[];
-    extern u8 data_0209d660;
-    extern s32 data_0209caa0[];
-    extern s32 data_0209fc48;
-    extern u8 data_0209f2a0;
-    extern u8 data_0209f218;
+    extern u8 PLAYER_TALKING;
+    extern s32 SAVE_DATA[];
+    extern s32 RUNNING_KUPPA_SCRIPT;
+    extern u8 PAUSED_DURING_TIMER;
+    extern u8 PAUSED_WITH_SELECT;
 }
 
 struct UnkVis {
@@ -62,7 +62,7 @@ struct UnkVis {
     virtual void v4();
     virtual int v5();
 };
-extern UnkVis* data_0209f5bc;
+extern UnkVis* SCENE_FADER;
 
 class Sound {
 public:
@@ -80,7 +80,7 @@ public:
     u8 unk0[8];
     u8 started;
 };
-extern Timer data_0209d4c8;
+extern Timer TIME_TIMER;
 class ShadowModel {
 public:
     static void CleanAll();
@@ -108,32 +108,32 @@ static inline u32 MaskOff(u32 x, u32 m) { return x & ~m; }
 
 int Stage::Behavior()
 {
-    data_0209b464 = data_0209b454;
+    ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
     CheckCameraInput();
     CheckInput();
-    if (data_0209f300 != 0)
-        data_0209f300 -= 1;
-    if (data_0209f2c4 == 2 && data_0209f22c == 0)
+    if (STAGE_TIMER != 0)
+        STAGE_TIMER -= 1;
+    if (GAME_PAUSED == 2 && PAUSE_MENU_TIMER == 0)
         PS_Cleanup();
     ProcessKuppaScript();
-    if (data_0209f5bc->v5() == 0) {
+    if (SCENE_FADER->v5() == 0) {
         ShadowModel::CleanAll();
         return 1;
     }
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (CURRENT_GAMEMODE == 1);
         if (b == 0) {
             UpdateMessage();
         } else {
-            u8 c9c = data_0209fc9c;
+            u8 c9c = CONNECTION_ERROR;
             if (c9c != 0) {
                 func_02032f54();
                 if (data_0209fcc8 >= 7u)
                     func_020199a4();
                 return 1;
             }
-            if (data_0209fc68 != 0) {
-                int b2 = (data_0209fc68 == 6);
+            if (DP_STATE != 0) {
+                int b2 = (DP_STATE == 6);
                 if (b2) {
                     if (c9c == 0) {
                         func_02019a58();
@@ -149,23 +149,23 @@ int Stage::Behavior()
                 int cnt = 0;
                 int i;
                 for (i = 0; i < 4; i++) {
-                    char* p = data_0209f394[i];
+                    char* p = PLAYER_ARR[i];
                     if (p != 0) {
                         int t = (*(u8*)(p + 0x711) != 0) ? 1 : 0;
                         if (t == 1)
                             cnt++;
                     }
                 }
-                if (cnt >= data_0209fc50) {
-                    if (data_0209f304 == 0x28 && data_0209f2bc == 3)
+                if (cnt >= NUM_PLAYERS_2) {
+                    if (VS_MODE_COUNTDOWN_TIMER == 0x28 && VS_MODE_COUNTDOWN == 3)
                         func_02012790(0x2b);
-                    if (data_0209f2c4 == 0) {
-                        if (data_0209f304 != 0 || data_0209f2bc != 0) {
-                            data_0209f304 = data_0209f304 - data_0208ee44;
-                            if (data_0209f304 == 0 && data_0209f2bc != 0) {
-                                data_0209f2bc -= 1;
-                                data_0209f304 = 0x28;
-                                if (data_0209f2bc != 0) {
+                    if (GAME_PAUSED == 0) {
+                        if (VS_MODE_COUNTDOWN_TIMER != 0 || VS_MODE_COUNTDOWN != 0) {
+                            VS_MODE_COUNTDOWN_TIMER = VS_MODE_COUNTDOWN_TIMER - GAME_SPEED_RELATED;
+                            if (VS_MODE_COUNTDOWN_TIMER == 0 && VS_MODE_COUNTDOWN != 0) {
+                                VS_MODE_COUNTDOWN -= 1;
+                                VS_MODE_COUNTDOWN_TIMER = 0x28;
+                                if (VS_MODE_COUNTDOWN != 0) {
                                     func_02012790(0x2b);
                                 } else {
                                     func_02012790(0x2a);
@@ -176,74 +176,74 @@ int Stage::Behavior()
                     }
                 }
             }
-            if (data_ov002_02111188 == 0 && data_0209f204 != 0) {
-                if (data_0209fc68 == 0) {
-                    if (data_02092110 < 0 && data_0209d4b0 == 0) {
-                        if (data_0209f294 == 0 && data_0209f290 == 0)
+            if (VS_MODE_TIMER_TIMER == 0 && VS_TIME_UP != 0) {
+                if (DP_STATE == 0) {
+                    if (NEXT_LEVEL_ID < 0 && KS_FADER == 0) {
+                        if (GAME_FROZEN == 0 && VS_MODE_EXIT_STATE == 0)
                             VE_Init();
                         else
                             VE_Update();
                     }
                 } else {
                     Scene::StartSceneFade(7, 0, 0);
-                    data_02092778 = 1;
-                    data_0209d4b0 = 0;
+                    DAT_02092778 = 1;
+                    KS_FADER = 0;
                 }
                 Sound::StopLoadedMusic_Layer1(0x3c);
             }
         }
     }
-    if (data_02092110 >= 0) {
-        int lvl = SublevelToLevel(data_02092110);
-        int lvl2 = SublevelToLevel(data_0209f2f8);
-        int bb = (data_0209f2d8 == 2);
-        if (bb == 0 && lvl <= 0xe && lvl != lvl2 && data_02092118 < 0
-            && (data_02092110 != 0xc || data_0209f268 != 4)) {
+    if (NEXT_LEVEL_ID >= 0) {
+        int lvl = SublevelToLevel(NEXT_LEVEL_ID);
+        int lvl2 = SublevelToLevel(LEVEL_ID);
+        int bb = (CURRENT_GAMEMODE == 2);
+        if (bb == 0 && lvl <= 0xe && lvl != lvl2 && CHECKPOINT_LEVEL_ID < 0
+            && (NEXT_LEVEL_ID != 0xc || NEXT_ENTRANCE_ID != 4)) {
             Scene::SetSceneToSpawn(4, 0);
         } else {
             Scene::SetSceneToSpawn(3, 0);
         }
-        if ((IsLevelInsideCastle(data_0209f2f8) == 0 || IsLevelInsideCastle(data_02092110) == 0)
-            && (IsLevelTinyHugeIslandOutside(data_0209f2f8) == 0 || IsLevelTinyHugeIslandOutside(data_02092110) == 0)) {
-            int bb2 = (data_0209f2d8 == 2);
+        if ((IsLevelInsideCastle(LEVEL_ID) == 0 || IsLevelInsideCastle(NEXT_LEVEL_ID) == 0)
+            && (IsLevelTinyHugeIslandOutside(LEVEL_ID) == 0 || IsLevelTinyHugeIslandOutside(NEXT_LEVEL_ID) == 0)) {
+            int bb2 = (CURRENT_GAMEMODE == 2);
             if (bb2 == 0)
                 Sound::StopLoadedMusic_Layer1(0x3c);
         }
-    } else if (data_0209f20c != 0) {
+    } else if (PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE != 0) {
         LC_Update();
-    } else if (data_0209f2c4 != 0) {
+    } else if (GAME_PAUSED != 0) {
         PS_Update();
     } else {
         u32 pi = data_020a0e40;
-        u16 h1 = *(u16*)((char*)data_020a0e58 + pi * 4);
+        u16 h1 = *(u16*)((char*)BUTTON_INPUT_ARR + pi * 4);
         if ((((h1 & 0x200) == 0 && (h1 & 0x100) == 0) || (*(u16*)((char*)data_020a0e5a + pi * 4) & 8) == 0)
-            && data_0209d660 == 0 && data_0209d4b0 == 0
+            && PLAYER_TALKING == 0 && KS_FADER == 0
             && CanPause() != 0 && IsPauseDisabled() == 0
-            && (u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0
-            && MaskOff(data_0209b454, 0) == 0) {
-            u8 st = data_0209f2d8;
+            && (u8)(GAME_FROZEN | (GAME_PAUSED | PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE)) == 0
+            && MaskOff(NEXT_ACTOR_UPDATE_FLAGS, 0) == 0) {
+            u8 st = CURRENT_GAMEMODE;
             int b1 = (st == 1);
-            if ((b1 && data_0209fc68 == 0) || (data_0209caa0[2] & 0x80)) {
+            if ((b1 && DP_STATE == 0) || (SAVE_DATA[2] & 0x80)) {
                 int b2 = (st == 2);
                 if (b2 == 0) {
-                    int b3 = (data_0209fc48 != 0);
+                    int b3 = (RUNNING_KUPPA_SCRIPT != 0);
                     if (b3 == 0) {
-                        if (data_0209f300 == 0) {
+                        if (STAGE_TIMER == 0) {
                             u32 pj = data_020a0e40;
                             u16 h2 = *(u16*)((char*)data_020a0e5a + pj * 4);
                             int t8 = h2 & 8;
-                            if ((t8 != 0 && (*(u16*)((char*)data_020a0e58 + pj * 4) & 4) == 0)
+                            if ((t8 != 0 && (*(u16*)((char*)BUTTON_INPUT_ARR + pj * 4) & 4) == 0)
                                 || (b1 == 0 && t8 == 0 && (h2 & 4) != 0)) {
-                                data_0209f2c4 = 1;
+                                GAME_PAUSED = 1;
                                 func_02012790(2);
-                                if (data_0209d4c8.started != 0) {
-                                    data_0209d4c8.StopTimer();
-                                    data_0209f2a0 = 1;
+                                if (TIME_TIMER.started != 0) {
+                                    TIME_TIMER.StopTimer();
+                                    PAUSED_DURING_TIMER = 1;
                                 }
-                                if (*(u16*)((char*)data_020a0e58 + data_020a0e40 * 4) & 4)
-                                    data_0209f218 = 1;
+                                if (*(u16*)((char*)BUTTON_INPUT_ARR + data_020a0e40 * 4) & 4)
+                                    PAUSED_WITH_SELECT = 1;
                                 else
-                                    data_0209f218 = 0;
+                                    PAUSED_WITH_SELECT = 0;
                                 PS_Init();
                                 PS_Update();
                             }
@@ -253,8 +253,8 @@ int Stage::Behavior()
             }
         }
     }
-    if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0) {
-        if ((data_0209b454 & ~0x20000000) == 0)
+    if ((u8)(GAME_FROZEN | (GAME_PAUSED | PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE)) == 0) {
+        if ((NEXT_ACTOR_UPDATE_FLAGS & ~0x20000000) == 0)
             ShadowModel::CleanAll();
     }
     return 1;

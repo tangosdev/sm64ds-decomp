@@ -18,7 +18,7 @@ extern "C" void func_ov006_020c057c(void*);
 
 struct V3 { int x, y, z; };
 struct V3s { short x, y, z; };
-extern V3 data_020a0ebc;
+extern V3 _ZN7Vector38IDENTITYE;
 extern V3s data_020a0edc;
 
 extern "C" void func_ov006_020c092c(char* thiz)
@@ -37,9 +37,9 @@ extern "C" void func_ov006_020c092c(char* thiz)
     *(int*)(c + 0xbc) = 0x1000;
     *(int*)(c + 0xc0) = 0x1000;
     *(int*)(c + 0xc4) = 0x1000;
-    *(int*)(c + 0xc8) = data_020a0ebc.x;
-    *(int*)(c + 0xcc) = data_020a0ebc.y;
-    *(int*)(c + 0xd0) = data_020a0ebc.z;
+    *(int*)(c + 0xc8) = _ZN7Vector38IDENTITYE.x;
+    *(int*)(c + 0xcc) = _ZN7Vector38IDENTITYE.y;
+    *(int*)(c + 0xd0) = _ZN7Vector38IDENTITYE.z;
     *(short*)(c + 0xe8) = data_020a0edc.x;
     *(short*)(c + 0xea) = data_020a0edc.y;
     *(short*)(c + 0xec) = data_020a0edc.z;

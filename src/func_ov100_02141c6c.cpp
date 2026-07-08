@@ -21,16 +21,16 @@ extern "C" {
     u32 __aeabi_uidiv(u32 a, u32 b);
 }
 
-extern SFP data_ov002_0210d9d8;
+extern SFP ONE_UP_MUSHROOM_MODEL_PTR;
 extern SFP data_ov100_02148600;
 extern SFP data_ov100_02148668;
 extern SFP data_ov100_02148608;
-extern int data_0209e650;
+extern int RNG_STATE;
 
 extern "C" int func_ov100_02141c6c(void* self)
 {
     u8* c = (u8*)self;
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
+    _ZN5Model8LoadFileER13SharedFilePtr(&ONE_UP_MUSHROOM_MODEL_PTR);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_02148600);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_02148668);
     void* bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_02148608);
@@ -53,7 +53,7 @@ extern "C" int func_ov100_02141c6c(void* self)
     if (sub != 0x10 && sub != 0x20) {
         *(u8*)(c+0x3f0) = 0;
         *(s32*)(c+0x98) = 0x7800;
-        *(s32*)(c+0x3e8) = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 100;
+        *(s32*)(c+0x3e8) = ((u32)RandomIntInternal(&RNG_STATE) >> 16) % 100;
         if ((u32)(u8)(*(u32*)(c+8) & 0xf) > 1)
             *(s32*)(c+0x3e4) = 0;
         else
@@ -66,7 +66,7 @@ extern "C" int func_ov100_02141c6c(void* self)
     *(s32*)(c+0x3d8) = *(s32*)(c+0x60);
     *(s32*)(c+0x3dc) = *(s32*)(c+0x64);
 
-    int r = RandomIntInternal(&data_0209e650);
+    int r = RandomIntInternal(&RNG_STATE);
     int fc = _ZNK9Animation13GetFrameCountEv((void*)(c+0x124));
     u32 rem = (u32)r % (u32)fc;
     *(s32*)(c+0x12c) = (rem << 16) >> 4;

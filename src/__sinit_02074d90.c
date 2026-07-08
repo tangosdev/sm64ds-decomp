@@ -1,5 +1,5 @@
-extern int data_0209b468[];
+extern int FIRST_ACTOR_LIST_NODE[];
 void __sinit_02074d90(void) {
-    data_0209b468[0] = 0;
-    data_0209b468[1] = 0;
+    FIRST_ACTOR_LIST_NODE[0] = 0;
+    FIRST_ACTOR_LIST_NODE[1] = 0;
 }

@@ -1,5 +1,5 @@
-extern int data_020a0c80[];
+extern int ACTIVE_MESH_COLLIDERS[];
 void _ZN5Stage18ResetMeshCollidersEv(void){
     int i;
-    for(i=0;i<0x18;i++) data_020a0c80[i]=0;
+    for(i=0;i<0x18;i++) ACTIVE_MESH_COLLIDERS[i]=0;
 }

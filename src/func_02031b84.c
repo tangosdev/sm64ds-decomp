@@ -8,7 +8,7 @@ extern unsigned char data_0209fccc;
 extern int data_0209285c[];
 extern int data_0209fd1c;
 extern int data_0209fd5c[];
-extern unsigned char data_0208f074[];
+extern unsigned char TALK_FONT_CHAR_WIDTHS[];
 extern unsigned char data_0209fcd8;
 extern unsigned char data_0209fc88;
 extern unsigned char data_0209fd20[];
@@ -52,7 +52,7 @@ void func_02031b84(char c)
     }
 
     {
-        unsigned char width = data_0208f074[c];
+        unsigned char width = TALK_FONT_CHAR_WIDTHS[c];
         data_0209fccc = (sh + width) & 7;
         data_0209fd20[data_0209fcd8] = width;
         data_0209fc88 = data_0209fc88 + width;

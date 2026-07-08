@@ -3,8 +3,8 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern "C" {
-extern unsigned char data_0209f250;
-extern signed char data_02092110;
+extern unsigned char CURR_PLAYER_ID;
+extern signed char NEXT_LEVEL_ID;
 extern int data_020873dc;
 extern int data_0208742c;
 extern int data_0209b0e8;
@@ -15,8 +15,8 @@ extern void _ZN6Camera11ChangeStateEPNS_5StateE(void *self, void *st);
 void _ZN6Camera14GoBehindPlayerEj(char *self, unsigned int j) {
     int slot4, slot8, slotc;
     int *p;
-    if (j != data_0209f250) return;
-    if (data_02092110 >= 0) return;
+    if (j != CURR_PLAYER_ID) return;
+    if (NEXT_LEVEL_ID >= 0) return;
     p = (int*)(self + 0x154);
     *p = *p & 0xfffffaf7;
     func_0200cb58(self, 0xa);

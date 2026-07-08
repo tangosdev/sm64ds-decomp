@@ -8,7 +8,7 @@ typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 
-extern s8 data_0209f2f8;
+extern s8 LEVEL_ID;
 extern int data_ov084_02130cc8[];
 extern int data_ov084_02130d74[];
 extern int data_ov084_02130228[];
@@ -156,7 +156,7 @@ int func_ov084_0212b6ec(char* c)
         int lvl = *(s32*)(c + 0x460);
         if (lvl == 0) {
             _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x1b4, 0);
-        } else if (data_0209f2f8 == 6 || data_0209f2f8 == 0x1b) {
+        } else if (LEVEL_ID == 6 || LEVEL_ID == 0x1b) {
             if (*(s32*)(c + 0x444) == data_ov084_02130228[lvl] && *(s32*)(c + 0x10c) != 7)
                 _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x1b4, 3);
             else

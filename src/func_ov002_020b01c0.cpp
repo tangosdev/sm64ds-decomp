@@ -7,13 +7,13 @@ typedef struct Actor Actor;
 
 struct ModelCache { int pad0; BMD_File* file; };
 
-extern ModelCache data_ov002_0210d9b8;
-extern SharedFilePtr data_ov002_0210d9d8;
-extern SharedFilePtr data_ov002_0210da30;
+extern ModelCache COIN_YELLOW_POLY32_MODEL_PTR;
+extern SharedFilePtr ONE_UP_MUSHROOM_MODEL_PTR;
+extern SharedFilePtr SUPER_MUSHROOM_MODEL_PTR;
 extern unsigned char data_ov002_020ff040[];
 extern unsigned char data_ov002_020ff050[];
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
@@ -34,19 +34,19 @@ extern "C" int func_ov002_020b01c0(char* c)
     isKind0 = (*(unsigned short*)(c + 0xc) == 0x114);
     if (isKind0) {
         if ((unsigned int)(*(int*)(c + 0x384) - 0xb) <= 1) {
-            if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, data_ov002_0210d9b8.file, 1, 1) == 0)
+            if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, COIN_YELLOW_POLY32_MODEL_PTR.file, 1, 1) == 0)
                 return 0;
         } else {
-            f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
+            f = _ZN5Model8LoadFileER13SharedFilePtr(&ONE_UP_MUSHROOM_MODEL_PTR);
             if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, f, 1, 1) == 0)
                 return 0;
         }
     } else {
         if ((unsigned int)(*(int*)(c + 0x384) - 0xb) <= 1) {
-            if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, data_ov002_0210d9b8.file, 1, 1) == 0)
+            if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, COIN_YELLOW_POLY32_MODEL_PTR.file, 1, 1) == 0)
                 return 0;
         } else {
-            f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
+            f = _ZN5Model8LoadFileER13SharedFilePtr(&SUPER_MUSHROOM_MODEL_PTR);
             if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, f, 1, 1) == 0)
                 return 0;
         }
@@ -92,8 +92,8 @@ extern "C" int func_ov002_020b01c0(char* c)
     _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x144);
     *(int*)(c + 0x394) = 0;
 
-    if (data_0209f2f8 == 7 && *(int*)(c + 0x60) == 0xdac000 && *(int*)(c + 0x64) == 0
-        && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0)) {
+    if (LEVEL_ID == 7 && *(int*)(c + 0x60) == 0xdac000 && *(int*)(c + 0x64) == 0
+        && (STAR_ID == 1 || IsStarCollectedInCurLevel(1) == 0)) {
         _ZN9ActorBase18MarkForDestructionEv(c);
         return 0;
     }

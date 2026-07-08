@@ -9,7 +9,7 @@ extern void func_ov063_0211a030(char *thiz, int a1, int a2);
 extern void func_ov063_0211a964(char *thiz, int arg1);
 extern void func_ov063_0211a960(char *thiz);
 
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 void func_ov063_02119e38(char *thiz, int a1, short a2, int a3) {
   int thresh;
@@ -36,7 +36,7 @@ void func_ov063_02119e38(char *thiz, int a1, short a2, int a3) {
         thresh = 0x5dc000;
     }
 
-    if (data_0209f2f8 == 3 &&
+    if (LEVEL_ID == 3 &&
         Vec3_HorzDist((Vector3*)(thiz + 0x51c), (Vector3*)(*(char**)(thiz + 0x484) + 0x5c)) > thresh) {
       angle = Vec3_HorzAngle((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x51c));
     } else {

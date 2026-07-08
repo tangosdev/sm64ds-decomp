@@ -4,7 +4,7 @@ extern int __aeabi_idiv(int a, int b);
 extern int func_ov080_02125d08(void *self, int frames);
 extern int func_ov080_02125cd4(void *c, int n);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 int func_ov080_02125bb0(void *self, int frames);
 }
 
@@ -35,6 +35,6 @@ int func_ov080_02125bb0(void *self, int frames)
         t = r4 + (int)(((long long)(-d) * frames + 0x800) >> 12);
         if (t < 0) t = 0;
     }
-    tv = data_02082214[((unsigned short)r5 >> 4) << 1];
+    tv = SINE_TABLE[((unsigned short)r5 >> 4) << 1];
     return (int)(((long long)tv * t + 0x800) >> 12);
 }

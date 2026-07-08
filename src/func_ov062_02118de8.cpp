@@ -5,7 +5,7 @@ extern "C" int _ZNK9Animation13GetFrameCountEv(void *a);
 extern "C" int _ZNK9Animation12WillHitFrameEi(void *a, int f);
 extern "C" int func_ov062_02118058(char *c);
 extern "C" int RandomIntInternal(int *seed);
-extern "C" int data_0209e650;
+extern "C" int RNG_STATE;
 
 extern "C" void func_ov062_02118de8(char *c)
 {
@@ -27,11 +27,11 @@ extern "C" void func_ov062_02118de8(char *c)
         *(int*)(c + 0x38c) = 5;
     else
         *(int*)(c + 0x38c) = 2;
-    if (((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x8000) {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+    if (((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) & 0x8000) {
+        int r = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) & 0x1fff;
         *(short*)(c + 0x3c2) = *(short*)(c + 0x94) - r;
     } else {
-        int r = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+        int r = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) & 0x1fff;
         *(short*)(c + 0x3c2) = *(short*)(c + 0x94) + r;
     }
     func_ov062_02118058(c);

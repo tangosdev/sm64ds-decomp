@@ -14,7 +14,7 @@ extern void func_ov100_02145e10(char* a, char* b);
 struct Vec3 { int x, y, z; };
 
 extern signed char data_ov100_02148390[];
-extern char data_0209caa0[];
+extern char SAVE_DATA[];
 extern char data_ov100_02148984[];
 extern char data_ov100_02148994[];
 
@@ -27,9 +27,9 @@ int func_ov100_02145c58(char* a, char* b) {
         entry = data_ov100_02148390 + *(int*)(a + 8) * 6;
         s5 = (entry[0] == 0x50);
         lt = ((int)NumStars() < entry[0]);
-        r6 = (*(unsigned char*)(data_0209caa0 + 0x41) == 0);
+        r6 = (*(unsigned char*)(SAVE_DATA + 0x41) == 0);
 
-        if (*(int*)(data_0209caa0 + 4) & (0x8000 << entry[1]))
+        if (*(int*)(SAVE_DATA + 4) & (0x8000 << entry[1]))
             goto e10;
         if (s5) {
             if (*(int*)(a + 0x88) <= 0) goto e10;

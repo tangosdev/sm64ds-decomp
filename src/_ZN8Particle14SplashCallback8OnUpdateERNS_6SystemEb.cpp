@@ -18,7 +18,7 @@ struct Node {
     u16 f2e;          /* 0x2e */
 };
 
-extern "C" int data_0209f32c;
+extern "C" int WATER_HEIGHT;
 extern "C" unsigned int _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(Fix12i x, Fix12i y, Fix12i z);
 extern "C" int _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb(char *self, char *sys, int b);
 
@@ -29,11 +29,11 @@ extern "C" int _ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb(char *self, c
         int xx = node->f14 + node->f8;
         int test = node->f18 + node->fc;
         int zz = node->f1c + node->f10;
-        if (node->f24 < 0 && (test << 3) < data_0209f32c) {
+        if (node->f24 < 0 && (test << 3) < WATER_HEIGHT) {
             node->f2e = node->f2c;
             _ZN8Particle6System9NewRippleE5Fix12IiES2_S2_(
                 xx << 3,
-                data_0209f32c + 0x3000,
+                WATER_HEIGHT + 0x3000,
                 zz << 3);
         }
         node = node->next;

@@ -10,11 +10,11 @@ extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, A
 extern "C" void func_ov002_020b2c44(void *self);
 extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, Actor *a, int b, int c, void *d, int e);
 
-extern SharedFilePtr data_ov002_0210da58;
-extern unsigned char data_0209f2d8;
+extern SharedFilePtr FEATHER_MODEL_PTR;
+extern unsigned char CURRENT_GAMEMODE;
 
 struct Sub { char pad[0x7c]; short f7c; };
-extern char *data_0209f318;
+extern char *CAMERA;
 
 
 extern "C" int func_ov002_020b311c(char *self)
@@ -22,7 +22,7 @@ extern "C" int func_ov002_020b311c(char *self)
     BMD_File *bmd;
     int b;
 
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da58);
+    bmd = _ZN5Model8LoadFileER13SharedFilePtr(FEATHER_MODEL_PTR);
     if (!_ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, 1))
         return 0;
     if (!_ZN11ShadowModel12InitCylinderEv(self + 0x314))
@@ -36,9 +36,9 @@ extern "C" int func_ov002_020b311c(char *self)
 
     *(short *)(self + 0x8c) = 0x4000;
     *(short *)(self + 0x90) = -0x4000;
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (!b) {
-        *(short *)(self + 0x8e) = ((Sub *)(data_0209f318 + 0x100))->f7c + 0x4000;
+        *(short *)(self + 0x8e) = ((Sub *)(CAMERA + 0x100))->f7c + 0x4000;
     }
     *(unsigned char *)(self + 0x384) = 0xb4;
     *(int *)(self + 0xa8) = 0x3000;

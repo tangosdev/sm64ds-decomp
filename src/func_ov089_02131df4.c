@@ -5,16 +5,16 @@ extern int _ZN6Player17SetNoControlStateEhih(void* p, unsigned char a, int b, un
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
 extern void func_ov089_0213115c(char* c, int i);
 extern void _ZN5Event6SetBitEj(unsigned int a);
-extern int data_0209caa0[];
-extern unsigned char data_0209f2ac;
+extern int SAVE_DATA[];
+extern unsigned char NEW_STAR_COLLECTED;
 
 void func_ov089_02131df4(char* c, char* player)
 {
-    if (data_0209caa0[1] & (2 << *(int*)(c + 0x444)))
-        data_0209f2ac = 0;
+    if (SAVE_DATA[1] & (2 << *(int*)(c + 0x444)))
+        NEW_STAR_COLLECTED = 0;
     else
-        data_0209f2ac = 1;
-    data_0209caa0[1] |= (2 << *(int*)(c + 0x444));
+        NEW_STAR_COLLECTED = 1;
+    SAVE_DATA[1] |= (2 << *(int*)(c + 0x444));
 
     if (*(int*)(c + 0x444) <= 1) {
         _ZN6Player17SetNoControlStateEhih(player, 3, -1, 0);

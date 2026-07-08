@@ -6,7 +6,7 @@ extern void func_ov002_020e9448(char* c);
 extern void func_ov002_020e81e0(char* c);
 extern void func_ov002_020e7e24(char* c);
 extern void func_ov002_020e7d08(char* c);
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 void func_ov002_020ea824(char* c)
 {
@@ -21,7 +21,7 @@ void func_ov002_020ea824(char* c)
         *yp += 0xc8000;
         *(int*)(c + 0x98) = 0;
         *(int*)(c + 0xa8) = 0x18000;
-        if (data_0209f2f8 == 0xb) {
+        if (LEVEL_ID == 0xb) {
             if (*(unsigned char*)(c + 0x49d) == 3) {
                 *(int*)(c + 0xa8) = 0x10000;
                 goto skip;

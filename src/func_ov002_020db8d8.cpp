@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 struct Vec3 { int x, y, z; };
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 extern int _ZNK6Player14GetBodyModelIDEjb(void *c, unsigned int a, bool b);
 extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
 extern void Vec3_MulScalar(void *out, void *vec, int s);
@@ -31,7 +31,7 @@ void func_ov002_020db8d8(char *self)
     dir.x = 0;
     dir.z = 0;
     dir.y = -0x32000;
-    cond = (data_0209f2d8 == 1);
+    cond = (CURRENT_GAMEMODE == 1);
     if (cond != 0) {
         func_ov002_020dc174(self, &dir, 0x46000, 0x96000, 0x8000, 0);
     } else {

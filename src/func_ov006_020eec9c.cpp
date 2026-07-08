@@ -10,7 +10,7 @@ extern void func_ov006_020c893c();
 extern void func_ov006_020eed64();
 extern void *data_ov006_0213ccfc[];
 extern void *data_ov006_0213c62c[];
-extern void *data_020a0eac;
+extern void *_ZN6Memory11gameHeapPtrE;
 void *func_ov006_020eec9c(char *c);
 void *func_ov006_020eec9c(char *c) {
     *(void ***)c = data_ov006_0213ccfc;
@@ -21,7 +21,7 @@ void *func_ov006_020eec9c(char *c) {
     *(void ***)c = data_ov006_0213c62c;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
     func_ov004_020b29c0(c);
-    _ZN6Memory10DeallocateEPvP4Heap(c, *(void **)&data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(c, *(void **)&_ZN6Memory11gameHeapPtrE);
     return c;
 }
 }

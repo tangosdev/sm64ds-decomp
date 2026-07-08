@@ -13,8 +13,8 @@ unsigned char NumStars(void);
 extern struct SharedFilePtr data_ov009_02113e90;
 extern struct SharedFilePtr data_ov009_02113e88;
 extern struct CLPS_Block data_ov009_02112bf8;
-extern unsigned char data_0209f2d8;
-extern int data_0209caa0;
+extern unsigned char CURRENT_GAMEMODE;
+extern int SAVE_DATA;
 
 int func_ov009_02111f40(unsigned char *self)
 {
@@ -29,12 +29,12 @@ int func_ov009_02111f40(unsigned char *self)
             *(s16 *)(self + 0x8e), data_ov009_02112bf8);
     }
     if ((*(int*)(self + 8) & 0xff) == 0xff) {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(CURRENT_GAMEMODE == 1);
         if (b != 0) goto ret1;
-        if ((*(int*)((char*)&data_0209caa0 + 8) & 0x80000) == 0) goto ret1;
+        if ((*(int*)((char*)&SAVE_DATA + 8) & 0x80000) == 0) goto ret1;
         return 0;
     } else {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(CURRENT_GAMEMODE == 1);
         if (b != 0) goto ret1;
         if (NumStars() >= 0x96) return 0;
     }

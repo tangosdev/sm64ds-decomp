@@ -5,7 +5,7 @@ typedef short s16;
 typedef int s32;
 typedef unsigned int u32;
 typedef long long s64;
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 struct Ent
 {
   int out0;
@@ -21,10 +21,10 @@ void func_ov002_020f3ae8(char *base, int idx)
   struct Ent *arr = (struct Ent *) base;
   int a;
   int b;
-  a = data_02082214[((arr[idx].angle >> 4) * 2) + 1];
+  a = SINE_TABLE[((arr[idx].angle >> 4) * 2) + 1];
   b = arr[idx].vx;
   arr[idx].out0 = ((int) (((((s64) a) * b) + 0x800) >> 0xc)) + 0xe0000;
-  a = data_02082214[(arr[idx].angle >> 4) * 2];
+  a = SINE_TABLE[(arr[idx].angle >> 4) * 2];
   b = arr[idx].vx;
   arr[idx].out4 = ((int) (((((s64) a) * b) + 0x800) >> 0xc)) + 0x66000;
   if (arr[idx].vx > 0x18000)

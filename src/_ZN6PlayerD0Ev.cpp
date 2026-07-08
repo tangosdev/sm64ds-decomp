@@ -9,10 +9,10 @@ extern int _ZN5ActorD1Ev(void*);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern void _ZN15TextureSequenceD1Ev(void);
 extern void _ZN15MaterialChangerD1Ev(void);
-extern void* data_ov002_0210a83c[];
-extern void* data_020a0eac;
+extern void* _ZTV6Player[];
+extern void* _ZN6Memory11gameHeapPtrE;
 void* _ZN6PlayerD0Ev(void* c) {
-  *(void***)c = data_ov002_0210a83c;
+  *(void***)c = _ZTV6Player;
   _ZN12WithMeshClsnD1Ev((char*)c+0x380);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)c+0x314);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)c+0x2d4);
@@ -23,7 +23,7 @@ void* _ZN6PlayerD0Ev(void* c) {
   _ZN9ModelAnimD1Ev((char*)c+0x174);
   _ZN9ModelAnimD1Ev((char*)c+0xf0);
   _ZN5ActorD1Ev(c);
-  _ZN6Memory10DeallocateEPvP4Heap(c, *(void**)&data_020a0eac);
+  _ZN6Memory10DeallocateEPvP4Heap(c, *(void**)&_ZN6Memory11gameHeapPtrE);
   return c;
 }
 }

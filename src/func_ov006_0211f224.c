@@ -2,7 +2,7 @@ extern void func_ov006_0211f454(char *c, int i);
 extern void func_ov006_0211f34c(char *c, int i);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
     unsigned short a, unsigned short b, int c, unsigned short d);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov006_0211f224(char *c, int i)
 {
@@ -10,7 +10,7 @@ void func_ov006_0211f224(char *c, int i)
     func_ov006_0211f454(c, i);
     func_ov006_0211f34c(c, i);
     k = i * 0x24;
-    if (data_02082214[2 * (*(unsigned short *)(c + 0x466c + k) >> 4) + 1] >= 0)
+    if (SINE_TABLE[2 * (*(unsigned short *)(c + 0x466c + k) >> 4) + 1] >= 0)
         *(unsigned char *)(c + 0x467e + k) = 1;
     else
         *(unsigned char *)(c + 0x467e + k) = 0;

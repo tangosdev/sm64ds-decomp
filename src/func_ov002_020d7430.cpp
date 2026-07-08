@@ -14,8 +14,8 @@ extern int _ZN6Player7IsStateERNS_5StateE(char* c, void* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern void func_ov002_020d718c(char* c);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
-extern char data_ov002_02110034;
-extern char data_ov002_0211013c;
+extern char _ZN6Player14ST_YOSHI_POWERE;
+extern char _ZN6Player7ST_WALKE;
 void func_ov002_020d7430(char* c){
   Obj* o = *(Obj**)(c+0x360);
   if(o->v18() == 2){
@@ -29,8 +29,8 @@ void func_ov002_020d7430(char* c){
   func_ov002_020c9e18(c);
   o = *(Obj**)(c+0x360);
   o->v19(c);
-  if(_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110034)){
-    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+  if(_ZN6Player7IsStateERNS_5StateE(c, &_ZN6Player14ST_YOSHI_POWERE)){
+    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
   }
   func_ov002_020d718c(c);
   _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0xfd, c+0x74);

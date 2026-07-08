@@ -1,5 +1,5 @@
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int data_ov006_0213af28[];
 
 struct W2 { int a, b; };
@@ -8,7 +8,7 @@ void func_ov006_020c5370(char *c)
 {
     unsigned int r;
     *(short *)(c + 0xe6) = 0;
-    r = (unsigned int)RandomIntInternal(&data_0209e650);
+    r = (unsigned int)RandomIntInternal(&RNG_STATE);
     r &= 0x7fffffff;
     *(short *)(c + 0xec) = (short)(((int)((r >> 0x13) * 0x2d) >> 0xc) + 0xf);
     *(int *)(c + 0xb4) = *(int *)(c + 0x9c);

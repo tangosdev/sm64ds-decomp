@@ -1,9 +1,9 @@
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 int func_ov022_02112710(char *c)
 {
-    unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+    unsigned int r = (unsigned int)RandomIntInternal(&RNG_STATE) >> 8;
     int *p98;
     int *pa8;
     *(short *)(c + 0x110) = 0x3c;

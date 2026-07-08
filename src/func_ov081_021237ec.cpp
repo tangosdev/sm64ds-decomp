@@ -15,7 +15,7 @@ void AddVec3(Vector3* a, Vector3* b, Vector3* c);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 void func_0201267c(int a, void* b);
 void _ZN5Actor24KillAndTrackInDeathTableEv(void* c);
-extern struct Mtx43 data_020a0e68;
+extern struct Mtx43 MATRIX_SCRATCH_PAPER;
 }
 
 extern "C" void func_ov081_021237ec(char* c)
@@ -36,12 +36,12 @@ extern "C" void func_ov081_021237ec(char* c)
     b.z = *(int*)(c + 0x64);
     _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &b, 3, 0xa000, 0);
 
-    Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
-    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(c + 0x124) + 0x30), &data_020a0e68, &data_020a0e68);
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
+    MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(c + 0x124) + 0x30), &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
 
-    t.x = data_020a0e68.m[9];
-    t.y = data_020a0e68.m[10];
-    t.z = data_020a0e68.m[11];
+    t.x = MATRIX_SCRATCH_PAPER.m[9];
+    t.y = MATRIX_SCRATCH_PAPER.m[10];
+    t.z = MATRIX_SCRATCH_PAPER.m[11];
     SubVec3(&t, (Vector3*)(c + 0x5c), &t);
     Vec3_LslInPlace(&t, 3);
     AddVec3(&t, (Vector3*)(c + 0x5c), &t);

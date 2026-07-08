@@ -1,5 +1,5 @@
 //cpp
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 
 struct Cls {
     virtual void method0();
@@ -11,7 +11,7 @@ struct Cls {
 };
 
 extern "C" int func_ov077_02126e38(char* c) {
-    if (*(int*)(c+0x60) < data_0209f32c) return 1;
+    if (*(int*)(c+0x60) < WATER_HEIGHT) return 1;
     Cls *obj = (Cls*)(c + 0x340);
     obj->method5(0);
     return 1;

@@ -7,7 +7,7 @@ extern "C" void func_ov004_020b0aa0(int arg);
 extern "C" void func_ov004_020ae20c(void);
 extern "C" void func_ov004_020b0a54(void* c);
 extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 
 extern "C" void func_ov006_020de0e0(char* self)
@@ -16,7 +16,7 @@ extern "C" void func_ov006_020de0e0(char* self)
   *(int*)(self+0x51cc) -= 1;
   unsigned int idx = data_020a0e40[0];
   int flag = 0;
-  if (data_020a0de8[idx*4] != 0) {
+  if (TOUCH_INPUT_ARR[idx*4] != 0) {
     if (data_020a0de9[idx*4] != 0) flag = 1;
   }
   if (flag != 0) {

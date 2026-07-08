@@ -4,13 +4,13 @@ extern int SublevelToLevel(int i);
 extern int _ZN8SaveData13GetCoinRecordEj(unsigned int);
 extern void func_ov003_020ae1a4(void* sl, int r);
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, void* attr, int x, int y, int a, int c, void* m);
-extern signed char data_02092110[];
+extern signed char NEXT_LEVEL_ID[];
 extern void* func_020aba70[];
 extern void* func_020ab9c8[];
 extern void* func_020abad8[];
 void func_ov003_020adfc8(char* sl) {
     int sb = 0xb8;
-    int lvl = SublevelToLevel(data_02092110[0]);
+    int lvl = SublevelToLevel(NEXT_LEVEL_ID[0]);
     int coin = _ZN8SaveData13GetCoinRecordEj(lvl);
     func_ov003_020ae1a4(sl, coin);
     int i;

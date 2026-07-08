@@ -13,7 +13,7 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 struct BCA_File;
 
-extern u16 data_0209e650;
+extern u16 RNG_STATE;
 extern void* data_ov073_021232a0[];
 extern char data_ov073_02123360;
 extern char data_ov073_021233a0;
@@ -102,7 +102,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
 
         *(u16*)(c + 0x4cc) = 0x10;
         func_02012694(0x16b, c + 0x74);
-        rnd = RandomIntInternal(&data_0209e650);
+        rnd = RandomIntInternal(&RNG_STATE);
         if (((rnd >> 8) & 7) == 0) {
             v.x = *(s32*)(c + 0x5c);
             v.y = *(s32*)(c + 0x60);
@@ -116,7 +116,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
                 do {
                     void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x120, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                     if (actor != 0) {
-                        rnd = RandomIntInternal(&data_0209e650);
+                        rnd = RandomIntInternal(&RNG_STATE);
                         shortY = ((s32)(((((u32)rnd >> 8) & 0xf) << 0x1c))) >> 0x10;
                         *(s16*)((char*)actor + 0x92) = 0;
                         *(s16*)((char*)actor + 0x94) = (s16)shortY;

@@ -15,7 +15,7 @@ struct Vtbl { void (*fns[64])(); };
 struct Obj { Vtbl *vt; };
 
 extern "C" u8 data_020a0e40[];
-extern "C" u8 data_020a0de8[];
+extern "C" u8 TOUCH_INPUT_ARR[];
 extern "C" u8 data_020a0de9[];
 extern "C" int data_02086b58[];
 extern "C" Obj *data_ov004_020beb68;
@@ -33,7 +33,7 @@ extern "C" void func_ov004_020b6ddc(int *c) {
     if (c[0x1c / 4] == 0) {
         i = data_020a0e40[0];
         flag = 0;
-        if (data_020a0de8[i * 4] != 0 && data_020a0de9[i * 4] != 0)
+        if (TOUCH_INPUT_ARR[i * 4] != 0 && data_020a0de9[i * 4] != 0)
             flag = 1;
         if (flag != 0) {
             func_ov004_020b0aa0(7);

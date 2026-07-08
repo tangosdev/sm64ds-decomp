@@ -22,7 +22,7 @@ extern int data_ov075_0211c9a4[];
 extern const unsigned char data_ov075_0211d888[];
 extern const unsigned char data_ov075_0211d768[];
 extern const unsigned char data_ov075_0211d780[];
-extern void *data_0209f5c0;
+extern void *ROOT_ACTOR_BASE;
 
 int func_ov075_02116ad4(void *arg) {
     void *tmp;
@@ -62,6 +62,6 @@ int func_ov075_02116ad4(void *arg) {
         mode = 2;
     }
 
-    *(void **)((char *)arg + 0x50) = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x15a, data_0209f5c0, mode, 0);
+    *(void **)((char *)arg + 0x50) = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x15a, ROOT_ACTOR_BASE, mode, 0);
     return 1;
 }

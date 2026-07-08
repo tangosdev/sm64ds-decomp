@@ -8,8 +8,8 @@ extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 *cur, const Vector3 *tgt, int step);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern int func_ov018_02111bf0(void *self, void *arg);
-extern unsigned char data_0209f220;
-extern struct Matrix4x3 data_020a0e68;
+extern unsigned char STAR_ID;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern void *data_ov016_02114dac;
 
 int func_ov016_02111758(char *c) {
@@ -19,14 +19,14 @@ int func_ov016_02111758(char *c) {
     out.x = 0; out.y = 0; out.z = 0;
     unsigned int t = (unsigned int)(*(int*)(c + 0x3a8)) << 4 >> 0x10;
     if (t >= 0x15 && t <= 0x3c) {
-        if (data_0209f220 == 1) {
+        if (STAR_ID == 1) {
             in.z = 0x2bc000;
         } else {
             in.z = 0x1f4000;
         }
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(c + 0x8e));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short*)(c + 0x8c));
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8c));
+        MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
         out.x += *(int*)(c + 0x3f0);
         out.y += *(int*)(c + 0x3f4);
         out.z += *(int*)(c + 0x3f8);

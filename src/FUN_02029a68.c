@@ -1,11 +1,11 @@
-extern int data_0209f324;
-extern int data_0209d4b0;
-extern unsigned char data_0209f274;
+extern int WIPES;
+extern int KS_FADER;
+extern unsigned char CAMERA_SAVED_LOOK_AT_RELATED;
 
 void FUN_02029a68(void){
-  if (data_0209d4b0 == data_0209f324 + 0x240) {
-    data_0209d4b0 = 0;
+  if (KS_FADER == WIPES + 0x240) {
+    KS_FADER = 0;
     *(volatile unsigned short*)0x4000050 = 0;
   }
-  data_0209f274 = 0;
+  CAMERA_SAVED_LOOK_AT_RELATED = 0;
 }

@@ -24,7 +24,7 @@ void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
 void func_ov090_02132b14(void* c);
 void _ZN12CylinderClsn5ClearEv(void* c);
 void _ZN12CylinderClsn6UpdateEv(void* c);
-extern char data_020a0e68[];
+extern char MATRIX_SCRATCH_PAPER[];
 }
 
 void ApproachLinear(short& v, short target, short step);
@@ -61,9 +61,9 @@ extern "C" int func_ov090_02132c94(char* c)
         *(short*)(c + 0x90) = *(short*)(c + 0x96);
         v.y = v.x = v.z = 0;
         v.z = 0xa000;
-        Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short*)(c + 0x92));
-        MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)(c + 0xa4));
+        Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c + 0x94));
+        Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, *(short*)(c + 0x92));
+        MulVec3Mat4x3(&v, MATRIX_SCRATCH_PAPER, (Vector3*)(c + 0xa4));
     }
     {
         int s = *(int*)(c + 0xa8) + *(int*)(c + 0x9c);

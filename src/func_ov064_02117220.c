@@ -7,7 +7,7 @@ int func_ov064_0211616c(void*);
 int RandomIntInternal(int* seed);
 void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned, unsigned, void*, void*, int, int);
 void* _ZN5Actor10FindWithIDEj(unsigned);
-extern int data_0209e650[];
+extern int RNG_STATE[];
 struct V3 { int x, y, z; };
 void func_ov064_02117220(char* c){
   if(func_ov064_0211616c(c) == 0) return;
@@ -15,7 +15,7 @@ void func_ov064_02117220(char* c){
   vec.x = *(int*)(c+0x5c);
   vec.y = *(int*)(c+0x60) + 0x136000;
   vec.z = *(int*)(c+0x64);
-  unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
+  unsigned int r = (unsigned int)RandomIntInternal(RNG_STATE);
   short v16[3];
   v16[0] = 0;
   v16[2] = 0;

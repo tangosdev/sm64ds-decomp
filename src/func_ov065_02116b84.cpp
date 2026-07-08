@@ -22,7 +22,7 @@ extern void func_ov065_02115ff0(char *c);
 extern char *_ZN5Actor13ClosestPlayerEv(Enemy *thiz);
 extern void _ZN9Animation7AdvanceEv(void *thiz);
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern char data_ov065_0211d650[];
 extern char data_ov065_0211d660[];
 extern int data_ov065_0211d670[];
@@ -88,7 +88,7 @@ extern "C" int func_ov065_02116b84(Enemy *thiz)
         *p3d8 += 0x200;
         ang = *(int *)(c + 0x3d8);
         idx = ((unsigned short)(short)ang >> 4) * 2;
-        tbl = data_02082214[idx];
+        tbl = SINE_TABLE[idx];
         result = (int)(((long long)tbl * 0x46000 + 0x800) >> 12);
         _Z14ApproachLinearRiii((int *)(void *)(c + 0x60), *(int *)(c + 0x3d0) + (result + 0xb4000), 0x3000);
     }

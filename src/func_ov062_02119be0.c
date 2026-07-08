@@ -15,7 +15,7 @@ extern void Actor_UntrackAndSpawnStar(void* actor, signed char* flag, unsigned i
 
 extern void* data_ov062_0211e03c[];
 extern void* data_ov062_0211e034[];
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 void func_ov062_02119be0(char* self)
 {
@@ -73,7 +73,7 @@ void func_ov062_02119be0(char* self)
             } else if (*(unsigned char*)(self + 0x3ac) != 0) {
                 *(unsigned char*)(self + 0x3af) = 0;
                 msg = 0x14c;
-            } else if (data_0209f2f8 == 0x18) {
+            } else if (LEVEL_ID == 0x18) {
                 msg = 0xc5;
             } else {
                 msg = 0x92;

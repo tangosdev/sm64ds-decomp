@@ -14,7 +14,7 @@ extern "C" void _ZN6Player7SetAnimEji5Fix12IiEj(Player* self, unsigned int a, in
 extern "C" int  _ZN6Player12FinishedAnimEv(Player* self);
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(Player* self, State& s);
 extern "C" void func_ov002_020bedd4(char* self);
-extern u8 data_0209f250;
+extern u8 CURR_PLAYER_ID;
 extern State data_ov002_02110154;
 
 extern "C" int _ZN6Player15St_Respawn_MainEv(Player* self)
@@ -25,7 +25,7 @@ extern "C" int _ZN6Player15St_Respawn_MainEv(Player* self)
         switch (*(u16*)(f + 0x6a4)) {
         case 1:
             *(int*)(f + 0x9c) = -0x4000;
-            if (*(u8*)(f + 0x6d8) == data_0209f250) {
+            if (*(u8*)(f + 0x6d8) == CURR_PLAYER_ID) {
                 FUN_02029980();
                 *(u16*)(f + 0x6a6) = 0x26;
             }
@@ -48,7 +48,7 @@ extern "C" int _ZN6Player15St_Respawn_MainEv(Player* self)
         break;
     case 2:
         if (*(u16*)(f + 0x6a6) == 0) {
-            if (*(u8*)(f + 0x6d8) == data_0209f250)
+            if (*(u8*)(f + 0x6d8) == CURR_PLAYER_ID)
                 FUN_02029934();
             _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110154);
         }

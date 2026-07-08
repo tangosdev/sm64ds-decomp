@@ -16,8 +16,8 @@ extern int data_ov094_02136ae8[];
 extern int data_ov094_02136af0[];
 extern int data_ov094_02136a1c[];
 extern void* data_ov094_02136b40;
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 int func_ov094_02136634(char* c) {
     int v0[3];
     void* f;
@@ -42,8 +42,8 @@ int func_ov094_02136634(char* c) {
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c+0x150, c, 0x50000, 0x64000, (void*)zero, zero);
     }
     func_ov094_02136188(c, &data_ov094_02136b40);
-    if (data_0209f2f8 != 7) return 1;
-    if (data_0209f220 == 1) return 1;
+    if (LEVEL_ID != 7) return 1;
+    if (STAR_ID == 1) return 1;
     if (IsStarCollectedInCurLevel(1) != 0) return 1;
     _ZN9ActorBase18MarkForDestructionEv(c);
     return 0;

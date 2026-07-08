@@ -15,13 +15,13 @@ struct Elem {
     struct Node *f8; /* 0x08 head */
 };
 
-extern char *data_0209f314;  /* holds pointer to element array base */
+extern char *AREAS;  /* holds pointer to element array base */
 extern void *_Znwj(u32 sz);
 
 void _Z23LoadMinimapChangeObjecti5Fix12IiEh(int idx, Fix12i val, u8 h)
 {
     struct Node *nn = (struct Node *)_Znwj(0x10);
-    struct Elem *e = (struct Elem *)(data_0209f314 + idx * 0xc);
+    struct Elem *e = (struct Elem *)(AREAS + idx * 0xc);
     struct Node *cur = e->f8;
     struct Node *prev = cur;
     if (cur != 0) {

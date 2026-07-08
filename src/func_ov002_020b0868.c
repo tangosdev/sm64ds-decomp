@@ -8,9 +8,9 @@ struct Vec3 { Fix12i x, y, z; };
 extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
 extern void Vec3_RotateYAndTranslate(struct Vec3* out, void* m, s16 ang, struct Vec3* in);
 extern void ChangeArea(int areaID);
-extern u8 data_0209f250;
-extern char* data_0209f394[];
-extern char data_020a0ebc;
+extern u8 CURR_PLAYER_ID;
+extern char* PLAYER_ARR[];
+extern char _ZN7Vector38IDENTITYE;
 
 int func_ov002_020b0868(char* c)
 {
@@ -19,9 +19,9 @@ int func_ov002_020b0868(char* c)
     struct Vec3 r;
     int v;
 
-    obj = data_0209f394[data_0209f250];
+    obj = PLAYER_ARR[CURR_PLAYER_ID];
     Vec3_Sub(&d, (struct Vec3*)(obj + 0x5c), (struct Vec3*)(c + 0x5c));
-    Vec3_RotateYAndTranslate(&r, &data_020a0ebc, *(s16*)(c + 0x8e), &d);
+    Vec3_RotateYAndTranslate(&r, &_ZN7Vector38IDENTITYE, *(s16*)(c + 0x8e), &d);
 
     v = r.x;
     if (v < 0) v = -v;

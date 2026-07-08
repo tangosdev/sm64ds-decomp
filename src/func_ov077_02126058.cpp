@@ -18,7 +18,7 @@ extern "C" void func_ov077_02125304(char *c);
 extern SharedFilePtr data_ov077_02127b48;
 extern SharedFilePtr data_ov077_02127b38;
 extern SharedFilePtr data_ov077_02127c14;
-extern char data_02082128;
+extern char _ZN9Matrix3x38IDENTITYE;
 
 struct M48 { int w[12]; };
 
@@ -40,7 +40,7 @@ extern "C" int func_ov077_02126058(char *c)
     *(int *)(c + 0x88) = 0x1000;
     *(unsigned char *)(c + 0x3e9) = 0x2c;
     func_ov077_02125e94(c, 0, 0x2c);
-    *(M48 *)(c + 0x3a0) = *(M48 *)&data_02082128;
+    *(M48 *)(c + 0x3a0) = *(M48 *)&_ZN9Matrix3x38IDENTITYE;
     func_ov077_02125304(c);
     return 1;
 }

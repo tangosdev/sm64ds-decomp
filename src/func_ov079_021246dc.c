@@ -16,7 +16,7 @@ extern void MeshColliderBase_Disable(void *self);
 extern void ActorBase_MarkForDestruction(void *self);
 extern void Actor_PoofDustAt(void *actor, const Vec3 *p);
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov079_021246dc(void *thiz)
 {
@@ -51,8 +51,8 @@ void func_ov079_021246dc(void *thiz)
                 ang = Vec3_HorzAngle(&pos, (Vec3 *)(c + 0x5c));
                 i = ang >> 4;
                 pos.y += 0x32000;
-                pos.x = data_02082214[i * 2] * mag + pos.x;
-                pos.z = data_02082214[i * 2 + 1] * mag + pos.z;
+                pos.x = SINE_TABLE[i * 2] * mag + pos.x;
+                pos.z = SINE_TABLE[i * 2 + 1] * mag + pos.z;
                 if (Player_ShowMessage(*(void **)(c + 0x3ac), c, 0xa5, &pos, 0, 0) == 0)
                     return;
                 (*(unsigned char *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF))++;

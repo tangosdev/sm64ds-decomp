@@ -5,7 +5,7 @@
  * -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  *
  * Full decompilation of the pause-screen state machine: 6 timer blocks +
- * a 20-case switch on data_0209f248. Byte-identical regions: prologue,
+ * a 20-case switch on PAUSE_MENU_ID. Byte-identical regions: prologue,
  * timers, jump table, cases 0,2,3,4,5,6,9,0xb,0xc,0xd,0xe,0xf,0x10,0x12,
  * 0x13 and the shared tail.
  *
@@ -76,54 +76,54 @@ void TurnBacklightOff(void);
 void _ZN8SaveData15SaveCurrentFileEv(void);
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 
-extern int data_0208ee44;          /* frame tick */
-extern u8 data_0208ee3c;
+extern int GAME_SPEED_RELATED;          /* frame tick */
+extern u8 BACKLIGHT_ENABLED;
 extern u8 data_0208ee40;
-extern s8 data_02092124;
-extern u8 data_0209d454;
-extern u8 data_0209d45c;
-extern u8 data_0209f1ec;           /* next pause state */
-extern u8 data_0209f1fc;
-extern u8 data_0209f210;           /* timer: star scroll */
-extern u8 data_0209f218;
-extern u8 data_0209f22c;           /* timer: whole update pause */
-extern u8 data_0209f234;           /* sound mode selection */
-extern u8 data_0209f238;
-extern u8 data_0209f23c;           /* timer -> options */
-extern u8 data_0209f240;
-extern u8 data_0209f244;           /* timer: button flash */
-extern u8 data_0209f248;           /* current pause state */
-extern u8 data_0209f250;
-extern u8 data_0209f280;
-extern u8 data_0209f29c;
-extern u8 data_0209f2a4;
-extern u8 data_0209f2b4;
-extern u8 data_0209f2b8;           /* save countdown */
-extern u8 data_0209f2c4;
-extern u8 data_0209f2c8;           /* displayed level */
-extern u8 data_0209f2cc;           /* timer -> options */
-extern u8 data_0209f2d8;
-extern u8 data_0209f2dc;
-extern u8 data_0209f2e0;           /* selected button */
-extern u8 data_0209f2e4;           /* timer -> options */
-extern u8 data_0209f2ec;
-extern u8 data_0209f2f0;
-extern s8 data_0209f2f8;
-extern u16 data_0209f300;
-extern u16 data_0209f360[];
+extern s8 LEVEL_OF_LAST_COLLECTED_STAR;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 NEXT_PAUSE_MENU_ID;           /* next pause state */
+extern u8 OPTIONS_MENU_OPENED;
+extern u8 ARROW_TIMER;           /* timer: star scroll */
+extern u8 PAUSED_WITH_SELECT;
+extern u8 PAUSE_MENU_TIMER;           /* timer: whole update pause */
+extern u8 SOUND_OPTION;           /* sound mode selection */
+extern u8 SELECTED_ARROW;
+extern u8 TIMER_0209f23c;           /* timer -> options */
+extern u8 BACK_BUTTON_PRESSED_2;
+extern u8 MENU_CHANGE_TIMER;           /* timer: button flash */
+extern u8 PAUSE_MENU_ID;           /* current pause state */
+extern u8 CURR_PLAYER_ID;
+extern u8 STOP_MUSIC_DURING_FADE;
+extern u8 BACK_BUTTON_PRESSED;
+extern u8 SELECTED_BUTTON_SMALL;
+extern u8 NUM_BIG_BUTTONS;
+extern u8 SAVE_MENU_TIMER;           /* save countdown */
+extern u8 GAME_PAUSED;
+extern u8 MENU_DISPLAYED_COURSE;           /* displayed level */
+extern u8 BACKLIGHT_OPTION_TIMER;           /* timer -> options */
+extern u8 CURRENT_GAMEMODE;
+extern u8 SELECTED_CONTROLLER_MODE;
+extern u8 SELECTED_BUTTON;           /* selected button */
+extern u8 SOUND_MODE_TIMER;           /* timer -> options */
+extern u8 BACKLIGHT_OFF;
+extern u8 COURSE_ARROW_BUTTONS_INVISIBLE;
+extern s8 LEVEL_ID;
+extern u16 STAGE_TIMER;
+extern u16 BG1_BUTTON_TILE_OFFSETS[];
 extern u8 data_0209f4ae[];
-extern int data_0209fc68;
-extern int data_0209b454;
-extern int data_0209b464;
+extern int DP_STATE;
+extern int NEXT_ACTOR_UPDATE_FLAGS;
+extern int ACTOR_UPDATE_FLAGS;
 extern s16 data_020756d0[];
 extern u8 data_02111150;
 extern volatile u8 data_020a0e40;  /* active input slot */
-extern u8 data_020a0de8[]; /* touch: active   [slot*4]   */
+extern u8 TOUCH_INPUT_ARR[]; /* touch: active   [slot*4]   */
 extern u8 data_020a0de9[]; /* touch: pressed  [slot*4]   */
 extern volatile u8 data_020a0dea[]; /* touch: x        [slot*4]   */
 extern volatile u8 data_020a0deb[]; /* touch: y        [slot*4]   */
 
-#define DE8P(off) ((u8 *)((long long)(int)(data_020a0de8 + (off)) & 0xFFFFFFFFFFFFFFFFLL))
+#define DE8P(off) ((u8 *)((long long)(int)(TOUCH_INPUT_ARR + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
 
@@ -143,23 +143,23 @@ void Stage::PS_Update()
     s32 sp10;
     s32 var_r0;
 
-    if (data_0209f210 != 0) {
-        data_0209f210 = data_0209f210 - data_0208ee44;
-        if (data_0209f210 == 0)
-            data_0209f238 = 0;
+    if (ARROW_TIMER != 0) {
+        ARROW_TIMER = ARROW_TIMER - GAME_SPEED_RELATED;
+        if (ARROW_TIMER == 0)
+            SELECTED_ARROW = 0;
     }
-    if (data_0209f2e4 != 0) {
-        data_0209f2e4 = data_0209f2e4 - data_0208ee44;
-        if (data_0209f2e4 == 0)
+    if (SOUND_MODE_TIMER != 0) {
+        SOUND_MODE_TIMER = SOUND_MODE_TIMER - GAME_SPEED_RELATED;
+        if (SOUND_MODE_TIMER == 0)
             _ZN5Stage20PS_UpdateOptionsMenuEv();
     }
-    if (data_0209f244 != 0) {
-        data_0209f244 = data_0209f244 - data_0208ee44;
-        if (data_0209f244 == 0) {
-            u8 st = data_0209f248;
+    if (MENU_CHANGE_TIMER != 0) {
+        MENU_CHANGE_TIMER = MENU_CHANGE_TIMER - GAME_SPEED_RELATED;
+        if (MENU_CHANGE_TIMER == 0) {
+            u8 st = PAUSE_MENU_ID;
             if (st == 8 || st == 0xa) {
-                if (data_0209f240 != 0) {
-                    data_0209f240 = 0;
+                if (BACK_BUTTON_PRESSED_2 != 0) {
+                    BACK_BUTTON_PRESSED_2 = 0;
                     _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
                 } else if (st == 8) {
                     _ZN5Stage17UpdateMenuButtonsEb(0);
@@ -171,25 +171,25 @@ void Stage::PS_Update()
             }
         }
     }
-    if (data_0209f2cc != 0) {
-        data_0209f2cc = data_0209f2cc - data_0208ee44;
-        if (data_0209f2cc == 0)
+    if (BACKLIGHT_OPTION_TIMER != 0) {
+        BACKLIGHT_OPTION_TIMER = BACKLIGHT_OPTION_TIMER - GAME_SPEED_RELATED;
+        if (BACKLIGHT_OPTION_TIMER == 0)
             _ZN5Stage20PS_UpdateOptionsMenuEv();
     }
-    if (data_0209f23c != 0) {
-        data_0209f23c = data_0209f23c - data_0208ee44;
-        if (data_0209f23c == 0)
+    if (TIMER_0209f23c != 0) {
+        TIMER_0209f23c = TIMER_0209f23c - GAME_SPEED_RELATED;
+        if (TIMER_0209f23c == 0)
             _ZN5Stage20PS_UpdateOptionsMenuEv();
     }
-    if (data_0209f22c != 0) {
-        data_0209f22c = data_0209f22c - data_0208ee44;
+    if (PAUSE_MENU_TIMER != 0) {
+        PAUSE_MENU_TIMER = PAUSE_MENU_TIMER - GAME_SPEED_RELATED;
         return;
     }
 
-    if (data_0209f248 != data_0209f1ec)
-        data_0209f248 = data_0209f1ec;
+    if (PAUSE_MENU_ID != NEXT_PAUSE_MENU_ID)
+        PAUSE_MENU_ID = NEXT_PAUSE_MENU_ID;
 
-    switch (data_0209f248) {
+    switch (PAUSE_MENU_ID) {
     case 0: {
         u8 i;
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
@@ -202,43 +202,43 @@ void Stage::PS_Update()
             i = (u8)(i + 1);
         } while (i < 0xf);
         if (i == 0xf) {
-            data_0209f2c8 = i;
-            data_0209f2f0 = 1;
+            MENU_DISPLAYED_COURSE = i;
+            COURSE_ARROW_BUTTONS_INVISIBLE = 1;
         } else {
-            if (SublevelToLevel(data_02092124) >= 0xf) {
-                data_0209f2c8 = 0xf;
+            if (SublevelToLevel(LEVEL_OF_LAST_COLLECTED_STAR) >= 0xf) {
+                MENU_DISPLAYED_COURSE = 0xf;
             } else {
-                data_0209f2c8 = SublevelToLevel(data_02092124);
+                MENU_DISPLAYED_COURSE = SublevelToLevel(LEVEL_OF_LAST_COLLECTED_STAR);
             }
-            data_0209f2f0 = 0;
+            COURSE_ARROW_BUTTONS_INVISIBLE = 0;
         }
-        _ZN7Message7DisplayEj(data_020756d0[data_0209f2c8]);
-        data_0209f360[0] = 0x80;
-        data_0209f360[1] = 0x120;
-        data_0209f360[2] = 0x1c0;
-        data_0209f360[3] = 0x260;
-        data_0209f2b4 = 4;
-        data_0209f2e0 = 0;
+        _ZN7Message7DisplayEj(data_020756d0[MENU_DISPLAYED_COURSE]);
+        BG1_BUTTON_TILE_OFFSETS[0] = 0x80;
+        BG1_BUTTON_TILE_OFFSETS[1] = 0x120;
+        BG1_BUTTON_TILE_OFFSETS[2] = 0x1c0;
+        BG1_BUTTON_TILE_OFFSETS[3] = 0x260;
+        NUM_BIG_BUTTONS = 4;
+        SELECTED_BUTTON = 0;
         _ZN5Stage17UpdateMenuButtonsEb(1);
-        data_0209f240 = 0;
+        BACK_BUTTON_PRESSED_2 = 0;
         _ZN5Stage25PS_UpdateOkAndBackButtonsEb(1);
         SetBg1Offset(0, 0);
         SetBg2Offset(0, 0);
         SetBg3Offset(0, 0);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d45c |= 0xe;
-        data_0209d454 |= 3;
-        data_0209f1ec = 1;
+        TOP_SCREEN_RELATED |= 0xe;
+        BOTTOM_SCREEN_RELATED |= 3;
+        NEXT_PAUSE_MENU_ID = 1;
         return;
     }
     case 1: {
-        if (data_0209f300 != 0)
+        if (STAGE_TIMER != 0)
             return;
         {
             int touched = 0;
             u8 slot = data_020a0e40;
-            if (data_020a0de8[slot * 4] != 0) {
+            if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                 if (data_020a0de9[slot * 4] != 0)
                     touched = 1;
             }
@@ -252,16 +252,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x20) < 0x20)
                 goto sel1_0;
-            if (data_0209f2e0 == 0 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 0 && IsButtonInputValid() != 0)
                 goto sel1_0;
             goto chk1_1;
         sel1_0:
-            if (data_0209f2e0 == 0)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 0;
-            data_0209f22c = data_0208ee44 << 3;
+            if (SELECTED_BUTTON == 0)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 0;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f2c4 = 2;
+            GAME_PAUSED = 2;
             func_02012790(3);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x28) < 0xb0)
                 return;
@@ -273,16 +273,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x48) < 0x20)
                 goto sel1_1;
-            if (data_0209f2e0 == 1 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 1 && IsButtonInputValid() != 0)
                 goto sel1_1;
             goto chk1_2;
         sel1_1:
-            if (data_0209f2e0 == 1)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 1;
+            if (SELECTED_BUTTON == 1)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 1;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 7;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 7;
             func_02012790(0x53);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -294,16 +294,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x70) < 0x20)
                 goto sel1_2;
-            if (data_0209f2e0 == 2 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 2 && IsButtonInputValid() != 0)
                 goto sel1_2;
             goto chk1_3;
         sel1_2:
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (SELECTED_BUTTON == 2)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 2;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 9;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 9;
             func_02012790(0x54);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -315,31 +315,31 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x98) < 0x20)
                 goto sel1_3;
-            if (data_0209f2e0 == 3 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 3 && IsButtonInputValid() != 0)
                 goto sel1_3;
             goto chk1_arrows;
         sel1_3:
-            if (data_0209f2e0 == 3)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 3;
-            data_0209f22c = data_0208ee44 << 3;
+            if (SELECTED_BUTTON == 3)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 3;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f1ec = 0xc;
+            NEXT_PAUSE_MENU_ID = 0xc;
             func_02012790(0x55);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x28) < 0xb0)
                 return;
             return;
         }
     chk1_arrows:
-        if (data_0209f2f0 != 0)
+        if (COURSE_ARROW_BUTTONS_INVISIBLE != 0)
             return;
         {
             register u8 *de8_sb;
             var_sl = 0;
             var_fp = var_sl;
-            (void)(u32)&data_0209f238;
-            (void)(u32)&data_020a0de8;
-            (void)(u32)&data_0209f2c8;
+            (void)(u32)&SELECTED_ARROW;
+            (void)(u32)&TOUCH_INPUT_ARR;
+            (void)(u32)&MENU_DISPLAYED_COURSE;
             sp4 = var_sl;
             sp8 = var_sl;
             sp0 = var_sl;
@@ -353,20 +353,20 @@ void Stage::PS_Update()
                 var_r0 = sp0;
                 sl2 = data_020a0e40;
                 de_off = sl2 * 4;
-                a = data_020a0de8[sl2 * 4];
+                a = TOUCH_INPUT_ARR[sl2 * 4];
                 if ((a != 0) && (DE8P(de_off)[1] != 0)) {
                     var_r0 = 1;
                 }
                 if ((var_r0 != 0) && ((u32)(vx = DE8P(sl2 * 4)[2]) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
-                    data_0209f2c8 = (u8)(data_0209f2c8 - 1);
-                    data_0209f238 = 1;
+                    MENU_DISPLAYED_COURSE = (u8)(MENU_DISPLAYED_COURSE - 1);
+                    SELECTED_ARROW = 1;
                     var_fp = 1;
                     if (((u32)vx & 0xffU) < 0x38U) {
-                        if (data_0209f2c8 == 0xFF) {
-                            data_0209f2c8 = 0xF;
+                        if (MENU_DISPLAYED_COURSE == 0xFF) {
+                            MENU_DISPLAYED_COURSE = 0xF;
                         }
                     }
-                    data_0209f210 = (u8)(data_0208ee44 * 3);
+                    ARROW_TIMER = (u8)(GAME_SPEED_RELATED * 3);
                 } else {
                     s32 var_r0_2;
                     if ((a != 0) && (DE8P(sl2 * 4)[1] != 0)) {
@@ -376,21 +376,21 @@ void Stage::PS_Update()
                     }
                     if (var_r0_2 != 0) {
                         if (((u32)(u8)(DE8P(sl2 * 4)[2] - 0xC8) < 0x38U) && ((u32)DE8P(sl2 * 4)[3] < 0x20U)) {
-                            data_0209f2c8 = (u8)(data_0209f2c8 + 1);
-                            data_0209f238 = 2;
+                            MENU_DISPLAYED_COURSE = (u8)(MENU_DISPLAYED_COURSE + 1);
+                            SELECTED_ARROW = 2;
                             var_fp = 1;
-                            if (data_0209f2c8 == 0x10) {
-                                data_0209f2c8 = (u8)sp8;
+                            if (MENU_DISPLAYED_COURSE == 0x10) {
+                                MENU_DISPLAYED_COURSE = (u8)sp8;
                             }
-                            data_0209f210 = (u8)(data_0208ee44 * 3);
+                            ARROW_TIMER = (u8)(GAME_SPEED_RELATED * 3);
                         }
                     }
                 }
-                if ((data_0209f2c8 == 0xF) || (CountStarsCollectedInLevelToDisplay(data_0209f2c8) != 0)) {
+                if ((MENU_DISPLAYED_COURSE == 0xF) || (CountStarsCollectedInLevelToDisplay(MENU_DISPLAYED_COURSE) != 0)) {
                     var_sl = 1;
-                    if (data_0209f238 == 1) {
+                    if (SELECTED_ARROW == 1) {
                         func_02012790(spC);
-                    } else if (data_0209f238 == 2) {
+                    } else if (SELECTED_ARROW == 2) {
                         func_02012790(sp10);
                     }
                 }
@@ -398,42 +398,42 @@ void Stage::PS_Update()
         }
         if (var_fp == 0)
             return;
-        _ZN7Message11DisplayTextEt(data_020756d0[data_0209f2c8]);
+        _ZN7Message11DisplayTextEt(data_020756d0[MENU_DISPLAYED_COURSE]);
         return;
     }
     case 2: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xc00;
         REG16(0x400000a) = (REG16(0x400000a) & 0x43) | 0x1210;
-        data_0209f1ec = 3;
-        data_0209f2c8 = SublevelToLevel(data_02092124);
-        _ZN7Message16DisplayPauseTextEth(0x277, data_0209f2c8);
-        data_0209f360[0] = 0x60;
-        data_0209f360[1] = 0x100;
-        data_0209f360[2] = 0x1a0;
-        data_0209f360[3] = 0x240;
-        data_0209f2b4 = 4;
-        data_0209f2e0 = 0;
+        NEXT_PAUSE_MENU_ID = 3;
+        MENU_DISPLAYED_COURSE = SublevelToLevel(LEVEL_OF_LAST_COLLECTED_STAR);
+        _ZN7Message16DisplayPauseTextEth(0x277, MENU_DISPLAYED_COURSE);
+        BG1_BUTTON_TILE_OFFSETS[0] = 0x60;
+        BG1_BUTTON_TILE_OFFSETS[1] = 0x100;
+        BG1_BUTTON_TILE_OFFSETS[2] = 0x1a0;
+        BG1_BUTTON_TILE_OFFSETS[3] = 0x240;
+        NUM_BIG_BUTTONS = 4;
+        SELECTED_BUTTON = 0;
         _ZN5Stage17UpdateMenuButtonsEb(1);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 8;
-        if (func_02029408() != 0 && data_020756d0[data_0209f2c8] != 0) {
+        TOP_SCREEN_RELATED |= 8;
+        if (func_02029408() != 0 && data_020756d0[MENU_DISPLAYED_COURSE] != 0) {
             SetBg2Offset(0, 0);
             SetSubBg0Offset(0, 0);
             SetSubBg1Offset(0, 0);
-            data_0209d45c |= 4;
-            data_0209d454 |= 3;
+            TOP_SCREEN_RELATED |= 4;
+            BOTTOM_SCREEN_RELATED |= 3;
             return;
         }
-        data_0209f1ec = 0xb;
+        NEXT_PAUSE_MENU_ID = 0xb;
         return;
     }
     case 3: {
-        if (data_0209f300 != 0)
+        if (STAGE_TIMER != 0)
             return;
         {
             int touched = 0;
             u8 slot = data_020a0e40;
-            if (data_020a0de8[slot * 4] != 0) {
+            if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                 if (data_020a0de9[slot * 4] != 0)
                     touched = 1;
             }
@@ -447,16 +447,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x18) < 0x20)
                 goto sel3_0;
-            if (data_0209f2e0 == 0 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 0 && IsButtonInputValid() != 0)
                 goto sel3_0;
             goto chk3_1;
         sel3_0:
-            if (data_0209f2e0 == 0)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 0;
+            if (SELECTED_BUTTON == 0)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 0;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 2;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 2;
             func_02012790(3);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -468,16 +468,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x40) < 0x20)
                 goto sel3_1;
-            if (data_0209f2e0 == 1 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 1 && IsButtonInputValid() != 0)
                 goto sel3_1;
             goto chk3_2;
         sel3_1:
-            if (data_0209f2e0 == 1)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 1;
+            if (SELECTED_BUTTON == 1)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 1;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 7;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 7;
             func_02012790(0x53);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -489,16 +489,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x68) < 0x20)
                 goto sel3_2;
-            if (data_0209f2e0 == 2 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 2 && IsButtonInputValid() != 0)
                 goto sel3_2;
             goto chk3_3;
         sel3_2:
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (SELECTED_BUTTON == 2)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 2;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 9;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 9;
             func_02012790(0x54);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -510,17 +510,17 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x90) < 0x20)
                 goto sel3_3;
-            if (data_0209f2e0 != 3)
+            if (SELECTED_BUTTON != 3)
                 return;
             if (IsButtonInputValid() == 0)
                 return;
         sel3_3:
-            if (data_0209f2e0 == 3)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 3;
+            if (SELECTED_BUTTON == 3)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 3;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0x13;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 0x13;
             func_02012790(0x56);
             return;
         }
@@ -528,34 +528,34 @@ void Stage::PS_Update()
     case 4: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
         REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0x1010;
-        data_0209f1ec = 5;
+        NEXT_PAUSE_MENU_ID = 5;
         _ZN7Message18DisplayPauseTextVSEt(0);
-        data_0209f360[0] = 0xa0;
-        data_0209f360[1] = 0x140;
-        data_0209f360[2] = 0x1e0;
-        data_0209f2b4 = 3;
-        data_0209f2e0 = 0;
+        BG1_BUTTON_TILE_OFFSETS[0] = 0xa0;
+        BG1_BUTTON_TILE_OFFSETS[1] = 0x140;
+        BG1_BUTTON_TILE_OFFSETS[2] = 0x1e0;
+        NUM_BIG_BUTTONS = 3;
+        SELECTED_BUTTON = 0;
         _ZN5Stage17UpdateMenuButtonsEb(1);
         if (func_02029408() == 0) {
-            data_0209f1ec = 0xb;
+            NEXT_PAUSE_MENU_ID = 0xb;
             return;
         }
         SetBg2Offset(0, 0);
         SetBg3Offset(0, 0);
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
+        TOP_SCREEN_RELATED |= 4;
+        TOP_SCREEN_RELATED &= ~8;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209d454 |= 3;
+        BOTTOM_SCREEN_RELATED |= 3;
         return;
     }
     case 5: {
-        if (data_0209f300 != 0)
+        if (STAGE_TIMER != 0)
             return;
         {
             int touched = 0;
             u8 slot = data_020a0e40;
-            if (data_020a0de8[slot * 4] != 0) {
+            if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                 if (data_020a0de9[slot * 4] != 0)
                     touched = 1;
             }
@@ -569,16 +569,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x28) < 0x20)
                 goto sel5_0;
-            if (data_0209f2e0 == 0 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 0 && IsButtonInputValid() != 0)
                 goto sel5_0;
             goto chk5_1;
         sel5_0:
-            if (data_0209f2e0 == 0)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 0;
+            if (SELECTED_BUTTON == 0)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 0;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f2c4 = 2;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            GAME_PAUSED = 2;
             func_02012790(3);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -590,16 +590,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x50) < 0x20)
                 goto sel5_1;
-            if (data_0209f2e0 == 1 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 1 && IsButtonInputValid() != 0)
                 goto sel5_1;
             goto chk5_2;
         sel5_1:
-            if (data_0209f2e0 == 1)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 1;
+            if (SELECTED_BUTTON == 1)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 1;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0x13;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 0x13;
             data_02111150 = 1;
             func_02012790(0x56);
             return;
@@ -610,17 +610,17 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x78) < 0x20)
                 goto sel5_2;
-            if (data_0209f2e0 != 2)
+            if (SELECTED_BUTTON != 2)
                 return;
             if (IsButtonInputValid() == 0)
                 return;
         sel5_2:
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (SELECTED_BUTTON == 2)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 2;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 6;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 6;
             data_02111150 = 1;
             func_02012790(0x55);
             return;
@@ -628,15 +628,15 @@ void Stage::PS_Update()
     }
     case 6: {
         _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
-        data_0209f280 = 1;
+        NEXT_ACTOR_UPDATE_FLAGS |= 0x40000000;
+        ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
+        STOP_MUSIC_DURING_FADE = 1;
         _ZN5Stage10PS_CleanupEv();
         return;
     }
     case 7: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xf00;
-        if (data_0209f218 != 0) {
+        if (PAUSED_WITH_SELECT != 0) {
             if (GetOwnerLanguage() == 5) {
                 LoadCompressedFileAt(0xb001, _ZN3G2S12GetBG1ScrPtrEv());
             } else if (GetOwnerLanguage() == 4) {
@@ -661,31 +661,31 @@ void Stage::PS_Update()
                 LoadCompressedFileAt(0xa009, _ZN3G2S12GetBG1ScrPtrEv());
             }
         }
-        data_0209f360[0] = 0x80;
-        data_0209f360[1] = 0x120;
-        data_0209f360[2] = 0x1c0;
-        data_0209f2b4 = 3;
-        data_0209f1ec = 8;
+        BG1_BUTTON_TILE_OFFSETS[0] = 0x80;
+        BG1_BUTTON_TILE_OFFSETS[1] = 0x120;
+        BG1_BUTTON_TILE_OFFSETS[2] = 0x1c0;
+        NUM_BIG_BUTTONS = 3;
+        NEXT_PAUSE_MENU_ID = 8;
         {
             u8 cur = data_0209f4ae[data_020a0e40 * 0x18];
-            data_0209f2dc = cur;
-            data_0209f2e0 = cur;
+            SELECTED_CONTROLLER_MODE = cur;
+            SELECTED_BUTTON = cur;
         }
         _ZN5Stage17UpdateMenuButtonsEb(0);
         _ZN7Message25DisplayControllerModeTextEt(0x280);
-        REG16(0x400000c) = (((data_0209f2dc + 0xd) << 8) | (REG16(0x400000c) & 0x43)) | 0x10;
+        REG16(0x400000c) = (((SELECTED_CONTROLLER_MODE + 0xd) << 8) | (REG16(0x400000c) & 0x43)) | 0x10;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
         REG32(0x4001010) = 0;
         REG32(0x4001014) = 0;
-        data_0209f29c = 0;
-        data_0209f240 = 0;
+        BACK_BUTTON_PRESSED = 0;
+        BACK_BUTTON_PRESSED_2 = 0;
         _ZN5Stage25PS_UpdateOkAndBackButtonsEb(1);
         SetBg2Offset(0, 0);
-        data_0209d45c &= ~2;
-        data_0209d45c |= 4;
-        data_0209d45c &= ~8;
-        data_0209d454 |= 3;
+        TOP_SCREEN_RELATED &= ~2;
+        TOP_SCREEN_RELATED |= 4;
+        TOP_SCREEN_RELATED &= ~8;
+        BOTTOM_SCREEN_RELATED |= 3;
         return;
     }
     case 8: {
@@ -695,9 +695,9 @@ void Stage::PS_Update()
         u8 relx;
         u8 firstw;
         int idxa;
-        if (data_0209f300 != 0)
+        if (STAGE_TIMER != 0)
             return;
-        if (data_020a0de8[data_020a0e40 * 4] == 0) {
+        if (TOUCH_INPUT_ARR[data_020a0e40 * 4] == 0) {
             if (IsButtonInputValid() == 0)
                 return;
         }
@@ -722,133 +722,133 @@ void Stage::PS_Update()
         if ((u8)(ty - 0x1e) < 0x24) {
             if ((u8)(ty - 0x20) >= 0x20)
                 return;
-            if (data_0209f2a4 == 1) {
+            if (SELECTED_BUTTON_SMALL == 1) {
                 int t = 0;
-                if (data_020a0de8[idxa] != 0) {
+                if (TOUCH_INPUT_ARR[idxa] != 0) {
                     if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
                     return;
             }
-            data_0209f2a4 = 1;
+            SELECTED_BUTTON_SMALL = 1;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xd10;
-            data_0209f244 = data_0208ee44 << 2;
+            MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
             {
                 int t = 1;
-                u8 a = data_020a0de8[slot * 4];
+                u8 a = TOUCH_INPUT_ARR[slot * 4];
                 if (a == 0)
                     goto mode0_change;
                 if (!(a != 0 && data_020a0de9[slot * 4] != 0))
                     t = 0;
                 if (t == 0)
                     goto mode0_keep;
-                if (data_0209f2dc != 0)
+                if (SELECTED_CONTROLLER_MODE != 0)
                     goto mode0_keep;
             mode0_change:
-                data_0209f2dc = 0;
+                SELECTED_CONTROLLER_MODE = 0;
                 SetControllerMode(0);
-                data_0209f22c = data_0208ee44 << 3;
+                PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
                 func_02012790(0x116);
-                data_0209f2c4 = 2;
+                GAME_PAUSED = 2;
                 goto mode0_done;
             mode0_keep:
-                data_0209f2dc = 0;
-                data_0209f240 = 0;
+                SELECTED_CONTROLLER_MODE = 0;
+                BACK_BUTTON_PRESSED_2 = 0;
                 _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
                 func_02012790(0x5b);
             mode0_done:
-                data_0209f2e0 = 0;
+                SELECTED_BUTTON = 0;
                 _ZN5Stage17UpdateMenuButtonsEb(0);
                 return;
             }
         } else if ((u8)(ty - 0x46) < 0x24) {
             if ((u8)(ty - 0x48) >= 0x20)
                 return;
-            if (data_0209f2a4 == 2) {
+            if (SELECTED_BUTTON_SMALL == 2) {
                 int t = 0;
-                if (data_020a0de8[idxa] != 0) {
+                if (TOUCH_INPUT_ARR[idxa] != 0) {
                     if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
                     return;
             }
-            data_0209f2a4 = 2;
+            SELECTED_BUTTON_SMALL = 2;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xe10;
-            data_0209f244 = data_0208ee44 << 2;
+            MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
             {
                 int t;
-                u8 a = data_020a0de8[slot * 4];
+                u8 a = TOUCH_INPUT_ARR[slot * 4];
                 if (a == 0)
                     goto mode1_change;
                 t = (a != 0 && data_020a0de9[slot * 4] != 0);
                 if (t == 0)
                     goto mode1_keep;
-                if (data_0209f2dc != 1)
+                if (SELECTED_CONTROLLER_MODE != 1)
                     goto mode1_keep;
             mode1_change:
-                data_0209f2dc = 1;
+                SELECTED_CONTROLLER_MODE = 1;
                 SetControllerMode(1);
-                data_0209f22c = data_0208ee44 << 3;
+                PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
                 func_02012790(0x116);
-                data_0209f2c4 = 2;
+                GAME_PAUSED = 2;
                 goto mode1_done;
             mode1_keep:
-                data_0209f2dc = 1;
-                data_0209f240 = 0;
+                SELECTED_CONTROLLER_MODE = 1;
+                BACK_BUTTON_PRESSED_2 = 0;
                 _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
                 func_02012790(0x5b);
             mode1_done:
-                data_0209f2e0 = 1;
+                SELECTED_BUTTON = 1;
                 _ZN5Stage17UpdateMenuButtonsEb(0);
                 return;
             }
         } else if ((u8)(ty - 0x6e) < 0x24) {
             if ((u8)(ty - 0x70) >= 0x20)
                 return;
-            if (data_0209f2a4 == 3) {
+            if (SELECTED_BUTTON_SMALL == 3) {
                 int t = 0;
-                if (data_020a0de8[idxa] != 0) {
+                if (TOUCH_INPUT_ARR[idxa] != 0) {
                     if (data_020a0de9[idxa] != 0)
                         t = 1;
                 }
                 if (t == 0)
                     return;
             }
-            data_0209f2a4 = 3;
+            SELECTED_BUTTON_SMALL = 3;
             REG16(0x400000c) = (REG16(0x400000c) & 0x43) | 0xf10;
-            data_0209f244 = data_0208ee44 << 2;
+            MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
             {
                 int t;
-                u8 a = data_020a0de8[slot * 4];
+                u8 a = TOUCH_INPUT_ARR[slot * 4];
                 if (a == 0)
                     goto mode2_change;
                 t = (a != 0 && data_020a0de9[slot * 4] != 0);
                 if (t == 0)
                     goto mode2_keep;
-                if (data_0209f2dc != 2)
+                if (SELECTED_CONTROLLER_MODE != 2)
                     goto mode2_keep;
             mode2_change:
-                data_0209f2dc = 2;
+                SELECTED_CONTROLLER_MODE = 2;
                 SetControllerMode(2);
-                data_0209f22c = data_0208ee44 << 3;
+                PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
                 func_02012790(0x116);
-                data_0209f2c4 = 2;
+                GAME_PAUSED = 2;
                 goto mode2_done;
             mode2_keep:
-                data_0209f2dc = 2;
-                data_0209f240 = 0;
+                SELECTED_CONTROLLER_MODE = 2;
+                BACK_BUTTON_PRESSED_2 = 0;
                 _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
                 func_02012790(0x5b);
             mode2_done:
-                data_0209f2e0 = 2;
+                SELECTED_BUTTON = 2;
                 _ZN5Stage17UpdateMenuButtonsEb(0);
                 return;
             }
         } else {
             int t = 0;
-            u8 a0 = data_020a0de8[idxa];
+            u8 a0 = TOUCH_INPUT_ARR[idxa];
             if (a0 != 0) {
                 if (data_020a0de9[idxa] != 0)
                     t = 1;
@@ -860,7 +860,7 @@ void Stage::PS_Update()
             if ((u8)(ty - 0x98) < 0x20)
                 goto okback;
         chk218:
-            if (data_0209f218 == 0) {
+            if (PAUSED_WITH_SELECT == 0) {
                 int t2;
                 t2 = (a0 != 0 && data_020a0de9[slot * 4] != 0);
                 if (t2 == 0)
@@ -878,7 +878,7 @@ void Stage::PS_Update()
                 u8 slot2 = data_020a0e40;
                 if ((u8)(data_020a0deb[slot2 * 4] - 0x98) < 0x20 &&
                     IsButtonInputValid() != 0) {
-                    data_0209f29c = 0;
+                    BACK_BUTTON_PRESSED = 0;
                     goto okback_go;
                 }
             }
@@ -886,51 +886,51 @@ void Stage::PS_Update()
                 u8 slot2 = data_020a0e40;
                 if ((u8)(data_020a0dea[slot2 * 4] - 0xd8) < 0x20 &&
                     (u8)(data_020a0deb[slot2 * 4] - 0x98) < 0x20) {
-                    data_0209f29c = 1;
+                    BACK_BUTTON_PRESSED = 1;
                 }
             }
         okback_go:
-            data_0209f2e0 = 3;
-            SetControllerMode(data_0209f2dc);
-            data_0209f240 = 1;
-            data_0209f244 = data_0208ee44 << 2;
+            SELECTED_BUTTON = 3;
+            SetControllerMode(SELECTED_CONTROLLER_MODE);
+            BACK_BUTTON_PRESSED_2 = 1;
+            MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
             _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            if (data_0209f29c == 0) {
-                data_0209f2c4 = 2;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            if (BACK_BUTTON_PRESSED == 0) {
+                GAME_PAUSED = 2;
                 func_02012790(0x116);
                 return;
             }
             func_02012790(0x5c);
-            if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-                data_0209f1ec = 0;
+            if (SublevelToLevel(LEVEL_ID) == 0x1d) {
+                NEXT_PAUSE_MENU_ID = 0;
             } else {
-                data_0209f1ec = 2;
+                NEXT_PAUSE_MENU_ID = 2;
             }
             return;
         fail8:
-            data_0209f2a4 = 0;
+            SELECTED_BUTTON_SMALL = 0;
             return;
         }
     }
     case 9: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1000;
-        data_0209f1ec = 0xa;
-        data_0209f234 = GetSoundMode();
-        data_0209f2ec = data_0208ee3c ^ 1;
-        data_0209f1fc = data_0208ee40;
-        data_0209f238 = 0;
-        _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
-        data_0209f2b4 = 2;
-        data_0209f2e0 = 0;
+        NEXT_PAUSE_MENU_ID = 0xa;
+        SOUND_OPTION = GetSoundMode();
+        BACKLIGHT_OFF = BACKLIGHT_ENABLED ^ 1;
+        OPTIONS_MENU_OPENED = data_0208ee40;
+        SELECTED_ARROW = 0;
+        _ZN7Message22DisplayOptionsMenuTextEt((s16)(SOUND_OPTION + 0x284));
+        NUM_BIG_BUTTONS = 2;
+        SELECTED_BUTTON = 0;
         _ZN5Stage20PS_UpdateOptionsMenuEv();
-        data_0209f29c = 0;
-        data_0209f240 = 0;
+        BACK_BUTTON_PRESSED = 0;
+        BACK_BUTTON_PRESSED_2 = 0;
         _ZN5Stage25PS_UpdateOkAndBackButtonsEb(1);
-        if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-            data_0209d45c &= ~2;
+        if (SublevelToLevel(LEVEL_ID) == 0x1d) {
+            TOP_SCREEN_RELATED &= ~2;
         } else {
-            data_0209d45c &= ~4;
+            TOP_SCREEN_RELATED &= ~4;
         }
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
@@ -942,7 +942,7 @@ void Stage::PS_Update()
         u8 tx;
         u8 relx;
         u8 firstw;
-        if (data_020a0de8[data_020a0e40 * 4] == 0) {
+        if (TOUCH_INPUT_ARR[data_020a0e40 * 4] == 0) {
             if (IsButtonInputValid() == 0)
                 return;
         }
@@ -969,26 +969,26 @@ void Stage::PS_Update()
                     return;
                 if ((u8)(ty - 0x30) >= 0x10)
                     return;
-                if (data_0209f2a4 == 1) {
+                if (SELECTED_BUTTON_SMALL == 1) {
                     int t = 0;
-                    if (data_020a0de8[slot * 4] != 0) {
+                    if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                         if (data_020a0de9[slot * 4] != 0)
                             t = 1;
                     }
                     if (t == 0)
                         return;
                 }
-                data_0209f2a4 = 1;
-                data_0209f234 = data_0209f234 - 1;
-                if (data_0209f234 == 0xff)
-                    data_0209f234 = 2;
-                data_0209f238 = 2;
-                data_0209f210 = data_0208ee44 * 3;
-                data_0209f2e0 = 0;
-                _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
-                data_0209f2e4 = 8;
+                SELECTED_BUTTON_SMALL = 1;
+                SOUND_OPTION = SOUND_OPTION - 1;
+                if (SOUND_OPTION == 0xff)
+                    SOUND_OPTION = 2;
+                SELECTED_ARROW = 2;
+                ARROW_TIMER = GAME_SPEED_RELATED * 3;
+                SELECTED_BUTTON = 0;
+                _ZN7Message22DisplayOptionsMenuTextEt((s16)(SOUND_OPTION + 0x284));
+                SOUND_MODE_TIMER = 8;
                 _ZN5Stage20PS_UpdateOptionsMenuEv();
-                SetSoundMode(data_0209f234);
+                SetSoundMode(SOUND_OPTION);
                 func_02012790(0x64);
                 if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x5c) < 0x10)
                     return;
@@ -1030,27 +1030,27 @@ void Stage::PS_Update()
             if ((u8)(ty2 - 0x28) >= 0x20)
                 return;
         snd_next_go:
-            if (data_0209f2a4 == 2) {
+            if (SELECTED_BUTTON_SMALL == 2) {
                 int t = 0;
-                if (data_020a0de8[slot * 4] != 0) {
+                if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                     if (data_020a0de9[slot * 4] != 0)
                         t = 1;
                 }
                 if (t == 0)
                     return;
             }
-            data_0209f2a4 = 2;
-            data_0209f234 = data_0209f234 + 1;
-            if (data_0209f234 == 3)
-                data_0209f234 = 0;
-            data_0209f238 = 1;
-            data_0209f210 = data_0208ee44 * 3;
-            data_0209f2e0 = 0;
-            SetSoundMode(data_0209f234);
+            SELECTED_BUTTON_SMALL = 2;
+            SOUND_OPTION = SOUND_OPTION + 1;
+            if (SOUND_OPTION == 3)
+                SOUND_OPTION = 0;
+            SELECTED_ARROW = 1;
+            ARROW_TIMER = GAME_SPEED_RELATED * 3;
+            SELECTED_BUTTON = 0;
+            SetSoundMode(SOUND_OPTION);
             func_02012790(0x64);
-            data_0209f2e4 = 8;
+            SOUND_MODE_TIMER = 8;
             _ZN5Stage20PS_UpdateOptionsMenuEv();
-            _ZN7Message22DisplayOptionsMenuTextEt((s16)(data_0209f234 + 0x284));
+            _ZN7Message22DisplayOptionsMenuTextEt((s16)(SOUND_OPTION + 0x284));
             {
                 u8 s3 = data_020a0e40;
                 u8 x3 = data_020a0dea[s3 * 4];
@@ -1076,25 +1076,25 @@ void Stage::PS_Update()
                 tmpv = ty2b - 0x58;
                 if ((u8)tmpv >= 0x20)
                     return;
-                if (data_0209f2a4 == 3) {
+                if (SELECTED_BUTTON_SMALL == 3) {
                     int t = 0;
-                    if (data_020a0de8[slot * 4] != 0) {
+                    if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                         if (data_020a0de9[slot * 4] != 0)
                             t = 1;
                     }
                     if (t == 0)
                         return;
                 }
-                data_0209f2a4 = 3;
-                if (data_0209f2ec != 0) {
+                SELECTED_BUTTON_SMALL = 3;
+                if (BACKLIGHT_OFF != 0) {
                     func_02012790(0x66);
                     TurnBacklightOn();
                 } else {
-                    data_0209f2cc = data_0208ee44 << 2;
+                    BACKLIGHT_OPTION_TIMER = GAME_SPEED_RELATED << 2;
                     func_02012790(0x67);
                 }
-                data_0209f2ec = 0;
-                data_0209f2e0 = 1;
+                BACKLIGHT_OFF = 0;
+                SELECTED_BUTTON = 1;
                 _ZN5Stage20PS_UpdateOptionsMenuEv();
                 if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x70) < 0x38)
                     return;
@@ -1111,25 +1111,25 @@ void Stage::PS_Update()
                     tmpv = ty3 - 0x58;
                     if ((u8)tmpv >= 0x20)
                         return;
-                    if (data_0209f2a4 == 4) {
+                    if (SELECTED_BUTTON_SMALL == 4) {
                         int t = 0;
-                        if (data_020a0de8[slot * 4] != 0) {
+                        if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                             if (data_020a0de9[slot * 4] != 0)
                                 t = 1;
                         }
                         if (t == 0)
                             return;
                     }
-                    data_0209f2a4 = 4;
-                    if (data_0209f2ec == 0) {
+                    SELECTED_BUTTON_SMALL = 4;
+                    if (BACKLIGHT_OFF == 0) {
                         func_02012790(0x66);
                         TurnBacklightOff();
                     } else {
-                        data_0209f2cc = data_0208ee44 << 2;
+                        BACKLIGHT_OPTION_TIMER = GAME_SPEED_RELATED << 2;
                         func_02012790(0x67);
                     }
-                    data_0209f2ec = 1;
-                    data_0209f2e0 = 1;
+                    BACKLIGHT_OFF = 1;
+                    SELECTED_BUTTON = 1;
                     _ZN5Stage20PS_UpdateOptionsMenuEv();
                     if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0xb0) < 0x38)
                         return;
@@ -1146,27 +1146,27 @@ void Stage::PS_Update()
                     tmpv = ty4 - 0x58;
                     if ((u8)tmpv >= 0x20)
                         return;
-                    if (data_0209f2a4 == 5) {
+                    if (SELECTED_BUTTON_SMALL == 5) {
                         int t = 0;
-                        if (data_020a0de8[slot * 4] != 0) {
+                        if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                             if (data_020a0de9[slot * 4] != 0)
                                 t = 1;
                         }
                         if (t == 0)
                             return;
                     }
-                    data_0209f2a4 = 5;
-                    if (data_0209f2e0 != 1) {
-                        data_0209f2e0 = 1;
+                    SELECTED_BUTTON_SMALL = 5;
+                    if (SELECTED_BUTTON != 1) {
+                        SELECTED_BUTTON = 1;
                         _ZN5Stage20PS_UpdateOptionsMenuEv();
                     }
-                    data_0209f2ec = data_0209f2ec ^ 1;
-                    if (data_0209f2ec == 0) {
+                    BACKLIGHT_OFF = BACKLIGHT_OFF ^ 1;
+                    if (BACKLIGHT_OFF == 0) {
                         TurnBacklightOn();
                     } else {
                         TurnBacklightOff();
                     }
-                    data_0209f2cc = data_0208ee44 << 2;
+                    BACKLIGHT_OPTION_TIMER = GAME_SPEED_RELATED << 2;
                     _ZN5Stage20PS_UpdateOptionsMenuEv();
                     func_02012790(0x66);
                     return;
@@ -1174,7 +1174,7 @@ void Stage::PS_Update()
             }
             {
                 int t = 0;
-                if (data_020a0de8[slot * 4] != 0) {
+                if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                     if (data_020a0de9[slot * 4] != 0)
                         t = 1;
                 }
@@ -1200,39 +1200,39 @@ void Stage::PS_Update()
                 }
                 if (IsButtonInputValid() != 0) {
                 set29c:
-                    data_0209f29c = 0;
+                    BACK_BUTTON_PRESSED = 0;
                     goto opt_go;
                 }
                 {
                     u8 s4 = data_020a0e40;
                     if ((u8)(data_020a0dea[s4 * 4] - 0xd8) < 0x20 &&
                         (u8)(data_020a0deb[s4 * 4] - 0x98) < 0x20) {
-                        data_0209f29c = 1;
+                        BACK_BUTTON_PRESSED = 1;
                     }
                 }
             opt_go:
-                data_0209f2e0 = 2;
-                data_0209f22c = data_0208ee44 << 3;
+                SELECTED_BUTTON = 2;
+                PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
                 _ZN5Stage20PS_UpdateOptionsMenuEv();
-                data_0209f240 = 1;
-                data_0209f244 = data_0208ee44 << 2;
+                BACK_BUTTON_PRESSED_2 = 1;
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
                 _ZN5Stage25PS_UpdateOkAndBackButtonsEb(0);
-                if (data_0209f29c == 0) {
-                    SetSoundMode(data_0209f234);
-                    if (data_0209f1fc != 0) {
+                if (BACK_BUTTON_PRESSED == 0) {
+                    SetSoundMode(SOUND_OPTION);
+                    if (OPTIONS_MENU_OPENED != 0) {
                         data_0208ee40 = 1;
                     } else {
                         data_0208ee40 = 0;
                     }
-                    data_0209f2c4 = 2;
+                    GAME_PAUSED = 2;
                     func_02012790(0x116);
                     return;
                 }
                 func_02012790(0x5d);
-                if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-                    data_0209f1ec = 0;
+                if (SublevelToLevel(LEVEL_ID) == 0x1d) {
+                    NEXT_PAUSE_MENU_ID = 0;
                 } else {
-                    data_0209f1ec = 2;
+                    NEXT_PAUSE_MENU_ID = 2;
                 }
                 return;
             }
@@ -1241,30 +1241,30 @@ void Stage::PS_Update()
     case 0xb: {
         if (IsButtonInputValid() == 0)
             return;
-        data_0209f244 = data_0208ee44 << 2;
-        data_0209f2c4 = 2;
+        MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+        GAME_PAUSED = 2;
         func_02012790(3);
         return;
     }
     case 0xc: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xd00;
         _ZN7Message19DisplaySaveMenuTextEt(0x290);
-        data_0209f360[0] = 0xa0;
-        data_0209f360[1] = 0x140;
-        data_0209f360[2] = 0x1e0;
-        data_0209f2b4 = 3;
-        data_0209f2e0 = 0;
+        BG1_BUTTON_TILE_OFFSETS[0] = 0xa0;
+        BG1_BUTTON_TILE_OFFSETS[1] = 0x140;
+        BG1_BUTTON_TILE_OFFSETS[2] = 0x1e0;
+        NUM_BIG_BUTTONS = 3;
+        SELECTED_BUTTON = 0;
         _ZN5Stage17UpdateMenuButtonsEb(1);
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        data_0209f1ec = 0xd;
+        NEXT_PAUSE_MENU_ID = 0xd;
         return;
     }
     case 0xd: {
         {
             int touched = 0;
             u8 slot = data_020a0e40;
-            if (data_020a0de8[slot * 4] != 0) {
+            if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                 if (data_020a0de9[slot * 4] != 0)
                     touched = 1;
             }
@@ -1278,16 +1278,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x28) < 0x20)
                 goto seld_0;
-            if (data_0209f2e0 == 0 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 0 && IsButtonInputValid() != 0)
                 goto seld_0;
             goto chkd_1;
         seld_0:
-            if (data_0209f2e0 == 0)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 0;
+            if (SELECTED_BUTTON == 0)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 0;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f2c4 = 2;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            GAME_PAUSED = 2;
             func_02012790(3);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -1299,16 +1299,16 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x50) < 0x20)
                 goto seld_1;
-            if (data_0209f2e0 == 1 && IsButtonInputValid() != 0)
+            if (SELECTED_BUTTON == 1 && IsButtonInputValid() != 0)
                 goto seld_1;
             goto chkd_2;
         seld_1:
-            if (data_0209f2e0 == 1)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 1;
+            if (SELECTED_BUTTON == 1)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 1;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0xe;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 0xe;
             func_02012790(0x5e);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -1320,17 +1320,17 @@ void Stage::PS_Update()
             if ((u8)(data_020a0dea[slot * 4] - 8) < 0xf0 &&
                 (u8)(data_020a0deb[slot * 4] - 0x78) < 0x20)
                 goto seld_2;
-            if (data_0209f2e0 != 2)
+            if (SELECTED_BUTTON != 2)
                 return;
             if (IsButtonInputValid() == 0)
                 return;
         seld_2:
-            if (data_0209f2e0 == 2)
-                data_0209f244 = data_0208ee44 << 2;
-            data_0209f2e0 = 2;
+            if (SELECTED_BUTTON == 2)
+                MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
+            SELECTED_BUTTON = 2;
             _ZN5Stage17UpdateMenuButtonsEb(0);
-            data_0209f22c = data_0208ee44 << 3;
-            data_0209f1ec = 0x10;
+            PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+            NEXT_PAUSE_MENU_ID = 0x10;
             func_02012790(0x5f);
             if ((u8)(data_020a0dea[data_020a0e40 * 4] - 8) < 0xf0)
                 return;
@@ -1339,39 +1339,39 @@ void Stage::PS_Update()
     }
     case 0xe: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0xe00;
-        data_0209f1ec = 0xf;
+        NEXT_PAUSE_MENU_ID = 0xf;
         _ZN7Message21DisplaySaveStatusTextEt(0x295);
-        data_0209d45c &= ~2;
-        data_0209f2b8 = 0x78;
+        TOP_SCREEN_RELATED &= ~2;
+        SAVE_MENU_TIMER = 0x78;
         return;
     }
     case 0xf: {
-        if (data_0209f2b8 == 0)
+        if (SAVE_MENU_TIMER == 0)
             return;
-        if (data_0209f2b8 == 0x78)
+        if (SAVE_MENU_TIMER == 0x78)
             _ZN8SaveData15SaveCurrentFileEv();
-        if (data_0209f2b8 == 0x3c)
+        if (SAVE_MENU_TIMER == 0x3c)
             _ZN7Message21DisplaySaveStatusTextEt(0x296);
-        data_0209f2b8 = data_0209f2b8 - data_0208ee44;
-        if (data_0209f2b8 != 0)
+        SAVE_MENU_TIMER = SAVE_MENU_TIMER - GAME_SPEED_RELATED;
+        if (SAVE_MENU_TIMER != 0)
             return;
-        if (data_0209f2e0 != 1) {
-            data_0209f2c4 = 2;
+        if (SELECTED_BUTTON != 1) {
+            GAME_PAUSED = 2;
             return;
         }
         _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
-        data_0209f280 = 1;
+        STOP_MUSIC_DURING_FADE = 1;
         _ZN5Stage10PS_CleanupEv();
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        NEXT_ACTOR_UPDATE_FLAGS |= 0x40000000;
+        ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
         _ZN5Sound22StopLoadedMusic_Layer1Ej(0xa);
         return;
     }
     case 0x10: {
         REG16(0x400100a) = (REG16(0x400100a) & 0x43) | 0x1100;
-        data_0209f1ec = 0x11;
+        NEXT_PAUSE_MENU_ID = 0x11;
         _ZN7Message19DisplayDontSaveTextEt(0x297);
-        data_0209f2e0 = 1;
+        SELECTED_BUTTON = 1;
         _ZN5Stage17PS_UpdateSaveMenuEb(1);
         return;
     }
@@ -1379,7 +1379,7 @@ void Stage::PS_Update()
         {
             int touched = 0;
             u8 slot = data_020a0e40;
-            if (data_020a0de8[slot * 4] != 0) {
+            if (TOUCH_INPUT_ARR[slot * 4] != 0) {
                 if (data_020a0de9[slot * 4] != 0)
                     touched = 1;
             }
@@ -1397,16 +1397,16 @@ void Stage::PS_Update()
             if ((u8)rel < 0x50) {
                 rely = data_020a0deb[slot * 4] - 0x98;
                 if ((u8)rely < 0x20) {
-                    if (data_0209f2e0 == 0)
-                        data_0209f244 = data_0208ee44 << 2;
+                    if (SELECTED_BUTTON == 0)
+                        MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
-                        data_0209f1ec = 0x12;
+                        PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+                        NEXT_PAUSE_MENU_ID = 0x12;
                         func_02012790(0x60);
                     } else {
                         func_02012790(0x51);
                     }
-                    data_0209f2e0 = 0;
+                    SELECTED_BUTTON = 0;
                     _ZN5Stage17PS_UpdateSaveMenuEb(0);
                     return;
                 }
@@ -1419,16 +1419,16 @@ void Stage::PS_Update()
                     rely = data_020a0deb[slot * 4] - 0x98;
                     if ((u8)rely >= 0x20)
                         return;
-                    if (data_0209f2e0 == 1)
-                        data_0209f244 = data_0208ee44 << 2;
+                    if (SELECTED_BUTTON == 1)
+                        MENU_CHANGE_TIMER = GAME_SPEED_RELATED << 2;
                     if ((u8)rel < 0x50 && (u8)rely < 0x20) {
-                        data_0209f22c = data_0208ee44 << 3;
-                        data_0209f1ec = 0x12;
+                        PAUSE_MENU_TIMER = GAME_SPEED_RELATED << 3;
+                        NEXT_PAUSE_MENU_ID = 0x12;
                         func_02012790(3);
                     } else {
                         func_02012790(0x52);
                     }
-                    data_0209f2e0 = 1;
+                    SELECTED_BUTTON = 1;
                     _ZN5Stage17PS_UpdateSaveMenuEb(0);
                     return;
                 }
@@ -1436,32 +1436,32 @@ void Stage::PS_Update()
         }
     }
     case 0x12: {
-        if (data_0209f2e0 != 0) {
-            data_0209f2c4 = 2;
+        if (SELECTED_BUTTON != 0) {
+            GAME_PAUSED = 2;
             return;
         }
         _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
-        data_0209f280 = 1;
+        STOP_MUSIC_DURING_FADE = 1;
         _ZN5Stage10PS_CleanupEv();
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
+        NEXT_ACTOR_UPDATE_FLAGS |= 0x40000000;
+        ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
         return;
     }
     case 0x13: {
-        int t = (data_0209f2d8 == 1);
-        if (t != false && data_0209fc68 == 0) {
+        int t = (CURRENT_GAMEMODE == 1);
+        if (t != false && DP_STATE == 0) {
             _ZN5Scene14StartSceneFadeEjjt(6, 1, 0);
-            data_0209f280 = 1;
+            STOP_MUSIC_DURING_FADE = 1;
             _ZN5Stage10PS_CleanupEv();
-            data_0209b454 |= 0x40000000;
-            data_0209b464 = data_0209b454;
+            NEXT_ACTOR_UPDATE_FLAGS |= 0x40000000;
+            ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
             return;
         }
         LoadLevelNoReturn(2, 0, -1, 0);
-        data_0209b454 |= 0x40000000;
-        data_0209b464 = data_0209b454;
-        data_0209f280 = 1;
-        data_0209f2c4 = 2;
+        NEXT_ACTOR_UPDATE_FLAGS |= 0x40000000;
+        ACTOR_UPDATE_FLAGS = NEXT_ACTOR_UPDATE_FLAGS;
+        STOP_MUSIC_DURING_FADE = 1;
+        GAME_PAUSED = 2;
         return;
     }
     default:

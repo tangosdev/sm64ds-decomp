@@ -17,14 +17,14 @@ struct Obj {
     virtual int  v6(void *arg);
 };
 
-extern "C" Obj *data_020a0c80;
+extern "C" Obj *ACTIVE_MESH_COLLIDERS;
 
 extern "C" int func_02038ea4(void *thiz)
 {
     int r = 0;
     Obj *o;
     func_02037464(thiz);
-    o = data_020a0c80;
+    o = ACTIVE_MESH_COLLIDERS;
     if (o != 0) {
         if (func_02035354(thiz, func_020393b4(o)) == 0) {
             if (o->v6(thiz) != 0) {

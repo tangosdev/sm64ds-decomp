@@ -7,9 +7,9 @@ typedef unsigned int u32;
 struct Vec3 { int x, y, z; };
 struct VVec3 { volatile int x, y, z; };
 
-extern s8 data_0209f2f8;
-extern s8 data_ov002_02111184;
-extern int data_0209d4c8;
+extern s8 LEVEL_ID;
+extern s8 DISPLAY_TIMER;
+extern int TIME_TIMER;
 extern int data_ov062_0211e004[];
 extern int data_ov062_0211e014[];
 extern int data_ov062_0211e024[];
@@ -62,8 +62,8 @@ void func_ov062_0211a1f4(char *a)
         *(u8 *)(a + 0x3b5) = 1;
         (*(u8 *)(((int)a + 0x390) & 0xFFFFFFFFFFFFFFFF))++;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e014[1], 0x40000000, 0x1000, 0);
-        data_ov002_02111184 = 1;
-        _ZN5Timer10StartTimerEv(&data_0209d4c8);
+        DISPLAY_TIMER = 1;
+        _ZN5Timer10StartTimerEv(&TIME_TIMER);
         func_0201267c(0x4d, a + 0x74);
         return;
     case 2:
@@ -79,7 +79,7 @@ void func_ov062_0211a1f4(char *a)
                 return;
             *(int *)(a + 0x38c) = 3;
             *(u8 *)(a + 0x390) = 0;
-            _ZN5Timer9StopTimerEv(&data_0209d4c8);
+            _ZN5Timer9StopTimerEv(&TIME_TIMER);
             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;
             *(u8 *)(o + 0x16e) = 1;
             return;
@@ -99,7 +99,7 @@ void func_ov062_0211a1f4(char *a)
                 if (*(u8 *)(o + 0x16e) != 0 &&
                     Vec3_Dist(a + 0x5c, *(char **)(a + 0x398) + 0x5c) > 0x7d0000)
                     r5 = 8;
-                else if (data_0209f2f8 == 0x18)
+                else if (LEVEL_ID == 0x18)
                     r5 = 6;
             }
         }
@@ -141,7 +141,7 @@ void func_ov062_0211a1f4(char *a)
             char *o;
             *(int *)(a + 0x38c) = 3;
             *(u8 *)(a + 0x390) = 0;
-            _ZN5Timer9StopTimerEv(&data_0209d4c8);
+            _ZN5Timer9StopTimerEv(&TIME_TIMER);
             o = _ZN5Actor10FindWithIDEj(*(int *)(a + 0x394));
             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;
             *(u8 *)(o + 0x16e) = 1;

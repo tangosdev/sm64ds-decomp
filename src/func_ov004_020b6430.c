@@ -7,7 +7,7 @@ extern void func_ov004_020b52b8(char *c);
 
 extern int data_ov004_020bf9ec;
 extern int data_ov004_020bfa18;
-extern int data_020a0db0;
+extern int FRAME_TIMER;
 extern int *data_ov004_020bc828[];
 extern int data_ov004_020bfa24;
 extern int data_ov004_020bf9e8;
@@ -17,7 +17,7 @@ void func_ov004_020b6430(void) {
     int i;
     char *p;
     if (data_ov004_020bf9ec == 0 && data_ov004_020bfa18 != 0) {
-        if (data_020a0db0 & 0x10) {
+        if (FRAME_TIMER & 0x10) {
             func_ov004_020af68c((void*)data_ov004_020bc828[func_ov004_020ad674()][0], 0x14, 0x30, -1, -1);
         } else {
             func_ov004_020af68c((void*)data_ov004_020bc828[func_ov004_020ad674()][1], 0x14, 0x30, -1, -1);

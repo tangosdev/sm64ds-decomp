@@ -14,10 +14,10 @@ int func_ov001_020aa858(int self, void* a, int b, int d, int e);
 void func_ov001_020aa6e4(int idx, u32 pri, void* obj);
 int SublevelToLevel(int i);
 
-extern void* data_0209f394;
+extern void* PLAYER_ARR;
 extern u8 data_ov001_020ad628[];
 extern void* data_ov001_020ad634[];
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 /* Route the +0x1b flag-byte address through 64-bit arithmetic so it is
  * materialized (add rX,base,#0x1b) for the read-modify-write, matching the ROM. */
@@ -41,7 +41,7 @@ void func_ov001_020aaa54(void)
     unsigned sp4;
     int typ;
     int spc;
-    void* player = data_0209f394;
+    void* player = PLAYER_ARR;
     int zero = 0;
     int three = 3;
     void* z1 = 0;
@@ -155,7 +155,7 @@ void func_ov001_020aaa54(void)
         }
 
         if ((*flagp & 3) == 0) {
-            int lvl = SublevelToLevel(data_0209f2f8);
+            int lvl = SublevelToLevel(LEVEL_ID);
             if ((unsigned)(lvl - 0xf) <= 2) *flagp |= 1;
             else *flagp |= 2;
         }

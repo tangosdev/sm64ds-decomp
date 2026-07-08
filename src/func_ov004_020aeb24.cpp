@@ -24,7 +24,7 @@ extern void func_ov004_020b9220(char* p);
 
 extern unsigned char data_020a0e40[];
 extern unsigned short data_020a0e5a[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
@@ -52,7 +52,7 @@ void func_ov004_020aeb24(char* c)
 
     idx = data_020a0e40[0];
     unlocked = 0;
-    if (data_020a0de8[idx * 4] != 0) {
+    if (TOUCH_INPUT_ARR[idx * 4] != 0) {
         unlocked = (data_020a0de9[idx * 4] != 0);
     }
     if (unlocked == 0) goto after;

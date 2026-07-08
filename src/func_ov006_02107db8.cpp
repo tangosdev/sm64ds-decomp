@@ -3,7 +3,7 @@ extern "C" {
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 int func_020124c4(int a, int b, int c, int d);
 }
-extern int data_020a0e68;
+extern int MATRIX_SCRATCH_PAPER;
 
 struct Obj {
     virtual void v0();
@@ -30,8 +30,8 @@ extern "C" void func_ov006_02107db8(C *c)
     *p = (short)(*p + *(short *)(b + 0xc8));
     *(short *)(*(int *)(b + 0x20) + 0x82) = (short)(-*(short *)(b + 0xc2));
     c->obj.v3();
-    Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-    *(M48 *)(b + 0x2c) = *(M48 *)&data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, 0, 0, 0);
+    *(M48 *)(b + 0x2c) = *(M48 *)&MATRIX_SCRATCH_PAPER;
     (c->*(c->pmf))();
     {
         short s = *(short *)(b + 0xcc);

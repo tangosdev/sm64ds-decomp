@@ -2,7 +2,7 @@
 struct BMD_File;
 struct PathStuff { void* a; void* file; };  // data_0210d9f0: load [4]
 
-extern PathStuff data_ov002_0210d9f0;
+extern PathStuff SNUFIT_BULLET_MODEL_PTR;
 extern void func_ov002_020eff90(void);
 
 extern "C" {
@@ -17,7 +17,7 @@ void func_ov002_020efaf0(char* c)
   int i;
   char* m = c + 0x320;
   for (i = 0; i < 3; i++, m += 0x50) {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(m, data_ov002_0210d9f0.file, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(m, SNUFIT_BULLET_MODEL_PTR.file, 1, -1);
   }
   _ZN7PathPtr6FromIDEj(c + 0x430, *(unsigned int*)(c + 8) & 0xff);
   if (func_ov002_020efedc(c)) {

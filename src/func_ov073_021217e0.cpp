@@ -9,7 +9,7 @@ extern void* data_ov073_021232a8;
 extern void* data_ov073_02123290;
 extern void* data_ov073_021232b0;
 extern void* data_ov073_021232b8;
-extern void* data_ov002_0210da30;
+extern void* SUPER_MUSHROOM_MODEL_PTR;
 extern void* data_ov073_02123298;
 
 int func_ov073_021217e0(void){
@@ -21,7 +21,7 @@ int func_ov073_021217e0(void){
   _ZN13SharedFilePtr7ReleaseEv(&data_ov073_02123290);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov073_021232b0);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov073_021232b8);
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da30);
+  _ZN13SharedFilePtr7ReleaseEv(&SUPER_MUSHROOM_MODEL_PTR);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov073_02123298);
   return 1;
 }

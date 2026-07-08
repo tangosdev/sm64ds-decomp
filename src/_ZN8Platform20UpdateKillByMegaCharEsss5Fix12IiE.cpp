@@ -24,7 +24,7 @@ struct RaycastLine {
     char buf[0x78];
 };
 
-extern Matrix4x3 data_020a0e68;
+extern Matrix4x3 MATRIX_SCRATCH_PAPER;
 
 struct Platform {
     char _0[0x5c];
@@ -54,8 +54,8 @@ int Platform::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
     vmid[0] = 0;
     vmid[1] = 0;
     vmid[2] = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, this->f_94);
-    MulVec3Mat4x3(vin, &data_020a0e68, vmid);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, this->f_94);
+    MulVec3Mat4x3(vin, &MATRIX_SCRATCH_PAPER, vmid);
     Vec3_Add((Vec3*)vout, (Vec3*)this->pos, (Vec3*)vmid);
     vmid[0] = vout[0];
     vmid[1] = vout[1];

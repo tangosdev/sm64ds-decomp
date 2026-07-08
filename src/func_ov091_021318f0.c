@@ -25,8 +25,8 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGro
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 
-extern signed char data_0209f2f8;
-extern struct Matrix4x3 data_020a0e68;
+extern signed char LEVEL_ID;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern char data_ov091_02134cdc[];
 extern char data_ov091_02134d1c[];
 extern void *data_ov091_02134c30[];
@@ -62,7 +62,7 @@ int func_ov091_021318f0(char *c)
         isSpecial = (enum Bool)(*(unsigned short*)(c + 0xc) == 0x1e);
         if (isSpecial) {
             c[0x395] = 2;
-        } else if (data_0209f2f8 == 7) {
+        } else if (LEVEL_ID == 7) {
             c[0x395] = 1;
         }
     }
@@ -77,11 +77,11 @@ int func_ov091_021318f0(char *c)
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x1d, 0xffff, &v, 0, *(signed char*)(c + 0xcc), -1);
     }
 
-    Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(c + 0x8e));
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
 
     idx395 = (unsigned char)c[0x395];
     idx394 = (unsigned char)c[0x394];
-    MulVec3Mat4x3((Vector3*)((char*)data_ov091_02134cdc + idx395 * 0x78 + idx394 * 0xc), &data_020a0e68, &rotated);
+    MulVec3Mat4x3((Vector3*)((char*)data_ov091_02134cdc + idx395 * 0x78 + idx394 * 0xc), &MATRIX_SCRATCH_PAPER, &rotated);
 
     Vec3_Add(&v2, (Vector3*)(c + 0x388), &rotated);
 

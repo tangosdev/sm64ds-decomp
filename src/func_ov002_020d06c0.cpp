@@ -1,8 +1,8 @@
 //cpp
 struct State {};
-extern State data_ov002_021101b4;
-extern State data_ov002_0211001c;
-extern State data_ov002_0210ffec;
+extern State _ZN6Player7ST_FALLE;
+extern State _ZN6Player16ST_CEILING_GRATEE;
+extern State _ZN6Player13ST_LEDGE_HANGE;
 
 struct Player {
     int GetHealth();
@@ -17,7 +17,7 @@ extern "C" int func_ov002_020d06c0(Player *p)
 {
     int thresh, b354, b358;
 
-    if (!p->IsState(data_ov002_021101b4))
+    if (!p->IsState(_ZN6Player7ST_FALLE))
         return 0;
 
     if (p->GetHealth() != 0 &&
@@ -32,7 +32,7 @@ extern "C" int func_ov002_020d06c0(Player *p)
             if (b358 == 0 &&
                 *(unsigned char *)((char *)p + 0x708) == 0 &&
                 *(unsigned char *)((char *)p + 0x6fd) == 0 &&
-                p->IsState(data_ov002_0211001c) == 0 &&
+                p->IsState(_ZN6Player16ST_CEILING_GRATEE) == 0 &&
                 *(unsigned char *)((char *)p + 0x6de) != 0)
             {
                 goto cont;
@@ -57,6 +57,6 @@ cont:
         return 0;
 
     *(unsigned char *)((char *)p + 0x6e3) = 0;
-    p->ChangeState(data_ov002_0210ffec);
+    p->ChangeState(_ZN6Player13ST_LEDGE_HANGE);
     return 1;
 }

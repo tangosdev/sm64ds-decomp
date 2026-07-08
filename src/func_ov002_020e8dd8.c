@@ -1,11 +1,11 @@
 
 typedef unsigned char u8;
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f264;
+extern signed char LEVEL_ID;
+extern unsigned char LAST_ENTRANCE_ID;
 extern void _ZN9PowerStar13AddStarMarkerEv(void);
 int func_ov002_020e8dd8(unsigned char *self)
 {
-  signed char g1 = data_0209f2f8;
+  signed char g1 = LEVEL_ID;
   int t;
   if (g1 == 5)
   {
@@ -18,7 +18,7 @@ int func_ov002_020e8dd8(unsigned char *self)
   {
     if ((*((u8 *) (self + 0x49d))) == 4)
     {
-      if (data_0209f264 != 4)
+      if (LAST_ENTRANCE_ID != 4)
       {
         return;
       }

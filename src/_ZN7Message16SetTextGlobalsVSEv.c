@@ -1,11 +1,11 @@
-extern int data_0209fd14;
+extern int VS_MSG_FILE_PTR;
 extern int data_0209fd04;
 extern int data_0209fcf8;
 extern int data_0209fcfc;
 extern int data_0209fd08;
 
 void _ZN7Message16SetTextGlobalsVSEv(void) {
-    int ip = data_0209fd14;
+    int ip = VS_MSG_FILE_PTR;
     int r2 = ip + 0x20;
     data_0209fd04 = ip;
     data_0209fcf8 = r2;

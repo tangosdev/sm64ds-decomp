@@ -5,7 +5,7 @@ extern "C" {
 int func_ov002_020e9630(char*);
 }
 
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 
 extern "C" int func_ov002_020e73ac(char* arg) {
     int c, a, b;
@@ -14,7 +14,7 @@ extern "C" int func_ov002_020e73ac(char* arg) {
         return 3;
     }
 
-    a = data_0209f2d8 == 1;
+    a = CURRENT_GAMEMODE == 1;
     if (a != false) {
         goto ret2;
     }

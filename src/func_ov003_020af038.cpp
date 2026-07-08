@@ -10,7 +10,7 @@ struct Obj {
   virtual int m_18();
   virtual int m_1c();
 };
-extern Obj* data_0209f5bc;
+extern Obj* SCENE_FADER;
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -22,67 +22,67 @@ extern "C" void func_02012790(int a);
 extern "C" int func_ov003_020adf50(char* c);
 extern "C" void func_ov003_020ae358(char* c);
 
-extern signed char data_02092110;
-extern int data_0208ee44;
-extern short data_0209f5e8;
-extern unsigned char data_02092128;
-extern unsigned char data_02092114;
-extern unsigned char data_0209caa0[];
+extern signed char NEXT_LEVEL_ID;
+extern int GAME_SPEED_RELATED;
+extern short DEFAULT_SCENE_FADER;
+extern unsigned char NEXT_HAT_CHARACTER_ARR;
+extern unsigned char NEXT_HAT_CHARACTER;
+extern unsigned char SAVE_DATA[];
 extern unsigned char data_020a0e40;
 struct Row020a0de8 { unsigned char b0, b1, b2, b3; };
-extern struct Row020a0de8 data_020a0de8[];
+extern struct Row020a0de8 TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[][4];
-extern unsigned short data_020a0e58[];
+extern unsigned short BUTTON_INPUT_ARR[];
 extern unsigned short data_020a0e5a[];
-extern unsigned char data_0209f1f0;
+extern unsigned char NEXT_STAR_ID;
 
 #define U8(o)  (*(unsigned char*)(c+(o)))
 #define U16(o) (*(unsigned short*)(c+(o)))
 #define S16(o) (*(short*)(c+(o)))
 
 extern "C" int func_ov003_020af038(char* c) {
-    if (data_0209f5bc->v5() != 0) {
+    if (SCENE_FADER->v5() != 0) {
         DecIfAbove0_Byte((unsigned char*)(c + 0x117));
         DecIfAbove0_Byte((unsigned char*)(c + 0x118));
-        if ((U8(0x119) != 0) || ((SublevelToLevel(data_02092110) > 0xE) && (IsButtonInputValid() != 0))) {
+        if ((U8(0x119) != 0) || ((SublevelToLevel(NEXT_LEVEL_ID) > 0xE) && (IsButtonInputValid() != 0))) {
             if (U8(0x119) != 0) {
-                *(unsigned char*)(((long long)(int)(c + 0x119)) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+                *(unsigned char*)(((long long)(int)(c + 0x119)) & 0xFFFFFFFFFFFFFFFFLL) -= GAME_SPEED_RELATED;
             }
-            if ((U8(0x119) == 0) || ((SublevelToLevel(data_02092110) > 0xE) && (IsButtonInputValid() != 0))) {
+            if ((U8(0x119) == 0) || ((SublevelToLevel(NEXT_LEVEL_ID) > 0xE) && (IsButtonInputValid() != 0))) {
                 _ZN5Scene14StartSceneFadeEjjt(3, 0, 0);
-                *(short*)((char*)&data_0209f5e8 + 0xc) = 0x7fff;
-                if (SublevelToLevel(data_02092110) <= 0xE) {
-                    data_0209f1f0 = U8(0x115) + 1;
+                *(short*)((char*)&DEFAULT_SCENE_FADER + 0xc) = 0x7fff;
+                if (SublevelToLevel(NEXT_LEVEL_ID) <= 0xE) {
+                    NEXT_STAR_ID = U8(0x115) + 1;
                 } else {
-                    data_0209f1f0 = 1;
+                    NEXT_STAR_ID = 1;
                 }
             }
         } else if ((U8(0x135) != 0) && (IsButtonInputValid() != 0)) {
             unsigned char temp_r1 = U8(0x133);
-            if ((temp_r1 == 0) && ((unsigned)U8(0x130) > 1U) && (data_0209caa0[0x41] == 3)) {
+            if ((temp_r1 == 0) && ((unsigned)U8(0x130) > 1U) && (SAVE_DATA[0x41] == 3)) {
                 U8(0x133) = 2;
                 func_02012790(0x12E);
             } else if (U8(0x139) == 0) {
                 if (temp_r1 == 1) {
                     unsigned char temp_r0 = (unsigned char)func_ov003_020adf50(c);
-                    data_02092128 = temp_r0;
-                    data_02092114 = temp_r0;
+                    NEXT_HAT_CHARACTER_ARR = temp_r0;
+                    NEXT_HAT_CHARACTER = temp_r0;
                     U8(0x132) = temp_r0;
-                    U8(0x118) = (unsigned char)(data_0208ee44 * 3);
+                    U8(0x118) = (unsigned char)(GAME_SPEED_RELATED * 3);
                     U8(0x139) = 2;
                 } else {
                     U8(0x133) = 2;
                     U8(0x132) = 3;
-                    U8(0x118) = (unsigned char)(data_0208ee44 * 6);
+                    U8(0x118) = (unsigned char)(GAME_SPEED_RELATED * 6);
                     U8(0x139) = 1;
                 }
                 U8(0x119) = 0x10;
-                func_02012790(data_0209caa0[0x41] + 0x3C);
+                func_02012790(SAVE_DATA[0x41] + 0x3C);
             }
-        } else if (SublevelToLevel(data_02092110) <= 0xE) {
+        } else if (SublevelToLevel(NEXT_LEVEL_ID) <= 0xE) {
             int var_r4 = U8(0x115);
             int var_lr = 0;
-            struct Row020a0de8 *row = &data_020a0de8[data_020a0e40];
+            struct Row020a0de8 *row = &TOUCH_INPUT_ARR[data_020a0e40];
             unsigned char temp_r1_2 = row->b0;
             if (temp_r1_2 != 0) {
                 unsigned char temp_r0_2 = U8(0x114);
@@ -101,7 +101,7 @@ extern "C" int func_ov003_020af038(char* c) {
                                 var_r0 = 0;
                             }
                             if ((var_r0 != 0) || (var_r4 != var_ip)) {
-                                U8(0x117) = (unsigned char)(data_0208ee44 * 3);
+                                U8(0x117) = (unsigned char)(GAME_SPEED_RELATED * 3);
                             }
                             if (var_r4 != var_ip) {
                                 var_r4 = var_ip;
@@ -115,9 +115,9 @@ extern "C" int func_ov003_020af038(char* c) {
                     } while (var_ip < (int)temp_r0_2);
                 }
             }
-            if ((var_lr == 0) && (U8(0x135) == 2) && (U8(0x133) == 0) && (data_0209caa0[0x42] == 0)) {
-                if (data_020a0e58[0] & 0x20) {
-                    int temp_r1_3 = data_020a0e58[1] & 0x20;
+            if ((var_lr == 0) && (U8(0x135) == 2) && (U8(0x133) == 0) && (SAVE_DATA[0x42] == 0)) {
+                if (BUTTON_INPUT_ARR[0] & 0x20) {
+                    int temp_r1_3 = BUTTON_INPUT_ARR[1] & 0x20;
                     if ((temp_r1_3 != 0) || (U16(0x104) == 0)) {
                         unsigned short var_r1;
                         if (temp_r1_3 != 0) var_r1 = 0x10; else var_r1 = 8;
@@ -134,8 +134,8 @@ extern "C" int func_ov003_020af038(char* c) {
                         }
                     }
                 } else {
-                    int temp_r1_5 = data_020a0e58[1] & 0x10;
-                    if ((data_020a0e58[0] & 0x10) && ((temp_r1_5 != 0) || (U16(0x104) == 0))) {
+                    int temp_r1_5 = BUTTON_INPUT_ARR[1] & 0x10;
+                    if ((BUTTON_INPUT_ARR[0] & 0x10) && ((temp_r1_5 != 0) || (U16(0x104) == 0))) {
                         unsigned short var_r1_2;
                         if (temp_r1_5 != 0) var_r1_2 = 0x10; else var_r1_2 = 8;
                         U16(0x104) = var_r1_2;
@@ -155,25 +155,25 @@ extern "C" int func_ov003_020af038(char* c) {
             if (U8(0x115) != var_r4) {
                 U8(0x115) = var_r4;
                 _ZN7Message28DisplayStarNameForStarSelectEj((unsigned int)(short)var_r4);
-                U8(0x117) = (unsigned char)(data_0208ee44 * 3);
+                U8(0x117) = (unsigned char)(GAME_SPEED_RELATED * 3);
             }
             if (U8(0x139) == 0) {
                 func_ov003_020ae358(c);
             }
         }
-        if (SublevelToLevel(data_02092110) <= 0xE) {
+        if (SublevelToLevel(NEXT_LEVEL_ID) <= 0xE) {
             unsigned char temp_r0_3 = U8(0x135);
             if (temp_r0_3 == 0) {
-                if ((IsButtonInputValid() != 0) || ((data_0209caa0[0x42] == 0) && (*(unsigned short*)((char*)data_020a0e5a + data_020a0e40 * 4) & 0xF0))) {
+                if ((IsButtonInputValid() != 0) || ((SAVE_DATA[0x42] == 0) && (*(unsigned short*)((char*)data_020a0e5a + data_020a0e40 * 4) & 0xF0))) {
                     func_02012790(0x12E);
-                    if ((data_0209caa0[0x42] == 0) && (data_020a0e58[1] & 0x30)) {
+                    if ((SAVE_DATA[0x42] == 0) && (BUTTON_INPUT_ARR[1] & 0x30)) {
                         U8(0x135) = 1;
                     } else {
                         U8(0x135) = 2;
                     }
-                    if (SublevelToLevel(data_02092110) <= 0xE) {
+                    if (SublevelToLevel(NEXT_LEVEL_ID) <= 0xE) {
                         U8(0x133) = 0;
-                    } else if (((unsigned)U8(0x130) > 1U) && (data_0209caa0[0x41] == 3)) {
+                    } else if (((unsigned)U8(0x130) > 1U) && (SAVE_DATA[0x41] == 3)) {
                         U8(0x133) = 1;
                         if (U8(0x130) != 4) {
                             U8(0x134) = 0;
@@ -185,16 +185,16 @@ extern "C" int func_ov003_020af038(char* c) {
                     }
                 }
             } else if (temp_r0_3 == 1) {
-                if (data_020a0e58[1] != 0) {
+                if (BUTTON_INPUT_ARR[1] != 0) {
                     U8(0x135) = 2;
                 }
-            } else if ((data_0209caa0[0x42] == 0) && (data_020a0e58[0] & 0xC0)) {
-                if (data_020a0e58[1] & 0x40) {
+            } else if ((SAVE_DATA[0x42] == 0) && (BUTTON_INPUT_ARR[0] & 0xC0)) {
+                if (BUTTON_INPUT_ARR[1] & 0x40) {
                     if (U8(0x133) != 0) {
                         U8(0x133) -= 1;
                         if (U8(0x133) == 1) {
                             unsigned char temp_r2 = U8(0x130);
-                            if (((unsigned)temp_r2 > 1U) && (data_0209caa0[0x41] == 3)) {
+                            if (((unsigned)temp_r2 > 1U) && (SAVE_DATA[0x41] == 3)) {
                                 if (temp_r2 != 4) {
                                     U8(0x134) = 0;
                                 } else {
@@ -206,11 +206,11 @@ extern "C" int func_ov003_020af038(char* c) {
                         }
                         func_02012790(0x12E);
                     }
-                } else if ((data_020a0e58[1] & 0x80) && (U8(0x133) != 2)) {
+                } else if ((BUTTON_INPUT_ARR[1] & 0x80) && (U8(0x133) != 2)) {
                     U8(0x133) += 1;
                     if (U8(0x133) == 1) {
                         unsigned char temp_r2_2 = U8(0x130);
-                        if (((unsigned)temp_r2_2 > 1U) && (data_0209caa0[0x41] == 3)) {
+                        if (((unsigned)temp_r2_2 > 1U) && (SAVE_DATA[0x41] == 3)) {
                             if (temp_r2_2 != 4) {
                                 U8(0x134) = 0;
                             } else {
@@ -223,7 +223,7 @@ extern "C" int func_ov003_020af038(char* c) {
                     func_02012790(0x12E);
                 }
             }
-            if (((unsigned)U8(0x130) <= 1U) || (data_0209caa0[0x41] != 3)) {
+            if (((unsigned)U8(0x130) <= 1U) || (SAVE_DATA[0x41] != 3)) {
                 if (U16(0x108) != 0) {
                     U16(0x108) -= 1;
                     if (U16(0x108) == 0) {

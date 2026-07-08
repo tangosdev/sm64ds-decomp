@@ -18,7 +18,7 @@ extern void func_ov070_02121310(void* c);
 extern void _ZN13RaycastGroundD1Ev(struct RG* rg);
 
 extern void* data_ov070_02123698;
-extern struct Blk data_02082128;
+extern struct Blk _ZN9Matrix3x38IDENTITYE;
 
 int func_ov070_02121914(char* self)
 {
@@ -47,7 +47,7 @@ int func_ov070_02121914(char* self)
     *(int*)(self + 0x80) = 0x1000;
     *(int*)(self + 0x84) = 0x1000;
     *(int*)(self + 0x88) = 0x1000;
-    *(struct Blk*)(self + 0x35c) = data_02082128;
+    *(struct Blk*)(self + 0x35c) = _ZN9Matrix3x38IDENTITYE;
 
     _ZN13RaycastGroundC1Ev(&rg);
     _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, (struct Vector3*)(self + 0x5c), self);

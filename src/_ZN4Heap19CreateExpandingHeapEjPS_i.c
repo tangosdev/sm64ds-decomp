@@ -9,7 +9,7 @@ struct HeapS {
     u32 flags;
     struct ExpandingHeapAllocator *allocator;
 };
-extern struct HeapS *data_020a0ea0;
+extern struct HeapS *_ZN6Memory14defaultHeapPtrE;
 extern void *_ZN4Heap8AllocateEji(struct HeapS *self, u32 size, int align);
 extern struct ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(void *start, u32 size, u32 nodeID);
 extern void _ZN4Heap10DeallocateEPv(struct HeapS *self, void *p);
@@ -17,7 +17,7 @@ extern void _ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator(struct HeapS
 
 struct HeapS *_ZN4Heap19CreateExpandingHeapEjPS_i(u32 size, struct Heap *root, int align) {
   struct HeapS *rh = (struct HeapS *)root;
-  if (root == 0) rh = data_020a0ea0;
+  if (root == 0) rh = _ZN6Memory14defaultHeapPtrE;
   struct HeapS *heap = (struct HeapS *)_ZN4Heap8AllocateEji(rh, size + 0x18, align);
   if (heap != 0) {
     heap->heapStart = (char*)heap + 0x18;

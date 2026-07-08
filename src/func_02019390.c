@@ -11,11 +11,11 @@ typedef struct Obj {
     VFN* vt;
 } Obj;
 
-extern Obj* data_0209d4a8;
+extern Obj* SCENE_RELATED;
 
 void func_02019390(void)
 {
-    Obj* o = data_0209d4a8;
+    Obj* o = SCENE_RELATED;
     if (o != 0) {
         if (o->vt[0](o) == 0) {
             func_0202345c();

@@ -28,8 +28,8 @@ extern void func_ov004_020b04d0(int v);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
 extern int func_ov004_020adc1c(void);
 
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern char data_ov006_0213c5a0;
 
 int func_ov006_020e6894(char* self)
@@ -43,7 +43,7 @@ int func_ov006_020e6894(char* self)
 
     if (r6 == 0) return 0;
 
-    data_0209d45c |= 8;
+    TOP_SCREEN_RELATED |= 8;
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3) | 2;
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1220;
     DecompressLZ16(r6, (void*)func_02054d88());
@@ -56,7 +56,7 @@ int func_ov006_020e6894(char* self)
     func_02056314(f, 0, 0x800);
     Deallocate(f);
 
-    data_0209d45c |= 4;
+    TOP_SCREEN_RELATED |= 4;
     *(volatile u16*)0x400000c = (*(volatile u16*)0x400000c & ~3) | 2;
     *(volatile u16*)0x400000c = (*(volatile u16*)0x400000c & 0x43) | 0x5420;
 
@@ -83,7 +83,7 @@ int func_ov006_020e6894(char* self)
     DecompressLZ16(c7, (void*)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj(c8, 0, 0x100);
 
-    data_0209d454 |= 4;
+    BOTTOM_SCREEN_RELATED |= 4;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0x814;
     DecompressLZ16(r6, (void*)func_02054de8());

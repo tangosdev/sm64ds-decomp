@@ -1,7 +1,7 @@
 extern int func_02017acc();
 extern void func_020731dc();
 extern void func_02017ab4(void);
-extern int data_ov100_02148934[];
+extern int STAR_DOOR_MODEL_PTR[];
 extern int data_ov100_0214893c[];
 
 struct Pair { int a, b; };
@@ -27,8 +27,8 @@ extern struct Dst2 data_ov100_02148954;
 
 void __sinit_ov100_02147a70(void)
 {
-    func_02017acc(data_ov100_02148934, 0x4a1);
-    func_020731dc(data_ov100_02148934, &func_02017ab4, data_ov100_0214893c);
+    func_02017acc(STAR_DOOR_MODEL_PTR, 0x4a1);
+    func_020731dc(STAR_DOOR_MODEL_PTR, &func_02017ab4, data_ov100_0214893c);
     data_ov100_02148974.p0 = data_02086b58;
     data_ov100_02148974.p1 = data_ov100_0214836c;
     data_ov100_02148984.p0 = data_ov100_02148364;

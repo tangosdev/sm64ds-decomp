@@ -11,7 +11,7 @@ void func_02012790(int x);
 void func_ov019_021122dc(void* c, int n);
 int _ZN6Player18HasFinishedTalkingEv(void* p);
 
-extern unsigned char data_0209d684;
+extern unsigned char MESSAGE_RESULT;
 
 int func_ov019_02111fec(char* c) {
     unsigned char st = *(unsigned char*)(c + 0x38f);
@@ -40,7 +40,7 @@ int func_ov019_02111fec(char* c) {
     }
     case 1:
         if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x378)) == 2) {
-            unsigned char d = data_0209d684;
+            unsigned char d = MESSAGE_RESULT;
             if (d == 1) {
                 func_02012790(0x98);
                 func_ov019_021122dc(c, 2);

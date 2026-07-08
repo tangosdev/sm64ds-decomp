@@ -6,8 +6,8 @@ extern u8 data_0209b340[];
 extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
 extern u8 data_0209b3d8[];
-extern u8 data_0208ee3c[];
-extern int data_0209caa0[];
+extern u8 BACKLIGHT_ENABLED[];
+extern int SAVE_DATA[];
 
 extern int GetSoundMode(void);
 extern int _ZN8SaveData19IsCharacterUnlockedEj(u32);
@@ -29,8 +29,8 @@ void func_ov007_020cc168(u32 idx) {
         data_0209b340[8] = 0;
     }
 
-    data_0209b340[9] = data_0208ee3c[0];
-    data_0209b34b[idx] = (data_0209caa0[1] & 1) ? 1 : 0;
+    data_0209b340[9] = BACKLIGHT_ENABLED[0];
+    data_0209b34b[idx] = (SAVE_DATA[1] & 1) ? 1 : 0;
 
     chr = 3;
     i = 2;

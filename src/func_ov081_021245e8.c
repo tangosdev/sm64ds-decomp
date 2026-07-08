@@ -1,8 +1,8 @@
 typedef int Fix12i;
 typedef struct Vector3 { int x, y, z; } Vector3;
 extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
-extern unsigned char data_0209f21c[];
-extern char* data_0209f394[];
+extern unsigned char NUM_PLAYERS[];
+extern char* PLAYER_ARR[];
 
 int func_ov081_021245e8(void* thiz)
 {
@@ -11,9 +11,9 @@ int func_ov081_021245e8(void* thiz)
     int i = 0;
     Vector3 v;
     *(int*)(sl + 0x40c) = -1;
-    if ((int)data_0209f21c[0] > 0) {
+    if ((int)NUM_PLAYERS[0] > 0) {
         do {
-            char* obj = data_0209f394[i];
+            char* obj = PLAYER_ARR[i];
             if (obj != 0) {
                 int dist;
                 int* s = (int*)(((long long)(obj + 0x5c)) & 0xFFFFFFFFFFFFFFFF);
@@ -30,7 +30,7 @@ int func_ov081_021245e8(void* thiz)
                 }
             }
             i++;
-        } while (i < (int)data_0209f21c[0]);
+        } while (i < (int)NUM_PLAYERS[0]);
     }
     return min;
 }

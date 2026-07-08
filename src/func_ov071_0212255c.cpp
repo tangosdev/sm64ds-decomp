@@ -39,7 +39,7 @@ extern void func_ov071_02122080(char* t);
 extern void func_020393d4(int* p, int v);
 
 extern SharedFilePtr data_ov071_021230d0;
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 extern SharedFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 }
@@ -58,8 +58,8 @@ extern "C" int func_ov071_0212255c(char* self) {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x8e));
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x8e));
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
     Vector3 res;
     Vec3_Add(&res, (Vector3*)(self + 0x5c), &out);
     *(int*)(self + 0x5c) = res.x;

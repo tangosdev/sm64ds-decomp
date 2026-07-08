@@ -202,7 +202,7 @@ data_ov000_020ab7b4 kind:data(any) addr:0x020ab7b4
 data_ov000_020ab7d0 kind:data(any) addr:0x020ab7d0
 data_ov000_020ab7ec kind:data(any) addr:0x020ab7ec
 data_ov000_020ab800 kind:data(any) addr:0x020ab800 ambiguous
-data_ov000_020ab808 kind:data(any) addr:0x020ab808
+_ZN3OAM19MM_MARIO_W_CAP_ICONE kind:data(any) addr:0x020ab808
 data_ov000_020ab820 kind:data(any) addr:0x020ab820 ambiguous
 data_ov000_020ab824 kind:data(any) addr:0x020ab824
 data_ov000_020ab838 kind:data(any) addr:0x020ab838 ambiguous
@@ -220,11 +220,11 @@ data_ov000_020ab8b0 kind:data(any) addr:0x020ab8b0
 data_ov000_020ab8b8 kind:data(any) addr:0x020ab8b8 ambiguous
 data_ov000_020ab8cc kind:data(any) addr:0x020ab8cc
 data_ov000_020ab8d0 kind:data(any) addr:0x020ab8d0 ambiguous
-data_ov000_020ab8e8 kind:data(any) addr:0x020ab8e8
+_ZN3OAM13MM_YOSHI_ICONE kind:data(any) addr:0x020ab8e8
 data_ov000_020ab8f0 kind:data(any) addr:0x020ab8f0 ambiguous
 data_ov000_020ab904 kind:data(any) addr:0x020ab904
 data_ov000_020ab908 kind:data(any) addr:0x020ab908 ambiguous
-data_ov000_020ab920 kind:data(any) addr:0x020ab920
+_ZN3OAM19MM_YOSHI_W_CAP_ICONE kind:data(any) addr:0x020ab920
 data_ov000_020ab938 kind:data(any) addr:0x020ab938 ambiguous
 data_ov000_020ab93c kind:data(any) addr:0x020ab93c
 data_ov000_020ab940 kind:data(any) addr:0x020ab940 ambiguous
@@ -233,13 +233,13 @@ data_ov000_020ab958 kind:data(any) addr:0x020ab958
 data_ov000_020ab974 kind:data(any) addr:0x020ab974
 data_ov000_020ab990 kind:data(any) addr:0x020ab990
 data_ov000_020ab9ac kind:data(any) addr:0x020ab9ac
-data_ov000_020ab9c8 kind:data(any) addr:0x020ab9c8
+_ZN3OAM5TIMESE kind:data(any) addr:0x020ab9c8
 data_ov000_020ab9e4 kind:data(any) addr:0x020ab9e4
 data_ov000_020aba00 kind:data(any) addr:0x020aba00
 data_ov000_020aba1c kind:data(any) addr:0x020aba1c
 data_ov000_020aba38 kind:data(any) addr:0x020aba38
 data_ov000_020aba54 kind:data(any) addr:0x020aba54
-data_ov000_020aba70 kind:data(any) addr:0x020aba70
+_ZN3OAM7NUMBERSE kind:data(any) addr:0x020aba70
 data_ov000_020aba8c kind:data(any) addr:0x020aba8c
 data_ov000_020abaa8 kind:data(any) addr:0x020abaa8
 data_ov000_020abac0 kind:data(any) addr:0x020abac0 ambiguous
@@ -449,7 +449,7 @@ data_ov000_020acfcc kind:data(any) addr:0x020acfcc
 data_ov000_020acfec kind:data(any) addr:0x020acfec
 data_ov000_020ad00c kind:data(any) addr:0x020ad00c
 data_ov000_020ad02c kind:data(any) addr:0x020ad02c
-data_ov000_020ad04c kind:data(any) addr:0x020ad04c
+_ZN3OAM21CONTROLLER_MODE_TEXTSE kind:data(any) addr:0x020ad04c
 data_ov000_020ad06c kind:data(any) addr:0x020ad06c
 data_ov000_020ad08c kind:data(any) addr:0x020ad08c
 data_ov000_020ad0ac kind:data(any) addr:0x020ad0ac

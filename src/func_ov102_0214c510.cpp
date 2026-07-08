@@ -28,10 +28,10 @@ extern "C" void func_ov102_0214c0b8(void* c);
 
 extern SharedFilePtr data_ov102_0214e9c0;
 extern SharedFilePtr data_ov102_0214e9c8;
-extern SharedFilePtr data_ov002_0210d9e0;
+extern SharedFilePtr BOB_OMB_MODEL_PTR;
 
 struct S48 { int a[12]; };
-extern S48 data_02082128;
+extern S48 _ZN9Matrix3x38IDENTITYE;
 
 struct Obj {
     char p0[8];
@@ -74,7 +74,7 @@ extern "C" int func_ov102_0214c510(Obj* o)
 
     Animation::LoadFile(data_ov102_0214e9c0);
     Animation::LoadFile(data_ov102_0214e9c8);
-    bmd = Model::LoadFile(data_ov002_0210d9e0);
+    bmd = Model::LoadFile(BOB_OMB_MODEL_PTR);
     if (((ModelBase*)&o->f300)->SetFile(bmd, 1, -1) == 0)
         return 0;
     if (((ShadowModel*)&o->f364)->InitCylinder() == 0)
@@ -99,7 +99,7 @@ extern "C" int func_ov102_0214c510(Obj* o)
     o->f3c4 = o->f5c;
     o->f3c8 = o->f60;
     o->f3cc = o->f64;
-    o->f394 = data_02082128;
+    o->f394 = _ZN9Matrix3x38IDENTITYE;
     o->f3e8 = 0;
     o->f3ea = 0;
     o->f80 = 0x1000;

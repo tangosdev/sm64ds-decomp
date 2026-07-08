@@ -29,13 +29,13 @@ struct Self {
     virtual void m70();  /* index 28 = 0x70 */
 };
 
-extern Scene *data_0209f5bc;
+extern Scene *SCENE_FADER;
 extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern char data_ov004_020bf648[];
 extern char data_ov004_020bebe8[];
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 
 extern "C" int _ZN5Scene14BeforeBehaviorEv();
 
@@ -48,7 +48,7 @@ extern "C" int func_ov004_020b0620(char *self)
     if (_ZN5Scene14BeforeBehaviorEv() == 0)
         return 0;
 
-    if (((Scene *)data_0209f5bc)->f05()) {
+    if (((Scene *)SCENE_FADER)->f05()) {
         mode = data_020a0e40;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -58,7 +58,7 @@ extern "C" int func_ov004_020b0620(char *self)
                         ((Self *)self)->m70();
                 }
             } else {
-                if (data_020a0de8[mode * 4] == 0)
+                if (TOUCH_INPUT_ARR[mode * 4] == 0)
                     ((Self *)self)->m6c();
             }
         }
@@ -95,11 +95,11 @@ extern "C" int func_ov004_020b0620(char *self)
     }
 
     if (*(int *)(self + 0xa4) == 0) {
-        if (((Scene *)data_0209f5bc)->f05() == 0)
+        if (((Scene *)SCENE_FADER)->f05() == 0)
             return 0;
     }
 
-    _Z14ApproachLinearRiii((int *)(self + 0xac), *(int *)(self + 0xa8), data_0208ee44);
+    _Z14ApproachLinearRiii((int *)(self + 0xac), *(int *)(self + 0xa8), GAME_SPEED_RELATED);
 
     {
         int *p = (int *)(((int)self + 0x5c) & 0xFFFFFFFFFFFFFFFF);

@@ -3,7 +3,7 @@ typedef struct { s32 x, y, z; } Vector3;
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 
 void func_ov062_0211b2fc(char* c){
   Vector3 v[2];
@@ -24,7 +24,7 @@ void func_ov062_0211b2fc(char* c){
     }
     v[0].z = 0x28000;
   }
-  Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c+0x8e));
-  Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short*)(c+0x8c));
-  MulVec3Mat4x3(&v[0], data_020a0e68, (Vector3*)(c+0xa4));
+  Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c+0x8e));
+  Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, *(short*)(c+0x8c));
+  MulVec3Mat4x3(&v[0], MATRIX_SCRATCH_PAPER, (Vector3*)(c+0xa4));
 }

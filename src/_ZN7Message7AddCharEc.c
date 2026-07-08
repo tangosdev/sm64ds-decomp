@@ -10,7 +10,7 @@ extern unsigned char data_0209d678;
 extern int data_0208eecc[];
 extern int data_0209d704;
 extern int data_0209d74c[];
-extern unsigned char data_0208f074[];
+extern unsigned char TALK_FONT_CHAR_WIDTHS[];
 extern unsigned char data_0209d6a4;
 extern unsigned char data_0209d6b0;
 extern unsigned char data_0209d710[];
@@ -59,7 +59,7 @@ void Message::AddChar(char c)
     }
 
     {
-        unsigned char width = data_0208f074[c];
+        unsigned char width = TALK_FONT_CHAR_WIDTHS[c];
         data_0209d678 = (sh + width) & 7;
         data_0209d710[data_0209d6a4] = width;
         data_0209d6b0 = data_0209d6b0 + width;

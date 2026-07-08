@@ -26,9 +26,9 @@ extern void func_ov006_021279b0(void *p);
 extern void func_ov006_02126ee4(void *p);
 extern void func_ov006_02126a98(void *p);
 
-extern int data_0208ee44;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern int GAME_SPEED_RELATED;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern char data_ov006_0214009c;
 extern char data_ov006_021400bc;
 extern char data_ov006_021400dc;
@@ -39,7 +39,7 @@ int func_ov006_02129268(void *arg0)
     u8 *r4 = (u8 *)arg0;
     void *buf;
 
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     *(vu16 *)0x4000304 &= ~0x8000;
     *(r4 + 0xb9f8) = 1;
 
@@ -68,8 +68,8 @@ int func_ov006_02129268(void *arg0)
     LoadCompressedFileAt(0xac, func_02054fb0());
     LoadCompressedFileAt(0xac, _ZN3G2S12GetBG3ScrPtrEv());
 
-    data_0209d45c |= 0xc;
-    data_0209d454 |= 0xc;
+    TOP_SCREEN_RELATED |= 0xc;
+    BOTTOM_SCREEN_RELATED |= 0xc;
 
     buf = func_020adc74(&data_ov006_0214009c);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(buf, 0x100);
@@ -100,7 +100,7 @@ int func_ov006_02129268(void *arg0)
         return 0;
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
-    data_0209d45c |= 1;
+    TOP_SCREEN_RELATED |= 1;
 
     func_ov006_021279b0(arg0);
     func_ov006_02126ee4(arg0);

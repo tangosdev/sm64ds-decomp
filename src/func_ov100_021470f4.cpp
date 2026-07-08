@@ -14,7 +14,7 @@ extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
 struct MeshColliderBase { int IsEnabled(); void Enable(void *a); };
 struct Platform3 { int IsClsnInRange(Fix12i a, int b); };
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 
 extern "C" int func_ov100_021470f4(char* c)
 {
@@ -30,7 +30,7 @@ extern "C" int func_ov100_021470f4(char* c)
     func_ov100_02146e70(c);
     func_020393a4((int*)(c + 0x124), 0x150000);
     func_02039394((int*)(c + 0x124), 0x1000);
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(CURRENT_GAMEMODE == 1);
     if (b != 0) {
         if (((MeshColliderBase*)(c + 0x124))->IsEnabled() == 0) {
             ((MeshColliderBase*)(c + 0x124))->Enable(c);

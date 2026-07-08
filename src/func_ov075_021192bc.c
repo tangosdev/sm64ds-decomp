@@ -6,7 +6,7 @@ extern int func_0203d8fc(void);
 extern void func_ov075_0211a100(char* c, void* r1);
 extern void func_02012790(int a);
 
-extern unsigned char data_0209fc50;
+extern unsigned char NUM_PLAYERS_2;
 extern unsigned char data_0209fc54;
 extern unsigned char data_0208f274;
 extern int data_ov075_0211d768[];
@@ -18,7 +18,7 @@ void func_ov075_021192bc(char* self)
     switch (*(unsigned char*)(self + 0x282)) {
     case 0:
         {
-            unsigned char v = data_0209fc50;
+            unsigned char v = NUM_PLAYERS_2;
             int r = func_0203d890();
             if (v == r) {
                 func_020308b4(r);

@@ -26,7 +26,7 @@ extern SharedFilePtr *data_ov070_021222e0[];
 extern SharedFilePtr data_ov070_021235ec;
 extern BTA_File data_ov070_021231f4;
 extern Vector3 data_ov070_0212365c;
-extern char data_02082128;
+extern char _ZN9Matrix3x38IDENTITYE;
 
 struct M48 { int w[12]; };
 
@@ -66,7 +66,7 @@ extern "C" int func_ov070_02120eec(char *c)
     *(int *)(c + 0xa0) = 0;
     func_ov070_02120da8(c, 1);
 
-    *(M48 *)(c + 0x3d4) = *(M48 *)&data_02082128;
+    *(M48 *)(c + 0x3d4) = *(M48 *)&_ZN9Matrix3x38IDENTITYE;
 
     func_ov070_02120724(c);
     return 1;

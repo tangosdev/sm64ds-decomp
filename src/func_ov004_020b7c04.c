@@ -1,6 +1,6 @@
 extern int data_ov004_020bc8b8;
 extern int data_ov004_020bc8b4;
-extern void* data_0209f5bc;
+extern void* SCENE_FADER;
 extern char data_0209f61c[];
 extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 extern void func_ov004_020ae274(int c);
@@ -22,7 +22,7 @@ void func_ov004_020b7c04(char* c)
         return;
     }
     if (v != 0) return;
-    o = *(struct Obj**)&data_0209f5bc;
+    o = *(struct Obj**)&SCENE_FADER;
     if (o->vt->m[7](o) != 0) return;
     _ZN5Scene9SetFadersEP15FaderBrightness(data_0209f61c);
     func_0202ec9c(data_0209f61c, 2);

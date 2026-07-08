@@ -1,10 +1,10 @@
-extern signed char data_ov002_02110af0;
-extern signed char data_02092120;
-extern int data_ov002_02110af8;
+extern signed char ENDLESS_STAIRS_FOG_AREA_ID;
+extern signed char AREA_ID;
+extern int ENDLESS_STAIRS_FOG_PTR;
 
 int func_ov002_020f1c20(void)
 {
-    if (data_ov002_02110af0 == data_02092120)
-        return data_ov002_02110af8;
+    if (ENDLESS_STAIRS_FOG_AREA_ID == AREA_ID)
+        return ENDLESS_STAIRS_FOG_PTR;
     return 0;
 }

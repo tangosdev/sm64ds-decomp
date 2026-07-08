@@ -9,13 +9,13 @@ extern int AngleDiff(int a, int b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, int a, int b, int c, u32 d);
 extern int ApproachAngle(s16* angle, int from, int start, int speed, int max);
 
-extern u16 data_0209b274;
+extern u16 KS_FRAME_COUNTER;
 
 int func_ov002_020bcd38(char* player, u8* p, int a2, int a3)
 {
     s16 cur;
 
-    if (a2 == data_0209b274) {
+    if (a2 == KS_FRAME_COUNTER) {
         int dt = a3 - a2;
         *(s16*)(player + 0x69c) = (short)AngleDiff(*(s16*)(player + 0x8e), ReadUnalignedShort(p)) / dt;
         *(u8*)(player + 0x6e5) = (u8)dt;

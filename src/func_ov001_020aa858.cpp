@@ -1,14 +1,14 @@
 //cpp
 extern "C" {
 int _ZN6Player15IsCollectingCapEv(void* p);
-extern signed char data_02092114[];
+extern signed char NEXT_HAT_CHARACTER[];
 extern unsigned char data_ov001_020ad628[];
 extern unsigned char data_ov001_020ad62c[];
-extern void* data_0209f394[];
+extern void* PLAYER_ARR[];
 
 int func_ov001_020aa858(int self, char* a, int b, int d)
 {
-    if (b == 0 && self == data_02092114[0]) {
+    if (b == 0 && self == NEXT_HAT_CHARACTER[0]) {
         data_ov001_020ad628[self] |= 0x40;
         data_ov001_020ad62c[self] |= 0x80;
         return 0;
@@ -17,7 +17,7 @@ int func_ov001_020aa858(int self, char* a, int b, int d)
     unsigned char k = *(unsigned char*)(a+0x19);
     if (k >= 3) return 1;
     if (d != 0) return 0;
-    void* p = data_0209f394[0];
+    void* p = PLAYER_ARR[0];
     if (k != 4) {
         if (_ZN6Player15IsCollectingCapEv(p)) return 0;
     }

@@ -8,19 +8,19 @@ struct StarEntry {
 };
 
 extern "C" {
-extern signed char data_02092110;
-extern short data_0209d6d4;
-extern u8 data_0209d660;
+extern signed char NEXT_LEVEL_ID;
+extern short CURR_MSG_ID;
+extern u8 PLAYER_TALKING;
 extern u8 data_0209d6c0;
 extern u8 data_0209d6c4;
-extern StarEntry* data_0209d708;
-extern StarEntry* data_0209d6f0;
-extern int* data_0209d70c;
+extern StarEntry* MSG_ARR_PTR;
+extern StarEntry* CURR_MSG_PTR;
+extern int* MSG_FILE_PTR;
 extern int data_0209d6fc;
-extern int data_0209d6f4;
+extern int CURR_MSG_TEXT_CHAR;
 extern u8 data_0209d6b0;
 extern u8 data_0209d65c;
-extern u8 data_0209d6a8;
+extern u8 MSG_LINE_HEIGHT;
 
 int SublevelToLevel(int i);
 void func_0201eaac(void);
@@ -40,19 +40,19 @@ extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int msg)
     u16* q;
     int i;
 
-    data_0209d6d4 = (short)(msg + (SublevelToLevel(data_02092110) * 7 + 0x1b4));
-    data_0209d660 = 0;
+    CURR_MSG_ID = (short)(msg + (SublevelToLevel(NEXT_LEVEL_ID) * 7 + 0x1b4));
+    PLAYER_TALKING = 0;
     func_0201eaac();
 
-    idx = data_0209d6d4;
+    idx = CURR_MSG_ID;
     data_0209d6c0 = 2;
     data_0209d6c4 = 1;
-    data_0209d6f0 = (StarEntry*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    CURR_MSG_PTR = (StarEntry*)((char*)MSG_ARR_PTR + idx * 8);
+    CURR_MSG_TEXT_CHAR = data_0209d6fc + 0x28 + MSG_FILE_PTR[1] + *(int*)((char*)MSG_ARR_PTR + idx * 8);
     func_0201b6f8(0);
 
     data_0209d65c = (0x100 - (int)data_0209d6b0) / 2;
-    data_0209d6a8 = 0x20;
+    MSG_LINE_HEIGHT = 0x20;
 
     p = func_02054d88() + 0x5000;
     li = 0;
@@ -64,5 +64,5 @@ extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int msg)
     }
 
     func_0201b7cc();
-    func_0201b388(data_0209d6a8);
+    func_0201b388(MSG_LINE_HEIGHT);
 }

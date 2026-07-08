@@ -4,7 +4,7 @@
 // Counts as decompiled, not matched.
 extern "C" {
 extern short data_0209fce8;
-extern unsigned char data_0209fc9c;
+extern unsigned char CONNECTION_ERROR;
 extern unsigned char data_0209fc78;
 extern unsigned char data_0209fc84;
 extern unsigned char data_0209fc94;
@@ -20,7 +20,7 @@ void func_020338b0(int a, int b, short c, int d) {
     volatile int li0, li1;
     volatile unsigned short ls0, ls1;
     data_0209fce8 = c;
-    data_0209fc9c = 0;
+    CONNECTION_ERROR = 0;
     func_02034504();
     data_0209fc78 = 0;
     if (d >= 0) data_0209fc84 = d;

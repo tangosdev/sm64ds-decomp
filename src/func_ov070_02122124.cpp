@@ -5,7 +5,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
 extern void func_ov070_02122044(void* c, int a);
-extern int data_02082128[];
+extern int _ZN9Matrix3x38IDENTITYE[];
 
 int func_ov070_02122124(char* c)
 {
@@ -19,7 +19,7 @@ int func_ov070_02122124(char* c)
     *(int*)(c + 0x84) = 0x1000;
     *(int*)(c + 0x88) = 0x1000;
     func_ov070_02122044(c, 0);
-    *(struct M48*)(c + 0x2ec) = *(struct M48*)data_02082128;
+    *(struct M48*)(c + 0x2ec) = *(struct M48*)_ZN9Matrix3x38IDENTITYE;
     return 1;
 }
 }

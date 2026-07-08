@@ -4,7 +4,7 @@ extern int _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4(void);
 extern void func_02017984(void);
 
-extern char data_ov089_02132c50[];
+extern char BOWSER_KEY_MODEL_PTR[];
 extern char data_ov089_02132cb0[];
 extern char data_ov089_02132c78[];
 extern char data_ov089_02132cbc[];
@@ -34,8 +34,8 @@ extern struct P2 data_ov089_02132b18;
 
 void __sinit_ov089_021328d4(void)
 {
-    func_02017acc(data_ov089_02132c50, 0x44d);
-    func_020731dc(data_ov089_02132c50, func_02017ab4, data_ov089_02132cb0);
+    func_02017acc(BOWSER_KEY_MODEL_PTR, 0x44d);
+    func_020731dc(BOWSER_KEY_MODEL_PTR, func_02017ab4, data_ov089_02132cb0);
     func_02017acc(data_ov089_02132c78, 0x49c);
     func_020731dc(data_ov089_02132c78, func_02017ab4, data_ov089_02132cbc);
     func_02017acc(data_ov089_02132c68, 0x49d);

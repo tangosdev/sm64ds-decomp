@@ -3,7 +3,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern int RandomIntInternal(int* seed);
 extern Vector3 data_ov027_02113d10;
-extern int data_0209e650;
+extern int RNG_STATE;
 
 int func_ov027_021124e4(void* thiz, void* other)
 {
@@ -17,7 +17,7 @@ int func_ov027_021124e4(void* thiz, void* other)
     if (ang > 0x2af8) ang = 0x2af8;
     if (ang < 0x9de) ang = 0x9de;
     {
-        int r = RandomIntInternal(&data_0209e650);
+        int r = RandomIntInternal(&RNG_STATE);
         *(short*)(c + 0x58) = 0xc1c;
         *(short*)(c + 0x5a) = (short)(ang + ((r & 0x1fff) - 0x1000));
     }

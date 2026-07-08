@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef int s32;
 
 extern "C" {
-extern u8 data_0209fc9c;
+extern u8 CONNECTION_ERROR;
 extern u8 data_0209fc94;
 extern u8 data_0209fc78;
 void func_02034504(void);
@@ -17,7 +17,7 @@ namespace G2S { char* GetBG0CharPtr(); char* GetBG0ScrPtr(); }
 
 extern "C" void func_02033390(int sub)
 {
-    data_0209fc9c = 0;
+    CONNECTION_ERROR = 0;
     func_02034504();
     data_0209fc94 = 1;
     data_0209fc78 = 0;

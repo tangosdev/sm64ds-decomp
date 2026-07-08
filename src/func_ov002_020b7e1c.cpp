@@ -13,7 +13,7 @@ struct SaveData {
 };
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern "C" void func_ov002_020b6fcc(char* c);
-extern int data_02092138;
+extern int STAR_CAP_MIN_POS_Y;
 
 extern "C" int func_ov002_020b7e1c(char* self);
 int func_ov002_020b7e1c(char* self) {
@@ -32,7 +32,7 @@ int func_ov002_020b7e1c(char* self) {
         ((Actor*)self)->SetRanges(0x32000, 0x32000, 0x1000000, 0x1000000);
     }
     func_ov002_020b6fcc(self);
-    if (data_02092138 > *(int*)(self + 0x60)) {
+    if (STAR_CAP_MIN_POS_Y > *(int*)(self + 0x60)) {
         SaveData::PlayerLoseCap();
         ((ActorBase*)self)->MarkForDestruction();
     }

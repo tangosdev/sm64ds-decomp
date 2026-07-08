@@ -1,10 +1,10 @@
-extern short data_0209f358[];
-extern int data_0209f394[];
+extern short NUM_COINS[];
+extern int PLAYER_ARR[];
 extern void func_ov002_020b18f0(int a);
 
 void GiveCoins(int idx, int amount)
 {
-    short *p = data_0209f358;
+    short *p = NUM_COINS;
     short cur = p[idx];
     short v = cur + amount;
     p[idx] = v;
@@ -14,5 +14,5 @@ void GiveCoins(int idx, int amount)
     } else if (v < 0) {
         p[idx] = 0;
     }
-    func_ov002_020b18f0(data_0209f394[idx]);
+    func_ov002_020b18f0(PLAYER_ARR[idx]);
 }

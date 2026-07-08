@@ -10,9 +10,9 @@ extern void _ZN9Animation7AdvanceEv(void* a);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void func_ov102_02149e38(char* self);
-extern int data_0209caa0[];
-extern unsigned char data_0209f2d8;
-extern signed char data_0209f2f8;
+extern int SAVE_DATA[];
+extern unsigned char CURRENT_GAMEMODE;
+extern signed char LEVEL_ID;
 int func_ov102_0214a32c(char* c) {
     func_ov102_02149df0(c);
     if (*(int*)(c+0x3e8) != 2) {
@@ -29,7 +29,7 @@ int func_ov102_0214a32c(char* c) {
         }
         goto end;
     }
-    if ((data_0209caa0[1] & 0x80000000) == 0) {
+    if ((SAVE_DATA[1] & 0x80000000) == 0) {
         int b = (int)(*(unsigned short*)(c+0xc) == 0x14);
         if (b != 0) {
             _ZN9Animation7AdvanceEv(c+0x370);
@@ -40,7 +40,7 @@ int func_ov102_0214a32c(char* c) {
         }
     }
     {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(CURRENT_GAMEMODE == 1);
         if (b != 0) {
             if (_ZN16MeshColliderBase9IsEnabledEv(c+0x124) == 0) {
                 _ZN16MeshColliderBase6EnableEP5Actor(c+0x124, c);
@@ -48,7 +48,7 @@ int func_ov102_0214a32c(char* c) {
             goto end;
         }
     }
-    if (data_0209f2f8 == 0x1c) {
+    if (LEVEL_ID == 0x1c) {
         if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x460000, 0x46000) != 0) {
             func_ov102_02149e38(c);
         }

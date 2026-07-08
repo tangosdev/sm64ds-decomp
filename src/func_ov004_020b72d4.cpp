@@ -14,7 +14,7 @@ extern "C" void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, un
 extern "C" void func_02012dd0(void* c);
 extern "C" void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
-extern Obj* data_0209f5bc;
+extern Obj* SCENE_FADER;
 struct Pair { int a; int b; };
 extern Pair data_ov004_020bc914;
 extern void* data_0209f61c;
@@ -26,7 +26,7 @@ extern int data_ov004_020bc8a4;
 extern "C" void func_ov004_020b72d4(char* c){
   if (*(int*)(c + 0x1c) == 0) {
     if (func_ov004_020b0b1c(0) != 0) {
-      data_0209f5bc->m_10(0x1e, 0);
+      SCENE_FADER->m_10(0x1e, 0);
       int a = data_ov004_020bc914.a;
       int b = data_ov004_020bc914.b;
       *(int*)(c + 8) = b ? a : a;
@@ -37,7 +37,7 @@ extern "C" void func_ov004_020b72d4(char* c){
       if (func_ov004_020b0b1c(1) == 0)
         return;
     }
-    if (data_0209f5bc->m_1c() != 0)
+    if (SCENE_FADER->m_1c() != 0)
       return;
     _ZN5Scene9SetFadersEP15FaderBrightness(&data_0209f61c);
     func_0202ec9c(&data_0209f61c, 2);

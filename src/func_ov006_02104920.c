@@ -4,7 +4,7 @@
 extern void SetSubBg0Offset(int a, int b);
 extern void func_02012790(int a);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern int data_ov006_0212ed00[];
 
 void func_ov006_02104920(char *c, int idx)
@@ -17,7 +17,7 @@ void func_ov006_02104920(char *c, int idx)
         *(unsigned short *)(c + 0x4690 + n) = 0;
         *(unsigned char *)(c + n + 0x4000 + 0x693) = 0;
         SetSubBg0Offset(0, 0);
-        data_0209d454 &= ~1;
+        BOTTOM_SCREEN_RELATED &= ~1;
         func_02012790(0x12f);
         *(unsigned char *)(c + 0x4fe2) -= 1;
         return;

@@ -4,7 +4,7 @@
  */
 
 extern int func_ov002_020ceaf4(unsigned char *self);
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 
 void func_ov002_020c9718(unsigned char *self)
 {
@@ -12,7 +12,7 @@ void func_ov002_020c9718(unsigned char *self)
     if (self[0x706] == 0)
         return;
     *(int *)(self + 0xa8) = func_ov002_020ceaf4(self);
-    r2 = data_0209f32c - 0x50000;
+    r2 = WATER_HEIGHT - 0x50000;
     if (*(int *)(self + 0x60) < r2)
         return;
     if (*(int *)(self + 0xa8) >= 0)

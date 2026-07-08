@@ -25,10 +25,10 @@ extern void func_ov006_020c1eb4(char *c);
 extern int RandomIntInternal(int *seed);
 extern void func_ov004_020b04d0(int v);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern int data_0209e650;
-extern int data_0208ee44;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern int RNG_STATE;
+extern int GAME_SPEED_RELATED;
 extern int func_020bc88c;
 extern int func_020bc878;
 extern int func_020bc8b8;
@@ -98,7 +98,7 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
 
     LoadCompressedFileAt(0xeb, (void *)0x6400000);
 
-    data_0209d45c = 0x1f;
+    TOP_SCREEN_RELATED = 0x1f;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 3;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
     *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
@@ -115,7 +115,7 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
         Deallocate((void *)h);
     }
 
-    data_0209d454 = 0x14;
+    BOTTOM_SCREEN_RELATED = 0x14;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     func_ov006_020c2154(c + 0x4f38);
@@ -129,7 +129,7 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
     *(int *)(c + 0x5000 + 0xc) = 0;
 
     for (int i = 0; i < 3; i++) {
-        int rnd = RandomIntInternal(&data_0209e650);
+        int rnd = RandomIntInternal(&RNG_STATE);
         u32 divisor = *(u8 *)(c + 0x5000 + 0x3a);
         u32 val = ((u32)rnd >> 16) % divisor;
         ((u32 *)(c + 0x4fe4))[i] = val * 0x50000;
@@ -146,7 +146,7 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
 
     func_ov004_020b04d0(0x20);
 
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
 
     *(u16 *)(c + 0x5018) = 0;
     *(u16 *)(c + 0x501a) = 0;

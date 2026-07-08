@@ -34,16 +34,16 @@ extern "C" {
     void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
 }
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern void* data_0209b2e8;
 extern u8 data_020a0e40;
 extern u8 data_0209f4ae[];
 extern void* data_ov075_0211d71c;
-extern void* data_0209d4a8;
+extern void* SCENE_RELATED;
 extern u8 data_0209b2f0[];
-extern s32 data_0208ee44;
-extern u8 data_02092778;
+extern s32 GAME_SPEED_RELATED;
+extern u8 DAT_02092778;
 
 extern "C" int func_ov075_0211a410(char* c)
 {
@@ -77,7 +77,7 @@ extern "C" int func_ov075_0211a410(char* c)
     SetBg0Offset(0, 0);
     SetBg2Offset(0, 0);
     SetBg3Offset(0, 0);
-    data_0209d45c = 0x11;
+    TOP_SCREEN_RELATED = 0x11;
 
     *(u16*)0x4001008 = (*(u16*)0x4001008 & ~3) | 1;
     *(u16*)0x400100c = (*(u16*)0x400100c & ~3) | 3;
@@ -85,7 +85,7 @@ extern "C" int func_ov075_0211a410(char* c)
     SetSubBg0Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    data_0209d454 = 0x18;
+    BOTTOM_SCREEN_RELATED = 0x18;
 
     *(u8*)(c + 0x283) = 0;
     *(u8*)(c + 0x284) = 0;
@@ -119,7 +119,7 @@ extern "C" int func_ov075_0211a410(char* c)
     }
 
     func_ov075_0211601c((char*)&data_ov075_0211d71c, (int)c, 1);
-    data_0209d4a8 = &data_ov075_0211d71c;
+    SCENE_RELATED = &data_ov075_0211d71c;
     _ZN5Sound16LoadInitialGroupEi(0x2b);
 
     {
@@ -137,7 +137,7 @@ extern "C" int func_ov075_0211a410(char* c)
         }
     }
 
-    data_0208ee44 = 2;
-    data_02092778 = 0;
+    GAME_SPEED_RELATED = 2;
+    DAT_02092778 = 0;
     return 1;
 }

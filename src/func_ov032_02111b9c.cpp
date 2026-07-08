@@ -19,7 +19,7 @@ extern int data_ov032_02113a8c;
 extern int data_ov032_02113a48;
 extern int data_ov032_02113a7c;
 extern int data_ov032_02113abc;
-extern int data_0209e650;
+extern int RNG_STATE;
 }
 
 extern "C" int func_ov032_02111b9c(unsigned char* thiz)
@@ -40,7 +40,7 @@ init:
 track:
     {
         *(short*)(thiz + 0x430) = Vec3_HorzAngle((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x418));
-        unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650);
+        unsigned int r = (unsigned int)RandomIntInternal(&RNG_STATE);
         int s5 = (int)(((r >> 8) & 3) << 0x1c) >> 0x10;
         ApproachLinear(*(short*)(thiz + 0x94), *(short*)(thiz + 0x430), 0x200);
         if (Vec3_HorzDist((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x418)) < 0x258000) {

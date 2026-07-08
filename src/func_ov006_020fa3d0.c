@@ -7,7 +7,7 @@ extern void func_ov006_020f94f4(void);
 extern int _Z15ApproachLinear2Rsss(short *a, short b, short c);
 
 extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 
 int func_ov006_020fa3d0(char *self)
@@ -23,7 +23,7 @@ int func_ov006_020fa3d0(char *self)
     case 5: {
         unsigned char idx = data_020a0e40[0];
         int found = 0;
-        if (data_020a0de8[idx * 4] != 0) {
+        if (TOUCH_INPUT_ARR[idx * 4] != 0) {
             if (data_020a0de9[idx * 4] != 0) {
                 found = 1;
             }

@@ -12,16 +12,16 @@ struct StarEntry {
 };
 
 extern "C" {
-extern short data_0209d6d4;
-extern u8 data_0209d660;
-extern StarEntry* data_0209d708;
-extern StarEntry* data_0209d6f0;
-extern int* data_0209d70c;
+extern short CURR_MSG_ID;
+extern u8 PLAYER_TALKING;
+extern StarEntry* MSG_ARR_PTR;
+extern StarEntry* CURR_MSG_PTR;
+extern int* MSG_FILE_PTR;
 extern int data_0209d6fc;
-extern volatile int data_0209d6f4;
+extern volatile int CURR_MSG_TEXT_CHAR;
 extern u8 data_0209d6c4;
 extern u8 data_0209d65c;
-extern u8 data_0209d6a8;
+extern u8 MSG_LINE_HEIGHT;
 extern u8 data_0209d6b0;
 extern u8 data_0209d6c0;
 
@@ -47,18 +47,18 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
     int div;
     int div2;
 
-    data_0209d6d4 = (short)(courseID + 0x196);
-    data_0209d660 = 0;
+    CURR_MSG_ID = (short)(courseID + 0x196);
+    PLAYER_TALKING = 0;
     func_0201eaac();
 
-    idx = data_0209d6d4;
-    data_0209d6f0 = (StarEntry*)((char*)data_0209d708 + idx * 8);
-    sum = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = sum;
-    data_0209d6f4 = sum + 3;
+    idx = CURR_MSG_ID;
+    CURR_MSG_PTR = (StarEntry*)((char*)MSG_ARR_PTR + idx * 8);
+    sum = data_0209d6fc + 0x28 + MSG_FILE_PTR[1] + *(int*)((char*)MSG_ARR_PTR + idx * 8);
+    CURR_MSG_TEXT_CHAR = sum;
+    CURR_MSG_TEXT_CHAR = sum + 3;
     func_0201b6f8(0);
 
-    data_0209d6a8 = (u8)((0x100 - data_0209d6b0) / 2);
+    MSG_LINE_HEIGHT = (u8)((0x100 - data_0209d6b0) / 2);
     data_0209d65c = 0x20;
 
     {
@@ -73,7 +73,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
         MultiStore16(ls, s1, 0x800);
     }
 
-    if (data_0209d6d4 >= 0x1a5) {
+    if (CURR_MSG_ID >= 0x1a5) {
         data_0209d6c4 = 0;
         q = (u16*)(func_02054fb0() + 0x400);
     } else {
@@ -88,19 +88,19 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
 
     SetSubBg1Offset(0, 0);
     func_0201b7cc();
-    func_0201b388(data_0209d6a8);
+    func_0201b388(MSG_LINE_HEIGHT);
 
-    if (data_0209d6d4 >= 0x1a5) {
+    if (CURR_MSG_ID >= 0x1a5) {
         return;
     }
 
     idx = 654;
     data_0209d6c0 = 1;
-    data_0209d6f0 = (StarEntry*)((char*)data_0209d708 + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] + *(int*)((char*)data_0209d708 + idx * 8);
+    CURR_MSG_PTR = (StarEntry*)((char*)MSG_ARR_PTR + idx * 8);
+    CURR_MSG_TEXT_CHAR = data_0209d6fc + 0x28 + MSG_FILE_PTR[1] + *(int*)((char*)MSG_ARR_PTR + idx * 8);
     func_0201b6f8(0);
 
-    data_0209d6a8 = (u8)((0xd2 - data_0209d6b0) / 2);
+    MSG_LINE_HEIGHT = (u8)((0xd2 - data_0209d6b0) / 2);
     data_0209d65c = 0x20;
 
     {
@@ -117,5 +117,5 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
     } while (div2 < 0x40);
 
     func_0201b7cc();
-    func_0201b388(data_0209d6a8);
+    func_0201b388(MSG_LINE_HEIGHT);
 }

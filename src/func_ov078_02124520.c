@@ -18,8 +18,8 @@ extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);
 extern void func_ov078_02125c48(void *c, void *p);
 
-extern void *data_0209f318;
-extern Matrix4x3 data_020a0e68;
+extern void *CAMERA;
+extern Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern void *data_ov078_0212703c;
 
 int func_ov078_02124520(char *c)
@@ -38,18 +38,18 @@ int func_ov078_02124520(char *c)
     unsigned int *flags;
     s16 ang;
 
-    cam = data_0209f318;
+    cam = CAMERA;
     if (_ZNK9Animation12WillHitFrameEi(c + 0x31c, 0x46)) {
         func_ov078_02125c24(c, 0x7d0000);
         func_02012694(0x12c, c + 0x74);
         a.x = 0;
         a.y = 0;
         a.z = 0;
-        data_020a0e68 = *(Matrix4x3 *)(c + 0x2e8);
-        MulMat4x3Mat4x3((char *)*(void **)(c + 0x2e0) + 0x120, &data_020a0e68, &data_020a0e68);
-        a.x = data_020a0e68.m[9];
-        a.y = data_020a0e68.m[10];
-        a.z = data_020a0e68.m[11];
+        MATRIX_SCRATCH_PAPER = *(Matrix4x3 *)(c + 0x2e8);
+        MulMat4x3Mat4x3((char *)*(void **)(c + 0x2e0) + 0x120, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+        a.x = MATRIX_SCRATCH_PAPER.m[9];
+        a.y = MATRIX_SCRATCH_PAPER.m[10];
+        a.z = MATRIX_SCRATCH_PAPER.m[11];
         Vec3_Lsl(&tmp, &a, 3);
         a.x = tmp.x;
         dust.x = tmp.x;
@@ -80,8 +80,8 @@ int func_ov078_02124520(char *c)
         pos.z = *(int *)(c + 0x64);
         look.y += 0x100000;
         in.z = 0x800000;
-        Matrix4x3_FromRotationY(&data_020a0e68, ang);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, ang);
+        MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
         pos.y += 0x100000;
         pos.x += out.x;
         pos.z += out.z;

@@ -8,7 +8,7 @@ extern s32 Vec3_HorzLen(const Vector3 *v);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, s32 x, s32 y, s32 z);
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 void func_ov074_02120bb8(char *self, char *p1, char *p2, int mode)
 {
@@ -43,10 +43,10 @@ void func_ov074_02120bb8(char *self, char *p1, char *p2, int mode)
     iY = (u16)aY >> 4;
     iX = (u16)aX >> 4;
 
-    s = (s32)(((long long)w * data_02082214[iY * 2 + 1] + 0x800) >> 12);
-    dst.x += (s32)(((long long)s * data_02082214[iX * 2] + 0x800) >> 12);
-    dst.y += (s32)(((long long)w * data_02082214[iY * 2] + 0x800) >> 12);
-    dst.z += (s32)(((long long)s * data_02082214[iX * 2 + 1] + 0x800) >> 12);
+    s = (s32)(((long long)w * SINE_TABLE[iY * 2 + 1] + 0x800) >> 12);
+    dst.x += (s32)(((long long)s * SINE_TABLE[iX * 2] + 0x800) >> 12);
+    dst.y += (s32)(((long long)w * SINE_TABLE[iY * 2] + 0x800) >> 12);
+    dst.z += (s32)(((long long)s * SINE_TABLE[iX * 2 + 1] + 0x800) >> 12);
 
     switch (mode) {
     case 0:

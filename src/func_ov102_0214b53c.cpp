@@ -27,8 +27,8 @@ void func_ov102_0214b444(void* c);
 extern int data_ov102_0214ea18[];
 extern int data_ov102_0214ea1c[];
 extern int data_ov102_0214ea20[];
-extern Mtx43 data_020a0e68;
-extern s16 data_02082214[];
+extern Mtx43 MATRIX_SCRATCH_PAPER;
+extern s16 SINE_TABLE[];
 }
 
 extern "C" void func_ov102_0214b53c(char* c)
@@ -76,13 +76,13 @@ extern "C" void func_ov102_0214b53c(char* c)
         *(volatile int*)&p.y = 0;
         *(volatile int*)&p.z = 0;
 
-        data_020a0e68 = *(Mtx43*)(c + 0x31c);
-        MulMat4x3Mat4x3(*(char**)(c + 0x314) + 0x60, &data_020a0e68, &data_020a0e68);
+        MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0x31c);
+        MulMat4x3Mat4x3(*(char**)(c + 0x314) + 0x60, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
 
         Vec3 s;
-        s.x = data_020a0e68.w[9];
-        s.y = data_020a0e68.w[10];
-        s.z = data_020a0e68.w[11];
+        s.x = MATRIX_SCRATCH_PAPER.w[9];
+        s.y = MATRIX_SCRATCH_PAPER.w[10];
+        s.z = MATRIX_SCRATCH_PAPER.w[11];
         Vec3 d;
         Vec3_Lsl(&d, &s, 3);
 
@@ -104,11 +104,11 @@ extern "C" void func_ov102_0214b53c(char* c)
                     dead.y = *(int*)(obj + 0x60);
                     dead.z = *(int*)(obj + 0x64);
 
-                    data_020a0e68 = *(Mtx43*)(*(char**)(c + 0xd0) + 0x5ec);
+                    MATRIX_SCRATCH_PAPER = *(Mtx43*)(*(char**)(c + 0xd0) + 0x5ec);
 
-                    p.x = data_020a0e68.w[9];
-                    p.y = data_020a0e68.w[10];
-                    p.z = data_020a0e68.w[11];
+                    p.x = MATRIX_SCRATCH_PAPER.w[9];
+                    p.y = MATRIX_SCRATCH_PAPER.w[10];
+                    p.z = MATRIX_SCRATCH_PAPER.w[11];
                     Vec3_LslInPlace(&p, 3);
 
                     char* p2 = *(char**)(c + 0xd0);
@@ -125,11 +125,11 @@ extern "C" void func_ov102_0214b53c(char* c)
                     u16 ang8e = (u16)diff;
                     u16 v582 = tmp.v582;
 
-                    p.y += 0x14000 + data_02082214[(v582 >> 4) * 2] * 0x1e;
+                    p.y += 0x14000 + SINE_TABLE[(v582 >> 4) * 2] * 0x1e;
 
                     int idxX2 = ((u16)ang8e >> 4) * 2;
-                    p.x += data_02082214[idxX2] * 0x3c;
-                    p.z += data_02082214[idxX2 + 1] * 0x3c;
+                    p.x += SINE_TABLE[idxX2] * 0x3c;
+                    p.z += SINE_TABLE[idxX2 + 1] * 0x3c;
                 }
             }
             *(int*)(c + 0x3fc) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

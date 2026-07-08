@@ -8,7 +8,7 @@ extern "C" {
     unsigned int LoadCompressedFileAt(int fileID, void* target);
 }
 
-extern unsigned char data_0209d45c;
+extern unsigned char TOP_SCREEN_RELATED;
 extern int data_ov006_0213e614[];
 
 extern "C" void func_ov006_0210aa60(void)
@@ -21,7 +21,7 @@ extern "C" void func_ov006_0210aa60(void)
 
     SetBg1Offset(0, 0);
 
-    data_0209d45c &= ~2;
+    TOP_SCREEN_RELATED &= ~2;
 
     idx = func_ov004_020ad674();
     LoadCompressedFileAt(data_ov006_0213e614[idx], func_02054ea8());

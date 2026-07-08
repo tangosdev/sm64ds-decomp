@@ -9,7 +9,7 @@ extern void MulVec3Mat4x3(void* a, void* b, void* c);
 extern void Vec3_LslInPlace(void* v, int n);
 extern int _Z14ApproachLinearRiii(int* dst, int target, int step);
 
-extern unsigned short data_0209b274;
+extern unsigned short KS_FRAME_COUNTER;
 extern int data_ov002_02110b04;
 extern int data_ov002_02110afc;
 extern int data_ov002_02110b08;
@@ -20,7 +20,7 @@ extern void func_020072c0(void);
 extern int data_ov002_02110de8[];
 extern int data_ov002_02110e00[];
 extern int data_ov002_02110dac[];
-extern int data_0209b41c[];
+extern int INV_VIEW_MATRIX_ASR_3[];
 
 int func_ov002_020f7538(char* c, unsigned char* arg1, int arg2) {
   int a = arg1[0];
@@ -31,7 +31,7 @@ int func_ov002_020f7538(char* c, unsigned char* arg1, int arg2) {
   int scale;
   Vec3 tmp, diff, scaled, sum;
 
-  if (f1 != 0 && arg2 == data_0209b274) {
+  if (f1 != 0 && arg2 == KS_FRAME_COUNTER) {
     *(short*)(c + 0x8c) = 0xd00;
     *(short*)(c + 0x8e) = -0x7300;
     *(short*)(c + 0x90) = 0x2f00;
@@ -82,7 +82,7 @@ int func_ov002_020f7538(char* c, unsigned char* arg1, int arg2) {
     *(int*)(dp + 4) = sum.y;
     *(int*)(dp + 8) = sum.z;
   }
-  MulVec3Mat4x3(*(char**)(c + 0xe0) + 0x64, data_0209b41c, c + 0x5c);
+  MulVec3Mat4x3(*(char**)(c + 0xe0) + 0x64, INV_VIEW_MATRIX_ASR_3, c + 0x5c);
   Vec3_LslInPlace(c + 0x5c, 3);
   _Z14ApproachLinearRiii((int*)(c + 0xf4), f1, f2);
   *(unsigned char*)(c + 0x102) = *(int*)(c + 0xf4) >> 0xc;

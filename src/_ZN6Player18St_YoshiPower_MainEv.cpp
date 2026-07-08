@@ -42,12 +42,12 @@ extern void func_ov002_020daa74(char*);
 extern void func_ov002_020bedd4(char*);
 extern void _ZN9Animation7AdvanceEv(void*);
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern int data_ov002_0210e3d8[];
-extern char data_ov002_02110034;
-extern char data_ov002_021101b4;
-extern char data_ov002_0211013c;
-extern char data_ov002_0211067c;
+extern char _ZN6Player14ST_YOSHI_POWERE;
+extern char _ZN6Player7ST_FALLE;
+extern char _ZN6Player7ST_WALKE;
+extern char _ZN6Player7ST_SWIME;
 
 int _ZN6Player18St_YoshiPower_MainEv(char* c)
 {
@@ -149,7 +149,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             obj0 = *(Obj**)(c+0x360);
             if (obj0 != 0) {
                 if (obj0->v18() == 3) {
-                    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110034);
+                    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player14ST_YOSHI_POWERE);
                     return 1;
                 }
                 if (func_ov002_020e0ccc(c, *(void**)(c+0x360)) != 0) {
@@ -158,9 +158,9 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
                 *(unsigned short*)(c+0x6c6) = 0x5a;
             }
             if (*(unsigned char*)(c+0x6de) != 0) {
-                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
+                _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_FALLE);
             } else {
-                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+                _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
             }
             return 1;
         }
@@ -178,9 +178,9 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
         int* a50b = (int*)(((long long)(int)((char*)*(void**)(c + (id4<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
         if ((unsigned short)(a50b[2] >> 0xc) == 0) {
             if (*(unsigned char*)(c+0x6de) != 0) {
-                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
+                _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_FALLE);
             } else {
-                _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+                _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
             }
             return 1;
         }
@@ -191,9 +191,9 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
         if (*(unsigned short*)(c+0x6a4) == 0) {
             if (*(void**)(c+0x360) == 0) {
                 if (*(unsigned char*)(c+0x706) != 0) {
-                    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211067c);
+                    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_SWIME);
                 } else {
-                    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+                    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
                 }
             } else {
                 func_ov002_020d7430(c);
@@ -230,7 +230,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0xff, c+0x74);
         }
         if (_ZN6Player12FinishedAnimEv(c) != 0) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
             return 1;
         }
         goto common_tail;
@@ -242,15 +242,15 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             int* a50d = (int*)(((long long)(int)((char*)*(void**)(c + (id8<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
             if (((unsigned int)(a50d[2] << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)(c+0x8e) >> 4) * 2;
-                short* tbl = data_02082214;
+                short* tbl = SINE_TABLE;
                 int zv = *(int*)(c+0x64) + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
                 int yv = *(int*)(c+0x60) + 0x37000;
                 pos.x = *(int*)(c+0x5c) + (int)(((((long long)tbl[i2]) << 18) + 0x800) >> 12);
                 pos.z = zv;
                 pos.y = yv;
-                dir.x = data_02082214[(*(unsigned short*)(c+0x8e) >> 4) * 2];
+                dir.x = SINE_TABLE[(*(unsigned short*)(c+0x8e) >> 4) * 2];
                 dir.y = 0;
-                dir.z = data_02082214[(*(unsigned short*)(c+0x8e) >> 4) * 2 + 1];
+                dir.z = SINE_TABLE[(*(unsigned short*)(c+0x8e) >> 4) * 2 + 1];
                 *(void**)(c+0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(c+0x628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)(((int)&dir) & 0xFFFFFFFFFFFFFFFFLL), 0);
                 *(void**)(c+0x62c) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(c+0x62c), 0x13d, pos.x, pos.y, pos.z, &dir, 0);
                 func_ov002_020dc09c(c);
@@ -267,7 +267,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             }
         }
         if (_ZN6Player12FinishedAnimEv(c) != 0) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
             return 1;
         }
         goto common_tail;
@@ -286,7 +286,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             goto common_tail;
         }
         if (_ZN6Player12FinishedAnimEv(c) != 0) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_WALKE);
             return 1;
         }
         goto common_tail;

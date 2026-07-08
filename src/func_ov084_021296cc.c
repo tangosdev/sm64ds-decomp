@@ -10,8 +10,8 @@ extern void _ZN5Actor11UntrackStarERa(signed char *s);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 a, struct Vec3 *pos, void *rot, int e, int f);
 extern void LinkSilverStarAndStarMarker(char *a, char *b);
 extern void _ZN5Actor13SpawnSoundObjEj(void *c, u32 id);
-extern u8 data_0209f208[];
-extern u8 *data_0209f344;
+extern u8 NUM_VS_STARS_COLLECTED[];
+extern u8 *VS_STAR_SPAWN_ORDER;
 
 void func_ov084_021296cc(char *c)
 {
@@ -33,7 +33,7 @@ void func_ov084_021296cc(char *c)
         return;
     }
     if (*(u8*)(c + 0x464) != 2) return;
-    if (*(u8*)(c + 0x466) != data_0209f344[data_0209f208[0]]) return;
+    if (*(u8*)(c + 0x466) != VS_STAR_SPAWN_ORDER[NUM_VS_STARS_COLLECTED[0]]) return;
     _ZN5Actor11UntrackStarERa((signed char*)(c + 0x465));
     _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
             0xb4, *(u8*)(c + 0x466) | 0x30, (struct Vec3*)(c + 0x5c), 0,

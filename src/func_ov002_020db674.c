@@ -1,7 +1,7 @@
 extern int func_ov002_020d82f0(void* c);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
-extern int data_ov002_02110094;
+extern int _ZN6Player7ST_HURTE;
 
 int func_ov002_020db674(char* c, int a1, int a2, int a3)
 {
@@ -15,6 +15,6 @@ int func_ov002_020db674(char* c, int a1, int a2, int a3)
     c[0x6e3] = 4;
     c[0x6de] = 1;
     c[0x6df] = 0;
-    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110094);
+    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player7ST_HURTE);
     return 1;
 }

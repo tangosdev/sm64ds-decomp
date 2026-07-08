@@ -37,7 +37,7 @@ extern "C" Entry3 data_ov065_0211d194[];
 extern "C" Entry3 data_ov065_0211d198[];
 extern "C" Entry3 data_ov065_0211d19c[];
 extern "C" void func_ov065_0211aacc();
-extern "C" unsigned char data_0209f2c0;
+extern "C" unsigned char LEVEL_SPECIFIC_SETTING;
 extern "C" void *data_ov065_0211c0b8[];
 
 struct V3 { int x, y, z; };
@@ -84,7 +84,7 @@ skip:;
 
     func_020393c4(self + 0x124, (void*)&func_ov065_0211aacc);
 
-    *(void**)(self + 0x390) = data_ov065_0211c0b8[data_0209f2c0];
+    *(void**)(self + 0x390) = data_ov065_0211c0b8[LEVEL_SPECIFIC_SETTING];
     *(void**)(self + 0x38c) = *(void**)(self + 0x390);
     *(void**)(self + 0x32c) = *(void**)(self + 0x38c);
 

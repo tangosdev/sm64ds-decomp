@@ -12,8 +12,8 @@ struct C { char pad[0x37c]; PMF *pp; };
 struct RayParams { Vector3 start, end, in, out; };
 
 extern "C" {
-extern void *data_0209f318;
-extern Mat4x3 data_020a0e68;
+extern void *CAMERA;
+extern Mat4x3 MATRIX_SCRATCH_PAPER;
 extern Vector3 data_ov073_02123040;
 extern char data_ov073_02123320[];
 extern char data_ov073_02123330[];
@@ -62,7 +62,7 @@ extern "C" int func_ov073_021218a0(C *c)
     Vector3 v54;
     int line[0x1f];
 
-    *(C **)((char *)data_0209f318 + 0x114) = c;
+    *(C **)((char *)CAMERA + 0x114) = c;
     DecIfAbove0_Short((unsigned short *)(self + 0x100));
 
     if (*(void **)((char *)c->pp + 8) != 0) {
@@ -86,11 +86,11 @@ extern "C" int func_ov073_021218a0(C *c)
 
     if (((char *)c->pp == data_ov073_02123330 || (char *)c->pp == data_ov073_02123350)
         && _ZNK9Animation12WillHitFrameEi(self + 0x35c, 7) != 0) {
-        data_020a0e68 = *(Mat4x3 *)(self + 0x328);
-        MulMat4x3Mat4x3(*(char **)(self + 0x320) + 0x60, &data_020a0e68, &data_020a0e68);
-        v0.x = data_020a0e68.m[9];
-        v0.y = data_020a0e68.m[10];
-        v0.z = data_020a0e68.m[11];
+        MATRIX_SCRATCH_PAPER = *(Mat4x3 *)(self + 0x328);
+        MulMat4x3Mat4x3(*(char **)(self + 0x320) + 0x60, &MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
+        v0.x = MATRIX_SCRATCH_PAPER.m[9];
+        v0.y = MATRIX_SCRATCH_PAPER.m[10];
+        v0.z = MATRIX_SCRATCH_PAPER.m[11];
         Vec3_Lsl(&v3C, &v0, 3);
         v0 = v3C;
         func_02012694(0x167, self + 0x74);
@@ -118,9 +118,9 @@ extern "C" int func_ov073_021218a0(C *c)
             rp.in.z = 0x258000;
         else
             rp.in.z = 0x12c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(self + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-        MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short *)(self + 0x94));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, 0x2000);
+        MulVec3Mat4x3(&rp.in, &MATRIX_SCRATCH_PAPER, &rp.out);
         rp.end.x = rp.start.x;
         rp.end.x = rp.start.x + rp.out.x;
         rp.end.y = rp.start.y;

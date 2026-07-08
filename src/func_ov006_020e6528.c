@@ -8,7 +8,7 @@ extern void SetBg0Offset(int a, int b);
 extern int data_0209d4b8;
 extern int data_ov006_0212e534[];
 extern int data_ov006_0212e554[];
-extern u8 data_0209d45c;
+extern u8 TOP_SCREEN_RELATED;
 
 void func_ov006_020e6528(char* c)
 {
@@ -35,9 +35,9 @@ void func_ov006_020e6528(char* c)
     SetBg2Offset(0x80 - *(int*)(c + 0x4fc8), 0x80 - *(int*)(c + 0x4fcc));
 
     if (*(int*)(c + 0x4fd0) == 0) {
-        data_0209d45c &= ~1;
+        TOP_SCREEN_RELATED &= ~1;
         return;
     }
     SetBg0Offset(0x80 - *(int*)(c + 0x4fd4), 0x80 - *(int*)(c + 0x4fd8));
-    data_0209d45c |= 1;
+    TOP_SCREEN_RELATED |= 1;
 }

@@ -5,15 +5,15 @@
 extern "C" {
 void MulVec3Mat4x3(void* v, void* m, void* out);
 int _ZN4cstd4fdivEii(int a, int b);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov007_020bfd70(char* r4, void* r1, int* r5, int* r6) {
     int out[3];
     MulVec3Mat4x3(r1, r4 + 0x44, out);
     int ang = *(unsigned short*)(r4 + 0xd4) >> 4;
     int i = ang * 2;
-    int cosv = data_02082214[i];
-    int sinv = data_02082214[i + 1];
+    int cosv = SINE_TABLE[i];
+    int sinv = SINE_TABLE[i + 1];
     int z = out[2];
     if (z < 0) z = -z;
     int r = (int)(((long long)cosv * (long long)z + 0x800) >> 0xc);

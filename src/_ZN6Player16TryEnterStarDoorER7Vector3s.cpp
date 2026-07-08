@@ -2,9 +2,9 @@
 extern "C" {
 struct State;
 struct Vector3;
-extern State data_ov002_0211013c;
+extern State _ZN6Player7ST_WALKE;
 extern State data_ov002_02110154;
-extern State data_ov002_0211043c;
+extern State _ZN6Player10ST_ON_WALLE;
 extern int data_ov002_0210e164;
 extern int data_ov002_0210f344[3];
 extern int data_ov002_0210f308;
@@ -18,9 +18,9 @@ extern short Vec3_HorzAngle(const void *v0, const void *v1);
 
 int _ZN6Player16TryEnterStarDoorER7Vector3s(char *c, int *pos, short kind)
 {
-    if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211013c) ||
+    if (_ZN6Player7IsStateERNS_5StateE(c, &_ZN6Player7ST_WALKE) ||
         _ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110154) ||
-        _ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211043c)) {
+        _ZN6Player7IsStateERNS_5StateE(c, &_ZN6Player10ST_ON_WALLE)) {
         if (_ZN6Player17SetNoControlStateEhih(c, 0xa, -1, 0)) {
             *(int *)(c + 0x750) = pos[0];
             *(int *)(c + 0x754) = pos[1];

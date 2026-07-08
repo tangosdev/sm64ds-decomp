@@ -3,9 +3,9 @@ typedef unsigned char u8;
 struct Vector3;
 struct ActorBase;
 extern "C" u8 NumStars(void);
-extern u8 data_0209f2ac;
+extern u8 NEW_STAR_COLLECTED;
 extern short data_ov002_020ff1a0[];
-extern void* data_0209f318;
+extern void* CAMERA;
 
 struct ActorBase {};
 struct Player : ActorBase {
@@ -17,7 +17,7 @@ extern "C" int func_ov002_020c6e14(Player* self)
 {
     int idx;
 
-    if (data_0209f2ac != 0) {
+    if (NEW_STAR_COLLECTED != 0) {
         idx = -1;
         switch (NumStars()) {
         case 1:  idx = 0; break;
@@ -33,7 +33,7 @@ extern "C" int func_ov002_020c6e14(Player* self)
             return 0;
 
         if (self->ShowMessage(*self, data_ov002_020ff1a0[idx], 0, 0, 2) != 0) {
-            ((Camera*)data_0209f318)->SetFlag_3();
+            ((Camera*)CAMERA)->SetFlag_3();
             return 1;
         }
     }

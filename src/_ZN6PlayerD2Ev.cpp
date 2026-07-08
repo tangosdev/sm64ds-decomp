@@ -8,9 +8,9 @@ extern int _ZN9ModelAnimD1Ev(void*);
 extern int _ZN5ActorD1Ev(void*);
 extern void _ZN15TextureSequenceD1Ev(void);
 extern void _ZN15MaterialChangerD1Ev(void);
-extern void* data_ov002_0210a83c[];
+extern void* _ZTV6Player[];
 void* _ZN6PlayerD2Ev(void* c) {
-  *(void***)c = data_ov002_0210a83c;
+  *(void***)c = _ZTV6Player;
   _ZN12WithMeshClsnD1Ev((char*)c+0x380);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)c+0x314);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)c+0x2d4);

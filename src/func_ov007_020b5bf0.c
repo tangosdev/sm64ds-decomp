@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern u8 data_ov007_0210342c[];
 
 extern int _ZN4cstd3divEii(int, int);
@@ -44,7 +44,7 @@ void func_ov007_020b5bf0(char *arg0)
 
                 r = (u16)r;
                 idx = (r >> 4) * 2;
-                tblval = data_02082214[idx];
+                tblval = SINE_TABLE[idx];
                 inv = 0x1000 - sb;
                 typeField = *(u16 *)r7;
                 r2 = (int)(((long long)tblval * inv + 0x800) >> 0xc);

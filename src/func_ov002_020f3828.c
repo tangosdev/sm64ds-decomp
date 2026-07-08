@@ -3,7 +3,7 @@
 // Counts as decompiled, not matched.
 extern void SetSubBg1Offset(int a, int b);
 extern void SetSubBg2Offset(int a, int b);
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 void func_ov002_020f3828(int* c)
 {
@@ -30,5 +30,5 @@ void func_ov002_020f3828(int* c)
     c[0x134/4] = -0x38000;
     SetSubBg1Offset(c[0x130/4] >> 12, c[0x134/4] >> 12);
     SetSubBg2Offset(c[0x130/4] >> 12, c[0x134/4] >> 12);
-    data_0209d454 |= 6;
+    BOTTOM_SCREEN_RELATED |= 6;
 }

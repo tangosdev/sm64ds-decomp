@@ -7,7 +7,7 @@ struct Actor {
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *mf, short angX);
-extern "C" Matrix4x3 data_020a0e68;
+extern "C" Matrix4x3 MATRIX_SCRATCH_PAPER;
 
 extern "C" void func_ov018_02111d28(Actor *self)
 {
@@ -20,9 +20,9 @@ extern "C" void func_ov018_02111d28(Actor *self)
                               0x140000, 0x50000, 0xf);
     if (*(short*)(s + 0x380) != 0 || *(short*)(s + 0x382) != 0) {
         Matrix4x3 *dst = (Matrix4x3*)((*(char**)(s + 0xe8)) + 0xf0);
-        data_020a0e68 = *dst;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(s + 0x382));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short*)(s + 0x380));
-        *(Matrix4x3*)((*(char**)(s + 0xe8)) + 0xf0) = data_020a0e68;
+        MATRIX_SCRATCH_PAPER = *dst;
+        Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(short*)(s + 0x382));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short*)(s + 0x380));
+        *(Matrix4x3*)((*(char**)(s + 0xe8)) + 0xf0) = MATRIX_SCRATCH_PAPER;
     }
 }

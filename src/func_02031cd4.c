@@ -11,7 +11,7 @@ extern u8 data_0209fcc8;
 extern u32 data_0209fd18;
 extern u8* data_0209fd0c;
 extern u8 data_0208f174[];
-extern u8 data_0208f074[];
+extern u8 TALK_FONT_CHAR_WIDTHS[];
 extern void func_02031028(void* a);
 
 void func_02031cd4(void* arg)
@@ -48,7 +48,7 @@ void func_02031cd4(void* arg)
             return;
         default:
             if (arg == 0)
-                data_0209fc88 += data_0208f074[cmd];
+                data_0209fc88 += TALK_FONT_CHAR_WIDTHS[cmd];
             else
                 data_0209fc88 += data_0208f174[cmd];
             i += 1;

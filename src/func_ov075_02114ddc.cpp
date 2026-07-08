@@ -14,7 +14,7 @@ extern char data_ov075_0211d414;
 extern char *data_ov075_0211c678[];
 extern char data_ov075_0211d40c;
 extern char data_ov075_0211d3ac;
-extern char data_0209e650;
+extern char RNG_STATE;
 extern int data_ov075_0211b544[];
 }
 
@@ -42,7 +42,7 @@ extern "C" int func_ov075_02114ddc(void *cc, int r6, int r5, int r4)
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0xd4, tex, 0, 0x1000, 0);
 
     {
-        unsigned x = (unsigned)RandomIntInternal(&data_0209e650);
+        unsigned x = (unsigned)RandomIntInternal(&RNG_STATE);
         int fc = _ZNK9Animation13GetFrameCountEv(c + 0x50);
         *(int*)(c + 0xdc) = (((x >> 0x10) % (unsigned)fc) << 0x10) >> 4;
     }

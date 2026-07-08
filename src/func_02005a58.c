@@ -25,10 +25,10 @@ extern char data_020918c4;
 extern char data_020914e0;
 extern char data_020916d8;
 extern char data_02091570;
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
-extern char data_0208ee44;
-extern char data_0209f5e8;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
+extern char GAME_SPEED_RELATED;
+extern char DEFAULT_SCENE_FADER;
 extern void func_0201a2f8(void);
 extern unsigned char data_0209f1e8;
 
@@ -85,8 +85,8 @@ int func_02005a58(char* c)
     _ZN3GXS10LoadBGPlttEPKvjj(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_02091570, _ZN3G2S12GetBG2ScrPtrEv());
 
-    data_0209d45c = 1;
-    data_0209d454 = 4;
+    TOP_SCREEN_RELATED = 1;
+    BOTTOM_SCREEN_RELATED = 4;
     *(volatile u32*)0x4000000 = (*(volatile u32*)0x4000000 & ~0x1f00) | 0x100;
     *(volatile u32*)0x4001000 = (*(volatile u32*)0x4001000 & ~0x1f00) | 0x400;
 
@@ -94,10 +94,10 @@ int func_02005a58(char* c)
     *(unsigned char*)(c + 0x52) = 0;
     *(unsigned char*)(c + 0x54) = 0;
     *(unsigned char*)(c + 0x55) = 0;
-    *(int*)(&data_0208ee44) = 1;
+    *(int*)(&GAME_SPEED_RELATED) = 1;
     func_020233f4();
 
-    *(unsigned short*)(&data_0209f5e8 + 0xc) = 0x7fff;
+    *(unsigned short*)(&DEFAULT_SCENE_FADER + 0xc) = 0x7fff;
     _ZN5Sound6Play2DEjj(4, 0);
     data_0209f1e8 = (unsigned char)func_0201a244((void*)func_0201a2f8, 0, 0xf, 0, 0x1000);
     return 1;

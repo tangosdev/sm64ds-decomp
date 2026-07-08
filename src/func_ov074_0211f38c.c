@@ -9,7 +9,7 @@ extern u16 DecIfAbove0_Short(u16* p);
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 extern u8 data_ov074_02122d80[];
 
 int func_ov074_0211f38c(u8* c){
@@ -47,8 +47,8 @@ int func_ov074_0211f38c(u8* c){
         }
         {
             int s=((u16)ang.y>>4)<<1;
-            p0.x += (int)(((s64)mult * data_02082214[s] + 0x800) >> 0xc);
-            p0.z += (int)(((s64)mult * data_02082214[s+1] + 0x800) >> 0xc);
+            p0.x += (int)(((s64)mult * SINE_TABLE[s] + 0x800) >> 0xc);
+            p0.z += (int)(((s64)mult * SINE_TABLE[s+1] + 0x800) >> 0xc);
         }
         ang.x=Vec3_VertAngle(&p1, &p0);
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);

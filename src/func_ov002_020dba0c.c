@@ -1,11 +1,11 @@
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 struct V3 { int a, b, c; };
 extern void func_ov002_020dc174(char* c, struct V3* r1, int r2, int r3, unsigned int a5, unsigned int a6);
 void func_ov002_020dba0c(char* c){
   struct V3 v;
   int r2, r3;
   unsigned int a5;
-  if((int)(data_0209f2d8 == 1) != 0){
+  if((int)(CURRENT_GAMEMODE == 1) != 0){
     v.c = 0xa0000;
     v.a = 0;
     r2 = 0x78000;

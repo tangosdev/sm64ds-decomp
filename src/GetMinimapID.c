@@ -19,9 +19,9 @@ struct Obj {
     s8 fcc;
 };
 
-extern char *data_0209f314;
-extern s8 data_02092120;
-extern char *data_0209f340;
+extern char *AREAS;
+extern s8 AREA_ID;
+extern char *LEVEL_FILE;
 
 int GetMinimapID(struct Obj *obj, int arg)
 {
@@ -30,8 +30,8 @@ int GetMinimapID(struct Obj *obj, int arg)
     int val;
     struct Node *node;
     if (idx < 0)
-        idx = data_02092120;
-    g = data_0209f314;
+        idx = AREA_ID;
+    g = AREAS;
     if (g == 0)
         goto tail;
     node = ((struct Entry *)(g + idx * 0xc))->f8;
@@ -57,5 +57,5 @@ L74:
     if (node != 0)
         return node->f4;
 tail:
-    return *(s8 *)(*(char **)(data_0209f340 + 0x10) + idx * 0xc + 8);
+    return *(s8 *)(*(char **)(LEVEL_FILE + 0x10) + idx * 0xc + 8);
 }

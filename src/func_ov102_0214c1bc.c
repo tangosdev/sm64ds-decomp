@@ -24,8 +24,8 @@ extern int func_ov102_0214b248(void*);
 extern void func_ov102_0214b384(void*,int);
 extern void func_ov102_0214ad40(void*);
 
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 
 int func_ov102_0214c1bc(char *c)
 {
@@ -86,7 +86,7 @@ int func_ov102_0214c1bc(char *c)
         }
 
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x110);
-        if (data_0209f2f8 == 6 && data_0209f220 == 3) {
+        if (LEVEL_ID == 6 && STAR_ID == 3) {
             if (*(int*)(c+0x98) == 0x5000) {
                 _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 3);
             } else {

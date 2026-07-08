@@ -3,7 +3,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 extern int _ZN4cstd4fdivEii(int, int);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern void* data_ov006_02137630[];
 extern void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
@@ -24,8 +24,8 @@ void func_ov006_021104c0(char* self)
                 scale = 0x1000;
                 if ((f38 - 0x20) % 16 < 4) idx = 0;
             }
-            b = (int)((((long long)data_02082214[1] * scale) + 0x800) >> 12);
-            a = (int)((((long long)data_02082214[0] * scale) + 0x800) >> 12);
+            b = (int)((((long long)SINE_TABLE[1] * scale) + 0x800) >> 12);
+            a = (int)((((long long)SINE_TABLE[0] * scale) + 0x800) >> 12);
             vec._00 = b;
             vec._01 = a;
             vec._10 = -a;

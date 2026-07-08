@@ -31,7 +31,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern void func_ov002_020f64ac(void *c, void *p);
 extern int func_ov002_020f65ec(void *c);
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 extern int data_ov002_0210bc88;
 int func_ov002_020f81c4(void *arg0)
 {
@@ -87,23 +87,23 @@ int func_ov002_020f81c4(void *arg0)
     }
   }
   Vec3_Asr(&asr, (Vec3 *) (c + 0x5c), 3);
-  Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
+  Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, asr.x, asr.y, asr.z);
   t = *((s32 *) (c + 8));
   if ((((u32) t) >= 0x1a) && (((u32) t) <= 0x2d))
   {
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, *((s16 *) (c + 0x8c)), *((s16 *) (c + 0x8e)), *((s16 *) (c + 0x90)));
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&MATRIX_SCRATCH_PAPER, *((s16 *) (c + 0x8c)), *((s16 *) (c + 0x8e)), *((s16 *) (c + 0x90)));
   }
   else
   {
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, *((s16 *) (c + 0x8c)), *((s16 *) (c + 0x8e)), *((s16 *) (c + 0x90)));
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&MATRIX_SCRATCH_PAPER, *((s16 *) (c + 0x8c)), *((s16 *) (c + 0x8e)), *((s16 *) (c + 0x90)));
   }
   if ((*((char **) (c + 0xdc))) != 0)
   {
-    *((Mtx43 *) ((*((char **) (c + 0xdc))) + 0x1c)) = data_020a0e68;
+    *((Mtx43 *) ((*((char **) (c + 0xdc))) + 0x1c)) = MATRIX_SCRATCH_PAPER;
   }
   if ((*((char **) (c + 0xe0))) != 0)
   {
-    *((Mtx43 *) ((*((char **) (c + 0xe0))) + 0x1c)) = data_020a0e68;
+    *((Mtx43 *) ((*((char **) (c + 0xe0))) + 0x1c)) = MATRIX_SCRATCH_PAPER;
     func_ov002_020f64ac(*((char **) (c + 0xe0)), &data_ov002_0210bc88);
     func_ov002_020f65ec(*((char **) (c + 0xe0)));
   }

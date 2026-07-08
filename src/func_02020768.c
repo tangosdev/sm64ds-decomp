@@ -4,7 +4,7 @@
 extern int func_0202044c(char *thiz, int idx);
 extern void func_0202043c(char *thiz);
 
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 
 void func_02020768(char *thiz)
 {
@@ -15,7 +15,7 @@ void func_02020768(char *thiz)
         return;
 
     acc = (int *)(thiz + 0x1c);
-    *acc += data_0208ee44;
+    *acc += GAME_SPEED_RELATED;
 
     if (*(int *)(thiz + 0x1c) < *(int *)(thiz + 0x18))
         return;

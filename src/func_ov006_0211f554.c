@@ -3,7 +3,7 @@
 // Counts as decompiled, not matched.
 extern void func_ov006_0211f454(char *c, int i);
 extern void func_ov006_0211f34c(char *c, int i);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov006_0211f554(char *c, int i)
 {
@@ -12,7 +12,7 @@ void func_ov006_0211f554(char *c, int i)
     *(unsigned short *)(e + 0x466e) = 0;
     func_ov006_0211f454(c, i);
     func_ov006_0211f34c(c, i);
-    v = data_02082214[(*(unsigned short *)(e + 0x466c) >> 4) * 2 + 1];
+    v = SINE_TABLE[(*(unsigned short *)(e + 0x466c) >> 4) * 2 + 1];
     if (v >= 0)
         *(unsigned char *)(e + 0x467e) = 1;
     else

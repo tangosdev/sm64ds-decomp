@@ -17,7 +17,7 @@ extern SharedFilePtr data_ov006_02140330;
 extern SharedFilePtr data_ov006_02140338;
 
 struct GObj { int w[8]; };
-extern GObj *data_0209f5c0;
+extern GObj *ROOT_ACTOR_BASE;
 
 extern "C" int func_ov006_020c6e4c(char *c) {
     BMD_File *m = Model::LoadFile(data_ov006_02140330);
@@ -28,7 +28,7 @@ extern "C" int func_ov006_020c6e4c(char *c) {
     ((ModelAnim *)(c + 0x38))->SetAnim(a, 0, 0x800, 0);
     func_02016acc(c + 0x38, 1);
     func_02016b24(c + 0x38, 2);
-    int b = (*(unsigned short *)((char *)data_0209f5c0 + 0xc) == 0x175);
+    int b = (*(unsigned short *)((char *)ROOT_ACTOR_BASE + 0xc) == 0x175);
     if (b != 0) {
         func_02016a14(c + 0x38, 0x7fff);
         func_02016a04(c + 0x38, 0x7d40);

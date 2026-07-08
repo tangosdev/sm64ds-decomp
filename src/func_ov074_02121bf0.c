@@ -18,7 +18,7 @@ extern void func_ov074_02121300(char *c);
 extern void func_ov074_0212195c(char *c);
 extern void func_ov074_02121800(char *c);
 
-extern char *data_0209f318;
+extern char *CAMERA;
 extern int data_ov074_0212290c[];
 
 int func_ov074_02121bf0(char *c)
@@ -36,7 +36,7 @@ int func_ov074_02121bf0(char *c)
     *(int *)(c + 0x5e8) = u < 0 ? -u : u;
 
     if (*(int *)(c + 0x5cc) != 7) {
-        *(void **)(data_0209f318 + 0x114) = c;
+        *(void **)(CAMERA + 0x114) = c;
     }
 
     func_ov074_0212199c(c);

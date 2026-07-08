@@ -12,7 +12,7 @@ void Matrix4x3_FromRotationY(void* m, int angle);
 void MulVec3Mat4x3(Vec3* in, void* m, Vec3* out);
 short Vec3_HorzAngle(const Vec3* a, const Vec3* b);
 int func_ov094_02136188(void* c, PMF* p);
-extern char data_020a0e68[];
+extern char MATRIX_SCRATCH_PAPER[];
 extern PMF data_ov094_02136b60;
 
 int func_ov094_02136024(char* c){
@@ -34,8 +34,8 @@ int func_ov094_02136024(char* c){
       d.x = 0;
       d.y = 0;
       d.z = 0x320000;
-      Matrix4x3_FromRotationY(data_020a0e68, 0x4000);
-      MulVec3Mat4x3(&d, data_020a0e68, (Vec3*)(c+0x3d8));
+      Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, 0x4000);
+      MulVec3Mat4x3(&d, MATRIX_SCRATCH_PAPER, (Vec3*)(c+0x3d8));
       *(int*)(c+0x3d8) += *(int*)(c+0x5c);
       *(int*)(c+0x3dc) += *(int*)(c+0x60);
       *(int*)(c+0x3e0) += *(int*)(c+0x64);

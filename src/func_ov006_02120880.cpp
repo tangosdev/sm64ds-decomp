@@ -1,7 +1,7 @@
 //cpp
 extern "C" int data_ov006_0213fb34;
 extern "C" int data_ov006_0213c62c;
-extern "C" int data_020a0eac;
+extern "C" int _ZN6Memory11gameHeapPtrE;
 extern "C" void func_ov006_02120938();
 extern "C" void func_ov006_020d1008();
 extern "C" void func_ov006_020ccfc8();
@@ -19,6 +19,6 @@ extern "C" void *func_ov006_02120880(char *thiz)
     *(int**)thiz = &data_ov006_0213c62c;
     _ZN8Particle10SysTrackerD1Ev(thiz + 0x47e4);
     func_ov004_020b29c0(thiz);
-    _ZN6Memory10DeallocateEPvP4Heap(thiz, *(void**)&data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(thiz, *(void**)&_ZN6Memory11gameHeapPtrE);
     return thiz;
 }

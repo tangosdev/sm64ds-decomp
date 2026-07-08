@@ -5,11 +5,11 @@ extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* thiz);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
-extern int data_02092138;
+extern int STAR_CAP_MIN_POS_Y;
 
 int func_ov002_020b7cec(char* c)
 {
-    if (data_02092138 > *(int*)(c + 0x60)
+    if (STAR_CAP_MIN_POS_Y > *(int*)(c + 0x60)
         || _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144)
         || !DecIfAbove0_Short((unsigned short*)(c + 0x100))
         || (*(int*)(c + 0xb0) & 8))

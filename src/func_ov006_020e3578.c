@@ -23,8 +23,8 @@ extern void func_ov004_020b04d0(int v);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
 extern int func_ov004_020adc1c(void);
 
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern char data_ov006_0213c394;
 extern char data_ov006_0213c3b4;
 
@@ -36,7 +36,7 @@ int func_ov006_020e3578(char* self)
 
     if (a == 0 || b == 0) return 0;
 
-    data_0209d45c |= 4;
+    TOP_SCREEN_RELATED |= 4;
     *(volatile u16*)0x400000c = (*(volatile u16*)0x400000c & ~3) | 2;
     *(volatile u16*)0x400000c = (*(volatile u16*)0x400000c & 0x43) | 0x1220;
     DecompressLZ16(a, _ZN2G213GetBG2CharPtrEv());
@@ -55,7 +55,7 @@ int func_ov006_020e3578(char* self)
         DecompressLZ16(c7, (void*)0x6400000);
         _ZN2GX11LoadOBJPlttEPKvjj(c8, 0, 0x100);
 
-        data_0209d454 |= 4;
+        BOTTOM_SCREEN_RELATED |= 4;
         *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
         *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0x814;
         DecompressLZ16(b, (void*)func_02054de8());

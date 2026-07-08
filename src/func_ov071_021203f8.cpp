@@ -9,7 +9,7 @@ struct WithMeshClsn { void Init(Actor *a, int b, int c, void *d, int e); void St
 extern "C" char data_ov071_02122f80;
 extern "C" char data_ov071_02122f88;
 struct Blob48 { int w[12]; };
-extern "C" Blob48 data_02082128;
+extern "C" Blob48 _ZN9Matrix3x38IDENTITYE;
 extern "C" void func_ov071_021202ec(Actor *self, int type);
 extern "C" int func_ov071_0211f524(char *c);
 
@@ -43,7 +43,7 @@ extern "C" int func_ov071_021203f8(Actor *self)
     *(int*)(s + 0x88) = 0x1000;
     *(int*)(s + 0xd0) = 0;
     *(short*)(s + 0x3a8) = 0x3c;
-    *(Blob48*)(s + 0x350) = data_02082128;
+    *(Blob48*)(s + 0x350) = _ZN9Matrix3x38IDENTITYE;
     func_ov071_0211f524(s);
     return 1;
 }

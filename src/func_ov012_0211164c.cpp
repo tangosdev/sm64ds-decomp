@@ -13,7 +13,7 @@ extern int data_ov012_021124d0[];
 extern int data_ov012_021124c8[];
 extern int data_ov012_02111c24[];
 extern int data_ov012_02111c90[];
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 int func_ov012_0211164c(char* c){
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124d0);
   _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov012_021124c8);
@@ -26,7 +26,7 @@ int func_ov012_0211164c(char* c){
   _ZN16MeshColliderBase6EnableEP5Actor(c+0x124, c);
   int v = *(int*)(c+0x60) - 0x4b0000;
   *(int*)(c+0x334) = v;
-  if(data_0209caa0[2] & 0x80000){
+  if(SAVE_DATA[2] & 0x80000){
     *(int*)(c+0x60) = *(int*)(c+0x334);
   }
   return 1;

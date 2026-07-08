@@ -7,7 +7,7 @@ void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToScale(void* m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
 void _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(void* thiz, void* mtx, void* vec);
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 
 void _ZN9FaderWipe11AdvanceFadeEv(char* thiz)
 {
@@ -24,10 +24,10 @@ void _ZN9FaderWipe11AdvanceFadeEv(char* thiz)
         }
         if (*(Fix12i*)(thiz + 4) != 0) {
             Fix12i scale = (Fix12i)(((long long)(0x1000 - *(Fix12i*)(thiz + 4)) * 0x20000 + 0x800) >> 12);
-            Matrix4x3_FromTranslation(data_020a0e68, 0, 0, -0x1000);
-            Matrix4x3_ApplyInPlaceToScale(data_020a0e68, scale, scale, scale);
-            Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, 0x4000);
-            _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(thiz + 0x18, data_020a0e68, 0);
+            Matrix4x3_FromTranslation(MATRIX_SCRATCH_PAPER, 0, 0, -0x1000);
+            Matrix4x3_ApplyInPlaceToScale(MATRIX_SCRATCH_PAPER, scale, scale, scale);
+            Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, 0x4000);
+            _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(thiz + 0x18, MATRIX_SCRATCH_PAPER, 0);
         }
     }
     if (*(Fix12i*)(thiz + 4) == old) return;

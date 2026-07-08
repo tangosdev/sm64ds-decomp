@@ -8,7 +8,7 @@ extern "C" int _ZN5Actor13ClosestPlayerEv(void);
 extern "C" int _ZN6Player17SetNoControlStateEhih(int self, unsigned char a, int b, unsigned char c);
 extern "C" void func_ov085_0212e728(int c, int a, int b);
 
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 extern int data_ov085_02130800[];
 
 extern "C" int func_ov085_0212e4a4(int self)
@@ -16,7 +16,7 @@ extern "C" int func_ov085_0212e4a4(int self)
     int p = _ZN5Actor13ClosestPlayerEv();
     if (p != 0) {
         V3 v = *(V3*)(p + 0x5c);
-        if ((data_0209caa0[2] & 0x10000) != 0 &&
+        if ((SAVE_DATA[2] & 0x10000) != 0 &&
             *(int*)((int)&v + 8) > -0x28000 &&
             _ZN6Player17SetNoControlStateEhih(p, 0x12, -1, 0) != 0) {
             *(int*)(p + 0x744) = *(int*)(self + 0x5c);

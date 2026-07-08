@@ -2,7 +2,7 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern void* data_ov006_0213765c[];
 extern void* data_ov006_02137674[];
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
@@ -23,8 +23,8 @@ void func_ov006_021117bc(char* self)
             int vec[4];
             if (*(int*)(self + 0x28) < 0x1000) return;
             d = _ZN4cstd4fdivEii(0x7000, *(int*)(self + 0x28));
-            b = (int)(((long long)data_02082214[1] * d + 0x800) >> 12);
-            a = (int)(((long long)data_02082214[0] * d + 0x800) >> 12);
+            b = (int)(((long long)SINE_TABLE[1] * d + 0x800) >> 12);
+            a = (int)(((long long)SINE_TABLE[0] * d + 0x800) >> 12);
             vec[0] = b;
             vec[1] = a;
             vec[2] = -a;

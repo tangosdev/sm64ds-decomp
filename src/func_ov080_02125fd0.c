@@ -8,7 +8,7 @@ typedef short s16;
 extern void MulMat4x3Mat4x3(const void* m1, const void* m0, void* mF);
 extern void func_020553a4(void* m);
 extern void func_ov080_02125460(void* self);
-extern int data_0209b3ec;
+extern int VIEW_MATRIX_ASR_3;
 
 void func_ov080_02125fd0(char* self)
 {
@@ -17,7 +17,7 @@ void func_ov080_02125fd0(char* self)
     char* p;
 
     *(int*)0x4000444 = 0;
-    MulMat4x3Mat4x3((void*)(self + 0xd4), &data_0209b3ec, tmp);
+    MulMat4x3Mat4x3((void*)(self + 0xd4), &VIEW_MATRIX_ASR_3, tmp);
     *(int*)0x4000440 = 2;
     func_020553a4(tmp);
     *(int*)0x40004c8 = 0xe0000000;

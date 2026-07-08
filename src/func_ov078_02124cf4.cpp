@@ -18,7 +18,7 @@ int Player_ShowMessage(void* self, ActorBase& a, unsigned int b, const Vector3* 
 extern int data_ov078_021270ac;
 extern int data_ov078_021270ec;
 extern int data_ov078_0212705c;
-extern unsigned char data_0209f220;
+extern unsigned char STAR_ID;
 }
 
 extern "C" int func_ov078_02124cf4(unsigned char* thiz)
@@ -50,7 +50,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
 
     Sound_ChangeMusicVolume(0x14, 0x15666);
     int msg = 0;
-    if (data_0209f220 == 1) {
+    if (STAR_ID == 1) {
         msg = (short)(msg + (short)(*(int*)(other + 8) + 0x9a));
     } else {
         msg = 0x95;

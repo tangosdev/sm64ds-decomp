@@ -26,7 +26,7 @@ extern SharedFilePtr data_ov085_0213073c;
 extern int data_ov085_021307d0;
 extern int data_ov085_02130790;
 extern int data_ov085_021307e0;
-extern char data_0209caa0[];
+extern char SAVE_DATA[];
 
 extern "C" int func_ov085_0212ebec(char* thiz){
   BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov085_0213074c);
@@ -51,13 +51,13 @@ extern "C" int func_ov085_0212ebec(char* thiz){
     break;
   case 1:
     {
-      int v = *(int*)(data_0209caa0 + 8);
+      int v = *(int*)(SAVE_DATA + 8);
       if (v & 0x20000)
         return 0;
       if (v & 0x10000)
-        *(int*)(data_0209caa0 + 8) = v & ~0x10000;
+        *(int*)(SAVE_DATA + 8) = v & ~0x10000;
       *(u8*)(thiz + 0x2dc) = 1;
-      if (!(*(int*)(data_0209caa0 + 8) & 0x80))
+      if (!(*(int*)(SAVE_DATA + 8) & 0x80))
         func_ov085_0212e728(thiz, &data_ov085_02130790);
       else
         func_ov085_0212e728(thiz, &data_ov085_021307e0);

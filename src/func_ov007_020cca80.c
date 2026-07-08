@@ -1,7 +1,7 @@
-extern int data_020a0ea0;
+extern int _ZN6Memory14defaultHeapPtrE;
 extern unsigned int _ZN4Heap21MaxAllocationUnitSizeEv(unsigned int);
 
 void func_ov007_020cca80(void)
 {
-    (void)_ZN4Heap21MaxAllocationUnitSizeEv((unsigned int)data_020a0ea0);
+    (void)_ZN4Heap21MaxAllocationUnitSizeEv((unsigned int)_ZN6Memory14defaultHeapPtrE);
 }

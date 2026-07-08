@@ -2,7 +2,7 @@
 typedef unsigned short u16;
 
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *st);
-extern int data_ov002_0211004c;
+extern int _ZN6Player10ST_SWALLOWE;
 
 extern "C" void _ZN6Player13InitFireYoshiEv(char *c)
 {
@@ -10,5 +10,5 @@ extern "C" void _ZN6Player13InitFireYoshiEv(char *c)
     *p |= 0x1000;
     if (*(int *)(c + 0x360) == 0)
         return;
-    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211004c);
+    _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player10ST_SWALLOWE);
 }

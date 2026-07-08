@@ -1,7 +1,7 @@
 
 extern short ReadUnalignedShort(unsigned char *p);
 extern int RandomIntInternal(int *seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 int func_ov002_020f6e48(char *self, unsigned char *p)
 {
   int b;
@@ -33,7 +33,7 @@ int func_ov002_020f6e48(char *self, unsigned char *p)
   *((int *) (self + 0x84)) = 0xb33;
   *((int *) (self + 0x88)) = 0xb33;
   rv = *((int *) ((*((int *) (self - -0xe0))) + 0x54));
-  new_var2 = RandomIntInternal(&data_0209e650);
+  new_var2 = RandomIntInternal(&RNG_STATE);
   *((int *) ((*((int *) (self + 0xe0))) + 0x58)) = ((unsigned short) (((int) (((((long long) ((int) ((((unsigned int) new_var2) >> 20) & 0xfff))) * rv) + 0x800) >> 12)) >> 12)) << 12;
   return 1;
 }

@@ -13,7 +13,7 @@ extern SharedFilePtr data_ov073_021232a8;
 extern SharedFilePtr data_ov073_02123290;
 extern SharedFilePtr data_ov073_021232b0;
 extern SharedFilePtr data_ov073_021232b8;
-extern SharedFilePtr data_ov002_0210da30;
+extern SharedFilePtr SUPER_MUSHROOM_MODEL_PTR;
 extern SharedFilePtr data_ov073_02123298;
 extern Vector3 data_ov073_02123040;
 extern PMF data_ov073_02123330;
@@ -40,7 +40,7 @@ int func_ov073_02121ccc(char* c) {
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov073_02123290);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov073_021232b0);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov073_021232b8);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
+    _ZN5Model8LoadFileER13SharedFilePtr(&SUPER_MUSHROOM_MODEL_PTR);
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov073_02123298);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x30c, f, 1, -1);
     _ZN11ShadowModel12InitCylinderEv(c+0x380);

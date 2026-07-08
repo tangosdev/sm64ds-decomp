@@ -7,7 +7,7 @@ void _ZN9ModelBase12ApplyOpacityEj(void* m, unsigned int op);
 void func_ov002_020f65b8(void* o);
 }
 struct M48 { int w[12]; };
-extern M48 data_0209b41c;
+extern M48 INV_VIEW_MATRIX_ASR_3;
 extern int data_ov002_0210bb7c[];
 typedef void (*VFN)(void*, int);
 extern "C" int func_ov002_020f80ac(char* c){
@@ -15,7 +15,7 @@ extern "C" int func_ov002_020f80ac(char* c){
     char* p = *(char**)(c + 0xdc) + 0x1c;
     int* tbl = data_ov002_0210bb7c;
     int i;
-    *(M48*)p = data_0209b41c;
+    *(M48*)p = INV_VIEW_MATRIX_ASR_3;
     for (i = 0; i < 3; i++){
       *(int*)(p + 0x24) = tbl[0];
       *(int*)(p + 0x28) = tbl[1];

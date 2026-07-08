@@ -1,8 +1,8 @@
-extern short data_02092144[];
+extern short HEALTH_ARR[];
 
 void GiveHealth(int idx, int amt)
 {
-    data_02092144[idx] += amt;
-    if (data_02092144[idx] > 0x880) { data_02092144[idx] = 0x880; return; }
-    if (data_02092144[idx] < 0) { data_02092144[idx] = 0; }
+    HEALTH_ARR[idx] += amt;
+    if (HEALTH_ARR[idx] > 0x880) { HEALTH_ARR[idx] = 0x880; return; }
+    if (HEALTH_ARR[idx] < 0) { HEALTH_ARR[idx] = 0; }
 }

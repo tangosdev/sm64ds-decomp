@@ -15,7 +15,7 @@ extern int func_ov075_02116d40(int c);
 extern void func_02020124(void);
 
 extern int data_ov075_0211d780[];
-extern int data_0208ee44[];
+extern int GAME_SPEED_RELATED[];
 
 void func_ov075_021190a4(int c)
 {
@@ -38,7 +38,7 @@ void func_ov075_021190a4(int c)
 
     if (*(int*)(c + 0x264) > 0) {
         int *q = (int*)(c + 0x264);
-        *q = *q - data_0208ee44[0];
+        *q = *q - GAME_SPEED_RELATED[0];
         return;
     }
 

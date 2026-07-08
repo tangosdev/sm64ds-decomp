@@ -28,7 +28,7 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void* _ZN6Memory13operator_new2Ej(u32 sz);
 extern void func_ov002_020f5ad4(char* c);
 
-extern u8 data_0209d454;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 void func_ov002_020f5fe4(char* c)
 {
@@ -41,7 +41,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg3Offset(0, 0);
     _ZN3GXS15SetGraphicsModeEi(0);
 
-    data_0209d454 &= ~0x1f;
+    BOTTOM_SCREEN_RELATED &= ~0x1f;
 
     f = LoadFile(0x267);
     DecompressLZ16(f, (void*)0x6400000);
@@ -109,7 +109,7 @@ void func_ov002_020f5fe4(char* c)
     func_02056374((const void*)f, 0, 0x800);
     Deallocate((void*)f);
 
-    data_0209d454 |= 0x10;
+    BOTTOM_SCREEN_RELATED |= 0x10;
 
     {
         int f6 = LoadFile(0x256);

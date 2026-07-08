@@ -1,33 +1,33 @@
-extern unsigned char data_0209f2d8;
-extern int data_0209caa0;
+extern unsigned char CURRENT_GAMEMODE;
+extern int SAVE_DATA;
 
 void func_ov002_020c43c4(char* self, unsigned int idx) {
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(CURRENT_GAMEMODE == 1);
     if (b != 0) return;
     switch (idx) {
     case 1:
-        if ((&data_0209caa0)[2] & 0x400) return;
-        (&data_0209caa0)[2] |= 0x400;
+        if ((&SAVE_DATA)[2] & 0x400) return;
+        (&SAVE_DATA)[2] |= 0x400;
         break;
     case 2:
-        if ((&data_0209caa0)[2] & 0x800) return;
-        (&data_0209caa0)[2] |= 0x800;
+        if ((&SAVE_DATA)[2] & 0x800) return;
+        (&SAVE_DATA)[2] |= 0x800;
         break;
     case 3:
-        if ((&data_0209caa0)[2] & 0x1000) return;
-        (&data_0209caa0)[2] |= 0x1000;
+        if ((&SAVE_DATA)[2] & 0x1000) return;
+        (&SAVE_DATA)[2] |= 0x1000;
         break;
     case 4:
-        if ((&data_0209caa0)[2] & 0x2000) return;
-        (&data_0209caa0)[2] |= 0x2000;
+        if ((&SAVE_DATA)[2] & 0x2000) return;
+        (&SAVE_DATA)[2] |= 0x2000;
         break;
     case 5:
-        if ((&data_0209caa0)[2] & 0x4000) return;
-        (&data_0209caa0)[2] |= 0x4000;
+        if ((&SAVE_DATA)[2] & 0x4000) return;
+        (&SAVE_DATA)[2] |= 0x4000;
         break;
     case 6:
-        if ((&data_0209caa0)[2] & 0x10000000) return;
-        (&data_0209caa0)[2] |= 0x10000000;
+        if ((&SAVE_DATA)[2] & 0x10000000) return;
+        (&SAVE_DATA)[2] |= 0x10000000;
         break;
     case 0:
         break;

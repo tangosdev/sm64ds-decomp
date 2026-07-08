@@ -12,10 +12,10 @@ extern void func_02020304(void);
 extern unsigned char data_020a0e40[];
 extern unsigned char data_0209f4ae[];
 extern s16 data_ov075_0211b5d4[];
-extern unsigned char data_0209d454[];
+extern unsigned char BOTTOM_SCREEN_RELATED[];
 extern int data_ov075_0211c9b8[];
 extern int data_ov075_0211d71c[];
-extern unsigned char data_0209d45c[];
+extern unsigned char TOP_SCREEN_RELATED[];
 
 void func_ov075_02117918(char *self)
 {
@@ -43,7 +43,7 @@ void func_ov075_02117918(char *self)
     func_ov075_02115e8c(self + 0x100, 0xc, 0, data_ov075_0211b5d4[r], 0xa8);
 
     *(unsigned char *)(self + 0x280) = 5;
-    data_0209d454[0] &= ~5;
+    BOTTOM_SCREEN_RELATED[0] &= ~5;
 
     r = func_0200f0bc();
     func_ov075_02116030(data_ov075_0211d71c, LoadFile(data_ov075_0211c9b8[r]));
@@ -56,8 +56,8 @@ void func_ov075_02117918(char *self)
         SetBg2Offset(0, 0x100);
 
     func_02033bb8(5);
-    data_0209d45c[0] |= 4;
-    data_0209d454[0] |= 5;
+    TOP_SCREEN_RELATED[0] |= 4;
+    BOTTOM_SCREEN_RELATED[0] |= 5;
     _ZN3G2x18SetBlendBrightnessEPVtts((void *)0x4000050, 0xb, ~5);
 
     *(int *)(self + 0x268) = *(unsigned char *)(self + 0x281);

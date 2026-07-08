@@ -21,8 +21,8 @@ void func_ov004_020b682c(void);
 namespace GX { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
 namespace GXS { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern int func_020bc7d4;
 extern int data_ov006_0213d370[];
 
@@ -31,7 +31,7 @@ extern "C" int func_ov006_020f74b4(char *self)
     void *a;
     void *b;
 
-    data_0209d45c = 0x11;
+    TOP_SCREEN_RELATED = 0x11;
     func_ov006_0210a534();
     a = LoadFile(data_ov006_0213d370[func_ov004_020ad674()]);
     b = LoadFile(0xbb);
@@ -41,7 +41,7 @@ extern "C" int func_ov006_020f74b4(char *self)
     GXS::LoadOBJPltt(b, 0, 0x100);
     Deallocate(a);
     Deallocate(b);
-    data_0209d454 = 0x18;
+    BOTTOM_SCREEN_RELATED = 0x18;
     func_ov006_020f7064(self);
     func_ov006_020c0aa8(self + 0x4660);
     if (func_ov006_020c1a88(self + 0x4f38) == 0) return 0;

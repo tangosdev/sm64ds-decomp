@@ -17,16 +17,16 @@ extern void func_020731dc(int a, int b, void **node);
 extern void func_ov002_020f6f48(char *c, Vec3 *v, int amt);
 extern void MulVec3Mat4x3(void *m, void *v, Vec3 *out);
 extern void Vec3_LslInPlace(Vec3 *v, int sh);
-extern u16 data_0209b274;
-extern int data_0209e650;
-extern char *data_0209f318;
+extern u16 KS_FRAME_COUNTER;
+extern int RNG_STATE;
+extern char *CAMERA;
 extern int data_ov002_0210b614;
 extern int data_ov002_02110b0c;
 extern int data_ov002_02110c20[];
 extern int func_020072c0;
 extern int data_ov002_02110db8;
 extern int data_ov002_0210b958;
-extern int data_0209b41c;
+extern int INV_VIEW_MATRIX_ASR_3;
 inline unsigned int inline_fn(unsigned int arg0)
 {
   return arg0;
@@ -37,15 +37,15 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
   char *c = (char *) arg0;
   u8 *flag = (u8 *) arg1;
   Vec3 v;
-  if (arg2 == data_0209b274)
+  if (arg2 == KS_FRAME_COUNTER)
   {
     if ((*flag) != 0)
     {
-      int r = (inline_fn(RandomIntInternal(&data_0209e650)) >> 20) & 0xfff;
+      int r = (inline_fn(RandomIntInternal(&RNG_STATE)) >> 20) & 0xfff;
       int m = (s32) (((((long long) r) * 0xa000) + 0x800) >> 12);
       *((s32 *) (c + 0xf4)) = m + 0x19000;
     }
-    AddVec3((Vec3 *) (c + 0x5c), (Vec3 *) (data_0209f318 + 0x8c), (Vec3 *) (c + 0x5c));
+    AddVec3((Vec3 *) (c + 0x5c), (Vec3 *) (CAMERA + 0x8c), (Vec3 *) (c + 0x5c));
     if (arg2 > 0x2bc)
     {
       *((s32 *) ((((int) c) + 0x60) & 0xFFFFFFFFFFFFFFFF)) -= 0x96000;
@@ -56,7 +56,7 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
       data_ov002_0210b614 = arg2;
     }
   }
-  if (arg3 == data_0209b274)
+  if (arg3 == KS_FRAME_COUNTER)
   {
     *((u8 *) (c + 0x102)) = 0;
     return 1;
@@ -76,7 +76,7 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
   }
   else
   {
-    MulVec3Mat4x3(&data_ov002_0210b958, &data_0209b41c, &v);
+    MulVec3Mat4x3(&data_ov002_0210b958, &INV_VIEW_MATRIX_ASR_3, &v);
     Vec3_LslInPlace(&v, 3);
     func_ov002_020f6f48(c, &v, 8);
   }

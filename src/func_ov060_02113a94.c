@@ -2,7 +2,7 @@ typedef short s16;
 typedef struct Vector3 { int x, y, z; } Vector3;
 extern int Vec3_HorzLen(const Vector3* v);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov060_02113a94(void* thiz)
 {
@@ -20,7 +20,7 @@ void func_ov060_02113a94(void* thiz)
         zero.y = 0;
         zero.z = 0;
         a = (int)(unsigned short)Vec3_HorzAngle(&zero, (Vector3*)(c + 0x5c)) >> 4;
-        *(int*)(c + 0x5c) = (short)data_02082214[a * 2] * (short)0xed8;
-        *(int*)(c + 0x64) = (short)data_02082214[a * 2 + 1] * (short)0xed8;
+        *(int*)(c + 0x5c) = (short)SINE_TABLE[a * 2] * (short)0xed8;
+        *(int*)(c + 0x64) = (short)SINE_TABLE[a * 2 + 1] * (short)0xed8;
     }
 }

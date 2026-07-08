@@ -7,7 +7,7 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int,
 extern void *_ZN5Actor13ClosestPlayerEv(void *);
 extern short Vec3_VertAngle(const void *, const void *);
 extern int data_ov014_02114970[];
-extern short data_02082214[];
+extern short SINE_TABLE[];
 void func_ov014_02111b70(char *c)
 {
   int new_var;
@@ -26,7 +26,7 @@ void func_ov014_02111b70(char *c)
   tgt[2] = new_var;
   int a = (unsigned short) Vec3_VertAngle(tgt, (const void *) (c + 0x5c));
   int i = (a >> 4) << 1;
-  *((int *) (c + 0xa8)) = -((int) (((((long long) data_02082214[i]) * 0x8c000) + 0x800) >> 12));
+  *((int *) (c + 0xa8)) = -((int) (((((long long) SINE_TABLE[i]) * 0x8c000) + 0x800) >> 12));
   int v = *((int *) (c + 0xa8));
   if (v < 0x5000)
   {
@@ -41,6 +41,6 @@ void func_ov014_02111b70(char *c)
   if (((!c) && (!c)) && (!c))
   {
   }
-  *((int *) (c + 0x98)) = (int) (((((long long) data_02082214[i + 1]) * 0x8c000) + 0x800) >> 12);
+  *((int *) (c + 0x98)) = (int) (((((long long) SINE_TABLE[i + 1]) * 0x8c000) + 0x800) >> 12);
   *((short *) ((c + 0x500) + 0xfc)) = 0x3c;
 }

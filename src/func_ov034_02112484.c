@@ -3,7 +3,7 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern int data_ov034_02114488;
-extern char data_020a0e68[];
+extern char MATRIX_SCRATCH_PAPER[];
 
 struct Vec3 { int x, y, z; };
 
@@ -37,8 +37,8 @@ extern "C" void func_ov034_02112484(char *sl)
             out.x = 0;
             out.y = 0;
             out.z = 0;
-            Matrix4x3_FromRotationY(data_020a0e68, (short)(*(short *)(sl + 0x400 + 0x46) + 0x200));
-            MulVec3Mat4x3(&in, data_020a0e68, &out);
+            Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, (short)(*(short *)(sl + 0x400 + 0x46) + 0x200));
+            MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
             Vec3_Add(&sum, (struct Vec3 *)(sl + 0x3cc + r6 * 0xc), &out);
             *(int *)(r8 + 0x3cc) = sum.x;
             *(int *)(r8 + 0x3d0) = sum.y;

@@ -1,4 +1,4 @@
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 
 void func_ov001_020ab550(char *c)
 {
@@ -10,7 +10,7 @@ void func_ov001_020ab550(char *c)
         return;
     }
     p = (int *)(((int)c + 0xc) & 0xFFFFFFFFFFFFFFFF);
-    *p = *p - data_0208ee44;
+    *p = *p - GAME_SPEED_RELATED;
     v = *(int *)(c + 0xc);
     if (v > 0) {
         return;

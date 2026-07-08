@@ -1,7 +1,7 @@
 //cpp
 extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
   unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 extern "C" void func_ov002_020cb474(char* c){
   int* r1 = *(int**)(c+0x37c);
@@ -15,7 +15,7 @@ extern "C" void func_ov002_020cb474(char* c){
   v[1] = y;
   v[2] = z;
   unsigned int id;
-  switch (data_0209f2f8) {
+  switch (LEVEL_ID) {
     case 0x13:
     case 0xa:
       id = 0xba;

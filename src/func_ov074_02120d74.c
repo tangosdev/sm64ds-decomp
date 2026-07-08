@@ -8,7 +8,7 @@ typedef unsigned int u32;
 
 struct Vector3 { int x, y, z; };
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
@@ -130,9 +130,9 @@ void func_ov074_02120d74(char *a)
                                 v0.z = *(int *)(a + 0x64);
                                 if (*(u32 *)(a + 0x5dc) == 0 && _ZN5Actor10FindWithIDEj(*(u32 *)(a + 0x5dc)) == 0) {
                                     int k = ((u16)(s16)(*(int *)(a + 0x5f0) * ((s16)((*(int *)(a + 0x80) / 0x1000) * 0x350 + 0x500) + 0x600) + (*(s16 *)(a + 0x5f4) + *(s16 *)(a + 0x5f8)))) >> 4;
-                                    v0.x = (int)(((long long)data_02082214[k * 2] * 0x546000LL + 0x800) >> 12);
+                                    v0.x = (int)(((long long)SINE_TABLE[k * 2] * 0x546000LL + 0x800) >> 12);
                                     v0.y += 0x32000;
-                                    v0.z = (int)(((long long)data_02082214[k * 2 + 1] * 0x546000LL + 0x800) >> 12);
+                                    v0.z = (int)(((long long)SINE_TABLE[k * 2 + 1] * 0x546000LL + 0x800) >> 12);
                                     *(int *)(a + 0x5dc) = *(int *)(_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x115, 0, &v0, 0, *(s8 *)(a + 0xcc), -1) + 4);
                                 }
                             }

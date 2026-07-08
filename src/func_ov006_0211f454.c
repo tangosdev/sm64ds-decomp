@@ -1,12 +1,12 @@
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 void func_ov006_0211f454(char *c, int i)
 {
   int n = i * 0x24;
   char *pm = c + 0x4668;
   char *pa = c + 0x466c;
   int *new_var;
-  short *tbl = data_02082214;
+  short *tbl = SINE_TABLE;
   int angle = *((unsigned short *) (pa + n));
   int s = tbl[((angle >> 4) * 2) + 1];
   int mult = *((int *) (pm + n));

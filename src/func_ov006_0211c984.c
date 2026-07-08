@@ -17,21 +17,21 @@ extern void func_ov006_0211c080(void *p);
 extern void func_ov004_020b6808(void);
 extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 int func_ov006_0211c984(void *arg0)
 {
     u8 *r7 = (u8 *)arg0;
     int r6, r5, r4;
 
-    data_0209d45c |= 0x11;
+    TOP_SCREEN_RELATED |= 0x11;
     r6 = LoadFile(0xff);
     r5 = LoadFile(0x100);
     DecompressLZ16(r6, (void *)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)r5, 0, 0x100);
 
-    data_0209d454 |= 4;
+    BOTTOM_SCREEN_RELATED |= 4;
     r4 = LoadFile(0x98);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
     DecompressLZ16(r4, (void *)func_02054de8());

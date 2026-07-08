@@ -39,7 +39,7 @@ extern int func_ov096_02135800(char* c);
 extern short Vec3_HorzAngle(void*, void*);
 extern int RandomIntInternal(void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
-extern int data_0209e650[];
+extern int RNG_STATE[];
 }
 extern "C" int func_ov096_02136134(char* c){
   int cond = (*(unsigned short*)(c+0xc) == 0xf0);
@@ -50,7 +50,7 @@ extern "C" int func_ov096_02136134(char* c){
     _ZN5Sound9PlayBank0EjRK7Vector3(9, c+0x74);
     func_ov096_02135800(c);
     *(short*)(c+0x94) = Vec3_HorzAngle((char*)*(void**)(c+0x388)+0x5c, c+0x5c);
-    int rnd = RandomIntInternal(data_0209e650);
+    int rnd = RandomIntInternal(RNG_STATE);
     *(short*)(c+0x94) = *(short*)(c+0x94) + ((rnd & 0x7fff) - 0x4000);
     *(short*)(c+0x8e) = *(short*)(c+0x94) + 0x8000;
     *(int*)(c+0xa8) = 0x28000;

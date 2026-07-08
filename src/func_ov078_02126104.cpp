@@ -24,7 +24,7 @@ extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(voi
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 
-extern void *data_0209f318;
+extern void *CAMERA;
 extern char data_ov078_0212707c[];
 extern char data_ov078_021270bc[];
 extern char data_ov078_0212703c[];
@@ -37,7 +37,7 @@ extern "C" int func_ov078_02126104(C *c)
     char *self = (char *)c;
 
     if (_ZN5Actor13DistToCPlayerEv(c) < 0x1770000) {
-        *(C **)((char *)data_0209f318 + 0x114) = c;
+        *(C **)((char *)CAMERA + 0x114) = c;
     }
 
     if (*(void **)((char *)c->pp + 8) != 0) {

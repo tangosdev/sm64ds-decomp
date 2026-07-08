@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 struct Vec3 { int x, y, z; };
-extern int data_020a0e68;
+extern int MATRIX_SCRATCH_PAPER;
 extern void func_ov002_020ed684(void *c);
 extern void _ZN9Animation7AdvanceEv(void *c);
 extern void Matrix4x3_FromRotationZXYExt(void *m, int x, int y, int z);
@@ -30,8 +30,8 @@ int func_ov002_020ee010(char *self)
             vmid.y = 0;
             vmid.z = 0;
             ang = (short *)(((int)*(char **)(self + 0x38c) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
-            Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
-            MulVec3Mat4x3(&vin, &data_020a0e68, &vmid);
+            Matrix4x3_FromRotationZXYExt(&MATRIX_SCRATCH_PAPER, ang[0], ang[1], ang[2]);
+            MulVec3Mat4x3(&vin, &MATRIX_SCRATCH_PAPER, &vmid);
             Vec3_Add(&vout, *(char **)(self + 0x38c) + 0x5c, &vmid);
             *(int *)(self + 0x5c) = vout.x;
             *(int *)(self + 0x60) = vout.y;

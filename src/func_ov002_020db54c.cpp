@@ -3,7 +3,7 @@ typedef unsigned short u16;
 struct Vector3 { int x, y, z; };
 struct State;
 extern "C" void func_02035860(void *a, struct Vector3 *v);
-extern struct State data_ov002_021101cc;
+extern struct State _ZN6Player9ST_THROWNE;
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(void *self, struct State &s);
 
 extern "C" void func_ov002_020db54c(unsigned char *self, int a, int b, short c)
@@ -31,5 +31,5 @@ extern "C" void func_ov002_020db54c(unsigned char *self, int a, int b, short c)
         }
     }
     *(int *)(self + 0x35c) = 0;
-    _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_021101cc);
+    _ZN6Player11ChangeStateERNS_5StateE(self, _ZN6Player9ST_THROWNE);
 }

@@ -1,7 +1,7 @@
-extern unsigned char data_0209f2d8[];
+extern unsigned char CURRENT_GAMEMODE[];
 extern void data_ov043_02112424(void*);
 int func_ov027_02112740(char* c){
-  int b = data_0209f2d8[0];
+  int b = CURRENT_GAMEMODE[0];
   b = (b == 2);
   if(b) return 1;
   {

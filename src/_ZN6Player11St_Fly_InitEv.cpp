@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern int data_0209f318[];
+extern int CAMERA[];
 extern void func_ov002_020dab14(char*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern void func_0200d6f0(void*,unsigned char);
@@ -19,7 +19,7 @@ int _ZN6Player11St_Fly_InitEv(char* c){
     *(int*)(c+0x9c)=0;
     _ZN6Player7SetAnimEji5Fix12IiEj(c,0x49,0,0x1000,0);
   }
-  func_0200d6f0((void*)data_0209f318[0], *(unsigned char*)(c+0x6d8));
+  func_0200d6f0((void*)CAMERA[0], *(unsigned char*)(c+0x6d8));
   return 1;
 }
 }

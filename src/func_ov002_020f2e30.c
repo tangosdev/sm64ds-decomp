@@ -5,7 +5,7 @@
 
 extern void func_0201f108(void);
 extern void func_0201ef50(unsigned int x);
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 struct Obj {
     char pad1c4[0x1c4];
@@ -29,5 +29,5 @@ void func_ov002_020f2e30(struct Obj *self, int n) {
     self->f1cb = (unsigned char)n;
     func_0201f108();
     func_0201ef50(n & 0xff);
-    data_0209d454 |= 1;
+    BOTTOM_SCREEN_RELATED |= 1;
 }

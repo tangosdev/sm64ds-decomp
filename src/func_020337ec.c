@@ -1,4 +1,4 @@
-extern unsigned char data_0209fc9c;
+extern unsigned char CONNECTION_ERROR;
 extern unsigned char data_0209fc94;
 extern unsigned char data_0209fc78;
 extern short data_0209fce8;
@@ -15,7 +15,7 @@ void func_020337ec(void)
 {
     volatile unsigned short v;
     volatile int z;
-    data_0209fc9c = 0;
+    CONNECTION_ERROR = 0;
     func_02034504();
     data_0209fc94 = 1;
     data_0209fc78 = 0;

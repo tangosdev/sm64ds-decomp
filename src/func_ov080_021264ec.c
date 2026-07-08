@@ -5,17 +5,17 @@ extern void func_ov080_021256f8(void *c);
 extern int func_ov080_02125bb0(void *c, int x);
 extern void func_ov080_02125940(void *c);
 extern void func_ov080_02125af0(void *c);
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 
 struct E { char _0[8]; int f8; int fc; char _10[8]; };
 
 void func_ov080_021264ec(char *c)
 {
     if ((unsigned char)((*(unsigned int*)(c + 8) >> 8) & 0x1f) == 7 &&
-        !(data_0209caa0[2] & 0x40000) &&
+        !(SAVE_DATA[2] & 0x40000) &&
         IsStarCollectedInLevel(0x12, 1)) {
         if (_Z14ApproachLinearRiii((int*)(c + 0x5c), *(int*)(c + 0x1b0) + 0x802000, 0x13e72))
-            data_0209caa0[2] |= 0x40000;
+            SAVE_DATA[2] |= 0x40000;
         func_ov080_0212555c(c);
     }
     func_ov080_021256f8(c);

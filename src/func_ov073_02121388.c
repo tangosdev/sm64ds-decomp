@@ -12,7 +12,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ac
 extern void func_02012694(int a, void* p);
 extern int func_ov073_0212157c(void* c, void* p);
 
-extern void* data_0209f318;
+extern void* CAMERA;
 extern void* data_ov073_02123350;
 
 int func_ov073_02121388(char* c) {
@@ -34,7 +34,7 @@ int func_ov073_02121388(char* c) {
         vplayer.y = *(int*)(pv + 4);
         vplayer.z = *(int*)(pv + 8);
     }
-    cam = data_0209f318;
+    cam = CAMERA;
     vmsg.x = *(int*)(c + 0x5c);
     vmsg.y = *(int*)(c + 0x60);
     vmsg.z = *(int*)(c + 0x64);

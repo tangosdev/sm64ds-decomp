@@ -5,7 +5,7 @@ extern struct SharedFilePtr data_ov060_0211ac78;
 extern struct SharedFilePtr *data_ov060_021192dc[];
 extern struct SharedFilePtr *data_ov060_0211927c[];
 extern struct SharedFilePtr data_ov060_0211b208;
-extern struct SharedFilePtr data_ov089_02132c50;
+extern struct SharedFilePtr BOWSER_KEY_MODEL_PTR;
 int func_ov060_02115e80(void) {
     int i;
     _ZN13SharedFilePtr7ReleaseEv(&data_ov060_0211ac78);
@@ -14,7 +14,7 @@ int func_ov060_02115e80(void) {
     for (i = 0; i < 6; i++)
         _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211927c[i]);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov060_0211b208);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov089_02132c50);
+    _ZN13SharedFilePtr7ReleaseEv(&BOWSER_KEY_MODEL_PTR);
     func_02011cfc();
     return 1;
 }

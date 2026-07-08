@@ -11,7 +11,7 @@ extern void func_ov060_02116518(char *self, u32 kind, int a2, int a3);
 extern void func_ov060_021172e0(void *self);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov060_02116f90(char *self) {
     _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
@@ -28,7 +28,7 @@ void func_ov060_02116f90(char *self) {
             if (*(int *)(self + 0x35c) == 7) {
                 *(int *)(self + 0x360) = 0x6000;
             } else {
-                *(int *)(self + 0x360) = ((u32)RandomIntInternal(&data_0209e650) >> 16 & 0xfff) * 2 + 0x6000;
+                *(int *)(self + 0x360) = ((u32)RandomIntInternal(&RNG_STATE) >> 16 & 0xfff) * 2 + 0x6000;
             }
             *(int *)(self + 0x98) = 0;
             *(int *)(self + 0xa8) = 0;

@@ -8,8 +8,8 @@ struct Vector3_16;
 extern void func_ov102_02149684(int* dst, void* src);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3& pos, const Vector3_16* r, int e, int f);
 extern int RandomIntInternal(int* seed);
-extern int data_0209f318;
-extern int data_0209e650;
+extern int CAMERA;
+extern int RNG_STATE;
 
 void func_ov102_0214953c(char* c, int p1, int p2)
 {
@@ -18,12 +18,12 @@ void func_ov102_0214953c(char* c, int p1, int p2)
     char* o = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
         0x10d, (unsigned int)(p2 | (p1 << 8)), pos, 0, *(signed char*)(c + 0xcc), -1);
     if (o == 0) return;
-    char* g = *(char**)&data_0209f318;
+    char* g = *(char**)&CAMERA;
     volatile int vel[3];
     vel[0] = 0;
     vel[1] = 0x11000;
     vel[2] = 0;
-    int rnd = RandomIntInternal(&data_0209e650);
+    int rnd = RandomIntInternal(&RNG_STATE);
     int vsum = rnd + (*(short*)(g + 0x17c) + 0x8000);
     *(short*)(o + 0x92) = 0;
     *(short*)(o + 0x94) = (short)vsum;

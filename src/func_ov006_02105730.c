@@ -11,7 +11,7 @@ typedef struct WarpEntry {
 } WarpEntry;
 
 extern u8 data_020a0e40;
-extern WarpEntry data_020a0de8[];
+extern WarpEntry TOUCH_INPUT_ARR[];
 
 void func_ov006_02105730(char* thiz) {
     u8 idx;
@@ -24,14 +24,14 @@ void func_ov006_02105730(char* thiz) {
     }
     idx = data_020a0e40;
     b = 0;
-    if (data_020a0de8[idx].a != 0) {
-        b = (data_020a0de8[idx].b != 0);
+    if (TOUCH_INPUT_ARR[idx].a != 0) {
+        b = (TOUCH_INPUT_ARR[idx].b != 0);
     }
     if (b == 0) {
         return;
     }
-    dx = data_020a0de8[idx].c - 0xe8;
-    dy = data_020a0de8[idx].d - 0x10;
+    dx = TOUCH_INPUT_ARR[idx].c - 0xe8;
+    dy = TOUCH_INPUT_ARR[idx].d - 0x10;
     if (dx < -15) {
         return;
     }

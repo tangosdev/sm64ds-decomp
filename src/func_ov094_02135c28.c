@@ -16,10 +16,10 @@ extern void _Z14ApproachLinearRiii(int* x, int target, int step);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* dst, void* mat, void* src);
 
-extern short data_02082214[];
-extern int data_0209e650[];
+extern short SINE_TABLE[];
+extern int RNG_STATE[];
 extern char data_ov094_02136b50[];
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 
 struct V6 { int v[6]; };
 
@@ -55,8 +55,8 @@ int func_ov094_02135c28(void* thiz)
         *(s16*)(c + 0x100) = 0x32;
         *(s16*)(c + 0x3ec) = Vec3_HorzAngle((const void*)(c + 0x5c), (const void*)(c + 0x3d8));
     } else if (*(u16*)(c + 0x100) == 0) {
-        *(s16*)(c + 0x3ec) = (s16)(((u32)RandomIntInternal(data_0209e650) >> 8) << 12);
-        *(s16*)(c + 0x100) = (s16)((((u32)RandomIntInternal(data_0209e650) >> 8) & 0x3f) + 0x32);
+        *(s16*)(c + 0x3ec) = (s16)(((u32)RandomIntInternal(RNG_STATE) >> 8) << 12);
+        *(s16*)(c + 0x100) = (s16)((((u32)RandomIntInternal(RNG_STATE) >> 8) & 0x3f) + 0x32);
     }
 
     ApproachAngle((short*)(c + 0x94), *(s16*)(c + 0x3ec), 0xa, 0x200, 0x100);
@@ -73,11 +73,11 @@ int func_ov094_02135c28(void* thiz)
     *p3e8 += 0x200;
     ang = *(int*)(c + 0x3e8);
     idx = ((u16)(short)ang >> 4) * 2;
-    tbl = data_02082214[idx];
+    tbl = SINE_TABLE[idx];
     result = (int)(((long long)tbl * 0x64000 + 0x800) >> 12);
     _Z14ApproachLinearRiii((int*)(c + 0x60), *(int*)(c + 0x3dc) + result, 0x3000);
 
-    Matrix4x3_FromRotationY(data_020a0e68, *(s16*)(c + 0x94));
-    MulVec3Mat4x3(&buf, data_020a0e68, (void*)(c + 0xa4));
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x94));
+    MulVec3Mat4x3(&buf, MATRIX_SCRATCH_PAPER, (void*)(c + 0xa4));
     return 1;
 }

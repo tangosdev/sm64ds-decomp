@@ -19,15 +19,15 @@ extern void func_ov006_020dc7b4(char *c);
 extern void func_ov006_020dc2f8(char *c);
 extern void func_ov004_020b04d0(int v);
 extern int func_ov004_020adc1c(void);
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern int data_0208ee44;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern int GAME_SPEED_RELATED;
 
 int func_ov006_020de704(void *arg0) {
     char *c = (char*)arg0;
     int a, b, d;
 
-    data_0209d45c |= 8;
+    TOP_SCREEN_RELATED |= 8;
     *(volatile u16*)0x400000e &= ~3;
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & 0x43) | 0x1210;
 
@@ -48,7 +48,7 @@ int func_ov006_020de704(void *arg0) {
     DecompressLZ16(b, (void*)0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void*)a, 0, 0x100);
 
-    data_0209d454 |= 8;
+    BOTTOM_SCREEN_RELATED |= 8;
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 3;
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x1210;
 
@@ -71,7 +71,7 @@ int func_ov006_020de704(void *arg0) {
 
     *(int*)(c + 0xa8) = 0;
     *(int*)(c + 0xac) = *(int*)(c + 0xa8);
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     func_ov006_020ddf9c(c);
     func_ov006_020dd334(c);
     func_ov006_020dc7b4(c);

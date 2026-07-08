@@ -23,11 +23,11 @@ extern int IsStarCollectedInCurLevel(u8 x);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern int _ZN5Actor18GetBitInDeathTableEv(void *self);
 
-extern char data_ov002_0210d9a8;
+extern char RED_NUMBER_MODEL_PTR;
 extern char data_ov002_0211092c;
 extern char data_ov002_0211093c;
-extern u8 data_0209f2d8;
-extern s8 data_0209f2f8;
+extern u8 CURRENT_GAMEMODE;
+extern s8 LEVEL_ID;
 
 int func_ov002_020eb204(char *c)
 {
@@ -112,7 +112,7 @@ int func_ov002_020eb204(char *c)
     }
 
     if (*(u8 *)(c + 0x1d8) != 0) {
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
+        _ZN5Model8LoadFileER13SharedFilePtr(&RED_NUMBER_MODEL_PTR);
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211092c), 1, 0x19) == 0) {
             _ZN13RaycastGroundD1Ev(&rg);
             return 0;
@@ -141,9 +141,9 @@ int func_ov002_020eb204(char *c)
     *(s16 *)(c + 0x1d6) = -1;
     *(s32 *)(c + 0x1d0) = r3;
 
-    if (data_0209f2d8 == 1)
+    if (CURRENT_GAMEMODE == 1)
         r3 = 1;
-    if (r3 == 0 && SublevelToLevel((s8)data_0209f2f8) == 0x1d && IsStarCollectedInCurLevel(*(u8 *)(c + 0x1d9)) != 0) {
+    if (r3 == 0 && SublevelToLevel((s8)LEVEL_ID) == 0x1d && IsStarCollectedInCurLevel(*(u8 *)(c + 0x1d9)) != 0) {
         _ZN9ActorBase18MarkForDestructionEv(c);
         _ZN13RaycastGroundD1Ev(&rg);
         return 0;

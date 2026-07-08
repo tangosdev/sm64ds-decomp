@@ -9,7 +9,7 @@ extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 
-extern int data_0209e650[];
+extern int RNG_STATE[];
 extern unsigned char data_ov034_0211433c[];
 extern int data_ov034_02114488[];
 
@@ -30,7 +30,7 @@ void func_ov034_02112348(char* c)
     }
 
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x8da)) == 0) {
-        int r = (unsigned)RandomIntInternal(data_0209e650) >> 0x1b;
+        int r = (unsigned)RandomIntInternal(RNG_STATE) >> 0x1b;
         if (r & 1) {
             *(short*)(c + 0x8d8) = (short)((r & 0xf) << 0xc);
         } else {

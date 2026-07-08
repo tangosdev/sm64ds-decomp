@@ -5,7 +5,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern int _ZN4cstd3divEii(int a, int b);
 extern void InvMat4x3(void* dst, void* out);
 extern void MulVec3Mat4x3(void* v, void* m, void* res);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov007_020bfe4c(char* thiz, int a, int b, int c, Vector3* out)
 {
@@ -17,8 +17,8 @@ void func_ov007_020bfe4c(char* thiz, int a, int b, int c, Vector3* out)
     v.z = c;
     ang = (int)*(unsigned short*)(thiz + 0xd4) >> 4;
     i = ang * 2;
-    sinv = data_02082214[i + 1];
-    cosv = data_02082214[i];
+    sinv = SINE_TABLE[i + 1];
+    cosv = SINE_TABLE[i];
     ac = c < 0 ? -c : c;
     f1 = _ZN4cstd4fdivEii((int)(((long long)cosv * ac + 0x800) >> 12), sinv);
     v.x = _ZN4cstd3divEii((int)(((long long)v.x * f1 + 0x800) >> 12), 0x60);

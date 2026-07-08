@@ -7,7 +7,7 @@ extern void func_02012694(int a, void* p);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int data_ov092_02132074[];
 extern int data_ov092_02132080[];
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov092_02131878(char* c, char* a1, unsigned int a2){
   unsigned char f = *(unsigned char*)(c+0x575);
@@ -26,9 +26,9 @@ void func_ov092_02131878(char* c, char* a1, unsigned int a2){
   {
     int n = (*(unsigned short*)(c+0x94)) >> 4;
     int* pb0 = (int*)(c+0xb0);
-    *(short*)(c+0x4e0) = data_02082214[2*n+1] >> 2;
+    *(short*)(c+0x4e0) = SINE_TABLE[2*n+1] >> 2;
     *(short*)(c+0x4e2) = 0;
-    *(short*)(c+0x4e4) = (-(int)data_02082214[2*n]) >> 2;
+    *(short*)(c+0x4e4) = (-(int)SINE_TABLE[2*n]) >> 2;
     *pb0 = *pb0 & ~0x2000000;
     *(int*)(c+0x4ec) = 0x1a9000;
   }

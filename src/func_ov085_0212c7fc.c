@@ -15,10 +15,10 @@ extern char data_ov085_021305c8;
 extern char data_ov085_021305c0;
 extern char data_ov085_021305d8;
 extern char data_ov085_021305e0;
-extern int data_0209caa0[];
-extern s8 data_0209f2f8;
+extern int SAVE_DATA[];
+extern s8 LEVEL_ID;
 extern s32 data_ov085_021305ac;
-extern int data_0209e650;
+extern int RNG_STATE;
 extern char data_ov085_021306cc;
 
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
@@ -69,7 +69,7 @@ int func_ov085_0212c7fc(char* c)
 
     r1 = *(s32*)(c + 0x43c);
     if (r1 != 7) {
-        if (!(data_0209caa0[1] & 0x40000000))
+        if (!(SAVE_DATA[1] & 0x40000000))
             return 0;
     }
 
@@ -83,7 +83,7 @@ int func_ov085_0212c7fc(char* c)
         goto skip17;
 
 check18:
-    if (!(data_0209caa0[2] & 0x80000))
+    if (!(SAVE_DATA[2] & 0x80000))
         return 0;
 
 skip17:
@@ -105,7 +105,7 @@ skip17:
     *(s32*)(c + 0x84) = *(s32*)(c + 0x88);
 
     if (*(s32*)(c + 0x43c) == 7) {
-        if (data_0209caa0[1] & 0x40)
+        if (SAVE_DATA[1] & 0x40)
             return 0;
         *(u8*)(c + 0x428) = 1;
         goto block_26;
@@ -114,7 +114,7 @@ skip17:
     r0 = _ZN5Actor13ClosestPlayerEv(c);
     if (r0 == 0)
         return 0;
-    if (data_0209f2f8 != 0x32) {
+    if (LEVEL_ID != 0x32) {
         if (*(s32*)(c + 0x440) != *(u8*)((char*)r0 + 0x6d9))
             return 0;
     }
@@ -136,10 +136,10 @@ block_26:
     {
         int v;
         v = *(s32*)((char*)r6 + 8);
-        if (data_0209f2f8 == 0x32)
+        if (LEVEL_ID == 0x32)
             v = 1;
         if (func_02013890(*(s32*)(c + 0x43c), v) != 0 && data_ov085_021305ac < 8) {
-            u32 rnd = RandomIntInternal(&data_0209e650) >> 8;
+            u32 rnd = RandomIntInternal(&RNG_STATE) >> 8;
             if (NumStars() >= 0x51) {
                 if (*(s32*)((char*)r6 + 8) == 3) {
                     if ((rnd & 0xf) == 0)
@@ -165,7 +165,7 @@ block_26:
     }
 
 block_out:
-    if (data_0209f2f8 == 5) {
+    if (LEVEL_ID == 5) {
         if (*(s8*)(c + 0xcc) == 3)
             *(s32*)(c + 0xb0) = 0x8280;
     }

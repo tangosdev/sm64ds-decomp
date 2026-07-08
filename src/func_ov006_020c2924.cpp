@@ -1,10 +1,10 @@
 //cpp
 extern "C" {
 extern int func_ov006_020c2848(void* c);
-extern void* data_0209f5bc;
+extern void* SCENE_FADER;
 void func_ov006_020c2924(char* c){
   func_ov006_020c2848(c);
-  void* obj=data_0209f5bc;
+  void* obj=SCENE_FADER;
   int (**vt)(void*)=*(int(***)(void*))obj;
   if(vt[6](obj)==0) return;
   *(int*)(c+0x190)=0;

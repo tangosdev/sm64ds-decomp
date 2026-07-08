@@ -5,7 +5,7 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttt(
     volatile void *reg,
     unsigned short a, unsigned short b, int c, int d);
 
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 void func_ov002_020f1fcc(unsigned char *self)
 {
@@ -27,9 +27,9 @@ void func_ov002_020f1fcc(unsigned char *self)
             (volatile void *)0x4001050, 4, 0x28, v, 0x10 - v);
         return;
     }
-    data_0209d454 &= ~4;
+    BOTTOM_SCREEN_RELATED &= ~4;
     *(volatile unsigned int *)0x4001000 =
-        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (data_0209d454 << 8);
+        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (BOTTOM_SCREEN_RELATED << 8);
     _ZN3G2x13SetBlendAlphaEPVttttt(
         (volatile void *)0x4001050, 0, 0x28, 0xc, 4);
     s = *(unsigned char **)(self + 0xd4);

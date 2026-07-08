@@ -18,7 +18,7 @@ extern int data_ov002_0210dd50;
 extern int data_ov002_0210d8b4;
 extern int data_ov002_0210d774;
 extern void func_ov002_020b56c4(void);
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 
 int func_ov002_020b5500(char *self)
 {
@@ -43,7 +43,7 @@ int func_ov002_020b5500(char *self)
 
     func_020393c4((int *)(self + 0x324), (int)&func_ov002_020b56c4);
 
-    if (data_0209caa0[1] & 0x80000000) {
+    if (SAVE_DATA[1] & 0x80000000) {
         *(int *)(self + 0x320) = (int)(self + 0x4ec);
         *(int *)(self + 0x70c) = _ZNK9Animation13GetFrameCountEv(self + 0x704) << 12;
         _ZN9Animation7AdvanceEv(self + 0x704);

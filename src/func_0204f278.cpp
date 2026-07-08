@@ -4,7 +4,7 @@ extern "C" void func_020512f0(int *p);
 extern "C" void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(HeapAllocator *a, void *self);
 
 struct Elem { char pad[0x1c]; };
-extern Elem data_020a4d6c[];
+extern Elem _ZN5Sound7PLAYERSE[];
 
 extern "C" void func_0204f278(char *thiz);
 
@@ -20,5 +20,5 @@ void func_0204f278(char *thiz)
     }
     int idx = *(int *)(thiz + 0x10);
     _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(
-        (HeapAllocator *)((char *)&data_020a4d6c[idx] + 0xc), thiz);
+        (HeapAllocator *)((char *)&_ZN5Sound7PLAYERSE[idx] + 0xc), thiz);
 }

@@ -9,7 +9,7 @@ struct GVT {
     int (*f18)(void*);
 };
 struct GObj { struct GVT *vt; };
-extern "C" struct GObj *data_0209f5bc;
+extern "C" struct GObj *SCENE_FADER;
 
 struct Scene {
     virtual int v00();
@@ -27,13 +27,13 @@ extern "C" Scene *data_0209d4ac;
 
 extern "C" void _ZN5Scene9SetFadersEP15FaderBrightness(Scene *thiz)
 {
-    if (data_0209f5bc) {
-        if (data_0209f5bc->vt->f14(data_0209f5bc)) {
+    if (SCENE_FADER) {
+        if (SCENE_FADER->vt->f14(SCENE_FADER)) {
             thiz->v24();
-        } else if (data_0209f5bc->vt->f18(data_0209f5bc)) {
+        } else if (SCENE_FADER->vt->f18(SCENE_FADER)) {
             thiz->v20();
         }
     }
-    data_0209f5bc = (struct GObj*)thiz;
+    SCENE_FADER = (struct GObj*)thiz;
     data_0209d4ac = thiz;
 }

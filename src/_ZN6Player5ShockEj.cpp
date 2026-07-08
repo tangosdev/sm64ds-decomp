@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 struct State;
-extern State data_ov002_021100c4;
+extern State _ZN6Player14ST_ELECTROCUTEE;
 extern int func_ov002_020d82f0(void* c);
 extern int func_ov002_020d91e0(void* c, int a, int b, int d);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, State* st);
@@ -14,7 +14,7 @@ int _ZN6Player5ShockEj(char* c, unsigned int j){
     unsigned char* p = (unsigned char*)(((int)c + 0x6e5) & 0xFFFFFFFFFFFFFFFF);
     *p |= 2;
   }
-  _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021100c4);
+  _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player14ST_ELECTROCUTEE);
   return 1;
 }
 }

@@ -1,7 +1,7 @@
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 extern short data_0209fce8;
-extern unsigned char data_0209fc9c;
+extern unsigned char CONNECTION_ERROR;
 extern unsigned char data_0209fc94;
 extern unsigned char data_0209fc78;
 extern unsigned char data_0209fcdc;
@@ -25,7 +25,7 @@ void func_02033bb8(int param0)
     short *scr;
 
     data_0209fce8 = (short)param0;
-    data_0209fc9c = 0;
+    CONNECTION_ERROR = 0;
     func_02034504();
 
     data_0209fc94 = 1;

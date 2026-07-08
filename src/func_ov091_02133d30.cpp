@@ -21,8 +21,8 @@ int _ZN9Animation8FinishedEv(void *self);
 int func_ov091_02134044(void *c, void *p);
 }
 
-extern s16 data_02082214[];
-extern int data_0209e650;
+extern s16 SINE_TABLE[];
+extern int RNG_STATE;
 extern void *data_ov091_021356d0;
 
 struct Vector3_16f { s16 x, y, z; };
@@ -66,9 +66,9 @@ extern "C" int func_ov091_02133d30(Self *self)
     }
 
     if (self->type > 0x1e) {
-        vec.x = data_02082214[(self->angle >> 4) * 2];
+        vec.x = SINE_TABLE[(self->angle >> 4) * 2];
         vec.y = 0;
-        vec.z = data_02082214[(self->angle >> 4) * 2 + 1];
+        vec.z = SINE_TABLE[(self->angle >> 4) * 2 + 1];
 
         pos.y = pos.y + 0x28000;
 
@@ -89,7 +89,7 @@ extern "C" int func_ov091_02133d30(Self *self)
                 tgt.z = *(int *)((char *)ppos + 8);
                 tgt.y = *(int *)((char *)player + 0x644);
 
-                rnd = RandomIntInternal(&data_0209e650);
+                rnd = RandomIntInternal(&RNG_STATE);
                 ang = self->f94 + (s16)(0x2000 - (((rnd >> 8) & 3) << 0xc));
 
                 *(s16 *)((char *)spawned + 0x92) = Vec3_VertAngle(&self->x, &tgt);

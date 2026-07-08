@@ -23,8 +23,8 @@ extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 
 extern void* data_ov084_02130da4;
 extern void* data_ov084_02130d9c;
-extern signed char data_0209f2f8;
-extern unsigned char data_0209f220;
+extern signed char LEVEL_ID;
+extern unsigned char STAR_ID;
 }
 
 extern "C" int func_ov084_0212d028(char* self) {
@@ -82,9 +82,9 @@ extern "C" int func_ov084_0212d028(char* self) {
 after_lostcap:
     if (func_ov084_0212cac0(self) == 0)
         goto return1;
-    if (data_0209f2f8 != 8)
+    if (LEVEL_ID != 8)
         goto return1;
-    if (data_0209f220 == 1)
+    if (STAR_ID == 1)
         goto return0_2;
     if (IsStarCollected(SublevelToLevel(8), 1) != 0)
         goto return1;

@@ -10,8 +10,8 @@ struct Player {
 
 extern "C" int func_ov002_020bf30c(void *c, int a);
 extern "C" int func_02037e38(unsigned int *p);
-extern State data_ov002_0211013c;
-extern State data_ov002_021101b4;
+extern State _ZN6Player7ST_WALKE;
+extern State _ZN6Player7ST_FALLE;
 
 extern "C" void func_ov002_020c29d4(Player *self);
 extern "C" void func_ov002_020c29d4(Player *self)
@@ -22,9 +22,9 @@ extern "C" void func_ov002_020c29d4(Player *self)
     unsigned char flags = *(unsigned char *)(base + 0x6eb);
     if ((flags & 1) && !(flags & 0x80)) {
         if (*(int *)(base + 0x98) >= func_ov002_020bf30c(self, 0x28000)) {
-            if (self->IsState(data_ov002_0211013c)) {
+            if (self->IsState(_ZN6Player7ST_WALKE)) {
                 *(short *)(base + 0x6bc) = 0x1e;
-            } else if (self->IsState(data_ov002_021101b4)
+            } else if (self->IsState(_ZN6Player7ST_FALLE)
                        && *(int *)(base + 0xa8) < 0
                        && (*(int *)(base + 0x684) - *(int *)(base + 0x60)) < 0x64000) {
                 *(short *)(base + 0x6bc) = 0x1e;

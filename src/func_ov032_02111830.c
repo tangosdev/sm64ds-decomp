@@ -8,8 +8,8 @@ typedef int Fix12i;
 typedef struct { int x, y, z; } Vector3;
 struct Matrix4x3 { int m[12]; };
 
-extern int data_0209f32c;
-extern struct Matrix4x3 data_020a0e68;
+extern int WATER_HEIGHT;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 extern int data_ov032_02113a50[];
 extern void* data_ov032_02113a8c;
 
@@ -30,10 +30,10 @@ int func_ov032_02111830(char *c)
     s16 speed;
 
     speed = 0x3000;
-    if (data_0209f32c - 0x64000 > *(int*)(c + 0x60))
+    if (WATER_HEIGHT - 0x64000 > *(int*)(c + 0x60))
         speed = 0;
 
-    if (*(int*)(c + 0x424) == 0 && data_0209f32c > *(int*)(c + 0x60)) {
+    if (*(int*)(c + 0x424) == 0 && WATER_HEIGHT > *(int*)(c + 0x60)) {
         if (*(s16*)(c + 0x430) > 0)
             *(int*)(c + 0x424) = 1;
     }
@@ -49,12 +49,12 @@ int func_ov032_02111830(char *c)
             v[1].x = 0; v[1].y = 0; v[1].z = 0;
             v[2].x = 0; v[2].y = 0; v[2].z = 0;
             v[1].z = 0xa0000;
-            Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-            MulVec3Mat4x3(&v[1], &data_020a0e68, &v[2]);
+            Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+            MulVec3Mat4x3(&v[1], &MATRIX_SCRATCH_PAPER, &v[2]);
             v[0].x += v[2].x;
             v[0].z += v[2].z;
             func_02022c80(0, 0x55, v[0].x, v[0].y, v[0].z, 0);
-            *(int*)(c + 0x42c) = func_02022d00(*(int*)(c + 0x42c), 0x56, v[0].x, data_0209f32c, v[0].z, 0);
+            *(int*)(c + 0x42c) = func_02022d00(*(int*)(c + 0x42c), 0x56, v[0].x, WATER_HEIGHT, v[0].z, 0);
             v[0].y += 0x4b000;
             func_02022c80(0, 0x54, v[0].x, v[0].y, v[0].z, 0);
         }
@@ -73,9 +73,9 @@ int func_ov032_02111830(char *c)
         in2.x = 0; in2.y = 0; in2.z = 0;
         out2.x = 0; out2.y = 0; out2.z = 0;
         in2.z = 0x14000;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16*)(c + 0x8c));
-        MulVec3Mat4x3(&in2, &data_020a0e68, &out2);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8c));
+        MulVec3Mat4x3(&in2, &MATRIX_SCRATCH_PAPER, &out2);
         *(int*)(c + 0xa8) = out2.y;
     }
 

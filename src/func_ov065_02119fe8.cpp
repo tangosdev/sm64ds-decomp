@@ -14,7 +14,7 @@ extern "C" void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiE
     void* self, void* sm, void* mtx, int f, int a, int b, unsigned int c);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 
-extern void* data_020a0e68;
+extern void* MATRIX_SCRATCH_PAPER;
 
 extern "C" void func_ov065_02119fe8(char* self) {
     Vector3 v1;
@@ -28,8 +28,8 @@ extern "C" void func_ov065_02119fe8(char* self) {
     v2.z = 0;
     v1.x = 0;
     v1.z = 0;
-    Matrix4x3_FromRotationZXYExt(&data_020a0e68, *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));
-    MulVec3Mat4x3(&v1, &data_020a0e68, &v2);
+    Matrix4x3_FromRotationZXYExt(&MATRIX_SCRATCH_PAPER, *(s16*)(self + 0x8c), *(s16*)(self + 0x8e), *(s16*)(self + 0x90));
+    MulVec3Mat4x3(&v1, &MATRIX_SCRATCH_PAPER, &v2);
     AddVec3(&v2, (Vector3*)(self + 0x5c), &v2);
     {
         int vy = v2.y;

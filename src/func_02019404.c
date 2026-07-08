@@ -1,6 +1,6 @@
-extern void* data_0209d4a8;
+extern void* SCENE_RELATED;
 void func_02019404(void){
-  void** o = (void**)data_0209d4a8;
+  void** o = (void**)SCENE_RELATED;
   if(!o) return;
   void** vt = (void**)o[0];
   ((void(*)(void*))vt[1])(o);

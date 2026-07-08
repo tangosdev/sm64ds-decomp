@@ -14,35 +14,35 @@ extern int _ZNK6Player14GetBodyModelIDEjb(void*,unsigned int,int);
 extern int _ZNK9Animation12WillHitFrameEi(void*,int);
 extern void func_0201251c(int,int,void*,int);
 extern void func_ov002_020bedd4(void*);
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 extern unsigned char data_0209f49e;
 extern unsigned char data_020a0e40;
 extern short data_0209f4a0;
-extern int data_ov002_0211013c[];
-extern int data_ov002_021106c4[];
-extern int data_ov002_0211067c[];
+extern int _ZN6Player7ST_WALKE[];
+extern int _ZN6Player20ST_METAL_WATER_WATERE[];
+extern int _ZN6Player7ST_SWIME[];
 
 int _ZN6Player24St_MetalWaterGround_MainEv(char* c)
 {
     if(func_ov002_020cec2c(c)) return 1;
     int u703 = *(unsigned char*)(c+0x703);
-    if((int)(data_0209f32c - 0x50000) < (int)(*(int*)(c+0x60) - 0xa000)){
+    if((int)(WATER_HEIGHT - 0x50000) < (int)(*(int*)(c+0x60) - 0xa000)){
         *(unsigned char*)(c+0x706) = 0;
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_WALKE);
         return 1;
     }
     if(*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18) & 2){
         *(unsigned char*)(c+0x6e3) = 0;
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021106c4);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player20ST_METAL_WATER_WATERE);
         return 1;
     }
     if(*(unsigned char*)(c+0x6de) != 0 && (*(int*)(c+0x60) - *(int*)(c+0x644)) >= 0x32000){
         *(unsigned char*)(c+0x6e3) = 1;
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021106c4);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player20ST_METAL_WATER_WATERE);
         return 1;
     }
     if(*(unsigned char*)(c+0x6f9) == 0 && u703 == 0){
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211067c);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_SWIME);
         return 1;
     }
     func_ov002_020cd190(c);

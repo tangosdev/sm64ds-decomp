@@ -6,7 +6,7 @@ char* _ZN5Actor10FindWithIDEj(unsigned int id);
 void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
 int Vec3_HorzLen(Vec3* v);
 int RandomIntInternal(int* seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov100_021463b0(char* c)
 {
@@ -19,9 +19,9 @@ void func_ov100_021463b0(char* c)
         Vec3_Sub(&v, (Vec3*)(c + 0x5c), (Vec3*)(a + 0x5c));
     }
     if (Vec3_HorzLen(&v) >= 0xfa000) return;
-    *(int*)(c + 0x98) = (((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x1fff) + 0x2000;
+    *(int*)(c + 0x98) = (((unsigned)RandomIntInternal(&RNG_STATE) >> 15) & 0x1fff) + 0x2000;
     *(int*)(c + 0x130) = 0x1000;
-    *(unsigned char*)(c + 0x15a) = (unsigned char)((((unsigned)RandomIntInternal(&data_0209e650) >> 15) & 0x7f) + 0x3c);
+    *(unsigned char*)(c + 0x15a) = (unsigned char)((((unsigned)RandomIntInternal(&RNG_STATE) >> 15) & 0x7f) + 0x3c);
     *(int*)(c + 0x14c) = 5;
 }
 }

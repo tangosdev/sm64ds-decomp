@@ -19,7 +19,7 @@ extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 }
-extern Mtx data_02082128;
+extern Mtx _ZN9Matrix3x38IDENTITYE;
 
 extern "C" void func_ov078_02125c98(char* c) {
   int h = *(int*)(c+0x60);
@@ -41,7 +41,7 @@ extern "C" void func_ov078_02125c98(char* c) {
   int r8 = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
   if (r8 < 0xa000)
     r8 = 0xa000;
-  *(Mtx*)(c+0x434) = data_02082128;
+  *(Mtx*)(c+0x434) = _ZN9Matrix3x38IDENTITYE;
   *(int*)(c+0x458) = *(int*)(c+0x5c) >> 3;
   *(int*)(c+0x45c) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x460) = *(int*)(c+0x64) >> 3;

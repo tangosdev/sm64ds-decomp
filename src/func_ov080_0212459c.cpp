@@ -12,7 +12,7 @@ extern "C" void func_ov080_02124418(void *t);
 extern "C" void CylinderClsn_Clear(void *self);
 extern "C" void CylinderClsn_Update(void *self);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 
 extern "C" int func_ov080_0212459c(void *thiz)
 {
@@ -49,7 +49,7 @@ extern "C" int func_ov080_0212459c(void *thiz)
             int r;
 
             s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&RNG_STATE);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
             *(short *)(s + 0x96) = 0;
@@ -59,7 +59,7 @@ extern "C" int func_ov080_0212459c(void *thiz)
             *(int *)(s + 0xac) = 0;
 
             s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
-            r = RandomIntInternal(&data_0209e650);
+            r = RandomIntInternal(&RNG_STATE);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
             *(short *)(s + 0x96) = 0;

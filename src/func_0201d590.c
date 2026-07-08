@@ -4,12 +4,12 @@
 // Counts as decompiled, not matched.
 extern "C" {
 typedef unsigned char u8;
-extern short data_0209d6d4;
-extern int data_0209d708;
-extern int **data_0209d70c;
+extern short CURR_MSG_ID;
+extern int MSG_ARR_PTR;
+extern int **MSG_FILE_PTR;
 extern int data_0209d6fc;
-extern int data_0209d6f0;
-extern int data_0209d6f4;
+extern int CURR_MSG_PTR;
+extern int CURR_MSG_TEXT_CHAR;
 extern u8 data_0209d6b0;
 extern u8 data_0209d65c;
 extern u8 data_0209d674;
@@ -21,10 +21,10 @@ extern void func_0201b100(int a);
 void func_0201d590(void) {
     volatile int li;
     int n;
-    int idx = data_0209d6d4;
-    char *base = (char*)data_0209d708;
-    data_0209d6f0 = (int)(base + idx * 8);
-    data_0209d6f4 = data_0209d6fc + 0x28 + (*data_0209d70c)[1] + *(int*)(base + idx * 8);
+    int idx = CURR_MSG_ID;
+    char *base = (char*)MSG_ARR_PTR;
+    CURR_MSG_PTR = (int)(base + idx * 8);
+    CURR_MSG_TEXT_CHAR = data_0209d6fc + 0x28 + (*MSG_FILE_PTR)[1] + *(int*)(base + idx * 8);
     func_0201b6f8(1);
     data_0209d65c = 0;
     n = ((data_0209d6b0 + 7) / 8) << 6;

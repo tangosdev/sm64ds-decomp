@@ -30,7 +30,7 @@ extern void func_02012694(int a, void* b);
 extern void func_ov073_0212157c(void* c, void* p);
 }
 
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 
 extern "C" int func_ov073_021203ac(char* c)
 {
@@ -81,9 +81,9 @@ state0:
             vOut.x = 0;
             vOut.y = 0;
             vOut.z = 0;
-            Matrix4x3_FromRotationY(&data_020a0e68, ha);
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, va);
-            MulVec3Mat4x3(&vIn, &data_020a0e68, &vOut);
+            Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, ha);
+            Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, va);
+            MulVec3Mat4x3(&vIn, &MATRIX_SCRATCH_PAPER, &vOut);
             *(s32*)(c + 0xa4) = vOut.x;
             *(s32*)(c + 0xac) = vOut.z;
         }

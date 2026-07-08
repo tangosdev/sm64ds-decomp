@@ -10,7 +10,7 @@ void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 *v, unsigned int d);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_ov070_02120644(char *c);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 int func_ov070_021209e4(char *c) {
     _Z14ApproachLinearRiii((int*)(c + 0x424), 1000, 20);
@@ -33,17 +33,17 @@ int func_ov070_021209e4(char *c) {
 
     {
         int idx = (*(unsigned short*)(c + 0x94)) >> 4;
-        int cosv = data_02082214[idx * 2];
+        int cosv = SINE_TABLE[idx * 2];
         *(int*)(c + 0x410) = (int)(((s64)ip * cosv + 0x800) >> 0xc);
     }
     {
         int idx = (*(unsigned short*)(c + 0x42c)) >> 4;
-        int sinv = data_02082214[idx * 2];
+        int sinv = SINE_TABLE[idx * 2];
         *(int*)(c + 0x414) = (int)(((s64)0x14000 * sinv + 0x800) >> 0xc);
     }
     {
         int idx = (*(unsigned short*)(c + 0x94)) >> 4;
-        int sinv = data_02082214[idx * 2 + 1];
+        int sinv = SINE_TABLE[idx * 2 + 1];
         *(int*)(c + 0x418) = (int)(((s64)ip * sinv + 0x800) >> 0xc);
     }
 
@@ -53,7 +53,7 @@ int func_ov070_021209e4(char *c) {
 
     {
         int idx = (*(unsigned short*)(c + 0x42e)) >> 4;
-        int cosv = data_02082214[idx * 2];
+        int cosv = SINE_TABLE[idx * 2];
         int scale = (int)(((s64)0x555 * cosv + 0x800) >> 0xc) + 0x800;
         *(int*)(c + 0x80) = scale;
         *(int*)(c + 0x84) = scale;

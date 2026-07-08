@@ -3,7 +3,7 @@
 // Counts as decompiled, not matched.
 typedef struct { short x, y, z; } Vec3s;
 extern void *_ZN8Particle7Manager9AddSystemEiR7Vector3(void *thiz, int id, void *pos);
-extern void *data_0209ee74;
+extern void *PARTICLE_SYS_TRACKER;
 
 struct Bf74 {
     unsigned int a : 6;
@@ -13,10 +13,10 @@ struct Bf74 {
 
 int func_02021d1c(char *self, int a1, int id, void *pos, Vec3s *p5, void **p6)
 {
-    void *sys = *(void **)((char *)*(void **)((char *)*(void **)((char *)data_0209ee74 + 4) + 0x1c) + (id << 5));
+    void *sys = *(void **)((char *)*(void **)((char *)*(void **)((char *)PARTICLE_SYS_TRACKER + 4) + 0x1c) + (id << 5));
     *(int *)sys = *(int *)sys & ~0x4000;
     *(void **)(self + 0xc) = _ZN8Particle7Manager9AddSystemEiR7Vector3(
-        *(void **)((char *)data_0209ee74 + 4), id, pos);
+        *(void **)((char *)PARTICLE_SYS_TRACKER + 4), id, pos);
     if (*(void **)(self + 0xc) == 0)
         return 0;
     if (id == 0x52 || id == 0x50) {

@@ -2,7 +2,7 @@
 namespace LVL_Overlay {
 struct ObjSubTable { int pad0; int* p; };
 }
-extern int data_02092134;
+extern int STAR_CAMERA_SETTINGS;
 void LoadStarCameraObjects(LVL_Overlay::ObjSubTable& t, int a, unsigned int b) {
-    data_02092134 = *t.p;
+    STAR_CAMERA_SETTINGS = *t.p;
 }

@@ -1,5 +1,5 @@
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov060_02115314(char* c)
 {
@@ -18,7 +18,7 @@ void func_ov060_02115314(char* c)
     } else {
         *(unsigned char*)(c + 0x415) = 0;
         if (*(unsigned char*)(c + 0x429) == 0) {
-            unsigned int v = (unsigned int)RandomIntInternal(&data_0209e650) >> 0x10;
+            unsigned int v = (unsigned int)RandomIntInternal(&RNG_STATE) >> 0x10;
             if (v % 10 == 0)
                 *(int*)(c + 0x40c) = 3;
             else

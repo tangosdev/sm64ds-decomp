@@ -11,7 +11,7 @@ void func_ov077_02125304(char* c);
 void _ZN5Actor8PoofDustEv(void* c);
 void func_02012694(int a, void* p);
 
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 int func_ov077_02125f68(char* c)
 {
@@ -30,7 +30,7 @@ int func_ov077_02125f68(char* c)
     func_ov077_02125e20(c);
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x1b0);
     func_ov077_02125304(c);
-    if (data_0209f2f8 == 0x1c && *(int*)(c + 0x60) <= -0x1600000) {
+    if (LEVEL_ID == 0x1c && *(int*)(c + 0x60) <= -0x1600000) {
         _ZN5Actor8PoofDustEv(c);
         func_02012694(0xc4, c + 0x74);
         _ZN9ActorBase18MarkForDestructionEv(c);

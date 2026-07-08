@@ -19,16 +19,16 @@ extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 struct Block48 { int w[12]; };
 
 extern void* data_ov081_02128ed4;
-extern int data_ov002_0210d9b8[];
+extern int COIN_YELLOW_POLY32_MODEL_PTR[];
 extern void* data_ov081_021280d8[4];
-extern Block48 data_02082128;
+extern Block48 _ZN9Matrix3x38IDENTITYE;
 
 extern "C" int func_ov081_021278a8(char* c) {
     RaycastGround rc;
     Vector3 pos;
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov081_02128ed4);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, 1);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x138, (void*)data_ov002_0210d9b8[1], 1, 1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x138, (void*)COIN_YELLOW_POLY32_MODEL_PTR[1], 1, 1) == 0)
         return 0;
     for (int i = 0; i < 4; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov081_021280d8[i]);
@@ -61,7 +61,7 @@ extern "C" int func_ov081_021278a8(char* c) {
     *(int*)(c + 0x3d4) = *(int*)(c + 0x60);
     *(int*)(c + 0x3d8) = *(int*)(c + 0x64);
     *(unsigned char*)(c + 0x3f0) = 1;
-    *(Block48*)(c + 0x3a0) = data_02082128;
+    *(Block48*)(c + 0x3a0) = _ZN9Matrix3x38IDENTITYE;
     func_ov081_02126a20(c);
     _ZN13RaycastGroundD1Ev(&rc);
     return 1;

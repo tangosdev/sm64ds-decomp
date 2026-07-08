@@ -15,7 +15,7 @@ int func_ov079_02123a8c(Actor* self);
 void func_ov079_02124008(Actor* self);
 }
 
-extern int data_0209f318;
+extern int CAMERA;
 extern PMF data_ov079_02128280[];
 
 extern "C" int func_ov079_02125fcc(Actor* self)
@@ -24,7 +24,7 @@ extern "C" int func_ov079_02125fcc(Actor* self)
 
     if (*(unsigned char*)(c + 0x414) != 0 && *(int*)(c + 0x3b0) != 9) {
         if (_ZN5Actor13DistToCPlayerEv(self) < 0x1770000) {
-            *(int*)(*(int*)&data_0209f318 + 0x114) = (int)self;
+            *(int*)(*(int*)&CAMERA + 0x114) = (int)self;
         }
     }
 

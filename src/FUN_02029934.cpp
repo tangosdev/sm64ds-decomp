@@ -10,13 +10,13 @@ struct Obj {
     virtual int v7();
 };
 extern "C" {
-extern Obj* data_0209f5bc;
-extern int data_0209d4b0;
+extern Obj* SCENE_FADER;
+extern int KS_FADER;
 }
 extern "C" void FUN_02029934(void) {
-    Obj* o = data_0209f5bc;
+    Obj* o = SCENE_FADER;
     if (o->v7() == 0) {
-        data_0209d4b0 = 0;
+        KS_FADER = 0;
         *(volatile unsigned short*)0x4000050 = 0;
     }
 }

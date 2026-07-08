@@ -5,10 +5,10 @@ extern void func_0203d930(void);
 extern void func_ov075_02116c8c(void *p);
 extern void func_ov075_02118bf8(void);
 
-extern int data_0209fc68;
+extern int DP_STATE;
 extern unsigned char data_ov075_0211d5bc;
 extern unsigned char data_0209b2e4;
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 struct P2 { int a, b; };
 extern struct P2 data_02086b58;
 
@@ -19,7 +19,7 @@ void func_ov075_02118a84(char *r4)
             *(int *)(r4 + 0x268) = 1;
     }
     if (*(unsigned char *)(r4 + 0x282) == 0) {
-        if (data_0209fc68 != 0) {
+        if (DP_STATE != 0) {
             if (data_ov075_0211d5bc == 0) {
                 func_0201a244((void *)&func_ov075_02118bf8, data_0209b2e4, 0xf, 0, 0x1000);
                 data_ov075_0211d5bc = 1;
@@ -39,7 +39,7 @@ void func_ov075_02118a84(char *r4)
     }
     if (*(int *)(r4 + 0x264) > 0) {
         int *p = (int *)(((long long)(int)(r4 + 0x264)) & 0xFFFFFFFFFFFFFFFFLL);
-        *p = *p - data_0208ee44;
+        *p = *p - GAME_SPEED_RELATED;
     }
     if (*(unsigned char *)(r4 + 0x282) < 2)
         return;

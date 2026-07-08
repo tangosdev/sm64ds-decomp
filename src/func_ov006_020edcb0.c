@@ -11,8 +11,8 @@ extern int GetBG3CharPtr(void);
 extern void func_020562b4(int src, u32 offset, u32 count);
 extern void GXS_LoadBGPltt(const void *p, u32 a, u32 b);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 
 void func_ov006_020edcb0(void){
   int r6 = LoadFile(0x3b);
@@ -26,7 +26,7 @@ void func_ov006_020edcb0(void){
   DecompressLZ16(r6, func_02054d88());
   func_02056314(r5, 0, 0x800);
   GX_LoadBGPltt((const void *)r4, 0x60, 0x1a0);
-  data_0209d45c |= 8;
+  TOP_SCREEN_RELATED |= 8;
   Deallocate((void *)r6);
   Deallocate((void *)r5);
   Deallocate((void *)r4);
@@ -42,7 +42,7 @@ void func_ov006_020edcb0(void){
   DecompressLZ16(r6, GetBG3CharPtr());
   func_020562b4(r5, 0, 0x800);
   GXS_LoadBGPltt((const void *)r4, 0x60, 0x1a0);
-  data_0209d454 |= 8;
+  BOTTOM_SCREEN_RELATED |= 8;
   Deallocate((void *)r6);
   Deallocate((void *)r5);
   Deallocate((void *)r4);

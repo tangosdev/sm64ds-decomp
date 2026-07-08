@@ -15,10 +15,10 @@ extern "C" void ModelAnim_SetAnim(void *self, void *bca, int a, int fix, unsigne
 extern "C" void func_ov032_02111ff4(void *c, void *p);
 extern "C" short Vec3_VertAngle(void *a, void *b);
 
-extern int data_020a0e68;
+extern int MATRIX_SCRATCH_PAPER;
 extern void **data_ov032_02113a50;
 extern void *data_ov032_02113a8c;
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 
 extern "C" int func_ov032_02111620(void *thiz)
 {
@@ -37,9 +37,9 @@ extern "C" int func_ov032_02111620(void *thiz)
         in[2] = 0;
         in[2] = 0x14000;
         in[0] = 0; in[1] = 0; out[0] = 0; out[1] = 0; out[2] = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(c + 0x8e));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short *)(c + 0x8c));
-        MulVec3Mat4x3(in, &data_020a0e68, out);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short *)(c + 0x8e));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short *)(c + 0x8c));
+        MulVec3Mat4x3(in, &MATRIX_SCRATCH_PAPER, out);
         *(int *)(c + 0xa8) = out[1];
         goto afterblock;
     }
@@ -71,7 +71,7 @@ afterblock: ;
         vec[0] = p[0];
         vec[1] = p[1];
         vec[2] = p[2];
-        if (data_0209f32c > *(int *)(c + 0x60)) {
+        if (WATER_HEIGHT > *(int *)(c + 0x60)) {
             ApproachLinear((short *)(c + 0x92), 0, 0x200);
         } else {
             ApproachLinear((short *)(c + 0x92), Vec3_VertAngle(c + 0x5c, vec), 0x200);

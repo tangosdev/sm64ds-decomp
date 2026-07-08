@@ -11,7 +11,7 @@ int func_ov002_020d93ac(char *self);
 short GetAngleToCamera(int i);
 }
 
-extern u8 data_0209f2d8;
+extern u8 CURRENT_GAMEMODE;
 
 struct Actor;
 extern bool _ZN6Player8HasNoCapEv(char *self);
@@ -47,7 +47,7 @@ extern "C" int func_ov002_020d93ac(char *self)
         pos, 0, *(signed char *)(self + 0xcc), -1);
     if (spawned == 0) goto fail;
 
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (!b) {
         ang = GetAngleToCamera(*(u8 *)(self + 0x6d8));
         zz = *(s16 *)(self + 0x96);

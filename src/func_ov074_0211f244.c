@@ -4,7 +4,7 @@
 // Counts as decompiled, not matched.
 struct Actor { static Actor *FindWithActorID(unsigned int id, Actor *after); };
 extern "C" int RandomIntInternal(int *seed);
-extern "C" int data_0209e650;
+extern "C" int RNG_STATE;
 
 extern "C" void func_ov074_0211f244(Actor *self)
 {
@@ -15,7 +15,7 @@ extern "C" void func_ov074_0211f244(Actor *self)
         if (a != self) {
             char *t = (char*)a;
             *(int*)(t + 0x9c) = -0xa000;
-            int rv = (unsigned int)RandomIntInternal(&data_0209e650) >> 8;
+            int rv = (unsigned int)RandomIntInternal(&RNG_STATE) >> 8;
             *(short*)(t + 0x5fc) = 0x30;
             *(int*)(t + 0x98) = ((rv & 0xf) << 0xc) + 0x16000;
             *(int*)(t + 0xa4) = 0;

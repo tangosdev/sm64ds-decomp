@@ -1,5 +1,5 @@
 //cpp
-extern "C" int data_0209f32c;
+extern "C" int WATER_HEIGHT;
 struct Node { struct Node* next; char pad[8]; int field0c; char pad2[8]; int field18; };
 struct System { char pad8[8]; struct Node* head; char pad[0x10]; int field1c; };
 struct Particle { char pad4[4]; int field4; };
@@ -15,7 +15,7 @@ int _ZN8Particle16FitWaterCallback8OnUpdateERNS_6SystemEb(void* thiz, System* sy
         *flags |= 2;
         if (node == 0) return 0;
     }
-    v = (((Particle*)thiz)->field4 + data_0209f32c) >> 3;
+    v = (((Particle*)thiz)->field4 + WATER_HEIGHT) >> 3;
     while (node != 0) {
         node->field18 = v - node->field0c;
         node = node->next;

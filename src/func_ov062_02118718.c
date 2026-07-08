@@ -8,7 +8,7 @@ extern int RandomIntInternal(int *seed);
 extern int _ZN5Actor14GetSubtractionEss(void *self, short a, short b);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern void func_ov062_02117994(char *c, int idx);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov062_02118718(char *c)
 {
@@ -36,10 +36,10 @@ void func_ov062_02118718(char *c)
                 if (*(unsigned short*)(c + 0x3c8) != 0) {
                     *(unsigned short*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF) -= 1;
                 } else {
-                    if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x8000)
-                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) -= ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                    if (((unsigned)RandomIntInternal(&RNG_STATE) >> 16) & 0x8000)
+                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) -= ((unsigned)RandomIntInternal(&RNG_STATE) >> 16) & 0x1fff;
                     else
-                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) += ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) += ((unsigned)RandomIntInternal(&RNG_STATE) >> 16) & 0x1fff;
                     *(unsigned short*)(c + 0x3c8) = 0x14;
                 }
             }

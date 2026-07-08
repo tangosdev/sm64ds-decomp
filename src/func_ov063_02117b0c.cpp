@@ -12,7 +12,7 @@ extern void func_0201277c(int a);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
 extern char data_ov063_0211e1c8;
-extern char *data_0209f318;
+extern char *CAMERA;
 }
 
 extern "C" void func_ov063_02117b0c(void *cc)
@@ -53,7 +53,7 @@ extern "C" void func_ov063_02117b0c(void *cc)
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x7222);
         func_02011cfc();
         *(unsigned short*)(c + 0x5d4) &= ~0x400;
-        *(int*)(*(char**)&data_0209f318 + 0x154) &= ~8;
+        *(int*)(*(char**)&CAMERA + 0x154) &= ~8;
         break;
     }
 }

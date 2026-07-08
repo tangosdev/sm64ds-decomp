@@ -17,7 +17,7 @@ extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
 extern unsigned char data_0209b300;
 extern int data_0209d4b8;
-extern int data_0209e650;
+extern int RNG_STATE;
 extern unsigned char data_0209b304;
 
 int func_ov005_020c14a0(char* c) {
@@ -29,7 +29,7 @@ int func_ov005_020c14a0(char* c) {
         return 1;
     }
     RandomIntInternal(&data_0209d4b8);
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&RNG_STATE);
 
     if (*(int*)(c+0x90) > 0) {
         int* p = (int*)(c+0x90);

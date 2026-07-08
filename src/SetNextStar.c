@@ -1,20 +1,20 @@
 extern int SublevelToLevel(int i);
 
 typedef unsigned char u8;
-extern signed char data_02092110;
-extern u8 data_0209f1f0;
-extern u8 data_0209f2d8;
+extern signed char NEXT_LEVEL_ID;
+extern u8 NEXT_STAR_ID;
+extern u8 CURRENT_GAMEMODE;
 
 void SetNextStar(void)
 {
-    int level = SublevelToLevel(data_02092110);
+    int level = SublevelToLevel(NEXT_LEVEL_ID);
     int b;
-    if (data_0209f1f0 == 1) return;
-    b = (int)(data_0209f2d8 == 1);
+    if (NEXT_STAR_ID == 1) return;
+    b = (int)(CURRENT_GAMEMODE == 1);
     if (b != 0) return;
     if (level != -1) {
         if (level <= 0xe) return;
         if (level == 0x13) return;
     }
-    data_0209f1f0 = 1;
+    NEXT_STAR_ID = 1;
 }

@@ -20,19 +20,19 @@ void MovingCylinderClsnWithPos_Init(void* self, Actor* a, const Vector3& v, int 
 void func_ov090_02132ac4(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov090_02134524;
-extern SharedFilePtr data_ov002_0210da10;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern SharedFilePtr WATER_RING_MODEL_PTR;
+extern SharedFilePtr RED_NUMBER_MODEL_PTR;
 extern SharedFilePtr data_ov090_0213452c;
 extern Vector3 data_ov090_02134200;
 extern int data_ov090_0213454c;
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 }
 
 extern "C" int func_ov090_02132e38(unsigned char* thiz)
 {
     ModelBase_SetFile(thiz + 0x30c, Model_LoadFile(data_ov090_02134524), 1, -1);
-    Model_LoadFile(data_ov002_0210da10);
-    Model_LoadFile(data_ov002_0210d9a8);
+    Model_LoadFile(WATER_RING_MODEL_PTR);
+    Model_LoadFile(RED_NUMBER_MODEL_PTR);
     Animation_LoadFile(data_ov090_0213452c);
 
     *(int*)(thiz + 0x37c) = *(int*)(thiz + 8) & 0xff;
@@ -64,7 +64,7 @@ extern "C" int func_ov090_02132e38(unsigned char* thiz)
     }
 
     {
-        int b = (int)(data_0209f2d8 == 2);
+        int b = (int)(CURRENT_GAMEMODE == 2);
         if (b != 0) {
             *(int*)(thiz + 0x384) = 3;
             *(short*)(thiz + 0x92) = (short)0xf303;

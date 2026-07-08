@@ -1,11 +1,11 @@
 extern void func_0200d8c8(void* cam, void* v, int strength);
-extern int data_0209f318;
+extern int CAMERA;
 extern void _ZN5Actor15HugeLandingDustEb(void* thiz, int b);
 extern void func_02012694(int a, void* b);
 
 void func_ov066_02116ac4(char* c, int strength) {
     volatile int s0, s1, s2;
-    func_0200d8c8((void*)data_0209f318, c + 0x5c, strength);
+    func_0200d8c8((void*)CAMERA, c + 0x5c, strength);
     s0 = *(int*)(c + 0x5c);
     s1 = *(int*)(c + 0x60);
     s2 = *(int*)(c + 0x64);

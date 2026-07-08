@@ -1,7 +1,7 @@
 //cpp
 typedef short s16;
 typedef long long s64;
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 struct Obj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -22,17 +22,17 @@ extern "C" void func_ov079_02123d4c(int* out, char* a){
         int m;
         int d;
         if (*(unsigned char*)(a + 0x414)) {
-            m = (s16)data_02082214[((unsigned short)*(unsigned short*)(a + 0x8c) >> 4) * 2] * (s16)0x190;
+            m = (s16)SINE_TABLE[((unsigned short)*(unsigned short*)(a + 0x8c) >> 4) * 2] * (s16)0x190;
         } else {
-            m = (s16)data_02082214[((unsigned short)*(unsigned short*)(a + 0x8c) >> 4) * 2] * (s16)0xc8;
+            m = (s16)SINE_TABLE[((unsigned short)*(unsigned short*)(a + 0x8c) >> 4) * 2] * (s16)0xc8;
         }
-        out[0] = out[0] + (int)(((s64)m * data_02082214[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
+        out[0] = out[0] + (int)(((s64)m * SINE_TABLE[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
         d = ((struct Obj*)a)->m1d();
         {
             int* p1 = (int*)(((int)out + 4) & 0xFFFFFFFFFFFFFFFF);
             int* p2 = (int*)(((int)out + 8) & 0xFFFFFFFFFFFFFFFF);
             *p1 = *p1 + d;
-            *p2 = *p2 + (int)(((s64)m * data_02082214[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
+            *p2 = *p2 + (int)(((s64)m * SINE_TABLE[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         }
     }
 }

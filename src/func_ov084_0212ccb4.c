@@ -14,7 +14,7 @@ struct Camera {
 
 extern "C" int func_ov084_0212cda0(int arg0, Vector3* out, Vector3* target);
 
-extern Camera* data_0209f318;
+extern Camera* CAMERA;
 
 struct Obj {
     char pad[0x8c];
@@ -26,7 +26,7 @@ struct Obj {
 
 extern "C" int func_ov084_0212ccb4(Obj* self)
 {
-    Camera* cam = data_0209f318;
+    Camera* cam = CAMERA;
     Vector3 l1;
     Vector3 l2;
     Vector3* sa = &cam->a;

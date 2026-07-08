@@ -1,15 +1,15 @@
 extern unsigned char data_0209d664;
-extern unsigned char data_0209f2d8;
-extern short data_0209d6d4;
+extern unsigned char CURRENT_GAMEMODE;
+extern short CURR_MSG_ID;
 
 int func_0201fb4c(void)
 {
     short v;
     int b;
     if (data_0209d664 != 0) goto no;
-    b = (data_0209f2d8 == 2);
+    b = (CURRENT_GAMEMODE == 2);
     if (b != 0) goto no;
-    v = data_0209d6d4;
+    v = CURR_MSG_ID;
     if (v == 0xcc) goto no;
     if (v == 0xce) goto no;
     if (v == 0xd0) goto no;

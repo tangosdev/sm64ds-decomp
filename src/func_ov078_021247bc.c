@@ -18,10 +18,10 @@ extern void func_0200fa8c(void *c, int a);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc);
 extern void _ZN6Camera9SetFlag_3Ev(void *thiz);
 
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 extern char data_ov078_021270fc;
 extern char data_ov078_02126f08;
-extern char data_0209f318;
+extern char CAMERA;
 extern char data_ov078_021270dc;
 
 int func_ov078_021247bc(void *thiz)
@@ -53,9 +53,9 @@ int func_ov078_021247bc(void *thiz)
         vC.x = 0;
         vC.y = 0;
         vC.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(c + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short *)(c + 0x92));
-        MulVec3Mat4x3(&vB, &data_020a0e68, &vC);
+        Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(short *)(c + 0x94));
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(short *)(c + 0x92));
+        MulVec3Mat4x3(&vB, &MATRIX_SCRATCH_PAPER, &vC);
         *(int *)(c + 0xa4) = vC.x;
         if (*(unsigned char *)(c + 0x499) == 0) {
             *(int *)(c + 0xa8) = vC.y;
@@ -114,7 +114,7 @@ int func_ov078_021247bc(void *thiz)
             m = *(unsigned short *)(pl2 + 0x6ce) & 0x800;
             if (m == 0) {
                 if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl2, c, 0x94, &E, 0, 0) != 0) {
-                    _ZN6Camera9SetFlag_3Ev(*(void **)&data_0209f318);
+                    _ZN6Camera9SetFlag_3Ev(*(void **)&CAMERA);
                     func_02012694(0x12a, c + 0x74);
                     func_ov078_02125c48(c, &data_ov078_021270dc);
                 }

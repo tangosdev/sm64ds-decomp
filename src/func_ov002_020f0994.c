@@ -8,7 +8,7 @@ extern "C" {
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
 extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* ts, void* mc);
-extern int data_0209b454;
+extern int NEXT_ACTOR_UPDATE_FLAGS;
 }
 
 struct Obj {
@@ -25,7 +25,7 @@ extern "C" int func_ov002_020f0994(char* c)
     void* a;
 
     u32 id = 0xb2;
-    if (data_0209b454 & 0x4000000) {
+    if (NEXT_ACTOR_UPDATE_FLAGS & 0x4000000) {
         a = 0;
         while ((a = _ZN5Actor15FindWithActorIDEjPS_(id, a)) != 0) {
             if (*(int*)((char*)a + 0x43c) == 6 && *(unsigned short*)((char*)a + 0x496) == 0x64) {

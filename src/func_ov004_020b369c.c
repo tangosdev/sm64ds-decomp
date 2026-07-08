@@ -6,7 +6,7 @@ typedef short s16;
 typedef unsigned short u16;
 typedef long long s64;
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 struct M { int _00, _01, _10, _11; };
 extern void func_ov004_020b1c68(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 
@@ -16,11 +16,11 @@ void func_ov004_020b369c(char* self) {
     struct M m;
     u16 flag;
     do {
-        int s0 = data_02082214[(angle >> 4) * 2];
+        int s0 = SINE_TABLE[(angle >> 4) * 2];
         int mm = (int)(((s64)s0 * 0x800 + 0x800) >> 12);
         int idx = (u16)mm >> 4;
-        int cos1 = data_02082214[idx * 2 + 1];
-        int sin1 = data_02082214[idx * 2];
+        int cos1 = SINE_TABLE[idx * 2 + 1];
+        int sin1 = SINE_TABLE[idx * 2];
         int fc = (int)(((s64)cos1 * 0x1000 + 0x800) >> 12);
         int fs = (int)(((s64)sin1 * 0x1000 + 0x800) >> 12);
         m._00 = fc;

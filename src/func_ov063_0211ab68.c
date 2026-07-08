@@ -16,7 +16,7 @@ extern struct Vec3 data_ov063_0211ee8c;
 extern void* data_ov063_0211ee20;
 extern void* data_ov063_0211edfc;
 extern void* data_ov063_0211ee08;
-extern int data_0209e650;
+extern int RNG_STATE;
 extern void func_020072c0(void);
 
 extern void func_020731dc(struct Vec3* a, void (*b)(void), void** node);
@@ -61,7 +61,7 @@ void func_ov063_0211ab68(char* obj) {
         rot.x = *(s16*)(obj + 0x92);
         rot.y = *(s16*)(obj + 0x94);
         rot.z = *(s16*)(obj + 0x96);
-        rot.y = (u32)RandomIntInternal(&data_0209e650) >> 16;
+        rot.y = (u32)RandomIntInternal(&RNG_STATE) >> 16;
         Actor_Spawn(0xd1, 0xfff6, &pos, &rot, *(s8*)(obj + 0x5d0), -1);
     }
     MarkForDestruction(obj);

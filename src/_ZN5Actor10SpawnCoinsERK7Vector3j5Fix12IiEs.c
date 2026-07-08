@@ -6,7 +6,7 @@ typedef unsigned int u32;
 typedef short s16;
 struct Vector3 { s32 x, y, z; };
 struct Vector3_16 { s16 x, y, z; };
-extern s32 data_0209e650[];
+extern s32 RNG_STATE[];
 extern u32 RandomIntInternal(void *state);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, struct Vector3 *v, struct Vector3_16 *vr, s32 a, s32 b);
 void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, struct Vector3 *pos, u32 count, s32 spread, s16 angle){
@@ -23,9 +23,9 @@ void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, struct Vector3 *pos, u
             s32 ang;
             u32 r;
             do {
-                ang = (s32)(((u32)RandomIntInternal(data_0209e650) >> 16) << 27) >> 16;
+                ang = (s32)(((u32)RandomIntInternal(RNG_STATE) >> 16) << 27) >> 16;
             } while (ang == prev);
-            r = (u32)RandomIntInternal(data_0209e650) >> 16;
+            r = (u32)RandomIntInternal(RNG_STATE) >> 16;
             *(s16*)((char*)actor+0x92) = 0;
             prev = ang;
             *(s32*)((char*)actor+0x98) = (u32)((u32)spread * ((r % 50) + 100)) / 100;

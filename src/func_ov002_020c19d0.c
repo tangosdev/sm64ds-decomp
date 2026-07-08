@@ -14,7 +14,7 @@ struct RaycastLine {
     void SetObjAndLine(const Vector3&, const Vector3&, Actor*);
     int DetectClsn();
 };
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern "C" int func_ov002_020c19d0(char* self, int arg1, int arg2);
 int func_ov002_020c19d0(char* self, int arg1, int arg2) {
@@ -23,8 +23,8 @@ int func_ov002_020c19d0(char* self, int arg1, int arg2) {
     RaycastLine rl;
     unsigned int idx = (unsigned int)(angle >> 4);
     {
-        int t0 = data_02082214[idx * 2];
-        int t1 = data_02082214[idx * 2 + 1];
+        int t0 = SINE_TABLE[idx * 2];
+        int t1 = SINE_TABLE[idx * 2 + 1];
         v1.y = *(int*)(self + 0x60) + (arg2 << 12);
         v1.z = *(int*)(self + 0x64);
         v1.x = *(int*)(self + 0x5c);

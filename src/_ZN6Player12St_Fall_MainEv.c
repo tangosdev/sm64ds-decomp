@@ -4,11 +4,11 @@ extern int _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern int func_ov002_020e2664(void*);
 extern int func_ov002_020bedd4(void*);
 extern Fix12i func_ov002_020bf30c(void* c, Fix12i a);
-extern char data_ov002_02110424[];
+extern char _ZN6Player7ST_LANDE[];
 int _ZN6Player12St_Fall_MainEv(void* c) {
   func_ov002_020e28d4(c, 0x1800, 0x800);
   if (*(unsigned char*)((char*)c+0x6de) == 0) {
-    _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110424);
+    _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_LANDE);
   } else if (func_ov002_020e2664(c)) {
     return 1;
   }

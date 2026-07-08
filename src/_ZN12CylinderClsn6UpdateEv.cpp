@@ -1,11 +1,11 @@
 //cpp
 extern "C" {
-extern void* data_0209cee8;
+extern void* _ZN12CylinderClsn4lastE;
 void _ZN12CylinderClsn6UpdateEv(char* c){
   if(*(int*)(c+0x18) & 1) return;
-  void* h = data_0209cee8;
+  void* h = _ZN12CylinderClsn4lastE;
   *(void**)(c+0x2c) = h;
-  if(data_0209cee8) *(void**)((char*)data_0209cee8+0x28) = c;
-  data_0209cee8 = c;
+  if(_ZN12CylinderClsn4lastE) *(void**)((char*)_ZN12CylinderClsn4lastE+0x28) = c;
+  _ZN12CylinderClsn4lastE = c;
 }
 }

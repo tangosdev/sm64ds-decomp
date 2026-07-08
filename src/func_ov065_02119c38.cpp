@@ -38,9 +38,9 @@ extern s16 data_ov065_0211cfa8[];
 extern void *data_ov065_0211cfd4[];
 extern void *data_ov065_0211cfd8[];
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
-extern u8 data_0209f2c0;
+extern u8 LEVEL_SPECIFIC_SETTING;
 extern u8 data_ov065_0211cfa4[];
-extern s32 data_020a0e68[];
+extern s32 MATRIX_SCRATCH_PAPER[];
 
 struct RaycastGround {
     char pad[0x44];
@@ -99,7 +99,7 @@ extern "C" int func_ov065_02119c38(void *self)
     {
         s32 va[3];
         s32 vb[3];
-        *(u16 *)(c + 0x300 + 0x74) = data_ov065_0211cfa4[data_0209f2c0];
+        *(u16 *)(c + 0x300 + 0x74) = data_ov065_0211cfa4[LEVEL_SPECIFIC_SETTING];
         va[0] = 0;
         va[2] = 0;
         vb[0] = 0;
@@ -109,8 +109,8 @@ extern "C" int func_ov065_02119c38(void *self)
         va[0] = 0x64000;
         va[2] = 0x64000;
 
-        Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));
-        MulVec3Mat4x3(va, data_020a0e68, vb);
+        Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x8e));
+        MulVec3Mat4x3(va, MATRIX_SCRATCH_PAPER, vb);
         AddVec3(vb, c + 0x5c, vb);
         vb[1] -= 0xd2000;
 

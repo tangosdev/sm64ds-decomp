@@ -24,7 +24,7 @@ extern void* data_ov006_02140408;
 extern void* data_ov006_0214042c;
 
 extern char* data_ov006_02141a40;
-extern void* data_0209f5c0;
+extern void* ROOT_ACTOR_BASE;
 
 extern int func_020179b4(SharedFilePtr* f, void* model, int a);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
@@ -52,7 +52,7 @@ int func_ov006_020c87d0(char* c)
     if (data_ov006_02141a40 != 0)
         func_ov006_020bfec0(data_ov006_02141a40, c + 0x14, (short*)(c + 0x36));
 
-    t = *(u16*)((char*)data_0209f5c0 + 0xc) == 0x175;
+    t = *(u16*)((char*)ROOT_ACTOR_BASE + 0xc) == 0x175;
     if (t != false) {
         func_02016a14(c + 0x4c, 0x7fff);
         func_02016a04(c + 0x4c, 0x210);

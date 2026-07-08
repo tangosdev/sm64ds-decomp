@@ -1,6 +1,6 @@
-extern unsigned short data_020a1040[];
+extern unsigned short FRAME_COUNTER[];
 
 void func_0203d930(void)
 {
-    data_020a1040[6] &= 0xbfff;
+    FRAME_COUNTER[6] &= 0xbfff;
 }

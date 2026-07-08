@@ -1,7 +1,7 @@
-extern int data_0209fc68;
-extern unsigned char data_0209fc5c[];
+extern int DP_STATE;
+extern unsigned char IS_PLAYER_ACTIVE[];
 extern signed char data_0209fc64[];
-extern signed char data_0209fc50;
+extern signed char NUM_PLAYERS_2;
 extern signed char data_0209fc58;
 
 void func_02030994(void)
@@ -10,9 +10,9 @@ void func_02030994(void)
     int i;
     unsigned char* src;
     signed char* dst;
-    if (data_0209fc68 == 0) return;
+    if (DP_STATE == 0) return;
     acc = 0;
-    src = data_0209fc5c;
+    src = IS_PLAYER_ACTIVE;
     dst = data_0209fc64;
     i = 0;
     do {
@@ -27,7 +27,7 @@ void func_02030994(void)
         }
         dst++;
     } while (i < 4);
-    data_0209fc50 = acc;
+    NUM_PLAYERS_2 = acc;
     data_0209fc58 = 0;
-    data_0209fc68 = 4;
+    DP_STATE = 4;
 }

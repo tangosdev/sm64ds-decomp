@@ -39,7 +39,7 @@ data_ov089_02132b84 kind:data(any) addr:0x02132b84
 data_ov089_02132ba8 kind:data(any) addr:0x02132ba8
 data_ov089_02132c40 kind:bss addr:0x02132c40
 data_ov089_02132c48 kind:bss addr:0x02132c48
-data_ov089_02132c50 kind:bss addr:0x02132c50
+BOWSER_KEY_MODEL_PTR kind:bss addr:0x02132c50
 data_ov089_02132c58 kind:bss addr:0x02132c58
 data_ov089_02132c60 kind:bss addr:0x02132c60
 data_ov089_02132c68 kind:bss addr:0x02132c68

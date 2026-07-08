@@ -15,7 +15,7 @@ extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 extern int AngleDiff(int a, int b);
 
 extern int data_ov080_021276c4[];
-extern int data_0209e650[];
+extern int RNG_STATE[];
 
 struct G { int w[2]; };
 extern struct G data_ov080_021283e0;
@@ -58,7 +58,7 @@ void func_ov080_02123c24(char *c)
     *(unsigned int *)(c + 0x188) = 0;
 
     if (*(unsigned char *)(c + 0x180) == 2) {
-        unsigned int rv = (unsigned int)RandomIntInternal(data_0209e650) >> 8;
+        unsigned int rv = (unsigned int)RandomIntInternal(RNG_STATE) >> 8;
         unsigned char rem = (unsigned char)(rv % 3);
         if (rem == 0) {
             *(int *)(c + 0x17c) = 3;

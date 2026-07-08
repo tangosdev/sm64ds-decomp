@@ -21,7 +21,7 @@ extern u32 data_ov002_0210a584[];
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern u8 data_ov002_020ff0ec[];
-extern int data_ov002_0211013c[];
+extern int _ZN6Player7ST_WALKE[];
 }
 
 extern "C" int _ZN6Player21St_StuckInGround_MainEv(char* c)
@@ -54,7 +54,7 @@ extern "C" int _ZN6Player21St_StuckInGround_MainEv(char* c)
         }
         if (_ZN6Player12FinishedAnimEv(c)) {
             *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_WALKE);
         }
         break;
     }

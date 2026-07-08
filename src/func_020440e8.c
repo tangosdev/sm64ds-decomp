@@ -1,8 +1,8 @@
-extern int data_020a4b68;
+extern int CURRENT_OBJECT_LIST_NODE;
 unsigned int func_020440e8(int v)
 {
-  if (data_020a4b68 == v)
+  if (CURRENT_OBJECT_LIST_NODE == v)
   {
-    data_020a4b68 = (data_020a4b68 == v) * 0;
+    CURRENT_OBJECT_LIST_NODE = (CURRENT_OBJECT_LIST_NODE == v) * 0;
   }
 }

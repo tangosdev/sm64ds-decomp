@@ -1,9 +1,9 @@
 //cpp
 extern "C" {
-extern unsigned char data_0209caa0[];
+extern unsigned char SAVE_DATA[];
 int _ZN8SaveData22NumGlowingRabbitsFoundEv(void){
   int count = 0;
-  int f = *(int*)(data_0209caa0+8);
+  int f = *(int*)(SAVE_DATA+8);
   unsigned int mask = 0x100000;
   int i = 0;
   do {

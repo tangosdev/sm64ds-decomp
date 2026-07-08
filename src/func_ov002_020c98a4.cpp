@@ -2,7 +2,7 @@
 extern "C" {
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(char*, int, int, int, unsigned int);
 extern void func_0200d148(void*, unsigned char);
-extern void* data_0209f318[];
+extern void* CAMERA[];
 void func_ov002_020c98a4(char* c){
   *(unsigned char*)(c+0x71a)=0;
   *(unsigned char*)(c+0x6e3)=0x18;
@@ -11,6 +11,6 @@ void func_ov002_020c98a4(char* c){
   *(int*)(c+0x98)=0;
   *(int*)(c+0xa8)=0;
   *(unsigned char*)(c+0x70c)=0;
-  func_0200d148(data_0209f318[0], *(unsigned char*)(c+0x6d8));
+  func_0200d148(CAMERA[0], *(unsigned char*)(c+0x6d8));
 }
 }

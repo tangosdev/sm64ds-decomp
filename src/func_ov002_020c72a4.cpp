@@ -13,8 +13,8 @@ struct RaycastGround {
 extern "C" void _ZN4BgCh19StartDetectingWaterEv(RaycastGround*);
 extern "C" int func_02037e78(int* p);
 extern "C" void func_ov002_020c71e0(void*);
-extern int data_0209212c;
-extern int data_0209f32c;
+extern int STAR_CAP_MAX_POS_Y;
+extern int WATER_HEIGHT;
 
 extern "C" void func_ov002_020c72a4(void* thisptr)
 {
@@ -22,7 +22,7 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     RaycastGround rg;
     Vector3 v;
     int z = *(int*)(r4 + 0x64);
-    int d = data_0209212c;
+    int d = STAR_CAP_MAX_POS_Y;
     int x = *(int*)(r4 + 0x5c);
     v.x = x;
     v.y = d;
@@ -33,7 +33,7 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     if (rg.DetectClsn()) {
         if (func_02037e78(&rg.f14) != 0) {
             *(int*)(r4 + 0x64c) = *(int*)((char*)&rg + 0x44);
-            data_0209f32c = *(int*)(r4 + 0x64c);
+            WATER_HEIGHT = *(int*)(r4 + 0x64c);
         }
     }
     *(int*)((char*)&rg + 0x4c) = 0x1f4000;

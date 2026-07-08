@@ -10,16 +10,16 @@ extern "C" void func_ov004_020b0aa0(int arg);
 extern "C" void func_ov004_020ae20c(void);
 extern "C" void func_ov004_020ae2c8(void);
 extern "C" void func_ov004_020b29a0(void* c, void* arg);
-extern Obj* data_0209f5bc;
+extern Obj* SCENE_FADER;
 extern void* data_ov004_020beb68;
 
 extern "C" void func_ov004_020b7fec(char* c){
-  if (data_0209f5bc->m_18() == 0)
+  if (SCENE_FADER->m_18() == 0)
     return;
   void* r5 = data_ov004_020beb68;
   if (r5 == 0)
     return;
-  data_0209f5bc->m_c(0x1e, 0);
+  SCENE_FADER->m_c(0x1e, 0);
   func_ov004_020b0aa0(0x1d);
   func_ov004_020ae20c();
   func_ov004_020ae2c8();

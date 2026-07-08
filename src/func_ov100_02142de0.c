@@ -12,8 +12,8 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
 
 extern char data_ov100_02148668;
-extern int data_02092138;
-extern signed char data_0209f2f8;
+extern int STAR_CAP_MIN_POS_Y;
+extern signed char LEVEL_ID;
 
 int func_ov100_02142de0(char *o)
 {
@@ -44,8 +44,8 @@ int func_ov100_02142de0(char *o)
         }
         func_ov100_0214233c(o);
         *(short *)(o + 0x94) = *(short *)(o + 0x3ba);
-        *(int *)(o + 0x3c8) = *(int *)&data_02092138;
-        d = *(signed char *)&data_0209f2f8;
+        *(int *)(o + 0x3c8) = *(int *)&STAR_CAP_MIN_POS_Y;
+        d = *(signed char *)&LEVEL_ID;
         if (d == 0x19) {
             *(int *)(o + 0x98) = 0xa000;
             *(int *)(o + 0x3ac) = 0x800;
@@ -60,7 +60,7 @@ int func_ov100_02142de0(char *o)
             *(int *)(o + 0x3b4) = 0x1000;
             _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(o + 0x374, o, 0x64000, 0x64000, 0x200004, 0x3c0);
             _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(o + 0x110, o, 0x64000, 0x64000, 0, 0);
-            d = *(volatile signed char *)&data_0209f2f8;
+            d = *(volatile signed char *)&LEVEL_ID;
             if (d == 0x18) {
                 *(int *)(o + 0x98) = 0x19000;
                 *(int *)(o + 0x3c8) = 0xfec78000;
@@ -91,7 +91,7 @@ int func_ov100_02142de0(char *o)
     }
 
     if (kind == 0) {
-        d = *(signed char *)&data_0209f2f8;
+        d = *(signed char *)&LEVEL_ID;
         if (d == 0x19) {
             *(int *)(o + 0x3c0) = 0x200000;
             *(int *)(o + 0x3c4) = 0x1770000;

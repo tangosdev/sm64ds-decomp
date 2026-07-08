@@ -16,7 +16,7 @@ extern int func_ov002_020d91e0(char *thiz, int damage, int doPre);
 extern void func_ov002_020da9d4(char *c);
 extern int func_ov002_020c5dec(char *c, int r1);
 
-extern s8 data_0209f2f8;
+extern s8 LEVEL_ID;
 
 int func_ov002_020cec2c(char *self)
 {
@@ -30,7 +30,7 @@ int func_ov002_020cec2c(char *self)
         return 0;
 
     flag = 0;
-    if (data_0209f2f8 == 0x13 || data_0209f2f8 == 0x14 || data_0209f2f8 == 0x30)
+    if (LEVEL_ID == 0x13 || LEVEL_ID == 0x14 || LEVEL_ID == 0x30)
         flag = 1;
 
     if (func_ov002_020ceb54(self) == 0 && flag == 0) {

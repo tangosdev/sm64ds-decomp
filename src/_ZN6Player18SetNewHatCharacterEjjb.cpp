@@ -1,7 +1,7 @@
 //cpp
 struct State;
-extern State data_ov002_02110604;
-extern State data_ov002_0211013c;
+extern State _ZN6Player15ST_SWING_PLAYERE;
+extern State _ZN6Player7ST_WALKE;
 
 extern "C" {
 void func_ov002_020bdb50(char* c, unsigned int p2);
@@ -25,10 +25,10 @@ void _ZN6Player18SetNewHatCharacterEjjb(char* c, unsigned int p1, unsigned int p
   }
   func_ov002_020bdb50(c, p2);
   func_ov002_020bda48(c);
-  if (_ZN6Player7IsStateERNS_5StateE(c, data_ov002_02110604)) {
+  if (_ZN6Player7IsStateERNS_5StateE(c, _ZN6Player15ST_SWING_PLAYERE)) {
     func_ov002_020d9c70(c);
     func_ov002_020da95c(c);
-    _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
+    _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_WALKE);
   }
   if (p3 == 0) {
     if (p1 != *(unsigned char*)(c + 0x6d9)) func_02012790(0xb);

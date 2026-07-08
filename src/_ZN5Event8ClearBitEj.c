@@ -1,5 +1,5 @@
-extern unsigned int data_0209f34c;
+extern unsigned int EVENT_FIELD;
 int _ZN5Event8ClearBitEj(unsigned int bit)
 {
-    return data_0209f34c &= ~(1 << bit);
+    return EVENT_FIELD &= ~(1 << bit);
 }

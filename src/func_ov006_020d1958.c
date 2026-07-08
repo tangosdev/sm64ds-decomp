@@ -4,7 +4,7 @@
 // Counts as decompiled, not matched.
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
@@ -29,7 +29,7 @@ extern "C" void func_ov006_020d1958(Base *o)
     if (*(unsigned char *)(c + 0x5000 + 0x3dd) == 1) return;
     unsigned int i = data_020a0e40;
     int b3 = 0;
-    if (data_020a0de8[i << 2] != 0) {
+    if (TOUCH_INPUT_ARR[i << 2] != 0) {
         if (data_020a0de9[i << 2] != 0) b3 = 1;
     }
     if (b3 == 0) return;

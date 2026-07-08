@@ -24,14 +24,14 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thi
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* thiz);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* thiz);
 
-extern Blob48 data_02082128;
-extern s8 data_0209f2f8;
-extern u8 data_0209f220;
-extern s32 data_0209f40c[];
-extern u8 data_0209f2d8;
-extern FileEntry* data_ov002_020ff06c[];
-extern FileEntry* data_ov002_020ff060[];
-extern void* data_ov002_0210d9a8;
+extern Blob48 _ZN9Matrix3x38IDENTITYE;
+extern s8 LEVEL_ID;
+extern u8 STAR_ID;
+extern s32 STAR_MARKERS[];
+extern u8 CURRENT_GAMEMODE;
+extern FileEntry* COIN_POLY32_MODEL_PTRS[];
+extern FileEntry* COIN_POLY4_MODEL_PTRS[];
+extern void* RED_NUMBER_MODEL_PTR;
 
 int func_ov002_020b2508(char* c)
 {
@@ -94,7 +94,7 @@ case17:
     }
 shared140:;
 
-    *(Blob48*)(c + 0x368) = data_02082128;
+    *(Blob48*)(c + 0x368) = _ZN9Matrix3x38IDENTITYE;
 
     *(s8*)(c + 0x3ac) = -1;
     *(u8*)(c + 0x3ab) = 0xff;
@@ -107,13 +107,13 @@ shared140:;
         b = (b == 0x121);
         if (b) {
             *(u8*)(c + 0x3ab) = (u8)((*(u32*)(c + 8) >> 4) & 7);
-            _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
+            _ZN5Model8LoadFileER13SharedFilePtr(&RED_NUMBER_MODEL_PTR);
             *(s32*)(c + 0x3a0) = 1;
-            if (SublevelToLevel(data_0209f2f8) == 0x13 ||
-                *(u8*)(c + 0x3ab) == data_0209f220) {
+            if (SublevelToLevel(LEVEL_ID) == 0x13 ||
+                *(u8*)(c + 0x3ab) == STAR_ID) {
                 if (_ZN5Actor18GetBitInDeathTableEv(c) == 0) {
                     for (i = 0; i < 0xc; i = (s8)(i + 1)) {
-                        if (data_0209f40c[i] == 0) {
+                        if (STAR_MARKERS[i] == 0) {
                             SetStarMarker(i, c, 4);
                             *(s8*)(c + 0x3ac) = i;
                             break;
@@ -136,19 +136,19 @@ shared140:;
 
     j = *(s32*)(c + 0x3a0);
     if (j < 2) {
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd8, data_ov002_020ff06c[j]->bmd, 1, 1) == 0) {
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd8, COIN_POLY32_MODEL_PTRS[j]->bmd, 1, 1) == 0) {
             return 0;
         }
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, data_ov002_020ff060[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, COIN_POLY4_MODEL_PTRS[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
             return 0;
         }
     } else {
-        _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_020ff06c[j]);
-        _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_020ff060[*(s32*)(c + 0x3a0)]);
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd8, data_ov002_020ff06c[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
+        _ZN5Model8LoadFileER13SharedFilePtr(COIN_POLY32_MODEL_PTRS[j]);
+        _ZN5Model8LoadFileER13SharedFilePtr(COIN_POLY4_MODEL_PTRS[*(s32*)(c + 0x3a0)]);
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd8, COIN_POLY32_MODEL_PTRS[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
             return 0;
         }
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, data_ov002_020ff060[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x114, COIN_POLY4_MODEL_PTRS[*(s32*)(c + 0x3a0)]->bmd, 1, 1) == 0) {
             return 0;
         }
     }
@@ -169,7 +169,7 @@ shared140:;
     } else {
         if (t == 6) {
             int b3;
-            b3 = data_0209f2d8;
+            b3 = CURRENT_GAMEMODE;
             b3 = (b3 == 1);
             if (b3 == false) {
                 *(u16*)(c + 0x3a8) = 0xffffu;

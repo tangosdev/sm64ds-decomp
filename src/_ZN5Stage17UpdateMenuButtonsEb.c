@@ -3,26 +3,26 @@
 // Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
-extern u8 data_0209f2b4;
-extern u16 data_0209f360[];
-extern u8 data_0209f2e0;
-extern u8 data_0209f244;
-extern u8 data_0209f2c4;
-extern u8 data_0209f248;
+extern u8 NUM_BIG_BUTTONS;
+extern u16 BG1_BUTTON_TILE_OFFSETS[];
+extern u8 SELECTED_BUTTON;
+extern u8 MENU_CHANGE_TIMER;
+extern u8 GAME_PAUSED;
+extern u8 PAUSE_MENU_ID;
 extern unsigned short* _ZN3G2S12GetBG1ScrPtrEv(void);
 
 void _ZN5Stage17UpdateMenuButtonsEb(int b)
 {
     int i;
-    for (i = 0; i < data_0209f2b4; i++) {
+    for (i = 0; i < NUM_BIG_BUTTONS; i++) {
         u16* p;
         unsigned int v;
         int j;
-        p = _ZN3G2S12GetBG1ScrPtrEv() + data_0209f360[i];
+        p = _ZN3G2S12GetBG1ScrPtrEv() + BG1_BUTTON_TILE_OFFSETS[i];
         if (b == 0) {
-            if (data_0209f2e0 != i) {
+            if (SELECTED_BUTTON != i) {
                 v = 0x1000;
-            } else if (data_0209f244 == 0) {
+            } else if (MENU_CHANGE_TIMER == 0) {
                 v = 0x2000;
             } else {
                 v = 0x1000;
@@ -31,8 +31,8 @@ void _ZN5Stage17UpdateMenuButtonsEb(int b)
         } else {
             v = 0x1000;
         }
-        if (data_0209f2c4 != 0) {
-            u8 t = (u8)(data_0209f248 + 0xf9);
+        if (GAME_PAUSED != 0) {
+            u8 t = (u8)(PAUSE_MENU_ID + 0xf9);
             if (t <= 1) v = (u16)(v + 0x4000);
         }
         for (j = 0; j < 0x20; j++) {

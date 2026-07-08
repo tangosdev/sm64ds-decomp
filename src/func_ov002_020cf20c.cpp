@@ -11,7 +11,7 @@ extern int func_02037e38(unsigned int* p);
 extern int func_02037e48(unsigned int* p);
 extern void func_0200ca14(void* a, unsigned char b, int c);
 extern void _ZN11RaycastLineD1Ev(void* self);
-extern void* data_0209f318[];
+extern void* CAMERA[];
 
 int func_ov002_020cf20c(char* c) {
     Vector3 v1;
@@ -33,7 +33,7 @@ int func_ov002_020cf20c(char* c) {
     if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
         if (func_02037e38((unsigned int*)(rl + 0x14)) == 3) {
             _ZN11RaycastLine10GetClsnPosEv(&clsnPos, rl);
-            void* cam = data_0209f318[0];
+            void* cam = CAMERA[0];
             int t = func_02037e48((unsigned int*)(rl + 0x14));
             func_0200ca14(cam, *(unsigned char*)(c + 0x6d8), t);
             int ret = clsnPos.y;

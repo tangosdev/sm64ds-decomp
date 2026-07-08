@@ -16,7 +16,7 @@ extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern "C" void func_ov071_02121b08(void* c);
 
 extern Vector3 data_ov071_021230b8;
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 
 extern "C" int func_ov071_02121d80(char* c)
 {
@@ -34,9 +34,9 @@ extern "C" int func_ov071_02121d80(char* c)
         r.z = *(int*)(c + 0x98);
         r.x = 0;
         r.y = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, *(s16*)(c + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(s16*)(c + 0x92));
-        MulVec3Mat4x3(&r, data_020a0e68, c + 0xa4);
+        Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x94));
+        Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x92));
+        MulVec3Mat4x3(&r, MATRIX_SCRATCH_PAPER, c + 0xa4);
         *(Vector3*)(c + 0xa4) = *(Vector3*)(c + 0xa4);
         _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0xfc);
         func_ov071_02121b50(c, c + 0x13c);

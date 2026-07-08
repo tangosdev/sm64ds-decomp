@@ -24,9 +24,9 @@ extern "C" void _ZN9Animation7AdvanceEv(void *);
 extern "C" u8 data_020a0e40;
 extern "C" s16 data_0209f49e[];
 extern "C" s16 data_0209f4a0[];
-extern "C" s16 data_02082214[];
-extern "C" State data_ov002_021101b4;
-extern "C" State data_ov002_021105a4;
+extern "C" s16 SINE_TABLE[];
+extern "C" State _ZN6Player7ST_FALLE;
+extern "C" State _ZN6Player15ST_GROUND_POUNDE;
 
 extern "C" s32 _ZN6Player15St_Balloon_MainEv(char *c)
 {
@@ -40,14 +40,14 @@ extern "C" s32 _ZN6Player15St_Balloon_MainEv(char *c)
 
     if (*(u16 *)(c + 0x6c0) == 0) {
         func_ov002_020de968(c);
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_FALLE);
         return 1;
     }
 
     u16 flags = *(u16 *)((char *)&data_0209f49e + data_020a0e40 * 0x18);
     if (flags & 0x400) {
         func_ov002_020de968(c);
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021105a4);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player15ST_GROUND_POUNDE);
         return 1;
     }
 
@@ -81,10 +81,10 @@ extern "C" s32 _ZN6Player15St_Balloon_MainEv(char *c)
             if (*(s32 *)(c + 0x98) < 0x4000)
                 *(s32 *)(c + 0x98) = 0x4000;
             s32 idx = ((s32)(u16)diff >> 4) * 2;
-            s16 t0 = data_02082214[idx + 1];
+            s16 t0 = SINE_TABLE[idx + 1];
             s32 v1 = (s32)(((long long)*(s32 *)(c + 0x98) * t0 + 0x800) >> 12);
             s32 v = (s32)(((long long)v1 * 0xa0 + 0x800) >> 12);
-            s16 t1 = data_02082214[idx];
+            s16 t1 = SINE_TABLE[idx];
             *(s16 *)(c + 0x69c) = (s16)(((long long)t1 * v + 0x800) >> 12);
             *(s16 *)(c + 0x69e) = (s16)(((long long)t0 * v + 0x800) >> 12);
         }

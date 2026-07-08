@@ -1,6 +1,6 @@
 typedef unsigned char u8;
 
-extern u8 data_0209d454;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern int data_ov075_0211d71c[];
 
 extern void func_ov075_02116028(int *p, int v);
@@ -14,11 +14,11 @@ void func_ov075_02119918(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
 
-    data_0209d454 = data_0209d454 & ~1;
+    BOTTOM_SCREEN_RELATED = BOTTOM_SCREEN_RELATED & ~1;
     func_ov075_02116028(data_ov075_0211d71c, 2);
     func_02034414(0x11);
 
-    data_0209d454 = data_0209d454 | 5;
+    BOTTOM_SCREEN_RELATED = BOTTOM_SCREEN_RELATED | 5;
     *(u8 *)(c + 0x281) = 1;
     func_ov075_02115e8c(c + 0x70, 8, 0, 0x50, 0xa8);
     func_ov075_02115e8c(c + 0x94, 8, 0, 0xb0, 0xa8);

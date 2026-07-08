@@ -7,7 +7,7 @@ extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
 extern unsigned int _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern struct Matrix4x3 data_020a0e68;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 
 void func_ov078_02125de0(char *c)
 {
@@ -45,10 +45,10 @@ void func_ov078_02125de0(char *c)
         if (actor == 0)
             continue;
 
-        data_020a0e68 = *(struct Matrix4x3*)(c + 0x4a4);
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xb000, -0x7000, -0x6000);
-        Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x1000, 0x2000);
-        *(struct Matrix4x3*)(c + 0x4a4) = data_020a0e68;
+        MATRIX_SCRATCH_PAPER = *(struct Matrix4x3*)(c + 0x4a4);
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0xb000, -0x7000, -0x6000);
+        Matrix4x3_ApplyInPlaceToRotationXYZExt(&MATRIX_SCRATCH_PAPER, 0x4000, -0x1000, 0x2000);
+        *(struct Matrix4x3*)(c + 0x4a4) = MATRIX_SCRATCH_PAPER;
         *(void**)((char*)actor + 0xc8) = c + 0x4a4;
     }
 }

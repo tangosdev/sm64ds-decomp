@@ -6,7 +6,7 @@ extern int func_ov075_02115290(int dummy, int col);
 extern void func_ov075_021149d0(char* dst, int val);
 extern void func_02012790(int x);
 
-extern u8 data_0209fc50[];
+extern u8 NUM_PLAYERS_2[];
 
 void func_ov075_02115134(char* c)
 {
@@ -17,7 +17,7 @@ void func_ov075_02115134(char* c)
         func_ov075_021149d0(p, func_ov075_02115290((int)c, i));
         p += 0x158;
     }
-    lim = data_0209fc50[0];
+    lim = NUM_PLAYERS_2[0];
     cur = *(u8*)(c + 0xf43);
     if (cur > lim)
         func_02012790(0x12a);

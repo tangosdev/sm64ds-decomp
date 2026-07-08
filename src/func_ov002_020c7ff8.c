@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-extern void *data_0209f318;
+extern void *CAMERA;
 extern void func_0200d4b0(void *g, u8 playerID, int x);
 extern void func_0200d508(void *g, u8 playerID);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *thiz, u32 anim, int a, int fix, u32 e);
@@ -11,7 +11,7 @@ extern void func_02012790(int x);
 void func_ov002_020c7ff8(char *self)
 {
     u8 s = *(u8 *)(self + 0x70a);
-    void *g = data_0209f318;
+    void *g = CAMERA;
     if (s == 0 || s == 1 || s == 0x11) {
         func_0200d4b0(g, *(u8 *)(self + 0x6d8), -1);
     } else if (s == 3) {

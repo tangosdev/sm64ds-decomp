@@ -29,7 +29,7 @@ struct Dst {
     struct Pair p7;
 };
 extern struct Dst data_ov002_0210db80;
-extern struct Dst data_ov002_0210dbc0;
+extern struct Dst ENEMY_DEATH_FUNCS;
 
 void __sinit_ov002_02100938(void)
 {
@@ -41,12 +41,12 @@ void __sinit_ov002_02100938(void)
     data_ov002_0210db80.p5 = data_ov002_02108170;
     data_ov002_0210db80.p6 = data_ov002_02108140;
     data_ov002_0210db80.p7 = data_ov002_021081a0;
-    data_ov002_0210dbc0.p0 = data_ov002_021081b0;
-    data_ov002_0210dbc0.p1 = data_ov002_021081a8;
-    data_ov002_0210dbc0.p2 = data_ov002_02108148;
-    data_ov002_0210dbc0.p3 = data_ov002_02108198;
-    data_ov002_0210dbc0.p4 = data_ov002_02108190;
-    data_ov002_0210dbc0.p5 = data_ov002_02108188;
-    data_ov002_0210dbc0.p6 = data_ov002_02108180;
-    data_ov002_0210dbc0.p7 = data_ov002_02108178;
+    ENEMY_DEATH_FUNCS.p0 = data_ov002_021081b0;
+    ENEMY_DEATH_FUNCS.p1 = data_ov002_021081a8;
+    ENEMY_DEATH_FUNCS.p2 = data_ov002_02108148;
+    ENEMY_DEATH_FUNCS.p3 = data_ov002_02108198;
+    ENEMY_DEATH_FUNCS.p4 = data_ov002_02108190;
+    ENEMY_DEATH_FUNCS.p5 = data_ov002_02108188;
+    ENEMY_DEATH_FUNCS.p6 = data_ov002_02108180;
+    ENEMY_DEATH_FUNCS.p7 = data_ov002_02108178;
 }

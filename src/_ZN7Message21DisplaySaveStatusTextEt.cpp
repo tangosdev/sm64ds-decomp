@@ -1,9 +1,9 @@
 //cpp
 extern "C" {
-extern unsigned short data_0209d6d4;
-extern unsigned char data_0209d660;
+extern unsigned short CURR_MSG_ID;
+extern unsigned char PLAYER_TALKING;
 extern unsigned char data_0209d668;
-extern unsigned char data_0209d6a8;
+extern unsigned char MSG_LINE_HEIGHT;
 extern unsigned char data_0209d674;
 extern int func_0201eaac();
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
@@ -16,11 +16,11 @@ void _ZN7Message21DisplaySaveStatusTextEt(unsigned short n) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
-    data_0209d6d4 = n;
-    data_0209d660 = 0;
+    CURR_MSG_ID = n;
+    PLAYER_TALKING = 0;
     func_0201eaac();
     data_0209d668 = 1;
-    data_0209d6a8 = 0;
+    MSG_LINE_HEIGHT = 0;
     data_0209d674 = 0;
     p = _ZN3G2S13GetBG0CharPtrEv() + 0x4000;
     li = 0;

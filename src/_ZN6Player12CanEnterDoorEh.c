@@ -10,28 +10,28 @@ struct Player {
     int CanEnterDoor(unsigned char);
 };
 
-extern State data_ov002_0211022c;
-extern State data_ov002_0211013c;
+extern State _ZN6Player13ST_NO_CONTROLE;
+extern State _ZN6Player7ST_WALKE;
 extern State data_ov002_02110154;
-extern State data_ov002_0211043c;
-extern State data_ov002_0211004c;
+extern State _ZN6Player10ST_ON_WALLE;
+extern State _ZN6Player10ST_SWALLOWE;
 
 struct DoorObj { int (**vtbl)(DoorObj *); };
 
 int Player::CanEnterDoor(unsigned char door)
 {
-    if (IsState(data_ov002_0211022c)) {
+    if (IsState(_ZN6Player13ST_NO_CONTROLE)) {
         if (!(*(unsigned char *)((char *)this + 0x6e3) == 0x13 &&
               *(unsigned char *)((char *)this + 0x70b) != 0))
             return 0;
     }
 
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110154) ||
-        IsState(data_ov002_0211022c) || IsState(data_ov002_0211043c)) {
+    if (IsState(_ZN6Player7ST_WALKE) || IsState(data_ov002_02110154) ||
+        IsState(_ZN6Player13ST_NO_CONTROLE) || IsState(_ZN6Player10ST_ON_WALLE)) {
         if (*(DoorObj **)((char *)this + 0x360) != 0) {
             if ((*(DoorObj **)((char *)this + 0x360))->vtbl[0x48 / 4](*(DoorObj **)((char *)this + 0x360)) == 6 ||
                 (*(DoorObj **)((char *)this + 0x360))->vtbl[0x48 / 4](*(DoorObj **)((char *)this + 0x360)) == 1) {
-                ChangeState(data_ov002_0211004c);
+                ChangeState(_ZN6Player10ST_SWALLOWE);
             }
             return 0;
         }

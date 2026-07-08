@@ -21,9 +21,9 @@ struct Camera {
 };
 
 extern "C" {
-extern u8 data_0209f1f8;
-extern u8 data_0209f250;
-extern void *data_0209f394[];
+extern u8 NUM_VIEWS;
+extern u8 CURR_PLAYER_ID;
+extern void *PLAYER_ARR[];
 
 struct ViewObj { u8 type; u8 p1; s16 x; s16 y; s16 z; };
 extern struct ViewObj *GetViewObj(int idx);
@@ -41,7 +41,7 @@ int Camera::InitResources()
 {
     Camera *thiz = this;
     u32 i;
-    for (i = 0; i < data_0209f1f8; i = (u8)(i + 1)) {
+    for (i = 0; i < NUM_VIEWS; i = (u8)(i + 1)) {
         struct ViewObj *v = GetViewObj(i);
         if (v->type == 7) {
             s32 *p;
@@ -55,13 +55,13 @@ int Camera::InitResources()
         }
     }
     *(int*)((char*)thiz+0x168) = 0;
-    *(void**)((char*)thiz+0x110) = data_0209f394[data_0209f250];
+    *(void**)((char*)thiz+0x110) = PLAYER_ARR[CURR_PLAYER_ID];
     ChangeArea(*(signed char*)(*(char**)((char*)thiz+0x110)+0xcc));
     *(int*)((char*)thiz+0x114) = 0;
     *(int*)((char*)thiz+0x118) = 0;
     _ZN6Camera11ChangeStateEPNS_5StateE(thiz, &data_0209b008[0]);
     func_0200cf40(thiz);
     if (StartWithFarCamera() != 0)
-        func_0200d0ac(thiz, data_0209f250);
+        func_0200d0ac(thiz, CURR_PLAYER_ID);
     return this->v9();
 }

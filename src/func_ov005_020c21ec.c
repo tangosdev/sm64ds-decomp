@@ -4,8 +4,8 @@
 
 extern void *_ZN9ActorBasenwEj(unsigned);
 extern volatile int _ZN9ActorBaseC1Ev(void *);
-extern int data_0208e4b8[];
-extern int data_02092680[];
+extern int _ZTV12ActorDerived[];
+extern int _ZTV5Scene[];
 extern int data_ov005_020c2490[];
 int *func_ov005_020c21ec(void)
 {
@@ -21,11 +21,11 @@ int *func_ov005_020c21ec(void)
   if (p)
   {
     unsigned char *f;
-    new_var5 = (int) data_0208e4b8;
+    new_var5 = (int) _ZTV12ActorDerived;
     f--;
     _ZN9ActorBaseC1Ev(p);
     p[0] = new_var5;
-    p[0] = (int) data_02092680;
+    p[0] = (int) _ZTV5Scene;
     f = ((unsigned char *) p) + 0x13;
     new_var3 = data_ov005_020c2490;
     f++;

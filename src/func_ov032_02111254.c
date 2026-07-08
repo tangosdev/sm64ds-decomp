@@ -5,7 +5,7 @@ extern char* ClosestPlayer(char* c);
 extern int Vec3_HorzDist(void* a, void* b);
 extern int data_ov032_02113abc[];
 extern int data_ov032_02113a7c[];
-extern int data_0209f32c[];
+extern int WATER_HEIGHT[];
 int func_ov032_02111254(char *c) {
     char *pl = ClosestPlayer(c);
     int *s;
@@ -22,7 +22,7 @@ int func_ov032_02111254(char *c) {
         if (*(unsigned char*)(pl+0x706) == 0)
             return 0;
     }
-    d = *(int*)(pl+0x644) - data_0209f32c[0];
+    d = *(int*)(pl+0x644) - WATER_HEIGHT[0];
     if (d < 0) d = -d;
     if (d < 0xb4000)
         return 0;

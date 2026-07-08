@@ -10,9 +10,9 @@ extern void func_ov001_020aaa54(void);
 
 extern unsigned char data_ov001_020ad620;
 extern char *data_ov001_020ad634[3];
-extern unsigned char data_0209f284;
-extern unsigned char data_0209f2d8;
-extern char *data_0209f394;
+extern unsigned char BOUNCING_MSG_ARROWS_VISIBLE;
+extern unsigned char CURRENT_GAMEMODE;
+extern char *PLAYER_ARR;
 extern unsigned char data_ov001_020ad624;
 extern unsigned char data_ov001_020ad62c[3];
 
@@ -40,11 +40,11 @@ void func_ov001_020aaf40(void)
             }
         }
         if (data_ov001_020ad620 == 0)
-            data_0209f284 = 0;
+            BOUNCING_MSG_ARROWS_VISIBLE = 0;
     }
 
-    if ((int)(data_0209f2d8 == 1) == 0) {
-        char *pl = data_0209f394;
+    if ((int)(CURRENT_GAMEMODE == 1) == 0) {
+        char *pl = PLAYER_ARR;
         if (_ZN6Player8HasNoCapEv(pl) && !_ZN6Player15IsCollectingCapEv(pl)) {
             func_ov001_020aadac();
             data_ov001_020ad624 = 1;

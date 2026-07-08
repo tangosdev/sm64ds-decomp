@@ -5,7 +5,7 @@ extern int func_ov060_02111cc0(char *c, int a, int b);
 extern int func_ov060_02115a30(char *c);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN12WithMeshClsn15ClearGroundFlagEv(char *c);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 int func_ov060_021125f0(char *c)
 {
     int v, sc, r;
@@ -27,9 +27,9 @@ int func_ov060_021125f0(char *c)
     v = v * 0x46 / 6000;
     if (v > 0x2d)
         v = v * 0x19 / 10;
-    sc = data_02082214[((*(unsigned short*)(c + 0x8c) >> 4) << 1) + 1];
+    sc = SINE_TABLE[((*(unsigned short*)(c + 0x8c) >> 4) << 1) + 1];
     *(int*)(c + 0x98) = v * sc;
-    *(int*)(c + 0xa8) = -v * data_02082214[(*(unsigned short*)(c + 0x8c) >> 4) << 1];
+    *(int*)(c + 0xa8) = -v * SINE_TABLE[(*(unsigned short*)(c + 0x8c) >> 4) << 1];
     a = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x3a8));
     if (a) {
         *(int*)(a + 0x110) = 1;

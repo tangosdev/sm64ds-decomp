@@ -11,7 +11,7 @@ extern int _ZNK6Player14GetBodyModelIDEjb(char* thiz, u32 a, int b);
 extern void func_ov002_020d93ac(char* thiz);
 extern void func_0200d89c(char* p);
 extern u32 data_ov002_0210a6d4[];
-extern char* data_0209f318;
+extern char* CAMERA;
 
 int _ZN6Player12St_Hurt_InitEv(char* c)
 {
@@ -33,7 +33,7 @@ int _ZN6Player12St_Hurt_InitEv(char* c)
     }
     *(u8*)(c+0x708) = 1;
     *(int*)(c+0x640) = *(int*)(c+0xa8);
-    func_0200d89c(data_0209f318);
+    func_0200d89c(CAMERA);
     *(s16*)(c+0x600+0xa8) = 5;
     return 1;
 }

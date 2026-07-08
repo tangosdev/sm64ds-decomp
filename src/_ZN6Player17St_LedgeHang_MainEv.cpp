@@ -20,7 +20,7 @@ extern void func_ov002_020bedd4(void* c);
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
 extern s16 data_0209f4a0[];
-extern int data_ov002_02110004[];
+extern int _ZN6Player13ST_LEDGE_GRABE[];
 }
 
 extern "C" int _ZN6Player17St_LedgeHang_MainEv(char* c)
@@ -55,7 +55,7 @@ extern "C" int _ZN6Player17St_LedgeHang_MainEv(char* c)
              && (*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2))
             || func_ov002_020cfea4(c)) {
             *(u8*)(c + 0x6e3) = 1;
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110004);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player13ST_LEDGE_GRABE);
         } else {
             if (func_ov002_020cfbdc(c))
                 return 1;
@@ -70,7 +70,7 @@ extern "C" int _ZN6Player17St_LedgeHang_MainEv(char* c)
                         func_ov002_020d0948(c);
                     } else if (!func_ov002_020cfaf0(c)) {
                         *(u8*)(c + 0x6e3) = 0;
-                        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110004);
+                        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player13ST_LEDGE_GRABE);
                     }
                 }
             }

@@ -1,6 +1,6 @@
 //cpp
 struct State;
-extern State data_ov002_0211022c;
+extern State _ZN6Player13ST_NO_CONTROLE;
 extern "C" {
 int _ZN6Player7IsStateERNS_5StateE(char* c, State& s);
 void func_ov002_020ce9c8(char* c);
@@ -10,7 +10,7 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int a, int b, int d, unsi
 int func_ov002_020c7f10(char* c)
 {
   unsigned char v;
-  if (!_ZN6Player7IsStateERNS_5StateE(c, data_ov002_0211022c)) goto fail;
+  if (!_ZN6Player7IsStateERNS_5StateE(c, _ZN6Player13ST_NO_CONTROLE)) goto fail;
   if (*(unsigned char*)(c + 0x6e3) != 0) goto fail;
   v = *(unsigned char*)(c + 0x70a);
   if (v == 0 || v == 1 || v == 0x11 || (unsigned char)(v + 0xfe) <= 1) {

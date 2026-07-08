@@ -3,10 +3,10 @@ struct Hdr84 {
     int count;
 };
 
-extern struct { char pad[0x7c]; struct Hdr84 *f7c; } *data_020a5bb8;
+extern struct { char pad[0x7c]; struct Hdr84 *f7c; } *_ZN5Sound8SDAT_RAM3PTRE;
 
 int func_02050a5c(unsigned int i) {
-    struct Hdr84 *h = data_020a5bb8->f7c;
+    struct Hdr84 *h = _ZN5Sound8SDAT_RAM3PTRE->f7c;
     if (i >= (unsigned int)h->count) return 0;
     return *(int *)((char *)h + i * 16 + 0x10);
 }

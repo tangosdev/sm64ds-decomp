@@ -1,9 +1,9 @@
-extern unsigned char data_0208ee3c;
-extern unsigned char data_0209d454;
+extern unsigned char BACKLIGHT_ENABLED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 void func_ov004_020b9220(char *c) {
     *(unsigned char *)(c + 0x58) = 1;
-    if (data_0208ee3c != 0) {
+    if (BACKLIGHT_ENABLED != 0) {
         *(unsigned char *)(c + 0x7c) = 1;
         *(unsigned char *)(c + 0xa0) = 0;
     } else {
@@ -11,7 +11,7 @@ void func_ov004_020b9220(char *c) {
         *(unsigned char *)(c + 0xa0) = 1;
     }
     *(unsigned char *)(c + 0xc4) = 0;
-    data_0209d454 |= 2;
+    BOTTOM_SCREEN_RELATED |= 2;
     *(int *)(c + 0x120) = 8;
     *(unsigned char *)(c + 0x124) = 1;
 }

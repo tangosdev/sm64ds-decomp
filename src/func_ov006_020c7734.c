@@ -13,7 +13,7 @@ extern "C" void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(
 extern unsigned char data_ov006_02140400;
 extern void *data_ov006_02141a44;
 extern unsigned short data_ov006_02140404;
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern OamAttr *data_ov006_02134d1c;
 
 struct VObj;
@@ -43,12 +43,12 @@ extern "C" void func_ov006_020c7734(char *self)
         func_ov006_020bfec0(data_ov006_02141a44, self + 0x14, v);
 
         g = data_ov006_02140404;
-        t = data_02082214[(g >> 4) * 2];
+        t = SINE_TABLE[(g >> 4) * 2];
         v[1] = v[1] - (((t << 2) + 0x30000) >> 12);
         r1res = func_02053200((t >> 2) + 0x1000);
 
         g = data_ov006_02140404;
-        r2res = -func_02053200((data_02082214[(g >> 4) * 2 + 1] >> 2) + 0x1000);
+        r2res = -func_02053200((SINE_TABLE[(g >> 4) * 2 + 1] >> 2) + 0x1000);
 
         Mtx m;
         m.d = r2res;

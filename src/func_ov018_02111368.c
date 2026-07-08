@@ -32,7 +32,7 @@ int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
 }
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 struct Vector3 { int x, y, z; };
 struct PathPtrObj { int a, b; };
@@ -54,7 +54,7 @@ extern "C" int func_ov018_02111368(char* self)
     if (other != 0) {
         char* otherPos = other + 0x5c;
         Fix12i dist = Vec3_HorzDist(self + 0x5c, otherPos);
-        target = (s16)((int)(((s64)dist * data_02082214[((u16)(s16)AngleDiff(Vec3_HorzAngle(self + 0x5c, otherPos), *(s16*)(self + 0x8e)) >> 4) * 2 + 1] + 0x800) >> 12) / 256);
+        target = (s16)((int)(((s64)dist * SINE_TABLE[((u16)(s16)AngleDiff(Vec3_HorzAngle(self + 0x5c, otherPos), *(s16*)(self + 0x8e)) >> 4) * 2 + 1] + 0x800) >> 12) / 256);
     } else {
         if (*(int*)(self + 0x34c) > 0 && *(int*)(self + 0x33c) == 1) {
             if (Vec3_HorzDist(self + 0x5c, self + 0x324) < 0x10000) {

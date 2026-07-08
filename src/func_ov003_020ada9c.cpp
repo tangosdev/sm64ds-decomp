@@ -9,11 +9,11 @@ extern void Enable3dEngines(void);
 extern void func_020233f4(void);
 extern void func_ov003_020ad6ec(int);
 
-extern u8 data_0208a178[];
-extern u8 data_0208c178[];
-extern u8 data_0208c378[];
-extern u8 data_0209d45c[];
-extern u8 data_0208ee44[];
+extern u8 font_2D_ncg_bin[];
+extern u8 font_2D_ncl_bin[];
+extern u8 debug_level_select_arrow_ncg_bin[];
+extern u8 TOP_SCREEN_RELATED[];
+extern u8 GAME_SPEED_RELATED[];
 extern u8 data_0209ee90[];
 }
 
@@ -44,18 +44,18 @@ extern "C" int func_ov003_020ada9c(int arg)
     *(volatile u16*)0x4000008 &= ~3;
     *(volatile u16*)0x4000008 = (*(volatile u16*)0x4000008 & 0x43) | 0x1f00;
     *(volatile u16*)0x4000008 &= ~0x40;
-    GX::LoadBG0Char(data_0208a178, 0, 0x2000);
-    GX::LoadBGPltt(data_0208c178, 0, 0x200);
+    GX::LoadBG0Char(font_2D_ncg_bin, 0, 0x2000);
+    GX::LoadBGPltt(font_2D_ncl_bin, 0, 0x200);
     {
         u16 *scr = G2::GetBG0ScrPtr();
         int i = 0;
         do { *scr++ = 0xff; i++; } while (i < 0x1800);
     }
-    GX::LoadOBJ(data_0208c378, 0, 0x2000);
-    GX::LoadOBJPltt(data_0208c178, 0, 0x200);
-    *(u8*)data_0209d45c = 0x11;
+    GX::LoadOBJ(debug_level_select_arrow_ncg_bin, 0, 0x2000);
+    GX::LoadOBJPltt(font_2D_ncl_bin, 0, 0x200);
+    *(u8*)TOP_SCREEN_RELATED = 0x11;
     *(volatile u32*)0x4000000 = (*(volatile u32*)0x4000000 & ~0x1f00) | 0x1100;
-    *(int*)data_0208ee44 = 2;
+    *(int*)GAME_SPEED_RELATED = 2;
     func_ov003_020ad6ec(arg);
     *(volatile u32*)0x4000010 = 0;
     *(u8*)(data_0209ee90 + 0x340) = 0;

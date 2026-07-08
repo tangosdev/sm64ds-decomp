@@ -14,7 +14,7 @@ extern void func_ov020_021112b0(char *c);
 extern int _Z14ApproachLinearRsss(s16 *, short, short);
 
 extern void *data_ov020_02114ab0[];
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 #define A8C (*(u16 *)((char *)c + 0x8c))
 #define A8E (*(u16 *)((char *)c + 0x8e))
@@ -41,10 +41,10 @@ void func_ov020_02111c30(char *c)
         *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
 
         {
-            s32 r = (s32)(((s64)data_02082214[(A8C >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
-            *(s32 *)(c + 0xa4) = (s32)(((s64)r * data_02082214[(A8E >> 4) * 2] + 0x800) >> 12);
-            *(s32 *)(c + 0xa8) = (s32)(((s64)data_02082214[(A8C >> 4) * 2] * -0x32000 + 0x800) >> 12);
-            *(s32 *)(c + 0xac) = (s32)(((s64)r * data_02082214[(A8E >> 4) * 2 + 1] + 0x800) >> 12);
+            s32 r = (s32)(((s64)SINE_TABLE[(A8C >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
+            *(s32 *)(c + 0xa4) = (s32)(((s64)r * SINE_TABLE[(A8E >> 4) * 2] + 0x800) >> 12);
+            *(s32 *)(c + 0xa8) = (s32)(((s64)SINE_TABLE[(A8C >> 4) * 2] * -0x32000 + 0x800) >> 12);
+            *(s32 *)(c + 0xac) = (s32)(((s64)r * SINE_TABLE[(A8E >> 4) * 2 + 1] + 0x800) >> 12);
         }
         return;
     }

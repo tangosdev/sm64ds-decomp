@@ -7,7 +7,7 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(char* sel
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 extern char data_ov020_02114af0[];
 struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct M48 _ZN9Matrix3x38IDENTITYE;
 
 int func_ov020_021133b0(char* c)
 {
@@ -23,6 +23,6 @@ int func_ov020_021133b0(char* c)
     *(int*)(c+0x380) = *(int*)(c+0x5c);
     *(int*)(c+0x384) = *(int*)(c+0x60);
     *(int*)(c+0x388) = *(int*)(c+0x64);
-    *(struct M48*)(c+0x14c) = data_02082128;
+    *(struct M48*)(c+0x14c) = _ZN9Matrix3x38IDENTITYE;
     return 1;
 }

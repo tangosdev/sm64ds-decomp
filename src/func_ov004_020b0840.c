@@ -6,7 +6,7 @@ extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int x);
 extern void func_ov004_020b2c84(void);
 extern void _ZN5Scene21AfterCleanupResourcesEj(char* c, unsigned int x);
 extern int data_0209b308[];
-extern int data_0209d4a8[];
+extern int SCENE_RELATED[];
 extern int data_ov004_020beb74[];
 extern int data_ov004_020beb60[];
 
@@ -14,7 +14,7 @@ void func_ov004_020b0840(char* c, int arg){
   if (arg == 2) {
     if (data_0209b308[4] == 0)
       func_ov004_020ad90c();
-    data_0209d4a8[0] = 0;
+    SCENE_RELATED[0] = 0;
     data_ov004_020beb74[1] = 0;
     func_ov004_020b0aa0(0x1d);
     if (data_ov004_020beb60[0] != 0) {

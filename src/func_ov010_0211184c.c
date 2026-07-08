@@ -2,7 +2,7 @@ struct V3 { int x, y, z; };
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern short Vec3_HorzAngle(const struct V3* v0, const struct V3* v1);
 extern int Vec3_HorzDist(const struct V3* a, const struct V3* b);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 void func_ov010_0211184c(char* c, char* arg2) {
     char* target;
     unsigned int id;
@@ -35,7 +35,7 @@ void func_ov010_0211184c(char* c, char* arg2) {
     ang2 = (short)(ang + *(short*)(target+0x8e));
     dist = Vec3_HorzDist(&vt, &va);
     idx = (unsigned short)ang2 >> 4;
-    tv = data_02082214[idx*2];
+    tv = SINE_TABLE[idx*2];
     d = (int)(((long long)dist * tv + 0x800) >> 12);
     if (d < 0x10e000) *(unsigned char*)(target+0x3aa) = 1;
 }

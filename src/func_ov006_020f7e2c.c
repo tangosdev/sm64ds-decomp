@@ -1,4 +1,4 @@
-extern int data_020a0db0;
+extern int FRAME_TIMER;
 extern unsigned short data_ov006_0213d600[];
 extern int data_ov006_0214250c[];
 void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
@@ -10,7 +10,7 @@ void func_ov006_020f7e2c(char *thiz)
     k = *(unsigned char*)(thiz + 0x2d);
     if (k == 0) return;
     if (k == 3) {
-        if (((&data_020a0db0)[0] & 8) != 0) return;
+        if (((&FRAME_TIMER)[0] & 8) != 0) return;
     }
     {
         int idx = (*(unsigned char*)(thiz + 0x2c) + 1) * 5

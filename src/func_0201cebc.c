@@ -1,7 +1,7 @@
-    extern short data_0209d6d4;
-    extern unsigned char data_0209d660;
+    extern short CURR_MSG_ID;
+    extern unsigned char PLAYER_TALKING;
     extern unsigned char data_0209d668;
-    extern unsigned char data_0209d6a8;
+    extern unsigned char MSG_LINE_HEIGHT;
     extern unsigned char data_0209d674;
     extern void func_0201eaac(void);
     extern int _ZN3G2S13GetBG0CharPtrEv(void);
@@ -14,11 +14,11 @@
     {
         volatile unsigned short v;
         volatile int z;
-        data_0209d6d4 = a0;
-        data_0209d660 = 0;
+        CURR_MSG_ID = a0;
+        PLAYER_TALKING = 0;
         func_0201eaac();
         data_0209d668 = 1;
-        data_0209d6a8 = 0;
+        MSG_LINE_HEIGHT = 0;
         data_0209d674 = 0;
         {
             int *dst = (int *)(_ZN3G2S13GetBG0CharPtrEv() + 0x4000);
@@ -31,6 +31,6 @@
             MultiStore16(v, dst, 0x800);
         }
         func_0201d6a0(0x100, 0x20);
-        data_0209d6d4 = 0x27e;
+        CURR_MSG_ID = 0x27e;
         func_0201d6a0(0x1c0, 0x20);
     }

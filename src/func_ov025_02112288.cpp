@@ -3,7 +3,7 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern "C" {
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
@@ -22,7 +22,7 @@ extern "C" int func_ov025_02112288(char* c)
         unsigned short* pa = (unsigned short*)(c + 0x3f4);
         int idx = (int)(*pa << 0x1c) >> 0x10;
         idx = (int)((unsigned)(idx << 0x10) >> 0x10) >> 4;
-        int s = data_02082214[idx << 1];
+        int s = SINE_TABLE[idx << 1];
         int d = (int)(((long long)s * 0xa + 0x800) >> 0xc);
         *(int*)(c + 0x60) = *(int*)(c + 0x374) + d;
         if (*pa == 8) {
@@ -51,7 +51,7 @@ extern "C" int func_ov025_02112288(char* c)
     case 3: {
         int idx = (int)(*(unsigned short*)(c + 0x3f4) << 0x1c) >> 0x10;
         idx = (int)((unsigned)(idx << 0x10) >> 0x10) >> 4;
-        int s = data_02082214[idx << 1];
+        int s = SINE_TABLE[idx << 1];
         int d = (int)(((long long)s * 0xa + 0x800) >> 0xc);
         *(int*)(c + 0x60) = d + 0x80000;
         if (*(unsigned short*)(c + 0x3f4) >= 8) {

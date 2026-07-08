@@ -15,7 +15,7 @@ extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_
 extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 void func_ov002_020f8b24(void* arg0)
 {
@@ -48,8 +48,8 @@ void func_ov002_020f8b24(void* arg0)
             v.x = x * (u32)-1;
     }
     Vec3_Asr(&asr, &v, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    *(Mtx43*)(c + 0x328) = data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, asr.x, asr.y, asr.z);
+    *(Mtx43*)(c + 0x328) = MATRIX_SCRATCH_PAPER;
     _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x300, c + 0x328, 0x28000, 0x64000, 0xf);
 }

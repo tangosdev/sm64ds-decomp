@@ -3,7 +3,7 @@ extern "C" int func_ov002_020c04ac(char* c);
 extern "C" int func_ov002_020c031c(void* c);
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(void* self, void* state);
 
-extern char data_ov002_021103f4;
+extern char _ZN6Player13ST_SLOPE_JUMPE;
 
 extern "C" int func_ov002_020e2be4(char* self){
     int thr;
@@ -27,6 +27,6 @@ extern "C" int func_ov002_020e2be4(char* self){
     }
     if (*(int*)(self + 0x558) > thr)
         return 0;
-    _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_021103f4);
+    _ZN6Player11ChangeStateERNS_5StateE(self, &_ZN6Player13ST_SLOPE_JUMPE);
     return 1;
 }

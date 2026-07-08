@@ -27,7 +27,7 @@ extern void func_02012694(int a, void *p);
 extern int _ZN5Actor13DistToCPlayerEv(void *thiz);
 extern int RandomIntInternal(int *seed);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3 *pos, const struct Vector3_16 *ang, int e, int f);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 int func_ov021_02112854(char *c)
 {
@@ -88,7 +88,7 @@ int func_ov021_02112854(char *c)
                 v16.x = *(u16*)(c + 0x92);
                 v16.y = *(u16*)(c + 0x94);
                 v16.z = *(u16*)(c + 0x96);
-                rnd = (u32)RandomIntInternal(&data_0209e650);
+                rnd = (u32)RandomIntInternal(&RNG_STATE);
                 v16.y = v16.y + (rnd >> 16) % 0xc00;
                 if (*(u8*)(c + 0x3be) == 1 && *(u8*)(c + 0x3bf) >= 5 && *(u8*)(c + 0x3c2) == 0) {
                     char *a;

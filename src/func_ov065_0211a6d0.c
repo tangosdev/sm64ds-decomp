@@ -16,14 +16,14 @@ extern void _ZN9Animation7AdvanceEv(void* a);
 extern void* _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov065_0211a550(char* c);
 
-extern u8 data_0209f2c0;
+extern u8 LEVEL_SPECIFIC_SETTING;
 extern int func_ov065_0211aacc;
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int data_ov065_0211c0b8[];
 
 int func_ov065_0211a6d0(char* c)
 {
-    if (data_0209f2c0 == 3) {
+    if (LEVEL_SPECIFIC_SETTING == 3) {
         func_020393c4((int*)(c + 0x124), 0);
         _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     } else {
@@ -32,10 +32,10 @@ int func_ov065_0211a6d0(char* c)
                 func_020393c4((int*)(c + 0x124), (int)&func_ov065_0211aacc);
             }
 
-            if (data_0209f2c0 == 2) {
+            if (LEVEL_SPECIFIC_SETTING == 2) {
                 if (_Z14ApproachLinearRiii((int*)(c + 0x38c), *(int*)(c + 0x390), 0xcc) != 0
                     && DecIfAbove0_Short((u16*)(c + 0x39c)) == 0) {
-                    unsigned int r = (u16)((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
+                    unsigned int r = (u16)((unsigned int)RandomIntInternal(&RNG_STATE) >> 0x10);
                     *(s16*)(c + 0x300 + 0x9c) = (s16)(((int)r % 7) * 0x14 + 0xa);
                     if (r >= 0x7fff) {
                         *(int*)(c + 0x390) = 0x1000;
@@ -44,7 +44,7 @@ int func_ov065_0211a6d0(char* c)
                     }
                 }
             } else {
-                *(int*)(c + 0x38c) = data_ov065_0211c0b8[data_0209f2c0];
+                *(int*)(c + 0x38c) = data_ov065_0211c0b8[LEVEL_SPECIFIC_SETTING];
             }
 
             *(int*)(c + 0x32c) = *(int*)(c + 0x38c);

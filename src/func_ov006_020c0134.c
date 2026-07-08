@@ -25,8 +25,8 @@ extern int _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3(struct Vector3 *,struct 
 extern void _Z13CopyToViewMatPK9Matrix4x3(struct Matrix4x3 *);
 extern int _ZN7Clipper13Func_020156DCEv(void *,int,int,int,int);
 
-extern short data_02082214[];
-extern char data_0209f43c[];
+extern short SINE_TABLE[];
+extern char GLOBAL_CLIPPER[];
 
 void func_ov006_020c0134(struct Camera *self)
 {
@@ -55,7 +55,7 @@ void func_ov006_020c0134(struct Camera *self)
 
     idx = (self->angle >> 4) * 2;
     _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(
-        data_02082214[idx], data_02082214[idx + 1],
+        SINE_TABLE[idx], SINE_TABLE[idx + 1],
         0x1555, 0x1000, 0x1388000, 0x1000, 1, &self->projMat);
 
     _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3(
@@ -64,5 +64,5 @@ void func_ov006_020c0134(struct Camera *self)
     _Z13CopyToViewMatPK9Matrix4x3(&self->viewMat);
 
     _ZN7Clipper13Func_020156DCEv(
-        data_0209f43c, 0x1555, self->angle, 0x1000, 0x1388000);
+        GLOBAL_CLIPPER, 0x1555, self->angle, 0x1000, 0x1388000);
 }

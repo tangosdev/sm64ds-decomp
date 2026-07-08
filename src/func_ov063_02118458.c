@@ -19,8 +19,8 @@ extern s16 data_ov063_0211e1c0[];
 extern int data_ov063_0211edcc;
 extern int data_ov063_0211edd4;
 extern int data_ov063_0211ede4;
-extern int data_0209e650;
-extern s16 data_02082214[];
+extern int RNG_STATE;
+extern s16 SINE_TABLE[];
 
 void func_ov063_02118458(void* self)
 {
@@ -44,7 +44,7 @@ void func_ov063_02118458(void* self)
                 int rnd;
                 *(u8*)(c + 0x5cc) = 1;
                 *(int*)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-                rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
+                rnd = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) & 0x3f;
                 *(u16*)(c + 0x5be) = rnd + 0xb4;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x380,
                     *(void**)(&data_ov063_0211ede4 + 1), 0, 0x1000, 0);
@@ -53,7 +53,7 @@ void func_ov063_02118458(void* self)
             int rnd;
             *(u8*)(c + 0x5cc) = 1;
             *(int*)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-            rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
+            rnd = ((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) & 0x3f;
             *(u16*)(c + 0x5be) = rnd + 0xb4;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x380,
                 *(void**)(&data_ov063_0211ede4 + 1), 0, 0x1000, 0);
@@ -66,8 +66,8 @@ void func_ov063_02118458(void* self)
             v.x = *(int*)(c + 0x5c);
             v.y = *(int*)(c + 0x60);
             v.z = *(int*)(c + 0x64);
-            v.x = data_02082214[(*(u16*)(c + 0x8e) >> 4) * 2] * m + v.x;
-            v.z = data_02082214[(*(u16*)(c + 0x8e) >> 4) * 2 + 1] * m + v.z;
+            v.x = SINE_TABLE[(*(u16*)(c + 0x8e) >> 4) * 2] * m + v.x;
+            v.z = SINE_TABLE[(*(u16*)(c + 0x8e) >> 4) * 2 + 1] * m + v.z;
             char* fb;
             *(s16*)(c + 0x8c) = 0x1000;
             func_02012694(0x156, c + 0x74);

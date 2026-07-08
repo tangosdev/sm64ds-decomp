@@ -12,28 +12,28 @@ extern void func_02020190(void);
 extern void func_02012790(int a);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
 
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern int data_ov075_0211d71c;
-extern unsigned char data_0209d45c;
-extern int data_0209fc68;
+extern unsigned char TOP_SCREEN_RELATED;
+extern int DP_STATE;
 
 void func_ov075_02118378(void *c) {
-    data_0209d454 &= ~5;
+    BOTTOM_SCREEN_RELATED &= ~5;
     func_ov075_02116028(&data_ov075_0211d71c, 1);
     func_ov075_02116030(&data_ov075_0211d71c, LoadFile(0x9801));
     LoadCompressedFileAt(0x8407, _ZN3G2S12GetBG3ScrPtrEv());
     _ZN7Message17DisplayVsExitTextEt(0x1f);
 
-    data_0209d45c |= 0xe;
-    data_0209d454 |= 5;
+    TOP_SCREEN_RELATED |= 0xe;
+    BOTTOM_SCREEN_RELATED |= 5;
     *(unsigned char *)((char *)c + 0x281) = 0;
     func_ov075_02115e8c((char *)c + 0x70, 0xa, 0, 0x80, 0x48);
     func_ov075_02115e8c((char *)c + 0x94, 0xa, 0, 0x80, 0x78);
     *(unsigned char *)((char *)c + 0x280) = 2;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 4, 0x11, 0xc, 4);
     *(unsigned char *)((char *)c + 0x287) = 0xe;
-    if (data_0209fc68 != 0)
-        data_0209fc68 = 5;
+    if (DP_STATE != 0)
+        DP_STATE = 5;
     func_02020190();
     *(int *)((char *)c + 0x268) = 0;
     *(int *)((char *)c + 0x26c) = 0;

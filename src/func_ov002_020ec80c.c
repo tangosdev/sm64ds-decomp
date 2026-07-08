@@ -3,7 +3,7 @@
 // Counts as decompiled, not matched.
 extern int RandomIntInternal(int* seed);
 extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* v, void* w, int e, int f);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov002_020ec80c(char* a, void* b, int count, int sl, short arg5)
 {
@@ -25,9 +25,9 @@ void func_ov002_020ec80c(char* a, void* b, int count, int sl, short arg5)
         n = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x122, 2, b, 0, *(signed char*)(a + 0xcc), -1);
         if (n != 0) {
             do {
-                rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16) << 27) >> 16;
+                rv = (int)(((unsigned int)RandomIntInternal(&RNG_STATE) >> 16) << 27) >> 16;
             } while (rv == prev);
-            r = (unsigned int)RandomIntInternal(&data_0209e650) >> 16;
+            r = (unsigned int)RandomIntInternal(&RNG_STATE) >> 16;
             *(short*)(n + 0x92) = zero;
             v98 = sl * ((r % 50) + 100) / 100;
             prev = rv;

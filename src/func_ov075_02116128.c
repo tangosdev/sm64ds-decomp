@@ -6,11 +6,11 @@ extern "C" {
 unsigned short *_ZN2G212GetBG1ScrPtrEv();
 int func_02030958(int val);
 }
-extern unsigned char data_0209fc50;
+extern unsigned char NUM_PLAYERS_2;
 
 extern "C" void func_ov075_02116128(int unused, int r6, int r5)
 {
-    int b = data_0209fc50;
+    int b = NUM_PLAYERS_2;
     unsigned short *bg = _ZN2G212GetBG1ScrPtrEv();
     int a = func_02030958(r6);
     int t = 4 - b;

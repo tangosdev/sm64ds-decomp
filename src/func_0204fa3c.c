@@ -4,7 +4,7 @@ extern void *func_020511d4(void *a, u32 elemSize, u32 p2, u32 p3, u32 p4);
 extern void *func_0205130c(unsigned int addr, unsigned int size);
 extern void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void *iter, void *alloc);
 extern void func_0204f278(void);
-extern char data_020a4d6c[];
+extern char _ZN5Sound7PLAYERSE[];
 
 int func_0204fa3c(int owner, void *b, u32 c)
 {
@@ -19,6 +19,6 @@ int func_0204fa3c(int owner, void *b, u32 c)
     if (!res) return 0;
     *(void **)(r4 + 8) = res;
     _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(
-        data_020a4d6c + owner * 0x1c + 0xc, r4);
+        _ZN5Sound7PLAYERSE + owner * 0x1c + 0xc, r4);
     return 1;
 }

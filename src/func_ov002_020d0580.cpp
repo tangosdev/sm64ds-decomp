@@ -1,7 +1,7 @@
 //cpp
 struct State {};
-extern State data_ov002_021105a4;
-extern State data_ov002_0210ffec;
+extern State _ZN6Player15ST_GROUND_POUNDE;
+extern State _ZN6Player13ST_LEDGE_HANGE;
 
 struct Player {
     int GetHealth();
@@ -39,7 +39,7 @@ extern "C" int func_ov002_020d0580(Player *p)
     return 0;
 
 cont:
-    if (p->IsState(data_ov002_021105a4)) {
+    if (p->IsState(_ZN6Player15ST_GROUND_POUNDE)) {
         if (*(unsigned char *)((char *)p + 0x6e3) != 0)
             return 0;
     }
@@ -49,6 +49,6 @@ cont:
     if (func_ov002_020d0178(p, *(int *)((char *)p + 0x60), 0) == 0)
         return 0;
     *(unsigned char *)((char *)p + 0x6e3) = 1;
-    p->ChangeState(data_ov002_0210ffec);
+    p->ChangeState(_ZN6Player13ST_LEDGE_HANGE);
     return 1;
 }

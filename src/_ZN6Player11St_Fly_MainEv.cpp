@@ -28,14 +28,14 @@ extern "C" void Vec3_MulScalarInPlace(s32 *v, s32 s);
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, void *s1, int s2);
 extern "C" void func_ov002_020bedd4(char *self);
 
-extern State data_ov002_0211004c;
-extern State data_ov002_021105a4;
-extern State data_ov002_021101b4;
-extern State data_ov002_021105bc;
+extern State _ZN6Player10ST_SWALLOWE;
+extern State _ZN6Player15ST_GROUND_POUNDE;
+extern State _ZN6Player7ST_FALLE;
+extern State _ZN6Player7ST_DIVEE;
 extern u8 data_020a0e40;
 extern u16 data_0209f49e;
 extern u16 data_0209f49c;
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 struct Vec16 { s16 x, y, z; };
 struct Vec32 { s32 x, y, z; };
@@ -50,20 +50,20 @@ int Player::St_Fly_Main()
         goto skip;
     }
     if (func_ov002_020d674c(c) != 0) {
-        this->ChangeState(data_ov002_0211004c);
+        this->ChangeState(_ZN6Player10ST_SWALLOWE);
     } else {
-        this->ChangeState(data_ov002_021105a4);
+        this->ChangeState(_ZN6Player15ST_GROUND_POUNDE);
     }
     return 1;
 
 skip:
     if (*(u8 *)(c + 0x6ff) == 0) {
-        this->ChangeState(data_ov002_021101b4);
+        this->ChangeState(_ZN6Player7ST_FALLE);
         return 1;
     }
     if (*(u8 *)(c + 0x6de) == 0) {
         func_ov002_020c2f64(c);
-        this->ChangeState(data_ov002_021105bc);
+        this->ChangeState(_ZN6Player7ST_DIVEE);
         this->SetAnim(0x43, 0x40000000, 0x1000, 0);
         *(s32 *)(c + 0xa8) = 0;
         return 1;
@@ -103,12 +103,12 @@ skip:
 #define sp18 vec32.y
 #define sp1C vec32.z
     {
-        s16 n = data_02082214[(*(u16 *)(c + 0x92) >> 4) * 2 + 1];
+        s16 n = SINE_TABLE[(*(u16 *)(c + 0x92) >> 4) * 2 + 1];
         s32 r0 = (s16)-n;
-        s16 t = data_02082214[(*(u16 *)(c + 0x8e) >> 4) * 2];
+        s16 t = SINE_TABLE[(*(u16 *)(c + 0x8e) >> 4) * 2];
         spC = (s16)(((s64)r0 * t + 0x800) >> 0xc);
-        spE = data_02082214[(*(u16 *)(c + 0x8c) >> 4) * 2];
-        s16 t2 = data_02082214[(*(u16 *)(c + 0x8e) >> 4) * 2 + 1];
+        spE = SINE_TABLE[(*(u16 *)(c + 0x8c) >> 4) * 2];
+        s16 t2 = SINE_TABLE[(*(u16 *)(c + 0x8e) >> 4) * 2 + 1];
         sp10 = (s16)(((s64)r0 * t2 + 0x800) >> 0xc);
     }
 

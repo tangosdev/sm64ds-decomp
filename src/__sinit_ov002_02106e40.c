@@ -5,9 +5,9 @@ extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
 extern void func_02017ab4(void);
 extern void func_02017984(void);
 
-extern void* data_ov002_0211094c;
+extern void* POWER_STAR_MODEL_PTR;
 extern void* data_ov002_0211096c;
-extern void* data_ov002_0211095c;
+extern void* TRANSPARENT_STAR_MODEL_PTR;
 extern void* data_ov002_02110978;
 extern void* data_ov002_02110954;
 extern void* data_ov002_02110984;
@@ -44,10 +44,10 @@ extern struct P2 data_ov002_0210a9c0;
 
 void __sinit_ov002_02106e40(void)
 {
-    func_02017acc(&data_ov002_0211094c, 0x8015);
-    func_020731dc(&data_ov002_0211094c, (void*)&func_02017ab4, (void**)&data_ov002_0211096c);
-    func_02017acc(&data_ov002_0211095c, 0x8017);
-    func_020731dc(&data_ov002_0211095c, (void*)&func_02017ab4, (void**)&data_ov002_02110978);
+    func_02017acc(&POWER_STAR_MODEL_PTR, 0x8015);
+    func_020731dc(&POWER_STAR_MODEL_PTR, (void*)&func_02017ab4, (void**)&data_ov002_0211096c);
+    func_02017acc(&TRANSPARENT_STAR_MODEL_PTR, 0x8017);
+    func_020731dc(&TRANSPARENT_STAR_MODEL_PTR, (void*)&func_02017ab4, (void**)&data_ov002_02110978);
     func_02017acc(&data_ov002_02110954, 0x8019);
     func_020731dc(&data_ov002_02110954, (void*)&func_02017ab4, (void**)&data_ov002_02110984);
     func_02017acc(&data_ov002_0211093c, 0x4a0);

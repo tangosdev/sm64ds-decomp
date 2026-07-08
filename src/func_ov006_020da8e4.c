@@ -1,7 +1,7 @@
 
 extern int RandomIntInternal(int *seed);
 extern int data_ov006_0213bd18[];
-extern int data_0209e650;
+extern int RNG_STATE;
 int func_ov006_020da8e4(void)
 {
   int r5 = 0;
@@ -12,7 +12,7 @@ int func_ov006_020da8e4(void)
     sum += data_ov006_0213bd18[i];
   }
 
-  sum = (sum * ((int) ((((unsigned int) RandomIntInternal(&data_0209e650)) & 0x7fffffff) >> 0x13))) >> 0xc;
+  sum = (sum * ((int) ((((unsigned int) RandomIntInternal(&RNG_STATE)) & 0x7fffffff) >> 0x13))) >> 0xc;
   for (i = 0; i < 6; i++)
   {
     sum -= data_ov006_0213bd18[i];

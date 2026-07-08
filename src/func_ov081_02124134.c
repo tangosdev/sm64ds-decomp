@@ -3,7 +3,7 @@ extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int RandomIntInternal(int* seed);
 extern void func_02012790(int);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct V3*, void*, int, int);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov081_02124134(char* c){
   char* a;
@@ -22,7 +22,7 @@ void func_ov081_02124134(char* c){
     if (a) {
       unsigned int rv;
       *(int*)(a+0x9c) = -0x2000;
-      rv = (unsigned int)RandomIntInternal(&data_0209e650);
+      rv = (unsigned int)RandomIntInternal(&RNG_STATE);
       rv = (rv >> 8) & 0xf;
       *(short*)(a+0x92) = 0;
       *(short*)(a+0x94) = rv << 0xc;

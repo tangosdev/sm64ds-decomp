@@ -1,4 +1,4 @@
-extern signed char data_0209f310[];
+extern signed char NUM_VS_STARS_OBTAINED_PLAYER[];
 void GiveVsStars(int idx, int delta){
-  data_0209f310[idx] += delta;
+  NUM_VS_STARS_OBTAINED_PLAYER[idx] += delta;
 }

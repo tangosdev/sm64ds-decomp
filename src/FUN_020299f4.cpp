@@ -8,11 +8,11 @@ struct B {
   virtual void w3(); virtual void w4(int,int); virtual void w5();
   virtual void w6(); virtual void w7(); virtual void w8(); virtual void w9();
 };
-extern "C" { extern A* data_0209f5bc; extern char* data_0209f324; extern B* data_0209d4b0; }
+extern "C" { extern A* SCENE_FADER; extern char* WIPES; extern B* KS_FADER; }
 extern "C" void FUN_020299f4(void){
-  if(data_0209f5bc->v7() != 0) return;
-  B* o2 = (B*)(data_0209f324 + 0x240);
-  data_0209d4b0 = o2;
+  if(SCENE_FADER->v7() != 0) return;
+  B* o2 = (B*)(WIPES + 0x240);
+  KS_FADER = o2;
   o2->w9();
   o2->w4(0x1e, 0);
 }

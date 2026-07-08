@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 extern void *data_ov006_0213d6fc;
 extern u8 data_020a0e40[];
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
@@ -22,7 +22,7 @@ int func_ov006_020f9bec(struct Obj *c)
     idx = data_020a0e40[0];
     off = idx * 4;
     has = 0;
-    if (data_020a0de8[off]) {
+    if (TOUCH_INPUT_ARR[off]) {
         if (data_020a0de9[off]) has = 1;
     }
     if (has == 0) goto fail;

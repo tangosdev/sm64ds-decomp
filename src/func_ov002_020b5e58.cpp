@@ -22,7 +22,7 @@ extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
 extern char func_ov002_020b5fc4;
 extern char _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
-extern "C" signed char data_0209f2f8;
+extern "C" signed char LEVEL_ID;
 
 extern "C" int func_ov002_020b5e58(char *self, char *fp)
 {
@@ -53,7 +53,7 @@ extern "C" int func_ov002_020b5e58(char *self, char *fp)
     *(char *)(self + 0x340) = 0;
     *(int *)(self + 0x344) = *(int *)(self + 0x60);
 
-    if (data_0209f2f8 == 0x15) {
+    if (LEVEL_ID == 0x15) {
         _ZN13RaycastGroundC1Ev(&rg);
         vy = *(int *)(self + 0x60);
         vz = *(int *)(self + 0x64);

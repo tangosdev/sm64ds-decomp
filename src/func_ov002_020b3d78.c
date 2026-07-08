@@ -20,8 +20,8 @@ extern int IsStarCollectedInCurLevel(int a);
 extern char* data_ov002_02108ab0[];
 extern char* data_ov002_02108ab4[];
 extern char* data_ov002_02108ab8[];
-extern signed char data_0209f2f8;
-extern u8 data_0209f220;
+extern signed char LEVEL_ID;
+extern u8 STAR_ID;
 
 int func_ov002_020b3d78(void* self)
 {
@@ -100,7 +100,7 @@ int func_ov002_020b3d78(void* self)
         int t11b = *(u16*)(c+0xc);
         t11b = t11b == 0x11;
         if (t11b != false && func_ov002_020b36a0((char*)c) != 0) {
-            if (data_0209f2f8 == 1)
+            if (LEVEL_ID == 1)
                 return 0;
         }
     }
@@ -109,8 +109,8 @@ int func_ov002_020b3d78(void* self)
     {
     int t2e = *(u16*)(c+0xc);
     t2e = t2e == 0x2e;
-    if (t2e != false && data_0209f2f8 == 7) {
-        if (data_0209f220 != 1) {
+    if (t2e != false && LEVEL_ID == 7) {
+        if (STAR_ID != 1) {
             if (IsStarCollectedInCurLevel(1) != 0)
                 goto ret1;
         }

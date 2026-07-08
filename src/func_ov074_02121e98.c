@@ -47,7 +47,7 @@ extern "C" {
     void func_ov074_0212195c(void *t);
 }
 
-extern void *data_ov002_0210da30;
+extern void *SUPER_MUSHROOM_MODEL_PTR;
 extern void *data_ov084_02130cf8;
 extern void *data_ov074_0212292c[];
 extern void *data_ov074_02122948[];
@@ -60,7 +60,7 @@ extern void *data_ov074_02122e5c[];
 extern void *func_021124ac;
 extern u16 data_ov074_02122e04[];
 extern u16 data_ov074_02122dfc[];
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 struct RG { char pad[0x4c]; };
 
@@ -80,7 +80,7 @@ extern "C" int func_ov074_02121e98(char *self)
         return;
     }
 
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
+    _ZN5Model8LoadFileER13SharedFilePtr(&SUPER_MUSHROOM_MODEL_PTR);
     LoadKeyModels(2);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov084_02130cf8);
 
@@ -157,8 +157,8 @@ extern "C" int func_ov074_02121e98(char *self)
         *pf = (s16)(*pf + *(s16 *)(self + 0x5f6));
     }
 
-    *(s32 *)(self + 0x5c) = (s32)(((s64)data_02082214[(*(u16 *)(self + 0x5f4) >> 4) * 2] * 0x546000 + 0x800) >> 0xc);
-    *(s32 *)(self + 0x64) = (s32)(((s64)data_02082214[(*(u16 *)(self + 0x5f4) >> 4) * 2 + 1] * 0x546000 + 0x800) >> 0xc);
+    *(s32 *)(self + 0x5c) = (s32)(((s64)SINE_TABLE[(*(u16 *)(self + 0x5f4) >> 4) * 2] * 0x546000 + 0x800) >> 0xc);
+    *(s32 *)(self + 0x64) = (s32)(((s64)SINE_TABLE[(*(u16 *)(self + 0x5f4) >> 4) * 2 + 1] * 0x546000 + 0x800) >> 0xc);
 
     {
         s32 a2 = *(s32 *)(self + 0x60);

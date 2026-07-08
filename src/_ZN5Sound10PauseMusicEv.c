@@ -1,5 +1,5 @@
 typedef signed char s8;
-extern s8 data_0209f2f8;
+extern s8 LEVEL_ID;
 extern s8 data_0208e420;
 extern s8 data_0208e42c;
 extern s8 data_0209b470;
@@ -9,7 +9,7 @@ extern int func_0204f958(int,int);
 extern void func_02011c54(void);
 extern int func_0204f9c4(int,int);
 void _ZN5Sound10PauseMusicEv(void){
- int state=data_0209f2f8;
+ int state=LEVEL_ID;
  if(state==2||state==5||state==4||state==0x32){
    if(data_0208e420<0){
      data_0208e420=data_0208e42c;

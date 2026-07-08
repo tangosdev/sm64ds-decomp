@@ -11,10 +11,10 @@ namespace G2S { u16* GetBG1ScrPtr(); }
 
 extern int data_02075610[];
 extern u16 data_020755cc[];
-extern u8 data_0209f2b4;
-extern u8 data_0209f2e0;
-extern u8 data_0209f29c;
-extern u8 data_0209f244;
+extern u8 NUM_BIG_BUTTONS;
+extern u8 SELECTED_BUTTON;
+extern u8 BACK_BUTTON_PRESSED;
+extern u8 MENU_CHANGE_TIMER;
 
 struct Stage {
     static void PS_UpdateOkAndBackButtons(bool b);
@@ -37,7 +37,7 @@ void Stage::PS_UpdateOkAndBackButtons(bool b)
             sl = 0x1000;
         } else {
             int v;
-            if (data_0209f2b4 == data_0209f2e0 && data_0209f29c == i && data_0209f244 == 0)
+            if (NUM_BIG_BUTTONS == SELECTED_BUTTON && BACK_BUTTON_PRESSED == i && MENU_CHANGE_TIMER == 0)
                 v = 0x2000;
             else
                 v = 0x1000;

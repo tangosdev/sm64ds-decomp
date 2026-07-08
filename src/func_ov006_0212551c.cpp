@@ -2,9 +2,9 @@
 typedef unsigned int u32;
 typedef int s32;
 extern "C" {
-extern unsigned char data_0209d45c[];
+extern unsigned char TOP_SCREEN_RELATED[];
 extern int data_ov006_0213fe78[];
-extern int data_0208ee44[];
+extern int GAME_SPEED_RELATED[];
 extern void func_ov006_0210a534(void);
 extern s32 func_ov004_020ad674(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
@@ -30,7 +30,7 @@ int func_ov006_0212551c(void *self) {
     Obj *o = (Obj *)self;
     char *c = (char *)self;
     int fh;
-    data_0209d45c[0] = 0x11;
+    TOP_SCREEN_RELATED[0] = 0x11;
     func_ov006_0210a534();
     LoadCompressedFileAt(data_ov006_0213fe78[func_ov004_020ad674()], (void *)0x6600000);
     fh = LoadFile(0xb3);
@@ -41,7 +41,7 @@ int func_ov006_0212551c(void *self) {
         return 0;
     func_ov004_020b04d0(0x20);
     func_ov004_020b682c();
-    data_0208ee44[0] = 1;
+    GAME_SPEED_RELATED[0] = 1;
     *(int *)(c + 0xa8) = func_ov004_020ad8b8();
     *(int *)(c + 0xac) = *(int *)(c + 0xa8);
     o->v18(3);

@@ -13,8 +13,8 @@ void GiveVsStars(int idx, int delta);
 void func_ov002_020e7218(char *a, char *b, int gate);
 }
 
-extern u8 data_0209f2d8;
-extern s8 data_0209f310;
+extern u8 CURRENT_GAMEMODE;
+extern s8 NUM_VS_STARS_OBTAINED_PLAYER;
 
 extern char *_ZN5Actor13SpawnSoundObjEj(char *self, u32 a);
 extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
@@ -28,10 +28,10 @@ extern "C" int func_ov002_020d94cc(char *self)
     int xv, yv, sum, zv;
     int b;
 
-    if ((&data_0209f310)[*(u8 *)(self + 0x6d8)] <= 0) goto fail;
+    if ((&NUM_VS_STARS_OBTAINED_PLAYER)[*(u8 *)(self + 0x6d8)] <= 0) goto fail;
 
     sndobj = _ZN5Actor13SpawnSoundObjEj(self, 3);
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (b) {
         if (sndobj != 0) *(int *)(sndobj + 0xd4) = 0x50;
     }
@@ -46,7 +46,7 @@ extern "C" int func_ov002_020d94cc(char *self)
     pos.y = sum;
     pos.z = zv;
 
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (b)
         spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, 0x10, pos, 0, *(s8 *)(self + 0xcc), -1);
     else
@@ -56,7 +56,7 @@ extern "C" int func_ov002_020d94cc(char *self)
 
     func_ov002_020e7218(spawned, self, 0);
 
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (!b) {
         ang = GetAngleToCamera(*(u8 *)(self + 0x6d8));
         zz = *(s16 *)(self + 0x96);

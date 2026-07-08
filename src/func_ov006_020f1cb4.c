@@ -8,7 +8,7 @@ typedef long long s64;
 
 extern void func_ov006_020f1dbc(void);
 extern int data_ov006_0212e8c8[];
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 void func_ov006_020f1cb4(char *r0, int r1)
 {
@@ -21,13 +21,13 @@ void func_ov006_020f1cb4(char *r0, int r1)
     }
     idx = *(u16*)(r0 + r1 * 2 + 0x4f7c) >> 4;
     k = *(u8*)(r0 + 0x5365 + r1);
-    t = data_02082214[idx * 2 + 1];
+    t = SINE_TABLE[idx * 2 + 1];
     mat = data_ov006_0212e8c8[k];
     *(int*)(r0 + 0x47f8 + r1 * 4) = *(int*)(r0 + 0x47f8 + r1 * 4)
         + (int)(((s64)t * mat + 0x800) >> 12);
     idx = *(u16*)(r0 + r1 * 2 + 0x4f7c) >> 4;
     k = *(u8*)(r0 + 0x5365 + r1);
-    t = data_02082214[idx * 2];
+    t = SINE_TABLE[idx * 2];
     mat = data_ov006_0212e8c8[k];
     *(int*)(r0 + 0x49d8 + r1 * 4) = *(int*)(r0 + 0x49d8 + r1 * 4)
         + (int)(((s64)t * mat + 0x800) >> 12);

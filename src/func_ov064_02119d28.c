@@ -3,7 +3,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef long long s64;
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 extern void func_ov064_02119afc(char* c);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* t);
@@ -25,7 +25,7 @@ int func_ov064_02119d28(char* c) {
     {
         s16 a = *(int*)(c + 0x374);
         int idx = ((u16)a >> 4) * 2;
-        int fr = (int)((((s64)data_02082214[idx] << 10) + 0x800) >> 12);
+        int fr = (int)((((s64)SINE_TABLE[idx] << 10) + 0x800) >> 12);
         int v = fr + *(int*)(c + 0x384);
         _Z14ApproachLinearRiii((int*)(c + 0x384), 0x2000, spd);
         _Z14ApproachLinearRiii((int*)(c + 0x80), v, spd);
@@ -38,7 +38,7 @@ int func_ov064_02119d28(char* c) {
         s16 b = *(int*)(c + 0x378);
         int idx2 = ((u16)b >> 4) * 2;
         s16 *w = (s16*)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFFLL);
-        *w = *w + (int)((((s64)data_02082214[idx2] << 8) + 0x800) >> 12);
+        *w = *w + (int)((((s64)SINE_TABLE[idx2] << 8) + 0x800) >> 12);
     }
     *(int*)(c + 0x88) = *(int*)(c + 0x80);
     *(int*)(c + 0x84) = *(int*)(c + 0x88);

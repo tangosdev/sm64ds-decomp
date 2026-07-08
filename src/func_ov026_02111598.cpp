@@ -9,12 +9,12 @@ extern int _ZNK7PathPtr8NumNodesEv(void*);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void*, void*, V3*, int, int, unsigned int, unsigned int);
 extern int func_ov053_021112a4(char*);
 extern int data_ov026_02113ea0[];
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 extern V3 data_ov032_02113a9c;
 int func_ov026_02111598(char *c){
   void *f = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov026_02113ea0);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
-  if((data_0209caa0[1] & 0x204) == 0) return 0;
+  if((SAVE_DATA[1] & 0x204) == 0) return 0;
   _ZN11ShadowModel10InitCuboidEv(c+0x188);
   _ZN7PathPtr6FromIDEj(c+0x164, *(unsigned int*)(c+8) & 0xff);
   *(int*)(c+0x16c) = _ZNK7PathPtr8NumNodesEv(c+0x164);

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 struct State;
-extern State data_ov002_0211016c;
+extern State _ZN6Player10ST_GRABBEDE;
 extern int func_ov002_020d82f0(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, State* st);
 int func_ov002_020db5f4(char* c, char* arg){
@@ -11,7 +11,7 @@ int func_ov002_020db5f4(char* c, char* arg){
   }
   if (*(int*)(c + 0x35c) != 0) return 0;
   *(int*)(c + 0x35c) = (int)arg;
-  _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_0211016c);
+  _ZN6Player11ChangeStateERNS_5StateE(c, &_ZN6Player10ST_GRABBEDE);
   return 1;
 }
 }

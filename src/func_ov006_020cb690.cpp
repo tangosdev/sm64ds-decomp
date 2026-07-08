@@ -3,7 +3,7 @@ struct ModelAnim { void SetAnim(void* bca, int b, int c, unsigned int d); };
 extern "C" {
 void func_ov006_020e6df0(int a0, char* a1, void* a2);
 void func_ov006_020cb5c4(char* c);
-extern int data_020a0ebc[];
+extern int _ZN7Vector38IDENTITYE[];
 extern int *data_ov006_021405c0;
 struct W2 { int a, b; };
 extern struct W2 data_ov006_0213b224;
@@ -11,9 +11,9 @@ void func_ov006_020cb690(char* c);
 }
 void func_ov006_020cb690(char* c)
 {
-    *(int*)(c+0x34) = data_020a0ebc[0];
-    *(int*)(c+0x38) = data_020a0ebc[1];
-    *(int*)(c+0x3c) = data_020a0ebc[2];
+    *(int*)(c+0x34) = _ZN7Vector38IDENTITYE[0];
+    *(int*)(c+0x38) = _ZN7Vector38IDENTITYE[1];
+    *(int*)(c+0x3c) = _ZN7Vector38IDENTITYE[2];
     ((ModelAnim*)(c+0x6c))->SetAnim((void*)data_ov006_021405c0, 0x40000000, 0x800, 0);
     func_ov006_020e6df0(0, (char*)0x17, *(void**)(c+0x1c));
     {

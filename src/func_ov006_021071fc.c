@@ -8,7 +8,7 @@ extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short a
 extern void SetSubBg0Offset(int a, int b);
 
 extern char *func_020beb68;
-extern unsigned char data_0209d454;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 
 void func_ov006_021071fc(char *self, int flag)
 {
@@ -43,5 +43,5 @@ void func_ov006_021071fc(char *self, int flag)
     func_ov004_020b0cac(0xd, 0x80, 0x40, 0, -1, 0xd);
     SetSubBg0Offset(0, 0);
 
-    data_0209d454 &= ~1;
+    BOTTOM_SCREEN_RELATED &= ~1;
 }

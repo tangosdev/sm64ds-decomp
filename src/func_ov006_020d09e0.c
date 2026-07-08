@@ -5,12 +5,12 @@ struct V3 { int x, y, z; };
 extern void func_020553a4(void* p);
 extern void func_0203cd80(struct V3* out, int a, int b);
 extern void func_ov006_020cf2fc(char* p);
-extern char data_0209b3ec[];
+extern char VIEW_MATRIX_ASR_3[];
 extern char data_ov006_02140990[];
 void func_ov006_020d09e0(void) {
     struct V3 s;
     *(volatile int*)0x4000440 = 2;
-    func_020553a4(data_0209b3ec);
+    func_020553a4(VIEW_MATRIX_ASR_3);
     s.x = 0;
     s.y = 0;
     s.z = 0xfffff008;

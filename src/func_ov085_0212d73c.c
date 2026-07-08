@@ -14,7 +14,7 @@ extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int LenVec3(Vector3 *v);
 extern void func_ov085_0212e728(char *c, void *p);
 
-extern void *data_0209f318;
+extern void *CAMERA;
 extern Vector3 data_ov085_0213084c;
 extern void *data_ov085_021307a0;
 
@@ -25,7 +25,7 @@ int func_ov085_0212d73c(char *c)
     int spd;
     int len;
 
-    cam = data_0209f318;
+    cam = CAMERA;
     _ZN6Camera9SetFlag_3Ev(cam);
     *(unsigned int *)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int *)(c + 0x2e4), 3, 0x182, (Vector3 *)(c + 0x74), 0);
     _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle((Vector3 *)(c + 0x5c), &data_ov085_0213084c), 0x200);

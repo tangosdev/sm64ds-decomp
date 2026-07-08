@@ -1,6 +1,6 @@
 typedef int Fix12i;
-extern unsigned char data_0209f250;
-extern void* data_0209f318;
+extern unsigned char CURR_PLAYER_ID;
+extern void* CAMERA;
 extern short GetAngleToCamera(int i);
 
 void func_ov002_020cae10(char* c)
@@ -8,8 +8,8 @@ void func_ov002_020cae10(char* c)
     int r4 = 0x4000;
     int ang;
     int r8;
-    if (*(unsigned char*)(c + 0x6d8) == data_0209f250) {
-        r4 -= *(short*)((char*)*(void**)&data_0209f318 + 0x17e);
+    if (*(unsigned char*)(c + 0x6d8) == CURR_PLAYER_ID) {
+        r4 -= *(short*)((char*)*(void**)&CAMERA + 0x17e);
         r4 = (short)r4;
     }
     ang = (short)((*(short*)(c + 0x8e) - GetAngleToCamera(*(unsigned char*)(c + 0x6d8))) + 0x8000);

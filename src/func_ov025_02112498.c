@@ -8,7 +8,7 @@ typedef struct KCL_File KCL_File;
 typedef struct Matrix4x3 Matrix4x3;
 typedef struct CLPS_Block CLPS_Block;
 extern SharedFilePtr data_ov025_02113ae0;
-extern SharedFilePtr data_ov002_0210d9f0;
+extern SharedFilePtr SNUFIT_BULLET_MODEL_PTR;
 extern SharedFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
@@ -25,7 +25,7 @@ struct E12 { int a, b, c; };
 
 int func_ov025_02112498(char* c) {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov025_02113ae0), 1, -1);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x320, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9f0), 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x320, _ZN5Model8LoadFileER13SharedFilePtr(&SNUFIT_BULLET_MODEL_PTR), 1, -1);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c+0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov025_02113ad8),

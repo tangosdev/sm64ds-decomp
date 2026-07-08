@@ -22,29 +22,29 @@ extern void func_ov006_020e7428(void);
 extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN3GXS15SetGraphicsModeEi(int a);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern u8 data_0209e660;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern u8 _ZN3OAM14subOAMDisabledE;
 extern int data_ov006_0213c5fc[];
 extern void *data_ov006_02141a4c;
 extern void *data_ov006_02141a48;
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 extern void *data_ov006_02141a44;
 extern void *data_ov006_02141a40;
 extern void *data_ov006_02141a50;
 extern int func_020beb74[];
-extern void *data_0209d4a8;
+extern void *SCENE_RELATED;
 
 void func_ov006_020e7124(char *obj)
 {
     void *p;
 
     *(vu32 *)0x4001000u |= 0x10000u;
-    data_0209d45c = 0x10;
-    data_0209d454 = 0x10;
+    TOP_SCREEN_RELATED = 0x10;
+    BOTTOM_SCREEN_RELATED = 0x10;
     func_ov004_020b290c();
     func_ov004_020b2980();
-    data_0209e660 = 1;
+    _ZN3OAM14subOAMDisabledE = 1;
     _ZN2GX15DisableAllBanksEv();
     _ZN2GX13SetBankForTexEt(1);
     _ZN2GX17SetBankForTexPlttEt(0x40);
@@ -67,7 +67,7 @@ void func_ov006_020e7124(char *obj)
     InitialiseVramGlobals();
     func_ov004_020b0d30();
     func_ov006_020e7428();
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     _ZN2GX15SetGraphicsModeEiii(1, 0, 1);
     _ZN3GXS15SetGraphicsModeEi(5);
     *(vu32 *)0x4000000u &= 0xffcfffefu;
@@ -75,5 +75,5 @@ void func_ov006_020e7124(char *obj)
     data_ov006_02141a40 = obj + 0x466c;
     data_ov006_02141a50 = obj + 0x4728;
     func_020beb74[1] = (int)obj;
-    data_0209d4a8 = (void *)func_020beb74;
+    SCENE_RELATED = (void *)func_020beb74;
 }

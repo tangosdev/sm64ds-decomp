@@ -9,7 +9,7 @@ struct ShadowModel;
 struct Actor {
     void DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &mtx, Fix12 a, int b, unsigned int c);
 };
-extern Matrix4x3 data_02082128;
+extern Matrix4x3 _ZN9Matrix3x38IDENTITYE;
 
 extern "C" void func_ov074_02121800(char *c)
 {
@@ -24,7 +24,7 @@ extern "C" void func_ov074_02121800(char *c)
 
     if (*(unsigned char *)(c + 0x608) != 0) return;
 
-    mtx = data_02082128;
+    mtx = _ZN9Matrix3x38IDENTITYE;
 
     self = c;
     src = c;

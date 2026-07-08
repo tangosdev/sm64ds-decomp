@@ -12,14 +12,14 @@ void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, Actor*, int 
 void func_ov064_0211a284(char* t);
 unsigned char _ZN5Actor9TrackStarEjj(void* thiz, unsigned int, unsigned int);
 }
-extern SharedFilePtr data_ov002_0210d9a8;
-extern SharedFilePtr data_ov002_0210da38;
+extern SharedFilePtr RED_NUMBER_MODEL_PTR;
+extern SharedFilePtr BUBBLE_MODEL_PTR;
 extern SharedFilePtr data_ov064_0211c96c;
 extern SharedFilePtr data_ov064_0211c964;
 
 extern "C" int func_ov064_0211a814(char* c) {
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da38);
+    _ZN5Model8LoadFileER13SharedFilePtr(RED_NUMBER_MODEL_PTR);
+    _ZN5Model8LoadFileER13SharedFilePtr(BUBBLE_MODEL_PTR);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4,
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov064_0211c96c), 1, -1);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4,

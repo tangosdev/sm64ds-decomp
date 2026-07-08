@@ -16,7 +16,7 @@ struct Obj {
 
 extern "C" {
     extern u8 data_020a0e40;
-    extern u8 data_020a0de8[];
+    extern u8 TOUCH_INPUT_ARR[];
     extern u8 data_020a0de9[];
     extern u8 data_020a0dea[];
     extern u8 data_020a0deb[];
@@ -35,7 +35,7 @@ extern "C" void func_ov006_020d1a3c(void *p)
     base = (char *)p;
     idx = data_020a0e40;
     flag = 0;
-    if (data_020a0de8[idx * 4]) {
+    if (TOUCH_INPUT_ARR[idx * 4]) {
         if (data_020a0de9[idx * 4] != 0) flag = 1;
     }
     if (flag != 0) {
@@ -43,7 +43,7 @@ extern "C" void func_ov006_020d1a3c(void *p)
         *(int *)(base + 0x53d8) = 0;
     }
     idx = data_020a0e40;
-    if (data_020a0de8[idx * 4] != 0) {
+    if (TOUCH_INPUT_ARR[idx * 4] != 0) {
         a = data_020a0dea[idx * 4];
         b = data_020a0deb[idx * 4];
         if ((a >= 0 && a < 0x10 && b >= 0x40 && b < 0x80) ||

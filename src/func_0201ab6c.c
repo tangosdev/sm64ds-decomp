@@ -4,7 +4,7 @@ typedef unsigned short u16;
 extern void _ZN7Message7AddCharEc(int c);
 
 struct S { u8 b[8]; };
-extern struct S *data_0209d6f4;
+extern struct S *CURR_MSG_TEXT_CHAR;
 extern u8 data_0209d6b4;
 extern u8 data_0209d688;
 extern u8 data_0209d68c;
@@ -13,7 +13,7 @@ extern u8 data_0209d6e4[];
 extern u8 data_0209d694;
 
 void func_0201ab6c(void) {
-    struct S *p = data_0209d6f4;
+    struct S *p = CURR_MSG_TEXT_CHAR;
     u16 v = p->b[4] | (p->b[3] << 8);
     u8 idx;
     switch (v) {

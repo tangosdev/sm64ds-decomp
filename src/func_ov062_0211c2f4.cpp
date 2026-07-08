@@ -30,9 +30,9 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(void *out, Vector3 *in, int s);
 extern void SubVec3(void *a, void *b, void *c);
 
-extern s8 data_0209f2f8;
-extern int data_0209e650;
-extern int data_020a0e68;
+extern s8 LEVEL_ID;
+extern int RNG_STATE;
+extern int MATRIX_SCRATCH_PAPER;
 extern int data_ov062_0211e17c;
 }
 
@@ -65,12 +65,12 @@ extern "C" int func_ov062_0211c2f4(char *self) {
 
 arrived:
     *(int *)(self + 0x460) = 7;
-    if (*(u8 *)(self + 0x448) == 2 || (u8)(s8)(data_0209f2f8 - 0x18) <= 1) {
+    if (*(u8 *)(self + 0x448) == 2 || (u8)(s8)(LEVEL_ID - 0x18) <= 1) {
         (*(int *)(((int)self + 0x474) & 0xFFFFFFFFFFFFFFFF))++;
         if (*(int *)(self + 0x474) >= 4)
             *(int *)(self + 0x474) = 0;
     } else if (func_ov062_0211b3ac(self) == 0) {
-        u32 r = (u32)RandomIntInternal(&data_0209e650) >> 8 & 3;
+        u32 r = (u32)RandomIntInternal(&RNG_STATE) >> 8 & 3;
         if (*(int *)(self + 0x474) != r) {
             *(int *)(self + 0x474) = r;
         } else {
@@ -84,8 +84,8 @@ arrived:
     *(int *)(self + 0x434) = *(int *)(self + 0x60);
     *(int *)(self + 0x438) = *(int *)(self + 0x64);
     zero[2] = 0; zero[0] = 0; zero[1] = 0; zero[2] = 0x14000;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16 *)(self + 0x8e));
-    MulVec3Mat4x3((Vector3 *)zero, &data_020a0e68, self + 0xa4);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16 *)(self + 0x8e));
+    MulVec3Mat4x3((Vector3 *)zero, &MATRIX_SCRATCH_PAPER, self + 0xa4);
     func_ov062_0211c658(self, &data_ov062_0211e17c);
     return 1;
 

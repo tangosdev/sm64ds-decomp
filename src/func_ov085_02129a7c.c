@@ -18,9 +18,9 @@ struct BMD_File;
 extern SharedFilePtr data_ov085_02130488;
 extern SharedFilePtr data_ov085_02130490;
 extern SharedFilePtr data_ov085_02130480;
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern SharedFilePtr MARIO_CAP_MODEL_PTR;
+extern SharedFilePtr LUIGI_CAP_MODEL_PTR;
+extern SharedFilePtr WARIO_CAP_MODEL_PTR;
 extern u8 data_ov085_0212f27c[];
 
 extern "C" {
@@ -64,9 +64,9 @@ extern "C" int func_ov085_02129a7c(char* r4)
     *(s32*)(r4 + 0x1f4) = 0;
 
     if (*(u8*)(r4 + 0x20b) == 1) {
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&MARIO_CAP_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&LUIGI_CAP_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&WARIO_CAP_MODEL_PTR);
         if (func_02013a44()) {
             void* p = _ZN5Actor13ClosestPlayerEv(r4);
             if (p) {

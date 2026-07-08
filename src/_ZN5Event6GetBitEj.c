@@ -3,7 +3,7 @@
  * is set in the global event bitfield EVENT_FIELD. Declared in SM64DS_2.h:
  *   namespace Event { u32 GetBit(u32 bit); ... }
  *
- * Reloc resolves to EVENT_FIELD at 0x0209f34c (symbols.txt: data_0209f34c).
+ * Reloc resolves to EVENT_FIELD at 0x0209f34c (symbols.txt: EVENT_FIELD).
  * The `1 << n` shift is load-bearing.
  */
 

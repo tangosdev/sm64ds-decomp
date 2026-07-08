@@ -4,7 +4,7 @@
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 void func_ov012_0211123c(char* c) {
     int* q;
     char* p;
@@ -19,7 +19,7 @@ void func_ov012_0211123c(char* c) {
 check:
     if (p != c) {
         if (*(unsigned char*)(p+0x31e)) {
-            data_0209caa0[2] |= 0x80000;
+            SAVE_DATA[2] |= 0x80000;
         }
         return;
     }

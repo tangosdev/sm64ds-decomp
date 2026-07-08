@@ -5,16 +5,16 @@ extern void _ZN16MeshColliderBase7DisableEv(void *p);
 extern void _ZN13SharedFilePtr7ReleaseEv(void *p);
 extern void _ZN5Actor11UntrackStarERa(void *self, void *p);
 }
-extern char data_ov002_0210da58[];
-extern char data_ov002_0210da18[];
-extern char data_ov002_0210d9d8[];
-extern char data_ov002_0210da30[];
-extern char data_ov002_0210d9b0[];
-extern char data_ov002_0210d9d0[];
-extern char data_ov002_0210d9e0[];
-extern char data_ov002_0210da40[];
-extern char data_ov002_0210d9a0[];
-extern char data_ov002_0210d9c0[];
+extern char FEATHER_MODEL_PTR[];
+extern char SHELL_MODEL_PTRS[];
+extern char ONE_UP_MUSHROOM_MODEL_PTR[];
+extern char SUPER_MUSHROOM_MODEL_PTR[];
+extern char POWER_FLOWER_OPEN_MODEL_PTR[];
+extern char POWER_FLOWER_CLOSED_MODEL_PTR[];
+extern char BOB_OMB_MODEL_PTR[];
+extern char MARIO_CAP_MODEL_PTR[];
+extern char LUIGI_CAP_MODEL_PTR[];
+extern char WARIO_CAP_MODEL_PTR[];
 extern char data_ov102_0214e7e8[];
 extern char data_ov102_0214e808[];
 extern char data_ov102_0214e7f8[];
@@ -32,7 +32,7 @@ extern "C" int func_ov102_0214a08c(char *c)
 
     b = (int)(*(unsigned short *)(c + 0xc) == 0x16);
     if (b)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da58);
+        _ZN13SharedFilePtr7ReleaseEv(FEATHER_MODEL_PTR);
 
     b2 = (int)(*(unsigned short *)(c + 0xc) == 0x14);
     if (b2)
@@ -45,27 +45,27 @@ extern "C" int func_ov102_0214a08c(char *c)
             _ZN5Actor11UntrackStarERa(c, c + 0x3f0);
             break;
         case 3:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da18);
+            _ZN13SharedFilePtr7ReleaseEv(SHELL_MODEL_PTRS);
             break;
         case 2:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d8);
+            _ZN13SharedFilePtr7ReleaseEv(ONE_UP_MUSHROOM_MODEL_PTR);
             break;
         case 4:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da30);
+            _ZN13SharedFilePtr7ReleaseEv(SUPER_MUSHROOM_MODEL_PTR);
             break;
         case 7:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9b0);
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d0);
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_OPEN_MODEL_PTR);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_CLOSED_MODEL_PTR);
+            _ZN13SharedFilePtr7ReleaseEv(BOB_OMB_MODEL_PTR);
             break;
         case 5:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da58);
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9b0);
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d0);
+            _ZN13SharedFilePtr7ReleaseEv(FEATHER_MODEL_PTR);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_OPEN_MODEL_PTR);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_CLOSED_MODEL_PTR);
             break;
         case 6:
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9b0);
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9d0);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_OPEN_MODEL_PTR);
+            _ZN13SharedFilePtr7ReleaseEv(POWER_FLOWER_CLOSED_MODEL_PTR);
             break;
         }
     }
@@ -75,7 +75,7 @@ extern "C" int func_ov102_0214a08c(char *c)
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7e8);
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e808);
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7f8);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+        _ZN13SharedFilePtr7ReleaseEv(BOB_OMB_MODEL_PTR);
         break;
     case 1:
     case 2:
@@ -83,18 +83,18 @@ extern "C" int func_ov102_0214a08c(char *c)
         break;
     case 3:
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7f0);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da40);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+        _ZN13SharedFilePtr7ReleaseEv(MARIO_CAP_MODEL_PTR);
+        _ZN13SharedFilePtr7ReleaseEv(BOB_OMB_MODEL_PTR);
         break;
     case 5:
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7d8);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a0);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+        _ZN13SharedFilePtr7ReleaseEv(LUIGI_CAP_MODEL_PTR);
+        _ZN13SharedFilePtr7ReleaseEv(BOB_OMB_MODEL_PTR);
         break;
     case 4:
         _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7e0);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9c0);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+        _ZN13SharedFilePtr7ReleaseEv(WARIO_CAP_MODEL_PTR);
+        _ZN13SharedFilePtr7ReleaseEv(BOB_OMB_MODEL_PTR);
     }
     _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e7d0);
     return 1;

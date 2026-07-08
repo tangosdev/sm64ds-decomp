@@ -16,7 +16,7 @@ struct CapEnemy {
     unsigned char field_17f;
 };
 
-extern int data_0209f2d8;
+extern int CURRENT_GAMEMODE;
 extern "C" int *_ZN5Actor13ClosestPlayerEv(void *self);
 
 int CapEnemy::GetCapState() {
@@ -24,7 +24,7 @@ int CapEnemy::GetCapState() {
         return 2;
     }
 
-    unsigned char val = *(unsigned char *)&data_0209f2d8;
+    unsigned char val = *(unsigned char *)&CURRENT_GAMEMODE;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
         int *p = _ZN5Actor13ClosestPlayerEv(this);

@@ -1,8 +1,8 @@
 //cpp
 extern "C" {
-extern short data_0209d6d4;
+extern short CURR_MSG_ID;
 extern unsigned char data_0209d6c0;
-extern unsigned char data_0209d6a8;
+extern unsigned char MSG_LINE_HEIGHT;
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
@@ -22,13 +22,13 @@ void _ZN7Message22DisplayOptionsMenuTextEt(unsigned short n) {
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
     func_0201cfb8(n);
-    data_0209d6d4 = 0x287;
+    CURR_MSG_ID = 0x287;
     data_0209d6c0 = 1;
     func_0201d418(0x18f, 0x28);
-    data_0209d6d4 = data_0209d6d4 + 1;
+    CURR_MSG_ID = CURR_MSG_ID + 1;
     func_0201d418(0x197, 0x28);
-    data_0209d6a8 = data_0209d6a8 << 1;
-    data_0209d6d4 = 0x283;
+    MSG_LINE_HEIGHT = MSG_LINE_HEIGHT << 1;
+    CURR_MSG_ID = 0x283;
     func_0201d6a0(0x280, 0x20);
 }
 }

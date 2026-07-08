@@ -12,19 +12,19 @@ typedef struct {
     void *arg;            /* +8 */
 } DmaEnt;
 
-extern DmaEnt data_020a60c4[];
-extern u16 data_02099fd4[];
+extern DmaEnt _ZN3IRQ15DmaTimFunctionsE[];
+extern u16 _ZN3IRQ13DmaTimIndicesE[];
 extern volatile u32 reg[];
 
 void _ZN3IRQ13DmaTimHandlerEv(u32 idx) {
-    void (*fn)(void *) = data_020a60c4[idx].fn;
-    u16 bit = data_02099fd4[idx];
+    void (*fn)(void *) = _ZN3IRQ15DmaTimFunctionsE[idx].fn;
+    u16 bit = _ZN3IRQ13DmaTimIndicesE[idx];
     u32 mask = 1u << bit;
-    data_020a60c4[idx].fn = 0;
+    _ZN3IRQ15DmaTimFunctionsE[idx].fn = 0;
     if (fn != 0)
-        fn(data_020a60c4[idx].arg);
+        fn(_ZN3IRQ15DmaTimFunctionsE[idx].arg);
     reg[0x3ff8 / 4] |= mask;
-    if (data_020a60c4[idx].flag != 0)
+    if (_ZN3IRQ15DmaTimFunctionsE[idx].flag != 0)
         return;
     _ZN3IRQ11DisableIRQsEj(mask);
 }

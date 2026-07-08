@@ -1,18 +1,18 @@
-extern unsigned char data_0209f21c;
-extern signed char data_0209f30c;
+extern unsigned char NUM_PLAYERS;
+extern signed char NUM_RED_COINS;
 extern signed char data_0209f30d;
 
 signed char NumRedCoins(void)
 {
     int i = 1;
-    signed char sum = data_0209f30c;
+    signed char sum = NUM_RED_COINS;
     signed char *p;
-    if (i >= (int)data_0209f21c) return sum;
+    if (i >= (int)NUM_PLAYERS) return sum;
     p = &data_0209f30d;
     do {
         sum = (signed char)(sum + *p);
         i++;
         p++;
-    } while (i < (int)data_0209f21c);
+    } while (i < (int)NUM_PLAYERS);
     return sum;
 }

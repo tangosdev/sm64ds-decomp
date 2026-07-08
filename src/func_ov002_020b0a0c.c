@@ -8,7 +8,7 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 
 extern void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
-extern u8 data_0209f2c0[];
+extern u8 LEVEL_SPECIFIC_SETTING[];
 
 struct Obj {
     char pad[8];
@@ -19,7 +19,7 @@ struct Obj {
 
 void func_ov002_020b0a0c(struct Obj *self)
 {
-    data_0209f2c0[0] = (u8)self->f90;
+    LEVEL_SPECIFIC_SETTING[0] = (u8)self->f90;
     {
         u32 v = self->f8;
         u32 hi = v >> 0x18;

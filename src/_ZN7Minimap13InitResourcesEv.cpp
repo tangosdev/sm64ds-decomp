@@ -25,17 +25,17 @@ extern "C" {
     int func_0202a958(void);
 }
 
-extern u8 data_0209f2e8;
-extern u16* data_0209f334;
-extern u8 data_0209f2d8;
-extern u8 data_0209f250;
-extern void* data_0209f394[];
-extern signed char data_0209f2f8;
-extern signed char data_ov002_02111148;
-extern u8 data_0209d454;
-extern s32 data_0209caa0[];
-extern s32 data_0209fc48;
-extern u8 data_ov002_02111150;
+extern u8 MAP_TILE_ARR_SIZE;
+extern u16* MAP_TILE_ARR_PTR;
+extern u8 CURRENT_GAMEMODE;
+extern u8 CURR_PLAYER_ID;
+extern void* PLAYER_ARR[];
+extern signed char LEVEL_ID;
+extern signed char CUR_MINIMAP_ID;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern s32 SAVE_DATA[];
+extern s32 RUNNING_KUPPA_SCRIPT;
+extern u8 EXIT_COURSE_VS_MODE;
 
 extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
 {
@@ -67,8 +67,8 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
         }
     }
 
-    p = data_0209f334;
-    for (i = 0; i < data_0209f2e8; i++) {
+    p = MAP_TILE_ARR_PTR;
+    for (i = 0; i < MAP_TILE_ARR_SIZE; i++) {
         if (*p != 0) {
             int f3 = LoadFile(*p);
             DecompressLZ16(f3, (char*)_ZN3G2S12GetBG3ScrPtrEv() - (i << 11));
@@ -78,41 +78,41 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
     }
 
     {
-        int b = (data_0209f2d8 == 1);
+        int b = (CURRENT_GAMEMODE == 1);
         if (!b) {
             _ZN7Minimap19UpdateLevelSpecificEv();
         }
     }
 
-    data_ov002_02111148 = (signed char)GetMinimapID(data_0209f394[data_0209f250], -1);
+    CUR_MINIMAP_ID = (signed char)GetMinimapID(PLAYER_ARR[CURR_PLAYER_ID], -1);
 
-    if (data_ov002_02111148 >= 0) {
-        if ((SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3)
-            || SublevelToLevel(data_0209f2f8) == 4
-            || (SublevelToLevel(data_0209f2f8) == 0x13 && data_0209f2f8 == 0x2e)
-            || SublevelToLevel(data_0209f2f8) == -1)
+    if (CUR_MINIMAP_ID >= 0) {
+        if ((SublevelToLevel(LEVEL_ID) == 0x1d && LEVEL_ID != 1 && LEVEL_ID != 0x33 && LEVEL_ID != 3)
+            || SublevelToLevel(LEVEL_ID) == 4
+            || (SublevelToLevel(LEVEL_ID) == 0x13 && LEVEL_ID == 0x2e)
+            || SublevelToLevel(LEVEL_ID) == -1)
         {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
+            *(volatile u16*)0x400100e = (u16)(((0x1f - CUR_MINIMAP_ID) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
             *(s32*)(c + 0x1d8) = 0x100;
             *(s32*)(c + 0x1dc) = 0x80;
 
-            if (SublevelToLevel(data_0209f2f8) == 4) {
+            if (SublevelToLevel(LEVEL_ID) == 4) {
                 *(s32*)(c + 0x1e0) = 0x258000;
                 *(s32*)(c + 0x1e4) = 0;
                 *(s32*)(c + 0x1e8) = 0x64000;
-            } else if (SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3) {
+            } else if (SublevelToLevel(LEVEL_ID) == 0x1d && LEVEL_ID != 1 && LEVEL_ID != 0x33 && LEVEL_ID != 3) {
                 *(s32*)(c + 0x1e0) = -0x2bc000;
                 *(s32*)(c + 0x1e4) = 0;
                 *(s32*)(c + 0x1e8) = -0x2bc000;
             } else {
-                SublevelToLevel(data_0209f2f8);
+                SublevelToLevel(LEVEL_ID);
                 *(s32*)(c + 0x1e0) = 0;
                 *(s32*)(c + 0x1e4) = 0;
                 *(s32*)(c + 0x1e8) = 0;
             }
             *(u8*)(c + 0x251) = 1;
         } else {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
+            *(volatile u16*)0x400100e = (u16)(((0x1f - CUR_MINIMAP_ID) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
             *(s32*)(c + 0x1d8) = 0x80;
             *(s32*)(c + 0x1dc) = 0x40;
             *(s32*)(c + 0x1e0) = 0;
@@ -120,18 +120,18 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
             *(s32*)(c + 0x1e8) = 0;
             *(u8*)(c + 0x251) = 2;
         }
-        data_0209d454 |= 8;
+        BOTTOM_SCREEN_RELATED |= 8;
     } else {
-        data_0209d454 &= ~8;
+        BOTTOM_SCREEN_RELATED &= ~8;
     }
 
-    *(s32*)(c + 0x214) = GetMinimapScale(data_ov002_02111148);
+    *(s32*)(c + 0x214) = GetMinimapScale(CUR_MINIMAP_ID);
 
     {
-        int b1 = (data_0209f2d8 == 0);
+        int b1 = (CURRENT_GAMEMODE == 0);
         if (b1) {
-            if (!(data_0209caa0[2] & 0x80)) {
-                int b3 = (data_0209fc48 != 0);
+            if (!(SAVE_DATA[2] & 0x80)) {
+                int b3 = (RUNNING_KUPPA_SCRIPT != 0);
                 if (!b3) {
                     *(s32*)(c + 0x218) = (*(s32*)(c + 0x214)) << 1;
                     *(u16*)(c + 0x21c) = 0;
@@ -145,7 +145,7 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
     unk218_done:;
     }
 
-    data_ov002_02111150 = 0;
+    EXIT_COURSE_VS_MODE = 0;
     *(s32*)(c + 0x50) = 0x1000;
     *(s32*)(c + 0x54) = 0;
     *(s32*)(c + 0x58) = 0;

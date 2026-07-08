@@ -11,8 +11,8 @@ extern "C" void func_ov006_020c0aa8(void *p);
 extern "C" int func_ov006_020c1a88(void *p);
 extern "C" void func_ov004_020b682c(void);
 extern "C" int data_ov006_0213d744[];
-extern "C" unsigned char data_0209d45c;
-extern "C" unsigned char data_0209d454;
+extern "C" unsigned char TOP_SCREEN_RELATED;
+extern "C" unsigned char BOTTOM_SCREEN_RELATED;
 
 struct Base {
     virtual void m00();
@@ -51,8 +51,8 @@ extern "C" int func_ov006_020fa56c(char *c)
     _ZN3GXS11LoadOBJPlttEPKvjj((void *)f2, 0, 0x100);
     Deallocate((void *)f1);
     Deallocate((void *)f2);
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x18;
+    TOP_SCREEN_RELATED = 0x11;
+    BOTTOM_SCREEN_RELATED = 0x18;
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     func_ov006_020c0aa8((void *)(c + 0x4660));

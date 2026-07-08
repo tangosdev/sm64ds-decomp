@@ -3,8 +3,8 @@ struct C;
 typedef int (C::*PMF)(void*);
 extern PMF data_ov002_0211110c[];
 extern int data_0208e430;
-extern int data_0209b49c;
-extern int data_0209b490;
+extern int MESSAGE_SOUND_VOLUME_LSL_12;
+extern int MUSIC_VOLUME_LSL_12;
 
 extern "C" {
 void _ZN9ActorBase18MarkForDestructionEv(C* c);
@@ -16,7 +16,7 @@ int func_ov002_020f94fc(char* cc)
     int sel = *(int*)(cc + 8);
     int r = (c->*data_ov002_0211110c[sel])(cc + 0xdc);
     if (r == 0 && *(int*)(cc + 0xd4) == data_0208e430
-        && (*(unsigned short*)(cc + 0xdc) <= 0xa || data_0209b49c > 0x7f)) {
+        && (*(unsigned short*)(cc + 0xdc) <= 0xa || MESSAGE_SOUND_VOLUME_LSL_12 > 0x7f)) {
         goto skip;
     }
     _ZN9ActorBase18MarkForDestructionEv(c);
@@ -25,7 +25,7 @@ int func_ov002_020f94fc(char* cc)
     }
 skip:
     if (*(int*)(cc + 8) != 6) {
-        if (data_0209b490 < *(int*)(cc + 0xd8)) *(unsigned short*)(cc + 0xdc) = *(unsigned short*)(cc + 0xde);
+        if (MUSIC_VOLUME_LSL_12 < *(int*)(cc + 0xd8)) *(unsigned short*)(cc + 0xdc) = *(unsigned short*)(cc + 0xde);
     }
     return 1;
 }

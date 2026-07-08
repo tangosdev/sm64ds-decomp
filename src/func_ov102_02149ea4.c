@@ -6,13 +6,13 @@ void Matrix4x3_FromRotationY(void* m, int angle);
 void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* thiz, void* sm, void* mtx, int a, int b, int c2, unsigned int d);
 
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 
 void func_ov102_02149ea4(char *c) {
     {
         int b1 = (*(int*)(c + 0xb0) & 8) != 0;
         if (b1) {
-            int b2 = (data_0209f2d8 == 1);
+            int b2 = (CURRENT_GAMEMODE == 1);
             if (b2 == 0) goto skipcall;
         }
         *(int*)(c + 0x3e4) = func_ov102_02149610(c);

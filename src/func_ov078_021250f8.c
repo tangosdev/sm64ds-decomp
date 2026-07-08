@@ -15,7 +15,7 @@ extern void MulVec3Mat4x3(void* a, void* m, void* b);
 extern int _ZN9Animation8FinishedEv(void* self);
 extern void func_ov078_02125c48(void* c, void* p);
 
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 extern int data_ov078_0212703c;
 
 int func_ov078_021250f8(char* c) {
@@ -55,9 +55,9 @@ int func_ov078_021250f8(char* c) {
                     v[0].x = v[1].x - *(int*)(c + 0x4ec);
                     v[0].y = v[1].y - *(int*)(c + 0x4f0);
                     v[0].z = v[1].z - *(int*)(c + 0x4f4);
-                    Matrix4x3_FromRotationY(data_020a0e68,
+                    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER,
                         _ZN4cstd5atan2E5Fix12IiES1_(v[0].x, v[0].z));
-                    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68,
+                    Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER,
                         (short)(-_ZN4cstd5atan2E5Fix12IiES1_(v[0].y, Vec3_HorzLen(&v[0]))));
                     out.y += 0x14000;
                     func_ov102_0214ad14(target);
@@ -66,7 +66,7 @@ int func_ov078_021250f8(char* c) {
                     *(int*)((char*)target + 0xac) = out.z;
                     *(int*)((char*)target + 0x98) = 0x14000;
                     *(int*)((char*)target + 0x9c) = -0x2000;
-                    MulVec3Mat4x3(&in, data_020a0e68, &out);
+                    MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
                 }
                 *(unsigned char*)(c + *(int*)(c + 0x49c) + 0x42c) = 1;
                 *(int*)((char*)target + 0xc8) = 0;

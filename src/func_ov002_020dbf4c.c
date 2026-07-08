@@ -1,10 +1,10 @@
 struct V3 { int a, b, c; };
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 extern void func_ov002_020dc174(char* c, struct V3* r1, int r2, int r3, unsigned int a5, unsigned int a6);
 void func_ov002_020dbf4c(char* c){
   struct V3 v;
   int r2, r3;
-  if((int)(data_0209f2d8 == 1) != 0){
+  if((int)(CURRENT_GAMEMODE == 1) != 0){
     v.a = 0;
     v.b = 0xa000;
     v.c = 0x50000;

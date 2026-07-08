@@ -7,7 +7,7 @@ struct Matrix4x3;
 struct G3i {
     static void PerspectiveW_(Fix12, int, int, int, int, int, bool, Matrix4x3*);
 };
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern "C" void func_ov007_020c0078(char* c)
 {
@@ -18,8 +18,8 @@ extern "C" void func_ov007_020c0078(char* c)
 
     int a = (int)*(unsigned short*)(c + 0xd4) >> 4;
     G3i::PerspectiveW_(
-        data_02082214[a * 2],
-        data_02082214[a * 2 + 1],
+        SINE_TABLE[a * 2],
+        SINE_TABLE[a * 2 + 1],
         ((unsigned int)*(int*)(c + 0xbc) >> 0x14) | (*(int*)(c + 0xc0) << 12),
         *(int*)(c + 0xc4),
         *(int*)(c + 0xc8),

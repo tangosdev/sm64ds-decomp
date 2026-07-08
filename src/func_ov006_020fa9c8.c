@@ -1,6 +1,6 @@
 extern void SetBg2Offset(int a, int b);
 extern void func_ov006_020fa9a0(char *p);
-extern unsigned char data_0209d45c;
+extern unsigned char TOP_SCREEN_RELATED;
 
 void func_ov006_020fa9c8(char *p, int i)
 {
@@ -17,6 +17,6 @@ void func_ov006_020fa9c8(char *p, int i)
     if (dv < 0x40) return;
     *(short *)(p + 0x5c0c + n) = 0x258;
     *(unsigned char *)(p + 0x5c0f + n) = 0;
-    data_0209d45c &= ~4;
+    TOP_SCREEN_RELATED &= ~4;
     func_ov006_020fa9a0(p);
 }

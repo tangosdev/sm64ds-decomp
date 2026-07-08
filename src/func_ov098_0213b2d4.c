@@ -9,7 +9,7 @@ extern void func_ov098_0213b15c(void*);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void*, void*, int, int, unsigned int, unsigned int);
 extern char data_ov098_0213c8e8;
 extern char data_ov098_0213c91c;
-extern char data_ov002_0210da38;
+extern char BUBBLE_MODEL_PTR;
 int func_ov098_0213b2d4(char* c){
   void* f;
   char* p60;
@@ -48,7 +48,7 @@ int func_ov098_0213b2d4(char* c){
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x124, c, 0x50000, 0x12c000, 0x800004, 0);
   }
   _ZN5Model8LoadFileER13SharedFilePtr(&data_ov098_0213c91c);
-  _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da38);
+  _ZN5Model8LoadFileER13SharedFilePtr(&BUBBLE_MODEL_PTR);
   return 1;
 }
 }

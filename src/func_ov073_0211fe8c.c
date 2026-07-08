@@ -13,8 +13,8 @@ extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern int func_ov073_0212157c(void* c, void* p);
 
-extern void* data_0209f318;
-extern int data_020a0e68[];
+extern void* CAMERA;
+extern int MATRIX_SCRATCH_PAPER[];
 extern void* data_ov073_021233e0;
 
 int func_ov073_0211fe8c(char* c) {
@@ -36,7 +36,7 @@ int func_ov073_0211fe8c(char* c) {
 
     func_ov073_0211f144(c);
 
-    cam = data_0209f318;
+    cam = CAMERA;
     _ZN6Camera9SetFlag_3Ev(cam);
 
     in.x = 0; in.y = 0; in.z = 0;
@@ -52,8 +52,8 @@ int func_ov073_0211fe8c(char* c) {
     look.y += 0x100000;
     in.z = -0x59c000;
 
-    Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c + 0x8e));
-    MulVec3Mat4x3(&in, data_020a0e68, &out);
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short*)(c + 0x8e));
+    MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
 
     pos.y -= 0x100000;
     pos.x = pos.x + out.x;

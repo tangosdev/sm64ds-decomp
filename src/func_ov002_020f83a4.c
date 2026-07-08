@@ -18,7 +18,7 @@ extern void _ZN5ModelC2Ev(void *p);
 extern int func_ov002_020f6618(void *self, void *mdl, int nAnims, void *anims, int a5, int texByte, void *texs, int tsData);
 extern int func_ov002_020f6960(void *self, void *fp, int n);
 
-extern unsigned char data_0209f2d8;
+extern unsigned char CURRENT_GAMEMODE;
 extern char data_ov002_0210b600;
 extern char data_ov002_0210b604;
 extern char data_ov002_0210b608;
@@ -29,7 +29,7 @@ extern char data_ov002_0210bcc4;
 extern char data_ov002_0210bce8;
 extern char data_ov002_0210bcf0;
 extern char data_ov002_0210bd24;
-extern char data_ov002_0211094c;
+extern char POWER_STAR_MODEL_PTR;
 extern char data_ov002_02110b50;
 extern char data_ov002_02110b70;
 extern char data_ov002_02110b78;
@@ -63,7 +63,7 @@ int func_ov002_020f83a4(Obj *arg0) {
         }
         arg0->unkE0 = p;
         if (arg0->unkE0 == 0) return 0;
-        t = (*(volatile unsigned char *)&data_0209f2d8 == 2);
+        t = (*(volatile unsigned char *)&CURRENT_GAMEMODE == 2);
         if (t == 0) {
             if (func_ov002_020f6618(arg0->unkE0, &data_ov002_02110b98, 1, &data_ov002_0210b610, 1, 1, &data_ov002_0210b600, 0x16) == 0) return 0;
         } else {
@@ -98,7 +98,7 @@ int func_ov002_020f83a4(Obj *arg0) {
         }
         arg0->unkDC = p;
         if (arg0->unkDC == 0) return 0;
-        if (func_ov002_020f6960(arg0->unkDC, &data_ov002_0211094c, -1) == 0) return 0;
+        if (func_ov002_020f6960(arg0->unkDC, &POWER_STAR_MODEL_PTR, -1) == 0) return 0;
     } else if (arg0->unk8 == 0x19) {
         p = _Znwj(0x60);
         if (p) {

@@ -10,7 +10,7 @@ extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachLinear(int *p, int target, int step);
 extern void func_ov034_02112688(void *c);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int data_ov034_02114488[];
 
 void func_ov034_02111c48(void *thiz)
@@ -34,7 +34,7 @@ void func_ov034_02111c48(void *thiz)
     }
 
     if (DecIfAbove0_Byte((unsigned char *)(c + 0x8da)) == 0) {
-        r4 = RandomIntInternal(&data_0209e650);
+        r4 = RandomIntInternal(&RNG_STATE);
         {
             unsigned char db = *(unsigned char *)(c + 0x8db);
             unsigned int hi;
@@ -52,7 +52,7 @@ void func_ov034_02111c48(void *thiz)
     }
 
     if (WithMeshClsn_IsOnWall(c + 0x708) != 0 || len > 0x5dc000) {
-        r4 = RandomIntInternal(&data_0209e650);
+        r4 = RandomIntInternal(&RNG_STATE);
         *(short *)(c + 0x800 + 0xd8) = Vec3_HorzAngle(c + 0x5c, c + 0x8cc);
         *(unsigned char *)(c + 0x8da) = (unsigned char)((unsigned int)(r4 + 0x1e) >> 0x1b);
         *(unsigned char *)(c + 0x8da) =

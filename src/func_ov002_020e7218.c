@@ -6,7 +6,7 @@ struct V3 { int x, y, z; };
 extern "C" {
 extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(void* self, struct V3* pos, unsigned a, int b, unsigned short c, void* d);
 extern void func_ov002_020e7554(void* self);
-extern signed char data_0209f310[];
+extern signed char NUM_VS_STARS_OBTAINED_PLAYER[];
 void func_ov002_020e7218(char* c, char* a, int gate) {
     if (gate == 0) {
         struct V3 pos;
@@ -14,7 +14,7 @@ void func_ov002_020e7218(char* c, char* a, int gate) {
         pos.x = v[0];
         pos.y = v[1] + 0xc8000;
         pos.z = v[2];
-        _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &pos, data_0209f310[*(unsigned char*)(a+0x6d8)], *(unsigned short*)(c+0xc) != 0xb2, 0x15, a);
+        _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &pos, NUM_VS_STARS_OBTAINED_PLAYER[*(unsigned char*)(a+0x6d8)], *(unsigned short*)(c+0xc) != 0xb2, 0x15, a);
     }
     *(unsigned short*)(c+0x4a2) |= 0x40;
     func_ov002_020e7554(c);

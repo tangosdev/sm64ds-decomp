@@ -10,7 +10,7 @@ extern int func_ov090_02131e00(void* c, void* p);
 extern int RandomIntInternal(int* seed);
 extern char data_ov090_02134504[];
 extern char data_ov090_021344e4[];
-extern int data_0209e650[];
+extern int RNG_STATE[];
 int func_ov090_02131c48(char* c) {
     unsigned int s;
     s = (unsigned)((unsigned)(*(int*)(c+0x364) << 4) >> 0x10);
@@ -38,7 +38,7 @@ int func_ov090_02131c48(char* c) {
                     *(int*)(c+0x374) = *(int*)(c+0x5c);
                     *(int*)(c+0x378) = *(int*)(c+0x60);
                     *(int*)(c+0x37c) = *(int*)(c+0x64);
-                    int r = RandomIntInternal(data_0209e650);
+                    int r = RandomIntInternal(RNG_STATE);
                     *(short*)(c+0x39a) = (short)((r >> 8) << 0xd);
                     func_ov090_02131e00(c, data_ov090_021344e4);
                 }

@@ -24,7 +24,7 @@ void _ZN12CylinderClsn5ClearEv(void* c);
 void _ZN12CylinderClsn6UpdateEv(void* c);
 }
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 extern "C" void func_ov100_02142918(char* c)
 {
@@ -48,9 +48,9 @@ extern "C" void func_ov100_02142918(char* c)
         int ang;
         *(s16*)(c + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(c, *(int*)(c + 0xe0), *(int*)(c + 0xe8), *(s16*)(c + 0x94));
         ang = *(u16*)(c + 0x94);
-        *(int*)(c + 0xa4) = (int)(((long long)*(int*)(c + 0x98) * data_02082214[(ang >> 4) << 1] + 0x800) >> 12);
+        *(int*)(c + 0xa4) = (int)(((long long)*(int*)(c + 0x98) * SINE_TABLE[(ang >> 4) << 1] + 0x800) >> 12);
         ang = *(u16*)(c + 0x94);
-        *(int*)(c + 0xac) = (int)(((long long)*(int*)(c + 0x98) * data_02082214[((ang >> 4) << 1) + 1] + 0x800) >> 12);
+        *(int*)(c + 0xac) = (int)(((long long)*(int*)(c + 0x98) * SINE_TABLE[((ang >> 4) << 1) + 1] + 0x800) >> 12);
         {
             int* pa4 = (int*)((((long long)(int)(c + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL));
             int* pac = (int*)((((long long)(int)(c + 0xac)) & 0xFFFFFFFFFFFFFFFFLL));

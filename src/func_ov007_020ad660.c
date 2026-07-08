@@ -5,7 +5,7 @@ typedef unsigned char u8;
 typedef unsigned int u32;
 
 extern u8 data_ov007_0210342c[];
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 extern void func_ov007_020c92d0(void *a);
 extern void func_ov007_020c0638(void *a, int b, int c, int d);
@@ -129,7 +129,7 @@ void func_ov007_020ad660(char *arg0)
                 if (inv2 < 0x50) {
                     inv2 = 0;
                 }
-                prod = data_02082214[(r >> 4) * 2] * 0x19;
+                prod = SINE_TABLE[(r >> 4) * 2] * 0x19;
                 result = (int)(((long long)inv2 * prod + 0x800) >> 0xc);
                 *(int *)(*(char **)(arg0 + 4) + 0x2c) = result;
             }
@@ -161,7 +161,7 @@ void func_ov007_020ad660(char *arg0)
                 t = t >> 0x10;
                 idx = (int)t >> 4;
                 half = sq / 2;
-                tblval = data_02082214[idx * 2];
+                tblval = SINE_TABLE[idx * 2];
                 temp_a = half + 0x800;
                 result = (int)(((long long)temp_a * tblval + 0x800) >> 0xc);
                 *(int *)(*(char **)(arg0 + 4) + 0x2c) = -result;

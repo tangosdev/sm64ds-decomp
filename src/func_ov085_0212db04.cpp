@@ -4,7 +4,7 @@ extern "C" {
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, Vector3* v);
-extern void* data_0209f318;
+extern void* CAMERA;
 int func_ov085_0212db04(char* c) {
   Vector3 look, pos;
   void* cam;
@@ -16,7 +16,7 @@ int func_ov085_0212db04(char* c) {
   *(int*)(c + 0x2a4) = *(int*)(c + 0x5c);
   *(int*)(c + 0x2a8) = *(int*)(c + 0x60);
   *(int*)(c + 0x2ac) = *(int*)(c + 0x64);
-  cam = data_0209f318;
+  cam = CAMERA;
   _ZN6Camera9SetFlag_3Ev(cam);
   look.x = -0x304000;
   look.y = 0x3c1000;

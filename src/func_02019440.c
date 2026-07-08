@@ -1,8 +1,8 @@
 typedef unsigned short u16;
 
-extern int data_0209d4a8;
+extern int SCENE_RELATED;
 extern int data_0209d4ac;
-extern int data_0209d4b0;
+extern int KS_FADER;
 
 extern void func_0203bd24(void);
 extern int func_02053be0(int enable);
@@ -28,9 +28,9 @@ void func_02019440(void)
     MultiStore32Bytes(b, (int *)0x7000000, 0x400);
     c = 0;
     MultiStore32Bytes(c, (int *)0x5000000, 0x400);
-    data_0209d4a8 = 0;
+    SCENE_RELATED = 0;
     data_0209d4ac = 0;
-    data_0209d4b0 = 0;
+    KS_FADER = 0;
     func_0200f4f4();
     func_0200f46c();
 }

@@ -127,9 +127,9 @@ data_ov001_020acb74 kind:data(any) addr:0x020acb74
 data_ov001_020accfc kind:data(any) addr:0x020accfc
 data_ov001_020ace84 kind:data(any) addr:0x020ace84
 data_ov001_020ad04c kind:data(any) addr:0x020ad04c ambiguous
-data_ov001_020ad058 kind:data(any) addr:0x020ad058
-data_ov001_020ad188 kind:data(any) addr:0x020ad188
-data_ov001_020ad2d0 kind:data(any) addr:0x020ad2d0
+_ZN3OAM15TOUCH_MODE_TEXTE kind:data(any) addr:0x020ad058
+_ZN3OAM18STANDARD_MODE_TEXTE kind:data(any) addr:0x020ad188
+_ZN3OAM19DUAL_HAND_MODE_TEXTE kind:data(any) addr:0x020ad2d0
 data_ov001_020ad450 kind:data(any) addr:0x020ad450
 data_ov001_020ad458 kind:data(any) addr:0x020ad458
 data_ov001_020ad470 kind:data(any) addr:0x020ad470

@@ -21,7 +21,7 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern "C" void MulVec3Mat4x3(const Vector3* in, const void* m, Vector3* out);
 
 extern void* data_ov026_02113f3c;
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 
 extern "C" int func_ov026_02111d4c(char* c)
 {
@@ -57,9 +57,9 @@ extern "C" int func_ov026_02111d4c(char* c)
                 out.y = 0;
                 out.z = 0;
 
-                Matrix4x3_FromRotationY(&data_020a0e68, (short)(((Actor*)c)->HorzAngleToCPlayer() + 0x8000));
-                Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-                MulVec3Mat4x3(&m, &data_020a0e68, &out);
+                Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, (short)(((Actor*)c)->HorzAngleToCPlayer() + 0x8000));
+                Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, 0x2000);
+                MulVec3Mat4x3(&m, &MATRIX_SCRATCH_PAPER, &out);
 
                 Vector3* p1 = (Vector3*)(((int)(((int)pl) & 0xFFFFFFFFFFFFFFFFull) + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
                 m = *p1;

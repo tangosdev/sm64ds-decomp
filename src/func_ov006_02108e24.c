@@ -4,7 +4,7 @@ typedef unsigned char u8;
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern int data_ov006_021428c8;
 extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
@@ -22,7 +22,7 @@ int func_ov006_02108e24(int *p)
   }
   idx = data_020a0e40;
   flag = 0;
-  if (data_020a0de8[idx * 4])
+  if (TOUCH_INPUT_ARR[idx * 4])
   {
     if (data_020a0de9[idx * 4] != 0)
     {

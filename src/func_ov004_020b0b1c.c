@@ -1,5 +1,5 @@
 extern unsigned char data_020a0e40;
-extern unsigned char data_020a0de8[][4];
+extern unsigned char TOUCH_INPUT_ARR[][4];
 extern unsigned char data_020a0de9[][4];
 extern unsigned char data_020a0dea[][4];
 extern unsigned char data_020a0deb[][4];
@@ -31,7 +31,7 @@ int func_ov004_020b0b1c(int arg) {
     int flag = 0;
     int i;
 
-    if (data_020a0de8[idx][0] != 0) {
+    if (TOUCH_INPUT_ARR[idx][0] != 0) {
         if (data_020a0de9[idx][0] != 0) flag = 1;
     }
 

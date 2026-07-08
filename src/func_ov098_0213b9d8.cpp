@@ -15,7 +15,7 @@ extern "C" Actor *_ZN5Actor13ClosestPlayerEv(void);
 extern "C" s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3 *pos, const Vector3_16 *rot, s32 areaID, s32 deathTableID);
 extern "C" void func_0201267c(u32 a, void *b, void *c, int d);
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 
 extern "C" int func_ov098_0213b9d8(char *self)
 {
@@ -37,8 +37,8 @@ extern "C" int func_ov098_0213b9d8(char *self)
 
     a = (unsigned short)*(s16 *)((char *)player + 0x94) >> 4;
     factor = (*(int *)((char *)player + 0x98) >> 0xc) * 0x1c + 0x64;
-    cs = data_02082214[a * 2];
-    sn = data_02082214[a * 2 + 1];
+    cs = SINE_TABLE[a * 2];
+    sn = SINE_TABLE[a * 2 + 1];
     v.y = v.y + 0x480000;
     v.x = factor * cs + v.x;
     v.z = factor * sn + v.z;

@@ -13,13 +13,13 @@ extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
 }
 
-extern u8 data_0209f2d8[];
+extern u8 CURRENT_GAMEMODE[];
 
 extern "C" void func_ov100_021435e8(char* c)
 {
     if (*(u8*)(c + 0x6c8) != 0) return;
 
-    int flag = (data_0209f2d8[0] == 1);
+    int flag = (CURRENT_GAMEMODE[0] == 1);
     if (!flag) {
         if (*(s32*)(c + 0x6d0) == 0) {
             void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb3, 0,

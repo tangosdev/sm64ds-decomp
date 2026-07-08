@@ -15,7 +15,7 @@ struct Thing {
     PMF callback;   // 0x8
 };
 
-extern "C" Node *data_020a4b68;
+extern "C" Node *CURRENT_OBJECT_LIST_NODE;
 
 extern "C" void *func_02043fdc(Thing *thiz)
 {
@@ -24,11 +24,11 @@ extern "C" void *func_02043fdc(Thing *thiz)
     node = thiz->head;
     while (node != 0) {
         Node *next;
-        data_020a4b68 = node;
+        CURRENT_OBJECT_LIST_NODE = node;
         next = node->next;
         (node->obj->*thiz->callback)();
         node = next;
     }
-    data_020a4b68 = node;
+    CURRENT_OBJECT_LIST_NODE = node;
     return (void *)1;
 }

@@ -19,17 +19,17 @@ extern void func_ov002_020d2f24(void* c);
 extern void func_ov002_020d2e74(void* c);
 extern void func_ov002_020bedd4(void* c);
 
-extern int data_ov002_0211049c[];
-extern void* data_0209f318;
+extern int _ZN6Player17ST_WAIT_QUICKSANDE[];
+extern void* CAMERA;
 extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49c[];
 extern char data_0209f4a0[];
 extern unsigned char data_0209f4ae[];
-extern unsigned char data_0209f2d8;
-extern int data_0209caa0[];
+extern unsigned char CURRENT_GAMEMODE;
+extern int SAVE_DATA[];
 extern unsigned char data_0209f49e[];
-extern int data_ov002_0211019c[];
-extern int data_ov002_0211013c[];
+extern int _ZN6Player7ST_JUMPE[];
+extern int _ZN6Player7ST_WALKE[];
 
 int _ZN6Player12St_Wait_MainEv(char* c)
 {
@@ -44,13 +44,13 @@ int _ZN6Player12St_Wait_MainEv(char* c)
         return 1;
     }
     if (*(int*)(c+0x68c) >= 0x1e000) {
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211049c);
+        _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player17ST_WAIT_QUICKSANDE);
         return 1;
     }
 
     {
     unsigned char st = *(unsigned char*)(c+0x6e3);
-    void* r4 = data_0209f318;
+    void* r4 = CAMERA;
     switch (st) {
     default:
         break;
@@ -62,10 +62,10 @@ int _ZN6Player12St_Wait_MainEv(char* c)
         }
     }
     case 0: {
-        unsigned char f2d8_0 = data_0209f2d8;
+        unsigned char f2d8_0 = CURRENT_GAMEMODE;
         int b0 = (f2d8_0 == 1);
         if (b0 == 0) {
-            if (data_0209caa0[2] & 0x80) {
+            if (SAVE_DATA[2] & 0x80) {
                 int b1 = (f2d8_0 == 2);
                 if (b1) goto blk0_34;
                 goto blk0_35;
@@ -189,10 +189,10 @@ int _ZN6Player12St_Wait_MainEv(char* c)
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(c+0x6d9), 0x2a, c+0x74);
         }
         {
-            unsigned char f2d8_2 = data_0209f2d8;
+            unsigned char f2d8_2 = CURRENT_GAMEMODE;
             int b2a = (f2d8_2 == 1);
             if (b2a == 0) {
-                if ((data_0209caa0[2] & 0x80) == 0) break;
+                if ((SAVE_DATA[2] & 0x80) == 0) break;
                 int b2b = (f2d8_2 == 2);
                 if (b2b != false) break;
             }
@@ -204,7 +204,7 @@ int _ZN6Player12St_Wait_MainEv(char* c)
             *(unsigned char*)(c+0x721) = 1;
         }
         if (*(unsigned short*)(data_0209f49e+data_020a0e40*0x18) & 2) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211019c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_JUMPE);
             (*(unsigned int*)(((int)r4 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~0x2000;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(c+0x6d9), 0x2e, c+0x74);
             return 1;
@@ -251,10 +251,10 @@ int _ZN6Player12St_Wait_MainEv(char* c)
             }
         }
         {
-            unsigned char f2d8_4 = data_0209f2d8;
+            unsigned char f2d8_4 = CURRENT_GAMEMODE;
             int b4a = (f2d8_4 == 1);
             if (b4a == 0) {
-                if ((data_0209caa0[2] & 0x80) == 0) break;
+                if ((SAVE_DATA[2] & 0x80) == 0) break;
                 int b4b = (f2d8_4 == 2);
                 if (b4b != false) break;
             }
@@ -290,7 +290,7 @@ int _ZN6Player12St_Wait_MainEv(char* c)
 
     case 9: {
         if (_ZN6Player12FinishedAnimEv(c)) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
+            _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player7ST_WALKE);
         }
         break;
     }

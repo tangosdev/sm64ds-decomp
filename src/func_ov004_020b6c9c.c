@@ -1,7 +1,7 @@
 struct P2 { int a; int b; };
 extern void *data_ov004_020beb68;
 extern unsigned char data_020a0e40[];
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 extern unsigned char data_020a0de9[];
 extern struct P2 data_02086b58;
 
@@ -20,7 +20,7 @@ void func_ov004_020b6c9c(struct Obj *c)
         unsigned char idx = data_020a0e40[0];
         int off = idx * 4;
         int ok = 0;
-        if (data_020a0de8[off]) {
+        if (TOUCH_INPUT_ARR[off]) {
             if (data_020a0de9[off]) ok = 1;
         }
         if (ok == 0)

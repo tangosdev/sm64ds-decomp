@@ -1,9 +1,9 @@
-extern unsigned char data_0209f2bc;
-extern short data_0209f308;
-extern unsigned char data_0209f1f4;
+extern unsigned char VS_MODE_COUNTDOWN;
+extern short VS_NEW_STAR_TIMER;
+extern unsigned char VS_NEW_STAR_SOUND_PLAYED;
 
 void FUN_0202a130(void) {
-    if (data_0209f2bc != 0) return;
-    data_0209f308 = 0xb4;
-    data_0209f1f4 = 0;
+    if (VS_MODE_COUNTDOWN != 0) return;
+    VS_NEW_STAR_TIMER = 0xb4;
+    VS_NEW_STAR_SOUND_PLAYED = 0;
 }

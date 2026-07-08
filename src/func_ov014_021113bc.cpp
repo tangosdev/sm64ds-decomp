@@ -9,7 +9,7 @@ extern void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *heap);
 extern void _ZN5ModelD1Ev(void *p);
 extern int data_ov034_021147ec[];
 extern int func_020072c0(void);
-extern int data_020a0eac;
+extern int _ZN6Memory11gameHeapPtrE;
 
 void *func_ov014_021113bc(char *self) {
     *(int**)self = data_ov034_021147ec;
@@ -21,7 +21,7 @@ void *func_ov014_021113bc(char *self) {
     _ZN9ModelAnimD1Ev(self + 0x150);
     _ZN25MovingCylinderClsnWithPosD1Ev(self + 0x110);
     func_ov002_020aed18((int*)self);
-    _ZN6Memory10DeallocateEPvP4Heap(self, *(void**)&data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(self, *(void**)&_ZN6Memory11gameHeapPtrE);
     return self;
 }
 }

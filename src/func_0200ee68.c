@@ -1,5 +1,5 @@
-extern int data_0209fc48;
+extern int RUNNING_KUPPA_SCRIPT;
 extern int data_020889b0;
 int func_0200ee68(void){
-return data_0209fc48 == (int)&data_020889b0;
+return RUNNING_KUPPA_SCRIPT == (int)&data_020889b0;
 }

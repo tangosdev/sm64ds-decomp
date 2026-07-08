@@ -1,8 +1,8 @@
-extern unsigned char data_0209fc50[];
+extern unsigned char NUM_PLAYERS_2[];
 extern signed char data_0209fc64[];
 extern int data_ov075_0211b554[][4];
 int func_ov075_02115290(int dummy, int col) {
-    int cnt = data_0209fc50[0];
+    int cnt = NUM_PLAYERS_2[0];
     int row;
     if ((unsigned int)cnt <= 1) {
         row = 0;

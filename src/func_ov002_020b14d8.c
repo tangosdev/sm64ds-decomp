@@ -13,7 +13,7 @@ struct BF3ae {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *c, void *sm, void *mtx, int a, int b, unsigned int u);
-extern int data_02082128[];
+extern int _ZN9Matrix3x38IDENTITYE[];
 
 void func_ov002_020b14d8(char *c)
 {
@@ -25,7 +25,7 @@ void func_ov002_020b14d8(char *c)
     *(int*)(c + 0x10c) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x110) = *(int*)(c + 0x64) >> 3;
     *(struct M12*)(c + 0x120) = *(struct M12*)(c + 0xe4);
-    *(struct M12*)(c + 0x368) = *(struct M12*)data_02082128;
+    *(struct M12*)(c + 0x368) = *(struct M12*)_ZN9Matrix3x38IDENTITYE;
     *(int*)(c + 0x38c) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x390) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x394) = *(int*)(c + 0x64) >> 3;

@@ -8,7 +8,7 @@ typedef int s32;
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
-extern char data_ov002_02110424;
+extern char _ZN6Player7ST_LANDE;
 
 struct Player {
     char pad0[0x8e];
@@ -30,7 +30,7 @@ int _ZN6Player12St_Spin_MainEv(struct Player *thiz)
     func_ov002_020e28d4(thiz, 0x1000, 0x1000);
     if (thiz->field_6de == 0) {
         thiz->field_8e = thiz->field_94;
-        _ZN6Player11ChangeStateERNS_5StateE(thiz, &data_ov002_02110424);
+        _ZN6Player11ChangeStateERNS_5StateE(thiz, &_ZN6Player7ST_LANDE);
     }
     if (*(u16*)((char*)data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) {
         thiz->field_a0 = -0x9000;

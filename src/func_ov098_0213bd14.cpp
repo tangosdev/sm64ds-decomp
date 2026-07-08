@@ -21,7 +21,7 @@ struct WithMeshClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
 };
 
-extern SharedFilePtr data_ov002_0210da38;
+extern SharedFilePtr BUBBLE_MODEL_PTR;
 extern SharedFilePtr data_ov098_0213c91c;
 
 struct Obj {
@@ -58,13 +58,13 @@ extern "C" int func_ov098_0213bd14(Obj* o)
 
     if (o->f3c8 == 2)
     {
-        bmd = Model::LoadFile(data_ov002_0210da38);
+        bmd = Model::LoadFile(BUBBLE_MODEL_PTR);
         if (((ModelBase*)&o->f300)->SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
-        Model::LoadFile(data_ov002_0210da38);
+        Model::LoadFile(BUBBLE_MODEL_PTR);
         bmd = Model::LoadFile(data_ov098_0213c91c);
         if (((ModelBase*)&o->f300)->SetFile(bmd, 1, 0x16) == 0)
             return 0;

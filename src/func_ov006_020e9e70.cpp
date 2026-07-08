@@ -18,8 +18,8 @@ void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 void func_ov006_020e8aac(char* c);
 void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
 extern void* data_ov006_02141e9c;
 extern void* data_ov006_0213c844;
 extern void* data_ov006_02141e74;
@@ -48,8 +48,8 @@ extern "C" int func_ov006_020e9e70(void* arg0)
     int r5v;
     int r4v;
 
-    data_0209d45c = 0x11;
-    data_0209d454 = 0x10;
+    TOP_SCREEN_RELATED = 0x11;
+    BOTTOM_SCREEN_RELATED = 0x10;
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
 
@@ -78,7 +78,7 @@ extern "C" int func_ov006_020e9e70(void* arg0)
     *(M48*)(c + 0x4f54) = (M48&)data_ov006_0213c88c;
     *(M48*)(c + 0x4fa4) = tmp;
 
-    data_0209d454 |= 4;
+    BOTTOM_SCREEN_RELATED |= 4;
     *(volatile unsigned short*)0x400100c &= ~3;
     *(volatile unsigned short*)0x400100c &= ~0x40;
     zero = 0;

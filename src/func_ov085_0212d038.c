@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 extern void func_02013868(int t, int x);
 extern void _ZN6Player17SetNoControlStateEhih(void* p, u8 a, int b, u8 c);
-extern int data_0209caa0[];
+extern int SAVE_DATA[];
 int func_ov085_0212d038(char* c){
   int t;
   *(int*)(c+0xa4) = 0;
@@ -15,12 +15,12 @@ int func_ov085_0212d038(char* c){
       _ZN6Player17SetNoControlStateEhih(*(void**)(c+0x18c), 2, 0x189, 1);
       *(int*)(c+0x194) = 0;
     } else {
-      data_0209caa0[1] |= 0x40;
+      SAVE_DATA[1] |= 0x40;
       _ZN6Player17SetNoControlStateEhih(*(void**)(c+0x18c), 2, 0x18c, 1);
       *(int*)(c+0x194) = 6;
     }
   } else {
-    data_0209caa0[1] |= 0x80;
+    SAVE_DATA[1] |= 0x80;
     _ZN6Player17SetNoControlStateEhih(*(void**)(c+0x18c), 2, 0x149, 1);
     *(int*)(c+0x194) = 6;
   }

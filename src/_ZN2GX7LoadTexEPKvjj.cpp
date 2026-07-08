@@ -9,7 +9,7 @@ extern "C" void MultiCopy_Int(int *src, int *dst, int len);
 extern unsigned int data_020a60bc;
 extern unsigned int data_020a60ac;
 extern unsigned int data_020a60c0;
-extern int data_02099fd0;
+extern int RENDER_DMA_CHANNEL;
 
 namespace GX {
 void LoadTex(void const *src, unsigned int offset, unsigned int size) {
@@ -26,10 +26,10 @@ void LoadTex(void const *src, unsigned int offset, unsigned int size) {
         } else {
             int len = top - offset;
             unsigned int d0 = data_020a60ac + offset;
-            int ch = data_02099fd0;
+            int ch = RENDER_DMA_CHANNEL;
             if (ch != -1) {
                 DMASyncWordTransfer(ch, (unsigned int)src, d0, len);
-                func_02059fd0(data_02099fd0, (int)((char*)src + len), base, size - len, 0, 0);
+                func_02059fd0(RENDER_DMA_CHANNEL, (int)((char*)src + len), base, size - len, 0, 0);
                 return;
             }
             MultiCopy_Int((int*)src, (int*)d0, len);
@@ -37,10 +37,10 @@ void LoadTex(void const *src, unsigned int offset, unsigned int size) {
             return;
         }
     }
-    if (data_02099fd0 == -1) {
+    if (RENDER_DMA_CHANNEL == -1) {
         MultiCopy_Int((int*)src, (int*)dst, size);
         return;
     }
-    func_02059fd0(data_02099fd0, (int)src, dst, size, 0, 0);
+    func_02059fd0(RENDER_DMA_CHANNEL, (int)src, dst, size, 0, 0);
 }
 }

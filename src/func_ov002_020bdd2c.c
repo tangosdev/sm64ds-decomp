@@ -3,12 +3,12 @@
 // Counts as decompiled, not matched.
 extern void func_ov002_020db8bc(unsigned char* p, unsigned char val);
 extern void func_ov002_020bd984(void* c, int x);
-extern void* data_0209f318;
+extern void* CAMERA;
 void func_ov002_020bdd2c(void* c) {
   if (*(unsigned char*)((char*)c+0x703) != 1) return;
   func_ov002_020db8bc((unsigned char*)c, 3);
   {
-    int* f = (int*)((char*)data_0209f318+0x154);
+    int* f = (int*)((char*)CAMERA+0x154);
     *f &= ~0x80;
   }
   func_ov002_020bd984(c, 0x31);

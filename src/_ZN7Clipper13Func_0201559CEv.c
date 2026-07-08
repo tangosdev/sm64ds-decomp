@@ -19,12 +19,12 @@ struct Clipper {
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void CrossVec3(Vector3* a, Vector3* b, Vector3* result);
 extern void NormalizeVec3(Vector3* src, Vector3* dst);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void _ZN7Clipper13Func_0201559CEv(struct Clipper* thiz)
 {
     int idx = (int)thiz->m58 >> 4;
-    int q = _ZN4cstd4fdivEii(data_02082214[2 * idx], data_02082214[2 * idx + 1]);
+    int q = _ZN4cstd4fdivEii(SINE_TABLE[2 * idx], SINE_TABLE[2 * idx + 1]);
     Fix12i b = (Fix12i)(((long long)thiz->m50 * q + 0x800) >> 12);
     Fix12i c = (Fix12i)(((long long)thiz->m4c * b + 0x800) >> 12);
     Vector3 v0, v1, v2, v3;

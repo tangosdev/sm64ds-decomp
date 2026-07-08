@@ -2,9 +2,9 @@
 extern "C" {
 struct Vec3 { int x, y, z; };
 extern int data_ov002_02110a48;
-extern int data_0209f318;
-extern int data_0209f43c;
-extern int data_0209b3ec;
+extern int CAMERA;
+extern int GLOBAL_CLIPPER;
+extern int VIEW_MATRIX_ASR_3;
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *a, void *b, void *c, int d, void *e);
 extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
@@ -21,7 +21,7 @@ struct ModelBase {
 
 extern "C" int func_ov002_020ec0a4(char *self)
 {
-    char *base = (char *)data_0209f318;
+    char *base = (char *)CAMERA;
     int *iter = &data_ov002_02110a48;
     char *sl = self + 0xd4;
     int i = 0;
@@ -40,7 +40,7 @@ extern "C" int func_ov002_020ec0a4(char *self)
         sb = (int *)*iter;
         while (sb != 0) {
             int v = _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(
-                        &data_0209f43c, &data_0209b3ec, sb, c1e000, &buf);
+                        &GLOBAL_CLIPPER, &VIEW_MATRIX_ASR_3, sb, c1e000, &buf);
             if (v > 0x11000 && v < 0x578000) {
                 int op = c1f;
                 if (v < 0x2f000) {

@@ -27,12 +27,12 @@ extern Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern void func_ov060_02112434(void* t);
 extern void func_ov060_02111a28(void* t);
 extern void func_ov060_0211577c(void* t);
-extern int data_0209e650;
-extern char* data_0209f318;
+extern int RNG_STATE;
+extern char* CAMERA;
 }
 
 extern "C" int func_ov060_02115f64(char* self) {
-    RandomIntInternal(&data_0209e650);
+    RandomIntInternal(&RNG_STATE);
     *(int*)(self + 0x3a0) = (int)((Actor*)self)->ClosestPlayer();
     if (*(Actor**)(self + 0x3a0) != 0) {
         *(s16*)(self + 0x406) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)((char*)*(Actor**)(self + 0x3a0) + 0x5c));
@@ -47,7 +47,7 @@ extern "C" int func_ov060_02115f64(char* self) {
     *(int*)(self + 0x130) = *(int*)(self + 0x3f8);
     ((Animation*)(self + 0x124))->Advance();
     func_ov060_0211577c(self);
-    *(char**)(data_0209f318 + 0x114) = self;
+    *(char**)(CAMERA + 0x114) = self;
     ((CylinderClsn*)(self + 0x360))->Clear();
     Vector3 v;
     v.z = 0x50000;

@@ -1,9 +1,9 @@
 struct State { int a; int b; };
 extern int _ZN6Player7IsStateERNS_5StateE(void *c, struct State *s);
-extern struct State data_ov002_0211022c;
+extern struct State _ZN6Player13ST_NO_CONTROLE;
 
 int _ZN6Player12Unk_020c9e5cEh(void *c, unsigned char h){
-  if(!_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_0211022c)) return 0;
+  if(!_ZN6Player7IsStateERNS_5StateE(c, &_ZN6Player13ST_NO_CONTROLE)) return 0;
   if(*(unsigned char*)((char*)c+0x70a) != h) return 0;
   switch(h){
   case 0:

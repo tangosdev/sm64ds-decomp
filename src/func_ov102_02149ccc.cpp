@@ -35,12 +35,12 @@ struct Obj {
 
 extern "C" Actor *_ZN5Actor13ClosestPlayerEv(char *self);
 extern "C" int Vec3_HorzDist(const void *a, const void *b);
-extern "C" int data_0209caa0[];
+extern "C" int SAVE_DATA[];
 
 extern "C" void func_ov102_02149ccc(char *self)
 {
     Actor *player;
-    if (!(data_0209caa0[1] & 0x80000000)) {
+    if (!(SAVE_DATA[1] & 0x80000000)) {
         int b = (int)(*(unsigned short *)(self + 0xc) == 0x14);
         if (b)
             return;

@@ -17,7 +17,7 @@ extern int data_ov035_02112c70[];
 extern int data_ov035_02112c60[];
 extern int data_ov035_02112c68[];
 extern int data_ov035_021121d8[];
-extern u8 data_0209f2c0[];
+extern u8 LEVEL_SPECIFIC_SETTING[];
 extern s16 data_ov035_02111ef4[][4];
 extern s16 data_ov035_02111ef0[];
 
@@ -54,7 +54,7 @@ int func_ov035_021114e0(char *c)
     {
         int st = *(int*)(c + 0x32c);
         char *r = c + 0x300;
-        *(s16*)(r + 0x1e) = data_ov035_02111ef4[st][data_0209f2c0[0]];
+        *(s16*)(r + 0x1e) = data_ov035_02111ef4[st][LEVEL_SPECIFIC_SETTING[0]];
         *(s16*)(r + 0x24) = data_ov035_02111ef0[*(int*)(c + 0x32c)];
         *(s16*)(r + 0x26) = data_ov035_02111ef0[*(int*)(c + 0x32c)];
     }

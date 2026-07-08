@@ -3,8 +3,8 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern "C" u8 data_0209d45c;
-extern "C" u8 data_0209d454;
+extern "C" u8 TOP_SCREEN_RELATED;
+extern "C" u8 BOTTOM_SCREEN_RELATED;
 extern "C" u8 data_0209d460;
 extern "C" u8 data_0209d458;
 
@@ -46,8 +46,8 @@ extern "C" void func_ov004_020aeed8(char* c)
 {
     Obj* o = (Obj*)c;
 
-    data_0209d45c = 0;
-    data_0209d454 = 0;
+    TOP_SCREEN_RELATED = 0;
+    BOTTOM_SCREEN_RELATED = 0;
 
     *(u32*)0x4000000 &= ~0x1f00;
     *(u32*)0x4001000 &= ~0x1f00;
@@ -67,12 +67,12 @@ extern "C" void func_ov004_020aeed8(char* c)
         MultiCopy_Int((int*)(c + 0x2228), (int*)src, 0x2000);
     }
 
-    data_0209d45c = (u8)*(u32*)(c + 0x21c);
-    data_0209d454 = (u8)*(u32*)(c + 0x220);
+    TOP_SCREEN_RELATED = (u8)*(u32*)(c + 0x21c);
+    BOTTOM_SCREEN_RELATED = (u8)*(u32*)(c + 0x220);
 
     if (o->f68() == 2)
         return;
 
-    *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0x1f00) | ((u32)data_0209d45c << 8);
-    *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0x1f00) | ((u32)data_0209d454 << 8);
+    *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0x1f00) | ((u32)TOP_SCREEN_RELATED << 8);
+    *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0x1f00) | ((u32)BOTTOM_SCREEN_RELATED << 8);
 }

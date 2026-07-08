@@ -5,7 +5,7 @@ extern void MulVec3Mat4x3(void* out, void* m, void* in);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void*, void*);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void*, void*, unsigned int, int, unsigned int, unsigned int, unsigned int);
-extern int data_020a0e68[];
+extern int MATRIX_SCRATCH_PAPER[];
 struct V3 { int x, y, z; };
 
 void func_ov090_02133710(char* c) {
@@ -22,8 +22,8 @@ void func_ov090_02133710(char* c) {
     } else if (*(int*)(c + 0x384) == 2) {
         v.z = -0x8c000;
     }
-    Matrix4x3_FromRotationY(data_020a0e68, 0);
-    MulVec3Mat4x3(&v, data_020a0e68, c + 0x374);
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, 0);
+    MulVec3Mat4x3(&v, MATRIX_SCRATCH_PAPER, c + 0x374);
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, c + 0x374);
     if (*(unsigned int*)(c + 0x134) == 0) return;
     a = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x134));

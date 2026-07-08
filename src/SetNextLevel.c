@@ -4,14 +4,14 @@
 typedef unsigned char u8;
 typedef signed char s8;
 
-extern s8 data_0209f2f8;
-extern s8 data_0209211c;
-extern u8 data_0209f200;
-extern u8 data_02092110;
-extern u8 data_0209f268;
-extern u8 data_0209f220;
-extern u8 data_0209f1f0;
-extern u8 data_0209f26c;
+extern s8 LEVEL_ID;
+extern s8 RETURN_LEVEL_ID;
+extern u8 RETURN_ENTRANCE_ID;
+extern u8 NEXT_LEVEL_ID;
+extern u8 NEXT_ENTRANCE_ID;
+extern u8 STAR_ID;
+extern u8 NEXT_STAR_ID;
+extern u8 RETURN_STATE;
 
 struct Entry { s8 a; s8 b; u8 c; };
 extern struct Entry data_02075638[];
@@ -20,36 +20,36 @@ int SublevelToLevel(int i);
 void SetNextStar(void);
 
 void SetNextLevel(int arg) {
-    int v = data_0209f2f8;
+    int v = LEVEL_ID;
     unsigned i;
     struct Entry* p;
     if (v == 0x22) {
         if (arg != 1) {
-            data_0209211c = 1;
-            data_0209f200 = 0xa;
+            RETURN_LEVEL_ID = 1;
+            RETURN_ENTRANCE_ID = 0xa;
         }
     } else {
         p = data_02075638;
         for (i = 0; i < 8; i++) {
             if (v == p->a) {
-                data_0209211c = p->b;
-                data_0209f200 = p->c;
+                RETURN_LEVEL_ID = p->b;
+                RETURN_ENTRANCE_ID = p->c;
                 break;
             }
             p++;
         }
     }
-    if (data_0209211c >= 0) {
+    if (RETURN_LEVEL_ID >= 0) {
         if (SublevelToLevel(0) == 0x1d) {
-            data_02092110 = 1;
-            data_0209f268 = 0xd;
+            NEXT_LEVEL_ID = 1;
+            NEXT_ENTRANCE_ID = 0xd;
         } else {
-            data_02092110 = data_0209211c;
-            data_0209f268 = data_0209f200;
+            NEXT_LEVEL_ID = RETURN_LEVEL_ID;
+            NEXT_ENTRANCE_ID = RETURN_ENTRANCE_ID;
         }
     }
-    data_0209211c = -1;
-    data_0209f1f0 = data_0209f220;
+    RETURN_LEVEL_ID = -1;
+    NEXT_STAR_ID = STAR_ID;
     SetNextStar();
-    data_0209f26c = arg;
+    RETURN_STATE = arg;
 }

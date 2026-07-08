@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern int data_ov002_021102a4[];
+extern int _ZN6Player11ST_TELEPORTE[];
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 int func_ov002_020c6adc(char* c)
 {
@@ -8,7 +8,7 @@ int func_ov002_020c6adc(char* c)
     if (v == 0)
         return 0;
     *(unsigned short*)((((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL)) &= ~8;
-    _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021102a4);
+    _ZN6Player11ChangeStateERNS_5StateE(c, _ZN6Player11ST_TELEPORTE);
     return 1;
 }
 }

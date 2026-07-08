@@ -10,7 +10,7 @@ extern int _ZN13RaycastGround10DetectClsnEv(void *rg);
 extern void _ZN13RaycastGroundD1Ev(void *rg);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *c, void *sm, void *mtx, int h, int g, unsigned int u);
-extern signed char data_0209f2f8[];
+extern signed char LEVEL_ID[];
 
 struct RG { char pad[0x44]; int ground; char pad2[8]; };
 
@@ -38,7 +38,7 @@ void func_ov070_02120724(char *c)
     }
 
     g = 0x1f4000;
-    if (data_0209f2f8[0] == 0x11) {
+    if (LEVEL_ID[0] == 0x11) {
         struct RG rg;
         struct Vec3 pos;
         int y;

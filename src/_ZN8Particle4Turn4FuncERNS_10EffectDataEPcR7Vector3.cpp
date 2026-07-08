@@ -2,7 +2,7 @@
 typedef unsigned short u16;
 typedef short s16;
 extern "C" {
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 void func_02052550(int* m, int a, int b);
 void func_0205256c(int* m, int a, int b);
 void Matrix3x3_SetRotationZ(int* m, int a, int b);
@@ -18,15 +18,15 @@ extern "C" void _ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3(EffectData& 
     switch (e.mode) {
     case 0:
         idx = e.angle >> 4;
-        func_02052550(mtx, data_02082214[idx*2], data_02082214[idx*2+1]);
+        func_02052550(mtx, SINE_TABLE[idx*2], SINE_TABLE[idx*2+1]);
         break;
     case 1:
         idx = e.angle >> 4;
-        func_0205256c(mtx, data_02082214[idx*2], data_02082214[idx*2+1]);
+        func_0205256c(mtx, SINE_TABLE[idx*2], SINE_TABLE[idx*2+1]);
         break;
     case 2:
         idx = e.angle >> 4;
-        Matrix3x3_SetRotationZ(mtx, data_02082214[idx*2], data_02082214[idx*2+1]);
+        Matrix3x3_SetRotationZ(mtx, SINE_TABLE[idx*2], SINE_TABLE[idx*2+1]);
         break;
     }
     MulVec3Mat3x3((int*)(p + 0x14), mtx, (int*)(p + 0x14));

@@ -1,6 +1,6 @@
 //cpp
 struct V3 { int x, y, z; };
-extern int data_0209e650;
+extern int RNG_STATE;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void *_ZN5Actor13ClosestPlayerEv(void *thiz);
 extern "C" short Vec3_HorzAngle(struct V3 *a, struct V3 *b);
@@ -13,9 +13,9 @@ extern "C" void func_ov100_021464f4(char *c){
   void *pl;
   struct V3 v;
   if(*(int*)(c+0x150) == 0){
-    *(int*)(c+0x144) = (RandomIntInternal(&data_0209e650) & 0x3fff) + 0xd000;
-    *(int*)(c+0x148) = (((unsigned int)RandomIntInternal(&data_0209e650) % 0x12c) + 0x1f4) << 12;
-    *(short*)(c+0x154) = (RandomIntInternal(&data_0209e650) & 0x3ff) + 0x400;
+    *(int*)(c+0x144) = (RandomIntInternal(&RNG_STATE) & 0x3fff) + 0xd000;
+    *(int*)(c+0x148) = (((unsigned int)RandomIntInternal(&RNG_STATE) % 0x12c) + 0x1f4) << 12;
+    *(short*)(c+0x154) = (RandomIntInternal(&RNG_STATE) & 0x3ff) + 0x400;
     *(int*)(c+0x130) = 0x4000;
   } else if(*(int*)(c+0x150) == 0x14){
     *(int*)(c+0x130) = 0x1000;

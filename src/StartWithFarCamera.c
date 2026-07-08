@@ -1,5 +1,5 @@
-extern unsigned char* data_0209f340;
+extern unsigned char* LEVEL_FILE;
 int StartWithFarCamera(void)
 {
-    return (data_0209f340[0x15] & 1) != 0;
+    return (LEVEL_FILE[0x15] & 1) != 0;
 }

@@ -1,7 +1,7 @@
 extern void func_ov006_0211f454(unsigned char* base, int idx);
 extern void func_ov006_0211f34c(unsigned char* base, int idx);
 extern void func_ov006_0211e8a8(unsigned char* base, int idx);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov006_0211f0d0(unsigned char* base, int idx)
 {
@@ -19,7 +19,7 @@ void func_ov006_0211f0d0(unsigned char* base, int idx)
     func_ov006_0211f34c(base, idx);
     {
         int v = *(unsigned short*)((unsigned char*)(base + 0x466c) + off);
-        short look = data_02082214[(v >> 4) * 2 + 1];
+        short look = SINE_TABLE[(v >> 4) * 2 + 1];
         if (look >= 0)
             *(unsigned char*)((unsigned char*)(base + 0x467e) + off) = 1;
         else

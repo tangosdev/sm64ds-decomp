@@ -18,10 +18,10 @@ extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN6Player12Unk_020c6a10Ej(void* p, unsigned int a);
 
-extern unsigned char data_0209f220;
+extern unsigned char STAR_ID;
 extern char data_ov078_0212705c;
 extern char data_ov078_0212702c;
-extern int data_0209e650;
+extern int RNG_STATE;
 
 struct V3 { int x, y, z; };
 
@@ -43,7 +43,7 @@ int func_ov078_021240a0(char* c)
                 char* pl = (char*)(long)*(int*)(c + 0x430);
                 if (_ZN6Player9StartTalkER9ActorBaseb(pl, c, 1)) {
                     int msg;
-                    if (data_0209f220 == 1) {
+                    if (STAR_ID == 1) {
                         msg = (short)(*(int*)(pl + 8) + 0x9a);
                     } else {
                         msg = 0x95;
@@ -68,7 +68,7 @@ int func_ov078_021240a0(char* c)
                 return 1;
             }
             if (Vec3_Dist(c + 0x4d4, c + 0x5c) < 0x258000) {
-                int r = RandomIntInternal(&data_0209e650);
+                int r = RandomIntInternal(&RNG_STATE);
                 int d = ((r >> 8) & 0xf) << 0x1c >> 0x10;
                 if (d < -0x4000) d = -0x4000;
                 else if (d > 0x4000) d = 0x4000;

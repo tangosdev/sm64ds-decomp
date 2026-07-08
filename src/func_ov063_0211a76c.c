@@ -1,4 +1,4 @@
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern short data_ov063_0211e7e0[];
 
 void func_ov063_0211a76c(char* c, int cond, int val)
@@ -11,7 +11,7 @@ void func_ov063_0211a76c(char* c, int cond, int val)
     ip = (ip << 1) + 1;
 
     *(int*)(c + 0x98) = val;
-    *(int*)(c + 0xa8) = data_02082214[ip];
+    *(int*)(c + 0xa8) = SINE_TABLE[ip];
     *(short*)(c + 0x94) = *(short*)(c + 0x5b6);
     if (cond == 0) return;
 

@@ -22,8 +22,8 @@ int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 }
 
-extern struct Mtx43 data_020a0e68;
-extern unsigned char data_0209f2d8;
+extern struct Mtx43 MATRIX_SCRATCH_PAPER;
+extern unsigned char CURRENT_GAMEMODE;
 
 extern "C" void func_ov002_020b2c44(char *c)
 {
@@ -33,13 +33,13 @@ extern "C" void func_ov002_020b2c44(char *c)
     int b;
 
     Vec3_Asr(&v, (struct Vec3 *)(c + 0x5c), 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + 0x90));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16 *)(c + 0x8c));
-    *(struct Mtx43 *)(c + 0xf0) = data_020a0e68;
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v.x, v.y, v.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x8e));
+    Matrix4x3_ApplyInPlaceToRotationZ(&MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x90));
+    Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x8c));
+    *(struct Mtx43 *)(c + 0xf0) = MATRIX_SCRATCH_PAPER;
 
-    b = (data_0209f2d8 == 1);
+    b = (CURRENT_GAMEMODE == 1);
     if (b) {
         Matrix4x3_FromRotationY(c + 0x33c, *(s16 *)(c + 0x8e));
         *(int *)(c + 0x360) = *(int *)(c + 0x5c) >> 3;

@@ -10,7 +10,7 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 angX);
 extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 struct VObj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -37,13 +37,13 @@ extern "C" void func_ov071_0211f524(char* c)
     *(int*)(c + 0x11c) = *(int*)(c + 0x64) >> 3;
 
     if (*(s16*)(c + 0x8c) != 0) {
-        data_020a0e68 = *(Mtx43*)(c + 0xf0);
+        MATRIX_SCRATCH_PAPER = *(Mtx43*)(c + 0xf0);
         int y1 = ((VObj*)c)->m29() >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16*)(c + 0x8c));
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y1, 0);
+        Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8c));
         int y2 = (-((VObj*)c)->m29()) >> 3;
-        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
-        *(Mtx43*)(c + 0xf0) = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, y2, 0);
+        *(Mtx43*)(c + 0xf0) = MATRIX_SCRATCH_PAPER;
     }
 
     *(int*)(c + 0x374) = *(int*)(c + 0x5c) >> 3;

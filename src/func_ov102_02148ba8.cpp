@@ -3,7 +3,7 @@ extern "C" {
 int _ZN16MeshColliderBase9IsEnabledEv(void* c);
 void _ZN16MeshColliderBase6EnableEP5Actor(void* c, void* a);
 int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
-extern unsigned char data_0209f2d8[];
+extern unsigned char CURRENT_GAMEMODE[];
 
 int func_ov102_02148ba8(char* c)
 {
@@ -17,7 +17,7 @@ int func_ov102_02148ba8(char* c)
     case 0x154: r1 = 0x300000; break;
     case 0x155: r1 = 0x300000; break;
     }
-    int on = (data_0209f2d8[0] == 1);
+    int on = (CURRENT_GAMEMODE[0] == 1);
     if (on) {
         if (!_ZN16MeshColliderBase9IsEnabledEv((char*)c+0x124))
             _ZN16MeshColliderBase6EnableEP5Actor((char*)c+0x124, c);

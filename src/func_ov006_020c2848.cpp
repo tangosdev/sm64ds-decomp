@@ -5,7 +5,7 @@ extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*, void*, int
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 extern void* data_ov006_0213ae48;
-extern void* data_0209f5bc;
+extern void* SCENE_FADER;
 struct P2 { void* a; void* b; };
 extern P2 data_ov006_0213adc8;
 }
@@ -24,7 +24,7 @@ extern "C" void func_ov006_020c2848(char* c)
 {
     if (*(int*)(c + 0x68) != *(int*)(c + 0x104)) {
         int r5 = 0;
-        if (((VObj*)data_0209f5bc)->v6() == 0) {
+        if (((VObj*)SCENE_FADER)->v6() == 0) {
             if (_ZN9Animation8FinishedEv(c + 0x58) == 0 || *(int*)(c + 0x68) == *(int*)(c + 0x13c)) {
                 r5 = 8;
             }

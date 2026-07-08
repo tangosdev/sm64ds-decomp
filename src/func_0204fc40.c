@@ -18,7 +18,7 @@ struct E2 {
 extern char data_020a4d60[];
 extern char data_020a4d54[];
 extern struct E1 data_020a50ec[];
-extern struct E2 data_020a4d6c[];
+extern struct E2 _ZN5Sound7PLAYERSE[];
 
 void func_0204fc40(void)
 {
@@ -31,8 +31,8 @@ void func_0204fc40(void)
         _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(data_020a4d54, &data_020a50ec[i]);
     }
     for (i = 0; i < 0x20; i++) {
-        _ZN18NestedHeapIteratorC1Ej(&data_020a4d6c[i], 0xc);
-        _ZN18NestedHeapIteratorC1Ej(data_020a4d6c[i].b, 0);
-        data_020a4d6c[i].f18 = 1;
+        _ZN18NestedHeapIteratorC1Ej(&_ZN5Sound7PLAYERSE[i], 0xc);
+        _ZN18NestedHeapIteratorC1Ej(_ZN5Sound7PLAYERSE[i].b, 0);
+        _ZN5Sound7PLAYERSE[i].f18 = 1;
     }
 }

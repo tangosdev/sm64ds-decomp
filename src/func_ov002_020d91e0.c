@@ -9,7 +9,7 @@ extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void _ZN6Player4HealEi(void* thiz, int amt);
 extern int _ZN6Player9GetHealthEv(void* thiz);
 
-extern u8 data_0209f2d8;
+extern u8 CURRENT_GAMEMODE;
 extern char data_0209ee90[];
 
 int func_ov002_020d91e0(char* thiz, int damage, int doPre)
@@ -21,7 +21,7 @@ int func_ov002_020d91e0(char* thiz, int damage, int doPre)
     }
 
     {
-        int b = (int)(data_0209f2d8 == 1);
+        int b = (int)(CURRENT_GAMEMODE == 1);
         if (b != 0) return 0;
     }
 

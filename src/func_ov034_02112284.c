@@ -6,7 +6,7 @@ extern void _ZN6Camera9SetFlag_3Ev(void* self);
 extern void func_0201267c(int anim, char* p);
 extern void func_ov034_021125b8(char* c, int i);
 extern char data_ov034_02113820[];
-extern char data_0209f318[];
+extern char CAMERA[];
 
 void func_ov034_02112284(char* c) {
   struct Vector3 v;
@@ -17,7 +17,7 @@ void func_ov034_02112284(char* c) {
   v.y = v.y + 0x28000;
   if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(self, c, *(s16*)data_ov034_02113820, &v, 1, 0) == 0) return;
   _ZN7Message11PrepareTalkEv();
-  _ZN6Camera9SetFlag_3Ev(*(void**)data_0209f318);
+  _ZN6Camera9SetFlag_3Ev(*(void**)CAMERA);
   *(unsigned char*)(c+0x8e1) = 1;
   func_0201267c(0x11b, c+0x74);
   func_ov034_021125b8(c, 2);

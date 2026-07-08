@@ -56,10 +56,10 @@ extern void *data_ov079_02127bf0[];
 extern void *data_ov079_02127ba0;
 extern void *func_021135d4;
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
-extern u8 data_0209f21c;
-extern s32 data_0209f394[];
-extern signed char data_0209f2f8;
-extern u8 data_0209f220;
+extern u8 NUM_PLAYERS;
+extern s32 PLAYER_ARR[];
+extern signed char LEVEL_ID;
+extern u8 STAR_ID;
 
 struct Sub18 {
     char pad[0x39c];
@@ -201,11 +201,11 @@ extern "C" int func_ov079_02126164(char *self) {
     } while (i < 4);
 
     {
-        s32 cnt = data_0209f21c;
+        s32 cnt = NUM_PLAYERS;
         if (cnt > 0) {
             i = 0;
             do {
-                s32 v = data_0209f394[i];
+                s32 v = PLAYER_ARR[i];
                 ((WithArr *)self)->arr[i] = v;
                 i += 1;
             } while (i < cnt);
@@ -213,8 +213,8 @@ extern "C" int func_ov079_02126164(char *self) {
     }
 
     if (*(u8 *)(self + 0x414) != 0
-        && data_0209f2f8 == 7
-        && data_0209f220 != 1
+        && LEVEL_ID == 7
+        && STAR_ID != 1
         && IsStarCollectedInCurLevel(1) != 0) {
         _ZN9ActorBase18MarkForDestructionEv(self);
         return 0;

@@ -13,11 +13,11 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 
 extern u32 data_ov070_02123510[];
-extern s8 data_0209f2f8;
+extern s8 LEVEL_ID;
 extern char data_ov070_0212359c;
 extern char data_ov070_021235dc;
-extern s32 data_0209f32c;
-extern s32 data_020a0e68[];
+extern s32 WATER_HEIGHT;
+extern s32 MATRIX_SCRATCH_PAPER[];
 
 extern "C" {
 extern int ApproachAngle(s16* angle, int target, int step, int maxDelta, int minDelta);
@@ -52,7 +52,7 @@ extern "C" int func_ov070_0211f6e0(char* c)
             *(s32*)(c + 0x3d8) = 1;
         }
         if (*(s32*)(c + 0x3dc) == 1) {
-            if (data_0209f2f8 != 0x16)
+            if (LEVEL_ID != 0x16)
                 *(s32*)(c + 0x3c4) += 0x12c000;
             *(s32*)(c + 0x3d8) = 0;
             *(u16*)(c + 0x3cc) = 0x5a;
@@ -62,7 +62,7 @@ extern "C" int func_ov070_0211f6e0(char* c)
     }
 
     if (*(u16*)(c + 0x100) == 0 || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144)) {
-        if (data_0209f2f8 != 0x16) {
+        if (LEVEL_ID != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
@@ -74,7 +74,7 @@ extern "C" int func_ov070_0211f6e0(char* c)
 
     player = _ZN5Actor22ClosestNonVanishPlayerEv(c);
     if (player == 0) {
-        if (data_0209f2f8 != 0x16) {
+        if (LEVEL_ID != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
@@ -84,8 +84,8 @@ extern "C" int func_ov070_0211f6e0(char* c)
         return 1;
     }
 
-    if (*(u8*)((char*)player + 0x706) != 0 && data_0209f32c > *(s32*)(c + 0x60)) {
-        if (data_0209f2f8 != 0x16) {
+    if (*(u8*)((char*)player + 0x706) != 0 && WATER_HEIGHT > *(s32*)(c + 0x60)) {
+        if (LEVEL_ID != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60) + 0xc8000;
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
@@ -105,7 +105,7 @@ extern "C" int func_ov070_0211f6e0(char* c)
     v.y = 0;
     v.z = 0;
     tmp.y = *(s32*)((char*)player + 0x644);
-    if (data_0209f2f8 == 0x16)
+    if (LEVEL_ID == 0x16)
         tmp.y += 0x32000;
     else
         tmp.y += 0x47000;
@@ -124,9 +124,9 @@ extern "C" int func_ov070_0211f6e0(char* c)
     half = (*(s16*)(c + 0x94) - *(s16*)(c + 0x3e6)) / 2;
     ApproachAngle((s16*)(c + 0x96), half, 0xa, 0x100, 0x50);
 
-    Matrix4x3_FromRotationY(data_020a0e68, *(s16*)(c + 0x8e));
-    Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(s16*)(c + 0x92));
-    MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)(c + 0xa4));
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x8e));
+    Matrix4x3_ApplyInPlaceToRotationX(MATRIX_SCRATCH_PAPER, *(s16*)(c + 0x92));
+    MulVec3Mat4x3(&v, MATRIX_SCRATCH_PAPER, (Vector3*)(c + 0xa4));
 
     return 1;
 }

@@ -2,15 +2,15 @@
 // _ZN3HUD6RenderEv at 0x020fd5e0
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" {
-extern unsigned char data_0209f2d8;
-extern unsigned char data_0209fc9c;
-extern unsigned char data_0209f2c4;
-extern unsigned char data_0209f20c;
-extern unsigned char data_0209f294;
-extern unsigned char data_0209f204;
-extern int data_0209caa0[];
-extern unsigned char data_0209f284;
-extern unsigned char data_0209f2d4;
+extern unsigned char CURRENT_GAMEMODE;
+extern unsigned char CONNECTION_ERROR;
+extern unsigned char GAME_PAUSED;
+extern unsigned char PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE;
+extern unsigned char GAME_FROZEN;
+extern unsigned char VS_TIME_UP;
+extern int SAVE_DATA[];
+extern unsigned char BOUNCING_MSG_ARROWS_VISIBLE;
+extern unsigned char LEVEL_CLEAR_SCREEN_STATE;
 
 void _ZN3HUD13RenderVsTimerEv(void *);
 void _ZN3HUD15RenderStarCountEv(void *);
@@ -25,23 +25,23 @@ void _ZN5Stage20RenderBouncingArrowsEv(void);
 void _ZN3HUD15RenderLifeCountEv(void *);
 
 int _ZN3HUD6RenderEv(void *self) {
-    int b = (data_0209f2d8 == 1);
+    int b = (CURRENT_GAMEMODE == 1);
     if (b) {
-        if (data_0209fc9c != 0) goto end;
-        if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0) {
+        if (CONNECTION_ERROR != 0) goto end;
+        if (((GAME_PAUSED | PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE | GAME_FROZEN) & 0xff) == 0) {
             _ZN3HUD13RenderVsTimerEv(self);
             _ZN3HUD15RenderStarCountEv(self);
             _ZN3HUD15RenderCoinCountEv(self);
             _ZN3HUD19RenderCameraButtonsEv(self);
         } else {
-            if (data_0209f204 != 0) {
+            if (VS_TIME_UP != 0) {
                 _ZN3HUD13RenderVsTimerEv(self);
             }
         }
     } else {
-        if ((data_0209caa0[2] & 0x80) == 0) goto end;
-        unsigned char v = data_0209f20c;
-        if (((data_0209f2c4 | v | data_0209f294) & 0xff) == 0) {
+        if ((SAVE_DATA[2] & 0x80) == 0) goto end;
+        unsigned char v = PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE;
+        if (((GAME_PAUSED | v | GAME_FROZEN) & 0xff) == 0) {
             _ZN3HUD17RenderHealthMeterEv(self);
             if (_ZN5Event6GetBitEj(0x1d) == 0) {
                 _ZN3HUD15RenderCoinCountEv(self);
@@ -49,7 +49,7 @@ int _ZN3HUD6RenderEv(void *self) {
                 _ZN3HUD17RenderSilverStarsEv(self);
                 _ZN3HUD15RenderTimeTimerEv(self);
             }
-            if (data_0209f284 != 0) {
+            if (BOUNCING_MSG_ARROWS_VISIBLE != 0) {
                 _ZN5Stage20RenderBouncingArrowsEv();
             }
         } else {
@@ -58,10 +58,10 @@ int _ZN3HUD6RenderEv(void *self) {
                 _ZN3HUD15RenderStarCountEv(self);
             }
         }
-        unsigned char v2 = data_0209f20c;
-        if ((data_0209f2c4 | v2 | data_0209f294) & 0xff) {
+        unsigned char v2 = PAUSE_LEVEL_CLEAR_SAVE_MENU_ACTIVE;
+        if ((GAME_PAUSED | v2 | GAME_FROZEN) & 0xff) {
             if (v2 == 0) goto end;
-            if (data_0209f2d4 >= 3) goto end;
+            if (LEVEL_CLEAR_SCREEN_STATE >= 3) goto end;
         }
         _ZN3HUD15RenderStarCountEv(self);
         _ZN3HUD19RenderCameraButtonsEv(self);

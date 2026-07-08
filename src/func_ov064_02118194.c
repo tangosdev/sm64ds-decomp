@@ -5,15 +5,15 @@ extern int _ZN5ActorD1Ev(void *p);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void *p, void *h);
 extern int data_ov064_0211be10[];
 extern int _ZN19CylinderClsnWithPosD1Ev[];
-extern int data_ov002_0210ae38[];
-extern int *data_020a0eac;
+extern int _ZTV8Platform[];
+extern int *_ZN6Memory11gameHeapPtrE;
 int func_ov064_02118194(char *c) {
     *(int**)(c) = data_ov064_0211be10;
     func_0207328c(c+0x360, 8, 0x3c, _ZN19CylinderClsnWithPosD1Ev);
-    *(int**)(c) = data_ov002_0210ae38;
+    *(int**)(c) = _ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev(c+0x124);
     _ZN5ModelD1Ev(c+0xd4);
     _ZN5ActorD1Ev(c);
-    _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(c, _ZN6Memory11gameHeapPtrE);
     return (int)c;
 }

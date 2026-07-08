@@ -10,7 +10,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern char data_ov065_0211d98c[];
 extern char data_ov065_0211d97c[];
 extern char func_021121b8[];
-extern unsigned char data_0209f2c0[];
+extern unsigned char LEVEL_SPECIFIC_SETTING[];
 extern char data_ov065_0211c0d4[];
 extern char data_ov065_0211c0d0[];
 
@@ -31,7 +31,7 @@ int func_ov065_0211ba88(char* c)
     *(int*)(c + 0x324) = *(int*)(c + 0x60);
     *(int*)(c + 0x328) = *(int*)(c + 0x64);
     *(unsigned char*)(c + 0x32e) = 0;
-    ip = data_0209f2c0[0];
+    ip = LEVEL_SPECIFIC_SETTING[0];
     b = *(unsigned char*)(c + 0x32e);
     *(short*)(c + 0x32c) = *(unsigned short*)(data_ov065_0211c0d4 + (ip << 4) + (b << 3));
     b = *(unsigned char*)(c + 0x32e);

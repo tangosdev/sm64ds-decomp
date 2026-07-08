@@ -1,10 +1,10 @@
 //cpp
 extern "C" {
-extern char* data_020a5bb8;
+extern char* _ZN5Sound8SDAT_RAM3PTRE;
 
 int _ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned int id)
 {
-    char* root = data_020a5bb8;
+    char* root = _ZN5Sound8SDAT_RAM3PTRE;
     char* sub = *(char**)(root + 0x84);
     int off = *(int*)(sub + 0x8);
     char* tbl = (off == 0) ? 0 : sub + off;

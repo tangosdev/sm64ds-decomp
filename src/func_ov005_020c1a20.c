@@ -45,15 +45,15 @@ extern void _ZN5Scene9SetFadersEP15FaderBrightness(void *p);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
 
 extern u8 data_0209f5f8;
-extern u32 data_0209caa0[];
+extern u32 SAVE_DATA[];
 extern u8 data_0209b300;
 extern u8 data_0209b304;
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
 extern int data_0208a170;
 extern u8 data_0209f1d8;
 extern u8 data_0209b2fc;
-extern int data_0208ee44;
+extern int GAME_SPEED_RELATED;
 extern char data_0209f61c;
 
 typedef struct Entry {
@@ -86,7 +86,7 @@ int func_ov005_020c1a20(void *arg0)
     _ZN5Sound19LoadGroupAndSetBankEii(0x27, 5);
     func_02019028();
 
-    if (!(data_0209caa0[0x48 / 4] & 0x80000000)) {
+    if (!(SAVE_DATA[0x48 / 4] & 0x80000000)) {
         tbl = data_ov005_020c24d8;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
@@ -94,7 +94,7 @@ int func_ov005_020c1a20(void *arg0)
             }
             tbl++;
         }
-        data_0209caa0[0x48 / 4] |= 0x80000000;
+        SAVE_DATA[0x48 / 4] |= 0x80000000;
         data_0209b300 = 1;
     }
 
@@ -139,8 +139,8 @@ int func_ov005_020c1a20(void *arg0)
     _ZN2GX13SetBankForOBJEt(0x10);
     _ZN2GX17SetBankForTexPlttEt(0x20);
 
-    data_0209d45c &= ~0x1f;
-    data_0209d454 &= ~0x1f;
+    TOP_SCREEN_RELATED &= ~0x1f;
+    BOTTOM_SCREEN_RELATED &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     _ZN2GX15SetGraphicsModeEiii(1, 0, 1);
@@ -268,19 +268,19 @@ int func_ov005_020c1a20(void *arg0)
     if (data_0209b300 == 1) {
         data_0209f1d8 = 1;
     }
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     if (data_0209b2fc != 0) {
         _ZN5Scene9SetFadersEP15FaderBrightness(&data_0209f61c);
     }
 
     data_0209b2fc = 0;
-    data_0209d45c |= 0x11;
-    data_0209d454 |= 0x11;
-    data_0209d45c &= ~2;
-    data_0209d454 &= ~2;
-    data_0209d45c |= 4;
-    data_0209d45c &= ~8;
-    data_0209d454 |= 0xc;
+    TOP_SCREEN_RELATED |= 0x11;
+    BOTTOM_SCREEN_RELATED |= 0x11;
+    TOP_SCREEN_RELATED &= ~2;
+    BOTTOM_SCREEN_RELATED &= ~2;
+    TOP_SCREEN_RELATED |= 4;
+    TOP_SCREEN_RELATED &= ~8;
+    BOTTOM_SCREEN_RELATED |= 0xc;
     _ZN5Sound22LoadAndSetMusic_Layer1Ei(5);
     return 1;
 }

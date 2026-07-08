@@ -1,4 +1,4 @@
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 extern void func_ov002_020ba01c(char* c, int a, int b, int fix, int e);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 extern void func_ov002_020e7104(char* c, int n);
@@ -16,7 +16,7 @@ void func_ov002_020ba2d0(char* c){
       *(signed char*)(c+0xcc) = -1;
     }
   }else{
-    if(data_0209f2f8 == 0xd && *(int*)(c+0x5c) == -0x140000){
+    if(LEVEL_ID == 0xd && *(int*)(c+0x5c) == -0x140000){
       _ZN5Actor13SpawnSoundObjEj(c, 0);
     }
     _ZN5Event6SetBitEj(*(unsigned char*)(c+0x34e));

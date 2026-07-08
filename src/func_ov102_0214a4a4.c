@@ -14,12 +14,12 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern unsigned char _ZN5Actor9TrackStarEjj(void* c, unsigned int a, unsigned int b);
 
 extern char data_ov102_0214e7e8, data_ov102_0214e808, data_ov102_0214e7f8;
-extern char data_ov002_0210d9e0, data_ov102_0214e800, data_ov102_0214e7f0;
-extern char data_ov002_0210da40, data_ov102_0214e7d8, data_ov002_0210d9a0;
-extern char data_ov102_0214e7e0, data_ov002_0210d9c0, data_ov102_0214e7d0;
-extern char data_ov002_0210d954, data_ov002_0210da58, data_ov002_0210da18;
-extern char data_ov002_0210d9d8, data_ov002_0210da30, data_ov002_0210d9b0;
-extern char data_ov002_0210d9d0;
+extern char BOB_OMB_MODEL_PTR, data_ov102_0214e800, data_ov102_0214e7f0;
+extern char MARIO_CAP_MODEL_PTR, data_ov102_0214e7d8, LUIGI_CAP_MODEL_PTR;
+extern char data_ov102_0214e7e0, WARIO_CAP_MODEL_PTR, data_ov102_0214e7d0;
+extern char data_ov002_0210d954, FEATHER_MODEL_PTR, SHELL_MODEL_PTRS;
+extern char ONE_UP_MUSHROOM_MODEL_PTR, SUPER_MUSHROOM_MODEL_PTR, POWER_FLOWER_OPEN_MODEL_PTR;
+extern char POWER_FLOWER_CLOSED_MODEL_PTR;
 
 struct M12 { int w[12]; };
 
@@ -31,7 +31,7 @@ int func_ov102_0214a4a4(char* c)
         r5 = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e7e8);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e808), 1, 0x19);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x320, _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov102_0214e7f8), 0, 0x1000, 0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&BOB_OMB_MODEL_PTR);
         break;
     case 1:
     case 2:
@@ -39,18 +39,18 @@ int func_ov102_0214a4a4(char* c)
         break;
     case 3:
         r5 = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e7f0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&MARIO_CAP_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&BOB_OMB_MODEL_PTR);
         break;
     case 5:
         r5 = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e7d8);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&LUIGI_CAP_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&BOB_OMB_MODEL_PTR);
         break;
     case 4:
         r5 = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e7e0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&WARIO_CAP_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&BOB_OMB_MODEL_PTR);
         break;
     }
 
@@ -83,7 +83,7 @@ int func_ov102_0214a4a4(char* c)
         int b16 = (*(unsigned short*)(c + 0xc) == 0x16);
         if (b16 != 0) {
             *(unsigned char*)(c + 0x3f3) = 0;
-            _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
+            _ZN5Model8LoadFileER13SharedFilePtr(&FEATHER_MODEL_PTR);
         }
     }
 
@@ -101,27 +101,27 @@ int func_ov102_0214a4a4(char* c)
     case 1:
         break;
     case 3:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da18);
+        _ZN5Model8LoadFileER13SharedFilePtr(&SHELL_MODEL_PTRS);
         break;
     case 2:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
+        _ZN5Model8LoadFileER13SharedFilePtr(&ONE_UP_MUSHROOM_MODEL_PTR);
         break;
     case 4:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
+        _ZN5Model8LoadFileER13SharedFilePtr(&SUPER_MUSHROOM_MODEL_PTR);
         break;
     case 6:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_OPEN_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_CLOSED_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&BOB_OMB_MODEL_PTR);
         break;
     case 5:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&FEATHER_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_OPEN_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_CLOSED_MODEL_PTR);
         break;
     case 7:
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_OPEN_MODEL_PTR);
+        _ZN5Model8LoadFileER13SharedFilePtr(&POWER_FLOWER_CLOSED_MODEL_PTR);
         break;
     }
     return 1;

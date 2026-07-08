@@ -9,12 +9,12 @@ extern void func_02007c9c(const Vector3 *v0, const Vector3 *v1, int *outDist,
 extern void func_02007c14(Vector3 *res, const Vector3 *trans, int mag,
                           short ang, short angY);
 
-extern u16 data_0209b274;
+extern u16 KS_FRAME_COUNTER;
 
 int func_020079ac(char *self, unsigned char *p, int tag) {
     int dist;
     short vert, horz;
-    if (tag == data_0209b274) {
+    if (tag == KS_FRAME_COUNTER) {
         *(int*)(self + 0xb0) = *(int*)(self + 0x80);
         *(int*)(self + 0xb4) = *(int*)(self + 0x84);
         *(int*)(self + 0xb8) = *(int*)(self + 0x88);

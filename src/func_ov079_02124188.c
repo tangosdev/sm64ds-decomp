@@ -8,8 +8,8 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void *mF, short angY);
 extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *sm, void *mtx, int a, int b, int c, unsigned int g);
 
-extern short data_02082214[];
-extern Mtx43 data_020a0e68;
+extern short SINE_TABLE[];
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 #define FX12(a,b) (int)(((long long)(a) * (int)(b) + 0x800) >> 12)
 
@@ -39,24 +39,24 @@ void func_ov079_02124188(char *self)
     *(short *)(self + 0x3e4) = (short)(*(unsigned short *)(rotdesc + 0x1e) - 0x4000);
 
     if (*(unsigned char *)(self + 0x414) != 0) {
-        cosv = data_02082214[(*(unsigned short *)(self + 0x8c) >> 4) << 1];
+        cosv = SINE_TABLE[(*(unsigned short *)(self + 0x8c) >> 4) << 1];
         sinComp = cosv * 0x190;
         shadowRad = cosv * 0x1a9 + 0xc8000;
     } else {
-        cosv = data_02082214[(*(unsigned short *)(self + 0x8c) >> 4) << 1];
+        cosv = SINE_TABLE[(*(unsigned short *)(self + 0x8c) >> 4) << 1];
         sinComp = cosv * 0xc8;
         shadowRad = cosv * 0xd2 + 0x64000;
     }
 
-    pos.x += FX12(sinComp, data_02082214[(*(unsigned short *)(self + 0x8e) >> 4) << 1]);
-    pos.z += FX12(sinComp, data_02082214[((*(unsigned short *)(self + 0x8e) >> 4) << 1) + 1]);
+    pos.x += FX12(sinComp, SINE_TABLE[(*(unsigned short *)(self + 0x8e) >> 4) << 1]);
+    pos.z += FX12(sinComp, SINE_TABLE[((*(unsigned short *)(self + 0x8e) >> 4) << 1) + 1]);
 
     Vec3_Asr(&asr, &pos, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, asr.x, asr.y, asr.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER,
         (short)(*(short *)(self + 0x8e) + *(short *)(self + 0x3e2)));
 
-    *(Mtx43 *)(self + 0x36c) = data_020a0e68;
+    *(Mtx43 *)(self + 0x36c) = MATRIX_SCRATCH_PAPER;
 
     if (*(unsigned char *)(self + 0x404) == 0)
         return;

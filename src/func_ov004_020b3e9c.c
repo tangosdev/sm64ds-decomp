@@ -2,7 +2,7 @@ typedef short s16;
 typedef unsigned short u16;
 typedef long long s64;
 
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern int func_02053200(int x);
 struct M { int _00, _01, _10, _11; };
@@ -37,11 +37,11 @@ void func_ov004_020b3e9c(char* self) {
             int angle = (u16)(*(int*)(self + 0x24) - 0x18000);
             struct M m2;
             do {
-                int s0 = data_02082214[(angle >> 4) * 2];
+                int s0 = SINE_TABLE[(angle >> 4) * 2];
                 int mm = (int)(((s64)s0 * 0x800 + 0x800) >> 12);
                 int idx = (u16)mm >> 4;
-                int cos1 = data_02082214[idx * 2 + 1];
-                int sin1 = data_02082214[idx * 2];
+                int cos1 = SINE_TABLE[idx * 2 + 1];
+                int sin1 = SINE_TABLE[idx * 2];
                 int fc = (int)(((s64)cos1 * 0x1000 + 0x800) >> 12);
                 int fs = (int)(((s64)sin1 * 0x1000 + 0x800) >> 12);
                 m2._00 = fc;

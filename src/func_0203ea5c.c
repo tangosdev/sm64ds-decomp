@@ -62,7 +62,7 @@ extern u16 data_020a102b;
 extern u8 data_020a102d;
 extern u8 data_020a102e;
 extern u8 data_020a102f[0x11];
-extern Rec data_020a1040;
+extern Rec FRAME_COUNTER;
 extern u8 data_020a1044;
 extern u8 data_020a1046;
 extern u8 data_020a1048;
@@ -171,17 +171,17 @@ int func_0203ea5c(void)
                 } else {
                     sp2c = data_020a0ef8 - 1;
                 }
-                data_020a1040.unkC = (u16) (data_020a1040.unkC | 1);
+                FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC | 1);
                 func_0205a61c(&data_020a104c, &data_020a1020, sp14);
                 func_0205a61c(&sp2c, &data_020a1022, 1);
                 func_0205a61c((u8 *) ((sp2c * 0x16) + (s32) &data_020a10a4), &data_020a1023, 0x16);
             } else {
-                data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xFFFE);
+                FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC & 0xFFFE);
             }
         }
         if (data_020a0ef8 == 0) {
             func_0205a61c(&data_020a104c, &data_020a1020, sp14);
-            func_0205a61c(&data_020a1040, &data_020a1022, sp18);
+            func_0205a61c(&FRAME_COUNTER, &data_020a1022, sp18);
             func_0205a61c(&data_020a104e, &data_020a1026, sp14);
             func_0205a61c(&data_020a1044, &data_020a1028, 1);
             func_0205a61c(&data_020a1046, &data_020a1029, 1);
@@ -221,7 +221,7 @@ int func_0203ea5c(void)
             }
             break;
         case 4:
-            if ((data_020a1040.unkC & 0x4000) && (data_020a1154[0].unkC & 0x2000)) {
+            if ((FRAME_COUNTER.unkC & 0x4000) && (data_020a1154[0].unkC & 0x2000)) {
                 sp8 = 1;
             } else {
                 temp_r0_4 = func_020406b4(&data_020a1020, &sp2e);
@@ -229,7 +229,7 @@ int func_0203ea5c(void)
                 if (temp_r0_4 != 0) {
                     data_020a0f1c |= 0xC000;
                 }
-                if (data_020a1040.unkC & 0x4000) {
+                if (FRAME_COUNTER.unkC & 0x4000) {
                     sp8 = 1;
                 }
             }
@@ -254,7 +254,7 @@ int func_0203ea5c(void)
                             default:
                                 break;
                             case 0:
-                                data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xFFFE);
+                                FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC & 0xFFFE);
                                 func_0205a588(&data_020a10a4, 0, 0x16);
                                 func_0205a61c(temp_r0_6 + 3, &data_020a10a4, 0x16);
                                 break;
@@ -357,7 +357,7 @@ loop_90:
                                             goto loop_90;
                                         }
                                     }
-                                    if ((var_r3 != 0) && !(data_020a1154[0].unkC & 0x2000) && !(data_020a1040.unkC & 0x2000)) {
+                                    if ((var_r3 != 0) && !(data_020a1154[0].unkC & 0x2000) && !(FRAME_COUNTER.unkC & 0x2000)) {
                                         if ((u32) data_02099e18 > 2U) {
                                             func_02040a84();
                                             func_02040a5c();
@@ -365,7 +365,7 @@ loop_90:
                                         data_020a0f2c = 0;
                                         do {
                                         } while (func_0203fd64() != 1);
-                                        data_020a1040.unkC = (u16) (data_020a1040.unkC | 0x2000);
+                                        FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC | 0x2000);
                                     }
                                     var_r5_4 = &data_020a1178;
                                     var_r2_2 = 0;
@@ -381,11 +381,11 @@ loop_103:
                                             goto loop_103;
                                         }
                                     }
-                                    if ((var_r2_2 == 0) && (data_020a1154[0].unkC & 0x2000) && (data_020a1040.unkC & 0x2000)) {
+                                    if ((var_r2_2 == 0) && (data_020a1154[0].unkC & 0x2000) && (FRAME_COUNTER.unkC & 0x2000)) {
                                         data_020a0f2c = 1;
                                         do {
                                         } while (func_0203fd64() != 1);
-                                        data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xDFFF);
+                                        FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC & 0xDFFF);
                                     }
                                 }
                             }
@@ -393,7 +393,7 @@ loop_103:
                             var_r1 = data_020a1154;
 loop_114:
                             if ((var_r1->unkC & 0x8000) && (var_r1->unk0 != data_020a1154[data_020a0f10].unk0)) {
-                                data_020a1040.unk0 = data_020a1154[0].unk0;
+                                FRAME_COUNTER.unk0 = data_020a1154[0].unk0;
                                 data_020a0f1c |= 2;
                                 if (data_020a0efc == 0) {
                                     sp8 = 0;
@@ -450,15 +450,15 @@ block_138:
                 goto loop_133;
             }
         }
-        if ((data_020a1154[0].unkC & 0x2000) || (data_020a1040.unkC & 0x4000)) {
+        if ((data_020a1154[0].unkC & 0x2000) || (FRAME_COUNTER.unkC & 0x4000)) {
             data_020a0efc = 3;
         }
         if (data_020a0efc != 0) {
-            data_020a1040.unk22 = 0;
+            FRAME_COUNTER.unk22 = 0;
             data_020a0f1c &= 0xFF60;
-            data_020a1040.unk22 = 0;
+            FRAME_COUNTER.unk22 = 0;
             data_020a0f30 = 0;
-            data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xEFFF);
+            FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC & 0xEFFF);
             data_020a0efc -= 1;
         }
         if (data_020a0efc != 0) {
@@ -478,14 +478,14 @@ loop_147:
                 goto loop_147;
             }
         }
-        temp_r0 = data_020a1040.unkC & 0x1000;
+        temp_r0 = FRAME_COUNTER.unkC & 0x1000;
         if (temp_r0 == 0) {
             return temp_r0;
         }
         if (var_r4_2 == 0) {
             return temp_r0;
         }
-        data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xEFFF);
+        FRAME_COUNTER.unkC = (u16) (FRAME_COUNTER.unkC & 0xEFFF);
         data_020a0f30 = 1;
         return 1;
     }

@@ -33,9 +33,9 @@ extern void func_ov004_020b04d0(int v);
 extern int data_ov006_0213e628[];
 extern unsigned char data_ov006_0213ea20[];
 extern unsigned char data_ov006_0213e9e0[];
-extern unsigned char data_0209d45c;
-extern unsigned char data_0209d454;
-extern int data_0208ee44;
+extern unsigned char TOP_SCREEN_RELATED;
+extern unsigned char BOTTOM_SCREEN_RELATED;
+extern int GAME_SPEED_RELATED;
 extern int func_020bc88c;
 extern int func_020bc878;
 extern int func_020bc860;
@@ -90,7 +90,7 @@ extern "C" int func_ov006_0210d1fc(void *arg0)
     LoadCompressedFileAt(0x7c, _ZN2G212GetBG2ScrPtrEv());
     LoadCompressedFileAt(0x7f, func_02054fb0());
 
-    data_0209d45c = 0x1c;
+    TOP_SCREEN_RELATED = 0x1c;
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1410;
@@ -134,7 +134,7 @@ extern "C" int func_ov006_0210d1fc(void *arg0)
         Deallocate((void *)h);
     }
 
-    data_0209d454 = 0x1d;
+    BOTTOM_SCREEN_RELATED = 0x1d;
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 
@@ -180,6 +180,6 @@ extern "C" int func_ov006_0210d1fc(void *arg0)
     func_ov006_0210c478(c + 0x4660);
     ((struct Obj *)c)->m48(3);
     func_ov004_020b04d0(0x20);
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     return 1;
 }

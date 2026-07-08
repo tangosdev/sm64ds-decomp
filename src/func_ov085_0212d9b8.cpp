@@ -2,7 +2,7 @@
 // NONMATCHING: different op / idiom (div=47). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern char data_ov085_02130820[];
 extern "C" void *_ZN5Actor13ClosestPlayerEv(void *thiz);
 extern "C" void _Z14ApproachLinearRiii(int *p, int target, int step);
@@ -17,7 +17,7 @@ extern "C" int func_ov085_0212d9b8(char *c){
   *(int*)(c+0x2c8) += 1;
   *(int*)(c+0x2cc) += 0x500;
   _Z14ApproachLinearRiii((int*)(c+0x60),
-    (int)(((long long)data_02082214[((unsigned short)(short)*(int*)(c+0x2cc) >> 4)*2] * 0x1a000 + 0x800) >> 12) + *(int*)(c+0x2a8),
+    (int)(((long long)SINE_TABLE[((unsigned short)(short)*(int*)(c+0x2cc) >> 4)*2] * 0x1a000 + 0x800) >> 12) + *(int*)(c+0x2a8),
     0x10000000);
   if(*(int*)(c+0x2c8) == 0x32){
     func_ov002_020c3ea0((char*)pl);

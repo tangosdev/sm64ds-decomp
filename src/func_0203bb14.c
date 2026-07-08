@@ -1,7 +1,7 @@
 extern int func_0203daac(void);
-extern unsigned char data_020a0de8[];
+extern unsigned char TOUCH_INPUT_ARR[];
 void func_0203bb14(void){
-  unsigned char* p = data_020a0de8;
+  unsigned char* p = TOUCH_INPUT_ARR;
   int i = 0;
   if (func_0203daac() <= 0) return;
   do {

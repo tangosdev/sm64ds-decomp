@@ -15,7 +15,7 @@ struct Obj {
 extern "C" {
 extern int RandomIntInternal(int *seed);
 extern int data_ov006_02140544[];
-extern int data_0209e650;
+extern int RNG_STATE;
 extern int data_ov006_02140558[];
 extern int data_ov006_02140578[];
 extern int *data_ov006_0213b22c[];
@@ -29,7 +29,7 @@ extern "C" void func_ov006_020cc198(char *c)
     int *p38;
     *(int *)(c + 0x40) = data_ov006_02140544[0];
     *(int *)(c + 0x34) = data_ov006_02140558[0] +
-        (int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19);
+        (int)(((unsigned int)RandomIntInternal(&RNG_STATE) & 0x7fffffff) >> 19);
     p38 = (int *)(c + 0x38);
     if (*(int *)(c + 0x1c) > 0)
         *(int *)(c + 0x34) = -*(int *)(c + 0x34);

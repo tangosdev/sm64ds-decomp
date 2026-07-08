@@ -13,7 +13,7 @@ extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
 
-extern int data_020a0e68;
+extern int MATRIX_SCRATCH_PAPER;
 struct M48 { int w[12]; };
 
 struct Enemy {
@@ -79,19 +79,19 @@ int Enemy::UpdateKillByInvincibleChar(WithMeshClsn &w, ModelAnim &m, unsigned in
         *a8e = (short)(*a8e + *(short *)(c + 0xee));
         *a90 = (short)(*a90 + *(short *)(c + 0xf0));
         Vec3_Asr(t, c + 0x5c, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
+        Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, t[0], t[1], t[2]);
         {
             int r = ((VT *)c)->vm();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, r >> 3, 0);
+            Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, r >> 3, 0);
         }
-        Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
+        Matrix4x3_ApplyInPlaceToRotationZXYExt(&MATRIX_SCRATCH_PAPER,
                                                *(short *)(c + 0x8c), *(short *)(c + 0x8e),
                                                *(short *)(c + 0x90));
         {
             int r = ((VT *)c)->vm();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-r) >> 3, 0);
+            Matrix4x3_ApplyInPlaceToTranslation(&MATRIX_SCRATCH_PAPER, 0, (-r) >> 3, 0);
         }
-        *(M48 *)(r5 + 0x1c) = *(M48 *)&data_020a0e68;
+        *(M48 *)(r5 + 0x1c) = *(M48 *)&MATRIX_SCRATCH_PAPER;
     }
     return 1;
 }

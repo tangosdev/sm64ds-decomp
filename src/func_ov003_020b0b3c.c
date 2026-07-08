@@ -37,10 +37,10 @@ extern void func_ov003_020b0730(void *self, int a);
 extern void _ZN5Sound16LoadInitialGroupEi(int a);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
 
-extern u8 data_0209d45c;
-extern u8 data_0209d454;
-extern u8 data_0209f204;
-extern int data_0208ee44;
+extern u8 TOP_SCREEN_RELATED;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern u8 VS_TIME_UP;
+extern int GAME_SPEED_RELATED;
 extern short data_ov003_020b1764[];
 
 int func_ov003_020b0b3c(void *arg)
@@ -122,7 +122,7 @@ int func_ov003_020b0b3c(void *arg)
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)f, 0, 0x200);
     Deallocate((void *)f);
 
-    data_0209d45c = 0x14;
+    TOP_SCREEN_RELATED = 0x14;
 
     *(volatile u16 *)0x4001008 &= ~3;
     *(volatile u16 *)0x4001008 &= ~0x40;
@@ -180,12 +180,12 @@ int func_ov003_020b0b3c(void *arg)
         ((short *)(c + 0x80))[f] = 0;
     }
 
-    data_0209d454 = 0x14;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (data_0209d45c << 8);
+    BOTTOM_SCREEN_RELATED = 0x14;
+    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (TOP_SCREEN_RELATED << 8);
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
-    data_0209f204 = 1;
+    VS_TIME_UP = 1;
     _ZN5Sound16LoadInitialGroupEi(2);
     _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x15);
-    data_0208ee44 = 1;
+    GAME_SPEED_RELATED = 1;
     return 1;
 }

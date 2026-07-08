@@ -17,9 +17,9 @@ extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, voi
 extern void func_ov030_021141a8(void *self, int a);
 extern void func_ov030_02112094(void *self);
 
-extern char data_ov002_0210da40;
-extern char data_ov002_0210d9a0;
-extern char data_ov002_0210d9c0;
+extern char MARIO_CAP_MODEL_PTR;
+extern char LUIGI_CAP_MODEL_PTR;
+extern char WARIO_CAP_MODEL_PTR;
 extern char data_ov030_02115d00;
 extern void *data_ov030_02114824[];
 extern void *data_ov030_02115cf0[];
@@ -31,9 +31,9 @@ int func_ov030_02114378(char *s)
     u16 h;
     int *py;
 
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
+    _ZN5Model8LoadFileER13SharedFilePtr(&MARIO_CAP_MODEL_PTR);
+    _ZN5Model8LoadFileER13SharedFilePtr(&LUIGI_CAP_MODEL_PTR);
+    _ZN5Model8LoadFileER13SharedFilePtr(&WARIO_CAP_MODEL_PTR);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(s + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov030_02115d00), 1, 1);
     for (i = 0; i < 10; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov030_02114824[i]);

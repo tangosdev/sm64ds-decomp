@@ -20,11 +20,11 @@ extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 extern u8 data_0209446c[];
 extern u8 data_0209444c[];
 extern u8 data_020945d0[];
-extern u8 data_0209d45c[];
-extern u8 data_0209d454[];
+extern u8 TOP_SCREEN_RELATED[];
+extern u8 BOTTOM_SCREEN_RELATED[];
 extern u8 data_020a0c68[];
-extern u8 data_0209d4a8[];
-extern u8 data_0208ee44[];
+extern u8 SCENE_RELATED[];
+extern u8 GAME_SPEED_RELATED[];
 extern u8 func_0201a2f8[];
 extern u8 data_020a0c64[];
 
@@ -65,8 +65,8 @@ int func_0203506c(void *arg0)
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
-    *(u8 *)&data_0209d45c = 0;
-    *(u8 *)&data_0209d454 = 0;
+    *(u8 *)&TOP_SCREEN_RELATED = 0;
+    *(u8 *)&BOTTOM_SCREEN_RELATED = 0;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
     _ZN2GX6DispOnEv();
@@ -74,13 +74,13 @@ int func_0203506c(void *arg0)
     *(volatile u32 *)0x4001000 |= 0x10000;
     func_02034b1c((void *)&data_020a0c68, (int)self);
 
-    *(void **)&data_0209d4a8 = (void *)&data_020a0c68;
+    *(void **)&SCENE_RELATED = (void *)&data_020a0c68;
     *(int *)((char *)self + 0x60) = 0;
     *(int *)((char *)self + 0x64) = 0;
     _ZN5Scene9SetFadersEP15FaderBrightness((void *)((char *)self + 0x50));
 
     *(u16 *)((char *)self + 0x5c) = 0x7fff;
-    *(int *)&data_0208ee44 = 1;
+    *(int *)&GAME_SPEED_RELATED = 1;
     *(int *)&data_020a0c64 = func_0201a244((int)&func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;

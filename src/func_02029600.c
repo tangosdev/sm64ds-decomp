@@ -1,12 +1,12 @@
-extern unsigned char data_0209f2d8;
-extern unsigned char data_ov002_02111148;
+extern unsigned char CURRENT_GAMEMODE;
+extern unsigned char CUR_MINIMAP_ID;
 extern int GetMinimapID(int a, int b);
 
 int func_02029600(int x)
 {
-    int b = (int)(data_0209f2d8 == 2);
+    int b = (int)(CURRENT_GAMEMODE == 2);
     if (b == 0) {
-        unsigned char saved = data_ov002_02111148;
+        unsigned char saved = CUR_MINIMAP_ID;
         int r = GetMinimapID(x, -1);
         if (r == saved)
             return 1;

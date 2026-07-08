@@ -14,11 +14,11 @@ int _ZN5Actor14GetSubtractionEss(Actor* a, short s1, int s2);
 int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn* w);
 void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
 int _ZN4cstd4fdivEii(int a, int b);
-extern signed char data_0209f2f8;
+extern signed char LEVEL_ID;
 
 void func_ov100_02142130(char* c){
   *(unsigned char*)(c+0x3d1) = 0;
-  if (data_0209f2f8 == 0x19) func_020383f0(c+0x110);
+  if (LEVEL_ID == 0x19) func_020383f0(c+0x110);
   else func_02038414(c+0x110);
   if (_ZNK12WithMeshClsn8IsOnWallEv((WithMeshClsn*)(c+0x110)) != 0) {
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK12WithMeshClsn13GetWallResultEv((WithMeshClsn*)(c+0x110)) + 4), (Vector3*)(c+0xe0));

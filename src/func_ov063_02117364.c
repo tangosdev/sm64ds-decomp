@@ -33,7 +33,7 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
 extern void func_ov063_02117650(void* c);
 extern void func_02012694(int a, void* b, void* d, int e);
 extern int RandomIntInternal(int* seed);
-extern int data_0209e650;
+extern int RNG_STATE;
 
 #define New _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE
 
@@ -86,8 +86,8 @@ void func_ov063_02117364(void* c)
         return;
     *(u8*)((char*)c + 0x5cc) = 1;
     *(u32*)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFFLL) &= ~1u;
-    ((Sub*)((char*)c + 0x500))->fbe = ((u32)RandomIntInternal(&data_0209e650) >> 16 & 0x3f) + 0x3c;
-    ((Sub*)((char*)c + 0x500))->fc4 = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 150 + 0x12c;
+    ((Sub*)((char*)c + 0x500))->fbe = ((u32)RandomIntInternal(&RNG_STATE) >> 16 & 0x3f) + 0x3c;
+    ((Sub*)((char*)c + 0x500))->fc4 = ((u32)RandomIntInternal(&RNG_STATE) >> 16) % 150 + 0x12c;
     *(u32*)((char*)c + 0x5dc) = 0;
     *(u32*)((char*)c + 0x5d8) = *(u32*)((char*)c + 0x5dc);
 }

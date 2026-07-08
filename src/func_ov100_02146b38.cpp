@@ -5,7 +5,7 @@ struct Entry { PMF pmf; };
 extern "C" Entry data_ov100_02148a1c[];
 struct Vec3 { int x, y, z; };
 struct M48 { int w[12]; };
-extern "C" M48 data_020a0e68;
+extern "C" M48 MATRIX_SCRATCH_PAPER;
 
 extern "C" int* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" int func_ov100_0214639c(int* p);
@@ -55,10 +55,10 @@ extern "C" int func_ov100_02146b38(C* c)
             }
         }
         Vec3_Asr(&v, &c->pos, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
+        Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, v.x, v.y, v.z);
         c->f8e = c->f94;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, c->f8e);
-        c->mtx = data_020a0e68;
+        Matrix4x3_ApplyInPlaceToRotationY(&MATRIX_SCRATCH_PAPER, c->f8e);
+        c->mtx = MATRIX_SCRATCH_PAPER;
         _ZN9Animation7AdvanceEv(&c->anim);
     }
     return 1;

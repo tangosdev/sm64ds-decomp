@@ -8,8 +8,8 @@ extern void _ZN7Message13DisplaySavingEt(unsigned short a);
 extern void _ZN7Message7EndTalkEv(void);
 extern void func_ov085_0212bc78(void *c, void *p);
 
-extern unsigned char data_0209d684;
-extern unsigned char data_0209d660;
+extern unsigned char MESSAGE_RESULT;
+extern unsigned char PLAYER_TALKING;
 extern char data_ov085_021306bc[];
 
 int func_ov085_0212a904(void *thiz)
@@ -23,7 +23,7 @@ int func_ov085_0212a904(void *thiz)
     *(short *)(self + 0x424) = Vec3_HorzAngle((struct Vector3 *)(self + 0x5c), (struct Vector3 *)(r4 + 0x5c));
     ApproachAngle(self + 0x94, *(short *)(self + 0x424), 1, 0x500, 0x500);
 
-    gb = data_0209d684;
+    gb = MESSAGE_RESULT;
     vec.x = *(int *)(self + 0x5c);
     vec.y = *(int *)(self + 0x60);
     vec.z = *(int *)(self + 0x64);
@@ -41,7 +41,7 @@ int func_ov085_0212a904(void *thiz)
         }
         break;
     case 1:
-        if (data_0209d660 == 0) {
+        if (PLAYER_TALKING == 0) {
             if (gb == 1) {
                 func_02012790(0x5e);
                 _ZN7Message13DisplaySavingEt(0x295);
@@ -61,7 +61,7 @@ int func_ov085_0212a904(void *thiz)
         }
         break;
     case 2:
-        if (data_0209d660 == 0) {
+        if (PLAYER_TALKING == 0) {
             unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce) & 0xFFFFFFFFFFFFFFFF);
             *hp &= ~0x800;
             _ZN7Message7EndTalkEv();

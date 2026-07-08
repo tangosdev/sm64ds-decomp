@@ -23,11 +23,11 @@ void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);
 int SublevelToLevel(int i);
 
-extern u8 data_0209f2d8;
-extern int data_0209caa0[];
-extern int data_0209fc48;
-extern u8 data_0209d454;
-extern int data_0209fc68;
+extern u8 CURRENT_GAMEMODE;
+extern int SAVE_DATA[];
+extern int RUNNING_KUPPA_SCRIPT;
+extern u8 BOTTOM_SCREEN_RELATED;
+extern int DP_STATE;
 }
 
 class Stage {
@@ -78,9 +78,9 @@ void Stage::LoadGraphics2D(bool b, int i)
         LoadFont3D();
     }
 
-    if ((int)(data_0209f2d8 == 0) != 0
-        && (data_0209caa0[2] & 0x80) == 0
-        && (int)(data_0209fc48 != 0) == 0) {
+    if ((int)(CURRENT_GAMEMODE == 0) != 0
+        && (SAVE_DATA[2] & 0x80) == 0
+        && (int)(RUNNING_KUPPA_SCRIPT != 0) == 0) {
         BG0CNT_SUB &= ~3;
         BG0CNT_SUB &= ~0x40;
         BG0CNT_SUB = (BG0CNT_SUB & 0x43) | 0xd000;
@@ -102,7 +102,7 @@ void Stage::LoadGraphics2D(bool b, int i)
             volatile u16 sp0 = 0x10d0;
             MultiStore16(sp0, scr2, 0x800);
         }
-        data_0209d454 = 0x17;
+        BOTTOM_SCREEN_RELATED = 0x17;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
         SetSubBg2Offset(0, 0);
@@ -158,7 +158,7 @@ void Stage::LoadGraphics2D(bool b, int i)
     LoadCompressedFileAt(0x9806, r7 + 0x1000);
 
     if (b != 0) {
-        if (data_0209fc68 != 0) {
+        if (DP_STATE != 0) {
             return;
         }
         if (GetOwnerLanguage() == 5) {

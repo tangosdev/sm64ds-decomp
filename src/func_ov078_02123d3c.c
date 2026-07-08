@@ -13,7 +13,7 @@ extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void func_02012694(int id, void* v);
 extern void func_ov078_02125c48(char* c, void* p);
 
-extern u8 data_0209f220;
+extern u8 STAR_ID;
 extern void* data_ov078_021270cc;
 
 int func_ov078_02123d3c(char* c)
@@ -33,7 +33,7 @@ int func_ov078_02123d3c(char* c)
     v.y = *(int*)(c + 0x4d8);
     v.z = *(int*)(c + 0x4dc);
 
-    if (data_0209f220 != 1) {
+    if (STAR_ID != 1) {
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);

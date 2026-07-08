@@ -29,7 +29,7 @@ extern void *data_ov034_0211389c[];
 extern void *data_ov034_021138b0[];
 extern s32 data_ov034_021138c4[];
 extern s32 data_ov034_021138d8[];
-extern s32 data_020a0e68[];
+extern s32 MATRIX_SCRATCH_PAPER[];
 
 int func_ov034_0211323c(void *arg0)
 {
@@ -117,8 +117,8 @@ int func_ov034_0211323c(void *arg0)
             vb[0] = sp3C;
             vb[1] = sp3C;
             vb[2] = sp3C;
-            Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x446));
-            MulVec3Mat4x3(va, data_020a0e68, vb);
+            Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(s16 *)(c + 0x446));
+            MulVec3Mat4x3(va, MATRIX_SCRATCH_PAPER, vb);
             sp24 = i - 1;
             Vec3_Add(out, (c + 0x3cc) + sp24 * 0xc, vb);
             *(s32 *)(r7p + 0x3cc) = out[0];

@@ -1,7 +1,7 @@
 typedef short s16;
 typedef int s32;
 typedef long long s64;
-extern s16 data_02082214[];
+extern s16 SINE_TABLE[];
 void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void *c){
     s32 v98 = *(s32*)((char*)c+0x98);
     if (v98 == 0) {
@@ -25,14 +25,14 @@ void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void *c){
         s16 cosv;
         s64 pz;
         j = ((s32)*(unsigned short*)((char*)c+0x94) >> 4) << 1;
-        sinv = data_02082214[j + 1];
+        sinv = SINE_TABLE[j + 1];
         a8 = *(s32*)((char*)c+0xa8);
         v9c = *(s32*)((char*)c+0x9c);
         a0 = *(s32*)((char*)c+0xa0);
         px = ((s64)v98 * sinv + 0x800) >> 12;
         nx = a8 + v9c;
         if (nx >= a0) a0 = nx;
-        cosv = data_02082214[j];
+        cosv = SINE_TABLE[j];
         pz = ((s64)v98 * cosv + 0x800) >> 12;
         *(s32*)((char*)c+0xa4) = (s32)pz;
         *(s32*)((char*)c+0xa8) = a0;

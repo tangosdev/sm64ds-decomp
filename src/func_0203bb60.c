@@ -8,12 +8,12 @@ struct R {
     u16 field_4;   /* 0x4 */
 };
 
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern struct R *func_0203dabc(int idx);
 
 void func_0203bb60(void)
 {
-    u8 *p = data_020a0de8;
+    u8 *p = TOUCH_INPUT_ARR;
     int i;
     for (i = 0; i < 4; i++) {
         struct R *r = func_0203dabc(i);

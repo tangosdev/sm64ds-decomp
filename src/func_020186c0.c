@@ -5,7 +5,7 @@ struct S82 {
     unsigned short fa;  /* +0xa */
     char padc[8];
 };
-extern struct S82 data_0208ecf4[];
+extern struct S82 ARCHIVE_INFOS[];
 extern unsigned char data_0208eb54;
 extern int LoadArchive(int idx);
 extern void Crash(void);
@@ -16,7 +16,7 @@ int func_020186c0(unsigned int val)
     unsigned int i;
     struct S82 *e;
     if (val < 0x8000) return 0;
-    e = data_0208ecf4;
+    e = ARCHIVE_INFOS;
     for (i = 0; i < 0xd; i++) {
         if (e->f8 > val) goto next;
         if (val >= e->fa) goto next;

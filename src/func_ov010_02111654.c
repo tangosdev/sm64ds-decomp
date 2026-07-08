@@ -10,7 +10,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393c4(int* p, int v);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void* p, void* a);
 
-extern short data_02082214[];
+extern short SINE_TABLE[];
 extern void* data_ov010_02112d08;
 extern void* data_ov010_02112d00;
 extern void* data_ov010_021122f8;
@@ -32,8 +32,8 @@ int func_ov010_02111654(char* c)
         *(int*)(c + 0x3a4) = 0;
 
         idx = ((int)(*(unsigned short*)(c + 0x8e)) >> 4) * 2;
-        sx = data_02082214[idx + 1];
-        sz = data_02082214[idx];
+        sx = SINE_TABLE[idx + 1];
+        sz = SINE_TABLE[idx];
         z = *(int*)(c + 0x64) + sz * 0x15d;
         x = *(int*)(c + 0x5c) - sx * 0x15d;
         y = *(int*)(c + 0x60);
@@ -44,8 +44,8 @@ int func_ov010_02111654(char* c)
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
         idx = ((int)(*(unsigned short*)(c + 0x8e)) >> 4) * 2;
-        sz = data_02082214[idx];
-        sx = data_02082214[idx + 1];
+        sz = SINE_TABLE[idx];
+        sx = SINE_TABLE[idx + 1];
         z = *(int*)(c + 0x64) - sz * 0x15d;
         x = sx * 0x15d + *(int*)(c + 0x5c);
         y = *(int*)(c + 0x60);

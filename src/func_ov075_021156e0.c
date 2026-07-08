@@ -40,10 +40,10 @@ extern char data_ov075_0211d3f4;
 extern char data_ov075_0211d38c;
 extern char data_ov075_0211d3dc;
 extern char data_ov075_0211d40c;
-extern char data_020a0e68;
+extern char MATRIX_SCRATCH_PAPER;
 extern char data_ov075_0211c654;
 extern int data_ov075_0211d380;
-extern unsigned char data_0209fc50;
+extern unsigned char NUM_PLAYERS_2;
 
 struct M48 { int w[12]; };
 
@@ -88,8 +88,8 @@ int func_ov075_021156e0(char* c)
 
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x86c, *(void**)(&data_ov075_0211d3fc + 4), 1, -1);
 
-    func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
-    *(struct M48*)(c + 0x888) = *(struct M48*)&data_020a0e68;
+    func_0203c178(&MATRIX_SCRATCH_PAPER, 0x7d000, 0x7d000, 0x7d000);
+    *(struct M48*)(c + 0x888) = *(struct M48*)&MATRIX_SCRATCH_PAPER;
 
     if (*(int*)(c + 8) != 1) {
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x8bc, *(void**)(&data_ov075_0211d3bc + 4), 1, -1);
@@ -130,7 +130,7 @@ int func_ov075_021156e0(char* c)
     *(unsigned char*)(c + 0xf44) = 0;
     *(unsigned char*)(c + 0xf41) = 0;
     *(unsigned char*)(c + 0xf42) = 0;
-    *(unsigned char*)(c + 0xf43) = data_0209fc50;
+    *(unsigned char*)(c + 0xf43) = NUM_PLAYERS_2;
     if (*(unsigned char*)(c + 0xf43) < 1)
         *(unsigned char*)(c + 0xf43) = 1;
 

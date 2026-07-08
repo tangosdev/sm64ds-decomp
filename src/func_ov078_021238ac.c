@@ -18,12 +18,12 @@ extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
-extern void *data_0209f318;
-extern int data_020a0e68[];
+extern void *CAMERA;
+extern int MATRIX_SCRATCH_PAPER[];
 
 int func_ov078_021238ac(char *c)
 {
-    void *cam = data_0209f318;
+    void *cam = CAMERA;
     struct Vec3 v;
     struct Vec3 t;
     struct Vec3 u;
@@ -40,12 +40,12 @@ int func_ov078_021238ac(char *c)
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    *(struct M12*)data_020a0e68 = *(struct M12*)(c + 0x2e8);
-    MulMat4x3Mat4x3((char*)*(void**)(c + 0x2e0) + 0x30, data_020a0e68, data_020a0e68);
+    *(struct M12*)MATRIX_SCRATCH_PAPER = *(struct M12*)(c + 0x2e8);
+    MulMat4x3Mat4x3((char*)*(void**)(c + 0x2e0) + 0x30, MATRIX_SCRATCH_PAPER, MATRIX_SCRATCH_PAPER);
 
-    v.x = data_020a0e68[0x24 / 4];
-    v.y = data_020a0e68[0x28 / 4];
-    v.z = data_020a0e68[0x2c / 4];
+    v.x = MATRIX_SCRATCH_PAPER[0x24 / 4];
+    v.y = MATRIX_SCRATCH_PAPER[0x28 / 4];
+    v.z = MATRIX_SCRATCH_PAPER[0x2c / 4];
     Vec3_Lsl(&t, &v, 3);
     v.x = t.x;
     v.y = t.y;

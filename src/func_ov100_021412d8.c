@@ -10,7 +10,7 @@ extern int _ZN5Actor13DistToCPlayerEv(void* self);
 extern unsigned int RandomIntInternal(void* g);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vec3* pos, const struct Vec3_16* rot, int e, int f);
 
-extern int data_0209e650;
+extern int RNG_STATE;
 
 void func_ov100_021412d8(char* sl)
 {
@@ -21,7 +21,7 @@ void func_ov100_021412d8(char* sl)
         if (_ZN5Actor13DistToCPlayerEv(sl) >= 0xc8000)
             return;
         {
-            int sb = (int)(RandomIntInternal(&data_0209e650) % 3);
+            int sb = (int)(RandomIntInternal(&RNG_STATE) % 3);
             int sel;
             int i;
             int mask = typ & 0x30;
@@ -38,7 +38,7 @@ void func_ov100_021412d8(char* sl)
                 } else {
                     sel = three;
                 }
-                rot.y = (s16)(rot.y + (s16)(RandomIntInternal(&data_0209e650) >> 0x10));
+                rot.y = (s16)(rot.y + (s16)(RandomIntInternal(&RNG_STATE) >> 0x10));
                 _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x150, mask | (sel << 6),
                     (struct Vec3*)(sl + 0x5c), &rot, (int)*(s8*)(sl + 0xcc), -1);
             }
@@ -52,9 +52,9 @@ void func_ov100_021412d8(char* sl)
         }
     }
 
-    *(s16*)(sl + 0x300 + 0xec) = (s16)(RandomIntInternal(&data_0209e650) >> 0x10);
-    *(s16*)(sl + 0x94) = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)((RandomIntInternal(&data_0209e650) >> 0x10) & 0x3fff));
-    *(int*)(sl + 0x98) = (int)((RandomIntInternal(&data_0209e650) >> 0x10) & 0xfff) * 0xf + 0xf000;
+    *(s16*)(sl + 0x300 + 0xec) = (s16)(RandomIntInternal(&RNG_STATE) >> 0x10);
+    *(s16*)(sl + 0x94) = (s16)(*(s16*)(sl + 0x300 + 0xec) + (int)((RandomIntInternal(&RNG_STATE) >> 0x10) & 0x3fff));
+    *(int*)(sl + 0x98) = (int)((RandomIntInternal(&RNG_STATE) >> 0x10) & 0xfff) * 0xf + 0xf000;
     *(int*)(sl + 0x3e8) = 0;
     *(int*)(sl + 0x3e4) = 5;
 }

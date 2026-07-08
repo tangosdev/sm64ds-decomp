@@ -7,9 +7,9 @@ struct HeapS {
     struct Heap *parentHeap;
     u32 flags;
 };
-extern void *data_02099d90;
+extern void *_ZTV4Heap;
 void _ZN4HeapC1EPvjP4Heap(struct HeapS *heap, void *start, u32 size, struct Heap *root) {
-  heap->vtable = &data_02099d90;
+  heap->vtable = &_ZTV4Heap;
   heap->heapStart = start;
   heap->heapSize = size;
   heap->parentHeap = root;

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 struct M48 { int w[12]; };
-extern M48 data_020a0e68;
+extern M48 MATRIX_SCRATCH_PAPER;
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 }
 struct ModelComponents;
@@ -20,14 +20,14 @@ void func_ov006_020e777c(char *c)
     char *r5;
     char *r4;
     void *zero;
-    Matrix4x3_FromTranslation(&data_020a0e68, 0x8c000, 0x80000, 0x40000);
+    Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, 0x8c000, 0x80000, 0x40000);
     r5 = c;
     r4 = c + 0x12c;
     i = 0;
     zero = (void*)i;
     do {
         if (*(int*)(c + i*4 + 0x168) != 0) {
-            *(M48*)(r5 + 0x1c) = data_020a0e68;
+            *(M48*)(r5 + 0x1c) = MATRIX_SCRATCH_PAPER;
             ((MaterialChanger*)r4)->Update(*(ModelComponents*)(r5 + 8));
             ((Obj*)r5)->m(zero);
         }

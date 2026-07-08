@@ -14,18 +14,18 @@ void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Blo
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 void _ZN16MeshColliderBase6EnableEP5Actor(void* self, void* actor);
 int func_ov009_02111b1c(char* thiz);
-extern unsigned char data_0209f2d8;
-extern int data_0209caa0;
+extern unsigned char CURRENT_GAMEMODE;
+extern int SAVE_DATA;
 extern struct DataPtr data_ov009_02113c68;
 extern struct BTA_File data_ov009_02112bc4;
 extern struct SharedFilePtr data_ov009_02113c70;
 extern struct CLPS_Block data_ov009_02112c38;
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 
 int func_ov009_02111c74(char *self){
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(CURRENT_GAMEMODE == 1);
     if (b == 0) {
-        if (*(int*)((char*)&data_0209caa0 + 8) & 0x80000) {
+        if (*(int*)((char*)&SAVE_DATA + 8) & 0x80000) {
             *(int*)(self + 0x60) = -0x2bc000;
         }
     }
@@ -46,7 +46,7 @@ int func_ov009_02111c74(char *self){
     _ZN16MeshColliderBase6EnableEP5Actor(self + 0x124, self);
     {
         int v = *(int*)(self + 0x60) - 0x64000;
-        if (data_0209f32c > v) data_0209f32c = v;
+        if (WATER_HEIGHT > v) WATER_HEIGHT = v;
     }
     func_ov009_02111b1c(self);
     return 1;

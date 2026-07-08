@@ -9,7 +9,7 @@ extern int _ZN11ShadowModelD1Ev(void* c);
 extern int _ZN25MovingCylinderClsnWithPosD1Ev(void* c);
 extern int _ZN9ModelAnimD1Ev(void* c);
 extern int func_ov002_020aed18(int* x);
-extern int data_020a0eac;
+extern int _ZN6Memory11gameHeapPtrE;
 extern int _ZN6Memory10DeallocateEPvP4Heap(void* p, void* h);
 int func_ov074_0211f0a0(void* c)
 {
@@ -23,6 +23,6 @@ int func_ov074_0211f0a0(void* c)
     _ZN9ModelAnimD1Ev((char*)c+0x210);
     func_0207328c((char*)c+0x110, 4, 0x40, (void*)_ZN25MovingCylinderClsnWithPosD1Ev);
     func_ov002_020aed18((int*)c);
-    _ZN6Memory10DeallocateEPvP4Heap(c, (void*)data_020a0eac);
+    _ZN6Memory10DeallocateEPvP4Heap(c, (void*)_ZN6Memory11gameHeapPtrE);
     return (int)c;
 }

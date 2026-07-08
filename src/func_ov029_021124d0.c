@@ -16,9 +16,9 @@ extern void _ZN16MeshColliderBase6EnableEP5Actor(void *mc, void *actor);
 
 extern void *data_ov029_021142fc[];
 extern void *data_ov029_02112fb8;
-extern u8 data_0209f2c0[];
+extern u8 LEVEL_SPECIFIC_SETTING[];
 extern int data_ov029_02112b2c[];
-extern int data_0209f32c;
+extern int WATER_HEIGHT;
 extern void *data_ov029_02114304[];
 extern void *data_ov029_02112fec;
 
@@ -34,12 +34,12 @@ int func_ov029_021124d0(char *c)
 
     *(u8*)(c + 0x338) = (u8)(*(int*)(c + 8) & 1);
     if (*(u8*)(c + 0x338) == 0) {
-        unsigned int idx = data_0209f2c0[0];
+        unsigned int idx = LEVEL_SPECIFIC_SETTING[0];
         if (idx >= 3) idx = 2;
         *(int*)(c + 0x60) = data_ov029_02112b2c[idx];
     }
     *(int*)(c + 0x334) = *(int*)(c + 0x60);
-    data_0209f32c = *(int*)(c + 0x60);
+    WATER_HEIGHT = *(int*)(c + 0x60);
 
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);

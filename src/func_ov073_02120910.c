@@ -10,8 +10,8 @@ extern void _Z14ApproachLinearRsss(short *, short, short);
 extern int func_ov073_0211f61c(void *c);
 extern int func_ov073_0212157c(void *c, void *p);
 
-extern int data_020a0e68[];
-extern short data_02082214[];
+extern int MATRIX_SCRATCH_PAPER[];
+extern short SINE_TABLE[];
 extern int data_ov073_02123340[];
 extern int data_ov073_021233f0[];
 
@@ -43,8 +43,8 @@ int func_ov073_02120910(char *c)
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(data_020a0e68, *(short *)(c + 0x8e) + 0x8000);
-    MulVec3Mat4x3(&in, data_020a0e68, &out);
+    Matrix4x3_FromRotationY(MATRIX_SCRATCH_PAPER, *(short *)(c + 0x8e) + 0x8000);
+    MulVec3Mat4x3(&in, MATRIX_SCRATCH_PAPER, &out);
     in.x = *(int *)(c + 0x4a8) + out.x;
     in.y = *(int *)(c + 0x4ac);
     in.z = *(int *)(c + 0x4b0) + out.z;
@@ -53,7 +53,7 @@ int func_ov073_02120910(char *c)
     *(short *)(c + 0x94) = *(short *)(c + 0x8e) + 0x8000;
     *(int *)(((int)c + 0x4b4) & 0xFFFFFFFFFFFFFFFF) += 0x500;
     _Z14ApproachLinearRsss((short *)(c + 0x8c),
-        ((s64)*(int *)(c + 0x4d0) * data_02082214[((unsigned short)(short)*(int *)(c + 0x4b4) >> 4) * 2] + 0x800) >> 12,
+        ((s64)*(int *)(c + 0x4d0) * SINE_TABLE[((unsigned short)(short)*(int *)(c + 0x4b4) >> 4) * 2] + 0x800) >> 12,
         0x400);
     if (func_ov073_0211f61c(c)) {
         func_ov073_0212157c(c, data_ov073_021233f0);

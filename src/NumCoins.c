@@ -1,9 +1,9 @@
-extern unsigned char data_0209f21c;
-extern short data_0209f358[];
+extern unsigned char NUM_PLAYERS;
+extern short NUM_COINS[];
 short NumCoins(void){
   int i = 1;
-  int n = data_0209f21c;
-  short* p = data_0209f358;
+  int n = NUM_PLAYERS;
+  short* p = NUM_COINS;
   short sum = p[0];
   if (n <= 1) return sum;
   do {

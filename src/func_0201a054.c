@@ -31,8 +31,8 @@ extern void func_0201a5cc(void);
 
 extern char data_0208ee50[];
 extern char data_0209d574[];
-extern char data_02090864[];
-extern void* data_020a4bb8;
+extern char _Z6DLLoadi[];
+extern void* ACTOR_SPAWN_INFO_TABLE_PTR;
 struct S0209ee90 { char pad[0x44]; u32 f44; };
 extern struct S0209ee90 data_0209ee90;
 
@@ -72,7 +72,7 @@ void func_0201a054(void){
   if (!r4)
     func_020134c8();
   func_0203b684();
-  data_020a4bb8 = data_02090864;
+  ACTOR_SPAWN_INFO_TABLE_PTR = _Z6DLLoadi;
   func_020233f0();
   _ZN5Scene18PrepareToSpawnBootEv();
   func_020196cc();

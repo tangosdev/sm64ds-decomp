@@ -7,15 +7,15 @@ struct V3_16f;
 extern "C" {
 int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, void* v, void* cb);
-extern short data_02082214[];
+extern short SINE_TABLE[];
 
 void func_ov024_02111350(char* c){
     char* g = c + 0x300;
     int a1 = ((int)((unsigned int)*(unsigned short*)(g + 0xb2) << 0x1e)) >> 0x10;
-    *(int*)(c + 0x5c) = (short)data_02082214[((unsigned short)a1 >> 4) * 2] * (short)0x28 + *(int*)(c + 0x3a0);
+    *(int*)(c + 0x5c) = (short)SINE_TABLE[((unsigned short)a1 >> 4) * 2] * (short)0x28 + *(int*)(c + 0x3a0);
     if ((unsigned short)*(unsigned short*)(g + 0xb2) < 0x3c) {
         int a2 = ((int)((unsigned int)*(unsigned short*)(g + 0xb2) << 0x1d)) >> 0x10;
-        int m = (short)data_02082214[((unsigned short)a2 >> 4) * 2] * (short)0xa;
+        int m = (short)SINE_TABLE[((unsigned short)a2 >> 4) * 2] * (short)0xa;
         if (m < 0) m = -m;
         *(int*)(c + 0x60) = *(int*)(c + 0x3a4) + m;
     } else {

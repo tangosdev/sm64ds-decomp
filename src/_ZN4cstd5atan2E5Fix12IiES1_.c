@@ -8,7 +8,7 @@ typedef short s16;
 extern s32 _ZN4cstd4fdivEii(s32 num, s32 den);
 extern s32 func_01ffa4bc(s32 a);
 extern s32 func_01ff98f4(s32 a, s32 b);
-extern unsigned short data_020994e0[];
+extern unsigned short ATAN_TABLE[];
 
 s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x)
 {
@@ -26,25 +26,25 @@ s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x)
     } else if (y >= 0) {
         if (x >= 0) {
             if (x >= y)
-                r = data_020994e0[_ZN4cstd4fdivEii(y, x) >> 2];
+                r = ATAN_TABLE[_ZN4cstd4fdivEii(y, x) >> 2];
             else
-                r = 0x4000 - data_020994e0[_ZN4cstd4fdivEii(x, y) >> 2];
+                r = 0x4000 - ATAN_TABLE[_ZN4cstd4fdivEii(x, y) >> 2];
         } else {
             if (-x < y)
-                r = data_020994e0[_ZN4cstd4fdivEii(-x, y) >> 2] + 0x4000;
+                r = ATAN_TABLE[_ZN4cstd4fdivEii(-x, y) >> 2] + 0x4000;
             else
-                r = 0x8000 - data_020994e0[_ZN4cstd4fdivEii(y, -x) >> 2];
+                r = 0x8000 - ATAN_TABLE[_ZN4cstd4fdivEii(y, -x) >> 2];
         }
     } else if (func_01ff98f4(func_01ffa4bc(x), 0)) {
         if (x <= y)
-            r = data_020994e0[_ZN4cstd4fdivEii(-y, -x) >> 2] + 0x8000;
+            r = ATAN_TABLE[_ZN4cstd4fdivEii(-y, -x) >> 2] + 0x8000;
         else
-            r = 0xc000 - data_020994e0[_ZN4cstd4fdivEii(-x, -y) >> 2];
+            r = 0xc000 - ATAN_TABLE[_ZN4cstd4fdivEii(-x, -y) >> 2];
     } else {
         if (x < -y)
-            r = data_020994e0[_ZN4cstd4fdivEii(x, -y) >> 2] + 0xc000;
+            r = ATAN_TABLE[_ZN4cstd4fdivEii(x, -y) >> 2] + 0xc000;
         else
-            r = -data_020994e0[_ZN4cstd4fdivEii(-y, x) >> 2];
+            r = -ATAN_TABLE[_ZN4cstd4fdivEii(-y, x) >> 2];
     }
     return (s16)r;
 }

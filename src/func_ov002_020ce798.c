@@ -19,16 +19,16 @@ struct Player {
     int x, y, z;
     bool IsState(State &s);
 };
-extern "C" State data_ov002_0211067c;
-extern "C" int data_0209f32c;
+extern "C" State _ZN6Player7ST_SWIME;
+extern "C" int WATER_HEIGHT;
 
 extern "C" void func_ov002_020ce798(Player *self)
 {
     Vector3 v1, v2, cp;
-    if (!self->IsState(data_ov002_0211067c)) return;
-    if (self->y >= data_0209f32c - 0x50000) {
+    if (!self->IsState(_ZN6Player7ST_SWIME)) return;
+    if (self->y >= WATER_HEIGHT - 0x50000) {
         if (!((WithMeshClsn *)((char *)self + 0x380))->IsOnGround())
-            self->y = data_0209f32c - 0x50000;
+            self->y = WATER_HEIGHT - 0x50000;
     }
     {
         RaycastLine rl;

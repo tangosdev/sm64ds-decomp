@@ -6,7 +6,7 @@ extern "C" {
 int func_ov074_0212229c(void);
 void _ZN13SharedFilePtr7ReleaseEv(void* thiz);
 void UnloadKeyModels(int i);
-extern char data_ov002_0210da30;
+extern char SUPER_MUSHROOM_MODEL_PTR;
 extern char data_ov084_02130cf8;
 extern void* data_ov074_0212292c[];
 extern char data_ov074_02123000;
@@ -20,7 +20,7 @@ int func_ov074_02121abc(int* c)
     if (v == 0x1111) {
         return func_ov074_0212229c();
     }
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da30);
+    _ZN13SharedFilePtr7ReleaseEv(&SUPER_MUSHROOM_MODEL_PTR);
     UnloadKeyModels(2);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov084_02130cf8);
     for (i = 0; i < 7; i++)

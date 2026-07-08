@@ -26,7 +26,7 @@ extern "C" void _ZN14BlendModelAnim7AdvanceEv(void* self);
 
 struct Disp { int unused[2]; PMF pmf; };  // +8 = pmf
 
-extern "C" unsigned char data_0209f220;
+extern "C" unsigned char STAR_ID;
 extern void* data_ov016_02114dbc;
 
 extern "C" int func_ov016_02112010(char* c) {
@@ -76,7 +76,7 @@ after:
     }
     _ZN12CylinderClsn5ClearEv(c+0x110);
     _ZN12CylinderClsn6UpdateEv(c+0x110);
-    if (data_0209f220 == 1 && *(void**)(c+0x34c) != &data_ov016_02114dbc) {
+    if (STAR_ID == 1 && *(void**)(c+0x34c) != &data_ov016_02114dbc) {
         _ZN12CylinderClsn5ClearEv(c+0x150);
         _ZN12CylinderClsn6UpdateEv(c+0x150);
         _ZN14BlendModelAnim7AdvanceEv(c+0x350);

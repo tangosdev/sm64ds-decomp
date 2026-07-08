@@ -16,7 +16,7 @@ struct Actor {
     void DropShadowRadHeight(ShadowModel &, Matrix4x3 &, Fix12, Fix12, unsigned int);
 };
 
-extern Mtx43 data_020a0e68;
+extern Mtx43 MATRIX_SCRATCH_PAPER;
 
 struct Obj {
     char pad5c[0x5c];
@@ -43,16 +43,16 @@ extern "C" void func_ov085_0212bedc(Obj *c)
     vd.z = c->v64;
     vd.x = 0x1086000;
     v.z = Vec3_HorzDist((Vector3 *)&c->v5c, &vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((Vector3 *)&c->v5c, &vd));
-    MulVec3Mat4x3(&v, &data_020a0e68, &res);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, Vec3_HorzAngle((Vector3 *)&c->v5c, &vd));
+    MulVec3Mat4x3(&v, &MATRIX_SCRATCH_PAPER, &res);
     {
         int t;
         vd.x = vd.x + res.x;
         t = c->v60;
         vd.y = t;
         vd.z = vd.z + res.z;
-        Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
+        Matrix4x3_FromTranslation(&MATRIX_SCRATCH_PAPER, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
-    c->mtx = data_020a0e68;
+    c->mtx = MATRIX_SCRATCH_PAPER;
     ((Actor *)c)->DropShadowRadHeight(*(ShadowModel *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000, 0x258000, 0xf);
 }

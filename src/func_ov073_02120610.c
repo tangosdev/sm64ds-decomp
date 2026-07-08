@@ -11,7 +11,7 @@
     extern void func_ov073_0212157c(void *c, void *p);
 
     extern void **data_ov073_021232a8;
-    extern int data_020a0e68;
+    extern int MATRIX_SCRATCH_PAPER;
     extern void *data_ov073_02123320;
 
     int func_ov073_02120610(void *thiz)
@@ -51,9 +51,9 @@
             in[2] = 0;
             in[0] = 0; in[1] = 0; out[0] = 0; out[1] = 0; out[2] = 0;
             in[2] = 0x28000;
-            Matrix4x3_FromRotationY(&data_020a0e68, hz);
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, vt);
-            MulVec3Mat4x3(in, &data_020a0e68, out);
+            Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, hz);
+            Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, vt);
+            MulVec3Mat4x3(in, &MATRIX_SCRATCH_PAPER, out);
             *(int *)(c + 0xa4) = out[0];
             if (*(int *)(c + 0x4b4) != 0 || *(int *)(c + 0xa8) < 0) {
                 *(int *)(c + 0xa8) = out[1];

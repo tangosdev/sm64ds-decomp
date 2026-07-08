@@ -2,7 +2,7 @@
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern void func_ov006_020fa924(char* c);
-extern unsigned char data_0209d45c;
+extern unsigned char TOP_SCREEN_RELATED;
 
 void func_ov006_020fac48(char* c, int idx)
 {
@@ -13,7 +13,7 @@ void func_ov006_020fac48(char* c, int idx)
         *(unsigned short*)(c + 0x5c0c + n) = *(unsigned short*)(c + 0x5c0c + n) - 1;
         return;
     }
-    data_0209d45c = data_0209d45c | 4;
+    TOP_SCREEN_RELATED = TOP_SCREEN_RELATED | 4;
     *(int*)(c + 0x5bfc + n) = 0x100000;
     *(int*)(c + 0x5c00 + n) = 0x40000;
     *(int*)(c + n + 0x5000 + 0xc04) = -0x1000;

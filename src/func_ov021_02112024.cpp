@@ -7,7 +7,7 @@ void MulVec3Mat4x3(struct Vector3* v, struct Matrix4x3* m, struct Vector3* out);
 void Quaternion_FromVector3(void* q, struct Vector3* axis, struct Vector3* v);
 void Quaternion_Normalize(void* q);
 extern int data_02092768[];
-extern struct Matrix4x3 data_020a0e68;
+extern struct Matrix4x3 MATRIX_SCRATCH_PAPER;
 
 void func_ov021_02112024(char* c, char* a) {
   *(char*)(c+0xc7e) = 1;
@@ -19,10 +19,10 @@ void func_ov021_02112024(char* c, char* a) {
     *(int*)(c+0xc68) = data_02092768[3];
     return;
   }
-  data_020a0e68 = *(struct Matrix4x3*)(c+0x2ec);
-  InvMat4x3(&data_020a0e68, &data_020a0e68);
+  MATRIX_SCRATCH_PAPER = *(struct Matrix4x3*)(c+0x2ec);
+  InvMat4x3(&MATRIX_SCRATCH_PAPER, &MATRIX_SCRATCH_PAPER);
   struct Vector3 t;
-  MulVec3Mat4x3((struct Vector3*)(a+0x5c), &data_020a0e68, &t);
+  MulVec3Mat4x3((struct Vector3*)(a+0x5c), &MATRIX_SCRATCH_PAPER, &t);
   t.y = t.y * 0x30;
   struct Vector3 axis;
   axis.x = 0;

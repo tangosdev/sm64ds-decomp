@@ -12,13 +12,13 @@ extern int _ZN5Actor14TriplePoofDustEv(void* c);
 extern int func_02012694(int a, void* p);
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* a, Vector3* v, unsigned n, Fix12i f, short s);
-extern int data_02092138;
-extern void* data_0209f318;
+extern int STAR_CAP_MIN_POS_Y;
+extern void* CAMERA;
 
 int func_ov062_021163b0(char* c)
 {
     Vector3 v[2];
-    if (data_02092138 > *(int*)(c + 0x60)) {
+    if (STAR_CAP_MIN_POS_Y > *(int*)(c + 0x60)) {
         _ZN5Actor24KillAndTrackInDeathTableEv(c);
         return 1;
     }
@@ -26,7 +26,7 @@ int func_ov062_021163b0(char* c)
         _ZN5Actor14TriplePoofDustEv(c);
         _ZN5Actor24KillAndTrackInDeathTableEv(c);
         func_02012694(0x125, c + 0x74);
-        func_0200d8c8(data_0209f318, c + 0x5c, 0x7d0000);
+        func_0200d8c8(CAMERA, c + 0x5c, 0x7d0000);
         v[0].x = *(int*)(c + 0x5c);
         v[0].y = *(int*)(c + 0x60);
         v[0].z = *(int*)(c + 0x64);

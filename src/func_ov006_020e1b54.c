@@ -7,7 +7,7 @@ typedef unsigned char u8;
 
 extern void func_02012718(void *a, int b);
 extern u8 data_020a0e40;
-extern u8 data_020a0de8[];
+extern u8 TOUCH_INPUT_ARR[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
@@ -18,7 +18,7 @@ void func_ov006_020e1b54(char *c)
     int flag = 0;
     int x, y;
 
-    if (data_020a0de8[idx * 4] != 0) {
+    if (TOUCH_INPUT_ARR[idx * 4] != 0) {
         if (data_020a0de9[idx * 4] != 0) flag = 1;
     }
     if (flag == 0) return;

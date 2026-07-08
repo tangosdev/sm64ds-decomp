@@ -35,8 +35,8 @@ int func_ov090_02131e00(C *c, PMF *p);
 void _ZN11RaycastLineD1Ev(RaycastLine *self);
 }
 
-extern int data_0209e650;
-extern char data_020a0e68[0x30];
+extern int RNG_STATE;
+extern char MATRIX_SCRATCH_PAPER[0x30];
 extern char data_ov090_021344e4;
 extern char data_ov090_02134504;
 
@@ -50,7 +50,7 @@ extern "C" int func_ov090_02131648(C *c)
     RaycastLine rc;
     int angleSet;
 
-    rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
+    rnd = (u32)RandomIntInternal(&RNG_STATE) >> 8;
     dist = Vec3_Dist((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
 
     if ((((*(u32 *)(self + 0x364)) << 4) >> 0x10 & 0xf) == 0) {
@@ -73,9 +73,9 @@ extern "C" int func_ov090_02131648(C *c)
     in.y = 0x64000;
     in.z = 0x1f4000;
 
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16 *)(self + 0x8e));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    Matrix4x3_FromRotationY(&MATRIX_SCRATCH_PAPER, *(s16 *)(self + 0x8e));
+    Matrix4x3_ApplyInPlaceToRotationX(&MATRIX_SCRATCH_PAPER, 0x2000);
+    MulVec3Mat4x3(&in, &MATRIX_SCRATCH_PAPER, &out);
 
     b.x = a.x;
     b.x = a.x + out.x;

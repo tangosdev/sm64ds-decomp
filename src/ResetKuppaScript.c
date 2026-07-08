@@ -1,17 +1,17 @@
-extern int data_0209b284[];
-extern unsigned char data_0209f21c[];
-extern unsigned char data_0209b270[];
-extern int data_0209b2a4[];
-extern int data_0209fc4c[];
-extern int data_0209fc48[];
+extern int KS_PLAYER_IDS[];
+extern unsigned char NUM_PLAYERS[];
+extern unsigned char KS_NUM_PLAYERS[];
+extern int CUTSCENE_OBJECT_IDS[];
+extern int SAVED_KUPPA_SCRIPT[];
+extern int RUNNING_KUPPA_SCRIPT[];
 
 void ResetKuppaScript(void)
 {
     int i;
     int j;
 
-    for (i = 0; i < 4; i++) data_0209b284[i] = 0;
-    data_0209b270[0] = data_0209f21c[0];
-    for (j = 0; j < 0x10; j++) data_0209b2a4[j] = 0;
-    data_0209fc48[0] = data_0209fc4c[0];
+    for (i = 0; i < 4; i++) KS_PLAYER_IDS[i] = 0;
+    KS_NUM_PLAYERS[0] = NUM_PLAYERS[0];
+    for (j = 0; j < 0x10; j++) CUTSCENE_OBJECT_IDS[j] = 0;
+    RUNNING_KUPPA_SCRIPT[0] = SAVED_KUPPA_SCRIPT[0];
 }

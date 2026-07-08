@@ -1,6 +1,6 @@
-extern void* data_0209d4b0;
+extern void* KS_FADER;
 void func_02018ec0(void){
-  void** o = (void**)data_0209d4b0;
+  void** o = (void**)KS_FADER;
   if(!o) return;
   void** vt = (void**)o[0];
   ((void(*)(void*))vt[2])(o);

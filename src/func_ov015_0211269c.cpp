@@ -27,9 +27,9 @@ extern void* data_ov015_02114a5c;
 extern void* data_ov015_02113594;
 extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern void func_ov015_021128f8();
-extern s16 data_02082214[];
-extern signed char data_0209f2f8;
-extern u8 data_0209f220;
+extern s16 SINE_TABLE[];
+extern signed char LEVEL_ID;
+extern u8 STAR_ID;
 
 struct V3 { int x, y, z; };
 struct RG { char b[0x4c]; };
@@ -62,9 +62,9 @@ extern "C" int func_ov015_0211269c(char* self) {
   }
 
   {
-    int s0 = data_02082214[(*(unsigned short*)(self+0x8e) >> 4) * 2];
+    int s0 = SINE_TABLE[(*(unsigned short*)(self+0x8e) >> 4) * 2];
     *(int*)(self+0x384) = (int)(((s64)s0 * 0xc8000 + 0x800) >> 12);
-    int s1 = data_02082214[(*(unsigned short*)(self+0x8e) >> 4) * 2 + 1];
+    int s1 = SINE_TABLE[(*(unsigned short*)(self+0x8e) >> 4) * 2 + 1];
     *(int*)(self+0x388) = (int)(((s64)s1 * 0xc8000 + 0x800) >> 12);
   }
 
@@ -83,7 +83,7 @@ extern "C" int func_ov015_0211269c(char* self) {
     *(int*)(self+0xa8) = 0xa000;
   }
 
-  if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) && *(int*)(self+0x60) >= 0xdac000) {
+  if (LEVEL_ID == 7 && (STAR_ID == 1 || IsStarCollectedInCurLevel(1) == 0) && *(int*)(self+0x60) >= 0xdac000) {
     _ZN13RaycastGroundD1Ev(&rc);
     return 0;
   }

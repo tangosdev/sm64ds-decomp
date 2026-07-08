@@ -7,7 +7,7 @@ typedef unsigned int u32;
 
 extern int __aeabi_idiv(int a, int b);
 
-extern u32 data_020a4d30;
+extern u32 PARTICLE_RNG_STATE;
 
 struct Dst {
     char pad0[0x40];
@@ -38,8 +38,8 @@ void func_0204d1b4(struct Dst *dst, struct Src *src, int t) {
         int d = (int)((h << 0x11) >> 0x1b) - (int)((h << 0x16) >> 0x1b);
         r1 = __aeabi_idiv((t - 0xff) * d, 0xff - hi) + (int)((h << 0x11) >> 0x1b);
     }
-    data_020a4d30 = data_020a4d30 * 0x5eedf715 + 0x1b0cb173;
-    int rnd = data_020a4d30 >> 0x18;
+    PARTICLE_RNG_STATE = PARTICLE_RNG_STATE * 0x5eedf715 + 0x1b0cb173;
+    int rnd = PARTICLE_RNG_STATE >> 0x18;
     int v = be[2] * rnd;
     v >>= 8;
     v = 0xff - v;
