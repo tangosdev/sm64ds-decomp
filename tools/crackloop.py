@@ -191,29 +191,33 @@ def land(a):
                           f"the matched.jsonl rows) before committing ***")
         except Exception as e:
             print(f"link-gate sweep failed ({e}); run tools/linkcheck.py by hand")
-    try:
-        sys.path.insert(0, str(TOOLS))
-        import claims
-        if a.refine:
-            p = REPO / "progress" / "claims_active_refine.json"
-            if p.exists():
-                ids = json.loads(p.read_text())
-                for mod, v in ids.items():
-                    for cid in (v if isinstance(v, list) else [v]):
-                        claims.release(cid)
+    # Optional claims cleanup. Banking already succeeded above, so this must NEVER abort the
+    # land: skip it entirely under --no-claims (console/driver runs), and swallow any error
+    # (e.g. an empty/half-written active file -> JSONDecodeError, which used to crash land and
+    # skip the progress refresh below even though the match was banked fine).
+    if not a.no_claims:
+        try:
+            sys.path.insert(0, str(TOOLS))
+            import claims
+
+            def _ids(p):  # tolerate a missing / empty / half-written claims file
+                t = p.read_text().strip() if p.exists() else ""
+                return json.loads(t) if t else {}
+
+            if a.refine:
+                p = REPO / "progress" / "claims_active_refine.json"
+                ids = _ids(p)
+            else:
+                _, p = _paths(a.tag)
+                ids = _ids(p)
+            for mod, v in ids.items():
+                for cid in (v if isinstance(v, list) else [v]):
+                    claims.release(cid)
+            if ids:
                 p.unlink()
-                print("released refine claims")
-        else:
-            _, active = _paths(a.tag)
-            if active.exists():
-                ids = json.loads(active.read_text())
-                for mod, v in ids.items():
-                    for cid in (v if isinstance(v, list) else [v]):
-                        claims.release(cid)
-                active.unlink()
-                print(f"released '{a.tag}' claims")
-    except ImportError:
-        pass
+                print(f"released {'refine' if a.refine else repr(a.tag)} claims")
+        except Exception as e:
+            print(f"(claims release skipped: {e})")
     run("progress.py", check=False)
     print("\nbatch landed. Commit when ready: git add src/ nearmiss/ README.md && "
           "git commit -m \"Match N functions via coddog fan-out (XX.X%)\"")
