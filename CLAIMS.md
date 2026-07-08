@@ -41,6 +41,7 @@ it is fair to take over: ping the claimant first.
 | ov001 func_ov001_020aadac (0x020aadac-0x020aaf40) | lunavyqo | 2026-07-06 | done - verified byte-identical |
 | ov001 func_ov001_020ab110 (0x020ab110, size 0x118) | lunavyqo | 2026-07-06 | done - verified byte-identical |
 | ov017 func_ov017_021112c4 (0x021112c4-0x021113c0) | lunavyqo | 2026-07-07 | done - verified byte-identical |
+| ov014 func_ov014_02111a6c (0x02111a6c, size 0x84) | lunavyqo | 2026-07-08 | done - verified byte-identical |
 | ov002 _ZN6Player18St_YoshiPower_MainEv (0x020d7504, 0x9cc) | ruspecial (Claude-assisted) | 2026-07-05 | done - matched byte-identical, PR open |
 | ov002/006/065/080 batch: func_ov006_020ef794, _ZN6Player19St_CrazedCrate_InitEv, func_ov080_02123fcc, func_ov006_020c87d0, func_ov002_020cec2c, func_ov065_0211a6d0 | ruspecial (Claude-assisted) | 2026-07-06 | done - 6 verified byte-identical |
 | ov063 func_ov063_0211640c (0x0211640c, 0x2a0) | ruspecial (Claude-assisted) | 2026-07-06 | NONMATCHING div=1 (ang*-1 rsb vs ROM smulbb); near-miss draft submitted |
