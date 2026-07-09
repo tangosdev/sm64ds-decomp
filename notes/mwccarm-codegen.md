@@ -508,6 +508,46 @@ can pay (Fable, effort high, retry tier only); do not extend this to fresh fan-o
 shows a pool load where you wrote a small constant, check whether the slot is a reloc
 in the target and pass an address instead.
 
+## 6h. Laundering a pooled global's ADDRESS fixes its register CLASS, not just materialization (2026-07-08)
+
+The 6g u64-mask launder was documented as a lever for address *materialization*
+(forcing `add rX, base, #off` + `[rX]`). It ALSO fixes a distinct problem: a pooled
+global sitting in the WRONG register on an otherwise byte-exact function.
+
+**Symptom (pure-coloring near-miss):** falign shows the instruction stream is identical
+(0 insert / 0 delete, correct size) but a pooled global's base is colored to the leftover
+register (typically r3), and that one swap ripples into ~25 differing words. On
+func_ov024_02111350 the ROM held the sincos table base (`data_02082214`) in r0 and the
+`c+0x300` temp in r2; every plain-C spelling put the table in r3 and the temp in r0.
+
+**Cause:** a *plain* pool-address constant - whether inline (`data_sym[i]`) or a plain
+named pointer (`T* p = data_sym;`) - is in mwcc's *rematerializable-constant* class,
+which the allocator colors LAST, so it always takes whatever register is left over. A
+plain named pointer mis-colors just as badly (often callee-saved or the leftover reg);
+this is the same "named base pointers mis-color, only plain temps reach the intended
+reg" effect seen in 6g's laundering caveat.
+
+**Fix:** launder the global's address so it becomes a "computed" value allocated in
+NORMAL birth-order:
+
+```c
+#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+s16 *tbl = (s16 *)(int)M(data_02082214);   /* claims r0, not the leftover r3 */
+int  a1  = ...;                            /* next-born named local -> r1 */
+```
+
+The laundered-named pointer declared first claims r0; subsequent named locals / temps
+descend r1, r2, r3 in birth order to match the ROM. Pair with `#pragma opt_common_subs
+off` (EBB-local CSE, so the `c+0x300`-style base rematerializes per EBB like the ROM
+instead of being hoisted into one long-lived register) and control long-lived vs
+per-EBB values by named-local vs inline (6h's companion, the EBB-CSE master lever in 6e).
+
+Cracked func_ov024_02111350 (div 25 -> 0, byte-exact; the file had been parked as a
+`//cpp` NONMATCHING "not byte-matchable from C" draft - wrong). Found by a Fable refine
+agent seeded from the 25-div near-miss. **Inert on this shape (~90 variants):** decl
+orders, `register` keyword, volatile, struct-member spelling, C++ mode,
+`opt_propagation off`, and - critically - a plain (un-laundered) named `tbl` pointer.
+
 ## 7. Workflow implications
 
 - **Free tiers first, every cycle:** `clone.py --apply` (byte-identical retarget) then
