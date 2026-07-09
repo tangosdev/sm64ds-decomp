@@ -345,6 +345,16 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
   kept the constant live in r8 across a loop AND rotated the entire allocation to the ROM
   shape - single-shot fix from a 28-div draft (func_ov039_021112a0). Also the only known
   breaker for pure-constant folds the u64-mask launder cannot touch (func_ov015_021114f0).
+- **Launder signedness is a value-number lever (2026-07-10).** `(int)` vs `(unsigned int)`
+  inside the u64-mask give DISTINCT 64-bit value numbers, so two materialized bases around
+  a call both emit instead of CSE keeping the address live across it - a finer-grained tool
+  than respelling the whole mask (found on _ZN6Camera14GoBehindPlayerEj, 9->4 div).
+- **Bit-field extract coloring: `(short)x << 12` vs `(x << 16) >> 4` (2026-07-10).** Both
+  are the same extract, but the cast form forces a non-inplace lsl into a FRESH register
+  plus an in-place asr, reproducing a target's r0/r2/r1/r0 coloring that the double-shift
+  form never hits (load-bearing in func_ov007_020be0dc). Also from that crack: a global
+  `#pragma opt_propagation off` can HURT - it rotates coloring function-wide, so try
+  removing it when a draft inherited one.
 - **Vary the launder spelling per block to stop cross-call CSE.** Repeating the identical
   u64-mask expression in two blocks invites mwccarm to hoist the shared computation above
   the call; spelling the mask differently per block (zero-extend vs sign-extend placement)
