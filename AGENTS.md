@@ -21,6 +21,14 @@ Do not open a PR expecting a maintainer to "fix it up." Verify locally first:
 python tools/match.py --c yourfile.c --func <name> --addr 0x<addr> --size 0x<size> --version 1.2/sp2p3
 ```
 
+**A byte-match from `match`/`fdiff` is NOT proof your relocations are right** — those
+tools wildcard relocated words, so a call to the *wrong* function with the right shape
+still "matches" locally and then fails CI as WRONG-DEST. If your function calls anything
+or touches globals, run `linkcheck` on it before opening the PR. And treat symbol names
+as hints, not truth: if your reloc keeps linking somewhere `validate` rejects, check what
+the ROM bytes actually branch to before re-attempting (a misnamed config symbol baited
+six straight PRs on the `_ZThn80_` thunks).
+
 ## What goes where
 
 | You have… | It goes in… |
