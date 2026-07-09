@@ -191,6 +191,10 @@ C that compiles to a different instruction SHAPE. The recurring structural misse
   `if (cond) return X;` with the same test direction, not a wrapping loop/if-else. A loop
   whose conditional branch sits at the BOTTOM of the disasm is a do/while (test at bottom),
   not a `while` (test at top). A retry call at the very end belongs at the bottom of the loop.
+  Conversely, a short forward branch past a guard chain is often NOT an early return -- it can
+  skip a single call/block and rejoin the main body. Always derive control flow from the
+  branch TARGET ADDRESS in the disasm, not from what the guard "looks like" (two 2026-07-09
+  drafts mis-modeled skip-blocks as returns and diverged until re-derived).
 - **Call-arg spilling.** When the ROM does `str rN,[sp,#K]` then reloads `ldr rN,[sp,#K]`
   before each of several calls, those are LOCALS the compiler spilled (calls clobber r0-r3).
   Use plain locals and pass them to each call; do NOT pack them into a struct (a struct
@@ -205,6 +209,13 @@ C that compiles to a different instruction SHAPE. The recurring structural misse
   case 3: ... case 2:` to get the 1,3,2 block layout). For a dense 0..N table mwccarm needs the
   low cases PRESENT even if empty -- add `case 0: case 1:` stubs to force the table instead of a
   compare chain (`func_0205fab4`, `func_02040724`, 2026-06-22).
+- **Same-variable else-if chains can lose their skip branches -- force branch-per-case with
+  `switch`.** When an `else if` chain compares ONE variable against different constants,
+  mwccarm can prove the arms mutually exclusive and drop the "skip remaining checks"
+  branches, emitting a shorter compare chain than the ROM. Rewriting the chain as a
+  `switch` with an explicit `break` per case restores the ROM's branch-per-case shape even
+  though the two forms are logically identical (one-shot crack of `func_0204a5c8` after
+  else-if stalled, 2026-07-09).
 - **Loop entry-guard shape = `while (p && cond)`.** A traversal that tests at the TOP and
   advances before the body (entry-guard `b`/`bls`/`blo` then a bottom back-edge) comes from a
   compound `while (p && cond)`, not a `for` or `do/while` -- those reallocate the iterator
@@ -337,7 +348,13 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
 - **Vary the launder spelling per block to stop cross-call CSE.** Repeating the identical
   u64-mask expression in two blocks invites mwccarm to hoist the shared computation above
   the call; spelling the mask differently per block (zero-extend vs sign-extend placement)
-  keeps each materialization local (func_ov090_02131b94).
+  keeps each materialization local (func_ov090_02131b94). Also holds per OCCURRENCE in
+  straight-line code (2026-07-09): repeating ONE spelling for the same non-encodable
+  offset let the allocator cache the materialized address in a single persistent register
+  across the whole function, pulling an extra callee-saved reg into the push set where the
+  ROM re-materializes at each site; alternating sign- vs zero-extend cast placement per
+  occurrence made each site re-materialize independently and byte-matched
+  (func_ov002_020e9840, offsets self+0x4a2 / self+0x128, similarity batch).
 - **Reloc-split trap (link gate, not codegen):** a byte-perfect single-array draft can
   still be WRONG-DEST if the ROM pools TWO nearby symbol addresses (parallel halfword
   arrays 2 bytes apart) where the draft uses one base + folded offsets. Restructuring to
