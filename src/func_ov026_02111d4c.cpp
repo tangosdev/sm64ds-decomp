@@ -1,4 +1,5 @@
 //cpp
+#pragma opt_propagation off
 struct Vector3 { int x, y, z; };
 
 struct Player {
@@ -44,12 +45,12 @@ extern "C" int func_ov026_02111d4c(char* c)
         if (pl->flag6f9 == 0) {
             int dd = Vec3_Dist((Vector3*)(c + 0x1a8), &v);
             if (dd < 0x44c000) {
+                int q;
+                int t;
                 Vector3 m;
                 Vector3 out;
-                int q;
-                q = 0x44c000;
-                q -= dd;
-                q = q / 35;
+                t = 0x44c000 - dd;
+                q = t / 35;
                 m.x = 0;
                 m.y = 0;
                 m.z = q;
