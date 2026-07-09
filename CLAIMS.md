@@ -48,3 +48,4 @@ it is fair to take over: ping the claimant first.
 | ov002 _ZN6Player18St_YoshiPower_MainEv (0x020d7504, 0x9cc) | ruspecial (Claude-assisted) | 2026-07-05 | done - matched byte-identical, PR open |
 | ov002/006/065/080 batch: func_ov006_020ef794, _ZN6Player19St_CrazedCrate_InitEv, func_ov080_02123fcc, func_ov006_020c87d0, func_ov002_020cec2c, func_ov065_0211a6d0 | ruspecial (Claude-assisted) | 2026-07-06 | done - 6 verified byte-identical |
 | ov063 func_ov063_0211640c (0x0211640c, 0x2a0) | ruspecial (Claude-assisted) | 2026-07-06 | NONMATCHING div=1 (ang*-1 rsb vs ROM smulbb); near-miss draft submitted |
+| ov058 func_ov058_0211123c (0x0211123c, size 0x3e0) | lunavyqo | 2026-07-09 | done - verified byte-identical |
