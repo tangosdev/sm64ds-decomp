@@ -1,6 +1,3 @@
-// NONMATCHING: extra logic (you do more) (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
@@ -9,7 +6,7 @@ void func_ov012_0211123c(char* c) {
     int* q;
     char* p;
     if (*(unsigned char*)(c+0x31e)) return;
-    q = (int*)(c+0x60);
+    q = (int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
     *q -= 0x64000;
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
