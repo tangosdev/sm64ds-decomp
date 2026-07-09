@@ -1,0 +1,87 @@
+//cpp
+extern "C" void func_02021c90(char *c);
+extern "C" void _ZN8Particle14SimpleCallbackC2Ev(char *p);
+extern "C" void func_020226a4(char *p);
+extern "C" void *func_020225fc(void *p);
+
+extern void *data_0208f3e4;
+extern void *data_0208f3a4;
+extern void *data_0208f3b4;
+extern void *data_0208f3f4;
+extern void *data_0208f404;
+extern void *data_0208f424;
+extern void *data_0208f434;
+extern void *data_0208f444;
+extern void *data_0208f454;
+extern void *data_0208f464;
+extern void *data_0209ee74;
+
+extern "C" void *_ZN8Particle10SysTrackerC1Ev(char *r4)
+{
+    void *r2;
+    void *r0;
+    void *r1;
+
+    func_02021c90(r4 + 8);
+    _ZN8Particle14SimpleCallbackC2Ev(r4 + 0x754);
+    _ZN8Particle14SimpleCallbackC2Ev(r4 + 0x760);
+    func_020226a4(r4 + 0x76c);
+    r1 = data_0208f3e4;
+    func_020226a4(r4 + 0x778);
+    *(void **)(r4 + 0x76c) = r1;
+    r1 = data_0208f3e4;
+    func_020226a4(r4 + 0x784);
+    *(void **)(r4 + 0x778) = r1;
+    r1 = data_0208f3a4;
+    func_020226a4(r4 + 0x790);
+    *(void **)(r4 + 0x784) = r1;
+    r1 = data_0208f444;
+    _ZN8Particle14SimpleCallbackC2Ev(r4 + 0x79c);
+    *(void **)(r4 + 0x790) = r1;
+    _ZN8Particle14SimpleCallbackC2Ev(r4 + 0x7a8);
+    func_020225fc(r4 + 0x7b4);
+    func_020225fc(r4 + 0x7c4);
+    func_020225fc(r4 + 0x7d4);
+    func_020225fc(r4 + 0x7e4);
+    r2 = data_0208f3b4;
+    r0 = data_0208f3f4;
+    *(void **)(r4 + 0x7f0) = r2;
+    *(void **)(r4 + 0x7f0) = r0;
+    *(void **)(r4 + 0x7f4) = r2;
+    r0 = data_0208f424;
+    r1 = data_0208f454;
+    *(void **)(r4 + 0x7f4) = r0;
+    *(void **)(r4 + 0x7f8) = r2;
+    *(void **)(r4 + 0x7f8) = r1;
+    *(int *)(r4 + 0x7fc) = 0x3000;
+    *(void **)(r4 + 0x800) = r2;
+    *(void **)(r4 + 0x800) = r1;
+    *(int *)(r4 + 0x804) = 0x3000;
+    func_020226a4(r4 + 0x808);
+    r0 = data_0208f404;
+    r2 = data_0208f3b4;
+    *(void **)(r4 + 0x808) = r0;
+    *(void **)(r4 + 0x810) = r2;
+    r1 = data_0208f434;
+    *(void **)(r4 + 0x810) = r1;
+    *(unsigned char *)(r4 + 0x814) = 1;
+    *(void **)(r4 + 0x818) = r2;
+    r1 = data_0208f464;
+    r0 = &data_0209ee74;
+    *(void **)(r4 + 0x818) = r1;
+    *(void **)r0 = r4;
+    r0 = (void *)0;
+    *(int *)(r4 + 4) = 0;
+    *(int *)(r4 + 0x750) = 0;
+    *(int *)(r4 + 0x75c) = 0;
+    *(int *)(r4 + 0x768) = 0;
+    *(int *)(r4 + 0x774) = 0;
+    *(int *)(r4 + 0x780) = 0;
+    *(int *)(r4 + 0x78c) = 0;
+    *(int *)(r4 + 0x798) = 0;
+    *(int *)(r4 + 0x7a4) = 0;
+    *(int *)(r4 + 0x7b0) = 0;
+    *(int *)(r4 + 0x7c0) = 0;
+    *(int *)(r4 + 0x804) = 0x4b000;
+    return r4;
+}
