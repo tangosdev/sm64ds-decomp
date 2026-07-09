@@ -42,6 +42,7 @@ it is fair to take over: ping the claimant first.
 | ov001 func_ov001_020ab110 (0x020ab110, size 0x118) | lunavyqo | 2026-07-06 | done - verified byte-identical |
 | ov017 func_ov017_021112c4 (0x021112c4-0x021113c0) | lunavyqo | 2026-07-07 | done - verified byte-identical |
 | ov014 func_ov014_02111a6c (0x02111a6c, size 0x84) | lunavyqo | 2026-07-08 | done - verified byte-identical |
+| ov023 func_ov023_021113b0 (0x021113b0-0x02111670) | lunavyqo | 2026-07-09 | done - verified byte-identical, PR #159 open; API claim kept active |
 | ov043 small wrappers: func_ov043_021114b0, 021115cc, 021115e0, 02111744, 02111758 | lunavyqo | 2026-07-08 | done - verified byte-identical, PR open |
 | ov035 func_ov035_0211195c (0x0211195c-0x02111a98) | lunavyqo | 2026-07-08 | done - verified byte-identical |
 | ov013 func_ov013_021112a8 (0x021112a8-0x0211133c) | lunavyqo | 2026-07-08 | done - verified byte-identical |
