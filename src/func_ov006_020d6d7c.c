@@ -1,6 +1,4 @@
-// NONMATCHING: different op / idiom (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+#pragma opt_propagation off
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
