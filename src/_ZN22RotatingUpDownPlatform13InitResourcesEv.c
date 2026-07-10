@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
@@ -11,7 +8,7 @@ extern void func_020393c4(void* p, void* v);
 extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern int _ZNK7PathPtr8NumNodesEv(void* self);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
-extern int Vec3_Equal(void* a, void* b);
+extern int Vec3_equal(void* a, void* b);
 
 extern int data_ov091_021344fc[];
 extern int data_ov091_021344f4[];
@@ -48,10 +45,10 @@ int _ZN22RotatingUpDownPlatform13InitResourcesEv(char* c)
     *(int*)(c + 0x334) = *(int*)(c + 0x64);
     _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x344, c + 0x338, *(unsigned*)(c + 0x328));
 
-    if (Vec3_Equal(c + 0x338, c + 0x32c)) {
-        int* p = (int*)(c + 0x328);
+    if (Vec3_equal(c + 0x338, c + 0x32c)) {
+        int* p = (int*)(((int)c + 0x328) & 0xFFFFFFFFFFFFFFFFLL);
         *p = *p + 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x344, c + 0x338, *p);
+        _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x344, c + 0x338, *(unsigned*)(c + 0x328));
     }
 
     *(short*)(c + 0x350) = *(short*)(c + 0x8e);
