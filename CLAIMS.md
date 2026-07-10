@@ -30,6 +30,7 @@ it is fair to take over: ping the claimant first.
 | ov019: 0211131c (0x0211131c), 021117a8 (0x021117a8), 02111dec (0x02111dec), 02111fec (0x02111fec) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #228 open |
 | ov096: 02135948 (0x02135948), 02136264 (0x02136264), 02136434 (0x02136434), 02136754 (0x02136754), 02136fd4 (0x02136fd4), 02137088 (0x02137088), 021372c0 (0x021372c0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #230 open |
 | ov016: 02111284 (0x02111284), 021115c0 (0x021115c0), 02112fa8 (0x02112fa8) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #231 open |
+| ov077: 021241ac (0x021241ac), 021243c0 (0x021243c0), 021256b4 (0x021256b4), 02125bb4 (0x02125bb4), 02126300 (0x02126300), 0212679c (0x0212679c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #232 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
