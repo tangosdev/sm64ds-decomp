@@ -49,6 +49,7 @@ it is fair to take over: ping the claimant first.
 | ov072 10 funcs (0x0211f1dc-0x021218dc) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #235 open |
 | ov015: _ZN13PoleBillboard8BehaviorEv (0x02111720), _ZN14MovingBarSmall8BehaviorEv (0x021124d0), 021114f0 (0x021114f0) | lunavyqo | 2026-07-10 | near-miss (PR #229 open) |
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
+| ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | near-miss (PR #239 open) |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
