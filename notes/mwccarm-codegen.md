@@ -345,6 +345,15 @@ Additions from the 2026-07-04/05 overnight runs (credit: Fable refine agents):
   kept the constant live in r8 across a loop AND rotated the entire allocation to the ROM
   shape - single-shot fix from a 28-div draft (func_ov039_021112a0). Also the only known
   breaker for pure-constant folds the u64-mask launder cannot touch (func_ov015_021114f0).
+- **Shift-form is a coloring lever (2026-07-10).** `(unsigned short)((unsigned int)x >> 12)`
+  vs `((unsigned int)(x << 4)) >> 16` extract the same field but color differently; the
+  cast-then-shift form flipped a 10-div residual that survived all 24 decl-order
+  permutations (_ZN6Player11St_Owl_MainEv). Same family as the (short)x<<12 lever below.
+- **Big-offset placement: let the compiler split, don't pre-offset (2026-07-10).** For
+  cluster offsets like base+0x52c4, a pre-offset pointer (`p = c + 0x5000`) hoists the add
+  to block entry; writing raw large offsets off the ORIGINAL base makes mwccarm emit its
+  own `add #0x5000` lazily at the FIRST access, matching ROMs where the add appears
+  mid-block (func_ov006_020e83bc).
 - **Launder signedness is a value-number lever (2026-07-10).** `(int)` vs `(unsigned int)`
   inside the u64-mask give DISTINCT 64-bit value numbers, so two materialized bases around
   a call both emit instead of CSE keeping the address live across it - a finer-grained tool
