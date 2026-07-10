@@ -4,7 +4,7 @@ extern void func_020733a8(void*, int, int, void*, void*);
 
 struct P2 { int a, b; };
 extern char data_0208e4b8[];
-extern char data_02092680[];
+extern char _ZTV5Stage[];
 extern char data_ov075_0211d304[];
 extern struct P2 data_02086b58;
 extern void func_ov075_02115bac(void);
@@ -19,7 +19,7 @@ void* func_ov075_0211a854(void)
         struct P2 v;
         _ZN9ActorBaseC1Ev(p);
         *(char**)p = data_0208e4b8;
-        *(char**)p = data_02092680;
+        *(char**)p = _ZTV5Stage;
         {
             unsigned char* f = (unsigned char*)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF);
             *f |= 1;

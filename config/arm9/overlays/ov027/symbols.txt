@@ -1,19 +1,19 @@
-func_ov027_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov027_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN10SlidingIceD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN10SlidingIceD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov027_0211123c kind:function(arm,size=0x28) addr:0x0211123c
-func_ov027_02111264 kind:function(arm,size=0x50) addr:0x02111264
-func_ov027_021112b4 kind:function(arm,size=0x50) addr:0x021112b4
-func_ov027_02111304 kind:function(arm,size=0x13c) addr:0x02111304
-func_ov027_02111440 kind:function(arm,size=0x124) addr:0x02111440
-func_ov027_02111564 kind:function(arm,size=0x30) addr:0x02111564
-func_ov027_02111594 kind:function(arm,size=0x30) addr:0x02111594
+_ZN10SlidingIce16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
+_ZN10SlidingIce6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
+_ZN10SlidingIce8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
+_ZN10SlidingIce13InitResourcesEv kind:function(arm,size=0x124) addr:0x02111440
+SlidingIce_Spawn kind:function(arm,size=0x30) addr:0x02111564
+SlidingIceSpawner_Spawn kind:function(arm,size=0x30) addr:0x02111594
 func_ov027_021115c4 kind:function(arm,size=0x54) addr:0x021115c4
 func_ov027_02111618 kind:function(arm,size=0x68) addr:0x02111618
 func_ov027_02111680 kind:function(arm,size=0x70) addr:0x02111680
 func_ov027_021116f0 kind:function(arm,size=0x80) addr:0x021116f0
 func_ov027_02111770 kind:function(arm,size=0xac) addr:0x02111770
 func_ov027_0211181c kind:function(arm,size=0x50) addr:0x0211181c
-func_ov027_0211186c kind:function(arm,size=0x5c) addr:0x0211186c
+ChillBully_Spawn kind:function(arm,size=0x5c) addr:0x0211186c
 func_ov027_021118c8 kind:function(arm,size=0x5c) addr:0x021118c8
 func_ov027_02111924 kind:function(arm,size=0x70) addr:0x02111924
 func_ov027_02111994 kind:function(arm,size=0x94) addr:0x02111994
@@ -30,8 +30,8 @@ func_ov027_02111e00 kind:function(arm,size=0x34) addr:0x02111e00
 func_ov027_02111e34 kind:function(arm,size=0x80) addr:0x02111e34
 func_ov027_02111eb4 kind:function(arm,size=0x1c8) addr:0x02111eb4
 func_ov027_0211207c kind:function(arm,size=0x48) addr:0x0211207c
-func_ov027_021120c4 kind:function(arm,size=0x40) addr:0x021120c4
-func_ov027_02112104 kind:function(arm,size=0x54) addr:0x02112104
+_ZN13SnowmanBreathD1Ev kind:function(arm,size=0x40) addr:0x021120c4
+_ZN13SnowmanBreathD0Ev kind:function(arm,size=0x54) addr:0x02112104
 func_ov027_02112158 kind:function(arm,size=0x18) addr:0x02112158
 func_ov027_02112170 kind:function(arm,size=0x1cc) addr:0x02112170
 func_ov027_0211233c kind:function(arm,size=0x74) addr:0x0211233c
@@ -41,12 +41,12 @@ func_ov027_02112480 kind:function(arm,size=0x64) addr:0x02112480
 func_ov027_021124e4 kind:function(arm,size=0xc4) addr:0x021124e4
 func_ov027_021125a8 kind:function(arm,size=0x70) addr:0x021125a8
 func_ov027_02112618 kind:function(arm,size=0xe8) addr:0x02112618
-func_ov027_02112700 kind:function(arm,size=0x3c) addr:0x02112700
-func_ov027_0211273c kind:function(arm,size=0x4) addr:0x0211273c
-func_ov027_02112740 kind:function(arm,size=0x64) addr:0x02112740
-func_ov027_021127a4 kind:function(arm,size=0x238) addr:0x021127a4
-func_ov027_021129dc kind:function(arm,size=0xd8) addr:0x021129dc
-func_ov027_02112ab4 kind:function(arm,size=0x60) addr:0x02112ab4
+_ZN13SnowmanBreath16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02112700
+_ZN13SnowmanBreath16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211273c
+_ZN13SnowmanBreath6RenderEv kind:function(arm,size=0x64) addr:0x02112740
+_ZN13SnowmanBreath8BehaviorEv kind:function(arm,size=0x238) addr:0x021127a4
+_ZN13SnowmanBreath13InitResourcesEv kind:function(arm,size=0xd8) addr:0x021129dc
+SnowmanBreath_Spawn kind:function(arm,size=0x60) addr:0x02112ab4
 data_ov027_02112b14 kind:data(any) addr:0x02112b14
 data_ov027_02112b18 kind:data(any) addr:0x02112b18
 data_ov027_02112b1c kind:data(any) addr:0x02112b1c
@@ -116,12 +116,12 @@ data_ov027_021136f4 kind:data(any) addr:0x021136f4 ambiguous
 data_ov027_0211373c kind:data(any) addr:0x0211373c ambiguous
 data_ov027_021137c4 kind:data(any) addr:0x021137c4
 data_ov027_021137d0 kind:data(any) addr:0x021137d0
-data_ov027_021137e4 kind:data(any) addr:0x021137e4 ambiguous
+SlidingIceSpawner_SpawnInfo kind:data(any) addr:0x021137e4 ambiguous
 data_ov027_021137f8 kind:data(any) addr:0x021137f8 ambiguous
-data_ov027_02113800 kind:data(any) addr:0x02113800 ambiguous
+SlidingIce_SpawnInfo kind:data(any) addr:0x02113800 ambiguous
 data_ov027_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov027_02113820 kind:data(any) addr:0x02113820 ambiguous
-data_ov027_02113824 kind:data(any) addr:0x02113824
+_ZTV10SlidingIce kind:data(any) addr:0x02113824
 data_ov027_0211382c kind:data(any) addr:0x0211382c ambiguous
 data_ov027_021138a4 kind:data(any) addr:0x021138a4
 data_ov027_021138a8 kind:data(any) addr:0x021138a8 ambiguous
@@ -129,7 +129,7 @@ data_ov027_021138b0 kind:data(any) addr:0x021138b0
 data_ov027_021138bc kind:data(any) addr:0x021138bc
 data_ov027_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov027_021138c8 kind:data(any) addr:0x021138c8
-data_ov027_021138d8 kind:data(any) addr:0x021138d8 ambiguous
+ChillBully_SpawnInfo kind:data(any) addr:0x021138d8 ambiguous
 data_ov027_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov027_021138f4 kind:data(any) addr:0x021138f4
 data_ov027_021138fc kind:data(any) addr:0x021138fc ambiguous
@@ -157,8 +157,8 @@ data_ov027_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov027_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov027_02113b10 kind:data(any) addr:0x02113b10
 data_ov027_02113b1c kind:data(any) addr:0x02113b1c
-data_ov027_02113b2c kind:data(any) addr:0x02113b2c ambiguous
-data_ov027_02113b50 kind:data(any) addr:0x02113b50
+SnowmanBreath_SpawnInfo kind:data(any) addr:0x02113b2c ambiguous
+_ZTV13SnowmanBreath kind:data(any) addr:0x02113b50
 data_ov027_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov027_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov027_02113b90 kind:data(any) addr:0x02113b90 ambiguous

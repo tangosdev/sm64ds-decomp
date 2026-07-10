@@ -3286,7 +3286,7 @@ data_02086d58 kind:data(any) addr:0x02086d58
 data_02086d60 kind:data(any) addr:0x02086d60
 data_02086d68 kind:data(any) addr:0x02086d68
 data_02086d70 kind:data(any) addr:0x02086d70
-data_02086d78 kind:data(any) addr:0x02086d78
+Camera_SpawnInfo kind:data(any) addr:0x02086d78
 data_02086d80 kind:data(any) addr:0x02086d80
 data_02086d88 kind:data(any) addr:0x02086d88
 data_02086d90 kind:data(any) addr:0x02086d90
@@ -4224,7 +4224,7 @@ data_02092654 kind:data(any) addr:0x02092654
 data_02092660 kind:data(any) addr:0x02092660
 data_02092664 kind:data(any) addr:0x02092664
 data_02092668 kind:data(any) addr:0x02092668
-data_02092680 kind:data(any) addr:0x02092680
+_ZTV5Stage kind:data(any) addr:0x02092680
 data_020926c8 kind:data(any) addr:0x020926c8
 data_020926cc kind:data(any) addr:0x020926cc
 data_020926d0 kind:data(any) addr:0x020926d0

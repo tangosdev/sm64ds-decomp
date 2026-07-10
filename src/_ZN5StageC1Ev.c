@@ -7,7 +7,7 @@ extern int _ZN8Particle10SysTrackerC1Ev(void *);
 extern int _ZN5ModelC1Ev(void *);
 extern int _ZN12MeshColliderC1Ev(void *);
 extern int data_0208e4b8[];
-extern int data_02092680[];
+extern int _ZTV5Stage[];
 extern int data_020921c0[];
 
 void *_ZN5StageC1Ev(void)
@@ -17,7 +17,7 @@ void *_ZN5StageC1Ev(void)
         unsigned char *flag = (unsigned char*)(p+0x13);
         _ZN9ActorBaseC1Ev(p);
         *(int*)(p) = (int)data_0208e4b8;
-        *(int*)(p) = (int)data_02092680;
+        *(int*)(p) = (int)_ZTV5Stage;
         *flag |= 1;
         *flag |= 4;
         *(int*)(p) = (int)data_020921c0;

@@ -8,9 +8,9 @@ func_ov018_02111368 kind:function(arm,size=0x34c) addr:0x02111368
 func_ov018_021116b4 kind:function(arm,size=0x134) addr:0x021116b4
 func_ov018_021117e8 kind:function(arm,size=0x1c) addr:0x021117e8
 func_ov018_02111804 kind:function(arm,size=0x14) addr:0x02111804
-func_ov018_02111818 kind:function(arm,size=0x30) addr:0x02111818
-func_ov018_02111848 kind:function(arm,size=0x50) addr:0x02111848
-func_ov018_02111898 kind:function(arm,size=0x64) addr:0x02111898
+SkiLift_Spawn kind:function(arm,size=0x30) addr:0x02111818
+_ZN7SkiLiftD1Ev kind:function(arm,size=0x50) addr:0x02111848
+_ZN7SkiLiftD0Ev kind:function(arm,size=0x64) addr:0x02111898
 func_ov018_021118fc kind:function(arm,size=0x6c) addr:0x021118fc
 func_ov018_02111968 kind:function(arm,size=0xe0) addr:0x02111968
 func_ov018_02111a48 kind:function(arm,size=0xf4) addr:0x02111a48
@@ -26,26 +26,26 @@ func_ov018_021122ec kind:function(arm,size=0x70) addr:0x021122ec
 func_ov018_0211235c kind:function(arm,size=0x3c) addr:0x0211235c
 func_ov018_02112398 kind:function(arm,size=0x38) addr:0x02112398
 func_ov018_021123d0 kind:function(arm,size=0x1c) addr:0x021123d0
-func_ov018_021123ec kind:function(arm,size=0x64) addr:0x021123ec
-func_ov018_02112450 kind:function(arm,size=0x4) addr:0x02112450
-func_ov018_02112454 kind:function(arm,size=0x2c) addr:0x02112454
-func_ov018_02112480 kind:function(arm,size=0x50) addr:0x02112480
-func_ov018_021124d0 kind:function(arm,size=0x1ac) addr:0x021124d0
-func_ov018_0211267c kind:function(arm,size=0x58) addr:0x0211267c
+_ZN7SkiLift16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021123ec
+_ZN7SkiLift16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112450
+_ZN7SkiLift6RenderEv kind:function(arm,size=0x2c) addr:0x02112454
+_ZN7SkiLift8BehaviorEv kind:function(arm,size=0x50) addr:0x02112480
+_ZN7SkiLift13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x021124d0
+MotherPenguin_Spawn kind:function(arm,size=0x58) addr:0x0211267c
 func_ov018_021126d4 kind:function(arm,size=0x24) addr:0x021126d4
 func_ov018_021126f8 kind:function(arm,size=0x38) addr:0x021126f8
 func_ov018_02112730 kind:function(arm,size=0x5c) addr:0x02112730
-func_ov018_0211278c kind:function(arm,size=0x30) addr:0x0211278c
-func_ov018_021127bc kind:function(arm,size=0x44) addr:0x021127bc
-func_ov018_02112800 kind:function(arm,size=0x58) addr:0x02112800
+PowerStarCreate_Spawn kind:function(arm,size=0x30) addr:0x0211278c
+_ZN8IceSheetD1Ev kind:function(arm,size=0x44) addr:0x021127bc
+_ZN8IceSheetD0Ev kind:function(arm,size=0x58) addr:0x02112800
 func_ov018_02112858 kind:function(arm,size=0x28) addr:0x02112858
 func_ov018_02112880 kind:function(arm,size=0x60) addr:0x02112880
 func_ov018_021128e0 kind:function(arm,size=0x44) addr:0x021128e0
-func_ov018_02112924 kind:function(arm,size=0x44) addr:0x02112924
-func_ov018_02112968 kind:function(arm,size=0x28) addr:0x02112968
-func_ov018_02112990 kind:function(arm,size=0x30) addr:0x02112990
-func_ov018_021129c0 kind:function(arm,size=0x84) addr:0x021129c0
-func_ov018_02112a44 kind:function(arm,size=0x30) addr:0x02112a44
+_ZN8IceSheet16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112924
+_ZN8IceSheet6RenderEv kind:function(arm,size=0x28) addr:0x02112968
+_ZN8IceSheet8BehaviorEv kind:function(arm,size=0x30) addr:0x02112990
+_ZN8IceSheet13InitResourcesEv kind:function(arm,size=0x84) addr:0x021129c0
+IceSheet_Spawn kind:function(arm,size=0x30) addr:0x02112a44
 data_ov018_02112a74 kind:data(any) addr:0x02112a74
 data_ov018_02112a78 kind:data(any) addr:0x02112a78
 data_ov018_02112a7c kind:data(any) addr:0x02112a7c
@@ -125,7 +125,7 @@ data_ov018_02113820 kind:data(any) addr:0x02113820 ambiguous
 data_ov018_0211382c kind:data(any) addr:0x0211382c ambiguous
 data_ov018_02113888 kind:data(any) addr:0x02113888
 data_ov018_02113894 kind:data(any) addr:0x02113894
-data_ov018_021138a8 kind:data(any) addr:0x021138a8 ambiguous
+SkiLift_SpawnInfo kind:data(any) addr:0x021138a8 ambiguous
 data_ov018_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov018_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov018_021138cc kind:data(any) addr:0x021138cc
@@ -142,22 +142,22 @@ data_ov018_02113974 kind:data(any) addr:0x02113974
 data_ov018_0211397c kind:data(any) addr:0x0211397c
 data_ov018_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov018_02113988 kind:data(any) addr:0x02113988
-data_ov018_02113998 kind:data(any) addr:0x02113998 ambiguous
+MotherPenguin_SpawnInfo kind:data(any) addr:0x02113998 ambiguous
 data_ov018_021139b0 kind:data(any) addr:0x021139b0 ambiguous
-data_ov018_021139bc kind:data(any) addr:0x021139bc
+_ZTV7SkiLift kind:data(any) addr:0x021139bc
 data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
-data_ov018_02113a00 kind:data(any) addr:0x02113a00 ambiguous
+BridgePenguin_SpawnInfo kind:data(any) addr:0x02113a00 ambiguous
 data_ov018_02113a38 kind:data(any) addr:0x02113a38
 data_ov018_02113a44 kind:data(any) addr:0x02113a44
-data_ov018_02113a50 kind:data(any) addr:0x02113a50 ambiguous
+PowerStarCreate_SpawnInfo kind:data(any) addr:0x02113a50 ambiguous
 data_ov018_02113a74 kind:data(any) addr:0x02113a74
 data_ov018_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov018_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov018_02113af0 kind:data(any) addr:0x02113af0
 data_ov018_02113afc kind:data(any) addr:0x02113afc
-data_ov018_02113b10 kind:data(any) addr:0x02113b10 ambiguous
+IceSheet_SpawnInfo kind:data(any) addr:0x02113b10 ambiguous
 data_ov018_02113b2c kind:data(any) addr:0x02113b2c ambiguous
-data_ov018_02113b34 kind:data(any) addr:0x02113b34
+_ZTV8IceSheet kind:data(any) addr:0x02113b34
 data_ov018_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 data_ov018_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov018_02113b80 kind:data(any) addr:0x02113b80 ambiguous

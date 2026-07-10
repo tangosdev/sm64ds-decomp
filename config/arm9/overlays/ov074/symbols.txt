@@ -1,5 +1,5 @@
-func_ov074_0211f000 kind:function(arm,size=0xa0) addr:0x0211f000
-func_ov074_0211f0a0 kind:function(arm,size=0xb4) addr:0x0211f0a0
+_ZN8GoombossD1Ev kind:function(arm,size=0xa0) addr:0x0211f000
+_ZN8GoombossD0Ev kind:function(arm,size=0xb4) addr:0x0211f0a0
 func_ov074_0211f154 kind:function(arm,size=0xf0) addr:0x0211f154
 func_ov074_0211f244 kind:function(arm,size=0x100) addr:0x0211f244
 func_ov074_0211f344 kind:function(arm,size=0x48) addr:0x0211f344
@@ -43,16 +43,16 @@ func_ov074_0212195c kind:function(arm,size=0x40) addr:0x0212195c
 func_ov074_0212199c kind:function(arm,size=0x84) addr:0x0212199c
 func_ov074_02121a20 kind:function(arm,size=0x2c) addr:0x02121a20
 func_ov074_02121a4c kind:function(arm,size=0x70) addr:0x02121a4c
-func_ov074_02121abc kind:function(arm,size=0xb4) addr:0x02121abc
-func_ov074_02121b70 kind:function(arm,size=0x80) addr:0x02121b70
-func_ov074_02121bf0 kind:function(arm,size=0x2a8) addr:0x02121bf0
-func_ov074_02121e98 kind:function(arm,size=0x404) addr:0x02121e98
+_ZN8Goomboss16CleanupResourcesEv kind:function(arm,size=0xb4) addr:0x02121abc
+_ZN8Goomboss6RenderEv kind:function(arm,size=0x80) addr:0x02121b70
+_ZN8Goomboss8BehaviorEv kind:function(arm,size=0x2a8) addr:0x02121bf0
+_ZN8Goomboss13InitResourcesEv kind:function(arm,size=0x404) addr:0x02121e98
 func_ov074_0212229c kind:function(arm,size=0x44) addr:0x0212229c
 func_ov074_021222e0 kind:function(arm,size=0xdc) addr:0x021222e0
 func_ov074_021223bc kind:function(arm,size=0x278) addr:0x021223bc
 func_ov074_02122634 kind:function(arm,size=0x130) addr:0x02122634
-func_ov074_02122764 kind:function(arm,size=0xd4) addr:0x02122764
-func_ov074_02122838 kind:function(arm,size=0xd4) addr:0x02122838
+ExplosionGoomba_Spawn kind:function(arm,size=0xd4) addr:0x02122764
+Goomboss_Spawn kind:function(arm,size=0xd4) addr:0x02122838
 data_ov074_0212290c kind:data(any) addr:0x0212290c
 data_ov074_0212291c kind:data(any) addr:0x0212291c
 data_ov074_0212292c kind:data(any) addr:0x0212292c
@@ -86,10 +86,10 @@ data_ov074_02122e30 kind:data(any) addr:0x02122e30
 data_ov074_02122e3c kind:data(any) addr:0x02122e3c
 data_ov074_02122e4c kind:data(any) addr:0x02122e4c
 data_ov074_02122e5c kind:data(any) addr:0x02122e5c
-data_ov074_02122e78 kind:data(any) addr:0x02122e78 ambiguous
-data_ov074_02122e94 kind:data(any) addr:0x02122e94 ambiguous
+Goomboss_SpawnInfo kind:data(any) addr:0x02122e78 ambiguous
+ExplosionGoomba_SpawnInfo kind:data(any) addr:0x02122e94 ambiguous
 data_ov074_02122eb0 kind:data(any) addr:0x02122eb0 ambiguous
-data_ov074_02122eb8 kind:data(any) addr:0x02122eb8
+_ZTV8Goomboss kind:data(any) addr:0x02122eb8
 data_ov074_02122f34 kind:data(any) addr:0x02122f34
 data_ov074_02122f38 kind:data(any) addr:0x02122f38
 data_ov074_02122f3c kind:data(any) addr:0x02122f3c

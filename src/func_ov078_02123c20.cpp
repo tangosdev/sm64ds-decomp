@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern int* func_ov080_02123804(int* t);
+extern int* _ZN13MontyMoleRockD0Ev(int* t);
 extern void func_ov078_02123864(char* r7);
 extern void func_ov002_020db54c(int a, int b, int c, int d);
 extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
@@ -10,7 +10,7 @@ extern void func_ov078_02125c48(char* c, void* p);
 extern int data_ov078_021270fc[];
 
 int func_ov078_02123c20(char* c){
-    if((int)func_ov080_02123804((int*)c) == 1){
+    if((int)_ZN13MontyMoleRockD0Ev((int*)c) == 1){
         func_ov078_02123864(c);
         int v = *(int*)(c+0x494);
         if(v != 0){

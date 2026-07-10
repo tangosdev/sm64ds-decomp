@@ -1,6 +1,6 @@
 //cpp
 extern "C" int data_ov006_0213fb34;
-extern "C" int data_ov006_0213c62c;
+extern "C" int _ZTV17MgBounceAndPounce;
 extern "C" int data_020a0eac;
 extern "C" void func_ov006_02120938();
 extern "C" void func_ov006_020d1008();
@@ -16,7 +16,7 @@ extern "C" void *func_ov006_02120880(char *thiz)
     func_0207328c(thiz + 0x5cd0, 5, 0x24, &func_ov006_02120938);
     func_0207328c(thiz + 0x534c, 3, 0x32c, &func_ov006_020d1008);
     func_0207328c(thiz + 0x500c, 4, 0xd0, &func_ov006_020ccfc8);
-    *(int**)thiz = &data_ov006_0213c62c;
+    *(int**)thiz = &_ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(thiz + 0x47e4);
     func_ov004_020b29c0(thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, *(void**)&data_020a0eac);

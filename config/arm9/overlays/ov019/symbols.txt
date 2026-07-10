@@ -1,5 +1,5 @@
-func_ov019_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov019_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
+_ZN13RacingPenguinD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN13RacingPenguinD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 func_ov019_02111254 kind:function(arm,size=0x28) addr:0x02111254
 func_ov019_0211127c kind:function(arm,size=0x3c) addr:0x0211127c
 func_ov019_021112b8 kind:function(arm,size=0x64) addr:0x021112b8
@@ -22,17 +22,17 @@ func_ov019_021121f8 kind:function(arm,size=0x70) addr:0x021121f8
 func_ov019_02112268 kind:function(arm,size=0x3c) addr:0x02112268
 func_ov019_021122a4 kind:function(arm,size=0x38) addr:0x021122a4
 func_ov019_021122dc kind:function(arm,size=0x1c) addr:0x021122dc
-func_ov019_021122f8 kind:function(arm,size=0x64) addr:0x021122f8
-func_ov019_0211235c kind:function(arm,size=0x4) addr:0x0211235c
-func_ov019_02112360 kind:function(arm,size=0x34) addr:0x02112360
-func_ov019_02112394 kind:function(arm,size=0x40) addr:0x02112394
-func_ov019_021123d4 kind:function(arm,size=0x1e8) addr:0x021123d4
-func_ov019_021125bc kind:function(arm,size=0x60) addr:0x021125bc
-func_ov019_0211261c kind:function(arm,size=0x24) addr:0x0211261c
-func_ov019_02112640 kind:function(arm,size=0x38) addr:0x02112640
-func_ov019_02112678 kind:function(arm,size=0xa4) addr:0x02112678
-func_ov019_0211271c kind:function(arm,size=0x30) addr:0x0211271c
-func_ov019_0211274c kind:function(arm,size=0x30) addr:0x0211274c
+_ZN13RacingPenguin16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021122f8
+_ZN13RacingPenguin16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211235c
+_ZN13RacingPenguin6RenderEv kind:function(arm,size=0x34) addr:0x02112360
+_ZN13RacingPenguin8BehaviorEv kind:function(arm,size=0x40) addr:0x02112394
+_ZN13RacingPenguin13InitResourcesEv kind:function(arm,size=0x1e8) addr:0x021123d4
+RacingPenguin_Spawn kind:function(arm,size=0x60) addr:0x021125bc
+_ZN15IceSlideManagerD1Ev kind:function(arm,size=0x24) addr:0x0211261c
+_ZN15IceSlideManagerD0Ev kind:function(arm,size=0x38) addr:0x02112640
+_ZN15IceSlideManager8BehaviorEv kind:function(arm,size=0xa4) addr:0x02112678
+_ZN15IceSlideManager13InitResourcesEv kind:function(arm,size=0x30) addr:0x0211271c
+IceSlideManager_Spawn kind:function(arm,size=0x30) addr:0x0211274c
 data_ov019_0211277c kind:data(any) addr:0x0211277c
 data_ov019_02112788 kind:data(any) addr:0x02112788
 __sinit_ov019_021127a4 kind:function(arm,size=0x370) addr:0x021127a4
@@ -100,13 +100,13 @@ data_ov019_021132c0 kind:data(any) addr:0x021132c0
 data_ov019_021132c8 kind:data(any) addr:0x021132c8
 data_ov019_021132d0 kind:data(any) addr:0x021132d0
 data_ov019_021132dc kind:data(any) addr:0x021132dc
-data_ov019_021132ec kind:data(any) addr:0x021132ec ambiguous
-data_ov019_02113310 kind:data(any) addr:0x02113310
+RacingPenguin_SpawnInfo kind:data(any) addr:0x021132ec ambiguous
+_ZTV13RacingPenguin kind:data(any) addr:0x02113310
 data_ov019_02113344 kind:data(any) addr:0x02113344 ambiguous
 data_ov019_0211338c kind:data(any) addr:0x0211338c
 data_ov019_02113398 kind:data(any) addr:0x02113398
-data_ov019_021133a8 kind:data(any) addr:0x021133a8 ambiguous
-data_ov019_021133cc kind:data(any) addr:0x021133cc
+IceSlideManager_SpawnInfo kind:data(any) addr:0x021133a8 ambiguous
+_ZTV15IceSlideManager kind:data(any) addr:0x021133cc
 data_ov019_02113434 kind:data(any) addr:0x02113434 ambiguous
 data_ov019_02113460 kind:bss addr:0x02113460
 data_ov019_02113468 kind:bss addr:0x02113468

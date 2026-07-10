@@ -8,7 +8,7 @@ extern void func_ov006_021227c8(void);
 extern void func_ov006_020d1008(void);
 extern void func_ov006_020ca604(void);
 extern void *data_ov006_0213fc7c[];
-extern void *data_ov006_0213c62c[];
+extern void *_ZTV17MgBounceAndPounce[];
 
 void *func_ov006_021225ac(void *thiz)
 {
@@ -20,7 +20,7 @@ void *func_ov006_021225ac(void *thiz)
     func_0207328c(c + 0x5ddc, 0xa, 0x1d0, (void *)func_ov006_021227c8);
     func_0207328c(c + 0x5458, 3, 0x32c, (void *)func_ov006_020d1008);
     func_0207328c(c + 0x500c, 5, 0xdc, (void *)func_ov006_020ca604);
-    *(void **)c = data_ov006_0213c62c;
+    *(void **)c = _ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
     func_ov004_020b29c0(c);
     return c;

@@ -1,5 +1,5 @@
-func_ov066_02115ee0 kind:function(arm,size=0xa4) addr:0x02115ee0
-func_ov066_02115f84 kind:function(arm,size=0xb8) addr:0x02115f84
+_ZN6EyerokD1Ev kind:function(arm,size=0xa4) addr:0x02115ee0
+_ZN6EyerokD0Ev kind:function(arm,size=0xb8) addr:0x02115f84
 func_ov066_0211603c kind:function(arm,size=0x2ac) addr:0x0211603c
 func_ov066_021162e8 kind:function(arm,size=0x44) addr:0x021162e8
 func_ov066_0211632c kind:function(arm,size=0x64) addr:0x0211632c
@@ -53,15 +53,15 @@ func_ov066_0211944c kind:function(arm,size=0x8) addr:0x0211944c
 func_ov066_02119454 kind:function(arm,size=0x50) addr:0x02119454
 func_ov066_021194a4 kind:function(arm,size=0x58) addr:0x021194a4
 func_ov066_021194fc kind:function(arm,size=0x158) addr:0x021194fc
-func_ov066_02119654 kind:function(arm,size=0x14c) addr:0x02119654
-func_ov066_021197a0 kind:function(arm,size=0x4) addr:0x021197a0
-func_ov066_021197a4 kind:function(arm,size=0x94) addr:0x021197a4
-func_ov066_02119838 kind:function(arm,size=0x4b0) addr:0x02119838
-func_ov066_02119ce8 kind:function(arm,size=0x5f4) addr:0x02119ce8
+_ZN6Eyerok16CleanupResourcesEv kind:function(arm,size=0x14c) addr:0x02119654
+_ZN6Eyerok16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021197a0
+_ZN6Eyerok6RenderEv kind:function(arm,size=0x94) addr:0x021197a4
+_ZN6Eyerok8BehaviorEv kind:function(arm,size=0x4b0) addr:0x02119838
+_ZN6Eyerok13InitResourcesEv kind:function(arm,size=0x5f4) addr:0x02119ce8
 func_ov066_0211a2dc kind:function(arm,size=0x8) addr:0x0211a2dc
 func_ov066_0211a2e4 kind:function(arm,size=0x78) addr:0x0211a2e4
 func_ov066_0211a35c kind:function(arm,size=0x14) addr:0x0211a35c
-func_ov066_0211a370 kind:function(arm,size=0xa8) addr:0x0211a370
+Eyerok_Spawn kind:function(arm,size=0xa8) addr:0x0211a370
 __sinit_ov066_0211a418 kind:function(arm,size=0x7a8) addr:0x0211a418
 .p__sinit_ov066_0211a418 kind:data(word) addr:0x0211abc0
 data_ov066_0211abe0 kind:data(any) addr:0x0211abe0
@@ -107,8 +107,8 @@ data_ov066_0211ad10 kind:data(any) addr:0x0211ad10
 data_ov066_0211ad18 kind:data(any) addr:0x0211ad18
 data_ov066_0211ad24 kind:data(any) addr:0x0211ad24
 data_ov066_0211ad30 kind:data(any) addr:0x0211ad30
-data_ov066_0211ad40 kind:data(any) addr:0x0211ad40 ambiguous
-data_ov066_0211ad64 kind:data(any) addr:0x0211ad64
+Eyerok_SpawnInfo kind:data(any) addr:0x0211ad40 ambiguous
+_ZTV6Eyerok kind:data(any) addr:0x0211ad64
 data_ov066_0211ae00 kind:bss addr:0x0211ae00
 data_ov066_0211ae04 kind:bss addr:0x0211ae04
 data_ov066_0211ae08 kind:bss addr:0x0211ae08

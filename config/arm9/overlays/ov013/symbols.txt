@@ -5,16 +5,16 @@ func_ov013_02111238 kind:function(arm,size=0x48) addr:0x02111238
 func_ov013_02111280 kind:function(arm,size=0x28) addr:0x02111280
 func_ov013_021112a8 kind:function(arm,size=0x94) addr:0x021112a8
 func_ov013_0211133c kind:function(arm,size=0x48) addr:0x0211133c
-func_ov013_02111384 kind:function(arm,size=0x38) addr:0x02111384
-func_ov013_021113bc kind:function(arm,size=0x30) addr:0x021113bc
-func_ov013_021113ec kind:function(arm,size=0x44) addr:0x021113ec
+ClockPaintingPendulum_Spawn kind:function(arm,size=0x38) addr:0x02111384
+_ZN22ClockPaintingHandShortD1Ev kind:function(arm,size=0x30) addr:0x021113bc
+_ZN22ClockPaintingHandShortD0Ev kind:function(arm,size=0x44) addr:0x021113ec
 func_ov013_02111430 kind:function(arm,size=0x48) addr:0x02111430
-func_ov013_02111478 kind:function(arm,size=0x2c) addr:0x02111478
-func_ov013_021114a4 kind:function(arm,size=0x28) addr:0x021114a4
-func_ov013_021114cc kind:function(arm,size=0x100) addr:0x021114cc
-func_ov013_021115cc kind:function(arm,size=0x70) addr:0x021115cc
-func_ov013_0211163c kind:function(arm,size=0x38) addr:0x0211163c
-func_ov013_02111674 kind:function(arm,size=0x38) addr:0x02111674
+_ZN22ClockPaintingHandShort16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111478
+_ZN22ClockPaintingHandShort6RenderEv kind:function(arm,size=0x28) addr:0x021114a4
+_ZN22ClockPaintingHandShort8BehaviorEv kind:function(arm,size=0x100) addr:0x021114cc
+_ZN22ClockPaintingHandShort13InitResourcesEv kind:function(arm,size=0x70) addr:0x021115cc
+ClockPaintingHandShort_Spawn kind:function(arm,size=0x38) addr:0x0211163c
+ClockPaintingHandLong_Spawn kind:function(arm,size=0x38) addr:0x02111674
 data_ov013_021116ac kind:data(any) addr:0x021116ac
 data_ov013_021116b0 kind:data(any) addr:0x021116b0
 __sinit_ov013_021116b8 kind:function(arm,size=0x40) addr:0x021116b8
@@ -87,7 +87,7 @@ data_ov013_021120d8 kind:data(any) addr:0x021120d8 ambiguous
 data_ov013_021120e0 kind:data(any) addr:0x021120e0
 data_ov013_021120ec kind:data(any) addr:0x021120ec
 data_ov013_021120f8 kind:data(any) addr:0x021120f8 ambiguous
-data_ov013_02112104 kind:data(any) addr:0x02112104 ambiguous
+ClockPaintingPendulum_SpawnInfo kind:data(any) addr:0x02112104 ambiguous
 data_ov013_02112118 kind:data(any) addr:0x02112118 ambiguous
 data_ov013_02112128 kind:data(any) addr:0x02112128
 data_ov013_02112138 kind:data(any) addr:0x02112138 ambiguous
@@ -97,10 +97,10 @@ data_ov013_02112198 kind:data(any) addr:0x02112198 ambiguous
 data_ov013_021121a4 kind:data(any) addr:0x021121a4
 data_ov013_021121b0 kind:data(any) addr:0x021121b0
 data_ov013_021121b8 kind:data(any) addr:0x021121b8 ambiguous
-data_ov013_021121c0 kind:data(any) addr:0x021121c0 ambiguous
-data_ov013_021121dc kind:data(any) addr:0x021121dc ambiguous
+ClockPaintingHandLong_SpawnInfo kind:data(any) addr:0x021121c0 ambiguous
+ClockPaintingHandShort_SpawnInfo kind:data(any) addr:0x021121dc ambiguous
 data_ov013_021121f8 kind:data(any) addr:0x021121f8 ambiguous
-data_ov013_02112200 kind:data(any) addr:0x02112200
+_ZTV22ClockPaintingHandShort kind:data(any) addr:0x02112200
 data_ov013_02112258 kind:data(any) addr:0x02112258 ambiguous
 data_ov013_0211227c kind:data(any) addr:0x0211227c ambiguous
 data_ov013_02112280 kind:bss addr:0x02112280

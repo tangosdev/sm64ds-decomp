@@ -1,5 +1,5 @@
-func_ov090_02130f00 kind:function(arm,size=0x40) addr:0x02130f00
-func_ov090_02130f40 kind:function(arm,size=0x54) addr:0x02130f40
+_ZN7SkeeterD1Ev kind:function(arm,size=0x40) addr:0x02130f00
+_ZN7SkeeterD0Ev kind:function(arm,size=0x54) addr:0x02130f40
 func_ov090_02130f94 kind:function(arm,size=0x120) addr:0x02130f94
 func_ov090_021310b4 kind:function(arm,size=0x2c4) addr:0x021310b4
 func_ov090_02131378 kind:function(arm,size=0x128) addr:0x02131378
@@ -14,30 +14,30 @@ func_ov090_02131c48 kind:function(arm,size=0x168) addr:0x02131c48
 func_ov090_02131db0 kind:function(arm,size=0x50) addr:0x02131db0
 func_ov090_02131e00 kind:function(arm,size=0x50) addr:0x02131e00
 func_ov090_02131e50 kind:function(arm,size=0x8c) addr:0x02131e50
-func_ov090_02131edc kind:function(arm,size=0x54) addr:0x02131edc
-func_ov090_02131f30 kind:function(arm,size=0x4) addr:0x02131f30
-func_ov090_02131f34 kind:function(arm,size=0x54) addr:0x02131f34
-func_ov090_02131f88 kind:function(arm,size=0x3d4) addr:0x02131f88
-func_ov090_0213235c kind:function(arm,size=0x2bc) addr:0x0213235c
+_ZN7Skeeter16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02131edc
+_ZN7Skeeter16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02131f30
+_ZN7Skeeter6RenderEv kind:function(arm,size=0x54) addr:0x02131f34
+_ZN7Skeeter8BehaviorEv kind:function(arm,size=0x3d4) addr:0x02131f88
+_ZN7Skeeter13InitResourcesEv kind:function(arm,size=0x2bc) addr:0x0213235c
 func_ov090_02132618 kind:function(arm,size=0x8) addr:0x02132618
 func_ov090_02132620 kind:function(arm,size=0x2c) addr:0x02132620
 func_ov090_0213264c kind:function(arm,size=0x8) addr:0x0213264c
-func_ov090_02132654 kind:function(arm,size=0x48) addr:0x02132654
-func_ov090_0213269c kind:function(arm,size=0x40) addr:0x0213269c
-func_ov090_021326dc kind:function(arm,size=0x54) addr:0x021326dc
+Skeeter_Spawn kind:function(arm,size=0x48) addr:0x02132654
+_ZN8MantaRayD1Ev kind:function(arm,size=0x40) addr:0x0213269c
+_ZN8MantaRayD0Ev kind:function(arm,size=0x54) addr:0x021326dc
 func_ov090_02132730 kind:function(arm,size=0xb4) addr:0x02132730
 func_ov090_021327e4 kind:function(arm,size=0x274) addr:0x021327e4
 func_ov090_02132a58 kind:function(arm,size=0x6c) addr:0x02132a58
 func_ov090_02132ac4 kind:function(arm,size=0x50) addr:0x02132ac4
 func_ov090_02132b14 kind:function(arm,size=0x108) addr:0x02132b14
-func_ov090_02132c1c kind:function(arm,size=0x48) addr:0x02132c1c
-func_ov090_02132c64 kind:function(arm,size=0x4) addr:0x02132c64
-func_ov090_02132c68 kind:function(arm,size=0x2c) addr:0x02132c68
-func_ov090_02132c94 kind:function(arm,size=0x1a4) addr:0x02132c94
-func_ov090_02132e38 kind:function(arm,size=0x1b0) addr:0x02132e38
-func_ov090_02132fe8 kind:function(arm,size=0x4c) addr:0x02132fe8
-func_ov090_02133034 kind:function(arm,size=0x40) addr:0x02133034
-func_ov090_02133074 kind:function(arm,size=0x54) addr:0x02133074
+_ZN8MantaRay16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02132c1c
+_ZN8MantaRay16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02132c64
+_ZN8MantaRay6RenderEv kind:function(arm,size=0x2c) addr:0x02132c68
+_ZN8MantaRay8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02132c94
+_ZN8MantaRay13InitResourcesEv kind:function(arm,size=0x1b0) addr:0x02132e38
+MantaRay_Spawn kind:function(arm,size=0x4c) addr:0x02132fe8
+_ZN10CheepCheepD1Ev kind:function(arm,size=0x40) addr:0x02133034
+_ZN10CheepCheepD0Ev kind:function(arm,size=0x54) addr:0x02133074
 func_ov090_021330c8 kind:function(arm,size=0xc8) addr:0x021330c8
 func_ov090_02133190 kind:function(arm,size=0x34) addr:0x02133190
 func_ov090_021331c4 kind:function(arm,size=0x3c) addr:0x021331c4
@@ -45,25 +45,25 @@ func_ov090_02133200 kind:function(arm,size=0x90) addr:0x02133200
 func_ov090_02133290 kind:function(arm,size=0x58) addr:0x02133290
 func_ov090_021332e8 kind:function(arm,size=0x50) addr:0x021332e8
 func_ov090_02133338 kind:function(arm,size=0x74) addr:0x02133338
-func_ov090_021333ac kind:function(arm,size=0x30) addr:0x021333ac
-func_ov090_021333dc kind:function(arm,size=0x4) addr:0x021333dc
-func_ov090_021333e0 kind:function(arm,size=0x50) addr:0x021333e0
-func_ov090_02133430 kind:function(arm,size=0x100) addr:0x02133430
-func_ov090_02133530 kind:function(arm,size=0x104) addr:0x02133530
-func_ov090_02133634 kind:function(arm,size=0x48) addr:0x02133634
-func_ov090_0213367c kind:function(arm,size=0x40) addr:0x0213367c
-func_ov090_021336bc kind:function(arm,size=0x54) addr:0x021336bc
+_ZN10CheepCheep16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021333ac
+_ZN10CheepCheep16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021333dc
+_ZN10CheepCheep6RenderEv kind:function(arm,size=0x50) addr:0x021333e0
+_ZN10CheepCheep8BehaviorEv kind:function(arm,size=0x100) addr:0x02133430
+_ZN10CheepCheep13InitResourcesEv kind:function(arm,size=0x104) addr:0x02133530
+CheepCheep_Spawn kind:function(arm,size=0x48) addr:0x02133634
+_ZN5SharkD1Ev kind:function(arm,size=0x40) addr:0x0213367c
+_ZN5SharkD0Ev kind:function(arm,size=0x54) addr:0x021336bc
 func_ov090_02133710 kind:function(arm,size=0x120) addr:0x02133710
 func_ov090_02133830 kind:function(arm,size=0x4c) addr:0x02133830
 func_ov090_0213387c kind:function(arm,size=0x38) addr:0x0213387c
 func_ov090_021338b4 kind:function(arm,size=0x50) addr:0x021338b4
 func_ov090_02133904 kind:function(arm,size=0x74) addr:0x02133904
-func_ov090_02133978 kind:function(arm,size=0x30) addr:0x02133978
-func_ov090_021339a8 kind:function(arm,size=0x4) addr:0x021339a8
-func_ov090_021339ac kind:function(arm,size=0x2c) addr:0x021339ac
-func_ov090_021339d8 kind:function(arm,size=0x1c0) addr:0x021339d8
-func_ov090_02133b98 kind:function(arm,size=0x108) addr:0x02133b98
-func_ov090_02133ca0 kind:function(arm,size=0x48) addr:0x02133ca0
+_ZN5Shark16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02133978
+_ZN5Shark16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021339a8
+_ZN5Shark6RenderEv kind:function(arm,size=0x2c) addr:0x021339ac
+_ZN5Shark8BehaviorEv kind:function(arm,size=0x1c0) addr:0x021339d8
+_ZN5Shark13InitResourcesEv kind:function(arm,size=0x108) addr:0x02133b98
+Shark_Spawn kind:function(arm,size=0x48) addr:0x02133ca0
 __sinit_ov090_02133ce8 kind:function(arm,size=0x1c0) addr:0x02133ce8
 __sinit_ov090_02133ea8 kind:function(arm,size=0xa4) addr:0x02133ea8
 __sinit_ov090_02133f4c kind:function(arm,size=0xd4) addr:0x02133f4c
@@ -83,15 +83,15 @@ data_ov090_02134118 kind:data(any) addr:0x02134118
 data_ov090_02134120 kind:data(any) addr:0x02134120
 data_ov090_0213412c kind:data(any) addr:0x0213412c
 data_ov090_02134138 kind:data(any) addr:0x02134138
-data_ov090_02134144 kind:data(any) addr:0x02134144 ambiguous
-data_ov090_02134168 kind:data(any) addr:0x02134168
+Skeeter_SpawnInfo kind:data(any) addr:0x02134144 ambiguous
+_ZTV7Skeeter kind:data(any) addr:0x02134168
 data_ov090_021341e4 kind:data(any) addr:0x021341e4
 data_ov090_021341ec kind:data(any) addr:0x021341ec
 data_ov090_021341f4 kind:data(any) addr:0x021341f4
 data_ov090_02134200 kind:data(any) addr:0x02134200
 data_ov090_0213420c kind:data(any) addr:0x0213420c
-data_ov090_02134218 kind:data(any) addr:0x02134218 ambiguous
-data_ov090_0213423c kind:data(any) addr:0x0213423c
+MantaRay_SpawnInfo kind:data(any) addr:0x02134218 ambiguous
+_ZTV8MantaRay kind:data(any) addr:0x0213423c
 data_ov090_021342b8 kind:data(any) addr:0x021342b8
 data_ov090_021342c0 kind:data(any) addr:0x021342c0
 data_ov090_021342c8 kind:data(any) addr:0x021342c8
@@ -99,14 +99,14 @@ data_ov090_021342d0 kind:data(any) addr:0x021342d0
 data_ov090_021342d8 kind:data(any) addr:0x021342d8
 data_ov090_021342e4 kind:data(any) addr:0x021342e4
 data_ov090_021342f0 kind:data(any) addr:0x021342f0
-data_ov090_02134300 kind:data(any) addr:0x02134300 ambiguous
-data_ov090_02134324 kind:data(any) addr:0x02134324
+CheepCheep_SpawnInfo kind:data(any) addr:0x02134300 ambiguous
+_ZTV10CheepCheep kind:data(any) addr:0x02134324
 data_ov090_021343a0 kind:data(any) addr:0x021343a0
 data_ov090_021343a8 kind:data(any) addr:0x021343a8
 data_ov090_021343b0 kind:data(any) addr:0x021343b0
 data_ov090_021343bc kind:data(any) addr:0x021343bc
-data_ov090_021343c8 kind:data(any) addr:0x021343c8 ambiguous
-data_ov090_021343ec kind:data(any) addr:0x021343ec
+Shark_SpawnInfo kind:data(any) addr:0x021343c8 ambiguous
+_ZTV5Shark kind:data(any) addr:0x021343ec
 data_ov090_02134480 kind:bss addr:0x02134480
 data_ov090_02134488 kind:bss addr:0x02134488
 data_ov090_02134490 kind:bss addr:0x02134490

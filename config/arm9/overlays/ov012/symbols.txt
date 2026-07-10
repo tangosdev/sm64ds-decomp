@@ -5,14 +5,14 @@ func_ov012_021112ec kind:function(arm,size=0x38) addr:0x021112ec
 func_ov012_02111324 kind:function(arm,size=0x28) addr:0x02111324
 func_ov012_0211134c kind:function(arm,size=0x24) addr:0x0211134c
 func_ov012_02111370 kind:function(arm,size=0xb0) addr:0x02111370
-func_ov012_02111420 kind:function(arm,size=0x30) addr:0x02111420
-func_ov012_02111450 kind:function(arm,size=0x4c) addr:0x02111450
-func_ov012_0211149c kind:function(arm,size=0x60) addr:0x0211149c
-func_ov012_021114fc kind:function(arm,size=0x44) addr:0x021114fc
-func_ov012_02111540 kind:function(arm,size=0x34) addr:0x02111540
-func_ov012_02111574 kind:function(arm,size=0xd8) addr:0x02111574
-func_ov012_0211164c kind:function(arm,size=0xe4) addr:0x0211164c
-func_ov012_02111730 kind:function(arm,size=0x38) addr:0x02111730
+SwitchPillar_Spawn kind:function(arm,size=0x30) addr:0x02111420
+_ZN12SwitchPillarD1Ev kind:function(arm,size=0x4c) addr:0x02111450
+_ZN12SwitchPillarD0Ev kind:function(arm,size=0x60) addr:0x0211149c
+_ZN12SwitchPillar16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021114fc
+_ZN12SwitchPillar6RenderEv kind:function(arm,size=0x34) addr:0x02111540
+_ZN12SwitchPillar8BehaviorEv kind:function(arm,size=0xd8) addr:0x02111574
+_ZN12SwitchPillar13InitResourcesEv kind:function(arm,size=0xe4) addr:0x0211164c
+BasementWater_Spawn kind:function(arm,size=0x38) addr:0x02111730
 data_ov012_02111768 kind:data(any) addr:0x02111768
 data_ov012_0211176c kind:data(any) addr:0x0211176c
 data_ov012_02111770 kind:data(any) addr:0x02111770
@@ -95,16 +95,16 @@ data_ov012_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov012_0211229c kind:data(any) addr:0x0211229c ambiguous
 data_ov012_02112300 kind:data(any) addr:0x02112300
 data_ov012_0211230c kind:data(any) addr:0x0211230c
-data_ov012_02112320 kind:data(any) addr:0x02112320 ambiguous
+SwitchPillar_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
 data_ov012_02112344 kind:data(any) addr:0x02112344
 data_ov012_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous
 data_ov012_021123c4 kind:data(any) addr:0x021123c4
 data_ov012_021123d0 kind:data(any) addr:0x021123d0
-data_ov012_021123e4 kind:data(any) addr:0x021123e4 ambiguous
+BasementWater_SpawnInfo kind:data(any) addr:0x021123e4 ambiguous
 data_ov012_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov012_02112404 kind:data(any) addr:0x02112404 ambiguous
-data_ov012_02112408 kind:data(any) addr:0x02112408
+_ZTV12SwitchPillar kind:data(any) addr:0x02112408
 data_ov012_0211241c kind:data(any) addr:0x0211241c ambiguous
 data_ov012_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov012_02112434 kind:data(any) addr:0x02112434 ambiguous

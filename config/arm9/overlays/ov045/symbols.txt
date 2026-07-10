@@ -6,39 +6,39 @@ func_ov045_0211129c kind:function(arm,size=0x150) addr:0x0211129c
 func_ov045_021113ec kind:function(arm,size=0xbc) addr:0x021113ec
 func_ov045_021114a8 kind:function(arm,size=0x20) addr:0x021114a8
 func_ov045_021114c8 kind:function(arm,size=0x14) addr:0x021114c8
-func_ov045_021114dc kind:function(arm,size=0x30) addr:0x021114dc
-func_ov045_0211150c kind:function(arm,size=0x4c) addr:0x0211150c
-func_ov045_02111558 kind:function(arm,size=0x60) addr:0x02111558
-func_ov045_021115b8 kind:function(arm,size=0x38) addr:0x021115b8
-func_ov045_021115f0 kind:function(arm,size=0x28) addr:0x021115f0
-func_ov045_02111618 kind:function(arm,size=0x120) addr:0x02111618
-func_ov045_02111738 kind:function(arm,size=0xd0) addr:0x02111738
-func_ov045_02111808 kind:function(arm,size=0x38) addr:0x02111808
-func_ov045_02111840 kind:function(arm,size=0x38) addr:0x02111840
-func_ov045_02111878 kind:function(arm,size=0x4c) addr:0x02111878
+FireSeaElevator_Spawn kind:function(arm,size=0x30) addr:0x021114dc
+_ZN15FireSeaElevatorD1Ev kind:function(arm,size=0x4c) addr:0x0211150c
+_ZN15FireSeaElevatorD0Ev kind:function(arm,size=0x60) addr:0x02111558
+_ZN15FireSeaElevator16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021115b8
+_ZN15FireSeaElevator6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
+_ZN15FireSeaElevator8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
+_ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
+PoleLift_Spawn kind:function(arm,size=0x38) addr:0x02111808
+_ZN8PoleLiftD1Ev kind:function(arm,size=0x38) addr:0x02111840
+_ZN8PoleLiftD0Ev kind:function(arm,size=0x4c) addr:0x02111878
 func_ov045_021118c4 kind:function(arm,size=0x34) addr:0x021118c4
 func_ov045_021118f8 kind:function(arm,size=0x40) addr:0x021118f8
-func_ov045_02111938 kind:function(arm,size=0x38) addr:0x02111938
-func_ov045_02111970 kind:function(arm,size=0x4) addr:0x02111970
-func_ov045_02111974 kind:function(arm,size=0x4c) addr:0x02111974
-func_ov045_021119c0 kind:function(arm,size=0x70) addr:0x021119c0
-func_ov045_02111a30 kind:function(arm,size=0xa4) addr:0x02111a30
-func_ov045_02111ad4 kind:function(arm,size=0x40) addr:0x02111ad4
+_ZN8PoleLift16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111938
+_ZN8PoleLift16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111970
+_ZN8PoleLift6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
+_ZN8PoleLift8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
+_ZN8PoleLift13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
+ExtendingPlatform_Spawn kind:function(arm,size=0x40) addr:0x02111ad4
 func_ov045_02111b14 kind:function(arm,size=0x50) addr:0x02111b14
 func_ov045_02111b64 kind:function(arm,size=0x64) addr:0x02111b64
 func_ov045_02111bc8 kind:function(arm,size=0x14) addr:0x02111bc8
 func_ov045_02111bdc kind:function(arm,size=0x18) addr:0x02111bdc
-func_ov045_02111bf4 kind:function(arm,size=0x3c) addr:0x02111bf4
-func_ov045_02111c30 kind:function(arm,size=0x50) addr:0x02111c30
-func_ov045_02111c80 kind:function(arm,size=0x64) addr:0x02111c80
-func_ov045_02111ce4 kind:function(arm,size=0x14) addr:0x02111ce4
-func_ov045_02111cf8 kind:function(arm,size=0x14) addr:0x02111cf8
-func_ov045_02111d0c kind:function(arm,size=0x3c) addr:0x02111d0c
-func_ov045_02111d48 kind:function(arm,size=0x50) addr:0x02111d48
-func_ov045_02111d98 kind:function(arm,size=0x64) addr:0x02111d98
-func_ov045_02111dfc kind:function(arm,size=0x14) addr:0x02111dfc
-func_ov045_02111e10 kind:function(arm,size=0x14) addr:0x02111e10
-func_ov045_02111e24 kind:function(arm,size=0x3c) addr:0x02111e24
+FloatingFloorBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111bf4
+_ZN16FloatingFloorBfsD1Ev kind:function(arm,size=0x50) addr:0x02111c30
+_ZN16FloatingFloorBfsD0Ev kind:function(arm,size=0x64) addr:0x02111c80
+_ZN16FloatingFloorBfs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111ce4
+_ZN16FloatingFloorBfs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111cf8
+TiltingPlatformBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111d0c
+_ZN12FallBlockBfsD1Ev kind:function(arm,size=0x50) addr:0x02111d48
+_ZN12FallBlockBfsD0Ev kind:function(arm,size=0x64) addr:0x02111d98
+_ZN12FallBlockBfs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111dfc
+_ZN12FallBlockBfs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111e10
+FallBlockBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111e24
 data_ov045_02111e60 kind:data(any) addr:0x02111e60
 data_ov045_02111e64 kind:data(any) addr:0x02111e64
 data_ov045_02111e68 kind:data(any) addr:0x02111e68
@@ -125,35 +125,35 @@ data_ov045_02112ca8 kind:data(any) addr:0x02112ca8 ambiguous
 data_ov045_02112cb0 kind:data(any) addr:0x02112cb0
 data_ov045_02112cbc kind:data(any) addr:0x02112cbc
 data_ov045_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
-data_ov045_02112cd0 kind:data(any) addr:0x02112cd0 ambiguous
+FireSeaElevator_SpawnInfo kind:data(any) addr:0x02112cd0 ambiguous
 data_ov045_02112cf4 kind:data(any) addr:0x02112cf4
 data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
 data_ov045_02112d74 kind:data(any) addr:0x02112d74
 data_ov045_02112d80 kind:data(any) addr:0x02112d80
-data_ov045_02112d98 kind:data(any) addr:0x02112d98 ambiguous
-data_ov045_02112dbc kind:data(any) addr:0x02112dbc
+PoleLift_SpawnInfo kind:data(any) addr:0x02112d98 ambiguous
+_ZTV15FireSeaElevator kind:data(any) addr:0x02112dbc
 data_ov045_02112e3c kind:data(any) addr:0x02112e3c
 data_ov045_02112e48 kind:data(any) addr:0x02112e48
-data_ov045_02112e5c kind:data(any) addr:0x02112e5c ambiguous
-data_ov045_02112e80 kind:data(any) addr:0x02112e80
+ExtendingPlatform_SpawnInfo kind:data(any) addr:0x02112e5c ambiguous
+_ZTV8PoleLift kind:data(any) addr:0x02112e80
 data_ov045_02112efc kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
 data_ov045_02112f14 kind:data(any) addr:0x02112f14
-data_ov045_02112f2c kind:data(any) addr:0x02112f2c ambiguous
+FloatingFloorBfs_SpawnInfo kind:data(any) addr:0x02112f2c ambiguous
 data_ov045_02112f50 kind:data(any) addr:0x02112f50
 data_ov045_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov045_02112f7c kind:data(any) addr:0x02112f7c ambiguous
 data_ov045_02112fd0 kind:data(any) addr:0x02112fd0
 data_ov045_02112fdc kind:data(any) addr:0x02112fdc
 data_ov045_02112fe8 kind:data(any) addr:0x02112fe8
-data_ov045_02112ffc kind:data(any) addr:0x02112ffc ambiguous
-data_ov045_02113020 kind:data(any) addr:0x02113020
+TiltingPlatformBfs_SpawnInfo kind:data(any) addr:0x02112ffc ambiguous
+_ZTV16FloatingFloorBfs kind:data(any) addr:0x02113020
 data_ov045_021130a0 kind:data(any) addr:0x021130a0
 data_ov045_021130ac kind:data(any) addr:0x021130ac
 data_ov045_021130b8 kind:data(any) addr:0x021130b8
 data_ov045_021130cc kind:data(any) addr:0x021130cc ambiguous
-data_ov045_021130d0 kind:data(any) addr:0x021130d0 ambiguous
-data_ov045_021130f4 kind:data(any) addr:0x021130f4
+FallBlockBfs_SpawnInfo kind:data(any) addr:0x021130d0 ambiguous
+_ZTV12FallBlockBfs kind:data(any) addr:0x021130f4
 data_ov045_02113180 kind:bss addr:0x02113180
 data_ov045_02113188 kind:bss addr:0x02113188
 data_ov045_02113190 kind:bss addr:0x02113190

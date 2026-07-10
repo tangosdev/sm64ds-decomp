@@ -1,10 +1,10 @@
-func_ov044_021111a0 kind:function(arm,size=0x30) addr:0x021111a0
-func_ov044_021111d0 kind:function(arm,size=0x44) addr:0x021111d0
+_ZN19OrangeBallBillboardD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN19OrangeBallBillboardD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov044_02111214 kind:function(arm,size=0x40) addr:0x02111214
-func_ov044_02111254 kind:function(arm,size=0x24) addr:0x02111254
-func_ov044_02111278 kind:function(arm,size=0x28) addr:0x02111278
-func_ov044_021112a0 kind:function(arm,size=0x3c) addr:0x021112a0
-func_ov044_021112dc kind:function(arm,size=0x38) addr:0x021112dc
+_ZN19OrangeBallBillboard16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN19OrangeBallBillboard6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN19OrangeBallBillboard13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
+OrangeBallBillboard_Spawn kind:function(arm,size=0x38) addr:0x021112dc
 __sinit_ov044_02111314 kind:function(arm,size=0x40) addr:0x02111314
 .p__sinit_ov044_02111314 kind:data(word) addr:0x02111354
 data_ov044_02111360 kind:data(any) addr:0x02111360
@@ -30,10 +30,10 @@ data_ov044_02111560 kind:data(any) addr:0x02111560 ambiguous
 data_ov044_0211159c kind:data(any) addr:0x0211159c ambiguous
 data_ov044_021115bc kind:data(any) addr:0x021115bc
 data_ov044_021115c8 kind:data(any) addr:0x021115c8
-data_ov044_021115e0 kind:data(any) addr:0x021115e0 ambiguous
+OrangeBallBillboard_SpawnInfo kind:data(any) addr:0x021115e0 ambiguous
 data_ov044_021115e4 kind:data(any) addr:0x021115e4 ambiguous
 data_ov044_021115f4 kind:data(any) addr:0x021115f4 ambiguous
-data_ov044_02111604 kind:data(any) addr:0x02111604
+_ZTV19OrangeBallBillboard kind:data(any) addr:0x02111604
 data_ov044_02111624 kind:data(any) addr:0x02111624 ambiguous
 data_ov044_02111640 kind:data(any) addr:0x02111640 ambiguous
 data_ov044_02111660 kind:data(any) addr:0x02111660 ambiguous

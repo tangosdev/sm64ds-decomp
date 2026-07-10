@@ -1,5 +1,5 @@
-func_ov092_02130f00 kind:function(arm,size=0x5c) addr:0x02130f00
-func_ov092_02130f5c kind:function(arm,size=0x70) addr:0x02130f5c
+_ZN6ToxBoxD1Ev kind:function(arm,size=0x5c) addr:0x02130f00
+_ZN6ToxBoxD0Ev kind:function(arm,size=0x70) addr:0x02130f5c
 func_ov092_02130fcc kind:function(arm,size=0x44) addr:0x02130fcc
 func_ov092_02131010 kind:function(arm,size=0x1a0) addr:0x02131010
 func_ov092_021311b0 kind:function(arm,size=0x200) addr:0x021311b0
@@ -16,11 +16,11 @@ func_ov092_02131878 kind:function(arm,size=0x138) addr:0x02131878
 func_ov092_021319b0 kind:function(arm,size=0xd8) addr:0x021319b0
 func_ov092_02131a88 kind:function(arm,size=0x64) addr:0x02131a88
 func_ov092_02131aec kind:function(arm,size=0xec) addr:0x02131aec
-func_ov092_02131bd8 kind:function(arm,size=0x44) addr:0x02131bd8
-func_ov092_02131c1c kind:function(arm,size=0x28) addr:0x02131c1c
-func_ov092_02131c44 kind:function(arm,size=0x15c) addr:0x02131c44
-func_ov092_02131da0 kind:function(arm,size=0x278) addr:0x02131da0
-func_ov092_02132018 kind:function(arm,size=0x5c) addr:0x02132018
+_ZN6ToxBox16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02131bd8
+_ZN6ToxBox6RenderEv kind:function(arm,size=0x28) addr:0x02131c1c
+_ZN6ToxBox8BehaviorEv kind:function(arm,size=0x15c) addr:0x02131c44
+_ZN6ToxBox13InitResourcesEv kind:function(arm,size=0x278) addr:0x02131da0
+ToxBox_Spawn kind:function(arm,size=0x5c) addr:0x02132018
 data_ov092_02132074 kind:data(any) addr:0x02132074
 data_ov092_02132080 kind:data(any) addr:0x02132080
 data_ov092_0213208c kind:data(any) addr:0x0213208c
@@ -39,8 +39,8 @@ data_ov092_02132280 kind:data(any) addr:0x02132280
 data_ov092_02132288 kind:data(any) addr:0x02132288
 data_ov092_02132294 kind:data(any) addr:0x02132294
 data_ov092_021322a0 kind:data(any) addr:0x021322a0
-data_ov092_021322ac kind:data(any) addr:0x021322ac
-data_ov092_021322d0 kind:data(any) addr:0x021322d0
+ToxBox_SpawnInfo kind:data(any) addr:0x021322ac
+_ZTV6ToxBox kind:data(any) addr:0x021322d0
 data_ov092_02132350 kind:data(any) addr:0x02132350
 data_ov092_021323dc kind:data(any) addr:0x021323dc
 data_ov092_0213246c kind:data(any) addr:0x0213246c

@@ -1,8 +1,8 @@
-func_ov016_021111a0 kind:function(arm,size=0x68) addr:0x021111a0
-func_ov016_02111208 kind:function(arm,size=0x7c) addr:0x02111208
+_ZN5UnagiD1Ev kind:function(arm,size=0x68) addr:0x021111a0
+_ZN5UnagiD0Ev kind:function(arm,size=0x7c) addr:0x02111208
 func_ov016_02111284 kind:function(arm,size=0x2b0) addr:0x02111284
 func_ov016_02111534 kind:function(arm,size=0x70) addr:0x02111534
-func_ov016_021115a4 kind:function(arm,size=0x1c) addr:0x021115a4
+BookSwitch_Spawn kind:function(arm,size=0x1c) addr:0x021115a4
 func_ov016_021115c0 kind:function(arm,size=0x158) addr:0x021115c0
 func_ov016_02111718 kind:function(arm,size=0x40) addr:0x02111718
 func_ov016_02111758 kind:function(arm,size=0x108) addr:0x02111758
@@ -13,21 +13,21 @@ func_ov016_021119ec kind:function(arm,size=0x1c0) addr:0x021119ec
 func_ov016_02111bac kind:function(arm,size=0x44) addr:0x02111bac
 func_ov016_02111bf0 kind:function(arm,size=0x50) addr:0x02111bf0
 func_ov016_02111c40 kind:function(arm,size=0x2f8) addr:0x02111c40
-func_ov016_02111f38 kind:function(arm,size=0x48) addr:0x02111f38
-func_ov016_02111f80 kind:function(arm,size=0x4) addr:0x02111f80
-func_ov016_02111f84 kind:function(arm,size=0x8c) addr:0x02111f84
-func_ov016_02112010 kind:function(arm,size=0x1b0) addr:0x02112010
-func_ov016_021121c0 kind:function(arm,size=0x3c8) addr:0x021121c0
-func_ov016_02112588 kind:function(arm,size=0x84) addr:0x02112588
-func_ov016_0211260c kind:function(arm,size=0x44) addr:0x0211260c
-func_ov016_02112650 kind:function(arm,size=0x58) addr:0x02112650
+_ZN5Unagi16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02111f38
+_ZN5Unagi16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111f80
+_ZN5Unagi6RenderEv kind:function(arm,size=0x8c) addr:0x02111f84
+_ZN5Unagi8BehaviorEv kind:function(arm,size=0x1b0) addr:0x02112010
+_ZN5Unagi13InitResourcesEv kind:function(arm,size=0x3c8) addr:0x021121c0
+Unagi_Spawn kind:function(arm,size=0x84) addr:0x02112588
+_ZN6ShipUpD1Ev kind:function(arm,size=0x44) addr:0x0211260c
+_ZN6ShipUpD0Ev kind:function(arm,size=0x58) addr:0x02112650
 func_ov016_021126a8 kind:function(arm,size=0x48) addr:0x021126a8
-func_ov016_021126f0 kind:function(arm,size=0x54) addr:0x021126f0
-func_ov016_02112744 kind:function(arm,size=0x28) addr:0x02112744
-func_ov016_0211276c kind:function(arm,size=0xd0) addr:0x0211276c
-func_ov016_0211283c kind:function(arm,size=0x164) addr:0x0211283c
-func_ov016_021129a0 kind:function(arm,size=0x30) addr:0x021129a0
-func_ov016_021129d0 kind:function(arm,size=0x30) addr:0x021129d0
+_ZN6ShipUp16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x021126f0
+_ZN6ShipUp6RenderEv kind:function(arm,size=0x28) addr:0x02112744
+_ZN6ShipUp8BehaviorEv kind:function(arm,size=0xd0) addr:0x0211276c
+_ZN6ShipUp13InitResourcesEv kind:function(arm,size=0x164) addr:0x0211283c
+ShipUp_Spawn kind:function(arm,size=0x30) addr:0x021129a0
+ShipDown_Spawn kind:function(arm,size=0x30) addr:0x021129d0
 func_ov016_02112a00 kind:function(arm,size=0x44) addr:0x02112a00
 func_ov016_02112a44 kind:function(arm,size=0x58) addr:0x02112a44
 func_ov016_02112a9c kind:function(arm,size=0x48) addr:0x02112a9c
@@ -35,19 +35,19 @@ func_ov016_02112ae4 kind:function(arm,size=0x44) addr:0x02112ae4
 func_ov016_02112b28 kind:function(arm,size=0x28) addr:0x02112b28
 func_ov016_02112b50 kind:function(arm,size=0x2cc) addr:0x02112b50
 func_ov016_02112e1c kind:function(arm,size=0xa8) addr:0x02112e1c
-func_ov016_02112ec4 kind:function(arm,size=0x30) addr:0x02112ec4
+RockPillar_Spawn kind:function(arm,size=0x30) addr:0x02112ec4
 func_ov016_02112ef4 kind:function(arm,size=0x50) addr:0x02112ef4
 func_ov016_02112f44 kind:function(arm,size=0x64) addr:0x02112f44
 func_ov016_02112fa8 kind:function(arm,size=0x14) addr:0x02112fa8
-func_ov016_02112fbc kind:function(arm,size=0x3c) addr:0x02112fbc
-func_ov016_02112ff8 kind:function(arm,size=0x4c) addr:0x02112ff8
-func_ov016_02113044 kind:function(arm,size=0x60) addr:0x02113044
+FloatOnWaterPlatformJrb_Spawn kind:function(arm,size=0x3c) addr:0x02112fbc
+_ZN23FloatOnWaterPlatformJrbD1Ev kind:function(arm,size=0x4c) addr:0x02112ff8
+_ZN23FloatOnWaterPlatformJrbD0Ev kind:function(arm,size=0x60) addr:0x02113044
 func_ov016_021130a4 kind:function(arm,size=0x48) addr:0x021130a4
-func_ov016_021130ec kind:function(arm,size=0x44) addr:0x021130ec
-func_ov016_02113130 kind:function(arm,size=0x28) addr:0x02113130
-func_ov016_02113158 kind:function(arm,size=0x2dc) addr:0x02113158
-func_ov016_02113434 kind:function(arm,size=0xdc) addr:0x02113434
-func_ov016_02113510 kind:function(arm,size=0x3c) addr:0x02113510
+_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021130ec
+_ZN23FloatOnWaterPlatformJrb6RenderEv kind:function(arm,size=0x28) addr:0x02113130
+_ZN23FloatOnWaterPlatformJrb8BehaviorEv kind:function(arm,size=0x2dc) addr:0x02113158
+_ZN23FloatOnWaterPlatformJrb13InitResourcesEv kind:function(arm,size=0xdc) addr:0x02113434
+SlidingBox_Spawn kind:function(arm,size=0x3c) addr:0x02113510
 data_ov016_0211354c kind:data(any) addr:0x0211354c
 data_ov016_02113550 kind:data(any) addr:0x02113550
 data_ov016_02113554 kind:data(any) addr:0x02113554
@@ -156,7 +156,7 @@ data_ov016_02114880 kind:data(any) addr:0x02114880
 data_ov016_02114888 kind:data(any) addr:0x02114888
 data_ov016_0211488c kind:data(any) addr:0x0211488c ambiguous
 data_ov016_02114890 kind:data(any) addr:0x02114890
-data_ov016_02114898 kind:data(any) addr:0x02114898
+BookSwitch_SpawnInfo kind:data(any) addr:0x02114898
 data_ov016_021148a0 kind:data(any) addr:0x021148a0
 data_ov016_021148a8 kind:data(any) addr:0x021148a8
 data_ov016_021148b0 kind:data(any) addr:0x021148b0
@@ -165,30 +165,30 @@ data_ov016_021148b8 kind:data(any) addr:0x021148b8
 data_ov016_021148c0 kind:data(any) addr:0x021148c0
 data_ov016_021148c8 kind:data(any) addr:0x021148c8
 data_ov016_021148d4 kind:data(any) addr:0x021148d4
-data_ov016_021148e0 kind:data(any) addr:0x021148e0 ambiguous
+Unagi_SpawnInfo kind:data(any) addr:0x021148e0 ambiguous
 data_ov016_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov016_02114908 kind:data(any) addr:0x02114908
-data_ov016_02114958 kind:data(any) addr:0x02114958
+_ZTV5Unagi kind:data(any) addr:0x02114958
 data_ov016_021149d4 kind:data(any) addr:0x021149d4
 data_ov016_021149dc kind:data(any) addr:0x021149dc
 data_ov016_021149e8 kind:data(any) addr:0x021149e8
 data_ov016_021149f0 kind:data(any) addr:0x021149f0 ambiguous
-data_ov016_021149fc kind:data(any) addr:0x021149fc ambiguous
-data_ov016_02114a18 kind:data(any) addr:0x02114a18 ambiguous
-data_ov016_02114a3c kind:data(any) addr:0x02114a3c
+ShipDown_SpawnInfo kind:data(any) addr:0x021149fc ambiguous
+ShipUp_SpawnInfo kind:data(any) addr:0x02114a18 ambiguous
+_ZTV6ShipUp kind:data(any) addr:0x02114a3c
 data_ov016_02114abc kind:data(any) addr:0x02114abc
 data_ov016_02114ac8 kind:data(any) addr:0x02114ac8
-data_ov016_02114adc kind:data(any) addr:0x02114adc ambiguous
+RockPillar_SpawnInfo kind:data(any) addr:0x02114adc ambiguous
 data_ov016_02114b00 kind:data(any) addr:0x02114b00
 data_ov016_02114b80 kind:data(any) addr:0x02114b80
 data_ov016_02114b8c kind:data(any) addr:0x02114b8c
 data_ov016_02114b98 kind:data(any) addr:0x02114b98
-data_ov016_02114ba8 kind:data(any) addr:0x02114ba8
+FloatOnWaterPlatformJrb_SpawnInfo kind:data(any) addr:0x02114ba8
 data_ov016_02114bcc kind:data(any) addr:0x02114bcc
 data_ov016_02114c4c kind:data(any) addr:0x02114c4c
 data_ov016_02114c58 kind:data(any) addr:0x02114c58
-data_ov016_02114c68 kind:data(any) addr:0x02114c68
-data_ov016_02114c8c kind:data(any) addr:0x02114c8c
+SlidingBox_SpawnInfo kind:data(any) addr:0x02114c68
+_ZTV23FloatOnWaterPlatformJrb kind:data(any) addr:0x02114c8c
 data_ov016_02114d20 kind:bss addr:0x02114d20
 data_ov016_02114d28 kind:bss addr:0x02114d28
 data_ov016_02114d30 kind:bss addr:0x02114d30

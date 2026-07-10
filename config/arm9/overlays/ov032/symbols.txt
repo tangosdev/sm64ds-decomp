@@ -28,14 +28,14 @@ func_ov032_02112544 kind:function(arm,size=0x44) addr:0x02112544
 func_ov032_02112588 kind:function(arm,size=0x28) addr:0x02112588
 func_ov032_021125b0 kind:function(arm,size=0x24) addr:0x021125b0
 func_ov032_021125d4 kind:function(arm,size=0x94) addr:0x021125d4
-func_ov032_02112668 kind:function(arm,size=0x30) addr:0x02112668
-func_ov032_02112698 kind:function(arm,size=0x4c) addr:0x02112698
-func_ov032_021126e4 kind:function(arm,size=0x60) addr:0x021126e4
-func_ov032_02112744 kind:function(arm,size=0x44) addr:0x02112744
-func_ov032_02112788 kind:function(arm,size=0x34) addr:0x02112788
-func_ov032_021127bc kind:function(arm,size=0x34) addr:0x021127bc
-func_ov032_021127f0 kind:function(arm,size=0xc8) addr:0x021127f0
-func_ov032_021128b8 kind:function(arm,size=0x38) addr:0x021128b8
+HugeCover_Spawn kind:function(arm,size=0x30) addr:0x02112668
+_ZN9HugeCoverD1Ev kind:function(arm,size=0x4c) addr:0x02112698
+_ZN9HugeCoverD0Ev kind:function(arm,size=0x60) addr:0x021126e4
+_ZN9HugeCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112744
+_ZN9HugeCover6RenderEv kind:function(arm,size=0x34) addr:0x02112788
+_ZN9HugeCover8BehaviorEv kind:function(arm,size=0x34) addr:0x021127bc
+_ZN9HugeCover13InitResourcesEv kind:function(arm,size=0xc8) addr:0x021127f0
+HugeWater_Spawn kind:function(arm,size=0x38) addr:0x021128b8
 data_ov032_021128f0 kind:data(any) addr:0x021128f0
 data_ov032_021128f4 kind:data(any) addr:0x021128f4
 data_ov032_021128f8 kind:data(any) addr:0x021128f8
@@ -131,7 +131,7 @@ data_ov032_0211382c kind:data(any) addr:0x0211382c ambiguous
 data_ov032_021138a0 kind:data(any) addr:0x021138a0
 data_ov032_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov032_021138ac kind:data(any) addr:0x021138ac
-data_ov032_021138bc kind:data(any) addr:0x021138bc ambiguous
+HugeCover_SpawnInfo kind:data(any) addr:0x021138bc ambiguous
 data_ov032_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov032_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov032_021138e0 kind:data(any) addr:0x021138e0
@@ -140,9 +140,9 @@ data_ov032_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov032_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov032_02113960 kind:data(any) addr:0x02113960
 data_ov032_0211396c kind:data(any) addr:0x0211396c
-data_ov032_02113980 kind:data(any) addr:0x02113980 ambiguous
+HugeWater_SpawnInfo kind:data(any) addr:0x02113980 ambiguous
 data_ov032_02113998 kind:data(any) addr:0x02113998 ambiguous
-data_ov032_021139a4 kind:data(any) addr:0x021139a4
+_ZTV9HugeCover kind:data(any) addr:0x021139a4
 data_ov032_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov032_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov032_02113a00 kind:data(any) addr:0x02113a00 ambiguous

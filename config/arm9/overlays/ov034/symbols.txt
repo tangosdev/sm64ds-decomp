@@ -1,5 +1,5 @@
-func_ov034_021111a0 kind:function(arm,size=0x110) addr:0x021111a0
-func_ov034_021112b0 kind:function(arm,size=0x124) addr:0x021112b0
+_ZN7WigglerD1Ev kind:function(arm,size=0x110) addr:0x021111a0
+_ZN7WigglerD0Ev kind:function(arm,size=0x124) addr:0x021112b0
 func_ov034_021113d4 kind:function(arm,size=0x14c) addr:0x021113d4
 func_ov034_02111520 kind:function(arm,size=0x68) addr:0x02111520
 func_ov034_02111588 kind:function(arm,size=0x38) addr:0x02111588
@@ -28,11 +28,11 @@ func_ov034_02112650 kind:function(arm,size=0x38) addr:0x02112650
 func_ov034_02112688 kind:function(arm,size=0x1ec) addr:0x02112688
 func_ov034_02112874 kind:function(arm,size=0x178) addr:0x02112874
 func_ov034_021129ec kind:function(arm,size=0x70) addr:0x021129ec
-func_ov034_02112a5c kind:function(arm,size=0x98) addr:0x02112a5c
-func_ov034_02112af4 kind:function(arm,size=0x68) addr:0x02112af4
-func_ov034_02112b5c kind:function(arm,size=0x6e0) addr:0x02112b5c
-func_ov034_0211323c kind:function(arm,size=0x468) addr:0x0211323c
-func_ov034_021136a4 kind:function(arm,size=0x17c) addr:0x021136a4
+_ZN7Wiggler16CleanupResourcesEv kind:function(arm,size=0x98) addr:0x02112a5c
+_ZN7Wiggler6RenderEv kind:function(arm,size=0x68) addr:0x02112af4
+_ZN7Wiggler8BehaviorEv kind:function(arm,size=0x6e0) addr:0x02112b5c
+_ZN7Wiggler13InitResourcesEv kind:function(arm,size=0x468) addr:0x0211323c
+Wiggler_Spawn kind:function(arm,size=0x17c) addr:0x021136a4
 data_ov034_02113820 kind:data(any) addr:0x02113820
 data_ov034_02113828 kind:data(any) addr:0x02113828
 data_ov034_0211382c kind:data(any) addr:0x0211382c ambiguous
@@ -111,8 +111,8 @@ data_ov034_0211445c kind:data(any) addr:0x0211445c
 data_ov034_02114468 kind:data(any) addr:0x02114468
 data_ov034_02114478 kind:data(any) addr:0x02114478
 data_ov034_02114488 kind:data(any) addr:0x02114488
-data_ov034_02114498 kind:data(any) addr:0x02114498 ambiguous
-data_ov034_021144bc kind:data(any) addr:0x021144bc
+Wiggler_SpawnInfo kind:data(any) addr:0x02114498 ambiguous
+_ZTV7Wiggler kind:data(any) addr:0x021144bc
 data_ov034_02114538 kind:data(any) addr:0x02114538
 data_ov034_0211454c kind:data(any) addr:0x0211454c ambiguous
 data_ov034_02114568 kind:data(any) addr:0x02114568 ambiguous

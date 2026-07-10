@@ -1,5 +1,5 @@
-func_ov075_02113ee0 kind:function(arm,size=0x74) addr:0x02113ee0
-func_ov075_02113f54 kind:function(arm,size=0x88) addr:0x02113f54
+_ZN14UnknownVsEntryD1Ev kind:function(arm,size=0x74) addr:0x02113ee0
+_ZN14UnknownVsEntryD0Ev kind:function(arm,size=0x88) addr:0x02113f54
 func_ov075_02113fdc kind:function(arm,size=0x34) addr:0x02113fdc
 func_ov075_02114010 kind:function(arm,size=0xd4) addr:0x02114010
 func_ov075_021140e4 kind:function(arm,size=0xd4) addr:0x021140e4
@@ -35,11 +35,11 @@ func_ov075_021151b4 kind:function(arm,size=0x98) addr:0x021151b4
 func_ov075_0211524c kind:function(arm,size=0x44) addr:0x0211524c
 func_ov075_02115290 kind:function(arm,size=0x44) addr:0x02115290
 func_ov075_021152d4 kind:function(arm,size=0xb4) addr:0x021152d4
-func_ov075_02115388 kind:function(arm,size=0x144) addr:0x02115388
-func_ov075_021154cc kind:function(arm,size=0x90) addr:0x021154cc
-func_ov075_0211555c kind:function(arm,size=0x184) addr:0x0211555c
-func_ov075_021156e0 kind:function(arm,size=0x314) addr:0x021156e0
-func_ov075_021159f4 kind:function(arm,size=0x94) addr:0x021159f4
+_ZN14UnknownVsEntry16CleanupResourcesEv kind:function(arm,size=0x144) addr:0x02115388
+_ZN14UnknownVsEntry6RenderEv kind:function(arm,size=0x90) addr:0x021154cc
+_ZN14UnknownVsEntry8BehaviorEv kind:function(arm,size=0x184) addr:0x0211555c
+_ZN14UnknownVsEntry13InitResourcesEv kind:function(arm,size=0x314) addr:0x021156e0
+UnknownVsEntry_Spawn kind:function(arm,size=0x94) addr:0x021159f4
 func_ov075_02115a88 kind:function(arm,size=0x30) addr:0x02115a88
 func_ov075_02115ab8 kind:function(arm,size=0x70) addr:0x02115ab8
 func_ov075_02115b28 kind:function(arm,size=0x84) addr:0x02115b28
@@ -165,7 +165,7 @@ data_ov075_0211c5f0 kind:data(any) addr:0x0211c5f0
 data_ov075_0211c5f8 kind:data(any) addr:0x0211c5f8
 data_ov075_0211c600 kind:data(any) addr:0x0211c600
 data_ov075_0211c608 kind:data(any) addr:0x0211c608
-data_ov075_0211c610 kind:data(any) addr:0x0211c610 ambiguous
+UnknownVsEntry_SpawnInfo kind:data(any) addr:0x0211c610 ambiguous
 data_ov075_0211c618 kind:data(any) addr:0x0211c618
 data_ov075_0211c620 kind:data(any) addr:0x0211c620
 data_ov075_0211c628 kind:data(any) addr:0x0211c628
@@ -178,7 +178,7 @@ data_ov075_0211c660 kind:data(any) addr:0x0211c660
 data_ov075_0211c66c kind:data(any) addr:0x0211c66c
 data_ov075_0211c678 kind:data(any) addr:0x0211c678
 data_ov075_0211c688 kind:data(any) addr:0x0211c688
-data_ov075_0211c6a0 kind:data(any) addr:0x0211c6a0
+_ZTV14UnknownVsEntry kind:data(any) addr:0x0211c6a0
 data_ov075_0211c6e8 kind:data(any) addr:0x0211c6e8
 data_ov075_0211c6ec kind:data(any) addr:0x0211c6ec
 data_ov075_0211c6f0 kind:data(any) addr:0x0211c6f0

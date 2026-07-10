@@ -1,5 +1,5 @@
-func_ov073_0211f000 kind:function(arm,size=0x98) addr:0x0211f000
-func_ov073_0211f098 kind:function(arm,size=0xac) addr:0x0211f098
+_ZN11ChiefChillyD1Ev kind:function(arm,size=0x98) addr:0x0211f000
+_ZN11ChiefChillyD0Ev kind:function(arm,size=0xac) addr:0x0211f098
 func_ov073_0211f144 kind:function(arm,size=0x17c) addr:0x0211f144
 func_ov073_0211f2c0 kind:function(arm,size=0x1d4) addr:0x0211f2c0
 func_ov073_0211f494 kind:function(arm,size=0x188) addr:0x0211f494
@@ -38,15 +38,15 @@ func_ov073_02121388 kind:function(arm,size=0x1b0) addr:0x02121388
 func_ov073_02121538 kind:function(arm,size=0x44) addr:0x02121538
 func_ov073_0212157c kind:function(arm,size=0x50) addr:0x0212157c
 func_ov073_021215cc kind:function(arm,size=0x214) addr:0x021215cc
-func_ov073_021217e0 kind:function(arm,size=0x8c) addr:0x021217e0
-func_ov073_0212186c kind:function(arm,size=0x4) addr:0x0212186c
-func_ov073_02121870 kind:function(arm,size=0x30) addr:0x02121870
-func_ov073_021218a0 kind:function(arm,size=0x42c) addr:0x021218a0
-func_ov073_02121ccc kind:function(arm,size=0x1f4) addr:0x02121ccc
+_ZN11ChiefChilly16CleanupResourcesEv kind:function(arm,size=0x8c) addr:0x021217e0
+_ZN11ChiefChilly16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212186c
+_ZN11ChiefChilly6RenderEv kind:function(arm,size=0x30) addr:0x02121870
+_ZN11ChiefChilly8BehaviorEv kind:function(arm,size=0x42c) addr:0x021218a0
+_ZN11ChiefChilly13InitResourcesEv kind:function(arm,size=0x1f4) addr:0x02121ccc
 func_ov073_02121ec0 kind:function(arm,size=0x8) addr:0x02121ec0
-func_ov073_02121ec8 kind:function(arm,size=0xc8) addr:0x02121ec8
-func_ov073_02121f90 kind:function(arm,size=0x44) addr:0x02121f90
-func_ov073_02121fd4 kind:function(arm,size=0x58) addr:0x02121fd4
+ChiefChilly_Spawn kind:function(arm,size=0xc8) addr:0x02121ec8
+_ZN8CccArenaD1Ev kind:function(arm,size=0x44) addr:0x02121f90
+_ZN8CccArenaD0Ev kind:function(arm,size=0x58) addr:0x02121fd4
 func_ov073_0212202c kind:function(arm,size=0x8) addr:0x0212202c
 func_ov073_02122034 kind:function(arm,size=0x8c) addr:0x02122034
 func_ov073_021220c0 kind:function(arm,size=0x120) addr:0x021220c0
@@ -57,15 +57,15 @@ func_ov073_021222ec kind:function(arm,size=0xb0) addr:0x021222ec
 func_ov073_0212239c kind:function(arm,size=0x8) addr:0x0212239c
 func_ov073_021223a4 kind:function(arm,size=0x50) addr:0x021223a4
 func_ov073_021223f4 kind:function(arm,size=0x70) addr:0x021223f4
-func_ov073_02122464 kind:function(arm,size=0x64) addr:0x02122464
-func_ov073_021224c8 kind:function(arm,size=0x28) addr:0x021224c8
-func_ov073_021224f0 kind:function(arm,size=0x88) addr:0x021224f0
-func_ov073_02122578 kind:function(arm,size=0x1b8) addr:0x02122578
+_ZN8CccArena16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02122464
+_ZN8CccArena6RenderEv kind:function(arm,size=0x28) addr:0x021224c8
+_ZN8CccArena8BehaviorEv kind:function(arm,size=0x88) addr:0x021224f0
+_ZN8CccArena13InitResourcesEv kind:function(arm,size=0x1b8) addr:0x02122578
 func_ov073_02122730 kind:function(arm,size=0xa0) addr:0x02122730
 func_ov073_021227d0 kind:function(arm,size=0x14) addr:0x021227d0
-func_ov073_021227e4 kind:function(arm,size=0x30) addr:0x021227e4
-func_ov073_02122814 kind:function(arm,size=0x30) addr:0x02122814
-func_ov073_02122844 kind:function(arm,size=0x30) addr:0x02122844
+CccSmallIce_Spawn kind:function(arm,size=0x30) addr:0x021227e4
+CccBigIce_Spawn kind:function(arm,size=0x30) addr:0x02122814
+CccArena_Spawn kind:function(arm,size=0x30) addr:0x02122844
 __sinit_ov073_02122874 kind:function(arm,size=0x4d4) addr:0x02122874
 __sinit_ov073_02122d48 kind:function(arm,size=0x1ec) addr:0x02122d48
 .p__sinit_ov073_02122874 kind:data(word) addr:0x02122f34
@@ -105,8 +105,8 @@ data_ov073_02123038 kind:data(any) addr:0x02123038
 data_ov073_02123040 kind:data(any) addr:0x02123040
 data_ov073_0212304c kind:data(any) addr:0x0212304c
 data_ov073_02123058 kind:data(any) addr:0x02123058
-data_ov073_0212306c kind:data(any) addr:0x0212306c ambiguous
-data_ov073_02123090 kind:data(any) addr:0x02123090
+ChiefChilly_SpawnInfo kind:data(any) addr:0x0212306c ambiguous
+_ZTV11ChiefChilly kind:data(any) addr:0x02123090
 data_ov073_0212310c kind:data(any) addr:0x0212310c
 data_ov073_02123114 kind:data(any) addr:0x02123114
 data_ov073_0212311c kind:data(any) addr:0x0212311c
@@ -117,13 +117,13 @@ data_ov073_0212313c kind:data(any) addr:0x0212313c
 data_ov073_02123144 kind:data(any) addr:0x02123144
 data_ov073_0212314c kind:data(any) addr:0x0212314c
 data_ov073_02123158 kind:data(any) addr:0x02123158
-data_ov073_02123168 kind:data(any) addr:0x02123168 ambiguous
-data_ov073_02123184 kind:data(any) addr:0x02123184 ambiguous
-data_ov073_021231a0 kind:data(any) addr:0x021231a0 ambiguous
+CccArena_SpawnInfo kind:data(any) addr:0x02123168 ambiguous
+CccBigIce_SpawnInfo kind:data(any) addr:0x02123184 ambiguous
+CccSmallIce_SpawnInfo kind:data(any) addr:0x021231a0 ambiguous
 data_ov073_021231bc kind:data(any) addr:0x021231bc
 data_ov073_021231c0 kind:data(any) addr:0x021231c0
 data_ov073_021231c4 kind:data(any) addr:0x021231c4
-data_ov073_021231e8 kind:data(any) addr:0x021231e8
+_ZTV8CccArena kind:data(any) addr:0x021231e8
 data_ov073_02123254 kind:data(any) addr:0x02123254 ambiguous
 data_ov073_02123280 kind:bss addr:0x02123280
 data_ov073_02123288 kind:bss addr:0x02123288

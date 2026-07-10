@@ -1,11 +1,11 @@
-func_ov039_021111a0 kind:function(arm,size=0x30) addr:0x021111a0
-func_ov039_021111d0 kind:function(arm,size=0x44) addr:0x021111d0
+_ZN5CloudD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN5CloudD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov039_02111214 kind:function(arm,size=0x40) addr:0x02111214
-func_ov039_02111254 kind:function(arm,size=0x24) addr:0x02111254
-func_ov039_02111278 kind:function(arm,size=0x28) addr:0x02111278
-func_ov039_021112a0 kind:function(arm,size=0x8c) addr:0x021112a0
-func_ov039_0211132c kind:function(arm,size=0x50) addr:0x0211132c
-func_ov039_0211137c kind:function(arm,size=0x38) addr:0x0211137c
+_ZN5Cloud16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN5Cloud6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN5Cloud8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112a0
+_ZN5Cloud13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211132c
+Cloud_Spawn kind:function(arm,size=0x38) addr:0x0211137c
 __sinit_ov039_021113b4 kind:function(arm,size=0x40) addr:0x021113b4
 .p__sinit_ov039_021113b4 kind:data(word) addr:0x021113f4
 data_ov039_02111400 kind:data(any) addr:0x02111400
@@ -47,9 +47,9 @@ data_ov039_02111760 kind:data(any) addr:0x02111760 ambiguous
 data_ov039_02111768 kind:data(any) addr:0x02111768 ambiguous
 data_ov039_02111818 kind:data(any) addr:0x02111818
 data_ov039_02111824 kind:data(any) addr:0x02111824
-data_ov039_02111834 kind:data(any) addr:0x02111834 ambiguous
+Cloud_SpawnInfo kind:data(any) addr:0x02111834 ambiguous
 data_ov039_02111844 kind:data(any) addr:0x02111844 ambiguous
-data_ov039_02111858 kind:data(any) addr:0x02111858
+_ZTV5Cloud kind:data(any) addr:0x02111858
 data_ov039_021118e0 kind:bss addr:0x021118e0
 data_ov039_021118e4 kind:bss addr:0x021118e4
 data_ov039_021118ec kind:bss addr:0x021118ec

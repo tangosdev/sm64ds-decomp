@@ -2,22 +2,22 @@ func_ov047_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
 func_ov047_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
 func_ov047_02111254 kind:function(arm,size=0x14) addr:0x02111254
 func_ov047_02111268 kind:function(arm,size=0x18) addr:0x02111268
-func_ov047_02111280 kind:function(arm,size=0x3c) addr:0x02111280
-func_ov047_021112bc kind:function(arm,size=0x50) addr:0x021112bc
-func_ov047_0211130c kind:function(arm,size=0x64) addr:0x0211130c
-func_ov047_02111370 kind:function(arm,size=0x14) addr:0x02111370
-func_ov047_02111384 kind:function(arm,size=0x38) addr:0x02111384
+RickshawBs_Spawn kind:function(arm,size=0x3c) addr:0x02111280
+_ZN10RickshawBsD1Ev kind:function(arm,size=0x50) addr:0x021112bc
+_ZN10RickshawBsD0Ev kind:function(arm,size=0x64) addr:0x0211130c
+_ZN10RickshawBs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111370
+_ZN10RickshawBs13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111384
 func_ov047_021113bc kind:function(arm,size=0x3c) addr:0x021113bc
 func_ov047_021113f8 kind:function(arm,size=0x50) addr:0x021113f8
 func_ov047_02111448 kind:function(arm,size=0x64) addr:0x02111448
 func_ov047_021114ac kind:function(arm,size=0x14) addr:0x021114ac
 func_ov047_021114c0 kind:function(arm,size=0x14) addr:0x021114c0
-func_ov047_021114d4 kind:function(arm,size=0x3c) addr:0x021114d4
-func_ov047_02111510 kind:function(arm,size=0x80) addr:0x02111510
-func_ov047_02111590 kind:function(arm,size=0x94) addr:0x02111590
-func_ov047_02111624 kind:function(arm,size=0x14) addr:0x02111624
-func_ov047_02111638 kind:function(arm,size=0x14) addr:0x02111638
-func_ov047_0211164c kind:function(arm,size=0x90) addr:0x0211164c
+RickshawPlatformBs_Spawn kind:function(arm,size=0x3c) addr:0x021114d4
+_ZN18RickshawPlatformBsD1Ev kind:function(arm,size=0x80) addr:0x02111510
+_ZN18RickshawPlatformBsD0Ev kind:function(arm,size=0x94) addr:0x02111590
+_ZN18RickshawPlatformBs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111624
+_ZN18RickshawPlatformBs13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
+StairsBs_Spawn kind:function(arm,size=0x90) addr:0x0211164c
 __sinit_ov047_021116dc kind:function(arm,size=0x6c) addr:0x021116dc
 __sinit_ov047_02111748 kind:function(arm,size=0x6c) addr:0x02111748
 __sinit_ov047_021117b4 kind:function(arm,size=0x68) addr:0x021117b4
@@ -86,7 +86,7 @@ data_ov047_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 data_ov047_0211224c kind:data(any) addr:0x0211224c
 data_ov047_02112258 kind:data(any) addr:0x02112258
 data_ov047_02112264 kind:data(any) addr:0x02112264
-data_ov047_0211227c kind:data(any) addr:0x0211227c ambiguous
+RickshawBs_SpawnInfo kind:data(any) addr:0x0211227c ambiguous
 data_ov047_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov047_0211229c kind:data(any) addr:0x0211229c ambiguous
 data_ov047_021122a0 kind:data(any) addr:0x021122a0
@@ -97,7 +97,7 @@ data_ov047_02112334 kind:data(any) addr:0x02112334
 data_ov047_02112340 kind:data(any) addr:0x02112340
 data_ov047_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov047_02112368 kind:data(any) addr:0x02112368 ambiguous
-data_ov047_0211237c kind:data(any) addr:0x0211237c
+_ZTV10RickshawBs kind:data(any) addr:0x0211237c
 data_ov047_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov047_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov047_021123fc kind:data(any) addr:0x021123fc
@@ -105,7 +105,7 @@ data_ov047_02112404 kind:data(any) addr:0x02112404 ambiguous
 data_ov047_02112408 kind:data(any) addr:0x02112408
 data_ov047_02112414 kind:data(any) addr:0x02112414
 data_ov047_0211241c kind:data(any) addr:0x0211241c ambiguous
-data_ov047_02112428 kind:data(any) addr:0x02112428 ambiguous
+RickshawPlatformBs_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
 data_ov047_02112434 kind:data(any) addr:0x02112434 ambiguous
 data_ov047_02112438 kind:data(any) addr:0x02112438 ambiguous
 data_ov047_0211244c kind:data(any) addr:0x0211244c
@@ -116,12 +116,12 @@ data_ov047_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 data_ov047_021124cc kind:data(any) addr:0x021124cc
 data_ov047_021124d4 kind:data(any) addr:0x021124d4 ambiguous
 data_ov047_021124d8 kind:data(any) addr:0x021124d8
-data_ov047_021124ec kind:data(any) addr:0x021124ec ambiguous
+StairsBs_SpawnInfo kind:data(any) addr:0x021124ec ambiguous
 data_ov047_021124f8 kind:data(any) addr:0x021124f8 ambiguous
 data_ov047_021124fc kind:data(any) addr:0x021124fc ambiguous
 data_ov047_02112508 kind:data(any) addr:0x02112508
 data_ov047_02112530 kind:data(any) addr:0x02112530 ambiguous
-data_ov047_0211254c kind:data(any) addr:0x0211254c
+_ZTV18RickshawPlatformBs kind:data(any) addr:0x0211254c
 data_ov047_02112570 kind:data(any) addr:0x02112570 ambiguous
 data_ov047_02112590 kind:data(any) addr:0x02112590 ambiguous
 data_ov047_021125cc kind:data(any) addr:0x021125cc ambiguous

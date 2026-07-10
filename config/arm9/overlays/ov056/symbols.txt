@@ -1,10 +1,10 @@
-func_ov056_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov056_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
-func_ov056_0211123c kind:function(arm,size=0x48) addr:0x0211123c
-func_ov056_02111284 kind:function(arm,size=0x28) addr:0x02111284
-func_ov056_021112ac kind:function(arm,size=0x234) addr:0x021112ac
-func_ov056_021114e0 kind:function(arm,size=0xb4) addr:0x021114e0
-func_ov056_02111594 kind:function(arm,size=0x38) addr:0x02111594
+_ZN17BigMovingIceBlockD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN17BigMovingIceBlockD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN17BigMovingIceBlock16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211123c
+_ZN17BigMovingIceBlock6RenderEv kind:function(arm,size=0x28) addr:0x02111284
+_ZN17BigMovingIceBlock8BehaviorEv kind:function(arm,size=0x234) addr:0x021112ac
+_ZN17BigMovingIceBlock13InitResourcesEv kind:function(arm,size=0xb4) addr:0x021114e0
+BigMovingIceBlock_Spawn kind:function(arm,size=0x38) addr:0x02111594
 data_ov056_021115cc kind:data(any) addr:0x021115cc
 data_ov056_021115d0 kind:data(any) addr:0x021115d0
 data_ov056_021115e0 kind:data(any) addr:0x021115e0 ambiguous
@@ -148,8 +148,8 @@ data_ov056_021132ec kind:data(any) addr:0x021132ec ambiguous
 data_ov056_02113314 kind:data(any) addr:0x02113314
 data_ov056_02113320 kind:data(any) addr:0x02113320
 data_ov056_0211332c kind:data(any) addr:0x0211332c
-data_ov056_02113344 kind:data(any) addr:0x02113344 ambiguous
-data_ov056_02113368 kind:data(any) addr:0x02113368
+BigMovingIceBlock_SpawnInfo kind:data(any) addr:0x02113344 ambiguous
+_ZTV17BigMovingIceBlock kind:data(any) addr:0x02113368
 data_ov056_021133a8 kind:data(any) addr:0x021133a8 ambiguous
 data_ov056_02113400 kind:bss addr:0x02113400
 data_ov056_02113408 kind:bss addr:0x02113408

@@ -5,13 +5,13 @@ func_ov052_02111284 kind:function(arm,size=0x28) addr:0x02111284
 func_ov052_021112ac kind:function(arm,size=0x9c) addr:0x021112ac
 func_ov052_02111348 kind:function(arm,size=0xc8) addr:0x02111348
 func_ov052_02111410 kind:function(arm,size=0x30) addr:0x02111410
-func_ov052_02111440 kind:function(arm,size=0x44) addr:0x02111440
-func_ov052_02111484 kind:function(arm,size=0x58) addr:0x02111484
-func_ov052_021114dc kind:function(arm,size=0x48) addr:0x021114dc
-func_ov052_02111524 kind:function(arm,size=0x28) addr:0x02111524
-func_ov052_0211154c kind:function(arm,size=0x230) addr:0x0211154c
-func_ov052_0211177c kind:function(arm,size=0xb4) addr:0x0211177c
-func_ov052_02111830 kind:function(arm,size=0x38) addr:0x02111830
+_ZN14SquarePathLiftD1Ev kind:function(arm,size=0x44) addr:0x02111440
+_ZN14SquarePathLiftD0Ev kind:function(arm,size=0x58) addr:0x02111484
+_ZN14SquarePathLift16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x021114dc
+_ZN14SquarePathLift6RenderEv kind:function(arm,size=0x28) addr:0x02111524
+_ZN14SquarePathLift8BehaviorEv kind:function(arm,size=0x230) addr:0x0211154c
+_ZN14SquarePathLift13InitResourcesEv kind:function(arm,size=0xb4) addr:0x0211177c
+SquarePathLift_Spawn kind:function(arm,size=0x38) addr:0x02111830
 data_ov052_02111868 kind:data(any) addr:0x02111868
 data_ov052_0211186c kind:data(any) addr:0x0211186c
 data_ov052_02111870 kind:data(any) addr:0x02111870
@@ -100,8 +100,8 @@ data_ov052_02112590 kind:data(any) addr:0x02112590 ambiguous
 data_ov052_021125a0 kind:data(any) addr:0x021125a0
 data_ov052_021125ac kind:data(any) addr:0x021125ac
 data_ov052_021125b8 kind:data(any) addr:0x021125b8
-data_ov052_021125cc kind:data(any) addr:0x021125cc ambiguous
-data_ov052_021125f0 kind:data(any) addr:0x021125f0
+SquarePathLift_SpawnInfo kind:data(any) addr:0x021125cc ambiguous
+_ZTV14SquarePathLift kind:data(any) addr:0x021125f0
 data_ov052_02112610 kind:data(any) addr:0x02112610 ambiguous
 data_ov052_02112680 kind:bss addr:0x02112680
 data_ov052_02112688 kind:bss addr:0x02112688

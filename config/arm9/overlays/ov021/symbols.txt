@@ -1,11 +1,11 @@
-func_ov021_021111a0 kind:function(arm,size=0x74) addr:0x021111a0
-func_ov021_02111214 kind:function(arm,size=0x88) addr:0x02111214
+_ZN12WorkElevatorD1Ev kind:function(arm,size=0x74) addr:0x021111a0
+_ZN12WorkElevatorD0Ev kind:function(arm,size=0x88) addr:0x02111214
 func_ov021_0211129c kind:function(arm,size=0x198) addr:0x0211129c
 func_ov021_02111434 kind:function(arm,size=0x1a8) addr:0x02111434
-func_ov021_021115dc kind:function(arm,size=0x74) addr:0x021115dc
-func_ov021_02111650 kind:function(arm,size=0x78) addr:0x02111650
-func_ov021_021116c8 kind:function(arm,size=0x5a4) addr:0x021116c8
-func_ov021_02111c6c kind:function(arm,size=0x258) addr:0x02111c6c
+_ZN12WorkElevator16CleanupResourcesEv kind:function(arm,size=0x74) addr:0x021115dc
+_ZN12WorkElevator6RenderEv kind:function(arm,size=0x78) addr:0x02111650
+_ZN12WorkElevator8BehaviorEv kind:function(arm,size=0x5a4) addr:0x021116c8
+_ZN12WorkElevator13InitResourcesEv kind:function(arm,size=0x258) addr:0x02111c6c
 func_ov021_02111ec4 kind:function(arm,size=0x18) addr:0x02111ec4
 func_ov021_02111edc kind:function(arm,size=0x40) addr:0x02111edc
 func_ov021_02111f1c kind:function(arm,size=0x18) addr:0x02111f1c
@@ -16,26 +16,26 @@ func_ov021_02111fcc kind:function(arm,size=0x18) addr:0x02111fcc
 func_ov021_02111fe4 kind:function(arm,size=0x40) addr:0x02111fe4
 func_ov021_02112024 kind:function(arm,size=0x104) addr:0x02112024
 func_ov021_02112128 kind:function(arm,size=0x40) addr:0x02112128
-func_ov021_02112168 kind:function(arm,size=0x80) addr:0x02112168
-func_ov021_021121e8 kind:function(arm,size=0x48) addr:0x021121e8
-func_ov021_02112230 kind:function(arm,size=0x5c) addr:0x02112230
+WorkElevator_Spawn kind:function(arm,size=0x80) addr:0x02112168
+_ZN11RollingRockD1Ev kind:function(arm,size=0x48) addr:0x021121e8
+_ZN11RollingRockD0Ev kind:function(arm,size=0x5c) addr:0x02112230
 func_ov021_0211228c kind:function(arm,size=0x8) addr:0x0211228c
 func_ov021_02112294 kind:function(arm,size=0x68) addr:0x02112294
 func_ov021_021122fc kind:function(arm,size=0xb4) addr:0x021122fc
 func_ov021_021123b0 kind:function(arm,size=0x194) addr:0x021123b0
 func_ov021_02112544 kind:function(arm,size=0x270) addr:0x02112544
 func_ov021_021127b4 kind:function(arm,size=0x44) addr:0x021127b4
-func_ov021_021127f8 kind:function(arm,size=0x24) addr:0x021127f8
-func_ov021_0211281c kind:function(arm,size=0x38) addr:0x0211281c
-func_ov021_02112854 kind:function(arm,size=0x2d8) addr:0x02112854
-func_ov021_02112b2c kind:function(arm,size=0x238) addr:0x02112b2c
-func_ov021_02112d64 kind:function(arm,size=0x50) addr:0x02112d64
-func_ov021_02112db4 kind:function(arm,size=0x50) addr:0x02112db4
-func_ov021_02112e04 kind:function(arm,size=0x64) addr:0x02112e04
-func_ov021_02112e68 kind:function(arm,size=0x14) addr:0x02112e68
-func_ov021_02112e7c kind:function(arm,size=0x44) addr:0x02112e7c
-func_ov021_02112ec0 kind:function(arm,size=0x14) addr:0x02112ec0
-func_ov021_02112ed4 kind:function(arm,size=0x3c) addr:0x02112ed4
+_ZN11RollingRock16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021127f8
+_ZN11RollingRock6RenderEv kind:function(arm,size=0x38) addr:0x0211281c
+_ZN11RollingRock8BehaviorEv kind:function(arm,size=0x2d8) addr:0x02112854
+_ZN11RollingRock13InitResourcesEv kind:function(arm,size=0x238) addr:0x02112b2c
+RollingRock_Spawn kind:function(arm,size=0x50) addr:0x02112d64
+_ZN10ShutterHmcD1Ev kind:function(arm,size=0x50) addr:0x02112db4
+_ZN10ShutterHmcD0Ev kind:function(arm,size=0x64) addr:0x02112e04
+_ZN10ShutterHmc16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112e68
+_ZN10ShutterHmc8BehaviorEv kind:function(arm,size=0x44) addr:0x02112e7c
+_ZN10ShutterHmc13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112ec0
+ShutterHmc_Spawn kind:function(arm,size=0x3c) addr:0x02112ed4
 data_ov021_02112f10 kind:data(any) addr:0x02112f10
 data_ov021_02112f14 kind:data(any) addr:0x02112f14
 data_ov021_02112f18 kind:data(any) addr:0x02112f18
@@ -193,13 +193,13 @@ data_ov021_02114740 kind:data(any) addr:0x02114740
 data_ov021_02114748 kind:data(any) addr:0x02114748
 data_ov021_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov021_02114754 kind:data(any) addr:0x02114754
-data_ov021_02114768 kind:data(any) addr:0x02114768 ambiguous
-data_ov021_0211478c kind:data(any) addr:0x0211478c
+WorkElevator_SpawnInfo kind:data(any) addr:0x02114768 ambiguous
+_ZTV12WorkElevator kind:data(any) addr:0x0211478c
 data_ov021_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 data_ov021_0211480c kind:data(any) addr:0x0211480c
 data_ov021_02114818 kind:data(any) addr:0x02114818
-data_ov021_02114824 kind:data(any) addr:0x02114824 ambiguous
-data_ov021_02114848 kind:data(any) addr:0x02114848
+RollingRock_SpawnInfo kind:data(any) addr:0x02114824 ambiguous
+_ZTV11RollingRock kind:data(any) addr:0x02114848
 data_ov021_02114860 kind:data(any) addr:0x02114860 ambiguous
 data_ov021_02114874 kind:data(any) addr:0x02114874 ambiguous
 data_ov021_0211487c kind:data(any) addr:0x0211487c ambiguous
@@ -211,8 +211,8 @@ data_ov021_021148c4 kind:data(any) addr:0x021148c4
 data_ov021_021148d0 kind:data(any) addr:0x021148d0
 data_ov021_021148dc kind:data(any) addr:0x021148dc
 data_ov021_021148e0 kind:data(any) addr:0x021148e0 ambiguous
-data_ov021_021148f0 kind:data(any) addr:0x021148f0 ambiguous
-data_ov021_02114914 kind:data(any) addr:0x02114914
+ShutterHmc_SpawnInfo kind:data(any) addr:0x021148f0 ambiguous
+_ZTV10ShutterHmc kind:data(any) addr:0x02114914
 data_ov021_021149a0 kind:bss addr:0x021149a0
 data_ov021_021149a8 kind:bss addr:0x021149a8
 data_ov021_021149b0 kind:bss addr:0x021149b0

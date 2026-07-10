@@ -1,17 +1,17 @@
-func_ov098_02137be0 kind:function(arm,size=0x4c) addr:0x02137be0
-func_ov098_02137c2c kind:function(arm,size=0x60) addr:0x02137c2c
+_ZN14ArrowSignRightD1Ev kind:function(arm,size=0x4c) addr:0x02137be0
+_ZN14ArrowSignRightD0Ev kind:function(arm,size=0x60) addr:0x02137c2c
 func_ov098_02137c8c kind:function(arm,size=0x40) addr:0x02137c8c
 func_ov098_02137ccc kind:function(arm,size=0x74) addr:0x02137ccc
 func_ov098_02137d40 kind:function(arm,size=0x40) addr:0x02137d40
 func_ov098_02137d80 kind:function(arm,size=0x3c) addr:0x02137d80
-func_ov098_02137dbc kind:function(arm,size=0x64) addr:0x02137dbc
-func_ov098_02137e20 kind:function(arm,size=0x28) addr:0x02137e20
-func_ov098_02137e48 kind:function(arm,size=0xa4) addr:0x02137e48
-func_ov098_02137eec kind:function(arm,size=0xe4) addr:0x02137eec
-func_ov098_02137fd0 kind:function(arm,size=0x38) addr:0x02137fd0
-func_ov098_02138008 kind:function(arm,size=0x38) addr:0x02138008
-func_ov098_02138040 kind:function(arm,size=0x7c) addr:0x02138040
-func_ov098_021380bc kind:function(arm,size=0x90) addr:0x021380bc
+_ZN14ArrowSignRight16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02137dbc
+_ZN14ArrowSignRight6RenderEv kind:function(arm,size=0x28) addr:0x02137e20
+_ZN14ArrowSignRight8BehaviorEv kind:function(arm,size=0xa4) addr:0x02137e48
+_ZN14ArrowSignRight13InitResourcesEv kind:function(arm,size=0xe4) addr:0x02137eec
+ArrowSignRight_Spawn kind:function(arm,size=0x38) addr:0x02137fd0
+ArrowSignLeft_Spawn kind:function(arm,size=0x38) addr:0x02138008
+_ZN5CrateD1Ev kind:function(arm,size=0x7c) addr:0x02138040
+_ZN5CrateD0Ev kind:function(arm,size=0x90) addr:0x021380bc
 func_ov098_0213814c kind:function(arm,size=0x9c) addr:0x0213814c
 func_ov098_021381e8 kind:function(arm,size=0x50) addr:0x021381e8
 func_ov098_02138238 kind:function(arm,size=0xe0) addr:0x02138238
@@ -39,14 +39,14 @@ func_ov098_02139228 kind:function(arm,size=0x47c) addr:0x02139228
 func_ov098_021396a4 kind:function(arm,size=0x124) addr:0x021396a4
 func_ov098_021397c8 kind:function(arm,size=0x88) addr:0x021397c8
 func_ov098_02139850 kind:function(arm,size=0x200) addr:0x02139850
-func_ov098_02139a50 kind:function(arm,size=0x58) addr:0x02139a50
-func_ov098_02139aa8 kind:function(arm,size=0x64) addr:0x02139aa8
-func_ov098_02139b0c kind:function(arm,size=0x208) addr:0x02139b0c
-func_ov098_02139d14 kind:function(arm,size=0x130) addr:0x02139d14
+_ZN5Crate16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x02139a50
+_ZN5Crate6RenderEv kind:function(arm,size=0x64) addr:0x02139aa8
+_ZN5Crate8BehaviorEv kind:function(arm,size=0x208) addr:0x02139b0c
+_ZN5Crate13InitResourcesEv kind:function(arm,size=0x130) addr:0x02139d14
 func_ov098_02139e44 kind:function(arm,size=0x20) addr:0x02139e44
 func_ov098_02139e64 kind:function(arm,size=0x14) addr:0x02139e64
 func_ov098_02139e78 kind:function(arm,size=0x8c) addr:0x02139e78
-func_ov098_02139f04 kind:function(arm,size=0x6c) addr:0x02139f04
+Crate_Spawn kind:function(arm,size=0x6c) addr:0x02139f04
 func_ov098_02139f70 kind:function(arm,size=0x58) addr:0x02139f70
 func_ov098_02139fc8 kind:function(arm,size=0x44) addr:0x02139fc8
 func_ov098_0213a00c kind:function(arm,size=0x9c) addr:0x0213a00c
@@ -62,21 +62,21 @@ func_ov098_0213a36c kind:function(arm,size=0x428) addr:0x0213a36c
 func_ov098_0213a794 kind:function(arm,size=0x14c) addr:0x0213a794
 func_ov098_0213a8e0 kind:function(arm,size=0xc) addr:0x0213a8e0
 func_ov098_0213a8ec kind:function(arm,size=0x14) addr:0x0213a8ec
-func_ov098_0213a900 kind:function(arm,size=0x38) addr:0x0213a900
-func_ov098_0213a938 kind:function(arm,size=0x4c) addr:0x0213a938
+_ZN6CannonD1Ev kind:function(arm,size=0x38) addr:0x0213a900
+_ZN6CannonD0Ev kind:function(arm,size=0x4c) addr:0x0213a938
 func_ov098_0213a984 kind:function(arm,size=0xa4) addr:0x0213a984
 func_ov098_0213aa28 kind:function(arm,size=0x2e0) addr:0x0213aa28
 func_ov098_0213ad08 kind:function(arm,size=0xe0) addr:0x0213ad08
 func_ov098_0213ade8 kind:function(arm,size=0x2bc) addr:0x0213ade8
 func_ov098_0213b0a4 kind:function(arm,size=0xb8) addr:0x0213b0a4
 func_ov098_0213b15c kind:function(arm,size=0x7c) addr:0x0213b15c
-func_ov098_0213b1d8 kind:function(arm,size=0x3c) addr:0x0213b1d8
-func_ov098_0213b214 kind:function(arm,size=0x58) addr:0x0213b214
-func_ov098_0213b26c kind:function(arm,size=0x68) addr:0x0213b26c
-func_ov098_0213b2d4 kind:function(arm,size=0x168) addr:0x0213b2d4
-func_ov098_0213b43c kind:function(arm,size=0x40) addr:0x0213b43c
-func_ov098_0213b47c kind:function(arm,size=0x48) addr:0x0213b47c
-func_ov098_0213b4c4 kind:function(arm,size=0x5c) addr:0x0213b4c4
+_ZN6Cannon16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0213b1d8
+_ZN6Cannon6RenderEv kind:function(arm,size=0x58) addr:0x0213b214
+_ZN6Cannon8BehaviorEv kind:function(arm,size=0x68) addr:0x0213b26c
+_ZN6Cannon13InitResourcesEv kind:function(arm,size=0x168) addr:0x0213b2d4
+Cannon_Spawn kind:function(arm,size=0x40) addr:0x0213b43c
+_ZN9WaterBombD1Ev kind:function(arm,size=0x48) addr:0x0213b47c
+_ZN9WaterBombD0Ev kind:function(arm,size=0x5c) addr:0x0213b4c4
 func_ov098_0213b520 kind:function(arm,size=0x64) addr:0x0213b520
 func_ov098_0213b584 kind:function(arm,size=0xb8) addr:0x0213b584
 func_ov098_0213b63c kind:function(arm,size=0xa4) addr:0x0213b63c
@@ -84,11 +84,11 @@ func_ov098_0213b6e0 kind:function(arm,size=0x108) addr:0x0213b6e0
 func_ov098_0213b7e8 kind:function(arm,size=0x1f0) addr:0x0213b7e8
 func_ov098_0213b9d8 kind:function(arm,size=0x144) addr:0x0213b9d8
 func_ov098_0213bb1c kind:function(arm,size=0x80) addr:0x0213bb1c
-func_ov098_0213bb9c kind:function(arm,size=0x48) addr:0x0213bb9c
-func_ov098_0213bbe4 kind:function(arm,size=0x3c) addr:0x0213bbe4
-func_ov098_0213bc20 kind:function(arm,size=0xf4) addr:0x0213bc20
-func_ov098_0213bd14 kind:function(arm,size=0x1fc) addr:0x0213bd14
-func_ov098_0213bf10 kind:function(arm,size=0x50) addr:0x0213bf10
+_ZN9WaterBomb16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0213bb9c
+_ZN9WaterBomb6RenderEv kind:function(arm,size=0x3c) addr:0x0213bbe4
+_ZN9WaterBomb8BehaviorEv kind:function(arm,size=0xf4) addr:0x0213bc20
+_ZN9WaterBomb13InitResourcesEv kind:function(arm,size=0x1fc) addr:0x0213bd14
+WaterBomb_Spawn kind:function(arm,size=0x50) addr:0x0213bf10
 data_ov098_0213bf60 kind:data(any) addr:0x0213bf60
 data_ov098_0213bf64 kind:data(any) addr:0x0213bf64
 data_ov098_0213bf68 kind:data(any) addr:0x0213bf68
@@ -106,10 +106,10 @@ data_ov098_0213c36c kind:data(any) addr:0x0213c36c
 data_ov098_0213c380 kind:data(any) addr:0x0213c380
 data_ov098_0213c384 kind:data(any) addr:0x0213c384
 data_ov098_0213c388 kind:data(any) addr:0x0213c388
-data_ov098_0213c398 kind:data(any) addr:0x0213c398 ambiguous
-data_ov098_0213c3b4 kind:data(any) addr:0x0213c3b4 ambiguous
-data_ov098_0213c3d8 kind:data(any) addr:0x0213c3d8
-data_ov098_0213c434 kind:data(any) addr:0x0213c434 ambiguous
+ArrowSignLeft_SpawnInfo kind:data(any) addr:0x0213c398 ambiguous
+ArrowSignRight_SpawnInfo kind:data(any) addr:0x0213c3b4 ambiguous
+_ZTV14ArrowSignRight kind:data(any) addr:0x0213c3d8
+MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
 data_ov098_0213c458 kind:data(any) addr:0x0213c458
 data_ov098_0213c460 kind:data(any) addr:0x0213c460
 data_ov098_0213c468 kind:data(any) addr:0x0213c468
@@ -129,8 +129,8 @@ data_ov098_0213c4d4 kind:data(any) addr:0x0213c4d4
 data_ov098_0213c4e0 kind:data(any) addr:0x0213c4e0
 data_ov098_0213c4f0 kind:data(any) addr:0x0213c4f0
 data_ov098_0213c500 kind:data(any) addr:0x0213c500
-data_ov098_0213c510 kind:data(any) addr:0x0213c510 ambiguous
-data_ov098_0213c534 kind:data(any) addr:0x0213c534
+Crate_SpawnInfo kind:data(any) addr:0x0213c510 ambiguous
+_ZTV5Crate kind:data(any) addr:0x0213c534
 data_ov098_0213c5bc kind:data(any) addr:0x0213c5bc
 data_ov098_0213c63c kind:data(any) addr:0x0213c63c
 data_ov098_0213c644 kind:data(any) addr:0x0213c644
@@ -139,15 +139,15 @@ data_ov098_0213c654 kind:data(any) addr:0x0213c654
 data_ov098_0213c65c kind:data(any) addr:0x0213c65c
 data_ov098_0213c664 kind:data(any) addr:0x0213c664
 data_ov098_0213c670 kind:data(any) addr:0x0213c670
-data_ov098_0213c67c kind:data(any) addr:0x0213c67c ambiguous
-data_ov098_0213c6a0 kind:data(any) addr:0x0213c6a0
+Cannon_SpawnInfo kind:data(any) addr:0x0213c67c ambiguous
+_ZTV6Cannon kind:data(any) addr:0x0213c6a0
 data_ov098_0213c71c kind:data(any) addr:0x0213c71c
 data_ov098_0213c724 kind:data(any) addr:0x0213c724
 data_ov098_0213c72c kind:data(any) addr:0x0213c72c
 data_ov098_0213c734 kind:data(any) addr:0x0213c734
 data_ov098_0213c740 kind:data(any) addr:0x0213c740
-data_ov098_0213c74c kind:data(any) addr:0x0213c74c ambiguous
-data_ov098_0213c770 kind:data(any) addr:0x0213c770
+WaterBomb_SpawnInfo kind:data(any) addr:0x0213c74c ambiguous
+_ZTV9WaterBomb kind:data(any) addr:0x0213c770
 data_ov098_0213c78c kind:data(any) addr:0x0213c78c ambiguous
 data_ov098_0213c800 kind:bss addr:0x0213c800
 data_ov098_0213c808 kind:bss addr:0x0213c808

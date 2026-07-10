@@ -1,7 +1,7 @@
-func_ov020_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov020_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
-func_ov020_02111254 kind:function(arm,size=0x24) addr:0x02111254
-func_ov020_02111278 kind:function(arm,size=0x38) addr:0x02111278
+_ZN8BookShotD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN8BookShotD0Ev kind:function(arm,size=0x64) addr:0x021111f0
+_ZN15BookShotSpawnerD1Ev kind:function(arm,size=0x24) addr:0x02111254
+_ZN15BookShotSpawnerD0Ev kind:function(arm,size=0x38) addr:0x02111278
 func_ov020_021112b0 kind:function(arm,size=0x90) addr:0x021112b0
 func_ov020_02111340 kind:function(arm,size=0xd8) addr:0x02111340
 func_ov020_02111418 kind:function(arm,size=0x194) addr:0x02111418
@@ -16,21 +16,21 @@ func_ov020_02111fc4 kind:function(arm,size=0xbc) addr:0x02111fc4
 func_ov020_02112080 kind:function(arm,size=0x90) addr:0x02112080
 func_ov020_02112110 kind:function(arm,size=0x5c) addr:0x02112110
 func_ov020_0211216c kind:function(arm,size=0xd8) addr:0x0211216c
-func_ov020_02112244 kind:function(arm,size=0x4c) addr:0x02112244
-func_ov020_02112290 kind:function(arm,size=0x34) addr:0x02112290
-func_ov020_021122c4 kind:function(arm,size=0x78) addr:0x021122c4
-func_ov020_0211233c kind:function(arm,size=0xdc) addr:0x0211233c
-func_ov020_02112418 kind:function(arm,size=0xcc) addr:0x02112418
-func_ov020_021124e4 kind:function(arm,size=0x284) addr:0x021124e4
-func_ov020_02112768 kind:function(arm,size=0x3c) addr:0x02112768
+_ZN8BookShot16CleanupResourcesEv kind:function(arm,size=0x4c) addr:0x02112244
+_ZN15BookShotSpawner16CleanupResourcesEv kind:function(arm,size=0x34) addr:0x02112290
+_ZN8BookShot6RenderEv kind:function(arm,size=0x78) addr:0x021122c4
+_ZN8BookShot8BehaviorEv kind:function(arm,size=0xdc) addr:0x0211233c
+_ZN15BookShotSpawner8BehaviorEv kind:function(arm,size=0xcc) addr:0x02112418
+_ZN8BookShot13InitResourcesEv kind:function(arm,size=0x284) addr:0x021124e4
+_ZN15BookShotSpawner13InitResourcesEv kind:function(arm,size=0x3c) addr:0x02112768
 func_ov020_021127a4 kind:function(arm,size=0x28) addr:0x021127a4
 func_ov020_021127cc kind:function(arm,size=0x28) addr:0x021127cc
 func_ov020_021127f4 kind:function(arm,size=0x5c) addr:0x021127f4
-func_ov020_02112850 kind:function(arm,size=0x30) addr:0x02112850
-func_ov020_02112880 kind:function(arm,size=0x5c) addr:0x02112880
-func_ov020_021128dc kind:function(arm,size=0x5c) addr:0x021128dc
-func_ov020_02112938 kind:function(arm,size=0x48) addr:0x02112938
-func_ov020_02112980 kind:function(arm,size=0x5c) addr:0x02112980
+BookShotSpawner_Spawn kind:function(arm,size=0x30) addr:0x02112850
+Bookend_Spawn kind:function(arm,size=0x5c) addr:0x02112880
+BookShot_Spawn kind:function(arm,size=0x5c) addr:0x021128dc
+_ZN12HauntedChairD1Ev kind:function(arm,size=0x48) addr:0x02112938
+_ZN12HauntedChairD0Ev kind:function(arm,size=0x5c) addr:0x02112980
 func_ov020_021129dc kind:function(arm,size=0x124) addr:0x021129dc
 func_ov020_02112b00 kind:function(arm,size=0x394) addr:0x02112b00
 func_ov020_02112e94 kind:function(arm,size=0x234) addr:0x02112e94
@@ -38,11 +38,11 @@ func_ov020_021130c8 kind:function(arm,size=0x80) addr:0x021130c8
 func_ov020_02113148 kind:function(arm,size=0xb0) addr:0x02113148
 func_ov020_021131f8 kind:function(arm,size=0x48) addr:0x021131f8
 func_ov020_02113240 kind:function(arm,size=0x98) addr:0x02113240
-func_ov020_021132d8 kind:function(arm,size=0x24) addr:0x021132d8
-func_ov020_021132fc kind:function(arm,size=0x28) addr:0x021132fc
-func_ov020_02113324 kind:function(arm,size=0x8c) addr:0x02113324
-func_ov020_021133b0 kind:function(arm,size=0xe4) addr:0x021133b0
-func_ov020_02113494 kind:function(arm,size=0x50) addr:0x02113494
+_ZN12HauntedChair16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021132d8
+_ZN12HauntedChair6RenderEv kind:function(arm,size=0x28) addr:0x021132fc
+_ZN12HauntedChair8BehaviorEv kind:function(arm,size=0x8c) addr:0x02113324
+_ZN12HauntedChair13InitResourcesEv kind:function(arm,size=0xe4) addr:0x021133b0
+HauntedChair_Spawn kind:function(arm,size=0x50) addr:0x02113494
 data_ov020_021134e4 kind:data(any) addr:0x021134e4
 data_ov020_021134e8 kind:data(any) addr:0x021134e8
 data_ov020_021134ec kind:data(any) addr:0x021134ec
@@ -201,22 +201,22 @@ data_ov020_0211482c kind:data(any) addr:0x0211482c
 data_ov020_02114838 kind:data(any) addr:0x02114838
 data_ov020_02114844 kind:data(any) addr:0x02114844
 data_ov020_02114850 kind:data(any) addr:0x02114850
-data_ov020_02114860 kind:data(any) addr:0x02114860 ambiguous
+Bookend_SpawnInfo kind:data(any) addr:0x02114860 ambiguous
 data_ov020_02114874 kind:data(any) addr:0x02114874 ambiguous
-data_ov020_0211487c kind:data(any) addr:0x0211487c ambiguous
+BookShotSpawner_SpawnInfo kind:data(any) addr:0x0211487c ambiguous
 data_ov020_0211488c kind:data(any) addr:0x0211488c ambiguous
 data_ov020_02114898 kind:data(any) addr:0x02114898 ambiguous
-data_ov020_021148b4 kind:data(any) addr:0x021148b4 ambiguous
+BookShot_SpawnInfo kind:data(any) addr:0x021148b4 ambiguous
 data_ov020_021148b8 kind:data(any) addr:0x021148b8 ambiguous
-data_ov020_021148d8 kind:data(any) addr:0x021148d8
+_ZTV15BookShotSpawner kind:data(any) addr:0x021148d8
 data_ov020_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov020_021148f0 kind:data(any) addr:0x021148f0 ambiguous
-data_ov020_0211495c kind:data(any) addr:0x0211495c
+_ZTV8BookShot kind:data(any) addr:0x0211495c
 data_ov020_021149d8 kind:data(any) addr:0x021149d8
 data_ov020_021149e4 kind:data(any) addr:0x021149e4
-data_ov020_021149f0 kind:data(any) addr:0x021149f0 ambiguous
+HauntedChair_SpawnInfo kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
-data_ov020_02114a14 kind:data(any) addr:0x02114a14
+_ZTV12HauntedChair kind:data(any) addr:0x02114a14
 data_ov020_02114a18 kind:data(any) addr:0x02114a18 ambiguous
 data_ov020_02114aa0 kind:bss addr:0x02114aa0
 data_ov020_02114aa8 kind:bss addr:0x02114aa8

@@ -1,13 +1,13 @@
-func_ov031_021111a0 kind:function(arm,size=0x30) addr:0x021111a0
-func_ov031_021111d0 kind:function(arm,size=0x44) addr:0x021111d0
+_ZN25SlideDecorationSilverStarD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN25SlideDecorationSilverStarD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov031_02111214 kind:function(arm,size=0x40) addr:0x02111214
-func_ov031_02111254 kind:function(arm,size=0x2c) addr:0x02111254
-func_ov031_02111280 kind:function(arm,size=0x28) addr:0x02111280
-func_ov031_021112a8 kind:function(arm,size=0x9c) addr:0x021112a8
-func_ov031_02111344 kind:function(arm,size=0x38) addr:0x02111344
-func_ov031_0211137c kind:function(arm,size=0x38) addr:0x0211137c
-func_ov031_021113b4 kind:function(arm,size=0x38) addr:0x021113b4
-func_ov031_021113ec kind:function(arm,size=0x38) addr:0x021113ec
+_ZN25SlideDecorationSilverStar16CleanupResourcesEv kind:function(arm,size=0x2c) addr:0x02111254
+_ZN25SlideDecorationSilverStar6RenderEv kind:function(arm,size=0x28) addr:0x02111280
+_ZN25SlideDecorationSilverStar13InitResourcesEv kind:function(arm,size=0x9c) addr:0x021112a8
+SlideDecorationBlueSmiley_Spawn kind:function(arm,size=0x38) addr:0x02111344
+SlideDecorationOrangeSmiley_Spawn kind:function(arm,size=0x38) addr:0x0211137c
+SlideDecorationYellowStar_Spawn kind:function(arm,size=0x38) addr:0x021113b4
+SlideDecorationSilverStar_Spawn kind:function(arm,size=0x38) addr:0x021113ec
 data_ov031_02111424 kind:data(any) addr:0x02111424
 __sinit_ov031_02111434 kind:function(arm,size=0xb8) addr:0x02111434
 .p__sinit_ov031_02111434 kind:data(word) addr:0x021114ec
@@ -50,12 +50,12 @@ data_ov031_02111834 kind:data(any) addr:0x02111834 ambiguous
 data_ov031_02111844 kind:data(any) addr:0x02111844 ambiguous
 data_ov031_021118e8 kind:data(any) addr:0x021118e8
 data_ov031_021118f4 kind:data(any) addr:0x021118f4
-data_ov031_0211190c kind:data(any) addr:0x0211190c ambiguous
-data_ov031_02111928 kind:data(any) addr:0x02111928 ambiguous
+SlideDecorationSilverStar_SpawnInfo kind:data(any) addr:0x0211190c ambiguous
+SlideDecorationYellowStar_SpawnInfo kind:data(any) addr:0x02111928 ambiguous
 data_ov031_0211192c kind:data(any) addr:0x0211192c ambiguous
-data_ov031_02111944 kind:data(any) addr:0x02111944 ambiguous
-data_ov031_02111960 kind:data(any) addr:0x02111960 ambiguous
-data_ov031_02111984 kind:data(any) addr:0x02111984
+SlideDecorationOrangeSmiley_SpawnInfo kind:data(any) addr:0x02111944 ambiguous
+SlideDecorationBlueSmiley_SpawnInfo kind:data(any) addr:0x02111960 ambiguous
+_ZTV25SlideDecorationSilverStar kind:data(any) addr:0x02111984
 data_ov031_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov031_02111a00 kind:bss addr:0x02111a00
 data_ov031_02111a08 kind:bss addr:0x02111a08

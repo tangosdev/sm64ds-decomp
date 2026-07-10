@@ -1,5 +1,5 @@
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern int func_ov080_02123804(void* t);
+extern int _ZN13MontyMoleRockD0Ev(void* t);
 extern char* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
 extern int func_ov078_02125c48(void* c, void* p);
@@ -12,7 +12,7 @@ struct Vec3 { int x,y,z; };
 
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
-    if(func_ov080_02123804(c) == 1) return 1;
+    if(_ZN13MontyMoleRockD0Ev(c) == 1) return 1;
     char* p = _ZN5Actor13ClosestPlayerEv(c);
     if(p != 0){
         struct Vec3 v = *(struct Vec3*)(p+0x5c);

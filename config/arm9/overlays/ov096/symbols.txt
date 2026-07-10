@@ -1,5 +1,5 @@
-func_ov096_02135700 kind:function(arm,size=0x48) addr:0x02135700
-func_ov096_02135748 kind:function(arm,size=0x5c) addr:0x02135748
+_ZN5PokeyD1Ev kind:function(arm,size=0x48) addr:0x02135700
+_ZN5PokeyD0Ev kind:function(arm,size=0x5c) addr:0x02135748
 func_ov096_021357a4 kind:function(arm,size=0x8) addr:0x021357a4
 func_ov096_021357ac kind:function(arm,size=0x8) addr:0x021357ac
 func_ov096_021357b4 kind:function(arm,size=0x4c) addr:0x021357b4
@@ -26,25 +26,25 @@ func_ov096_021368a4 kind:function(arm,size=0x10) addr:0x021368a4
 func_ov096_021368b4 kind:function(arm,size=0x3c) addr:0x021368b4
 func_ov096_021368f0 kind:function(arm,size=0x38) addr:0x021368f0
 func_ov096_02136928 kind:function(arm,size=0x1c) addr:0x02136928
-func_ov096_02136944 kind:function(arm,size=0x6c) addr:0x02136944
-func_ov096_021369b0 kind:function(arm,size=0x4c) addr:0x021369b0
-func_ov096_021369fc kind:function(arm,size=0x54) addr:0x021369fc
-func_ov096_02136a50 kind:function(arm,size=0x60) addr:0x02136a50
-func_ov096_02136ab0 kind:function(arm,size=0x220) addr:0x02136ab0
+_ZN5Pokey16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02136944
+_ZN5Pokey16OnPendingDestroyEv kind:function(arm,size=0x4c) addr:0x021369b0
+_ZN5Pokey6RenderEv kind:function(arm,size=0x54) addr:0x021369fc
+_ZN5Pokey8BehaviorEv kind:function(arm,size=0x60) addr:0x02136a50
+_ZN5Pokey13InitResourcesEv kind:function(arm,size=0x220) addr:0x02136ab0
 func_ov096_02136cd0 kind:function(arm,size=0x40) addr:0x02136cd0
-func_ov096_02136d10 kind:function(arm,size=0x50) addr:0x02136d10
-func_ov096_02136d60 kind:function(arm,size=0x50) addr:0x02136d60
-func_ov096_02136db0 kind:function(arm,size=0x48) addr:0x02136db0
-func_ov096_02136df8 kind:function(arm,size=0x5c) addr:0x02136df8
+PokeySegment_Spawn kind:function(arm,size=0x50) addr:0x02136d10
+Pokey_Spawn kind:function(arm,size=0x50) addr:0x02136d60
+_ZN7TornadoD1Ev kind:function(arm,size=0x48) addr:0x02136db0
+_ZN7TornadoD0Ev kind:function(arm,size=0x5c) addr:0x02136df8
 func_ov096_02136e54 kind:function(arm,size=0x180) addr:0x02136e54
 func_ov096_02136fd4 kind:function(arm,size=0xb4) addr:0x02136fd4
 func_ov096_02137088 kind:function(arm,size=0x238) addr:0x02137088
 func_ov096_021372c0 kind:function(arm,size=0x124) addr:0x021372c0
-func_ov096_021373e4 kind:function(arm,size=0x30) addr:0x021373e4
-func_ov096_02137414 kind:function(arm,size=0x34) addr:0x02137414
-func_ov096_02137448 kind:function(arm,size=0x11c) addr:0x02137448
-func_ov096_02137564 kind:function(arm,size=0x158) addr:0x02137564
-func_ov096_021376bc kind:function(arm,size=0x50) addr:0x021376bc
+_ZN7Tornado16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x021373e4
+_ZN7Tornado6RenderEv kind:function(arm,size=0x34) addr:0x02137414
+_ZN7Tornado8BehaviorEv kind:function(arm,size=0x11c) addr:0x02137448
+_ZN7Tornado13InitResourcesEv kind:function(arm,size=0x158) addr:0x02137564
+Tornado_Spawn kind:function(arm,size=0x50) addr:0x021376bc
 __sinit_ov096_0213770c kind:function(arm,size=0x188) addr:0x0213770c
 __sinit_ov096_02137894 kind:function(arm,size=0x6c) addr:0x02137894
 .p__sinit_ov096_0213770c kind:data(word) addr:0x02137900
@@ -63,13 +63,13 @@ data_ov096_02137970 kind:data(any) addr:0x02137970
 data_ov096_02137978 kind:data(any) addr:0x02137978
 data_ov096_02137980 kind:data(any) addr:0x02137980
 data_ov096_0213798c kind:data(any) addr:0x0213798c
-data_ov096_02137998 kind:data(any) addr:0x02137998 ambiguous
-data_ov096_021379b4 kind:data(any) addr:0x021379b4 ambiguous
-data_ov096_021379d8 kind:data(any) addr:0x021379d8
+Pokey_SpawnInfo kind:data(any) addr:0x02137998 ambiguous
+PokeySegment_SpawnInfo kind:data(any) addr:0x021379b4 ambiguous
+_ZTV5Pokey kind:data(any) addr:0x021379d8
 data_ov096_02137a54 kind:data(any) addr:0x02137a54
 data_ov096_02137a60 kind:data(any) addr:0x02137a60
-data_ov096_02137a6c kind:data(any) addr:0x02137a6c ambiguous
-data_ov096_02137a90 kind:data(any) addr:0x02137a90
+Tornado_SpawnInfo kind:data(any) addr:0x02137a6c ambiguous
+_ZTV7Tornado kind:data(any) addr:0x02137a90
 data_ov096_02137b20 kind:bss addr:0x02137b20
 data_ov096_02137b28 kind:bss addr:0x02137b28
 data_ov096_02137b30 kind:bss addr:0x02137b30

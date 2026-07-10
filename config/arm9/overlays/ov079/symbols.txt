@@ -1,5 +1,5 @@
-func_ov079_02123740 kind:function(arm,size=0x58) addr:0x02123740
-func_ov079_02123798 kind:function(arm,size=0x6c) addr:0x02123798
+_ZN5WhompD1Ev kind:function(arm,size=0x58) addr:0x02123740
+_ZN5WhompD0Ev kind:function(arm,size=0x6c) addr:0x02123798
 func_ov079_02123804 kind:function(arm,size=0x288) addr:0x02123804
 func_ov079_02123a8c kind:function(arm,size=0xc8) addr:0x02123a8c
 func_ov079_02123b54 kind:function(arm,size=0xc) addr:0x02123b54
@@ -28,23 +28,23 @@ func_ov079_02125504 kind:function(arm,size=0x1d0) addr:0x02125504
 func_ov079_021256d4 kind:function(arm,size=0x228) addr:0x021256d4
 func_ov079_021258fc kind:function(arm,size=0x248) addr:0x021258fc
 func_ov079_02125b44 kind:function(arm,size=0x36c) addr:0x02125b44
-func_ov079_02125eb0 kind:function(arm,size=0xc8) addr:0x02125eb0
-func_ov079_02125f78 kind:function(arm,size=0x54) addr:0x02125f78
-func_ov079_02125fcc kind:function(arm,size=0x198) addr:0x02125fcc
-func_ov079_02126164 kind:function(arm,size=0x424) addr:0x02126164
-func_ov079_02126588 kind:function(arm,size=0x60) addr:0x02126588
-func_ov079_021265e8 kind:function(arm,size=0x60) addr:0x021265e8
-func_ov079_02126648 kind:function(arm,size=0x50) addr:0x02126648
-func_ov079_02126698 kind:function(arm,size=0x64) addr:0x02126698
+_ZN5Whomp16CleanupResourcesEv kind:function(arm,size=0xc8) addr:0x02125eb0
+_ZN5Whomp6RenderEv kind:function(arm,size=0x54) addr:0x02125f78
+_ZN5Whomp8BehaviorEv kind:function(arm,size=0x198) addr:0x02125fcc
+_ZN5Whomp13InitResourcesEv kind:function(arm,size=0x424) addr:0x02126164
+WhompKing_Spawn kind:function(arm,size=0x60) addr:0x02126588
+Whomp_Spawn kind:function(arm,size=0x60) addr:0x021265e8
+_ZN10BulletBillD1Ev kind:function(arm,size=0x50) addr:0x02126648
+_ZN10BulletBillD0Ev kind:function(arm,size=0x64) addr:0x02126698
 func_ov079_021266fc kind:function(arm,size=0x8) addr:0x021266fc
 func_ov079_02126704 kind:function(arm,size=0x90) addr:0x02126704
 func_ov079_02126794 kind:function(arm,size=0x98) addr:0x02126794
 func_ov079_0212682c kind:function(arm,size=0x1ec) addr:0x0212682c
-func_ov079_02126a18 kind:function(arm,size=0x30) addr:0x02126a18
-func_ov079_02126a48 kind:function(arm,size=0x3c) addr:0x02126a48
-func_ov079_02126a84 kind:function(arm,size=0x1c0) addr:0x02126a84
-func_ov079_02126c44 kind:function(arm,size=0x120) addr:0x02126c44
-func_ov079_02126d64 kind:function(arm,size=0x58) addr:0x02126d64
+_ZN10BulletBill16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02126a18
+_ZN10BulletBill6RenderEv kind:function(arm,size=0x3c) addr:0x02126a48
+_ZN10BulletBill8BehaviorEv kind:function(arm,size=0x1c0) addr:0x02126a84
+_ZN10BulletBill13InitResourcesEv kind:function(arm,size=0x120) addr:0x02126c44
+BulletBill_Spawn kind:function(arm,size=0x58) addr:0x02126d64
 func_ov079_02126dbc kind:function(arm,size=0x44) addr:0x02126dbc
 func_ov079_02126e00 kind:function(arm,size=0x58) addr:0x02126e00
 func_ov079_02126e58 kind:function(arm,size=0x74) addr:0x02126e58
@@ -53,17 +53,17 @@ func_ov079_02126f04 kind:function(arm,size=0x60) addr:0x02126f04
 func_ov079_02126f64 kind:function(arm,size=0x28) addr:0x02126f64
 func_ov079_02126f8c kind:function(arm,size=0x104) addr:0x02126f8c
 func_ov079_02127090 kind:function(arm,size=0x124) addr:0x02127090
-func_ov079_021271b4 kind:function(arm,size=0x30) addr:0x021271b4
-func_ov079_021271e4 kind:function(arm,size=0x44) addr:0x021271e4
-func_ov079_02127228 kind:function(arm,size=0x58) addr:0x02127228
+BillBlaster_Spawn kind:function(arm,size=0x30) addr:0x021271b4
+_ZN12FortressWallD1Ev kind:function(arm,size=0x44) addr:0x021271e4
+_ZN12FortressWallD0Ev kind:function(arm,size=0x58) addr:0x02127228
 func_ov079_02127280 kind:function(arm,size=0x60) addr:0x02127280
 func_ov079_021272e0 kind:function(arm,size=0x20) addr:0x021272e0
-func_ov079_02127300 kind:function(arm,size=0x64) addr:0x02127300
-func_ov079_02127364 kind:function(arm,size=0x40) addr:0x02127364
-func_ov079_021273a4 kind:function(arm,size=0xf0) addr:0x021273a4
-func_ov079_02127494 kind:function(arm,size=0xe8) addr:0x02127494
-func_ov079_0212757c kind:function(arm,size=0x30) addr:0x0212757c
-func_ov079_021275ac kind:function(arm,size=0x30) addr:0x021275ac
+_ZN12FortressWall16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02127300
+_ZN12FortressWall6RenderEv kind:function(arm,size=0x40) addr:0x02127364
+_ZN12FortressWall8BehaviorEv kind:function(arm,size=0xf0) addr:0x021273a4
+_ZN12FortressWall13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02127494
+FortressWall_Spawn kind:function(arm,size=0x30) addr:0x0212757c
+FortressWallBreakable_Spawn kind:function(arm,size=0x30) addr:0x021275ac
 data_ov079_021275dc kind:data(any) addr:0x021275dc
 data_ov079_021275e4 kind:data(any) addr:0x021275e4
 data_ov079_021275ec kind:data(any) addr:0x021275ec
@@ -92,21 +92,21 @@ data_ov079_02127c18 kind:data(any) addr:0x02127c18
 data_ov079_02127c20 kind:data(any) addr:0x02127c20
 data_ov079_02127c28 kind:data(any) addr:0x02127c28
 data_ov079_02127c34 kind:data(any) addr:0x02127c34
-data_ov079_02127c40 kind:data(any) addr:0x02127c40 ambiguous
-data_ov079_02127c5c kind:data(any) addr:0x02127c5c ambiguous
-data_ov079_02127c80 kind:data(any) addr:0x02127c80
+WhompKing_SpawnInfo kind:data(any) addr:0x02127c40 ambiguous
+Whomp_SpawnInfo kind:data(any) addr:0x02127c5c ambiguous
+_ZTV5Whomp kind:data(any) addr:0x02127c80
 data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
 data_ov079_02127e9c kind:data(any) addr:0x02127e9c
 data_ov079_02127ea4 kind:data(any) addr:0x02127ea4
 data_ov079_02127eac kind:data(any) addr:0x02127eac
 data_ov079_02127eb8 kind:data(any) addr:0x02127eb8
-data_ov079_02127ec4 kind:data(any) addr:0x02127ec4
-data_ov079_02127ee8 kind:data(any) addr:0x02127ee8
+BulletBill_SpawnInfo kind:data(any) addr:0x02127ec4
+_ZTV10BulletBill kind:data(any) addr:0x02127ee8
 data_ov079_02127f64 kind:data(any) addr:0x02127f64
 data_ov079_02127f70 kind:data(any) addr:0x02127f70
 data_ov079_02127f7c kind:data(any) addr:0x02127f7c
-data_ov079_02127f94 kind:data(any) addr:0x02127f94 ambiguous
+BillBlaster_SpawnInfo kind:data(any) addr:0x02127f94 ambiguous
 data_ov079_02127fb8 kind:data(any) addr:0x02127fb8
 data_ov079_02127fec kind:data(any) addr:0x02127fec ambiguous
 data_ov079_02128008 kind:data(any) addr:0x02128008 ambiguous
@@ -115,9 +115,9 @@ data_ov079_02128044 kind:data(any) addr:0x02128044
 data_ov079_02128058 kind:data(any) addr:0x02128058
 data_ov079_0212805c kind:data(any) addr:0x0212805c
 data_ov079_02128060 kind:data(any) addr:0x02128060
-data_ov079_02128070 kind:data(any) addr:0x02128070 ambiguous
-data_ov079_0212808c kind:data(any) addr:0x0212808c ambiguous
-data_ov079_021280b0 kind:data(any) addr:0x021280b0
+FortressWallBreakable_SpawnInfo kind:data(any) addr:0x02128070 ambiguous
+FortressWall_SpawnInfo kind:data(any) addr:0x0212808c ambiguous
+_ZTV12FortressWall kind:data(any) addr:0x021280b0
 data_ov079_02128140 kind:bss addr:0x02128140
 data_ov079_02128148 kind:bss addr:0x02128148
 data_ov079_02128150 kind:bss addr:0x02128150

@@ -446,7 +446,7 @@ func_ov006_020d9104 kind:function(arm,size=0x5c) addr:0x020d9104
 func_ov006_020d9160 kind:function(arm,size=0x50) addr:0x020d9160
 func_ov006_020d91b0 kind:function(arm,size=0x94) addr:0x020d91b0
 func_ov006_020d9244 kind:function(arm,size=0x330) addr:0x020d9244
-func_ov006_020d9574 kind:function(arm,size=0x30) addr:0x020d9574
+MgSortOrSplode_Spawn kind:function(arm,size=0x30) addr:0x020d9574
 func_ov006_020d95a4 kind:function(arm,size=0x94) addr:0x020d95a4
 func_ov006_020d9638 kind:function(arm,size=0xa8) addr:0x020d9638
 func_ov006_020d96e0 kind:function(arm,size=0x10) addr:0x020d96e0
@@ -481,7 +481,7 @@ func_ov006_020db6ec kind:function(arm,size=0x34) addr:0x020db6ec
 func_ov006_020db720 kind:function(arm,size=0x2bc) addr:0x020db720
 func_ov006_020db9dc kind:function(arm,size=0x114) addr:0x020db9dc
 func_ov006_020dbaf0 kind:function(arm,size=0x264) addr:0x020dbaf0
-func_ov006_020dbd54 kind:function(arm,size=0xc0) addr:0x020dbd54
+MgPicturePoker_Spawn kind:function(arm,size=0xc0) addr:0x020dbd54
 func_ov006_020dbe14 kind:function(arm,size=0x1c) addr:0x020dbe14
 func_ov006_020dbe30 kind:function(arm,size=0x10) addr:0x020dbe30
 func_ov006_020dbe40 kind:function(arm,size=0x24) addr:0x020dbe40
@@ -546,7 +546,7 @@ func_ov006_020de5b0 kind:function(arm,size=0x8c) addr:0x020de5b0
 func_ov006_020de63c kind:function(arm,size=0x60) addr:0x020de63c
 func_ov006_020de69c kind:function(arm,size=0x68) addr:0x020de69c
 func_ov006_020de704 kind:function(arm,size=0x23c) addr:0x020de704
-func_ov006_020de940 kind:function(arm,size=0x48) addr:0x020de940
+MgCoincentration_Spawn kind:function(arm,size=0x48) addr:0x020de940
 func_ov006_020de988 kind:function(arm,size=0x94) addr:0x020de988
 func_ov006_020dea1c kind:function(arm,size=0xa8) addr:0x020dea1c
 func_ov006_020deac4 kind:function(arm,size=0x4) addr:0x020deac4
@@ -625,7 +625,7 @@ func_ov006_020e3470 kind:function(arm,size=0x7c) addr:0x020e3470
 func_ov006_020e34ec kind:function(arm,size=0x3c) addr:0x020e34ec
 func_ov006_020e3528 kind:function(arm,size=0x50) addr:0x020e3528
 func_ov006_020e3578 kind:function(arm,size=0x2a8) addr:0x020e3578
-func_ov006_020e3820 kind:function(arm,size=0x34) addr:0x020e3820
+MgShuffleShell_Spawn kind:function(arm,size=0x34) addr:0x020e3820
 func_ov006_020e3854 kind:function(arm,size=0x24) addr:0x020e3854
 func_ov006_020e3878 kind:function(arm,size=0x38) addr:0x020e3878
 func_ov006_020e38b0 kind:function(arm,size=0x98) addr:0x020e38b0
@@ -679,8 +679,8 @@ func_ov006_020e67f0 kind:function(arm,size=0x4c) addr:0x020e67f0
 func_ov006_020e683c kind:function(arm,size=0x58) addr:0x020e683c
 func_ov006_020e6894 kind:function(arm,size=0x360) addr:0x020e6894
 func_ov006_020e6bf4 kind:function(arm,size=0x34) addr:0x020e6bf4
-func_ov006_020e6c28 kind:function(arm,size=0x38) addr:0x020e6c28
-func_ov006_020e6c60 kind:function(arm,size=0x4c) addr:0x020e6c60
+_ZN17MgBounceAndPounceD1Ev kind:function(arm,size=0x38) addr:0x020e6c28
+_ZN17MgBounceAndPounceD0Ev kind:function(arm,size=0x4c) addr:0x020e6c60
 func_ov006_020e6cac kind:function(arm,size=0x78) addr:0x020e6cac
 func_ov006_020e6d24 kind:function(arm,size=0x68) addr:0x020e6d24
 func_ov006_020e6d8c kind:function(arm,size=0xc) addr:0x020e6d8c
@@ -692,12 +692,12 @@ func_ov006_020e6e3c kind:function(arm,size=0x10) addr:0x020e6e3c
 func_ov006_020e6e4c kind:function(arm,size=0x8) addr:0x020e6e4c
 func_ov006_020e6e54 kind:function(arm,size=0x24) addr:0x020e6e54
 func_ov006_020e6e78 kind:function(arm,size=0xe8) addr:0x020e6e78
-func_ov006_020e6f60 kind:function(arm,size=0xac) addr:0x020e6f60
-func_ov006_020e700c kind:function(arm,size=0x34) addr:0x020e700c
-func_ov006_020e7040 kind:function(arm,size=0x34) addr:0x020e7040
-func_ov006_020e7074 kind:function(arm,size=0x4c) addr:0x020e7074
-func_ov006_020e70c0 kind:function(arm,size=0x24) addr:0x020e70c0
-func_ov006_020e70e4 kind:function(arm,size=0x2c) addr:0x020e70e4
+_ZN17MgBounceAndPounce21AfterCleanupResourcesEj kind:function(arm,size=0xac) addr:0x020e6f60
+_ZN17MgBounceAndPounce11AfterRenderEj kind:function(arm,size=0x34) addr:0x020e700c
+_ZN17MgBounceAndPounce12BeforeRenderEv kind:function(arm,size=0x34) addr:0x020e7040
+_ZN17MgBounceAndPounce14BeforeBehaviorEv kind:function(arm,size=0x4c) addr:0x020e7074
+_ZN17MgBounceAndPounce18AfterInitResourcesEj kind:function(arm,size=0x24) addr:0x020e70c0
+_ZN17MgBounceAndPounce19BeforeInitResourcesEv kind:function(arm,size=0x2c) addr:0x020e70e4
 func_ov006_020e7110 kind:function(arm,size=0x14) addr:0x020e7110
 func_ov006_020e7124 kind:function(arm,size=0x19c) addr:0x020e7124
 func_ov006_020e72c0 kind:function(arm,size=0x104) addr:0x020e72c0
@@ -773,7 +773,7 @@ func_ov006_020e9cec kind:function(arm,size=0x30) addr:0x020e9cec
 func_ov006_020e9d1c kind:function(arm,size=0xe4) addr:0x020e9d1c
 func_ov006_020e9e00 kind:function(arm,size=0x70) addr:0x020e9e00
 func_ov006_020e9e70 kind:function(arm,size=0x380) addr:0x020e9e70
-func_ov006_020ea1f0 kind:function(arm,size=0x90) addr:0x020ea1f0
+MgPsycheOut_Spawn kind:function(arm,size=0x90) addr:0x020ea1f0
 func_ov006_020ea280 kind:function(arm,size=0x48) addr:0x020ea280
 func_ov006_020ea2c8 kind:function(arm,size=0x5c) addr:0x020ea2c8
 func_ov006_020ea324 kind:function(arm,size=0x2c) addr:0x020ea324
@@ -835,7 +835,7 @@ func_ov006_020ed8a4 kind:function(arm,size=0x1a4) addr:0x020ed8a4
 func_ov006_020eda48 kind:function(arm,size=0xbc) addr:0x020eda48
 func_ov006_020edb04 kind:function(arm,size=0x1ac) addr:0x020edb04
 func_ov006_020edcb0 kind:function(arm,size=0x168) addr:0x020edcb0
-func_ov006_020ede18 kind:function(arm,size=0x68) addr:0x020ede18
+MgWhichWiggler_Spawn kind:function(arm,size=0x68) addr:0x020ede18
 func_ov006_020ede80 kind:function(arm,size=0x40) addr:0x020ede80
 func_ov006_020edec0 kind:function(arm,size=0x94) addr:0x020edec0
 func_ov006_020edf54 kind:function(arm,size=0xa8) addr:0x020edf54
@@ -855,7 +855,7 @@ func_ov006_020ee658 kind:function(arm,size=0x38) addr:0x020ee658
 func_ov006_020ee690 kind:function(arm,size=0x24c) addr:0x020ee690
 func_ov006_020ee8dc kind:function(arm,size=0xb8) addr:0x020ee8dc
 func_ov006_020ee994 kind:function(arm,size=0x168) addr:0x020ee994
-func_ov006_020eeafc kind:function(arm,size=0xec) addr:0x020eeafc
+MgBounceAndPounce_Spawn kind:function(arm,size=0xec) addr:0x020eeafc
 func_ov006_020eebe8 kind:function(arm,size=0xb4) addr:0x020eebe8
 func_ov006_020eec9c kind:function(arm,size=0xc8) addr:0x020eec9c
 func_ov006_020eed64 kind:function(arm,size=0x4) addr:0x020eed64
@@ -943,7 +943,7 @@ func_ov006_020f3294 kind:function(arm,size=0x12c) addr:0x020f3294
 func_ov006_020f33c0 kind:function(arm,size=0x54) addr:0x020f33c0
 func_ov006_020f3414 kind:function(arm,size=0x4c) addr:0x020f3414
 func_ov006_020f3460 kind:function(arm,size=0x3a0) addr:0x020f3460
-func_ov006_020f3800 kind:function(arm,size=0x34) addr:0x020f3800
+MgWanted_Spawn kind:function(arm,size=0x34) addr:0x020f3800
 func_ov006_020f3834 kind:function(arm,size=0x54) addr:0x020f3834
 func_ov006_020f3888 kind:function(arm,size=0x68) addr:0x020f3888
 func_ov006_020f38f0 kind:function(arm,size=0x3c) addr:0x020f38f0
@@ -990,7 +990,7 @@ func_ov006_020f52c4 kind:function(arm,size=0x60) addr:0x020f52c4
 func_ov006_020f5324 kind:function(arm,size=0x64) addr:0x020f5324
 func_ov006_020f5388 kind:function(arm,size=0x5c) addr:0x020f5388
 func_ov006_020f53e4 kind:function(arm,size=0x120) addr:0x020f53e4
-func_ov006_020f5504 kind:function(arm,size=0x60) addr:0x020f5504
+MgMemoryMatch_Spawn kind:function(arm,size=0x60) addr:0x020f5504
 func_ov006_020f5564 kind:function(arm,size=0x54) addr:0x020f5564
 func_ov006_020f55b8 kind:function(arm,size=0x68) addr:0x020f55b8
 func_ov006_020f5620 kind:function(arm,size=0x3c) addr:0x020f5620
@@ -1042,7 +1042,7 @@ func_ov006_020f7394 kind:function(arm,size=0x60) addr:0x020f7394
 func_ov006_020f73f4 kind:function(arm,size=0x64) addr:0x020f73f4
 func_ov006_020f7458 kind:function(arm,size=0x5c) addr:0x020f7458
 func_ov006_020f74b4 kind:function(arm,size=0x120) addr:0x020f74b4
-func_ov006_020f75d4 kind:function(arm,size=0x60) addr:0x020f75d4
+MgMemoryMaster_Spawn kind:function(arm,size=0x60) addr:0x020f75d4
 func_ov006_020f7634 kind:function(arm,size=0x74) addr:0x020f7634
 func_ov006_020f76a8 kind:function(arm,size=0x88) addr:0x020f76a8
 func_ov006_020f7730 kind:function(arm,size=0x10) addr:0x020f7730
@@ -1091,7 +1091,7 @@ func_ov006_020fa13c kind:function(arm,size=0x294) addr:0x020fa13c
 func_ov006_020fa3d0 kind:function(arm,size=0x104) addr:0x020fa3d0
 func_ov006_020fa4d4 kind:function(arm,size=0x98) addr:0x020fa4d4
 func_ov006_020fa56c kind:function(arm,size=0x140) addr:0x020fa56c
-func_ov006_020fa6ac kind:function(arm,size=0x94) addr:0x020fa6ac
+MgPairAGoneAndOn_Spawn kind:function(arm,size=0x94) addr:0x020fa6ac
 func_ov006_020fa740 kind:function(arm,size=0x1c) addr:0x020fa740
 func_ov006_020fa75c kind:function(arm,size=0x24) addr:0x020fa75c
 func_ov006_020fa780 kind:function(arm,size=0x38) addr:0x020fa780
@@ -1168,7 +1168,7 @@ func_ov006_020fed58 kind:function(arm,size=0x6c) addr:0x020fed58
 func_ov006_020fedc4 kind:function(arm,size=0x60) addr:0x020fedc4
 func_ov006_020fee24 kind:function(arm,size=0x19c) addr:0x020fee24
 func_ov006_020fefc0 kind:function(arm,size=0x42c) addr:0x020fefc0
-func_ov006_020ff3ec kind:function(arm,size=0x34) addr:0x020ff3ec
+MgBobOmbSquad_Spawn kind:function(arm,size=0x34) addr:0x020ff3ec
 func_ov006_020ff420 kind:function(arm,size=0x24) addr:0x020ff420
 func_ov006_020ff444 kind:function(arm,size=0x38) addr:0x020ff444
 func_ov006_020ff47c kind:function(arm,size=0x70) addr:0x020ff47c
@@ -1242,7 +1242,7 @@ func_ov006_02103cbc kind:function(arm,size=0x6c) addr:0x02103cbc
 func_ov006_02103d28 kind:function(arm,size=0x50) addr:0x02103d28
 func_ov006_02103d78 kind:function(arm,size=0x158) addr:0x02103d78
 func_ov006_02103ed0 kind:function(arm,size=0x388) addr:0x02103ed0
-func_ov006_02104258 kind:function(arm,size=0x34) addr:0x02104258
+MgLakituLaunch_Spawn kind:function(arm,size=0x34) addr:0x02104258
 func_ov006_0210428c kind:function(arm,size=0x24) addr:0x0210428c
 func_ov006_021042b0 kind:function(arm,size=0x38) addr:0x021042b0
 func_ov006_021042e8 kind:function(arm,size=0x6c) addr:0x021042e8
@@ -1314,7 +1314,7 @@ func_ov006_021071fc kind:function(arm,size=0x110) addr:0x021071fc
 func_ov006_0210730c kind:function(arm,size=0x4c) addr:0x0210730c
 func_ov006_02107358 kind:function(arm,size=0x58) addr:0x02107358
 func_ov006_021073b0 kind:function(arm,size=0x4a8) addr:0x021073b0
-func_ov006_02107858 kind:function(arm,size=0x34) addr:0x02107858
+MgPuzzlePanelPuzzlePanic_Spawn kind:function(arm,size=0x34) addr:0x02107858
 func_ov006_0210788c kind:function(arm,size=0x94) addr:0x0210788c
 func_ov006_02107920 kind:function(arm,size=0xa8) addr:0x02107920
 func_ov006_021079c8 kind:function(arm,size=0x4) addr:0x021079c8
@@ -1355,7 +1355,7 @@ func_ov006_02109834 kind:function(arm,size=0x26c) addr:0x02109834
 func_ov006_02109aa0 kind:function(arm,size=0xc) addr:0x02109aa0
 func_ov006_02109aac kind:function(arm,size=0x6e8) addr:0x02109aac
 func_ov006_0210a194 kind:function(arm,size=0x26c) addr:0x0210a194
-func_ov006_0210a400 kind:function(arm,size=0xac) addr:0x0210a400
+MgMushroomRoulette_Spawn kind:function(arm,size=0xac) addr:0x0210a400
 func_ov006_0210a4ac kind:function(arm,size=0x4) addr:0x0210a4ac
 func_ov006_0210a4b0 kind:function(arm,size=0x38) addr:0x0210a4b0
 func_ov006_0210a4e8 kind:function(arm,size=0x4c) addr:0x0210a4e8
@@ -1538,7 +1538,7 @@ func_ov006_02118a8c kind:function(arm,size=0x58) addr:0x02118a8c
 func_ov006_02118ae4 kind:function(arm,size=0x8c) addr:0x02118ae4
 func_ov006_02118b70 kind:function(arm,size=0x8dc) addr:0x02118b70
 func_ov006_0211944c kind:function(arm,size=0x3d8) addr:0x0211944c
-func_ov006_02119824 kind:function(arm,size=0xdc) addr:0x02119824
+MgBingoBallSlotsShot_Spawn kind:function(arm,size=0xdc) addr:0x02119824
 func_ov006_02119900 kind:function(arm,size=0x4) addr:0x02119900
 func_ov006_02119904 kind:function(arm,size=0x54) addr:0x02119904
 func_ov006_02119958 kind:function(arm,size=0x68) addr:0x02119958
@@ -1621,7 +1621,7 @@ func_ov006_0211c5d0 kind:function(arm,size=0xf4) addr:0x0211c5d0
 func_ov006_0211c6c4 kind:function(arm,size=0x5c) addr:0x0211c6c4
 func_ov006_0211c720 kind:function(arm,size=0x264) addr:0x0211c720
 func_ov006_0211c984 kind:function(arm,size=0x1ec) addr:0x0211c984
-func_ov006_0211cb70 kind:function(arm,size=0x60) addr:0x0211cb70
+MgBoomBox_Spawn kind:function(arm,size=0x60) addr:0x0211cb70
 func_ov006_0211cbd0 kind:function(arm,size=0x24) addr:0x0211cbd0
 func_ov006_0211cbf4 kind:function(arm,size=0x38) addr:0x0211cbf4
 func_ov006_0211cc2c kind:function(arm,size=0x64) addr:0x0211cc2c
@@ -1703,7 +1703,7 @@ func_ov006_02120248 kind:function(arm,size=0x100) addr:0x02120248
 func_ov006_02120348 kind:function(arm,size=0x64) addr:0x02120348
 func_ov006_021203ac kind:function(arm,size=0x50) addr:0x021203ac
 func_ov006_021203fc kind:function(arm,size=0x3ac) addr:0x021203fc
-func_ov006_021207a8 kind:function(arm,size=0x34) addr:0x021207a8
+MgHideAndBooSeek_Spawn kind:function(arm,size=0x34) addr:0x021207a8
 func_ov006_021207dc kind:function(arm,size=0xa4) addr:0x021207dc
 func_ov006_02120880 kind:function(arm,size=0xb8) addr:0x02120880
 func_ov006_02120938 kind:function(arm,size=0x4) addr:0x02120938
@@ -1746,7 +1746,7 @@ func_ov006_02121f70 kind:function(arm,size=0x34) addr:0x02121f70
 func_ov006_02121fa4 kind:function(arm,size=0x1f4) addr:0x02121fa4
 func_ov006_02122198 kind:function(arm,size=0x184) addr:0x02122198
 func_ov006_0212231c kind:function(arm,size=0x174) addr:0x0212231c
-func_ov006_02122490 kind:function(arm,size=0x118) addr:0x02122490
+MgTrampolineTime_Spawn kind:function(arm,size=0x118) addr:0x02122490
 func_ov006_021225a8 kind:function(arm,size=0x4) addr:0x021225a8
 func_ov006_021225ac kind:function(arm,size=0x104) addr:0x021225ac
 func_ov006_021226b0 kind:function(arm,size=0x118) addr:0x021226b0
@@ -1788,7 +1788,7 @@ func_ov006_02124298 kind:function(arm,size=0x34) addr:0x02124298
 func_ov006_021242cc kind:function(arm,size=0x120) addr:0x021242cc
 func_ov006_021243ec kind:function(arm,size=0x1bc) addr:0x021243ec
 func_ov006_021245a8 kind:function(arm,size=0x174) addr:0x021245a8
-func_ov006_0212471c kind:function(arm,size=0x18c) addr:0x0212471c
+MgTrampolineTerror_Spawn kind:function(arm,size=0x18c) addr:0x0212471c
 func_ov006_021248a8 kind:function(arm,size=0x60) addr:0x021248a8
 func_ov006_02124908 kind:function(arm,size=0x74) addr:0x02124908
 func_ov006_0212497c kind:function(arm,size=0x88) addr:0x0212497c
@@ -1809,7 +1809,7 @@ func_ov006_02125364 kind:function(arm,size=0x58) addr:0x02125364
 func_ov006_021253bc kind:function(arm,size=0x104) addr:0x021253bc
 func_ov006_021254c0 kind:function(arm,size=0x5c) addr:0x021254c0
 func_ov006_0212551c kind:function(arm,size=0xdc) addr:0x0212551c
-func_ov006_021255f8 kind:function(arm,size=0x94) addr:0x021255f8
+MgLuckyStars_Spawn kind:function(arm,size=0x94) addr:0x021255f8
 func_ov006_0212568c kind:function(arm,size=0xb0) addr:0x0212568c
 func_ov006_0212573c kind:function(arm,size=0xc4) addr:0x0212573c
 func_ov006_02125800 kind:function(arm,size=0x4) addr:0x02125800
@@ -1852,7 +1852,7 @@ func_ov006_0212a224 kind:function(arm,size=0x50) addr:0x0212a224
 func_ov006_0212a274 kind:function(arm,size=0x6c) addr:0x0212a274
 func_ov006_0212a2e0 kind:function(arm,size=0xe0) addr:0x0212a2e0
 func_ov006_0212a3c0 kind:function(arm,size=0x160) addr:0x0212a3c0
-func_ov006_0212a520 kind:function(arm,size=0x34) addr:0x0212a520
+MgSnowballSlalom_Spawn kind:function(arm,size=0x34) addr:0x0212a520
 func_ov006_0212a554 kind:function(arm,size=0x74) addr:0x0212a554
 func_ov006_0212a5c8 kind:function(arm,size=0x88) addr:0x0212a5c8
 func_ov006_0212a650 kind:function(arm,size=0x4) addr:0x0212a650
@@ -3441,7 +3441,7 @@ data_ov006_0213babc kind:data(any) addr:0x0213babc
 data_ov006_0213bac4 kind:data(any) addr:0x0213bac4
 data_ov006_0213bacc kind:data(any) addr:0x0213bacc
 data_ov006_0213bad4 kind:data(any) addr:0x0213bad4
-data_ov006_0213badc kind:data(any) addr:0x0213badc
+MgSortOrSplode_SpawnInfo kind:data(any) addr:0x0213badc
 data_ov006_0213bae4 kind:data(any) addr:0x0213bae4
 data_ov006_0213baec kind:data(any) addr:0x0213baec
 data_ov006_0213baf4 kind:data(any) addr:0x0213baf4
@@ -3454,7 +3454,7 @@ data_ov006_0213bb4c kind:data(any) addr:0x0213bb4c
 data_ov006_0213bbb4 kind:data(any) addr:0x0213bbb4
 data_ov006_0213bc44 kind:data(any) addr:0x0213bc44
 data_ov006_0213bc48 kind:data(any) addr:0x0213bc48
-data_ov006_0213bc50 kind:data(any) addr:0x0213bc50
+MgPicturePoker_SpawnInfo kind:data(any) addr:0x0213bc50
 data_ov006_0213bc58 kind:data(any) addr:0x0213bc58
 data_ov006_0213bc64 kind:data(any) addr:0x0213bc64
 data_ov006_0213bc70 kind:data(any) addr:0x0213bc70
@@ -3490,7 +3490,7 @@ data_ov006_0213bebc kind:data(any) addr:0x0213bebc
 data_ov006_0213bec4 kind:data(any) addr:0x0213bec4
 data_ov006_0213becc kind:data(any) addr:0x0213becc
 data_ov006_0213bed4 kind:data(any) addr:0x0213bed4
-data_ov006_0213bedc kind:data(any) addr:0x0213bedc
+MgCoincentration_SpawnInfo kind:data(any) addr:0x0213bedc
 data_ov006_0213bee4 kind:data(any) addr:0x0213bee4
 data_ov006_0213beec kind:data(any) addr:0x0213beec
 data_ov006_0213bef4 kind:data(any) addr:0x0213bef4
@@ -3535,7 +3535,7 @@ data_ov006_0213c1f4 kind:data(any) addr:0x0213c1f4
 data_ov006_0213c1fc kind:data(any) addr:0x0213c1fc
 data_ov006_0213c204 kind:data(any) addr:0x0213c204
 data_ov006_0213c20c kind:data(any) addr:0x0213c20c
-data_ov006_0213c214 kind:data(any) addr:0x0213c214 ambiguous
+MgShuffleShell_SpawnInfo kind:data(any) addr:0x0213c214 ambiguous
 data_ov006_0213c21c kind:data(any) addr:0x0213c21c
 data_ov006_0213c224 kind:data(any) addr:0x0213c224
 data_ov006_0213c22c kind:data(any) addr:0x0213c22c
@@ -3605,7 +3605,7 @@ data_ov006_0213c5d4 kind:data(any) addr:0x0213c5d4
 data_ov006_0213c5e8 kind:data(any) addr:0x0213c5e8
 data_ov006_0213c5fc kind:data(any) addr:0x0213c5fc
 data_ov006_0213c610 kind:data(any) addr:0x0213c610
-data_ov006_0213c62c kind:data(any) addr:0x0213c62c
+_ZTV17MgBounceAndPounce kind:data(any) addr:0x0213c62c
 data_ov006_0213c67c kind:data(any) addr:0x0213c67c ambiguous
 data_ov006_0213c6bc kind:data(any) addr:0x0213c6bc
 data_ov006_0213c6c4 kind:data(any) addr:0x0213c6c4
@@ -3633,7 +3633,7 @@ data_ov006_0213c76c kind:data(any) addr:0x0213c76c
 data_ov006_0213c774 kind:data(any) addr:0x0213c774
 data_ov006_0213c77c kind:data(any) addr:0x0213c77c
 data_ov006_0213c784 kind:data(any) addr:0x0213c784
-data_ov006_0213c78c kind:data(any) addr:0x0213c78c ambiguous
+MgPsycheOut_SpawnInfo kind:data(any) addr:0x0213c78c ambiguous
 data_ov006_0213c794 kind:data(any) addr:0x0213c794
 data_ov006_0213c79c kind:data(any) addr:0x0213c79c
 data_ov006_0213c7a4 kind:data(any) addr:0x0213c7a4
@@ -3659,7 +3659,7 @@ data_ov006_0213c96c kind:data(any) addr:0x0213c96c
 data_ov006_0213c974 kind:data(any) addr:0x0213c974
 data_ov006_0213c97c kind:data(any) addr:0x0213c97c
 data_ov006_0213c984 kind:data(any) addr:0x0213c984
-data_ov006_0213c98c kind:data(any) addr:0x0213c98c ambiguous
+MgWhichWiggler_SpawnInfo kind:data(any) addr:0x0213c98c ambiguous
 data_ov006_0213c994 kind:data(any) addr:0x0213c994
 data_ov006_0213c99c kind:data(any) addr:0x0213c99c
 data_ov006_0213c9a4 kind:data(any) addr:0x0213c9a4
@@ -3697,7 +3697,7 @@ data_ov006_0213cb48 kind:data(any) addr:0x0213cb48
 data_ov006_0213cb4c kind:data(any) addr:0x0213cb4c
 data_ov006_0213cb54 kind:data(any) addr:0x0213cb54
 data_ov006_0213cb5c kind:data(any) addr:0x0213cb5c
-data_ov006_0213cb64 kind:data(any) addr:0x0213cb64 ambiguous
+MgBounceAndPounce_SpawnInfo kind:data(any) addr:0x0213cb64 ambiguous
 data_ov006_0213cb6c kind:data(any) addr:0x0213cb6c
 data_ov006_0213cb74 kind:data(any) addr:0x0213cb74
 data_ov006_0213cb7c kind:data(any) addr:0x0213cb7c
@@ -3709,7 +3709,7 @@ data_ov006_0213cbb4 kind:data(any) addr:0x0213cbb4
 data_ov006_0213cbc8 kind:data(any) addr:0x0213cbc8
 data_ov006_0213cbe4 kind:data(any) addr:0x0213cbe4
 data_ov006_0213cc74 kind:data(any) addr:0x0213cc74
-data_ov006_0213cc7c kind:data(any) addr:0x0213cc7c ambiguous
+MgBounceAndTrounce_SpawnInfo kind:data(any) addr:0x0213cc7c ambiguous
 data_ov006_0213cc84 kind:data(any) addr:0x0213cc84
 data_ov006_0213cc8c kind:data(any) addr:0x0213cc8c
 data_ov006_0213cc94 kind:data(any) addr:0x0213cc94
@@ -3736,7 +3736,7 @@ data_ov006_0213cdec kind:data(any) addr:0x0213cdec
 data_ov006_0213cdf4 kind:data(any) addr:0x0213cdf4
 data_ov006_0213cdfc kind:data(any) addr:0x0213cdfc
 data_ov006_0213ce04 kind:data(any) addr:0x0213ce04
-data_ov006_0213ce0c kind:data(any) addr:0x0213ce0c ambiguous
+MgWanted_SpawnInfo kind:data(any) addr:0x0213ce0c ambiguous
 data_ov006_0213ce14 kind:data(any) addr:0x0213ce14
 data_ov006_0213ce1c kind:data(any) addr:0x0213ce1c
 data_ov006_0213ce24 kind:data(any) addr:0x0213ce24
@@ -3758,7 +3758,7 @@ data_ov006_0213cfa0 kind:data(any) addr:0x0213cfa0
 data_ov006_0213cfc0 kind:data(any) addr:0x0213cfc0
 data_ov006_0213cfc8 kind:data(any) addr:0x0213cfc8
 data_ov006_0213cfd0 kind:data(any) addr:0x0213cfd0
-data_ov006_0213cfd8 kind:data(any) addr:0x0213cfd8 ambiguous
+MgMemoryMatch_SpawnInfo kind:data(any) addr:0x0213cfd8 ambiguous
 data_ov006_0213cfe0 kind:data(any) addr:0x0213cfe0
 data_ov006_0213cfe8 kind:data(any) addr:0x0213cfe8
 data_ov006_0213cff0 kind:data(any) addr:0x0213cff0
@@ -3799,7 +3799,7 @@ data_ov006_0213d268 kind:data(any) addr:0x0213d268
 data_ov006_0213d270 kind:data(any) addr:0x0213d270
 data_ov006_0213d278 kind:data(any) addr:0x0213d278
 data_ov006_0213d280 kind:data(any) addr:0x0213d280
-data_ov006_0213d288 kind:data(any) addr:0x0213d288 ambiguous
+MgMemoryMaster_SpawnInfo kind:data(any) addr:0x0213d288 ambiguous
 data_ov006_0213d290 kind:data(any) addr:0x0213d290
 data_ov006_0213d298 kind:data(any) addr:0x0213d298
 data_ov006_0213d2a0 kind:data(any) addr:0x0213d2a0
@@ -3851,7 +3851,7 @@ data_ov006_0213d6f8 kind:data(any) addr:0x0213d6f8
 data_ov006_0213d6fc kind:data(any) addr:0x0213d6fc
 data_ov006_0213d700 kind:data(any) addr:0x0213d700
 data_ov006_0213d704 kind:data(any) addr:0x0213d704
-data_ov006_0213d70c kind:data(any) addr:0x0213d70c ambiguous
+MgPairAGoneAndOn_SpawnInfo kind:data(any) addr:0x0213d70c ambiguous
 data_ov006_0213d714 kind:data(any) addr:0x0213d714
 data_ov006_0213d728 kind:data(any) addr:0x0213d728
 data_ov006_0213d730 kind:data(any) addr:0x0213d730
@@ -3878,7 +3878,7 @@ data_ov006_0213d8f0 kind:data(any) addr:0x0213d8f0
 data_ov006_0213d8f8 kind:data(any) addr:0x0213d8f8
 data_ov006_0213d900 kind:data(any) addr:0x0213d900
 data_ov006_0213d908 kind:data(any) addr:0x0213d908
-data_ov006_0213d910 kind:data(any) addr:0x0213d910 ambiguous
+MgBobOmbSquad_SpawnInfo kind:data(any) addr:0x0213d910 ambiguous
 data_ov006_0213d918 kind:data(any) addr:0x0213d918
 data_ov006_0213d920 kind:data(any) addr:0x0213d920
 data_ov006_0213d928 kind:data(any) addr:0x0213d928
@@ -3891,7 +3891,7 @@ data_ov006_0213d960 kind:data(any) addr:0x0213d960
 data_ov006_0213d974 kind:data(any) addr:0x0213d974
 data_ov006_0213d9cc kind:data(any) addr:0x0213d9cc
 data_ov006_0213da5c kind:data(any) addr:0x0213da5c
-data_ov006_0213da64 kind:data(any) addr:0x0213da64 ambiguous
+MgLakituLaunch_SpawnInfo kind:data(any) addr:0x0213da64 ambiguous
 data_ov006_0213da6c kind:data(any) addr:0x0213da6c
 data_ov006_0213da74 kind:data(any) addr:0x0213da74
 data_ov006_0213da7c kind:data(any) addr:0x0213da7c
@@ -3929,7 +3929,7 @@ data_ov006_0213dbbc kind:data(any) addr:0x0213dbbc
 data_ov006_0213dc4c kind:data(any) addr:0x0213dc4c
 data_ov006_0213dc54 kind:data(any) addr:0x0213dc54
 data_ov006_0213dc5c kind:data(any) addr:0x0213dc5c
-data_ov006_0213dc64 kind:data(any) addr:0x0213dc64 ambiguous
+MgPuzzlePanelPuzzlePanic_SpawnInfo kind:data(any) addr:0x0213dc64 ambiguous
 data_ov006_0213dc6c kind:data(any) addr:0x0213dc6c
 data_ov006_0213dc74 kind:data(any) addr:0x0213dc74
 data_ov006_0213dc7c kind:data(any) addr:0x0213dc7c
@@ -4001,7 +4001,7 @@ data_ov006_0213e24c kind:data(any) addr:0x0213e24c
 data_ov006_0213e2dc kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
 data_ov006_0213e2e8 kind:data(any) addr:0x0213e2e8
-data_ov006_0213e2f0 kind:data(any) addr:0x0213e2f0 ambiguous
+MgMushroomRoulette_SpawnInfo kind:data(any) addr:0x0213e2f0 ambiguous
 data_ov006_0213e2f8 kind:data(any) addr:0x0213e2f8
 data_ov006_0213e300 kind:data(any) addr:0x0213e300
 data_ov006_0213e30c kind:data(any) addr:0x0213e30c
@@ -4084,7 +4084,7 @@ data_ov006_0213ea20 kind:data(any) addr:0x0213ea20
 data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
 data_ov006_0213eaa8 kind:data(any) addr:0x0213eaa8
 data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
-data_ov006_0213ebd0 kind:data(any) addr:0x0213ebd0 ambiguous
+MgBingoBallSlotsShot_SpawnInfo kind:data(any) addr:0x0213ebd0 ambiguous
 data_ov006_0213ebd8 kind:data(any) addr:0x0213ebd8
 data_ov006_0213ebe0 kind:data(any) addr:0x0213ebe0
 data_ov006_0213ebec kind:data(any) addr:0x0213ebec
@@ -4212,7 +4212,7 @@ data_ov006_0213f67c kind:data(any) addr:0x0213f67c
 data_ov006_0213f684 kind:data(any) addr:0x0213f684
 data_ov006_0213f68c kind:data(any) addr:0x0213f68c
 data_ov006_0213f694 kind:data(any) addr:0x0213f694
-data_ov006_0213f69c kind:data(any) addr:0x0213f69c ambiguous
+MgBoomBox_SpawnInfo kind:data(any) addr:0x0213f69c ambiguous
 data_ov006_0213f6a4 kind:data(any) addr:0x0213f6a4
 data_ov006_0213f6ac kind:data(any) addr:0x0213f6ac
 data_ov006_0213f6b4 kind:data(any) addr:0x0213f6b4
@@ -4252,7 +4252,7 @@ data_ov006_0213f954 kind:data(any) addr:0x0213f954
 data_ov006_0213f95c kind:data(any) addr:0x0213f95c
 data_ov006_0213f964 kind:data(any) addr:0x0213f964
 data_ov006_0213f96c kind:data(any) addr:0x0213f96c
-data_ov006_0213f974 kind:data(any) addr:0x0213f974 ambiguous
+MgHideAndBooSeek_SpawnInfo kind:data(any) addr:0x0213f974 ambiguous
 data_ov006_0213f97c kind:data(any) addr:0x0213f97c
 data_ov006_0213f984 kind:data(any) addr:0x0213f984
 data_ov006_0213f98c kind:data(any) addr:0x0213f98c
@@ -4269,7 +4269,7 @@ data_ov006_0213fa9c kind:data(any) addr:0x0213fa9c
 data_ov006_0213faa0 kind:data(any) addr:0x0213faa0
 data_ov006_0213faa8 kind:data(any) addr:0x0213faa8
 data_ov006_0213fab0 kind:data(any) addr:0x0213fab0
-data_ov006_0213fab8 kind:data(any) addr:0x0213fab8 ambiguous
+MgTrampolineTime_SpawnInfo kind:data(any) addr:0x0213fab8 ambiguous
 data_ov006_0213fac0 kind:data(any) addr:0x0213fac0
 data_ov006_0213fac8 kind:data(any) addr:0x0213fac8
 data_ov006_0213fad0 kind:data(any) addr:0x0213fad0
@@ -4279,7 +4279,7 @@ data_ov006_0213fb04 kind:data(any) addr:0x0213fb04
 data_ov006_0213fb18 kind:data(any) addr:0x0213fb18
 data_ov006_0213fb34 kind:data(any) addr:0x0213fb34
 data_ov006_0213fbc4 kind:data(any) addr:0x0213fbc4
-data_ov006_0213fbc8 kind:data(any) addr:0x0213fbc8 ambiguous
+MgTrampolineTerror_SpawnInfo kind:data(any) addr:0x0213fbc8 ambiguous
 data_ov006_0213fbd0 kind:data(any) addr:0x0213fbd0
 data_ov006_0213fbd8 kind:data(any) addr:0x0213fbd8
 data_ov006_0213fbe0 kind:data(any) addr:0x0213fbe0
@@ -4305,7 +4305,7 @@ data_ov006_0213fd4c kind:data(any) addr:0x0213fd4c
 data_ov006_0213fd54 kind:data(any) addr:0x0213fd54
 data_ov006_0213fd5c kind:data(any) addr:0x0213fd5c
 data_ov006_0213fd64 kind:data(any) addr:0x0213fd64
-data_ov006_0213fd6c kind:data(any) addr:0x0213fd6c ambiguous
+MgLuckyStars_SpawnInfo kind:data(any) addr:0x0213fd6c ambiguous
 data_ov006_0213fd74 kind:data(any) addr:0x0213fd74
 data_ov006_0213fd7c kind:data(any) addr:0x0213fd7c
 data_ov006_0213fd84 kind:data(any) addr:0x0213fd84
@@ -4339,7 +4339,7 @@ data_ov006_0213ff98 kind:data(any) addr:0x0213ff98
 data_ov006_0213ffa0 kind:data(any) addr:0x0213ffa0
 data_ov006_0213ffa8 kind:data(any) addr:0x0213ffa8
 data_ov006_0213ffb0 kind:data(any) addr:0x0213ffb0
-data_ov006_0213ffb8 kind:data(any) addr:0x0213ffb8 ambiguous
+MgSnowballSlalom_SpawnInfo kind:data(any) addr:0x0213ffb8 ambiguous
 data_ov006_0213ffc0 kind:data(any) addr:0x0213ffc0
 data_ov006_0213ffc8 kind:data(any) addr:0x0213ffc8
 data_ov006_0213ffd0 kind:data(any) addr:0x0213ffd0

@@ -1,9 +1,9 @@
-func_ov058_021111a0 kind:function(arm,size=0x40) addr:0x021111a0
-func_ov058_021111e0 kind:function(arm,size=0x54) addr:0x021111e0
-func_ov058_02111234 kind:function(arm,size=0x8) addr:0x02111234
-func_ov058_0211123c kind:function(arm,size=0x3e0) addr:0x0211123c
-func_ov058_0211161c kind:function(arm,size=0x6c) addr:0x0211161c
-func_ov058_02111688 kind:function(arm,size=0x5c) addr:0x02111688
+_ZN15RecRoomCupboardD1Ev kind:function(arm,size=0x40) addr:0x021111a0
+_ZN15RecRoomCupboardD0Ev kind:function(arm,size=0x54) addr:0x021111e0
+_ZN15RecRoomCupboard16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02111234
+_ZN15RecRoomCupboard8BehaviorEv kind:function(arm,size=0x3e0) addr:0x0211123c
+_ZN15RecRoomCupboard13InitResourcesEv kind:function(arm,size=0x6c) addr:0x0211161c
+RecRoomCupboard_Spawn kind:function(arm,size=0x5c) addr:0x02111688
 data_ov058_02111700 kind:data(any) addr:0x02111700
 data_ov058_02111704 kind:data(any) addr:0x02111704
 data_ov058_0211170c kind:data(any) addr:0x0211170c
@@ -38,9 +38,9 @@ data_ov058_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov058_021119a0 kind:data(any) addr:0x021119a0
 data_ov058_02111a30 kind:data(any) addr:0x02111a30
 data_ov058_02111a3c kind:data(any) addr:0x02111a3c
-data_ov058_02111a4c kind:data(any) addr:0x02111a4c ambiguous
+RecRoomCupboard_SpawnInfo kind:data(any) addr:0x02111a4c ambiguous
 data_ov058_02111a58 kind:data(any) addr:0x02111a58 ambiguous
-data_ov058_02111a70 kind:data(any) addr:0x02111a70
+_ZTV15RecRoomCupboard kind:data(any) addr:0x02111a70
 data_ov058_02111a78 kind:data(any) addr:0x02111a78 ambiguous
 data_ov058_02111abc kind:data(any) addr:0x02111abc ambiguous
 data_ov058_02111ad4 kind:data(any) addr:0x02111ad4 ambiguous

@@ -1,5 +1,5 @@
-func_ov070_0211f000 kind:function(arm,size=0x48) addr:0x0211f000
-func_ov070_0211f048 kind:function(arm,size=0x5c) addr:0x0211f048
+_ZN6FlyGuyD1Ev kind:function(arm,size=0x48) addr:0x0211f000
+_ZN6FlyGuyD0Ev kind:function(arm,size=0x5c) addr:0x0211f048
 func_ov070_0211f0a4 kind:function(arm,size=0x5c) addr:0x0211f0a4
 func_ov070_0211f100 kind:function(arm,size=0x268) addr:0x0211f100
 func_ov070_0211f368 kind:function(arm,size=0xe8) addr:0x0211f368
@@ -16,17 +16,17 @@ func_ov070_0211fd98 kind:function(arm,size=0x210) addr:0x0211fd98
 func_ov070_0211ffa8 kind:function(arm,size=0x78) addr:0x0211ffa8
 func_ov070_02120020 kind:function(arm,size=0x50) addr:0x02120020
 func_ov070_02120070 kind:function(arm,size=0xe0) addr:0x02120070
-func_ov070_02120150 kind:function(arm,size=0x6c) addr:0x02120150
-func_ov070_021201bc kind:function(arm,size=0x4) addr:0x021201bc
-func_ov070_021201c0 kind:function(arm,size=0x50) addr:0x021201c0
-func_ov070_02120210 kind:function(arm,size=0x1a4) addr:0x02120210
-func_ov070_021203b4 kind:function(arm,size=0x130) addr:0x021203b4
+_ZN6FlyGuy16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02120150
+_ZN6FlyGuy16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021201bc
+_ZN6FlyGuy6RenderEv kind:function(arm,size=0x50) addr:0x021201c0
+_ZN6FlyGuy8BehaviorEv kind:function(arm,size=0x1a4) addr:0x02120210
+_ZN6FlyGuy13InitResourcesEv kind:function(arm,size=0x130) addr:0x021203b4
 func_ov070_021204e4 kind:function(arm,size=0x8) addr:0x021204e4
 func_ov070_021204ec kind:function(arm,size=0x2c) addr:0x021204ec
 func_ov070_02120518 kind:function(arm,size=0x8) addr:0x02120518
-func_ov070_02120520 kind:function(arm,size=0x50) addr:0x02120520
-func_ov070_02120570 kind:function(arm,size=0x60) addr:0x02120570
-func_ov070_021205d0 kind:function(arm,size=0x74) addr:0x021205d0
+FlyGuy_Spawn kind:function(arm,size=0x50) addr:0x02120520
+_ZN3AmpD1Ev kind:function(arm,size=0x60) addr:0x02120570
+_ZN3AmpD0Ev kind:function(arm,size=0x74) addr:0x021205d0
 func_ov070_02120644 kind:function(arm,size=0xe0) addr:0x02120644
 func_ov070_02120724 kind:function(arm,size=0x180) addr:0x02120724
 func_ov070_021208a4 kind:function(arm,size=0x6c) addr:0x021208a4
@@ -38,14 +38,14 @@ func_ov070_02120ce4 kind:function(arm,size=0x50) addr:0x02120ce4
 func_ov070_02120d34 kind:function(arm,size=0x3c) addr:0x02120d34
 func_ov070_02120d70 kind:function(arm,size=0x38) addr:0x02120d70
 func_ov070_02120da8 kind:function(arm,size=0x1c) addr:0x02120da8
-func_ov070_02120dc4 kind:function(arm,size=0x5c) addr:0x02120dc4
-func_ov070_02120e20 kind:function(arm,size=0x4) addr:0x02120e20
-func_ov070_02120e24 kind:function(arm,size=0x68) addr:0x02120e24
-func_ov070_02120e8c kind:function(arm,size=0x60) addr:0x02120e8c
-func_ov070_02120eec kind:function(arm,size=0x1c0) addr:0x02120eec
-func_ov070_021210ac kind:function(arm,size=0x6c) addr:0x021210ac
-func_ov070_02121118 kind:function(arm,size=0x48) addr:0x02121118
-func_ov070_02121160 kind:function(arm,size=0x5c) addr:0x02121160
+_ZN3Amp16CleanupResourcesEv kind:function(arm,size=0x5c) addr:0x02120dc4
+_ZN3Amp16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02120e20
+_ZN3Amp6RenderEv kind:function(arm,size=0x68) addr:0x02120e24
+_ZN3Amp8BehaviorEv kind:function(arm,size=0x60) addr:0x02120e8c
+_ZN3Amp13InitResourcesEv kind:function(arm,size=0x1c0) addr:0x02120eec
+Amp_Spawn kind:function(arm,size=0x6c) addr:0x021210ac
+_ZN10FlameChompD1Ev kind:function(arm,size=0x48) addr:0x02121118
+_ZN10FlameChompD0Ev kind:function(arm,size=0x5c) addr:0x02121160
 func_ov070_021211bc kind:function(arm,size=0x8) addr:0x021211bc
 func_ov070_021211c4 kind:function(arm,size=0xd4) addr:0x021211c4
 func_ov070_02121298 kind:function(arm,size=0x78) addr:0x02121298
@@ -61,16 +61,16 @@ func_ov070_021217ac kind:function(arm,size=0x60) addr:0x021217ac
 func_ov070_0212180c kind:function(arm,size=0x3c) addr:0x0212180c
 func_ov070_02121848 kind:function(arm,size=0x38) addr:0x02121848
 func_ov070_02121880 kind:function(arm,size=0x1c) addr:0x02121880
-func_ov070_0212189c kind:function(arm,size=0x24) addr:0x0212189c
-func_ov070_021218c0 kind:function(arm,size=0x4) addr:0x021218c0
-func_ov070_021218c4 kind:function(arm,size=0x30) addr:0x021218c4
-func_ov070_021218f4 kind:function(arm,size=0x20) addr:0x021218f4
-func_ov070_02121914 kind:function(arm,size=0x150) addr:0x02121914
+_ZN10FlameChomp16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x0212189c
+_ZN10FlameChomp16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021218c0
+_ZN10FlameChomp6RenderEv kind:function(arm,size=0x30) addr:0x021218c4
+_ZN10FlameChomp8BehaviorEv kind:function(arm,size=0x20) addr:0x021218f4
+_ZN10FlameChomp13InitResourcesEv kind:function(arm,size=0x150) addr:0x02121914
 func_ov070_02121a64 kind:function(arm,size=0x7c) addr:0x02121a64
 func_ov070_02121ae0 kind:function(arm,size=0x18) addr:0x02121ae0
-func_ov070_02121af8 kind:function(arm,size=0x50) addr:0x02121af8
-func_ov070_02121b48 kind:function(arm,size=0x40) addr:0x02121b48
-func_ov070_02121b88 kind:function(arm,size=0x54) addr:0x02121b88
+FlameChomp_Spawn kind:function(arm,size=0x50) addr:0x02121af8
+_ZN14FlameChompFireD1Ev kind:function(arm,size=0x40) addr:0x02121b48
+_ZN14FlameChompFireD0Ev kind:function(arm,size=0x54) addr:0x02121b88
 func_ov070_02121bdc kind:function(arm,size=0x8) addr:0x02121bdc
 func_ov070_02121be4 kind:function(arm,size=0xa8) addr:0x02121be4
 func_ov070_02121c8c kind:function(arm,size=0x30) addr:0x02121c8c
@@ -84,12 +84,12 @@ func_ov070_02121fb0 kind:function(arm,size=0x20) addr:0x02121fb0
 func_ov070_02121fd0 kind:function(arm,size=0x3c) addr:0x02121fd0
 func_ov070_0212200c kind:function(arm,size=0x38) addr:0x0212200c
 func_ov070_02122044 kind:function(arm,size=0x1c) addr:0x02122044
-func_ov070_02122060 kind:function(arm,size=0x8) addr:0x02122060
-func_ov070_02122068 kind:function(arm,size=0x4) addr:0x02122068
-func_ov070_0212206c kind:function(arm,size=0x98) addr:0x0212206c
-func_ov070_02122104 kind:function(arm,size=0x20) addr:0x02122104
-func_ov070_02122124 kind:function(arm,size=0xd8) addr:0x02122124
-func_ov070_021221fc kind:function(arm,size=0x48) addr:0x021221fc
+_ZN14FlameChompFire16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02122060
+_ZN14FlameChompFire16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02122068
+_ZN14FlameChompFire6RenderEv kind:function(arm,size=0x98) addr:0x0212206c
+_ZN14FlameChompFire8BehaviorEv kind:function(arm,size=0x20) addr:0x02122104
+_ZN14FlameChompFire13InitResourcesEv kind:function(arm,size=0xd8) addr:0x02122124
+FlameChompFire_Spawn kind:function(arm,size=0x48) addr:0x021221fc
 data_ov070_02122244 kind:data(any) addr:0x02122244
 data_ov070_02122248 kind:data(any) addr:0x02122248
 data_ov070_0212224c kind:data(any) addr:0x0212224c
@@ -131,8 +131,8 @@ data_ov070_02123110 kind:data(any) addr:0x02123110
 data_ov070_02123118 kind:data(any) addr:0x02123118
 data_ov070_02123120 kind:data(any) addr:0x02123120
 data_ov070_0212312c kind:data(any) addr:0x0212312c
-data_ov070_02123144 kind:data(any) addr:0x02123144 ambiguous
-data_ov070_02123168 kind:data(any) addr:0x02123168
+FlyGuy_SpawnInfo kind:data(any) addr:0x02123144 ambiguous
+_ZTV6FlyGuy kind:data(any) addr:0x02123168
 data_ov070_02123184 kind:data(any) addr:0x02123184 ambiguous
 data_ov070_021231a0 kind:data(any) addr:0x021231a0 ambiguous
 data_ov070_021231e4 kind:data(any) addr:0x021231e4
@@ -145,8 +145,8 @@ data_ov070_0212322c kind:data(any) addr:0x0212322c
 data_ov070_02123234 kind:data(any) addr:0x02123234
 data_ov070_0212323c kind:data(any) addr:0x0212323c
 data_ov070_02123248 kind:data(any) addr:0x02123248
-data_ov070_02123254 kind:data(any) addr:0x02123254 ambiguous
-data_ov070_02123278 kind:data(any) addr:0x02123278
+Amp_SpawnInfo kind:data(any) addr:0x02123254 ambiguous
+_ZTV3Amp kind:data(any) addr:0x02123278
 data_ov070_021232f4 kind:data(any) addr:0x021232f4
 data_ov070_021232fc kind:data(any) addr:0x021232fc
 data_ov070_02123304 kind:data(any) addr:0x02123304
@@ -157,16 +157,16 @@ data_ov070_02123324 kind:data(any) addr:0x02123324
 data_ov070_0212332c kind:data(any) addr:0x0212332c
 data_ov070_02123334 kind:data(any) addr:0x02123334
 data_ov070_02123340 kind:data(any) addr:0x02123340
-data_ov070_0212334c kind:data(any) addr:0x0212334c ambiguous
-data_ov070_02123370 kind:data(any) addr:0x02123370
+FlameChomp_SpawnInfo kind:data(any) addr:0x0212334c ambiguous
+_ZTV10FlameChomp kind:data(any) addr:0x02123370
 data_ov070_021233ec kind:data(any) addr:0x021233ec
 data_ov070_021233f4 kind:data(any) addr:0x021233f4
 data_ov070_021233fc kind:data(any) addr:0x021233fc
 data_ov070_02123404 kind:data(any) addr:0x02123404
 data_ov070_0212340c kind:data(any) addr:0x0212340c
 data_ov070_02123418 kind:data(any) addr:0x02123418
-data_ov070_02123424 kind:data(any) addr:0x02123424 ambiguous
-data_ov070_02123448 kind:data(any) addr:0x02123448
+FlameChompFire_SpawnInfo kind:data(any) addr:0x02123424 ambiguous
+_ZTV14FlameChompFire kind:data(any) addr:0x02123448
 data_ov070_021234c4 kind:data(any) addr:0x021234c4
 data_ov070_021234dc kind:data(any) addr:0x021234dc
 data_ov070_02123500 kind:bss addr:0x02123500

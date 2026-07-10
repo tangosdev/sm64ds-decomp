@@ -1,5 +1,5 @@
-func_ov065_02115ee0 kind:function(arm,size=0x48) addr:0x02115ee0
-func_ov065_02115f28 kind:function(arm,size=0x5c) addr:0x02115f28
+_ZN6SnufitD1Ev kind:function(arm,size=0x48) addr:0x02115ee0
+_ZN6SnufitD0Ev kind:function(arm,size=0x5c) addr:0x02115f28
 func_ov065_02115f84 kind:function(arm,size=0x6c) addr:0x02115f84
 func_ov065_02115ff0 kind:function(arm,size=0x2d0) addr:0x02115ff0
 func_ov065_021162c0 kind:function(arm,size=0x68) addr:0x021162c0
@@ -12,17 +12,17 @@ func_ov065_02116744 kind:function(arm,size=0x164) addr:0x02116744
 func_ov065_021168a8 kind:function(arm,size=0x74) addr:0x021168a8
 func_ov065_0211691c kind:function(arm,size=0x50) addr:0x0211691c
 func_ov065_0211696c kind:function(arm,size=0x17c) addr:0x0211696c
-func_ov065_02116ae8 kind:function(arm,size=0x48) addr:0x02116ae8
-func_ov065_02116b30 kind:function(arm,size=0x4) addr:0x02116b30
-func_ov065_02116b34 kind:function(arm,size=0x50) addr:0x02116b34
-func_ov065_02116b84 kind:function(arm,size=0x28c) addr:0x02116b84
-func_ov065_02116e10 kind:function(arm,size=0xfc) addr:0x02116e10
+_ZN6Snufit16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02116ae8
+_ZN6Snufit16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02116b30
+_ZN6Snufit6RenderEv kind:function(arm,size=0x50) addr:0x02116b34
+_ZN6Snufit8BehaviorEv kind:function(arm,size=0x28c) addr:0x02116b84
+_ZN6Snufit13InitResourcesEv kind:function(arm,size=0xfc) addr:0x02116e10
 func_ov065_02116f0c kind:function(arm,size=0x8) addr:0x02116f0c
 func_ov065_02116f14 kind:function(arm,size=0x2c) addr:0x02116f14
 func_ov065_02116f40 kind:function(arm,size=0x8) addr:0x02116f40
-func_ov065_02116f48 kind:function(arm,size=0x50) addr:0x02116f48
-func_ov065_02116f98 kind:function(arm,size=0x50) addr:0x02116f98
-func_ov065_02116fe8 kind:function(arm,size=0x64) addr:0x02116fe8
+Snufit_Spawn kind:function(arm,size=0x50) addr:0x02116f48
+_ZN5SwoopD1Ev kind:function(arm,size=0x50) addr:0x02116f98
+_ZN5SwoopD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
 func_ov065_0211704c kind:function(arm,size=0x3b8) addr:0x0211704c
 func_ov065_02117404 kind:function(arm,size=0x1ac) addr:0x02117404
 func_ov065_021175b0 kind:function(arm,size=0x74) addr:0x021175b0
@@ -34,19 +34,19 @@ func_ov065_02117888 kind:function(arm,size=0x74) addr:0x02117888
 func_ov065_021178fc kind:function(arm,size=0x48) addr:0x021178fc
 func_ov065_02117944 kind:function(arm,size=0x50) addr:0x02117944
 func_ov065_02117994 kind:function(arm,size=0x110) addr:0x02117994
-func_ov065_02117aa4 kind:function(arm,size=0x48) addr:0x02117aa4
-func_ov065_02117aec kind:function(arm,size=0x4) addr:0x02117aec
-func_ov065_02117af0 kind:function(arm,size=0x74) addr:0x02117af0
-func_ov065_02117b64 kind:function(arm,size=0x21c) addr:0x02117b64
-func_ov065_02117d80 kind:function(arm,size=0x12c) addr:0x02117d80
+_ZN5Swoop16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02117aa4
+_ZN5Swoop16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02117aec
+_ZN5Swoop6RenderEv kind:function(arm,size=0x74) addr:0x02117af0
+_ZN5Swoop8BehaviorEv kind:function(arm,size=0x21c) addr:0x02117b64
+_ZN5Swoop13InitResourcesEv kind:function(arm,size=0x12c) addr:0x02117d80
 func_ov065_02117eac kind:function(arm,size=0x8) addr:0x02117eac
 func_ov065_02117eb4 kind:function(arm,size=0x2c) addr:0x02117eb4
 func_ov065_02117ee0 kind:function(arm,size=0x8) addr:0x02117ee0
-func_ov065_02117ee8 kind:function(arm,size=0x58) addr:0x02117ee8
-func_ov065_02117f40 kind:function(arm,size=0x68) addr:0x02117f40
-func_ov065_02117fa8 kind:function(arm,size=0x7c) addr:0x02117fa8
-func_ov065_02118024 kind:function(arm,size=0x40) addr:0x02118024
-func_ov065_02118064 kind:function(arm,size=0x54) addr:0x02118064
+Swoop_Spawn kind:function(arm,size=0x58) addr:0x02117ee8
+_ZN6DorrieD1Ev kind:function(arm,size=0x68) addr:0x02117f40
+_ZN6DorrieD0Ev kind:function(arm,size=0x7c) addr:0x02117fa8
+_ZN9DorrieCapD1Ev kind:function(arm,size=0x40) addr:0x02118024
+_ZN9DorrieCapD0Ev kind:function(arm,size=0x54) addr:0x02118064
 func_ov065_021180b8 kind:function(arm,size=0x1c) addr:0x021180b8
 func_ov065_021180d4 kind:function(arm,size=0x174) addr:0x021180d4
 func_ov065_02118248 kind:function(arm,size=0x9c) addr:0x02118248
@@ -56,33 +56,33 @@ func_ov065_02118634 kind:function(arm,size=0x204) addr:0x02118634
 func_ov065_02118838 kind:function(arm,size=0x414) addr:0x02118838
 func_ov065_02118c4c kind:function(arm,size=0x78) addr:0x02118c4c
 func_ov065_02118cc4 kind:function(arm,size=0x40) addr:0x02118cc4
-func_ov065_02118d04 kind:function(arm,size=0x7c) addr:0x02118d04
-func_ov065_02118d80 kind:function(arm,size=0x28) addr:0x02118d80
-func_ov065_02118da8 kind:function(arm,size=0x48) addr:0x02118da8
-func_ov065_02118df0 kind:function(arm,size=0x2b8) addr:0x02118df0
-func_ov065_021190a8 kind:function(arm,size=0x168) addr:0x021190a8
+_ZN6Dorrie16CleanupResourcesEv kind:function(arm,size=0x7c) addr:0x02118d04
+_ZN6Dorrie6RenderEv kind:function(arm,size=0x28) addr:0x02118d80
+_ZN9DorrieCap6RenderEv kind:function(arm,size=0x48) addr:0x02118da8
+_ZN6Dorrie8BehaviorEv kind:function(arm,size=0x2b8) addr:0x02118df0
+_ZN9DorrieCap8BehaviorEv kind:function(arm,size=0x168) addr:0x021190a8
 func_ov065_02119210 kind:function(arm,size=0x18) addr:0x02119210
-func_ov065_02119228 kind:function(arm,size=0x2c0) addr:0x02119228
-func_ov065_021194e8 kind:function(arm,size=0x84) addr:0x021194e8
+_ZN6Dorrie13InitResourcesEv kind:function(arm,size=0x2c0) addr:0x02119228
+_ZN9DorrieCap13InitResourcesEv kind:function(arm,size=0x84) addr:0x021194e8
 func_ov065_0211956c kind:function(arm,size=0x28) addr:0x0211956c
 func_ov065_02119594 kind:function(arm,size=0x28) addr:0x02119594
 func_ov065_021195bc kind:function(arm,size=0x14) addr:0x021195bc
 func_ov065_021195d0 kind:function(arm,size=0x14) addr:0x021195d0
 func_ov065_021195e4 kind:function(arm,size=0x8) addr:0x021195e4
-func_ov065_021195ec kind:function(arm,size=0x48) addr:0x021195ec
-func_ov065_02119634 kind:function(arm,size=0x88) addr:0x02119634
+DorrieCap_Spawn kind:function(arm,size=0x48) addr:0x021195ec
+Dorrie_Spawn kind:function(arm,size=0x88) addr:0x02119634
 func_ov065_021196bc kind:function(arm,size=0x1c) addr:0x021196bc
-func_ov065_021196d8 kind:function(arm,size=0x54) addr:0x021196d8
-func_ov065_0211972c kind:function(arm,size=0x68) addr:0x0211972c
+_ZN15TtcRotatingCubeD1Ev kind:function(arm,size=0x54) addr:0x021196d8
+_ZN15TtcRotatingCubeD0Ev kind:function(arm,size=0x68) addr:0x0211972c
 func_ov065_02119794 kind:function(arm,size=0x10c) addr:0x02119794
 func_ov065_021198a0 kind:function(arm,size=0x6c) addr:0x021198a0
 func_ov065_0211990c kind:function(arm,size=0x78) addr:0x0211990c
-func_ov065_02119984 kind:function(arm,size=0x78) addr:0x02119984
-func_ov065_021199fc kind:function(arm,size=0x54) addr:0x021199fc
-func_ov065_02119a50 kind:function(arm,size=0x1e8) addr:0x02119a50
-func_ov065_02119c38 kind:function(arm,size=0x284) addr:0x02119c38
-func_ov065_02119ebc kind:function(arm,size=0x40) addr:0x02119ebc
-func_ov065_02119efc kind:function(arm,size=0x40) addr:0x02119efc
+_ZN15TtcRotatingCube16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02119984
+_ZN15TtcRotatingCube6RenderEv kind:function(arm,size=0x54) addr:0x021199fc
+_ZN15TtcRotatingCube8BehaviorEv kind:function(arm,size=0x1e8) addr:0x02119a50
+_ZN15TtcRotatingCube13InitResourcesEv kind:function(arm,size=0x284) addr:0x02119c38
+TtcRotatingPrism_Spawn kind:function(arm,size=0x40) addr:0x02119ebc
+TtcRotatingCube_Spawn kind:function(arm,size=0x40) addr:0x02119efc
 func_ov065_02119f3c kind:function(arm,size=0x4c) addr:0x02119f3c
 func_ov065_02119f88 kind:function(arm,size=0x60) addr:0x02119f88
 func_ov065_02119fe8 kind:function(arm,size=0x12c) addr:0x02119fe8
@@ -92,17 +92,17 @@ func_ov065_0211a1a0 kind:function(arm,size=0x28) addr:0x0211a1a0
 func_ov065_0211a1c8 kind:function(arm,size=0x190) addr:0x0211a1c8
 func_ov065_0211a358 kind:function(arm,size=0x104) addr:0x0211a358
 func_ov065_0211a45c kind:function(arm,size=0x38) addr:0x0211a45c
-func_ov065_0211a494 kind:function(arm,size=0x54) addr:0x0211a494
-func_ov065_0211a4e8 kind:function(arm,size=0x68) addr:0x0211a4e8
+_ZN20TtcConveyorBeltLargeD1Ev kind:function(arm,size=0x54) addr:0x0211a494
+_ZN20TtcConveyorBeltLargeD0Ev kind:function(arm,size=0x68) addr:0x0211a4e8
 func_ov065_0211a550 kind:function(arm,size=0xe8) addr:0x0211a550
-func_ov065_0211a638 kind:function(arm,size=0x64) addr:0x0211a638
-func_ov065_0211a69c kind:function(arm,size=0x34) addr:0x0211a69c
-func_ov065_0211a6d0 kind:function(arm,size=0x1a0) addr:0x0211a6d0
-func_ov065_0211a870 kind:function(arm,size=0x1c8) addr:0x0211a870
+_ZN20TtcConveyorBeltLarge16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211a638
+_ZN20TtcConveyorBeltLarge6RenderEv kind:function(arm,size=0x34) addr:0x0211a69c
+_ZN20TtcConveyorBeltLarge8BehaviorEv kind:function(arm,size=0x1a0) addr:0x0211a6d0
+_ZN20TtcConveyorBeltLarge13InitResourcesEv kind:function(arm,size=0x1c8) addr:0x0211a870
 func_ov065_0211aa38 kind:function(arm,size=0x94) addr:0x0211aa38
 func_ov065_0211aacc kind:function(arm,size=0x14) addr:0x0211aacc
-func_ov065_0211aae0 kind:function(arm,size=0x40) addr:0x0211aae0
-func_ov065_0211ab20 kind:function(arm,size=0x40) addr:0x0211ab20
+TtcConveyorBeltLarge_Spawn kind:function(arm,size=0x40) addr:0x0211aae0
+TtcConveyorBeltSmall_Spawn kind:function(arm,size=0x40) addr:0x0211ab20
 func_ov065_0211ab60 kind:function(arm,size=0x4c) addr:0x0211ab60
 func_ov065_0211abac kind:function(arm,size=0x60) addr:0x0211abac
 func_ov065_0211ac0c kind:function(arm,size=0xf8) addr:0x0211ac0c
@@ -111,32 +111,32 @@ func_ov065_0211ad48 kind:function(arm,size=0x28) addr:0x0211ad48
 func_ov065_0211ad70 kind:function(arm,size=0x98) addr:0x0211ad70
 func_ov065_0211ae08 kind:function(arm,size=0x3cc) addr:0x0211ae08
 func_ov065_0211b1d4 kind:function(arm,size=0x154) addr:0x0211b1d4
-func_ov065_0211b328 kind:function(arm,size=0x38) addr:0x0211b328
-func_ov065_0211b360 kind:function(arm,size=0x4c) addr:0x0211b360
-func_ov065_0211b3ac kind:function(arm,size=0x60) addr:0x0211b3ac
+TTC_MovingBar_Spawn kind:function(arm,size=0x38) addr:0x0211b328
+_ZN13TTC_MovingBarD1Ev kind:function(arm,size=0x4c) addr:0x0211b360
+_ZN13TTC_MovingBarD0Ev kind:function(arm,size=0x60) addr:0x0211b3ac
 func_ov065_0211b40c kind:function(arm,size=0x70) addr:0x0211b40c
-func_ov065_0211b47c kind:function(arm,size=0x64) addr:0x0211b47c
-func_ov065_0211b4e0 kind:function(arm,size=0x28) addr:0x0211b4e0
-func_ov065_0211b508 kind:function(arm,size=0x138) addr:0x0211b508
-func_ov065_0211b640 kind:function(arm,size=0x140) addr:0x0211b640
-func_ov065_0211b780 kind:function(arm,size=0x38) addr:0x0211b780
-func_ov065_0211b7b8 kind:function(arm,size=0x38) addr:0x0211b7b8
-func_ov065_0211b7f0 kind:function(arm,size=0x44) addr:0x0211b7f0
-func_ov065_0211b834 kind:function(arm,size=0x58) addr:0x0211b834
-func_ov065_0211b88c kind:function(arm,size=0x44) addr:0x0211b88c
-func_ov065_0211b8d0 kind:function(arm,size=0x28) addr:0x0211b8d0
-func_ov065_0211b8f8 kind:function(arm,size=0x190) addr:0x0211b8f8
-func_ov065_0211ba88 kind:function(arm,size=0xf4) addr:0x0211ba88
-func_ov065_0211bb7c kind:function(arm,size=0x30) addr:0x0211bb7c
-func_ov065_0211bbac kind:function(arm,size=0x30) addr:0x0211bbac
-func_ov065_0211bbdc kind:function(arm,size=0x4c) addr:0x0211bbdc
-func_ov065_0211bc28 kind:function(arm,size=0x60) addr:0x0211bc28
+_ZN13TTC_MovingBar16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211b47c
+_ZN13TTC_MovingBar6RenderEv kind:function(arm,size=0x28) addr:0x0211b4e0
+_ZN13TTC_MovingBar8BehaviorEv kind:function(arm,size=0x138) addr:0x0211b508
+_ZN13TTC_MovingBar13InitResourcesEv kind:function(arm,size=0x140) addr:0x0211b640
+TtcRotatingTriangle_Spawn kind:function(arm,size=0x38) addr:0x0211b780
+TtcRotatingGear_Spawn kind:function(arm,size=0x38) addr:0x0211b7b8
+_ZN15TtcRotatingGearD1Ev kind:function(arm,size=0x44) addr:0x0211b7f0
+_ZN15TtcRotatingGearD0Ev kind:function(arm,size=0x58) addr:0x0211b834
+_ZN15TtcRotatingGear16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211b88c
+_ZN15TtcRotatingGear6RenderEv kind:function(arm,size=0x28) addr:0x0211b8d0
+_ZN15TtcRotatingGear8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
+_ZN15TtcRotatingGear13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
+TtcMovingCubeB_Spawn kind:function(arm,size=0x30) addr:0x0211bb7c
+TtcMovingCubeA_Spawn kind:function(arm,size=0x30) addr:0x0211bbac
+_ZN14TtcMovingCubeAD1Ev kind:function(arm,size=0x4c) addr:0x0211bbdc
+_ZN14TtcMovingCubeAD0Ev kind:function(arm,size=0x60) addr:0x0211bc28
 func_ov065_0211bc88 kind:function(arm,size=0x98) addr:0x0211bc88
-func_ov065_0211bd20 kind:function(arm,size=0x44) addr:0x0211bd20
-func_ov065_0211bd64 kind:function(arm,size=0x28) addr:0x0211bd64
-func_ov065_0211bd8c kind:function(arm,size=0x178) addr:0x0211bd8c
-func_ov065_0211bf04 kind:function(arm,size=0x13c) addr:0x0211bf04
-func_ov065_0211c040 kind:function(arm,size=0x38) addr:0x0211c040
+_ZN14TtcMovingCubeA16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211bd20
+_ZN14TtcMovingCubeA6RenderEv kind:function(arm,size=0x28) addr:0x0211bd64
+_ZN14TtcMovingCubeA8BehaviorEv kind:function(arm,size=0x178) addr:0x0211bd8c
+_ZN14TtcMovingCubeA13InitResourcesEv kind:function(arm,size=0x13c) addr:0x0211bf04
+TTC_MovingBeam_Spawn kind:function(arm,size=0x38) addr:0x0211c040
 data_ov065_0211c078 kind:data(any) addr:0x0211c078
 data_ov065_0211c080 kind:data(any) addr:0x0211c080
 data_ov065_0211c08c kind:data(any) addr:0x0211c08c
@@ -176,8 +176,8 @@ data_ov065_0211cb50 kind:data(any) addr:0x0211cb50
 data_ov065_0211cb58 kind:data(any) addr:0x0211cb58
 data_ov065_0211cb60 kind:data(any) addr:0x0211cb60
 data_ov065_0211cb6c kind:data(any) addr:0x0211cb6c
-data_ov065_0211cb80 kind:data(any) addr:0x0211cb80 ambiguous
-data_ov065_0211cba4 kind:data(any) addr:0x0211cba4
+Snufit_SpawnInfo kind:data(any) addr:0x0211cb80 ambiguous
+_ZTV6Snufit kind:data(any) addr:0x0211cba4
 data_ov065_0211cc20 kind:data(any) addr:0x0211cc20
 data_ov065_0211cc28 kind:data(any) addr:0x0211cc28
 data_ov065_0211cc30 kind:data(any) addr:0x0211cc30
@@ -188,8 +188,8 @@ data_ov065_0211cc50 kind:data(any) addr:0x0211cc50
 data_ov065_0211cc58 kind:data(any) addr:0x0211cc58
 data_ov065_0211cc60 kind:data(any) addr:0x0211cc60
 data_ov065_0211cc6c kind:data(any) addr:0x0211cc6c
-data_ov065_0211cc7c kind:data(any) addr:0x0211cc7c ambiguous
-data_ov065_0211cca0 kind:data(any) addr:0x0211cca0
+Swoop_SpawnInfo kind:data(any) addr:0x0211cc7c ambiguous
+_ZTV5Swoop kind:data(any) addr:0x0211cca0
 data_ov065_0211cd1c kind:data(any) addr:0x0211cd1c
 data_ov065_0211cd24 kind:data(any) addr:0x0211cd24
 data_ov065_0211cd2c kind:data(any) addr:0x0211cd2c
@@ -198,10 +198,10 @@ data_ov065_0211cd40 kind:data(any) addr:0x0211cd40
 data_ov065_0211cd4c kind:data(any) addr:0x0211cd4c
 data_ov065_0211cd58 kind:data(any) addr:0x0211cd58
 data_ov065_0211cd68 kind:data(any) addr:0x0211cd68
-data_ov065_0211cd84 kind:data(any) addr:0x0211cd84 ambiguous
-data_ov065_0211cda0 kind:data(any) addr:0x0211cda0 ambiguous
-data_ov065_0211cdc4 kind:data(any) addr:0x0211cdc4
-data_ov065_0211ce48 kind:data(any) addr:0x0211ce48
+Dorrie_SpawnInfo kind:data(any) addr:0x0211cd84 ambiguous
+DorrieCap_SpawnInfo kind:data(any) addr:0x0211cda0 ambiguous
+_ZTV9DorrieCap kind:data(any) addr:0x0211cdc4
+_ZTV6Dorrie kind:data(any) addr:0x0211ce48
 data_ov065_0211cec4 kind:data(any) addr:0x0211cec4
 data_ov065_0211cee4 kind:data(any) addr:0x0211cee4
 data_ov065_0211cf04 kind:data(any) addr:0x0211cf04
@@ -216,9 +216,9 @@ data_ov065_0211cfb8 kind:data(any) addr:0x0211cfb8
 data_ov065_0211cfd0 kind:data(any) addr:0x0211cfd0
 data_ov065_0211cfd4 kind:data(any) addr:0x0211cfd4
 data_ov065_0211cfd8 kind:data(any) addr:0x0211cfd8
-data_ov065_0211cfe8 kind:data(any) addr:0x0211cfe8 ambiguous
-data_ov065_0211d004 kind:data(any) addr:0x0211d004 ambiguous
-data_ov065_0211d028 kind:data(any) addr:0x0211d028
+TtcRotatingCube_SpawnInfo kind:data(any) addr:0x0211cfe8 ambiguous
+TtcRotatingPrism_SpawnInfo kind:data(any) addr:0x0211d004 ambiguous
+_ZTV15TtcRotatingCube kind:data(any) addr:0x0211d028
 data_ov065_0211d0a8 kind:data(any) addr:0x0211d0a8
 data_ov065_0211d0b4 kind:data(any) addr:0x0211d0b4
 data_ov065_0211d0c8 kind:data(any) addr:0x0211d0c8 ambiguous
@@ -229,13 +229,13 @@ data_ov065_0211d180 kind:data(any) addr:0x0211d180
 data_ov065_0211d194 kind:data(any) addr:0x0211d194
 data_ov065_0211d198 kind:data(any) addr:0x0211d198
 data_ov065_0211d19c kind:data(any) addr:0x0211d19c
-data_ov065_0211d1ac kind:data(any) addr:0x0211d1ac ambiguous
-data_ov065_0211d1c8 kind:data(any) addr:0x0211d1c8 ambiguous
-data_ov065_0211d1ec kind:data(any) addr:0x0211d1ec
+TtcConveyorBeltSmall_SpawnInfo kind:data(any) addr:0x0211d1ac ambiguous
+TtcConveyorBeltLarge_SpawnInfo kind:data(any) addr:0x0211d1c8 ambiguous
+_ZTV20TtcConveyorBeltLarge kind:data(any) addr:0x0211d1ec
 data_ov065_0211d26c kind:data(any) addr:0x0211d26c
 data_ov065_0211d270 kind:data(any) addr:0x0211d270
 data_ov065_0211d27c kind:data(any) addr:0x0211d27c
-data_ov065_0211d290 kind:data(any) addr:0x0211d290 ambiguous
+TTC_MovingBar_SpawnInfo kind:data(any) addr:0x0211d290 ambiguous
 data_ov065_0211d2b4 kind:data(any) addr:0x0211d2b4
 data_ov065_0211d334 kind:data(any) addr:0x0211d334
 data_ov065_0211d338 kind:data(any) addr:0x0211d338
@@ -243,19 +243,19 @@ data_ov065_0211d344 kind:data(any) addr:0x0211d344
 data_ov065_0211d35c kind:data(any) addr:0x0211d35c
 data_ov065_0211d360 kind:data(any) addr:0x0211d360
 data_ov065_0211d364 kind:data(any) addr:0x0211d364
-data_ov065_0211d374 kind:data(any) addr:0x0211d374 ambiguous
-data_ov065_0211d390 kind:data(any) addr:0x0211d390 ambiguous
-data_ov065_0211d3b4 kind:data(any) addr:0x0211d3b4
+TtcRotatingGear_SpawnInfo kind:data(any) addr:0x0211d374 ambiguous
+TtcRotatingTriangle_SpawnInfo kind:data(any) addr:0x0211d390 ambiguous
+_ZTV13TTC_MovingBar kind:data(any) addr:0x0211d3b4
 data_ov065_0211d434 kind:data(any) addr:0x0211d434
 data_ov065_0211d440 kind:data(any) addr:0x0211d440
-data_ov065_0211d454 kind:data(any) addr:0x0211d454 ambiguous
-data_ov065_0211d470 kind:data(any) addr:0x0211d470 ambiguous
-data_ov065_0211d494 kind:data(any) addr:0x0211d494
+TtcMovingCubeA_SpawnInfo kind:data(any) addr:0x0211d454 ambiguous
+TtcMovingCubeB_SpawnInfo kind:data(any) addr:0x0211d470 ambiguous
+_ZTV15TtcRotatingGear kind:data(any) addr:0x0211d494
 data_ov065_0211d514 kind:data(any) addr:0x0211d514
 data_ov065_0211d520 kind:data(any) addr:0x0211d520
 data_ov065_0211d530 kind:data(any) addr:0x0211d530
-data_ov065_0211d544 kind:data(any) addr:0x0211d544 ambiguous
-data_ov065_0211d568 kind:data(any) addr:0x0211d568
+TTC_MovingBeam_SpawnInfo kind:data(any) addr:0x0211d544 ambiguous
+_ZTV14TtcMovingCubeA kind:data(any) addr:0x0211d568
 data_ov065_0211d600 kind:bss addr:0x0211d600
 data_ov065_0211d608 kind:bss addr:0x0211d608
 data_ov065_0211d610 kind:bss addr:0x0211d610

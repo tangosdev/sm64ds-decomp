@@ -7,7 +7,7 @@ extern void _ZN9ActorBaseC1Ev(void *p);
 extern void func_02017278(int *p);
 
 extern int data_0208e4b8[];
-extern int data_02092680[];
+extern int _ZTV5Stage[];
 extern int data_ov007_021032e8[];
 extern int data_0208ee14[];
 extern int data_ov007_021032b0[];
@@ -19,7 +19,7 @@ int *func_ov007_020ccad0(void)
         unsigned char *f;
         _ZN9ActorBaseC1Ev(p);
         p[0] = (int)data_0208e4b8;
-        p[0] = (int)data_02092680;
+        p[0] = (int)_ZTV5Stage;
         f = (unsigned char *)((long long)(int)((char *)p + 0x13) & 0xFFFFFFFFFFFFFFFFLL);
         *f |= 1;
         *f |= 4;

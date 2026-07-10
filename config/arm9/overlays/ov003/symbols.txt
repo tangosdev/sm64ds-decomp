@@ -23,7 +23,7 @@ func_ov003_020ae6f4 kind:function(arm,size=0x944) addr:0x020ae6f4
 func_ov003_020af038 kind:function(arm,size=0x834) addr:0x020af038
 func_ov003_020af86c kind:function(arm,size=0x34) addr:0x020af86c
 func_ov003_020af8a0 kind:function(arm,size=0xc50) addr:0x020af8a0
-func_ov003_020b04f0 kind:function(arm,size=0x90) addr:0x020b04f0
+StarSelect_Spawn kind:function(arm,size=0x90) addr:0x020b04f0
 func_ov003_020b0580 kind:function(arm,size=0x3c) addr:0x020b0580
 func_ov003_020b05bc kind:function(arm,size=0x50) addr:0x020b05bc
 func_ov003_020b060c kind:function(arm,size=0x124) addr:0x020b060c
@@ -104,7 +104,7 @@ data_ov003_020b16a0 kind:data(any) addr:0x020b16a0
 data_ov003_020b16a4 kind:data(any) addr:0x020b16a4
 data_ov003_020b16a8 kind:data(any) addr:0x020b16a8
 data_ov003_020b16ac kind:data(any) addr:0x020b16ac
-data_ov003_020b16b4 kind:data(any) addr:0x020b16b4 ambiguous
+StarSelect_SpawnInfo kind:data(any) addr:0x020b16b4 ambiguous
 data_ov003_020b16bc kind:data(any) addr:0x020b16bc
 data_ov003_020b16c8 kind:data(any) addr:0x020b16c8
 data_ov003_020b16d4 kind:data(any) addr:0x020b16d4

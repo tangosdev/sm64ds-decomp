@@ -13,40 +13,40 @@ func_ov026_02111764 kind:function(arm,size=0x44) addr:0x02111764
 func_ov026_021117a8 kind:function(arm,size=0x28) addr:0x021117a8
 func_ov026_021117d0 kind:function(arm,size=0x8) addr:0x021117d0
 func_ov026_021117d8 kind:function(arm,size=0xb0) addr:0x021117d8
-func_ov026_02111888 kind:function(arm,size=0x30) addr:0x02111888
+BowserShutter_Spawn kind:function(arm,size=0x30) addr:0x02111888
 func_ov026_021118b8 kind:function(arm,size=0x44) addr:0x021118b8
 func_ov026_021118fc kind:function(arm,size=0x58) addr:0x021118fc
 func_ov026_02111954 kind:function(arm,size=0x44) addr:0x02111954
 func_ov026_02111998 kind:function(arm,size=0x28) addr:0x02111998
 func_ov026_021119c0 kind:function(arm,size=0xb0) addr:0x021119c0
-func_ov026_02111a70 kind:function(arm,size=0x30) addr:0x02111a70
-func_ov026_02111aa0 kind:function(arm,size=0x38) addr:0x02111aa0
-func_ov026_02111ad8 kind:function(arm,size=0x4c) addr:0x02111ad8
+Submarine_Spawn kind:function(arm,size=0x30) addr:0x02111a70
+_ZN9SubmarineD1Ev kind:function(arm,size=0x38) addr:0x02111aa0
+_ZN9SubmarineD0Ev kind:function(arm,size=0x4c) addr:0x02111ad8
 func_ov026_02111b24 kind:function(arm,size=0x190) addr:0x02111b24
 func_ov026_02111cb4 kind:function(arm,size=0x98) addr:0x02111cb4
 func_ov026_02111d4c kind:function(arm,size=0x18c) addr:0x02111d4c
 func_ov026_02111ed8 kind:function(arm,size=0x8) addr:0x02111ed8
 func_ov026_02111ee0 kind:function(arm,size=0x50) addr:0x02111ee0
 func_ov026_02111f30 kind:function(arm,size=0x74) addr:0x02111f30
-func_ov026_02111fa4 kind:function(arm,size=0x30) addr:0x02111fa4
-func_ov026_02111fd4 kind:function(arm,size=0x4) addr:0x02111fd4
-func_ov026_02111fd8 kind:function(arm,size=0x34) addr:0x02111fd8
-func_ov026_0211200c kind:function(arm,size=0xe0) addr:0x0211200c
-func_ov026_021120ec kind:function(arm,size=0xd0) addr:0x021120ec
-func_ov026_021121bc kind:function(arm,size=0x40) addr:0x021121bc
-func_ov026_021121fc kind:function(arm,size=0x38) addr:0x021121fc
-func_ov026_02112234 kind:function(arm,size=0x4c) addr:0x02112234
+_ZN9Submarine16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02111fa4
+_ZN9Submarine16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111fd4
+_ZN9Submarine6RenderEv kind:function(arm,size=0x34) addr:0x02111fd8
+_ZN9Submarine8BehaviorEv kind:function(arm,size=0xe0) addr:0x0211200c
+_ZN9Submarine13InitResourcesEv kind:function(arm,size=0xd0) addr:0x021120ec
+Whirlpool_Spawn kind:function(arm,size=0x40) addr:0x021121bc
+_ZN12WaterSuctionD1Ev kind:function(arm,size=0x38) addr:0x021121fc
+_ZN12WaterSuctionD0Ev kind:function(arm,size=0x4c) addr:0x02112234
 func_ov026_02112280 kind:function(arm,size=0x30) addr:0x02112280
 func_ov026_021122b0 kind:function(arm,size=0x1c) addr:0x021122b0
 func_ov026_021122cc kind:function(arm,size=0x8) addr:0x021122cc
 func_ov026_021122d4 kind:function(arm,size=0x50) addr:0x021122d4
 func_ov026_02112324 kind:function(arm,size=0x4) addr:0x02112324
-func_ov026_02112328 kind:function(arm,size=0x8) addr:0x02112328
-func_ov026_02112330 kind:function(arm,size=0x4) addr:0x02112330
-func_ov026_02112334 kind:function(arm,size=0x8) addr:0x02112334
-func_ov026_0211233c kind:function(arm,size=0x8c) addr:0x0211233c
-func_ov026_021123c8 kind:function(arm,size=0x88) addr:0x021123c8
-func_ov026_02112450 kind:function(arm,size=0x40) addr:0x02112450
+_ZN12WaterSuction16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02112328
+_ZN12WaterSuction16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112330
+_ZN12WaterSuction6RenderEv kind:function(arm,size=0x8) addr:0x02112334
+_ZN12WaterSuction8BehaviorEv kind:function(arm,size=0x8c) addr:0x0211233c
+_ZN12WaterSuction13InitResourcesEv kind:function(arm,size=0x88) addr:0x021123c8
+WaterSuction_Spawn kind:function(arm,size=0x40) addr:0x02112450
 data_ov026_02112490 kind:data(any) addr:0x02112490
 data_ov026_02112494 kind:data(any) addr:0x02112494
 data_ov026_02112498 kind:data(any) addr:0x02112498
@@ -178,7 +178,7 @@ data_ov026_02113b50 kind:data(any) addr:0x02113b50 ambiguous
 data_ov026_02113b5c kind:data(any) addr:0x02113b5c
 data_ov026_02113b68 kind:data(any) addr:0x02113b68
 data_ov026_02113b7c kind:data(any) addr:0x02113b7c ambiguous
-data_ov026_02113b80 kind:data(any) addr:0x02113b80 ambiguous
+BowserShutter_SpawnInfo kind:data(any) addr:0x02113b80 ambiguous
 data_ov026_02113b90 kind:data(any) addr:0x02113b90 ambiguous
 data_ov026_02113ba4 kind:data(any) addr:0x02113ba4
 data_ov026_02113c08 kind:data(any) addr:0x02113c08 ambiguous
@@ -187,7 +187,7 @@ data_ov026_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov026_02113c24 kind:data(any) addr:0x02113c24
 data_ov026_02113c28 kind:data(any) addr:0x02113c28 ambiguous
 data_ov026_02113c30 kind:data(any) addr:0x02113c30
-data_ov026_02113c48 kind:data(any) addr:0x02113c48 ambiguous
+Submarine_SpawnInfo kind:data(any) addr:0x02113c48 ambiguous
 data_ov026_02113c6c kind:data(any) addr:0x02113c6c
 data_ov026_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 data_ov026_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
@@ -197,8 +197,8 @@ data_ov026_02113cfc kind:data(any) addr:0x02113cfc
 data_ov026_02113d04 kind:data(any) addr:0x02113d04
 data_ov026_02113d0c kind:data(any) addr:0x02113d0c
 data_ov026_02113d18 kind:data(any) addr:0x02113d18
-data_ov026_02113d30 kind:data(any) addr:0x02113d30 ambiguous
-data_ov026_02113d54 kind:data(any) addr:0x02113d54
+Whirlpool_SpawnInfo kind:data(any) addr:0x02113d30 ambiguous
+_ZTV9Submarine kind:data(any) addr:0x02113d54
 data_ov026_02113d90 kind:data(any) addr:0x02113d90 ambiguous
 data_ov026_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 data_ov026_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
@@ -206,8 +206,8 @@ data_ov026_02113dd0 kind:data(any) addr:0x02113dd0
 data_ov026_02113dd8 kind:data(any) addr:0x02113dd8
 data_ov026_02113de0 kind:data(any) addr:0x02113de0
 data_ov026_02113dec kind:data(any) addr:0x02113dec
-data_ov026_02113e00 kind:data(any) addr:0x02113e00 ambiguous
-data_ov026_02113e24 kind:data(any) addr:0x02113e24
+WaterSuction_SpawnInfo kind:data(any) addr:0x02113e00 ambiguous
+_ZTV12WaterSuction kind:data(any) addr:0x02113e24
 data_ov026_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 data_ov026_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 data_ov026_02113e88 kind:data(any) addr:0x02113e88 ambiguous

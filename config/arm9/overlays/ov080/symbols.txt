@@ -1,7 +1,7 @@
-func_ov080_02123740 kind:function(arm,size=0x38) addr:0x02123740
-func_ov080_02123778 kind:function(arm,size=0x4c) addr:0x02123778
-func_ov080_021237c4 kind:function(arm,size=0x40) addr:0x021237c4
-func_ov080_02123804 kind:function(arm,size=0x54) addr:0x02123804
+_ZN9MontyMoleD1Ev kind:function(arm,size=0x38) addr:0x02123740
+_ZN9MontyMoleD0Ev kind:function(arm,size=0x4c) addr:0x02123778
+_ZN13MontyMoleRockD1Ev kind:function(arm,size=0x40) addr:0x021237c4
+_ZN13MontyMoleRockD0Ev kind:function(arm,size=0x54) addr:0x02123804
 func_ov080_02123858 kind:function(arm,size=0x8) addr:0x02123858
 func_ov080_02123860 kind:function(arm,size=0xc4) addr:0x02123860
 func_ov080_02123924 kind:function(arm,size=0x110) addr:0x02123924
@@ -14,18 +14,18 @@ func_ov080_02124208 kind:function(arm,size=0x158) addr:0x02124208
 func_ov080_02124360 kind:function(arm,size=0x78) addr:0x02124360
 func_ov080_021243d8 kind:function(arm,size=0x40) addr:0x021243d8
 func_ov080_02124418 kind:function(arm,size=0x40) addr:0x02124418
-func_ov080_02124458 kind:function(arm,size=0x5c) addr:0x02124458
-func_ov080_021244b4 kind:function(arm,size=0x24) addr:0x021244b4
-func_ov080_021244d8 kind:function(arm,size=0x28) addr:0x021244d8
-func_ov080_02124500 kind:function(arm,size=0x30) addr:0x02124500
-func_ov080_02124530 kind:function(arm,size=0x6c) addr:0x02124530
-func_ov080_0212459c kind:function(arm,size=0x1f0) addr:0x0212459c
-func_ov080_0212478c kind:function(arm,size=0x128) addr:0x0212478c
-func_ov080_021248b4 kind:function(arm,size=0xe4) addr:0x021248b4
-func_ov080_02124998 kind:function(arm,size=0x48) addr:0x02124998
-func_ov080_021249e0 kind:function(arm,size=0x40) addr:0x021249e0
-func_ov080_02124a20 kind:function(arm,size=0x48) addr:0x02124a20
-func_ov080_02124a68 kind:function(arm,size=0x5c) addr:0x02124a68
+_ZN9MontyMole16CleanupResourcesEv kind:function(arm,size=0x5c) addr:0x02124458
+_ZN13MontyMoleRock16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021244b4
+_ZN9MontyMole6RenderEv kind:function(arm,size=0x28) addr:0x021244d8
+_ZN13MontyMoleRock6RenderEv kind:function(arm,size=0x30) addr:0x02124500
+_ZN9MontyMole8BehaviorEv kind:function(arm,size=0x6c) addr:0x02124530
+_ZN13MontyMoleRock8BehaviorEv kind:function(arm,size=0x1f0) addr:0x0212459c
+_ZN9MontyMole13InitResourcesEv kind:function(arm,size=0x128) addr:0x0212478c
+_ZN13MontyMoleRock13InitResourcesEv kind:function(arm,size=0xe4) addr:0x021248b4
+MontyMoleRock_Spawn kind:function(arm,size=0x48) addr:0x02124998
+MontyMole_Spawn kind:function(arm,size=0x40) addr:0x021249e0
+_ZN11CrazedCrateD1Ev kind:function(arm,size=0x48) addr:0x02124a20
+_ZN11CrazedCrateD0Ev kind:function(arm,size=0x5c) addr:0x02124a68
 func_ov080_02124ac4 kind:function(arm,size=0x8) addr:0x02124ac4
 func_ov080_02124acc kind:function(arm,size=0x170) addr:0x02124acc
 func_ov080_02124c3c kind:function(arm,size=0x224) addr:0x02124c3c
@@ -38,13 +38,13 @@ func_ov080_0212509c kind:function(arm,size=0x2c) addr:0x0212509c
 func_ov080_021250c8 kind:function(arm,size=0x3c) addr:0x021250c8
 func_ov080_02125104 kind:function(arm,size=0x38) addr:0x02125104
 func_ov080_0212513c kind:function(arm,size=0x1c) addr:0x0212513c
-func_ov080_02125158 kind:function(arm,size=0x24) addr:0x02125158
-func_ov080_0212517c kind:function(arm,size=0x4) addr:0x0212517c
-func_ov080_02125180 kind:function(arm,size=0x4c) addr:0x02125180
-func_ov080_021251cc kind:function(arm,size=0x20) addr:0x021251cc
-func_ov080_021251ec kind:function(arm,size=0x12c) addr:0x021251ec
+_ZN11CrazedCrate16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02125158
+_ZN11CrazedCrate16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212517c
+_ZN11CrazedCrate6RenderEv kind:function(arm,size=0x4c) addr:0x02125180
+_ZN11CrazedCrate8BehaviorEv kind:function(arm,size=0x20) addr:0x021251cc
+_ZN11CrazedCrate13InitResourcesEv kind:function(arm,size=0x12c) addr:0x021251ec
 func_ov080_02125318 kind:function(arm,size=0x9c) addr:0x02125318
-func_ov080_021253b4 kind:function(arm,size=0x50) addr:0x021253b4
+CrazedCrate_Spawn kind:function(arm,size=0x50) addr:0x021253b4
 func_ov080_02125404 kind:function(arm,size=0x24) addr:0x02125404
 func_ov080_02125428 kind:function(arm,size=0x38) addr:0x02125428
 func_ov080_02125460 kind:function(arm,size=0xfc) addr:0x02125460
@@ -73,7 +73,7 @@ func_ov080_02126c1c kind:function(arm,size=0x4) addr:0x02126c1c
 func_ov080_02126c20 kind:function(arm,size=0x40) addr:0x02126c20
 func_ov080_02126c60 kind:function(arm,size=0x40) addr:0x02126c60
 func_ov080_02126ca0 kind:function(arm,size=0x2ec) addr:0x02126ca0
-func_ov080_02126f8c kind:function(arm,size=0x30) addr:0x02126f8c
+Painting_Spawn kind:function(arm,size=0x30) addr:0x02126f8c
 func_ov080_02126fbc kind:function(arm,size=0x58) addr:0x02126fbc
 func_ov080_02127014 kind:function(arm,size=0x44) addr:0x02127014
 func_ov080_02127058 kind:function(arm,size=0x3c) addr:0x02127058
@@ -110,12 +110,12 @@ data_ov080_02127fb0 kind:data(any) addr:0x02127fb0
 data_ov080_02127fbc kind:data(any) addr:0x02127fbc
 data_ov080_02127fc8 kind:data(any) addr:0x02127fc8
 data_ov080_02127fd8 kind:data(any) addr:0x02127fd8
-data_ov080_02127fec kind:data(any) addr:0x02127fec ambiguous
-data_ov080_02128008 kind:data(any) addr:0x02128008 ambiguous
-data_ov080_0212802c kind:data(any) addr:0x0212802c
+MontyMole_SpawnInfo kind:data(any) addr:0x02127fec ambiguous
+MontyMoleRock_SpawnInfo kind:data(any) addr:0x02128008 ambiguous
+_ZTV13MontyMoleRock kind:data(any) addr:0x0212802c
 data_ov080_02128070 kind:data(any) addr:0x02128070 ambiguous
 data_ov080_0212808c kind:data(any) addr:0x0212808c ambiguous
-data_ov080_021280b0 kind:data(any) addr:0x021280b0
+_ZTV9MontyMole kind:data(any) addr:0x021280b0
 data_ov080_0212812c kind:data(any) addr:0x0212812c
 data_ov080_02128134 kind:data(any) addr:0x02128134
 data_ov080_0212813c kind:data(any) addr:0x0212813c
@@ -124,8 +124,8 @@ data_ov080_0212814c kind:data(any) addr:0x0212814c
 data_ov080_02128154 kind:data(any) addr:0x02128154
 data_ov080_0212815c kind:data(any) addr:0x0212815c
 data_ov080_02128168 kind:data(any) addr:0x02128168
-data_ov080_02128174 kind:data(any) addr:0x02128174 ambiguous
-data_ov080_02128198 kind:data(any) addr:0x02128198
+CrazedCrate_SpawnInfo kind:data(any) addr:0x02128174 ambiguous
+_ZTV11CrazedCrate kind:data(any) addr:0x02128198
 data_ov080_02128214 kind:data(any) addr:0x02128214
 data_ov080_0212821c kind:data(any) addr:0x0212821c
 data_ov080_02128224 kind:data(any) addr:0x02128224
@@ -140,7 +140,7 @@ data_ov080_02128264 kind:data(any) addr:0x02128264
 data_ov080_0212826c kind:data(any) addr:0x0212826c
 data_ov080_02128274 kind:data(any) addr:0x02128274
 data_ov080_02128280 kind:data(any) addr:0x02128280
-data_ov080_02128290 kind:data(any) addr:0x02128290 ambiguous
+Painting_SpawnInfo kind:data(any) addr:0x02128290 ambiguous
 data_ov080_021282b4 kind:data(any) addr:0x021282b4
 data_ov080_02128338 kind:data(any) addr:0x02128338
 data_ov080_021283c0 kind:bss addr:0x021283c0

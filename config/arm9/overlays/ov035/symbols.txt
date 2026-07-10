@@ -1,21 +1,21 @@
-func_ov035_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov035_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
-func_ov035_0211123c kind:function(arm,size=0x88) addr:0x0211123c
-func_ov035_021112c4 kind:function(arm,size=0x28) addr:0x021112c4
-func_ov035_021112ec kind:function(arm,size=0x1f4) addr:0x021112ec
-func_ov035_021114e0 kind:function(arm,size=0x17c) addr:0x021114e0
-func_ov035_0211165c kind:function(arm,size=0x30) addr:0x0211165c
+_ZN16RotatingCogSmallD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN16RotatingCogSmallD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN16RotatingCogSmall16CleanupResourcesEv kind:function(arm,size=0x88) addr:0x0211123c
+_ZN16RotatingCogSmall6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
+_ZN16RotatingCogSmall8BehaviorEv kind:function(arm,size=0x1f4) addr:0x021112ec
+_ZN16RotatingCogSmall13InitResourcesEv kind:function(arm,size=0x17c) addr:0x021114e0
+RotatingCogSmall_Spawn kind:function(arm,size=0x30) addr:0x0211165c
 func_ov035_0211168c kind:function(arm,size=0x30) addr:0x0211168c
-func_ov035_021116bc kind:function(arm,size=0x30) addr:0x021116bc
-func_ov035_021116ec kind:function(arm,size=0x4c) addr:0x021116ec
-func_ov035_02111738 kind:function(arm,size=0x60) addr:0x02111738
+RotatingClockHand_Spawn kind:function(arm,size=0x30) addr:0x021116bc
+_ZN17RotatingClockHandD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
+_ZN17RotatingClockHandD0Ev kind:function(arm,size=0x60) addr:0x02111738
 func_ov035_02111798 kind:function(arm,size=0x110) addr:0x02111798
 func_ov035_021118a8 kind:function(arm,size=0x48) addr:0x021118a8
-func_ov035_021118f0 kind:function(arm,size=0x44) addr:0x021118f0
-func_ov035_02111934 kind:function(arm,size=0x28) addr:0x02111934
-func_ov035_0211195c kind:function(arm,size=0x13c) addr:0x0211195c
-func_ov035_02111a98 kind:function(arm,size=0x100) addr:0x02111a98
-func_ov035_02111b98 kind:function(arm,size=0x38) addr:0x02111b98
+_ZN17RotatingClockHand16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021118f0
+_ZN17RotatingClockHand6RenderEv kind:function(arm,size=0x28) addr:0x02111934
+_ZN17RotatingClockHand8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
+_ZN17RotatingClockHand13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
+SpinningPlatform_Spawn kind:function(arm,size=0x38) addr:0x02111b98
 data_ov035_02111bd0 kind:data(any) addr:0x02111bd0
 data_ov035_02111bd4 kind:data(any) addr:0x02111bd4
 data_ov035_02111bd8 kind:data(any) addr:0x02111bd8
@@ -100,18 +100,18 @@ data_ov035_021129b4 kind:data(any) addr:0x021129b4 ambiguous
 data_ov035_02112a6c kind:data(any) addr:0x02112a6c ambiguous
 data_ov035_02112a84 kind:data(any) addr:0x02112a84
 data_ov035_02112a90 kind:data(any) addr:0x02112a90
-data_ov035_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
+RotatingClockHand_SpawnInfo kind:data(any) addr:0x02112aa4 ambiguous
 data_ov035_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
 data_ov035_02112ac0 kind:data(any) addr:0x02112ac0 ambiguous
-data_ov035_02112adc kind:data(any) addr:0x02112adc ambiguous
-data_ov035_02112b00 kind:data(any) addr:0x02112b00
+RotatingCogSmall_SpawnInfo kind:data(any) addr:0x02112adc ambiguous
+_ZTV16RotatingCogSmall kind:data(any) addr:0x02112b00
 data_ov035_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 data_ov035_02112b80 kind:data(any) addr:0x02112b80
 data_ov035_02112b84 kind:data(any) addr:0x02112b84 ambiguous
 data_ov035_02112b88 kind:data(any) addr:0x02112b88
 data_ov035_02112b94 kind:data(any) addr:0x02112b94
-data_ov035_02112ba8 kind:data(any) addr:0x02112ba8 ambiguous
-data_ov035_02112bcc kind:data(any) addr:0x02112bcc
+SpinningPlatform_SpawnInfo kind:data(any) addr:0x02112ba8 ambiguous
+_ZTV17RotatingClockHand kind:data(any) addr:0x02112bcc
 data_ov035_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov035_02112bec kind:data(any) addr:0x02112bec ambiguous
 data_ov035_02112c08 kind:data(any) addr:0x02112c08 ambiguous

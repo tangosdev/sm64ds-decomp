@@ -1,5 +1,5 @@
-func_ov071_0211f000 kind:function(arm,size=0x48) addr:0x0211f000
-func_ov071_0211f048 kind:function(arm,size=0x5c) addr:0x0211f048
+_ZN10ScuttlebugD1Ev kind:function(arm,size=0x48) addr:0x0211f000
+_ZN10ScuttlebugD0Ev kind:function(arm,size=0x5c) addr:0x0211f048
 func_ov071_0211f0a4 kind:function(arm,size=0x8) addr:0x0211f0a4
 func_ov071_0211f0ac kind:function(arm,size=0x8) addr:0x0211f0ac
 func_ov071_0211f0b4 kind:function(arm,size=0x94) addr:0x0211f0b4
@@ -28,15 +28,15 @@ func_ov071_02120200 kind:function(arm,size=0x78) addr:0x02120200
 func_ov071_02120278 kind:function(arm,size=0x3c) addr:0x02120278
 func_ov071_021202b4 kind:function(arm,size=0x38) addr:0x021202b4
 func_ov071_021202ec kind:function(arm,size=0x1c) addr:0x021202ec
-func_ov071_02120308 kind:function(arm,size=0x30) addr:0x02120308
-func_ov071_02120338 kind:function(arm,size=0x4) addr:0x02120338
-func_ov071_0212033c kind:function(arm,size=0x5c) addr:0x0212033c
-func_ov071_02120398 kind:function(arm,size=0x60) addr:0x02120398
-func_ov071_021203f8 kind:function(arm,size=0x188) addr:0x021203f8
+_ZN10Scuttlebug16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02120308
+_ZN10Scuttlebug16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02120338
+_ZN10Scuttlebug6RenderEv kind:function(arm,size=0x5c) addr:0x0212033c
+_ZN10Scuttlebug8BehaviorEv kind:function(arm,size=0x60) addr:0x02120398
+_ZN10Scuttlebug13InitResourcesEv kind:function(arm,size=0x188) addr:0x021203f8
 func_ov071_02120580 kind:function(arm,size=0x98) addr:0x02120580
-func_ov071_02120618 kind:function(arm,size=0x50) addr:0x02120618
-func_ov071_02120668 kind:function(arm,size=0x48) addr:0x02120668
-func_ov071_021206b0 kind:function(arm,size=0x5c) addr:0x021206b0
+Scuttlebug_Spawn kind:function(arm,size=0x50) addr:0x02120618
+_ZN3MrID1Ev kind:function(arm,size=0x48) addr:0x02120668
+_ZN3MrID0Ev kind:function(arm,size=0x5c) addr:0x021206b0
 func_ov071_0212070c kind:function(arm,size=0x154) addr:0x0212070c
 func_ov071_02120860 kind:function(arm,size=0x168) addr:0x02120860
 func_ov071_021209c8 kind:function(arm,size=0x58) addr:0x021209c8
@@ -53,28 +53,28 @@ func_ov071_02121570 kind:function(arm,size=0x50) addr:0x02121570
 func_ov071_021215c0 kind:function(arm,size=0x3c) addr:0x021215c0
 func_ov071_021215fc kind:function(arm,size=0x38) addr:0x021215fc
 func_ov071_02121634 kind:function(arm,size=0x1c) addr:0x02121634
-func_ov071_02121650 kind:function(arm,size=0x64) addr:0x02121650
-func_ov071_021216b4 kind:function(arm,size=0x4) addr:0x021216b4
-func_ov071_021216b8 kind:function(arm,size=0x34) addr:0x021216b8
-func_ov071_021216ec kind:function(arm,size=0x48) addr:0x021216ec
-func_ov071_02121734 kind:function(arm,size=0x298) addr:0x02121734
-func_ov071_021219cc kind:function(arm,size=0x50) addr:0x021219cc
-func_ov071_02121a1c kind:function(arm,size=0x50) addr:0x02121a1c
-func_ov071_02121a6c kind:function(arm,size=0x40) addr:0x02121a6c
-func_ov071_02121aac kind:function(arm,size=0x54) addr:0x02121aac
+_ZN3MrI16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02121650
+_ZN3MrI16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021216b4
+_ZN3MrI6RenderEv kind:function(arm,size=0x34) addr:0x021216b8
+_ZN3MrI8BehaviorEv kind:function(arm,size=0x48) addr:0x021216ec
+_ZN3MrI13InitResourcesEv kind:function(arm,size=0x298) addr:0x02121734
+BigMrI_Spawn kind:function(arm,size=0x50) addr:0x021219cc
+MrI_Spawn kind:function(arm,size=0x50) addr:0x02121a1c
+_ZN14MrI_ProjectileD1Ev kind:function(arm,size=0x40) addr:0x02121a6c
+_ZN14MrI_ProjectileD0Ev kind:function(arm,size=0x54) addr:0x02121aac
 func_ov071_02121b00 kind:function(arm,size=0x8) addr:0x02121b00
 func_ov071_02121b08 kind:function(arm,size=0x48) addr:0x02121b08
 func_ov071_02121b50 kind:function(arm,size=0x54) addr:0x02121b50
 func_ov071_02121ba4 kind:function(arm,size=0xc8) addr:0x02121ba4
 func_ov071_02121c6c kind:function(arm,size=0x9c) addr:0x02121c6c
-func_ov071_02121d08 kind:function(arm,size=0x8) addr:0x02121d08
-func_ov071_02121d10 kind:function(arm,size=0x4) addr:0x02121d10
-func_ov071_02121d14 kind:function(arm,size=0x6c) addr:0x02121d14
-func_ov071_02121d80 kind:function(arm,size=0x134) addr:0x02121d80
-func_ov071_02121eb4 kind:function(arm,size=0xe8) addr:0x02121eb4
-func_ov071_02121f9c kind:function(arm,size=0x48) addr:0x02121f9c
-func_ov071_02121fe4 kind:function(arm,size=0x44) addr:0x02121fe4
-func_ov071_02122028 kind:function(arm,size=0x58) addr:0x02122028
+_ZN14MrI_Projectile16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02121d08
+_ZN14MrI_Projectile16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121d10
+_ZN14MrI_Projectile6RenderEv kind:function(arm,size=0x6c) addr:0x02121d14
+_ZN14MrI_Projectile8BehaviorEv kind:function(arm,size=0x134) addr:0x02121d80
+_ZN14MrI_Projectile13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02121eb4
+MrI_Projectile_Spawn kind:function(arm,size=0x48) addr:0x02121f9c
+_ZN6CoffinD1Ev kind:function(arm,size=0x44) addr:0x02121fe4
+_ZN6CoffinD0Ev kind:function(arm,size=0x58) addr:0x02122028
 func_ov071_02122080 kind:function(arm,size=0x48) addr:0x02122080
 func_ov071_021220c8 kind:function(arm,size=0xcc) addr:0x021220c8
 func_ov071_02122194 kind:function(arm,size=0x28) addr:0x02122194
@@ -82,11 +82,11 @@ func_ov071_021221bc kind:function(arm,size=0x1f4) addr:0x021221bc
 func_ov071_021223b0 kind:function(arm,size=0x18) addr:0x021223b0
 func_ov071_021223c8 kind:function(arm,size=0x4c) addr:0x021223c8
 func_ov071_02122414 kind:function(arm,size=0x4c) addr:0x02122414
-func_ov071_02122460 kind:function(arm,size=0x44) addr:0x02122460
-func_ov071_021224a4 kind:function(arm,size=0x28) addr:0x021224a4
-func_ov071_021224cc kind:function(arm,size=0x90) addr:0x021224cc
-func_ov071_0212255c kind:function(arm,size=0x114) addr:0x0212255c
-func_ov071_02122670 kind:function(arm,size=0x30) addr:0x02122670
+_ZN6Coffin16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02122460
+_ZN6Coffin6RenderEv kind:function(arm,size=0x28) addr:0x021224a4
+_ZN6Coffin8BehaviorEv kind:function(arm,size=0x90) addr:0x021224cc
+_ZN6Coffin13InitResourcesEv kind:function(arm,size=0x114) addr:0x0212255c
+Coffin_Spawn kind:function(arm,size=0x30) addr:0x02122670
 data_ov071_021226a0 kind:data(any) addr:0x021226a0
 data_ov071_021226a4 kind:data(any) addr:0x021226a4
 __sinit_ov071_021226ac kind:function(arm,size=0x21c) addr:0x021226ac
@@ -117,8 +117,8 @@ data_ov071_02122be0 kind:data(any) addr:0x02122be0
 data_ov071_02122be8 kind:data(any) addr:0x02122be8
 data_ov071_02122bf0 kind:data(any) addr:0x02122bf0
 data_ov071_02122bfc kind:data(any) addr:0x02122bfc
-data_ov071_02122c08 kind:data(any) addr:0x02122c08 ambiguous
-data_ov071_02122c2c kind:data(any) addr:0x02122c2c
+Scuttlebug_SpawnInfo kind:data(any) addr:0x02122c08 ambiguous
+_ZTV10Scuttlebug kind:data(any) addr:0x02122c2c
 data_ov071_02122ca8 kind:data(any) addr:0x02122ca8
 data_ov071_02122cb0 kind:data(any) addr:0x02122cb0
 data_ov071_02122cb8 kind:data(any) addr:0x02122cb8
@@ -127,13 +127,13 @@ data_ov071_02122cc8 kind:data(any) addr:0x02122cc8
 data_ov071_02122cd0 kind:data(any) addr:0x02122cd0
 data_ov071_02122cd8 kind:data(any) addr:0x02122cd8
 data_ov071_02122ce4 kind:data(any) addr:0x02122ce4
-data_ov071_02122cf0 kind:data(any) addr:0x02122cf0 ambiguous
-data_ov071_02122d0c kind:data(any) addr:0x02122d0c ambiguous
-data_ov071_02122d30 kind:data(any) addr:0x02122d30
+MrI_SpawnInfo kind:data(any) addr:0x02122cf0 ambiguous
+BigMrI_SpawnInfo kind:data(any) addr:0x02122d0c ambiguous
+_ZTV3MrI kind:data(any) addr:0x02122d30
 data_ov071_02122dac kind:data(any) addr:0x02122dac
 data_ov071_02122db8 kind:data(any) addr:0x02122db8
-data_ov071_02122dc4 kind:data(any) addr:0x02122dc4 ambiguous
-data_ov071_02122de8 kind:data(any) addr:0x02122de8
+MrI_Projectile_SpawnInfo kind:data(any) addr:0x02122dc4 ambiguous
+_ZTV14MrI_Projectile kind:data(any) addr:0x02122de8
 data_ov071_02122e64 kind:data(any) addr:0x02122e64
 data_ov071_02122e6c kind:data(any) addr:0x02122e6c
 data_ov071_02122e74 kind:data(any) addr:0x02122e74
@@ -143,9 +143,9 @@ data_ov071_02122e84 kind:data(any) addr:0x02122e84
 data_ov071_02122e8c kind:data(any) addr:0x02122e8c
 data_ov071_02122e94 kind:data(any) addr:0x02122e94
 data_ov071_02122ea0 kind:data(any) addr:0x02122ea0
-data_ov071_02122eb0 kind:data(any) addr:0x02122eb0 ambiguous
+Coffin_SpawnInfo kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
-data_ov071_02122efc kind:data(any) addr:0x02122efc
+_ZTV6Coffin kind:data(any) addr:0x02122efc
 data_ov071_02122f80 kind:bss addr:0x02122f80
 data_ov071_02122f88 kind:bss addr:0x02122f88
 data_ov071_02122f90 kind:bss addr:0x02122f90

@@ -1,51 +1,51 @@
-func_ov091_02130f00 kind:function(arm,size=0x4c) addr:0x02130f00
-func_ov091_02130f4c kind:function(arm,size=0x60) addr:0x02130f4c
+_ZN25RotatingUpDownPlatformUtmD1Ev kind:function(arm,size=0x4c) addr:0x02130f00
+_ZN25RotatingUpDownPlatformUtmD0Ev kind:function(arm,size=0x60) addr:0x02130f4c
 func_ov091_02130fac kind:function(arm,size=0xc4) addr:0x02130fac
 func_ov091_02131070 kind:function(arm,size=0x8c) addr:0x02131070
 func_ov091_021310fc kind:function(arm,size=0x64) addr:0x021310fc
 func_ov091_02131160 kind:function(arm,size=0x1e0) addr:0x02131160
 func_ov091_02131340 kind:function(arm,size=0x48) addr:0x02131340
-func_ov091_02131388 kind:function(arm,size=0x80) addr:0x02131388
-func_ov091_02131408 kind:function(arm,size=0x60) addr:0x02131408
-func_ov091_02131468 kind:function(arm,size=0x488) addr:0x02131468
-func_ov091_021318f0 kind:function(arm,size=0x2b4) addr:0x021318f0
-func_ov091_02131ba4 kind:function(arm,size=0x38) addr:0x02131ba4
-func_ov091_02131bdc kind:function(arm,size=0x38) addr:0x02131bdc
-func_ov091_02131c14 kind:function(arm,size=0x44) addr:0x02131c14
-func_ov091_02131c58 kind:function(arm,size=0x58) addr:0x02131c58
+_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv kind:function(arm,size=0x80) addr:0x02131388
+_ZN25RotatingUpDownPlatformUtm6RenderEv kind:function(arm,size=0x60) addr:0x02131408
+_ZN25RotatingUpDownPlatformUtm8BehaviorEv kind:function(arm,size=0x488) addr:0x02131468
+_ZN25RotatingUpDownPlatformUtm13InitResourcesEv kind:function(arm,size=0x2b4) addr:0x021318f0
+RotatingUpDownPlatformUtm_Spawn kind:function(arm,size=0x38) addr:0x02131ba4
+RotatingUpDownPlatform_Spawn kind:function(arm,size=0x38) addr:0x02131bdc
+_ZN22RotatingUpDownPlatformD1Ev kind:function(arm,size=0x44) addr:0x02131c14
+_ZN22RotatingUpDownPlatformD0Ev kind:function(arm,size=0x58) addr:0x02131c58
 func_ov091_02131cb0 kind:function(arm,size=0x108) addr:0x02131cb0
 func_ov091_02131db8 kind:function(arm,size=0x138) addr:0x02131db8
 func_ov091_02131ef0 kind:function(arm,size=0xac) addr:0x02131ef0
 func_ov091_02131f9c kind:function(arm,size=0x64) addr:0x02131f9c
 func_ov091_02132000 kind:function(arm,size=0x9c) addr:0x02132000
-func_ov091_0213209c kind:function(arm,size=0x44) addr:0x0213209c
-func_ov091_021320e0 kind:function(arm,size=0x28) addr:0x021320e0
-func_ov091_02132108 kind:function(arm,size=0x104) addr:0x02132108
-func_ov091_0213220c kind:function(arm,size=0x154) addr:0x0213220c
+_ZN22RotatingUpDownPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0213209c
+_ZN22RotatingUpDownPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021320e0
+_ZN22RotatingUpDownPlatform8BehaviorEv kind:function(arm,size=0x104) addr:0x02132108
+_ZN22RotatingUpDownPlatform13InitResourcesEv kind:function(arm,size=0x154) addr:0x0213220c
 func_ov091_02132360 kind:function(arm,size=0x20) addr:0x02132360
 func_ov091_02132380 kind:function(arm,size=0x14) addr:0x02132380
-func_ov091_02132394 kind:function(arm,size=0x38) addr:0x02132394
-func_ov091_021323cc kind:function(arm,size=0x38) addr:0x021323cc
-func_ov091_02132404 kind:function(arm,size=0x44) addr:0x02132404
-func_ov091_02132448 kind:function(arm,size=0x58) addr:0x02132448
-func_ov091_021324a0 kind:function(arm,size=0x64) addr:0x021324a0
-func_ov091_02132504 kind:function(arm,size=0x28) addr:0x02132504
-func_ov091_0213252c kind:function(arm,size=0xa8) addr:0x0213252c
-func_ov091_021325d4 kind:function(arm,size=0x214) addr:0x021325d4
-func_ov091_021327e8 kind:function(arm,size=0x30) addr:0x021327e8
-func_ov091_02132818 kind:function(arm,size=0x30) addr:0x02132818
-func_ov091_02132848 kind:function(arm,size=0x30) addr:0x02132848
-func_ov091_02132878 kind:function(arm,size=0x30) addr:0x02132878
-func_ov091_021328a8 kind:function(arm,size=0x30) addr:0x021328a8
-func_ov091_021328d8 kind:function(arm,size=0x30) addr:0x021328d8
-func_ov091_02132908 kind:function(arm,size=0x30) addr:0x02132908
-func_ov091_02132938 kind:function(arm,size=0x60) addr:0x02132938
-func_ov091_02132998 kind:function(arm,size=0x74) addr:0x02132998
+SquareMetalNetLift_Spawn kind:function(arm,size=0x38) addr:0x02132394
+ArrowPathLift_Spawn kind:function(arm,size=0x38) addr:0x021323cc
+_ZN17SlidingPlatformWfD1Ev kind:function(arm,size=0x44) addr:0x02132404
+_ZN17SlidingPlatformWfD0Ev kind:function(arm,size=0x58) addr:0x02132448
+_ZN17SlidingPlatformWf16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021324a0
+_ZN17SlidingPlatformWf6RenderEv kind:function(arm,size=0x28) addr:0x02132504
+_ZN17SlidingPlatformWf8BehaviorEv kind:function(arm,size=0xa8) addr:0x0213252c
+_ZN17SlidingPlatformWf13InitResourcesEv kind:function(arm,size=0x214) addr:0x021325d4
+SlidingPlatformWf_Spawn kind:function(arm,size=0x30) addr:0x021327e8
+SlidingPlatformBfsRectangle_Spawn kind:function(arm,size=0x30) addr:0x02132818
+SlidingPlatformBfsSquare_Spawn kind:function(arm,size=0x30) addr:0x02132848
+SlidingPlatformRr_Spawn kind:function(arm,size=0x30) addr:0x02132878
+SlidingPlatformBsLong_Spawn kind:function(arm,size=0x30) addr:0x021328a8
+SlidingPlatformBsWide_Spawn kind:function(arm,size=0x30) addr:0x021328d8
+SlidingPlatformBdw_Spawn kind:function(arm,size=0x30) addr:0x02132908
+_ZN6ThwompD1Ev kind:function(arm,size=0x60) addr:0x02132938
+_ZN6ThwompD0Ev kind:function(arm,size=0x74) addr:0x02132998
 func_ov091_02132a0c kind:function(arm,size=0x8) addr:0x02132a0c
 func_ov091_02132a14 kind:function(arm,size=0x9c) addr:0x02132a14
-func_ov091_02132ab0 kind:function(arm,size=0x1d4) addr:0x02132ab0
-func_ov091_02132c84 kind:function(arm,size=0x34) addr:0x02132c84
-func_ov091_02132cb8 kind:function(arm,size=0x4c) addr:0x02132cb8
+_ZN6Thwomp8BehaviorEv kind:function(arm,size=0x1d4) addr:0x02132ab0
+_ZN6Thwomp13InitResourcesEv kind:function(arm,size=0x34) addr:0x02132c84
+Thwomp_Spawn kind:function(arm,size=0x4c) addr:0x02132cb8
 func_ov091_02132d04 kind:function(arm,size=0x68) addr:0x02132d04
 func_ov091_02132d6c kind:function(arm,size=0x54) addr:0x02132d6c
 func_ov091_02132dc0 kind:function(arm,size=0xa4) addr:0x02132dc0
@@ -55,8 +55,8 @@ func_ov091_02132f04 kind:function(arm,size=0xf0) addr:0x02132f04
 func_ov091_02132ff4 kind:function(arm,size=0x2c) addr:0x02132ff4
 func_ov091_02133020 kind:function(arm,size=0x78) addr:0x02133020
 func_ov091_02133098 kind:function(arm,size=0x120) addr:0x02133098
-func_ov091_021331b8 kind:function(arm,size=0x58) addr:0x021331b8
-func_ov091_02133210 kind:function(arm,size=0x44) addr:0x02133210
+_ZN6Thwomp16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x021331b8
+_ZN6Thwomp6RenderEv kind:function(arm,size=0x44) addr:0x02133210
 func_ov091_02133254 kind:function(arm,size=0x1a8) addr:0x02133254
 func_ov091_021333fc kind:function(arm,size=0x44) addr:0x021333fc
 func_ov091_02133440 kind:function(arm,size=0x58) addr:0x02133440
@@ -68,9 +68,9 @@ func_ov091_021336cc kind:function(arm,size=0x44) addr:0x021336cc
 func_ov091_02133710 kind:function(arm,size=0x28) addr:0x02133710
 func_ov091_02133738 kind:function(arm,size=0x174) addr:0x02133738
 func_ov091_021338ac kind:function(arm,size=0x8c) addr:0x021338ac
-func_ov091_02133938 kind:function(arm,size=0x30) addr:0x02133938
-func_ov091_02133968 kind:function(arm,size=0x40) addr:0x02133968
-func_ov091_021339a8 kind:function(arm,size=0x54) addr:0x021339a8
+Stump_Spawn kind:function(arm,size=0x30) addr:0x02133938
+_ZN5StumpD1Ev kind:function(arm,size=0x40) addr:0x02133968
+_ZN5StumpD0Ev kind:function(arm,size=0x54) addr:0x021339a8
 func_ov091_021339fc kind:function(arm,size=0x270) addr:0x021339fc
 func_ov091_02133c6c kind:function(arm,size=0xb0) addr:0x02133c6c
 func_ov091_02133d1c kind:function(arm,size=0x14) addr:0x02133d1c
@@ -80,15 +80,15 @@ func_ov091_02133f60 kind:function(arm,size=0xac) addr:0x02133f60
 func_ov091_0213400c kind:function(arm,size=0x38) addr:0x0213400c
 func_ov091_02134044 kind:function(arm,size=0x50) addr:0x02134044
 func_ov091_02134094 kind:function(arm,size=0x74) addr:0x02134094
-func_ov091_02134108 kind:function(arm,size=0x78) addr:0x02134108
-func_ov091_02134180 kind:function(arm,size=0x4) addr:0x02134180
-func_ov091_02134184 kind:function(arm,size=0x68) addr:0x02134184
-func_ov091_021341ec kind:function(arm,size=0x138) addr:0x021341ec
-func_ov091_02134324 kind:function(arm,size=0x160) addr:0x02134324
+_ZN5Stump16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02134108
+_ZN5Stump16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02134180
+_ZN5Stump6RenderEv kind:function(arm,size=0x68) addr:0x02134184
+_ZN5Stump8BehaviorEv kind:function(arm,size=0x138) addr:0x021341ec
+_ZN5Stump13InitResourcesEv kind:function(arm,size=0x160) addr:0x02134324
 func_ov091_02134484 kind:function(arm,size=0x8) addr:0x02134484
 func_ov091_0213448c kind:function(arm,size=0xc) addr:0x0213448c
 func_ov091_02134498 kind:function(arm,size=0x8) addr:0x02134498
-func_ov091_021344a0 kind:function(arm,size=0x48) addr:0x021344a0
+Fwoosh_Spawn kind:function(arm,size=0x48) addr:0x021344a0
 data_ov091_021344e8 kind:data(any) addr:0x021344e8
 data_ov091_021344f4 kind:data(any) addr:0x021344f4
 data_ov091_021344fc kind:data(any) addr:0x021344fc
@@ -112,12 +112,12 @@ data_ov091_02134bb8 kind:data(any) addr:0x02134bb8
 data_ov091_02134bc4 kind:data(any) addr:0x02134bc4
 data_ov091_02134bd0 kind:data(any) addr:0x02134bd0
 data_ov091_02134bdc kind:data(any) addr:0x02134bdc
-data_ov091_02134bf8 kind:data(any) addr:0x02134bf8 ambiguous
-data_ov091_02134c14 kind:data(any) addr:0x02134c14 ambiguous
+RotatingUpDownPlatform_SpawnInfo kind:data(any) addr:0x02134bf8 ambiguous
+RotatingUpDownPlatformUtm_SpawnInfo kind:data(any) addr:0x02134c14 ambiguous
 data_ov091_02134c30 kind:data(any) addr:0x02134c30
 data_ov091_02134c34 kind:data(any) addr:0x02134c34
 data_ov091_02134c38 kind:data(any) addr:0x02134c38
-data_ov091_02134c5c kind:data(any) addr:0x02134c5c
+_ZTV25RotatingUpDownPlatformUtm kind:data(any) addr:0x02134c5c
 data_ov091_02134cdc kind:data(any) addr:0x02134cdc
 data_ov091_02134d1c kind:data(any) addr:0x02134d1c
 data_ov091_02134e44 kind:data(any) addr:0x02134e44
@@ -126,32 +126,32 @@ data_ov091_02134e54 kind:data(any) addr:0x02134e54
 data_ov091_02134e5c kind:data(any) addr:0x02134e5c
 data_ov091_02134e64 kind:data(any) addr:0x02134e64
 data_ov091_02134e70 kind:data(any) addr:0x02134e70
-data_ov091_02134e80 kind:data(any) addr:0x02134e80 ambiguous
-data_ov091_02134e9c kind:data(any) addr:0x02134e9c ambiguous
-data_ov091_02134ec0 kind:data(any) addr:0x02134ec0
+ArrowPathLift_SpawnInfo kind:data(any) addr:0x02134e80 ambiguous
+SquareMetalNetLift_SpawnInfo kind:data(any) addr:0x02134e9c ambiguous
+_ZTV22RotatingUpDownPlatform kind:data(any) addr:0x02134ec0
 data_ov091_02134f40 kind:data(any) addr:0x02134f40
 data_ov091_02134f4c kind:data(any) addr:0x02134f4c
-data_ov091_02134f60 kind:data(any) addr:0x02134f60 ambiguous
-data_ov091_02134f7c kind:data(any) addr:0x02134f7c ambiguous
-data_ov091_02134f98 kind:data(any) addr:0x02134f98 ambiguous
-data_ov091_02134fb4 kind:data(any) addr:0x02134fb4 ambiguous
-data_ov091_02134fd0 kind:data(any) addr:0x02134fd0 ambiguous
-data_ov091_02134fec kind:data(any) addr:0x02134fec ambiguous
-data_ov091_02135008 kind:data(any) addr:0x02135008 ambiguous
+SlidingPlatformBdw_SpawnInfo kind:data(any) addr:0x02134f60 ambiguous
+SlidingPlatformBsWide_SpawnInfo kind:data(any) addr:0x02134f7c ambiguous
+SlidingPlatformBsLong_SpawnInfo kind:data(any) addr:0x02134f98 ambiguous
+SlidingPlatformRr_SpawnInfo kind:data(any) addr:0x02134fb4 ambiguous
+SlidingPlatformBfsSquare_SpawnInfo kind:data(any) addr:0x02134fd0 ambiguous
+SlidingPlatformBfsRectangle_SpawnInfo kind:data(any) addr:0x02134fec ambiguous
+SlidingPlatformWf_SpawnInfo kind:data(any) addr:0x02135008 ambiguous
 data_ov091_02135024 kind:data(any) addr:0x02135024
 data_ov091_02135028 kind:data(any) addr:0x02135028
 data_ov091_0213502c kind:data(any) addr:0x0213502c
-data_ov091_02135080 kind:data(any) addr:0x02135080
+_ZTV17SlidingPlatformWf kind:data(any) addr:0x02135080
 data_ov091_02135100 kind:data(any) addr:0x02135100
 data_ov091_02135120 kind:data(any) addr:0x02135120
 data_ov091_0213512c kind:data(any) addr:0x0213512c
 data_ov091_02135138 kind:data(any) addr:0x02135138
-data_ov091_02135150 kind:data(any) addr:0x02135150 ambiguous
-data_ov091_02135174 kind:data(any) addr:0x02135174
+Thwomp_SpawnInfo kind:data(any) addr:0x02135150 ambiguous
+_ZTV6Thwomp kind:data(any) addr:0x02135174
 data_ov091_021351fc kind:data(any) addr:0x021351fc
 data_ov091_0213527c kind:data(any) addr:0x0213527c
 data_ov091_02135288 kind:data(any) addr:0x02135288
-data_ov091_02135298 kind:data(any) addr:0x02135298 ambiguous
+Stump_SpawnInfo kind:data(any) addr:0x02135298 ambiguous
 data_ov091_021352bc kind:data(any) addr:0x021352bc
 data_ov091_0213533c kind:data(any) addr:0x0213533c
 data_ov091_02135344 kind:data(any) addr:0x02135344
@@ -161,8 +161,8 @@ data_ov091_0213535c kind:data(any) addr:0x0213535c
 data_ov091_02135364 kind:data(any) addr:0x02135364
 data_ov091_0213536c kind:data(any) addr:0x0213536c
 data_ov091_02135378 kind:data(any) addr:0x02135378
-data_ov091_02135388 kind:data(any) addr:0x02135388 ambiguous
-data_ov091_021353ac kind:data(any) addr:0x021353ac
+Fwoosh_SpawnInfo kind:data(any) addr:0x02135388 ambiguous
+_ZTV5Stump kind:data(any) addr:0x021353ac
 data_ov091_02135440 kind:bss addr:0x02135440
 data_ov091_02135448 kind:bss addr:0x02135448
 data_ov091_02135450 kind:bss addr:0x02135450

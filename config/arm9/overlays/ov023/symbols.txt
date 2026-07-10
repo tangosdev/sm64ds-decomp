@@ -1,12 +1,12 @@
-func_ov023_021111a0 kind:function(arm,size=0x4c) addr:0x021111a0
-func_ov023_021111ec kind:function(arm,size=0x60) addr:0x021111ec
+_ZN8SquasherD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN8SquasherD0Ev kind:function(arm,size=0x60) addr:0x021111ec
 func_ov023_0211124c kind:function(arm,size=0xbc) addr:0x0211124c
 func_ov023_02111308 kind:function(arm,size=0x48) addr:0x02111308
-func_ov023_02111350 kind:function(arm,size=0x38) addr:0x02111350
-func_ov023_02111388 kind:function(arm,size=0x28) addr:0x02111388
-func_ov023_021113b0 kind:function(arm,size=0x2c0) addr:0x021113b0
-func_ov023_02111670 kind:function(arm,size=0xb8) addr:0x02111670
-func_ov023_02111728 kind:function(arm,size=0x38) addr:0x02111728
+_ZN8Squasher16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111350
+_ZN8Squasher6RenderEv kind:function(arm,size=0x28) addr:0x02111388
+_ZN8Squasher8BehaviorEv kind:function(arm,size=0x2c0) addr:0x021113b0
+_ZN8Squasher13InitResourcesEv kind:function(arm,size=0xb8) addr:0x02111670
+Squasher_Spawn kind:function(arm,size=0x38) addr:0x02111728
 data_ov023_02111760 kind:data(any) addr:0x02111760
 data_ov023_02111764 kind:data(any) addr:0x02111764
 data_ov023_02111768 kind:data(any) addr:0x02111768
@@ -55,8 +55,8 @@ data_ov023_02111d30 kind:data(any) addr:0x02111d30
 data_ov023_02111e10 kind:data(any) addr:0x02111e10
 data_ov023_02111fa0 kind:data(any) addr:0x02111fa0
 data_ov023_02111fac kind:data(any) addr:0x02111fac
-data_ov023_02111fc0 kind:data(any) addr:0x02111fc0 ambiguous
-data_ov023_02111fe4 kind:data(any) addr:0x02111fe4
+Squasher_SpawnInfo kind:data(any) addr:0x02111fc0 ambiguous
+_ZTV8Squasher kind:data(any) addr:0x02111fe4
 data_ov023_02112080 kind:bss addr:0x02112080
 data_ov023_02112088 kind:bss addr:0x02112088
 data_ov023_0211208c kind:bss addr:0x0211208c ambiguous

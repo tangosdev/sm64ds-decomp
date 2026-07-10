@@ -1,5 +1,5 @@
-func_ov094_02135700 kind:function(arm,size=0x48) addr:0x02135700
-func_ov094_02135748 kind:function(arm,size=0x5c) addr:0x02135748
+_ZN10HootTheOwlD1Ev kind:function(arm,size=0x48) addr:0x02135700
+_ZN10HootTheOwlD0Ev kind:function(arm,size=0x5c) addr:0x02135748
 func_ov094_021357a4 kind:function(arm,size=0x110) addr:0x021357a4
 func_ov094_021358b4 kind:function(arm,size=0xd8) addr:0x021358b4
 func_ov094_0213598c kind:function(arm,size=0x4c) addr:0x0213598c
@@ -14,12 +14,12 @@ func_ov094_02136150 kind:function(arm,size=0x38) addr:0x02136150
 func_ov094_02136188 kind:function(arm,size=0x50) addr:0x02136188
 func_ov094_021361d8 kind:function(arm,size=0x108) addr:0x021361d8
 func_ov094_021362e0 kind:function(arm,size=0x100) addr:0x021362e0
-func_ov094_021363e0 kind:function(arm,size=0x48) addr:0x021363e0
-func_ov094_02136428 kind:function(arm,size=0x4) addr:0x02136428
-func_ov094_0213642c kind:function(arm,size=0x4c) addr:0x0213642c
-func_ov094_02136478 kind:function(arm,size=0x1bc) addr:0x02136478
-func_ov094_02136634 kind:function(arm,size=0x164) addr:0x02136634
-func_ov094_02136798 kind:function(arm,size=0x50) addr:0x02136798
+_ZN10HootTheOwl16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x021363e0
+_ZN10HootTheOwl16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02136428
+_ZN10HootTheOwl6RenderEv kind:function(arm,size=0x4c) addr:0x0213642c
+_ZN10HootTheOwl8BehaviorEv kind:function(arm,size=0x1bc) addr:0x02136478
+_ZN10HootTheOwl13InitResourcesEv kind:function(arm,size=0x164) addr:0x02136634
+HootTheOwl_Spawn kind:function(arm,size=0x50) addr:0x02136798
 __sinit_ov094_021367e8 kind:function(arm,size=0x1d0) addr:0x021367e8
 .p__sinit_ov094_021367e8 kind:data(word) addr:0x021369b8
 data_ov094_021369c0 kind:data(any) addr:0x021369c0
@@ -35,8 +35,8 @@ data_ov094_02136a08 kind:data(any) addr:0x02136a08
 data_ov094_02136a10 kind:data(any) addr:0x02136a10
 data_ov094_02136a1c kind:data(any) addr:0x02136a1c
 data_ov094_02136a28 kind:data(any) addr:0x02136a28
-data_ov094_02136a34 kind:data(any) addr:0x02136a34 ambiguous
-data_ov094_02136a58 kind:data(any) addr:0x02136a58
+HootTheOwl_SpawnInfo kind:data(any) addr:0x02136a34 ambiguous
+_ZTV10HootTheOwl kind:data(any) addr:0x02136a58
 data_ov094_02136ae0 kind:bss addr:0x02136ae0
 data_ov094_02136ae8 kind:bss addr:0x02136ae8
 data_ov094_02136af0 kind:bss addr:0x02136af0

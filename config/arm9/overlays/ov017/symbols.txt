@@ -1,10 +1,10 @@
-func_ov017_021111a0 kind:function(arm,size=0x4c) addr:0x021111a0
-func_ov017_021111ec kind:function(arm,size=0x60) addr:0x021111ec
-func_ov017_0211124c kind:function(arm,size=0x44) addr:0x0211124c
-func_ov017_02111290 kind:function(arm,size=0x34) addr:0x02111290
-func_ov017_021112c4 kind:function(arm,size=0xfc) addr:0x021112c4
-func_ov017_021113c0 kind:function(arm,size=0xc0) addr:0x021113c0
-func_ov017_02111480 kind:function(arm,size=0x38) addr:0x02111480
+_ZN9ShipWaterD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN9ShipWaterD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN9ShipWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211124c
+_ZN9ShipWater6RenderEv kind:function(arm,size=0x34) addr:0x02111290
+_ZN9ShipWater8BehaviorEv kind:function(arm,size=0xfc) addr:0x021112c4
+_ZN9ShipWater13InitResourcesEv kind:function(arm,size=0xc0) addr:0x021113c0
+ShipWater_Spawn kind:function(arm,size=0x38) addr:0x02111480
 data_ov017_021114b8 kind:data(any) addr:0x021114b8
 data_ov017_021114bc kind:data(any) addr:0x021114bc
 data_ov017_021114c0 kind:data(any) addr:0x021114c0
@@ -71,9 +71,9 @@ data_ov017_02111b74 kind:data(any) addr:0x02111b74 ambiguous
 data_ov017_02111b88 kind:data(any) addr:0x02111b88 ambiguous
 data_ov017_02111bb4 kind:data(any) addr:0x02111bb4
 data_ov017_02111bc0 kind:data(any) addr:0x02111bc0
-data_ov017_02111bd4 kind:data(any) addr:0x02111bd4 ambiguous
+ShipWater_SpawnInfo kind:data(any) addr:0x02111bd4 ambiguous
 data_ov017_02111be0 kind:data(any) addr:0x02111be0 ambiguous
-data_ov017_02111bf8 kind:data(any) addr:0x02111bf8
+_ZTV9ShipWater kind:data(any) addr:0x02111bf8
 data_ov017_02111c20 kind:data(any) addr:0x02111c20 ambiguous
 data_ov017_02111c54 kind:data(any) addr:0x02111c54 ambiguous
 data_ov017_02111c80 kind:bss addr:0x02111c80

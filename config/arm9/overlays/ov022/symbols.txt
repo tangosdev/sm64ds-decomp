@@ -6,21 +6,21 @@ func_ov022_021112ac kind:function(arm,size=0x1f0) addr:0x021112ac
 func_ov022_0211149c kind:function(arm,size=0xbc) addr:0x0211149c
 func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
 func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
-func_ov022_02111578 kind:function(arm,size=0x30) addr:0x02111578
+VolcanoRing_Spawn kind:function(arm,size=0x30) addr:0x02111578
 func_ov022_021115a8 kind:function(arm,size=0x50) addr:0x021115a8
 func_ov022_021115f8 kind:function(arm,size=0x64) addr:0x021115f8
 func_ov022_0211165c kind:function(arm,size=0x14) addr:0x0211165c
 func_ov022_02111670 kind:function(arm,size=0x18) addr:0x02111670
-func_ov022_02111688 kind:function(arm,size=0x3c) addr:0x02111688
-func_ov022_021116c4 kind:function(arm,size=0x44) addr:0x021116c4
-func_ov022_02111708 kind:function(arm,size=0x58) addr:0x02111708
-func_ov022_02111760 kind:function(arm,size=0x44) addr:0x02111760
-func_ov022_021117a4 kind:function(arm,size=0x28) addr:0x021117a4
-func_ov022_021117cc kind:function(arm,size=0xa4) addr:0x021117cc
-func_ov022_02111870 kind:function(arm,size=0xac) addr:0x02111870
+RotatingPlatformLll_Spawn kind:function(arm,size=0x3c) addr:0x02111688
+_ZN19RotatingPlatformLllD1Ev kind:function(arm,size=0x44) addr:0x021116c4
+_ZN19RotatingPlatformLllD0Ev kind:function(arm,size=0x58) addr:0x02111708
+_ZN19RotatingPlatformLll16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111760
+_ZN19RotatingPlatformLll6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
+_ZN19RotatingPlatformLll8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
+_ZN19RotatingPlatformLll13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
-func_ov022_02111950 kind:function(arm,size=0x30) addr:0x02111950
+FloatOnLavaPlatform_Spawn kind:function(arm,size=0x30) addr:0x02111950
 func_ov022_02111980 kind:function(arm,size=0x44) addr:0x02111980
 func_ov022_021119c4 kind:function(arm,size=0x58) addr:0x021119c4
 func_ov022_02111a1c kind:function(arm,size=0x48) addr:0x02111a1c
@@ -28,7 +28,7 @@ func_ov022_02111a64 kind:function(arm,size=0x44) addr:0x02111a64
 func_ov022_02111aa8 kind:function(arm,size=0x28) addr:0x02111aa8
 func_ov022_02111ad0 kind:function(arm,size=0x10c) addr:0x02111ad0
 func_ov022_02111bdc kind:function(arm,size=0xa0) addr:0x02111bdc
-func_ov022_02111c7c kind:function(arm,size=0x30) addr:0x02111c7c
+LavaBridge_Spawn kind:function(arm,size=0x30) addr:0x02111c7c
 func_ov022_02111cac kind:function(arm,size=0x44) addr:0x02111cac
 func_ov022_02111cf0 kind:function(arm,size=0x58) addr:0x02111cf0
 func_ov022_02111d48 kind:function(arm,size=0x48) addr:0x02111d48
@@ -36,41 +36,41 @@ func_ov022_02111d90 kind:function(arm,size=0x44) addr:0x02111d90
 func_ov022_02111dd4 kind:function(arm,size=0x28) addr:0x02111dd4
 func_ov022_02111dfc kind:function(arm,size=0xa4) addr:0x02111dfc
 func_ov022_02111ea0 kind:function(arm,size=0x9c) addr:0x02111ea0
-func_ov022_02111f3c kind:function(arm,size=0x30) addr:0x02111f3c
-func_ov022_02111f6c kind:function(arm,size=0x50) addr:0x02111f6c
-func_ov022_02111fbc kind:function(arm,size=0x64) addr:0x02111fbc
-func_ov022_02112020 kind:function(arm,size=0x20) addr:0x02112020
-func_ov022_02112040 kind:function(arm,size=0x78) addr:0x02112040
-func_ov022_021120b8 kind:function(arm,size=0x3c) addr:0x021120b8
-func_ov022_021120f4 kind:function(arm,size=0x3c) addr:0x021120f4
-func_ov022_02112130 kind:function(arm,size=0x44) addr:0x02112130
-func_ov022_02112174 kind:function(arm,size=0x58) addr:0x02112174
-func_ov022_021121cc kind:function(arm,size=0x44) addr:0x021121cc
-func_ov022_02112210 kind:function(arm,size=0x28) addr:0x02112210
-func_ov022_02112238 kind:function(arm,size=0x74) addr:0x02112238
-func_ov022_021122ac kind:function(arm,size=0xa4) addr:0x021122ac
-func_ov022_02112350 kind:function(arm,size=0x30) addr:0x02112350
+LavaSeesaw_Spawn kind:function(arm,size=0x30) addr:0x02111f3c
+_ZN21FloatingFloorLllSmallD1Ev kind:function(arm,size=0x50) addr:0x02111f6c
+_ZN21FloatingFloorLllSmallD0Ev kind:function(arm,size=0x64) addr:0x02111fbc
+_ZN21FloatingFloorLllSmall16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x02112020
+_ZN21FloatingFloorLllSmall13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
+FloatingFloorLllSmall_Spawn kind:function(arm,size=0x3c) addr:0x021120b8
+FloatingFloorLllBig_Spawn kind:function(arm,size=0x3c) addr:0x021120f4
+_ZN19FloatingFloorLllBigD1Ev kind:function(arm,size=0x44) addr:0x02112130
+_ZN19FloatingFloorLllBigD0Ev kind:function(arm,size=0x58) addr:0x02112174
+_ZN19FloatingFloorLllBig16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021121cc
+_ZN19FloatingFloorLllBig6RenderEv kind:function(arm,size=0x28) addr:0x02112210
+_ZN19FloatingFloorLllBig8BehaviorEv kind:function(arm,size=0x74) addr:0x02112238
+_ZN19FloatingFloorLllBig13InitResourcesEv kind:function(arm,size=0xa4) addr:0x021122ac
+LavaPlank_Spawn kind:function(arm,size=0x30) addr:0x02112350
 func_ov022_02112380 kind:function(arm,size=0x50) addr:0x02112380
 func_ov022_021123d0 kind:function(arm,size=0x64) addr:0x021123d0
 func_ov022_02112434 kind:function(arm,size=0x14) addr:0x02112434
 func_ov022_02112448 kind:function(arm,size=0x14) addr:0x02112448
-func_ov022_0211245c kind:function(arm,size=0x3c) addr:0x0211245c
-func_ov022_02112498 kind:function(arm,size=0x50) addr:0x02112498
-func_ov022_021124e8 kind:function(arm,size=0x64) addr:0x021124e8
-func_ov022_0211254c kind:function(arm,size=0x14) addr:0x0211254c
-func_ov022_02112560 kind:function(arm,size=0x30) addr:0x02112560
-func_ov022_02112590 kind:function(arm,size=0x14) addr:0x02112590
-func_ov022_021125a4 kind:function(arm,size=0x3c) addr:0x021125a4
-func_ov022_021125e0 kind:function(arm,size=0x30) addr:0x021125e0
-func_ov022_02112610 kind:function(arm,size=0x44) addr:0x02112610
+FallBlockLll_Spawn kind:function(arm,size=0x3c) addr:0x0211245c
+_ZN12FallBlockLllD1Ev kind:function(arm,size=0x50) addr:0x02112498
+_ZN12FallBlockLllD0Ev kind:function(arm,size=0x64) addr:0x021124e8
+_ZN12FallBlockLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211254c
+_ZN12FallBlockLll8BehaviorEv kind:function(arm,size=0x30) addr:0x02112560
+_ZN12FallBlockLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112590
+RollingLogLll_Spawn kind:function(arm,size=0x3c) addr:0x021125a4
+_ZN13RollingLogLllD1Ev kind:function(arm,size=0x30) addr:0x021125e0
+_ZN13RollingLogLllD0Ev kind:function(arm,size=0x44) addr:0x02112610
 func_ov022_02112654 kind:function(arm,size=0x58) addr:0x02112654
 func_ov022_021126ac kind:function(arm,size=0x64) addr:0x021126ac
 func_ov022_02112710 kind:function(arm,size=0x80) addr:0x02112710
 func_ov022_02112790 kind:function(arm,size=0x50) addr:0x02112790
-func_ov022_021127e0 kind:function(arm,size=0x20) addr:0x021127e0
-func_ov022_02112800 kind:function(arm,size=0xb8) addr:0x02112800
-func_ov022_021128b8 kind:function(arm,size=0x60) addr:0x021128b8
-func_ov022_02112918 kind:function(arm,size=0x38) addr:0x02112918
+_ZN13RollingLogLll16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
+_ZN13RollingLogLll8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
+_ZN13RollingLogLll13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
+VolcanoFire_Spawn kind:function(arm,size=0x38) addr:0x02112918
 data_ov022_02112950 kind:data(any) addr:0x02112950
 data_ov022_02112954 kind:data(any) addr:0x02112954
 data_ov022_02112958 kind:data(any) addr:0x02112958
@@ -192,7 +192,7 @@ data_ov022_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 data_ov022_02113cd4 kind:data(any) addr:0x02113cd4
 data_ov022_02113ce0 kind:data(any) addr:0x02113ce0
 data_ov022_02113cec kind:data(any) addr:0x02113cec ambiguous
-data_ov022_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
+VolcanoRing_SpawnInfo kind:data(any) addr:0x02113cf4 ambiguous
 data_ov022_02113d18 kind:data(any) addr:0x02113d18
 data_ov022_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov022_02113d90 kind:data(any) addr:0x02113d90 ambiguous
@@ -200,58 +200,58 @@ data_ov022_02113d98 kind:data(any) addr:0x02113d98
 data_ov022_02113da4 kind:data(any) addr:0x02113da4
 data_ov022_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 data_ov022_02113db0 kind:data(any) addr:0x02113db0
-data_ov022_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
+RotatingPlatformLll_SpawnInfo kind:data(any) addr:0x02113dc4 ambiguous
 data_ov022_02113de8 kind:data(any) addr:0x02113de8
 data_ov022_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 data_ov022_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 data_ov022_02113e68 kind:data(any) addr:0x02113e68
 data_ov022_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 data_ov022_02113e74 kind:data(any) addr:0x02113e74
-data_ov022_02113e88 kind:data(any) addr:0x02113e88 ambiguous
-data_ov022_02113eac kind:data(any) addr:0x02113eac
+FloatOnLavaPlatform_SpawnInfo kind:data(any) addr:0x02113e88 ambiguous
+_ZTV19RotatingPlatformLll kind:data(any) addr:0x02113eac
 data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 data_ov022_02113f2c kind:data(any) addr:0x02113f2c
 data_ov022_02113f38 kind:data(any) addr:0x02113f38
-data_ov022_02113f4c kind:data(any) addr:0x02113f4c ambiguous
+LavaBridge_SpawnInfo kind:data(any) addr:0x02113f4c ambiguous
 data_ov022_02113f70 kind:data(any) addr:0x02113f70
 data_ov022_02113f78 kind:data(any) addr:0x02113f78 ambiguous
 data_ov022_02113ff0 kind:data(any) addr:0x02113ff0
 data_ov022_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
 data_ov022_02113ffc kind:data(any) addr:0x02113ffc
-data_ov022_02114010 kind:data(any) addr:0x02114010 ambiguous
+LavaSeesaw_SpawnInfo kind:data(any) addr:0x02114010 ambiguous
 data_ov022_02114034 kind:data(any) addr:0x02114034
 data_ov022_021140b4 kind:data(any) addr:0x021140b4
 data_ov022_021140b8 kind:data(any) addr:0x021140b8 ambiguous
 data_ov022_021140c0 kind:data(any) addr:0x021140c0
 data_ov022_021140d4 kind:data(any) addr:0x021140d4
-data_ov022_021140ec kind:data(any) addr:0x021140ec ambiguous
+FloatingFloorLllBig_SpawnInfo kind:data(any) addr:0x021140ec ambiguous
 data_ov022_021140f8 kind:data(any) addr:0x021140f8 ambiguous
-data_ov022_02114108 kind:data(any) addr:0x02114108 ambiguous
-data_ov022_0211412c kind:data(any) addr:0x0211412c
+FloatingFloorLllSmall_SpawnInfo kind:data(any) addr:0x02114108 ambiguous
+_ZTV21FloatingFloorLllSmall kind:data(any) addr:0x0211412c
 data_ov022_0211417c kind:data(any) addr:0x0211417c ambiguous
 data_ov022_021141ac kind:data(any) addr:0x021141ac
 data_ov022_021141b8 kind:data(any) addr:0x021141b8
-data_ov022_021141cc kind:data(any) addr:0x021141cc ambiguous
-data_ov022_021141f0 kind:data(any) addr:0x021141f0
+LavaPlank_SpawnInfo kind:data(any) addr:0x021141cc ambiguous
+_ZTV19FloatingFloorLllBig kind:data(any) addr:0x021141f0
 data_ov022_02114270 kind:data(any) addr:0x02114270
 data_ov022_0211427c kind:data(any) addr:0x0211427c
 data_ov022_02114288 kind:data(any) addr:0x02114288
-data_ov022_021142a0 kind:data(any) addr:0x021142a0 ambiguous
+FallBlockLll_SpawnInfo kind:data(any) addr:0x021142a0 ambiguous
 data_ov022_021142c4 kind:data(any) addr:0x021142c4
 data_ov022_0211433c kind:data(any) addr:0x0211433c ambiguous
 data_ov022_02114344 kind:data(any) addr:0x02114344
 data_ov022_02114350 kind:data(any) addr:0x02114350
 data_ov022_0211435c kind:data(any) addr:0x0211435c
 data_ov022_0211436c kind:data(any) addr:0x0211436c
-data_ov022_02114380 kind:data(any) addr:0x02114380 ambiguous
-data_ov022_021143a4 kind:data(any) addr:0x021143a4
+RollingLogLll_SpawnInfo kind:data(any) addr:0x02114380 ambiguous
+_ZTV12FallBlockLll kind:data(any) addr:0x021143a4
 data_ov022_021143fc kind:data(any) addr:0x021143fc ambiguous
 data_ov022_02114424 kind:data(any) addr:0x02114424
 data_ov022_0211442c kind:data(any) addr:0x0211442c
 data_ov022_02114434 kind:data(any) addr:0x02114434
 data_ov022_02114440 kind:data(any) addr:0x02114440
-data_ov022_02114458 kind:data(any) addr:0x02114458 ambiguous
-data_ov022_0211447c kind:data(any) addr:0x0211447c
+VolcanoFire_SpawnInfo kind:data(any) addr:0x02114458 ambiguous
+_ZTV13RollingLogLll kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous
 data_ov022_02114500 kind:bss addr:0x02114500
 data_ov022_02114508 kind:bss addr:0x02114508

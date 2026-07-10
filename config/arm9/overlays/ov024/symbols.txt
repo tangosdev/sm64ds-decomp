@@ -1,19 +1,19 @@
-func_ov024_021111a0 kind:function(arm,size=0x4c) addr:0x021111a0
-func_ov024_021111ec kind:function(arm,size=0x60) addr:0x021111ec
-func_ov024_0211124c kind:function(arm,size=0x30) addr:0x0211124c
-func_ov024_0211127c kind:function(arm,size=0x44) addr:0x0211127c
+_ZN10PyramidTopD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN10PyramidTopD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN10PyramidTagD1Ev kind:function(arm,size=0x30) addr:0x0211124c
+_ZN10PyramidTagD0Ev kind:function(arm,size=0x44) addr:0x0211127c
 func_ov024_021112c0 kind:function(arm,size=0x90) addr:0x021112c0
 func_ov024_02111350 kind:function(arm,size=0x130) addr:0x02111350
 func_ov024_02111480 kind:function(arm,size=0x44) addr:0x02111480
 func_ov024_021114c4 kind:function(arm,size=0x40) addr:0x021114c4
-func_ov024_02111504 kind:function(arm,size=0x38) addr:0x02111504
-func_ov024_0211153c kind:function(arm,size=0x2c) addr:0x0211153c
-func_ov024_02111568 kind:function(arm,size=0x100) addr:0x02111568
-func_ov024_02111668 kind:function(arm,size=0x84) addr:0x02111668
-func_ov024_021116ec kind:function(arm,size=0xdc) addr:0x021116ec
-func_ov024_021117c8 kind:function(arm,size=0x74) addr:0x021117c8
-func_ov024_0211183c kind:function(arm,size=0x38) addr:0x0211183c
-func_ov024_02111874 kind:function(arm,size=0x38) addr:0x02111874
+_ZN10PyramidTop16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111504
+_ZN10PyramidTop6RenderEv kind:function(arm,size=0x2c) addr:0x0211153c
+_ZN10PyramidTop8BehaviorEv kind:function(arm,size=0x100) addr:0x02111568
+_ZN10PyramidTag8BehaviorEv kind:function(arm,size=0x84) addr:0x02111668
+_ZN10PyramidTop13InitResourcesEv kind:function(arm,size=0xdc) addr:0x021116ec
+_ZN10PyramidTag13InitResourcesEv kind:function(arm,size=0x74) addr:0x021117c8
+PyramidTag_Spawn kind:function(arm,size=0x38) addr:0x0211183c
+PyramidTop_Spawn kind:function(arm,size=0x38) addr:0x02111874
 data_ov024_021118ac kind:data(any) addr:0x021118ac
 data_ov024_021118b0 kind:data(any) addr:0x021118b0
 data_ov024_021118b4 kind:data(any) addr:0x021118b4
@@ -177,14 +177,14 @@ data_ov024_021137e4 kind:data(any) addr:0x021137e4 ambiguous
 data_ov024_021137ec kind:data(any) addr:0x021137ec
 data_ov024_021137f8 kind:data(any) addr:0x021137f8 ambiguous
 data_ov024_02113800 kind:data(any) addr:0x02113800 ambiguous
-data_ov024_02113804 kind:data(any) addr:0x02113804 ambiguous
-data_ov024_02113820 kind:data(any) addr:0x02113820 ambiguous
+PyramidTop_SpawnInfo kind:data(any) addr:0x02113804 ambiguous
+PyramidTag_SpawnInfo kind:data(any) addr:0x02113820 ambiguous
 data_ov024_0211382c kind:data(any) addr:0x0211382c ambiguous
-data_ov024_02113844 kind:data(any) addr:0x02113844
+_ZTV10PyramidTag kind:data(any) addr:0x02113844
 data_ov024_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov024_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov024_021138c4 kind:data(any) addr:0x021138c4 ambiguous
-data_ov024_021138c8 kind:data(any) addr:0x021138c8
+_ZTV10PyramidTop kind:data(any) addr:0x021138c8
 data_ov024_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov024_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov024_021138fc kind:data(any) addr:0x021138fc ambiguous

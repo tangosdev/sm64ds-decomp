@@ -16,25 +16,25 @@ func_ov025_021119f4 kind:function(arm,size=0x90) addr:0x021119f4
 func_ov025_02111a84 kind:function(arm,size=0xe0) addr:0x02111a84
 func_ov025_02111b64 kind:function(arm,size=0xc0) addr:0x02111b64
 func_ov025_02111c24 kind:function(arm,size=0xd0) addr:0x02111c24
-func_ov025_02111cf4 kind:function(arm,size=0x4c) addr:0x02111cf4
-func_ov025_02111d40 kind:function(arm,size=0x4c) addr:0x02111d40
-func_ov025_02111d8c kind:function(arm,size=0x60) addr:0x02111d8c
+Grindel_Spawn kind:function(arm,size=0x4c) addr:0x02111cf4
+_ZN11PyramidStepD1Ev kind:function(arm,size=0x4c) addr:0x02111d40
+_ZN11PyramidStepD0Ev kind:function(arm,size=0x60) addr:0x02111d8c
 func_ov025_02111dec kind:function(arm,size=0x44) addr:0x02111dec
 func_ov025_02111e30 kind:function(arm,size=0x40) addr:0x02111e30
-func_ov025_02111e70 kind:function(arm,size=0x38) addr:0x02111e70
-func_ov025_02111ea8 kind:function(arm,size=0x2c) addr:0x02111ea8
-func_ov025_02111ed4 kind:function(arm,size=0xcc) addr:0x02111ed4
-func_ov025_02111fa0 kind:function(arm,size=0x10c) addr:0x02111fa0
-func_ov025_021120ac kind:function(arm,size=0x38) addr:0x021120ac
-func_ov025_021120e4 kind:function(arm,size=0x64) addr:0x021120e4
-func_ov025_02112148 kind:function(arm,size=0x78) addr:0x02112148
-func_ov025_021121c0 kind:function(arm,size=0x3c) addr:0x021121c0
-func_ov025_021121fc kind:function(arm,size=0x8c) addr:0x021121fc
-func_ov025_02112288 kind:function(arm,size=0x210) addr:0x02112288
-func_ov025_02112498 kind:function(arm,size=0x124) addr:0x02112498
+_ZN11PyramidStep16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111e70
+_ZN11PyramidStep6RenderEv kind:function(arm,size=0x2c) addr:0x02111ea8
+_ZN11PyramidStep8BehaviorEv kind:function(arm,size=0xcc) addr:0x02111ed4
+_ZN11PyramidStep13InitResourcesEv kind:function(arm,size=0x10c) addr:0x02111fa0
+PyramidStep_Spawn kind:function(arm,size=0x38) addr:0x021120ac
+_ZN11PyramidLiftD1Ev kind:function(arm,size=0x64) addr:0x021120e4
+_ZN11PyramidLiftD0Ev kind:function(arm,size=0x78) addr:0x02112148
+_ZN11PyramidLift16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x021121c0
+_ZN11PyramidLift6RenderEv kind:function(arm,size=0x8c) addr:0x021121fc
+_ZN11PyramidLift8BehaviorEv kind:function(arm,size=0x210) addr:0x02112288
+_ZN11PyramidLift13InitResourcesEv kind:function(arm,size=0x124) addr:0x02112498
 func_ov025_021125bc kind:function(arm,size=0x20) addr:0x021125bc
 func_ov025_021125dc kind:function(arm,size=0x14) addr:0x021125dc
-func_ov025_021125f0 kind:function(arm,size=0x64) addr:0x021125f0
+PyramidLift_Spawn kind:function(arm,size=0x64) addr:0x021125f0
 data_ov025_02112654 kind:data(any) addr:0x02112654
 data_ov025_02112658 kind:data(any) addr:0x02112658
 data_ov025_0211265c kind:data(any) addr:0x0211265c
@@ -123,7 +123,7 @@ data_ov025_02113800 kind:data(any) addr:0x02113800 ambiguous
 data_ov025_02113804 kind:data(any) addr:0x02113804
 data_ov025_02113814 kind:data(any) addr:0x02113814
 data_ov025_02113820 kind:data(any) addr:0x02113820 ambiguous
-data_ov025_0211382c kind:data(any) addr:0x0211382c ambiguous
+Grindel_SpawnInfo kind:data(any) addr:0x0211382c ambiguous
 data_ov025_02113850 kind:data(any) addr:0x02113850
 data_ov025_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov025_021138bc kind:data(any) addr:0x021138bc ambiguous
@@ -131,16 +131,16 @@ data_ov025_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov025_021138d0 kind:data(any) addr:0x021138d0
 data_ov025_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov025_021138dc kind:data(any) addr:0x021138dc
-data_ov025_021138f0 kind:data(any) addr:0x021138f0 ambiguous
+PyramidStep_SpawnInfo kind:data(any) addr:0x021138f0 ambiguous
 data_ov025_021138fc kind:data(any) addr:0x021138fc ambiguous
-data_ov025_02113914 kind:data(any) addr:0x02113914
+_ZTV11PyramidStep kind:data(any) addr:0x02113914
 data_ov025_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov025_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov025_02113994 kind:data(any) addr:0x02113994
 data_ov025_02113998 kind:data(any) addr:0x02113998 ambiguous
 data_ov025_021139a0 kind:data(any) addr:0x021139a0
-data_ov025_021139b0 kind:data(any) addr:0x021139b0 ambiguous
-data_ov025_021139d4 kind:data(any) addr:0x021139d4
+PyramidLift_SpawnInfo kind:data(any) addr:0x021139b0 ambiguous
+_ZTV11PyramidLift kind:data(any) addr:0x021139d4
 data_ov025_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov025_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov025_02113a50 kind:data(any) addr:0x02113a50 ambiguous

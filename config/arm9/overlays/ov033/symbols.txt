@@ -5,14 +5,14 @@ func_ov033_02111280 kind:function(arm,size=0x44) addr:0x02111280
 func_ov033_021112c4 kind:function(arm,size=0x28) addr:0x021112c4
 func_ov033_021112ec kind:function(arm,size=0x24) addr:0x021112ec
 func_ov033_02111310 kind:function(arm,size=0x94) addr:0x02111310
-func_ov033_021113a4 kind:function(arm,size=0x30) addr:0x021113a4
-func_ov033_021113d4 kind:function(arm,size=0x4c) addr:0x021113d4
-func_ov033_02111420 kind:function(arm,size=0x60) addr:0x02111420
-func_ov033_02111480 kind:function(arm,size=0x44) addr:0x02111480
-func_ov033_021114c4 kind:function(arm,size=0x34) addr:0x021114c4
-func_ov033_021114f8 kind:function(arm,size=0xc4) addr:0x021114f8
-func_ov033_021115bc kind:function(arm,size=0xd4) addr:0x021115bc
-func_ov033_02111690 kind:function(arm,size=0x38) addr:0x02111690
+TinyCover_Spawn kind:function(arm,size=0x30) addr:0x021113a4
+_ZN9TinyCoverD1Ev kind:function(arm,size=0x4c) addr:0x021113d4
+_ZN9TinyCoverD0Ev kind:function(arm,size=0x60) addr:0x02111420
+_ZN9TinyCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111480
+_ZN9TinyCover6RenderEv kind:function(arm,size=0x34) addr:0x021114c4
+_ZN9TinyCover8BehaviorEv kind:function(arm,size=0xc4) addr:0x021114f8
+_ZN9TinyCover13InitResourcesEv kind:function(arm,size=0xd4) addr:0x021115bc
+TinyWater_Spawn kind:function(arm,size=0x38) addr:0x02111690
 data_ov033_021116c8 kind:data(any) addr:0x021116c8
 data_ov033_021116cc kind:data(any) addr:0x021116cc
 data_ov033_021116d0 kind:data(any) addr:0x021116d0
@@ -104,7 +104,7 @@ data_ov033_0211229c kind:data(any) addr:0x0211229c ambiguous
 data_ov033_02112320 kind:data(any) addr:0x02112320 ambiguous
 data_ov033_0211233c kind:data(any) addr:0x0211233c
 data_ov033_02112348 kind:data(any) addr:0x02112348
-data_ov033_02112358 kind:data(any) addr:0x02112358 ambiguous
+TinyCover_SpawnInfo kind:data(any) addr:0x02112358 ambiguous
 data_ov033_02112368 kind:data(any) addr:0x02112368 ambiguous
 data_ov033_0211237c kind:data(any) addr:0x0211237c
 data_ov033_021123e4 kind:data(any) addr:0x021123e4 ambiguous
@@ -112,11 +112,11 @@ data_ov033_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov033_021123fc kind:data(any) addr:0x021123fc
 data_ov033_02112404 kind:data(any) addr:0x02112404 ambiguous
 data_ov033_02112408 kind:data(any) addr:0x02112408
-data_ov033_0211241c kind:data(any) addr:0x0211241c ambiguous
+TinyWater_SpawnInfo kind:data(any) addr:0x0211241c ambiguous
 data_ov033_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov033_02112434 kind:data(any) addr:0x02112434 ambiguous
 data_ov033_02112438 kind:data(any) addr:0x02112438 ambiguous
-data_ov033_02112440 kind:data(any) addr:0x02112440
+_ZTV9TinyCover kind:data(any) addr:0x02112440
 data_ov033_0211244c kind:data(any) addr:0x0211244c ambiguous
 data_ov033_02112464 kind:data(any) addr:0x02112464 ambiguous
 data_ov033_02112494 kind:data(any) addr:0x02112494 ambiguous
