@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=14). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const void *v, unsigned int e);
@@ -9,6 +6,8 @@ extern void func_ov096_02136e54(void *self, int n);
 
 void func_ov096_021372c0(void *self);
 }
+
+#define M(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
 
 void func_ov096_021372c0(void *self)
 {
@@ -27,11 +26,11 @@ void func_ov096_021372c0(void *self)
         *(int*)(c + 0x88) = 0;
         *(unsigned short*)(c + 0x352) = 0;
         if (_ZN5Actor13DistToCPlayerEv(c) < 0x5dc000) {
-            unsigned char *p = (unsigned char*)(c + 0x360);
+            unsigned char *p = (unsigned char*)(int)M(c + 0x360);
             *p = *p + 1;
         }
         *(unsigned short*)(c + 0x350) = 0;
-        *(int*)(c + 0xec) &= ~1;
+        *(int*)(int)M(c + 0xec) &= ~1;
         *(unsigned short*)(c + 0x354) = 0;
     } else {
         *(int*)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(

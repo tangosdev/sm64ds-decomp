@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=14). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 extern int* data_0209f5bc[];
 extern unsigned char data_0209b304[];
@@ -17,8 +14,7 @@ void func_ov005_020c0140(char* c) {
     if (*(int*)(c + 0x98) > 0) return;
     if (data_0209b304[0] == 0) {
         if (*(int*)(c + 0x50) >= 0) {
-            int* p = (int*)(c + 0x50);
-            *p -= 8;
+            *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFULL) -= 8;
             if (*(int*)(c + 0x50) <= 0) {
                 *(int*)(c + 0x50) = 0;
                 *(unsigned char*)(c + 0x54) = 0;
@@ -26,8 +22,7 @@ void func_ov005_020c0140(char* c) {
         }
     } else {
         if (*(int*)(c + 0x50) <= 0xb0) {
-            int* p = (int*)(c + 0x50);
-            *p += 8;
+            *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFULL) += 8;
             if (*(int*)(c + 0x50) >= 0xb0) {
                 *(int*)(c + 0x50) = 0xb0;
                 *(unsigned char*)(c + 0x54) = 0;

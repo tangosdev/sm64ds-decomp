@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct PathPtr { char b[8]; };
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
@@ -20,6 +17,7 @@ extern int data_ov018_02113bc0[];
 extern int data_ov018_02112f48[];
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
 extern int func_ov018_02111804[];
+
 int func_ov018_021116b4(char* c){
   *(int*)(c+0x334) = *(int*)(c+8) & 0xff;
   if(*(int*)(c+0x334) == 0xff) return 0;
@@ -32,16 +30,22 @@ int func_ov018_021116b4(char* c){
   func_020393d4((int*)(c+0x124), (int)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   func_020393c4((int*)(c+0x124), (int)func_ov018_02111804);
   *(char*)(c+0x331) = 0x3c;
+  PathPtr p;
   *(int*)(c+0x324) = *(int*)(c+0x5c);
   *(int*)(c+0x328) = *(int*)(c+0x60);
   *(int*)(c+0x32c) = *(int*)(c+0x64);
-  *(short*)(c+0x8e) = *(short*)(c+0x8e) - 0x4000;
-  PathPtr p;
+  {
+    short* ang = (short*)((long long)(int)(c + 0x8e) & 0xFFFFFFFFFFFFFFFFLL);
+    *ang = *ang - 0x4000;
+  }
   _ZN7PathPtrC1Ev(&p);
   _ZN7PathPtr6FromIDEj(&p, *(int*)(c+0x334));
   *(int*)(c+0x338) = _ZNK7PathPtr8NumNodesEv(&p);
   *(int*)(c+0x34c) = 1;
-  *(int*)(c+0x33c) = *(int*)(c+0x33c) + *(int*)(c+0x34c);
+  {
+    int* ip = (int*)((long long)(int)(c + 0x33c) & 0xFFFFFFFFFFFFFFFFLL);
+    *ip = *ip + *(int*)(c + 0x34c);
+  }
   *(int*)(c+0x320) = 0;
   return 1;
 }

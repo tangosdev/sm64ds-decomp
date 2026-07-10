@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=16). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern char* ClosestPlayer(char* c);
 extern int Vec3_HorzDist(void* a, void* b);
 extern int data_ov032_02113abc[];
@@ -13,7 +10,7 @@ int func_ov032_02111254(char *c) {
     int d;
     if (pl == 0 || *(unsigned short*)(c+0x400+0x2a) != 0)
         return 0;
-    s = (int*)(pl + 0x5c);
+    s = (int*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
     *(int*)(c+0x418) = s[0];
     *(int*)(c+0x41c) = s[1];
     *(int*)(c+0x420) = s[2];
@@ -26,9 +23,9 @@ int func_ov032_02111254(char *c) {
     if (d < 0) d = -d;
     if (d < 0xb4000)
         return 0;
-    if (t == data_ov032_02113abc || t == data_ov032_02113a7c)
-        return 1;
-    if (Vec3_HorzDist(c+0x40c, c+0x418) > 0x4b0000)
-        return 0;
+    if (t != data_ov032_02113abc && t != data_ov032_02113a7c) {
+        if (Vec3_HorzDist(c+0x40c, c+0x418) > 0x4b0000)
+            return 0;
+    }
     return 1;
 }
