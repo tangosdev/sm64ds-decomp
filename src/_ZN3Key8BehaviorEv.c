@@ -1,7 +1,5 @@
 //cpp
-// NONMATCHING: different op / idiom (div=30). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// NONMATCHING: size 0x304-0x308 vs 0x310; matrix/speed/regperm residual
 typedef void (*VoidFn)();
 
 extern "C" {
@@ -23,9 +21,9 @@ extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(voi
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 
 extern char data_020a0e68;
-extern char data_ov089_02132c40;
-extern char data_ov089_02132b40;
-extern char data_ov089_02132ca4;
+extern int data_ov089_02132c40[];
+extern int data_ov089_02132b40[];
+extern int data_ov089_02132ca4[];
 }
 
 struct C { virtual void dummy(); };
@@ -43,25 +41,40 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
 
     if (v != 0) {
         if (v == 3) {
-            if (*(int*)(c + 0x110) != 0) {
+            {
                 char* o = *(char**)(c + 0x110);
-                *(int*)(c + 0x5c) = *(int*)(o + 0x5c);
-                *(int*)(c + 0x60) = *(int*)(o + 0x60);
-                *(int*)(c + 0x64) = *(int*)(o + 0x64);
-                *(short*)(c + 0x8e) = *(short*)(*(char**)(c + 0x110) + 0x8e);
+                if (o != 0) {
+                    int* s = (int*)(o + 0x5c);
+                    *(int*)(c + 0x5c) = s[0];
+                    *(int*)(c + 0x60) = s[1];
+                    *(int*)(c + 0x64) = s[2];
+                    {
+                        char* o2 = *(char**)(c + 0x110);
+                        int ang = *(short*)(o2 + 0x8e);
+                        *(short*)(c + 0x8e) = ang;
+                    }
+                }
             }
-            if (!_ZN9Animation8FinishedEv(c + 0x164)) {
+            if (_ZN9Animation8FinishedEv(c + 0x164) == 0) {
                 Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c + 0x8e));
                 MulMat4x3Mat4x3(*(void**)(c + 0x128), &data_020a0e68, &data_020a0e68);
-                vec[0] = *(int*)(&data_020a0e68 + 0x24);
-                vec[1] = *(int*)(&data_020a0e68 + 0x28);
-                vec[2] = *(int*)(&data_020a0e68 + 0x2c);
+                {
+                    char* m = &data_020a0e68;
+                    vec[0] = *(int*)(m + 0x24);
+                    vec[1] = *(int*)(m + 0x28);
+                    vec[2] = *(int*)(m + 0x2c);
+                }
                 SubVec3(vec, c + 0x5c, vec);
                 Vec3_LslInPlace(vec, 3);
                 AddVec3(vec, c + 0x5c, vec);
-                vec[1] = *(int*)(*(char**)(c + 0x124) + 0xc) * 0x23 + vec[1];
-                vec[1] = vec[1] - 0x48000;
+                {
+                    int y = vec[1];
+                    int sc = *(int*)(*(char**)(c + 0x124) + 0xc);
+                    y = sc * 0x23 + y;
+                    y = y - 0x48000;
+                    vec[1] = y;
+                }
                 *(void**)(c + 0x464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x464), 0x82, vec[0], vec[1], vec[2], 0, 0);
                 *(void**)(c + 0x468) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x468), 0x83, vec[0], vec[1], vec[2], 0, 0);
             }
@@ -72,7 +85,7 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
         if (_ZN9Animation8FinishedEv(c + 0x164)) {
             int b = (*(unsigned short*)(c + 0xc) == 0x11a);
             if (b != 0) {
-                if (*(int*)(c + 0x174) != *(int*)(&data_ov089_02132c40 + 4))
+                if (*(int*)(c + 0x174) != data_ov089_02132c40[1])
                     _ZN9ActorBase18MarkForDestructionEv(c);
             }
         }
@@ -85,11 +98,14 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
         return 1;
     }
     *(int*)(c + 0xd0) = 0;
-    if (*(short*)(c + 0x440) > 0x400) {
+    {
         short* spd = (short*)(c + 0x440);
-        *spd = *spd - 0x100;
-    } else if (*(short*)(c + 0x440) == 0) {
-        *(short*)(c + 0x440) = 0x400;
+        short s = *spd;
+        if (s > 0x400) {
+            *spd = s - 0x100;
+        } else if (s == 0) {
+            *spd = 0x400;
+        }
     }
     {
         short* ang = (short*)(c + 0x8e);
@@ -100,14 +116,14 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
     func_ov089_02131f54(c);
     _ZN12CylinderClsn5ClearEv(c + 0x220);
     if (*(int*)(c + 0x444) == 7) {
-        p7[0] = *(int*)(&data_ov089_02132b40);
-        p7[1] = *(int*)(&data_ov089_02132b40 + 4);
-        p7[2] = *(int*)(&data_ov089_02132b40 + 8);
+        p7[0] = data_ov089_02132b40[0];
+        p7[1] = data_ov089_02132b40[1];
+        p7[2] = data_ov089_02132b40[2];
         _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x220, p7);
     } else {
-        pe[0] = *(int*)(&data_ov089_02132ca4);
-        pe[1] = *(int*)(&data_ov089_02132ca4 + 4);
-        pe[2] = *(int*)(&data_ov089_02132ca4 + 8);
+        pe[0] = data_ov089_02132ca4[0];
+        pe[1] = data_ov089_02132ca4[1];
+        pe[2] = data_ov089_02132ca4[2];
         _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x220, pe);
     }
     _ZN12CylinderClsn6UpdateEv(c + 0x220);
