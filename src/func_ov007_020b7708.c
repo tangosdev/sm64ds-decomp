@@ -1,20 +1,26 @@
-// NONMATCHING: base materialization / addressing (div=3). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+/* func_ov007_020b7708 — lazily create particle system slot idx in the table
+ * at data_ov007_02103450 via Particle::Manager::AddSystem(data_ov007_0210344c,
+ * 0, pos), then set flag bit1 (+0x1c) on the new system.
+ */
 
-extern void *data_ov007_02103450[];
-extern void *data_ov007_0210344c;
-extern void *_ZN8Particle7Manager9AddSystemEiR7Vector3(void *mgr, int id, void *pos);
-void func_ov007_020b7708(int idx, void *pos)
+typedef unsigned int u32;
+
+struct PtclSys {
+    char _pad0[0x1c];
+    u32 flags;            /* 0x1c */
+};
+
+extern struct PtclSys* data_ov007_02103450[];
+extern void* data_ov007_0210344c;
+
+extern struct PtclSys* _ZN8Particle7Manager9AddSystemEiR7Vector3(void* mgr, int id, void* pos);
+
+void func_ov007_020b7708(int idx, void* pos)
 {
-  void *sys;
-  int *p;
-  if (data_ov007_02103450[idx] != 0)
-  {
-    return;
-  }
-  data_ov007_02103450[idx] = _ZN8Particle7Manager9AddSystemEiR7Vector3(data_ov007_0210344c, 0, pos);
-  sys = (p = data_ov007_02103450[idx]);
-  sys = (int *) (((char *) sys) - -0x1c);
-  *p |= 2;
+    if (data_ov007_02103450[idx] == 0) {
+        struct PtclSys* s;
+        data_ov007_02103450[idx] = _ZN8Particle7Manager9AddSystemEiR7Vector3(data_ov007_0210344c, 0, pos);
+        s = data_ov007_02103450[idx];
+        *(u32*)(((long long)(int)((char*)s + 0x1c)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+    }
 }

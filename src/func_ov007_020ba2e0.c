@@ -1,6 +1,7 @@
-// NONMATCHING: base materialization / addressing (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// Pokes the object referenced by the global pointer data_ov007_02104ba0:
+// calls func_ov007_020c5dec on its first field, sets +0x30=1, +0x40=0x1000,
+// (+0x44)->0x18=0x800, mirrors that into +0x3c, increments +0x24, and writes
+// 5 into the halfword at (+0x08)+2.
 typedef struct Sub {
     int pad[6];
     int x18;
@@ -42,6 +43,6 @@ void func_ov007_020ba2e0(void)
     data_ov007_02104ba0->x40 = 0x1000;
     data_ov007_02104ba0->x44->x18 = 0x800;
     data_ov007_02104ba0->x3c = data_ov007_02104ba0->x44->x18;
-    data_ov007_02104ba0->x24++;
+    (*(int *)((long long)(int)((char *)data_ov007_02104ba0 + 0x24) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
     data_ov007_02104ba0->f8->f2 = 5;
 }

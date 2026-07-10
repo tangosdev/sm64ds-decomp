@@ -1,19 +1,33 @@
-// NONMATCHING: different op / idiom (div=10). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern void func_ov060_021184bc(void* c);
-void func_ov060_021188e8(char* c){
-  int* p = (int*)(c+0x13c);
-  *p |= 1;
-  int v = *(unsigned short*)(c+0x100+0xac);
-  int x = (v * 9) << 12;
-  int r = x / 14 + 0x1000;
-  *(int*)(c+0x80) = r;
-  *(int*)(c+0x84) = r;
-  *(int*)(c+0x88) = r;
-  if(*(unsigned short*)(c+0x100+0xac) == 0x1c){
-    func_ov060_021184bc(c);
-    unsigned short* q = (unsigned short*)(c+0x1ac);
-    *q = *q + 1;
-  }
+/* func_ov060_021188e8 — set flag bit0 (0x13c), grow the uniform scale
+ * (0x80/0x84/0x88) as timer(0x1ac) * 0x9000 / 14 + 0x1000; at timer == 0x1c
+ * call func_ov060_021184bc and bump the timer. */
+
+typedef unsigned int u32;
+typedef unsigned short u16;
+
+extern void func_ov060_021184bc(char* c);
+
+typedef struct {
+    char _pad0[0x80];
+    int scaleX;    /* +0x080 */
+    int scaleY;    /* +0x084 */
+    int scaleZ;    /* +0x088 */
+    char _pad1[0xb0];
+    u32 flags;     /* +0x13c */
+    char _pad2[0x6c];
+    u16 timer;     /* +0x1ac */
+} Work;
+
+void func_ov060_021188e8(char* c)
+{
+    Work* w = (Work*)c;
+    int scale;
+    (*(u32*)((long long)(int)(c + 0x13c) & 0xFFFFFFFFFFFFFFFFLL)) |= 1;
+    scale = (w->timer * 9 << 12) / 14 + 0x1000;
+    w->scaleX = scale;
+    w->scaleY = scale;
+    w->scaleZ = scale;
+    if (w->timer == 0x1c)
+        func_ov060_021184bc(c);
+    (*(u16*)((long long)(int)(c + 0x1ac) & 0xFFFFFFFFFFFFFFFFLL))++;
 }

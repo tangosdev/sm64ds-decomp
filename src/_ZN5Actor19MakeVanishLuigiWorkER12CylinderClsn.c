@@ -1,16 +1,22 @@
-// NONMATCHING: base materialization / addressing (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-struct Actor;
-struct CylinderClsn;
-extern struct Actor *_ZN5Actor13ClosestPlayerEv(void);
+// Actor::MakeVanishLuigiWork(CylinderClsn&): clears bit 1 of the cylinder's
+// flags (+0x18), then re-sets it if the closest player has +0x6fb set
+// (vanish-cap state). Callee: _ZN5Actor13ClosestPlayerEv @ 0x02010ad8.
+typedef unsigned int u32;
+typedef unsigned char u8;
 
-void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(struct Actor *self, struct CylinderClsn *clsn)
+extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+
+void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, char *clsn)
 {
-    struct Actor *p;
-    *(int*)((char*)clsn+0x18) &= ~2;
-    p = _ZN5Actor13ClosestPlayerEv();
-    if (p == 0) return;
-    if (*(unsigned char*)((char*)p+0x6fb) != 0)
-        *(int*)((char*)clsn+0x18) |= 2;
+    void *player;
+
+    *(u32 *)(((long long)(int)(clsn + 0x18)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+
+    player = _ZN5Actor13ClosestPlayerEv(self);
+    if (player == 0)
+        return;
+
+    if (*((u8 *)player + 0x6fb) != 0) {
+        *(u32 *)(((unsigned long long)(u32)(clsn + 0x18)) & 0xFFFFFFFFFFFFFFFFULL) |= 2;
+    }
 }

@@ -1,11 +1,26 @@
-// NONMATCHING: predicated-select register/direction: `if(r<c) r=c` emits `movge r2,r1;mov r0,r2` but ROM has `movlt r1,r2;mov r0,r1`. The fixed-point result stays in r1 in the ROM; every clamp phrasing (ternary, override, early-return) either collapses the mov (in-place r0) or picks r2. (div=2)
-/* func_ov002_020bf224 at 0x020bf224 (ov002), size 0x58
- * Compiler mwccarm 1.2/sp2p3, flags:
- * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc */
-extern unsigned char data_020a0e40[];
-extern short data_0209f4a0[];
-int func_ov002_020bf224(int a, int b, int c) {
-  long long p = (long long)b * *(short*)((char*)data_0209f4a0 + data_020a0e40[0]*0x18);
-  int r = (int)((p + 0x800) >> 12);
-  return r < c ? c : r;
+/* func_ov002_020bf224 — scale b by an s16 factor from a 0x18-stride table
+ * indexed by byte data_020a0e40 (fx12 rounded multiply), clamped below by c.
+ * No callees; data: data_020a0e40 (u8 index), data_0209f4a0 (s16 table).
+ */
+
+typedef unsigned char u8;
+typedef unsigned int u32;
+typedef signed short s16;
+typedef long long s64;
+
+struct Entry {
+    s16 val;             /* 0x0 */
+    char _pad[0x16];
+};
+
+extern u8 data_020a0e40;
+extern struct Entry data_0209f4a0[];
+
+int func_ov002_020bf224(int a, int b, int c)
+{
+    s64 p = (s64)b * data_0209f4a0[data_020a0e40].val;
+    b = (int)((p + 0x800) >> 12);
+    if (b < c)
+        b = c;
+    return b;
 }

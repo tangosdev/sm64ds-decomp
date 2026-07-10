@@ -1,30 +1,40 @@
-// NONMATCHING: register allocation (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern void func_ov004_020b0aa0(int);
+/* func_ov006_0211e5cc — once no entry (stride 0x24, 16 of them) is active
+ * with stage <= 2, trigger func_ov004_020b0aa0(0xc) and bump the one-shot
+ * latch byte at 0x4c20 (skipped while the latch is set). */
 
-void func_ov006_0211e5cc(char *c)
+typedef unsigned char u8;
+
+extern void func_ov004_020b0aa0(int arg);
+
+typedef struct {
+    char _pad0[0x4677];
+    u8 active;   /* +0x4677 */
+    u8 stage;    /* +0x4678 */
+} View;
+
+typedef struct {
+    char _pad0[0x4c20];
+    u8 latch;    /* +0x4c20 */
+} Work;
+
+void func_ov006_0211e5cc(char* c)
 {
-    char *p;
-    int i;
     int found;
-    if (*(unsigned char *)(c + 0x4c20) != 0)
+    int i;
+    char* p;
+    if (((Work*)c)->latch != 0)
         return;
     found = 0;
-    i = 0;
-    p = c;
-    do {
-        if (*(unsigned char *)(p + 0x4677) != 0) {
-            if (*(unsigned char *)(p + 0x4678) <= 2) {
+    for (i = 0, p = c; i < 0x10; i++, p += 0x24) {
+        if (((View*)p)->active != 0) {
+            if (((View*)p)->stage <= 2) {
                 found++;
                 break;
             }
         }
-        i++;
-        p += 0x24;
-    } while (i < 0x10);
+    }
     if (found != 0)
         return;
     func_ov004_020b0aa0(0xc);
-    *(unsigned char *)(c + 0x4c20) += 1;
+    (*(u8*)((long long)(int)(c + 0x4c20) & 0xFFFFFFFFFFFFFFFFLL))++;
 }

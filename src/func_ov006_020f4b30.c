@@ -1,25 +1,45 @@
-// NONMATCHING: register allocation (div=19). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-void func_ov006_020f4b30(char *c)
+/* func_ov006_020f4b30 — once at least 2 items are ready, mark slot
+ * (11 - count) done (stride 0x18 array at 0x51a8), bump count; then per
+ * mode: mode 1 -> state 4 at count >= 10, else state 3/4 at count >= 8. */
+
+typedef unsigned char u8;
+
+typedef struct {
+    char _pad0[0x13];
+    u8 done;     /* +0x13 */
+    char _pad1[4];
+} Slot; /* 0x18 */
+
+typedef struct {
+    char _pad0[0x51a8];
+    Slot slots[12];   /* 0x51a8 */
+    char _pad1[0x50];
+    int state;        /* 0x5318 */
+    char _pad2[0xa];
+    short ready;      /* 0x5326 */
+    short count;      /* 0x5328 */
+    char _pad3[0x12];
+    u8 mode;          /* 0x533c */
+} Work;
+
+void func_ov006_020f4b30(char* c)
 {
-    int x;
-    unsigned char st;
-    if (*(short *)(c + 0x5326) < 2)
+    Work* w = (Work*)c;
+    u8 mode;
+    if (w->ready < 2)
         return;
-    x = *(short *)(c + 0x5328);
-    *(unsigned char *)(c + (0xb - x) * 0x18 + 0x5000 + 0x1bb) = 1;
-    *(short *)(c + 0x5328) += 1;
-    st = *(unsigned char *)(c + 0x533c);
-    if (st == 1) {
-        if (*(short *)(c + 0x5328) >= 0xa)
-            *(int *)(c + 0x5318) = 4;
+    w->slots[0xb - w->count].done = 1;
+    (*(short*)((long long)(int)(c + 0x5328) & 0xFFFFFFFFFFFFFFFFLL))++;
+    mode = w->mode;
+    if (mode == 1) {
+        if (w->count >= 10)
+            w->state = 4;
         return;
     }
-    if (*(short *)(c + 0x5328) < 8)
+    if (w->count < 8)
         return;
-    if (st != 0)
-        *(int *)(c + 0x5318) = 3;
+    if (mode != 0)
+        w->state = 3;
     else
-        *(int *)(c + 0x5318) = 4;
+        w->state = 4;
 }

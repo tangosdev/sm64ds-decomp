@@ -1,18 +1,33 @@
-// NONMATCHING: register allocation (div=18). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-void func_ov006_020d61dc(char *c, int index)
+/* func_ov006_020d61dc — bump per-slot timer (stride 0x10 array at 0x6280);
+ * every 5 ticks reset it and bump level; at level >= 4 set state=2, timer=0x20. */
+
+typedef unsigned short u16;
+typedef unsigned char u8;
+
+typedef struct {
+    char _pad0[8];
+    u16 timer;   /* +0x08 */
+    char _pad1[2];
+    u8 state;    /* +0x0c */
+    char _pad2[2];
+    u8 level;    /* +0x0f */
+} Slot; /* 0x10 */
+
+typedef struct {
+    char _pad0[0x6280];
+    Slot slots[16];
+} Work;
+
+void func_ov006_020d61dc(char* c, int index)
 {
-    char *base = c + index * 16;
-    *(unsigned short *)(c + 0x6288 + index * 16) =
-        *(unsigned short *)(c + 0x6288 + index * 16) + 1;
-    if (*(unsigned short *)(base + 0x6200 + 0x88) < 5)
+    Work* w = (Work*)c;
+    w->slots[index].timer++;
+    if (w->slots[index].timer < 5)
         return;
-    *(unsigned short *)(base + 0x6200 + 0x88) = 0;
-    *(unsigned char *)(c + 0x628f + index * 16) =
-        *(unsigned char *)(c + 0x628f + index * 16) + 1;
-    if (*(unsigned char *)(base + 0x6000 + 0x28f) >= 4) {
-        *(unsigned char *)(base + 0x6000 + 0x28c) = 2;
-        *(unsigned short *)(base + 0x6200 + 0x88) = 0x20;
+    w->slots[index].timer = 0;
+    w->slots[index].level++;
+    if (w->slots[index].level >= 4) {
+        w->slots[index].state = 2;
+        w->slots[index].timer = 0x20;
     }
 }
