@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=10). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 struct V3 { Fix12i x, y, z; };
 extern "C" {
@@ -28,19 +25,20 @@ int func_ov077_021243c0(char* c){
     }
     if (_ZN9Animation8FinishedEv(c + 0x124)) {
         func_ov077_0212478c(c, 0);
-        func_ov077_0212390c(c);
-        func_ov077_02123814(c);
     }
+    func_ov077_0212390c(c);
+    func_ov077_02123814(c);
     _ZN9Animation7AdvanceEv(c + 0x124);
     _ZN9Animation7AdvanceEv(c + 0x1b0);
     func_ov077_02123a74(c);
     {
-        struct V3 v;
         int* d = data_ov077_02127b88;
         int off = *(int*)(c + 0x414);
-        v.x = d[0];
-        v.y = d[1] + off;
-        v.z = d[2];
+        int z = d[2];
+        int y = d[1] + off;
+        int x = d[0];
+        struct V3 v;
+        v.x = x; v.y = y; v.z = z;
         _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x1c4, &v);
     }
     _ZN12CylinderClsn5ClearEv(c + 0x1c4);
