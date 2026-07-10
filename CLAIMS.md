@@ -36,6 +36,7 @@ it is fair to take over: ping the claimant first.
 | ov030: _ZN9UkikiCage13InitResourcesEv (0x02111638), _ZN9UkikiCage16CleanupResourcesEv (0x02111610), _ZN9UkikiCage8BehaviorEv (0x02111624), 02111b20 (0x02111b20), 02112da0 (0x02112da0), 02113094 (0x02113094) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #237 open |
 | ov071: 0211f8d0 (0x0211f8d0), 0212070c (0x0212070c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #238 open |
 | ov081 14 funcs (0x02123910-0x02127e1c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #240 open |
+| ov021: _ZN10ShutterHmc13InitResourcesEv (0x02112ec0), _ZN10ShutterHmc16CleanupResourcesEv (0x02112e68) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #241 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
