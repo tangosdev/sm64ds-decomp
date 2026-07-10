@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vec3 { int x, y, z; };
 
 extern int Vec3_Dist(void *a, void *b);
@@ -37,8 +34,9 @@ int func_ov077_0212679c(char *c)
     }
 
     p = (char *)_ZN5Actor13ClosestPlayerEv(c);
-    pp = (struct Vec3 *)(p + 0x5c);
     if (p != 0) {
+        /* u64 launder forces base materialization after the null cmp */
+        pp = (struct Vec3 *)(void *)(unsigned long long)(unsigned long)(p + 0x5c);
         pv.x = pp->x;
         pv.y = pp->y;
         pv.z = pp->z;
@@ -56,11 +54,8 @@ int func_ov077_0212679c(char *c)
         *(int *)(c + 0x39c) = __aeabi_idiv(0x1000, 5 - spd / 20);
     }
 
-    if (dist <= 0x5dc000 && *(unsigned short *)(c + 0x100) != 0) {
-        if (func_ov077_02126300(c) != 0) {
-            func_ov077_02126d5c(c, data_ov077_02127cf8);
-        }
-    }
+    if (dist > 0x5dc000 || *(unsigned short *)(c + 0x100) == 0 || func_ov077_02126300(c) != 0)
+        func_ov077_02126d5c(c, data_ov077_02127cf8);
 
     return 1;
 }

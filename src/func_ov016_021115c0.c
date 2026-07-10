@@ -1,6 +1,3 @@
-// NONMATCHING: push-set / frame (div=32). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void _ZN7PathPtrC1Ev(void* self);
 extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
@@ -20,6 +17,8 @@ extern char data_ov016_02114d7c;
 
 struct Vec3 { int x, y, z; };
 
+#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+
 int func_ov016_021115c0(char* c)
 {
     char pp[8];
@@ -37,7 +36,7 @@ int func_ov016_021115c0(char* c)
     {
         int d = AngleDiff(ha, *(short*)(c + 0x94));
         int s = d + ((unsigned)d >> 31);
-        *(short*)(c + 0x426) = (short)(s >> 1);
+        *(short*)((char*)LA(c + 0x400) + 0x26) = (short)(s >> 1);
     }
     _Z14ApproachLinearRsss((short*)(c + 0x94), ha, 0x80);
 
@@ -52,16 +51,15 @@ int func_ov016_021115c0(char* c)
             return 1;
         }
         {
-            int* q = (int*)(c + 0x410);
+            int* q = (int*)LA(c + 0x410);
             *q = *q + 1;
         }
         if (*(int*)(c + 0x410) >= *(int*)(c + 0x40c))
             *(int*)(c + 0x410) = 0;
         func_02012694(0xfa, c + 0x74);
-        return 1;
+    } else {
+        Vec3_MulScalar(&scaled, &diff, _ZN4cstd4fdivEii(0xa000, len));
+        SubVec3(c + 0x5c, &scaled, c + 0x5c);
     }
-
-    Vec3_MulScalar(&scaled, &diff, _ZN4cstd4fdivEii(0xa000, len));
-    SubVec3(c + 0x5c, &scaled, c + 0x5c);
     return 1;
 }

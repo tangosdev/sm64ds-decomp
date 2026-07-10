@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct ActorBase;
 
@@ -29,7 +26,7 @@ int func_ov078_021259ec(char* c)
     unsigned int b;
 
     if (*(unsigned char*)(c + 0x506) == 1) {
-        unsigned char *p = (unsigned char*)(c + 0x506) + 4;
+        unsigned char *p = (unsigned char*)(((long long)(int)(c + 0x50a)) & 0xFFFFFFFFFFFFFFFFLL);
         *p += 1;
         if (*(unsigned char*)(c + 0x50a) > 0xc8) {
             *(int*)(c + 0xb0) = 0x10000003;
@@ -38,10 +35,10 @@ int func_ov078_021259ec(char* c)
             *(int*)(c + 0x500) = 3;
             _ZN5Sound22StopLoadedMusic_Layer3Ev();
             func_02011cfc();
+            *(unsigned char*)(c + 0x508) = 0;
         }
     }
 
-    *(unsigned char*)(c + 0x508) = 0;
     ApproachLinear((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
 

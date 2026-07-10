@@ -1,11 +1,6 @@
-// NONMATCHING: base materialization / addressing (div=33). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
-typedef unsigned short u16;
 typedef short s16;
 typedef int Fix12i;
-
 typedef struct { int x, y, z; } Vector3;
 
 extern int ApproachAngle(s16* angle, int target, int a, int b, int max);
@@ -16,19 +11,25 @@ extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* c);
 int func_ov081_02124894(char* c)
 {
     Vector3 v;
-    if (*(int*)(c + 0x408) <= 0)
-        *(s16*)(c + 0x414) = *(s16*)(c + 0x414) + 0x200;
+    /* Source written as (>0 ? sub : add) so mwccarm inversion emits the
+       ROM's le/add arm first, then the unconditional sub arm. */
+    if (*(int*)(c + 0x408) > 0)
+        *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) =
+            *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) - 0x200;
     else
-        *(s16*)(c + 0x414) = *(s16*)(c + 0x414) - 0x200;
-
-    *(s16*)(c + 0x94) = *(s16*)(c + 0x94) + *(s16*)(c + 0x414);
-    ApproachAngle((s16*)(c + 0x8c), -0x2800, 1, 0x500, 0x500);
+        *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) =
+            *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) + 0x200;
 
     {
-        int* p = (int*)(c + 0x410);
-        *p += 1;
+        s16 *ang = (s16*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF);
+        *ang = *ang + *(s16*)((c + 0x400) + 0x14);
     }
-    if (*(int*)(c + 0x410) <= 0x28) return 1;
+    ApproachAngle((s16*)(c + 0x8c), -0x2800, 1, 0x500, 0x500);
+    {
+        int *p = (int*)(((int)c + 0x410) & 0xFFFFFFFFFFFFFFFF);
+        *p = *p + 1;
+    }
+    if (*(int*)(c + 0x410) <= 0x28) goto done;
     if (*(u8*)(c + 0x469) == 0) {
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
@@ -37,5 +38,6 @@ int func_ov081_02124894(char* c)
     }
     func_ov081_02124134(c);
     _ZN5Actor24KillAndTrackInDeathTableEv(c);
+done:
     return 1;
 }

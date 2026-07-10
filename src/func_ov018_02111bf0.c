@@ -1,14 +1,11 @@
 //cpp
-// NONMATCHING: different op / idiom (div=21). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct WithMeshClsn WithMeshClsn;
 struct SurfaceInfo {
-  int a, b, c, d, e;      // +0..+0x10 (5 ints)
-  unsigned short f, g;    // +0x14,+0x16
-  int h, i, j;            // +0x18,+0x1c,+0x20
+  int a, b, c, d, e;
+  unsigned short f, g;
+  int h, i, j;
 };
 struct ClsnResult {
   void* vt;
@@ -38,10 +35,27 @@ void func_ov018_02111bf0(char* c, WithMeshClsn* w){
   if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0) {
     struct ClsnResult* src = _ZNK12WithMeshClsn13GetWallResultEv(w);
     struct ClsnResult cr;
-    struct SurfaceInfo* dst = &cr.info;
-    *dst = src->info;
-    cr.vt = &data_02099368;
     Vector3 wn;
+    struct SurfaceInfo* dst = &cr.info;
+    // demand a first (should get r4), then b (r1), then dst (r2)
+    int a = *(int*)((char*)src + 4);
+    int b = *(int*)((char*)src + 8);
+    *(int*)((char*)dst + 0) = b ? a : a;
+    *(int*)((char*)dst + 4) = b;
+    int t = *(int*)((char*)src + 0xc);
+    void* vt = &data_02099368;
+    *(int*)((char*)dst + 8) = t;
+    t = *(int*)((char*)src + 0x10);
+    *(int*)((char*)dst + 0xc) = t;
+    t = *(int*)((char*)src + 0x14);
+    *(int*)((char*)dst + 0x10) = t;
+    cr.vt = vt;
+    // remaining via cr members for sp-relative
+    cr.info.f = *(unsigned short*)((char*)src + 0x18);
+    cr.info.g = *(unsigned short*)((char*)src + 0x1a);
+    cr.info.h = *(int*)((char*)src + 0x1c);
+    cr.info.i = *(int*)((char*)src + 0x20);
+    cr.info.j = *(int*)((char*)src + 0x24);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(dst, &wn);
     _ZN10ClsnResultD1Ev(&cr);
   }

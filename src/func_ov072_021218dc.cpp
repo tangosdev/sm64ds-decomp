@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: missing logic (ROM does more) (div=37). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 extern "C" int _ZN9Animation8FinishedEv(void* a);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* f, int b, Fix12i c, unsigned int d);
@@ -24,15 +21,16 @@ extern "C" int func_ov072_021218dc(char* self){
     if(_ZN9Animation8FinishedEv(self+0x124)){
       _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self+0xd4, data_ov072_02122cac[1], 0, 0x1000, 0);
       *(int*)(self+0x130)=0x1000;
-      pb=(unsigned char*)(self+0x36e); (*pb)++;
+      pb=(unsigned char*)(((int)self+0x36e) & 0xFFFFFFFFFFFFFFFFLL); (*pb)++;
     }
     break;
   case 1:
-    pi=(int*)(self+0x98); *pi -= 0x3000;
+    pi=(int*)(((int)self+0x98) & 0xFFFFFFFFFFFFFFFFLL);
+    *pi = *pi - 0x3000;
     if(*(int*)(self+0x98) < 0){
       _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self+0xd4, data_ov072_02122ca4[1], 0x40000000, 0x1000, 0);
       *(int*)(self+0x98)=0;
-      pb=(unsigned char*)(self+0x36e); (*pb)++;
+      pb=(unsigned char*)(((int)self+0x36e) & 0xFFFFFFFFFFFFFFFFLL); (*pb)++;
     }
     break;
   case 2:

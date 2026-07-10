@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=16). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vec3 { int x, y, z; };
 struct PathPtr { int a, b; };
 
@@ -20,6 +17,9 @@ extern char data_ov081_02128e74[];
 int func_ov081_02125208(char *c) {
     struct PathPtr p;
     struct Vec3 node;
+    int st;
+    int z;
+    int n;
 
     if (*(unsigned short*)(c + 0x100) != 0) {
         goto exit;
@@ -27,7 +27,8 @@ int func_ov081_02125208(char *c) {
 
     if (*(int*)(c + 0x408) == 1) {
         *(int*)(c + 0xa8) = 0x14000;
-        *(int*)(c + 0x9c) = -0x4000;
+        n = 0x4000;
+        *(int*)(c + 0x9c) = -n;
         *(int*)(c + 0x408) = 2;
         func_02012694(0xdd, c + 0x74);
     }
@@ -45,10 +46,11 @@ int func_ov081_02125208(char *c) {
         goto exit;
     }
 
-    if (*(int*)(c + 0x408) == 0) {
+    st = *(int*)(c + 0x408);
+    if (st == 0) {
         goto label_118;
     }
-    if (*(int*)(c + 0x408) != 1) {
+    if (st != 1) {
         goto label_ec;
     }
 
@@ -56,7 +58,7 @@ int func_ov081_02125208(char *c) {
 
 label_ec:
     {
-        int *pState = (int*)(c + 0x408);
+        int *pState = (int*)(((int)c + 0x408) & 0xFFFFFFFFFFFFFFFF);
         *pState = *pState + 1;
         if (*(int*)(c + 0x408) < 0xb) {
             return 1;
@@ -64,13 +66,12 @@ label_ec:
     }
 
 label_118:
-    {
-        unsigned int zero = 0;
-        *(int*)(c + 0x408) = zero;
-        *(int*)(c + 0xa8) = 0x3a000;
-        *(int*)(c + 0x9c) = -0x4000;
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x30c, *(void**)(data_ov081_02128d88 + 4), 0x40000000, 0x1000, zero);
-    }
+    z = 0;
+    n = 0x4000;
+    *(int*)(c + 0x408) = z;
+    *(int*)(c + 0xa8) = 0x3a000;
+    *(int*)(c + 0x9c) = -n;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x30c, *(void**)(data_ov081_02128d88 + 4), 0x40000000, 0x1000, z);
     func_02012694(0xdd, c + 0x74);
     func_ov081_02125488(c, data_ov081_02128e74);
 

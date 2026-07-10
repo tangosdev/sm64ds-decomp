@@ -1,6 +1,3 @@
-// NONMATCHING: missing logic (ROM does more) (div=49). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 enum Bool { FALSE, TRUE };
 
 typedef struct { int x, y, z; } Vector3;
@@ -46,7 +43,8 @@ int _ZN25RotatingUpDownPlatformUtm13InitResourcesEv(char *c)
     void *kcl;
 
     if (*(unsigned int*)(c + 8) == 0xffff) {
-        *(int*)(c + 0xb0) &= ~2;
+        int *p = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+        *p = *p & ~2;
         _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(c, 0, 0x1000, 0, 0);
         return 1;
     }
@@ -70,18 +68,24 @@ int _ZN25RotatingUpDownPlatformUtm13InitResourcesEv(char *c)
     c[0x394] = (unsigned char)(*(unsigned int*)(c + 8) & 0xf);
 
     if ((unsigned char)c[0x394] == 2) {
-        idx395 = (unsigned char)c[0x395];
-        Vec3_Add(&v, (Vector3*)(c + 0x388), (Vector3*)((char*)data_ov091_02134cdc + idx395 * 0x78));
-        idx395 = (unsigned char)c[0x395];
-        v.y += *(int*)((char*)data_ov091_02134d1c + idx395 * 0x78);
+        char *tbl = data_ov091_02134cdc;
+        int s = 0x78;
+        int i = (unsigned char)c[0x395];
+        Vec3_Add(&v, (Vector3*)(c + 0x388), (Vector3*)(tbl + i * s));
+        i = (unsigned char)c[0x395];
+        v.y += *(int*)(data_ov091_02134d1c + i * s);
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x1d, 0xffff, &v, 0, *(signed char*)(c + 0xcc), -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, *(short*)(c + 0x8e));
 
-    idx395 = (unsigned char)c[0x395];
-    idx394 = (unsigned char)c[0x394];
-    MulVec3Mat4x3((Vector3*)((char*)data_ov091_02134cdc + idx395 * 0x78 + idx394 * 0xc), &data_020a0e68, &rotated);
+    {
+        char *tbl = data_ov091_02134cdc;
+        int s = 0x78;
+        int i = (unsigned char)c[0x395];
+        idx394 = (unsigned char)c[0x394];
+        MulVec3Mat4x3((Vector3*)(tbl + i * s + idx394 * 0xc), &data_020a0e68, &rotated);
+    }
 
     Vec3_Add(&v2, (Vector3*)(c + 0x388), &rotated);
 

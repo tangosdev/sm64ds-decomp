@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=15). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 struct Vector3 { int x, y, z; };
 
@@ -15,6 +12,7 @@ extern void func_ov072_021205d4(void *self, int a);
 int func_ov072_021201d4(char *self)
 {
     struct Vector3 v;
+    unsigned char *st;
     switch (*(unsigned char *)(self + 0x334))
     {
     case 0:
@@ -29,7 +27,8 @@ int func_ov072_021201d4(char *self)
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10f, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x110, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
-            ++*(unsigned char *)(self + 0x334);
+            st = (unsigned char *)(((int)self + 0x334) & 0xFFFFFFFFFFFFFFFFLL);
+            *st = *st + 1;
         }
         break;
     case 1:
