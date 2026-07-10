@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZN6Player17SetNoControlStateEhih(void* p, unsigned char a, int b, unsigned char d);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
 extern void func_ov089_0213115c(char* c, int i);
@@ -27,12 +24,20 @@ void func_ov089_02131df4(char* c, char* player)
     func_ov089_0213115c(c, 3);
     *(char**)(c + 0x110) = player;
     {
-        int* s = (int*)(*(char**)(c + 0x110) + 0x5c);
-        *(int*)(c + 0x5c) = s[0];
+        char* pl = *(char**)(c + 0x110);
+        /* force separate base materialization like ROM: r2=c+0xb0, r3=pl+0x5c */
+        int* fl = (int*)(unsigned)((unsigned long long)(unsigned)(c + 0xb0));
+        int* s = (int*)(unsigned)((unsigned long long)(unsigned)(pl + 0x5c));
+        int t0 = s[0];
+        int ev = 0x1d;
+        *(int*)(c + 0x5c) = t0;
         *(int*)(c + 0x60) = s[1];
         *(int*)(c + 0x64) = s[2];
+        {
+            int ang = *(short*)(*(char**)(c + 0x110) + 0x8e);
+            *(short*)(c + 0x8e) = ang;
+        }
+        *fl &= ~0x40000;
+        _ZN5Event6SetBitEj(ev);
     }
-    *(short*)(c + 0x8e) = *(short*)(*(char**)(c + 0x110) + 0x8e);
-    *(int*)(c + 0xb0) &= ~0x40000;
-    _ZN5Event6SetBitEj(0x1d);
 }

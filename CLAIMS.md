@@ -21,6 +21,33 @@ it is fair to take over: ping the claimant first.
 |---|---|---|---|
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
+| ov029 8 funcs (0x02111254-0x02112354) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #221 open |
+| ov032: __sinit_ov032_02112c10 (0x02112c10), 02111254 (0x02111254), 02111620 (0x02111620), 02111830 (0x02111830), 02111e24 (0x02111e24) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #222 open |
+| ov094: _ZN10HootTheOwl13InitResourcesEv (0x02136634), 021359d8 (0x021359d8), 02136024 (0x02136024), 021362e0 (0x021362e0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #223 open |
+| ov018: 02111368 (0x02111368), 021116b4 (0x021116b4), 02111804 (0x02111804), 02111bf0 (0x02111bf0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #224 open |
+| ov014: _ZN10ChainChomp13InitResourcesEv (0x02112b14), 021115ec (0x021115ec), 02111b70 (0x02111b70) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #225 open |
+| ov025: _ZN11PyramidLift13InitResourcesEv (0x02112498), _ZN11PyramidLift8BehaviorEv (0x02112288), 021119f4 (0x021119f4), 02111a84 (0x02111a84), 02112288, 02112498 | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #226 open |
+| ov015: _ZN11FallBlockWf13InitResourcesEv (0x02112dbc), _ZN11FallBlockWf16CleanupResourcesEv (0x02112da8), 02111eec (0x02111eec), 021128f8 (0x021128f8), 02112c84 (0x02112c84) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #227 open |
+| ov019: 0211131c (0x0211131c), 021117a8 (0x021117a8), 02111dec (0x02111dec), 02111fec (0x02111fec) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #228 open |
+| ov096: 02135948 (0x02135948), 02136264 (0x02136264), 02136434 (0x02136434), 02136754 (0x02136754), 02136fd4 (0x02136fd4), 02137088 (0x02137088), 021372c0 (0x021372c0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #230 open |
+| ov016: 02111284 (0x02111284), 021115c0 (0x021115c0), 02112fa8 (0x02112fa8) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #231 open |
+| ov077: 021241ac (0x021241ac), 021243c0 (0x021243c0), 021256b4 (0x021256b4), 02125bb4 (0x02125bb4), 02126300 (0x02126300), 0212679c (0x0212679c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #232 open |
+| ov070: _ZN6FlyGuy8BehaviorEv (0x02120210), 0211f368 (0x0211f368), 0212156c (0x0212156c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #233 open |
+| ov005: 020c0140 (0x020c0140), 020c0878 (0x020c0878), 020c14a0 (0x020c14a0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #236 open |
+| ov030: _ZN9UkikiCage13InitResourcesEv (0x02111638), _ZN9UkikiCage16CleanupResourcesEv (0x02111610), _ZN9UkikiCage8BehaviorEv (0x02111624), 02111b20 (0x02111b20), 02112da0 (0x02112da0), 02113094 (0x02113094) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #237 open |
+| ov071: 0211f8d0 (0x0211f8d0), 0212070c (0x0212070c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #238 open |
+| ov081 14 funcs (0x02123910-0x02127e1c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #240 open |
+| ov021: _ZN10ShutterHmc13InitResourcesEv (0x02112ec0), _ZN10ShutterHmc16CleanupResourcesEv (0x02112e68) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #241 open |
+| ov020: _ZN15BookShotSpawner8BehaviorEv (0x02112418), 02111aa8 (0x02111aa8) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #242 open |
+| ov066: 0211603c (0x0211603c), 02116390 (0x02116390), 02116db0 (0x02116db0), 021171b0 (0x021171b0), 02118188 (0x02118188), 0211a2e4 (0x0211a2e4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #243 open |
+| ov021 _ZN12WorkElevator13InitResourcesEv (0x02111c6c, size 0x258) | lunavyqo | 2026-07-10 | near-miss (PR #247 open) |
+| ov021 _ZN12WorkElevator8BehaviorEv (0x021116c8, size 0x5a4) | lunavyqo | 2026-07-10 | near-miss (PR #249 open) |
+| ov078 10 funcs (0x021238ac-0x02126660) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #250 open |
+| ov089: 02130fb4 (0x02130fb4), 02131df4 (0x02131df4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #251 open |
+| ov034: 02112020 (0x02112020), 02112484 (0x02112484) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #253 open |
+| ov073: 0211f144 (0x0211f144), 0211f494 (0x0211f494), 0211fa74 (0x0211fa74), 0212128c (0x0212128c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #256 open |
+| ov073: 0211f2c0 (0x0211f2c0), 02120ed0 (0x02120ed0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #260 open |
+| ov072 10 funcs (0x0211f1dc-0x021218dc) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #235 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |

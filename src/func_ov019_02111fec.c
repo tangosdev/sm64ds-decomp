@@ -1,6 +1,3 @@
-// NONMATCHING: extra logic (you do more) (div=34). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vec3 { int x, y, z; };
 short Vec3_HorzAngle(const struct Vec3 *v0, const struct Vec3 *v1);
 int _Z14ApproachLinearRsss(short* dst, short target, short step);
@@ -13,9 +10,10 @@ int _ZN6Player18HasFinishedTalkingEv(void* p);
 
 extern unsigned char data_0209d684;
 
+#define LB(off) (*(unsigned char *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+
 int func_ov019_02111fec(char* c) {
-    unsigned char st = *(unsigned char*)(c + 0x38f);
-    switch (st) {
+    switch (*(unsigned char*)(c + 0x38f)) {
     case 0: {
         char* tgt = *(char**)(c + 0x378);
         short ang = Vec3_HorzAngle((struct Vec3*)(c + 0x5c), (struct Vec3*)(tgt + 0x5c));
@@ -23,17 +21,19 @@ int func_ov019_02111fec(char* c) {
             struct Vec3 pos;
             int msg;
             int eq;
+            int y;
             int z;
             pos.x = *(int*)(c + 0x5c);
-            pos.y = *(int*)(c + 0x60);
+            y = *(int*)(c + 0x60);
+            pos.y = y;
             z = *(int*)(c + 0x64);
-            pos.y = *(int*)(c + 0x60) + 0x190000;
             pos.z = z;
+            pos.y = y + 0x190000;
             eq = (int)(NumStars() == 0x96);
             if (eq != 0) msg = 0xab; else msg = 0xa7;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x378), c, (short)msg, &pos, 1, 2) != 0) {
-                unsigned char* p = (unsigned char*)(c + 0x38f);
-                *p = *p + 1;
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+                    *(void**)(c + 0x378), c, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
+                LB(0x38f) = LB(0x38f) + 1;
             }
         }
         break;

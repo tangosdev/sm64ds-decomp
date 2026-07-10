@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=27). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
@@ -107,28 +104,28 @@ extern "C" int func_ov018_02111368(char* self)
         }
 
         if (reached) {
-            int& curIdxR = *(int*)(self + 0x33c);
-            curIdxR += *(int*)(self + 0x34c);
+            int* pIdx = (int*)((long long)(int)(self + 0x33c) & 0xFFFFFFFFFFFFFFFFLL);
+            *pIdx = *pIdx + *(int*)(self + 0x34c);
             if (*(int*)(self + 0x33c) < 0) {
                 if (_ZNK7PathPtr5LoopsEv(&path) != 0) {
                     *(int*)(self + 0x33c) = *(int*)(self + 0x338) - 1;
                 } else {
-                    int& curIdxR2 = *(int*)(self + 0x33c);
                     *(u8*)(self + 0x331) = 0x3c;
                     *(u8*)(self + 0x330) = 0;
                     *(int*)(self + 0x34c) = 1;
-                    curIdxR2 += *(int*)(self + 0x34c) * 2;
+                    int* pIdx2 = (int*)((long long)(unsigned int)(self + 0x33c) & 0xFFFFFFFFFFFFFFFFLL);
+                    *pIdx2 = *pIdx2 + (*(int*)(self + 0x34c) * 2);
                 }
             }
             if (*(int*)(self + 0x33c) >= *(int*)(self + 0x338)) {
                 if (_ZNK7PathPtr5LoopsEv(&path) != 0) {
                     *(int*)(self + 0x33c) = 0;
                 } else {
-                    int& curIdxR3 = *(int*)(self + 0x33c);
                     *(u8*)(self + 0x331) = 0x3c;
                     *(u8*)(self + 0x330) = 0;
                     *(int*)(self + 0x34c) = -1;
-                    curIdxR3 += *(int*)(self + 0x34c) * 2;
+                    int* pIdx3 = (int*)((long long)(int)((unsigned)(int)self + 0x33c) & 0xFFFFFFFFFFFFFFFFLL);
+                    *pIdx3 = *pIdx3 + (*(int*)(self + 0x34c) * 2);
                 }
             }
         }
