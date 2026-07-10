@@ -75,11 +75,28 @@ def build_config_relocs():
     return out
 
 
+# mwccarm lowers the C `/` and `%` operators (variable divisor) to calls to its
+# own runtime helpers -- _u32_div_f / _s32_div_f (and the non-leaf _u32_div /
+# _s32_div). Those are the very ITCM routines config records under their ARM EABI
+# names (__aeabi_uidiv @ 0x01ffadf0, __aeabi_idiv @ 0x01ffabe4), so the emitted
+# name and the config name are two spellings of one address. symbols.txt is
+# address-keyed (one name per address) and dozens of sources reference the
+# __aeabi_* spelling by name, so the alias cannot live there -- it resolves here.
+# Without it every byte-correct match that uses `/` or `%` reads BLIND.
+_RUNTIME_ALIASES = {
+    "_u32_div_f": "__aeabi_uidiv",
+    "_u32_div":   "__aeabi_uidiv",
+    "_s32_div_f": "__aeabi_idiv",
+    "_s32_div":   "__aeabi_idiv",
+}
+
+
 def resolve_candidate(symname, name_index):
     """Destination (module_or_None, addr) the candidate symbol refers to, or None.
 
     Prefer the address encoded in func_<addr> / func_ov<NN>_<addr> names (these are
-    unambiguous and module-bearing); fall back to the symbols.txt name index."""
+    unambiguous and module-bearing); fall back to the symbols.txt name index, then
+    to the mwccarm runtime-helper alias table."""
     m = _FUNC_RE.fullmatch(symname) or _FUNC_RE.match(symname)
     if m:
         mod = f"ov{int(m.group(1)):03d}" if m.group(1) is not None else None
@@ -87,6 +104,9 @@ def resolve_candidate(symname, name_index):
     if symname in name_index:
         mod, addr = name_index[symname]
         return (mod, addr)
+    alias = _RUNTIME_ALIASES.get(symname)
+    if alias is not None and alias in name_index:
+        return name_index[alias]
     return None
 
 
