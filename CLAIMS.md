@@ -43,6 +43,7 @@ it is fair to take over: ping the claimant first.
 | ov021 _ZN12WorkElevator8BehaviorEv (0x021116c8, size 0x5a4) | lunavyqo | 2026-07-10 | near-miss (PR #249 open) |
 | ov078 10 funcs (0x021238ac-0x02126660) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #250 open |
 | ov089: 02130fb4 (0x02130fb4), 02131df4 (0x02131df4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #251 open |
+| ov034: 02112020 (0x02112020), 02112484 (0x02112484) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #253 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
