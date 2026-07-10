@@ -26,6 +26,7 @@ it is fair to take over: ping the claimant first.
 | ov018: 02111368 (0x02111368), 021116b4 (0x021116b4), 02111804 (0x02111804), 02111bf0 (0x02111bf0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #224 open |
 | ov014: _ZN10ChainChomp13InitResourcesEv (0x02112b14), 021115ec (0x021115ec), 02111b70 (0x02111b70) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #225 open |
 | ov025: _ZN11PyramidLift13InitResourcesEv (0x02112498), _ZN11PyramidLift8BehaviorEv (0x02112288), 021119f4 (0x021119f4), 02111a84 (0x02111a84), 02112288, 02112498 | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #226 open |
+| ov015: _ZN11FallBlockWf13InitResourcesEv (0x02112dbc), _ZN11FallBlockWf16CleanupResourcesEv (0x02112da8), 02111eec (0x02111eec), 021128f8 (0x021128f8), 02112c84 (0x02112c84) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #227 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
