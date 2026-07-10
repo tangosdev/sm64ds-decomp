@@ -22,6 +22,7 @@ it is fair to take over: ping the claimant first.
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
 | ov029 8 funcs (0x02111254-0x02112354) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #221 open |
 | ov032: __sinit_ov032_02112c10 (0x02112c10), 02111254 (0x02111254), 02111620 (0x02111620), 02111830 (0x02111830), 02111e24 (0x02111e24) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #222 open |
+| ov094: _ZN10HootTheOwl13InitResourcesEv (0x02136634), 021359d8 (0x021359d8), 02136024 (0x02136024), 021362e0 (0x021362e0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #223 open |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |

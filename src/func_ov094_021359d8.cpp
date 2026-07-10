@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: push-set / frame (div=60). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" void ModelAnim_SetAnim(void *self, void *bca, int a, int fix, unsigned int b);
 extern "C" int Sound_PlayLong(unsigned int a, unsigned int b, unsigned int cc, void *pos, unsigned int d);
 extern "C" int func_ov002_020df7f4(void *c);
@@ -20,6 +17,7 @@ extern void *data_ov094_02136b30;
 extern "C" int func_ov094_021359d8(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
+    void *rider;
 
     if (*(unsigned short *)(c + 0x100) == 1) {
         ModelAnim_SetAnim(c + 0x30c, (&data_ov094_02136ae8)[1], 0, 0x1000, 0);
@@ -41,7 +39,8 @@ extern "C" int func_ov094_021359d8(void *thiz)
         }
     }
 
-    if (*(int *)(c + 0x3cc) != 0 && func_ov002_020df7f4(c) == 1) {
+    rider = *(void **)(c + 0x3cc);
+    if (rider != 0 && func_ov002_020df7f4(rider) == 1) {
         *(unsigned short *)(c + 0x100) = 0xa;
         ModelAnim_SetAnim(c + 0x30c, (&data_ov094_02136af8)[1], 0, 0x1000, 0);
     }
@@ -49,7 +48,8 @@ extern "C" int func_ov094_021359d8(void *thiz)
     ApproachAngle((short *)(c + 0x92), 0, 0xa, 0x200, 0x100);
 
     if (WithMeshClsn_IsOnWall(c + 0x150) != 0 || func_02035638(c + 0x150) != 0) {
-        if (*(int *)(c + 0x3cc) != 0 && func_ov002_020df7ac(thiz) != 0) {
+        rider = *(void **)(c + 0x3cc);
+        if (rider != 0 && func_ov002_020df7ac(rider) != 0) {
             WithMeshClsn_Unk_0203589c(c + 0x150);
             *(int *)(c + 0x3cc) = 0;
             *(int *)(c + 0x3e8) = 0;
@@ -59,13 +59,20 @@ extern "C" int func_ov094_021359d8(void *thiz)
         }
     }
 
-    if (*(int *)(c + 0x3cc) != 0) {
-        if (func_ov002_020df7f4(c) < 0) {
-            *(int *)(c + 0x3cc) = 0;
-            *(int *)(c + 0x3e8) = 0;
-            *(unsigned short *)(c + 0x100) = 0;
-            func_ov094_02136188(c, &data_ov094_02136b30);
-        }
+    rider = *(void **)(c + 0x3cc);
+    if (rider == 0) {
+        goto cleanup;
     }
+    if (rider == 0) {
+        goto end;
+    }
+    if (func_ov002_020df7f4(rider) < 0) {
+cleanup:
+        *(int *)(c + 0x3cc) = 0;
+        *(int *)(c + 0x3e8) = 0;
+        *(unsigned short *)(c + 0x100) = 0;
+        func_ov094_02136188(c, &data_ov094_02136b30);
+    }
+end:
     return 1;
 }
