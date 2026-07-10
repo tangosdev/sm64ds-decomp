@@ -1,0 +1,6 @@
+extern void func_02048fd4(int i);
+
+void func_02048ed4(void)
+{
+    func_02048fd4(6);
+}
