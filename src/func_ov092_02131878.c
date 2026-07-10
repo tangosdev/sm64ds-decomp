@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef struct { int x, y, z; } Vector3;
 extern int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern void func_02012694(int a, void* p);
@@ -8,6 +5,7 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int data_ov092_02132074[];
 extern int data_ov092_02132080[];
 extern short data_02082214[];
+#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
 
 void func_ov092_02131878(char* c, char* a1, unsigned int a2){
   unsigned char f = *(unsigned char*)(c+0x575);
@@ -24,11 +22,13 @@ void func_ov092_02131878(char* c, char* a1, unsigned int a2){
   if (a2 < 2) *(short*)(c+0x94) = *(short*)(a1+0x8e);
   else *(short*)(c+0x94) = Vec3_HorzAngle((Vector3*)(a1+0x5c), (Vector3*)(c+0x5c));
   {
-    int n = (*(unsigned short*)(c+0x94)) >> 4;
-    int* pb0 = (int*)(c+0xb0);
-    *(short*)(c+0x4e0) = data_02082214[2*n+1] >> 2;
-    *(short*)(c+0x4e2) = 0;
-    *(short*)(c+0x4e4) = (-(int)data_02082214[2*n]) >> 2;
+    unsigned n = (*(unsigned short*)(c+0x94)) >> 4;
+    short *base = (short*)(c + 0x400);
+    short *tbl = data_02082214;
+    int *pb0 = (int*)LA(c+0xb0);
+    base[0xe0/2] = (short)(tbl[(n<<1)+1] >> 2);
+    base[0xe2/2] = 0;
+    base[0xe4/2] = (short)((-(int)tbl[n<<1]) >> 2);
     *pb0 = *pb0 & ~0x2000000;
     *(int*)(c+0x4ec) = 0x1a9000;
   }
