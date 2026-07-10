@@ -584,6 +584,32 @@ agent seeded from the 25-div near-miss. **Inert on this shape (~90 variants):** 
 orders, `register` keyword, volatile, struct-member spelling, C++ mode,
 `opt_propagation off`, and - critically - a plain (un-laundered) named `tbl` pointer.
 
+## 6i. Block-scoped temp flips a virtual-call-result loop coloring swap (2026-07-07)
+
+**Symptom:** a loop miss that is a pure cyclic r4/r5 SWAP between a reused pointer and a
+reused mask/accumulator, where the value that gets swapped comes from a virtual (or other
+indirect) call result inside the loop body. Everything else in the loop is byte-exact;
+only the live-range coloring of the call result vs. the carried pointer/mask is inverted.
+
+**Fix:** route the call result through a FRESH nested scope instead of assigning it
+directly to the carried variable:
+
+```c
+{ int t = o->vN(this); mask = t; }   /* correct: extra scope boundary */
+/* NOT: */
+mask = o->vN(this);                  /* wrong: same coloring as before */
+```
+
+The block `{ }` around the temp adds a live-range boundary that changes which register
+the allocator hands the call result, which flips the rotation to match the ROM. This is
+distinct from named-manual-CSE (6e/6h) - the point here is the SCOPE boundary, not
+caching a value for reuse; the temp `t` is dead immediately after the assignment.
+
+Cracked `_ZN10SphereClsn10DetectClsnEv` (SphereClsn::DetectClsn, div 16 -> 0, Fable,
+~21 attempts). Try this BEFORE declaring a virtual-call-result loop swap a coloring
+floor - the plain floor (register-coloring swap with NO virtual call feeding it) is
+still unreachable and should still be parked.
+
 ## 7. Workflow implications
 
 - **Free tiers first, every cycle:** `clone.py --apply` (byte-identical retarget) then
