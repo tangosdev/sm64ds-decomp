@@ -48,6 +48,20 @@ If your local nonmatching.jsonl predates 2026-07-01, prune the poisoned entries 
 drop rows whose reason starts with "fan-out miss" AND divergences == 2 exactly (that
 value was fabricated by the old bank_run; ~33 retryable functions were parked that way).
 
+**Stacking a same-session batch on an unmerged prior-batch PR (2026-07-10):** the coddog
+scheduler's "already matched" check only sees committed src/ files in the CURRENT branch's
+working tree. If batch 2 branches from `main` while batch 1's PR is still open, `prep`
+will re-surface batch 1's matches as "fresh" (they look unmatched from `main`'s point of
+view). Fix: branch or fast-forward-merge onto batch 1's branch tip BEFORE running `prep`
+for batch 2, not onto `main`. If batch 2's `prep` already ran and locked a duplicate
+worklist before you notice, do NOT `release-active`/`land` it blindly - the claims API is
+idempotent per (module, address-range) under one handle, so a duplicate `lock-worklist`
+call mostly returns the SAME claim ids already held for batch 1's re-locked matches, and
+releasing them would unlock those. Just rename (don't release) the stale
+`claims_active_<tag>.json` marker to clear `prep`'s in-flight check, then re-run `prep`
+once the branch is corrected. Open the batch-2 PR with `--base <batch-1-branch>` (a
+stacked PR); retarget to `main` once batch 1 merges.
+
 ## After every batch: mine it, then optimize (standing rule)
 
 The levers that broke the walls came out of batch RESULT NOTES, not the batches
