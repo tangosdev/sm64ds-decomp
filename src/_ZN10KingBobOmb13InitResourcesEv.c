@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=11). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12;
 typedef struct { int w[2]; } SharedFilePtr;
 typedef struct { short x,y,z; } Vector3_16;
@@ -80,12 +77,19 @@ int _ZN10KingBobOmb13InitResourcesEv(char* c) {
     *(int*)(c+0x500) = 3;
     *(unsigned char*)(c+0x509) = *(int*)(c+8) & 0xf;
     *(unsigned char*)(c+0x507) = _ZN5Actor9TrackStarEjj(c, *(unsigned char*)(c+0x509), 2);
+#pragma opt_strength_reduction off
+    {
+    int z = 0;
     for (i = 0; i < 2; i++) {
-        *(unsigned char*)(c+0x42c+i) = i;
-        *(int*)(c+0x424+i*4) = i;
+        *(int*)(c+0x424+i*4) = z;
+        *(unsigned char*)(c+0x42c+i) = (unsigned char)z;
+    }
     }
     *(int*)(c+0x4a0) = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
-    *(int*)(c+0x4a0) = *(int*)(c+0x4a0) + 1;
+    {
+        int *p = (int*)(((long long)(int)(c + 0x4a0)) & 0xFFFFFFFFFFFFFFFFLL);
+        *p = *p + 1;
+    }
     *(short*)(c+0x400+0xf8) = *(short*)(c+0x8e);
     func_ov078_02125c48(c, &data_ov078_0212710c);
     return 1;

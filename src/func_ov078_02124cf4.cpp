@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=60). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct ActorBase;
 
@@ -36,7 +33,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
         func_ov078_02125c24(thiz, 0x7d0000);
         func_0200fa8c((int*)thiz, 1);
         thiz[0x499] = 1;
-        int* p = (int*)(thiz + 0x500);
+        int* p = (int*)((unsigned long long)((int)thiz + 0x500) & 0xFFFFFFFFFFFFFFFFULL);
         *p = *p - 1;
     }
     if (*(int*)(thiz + 0x500) > 0) {
@@ -45,21 +42,20 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
     }
     unsigned char* other = *(unsigned char**)(thiz + 0x430);
     if (other == 0) goto done;
-    if ((*(unsigned short*)(other + 0x6ce) & 0x800) != 0) goto done;
+    if ((unsigned short)(*(unsigned short*)(other + 0x6ce) & 0x800) != 0) goto done;
     if (Player_StartTalk(other, *(ActorBase*)thiz, 1) == 0) goto done;
 
+    short msg = 0;
     Sound_ChangeMusicVolume(0x14, 0x15666);
-    int msg = 0;
     if (data_0209f220 == 1) {
-        msg = (short)(msg + (short)(*(int*)(other + 8) + 0x9a));
+        msg += (short)(*(int*)(other + 8) + 0x9a);
     } else {
         msg = 0x95;
     }
 
-    if (Player_ShowMessage(other, *(ActorBase*)thiz, msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
+    if (Player_ShowMessage(other, *(ActorBase*)thiz, (unsigned)(int)msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
     func_02012694(0x12a, (int*)(thiz + 0x74));
     func_ov078_02125c48(thiz, &data_ov078_0212705c);
-    goto done;
 done:
     return 1;
 }
