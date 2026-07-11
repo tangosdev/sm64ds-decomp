@@ -1,53 +1,31 @@
-//cpp
-// NONMATCHING: different op / idiom (div=30). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
-typedef int s32;
 
-struct Vector3 { int x, y, z; };
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 
-extern "C" {
-void *func_0204d958(void *p);
-void func_0204ae2c(void *p, Vector3 *v);
-void func_0204d9a0(void *a, void *b);
-}
+extern void* func_0204d958(void* p);
+extern void func_0204ae2c(void* o, void* p18, void* src3);
+extern void func_0204d9a0(void* a, void* b);
 
-struct Mgr {
-    char pad0[0xc];
-    int u0c;        /* 0xc */
-    char pad1[0x1c - 0x10];
-    int *u1c;       /* 0x1c */
-    char pad2[0x2c - 0x20];
-    u16 u2c;        /* 0x2c */
-    u16 u2e;        /* 0x2e */
-};
-
-namespace Particle {
-struct Manager {
-    int AddSystem(int idx, Vector3 &v);
-};
-
-int Manager::AddSystem(int idx, Vector3 &v) {
-    Mgr *self = (Mgr*)this;
-    int r4 = 0;
-    if (self->u0c != 0) {
-        void *sys = func_0204d958(&self->u0c);
+int _ZN8Particle7Manager9AddSystemEiR7Vector3(char* self, int idx, void* v) {
+    int r4;
+    char* sys;
+    u32* p;
+    u32 lo;
+    r4 = 0;
+    if (*(int*)(self + 0xc) != 0) {
+        sys = (char*)func_0204d958(self + 0xc);
         r4 = (int)sys;
-        func_0204ae2c((char*)self->u1c + idx * 0x20, &v);
-        {
-            u32 *p = (u32*)((char*)sys + 0x74);
-            *p = (*p & ~0x3fu) | (self->u2c & 0x3f);
-            *p = (*p & ~0xfc0u) | ((self->u2e & 0x3f) << 6);
-            u32 lo = (*((u32*)sys + 0x74/4) << 0x1a) >> 0x1a;
-            *p = (*p & ~0x3f000u) | ((lo & 0x3f) << 12);
-            *p = *p & 0x3ffff;
-        }
-        func_0204d9a0((char*)self + 4, sys);
-        if (((**(u32**)((char*)sys + 0x18)) << 0x11) >> 0x1f) r4 = 0;
+        func_0204ae2c(sys, *(char**)(self + 0x1c) + idx * 0x20, v);
+        p = (u32*)AT(sys, 0x74);
+        *p = (*p & ~0x3fu) | (*(u16*)(self + 0x2c) & 0x3f);
+        *p = (*p & ~0xfc0u) | ((*(u16*)(self + 0x2e) & 0x3f) << 6);
+        lo = (u32)(((long long)(int)(*(u32*)(sys + 0x74) << 26)) & 0xFFFFFFFFFFFFFFFFLL);
+        lo = lo >> 26;
+        *p = (*p & ~0x3f000u) | (((u32)(((long long)(int)lo) & 0xFFFFFFFFFFFFFFFFLL) & 0x3f) << 12);
+        *p = *p & 0x3ffff;
+        func_0204d9a0(self + 4, sys);
+        if ((***(u32***)(sys + 0x18) << 17) >> 31) r4 = 0;
     }
     return r4;
-}
 }

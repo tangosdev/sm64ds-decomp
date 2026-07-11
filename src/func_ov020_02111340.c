@@ -1,4 +1,4 @@
-// NONMATCHING: mul/add instruction scheduling after FindWithID (div=13). Logic verified vs ROM.
+#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 extern int RandomIntInternal(void *p);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
@@ -18,17 +18,23 @@ void func_ov020_02111340(char *c)
         {
             struct Vec3 pos;
             struct Vec3_16 rot;
-            int *fp = (int *)(found + 0x5c);
+            int *fp = (int *)AT(found, 0x5c);
             int mul = 0x1f4 * bit;
             int x = fp[0];
             int dx = mul - 0xfa;
-            int y = fp[1];
-            int z = fp[2];
             pos.x = x;
-            pos.y = y;
-            pos.z = z;
-            pos.x = x + (dx << 12);
-            pos.y = y + 0x41000;
+            {
+                int y = fp[1];
+                int nx = x + (dx << 12);
+                pos.y = y;
+                {
+                    int z = fp[2];
+                    int ny = y + 0x41000;
+                    pos.z = z;
+                    pos.x = nx;
+                    pos.y = ny;
+                }
+            }
             pos.z = *(int *)(*(char **)(c + 0x41c) + 0x64);
             rot.y = (short)((bit << 15) + 0x4000);
             rot.x = 0;

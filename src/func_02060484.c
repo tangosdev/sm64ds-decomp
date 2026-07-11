@@ -1,32 +1,25 @@
-//cpp
-// NONMATCHING: different op / idiom (div=10). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
-extern "C" {
 extern char data_020a8180[];
 extern int data_020a6134[];
 void func_020580f0(void* p);
 void func_02060228(void* fn);
 int func_0206062c(void* g);
-}
-namespace IRQ { unsigned int Disable(); void Restore(unsigned int); }
+extern unsigned int _ZN3IRQ7DisableEv(void);
+extern void _ZN3IRQ7RestoreEj(unsigned int flags);
 
-extern "C" int func_02060484(int a, int b, int c, int d, int e, int f)
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+
+int func_02060484(int a, int b, int c, int d, int e, int f)
 {
-    char* g = data_020a8180;
-    unsigned int irq = IRQ::Disable();
+    char* g = (char*)AT(data_020a8180, 0);
+    unsigned int irq = _ZN3IRQ7DisableEv();
     if (*(u32*)(g + 0x34) & 4) {
-        char* p = g + 0xd4;
         do {
-            func_020580f0(p);
+            func_020580f0(g + 0xd4);
         } while (*(u32*)(g + 0x34) & 4);
     }
-    {
-        u32* fp = (u32*)(g + 0x34);
-        *fp = *fp | 4;
-    }
-    IRQ::Restore(irq);
+    *(u32*)AT(g, 0x34) |= 4;
+    _ZN3IRQ7RestoreEj(irq);
     *(int*)(g + 0x18) = b;
     *(int*)(g + 0x1c) = a;
     *(int*)(g + 0x20) = c;

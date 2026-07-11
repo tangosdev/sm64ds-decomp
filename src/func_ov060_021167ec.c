@@ -1,7 +1,3 @@
-//cpp
-// NONMATCHING: register allocation (div=3). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
 
@@ -12,26 +8,24 @@ struct Actor {
     short f96;   /* 0x96 */
 };
 
-extern "C" {
-extern void* _ZN5Actor13ClosestPlayerEv(void);
-extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16* p, int e, int f);
+extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* v, const struct Vector3_16* p, int e, int f);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
-}
 
-extern "C" void func_ov060_021167ec(char* c)
+void func_ov060_021167ec(char* c)
 {
     char* p;
     if (*(unsigned short*)(c + 0x374) != 0) return;
-    p = (char*)_ZN5Actor13ClosestPlayerEv();
+    p = (char*)_ZN5Actor13ClosestPlayerEv(c);
     if (p == 0) return;
-    *(short*)(c + 0x94) = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)(p + 0x5c));
+    *(short*)(c + 0x94) = Vec3_HorzAngle((struct Vector3*)(c + 0x5c), (struct Vector3*)(p + 0x5c));
     *(int*)(c + 0x360) = 0x5000;
     {
         int i = 0;
         int ang = 0;
         do {
-            Actor* a = (Actor*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, 4, *(Vector3*)(c + 0x5c), (const Vector3_16*)0, *(signed char*)(c + 0xcc), -1);
+            struct Actor* a = (struct Actor*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, 4, (struct Vector3*)(c + 0x5c), (const struct Vector3_16*)0, *(signed char*)(c + 0xcc), -1);
             short v = *(short*)(c + 0x94) + ang;
             a->f92 = 0;
             a->f94 = v;

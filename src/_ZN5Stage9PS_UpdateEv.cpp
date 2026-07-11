@@ -25,6 +25,28 @@
  *   Named-ptr assigns can get symbol order f2c8,de8,f238 but steal high regs
  *   and/or fire before mov fp. Direct globals keep colors+placement but always
  *   emit f238 before de8. See scratch/HANDOFF_Stage_PS_Update.md.
+ *
+ * 2026-07-11 WALL CONFIRMED (known wall #2, pure scheduling). Swept 10+ more
+ *   shapes; ALL byte-neutral ones keep the swapped pair, ALL order-flipping
+ *   ones break colors/placement:
+ *   - byte-neutral, order-inert: struct Touch{active,pressed,x,y} cast-arith
+ *     (TOUCHP), cast-subscript ((Touch*)de8)[sl2].f, per-EBB element ptr
+ *     assigned in-condition ((tp=&((Touch*)de8)[sl2])->x), de_off u32,
+ *     extern decl order, dead &-casts / dead laundered derefs (DCE'd early).
+ *   - named de8 ptr ONLY (register u8 *de8_sb = de8): ROM order+all colors,
+ *     but its ldr schedule-lifts to block slot 2 ([mov sl][ldr sb][mov fp]
+ *     [ldr r5][ldr r4]) = 3mm; fake +var_fp dep is erased by const-prop, so
+ *     it cannot be pinned after mov fp.
+ *   - naming more webs: register locals color TOP-DOWN from sb, pointer-typed
+ *     class before int-typed, decl order within class (observed sb,r8,r7 for
+ *     3 ptrs; consts then r6,r5,r4) - a named ptr can never reach r5/r4 while
+ *     consts sit above, so ROM's interleaved sb/r5/r4 ptr coloring is
+ *     unreachable via naming.
+ *   - regressions: direct u8 [sl2*4+k] spelling +5 insns (launder/struct add
+ *     IS load-bearing); f238 offset-0 launder detaches from r4 web (30mm);
+ *     369/370 statement swap perturbs body schedule (15mm).
+ *   Hoisted-invariant ldr emission order is allocator-internal and
+ *   spelling-invariant. Permuter cannot flip it either. Parked at div=2.
  */
 typedef unsigned char u8;
 typedef unsigned short u16;

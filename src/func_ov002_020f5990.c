@@ -1,16 +1,19 @@
-//cpp
-// NONMATCHING: different op / idiom (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// NONMATCHING: div=5 — arg shift-chain register crossing: ROM keeps (f0<<4)>>16 in-place in r1
+// and (f4<<4)>>16 in r2; mwcc colors rawA=r2/rawB=r1 and spills the lsl through ip. Same residual
+// under BOTH C and C++ frontends (C PTMF dispatch recipe byte-matches the member-pointer call block).
+// Shapes tried: inline args, named temps, split statements, compound <<=/>>=, u64-identity launders,
+// array subscript spelling, volatile on either load, assignment-expr-in-arg. Wall family 67(a).
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 typedef int s32;
 typedef short s16;
 typedef unsigned char u8;
-struct C;
-typedef void (C::*PMF)(int);
 
-extern "C" void func_ov002_020f39ec(char* c, int i);
-extern "C" void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4);
-extern PMF data_ov002_02110e7c[];
+extern void func_ov002_020f39ec(char* c, int i);
+extern void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4);
+
+typedef void (*MF)(char*, int);
+struct PM { int fn; int dv; };
+extern struct PM data_ov002_02110e7c[];
 
 struct Sub {
     int f0;
@@ -26,20 +29,26 @@ struct Sub {
     u8 f49;
 };
 
-extern "C" void func_ov002_020f5990(char* c);
 void func_ov002_020f5990(char* c)
 {
-    C* self = (C*)c;
-    Sub* s = (Sub*)c;
     int i;
+    struct Sub* s = (struct Sub*)c;
     {
-        int* cnt = (int*)(c + 0x1f8);
+        int* cnt = (int*)AT(c, 0x1f8);
         *cnt = *cnt + 1;
         *cnt = *cnt & 3;
     }
-    for (i = 0; i < 4; i++, s = (Sub*)((char*)s + 0x4c)) {
+    for (i = 0; i < 4; i++, s = (struct Sub*)((char*)s + 0x4c)) {
         if (s->f44 == 0) continue;
-        (self->*data_ov002_02110e7c[s->f46])(i);
+        {
+            struct PM* e = &data_ov002_02110e7c[s->f46];
+            int dv = e->dv;
+            char* obj = c + (dv >> 1);
+            MF fp;
+            if (dv & 1) fp = *(MF*)(*(char**)obj + e->fn);
+            else fp = (MF)e->fn;
+            fp(obj, i);
+        }
         func_ov002_020f39ec(c, i);
         if (s->f49 == 0) continue;
         if (i != *(int*)(c + 0x1f8)) continue;

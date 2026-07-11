@@ -1,30 +1,30 @@
-// NONMATCHING: base materialization / addressing (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
 typedef unsigned char u8;
 
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* thiz, u32 anim, int a, int fix, u32 b);
-extern int _ZNK6Player14GetBodyModelIDEjb(char* thiz, u32 a, int b);
+extern u8 _ZNK6Player14GetBodyModelIDEjb(char* thiz, u32 a, int b);
 extern void func_ov002_020d93ac(char* thiz);
 extern void func_0200d89c(char* p);
 extern u32 data_ov002_0210a6d4[];
 extern char* data_0209f318;
 
+#pragma opt_propagation off
 int _ZN6Player12St_Hurt_InitEv(char* c)
 {
-    int mid;
+    u8 mid;
     char* m;
     u8 old;
     _ZN6Player7SetAnimEji5Fix12IiEj(c, data_ov002_0210a6d4[*(u8*)(c+0x6e3) & 7], 0x40000000, 0x1000, 0);
     mid = _ZNK6Player14GetBodyModelIDEjb(c, *(int*)(c+8) & 0xff, 0);
-    m = *(char**)(c + mid*4 + 0xdc) + 0x50;
-    *(int*)(m + 8) = 0;
-    *(u8*)(c+0x6e6) = 0;
+    m = (char*)AT(*(char**)(c + mid*4 + 0xdc), 0x50);
+    mid = 0;
+    *(int*)(m + 8) = mid;
+    *(u8*)(c+0x6e6) = mid;
     old = *(u8*)(c+0x6e5);
-    *(u8*)(c+0x6e5) = 0;
+    *(u8*)(c+0x6e5) = mid;
     if ((*(u8*)(c+0x6e3) & 0xf0) == 0x10) *(u8*)(c+0x6e5) = old << 4;
     *(u8*)(c+0x70c) = 0;
     if (*(int*)(c+0x674) != 0) {

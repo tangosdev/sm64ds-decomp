@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=18). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 void func_02018c00(void* dst, int a, int id);
 int func_0203d7b8(void);
@@ -18,9 +15,12 @@ void LoadOverlay(int id)
 {
     struct Pair pair;
     char buf[0x24];
-    u32 start, total, end;
+    u32 start;
     struct Region* slot;
     u32 i;
+    u32 total;
+    struct Region* p;
+    u32 end;
 
     func_02018c00(buf, 0, id);
     if (func_0203d7b8() != 0) return;
@@ -30,11 +30,12 @@ void LoadOverlay(int id)
     total = *(u32*)(buf + 8) + *(u32*)(buf + 0xc);
     start = *(u32*)(buf + 4);
     end = start + total;
-    for (i = 0; i < 12; i++) {
-        if (data_0209d3c4[i].valid == 0xffffffff) {
-            if (slot == 0) slot = &data_0209d3c4[i];
-        } else if (data_0209d3c4[i].start + data_0209d3c4[i].size > start &&
-                   end > data_0209d3c4[i].start) {
+    p = data_0209d3c4;
+    for (i = 0; i < 12; i++, p++) {
+        if (p->valid == 0xffffffff) {
+            if (slot == 0) slot = p;
+        } else if (p->start + p->size > start &&
+                   end > p->start) {
             Crash();
         }
     }
