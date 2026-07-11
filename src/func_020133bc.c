@@ -1,6 +1,3 @@
-// NONMATCHING: push-set / frame (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned int u32;
 extern void func_0204f070(void);
@@ -28,12 +25,15 @@ extern char data_0209b53c[];
 extern int data_0209baa0;
 extern u8 data_0209b480;
 
+#pragma opt_propagation off
 void func_020133bc(void)
 {
+    char *anim;
     func_0204f070();
     data_0209b498 = (int)func_0205130c((u32)_ZN6Memory8AllocateEj(0x100000), 0x100000);
+    anim = data_0208e498;
     func_0201a9fc(data_0209d574);
-    func_02050f34(&data_0209b4b4, (int)data_0208e498, data_0209b498, 0);
+    func_02050f34(&data_0209b4b4, (int)anim, data_0209b498, 0);
     func_0201a9fc(data_0209d574);
     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
     if (func_0203d974() == 0) {

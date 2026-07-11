@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -45,10 +42,10 @@ int func_0206a4a0(void)
         if (*(u16 *)card != *(u16 *)0x801fffe)
             goto setflag;
     }
-    if (card->w8 != (*(int *)(((int)io + 0xac) & 0xFFFFFFFFFFFFFFFF)) && card->b0) {
+    if (card->w8 != *(int *)(io + 0xac) && card->b0) {
     setflag:
         {
-            u8 *p = (u8 *)0x27ffc35;
+            u8 *p = (u8 *)(((int)card + 5) & 0xFFFFFFFFFFFFFFFF);
             ret = 0;
             *p |= 2;
         }

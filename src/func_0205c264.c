@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void func_0205c528(void *dst, void *bits, int n);
 
 struct Out { unsigned char b0; unsigned char pad; unsigned short b2; };
@@ -29,18 +26,18 @@ int func_0205c264(int *thiz)
     } else {
         func_0205c528(&two[0], r4 + 0x14, *(int *)(r4 + 0x10));
         *(r4 + 0x14 + *(int *)(r4 + 0x10)) = 0;
-        if (*(int *)(r4 + 0xc) != 0) {
-            func_0205c528(&two[0], &out.b2, 2);
-            *(int *)r4 = thiz[2];
-            *(short *)(r4 + 4) = out.b2 & 0xfff;
-            *(short *)(r4 + 6) = 0;
-            *(int *)(r4 + 8) = 0;
-        } else {
-            unsigned short *q = (unsigned short *)((char *)thiz + 0x22);
-            *(int *)r4 = thiz[2];
-            *(int *)(r4 + 4) = *(unsigned short *)((char *)thiz + 0x22);
-            *q = *q + 1;
-        }
+    }
+    if (*(int *)(r4 + 0xc) != 0) {
+        func_0205c528(&two[0], &out.b2, 2);
+        *(int *)r4 = thiz[2];
+        *(short *)(r4 + 4) = out.b2 & 0xfff;
+        *(short *)(r4 + 6) = 0;
+        *(int *)(r4 + 8) = 0;
+    } else {
+        unsigned short *q = (unsigned short *)(int)(((long long)(int)((char *)thiz + 0x22)) & 0xFFFFFFFFFFFFFFFFLL);
+        *(int *)r4 = thiz[2];
+        *(int *)(r4 + 4) = *(unsigned short *)((char *)thiz + 0x22);
+        *q = *q + 1;
     }
     thiz[9] = two[1];               /* [0x24] */
     return 0;
