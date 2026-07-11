@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=11). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int func_ov002_020efe68(char* c);
 extern int Vec3_HorzDist(const void* a, const void* b);
 
@@ -24,12 +21,14 @@ void func_ov002_020ef57c(char* c){
   } else {
     *(unsigned char*)(c+0x448) = 0x1e;
     *(unsigned char*)(c+0x449) = 0x18;
+    *(short*)(c+0x44a) = 0;
+    *(int*)(c+0x444) = *(int*)(c+0x60);
   }
-  *(short*)(c+0x44a) = 0;
-  *(int*)(c+0x444) = *(int*)(c+0x60);
   {
-    int b2 = (*(unsigned short*)(c+0xc) == 0x82);
-    if (b2 == 0) return;
+    int b2 = (int)(*(unsigned short*)(c+0xc) == 0x82);
+    if (b2 == 0) {
+      return;
+    }
+    *(int*)(c+0x98) = Vec3_HorzDist(c+0x5c, c+0x68);
   }
-  *(int*)(c+0x98) = Vec3_HorzDist(c+0x5c, c+0x68);
 }

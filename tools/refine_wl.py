@@ -40,6 +40,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-div", type=int, default=6)
     ap.add_argument("--limit", type=int, default=20)
+    ap.add_argument("--min-size", default=None,
+                    help="only near-misses with size >= this (hex ok, e.g. 0x100); "
+                         "keeps parallel workers on disjoint size bands")
+    ap.add_argument("--max-size", default=None,
+                    help="only near-misses with size < this (hex ok, e.g. 0x100)")
     ap.add_argument("--out", default=str(REPO / "progress" / "wl_refine.jsonl"))
     ap.add_argument("--include-all-cats", action="store_true",
                     help="skip category routing (take everything under --max-div)")
@@ -57,6 +62,9 @@ def main():
         r["addr"] = int(r["addr"], 0) if isinstance(r["addr"], str) else r["addr"]
         r["size"] = int(r["size"], 0) if isinstance(r["size"], str) else r["size"]
 
+    min_size = int(args.min_size, 0) if args.min_size is not None else None
+    max_size = int(args.max_size, 0) if args.max_size is not None else None
+
     parked = L.nonmatching_set()
     attempted = set()
     if ATTEMPTED.exists() and not args.include_attempted:
@@ -72,6 +80,8 @@ def main():
             if r.get("divergences") and 0 < r["divergences"] <= args.max_div
             and r["name"] not in attempted
             and (r["module"], r["addr"]) not in parked
+            and (min_size is None or r["size"] >= min_size)
+            and (max_size is None or r["size"] < max_size)
             and unmatched(r["name"])]
     pool.sort(key=lambda r: r["divergences"])
 

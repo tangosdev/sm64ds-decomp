@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
@@ -20,7 +17,8 @@ int _ZN6Player12St_Hurt_InitEv(char* c)
     u8 old;
     _ZN6Player7SetAnimEji5Fix12IiEj(c, data_ov002_0210a6d4[*(u8*)(c+0x6e3) & 7], 0x40000000, 0x1000, 0);
     mid = _ZNK6Player14GetBodyModelIDEjb(c, *(int*)(c+8) & 0xff, 0);
-    m = *(char**)(c + mid*4 + 0xdc) + 0x50;
+    m = *(char**)(c + mid*4 + 0xdc);
+    m = (char*)(((unsigned int)m + 0x50) & 0xFFFFFFFFU);
     *(int*)(m + 8) = 0;
     *(u8*)(c+0x6e6) = 0;
     old = *(u8*)(c+0x6e5);

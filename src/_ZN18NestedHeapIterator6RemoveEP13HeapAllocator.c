@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef unsigned short u16;
 
@@ -24,5 +21,5 @@ void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(struct NHI* self, void* nod
     }
     *(void**)((char*)node + off) = 0;
     *(void**)((char*)node + off + 4) = 0;
-    self->count--;
+    *(u16 *)(((u32)self + 8) & 0xFFFFFFFFFFFFFFFFULL) -= 1;
 }

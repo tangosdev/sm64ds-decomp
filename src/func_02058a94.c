@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
 extern void func_02058988(void* list, char* node);
@@ -11,10 +8,10 @@ void func_02058a94(char* obj) {
     unsigned int saved = _ZN3IRQ7DisableEv();
     int g = data_020a6134.field8;
     if (*(int*)(obj + 4) == g) {
-        int* cnt = (int*)(obj + 8);
+        int* cnt = (int*)(((int)(obj + 8)) & 0xFFFFFFFFFFFFFFFFULL);
         *cnt = *cnt - 1;
         if (*(int*)(obj + 8) == 0) {
-            func_02058988(obj, obj);
+            func_02058988((void*)g, obj);
             *(int*)(obj + 4) = 0;
             func_0205807c(obj);
         }

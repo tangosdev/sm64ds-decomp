@@ -1,7 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-
 extern int __aeabi_uidiv(unsigned int a, unsigned int b);
 extern struct LL
 {
@@ -14,6 +10,7 @@ void func_0204fce8(int *thiz, void *arg)
 {
   int new_var;
   int i;
+  int *pcount;
   unsigned char *p = (unsigned char *) thiz;
   int q = __aeabi_uidiv(thiz[4], thiz[5]);
   int scaled = q * thiz[8];
@@ -24,7 +21,8 @@ void func_0204fce8(int *thiz, void *arg)
   }
 
   ((FP) thiz[6])(arg, thiz[0xc], data_020a5538, q, thiz[2], thiz[7]);
-  thiz[8]++;
+  pcount = (int *) (((int) thiz + 0x20) & 0xFFFFFFFFFFFFFFFF);
+  (*pcount)++;
   if (thiz[8] >= thiz[5])
   {
     thiz[8] = 0;

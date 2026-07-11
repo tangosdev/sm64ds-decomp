@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int __aeabi_idiv(int a, int b);
 
 void func_ov006_02106080(char* self, int x)
@@ -19,7 +16,7 @@ void func_ov006_02106080(char* self, int x)
     int i, j;
     for (i = 0; i < n2; i++) {
         for (j = 0; j < n1; j++) {
-            unsigned char* p = (unsigned char*)self + ((*(int*)(self + 0x4cbc)) * (b + i) + (a + j) + 0x4f1e);
+            unsigned char* p = (unsigned char*)((((int)self + ((*(int*)(self + 0x4cbc)) * (b + i) + (a + j))) + 0x4f1e) & 0xFFFFFFFFFFFFFFFF);
             *p ^= 1;
         }
     }

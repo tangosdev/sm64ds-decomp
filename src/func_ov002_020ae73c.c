@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=10). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int Fix12i;
 typedef short s16;
@@ -19,8 +16,11 @@ void func_ov002_020ae73c(char* c, char* arg)
     else
         *(int*)(c + 0x98) = 0x14000;
 
-    *(int*)(c + 0x98) = *(int*)(c + 0x98) / 3;
+    {
+        int *p = (int *)(((int)(c) + 0x98) & 0xFFFFFFFFFFFFFFFF);
+        *p = *p / 6;
+    }
     *(s16*)(c + 0x102) = 8;
-    *(int*)(c + 0xb0) &= ~1;
+    *(int *)(((int)(c) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
     _ZN5Sound9PlayBank0EjRK7Vector3(0xa, c + 0x74);
 }

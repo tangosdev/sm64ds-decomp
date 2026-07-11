@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int m[12]; } Matrix4x3;
@@ -19,7 +16,7 @@ void func_ov080_0212555c(char *self)
     Vec3_Asr(&v, (Vec3*)(self + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, *(short*)(self + 0x8c), *(short*)(self + 0x8e), *(short*)(self + 0x90));
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, -(((unsigned char)(*(int*)(self + 8) & 0xf) + 1) * 0x64000) / 16, 0, 0);
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, -(((unsigned char)(*(int*)(self + 8) & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
     *(Matrix4x3*)(self + 0xd4) = data_020a0e68;
     InvMat4x3(&data_020a0e68, &data_020a0e68);
     *(Matrix4x3*)(self + 0x104) = data_020a0e68;

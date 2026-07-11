@@ -1,8 +1,5 @@
-// NONMATCHING: register allocation (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-extern void func_0200fa04(void *c, void *v);
+extern void func_0200fa04(void *c, void *v, int flag);
 extern void func_ov060_02111cc0(void *c, int a, int b);
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player7IsInAirEv(void *p);
@@ -19,7 +16,7 @@ int func_ov060_021145d4(char *c){
     v.x = *(int*)(c + 0x5c);
     v.y = *(int*)(c + 0x60);
     v.z = *(int*)(c + 0x64);
-    func_0200fa04(c, &v);
+    func_0200fa04(c, &v, 0);
     func_ov060_02111cc0(c, 0xc, 0x40000000);
     func_02012694(0xb6, c + 0x74);
     if(*(unsigned char*)(c + 0x414) == 0){

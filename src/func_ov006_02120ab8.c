@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 
 int _Z15ApproachLinear2Rsss(short *a, short b, short c);
 void func_ov006_02120b7c(void *node);
@@ -16,10 +13,11 @@ void func_ov006_02120ab8(char *this)
   {
     func_ov006_02120b7c(this);
     *((short *) (this + 0x20)) = 0;
-    this++;
   }
-  *((int *) (this + 4)) = (*((int *) (this + 4))) + (*((int *) (this + 0x14)));
+  {
+    int *p = (int *) (((int) this + 4) & 0xFFFFFFFFFFFFFFFF);
+    *p = *p + (*((int *) (this + 0x14)));
+  }
   _Z14ApproachLinearRiii((int *) (this + 8), *((int *) (this + 0x10)), 0x1800);
   func_0203d630((int *) (this + 0x14), 0xf00);
-  this--;
 }

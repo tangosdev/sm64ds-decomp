@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void func_ov060_02111cc0(char *c, int a, int b);
 extern void func_02012694(int a, void *p, int b);
 
@@ -15,7 +12,7 @@ void func_ov060_02113564(char *c)
     *(int *)(c + 0x9c) = -0x2000;
     *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x408) + 0x8000);
     *(short *)(c + 0x3fe) = 0;
-    *(unsigned char *)(c + 0x423) = *(unsigned char *)(c + 0x423) + 1;
+    *(unsigned char *)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFF) += 1;
     *(int *)(c + 0x364) = 0xb4000;
     func_02012694(0xb1, (void *)(c + 0x74), 0xb4000);
 }

@@ -17,7 +17,7 @@ const A = typeof args === 'string' ? JSON.parse(args) : args
 const names = Array.isArray(A) ? A : A.names
 const MODEL = (Array.isArray(A) ? null : A.model) || 'sonnet'
 const EFFORT = (Array.isArray(A) ? null : A.effort) || 'xhigh'
-const WL = 'progress/wl_refine.jsonl'
+const WL = (Array.isArray(A) ? null : A.wl) || 'progress/wl_refine.jsonl'
 
 const SCHEMA = {
   type: 'object', additionalProperties: false,

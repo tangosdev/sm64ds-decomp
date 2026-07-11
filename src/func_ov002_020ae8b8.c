@@ -1,18 +1,25 @@
-// NONMATCHING: different op / idiom (div=14). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern unsigned short data_ov002_020ff01c[];
-void func_ov002_020ae8b8(char* c, char* arg){
-  int eq = (*(unsigned short*)(arg+0xc) == 0xbf);
-  if (eq == 0) {
-    *(int*)(c+0x98) = 0xa000;
-    *(int*)(c+0xa8) = 0x28000;
-  } else {
-    int v = *(int*)(arg+8);
-    int t = data_ov002_020ff01c[(unsigned short)v];
-    int r4 = t << 3;
-    *(int*)(c+0x98) = (r4 << 12) / 100;
-    *(int*)(c+0xa8) = ((r4 / 100) + 0x20) << 12;
-  }
-  *(int*)(c+0xb0) &= ~1;
+typedef unsigned short u16;
+
+enum { false, true };
+
+extern u16 data_ov002_020ff01c[];
+
+void func_ov002_020ae8b8(char* c, char* arg)
+{
+    int b;
+    b = *(u16*)(arg + 0xc);
+    b = b == 0xbf;
+    if (b != false) {
+        u16 t = data_ov002_020ff01c[(u16)*(int*)(arg + 8)];
+        int r4 = (int)t << 3;
+        int ip = r4 << 12;
+        int d1 = ip / 100;
+        int d2 = r4 / 100;
+        *(int*)(c + 0x98) = d1;
+        *(int*)(c + 0xa8) = (d2 + 0x20) << 12;
+    } else {
+        *(int*)(c + 0x98) = 0xa000;
+        *(int*)(c + 0xa8) = 0x28000;
+    }
+    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
 }

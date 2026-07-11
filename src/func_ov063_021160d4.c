@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=2). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 
 typedef struct
 {
@@ -36,6 +33,6 @@ void func_ov063_021160d4(char *c)
   SubVec3((Vec3 *) (c + 0x534), (Vec3 *) (c + 0x5c), (Vec3 *) (c + 0x534));
   SubVec3((Vec3 *) (c + 0x534), (Vec3 *) (c + 0x540), (Vec3 *) (c + 0x534));
   Vec3_MulScalarInPlace((Vec3 *) (c + 0x534), 0x6800);
-  p = &((Vec3 *) (c + 0x534))->z;
+  p = (int *) (((int) c + 0x53c) & 0xFFFFFFFFFFFFFFFF);
   *p += *((int *) (c + 0x598));
 }

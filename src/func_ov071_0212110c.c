@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef struct { int f0; void *f4; } AnimData;
 extern AnimData data_ov071_02123048;
 
@@ -24,7 +21,7 @@ int func_ov071_0212110c(char *self)
     *(unsigned char*)(self + 0x215) = 0x2e;
     *(short*)(self + 0x210) = 0;
     func_0201267c(0x119, self + 0x74);
-    *(int*)(self + 0xb0) &= ~1;
+    *(int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
     *(int*)(self + 0x1e8) = 2;
     *(int*)(self + 0x1fc) = 0x500;
     return 1;

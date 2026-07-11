@@ -1,35 +1,34 @@
-// NONMATCHING: register allocation (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 extern int LoadArchive(int idx);
-extern void func_0201a458(void);
-extern void *_ZN4Heap10SetDefaultEv(void);
-extern void HeapUse(void *h);
+extern void *func_0201a458(void);
+extern void *_ZN4Heap10SetDefaultEv(void *h);
 extern void LoadTextNarcs(void);
-extern void func_0201a5f8(int);
+extern void func_0201a5f8(int t);
 extern void LoadOverlay(int id);
 extern void *func_0201a3e4(void);
 
 extern u32 data_020a0c60;
 extern void *data_020a0c5c;
+extern int overlay_64;
+extern int overlay_66;
 
 void func_02034fbc(void)
 {
+    void *h;
+
     LoadArchive(0);
-    func_0201a458();
+    h = func_0201a458();
     if (!(data_020a0c60 & 1)) {
-        data_020a0c5c = _ZN4Heap10SetDefaultEv();
+        data_020a0c5c = _ZN4Heap10SetDefaultEv(h);
         data_020a0c60 |= 1;
     }
     LoadTextNarcs();
     LoadArchive(1);
-    HeapUse(data_020a0c5c);
+    _ZN4Heap10SetDefaultEv(data_020a0c5c);
     func_0201a5f8(6);
-    LoadOverlay(0x64);
-    LoadOverlay(0x66);
-    data_020a0c5c = func_0201a3e4();
-    HeapUse(data_020a0c5c);
+    LoadOverlay((int)&overlay_64);
+    LoadOverlay((int)&overlay_66);
+    data_020a0c5c = _ZN4Heap10SetDefaultEv(func_0201a3e4());
     LoadArchive(7);
-    HeapUse(data_020a0c5c);
+    _ZN4Heap10SetDefaultEv(data_020a0c5c);
 }

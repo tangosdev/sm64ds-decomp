@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
 extern void func_020580f0(void *this);
@@ -27,7 +24,10 @@ int func_02058894(struct Q *q, int val, int flag)
     {
         int idx = (q->cap + q->head) % q->count;
         q->arr[idx] = val;
-        q->head++;
+        {
+            int *headp = (int*)(((long long)((char*)q + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            *headp = *headp + 1;
+        }
         func_0205807c((char*)q + 2);
         _ZN3IRQ7RestoreEj(saved);
         return 1;
