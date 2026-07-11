@@ -42,7 +42,7 @@ it is fair to take over: ping the claimant first.
 | ov021 _ZN12WorkElevator13InitResourcesEv (0x02111c6c, size 0x258) | lunavyqo | 2026-07-10 | near-miss (PR #247 open) |
 | ov021 _ZN12WorkElevator8BehaviorEv (0x021116c8, size 0x5a4) | lunavyqo | 2026-07-10 | near-miss (PR #249 open) |
 | ov078 10 funcs (0x021238ac-0x02126660) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #250 open |
-| ov089: 02130fb4 (0x02130fb4), 02131df4 (0x02131df4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #251 open |
+| ov089: 02130fb4 (0x02130fb4), 02131df4 (0x02131df4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #251 merged |
 | ov034: 02112020 (0x02112020), 02112484 (0x02112484) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #253 open |
 | ov073: 0211f144 (0x0211f144), 0211f494 (0x0211f494), 0211fa74 (0x0211fa74), 0212128c (0x0212128c) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #256 open |
 | ov073: 0211f2c0 (0x0211f2c0), 02120ed0 (0x02120ed0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #260 open |
@@ -51,7 +51,7 @@ it is fair to take over: ping the claimant first.
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
 | ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | near-miss (PR #239 open) |
 | ov020: 02111340 (0x02111340), 021115ac (0x021115ac), 02113148 (0x02113148) | lunavyqo | 2026-07-10 | near-miss (PR #244 open) |
-| ov089: _ZN3Key8BehaviorEv (0x02132194), 02130fb4 (0x02130fb4), 021311c0 (0x021311c0), 0213162c (0x0213162c), 02131b18 (0x02131b18), 02131df4 (0x02131df4) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #245 open |
+| ov089: _ZN3Key8BehaviorEv (0x02132194), 021311c0 (0x021311c0), 0213162c (0x0213162c), 02131b18 (0x02131b18) | lunavyqo | 2026-07-10 | near-miss (in main, refine-tier); PR #245 closed - matches split to #251 |
 | ov092: _ZN6ToxBox13InitResourcesEv (0x02131da0), _ZN6ToxBox8BehaviorEv (0x02131c44), 02131010 (0x02131010), 021311b0 (0x021311b0), 021316d8 (0x021316d8), 02131878 (0x02131878) | lunavyqo | 2026-07-10 | near-miss (PR #246 open) |
 | ov021: _ZN11RollingRock8BehaviorEv (0x02112854), 02112544 (0x02112544) | lunavyqo | 2026-07-10 | near-miss (PR #248 open) |
 | ov091: _ZN22RotatingUpDownPlatform13InitResourcesEv (0x0213220c), _ZN6Thwomp8BehaviorEv (0x02132ab0), 02131160 (0x02131160), 02131db8 (0x02131db8), 02133098 (0x02133098), 021334b8 (0x021334b8), 02133c6c (0x02133c6c) | lunavyqo | 2026-07-10 | near-miss (PR #254 open) |
