@@ -789,6 +789,70 @@ Three parked "not reachable from C" regalloc near-misses cracked byte-exact
   func_ov092_021311b0 (its mutation: inline the base re-deref). Route 2-div
   add/add or mov/str swaps to the permuter before calling floor.
 
+## 6o. Ordering-residual triage: five levers, four true floors (2026-07-11)
+
+Adversarial triage of every pure instruction-reorder near-miss in the DB (identical
+instruction multiset, order-only diff, div<=12: 16 candidates after dropping 5 ghost
+entries; one prober + one skeptic per function, ~40 spellings each): 6 cracked
+byte-exact, 4 verified floor. The crack levers:
+
+- **goto-pinned early-return flips cond-move PAIR order.** `return r == 2;` and every
+  inversion spelling (`!(r!=2)`, ternaries both ways, if/else both polarities, named
+  temps, xor/sub forms) canonicalize to moveq-first; the ROM wanted movne-first.
+  `if (r == 2) goto yes; return 0; yes: return 1;` pins block layout so if-conversion
+  predicates in layout order - byte-exact (func_0203faa8, previously survived ~8k
+  permuter iterations). The goto is load-bearing: `if (r != 2) return 0; return 1;`
+  canonicalizes back.
+- **0/1 selects emit the TRUE arm first, and {0,1} INT arms canonicalize to
+  bool(!=0)** (extends 6c), so movne-first is immovable in int spellings. Pointer-typed
+  arms dodge the canonicalization while still folding to immediate movs:
+  `(int)((x == 0) ? (char *)0 : (char *)1)` pins cmp/moveq#0/movne#1
+  (func_ov007_020b91b4).
+- **Equal-arm ternary on a call argument flips arg emission order.**
+  `f(0x78, id ? c + 0x74 : c + 0x74)` (id provably nonzero, arms identical - folds to
+  one add, no cmp) makes the const arg emit FIRST (mov before add = ROM order) with
+  zero other byte changes (func_ov079_02126a84). Wrap the argument whose setup must
+  move LATER; wrapping the other argument is inert. The same identical-arm select on a
+  table pointer flips ldr-over-mov promotion on _ZN3HUD13InitResourcesEv but couples
+  there (a strh stops sinking) - lever real, that function still open.
+- **Loads-before-stores batching fires only in the ELSE arm.** Inverting a guard so
+  the store+call arm becomes else (`==0` -> `!=0`, arms swapped) stopped a pool ldr
+  from hoisting over a strb; the predicated short-arm bytes are identical either way
+  (func_ov079_02126164). Same family: a default-arm guard spelled
+  `if (x == 0) { ...; break; } return;` instead of `if (x != 0) return; ...`
+  suppressed a pool-ldr hoist over a strh (func_ov004_020b3278).
+- **volatile on a PAIR of adjacent stores un-freezes the pool-ldr batch order.**
+  mwccarm otherwise batches all tail-block pool loads up front in a fixed internal
+  order; volatile-qualifying the two stores dropped strh/orr into their ROM slots
+  cleanly, 8 -> 6 divergences (func_0205fb58, still open).
+- **Don't hand-expand what the compiler synthesizes.** A hand-expanded signed `/2`
+  (add/lsr#31/asr#1 written out) pinned a byte store where written; the natural `/ 2`
+  spelling regenerates the identical sequence and self-schedules the store into the
+  ROM slot (func_ov095_021365d8).
+
+What survived BOTH prober and skeptic - marked `floor(ordering)` in nearmiss/db.jsonl
+(nearmiss_db.py mark-floor / unmark-floor; excluded from export-close and refine_wl):
+
+- speculative stall-slot fill across a bne: OUR compile hoists a loop-counter init
+  into a load-use gap, the ROM does not, and no spelling suppresses the hoist
+  (func_ov006_020dac34);
+- one-slot load-delay-slot fill (add-vs-str swap after a pool ldr): C++ frontend
+  compiles the whole function byte-identical, comma-sequencing the store into the
+  RMW statement is invisible to the scheduler (func_ov060_02113740);
+- fixed call-arg pool-ldr hoist distance: always 3 slots above the bl in every intact
+  spelling, ROM shows 1 (func_ov006_0211dad0);
+- position-dependent final-block scheduler state: the byte-identical C spelling
+  MATCHES in the function's first arm and diverges in the last block before the
+  literal pool (func_ov006_020fb230);
+- Stage::PS_Update's case-1 preheader independent-ldr pair (see that file's header).
+
+Caveats from this run: two initial floor verdicts fell to the skeptic's fresh lever
+families, and 6n's permuter result cracked a third ordering shape - treat
+floor(ordering) as "no known lever", not "impossible", and unmark when a new family
+lands. Mechanics: match.py diff columns are LEFT=ROM / RIGHT=candidate (two probers
+misread this and inverted their narrative); the DB's div is sequence edit-distance,
+not the raw MISMATCH line count (a 1-slot displacement can print 9 lines).
+
 ## 8. The `asm`-block escape hatch (for hand-written-asm SDK primitives)
 
 Some functions -- especially arm9 NITRO-SDK primitives -- are HAND-WRITTEN ASSEMBLY that NO C
