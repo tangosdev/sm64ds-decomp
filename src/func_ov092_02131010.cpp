@@ -1,11 +1,15 @@
 //cpp
-// NONMATCHING: div 2/104 (was 63). Sole residual is one scheduler slot: the ROM
+// NONMATCHING: div=2 (2/104 words). Sole residual is one scheduler slot: the ROM
 // emits "sub r3; mov r2,#1; str ip,[sp,#8]" where every C spelling emits
 // "sub r3; str ip,[sp,#8]; mov r2,#1" (LandingDustAt's bool arg vs the volatile
-// tmp.z store, adjacent independent insns). Tried: named/inlined arg, y-reassign,
-// comma-arg hoist, b?z:z fake dep, bool proto, C++ copy-temp, cast-away volatile,
-// statement permutations, pragmas, and a 25-min PERM_RANDOMIZE-focused permuter
-// run (no improvement). Everything else byte-exact incl. frame 0x28 and coloring.
+// tmp.z store, adjacent independent insns).
+// Tried (still div=2): named/inlined bool, y-reassign/y-overwrite-as-bool, comma-arg
+// hoist, b?z:z / z+(b-b) / z|(b&0) fake deps, bool proto, C++ copy-temp / ctor,
+// cast-away volatile, partial-volatile fields, equal-arm ternary on dust/bool args
+// (6o), address-escape of b, #pragma opt_propagation off, statement/decl order
+// perms, 25-min+ permuter (score stuck at 60 = one reorder). Everything else
+// byte-exact incl. frame 0x28, pool (0x504, 0x5dc000), and coloring.
+// Compiler: mwccarm 1.2/sp2p3. Addr: 0x02131010 size 0x1a0 (ov092).
 struct Vector3 { int x, y, z; };
 typedef short s16;
 #define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)

@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov092 func_ov092_02131010 (0x02131010, 0x1a0) | lunavyqo (AI-assisted) | 2026-07-12 | **near-miss div=2** — LandingDustAt mov r2,#1 vs str ip,[sp,#8] scheduler swap; API claim clm_eac7d2bda660; handoff in src header |
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
 | ov029 8 funcs (0x02111254-0x02112354) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #221 open |
 | ov032: __sinit_ov032_02112c10 (0x02112c10), 02111254 (0x02111254), 02111620 (0x02111620), 02111830 (0x02111830), 02111e24 (0x02111e24) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #222 open |
