@@ -1,8 +1,6 @@
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+
 struct V3 { int x, y, z; };
-extern char* _ZN5Actor13ClosestPlayerEv(void);
+extern char* _ZN5Actor13ClosestPlayerEv(void* self);
 extern int Vec3_Sub(struct V3* dst, void* a, void* b);
 extern int Vec3_HorzLen(struct V3* v);
 extern int func_0201267c(unsigned int a, void* b);
@@ -12,7 +10,7 @@ extern int RandomIntInternal(void* rng);
 extern int data_0209e650;
 void func_ov009_021115d8(char* c) {
     if (*(unsigned char*)(c+0x180) != 0) {
-        char* p2 = _ZN5Actor13ClosestPlayerEv();
+        char* p2 = _ZN5Actor13ClosestPlayerEv(c);
         if (p2 != 0) {
             struct V3 copy;
             struct V3 diff;
@@ -36,5 +34,5 @@ void func_ov009_021115d8(char* c) {
     *(short*)(c+0x92) = 5000 - (unsigned int)RandomIntInternal(&data_0209e650) % 4000;
     *(int*)(c+0x174) = 0x28000;
     *(int*)(c+0x17c) = 3;
-    *(int*)(c+0xb0) &= ~0x10000;
+    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x10000;
 }
