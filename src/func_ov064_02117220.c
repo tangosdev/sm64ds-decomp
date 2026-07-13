@@ -1,36 +1,36 @@
 //cpp
-// NONMATCHING: different op / idiom (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern "C" {
-int func_ov064_0211616c(void*);
-int RandomIntInternal(int* seed);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned, unsigned, void*, void*, int, int);
-void* _ZN5Actor10FindWithIDEj(unsigned);
-extern int data_0209e650[];
-struct V3 { int x, y, z; };
-void func_ov064_02117220(char* c){
-  if(func_ov064_0211616c(c) == 0) return;
-  struct V3 vec;
-  vec.x = *(int*)(c+0x5c);
-  vec.y = *(int*)(c+0x60) + 0x136000;
-  vec.z = *(int*)(c+0x64);
-  unsigned int r = (unsigned int)RandomIntInternal(data_0209e650);
-  short v16[3];
-  v16[0] = 0;
-  v16[2] = 0;
-  v16[1] = (short)(*(short*)(c+0x94) + 0x8000 + ((r >> 8) & 0x3ff));
-  void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x120, 2, &vec, v16, *(signed char*)(c+0xcc), -1);
-  if(a != 0){
-    *(int*)((char*)a+0x98) = 0xa000;
-    *(int*)((char*)a+0xa4) = 0;
-    *(int*)((char*)a+0xa8) = 0x50000;
-    *(int*)((char*)a+0xac) = 0;
-    void* f = _ZN5Actor10FindWithIDEj(*(int*)(c+0x3fc));
-    if(f != 0){
-      unsigned char* p = (unsigned char*)((char*)f + 0x3fe);
-      *p = *p + 1;
+typedef unsigned char u8; typedef signed char s8; typedef short s16;
+struct Vector3 { int x, y, z; }; struct Vector3_16 { s16 x, y, z; };
+struct Actor {
+  static Actor* Spawn(unsigned a, unsigned b, const Vector3& pos, const Vector3_16* rot, int e, int f);
+  static Actor* FindWithID(unsigned id);
+};
+Actor* Actor::Spawn(unsigned, unsigned, const Vector3&, const Vector3_16*, int, int);
+Actor* Actor::FindWithID(unsigned);
+extern "C" { extern int RandomIntInternal(void* seed); extern int data_0209e650; extern int func_ov064_0211616c(void* thiz); }
+extern "C" void func_ov064_02117220(char* self) {
+    if (func_ov064_0211616c(self) == 0) return;
+    int pz = *(int*)(self + 0x64);
+    int py = *(int*)(self + 0x60) + 0x136000;
+    int px = *(int*)(self + 0x5c);
+    Vector3 pos;
+    pos.x = px;
+    pos.y = py;
+    pos.z = pz;
+    int r = RandomIntInternal(&data_0209e650);
+    Vector3_16 rot;
+    s16 ang = (s16)(*(s16*)(self + 0x94) + 0x8000 + (((unsigned)r >> 8) & 0x3ff));
+    rot.x = 0; rot.z = 0; rot.y = ang;
+    Actor* a = Actor::Spawn(0x120, 2, pos, &rot, *(s8*)(self + 0xcc), -1);
+    if (a) {
+        *(int*)((char*)a + 0x98) = 0xa000;
+        *(int*)((char*)a + 0xa4) = 0;
+        *(int*)((char*)a + 0xa8) = 0x50000;
+        *(int*)((char*)a + 0xac) = 0;
     }
-  }
-}
+    Actor* f = Actor::FindWithID(*(unsigned*)(self + 0x3fc));
+    if (f) {
+        u8* p = (u8*)(((long long)(int)((char*)f + 0x3fe)) & 0xFFFFFFFFFFFFFFFFLL);
+        *p = (u8)(*p + 1);
+    }
 }

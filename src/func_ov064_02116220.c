@@ -1,7 +1,16 @@
 //cpp
-// NONMATCHING: register allocation (div=14). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+struct ActorV {
+  virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
+  virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
+  virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
+  virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
+  virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
+  virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
+  virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
+  virtual void v28(); virtual void v29(); virtual void v30(); virtual void v31();
+  virtual void v32(); virtual void v33(); virtual void v34(); virtual void v35();
+  virtual void m90();
+};
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct Actor Actor;
@@ -18,11 +27,16 @@ void func_ov064_02116220(char* c){
   RaycastGround rg;
   _ZN13RaycastGroundC1Ev(&rg);
   Vector3 v;
-  int vy = *(int*)(c+0x60) + *(int*)(c+0x3ec);
-  int vz = *(int*)(c+0x64);
-  v.x = *(int*)(c+0x5c);
-  v.y = vy + 0x96000;
-  v.z = vz;
+  int y = *(int*)(c+0x60);
+  int yoff = *(int*)(c+0x3ec);
+  int z = *(int*)(c+0x64);
+  int x = *(int*)(c+0x5c);
+  int sum = y + yoff;
+  int yv = sum + 0x96000;
+  v.x = x;
+  v.y = yv;
+  v.z = z;
+
   _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, (Actor*)c);
   if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
     *(int*)(c+0x3f4) = *(int*)(rg.buf + 0x44);
@@ -34,9 +48,8 @@ void func_ov064_02116220(char* c){
         *(int*)(c+0x398) = 4;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x110,
             *(BCA_File**)(*(int*)(*(int*)(c+0x330) + 4) + 4), 0, 0x1000, 0);
-        int* pb0 = (int*)(c+0xb0);
-        *pb0 &= ~1;
-        (*(void(**)(void*))(*(int*)c + 0x90))(c);
+        *(unsigned int *)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1u;
+        ((ActorV*)c)->m90();
         *(int*)(c+0x3a8) = *(int*)(c+0x5c);
         *(int*)(c+0x3ac) = *(int*)(c+0x60);
         *(int*)(c+0x3b0) = *(int*)(c+0x64);
