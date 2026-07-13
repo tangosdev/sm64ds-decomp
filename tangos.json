@@ -96,6 +96,7 @@
         { "name": "easy", "type": "boolean", "flag": "--easy", "description": "Only straight-line / single-guard functions (high LLM hit rate)." },
         { "name": "spread", "type": "boolean", "flag": "--spread", "description": "Round-robin across all modules, freshest-first, to stay in the high-hit-rate regime." },
         { "name": "similar", "type": "boolean", "flag": "--similar", "description": "Order by number of already-matched lookalikes (best few-shot examples first)." },
+        { "name": "random", "type": "boolean", "flag": "--random", "description": "Pull unmatched functions uniformly at random (any size), reshuffled every run (the Random role)." },
         { "name": "examples", "type": "integer", "flag": "--examples", "description": "Attach up to N verified sibling sources as few-shot examples per record (0 disables)." },
         { "name": "klass", "type": "string", "flag": "--class", "description": "Only methods of this C++ class (subsystem batching)." },
         { "name": "list_classes", "type": "boolean", "flag": "--list-classes", "description": "Print unmatched-function counts per C++ class, then exit." }
