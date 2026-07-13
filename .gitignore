@@ -61,8 +61,16 @@ tools/claims_key.txt
 tools/claims_handle.txt
 /scratchpad/
 
+# per-session runtime scratch (terminal logs, temp files, local MCP setup)
+/temp/
+/terminals/
+/mcps/
+
 # coddog fan-out scratch (agents write candidates here)
 _abwork/
+
+# glm fan-out scratch (agents write candidates here)
+_glmwork/
 
 # AI-session draft area (Cursor/Grok and friends): unverified candidates live
 # here, never in src/ - src/ is oracle-verified matches only
