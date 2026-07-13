@@ -61,6 +61,13 @@ def synced_from_src():
     Returns (done_n, done_b, n, total_bytes)."""
     n = total_bytes = done_n = done_b = 0
     for sym in CONFIG.rglob("symbols.txt"):
+        # Canonical module universe: arm9 main + overlays only. itcm/dtcm are
+        # skipped so this fallback agrees with chaos-db.json / the treemap / the
+        # hosted viewer (see chaos_db_ci.module_label), which all report the same
+        # number. Without this filter itcm/dtcm inflate the denominator.
+        rel = sym.parent.relative_to(CONFIG).as_posix()
+        if rel != "arm9" and not re.fullmatch(r"arm9/overlays/ov\d+", rel):
+            continue
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_NAME_RE.match(line)
             if not m:

@@ -61,6 +61,12 @@ tools/claims_key.txt
 tools/claims_handle.txt
 /scratchpad/
 
+# generated Chaos Viewer data: the shared copy lives on the chaos-data branch
+# (raw URL in tangos.json / chaosviewer.config.json); regenerate locally on
+# demand with tools/chaos_db_ci.py. Never commit it to main - it goes stale and
+# progress.py reports the same number ROM-free without it.
+/chaos-db.json
+
 # per-session runtime scratch (terminal logs, temp files, local MCP setup)
 /temp/
 /terminals/
