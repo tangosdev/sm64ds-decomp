@@ -1,12 +1,8 @@
 //cpp
-// NONMATCHING: different op / idiom (div=15). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
 struct Actor;
-
 struct Platform {
     int UpdateKillByMegaChar(short, short, short, Fix12);
     int IsClsnInRange(Fix12, Fix12);
@@ -21,7 +17,6 @@ Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
-
 int Platform::UpdateKillByMegaChar(short, short, short, Fix12);
 Actor* Actor_s::FindWithID(unsigned int);
 Actor* Actor_s::ClosestPlayer();
@@ -37,17 +32,19 @@ extern "C" int func_ov079_02126f8c(char* c) {
         Fix12 dist = Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         short ang = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         if (AngleDiff(ang, *(short*)(c + 0x8e)) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
-            int yy = *(int*)(c + 0x60);
-            int zz = *(int*)(c + 0x64);
+            long long yll = *(int*)(c + 0x60);
+            int z = *(int*)(c + 0x64);
+            int x = *(int*)(c + 0x5c);
+            int y = (int)yll + 0x96000;
             Vector3 pos;
-            pos.x = *(int*)(c + 0x5c);
-            pos.z = zz;
-            pos.y = yy + 0x96000;
+            *(volatile int*)&pos.x = x;
+            *(volatile int*)&pos.z = z;
+            *(volatile int*)&pos.y = y;
             Actor* spawned = Actor_s::Spawn(0xde, 0, pos, (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
             *(int*)(c + 0x320) = *(int*)((char*)spawned + 4);
             *(int*)((char*)spawned + 0x3dc) = (int)c;
-            self->IsClsnInRange(0, 0);
         }
     }
+    self->IsClsnInRange(0, 0);
     return 1;
 }

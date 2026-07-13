@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: missing logic (ROM does more) (div=2). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
@@ -113,9 +110,7 @@ extern "C" int _ZN5Whomp13InitResourcesEv(char *self) {
         return 0;
     }
 
-    if (*(u8 *)(self + 0x414) == 0) {
-        *(u8 *)(self + 0x401) = 1;
-    } else {
+    if (*(u8 *)(self + 0x414) != 0) {
         *(u8 *)(self + 0x401) = 3;
         _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(data_ov079_02128168.unk4, data_ov079_02128178.unk4);
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
@@ -125,6 +120,8 @@ extern "C" int _ZN5Whomp13InitResourcesEv(char *self) {
         *(s32 *)(self + 0x338) = 0;
         *(u8 *)(self + 0x409) = (u8)(*(s32 *)(self + 8) & 0xf);
         *(u8 *)(self + 0x408) = _ZN5Actor9TrackStarEjj(self, *(u8 *)(self + 0x409), 2);
+    } else {
+        *(u8 *)(self + 0x401) = 1;
     }
 
     func_ov079_02124188(self);

@@ -1,6 +1,4 @@
-// NONMATCHING: base materialization / addressing (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* f, int a, int b, unsigned int e);
 extern void _ZN9Animation7AdvanceEv(void* a);
 extern int data_ov079_021275dc[];
@@ -17,10 +15,11 @@ void func_ov079_021249f0(char* c)
         *(int*)(c + 0x98) = 0;
         *(int*)(c + 0x328) = 0x2000;
         if (*(unsigned short*)(c + 0x100) >= 0x20) {
-            unsigned char* p = (unsigned char*)c + 0x40c;
+            unsigned char* p = (unsigned char*)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
             (*p)++;
         } else {
-            *(short*)(c + 0x94) = *(short*)(c + 0x94) + 0x400;
+            short *p94 = (short*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFFLL);
+            *p94 = *p94 + 0x400;
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
         }
     } else {

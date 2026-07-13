@@ -1,8 +1,4 @@
 //cpp
-// NONMATCHING: arg-setup emission order: the func_02012694(0x78, c+0x74) call emits `mov r0,#0x78; add r1,r5,#0x74` but the ROM emits the address first (`add r1; mov r0`). The same call matches elsewhere (ov060) where an interleaved store shifts the schedule; here with nothing to interleave, mwcc picks the opposite order and no arg-materialization/pointer-type phrasing flips it. (div=2)
-/* _ZN10BulletBill8BehaviorEv at 0x02126a84 (ov079), size 0x1c0
- * Compiler mwccarm 1.2/sp2p3, flags:
- * -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -54,7 +50,12 @@ extern "C" int _ZN10BulletBill8BehaviorEv(char *c)
             _ZN6Player16IncMegaKillCountEv();
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8f, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
             _ZN9ActorBase18MarkForDestructionEv(c);
-            func_02012694(0x78, c + 0x74);
+            {
+#pragma opt_propagation off
+                void *p = c + 0x74;
+                int n = 0x78;
+                func_02012694(n, p);
+            }
         } else if (flags & 0x3c0) {
             *(int *)(c + 0x3d4) = 1;
             {
