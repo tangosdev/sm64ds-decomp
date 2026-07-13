@@ -853,6 +853,24 @@ lands. Mechanics: match.py diff columns are LEFT=ROM / RIGHT=candidate (two prob
 misread this and inverted their narrative); the DB's div is sequence edit-distance,
 not the raw MISMATCH line count (a 1-slot displacement can print 9 lines).
 
+## 6p. A loop counter reused across loops inherits its prior loop's register color (2026-07-13, Fable 0x400-0x800)
+
+Reusing ONE counter variable across several sequential loops (`for (i=...) {..} ...
+for (i=...) {..}`) makes its register web span the whole function, so the allocator
+keeps it in whatever callee-saved reg the FIRST loop colored it into - and that color
+sits behind any constants the later loops hoist. Declaring a **fresh counter per loop**
+(`i`, then `j`, then `k`, or block-scoped `for (int i...)` each time) lets each one
+color first (r4 ahead of the hoisted pool constants), which is what the ROM does.
+Matched func_ov006_0210e4f4 exactly: a 46-div residual was one coloring rotation from a
+single counter shared across all 3 loops; three fresh counters cleared it in one edit.
+Complements 6i (block-scoping a call-result temp) and 6k (reverse-decl-order coloring):
+6i/6k control WHICH reg within a scope, 6p controls whether the web crosses scopes at
+all. Cheap first thing to try on any multi-loop function with a lone counter and a
+coloring-only residual. (Same batch reconfirmed the star levers on large logic:
+u64-address laundering of RMW lvalues, `#pragma opt_strength_reduction off` for
+mla+spilled-base index math, `#pragma opt_common_subs off` to stop cross-EBB base+off
+CSE, and pointer-deref virtual calls to block devirtualization.)
+
 ## 8. The `asm`-block escape hatch (for hand-written-asm SDK primitives)
 
 Some functions -- especially arm9 NITRO-SDK primitives -- are HAND-WRITTEN ASSEMBLY that NO C
