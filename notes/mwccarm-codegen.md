@@ -267,7 +267,7 @@ guard-heavy overlay code (off by ~4 instructions), and there is a reliable knob 
 
 ## 6d. Floor taxonomy additions (refine batch, 2026-07-01)
 
-Two more residual classes confirmed source-invariant across many C spellings; when the diff
+Three residual classes confirmed source-invariant across many C spellings; when the diff
 shows one of these, stop early and report the near-miss:
 
 - **Pool-load of an immediate-encodable constant.** The ROM emits `ldr rX,[pc,#pool]` for a
@@ -279,9 +279,20 @@ shows one of these, stop early and report the near-miss:
   (func_0206ce20: identical across 10 phrasings incl. guard clause, goto, do/while-break).
   Related: an extra `add sp,sp,#imm` vs a fully if-converted merged epilogue
   (func_ov021_02111434).
+- **Un-predicated branch around a pool-materialized byte-field RMW.** For `c[OFF]++` where
+  OFF is not a data-processing immediate (e.g. 0x36e) but fits LDRB/STRB's 12-bit offset, the
+  ROM guards the increment with a REAL `beq` and pool-loads the offset to build the address
+  (`beq skip; ldr r0,[pc]; add r1,r4,r0; ldrb/add/strb; skip:`). mwccarm at -O4,p instead
+  emits either the tight predicated 4-instr direct-offset form (no pool -- confirmed by an
+  isolated single-statement test, so the pool is context/pressure-dependent, not
+  encoding-forced) or, with a pointer var hoisted before the branch, a PREDICATED pool form.
+  Swept ~8 phrasings (bare postfix, ptr-var scope/position, void* arith, inverted condition):
+  each lands at most two of {pool, real branch, correct outer regs}, never all three
+  (inverting the condition gets the branch but breaks outer control-flow regalloc). Example:
+  func_ov072_021214dc (near-miss banked in _abwork, 48 div / 89 words, 324 vs 356 bytes).
 
-Both classes live in nearmiss/db.jsonl at div 1-2; candidates for an asm-block close-out
-(sec 8) if their subsystems ever need completion.
+The first two classes live in nearmiss/db.jsonl at div 1-2; candidates for an asm-block
+close-out (sec 8) if their subsystems ever need completion.
 
 ## 6e. Fable-discovered levers (2026-07-01) - walls that turned out to be reachable
 
