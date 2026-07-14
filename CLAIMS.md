@@ -109,3 +109,4 @@ it is fair to take over: ping the claimant first.
 | ov009: func_ov009_0211145c, func_ov009_021115d8, _ZN4Bird13InitResourcesEv | lunavyqo (Grok) | 2026-07-13 | **done** — 3 verified byte-identical |
 | ov064 batch11: 8 funcs (15f98,16220,17220,Bully::Behavior,17d24,18760,LavaBubble::InitResources,18ee4) | lunavyqo (Grok) | 2026-07-13 | **done** — 8 verified byte-identical (RotatingFirebar::Behavior, 193b4, 1a4c4 dropped: hand-asm dcd dumps, not matches) |
 | ov016 Unagi batch: func_ov016_021119ec, _ZN5Unagi8BehaviorEv, _ZN5Unagi13InitResourcesEv (0x021119ec-0x02112e1c) | lunavyqo (Grok) | 2026-07-13 | **done** — 3 matched byte-identical; near-misses func_ov016_02111c40 (div=54) + func_ov016_02112b50 (div=10) banked in nearmiss/db.jsonl |
+| ov066: func_ov066_02118e04 (0x02118e04, 0x218) + _ZN6Eyerok8BehaviorEv (0x02119838, 0x4b0) | lunavyqo (Grok) | 2026-07-15 | **done** — both verified byte-identical |
