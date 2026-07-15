@@ -1,69 +1,70 @@
 //cpp
-// NONMATCHING: different op / idiom (div=45). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
-extern void _Z14ApproachLinearRiii(int *p, int t, int s);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *o, void *f, int a, int fx, unsigned j);
-extern int _ZN9Animation8FinishedEv(void *o);
-extern int _ZN6Player12GetTalkStateEv(void);
-extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned a);
-extern void _ZN7Message7EndTalkEv(void);
-extern void func_ov034_021125b8(void *c, int i);
-extern char *data_ov034_0211389c[];
-extern char *data_ov034_02113860[];
+void _Z14ApproachLinearRiii(int *p, int t, int s);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned);
+int _ZN9Animation8FinishedEv(void *);
+int _ZN6Player12GetTalkStateEv(void *);
+void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned);
+void _ZN7Message7EndTalkEv(void);
+void func_ov034_021125b8(void *, int);
 }
+extern void **data_ov034_0211389c[];
+extern void **data_ov034_02113860[];
 
-extern "C" void func_ov034_021120ac(void *cc)
-{
-    char *c = (char*)cc;
-    int i, j, k;
-    int match;
+extern "C" void func_ov034_021120ac(char *c) {
+    int i, k;
+    char *anim;
+    void *player;
 
-    _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x1000);
+    _Z14ApproachLinearRiii((int *)(c + 0x98), 0, 0x1000);
 
-    if (*(unsigned char*)(c + 0x8da) == 0) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(void**)(data_ov034_0211389c[0] + 4), 0x40000000, 0x1000, 0);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x174, *(void**)(data_ov034_0211389c[1] + 4), 0x40000000, 0x1000, 0);
+    if (*(unsigned char *)(c + 0x8da) == 0) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov034_0211389c[0][1], 0x40000000, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x174, data_ov034_0211389c[1][1], 0x40000000, 0x1000, 0);
     }
 
-    {
-        char *r7 = c + 0x110 + 0xc8;
-        int r8 = 6;
-        for (i = 2; i < 5; i++) {
-            if (*(unsigned char*)(c + 0x8da) == r8 - 3) {
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(r7, *(void**)(data_ov034_0211389c[i] + 4), 0x40000000, 0x1000, 0);
-            }
-            r8 += 3;
-            r7 += 0x64;
-        }
+    anim = c + 0x110;
+    anim = anim + 0xc8;
+    for (i = 2, k = 6; i < 5; i++, k += 3, anim += 0x64) {
+        if (*(unsigned char *)(c + 0x8da) == k - 3)
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(anim, data_ov034_0211389c[i][1], 0x40000000, 0x1000, 0);
     }
 
     if (_ZN9Animation8FinishedEv(c + 0x2f0)) {
-        char *r7 = c + 0x110;
-        for (j = 0; j < 5; j++) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(r7, *(void**)(data_ov034_02113860[j] + 4), 0, 0x1000, 0);
-            r7 += 0x64;
+{
+int i; char *p;
+p = c + 0x110;
+i = 0;
+        for (; i < 5; i++, p += 0x64)
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p, data_ov034_02113860[i][1], 0, 0x1000, 0);
+}
+    }
+
+    player = *(void **)(c + 0x8c8);
+
+    {
+        int flag; int i; char *p; int zero;
+        p = c;
+        flag = 1;
+        zero = 0;
+        i = 0;
+        for (; i < 5; i++, p += 0x64) {
+            if (*(int *)(p + 0x170) != (int)data_ov034_02113860[i][1])
+                flag = zero;
+        }
+        if (flag == 1) {
+            if (_ZN6Player12GetTalkStateEv(player) == 2) {
+                _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
+                _ZN7Message7EndTalkEv();
+                func_ov034_021125b8(c, 3);
+            }
         }
     }
 
     {
-        char *r5 = c;
-        match = 1;
-        for (k = 0; k < 5; k++) {
-            if (*(int*)(r5 + 0x170) != *(int*)(data_ov034_02113860[k] + 4))
-                match = 0;
-            r5 += 0x64;
-        }
+        unsigned char *t = (unsigned char *)(void *)(unsigned long long)(unsigned)(c + 0x8da);
+        *t = (unsigned char)(*t + 1);
     }
-
-    if (match == 1 && _ZN6Player12GetTalkStateEv() == 2) {
-        _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
-        _ZN7Message7EndTalkEv();
-        func_ov034_021125b8(c, 3);
-    }
-
-    *(unsigned char*)(c + 0x8da) += 1;
-    if (*(unsigned char*)(c + 0x8da) > 0xc)
-        *(unsigned char*)(c + 0x8da) = 0xd;
+    if (*(unsigned char *)(c + 0x8da) > 0xc)
+        *(unsigned char *)(c + 0x8da) = 0xd;
 }
