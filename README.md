@@ -1,11 +1,11 @@
-# sm64ds-decomp
+# Super Mario 64 DS Decompilation (sm64ds-decomp)
 
 [![Discord Server][discord-badge]][discord]
 
 [discord]: https://discord.gg/JXckvdARc
 [discord-badge]: https://img.shields.io/discord/1520811338568569112?color=7289DA&logo=discord&logoColor=ffffff
 
-A from-scratch effort to decompile **Super Mario 64 DS** into matching C.
+A from-scratch decompilation (decomp) of **Super Mario 64 DS** into matching C.
 
 New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**, coordinate work in
 **[CLAIMS.md](CLAIMS.md)**, and if you review or merge PRs read **[MERGE.md](MERGE.md)**.
