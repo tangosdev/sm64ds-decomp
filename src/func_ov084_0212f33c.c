@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=7). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vec3 { int x, y, z; };
 extern "C" {
 extern void func_02012694(unsigned int a, void *b);
@@ -37,15 +34,13 @@ void func_ov084_0212f33c(void *self)
     } else {
         r4 = 0;
         if (*(unsigned char*)(c + 0x108) != 0) {
-            int vy = *(int*)(c + 0x60) + 0x78000;
-            int vz = *(int*)(c + 0x64);
-            v.x = *(int*)(c + 0x5c);
-            v.y = vy;
-            v.z = vz;
+            int y = *(int*)(c + 0x60);
+            int z = *(int*)(c + 0x64);
+            v = (struct Vec3){*(int*)(c + 0x5c), y + 0x78000, z};
             _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
                 0x122, r4, &v, (void*)r4, *(signed char*)(c + 0xcc), -1);
+            *(unsigned char*)(c + 0x108) = r4;
         }
-        *(unsigned char*)(c + 0x108) = r4;
         *(int*)(c + 0x458) = 7;
     }
     *(int*)(c + 0x80) = r4;

@@ -1,7 +1,5 @@
-// NONMATCHING: different op / idiom (div=16). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef struct { int x, y, z; } Vec3;
+typedef struct { int a, b; } W2;
 extern int LenVec3(Vec3 *v);
 extern void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
 extern int NormalizeVec3IfNonZero(Vec3 *v);
@@ -21,27 +19,32 @@ struct Obj {
     short fe6;
 };
 
-extern int data_ov006_0213af50[2];
+extern W2 data_ov006_0213af50;
 
 void func_ov006_020c57d4(struct Obj *o)
 {
     Vec3 a, b, da, db, t;
     int la;
+    int ay, ax, by, bx;
     o->fa8.x = o->f4;
     o->fa8.y = o->f8;
     o->fa8.z = o->fc;
     o->fdc = LenVec3(&o->fa8);
     o->fe6 = 0;
-    a.x = o->f14;
-    a.y = o->f1c;
+    ay = o->f1c;
+    ax = o->f14;
+    a.x = ax;
+    a.y = ay;
     a.z = 0;
-    b.x = o->f10;
-    b.y = o->f18;
+    by = o->f18;
+    bx = o->f10;
+    b.x = bx;
+    b.y = by;
     b.z = 0;
     Vec3_Sub(&da, &a, &o->f9c);
     la = LenVec3(&da);
     Vec3_Sub(&db, &b, &o->f9c);
-    if (la < LenVec3(&db)) {
+    if (LenVec3(&db) < la) {
         o->fb4.x = a.x;
         o->fb4.y = a.y;
         o->fb4.z = a.z;
@@ -59,8 +62,7 @@ void func_ov006_020c57d4(struct Obj *o)
         o->fa8.y = o->f8;
         o->fa8.z = o->fc;
     } else {
-        Vec3_MulScalarInPlace((int*)&o->fa8, o->fdc);
+        Vec3_MulScalarInPlace((int *)&o->fa8, o->fdc);
     }
-    *(int*)((char*)o + 0x30) = data_ov006_0213af50[0];
-    *(int*)((char*)o + 0x34) = data_ov006_0213af50[1];
+    *(W2 *)((char *)o + 0x30) = data_ov006_0213af50;
 }

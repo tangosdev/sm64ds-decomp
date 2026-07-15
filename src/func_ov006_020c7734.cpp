@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct OamAttr;
 struct Matrix2x2;
 
@@ -15,26 +12,27 @@ extern void *data_ov006_02141a44;
 extern unsigned short data_ov006_02140404;
 extern short data_02082214[];
 extern OamAttr *data_ov006_02134d1c;
-
-struct VObj;
-typedef void (*VFn)(VObj *o, void *arg);
-struct VObj {
-    char *tbl;
-};
 extern char data_ov006_0212ddd0;
 
-struct Mtx {
-    int a, b, c, d;
-    Mtx() { a = 0; b = 0; c = 0; d = 0; }
+struct Mtx { int a, b, c, d; };
+
+struct VBase {
+    virtual void m0();
+    virtual void m1();
+    virtual void m2();
+    virtual void m3();
+    virtual void m4();
+    virtual void m5(void *arg);
 };
 
 extern "C" void func_ov006_020c7734(char *self)
 {
-    short v[2];        // sp+0xc, sp+0xe
+    short v[2];
     int r1res;
     int r2res;
     int g;
     int t;
+    Mtx m;
 
     if (*(unsigned char *)(self + 0x35) == 0)
         return;
@@ -50,15 +48,14 @@ extern "C" void func_ov006_020c7734(char *self)
         g = data_ov006_02140404;
         r2res = -func_02053200((data_02082214[(g >> 4) * 2 + 1] >> 2) + 0x1000);
 
-        Mtx m;
+        int *mp = (int *)&m;
+        int z = 0;
+        mp[0] = z; mp[1] = z; mp[2] = z; mp[3] = z;
         m.d = r2res;
         m.a = r1res;
         _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(
             false, data_ov006_02134d1c, v[0], v[1], -1, -1, (Matrix2x2 *)&m);
     }
 
-    {
-        VObj *o = (VObj *)(self + 0x4c);
-        (*(VFn *)(o->tbl + 0x14))(o, &data_ov006_0212ddd0);
-    }
+    ((VBase *)(self + 0x4c))->m5(&data_ov006_0212ddd0);
 }

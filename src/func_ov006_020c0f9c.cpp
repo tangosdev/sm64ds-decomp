@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: predicate vs branch (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
 extern int _ZNK9Animation12WillHitFrameEi(void *o, int f);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *o, void *bca, int a, int b, int fx, unsigned short t);
@@ -18,9 +15,11 @@ extern "C" void func_ov006_020c0f9c(void *cc)
         goto other;
 
     if (_ZNK9Animation12WillHitFrameEi(c + 0x6c, 0)) {
-        short t = *(short*)((char*)(c + 0x100) + 0xde);
-        *(short*)(c + 0x1de) = *(short*)(c + 0x1de) - 1;
-        if (t <= 0) {
+        short cv = *(short*)(c + 0x100 + 0xde);
+        short *p = (short*)(((long)c + 0x1de) & 0xFFFFFFFFFFFFFFFF);
+        short old = *p;
+        *p = old - 1;
+        if (cv <= 0) {
             int a;
             *(int*)(c + 0x1d4) = 0;
             a = *(short*)(c + 0x1a);

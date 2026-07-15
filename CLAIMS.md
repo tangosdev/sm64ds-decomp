@@ -112,3 +112,5 @@ it is fair to take over: ping the claimant first.
 | ov066: func_ov066_02118e04 (0x02118e04, 0x218) + _ZN6Eyerok8BehaviorEv (0x02119838, 0x4b0) | lunavyqo (Grok) | 2026-07-15 | **done** — both verified byte-identical |
 | ov034 Wiggler batch: func_ov034_021113d4/115cc/11e68/120ac/12688/12874 (0x021113d4-0x0211323c) | lunavyqo (Grok) | 2026-07-15 | **done** — 6 matched byte-identical; _ZN7Wiggler8BehaviorEv near-miss (div=277, size 0x6e0) banked in nearmiss/db.jsonl |
 | ov004 batch16: __sinit_020b9b24 + 020b53f0/410c/6ddc/556c (5 funcs) | lunavyqo (Grok) | 2026-07-15 | **done** — 5 matched byte-identical (mwccarm 1.2/sp2p3); near-misses func_ov004_020b484c/38ac/3b38/4360/45c0 banked in nearmiss/db.jsonl |
+| ov006 batch 0x020c0f0c-0x020c7860 (14 funcs) | lunavyqo (Grok) | 2026-07-15 | **done** — 14 matched byte-identical; near-misses func_ov006_020c3990 (div=14) + func_ov006_020c4fa4 banked in nearmiss/db.jsonl |
+| ov080 batch16: 15/16 MATCH (261f4 div=5 4a8 regperm wall, same as 25460) | lunavyqo (Grok) | 2026-07-15 | **active** — 15 matched PR draft; 261f4 near-miss banked |

@@ -1,6 +1,4 @@
-// NONMATCHING: different op / idiom (div=41). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+/* use unsigned loads / different shift form (>>8) cast s16 */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef short s16;
@@ -14,7 +12,7 @@ void func_ov080_02125fd0(char* self)
 {
     int tmp[13];
     int i;
-    char* p;
+    int* p;
 
     *(int*)0x4000444 = 0;
     MulMat4x3Mat4x3((void*)(self + 0xd4), &data_0209b3ec, tmp);
@@ -30,15 +28,22 @@ void func_ov080_02125fd0(char* self)
     *(int*)0x4000500 = 1;
 
     i = 0;
-    p = self + 0x140;
+    p = (int*)(self + 0x140);
     do {
-        *(int*)0x4000488 = *(int*)(p + 0x14);
-        *(int*)0x4000484 = *(int*)(p + 0x10);
-        *(int*)0x400048c = (u16)(s16)((*(int*)(p + 0) << 8) >> 0x10)
-                         | (s16)((*(int*)(p + 4) << 8) >> 0x10) << 0x10;
-        *(int*)0x400048c = (u16)(s16)((*(int*)(p + 8) << 8) >> 0x10);
+        int v0, v1, v2;
+        s16 s0, s1, s2;
+        *(int*)0x4000488 = p[5];
+        *(int*)0x4000484 = p[4];
+        v0 = p[0];
+        v1 = p[1];
+        v2 = p[2];
+        s0 = (s16)(v0 >> 8);
+        s1 = (s16)(v1 >> 8);
+        s2 = (s16)(v2 >> 8);
+        *(int*)0x400048c = (u16)s0 | ((u16)s1 << 16);
+        *(int*)0x400048c = (u16)s2;
         i++;
-        p += 0x18;
+        p += 6;
     } while (i < 4);
 
     *(int*)0x4000504 = 0;
