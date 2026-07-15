@@ -1,6 +1,6 @@
-extern void func_02045f80(void *a);
+void func_02045f80(char* p);
 
-void func_02016a14(void *a)
+void func_02016a14(char* self)
 {
-    func_02045f80((void *)((char *)a + 8));
+    func_02045f80(self + 8);
 }
