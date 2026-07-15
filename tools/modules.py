@@ -10,34 +10,42 @@ import re
 REPO = pathlib.Path(__file__).resolve().parent.parent
 EXTRACTED = REPO / "extracted"
 CFG = REPO / "config" / "arm9"
-OVL_YAML = EXTRACTED / "dsd" / "arm9_overlays" / "overlays.yaml"
 ARM9_BASE = 0x02004000
 
 
-def _overlay_bases():
-    """{overlay_id: base_address} parsed from overlays.yaml."""
-    out, cur = {}, None
-    for line in OVL_YAML.read_text(errors="ignore").splitlines():
-        m = re.match(r"\s*-\s*id:\s*(\d+)", line)
+def _overlay_base(symbols):
+    """An overlay's base = its lowest symbol address, read from the config's symbols.txt.
+
+    dsd relocates each overlay to a unique address in the delinked config space so that
+    (module, addr) is well-defined even though overlays share RAM slots at runtime; that
+    base is the overlay's lowest symbol. We derive it from config (the source of truth)
+    rather than `extracted/dsd/arm9_overlays/overlays.yaml`, whose `base_address` is the
+    raw ROM overlay-TABLE ramAddress -- correct for the ROM image but NOT the config's
+    relocated space, so reading it makes `addr - base` land outside the overlay binary.
+    (The overlay binaries are identity-indexed: overlay_NNNN.bin == config ovNNN.)"""
+    lo = None
+    for line in symbols.read_text(errors="ignore").splitlines():
+        m = re.search(r"addr:0x([0-9a-fA-F]+)", line)
         if m:
-            cur = int(m.group(1))
-        m = re.match(r"\s*base_address:\s*(\d+)", line)
-        if m and cur is not None:
-            out[cur] = int(m.group(1))
-            cur = None
-    return out
+            a = int(m.group(1), 16)
+            lo = a if lo is None else min(lo, a)
+    return lo
 
 
 def modules():
     """All modules as dicts: {name, syms, relocs, bin, base}."""
     mods = [{"name": "main", "syms": CFG / "symbols.txt", "relocs": CFG / "relocs.txt",
              "bin": EXTRACTED / "arm9_dec.bin", "base": ARM9_BASE}]
-    for i, base in sorted(_overlay_bases().items()):
-        d = CFG / "overlays" / f"ov{i:03d}"
-        b = EXTRACTED / "overlays" / f"overlay_{i:04d}.bin"
-        if d.is_dir() and b.is_file():
-            mods.append({"name": f"ov{i:03d}", "syms": d / "symbols.txt",
-                         "relocs": d / "relocs.txt", "bin": b, "base": base})
+    for d in sorted((CFG / "overlays").glob("ov*")):
+        syms = d / "symbols.txt"
+        b = EXTRACTED / "overlays" / f"overlay_{int(d.name[2:]):04d}.bin"
+        if not (d.is_dir() and b.is_file() and syms.is_file()):
+            continue
+        base = _overlay_base(syms)
+        if base is None:
+            continue
+        mods.append({"name": d.name, "syms": syms, "relocs": d / "relocs.txt",
+                     "bin": b, "base": base})
     return mods
 
 
