@@ -46,12 +46,16 @@ def shape(ins):
 def target_from_args(a):
     if a.target_hex:
         return bytes.fromhex(a.target_hex)
+    # Default to the main module when none is given: an arm9 target only carries addr/size, so
+    # requiring --module for it just produced the cryptic "module None not found". Overlays always
+    # pass ovNNN explicitly, so this only affects the main binary.
+    want = a.module or "arm9"
     for mod in MOD.modules():
         label = "arm9" if mod["name"] == "main" else mod["name"]
-        if label == a.module:
+        if label == want:
             data = mod["bin"].read_bytes()
             return data[a.addr - mod["base"]:a.addr - mod["base"] + a.size]
-    raise SystemExit(f"module {a.module} not found")
+    raise SystemExit(f"module {want} not found")
 
 
 def main():
