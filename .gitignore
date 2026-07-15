@@ -86,3 +86,6 @@ _glmwork/
 
 # emu-trace runtime capture output (tools/trace/collect.py) - regenerable data
 /traces/
+
+# emu-trace behavioral capture output (tools/trace/behavior.py)
+/behavior/
