@@ -22,7 +22,7 @@
     "cwd": ".",
     "python": "python",
     "shell": false,
-    "envKeys": ["GITHUB_TOKEN", "ANTHROPIC_API_KEY", "GLM_API_KEY", "DEEPSEEK_API_KEY", "CLAIMS_API_KEY"],
+    "envKeys": ["GITHUB_TOKEN", "ANTHROPIC_API_KEY", "GLM_API_KEY", "DEEPSEEK_API_KEY", "NEMOTRON_API_KEY", "CLAIMS_API_KEY"],
     "envKeyHelp": {
       "GITHUB_TOKEN": {
         "note": "Read-only GitHub token. Raises the API rate limit (anonymous is 60/hr) so contributor stats and PR-based match attribution work. A fine-grained token with public-repo read access is enough - it is stored encrypted on your machine and never shared.",
@@ -31,6 +31,7 @@
       "ANTHROPIC_API_KEY": { "note": "Only if you run the Claude cascade/refine tools over the API instead of driving them from an editor session." },
       "GLM_API_KEY": { "note": "z.ai coding-plan key for the GLM refine tier (tools/glm_refine.py).", "url": "https://z.ai" },
       "DEEPSEEK_API_KEY": { "note": "DeepSeek platform API key. Stored encrypted; gives you a DeepSeek box (deepseek-chat / deepseek-reasoner).", "url": "https://platform.deepseek.com/api_keys" },
+      "NEMOTRON_API_KEY": { "note": "Local Nemotron-3 via LM Studio (OpenAI-compatible server on localhost:1234, model 'nemo'). The server ignores the value, so any placeholder like 'lm-studio' works - storing it just switches the Nemotron box on and makes it console-drivable. Start LM Studio (Start-Nemotron.ps1) before driving." },
       "CLAIMS_API_KEY": { "note": "Write key for the belongto.us claims board, so your locks post under your handle. Optional - read-only works without it." }
     }
   },

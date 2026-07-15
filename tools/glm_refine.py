@@ -137,18 +137,62 @@ def extract(reply):
     return src, note, floor
 
 
-def chat(messages, max_tokens=8000, retries=8):
+def _read_openai_stream(r, on_delta):
+    """Parse an OpenAI /chat/completions SSE stream. Echo each delta to on_delta as it arrives - both
+    reasoning_content (the model thinking) and content (the answer) - so the console live viewer shows
+    the model working in real time. Only `content` is accumulated and returned; reasoning is shown but
+    not fed to the code extractor. Returns (text, prompt_tokens, completion_tokens) like the non-stream
+    path (usage rides the final chunk when the server honors stream_options.include_usage)."""
+    parts, in_tok, out_tok = [], 0, 0
+    for raw in r.iter_lines(decode_unicode=True):
+        if not raw or not raw.startswith("data:"):
+            continue
+        payload = raw[5:].strip()
+        if payload == "[DONE]":
+            break
+        try:
+            chunk = json.loads(payload)
+        except ValueError:
+            continue
+        choices = chunk.get("choices") or []
+        if choices:
+            delta = choices[0].get("delta") or {}
+            reason = delta.get("reasoning_content")
+            if reason:
+                on_delta(reason)
+            piece = delta.get("content")
+            if piece:
+                parts.append(piece)
+                on_delta(piece)
+        usage = chunk.get("usage")
+        if usage:
+            in_tok = usage.get("prompt_tokens") or in_tok
+            out_tok = usage.get("completion_tokens") or out_tok
+    return "".join(parts), in_tok, out_tok
+
+
+def chat(messages, max_tokens=8000, retries=8, on_delta=None):
     think, mt = _thinking_for(max_tokens)
+    # Token streaming (OpenAI dialect only): when on_delta is given, read the SSE stream and echo each
+    # delta as it arrives instead of waiting for the whole reply. Same tokens at the same rate, just
+    # delivered incrementally. Anthropic-dialect callers ignore on_delta (they stay non-streaming).
+    stream = bool(on_delta) and _IS_OPENAI
     if _IS_OPENAI:
-        # OpenAI Chat Completions dialect (DeepSeek): Bearer auth, /chat/completions, choices[].
+        # OpenAI Chat Completions dialect (DeepSeek / local LM Studio): Bearer auth, /chat/completions.
         url = BASE_URL.rstrip("/") + "/chat/completions"
         headers = {"authorization": f"Bearer {API_KEY}", "content-type": "application/json"}
-        # A reasoning model (deepseek-reasoner) spends its hidden reasoning INSIDE max_tokens; at
-        # the default 8000 a hard function's reasoning starves/truncates the code block ("no code
-        # block returned"). Give it real headroom - it only bills what it actually uses.
-        if "reason" in MODEL.lower():
+        # A reasoning model (deepseek-reasoner, nemotron) spends its hidden thinking INSIDE
+        # max_tokens; at the default 8000 a hard function's reasoning starves/truncates the code
+        # block ("no code block returned"). Give the known reasoners real headroom - they only bill
+        # what they use. (nemotron reasons heavily but its name lacks "reason", so name it explicitly.
+        # NOTE: this is still bounded by the server's loaded context window - LM Studio defaults
+        # Nemotron to 8192, too small for this; load it with a bigger --context to actually use this.)
+        if "reason" in MODEL.lower() or "nemotron" in MODEL.lower():
             mt = max(mt, 24000)
         body = {"model": MODEL, "max_tokens": mt, "messages": messages}
+        if stream:
+            body["stream"] = True
+            body["stream_options"] = {"include_usage": True}  # usage rides the final chunk
     else:
         url = BASE_URL.rstrip("/") + "/v1/messages"
         headers = {"x-api-key": API_KEY, "anthropic-version": "2023-06-01",
@@ -164,12 +208,20 @@ def chat(messages, max_tokens=8000, retries=8):
     delay = 5
     for i in range(retries):
         try:
-            r = requests.post(url, headers=headers, json=body, timeout=600)
+            r = requests.post(url, headers=headers, json=body, timeout=600, stream=stream)
         except requests.RequestException:
             if i == retries - 1:
                 raise RuntimeError("GLM API: network error, retries exhausted")
             time.sleep(delay + random.uniform(0, 3)); delay = min(delay * 2, 120); continue
         if r.status_code == 200:
+            if stream:
+                # A mid-stream drop is retried like any network hiccup (partial deltas already echoed).
+                try:
+                    return _read_openai_stream(r, on_delta)
+                except requests.RequestException:
+                    if i == retries - 1:
+                        raise RuntimeError("GLM API: stream error, retries exhausted")
+                    time.sleep(delay + random.uniform(0, 3)); delay = min(delay * 2, 120); continue
             data = r.json()
             if _IS_OPENAI:
                 msg = (data.get("choices") or [{}])[0].get("message", {}) or {}
@@ -205,10 +257,33 @@ def verify(name, wl):
     return (int(m.group(1)) if m else 999), out
 
 
-def crack_one(name, wl, attempts, row):
+def crack_one(name, wl, attempts, row, live=False):
     t_in = t_out = 0
     orig_div = None  # stored draft's divergence before refining; None if verify never ran
     att_log = []  # per-attempt lines, printed by the caller BELOW the result header
+    # On a sequential drive (jobs=1, e.g. GLM / local Nemotron) stream each attempt as it lands so
+    # the console's live viewer fills in instead of sitting silent for the minute+ a slow local model
+    # takes per function. Parallel drives keep the tidy result-first block (live=False), since
+    # interleaved workers would scramble it. The line still goes into att_log for the .output file.
+    def note_attempt(msg):
+        att_log.append(msg)
+        if live:
+            log(f"    {name} {msg}")
+    # Live token echo -> STDERR. The console shows stderr in its live viewer, but its progress parser
+    # only reads STDOUT, so raw model text (which could contain a "(1/2) ...: MATCH"-looking line) can
+    # never be miscounted as a completion. Buffered so a fast stream doesn't flood the IPC: flushed on
+    # a newline or ~120 chars, with the tail flushed after each reply.
+    _sbuf, _slen = [], [0]
+    def stream_echo(frag):
+        _sbuf.append(frag); _slen[0] += len(frag)
+        if _slen[0] >= 120 or "\n" in frag:
+            sys.stderr.write("".join(_sbuf)); sys.stderr.flush()
+            _sbuf.clear(); _slen[0] = 0
+    def flush_echo():
+        if _sbuf:
+            sys.stderr.write("".join(_sbuf) + "\n"); sys.stderr.flush()
+            _sbuf.clear(); _slen[0] = 0
+    on_delta = stream_echo if live else None
     try:
         ctx = run_tool(["tools/abrow.py", "--name", name, "--wl", wl])
         draft = row.get("draft") or ""
@@ -222,31 +297,49 @@ def crack_one(name, wl, attempts, row):
                     "divergences": 0, "orig_div": orig_div, "note": "stored draft already matches",
                     "log": att_log}, 0, 0
 
+        has_draft = bool(draft.strip())
+        if live:  # immediate feedback: which function is being worked, before the slow model call
+            phase = f"draft div={best_div}, refining" if has_draft else "no draft, writing from scratch"
+            log(f"-> {name}: {phase} with {MODEL} (up to {attempts} attempts)...")
+        if has_draft:
+            draft_block = (f"=== CURRENT DRAFT (divergences={best_div}) ===\n{draft}\n\n"
+                           f"=== VERIFIER OUTPUT ===\n{vout}")
+        else:
+            # No candidate exists yet (a fresh target). Say so plainly: an empty "CURRENT DRAFT
+            # (divergences=999)" block just reads to the model as "the draft is missing" and sends it
+            # hunting for one or reaching for an inline-asm hack. Point it at writing real C instead.
+            draft_block = ("=== NO DRAFT YET ===\nThere is no candidate C for this function - write the "
+                           "COMPLETE source file from scratch so mwccarm compiles it to byte-match the "
+                           "target disassembly above. Write real C/C++ (declarations, types, the function "
+                           "body); do NOT emit an inline-asm blob - that is not a valid match and will not "
+                           "compile with these flags.")
         messages = [{"role": "user", "content":
                      f"{INSTRUCTIONS}\n\nFUNCTION: {name}\n\n=== CONTEXT (annotated target "
-                     f"disasm, callee sigs, pool slots, stored draft) ===\n{ctx}\n\n"
-                     f"=== CURRENT DRAFT (divergences={best_div}) ===\n{draft}\n\n"
-                     f"=== VERIFIER OUTPUT ===\n{vout}"}]
+                     f"disasm, callee sigs, pool slots, stored draft) ===\n{ctx}\n\n{draft_block}"}]
         note, stale, apierr = "", 0, 0
         for att in range(1, attempts + 1):
             # Per-attempt error handling: a rate-limit/network error on one attempt must NOT sink
             # the whole function (the old behavior: div=999 with zero logged attempts). Log it and
             # keep going, up to a few consecutive failures. BALANCE_EXHAUSTED still hard-stops.
             try:
-                reply, i_tok, o_tok = chat(messages)
+                reply, i_tok, o_tok = chat(messages, on_delta=on_delta)
             except RuntimeError as e:
                 if "BALANCE_EXHAUSTED" in str(e):
                     raise
                 apierr += 1
-                att_log.append(f"attempt {att}: api error - {str(e)[:50]}")
+                if live:
+                    flush_echo()
+                note_attempt(f"attempt {att}: api error - {str(e)[:50]}")
                 if apierr >= 3:
                     break
                 continue
             apierr = 0
+            if live:
+                flush_echo()  # push the tail of the streamed reply before the attempt-summary line
             t_in += i_tok; t_out += o_tok
             src, note, floor = extract(reply)
             if not src:
-                att_log.append(f"attempt {att}: no code block returned")
+                note_attempt(f"attempt {att}: no code block returned")
                 messages.append({"role": "assistant", "content": reply})
                 messages.append({"role": "user", "content":
                                  "No code block found. Reply with the complete source file "
@@ -254,7 +347,7 @@ def crack_one(name, wl, attempts, row):
                 continue
             (_WORKDIR / f"{name}.src").write_text(src, encoding="utf-8", newline="\n")
             div, vout = verify(name, wl)
-            att_log.append(f"attempt {att}: div={div} (best {min(best_div, div)})")
+            note_attempt(f"attempt {att}: div={div} (best {min(best_div, div)})")
             if div < best_div:
                 best_div, best_src, stale = div, src, 0
             else:
@@ -337,6 +430,7 @@ def main():
 
     t0 = time.time()
     results, tin, tout, skipped = [], 0, 0, 0
+    live = args.jobs == 1  # sequential drive: stream per-attempt progress (see crack_one)
     for c0 in range(0, len(rows), args.chunk):
         chunk = rows[c0:c0 + args.chunk]
         locked = []           # (row, claim_id or None)
@@ -367,7 +461,7 @@ def main():
             continue
         try:
             with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-                futs = {ex.submit(crack_one, r["name"], args.wl, args.attempts, r): r
+                futs = {ex.submit(crack_one, r["name"], args.wl, args.attempts, r, live): r
                         for r, _ in locked}
                 for f in concurrent.futures.as_completed(futs):
                     res, i_tok, o_tok = f.result()
@@ -383,7 +477,8 @@ def main():
                     if isinstance(orig, int) and orig > 0:
                         status += f" (from: {orig})"
                     lines = [f"({len(results)}/{len(rows)}) {res['name']}: {status}"]
-                    lines += [f"    {ln}" for ln in res.get('log', [])]
+                    if not live:  # sequential runs already streamed these attempts live
+                        lines += [f"    {ln}" for ln in res.get('log', [])]
                     log("\n".join(lines))
         finally:
             if claims is not None:

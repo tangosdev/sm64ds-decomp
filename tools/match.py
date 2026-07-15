@@ -154,6 +154,15 @@ def main():
             print(f"  (reloc-destination check unavailable: {e}; byte-only compare)")
 
     cfile = pathlib.Path(args.c)
+    # Auto-detect C++ the same way fdiff/swarm do: a leading //cpp marker means compile with
+    # -lang c++ instead of the default -lang c99, so C++ candidates stop failing to compile
+    # (the file is already .cpp, so it compiles in place - no temp copy needed).
+    flags = args.flags
+    try:
+        if cfile.read_text(encoding="utf-8").startswith("//cpp") and "-lang c99" in flags:
+            flags = flags.replace("-lang c99", "-lang c++")
+    except OSError:
+        pass  # a missing/unreadable candidate surfaces later at compile_c with a clearer error
     if args.bin:
         tgt = target_bytes(args.addr, args.size, pathlib.Path(args.bin), args.base)
     elif args.module and args.module != "arm9":
@@ -189,7 +198,7 @@ def main():
     matched = []
     closest = None  # (ndiff, version, code, relocs) for a helpful diff when nothing matches
     for v in versions:
-        obj = compile_c(cfile, v, args.flags)
+        obj = compile_c(cfile, v, flags)
         if obj is None:
             continue
         code, relocs = extract_func(obj, args.func)
