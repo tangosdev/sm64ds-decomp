@@ -181,10 +181,13 @@ def chat(messages, max_tokens=8000, retries=8, on_delta=None):
         # OpenAI Chat Completions dialect (DeepSeek / local LM Studio): Bearer auth, /chat/completions.
         url = BASE_URL.rstrip("/") + "/chat/completions"
         headers = {"authorization": f"Bearer {API_KEY}", "content-type": "application/json"}
-        # A reasoning model (deepseek-reasoner) spends its hidden reasoning INSIDE max_tokens; at
-        # the default 8000 a hard function's reasoning starves/truncates the code block ("no code
-        # block returned"). Give it real headroom - it only bills what it actually uses.
-        if "reason" in MODEL.lower():
+        # A reasoning model (deepseek-reasoner, nemotron) spends its hidden thinking INSIDE
+        # max_tokens; at the default 8000 a hard function's reasoning starves/truncates the code
+        # block ("no code block returned"). Give the known reasoners real headroom - they only bill
+        # what they use. (nemotron reasons heavily but its name lacks "reason", so name it explicitly.
+        # NOTE: this is still bounded by the server's loaded context window - LM Studio defaults
+        # Nemotron to 8192, too small for this; load it with a bigger --context to actually use this.)
+        if "reason" in MODEL.lower() or "nemotron" in MODEL.lower():
             mt = max(mt, 24000)
         body = {"model": MODEL, "max_tokens": mt, "messages": messages}
         if stream:
@@ -294,13 +297,25 @@ def crack_one(name, wl, attempts, row, live=False):
                     "divergences": 0, "orig_div": orig_div, "note": "stored draft already matches",
                     "log": att_log}, 0, 0
 
+        has_draft = bool(draft.strip())
         if live:  # immediate feedback: which function is being worked, before the slow model call
-            log(f"-> {name}: draft div={best_div}, refining with {MODEL} (up to {attempts} attempts)...")
+            phase = f"draft div={best_div}, refining" if has_draft else "no draft, writing from scratch"
+            log(f"-> {name}: {phase} with {MODEL} (up to {attempts} attempts)...")
+        if has_draft:
+            draft_block = (f"=== CURRENT DRAFT (divergences={best_div}) ===\n{draft}\n\n"
+                           f"=== VERIFIER OUTPUT ===\n{vout}")
+        else:
+            # No candidate exists yet (a fresh target). Say so plainly: an empty "CURRENT DRAFT
+            # (divergences=999)" block just reads to the model as "the draft is missing" and sends it
+            # hunting for one or reaching for an inline-asm hack. Point it at writing real C instead.
+            draft_block = ("=== NO DRAFT YET ===\nThere is no candidate C for this function - write the "
+                           "COMPLETE source file from scratch so mwccarm compiles it to byte-match the "
+                           "target disassembly above. Write real C/C++ (declarations, types, the function "
+                           "body); do NOT emit an inline-asm blob - that is not a valid match and will not "
+                           "compile with these flags.")
         messages = [{"role": "user", "content":
                      f"{INSTRUCTIONS}\n\nFUNCTION: {name}\n\n=== CONTEXT (annotated target "
-                     f"disasm, callee sigs, pool slots, stored draft) ===\n{ctx}\n\n"
-                     f"=== CURRENT DRAFT (divergences={best_div}) ===\n{draft}\n\n"
-                     f"=== VERIFIER OUTPUT ===\n{vout}"}]
+                     f"disasm, callee sigs, pool slots, stored draft) ===\n{ctx}\n\n{draft_block}"}]
         note, stale, apierr = "", 0, 0
         for att in range(1, attempts + 1):
             # Per-attempt error handling: a rate-limit/network error on one attempt must NOT sink
