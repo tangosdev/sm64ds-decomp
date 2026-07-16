@@ -1,8 +1,9 @@
-// NONMATCHING: different op / idiom (div=15). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern int data_023c0000;
-extern int gMainRamFlag;
+typedef unsigned int u32;
+typedef int s32;
+
+extern char data_023c0000;
+extern void func_00000600(void);
+extern void func_00000000(void);
 
 int func_02058df4(unsigned int idx)
 {
@@ -13,17 +14,21 @@ int func_02058df4(unsigned int idx)
         return 0x2700000;
     case 3:
         return 0x2000000;
-    case 4:
-    {
-        int base = (int)&data_023c0000;
-        int v = gMainRamFlag;
-        int lim = (base + 0x3f80) - 0x600;
-        if (v == 0) {
-            if (base < 0x23c0020) base = 0x23c0020;
-            return base;
+    case 4: {
+        u32 irqStackLo = (u32)&data_023c0000 + 0x3f80 - (s32)func_00000600;
+        u32 sysStackLo;
+
+        if (!(s32)func_00000000) {
+            sysStackLo = (u32)&data_023c0000;
+            if (sysStackLo < 0x23c0020) {
+                sysStackLo = 0x23c0020;
+            }
+        } else if ((s32)func_00000000 < 0) {
+            sysStackLo = (u32)&data_023c0000 - (s32)func_00000000;
+        } else {
+            sysStackLo = irqStackLo - (s32)func_00000000;
         }
-        if (v < 0) return base - v;
-        return lim - v;
+        return sysStackLo;
     }
     case 5:
         return 0x27ff800;

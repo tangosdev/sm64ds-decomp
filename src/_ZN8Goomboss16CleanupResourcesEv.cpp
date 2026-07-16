@@ -1,9 +1,6 @@
 //cpp
-// NONMATCHING: register allocation (div=3). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" {
-int func_ov074_0212229c(void);
+int func_ov074_0212229c(int* c);
 void _ZN13SharedFilePtr7ReleaseEv(void* thiz);
 void UnloadKeyModels(int i);
 extern char data_ov002_0210da30;
@@ -18,7 +15,7 @@ int _ZN8Goomboss16CleanupResourcesEv(int* c)
     int i;
     int v = c[2];
     if (v == 0x1111) {
-        return func_ov074_0212229c();
+        return func_ov074_0212229c(c);
     }
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da30);
     UnloadKeyModels(2);
