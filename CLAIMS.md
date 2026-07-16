@@ -19,11 +19,14 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
-| ov004 func_ov004_020ad878 (0x020ad878, size 0x40) | Codex/Lovelace | 2026-07-16 | active — easiest-free batch 8, exact byte + relocation verification |
+| arm9 _ZN8CapEnemy11GetCapStateEv (0x02005fa0, size 0xb4) | Codex | 2026-07-16 | active — free div=3 near-match refinement |
+| ov006 func_ov006_0211dad0 (0x0211dad0, size 0xac) | Codex/Raman | 2026-07-16 | active — free div=2 near-match refinement |
+| arm9 func_02068dc8 (0x02068dc8, size 0x7c) | Codex/Lovelace | 2026-07-16 | active — free div=4 near-match refinement |
+| ov004 func_ov004_020ad878 (0x020ad878, size 0x40) | Codex/Lovelace | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
 | ov005 func_ov005_020bfefc (0x020bfefc, size 0x50) | Codex/Mendel | 2026-07-16 | active — easiest-free batch 8, exact byte + relocation verification |
-| ov007 func_ov007_020adb84 (0x020adb84, size 0x44) | Codex | 2026-07-16 | active — easiest-free batch 8, exact byte + relocation verification |
+| ov007 func_ov007_020adb84 (0x020adb84, size 0x44) | Codex | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
 | ov003 func_ov003_020ad69c (0x020ad69c, size 0x50) | Codex | 2026-07-16 | done — 80-byte exact match with verified relocation targets; PR #372 |
-| ov007 func_ov007_020c6550 (0x020c6550, size 0x6c) | Codex/Raman | 2026-07-16 | active — easiest-free batch 7, byte-match + strict relocs/linkcheck |
+| ov007 func_ov007_020c6550 (0x020c6550, size 0x6c) | Codex/Raman | 2026-07-16 | released — DB-best div=3 confirmed register-allocation floor; no tracked source change |
 | ov071 _ZN6Coffin8BehaviorEv (0x021224cc, size 0x90) | Codex/Lovelace | 2026-07-16 | done — 144-byte exact match, strict relocs + linkcheck VERIFIED; PR #371 |
 | ov074 _ZN8Goomboss16CleanupResourcesEv (0x02121abc, size 0xb4) | Codex/Mendel | 2026-07-16 | done — 180-byte exact match, strict relocs + linkcheck VERIFIED; PR #373 |
 | ov060 func_ov060_021151d4 (0x021151d4, size 0x140) | Codex | 2026-07-16 | released — existing DB-best div=3 confirmed materialized-base floor; no tracked source change |
