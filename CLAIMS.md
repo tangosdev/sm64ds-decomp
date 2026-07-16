@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| arm9 func_02058568 (0x02058568, size 0x64) | Codex/Lovelace | 2026-07-16 | active — free div=5 near-match refinement |
 | arm9 _ZN8CapEnemy11GetCapStateEv (0x02005fa0, size 0xb4) | Codex | 2026-07-16 | released — DB-best confirmed four-word scheduling floor; no tracked source change |
 | ov006 func_ov006_0211dad0 (0x0211dad0, size 0xac) | Codex/Raman | 2026-07-16 | active — free div=2 near-match refinement |
 | arm9 func_02068dc8 (0x02068dc8, size 0x7c) | Codex/Lovelace | 2026-07-16 | released — DB-best div=4 confirmed r3/r0 register-coloring floor; no tracked source change |
