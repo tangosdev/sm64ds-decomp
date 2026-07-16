@@ -1,13 +1,13 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
+extern char data_ov090_02134524[];
+extern char data_ov002_0210da10[];
+extern char data_ov002_0210d9a8[];
+extern char data_ov090_0213452c[];
 int _ZN8MantaRay16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
-    _ZN13SharedFilePtr7ReleaseEv(G3);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov090_02134524);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da10);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a8);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov090_0213452c);
     return 1;
 }
