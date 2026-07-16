@@ -19,10 +19,10 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
-| arm9 func_020453c0 (0x020453c0, size 0xbc) | Codex/Raman | 2026-07-16 | active — batch 10, free div=5 refinement |
-| ov002 func_ov002_020f5990 (0x020f5990, size 0xdc) | Codex/Lovelace | 2026-07-16 | active — batch 10, free div=5 refinement |
-| ov006 MgBounceAndPounce_Spawn (0x020eeafc, size 0xec) | Codex/Mendel | 2026-07-16 | active — batch 10, free div=5 refinement |
-| ov006 func_ov006_020c6088 (0x020c6088, size 0x100) | Codex | 2026-07-16 | active — batch 10, free div=5 refinement |
+| arm9 func_020453c0 (0x020453c0, size 0xbc) | Codex/Raman | 2026-07-16 | done — exact 188 bytes, strict relocs + linkcheck VERIFIED; PR #379 |
+| ov002 func_ov002_020f5990 (0x020f5990, size 0xdc) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed argument-register coloring floor; no tracked change |
+| ov006 MgBounceAndPounce_Spawn (0x020eeafc, size 0xec) | Codex/Mendel | 2026-07-16 | done — exact 236 bytes, strict relocs + linkcheck VERIFIED; PR #380 |
+| ov006 func_ov006_020c6088 (0x020c6088, size 0x100) | Codex | 2026-07-16 | done — stale DB entry already byte-exact; canonical calls close BLIND-2; PR #378 |
 | ov006 func_ov006_020effb8 (0x020effb8, size 0x74) | Codex/Raman | 2026-07-16 | done — exact 116 bytes, strict relocs + linkcheck VERIFIED; PR #376 |
 | arm9 func_0205d688 (0x0205d688, size 0x8c) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed allocator floor; semantic correction documented, no tracked change |
 | ov006 func_ov006_020d1958 (0x020d1958, size 0xe4) | Codex/Mendel | 2026-07-16 | done — exact 228 bytes, strict relocs + linkcheck VERIFIED; PR #377 |
