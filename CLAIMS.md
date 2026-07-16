@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| main (arm9): 8 funcs 0x02048234-0x0204c584 (func_02048234, func_02048720, func_020490b0, func_020494cc, func_0204b244, func_0204bbd8, func_0204be40, func_0204c304) | ai-tdd-labs (claude-fable) | 2026-07-16 | active |
 | ov095: func_ov095_021357d8 (0x021357d8), func_ov095_021358cc (0x021358cc), func_ov095_02135cdc (0x02135cdc), UpDownLiftBbh::InitResources (0x021365d8), Flamethrower::Behavior (0x021368f0), Flamethrower::InitResources (0x02136d60) | lunavyqo | 2026-07-12 | done (partial) — 357d8 + UpDownLift InitResources MATCH (PR #305); 35cdc near-miss div≈40 in DB; 358cc/Flamethrower still open |
 | ov019 func_ov019_02111558 (0x02111558, size 0x1fc) | lunavyqo | 2026-07-12 | done - verified byte-identical, draft PR |
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
