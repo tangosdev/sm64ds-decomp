@@ -22,6 +22,7 @@ it is fair to take over: ping the claimant first.
 | arm9 _ZN8CapEnemy11GetCapStateEv (0x02005fa0, size 0xb4) | Codex | 2026-07-16 | active — free div=3 near-match refinement |
 | ov006 func_ov006_0211dad0 (0x0211dad0, size 0xac) | Codex/Raman | 2026-07-16 | active — free div=2 near-match refinement |
 | arm9 func_02068dc8 (0x02068dc8, size 0x7c) | Codex/Lovelace | 2026-07-16 | active — free div=4 near-match refinement |
+| arm9 func_02058df4 (0x02058df4, size 0xac) | Codex/Mendel | 2026-07-16 | active — free div=4 near-match refinement |
 | ov004 func_ov004_020ad878 (0x020ad878, size 0x40) | Codex/Lovelace | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
 | ov005 func_ov005_020bfefc (0x020bfefc, size 0x50) | Codex/Mendel | 2026-07-16 | active — easiest-free batch 8, exact byte + relocation verification |
 | ov007 func_ov007_020adb84 (0x020adb84, size 0x44) | Codex | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
