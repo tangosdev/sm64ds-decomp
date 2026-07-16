@@ -1,6 +1,6 @@
 struct Vec3 { int x, y, z; };
 extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern void ApproachLinear(short *a, short b, short c);
+extern void _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void func_ov006_020c49d8(void *c);
 
 void func_ov006_020c6088(char *c)
@@ -46,8 +46,8 @@ after_x:;
 
     AddVec3((struct Vec3*)(c + 0x9c), (struct Vec3*)(c + 0xa8), (struct Vec3*)(c + 0x9c));
     if (*(int*)(c + 0xa8) > 0)
-        ApproachLinear((short*)(c + 0xe6), 0x3000, 0x200);
+        _Z14ApproachLinearRsss((short*)(c + 0xe6), 0x3000, 0x200);
     else
-        ApproachLinear((short*)(c + 0xe6), -0x3000, 0x200);
+        _Z14ApproachLinearRsss((short*)(c + 0xe6), -0x3000, 0x200);
     func_ov006_020c49d8(c);
 }
