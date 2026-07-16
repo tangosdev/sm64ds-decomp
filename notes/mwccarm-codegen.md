@@ -942,6 +942,48 @@ A genuine-asm tell confirmed 2026-06-22: a leaf that does `mov`-zero then the SA
 C emits repeated identical no-writeback stores; asm-hatch it. Same for SDK memset/fill with
 alignment prologue + multiple mid-function `bx lr` exits and predicated `strneh`/`bics` (func_0205a588).
 
+## 6s. The arm9 printf/soft-double cluster: READ8/WRITE8 macro idioms (2026-07-16, Fable largest-first)
+
+The debug-printf formatter core `func_0206a928` (0x1360, biggest unmatched in arm9) and its
+soft-double helpers (`func_0206bc8c` digit-extract, `func_0206bdb4` /10, `func_0206c244` x10,
+`func_0206c51c` add, plus matched `func_0206c8b4` exp-extract / `func_0206c90c` sign / 
+`func_0206c93c` div / `func_0206c9f4` pad / `func_0206ca44` strlen) are ONE original TU with
+a shared byte-access idiom: every byte read/write goes through an unaligned-safe u16 RMW pair
+(DS VRAM cannot take 8-bit writes). What reproduces the ROM shape:
+
+- Reads are a TERNARY macro (value in a scratch reg, both arms if-converted ldrhne/ldrheq):
+  `#define READ8(a) ((((int)(a)) & 1) ? ((*(u16*)((a)-1) & 0xff00) >> 8) : (*(u16*)(a) & 0xff))`
+  Writing the read as an if/else statement into a named `b` instead makes `b` a callee-saved
+  web and mis-colors the whole function.
+- Writes are an if/else statement macro with the ODD arm as the then-branch; mwccarm
+  if-converts the even (else) arm and emits it first with a beq over the plain odd arm:
+  `#define WRITE8(a,v) if (((int)(a)) & 1) *(u16*)((a)-1) = (*(u16*)((a)-1) & 0xff) | (((v)&0xff) << 8); else *(u16*)(a) = (*(u16*)(a) & 0xff00) | ((v)&0xff)`
+- Read-modify-write sites recompute the pointer BETWEEN the read and the write
+  (`q = base + k; b = READ8(q) | X; q = base + k; WRITE8(q, b);`) - each macro use re-tests
+  `(q & 1)` with its own `ands`.
+- Doubles pass as `u64` by value; `u64 f(u64 d, int flag)` reproduces the `push {r0-r3}`
+  arg-homing prologue exactly (reads via `(char*)&d`). Helpers redeclare each other with
+  whatever prototype the call site needs (the ROM TU did too - see func_0206c90c's S16).
+- Mantissa building: `mant = 0; mant |= 0x10; mant |= READ8(q) & 0xf;` as SEPARATE |=
+  statements, then `for (i=5;i>=0;i--) { p = q + i; mant <<= 8; mant |= READ8(p); }` with the
+  shift BEFORE the read (the read's conditional pair schedules between the two shift halves).
+- `#pragma opt_strength_reduction off` + `#pragma optimize_for_size on` cluster-wide (as in
+  the matched siblings).
+- Variable u64 shifts are SOURCE-level 1-bit loops (`for (j=0;j<cnt;j++) t >>= 1;`), not
+  `>> cnt` (no runtime-helper calls anywhere in the cluster).
+
+Result: size-exact candidates for all four helpers (bc8c 48/74, c244 67/182, bdb4 153/292,
+c51c 182/230 aligned divergences, all in nearmiss/db.jsonl). The residue is ONE systematic
+callee-saved assignment rotation: the ROM gives the byte-pointer temps (q/p) and loop
+counter (i) r4-r7 and leaves the u64 accumulator in caller-saved, while our compiles put the
+accumulator low and the pointers in scratch. NOT governed by 6k reverse-decl order, decl
+initializers, `register`, block-scoping, or in-TU asm callees (all probed and dead). A
+two-step pointer build (`q = (char*)&d; q += 6;`) DID pull q into r4 on bc8c (53->48) -
+statement-shape changes web priority where decl order does not (consistent with 6q).
+Permuter is grinding the remainder; whoever cracks ONE of these cracks all five, then the
+0x1360 monster (a DFA-table printf: state tables data_0209a0a0/data_0209a130, 0x40-byte
+chunked stream writes through the callback at +0x10, %f via these soft-double helpers).
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
