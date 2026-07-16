@@ -1,13 +1,10 @@
 //cpp
-// NONMATCHING: register allocation (div=4). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
-extern unsigned char data_020a0dea[];
-extern unsigned char data_020a0deb[];
+extern unsigned char data_020a0dea[][4];
+extern unsigned char data_020a0deb[][4];
 
 struct Base {
     virtual int v00(); virtual int v04(); virtual int v08(); virtual int v0c();
@@ -27,14 +24,15 @@ extern "C" void func_ov006_020d1958(Base *o)
     char *c = (char *)o;
     if (o->v90() == 0) return;
     if (*(unsigned char *)(c + 0x5000 + 0x3dd) == 1) return;
-    unsigned int i = data_020a0e40;
-    int b3 = 0;
-    if (data_020a0de8[i << 2] != 0) {
-        if (data_020a0de9[i << 2] != 0) b3 = 1;
+    unsigned int i = 0;
+    int b3 = data_020a0e40;
+    if (data_020a0de8[b3 << 2] != 0) {
+        unsigned int off = b3 << 2;
+        if (data_020a0de9[off] != 0) i = 1;
     }
-    if (b3 == 0) return;
-    int v1 = data_020a0dea[i << 2];
-    int v0 = data_020a0deb[i << 2];
+    if (i == 0) return;
+    int v1 = data_020a0dea[b3][0];
+    int v0 = data_020a0deb[b3][0];
     if (v1 < 0x60) return;
     if (v1 >= 0xa0) return;
     if (v0 < 0xa0) return;

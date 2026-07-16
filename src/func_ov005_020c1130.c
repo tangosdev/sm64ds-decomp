@@ -1,4 +1,3 @@
-// NONMATCHING: entry-load/00b4 setup; switch schedule; type5 close (div=92)
 typedef unsigned char u8;
 typedef unsigned int u32;
 
@@ -23,14 +22,14 @@ typedef struct Entry {
 
 extern Pair data_ov005_020c2280[];
 extern Entry data_ov005_020c24d8[];
-extern void* data_ov005_020c2f4c[];
+extern void *data_ov005_020c2f4c[];
 
-extern int func_ov005_020c00b4(void* self, int n);
-extern int func_ov005_020bfff4(void* self, int n, int c);
-extern void func_ov005_020c1030(void* self, int x, int y, int val);
-extern int _ZN3OAM9RenderSubEP7OamAttriiii(void* oam, int x, int y, int a, int b);
+extern int func_ov005_020c00b4(void *self, int n);
+extern int func_ov005_020bfff4(void *self, int n, int c);
+extern void func_ov005_020c1030(void *self, int x, int y, int val);
+extern int _ZN3OAM9RenderSubEP7OamAttriiii(void *oam, int x, int y, int a, int b);
 
-void func_ov005_020c1130(char* sl)
+void func_ov005_020c1130(char *sl)
 {
     int end;
     int i;
@@ -38,7 +37,6 @@ void func_ov005_020c1130(char* sl)
     int zero;
     int neg1;
     int type;
-    int idx;
     int x, y;
     int val;
     unsigned int u;
@@ -46,7 +44,7 @@ void func_ov005_020c1130(char* sl)
     unsigned int rem;
     unsigned int pct;
 
-    if (*(u8*)(sl + 0x54) == 1)
+    if (*(u8 *)(sl + 0x54) == 1)
         return;
 
     if (data_0209b304 == 1) {
@@ -63,9 +61,8 @@ void func_ov005_020c1130(char* sl)
     neg1 = -1;
     r8 = i * 4;
     do {
-        idx = data_0208a170 + r8;
-        if (func_ov005_020c00b4(sl, idx) != 0) {
-            type = data_ov005_020c24d8[idx].unk8;
+        if (func_ov005_020c00b4(sl, data_0208a170 + r8) != 0) {
+            type = data_ov005_020c24d8[data_0208a170 + r8].unk8;
             if (type != 0) {
                 if (type == 1) {
                     y = data_ov005_020c2280[i].y;
@@ -86,14 +83,14 @@ void func_ov005_020c1130(char* sl)
                     val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
                     func_ov005_020c1030(sl, x - 4, y, val);
                 } else if (type == 3) {
-                    val = func_ov005_020bfff4(sl, idx, zero);
+                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
                     x = data_ov005_020c2280[i].x;
                     y = data_ov005_020c2280[i].y;
                     func_ov005_020c1030(sl, x - 0x14, y, val);
                 } else if (type == 5) {
                     y = data_ov005_020c2280[i].y;
                     x = data_ov005_020c2280[i].x;
-                    val = func_ov005_020bfff4(sl, idx, zero);
+                    val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
                     major = u / 60u;
                     func_ov005_020c1030(sl, x - 0x10, y, (int)major);
@@ -102,7 +99,6 @@ void func_ov005_020c1130(char* sl)
                     val = func_ov005_020bfff4(sl, data_0208a170 + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
-                    /* rem/6 == (rem*100/60)/10 — ROM uses rem*100 then magic /600 */
                     pct = rem * 100u;
                     func_ov005_020c1030(sl, x + 8, y, (int)(pct / 600u));
 
@@ -114,7 +110,7 @@ void func_ov005_020c1130(char* sl)
                 }
             }
         }
+        r8 += 4;
         i += 1;
-        r8 = i * 4;
     } while (i <= end);
 }

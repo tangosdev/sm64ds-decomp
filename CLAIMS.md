@@ -20,6 +20,36 @@ it is fair to take over: ping the claimant first.
 | Range | Who | Claimed | Status |
 |---|---|---|---|
 | main (arm9): 7 funcs — 02048234, 02048720, 020490b0, 020494cc, 0204bbd8, 0204be40, 0204c304 (also locked via claims api) | ai-tdd-labs (claude-fable) | 2026-07-16 | released (api locks freed; no matches landed) |
+| ov004: func_ov004_020af2f8 (0x020af2f8, size 0x2e8) | lunavyqo (Grok) | 2026-07-16 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); claim clm_a25f174bbe49 kept active |
+| ov006 func_ov006_020fc8c0 (0x020fc8c0, size 0xf0) | Codex/Raman | 2026-07-16 | active — batch 11, free div=6 refinement |
+| arm9 func_02069918 (0x02069918, size 0x7c) | Codex/Lovelace | 2026-07-16 | released — required base-copy is optimized away; DB-best restored, no tracked change |
+| ov007 func_ov007_020b782c (0x020b782c, size 0xa4) | Codex/Lovelace | 2026-07-16 | active — batch 11 replacement, free div=8 refinement |
+| ov007 func_ov007_020c1448 (0x020c1448, size 0x70) | Codex/Mendel | 2026-07-16 | active — batch 11, free div=8 refinement |
+| ov006 func_ov006_0211b0ec (0x0211b0ec, size 0x90) | Codex | 2026-07-16 | done — exact 144 bytes, strict relocs + linkcheck VERIFIED; PR #382 |
+| ov007 func_ov007_020c3598 (0x020c3598, size 0xf4) | Codex | 2026-07-16 | active — batch 11 replacement, free div=7 refinement |
+| arm9 func_020453c0 (0x020453c0, size 0xbc) | Codex/Raman | 2026-07-16 | done — exact 188 bytes, strict relocs + linkcheck VERIFIED; PR #379 |
+| ov002 func_ov002_020f5990 (0x020f5990, size 0xdc) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed argument-register coloring floor; no tracked change |
+| ov006 MgBounceAndPounce_Spawn (0x020eeafc, size 0xec) | Codex/Mendel | 2026-07-16 | done — exact 236 bytes, strict relocs + linkcheck VERIFIED; PR #380 |
+| ov006 func_ov006_020c6088 (0x020c6088, size 0x100) | Codex | 2026-07-16 | done — stale DB entry already byte-exact; canonical calls close BLIND-2; PR #378 |
+| ov006 func_ov006_020effb8 (0x020effb8, size 0x74) | Codex/Raman | 2026-07-16 | done — exact 116 bytes, strict relocs + linkcheck VERIFIED; PR #376 |
+| arm9 func_0205d688 (0x0205d688, size 0x8c) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed allocator floor; semantic correction documented, no tracked change |
+| ov006 func_ov006_020d1958 (0x020d1958, size 0xe4) | Codex/Mendel | 2026-07-16 | done — exact 228 bytes, strict relocs + linkcheck VERIFIED; PR #377 |
+| ov075 func_ov075_0211a948 (0x0211a948, size 0xb8) | Codex | 2026-07-16 | released — documented pure register-coloring floor (~150 prior variants); DB-best restored |
+| ov006 func_ov006_020c7734 (0x020c7734, size 0x12c) | Codex | 2026-07-16 | released — stale DB entry; existing src from PR #338 independently strict-matches and linkcheck VERIFIED |
+| ov006 func_ov006_0211aed0 (0x0211aed0, size 0x90) | Codex | 2026-07-16 | released — DB-best div=6 confirmed three-register coloring floor; no tracked source change |
+| arm9 func_02058568 (0x02058568, size 0x64) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed hand-asm/context register floor; no tracked source change |
+| arm9 _ZN8CapEnemy11GetCapStateEv (0x02005fa0, size 0xb4) | Codex | 2026-07-16 | released — DB-best confirmed four-word scheduling floor; no tracked source change |
+| ov006 func_ov006_0211dad0 (0x0211dad0, size 0xac) | Codex/Raman | 2026-07-16 | released — DB-best raw div=3 confirmed literal-load scheduling floor; no tracked source change |
+| arm9 func_02068dc8 (0x02068dc8, size 0x7c) | Codex/Lovelace | 2026-07-16 | released — DB-best div=4 confirmed r3/r0 register-coloring floor; no tracked source change |
+| arm9 func_02058df4 (0x02058df4, size 0xac) | Codex/Mendel | 2026-07-16 | done — NitroSDK arena-high function exact 172 bytes, linkcheck blind=0; PR #375 |
+| ov004 func_ov004_020ad878 (0x020ad878, size 0x40) | Codex/Lovelace | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
+| ov005 func_ov005_020bfefc (0x020bfefc, size 0x50) | Codex/Mendel | 2026-07-16 | done — exact 80 bytes with canonical relocation targets, linkcheck blind=0; PR #374 |
+| ov007 func_ov007_020adb84 (0x020adb84, size 0x44) | Codex | 2026-07-16 | released — existing src independently confirmed exact + linkcheck VERIFIED; no change needed |
+| ov003 func_ov003_020ad69c (0x020ad69c, size 0x50) | Codex | 2026-07-16 | done — 80-byte exact match with verified relocation targets; PR #372 |
+| ov007 func_ov007_020c6550 (0x020c6550, size 0x6c) | Codex/Raman | 2026-07-16 | released — DB-best div=3 confirmed register-allocation floor; no tracked source change |
+| ov071 _ZN6Coffin8BehaviorEv (0x021224cc, size 0x90) | Codex/Lovelace | 2026-07-16 | done — 144-byte exact match, strict relocs + linkcheck VERIFIED; PR #371 |
+| ov074 _ZN8Goomboss16CleanupResourcesEv (0x02121abc, size 0xb4) | Codex/Mendel | 2026-07-16 | done — 180-byte exact match, strict relocs + linkcheck VERIFIED; PR #373 |
+| ov060 func_ov060_021151d4 (0x021151d4, size 0x140) | Codex | 2026-07-16 | released — existing DB-best div=3 confirmed materialized-base floor; no tracked source change |
 | ov095: func_ov095_021357d8 (0x021357d8), func_ov095_021358cc (0x021358cc), func_ov095_02135cdc (0x02135cdc), UpDownLiftBbh::InitResources (0x021365d8), Flamethrower::Behavior (0x021368f0), Flamethrower::InitResources (0x02136d60) | lunavyqo | 2026-07-12 | done (partial) — 357d8 + UpDownLift InitResources MATCH (PR #305); 35cdc near-miss div≈40 in DB; 358cc/Flamethrower still open |
 | ov019 func_ov019_02111558 (0x02111558, size 0x1fc) | lunavyqo | 2026-07-12 | done - verified byte-identical, draft PR |
 | _example: ov004 0x020b0000-0x020b8000_ | _handle_ | _2026-06-17_ | _example_ |
@@ -52,7 +82,7 @@ it is fair to take over: ping the claimant first.
 | ov072 10 funcs (0x0211f1dc-0x021218dc) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #235 open |
 | ov015: _ZN13PoleBillboard8BehaviorEv (0x02111720), _ZN14MovingBarSmall8BehaviorEv (0x021124d0), 021114f0 (0x021114f0) | lunavyqo | 2026-07-10 | near-miss (PR #229 open) |
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
-| ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | near-miss (PR #239 open) |
+| ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | **partial done** — 020c1130 MATCH (PR #385); 020c0378 + 020c16e4 still near-miss (banked in nearmiss/db.jsonl; old PR #239 stale) |
 | ov020: 02111340 (0x02111340), 021115ac (0x021115ac), 02113148 (0x02113148) | lunavyqo | 2026-07-10 | near-miss (PR #244 open) |
 | ov089: _ZN3Key8BehaviorEv (0x02132194), 021311c0 (0x021311c0), 0213162c (0x0213162c), 02131b18 (0x02131b18) | lunavyqo | 2026-07-10 | near-miss (in main, refine-tier); PR #245 closed - matches split to #251 |
 | ov092: _ZN6ToxBox13InitResourcesEv (0x02131da0), _ZN6ToxBox8BehaviorEv (0x02131c44), 02131010 (0x02131010), 021311b0 (0x021311b0), 021316d8 (0x021316d8), 02131878 (0x02131878) | lunavyqo | 2026-07-10 | near-miss (PR #246 open) |
@@ -101,7 +131,7 @@ it is fair to take over: ping the claimant first.
 | easy/broad LLM fan-out sess3 (72 cands, size ~0x6c-0x1ec): 72 named funcs across arm9/ov006/ov007/ov002 + others (addrs 0x0200xxxx-0x0214xxxx) | andrew (Claude-assisted) | 2026-07-11 | in progress - 6-agent disjoint fan-out. Read-only API check() first (no overlap with the 9 live locks); no key so coordinating via this row. Sibling PR #279 (36 funcs) already open. |
 | ov077 _ZN6Lakitu13InitResourcesEv (0x02124908, 0x19c) | lunavyqo (Grok) | 2026-07-13 | **done** — verified byte-identical |
 | arm9 MulMat4x3Mat4x3 (0x02052914, 0x220) | tangosdev (Claude/Opus) | 2026-07-12 | near-miss, floor(register allocation) - structurally byte-exact (all 12 outputs correct); ROM uses 7 callee-saved regs, mwccarm gives clean C 5 and spills (+9 insns). Hand-tuning + 23min permuter (206->112 div) did not crack. Draft banked to nearmiss/db.jsonl for a stronger tier. RELEASED. |
-| arm9 fan-out (0x1f0-0x27c, 14 funcs): scattered main-binary 0x02013f4c-0x02072fcc | tangosdev (Claude/Fable) | 2026-07-12 | DONE - 12/14 matched byte-identical + link-gated (52K tok/landed); func_0204b244 near-miss div 6 (POLYGON_ATTR r0/r2 coloring floor), func_02072fcc near-miss div 17 (1-insn b+1 hoist, Fable hit quota). Both banked to nearmiss/db.jsonl. RELEASED. |
+| arm9 fan-out (0x1f0-0x27c, 14 funcs): scattered main-binary 0x02013f4c-0x02072fcc | tangosdev (Claude/Fable) | 2026-07-12 | DONE - 12/14 matched; **func_0204b244 later MATCH (PR #385)**; func_02072fcc still near-miss div 17 banked. RELEASED. |
 | arm9 fan-out #2 (0x100-0x400, 16 funcs): func_02046bbc,0206610c,0200c394,ShowCrashScreen,020316d8,02040c34,0205bc88,02048234,0200bb28,020197b8,0200c66c,020662c0,02046e28,0205f300,0201b7cc,02031e00 | tangosdev (Claude/Opus) | 2026-07-12 | DONE - 6/16 matched + link-gated (020197b8,0200c66c,020662c0,0205f300,0201b7cc,02031e00); 10 near-miss (mostly register-coloring floors, banked to nearmiss/db.jsonl). Opus 6/16 @ 219K tok/landed vs Fable 12/14 @ 52K - FABLE is the better fan-out model, Opus for finishing near-misses. RELEASED. |
 | ov018 func_ov018_02111fac (0x02111fac, size 0x230) | lunavyqo (Grok-assisted) | 2026-07-12 | done - verified byte-identical; API claim clm_5551ed44d304 kept active |
 | ov072: func_ov072_02121368 (0x02121368, 0x174) + __sinit_ov072_02122414 (0x02122414, 0x2f4) | lunavyqo (Grok-assisted) | 2026-07-13 | done - both verified byte-identical |
@@ -118,3 +148,7 @@ it is fair to take over: ping the claimant first.
 | ov006 batch16: 0x020c7a30-0x020cc198 (16 claimed) — **7 MATCH** (9098,9c8c,caadc,8ddc,cb1a8,cb528,ca840); 8 banked nearmiss (8680,9d7c,ca8e0,cb72c,7a30,8c78,7c68,cbfd8); c94e0 open | lunavyqo (Grok) | 2026-07-16 | **done (7 matched + DB bank)** |
 | easy/spread fan-out (36 funcs, size ~0x70-0x1fc): arm9(4), ov002(5), ov004(1), ov006(6), ov007(11), ov030(1), ov060(3), ov063(1), ov074(1), ov095(1), ov100(1), ov102(1) | andrew (Claude-assisted) | 2026-07-16 | in progress — worklist --easy --spread top-of-pile picks, filtered against rebuilt ledger + live belongto.us claims (no key, coordinating via this row) |
 | mixed batch (arm9/ov002/ov006/ov007): 21 funcs incl. Player::CleanupResources, HUD::Behavior, Stage::VE_Update, Stage::RenderModelTransparent | ruspecial (Fable) | 2026-07-16 | **done** - 21 matched byte-identical; 15 near-misses banked in nearmiss/db.jsonl |
+| batch8 arm9+ov005: 0204b244, 0204b81c, 020c1130 (+ near-miss bank for rest of 8-pack) | lunavyqo (Grok) | 2026-07-16 | **done (3 matched PR #385)** — b244@0x0204b244/0x21c, b81c@0x0204b81c/0x3bc, c1130@0x020c1130/0x370 byte-identical; near-misses banked in nearmiss/db.jsonl (not src/): af3c div≈25, 0b04 div≈25 (size 0x434), c0378 div≈37, a730 div≈281 (size 0x6fc), c16e4 div≈156 |
+| arm9: func_02065c2c/65de4/6610c/6655c/676e0/67bfc/681b8/688fc (0x02065c2c–0x02068a28) | lunavyqo (Grok) | 2026-07-16 | **done (4 matched + DB bank)** — 65c2c/65de4/681b8/688fc byte-identical (PR #368); near-misses banked: 676e0 (div=4 case2 schedule wall), 67bfc (div=38), 6610c (div=50), 6655c (div=179) in nearmiss/db.jsonl |
+| div1 refine: func_ov006_020e84b8 (0x020e84b8) + func_ov007_020c5854 (0x020c5854); near-misses banked func_ov090_021327e4 (div=1) + func_02071364 (div=1) | lunavyqo (Grok) | 2026-07-16 | **done** — 2 matched byte-identical (PR #362); near-misses banked in nearmiss/db.jsonl (not src/) |
+| ov002: _ZN6Player8BehaviorEv (0x020e4d24, size 0x868) | lunavyqo (Grok) | 2026-07-16 | **done** — verified byte-identical (draft PR #389); walk-before-abs closed residual; claim clm_ce7b107538fd |
