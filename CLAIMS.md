@@ -23,7 +23,8 @@ it is fair to take over: ping the claimant first.
 | arm9 func_02069918 (0x02069918, size 0x7c) | Codex/Lovelace | 2026-07-16 | released — required base-copy is optimized away; DB-best restored, no tracked change |
 | ov007 func_ov007_020b782c (0x020b782c, size 0xa4) | Codex/Lovelace | 2026-07-16 | active — batch 11 replacement, free div=8 refinement |
 | ov007 func_ov007_020c1448 (0x020c1448, size 0x70) | Codex/Mendel | 2026-07-16 | active — batch 11, free div=8 refinement |
-| ov006 func_ov006_0211b0ec (0x0211b0ec, size 0x90) | Codex | 2026-07-16 | active — batch 11, free div=8 refinement |
+| ov006 func_ov006_0211b0ec (0x0211b0ec, size 0x90) | Codex | 2026-07-16 | done — exact 144 bytes, strict relocs + linkcheck VERIFIED; PR #382 |
+| ov007 func_ov007_020c3598 (0x020c3598, size 0xf4) | Codex | 2026-07-16 | active — batch 11 replacement, free div=7 refinement |
 | arm9 func_020453c0 (0x020453c0, size 0xbc) | Codex/Raman | 2026-07-16 | done — exact 188 bytes, strict relocs + linkcheck VERIFIED; PR #379 |
 | ov002 func_ov002_020f5990 (0x020f5990, size 0xdc) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed argument-register coloring floor; no tracked change |
 | ov006 MgBounceAndPounce_Spawn (0x020eeafc, size 0xec) | Codex/Mendel | 2026-07-16 | done — exact 236 bytes, strict relocs + linkcheck VERIFIED; PR #380 |
