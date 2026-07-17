@@ -5,7 +5,8 @@
     "bmanus2": "tangosdev",
     "noreply": "tangosdev",
     "leonard.van.der.plaat": "lplaat",
-    "andrew": "andrewboudreau"
+    "andrew": "andrewboudreau",
+    "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
     "src/func_02035860.c": "ruspecial",
