@@ -16,6 +16,16 @@
     "submitting": "Before opening a PR read AGENTS.md in the repo root. Every file you add to src/ MUST byte-reproduce the ROM (pass the `validate` CI check) - green is the ONLY merge gate. NEVER commit a non-reproducing file to src/: a near-miss/WRONG-DEST file is a false match someone has to rip back out. Close-but-not-matching drafts go to nearmiss/db.jsonl via tools/nearmiss_db.py, NOT src/. One matched function per src/<symbol>.c|.cpp (first line //cpp for C++). Claim your span in CLAIMS.md first. PR title: 'Match N functions byte-identical (mwccarm 1.2/sp2p3)', src-only, no bundled tools/CI. How PRs are reviewed + merged: MERGE.md.",
     "rules": "only your own legally dumped ROM; never commit the ROM, its assets, or extracted binaries - the one deliberate exception is the annotated disassembly TEXT of still-unmatched functions, published in the coordination data (chaos-data branch) so contributors can work, the same practice as decomp repos committing .s files; import struct/field knowledge (see CREDITS.md) but write all C from scratch.",
     "nearMissNote": "If a function will not fully match after real effort, do not discard your best attempt - it is still valuable. Store the closest compiling draft as a near-miss (highest-yield input to the refine tier); most matches now start from someone's stored near-miss.",
+    "matchConventions": {
+      "attemptTree": false,
+      "nearMissDb": "nearmiss/db.jsonl",
+      "ghidraDrafts": false,
+      "defaultProvenance": {
+        "model": "grok-4.5",
+        "reasoning": "high",
+        "harness": "grok-build"
+      }
+    },
     "knownWalls": "PROVEN unreachable from source (see notes/matching-style.md 'Known walls') - not an excuse to give up, but if your near-miss has collapsed to EXACTLY one of these, verify it, tell the user it's a known wall, and move on/hand to the permuter instead of grinding. (1) FIRST-ACCESS-FOLD: a single read-modify-write through base+offset (x->flag |= BIT) is 'add rN,base,#off; ldr [rN]; op; str [rN]' in the ROM but folds to 'ldr [base,#off]' from ALL C/C++ (array-index/pointer/(int)-cast/volatile/C++ inheritance, -O1..-O4, any version, permuter) - the whole tiny-arm9 flag-setter cluster (WithMeshClsn/BgCh setters, func_020353e0..func_02035784). If your ONLY divergence is that 1-instr materialization, it's the wall. (2) PURE SCHEDULING: same instructions reordered (load/store batching, cond-move polarity), same size, no statement/operand order changes it - the permuter can't flip it either."
   },
   "runtime": {
