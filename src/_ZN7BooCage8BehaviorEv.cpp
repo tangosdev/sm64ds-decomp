@@ -6,10 +6,11 @@ struct WithMeshClsn {
     bool JustHitGround() const;
     bool IsOnGround() const;
 };
+struct CylinderClsn;
 struct Actor {
     static Actor* FindWithID(unsigned int id);
     void LandingDust(bool b);
-    void UpdatePos(void* cyl);
+    void UpdatePos(CylinderClsn* cyl);
 };
 struct Player {
     void JumpIntoBooCage(Vector3& v);
@@ -21,14 +22,9 @@ struct CylinderClsn {
     void Clear();
     void Update();
 };
-namespace Particle {
-    struct Callback;
-    struct System {
-        static unsigned int New(unsigned int a, unsigned int b, Fix12i x, Fix12i y, Fix12i z,
-                                void* v, Callback* cb);
-    };
-}
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* t);
+extern "C" unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
+extern "C" int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* t);
 extern "C" void func_ov063_021169c4(char* c);
 
 struct BooCage {
@@ -68,7 +64,7 @@ int BooCage::Behavior()
         int y = *(int*)(self + 0x60);
         int x = *(int*)(self + 0x5c);
         unsigned int pid = *(unsigned int*)(self + 0x378);
-        *(unsigned int*)(self + 0x378) = Particle::System::New(
+        *(unsigned int*)(self + 0x378) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             pid, 0x119, x, y + 0x64000, z, 0, 0);
     }
 
