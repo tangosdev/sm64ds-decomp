@@ -146,7 +146,13 @@ def winning_object(name, addr, size, mod):
     target = RV.rom_bytes(mod, addr, size)
     if target is None:
         return None, None, "no-module-bin"
+    # Distinguish the three ways this can fail so callers do not report a missing
+    # or wrong-length source as "no-repro" (which reads as a false-match red flag).
+    # saw_source: src_texts yielded at least one candidate to try.
+    # saw_len:    a candidate compiled to a function of the expected length.
+    saw_source = saw_len = False
     for src in RV.src_texts(name, addr):
+        saw_source = True
         attempts = ([(S.CPP_FLAGS, ".cpp")] if src.startswith("//cpp")
                     else [(M.DEFAULT_FLAGS, ".c"), (S.CPP_FLAGS, ".cpp")])
         for flags, suf in attempts:
@@ -169,12 +175,17 @@ def winning_object(name, addr, size, mod):
                         code, relocs = M.extract_func(obj, sym)
                         if code is None or len(code) != len(target):
                             continue
+                        saw_len = True
                         ok, _ = M.compare(target, code, relocs, verbose=False)
                         if ok:
                             return obj, sym, None
             finally:
                 pathlib.Path(tmp).unlink(missing_ok=True)
-    return None, None, "no-repro"
+    if not saw_source:
+        return None, None, "no-source"      # no src/<name>.c|.cpp on disk to try
+    if not saw_len:
+        return None, None, "len-mismatch"   # compiled, but never the target's length
+    return None, None, "no-repro"           # right length, but bytes never matched
 
 
 def classify(cand_name, cand_mod, cand_addr, cfg, sym_index):

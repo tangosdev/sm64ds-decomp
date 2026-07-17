@@ -22,8 +22,10 @@ Verdicts (per function):
   VERIFIED   every reloc resolved and the linked bytes equal the ROM
   WRONG      a resolved reloc links to bytes that differ from the ROM (false match)
   BLIND-n    n reloc slots could not be resolved; everything else verified
-  NO-REPRO   the committed source no longer reproduces the ROM bytes
-  NO-SYM     the function symbol was not found in the object
+  NO-REPRO   the committed source compiles to the right length but the bytes differ
+  NO-SRC     no src/<name>.c|.cpp on disk to try (e.g. wrong branch / not yet landed)
+  NO-BIN     the module binary for this address was not available
+  NO-SYM     the function symbol was not found, or compiled to the wrong length
 
 Usage:
   python tools/linkcheck.py                          # whole corpus
@@ -190,7 +192,11 @@ def linkcheck(name, addr, size, mod, name_index):
     import reverify_corpus as RV
     obj, sym, err = RA.winning_object(name, addr, size, mod)
     if obj is None:
-        return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "NO-REPRO",
+        # A missing or wrong-length source is NOT a false match; give it a verdict
+        # distinct from NO-REPRO so it does not read as "the source stopped matching".
+        verdict = {"no-source": "NO-SRC", "no-module-bin": "NO-BIN",
+                   "len-mismatch": "NO-SYM"}.get(err, "NO-REPRO")
+        return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": verdict,
                 "reason": err, "diffs": [], "blind": 0}
     target = RV.rom_bytes(mod, addr, size)
     code, _ = M.extract_func(obj, sym)
@@ -286,7 +292,7 @@ def main():
         return "BLIND" if v.startswith("BLIND") else v
     cat = Counter(bucket(r["verdict"]) for r in results)
     print("\n=== link-based verification ===")
-    for k in ["VERIFIED", "BENIGN", "BLIND", "WRONG", "NO-REPRO", "NO-SYM"]:
+    for k in ["VERIFIED", "BENIGN", "BLIND", "WRONG", "NO-REPRO", "NO-SRC", "NO-BIN", "NO-SYM"]:
         if cat.get(k):
             print(f"  {k:10} {cat[k]}")
     wrong = [r for r in results if r["verdict"] == "WRONG"]
