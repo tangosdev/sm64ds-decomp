@@ -15,30 +15,66 @@
     "readFirst": "notes/mwccarm-codegen.md (esp. sec 6e-6g levers: u64-mask laundering for materialized bases, declaration/statement order for register coloring, //cpp dummy-vtable dispatch, struct-copy interleave) and notes/pret-idioms.md. Coordinate via CLAIMS.md.",
     "submitting": "Before opening a PR read AGENTS.md in the repo root. Every file you add to src/ MUST byte-reproduce the ROM (pass the `validate` CI check) - green is the ONLY merge gate. NEVER commit a non-reproducing file to src/: a near-miss/WRONG-DEST file is a false match someone has to rip back out. Close-but-not-matching drafts go to nearmiss/db.jsonl via tools/nearmiss_db.py, NOT src/. One matched function per src/<symbol>.c|.cpp (first line //cpp for C++). Claim your span in CLAIMS.md first. PR title: 'Match N functions byte-identical (mwccarm 1.2/sp2p3)', src-only, no bundled tools/CI. How PRs are reviewed + merged: MERGE.md.",
     "rules": "only your own legally dumped ROM; never commit the ROM, its assets, or extracted binaries - the one deliberate exception is the annotated disassembly TEXT of still-unmatched functions, published in the coordination data (chaos-data branch) so contributors can work, the same practice as decomp repos committing .s files; import struct/field knowledge (see CREDITS.md) but write all C from scratch.",
-    "nearMissNote": "If a function will not fully match after real effort, do not discard your best attempt - it is still valuable. Store the closest compiling draft as a near-miss (highest-yield input to the refine tier); most matches now start from someone's stored near-miss.",
+    "nearMissNote": "If a function will not fully match after real effort, do not discard your best attempt - it is still valuable. Store the closest compiling draft as a near-miss (highest-yield input to the refine tier); most matches now start from someone's stored near-miss. Log tries with tools/log_attempt.py (attempt tree); tip C still in nearmiss/db.jsonl via --src; final how via tools/stamp_provenance.py (not tools/bank.py fan-out).",
+    "matchConventions": {
+      "attemptTree": true,
+      "attemptsPath": "config/match_attempts.jsonl",
+      "provenancePath": "config/match_provenance.jsonl",
+      "nearMissDb": "nearmiss/db.jsonl",
+      "ghidraDrafts": false,
+      "defaultProvenance": {
+        "model": "grok-4.5",
+        "reasoning": "high",
+        "harness": "grok-build"
+      }
+    },
     "knownWalls": "PROVEN unreachable from source (see notes/matching-style.md 'Known walls') - not an excuse to give up, but if your near-miss has collapsed to EXACTLY one of these, verify it, tell the user it's a known wall, and move on/hand to the permuter instead of grinding. (1) FIRST-ACCESS-FOLD: a single read-modify-write through base+offset (x->flag |= BIT) is 'add rN,base,#off; ldr [rN]; op; str [rN]' in the ROM but folds to 'ldr [base,#off]' from ALL C/C++ (array-index/pointer/(int)-cast/volatile/C++ inheritance, -O1..-O4, any version, permuter) - the whole tiny-arm9 flag-setter cluster (WithMeshClsn/BgCh setters, func_020353e0..func_02035784). If your ONLY divergence is that 1-instr materialization, it's the wall. (2) PURE SCHEDULING: same instructions reordered (load/store batching, cond-move polarity), same size, no statement/operand order changes it - the permuter can't flip it either."
   },
   "runtime": {
     "cwd": ".",
     "python": "python",
     "shell": false,
-    "envKeys": ["GITHUB_TOKEN", "ANTHROPIC_API_KEY", "GLM_API_KEY", "DEEPSEEK_API_KEY", "NEMOTRON_API_KEY", "CLAIMS_API_KEY"],
+    "envKeys": [
+      "GITHUB_TOKEN",
+      "ANTHROPIC_API_KEY",
+      "GLM_API_KEY",
+      "DEEPSEEK_API_KEY",
+      "NEMOTRON_API_KEY",
+      "CLAIMS_API_KEY"
+    ],
     "envKeyHelp": {
       "GITHUB_TOKEN": {
         "note": "Read-only GitHub token. Raises the API rate limit (anonymous is 60/hr) so contributor stats and PR-based match attribution work. A fine-grained token with public-repo read access is enough - it is stored encrypted on your machine and never shared.",
         "url": "https://github.com/settings/tokens?type=beta"
       },
-      "ANTHROPIC_API_KEY": { "note": "Only if you run the Claude cascade/refine tools over the API instead of driving them from an editor session." },
-      "GLM_API_KEY": { "note": "z.ai coding-plan key for the GLM refine tier (tools/glm_refine.py).", "url": "https://z.ai" },
-      "DEEPSEEK_API_KEY": { "note": "DeepSeek platform API key. Stored encrypted; gives you a DeepSeek box (deepseek-chat / deepseek-reasoner).", "url": "https://platform.deepseek.com/api_keys" },
-      "NEMOTRON_API_KEY": { "note": "Local Nemotron-3 via LM Studio (OpenAI-compatible server on localhost:1234, model 'nemo'). The server ignores the value, so any placeholder like 'lm-studio' works - storing it just switches the Nemotron box on and makes it console-drivable. Start LM Studio (Start-Nemotron.ps1) before driving." },
-      "CLAIMS_API_KEY": { "note": "Write key for the belongto.us claims board, so your locks post under your handle. Optional - read-only works without it." }
+      "ANTHROPIC_API_KEY": {
+        "note": "Only if you run the Claude cascade/refine tools over the API instead of driving them from an editor session."
+      },
+      "GLM_API_KEY": {
+        "note": "z.ai coding-plan key for the GLM refine tier (tools/glm_refine.py).",
+        "url": "https://z.ai"
+      },
+      "DEEPSEEK_API_KEY": {
+        "note": "DeepSeek platform API key. Stored encrypted; gives you a DeepSeek box (deepseek-chat / deepseek-reasoner).",
+        "url": "https://platform.deepseek.com/api_keys"
+      },
+      "NEMOTRON_API_KEY": {
+        "note": "Local Nemotron-3 via LM Studio (OpenAI-compatible server on localhost:1234, model 'nemo'). The server ignores the value, so any placeholder like 'lm-studio' works - storing it just switches the Nemotron box on and makes it console-drivable. Start LM Studio (Start-Nemotron.ps1) before driving."
+      },
+      "CLAIMS_API_KEY": {
+        "note": "Write key for the belongto.us claims board, so your locks post under your handle. Optional - read-only works without it."
+      }
     }
   },
   "requirements": {
     "rom": true,
     "compiler": "mwccarm",
-    "pythonPackages": ["capstone", "pyelftools", "ndspy", "requests"],
+    "pythonPackages": [
+      "capstone",
+      "pyelftools",
+      "ndspy",
+      "requests"
+    ],
     "notes": "mwccarm (CodeWarrior ARM) + license.dat go in tools/mwccarm/; extract your own legally dumped ROM with tools/unpack.py to produce extracted/. The ROM and extracted binaries are never committed."
   },
   "data": {
@@ -48,13 +84,54 @@
     "claimsApi": "https://belongto.us/api/claims"
   },
   "categories": [
-    { "id": "reporting", "label": "Progress & Reporting", "order": 1, "description": "Read-only status: how much of the game is matched." },
-    { "id": "scheduling", "label": "Worklists & Scheduling", "order": 2, "description": "Pick and order the next functions to attack." },
-    { "id": "analysis", "label": "Analysis & Debugging", "order": 3, "description": "Disassemble, diff a candidate against the ROM, study codegen." },
-    { "id": "matching", "label": "Matching & Cracking", "order": 4, "description": "Template/structural/LLM tiers that produce and bank matches." },
-    { "id": "nearmiss", "label": "Near-miss & Refine", "order": 5, "description": "Store, categorize, and finish close-but-not-matching drafts." },
-    { "id": "verification", "label": "Verification & Auditing", "order": 6, "description": "Prove banked matches really reproduce the ROM bytes." },
-    { "id": "setup", "label": "Setup & Symbols", "order": 7, "description": "ROM extraction, symbol import, coordination." }
+    {
+      "id": "reporting",
+      "label": "Progress & Reporting",
+      "order": 1,
+      "description": "Read-only status: how much of the game is matched."
+    },
+    {
+      "id": "scheduling",
+      "label": "Worklists & Scheduling",
+      "order": 2,
+      "description": "Pick and order the next functions to attack."
+    },
+    {
+      "id": "analysis",
+      "label": "Analysis & Debugging",
+      "order": 3,
+      "description": "Disassemble, diff a candidate against the ROM, study codegen."
+    },
+    {
+      "id": "matching",
+      "label": "Matching & Cracking",
+      "order": 4,
+      "description": "Template/structural/LLM tiers that produce and bank matches."
+    },
+    {
+      "id": "nearmiss",
+      "label": "Near-miss & Refine",
+      "order": 5,
+      "description": "Store, categorize, and finish close-but-not-matching drafts."
+    },
+    {
+      "id": "verification",
+      "label": "Verification & Auditing",
+      "order": 6,
+      "description": "Prove banked matches really reproduce the ROM bytes."
+    },
+    {
+      "id": "setup",
+      "label": "Setup & Symbols",
+      "order": 7,
+      "description": "ROM extraction, symbol import, coordination."
+    },
+    {
+      "id": "logging",
+      "label": "Match logging",
+      "order": 8,
+      "description": "Attempt tree + provenance how-records (Console stack)."
+    }
   ],
   "tools": [
     {
@@ -65,7 +142,12 @@
       "command": "{python} tools/progress.py {flags}",
       "description": "Report decomp completion: matched functions and bytes vs the whole game. Use --bar for the committed-data README block (reproducible without the ROM or local ledger).",
       "args": [
-        { "name": "bar", "type": "boolean", "flag": "--bar", "description": "Emit the compact README progress block from committed data only." }
+        {
+          "name": "bar",
+          "type": "boolean",
+          "flag": "--bar",
+          "description": "Emit the compact README progress block from committed data only."
+        }
       ]
     },
     {
@@ -76,7 +158,12 @@
       "command": "{python} tools/treemap.py {flags}",
       "description": "WinDirStat-style treemap of decomp progress: every function is a rectangle, colored by match status, grouped by module. Writes a self-contained HTML artifact (does not touch repo source).",
       "args": [
-        { "name": "out", "type": "string", "flag": "--out", "description": "Output HTML path (default treemap.html)." }
+        {
+          "name": "out",
+          "type": "string",
+          "flag": "--out",
+          "description": "Output HTML path (default treemap.html)."
+        }
       ]
     },
     {
@@ -87,20 +174,90 @@
       "command": "{python} tools/worklist.py {flags}",
       "description": "Emit a worklist of unmatched functions with fully-resolved context (disasm, callees, pool slots, examples) for an agent to attempt. JSONL to stdout, or --pretty for one readable row.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module", "description": "Restrict to one module (e.g. arm9, ov006)." },
-        { "name": "max", "type": "string", "flag": "--max", "description": "Max function size, hex ok (e.g. 0x80)." },
-        { "name": "limit", "type": "integer", "flag": "--limit", "description": "Max rows to emit." },
-        { "name": "addr", "type": "string", "flag": "--addr", "description": "One specific function address (hex)." },
-        { "name": "pretty", "type": "boolean", "flag": "--pretty", "description": "Human-readable single-row output." },
-        { "name": "no_template", "type": "boolean", "flag": "--no-template", "description": "Exclude functions a template already handles (the LLM pile)." },
-        { "name": "min", "type": "string", "flag": "--min", "description": "Min function size, hex ok." },
-        { "name": "easy", "type": "boolean", "flag": "--easy", "description": "Only straight-line / single-guard functions (high LLM hit rate)." },
-        { "name": "spread", "type": "boolean", "flag": "--spread", "description": "Round-robin across all modules, freshest-first, to stay in the high-hit-rate regime." },
-        { "name": "similar", "type": "boolean", "flag": "--similar", "description": "Order by number of already-matched lookalikes (best few-shot examples first)." },
-        { "name": "random", "type": "boolean", "flag": "--random", "description": "Pull unmatched functions uniformly at random (any size), reshuffled every run (the Random role)." },
-        { "name": "examples", "type": "integer", "flag": "--examples", "description": "Attach up to N verified sibling sources as few-shot examples per record (0 disables)." },
-        { "name": "klass", "type": "string", "flag": "--class", "description": "Only methods of this C++ class (subsystem batching)." },
-        { "name": "list_classes", "type": "boolean", "flag": "--list-classes", "description": "Print unmatched-function counts per C++ class, then exit." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Restrict to one module (e.g. arm9, ov006)."
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max",
+          "description": "Max function size, hex ok (e.g. 0x80)."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit",
+          "description": "Max rows to emit."
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "flag": "--addr",
+          "description": "One specific function address (hex)."
+        },
+        {
+          "name": "pretty",
+          "type": "boolean",
+          "flag": "--pretty",
+          "description": "Human-readable single-row output."
+        },
+        {
+          "name": "no_template",
+          "type": "boolean",
+          "flag": "--no-template",
+          "description": "Exclude functions a template already handles (the LLM pile)."
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "flag": "--min",
+          "description": "Min function size, hex ok."
+        },
+        {
+          "name": "easy",
+          "type": "boolean",
+          "flag": "--easy",
+          "description": "Only straight-line / single-guard functions (high LLM hit rate)."
+        },
+        {
+          "name": "spread",
+          "type": "boolean",
+          "flag": "--spread",
+          "description": "Round-robin across all modules, freshest-first, to stay in the high-hit-rate regime."
+        },
+        {
+          "name": "similar",
+          "type": "boolean",
+          "flag": "--similar",
+          "description": "Order by number of already-matched lookalikes (best few-shot examples first)."
+        },
+        {
+          "name": "random",
+          "type": "boolean",
+          "flag": "--random",
+          "description": "Pull unmatched functions uniformly at random (any size), reshuffled every run (the Random role)."
+        },
+        {
+          "name": "examples",
+          "type": "integer",
+          "flag": "--examples",
+          "description": "Attach up to N verified sibling sources as few-shot examples per record (0 disables)."
+        },
+        {
+          "name": "klass",
+          "type": "string",
+          "flag": "--class",
+          "description": "Only methods of this C++ class (subsystem batching)."
+        },
+        {
+          "name": "list_classes",
+          "type": "boolean",
+          "flag": "--list-classes",
+          "description": "Print unmatched-function counts per C++ class, then exit."
+        }
       ]
     },
     {
@@ -111,13 +268,46 @@
       "command": "{python} tools/coddog.py {flags}",
       "description": "Fuzzy opcode-similarity scheduler: order unmatched functions by similarity to already-matched ones for the highest hit rate, attaching the closest matched siblings as scaffolding. --explain NAME shows a function's nearest matched neighbours.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "min", "type": "string", "flag": "--min", "description": "Min function size (hex ok)." },
-        { "name": "max", "type": "string", "flag": "--max", "description": "Max function size (hex ok)." },
-        { "name": "limit", "type": "integer", "flag": "--limit" },
-        { "name": "spread", "type": "boolean", "flag": "--spread", "description": "Spread the batch across modules/address space." },
-        { "name": "out", "type": "string", "flag": "--out", "description": "Write the worklist JSONL here." },
-        { "name": "explain", "type": "string", "flag": "--explain", "description": "Show the closest matched siblings for one function name." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "flag": "--min",
+          "description": "Min function size (hex ok)."
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max",
+          "description": "Max function size (hex ok)."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit"
+        },
+        {
+          "name": "spread",
+          "type": "boolean",
+          "flag": "--spread",
+          "description": "Spread the batch across modules/address space."
+        },
+        {
+          "name": "out",
+          "type": "string",
+          "flag": "--out",
+          "description": "Write the worklist JSONL here."
+        },
+        {
+          "name": "explain",
+          "type": "string",
+          "flag": "--explain",
+          "description": "Show the closest matched siblings for one function name."
+        }
       ]
     },
     {
@@ -128,8 +318,16 @@
       "command": "{python} tools/triage.py {flags}",
       "description": "Classify unmatched functions as strict (exact template match), regperm (only register permutation differs), or none. Surfaces template-correct, regalloc-blocked cheap wins.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "max", "type": "string", "flag": "--max" }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max"
+        }
       ]
     },
     {
@@ -140,7 +338,12 @@
       "command": "{python} tools/recurring.py {flags}",
       "description": "Find idioms worth templatizing: shapes the LLM already cracked that still have many unmatched siblings.",
       "args": [
-        { "name": "min", "type": "integer", "flag": "--min", "description": "Only shapes with >= N unmatched siblings." }
+        {
+          "name": "min",
+          "type": "integer",
+          "flag": "--min",
+          "description": "Only shapes with >= N unmatched siblings."
+        }
       ]
     },
     {
@@ -151,10 +354,28 @@
       "command": "{python} tools/cluster_targets.py {flags}",
       "description": "Score unmatched functions by match likelihood and cluster ones sharing callees, for batching under a single agent.",
       "args": [
-        { "name": "lo", "type": "string", "flag": "--lo", "description": "Low address bound (hex)." },
-        { "name": "hi", "type": "string", "flag": "--hi", "description": "High address bound (hex)." },
-        { "name": "max", "type": "string", "flag": "--max" },
-        { "name": "count", "type": "integer", "flag": "--count" }
+        {
+          "name": "lo",
+          "type": "string",
+          "flag": "--lo",
+          "description": "Low address bound (hex)."
+        },
+        {
+          "name": "hi",
+          "type": "string",
+          "flag": "--hi",
+          "description": "High address bound (hex)."
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "flag": "--count"
+        }
       ]
     },
     {
@@ -163,14 +384,42 @@
       "category": "analysis",
       "readOnly": true,
       "command": "{python} tools/disasm.py {flags}",
-      "needs": ["rom"],
+      "needs": [
+        "rom"
+      ],
       "description": "Quick scratch disassembler for an extracted DS binary to ARM assembly.",
       "args": [
-        { "name": "binary", "type": "string", "positional": true, "required": true, "description": "Path to the extracted binary, e.g. extracted/arm9_dec.bin." },
-        { "name": "offset", "type": "string", "flag": "--offset", "description": "Start offset (hex ok)." },
-        { "name": "length", "type": "string", "flag": "--length", "description": "Byte length (hex ok)." },
-        { "name": "base", "type": "string", "flag": "--base", "description": "Load address (default 0x02000000)." },
-        { "name": "thumb", "type": "boolean", "flag": "--thumb", "description": "Decode as Thumb instead of ARM." }
+        {
+          "name": "binary",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Path to the extracted binary, e.g. extracted/arm9_dec.bin."
+        },
+        {
+          "name": "offset",
+          "type": "string",
+          "flag": "--offset",
+          "description": "Start offset (hex ok)."
+        },
+        {
+          "name": "length",
+          "type": "string",
+          "flag": "--length",
+          "description": "Byte length (hex ok)."
+        },
+        {
+          "name": "base",
+          "type": "string",
+          "flag": "--base",
+          "description": "Load address (default 0x02000000)."
+        },
+        {
+          "name": "thumb",
+          "type": "boolean",
+          "flag": "--thumb",
+          "description": "Decode as Thumb instead of ARM."
+        }
       ]
     },
     {
@@ -179,19 +428,77 @@
       "category": "analysis",
       "readOnly": true,
       "command": "{python} tools/match.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "The oracle: compile a candidate C file with mwccarm and relocation-aware byte-compare it to the ROM. Without --version it sweeps the default version list and reports the best. This is the ground-truth verifier; it does not bank anything.",
       "args": [
-        { "name": "c", "type": "string", "flag": "--c", "required": true, "description": "Path to the candidate C/C++ file." },
-        { "name": "func", "type": "string", "flag": "--func", "required": true, "description": "Function name." },
-        { "name": "addr", "type": "string", "flag": "--addr", "required": true, "description": "Function address (hex, e.g. 0x02065a84)." },
-        { "name": "size", "type": "string", "flag": "--size", "required": true, "description": "Function size (hex, e.g. 0x10)." },
-        { "name": "version", "type": "string", "flag": "--version", "default": "1.2/sp2p3", "description": "mwccarm version, e.g. 1.2/sp2p3. Omit to sweep." },
-        { "name": "flags", "type": "string", "flag": "--flags", "description": "Override compiler flags." },
-        { "name": "module", "type": "string", "flag": "--module", "description": "Target module: arm9 (default) or an overlay like ov006 - resolves the overlay binary + load address automatically. REQUIRED for overlay functions, or the target reads as empty." },
-        { "name": "brief", "type": "boolean", "flag": "--brief", "description": "Terse pass/fail per version; skips the full byte dump. Use for large functions to keep output small." },
-        { "name": "bin", "type": "string", "flag": "--bin", "description": "Advanced: override the target binary path instead of --module resolution." },
-        { "name": "base", "type": "string", "flag": "--base", "description": "Advanced: load address of --bin (hex)." }
+        {
+          "name": "c",
+          "type": "string",
+          "flag": "--c",
+          "required": true,
+          "description": "Path to the candidate C/C++ file."
+        },
+        {
+          "name": "func",
+          "type": "string",
+          "flag": "--func",
+          "required": true,
+          "description": "Function name."
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "flag": "--addr",
+          "required": true,
+          "description": "Function address (hex, e.g. 0x02065a84)."
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "flag": "--size",
+          "required": true,
+          "description": "Function size (hex, e.g. 0x10)."
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "flag": "--version",
+          "default": "1.2/sp2p3",
+          "description": "mwccarm version, e.g. 1.2/sp2p3. Omit to sweep."
+        },
+        {
+          "name": "flags",
+          "type": "string",
+          "flag": "--flags",
+          "description": "Override compiler flags."
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Target module: arm9 (default) or an overlay like ov006 - resolves the overlay binary + load address automatically. REQUIRED for overlay functions, or the target reads as empty."
+        },
+        {
+          "name": "brief",
+          "type": "boolean",
+          "flag": "--brief",
+          "description": "Terse pass/fail per version; skips the full byte dump. Use for large functions to keep output small."
+        },
+        {
+          "name": "bin",
+          "type": "string",
+          "flag": "--bin",
+          "description": "Advanced: override the target binary path instead of --module resolution."
+        },
+        {
+          "name": "base",
+          "type": "string",
+          "flag": "--base",
+          "description": "Advanced: load address of --bin (hex)."
+        }
       ]
     },
     {
@@ -200,16 +507,51 @@
       "category": "analysis",
       "readOnly": true,
       "command": "{python} tools/fdiff.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Iteration oracle: compile a candidate and show the per-instruction byte diff vs the ROM with relocations wildcarded (offset | target insn | candidate insn | OK/MISMATCH/reloc).",
       "args": [
-        { "name": "c", "type": "string", "flag": "--c", "required": true },
-        { "name": "name", "type": "string", "flag": "--name", "required": true },
-        { "name": "target_hex", "type": "string", "flag": "--target-hex", "description": "Target bytes as hex (alternative to module/addr/size)." },
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "addr", "type": "string", "flag": "--addr" },
-        { "name": "size", "type": "string", "flag": "--size" },
-        { "name": "quiet", "type": "boolean", "flag": "--quiet", "description": "Summary only." }
+        {
+          "name": "c",
+          "type": "string",
+          "flag": "--c",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "flag": "--name",
+          "required": true
+        },
+        {
+          "name": "target_hex",
+          "type": "string",
+          "flag": "--target-hex",
+          "description": "Target bytes as hex (alternative to module/addr/size)."
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "flag": "--addr"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "flag": "--size"
+        },
+        {
+          "name": "quiet",
+          "type": "boolean",
+          "flag": "--quiet",
+          "description": "Summary only."
+        }
       ]
     },
     {
@@ -218,17 +560,57 @@
       "category": "analysis",
       "readOnly": true,
       "command": "{python} tools/falign.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Aligns mnemonic/operand sequences (branch targets and pc-offsets normalized) to diff a candidate against the ROM even when sizes differ - for cracking large functions incrementally. EXPENSIVE on multi-KB functions (dumps every diverging block); prefer fdiff --quiet first, and pass quiet=true or limit=1-2 on large functions.",
       "args": [
-        { "name": "c", "type": "string", "flag": "--c", "required": true },
-        { "name": "name", "type": "string", "flag": "--name", "required": true },
-        { "name": "target_hex", "type": "string", "flag": "--target-hex" },
-        { "name": "module", "type": "string", "flag": "--module", "description": "arm9 or an overlay like ov006 (resolves the overlay binary automatically)." },
-        { "name": "addr", "type": "string", "flag": "--addr" },
-        { "name": "size", "type": "string", "flag": "--size" },
-        { "name": "quiet", "type": "boolean", "flag": "--quiet", "description": "Only the aligned block map + summary, no per-instruction dump. Compact." },
-        { "name": "limit", "type": "integer", "flag": "--limit", "description": "Show per-instruction detail for only the first N diverging blocks (fix the earliest first). Use 1-2 on large functions." }
+        {
+          "name": "c",
+          "type": "string",
+          "flag": "--c",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "flag": "--name",
+          "required": true
+        },
+        {
+          "name": "target_hex",
+          "type": "string",
+          "flag": "--target-hex"
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "arm9 or an overlay like ov006 (resolves the overlay binary automatically)."
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "flag": "--addr"
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "flag": "--size"
+        },
+        {
+          "name": "quiet",
+          "type": "boolean",
+          "flag": "--quiet",
+          "description": "Only the aligned block map + summary, no per-instruction dump. Compact."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit",
+          "description": "Show per-instruction detail for only the first N diverging blocks (fix the earliest first). Use 1-2 on large functions."
+        }
       ]
     },
     {
@@ -239,8 +621,17 @@
       "command": "{python} tools/coloring.py {flags}",
       "description": "Empirical study of when mwccarm colors temporaries into ip/r12, to bias templates.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "examples", "type": "integer", "flag": "--examples", "description": "Show N sample ip-using functions." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "examples",
+          "type": "integer",
+          "flag": "--examples",
+          "description": "Show N sample ip-using functions."
+        }
       ]
     },
     {
@@ -251,7 +642,12 @@
       "command": "{python} tools/demangle.py {flags}",
       "description": "Pragmatic Itanium C++ demangler: extract class::method and argument types from mangled _Z names.",
       "args": [
-        { "name": "names", "type": "string", "positional": true, "description": "One or more mangled names (space separated)." }
+        {
+          "name": "names",
+          "type": "string",
+          "positional": true,
+          "description": "One or more mangled names (space separated)."
+        }
       ]
     },
     {
@@ -261,12 +657,27 @@
       "readOnly": false,
       "command": "{python} tools/swarm.py {flags}",
       "apply": "--apply",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Zero-token template tier: recognize self-contained function shapes (constant returns, field load/store, arithmetic), emit the obvious C, and verify via the oracle. Dry-run by default; --apply banks wins.",
       "args": [
-        { "name": "min", "type": "string", "flag": "--min" },
-        { "name": "max", "type": "string", "flag": "--max" },
-        { "name": "count", "type": "integer", "flag": "--count" }
+        {
+          "name": "min",
+          "type": "string",
+          "flag": "--min"
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "flag": "--count"
+        }
       ]
     },
     {
@@ -276,10 +687,18 @@
       "readOnly": false,
       "command": "{python} tools/sweep.py {flags}",
       "apply": "--apply",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Run the free template tier (leaf + reloc rules) across every module. Dry-run by default; --apply records wins and writes src/*.c.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module", "description": "Restrict to one module." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Restrict to one module."
+        }
       ]
     },
     {
@@ -289,10 +708,18 @@
       "readOnly": false,
       "command": "{python} tools/clone.py {flags}",
       "apply": "--apply",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Free matcher: bank unmatched functions that are byte-identical structural clones of matched ones (modulo relocs), with a reloc-destination gate to prevent false positives. Dry-run by default.",
       "args": [
-        { "name": "max", "type": "string", "flag": "--max", "description": "Max function size (default 0x200)." }
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max",
+          "description": "Max function size (default 0x200)."
+        }
       ]
     },
     {
@@ -302,10 +729,17 @@
       "readOnly": false,
       "command": "{python} tools/paramclone.py {flags}",
       "apply": "--apply",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Pair unmatched with matched functions sharing an instruction skeleton, substitute immediates, and re-verify. Compounds with clone. Dry-run by default.",
       "args": [
-        { "name": "max", "type": "string", "flag": "--max" }
+        {
+          "name": "max",
+          "type": "string",
+          "flag": "--max"
+        }
       ]
     },
     {
@@ -315,11 +749,26 @@
       "readOnly": false,
       "command": "{python} tools/bank.py {flags}",
       "apply": "--apply",
-      "needs": ["rom", "compiler"],
-      "description": "Independently re-compile and re-check each candidate in a fan-out result JSON, then bank the passing ones. Nothing is trusted on an agent's say-so. Verify-only without --apply.",
+      "needs": [
+        "rom",
+        "compiler"
+      ],
+      "description": "Independently re-compile and re-check each candidate in a fan-out result JSON, then bank the passing ones. Nothing is trusted on an agent's say-so. Verify-only without --apply. Fan-out verify/bank only \u2014 use log_attempt for tries and stamp_provenance for how.",
       "args": [
-        { "name": "result", "type": "string", "flag": "--result", "required": true, "description": "Path to the fan-out output JSON." },
-        { "name": "worklist", "type": "string", "flag": "--worklist", "required": true, "description": "The worklist JSONL the result was produced from." }
+        {
+          "name": "result",
+          "type": "string",
+          "flag": "--result",
+          "required": true,
+          "description": "Path to the fan-out output JSON."
+        },
+        {
+          "name": "worklist",
+          "type": "string",
+          "flag": "--worklist",
+          "required": true,
+          "description": "The worklist JSONL the result was produced from."
+        }
       ]
     },
     {
@@ -330,10 +779,20 @@
       "command": "{python} tools/cascade.py {flags}",
       "apply": "--apply",
       "longRunning": true,
-      "needs": ["rom", "compiler", "network", "env:ANTHROPIC_API_KEY"],
+      "needs": [
+        "rom",
+        "compiler",
+        "network",
+        "env:ANTHROPIC_API_KEY"
+      ],
       "description": "Query a cheap model on template near-misses with the target asm + closest draft, recompile/verify, retry once with diff feedback. The compiler+oracle judge, not the model. --apply records wins.",
       "args": [
-        { "name": "limit", "type": "integer", "flag": "--limit", "description": "How many near-misses to attempt." }
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit",
+          "description": "How many near-misses to attempt."
+        }
       ]
     },
     {
@@ -343,12 +802,32 @@
       "readOnly": false,
       "command": "{python} tools/glm_refine.py {flags}",
       "longRunning": true,
-      "needs": ["rom", "compiler", "network", "env:GLM_API_KEY"],
+      "needs": [
+        "rom",
+        "compiler",
+        "network",
+        "env:GLM_API_KEY"
+      ],
       "description": "Run the refine tier through the GLM API instead of Workflow agents: concurrent jobs, up to N attempts per function, early-stop on stale rounds. Writes drafts and appends wins.",
       "args": [
-        { "name": "wl", "type": "string", "flag": "--wl", "description": "Refine worklist JSONL (build with refine_wl first)." },
-        { "name": "jobs", "type": "integer", "flag": "--jobs", "description": "Concurrent jobs." },
-        { "name": "attempts", "type": "integer", "flag": "--attempts", "description": "Max attempts per function." }
+        {
+          "name": "wl",
+          "type": "string",
+          "flag": "--wl",
+          "description": "Refine worklist JSONL (build with refine_wl first)."
+        },
+        {
+          "name": "jobs",
+          "type": "integer",
+          "flag": "--jobs",
+          "description": "Concurrent jobs."
+        },
+        {
+          "name": "attempts",
+          "type": "integer",
+          "flag": "--attempts",
+          "description": "Max attempts per function."
+        }
       ]
     },
     {
@@ -359,10 +838,29 @@
       "command": "{python} tools/refine_wl.py {flags}",
       "description": "Export the closest fixable near-misses from the near-miss DB into a refine fan-out worklist, routed by category. Appends attempted addresses to a ledger to avoid repeats.",
       "args": [
-        { "name": "max_div", "type": "integer", "flag": "--max-div", "description": "Max divergence to include." },
-        { "name": "limit", "type": "integer", "flag": "--limit" },
-        { "name": "out", "type": "string", "flag": "--out", "description": "Output worklist path." },
-        { "name": "include_attempted", "type": "boolean", "flag": "--include-attempted", "description": "Also schedule near-misses already in the attempted ledger (keeps a driven refiner fed instead of drying up to 1 target after a pass)." }
+        {
+          "name": "max_div",
+          "type": "integer",
+          "flag": "--max-div",
+          "description": "Max divergence to include."
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit"
+        },
+        {
+          "name": "out",
+          "type": "string",
+          "flag": "--out",
+          "description": "Output worklist path."
+        },
+        {
+          "name": "include_attempted",
+          "type": "boolean",
+          "flag": "--include-attempted",
+          "description": "Also schedule near-misses already in the attempted ledger (keeps a driven refiner fed instead of drying up to 1 target after a pass)."
+        }
       ]
     },
     {
@@ -381,7 +879,12 @@
       "command": "{python} tools/nearmiss_db.py list {flags}",
       "description": "List the closest stored near-misses (the permuter/hand-fix backlog).",
       "args": [
-        { "name": "max_div", "type": "integer", "flag": "--max-div", "description": "Only entries within this divergence." }
+        {
+          "name": "max_div",
+          "type": "integer",
+          "flag": "--max-div",
+          "description": "Only entries within this divergence."
+        }
       ]
     },
     {
@@ -398,14 +901,35 @@
       "category": "verification",
       "readOnly": true,
       "command": "{python} tools/linkcheck.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "longRunning": true,
       "description": "Reconstruct the linked bytes of each banked match and byte-compare to the ROM with relocations resolved. Verdicts: VERIFIED, WRONG, BLIND-n, NO-REPRO, NO-SYM.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "limit", "type": "integer", "flag": "--limit" },
-        { "name": "jobs", "type": "integer", "flag": "-j", "description": "Concurrent verifier threads." },
-        { "name": "json", "type": "string", "flag": "--json", "description": "Write a JSON report here." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit"
+        },
+        {
+          "name": "jobs",
+          "type": "integer",
+          "flag": "-j",
+          "description": "Concurrent verifier threads."
+        },
+        {
+          "name": "json",
+          "type": "string",
+          "flag": "--json",
+          "description": "Write a JSON report here."
+        }
       ]
     },
     {
@@ -414,14 +938,33 @@
       "category": "verification",
       "readOnly": true,
       "command": "{python} tools/reloc_audit.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "longRunning": true,
       "description": "Audit that every banked match's relocations point at the correct callees/globals (catches wrong-table false positives the byte-gate wildcards).",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module" },
-        { "name": "limit", "type": "integer", "flag": "--limit" },
-        { "name": "jobs", "type": "integer", "flag": "-j" },
-        { "name": "json", "type": "string", "flag": "--json" }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module"
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "flag": "--limit"
+        },
+        {
+          "name": "jobs",
+          "type": "integer",
+          "flag": "-j"
+        },
+        {
+          "name": "json",
+          "type": "string",
+          "flag": "--json"
+        }
       ]
     },
     {
@@ -430,10 +973,18 @@
       "category": "verification",
       "readOnly": true,
       "command": "{python} tools/verify_mangled.py {flags}",
-      "needs": ["rom", "compiler"],
+      "needs": [
+        "rom",
+        "compiler"
+      ],
       "description": "Batch-verify that cleaned-up mangled template functions still byte-match. Optional name substring filter.",
       "args": [
-        { "name": "filter", "type": "string", "positional": true, "description": "Only verify names matching this substring." }
+        {
+          "name": "filter",
+          "type": "string",
+          "positional": true,
+          "description": "Only verify names matching this substring."
+        }
       ]
     },
     {
@@ -444,7 +995,12 @@
       "command": "{python} tools/chaos_db_ci.py {flags}",
       "description": "CI-safe Chaos Viewer / tangOS Atlas data generator: rebuild the normalized function/progress DB from committed data only (no ROM).",
       "args": [
-        { "name": "out", "type": "string", "flag": "--out", "description": "Output JSON path (default chaos-db.json)." }
+        {
+          "name": "out",
+          "type": "string",
+          "flag": "--out",
+          "description": "Output JSON path (default chaos-db.json)."
+        }
       ]
     },
     {
@@ -453,12 +1009,29 @@
       "category": "setup",
       "readOnly": true,
       "command": "{python} tools/claims.py check {flags}",
-      "needs": ["network"],
+      "needs": [
+        "network"
+      ],
       "description": "Read-only check of the coordination claim service for a module/address span (works without an API key).",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module", "required": true },
-        { "name": "start", "type": "string", "flag": "--start", "description": "Span start address (hex)." },
-        { "name": "end", "type": "string", "flag": "--end", "description": "Span end address (hex)." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "required": true
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "flag": "--start",
+          "description": "Span start address (hex)."
+        },
+        {
+          "name": "end",
+          "type": "string",
+          "flag": "--end",
+          "description": "Span end address (hex)."
+        }
       ]
     },
     {
@@ -467,13 +1040,38 @@
       "category": "setup",
       "readOnly": false,
       "command": "{python} tools/claims.py lock {flags}",
-      "needs": ["network"],
+      "needs": [
+        "network"
+      ],
       "description": "Claim a module/address span on the coordination service so no other agent grinds it. Posts under your handle using the console's CLAIMS_API_KEY - you never handle the key. Without a key configured it returns 401 (coordinate via CLAIMS.md instead). Returns the claim id; release it when done.",
       "args": [
-        { "name": "module", "type": "string", "flag": "--module", "required": true, "description": "arm9 or an overlay like ov006." },
-        { "name": "start", "type": "string", "flag": "--start", "required": true, "description": "Span start address (hex)." },
-        { "name": "end", "type": "string", "flag": "--end", "required": true, "description": "Span end address (hex)." },
-        { "name": "note", "type": "string", "flag": "--note", "description": "Short note, e.g. the function name you're matching." }
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "required": true,
+          "description": "arm9 or an overlay like ov006."
+        },
+        {
+          "name": "start",
+          "type": "string",
+          "flag": "--start",
+          "required": true,
+          "description": "Span start address (hex)."
+        },
+        {
+          "name": "end",
+          "type": "string",
+          "flag": "--end",
+          "required": true,
+          "description": "Span end address (hex)."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "flag": "--note",
+          "description": "Short note, e.g. the function name you're matching."
+        }
       ]
     },
     {
@@ -482,10 +1080,18 @@
       "category": "setup",
       "readOnly": false,
       "command": "{python} tools/claims.py release {flags}",
-      "needs": ["network"],
+      "needs": [
+        "network"
+      ],
       "description": "Release a claim you hold (by id, from claims_lock) once the work is banked or abandoned. Uses the console's key + your handle.",
       "args": [
-        { "name": "id", "type": "string", "flag": "--id", "required": true, "description": "The claim id returned by claims_lock." }
+        {
+          "name": "id",
+          "type": "string",
+          "flag": "--id",
+          "required": true,
+          "description": "The claim id returned by claims_lock."
+        }
       ]
     },
     {
@@ -504,11 +1110,224 @@
       "category": "setup",
       "readOnly": false,
       "command": "{python} tools/unpack.py {flags}",
-      "needs": ["rom"],
+      "needs": [
+        "rom"
+      ],
       "description": "Unpack a Nintendo DS ROM (.nds) into extracted ARM9/ARM7 binaries, overlays, and filesystem. Requires your OWN legally dumped cartridge; the ROM and its output are never committed.",
       "args": [
-        { "name": "rom", "type": "string", "positional": true, "required": true, "description": "Path to your .nds ROM dump." }
+        {
+          "name": "rom",
+          "type": "string",
+          "positional": true,
+          "required": true,
+          "description": "Path to your .nds ROM dump."
+        }
       ]
+    },
+    {
+      "id": "log_attempt",
+      "label": "Log attempt",
+      "category": "logging",
+      "readOnly": false,
+      "description": "REQUIRED after every try. AI: model+reasoning+harness. near_miss --src \u2192 nearmiss tip. Not tools/bank.py fan-out.",
+      "args": [
+        {
+          "name": "func",
+          "type": "string",
+          "flag": "--func",
+          "required": true,
+          "description": "Function symbol name."
+        },
+        {
+          "name": "module",
+          "type": "string",
+          "flag": "--module",
+          "description": "Module (arm9, ovNNN, \u2026)."
+        },
+        {
+          "name": "addr",
+          "type": "string",
+          "flag": "--addr",
+          "description": "Address (0x\u2026)."
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "flag": "--status",
+          "required": true,
+          "description": "matched | near_miss | no_progress | compile_error | failed | skipped."
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "flag": "--kind",
+          "description": "ai | human."
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "flag": "--model",
+          "description": "AI model slug (required for kind=ai)."
+        },
+        {
+          "name": "reasoning",
+          "type": "string",
+          "flag": "--reasoning",
+          "description": "AI reasoning (required for kind=ai)."
+        },
+        {
+          "name": "harness",
+          "type": "string",
+          "flag": "--harness",
+          "description": "AI harness slug (required for kind=ai)."
+        },
+        {
+          "name": "author",
+          "type": "string",
+          "flag": "--author",
+          "description": "GitHub login (WHO)."
+        },
+        {
+          "name": "session_scope",
+          "type": "string",
+          "flag": "--session-scope",
+          "required": true,
+          "description": "focused | batch."
+        },
+        {
+          "name": "batch_size",
+          "type": "number",
+          "flag": "--batch-size",
+          "description": "1 if focused; \u22652 if batch."
+        },
+        {
+          "name": "divergences",
+          "type": "number",
+          "flag": "--divergences",
+          "description": "For near_miss."
+        },
+        {
+          "name": "prev_best",
+          "type": "number",
+          "flag": "--prev-best",
+          "description": "Previous best divergences."
+        },
+        {
+          "name": "parent_attempt_id",
+          "type": "string",
+          "flag": "--parent-attempt-id",
+          "description": "Prior attemptId."
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "flag": "--src",
+          "description": "C path; near_miss upserts tip."
+        },
+        {
+          "name": "used_near_miss_draft",
+          "type": "boolean",
+          "flag": "--used-near-miss-draft",
+          "description": "Used near-miss tip."
+        },
+        {
+          "name": "used_ghidra_draft",
+          "type": "boolean",
+          "flag": "--used-ghidra-draft",
+          "description": "Used Ghidra scaffold."
+        },
+        {
+          "name": "note",
+          "type": "string",
+          "flag": "--note",
+          "description": "Optional note."
+        }
+      ],
+      "command": "{python} tools/log_attempt.py {flags}"
+    },
+    {
+      "id": "stamp_provenance",
+      "label": "Stamp provenance",
+      "category": "logging",
+      "readOnly": false,
+      "description": "After MATCH: final how-record. Not a new try. Not tools/bank.py fan-out.",
+      "args": [
+        {
+          "name": "src",
+          "type": "string",
+          "flag": "--src",
+          "description": "Promoted src path."
+        },
+        {
+          "name": "c",
+          "type": "string",
+          "flag": "--c",
+          "description": "Candidate to verify/promote."
+        },
+        {
+          "name": "func",
+          "type": "string",
+          "flag": "--func",
+          "description": "Function symbol."
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "flag": "--kind",
+          "required": true,
+          "description": "ai | human."
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "flag": "--model",
+          "description": "AI model slug."
+        },
+        {
+          "name": "reasoning",
+          "type": "string",
+          "flag": "--reasoning",
+          "description": "AI reasoning."
+        },
+        {
+          "name": "harness",
+          "type": "string",
+          "flag": "--harness",
+          "description": "AI harness."
+        },
+        {
+          "name": "author",
+          "type": "string",
+          "flag": "--author",
+          "description": "Optional WHO."
+        },
+        {
+          "name": "session_scope",
+          "type": "string",
+          "flag": "--session-scope",
+          "required": true,
+          "description": "focused | batch."
+        },
+        {
+          "name": "batch_size",
+          "type": "number",
+          "flag": "--batch-size",
+          "description": "Session size."
+        },
+        {
+          "name": "no_verify",
+          "type": "boolean",
+          "flag": "--no-verify",
+          "description": "Skip match.py."
+        },
+        {
+          "name": "promote",
+          "type": "boolean",
+          "flag": "--promote",
+          "description": "Copy --c to src/."
+        }
+      ],
+      "command": "{python} tools/stamp_provenance.py {flags}"
     }
   ]
 }
