@@ -1,0 +1,98 @@
+typedef struct { int a, b; } Pair;
+struct OamAttri;
+
+extern void func_0203d388(int *p, int angle);
+extern int func_ov006_020ebb40(char *o, int n);
+extern int func_ov006_020ebc08(char *c, int n);
+extern int func_ov006_020eb7b0(char *p);
+extern int func_02053200(int x);
+extern short data_02082214[];
+extern struct OamAttri *data_ov006_02142018[];
+extern struct OamAttri *data_ov006_021375c0;
+extern int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int, struct OamAttri *, int, int, int, int, int, int);
+
+void func_ov006_020ea914(char *self)
+{
+    Pair arr[5];
+    int i;
+    Pair dir;
+    int local_1c, local_20, local_24, local_28, local_2c, local_30, local_34;
+    int sb;
+    int r6, r5;
+    int fp;
+    int r4;
+
+    arr[4].a = 0xb4000;
+    arr[4].b = 0x80000;
+
+    for (i = 3; i >= 1; i--) {
+        arr[i].a = arr[i + 1].a;
+        arr[i].b = arr[i + 1].b;
+        arr[i].a -= ((int *)(self + 0x4c))[i] + (i + 1) * 0x2000;
+    }
+
+    arr[0] = arr[1];
+    arr[0].a -= *(int *)(self + 0x4c) + 0x2000;
+
+    sb = 0;
+    r6 = sb;
+    r5 = sb;
+
+    local_34 = sb;
+    local_30 = -0x18000;
+    fp = 0x1000;
+    local_2c = 0x2000;
+    local_24 = -1;
+    r4 = -0x4000;
+    local_28 = sb;
+    local_1c = sb;
+    dir.b = fp;
+    dir.a = local_1c;
+
+    for (; sb < 5; sb++) {
+        int w0 = arr[sb].a;
+        int w1 = arr[sb].b;
+        short ang84 = *(short *)(self + 0x84);
+        int r7 = (short)(ang84 - r6);
+        int r8 = r4;
+
+        func_0203d388((int *)&dir, r4);
+
+        if (*(unsigned char *)(self + 0x94) == 0) {
+            if (sb == 0) {
+                r8 = (short)(r4 + (data_02082214[(((unsigned short)r7) >> 4) * 2] >> 1));
+            } else {
+                int cosv = data_02082214[(((unsigned short)r7) >> 4) * 2];
+                int scale = 0x1800 - r5;
+                int rotated = (int)(((long long)cosv * scale + 0x800) >> 12);
+                r8 = (short)(r4 + (short)rotated);
+            }
+        }
+
+        local_20 = func_ov006_020ebb40(self, sb);
+
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(local_28, data_ov006_02142018[func_ov006_020ebc08(self, sb)],
+            w0 >> 12, w1 >> 12, local_20, local_24, fp, (unsigned short)r8);
+
+        if (sb == 0 && *(unsigned char *)(self + 0x94) != 0 && func_ov006_020eb7b0(self) != 0) {
+            Pair off;
+            int cosv2, scaleArg, fixScale;
+
+            off.a = local_2c;
+            off.b = local_30;
+            func_0203d388((int *)&off, r8);
+
+            cosv2 = data_02082214[(((unsigned short)r7) >> 4) * 2];
+            off.a = off.a + w0;
+            scaleArg = (cosv2 >> 2) + 0xc00;
+            off.b = off.b + w1;
+            fixScale = func_02053200(scaleArg);
+
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(local_34, data_ov006_021375c0,
+                off.a >> 12, off.b >> 12, local_24, local_24, fixScale, (unsigned short)r8);
+        }
+
+        r6 += 0x1800;
+        r5 += 0x200;
+    }
+}

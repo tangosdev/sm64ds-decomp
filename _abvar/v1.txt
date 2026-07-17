@@ -1,0 +1,34 @@
+  +0x004 | target: push {r4, r5, r6, r7, lr}    | yours: push {r4, r5, r6, r7, r8, lr}
+  +0x008 | target: sub sp, sp, #0xc             | yours: sub sp, sp, #8
+  +0x018 | target: mov r6, r0                   | yours: mov r5, #0
+  +0x01c | target: mov r5, #0                   | yours: mov r8, r0
+  +0x02c | target: bl #0x36c                    | yours: mov r7, r5
+  +0x030 | target: add r1, sp, #0x20            | yours: mov r6, r5
+  +0x038 | target: mov r2, r5                   | yours: add r1, sp, #0x20
+  +0x03c | target: ands r3, ip, #1              | yours: add r2, r1, #6
+  +0x040 | target: ldrhne r3, [ip, #-1]         | yours: ands r1, r2, #1
+  +0x044 | target: orr r4, r4, #0               | yours: ldrhne r1, [r2, #-1]
+  +0x048 | target: orr r5, r5, #0x10            | yours: orr r6, r6, #0
+  +0x04c | target: andne r3, r3, #0xff00        | yours: orr r7, r7, #0x10
+  +0x050 | target: asrne r3, r3, #8             | yours: andne r1, r1, #0xff00
+  +0x054 | target: ldrheq r3, [ip]              | yours: asrne r1, r1, #8
+  +0x058 | target: mov r1, r2                   | yours: ldrheq r1, [r2]
+  +0x05c | target: mov r7, #5                   | yours: mov ip, #5
+  +0x060 | target: andeq r3, r3, #0xff          | yours: add r2, sp, #0x20
+  +0x064 | target: and r3, r3, #0xf             | yours: andeq r1, r1, #0xff
+  +0x068 | target: orr r4, r4, r3, asr #31      | yours: and r1, r1, #0xf
+  +0x06c | target: orr r5, r5, r3               | yours: orr r6, r6, r1, asr #31
+  +0x070 | target: add ip, sp, #0x20            | yours: orr r7, r7, r1
+  +0x074 | target: add lr, ip, r7               | yours: add r3, r2, ip
+  +0x078 | target: ands r3, lr, #1              | yours: ands r1, r3, #1
+  +0x07c | target: ldrhne r3, [lr, #-1]         | yours: ldrhne r1, [r3, #-1]
+  +0x080 | target: lsl r4, r4, #8               | yours: lsl r6, r6, #8
+  +0x084 | target: orr r4, r4, r5, lsr #24      | yours: orr r6, r6, r7, lsr #24
+  +0x088 | target: andne r3, r3, #0xff00        | yours: andne r1, r1, #0xff00
+  +0x08c | target: asrne r3, r3, #8             | yours: asrne r1, r1, #8
+  +0x090 | target: ldrheq r3, [lr]              | yours: ldrheq r1, [r3]
+  +0x094 | target: lsl r5, r5, #8               | yours: lsl r7, r7, #8
+  +0x098 | target: andeq r3, r3, #0xff          | yours: andeq r1, r1, #0xff
+  +0x09c | target: orr r4, r4, r3, asr #31      | yours: orr r6, r6, r1, asr #31
+  ... 151 more mismatching words
+NOMATCH divergences=183/230

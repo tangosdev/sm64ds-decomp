@@ -1,0 +1,473 @@
+function: func_0206c51c   module: arm9   addr: 0x0206c51c   size: 0x398
+language: C
+closest matched siblings (opcode similarity): func_0206bdb4(0.601), _ZN11WingFeather8BehaviorEv(0.149)
+
+annotated disassembly:
+  push    {r0, r1, r2, r3}
+  push    {r4, r5, r6, r7, lr}
+  sub     sp, sp, #0xc
+  ldr     r0, [sp, #0x20]
+  ldr     r1, [sp, #0x24]
+  bl      #0x398  ; -> func_0206c8b4
+  mov     r6, r0
+  mov     r5, #0
+  ldr     r0, [sp, #0x28]
+  ldr     r1, [sp, #0x2c]
+  mov     r4, r5
+  bl      #0x398  ; -> func_0206c8b4
+  add     r1, sp, #0x20
+  add     ip, r1, #6
+  mov     r2, r5
+  ands    r3, ip, #1
+  ldrhne  r3, [ip, #-1]
+  orr     r4, r4, #0
+  orr     r5, r5, #0x10
+  andne   r3, r3, #0xff00
+  asrne   r3, r3, #8
+  ldrheq  r3, [ip]
+  mov     r1, r2
+  mov     r7, #5
+  andeq   r3, r3, #0xff
+  and     r3, r3, #0xf
+  orr     r4, r4, r3, asr #31
+  orr     r5, r5, r3
+  add     ip, sp, #0x20
+  add     lr, ip, r7
+  ands    r3, lr, #1
+  ldrhne  r3, [lr, #-1]
+  lsl     r4, r4, #8
+  orr     r4, r4, r5, lsr #24
+  andne   r3, r3, #0xff00
+  asrne   r3, r3, #8
+  ldrheq  r3, [lr]
+  lsl     r5, r5, #8
+  andeq   r3, r3, #0xff
+  orr     r4, r4, r3, asr #31
+  orr     r5, r5, r3
+  subs    r7, r7, #1
+  bpl     #0x74
+  add     r3, sp, #0x28
+  add     ip, r3, #6
+  ands    r3, ip, #1
+  ldrhne  r3, [ip, #-1]
+  orr     r1, r1, #0
+  orr     r2, r2, #0x10
+  andne   r3, r3, #0xff00
+  asrne   r3, r3, #8
+  ldrheq  r3, [ip]
+  mov     r7, #5
+  add     ip, sp, #0x28
+  andeq   r3, r3, #0xff
+  and     r3, r3, #0xf
+  orr     r1, r1, r3, asr #31
+  orr     r2, r2, r3
+  add     lr, ip, r7
+  ands    r3, lr, #1
+  ldrhne  r3, [lr, #-1]
+  lsl     r1, r1, #8
+  orr     r1, r1, r2, lsr #24
+  andne   r3, r3, #0xff00
+  asrne   r3, r3, #8
+  ldrheq  r3, [lr]
+  lsl     r2, r2, #8
+  andeq   r3, r3, #0xff
+  orr     r1, r1, r3, asr #31
+  orr     r2, r2, r3
+  subs    r7, r7, #1
+  bpl     #0xe8
+  cmp     r6, #0
+  bne     #0x140
+  mov     r3, #0
+  cmp     r4, r3
+  cmpeq   r5, r3
+  ldreq   r0, [sp, #0x28]
+  ldreq   r1, [sp, #0x2c]
+  beq     #0x384
+  cmp     r0, #0
+  bne     #0x160
+  mov     r3, #0
+  cmp     r1, r3
+  cmpeq   r2, r3
+  ldreq   r0, [sp, #0x20]
+  ldreq   r1, [sp, #0x24]
+  beq     #0x384
+  cmp     r6, r0
+  orr     r4, r4, #0x100000
+  orr     r5, r5, #0
+  orr     r1, r1, #0x100000
+  orr     r2, r2, #0
+  mov     r7, #0
+  blt     #0x1ac
+  sub     r3, r6, r0
+  b       #0x198
+  lsr     r2, r2, #1
+  lsr     r0, r1, #1
+  orr     r2, r2, r1, lsl #31
+  mov     r1, r0
+  add     r7, r7, #1
+  cmp     r7, r3
+  blt     #0x184
+  adds    r3, r5, r2
+  adc     r1, r4, r1
+  b       #0x1f4
+  sub     r6, r0, r6
+  b       #0x1c8
+  lsr     r5, r5, #1
+  lsr     r3, r4, #1
+  orr     r5, r5, r4, lsl #31
+  mov     r4, r3
+  add     r7, r7, #1
+  cmp     r7, r6
+  blt     #0x1b4
+  adds    r3, r5, r2
+  mov     r6, r0
+  adc     r1, r4, r1
+  b       #0x1f4
+  lsr     r3, r3, #1
+  lsr     r0, r1, #1
+  orr     r3, r3, r1, lsl #31
+  mov     r1, r0
+  add     r6, r6, #1
+  lsr     r0, r1, #0x15
+  mov     r4, #0
+  and     r2, r4, #0
+  and     r0, r0, #1
+  cmp     r2, r4
+  cmpeq   r0, r4
+  bne     #0x1e0
+  add     r0, sp, #0
+  add     r2, r0, #7
+  str     r4, [sp]
+  str     r4, [sp, #4]
+  ands    r0, r2, #1
+  ldrhne  r0, [r2, #-1]
+  andne   r0, r0, #0xff00
+  asrne   r2, r0, #8
+  ldrheq  r0, [r2]
+  andeq   r2, r0, #0xff
+  add     r0, sp, #0
+  add     r4, r0, #7
+  orr     r5, r2, r6, asr #4
+  ands    r0, r4, #1
+  ldrheq  r2, [r4]
+  andeq   r0, r5, #0xff
+  andeq   r2, r2, #0xff00
+  orreq   r0, r2, r0
+  strheq  r0, [r4]
+  beq     #0x274
+  ldrh    r2, [r4, #-1]
+  and     r0, r5, #0xff
+  and     r2, r2, #0xff
+  orr     r0, r2, r0, lsl #8
+  strh    r0, [r4, #-1]
+  add     r0, sp, #0
+  add     r2, r0, #6
+  ands    r0, r2, #1
+  ldrhne  r0, [r2, #-1]
+  andne   r0, r0, #0xff00
+  asrne   r5, r0, #8
+  ldrheq  r0, [r2]
+  and     r2, r6, #0xf
+  andeq   r5, r0, #0xff
+  add     r0, sp, #0
+  add     r4, r0, #6
+  orr     r5, r5, r2, lsl #4
+  ands    r0, r4, #1
+  ldrheq  r2, [r4]
+  andeq   r0, r5, #0xff
+  andeq   r2, r2, #0xff00
+  orreq   r0, r2, r0
+  strheq  r0, [r4]
+  beq     #0x2d4
+  ldrh    r2, [r4, #-1]
+  and     r0, r5, #0xff
+  and     r2, r2, #0xff
+  orr     r0, r2, r0, lsl #8
+  strh    r0, [r4, #-1]
+  ldr     r2, [pc, #0xb8]  ; = 0xfffff
+  mvn     r4, #0
+  and     r2, r1, r2
+  mov     ip, #6
+  add     r0, sp, #0
+  and     r3, r3, r4
+  mov     r1, #0
+  mov     r4, r3
+  mov     lr, r2
+  mov     r6, r1
+  lsl     r7, ip, #3
+  b       #0x318
+  lsr     r4, r4, #1
+  lsr     r5, lr, #1
+  orr     r4, r4, lr, lsl #31
+  mov     lr, r5
+  add     r6, r6, #1
+  cmp     r6, r7
+  blt     #0x304
+  add     lr, r0, ip
+  ands    r5, lr, #1
+  ldrhne  r5, [lr, #-1]
+  and     r4, r4, #0xff
+  andne   r5, r5, #0xff00
+  asrne   r5, r5, #8
+  ldrheq  r5, [lr]
+  andeq   r5, r5, #0xff
+  orr     r6, r4, r5
+  ands    r4, lr, #1
+  ldrheq  r5, [lr]
+  andeq   r4, r6, #0xff
+  andeq   r5, r5, #0xff00
+  orreq   r4, r5, r4
+  strheq  r4, [lr]
+  beq     #0x374
+  ldrh    r5, [lr, #-1]
+  and     r4, r6, #0xff
+  and     r5, r5, #0xff
+  orr     r4, r5, r4, lsl #8
+  strh    r4, [lr, #-1]
+  subs    ip, ip, #1
+  bpl     #0x2f0
+  ldr     r0, [sp]
+  ldr     r1, [sp, #4]
+  add     sp, sp, #0xc
+  pop     {r4, r5, r6, r7, lr}
+  add     sp, sp, #0x10
+  bx      lr
+
+callee signatures:
+  func_0206c8b4: asm int func_0206c8b4(int a, int b, int c, int d)
+
+pool slots:
+  {'off': '0x394', 'const': '0xfffff'}
+
+matched sibling scaffold func_0206bdb4:
+    typedef unsigned char u8;
+    typedef unsigned short u16;
+    typedef unsigned int u32;
+    typedef unsigned long long u64;
+    
+    extern int func_0206c90c(u64 x);
+    extern int func_0206c8b4(u64 x);
+    
+    #define RD(p) ((((u32)(p)) & 1) ? ((*(u16 *)((u32)(p) - 1) & 0xff00) >> 8) : (*(u16 *)(p) & 0xff))
+    
+    #define WR(p, v) \
+        do { \
+            if (((u32)(p)) & 1) \
+                *(u16 *)((u32)(p) - 1) = (*(u16 *)((u32)(p) - 1) & 0xff) | (((v) & 0xff) << 8); \
+            else \
+                *(u16 *)(p) = (*(u16 *)(p) & 0xff00) | ((v) & 0xff); \
+        } while (0)
+    
+    #pragma optimize_for_size on
+    #pragma opt_common_subs off
+    u64 func_0206bdb4(u64 x, int flag)
+    {
+        int sign;
+        int e;
+        int n;
+        u64 res;
+        int v;
+        int b;
+        int j;
+        u8 * q;
+        u64 frac;
+        u32 c;
+        int f;
+        u64 m;
+        u64 quot;
+        int d;
+        u32 rem;
+        int k;
+        u64 t;
+        int i;
+    
+        sign = func_0206c90c(x);
+        e = func_0206c8b4(x);
+    
+        m = 0;
+        m |= 0x10;
+        q = (u8 *)&x + 6;
+        m |= RD(q) & 0xf;
+        for (j = 5; j >= 0; j--) {
+            q = (u8 *)&x + j;
+            m <<= 8;
+            m |= RD(q);
+        }
+    
+        d = e - 0x3fd;
+        if (e >= 3) e -= 3; else e = 0;
+        quot = 0;
+        rem = 0;
+        i = 0;
+        m |= 0x0010000000000000ULL;
+        f = (flag == 0);
+        while ((c = (d <= 0x35 && f)), (i < (c ? d : 0x35))) {
+            quot <<= 1;
+            rem <<= 1;
+            t = m;
+            k = 0;
+            for (n = 0x34 - i; k < n; k++)
+                t >>= 1;
+            if ((t & 1) != 0)
+                rem++;
+            if (rem >= 5) {
+                quot += 1;
+                rem -= 5;
+            }
+            i++;
+        }
+        if (rem != 0)
+            quot += 1;
+        j = 0x35 - i;
+        for (k = 0; k < j; k++)
+            quot <<= 1;
+        if (d >= 3) d -= 3; else d = 0;
+        m -= quot;
+        if (flag == 0) {
+            v = 0x35 - d;
+            for (k = 0; k < v; k++)
+                m >>= 1;
+            for (i = 0; i < v; i++)
+                m <<= 1;
+        }
+        while (((m >> 52) & 1) == 0 && m != 0) {
+            e--;
+            m <<= 1;
+        }
+        frac = m & 0xFFFFFFFFFFFFFULL;
+        if (frac == 0) {
+            if (e < 0x3ff) {
+                if (flag == 0) {
+                    sign = 0;
+                    e = 0;
+                }
+            }
+        }
+        res = 0;
+        q = (u8 *)&res + 7;
+        v = RD(q) | (sign << 7);
+        q = (u8 *)&res + 7;
+        WR(q, v);
+        q = (u8 *)&res + 7;
+        v = RD(q) | (e >> 4);
+        q = (u8 *)&res + 7;
+        WR(q, v);
+        q = (u8 *)&res + 6;
+        v = RD(q) | ((e & 0xf) << 4);
+        q = (u8 *)&res + 6;
+        WR(q, v);
+        for (k = 6; k >= 0; k--) {
+            t = frac;
+            for (n = 0; n < k << 3; n++)
+                t >>= 1;
+            q = (u8 *)&res + k;
+            v = ((u32)t & 0xff) | RD(q);
+            WR(q, v);
+        }
+        return res;
+    }
+
+matched sibling scaffold _ZN11WingFeather8BehaviorEv:
+    //cpp
+    typedef short s16;
+    typedef unsigned short u16;
+    typedef unsigned char u8;
+    typedef unsigned int u32;
+    typedef long long s64;
+    
+    extern "C" {
+    void* _ZN5Actor13ClosestPlayerEv(void* self);
+    int _ZN6Player15IsCollectingCapEv(void* self);
+    void _ZN5Actor13SmallPoofDustEv(void* self);
+    void _ZN9ActorBase18MarkForDestructionEv(void* self);
+    u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
+    void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+    void func_020383fc(void* p);
+    int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+    void _Z15ApproachLinear2Rsss(short* ref, short target, short rate);
+    void _Z14ApproachLinearRiii(int* ref, int target, int rate);
+    u8 DecIfAbove0_Byte(u8* p);
+    void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 kind, int x, int y, int z);
+    void* _ZN5Actor10FindWithIDEj(u32 id);
+    void _ZN6Player16InitWingFeathersEb(void* self, int b);
+    void _ZN12CylinderClsn5ClearEv(void* self);
+    void _ZN12CylinderClsn6UpdateEv(void* self);
+    void func_ov002_020b2c44(char* c);
+    }
+    
+    extern u8 data_0209f2d8;
+    extern s16 data_02082214[];
+    extern void* data_0209f318;
+    
+    #pragma opt_common_subs off
+    
+    extern "C" int _ZN11WingFeather8BehaviorEv(char* self) {
+        {
+            int b = (data_0209f2d8 == 1);
+            if (!b) {
+                void* p = _ZN5Actor13ClosestPlayerEv(self);
+                if (*(int*)((char*)p + 8) != 0 || _ZN6Player15IsCollectingCapEv(p) != 0) {
+                    _ZN5Actor13SmallPoofDustEv(self);
+                    _ZN9ActorBase18MarkForDestructionEv(self);
+                    return 1;
+                }
+            }
+        }
+    
+        *(u32*)(self + 0x380) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            *(u32*)(self + 0x380), 0x4a, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64), 0, 0);
+    
+        _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
+        func_020383fc(self + 0x158);
+    
+        if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x158) != 0) {
+            _Z15ApproachLinear2Rsss((short*)(self + 0x37c), 0, 0x50);
+            _Z14ApproachLinearRiii((int*)(self + 0x98), 0, 0x555);
+            if (DecIfAbove0_Byte((u8*)(self + 0x384)) == 0) {
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+                _ZN9ActorBase18MarkForDestructionEv(self);
+            }
+        } else {
+            short* angp = (short*)((((s64)(self + 0x37c))) & 0xFFFFFFFFFFFFFFFFLL);
+            short old_ang = *angp;
+            *angp = old_ang + 0x400;
+            u16 newv = *(u16*)((char*)(self + 0x300) + 0x7c);
+            int idx = ((newv >> 4) << 1) + 1;
+            *(int*)(self + 0x98) = (int)(((s64)*(int*)(self + 0x378) * data_02082214[idx] + 0x800) >> 12);
+        }
+    
+        _Z14ApproachLinearRiii((int*)(self + 0x378), 0x10000, 0x332);
+    
+        {
+            int idx2 = (*(u16*)(self + 0x37c) >> 4) << 1;
+            *(s16*)(self + 0x8c) = data_02082214[idx2] + 0x4000;
+            int idx3 = ((*(u16*)(self + 0x37c) >> 4) << 1) + 1;
+            *(s16*)(self + 0x90) = data_02082214[idx3] * 2 - 0x6000;
+        }
+    
+        {
+            int b = (data_0209f2d8 == 1);
+            if (!b) {
+                *(s16*)(self + 0x8e) = *(s16*)((char*)data_0209f318 + 0x17c) + 0x4000;
+            }
+        }
+    
+        u32 id = *(u32*)(self + 0x148);
+        if (id != 0) {
+            void* a = _ZN5Actor10FindWithIDEj(id);
+            if (a != 0) {
+                int eq = (*(u16*)((char*)a + 0xc) == 0xbf);
+                if (eq) {
+                    _ZN6Player16InitWingFeathersEb(a, 1);
+                    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
+                    _ZN9ActorBase18MarkForDestructionEv(self);
+                    return 1;
+                }
+            }
+        }
+    
+        _ZN12CylinderClsn5ClearEv(self + 0x124);
+        _ZN12CylinderClsn6UpdateEv(self + 0x124);
+        func_ov002_020b2c44(self);
+        return 1;
+    }

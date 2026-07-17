@@ -1,0 +1,27 @@
+size differs: compiled 712 bytes vs target 804 - aligned diff ('-' = absent on that side):
+  insn   1 | target: sub sp, sp, #0x84            | yours: sub sp, sp, #0x6c
+  insn   5 | target: str r2, [sp, #0x78]          | yours: str r2, [sp, #0x64]
+  insn   6 | target: str r1, [sp, #0x7c]          | yours: str r1, [sp, #0x68]
+  insn   8 | target: add r2, sp, #0x58            | yours: add r2, sp, #0x44
+  insn  25 | target: ldr r1, [sp, #0x60]          | yours: ldr r1, [sp, #0x4c]
+  insn  26 | target: ldr r0, [sp, #0x64]          | yours: ldr r0, [sp, #0x50]
+  insn  27 | target: str r1, [sp, #0x58]          | yours: str r1, [sp, #0x44]
+  insn  28 | target: str r0, [sp, #0x5c]          | yours: str r0, [sp, #0x48]
+  insn  32 | target: sub r0, r1, r0               | yours: sub r1, r1, r0
+  insn  33 | target: mov r6, sb                   | yours: mov r0, #0x1000
+  insn  34 | target: mov r5, sb                   | yours: str r1, [sp, #0x44]
+  insn  35 | target: str r0, [sp, #0x58]          | yours: str r0, [sp, #0x14]
+  insn  36 | target: -                            | yours: str r0, [sp, #0x38]
+  insn  37 | target: mov r1, #0x4000              | yours: -
+  insn  38 | target: str sb, [sp, #0x34]          | yours: -
+  insn  40 | target: str r0, [sp, #0x30]          | yours: mov r1, #0x4000
+  insn  41 | target: rsb r4, r1, #0               | yours: -
+  insn  42 | target: mov r0, #0x2000              | yours: -
+  insn  44 | target: -                            | yours: rsb r0, r1, #0
+  insn  45 | target: -                            | yours: str r0, [sp, #0x18]
+  insn  46 | target: -                            | yours: mov r0, #0x2000
+  insn  47 | target: -                            | yours: str r0, [sp, #0x28]
+  insn  45 | target: str r0, [sp, #0x24]          | yours: mov r8, sb
+  insn  46 | target: mov fp, #0x1000              | yours: mov r7, sb
+  ... 98 more diverging instructions
+NOMATCH divergences=122/201 (aligned; sizes differ)

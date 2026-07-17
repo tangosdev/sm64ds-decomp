@@ -1,0 +1,167 @@
+typedef unsigned int u32;
+typedef unsigned short u16;
+typedef short s16;
+typedef unsigned char u8;
+typedef long long s64;
+
+typedef struct { int x, y, z; } Vec3;
+
+typedef struct {
+    u32 start : 6;
+    u32 limit : 6;
+    u32 count : 6;
+    u32 : 14;
+} Cnt74;
+
+typedef struct {
+    char _pad0[0x20];
+    s16 q20;
+    char _pad22[0x34 - 0x22];
+    u32 f0 : 8;
+    u32 f16 : 16;
+    u32 fa : 2;
+    u32 fb : 2;
+    u32 : 4;
+} P0;
+
+typedef struct {
+    P0 *p0;
+} Adat;
+
+typedef struct {
+    char _pad0[0x18];
+    Adat *p18;
+    char _pad1c[0x74 - 0x1c];
+    Cnt74 cnt;
+} Ctx;
+
+typedef struct {
+    u16 lo : 5;
+    u16 hi : 5;
+    u16 : 6;
+} M40;
+
+typedef struct {
+    char _pad0[8];
+    int p8;
+    int pc;
+    int p10;
+    int p14;
+    int p18;
+    int p1c;
+    Vec3 p20;
+    char _pad2c[4];
+    int p30;
+    s16 p34;
+    u16 p36;
+    char _pad38[2];
+    u16 p3a;
+    char _pad3c[4];
+    M40 p40;
+} Node;
+
+typedef struct {
+    char _pad0[0x30];
+    int p30;
+    Ctx *p34;
+    int *p38;
+} Self;
+
+extern void CrossVec3(Vec3 *a, Vec3 *b, Vec3 *out);
+extern void NormalizeVec3(Vec3 *src, Vec3 *dst);
+extern void Copy36Bytes(int *src, int *dst);
+extern void MulVec3Mat3x3(Vec3 *in, int *m, Vec3 *out);
+extern void MulVec3Mat4x3(Vec3 *v, int *m, Vec3 *dst);
+extern void func_02055388(int *m);
+extern void func_0204c24c(u8 a, u8 b);
+
+void func_0204b81c(Self *self, Node *node)
+{
+    Vec3 vecC;
+    Vec3 posbuf;
+    Vec3 vecA;
+    Vec3 vecB;
+    int matcopy[9];
+    int mat[12];
+    Ctx *c = self->p34;
+    int q = c->p18->p0->q20;
+    int scale = (node->p40.lo * (node->p40.hi + 1)) >> 5;
+    int *m = self->p38;
+    u32 v;
+    u32 f2;
+    int v1;
+    s64 v1x;
+    int v2;
+
+    v = *(u32 *)((char *)c + 0x74) << 14;
+    f2 = v >> 26;
+    v = self->p30 | 0xc0;
+    v |= f2 << 24;
+    v |= (u32)scale << 16;
+    *(volatile u32 *)0x40004a4 = v;
+    *(volatile u32 *)0x40004a4;
+    {
+        Cnt74 *qc = (Cnt74 *)(u32)(((s64)(int)((char *)c + 0x74)) & 0xFFFFFFFFFFFFFFFFLL);
+        qc->count++;
+        if (c->cnt.count > c->cnt.limit)
+            qc->count = c->cnt.start;
+    }
+
+    if (scale == 0)
+        return;
+
+    v1 = (int)(((s64)node->p30 * node->p34 + 0x800) >> 12);
+    posbuf.x = node->p14 + node->p8;
+    posbuf.y = node->p18 + node->pc;
+    vecA = node->p20;
+    v1x = v1;
+    posbuf.z = node->p1c + node->p10;
+    v2 = (int)(((s64)v1 * q + 0x800) >> 12);
+    vecB.x = m[2];
+    vecB.y = m[5];
+    vecB.z = m[8];
+    CrossVec3(&vecA, &vecB, &vecA);
+
+    if (vecA.x == 0 && vecA.y == 0 && vecA.z == 0)
+        return;
+
+    NormalizeVec3(&vecA, &vecA);
+    Copy36Bytes(m, matcopy);
+    MulVec3Mat3x3(&vecA, matcopy, &vecA);
+    MulVec3Mat4x3(&posbuf, m, &posbuf);
+    vecC = node->p20;
+    NormalizeVec3(&vecC, &vecC);
+
+    {
+        int tz = (int)(((s64)vecC.z * -m[8] + 0x800) >> 12);
+        int tx = (int)(((s64)vecC.x * -m[2] + 0x800) >> 12);
+        int ty = (int)(((s64)vecC.y * -m[5] + 0x800) >> 12);
+        int dot = tz + (tx + ty);
+        int s;
+        int w;
+        if (dot < 0)
+            dot = -dot;
+        s = (int)(((s64)(0x1000 - dot) * (int)self->p34->p18->p0->f16 + 0x800) >> 12);
+        w = (int)((v1x * (s + 0x1000) + 0x800) >> 12);
+        mat[9] = posbuf.x;
+        mat[10] = posbuf.y;
+        mat[11] = posbuf.z;
+        mat[8] = 0x1000;
+        mat[0] = (int)(((s64)vecA.x * v2 + 0x800) >> 12);
+        mat[3] = (int)(((s64)-vecA.y * w + 0x800) >> 12);
+        mat[1] = (int)(((s64)vecA.y * v2 + 0x800) >> 12);
+        mat[6] = 0;
+        mat[4] = (int)(((s64)vecA.x * w + 0x800) >> 12);
+        mat[7] = 0;
+        mat[2] = 0;
+        mat[5] = 0;
+        *(volatile u32 *)0x4000454 = 0;
+    }
+    func_02055388(mat);
+
+    *(volatile u32 *)0x4000480 = node->p3a;
+    {
+        P0 *p = self->p34->p18->p0;
+        func_0204c24c(p->fa, p->fb);
+    }
+}
