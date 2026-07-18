@@ -1,6 +1,3 @@
-// NONMATCHING: extra logic (you do more) (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
@@ -79,19 +76,13 @@ void __sinit_ov085_0212f5ec(void)
     data_ov085_021306ec.z = 0x18000;
     func_020731dc(&data_ov085_021306ec, (void*)&func_020072c0, (void**)&data_ov085_0213063c);
 
-    data_ov085_021306f8.x = 0x1c000;
-    data_ov085_021306f8.y = -0x14000;
-    data_ov085_021306f8.z = 0x32000;
+    { volatile V3* p = (volatile V3*)&data_ov085_021306f8; p->x = 0x1c000; p->y = -0x14000; p->z = 0x32000; }
     func_020731dc(&data_ov085_021306f8, (void*)&func_020072c0, (void**)&data_ov085_02130648);
 
-    data_ov085_02130704.x = 0x2b000;
-    data_ov085_02130704.y = -0x2a000;
-    data_ov085_02130704.z = 0x18000;
+    { volatile V3* p = (volatile V3*)&data_ov085_02130704; p->x = 0x2b000; p->y = -0x2a000; p->z = 0x18000; }
     func_020731dc(&data_ov085_02130704, (void*)&func_020072c0, (void**)&data_ov085_02130654);
 
-    data_ov085_02130710.x = 0x30000;
-    data_ov085_02130710.y = -0xa000;
-    data_ov085_02130710.z = 0x32000;
+    { volatile V3* p = (volatile V3*)&data_ov085_02130710; p->x = 0x30000; p->y = -0xa000; p->z = 0x32000; }
     func_020731dc(&data_ov085_02130710, (void*)&func_020072c0, (void**)&data_ov085_02130660);
 
     data_ov085_021306cc.a = data_ov085_02130074;

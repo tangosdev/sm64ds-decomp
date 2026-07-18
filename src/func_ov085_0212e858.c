@@ -1,6 +1,3 @@
-// NONMATCHING: missing logic (ROM does more) (div=10). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int Fix12i;
 
@@ -28,9 +25,10 @@ void func_ov085_0212e858(char *c)
     struct Vec3 off;
     struct Vec3 pp;
     struct Vec3 t;
-    void *pl;
+    char *pl;
     int p1, p2;
-    short ang;
+    signed char lvl;
+    struct Vec3 *ps;
 
     Vec3_Asr(&t, (struct Vec3*)(c + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
@@ -45,9 +43,11 @@ void func_ov085_0212e858(char *c)
 
     _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x1f0, c + 0x240, 0x46000, 0x258000, 0xf);
 
-    pl = _ZN5Actor13ClosestPlayerEv(c);
+    pl = (char*)_ZN5Actor13ClosestPlayerEv(c);
     if (pl == 0) return;
 
+    /* early load of level, zero stacks, then player pos copy interleaved with cmp */
+    lvl = data_0209f2f8;
     p.x = 0;
     p.y = 0;
     p.z = 0;
@@ -57,13 +57,11 @@ void func_ov085_0212e858(char *c)
     off.x = 0;
     off.y = 0;
     off.z = 0;
-    {
-        struct Vec3 *ps = (struct Vec3*)((char*)pl + 0x5c);
-        pp.x = ps->x;
-        pp.y = ps->y;
-        pp.z = ps->z;
-    }
-    if (data_0209f2f8 == 0x2f) {
+    ps = (struct Vec3*)(((long long)(int)(pl + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    pp.x = ps->x;
+    pp.y = ps->y;
+    pp.z = ps->z;
+    if (lvl == 0x2f) {
         p.x = 0;
     } else {
         p.x = 0x1086000;
@@ -72,8 +70,10 @@ void func_ov085_0212e858(char *c)
     p.z = pp.z;
 
     z1.z = Vec3_HorzDist(&pp, &p);
-    ang = Vec3_HorzAngle(&pp, &p);
-    Matrix4x3_FromRotationY(&data_020a0e68, ang);
+    {
+        short ang = Vec3_HorzAngle(&pp, &p);
+        Matrix4x3_FromRotationY(&data_020a0e68, ang);
+    }
     MulVec3Mat4x3(&z1, &data_020a0e68, &off);
 
     p.x = p.x + off.x;
@@ -81,7 +81,7 @@ void func_ov085_0212e858(char *c)
     p.z = p.z + off.z;
     Matrix4x3_FromTranslation(&data_020a0e68, p.x >> 3, p.y >> 3, p.z >> 3);
 
-    func_ov002_020e4374((char*)pl, &p1, &p2);
+    func_ov002_020e4374(pl, &p1, &p2);
 
     *(struct Mtx43*)(c + 0x270) = data_020a0e68;
     _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x218, c + 0x270, p2, p1, 0xf);
