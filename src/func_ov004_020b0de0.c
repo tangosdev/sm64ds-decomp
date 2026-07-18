@@ -1,24 +1,29 @@
-// NONMATCHING: base materialization / addressing (div=16). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-int func_ov004_020ad674(void);
+typedef int s32;
+s32 func_ov004_020ad674(void);
 void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
-extern int* data_ov004_020bbfa8[];
+extern char* data_ov004_020bbfa8[];
 
-void func_ov004_020b0de0(char* c){
-    if (*(unsigned char*)(c+0xc3) == 0) return;
-    if (*(unsigned char*)(c+0xc4) < 4) {
-        unsigned short* p = (unsigned short*)(c+0xc0);
-        *p = *p + 1;
-        if (*(unsigned short*)(c+0xc0) >= 0x30) {
-            unsigned char* q = (unsigned char*)(c+0xc4);
-            *(unsigned short*)(c+0xc0) = 0;
-            *q = *q + 1;
+#define LAU(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+
+void func_ov004_020b0de0(char* c)
+{
+    if (*(unsigned char*)(c + 0xc3) == 0)
+        return;
+    if ((unsigned int)*(unsigned char*)(c + 0xc4) < 4U) {
+        unsigned short* p = (unsigned short*)LAU(c + 0xc0);
+        *p = (unsigned short)(*p + 1);
+        if ((unsigned int)*(unsigned short*)(c + 0xc0) >= 0x30U) {
+            *(unsigned short*)(c + 0xc0) = 0U;
+            {
+                unsigned char* q = (unsigned char*)LAU(c + 0xc4);
+                *q = (unsigned char)(*q + 1);
+            }
         }
+        if ((unsigned int)*(unsigned short*)(c + 0xc0) >= 0x18U)
+            return;
     }
-    if (*(unsigned short*)(c+0xc0) >= 0x18) return;
     {
         int i = func_ov004_020ad674();
-        func_ov004_020afa20(*(int*)((char*)data_ov004_020bbfa8[i] + 0x28), 0xc0, 0xb0, -1, -1);
+        func_ov004_020afa20(*(int*)(data_ov004_020bbfa8[i] + 0x28), 0xc0, 0xb0, -1, -1);
     }
 }

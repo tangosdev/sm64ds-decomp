@@ -1,4 +1,3 @@
-// NONMATCHING: r0/r1 coloring on dual ldrh for vel.x/vel.y (div=4)
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
 
@@ -21,7 +20,6 @@ int func_ov070_0211f48c(char* c) {
     struct Vector3 posbuf;
     struct Vector3 fp;
     struct Vector3 tmp;
-    unsigned short ax, ay;
 
     pl = _ZN5Actor13ClosestPlayerEv(c);
     if ((unsigned)(*(int*)(c+0x358) << 4) >> 0x10 >= 0xd)
@@ -38,11 +36,7 @@ int func_ov070_0211f48c(char* c) {
 
 hitframe:
     if (_ZNK9Animation12WillHitFrameEi(c+0x350, 0xd) != 0) {
-        ax = *(unsigned short*)(c+0x8c);
-        ay = *(unsigned short*)(c+0x8e);
-        vel.x = ax;
-        vel.y = ay;
-        vel.z = *(unsigned short*)(c+0x90);
+        vel = *(struct Vector3_16*)(c+0x8c);
         if (pl != 0) {
             int *base = (int *)(int)M(pl + 0x5c);
             fp.x = base[0];

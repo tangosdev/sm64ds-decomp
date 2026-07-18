@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int Fix12i;
 
@@ -22,7 +19,7 @@ int _ZN7BooCage8BehaviorEv(char* self)
 {
     int r4 = 0;
     int r6 = 1;
-    u32 id;
+    void* player;
     if (*(unsigned char*)(self + 0x37e) == 0)
         r6 = _ZN5Sound15PlaySecretSoundEP5ActorPt(self, (unsigned short*)(self + 0x37c));
     if (_ZNK12WithMeshClsn13JustHitGroundEv(self + 0x144) != 0) {
@@ -30,13 +27,13 @@ int _ZN7BooCage8BehaviorEv(char* self)
         _ZN5Actor11LandingDustEb(self, 0);
     } else if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
         r4 = 1;
-        if (r6 == 0) {
-            if (*(unsigned short*)(self + 0x37c) > 0x3c) {
-                id = *(u32*)(self + 0x134);
-                if (id != 0 &&
-                    _ZN5Actor10FindWithIDEj(id) != 0 &&
-                    (*(int*)(self + 0x130) & 0x400000)) {
-                    _ZN6Player15JumpIntoBooCageER7Vector3(self, self + 0x5c);
+        if (r6 != 0 || *(unsigned short*)(self + 0x37c) > 0x3c) {
+            if (*(u32*)(self + 0x134) != 0) {
+                player = _ZN5Actor10FindWithIDEj(*(u32*)(self + 0x134));
+                if (player != 0) {
+                    if ((*(int*)(self + 0x130) & 0x400000) != 0) {
+                        _ZN6Player15JumpIntoBooCageER7Vector3(player, self + 0x5c);
+                    }
                 }
             }
         }
