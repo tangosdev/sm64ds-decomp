@@ -83,7 +83,7 @@ it is fair to take over: ping the claimant first.
 | ov015: _ZN13PoleBillboard8BehaviorEv (0x02111720), _ZN14MovingBarSmall8BehaviorEv (0x021124d0), 021114f0 (0x021114f0) | lunavyqo | 2026-07-10 | near-miss (PR #229 open) |
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
 | ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | **partial done** — 020c1130 MATCH (PR #385); 020c0378 + 020c16e4 still near-miss (banked in nearmiss/db.jsonl; old PR #239 stale) |
-| ov020: 02111340 (0x02111340), 021115ac (0x021115ac), 02113148 (0x02113148) | lunavyqo | 2026-07-10 | near-miss (PR #244 open) |
+| ov020: 02111340 (0x02111340), 021115ac (0x021115ac) | lunavyqo | 2026-07-10 | near-miss (PR #244 closed; 02113148 matched by ai-tdd-labs in #471) |
 | ov089: _ZN3Key8BehaviorEv (0x02132194), 021311c0 (0x021311c0), 0213162c (0x0213162c), 02131b18 (0x02131b18) | lunavyqo | 2026-07-10 | near-miss (in main, refine-tier); PR #245 closed - matches split to #251 |
 | ov092: _ZN6ToxBox13InitResourcesEv (0x02131da0), _ZN6ToxBox8BehaviorEv (0x02131c44), 02131010 (0x02131010), 021311b0 (0x021311b0), 021316d8 (0x021316d8), 02131878 (0x02131878) | lunavyqo | 2026-07-10 | near-miss (PR #246 open) |
 | ov021: _ZN11RollingRock8BehaviorEv (0x02112854), 02112544 (0x02112544) | lunavyqo | 2026-07-10 | near-miss (PR #248 open) |
