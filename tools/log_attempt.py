@@ -45,19 +45,25 @@ from match_provenance import (  # noqa: E402
 from nearmiss_db import locked, load_db, save_db, resolve_name  # noqa: E402
 
 
+def _int(x):
+    """Parse an addr/size that may arrive as hex ('0x...'), decimal string, or an int.
+    --addr/--size are documented as hex and the match tool passes hex, so base-0 auto-detect."""
+    return int(str(x), 0)
+
+
 def load_symbol(name: str):
     """Return (module, addr, size) from symbols / nearmiss resolve, or None."""
     m = resolve_name(name)
     if not m:
         return None
     addr, size, mod, _thex = m
-    return mod, int(addr), int(size)
+    return mod, _int(addr), _int(size)
 
 
 def upsert_near_miss_tip(*, src_file, module, addr, name, divergences, size, source):
     """Best-tip upsert into SM64DS nearmiss/db.jsonl (no ROM re-eval required)."""
     c_source = Path(src_file).read_text(encoding="utf-8", errors="replace")
-    key = (module, int(addr))
+    key = (module, _int(addr))
     with locked():
         db = load_db()
         cur = db.get(key)
@@ -66,9 +72,9 @@ def upsert_near_miss_tip(*, src_file, module, addr, name, divergences, size, sou
             return "kept", cur
         rec = {
             "module": module,
-            "addr": int(addr),
+            "addr": _int(addr),
             "name": name,
-            "size": int(size) if size is not None else (cur or {}).get("size"),
+            "size": _int(size) if size is not None else (cur or {}).get("size"),
             "lang": "cpp" if c_source.lstrip().startswith("//cpp") else "c",
             "divergences": int(divergences),
             "c_source": c_source,
