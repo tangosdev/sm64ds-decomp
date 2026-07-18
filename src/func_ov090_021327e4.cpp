@@ -66,12 +66,15 @@ extern "C" int func_ov090_021327e4(char* c)
         *(int*)((((long long)(int)(c + 0x400)) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
         if (*(int*)(c + 0x400) >= 0x14)
             *(int*)(c + 0x400) = 0;
-        /* Equal arms preserve the target mwccarm load and compare order. */
-        if (((int*)(c + 0x3ac))[*(int*)(c + 0x400)] !=
-            (*(int*)(c + 0x378)
-                ? (*(int**)(c + 0x3a8))[1]
-                : (*(int**)(c + 0x3a8))[1]))
-            goto Lreset;
+        {
+            int r0 = *(int*)(c + 0x400);
+            int r1 = (int)*(int**)(c + 0x3a8);
+            r0 = (int)(c + (r0 << 2));
+            r1 = *(int*)(r1 + 4);
+            r0 = *(int*)(r0 + 0x3ac);
+            if (r0 != r1)
+                goto Lreset;
+        }
         *(int*)((((long long)(int)(c + 0x378)) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
         func_02012790(0x25);
         num2 = *(Vector3*)((((long long)(int)((char*)*(void**)(c + 0x3a8) + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL));
