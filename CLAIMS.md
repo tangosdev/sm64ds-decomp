@@ -158,3 +158,4 @@ it is fair to take over: ping the claimant first.
 | arm9 func_02071364 (0x02071364, size 0x1ac) | lunavyqo (Grok) | 2026-07-18 | **done** — verified byte-identical, PR #490 merged |
 | ov090 func_ov090_021327e4 (0x021327e4, size 0x274) | lunavyqo (Grok) | 2026-07-18 | **done** — verified byte-identical, PR #491 merged |
 | arm9 Message::DisplaySaving (0x0201eb94, size 0x3a4) | lunavyqo | 2026-07-18 | done - verified byte-identical, draft PR |
+| div1 floors continue (2026-07-18): func_ov063_0211640c + func_02068dc8, func_ov002_020d5c6c, func_0205fb58, func_02068398, func_ov006_020fbcb8/021027e4, func_ov071_02120200 | lunavyqo (Grok) | 2026-07-18 | **active** — grinding ov063 div1 (mvn+smulbb); rest floors |
