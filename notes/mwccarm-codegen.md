@@ -1132,6 +1132,28 @@ emission cluster 5 slots (div 24 -> 14) and was load-bearing on `func_ov006_0211
 an **explicit reload of a named count after a call** reproduces mwccarm's entry-throwaway-base
 + LICM'd-reload-base split.
 
+## 6w. Comma-operator shares one register between two pooled pointers (2026-07-18, Random batch)
+
+When the ROM materializes two pooled base pointers but keeps them in the SAME callee-saved
+register (they are never simultaneously live), laundering both as separate statements (the 6e/6g
+u64-mask) makes mwccarm treat them as both-live and hand each its OWN register -- a coloring
+regression that pulls an extra reg into the push set. Fold the second pointer's materialization
+into a comma-operator inside the clause that first uses it, so its virtual register does not go
+live until that clause: `(p2 = LAUNDER(base2), p2->field)`. The allocator then reuses the
+register the first pointer vacated and reproduces the ROM's shared-register shape. Landed
+`func_ov006_020ce674` (two coloring rotations at once) paired with a per-pointer u64-mask launder
+on all three data pointers -- the launder alone regressed to both-live; the comma-operator is what
+serialized the two live ranges onto one register.
+
+Companion lever, same session (`func_ov006_020ec2bc`): a loop counter written as a DERIVED
+expression at the use site -- `(i*2+0x10)<<12` -- instead of an explicit `int k` counter avoids a
+redundant strength-reduced induction variable. The explicit counter made mwccarm keep BOTH
+`mov r7,#0x14` and `mov r6,#0x14000` live, raising pressure and spilling the loop-invariant `0` to
+the stack; the derived form drops the second induction var. This is the OPPOSITE direction from the
+earlier "explicit reload of a named count" / explicit-counter finding above -- so when a loop has a
+multiplicative induction plus a spill, probe BOTH counter shapes (explicit scalar vs derived
+expression); one of them frees the spilled register.
+
 ## 9. Prebuilt-library TUs: the ROM contains objects the canonical compiler never built
 
 Distinct from every floor above. These are not "C we cannot spell" -- they are translation units
