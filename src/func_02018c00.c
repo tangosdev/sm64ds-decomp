@@ -1,12 +1,8 @@
-// NONMATCHING: different op / idiom (div=13). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int data_020a8064[2];
 extern int data_020a806c[2];
 extern int data_020a8074;
 extern void func_0205a61c(void *dst, void *src, int n);
-struct Pair { int a, b; };
-extern int func_02018cbc(void *p0, int p1, int idx, void *p3, struct Pair m, struct Pair n);
+extern int func_02018cbc(char *self, int flag, int shift, int a3, int a5, int a6, int a7, int a8);
 
 int func_02018c00(int *thiz, int flag, int index)
 {
@@ -20,8 +16,8 @@ int func_02018c00(int *thiz, int flag, int index)
         return 1;
     }
     {
-        struct Pair m = *(struct Pair*)0x27ffe50;
-        struct Pair n = *(struct Pair*)0x27ffe58;
-        return func_02018cbc(thiz, flag, index, &data_020a8074, m, n);
+        int *m = (int*)0x27ffe50;
+        int *n = (int*)0x27ffe58;
+        return func_02018cbc((char*)thiz, flag, index, (int)&data_020a8074, m[0], m[1], n[0], n[1]);
     }
 }

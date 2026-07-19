@@ -1,51 +1,61 @@
-// NONMATCHING: register allocation (div=32). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern void func_02060d98(unsigned int a, unsigned int b);
-extern int func_02060ebc(void *self);
+typedef struct {
+    unsigned char pad[0x18];
+    unsigned int src;
+    unsigned int dst;
+    unsigned int size;
+} CardXferState;
 
-struct G {
-    char pad[0x18];
-    unsigned int f18;
-    unsigned int f1c;
-    unsigned int f20;
-};
-extern struct G data_020a8180;
+extern CardXferState data_020a8180;
+
+extern void func_02060d98(unsigned int a, unsigned int b);
+extern int func_02060ebc(char *self);
 
 int func_02060a64(char *self) {
-    unsigned int *r8;
+    CardXferState *g = &data_020a8180;
+    unsigned int *buf;
+    unsigned int *altBuf = (unsigned int *)(self + 0x20);
+    volatile unsigned int *romctrl = (volatile unsigned int *)0x40001A4;
+    volatile unsigned int *fifoData = (volatile unsigned int *)0x4100010;
+    unsigned int mask = (unsigned int)-0x200;
+
     for (;;) {
-        unsigned int r1;
-        unsigned int g18 = data_020a8180.f18;
-        r1 = g18 & (unsigned int)-0x200;
-        if (r1 == g18 && (data_020a8180.f1c & 3) == 0 && data_020a8180.f20 >= 0x200) {
-            r8 = (unsigned int*)data_020a8180.f1c;
+        unsigned int src = g->src;
+        unsigned int aligned = src & mask;
+        unsigned int i;
+        unsigned int status;
+        unsigned int cmd;
+
+        if (aligned == src && (g->dst & 3) == 0 && g->size >= 0x200) {
+            buf = (unsigned int *)g->dst;
         } else {
-            r8 = (unsigned int*)(self + 0x20);
-            *(unsigned int*)(self + 8) = r1;
+            buf = altBuf;
+            *(unsigned int *)(self + 8) = aligned;
         }
-        func_02060d98((r1 >> 8) | 0xb7000000, r1 << 0x18);
-        {
-            int i = 0;
-            unsigned int status;
-            *(volatile unsigned int*)0x40001a4 = *(unsigned int*)(self + 4);
-            do {
-                status = *(volatile unsigned int*)0x40001a4;
-                if (status & 0x800000) {
-                    if ((unsigned int)i < 0x200) {
-                        r8[i] = *(volatile unsigned int*)0x4100010;
-                        i++;
-                    }
+
+        func_02060d98((aligned >> 8) | 0xb7000000, aligned << 0x18);
+
+        cmd = *(unsigned int *)(self + 4);
+        i = 0;
+        *romctrl = cmd;
+        do {
+            status = *romctrl;
+            if (status & 0x800000) {
+                unsigned int val = *fifoData;
+                if (i < 0x200) {
+                    buf[i] = val;
+                    i++;
                 }
-            } while (status & 0x80000000);
-        }
-        if (r8 == (unsigned int*)data_020a8180.f1c) {
-            data_020a8180.f18 += 0x200;
-            data_020a8180.f1c += 0x200;
-            data_020a8180.f20 -= 0x200;
-            if (data_020a8180.f20 == 0) return 0;
+            }
+        } while (status & 0x80000000);
+
+        if (buf == (unsigned int *)*(volatile unsigned int *)&data_020a8180.dst) {
+            data_020a8180.src += 0x200;
+            data_020a8180.dst += 0x200;
+            data_020a8180.size -= 0x200;
+            if (data_020a8180.size == 0) return data_020a8180.size;
         } else {
-            if (func_02060ebc(self) == 0) return 0;
+            int rc = func_02060ebc(self);
+            if (rc == 0) return rc;
         }
     }
 }

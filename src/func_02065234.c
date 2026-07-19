@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 
@@ -30,19 +27,19 @@ void func_02065234(int arg)
     func_02065a84(-1);
     func_02065ad0(0);
     p = func_02065b94();
+    *(int *)(p + 0) = 0;
+    *(u16 *)(p + 8) = 0;
+    *(u16 *)(p + 0xa) = 0;
+    *(int *)(p + 0x10) = 0;
+    *(int *)(p + 0x138) = 0;
+    *(u16 *)(p + 0x140) = 0;
+    *(u16 *)(p + 0x142) = 0;
+    *(int *)(p + 0x148) = arg;
     for (i = 0; i < 0x10; i++) {
-        *(int *)(p + 0) = i;
-        *(u16 *)(p + 8) = i;
-        *(u16 *)(p + 0xa) = i;
-        *(int *)(p + 0x10) = i;
-        *(int *)(p + 0x138) = i;
-        *(u16 *)(p + 0x140) = i;
-        *(u16 *)(p + 0x142) = i;
-        *(int *)(p + 0x148) = arg;
-        *(u8 *)(p + 0x1d7) = i;
+        *(u8 *)(p + 0x1d7) = 0;
         p += 0x68;
     }
-    local[0] = i;
+    local[0] = 0;
     func_02065af0(local);
     func_02065be0();
     func_02065ba0(0);

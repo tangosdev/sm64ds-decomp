@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef signed char s8;
 
@@ -13,7 +10,11 @@ extern u8 data_0209f220;
 extern u8 data_0209f1f0;
 extern u8 data_0209f26c;
 
-struct Entry { s8 a; s8 b; u8 c; };
+struct Entry {
+    s8 a;
+    s8 b;
+    u8 c;
+};
 extern struct Entry data_02075638[];
 
 int SublevelToLevel(int i);
@@ -21,8 +22,9 @@ void SetNextStar(void);
 
 void SetNextLevel(int arg) {
     int v = data_0209f2f8;
-    unsigned i;
-    struct Entry* p;
+    unsigned int i;
+    struct Entry *p;
+
     if (v == 0x22) {
         if (arg != 1) {
             data_0209211c = 1;
@@ -39,15 +41,15 @@ void SetNextLevel(int arg) {
             p++;
         }
     }
-    if (data_0209211c >= 0) {
-        if (SublevelToLevel(0) == 0x1d) {
-            data_02092110 = 1;
-            data_0209f268 = 0xd;
-        } else {
-            data_02092110 = data_0209211c;
-            data_0209f268 = data_0209f200;
-        }
+
+    if (data_0209211c < 0 || SublevelToLevel(v) == 0x1d) {
+        data_02092110 = 1;
+        data_0209f268 = 0xd;
+    } else {
+        data_02092110 = data_0209211c;
+        data_0209f268 = data_0209f200;
     }
+
     data_0209211c = -1;
     data_0209f1f0 = data_0209f220;
     SetNextStar();

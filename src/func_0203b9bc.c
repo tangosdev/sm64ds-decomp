@@ -1,11 +1,8 @@
-// NONMATCHING: different op / idiom (div=51). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned short u16;
 
 struct Col { u16 a, b, c, d; };
 
-extern struct Col data_020a0df8[];
+extern volatile struct Col data_020a0df8[];
 extern struct Col data_020a0dd8;
 
 extern int func_0205edc8(void);
@@ -15,8 +12,8 @@ void func_0203b9bc(struct Col *out)
 {
     struct Col tmp[4];
     int i;
-    int idx;
     int flag;
+    int idx;
 
     idx = func_0205edc8();
     flag = 0;
@@ -45,8 +42,5 @@ void func_0203b9bc(struct Col *out)
         data_020a0dd8.d = 0;
     }
 
-    out->a = data_020a0dd8.a;
-    out->b = data_020a0dd8.b;
-    out->c = data_020a0dd8.c;
-    out->d = data_020a0dd8.d;
+    *out = data_020a0dd8;
 }

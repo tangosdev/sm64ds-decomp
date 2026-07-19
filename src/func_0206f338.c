@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=13). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct S {
     unsigned char pad0[2];
     short count;
@@ -48,16 +45,20 @@ void func_0206f338(struct S *s, int p)
         do {
             e = ((*--q - 0x30) + carry) & 0xff;
             carry = (e > 9) ? 1 : 0;
-            if (carry == 0 && e != 0) {
-                *q = e + 0x30;
-                break;
-            }
+            if (carry != 0) goto decrement;
+            if (e != 0) goto store;
+        decrement:
             p--;
+            continue;
+        store:
+            *q = e + 0x30;
+            break;
         } while (p != 0);
     }
 
     if (carry != 0) {
-        s->count = s->count + 1;
+        short *pc = (short *)(((int)s + 2) & 0xFFFFFFFFFFFFFFFFULL);
+        *pc = *pc + 1;
         s->len = 1;
         s->digits[0] = 0x31;
         return;

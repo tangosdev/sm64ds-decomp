@@ -1,6 +1,3 @@
-// NONMATCHING: missing logic (ROM does more) (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned long long u64;
 
 struct Node {
@@ -26,13 +23,13 @@ void func_02059a60(struct Node *p, u64 key)
         if (key < t) {
             key = key + ((t - key) / p->step + 1) * p->step;
         }
-        p->key = key;
     }
+    p->key = key;
 
     n = data_020a6444[0];
     if (n != 0) {
         do {
-            if ((long long)(key - n->key) >= 0) {
+            if ((long long)(key - n->key) < 0) {
                 p->prev = n->prev;
                 n->prev = p;
                 p->next = n;
@@ -49,11 +46,14 @@ void func_02059a60(struct Node *p, u64 key)
     }
 
     p->next = 0;
-    p->prev = data_020a6444[1];
-    data_020a6444[1] = p;
-    if (p->prev) {
-        p->prev->next = p;
-        return;
+    {
+        struct Node *tail = data_020a6444[1];
+        data_020a6444[1] = p;
+        p->prev = tail;
+        if (tail) {
+            tail->next = p;
+            return;
+        }
     }
     data_020a6444[1] = p;
     data_020a6444[0] = p;
