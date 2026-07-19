@@ -1,3 +1,4 @@
+// PR-validator smoke test: comment-only change; compiled bytes are unchanged.
 typedef unsigned long long u64;
 typedef unsigned short u16;
 
