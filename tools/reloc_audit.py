@@ -88,6 +88,10 @@ _RUNTIME_ALIASES = {
     "_u32_div":   "__aeabi_uidiv",
     "_s32_div_f": "__aeabi_idiv",
     "_s32_div":   "__aeabi_idiv",
+    # long-long family: mwccarm lowers u64 `/` and `%` the same way (seen on
+    # func_02059a60, campaign 2026-07-18); ITCM records them as __aeabi_ul*.
+    "_ll_udiv":   "__aeabi_uldiv",
+    "_ll_umod":   "__aeabi_ulmod",
 }
 
 
