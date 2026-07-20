@@ -47,14 +47,46 @@ CFLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gc
 
 
 def cpp_to_c(src):
-    """Strip a `//cpp` + single `extern "C" { ... }` wrapper to plain C so the C-only
-    permuter parser (pycparser) can mutate it. The mangled names are valid C identifiers.
-    Returns None when the source is real C++ (member fns / virtuals / multiple wrappers)
-    that doesn't fit the simple pattern."""
+    """Strip a `//cpp` draft down to plain C so the C-only permuter parser (pycparser)
+    can mutate it: drop the `//cpp` marker, unwrap every `extern "C" { ... }` linkage
+    block (keeping its inner content), remove single-declaration `extern "C"` forms, and
+    auto-typedef bare struct tags (C++ accepts `Name x;`, C needs `struct Name` or a
+    typedef). The mangled names are valid C identifiers.
+
+    Returns None only when `src` is not a `//cpp` draft. Over-broad stripping is SAFE:
+    permutable_base() keeps the C form only when it compiles byte-IDENTICALLY to the C++
+    original, so a draft that still contains real C++ after stripping (member-fn defs
+    `T Class::method(...)`, references, templates, virtuals) either fails to compile as C
+    or byte-mismatches, and is rejected -- never a wrong seed. Widening this from the old
+    single-wrapper regex unlocked the large class of drafts that are plain C wrapped in
+    `extern "C"` purely for name mangling / linkage."""
     if not src.startswith("//cpp"):
         return None
-    m = re.match(r'//cpp\s*\n\s*extern\s*"C"\s*\{(.*)\}\s*$', src, re.DOTALL)
-    return (m.group(1).strip() + "\n") if m else None
+    s = re.sub(r'^//cpp[^\n]*\n', '', src, count=1)
+    # Unwrap braced `extern "C" { ... }` blocks (possibly several, with content between),
+    # brace-matching each so nested braces in the body are handled.
+    out, i = [], 0
+    while i < len(s):
+        m = re.compile(r'extern\s*"C"\s*\{').match(s, i)
+        if not m:
+            out.append(s[i]); i += 1; continue
+        depth, j = 1, m.end()
+        while j < len(s) and depth:
+            depth += {"{": 1, "}": -1}.get(s[j], 0)
+            j += 1
+        if depth == 0:
+            out.append(s[m.end():j - 1]); i = j    # keep inner, drop the wrapper braces
+        else:
+            out.append(s[i]); i += 1               # unbalanced: leave verbatim
+    s = "".join(out)
+    # Single-declaration `extern "C" int foo();` -> drop just the linkage specifier.
+    s = re.sub(r'extern\s*"C"\s+(?=[A-Za-z_])', '', s)
+    # Auto-typedef bare struct tags so C accepts `Name x;`.
+    seen, pre = set(), []
+    for tag in re.findall(r'\bstruct\s+([A-Za-z_]\w*)\s*\{', s):
+        if tag not in seen:
+            seen.add(tag); pre.append(f"typedef struct {tag} {tag};")
+    return ("\n".join(pre) + "\n" + s) if pre else s
 
 
 def permutable_base(src, name):
