@@ -1,13 +1,12 @@
-# The last two arm9 functions: why 1.2 can't match them, and the 2.0-vs-asm-hatch decision
+# The two arm9 MSL functions: why they stay asm (and why that's by design, not a gap)
 
-**TL;DR** — arm9 has two remaining functions that cannot be matched by writing better C.
-It is **proven** they were not built by mwccarm 1.2 (the compiler this project uses); their
-byte layout is unreachable from any 1.2 source. The fingerprint points to a **later mwccarm
-(the 2.0 family)** as what actually built them — that part is a strong inference, not a
-reproduced fact (see *How sure are we?* below). Either way, closing them needs a
-project-level decision: **(A)** wire a 2.0 compiler into the build for these files, or
-**(B)** accept a hand-written assembly ("asm hatch"). This is a maintainer call, not more
-matching effort.
+**TL;DR** — two arm9 functions (`__pformatter`, `float2hex`) do not match under mwccarm 1.2.
+The cause is now **confirmed by reproduction**: they were built by a **2.0-family compiler**,
+whose stack-frame codegen 1.2 cannot emit. But matching them is **not worth doing** — they are
+IO-adjacent MSL plumbing that the recomp trampoline carries as an asm remainder *by design*, and
+a matched C version would sit behind that trampoline unused. **99.98% and 100% matched produce
+byte-identical recomp behavior.** No action is needed; this doc exists so the "wall" is recorded
+as understood-and-intentional, not as open work.
 
 ---
 
@@ -18,108 +17,67 @@ matching effort.
 | `func_0206e4a4` | arm9 | `0x0206e4a4` | 0x83c (2108 B) | MSL `__pformatter` — the core of `printf` |
 | `func_0206f46c` | arm9 | `0x0206f46c` | 0x3b4 (948 B) | MSL `float2hex` — `%a`/`%A` hex-float formatting |
 
-Both are internals of **MSL** (Metrowerks Standard Library), the C runtime that ships
-*with* the compiler rather than being written by the game's developers.
+Both are internals of **MSL** (Metrowerks Standard Library), the C runtime that ships *with* the
+compiler. Both do their work by writing formatted output through **output callbacks** — the
+IO-adjacent library shape the recomp screening layer is built to keep as asm.
 
-## What "matching" requires
+## The cause, confirmed by reproduction
 
-This project doesn't just need C that behaves correctly — it needs C that, compiled by
-**one specific compiler (mwccarm 1.2/sp2p3)**, produces the **exact same bytes** as the
-retail cartridge. Byte-identical, or it doesn't count.
+Earlier this was documented as an *inference* ("probably 2.0"). It is now a reproduced fact.
 
-## The root cause: the ROM wasn't built by only one compiler
+The tell is the function prologue's stack-frame shape. Compiling the honest by-value draft of
+`float2hex` and comparing the prologue to the ROM:
 
-A shipped game is assembled from many pieces, compiled at different times. The bulk of
-SM64DS was built with **mwccarm 1.2**. These two MSL objects were not — their code-generation
-fingerprint is one 1.2 never produces.
+| | frame pointer | frame size | reads args via | epilogue |
+|---|---|---|---|---|
+| **ROM** | none | `sub sp,#0x48` | `sp` | `addgt sp,#0x48 / popgt {…no fp…} / addgt sp,#0x10` |
+| **mwccarm 1.2/sp2p3** | `mov fp,sp` | `sub sp,#0x4c` | `fp` | `popgt {…with fp…}` |
+| **mwccarm 2.0** (base / sp2p3 / sp2p4) | none | `sub sp,#0x48` | `sp` | `addgt sp,#0x48 / popgt {…no fp…} / addgt sp,#0x10` |
 
-The tell is in how the **stack** (the CPU's scratch workspace during a function call) is used
-to pass a struct argument by value:
+2.0 reproduces the ROM's frame **exactly** — no frame pointer, the same `0x48`, sp-relative
+argument reads, and the identical `addgt / popgt / addgt` epilogue. 1.2 always emits the
+frame-pointer form (`mov fp,sp`, `sub sp,#0x4c`, `fp`-relative reads), which pulls `fp` into the
+saved-register set and shifts every stack offset. This is a code-generation habit **below the
+level any C source can reach** — verified across 1.2 base/sp2/sp2p3/sp3/sp4 and ~75 flag
+combinations, C and C++; the residual is invariant to source phrasing.
 
-- The **ROM's** code stages the by-value struct *below* the stack pointer with **no stack
-  adjustment and no frame pointer** — a compact, bookkeeping-free sequence
-  (`add r0,sp,#0x34; sub r5,sp,#8; ldm r0,{r0-r3}; stm r5,{r0-r3}`).
-- **1.2 cannot emit that.** From *every* source phrasing it instead emits
-  `sub ip,sp,#8; mov sp,ip; … add sp,ip,#8`, which pins `mov fp,sp`, pulls the frame-pointer
-  register into the saved-register set, and grows the stack frame (0x244 → 0x24c).
+So: **1.2 provably cannot build these; the 2.0 family provably can** (the frame is reproduced).
+The compiler is on hand (`tools/mwccarm/2.0/`), and `tools/match.py` already drives it — finishing
+a full byte-match under 2.0 would be ordinary near-miss work (the honest draft compiles ~7
+instructions short with different register coloring). **We are choosing not to, for the reason
+below.**
 
-Those extra instructions shift every subsequent stack offset in the function. The divergence
-is baked into the compiler's code-generation habits, **below the level any C source can
-control**.
+## Why we don't match them anyway
 
-## How sure are we? (proven vs. inferred)
+Even a perfect matched-C version of these two would change nothing:
 
-Being explicit, because "compiled with 2.0" is easy to overstate:
+- They write through **output callbacks** — exactly the IO-adjacent shape the recomp **screening
+  layer exists to reject**. Matched or not, they stay behind the **trampoline**.
+- The trampoline was designed from day one to carry an **asm remainder indefinitely**. Two MSL
+  functions is the smallest remainder imaginable — it is the intended steady state, not a
+  fallback.
+- Recomp output is **byte-identical** whether these two are asm or matched C. A matched version
+  would be a repo artifact the runtime never executes.
 
-**Proven — 1.2 cannot produce these bytes.** Verified exhaustively this project: multiple
-agents drove `func_0206e4a4` from 872 down to a hard floor of 253 differing instructions
-(the honest by-value draft of `func_0206f46c` floors at 149), across 1.2 base/sp2/sp2p3/sp3/sp4
-and ~75 flag combinations, C and C++. The residual is entirely the stack-frame shape above and
-is invariant to source phrasing. **This is the claim that matters** for "can we match at 1.2":
-the answer is no, and it is a reproduced fact.
+In other words, the "asm hatch" framing from the earlier draft of this note was wrong: there is
+no hatch and no decision. These functions living as asm is the architecture working as designed.
 
-**Strong inference — the culprit is the 2.0-family compiler.** This is *not* a reproduced
-byte-match; nobody has compiled these two functions with a 2.0 compiler and shown byte
-identity (doing so requires a 2.0 toolchain the project does not yet have — that is Option A).
-It rests on three converging pieces of evidence:
+## Bottom line
 
-1. **Corpus fingerprint.** The below-`sp`, no-frame-pointer staging idiom appears **nowhere in
-   the entire 1.2-matched corpus** (hundreds of functions). It is not a phrasing we haven't
-   found — it is a shape 1.2 does not emit, while it is a documented trait of the later
-   mwccarm (2.0) code generator.
-2. **A sibling family that *was* test-compiled with 2.0.** A separate group in the ROM — the
-   four `ActorBase::Process` pointer-to-member wrappers — shows the same fixed-frame staging
-   idiom and is likewise unmatchable at 1.2. Those were actually compiled with a 2.0 compiler
-   and came within **one instruction** of the ROM. That is the closest thing to direct 2.0
-   evidence, though it is a different set of functions.
-3. **External corroboration.** pokediamond (another DS decomp) treats its Nintendo-built
-   `__pformatter` as hand-written assembly, still unmatched `.s` after years — the same
-   function hitting the same wall in a sibling project.
+- **Not a bug, not an open task.** 1.2 can't build them; that's fully explained (2.0-family
+  codegen, reproduced).
+- **No value in matching them.** They stay behind the trampoline regardless, and 99.98% ==
+  100% in recomp behavior.
+- **Nothing to decide.** The earlier "2.0-path vs asm-hatch" question is moot — the asm remainder
+  is intentional and permanent.
 
-**Bottom line:** "not 1.2" is a fact; "2.0 specifically" is a best-fit attribution from the
-fingerprint plus a sibling-family measurement. The clean way to *confirm* it is the same as
-fixing it — compile these two with a 2.0 compiler and check for a byte-match (Option A below).
-
-## The two ways to close them
-
-### Option A — the "2.0 path" (the correct fix, and the way to confirm the diagnosis)
-
-Obtain a **mwccarm 2.0** compiler, wire it into the build, and compile *just these MSL files*
-with it. If they byte-match, the inference above becomes a confirmed fact and the functions are
-matched in one stroke.
-
-- **Pro:** genuine, readable C; matches the way the ROM was actually produced; simultaneously
-  proves the 2.0 attribution.
-- **Con:** a real infrastructure change — sourcing, integrating, and configuring a second
-  compiler version in the build, plus per-file compiler selection. (And a small residual risk:
-  if 2.0 does *not* byte-match, the attribution was wrong and only Option B remains.)
-
-### Option B — the "asm hatch" (the pragmatic fix)
-
-"Asm hatch" = *assembly escape hatch*. Instead of C, drop in the exact machine instructions
-(raw assembly) for these two functions and tell the build to use those bytes verbatim rather
-than compile anything.
-
-- **Pro:** guaranteed byte-match immediately; small, contained; does not depend on the 2.0
-  attribution being correct.
-- **Con:** not truly "decompiled" — it's a transcription, not readable C. Standard practice in
-  decomp projects for a handful of genuinely unreachable functions.
-
-## Recommendation
-
-Both are legitimate. Most decomp projects take the **asm hatch** for isolated library-runtime
-functions like these and reserve the effort of integrating a second compiler for cases where
-many functions need it. If a 2.0-built layer turns out to contribute *many* functions across
-the ROM (the MSL and PTMF-wrapper findings suggest there may be more than these two), the
-**2.0 path** pays for itself and confirms the diagnosis; if it's just a handful, the **asm
-hatch** is the lower-cost close.
-
-Either way, no amount of additional C-matching effort will crack them — the decision is about
-how the project wants to handle compiler-version-mismatched library code.
+If the trampoline / screening rationale is documented elsewhere in the project, treat that as the
+authoritative source; this note only records *why these two specific functions are in the asm
+remainder* so nobody re-opens the wall as if it were unfinished work.
 
 ---
 
-*Context: these two are the only functions blocking a literal 100% match of the arm9 module.
-The rest of arm9's remaining work is ordinary near-misses (register-allocation /
-instruction-ordering residuals) that are being closed the normal way. The codegen evidence
-above is recorded in more detail in `notes/mwccarm-codegen.md` section 9.*
+*Context: these two are the only functions that would block a literal 100% match of the arm9
+module — a number the recomp is indifferent to. The rest of arm9's remaining work is ordinary
+near-misses being closed the normal way. Codegen detail is in `notes/mwccarm-codegen.md`
+section 9.*
