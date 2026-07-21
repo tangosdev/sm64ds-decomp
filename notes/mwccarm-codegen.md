@@ -1209,6 +1209,71 @@ via lever 1 and lever 2 above. A single agent had already declared that residual
 10 probes -- it was not. Conversely, a residual that survives ~4 agents with disjoint angles
 (as both floors above did) is worth believing.
 
+## 6z. Seven levers from the 2026-07-21 Opus→Fable refine cascades (25 matches, PR #527/530/531/532)
+
+All discovered by Fable escalating residuals Opus had mapped as coloring/scheduling floors,
+seeded from Opus's narrowed draft. The meta-lesson (again): a residual one model calls a floor
+routinely falls to a *different* model's register rotation — always Fable-escalate div≤20 misses.
+
+1. **`#pragma opt_loop_invariants off` is NOT inert on larger functions.** The small-function
+   verdict (6f) does not generalize. When a u64-laundered in-loop RMW base (6h) keeps getting
+   hoisted out of the loop by LICM (producing a lower divergence but the wrong schedule), this
+   pragma pins it in-loop. Cracked `func_0205e6e4` (in-loop word-RMW that laundering alone
+   hoisted to 46 div).
+
+2. **Short-type an array temp to the array's element type.** A temp holding `data_02082214[i]`
+   (an `s16[]`) typed as `int` vs `short` changes the multiply grouping AND the register
+   coloring of the product. Typing it `short` fixed both. Cracked `func_0202048c`.
+
+3. **A `char*` (pointer-arithmetic) parameter stops the scheduler hoisting a laundered `add`
+   into a load-use slot.** Where an `int` param let mwcc speculatively hoist `add r2,r4,#OFF`
+   across a `ble` into the `ldr`→`cmp` load-use slot, retyping the param as `char*` (so the
+   offset is pointer arithmetic, not an int add) blocked the hoist. Cracked `func_ov075_021190a4`.
+
+4. **`volatile` on BOTH globals of a load/store pair pins them to source order** and, as a side
+   effect, relieves live-range pressure enough to move a variable off callee-saved r5 into a
+   scratch reg. Use when the scheduler batches two loads ahead of two stores but the ROM
+   interleaves them. Cracked `func_ov006_020ed8a4`.
+
+5. **Invert an if-arm's condition to defeat mwcc if-conversion.** When the ROM keeps a partial
+   predicated+branch form (`strble` / `ble` / RMW) but mwcc fully if-converts your version
+   (predicated `strble` + predicated RMW, one insn short), rewrite that arm so its THEN/ELSE are
+   swapped (e.g. laundered `-=K` as THEN, plain store as ELSE) — the asymmetry stops full
+   if-conversion. Cracked `func_ov063_0211aa34`. (An apparent `bl` tail-merge there was an
+   alignment artifact, not a real divergence.)
+
+6. **Split a `count++` used as an array index into `old=count; <laundered RMW>; buf[old]=v`.**
+   A plain `c->count++` copy-propagates away the fresh address; the ROM routes the increment
+   through a materialized register BEFORE the store. Capturing `old` and laundering the RMW
+   forces that shape. Cracked `func_0205e280`.
+
+7. **Statement order, not expression shape, rotates the mul-dest free list.** Moving two
+   `volatile` stack captures to BEFORE a lerp/multiply expression changed which scratch reg the
+   `mul` destination coalesced into (letting it take the dying operand's register). Any *naming*
+   of the product subterm instead restructured mul/mla and regressed. When a mul-chain coloring
+   residual resists expression rewrites, permute the surrounding statements. Cracked
+   `func_ov006_02124088`. Also: `bad=1;` before `reject=0;` (declaration/assignment order)
+   reproduced the ROM's `mov r3,#1` / `mov r1,#0` emission order — pair with `opt_propagation
+   off` (6r) to stop that order from jump-threading a `==0` test into a `blo`. Cracked
+   `func_02060b64`.
+
+### Band economics (measured, 2026-07-21)
+`crackloop.py refine --max-div 25` structural drafts ≈ **70% Opus @71–75K/landed**. Widening to
+`--max-div 40` drops Opus to **~17% @288K** (bigger gaps bottom out on coloring/scheduling
+floors) — but Fable then recovers **~75% of the closest misses** from the narrowed drafts
+(@12–46K/landed). Lead with Opus at div≤25; when that vein thins (it is draining —
+`refine_attempted.txt` consumes the pool each prep), widen and lean harder on Fable escalation.
+
+### A truncated-target tooling bug that hides a TRUE match (not a codegen floor)
+`func_ov064_0211a4c4` compiles reloc-wildcarded **byte-identical** to the ROM, but abverify
+reports 28 div because the worklist `target_hex` (528 B) is **truncated**: `dsd` split the
+function's dead exit block into a phantom symbol `func_ov064_0211a6d4` (0xc bytes —
+`add sp,#0xc` / `pop {r4-fp,lr}` / `bx lr`, i.e. this frame's own epilogue after a
+function-ending infinite loop). The compiler emits that dead block from every loop form; the ROM
+has it too. **Fix:** merge `func_ov064_0211a6d4` into `func_ov064_0211a4c4` (size → 0x21c) in the
+symbol config and regenerate `target_hex`; the source then MATCHes. Worth a sweep for other 0xc
+pure-epilogue phantom-tail symbols immediately after `noreturn`/infinite-loop functions.
+
 ## 9. Prebuilt-library TUs: the ROM contains objects the canonical compiler never built
 
 Distinct from every floor above. These are not "C we cannot spell" -- they are translation units
