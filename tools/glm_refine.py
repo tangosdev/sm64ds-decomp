@@ -33,6 +33,12 @@ PY = sys.executable
 BASE_URL = os.environ.get("GLM_BASE_URL", "https://api.z.ai/api/anthropic")
 MODEL = os.environ.get("GLM_MODEL", "glm-5.2")
 API_KEY = os.environ.get("GLM_API_KEY", "")
+# How many times a 429/5xx call retries before giving up. Higher = more patience to wait out a rate
+# window (the Requesty fan-out raises this, since 8 free models share one key's quota).
+try:
+    RETRIES = max(1, int(os.environ.get("GLM_RETRIES", "8")))
+except ValueError:
+    RETRIES = 8
 
 # Reasoning effort, set by the tangOS console per AI box (TANGOS_EFFORT), mapped to the
 # provider's thinking knob in chat(). Empty or "off" = no extended reasoning.
@@ -184,7 +190,7 @@ def _read_openai_stream(r, on_delta):
     return "".join(parts), in_tok, out_tok
 
 
-def chat(messages, max_tokens=8000, retries=8, on_delta=None):
+def chat(messages, max_tokens=8000, retries=RETRIES, on_delta=None):
     think, mt = _thinking_for(max_tokens)
     # Nemotron-3 (id "nemo" alias or "nemotron-*") reasons so heavily it burns its whole budget before
     # emitting the code block. Its NVIDIA system toggle "detailed thinking off" roughly halves the

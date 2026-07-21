@@ -55,21 +55,29 @@ DEFAULT_MODELS = [
 ]
 
 BASE_URL = os.environ.get("REQUESTY_BASE_URL", "https://router.requesty.ai/v1")
+# Every free model draws on the SAME key's rate limit, so 8 starting at once is a thundering herd of
+# 429s. Spread their launches a few seconds apart (STAGGER) and give each more retry patience
+# (GLM_RETRIES) so a throttled call waits out the window instead of dropping the model. Tunable.
+STAGGER_S = float(os.environ.get("REQUESTY_STAGGER_S", "4"))
+FANOUT_RETRIES = os.environ.get("REQUESTY_RETRIES", "12")
 
 
 def _slug(model):
     return re.sub(r"[^a-z0-9]+", "-", model.lower()).strip("-")
 
 
-def run_model(model, wl, attempts, jobs, key):
+def run_model(model, wl, attempts, jobs, key, launch_delay=0.0):
     """One glm_refine.py run pinned to `model`, into a private out+workdir. Returns the parsed output
-    dict (or None if the run produced nothing usable)."""
+    dict (or None if the run produced nothing usable). launch_delay staggers the start."""
+    if launch_delay:
+        time.sleep(launch_delay)
     out_path = pathlib.Path(tempfile.gettempdir()) / f"rqsty_{_slug(model)}_{os.getpid()}.output"
     env = dict(os.environ)
     env["GLM_API_KEY"] = key
     env["GLM_BASE_URL"] = BASE_URL
     env["GLM_MODEL"] = model
     env["GLM_DIALECT"] = "openai"
+    env["GLM_RETRIES"] = FANOUT_RETRIES  # shared-key rate limits need more patience than the default 8
     cmd = [PY, str(REPO / "tools" / "glm_refine.py"),
            "--wl", wl, "--out", str(out_path),
            "--attempts", str(attempts), "--jobs", str(jobs),
@@ -168,7 +176,8 @@ def main():
     # All models run concurrently (each is one glm_refine process). The pool cap bounds simultaneous
     # processes; API concurrency inside each is --jobs.
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(models)) as ex:
-        futs = {ex.submit(run_model, m, args.wl, args.attempts, args.jobs, key): m for m in models}
+        futs = {ex.submit(run_model, m, args.wl, args.attempts, args.jobs, key, i * STAGGER_S): m
+                for i, m in enumerate(models)}
         for f in concurrent.futures.as_completed(futs):
             m = futs[f]
             try:
