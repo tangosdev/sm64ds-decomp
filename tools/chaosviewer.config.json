@@ -11,8 +11,8 @@
   "readFirst": "notes/mwccarm-codegen.md (esp. sec 6e-6g levers: u64-mask laundering for materialized bases, declaration/statement order for register coloring, //cpp dummy-vtable dispatch, struct-copy interleave) and notes/pret-idioms.md. Coordinate via CLAIMS.md.",
   "rules": "only your own legally dumped ROM; never commit the ROM, its assets, or extracted binaries - the one deliberate exception is the annotated disassembly TEXT of still-unmatched functions, published in the coordination data (chaos-data branch) so contributors can work, the same practice as decomp repos committing .s files; import struct/field knowledge (see CREDITS.md) but write all C from scratch.",
   "discord": "https://discord.gg/JXckvdARc",
-  "claimsApi": "https://belongto.us/api/claims",
-  "claimsAuthUrl": "https://belongto.us/auth/github/start",
+  "claimsApi": "https://tangos.dev/api/claims",
+  "claimsAuthUrl": "https://tangos.dev/auth/github/start",
   "nearMissNote": "If a function will not fully match after real effort, do not discard your best attempt - it is still valuable. Open a PR anyway with your closest compiling draft as src/<name>.c, headed by one line: // NONMATCHING: <what still differs> (div=N, from the verify output). Near-miss drafts are the highest-yield input to this project's refine tier - most matches now start from someone's stored near-miss, and a close draft is usually finished within a day.",
   "dataUrl": "https://raw.githubusercontent.com/tangosdev/sm64ds-decomp/chaos-data/chaos-db.json"
 }

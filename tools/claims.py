@@ -1,4 +1,4 @@
-"""Coordinate decomp work via the belongto.us claims lock service so multiple bots
+"""Coordinate decomp work via the tangos.dev claims lock service so multiple bots
 do not grind the same address ranges. Programmatic sibling of CLAIMS.md.
 
 Lock flow: try-lock a (module, start, end) span -> renew while working -> release when
@@ -27,7 +27,7 @@ import sys
 import urllib.request
 import urllib.parse
 
-BASE = "https://belongto.us"
+BASE = "https://tangos.dev"
 
 
 def _load_local(env, fname):

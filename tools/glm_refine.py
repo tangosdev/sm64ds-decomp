@@ -444,7 +444,7 @@ def main():
     claims = None
     if not args.no_claims:
         sys.path.insert(0, str(REPO / "tools"))
-        import claims  # belongto.us lock service; per-chunk try-lock/release
+        import claims  # tangos.dev lock service; per-chunk try-lock/release
 
     def addr_int(r):
         a = r["addr"]

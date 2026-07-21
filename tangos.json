@@ -62,7 +62,7 @@
         "note": "Local Nemotron-3 via LM Studio (OpenAI-compatible server on localhost:1234, model 'nemo'). The server ignores the value, so any placeholder like 'lm-studio' works - storing it just switches the Nemotron box on and makes it console-drivable. Start LM Studio (Start-Nemotron.ps1) before driving."
       },
       "CLAIMS_API_KEY": {
-        "note": "Write key for the belongto.us claims board, so your locks post under your handle. Optional - read-only works without it."
+        "note": "Write key for the tangos.dev claims board, so your locks post under your handle. Optional - read-only works without it."
       }
     }
   },
@@ -81,7 +81,7 @@
     "generate": "{python} tools/chaos_db_ci.py --out {out}",
     "dbPath": "chaos-db.json",
     "committedDbUrl": "https://raw.githubusercontent.com/tangosdev/sm64ds-decomp/chaos-data/chaos-db.json",
-    "claimsApi": "https://belongto.us/api/claims"
+    "claimsApi": "https://tangos.dev/api/claims"
   },
   "categories": [
     {
