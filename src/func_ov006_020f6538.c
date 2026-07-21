@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=29). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void func_ov004_020b67f8(void);
 extern void func_ov004_020b0a54(int);
 extern void func_ov004_020adb1c(int self);
@@ -22,7 +19,8 @@ void func_ov006_020f6538(char *c)
     if (*(unsigned short *)(c + 0x53e4) == 0)
         goto zero;
 
-    *(unsigned short *)(c + 0x53e4) = *(unsigned short *)(c + 0x53e4) - 1;
+    *(unsigned short *)(((int)c + 0x53e4) & 0xffffffffffffffffLL) =
+        *(unsigned short *)(((int)c + 0x53e4) & 0xffffffffffffffffLL) - 1;
     if (*(short *)(c + 0x53e4) > 0)
         return;
 
@@ -35,7 +33,7 @@ void func_ov006_020f6538(char *c)
         p = func_020beb68;
         if (p != 0) {
             if (p->b4 < 0x270f)
-                p->b4++;
+                *(int *)(((int)p + 0xb4) & 0xffffffffffffffffLL) += 1;
             if (p->b4 > p->b8)
                 p->b8 = p->b4;
         }
@@ -48,7 +46,7 @@ void func_ov006_020f6538(char *c)
     p = func_020beb68;
     if (p != 0) {
         if (p->b4 > 0)
-            p->b4--;
+            *(int *)(((int)p + 0xb4) & 0xffffffffffffffffLL) -= 1;
     }
     func_ov006_020c0d68(c + 0x4f38);
     return;

@@ -1,19 +1,17 @@
 //cpp
-// NONMATCHING: different op / idiom (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern "C" void func_ov004_020b0aa0(int arg);
 extern "C" void func_ov006_02106048(char* c);
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 
 extern "C" void func_ov006_02104ecc(char* c)
 {
-    int* a = (int*)(c + 0x4660);
-    int* b = (int*)(c + 0x4668);
-    *a += *b;
+    int* a = (int*)(((int)c + 0x4660) & 0xFFFFFFFFFFFFFFFF);
+    *a += *(int*)(c + 0x4668);
+    int* b = (int*)(((int)c + 0x4668) & 0xFFFFFFFFFFFFFFFF);
     *b -= 0x400;
     if ((*(int*)(c + 0x4660) >> 12) > -0x40) return;
-    *(int*)(c + 0x4cac) += 1;
+    int* e = (int*)(((int)c + 0x4cac) & 0xFFFFFFFFFFFFFFFF);
+    (*e)++;
     *(unsigned char*)(c + 0x4675) = 4;
     *(int*)(c + 0x4660) = 0x10000;
     *(int*)(c + 0x4664) = 0x24000;
