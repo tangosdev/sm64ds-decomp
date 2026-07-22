@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov007 func_ov007_020aec00 (0x020aec00, size 0x94) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #587 |
 | main (arm9): 7 funcs — 02048234, 02048720, 020490b0, 020494cc, 0204bbd8, 0204be40, 0204c304 (also locked via claims api) | ai-tdd-labs (claude-fable) | 2026-07-16 | released (api locks freed; no matches landed) |
 | ov004: func_ov004_020af2f8 (0x020af2f8, size 0x2e8) | lunavyqo (Grok) | 2026-07-16 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); claim clm_a25f174bbe49 kept active |
 | ov006 func_ov006_020fc8c0 (0x020fc8c0, size 0xf0) | Codex/Raman | 2026-07-16 | active — batch 11, free div=6 refinement |
