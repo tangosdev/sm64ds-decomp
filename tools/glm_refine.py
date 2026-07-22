@@ -206,19 +206,21 @@ def chat(messages, max_tokens=8000, retries=RETRIES, on_delta=None):
         # OpenAI Chat Completions dialect (DeepSeek / local LM Studio): Bearer auth, /chat/completions.
         url = BASE_URL.rstrip("/") + "/chat/completions"
         headers = {"authorization": f"Bearer {API_KEY}", "content-type": "application/json"}
-        # A reasoning model (deepseek-reasoner, nemotron) spends its hidden thinking INSIDE
-        # max_tokens; at the default 8000 a hard function's reasoning starves/truncates the code
-        # block ("no code block returned"). Give the known reasoners real headroom - they only bill
-        # what they use. (Match is_nemo, not "nemotron": the model loads under the "nemo" alias, which
-        # "nemotron" would miss. Still bounded by the server's loaded context window - load Nemotron
-        # with a bigger --context, e.g. 32768, or this headroom can't be used.)
-        if "reason" in MODEL.lower() or is_nemo:
-            mt = max(mt, 24000)
         # OpenAI's own reasoning models (gpt-5 / o-series) REJECT max_tokens outright
         # ("Unsupported parameter: 'max_tokens' ... use 'max_completion_tokens'"), while every other
         # OpenAI-dialect host (DeepSeek, Kimi, Requesty, LM Studio) only knows max_tokens. Pick by
         # model; the 400 handler below also swaps them if this guess is wrong for some host.
         _openai_reasoner = bool(re.match(r"^(gpt-5|o[1-4])", MODEL.lower()))
+        # A reasoning model (deepseek-reasoner, nemotron, gpt-5/o-series) spends its hidden thinking
+        # INSIDE the token limit; at the default 8000 a hard function's reasoning starves/truncates
+        # the code block ("no code block returned"). Give the known reasoners real headroom - they
+        # only bill what they use. gpt-5/o-series count reasoning against max_completion_tokens the
+        # same way, and at "high" effort they think a lot, so they need it most. (Match is_nemo, not
+        # "nemotron": the model loads under the "nemo" alias, which "nemotron" would miss. Still
+        # bounded by the server's loaded context window - load Nemotron with a bigger --context,
+        # e.g. 32768, or this headroom can't be used.)
+        if "reason" in MODEL.lower() or is_nemo or _openai_reasoner:
+            mt = max(mt, 24000)
         body = {"model": MODEL, "messages": messages}
         body["max_completion_tokens" if _openai_reasoner else "max_tokens"] = mt
         # Those same models take the effort as `reasoning_effort` (minimal|low|medium|high) rather
