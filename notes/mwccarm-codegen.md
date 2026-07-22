@@ -1358,6 +1358,61 @@ needs the AND after the dependent `lsr` with dst on the pool-const register; any
 that moves the AND later rotates t0 out of sl and blows div to 29-30) and `func_020729f4`
 div 3 (r0/r1 rotation on a loop-head tag byte, invariant under 12+ spellings).
 
+## 7b. Second arm9 head cascade (2026-07-22, 4 matches) + an amendment to 6t/6u
+
+Follow-on to 7a, on the arm9 drafts carrying *structural* categories (predicate vs branch,
+missing logic, constant/value). Opus 4/12, Fable 4/9 on the misses.
+
+**AMENDMENT to sec 6t/6u**: the claim that an `asm` block "cannot spell `ldm{cond}` /
+`bx{cond}`" is **WRONG**. mwccarm assembles `ldmeqia sp!, {lr}` (the explicit `ia` suffix is
+what it wants) and `bxeq lr` directly. It also accepts `DCD 0x<word>` for hand-encoded
+instructions where `dc.l` / `dc.w` / `opword` / `.long` all fail to compile -- useful to know
+for the leaf-library asm files. The *C-side* predication floor in 6u is real and was
+re-confirmed twice: plain C predicates the middle guard into `movne` (div 6) and no source
+form reaches the ROM's conditional-return pair. **This does not make asm the answer for game
+logic** -- `func_02068398` matches byte-exact as a whole-function `asm` block and was
+deliberately NOT banked; it stays a near-miss. Whole-function asm for game logic is an asm
+transcription, not a decompilation.
+
+Levers that landed:
+
+- **Fake-dependency store reordering** (`Particle::CheckLavaCallback::SpawnParticles`, div 2->0).
+  To make a Vector3 field be *computed* first but *stored* second, hoist it into a temp and
+  reference the temp in a degenerate ternary on the other store:
+  `vy = <y expr>; v.x = vy ? sx<<3 : sx<<3;`. Generalizes 6y's fake-dependency trick to
+  store-emission order.
+- **Mixed temp/RMW interleave beats both pure families** (`Camera::Render`, div 4->0, Fable).
+  On a 6-element `(x+4)>>3` writeback, *def order* pins register/slot assignment while
+  *store-statement order* pins emission. Pure-temp and pure-RMW forms both floor (an
+  exhaustive 720-permutation sweep bottomed at div 4); temps for a SUBSET (0,1,2,4) with
+  def order (2,1,0,5,4,3) let the stores run ascending while holding the coloring. When a
+  store block resists, mix the two idioms rather than permuting within one.
+- **Volatile must cover BOTH sides of a str/ldr pair** (`func_0206dac4`, Fable). Volatile on
+  the counter global alone was ignored by the scheduler for the non-volatile array load;
+  volatile on the counter *and* the fn-ptr array, plus a temp index
+  (`i = cnt-1; cnt = i; arr[i]();`), pinned str-before-ldr. Extends the 6-family volatile
+  lever: the scheduler only serializes a pair when both ends are volatile.
+  (NOTE: this function was matched concurrently upstream in #542 and was not banked here.)
+- **Read the callee's real width and arity** (`func_02059c18`, div 6->0). The callee returned
+  a full `long long` (the `sbc` subtracts BOTH words) and took a third arg the ROM never
+  materializes -- `mov r2,#0` is absent because r2 already held a CSE'd zero from an earlier
+  `*(vu16*)0x4000106 = 0` store, which is exactly what kept r2 live and pushed another load
+  onto ip. A "missing" argument set-up instruction is evidence of a live CSE'd constant, not
+  of a missing argument.
+- **Control flow again, not codegen** (`OAM::Reset`, div 4->0). The if-arm's branch skipped
+  past two `MultiCopy32Bytes` calls AND a zero-store pair, so five statements belonged inside
+  the `else`; only two shared stores are the tail. This also explained an apparently
+  "duplicated" `mov r2,#0` (separate basic blocks). **Third such case in two batches** -- when
+  a residual includes a duplicated constant materialization, suspect basic-block structure
+  before reaching for a coloring lever.
+
+**Gate catch worth remembering**: `func_0205fb58` reached div 0 by merging a "phantom" symbol
+(`data_020a813c`) into one struct array at `data_020a8138` so mwcc folds the +4 field offset
+into a pool literal. The wildcarded byte oracle accepts it; the link gate rejected it
+(`WRONG-DEST reloc: data_020a8138 != config 0x020a813c`). If a merge like this is genuinely
+right, it is a CONFIG symbol-merge change, not a source spelling -- see the dsd symbol-split
+note in the session log.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating

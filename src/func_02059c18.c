@@ -1,11 +1,7 @@
-// NONMATCHING: register allocation (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-
 typedef unsigned short u16;
 typedef unsigned int u32;
 extern long long func_02059650(void *obj);
-extern void func_02056e4c(int a, void *fn);
+extern void func_02056e4c(u32 idx, u32 handler, u32 arg);
 extern void func_02059824(void);
 extern void _ZN3IRQ10EnableIRQsEj(unsigned int mask);
 typedef struct Obj
@@ -16,12 +12,12 @@ typedef struct Obj
 void func_02059c18(Obj *obj)
 {
   long long v;
-  int sub;
+  long long sub;
   u16 timer;
   sub = func_02059650(obj);
   *((volatile u16 *) 0x4000106) = 0;
   v = obj->t - sub;
-  func_02056e4c(1, (void *) func_02059824);
+  func_02056e4c(1, (u32) func_02059824, 0);
   if (v < 0)
   {
     timer = 0xfffe;
