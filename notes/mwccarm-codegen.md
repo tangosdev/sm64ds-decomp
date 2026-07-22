@@ -1413,6 +1413,52 @@ into a pool literal. The wildcarded byte oracle accepts it; the link gate reject
 right, it is a CONFIG symbol-merge change, not a source spelling -- see the dsd symbol-split
 note in the session log.
 
+## 7c. Third arm9 head cascade (2026-07-22, 7 matches) -- the head's deep tail still pays
+
+Opus 6/11 at 40.5K tok/landed on a div 2-17 pool (BETTER than the div 2-6 pools of 7a/7b),
+then Fable 1/5 at 231K on the misses. Read that pair carefully: **on this backlog, draft
+divergence count did NOT predict winnability** -- div 10/11 drafts landed while div 2-5 ones
+floored. What predicted it was whether the residual was structural. The Fable escalation, which
+paid 2/4 and 4/9 on shallower pools, dropped to 1/5 here; escalation is worth one pass, not two.
+
+New levers:
+
+- **Spill slots are grouped by TYPE, not declaration order** (`func_020319fc`, div 5->0).
+  A stack-slot ordering residual was fixed by declaring a local `int` instead of `unsigned int`
+  -- signed/unsigned was pinning the slot grouping. Try the type before permuting decl order.
+- **DELETE a named local and let EBB-local CSE rediscover it** (`func_02046bbc`, div 10->0).
+  A named `struct Node0 *node = ctx->node;` forced scratch r0 coloring; using inline
+  `ctx->node->m18` / `ctx->node->m28` at both uses let CSE make the temp, which colors to
+  callee-saved r7 like the ROM. The inverse of the usual "add a temp" instinct: **a named local
+  and a CSE temp get different coloring priority**.
+- **Mixed named/inline spelling of the SAME invariant reorders the preheader hoist batch**
+  (`func_0206071c`, div 11->0, Fable). mwcc emits loop-invariant ADDRESS adds before CONSTANT
+  movs; naming the invariant at only ONE of its three uses (inline at the other two) flipped
+  the group order to the ROM's constants-first. Pairs with `opt_loop_invariants off`.
+- **`opt_loop_invariants off` fixes preheader EMISSION ORDER, not just hoisting**
+  (`func_02060f60`, div 2->0) -- it stopped LICM lifting a laundered base above the constant movs.
+- **`volatile` on a ring-buffer array pins an indexed store ahead of a wrap-check**
+  (`func_0205b070`, div 11->0), after fixing tail store order with inline RMW instead of
+  hoisted temps.
+- **A backward `bne` with imm=-4 is a spin-wait loop, not an `if`** (`func_0205583c`, div 11->0).
+  The draft had modelled a GXSTAT busy-wait as an `if`; the back-edge block boundary is what
+  re-materializes a `mov #0` the draft appeared to be "missing". **FOURTH control-flow-not-codegen
+  case in three batches** -- the recurring tell is a missing or duplicated constant
+  materialization. Check the branch offsets before believing a coloring diagnosis.
+
+**Confirmed floors** (survived Opus AND Fable, both exhaustive): `Stage::LoadFog` (r5/r8 swap,
+the CSE'd zero web colors last under every lever), `func_020341a8` (r1/r2 swap rooted in one
+in-place-vs-fresh allocator choice), `GX::LoadTex` (r4/r5 web-identity swap; 9 disjoint probes
+compiled BITWISE IDENTICAL -- a 6y-class allocator-priority floor).
+
+**`func_02072fcc` is a ONE-INSTRUCTION miss and the best hand-fix candidate in the backlog**:
+mwcc PRE-hoists a loop-invariant `b+1` whose only use is on a cold retry path into the
+preheader (`add r1,r1,#1` + in-loop `mov r3,r1`) where the ROM recomputes `add r3,r1,#1`
+in-loop. All 17 "divergences" are that one insn plus the +4 branch-offset ripple. Both models
+exhausted the pragma space (opt_loop_invariants / common_subs / propagation / lifetimes /
+strength_reduction / dead_assignments, optimization_level 2/3, optimize_for_size), u64
+laundering, `&b[1]`, temps, goto/nested loop forms. Do not spend more model time on it.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating

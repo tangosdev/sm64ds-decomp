@@ -1,11 +1,8 @@
-// NONMATCHING: different op / idiom (div=21). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern int data_020a648c;
+extern volatile int data_020a648c;
+extern volatile int data_020a649c;
 extern int data_020a64a0;
 extern int data_020a6760;
-extern int data_020a649c;
-extern int data_020a64a8[];
+extern volatile int data_020a64a8[];
 extern int data_020a64a4;
 extern int data_020a6490;
 
@@ -28,13 +25,16 @@ int func_0205b070(int x)
         while (IPCSend(7, data_020a648c, 0) < 0)
             ;
     }
-    data_020a64a8[data_020a649c] = data_020a648c;
-    data_020a649c++;
-    if (data_020a649c > 8) data_020a649c = 0;
+    int temp = data_020a648c;
+    int idx = data_020a649c;
+    data_020a64a8[idx] = temp;
+    idx++;
+    data_020a649c = idx;
+    if (idx > 8) data_020a649c = 0;
 
-    data_020a64a4++;
     data_020a648c = 0;
     data_020a6490 = 0;
-    data_020a64a0++;
+    data_020a64a0 = data_020a64a0 + 1;
+    data_020a64a4 = data_020a64a4 + 1;
     return 1;
 }

@@ -18,8 +18,21 @@ it is fair to take over: ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| arm9 func_0205fb58 (0x0205fb58, size 0x78) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #580 |
+| arm9 func_02068398 (0x02068398, size 0x78) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #577 |
+| ov002 EnemySwitchTag::Behavior / _ZN14EnemySwitchTag8BehaviorEv (0x020f19fc, size 0xc8) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #585 |
+| ov002 func_ov002_020bf36c (0x020bf36c, size 0xa0) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #584 |
+| ov006 func_ov006_020de1d4 (0x020de1d4, size 0x98) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #586 |
+| ov006 func_ov006_020e61c4 (0x020e61c4, size 0xc8) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #583 |
+| ov006 func_ov006_020f4a40 (0x020f4a40, size 0x94) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #576 |
+| ov006 func_ov006_02101088 (0x02101088, size 0xc0) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #582 |
+| ov007 func_ov007_020aec00 (0x020aec00, size 0x94) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #587 |
+| ov060 func_ov060_021134ac (0x021134ac, size 0xb8) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #574 |
+| ov060 func_ov060_021184bc (0x021184bc, size 0x88) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); claim clm_c2edcc619489 kept active |
+| ov071 func_ov071_02120200 (0x02120200, size 0x78) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #578 |
 |---|---|---|---|
 | ov006 func_ov006_02106fdc (0x02106fdc, size 0xc0) | lunavyqo (Grok) | 2026-07-22 | near-miss — div=9 (r8/sb regperm floor); PR #588 |
+| ov006 func_ov006_020f1318 (0x020f1318, size 0xb4) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); claim clm_472a457ac984 kept active |
 | main (arm9): 7 funcs — 02048234, 02048720, 020490b0, 020494cc, 0204bbd8, 0204be40, 0204c304 (also locked via claims api) | ai-tdd-labs (claude-fable) | 2026-07-16 | released (api locks freed; no matches landed) |
 | ov004: func_ov004_020af2f8 (0x020af2f8, size 0x2e8) | lunavyqo (Grok) | 2026-07-16 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); claim clm_a25f174bbe49 kept active |
 | ov006 func_ov006_020fc8c0 (0x020fc8c0, size 0xf0) | Codex/Raman | 2026-07-16 | active — batch 11, free div=6 refinement |
