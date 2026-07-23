@@ -1,9 +1,7 @@
-// NONMATCHING: different op / idiom (div=13). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
+enum { false, true };
 struct Vector3 { int x, y, z; };
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
@@ -18,9 +16,15 @@ int func_ov002_020bb520(char* self){
   if (*(u8*)(self+0x58e) == 0) return 0;
   {
     char* other = (char*)_ZN5Actor10FindWithIDEj(id);
-    if (!(other != 0 && *(u16*)(other+0xc) == 0xbf)) {
-      return 0;
-    } else {
+    if (other == 0) goto fail;
+    {
+      int b = (int)(*(u16*)(other+0xc) == 0xbf);
+      if (b != false) goto success;
+    }
+  fail:
+    return 0;
+  success:
+    {
       int ang = Vec3_HorzAngle((struct Vector3*)(self+0x5c), (struct Vector3*)(other+0x5c));
       if (AngleDiff(ang, *(s16*)(self+0x8e)) > 0x4000) return 0;
       *(int*)(self+0x598) = (int)other;
