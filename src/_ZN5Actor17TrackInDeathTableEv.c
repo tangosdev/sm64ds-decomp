@@ -1,6 +1,6 @@
-extern void DeathTable_SetBit(int id);
+extern void DeathTable_SetBit(int);
 
-void _ZN5Actor17TrackInDeathTableEv(void *self)
+void _ZN5Actor17TrackInDeathTableEv(char *self)
 {
-    DeathTable_SetBit((short)((short *)self)[0xce >> 1]);
+    DeathTable_SetBit(*(short *)(self + 0xce));
 }

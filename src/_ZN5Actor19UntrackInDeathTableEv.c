@@ -1,6 +1,6 @@
-extern void DeathTable_ClearBit(int id);
+extern void DeathTable_ClearBit(int);
 
-void _ZN5Actor19UntrackInDeathTableEv(void *self)
+void _ZN5Actor19UntrackInDeathTableEv(char *self)
 {
-    DeathTable_ClearBit((short)((short *)self)[0xce >> 1]);
+    DeathTable_ClearBit(*(short *)(self + 0xce));
 }
