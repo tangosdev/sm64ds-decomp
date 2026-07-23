@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct V3 { int x, y, z; };
 struct S { char _0[8]; unsigned short f8; char _a[0x1a]; int *f24; int *f28; };
 extern int func_ov007_020c2e90(struct S *s, struct V3 *b, struct V3 *c, int d, int e);
@@ -22,7 +19,10 @@ int func_ov007_020c25fc(struct S *self, int a1, int a2, int a3, int e, int v)
         self->f24[self->f8] = a1;
         self->f28[self->f8] = a2;
         func_ov007_020c2d44(self, self->f8);
-        self->f8 = self->f8 + 1;
+        {
+            unsigned short *p = (unsigned short *)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL);
+            *p = *p + 1;
+        }
         if (func_ov007_020c2dfc(self, self->f8 - 1, v) != 0)
             func_ov007_020c24d0(self, self->f8 - 2);
         return 1;
