@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct CylinderClsn;
 struct Actor { void UpdatePos(CylinderClsn *c); };
 struct WithMeshClsn {
@@ -28,16 +25,17 @@ extern "C" int func_ov071_0211f7d4(Actor *self)
         } else {
             *(int*)(s + 0xa8) = (*(int*)(s + 0xa8) * -0x3c) / 0x64;
         }
-    } else {
-        if (((WithMeshClsn*)(s + 0x194))->IsOnGround()) {
-            *(int*)(s + 0xa8) = 0;
-            ((WithMeshClsn*)(s + 0x194))->ClearLimMovFlag();
-            *(int*)(s + 0xb0) |= 1;
-            *(short*)(s + 0x8c) = 0;
-            *(short*)(s + 0x8e) = *(short*)(s + 0x94);
-            *(short*)(s + 0x90) = 0;
-            func_ov071_021202ec(s, 2);
-        }
+    } else if (((WithMeshClsn*)(s + 0x194))->IsOnGround()) {
+        WithMeshClsn *wm = (WithMeshClsn*)(s + 0x194);
+        *(int*)(s + 0xa8) = 0;
+        wm->ClearLimMovFlag();
+        *(int *)(((long long)(int)(s + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        short z = 0;
+        short ang = *(short*)(s + 0x94);
+        *(short*)(s + 0x8c) = z;
+        *(short*)(s + 0x8e) = ang;
+        *(short*)(s + 0x90) = z;
+        func_ov071_021202ec(s, 2);
     }
     self->UpdatePos((CylinderClsn*)(s + 0x160));
     func_ov071_0211f29c(s);

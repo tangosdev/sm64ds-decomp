@@ -1,24 +1,20 @@
-// NONMATCHING: different op / idiom (div=18). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 
 void func_ov006_020e2dbc(char *c)
 {
     if (*(unsigned char*)(c + 0x4ee7) == 0) return;
+    if (*(unsigned short*)(c + 0x4ee0) != 0)
     {
-        unsigned short *us = (unsigned short*)(c + 0x4e00);
-        short *s = (short*)(c + 0x4e00);
-        if (us[0x70] != 0) {
-            (*(volatile unsigned short*)(c + 0x4ee0))--;
-            if (s[0x70] <= 0) s[0x70] = 0;
-            return;
-        }
+        *(unsigned short *)(((int)c + 0x4ee0) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        if ((short)*(unsigned short*)(c + 0x4ee0) <= 0)
+            *(unsigned short*)(c + 0x4ee0) = 0;
+        return;
     }
     *(unsigned char*)(c + 0x4ee7) = 0;
     {
         int idx = *(unsigned char*)(c + 0x4ee6);
-        if (idx >= 5) return;
+        if (idx >= 5)
+            return;
         {
             char *b = c + idx * 0x2c;
             *(unsigned char*)(b + 0x4689) = 1;
@@ -31,7 +27,7 @@ void func_ov006_020e2dbc(char *c)
     }
     if (*(unsigned char*)(c + 0x4ee6) != 0)
         _ZN5Sound12PlayBank2_2DEj(0x1d7);
-    (*(unsigned char*)(c + 0x4ee6))++;
+    (*(unsigned char *)(((int)c + 0x4ee6) & 0xFFFFFFFFFFFFFFFF))++;
     *(int*)(c + 0x4eb0) = 0x80000;
     *(int*)(c + 0x4eb4) = 0xb0000;
     *(unsigned char*)(c + 0x4ee4) = 0;
