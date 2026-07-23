@@ -3,3 +3,4 @@
 {"id":"ov006:0x020cb72c","module":"ov006","addr":34387756,"name":"func_ov006_020cb72c","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"andrewboudreau","srcPath":"src/func_ov006_020cb72c.c"}
 {"id":"ov007:0x020b2e64","module":"ov007","addr":34287204,"name":"func_ov007_020b2e64","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov007_020b2e64.c"}
 {"id":"ov002:0x020b18f0","module":"ov002","addr":34281712,"name":"func_ov002_020b18f0","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov002_020b18f0.c"}
+{"id":"ov006:0x020fac48","module":"ov006","addr":34581576,"name":"func_ov006_020fac48","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020fac48.c"}
