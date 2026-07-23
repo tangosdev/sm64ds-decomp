@@ -1,16 +1,13 @@
-// NONMATCHING: base materialization / addressing (div=19). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int ApproachAngle(short *p, int target, int a, int b, int c);
-extern void Sound_PlayBank3(unsigned int id, void *pos);
-extern void *Actor_Spawn(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
+extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *pos);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
-extern void Platform_UpdateModelPosAndRotY(void *self);
-extern int Platform_IsClsnInRange(void *self, int fix, int t);
-extern void Platform_UpdateClsnPosAndRot(void *self);
+extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
+extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int fix, int t);
+extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 
 int func_ov022_021112ac(void *thiz)
 {
@@ -27,7 +24,7 @@ int func_ov022_021112ac(void *thiz)
             break;
         *(unsigned short *)(c + 0x300 + 0x22) = 0x96;
         *(unsigned char *)(c + 0x31e) = 1;
-        Sound_PlayBank3(0xc, c + 0x74);
+        _ZN5Sound9PlayBank3EjRK7Vector3(0xc, c + 0x74);
         break;
     case 1:
         if (DecIfAbove0_Short((unsigned short *)(c + 0x322)) == 0) {
@@ -52,7 +49,7 @@ int func_ov022_021112ac(void *thiz)
             v[1] = *(int *)(c + 0x60);
             v[2] = *(int *)(c + 0x64);
             v[1] = *(int *)(c + 0x60) + 0x1f4000;
-            s = Actor_Spawn(0xf3, 0, v, 0, *(signed char *)(c + 0xcc), -1);
+            s = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xf3, 0, v, 0, *(signed char *)(c + 0xcc), -1);
             *(void **)((unsigned char *)s + 0x10c) = c;
             *(int *)((unsigned char *)s + 0x118) = *(int *)(c + 0x60);
             {
@@ -69,9 +66,9 @@ int func_ov022_021112ac(void *thiz)
     *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     func_020393a4(c + 0x124, 0x780000);
     func_02039394(c + 0x124, 0x1000);
-    Platform_UpdateModelPosAndRotY(c);
-    if (Platform_IsClsnInRange(c, 0x780000, 0x1000) != 0)
-        Platform_UpdateClsnPosAndRot(c);
+    _ZN8Platform21UpdateModelPosAndRotYEv(c);
+    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x780000, 0x1000) != 0)
+        _ZN8Platform19UpdateClsnPosAndRotEv(c);
     *(unsigned char *)(c + 0x320) = 0;
     return 1;
 }
