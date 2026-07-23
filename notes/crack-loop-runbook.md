@@ -300,7 +300,7 @@ an EMPTY set, and the tool believes nothing is matched. It then prints a plausib
 ## Claim before you spawn, not after
 
 `claims_check` is read-only and needs NO api key -- there is no excuse to skip it. On 2026-07-16
-two agents were spawned onto spans another contributor (`bmanus2-dotcom`, "glm-5.2 sweep") had
+two agents were spawned onto spans another contributor (`tangosdev`, "glm-5.2 sweep") had
 already locked, and two of that session's near-misses (`func_0204af3c`, `func_0205fb58`) were
 being ground on while held by `lunavyqo`. The board is genuinely crowded.
 ```
