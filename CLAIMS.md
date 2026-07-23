@@ -19,6 +19,8 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 func_ov002_020e7218 (0x020e7218, size 0xc0) | lunavyqo (Grok) | 2026-07-24 | **released** — improved near-miss **div=7** (was 19); u64 base + split y; residual r2/ip regperm wall. Tip banked nearmiss/db.jsonl |
+| ov006 func_ov006_020deed8 (0x020deed8, size 0xa8) | lunavyqo (Grok) | 2026-07-24 | **released** — improved near-miss **div=9** (was 13); reverse-decl long-lived locals; residual prologue a4. Tip banked |
 | ov002 func_ov002_020e5948 (0x020e5948, size 0x9e8) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); pure-C: opt_loop_invariants off + texseq inside outer after k=0 |
 | ov006 batch4: func_ov006_020e8bd0 (0x020e8bd0) + func_ov006_0211dad0 (0x0211dad0) MATCH; 020deed8 open | lunavyqo (Grok) | 2026-07-23 | **partial** — 2 matched + linkcheck VERIFIED (mwccarm 1.2/sp2p3) |
 | ov002 _ZN6Player12St_Spin_MainEv (0x020e10ec, size 0xb0) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); u64-mask field_8e RMW; API clm_82e428d3a1b7 kept |
@@ -121,7 +123,7 @@ it is fair to take over: ping the claimant first.
 | arm9 func_02008080 (0x02008080, size 0x30) | Cursor/Grok | 2026-07-02 | done |
 | ov085 func_ov085_0212aaec (0x0212aaec, size 0x150) | Cursor/Grok | 2026-07-02 | done |
 | Unclaimed coddog siblings (arm9/ov002/ov004, ~0x30–0x80 band) | Cursor/Grok | 2026-07-02 | in progress — param-clone crack; handoff scratch/HANDOFF_matches_2026-07-02.md |
-| func_ov006_021173c8 (0x021173c8, 0x10c0) + func_02009e70 (0x02009e70, 0x109c) | Cursor/Grok | 2026-07-02 | paused — v10 best NOT MATCH; sp40@0x7c blocker; scratch/HANDOFF_ov006_021173c8.md |
+| ov006 func_ov006_021173c8 (0x021173c8, size 0x10c0) | lunavyqo (Grok) | 2026-07-24 | **released** — improved near-miss **div=15** (was 597); fn-scope pcnt/pcnt2/val; residual pure slot-order floor. Tip banked |
 | _ZN5Stage9PS_UpdateEv (0x0202635c, 0x30ac) + func_ov006_02115b0c (0x02115b0c, 0x18bc) + func_0206a928 (0x0206a928, 0x1360) | Cursor/Grok | 2026-07-02 | paused — large funcs; scratch/HANDOFF_batch_4funcs.md (func_ov006_02112ad8 matched by andrewboudreau in #486) |
 | ov002: func_ov002_020f3310, 020f3d98, 020f562c, 020f5848 (0x4c each) | Cursor/Grok | 2026-07-02 | done - all four verified byte-identical |
 | ov006: func_ov006_0211a4b0 (andrew, PR #74) + 0211a648/0211a7ac/0211aa44/0211abdc/0211ad44/0211af60/0211b17c (Cursor/Grok) | mixed | 2026-07-03 | done - all eight verified byte-identical |
