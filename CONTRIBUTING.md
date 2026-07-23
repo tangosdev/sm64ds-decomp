@@ -143,3 +143,19 @@ Near-miss **tip C** stays in `nearmiss/db.jsonl` (pass `--src` on near_miss).
 Final **how** after MATCH: `tools/stamp_provenance.py` → `config/match_provenance.jsonl`.
 `tools/bank.py` remains fan-out batch verify/bank — not the how-stamp.
 See [notes/match-attempts.md](notes/match-attempts.md) and [notes/match-logging-console.md](notes/match-logging-console.md).
+
+You do not have to run either tool by hand. `tools/stamp_landed.py` runs in CI on every
+push to main and records both stores for whatever landed, so the only thing it needs
+from you is a statement of method it can trust. Put one line in a commit message or the
+PR description:
+
+```
+Provenance: ai model=grok-4.5 reasoning=high harness=grok-build
+Provenance: human
+```
+
+Agent batches that already name their model in the commit subject are picked up
+without it. Anything else lands **unstamped on purpose** — the ledger says "not
+recorded" rather than inventing a model, so a missing line costs information but never
+puts a wrong claim in the history. Credit is unaffected either way: WHO comes from git,
+HOW comes from this line, and the two are deliberately kept apart.
