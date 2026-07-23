@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=45). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int s32;
 typedef int Fix12i;
@@ -14,8 +11,23 @@ extern char* data_0209f32c;
 
 void func_ov002_020ce9c8(char* self)
 {
-    func_02022c80(0, *(unsigned char*)(self + 0x703) ? 0x54 : 0xce, *(int*)(self + 0x5c), (int)(data_0209f32c + 0x4b000), *(int*)(self + 0x64), 0);
-    func_02022cbc(0, *(unsigned char*)(self + 0x703) ? 0x55 : 0xcf, *(int*)(self + 0x5c), (int)(data_0209f32c + 0x3000), *(int*)(self + 0x64), 0);
+    int v[3];
+    int effectID;
+
+    *(volatile int*)&v[0] = *(int*)(self + 0x5c);
+    *(volatile int*)&v[1] = *(int*)(self + 0x60);
+    *(volatile int*)&v[2] = *(int*)(self + 0x64);
+    v[1] = (int)(data_0209f32c + 0x4b000);
+    effectID = 0xce;
+    if (*(unsigned char*)(self + 0x703))
+        effectID = 0x54;
+    func_02022c80(0, effectID, v[0], v[1], v[2], 0);
+
+    v[1] = (int)(data_0209f32c + 0x3000);
+    effectID = 0xcf;
+    if (*(unsigned char*)(self + 0x703))
+        effectID = 0x55;
+    func_02022cbc(0, effectID, v[0], v[1], v[2], 0);
 
     if (*(unsigned char*)(self + 0x703))
         *(int*)(self + 0x628) = func_02022d00(*(int*)(self + 0x628), 0x56, *(int*)(self + 0x5c), (int)data_0209f32c, *(int*)(self + 0x64), 0);
