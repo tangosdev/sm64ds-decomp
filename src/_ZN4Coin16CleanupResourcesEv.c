@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int Fix12i;
 extern void _ZN13SharedFilePtr7ReleaseEv(char* p);
 extern void _ZN5Actor11UntrackStarERa(char* c, signed char* p);
@@ -24,7 +21,10 @@ int _ZN4Coin16CleanupResourcesEv(char* c)
     if (o != 0) {
         int b2 = (int)(*(unsigned short*)(o + 0xc) == 0x4f);
         if (b2 != 0) {
-            if (*(unsigned char*)(o + 0xd6) != 0) (*(unsigned char*)(o + 0xd6))--;
+            if (*(unsigned char*)(o + 0xd6) != 0) {
+                unsigned char *p = (unsigned char*)(((int)o + 0xd6) & 0xFFFFFFFFFFFFFFFFULL);
+                *p = *p - 1;
+            }
         }
     }
     if (*(unsigned short*)(c + 0x3a8) != 0) return 1;

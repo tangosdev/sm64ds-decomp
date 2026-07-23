@@ -18,6 +18,7 @@ it is fair to take over: ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov002 Coin::CleanupResources (_ZN4Coin16CleanupResourcesEv @ 0x020b2198, size 0xec) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); u64-launder star-count RMW |
 | ov007 func_ov007_020b2e64 (0x020b2e64, size 0x1ec) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); store+call outside second if; API claim clm_d2887f4fbebb kept |
 | ov006 func_ov006_02106fdc (0x02106fdc, size 0xc0) | lunavyqo (Grok) | 2026-07-22 | near-miss — div=9 (r8/sb regperm floor); draft banked in nearmiss/db.jsonl (PR #588 closed: near-miss drafts belong in the DB, not src/) |
 | arm9 func_0205fb58 (0x0205fb58, size 0x78) | lunavyqo (Grok) | 2026-07-22 | **done** — verified byte-identical (mwccarm 1.2/sp2p3); PR #580 |
