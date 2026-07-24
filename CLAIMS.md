@@ -19,6 +19,19 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 batch7: func_ov002_020ae4cc (0x020ae4cc, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=9 |
+| ov075 batch7: func_ov075_02116128 (0x02116128, size 0xf4) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=29 |
+| ov062+ov006 batch8: func_ov062_02119af0 (0x02119af0, 0xf0) + func_ov006_020cc8c8 (0x020cc8c8, 0xf0) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 match (CLAIMS.md only; API key expired/revoked) |
+| ov002 func_ov002_020aefb8 (0x020aefb8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (prev div=24) |
+| ov075 func_ov075_02117d80 (0x02117d80, size 0x104) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (prev div=5) |
+| ov002 func_ov002_020d708c (0x020d708c, size 0x100) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=19 |
+| ov080 func_ov080_02125460 (0x02125460, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=5 |
+| ov002 func_ov002_020d8944 (0x020d8944, size 0x10c) | lunavyqo (Grok) | 2026-07-24 | **active** — batch2 match from near-miss div=15 |
+| ov063 func_ov063_021162c8 (0x021162c8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **active** — batch2 match from near-miss div=12 |
+| ov002 func_ov002_020f1468 (0x020f1468, size 0x110) + ov006 func_ov006_02124fd8 (0x02124fd8, size 0x10c) | lunavyqo (Grok) | 2026-07-24 | **done** — both verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch1 |
+| ov007 batch3: func_ov007_020c43bc (0x020c43bc, size 0x108) + func_ov007_020b2bd4 (0x020b2bd4, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **active** — API key expired; CLAIMS.md only |
+| ov007 func_ov007_020c55bc (0x020c55bc, size 0x100) | lunavyqo (Grok) | 2026-07-24 | **active** — batch5 match from near-miss div=9 |
+| ov002 func_ov002_020e7454 (0x020e7454, size 0x100) | lunavyqo (Grok) | 2026-07-24 | **active** — batch5 match from near-miss div=21 |
 | ov002 func_ov002_020e5948 (0x020e5948, size 0x9e8) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); pure-C: opt_loop_invariants off + texseq inside outer after k=0 |
 | ov006 batch4: func_ov006_020e8bd0 (0x020e8bd0) + func_ov006_0211dad0 (0x0211dad0) MATCH; 020deed8 open | lunavyqo (Grok) | 2026-07-23 | **partial** — 2 matched + linkcheck VERIFIED (mwccarm 1.2/sp2p3) |
 | ov002 _ZN6Player12St_Spin_MainEv (0x020e10ec, size 0xb0) | lunavyqo (Grok) | 2026-07-23 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); u64-mask field_8e RMW; API clm_82e428d3a1b7 kept |
