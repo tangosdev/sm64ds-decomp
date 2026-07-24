@@ -1,32 +1,36 @@
-// NONMATCHING: different op / idiom (div=32). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
 
-struct G2 { int w[2]; };
-extern struct G2 data_ov006_0213b204;
-extern struct G2 data_ov006_0213b21c;
-extern int data_ov006_021405c8[];
-extern int data_ov006_0214057c;
-extern int data_ov006_02140564;
+typedef short s16;
+typedef struct { int x, y; } G2;
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int b, unsigned int u);
+extern int data_ov006_0213b204[2];
+extern G2 data_ov006_0213b21c;
+extern void *data_ov006_021405c8[];
+extern void *data_ov006_0214057c;
+extern void *data_ov006_02140564;
 extern int data_ov006_0214055c;
 
 void func_ov006_020cc8c8(char *p) {
-    int *cur = (int *)(p + 0x64);
-    struct G2 *want = &data_ov006_0213b204;
-    *(int *)(p + 0x40) = 0;
-    *(int *)(p + 0x20) = data_ov006_021405c8[*(short *)(p + 0x52)];
-    *(int *)(p + 0x24) = 0;
-    *(int *)(p + 0x34) = 0;
-    *(int *)(p + 0x38) = 0;
-    *(int *)(p + 0x3c) = 0;
-    if (cur[0] == want->w[0] && (cur[1] == want->w[1] || *(int *)(p + 0x64) == 0)) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p + 0x6c, (void *)data_ov006_0214057c, 0x40000000, 0x800, 0);
+    int *cur;
+    int *want;
+    int z = 0;
+    *(int *)(p + 0x40) = z;
+    *(void **)(p + 0x20) = data_ov006_021405c8[*(s16 *)(p + 0x52)];
+    *(int *)(p + 0x24) = z;
+    *(int *)(p + 0x34) = z;
+    *(int *)(p + 0x38) = z;
+    *(int *)(p + 0x3c) = z;
+    cur = (int *)(((long long)(int)(p + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+    want = data_ov006_0213b204;
+    if (cur[0] == want[0] && (cur[1] == want[1] || *(int *)(p + 0x64) == 0)) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p + 0x6c, data_ov006_0214057c, 0x40000000, 0x800, 0);
     } else {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p + 0x6c, (void *)data_ov006_02140564, 0, 0x800, 0);
-        struct G2 *src = &data_ov006_0213b21c;
-        data_ov006_0214055c += 1;
-        *(int *)(p + 0x64) = src->w[0];
-        *(int *)(p + 0x68) = src->w[1];
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p + 0x6c, data_ov006_02140564, 0, 0x800, 0);
+    }
+    {
+        int *ctr = &data_ov006_0214055c;
+        int c = *ctr;
+        G2 s = data_ov006_0213b21c;
+        *ctr = c + 1;
+        *(G2 *)(p + 0x64) = s;
     }
 }
