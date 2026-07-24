@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=26). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 
 extern void _ZN5Model12SetPolygonIDEi(void* m, int id);
@@ -12,20 +9,24 @@ void func_ov063_0211aa34(char* self)
     int v;
     if (tgt != cur) {
         if (tgt > cur) {
-            if (cur + 0x14 >= tgt)
+            if (cur + 0x14 >= tgt) {
                 *(u8*)(self + 0x5c8) = tgt;
-            else
-                *(u8*)(self + 0x5c8) += 0x14;
+            } else {
+                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)) & 0xFFFFFFFFFFFFFFFFLL);
+                *p += 0x14;
+            }
         } else {
-            if (cur - 0x14 <= tgt)
+            if (cur - 0x14 > tgt) {
+                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)) & 0xFFFFFFFFFFFFFFFFLL);
+                *p -= 0x14;
+            } else {
                 *(u8*)(self + 0x5c8) = tgt;
-            else
-                *(u8*)(self + 0x5c8) -= 0x14;
+            }
         }
     }
     if (*(u8*)(self + 0x5c8) == 0xff) {
         _ZN5Model12SetPolygonIDEi(self + 0x380, 1);
-    } else if ((*(unsigned short*)(self + 0x5d4) >> 8) & 1) {
+    } else if ((unsigned)(*(unsigned short*)(self + 0x5d4) << 23) >> 31) {
         _ZN5Model12SetPolygonIDEi(self + 0x380, 2);
     } else {
         _ZN5Model12SetPolygonIDEi(self + 0x380, 0x16);
