@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=6). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct SharedFilePtr;
 struct BMD_File;
 struct Actor;
@@ -115,7 +112,8 @@ extern "C" int _ZN14UnchainedChomp13InitResourcesEv(unsigned char* thiz)
         pp.GetNode(*(Vector3*)(thiz + 0x5c), *(unsigned int*)(thiz + 0x6b4));
     }
 
-    *(int*)(thiz + 0x60) += 0x64000;
+    /* u64-mask launder: materialize add r1,r4,#0x60; ldr/str [r1] for y += 0x64000 */
+    *(int *)(((int)thiz + 0x60) & 0xFFFFFFFFFFFFFFFF) += 0x64000;
     *(int*)(thiz + 0x80) = 0x1000;
     *(int*)(thiz + 0x84) = 0x1000;
     *(int*)(thiz + 0x88) = 0x1000;
