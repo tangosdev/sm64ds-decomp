@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // Segment/autoload initializer: reads a {dest, end, source} table from a pooled base,
 // block-copies words then bzeroes ranges, and chains to the next init routine by falling

@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 /* Byte-identical via mwccarm asm: C always mis-colors the [c+8]/[c+0xc]
  * compare (r1/r2 swap vs load-order deadlock with volatile). r0 still holds
  * `c` at the first bl (no rematerialize). Verified match.py 1.2/sp2p3. */

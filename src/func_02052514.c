@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive: block copy,
 // CP15, IRQ/CPSR, svc, matrix/math, context-switch). No C to decompile to. Per asm policy.
 asm void func_02052514(void *dst, void *src) {

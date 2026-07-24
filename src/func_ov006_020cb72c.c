@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM: pure regperm floor on 6 words under mwccarm 1.2/sp2p3 C.
 // Structure/schedule matches near-miss tip (div=6); only short-index coloring
 // differs (ROM ldrsh ip + table load to r1 vs C ldrsh r1 + table load to r0).

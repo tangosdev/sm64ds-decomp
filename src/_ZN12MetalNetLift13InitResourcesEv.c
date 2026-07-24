@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // Argument-loading long-branch veneer: load the target address into ip and a data
 // pointer argument into r1 from the two inline literals, then tail-jump via `bx ip`.
 // Hand-asm because both trailing .words are relocations (wildcards) and the placeholder

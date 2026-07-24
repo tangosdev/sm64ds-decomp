@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM: instruction-scheduling floor on n*0x32000 vs w-round interleave.
 // Exhaustive C search (div=21 best): umull+sign-mla of n*0x32000 always finishes
 // mla before asr of the scale result when that result is in lr; store-first shapes

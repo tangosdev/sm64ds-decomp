@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // CPU exception/abort dispatcher: reads the processor mode out of CPSR (mrs r1,cpsr; tests
 // 0x17 abort / 0x1b undefined-instruction mode), manually saves context with stmdb and

@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 /* func_ov009_0211145c — spawn-count loop + free-bird velocity/sound setup.
  * Store/call tail uses mwccarm asm: pure C emits rsb r0 + wrong str/mov
  * interleave for -0x14000 / 0xff06a000 / func_0201267c (same wall as sibling

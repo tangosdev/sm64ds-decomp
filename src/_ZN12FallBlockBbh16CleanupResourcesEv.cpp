@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 //cpp
 // Tail-call veneer: load r1 with the class resource data pointer and jump to the
 // shared cleanup helper through ip (this stays in r0). Hand-asm because the

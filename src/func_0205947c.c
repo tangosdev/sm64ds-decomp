@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: IRQ/FIQ context save; reads source frame from ip/r12 (not a
 // normal C arg) and writes into data_020a63ac. Sibling func_0201cb2c is unrelated
 // pointer-setup; this matches func_02059468's callee chain as asm-only.

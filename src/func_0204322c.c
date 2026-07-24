@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM: ActorBase::Process PMF-arg staging via below-sp ldm (sub ip,sp,#4;
 // ldmia ip,{r3}; ldmia r1,{r1,r2}). Same softfloat/SDK shape documented in
 // notes/mwccarm-codegen.md sec 8 / matched func_0206ddcc family — no mwccarm

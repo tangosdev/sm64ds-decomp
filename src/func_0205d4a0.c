@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // Tail-call thunk: clear the two halfword fields at 0x34/0x36 unless field 0x10
 // already holds 5, stash the two incoming args into 0x2c/0x30, then tail-call the
 // pooled target with r1 forced to 5. Hand-asm because the trailing .word is a

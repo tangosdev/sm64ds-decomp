@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM: IPC send loop (cmd 0xd, arg 2) followed by an intentional hang
 // (b self). The symbol's span also contains an unreachable epilogue-less tail
 // that stores r0 into data_020a89a4 - not producible from a single C function,

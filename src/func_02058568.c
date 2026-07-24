@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 // OS_InitContext-style SDK primitive: stores entry pc+4 and the two stack pointers
 // (sp_svc at +0x44, sp = sp_svc - 0x40 at +0x38), derives the initial CPSR from the

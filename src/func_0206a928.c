@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. MSL debug printf / format
 // core (same family as pret MSL_Common_printf). Soft-double helpers of this
 // cluster matched as C; this 0x1360 DFA stays asm — stack-home wall under C.

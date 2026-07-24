@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. MSL C++ runtime array
 // construction (ctor applied forward across n elements) with an exception
 // frame (fp anchor + sp spill at [fp,#0x14]) and a landing pad that calls the

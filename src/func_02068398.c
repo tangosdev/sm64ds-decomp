@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 /* func_02068398 @ 0x02068398 size 0x78 — arm9
  * Double-guard predication floor from plain C: two sequential null checks that both
  * branch to a shared tail with a 1-instr reassignment (mov r1,r0) between them.

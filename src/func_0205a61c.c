@@ -1,3 +1,6 @@
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only runtime primitive).
 // SDK unaligned block copy - the memcpy twin of func_0205a588's byte-fill (they sit
 // adjacent in the ROM). Aligns dst to a halfword with an edge-preserving read-modify-write
