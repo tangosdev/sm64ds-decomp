@@ -1,8 +1,8 @@
-// NONMATCHING: div=211 (was 277 banked; 214 recompiled tip). size=0x6e0 exact.
-// Frame still sub sp,#0x84 (want 0x74): +0x10 spill before locals shifts all sp offs.
-// Walls: (1) one spilled vs fp + c+0x702 hoist steals fp; (2) Fix12 cos/sin interleave;
-// (3) loop setup reg birth (want r7/r5/r6/r4/r8/fp). angbase tip has frame 0x74+fp=one
-// but size 0x6dc. mwccarm 1.2/sp2p3 --module ov034 @ 0x02112b5c size 0x6e0
+// NONMATCHING: div=144 (was 277 banked / 211 prior tip). size=0x6e0 frame=0x74 exact.
+// Remaining: loop setup schedule (i/0x1000 before ptrs); Fix12 reg coloring (r0/r3/r8/r2/r5);
+// pv uses static k_off_6f8 (extra ldr) vs pool imm; DecIf add order; loop tail schedule.
+// Proven: swap_roles r7=c, ut1 volatile sp14 load, static off+row form, no setup barrier.
+// mwccarm 1.2/sp2p3 --module ov034 @ 0x02112b5c size 0x6e0
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 typedef unsigned char u8;
@@ -15,16 +15,15 @@ struct Vec3 { s32 x, y, z; };
 
 /* Force full 0x74 frame: intentional locals + spill pad to match ROM */
 struct Frame {
-    s32 sp00, sp04, sp08;
     void *sp0c;
     s32 sp10, sp14, sp18;
-    struct Vec3 head;    /* +0x1c */
-    struct Vec3 part;    /* +0x28 */
-    struct Vec3 camA;    /* +0x34 */
-    struct Vec3 camB;    /* +0x40 */
-    struct Vec3 scratch; /* +0x4c */
-    struct Vec3 t0;      /* +0x58 */
-    struct Vec3 t1;      /* +0x64 */
+    struct Vec3 head;
+    struct Vec3 part;
+    struct Vec3 camA;
+    struct Vec3 camB;
+    struct Vec3 scratch;
+    struct Vec3 t0;
+    struct Vec3 t1;
 };
 
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
@@ -59,6 +58,8 @@ extern u32 data_ov034_02113828[];
 extern s16 data_02082214[];
 extern void *data_0209f318;
 extern s32 data_020a0e68[];
+
+static int k_off_6f8 = 0x6f8;
 
 int _ZN7Wiggler8BehaviorEv(void *arg0)
 {
@@ -127,10 +128,10 @@ int _ZN7Wiggler8BehaviorEv(void *arg0)
         }
     }
 
-    r7 = c;
+    r4 = c;
     r5 = c;
     r6 = c + 0x160;
-    r4 = c + 0x40c;
+    r7 = c + 0x40c;
     i = 0;
     fr.sp10 = 0;
     fr.sp14 = 0;
@@ -139,37 +140,46 @@ int _ZN7Wiggler8BehaviorEv(void *arg0)
 
     do {
         u = (u16)(4 - *(u8 *)(c + 0x8db));
-        t = fr.sp14;
         if (u >= 3)
             u = (u32)fr.sp10;
+        t = *(volatile s32 *)&fr.sp14;
         if (u <= 2)
             t = one;
         if (t != 0)
-            *(s32 *)(r7 + 0x370) = (s32)(u << 12);
+            *(s32 *)(r4 + 0x370) = (s32)(u << 12);
 
         if (*(u8 *)(c + 0x8df) == 0)
             _ZN9Animation7AdvanceEv(r6);
 
         if (*(u8 *)(c + 0x8e0) == 0) {
-            if (DecIfAbove0_Byte((u8 *)(c + 0x702 + i)) != 0) {
-                s16 *pv = (s16 *)(c + 0x6f8 + (i << 1));
-                s32 zero = 0;
-                s32 round = 0x800;
-                s32 mul = 0x3000;
-                *pv = (s16)(*pv + 0x1200);
-                t = data_02082214[((((u16)*pv) >> 4) << 1) + 1];
-                t2 = (s32)(((long long)t * mul + round) >> 12);
-                t2 = t2 + (zero & 0);
-                *(s32 *)(r5 + 0x40c) = (t2 + 0xc000) / 10;
+            {
+                int o = 0x702;
+                o = o + i;
+                if (DecIfAbove0_Byte((u8 *)(c + o)) != 0) {
+                {
+                    char *row = c + (i << 1);
+                    s16 *pv = (s16 *)(row + k_off_6f8);
+                    s32 zero = 0;
+                    s32 round = 0x800;
+                    s32 mul = 0x3000;
+                    s16 angv = *pv;
+                    *pv = (s16)(angv + 0x1200);
+                    angv = *(s16 *)(row + 0x600 + 0xf8);
+                    t = data_02082214[((((u16)angv) >> 4) << 1) + 1];
+                    t2 = (s32)(((long long)t * mul + round) >> 12);
+                    t2 = t2 + (zero & 0);
+                    *(s32 *)(r5 + 0x40c) = (t2 + 0xc000) / 10;
+                }
             } else {
-                _Z14ApproachLinearRiii((s32 *)r4, fr.sp18, 0x199);
+                _Z14ApproachLinearRiii((s32 *)r7, fr.sp18, 0x199);
+            }
             }
         }
 
-        r7 += 0x14;
+        r4 += 0x14;
         r6 += 0x64;
         r5 += 0xc;
-        r4 += 0xc;
+        r7 += 0xc;
         i += 1;
     } while (i < 5);
 
@@ -191,30 +201,36 @@ int _ZN7Wiggler8BehaviorEv(void *arg0)
     *(s32 *)(c + 0x3d4) = *(s32 *)(c + 0x64);
     func_ov034_02112874(c);
 
-    *(s32 *)(c + 0x3d0) = *(s32 *)(c + 0x3dc) + 0x1000;
-
-    tbl = data_02082214;
     {
+        s32 ytmp = *(s32 *)(c + 0x3dc);
+        char *angbase = c + 0x400;
+        s16 *tblp = data_02082214;
         s32 zero = 0;
         s32 round = 0x800;
         s32 scale = 0x64000;
-        u16 ang;
         s32 cosv, sinv, fx;
+        s32 hx, hy, hz;
 
-        fr.head.x = *(s32 *)(c + 0x3cc);
-        fr.head.y = *(s32 *)(c + 0x3d0);
-        fr.head.z = *(s32 *)(c + 0x3d4);
+        *(s32 *)(c + 0x3d0) = ytmp + 0x1000;
+        tbl = tblp;
+        hx = *(s32 *)(c + 0x3cc);
+        fr.head.x = hx;
+        hy = *(s32 *)(c + 0x3d0);
+        fr.head.y = hy;
+        hz = *(s32 *)(c + 0x3d4);
+        fr.head.z = hz;
 
-        ang = *(u16 *)(c + 0x446);
-        cosv = tbl[(ang >> 4) << 1];
+        cosv = tblp[(*(u16 *)(angbase + 0x46) >> 4) << 1];
         fx = (s32)(((long long)cosv * scale + round) >> 12);
         fx = fx + (zero & 0);
-        fr.head.x = fr.head.x + fx;
+        hx = hx + fx;
+        fr.head.x = hx;
 
-        sinv = tbl[((ang >> 4) << 1) + 1];
+        sinv = tblp[((*(u16 *)(angbase + 0x46) >> 4) << 1) + 1];
         fx = (s32)(((long long)sinv * scale + round) >> 12);
         fx = fx + (zero & 0);
-        fr.head.z = fr.head.z + fx;
+        hz = hz + fx;
+        fr.head.z = hz;
     }
 
     *(s32 *)(c + 0x4ac) = fr.head.x;
