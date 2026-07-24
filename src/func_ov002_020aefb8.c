@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=24). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct CylinderClsn;
 struct WithMeshClsn {
     int IsOnGround() const;
@@ -20,10 +17,14 @@ extern "C" int Vec3_HorzLen(void*);
 
 extern "C" void func_ov002_020aefb8(char* self);
 void func_ov002_020aefb8(char* self) {
+    int *px;
+    int *pz;
     ((Actor*)self)->UpdatePosWithHorzSpeedAndAng();
     if (((WithMeshClsn*)(self + 0x144))->IsOnGround()) {
-        *(int*)(self + 0xa4) += *(int*)(self + 0xd4) * 0xa;
-        *(int*)(self + 0xac) += *(int*)(self + 0xdc) * 0xa;
+        px = (int*)(int)(((long long)(int)(self + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL);
+        *px += *(int*)(self + 0xd4) * 0xa;
+        pz = (int*)(int)(((long long)(int)(self + 0xac)) & 0xFFFFFFFFFFFFFFFFLL);
+        *pz += *(int*)(self + 0xdc) * 0xa;
         if (((WithMeshClsn*)(self + 0x144))->JustHitGround()) {
             *(int*)(self + 0xa8) = -(*(int*)(self + 0xa8) << 2) / 10;
         } else {
