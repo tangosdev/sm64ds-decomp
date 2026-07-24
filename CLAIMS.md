@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 _ZN6Player12St_Swim_MainEv (0x020cd94c, size 0x9d8) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); API clm_f1040cf22000 kept |
 | ov002 batch7: func_ov002_020ae4cc (0x020ae4cc, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=9 |
 | ov075 batch7: func_ov075_02116128 (0x02116128, size 0xf4) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=29 |
 | ov062+ov006 batch8: func_ov062_02119af0 (0x02119af0, 0xf0) + func_ov006_020cc8c8 (0x020cc8c8, 0xf0) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 match (CLAIMS.md only; API key expired/revoked) |
