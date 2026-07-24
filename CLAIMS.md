@@ -19,6 +19,10 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov060 func_ov060_02117db8 (0x02117db8, size 0x328) | lunavyqo (Grok) | 2026-07-24 | **released** — batch12 near-miss 222→8 banked (nearmiss/db.jsonl); residual call-setup vs work.y/x store order (shape 0.96); CLAIMS.md only |
+| ov060 func_ov060_02112724 (0x02112724, size 0x19c) | lunavyqo (Grok) | 2026-07-24 | **released** — batch3 improved tip 90→22 (shared body + V-copy via px, py-first); not matched; banked nearmiss; CLAIMS.md only (API key expired) |
+| ov060 batch10: func_ov060_02116d78 (0x02116d78, size 0x1fc) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved to div=82 (pos[3]+shift*12); regperm floor (r7/early pool vs ip/lr bases); tip in nearmiss/db.jsonl |
+| ov060 func_ov060_021140c0 (0x021140c0, size 0x1f4) | lunavyqo (Grok) | 2026-07-24 | **released** — batch7 near-miss improved 86→17/18 (regperm floor: r3/r5 modulo + ip/0xe8); tip banked in nearmiss/db.jsonl; CLAIMS.md only (API key expired) |
 | ov060 func_ov060_02115518 (0x02115518, size 0x1d4) | lunavyqo (Grok) | 2026-07-24 | **released** — batch9 improved near-miss 118→8 (r0/r2 tbl/z regperm floor); tip banked in nearmiss/db.jsonl; CLAIMS.md only (API key expired) |
 | ov002 _ZN6Player12St_Swim_MainEv (0x020cd94c, size 0x9d8) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 near-miss refine (prev div=258); API clm_f1040cf22000 |
 | arm9 Stage::InitResources (_ZN5Stage13InitResourcesEv @ 0x0202cc0c, size 0xa84) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (API clm_45763b45bf0a) |
