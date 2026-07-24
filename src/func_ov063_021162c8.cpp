@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3; struct Vector3_16;
 struct CapEnemy { void ReleaseCap(const Vector3 &v); };
 struct Actor {
@@ -9,9 +6,7 @@ struct Actor {
                         const Vector3_16 *p, int e, int f);
 };
 extern "C" void func_0201267c(int a, void *b);
-
 struct V3 { int x, y, z; };
-
 extern "C" void func_ov063_021162c8(char *self)
 {
     if ((unsigned int)(*(unsigned short*)(self + 0x5d4) << 0x19) >> 0x1f) {
@@ -32,9 +27,10 @@ extern "C" void func_ov063_021162c8(char *self)
             if (a != 0) {
                 *(unsigned char*)((char*)a + 0x3aa) = 0xa;
                 if (*(unsigned short*)(self + 0x4a0) == 0x121)
-                    *(unsigned short*)((char*)a + 0x300 + 0xa8) = 0;
+                    *(unsigned short*)((char*)a + 0x3a8) = 0;
             }
-            *(unsigned short*)(self + 0x5d4) &= ~2;
+            unsigned short *ip = (unsigned short *)(((long long)(int)(self + 0x5d4)) & 0xFFFFFFFFFFFFFFFFLL);
+            *ip = (unsigned short)(*ip & ~2);
         }
     }
     func_0201267c(0x14a, self + 0x74);
