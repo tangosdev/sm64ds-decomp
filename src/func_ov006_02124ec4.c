@@ -1,6 +1,3 @@
-// NONMATCHING: missing logic (ROM does more) (div=2). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
@@ -17,9 +14,9 @@ void func_ov006_02124ec4(char *sl)
         if (data_020a0de9[i * 4] != 0) ok = 1;
     }
     if (ok == 0) return;
-
     for (sb = 0; sb < 2; sb++) {
-        unsigned char *b = &data_020a0de8[(unsigned int)data_020a0e40 * 4];
+        unsigned char idx = *(volatile unsigned char *)&data_020a0e40;
+        unsigned char *b = &data_020a0de8[(unsigned int)idx * 4];
         int v = (int)b[2] - (data_ov006_0213fd44[sb] >> 12);
         int w = (int)b[3] - 0x60;
         if (v < -0x10) continue;
