@@ -19,6 +19,12 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 func_ov002_020f20f4 (0x20f20f4, size 0x11c) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); min_locals (no named g/arr) + permuter q-color; claim kept |
+| ov002 func_ov002_020cfaf0 (0x020cfaf0, size 0xec) | lunavyqo (Grok) | 2026-07-24 | **released** — floor(ordering) div=15 banked; cannot couple y@r2 + table@r5; b-side match; 76 scratch+40 variants exhausted |
+| ov006 func_ov006_02124ec4 (0x02124ec4, size 0x114) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile index pin *(volatile u8*)&data_020a0e40 for preheader fp/r8 load order |
+| ov085 func_ov085_0212e4a4 (0x0212e4a4, size 0xf8) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); field stores + u64-launder RMW + opt_common_subs off + unsigned self; permuter r3/ip |
+| ov002 _ZN8MugenBgm6RenderEv (0x020f80ac, size 0x118) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); struct{p,cur,src} stm r5! writeback + tbl before i; API claim released after match |
+| ov060 func_ov060_0211747c (0x0211747c, size 0x1a8) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 64→18 banked in nearmiss/db.jsonl; residual ppos/sintab coloring + mul order |
 | ov102 func_ov102_021498e0 (0x021498e0, size 0x398) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 221→7 banked in nearmiss/db.jsonl; residual pure instr-sched swap mov#0xd vs add pang (mwccarm floor) |
 | ov060 func_ov060_02117db8 (0x02117db8, size 0x328) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 222→8 banked in nearmiss/db.jsonl; residual call-setup vs work.y/x store order |
 | ov002 _ZN6Player12St_Swim_MainEv (0x020cd94c, size 0x9d8) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 near-miss refine (prev div=258); API clm_f1040cf22000 |
@@ -86,7 +92,6 @@ it is fair to take over: ping the claimant first.
 | ov006 func_ov006_020effb8 (0x020effb8, size 0x74) | Codex/Raman | 2026-07-16 | done — exact 116 bytes, strict relocs + linkcheck VERIFIED; PR #376 |
 | arm9 func_0205d688 (0x0205d688, size 0x8c) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed allocator floor; semantic correction documented, no tracked change |
 | ov006 func_ov006_020d1958 (0x020d1958, size 0xe4) | Codex/Mendel | 2026-07-16 | done — exact 228 bytes, strict relocs + linkcheck VERIFIED; PR #377 |
-| ov075 func_ov075_0211a948 (0x0211a948, size 0xb8) | Codex | 2026-07-16 | released — documented pure register-coloring floor (~150 prior variants); DB-best restored |
 | ov006 func_ov006_020c7734 (0x020c7734, size 0x12c) | Codex | 2026-07-16 | released — stale DB entry; existing src from PR #338 independently strict-matches and linkcheck VERIFIED |
 | ov006 func_ov006_0211aed0 (0x0211aed0, size 0x90) | Codex | 2026-07-16 | released — DB-best div=6 confirmed three-register coloring floor; no tracked source change |
 | arm9 func_02058568 (0x02058568, size 0x64) | Codex/Lovelace | 2026-07-16 | released — DB-best div=5 confirmed hand-asm/context register floor; no tracked source change |
@@ -140,7 +145,6 @@ it is fair to take over: ping the claimant first.
 | ov092: _ZN6ToxBox13InitResourcesEv (0x02131da0), _ZN6ToxBox8BehaviorEv (0x02131c44), 02131010 (0x02131010), 021311b0 (0x021311b0), 021316d8 (0x021316d8), 02131878 (0x02131878) | lunavyqo | 2026-07-10 | near-miss (PR #246 open) |
 | ov021: _ZN11RollingRock8BehaviorEv (0x02112854), 02112544 (0x02112544) | lunavyqo | 2026-07-10 | near-miss (PR #248 open) |
 | ov091: _ZN22RotatingUpDownPlatform13InitResourcesEv (0x0213220c), _ZN6Thwomp8BehaviorEv (0x02132ab0), 02131160 (0x02131160), 02131db8 (0x02131db8), 02133098 (0x02133098), 021334b8 (0x021334b8), 02133c6c (0x02133c6c) | lunavyqo | 2026-07-10 | near-miss (PR #254 open) |
-| ov073: 0211f2c0 (0x0211f2c0), 02120ed0 (0x02120ed0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #260 open (supersedes near-miss #257) |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
 | ov001 func_ov001_020ab550 (0x020ab550, size 0x60) | Cursor/Grok | 2026-07-02 | done |
@@ -224,7 +228,6 @@ it is fair to take over: ping the claimant first.
 | ov002+ov062 batch8: func_ov002_020bb520 (0x020bb520) MATCH; func_ov062_02119af0 tip 17→14 | lunavyqo (Grok) | 2026-07-24 | **partial** — bb520 MATCH+linkcheck VERIFIED (goto fail/success bool); 19af0 regperm floor div=14 banked (API clm_c1d5623426a2 kept / clm_10d6108c21d7 released) |
 | ov007 batch3: func_ov007_020b2bd4 (0x020b2bd4, size 0x108) MATCH; func_ov007_020c43bc (0x020c43bc) open | lunavyqo (Grok) | 2026-07-24 | **partial** — 020b2bd4 matched+linkcheck VERIFIED (mwccarm 1.2/sp2p3; p decl-first coloring); 020c43bc no_progress div=53 (DB tip div=49) |
 | ov063 batch13: func_ov063_02117cdc (0x02117cdc, size 0x77c) | lunavyqo (Grok) | 2026-07-24 | **active** — continue div=11 (prologue regperm + case9 y/x) |
-| ov063 batch13: func_ov063_02117cdc (0x02117cdc, size 0x77c) | lunavyqo (Grok) | 2026-07-24 | **released** — floor div=11 after exhaustive refine (prologue regperm + case9 load-order/schedule double-bind); tip in nearmiss/db.jsonl |
 | ov014 func_ov014_0211236c (0x0211236c, size 0x1a0) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss→decl-order regperm + sum.xyz/i/cur tail; API clm_9230bad49212 kept |
 | ov016 func_ov016_02112b50 (0x02112b50, size 0x2cc) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); compound += + inline (s16*)(c+0x300)[i] RHS (case-2 regperm); API clm_0ecf20846a56 kept |
 | ov060 func_ov060_02111a28 (0x02111a28, size 0x240) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); cast-short-shift prologue + branch rewrite; claim kept |
