@@ -1,6 +1,5 @@
-// NONMATCHING: missing logic (ROM does more) (div=40). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+enum { false, true };
+
 extern void func_ov102_0214ae1c(void*);
 extern int func_ov102_0214ab1c(void*);
 extern int func_ov102_0214aa18(void*);
@@ -55,8 +54,9 @@ int _ZN6BobOmb8BehaviorEv(char *c)
     if (*(int*)(c+0x10c) != 0) {
         _ZN5Enemy11UpdateDeathER12WithMeshClsn(c, c+0x144);
         func_ov102_0214b128(c);
-        flag = (*(int*)(c+0xb0) & 0x100) != 0;
-        if (flag != 0) {
+        flag = *(int*)(c+0xb0) & 0x100;
+        flag = flag != 0;
+        if (flag != false) {
             *(int*)(c+0x10c) = 0;
         } else if (*(int*)(c+0x10c) != 0) {
             func_ov102_0214b53c(c);
@@ -67,73 +67,75 @@ int _ZN6BobOmb8BehaviorEv(char *c)
     }
 
     func_ov102_0214b03c(c);
-    if (*(int*)(c+0x3dc) == 5) {
-        return 1;
-    }
+    if (*(int*)(c+0x3dc) != 5) {
+        if (*(int*)(c+0x9c) != 0) {
+            if ((*(int*)(c+0x130) & 0x10) != 0) {
+                short v[3];
+                other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0x134));
+                v[0] = -0x2000;
+                v[1] = 0;
+                v[2] = 0;
+                func_020ada40(c, v, other, 0x32000);
+                _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x110);
+                _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 0);
+                _ZN12CylinderClsn5ClearEv(c+0x110);
+                return 1;
+            }
 
-    if (*(int*)(c+0x9c) != 0) {
-        if ((*(int*)(c+0x130) & 0x10) != 0) {
-            short v[3];
-            other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0x134));
-            v[0] = -0x2000;
-            v[1] = 0;
-            v[2] = 0;
-            func_020ada40(c, v, other, 0x32000);
             _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x110);
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 0);
-            _ZN12CylinderClsn5ClearEv(c+0x110);
-            return 1;
-        }
-
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x110);
-        if (data_0209f2f8 == 6 && data_0209f220 == 3) {
-            if (*(int*)(c+0x98) == 0x5000) {
-                _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 3);
+            if (data_0209f2f8 == 6 && data_0209f220 == 3) {
+                if (*(int*)(c+0x98) == 0x5000) {
+                    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 3);
+                } else {
+                    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 2);
+                }
             } else {
                 _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 2);
             }
-        } else {
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c+0x144, 2);
-        }
 
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x144)) {
-            if (func_02037e78((int*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(c+0x144)+4))) {
-                func_ov102_0214ae1c(c);
-                return 1;
-            }
-            if (_ZNK12WithMeshClsn8IsOnWallEv(c+0x144) && *(int*)(c+0x3dc) == 0) {
-                func_ov102_0214beb4(c);
+            if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x144)) {
+                if (func_02037e78((int*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(c+0x144)+4))) {
+                    func_ov102_0214ae1c(c);
+                    return 1;
+                }
+                if (_ZNK12WithMeshClsn8IsOnWallEv(c+0x144) && *(int*)(c+0x3dc) == 0) {
+                    func_ov102_0214beb4(c);
+                }
             }
         }
-    }
 
-    r0 = func_ov102_0214b248(c);
-    if (r0 == 0) {
-        return 0;
-    }
-
-    if (*(unsigned int*)(c+0x134) != 0) {
-        if ((*(int*)(c+0x130) & 0x4000) != 0) {
-            func_ov102_0214b384(c, 4);
+        r0 = func_ov102_0214b248(c);
+        if (r0 == 0) {
+            return 0;
         }
-        if (*(int*)(c+0x3dc) == 4) {
-            unsigned char b = *(unsigned char*)(c+0x3f5);
-            if (b == 2 || b == 3) {
-                other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0x134));
-                if (other != 0) {
-                    int flag2 = (*(unsigned short*)((char*)other+0xc) == 0xbd);
-                    if (flag2) {
-                        func_ov102_0214b384(c, 2);
-                        *(int*)(c+0x128) |= 0x4000;
+
+        if (*(unsigned int*)(c+0x134) != 0) {
+            if ((*(int*)(c+0x130) & 0x4000) != 0) {
+                func_ov102_0214b384(c, 4);
+            }
+            if (*(int*)(c+0x3dc) == 4) {
+                unsigned char b = *(unsigned char*)(c+0x3f5);
+                if (b == 2 || b == 3) {
+                    other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0x134));
+                    if (other != 0) {
+                        int flag2 = *(unsigned short*)((char*)other+0xc);
+                        flag2 = flag2 == 0xbd;
+                        if (flag2 != false) {
+                            func_ov102_0214b384(c, 2);
+                            {
+                                int *p128 = (int *)(((unsigned long long)(unsigned)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFULL);
+                                *p128 |= 0x4000;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
 
-    func_ov102_0214b53c(c);
-    _ZN12CylinderClsn5ClearEv(c+0x110);
-    _ZN12CylinderClsn6UpdateEv(c+0x110);
-    func_ov102_0214ad40(c);
+        func_ov102_0214b53c(c);
+        _ZN12CylinderClsn5ClearEv(c+0x110);
+        _ZN12CylinderClsn6UpdateEv(c+0x110);
+        func_ov102_0214ad40(c);
+    }
     return 1;
 }

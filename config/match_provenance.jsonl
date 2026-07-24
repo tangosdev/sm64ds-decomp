@@ -41,3 +41,4 @@
 {"id":"ov060:0x02112434","module":"ov060","addr":34677812,"name":"func_ov060_02112434","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov060_02112434.cpp"}
 {"id":"ov060:0x021132a4","module":"ov060","addr":34681508,"name":"func_ov060_021132a4","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"andrewboudreau","srcPath":"src/func_ov060_021132a4.c"}
 {"id":"ov060:0x02114858","module":"ov060","addr":34687064,"name":"func_ov060_02114858","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov060_02114858.c"}
+{"id":"ov102:0x0214c1bc","module":"ov102","addr":34914748,"name":"_ZN6BobOmb8BehaviorEv","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/_ZN6BobOmb8BehaviorEv.c"}
