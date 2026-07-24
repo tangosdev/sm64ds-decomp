@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=51). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
@@ -80,7 +77,7 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
     }
 
     {
-        int b16 = (*(unsigned short*)(c + 0xc) == 0x16);
+        int b16 = !(*(unsigned short*)(c + 0xc) != 0x16);
         if (b16 != 0) {
             *(unsigned char*)(c + 0x3f3) = 0;
             _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
@@ -88,11 +85,11 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
     }
 
     {
-        int b14 = (*(unsigned short*)(c + 0xc) == 0x14);
+        int b14 = !(*(unsigned short*)(c + 0xc) != 0x14);
         if (b14 == 0) {
-            int b15 = (*(unsigned short*)(c + 0xc) == 0x15);
+            int b15 = !(*(unsigned short*)(c + 0xc) != 0x15);
             if (b15 == 0)
-                return 1;
+                goto end;
         }
     }
 
@@ -109,7 +106,7 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
     case 4:
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
         break;
-    case 6:
+    case 7:
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
@@ -119,10 +116,11 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
         break;
-    case 7:
+    case 6:
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9b0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d0);
         break;
     }
+end:
     return 1;
 }
