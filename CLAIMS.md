@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov060 func_ov060_02112724 (0x02112724, size 0x19c) | lunavyqo (Grok) | 2026-07-24 | **released** — batch3 improved tip 90→22 (shared body + V-copy via px, py-first); not matched; banked nearmiss; CLAIMS.md only (API key expired) |
 | ov002 _ZN6Player12St_Swim_MainEv (0x020cd94c, size 0x9d8) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 near-miss refine (prev div=258); API clm_f1040cf22000 |
 | arm9 Stage::InitResources (_ZN5Stage13InitResourcesEv @ 0x0202cc0c, size 0xa84) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (API clm_45763b45bf0a) |
 | arm9 Message::Update (_ZN7Message6UpdateEv @ 0x0201c0b8, size 0xa74) | lunavyqo (Grok) | 2026-07-24 | **active** — batch5 near-miss refine (prev div=62); API clm_b38112c264ac |
