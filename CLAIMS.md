@@ -19,7 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
-| ov034 _ZN7Wiggler8BehaviorEv (0x02112b5c, size 0x6e0) | lunavyqo (Grok) | 2026-07-24 | **active** — near-miss refine div=277→211; frame 0x84 wall; API clm_4e5dd7e55b5c |
+| ov034 _ZN7Wiggler8BehaviorEv (0x02112b5c, size 0x6e0) | lunavyqo (Grok) | 2026-07-24 | **done** — near-miss div=211 banked + PR #680 (// NONMATCHING); API released |
 | ov002 _ZN6Player12St_Swim_MainEv (0x020cd94c, size 0x9d8) | lunavyqo (Grok) | 2026-07-24 | **active** — batch8 near-miss refine (prev div=258); API clm_f1040cf22000 |
 | arm9 Stage::InitResources (_ZN5Stage13InitResourcesEv @ 0x0202cc0c, size 0xa84) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (API clm_45763b45bf0a) |
 | arm9 Message::Update (_ZN7Message6UpdateEv @ 0x0201c0b8, size 0xa74) | lunavyqo (Grok) | 2026-07-24 | **active** — batch5 near-miss refine (prev div=62); API clm_b38112c264ac |
