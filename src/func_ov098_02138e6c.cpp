@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=19). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -51,13 +48,13 @@ extern "C" void func_ov098_02138e6c(char *c)
     if (*(u32*)(c + 0x588) == 0) return;
 
     if ((*(u32*)(c + 0x584) & 0x40000) != 0) {
-        u32 *pp = (u32*)(c + 0x57c);
+        u32 *pp = (u32 *)(((int)c + 0x57c) & 0xFFFFFFFFFFFFFFFF);
         *(u8*)(c + 0x606) = 0x3c;
-        *pp = *pp & ~0x8000;
-        if ((*(u32*)(c + 0x584) & 0x4000) != 0) {
-            Base *o = (Base*)c;
-            o->m();
-        }
+        *pp = *pp & ~0x8000u;
+    }
+    if ((*(u32*)(c + 0x584) & 0x4000) != 0) {
+        Base *o = (Base*)c;
+        o->m();
     }
 
     a = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x588));

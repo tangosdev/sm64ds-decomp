@@ -19,6 +19,13 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov098 func_ov098_0213b9d8 (0x0213b9d8, size 0x144) | lunavyqo (Grok) | 2026-07-25 | **active** — batch1 near-miss refine (prev div=43); CLAIMS.md only (API key expired) |
+| ov095 func_ov095_02135cdc (0x02135cdc, size 0x1b4) | lunavyqo (Grok) | 2026-07-25 | **active** — batch7 from near-miss div=28; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_02138e6c (0x02138e6c, size 0x204) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); unnest 0x4000 + u64-launder 0x57c; from near-miss div=17 |
+| ov098 func_ov098_0213a36c (0x0213a36c, size 0x428) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 match; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_0213ade8 (0x0213ade8, size 0x2bc) | lunavyqo (Grok) | 2026-07-25 | **active** — batch2 match from near-miss div=105; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_0213aa28 (0x0213aa28, size 0x2e0) | lunavyqo (Grok) | 2026-07-25 | **active** — batch3 match from near-miss div=125; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_02139228 (0x02139228, size 0x47c) | lunavyqo (Grok) | 2026-07-25 | **active** — batch5 from near-miss div=104; CLAIMS.md only (API key expired) |
 | ov004 func_ov004_020b3b38 (0x020b3b38, size 0x120) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); sibling opt_propagation off + s16 extract; near-miss div=2→0 |
 | ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
 | ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); #pragma opt_common_subs off + u64-launder player+0x5c; from near-miss 111→10→0 |
@@ -26,6 +33,7 @@ it is fair to take over: ping the claimant first.
 | ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); angOff after in.z for zin delay-slot; CLAIMS.md only |
 | ov100 func_ov100_0214233c (0x0214233c, size 0x184) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); 6q var-identity + s8/s6 dest swap; CLAIMS.md only (API key expired) |
 | ov100 func_ov100_02140e44 (0x02140e44, size 0x258) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch7 from near-miss div=124; CLAIMS.md only (API key expired) |
+| ov095 _ZN12Flamethrower8BehaviorEv (0x021368f0, size 0x470) | lunavyqo (Grok) | 2026-07-25 | **active** — batch8 from near-miss div=204; CLAIMS.md only (API key expired) |
 | ov100 _ZN9Butterfly8BehaviorEv (0x02141a40, size 0x22c) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss→PMF+horiz*pitch+u64 counter; CLAIMS.md only (API key expired) |
 | ov002 func_ov002_020cfaf0 (0x020cfaf0, size 0xec) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 19→15 banked in nearmiss/db.jsonl; floor(ordering) y vs sin-table load/reg basins; b-side byte-identical |
 | ov102 func_ov102_021498e0 (0x021498e0, size 0x398) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 221→7 banked in nearmiss/db.jsonl; residual pure instr-sched swap mov#0xd vs add pang (mwccarm floor) |
@@ -243,7 +251,7 @@ it is fair to take over: ping the claimant first.
 | ov060 func_ov060_021128c0 (0x021128c0, size 0x2e8) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); /100 bounce + u64-launder bases; CLAIMS.md only (API key expired) |
 | ov060 func_ov060_021132a4 (0x021132a4, size 0x160) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3 + u64-launder RMW + volatile handle load |
 | ov060 func_ov060_02114858 (0x02114858, size 0x308) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss→permuter regperm floor; CLAIMS.md only (API key expired) |
-| ov060 func_ov060_02115518 (0x02115518, size 0x1d4) | lunavyqo (Grok) | 2026-07-24 | **released** — batch9 improved near-miss 118→8 (r0/r2 tbl/z regperm floor); tip banked in nearmiss/db.jsonl; CLAIMS.md only (API key expired) |
+| ov060 func_ov060_02115518 (0x02115518, size 0x1d4) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss div=2 pure instr-sched swap str y2 vs smlabb z (mwccarm floor); tip remains in nearmiss/db.jsonl |
 | ov060 func_ov060_02112724 (0x02112724, size 0x19c) | lunavyqo (Grok) | 2026-07-24 | **released** — batch3 improved tip 90→22 (shared body + V-copy via px, py-first); not matched; banked nearmiss; CLAIMS.md only (API key expired) |
 | ov060 func_ov060_021140c0 (0x021140c0, size 0x1f4) | lunavyqo (Grok) | 2026-07-24 | **released** — batch7 near-miss improved 86→17/18 (regperm floor: r3/r5 modulo + ip/0xe8); tip banked in nearmiss/db.jsonl; CLAIMS.md only (API key expired) |
 | ov102 _ZN6BobOmb8BehaviorEv (0x0214c1bc, size 0x354) | lunavyqo (Grok) | 2026-07-24 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); bool materialize + shared epilogue + u64-launder 0x128; API clm_6e02f4c4430d kept |
