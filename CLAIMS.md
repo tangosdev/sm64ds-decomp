@@ -20,7 +20,7 @@ it is fair to take over: ping the claimant first.
 | Range | Who | Claimed | Status |
 |---|---|---|---|
 | ov098 func_ov098_0213b9d8 (0x0213b9d8, size 0x144) | lunavyqo (Grok) | 2026-07-25 | **active** — batch1 near-miss refine (prev div=43); CLAIMS.md only (API key expired) |
-| ov095 func_ov095_02135cdc (0x02135cdc, size 0x1b4) | lunavyqo (Grok) | 2026-07-25 | **active** — batch7 from near-miss div=28; CLAIMS.md only (API key expired) |
+| ov095 func_ov095_02135cdc (0x02135cdc, size 0x1b4) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 28→26 banked in nearmiss/db.jsonl; residual SMULL schedule floor (r1/r2 const + mla/w-round interleave); hand-asm still in src/; CLAIMS.md only (API key expired) |
 | ov098 func_ov098_02138e6c (0x02138e6c, size 0x204) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); unnest 0x4000 + u64-launder 0x57c; from near-miss div=17 |
 | ov098 func_ov098_0213a36c (0x0213a36c, size 0x428) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 match; CLAIMS.md only (API key expired) |
 | ov098 func_ov098_0213ade8 (0x0213ade8, size 0x2bc) | lunavyqo (Grok) | 2026-07-25 | **active** — batch2 match from near-miss div=105; CLAIMS.md only (API key expired) |
