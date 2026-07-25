@@ -98,16 +98,16 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             func_0205d4cc((char *)localbuf);
             if (result) {
                 args.a = ctx->wr;
+                rgn = data_0209a07c;
                 args.b = ctx->rd - ctx->wr;
                 args.c = ((unsigned int)b + 0x160) - ctx->wr;
                 args.d = c;
-                rgn = data_0209a07c;
                 func_02067b68(&args, 0x4000, 0x8000, 1);
-                if (*(volatile int *)(rgn + 1) != 0) {
+                if (*(volatile int *)&rgn[1] != 0) {
                     do {
                         func_02067b68(&args, rgn[0], rgn[0] + rgn[1], 0);
                         rgn += 2;
-                    } while (rgn[1] != 0);
+                    } while (*(volatile int *)&rgn[1] != 0);
                 }
             }
         }

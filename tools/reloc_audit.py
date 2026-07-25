@@ -92,6 +92,8 @@ _RUNTIME_ALIASES = {
     # func_02059a60, campaign 2026-07-18); ITCM records them as __aeabi_ul*.
     "_ll_udiv":   "__aeabi_uldiv",
     "_ll_umod":   "__aeabi_ulmod",
+    # 1.2 spells the u64 `%` helper _ull_mod (seen on func_02071510, 2026-07-25).
+    "_ull_mod":   "__aeabi_ulmod",
 }
 
 

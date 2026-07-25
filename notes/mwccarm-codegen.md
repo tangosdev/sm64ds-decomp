@@ -1451,6 +1451,53 @@ the CSE'd zero web colors last under every lever), `func_020341a8` (r1/r2 swap r
 in-place-vs-fresh allocator choice), `GX::LoadTex` (r4/r5 web-identity swap; 9 disjoint probes
 compiled BITWISE IDENTICAL -- a 6y-class allocator-priority floor).
 
+## 6aa. The pragma crutch ROTATES callee-saved coloring (func_02033464, div 24->0, 2026-07-25)
+
+The biggest single lever found for the "pure register permutation" wall. func_02033464 was
+226/226 words schedule-identical with a consistent 4-register rename (args + one pool
+pointer cycled through r4/r5/r6/r7). Every spelling variant of the same IR kept the same
+rotation, because spellings that fold to the same IR give the same coloring. The draft's
+`#pragma opt_strength_reduction off` + `opt_common_subs off` pair bought the right SCHEDULE
+but perturbed the allocator's ranking; the ROM's coloring was mwccarm's NATURAL output for
+pragma-free source. Probes confirm the natural rule: args live across a call home to
+callee-saved regs in REVERSE arg order (c=r4, b=r5, a=r6), robust to use order, early
+stores, and volatiles. If your draft's homing differs from that pattern, the draft (or its
+pragmas) is perturbing the allocator; the original source did not force an unnatural
+coloring, it simply never needed your crutch.
+
+Recipe that took it 24->0, all source-level, no pragmas:
+1. Delete the pragmas, diff again, and read WHERE the bytes break without them. Each break
+   site names the natural construct the original used to get that schedule effect.
+2. SR-bloat on an indexed VRAM store loop: type the pointer `volatile u16 *` (real hardware
+   semantics; certainly the original's type). Volatile-qualified indexed stores are left
+   un-strength-reduced, un-CSE'd, and emission-pinned for free.
+3. CSE merging a byte-global read across a loop into one cached callee-saved reg (draft)
+   where the ROM reloads at the tail: declare the global `volatile u8` and feed multi-use
+   statements through an explicit temp (`u32 ch = g; x = ch + A; y = ch + B;`). One load
+   per source mention, fresh reload at the tail, and the cache register frees up.
+4. Pool-load ordered above a volatile stack store in the ROM but below it in the draft:
+   hoist the read into a named temp BEFORE the volatile store in source
+   (`int *dst = (int*)(cp + (g << 5)); li = 0; MultiStore_Int(li, dst, n);`).
+5. The address-expression TREE picks which optimizer eats a second store to base+i+K:
+   `*(u16*)((char*)&base[i] + 0x40)` gets SR pointer-walked; `base[i + 0x20]` spawns a
+   second induction counter; `(base + i)[0x20]` is left alone (matches the ROM's
+   `add r0, base, i, lsl #1` + `strh [r0, #0x40]`). Sweep all three forms; they are NOT
+   equivalent to the allocator even when they emit the same bytes.
+6. Last in-loop pair swap (base vs x fighting over r4): declaration order arbitrates it
+   once the IR is right (declare the winner earlier). The decl-order lever only works
+   AFTER the IR-level differences are gone; sweeping it on wrong IR is wasted motion.
+
+Diagnostic discipline: a homing-only oracle (which regs the entry movs pick) can look
+"fixed" while the schedule silently breaks downstream; always score with the full
+word-diff count plus a positional map (entry vs loop vs tail regions). Mid-function
+early-return guards demote the guarded value to color LAST under the pragma'd IR (the
+demotion follows the guarded variable and needs surrounding pressure to trigger); that
+demotion vanished with the pragmas, so treat guard-demotion as a symptom, not the disease.
+
+63 nearmiss DB entries carry these schedule pragmas (several at div 1-10); they are the
+immediate re-crack queue for this recipe. NOT applicable as-is to the s64/smull family
+(func_02048234-style drafts diverge in schedule, not pure coloring; different wall).
+
 **`func_02072fcc` is a ONE-INSTRUCTION miss and the best hand-fix candidate in the backlog**:
 mwcc PRE-hoists a loop-invariant `b+1` whose only use is on a cold retry path into the
 preheader (`add r1,r1,#1` + in-loop `mov r3,r1`) where the ROM recomputes `add r3,r1,#1`
