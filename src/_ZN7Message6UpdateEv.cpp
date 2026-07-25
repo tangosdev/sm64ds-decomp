@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=62). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -165,27 +162,28 @@ void Message::Update()
         }
     }
     case 6: {
-        u8 f0;
         int hasf1;
+        int idx;
+        u8 f0;
         if (IsButtonInputValid() != 0) {
             data_0209d684 = data_0209d68c + 1;
             data_0209d670 = 1;
             return;
         }
+        idx = data_020a0e40;
         hasf1 = 0;
-        f0 = data_020a0de8[data_020a0e40 * 4];
+        f0 = data_020a0de8[idx * 4];
         if (f0 != 0) {
-            if (data_020a0de9[data_020a0e40 * 4] != 0) {
+            if (data_020a0de9[idx * 4] != 0) {
                 hasf1 = 1;
             }
         }
         if (hasf1 != 0) {
-            data_0209d6d8 = data_020a0deb[data_020a0e40 * 4];
+            data_0209d6d8 = ((u8 (*)[4])data_020a0deb)[idx][0];
             data_0209d6d8 -= (s16)(data_0209d68c * 8);
         } else if (f0 != 0) {
-            s16 debval = data_020a0deb[data_020a0e40 * 4];
-            s16 delta = debval - data_0209d6d8;
-            data_0209d6dc = delta;
+            s16 debval = ((u8 (*)[4])data_020a0deb)[idx][0];
+            data_0209d6dc = debval - data_0209d6d8;
             if (data_0209d6dc > 0x10) {
                 data_0209d6dc = 0x10;
                 data_0209d6d8 = debval - 0x10;
@@ -219,7 +217,7 @@ void Message::Update()
                 break;
             }
         } else if (*((u8*)data_0209caa0 + 0x42) == 0) {
-            u16 mask = *(u16*)(&data_020a0e5a + data_020a0e40 * 4);
+            u16 mask = ((u16*)&data_020a0e5a)[idx * 2];
             if (mask & 0xC0) {
                 u8 target = (mask & 0x40) ? 0 : 2;
                 if (data_0209d68c != target) {
@@ -294,11 +292,9 @@ void Message::Update()
         }
     block_102_8:
         {
-            int trigger = 1;
+            int trigger;
             data_0209d670 = 1;
-            if (data_0209f2d8 != 2) {
-                trigger = 0;
-            }
+            trigger = (data_0209f2d8 == 2);
             data_0209d66c = 0;
             data_0209d6bc = 9;
             if (trigger != 0) {
