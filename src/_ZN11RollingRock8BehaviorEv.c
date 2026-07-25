@@ -1,4 +1,3 @@
-// NONMATCHING: size 0x2d4 vs target 0x2d8 (missing one pool word, likely 0x3bf offset materialization) (div=size)
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -35,8 +34,10 @@ int _ZN11RollingRock8BehaviorEv(char *c)
         if (*(int*)(c + 0x10c) == 8) return 1;
 
         if (*(u8*)(c + 0x3be) != 4) {
+            s16 *p8c;
             func_ov021_021127b4(c);
-            *(s16*)(c + 0x8c) = *(s16*)(c + 0x8c) + (*(int*)(c + 0x98) >> 12) * 0x43;
+            p8c = (s16 *)(int)(((long long)(int)(c + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+            *p8c = (s16)(*p8c + (*(int*)(c + 0x98) >> 12) * 0x43);
             *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
             func_ov021_02112544(c);
         }
@@ -71,21 +72,18 @@ int _ZN11RollingRock8BehaviorEv(char *c)
                 func_02012694(0x17a, c + 0x74);
             }
         }
-        return 1;
-    }
-
-    {
+    } else {
         int dist = _ZN5Actor13DistToCPlayerEv(c);
         if (dist > 0x5dc000) {
-            int th = (dist < 0x1770000) ? 0x70 : 0xe0;
+            u32 th = (dist < 0x1770000) ? 0x70 : 0xe0;
             if (*(u16*)(c + 0x100) >= th) {
                 struct Vector3_16 v16;
                 u32 rnd;
-                (*(u8*)(c + 0x3bf))++;
+                u8 *p3bf;
+                p3bf = (u8 *)(int)(((long long)(int)(c + 0x3bf)) & 0xFFFFFFFFFFFFFFFFLL);
+                *p3bf = (u8)(*p3bf + 1);
                 *(u16*)(c + 0x100) = 0;
-                v16.x = *(u16*)(c + 0x92);
-                v16.y = *(u16*)(c + 0x94);
-                v16.z = *(u16*)(c + 0x96);
+                v16 = *(struct Vector3_16*)(c + 0x92);
                 rnd = (u32)RandomIntInternal(&data_0209e650);
                 v16.y = v16.y + (rnd >> 16) % 0xc00;
                 if (*(u8*)(c + 0x3be) == 1 && *(u8*)(c + 0x3bf) >= 5 && *(u8*)(c + 0x3c2) == 0) {
@@ -101,7 +99,10 @@ int _ZN11RollingRock8BehaviorEv(char *c)
                 }
             }
         }
-        (*(u16*)(c + 0x100))++;
+        {
+            u16 *p100 = (u16 *)(int)(((long long)(int)(c + 0x100)) & 0xFFFFFFFFFFFFFFFFLL);
+            *p100 = (u16)(*p100 + 1);
+        }
     }
     return 1;
 }

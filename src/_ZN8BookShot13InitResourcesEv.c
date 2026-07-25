@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=39). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
 typedef struct { int w[2]; } SharedFilePtr;
@@ -17,6 +14,8 @@ extern SharedFilePtr data_ov020_02114aa0;
 extern SharedFilePtr data_ov020_02114ab8;
 extern SharedFilePtr data_ov020_02114aa8;
 extern SharedFilePtr data_ov020_02114ab0;
+
+#define LDR(p) ((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
 
 struct M48 { int w[12]; };
 extern struct M48 data_02082128;
@@ -53,7 +52,7 @@ int _ZN8BookShot13InitResourcesEv(char* c)
 
     *(struct M48*)(c+0x1ec) = data_02082128;
     *(char*)(c+0x450) = 0;
-    *(short*)(c+0x8e) = *(short*)(c+0x8e) + 0x8000;
+    *(short*)(int)LDR(c+0x8e) = *(short*)(int)LDR(c+0x8e) + 0x8000;
     *(int*)(c+0x44c) = 0x800;
 
     {
@@ -65,7 +64,7 @@ int _ZN8BookShot13InitResourcesEv(char* c)
             *(int*)(c+0x420) = 0;
             *(int*)(c+0x424) = 4;
             *(unsigned char*)(c+0x108) = 0;
-            *(int*)(c+0x238) |= 0x26fe0;
+            *(int*)(int)LDR(c+0x238) |= 0x26fe0;
             goto success;
         }
         {
@@ -75,7 +74,7 @@ int _ZN8BookShot13InitResourcesEv(char* c)
                 *(int*)(c+0x420) = 0;
                 *(int*)(c+0x424) = 0;
                 *(unsigned char*)(c+0x108) = 3;
-                *(int*)(c+0x238) |= 0x2efe0;
+                *(int*)(int)LDR(c+0x238) |= 0x2efe0;
                 goto success;
             }
         }
@@ -86,8 +85,8 @@ int _ZN8BookShot13InitResourcesEv(char* c)
                 *(int*)(c+0x420) = 1;
                 *(int*)(c+0x424) = 6;
                 *(unsigned char*)(c+0x108) = 0;
-                *(int*)(c+0x234) |= 4;
-                *(int*)(c+0x238) |= 0x3c0;
+                *(int*)(int)LDR(c+0x234) |= 4;
+                *(int*)(int)LDR(c+0x238) |= 0x3c0;
                 *(int*)(c+0x80) = 0x1000;
                 *(int*)(c+0x84) = 0x800;
                 *(int*)(c+0x88) = 0x800;

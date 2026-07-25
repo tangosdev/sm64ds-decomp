@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=41). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef int s32;
@@ -12,6 +9,8 @@ extern void func_ov020_02111340(void *thiz);
 extern void func_ov063_0211cae8(void *found, unsigned int mask);
 extern void ActorBase_MarkForDestruction(void *thiz);
 extern u8 data_ov020_02114828[];
+
+#define LDR(p) ((int)((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)))
 
 void func_ov020_0211174c(char *c)
 {
@@ -38,12 +37,12 @@ void func_ov020_0211174c(char *c)
             *ctr -= 1;
             return;
         }
-        z = (s32 *)(c + 0x64);
+        z = (s32 *)LDR(c + 0x64);
         *z -= 0x4000;
         if (*(s32 *)(c + 0x434) - *(s32 *)(c + 0x64) < 0x28000)
             return;
         *(s32 *)(c + 0x64) = *(s32 *)(c + 0x434) - 0x28000;
-        fl = (s32 *)(c + 0x234);
+        fl = (s32 *)LDR(c + 0x234);
         *(s32 *)(c + 0x424) = 8;
         *fl &= ~1;
         return;
@@ -53,7 +52,7 @@ void func_ov020_0211174c(char *c)
         s32 *fl;
         if (func_ov020_021115ac(c) <= 0)
             return;
-        fl = (s32 *)(c + 0x234);
+        fl = (s32 *)LDR(c + 0x234);
         *(s32 *)(c + 0x424) = 9;
         *fl |= 1;
         Sound_PlayBank0(0xb5, c + 0x74);
@@ -61,7 +60,7 @@ void func_ov020_0211174c(char *c)
     }
     case 9:
     {
-        s32 *z = (s32 *)(c + 0x64);
+        s32 *z = (s32 *)LDR(c + 0x64);
         *z += 0xa000;
         if (*(s32 *)(c + 0x64) < *(s32 *)(c + 0x434))
             return;
@@ -85,7 +84,7 @@ void func_ov020_0211174c(char *c)
             return;
         }
         if (*(u8 *)(found + 0x150) == 2) {
-            z = (s32 *)(c + 0x5c);
+            z = (s32 *)LDR(c + 0x5c);
             *z += 0x5000;
             if (*(s32 *)(c + 0x5c) < (s32)0xffa24000)
                 return;
