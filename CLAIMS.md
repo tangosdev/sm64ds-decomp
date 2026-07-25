@@ -20,10 +20,10 @@ it is fair to take over: ping the claimant first.
 | Range | Who | Claimed | Status |
 |---|---|---|---|
 | ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
-| ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **active** — batch6 from near-miss (111 matching); CLAIMS.md only (API key expired) |
+| ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); #pragma opt_common_subs off + u64-launder player+0x5c; from near-miss 111→10→0 |
 | ov102 func_ov102_02149ea4 (0x02149ea4, size 0x14c) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 13→7 banked in nearmiss/db.jsonl; residual mul-epilogue vs half interleave (adds r4 vs r1; mwccarm schedule floor) |
-| ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **active** — batch3 near-miss refine (124 matching); CLAIMS.md only (API key expired) |
-| ov100 func_ov100_0214233c (0x0214233c, size 0x184) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 near-miss refine (prev div=66); CLAIMS.md only (API key expired) |
+| ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 124→4 banked in nearmiss/db.jsonl; residual zin#0x32000 vs angOff mov schedule (4 insn); CLAIMS.md only |
+| ov100 func_ov100_0214233c (0x0214233c, size 0x184) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 continue regperm (div=33); CLAIMS.md only (API key expired) |
 | ov100 func_ov100_02140e44 (0x02140e44, size 0x258) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch7 from near-miss div=124; CLAIMS.md only (API key expired) |
 | ov100 _ZN9Butterfly8BehaviorEv (0x02141a40, size 0x22c) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss→PMF+horiz*pitch+u64 counter; CLAIMS.md only (API key expired) |
 | ov002 func_ov002_020cfaf0 (0x020cfaf0, size 0xec) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 19→15 banked in nearmiss/db.jsonl; floor(ordering) y vs sin-table load/reg basins; b-side byte-identical |
@@ -198,7 +198,7 @@ it is fair to take over: ping the claimant first.
 | ov025 func_ov025_021113f0 (0x021113f0, 0x3ec) | lunavyqo (Grok) | 2026-07-13 | **done** — verified byte-identical |
 | ov079 batch13: 13 Whomp/BulletBill funcs | lunavyqo (Grok) | 2026-07-13 | **done (12/13)** — 12 matched; 02124008 banked div=1 FLOOR(materialization) — notes/func_ov079_02124008-floor.md + nearmiss/db.jsonl |
 | ov009: func_ov009_0211145c, func_ov009_021115d8, _ZN4Bird13InitResourcesEv | lunavyqo (Grok) | 2026-07-13 | **done** — 3 verified byte-identical |
-| ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **active** — batch6 from near-miss (111 matching); CLAIMS.md only (API key expired) |
+| ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); #pragma opt_common_subs off + u64-launder player+0x5c; from near-miss 111→10→0 |
 | ov064 batch11: 8 funcs (15f98,16220,17220,Bully::Behavior,17d24,18760,LavaBubble::InitResources,18ee4) | lunavyqo (Grok) | 2026-07-13 | **done** — 8 verified byte-identical (RotatingFirebar::Behavior, 193b4, 1a4c4 dropped: hand-asm dcd dumps, not matches) |
 | ov016 Unagi batch: func_ov016_021119ec, _ZN5Unagi8BehaviorEv, _ZN5Unagi13InitResourcesEv (0x021119ec-0x02112e1c) | lunavyqo (Grok) | 2026-07-13 | **done** — 3 matched byte-identical; near-misses func_ov016_02111c40 (div=54) + func_ov016_02112b50 (div=10) banked in nearmiss/db.jsonl |
 | ov066: func_ov066_02118e04 (0x02118e04, 0x218) + _ZN6Eyerok8BehaviorEv (0x02119838, 0x4b0) | lunavyqo (Grok) | 2026-07-15 | **done** — both verified byte-identical |
