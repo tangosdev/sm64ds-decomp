@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(
     volatile void *reg,
     unsigned short a, unsigned short b, int c, int d);
@@ -13,13 +10,13 @@ void func_ov002_020f1fcc(unsigned char *self)
     int i, v;
     if (*(unsigned short *)(s + 0x2e) == 0)
         return;
-    (*(unsigned short *)(s + 0x2c))++;
+    (*(unsigned short *)((int)(((long long)(int)(s + 0x2c)) & 0xFFFFFFFFFFFFFFFFLL)))++;
     s = *(unsigned char **)(self + 0xd4);
     if (*(unsigned short *)(s + 0x2c) != 0x18)
         return;
     *(unsigned short *)(s + 0x2c) = 0;
     s = *(unsigned char **)(self + 0xd4);
-    (*(unsigned short *)(s + 0x2e))--;
+    (*(unsigned short *)((int)(((long long)(int)(s + 0x2e)) & 0xFFFFFFFFFFFFFFFFLL)))--;
     s = *(unsigned char **)(self + 0xd4);
     v = *(unsigned short *)(s + 0x2e);
     if (v != 0) {
@@ -33,9 +30,9 @@ void func_ov002_020f1fcc(unsigned char *self)
     _ZN3G2x13SetBlendAlphaEPVttttt(
         (volatile void *)0x4001050, 0, 0x28, 0xc, 4);
     s = *(unsigned char **)(self + 0xd4);
-    (*(unsigned char *)(s + 0x34))++;
+    (*(unsigned char *)((int)(((long long)(int)(s + 0x34)) & 0xFFFFFFFFFFFFFFFFLL)))++;
     for (i = 0; i < 3; i++) {
         s = *(unsigned char **)(self + 0xd4);
-        *(unsigned short *)(s + i * 2 + 0x24) = (i + 1) << 4;
+        ((unsigned short *)(s + 0x24))[i] = (i + 1) << 4;
     }
 }

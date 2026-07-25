@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Camera {
     char pad60[0x60];
     int f60;              // 0x60
@@ -10,24 +7,31 @@ struct Camera {
     unsigned char f6e5;   // 0x6e5
 };
 
-extern volatile int data_0209f318;
+extern struct Camera *data_0209f318;
 extern int data_0209f32c;
 
 extern void func_0200d768(struct Camera *thiz, unsigned char playerID);
 extern void func_0200d72c(struct Camera *thiz, unsigned char playerID);
 
+/* The 0x6e5 read-modify-write goes through a materialized base
+   (ldr rN,[pc]; add rN,c,rN) because 0x6e5 is not an ARM rotated immediate;
+   the (long long)-mask launder is what stops mwcc folding it to [c,#0x6e5]. */
+#define LAUNDER_U8(p) \
+    ((unsigned char *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+
 void func_ov002_020ceb7c(struct Camera *c)
 {
-    (void)data_0209f318;
+    struct Camera *g = data_0209f318;
+
     if (c->f6e5 & 2) {
         if (data_0209f32c - 0x50000 - c->f60 >= 0x64000)
             return;
-        func_0200d768(c, c->f6d8);
-        *(unsigned char *)((char *)c + 0x6e5) ^= 2;
+        func_0200d768(g, c->f6d8);
+        *LAUNDER_U8((char *)c + 0x6e5) ^= 2;
     } else {
         if (data_0209f32c - 0x50000 - c->f60 <= 0x12c000)
             return;
-        func_0200d72c(c, c->f6d8);
-        *(unsigned char *)((char *)c + 0x6e5) |= 2;
+        func_0200d72c(g, c->f6d8);
+        *LAUNDER_U8((char *)c + 0x6e5) |= 2;
     }
 }

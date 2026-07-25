@@ -1,11 +1,10 @@
-// NONMATCHING: different op / idiom (div=36). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 extern int _ZN5Event6GetBitEj(unsigned int);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
 extern void _ZN16MeshColliderBase7DisableEv(void*);
+
+#define LD(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
 
 int func_ov002_020b4bfc(char* c)
 {
@@ -19,7 +18,7 @@ int func_ov002_020b4bfc(char* c)
         break;
     case 1:
         if (DecIfAbove0_Byte((unsigned char*)(c + 0xdc9)) == 0) {
-            p = (unsigned char*)(c + 0xdc8);
+            p = (unsigned char*)LD(c + 0xdc8);
             *p = *p - 1;
             *(unsigned char*)(c + 0xdc9) = 2;
         }
@@ -34,7 +33,7 @@ int func_ov002_020b4bfc(char* c)
         break;
     case 3:
         if (DecIfAbove0_Byte((unsigned char*)(c + 0xdc9)) == 0) {
-            p = (unsigned char*)(c + 0xdc8);
+            p = (unsigned char*)LD(c + 0xdc8);
             *p = *p + 1;
             *(unsigned char*)(c + 0xdc9) = 2;
         }

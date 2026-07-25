@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=28). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct Vector3_16f { short x, y, z; };
 typedef int Fix12i;
@@ -29,6 +26,8 @@ namespace Particle {
 }
 
 extern "C" int func_ov002_020d91e0(char *thiz, int damage, int doPre);
+
+#define LAUNDER(p) ((unsigned char *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
 
 struct Obj {
     char pad0[0x5c];
@@ -63,12 +62,12 @@ extern "C" void func_ov002_020c1eb4(Obj *self, int dmg)
     self->p8c = self->p90;
     self->b6e3 = 0;
     if (self->b6de) {
-        unsigned char *q = (unsigned char *)self + 0x6e3;
+        unsigned char *q = LAUNDER((char *)self + 0x6e3);
         *q = *q + 2;
     }
     self->p8e = (short)(dmg * 2 - self->p8e);
     {
-        unsigned char *p = (unsigned char *)self + 0x6e3;
+        unsigned char *p = LAUNDER((char *)self + 0x6e3);
         self->p94 = (short)(self->p8e + 0x8000);
         self->p98 = 0xa000;
         *p = *p | 0x20;

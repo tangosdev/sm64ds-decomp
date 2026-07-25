@@ -1,6 +1,3 @@
-// NONMATCHING: push-set / frame (div=13). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 
 extern int func_ov002_020c1e44(void* a, int x);
@@ -34,10 +31,12 @@ int func_ov002_020c200c(char* self, int arg)
 
         if (_ZN6Player22IsBeingShotOutOfCannonEv(self))
             func_ov002_020eedc0(self + 0x380, self);
-
-        func_ov002_020c1eb4(self, arg);
-        return 1;
+    }
+    else
+    {
+        return 0;
     }
 
-    return 0;
+    func_ov002_020c1eb4(self, arg);
+    return 1;
 }
