@@ -1,13 +1,11 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-extern void func_0213a2cc(void);
-extern void *data_ov015_02114880;
-asm void _ZN11FallBlockWf16CleanupResourcesEv(void)
+// Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
+// `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
+// to reach another overlay. Loads the data pointer into r1; this stays in r0.
+#pragma long_calls on
+extern int func_0213a2cc(void *thisp, void *data);
+extern char data_ov015_02114880[];
+
+int _ZN11FallBlockWf16CleanupResourcesEv(void *thisp)
 {
-    ldr ip, [pc, #4]
-    ldr r1, [pc, #4]
-    bx ip
-    dcd func_0213a2cc
-    dcd data_ov015_02114880
+    return func_0213a2cc(thisp, data_ov015_02114880);
 }

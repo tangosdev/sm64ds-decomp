@@ -1,13 +1,9 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-extern void func_ov091_02132360(void);
+// Arg-shifting tail-call veneer. Drops the first argument and forwards the next two;
+// #pragma long_calls emits the pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call.
+#pragma long_calls on
+extern int func_ov091_02132360(void *b, void *c);
 
-asm void func_ov091_02132380(void)
+int func_ov091_02132380(void *a, void *b, void *c)
 {
-    ldr ip, [pc, #8]
-    mov r0, r1
-    mov r1, r2
-    bx ip
-    dcd func_ov091_02132360
+    return func_ov091_02132360(b, c);
 }

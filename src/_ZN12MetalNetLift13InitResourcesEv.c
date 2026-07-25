@@ -1,17 +1,11 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// Argument-loading long-branch veneer: load the target address into ip and a data
-// pointer argument into r1 from the two inline literals, then tail-jump via `bx ip`.
-// Hand-asm because both trailing .words are relocations (wildcards) and the placeholder
-// symbol must stay unmangled.
-extern void func_ov002_020b6244(void);
+// Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
+// `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
+// to reach another overlay. Loads the data pointer into r1; this stays in r0.
+#pragma long_calls on
+extern int func_ov002_020b6244(void *thisp, void *data);
 extern char data_ov064_0211adb0[];
-asm void _ZN12MetalNetLift13InitResourcesEv(void)
+
+int _ZN12MetalNetLift13InitResourcesEv(void *thisp)
 {
-    ldr ip, [pc, #4]
-    ldr r1, [pc, #4]
-    bx ip
-    dcd func_ov002_020b6244
-    dcd data_ov064_0211adb0
+    return func_ov002_020b6244(thisp, data_ov064_0211adb0);
 }
