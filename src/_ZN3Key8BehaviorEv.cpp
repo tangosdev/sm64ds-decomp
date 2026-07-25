@@ -1,5 +1,4 @@
 //cpp
-// NONMATCHING: size 0x304-0x308 vs 0x310; matrix/speed/regperm residual
 typedef void (*VoidFn)();
 
 extern "C" {
@@ -26,6 +25,7 @@ extern int data_ov089_02132b40[];
 extern int data_ov089_02132ca4[];
 }
 
+#define LAUNDER(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
 struct C { virtual void dummy(); };
 typedef void (C::*PMF)();
 struct PmfEntry { PMF pmf; };
@@ -44,7 +44,7 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
             {
                 char* o = *(char**)(c + 0x110);
                 if (o != 0) {
-                    int* s = (int*)(o + 0x5c);
+                    int* s = (int*)(int)LAUNDER(o + 0x5c);
                     *(int*)(c + 0x5c) = s[0];
                     *(int*)(c + 0x60) = s[1];
                     *(int*)(c + 0x64) = s[2];
@@ -61,20 +61,18 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
                 MulMat4x3Mat4x3(*(void**)(c + 0x128), &data_020a0e68, &data_020a0e68);
                 {
                     char* m = &data_020a0e68;
-                    vec[0] = *(int*)(m + 0x24);
-                    vec[1] = *(int*)(m + 0x28);
-                    vec[2] = *(int*)(m + 0x2c);
+                    int t0 = *(int*)(m + 0x24);
+                    int t1 = *(int*)(m + 0x28);
+                    int t2 = *(int*)(m + 0x2c);
+                    vec[2] = t2;
+                    vec[0] = t0;
+                    vec[1] = t1;
                 }
                 SubVec3(vec, c + 0x5c, vec);
                 Vec3_LslInPlace(vec, 3);
                 AddVec3(vec, c + 0x5c, vec);
-                {
-                    int y = vec[1];
-                    int sc = *(int*)(*(char**)(c + 0x124) + 0xc);
-                    y = sc * 0x23 + y;
-                    y = y - 0x48000;
-                    vec[1] = y;
-                }
+                vec[1] = *(int*)(*(char**)(c + 0x124) + 0xc) * 0x23 + vec[1];
+                vec[1] = vec[1] - 0x48000;
                 *(void**)(c + 0x464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x464), 0x82, vec[0], vec[1], vec[2], 0, 0);
                 *(void**)(c + 0x468) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x468), 0x83, vec[0], vec[1], vec[2], 0, 0);
             }
@@ -98,17 +96,14 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
         return 1;
     }
     *(int*)(c + 0xd0) = 0;
-    {
-        short* spd = (short*)(c + 0x440);
-        short s = *spd;
-        if (s > 0x400) {
-            *spd = s - 0x100;
-        } else if (s == 0) {
-            *spd = 0x400;
-        }
+    if (*(short*)(c + 0x440) > 0x400) {
+        short* q = (short*)(int)LAUNDER(c + 0x440);
+        *q = *q - 0x100;
+    } else if (*(short*)(c + 0x440) == 0) {
+        *(short*)(c + 0x440) = 0x400;
     }
     {
-        short* ang = (short*)(c + 0x8e);
+        short* ang = (short*)(int)LAUNDER(c + 0x8e);
         *ang = *ang + *(short*)(c + 0x440);
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);

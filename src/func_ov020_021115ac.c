@@ -1,6 +1,10 @@
-// NONMATCHING: stack frame size (#4 vs #0xc) and velocity zeroing store shape (div~size gap)
+/* The ROM reserves a 12-byte frame it never touches; two address-taken volatile locals
+ * reserve it with no emitted code (plain or non-address-taken volatiles are DCE'd before
+ * frame layout). The 6g u64-mask launder on &vel forces the ROM's `add r0,r4,#0xa4` base. */
 typedef unsigned short u16;
+typedef struct { int x, y, z; } Vec3;
 typedef unsigned int u32;
+#define LDR(p) ((int)((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)))
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern int _ZN5Actor24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);
@@ -11,6 +15,8 @@ int func_ov020_021115ac(char *c)
     u32 id;
     char *found;
     int t;
+    volatile int t1, t2;
+    (void)&t1; (void)&t2;
 
     id = *(u32 *)(c + 0x240);
     if (id == 0)
@@ -38,13 +44,14 @@ int func_ov020_021115ac(char *c)
         return 1;
 
     if (_ZN5Actor24BumpedUnderneathByPlayerER6Player(c, found) != 0) {
-        int *p = (int *)(found + 0xa4);
-        int r2 = p[2];
-        int r1 = p[0];
-        int r0 = 0;
-        p[0] = r1;
-        p[1] = r0;
-        p[2] = r2;
+        Vec3 *p = (Vec3 *)LDR(found + 0xa4);
+        Vec3 v;
+        v.z = p->z;
+        v.x = p->x;
+        v.y = 0;
+        *(int *)(found + 0xa4) = v.x;
+        *(int *)(found + 0xa8) = v.y;
+        *(int *)(found + 0xac) = v.z;
         *(void **)(c + 0x41c) = found;
         return 1;
     }
