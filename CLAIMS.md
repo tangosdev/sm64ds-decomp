@@ -19,7 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
-| ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **active** — batch2 from near-miss div=48; CLAIMS.md only (API key expired) |
+| ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
 | ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **active** — batch6 from near-miss (111 matching); CLAIMS.md only (API key expired) |
 | ov102 func_ov102_02149ea4 (0x02149ea4, size 0x14c) | lunavyqo (Grok) | 2026-07-25 | **active** — batch1 near-miss refine (prev div=13); CLAIMS.md only (API key expired) |
 | ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **active** — batch3 near-miss refine (124 matching); CLAIMS.md only (API key expired) |

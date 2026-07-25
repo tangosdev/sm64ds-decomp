@@ -121,3 +121,4 @@
 {"id":"arm9:0x0205a74c","module":"arm9","addr":33924940,"name":"func_0205a74c","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"tangosdev","srcPath":"src/func_0205a74c.c"}
 {"id":"arm9:0x0206dab4","module":"arm9","addr":34003636,"name":"func_0206dab4","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"tangosdev","srcPath":"src/func_0206dab4.c"}
 {"id":"ov100:0x02141a40","module":"ov100","addr":34871872,"name":"_ZN9Butterfly8BehaviorEv","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/_ZN9Butterfly8BehaviorEv.cpp"}
+{"id":"ov100:0x02143d64","module":"ov100","addr":34880868,"name":"_ZN14UnchainedChomp8BehaviorEv","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/_ZN14UnchainedChomp8BehaviorEv.cpp"}
