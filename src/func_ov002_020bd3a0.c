@@ -1,18 +1,22 @@
-// NONMATCHING: different op / idiom (div=16). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern unsigned short ReadUnalignedUshort(unsigned char* p);
-extern unsigned short data_0209b274;
-extern unsigned char data_020a0e40;
-extern unsigned short data_0209f49e;
-extern unsigned short data_0209f49c;
-int func_ov002_020bd3a0(char* p0, unsigned char* p1, unsigned int p2){
-  unsigned short val = ReadUnalignedUshort(p1);
-  if (p2 == data_0209b274) {
-    *(unsigned short*)((char*)&data_0209f49e + *(unsigned char*)(p0+0x6d8)*0x18) =
-        val | *(unsigned short*)((char*)&data_0209f49e + data_020a0e40*0x18);
-    *(unsigned short*)((char*)&data_0209f49c + *(unsigned char*)(p0+0x6d8)*0x18) =
-        val | *(unsigned short*)((char*)&data_0209f49c + data_020a0e40*0x18);
-  }
-  return 1;
+typedef unsigned short u16;
+typedef unsigned char u8;
+
+extern u16 ReadUnalignedUshort(u8* p);
+extern u16 data_0209b274;
+extern u8 data_020a0e40;
+extern u16 data_0209f49e;
+extern u16 data_0209f49c;
+
+#define LAUNDER(x) ((int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
+
+int func_ov002_020bd3a0(char* p0, u8* p1, unsigned int p2)
+{
+    u16 val = ReadUnalignedUshort(p1);
+    if (p2 == data_0209b274) {
+        *(u16*)((char*)&data_0209f49e + LAUNDER(*(u8*)(p0 + 0x6d8)) * 0x18) =
+            val | *(u16*)((char*)&data_0209f49e + LAUNDER(data_020a0e40) * 0x18);
+    }
+    val |= *(u16*)((char*)&data_0209f49c + LAUNDER(data_020a0e40) * 0x18);
+    *(u16*)((char*)&data_0209f49c + LAUNDER(*(u8*)(p0 + 0x6d8)) * 0x18) = val;
+    return 1;
 }
