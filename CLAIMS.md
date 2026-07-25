@@ -24,7 +24,7 @@ it is fair to take over: ping the claimant first.
 | ov098 func_ov098_02138e6c (0x02138e6c, size 0x204) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); unnest 0x4000 + u64-launder 0x57c; from near-miss div=17 |
 | ov098 func_ov098_0213a36c (0x0213a36c, size 0x428) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 match; CLAIMS.md only (API key expired) |
 | ov098 func_ov098_0213ade8 (0x0213ade8, size 0x2bc) | lunavyqo (Grok) | 2026-07-25 | **active** — batch2 match from near-miss div=105; CLAIMS.md only (API key expired) |
-| ov098 func_ov098_0213aa28 (0x0213aa28, size 0x2e0) | lunavyqo (Grok) | 2026-07-25 | **active** — batch3 match from near-miss div=125; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_0213aa28 (0x0213aa28, size 0x2e0) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); common timer++ + vs[2] frame 0x1c + z-first fused y load; from near-miss div=125; CLAIMS.md only (API key expired) |
 | ov098 func_ov098_02139228 (0x02139228, size 0x47c) | lunavyqo (Grok) | 2026-07-25 | **active** — batch5 from near-miss div=104; CLAIMS.md only (API key expired) |
 | ov004 func_ov004_020b3b38 (0x020b3b38, size 0x120) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); sibling opt_propagation off + s16 extract; near-miss div=2→0 |
 | ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
