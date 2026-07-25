@@ -21,7 +21,7 @@ it is fair to take over: ping the claimant first.
 |---|---|---|---|
 | ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
 | ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); #pragma opt_common_subs off + u64-launder player+0x5c; from near-miss 111→10→0 |
-| ov102 func_ov102_02149ea4 (0x02149ea4, size 0x14c) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 13→7 banked in nearmiss/db.jsonl; residual mul-epilogue vs half interleave (adds r4 vs r1; mwccarm schedule floor) |
+| ov102 func_ov102_02149ea4 (0x02149ea4, size 0x14c) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); inline half into b4 store |
 | ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 124→4 banked in nearmiss/db.jsonl; residual zin#0x32000 vs angOff mov schedule (4 insn); CLAIMS.md only |
 | ov100 func_ov100_0214233c (0x0214233c, size 0x184) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 continue regperm (div=33); CLAIMS.md only (API key expired) |
 | ov100 func_ov100_02140e44 (0x02140e44, size 0x258) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch7 from near-miss div=124; CLAIMS.md only (API key expired) |
