@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov016 func_ov016_02111c40 (0x02111c40, size 0x2f8) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 51→45→44→42 clean (idx_bone) / best **div=41** banked in nearmiss/db.jsonl; residual halfword + loop pool/RMW regperm + epi setup; CLAIMS.md only (API key expired) |
 | PURE_REGPERM re-crack fleet: all nearmiss DB entries whose residual is a pure register permutation, div<=24 (40 funcs across arm9/ov002/ov006/ov007/ov089/ov098) plus func_02048234 + func_0205dc7c | Tango (Fable fleet) | 2026-07-25 | **active** — recipe: notes/mwccarm-codegen.md 6aa + tools/wallcrack.py; results land per-function; rows released as they resolve |
 | MOSTLY_REGPERM lane: func_ov004_020b04f4, func_ov006_02108d28, func_ov006_020f456c, func_ov015_021114f0, func_0204af3c, func_02063718, func_ov006_02126ee4, func_ov007_020b2160, func_ov006_0211f9fc, func_ov004_020b2220, func_ov007_020c9688, func_ov006_0212a764, _ZN3Boo8BehaviorEv, func_020503a4, func_ov006_020f15ac | reserved (incoming Fable collaborator) | 2026-07-25 | **reserved** — same 6aa recipe + a small schedule fix each; claimant: replace this Who with your handle when you start |
 | ov098 func_ov098_0213b9d8 (0x0213b9d8, size 0x144) | lunavyqo (Grok) | 2026-07-25 | **active** — near-miss regperm floor on ny dest; do not ship non-match in src/; CLAIMS.md only |
