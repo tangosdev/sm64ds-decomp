@@ -19,13 +19,13 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
-| ov098 func_ov098_0213b9d8 (0x0213b9d8, size 0x144) | lunavyqo (Grok) | 2026-07-25 | **active** — batch1 continue from near-miss div=25; CLAIMS.md only (API key expired) |
+| ov098 func_ov098_0213b9d8 (0x0213b9d8, size 0x144) | lunavyqo (Grok) | 2026-07-25 | **active** — continue: near-miss 43→25→10 (pure regperm floor on ny dest r1 vs r2); CLAIMS.md only |
 | ov095 func_ov095_02135cdc (0x02135cdc, size 0x1b4) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 28→26 banked in nearmiss/db.jsonl; residual SMULL schedule floor (r1/r2 const + mla/w-round interleave); hand-asm **removed** from src/; CLAIMS.md only (API key expired) |
 | ov098 func_ov098_02138e6c (0x02138e6c, size 0x204) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck (mwccarm 1.2/sp2p3); unnest 0x4000 + u64-launder 0x57c; from near-miss div=17 |
-| ov098 func_ov098_0213a36c (0x0213a36c, size 0x428) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 refine div=9 residual (angle regperm + vcall); CLAIMS.md only (API key expired) |
+| ov098 func_ov098_0213a36c (0x0213a36c, size 0x428) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 258→9→7 banked; C++ virtual vcall fixed; residual pure angle regperm (pitch/b300 lr/r1 vs r3/lr); CLAIMS.md only |
 | ov098 func_ov098_0213ade8 (0x0213ade8, size 0x2bc) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 105→6 banked in nearmiss/db.jsonl; residual pure r0/r1 px/py regperm + store-order floor (vp=r2 vs px=r0 tradeoff); CLAIMS.md only (API key expired) |
 | ov098 func_ov098_0213aa28 (0x0213aa28, size 0x2e0) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); common timer++ + vs[2] frame 0x1c + z-first fused y load; from near-miss div=125; CLAIMS.md only (API key expired) |
-| ov098 func_ov098_02139228 (0x02139228, size 0x47c) | lunavyqo (Grok) | 2026-07-25 | **released** — near-miss improved 104→39 banked in nearmiss/db.jsonl; residual pure instr-sched in a1/a2 sin-table block (zeros early + 4-load hoist vs target interleave); CLAIMS.md only (API key expired) |
+| ov098 func_ov098_02139228 (0x02139228, size 0x47c) | lunavyqo (Grok) | 2026-07-25 | **active** — near-miss 104→16 banked; structure matched (c=r6, table r0, iang=ip, a1.z mid, a1.x late); residual pure regperm ang94 r1/r2 + v98 r8/r1 + a1x r7/r8; CLAIMS.md only (API key expired) |
 | ov004 func_ov004_020b3b38 (0x020b3b38, size 0x120) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); sibling opt_propagation off + s16 extract; near-miss div=2→0 |
 | ov100 _ZN14UnchainedChomp8BehaviorEv (0x02143d64, size 0x324) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); volatile Vector3{0,4,0} stack + null rot; from near-miss div=48 |
 | ov100 func_ov100_021415bc (0x021415bc, size 0x244) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); #pragma opt_common_subs off + u64-launder player+0x5c; from near-miss 111→10→0 |
