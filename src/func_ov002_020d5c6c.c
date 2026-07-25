@@ -1,22 +1,23 @@
-//cpp
-// NONMATCHING: register allocation (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-extern "C" {
+typedef unsigned short u16;
 struct State;
-extern State data_ov002_02110034;
-extern int func_ov002_020d600c(char* c);
-extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, State* st);
-int func_ov002_020d5c6c(char* c){
-  unsigned short f = *(unsigned short*)(c + 0x6ce) & 2;
-  if (f == 0) return 0;
-  if (*(int*)(c + 0x360) != 0){
-    if (func_ov002_020d600c(c)) goto change;
-  }
-  *(unsigned short*)(c + 0x6ce) &= ~2;
-  return 0;
+extern struct State data_ov002_02110034;
+extern int func_ov002_020d600c(void* p);
+extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, struct State* st);
+
+int func_ov002_020d5c6c(char* c)
+{
+    void* p;
+    u16 f = *(u16*)(c + 0x6ce) & 2;
+    if (f == 0)
+        return 0;
+    p = *(void**)(c + 0x360);
+    if (p != 0) {
+        if (func_ov002_020d600c(p))
+            goto change;
+    }
+    *(u16*)(void*)(int)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+    return 0;
 change:
-  _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110034);
-  return 1;
-}
+    _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110034);
+    return 1;
 }
