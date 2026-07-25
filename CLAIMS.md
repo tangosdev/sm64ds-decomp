@@ -24,7 +24,7 @@ it is fair to take over: ping the claimant first.
 | ov102 func_ov102_02149ea4 (0x02149ea4, size 0x14c) | lunavyqo (Grok) | 2026-07-25 | **active** — batch1 near-miss refine (prev div=13); CLAIMS.md only (API key expired) |
 | ov100 func_ov100_021437d4 (0x021437d4, size 0x2d0) | lunavyqo (Grok) | 2026-07-25 | **active** — batch3 near-miss refine (124 matching); CLAIMS.md only (API key expired) |
 | ov100 func_ov100_0214233c (0x0214233c, size 0x184) | lunavyqo (Grok) | 2026-07-25 | **active** — batch4 near-miss refine (prev div=66); CLAIMS.md only (API key expired) |
-| ov100 func_ov100_02140e44 (0x02140e44, size 0x258) | lunavyqo (Grok) | 2026-07-25 | **active** — batch7 from near-miss (124 matching); CLAIMS.md only (API key expired) |
+| ov100 func_ov100_02140e44 (0x02140e44, size 0x258) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch7 from near-miss div=124; CLAIMS.md only (API key expired) |
 | ov100 _ZN9Butterfly8BehaviorEv (0x02141a40, size 0x22c) | lunavyqo (Grok) | 2026-07-25 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss→PMF+horiz*pitch+u64 counter; CLAIMS.md only (API key expired) |
 | ov002 func_ov002_020cfaf0 (0x020cfaf0, size 0xec) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 19→15 banked in nearmiss/db.jsonl; floor(ordering) y vs sin-table load/reg basins; b-side byte-identical |
 | ov102 func_ov102_021498e0 (0x021498e0, size 0x398) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 221→7 banked in nearmiss/db.jsonl; residual pure instr-sched swap mov#0xd vs add pang (mwccarm floor) |
