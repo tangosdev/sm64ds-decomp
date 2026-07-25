@@ -1,0 +1,102 @@
+//cpp
+struct KCL_File;
+struct CLPS_Block;
+struct MeshCollider;
+struct ObjTable;
+struct Actor;
+struct ActorBase;
+
+struct LVL_SubTbl {
+    struct ObjTable* table;
+    char pad[8];
+};
+
+struct LVL_Overlay_s {
+    struct CLPS_Block* clps;
+    struct ObjTable* objTable;
+    char pad8[2];
+    unsigned short kclFileId;
+    char padC[4];
+    struct LVL_SubTbl* subTables;
+    unsigned char subCount;
+};
+
+extern "C" {
+
+extern short data_ov002_0211118c;
+extern unsigned char data_0209f2d8;
+extern int data_0209caa0[];
+extern struct ActorBase* data_0209f5c0;
+
+extern void func_0203accc(int v);
+extern void func_0203aca0(int a, int b);
+extern struct KCL_File* LoadFile(int handle);
+extern void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(struct KCL_File* f);
+extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(struct MeshCollider* thiz, struct KCL_File* f, struct CLPS_Block* clps);
+extern int _ZNK12MeshCollider16GetOctreeOriginYEv(struct MeshCollider* thiz);
+extern int _ZNK12MeshCollider13GetUnkOctreeYEv(struct MeshCollider* thiz);
+extern void func_0202a850(int a, int b);
+extern void _ZN16MeshColliderBase6EnableEP5Actor(struct MeshCollider* thiz, struct Actor* a);
+extern void _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(struct ObjTable* t, int i, unsigned int p);
+extern int ContinueKuppaScriptIfNecessary(void);
+extern void _ZN12ActorDerived5SpawnEjP9ActorBaseii(unsigned int id, struct ActorBase* parent, int a, int b);
+extern void StartIntroCutscene(void);
+
+void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(struct LVL_Overlay_s* ovl, unsigned int p, struct MeshCollider* mc)
+{
+    struct KCL_File* f;
+    struct LVL_SubTbl* e;
+    signed char i;
+    int kuppa;
+    int intro;
+    int t1;
+    int t2;
+    int isTwo;
+
+    func_0203accc(0);
+    func_0203aca0(0, 0);
+
+    if (ovl->kclFileId != 0) {
+        f = LoadFile(ovl->kclFileId);
+        _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
+        _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
+        func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
+        _ZN16MeshColliderBase6EnableEP5Actor(mc, 0);
+    }
+
+    data_ov002_0211118c = 0;
+    _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(ovl->objTable, -1, p);
+
+    e = ovl->subTables;
+    for (i = 0; i < ovl->subCount; i++) {
+        if (e->table != 0)
+            _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(e->table, i, p);
+        e++;
+    }
+
+    kuppa = ContinueKuppaScriptIfNecessary();
+
+    intro = 0;
+    t2 = 0;
+    t1 = (data_0209f2d8 == 0);
+    if (t1 != 0) {
+        if ((data_0209caa0[2] & 0x80) == 0)
+            t2 = 1;
+    }
+    if (t2 != 0) {
+        if (kuppa == 0)
+            intro = 1;
+    }
+
+    isTwo = (data_0209f2d8 == 2);
+    if (isTwo == 0) {
+        _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14f, data_0209f5c0, 0, 0);
+        if (intro == 0)
+            _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14e, data_0209f5c0, 0, 0);
+    }
+
+    if (intro != 0)
+        StartIntroCutscene();
+}
+
+}

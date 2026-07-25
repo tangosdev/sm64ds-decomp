@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=15). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef short s16;
 struct M48 { int w[12]; };
 struct V3 { int x, y, z; };
@@ -35,10 +32,13 @@ void func_ov002_020e8244(int* out, char* b)
     *(int*)(b + 0x4a8) = data_020a0e68.w[9];
     *(int*)(b + 0x4ac) = data_020a0e68.w[10];
     *(int*)(b + 0x4b0) = data_020a0e68.w[11];
-    SubVec3((struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8), (struct V3*)(b + 0x4a8));
+    SubVec3((struct V3*)(b + 0x4a8), (struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8));
     Vec3_LslInPlace((void*)(b + 0x4a8), 3);
     AddVec3((struct V3*)(b + 0x4a8), (struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8));
-    *(int*)(b + 0x4ac) = *(int*)(*(char**)(b + 0x31c) + 0xc) * 0xd + *(int*)(b + 0x4ac);
+    {
+        int* p = (int*)((int)(((long long)(int)(b + 0x4ac)) & 0xFFFFFFFFFFFFFFFFLL));
+        *p = *(int*)(*(char**)(b + 0x31c) + 0xc) * 0xd + *p;
+    }
     out[0] = *(int*)(b + 0x4a8);
     out[1] = *(int*)(b + 0x4ac);
     out[2] = *(int*)(b + 0x4b0);

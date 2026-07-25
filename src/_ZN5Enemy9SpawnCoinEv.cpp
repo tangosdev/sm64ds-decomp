@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=41). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef signed char s8;
 typedef short s16;
@@ -12,7 +9,7 @@ struct Vector3 { int x, y, z; };
 struct Vector3_16;
 
 struct Actor {
-    Actor *Spawn(u32 id, u32 b, const Vector3 &pos, const Vector3_16 *r, int e, int f);
+    static Actor *Spawn(u32 id, u32 b, const Vector3 &pos, const Vector3_16 *r, int e, int f);
     void PoofDust();
 };
 struct Enemy : Actor {
@@ -29,13 +26,16 @@ void Enemy::SpawnCoin()
     int i;
     Vector3 v;
     if (*(u8 *)(t + 0x108) != 0) {
-        v.y = *(int *)(t + 0x60) + 0x78000;
-        v.z = *(int *)(t + 0x64);
-        v.x = *(int *)(t + 0x5c);
+        int tz = *(int *)(t + 0x64);
+        int ty = *(int *)(t + 0x60) + 0x78000;
+        int tx = *(int *)(t + 0x5c);
+        v.x = tx;
+        v.y = ty;
+        v.z = tz;
         if (*(u8 *)(t + 0x108) >= 4)
             *(u8 *)(t + 0x108) = 1;
         for (i = 0; i < *(u8 *)(t + 0x10a) + 1; i++) {
-            Actor *coin = this->Spawn(
+            Actor *coin = Actor::Spawn(
                 (&data_ov002_020ff014)[*(u8 *)(t + 0x108) - 1],
                 0xf2, v, 0, *(s8 *)(t + 0xcc), -1);
             if (coin != 0) {

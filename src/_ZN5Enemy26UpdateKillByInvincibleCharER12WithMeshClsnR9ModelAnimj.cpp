@@ -1,97 +1,101 @@
 //cpp
-// NONMATCHING: extra logic (you do more) (div=64). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-struct WithMeshClsn;
-struct ModelAnim;
-struct CylinderClsn;
+extern "C" {
+extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *o);
+extern int _ZNK12WithMeshClsn8IsOnWallEv(void *o);
+extern void _ZN5Enemy9SpawnCoinEv(void *o);
+extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *o);
+extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *o, void *cc);
+extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *o, void *w, unsigned int j);
+extern short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *o, int a, int b, short s);
+extern void Vec3_Asr(void *d, const void *s, int sh);
+extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
+extern char data_020a0e68;
+}
 
-extern "C" int  WMC_IsOnGround(void *self);
-extern "C" int  WMC_IsOnWall(void *self);
-extern "C" void Vec3_Asr(void *d, void *s, int sh);
-extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
+struct VB {
+    virtual void d00();
+    virtual void d01();
+    virtual void d02();
+    virtual void d03();
+    virtual void d04();
+    virtual void d05();
+    virtual void d06();
+    virtual void d07();
+    virtual void d08();
+    virtual void d09();
+    virtual void d10();
+    virtual void d11();
+    virtual void d12();
+    virtual void d13();
+    virtual void d14();
+    virtual void d15();
+    virtual void d16();
+    virtual void d17();
+    virtual void d18();
+    virtual void d19();
+    virtual void d20();
+    virtual void d21();
+    virtual void d22();
+    virtual void d23();
+    virtual void d24();
+    virtual void d25();
+    virtual void d26();
+    virtual void d27();
+    virtual void d28();
+    virtual int m29();
+};
 
-extern int data_020a0e68;
 struct M48 { int w[12]; };
 
-struct Enemy {
-    int SpawnCoin();
-    int KillAndTrackInDeathTable();
-    int UpdatePos(CylinderClsn *c);
-    int UpdateWMClsn(WithMeshClsn &w, unsigned int j);
-    short ReflectAngle(int a, int b, short s);
-    int UpdateKillByInvincibleChar(WithMeshClsn &w, ModelAnim &m, unsigned int j);
-};
+#define LAUNDER(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
 
-struct VT {
-    virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
-    virtual void v4();  virtual void v5();  virtual void v6();  virtual void v7();
-    virtual void v8();  virtual void v9();  virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-    virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
-    virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
-    virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
-    virtual void v28(); virtual int  vm();
-};
-
-int Enemy::UpdateKillByInvincibleChar(WithMeshClsn &w, ModelAnim &m, unsigned int j)
+extern "C" int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+    void *cc, void *ww, void *mm, unsigned int flags)
 {
-    unsigned char *c = (unsigned char *)this;
-    unsigned char *r6 = (unsigned char *)&w;
-    unsigned char *r5 = (unsigned char *)&m;
+    char *c = (char *)cc;
+    char *w = (char *)ww;
+    char *m = (char *)mm;
+    int v[3];
 
     if (*(int *)(c + 0x10c) != 8)
         return 0;
 
-    if (*(unsigned short *)(c + 0x102) != 0) {
-        unsigned short *p = (unsigned short *)(c + 0x102);
-        *p = *p - 1;
+    if (*(unsigned short *)(c + 0x102) != 0)
+        *(unsigned short *)LAUNDER(c + 0x102) -= 1;
+
+    if (*(unsigned short *)(c + 0x102) == 0 ||
+        (w != 0 && _ZNK12WithMeshClsn10IsOnGroundEv(w) != 0 && *(int *)(c + 0xa8) < 0)) {
+        if (flags & 1)
+            _ZN5Enemy9SpawnCoinEv(c);
+        if (flags & 2)
+            _ZN5Actor24KillAndTrackInDeathTableEv(c);
+        *(int *)(c + 0x10c) = 0;
+        return 2;
     }
 
-    if (*(unsigned short *)(c + 0x102) != 0) {
-        if (r6 != 0 && WMC_IsOnGround(r6) != 0 && *(int *)(c + 0xa8) < 0) {
-            if (j & 1)
-                this->SpawnCoin();
-            if (j & 2)
-                this->KillAndTrackInDeathTable();
-            *(int *)(c + 0x10c) = 0;
-            return 2;
-        }
+    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    if (w != 0) {
+        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, w, 0);
+        if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0)
+            *(short *)(c + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(
+                c, *(int *)(c + 0xe0), *(int *)(c + 0xe8), *(short *)(c + 0x94));
     }
 
-    this->UpdatePos(0);
-    if (r6 != 0) {
-        this->UpdateWMClsn(w, 0);
-        if (WMC_IsOnWall(r6) != 0) {
-            *(short *)(c + 0x94) = this->ReflectAngle(*(int *)(c + 0xe0), *(int *)(c + 0xe8),
-                                                      *(short *)(c + 0x94));
-        }
-    }
-
-    if (r5 != 0) {
-        int t[3];
-        short *a8c = (short *)(c + 0x8c);
-        short *a8e = (short *)(c + 0x8e);
-        short *a90 = (short *)(c + 0x90);
-        *a8c = (short)(*a8c + *(short *)(c + 0xec));
-        *a8e = (short)(*a8e + *(short *)(c + 0xee));
-        *a90 = (short)(*a90 + *(short *)(c + 0xf0));
-        Vec3_Asr(t, c + 0x5c, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);
-        {
-            int r = ((VT *)c)->vm();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, r >> 3, 0);
-        }
+    if (m != 0) {
+        *(short *)LAUNDER(c + 0x8c) += *(short *)(c + 0xec);
+        *(short *)LAUNDER(c + 0x8e) += *(short *)(c + 0xee);
+        *(short *)LAUNDER(c + 0x90) += *(short *)(c + 0xf0);
+        Vec3_Asr(v, c + 0x5c, 3);
+        Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
+            ((VB *)(void *)c)->m29() >> 3, 0);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-                                               *(short *)(c + 0x8c), *(short *)(c + 0x8e),
-                                               *(short *)(c + 0x90));
-        {
-            int r = ((VT *)c)->vm();
-            Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-r) >> 3, 0);
-        }
-        *(M48 *)(r5 + 0x1c) = *(M48 *)&data_020a0e68;
+            *(short *)(c + 0x8c), *(short *)(c + 0x8e), *(short *)(c + 0x90));
+        Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
+            (-((VB *)(void *)c)->m29()) >> 3, 0);
+        *(M48 *)(m + 0x1c) = *(M48 *)&data_020a0e68;
     }
     return 1;
 }

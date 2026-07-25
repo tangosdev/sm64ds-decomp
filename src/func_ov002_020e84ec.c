@@ -1,6 +1,3 @@
-// NONMATCHING: constant / value (div=13). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef short s16;
 
@@ -25,10 +22,10 @@ void func_ov002_020e84ec(char* self)
     } else if (*(void**)(self + 0xc8) != 0) {
         *(struct M48*)(self + 0x328) = *(struct M48*)(*(char**)(self + 0xc8));
     } else if (!((struct Flags*)(self + 0x4a2))->b0) {
-        ang = (s16*)(self + 0x8e);
+        ang = (s16*)((int)(((long long)(int)(self + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL));
         t = *ang + 0xc00;
         *ang = t;
-        Matrix4x3_FromRotationY(self + 0x328, *ang);
+        Matrix4x3_FromRotationY(self + 0x328, *(s16*)(self + 0x8e));
         *(int*)(self + 0x34c) = *(int*)(self + 0x5c) >> 3;
         *(int*)(self + 0x350) = *(int*)(self + 0x60) >> 3;
         *(int*)(self + 0x354) = *(int*)(self + 0x64) >> 3;
