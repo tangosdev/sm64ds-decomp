@@ -1,6 +1,4 @@
-// NONMATCHING: different op / idiom (div=12). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+#pragma opt_propagation off
 typedef unsigned char u8;
 typedef short s16;
 typedef int Fix12i;
@@ -40,12 +38,12 @@ int func_ov002_020bd4e0(char* self, unsigned char* data)
         idx = *(u8*)(self + 0x6d8);
         *(short*)(data_0209f4a6 + idx * 0x18) = ang;
         s16 v6 = ReadUnalignedShort(data + 6);
-        idx = *(u8*)(self + 0x6d8);
-        *(short*)(data_0209f4a0 + idx * 0x18) = v6;
-        idx = *(u8*)(self + 0x6d8);
-        int b = data_020a0e40;
-        *(u8*)(data_0209f4ac + idx * 0x18) = 1;
-        idx = *(u8*)(self + 0x6d8);
-        *(unsigned short*)(data_0209f49c + idx * 0x18) = *(unsigned short*)(data_0209f49c + b * 0x18) | 0x800;
+        *(short*)(data_0209f4a0 + *(u8*)(self + 0x6d8) * 0x18) = v6;
+        {
+        int pi = *(u8*)(self + 0x6d8) * 0x18;
+        *(u8*)(data_0209f4ac + pi) = 1;
+        }
+        *(unsigned short*)(data_0209f49c + *(u8*)(self + 0x6d8) * 0x18) = *(unsigned short*)(data_0209f49c + data_020a0e40 * 0x18) | 0x800;
+        return 1;
     }
 }
