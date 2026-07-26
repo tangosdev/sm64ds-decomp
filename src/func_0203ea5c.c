@@ -1,6 +1,3 @@
-// NONMATCHING: register allocation (div=79). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -87,58 +84,60 @@ extern s16 data_020a0f2c;
 extern u16 data_020a0f30;
 extern u8 data_020a0efc;
 
-int func_0203ea5c(void)
+void func_0203ea5c(void)
 {
     s32 sp4;
     s32 sp8;
-    s32 spC;
-    s32 sp10;
+    s32 sp28;
+    u8 *var_sb;
     s32 sp14;
     s32 sp18;
+    s32 spC;
+    u8 *var_r8;
+    s32 temp_r0_4;
     s32 sp1c;
-    s32 sp20;
-    s32 sp24;
-    s32 sp28;
-    u8 sp2c;
+    s32 temp_r0_7;
     u16 sp2e;
-    Rec *var_r5;
-    Rec *var_r5_4;
+    Rec *var_r3_3;
+    s32 sp10;
     Rec *var_r6_4;
     u8 *var_r7_2;
-    u8 *var_sb;
-    s32 temp_r0_3;
-    s32 temp_r0_4;
-    s32 temp_r0_5;
-    s32 temp_r0_7;
+    s32 sp20;
+    Rec *var_r1;
+    s32 temp_r0;
+    u16 temp_r1;
+    u32 temp_r0_2;
     s32 temp_r0_8;
     s32 var_r0;
-    s32 var_r2;
-    s32 var_r2_2;
-    s32 var_r2_3;
+    s32 var_r6_2;
+    Rec *var_r5_4;
+    u8 *var_r6_3;
     s32 var_r2_4;
-    s32 var_r3;
+    Rec *var_r4;
     s32 var_r3_2;
     s32 var_r4_2;
     s32 var_r5_2;
     s32 var_r5_3;
-    s32 var_r6_2;
-    u16 temp_r1;
+    Rec *cur133;
+    s32 var_r2_3;
+    s32 sp24;
     u16 temp_r1_2;
-    u16 temp_r1_4;
+    u8 temp_r0_9;
     u16 temp_r2;
     s32 var_r7;
-    u32 temp_r0_2;
+    s32 var_r3;
     u8 *temp_r0_6;
     u8 *temp_r5;
-    Rec *var_r1;
-    Rec *var_r3_3;
-    Rec *var_r4;
+    s32 temp_r0_3;
+    u8 sp2c;
+    s32 var_r2_2;
     Rec *var_r6;
-    u8 *var_r6_3;
-    u8 *var_r8;
-    s32 temp_r0;
-    u8 temp_r0_9;
+    s32 temp_r0_5;
+    Rec *var_r5;
+    u32 n75;
+    s32 var_r2;
     u8 temp_r1_3;
+    u16 temp_r1_4;
 
     if (data_02099e1c != 0) {
         func_020408b0(2);
@@ -301,10 +300,12 @@ int func_0203ea5c(void)
                         } while ((s32) var_r7 < 4);
                         if (data_020a1154[data_020a0f10].unkC & 0x8000) {
                             if (data_020a0f10 == 0) {
-                                if ((data_020a0ef8 == 0) && ((u32) data_02099e18 > 1U)) {
-                                    var_r2 = 1;
-                                    var_r6_2 = 1;
+                                if (data_020a0ef8 == 0) {
+                                    n75 = data_02099e18;
+                                    if (n75 > 1U) {
                                     var_r5 = &data_020a1178;
+                                    var_r6_2 = 1;
+                                    var_r2 = 1;
 loop_75:
                                     temp_r1 = var_r5->unkC;
                                     if ((temp_r1 & 0x8000) && !(temp_r1 & 1)) {
@@ -316,11 +317,11 @@ loop_75:
                                             goto loop_75;
                                         }
                                     }
-                                    if ((var_r6_2 != 0) && ((u32) data_02099e18 > 1U)) {
+                                    if ((var_r6_2 != 0) && (n75 > 1U)) {
                                         spC = 1;
                                         data_020a0ef8 = (u8) sp28;
-                                        var_r8 = data_020a10ba;
                                         var_sb = data_020a0fa6;
+                                        var_r8 = data_020a10ba;
                                         do {
                                             if (func_0204271c(var_sb) == 0) {
                                                 var_r7_2 = data_020a0fbe;
@@ -336,16 +337,16 @@ loop_75:
                                                 } while (var_r5_2 < 4);
                                             }
                                             var_sb += 6;
-                                            temp_r0_7 = spC + 1;
                                             var_r8 += 0x16;
-                                            spC = temp_r0_7;
-                                        } while (temp_r0_7 < 4);
+                                            spC = spC + 1;
+                                        } while (spC < 4);
                                     }
                                 }
+                                }
                                 if ((u32) data_02099e18 > 1U) {
-                                    var_r5_3 = 1;
-                                    var_r3 = 1;
                                     var_r6_4 = &data_020a1178;
+                                    var_r3 = 1;
+                                    var_r5_3 = 1;
 loop_90:
                                     temp_r2 = var_r6_4->unkC;
                                     if ((temp_r2 & 0x8000) && !(temp_r2 & 0x4000)) {
@@ -391,20 +392,18 @@ loop_103:
                             }
                             var_r0 = 0;
                             var_r1 = data_020a1154;
-loop_114:
-                            if ((var_r1->unkC & 0x8000) && (var_r1->unk0 != data_020a1154[data_020a0f10].unk0)) {
-                                data_020a1040.unk0 = data_020a1154[0].unk0;
-                                data_020a0f1c |= 2;
-                                if (data_020a0efc == 0) {
-                                    sp8 = 0;
+                            do {
+                                if ((var_r1->unkC & 0x8000) && (var_r1->unk0 != data_020a1154[data_020a0f10].unk0)) {
+                                    data_020a1040.unk0 = data_020a1154[0].unk0;
+                                    data_020a0f1c |= 2;
+                                    if (data_020a0efc == 0) {
+                                        sp8 = 0;
+                                    }
+                                    break;
                                 }
-                            } else {
                                 var_r1 += 1;
                                 var_r0 += 1;
-                                if (var_r0 < 4) {
-                                    goto loop_114;
-                                }
-                            }
+                            } while (var_r0 < 4);
                         } else {
                             sp8 = 0;
                         }
@@ -431,9 +430,10 @@ loop_114:
     if (sp4 != 0) {
         var_r4 = data_020a1154;
         var_r2_3 = 0;
+        cur133 = &data_020a1154[data_020a0f10];
 loop_133:
         if (var_r4->unkC & 0x8000) {
-            temp_r1_3 = data_020a1154[data_020a0f10].unk22;
+            temp_r1_3 = cur133->unk22;
             temp_r0_9 = var_r4->unk22;
             if (temp_r0_9 != temp_r1_3) {
                 data_020a0f1c |= 8;
@@ -454,15 +454,15 @@ block_138:
             data_020a0efc = 3;
         }
         if (data_020a0efc != 0) {
-            data_020a1040.unk22 = 0;
             data_020a0f1c &= 0xFF60;
+            data_020a1040.unk22 = 0;
             data_020a1040.unk22 = 0;
             data_020a0f30 = 0;
             data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xEFFF);
             data_020a0efc -= 1;
         }
         if (data_020a0efc != 0) {
-            return data_020a0efc;
+            return;
         }
         var_r3_3 = data_020a1154;
         var_r4_2 = 1;
@@ -480,16 +480,15 @@ loop_147:
         }
         temp_r0 = data_020a1040.unkC & 0x1000;
         if (temp_r0 == 0) {
-            return temp_r0;
+            return;
         }
         if (var_r4_2 == 0) {
-            return temp_r0;
+            return;
         }
         data_020a1040.unkC = (u16) (data_020a1040.unkC & 0xEFFF);
         data_020a0f30 = 1;
-        return 1;
+        return;
     }
     data_020a0f04 = 0;
     data_020a0f1c |= 1;
-    return 0;
 }
