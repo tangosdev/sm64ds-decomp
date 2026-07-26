@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: base materialization / addressing (div=18). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct Vector3 { int x, y, z; };
 struct Range { int a, b, c, d, e, f; };
 extern "C" {
@@ -19,6 +16,8 @@ extern void* data_0209f318;
 extern int data_0209caa0[];
 extern int data_ov085_021307e0;
 
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+
 extern "C" int func_ov085_0212d5dc(char* c) {
   Range r;
   void* cam = *(void**)&data_0209f318;
@@ -33,10 +32,10 @@ extern "C" int func_ov085_0212d5dc(char* c) {
   _ZN6Camera9SetLookAtERK7Vector3(cam, c+0x2b0);
   _ZN6Camera6SetPosERK7Vector3(cam, c+0x2bc);
   Vec3_Dist(c+0x2b0, &r);
-  (*(int*)(c+0x2c8))++;
+  (*(int*)AT(c, 0x2c8))++;
   if (*(int*)(c+0x2c8) > 0x64) {
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x7f, 0, 0x7222, false) != 0) {
-      *(int*)((char*)cam+0x154) &= ~8;
+      *(int*)AT(cam, 0x154) &= ~8;
       *(int*)(c+0x98) = 0;
       *(int*)(c+0x2c8) = 0;
       *(int*)(c+0x2cc) = 0;

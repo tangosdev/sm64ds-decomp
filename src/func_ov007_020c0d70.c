@@ -1,6 +1,6 @@
-// NONMATCHING: base materialization / addressing (div=23). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+typedef unsigned short u16;
+typedef unsigned int u32;
+
 struct Anim {
     char pad[0x20];
     int mode;     /* 0x20 */
@@ -13,40 +13,54 @@ struct Anim {
 
 struct AnimData {
     int w0;
-    unsigned short *durations; /* 0x4 */
+    u16 *durations; /* 0x4 */
     int w8;
-    int count;    /* 0xc */
+    u32 count;      /* 0xc */
 };
+
+#define AT16(p, off) (*(short *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 
 void func_ov007_020c0d70(struct Anim *a, struct AnimData *d)
 {
     int loop;
     int step;
+    short m;
+    int dur;
 
-    if (a->mode == 0) return;
-    if (a->f28 != 0) return;
+    if (a->mode == 0)
+        return;
+    if (a->f28 != 0)
+        return;
 
+    step = 1;
     loop = (a->mode == 1);
     a->f28 = 0;
     a->changed = 0;
-    step = 1;
-    if (a->rev == 1) step = step * -1;
+    if (a->rev == 1)
+    {
+        m = -1;
+        step = step * m;
+    }
 
-    a->tick = (short)(a->tick + step);
+    AT16(a, 0x2e) += step;
 
-    if (a->tick >= (int)d->durations[a->frame]) {
+    dur = d->durations[a->frame];
+    if (a->tick >= dur)
+    {
         a->tick = 0;
-        a->frame++;
-        if (a->frame >= d->count) {
-            a->frame = (short)(loop ? 0 : d->count - 1);
-            a->changed = 1;
-        }
-    } else if (a->tick < 0) {
-        a->tick = (short)(d->durations[a->frame] - 1);
-        a->frame--;
-        if (a->frame < 0) {
-            a->frame = (short)(loop ? d->count - 1 : 0);
-            a->changed = 1;
-        }
+        AT16(a, 0x2c) += 1;
+        if (a->frame < d->count)
+            return;
+        a->frame = loop ? 0 : d->count - 1;
+        a->changed = 1;
+    }
+    else if (a->tick < 0)
+    {
+        a->tick = dur - 1;
+        AT16(a, 0x2c) -= 1;
+        if (a->frame >= 0)
+            return;
+        a->frame = loop ? d->count - 1 : 0;
+        a->changed = 1;
     }
 }

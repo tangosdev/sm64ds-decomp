@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=8). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 int func_ov007_020c3df4(int a, void* b);
 char* func_0204a4c8(char* (*alloc)(int), int a, int b, int c, unsigned short arg5);
 int func_ov007_020b3f20(int a);
@@ -15,12 +12,15 @@ extern int data_ov007_02103450[];
 
 void func_ov007_020b782c(void)
 {
-    int i;
+    int i, j;
     data_ov007_02103448 = (void*)func_ov007_020c3df4((int)&data_ov007_02102dd0, (void*)0x3c00);
     data_ov007_02103444 = 0;
     data_ov007_0210344c = func_0204a4c8(data_ov007_020b78d0, 2, 0xc8, 0x23, 0x25);
-    for (i = 0; i < 2; i++) {
-        data_ov007_02103450[i] = i;
-    }
+    i = 0;
+    j = i;
+    do {
+        data_ov007_02103450[i] = j;
+        i++;
+    } while (i < 2);
     func_0204a17c((int)data_ov007_0210344c, func_ov007_020b3f20(0x17));
 }
