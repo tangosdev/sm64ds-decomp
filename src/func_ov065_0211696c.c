@@ -1,6 +1,3 @@
-// NONMATCHING: base materialization / addressing (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef short s16;
 
@@ -36,10 +33,10 @@ void func_ov065_0211696c(char* c)
     *(int*)(c + 0x3c0) = *(int*)((char*)&data_020a0e68 + 0x24);
     *(int*)(c + 0x3c4) = *(int*)((char*)&data_020a0e68 + 0x28);
     *(int*)(c + 0x3c8) = *(int*)((char*)&data_020a0e68 + 0x2c);
-    *(int*)(c + 0x3c0) <<= 3;
-    *(int*)(c + 0x3c4) <<= 3;
-    *(int*)(c + 0x3c4) -= 0xa000;
-    *(int*)(c + 0x3c8) <<= 3;
+    *(int*)(int)(((long long)(int)(c + 0x3c0)) & 0xFFFFFFFFFFFFFFFFLL) <<= 3;
+    *(int*)(int)(((long long)(int)(c + 0x3c4)) & 0xFFFFFFFFFFFFFFFFLL) <<= 3;
+    *(int*)(int)(((long long)(int)(c + 0x3c4)) & 0xFFFFFFFFFFFFFFFFLL) -= 0xa000;
+    *(int*)(int)(((long long)(int)(c + 0x3c8)) & 0xFFFFFFFFFFFFFFFFLL) <<= 3;
 
     Matrix4x3_FromTranslation(&data_020a0e68,
         *(int*)(c + 0x5c) >> 3,

@@ -1,12 +1,11 @@
 //cpp
-// NONMATCHING: register allocation (div=47). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned int u32;
 typedef int Fix12i;
 typedef short s16;
 typedef unsigned short u16;
 typedef signed char s8;
+
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
 
 extern "C" {
 void func_02012694(u32 id, void *pos);
@@ -27,6 +26,7 @@ extern void *data_ov091_021356d0;
 
 struct Vector3_16f { s16 x, y, z; };
 struct Vec { Fix12i x, y, z; };
+struct Info { Vector3_16f vec; Vec pos; };
 
 struct Self {
     char pad0[0x5c];
@@ -49,52 +49,52 @@ struct Self {
 
 extern "C" int func_ov091_02133d30(Self *self)
 {
-    Vector3_16f vec;
-    volatile Vec pos;
+    Info info;
     Vec tgt;
     void *spawned;
     void *player;
-    int rnd;
     s16 ang;
 
-    pos.x = self->x;
-    pos.y = self->y;
-    pos.z = self->z;
+    info.pos.x = self->x;
+    info.pos.y = self->y;
+    info.pos.z = self->z;
 
     if (self->type == 0x1f) {
         func_02012694(0x164, (char *)self + 0x74);
     }
 
     if (self->type > 0x1e) {
-        vec.x = data_02082214[(self->angle >> 4) * 2];
-        vec.y = 0;
-        vec.z = data_02082214[(self->angle >> 4) * 2 + 1];
+        info.vec.x = data_02082214[(self->angle >> 4) * 2];
+        info.vec.y = 0;
+        info.vec.z = data_02082214[(self->angle >> 4) * 2 + 1];
 
-        pos.y = pos.y + 0x28000;
+        info.pos.y = info.pos.y + 0x28000;
 
         self->f368 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->f368, 0x72, pos.x, pos.y, pos.z, &vec, 0);
+            self->f368, 0x72, info.pos.x, info.pos.y, info.pos.z, &info.vec, 0);
         self->f36c = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            self->f36c, 0x73, pos.x, pos.y, pos.z, &vec, 0);
-    }
+            self->f36c, 0x73, info.pos.x, info.pos.y, info.pos.z, &info.vec, 0);
 
-    if (!(self->type & 1)) {
-        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xe7, 1, &self->x, 0, self->f_cc, -1);
-        if (spawned != 0) {
-            player = _ZN5Actor13ClosestPlayerEv(self);
-            if (player != 0) {
-                void *ppos = (char *)player + 0x5c;
-                tgt.x = *(int *)((char *)ppos + 0);
-                tgt.y = *(int *)((char *)ppos + 4);
-                tgt.z = *(int *)((char *)ppos + 8);
-                tgt.y = *(int *)((char *)player + 0x644);
+        if (!(self->type & 1)) {
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xe7, 1, &self->x, 0, self->f_cc, -1);
+            if (spawned != 0) {
+                player = _ZN5Actor13ClosestPlayerEv(self);
+                if (player != 0) {
+                    int *pp = (int *)AT(player, 0x5c);
+                    tgt.x = pp[0];
+                    tgt.y = pp[1];
+                    tgt.z = pp[2];
+                    tgt.y = *(int *)((char *)player + 0x644);
 
-                rnd = RandomIntInternal(&data_0209e650);
-                ang = self->f94 + (s16)(0x2000 - (((rnd >> 8) & 3) << 0xc));
+                    {
+                        s16 f94v = self->f94;
+                        ang = f94v + (s16)(0x2000 - ((((u32)RandomIntInternal(&data_0209e650) >> 8) & 3) << 0xc));
+                    }
 
-                *(s16 *)((char *)spawned + 0x92) = Vec3_VertAngle(&self->x, &tgt);
-                *(s16 *)((char *)spawned + 0x94) = ang;
-                *(s16 *)((char *)spawned + 0x96) = 0;
+                    *(s16 *)((char *)spawned + 0x92) = Vec3_VertAngle(&self->x, &tgt);
+                    *(s16 *)((char *)spawned + 0x94) = ang;
+                    *(s16 *)((char *)spawned + 0x96) = 0;
+                }
             }
         }
     }
