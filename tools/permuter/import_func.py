@@ -104,7 +104,7 @@ def permutable_base(src, name):
         flags = S.CPP_FLAGS if cpp else M.DEFAULT_FLAGS
         with tempfile.TemporaryDirectory() as td:
             cf = pathlib.Path(td) / ("c.cpp" if cpp else "c.c")
-            cf.write_text(s)
+            cf.write_text(s, encoding="utf-8")
             o = M.compile_c(cf, "1.2/sp2p3", flags)
         if o is None:
             return None
@@ -175,13 +175,13 @@ def setup_dir(found, base_src, out=None):
     out.mkdir(parents=True, exist_ok=True)
 
     (out / "compile.sh").write_text(
-        f'#!/bin/bash\nexec "{to_posix(WRAPPER)}" "$@"\n')
+        f'#!/bin/bash\nexec "{to_posix(WRAPPER)}" "$@"\n', encoding="utf-8", newline="\n")
     (out / "compile.sh").chmod(0o755)
     # Direct-compile sidecar: the permuter's compiler.py uses this to call mwccarm.exe
     # without spawning bash (~4x faster per candidate). Mirrors the wrapper's flags.
     (out / "cc.txt").write_text(json.dumps(
-        {"cmd": [to_win(MWCC), *CFLAGS, "-c"], "license": to_win(LICENSE)}))
-    (out / "base.c").write_text(base_src)
+        {"cmd": [to_win(MWCC), *CFLAGS, "-c"], "license": to_win(LICENSE)}), encoding="utf-8")
+    (out / "base.c").write_text(base_src, encoding="utf-8")
     (out / "target.o").write_bytes(tgt)
 
     # Reloc offsets to wildcard: prefer the seed's own .rel.text (authoritative, incl.
@@ -190,12 +190,12 @@ def setup_dir(found, base_src, out=None):
     if reloc_offs is None:
         relocs = R.load_relocs_file(mod["relocs"])
         reloc_offs = sorted(o - addr for o in relocs if addr <= o < addr + size)
-    (out / "target.o.relocs").write_text("".join(f"0x{o:x}\n" for o in reloc_offs))
+    (out / "target.o.relocs").write_text("".join(f"0x{o:x}\n" for o in reloc_offs), encoding="utf-8")
 
     (out / "settings.toml").write_text(
         f'compiler_type = "mwcc"\n'
         f'func_name = "{name}"\n'
-        f'objdump_command = "python {to_win(CAP)}"\n')
+        f'objdump_command = "python {to_win(CAP)}"\n', encoding="utf-8")
     return out, name, addr, size, len(reloc_offs)
 
 
