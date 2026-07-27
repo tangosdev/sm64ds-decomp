@@ -1752,9 +1752,8 @@ by name and its behaviour confirmed from primary artifacts; see 6ag. Consequence
 
 6af bounded first-access-fold to a compiler-build delta but could not name the build.
 It now has a name, and the fold behaviour is confirmed from period artifacts rather
-than inferred. The whole `1.0`/`1.1` framing in earlier notes was wrong: Nintendo's
-2003-2004 DS compiler used a `V0.x` numbering under two product names, and it is a
-different product line from everything in tools/mwccarm.
+than inferred. Nintendo's 2003-2004 DS compiler ran a `V0.x` numbering under two
+product names, and it is a different product line from everything in tools/mwccarm.
 
 Evidence comes from the compiler stamps and build paths that CodeWarrior writes into
 the prebuilt `.a` libraries shipped with each NitroSDK release:
@@ -1788,6 +1787,22 @@ Two measurements confirm this is the ROM's compiler:
    wins on both absolute bytes and hit rate (16.9% of candidates vs 13.1% and 11.0%),
    which puts the game's linked SDK at the V0.6.1 era. SM64DS (NA, gamecode ASME)
    shipped 2004-11-21, before CW-for-NITRO 1.2 existed at all.
+
+Metrowerks' own roadmap talk from the Nintendo DS Developer Conference, dated
+2004-09-30 (`7_Metrowerks.pdf`, "CodeWarrior for NINTENDO DS", Rafael Campana), fills
+in the rest of the 2004 line and dates it precisely. As of that talk the shipping IDE
+was 5.6, with two releases pending: "Release 0.9 (~Late September 2004)" adding overlay
+debugging, a command line debugger interface and batch pre/post linker plugins, then
+"Release 1.0 (~Early October 2004)" adding long veneer branch support, watchpoints, a
+simple profiler and a cache viewer. So a 1.0 did exist, in October 2004, and the jump
+straight to the surviving 1.2 of June 2005 is a gap in the archives rather than in the
+version numbering. SM64DS (NA) shipped 2004-11-21, which places its toolchain in the
+V0.6.1-to-1.0 window and before 1.2 by a wide margin.
+
+Worth noting for the asm-hatch work: long veneer branch support is a Release 1.0
+(Oct 2004) feature, landing right inside the game's build window. That is consistent
+with the veneer class being reachable from `#pragma long_calls on` rather than being
+hand-written assembly.
 
 Practical effect for matching: nothing changes today. V0.6.1 is not in any public
 archive (the surviving mirrors floor at the June-2005 1.2 installer), so 1.2/sp2p3
