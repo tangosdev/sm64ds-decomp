@@ -1303,6 +1303,11 @@ not asm-hatch (these are compiled code, not hand-asm, so section 8 does not appl
   moves) is what **2.0** emits -- 2.0 + `-proc arm7tdmi` reaches 1 word (`ldr r3,[ip]` vs
   `ldm ip,{r3}`). These 4 are the ONLY occurrences of this staging idiom in the whole ROM
   (arm9 + all overlays scanned); nothing in the 1.2-matched corpus produces it.
+  **SOLVED 2026-07-27 (6ah):** all four match under the recovered 2004 build 0056, which
+  emits the ROM's fixed-frame staging directly. The near-miss C already in the DB matches
+  unchanged; only the compiler was wrong. The "2.0 emits it" observation was the right
+  scent from the wrong direction, since the real build predates 1.2 rather than following
+  it.
 
 **Rule**: before a long grind on a big library-looking function, check whether its TU-mates
 match at 1.2 and whether the divergent idiom appears ANYWHERE in the matched corpus. If the
@@ -1990,6 +1995,16 @@ verified with strict reloc checking:
 
 Spot-checked against all 24 older builds: none of them match any of these. The four
 arm9 entries were not close misses, they were the wrong size entirely.
+
+Worth noting that this breaks a SECOND documented wall, not just materialization. Those
+four arm9 entries are the `ActorBase::Process` PTMF wrappers written up further up this
+file: mwccarm 1.2 forces a `push {fp,lr}` dynamic frame from every source form tried,
+giving 0x68 against the ROM's 0x5c, and the note concluded the ROM's fixed-frame staging
+"is what 2.0 emits". Build 0056 emits that staging directly and all four match on the
+near-miss C unchanged. The 2.0 observation was the right scent from the wrong direction:
+the behaviour belongs to the era before 1.2, not after it. Two independent walls falling
+to the same binary is the strongest evidence yet that the era, not the source, was the
+blocker all along.
 
 **Build 0056 is an ADDITION to the sweep, not a replacement for 1.2/sp2p3.** On an
 80-function sample of already-matched code, 78 matched under both, 0 under b56 alone,
