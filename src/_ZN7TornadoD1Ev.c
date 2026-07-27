@@ -2,7 +2,7 @@ extern void _ZN18TextureTransformerD1Ev(void *);
 extern void _ZN9ModelAnimD1Ev(void *);
 extern void _ZN12WithMeshClsnD1Ev(void *);
 extern void _ZN18MovingCylinderClsnD1Ev(void *);
-extern void _ZN5ActorD1Ev(void *);
+extern void _ZN5ActorD2Ev(void *);
 extern int VT0[];
 int *_ZN7TornadoD1Ev(int *t)
 {
@@ -11,6 +11,6 @@ int *_ZN7TornadoD1Ev(int *t)
     _ZN9ModelAnimD1Ev((char *)t + 0x2c4);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x108);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
-    _ZN5ActorD1Ev(t);
+    _ZN5ActorD2Ev(t);
     return t;
 }

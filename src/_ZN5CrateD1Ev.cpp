@@ -5,7 +5,7 @@ void _ZN11ShadowModelD1Ev(void*);
 void _ZN12WithMeshClsnD1Ev(void*);
 void _ZN18MovingMeshColliderD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
-void _ZN5ActorD1Ev(void*);
+void _ZN5ActorD2Ev(void*);
 extern int _ZTV5Crate[];
 extern int _ZTV17ExclamationSwitch[];
 void* _ZN5CrateD1Ev(char* self){
@@ -17,7 +17,7 @@ void* _ZN5CrateD1Ev(char* self){
     *(int*)self = (int)_ZTV17ExclamationSwitch;
     _ZN18MovingMeshColliderD1Ev(self + 0x124);
     _ZN5ModelD1Ev(self + 0xd4);
-    _ZN5ActorD1Ev(self);
+    _ZN5ActorD2Ev(self);
     return self;
 }
 }

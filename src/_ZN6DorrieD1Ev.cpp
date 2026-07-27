@@ -7,7 +7,7 @@ void _ZN18MovingCylinderClsnD1Ev(void*);
 void _ZN12WithMeshClsnD1Ev(void*);
 void func_0207328c(void*, int, int, void*);
 void _ZN9ModelAnimD1Ev(void*);
-void _ZN5ActorD1Ev(void*);
+void _ZN5ActorD2Ev(void*);
 void *_ZN6DorrieD1Ev(void* thiz);
 }
 void *_ZN6DorrieD1Ev(void* thiz) {
@@ -18,6 +18,6 @@ void *_ZN6DorrieD1Ev(void* thiz) {
     _ZN12WithMeshClsnD1Ev(c + 0xf50);
     func_0207328c(c + 0x150, 7, 0x200, (void*)func_ov065_021180b8);
     _ZN9ModelAnimD1Ev(c + 0xec);
-    _ZN5ActorD1Ev(c);
+    _ZN5ActorD2Ev(c);
     return c;
 }

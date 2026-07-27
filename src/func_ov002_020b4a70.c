@@ -1,7 +1,7 @@
 extern int func_0207328c(void*, int, int, void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
-extern int _ZN5ActorD1Ev(void*);
+extern int _ZN5ActorD2Ev(void*);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern void* data_ov002_02108d94;
 extern void* _ZTV17ExclamationSwitch;
@@ -13,7 +13,7 @@ void* func_ov002_020b4a70(void* c) {
   *(void**)c = &_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev((char*)c+0x124);
   _ZN5ModelD1Ev((char*)c+0xd4);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   _ZN6Memory10DeallocateEPvP4Heap(c, *(void**)&data_020a0eac);
   return c;
 }

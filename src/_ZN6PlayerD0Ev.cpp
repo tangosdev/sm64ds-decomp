@@ -5,7 +5,7 @@ extern int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern int _ZN11ShadowModelD1Ev(void*);
 extern int func_0207328c(void*, int, int, void*);
 extern int _ZN9ModelAnimD1Ev(void*);
-extern int _ZN5ActorD1Ev(void*);
+extern int _ZN5ActorD2Ev(void*);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern void _ZN15TextureSequenceD1Ev(void);
 extern void _ZN15MaterialChangerD1Ev(void);
@@ -22,7 +22,7 @@ void* _ZN6PlayerD0Ev(void* c) {
   func_0207328c((char*)c+0x1dc, 4, 0x14, (void*)_ZN15TextureSequenceD1Ev);
   _ZN9ModelAnimD1Ev((char*)c+0x174);
   _ZN9ModelAnimD1Ev((char*)c+0xf0);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   _ZN6Memory10DeallocateEPvP4Heap(c, *(void**)&data_020a0eac);
   return c;
 }

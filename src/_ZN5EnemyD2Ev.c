@@ -4,7 +4,7 @@
  */
 
 extern void *_ZTV5Enemy;                 /* Enemy vtable (wildcard reloc) */
-extern void *_ZN5ActorD1Ev(void *self);  /* Actor::~Actor (already named) */
+extern void *_ZN5ActorD2Ev(void *self);  /* Actor::~Actor (already named) */
 
 struct Enemy {
     void *vtable;
@@ -13,6 +13,6 @@ struct Enemy {
 void *_ZN5EnemyD2Ev(struct Enemy *self)
 {
     self->vtable = &_ZTV5Enemy;
-    _ZN5ActorD1Ev(self);
+    _ZN5ActorD2Ev(self);
     return self;
 }

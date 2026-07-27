@@ -1,7 +1,7 @@
 extern int func_0207328c(void *p, int a, int b, void *f);
 extern int _ZN5ModelD1Ev(void *p);
 extern int _ZN18MovingMeshColliderD1Ev(void *p);
-extern int _ZN5ActorD1Ev(void *p);
+extern int _ZN5ActorD2Ev(void *p);
 extern int data_ov002_0210af70[];
 extern int _ZTV17ExclamationSwitch[];
 int _ZN8PathLiftD2Ev(char *c) {
@@ -10,6 +10,6 @@ int _ZN8PathLiftD2Ev(char *c) {
     *(int**)(c) = _ZTV17ExclamationSwitch;
     _ZN18MovingMeshColliderD1Ev(c+0x124);
     _ZN5ModelD1Ev(c+0xd4);
-    _ZN5ActorD1Ev(c);
+    _ZN5ActorD2Ev(c);
     return (int)c;
 }

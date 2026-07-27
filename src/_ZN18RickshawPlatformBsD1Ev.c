@@ -4,7 +4,7 @@ extern int _ZTV17ExclamationSwitch[];
 extern int func_0207328c(void*,int,int,void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
-extern int _ZN5ActorD1Ev(void*);
+extern int _ZN5ActorD2Ev(void*);
 int _ZN18RickshawPlatformBsD1Ev(char* c){
   *(int*)c=(int)_ZTV18RickshawPlatformBs;
   *(int*)c=(int)data_ov002_02108d94;
@@ -13,6 +13,6 @@ int _ZN18RickshawPlatformBsD1Ev(char* c){
   *(int*)c=(int)_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev(c+0x124);
   _ZN5ModelD1Ev(c+0xd4);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   return (int)c;
 }

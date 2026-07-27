@@ -5,7 +5,7 @@
  *     0x02086f84 = _ZTV6Camera
  *     0x02092720 = _ZTV4View
  *     0x0208e4b8 = _ZTV12ActorDerived
- *   bl 0x02043d48 = _ZN9ActorBaseD1Ev (ActorBase::~ActorBase)
+ *   bl 0x02043d48 = _ZN9ActorBaseD2Ev (ActorBase::~ActorBase)
  *
  * CodeWarrior virtual-destructor codegen: as the dtor runs, the vptr at
  * [this+0] is reset to each base subobject's vtable in turn, then the
@@ -23,13 +23,13 @@ extern void *_ZTV4View[];
 extern void *_ZTV12ActorDerived[];
 
 /* Immediate base destructor. */
-extern void _ZN9ActorBaseD1Ev(struct Camera *thiz);
+extern void _ZN9ActorBaseD2Ev(struct Camera *thiz);
 
 struct Camera *_ZN6CameraD1Ev(struct Camera *thiz)
 {
     thiz->vtable = (void **)_ZTV6Camera;
     thiz->vtable = (void **)_ZTV4View;
     thiz->vtable = (void **)_ZTV12ActorDerived;
-    _ZN9ActorBaseD1Ev(thiz);
+    _ZN9ActorBaseD2Ev(thiz);
     return thiz;
 }

@@ -4,7 +4,7 @@ extern void _ZN11ShadowModelD1Ev(void* p);
 extern void _ZN5ModelD1Ev(void* p);
 extern void _ZN14BlendModelAnimD1Ev(void* p);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
-extern void _ZN5ActorD1Ev(void* p);
+extern void _ZN5ActorD2Ev(void* p);
 extern int func_0207328c(void* p, int a, int b, void* fn);
 extern int _ZTV6Eyerok[];
 extern int _ZTV17ExclamationSwitch[];
@@ -21,6 +21,6 @@ void* _ZN6EyerokD1Ev(char* c) {
     *(void**)c = _ZTV17ExclamationSwitch;
     _ZN18MovingMeshColliderD1Ev(c+0x124);
     _ZN5ModelD1Ev(c+0xd4);
-    _ZN5ActorD1Ev(c);
+    _ZN5ActorD2Ev(c);
     return c;
 }

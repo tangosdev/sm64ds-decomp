@@ -16,7 +16,7 @@ struct Heap;
  *   0x0203c1e8 = Memory::Deallocate(void*, Heap*)
  *   0x020a0eac = Memory::gameHeapPtr    (Heap*)
  * The three vtable literals are _ZTV6Camera / _ZTV4View / _ZTV12ActorDerived. */
-extern void ActorBaseDtor(struct Camera *self);                 /* _ZN9ActorBaseD1Ev */
+extern void ActorBaseDtor(struct Camera *self);                 /* _ZN9ActorBaseD2Ev */
 extern void Memory_Deallocate(void *ptr, struct Heap *heap);    /* _ZN6Memory10DeallocateEPvP4Heap */
 
 extern void *Camera_vtable;        /* _ZTV6Camera        */

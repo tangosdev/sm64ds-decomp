@@ -22,7 +22,7 @@ extern void *_ZTV5Scene[];
 extern void *_ZTV12ActorDerived[];
 
 extern void _ZN10FaderColorD1Ev(void *fader);          /* 0x020175c4 */
-extern void _ZN9ActorBaseD1Ev(struct MultiBootScene *self); /* 0x02043d48 */
+extern void _ZN9ActorBaseD2Ev(struct MultiBootScene *self); /* 0x02043d48 */
 
 struct MultiBootScene *func_02034a78(struct MultiBootScene *self)
 {
@@ -30,6 +30,6 @@ struct MultiBootScene *func_02034a78(struct MultiBootScene *self)
     _ZN10FaderColorD1Ev((char *)self + 0x50);
     self->vtable = (void **)_ZTV5Scene;
     self->vtable = (void **)_ZTV12ActorDerived;
-    _ZN9ActorBaseD1Ev(self);
+    _ZN9ActorBaseD2Ev(self);
     return self;
 }

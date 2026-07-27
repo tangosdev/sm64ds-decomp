@@ -3,7 +3,7 @@ extern "C" {
 extern int func_0207328c(void*,int,int,void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
-extern int _ZN5ActorD1Ev(void*);
+extern int _ZN5ActorD2Ev(void*);
 extern int _ZTV21ArmedRotatingPlatform[];
 extern int data_ov002_02108d94[];
 extern int _ZTV17ExclamationSwitch[];
@@ -15,7 +15,7 @@ void* _ZN21ArmedRotatingPlatformD1Ev(char* c){
   *(int**)c=_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev(c+0x124);
   _ZN5ModelD1Ev(c+0xd4);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   return c;
 }
 }

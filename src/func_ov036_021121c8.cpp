@@ -4,7 +4,7 @@ extern void _ZN9ModelAnimD1Ev(void*);
 extern void func_0207328c(void* arr, int count, int size, void(*dtor)(void*));
 extern void _ZN18MovingMeshColliderD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
-extern void _ZN5ActorD1Ev(void*);
+extern void _ZN5ActorD2Ev(void*);
 extern void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern void* data_ov036_02113f9c[];
 extern void* data_ov002_0210af70[];
@@ -20,7 +20,7 @@ void* func_ov036_021121c8(char* p){
   *(void***)p = (void**)_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev(p+0x124);
   _ZN5ModelD1Ev(p+0xd4);
-  _ZN5ActorD1Ev(p);
+  _ZN5ActorD2Ev(p);
   _ZN6Memory10DeallocateEPvP4Heap(p, data_020a0eac);
   return p;
 }

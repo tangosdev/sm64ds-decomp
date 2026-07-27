@@ -1,6 +1,6 @@
 extern void _ZN18MovingMeshColliderD1Ev(void *);
 extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD1Ev(void *);
+extern void _ZN5ActorD2Ev(void *);
 extern int VT0[];
 extern int VT1[];
 extern int VT2[];
@@ -11,6 +11,6 @@ int *func_ov016_02112ef4(int *t)
     t[0] = (int)VT2;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD1Ev(t);
+    _ZN5ActorD2Ev(t);
     return t;
 }

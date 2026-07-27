@@ -14,7 +14,7 @@ struct Heap;
 extern void *_ZTV5Stage[];
 extern void *data_0208e4b8[];
 
-extern void _ZN9ActorBaseD1Ev(struct Scene *self);              /* 0x02043d48 */
+extern void _ZN9ActorBaseD2Ev(struct Scene *self);              /* 0x02043d48 */
 extern void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, struct Heap *heap); /* 0x0203c1e8 */
 extern struct Heap *data_020a0eac;                   /* 0x020a0eac */
 
@@ -22,7 +22,7 @@ struct Scene *_ZN5SceneD0Ev(struct Scene *self)
 {
     self->vtable = (void **)_ZTV5Stage;
     self->vtable = (void **)data_0208e4b8;
-    _ZN9ActorBaseD1Ev(self);
+    _ZN9ActorBaseD2Ev(self);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }

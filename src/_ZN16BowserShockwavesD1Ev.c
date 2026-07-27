@@ -2,7 +2,7 @@ extern void _ZN18TextureTransformerD1Ev(void *);
 extern void _ZN15MaterialChangerD1Ev(void *);
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN5ActorD1Ev(void *);
+extern void _ZN5ActorD2Ev(void *);
 extern int VT0[];
 int *_ZN16BowserShockwavesD1Ev(int *t)
 {
@@ -15,6 +15,6 @@ int *_ZN16BowserShockwavesD1Ev(int *t)
     _ZN15MaterialChangerD1Ev((char *)t + 0x14c);
     _ZN15TextureSequenceD1Ev((char *)t + 0x138);
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
-    _ZN5ActorD1Ev(t);
+    _ZN5ActorD2Ev(t);
     return t;
 }

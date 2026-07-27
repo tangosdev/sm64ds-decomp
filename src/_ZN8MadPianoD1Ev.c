@@ -5,7 +5,7 @@ extern void _ZN11ShadowModelD1Ev(void*);
 extern void _ZN9ModelAnimD1Ev(void*);
 extern void _ZN18MovingMeshColliderD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
-extern void _ZN5ActorD1Ev(void*);
+extern void _ZN5ActorD2Ev(void*);
 extern void* _ZTV8MadPiano;
 extern void* _ZTV17ExclamationSwitch;
 void* _ZN8MadPianoD1Ev(void* c) {
@@ -19,6 +19,6 @@ void* _ZN8MadPianoD1Ev(void* c) {
   *(void**)c = &_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev((char*)c+0x124);
   _ZN5ModelD1Ev((char*)c+0xd4);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   return c;
 }

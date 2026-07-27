@@ -5,7 +5,7 @@ extern int func_0207328c(void*,int,int,void*);
 extern int _ZN11ShadowModelD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN9ModelAnimD1Ev(void*);
-extern int _ZN5ActorD1Ev(void*);
+extern int _ZN5ActorD2Ev(void*);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void*,void*);
 int _ZN11MirrorLuigiD0Ev(char* c){
   *(int*)c=(int)_ZTV11MirrorLuigi;
@@ -13,7 +13,7 @@ int _ZN11MirrorLuigiD0Ev(char* c){
   _ZN11ShadowModelD1Ev(c+0x188);
   _ZN5ModelD1Ev(c+0x138);
   _ZN9ModelAnimD1Ev(c+0xd4);
-  _ZN5ActorD1Ev(c);
+  _ZN5ActorD2Ev(c);
   _ZN6Memory10DeallocateEPvP4Heap(c,(void*)data_020a0eac[0]);
   return (int)c;
 }

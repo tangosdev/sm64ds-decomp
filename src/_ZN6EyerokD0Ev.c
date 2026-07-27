@@ -5,7 +5,7 @@ extern void _ZN11ShadowModelD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 extern void _ZN14BlendModelAnimD1Ev(void*);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-extern void _ZN5ActorD1Ev(void*);
+extern void _ZN5ActorD2Ev(void*);
 extern void* _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern int _ZTV6Eyerok[];
 extern int func_020072c0[];
@@ -23,7 +23,7 @@ void* _ZN6EyerokD0Ev(char* c) {
     *(int**)c = _ZTV17ExclamationSwitch;
     _ZN18MovingMeshColliderD1Ev(c+0x124);
     _ZN5ModelD1Ev(c+0xd4);
-    _ZN5ActorD1Ev(c);
+    _ZN5ActorD2Ev(c);
     _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
     return c;
 }

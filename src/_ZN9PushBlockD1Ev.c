@@ -2,7 +2,7 @@ extern void _ZN12WithMeshClsnD1Ev(void *);
 extern void _ZN18MovingCylinderClsnD1Ev(void *);
 extern void _ZN11ShadowModelD1Ev(void *);
 extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD1Ev(void *);
+extern void _ZN5ActorD2Ev(void *);
 extern int VT0[];
 int *_ZN9PushBlockD1Ev(int *t)
 {
@@ -12,6 +12,6 @@ int *_ZN9PushBlockD1Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x174);
     _ZN5ModelD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD1Ev(t);
+    _ZN5ActorD2Ev(t);
     return t;
 }
