@@ -1303,7 +1303,7 @@ not asm-hatch (these are compiled code, not hand-asm, so section 8 does not appl
   moves) is what **2.0** emits -- 2.0 + `-proc arm7tdmi` reaches 1 word (`ldr r3,[ip]` vs
   `ldm ip,{r3}`). These 4 are the ONLY occurrences of this staging idiom in the whole ROM
   (arm9 + all overlays scanned); nothing in the 1.2-matched corpus produces it.
-  **SOLVED 2026-07-27 (6ah):** all four match under the recovered 2004 build 0056, which
+  **SOLVED 2026-07-27 (6ai):** all four match under the recovered 2004 build 0056, which
   emits the ROM's fixed-frame staging directly. The near-miss C already in the DB matches
   unchanged; only the compiler was wrong. The "2.0 emits it" observation was the right
   scent from the wrong direction, since the real build predates 1.2 rather than following
@@ -1703,7 +1703,7 @@ exhausted the pragma space (opt_loop_invariants / common_subs / propagation / li
 strength_reduction / dead_assignments, optimization_level 2/3, optimize_for_size), u64
 laundering, `&b[1]`, temps, goto/nested loop forms. Do not spend more model time on it.
 
-## 6af. First-access-fold is a COMPILER-BUILD delta, not a source construct (SetGroundFlag challenge, 2026-07-27)
+## 6ag. First-access-fold is a COMPILER-BUILD delta, not a source construct (SetGroundFlag challenge, 2026-07-27)
 
 Ran the WithMeshClsn::SetGroundFlag (0x02035708, size 0x14) challenge to ground: find a
 source form that materializes `this+0x10` for the RMW without the u64 launder. Negative
@@ -1742,7 +1742,7 @@ it keeps the CSE'd address temp. Every mwccarm we have re-folds that temp
 unconditionally at O1+. That is the entire first-access-fold "floor": not a missing
 source construct, a codegen delta in whichever CW-for-DS build Nintendo actually ran
 (a pre-1.2 2004-era release; tools/mwccarm starts at 1.2). That build is now identified
-by name and its behaviour confirmed from primary artifacts; see 6ag. Consequences:
+by name and its behaviour confirmed from primary artifacts; see 6ah. Consequences:
 
 - The u64 whole-expression launder (6ac: launder the WHOLE address expression, not the
   base) is the CORRECT canonical compensation; 1,612 src files / 3,142 uses carry it
@@ -1753,9 +1753,9 @@ by name and its behaviour confirmed from primary artifacts; see 6ag. Consequence
   bound is hard: 95:1 in ROM, 0 reachable across 24 builds x 10 opt configs x 7 -opt
   toggles x ~30 formulations.
 
-## 6ag. The build that compiled the ROM: CodeWarrior for NITRO V0.5-V0.6.1 (2026-07-27)
+## 6ah. The build that compiled the ROM: CodeWarrior for NITRO V0.5-V0.6.1 (2026-07-27)
 
-6af bounded first-access-fold to a compiler-build delta but could not name the build.
+6ag bounded first-access-fold to a compiler-build delta but could not name the build.
 It now has a name and a build-number range, and the fold behaviour is confirmed from
 period artifacts rather than inferred. Nintendo's 2003-2004 DS compiler ran a `V0.x`
 product numbering under two names, IRIS (the pre-NITRO codename) and NITRO. It is the
@@ -1946,9 +1946,9 @@ Two results from testing those against our compiler:
   functions, it is a free axis to add to the near-miss sweep, particularly for residues
   suspected of an inlining-decision difference.
 
-## 6ah. RECOVERED: a 2004 mwccarm (build 0056), and the wall falls (2026-07-27)
+## 6ai. RECOVERED: a 2004 mwccarm (build 0056), and the wall falls (2026-07-27)
 
-6ag concluded that obtaining a pre-2005 binary was the only way past first-access-fold,
+6ah concluded that obtaining a pre-2005 binary was the only way past first-access-fold,
 and that no archive held one. The second half was wrong, in a useful way. NITRO was not
 a fork: the same mwccarm core shipped in Metrowerks' public, non-NDA "CodeWarrior for
 ARM ISA Edition", and Metrowerks' own FTP is preserved on archive.org. Its October 2004
@@ -1968,7 +1968,7 @@ splits the self-extractor payload and inflates the InstallShield volume in-proce
 nothing third-party is installed and nothing is executed. Artifact: 2,248,704 bytes,
 sha1 `8eb0b9653ea1c9a589c3a4399e37e2780059a818`. Install it as `2004/b56`.
 
-**The wall falls.** On the exact probe 6af called shape-blocked, plain C, no launder:
+**The wall falls.** On the exact probe 6ag called shape-blocked, plain C, no launder:
 
 ```
 add r1, r0, #0x154 / ldr r0, [r1] / orr r0, r0, #0x40 / str r0, [r1] / bx lr
@@ -1976,7 +1976,7 @@ add r1, r0, #0x154 / ldr r0, [r1] / orr r0, r0, #0x40 / str r0, [r1] / bx lr
 
 That is the ROM's 5-instruction materialized form. Every one of the 24 builds we had
 emits the folded 4-instruction version instead, at every opt level, under every source
-idiom tried. The difference is the compiler, exactly as 6af predicted.
+idiom tried. The difference is the compiler, exactly as 6ag predicted.
 
 Sweeping the 372-row near-miss DB through build 0056 landed **9 matches for free**,
 verified with strict reloc checking:
@@ -2010,7 +2010,7 @@ future floor diagnosis.
 80-function sample of already-matched code, 78 matched under both, 0 under b56 alone,
 and 1 regressed: `func_ov004_020adc1c` (ov004, 32 bytes) where b56 emits 0x24 against
 the ROM's 0x20. So b56 is not the game's exact build either. The true build sits
-between 56 and 72 and, per 6ag's product ladder and the Sept-Dec 2004 window, is most
+between 56 and 72 and, per 6ah's product ladder and the Sept-Dec 2004 window, is most
 likely 0058-0062, i.e. CodeWarrior for NITRO V0.5/V0.6/V0.6.1. Switching wholesale
 would break roughly 1% of the corpus; adding b56 to the version sweep costs nothing and
 wins the materialized family. The hunt is now much narrower: builds 0057-0062.
