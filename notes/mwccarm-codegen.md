@@ -1996,15 +1996,15 @@ verified with strict reloc checking:
 Spot-checked against all 24 older builds: none of them match any of these. The four
 arm9 entries were not close misses, they were the wrong size entirely.
 
-Worth noting that this breaks a SECOND documented wall, not just materialization. Those
-four arm9 entries are the `ActorBase::Process` PTMF wrappers written up further up this
-file: mwccarm 1.2 forces a `push {fp,lr}` dynamic frame from every source form tried,
-giving 0x68 against the ROM's 0x5c, and the note concluded the ROM's fixed-frame staging
-"is what 2.0 emits". Build 0056 emits that staging directly and all four match on the
-near-miss C unchanged. The 2.0 observation was the right scent from the wrong direction:
-the behaviour belongs to the era before 1.2, not after it. Two independent walls falling
-to the same binary is the strongest evidence yet that the era, not the source, was the
-blocker all along.
+This also breaks a second documented wall. Those four arm9 entries are the
+`ActorBase::Process` PTMF wrappers written up further up this file: mwccarm 1.2 forces a
+`push {fp,lr}` dynamic frame from every source form tried, giving 0x68 against the ROM's
+0x5c, and the note concluded the ROM's fixed-frame staging "is what 2.0 emits". Build
+0056 emits that staging directly and all four match on the near-miss C unchanged. The
+2.0 reading was the right scent from the wrong direction, since the behaviour belongs to
+the era before 1.2 rather than after it. Two unrelated walls falling to one binary is
+worth recording because it raises the prior on compiler era over source spelling for any
+future floor diagnosis.
 
 **Build 0056 is an ADDITION to the sweep, not a replacement for 1.2/sp2p3.** On an
 80-function sample of already-matched code, 78 matched under both, 0 under b56 alone,
