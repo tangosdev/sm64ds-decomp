@@ -2019,6 +2019,56 @@ Note for CI: the self-hosted validate box needs `2004/b56` installed before any
 b56-only match can be committed to src/, otherwise it cannot reproduce them and the
 files would land red. Run `tools/recover_cw2004.py` there first.
 
+## 6aj. Uninit-decl split: vreg birth order follows the DECLARATION LINE, not first assignment (2026-07-27, Opus→Fable on func_ov007_020c3fe4)
+
+The decl-order rules (2, 6e, 6k, 6q) all assume declarations carry initializers, which
+locks two levers together: the declaration line IS the first definition, so coloring
+order and evaluation order move as one. They are separable. Declare the locals
+*uninitialized* in one block, then assign in a second block, and the allocator ranks
+the webs by the DECLARATION line while the code still evaluates in assignment order.
+
+The case that proved it: func_ov007_020c3fe4 (ov007 0xac), a div-8 near-miss where the
+ROM kept a sub-object pointer `p` in scratch r2 and a shifted value `y` in callee-saved
+r5, and every initialized-decl spelling had them swapped. All 120 permutations of the
+initialized decls were swept — div 8 was the unique floor, and 9,107 permuter
+iterations never improved it, because with `int y = p->y >> 12;` the y-web cannot be
+born before the p-web that feeds it. Splitting:
+
+    s32 y; s32 m; s32 x; s32 vis; s32 onX; s32 negM; struct Inner *p; s32 f;
+    p = self->inner;
+    ...original statement order...
+
+hands short-lived `y` (declared first) the r5 slot and late-declared long-lived `p` the
+scratch r2, without perturbing any of the 35 already-matching instructions → div 0 on
+1.2/sp2p3. Three of six tested orders matched (y-first with p late in all of them), so
+the constraint is the y-before-p rank relation, not one magic permutation. ~24 compiles
+total, after u64-laundering (6h), pragmas (6f/6aa), escape-aliasing and shift respells
+(6ab/6ac) all stalled at div 8.
+
+Rule of thumb: when a residual is a pure 2-register swap between a value and the
+pointer/base it derives from, initialized decls CANNOT reach the ROM's coloring if the
+ROM births the derived value's web first. Try the uninit-decl split before calling it a
+wall — it reaches decl-order × assignment-order combinations the initialized form
+structurally cannot express. (C89 style keeps this legal in plain C.)
+
+Two same-day floors for contrast, both banked in nearmiss/db.jsonl with evidence:
+
+- **func_ov075_0211a948 (div 5): a two-attractor rank-pin.** Every spelling of
+  `tex>>3 | fmt<<26 | ...` renormalizes to attractor A (ROM's instruction selection,
+  swapped coloring, div 5) or attractor B (`fmt`-term-first: ROM's coloring, wrong
+  selection — `tex,lsr #3` folds into the orr and `lsl #26` materializes, div 7). The
+  ROM is A's selection with B's coloring; fold-side and color-rank ride the same
+  canonical tree and ~46 compiles across 6aa/6ab/6ac/6h found no construct that
+  decouples them. The uninit-decl split does NOT help here — the swap is inside one
+  expression tree, not between two statements. Open angle: anything that changes
+  pre-RA operand evaluation order of `|` without reordering the tree.
+- **func_ov006_020dbe9c (div 21): pooled-base web with exactly two reachable colors.**
+  The pool base of `data_02082214` colors `ip` un-laundered and `r6` laundered (6h
+  moves the class, as documented) — but the ROM wants `r4`, and all 21 divergences are
+  a forced cascade of that one choice. Laundering rotating the color without reaching
+  the target is the tell that the web's rank class is pinned (6ab), not that more
+  laundering variants are worth grinding.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
