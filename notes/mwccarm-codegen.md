@@ -1698,6 +1698,111 @@ exhausted the pragma space (opt_loop_invariants / common_subs / propagation / li
 strength_reduction / dead_assignments, optimization_level 2/3, optimize_for_size), u64
 laundering, `&b[1]`, temps, goto/nested loop forms. Do not spend more model time on it.
 
+## 6af. First-access-fold is a COMPILER-BUILD delta, not a source construct (SetGroundFlag challenge, 2026-07-27)
+
+Ran the WithMeshClsn::SetGroundFlag (0x02035708, size 0x14) challenge to ground: find a
+source form that materializes `this+0x10` for the RMW without the u64 launder. Negative
+result, now with the mechanism identified:
+
+- ~20 new formulation classes beyond the challenge's original 10, ALL emit the folded
+  0x10 form: bitfield set (bit 4), MI second-base member, volatile member, volatile
+  OBJECT pointer, inlined arg-pass helpers (C and C++), method-on-embedded-member,
+  accessor returning ref/ptr, self-helper with mask arg, register-pinned pointer,
+  one-trip loop, statement-expr assignment, late-const index, char* two-step,
+  struct-pointer +1 scaling, int-typed address.
+- All 24 local compiler builds (1.2 base..sp4, 2.0 base..sp2p4, dsi 1.1..1.6sp2) fold,
+  C and C++ front ends both (mwccarm emits Itanium mangling natively, so .cpp method
+  candidates extract under the same _ZN name).
+- Opt levels -O1..-O4 with ,p/,s all fold; -O0 emits a frame (0x20). The fold lives in
+  the L1 core (selection/regalloc), NOT in a toggleable pass: -opt noprop / nocse /
+  nolifetimes / nodeadstore / nostrength / noloop / nodeadcode all still fold. The
+  opt_* pragmas ARE recognized by mwccarm 1.2 (verified: -w illpragmas warns on a fake
+  pragma, stays silent on opt_propagation) and are still irrelevant to this fold.
+
+The positive result is a ROM census (adjacent-word scan of arm9_dec.bin for
+ldr/ALU/str with [rB,#imm] folded twice, vs add rB,base,#imm / ldr [rB] / ALU /
+str [rB] quads):
+
+- member-base RMW: 95 materialized vs 1 folded, and the single folded site
+  (0x02070450) is a pool-loaded GLOBAL counter with a flag-setting subs feeding a
+  branch (`if (--n)`), not a this-relative RMW.
+- stack-slot RMW ([sp,#imm]): 17 folded, 0 materialized -- both compilers agree there.
+- single reads always fold: the whole 0xc getter family (IsOnGround = ldr [r0,#0x10];
+  and #0x10; bx lr) beside every 0x14 setter/clearer of the same word. Getters return
+  the raw mask (no shift), so the original source was int + mask constants, not
+  bitfields.
+
+So the target compiler NEVER folds a member address that feeds both a load and a store:
+it keeps the CSE'd address temp. Every mwccarm we have re-folds that temp
+unconditionally at O1+. That is the entire first-access-fold "floor": not a missing
+source construct, a codegen delta in whichever CW-for-DS build Nintendo actually ran
+(a pre-1.2 2004-era release; tools/mwccarm starts at 1.2). That build is now identified
+by name and its behaviour confirmed from primary artifacts; see 6ag. Consequences:
+
+- The u64 whole-expression launder (6ac: launder the WHOLE address expression, not the
+  base) is the CORRECT canonical compensation; 1,612 src files / 3,142 uses carry it
+  today. Do not spend model time hunting formulations for materialized-RMW residues.
+- If an earlier CW-for-DS build is ever sourced, expect a mechanical mass de-launder
+  across those files, and re-test the base-materialization family (6g) against it.
+- Calibration, 6ae-style: bounded mechanism claim, not an impossibility proof. But the
+  bound is hard: 95:1 in ROM, 0 reachable across 24 builds x 10 opt configs x 7 -opt
+  toggles x ~30 formulations.
+
+## 6ag. The build that compiled the ROM: CodeWarrior for NITRO V0.6.1 (2026-07-27)
+
+6af bounded first-access-fold to a compiler-build delta but could not name the build.
+It now has a name, and the fold behaviour is confirmed from period artifacts rather
+than inferred. The whole `1.0`/`1.1` framing in earlier notes was wrong: Nintendo's
+2003-2004 DS compiler used a `V0.x` numbering under two product names, and it is a
+different product line from everything in tools/mwccarm.
+
+Evidence comes from the compiler stamps and build paths that CodeWarrior writes into
+the prebuilt `.a` libraries shipped with each NitroSDK release:
+
+| NitroSDK | date | stamped compiler | product path |
+|---|---|---|---|
+| 1.0 | 2004-04-16 | `Metrowerks C/C++ for ARM v1.0a1` | `CodeWarrior for IRIS V0.2`, `CodeWarrior for NITRO V0.3` |
+| 2.0rc3 | 2004-12-10 | `Metrowerks C/C++ for ARM v1.0a1` | `CodeWarrior for NITRO V0.6.1` |
+| 2.2a | 2005-08-26 | `Metrowerks C/C++ for ARM 2.0.0.73` | (none recorded) |
+
+IRIS is the pre-NITRO codename; NitroSDK 1.0's release notes also name "CodeWarrior
+Versions 0.2, 0.3, or 0.4.1", and its Rule-Defines.html gives the default install path
+`C:\Program Files\Metrowerks\CodeWarrior for NITRO V0.1`. The era's build system keys
+off `CWFOLDER_IRIS` / `CWFolder_NITRO`. Note the banner: `Metrowerks C/C++ for ARM`,
+NOT `for Embedded ARM`. Every build we have is `for Embedded ARM`, core 2.0 build 72
+(CW-for-NITRO 1.2, 2005-06-14) or later. `2.0.0.73` in the Aug-2005 SDK is build 73,
+one past our earliest, so the 2005 SDK is already our compiler family.
+
+Two measurements confirm this is the ROM's compiler:
+
+1. Controlled fold census. Same SDK codebase, three compiler eras, counting RMW sites
+   as materialized (`add rA,rB,#imm` then `[rA]`) vs folded (`[rB,#imm]`):
+   Apr 2004 / IRIS V0.2 = 64.1% materialized (175 vs 98); Dec 2004 / NITRO V0.6.1 =
+   61.8% (754 vs 466); Aug 2005 / build 73 = 26.2% (192 vs 542). The behaviour collapses
+   by 2.4x exactly at the 2004-to-2005 changeover, on near-identical source. For
+   reference the ROM itself is 226 materialized vs 11 folded, and all 24 local builds
+   fold the equivalent C 100% of the time.
+2. Link fingerprint. Reloc-free `.text` sections from each SDK's `.a` libraries,
+   searched byte-identically inside the ROM images: Apr 2004 hits 46 sections /
+   4,472 bytes, Dec 2004 hits 96 / 10,076, Aug 2005 hits 72 / 6,976. The Dec-2004 SDK
+   wins on both absolute bytes and hit rate (16.9% of candidates vs 13.1% and 11.0%),
+   which puts the game's linked SDK at the V0.6.1 era. SM64DS (NA, gamecode ASME)
+   shipped 2004-11-21, before CW-for-NITRO 1.2 existed at all.
+
+Practical effect for matching: nothing changes today. V0.6.1 is not in any public
+archive (the surviving mirrors floor at the June-2005 1.2 installer), so 1.2/sp2p3
+remains the best available proxy and the u64 whole-expression launder remains the
+correct compensation. What changes is the search: anyone hunting the real build should
+look for `CodeWarrior for IRIS` / `CodeWarrior for NITRO V0.x` / the banner
+`Metrowerks C/C++ for ARM v1.0a1`, not for a "1.0" or "1.1". The 2003-2004 IRIS-era
+material is the only place it can still be hiding.
+
+A build-discrimination check worth knowing when reasoning about any of this: on a
+26-function sample of matched code, 1.2/base (72), 1.2/sp2 (79) and 1.2/sp2p3 (82) are
+completely indistinguishable, all three matching every function. sp3 (84) and sp4 (87)
+start to diverge, and the 2.0 line never matches. So "sp2p3" in this repo means "the
+72-82 family", and the true compiler sits at or below build 72.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
