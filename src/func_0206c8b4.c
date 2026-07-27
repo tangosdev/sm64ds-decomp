@@ -1,28 +1,22 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
-asm int func_0206c8b4(int a, int b, int c, int d) {
-    stmdb sp!, {r0-r3}
-    add r0, sp, #0
-    add r1, r0, #7
-    ands r0, r1, #1
-    ldrneh r0, [r1, #-1]
-    andne r0, r0, #0xff00
-    movne r2, r0, asr #8
-    ldreqh r0, [r1]
-    andeq r2, r0, #0xff
-    add r0, sp, #0
-    add r1, r0, #6
-    ands r0, r1, #1
-    ldrneh r0, [r1, #-1]
-    andne r0, r0, #0xff00
-    movne r1, r0, asr #8
-    ldreqh r0, [r1]
-    andeq r1, r0, #0xff
-    and r0, r2, #0x7f
-    mov r0, r0, lsl #4
-    add r0, r0, r1, asr #4
-    add sp, sp, #0x10
-    bx lr
+#pragma opt_common_subs off
+int func_0206c8b4(double x)
+{
+    int hi, lo;
+    int a, b, p;
+
+    a = (int)((long long)(int)&x & 0xffffffffffffffffLL);
+    p = (int)((long long)(a + 7) & 0xffffffffffffffffLL);
+    if (p & 1)
+        hi = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
+    else
+        hi = *(unsigned short *)p & 0xff;
+
+    b = (int)((long long)(int)&x & 0xffffffffffffffffLL);
+    p = (int)((long long)(b + 6) & 0xffffffffffffffffLL);
+    if (p & 1)
+        lo = (*(unsigned short *)(p - 1) & 0xff00) >> 8;
+    else
+        lo = *(unsigned short *)p & 0xff;
+
+    return ((hi & 0x7f) << 4) + (lo >> 4);
 }
