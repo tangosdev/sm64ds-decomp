@@ -1794,14 +1794,30 @@ The `SDK_CW_BUILD_NUMBER_LD` ladder in the SDK buildtools maps LINKER builds to
 products: 0047 = Dec-2003 IRIS base, 0050 = IRIS V0.2 hotfix 1, 0056 = NITRO V0.3,
 0057 = V0.4.1, 0058 = V0.5, 0061 = V0.5 hotfix 1, 0062 = V0.6. Dated product history:
 V0.1 Nov 2003, V0.2 Dec 2003, V0.3 Mar 2004, V0.5 May 2004, V0.6 Jul 2004, V0.6.1 Aug
-2004; by Mar 2005 the install path becomes `CW for NINTENDO DS V1.0.2`, then 1.2 in
-June 2005. Those are linker numbers, so the matching compiler build is not read off
-them directly (in Dec 2003 the pair was cc 36 / ld 47), but it brackets the target
-between build 36 and build 72.
+2004; by Mar 2005 the install path becomes `CW for NINTENDO DS V1.0.2`, then 1.1
+(build 70 era, ~Mar 2005) and 1.2 in June 2005.
+
+The compiler's own changelog settles the dating. `ARM_Compiler_Notes.txt` ships inside
+the 1.2sp2p3 zip and carries an unbroken build history from the beginning:
+
+| core | builds | dates |
+|---|---|---|
+| 1.0a | 0001-0006 | 0001 = 2002-10-02, "first build of ARM compiler" |
+| 1.0 | 0007-0021 | 2003-02-19 to 2003-06-19 |
+| 2.0 | 0033-0050 | 2003-09-28 to 2004-06-15 |
+| 2.0 | **0053-0062** | **2004-09-09 to 2004-12-16** |
+| 2.0 | 0063-0066 | Jan 2005, internal builds |
+| 2.0 | 0067-0071 | 2005-01-21 to 2005-03-29 |
+| 2.0 | 0072 | 2005-05-12, ships in product 1.2 |
 
 **So SM64DS (NA, gamecode ASME, shipped 2004-11-21) was compiled by CodeWarrior for
-NITRO V0.5, V0.6 or V0.6.1, whose mwccarm core is a 2.0 build somewhere between 36 and
-72.**
+NITRO V0.5, V0.6 or V0.6.1, whose mwccarm core is 2.0 build 0053-0062.**
+
+One structural fact makes the hunt wider than it looks: NITRO was not a fork. That
+single changelog covers one mwccarm lineage which also feeds Metrowerks' public,
+non-Nintendo "CodeWarrior for ARM" / "ARM ISA Edition" products. So a public 2004-dated
+update from that line should carry a build in the 0053-0062 range, and public products
+survive in places Nintendo-confidential ones do not.
 
 Two measurements confirm this is the ROM's compiler:
 
@@ -1837,12 +1853,27 @@ dumps quoted above, which is how we know build 36 exists at all. Two known-missi
 in-family patches would also be new if found: `cw_ds_1_2_sp2_patch_20050915` (build 80)
 and `cw_ds_1_2_sp2_patch2_20050929` (build 81), plus 1.2 SP1, which no collection has.
 
-The realistic path to the binary is a leaked or mirrored 2004-2005 DS game source tree,
-because those commit the whole CodeWarrior install under `sdk/cw/ARM_Tools/
-Command_Line_Tools/`. Three such trees are public today (two copies of `retsam_00jupc`
-carrying CW-DS 2.0 SP2, and `yin846/pokemon_dp` carrying 1.2 SP2), which proves the
-pattern; none is old enough yet. Useful search hooks: `CWFOLDER_NITRO`, `CWFOLDER_IRIS`,
-`"CodeWarrior for NITRO V0"`, `"CW for NINTENDO DS V1.0.2"`, `CW_NINTENDO_DS_R`.
+Two realistic paths to a build in range remain open.
+
+The first is the public product line, which is promising precisely because it was sold
+without an NDA. Metrowerks' own public FTP is preserved at archive.org
+(`ftp_metrowerks_updates.7z`, 5.5 GB) and its `Metrowerks/CWARM/` folder holds
+`CW_ARM_2.1.1_Update.exe`, 24,337,350 bytes, dated 2004-10-20, whose internal file
+table lists `mwccarm.exe`. That date lands inside the 0053-0062 window. The file can be
+pulled without fetching the whole 5.5 GB: read the 7z start header and end header by
+HTTP range, then fetch only the solid block holding it. The blocker is that its payload
+is an appended InstallShield cabinet starting at offset 102912 (the PE's own resources
+are only 30 KB), which 7-Zip cannot open and which needs `unshield`. Nothing here is
+verified until someone extracts it and reads the banner, so treat it as a lead, not a
+result. If it does yield a 0053-0062 mwccarm, the first thing to run is the fold probe:
+compile `*(u32*)((char*)p+0x154) |= 0x40` and check whether the address materializes.
+
+The second is a leaked or mirrored 2004-2005 DS game source tree, because those commit
+the whole CodeWarrior install under `sdk/cw/ARM_Tools/Command_Line_Tools/`. Three such
+trees are public today (two copies of `retsam_00jupc` carrying CW-DS 2.0 SP2, and
+`yin846/pokemon_dp` carrying 1.2 SP2), which proves the pattern; none is old enough yet.
+Useful search hooks: `CWFOLDER_NITRO`, `CWFOLDER_IRIS`, `"CodeWarrior for NITRO V0"`,
+`"CW for NINTENDO DS V1.0.2"`, `CW_NINTENDO_DS_R`.
 
 Metrowerks' own roadmap talk from the Nintendo DS Developer Conference, dated
 2004-09-30 (`7_Metrowerks.pdf`, "CodeWarrior for NINTENDO DS", Rafael Campana), fills
