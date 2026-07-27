@@ -6,7 +6,7 @@ typedef unsigned int u32;
 
 struct HeapAllocator;
 
-extern void _ZN13HeapAllocator7DestroyEv(struct HeapAllocator* self);
+extern void func_0204ebb8(struct HeapAllocator* self);
 
 struct Heap {
     void* vtable;       // 0x00
@@ -22,6 +22,6 @@ struct ExpandingHeap {
 };
 
 void _ZN9SolidHeap8VDestroyEv(struct ExpandingHeap* self) {
-    _ZN13HeapAllocator7DestroyEv(self->allocator);
+    func_0204ebb8(self->allocator);
     self->allocator = 0;
 }
