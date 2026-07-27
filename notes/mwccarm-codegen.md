@@ -1748,29 +1748,60 @@ by name and its behaviour confirmed from primary artifacts; see 6ag. Consequence
   bound is hard: 95:1 in ROM, 0 reachable across 24 builds x 10 opt configs x 7 -opt
   toggles x ~30 formulations.
 
-## 6ag. The build that compiled the ROM: CodeWarrior for NITRO V0.6.1 (2026-07-27)
+## 6ag. The build that compiled the ROM: CodeWarrior for NITRO V0.5-V0.6.1 (2026-07-27)
 
 6af bounded first-access-fold to a compiler-build delta but could not name the build.
-It now has a name, and the fold behaviour is confirmed from period artifacts rather
-than inferred. Nintendo's 2003-2004 DS compiler ran a `V0.x` numbering under two
-product names, and it is a different product line from everything in tools/mwccarm.
+It now has a name and a build-number range, and the fold behaviour is confirmed from
+period artifacts rather than inferred. Nintendo's 2003-2004 DS compiler ran a `V0.x`
+product numbering under two names, IRIS (the pre-NITRO codename) and NITRO. It is the
+SAME product line as everything in tools/mwccarm, just far older.
 
-Evidence comes from the compiler stamps and build paths that CodeWarrior writes into
-the prebuilt `.a` libraries shipped with each NitroSDK release:
+Read the two version strings carefully, because they are different fields and confusing
+them sends you hunting the wrong thing. The CLI banner of the Dec-2003 compiler, from
+`docs/_private/CodeWarrior/mwccarm.help.txt` in `irisSDK-20031203.tar.gz` (verified
+directly, not secondhand):
 
-| NitroSDK | date | stamped compiler | product path |
+```
+Metrowerks C/C++ for Embedded ARM.
+Copyright c 2003, Metrowerks Corporation
+Version 2.0 build 36 (build 0036)
+Runtime Built: Nov 22 2003 11:16:18
+```
+
+with the linker at `Version 2.0 build 47`. So the banner says `Embedded ARM` in 2003
+exactly as it does in 2005, and the core version numbering is continuous: build 36
+(Nov 2003) through build 72 (CW-for-NITRO 1.2, 2005-06-14, our earliest) and on to 87.
+Separately, `Metrowerks C/C++ for ARM v1.0a1` is the ELF *producer stamp* written into
+`.o`/`.a` files by that era's compiler, not its banner. Both strings appear in the same
+object. Do not treat the producer stamp as a product-line tell.
+
+The install paths and producer stamps in each SDK's prebuilt `.a` libraries date the
+product line:
+
+| NitroSDK | date | producer stamp | product path |
 |---|---|---|---|
 | 1.0 | 2004-04-16 | `Metrowerks C/C++ for ARM v1.0a1` | `CodeWarrior for IRIS V0.2`, `CodeWarrior for NITRO V0.3` |
 | 2.0rc3 | 2004-12-10 | `Metrowerks C/C++ for ARM v1.0a1` | `CodeWarrior for NITRO V0.6.1` |
 | 2.2a | 2005-08-26 | `Metrowerks C/C++ for ARM 2.0.0.73` | (none recorded) |
 
-IRIS is the pre-NITRO codename; NitroSDK 1.0's release notes also name "CodeWarrior
-Versions 0.2, 0.3, or 0.4.1", and its Rule-Defines.html gives the default install path
-`C:\Program Files\Metrowerks\CodeWarrior for NITRO V0.1`. The era's build system keys
-off `CWFOLDER_IRIS` / `CWFolder_NITRO`. Note the banner: `Metrowerks C/C++ for ARM`,
-NOT `for Embedded ARM`. Every build we have is `for Embedded ARM`, core 2.0 build 72
-(CW-for-NITRO 1.2, 2005-06-14) or later. `2.0.0.73` in the Aug-2005 SDK is build 73,
-one past our earliest, so the 2005 SDK is already our compiler family.
+`2.0.0.73` in the Aug-2005 SDK is core build 73, one past our earliest, so by then the
+SDK is already being built by our compiler family. NitroSDK 1.0's release notes name
+"CodeWarrior Versions 0.2, 0.3, or 0.4.1"; ReleaseNotes-1.2 adds "NITRO-SDK 1.2 was
+created to be used with this V0.5". The era's build system keys off `CWFOLDER_IRIS` /
+`CWFolder_NITRO`, and installers are named `CW_NINTENDO_DS_R<ver>.exe`.
+
+The `SDK_CW_BUILD_NUMBER_LD` ladder in the SDK buildtools maps LINKER builds to
+products: 0047 = Dec-2003 IRIS base, 0050 = IRIS V0.2 hotfix 1, 0056 = NITRO V0.3,
+0057 = V0.4.1, 0058 = V0.5, 0061 = V0.5 hotfix 1, 0062 = V0.6. Dated product history:
+V0.1 Nov 2003, V0.2 Dec 2003, V0.3 Mar 2004, V0.5 May 2004, V0.6 Jul 2004, V0.6.1 Aug
+2004; by Mar 2005 the install path becomes `CW for NINTENDO DS V1.0.2`, then 1.2 in
+June 2005. Those are linker numbers, so the matching compiler build is not read off
+them directly (in Dec 2003 the pair was cc 36 / ld 47), but it brackets the target
+between build 36 and build 72.
+
+**So SM64DS (NA, gamecode ASME, shipped 2004-11-21) was compiled by CodeWarrior for
+NITRO V0.5, V0.6 or V0.6.1, whose mwccarm core is a 2.0 build somewhere between 36 and
+72.**
 
 Two measurements confirm this is the ROM's compiler:
 
@@ -1785,8 +1816,33 @@ Two measurements confirm this is the ROM's compiler:
    searched byte-identically inside the ROM images: Apr 2004 hits 46 sections /
    4,472 bytes, Dec 2004 hits 96 / 10,076, Aug 2005 hits 72 / 6,976. The Dec-2004 SDK
    wins on both absolute bytes and hit rate (16.9% of candidates vs 13.1% and 11.0%),
-   which puts the game's linked SDK at the V0.6.1 era. SM64DS (NA, gamecode ASME)
-   shipped 2004-11-21, before CW-for-NITRO 1.2 existed at all.
+   which puts the game's linked SDK at the V0.6.1 era.
+
+One negative result that saves future effort: there is no lost 2003-era flag to chase.
+Diffing build 36's `-help` surface against build 82's, zero options were removed and
+essentially none added (`-generic_symbol_names`, plus `-ARM`). The 2003 option set is
+the 2005 option set. Whatever changed about address folding changed inside codegen, so
+it cannot be recovered by flags on the compilers we have. Obtaining the binary is the
+only route. (The Dec-2003 SDK flag set, for reference: `-lang c -proc arm946e -nothumb
+-nopic -nopid -interworking -O4 -opt speed -inline on,noauto -msgstyle std -w all -enc
+SJIS -char unsigned -stdinc -enum int -stdkeywords off -avoid_strb all,err`. Nintendo's
+`-avoid_strb` was renamed `-avoid_byte` in V0.4 and is hidden from `-help` in both.)
+
+Availability, as of 2026-07-27: **no public archive holds any pre-2005 mwccarm.**
+Verified independently across archive.org `cw_consoles` and `ninty_curated_sdks`, the
+`twlsdk.randommeaninglesscharacters.com` mirror, the Paladin leak, the Pokemon Platinum
+leak, and `mid-kid/metroskrew` (oldest patch targets build 72). Every one floors at
+CW-DS 1.2 / build 72. What the Paladin leak's IRIS SDK does preserve is the `-help`
+dumps quoted above, which is how we know build 36 exists at all. Two known-missing
+in-family patches would also be new if found: `cw_ds_1_2_sp2_patch_20050915` (build 80)
+and `cw_ds_1_2_sp2_patch2_20050929` (build 81), plus 1.2 SP1, which no collection has.
+
+The realistic path to the binary is a leaked or mirrored 2004-2005 DS game source tree,
+because those commit the whole CodeWarrior install under `sdk/cw/ARM_Tools/
+Command_Line_Tools/`. Three such trees are public today (two copies of `retsam_00jupc`
+carrying CW-DS 2.0 SP2, and `yin846/pokemon_dp` carrying 1.2 SP2), which proves the
+pattern; none is old enough yet. Useful search hooks: `CWFOLDER_NITRO`, `CWFOLDER_IRIS`,
+`"CodeWarrior for NITRO V0"`, `"CW for NINTENDO DS V1.0.2"`, `CW_NINTENDO_DS_R`.
 
 Metrowerks' own roadmap talk from the Nintendo DS Developer Conference, dated
 2004-09-30 (`7_Metrowerks.pdf`, "CodeWarrior for NINTENDO DS", Rafael Campana), fills
@@ -1817,6 +1873,42 @@ A build-discrimination check worth knowing when reasoning about any of this: on 
 completely indistinguishable, all three matching every function. sp3 (84) and sp4 (87)
 start to diverge, and the 2.0 line never matches. So "sp2p3" in this repo means "the
 72-82 family", and the true compiler sits at or below build 72.
+
+### The SDK's own build flags, and what they rule in or out
+
+NitroSDK ships the makefile fragment it built itself with,
+`build/buildtools/commondefs.cctype.CW`. It is worth reading in full because it is the
+only surviving record of how Nintendo actually drove this compiler. Highlights:
+
+- `CWFOLDER_IRIS ?= C:/Program Files/Metrowerks/CodeWarrior for NITRO V0.6.1`, with
+  `CWFOLDER_NITRO` aliased to it and tools under `ARM_Tools/Command_Line_Tools`.
+- It branches on `SDK_CW_BUILD_NUMBER_LD` with the literal values `0050 0056 0057 0058
+  0061 0062`. That is the 2004 linker build series, and it sits well below our earliest
+  build 72, independently corroborating where the V0.x line falls.
+- Per-build workaround switches exist for that era: `SDK_CW_WA_OPT4`,
+  `SDK_CW_WA_CONSTPOOLS`, `SDK_CW_WA_OPT_BLX`, plus `CW_AVOID_STRB`, which is
+  `-avoid_strb all,noerr` on builds 0050/0056 and `-avoid_byte strb -warn_byte none`
+  after. Our 1.2/sp2p3 rejects `-avoid_strb` outright and accepts `-avoid_byte`, another
+  small confirmation that `-avoid_strb` belongs to the older builds only.
+- The library flag set is `-lang c -proc arm946e -nothumb -nopic -nopid -interworking
+  -O4 -inline on,noauto -opt speed -msgstyle std -w all -enc ascii -char signed -stdinc
+  -enum int -stdkeywords off -Cpp_exceptions off`.
+
+Two results from testing those against our compiler:
+
+- `-avoid_byte strb` is NOT what the game used, and this is now settled rather than
+  assumed. The flag replaces byte stores with `swpb`, and because `swpb` has no offset
+  addressing mode it forces exactly the materialized `add rA,rB,#imm` we have been
+  chasing: `ldrb r2,[r0,#4] / add r1,r0,#4 / bic r0,r2,#1 / swpb r0,r0,[r1]` instead of
+  the folded `ldrb/bic/strb`. Tempting, but the ROM contains zero `swp` or `swpb`
+  instructions across arm9, arm7 and every overlay, so the game was not built this way.
+  Worth recording that the materialization IS reachable under some flag mode, i.e. it is
+  a codegen mode rather than something the compiler structurally cannot express.
+- `-inline on,noauto`, `-inline off` and `-stdkeywords off` are all neutral on matched
+  code (verified on three arm9 functions of 224/404/744 bytes, all still MATCH). Since
+  `-inline on,noauto` is what the SDK actually used and it costs nothing on known-good
+  functions, it is a free axis to add to the near-miss sweep, particularly for residues
+  suspected of an inlining-decision difference.
 
 ---
 
