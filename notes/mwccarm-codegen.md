@@ -1941,6 +1941,69 @@ Two results from testing those against our compiler:
   functions, it is a free axis to add to the near-miss sweep, particularly for residues
   suspected of an inlining-decision difference.
 
+## 6ah. RECOVERED: a 2004 mwccarm (build 0056), and the wall falls (2026-07-27)
+
+6ag concluded that obtaining a pre-2005 binary was the only way past first-access-fold,
+and that no archive held one. The second half was wrong, in a useful way. NITRO was not
+a fork: the same mwccarm core shipped in Metrowerks' public, non-NDA "CodeWarrior for
+ARM ISA Edition", and Metrowerks' own FTP is preserved on archive.org. Its October 2004
+update carries the compiler.
+
+```
+Metrowerks C/C++ for Embedded ARM.
+Copyright (c) 2004, Metrowerks Corporation
+Version 2.0 build 56 (build 0056)
+Runtime Built: Sep 16 2004 13:20:23
+```
+
+`tools/recover_cw2004.py` reproduces it end to end and verifies the hash, downloading
+about 24 MB rather than the archive's 5.5 GB (7z keeps its header at the end, so three
+range requests locate and pull only the solid block that holds the one file). It then
+splits the self-extractor payload and inflates the InstallShield volume in-process, so
+nothing third-party is installed and nothing is executed. Artifact: 2,248,704 bytes,
+sha1 `8eb0b9653ea1c9a589c3a4399e37e2780059a818`. Install it as `2004/b56`.
+
+**The wall falls.** On the exact probe 6af called shape-blocked, plain C, no launder:
+
+```
+add r1, r0, #0x154 / ldr r0, [r1] / orr r0, r0, #0x40 / str r0, [r1] / bx lr
+```
+
+That is the ROM's 5-instruction materialized form. Every one of the 24 builds we had
+emits the folded 4-instruction version instead, at every opt level, under every source
+idiom tried. The difference is the compiler, exactly as 6af predicted.
+
+Sweeping the 372-row near-miss DB through build 0056 landed **9 matches for free**,
+verified with strict reloc checking:
+
+| function | module | size | was |
+|---|---|---|---|
+| func_ov006_020ce46c | ov006 | 520 | div 6 |
+| func_ov006_020c4fa4 | ov006 | 972 | div 8 |
+| func_ov075_02116f40 | ov075 | 284 | div 13 |
+| func_ov006_020f46ec | ov006 | 236 | div 20 |
+| func_ov003_020b0894 | ov003 | 672 | div 55 |
+| func_0204322c | arm9 | 92 | size mismatch |
+| func_02043288 | arm9 | 92 | size mismatch |
+| func_020432e4 | arm9 | 120 | size mismatch |
+| func_0204335c | arm9 | 92 | size mismatch |
+
+Spot-checked against all 24 older builds: none of them match any of these. The four
+arm9 entries were not close misses, they were the wrong size entirely.
+
+**Build 0056 is an ADDITION to the sweep, not a replacement for 1.2/sp2p3.** On an
+80-function sample of already-matched code, 78 matched under both, 0 under b56 alone,
+and 1 regressed: `func_ov004_020adc1c` (ov004, 32 bytes) where b56 emits 0x24 against
+the ROM's 0x20. So b56 is not the game's exact build either. The true build sits
+between 56 and 72 and, per 6ag's product ladder and the Sept-Dec 2004 window, is most
+likely 0058-0062, i.e. CodeWarrior for NITRO V0.5/V0.6/V0.6.1. Switching wholesale
+would break roughly 1% of the corpus; adding b56 to the version sweep costs nothing and
+wins the materialized family. The hunt is now much narrower: builds 0057-0062.
+
+Note for CI: the self-hosted validate box needs `2004/b56` installed before any
+b56-only match can be committed to src/, otherwise it cannot reproduce them and the
+files would land red. Run `tools/recover_cw2004.py` there first.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
