@@ -33,7 +33,11 @@ import zlib
 URL = ("https://archive.org/download/ftp_metrowerks_updates.7z/"
        "ftp_metrowerks_updates.7z")
 WANT = "CW_ARM_2.1.1_Update.exe"
-EXPECT_BUILD = b"2.0 build 0056"
+# Plain-ASCII marker present in the compiler's own text. The version ("2.0 build
+# 0056") is NOT usable here: it lives in the PE version resource as UTF-16, and the
+# banner itself is assembled at runtime from a format string.
+BANNER = b"Metrowerks C/C++ for Embedded ARM"
+EXPECT_BUILD_UTF16 = "2.0 build 0056".encode("utf-16-le")
 
 # Recovered 2026-07-27. mwccarm.exe, PE timestamp 2004-09-16 13:20:24 UTC,
 # version resource "2.0 build 0056", copyright 2004.
@@ -44,9 +48,21 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def fetch(url, start, end, out):
-    subprocess.run(["curl", "-sL", "-r", f"{start}-{end}", url, "-o", out],
-                   check=True, timeout=3600)
-    return open(out, "rb").read()
+    """Range-fetch [start, end] into `out`, reusing a complete previous download.
+
+    The payload block is ~2 GB, so a re-run after an interruption should not pay
+    for it twice. Returns the path; callers read it themselves so the big block
+    never has to sit in memory.
+    """
+    want = end - start + 1
+    if os.path.exists(out) and os.path.getsize(out) == want:
+        return out
+    subprocess.run(["curl", "-sL", "--fail", "-r", f"{start}-{end}", url, "-o", out],
+                   check=True, timeout=7200)
+    got = os.path.getsize(out)
+    if got != want:
+        sys.exit(f"short read: got {got} of {want} bytes (archive.org throttling?)")
+    return out
 
 
 def number(buf, pos):
@@ -65,12 +81,12 @@ def pull_installer(work):
     """Range-fetch just the solid block holding WANT, and return its bytes."""
     import py7zr
 
-    head = fetch(URL, 0, 31, os.path.join(work, "h0"))
+    head = open(fetch(URL, 0, 31, os.path.join(work, "h0")), "rb").read()
     if head[:6] != b"7z\xbc\xaf\x27\x1c":
         sys.exit("archive.org did not return a 7z (rate limited?)")
     nho, nhs, _ = struct.unpack_from("<QQI", head, 12)
     end_abs = 32 + nho
-    end = fetch(URL, end_abs, end_abs + nhs - 1, os.path.join(work, "h1"))
+    end = open(fetch(URL, end_abs, end_abs + nhs - 1, os.path.join(work, "h1")), "rb").read()
     total = end_abs + nhs
 
     p = 1
@@ -85,7 +101,8 @@ def pull_installer(work):
         v, p = number(end, p)
         sizes.append(v)
     hbase = 32 + packpos
-    packed = fetch(URL, hbase, hbase + sum(sizes) - 1, os.path.join(work, "h2"))
+    packed = open(fetch(URL, hbase, hbase + sum(sizes) - 1,
+                        os.path.join(work, "h2")), "rb").read()
 
     sparse = os.path.join(work, "remote.7z")
     with open(sparse, "wb") as f:
@@ -121,10 +138,10 @@ def pull_installer(work):
             k += 1
     s, ln = starts[fi]
     print(f"  fetching solid block {fi}: {ln/1e6:.0f} MB of {total/1e9:.1f} GB")
-    blob = fetch(URL, s, s + ln - 1, os.path.join(work, "blk"))
-    with open(sparse, "r+b") as f:
+    blk = fetch(URL, s, s + ln - 1, os.path.join(work, "blk"))
+    with open(blk, "rb") as src, open(sparse, "r+b") as f:
         f.seek(s)
-        f.write(blob)
+        shutil.copyfileobj(src, f, 1 << 22)
     with py7zr.SevenZipFile(sparse, "r") as z:
         z.extract(path=work, targets=[target])
     return os.path.join(work, target.replace("/", os.sep))
@@ -174,8 +191,9 @@ def carve_compiler(volume):
             if len(piece) < 0x2000:
                 break
         if len(out) >= 4096:
-            if out[:2] == b"MZ" and EXPECT_BUILD in bytes(out):
-                return bytes(out)
+            blob = bytes(out)
+            if blob[:2] == b"MZ" and BANNER in blob and EXPECT_BUILD_UTF16 in blob:
+                return blob
             pos = p
         else:
             pos += 1
