@@ -2069,6 +2069,91 @@ Two same-day floors for contrast, both banked in nearmiss/db.jsonl with evidence
   the target is the tell that the web's rank class is pinned (6ab), not that more
   laundering variants are worth grinding.
 
+## 6ak. Batch levers from the 2026-07-27 overlay batches (32+ matches, ov002/ov006/ov007/ov079)
+
+Rules proven byte-exact during the July 27 overlay campaign (PRs #768/#770/#771 and the
+follow-on batch). Each was load-bearing in at least one match; function addresses cited.
+
+### Expression spelling is not CSE-neutral
+
+- **`i++` vs `i = i + 1` are different to the optimizer.** Swapping one for the other
+  adds/removes a temp and can change coloring downstream. If a loop tail has one
+  spurious `mov`, try the other spelling before anything exotic.
+- **`ok++` vs `ok = 1` change spill behavior** for a flag that is only ever tested
+  non-zero: the increment keeps the variable live through the loop (it reads it) and can
+  force a spill the constant store avoids - and vice versa when the ROM wants the reload.
+- **`+` association order selects the addressing mode.** `base + OFF + i*N` makes the
+  compiler fold `base+OFF` first (pooled base, then reg+reg scaled access:
+  `add r0, rB, rOff; ldr [r0, r1, lsl #N]`), while `base + i*N + OFF` folds the scaled
+  index first and emits an immediate-offset access (`add r0, rB, r1, lsl #N;
+  ldr [r0, #OFF]`). Pick per the ROM's form, field by field.
+- **Switch case SOURCE order is a block-layout lever.** mwccarm emits case bodies in
+  source order (the jump table stays sorted). When block layout is off but the table is
+  right, permute the case bodies.
+- **A `j = 0;` init can be moved across an if-converted clamp** to change which EBB it
+  schedules into - one-slot hoist/sink residuals around a `cmp/movlt/movge` cluster are
+  often just this.
+
+### Laundering refinements (extends 6h)
+
+- The u64-mask launder works **inside a predicated block**: the pool materialization it
+  forces merges with the if-conversion, giving `ldrne rX, [pc, #..]`-style sequences a
+  plain spelling can't reach.
+- The launder **blocks store-address refolding where `volatile` does not**: `volatile`
+  only pins the access itself; the compiler can still refold the address computation
+  onto a CSE'd base. The launder pins the address expression.
+- **Timer/counter fields read with mixed signedness match mixed loads**: in
+  func_ov006_02103d78 the same u16 field is tested `!= 0` and decremented as `u16`
+  (ldrh) but compared `<= 0` as `s16` (ldrsh). Spell each access with the exact type
+  the ROM's load implies; the "one declared type per field" instinct is wrong here.
+- **Two textually different launder macros create two CSE base classes**
+  (func_ov006_0212a654): the ROM kept two copies of the same array base, each serving a
+  different subset of written fields. A single launder macro CSEs every laundered
+  address onto one base and is permanently one instruction short of the ROM. Two
+  spellings that differ only textually - e.g. `(int)M(i) * 32` vs `(unsigned)i * 32` -
+  are NOT CSE'd together, and each group gets its own base copy. General rule: the
+  optimizer's value-numbering is syntactic enough that textual variance is a handle for
+  controlling CSE class membership.
+
+### Aliasing and ABI shape
+
+- **Declare a global as a plain pointer, not an array, when the ROM reloads it after a
+  store** (func_ov007_020b6d40): `extern char *g;` can alias the pointed-to storage, so
+  a following store forces a reload of `[rG]`; `extern char *g[];` lets the compiler
+  prove the base immutable and CSE the load away.
+- **Route a call result through a named temp to reorder pool loads across the `bl`**
+  (func_ov007_020b6d40): `*(int *)(g + 0x74) = f(...)` may materialize the pool base
+  before the call; `tmp = f(...); *(int *)(g + 0x74) = tmp;` moves it after.
+- **A cast on a store base breaks pointer-CSE for the tail** (func_ov006_020fd17c):
+  spelling the last store's address off `(unsigned int)c` instead of `c` stops it
+  sharing the function-wide `c + off` base, so the compiler recomputes the address at
+  the tail - freeing a callee-saved register and removing a spill.
+- **The return type is a coloring lever** (func_ov007_020b7138): a tail that is a pure
+  r0-vs-rN swap - and survives every decl-order/pragma/permuter attack - can be the ABI
+  pinning the returned value to r0. The worklist's inferred `void` was wrong; making the
+  function `int` and returning the constant it stores flipped the whole tail coloring.
+  Rule: when the last value materialized is a constant that also gets stored, try
+  returning it. Callee signatures from the worklist are hints, not truth (same lesson
+  as the `_ZThn80_` thunks).
+- **In-loop redefinition from a const-qualified load defeats preheader pair-promotion**
+  (func_ov006_02119c74): mwccarm promotes a loop-invariant multiply operand pair into
+  the preheader unconditionally, replacing an in-loop `smull` with a hoisted one.
+  Reloading the operand each iteration from a `const`-qualified source makes it
+  formally loop-variant (the const qualifier keeps the value provably unchanged, so
+  semantics hold) and the `smull` stays inside the loop.
+
+### Second b56-only function confirmed (extends 6ai / section 9)
+
+func_ov002_020dec70 stages a by-value `Vector3_16f` argument **below sp with no sp
+adjustment** (`sub r3, sp, #8` ... `ldm r3, {r1,r2}`, never touching sp). Every 1.2 and
+2.0 build instead emits the `sub ip,sp,#8; mov sp,ip; ... add sp,ip,#8` dance and pins
+fp, cascading the whole function (verified across 11 builds x ~6 flag combos x 9 source
+spellings). `2004/b56` emits the ROM form verbatim. This is the same fixed-frame-staging
+fingerprint as 6ai's `func_ov006_020f0bf0`, now in a second overlay - by-value small-
+struct args below sp are shaping up to be THE b56-era detector. Two other levers were
+needed under b56 and are portable: a single `||` chain so all gates share one `return 0`
+block, and the biased field value held in a temp across calls.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
