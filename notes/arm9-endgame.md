@@ -78,7 +78,9 @@ five decl positions to rerank the webs, and 2004/b56 on every shape.
 
 ## Group B: mid-divergence, the best target for a model tier
 
-Nine functions, none floored, all with a reproducing draft in the near-miss DB. These are
+Nine functions, none floored, each with a draft in the near-miss DB. Verify the draft
+compiles before trusting its number: one entry (`func_0203e0ac`) stored a scratch-file
+path instead of C and could not reproduce anything until it was repaired. These are
 ordinary lever work: the C is roughly right and the divergence is small enough to reason
 about. Best tokens-per-match on the board.
 
@@ -175,7 +177,7 @@ ints. Re-derive the parameter list from those offsets before touching the body.
   (~25 variants), detailed above.
 - A permuter pass over the twelve closest arm9 targets at 420s each, `-j4`. Groups A and
   the top of B: no banks, no divergence improvements.
-- 2004/b56 across all 22.
+- 2004/b56 across the whole no-src set (0 wins) and across all 42 NONMATCHING files.
 
 ---
 
