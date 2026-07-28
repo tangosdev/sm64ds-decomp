@@ -2142,6 +2142,33 @@ follow-on batch). Each was load-bearing in at least one match; function addresse
   formally loop-variant (the const qualifier keeps the value provably unchanged, so
   semantics hold) and the `smull` stays inside the loop.
 
+### Late-batch additions (same campaign, batch 4)
+
+- **Partially-volatile struct beats the volatile object** (func_ov006_02126948, Fable):
+  `struct V3 { int x, y; volatile int z; };` on a PLAIN local keeps all three member
+  stores alive (the volatile member anchors the object) while the non-volatile members
+  escape the volatile-object canonical schedule - giving the ROM's naive uncoalesced
+  store group that ~30 volatile-object/launder/pragma variants could not reach. Paired
+  with `#pragma opt_lifetimes off` to collapse the frame. Rule: volatility per MEMBER is
+  a scheduling dial, not just an access pin.
+- **Callee-saved coloring follows the LOOP DEPTH of a definition, not decl order**
+  (func_ov006_021027e4): all 720 decl-order permutations were inert while moving a
+  definition between nesting depths rotated {r4,r5,r6} cyclically. Companion trick: a
+  parameter self-assignment inside the loop (`a1 = yb + j`) with the invariant sourced
+  from an untouched copy forces the entry `mov` to survive copy propagation.
+- **`a *= -1` is not respellable** (func_ov079_02124008): only the compound-assignment
+  form emits the ROM's `mvnmi` + `smulbb` + `lsl/asr` truncation quartet; every
+  arithmetically equal spelling folds to `rsb`.
+- **Constant-def hoisting out of loops is GLOBAL REGALLOC, not LICM**
+  (func_ov006_020ee994, wall): pool-address `ldr`s and `mov #imm` defs are placed at the
+  dominating point by the allocator at every opt level >= 1 in all 25 builds, immune to
+  every pragma/flag. Only `#pragma optimization_level 0` (function-granular, kills
+  CSE/sched too) or an irreducible CFG (a live second entry into the loop -> local
+  allocation, costs exactly the guard's 2 instructions) suppress it. A ROM loop with
+  full CSE/scheduling but zero constant hoisting and free callee-saved regs is a
+  fingerprint of a compiler build we do not have (or hand-scheduling) - stop grinding
+  and bank it.
+
 ### Second b56-only function confirmed (extends 6ai / section 9)
 
 func_ov002_020dec70 stages a by-value `Vector3_16f` argument **below sp with no sp
