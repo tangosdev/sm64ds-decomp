@@ -176,3 +176,101 @@ ints. Re-derive the parameter list from those offsets before touching the body.
 - A permuter pass over the twelve closest arm9 targets at 420s each, `-j4`. Groups A and
   the top of B: no banks, no divergence improvements.
 - 2004/b56 across all 22.
+
+---
+
+# Part 2: the 43 arm9 NONMATCHING files
+
+Counting "arm9 symbols with no src file" gives 21. Counting "src files marked
+NONMATCHING" gives 43. Both numbers are real and neither is the answer on its own, so
+the honest arm9 accounting is three lines:
+
+| | count | bytes |
+|---|---|---|
+| reproducing C | 3,027 | — |
+| byte-exact via hand-asm, marked NONMATCHING | 43 | 10,232 |
+| no src file at all (Part 1 above) | 21 | 31,076 |
+
+The 43 already reproduce the ROM. `linkcheck` returns VERIFIED with zero blind slots on
+them. They are marked NONMATCHING by policy, because hand-written assembly is not a
+decompilation. So "run the tools at them and get them matched" does not apply: compiling
+them only proves the assembler works. Every one of them passes a full 12-version sweep
+including 2004/b56, which is a tautology, not a result.
+
+What matters is that only **12 of the 43 are actually work**.
+
+## A. SDK assembly primitives — 27 files, 7,208 B — leave alone
+
+Functions Nintendo shipped as assembly: block copy, byte fill, CP15, lock IDs, context
+switch. There is no original C to recover, so writing C for them invents a source that
+never existed. Several already self-declare `Counts as matched (asm-primitive policy)`.
+The headers are inconsistent, though: every file also carries the blanket "does NOT count
+as matched" banner on line 1, which is what makes the set look like 43 units of pending
+work. **Worth fixing the headers so the count stops misleading people.**
+
+`func_0206a928` alone is 4,960 B, more than half this bucket.
+
+## B. Not C-expressible — 4 files, 136 B — leave alone
+
+Symbol-table artifacts rather than functions. `func_020729e8` is a bare epilogue
+(`add sp,#0xac; ldmia sp!,{...}; bx lr`). `func_020732e8`, `func_02073584` and
+`func_0207335c` start mid-frame, using `fp` without ever establishing it. These are
+shared exit stubs the symbol table split out; no C construct produces them standalone.
+
+## C. Convertible hand-asm — 5 files, 424 B — real work
+
+| function | size | div | note |
+|---|---|---|---|
+| `func_02059d8c` | 12 | — | `subs r0,r0,#4 / bhs / bx lr` delay loop |
+| `func_020610fc` | 60 | — | |
+| `func_02071644` | 80 | — | |
+| `func_02068398` | 120 | 1 | already floored `cond_opt` |
+| `func_0206470c` | 152 | — | |
+
+## D. C drafts that do not reproduce — 7 files, 2,464 B — real work
+
+These already contain C. They are ordinary near-misses and the best targets in the whole
+set, because the divergences are small and the shape is already right.
+
+| function | size | div |
+|---|---|---|
+| `_ZN8CapEnemy11GetCapStateEv` | 180 | 3 |
+| `_ZN5Model27LoadCompressedTextureToVramEPcjPc` | 184 | 5 |
+| `_ZN2GX7LoadTexEPKvjj` | 332 | 16 |
+| `_ZN5Stage25PS_UpdateOkAndBackButtonsEb` | 340 | 18 |
+| `func_0206062c` | 240 | 20 |
+| `func_02038824` | 532 | 22 |
+| `_ZN7Message30DisplayCourseNameForStarSelectEj` | 656 | — |
+
+**Start here.** `_ZN8CapEnemy11GetCapStateEv` at div 3 and
+`_ZN5Model27LoadCompressedTextureToVramEPcjPc` at div 5 are the two cheapest.
+
+## Worked attempt: func_02057078 (bucket A, and why A is bucket A)
+
+Recorded because it is the evidence that the primitives resist conversion, not just an
+assertion. It is the NitroSDK `OS_ReleaseLockID` sibling of `func_02057020`.
+
+```
+ROM:  ldr r3,=tbl / cmp r0,#0x60 / addpl r3,r3,#4 / subpl r0,r0,#0x60
+      submi r0,r0,#0x40 / mov r1,#0x80000000 / lsr r1,r1,r0
+      ldr r2,[r3] / orr r2,r2,r1 / str r2,[r3] / bx lr      (11 insns + pool)
+ours: ldr r3,[pc] / cmp r0,#0x60 / addge r3,r3,#4 / subge r0,r0,#0x60
+      ldr r2,[r3] / sublt r0,r0,#0x40 / mov r1,#0x80000000
+      orr r0,r2,r1,lsr r0 / str r0,[r3] / bx lr             (10 insns + pool)
+```
+
+Two differences and both are compiler-internal. mwccarm fuses the shift into the `orr`
+(`orr r0,r2,r1,lsr r0`) where the ROM keeps `lsr` and `orr` separate, and it selects
+GE/LT where the ROM has PL/MI. Six source spellings produce **byte-identical** output:
+plain if/else, `lockID - 0x60 >= 0` sign test, separate `bit` temp, `volatile` temp,
+compound `bit >>= lockID`, and the u64 whole-expression launder. The launder does not
+break the fusion, which is notable given how reliably it works elsewhere (6h).
+
+That is a peephole no source form reaches, which is why this was hatched. Expect the
+same for the rest of bucket A.
+
+## Correcting Part 1's scope
+
+Part 1 above claims 21 remaining and reads as if that is all of arm9. It is not. The
+complete picture is 21 with no source plus the 12 real ones here, so **33 functions of
+genuine work**, of which the 7 in bucket D are the cheapest anywhere in arm9.
