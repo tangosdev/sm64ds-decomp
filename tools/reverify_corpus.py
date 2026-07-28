@@ -26,7 +26,15 @@ import swarm as S
 SRC = REPO / "src"
 AUTO = REPO / "match" / "auto"
 ALL_VERSIONS = ["1.2/sp2p3", "1.2/base", "1.2/sp2", "1.2/sp3", "1.2/sp4",
-                "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3"]
+                "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3",
+                # Last on purpose. The sweep returns the FIRST version that reproduces,
+                # so 1.2/sp2p3 stays authoritative and nothing that passes today changes
+                # verdict. b56 is only reached for the pre-2005 codegen no later build can
+                # emit: the materialized member RMW and the PTMF wrapper frames (notes
+                # 6ai). It is not a strict superset of 1.2 -- func_ov004_020adc1c matches
+                # under sp2p3 and not under b56 -- which is exactly why it goes last
+                # rather than replacing anything.
+                "2004/b56"]
 
 _modcache = {}        # module name -> dict
 _bincache = {}        # module name -> full bytes
