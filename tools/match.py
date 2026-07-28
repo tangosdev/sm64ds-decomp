@@ -31,9 +31,7 @@ ARM9_BASE = 0x02004000
 DEFAULT_FLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc"
 SWEEP = ["1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
          "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3",
-         # The recovered 2004 build 0056 (see #776 / notes 6ai): a handful of ROM
-         # functions only reproduce under it, so a floor certified without it is
-         # incomplete. Last so the trio still wins ties.
+         # The recovered 2004 build 0056 (see #776 / notes 6ai):
          "2004/b56"]
 # The CodeWarrior 1.2 trio that survived version-pinning.
 PINNED = ["1.2/base", "1.2/sp2", "1.2/sp2p3"]
