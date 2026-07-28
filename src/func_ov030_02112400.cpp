@@ -1,8 +1,6 @@
 //cpp
-// NONMATCHING: missing logic (ROM does more) (div=34). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned short u16;
+typedef void* (*Vfn)();
 
 struct Animation { void Advance(); };
 struct CylinderClsn { void Clear(); void Update(); };
@@ -14,22 +12,24 @@ extern "C" void func_ov030_02111f6c(char* c, WithMeshClsn* w);
 extern "C" void func_ov030_02111bc4(void* c);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(void* c, int x);
+extern "C" void* data_02099368[];
 
 struct Actor {
     void UpdatePos(CylinderClsn*);
 };
 
-struct V2 { int x, y; };
+typedef struct { int a, b; } P2;
 struct ClsnResult {
-    V2 v;          // 0x4,0x8
-    int a2, a3, a4; // 0xc,0x10,0x14
-    u16 h0, h1;    // 0x18,0x1a
-    int t0, t1, t2; // 0x1c,0x20,0x24
+    Vfn* vtb;
+    P2 v;
+    int a2, a3, a4;
+    u16 h0, h1;
+    int t0, t1, t2;
     int GetClsnID() const;
-    virtual ~ClsnResult();
 };
 extern "C" ClsnResult* func_0203567c(WithMeshClsn* w);
 extern "C" int func_02037f44(ClsnResult* r);
+extern "C" void _ZN10ClsnResultD1Ev(ClsnResult* r);
 
 extern "C" int func_ov030_02112400(char* c)
 {
@@ -50,12 +50,23 @@ extern "C" int func_ov030_02112400(char* c)
         }
     } else {
         if (((WithMeshClsn*)(c + 0x194))->IsOnGround()) {
-            ClsnResult res = *func_0203567c((WithMeshClsn*)(c + 0x194));
-            if (res.GetClsnID() != -1) {
-                if (func_02037f44(&res) == 0) {
-                    func_ov030_021141a8(c, 0);
-                }
+            char* r = (char*)func_0203567c((WithMeshClsn*)(c + 0x194));
+            ClsnResult res;
+            int* d = (int*)&res.v;
+            *(double*)d = *(double*)(r + 4);
+            d[2] = *(int*)(r + 0xc);
+            d[3] = *(int*)(r + 0x10);
+            d[4] = *(int*)(r + 0x14);
+            res.vtb = (Vfn*)data_02099368;
+            res.h0 = *(u16*)(r + 0x18);
+            res.h1 = *(u16*)(r + 0x1a);
+            res.t0 = *(int*)(r + 0x1c);
+            res.t1 = *(int*)(r + 0x20);
+            res.t2 = *(int*)(r + 0x24);
+            if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
+                func_ov030_021141a8(c, 0);
             }
+            _ZN10ClsnResultD1Ev(&res);
         }
     }
     return 1;

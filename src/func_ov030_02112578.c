@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -43,10 +40,10 @@ int func_ov030_02112578(void *arg0)
     u8 *c = (u8 *)arg0;
     void *r4 = _ZN5Actor15FindWithActorIDEjPS_(0x67, 0);
     void *r6 = _ZN5Actor13ClosestPlayerEv(arg0);
-    volatile s32 v[3];
-    v[0] = 0x981;
-    v[1] = 0x77a;
-    v[2] = 0x501;
+    s32 v[3];
+    *(s32 *)((u8 *)v + 0) = 0x981;
+    *(s32 *)((u8 *)v + 4) = 0x77a;
+    *(s32 *)((u8 *)v + 8) = 0x501;
 
     switch (c[0x3c7]) {
     case 0:
