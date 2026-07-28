@@ -2181,6 +2181,38 @@ struct args below sp are shaping up to be THE b56-era detector. Two other levers
 needed under b56 and are portable: a single `||` chain so all gates share one `return 0`
 block, and the biased field value held in a temp across calls.
 
+### Third instance, and how to READ the fingerprint off the ROM (func_0206de14, #785)
+
+Confirms the detector in arm9. `func_0206de14` forwards its own arguments to a dispatch
+handler and stages a by-value pair below sp exactly as above; b56 emits it verbatim,
+every 1.2/2.0 build adds `mov sp, r2` / `add sp, r2, #4` and pins fp, costing 12 bytes.
+
+What this one adds is the diagnostic, because here the by-value struct was **not known in
+advance** - the banked draft modelled the arguments as five ints forwarded through `&a0`,
+and read as a "stale draft" that merely needed re-deriving. The tell is in the call setup:
+
+```
+sub r2, sp, #4      str r1, [r2]      str r0, [r2, #4]      ldm r2, {r3}
+add r1, sp, #0x1c   ldm r1, {r1, r2}
+```
+
+An `ldm` **at a call site** is an aggregate argument copy, not an ordinary load. Two
+consecutive incoming slots read with one `ldm` into consecutive argument registers is an
+8-byte struct passed by value. If one is written to `[sp-4]` and `[sp]` and then partly
+read back, that struct straddles the r3-to-stack boundary and the compiler is materialising
+it contiguously across that edge. Counting the argument words as separate ints reproduces
+the same *values* but emits plain per-slot loads and comes out short. So:
+
+**A near-miss that is short by a few instructions around a call, where the ROM uses `ldm`
+or `stm`, is an argument-SHAPE bug, not a divergence to grind.** Recover the signature
+first. Size misses in general deserve a shape review before a lever sweep.
+
+Process corollary worth more than the lever: this function had already been swept against
+b56 and recorded as a negative. The sweep fed it the wrong-shape draft, so it never put the
+real function in front of the compiler. **A version sweep is only evidence about the source
+you feed it.** Re-derive any draft that does not reproduce before believing a build sweep,
+and treat "compiler X does not help here" as scoped to the draft that was tested.
+
 ---
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
