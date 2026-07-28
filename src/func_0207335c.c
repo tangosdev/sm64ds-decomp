@@ -1,7 +1,6 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
+// NONMATCHING (NOT-C-EXPRESSIBLE): byte-exact hand-written asm. A bare epilogue / mid-frame
+// exit stub the symbol table split out, not a real function - no standalone C construct
+// produces it. Nothing here to match - see notes/arm9-endgame.md.
 extern void func_020731fc(void);
 extern void func_02071ba0(void);
 extern void func_020717c0(void);

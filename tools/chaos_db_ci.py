@@ -34,6 +34,32 @@ FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
 LOGIN_RE = re.compile(r"^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$")
 
+# A NONMATCHING file that reproduces the ROM and has no match left to chase - the banner
+# tags which kind. These are NOT pending work, so the viewers paint them apart from real
+# near-miss drafts instead of lumping everything unmatched together.
+NOMATCH_RE = re.compile(r"NONMATCHING \((ASM-PRIMITIVE|NOT-C-EXPRESSIBLE)\)")
+NOMATCH_REASONS = {
+    "ASM-PRIMITIVE": (
+        "asm-primitive",
+        "Nintendo shipped this as an assembly primitive. There is no original C to "
+        "recover, so writing C for it would invent a source that never existed.",
+    ),
+    "NOT-C-EXPRESSIBLE": (
+        "not-c-expressible",
+        "A bare epilogue or mid-frame exit stub the symbol table split out, not a real "
+        "function. No standalone C construct produces it.",
+    ),
+}
+
+
+def no_match_needed(head: str) -> dict[str, str] | None:
+    """Bucket + hover explanation for a file that needs no match, else None."""
+    m = NOMATCH_RE.search(head)
+    if not m:
+        return None
+    bucket, reason = NOMATCH_REASONS[m.group(1)]
+    return {"bucket": bucket, "reason": reason}
+
 
 def module_label(sym_path: pathlib.Path) -> str | None:
     """config/arm9/symbols.txt -> arm9; config/arm9/overlays/ovNNN -> ovNNN.
@@ -281,13 +307,16 @@ def main():
                 if f.is_file():
                     src_path = f"src/{name}.{ext}"
                     break
-            matched = bool(src_path) and "NONMATCHING" not in (
-                (SRC / src_path.split("/", 1)[1]).read_text(errors="ignore")[:200] if src_path else "")
+            head = (SRC / src_path.split("/", 1)[1]).read_text(errors="ignore")[:200] if src_path else ""
+            matched = bool(src_path) and "NONMATCHING" not in head
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,
                    "addr": addr, "size": size, "matched": matched}
             if src_path:
                 rec["srcPath"] = src_path
+                nomatch = no_match_needed(head)
+                if nomatch:
+                    rec["noMatch"] = nomatch
                 if matched:
                     # Priority: manual override > whoever FINISHED the match (turned the
                     # NONMATCHING draft byte-identical) > whoever first added the file.
