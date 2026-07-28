@@ -1,39 +1,17 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM: ActorBase::Process PMF-arg staging via below-sp ldm (sub ip,sp,#4;
-// ldmia ip,{r3}; ldmia r1,{r1,r2}). Same softfloat/SDK shape documented in
-// notes/mwccarm-codegen.md sec 8 / matched func_0206ddcc family — no mwccarm
-// C/C++ under -O4,p emits below-sp staging without a frame-pointer adjustment.
-// Pool order (third, second, first PMF) matches ROM at 0x0204322c.
-extern int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(void);
-extern void *data_02099e9c;
-extern void *data_02099e74;
-extern void *data_02099ecc;
+/* FLOOR under 1.2/sp2p3: mwccarm always emits push{fp,lr}+mov sp,ip dynamic frame
+ * (cand size 0x68 vs ROM 0x5c). Documented wall: notes/mwccarm-codegen.md PTMF wrappers.
+ * 2.0/sp2p3 -proc arm7tdmi: 1-word near-miss (ldr r3,[ip] vs ROM ldm ip,{r3}).
+ * Tried: C struct-by-value, six-int, local copies, stack arrays, u64, union, nested,
+ * //cpp real PTMF, pragma size — all fp-frame under pin 1.2/sp2p3.
+ */
+typedef struct { int a; int b; } PMF;
+extern int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(void *self, PMF a, PMF b, PMF c);
+extern PMF data_02099e9c;
+extern PMF data_02099e74;
+extern PMF data_02099ecc;
 
-asm void func_0204322c(void *self)
+int func_0204322c(void *self)
 {
-    stmdb sp!, {lr}
-    sub sp, sp, #0xc
-    ldr r2, [pc, #0x40]
-    ldr r1, [pc, #0x40]
-    ldr r3, [r2]
-    ldr r2, [r2, #4]
-    sub ip, sp, #4
-    str r3, [sp, #4]
-    str r2, [sp, #8]
-    ldr r3, [r1]
-    ldr r2, [r1, #4]
-    ldr r1, [pc, #0x24]
-    str r3, [ip]
-    str r2, [ip, #4]
-    ldmia ip, {r3}
-    ldmia r1, {r1, r2}
-    bl _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE
-    add sp, sp, #0xc
-    ldmia sp!, {lr}
-    bx lr
-    dcd data_02099e9c
-    dcd data_02099e74
-    dcd data_02099ecc
+    return _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(
+        self, data_02099ecc, data_02099e74, data_02099e9c);
 }

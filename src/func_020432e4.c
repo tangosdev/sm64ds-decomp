@@ -1,45 +1,20 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM: ActorBase::Process PMF-arg staging + conditional func_0204302c(id).
-// Below-sp mid-PMF pack via sub r3,sp,#4; ldmia r3,{r3}. Same floor as siblings.
-extern int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(void);
-extern void func_0204302c(void);
-extern void *data_02099e84;
-extern void *data_02099e7c;
-extern void *data_02099e8c;
+/* FLOOR under 1.2/sp2p3 — PTMF staging wall + conditional func_0204302c (size 0x84 vs 0x78).
+ * ROM: push {r4,r5,lr}; sub sp,#0xc; ldrh r4,[r0,#0xc]; stage PMFs; bl Process;
+ * if (r==1) func_0204302c(r4); return r;
+ */
+typedef struct { int a; int b; } PMF;
+extern int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(void *self, PMF a, PMF b, PMF c);
+extern PMF data_02099e84;
+extern PMF data_02099e7c;
+extern PMF data_02099e8c;
+extern void func_0204302c(int id);
 
-asm int func_020432e4(void *self)
+int func_020432e4(void *self)
 {
-    stmdb sp!, {r4, r5, lr}
-    sub sp, sp, #0xc
-    ldr r1, [pc, #0x5c]
-    ldrh r4, [r0, #0xc]
-    ldr r3, [r1]
-    ldr r2, [r1, #4]
-    ldr r1, [pc, #0x50]
-    str r3, [sp, #4]
-    str r2, [sp, #8]
-    ldr r2, [r1]
-    ldr r1, [r1, #4]
-    sub r3, sp, #4
-    str r2, [r3]
-    str r1, [r3, #4]
-    ldr r1, [pc, #0x34]
-    ldmia r3, {r3}
-    ldmia r1, {r1, r2}
-    bl _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE
-    mov r5, r0
-    cmp r5, #1
-    bne Lskip
-    mov r0, r4
-    bl func_0204302c
-Lskip:
-    mov r0, r5
-    add sp, sp, #0xc
-    ldmia sp!, {r4, r5, lr}
-    bx lr
-    dcd data_02099e84
-    dcd data_02099e7c
-    dcd data_02099e8c
+    unsigned short id = *(unsigned short *)((char *)self + 0xc);
+    int r = _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(
+        self, data_02099e8c, data_02099e7c, data_02099e84);
+    if (r == 1)
+        func_0204302c(id);
+    return r;
 }

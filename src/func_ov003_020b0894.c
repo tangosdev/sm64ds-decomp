@@ -1,6 +1,3 @@
-// NONMATCHING: different op / idiom (div=55). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 struct VT { void *v0, *v1, *v2, *v3, *v4; int (*m_14)(void *); };
 struct Obj { struct VT *vt; };
 
