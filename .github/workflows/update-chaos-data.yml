@@ -42,6 +42,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install tool dependencies
+        # tools/nearmiss_db.py imports match.py/swarm.py at module level, which need
+        # pyelftools + capstone; without them the dedupe step kills the whole run
+        # before the refresh commit (which is what keeps contributions.json moving).
+        run: pip install pyelftools capstone
       - name: Regenerate chaos-db.json + contributions.json
         run: python tools/chaos_db_ci.py --out _chaos_data/chaos-db.json --contrib-out contributions.json
       - name: Push if changed
