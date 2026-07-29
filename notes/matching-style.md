@@ -353,6 +353,23 @@ The pattern: hill-climbing explores the axes you thought of. A matched sibling s
 did not. When a function stalls with "logic certainly correct, residual is pure regalloc", stop
 sweeping and go read the nearest matched function in the same object family or subsystem.
 
+**Two caveats on picking siblings, both learned the hard way:**
+
+1. **Filter out `// NONMATCHING` files.** ~1% of `src/` (102 files as of 2026-07-29) are asm hatches
+   or non-reproducing drafts. Their codegen by definition does NOT reproduce the ROM, so spellings
+   copied from one are worse than useless. "Exists in `src/`" is not the same as "is a verified
+   match" — grep the first few lines before you learn anything from a file.
+2. **Nearest-by-address is only the first heuristic; nearest-by-RESIDUAL-SIGNATURE is stronger.**
+   For `func_ov063_02119074` the three nearest-by-address siblings had nothing useful. What cracked
+   it was scanning *every* matched function whose ROM prologue was `push {r4,lr}; sub sp,sp,#0x10`
+   with near-zero sp-relative traffic — i.e. every function with the same "dead frame space"
+   signature — and reading those. That surfaced the frame-padding idiom immediately. Search by the
+   shape of your residual, not just by proximity.
+
+Related, from the same batch: reading ONE well-chosen sibling beat a **10,000-iteration permuter
+run** on `func_ov006_02107ea8` (the permuter floored at 10 words and never got below; the sibling
+idiom took it to 0 in one edit). Do the reading before you reach for search.
+
 `func_ov002_020d869c` is the same lesson from the other direction: it was matched by resurrecting a
 banked 11-divergence near-miss whose central insight (the `~PVec(){}` trick below) had been right all
 along and was written off because of an unrelated callee-arity error. **Read `nearmiss/db.jsonl` for
