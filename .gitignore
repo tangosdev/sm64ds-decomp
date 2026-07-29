@@ -84,3 +84,7 @@ _glmwork/
 .agents/
 .codex/
 .cw2004work/
+
+# emu-trace runtime capture output (tools/trace) - regenerable, may contain ROM-derived memory dumps
+/traces/
+/behavior/
