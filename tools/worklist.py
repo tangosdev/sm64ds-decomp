@@ -211,7 +211,10 @@ def main():
         args.max = 0x40000 if args.random else 0x200
 
     matched = L.matched_set()            # example pool: byte-exact matches only
-    done = L.load_done()                 # matched + parked: skipped as targets
+    # matched + locally parked + verified floors. NOT load_done(): that reads only the
+    # gitignored nonmatching.jsonl, so on a fresh clone this handed floor-marked
+    # functions straight to an agent that built its worklist here instead of via coddog.
+    done = L.schedule_skip_set()
     gsyms = R.load_all_syms()
     kb = KB.build_kb()
     ex_mnem, ex_callee = (build_example_index(matched, gsyms, args.max)

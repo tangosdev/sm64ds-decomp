@@ -60,12 +60,14 @@ def load_parked(refine_max_div=REFINE_MAX_DIV):
     out was claimed by NEITHER tier and became unschedulable. Keep the two pools
     complementary - if the refiner won't have it, it stays a fresh target here.
     nearmiss/db.jsonl is committed (shared); nonmatching.jsonl is local - both used if present."""
-    parked = L.nonmatching_set()
+    # Locally parked + verified floors come from the shared helper, so this scheduler and
+    # the ones that go through ledger cannot drift apart. The refinable-deferral below is
+    # coddog's own routing policy, not a "never work this" statement, so it stays here.
+    parked = L.parked_set()
     for r in L.read_records(REPO / "nearmiss" / "db.jsonl"):
         try:
             div = r.get("divergences")
-            refinable = isinstance(div, int) and 0 < div <= refine_max_div
-            if r.get("floor") or refinable:
+            if isinstance(div, int) and 0 < div <= refine_max_div:
                 parked.add(L.key_of(r))
         except Exception:
             pass

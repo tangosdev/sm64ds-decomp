@@ -32,6 +32,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 SRC = REPO / "src"
 MATCHED = REPO / "progress" / "matched.jsonl"
 NONMATCHING = REPO / "progress" / "nonmatching.jsonl"
+NEARMISS = REPO / "nearmiss" / "db.jsonl"
 LOCKDIR = REPO / "progress" / ".lock"
 
 
@@ -96,9 +97,42 @@ def nonmatching_set():
     return _key_set(NONMATCHING)
 
 
+def floor_set():
+    """Canonical keys of every near-miss carrying a verified `floor` mark.
+
+    nonmatching.jsonl is gitignored, so a scheduler that parks only on THAT filters
+    nothing on a fresh clone. nearmiss/db.jsonl is committed, which makes it the only
+    portable record of "this one is a verified wall, do not schedule it". Reading it
+    here means every scheduler gets the same answer instead of each re-deriving one:
+    coddog and refine_wl already consulted the DB, while worklist.py and harvest_wl.py
+    did not, so an agent that built a worklist directly was still offered floors."""
+    out = set()
+    for rec in read_records(NEARMISS):
+        try:
+            if rec.get("floor"):
+                out.add(key_of(rec))
+        except Exception:
+            pass                        # a malformed DB row must not break scheduling
+    return out
+
+
+def parked_set():
+    """Everything no scheduler should offer as a target: locally parked + verified floors."""
+    return nonmatching_set() | floor_set()
+
+
 def load_done():
     """matched + parked: the do-not-select / do-not-re-bank set."""
     return matched_set() | nonmatching_set()
+
+
+def schedule_skip_set():
+    """Keys an LLM-spending scheduler must not hand out: matched, locally parked, or a
+    verified floor. Deliberately NOT load_done(): the free local sweeps (clone,
+    paramclone, sweep, swarm) cost no tokens, and floor marks have been wrong often
+    enough that excluding them from a zero-cost pass is a pure loss. Use this only where
+    a target turns into model spend."""
+    return matched_set() | parked_set()
 
 
 # ---------------------------------------------------------------------- lock

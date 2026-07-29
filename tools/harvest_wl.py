@@ -19,6 +19,7 @@ import argparse, json, subprocess, sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
 import swarm as S
+import ledger as L
 md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
 REPO = pathlib.Path(__file__).resolve().parent.parent
 
@@ -77,24 +78,22 @@ def main():
 
     # exclude functions already parked NONMATCHING and the floor skip-list (confirmed
     # floor/regperm that agents keep re-hitting but can't match from C -- don't re-attempt).
+    # Keys go through L.key_of, which normalizes module and address. These files disagree
+    # on the addr type -- nonmatching.jsonl carries ints, nearmiss/db.jsonl mostly hex
+    # strings -- so a raw (module, addr) tuple silently failed to match across them and let
+    # excluded functions back into the pool.
     parked = set()
     for fn in ("nonmatching.jsonl", "floor_skip.jsonl"):
         p = REPO / "progress" / fn
         if p.exists():
-            for l in p.read_text().splitlines():
-                if l.strip():
-                    r = json.loads(l)
-                    parked.add((r["module"], r["addr"]))
+            for r in L.read_records(p):
+                parked.add(L.key_of(r))
     # also exclude functions already in the near-miss DB: they were attempted and their best
     # compiling attempt is stored (nearmiss/db.jsonl); re-fanning them out wastes tokens. Finish
     # those through the permuter / by hand from the DB, not by re-harvesting.
-    nmdb = REPO / "nearmiss" / "db.jsonl"
-    if nmdb.exists():
-        for l in nmdb.read_text(encoding="utf-8").splitlines():
-            if l.strip():
-                r = json.loads(l)
-                parked.add((r["module"], r["addr"]))
-    rows = [r for r in rows if (r["module"], r["addr"]) not in parked]
+    for r in L.read_records(REPO / "nearmiss" / "db.jsonl"):
+        parked.add(L.key_of(r))
+    rows = [r for r in rows if L.key_of(r) not in parked]
 
     sz = lambda r: int(r["size"], 16) if isinstance(r["size"], str) else r["size"]
     floor = [r for r in rows if is_floor(r["target_hex"])]
