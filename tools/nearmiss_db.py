@@ -98,7 +98,7 @@ def evaluate(src, name, target):
 def load_db():
     db = {}
     for r in L.read_records(DB):        # corrupt lines are reported, not swallowed
-        db[(r["module"], r["addr"])] = r
+        db[L.key_of(r)] = r             # normalized: addr is stored as both hex str and int
     return db
 
 
@@ -372,7 +372,7 @@ def dedupe(args):
     seen, best, kept = {}, {}, []
     dups = 0
     for r in L.read_records(DB):                    # RAW rows, incl. union duplicates
-        key = (r.get("module"), r.get("addr"))
+        key = L.key_of(r)                           # int/hex-str addr forms must collide
         div = r.get("divergences")
         div = div if isinstance(div, int) else 1 << 30
         floored = 1 if r.get("floor") else 0
