@@ -2218,6 +2218,88 @@ and treat "compiler X does not help here" as scoped to the draft that was tested
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
 model of mwccarm - the cheaper, local alternative to disassembling the compiler itself.*
 
+## 6al. arm9 endgame batch 3 (2026-07-28): the TU language, the local's TYPE, and the stack-slot order
+
+Four levers from the fan-out over the last arm9 residue. Two are new tells for reading a
+disassembly, one is a measured layout rule, one refines the launder.
+
+### A materialized bool inside a condition chain means the TU is C++
+
+The ROM materializes `data_0209f2d8 == 1` as `cmp / moveq / movne / cmp / beq` - it builds
+the boolean into a register and *then* tests it, instead of branching on the first compare.
+In **C mode mwccarm folds that away under every spelling**: an `int` temp, `!!x`, a ternary,
+the comma operator, `(g == 1) == 1`, a `static` helper function. In **C++ mode a
+`static inline` predicate is inlined and its result is materialized exactly as the ROM has
+it**, while plain comparisons in the same translation unit still fold normally.
+
+So a materialized bool sitting inside an `&&` chain is a tell about two things at once:
+the file is C++, and the condition came from an inlined accessor rather than being written
+out. Found on func_02009e70 (Camera::Update); it was worth ~1300 divergences on its own.
+
+### The TYPE of a named local selects its callee-saved rank
+
+On func_0204a730 a byte-valued web was stuck in r4 across ~35 variants and read as
+rank-pinned. It is not. It is pinned only while it is a *compiler temp* or a *non-`u32`
+named local*. Hoisting the value manually into `u32 bb;` at **function scope** drops it to
+the bottom of the callee-saved order (byte -> r7, matching the ROM) and rotates three other
+webs up into r4/r5/r6.
+
+`u8`, `u16`, `s32` and `int` for the same variable all leave it at r4. The type is
+load-bearing on its own, independently of declaration position. This is a different knob
+from 6aj (declaration line controls birth order) - here birth order is fixed and the
+*rank class* moves.
+
+Companion move on the same function: relocating `s32 k` from function scope into the loop
+block **after** an existing pointer local promoted the counter over the node pointer. The
+two edits only work together; each alone regresses.
+
+### Measured stack-slot layout order
+
+Useful whenever a residual is a `[sp,#N]` that will not move. mwccarm 1.2/\* and 2004/b56
+lay the frame out in this order:
+
+1. named scalars, in declaration order
+2. compiler temps
+3. address-taken aggregates
+4. `volatile`s last, dropped into the alignment hole
+
+Corollary that costs time if you do not know it: **single-member structs, unions and
+1-element arrays are scalarized** back into group 1, so none of them are a way to reach a
+late slot. On func_0204a730 the ROM's word sits in the hole at `[sp,#0x2c]`; a
+non-volatile, non-address-taken scalar always lands at `0x1c` no matter where it is
+declared, and every construct that does reach `0x2c` re-folds the shift pair the ROM
+keeps. Conjecture: the fold is blocked exactly when the load can be value-numbered, which
+requires the non-address-taken non-volatile class, which structurally cannot reach the
+hole.
+
+### The launder alone loses to CSE across a whole function; pair it with `opt_common_subs off`
+
+When the ROM re-materializes the same address (`add rX, self, #0x154`) at each of many RMW
+sites, the u64 launder is **not** sufficient: mwcc value-numbers the laundered address into
+one callee-saved register for the entire function. All four launder spellings (`&`, `|`,
+`^`, `(long long)`) collapse to the same value number. `#pragma opt_common_subs off` is
+what keeps the sites distinct.
+
+The pragma then costs three CSEs the ROM *does* have - restore those with named temps.
+Pragma off plus selective named temps is the general shape, not pragma off alone.
+
+Second launder note, from func_020316d8: **the launder defeats mwcc's range-folder.**
+`short w = <byte-valued expr>;` gets range-folded and both shifts of the `lsl #16 / asr #16`
+pair vanish; `(short)(int)LAUNDER(expr)` restores the packed form and the correct size. It
+did not pay off there on divergence, but the range-folder is beatable and that is worth
+knowing.
+
+### Read register ROLES, not the divergence count, to order two residues
+
+func_020316d8 looked like two independent residue classes. Mapping which web owns which
+register showed one is downstream of the other: the free-register *pools* differ only
+because `rowstep` lands in `lr` for us and `r3` for the ROM, and everything in the second
+cluster is a cascade of that. A divergence count cannot see this; a role map can. Same
+technique found that on func_02009e70 a single assignment (`self -> r8`) accounts for 145
+of 282 differing words, which turns "302 divergences" into "one 4-cycle on
+{r6,r8,sb,sl}".
+
+
 ## 9a. CW try/catch EH IS reproducible from //cpp, and the 0x0207xxxx runtime "functions" are split-symbol fragments (2026-07-26, Fable)
 
 Two structural discoveries from the asm-hatched MSL C++ runtime cluster at arm9
