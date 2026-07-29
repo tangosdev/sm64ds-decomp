@@ -2217,3 +2217,89 @@ and treat "compiler X does not help here" as scoped to the draft that was tested
 
 *Add to this file whenever you learn a new codegen rule. It is the project's accumulating
 model of mwccarm - the cheaper, local alternative to disassembling the compiler itself.*
+
+## 9a. CW try/catch EH IS reproducible from //cpp, and the 0x0207xxxx runtime "functions" are split-symbol fragments (2026-07-26, Fable)
+
+Two structural discoveries from the asm-hatched MSL C++ runtime cluster at arm9
+0x02071644-0x0207359c. Both mean symbol-map fixes, not codegen levers.
+
+**(1) `//cpp` + `try`/`catch` compiles with exceptions ON under project flags** (no
+`-Cpp_exceptions` flag is passed, and mwccarm's C++ default is on). It reproduces the whole
+CW EH codegen vocabulary byte-exactly at 1.2/sp2p3: the EH frame (`sub sp,#0x18*records;
+mov fp,sp`), the try-entry sp spill (`str sp,[fp,#0x14]` = record0+0x14), catch islands
+placed after the function epilogue, the implicit catch-exit unregister call
+(`add r0,fp,#0; bl __unregister`, reloc-resolving to func_02071ba0), nested try records at
+fp+0x18 (sp spill at fp+0x2c), and rethrow via a plain call that lands on func_020717c0.
+Section 5's "compile as C++" rule extends to EH: never try to fake these frames from C.
+
+**(2) The catch islands were carved into separate symbols** (func_020732e8, func_0207335c,
+func_02073584) even though they are the SAME compiled function as their parents
+(func_0207328c, func_02073300, func_02073534 - MSL array-destroy helpers,
+`__destroy_arr`-family). Matching the COMBINED region (parent size + island size) from
+natural MSL-style C++ gives:
+
+- func_0207328c+020732e8 (0x74): 29/30, byte-exact except ONE extra dead
+  `ldr sp,[fp,#0x14]` before the outer epilogue.
+- func_02073300+0207335c (0xa8): 42/43, same single dead reload - the nested try, the
+  destroy-remaining loop, the mid-island `ldr sp,[fp,#0x2c]` and the rethrow call ALL match.
+- func_02073534+02073584 (0x68): 26/27, same single dead reload.
+
+Winning source shape (0207328c; 02073300 adds the nested
+`try { if (--n) do {...} while (--n); } catch (...) { func_020731fc(); } func_020717c0();`
+inside the catch; 02073534 is `while (current > base) { current -= size; dtor(current); }`
+in the try, no dtor null-check):
+
+```cpp
+//cpp
+extern "C" void func_020731fc(void);   /* terminate()-style wrapper; source-level call */
+typedef void (*dtor_t)(void *);
+extern "C" void func_0207328c(void *block, unsigned int n, unsigned int size, dtor_t dtor)
+{
+    if (dtor) {
+        char *p = (char *)block + n * size;
+        try {
+            if (n) { do { p -= size; dtor(p); } while (--n); }
+        } catch (...) {
+            func_020731fc();   /* emits the island's leading bl */
+        }
+    }
+}
+```
+
+The single residual is systematic: every 1.2-family compiler (base/sp2/sp2p3) emits a dead
+`ldr sp,[fp,#0x14]` when an outer catch falls into the function epilogue; the ROM build
+omits it (2.0-family does omit it but diverges everywhere else: pop-pc epilogues, no
+if-converted early returns). `__attribute__((noreturn))` on the catch call deletes TOO MUCH
+(the unregister call as well); optimize_for_size restructures the whole function. Section-9
+verdict: prebuilt MSL library object, one peephole newer than 1.2/sp2p3. The committed asm
+hatches stay; if the symbol map ever merges the islands into their parents, these //cpp
+sources are 1 instruction away and the drafts are the place to start.
+
+**(3) Two more split-symbol proofs.** func_020729e8 (0xc, bare `add sp,#0xac; pop; bx`) is
+the severed epilogue of func_02072168 (0x880, ends exactly at 0x020729e8) - unmatchable
+standalone by construction. And func_02071644's asm-hatch "regperm floor" claim is WRONG:
+the symbol map truncated it. Its dead trailing `bx lr` (mwccarm always appends one after a
+`for(;;)` whose exits are all early returns) was carved off as "func_02071694", currently
+"matched" as an empty function. Real C oracle-MATCHES the true 0x54 extent:
+
+```c
+void func_02071644(void *obj, int len) {   /* decimal digit-string increment w/ carry */
+    unsigned char *first = (unsigned char *)obj + 5;
+    unsigned char *p = first + len - 1;
+    unsigned char d;
+    for (;; *p-- = 0) {
+        d = *p;
+        if (d < 9) { *p = (unsigned char)(d + 1); return; }
+        if (p == first) {
+            *p = 1;
+            *(s16 *)(((long long)(int)((char *)obj + 2)) & 0xffffffffffffffffLL) += 1;
+            return;
+        }
+    }
+}
+```
+
+(6g launder forces the ROM's `add r1,r0,#2` materialized halfword RMW; the trailing dead
+`bx lr` is byte 0x50-0x53.) Rule: when a tiny symbol is a bare epilogue, a lone `bx lr`, or
+a catch-island shape (starts mid-frame, uses fp/r4-r7 it never set), check whether the
+PREVIOUS symbol's compiled form simply extends over it before believing any floor label.
