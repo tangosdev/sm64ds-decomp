@@ -1,6 +1,8 @@
-// NONMATCHING: different op / idiom (div=83). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// Matched byte-identical (mwccarm 1.2/sp2p3). Keys: volatile src pointer pins
+// the pool struct copy to ldr x,y,z + batched str z,x,y (not ldm/stm); same-type
+// u32 reads CSE the c+0x134 load into the FindWithID arg; laundered flags def
+// rotates the p/flags r5/r4 coloring; ternary + laundered test materializes the
+// ==0xbf bool (moveq #1/movne #0/cmp) instead of jump-threading.
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void func_020aea30(char* c, void* p, int a, int b);
@@ -19,18 +21,26 @@ extern struct V3 data_ov090_0213412c;
 
 void func_ov090_021310b4(char* c)
 {
-    struct V3 sv;
     short hv[3];
-    char* p;
+    struct V3 sv;
+    struct V3 cv;
+    struct V3 hurt;
     int flags;
+    char* p;
+    int x, y, z;
+    volatile struct V3* src = &data_ov090_0213412c;
 
-    sv = data_ov090_0213412c;
+    x = src->x;
+    y = src->y;
+    z = src->z;
+    sv.z = z;
+    sv.x = x;
+    sv.y = y;
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, &sv);
 
-    if (*(int*)(c + 0x134) == 0) return;
-    p = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x134));
-    if (p == 0) return;
-    flags = *(int*)(c + 0x130);
+    if (*(unsigned int*)(c + 0x134) == 0) return;
+    if ((p = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
+    flags = (int)(((long long)*(int*)(c + 0x130)) & 0xFFFFFFFFFFFFFFFFLL);
 
     if (flags & 0x2400) {
         *(int*)(c + 0x10c) = 2;
@@ -77,11 +87,10 @@ void func_ov090_021310b4(char* c)
         return;
     }
     {
-        int b = (*(unsigned short*)(p + 0xc) == 0xbf);
-        if (b == 0) return;
+        int b = (*(unsigned short*)(p + 0xc) == 0xbf) ? 1 : 0;
+        if ((int)(((long long)b) & 0xFFFFFFFFFFFFFFFFLL) == 0) return;
     }
     if (*(unsigned char*)(p + 0x6f9) == 1 || _ZN6Player9IsOnShellEv(p) == 1) {
-        struct V3 cv;
         cv.x = *(int*)(c + 0x5c);
         cv.y = *(int*)(c + 0x60);
         cv.z = *(int*)(c + 0x64);
@@ -90,11 +99,8 @@ void func_ov090_021310b4(char* c)
         _ZN5Actor24KillAndTrackInDeathTableEv(c);
         return;
     }
-    {
-        struct V3 hurt;
-        hurt.x = *(int*)(c + 0x5c);
-        hurt.y = *(int*)(c + 0x60);
-        hurt.z = *(int*)(c + 0x64);
-        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &hurt, 2, 0xc000, 1, 0, 1);
-    }
+    hurt.x = *(int*)(c + 0x5c);
+    hurt.y = *(int*)(c + 0x60);
+    hurt.z = *(int*)(c + 0x64);
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, &hurt, 2, 0xc000, 1, 0, 1);
 }

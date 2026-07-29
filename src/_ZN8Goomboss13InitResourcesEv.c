@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=24). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -20,7 +17,7 @@ struct Actor;
 struct Vector3_16;
 
 extern "C" {
-    void func_ov074_02122634();
+    void func_ov074_02122634(char *self);
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
     void LoadKeyModels(int idx);
     void *_ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
@@ -76,7 +73,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     s32 v[3];
 
     if (*(u32 *)(self + 8) == 0x1111) {
-        func_ov074_02122634();
+        func_ov074_02122634(self);
         return;
     }
 
@@ -153,20 +150,24 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     *(s16 *)(self + 0x5f6) = 0;
     *(s16 *)(self + 0x5f4) = 0x1000;
     {
-        s16 *pf = (s16 *)(self + 0x5f4);
-        *pf = (s16)(*pf + *(s16 *)(self + 0x5f6));
+        s16 *pf = (s16 *)(((s32)self + 0x5f4) & 0xFFFFFFFFFFFFFFFFull);
+        *pf += *(s16 *)(self + 0x5f6);
     }
 
     *(s32 *)(self + 0x5c) = (s32)(((s64)data_02082214[(*(u16 *)(self + 0x5f4) >> 4) * 2] * 0x546000 + 0x800) >> 0xc);
     *(s32 *)(self + 0x64) = (s32)(((s64)data_02082214[(*(u16 *)(self + 0x5f4) >> 4) * 2 + 1] * 0x546000 + 0x800) >> 0xc);
 
     {
-        s32 a2 = *(s32 *)(self + 0x60);
-        s32 a1 = *(s32 *)(self + 0x64);
-        s32 a0 = *(s32 *)(self + 0x5c);
-        a2 = a2 + 0x64000;
+        s32 a2;
+        s32 a1;
+        s32 a0;
+        s32 a3;
+        a2 = *(s32 *)(self + 0x60);
+        a1 = *(s32 *)(self + 0x64);
+        a0 = *(s32 *)(self + 0x5c);
+        a3 = a2 + 0x64000;
         v[0] = a0;
-        v[1] = a2;
+        v[1] = a3;
         v[2] = a1;
     }
 

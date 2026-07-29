@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: constant / value (div=15). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -34,6 +31,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12 x, Fix1
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* thiz, struct BCA_File* f, int i, int j, Fix12 fx, u16 k);
 }
 
+#pragma opt_loop_invariants off
 extern "C" s32 func_ov073_0211f61c(char* c)
 {
     void* r5;
@@ -123,7 +121,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
                         *(s16*)((char*)actor + 0x96) = 0;
                         *(s32*)((char*)actor + 0x98) = 0xa000;
                         if (_ZN8SaveData19IsCharacterUnlockedEj(2) != 0) {
-                            *(s32*)(c + 0x4c0) = *(s32*)(c + 0x4c0) + 1;
+                            *(s32*)(void*)(int)(((long long)(int)(c + 0x4c0)) & 0xFFFFFFFFFFFFFFFFll) += 1;
                             if (*(s32*)(c + 0x4c0) > 0x1e) {
                                 void* actor2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x115, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                                 if (actor2 != 0) {
@@ -143,7 +141,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
         {
             void* anim = *(void**)(c + 0x37c);
             if (anim != &data_ov073_021233d0 && anim != &data_ov073_021233a0) {
-                func_ov073_0212157c(c, 0);
+                func_ov073_0212157c(c, &data_ov073_021233a0);
             }
         }
         return 1;
