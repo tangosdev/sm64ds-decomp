@@ -451,3 +451,88 @@ chosen because the pragma is a global crutch that perturbs the allocator elsewhe
   three sibling functions in the same batch.
 - **Read the matched siblings and `nearmiss/db.jsonl` before starting** -- see the section at the top
   of this batch; it is the highest-yield habit here and it beat brute force on both hard functions.
+
+## Coloring residuals: what actually works (2026-07-29 retry sweep, 9 near-misses closed)
+
+A second sweep re-attacked banked near-misses from `nearmiss/db.jsonl`. Results below are each
+backed by a landed byte-identical match, and the negative results were established with controls.
+
+### FALSIFIED: "`#pragma opt_lifetimes off` gates declaration order"
+
+A plausible-sounding rule -- *decl order is inert without the pragma and load-bearing with it, so an
+inert decl sweep means the lever is gated rather than dead* -- was tested on three functions and is
+**false**:
+
+- `func_ov006_020fbcb8`: pragma toggled on/off/absent gave byte-identical output. Positive control
+  `#pragma optimization_level 0` changed the size massively, proving the harness works.
+- `func_ov007_020beb80`: full **720-permutation** decl sweep run with AND without the pragma; only
+  6 distinct outputs total, best was the natural order.
+- `func_ov006_020f13cc`: full 4! decl sweep x {pragma on, off} = 48 cells; every cell byte-identical
+  to its no-pragma twin. Web-span rank was also inert here.
+
+`notes/mwccarm-codegen.md` ~line 448 already listed `opt_lifetimes` as inert. **Treat every pragma as
+dead until proven live FOR THAT FUNCTION by a byte delta** -- mwccarm silently no-ops illegal pragmas
+and `2004/b56` ignores even `warn_illpragma`, so a byte change is the only proof. The pragmas most
+often live here are `opt_common_subs off` and `opt_loop_invariants off`. An inert decl sweep usually
+means the controlling axis is something else entirely, not that a pragma is gating it.
+
+### The lever that actually closed these: DON'T NAME THE BASE POINTER
+
+This is `notes/mwccarm-codegen.md` §6ab ("late shared-base via non-encodable offsets"), and it was
+the fix in three separate functions this sweep:
+
+A named `T *base = ...;` local colors into the early named-local band (r3/r2/r1/r0 descending) or
+strands in `ip`. The ROM frequently has **no such variable** -- it lets the addressing optimizer build
+the shared base itself as a **late temp**, which is what reaches the leftover-`r0` / callee-saved-`r6`
+colors. Delete the named pointer and write the full offset at each use:
+
+```c
+/* misses: named base colors early */          /* matches: late temp */
+int *pos = (int*)(c + 0x47f8);                 *(int *)(c + i*4 + 0x4000 + 0x7f8)
+... pos[i] ...                                 *(u16 *)(c + i*2 + 0x4f00 + 0x7c)
+```
+
+`func_ov006_020f13cc`: deleting two named bases went 28 -> 15 -> **0** words. Tell-tale sign that this
+is your bug: other blocks in the *same function* that already match are written in the full-offset
+form. `func_ov006_020d48dc` is the same lever (28 -> 5 -> 0), and it holds even when the offsets are
+out of 12-bit range and mwcc still has to split them into `add rX,base,#0x4000` + `[rX,#0x77c]`.
+
+Note this is the **inverse** of the RMW launder above: one *forces* materialization at RMW sites, the
+other *forbids naming* so the base stays a late temp. Both are the same underlying question -- where
+mwcc decides to CSE an address -- and you often need both in one function.
+
+### Other coloring levers proven this sweep
+
+- **Loop-depth-of-definition** (`notes/mwccarm-codegen.md` ~line 2154): with two scaled loop
+  invariants, defining one in the OUTER loop and the other INSIDE the inner loop is what decides which
+  web gets r6 and which gets r4. No declaration permutation reaches this axis.
+  (`func_ov006_020fbcb8`, via its twin.)
+- **Add a web to re-rank.** Function-scope locals fill r5-r7 in *reverse* declaration order while the
+  parameter takes r4. So when two webs are swapped and nothing you do to *either* helps, adding a
+  third function-scope local re-ranks the whole list and moves them both.
+  (`func_ov007_020beb80`, 34 -> 15 words.)
+- **One struct copy instead of N field stores.** Three separate `u16` stores let the scheduler hoist a
+  later load above an `umull`; `*(Vec3s *)(e + 0x3c) = dd;` emits the ROM's ld,ld,st,st,ld,st group.
+  (`func_ov007_020beb80`, 15 -> 0.) Statement reordering does NOT substitute for this.
+- **Address-escape beats `volatile` for keeping "dead" stores.** `volatile` preserves the stores but
+  freezes store order and blocks the scheduler; passing the aggregate's address to a call preserves
+  them *and* leaves the scheduler free to hoist call-arg setup as the ROM does.
+  (`func_ov060_02117db8`.)
+- **Frame padding**: when the only residual is `sub sp` short by N bytes with no extra memory traffic
+  in the ROM, `volatile int dummy[N/4]; (void)&dummy;` reserves stack and emits no code. Plain unused
+  locals, `volatile` arrays *without* `(void)&`, dead arrays and `long long` locals are all eliminated.
+  (`func_ov063_02119074`; the idiom already appears in 8 other `src/` files.)
+- **Don't hand-expand what the compiler expands idiomatically.** A seed spelling a signed halving as
+  `(s + ((unsigned)s >> 31)) >> 1` cost a match; plain `(a + b) / 2` emits the identical
+  `add rX,rX,rX,lsr#31; asr rX,#1` but without the extra pseudo-register.
+  (`func_ov063_021177b0` -- ten decl/order permutations stayed stuck at 6 words; all seven `/2`
+  variants matched immediately.)
+
+### Re-measure banked near-misses before trusting them
+
+The `divergences` field in `nearmiss/db.jsonl` is **not comparable across rows**. `match.py` bails
+before comparing words on a size mismatch, so a size-mismatched row reports a small or zero count that
+looks better than an honest size-exact row. Re-compile every candidate before ranking: of 8 top-ranked
+entries in this sweep, 3 turned out to be size mismatches masquerading as low divergence counts.
+**Size-exact-with-N-words is strictly better than any size mismatch** -- do not trade size exactness
+for a lower word count, and do not report "0 mismatching words" from a size-mismatched compile.
