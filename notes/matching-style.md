@@ -330,9 +330,33 @@ them is low-ROI vs the COVERAGE GAP: 6,850 unmatched funcs, 1,248 small (<0x40),
 UNTRIED (proven: func_0206165c, a 24-byte global-pointer setter, matches at canonical with
 `(G+i)[5]=v` but no template covers the shape). Harvest those first.
 
-## Batch levers (2026-07-29, PR #815 -- 17 matched of 19)
+## Batch levers (2026-07-29, PR #815 -- 18 matched of 19)
 
 Each was isolated against a control (the reported "no effect" results are as useful as the hits).
+
+### Read the matched siblings FIRST (the single highest-yield habit)
+
+Both functions in this batch that resisted brute force fell to reading already-matched code in the
+same subsystem -- neither fell to search:
+
+- `func_020316d8` was floored at **23 divergences after ~5600 compiles** of declaration-order,
+  statement-order, type and pragma hill-climbing, and diagnosed as a pure allocator rotation. The
+  supporting finding was even correct: decl order and `register`/type knobs have *zero* effect on
+  that function. It was not an allocator floor. The matched sibling `src/func_0201b100.c` contains
+  the same blit loop and carries the load-bearing spellings directly -- a `(short)(int)` double cast
+  to defeat the range-folder, the slow path as an `else` block with block-scoped locals, a char-cast
+  third store that breaks an mla-coalesce. ~650 compiles from that start.
+- `func_ov006_0211e8a8` was abandoned at 12 divergences against a documented wall; three siblings in
+  the same batch had already broken it. 16 compiles once pointed at them.
+
+The pattern: hill-climbing explores the axes you thought of. A matched sibling shows you the axis you
+did not. When a function stalls with "logic certainly correct, residual is pure regalloc", stop
+sweeping and go read the nearest matched function in the same object family or subsystem.
+
+`func_ov002_020d869c` is the same lesson from the other direction: it was matched by resurrecting a
+banked 11-divergence near-miss whose central insight (the `~PVec(){}` trick below) had been right all
+along and was written off because of an unrelated callee-arity error. **Read `nearmiss/db.jsonl` for
+your target before starting.**
 
 **Defeating dead-store elimination -- when the ROM has stores that "shouldn't exist".**
 - A local struct with a **user-declared destructor** makes it non-trivially-destructible, so mwccarm
@@ -408,7 +432,5 @@ chosen because the pragma is a global crutch that perturbs the allocator elsewhe
 - **Check "wall" and negative claims hardest.** In this batch a claimed context-file disasm bug did
   not exist (two adjacent instructions conflated), and a claimed hard wall had already been broken by
   three sibling functions in the same batch.
-- **Read the neighbours and the near-miss DB before starting.** `func_ov002_020d869c` was matched by
-  resurrecting a banked 11-divergence near-miss whose central insight (the `~PVec(){}` trick above)
-  had been correct all along but was written off because of an unrelated callee-arity error. Several
-  other matches mined their levers from already-matched functions in the same object family.
+- **Read the matched siblings and `nearmiss/db.jsonl` before starting** -- see the section at the top
+  of this batch; it is the highest-yield habit here and it beat brute force on both hard functions.
