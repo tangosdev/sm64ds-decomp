@@ -100,6 +100,19 @@ class VtableCache:
         self.syms = syms
         self.cache = {}
 
+    def _resolve(self, addr):
+        """Overlay-aliasing-aware resolve. ~100 level/actor overlays share the
+        same VA range, so a bare range hit can name a function from an overlay
+        that is not even loaded. Return the unique name when only one symbol
+        range contains addr; otherwise join all candidates with '|' and a '?'
+        so the ambiguity is visible instead of silently wrong."""
+        hits = sorted({name for lo, hi, name in self.syms.ranges if lo <= addr < hi})
+        if not hits:
+            return None
+        if len(hits) == 1:
+            return hits[0]
+        return "?" + "|".join(hits[:4]) + ("|..." if len(hits) > 4 else "")
+
     def info(self, vt):
         if vt in self.cache:
             return self.cache[vt]
@@ -110,9 +123,9 @@ class VtableCache:
             d1 = u32(raw, 16 * 4)
             if in_ram(beh):
                 out["behavior_addr"] = beh
-                out["behavior"] = self.syms.resolve(beh)
+                out["behavior"] = self._resolve(beh)
             if in_ram(d1):
-                out["dtor"] = self.syms.resolve(d1)
+                out["dtor"] = self._resolve(d1)
         except RspError:
             pass
         self.cache[vt] = out
