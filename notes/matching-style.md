@@ -140,7 +140,7 @@ WRITE args in natural order; arg5 -> `str [sp]`, arg6 -> `str [sp,#4]`, with `su
 **Chain bitfield extract in one expression to keep it in r0.** WRITE `((Call()>>8)&0x3f)+0xaa` as one expression -> `lsr r0,#8; and r0,#0x3f; add r1,r0,#0xaa`. Intermediate locals perturb the r0/r1 allocation.
 
 ### Not source-controllable (don't waste cycles; hand to permuter)
-- **Base-address materialization** (`add r2,r5,#OFF; ldr [r2]` vs `ldr [r5,#OFF]`): pointer locals, sub-object access, volatile all still fold to `[base,#off]`. Permuter territory.
+- **Base-address materialization** (`add r2,r5,#OFF; ldr [r2]` vs `ldr [r5,#OFF]`): pointer locals, sub-object access, volatile all still fold to `[base,#off]`. **PARTLY SUPERSEDED (2026-07-29)** -- for read-modify-write sites this IS source-controllable via the u64 no-op mask launder; see "RMW base materialization" below. The entry still holds for plain single-use loads/stores.
 - **Large-offset base split**: offset beyond ARM rotated-immediate range (e.g. 0x418, or `strh` past its smaller range) forces `ldr [pc];add` or `add base; strh [#small]`. Encoding-forced, not source-driven â€” leave it.
 ## Hand-crack validated rules (2026-06-20, high-effort hand-cracking + diff-oracle)
 
@@ -163,12 +163,14 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
   p[1]; p[2];` or `r[0x17]; r[0x18]; r[0x19];` materializes `add rX,base,#OFF` and uses [rX,#k].
   (Examples: _ZN18SolidHeapAllocator8ResetEndEv, func_020080b0.)
 - It is NOT reproducible when the FIRST/only access is at offset 0 from the materialized base
-  (`q[0]`, `*f`, `o->flags[0]`, a single-address read-modify-write): C always folds the zero-offset
-  access to direct `[base,#OFF]`. Tried pointer locals, sub-objects, volatile, real struct array
-  members -- all fold. The permuter cannot reach it either (it has no "materialize a base" mutation).
-  This is the single most common residual blocker (1-2 instructions) on otherwise-matched functions,
-  and it is currently UNMATCHABLE from C when the access is zero-offset. Leave it for a future model
-  or a permuter pass that learns this transform.
+  (`q[0]`, `*f`, `o->flags[0]`): C always folds the zero-offset access to direct `[base,#OFF]`.
+  Tried pointer locals, sub-objects, volatile, real struct array members -- all fold. The permuter
+  cannot reach it either (it has no "materialize a base" mutation). This remains the most common
+  residual blocker (1-2 instructions) on otherwise-matched functions.
+
+  **EXCEPTION -- read-modify-write sites ARE reachable (2026-07-29, PR #815).** The
+  "single-address read-modify-write" case previously listed here as unmatchable is source-
+  controllable; see the next section. Four functions in one batch turned on it.
 
 ### Materialization IS reproducible -- the triggers (mined from oracle-verified matches)
 
@@ -184,6 +186,76 @@ corpus show exactly what makes mwccarm emit it instead of folding:
 - LOAD/STORE ORDER is controlled by OPERAND and STATEMENT order (func_0201adac "reversed load order":
   `lo | (hi<<8)` loads `lo` first). Reordering the field copies flips which offset loads first AND
   whether the base materializes before the first load vs folds it.
+
+### RMW base materialization: the u64 no-op mask launder (2026-07-29, PR #815)
+
+**The rule.** In the ROM, **every read-modify-write materializes its address via a pool constant,
+while every single-use load/store folds onto the 12-bit offset.** That split is not noise -- it is
+readable straight off the disassembly before you write any C, and it tells you exactly which sites
+need laundering.
+
+ROM shape for an RMW at a non-encodable offset:
+```
+ldr  r2, [pc]  ; = 0x4c21
+add  r3, r0, r2
+ldrb r2, [r3]
+add  r2, r2, #1
+strb r2, [r3]
+```
+Naive C (`c[0x4c21]++`) instead folds onto whatever base is already live: `ldrb/strb [r2,#0xc21]`.
+
+**The lever** -- a no-op 64-bit mask, which blocks the base/value CSE and forces full-constant
+address materialization:
+```c
+#define A(a) (*(unsigned char*)(((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+A(c + 0x4c21)++;                       /* materializes */
+x = *(unsigned char*)(c + 0x4680);     /* plain fold -- leave it alone */
+```
+Also spelled `u16 *p = (u16*)(((int)c + 0x4c0c) & 0xFFFFFFFFFFFFFFFFULL); *p = *p - 1;`
+
+**Two constraints, both load-bearing:**
+1. **Launder ONLY the RMW sites.** Laundering the single-use accesses too will diverge -- the ROM
+   folds those.
+2. **Use textually distinct macros for distinct addresses.** One shared macro CSEs the laundered
+   addresses together into callee-saved registers and inflates the frame (observed: `sub sp,#0xc`
+   appearing from nowhere). This is the 6ak "textual variance is a handle on value-numbering" rule
+   showing up concretely. The cheapest way to make them distinct is to **vary the inner cast type**
+   -- semantically identical on a 32-bit target, different value-numbering classes:
+   ```c
+   #define L(a) (*(int*)(((long long)(int)(a))      & 0xFFFFFFFFFFFFFFFFLL))
+   #define M(a) (*(int*)(((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+   #define N(a) (*(int*)(((long long)(long)(a))     & 0xFFFFFFFFFFFFFFFFLL))
+   ```
+   (verbatim from `src/func_ov006_02114c04.c`, which needs all three)
+
+**Landed examples** (all byte-identical, strict relocs, linkcheck VERIFIED):
+`src/func_ov006_02114c04.c` (the clearest -- RMW/single-use split across a whole loop body),
+`src/func_ov006_0211fe78.c` (63 divergences -> 0 in one edit),
+`src/func_ov006_020d8d84.c`, `src/func_ov006_0211e8a8.c`.
+
+**Cost of the stale note.** `func_ov006_0211e8a8` was worked to 12 divergences, correctly diagnosed
+as the "first-access-fold wall" per the old text, and abandoned as unmatchable. Pointed at the
+sibling files above it closed in **16 compiles**. A wrong floor entry is worse than no entry: it
+stops a capable attempt that was one lever from landing. If you hit a documented wall, check
+whether anything in the recent corpus has already broken it.
+
+### The counter-lever: stopping over-materialization
+
+The opposite failure (mwcc materializes/CSEs an address the ROM rematerializes per region) has its
+own fix -- **do not pre-fold the base**. Modelling `self + 0x4694 + (i<<6)` as a flat constant makes
+mwcc pool-load it and hoist the result into callee-saved registers (observed: 7-register push).
+Modelling the same thing as a **stride-0x40 struct array** indexed `[i]` yields the ROM's
+`add rX,self,i,lsl#6; add rX,rX,#0x4000; ldrb [rX,#0x694]` and rematerializes per region.
+(`src/func_ov006_020d69b8.c`, `src/func_ov006_020d816c.c`.)
+
+Related: write the cast **inline** at each use. Hoisting it into a local pointer (`Ent *ents = ...`)
+forces one addressing form everywhere; inline lets mwcc pick per context, which is what the ROM does.
+And mixed addressing for the *same field* is real, not sloppiness -- one access may need the flat
+pool-base form while others need struct-member form; unifying them costs an instruction.
+
+Also worth knowing: the odd-looking `+0x4600`/`+0x4000` base splits in these overlays are just ARM
+immediate-offset encoding limits (`ldrh` imm <= 0xff, `ldr`/`ldrb` <= 0xfff) over a record array --
+predictable, not something to reverse-engineer per function.
 
 ### The hard floor: first-access-fold (tested exhaustively, NOT source-controllable)
 
@@ -204,9 +276,11 @@ exact shape, was banked `opus-hand`, but does NOT reproduce under any config -- 
 schedule defeated prior hand-matching too. (Flag for a corpus re-verification sweep.)
 
 Conclusion: the materialization triggers above DO crack the subset of misses that fit them (arg-pass,
-live-across-call, consecutive-index, order-sensitive). The residual first-access-fold / forward-
-interleaved-copy schedule is a true backend floor -- the same cases human decompilers leave
-NonMatching. The edge is automating everything source-controllable, not grinding this residue.
+live-across-call, consecutive-index, order-sensitive), **plus read-modify-write sites via the u64
+mask launder (2026-07-29)**. The residual first-access-fold on plain single-use accesses and the
+forward-interleaved-copy schedule still look like a backend floor -- but note that the RMW case sat
+in this section as "tested exhaustively, NOT source-controllable" for months and was wrong. Treat
+these entries as "nobody has cracked it yet", not "it is impossible".
 
 ## Reference-decomp ground truth + corrected understanding (2026-06-21)
 
@@ -255,3 +329,86 @@ So ~60-85 are addressable (not floor) -- but each needs the structure search abo
 them is low-ROI vs the COVERAGE GAP: 6,850 unmatched funcs, 1,248 small (<0x40), many easy and
 UNTRIED (proven: func_0206165c, a 24-byte global-pointer setter, matches at canonical with
 `(G+i)[5]=v` but no template covers the shape). Harvest those first.
+
+## Batch levers (2026-07-29, PR #815 -- 17 matched of 19)
+
+Each was isolated against a control (the reported "no effect" results are as useful as the hits).
+
+**Defeating dead-store elimination -- when the ROM has stores that "shouldn't exist".**
+- A local struct with a **user-declared destructor** makes it non-trivially-destructible, so mwccarm
+  cannot dead-store-eliminate the stores, while field reads still forward into register args. This
+  reproduces the ROM's "store x/y/z to `[sp],[sp+4],[sp+8]` **and** pass them in r1-r3":
+  ```c
+  struct PVec { s32 x, y, z; ~PVec() {} };
+  ```
+  Probed and rejected as the cause first: 4-byte structs, non-POD classes, `Vector3`-by-value,
+  varargs, 7-arg models. It is not a struct-ABI effect. (`src/func_ov002_020d869c.cpp`)
+- Where the ROM keeps several apparently-dead stores to locals, wrap **all the locals in one
+  enclosing struct whose address is taken**. That blocks SROA/register promotion for the whole
+  aggregate so the dead stores survive, while store-to-load forwarding still supplies the registers.
+  Nothing else worked: `opt_dead_assignments`/`opt_lifetimes`/`opt_propagation` off, `(void)&d`, and
+  an inlined helper taking `&d` all failed. (`src/func_ov006_02110a20.c`)
+
+**`inline`, not `static`.** mwccarm 1.2 does **not** auto-inline a `static` 4-line helper at `-O4,p`
+-- it emits a real `bl`. Marking it `inline` produced the ROM's separate expansions, each with its
+own hoisted zero temp. Easy to misread as "the ROM had no helper". (`src/func_ov006_02110a20.c`)
+
+**Stack layout is a derivation tool, not a guess.** Established with dedicated probe functions:
+slots follow **strictly lexical declaration order**; function-scope locals always get the lowest
+offsets; block depth and scope-close order are irrelevant; and **compiler temps are allocated after
+all declared locals**. Therefore a ROM slot at the *top* of the frame that is used *first* cannot be
+a declared local -- it must be a temp, i.e. a C99 compound literal (`obj->v = (Vec3){0,0,0};`).
+Deriving the construct from a frame-layout contradiction beats permuting spellings.
+(`src/func_ov007_020ca010.c`)
+
+**All-zero aggregate init triggers materialized-base stack zeroing.** `Vec3 v = {0,0,0};` gives
+`add rN,sp,#off; str r,[rN]; str r,[rN,#4]; str r,[rN,#8]`. Field assignments, a pointer local, an
+inlined `VecSet(&v,0,0,0)` and a `void*` helper all fold to `[sp,#off]`. A **non-zero** aggregate
+init instead emits a pool `ldm`/`stm` copy. (`src/func_ov007_020ca010.c`)
+
+**Pointer difference carries no conversion node.** To get a base-0 array stride offset into a
+register as an int, `(int)&((char(*)[0x24])0)[idx][0]` emits a surplus `add rX,rY,#0` that mwcc will
+not fold away (~12 cast spellings all did). Spell it as a **pointer difference** instead:
+```c
+off = ((char (*)[0x24])0)[idx] - (char*)0;
+```
+Operand order then matters: the pointer base must be the left operand of the following add, or you
+get the operands swapped. (`src/func_ov006_0211e8a8.c`)
+
+**`if/else` vs ternary has NON-LOCAL regalloc effects.** The existing "preserve ternaries" guidance
+is not universal. A case written as a ternary poisoned the whole function's r1/r2 assignment for two
+unrelated locals -- *despite* the ROM emitting the classic `moveq/movne` ternary shape. Rewriting it
+as `if/else` fixed a 20-instruction coloring residual far from the ternary itself. When a predicated
+pair is the only construct adjacent to a coloring residual, **try both forms**.
+(`src/func_ov007_020b5f64.c`)
+
+**Parallel loops want their own locals.** Six structurally identical zero-init loops sharing one
+`i`/`p` pair gave correct instruction shape with permuted registers; giving each loop its own counter
+and pointer fixed the allocation exactly. A declaration-order swap did not.
+(`src/func_ov006_020feba8.c`)
+
+**Assignment order, not declaration order.** Where a 24-permutation *declaration*-order sweep is
+inert, reordering the **assignment / first use** can still flip the entire callee-saved assignment
+(observed: 33 divergences -> 0 from moving one assignment). Source position of the first *use* sets
+web rank. Corollary: an inert decl-order sweep means the lever is **gated**, not dead -- try
+`#pragma opt_lifetimes off` and re-sweep. (`src/func_ov006_020fe750.c`)
+
+**Prefer a respelling to a pragma.** `#pragma opt_strength_reduction off` and the address-tree
+respelling `((int*)c + k)[0x1510]` both killed a spurious induction variable; the respelling was
+chosen because the pragma is a global crutch that perturbs the allocator elsewhere in the function.
+(`src/func_ov006_020e0068.c`)
+
+### Verification discipline
+
+- **A byte match is not proof.** A candidate here was byte-identical but relocated four pool words to
+  `data_020a0de8+addend` instead of four distinct symbols -- a WRONG-DEST false match. Cause: one
+  `struct {u8 a,b,c,d;}`. Fix: four separate single-byte structs, which keeps the
+  `ldrb [base,i,lsl#2]` addressing *and* lands each reloc on its own symbol. Always run
+  `tools/linkcheck.py` as well as `match.py`, and never pass `--no-strict-relocs`.
+- **Check "wall" and negative claims hardest.** In this batch a claimed context-file disasm bug did
+  not exist (two adjacent instructions conflated), and a claimed hard wall had already been broken by
+  three sibling functions in the same batch.
+- **Read the neighbours and the near-miss DB before starting.** `func_ov002_020d869c` was matched by
+  resurrecting a banked 11-divergence near-miss whose central insight (the `~PVec(){}` trick above)
+  had been correct all along but was written off because of an unrelated callee-arity error. Several
+  other matches mined their levers from already-matched functions in the same object family.
