@@ -786,6 +786,22 @@ Three parked "not reachable from C" regalloc near-misses cracked byte-exact
   retains every store in source order, the named locals keep the values in
   registers for the second copy, and no volatile READ is ever emitted because the
   source never reads tmp back (func_ov092_02131010, the "LandingDust double-store").
+  **REFINEMENT (2026-07-30, func_ov006_021082fc): `volatile` fixes the SIZE but can
+  cost you the COLORING.** On that function `volatile Vector3 tmp;` + named ints gave
+  the exact frame and the 3 dead stores, but left an 11-word register rotation in the
+  block feeding the call, and no declaration-order permutation (12 tried) moved it.
+  The spelling that gives dead stores AND the ROM's coloring is a **plain (non-volatile)
+  struct written and read through address-laundering casts**:
+  ```c
+  struct Vec3 t;                       /* NOT volatile */
+  ((int *)&t)[0] = x;  ((int *)&t)[1] = y;  ((int *)&t)[2] = z;
+  Callee(a, ((int *)&t)[0], ((int *)&t)[1], ((int *)&t)[2]);
+  ```
+  Taking the address keeps the stores (no SROA), non-volatile store-to-load forwarding
+  still passes the values in registers, and demoting the fields to memory class removes
+  the extra *named webs* that `volatile` + named ints introduce - which is what the
+  rotation was. Prefer this form; fall back to `volatile` only if the coloring already
+  matches. (Mined from the twin `src/func_ov006_02107ea8.c`, which uses the same idiom.)
 - **Stack layout is declaration order, low to high** (volatile arrays and structs
   included): `saved[3]` then `v1` then `v2` lands sp+0 / sp+0xc / sp+0x18
   (func_ov092_021311b0; confirmed again on func_ov092_02131010's tmp/eq/dust).
