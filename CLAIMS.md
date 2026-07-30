@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 func_ov002_020f34bc (0x020f34bc, size 0x128) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); shift-def order bs,cs,ds,as_ from near-miss div=14→7→0; API clm_8d0d054c32ba kept |
 | ov002 _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn (0x020ade78, size 0x3cc) | lunavyqo (Grok) | 2026-07-30 | **released** — floor(ordering) **div=2** confirmed 3 sessions. Mechanism: u64-launder makes `add r1,r6,#0x5c` ready for d0-load delay slot; mwccarm 1.2 ranks address-add above `mov r3,#0x800` (micro-lab). 100+ spellings+PERM+all 1.2/* identical residual. Tip in nearmiss. |
 | ov002 _ZN6Player12CanEnterDoorEh (0x020ca5cc, size 0x13c) | lunavyqo (Grok) | 2026-07-30 | **released** — near-miss improved **13→1** banked in nearmiss/db.jsonl; free-fn sibling style + reverse-arg door=r4; residual +0xcc bne target (non-match door-type→store vs shared ret0); vol sink colors+CF but +1 strb size 0x140; API clm_34467ef8ca6c released |
 | ov002 func_ov002_020c3160 (0x020c3160, size 0x644) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); a+(b-c) assoc + case2 k1400/s64 partial umull interleave; from near-miss div=270→0; API clm_6b908c258e7e kept |
