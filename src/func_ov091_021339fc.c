@@ -1,6 +1,3 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -72,11 +69,9 @@ void func_ov091_021339fc(char *c)
         if (*(u8*)(a + 0x6ff) != 0) return;
         if (*(u8*)(a + 0x6fd) != 0) return;
         {
-        u32 newHat, curHat0;
-        asm {
-            ldr curHat0, [a, #8]
-            mov newHat, #1
-        }
+        u32 param, curHat0;
+        curHat0 = *(u32*)(a + 8);
+        param = 1;
         if (hat != curHat0) {
             _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
         } else {
@@ -91,8 +86,9 @@ void func_ov091_021339fc(char *c)
             rot[1] = 0;
             rot[2] = 0;
             rot[1] = *(short*)(c + 0x94);
+            param = param | (curHat1 << 8);
             spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-                0x10d, newHat | (curHat1 << 8), (struct Vec3*)(c + 0x5c), rot, *(signed char*)(c + 0xcc), -1);
+                0x10d, param, (struct Vec3*)(c + 0x5c), rot, *(signed char*)(c + 0xcc), -1);
             if (spawned == 0) return;
             *(u32*)((char*)spawned + 0x98) = 0x32000;
             *(u32*)((char*)spawned + 0xa4) = 0;
