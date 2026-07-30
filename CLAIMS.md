@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov090 func_ov090_02131648 (0x02131648, size 0x42c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); u64-launder 0x39a/0x390 + (self+0x300)+off + p39a-after-store regperm flip; from near-miss div=87→8→0; CLAIMS.md only (API key expired) |
 | ov002 func_ov002_020ecb0c (0x020ecb0c, size 0x20c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); lever: `s32 py=*(volatile s32*)(c+0x60)+0x28000` decl-init fuse + onwall=table reuse; from near-miss 31→19→5→0; API clm_dacc62ab5d3f kept |
 | ov002 func_ov002_020f34bc (0x020f34bc, size 0x128) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); shift-def order bs,cs,ds,as_ from near-miss div=14→7→0; API clm_8d0d054c32ba kept |
 | ov002 _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn (0x020ade78, size 0x3cc) | lunavyqo (Grok) | 2026-07-30 | **released** — floor(ordering) **div=2** confirmed 3 sessions. Mechanism: u64-launder makes `add r1,r6,#0x5c` ready for d0-load delay slot; mwccarm 1.2 ranks address-add above `mov r3,#0x800` (micro-lab). 100+ spellings+PERM+all 1.2/* identical residual. Tip in nearmiss. |
