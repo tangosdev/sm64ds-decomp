@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 func_ov002_020c3160 (0x020c3160, size 0x644) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); a+(b-c) assoc + case2 k1400/s64 partial umull interleave; from near-miss div=270→0; API clm_6b908c258e7e kept |
 | ov002 _ZN8SignPost8BehaviorEv (0x020bbea4, size 0x39c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); hoist UpdateKillByMegaChar outside 0x58e/dist guards (ROM always calls it); from near-miss div=10→0; API clm_5cc3fc1ae257 kept |
 | ov002 func_ov002_020bb614 (0x020bb614, size 0x3dc) | lunavyqo (Grok) | 2026-07-30 | **active** — match from m2c+disasm; API clm_14bdef487e83 |
 | ov002 _ZN6Player7SetAnimEji5Fix12IiEj (0x020bef2c, size 0x210) | lunavyqo (Grok) | 2026-07-30 | **active** — batch4 near-miss refine (div=22); API clm_a2cf68ec087e |
