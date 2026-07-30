@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn (0x020ade78, size 0x3cc) | lunavyqo (Grok) | 2026-07-30 | **released** — no_progress floor(ordering) tip remains **div=2** in nearmiss/db.jsonl; residual pure stall-slot fill at +0x174/+0x17c (`mov r3,#0x800` vs `add r1,r6,#0x5c`); 30+ spellings + pragmas + //cpp + permuter score120; API clm_e4f90a12c2d3 released |
 | ov002 _ZN6Player12CanEnterDoorEh (0x020ca5cc, size 0x13c) | lunavyqo (Grok) | 2026-07-30 | **active** — batch8 near-miss refine (div=13 pure r4/r5); API clm_34467ef8ca6c |
 | ov002 func_ov002_020c3160 (0x020c3160, size 0x644) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); a+(b-c) assoc + case2 k1400/s64 partial umull interleave; from near-miss div=270→0; API clm_6b908c258e7e kept |
 | ov002 _ZN8SignPost8BehaviorEv (0x020bbea4, size 0x39c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); hoist UpdateKillByMegaChar outside 0x58e/dist guards (ROM always calls it); from near-miss div=10→0; API clm_5cc3fc1ae257 kept |
