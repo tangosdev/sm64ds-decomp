@@ -2300,6 +2300,67 @@ of 282 differing words, which turns "302 divergences" into "one 4-cycle on
 {r6,r8,sb,sl}".
 
 
+## 6am. The two biggest arm9 functions: measured lever weights (2026-07-30, Opus)
+
+Neither matched, but both moved a long way and every lever below was isolated by
+building the variant WITHOUT it and re-verifying, so the numbers are measured
+rather than attributed.
+
+### func_02009e70 (Camera::Update, 0x109c): 302 -> 183
+
+Two levers carry the whole distance, and one of them is worth more than everything
+else in this file combined.
+
+| variant | divergences |
+|---|---|
+| seed as banked | 302 |
+| booster removed, pragma kept | 302 |
+| pragma removed | 816 |
+| both | 183 |
+
+**`#pragma opt_common_subs off` is load-bearing here: -632.** Without it the frame
+is also wrong (0x1a4). On a function this size, CSE across the whole body is the
+dominant effect; check this BEFORE grinding registers.
+
+**The web-priority booster is worth -118 on its own.** Writing `sb = sb ? sb : sb;`
+immediately after the `Math_Function_0203b14c(self+0x130)` call makes `sb` claim r9,
+which pushes `self` down into r8 and matches the ROM's `mov r8, r0` entry. This is
+the 6y lever-1 shape; what is new is the placement rule - the boost has to sit at
+the point where the competing web is still live, not at the top of the function.
+
+A 2700-candidate booster sweep found no SECOND booster that helps, and decl-order
+permutation (52 tried), scope depth, per-web splits, 98 adjacent-statement swaps and
+volatile pinning all failed to move 184->183. The residue is a three-way
+r8/sb/sl rotation, which is the rank-pinned web shape from 6ab.
+
+### func_02072168 (VM interpreter, 0x880): 446 -> 195
+
+**A dense switch was NOT the problem** - worth recording as a negative result,
+because it looks like the obvious first move on a 20-case interpreter. mwccarm had
+already emitted `addls pc, pc, r0, lsl #2` plus 20 branch entries from the seed's
+switch, including the two default entries. Do not spend a pass on this.
+
+The real causes, in order of weight:
+
+- **A semantic bug in the seed.** Case 0x12 stored `q+4` after already doing `q += 4`,
+  a double advance the ROM does not do. It also forced a register spill into `sp+4`,
+  which shifted EVERY later local slot by 4 and cost roughly 90 divergences on its own.
+  Fixing one wrong store was worth far more than any codegen lever here.
+- **Memory-homing a local with `volatile`: -79.** Case 0x10's `k` is memory-homed in the
+  ROM (`str r2,[sp,#0x84]` / `ldr r3,[sp,#0x84]` around the third parse call).
+  Declaring it `volatile int k;` reproduces that, and because slot 0x84 is then
+  occupied, every later slot falls back into ROM alignment. This is the frame-layout
+  lever from 6al seen from the other side: you can place a slot by forcing a home, not
+  only by moving a declaration.
+- **A named advance variable stops mwcc sinking the increment.** Replacing `q += 4` with
+  a `unsigned char *adv;` declared in the case block and assigned right after the
+  function-pointer assembly keeps `q` in r0 for the `ldrb` chain and lands
+  `add rX, r0, #4` early, exactly like the ROM.
+
+Rejected with evidence: `#pragma opt_propagation off` DOES produce the ROM's early
+`and rX,r5,#K` + `cmp rX,#0` flag shape, but it recolours globally (op r5->r4,
+neg1 r4->r7) and lands at 376. Decl-order permutation does not recover the colouring.
+
 ## 9a. CW try/catch EH IS reproducible from //cpp, and the 0x0207xxxx runtime "functions" are split-symbol fragments (2026-07-26, Fable)
 
 Two structural discoveries from the asm-hatched MSL C++ runtime cluster at arm9
