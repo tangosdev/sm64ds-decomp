@@ -19,6 +19,12 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov091 func_ov091_021339fc (0x021339fc, size 0x270) | lunavyqo (Grok) | 2026-07-30 | **active** — pure-C crack of asm-hatch NONMATCHING (CLAIMS.md only; API key expired) |
+| ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo (Grok) | 2026-07-30 | **active** — batch2 near-miss refine (div=3 pure reg+sched residual: s pool r3 vs r0); CLAIMS.md only (API key rejected) |
+| ov080 func_ov080_021261f4 (0x021261f4, size 0x2f8) | lunavyqo (Grok) | 2026-07-30 | **active** — batch5 match from near-miss div=101; CLAIMS.md only (API key expired) |
+| ov090 func_ov090_02131648 (0x02131648, size 0x42c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); u64-launder 0x39a/0x390 + (self+0x300)+off + p39a-after-store regperm flip; from near-miss div=87→8→0; CLAIMS.md only (API key expired) |
+| ov073 func_ov073_021203ac (0x021203ac, size 0x244) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck BLIND-3 (mwccarm 1.2/sp2p3); lever: store -neg to 0x9c before u64-launder p=c+0x4c4 (r0=#0x5000 / r1=pool); from near-miss div=5→0; CLAIMS.md only (API key expired) |
+| ov064 func_ov064_021193b4 (0x021193b4, size 0x448) | lunavyqo (Grok) | 2026-07-30 | **active** — batch8 match from near-miss div=262; CLAIMS.md only (API key expired) |
 | ov002 func_ov002_020ecb0c (0x020ecb0c, size 0x20c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); lever: `s32 py=*(volatile s32*)(c+0x60)+0x28000` decl-init fuse + onwall=table reuse; from near-miss 31→19→5→0; API clm_dacc62ab5d3f kept |
 | ov002 func_ov002_020f34bc (0x020f34bc, size 0x128) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); shift-def order bs,cs,ds,as_ from near-miss div=14→7→0; API clm_8d0d054c32ba kept |
 | ov002 _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn (0x020ade78, size 0x3cc) | lunavyqo (Grok) | 2026-07-30 | **released** — floor(ordering) **div=2** confirmed 3 sessions. Mechanism: u64-launder makes `add r1,r6,#0x5c` ready for d0-load delay slot; mwccarm 1.2 ranks address-add above `mov r3,#0x800` (micro-lab). 100+ spellings+PERM+all 1.2/* identical residual. Tip in nearmiss. |
@@ -234,6 +240,7 @@ it is fair to take over: ping the claimant first.
 | ov092: _ZN6ToxBox13InitResourcesEv (0x02131da0), _ZN6ToxBox8BehaviorEv (0x02131c44), 02131010 (0x02131010), 021311b0 (0x021311b0), 021316d8 (0x021316d8), 02131878 (0x02131878) | lunavyqo | 2026-07-10 | near-miss (PR #246 open) |
 | ov021: _ZN11RollingRock8BehaviorEv (0x02112854), 02112544 (0x02112544) | lunavyqo | 2026-07-10 | near-miss (PR #248 open) |
 | ov091: _ZN22RotatingUpDownPlatform13InitResourcesEv (0x0213220c), _ZN6Thwomp8BehaviorEv (0x02132ab0), 02131160 (0x02131160), 02131db8 (0x02131db8), 02133098 (0x02133098), 021334b8 (0x021334b8), 02133c6c (0x02133c6c) | lunavyqo | 2026-07-10 | near-miss (PR #254 open) |
+| ov091 func_ov091_02131160 (0x02131160, size 0x1e0) | lunavyqo (Grok) | 2026-07-30 | **active** — batch3 match from near-miss div=119; CLAIMS.md only (API key expired) |
 | ov073: 0211f2c0 (0x0211f2c0), 02120ed0 (0x02120ed0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #260 open (supersedes near-miss #257) |
 | AI-assisted crack sweep: smallest untried funcs (~0x100 band), spread across modules (this batch mostly ov006/ov007) | beansntoast (AI-assisted) | 2026-06-29 | in progress |
 | ov002 __sinit_ov002_021019d0 (0x021019d0, size 0x5470) | Cursor/Grok | 2026-07-02 | done |
@@ -347,3 +354,4 @@ it is fair to take over: ping the claimant first.
 | ov102 func_ov102_0214b53c (0x0214b53c, size 0x44c) | lunavyqo (Grok) | 2026-07-24 | **released** — near-miss improved 96→60 banked in nearmiss/db.jsonl; first half exact; residual shadow regperm/schedule |
 | salvage: 13 console Random batch strays across ov004/ov060/ov063/ov070/ov075/ov084/ov085 (incl. _ZN7BooCage8BehaviorEv, __sinit_ov085_0212f5ec) | Tango | 2026-07-18 | **done** — 13 verified byte-identical + linkcheck VERIFIED; 9 near-misses banked; 169 db ghosts pruned; PR #498 |
 | arm9 100% campaign: ALL remaining arm9 unmatched functions (176 funcs, 107KB — full list reserved; excludes lunavyqo's active div1 trio func_02068dc8/func_0205fb58/func_02068398) | Tango | 2026-07-18 | **active (batch 1 landed)** — 46 matched byte-identical this PR (26 refine + 14 redraft/fresh + 5 salvage + 1 permuter); campaign paused mid-P2/P3 on usage, claim HELD for resume; dedicated worktree campaign to close arm9; matches accumulate locally, single batch PR at the end; near-misses banked on completion |
+| ov073 _ZN11ChiefChilly8BehaviorEv (0x021218a0, size 0x42c) | lunavyqo (Grok) | 2026-07-30 | **active** — match from near-miss div=87; CLAIMS.md only (API key expired) |
