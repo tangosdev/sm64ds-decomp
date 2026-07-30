@@ -2,7 +2,7 @@
 
 [![Discord Server][discord-badge]][discord]
 
-[discord]: https://discord.gg/JXckvdARc
+[discord]: https://discord.gg/YpReERF4e3
 [discord-badge]: https://img.shields.io/discord/1520811338568569112?color=7289DA&logo=discord&logoColor=ffffff
 
 A from-scratch decompilation (decomp) of **Super Mario 64 DS** into matching C.
