@@ -1,7 +1,5 @@
 //cpp
-// NONMATCHING: register allocation (div=87). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+#pragma opt_propagation off
 struct Vector3 { int x, y, z; };
 struct Mat4x3 { int m[12]; };
 
@@ -55,6 +53,7 @@ extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
 {
     char *self = (char *)c;
+    int angx;
     Vector3 v0;
     RayParams rp;
     Vector3 v3C;
@@ -110,23 +109,37 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
         rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
         rp.in.x = 0; rp.in.y = 0; rp.in.z = 0;
         rp.out.x = 0; rp.out.y = 0; rp.out.z = 0;
-        rp.start.x = *(int *)(self + 0x5c);
-        rp.start.y = *(int *)(self + 0x60);
-        rp.start.z = *(int *)(self + 0x64);
-        rp.start.y = *(int *)(self + 0x60) + 0x78000;
-        if (*(unsigned char *)(self + 0x4cb) > 1)
-            rp.in.z = 0x258000;
-        else
-            rp.in.z = 0x12c000;
-        Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(self + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
+        {
+            int y;
+            rp.start.x = *(int *)(self + 0x5c);
+            angx = 0x2000;
+            y = *(int *)(self + 0x60);
+            rp.start.y = y;
+            rp.start.z = *(int *)(self + 0x64);
+            rp.start.y = y + 0x78000;
+            if (*(unsigned char *)(self + 0x4cb) > 1)
+                rp.in.z = 0x258000;
+            else
+                rp.in.z = 0x12c000;
+            Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(self + 0x94));
+            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
+        }
         MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
-        rp.end.x = rp.start.x;
-        rp.end.x = rp.start.x + rp.out.x;
-        rp.end.y = rp.start.y;
-        rp.end.y = rp.start.y + rp.out.y;
-        rp.end.z = rp.start.z;
-        rp.end.z = rp.start.z + rp.out.z;
+        {
+            int sx = rp.start.x;
+            int ox = rp.out.x;
+            int sy = rp.start.y;
+            int sz = rp.start.z;
+            int oy, oz;
+            rp.end.x = sx;
+            rp.end.x = sx + ox;
+            oy = rp.out.y;
+            oz = rp.out.z;
+            rp.end.y = sy;
+            rp.end.y = sy + oy;
+            rp.end.z = sz;
+            rp.end.z = sz + oz;
+        }
         _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(line, &rp.start, &rp.end, self);
         if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
             if (*(int *)(self + 0x98) > 0xa000) {
