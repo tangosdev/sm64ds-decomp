@@ -19,10 +19,11 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 _ZN6Player12CanEnterDoorEh (0x020ca5cc, size 0x13c) | lunavyqo (Grok) | 2026-07-30 | **active** — batch8 near-miss refine (div=13 pure r4/r5); API clm_34467ef8ca6c |
 | ov002 func_ov002_020c3160 (0x020c3160, size 0x644) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); a+(b-c) assoc + case2 k1400/s64 partial umull interleave; from near-miss div=270→0; API clm_6b908c258e7e kept |
 | ov002 _ZN8SignPost8BehaviorEv (0x020bbea4, size 0x39c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); hoist UpdateKillByMegaChar outside 0x58e/dist guards (ROM always calls it); from near-miss div=10→0; API clm_5cc3fc1ae257 kept |
 | ov002 func_ov002_020bb614 (0x020bb614, size 0x3dc) | lunavyqo (Grok) | 2026-07-30 | **active** — match from m2c+disasm; API clm_14bdef487e83 |
-| ov002 _ZN6Player7SetAnimEji5Fix12IiEj (0x020bef2c, size 0x210) | lunavyqo (Grok) | 2026-07-30 | **active** — batch4 near-miss refine (div=22); API clm_a2cf68ec087e |
+| ov002 _ZN6Player7SetAnimEji5Fix12IiEj (0x020bef2c, size 0x210) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); split charId + decl order field8 before newVal + field8_only end + opt_propagation off; from near-miss div=22→19→11→0; API clm_a2cf68ec087e kept |
 | ov002 func_ov002_020c06fc (0x020c06fc, size 0x5c0) | lunavyqo (Grok) | 2026-07-30 | **active** — batch6 near-miss refine (div=11); API clm_0033b5f8e810 |
 | ov002 func_ov002_020bfa74 (0x020bfa74, size 0x44c) | lunavyqo (Grok) | 2026-07-30 | **active** — batch5 match from near-miss div=176; API clm_e771448b9e39 |
 | overlay batch 2026-07-27: ov075 func_ov075_0211a948; ov006 func_ov006_020c8c78 / 020e26f8 / 020e5a0c / 020ebc7c / 020eb9dc / 020dd334 / 020dbe9c; ov007 func_ov007_020c3fe4 / 020b8d48; ov002 func_ov002_020cfaf0; ov004 func_ov004_020b38ac | andrewboudreau (Claude) | 2026-07-27 | **done** — 10 matched byte-identical (mwccarm 1.2/sp2p3): ov002 020cfaf0, ov004 020b38ac, ov006 020c8c78/020dd334/020e26f8/020e5a0c/020eb9dc/020ebc7c, ov007 020b8d48/020c3fe4 (Fable uninit-decl split); 2 wall-marked near-misses banked: ov075 0211a948 (div 5, two-attractor rank-pin), ov006 020dbe9c (div 21, 6ab rank-pin) |
