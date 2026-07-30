@@ -81,6 +81,35 @@ def read_src_text(name):
     return texts[0] if texts else None
 
 
+# A committed `// NONMATCHING` file means one of two very different things, and both
+# header families open with "hand-written asm", so the banner alone cannot separate them:
+#
+#   SETTLED  "// NONMATCHING (ASM-PRIMITIVE): ... no match to chase. Counts as done
+#             under the asm-primitive policy"      -> assembly WAS the original source.
+#   OWES C   "// NONMATCHING: hand-written asm ... does NOT count as matched. Reverts to
+#             a draft until someone reproduces the bytes from real C"  -> still open work.
+#
+# Only the second is a legitimate target. Schedulers that tested for the banner alone
+# treated both as open drafts and kept handing out settled assembly: #822 was a whole
+# agent run that re-emitted an asm block already committed under the other extension.
+_SETTLED_TAGS = ("NONMATCHING (ASM-PRIMITIVE)", "NONMATCHING (NOT-C-EXPRESSIBLE)")
+_SETTLED_PHRASES = ("counts as done", "no match to chase", "nothing here to match")
+_OWES_C = "does not count as matched"
+
+
+def is_policy_done(src):
+    """True when a committed NONMATCHING file is SETTLED under notes/asm-policy.md
+    rather than an open draft. Never offer these as targets; they are also not valid
+    sibling examples, since the body is assembly rather than recovered C."""
+    if not src:
+        return False
+    head = src[:600]
+    low = head.lower()
+    if _OWES_C in low:                      # explicitly still owes a C decompilation
+        return False
+    return any(t in head for t in _SETTLED_TAGS) or any(p in low for p in _SETTLED_PHRASES)
+
+
 def target_is_done(done, label, addr, name):
     """Treat the source tree as authoritative when the generated ledger lags."""
     return ((label, addr) in done

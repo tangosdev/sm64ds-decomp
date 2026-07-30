@@ -105,9 +105,9 @@ def main():
             continue
         # A committed src/ file is the portable is-it-matched signal (matched.jsonl is
         # gitignored). A "// NONMATCHING" draft is NOT matched and stays a valid target,
-        # same rule coddog uses.
+        # but one settled under the asm-primitive policy is done and must not be offered.
         src = WL.read_src_text(name)
-        if src is not None and "// NONMATCHING" not in src[:200]:
+        if src is not None and ("// NONMATCHING" not in src[:200] or WL.is_policy_done(src)):
             continue
         code = a9[ad - BASE: ad - BASE + sz]
         cs = callees(code, ad, sz)

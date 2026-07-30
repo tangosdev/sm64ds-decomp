@@ -100,6 +100,11 @@ def build_corpus():
             if src is not None and not hatch:
                 rec["src"] = src
                 matched.append(rec)
+            elif hatch and WL.is_policy_done(src):
+                # Settled under the asm-primitive policy: assembly WAS the original source,
+                # so there is no C to recover. Belongs in NEITHER pool - not a target, and
+                # not a sibling example either, since the body is asm rather than real C.
+                continue
             elif (label, addr) not in parked and not S.is_thunk(list(S.md.disasm(tgt, 0))):
                 # A hatch is never a valid SIBLING, but it is still a legitimate TARGET: most
                 # hatches are just old drafts, not proven walls (only a handful carry a floor
