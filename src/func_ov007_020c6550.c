@@ -1,42 +1,23 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-/* Byte-identical via mwccarm asm: C always mis-colors the [c+8]/[c+0xc]
- * compare (r1/r2 swap vs load-order deadlock with volatile). r0 still holds
- * `c` at the first bl (no rematerialize). Verified match.py 1.2/sp2p3. */
-extern void func_ov007_020c6d20(void);
-extern void func_ov007_020c28ac(void);
+extern void func_ov007_020c6d20(char *self, int idx);
+extern void func_ov007_020c28ac(void *p);
 
-asm int func_ov007_020c6550(register char* c)
+int func_ov007_020c6550(char *c)
 {
-    stmdb sp!, {r4, r5, r6, lr}
-    mov r6, r0
-    ldr r4, [r6, #0x20]
-    mov r5, #1
-    ldrh r1, [r4, #8]
-    cmp r1, #0
-    beq Lfail
-    ldr r1, [r6, #8]
-    ldr r2, [r6, #0xc]
-    cmp r1, r2
-    blt Lsucc
-Lfail:
-    mov r5, #0
-    b Lend
-Lsucc:
-    bl func_ov007_020c6d20
-    add r1, r6, #8
-    ldr r0, [r1]
-    add r0, r0, #1
-    str r0, [r1]
-    ldr r1, [r6, #8]
-    ldr r0, [r6, #0xc]
-    cmp r1, r0
-    mov r0, r4
-    movge r5, #2
-    bl func_ov007_020c28ac
-Lend:
-    mov r0, r5
-    ldmia sp!, {r4, r5, r6, lr}
-    bx lr
+    int status = 1;
+    void *obj = *(void **)(c + 0x20);
+    int left;
+    if (*(unsigned short *)((char *)obj + 8) == 0 ||
+        (left = *(volatile int *)(c + 8)) >= *(int *)(c + 0xc)) {
+        status = 0;
+    } else {
+        func_ov007_020c6d20(c, left);
+        {
+            int *p = (int *)(((unsigned int)c + 8) & 0xFFFFFFFFFFFFFFFFULL);
+            *p = *p + 1;
+        }
+        if (*(int *)(c + 8) >= *(int *)(c + 0xc))
+            status = 2;
+        func_ov007_020c28ac(obj);
+    }
+    return status;
 }
