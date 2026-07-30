@@ -17,8 +17,12 @@ import argparse
 import json
 import pathlib
 import re
+import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
+import ledger as L
+import worklist as WL
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 ARM9 = REPO / "extracted" / "arm9_dec.bin"
@@ -42,15 +46,13 @@ def load_named():
 
 
 def load_matched():
-    done = set()
-    if MATCHED.is_file():
-        for l in MATCHED.read_text(errors="ignore").splitlines():
-            l = l.strip()
-            if l:
-                try:
-                    done.add(int(json.loads(l)["addr"], 0))
-                except Exception:
-                    pass
+    """arm9 addresses this tool must not hand to an agent.
+
+    matched.jsonl alone is not enough: it is gitignored, so on a fresh clone this
+    filtered nothing and the tool offered functions that were already matched, plus any
+    carrying a verified floor mark. schedule_skip_set() supplies matched + locally parked
+    + committed floors; a committed src/ file is the portable is-it-done signal on top."""
+    done = {addr for mod, addr in L.schedule_skip_set() if mod == "arm9"}
     # Also skip known-hard functions that repeatedly fail (one hex addr per line).
     skip = REPO / "progress" / "skip.txt"
     if skip.is_file():
@@ -100,6 +102,12 @@ def main():
         if mode != "arm" or not (args.min <= sz <= args.max):
             continue
         if not (args.lo <= ad < args.hi) or not (BASE <= ad < limit) or ad in done:
+            continue
+        # A committed src/ file is the portable is-it-matched signal (matched.jsonl is
+        # gitignored). A "// NONMATCHING" draft is NOT matched and stays a valid target,
+        # same rule coddog uses.
+        src = WL.read_src_text(name)
+        if src is not None and "// NONMATCHING" not in src[:200]:
             continue
         code = a9[ad - BASE: ad - BASE + sz]
         cs = callees(code, ad, sz)
