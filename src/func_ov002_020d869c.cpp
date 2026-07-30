@@ -1,12 +1,7 @@
 //cpp
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 
-typedef struct { s32 x, y, z; } Vector3;
 struct PVec { s32 x, y, z; ~PVec() {} };
-typedef s32 Fix12;
 
 extern "C" {
 extern char *_ZN5Actor10FindWithIDEj(u32 id);

@@ -1,8 +1,5 @@
-typedef int Fix12i;
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 
-typedef struct Vector3 { Fix12i x, y, z; } Vector3;
 
 extern Fix12i func_0203d614(const Vector3* v);
 extern int func_0203d434(Fix12i* in);
@@ -12,9 +9,10 @@ extern void func_0203d388(int *p, int angle);
 
 extern int data_0209d4b8;
 
-#define L(a) (*(int*)(((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL))
-#define M(a) (*(int*)(((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL))
-#define N(a) (*(int*)(((long long)(long)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+#include "launder.h"
+#define L LAUNDER_A
+#define M LAUNDER_B
+#define N LAUNDER_C
 
 void func_ov006_02114c04(char* o)
 {
