@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: different op / idiom (div=87). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -49,6 +46,10 @@ extern "C" int func_ov090_02131648(C *c)
     Vector3 a, b, in, out;
     RaycastLine rc;
     int angleSet;
+    s16 *p39a;
+    int sh;
+    s16 ha;
+    int *p390;
 
     rnd = (u32)RandomIntInternal(&data_0209e650) >> 8;
     dist = Vec3_Dist((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
@@ -67,7 +68,7 @@ extern "C" int func_ov090_02131648(C *c)
 
     a.x = *(int *)(self + 0x5c);
     selfY = *(int *)(self + 0x60);
-    *(volatile int *)&a.y = selfY;
+    a.y = selfY;
     a.z = *(int *)(self + 0x64);
     a.y = selfY + 0x64000;
     in.y = 0x64000;
@@ -88,21 +89,25 @@ extern "C" int func_ov090_02131648(C *c)
 
     if (_ZN11RaycastLine10DetectClsnEv(&rc) == 0) {
         if (*(u8 *)(self + 0x3a0) == 0) {
-            *(s16 *)(self + 0x39a) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            sh = (rnd & 3) << 0xc;
+            *(s16 *)((self + 0x300) + 0x9a) = ha;
+            p39a = (s16 *)(((int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
             angleSet = 1;
-            *(s16 *)(self + 0x39a) += (0x1800 - ((rnd & 3) << 0xc));
+            *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
             *(int *)(self + 0x60) = *(int *)(self + 0x6c);
             *(int *)(self + 0x64) = *(int *)(self + 0x70);
             *(u8 *)(self + 0x3a0) = 1;
         }
     } else {
-        *(u8 *)(self + 0x3a0) = 0;
+        *(u8 *)(self + 0x3a0) = (u8)angleSet;
     }
 
     if (dist > 0x3c0000) {
         if (*(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
-            *(s16 *)(self + 0x39a) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            *(s16 *)((self + 0x300) + 0x9a) = ha;
             angleSet = 1;
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
             *(int *)(self + 0x60) = *(int *)(self + 0x6c);
@@ -115,9 +120,12 @@ extern "C" int func_ov090_02131648(C *c)
 
     if (_ZNK12WithMeshClsn8IsOnWallEv(self + 0x150) != 0) {
         if (*(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
-            *(s16 *)(self + 0x39a) = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
+            sh = (rnd & 3) << 0xc;
+            *(s16 *)((self + 0x300) + 0x9a) = ha;
+            p39a = (s16 *)(((unsigned int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
             angleSet = 1;
-            *(s16 *)(self + 0x39a) += (0x1800 - ((rnd & 3) << 0xc));
+            *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
             *(int *)(self + 0x60) = *(int *)(self + 0x6c);
             *(int *)(self + 0x64) = *(int *)(self + 0x70);
@@ -127,34 +135,36 @@ extern "C" int func_ov090_02131648(C *c)
         *(u8 *)(self + 0x39f) = 0;
     }
 
-    if (*(u16 *)(self + 0x398) == 0 && *(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
-        *(u16 *)(self + 0x398) = (u16)((rnd + 0x32) & 0x3f);
-        *(s16 *)(self + 0x39a) = *(s16 *)(self + 0x39a) + (0x1800 - ((rnd & 3) << 0xc));
+    if (*(u16 *)((self + 0x300) + 0x98) == 0 && *(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
+        *(u16 *)((self + 0x300) + 0x98) = (u16)((rnd + 0x32) & 0x3f);
+        p39a = (s16 *)(((long long)(int)(self + 0x39a)) & 0xFFFFFFFFFFFFFFFFll);
+        *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
     if (angleSet == 1) {
-        *(u16 *)(self + 0x394) = 0xa;
-        *(u16 *)(self + 0x398) = 0x32;
-        *(u16 *)(self + 0x396) = 0x1e;
+        *(u16 *)((self + 0x300) + 0x94) = 0xa;
+        *(u16 *)((self + 0x300) + 0x98) = 0x32;
+        *(u16 *)((self + 0x300) + 0x96) = 0x1e;
         *(int *)(self + 0x98) = 0x9000;
         *(int *)(self + 0x3a4) = 0x1000;
     }
 
-    _Z14ApproachLinearRsss((s16 *)(self + 0x94), *(s16 *)(self + 0x39a), 0x500);
+    _Z14ApproachLinearRsss((s16 *)(self + 0x94), *(s16 *)((self + 0x300) + 0x9a), 0x500);
 
-    if (*(u16 *)(self + 0x94) == 0 && *(u16 *)(self + 0x96) == 0) {
+    if (*(u16 *)((self + 0x300) + 0x94) == 0 && *(u16 *)((self + 0x300) + 0x96) == 0) {
         *(int *)(self + 0x3a4) = 0x1000;
         *(int *)(self + 0x98) = 0x9000;
         if (func_ov090_021314a0(c) == 1) {
-            *(u16 *)(self + 0x396) = 0x1e;
-            *(u16 *)(self + 0x398) = 0x1e;
+            *(u16 *)((self + 0x300) + 0x96) = 0x1e;
+            *(u16 *)((self + 0x300) + 0x98) = 0x1e;
             *(int *)(self + 0x3a4) = 0x2000;
             *(int *)(self + 0x98) = 0xe000;
         }
     }
 
     if (((u32)((*(u32 *)(self + 0x364)) << 4) >> 0x10) >= 0x10) {
-        *(int *)(self + 0x390) = *(int *)(self + 0x390) + 1;
+        p390 = (int *)(((int)self + 0x390) & 0xFFFFFFFFFFFFFFFF);
+        *p390 = *p390 + 1;
     }
 
     if (*(int *)(self + 0x390) > 0x1e && *(u8 *)(self + 0x39e) == 0) {
