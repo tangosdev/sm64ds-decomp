@@ -1,4 +1,4 @@
-extern int func_0207328c(void*, int, int, void*);
+extern int __destroy_arr(void*, int, int, void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN5ActorD2Ev(void*);
@@ -8,8 +8,8 @@ extern void* _ZTV17ExclamationSwitch;
 extern void* data_020a0eac;
 void* func_ov002_020b4a70(void* c) {
   *(void**)c = &data_ov002_02108d94;
-  func_0207328c((char*)c+0x4b0, 5, 0x1c8, &_ZN18MovingMeshColliderD1Ev);
-  func_0207328c((char*)c+0x320, 5, 0x50, &_ZN5ModelD1Ev);
+  __destroy_arr((char*)c+0x4b0, 5, 0x1c8, &_ZN18MovingMeshColliderD1Ev);
+  __destroy_arr((char*)c+0x320, 5, 0x50, &_ZN5ModelD1Ev);
   *(void**)c = &_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev((char*)c+0x124);
   _ZN5ModelD1Ev((char*)c+0xd4);

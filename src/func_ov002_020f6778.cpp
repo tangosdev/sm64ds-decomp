@@ -5,7 +5,7 @@ extern int data_ov002_0210bce8[];
 extern int func_020072c0[];
 void _ZN13SharedFilePtr7ReleaseEv(void*);
 void _ZN9ModelAnimD2Ev(void*);
-void func_0207328c(void*, int, int, void*);
+void __destroy_arr(void*, int, int, void*);
 void _ZN6Memory16operator_delete2EPv(void*);
 typedef void (*VFN)(void*);
 void* func_ov002_020f6778(char* c){
@@ -30,7 +30,7 @@ void* func_ov002_020f6778(char* c){
     }
   }
   _ZN9ModelAnimD2Ev(c);
-  func_0207328c(c+0x64, 1, 0xc, (void*)func_020072c0);
+  __destroy_arr(c+0x64, 1, 0xc, (void*)func_020072c0);
   _ZN6Memory16operator_delete2EPv(c);
   return c;
 }

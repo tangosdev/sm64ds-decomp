@@ -5,7 +5,7 @@
 struct Heap;
 
 extern "C" void _ZN12WithMeshClsnD1Ev(void *thiz);
-extern "C" void func_0207328c(void *p, int a, int b, void *fn);
+extern "C" void __destroy_arr(void *p, int a, int b, void *fn);
 extern "C" void _ZN11ShadowModelD1Ev(void *thiz);
 extern "C" void _ZN9ModelAnimD1Ev(void *thiz);
 extern "C" void _ZN18MovingMeshColliderD1Ev(void *thiz);
@@ -22,7 +22,7 @@ extern "C" void *_ZN8MadPianoD0Ev(void *thiz)
     unsigned char *c = (unsigned char *)thiz;
     *(void **)c = _ZTV8MadPiano;
     _ZN12WithMeshClsnD1Ev(c + 0x50c);
-    func_0207328c(c + 0x48c, 2, 0x40, (void *)_ZN25MovingCylinderClsnWithPosD1Ev);
+    __destroy_arr(c + 0x48c, 2, 0x40, (void *)_ZN25MovingCylinderClsnWithPosD1Ev);
     _ZN11ShadowModelD1Ev(c + 0x3d4);
     _ZN11ShadowModelD1Ev(c + 0x3ac);
     _ZN11ShadowModelD1Ev(c + 0x384);

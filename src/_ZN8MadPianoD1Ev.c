@@ -8,14 +8,14 @@
 #include "decl_WithMeshClsn.h"
 /* recovered: named members + shared header */
 #include "MadPiano.h"
-extern int func_0207328c(void*, int, int, void*);
+extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern void* _ZTV8MadPiano;
 extern void* _ZTV17ExclamationSwitch;
 void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   *(void**)((void*)self) = &_ZTV8MadPiano;
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  func_0207328c((char*)((void*)self)+0x48c, 2, 0x40, &_ZN25MovingCylinderClsnWithPosD1Ev);
+  __destroy_arr((char*)((void*)self)+0x48c, 2, 0x40, &_ZN25MovingCylinderClsnWithPosD1Ev);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel3);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel2);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel1);

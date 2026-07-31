@@ -3,7 +3,7 @@
 /* recovered: named members + shared header */
 #include "RickshawPlatformBdw.h"
 extern "C" {
-extern int func_0207328c(void*,int,int,void*);
+extern int __destroy_arr(void*,int,int,void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN5ActorD2Ev(void*);
@@ -13,8 +13,8 @@ extern int _ZTV17ExclamationSwitch[];
 void* _ZN19RickshawPlatformBdwD1Ev(struct RickshawPlatformBdw *self) {
   *(int**)((char*)self)=_ZTV19RickshawPlatformBdw;
   *(int**)((char*)self)=data_ov002_02108d94;
-  func_0207328c(((char*)self)+0x4b0,5,0x1c8,(void*)_ZN18MovingMeshColliderD1Ev);
-  func_0207328c(((char*)self)+0x320,5,0x50,(void*)_ZN5ModelD1Ev);
+  __destroy_arr(((char*)self)+0x4b0,5,0x1c8,(void*)_ZN18MovingMeshColliderD1Ev);
+  __destroy_arr(((char*)self)+0x320,5,0x50,(void*)_ZN5ModelD1Ev);
   *(int**)((char*)self)=_ZTV17ExclamationSwitch;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMovingMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);

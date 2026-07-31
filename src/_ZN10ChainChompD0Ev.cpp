@@ -8,7 +8,7 @@
 /* recovered: named members + shared header */
 #include "ChainChomp.h"
 extern "C" {
-extern int func_0207328c(void *p, int a, int b, void *fn);
+extern int __destroy_arr(void *p, int a, int b, void *fn);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *p);
 extern int func_ov002_020aed18(int *x);
 extern int data_ov034_021147ec[];
@@ -17,10 +17,10 @@ extern int data_020a0eac;
 
 void *_ZN10ChainChompD0Ev(struct ChainChomp *self) {
     *(int**)((char *)self) = data_ov034_021147ec;
-    func_0207328c(((char *)self) + 0x578, 7, 0xc, (void*)func_020072c0);
-    func_0207328c(((char *)self) + 0x524, 7, 0xc, (void*)func_020072c0);
-    func_0207328c(((char *)self) + 0x40c, 7, 0x28, (void*)_ZN11ShadowModelD1Ev);
-    func_0207328c(((char *)self) + 0x1dc, 7, 0x50, (void*)_ZN5ModelD1Ev);
+    __destroy_arr(((char *)self) + 0x578, 7, 0xc, (void*)func_020072c0);
+    __destroy_arr(((char *)self) + 0x524, 7, 0xc, (void*)func_020072c0);
+    __destroy_arr(((char *)self) + 0x40c, 7, 0x28, (void*)_ZN11ShadowModelD1Ev);
+    __destroy_arr(((char *)self) + 0x1dc, 7, 0x50, (void*)_ZN5ModelD1Ev);
     _ZN11ShadowModelD1Ev((char *)&self->mShadowModel);
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)&self->mMovingCylinderClsnWithPos);

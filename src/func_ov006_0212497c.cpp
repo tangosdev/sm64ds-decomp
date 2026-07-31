@@ -6,7 +6,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
-extern int func_0207328c(void*, int, int, void*);
+extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
 extern void NullDestructor_0203d47c();
 extern void *data_ov006_0213e448[];
@@ -14,7 +14,7 @@ extern void *data_020a0eac;
 void *dScMgBSC_c_OnYoshiTryEat(char *c);
 void *dScMgBSC_c_OnYoshiTryEat(char *c) {
     *(void ***)c = data_ov006_0213fec8;
-    func_0207328c(c + 0x51a8, 2, 8, (void*)&NullDestructor_0203d47c);
+    __destroy_arr(c + 0x51a8, 2, 8, (void*)&NullDestructor_0203d47c);
     func_ov006_020c1c64(c + 0x4f38);
     *(void ***)c = data_ov006_0213e448;
     _ZN8Particle10SysTrackerD1Ev(c + 0x471c);

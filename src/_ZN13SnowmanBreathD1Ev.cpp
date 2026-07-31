@@ -6,10 +6,10 @@
 /* recovered: named members + shared header */
 #include "SnowmanBreath.h"
 extern "C" {
-extern int func_0207328c(void*, int, int, void*);
+extern int __destroy_arr(void*, int, int, void*);
 int _ZN13SnowmanBreathD1Ev(char* c){
   *(int**)c = RotatingPlatformRr_SpawnInfo;
-  func_0207328c(c+0xd4, 0x32, 0x60, data_ov056_02112158);
+  __destroy_arr(c+0xd4, 0x32, 0x60, data_ov056_02112158);
   _ZN5ActorD2Ev(c);
   return (int)c;
 }

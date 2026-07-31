@@ -55,7 +55,7 @@ typedef struct V2 { int x, y; } V2;
 
 extern void func_ov004_020adb1c(int a);
 extern void _ZN6Memory16operator_delete2EPv(void *p);
-extern void func_0207328c(void *p, int a, int b, void *cb);
+extern void __destroy_arr(void *p, int a, int b, void *cb);
 extern void func_ov004_020b04d0(int a);
 extern int GetOwnerLanguage(void);
 extern void func_02057d00(void *dst, void *src, int flag);
@@ -209,8 +209,8 @@ void func_ov006_02115b0c(char *c)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed74;
-                func_0207328c((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
-                func_0207328c((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
+                __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)data_ov006_0213ed10;
                 _ZN6Memory16operator_delete2EPv(p);
             }
@@ -823,5 +823,5 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x5000 + 0x998) = 0x100;
     SetSubBg0Offset(*(int *)(c + 0x5000 + 0x998), 0);
     func_ov006_02114dd0(c);
-    func_0207328c(pos, 0x19, 8, NullDestructor_0203d47c);
+    __destroy_arr(pos, 0x19, 8, NullDestructor_0203d47c);
 }

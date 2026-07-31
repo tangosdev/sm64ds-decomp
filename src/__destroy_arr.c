@@ -6,7 +6,7 @@
 // (fp anchor + sp spill at [fp,#0x14]) that no C under our flags reproduces;
 // its out-of-line landing pad is the already-matched func_020732e8. Per asm
 // policy, sibling of matched func_0207335c.
-asm void func_0207328c(void) {
+asm void __destroy_arr(void) {
     stmdb sp!, {r4, r5, r6, r7, r11, lr}
     sub sp, sp, #0x18
     mov r11, sp

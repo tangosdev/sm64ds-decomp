@@ -10,13 +10,13 @@
 #include "Eyerok.h"
 extern void _ZN15TextureSequenceD1Ev(void* p);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
-extern int func_0207328c(void* p, int a, int b, void* fn);
+extern int __destroy_arr(void* p, int a, int b, void* fn);
 extern int _ZTV17ExclamationSwitch[];
 extern int func_020072c0[];
 void* _ZN6EyerokD1Ev(struct Eyerok *self) {
     *(void**)((char*)self) = _ZTV6Eyerok;
     _ZN18MovingMeshColliderD1Ev((char*)&self->unk_674);
-    func_0207328c(((char*)self)+0x4dc, 0x14, 0xc, func_020072c0);
+    __destroy_arr(((char*)self)+0x4dc, 0x14, 0xc, func_020072c0);
     _ZN15TextureSequenceD1Ev((char*)&self->mTextureSequence);
     _ZN11ShadowModelD1Ev((char*)&self->mShadowModel);
     _ZN5ModelD1Ev((char*)&self->mModel2);
