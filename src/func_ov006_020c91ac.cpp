@@ -81,7 +81,7 @@ L70:
         else if (t > 0x1400) t = 0x1400;
         *(int *)(c + 0x3c) = t;
 
-        *(int *)(((int)c + 0x40) & 0xFFFFFFFFFFFFFFFF) +=
+        *(int *)(((int)c + 0x40)) +=
             (int)(((long long)data_ov006_02140574 * 0x400 + 0x800) >> 12);
 
         {
@@ -122,7 +122,7 @@ L1a4:
 L230:
     if (*(u16 *)(c + 0x18) == 3) {
         ((VtObj *)c)->m4();
-        *(int *)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFF) *= -1;
+        *(int *)(((int)c + 0x3c)) *= -1;
     }
 
 L260:

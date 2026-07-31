@@ -1,5 +1,5 @@
-#define LP(x) ((void*)(int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LI(x) ((int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LP(x) ((void*)(int)(((long long)(int)(x))))
+#define LI(x) ((int)(((long long)(int)(x))))
 typedef unsigned short u16;
 typedef unsigned char u8;
 typedef short s16;

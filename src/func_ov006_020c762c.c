@@ -9,7 +9,7 @@ int func_ov006_020c762c(char *c)
     int r = 0;
     int m = 1;
 
-    p = (struct Pair *)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFF);
+    p = (struct Pair *)(((int)c + 0x3c));
     g = &data_ov006_0213b058;
     if (p->a == g->a) {
         if (p->b == g->b)
@@ -21,7 +21,7 @@ cl1:
     }
     if (m != 0) {
         m = 1;
-        p = (struct Pair *)(((long long)(int)(c + 0x3c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (struct Pair *)(((long long)(int)(c + 0x3c)));
         g = &data_ov006_0213b070;
         if (p->a == g->a) {
             if (p->b == g->b)

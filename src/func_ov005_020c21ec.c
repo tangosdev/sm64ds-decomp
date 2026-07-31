@@ -10,8 +10,8 @@ int *func_ov005_020c21ec(void)
         _ZN9ActorBaseC1Ev(p);
         p[0] = (int)data_0208e4b8;
         p[0] = (int)_ZTV5Stage;
-        *(unsigned char *)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF) |= 1;
-        *(unsigned char *)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF) |= 4;
+        *(unsigned char *)(((int)p + 0x13)) |= 1;
+        *(unsigned char *)(((int)p + 0x13)) |= 4;
         p[0] = (int)data_ov005_020c2490;
     }
     return p;

@@ -24,15 +24,15 @@ int func_ov002_020f23f0(u8* self)
             void* o = data_0209f5bc;
             if (((int (**)(void*))*(void**)o)[5](o) != 0) {
                 {
-                    u16* p = (u16*)(((int)*(u8**)(self + 0xd4) + 8) & 0xFFFFFFFFFFFFFFFFLL);
+                    u16* p = (u16*)(((int)*(u8**)(self + 0xd4) + 8));
                     *p = *p + 1;
                 }
                 {
-                    u16* p = (u16*)(((int)*(u8**)(self + 0xd4) + 0xa) & 0xFFFFFFFFFFFFFFFFLL);
+                    u16* p = (u16*)(((int)*(u8**)(self + 0xd4) + 0xa));
                     *p = *p - 1;
                 }
                 if (*(u16*)(*(u8**)(self + 0xd4) + 8) == 8) {
-                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34));
                     *p = *p + 1;
                 }
             }
@@ -42,7 +42,7 @@ int func_ov002_020f23f0(u8* self)
         if (*(u8*)(self + 0x100) == 3) {
             data_ov002_02111144 = 1;
             {
-                u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34));
                 *p = *p + 1;
             }
         }
@@ -50,18 +50,18 @@ int func_ov002_020f23f0(u8* self)
     case 2:
         if ((data_020a0db0 & 1) == 0) {
             {
-                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 6) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 6));
                 *p = *p + 1;
             }
             {
-                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 4) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 4));
                 *p = *p - 1;
             }
             if (*(s16*)(*(u8**)(self + 0xd4) + 6) >= 0x80) {
                 int i;
                 int v;
                 {
-                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34));
                     *p = *p + 1;
                 }
                 i = 0;
@@ -81,7 +81,7 @@ int func_ov002_020f23f0(u8* self)
         break;
     case 4:
         if (*(u8*)(self + 0x100) == 4) {
-            u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+            u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34));
             *p = *p + 1;
         }
         func_ov002_020f237c(self);
@@ -89,16 +89,16 @@ int func_ov002_020f23f0(u8* self)
     case 5:
         if ((data_020a0db0 & 1) == 0) {
             {
-                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 6) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 6));
                 *p = *p + 1;
             }
             {
-                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 4) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* p = (s16*)(((int)*(u8**)(self + 0xd4) + 4));
                 *p = *p - 1;
             }
             if (*(s16*)(*(u8**)(self + 0xd4) + 6) >= 0xe0) {
                 {
-                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* p = (u8*)(((int)*(u8**)(self + 0xd4) + 0x34));
                     *p = *p + 1;
                 }
                 data_0209d454 = data_0209d454 & ~3;

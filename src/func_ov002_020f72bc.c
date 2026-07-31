@@ -14,7 +14,7 @@ int func_ov002_020f72bc(char* c)
     *(u32*)(c + 0x84) = 0x3000;
     *(u32*)(c + 0x88) = 0x3000;
     {
-        s16* p = (s16*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        s16* p = (s16*)(((int)c + 0x8e));
         *p = *p + 0x400;
     }
     *(u8*)(c + 0x102) = 0x1f;

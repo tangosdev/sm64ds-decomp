@@ -25,7 +25,7 @@ void func_ov006_020c66bc(char *c)
     int dx, dy, dz;
     int vx, vy;
 
-    *(short *)(((int)c + 0xea) & 0xFFFFFFFFFFFFFFFF) += 0x200;
+    *(short *)(((int)c + 0xea)) += 0x200;
 
     dx = *(int *)(c + 0x20) - *(int *)(c + 0x9c);
     *(int *)(c + 0xa8) = (int)((((long long)dx << 8) + 0x800) >> 12);

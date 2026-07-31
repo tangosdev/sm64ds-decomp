@@ -23,10 +23,10 @@ void func_ov006_020d452c(void *thiz)
     for (; i < 4; y += 0x40, i++) {
         int *p = (int *)(c + i * 4);
         if (*(int *)((char *)p + 0x4714) != 0) {
-            int *t = (int *)(((int)p + 0x539c) & 0xFFFFFFFFFFFFFFFFLL);
+            int *t = (int *)(((int)p + 0x539c));
             (*t)++;
             if (*t >= 6) {
-                int *u = (int *)(((int)p + 0x53ac) & 0xFFFFFFFFFFFFFFFFLL);
+                int *u = (int *)(((int)p + 0x53ac));
                 *t = 0;
                 (*u)++;
                 if (*u >= 14)
@@ -41,8 +41,8 @@ void func_ov006_020d452c(void *thiz)
             int *cnt2;
             int tbl[13];
             if (*(c + i + 0x5398) == 0) {
-                cnt = (int *)(((int)p + 0x5378) & 0xFFFFFFFFFFFFFFFFLL);
-                cnt2 = (int *)(((int)p + 0x5388) & 0xFFFFFFFFFFFFFFFFLL);
+                cnt = (int *)(((int)p + 0x5378));
+                cnt2 = (int *)(((int)p + 0x5388));
                 (*cnt)++;
                 if (*cnt2 >= 12) {
                     if (*cnt >= 6) {
@@ -54,8 +54,8 @@ void func_ov006_020d452c(void *thiz)
                     (*cnt2)++;
                 }
             } else {
-                cnt = (int *)(((int)p + 0x5378) & 0xFFFFFFFFFFFFFFFFLL);
-                cnt2 = (int *)(((int)p + 0x5388) & 0xFFFFFFFFFFFFFFFFLL);
+                cnt = (int *)(((int)p + 0x5378));
+                cnt2 = (int *)(((int)p + 0x5388));
                 (*cnt)++;
                 if (*cnt2 >= 12) {
                     if (*cnt >= 5) {

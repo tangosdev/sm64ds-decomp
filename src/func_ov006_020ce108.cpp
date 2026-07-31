@@ -84,14 +84,14 @@ extern "C" void func_ov006_020ce108(char *a, Obj *o)
         Vec3_MulScalar(&t1, &vA, *(int *)(a + 0x88));
         AddVec3(p1, &t1, p1);
         AddVec3(&acc, &vA, &acc);
-        *(short *)(((int)o + 0x22) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(short *)(((int)o + 0x22)) += 1;
     } else if (lenB < 0xE000 && NormalizeVec3IfNonZero(&vB) != 0) {
         Vec3_MulScalarInPlace(&vB, 0xE000 - lenB);
         vB.y <<= 1;
         Vec3_MulScalar(&t2, &vB, *(int *)(a + 0x88));
         AddVec3(p1, &t2, p1);
         AddVec3(&acc, &vB, &acc);
-        *(short *)(((int)o + 0x22) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(short *)(((int)o + 0x22)) += 1;
     }
 
     Vec3_MulScalar(&t3, &acc, 0x100);

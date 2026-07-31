@@ -3,7 +3,7 @@ s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern char* data_ov004_020bbfa8[];
 
-#define LAU(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAU(p) ((int)(((long long)(int)(p))))
 
 void func_ov004_020b0de0(char* c)
 {

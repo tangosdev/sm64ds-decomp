@@ -44,10 +44,10 @@ void func_ov006_020c29dc(char *c)
     p = *(int **)(mc + 4);
     _ZN15TextureSequence6UpdateER15ModelComponents(c + 0xc8, mc);
     _ZN18TextureTransformer6UpdateER15ModelComponents(c + 0xdc, mc);
-    *(int *)(((int)p + 0x104) & 0xFFFFFFFFFFFFFFFFLL) -= *(int *)(c + 0x194);
-    *(int *)(((int)p + 0x108) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x198);
-    *(int *)(((int)p + 0x134) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x18c);
-    *(int *)(((int)p + 0x138) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x190);
+    *(int *)(((int)p + 0x104)) -= *(int *)(c + 0x194);
+    *(int *)(((int)p + 0x108)) += *(int *)(c + 0x198);
+    *(int *)(((int)p + 0x134)) += *(int *)(c + 0x18c);
+    *(int *)(((int)p + 0x138)) += *(int *)(c + 0x190);
     ((Obj *)(c + 8))->m(0);
     ((Obj *)(c + 0x78))->m(&data_ov006_0212b8fc);
 }

@@ -34,7 +34,7 @@ extern u8 data_0209d454;
 
 extern "C" int func_ov006_020d48dc(char* self)
 {
-    *(u16*)(((long long)(int)(self + 0x53bc)) & 0xFFFFFFFFFFFFFFFFLL) += 0xc0;
+    *(u16*)(((long long)(int)(self + 0x53bc))) += 0xc0;
     {
         u8 *p2 = (u8*)(self + 0x5300);
         u16 idx = *(u16*)(p2 + 0xbc);
@@ -51,13 +51,13 @@ extern "C" int func_ov006_020d48dc(char* self)
             int i;
             for (i = 0; i < 4; i++) {
                 if (*(int*)(self + i * 4 + 0x4714) != 0) {
-                    int *counterA = (int*)(((long long)(int)(self + i * 4 + 0x539c)) & 0xFFFFFFFFFFFFFFFFLL);
+                    int *counterA = (int*)(((long long)(int)(self + i * 4 + 0x539c)));
                     (*counterA)++;
                     Buf14 local = data_ov006_0213b880;
                     if (*counterA >= local.v[i]) {
                         int *counterB;
                         *counterA = 0;
-                        counterB = (int*)(((long long)(int)(self + i * 4 + 0x53ac)) & 0xFFFFFFFFFFFFFFFFLL);
+                        counterB = (int*)(((long long)(int)(self + i * 4 + 0x53ac)));
                         (*counterB)++;
                         if (*counterB >= 0xe)
                             *counterB = 0;

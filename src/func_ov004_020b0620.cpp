@@ -106,7 +106,7 @@ extern "C" int dScMgBase_c_BeforeBehavior(char *self)
     _Z14ApproachLinearRiii((int *)(self + 0xac), *(int *)(self + 0xa8), data_0208ee44);
 
     {
-        int *p = (int *)(((int)self + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)self + 0x5c));
         *p = *p + 1;
     }
     if (*(int *)(self + 0x5c) >= 0x28)

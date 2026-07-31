@@ -1,6 +1,6 @@
 extern int data_ov006_0213b17c[];
 int func_ov006_020ccd04(int* r0) {
-    int* p = (int *)(((int)r0 + 0x64) & 0xFFFFFFFFFFFFFFFF);
+    int* p = (int *)(((int)r0 + 0x64));
     int* g = data_ov006_0213b17c;
     int ret = 1;
     if (p[0] == g[0]) {

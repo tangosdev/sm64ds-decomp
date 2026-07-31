@@ -16,7 +16,7 @@ void func_ov006_020d64c8(char *o, int i)
     if (i == 0) {
         u8 v = *(u8 *)(o + i * 16 + 0x626f);
         if (v == 2 || v == 4) {
-            int *w = (int *)(((int)o + 0x62b4) & 0xFFFFFFFFFFFFFFFF);
+            int *w = (int *)(((int)o + 0x62b4));
             *w += 0x8000;
         }
     }

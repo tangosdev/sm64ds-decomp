@@ -1,6 +1,6 @@
 struct V2 { int x, y; };
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern void func_ov006_020ce8a0(char* self, void* other, struct V2* a, struct V2* b);
 extern void Vec2_Sub(struct V2* o, struct V2* a, struct V2* b);

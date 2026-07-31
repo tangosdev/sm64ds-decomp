@@ -14,7 +14,7 @@ extern int _Z15ApproachLinear2Rsss(short *v, short target, short step);
 
 void func_ov006_020c6a9c(char *c)
 {
-    short *ang = (short *)(((int)c + 0xea) & 0xFFFFFFFFFFFFFFFFLL);
+    short *ang = (short *)(((int)c + 0xea));
     *ang = *ang + 0x200;
 
     *(int *)(c + 0xa8) = (int)(((*(int *)(c + 0x20) - *(int *)(c + 0x9c)) * 0x100LL + 0x800) >> 12);

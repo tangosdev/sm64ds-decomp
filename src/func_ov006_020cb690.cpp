@@ -22,7 +22,7 @@ void func_ov006_020cb690(char* c)
         *(int*)(c+0x64) = b ? a : a;
         *(int*)(c+0x68) = b;
     }
-    int* p20 = (int*)(((int)c + 0x20) & 0xFFFFFFFFFFFFFFFF);
+    int* p20 = (int*)(((int)c + 0x20));
     *p20 = *p20 + 0x20000;
     func_ov006_020cb5c4(c);
 }

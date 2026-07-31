@@ -14,12 +14,12 @@ void func_ov006_020d795c(char *o, int i)
     int b, v;
     {
         s16 tv = data_02082214[((*(u16 *)(o + i * 0x40 + 0x468c)) >> 4) * 2 + 1];
-        *(int *)((char *)(((int)o + 0x4660) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) +=
+        *(int *)((char *)(((int)o + 0x4660)) + i * 0x40) +=
             (int)(((s64)tv * *(int *)(o + i * 0x40 + 0x4670) + 0x800) >> 12);
     }
     {
         s16 tv = data_02082214[((*(u16 *)(o + i * 0x40 + 0x468c)) >> 4) * 2];
-        *(int *)((char *)(((int)o + 0x4664) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) +=
+        *(int *)((char *)(((int)o + 0x4664)) + i * 0x40) +=
             (int)(((s64)tv * *(int *)(o + i * 0x40 + 0x4670) + 0x800) >> 12);
     }
     b = *(u8 *)(o + i * 0x40 + 0x4696);

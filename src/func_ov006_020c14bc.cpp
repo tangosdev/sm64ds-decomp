@@ -31,7 +31,7 @@ extern "C" void func_ov006_020c14bc(char* c)
 
     if (_ZNK9Animation12WillHitFrameEi(c + 0x6c, 0)) {
         short cv = *(short*)(c + 0x100 + 0xd8);
-        short* p = (short*)(((long)c + 0x1d8) & 0xFFFFFFFFFFFFFFFF);
+        short* p = (short*)(((long)c + 0x1d8));
         short old = *p;
         *p = old - 1;
         if (cv <= 0) {

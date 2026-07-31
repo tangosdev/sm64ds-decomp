@@ -26,7 +26,7 @@ extern "C" void func_ov006_020ca8e0(void) {
   q0 = data_ov006_0213b104[0];
   for (;;) {
 
-    int* v = (int*)(((long long)(int)(e + 0x70)) & 0xFFFFFFFFFFFFFFFFLL);
+    int* v = (int*)(((long long)(int)(e + 0x70)));
     volatile int* q = (volatile int*)data_ov006_0213b104;
     if (v[0] == q0 && (v[1] == q[1] || *(int*)(e + 0x70) == 0)) {
 

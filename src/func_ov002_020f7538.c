@@ -77,7 +77,7 @@ int func_ov002_020f7538(char* c, unsigned char* arg1, int arg2) {
   Vec3_Add(&sum, (Vec3*)base, &scaled);
 
   {
-    char* dp = (char*)(((long long)(int)(*(char**)(c + 0xe0) + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+    char* dp = (char*)(((long long)(int)(*(char**)(c + 0xe0) + 0x64)));
     *(int*)(dp) = sum.x;
     *(int*)(dp + 4) = sum.y;
     *(int*)(dp + 8) = sum.z;

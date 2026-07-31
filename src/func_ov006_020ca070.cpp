@@ -61,7 +61,7 @@ L70:
         *(int *)(c + 0x24) = v;
     }
 
-    *(int *)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+    *(int *)(((int)c + 0x3c)) *= -1;
     if (*(int *)(c + 0x40) <= -0x800) goto L260;
 
     if (*(s16 *)(c + 0x22) != 0) goto L1a4;
@@ -100,7 +100,7 @@ L1a4:
 L230:
     if (*(u16 *)(c + 0x18) == 3) {
         ((VtObj *)c)->m4();
-        *(int *)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+        *(int *)(((int)c + 0x3c)) *= -1;
     }
 
 L260:

@@ -12,7 +12,7 @@ void func_ov006_020c057c(char* c) {
     int sp14[3];
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c+0x18, (void*)*(int*)(c+0x14), 0, 0, 0x800, 0);
     if (*(int*)(c+0xe4) < 3) {
-        *(int *)(((int)c + 0xe4) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(int *)(((int)c + 0xe4)) += 1;
     } else {
         *(int*)(c+0xe4) = 0;
     }
@@ -26,7 +26,7 @@ void func_ov006_020c057c(char* c) {
         *(int*)(c+0xcc) = el[1];
         *(int*)(c+0xd0) = el[2];
     }
-    *(int *)(((int)c + 0xe0) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int *)(((int)c + 0xe0)) += 1;
     Vec3_Sub(sp8, c+0xc8, (char*)((int*)*(int*)(c+0xb0))[1] + *(int*)(c+0xe0) * 0xc);
     *(int*)(c+0xd4) = sp8[0];
     *(int*)(c+0xd8) = sp8[1];

@@ -16,7 +16,7 @@ struct Sub {
 };
 extern "C" void func_ov006_020c4c54(int this_) {
     Vector3 v;
-    int *p = (int*)(((int)this_ + 0x30) & 0xFFFFFFFFFFFFFFFF);
+    int *p = (int*)(((int)this_ + 0x30));
     Vector3 *d = &data_ov006_0213af98;
     if (p[0] == d->x) {
         if (p[1] == d->y)

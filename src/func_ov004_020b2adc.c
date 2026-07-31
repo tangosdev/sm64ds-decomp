@@ -18,7 +18,7 @@ void *func_ov004_020b2adc(char *self)
     *(void **)self = &data_0208e4b8;
     *(void **)self = &_ZTV5Stage;
     {
-        unsigned char *p13 = (unsigned char *)(((long long)(int)(self + 0x13)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p13 = (unsigned char *)(((long long)(int)(self + 0x13)));
         *p13 |= 1;
         *p13 |= 4;
     }

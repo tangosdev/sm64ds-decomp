@@ -13,7 +13,7 @@ void dScMgAmida_c_OnYoshiTryEat_020d52f0(char *c, int arg)
         int *p;
         if (self->unk_0bc >= 0x7cf)
             goto final;
-        p = (int *)(((int)c + 0xbc) & 0xFFFFFFFFFFFFFFFF);
+        p = (int *)(((int)c + 0xbc));
         *p = *p + 1;
         if (self->unk_0bc > 0x270e)
             self->unk_0bc = 0x270e;

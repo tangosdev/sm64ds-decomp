@@ -110,13 +110,13 @@ L134:
     }
 
     func_02012718(0x1b3, *(int *)(c + 0x1c) + 0x80000);
-    *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFF) *= -1;
+    *(int *)(((int)c + 0x34)) *= -1;
     goto L1dc;
 
 L1ac:
     if (*(u16 *)(c + 0x18) == 3) {
         ((VtObj *)c)->m4();
-        *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFF) *= -1;
+        *(int *)(((int)c + 0x34)) *= -1;
     }
 
 L1dc:

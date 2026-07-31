@@ -9,7 +9,7 @@ void func_ov006_020cdc8c(char *self)
     int d;
     int v;
     int base = 0x400;
-    u16 *pa = (u16 *)(((long long)(int)(self + 0x9a)) & 0xFFFFFFFFFFFFFFFFLL);
+    u16 *pa = (u16 *)(((long long)(int)(self + 0x9a)));
 
     *pa = *pa + 0x40;
 

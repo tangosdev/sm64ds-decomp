@@ -91,13 +91,13 @@ L70:
 
 L130:
     func_ov006_020e6e3c(0x1b3, v);
-    *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+    *(int *)(((int)c + 0x34)) *= -1;
     goto L180;
 
 L150:
     if (*(u16 *)(c + 0x18) == 3) {
         ((VtObj *)c)->m4();
-        *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+        *(int *)(((int)c + 0x34)) *= -1;
     }
 
 L180:

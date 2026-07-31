@@ -30,7 +30,7 @@ void func_ov002_020f5990(char* c)
     int i;
     Sub* s = (Sub*)c;
     {
-        int* cnt = (int*)(((int)c + 0x1f8) & 0xFFFFFFFFFFFFFFFF);
+        int* cnt = (int*)(((int)c + 0x1f8));
         *cnt = *cnt + 1;
         *cnt = *cnt & 3;
     }

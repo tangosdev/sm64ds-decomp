@@ -41,7 +41,7 @@ extern "C" void func_ov002_020feb50(char* self) {
         *(s32*)(self + 0x354) = 1;
         _ZN5Sound4PlayEjjRK7Vector3(0, 0xa5, *(Vector3*)(self + 0x74));
         {
-            s16* p = (s16*)(((int)self + 0x94) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)self + 0x94));
             *p = *p - 0x8000;
         }
         *(s32*)(self + 0xa4) = 0;

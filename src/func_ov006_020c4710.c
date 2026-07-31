@@ -13,8 +13,8 @@ extern UID data_ov006_0213afb0;
 int func_ov006_020c4710(Actor *a)
 {
     int result = 0;
-    UID *p = (UID *)(int)(((long long)(int)&a->id) & 0xFFFFFFFFFFFFFFFFLL);
-    UID *c = (UID *)(int)(((long long)(int)&data_ov006_0213afa0) & 0xFFFFFFFFFFFFFFFFLL);
+    UID *p = (UID *)(int)(((long long)(int)&a->id));
+    UID *c = (UID *)(int)(((long long)(int)&data_ov006_0213afa0));
     int neq = 1;
     if (p->low == c->low) {
         if (p->high == c->high || a->id.low == 0)
@@ -23,8 +23,8 @@ int func_ov006_020c4710(Actor *a)
     if (neq != 0) {
         int flag = 1;
         int neq2 = flag;
-        UID *q = (UID *)(int)(((long long)(unsigned int)&a->id) & 0xFFFFFFFFFFFFFFFFLL);
-        UID *c2 = (UID *)(int)(((long long)(unsigned int)&data_ov006_0213afb0) & 0xFFFFFFFFFFFFFFFFLL);
+        UID *q = (UID *)(int)(((long long)(unsigned int)&a->id));
+        UID *c2 = (UID *)(int)(((long long)(unsigned int)&data_ov006_0213afb0));
         if (q->low == c2->low) {
             if (q->high == c2->high || a->id.low == 0)
                 neq2 = 0;

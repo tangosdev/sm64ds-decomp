@@ -13,7 +13,7 @@ void func_ov006_020c8270(char* c)
     int t0, t1;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x4c), data_ov006_0214041c, 0x40000000, 0x800, 0);
     *(int*)(c + 0xa4) = 0;
-    p = (struct Pair*)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFF);
+    p = (struct Pair*)(((int)c + 0x3c));
     g = &data_ov006_0213b068;
     if (p->a == g->a &&
         (p->b == g->b || *(int*)(c + 0x3c) == 0)) {

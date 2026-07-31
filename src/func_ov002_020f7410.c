@@ -14,7 +14,7 @@ int func_ov002_020f7410(unsigned char *self, unsigned char *in, int sel)
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == data_0209b274) {
-        register int *p = (int *)(((int)(*(unsigned char **)(self + 0xdc)) + 0x50) & 0xFFFFFFFFFFFFFFFF);
+        register int *p = (int *)(((int)(*(unsigned char **)(self + 0xdc)) + 0x50));
         p[0] = -0x5d00;
         p[1] = 0x1800;
         p[2] = -0x16000;

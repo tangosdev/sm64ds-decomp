@@ -68,7 +68,7 @@ void func_ov002_020f40fc(char *c, int i)
     if (*(unsigned short*)(c + 0x36) < 0x70)
         return;
     {
-        int off2 = (int)((long long)i & 0xffffffffffffffffLL) * 0x4c;
+        int off2 = (int)((long long)i) * 0x4c;
         *(unsigned char*)(c + 0x47 + off2) += 1;
         *(unsigned short*)(c + 0x3c + off2) = 0;
         *(unsigned char*)(c + 0x48 + off) = 0;

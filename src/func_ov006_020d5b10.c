@@ -17,7 +17,7 @@ void func_ov006_020d5b10(char *c)
     if (state == 1) {
         s32 v;
         s32 shifted;
-        *(s32*)(((long long)(int)(c + 0x62dc)) & 0xFFFFFFFFFFFFFFFFLL) += 0x3000;
+        *(s32*)(((long long)(int)(c + 0x62dc))) += 0x3000;
         v = *(s32*)(c+0x62dc);
         shifted = v >> 0xc;
         if (shifted >= 0xc0) {
@@ -37,7 +37,7 @@ void func_ov006_020d5b10(char *c)
     }
 
     if (*(u16*)(c+0x62f2) != 0) {
-        *(u16*)(((long long)(int)(c + 0x62f2)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(u16*)(((long long)(int)(c + 0x62f2))) -= 1;
         if (*(u16*)(c+0x62f2) != 0) {
             return;
         }
@@ -48,7 +48,7 @@ void func_ov006_020d5b10(char *c)
     {
         s32 v;
         s32 shifted;
-        *(s32*)(((long long)(int)(c + 0x62dc)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x3000;
+        *(s32*)(((long long)(int)(c + 0x62dc))) -= 0x3000;
         v = *(s32*)(c+0x62dc);
         shifted = v >> 0xc;
         if (shifted <= 0) {

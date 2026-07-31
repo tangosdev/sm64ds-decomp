@@ -45,7 +45,7 @@ extern "C" void func_ov006_020c07e8(C* c)
         _Z11UpdateAngleRssis(&c->a0f0, d, 8, 0x200);
 
         {
-            int* p = (int*)(((int)c + 0xb4) & 0xFFFFFFFFFFFFFFFF);
+            int* p = (int*)(((int)c + 0xb4));
             int* g = data_ov006_0213ac78;
             if (p[0] == g[0]) {
                 if (p[1] == g[1])

@@ -16,7 +16,7 @@ extern "C" void func_ov006_020c0f9c(void *cc)
 
     if (_ZNK9Animation12WillHitFrameEi(c + 0x6c, 0)) {
         short cv = *(short*)(c + 0x100 + 0xde);
-        short *p = (short*)(((long)c + 0x1de) & 0xFFFFFFFFFFFFFFFF);
+        short *p = (short*)(((long)c + 0x1de));
         short old = *p;
         *p = old - 1;
         if (cv <= 0) {
