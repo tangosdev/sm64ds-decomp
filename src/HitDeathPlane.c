@@ -1,12 +1,8 @@
+#include "types.h"
 /* HitDeathPlane at 0x02029b84
  * Handles player hitting a death plane: either restarts (SetNextLevel) or
  * triggers a scene fade, then always exits with StartExitFaderWipe.
  */
-
-typedef signed char s8;
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern s8 NUM_LIVES[];
 
 extern void SetNextLevel(void);

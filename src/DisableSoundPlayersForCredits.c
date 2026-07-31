@@ -1,3 +1,4 @@
+#include "types.h"
 /* DisableSoundPlayersForCredits — sets all 10 sound players' sequence limit to 0.
  * Iterates the same player-default table at 0x0208e448, but ignores the maxSeq
  * field and passes 0 instead, disabling each player.
@@ -5,10 +6,6 @@
  * Callee: 0x0204fadc = Sound::Player::SetPlayableSeqCount(s32, s32)
  *   _ZN5Sound6Player19SetPlayableSeqCountEii
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 extern void _ZN5Sound6Player19SetPlayableSeqCountEii(s32 playerID, s32 maxSeq);
 
 typedef struct {

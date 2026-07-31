@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
 extern unsigned int *data_020a89ac;

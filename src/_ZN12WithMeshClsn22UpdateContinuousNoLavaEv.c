@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol _ZN12WithMeshClsn22UpdateContinuousNoLavaEv
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "WithMeshClsn.h"
-typedef unsigned char u8;
-
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 typedef struct Vec3 { int x, y, z; } Vec3;

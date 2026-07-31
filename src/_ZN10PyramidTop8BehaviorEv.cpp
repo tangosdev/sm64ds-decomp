@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10PyramidTop8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PyramidTop.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* actor, void* pt);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int bank, void* pos);
 

@@ -1,11 +1,7 @@
+#include "types.h"
 /* ExitMinigameMenu at 0x0202ad78
  * Exits the minigame menu, either returning to rec room or fading to main menu.
  */
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern u8 RETURN_TO_REC_ROOM;  /* 0x0209f298 */
 extern u8 LEVEL_ID;            /* 0x0209f2f8 */
 

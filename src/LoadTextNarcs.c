@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern s32 LoadArchive(s32 archiveID);
 extern s32 GetOwnerLanguage(void);
 

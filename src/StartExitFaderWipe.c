@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef int Fix12i;
-
+#include "types.h"
 struct Fader {
     Fix12i currInterp;
     Fix12i speed;

@@ -1,12 +1,8 @@
+#include "types.h"
 /* KillPlayer at 0x02029b30
  * Kills the player: if lives remain, go to next level with reason 2,
  * otherwise trigger a game-over scene fade.  Then plays death sound.
  */
-
-typedef signed char s8;
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern s8 NUM_LIVES[];
 
 extern void SetNextLevel(u32 reason);

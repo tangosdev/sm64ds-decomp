@@ -1,7 +1,6 @@
+#include "types.h"
 // UpdateMinimap: copies a 16-byte descriptor into data_0209f3c8 and stores
 // the four scalar params into data_0209f3c4 (+0x14..+0x20).
-typedef unsigned int u32;
-
 typedef struct MinimapDesc { u32 a, b, c, d; } MinimapDesc;
 
 typedef struct MinimapState {

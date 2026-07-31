@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern u8 _ZN8SaveData26CountStarsCollectedInLevelEj(u32 courseID);
 
 u8 CountStarsCollectedInLevelToDisplay(s32 courseID) {

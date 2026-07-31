@@ -1,10 +1,7 @@
+#include "types.h"
 /* CommonModel::DoSetFile at 0x02016144, size=0x70
  * Loads model data from a BMD file, optionally sets material opacity and polygon ID.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;

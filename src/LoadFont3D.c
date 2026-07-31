@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void* LoadFile(u32 fileID);
 extern void Deallocate(void* ptr);
 extern void* func_02054d88(void);

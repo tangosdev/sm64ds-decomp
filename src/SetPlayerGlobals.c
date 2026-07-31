@@ -1,8 +1,5 @@
+#include "types.h"
 // SetPlayerGlobals - initializes player globals: lives, health, controller mode
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
 extern u8 NUM_LIVES;
 extern u16 HEALTH_ARR[];
 extern u8 SAVE_DATA[];

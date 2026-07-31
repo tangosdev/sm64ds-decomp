@@ -1,11 +1,8 @@
+#include "types.h"
 /* PrepareVsMode at 0x0202ae2c
  * Sets up VS mode: marks current game mode, initializes player globals,
  * starts a scene fade, then sets save data default values.
  */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern unsigned char CURRENT_GAMEMODE[];
 extern unsigned char SAVE_DATA[];
 

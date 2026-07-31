@@ -1,9 +1,5 @@
+#include "types.h"
 // DeathTable_SetBit: sets the bit in the actor death table for the given deathTableID
-
-typedef signed char s8;
-typedef unsigned int u32;
-typedef int s32;
-
 extern s8 LEVEL_ID;
 extern u32 ACTOR_DEATH_TABLE_ARR[];
 

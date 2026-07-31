@@ -1,10 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN12HauntedChair13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HauntedChair.h"
-typedef unsigned int u32;
 struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
 extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);

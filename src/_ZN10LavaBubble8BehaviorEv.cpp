@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10LavaBubble8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "LavaBubble.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int Fix12;
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct CylinderClsn;

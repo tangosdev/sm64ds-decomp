@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10MrBlizzard13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_PathPtr.h"
@@ -6,13 +7,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MrBlizzard.h"
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 struct Vec3 { int x, y, z; };
 
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);

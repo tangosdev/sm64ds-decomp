@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 struct Arg { void *m[3]; };
 
 extern int func_ov002_020b68b0(u8 *self, struct Arg *arg);

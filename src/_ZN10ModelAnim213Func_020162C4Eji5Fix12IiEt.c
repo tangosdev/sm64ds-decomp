@@ -1,11 +1,8 @@
+#include "types.h"
 /* ModelAnim2::Func_020162C4 at 0x020162c4, size=0x5c
  * Updates otherAnim: fast path (same file) just updates flags+speed;
  * slow path stores new file, loads numFrames, calls SetAnimation.
  */
-
-typedef int s32;
-typedef unsigned short u16;
-
 struct BCA_File {
     u16 unk00;
     u16 numFrames;

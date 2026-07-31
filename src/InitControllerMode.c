@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 struct Ctrl { u8 mode; char pad[0x17]; };   /* stride 0x18 */
 struct Obj42 { char pad[0x42]; u8 f42; };
 

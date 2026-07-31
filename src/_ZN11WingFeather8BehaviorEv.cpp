@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN11WingFeather8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "WingFeather.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-
 extern "C" {
 void* _ZN5Actor13ClosestPlayerEv(void* self);
 int _ZN6Player15IsCollectingCapEv(void* self);

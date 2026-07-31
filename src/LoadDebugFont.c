@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN2GX11LoadBG1CharEPKvjj(const void *src, u32 offset, u32 size);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *src, u32 offset, u32 size);
 extern void func_02023408(void);

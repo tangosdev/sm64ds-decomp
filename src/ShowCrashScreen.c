@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
+#include "types.h"
 extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern u64 func_020427c4(void);
 extern void *func_0202e118(void);

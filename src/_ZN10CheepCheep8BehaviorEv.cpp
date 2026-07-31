@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10CheepCheep8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -11,7 +12,6 @@ typedef void (Enemy::*PMF)();
 struct Holder { char pad[8]; PMF fn; };
 
 extern "C" {
-typedef unsigned int u32;
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);

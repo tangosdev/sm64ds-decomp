@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN11RollingRock13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "RollingRock.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 struct Vec3 { s32 x, y, z; };
 struct Actor;
 

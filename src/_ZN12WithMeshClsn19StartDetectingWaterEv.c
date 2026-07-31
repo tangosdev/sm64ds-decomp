@@ -1,8 +1,7 @@
+#include "types.h"
 /* _ZN12WithMeshClsn19StartDetectingWaterEv
  * Attempt 1: calls BgCh::StartDetectingWater on this+0x134 then this+0x20.
  */
-typedef unsigned int u32;
-
 struct BgCh { u32 _pad[1]; };
 
 extern void _ZN4BgCh19StartDetectingWaterEv(struct BgCh* self);

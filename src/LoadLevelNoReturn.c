@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef signed char s8;
-
+#include "types.h"
 extern void LoadLevel(u32 levelID, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
 
 extern s8 RETURN_LEVEL_ID;
