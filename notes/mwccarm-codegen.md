@@ -2477,3 +2477,10 @@ usual arithmetic conversions promote them back to unsigned (`int top` vs `unsign
 compares unsigned, emitting lo/hs) while the LOCALS keep their signed rank. Coloring reads
 the declared type; the condition code reads the promoted comparison type. The two are
 independently steerable (7->0, byte-identical, 1.2/sp2p3).
+
+Scope check (same night): a mechanical signedness sweep (singles, pairs, all-flip; 581
+compiles) across the seven other stuck arm9 residues (0202ffec, CapEnemy::GetCapState,
+Stage::InitResources, 0204a730, 020412f0, Stage::PS_UpdateOkAndBackButtons, 02038824)
+moved NOTHING. The lever fires when the residue is a two-local callee-saved web-identity
+swap; it does not perturb scheduling knots or wider coloring webs. Sweep script pattern:
+flip (unsigned int|int|u32|s32) decls in the bank draft, abverify each.
