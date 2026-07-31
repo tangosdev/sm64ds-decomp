@@ -1,7 +1,4 @@
-typedef unsigned long long u64;
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef signed char s8;
+#include "types.h"
 void *_ZN5Actor10FindWithIDEj(u32 id);
 void func_ov064_02118ee4(char *c)
 {

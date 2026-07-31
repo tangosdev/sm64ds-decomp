@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov075_0211a410
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -7,12 +8,6 @@
 // @emits dScEntry_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScEntry_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 extern "C" {
     void Enable3dEngines(void);
     void func_0200f2cc(void);

@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov065_02116364
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-
 struct V3A { int w[3]; };
 
 extern "C" {

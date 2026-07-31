@@ -1,8 +1,4 @@
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 extern s16 data_02082214[];
 extern void func_ov064_02119afc(char* c);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);

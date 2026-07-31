@@ -1,13 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov075_0211a2b8
 // @emits dScEntry_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScEntry_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern "C" {
     void func_020551f0(void *s, int v);
     int func_ov075_02119dc4(void *c, void *arg);

@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
+#include "types.h"
 extern s16 data_02082214[];
 extern void Vec3_Sub(int* out, int* a, int* b);
 extern int Vec3_HorzLen(int* v);

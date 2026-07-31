@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12;
+#include "types.h"
 typedef struct { short x, y, z; } Vector3_16f;
 struct Foo {
     char pad[0x5c];

@@ -1,9 +1,7 @@
+#include "types.h"
 // Copies vector triple 0 from the source entry table (+0x24, stride 0x40)
 // into the destination table (+0x20, stride 0x34), then copies triples
 // 2..count-1 with a signed-short counter and moving element pointers.
-typedef unsigned int u32;
-typedef signed short s16;
-
 typedef struct SrcTbl {
     char _pad0[0x24];
     int a, b, c;

@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov065_0211ae08
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,10 +7,6 @@
 // @emits daObjCtMecha05_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjCtMecha05_c::Behavior - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);

@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov074_021223bc
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int Fix12;
-
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50 - 0x14 - 0x30]; };
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 struct WithMeshClsn;

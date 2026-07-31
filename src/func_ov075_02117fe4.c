@@ -1,11 +1,9 @@
+#include "types.h"
 /* func_ov075_02117fe4 @ 0x02117fe4 (ov075, size 0x264)
  * Per-player two-digit counter HUD: renders tens/ones OAM digits for each
  * player, then every 3 calls toggles a blink flag and refreshes per-player
  * state.
  */
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern u8 data_0209fc50;
 extern u8 data_0209b2ec[];
 extern u8 data_0209b2f0[];

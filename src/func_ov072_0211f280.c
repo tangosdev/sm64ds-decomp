@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov072_0211f280
 /* recovered: shared common types */
 #include "common.h"
@@ -5,9 +6,6 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov072).
  */
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 struct Actor;
 
 

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12;
+#include "types.h"
 typedef struct { short x, y, z; } Vector3_16f;
 struct Callback {};
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 id, u32 param, Fix12 x, Fix12 y, Fix12 z, const Vector3_16f* pos, struct Callback* cb);

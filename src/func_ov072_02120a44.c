@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov072_02120a44
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,9 +7,6 @@
 // @emits daBgSnwmn_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daBgSnwmn_c::InitResources - recovered from vtable slot identity */
-typedef signed char s8;
-typedef unsigned int u32;
-
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *ang, int a, int b);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);

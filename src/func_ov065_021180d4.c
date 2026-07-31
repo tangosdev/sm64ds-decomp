@@ -1,13 +1,7 @@
+#include "types.h"
 // @symbol func_ov065_021180d4
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef long long s64;
-
 struct Actor;
 
 struct Vector3_16;

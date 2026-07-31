@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov064_02119afc
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
 extern "C" {
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* t, const Vector3& v);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);

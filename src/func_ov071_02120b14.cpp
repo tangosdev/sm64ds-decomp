@@ -1,16 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov071_02120b14
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-
-
-
 extern "C" {
     void* _ZN5Actor7FindEggER12CylinderClsn(void* self, void* c);
     void* _ZN5Actor18FindExplosionActorER12CylinderClsn(void* self, void* c);
