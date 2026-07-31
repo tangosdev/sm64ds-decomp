@@ -1,17 +1,19 @@
 //cpp
+// @symbol func_ov006_020f8d08
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgMCarlo_c.h"
+// @emits dScMgMCarlo_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo_c::InitResources - recovered from vtable slot identity */
 extern "C" {
-extern void func_ov004_020b04d0(int v);
 extern void func_ov006_0210a534(void *c);
 extern int func_ov004_020ad674(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Deallocate(void *ptr);
 extern void func_ov006_020c0aa8(void *p);
 extern int func_ov006_020c1a88(void *p);
-extern void func_ov004_020b682c(void);
-extern int func_ov004_020ad8b8(void);
-extern int func_ov004_020ad878(void);
-extern int data_ov006_0213d5b4[];
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 extern void *func_020beb68;
@@ -26,8 +28,9 @@ struct Obj {
     virtual void v16(); virtual void v17(); virtual void v18(int x);
 };
 
-extern "C" int func_ov006_020f8d08(char *c)
+extern "C" int dScMgMCarlo_c_InitResources(char *c)
 {
+    struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
     void *a;
     void *b;
 
@@ -48,13 +51,13 @@ extern "C" int func_ov006_020f8d08(char *c)
     if (func_ov006_020c1a88(c + 0x4f38) == 0) return 0;
 
     func_ov004_020b682c();
-    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
-    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
+    self->unk_0a8 = func_ov004_020ad8b8();
+    self->unk_0ac = self->unk_0a8;
     {
         int v = func_ov004_020ad878();
         if (func_020beb68) *(int *)((char *)func_020beb68 + 0xb4) = v;
     }
     ((Obj *)c)->v18(-1);
-    *(short *)(c + 0x60aa) = 0;
+    self->unk_60aa = 0;
     return 1;
 }

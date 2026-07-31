@@ -1,17 +1,18 @@
 //cpp
+// @symbol func_ov006_020edb04
+// @emits dScMgHanachan_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgHanachan_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef volatile unsigned int vu32;
 
-extern "C" void func_ov006_020edcb0(void);
 extern "C" void *LoadFile(int handle);
 extern "C" void DecompressLZ16(void *src, void *dst);
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern "C" void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern "C" void Deallocate(void *ptr);
-extern "C" void func_ov004_020b04d0(int v);
 
-extern int data_ov006_0213c954;
-extern vu32 *data_ov006_02137560[];
 
 struct Obj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -24,7 +25,7 @@ struct Obj {
     int unkAC;
 };
 
-extern "C" int func_ov006_020edb04(Obj *obj)
+extern "C" int dScMgHanachan_c_InitResources(Obj *obj)
 {
     void *a;
     void *b;

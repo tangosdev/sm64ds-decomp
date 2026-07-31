@@ -1,4 +1,11 @@
 //cpp
+// @symbol func_ov004_020b0620
+// @emits dScMgBase_c_BeforeBehavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::BeforeBehavior - recovered from vtable slot identity */
 extern "C" {
 int func_ov004_020b8ee0(char *p);
 void func_ov004_020aeb24(char *c);
@@ -33,14 +40,11 @@ extern Scene *data_0209f5bc;
 extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
 extern unsigned char data_020a0de8[];
-extern char data_ov004_020bf648[];
-extern char data_ov004_020bebe8[];
 extern int data_0208ee44;
 
-extern "C" int _ZN5Scene14BeforeBehaviorEv();
 
 #pragma opt_strength_reduction off
-extern "C" int func_ov004_020b0620(char *self)
+extern "C" int dScMgBase_c_BeforeBehavior(char *self)
 {
     int mode;
     unsigned short flags;

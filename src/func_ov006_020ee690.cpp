@@ -1,4 +1,12 @@
 //cpp
+// @symbol func_ov006_020ee690
+/* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
+#include "dScMgJump_c.h"
+// @emits dScMgJump_c_InitResources
+/* recovered: shared common types, renamed to Class_Method */
+/* dScMgJump_c::InitResources - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
@@ -9,9 +17,6 @@ extern s32 func_ov004_020ad674(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void const *src, unsigned int offset, unsigned int size);
-extern void Deallocate(void *ptr);
-extern void _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
-extern void InitialiseVramGlobals(void);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void func_ov006_020c0134(void *cam);
 extern int func_ov006_020c4684(char *ptr, int n);
@@ -19,14 +24,9 @@ extern int func_ov006_020c7574(char *base, int count);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int b, int c);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void func_ov004_020b04d0(int v);
 
-extern int data_ov006_0213cbc8[];
 extern u8 data_0209d45c;
 extern s16 data_02082614;
-extern void *data_ov006_02142188;
-extern void *data_ov006_02142190;
-extern void *data_ov006_02142184;
 
 struct Mtx43 { int m[12]; };
 extern struct Mtx43 data_020a0e68;
@@ -54,8 +54,9 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int func_ov006_020ee690(char *base)
+extern "C" int dScMgJump_c_InitResources(char *base)
 {
+    struct dScMgJump_c *self = (struct dScMgJump_c *)(void *)base;
     s32 idx;
     int buf1, buf2;
     s32 fov;
@@ -76,22 +77,22 @@ extern "C" int func_ov006_020ee690(char *base)
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = _ZN4cstd4fdivEii(0xc0000, (s32)data_02082614);
 
-    *(s32 *)(base + 0x470c) = 0;
-    *(s32 *)(base + 0x4710) = -0x64000;
-    *(s32 *)(base + 0x4714) = 0;
-    *(s32 *)(base + 0x4718) = 0;
-    *(s32 *)(base + 0x471c) = 0;
-    *(s32 *)(base + 0x4720) = fov;
-    *(u16 *)(base + 0x4724) = 0x800;
+    self->unk_470c = 0;
+    self->unk_4710 = -0x64000;
+    self->unk_4714 = 0;
+    self->unk_4718 = 0;
+    self->unk_471c = 0;
+    self->unk_4720 = fov;
+    self->unk_4724 = 0x800;
     func_ov006_020c0134(base + 0x466c);
 
-    *(s32 *)(base + 0x47c8) = 0;
-    *(s32 *)(base + 0x47cc) = 0x82000;
-    *(s32 *)(base + 0x47d0) = 0;
-    *(s32 *)(base + 0x47d4) = 0;
-    *(s32 *)(base + 0x47d8) = 0;
-    *(s32 *)(base + 0x47dc) = fov;
-    *(u16 *)(base + 0x47e0) = 0x800;
+    self->unk_47c8 = 0;
+    self->unk_47cc = 0x82000;
+    self->unk_47d0 = 0;
+    self->unk_47d4 = 0;
+    self->unk_47d8 = 0;
+    self->unk_47dc = fov;
+    self->unk_47e0 = 0x800;
     func_ov006_020c0134(base + 0x4728);
 
     if (func_ov006_020c4684(base + 0x5294, 6) == 0)

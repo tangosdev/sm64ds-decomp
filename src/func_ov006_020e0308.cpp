@@ -1,5 +1,11 @@
 //cpp
-/* func_ov006_020e0308 @ 0x020e0308 (ov006, size 0x26c)
+// @symbol func_ov006_020e0308
+// @emits dScMgCup_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgCup_c::InitResources - recovered from vtable slot identity */
+/* dScMgCup_c_InitResources @ 0x020e0308 (ov006, size 0x26c)
  * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the
  * board tiles/map/palette files, sets the touch UI margins, initializes
  * the three sliders from the table at data_ov006_0213c0a8, then calls
@@ -49,30 +55,19 @@ extern "C" {
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
-extern int data_ov004_020bc880;
-extern int data_ov004_020bc884;
-extern int data_ov004_020bc8a8;
-extern int data_ov004_020bc898;
-extern int data_ov004_020bc8a4;
-extern int data_ov004_020bc86c;
 extern Pair6 data_ov006_0213c0a8[];
 
 extern void func_ov006_020c225c(char *);
 extern int func_ov006_020c3050(char *);
-extern void SetSubBg0Offset(int, int);
-extern void SetSubBg2Offset(int, int);
 extern int func_02054de8(void);
 extern void LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(void *, unsigned int, unsigned int);
-extern void Deallocate(void *);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
-extern void func_ov004_020b6808(void);
-extern void func_ov006_020dec3c(char *);
 
-int func_ov006_020e0308(char *c)
+int dScMgCup_c_InitResources(char *c)
 {
     void *f;
 

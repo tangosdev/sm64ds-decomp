@@ -1,14 +1,16 @@
 //cpp
+// @symbol func_ov006_020e6e78
+// @emits dScMgJump2_c_OnKicked
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgJump2_c::OnKicked - recovered from vtable slot identity */
 extern "C" int func_ov004_020ae140(void* self);
 extern "C" void func_ov006_020c0134(int arg);
-extern "C" void func_ov006_020e7508(void);
-extern "C" void func_ov006_020e759c(void);
 
-extern unsigned char data_0209d464;
-extern int data_ov006_02141a44;
 extern unsigned char data_0209f5f8;
 
-extern "C" int func_ov006_020e6e78(char* self)
+extern "C" int dScMgJump2_c_OnKicked(char* self)
 {
     if (func_ov004_020ae140(self) == 0) return 0;
     if (*(int*)(self + 0x4628) == 0) {

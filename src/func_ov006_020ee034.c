@@ -1,3 +1,9 @@
+// @symbol func_ov006_020ee034
+// @emits dScMgJump_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgJump_c::Render - recovered from vtable slot identity */
 typedef unsigned short u16;
 
 typedef struct { int w[12]; } M48;
@@ -9,17 +15,10 @@ extern void func_ov004_020afcf8(void *a0, void *a1, int a2, void *a3);
 extern void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
 extern void func_0203cd80(int *m, short angle);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-extern void func_02045e44(void *self, unsigned int value, int index);
-extern void func_ov006_020c70d0(void);
-extern void func_ov006_020c425c(void);
 
-extern int data_ov006_02140428;
-extern int *data_ov006_0213cbb4[];
-extern int data_ov006_02134cf8;
 extern int data_020a0e68;
-extern int data_ov006_0213cb8c[3];
 
-int func_ov006_020ee034(void *self)
+int dScMgJump_c_Render(void *self)
 {
     char *c = (char *)self;
 
@@ -84,7 +83,7 @@ int func_ov006_020ee034(void *self)
         *(int *)((char *)p + 0x18) = *(int *)(c + 0x500c);
 
         {
-            void *obj2 = (void *)(((long long)(int)(c + 0x501c)) & 0xFFFFFFFFFFFFFFFFLL);
+            void *obj2 = (void *)(((long long)(int)(c + 0x501c)));
             ((void (**)(void *, void *))(*(int *)obj2))[5](obj2, &t);
         }
     }

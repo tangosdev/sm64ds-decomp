@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov006_020e0204
+// @emits dScMgCup_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgCup_c::Behavior - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
 
 class C { public: int dummy; };
@@ -12,11 +18,8 @@ typedef struct Frame {
 
 extern "C" Frame *data_ov006_0213c0d8[];
 
-extern "C" void func_ov006_020dedfc(char *o, int a, int b, int i);
-extern "C" void func_ov006_020debfc(char *p);
-extern "C" void func_ov006_020c2b8c(char *p);
 
-extern "C" int func_ov006_020e0204(char *o)
+extern "C" int dScMgCup_c_Behavior(char *o)
 {
     int i;
     (((C *)o)->*data_ov006_02141870[*(int *)(o + 0x5418)])();

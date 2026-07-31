@@ -1,3 +1,7 @@
+// @symbol func_ov006_020de63c
+// @emits dScMgCoin_c_Render
+/* recovered: renamed to Class_Method */
+/* dScMgCoin_c::Render - recovered from vtable slot identity */
 void func_ov006_020dccb8(void *c);
 void func_ov006_020dcd74(void *c);
 void func_ov006_020dc814(void *c);
@@ -9,7 +13,7 @@ void func_ov006_020dc870(void *c);
 void func_ov006_020dcea8(void *c);
 void func_ov006_020dcc48(void *c);
 
-int func_ov006_020de63c(void *c)
+int dScMgCoin_c_Render(void *c)
 {
     func_ov006_020dccb8(c);
     func_ov006_020dcd74(c);

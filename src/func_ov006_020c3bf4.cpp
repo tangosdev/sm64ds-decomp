@@ -1,8 +1,11 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov006_020c3bf4
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
-extern void func_0203cd80(struct Vec3 *v, int a);
-extern void func_0203ccd4(struct Vec3 *v, short angle);
+extern void func_0203cd80(struct Vector3 *v, int a);
+extern void func_0203ccd4(struct Vector3 *v, short angle);
 extern void func_02016a14(void *p, int a);
 extern void func_02016a04(void *p, int a);
 extern void func_ov006_020c35a8(char *c);
@@ -10,7 +13,7 @@ extern int data_ov006_0213aee8[12];
 void func_ov006_020c3bf4(void *self);
 }
 
-struct M48 { int w[12]; };
+
 
 struct Obj {
     virtual void f0() = 0;
@@ -24,7 +27,7 @@ struct Obj {
 void func_ov006_020c3bf4(void *self)
 {
     char *c = (char*)self;
-    struct Vec3 v;
+    struct Vector3 v;
     unsigned int packed;
     int i;
 
@@ -42,7 +45,7 @@ void func_ov006_020c3bf4(void *self)
     func_02016a14(c + 0xd18, 0x2bff);
     func_02016a04(c + 0xd18, 0x1211);
 
-    *(struct M48*)(c + 0xd34) = *(struct M48*)data_ov006_0213aee8;
+    *(struct Matrix4x3*)(c + 0xd34) = *(struct Matrix4x3*)data_ov006_0213aee8;
 
     ((Obj*)(c + 0xd18))->f5(0);
 

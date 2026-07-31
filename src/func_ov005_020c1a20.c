@@ -1,48 +1,31 @@
+// @symbol func_ov005_020c1a20
+// @emits dScMiniGm_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMiniGm_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern void LoadTextNarcs(void);
-extern int LoadArchive(int idx);
-extern void _ZN5Sound19LoadGroupAndSetBankEii(int a, int b);
-extern void func_02019028(void);
-extern void func_ov005_020bffc8(void *a0, int a1, int r2, int r3);
-extern int func_ov005_020bfff4(void *a, int b, int c);
-extern void _ZN2GX15DisableAllBanksEv(void);
-extern void _ZN2GX13SetBankForTexEt(u16 v);
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
 extern void _ZN2GX13SetBankForOBJEt(u16 v);
-extern void _ZN2GX17SetBankForTexPlttEt(u16 v);
-extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
-extern void _ZN3GXS15SetGraphicsModeEi(int a);
-extern void _ZN2GX6DispOnEv(void);
-extern void _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
-extern void InitialiseVramGlobals(void);
-extern void func_020233f4(void);
-extern void SetBg2Offset(int a, int b);
 extern int LoadFile(int handle);
 extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
-extern void Deallocate(void *p);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern int GetOwnerLanguage(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void SetSubBg2Offset(int a, int b);
-extern void SetSubBg3Offset(int a, int b);
 extern void *func_02054de8(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void SetSubBg0Offset(int a, int b);
 extern void *_ZN3G2S13GetBG0CharPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void *_ZN3G2S12GetBG0ScrPtrEv(void);
-extern void func_ov005_020c16e4(void *self);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void *p);
-extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
 
 extern u8 data_0209f5f8;
 extern u32 data_0209caa0[];
@@ -50,9 +33,6 @@ extern u8 data_0209b300;
 extern u8 data_0209b304;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int data_0208a170;
-extern u8 data_0209f1d8;
-extern u8 data_0209b2fc;
 extern int data_0208ee44;
 extern char data_0209f61c;
 
@@ -66,7 +46,7 @@ typedef struct Entry {
 
 extern Entry data_ov005_020c24d8[];
 
-int func_ov005_020c1a20(void *arg0)
+int dScMiniGm_c_InitResources(void *arg0)
 {
     char *c = (char *)arg0;
     int i, j;

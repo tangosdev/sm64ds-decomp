@@ -1,30 +1,19 @@
+// @symbol func_ov006_020f869c
+// @emits dScMgMCarlo_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo_c::Behavior - recovered from vtable slot identity */
 typedef short s16;
 
-extern int func_ov006_020f7b10(void);
-extern int func_ov006_020f7a90(void);
 extern int func_ov006_020c1718(void* p);
-extern void func_ov006_020c1164(void* t, int a1, void* a2);
-extern int func_ov006_020f7b90(void);
-extern int func_ov006_020c16b4(void* c);
-extern void func_ov006_020c0d68(void* c);
-extern void func_ov004_020b0a54(int a);
-extern void func_ov004_020ad79c(int a, int b);
-extern void func_ov004_020adb1c(int a);
-extern void func_ov006_020c0c80(void* c);
 extern void func_ov004_020b65e4(void);
 extern void func_ov006_020c19d0(void* c);
-extern void func_ov006_020f7740(void);
 
 extern char *func_020beb68;
-extern int data_ov006_0213d574;
-extern int data_ov006_0213d564;
-extern int data_ov006_0213d56c;
-extern int data_ov006_0213d570;
 extern int data_ov006_0213d568;
-extern int data_ov006_021424fc;
-extern int data_ov006_02142508;
 
-int func_ov006_020f869c(void* arg)
+int dScMgMCarlo_c_Behavior(void* arg)
 {
     unsigned char* c = (unsigned char*)arg;
 

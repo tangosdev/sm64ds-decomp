@@ -1,3 +1,9 @@
+// @symbol func_ov006_020e3578
+// @emits dScMgCurling_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgCurling_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 
@@ -6,29 +12,20 @@ extern void* _ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(const void* src, void* dst);
 extern void* LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void Deallocate(void* ptr);
-extern void func_020563d4(const void* src, u32 off, u32 cnt);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern unsigned func_02054de8(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void func_02056374(const void* src, u32 off, u32 cnt);
 extern void func_ov004_020adc5c(void* p);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void func_ov006_020e3388(char* self);
-extern void func_ov006_020e3378(char* p);
 extern void func_ov006_020e3250(char* c);
-extern void func_ov006_020e2dbc(char* c);
-extern void func_ov006_020e13a4(char* c);
-extern void func_ov004_020b04d0(int v);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
 extern int func_ov004_020adc1c(void);
 
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
-extern char data_ov006_0213c394;
-extern char data_ov006_0213c3b4;
 
-int func_ov006_020e3578(char* self)
+int dScMgCurling_c_InitResources(char* self)
 {
     char* a = func_020adc74(&data_ov006_0213c394);
     char* b = func_020adc74(&data_ov006_0213c3b4);

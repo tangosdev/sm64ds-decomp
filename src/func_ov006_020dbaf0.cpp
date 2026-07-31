@@ -1,5 +1,13 @@
 //cpp
-/* func_ov006_020dbaf0 @ 0x020dbaf0 (ov006, size 0x264)
+// @symbol func_ov006_020dbaf0
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgCard_c.h"
+// @emits dScMgCard_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScMgCard_c::InitResources - recovered from vtable slot identity */
+/* dScMgCard_c_InitResources @ 0x020dbaf0 (ov006, size 0x264)
  * Minigame graphics init: loads/decompresses the OBJ tiles+palettes for both
  * engines, sets blending, patches the OAM attr template list, spawns the two
  * rows of 5 slot sprites, and resets the shared counters.
@@ -43,28 +51,22 @@ struct VtObj {
 extern "C" {
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int data_ov006_0213bcb0[];
 extern u32 *data_ov006_02134028;
 extern char *data_ov004_020beb68;
 
-extern void func_ov004_020b04d0(int);
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
 extern int func_ov004_020ad674(void);
 extern void DecompressLZ16(void *, u32);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, u32, u32);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, u32, u32);
-extern void Deallocate(void *);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *, int, int, int, int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
-extern void func_ov006_020da0ac(char *, int *);
-extern int func_ov004_020ad8b8(void);
-extern int func_ov004_020ad878(void);
-extern void func_ov004_020b682c(void);
 
-int func_ov006_020dbaf0(char *c)
+int dScMgCard_c_InitResources(char *c)
 {
+    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     void *f7, *f6, *f5, *f4;
     int v[2];
 
@@ -117,16 +119,16 @@ int func_ov006_020dbaf0(char *c)
         }
     }
 
-    *(u16 *)(c + 0x5388) = 0;
-    *(u16 *)(c + 0x538a) = 0;
-    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
-    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
+    self->unk_5388 = 0;
+    self->unk_538a = 0;
+    self->unk_0a8 = func_ov004_020ad8b8();
+    self->unk_0ac = self->unk_0a8;
     {
         int r = func_ov004_020ad878();
         if (data_ov004_020beb68 != 0)
             *(int *)(data_ov004_020beb68 + 0xb4) = r;
     }
-    *(u16 *)(c + 0x5398) = 0;
+    self->unk_5398 = 0;
     func_ov004_020b682c();
     ((VtObj *)c)->m18(-1);
     return 1;

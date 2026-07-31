@@ -1,11 +1,15 @@
 //cpp
+// @symbol func_ov006_020d91b0
+// @emits dScMgBomroom_c_Behavior
+/* recovered: renamed to Class_Method */
+/* dScMgBomroom_c::Behavior - recovered from vtable slot identity */
 struct C;
 typedef void (C::*PMF)();
 extern "C" {
 extern PMF data_ov006_021416e0[];
 void func_ov006_020d5d08(char *c);
 void func_ov006_020d5b10(char *c);
-int func_ov006_020d91b0(char *c)
+int dScMgBomroom_c_Behavior(char *c)
 {
     if (*(unsigned short *)(c + 0x6200 + 0xf0) != 0) {
         unsigned short *t = (unsigned short *)(((int)c + 0x62f0) & 0xFFFFFFFFFFFFFFFF);

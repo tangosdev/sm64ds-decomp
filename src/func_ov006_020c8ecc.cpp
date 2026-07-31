@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov006_020c8ecc
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Matrix4x3 { int m[12]; };
+
 extern struct Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(struct Matrix4x3 *mF, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, short angY);

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov003_020ada9c
+// @emits dScTitle_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScTitle_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -30,7 +34,7 @@ namespace GX {
 namespace G2 { unsigned short *GetBG0ScrPtr(); }
 namespace Sound { void LoadInitialGroup(int); void LoadAndSetMusic_Layer1(int); }
 
-extern "C" int func_ov003_020ada9c(int arg)
+extern "C" int dScTitle_c_InitResources(int arg)
 {
     UnloadArchives();
     Enable3dEngines();

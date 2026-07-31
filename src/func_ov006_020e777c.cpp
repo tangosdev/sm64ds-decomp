@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov006_020e777c
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct M48 { int w[12]; };
-extern M48 data_020a0e68;
+
+extern Matrix4x3 data_020a0e68;
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 }
 struct ModelComponents;
@@ -27,7 +30,7 @@ void func_ov006_020e777c(char *c)
     zero = (void*)i;
     do {
         if (*(int*)(c + i*4 + 0x168) != 0) {
-            *(M48*)(r5 + 0x1c) = data_020a0e68;
+            *(Matrix4x3*)(r5 + 0x1c) = data_020a0e68;
             ((MaterialChanger*)r4)->Update(*(ModelComponents*)(r5 + 8));
             ((Obj*)r5)->m(zero);
         }

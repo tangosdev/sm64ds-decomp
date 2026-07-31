@@ -1,7 +1,15 @@
-extern int func_ov004_020b6324(int);
+// @symbol func_ov006_020db6ec
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgCard_c.h"
+// @emits dScMgCard_c_OnGroundPounded
+/* recovered: renamed to Class_Method */
+/* dScMgCard_c::OnGroundPounded - recovered from vtable slot identity */
 
-int func_ov006_020db6ec(void *this) {
-    int x = *(int *)((char *)this + 0xb4);
+int dScMgCard_c_OnGroundPounded(void *this) {
+    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)this;
+    int x = self->unk_0b4;
     int v;
     if (x < 5) {
         v = 1;

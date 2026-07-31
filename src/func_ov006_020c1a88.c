@@ -1,18 +1,17 @@
-struct V3 { int x, y, z; };
-struct V3s { short x, y, z; };
+// @symbol func_ov006_020c1a88
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Model.h"
+#include "decl_ShadowModel.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+extern struct Vector3 data_020a0ebc;
+extern struct Vector3_16 data_020a0edc;
 
-extern struct V3 data_020a0ebc;
-extern struct V3s data_020a0edc;
-
-extern void _ZN11ShadowModel8CleanAllEv(void);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int b, int c);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *file, int b, int c, int scale, unsigned short e);
-extern void _ZN5Model12HideMaterialEii(void *self, int a, int b);
-extern void func_ov006_020c0af8(char *c);
-extern void func_ov006_020c1764(char *c);
-extern void func_ov006_020c092c(char *c);
 
 int func_ov006_020c1a88(char *c)
 {
@@ -55,9 +54,9 @@ int func_ov006_020c1a88(char *c)
         return 0;
     }
     ip = *(void **)(c + 0x98);
-    *(int *)(((long long)(int)((char *)ip + 0x24)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-    *(int *)(((long long)(int)((char *)ip + 0x114)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-    *(int *)(((long long)(int)((char *)ip + 0xe4)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+    *(int *)(((long long)(int)((char *)ip + 0x24))) &= ~1;
+    *(int *)(((long long)(int)((char *)ip + 0x114))) &= ~1;
+    *(int *)(((long long)(int)((char *)ip + 0xe4))) |= 2;
     func_ov006_020c092c(c + 0xdc);
     *(short *)(c + 0x1e0) = 0;
     *(short *)(c + 0x1e2) = 1;

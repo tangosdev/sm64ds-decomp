@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov003_020b0814
+// @emits dScGameOver_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Stage.h"
+/* recovered: renamed to Class_Method */
+/* dScGameOver_c::Render - recovered from vtable slot identity */
 extern "C" {
 typedef int s32;
 typedef int Fix12i;
@@ -9,9 +15,8 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     bool32 sub, struct OamAttri *data, s32 x, s32 y,
     s32 palette, s32 priority, Fix12i scaleX, Fix12i scaleY,
     s32 rotation, s32 mode);
-extern void _ZN5Stage20RenderBouncingArrowsEv(void);
-int func_ov003_020b0814(char *c);
-int func_ov003_020b0814(char *c) {
+int dScGameOver_c_Render(char *c);
+int dScGameOver_c_Render(char *c) {
     int i;
     for (i = 0; i < 8; i++) {
         _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(

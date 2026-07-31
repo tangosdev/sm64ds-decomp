@@ -1,10 +1,14 @@
 //cpp
+// @symbol func_ov006_020e683c
+// @emits dScMgCurling2_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgCurling2_c::Behavior - recovered from vtable slot identity */
 extern "C" {
-extern int func_ov006_020e4800(void*);
-extern int func_ov006_020e3948(void*);
 struct Ent{ int a; int b; };
 extern Ent data_ov006_02141a18[];
-int func_ov006_020e683c(char* c){
+int dScMgCurling2_c_Behavior(char* c){
   int idx=*(int*)(c+0x5000+0x580);
   Ent* e=&data_ov006_02141a18[idx];
   int adj=e->b;

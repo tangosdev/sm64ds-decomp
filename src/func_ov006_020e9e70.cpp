@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_020e9e70
+// @emits dScMg3DEsp_c_InitResources
+/* recovered: shared common types, renamed to Class_Method */
+/* dScMg3DEsp_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 int _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
 void InitialiseVramGlobals(void);
@@ -39,7 +43,7 @@ struct Obj {
     virtual void v48(int arg);
 };
 
-extern "C" int func_ov006_020e9e70(void* arg0)
+extern "C" int dScMg3DEsp_c_InitResources(void* arg0)
 {
     char* c = (char*)arg0;
     M48 tmp;

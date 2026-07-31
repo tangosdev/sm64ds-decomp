@@ -1,14 +1,17 @@
+// @symbol func_ov006_020c225c
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov006_020c225c at 0x020c225c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-struct Vector3 { int x, y, z; };
-struct Matrix4x3 { int data[12]; };
+
+struct Matrix4x3_local { int data[12]; };
 
 struct Camera {
-    struct Matrix4x3 viewMat;  /* 0x00 */
+    struct Matrix4x3_local viewMat;  /* 0x00 */
     char pad30[0x30];          /* 0x30 */
-    struct Matrix4x3 projMat;  /* 0x60 */
+    struct Matrix4x3_local projMat;  /* 0x60 */
     char pad90[0x10];          /* 0x90 */
     struct Vector3 eye;        /* 0xa0 */
     struct Vector3 target;     /* 0xac */

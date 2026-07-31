@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov006_020ce108
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
@@ -11,11 +16,7 @@ extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 
-extern int data_ov006_0213b33c[2];
 extern Vector3 data_020a0ebc;
-extern int data_ov006_0212e070[];
-extern int data_ov006_021405b4[];
-extern int data_ov006_021405a8[];
 }
 
 struct Obj {

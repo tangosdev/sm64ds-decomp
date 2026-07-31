@@ -1,14 +1,17 @@
-extern void func_ov004_020adb1c(int self);
+// @symbol func_ov006_020f3294
+// @emits dScMgLuigi_c_OnYoshiTryEat_020f3294
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgLuigi_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov004_020b0aa0(int arg);
 extern void func_ov006_020f2ec0(char *c);
-extern void func_ov006_020f2e20(char *c);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
 extern char *func_020beb68;
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 
-void func_ov006_020f3294(char *c, int arg1)
+void dScMgLuigi_c_OnYoshiTryEat_020f3294(char *c, int arg1)
 {
     char *p;
     int *q;

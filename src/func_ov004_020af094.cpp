@@ -1,9 +1,13 @@
 //cpp
+// @symbol func_ov004_020af094
+// @emits dScMgBase_c_OnAimedAtWithEgg
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 typedef unsigned short u16;
 typedef short s16;
 
-extern "C" void func_02019028(void);
-extern "C" void MultiCopy_Int(int *dst, int *src, int len);
 extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *addr, unsigned int size);
 extern "C" void _ZN2GX10LoadBGPlttEPKvjj(const void *src, unsigned int offset, unsigned int size);
 extern "C" void _ZN3GXS10LoadBGPlttEPKvjj(const void *src, unsigned int offset, unsigned int size);
@@ -14,9 +18,6 @@ extern "C" void DecompressLZ16(void *src, void *dst);
 
 extern "C" unsigned char data_0209d45c;
 extern "C" unsigned char data_0209d454;
-extern "C" char data_ov004_020bea28[];
-extern "C" char data_ov004_020beac8[];
-extern "C" void *data_ov004_020bbf94[];
 
 struct Base {
     virtual void d0();
@@ -53,7 +54,7 @@ struct Obj : Base {
     char pad[0x4700];
 };
 
-extern "C" void func_ov004_020af094(Obj *self)
+extern "C" void dScMgBase_c_OnAimedAtWithEgg(Obj *self)
 {
     char *c = (char *)self;
 

@@ -1,12 +1,12 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov006_020c1804
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
-extern void func_0203cd80(struct Vec3 *m, short angle);
-extern void func_0203ccd4(struct Vec3 *m, short angle);
-extern void func_02016a14(void *self, int a);
-extern void func_02016a04(void *self, int a);
-extern void func_020169d8(char *self, int index, unsigned int value);
-extern void func_ov006_020c07a0(char *t);
+extern void func_0203cd80(struct Vector3 *m, short angle);
 void func_ov006_020c1804(void *self);
 }
 
@@ -24,7 +24,7 @@ struct Obj {
 void func_ov006_020c1804(void *self)
 {
     char *c = (char*)self;
-    struct Vec3 v1, v2;
+    struct Vector3 v1, v2;
     unsigned int p1, p2;
     short ang;
     unsigned char b[3];

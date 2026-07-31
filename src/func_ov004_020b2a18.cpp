@@ -1,15 +1,20 @@
 //cpp
+// @symbol func_ov004_020b2a18
+// @emits dScMgBase_c_OnYoshiTryEat_020b2a18
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
 typedef struct Heap Heap;
 void* func_ov004_020b929c(void* self);
 void _ZN9ActorBaseD2Ev(void* t);
 void _ZN6Memory10DeallocateEPvP4Heap(void* p, Heap* h);
-extern void* data_ov004_020bc0c0;
 extern void* data_ov004_020beb68;
 extern void* _ZTV5Stage;
 extern void* data_0208e4b8;
 extern Heap* data_020a0eac;
-void* func_ov004_020b2a18(void* self){
+void* dScMgBase_c_OnYoshiTryEat_020b2a18(void* self){
   char* t=(char*)self;
   *(void**)t = &data_ov004_020bc0c0;
   *(void**)&data_ov004_020beb68 = 0;

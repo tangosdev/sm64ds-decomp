@@ -1,14 +1,10 @@
-struct Mtx { int w[12]; };
-extern struct Mtx data_020a0e68;
+// @symbol func_ov006_020c3050
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+extern struct Matrix4x3 data_020a0e68;
 
-extern char data_ov006_0213ae48[];
-extern char data_ov006_0213ae60[];
-extern char data_ov006_0213aea8[];
-extern char data_ov006_0213ae00[];
-extern char data_ov006_0213ae30[];
-extern char data_ov006_0213ae78[];
-extern char data_ov006_0213ae90[];
-extern char data_ov006_0213ae18[];
 
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
@@ -17,9 +13,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int b, int
 extern void func_02016b24(void *o, unsigned int mask);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void *bta);
-extern void func_ov006_020c2848(char *c);
-extern void func_ov006_020c2290(char *c);
-extern void Matrix4x3_FromTranslation(struct Mtx *m, int x, int y, int z);
+extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 
 int func_ov006_020c3050(char *c)
 {
@@ -78,6 +72,6 @@ int func_ov006_020c3050(char *c)
         return 0;
 
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
-    *(struct Mtx *)(c + 0x94) = data_020a0e68;
+    *(struct Matrix4x3 *)(c + 0x94) = data_020a0e68;
     return 1;
 }

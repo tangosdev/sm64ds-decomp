@@ -1,16 +1,23 @@
+// @symbol func_ov004_020b0840
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgBase_c.h"
+// @emits dScMgBase_c_AfterCleanupResources
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::AfterCleanupResources - recovered from vtable slot identity */
 extern void func_ov004_020ad90c(void);
 extern void func_ov004_020b0aa0(int arg);
 extern void func_0203cbc0(void);
 extern void func_02012e1c(void);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int x);
-extern void func_ov004_020b2c84(void);
-extern void _ZN5Scene21AfterCleanupResourcesEj(char* c, unsigned int x);
 extern int data_0209b308[];
 extern int data_0209d4a8[];
-extern int data_ov004_020beb74[];
 extern int data_ov004_020beb60[];
 
-void func_ov004_020b0840(char* c, int arg){
+void dScMgBase_c_AfterCleanupResources(char* c, int arg){
+    struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
   if (arg == 2) {
     if (data_0209b308[4] == 0)
       func_ov004_020ad90c();
@@ -21,7 +28,7 @@ void func_ov004_020b0840(char* c, int arg){
       func_0203cbc0();
       data_ov004_020beb60[0] = 0;
     }
-    if (*(int*)(c + 0x4628) != 0) {
+    if (self->unk_4628 != 0) {
       func_02012e1c();
       _ZN5Sound22StopLoadedMusic_Layer1Ej(1);
     }

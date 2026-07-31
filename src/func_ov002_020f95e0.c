@@ -1,16 +1,17 @@
+// @symbol func_ov002_020f95e0
+// @emits daSoundObj_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daSoundObj_c::InitResources - recovered from vtable slot identity */
 #pragma opt_loop_invariants off
 
-extern int data_ov002_0210c080[];
-extern int data_ov002_0210c084[];
-extern unsigned short data_ov002_0210c088[];
-extern unsigned char data_ov002_0210c08a[];
-extern int data_0208e430;
 
 extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 
-int func_ov002_020f95e0(void *self)
+int daSoundObj_c_InitResources(void *self)
 {
     char *c = (char *)self;
     void *a;

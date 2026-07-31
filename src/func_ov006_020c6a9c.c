@@ -1,23 +1,16 @@
+// @symbol func_ov006_020c6a9c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 
-struct Vec3 { int x, y, z; };
 
-extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+
+extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern int _Z15ApproachLinear2Rsss(short *v, short target, short step);
-extern int func_ov006_020e6e3c(int a, int b);
 
-extern void func_ov006_020c63dc(char *c);
-extern void func_ov006_020c6348(char *c);
-extern void func_ov006_020c6248(char *c);
-extern void func_ov006_020c6188(char *c);
-extern void func_ov006_020c5ec8(char *c);
-extern void func_ov006_020c5cf4(char *c);
-extern void func_ov006_020c5aa4(char *c);
-extern void func_ov006_020c57d4(char *c);
-extern void func_ov006_020c561c(char *c);
-extern void func_ov006_020c54f4(char *c);
-extern void func_ov006_020c5370(char *c);
 
 void func_ov006_020c6a9c(char *c)
 {
@@ -27,7 +20,7 @@ void func_ov006_020c6a9c(char *c)
     *(int *)(c + 0xa8) = (int)(((*(int *)(c + 0x20) - *(int *)(c + 0x9c)) * 0x100LL + 0x800) >> 12);
     *(int *)(c + 0xac) = (int)(((*(int *)(c + 0x24) - *(int *)(c + 0xa0)) * 0x100LL + 0x800) >> 12);
     *(int *)(c + 0xb0) = (int)(((*(int *)(c + 0x28) - *(int *)(c + 0xa4)) * 0x100LL + 0x800) >> 12);
-    AddVec3((struct Vec3 *)(c + 0x9c), (struct Vec3 *)(c + 0xa8), (struct Vec3 *)(c + 0x9c));
+    AddVec3((struct Vector3 *)(c + 0x9c), (struct Vector3 *)(c + 0xa8), (struct Vector3 *)(c + 0x9c));
 
     if ((*(int *)(c + 0xa8) < 0 ? -*(int *)(c + 0xa8) : *(int *)(c + 0xa8)) < 0x10 &&
         (*(int *)(c + 0xac) < 0 ? -*(int *)(c + 0xac) : *(int *)(c + 0xac)) < 0x10) {

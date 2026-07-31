@@ -1,8 +1,13 @@
 //cpp
+// @symbol func_ov006_020cbaec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct V3 { int x, y, z; };
-struct Vector3_16f { s16 x, y, z; };
+
+
 
 struct VtObj {
     virtual void d0();
@@ -13,10 +18,10 @@ struct VtObj {
 };
 
 extern "C" {
-int DotVec3(const V3 *a, const V3 *b);
-void Vec3_MulScalar(V3 *out, const V3 *in, int scale);
-void SubVec3(V3 *a, V3 *b, V3 *c);
-void AddVec3(V3 *a, V3 *b, V3 *c);
+int DotVec3(const Vector3 *a, const Vector3 *b);
+void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
+void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int _ZN4cstd4fdivEii(int a, int b);
 void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, const void *f, void *g);
@@ -26,16 +31,12 @@ int func_ov006_020e6e3c(int a, int b);
 void func_ov006_020cb838(char *c);
 }
 
-extern int data_ov006_02140544;
-extern int data_ov006_02140570;
-extern void *data_ov006_0214059c;
-extern int data_ov006_0213b1ac[2];
 
 extern "C" void func_ov006_020cbaec(char *c)
 {
-    V3 tmp;
-    V3 tmp2;
-    V3 tmp4;
+    Vector3 tmp;
+    Vector3 tmp2;
+    Vector3 tmp4;
     int r5v;
     int r4v;
     int dot;
@@ -46,23 +47,23 @@ extern "C" void func_ov006_020cbaec(char *c)
     r4v = *(int *)(c + 0x14);
     if (r5v < 0) r5v = -r5v;
     {
-        int *src = (int *)(((long long)(int)(c + 4)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *src = (int *)(((long long)(int)(c + 4)));
         tmp.x = src[0];
         tmp.y = src[1];
         tmp.z = src[2];
     }
 
-    dot = DotVec3((V3 *)(c + 0x34), &tmp);
+    dot = DotVec3((Vector3 *)(c + 0x34), &tmp);
     scale = (int)(((long long)dot * 0x1400 + 0x800) >> 12);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3((V3 *)(c + 0x34), &tmp2, (V3 *)(c + 0x34));
+    SubVec3((Vector3 *)(c + 0x34), &tmp2, (Vector3 *)(c + 0x34));
 
     fdivr = _ZN4cstd4fdivEii(r4v, r4v + r5v);
 
     *(int *)(c + 0x40) = data_ov006_02140544;
 
     {
-        Vector3_16f v;
+        Vector3_16 v;
         v.x = (s16)tmp.x;
         v.y = (s16)tmp.y;
         v.z = (s16)tmp.z;
@@ -78,7 +79,7 @@ extern "C" void func_ov006_020cbaec(char *c)
 
     scale = (int)(((long long)data_ov006_02140570 * fdivr + 0x800) >> 12);
     Vec3_MulScalar(&tmp4, &tmp, scale);
-    AddVec3((V3 *)(c + 0x34), &tmp4, (V3 *)(c + 0x34));
+    AddVec3((Vector3 *)(c + 0x34), &tmp4, (Vector3 *)(c + 0x34));
 
     {
         int v = *(int *)(c + 0x34);

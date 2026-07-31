@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov006_020c092c
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BCA_File;
 struct Model { int d; };
@@ -16,10 +19,10 @@ extern "C" void _ZN5Model12SetPolygonIDEi(Model*, int);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(ShadowModel*);
 extern "C" void func_ov006_020c057c(void*);
 
-struct V3 { int x, y, z; };
-struct V3s { short x, y, z; };
-extern V3 data_020a0ebc;
-extern V3s data_020a0edc;
+
+
+extern Vector3 data_020a0ebc;
+extern Vector3_16 data_020a0edc;
 
 extern "C" void func_ov006_020c092c(char* thiz)
 {
