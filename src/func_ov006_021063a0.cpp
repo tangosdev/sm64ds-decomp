@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define RND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 

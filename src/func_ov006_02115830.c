@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct { int x, y; } V2;
 
 extern void func_ov006_021146cc(int *a, int *b);

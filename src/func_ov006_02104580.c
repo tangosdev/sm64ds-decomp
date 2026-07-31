@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern void func_ov006_0210446c(char *o, int x, int y, int mode);

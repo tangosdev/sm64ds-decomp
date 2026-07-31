@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 u32 _ZN3G2S13GetBG2CharPtrEv(void);
 
 #pragma opt_loop_invariants off

@@ -1,8 +1,7 @@
+#include "types.h"
 // Reset: forwards self to func_ov006_02114738, fills data_ov006_02142c1c with
 // 0..8, calls func_ov006_0210f998, then zeroes the per-slot state arrays
 // (+0x31/+0x3c/+0x60 x9, +0x6c/+0x8c x8) and +0x94/+0x98.
-typedef unsigned char u8;
-
 typedef struct Obj {
     char _pad0[0x31]; // 0x00
     u8 byteA[9];      // 0x31

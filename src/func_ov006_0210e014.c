@@ -1,9 +1,7 @@
+#include "types.h"
 // Latches +0x8/+0xc into +0x10/+0x14, then unless byte +0x44 == 1 or +0x40 <= 0
 // eases the s16 angle at +0x32 toward 0x3000 by 0x200 steps (clamped), and tail
 // calls func_ov006_0210d93c.
-typedef short s16;
-typedef unsigned char u8;
-
 typedef struct Obj {
     char _pad0[8];     // 0x00
     int x8;            // 0x08

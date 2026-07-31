@@ -1,8 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 
 void func_ov006_0211d924(char* p, int i)

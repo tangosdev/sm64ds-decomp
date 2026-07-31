@@ -1,11 +1,5 @@
+#include "types.h"
 /* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned int u32;
-typedef long long s64;
-typedef unsigned long long u64;
-
 typedef struct V2 {
     int x;
     int z;

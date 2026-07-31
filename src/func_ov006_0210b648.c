@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_0210b648
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,9 +7,6 @@
 // @emits dScMgSlot3_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgSlot3_c::Render - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int func_ov006_02111df4(char *o);
 extern int func_ov006_0210e4c8(char *o);
 extern int func_ov006_0210d898(char *o);

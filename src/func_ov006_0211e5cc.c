@@ -1,9 +1,7 @@
+#include "types.h"
 /* func_ov006_0211e5cc — once no entry (stride 0x24, 16 of them) is active
  * with stage <= 2, trigger FreeGfxSlotsById(0xc) and bump the one-shot
  * latch byte at 0x4c20 (skipped while the latch is set). */
-
-typedef unsigned char u8;
-
 extern void FreeGfxSlotsById(int arg);
 
 typedef struct {

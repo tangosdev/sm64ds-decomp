@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
+#include "types.h"
 struct M48 { int w[12]; };
 struct Vec3 { int x, y, z; };
 

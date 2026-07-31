@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_021243ec
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -7,11 +8,6 @@
 // @emits dScMgTrampoline2_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-
 extern "C" {
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void Camera_UpdateMatrices(void *cam);

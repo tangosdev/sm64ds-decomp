@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_0210a194
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -12,9 +13,6 @@
  * BG tiles/maps/palette and the shared OBJ tiles/palettes for both engines,
  * then initializes the board, cursor and slider objects.
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct VtObj {
     virtual void d0();
     virtual void d1();

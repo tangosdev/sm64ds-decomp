@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_02109834
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -11,10 +12,6 @@
  * countdown beep (volume ramps over the last 3 seconds), shows the winner
  * banner with per-rank colors, and refreshes the board.
  */
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-
 typedef struct Racer {
     char b[0x34];
 } Racer;

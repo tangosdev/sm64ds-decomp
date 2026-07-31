@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_0211c720
 // @emits dScMgSound_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -9,10 +10,6 @@
  * 0=init, 1=intro countdown (+0x5618), 2=result countdown (+0x5616) with
  * win/lose handling and 9999-capped win counter, 3=retry countdown.
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-
 extern char *data_ov004_020beb68;
 
 extern void FreeGfxSlotsById(int);

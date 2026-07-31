@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_021231ac
 // @emits dScMgTrampoline2_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::Render - recovered from vtable slot identity */
-typedef unsigned short u16;
-
 extern void func_0203cd80(int* m, short angle);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);

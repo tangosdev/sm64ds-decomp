@@ -1,3 +1,4 @@
+#include "types.h"
 // MATCHING (abverify MATCH, mwccarm 1.2/sp2p3, canonical flags)
 /* func_ov006_02115b0c at 0x02115b0c (ov006), size 0x18bc (6,332 bytes, 1583 insns)
  * Compiler mwccarm 1.2/sp2p3, flags:
@@ -47,10 +48,6 @@
  *    un-strength-reduced; does not break the div/mod-by-32 shift idioms.
  */
 #pragma opt_strength_reduction off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 typedef struct V2 { int x, y; } V2;
 
 extern void func_ov004_020adb1c(int a);

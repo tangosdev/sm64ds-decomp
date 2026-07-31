@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern "C" {
 int LoadFile(int handle);
 void DecompressLZ16(int src, void* dst);

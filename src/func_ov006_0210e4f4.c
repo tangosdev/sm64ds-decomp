@@ -1,10 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern int GetOwnerLanguage(void);
 extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);

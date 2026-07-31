@@ -1,8 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
+#include "types.h"
 enum { false = 0, true = 1 };
 
 typedef struct Thing {

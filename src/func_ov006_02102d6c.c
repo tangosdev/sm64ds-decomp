@@ -1,13 +1,10 @@
+#include "types.h"
 /* func_ov006_02102d6c at 0x02102d6c
  *
  * Resets entry i of a 0x40-stride array at this+0x4660: reverses and
  * quarters its velocity, clears counters, and tail-calls func_02012718
  * (sound: id 0x19c) with the entry's handle.
  */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct Entry {
     u32 handle;    /* +0x00 (this+0x4660) */
     int a;         /* +0x04 = 0xa8000 */

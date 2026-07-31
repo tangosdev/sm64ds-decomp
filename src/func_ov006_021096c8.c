@@ -1,12 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_021096c8
 // @emits dScMgRoulette_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgRoulette_c::OnTurnIntoEgg - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned short u16;
-
 extern void FreeGfxSlotsById(int a);
 extern int func_ov006_020c1718(char *c);
 extern void func_ov004_020b56c8(void);

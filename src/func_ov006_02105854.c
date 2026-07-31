@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern void func_ov006_02104eb8(char *p);
 extern void func_ov006_02104e70(unsigned char *p);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);

@@ -1,7 +1,5 @@
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef unsigned char u8;
-
 extern int data_ov004_020bfa18;
 
 extern void func_ov004_020ad79c(int a, int b);

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern u8 data_020a0e40;

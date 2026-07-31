@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_0211c984
 // @emits dScMgSound_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSound_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern int LoadFile(int handle);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);

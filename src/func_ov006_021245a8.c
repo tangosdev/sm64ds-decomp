@@ -1,8 +1,4 @@
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int LoadFile(int handle);
 extern s32 GetGameLanguage(void);
 extern char *_ZN2G213GetBG2CharPtrEv(void);

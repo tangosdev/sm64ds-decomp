@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-typedef volatile unsigned int vu32;
-
+#include "types.h"
 extern void func_ov004_020b290c(void);
 extern void func_ov004_020b2980(void);
 extern void _ZN2GX12SetBankForBGEt(u16 a);

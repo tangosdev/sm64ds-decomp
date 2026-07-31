@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 #define CNT16(b,i) (*(u16*)((b) + 0x4bdc + (i)*0x1c))
 #define CNT8(b,i)  (*(u8 *)((b) + 0x4be3 + (i)*0x1c))
 #define VEL(b,i)   (*(int*)((b) + 0x4bd4 + (i)*0x1c))
