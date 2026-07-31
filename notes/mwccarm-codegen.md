@@ -2531,3 +2531,49 @@ mwcc tracks the object's declared volatility for VN, so the fold still dies; and
 (void)&flags address-taking moves the slot but breaks 34 words elsewhere. Landed
 func_0204a730 byte-identical together with the banked group-B recipe (u32 byte-hoist
 at function scope + s32 k demoted into the loop block after var_r5).
+## 6aq. Booster direction on CALLER-saved pairs is inverted, and it must ride the BASE (2026-07-31, func_020412f0 MATCHED)
+
+Closing `func_020412f0` (5 -> 0 on 2004/b56) refines 6y lever 1. That lever was measured on
+callee-saved webs, where boosting a value pulls it toward the LOWER-numbered register. On a
+caller-saved r2/r3 pair the booster pushes the boosted web toward the HIGHER-numbered
+register instead. Reading 6y's direction across to scratch registers costs a whole sweep:
+a 20-variant hand pass and a first agent pass both boosted the wrong web and stalled at 5.
+
+**Shape.** A byte-triple store into a pooled global, `data_020a2409[r6] = b9; d9[1] = ba;
+d9[2] = bb;`. ROM holds the pool base in r3 and the derived `base + r6` in r2, and gives the
+LOWER register to the LONGER-lived derived pointer. Every plain spelling inverts both.
+
+**Fix.** Three conditions must hold simultaneously; any one alone is inert:
+
+```c
+u8 *b9b = data_020a2409;      /* 1. base is a NAMED local, declared FIRST */
+u8 *d9  = b9b + r6;           /* 2. derived comes from the LOCAL, not the symbol again */
+u8 b9v = ((volatile Msg *)m)->b9;
+u8 bav = ((volatile Msg *)m)->ba;
+b9b = b9b ? b9b : b9b;        /* 3. booster on the BASE (the SHORTER-lived web) */
+b9b[r6] = b9v;
+d9[1] = bav;
+d9[2] = m->bb;
+```
+
+Boost the shorter-lived web to push it UP; the longer-lived one then falls into the lower
+register. Also improves 1.2/base|sp2|sp2p3 from 12 to 7, so it is a better source shape, not
+a b56 artifact.
+
+**Inert on this shape (stayed at exactly 5):** booster on the DERIVED pointer at three
+placements (after its def, after the first store, doubled); the named base hoisted to the
+function-scope decl list; block-scope decl order in six orderings; a named base declared
+after the derived; `&arr[i]` vs `arr + i`; dropping the volatile temps; the 6h u64 address
+launder on the base, on both pooled bases, and on the derived; `opt_lifetimes off`;
+`scheduling off`.
+
+**Actively harmful here (record as regressions, not neutrals):** derived declared in a
+deeper nested block than the base store (14 div, rotates r0-r3 across the whole window); the
+6w comma-operator serializing the derived's def into its first use (14 div, same rotation);
+6q identity reuse of an existing function-scope pointer as the derived (50 div, leaks out of
+the case and rotates r4/r5/r6 across an unrelated tail).
+
+**Process note.** The near-miss DB stores ONE divergence number per row with no record of
+which compiler produced it. This function sat at "12" for weeks because that was its 1.2
+score; it was 5 on b56 the whole time. Sweep `--all` before believing any row's number, and
+before calling anything a floor.
