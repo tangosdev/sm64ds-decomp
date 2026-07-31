@@ -24,7 +24,7 @@ extern "C" int func_ov102_0214b248(char *c)
     {
         unsigned short st = *(unsigned short *)(c + 0x3ea);
         if (st != 0 && st <= 4) {
-            *(int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000;
+            *(int *)(((int)c + 0x128)) &= ~0x8000;
             if (*(unsigned short *)(c + 0x3ea) == 1) {
                 func_ov102_0214ae1c(c);
                 return 0;
@@ -41,7 +41,7 @@ extern "C" int func_ov102_0214b248(char *c)
                 func_ov002_020ef228(c + 0x144, (int)c);
             }
             {
-                int *f = (int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL);
+                int *f = (int *)(((long long)(int)(c + 0x128)));
                 *f &= ~4;
                 if (*(unsigned short *)(c + 0x3ea) == 2) {
                     *f |= 0x4000;

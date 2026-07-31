@@ -13,7 +13,7 @@ extern void func_ov102_0214baa0(void *c);
 void func_ov102_0214ae1c(char *c) {
     Vec3 v;
     int y, z, w;
-    *(unsigned int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000;
+    *(unsigned int *)(((int)c + 0x128)) &= ~0x8000;
     y = *(int *)(c + 0x60);
     z = *(int *)(c + 0x64);
     w = y + 0x78000;

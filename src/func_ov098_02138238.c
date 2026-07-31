@@ -38,7 +38,7 @@ void func_ov098_02138238(void *thiz)
     if (t4 == false) {
       void *p = *(void **)(c + 0xd0);
       if (p != 0) {
-        int *src = (int *)(int)(((long long)(int)((char *)p + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *src = (int *)(int)(((long long)(int)((char *)p + 0x5c)));
         *(int *)(c + 0x5c) = src[0];
         *(int *)(c + 0x60) = src[1];
         *(int *)(c + 0x64) = src[2];

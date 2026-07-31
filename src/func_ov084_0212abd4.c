@@ -23,11 +23,11 @@ void func_ov084_0212abd4(char *self)
     _Z14ApproachLinearRiii((int *)(self + 0x98), *(int *)(self + 0x444), 0x500);
     if (((Flag *)(self + 0x468))->b0) {
         if (_Z14ApproachLinearRsss((short *)(self + 0x94), *(s16 *)(self + 0x45a), step)) {
-            *(unsigned char *)(((int)self + 0x468) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+            *(unsigned char *)(((int)self + 0x468)) &= ~1;
             return;
         }
         {
-            unsigned char *p = (unsigned char *)(((int)self + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char *p = (unsigned char *)(((int)self + 0x468));
             *p = (*p & ~1) | 1;
         }
         return;
@@ -58,7 +58,7 @@ void func_ov084_0212abd4(char *self)
     {
         int bit = _ZN5Enemy24AngleAwayFromWallOrCliffER12WithMeshClsnRs(
                       self, self + 0x1b4, (short *)(self + 0x45c));
-        unsigned char *p = (unsigned char *)(((int)self + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p = (unsigned char *)(((int)self + 0x468));
         bit &= 1;
         *p = (*p & ~1) | bit;
     }
@@ -83,8 +83,8 @@ void func_ov084_0212abd4(char *self)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, data_ov084_02130ce8[1], 0, 0x1000, 0);
             
             if (*(u16 *)(self + 0x450) != 0) {
-                *(u16 *)(((int)self + 0x450) & 0xFFFFFFFFFFFFFFFFLL) =
-                    *(u16 *)(((int)self + 0x450) & 0xFFFFFFFFFFFFFFFFLL) - 1;
+                *(u16 *)(((int)self + 0x450)) =
+                    *(u16 *)(((int)self + 0x450)) - 1;
             } else if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 3) {
                 *(s16 *)(self + 0x45c) = *(s16 *)(self + 0x94) + (s16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
                 *(u16 *)(self + 0x450) = 0x64;

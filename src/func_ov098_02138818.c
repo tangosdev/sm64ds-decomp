@@ -31,5 +31,5 @@ void func_ov098_02138818(char *self)
     *(void **)(self + 0x5e8) = *(void **)(self + 0x5e4);
     *(void **)(self + 0x5e4) = 0;
 
-    *(int *)(((long long)(int)(self + 0x57c)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x2000;
+    *(int *)(((long long)(int)(self + 0x57c))) |= 0x2000;
 }

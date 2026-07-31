@@ -31,7 +31,7 @@ extern "C" void func_ov100_0214117c(char* c)
         *(int*)(c + 0x98) = 0;
         *(int*)(c + 0x3e8) = 0;
         *(int*)(c + 0x3e4) = 6;
-        *(int*)(((long long)(int)(c + 0xb0)) & 0xffffffffffffffffLL) &= ~0x10000;
+        *(int*)(((long long)(int)(c + 0xb0))) &= ~0x10000;
     } else {
         _Z14ApproachLinearRiii((int*)(c + 0x98), 0x8000, 0x800);
     }

@@ -46,7 +46,7 @@ extern "C" int func_ov085_0212de5c(PlayerObj *c)
     c->v8c = 0x1000;
     c->v90 = 0x800;
     {
-        int *pp = (int *)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFF);
+        int *pp = (int *)(((int)c + 0x2c8));
         int n = *pp + 1;
         *pp = n;
     }

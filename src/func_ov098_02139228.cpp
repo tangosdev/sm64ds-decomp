@@ -87,7 +87,7 @@ extern "C" int func_ov098_02139228(char *c)
     _Z14ApproachLinearRiii((int *)(c + 0x5f4), *(s32 *)(c + 0x5f0), 0x800);
 
     if ((*(s32 *)(c + 0x4e0) | *(s32 *)(c + 0x98)) == 0) {
-        int *p = (int *)(((int)c + 0x57c) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)c + 0x57c));
         *p &= ~0x2000;
         return 0;
     }

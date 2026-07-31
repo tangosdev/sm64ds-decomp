@@ -22,7 +22,7 @@ void Cannon_Kill(char *c)
             }
         } else {
             if (_Z14ApproachLinearRiii((int *)(c + 0x3bc), 0x300, *(int *)(c + 0x3b8)) != 0)
-                *(int *)(((int)c + 0x3c0) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(int *)(((int)c + 0x3c0)) += 1;
         }
         *(int *)(c + 0x3b8) = _ZN4cstd4fdivEii((int)(((long long)*(int *)(c + 0x3b8) * 0xb00 + 0x800) >> 12), 0x1000);
         *(int *)(c + 0x84) = *(int *)(c + 0x3bc);
@@ -32,7 +32,7 @@ void Cannon_Kill(char *c)
         int approach = _Z14ApproachLinearRiii((int *)(c + 0x3bc), 0x1000, *(int *)(c + 0x3b8));
         if (approach != 0) {
             char *player;
-            int *pst = (int *)(((int)c + 0x3c0) & 0xFFFFFFFFFFFFFFFF);
+            int *pst = (int *)(((int)c + 0x3c0));
             *pst = *pst + 1;
             *(int *)(c + 0xa8) = (*(u8 *)(c + 0x3b6) << 13) + 0x30000;
             *(int *)(c + 0x98) = 0x6000;

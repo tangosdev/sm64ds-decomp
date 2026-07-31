@@ -29,7 +29,7 @@ void func_ov098_0213ad08(char* self) {
         *(int*)(self + 0x180) = 3;
         *(u8*)(self + 0x185) = 0;
         *(char**)(self + 0x158) = a;
-        *(int*)(((int)self + 0x13c) & 0xFFFFFFFFFFFFFFFF) |= 1;
+        *(int*)(((int)self + 0x13c)) |= 1;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x14b, self + 0x74);
     }
 }

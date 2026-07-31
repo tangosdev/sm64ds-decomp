@@ -9,7 +9,7 @@ int func_ov090_02131584(char *c)
     *(int *)(c + 0x98) = 0;
     v = ((unsigned int)*(int *)(c + 0x364) << 4) >> 0x10;
     if (v >= 0x3b)
-        *(int *)(((int)c + 0x390) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(int *)(((int)c + 0x390)) += 1;
     if (*(int *)(c + 0x390) > 2 || func_ov090_021314a0(c) == 1)
         func_ov090_02131e00(c, &data_ov090_02134514);
     if (*(unsigned char *)(c + 0x39c) == 1)

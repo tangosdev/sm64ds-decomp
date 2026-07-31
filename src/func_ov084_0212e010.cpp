@@ -40,13 +40,13 @@ extern "C" void func_ov084_0212e010(char* self)
     int b;
 
     if (*(u8*)(self + 0x21d) != 0) {
-        short* hp = (short*)(((long long)(int)(self + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL);
+        short* hp = (short*)(((long long)(int)(self + 0x8e)));
         *hp = (s16)(*hp + *(s16*)(self + 0x218));
         ApproachLinear_s((short*)(self + 0x218), 0, 0xc8);
         func_ov084_0212d42c(self);
         if (_ZN9Animation8FinishedEv(self + 0x160) == 0)
             return;
-        (*(u8*)(((int)self + 0x21d) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(u8*)(((int)self + 0x21d)))--;
         if (*(u8*)(self + 0x21d) != 0)
             return;
         func_02012694(0x11f, self + 0x74);
@@ -59,8 +59,8 @@ extern "C" void func_ov084_0212e010(char* self)
     if (ApproachLinear_i((int*)(self + 0x204), 0, *(int*)(self + 0x214)) == 0)
         return;
     {
-        u32* p0 = (u32*)(((long long)(int)(self + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL);
-        u32* p1 = (u32*)(((long long)(int)(self + 0x18c)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32* p0 = (u32*)(((long long)(int)(self + 0xb0)));
+        u32* p1 = (u32*)(((long long)(int)(self + 0x18c)));
         *p0 &= ~0x10000000;
         *p1 |= 1;
     }
@@ -74,10 +74,10 @@ extern "C" void func_ov084_0212e010(char* self)
             other = (char*)_ZN5Actor10FindWithIDEj(*(u32*)(self + 0x1f0));
             if (other == 0)
                 return;
-            (*(u8*)(((int)other + 0x21a) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(u8*)(((int)other + 0x21a)))--;
             if (*(u8*)(self + 0x21e) != 0)
                 return;
-            (*(u8*)(((int)other + 0x21b) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8*)(((int)other + 0x21b)))++;
             if (*(u8*)(self + 0x220) != 0) {
                 buf1.x = *(int*)(self + 0x5c);
                 buf1.y = *(int*)(self + 0x60);
@@ -140,7 +140,7 @@ extern "C" void func_ov084_0212e010(char* self)
     if (*(u16*)(self + 0xc) != 0xfb)
         b = 0;
     if (b != false)
-        (*(u8*)(((int)other + 0x21a) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8*)(((int)other + 0x21a)))++;
     b = *(u16*)(self + 0xc) == 0xfd;
     if (b != false) {
         *(int*)(self + 0x1ec) = 3;

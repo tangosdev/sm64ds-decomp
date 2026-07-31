@@ -13,7 +13,7 @@ int func_ov085_0212dbdc(char* c)
     int* pp;
     if (p == 0)
         return 1;
-    pp = (int*)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFF);
+    pp = (int*)(((int)c + 0x2c8));
     *pp = *pp + 1;
     switch (*(int*)(c + 0x2c8)) {
     case 1:

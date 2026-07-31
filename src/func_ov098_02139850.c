@@ -47,7 +47,7 @@ void func_ov098_02139850(char* self)
             char* res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(self, *(char**)(self + 0x5e4), (struct Vector3*)(self + 0x4f4));
             *(struct Matrix4x3*)(self + 0xf0) = *(struct Matrix4x3*)res;
         }
-        *(u32*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
+        *(u32*)(((int)self + 0xb0)) |= 0x4000000;
     }
     return;
 
@@ -66,7 +66,7 @@ other:
         *(int*)(self + 0x4f8) = 0;
         *(int*)(self + 0x4fc) = 0;
         if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x320) != 0) {
-            *(u32*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x4000000;
+            *(u32*)(((int)self + 0xb0)) &= ~0x4000000;
         }
     }
 }

@@ -11,8 +11,8 @@ int func_ov085_0212d9b8(char* c)
     void* pl = _ZN5Actor13ClosestPlayerEv();
     if (pl == 0) return 1;
 
-    *(int*)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
-    *(int*)(((int)c + 0x2cc) & 0xFFFFFFFFFFFFFFFFLL) += 0x500;
+    *(int*)(((int)c + 0x2c8)) += 1;
+    *(int*)(((int)c + 0x2cc)) += 0x500;
 
     {
         int v = (short)*(int*)(c + 0x2cc);

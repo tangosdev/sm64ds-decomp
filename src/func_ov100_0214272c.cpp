@@ -59,8 +59,8 @@ ground:
         int *pa4;
         int *pac;
 
-        pa4 = (int *)(((int)c + 0xa4) & 0xFFFFFFFFFFFFFFFFLL);
-        pac = (int *)(((int)c + 0xac) & 0xFFFFFFFFFFFFFFFFLL);
+        pa4 = (int *)(((int)c + 0xa4));
+        pac = (int *)(((int)c + 0xac));
 
         *pa4 = *pa4 + *(int *)(c + 0xd4) * 3;
         *pac = *pac + *(int *)(c + 0xdc) * 3;

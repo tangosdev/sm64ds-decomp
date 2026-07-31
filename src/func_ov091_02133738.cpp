@@ -32,7 +32,7 @@ int func_ov091_02133738(char* c)
             int* p;
             if ((val > 0 && diff < -100) || (val < 0 && diff > 100))
                 *(int*)(c + 0x324) = 0;
-            p = (int*)(((int)c + 0x324) & 0xFFFFFFFFFFFFFFFF);
+            p = (int*)(((int)c + 0x324));
             *p = *p + diff;
             {
                 int a = *(int*)(c + 0x324);

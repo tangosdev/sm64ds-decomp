@@ -32,7 +32,7 @@ void func_ov095_02135cdc(char* self, char* other)
 	*(unsigned char*)(self + 0x326) = 1;
 	r = func_ov095_0213579c(self, other);
 
-	pa = (s16*)(int)(((long long)(int)(self + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+	pa = (s16*)(int)(((long long)(int)(self + 0x8c)));
 	*pa += ((struct SubA*)(self + 0x300))->f24;
 	x = (int)(((s64)dist * r + 0x800) >> 12);
 	d = (s16)AngleDiff(ang, *(s16*)(self + 0x8e));
@@ -44,7 +44,7 @@ void func_ov095_02135cdc(char* self, char* other)
 		acc = (int)(((s64)y * 0x51LL + 0x800) >> 12);
 
 	dv = acc / 4096;
-	*(s16*)(int)(((long long)(int)(self + 0x324)) & 0xFFFFFFFFFFFFFFFFLL) += dv;
+	*(s16*)(int)(((long long)(int)(self + 0x324))) += dv;
 	lim = (int)(((s64)r * 0x32000LL + 0x800) >> 12) / 4096;
 	if (((struct SubA*)(self + 0x300))->f24 > lim) ((struct SubA*)(self + 0x300))->f24 = lim;
 	if (((struct SubA*)(self + 0x300))->f24 < -lim) ((struct SubA*)(self + 0x300))->f24 = -lim;

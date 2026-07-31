@@ -27,7 +27,7 @@ int func_ov085_0212aaec(char *self)
     unsigned int id;
 
     player = *(void **)(self + 0x460);
-    pq = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    pq = (int *)(((int)player + 0x5c));
     pos.x = *(int *)(self + 0x5c);
     pos.y = *(int *)(self + 0x60);
     pos.z = *(int *)(self + 0x64);

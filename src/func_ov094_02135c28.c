@@ -69,7 +69,7 @@ int func_ov094_02135c28(void* thiz)
     buf.v[4] = 0;
     buf.v[5] = 0;
 
-    p3e8 = (int*)(((int)c + 0x3e8) & 0xFFFFFFFFFFFFFFFF);
+    p3e8 = (int*)(((int)c + 0x3e8));
     *p3e8 += 0x200;
     ang = *(int*)(c + 0x3e8);
     idx = ((u16)(short)ang >> 4) * 2;

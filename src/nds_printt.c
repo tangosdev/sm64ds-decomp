@@ -22,7 +22,7 @@ void nds_printt(unsigned short *dest, char *str, int value)
         } else if (c >= 0x41 && c <= 0x5a) {
             out = c;
         } else {
-            out = (int)(((long long)(int)c) & 0xFFFFFFFFFFFFFFFFLL);
+            out = (int)(((long long)(int)c));
         }
         func_020147bc(p, (char)out);
     }

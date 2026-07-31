@@ -37,7 +37,7 @@ int func_ov085_0212a904(void *thiz)
         if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(r4, self, 0x148, &vec, 0, 0)) {
             func_02012790(0xa);
             {
-                int *p = (int *)(((int)self + 0x41c) & 0xFFFFFFFFFFFFFFFF);
+                int *p = (int *)(((int)self + 0x41c));
                 (*p)++;
             }
         }
@@ -48,13 +48,13 @@ int func_ov085_0212a904(void *thiz)
                 func_02012790(0x5e);
                 _ZN7Message13DisplaySavingEt(0x295);
                 {
-                    int *p = (int *)(((int)self + 0x41c) & 0xFFFFFFFFFFFFFFFF);
+                    int *p = (int *)(((int)self + 0x41c));
                     (*p)++;
                 }
             } else if (gb == 2) {
                 func_02012790(0x98);
                 {
-                    unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce) & 0xFFFFFFFFFFFFFFFF);
+                    unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
                     *hp &= ~0x800;
                 }
                 _ZN7Message7EndTalkEv();
@@ -64,7 +64,7 @@ int func_ov085_0212a904(void *thiz)
         break;
     case 2:
         if (data_0209d660 == 0) {
-            unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce) & 0xFFFFFFFFFFFFFFFF);
+            unsigned short *hp = (unsigned short *)(((int)r4 + 0x6ce));
             *hp &= ~0x800;
             _ZN7Message7EndTalkEv();
             func_ov085_0212bc78(self, data_ov085_021306bc);

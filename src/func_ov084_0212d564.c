@@ -5,7 +5,7 @@ typedef unsigned int u32;
 typedef int s32;
 typedef long long s64;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 struct Locals {
     s16 acc[3];

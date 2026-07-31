@@ -11,7 +11,7 @@ extern void _ZN12WithMeshClsn15ClearGroundFlagEv(void*);
 void func_ov102_0214b128(char* c) {
     int t;
     if (_ZN5Actor7FindEggER12CylinderClsn(c, c + 0x110) || (*(int*)(c + 0x130) & 0x20000)) {
-        int* p = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0xb0));
         *(short*)(c + 0x3ea) = 4;
         *p = *p & ~1;
         *(int*)(c + 0x98) = 0;

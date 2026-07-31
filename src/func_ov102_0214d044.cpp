@@ -17,8 +17,8 @@ extern "C" int func_ov102_0214d044(char* c)
 copy:
     {
         void* base = *(void**)(c + 0x3c0);
-        int* s = (int*)(((int)base + 0x5c) & 0xFFFFFFFFFFFFFFFF);
-        short* a = (short*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        int* s = (int*)(((int)base + 0x5c));
+        short* a = (short*)(((int)c + 0x8e));
         int v0 = s[0];
         int ret = 1;
         *(int*)(c + 0x5c) = v0;

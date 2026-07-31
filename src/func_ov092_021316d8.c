@@ -2,7 +2,7 @@ typedef signed char s8;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LA(p) (((long long)(int)(p)))
 extern s16 data_02082214[];
 extern s8 data_ov092_0213208c[];
 extern void func_ov092_021314d0(void *c);

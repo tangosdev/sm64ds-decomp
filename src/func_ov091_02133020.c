@@ -2,7 +2,7 @@ extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 void func_ov091_02133020(char *c)
 {
-    (*(int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF)) += 0xa000;
+    (*(int *)(((int)c + 0x60))) += 0xa000;
     if (*(int *)(c + 0x60) < *(int *)(c + 0x390))
         return;
     *(int *)(c + 0x60) = *(int *)(c + 0x390);
