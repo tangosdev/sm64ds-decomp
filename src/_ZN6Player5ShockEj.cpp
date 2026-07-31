@@ -18,7 +18,7 @@ int Player::Shock(unsigned int j)
   mStateWork = 0;
   if (func_ov002_020d91e0(((char*)this), j<<8, 1, 0)) mStateWork = 1;
   if (mIsUnderwater) {
-    unsigned char* p = (unsigned char*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF);
+    unsigned char* p = (unsigned char*)(((int)((char*)this) + 0x6e5));
     *p |= 2;
   }
   _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_021100c4);

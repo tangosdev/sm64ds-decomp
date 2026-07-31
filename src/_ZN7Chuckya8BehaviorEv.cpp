@@ -92,7 +92,7 @@ extern "C" int _ZN7Chuckya8BehaviorEv(char* c)
     _ZN9Animation7AdvanceEv(c + 0x350);
 
     {
-        char* o = (char*)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFF);
+        char* o = (char*)(((int)c + 0x300));
         (*(void(**)(void*))(*(int*)o + 0xc))(o);
     }
 

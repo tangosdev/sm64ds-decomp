@@ -37,7 +37,7 @@ int Submarine::InitResources()
     unk_1a8 = mPosX;
     unk_1ac = mPosY;
     unk_1b0 = mPosZ;
-    *(int *)(((int)((char *)this) + 0x1ac) & 0xFFFFFFFFFFFFFFFF) -= 0x64000;
+    *(int *)(((int)((char *)this) + 0x1ac)) -= 0x64000;
 
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x114, (struct BCA_File *)data_ov026_02113f04.file, 0, 0x1000, 0);
 

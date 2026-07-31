@@ -15,7 +15,7 @@ int _ZN9TinyCover8BehaviorEv(int *t)
                 _ZN9ActorBase18MarkForDestructionEv(t);
             }
         } else {
-            int *p = (int*)(((int)t + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+            int *p = (int*)(((int)t + 0x60));
             *p -= 0x1000;
             t[0xce] = _ZN5Sound8PlayLongEjjjRK7Vector3j(t[0xce], 3, 0x96, (char*)t + 0x74, 0);
             if (t[0x18] <= t[0xcd]) {

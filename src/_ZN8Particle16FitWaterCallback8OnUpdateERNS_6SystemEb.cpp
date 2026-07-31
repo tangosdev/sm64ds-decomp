@@ -8,10 +8,10 @@ int _ZN8Particle16FitWaterCallback8OnUpdateERNS_6SystemEb(void* thiz, System* sy
     Node* node = sys->head;
     int v;
     if (b) {
-        int* flags = (int*)(((long)sys + 0x1c) & 0xFFFFFFFFFFFFFFFF);
+        int* flags = (int*)(((long)sys + 0x1c));
         *flags &= ~2;
     } else {
-        int* flags = (int*)(((long)sys + 0x1c) & 0xFFFFFFFFFFFFFFFF);
+        int* flags = (int*)(((long)sys + 0x1c));
         *flags |= 2;
         if (node == 0) return 0;
     }

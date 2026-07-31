@@ -12,7 +12,7 @@ extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 int TowerStep::Behavior()
 {
   if (DecIfAbove0_Byte((char*)&unk_31e) == 0) {
-    short* p = (short*)(((int)((char*)this) + 0x94) & 0xFFFFFFFFFFFFFFFF);
+    short* p = (short*)(((int)((char*)this) + 0x94));
     *p = *p + 0x100;
     unk_08e = unk_094;
     unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3j(unk_320, 3, 0x88, (void*)((char*)&unk_074), 0);

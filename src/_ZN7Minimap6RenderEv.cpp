@@ -177,7 +177,7 @@ int Minimap::Render()
                 if (lvl >= 0) {
                     if (*p != 4) {
                         if (data_ov002_02111148 == lvl) {
-                            *(u8 *)(((int)((char*)this + i) + 0x22e) & 0xFFFFFFFFFFFFFFFF) += data_0208ee44;
+                            *(u8 *)(((int)((char*)this + i) + 0x22e)) += data_0208ee44;
                             if ((u32)this->unk22E[i] >= 0xc)
                                 this->unk22E[i] = 0;
                             {
@@ -235,7 +235,7 @@ int Minimap::Render()
         }
 
         if (!(data_0209caa0[1] & 0x40) && (data_0209caa0[2] & 0x20000)) {
-            *(u8 *)(((int)this + 0x256) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(u8 *)(((int)this + 0x256)) += 1;
             if ((u32)this->unk256 >= 5)
                 this->unk256 = 0;
             if (this->unk248 >= 0) {

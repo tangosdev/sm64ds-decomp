@@ -30,7 +30,7 @@ void func_0201eaac(void)
   data_0209d668 = 0;
   data_0209d654 = 0;
   data_0209d67c = 0;
-  data_0209d6a8 = 0 & 0xFFFFFFFFFFFFFFFF;
+  data_0209d6a8 = 0;
   data_0209d65c = 0;
   data_0209d66c = 0;
   data_0209d690 = 0;

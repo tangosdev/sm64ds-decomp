@@ -22,27 +22,27 @@ int Player::DropActor()
     if (present) {
         int held = ((s[0x2c] & 0x200) != 0);
         if (!held) {
-            u32* s_ptr1 = (u32*)(((int)s + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* s_ptr1 = (u32*)(((int)s + 0xb0));
             *s_ptr1 &= ~0x4000u;
 
             u32* s_ptr2 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr2 = (u32*)(((int)s_ptr2 + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* field_ptr2 = (u32*)(((int)s_ptr2 + 0xb0));
             *field_ptr2 &= ~0x100u;
 
             u32* s_ptr3 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr3 = (u32*)(((int)s_ptr3 + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* field_ptr3 = (u32*)(((int)s_ptr3 + 0xb0));
             *field_ptr3 &= ~0x400u;
 
             u32* s_ptr4 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr4 = (u32*)(((int)s_ptr4 + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* field_ptr4 = (u32*)(((int)s_ptr4 + 0xb0));
             *field_ptr4 &= ~0x2000u;
 
             u32* s_ptr5 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr5 = (u32*)(((int)s_ptr5 + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* field_ptr5 = (u32*)(((int)s_ptr5 + 0xb0));
             *field_ptr5 &= ~0x800u;
 
             u32* s_ptr6 = *(u32**)((char*)&mHeldObj);
-            u32* field_ptr6 = (u32*)(((int)s_ptr6 + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+            u32* field_ptr6 = (u32*)(((int)s_ptr6 + 0xb0));
             *field_ptr6 &= ~0x1000u;
 
             *(u32**)((char*)&mHeldObj) = 0;

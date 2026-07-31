@@ -31,7 +31,7 @@ int func_02005110(char *self)
   s32 horzAngle;
   s32 mode;
   {
-    struct Vec3 *p = (struct Vec3 *) (((long long) ((int) ((*((char **) (self + 0x110))) + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL);
+    struct Vec3 *p = (struct Vec3 *) (((long long) ((int) ((*((char **) (self + 0x110))) + 0x5c))));
     eye.x = p->x;
     eye.y = p->y;
     eye.z = p->z;
@@ -76,7 +76,7 @@ int func_02005110(char *self)
     }
     fall = 0x2000;
     {
-      struct Vec3 *rawpos = (struct Vec3 *) (((long long) ((int) ((*((char **) (self + 0x110))) + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL);
+      struct Vec3 *rawpos = (struct Vec3 *) (((long long) ((int) ((*((char **) (self + 0x110))) + 0x5c))));
       s32 fallDist = Vec3_Dist(*((struct Vec3 **) (self + 0x11c)), rawpos);
       s32 t = fallDist - 0x200000;
       if (t > 0)

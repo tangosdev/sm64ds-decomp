@@ -12,7 +12,7 @@ extern s32 data_02086f14[3];
 void func_0200d1e4(char *self)
 {
     char *info = *(char **)(self + 0x110);
-    char *base = (char *)(((long long)(int)(info + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    char *base = (char *)(((long long)(int)(info + 0x5c)));
 
     *(s32 *)(self + 0x98) = *(s32 *)(base + 0);
     *(s32 *)(self + 0x9c) = *(s32 *)(base + 4);
@@ -32,7 +32,7 @@ void func_0200d1e4(char *self)
 
     int v2 = *(s32 *)(*(char **)(self + 0x13c) + 0x10);
     unsigned int dResult = func_020093d4(self, v2);
-    *(s32 *)(((long long)(int)(self + 0x84)) & 0xFFFFFFFFFFFFFFFFLL) += dResult;
+    *(s32 *)(((long long)(int)(self + 0x84))) += dResult;
 
     int v3 = *(s32 *)(*(char **)(self + 0x13c) + 0x20);
     unsigned int r0b = func_020093f4(self, v3);
@@ -46,7 +46,7 @@ void func_0200d1e4(char *self)
     angle = *(short *)(*(char **)(self + 0x110) + 0x8e);
     Vec3_RotateYAndTranslate(self + 0x8c, self + 0x80, angle, temp2);
 
-    *(s32 *)(((long long)(int)(self + 0x90)) & 0xFFFFFFFFFFFFFFFFLL) += (int)(dResult - 0x8b000);
+    *(s32 *)(((long long)(int)(self + 0x90))) += (int)(dResult - 0x8b000);
 
     *(s32 *)(self + 0xa4) = 0;
     *(s32 *)(self + 0xa8) = 0xc3f9d;

@@ -81,7 +81,7 @@ int MugenBgm::Behavior()
         if ((*((s32 *) (c + 0x60))) < h)
         {
           *((s32 *) (c + 0x60)) = h;
-          *((u8 *) ((((int) c) + 0x103) & 0xFFFFFFFFFFFFFFFF)) |= 1;
+          *((u8 *) ((((int) c) + 0x103))) |= 1;
         }
       }
       _ZN13RaycastGroundD1Ev(&rc);

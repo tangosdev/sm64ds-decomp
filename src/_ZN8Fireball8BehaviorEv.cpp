@@ -104,7 +104,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
             found = _ZN5Actor10FindWithIDEj((u32)id134);
             if (found != 0) {
                 if (*(int*)(c + 0x130) & 0x10) {
-                    *(u32*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10000001;
+                    *(u32*)(((int)c + 0xb0)) &= ~0x10000001;
                     *(s16*)(c + 0x94) = Vec3_HorzAngle((char*)found + 0x5c, c + 0x5c);
                     *(int*)(c + 0x98) = 0xa000;
                     *(int*)(c + 0xa8) = 0x28000;
@@ -158,7 +158,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                 }
             }
         } else {
-            *(int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+            *(int*)(((int)c + 0x128)) |= 1;
         }
     }
 
@@ -171,13 +171,13 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
     *(int*)(c + 0xa4) = (lr * data_02082214[(*(u16*)(c + 0x94) >> 4) * 2]) / 4096;
     *(int*)(c + 0xa8) = (-*(int*)(c + 0x98) * data_02082214[(*(u16*)(c + 0x92) >> 4) * 2]) / 4096;
     *(int*)(c + 0xac) = (lr * data_02082214[(*(u16*)(c + 0x94) >> 4) * 2 + 1]) / 4096;
-    *(int*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(c + 0xa4);
-    *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(c + 0xa8);
-    *(int*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(c + 0xac);
+    *(int*)(((int)c + 0x5c)) += *(int*)(c + 0xa4);
+    *(int*)(((int)c + 0x60)) += *(int*)(c + 0xa8);
+    *(int*)(((int)c + 0x64)) += *(int*)(c + 0xac);
 
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    *(int*)(((int)c + 0x360) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(c + 0x98);
+    *(int*)(((int)c + 0x360)) += *(int*)(c + 0x98);
 
     if (*(int*)(c + 0x360) > *(int*)(c + 0x364)
         || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0
@@ -206,7 +206,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
         _ZN9ActorBase18MarkForDestructionEv(c);
     }
 
-    *(u16*)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(u16*)(((int)c + 0x100)) += 1;
     func_ov002_020f8b24(c);
     return 1;
 }

@@ -18,7 +18,7 @@ extern int data_0209ee84;
 extern int data_0209ee8c;
 extern void* data_020a0ea0;
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 
 extern "C" void _ZN8Particle10SysTracker10InitialiseEv(struct Particle__SysTracker *self) {
     signed char v = data_0209f2f8;

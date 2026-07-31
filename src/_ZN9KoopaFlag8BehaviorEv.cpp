@@ -36,7 +36,7 @@ int KoopaFlag::Behavior()
     }
 
     if (mVictoryTimer != 0) {
-        *(unsigned short *)(((int)((char *)this) + 0x16C) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned short *)(((int)((char *)this) + 0x16C)) += 1;
         if (mVictoryTimer >= 0x5A) {
             if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x7F, 0, 0x8777, 0) != 0) {
                 mVictoryTimer = 0;

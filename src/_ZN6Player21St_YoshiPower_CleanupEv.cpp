@@ -15,11 +15,11 @@ int Player::St_YoshiPower_Cleanup()
     if (r2 != 0) {
         int t = (int)((*(int*)(r2+0xb0) & 0x20000) != 0);
         if (t != 0) {
-            *(int*)(((int)r2 + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0xe0000;
+            *(int*)(((int)r2 + 0xb0)) &= ~0xe0000;
             func_ov002_020d718c(((char*)this));
             return 1;
         }
-        *(int*)(((int)r2 + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20000;
+        *(int*)(((int)r2 + 0xb0)) &= ~0x20000;
     }
     if (mUseAltBodyModel == 0) {
         char* q = *(char**)((char*)&mObjInMouth);

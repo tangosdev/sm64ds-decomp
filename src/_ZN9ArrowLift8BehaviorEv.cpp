@@ -16,7 +16,7 @@ int ArrowLift::Behavior()
     func_ov029_021117ac(((char*)this));
     if (unk_15d != 0) {
         char* p;
-        s16* a = (s16*)(((int)((char*)this) + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        s16* a = (s16*)(((int)((char*)this) + 0x8e));
         *a = *a + 0x400;
         p = _ZN5Actor10FindWithIDEj(unk_158);
         if (p != 0) {

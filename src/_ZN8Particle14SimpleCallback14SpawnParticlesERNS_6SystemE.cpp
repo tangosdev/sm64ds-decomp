@@ -23,7 +23,7 @@ namespace Particle {
 
 void Particle::SimpleCallback::SpawnParticles(System& sys)
 {
-    *(u32*)(((int)&sys + 0x1c) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+    *(u32*)(((int)&sys + 0x1c)) |= 2;
     sys.field_3a = this->field_4;
     func_02049d60(data_0209ee74->p);
 }

@@ -78,13 +78,13 @@ int func_02008cb4(char* c)
             if (_ZN11RaycastLine10DetectClsnEv(&rc1) != 0) {
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rc1.surf, &n1);
                 if (DotVec3((Vec3*)(c + 0xec), &n1) > 0) {
-                    *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000;
+                    *(u32*)(((int)c + 0x154)) &= ~0x80000;
                     _ZN11RaycastLineD1Ev(&rc1);
                     return 0;
                 }
                 _ZN11RaycastLine10GetClsnPosEv(&cp1, &rc1);
                 if (Vec3_Dist((Vec3*)(c + 0xe0), &cp1) < 0x80000) {
-                    *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000;
+                    *(u32*)(((int)c + 0x154)) &= ~0x80000;
                     _ZN11RaycastLineD1Ev(&rc1);
                     return 0;
                 }
@@ -93,8 +93,8 @@ int func_02008cb4(char* c)
                     if ((f & 0x40000) && *(u8*)(c + 0x1a6) != 0 && !(f & 0x80100)) {
                         int a = _ZN4cstd5atan2E5Fix12IiES1_(n1.x, n1.z);
                         if (AngleDiff(a, _ZN4cstd5atan2E5Fix12IiES1_(*(int*)(c + 0xec), *(int*)(c + 0xf4))) > 0x6000) {
-                            *(s16*)(((int)c + 0x186) & 0xFFFFFFFFFFFFFFFF) += 0x8000;
-                            *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) |= 0x80000;
+                            *(s16*)(((int)c + 0x186)) += 0x8000;
+                            *(u32*)(((int)c + 0x154)) |= 0x80000;
                         }
                     }
                 }
@@ -124,7 +124,7 @@ int func_02008cb4(char* c)
     Vec3_Sub(&dir2, (Vec3*)(c + 0x8c), &v0);
     len = LenVec3(&dir2);
     if (len == 0) {
-        *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000;
+        *(u32*)(((int)c + 0x154)) &= ~0x80000;
         return 0;
     }
     Vec3_MulScalarInPlace(&dir2, _ZN4cstd4fdivEii(0x60000, len));
@@ -133,7 +133,7 @@ int func_02008cb4(char* c)
     func_0200897c(c, &rc2);
     _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc2, &v0, &end2, 0);
     if (_ZN11RaycastLine10DetectClsnEv(&rc2) == 0) {
-        *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000;
+        *(u32*)(((int)c + 0x154)) &= ~0x80000;
         _ZN11RaycastLineD1Ev(&rc2);
         return 0;
     }
@@ -166,7 +166,7 @@ int func_02008cb4(char* c)
         *(u8*)(c + 0x1a6) = 0;
         *(u16*)(c + 0x1a0) = 0;
     }
-    *(u32*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000;
+    *(u32*)(((int)c + 0x154)) &= ~0x80000;
     _ZN11RaycastLineD1Ev(&rc2);
     return 1;
 }

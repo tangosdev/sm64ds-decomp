@@ -12,12 +12,12 @@ int func_0200fa04(int a, Vector3* pos, int flag)
     RaycastGround rc;
     if (flag) {
         _ZN13RaycastGroundC1Ev(&rc);
-        *(int*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFLL) += 0x32000;
+        *(int*)(((int)pos + 4)) += 0x32000;
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rc))
             pos->y = rc.clsnY;
         _ZN13RaycastGroundD1Ev(&rc);
     }
-    *(int*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFLL) += 0x78000;
+    *(int*)(((int)pos + 4)) += 0x78000;
     return _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1b, pos->x, pos->y, pos->z);
 }

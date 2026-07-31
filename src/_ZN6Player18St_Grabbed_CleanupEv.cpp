@@ -25,7 +25,7 @@ extern void _ZN6Player9DropActorEv(struct Actor* a);
 int _ZN6Player18St_Grabbed_CleanupEv(struct Player* this_)
 {
     struct Actor* a;
-    *(u32*)(((long long)(int)((char*)this_ + 0x2ec)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+    *(u32*)(((long long)(int)((char*)this_ + 0x2ec))) &= ~2;
     a = this_->held;
     if (a) {
         int isBob = a->actorID == 0xbf;

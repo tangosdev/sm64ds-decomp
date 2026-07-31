@@ -34,10 +34,10 @@ int Thwomp::Behavior()
                 *(unsigned short *)(p + 0xa0) = 0xa;
             }
         } else {
-            char *p = (char *)(((int)((char *)this) + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+            char *p = (char *)(((int)((char *)this) + 0x300));
             int t = *(unsigned short *)(p + 0xa0);
             if (t != 0) {
-                unsigned short *q = (unsigned short *)(((int)((char *)this) + 0x3a0) & 0xFFFFFFFFFFFFFFFFLL);
+                unsigned short *q = (unsigned short *)(((int)((char *)this) + 0x3a0));
                 *q = *q - 1;
             } else {
                 func_ov091_02133020(((char *)this));
@@ -55,10 +55,10 @@ int Thwomp::Behavior()
         } else {
             _ZN9Animation7AdvanceEv((char *)&mTextureSequence);
             if (_ZN9Animation8FinishedEv((char *)&mTextureSequence) != 0) {
-                char *p = (char *)(((int)((char *)this) + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+                char *p = (char *)(((int)((char *)this) + 0x300));
                 int t = *(unsigned short *)(p + 0xa0);
                 if (t != 0) {
-                    unsigned short *q = (unsigned short *)(((int)((char *)this) + 0x3a0) & 0xFFFFFFFFFFFFFFFFLL);
+                    unsigned short *q = (unsigned short *)(((int)((char *)this) + 0x3a0));
                     *q = *q - 1;
                 } else {
                     func_ov091_02132f04(((char *)this));

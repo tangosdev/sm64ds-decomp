@@ -37,7 +37,7 @@ void func_0200cce4(char* cam)
     u32 d;
 
     if (*(char**)(cam + 0x110) != 0) {
-        Vector3* p = (Vector3*)(((int)*(char**)(cam + 0x110) + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        Vector3* p = (Vector3*)(((int)*(char**)(cam + 0x110) + 0x5c));
         *(int*)(cam + 0x98) = p->x;
         *(int*)(cam + 0x9c) = p->y;
         *(int*)(cam + 0xa0) = p->z;
@@ -53,7 +53,7 @@ void func_0200cce4(char* cam)
             *(s16*)(*(char**)(cam + 0x110) + 0x8e), &tmp1);
 
         d = func_020093d4(cam, *(int*)(*(char**)(cam + 0x13c) + 0x10));
-        *(int*)(((int)cam + 0x84) & 0xFFFFFFFFFFFFFFFF) += d;
+        *(int*)(((int)cam + 0x84)) += d;
 
         {
             u32 d2 = func_020093f4(cam, -*(int*)(*(char**)(cam + 0x13c) + 0x20));
@@ -91,7 +91,7 @@ void func_0200cce4(char* cam)
         if (_ZN13RaycastGround10DetectClsnEv(&ground) != 0) {
             *(int*)(cam + 0x90) = d + ground._[0x11];
         }
-        *(int*)(((int)cam + 0x90) & 0xFFFFFFFFFFFFFFFF) += func_020093d4(cam, 0x3c286);
+        *(int*)(((int)cam + 0x90)) += func_020093d4(cam, 0x3c286);
         {
             int diff;
             int base;
@@ -116,5 +116,5 @@ void func_0200cce4(char* cam)
         _ZN13RaycastGroundD1Ev(&ground);
         _ZN11RaycastLineD1Ev(&line);
     }
-    *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) |= 4;
+    *(int*)(((int)cam + 0x154)) |= 4;
 }

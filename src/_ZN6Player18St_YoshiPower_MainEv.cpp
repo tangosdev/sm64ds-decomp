@@ -68,7 +68,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             int t4 = (*(int*)((char*)*(void**)(c+0x160) + 0x58) >> 0xc) << 0x10;
             int id0 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
             dp = (char*)*(void**)(c + (id0<<2) + 0xdc);
-            dp = (char*)(((long long)(int)(dp + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+            dp = (char*)(((long long)(int)(dp + 0x50)));
             *(unsigned int*)(dp + 8) = (unsigned int)t4 >> 4;
             *(unsigned char*)(c+0x70c) = 1;
         }
@@ -103,7 +103,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             }
             int id2 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
             if (_ZNK9Animation12WillHitFrameEi((char*)*(void**)(c + (id2<<2) + 0xdc) + 0x50, 0xa) != 0) {
-                Vec3* src = (Vec3*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+                Vec3* src = (Vec3*)(((int)c + 0x5c));
                 dp = (char*)*(void**)(c+0x360);
                 *(int*)(dp+0x5c) = src->x;
                 *(int*)(dp+0x60) = src->y;
@@ -111,13 +111,13 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
                 Obj* o = *(Obj**)(c+0x360);
                 int cond = (*(unsigned short*)((char*)o+0xc) == 0xbf);
                 if (cond != 0) {
-                    *(int*)(((int)o + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20000;
+                    *(int*)(((int)o + 0xb0)) &= ~0x20000;
                     if (func_ov002_020d5ed0(*(void**)(c+0x360)) == 0) {
                         func_ov002_020d718c(c);
                     }
                 } else {
-                    *(int*)(((int)o + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x40000;
-                    *(int*)(((int)*(void**)(c+0x360) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20000;
+                    *(int*)(((int)o + 0xb0)) |= 0x40000;
+                    *(int*)(((int)*(void**)(c+0x360) + 0xb0)) &= ~0x20000;
                     if ((*(Obj**)(c+0x360))->v18() == 4 || (*(Obj**)(c+0x360))->v18() == 2) {
                         *(unsigned char*)(c+0x6e3) = 3;
                         int f2 = 1;
@@ -175,7 +175,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             return 1;
         }
         int id4 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
-        int* a50b = (int*)(((long long)(int)((char*)*(void**)(c + (id4<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* a50b = (int*)(((long long)(int)((char*)*(void**)(c + (id4<<2) + 0xdc) + 0x50)));
         if ((unsigned short)(a50b[2] >> 0xc) == 0) {
             if (*(unsigned char*)(c+0x6de) != 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
@@ -209,7 +209,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
             *(unsigned char*)(c+0x714) = z;
             if (*(unsigned char*)(c+0x714) == 0) {
                 int id6 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z);
-                int* a50c = (int*)(((long long)(int)((char*)*(void**)(c + (id6<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+                int* a50c = (int*)(((long long)(int)((char*)*(void**)(c + (id6<<2) + 0xdc) + 0x50)));
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(c+0x160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50c[2] << 4) >> 0x10);
             }
         }
@@ -220,10 +220,10 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
                 int cond3 = (*(unsigned short*)((char*)obj0+0xc) == 0xbf);
                 if (cond3 != 0) {
                     func_ov002_020d5cec(obj0);
-                    *(unsigned short*)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+                    *(unsigned short*)(((int)c + 0x6ce)) &= ~2;
                 } else {
-                    *(int*)(((int)obj0 + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x80000;
-                    *(int*)(((int)*(void**)(c+0x360) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x40000;
+                    *(int*)(((int)obj0 + 0xb0)) |= 0x80000;
+                    *(int*)(((int)*(void**)(c+0x360) + 0xb0)) &= ~0x40000;
                 }
             }
             *(void**)(c+0x360) = 0;
@@ -239,7 +239,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
     case 5: {
         if (*(unsigned short*)(c+0x6a4) != 0) {
             int id8 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
-            int* a50d = (int*)(((long long)(int)((char*)*(void**)(c + (id8<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* a50d = (int*)(((long long)(int)((char*)*(void**)(c + (id8<<2) + 0xdc) + 0x50)));
             if (((unsigned int)(a50d[2] << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)(c+0x8e) >> 4) * 2;
                 short* tbl = data_02082214;
@@ -251,7 +251,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
                 dir.x = data_02082214[(*(unsigned short*)(c+0x8e) >> 4) * 2];
                 dir.y = 0;
                 dir.z = data_02082214[(*(unsigned short*)(c+0x8e) >> 4) * 2 + 1];
-                *(void**)(c+0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(c+0x628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)(((int)&dir) & 0xFFFFFFFFFFFFFFFFLL), 0);
+                *(void**)(c+0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(c+0x628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)(((int)&dir)), 0);
                 *(void**)(c+0x62c) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(c+0x62c), 0x13d, pos.x, pos.y, pos.z, &dir, 0);
                 func_ov002_020dc09c(c);
                 _ZN12CylinderClsn5ClearEv(c+0x314);
@@ -260,7 +260,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
                     int z2 = 0;
                     *(unsigned char*)(c+0x714) = z2;
                     int id9 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z2);
-                    int* a50e = (int*)(((long long)(int)((char*)*(void**)(c + (id9<<2) + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+                    int* a50e = (int*)(((long long)(int)((char*)*(void**)(c + (id9<<2) + 0xdc) + 0x50)));
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(c+0x160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50e[2] << 4) >> 0x10);
                 }
                 return 1;

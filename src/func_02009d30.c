@@ -10,9 +10,9 @@ int func_02009d30(int *p)
 
     {
         int *tmp = *(int **)((char *)p + 0x110);
-        short *sp = (short *)(((int)p + 0x100) & 0xFFFFFFFFFFFFFFFF);
+        short *sp = (short *)(((int)p + 0x100));
         short h = *(short *)((char *)tmp + 0x8e);
-        unsigned int *addr = (unsigned int *)(((int)p + 0x154) & 0xFFFFFFFFFFFFFFFF);
+        unsigned int *addr = (unsigned int *)(((int)p + 0x154));
         sp[0x43] = (short)(h + 0x8000);
         *addr = *addr & ~0x100u;
     }

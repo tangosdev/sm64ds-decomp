@@ -54,7 +54,7 @@ int _ZN6Player9StartTalkER9ActorBaseb(char *thiz, ActorBase *actor, int b)
     } else {
         if (_ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_02110424) ||
             _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_021105a4)) {
-            *(u16 *)(((long long)(thiz + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x40;
+            *(u16 *)(((long long)(thiz + 0x6ce))) |= 0x40;
             return 0;
         }
 

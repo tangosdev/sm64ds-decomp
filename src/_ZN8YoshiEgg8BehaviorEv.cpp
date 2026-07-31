@@ -31,7 +31,7 @@ int YoshiEgg::Behavior()
             vmid.x = 0;
             vmid.y = 0;
             vmid.z = 0;
-            ang = (short *)(((int)*(char **)((char *)&mPlayer) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+            ang = (short *)(((int)*(char **)((char *)&mPlayer) + 0x8c));
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
             MulVec3Mat4x3(&vin, &data_020a0e68, &vmid);
             Vec3_Add(&vout, *(char **)((char *)&mPlayer) + 0x5c, &vmid);
@@ -48,7 +48,7 @@ int YoshiEgg::Behavior()
     {
         unsigned char idx = unk_420;
         if (*(unsigned char *)(((char *)this) + idx + 0x421) != 0) {
-            unsigned char *cp = (unsigned char *)(((int)((char *)this) + 0x420) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char *cp = (unsigned char *)(((int)((char *)this) + 0x420));
             *cp = *cp + 1;
         }
     }

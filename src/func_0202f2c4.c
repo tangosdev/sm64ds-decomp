@@ -14,7 +14,7 @@ void func_0202f2c4(void)
 {
     int line;
 
-    *(int *)(((long long)(int)((char *)&data_023c0000 + 0x3ff8)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+    *(int *)(((long long)(int)((char *)&data_023c0000 + 0x3ff8))) |= 2;
 
     line = *(volatile u16 *)0x4000006 + 1;
 

@@ -24,7 +24,7 @@ int Fireball::InitResources()
     {
         unsigned char v = unk_36d;
         if (v != 0 && v != 4) {
-            *(unsigned int*)(((int)((char*)&unk_12c)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x8000;
+            *(unsigned int*)(((int)((char*)&unk_12c))) |= 0x8000;
         }
     }
     return 1;

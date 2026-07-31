@@ -10,7 +10,7 @@ extern char data_0209b53c;
 
 int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h)
 {
-    int dd = (int)(((long long)d) & 0xFFFFFFFFFFFFFFFFLL);
+    int dd = (int)(((long long)d));
     int x;
     char *p;
 

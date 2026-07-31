@@ -20,6 +20,6 @@ int Player::St_GroundPound_Init()
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), anim, 0x40000000, 0x1000, 0);
   *(char*)((char*)&mStateStep)=2;
   _ZN5Sound9PlayBank0EjRK7Vector3(6, (char*)((void*)this)+0x74);
-  *(int*)((int*)(((int)((void*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFF)) |= 0x20;
+  *(int*)((int*)(((int)((void*)this) + 0x2ec))) |= 0x20;
   return 1;
 }

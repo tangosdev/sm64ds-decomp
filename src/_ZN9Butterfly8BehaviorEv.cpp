@@ -59,7 +59,7 @@ extern "C" int _ZN9Butterfly8BehaviorEv(char* c)
             }
         }
         _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
-        (*(int*)(((int)c + 0x3e8) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(int*)(((int)c + 0x3e8)))++;
     }
 
     if (*(int*)(c + 0x3e4) != 4) {

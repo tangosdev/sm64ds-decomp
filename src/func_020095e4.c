@@ -28,7 +28,7 @@ int func_020095e4(void *cam)
         r7 = (data_0209f4ae[off] == 2) ? 0x240 : 0x200;
         old186 = *(short *)(c + 0x186);
         {
-            short *p = (short *)(((int)c + 0x186) & 0xFFFFFFFFFFFFFFFFLL);
+            short *p = (short *)(((int)c + 0x186));
             int a = func_02008abc(cam);
             *p -= (int)(((long long)r7 * a + 0x800) >> 12);
         }
@@ -41,7 +41,7 @@ int func_020095e4(void *cam)
         *(short *)(c + 0x17c) = *(short *)(c + 0x19e) + *(short *)(c + 0x186);
         old17e = *(short *)(c + 0x17e);
         {
-            short *p = (short *)(((int)c + 0x17e) & 0xFFFFFFFFFFFFFFFFLL);
+            short *p = (short *)(((int)c + 0x17e));
             *p += (int)(((long long)r7 * (long long)func_02008a70(cam) + 0x800) >> 12);
         }
         {

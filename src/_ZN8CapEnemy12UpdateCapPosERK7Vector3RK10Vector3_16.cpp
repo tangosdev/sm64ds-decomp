@@ -27,11 +27,11 @@ void CapEnemy::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
     CapFlags* fl = (CapFlags*)(self + 0x17f);
     if (fl->b2 != 0 || fl->b1 == 0) {
         if ((*(unsigned char*)(self + 0x113) & 0xf) < 6) {
-            unsigned char* p = (unsigned char*)(((long long)(int)(self + 0x113)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char* p = (unsigned char*)(((long long)(int)(self + 0x113)));
             *p = *p | 0x80;
         }
     } else {
-        unsigned char* p = (unsigned char*)(((long long)(int)(self + 0x113)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char* p = (unsigned char*)(((long long)(int)(self + 0x113)));
         *p = *p & 7;
     }
     if (*(unsigned char*)(self + 0x113) >= 6) return;

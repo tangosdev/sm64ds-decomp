@@ -58,7 +58,7 @@ void func_0201b388(int a0)
     n = data_0209d6a4;
     step = (a0 - 1) << 5;
 
-    sb = (u32)(((long long)(int)start) & 0xFFFFFFFFFFFFFFFFLL);
+    sb = (u32)(((long long)(int)start));
     for (j = 0; j < 0x10; j++)
     {
         for (i = 0; i < n; i++)

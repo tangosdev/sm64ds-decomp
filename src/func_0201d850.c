@@ -66,7 +66,7 @@ void func_0201d850(u32 arg0)
     SetBg3Offset(0, 0);
 
     if (arg0 < 0xf) {
-        char *ep = (char *)(((int)data_0209d708 + 0x1468) & 0xFFFFFFFFFFFFFFFFLL);
+        char *ep = (char *)(((int)data_0209d708 + 0x1468));
         s32 base;
         s32 num;
         s32 n;
@@ -247,7 +247,7 @@ L_r4_else:
 
     data_0209d6b8 = 0;
     {
-        char *ep = (char *)(((int)data_0209d708 + 0x1470) & 0xFFFFFFFFFFFFFFFFLL);
+        char *ep = (char *)(((int)data_0209d708 + 0x1470));
         s32 base;
         s32 n;
         s32 tile;

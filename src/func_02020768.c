@@ -11,7 +11,7 @@ void func_02020768(char *thiz)
     if (*(unsigned char *)(thiz + 0x25) == 0)
         return;
 
-    acc = (int *)(((int)(thiz + 0x1c)) & 0xFFFFFFFFFFFFFFFF);
+    acc = (int *)(((int)(thiz + 0x1c)));
     *acc += data_0208ee44;
 
     if (*(int *)(thiz + 0x1c) < *(int *)(thiz + 0x18))
@@ -32,7 +32,7 @@ void func_02020768(char *thiz)
         return;
     }
 
-    cnt = (unsigned char *)(((int)(thiz + 0x24)) & 0xFFFFFFFFFFFFFFFF);
+    cnt = (unsigned char *)(((int)(thiz + 0x24)));
     *cnt -= 1;
     func_0202043c(thiz);
 }

@@ -32,8 +32,8 @@ int Player::St_StuckInGround_Main()
     case 0:
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a578[mStateStep], 0x40000000, 0x1000, 0);
-            *(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF) =
-                *(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF) + 1;
+            *(u8*)(((int)((char*)this) + 0x6e5)) =
+                *(u8*)(((int)((char*)this) + 0x6e5)) + 1;
             return 1;
         }
         break;
@@ -43,8 +43,8 @@ int Player::St_StuckInGround_Main()
                 break;
         }
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a584[mStateStep], 0x40000000, 0x1000, 0);
-        *(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF) =
-            *(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF) + 1;
+        *(u8*)(((int)((char*)this) + 0x6e5)) =
+            *(u8*)(((int)((char*)this) + 0x6e5)) + 1;
         break;
     case 2:
         {

@@ -85,7 +85,7 @@ int Snufit::Behavior()
         int idx;
         short tbl;
         int result;
-        p3d8 = (int *)(((int)c + 0x3d8) & 0xFFFFFFFFFFFFFFFF);
+        p3d8 = (int *)(((int)c + 0x3d8));
         *p3d8 += 0x200;
         ang = *(int *)(c + 0x3d8);
         idx = ((unsigned short)(short)ang >> 4) * 2;

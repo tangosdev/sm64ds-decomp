@@ -10,8 +10,8 @@ int Player_ReleaseHeldActor(char* c)
     if (is_bf != 0) {
         func_ov002_020db54c(p, 0x10000, 0x10000, *(short*)(c + 0x8e));
     }
-    *(int*)(((int)*(char**)(c + 0x358) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x4000;
-    *(int*)(((int)*(char**)(c + 0x358) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x100;
+    *(int*)(((int)*(char**)(c + 0x358) + 0xb0)) &= ~0x4000;
+    *(int*)(((int)*(char**)(c + 0x358) + 0xb0)) &= ~0x100;
     *(char**)(c + 0x358) = 0;
     return 1;
 }

@@ -16,8 +16,8 @@ int _ZN8CapEnemy16GetCapEatenOffItERK7Vector3(unsigned char *c, const struct Vec
         unsigned char idx;
         *(int *)(p + 0xd0) = *(int *)(c + 0xd0);
         *(unsigned char **)(*(unsigned char **)(c + 0xd0) + 0x360) = p;
-        *(int *)(((int)p + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x20000;
-        *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x20000;
+        *(int *)(((int)p + 0xb0)) |= 0x20000;
+        *(int *)(((int)c + 0xb0)) &= ~0x20000;
         *(int *)(c + 0xd0) = 0;
         if (c[0x110] == 0) {
             idx = c[0x113] & 7;

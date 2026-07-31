@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int m[12]; } Mtx43;
 
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LA(p) (((long long)(int)(p)))
 
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);

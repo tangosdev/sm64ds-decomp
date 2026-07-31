@@ -7,6 +7,6 @@ int FS_CloseFile(char *self)
 
     *(int *)(self + 8) = 0;
     *(int *)(self + 0x10) = 0xc;
-    *(int *)(((long long)(int)(self + 0xc)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x30;
+    *(int *)(((long long)(int)(self + 0xc))) &= ~0x30;
     return 1;
 }

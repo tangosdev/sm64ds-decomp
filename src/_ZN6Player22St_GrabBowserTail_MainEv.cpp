@@ -52,7 +52,7 @@ int Player::St_GrabBowserTail_Main()
             mStateWork = 0;
         if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0) {
             u8 v = mStateWork;
-            (*(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)((char*)this) + 0x6e5)))++;
             if (v > 0x78) {
                 mStateStep = 2;
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x7f, 0x40000000, 0x1000, 0);
@@ -76,17 +76,17 @@ int Player::St_GrabBowserTail_Main()
                     r3 = ((mDesiredAngleY - unk_6d4) << 9) >> 16;
                 if (r3 < -0x80) r3 = -0x80;
                 if (r3 > 0x80) r3 = 0x80;
-                *(s16*)(((int)((char*)this) + 0x69c) & 0xFFFFFFFFFFFFFFFFLL) += r3;
+                *(s16*)(((int)((char*)this) + 0x69c)) += r3;
                 if (mAngleYSpeed > 0x1000) mAngleYSpeed = 0x1000;
                 if (mAngleYSpeed < -0x1000) mAngleYSpeed = -0x1000;
             }
         } else {
             mStateArg = 0;
-            _Z15ApproachLinear2Rsss((s16*)(((int)((char*)this) + 0x69c) & 0xFFFFFFFFFFFFFFFFLL), 0, 0x40);
+            _Z15ApproachLinear2Rsss((s16*)(((int)((char*)this) + 0x69c)), 0, 0x40);
         }
         {
             s16 before = mAngleY;
-            *(s16*)(((int)((char*)this) + 0x8e) & 0xFFFFFFFFFFFFFFFFLL) += mAngleYSpeed;
+            *(s16*)(((int)((char*)this) + 0x8e)) += mAngleYSpeed;
             if ((mAngleYSpeed <= -0x100 && before < mAngleY) ||
                 (mAngleYSpeed >= 0x100 && before > mAngleY))
                 func_02012694(0xb4, ((char*)this) + 0x74);

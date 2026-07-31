@@ -18,7 +18,7 @@ int ShipUp::Behavior()
   }
   func_020393a4((int*)((char*)&mMeshCollider), 0x2000000);
   if(mModelIndex == 0){
-    *(short*)(((int)((char*)this) + 0x320) & 0xFFFFFFFFFFFFFFFF) += 0xda;
+    *(short*)(((int)((char*)this) + 0x320)) += 0xda;
     unk_08c = (short)((*(short*)((char*)data_02082214 + ((unk_320>>4)<<2)) << 0xa) >> 0xc);
     if(_ZN5Actor13DistToCPlayerEv(((char*)this)) < 0xbb8000){
       unk_324 = _ZN5Sound8PlayLongEjjjRK7Vector3j(unk_324, 3, 0x8b, ((char*)this)+0x74, 0);

@@ -7,6 +7,6 @@
 int Player::St_DizzyStars_Init()
 {
     mStateTimer = 0x12c;
-    *(int *)(((int)((char *)this) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x80;
+    *(int *)(((int)((char *)this) + 0xb0)) |= 0x80;
     return 1;
 }

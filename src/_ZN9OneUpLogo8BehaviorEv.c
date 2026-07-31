@@ -13,17 +13,17 @@ int _ZN9OneUpLogo8BehaviorEv(char *self)
 
     if (*(unsigned short *)(self + 0x14c) != 0) return 1;
 
-    *(int *)((int)(self + 0xa8) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(self + 0x9c);
+    *(int *)((int)(self + 0xa8)) += *(int *)(self + 0x9c);
     if (*(int *)(self + 0xa8) < *(int *)(self + 0xa0))
         *(int *)(self + 0xa8) = *(int *)(self + 0xa0);
-    *(int *)((int)(self + 0x60) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(self + 0xa8);
+    *(int *)((int)(self + 0x60)) += *(int *)(self + 0xa8);
 
     switch (*(u8 *)(self + 0x14e)) {
     case 0:
         if (*(int *)(self + 0x60) < *(int *)(self + 0x140)) {
             *(int *)(self + 0x60) = *(int *)(self + 0x140);
             *(int *)(self + 0xa8) = 0xf000;
-            (*(u8 *)((int)(self + 0x14e) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8 *)((int)(self + 0x14e)))++;
         }
         break;
     case 1:
@@ -40,7 +40,7 @@ int _ZN9OneUpLogo8BehaviorEv(char *self)
     if (*(int *)(self + 0x138) != 0) {
         char *other = _ZN5Actor10FindWithIDEj(*(int *)(self + 0x138));
         if (other != 0) {
-            struct V3 *op = (struct V3 *)((int)(other + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            struct V3 *op = (struct V3 *)((int)(other + 0x5c));
             int oy;
             pos.x = op->x;
             pos.y = oy = op->y;

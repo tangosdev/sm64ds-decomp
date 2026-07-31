@@ -20,7 +20,7 @@ int ShipWing::Behavior()
         if (unk_4e8 == 0) {
             unk_4e9 = 0;
         } else {
-            unsigned char* pc9 = (unsigned char*)(((int)((char*)this) + 0x4e9) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* pc9 = (unsigned char*)(((int)((char*)this) + 0x4e9));
             *pc9 = *pc9 + 1;
             unk_4e8 = 0;
         }

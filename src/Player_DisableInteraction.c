@@ -4,7 +4,7 @@ void Player_DisableInteraction(char *self)
     char *slot;
 
     *(unsigned char *)(self + 0x709) = 1;
-    slot = (char *)(((long long)(int)(self + 0x2ec)) & 0xFFFFFFFFFFFFFFFFLL);
+    slot = (char *)(((long long)(int)(self + 0x2ec)));
     tmp = *(unsigned int *)slot;
     tmp |= 4u;
     *(unsigned int *)slot = tmp;

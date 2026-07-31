@@ -12,7 +12,7 @@ void* func_02023624(void)
         *(int**)self = data_0208e4b8;
         *(int**)self = _ZTV5Stage;
         {
-            unsigned char* f = (unsigned char*)(((long long)(int)(self + 0x13)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char* f = (unsigned char*)(((long long)(int)(self + 0x13)));
             *f |= 1;
             *f |= 4;
         }

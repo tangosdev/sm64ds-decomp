@@ -8,7 +8,7 @@ struct Player {
 };
 
 int Player::St_CrazedCrate_Cleanup() {
-    *(int *)(((int)this + 0x2EC) & 0xFFFFFFFFFFFFFFFF) &= ~0x20;
+    *(int *)(((int)this + 0x2EC)) &= ~0x20;
     byte_6E1 = 0;
     return 1;
 }

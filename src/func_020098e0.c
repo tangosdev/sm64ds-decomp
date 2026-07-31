@@ -2,7 +2,7 @@ typedef short s16;
 typedef unsigned char u8;
 typedef long long s64;
 
-#define LP(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define LP(p) ((long long)(int)(p))
 
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 extern int func_020091f8(void *a, int b, int c, int d);

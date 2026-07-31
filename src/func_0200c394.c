@@ -40,7 +40,7 @@ body:
                 o = *(void **)(self + 0x114);
                 if (o) {
                     int qb = (int)o + 0x5c;
-                    *(int *)(self + 0x120) = *(int *)(qb & 0xFFFFFFFFFFFFFFFFLL);
+                    *(int *)(self + 0x120) = *(int *)(qb);
                     *(int *)(self + 0x124) = *(int *)(qb + 4);
                     *(int *)(self + 0x128) = *(int *)(qb + 8);
                 } else {

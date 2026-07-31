@@ -72,15 +72,15 @@ int Platform::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
     RaycastLine ray;
     ray.SetObjAndLine(this->pos, vmid, (Actor*)this);
     if (ray.DetectClsn()) {
-        *(short*)((int)(((long long)(int)((char*)this + 0x94)) & 0xFFFFFFFFFFFFFFFFLL)) =
-            (short)(*(short*)((int)(((long long)(int)((char*)this + 0x94)) & 0xFFFFFFFFFFFFFFFFLL)) + 0x8000);
+        *(short*)((int)(((long long)(int)((char*)this + 0x94)))) =
+            (short)(*(short*)((int)(((long long)(int)((char*)this + 0x94)))) + 0x8000);
     }
-    *(short*)((int)(((long long)(int)((char*)this + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL)) =
-        (short)(*(short*)((int)(((long long)(int)((char*)this + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL)) + a);
-    *(short*)((int)(((long long)(unsigned int)((char*)this + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL)) =
-        (short)(*(short*)((int)(((long long)(unsigned int)((char*)this + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL)) + b);
-    *(short*)((int)(((long long)(int)((char*)this + 0x90)) & 0xFFFFFFFFFFFFFFFFLL)) =
-        (short)(*(short*)((int)(((long long)(int)((char*)this + 0x90)) & 0xFFFFFFFFFFFFFFFFLL)) + c);
+    *(short*)((int)(((long long)(int)((char*)this + 0x8c)))) =
+        (short)(*(short*)((int)(((long long)(int)((char*)this + 0x8c)))) + a);
+    *(short*)((int)(((long long)(unsigned int)((char*)this + 0x8e)))) =
+        (short)(*(short*)((int)(((long long)(unsigned int)((char*)this + 0x8e)))) + b);
+    *(short*)((int)(((long long)(int)((char*)this + 0x90)))) =
+        (short)(*(short*)((int)(((long long)(int)((char*)this + 0x90)))) + c);
     ((Actor*)this)->UpdatePos(0);
     if (DecIfAbove0_Byte(&this->f_31d) == 0) {
         ((PlatformVT*)this)->v31();

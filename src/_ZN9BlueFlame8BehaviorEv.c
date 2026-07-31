@@ -36,7 +36,7 @@ int _ZN9BlueFlame8BehaviorEv(char *self)
     *(int *)(self + 0x5c) = *(int *)(self + 0xd4);
     *(int *)(self + 0x60) = *(int *)(self + 0xd8);
     *(int *)(self + 0x64) = *(int *)(self + 0xdc);
-    *(int *)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0xc0000;
+    *(int *)((int)(self + 0xb0)) &= ~0xc0000;
 
     if ((int)(*(unsigned short *)(self + 0xc) == 0x13d) != 0)
         func_020228dc(pos.x, pos.y, pos.z);

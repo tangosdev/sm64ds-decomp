@@ -20,17 +20,17 @@ int _ZN6Player18St_CameraZoom_MainEv(Player* thiz) {
             unsigned int id;
             thiz->ChangeState(data_ov002_0211013c);
             id = thiz->GetBodyModelID(*(int*)(self + 8) & 0xff, 0);
-            int q = (int)((*(volatile int*)(self + id * 4 + 0xdc) + 0x50) & 0xFFFFFFFFFFFFFFFF);
+            int q = (int)((*(volatile int*)(self + id * 4 + 0xdc) + 0x50));
             *(int*)(q + 8) = 0;
             *(short*)(self + 0x94) = *(short*)(self + 0x8e);
             return 1;
         }
         if (*(unsigned char*)(self + 0x6de)) {
-            *(unsigned short*)(((int)self + 0x6ce) & 0xFFFFFFFFFFFFFFFF) &= ~4;
+            *(unsigned short*)(((int)self + 0x6ce)) &= ~4;
         }
         func_ov002_020cae10(self);
         if (*(unsigned short*)((char*)&data_0209f49e + data_020a0e40 * 0x18) & 0x8f03) {
-            *(unsigned short*)(((int)self + 0x6ce) & 0xFFFFFFFFFFFFFFFF) &= ~4;
+            *(unsigned short*)(((int)self + 0x6ce)) &= ~4;
         }
         func_ov002_020cac60(self);
     }

@@ -32,13 +32,13 @@ int BigBully::Behavior()
         m = unk_0a0;
         if (t >= m) m = t;
         unk_0a8 = m;
-        p = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        p = (int*)(((int)((char*)this) + 0x60));
         *p = *p + unk_0a8;
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x174, 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
             u8* q;
             func_0200fa8c(((char*)this), 0);
-            q = (u8*)(((int)((char*)this) + 0x3fe) & 0xFFFFFFFFFFFFFFFF);
+            q = (u8*)(((int)((char*)this) + 0x3fe));
             *q = *q + 1;
         }
         func_ov064_02116bac(((char*)this));

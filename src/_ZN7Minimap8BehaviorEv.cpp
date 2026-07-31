@@ -115,9 +115,9 @@ extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, s32 b, s32 c, s32 d, s32 e);
 }
 
-#define F218 (*(s32 *)(((int)self + 0x218) & 0xFFFFFFFFFFFFFFFF))
-#define FANG (*(s16 *)(((int)self + 0x21c) & 0xFFFFFFFFFFFFFFFF))
-#define F254 (*(u8 *)(((int)self + 0x254) & 0xFFFFFFFFFFFFFFFF))
+#define F218 (*(s32 *)(((int)self + 0x218)))
+#define FANG (*(s16 *)(((int)self + 0x21c)))
+#define F254 (*(u8 *)(((int)self + 0x254)))
 #define FMUL(a, b) ((s32)((((long long)(a) * (b)) + 0x800) >> 12))
 
 extern "C" s32 _ZN7Minimap8BehaviorEv(Minimap *self);
@@ -276,7 +276,7 @@ L4d8:
     self->f60 = self->f1dc + ((FMUL(self->v1f4.x, self->f1d4) + 0x800) >> 12);
     self->f64 = self->f1dc + ((FMUL(self->v1f4.z, self->f1d4) + 0x800) >> 12);
 
-    op = (Vector3 *)(((int)obj + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    op = (Vector3 *)(((int)obj + 0x5c));
     v14 = *op;
     _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v14);
     _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v14, &self->v1f4, self->f1f0, self->ang, &v8);
@@ -314,7 +314,7 @@ L738:
     for (i = 0; i < 4; i++) {
         Obj *o = data_0209f394[i];
         if (o != 0) {
-        v2c = *(Vector3 *)(((int)o + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        v2c = *(Vector3 *)(((int)o + 0x5c));
         _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(&v2c);
         _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, &self->v1f4, self->f1f0, self->ang, &v8);
         self->a70[i] = (v8.x + 0x800) >> 12;

@@ -21,7 +21,7 @@ int Tornado::Behavior()
     case 2: func_ov096_02136fd4(); break;
     }
     {
-        unsigned short *p = (unsigned short*)(((int)((char *)this) + 0x350) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *p = (unsigned short*)(((int)((char *)this) + 0x350));
         *p = *p + 1;
     }
     if (s != unk_35c) {
