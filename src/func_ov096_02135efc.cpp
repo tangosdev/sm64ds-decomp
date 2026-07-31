@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov096_02135efc
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef short s16;
-typedef int Fix12i;
-
-
 struct Mtx43 { Fix12i a[12]; };
 
 extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);

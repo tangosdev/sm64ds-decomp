@@ -1,15 +1,10 @@
+#include "types.h"
 // @symbol func_ov085_0212b4b4
 // @emits PrincessPeach_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daPeach_c::Kill - recovered from vtable slot identity */
-
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void func_ov085_0212bc78(void *c, void *p);

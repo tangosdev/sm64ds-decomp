@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol func_ov084_021296cc
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-
-
 extern void _ZN5Actor11UntrackStarERa(void *thiz, signed char *s);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 a, struct Vector3 *pos, void *rot, int e, int f);
 extern void LinkSilverStarAndStarMarker(char *a, char *b);

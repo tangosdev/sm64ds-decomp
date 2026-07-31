@@ -1,18 +1,9 @@
+#include "types.h"
 // @symbol func_ov098_02139850
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
-
-
 extern int func_ov002_020e496c(char* c);
 extern int _ZN6Player14IsFrontSlidingEv(char* p);
 extern int _ZN6Player17LostGrabbedObjectEv(char* p);

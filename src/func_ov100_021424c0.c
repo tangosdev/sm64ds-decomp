@@ -1,13 +1,9 @@
+#include "types.h"
 /* func_ov100_021424c0 @ 0x021424c0 (ov100, size 0x26c)
  * Bob-omb buddy/enemy walk update: handles yoshi-eat (poof on eaten),
  * steering toward the current target angle, water/ground handling with
  * landing dust and rolling sound, speed cap 0x23000, and collision update.
  */
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(char *, char *);
 extern int func_ov002_020ad660(char *, char *, char *, int);
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);

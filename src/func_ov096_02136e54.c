@@ -1,7 +1,4 @@
-typedef int s32;
-typedef unsigned short u16;
-typedef signed short s16;
-
+#include "types.h"
 extern s16 data_02082214[];
 
 void func_ov096_02136e54(void* c, int a)

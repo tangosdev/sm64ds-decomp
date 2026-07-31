@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_02012694(u32 id, void *pos);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
 extern void _ZN5Enemy9SpawnCoinEv(char *self);

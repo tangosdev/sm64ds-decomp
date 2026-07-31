@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov095_021357d8
 // @emits SeesawBob_OnGroundPounded
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -5,10 +6,6 @@
 /* recovered: renamed to Class_Method */
 /* daObjSeesaw_c::OnGroundPounded - recovered from vtable slot identity */
 #pragma opt_propagation off
-
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
 extern int Vec3_Dist(void *a, void *b);
 extern s16 Vec3_HorzAngle(void *a, void *b);
 extern s16 data_02082214[];

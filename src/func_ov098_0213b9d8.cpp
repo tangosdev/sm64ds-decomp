@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov098_0213b9d8
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 struct Vector3_16;
 struct Actor;
 extern "C" Actor *_ZN5Actor13ClosestPlayerEv(void);

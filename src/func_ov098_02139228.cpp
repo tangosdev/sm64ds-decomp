@@ -1,18 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov098_02139228
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef int s32;
-typedef unsigned int u32;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef long long s64;
-
-
-
 struct C {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();

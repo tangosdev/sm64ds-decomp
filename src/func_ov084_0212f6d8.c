@@ -1,16 +1,10 @@
+#include "types.h"
 // @symbol func_ov084_0212f6d8
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
-
-
 extern void func_0201267c(unsigned int a, void *p);
 extern void _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);

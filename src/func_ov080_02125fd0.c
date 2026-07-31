@@ -1,8 +1,5 @@
+#include "types.h"
 /* use unsigned loads / different shift form (>>8) cast s16 */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef short s16;
-
 extern void MulMat4x3Mat4x3(const void* m1, const void* m0, void* mF);
 extern void func_020553a4(void* m);
 extern void func_ov080_02125460(void* self);

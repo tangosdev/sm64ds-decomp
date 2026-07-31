@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov094_021358b4
 /* recovered: shared common types */
 #include "common.h"
-
-typedef int Fix12;
-typedef unsigned char u8;
 extern "C" {
 extern void ApproachLinear(struct Vector3 *a, const struct Vector3 *b, Fix12 f);
 extern int func_ov094_02136188(void *c, void *p);

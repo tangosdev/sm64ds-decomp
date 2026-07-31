@@ -1,8 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef signed char s8;
-
+#include "types.h"
 extern "C" {
 void _ZN9Animation7AdvanceEv(void* self);
 int _ZNK9Animation13GetFrameCountEv(void* self);

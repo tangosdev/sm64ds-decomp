@@ -1,10 +1,8 @@
+#include "types.h"
 // @symbol func_ov098_0213b7e8
 // @emits Cannon_Kill
 /* recovered: renamed to Class_Method */
 /* daCnn_c::Kill - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern int _Z14ApproachLinearRiii(int *v, int step, int rate);
 extern void func_ov098_0213b63c(char *c);
 extern int _ZN4cstd4fdivEii(int a, int b);

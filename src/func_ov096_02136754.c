@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
+#include "types.h"
 extern s16 data_02082214[];
 extern void func_ov096_02136928(char* c, int n);
 extern void func_ov096_02135948(char* c);

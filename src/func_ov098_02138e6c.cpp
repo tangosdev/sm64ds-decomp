@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov098_02138e6c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
     virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();

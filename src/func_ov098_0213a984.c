@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol func_ov098_0213a984
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-
-
-
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 extern s16 data_02082214[];
 

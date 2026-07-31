@@ -1,7 +1,5 @@
 //cpp
-typedef int Fix12;
-typedef unsigned int u32;
-
+#include "types.h"
 struct PMF;
 struct Player;
 struct Actor {

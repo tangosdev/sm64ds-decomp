@@ -1,9 +1,8 @@
+#include "types.h"
 // @symbol func_ov080_02126124
 // @emits CrazedCrate_Kill
 /* recovered: renamed to Class_Method */
 /* daBttBk_c::Kill - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned int u32;
 void CrazedCrate_Kill(u32* c){
   *(int*)((char*)c+0x140)=0;
   *(int*)((char*)c+0x144)=0;

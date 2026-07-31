@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 enum { false, true };
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void func_ov102_0214ae1c(char* a);

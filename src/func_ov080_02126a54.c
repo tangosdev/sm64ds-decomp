@@ -1,8 +1,4 @@
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
+#include "types.h"
 extern int __aeabi_idiv(int a, int b);
 extern void func_ov080_02126124(u32 *c);
 void func_ov080_02126a54(char *sl)

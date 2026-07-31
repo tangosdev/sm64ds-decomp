@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov080_02126ca0
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -7,9 +8,6 @@
 // @emits daPicGate_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daPicGate_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 struct C;
 typedef void (C::*PMF)();
 struct Disp {

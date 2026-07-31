@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void *self, s16 a, s16 b, s16 c, int d);
 extern int DecIfAbove0_Byte(u8 *p);
 extern int Vec3_Dist(void *a, void *b);

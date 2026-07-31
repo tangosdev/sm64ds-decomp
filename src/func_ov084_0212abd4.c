@@ -1,6 +1,4 @@
-
-typedef short s16;
-typedef unsigned short u16;
+#include "types.h"
 extern void func_ov084_02129cf4(void *self, int a);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern int _Z14ApproachLinearRsss(short *a, short b, short c);

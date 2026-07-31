@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
+#include "types.h"
 extern void func_ov080_02126124(void* c);
 extern void func_ov080_02125de0(void* c, int a, int b, int d);
 struct Cell { int f0, f4, f8, fc, f10, f14; };

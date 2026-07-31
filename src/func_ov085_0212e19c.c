@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov085_0212e19c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-
-
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);

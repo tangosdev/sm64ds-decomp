@@ -1,14 +1,7 @@
+#include "types.h"
 // @symbol func_ov100_021412d8
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef signed char s8;
-
-
-
-
 extern int _ZN5Actor13DistToCPlayerEv(void* self);
 extern unsigned int RandomIntInternal(void* g);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* pos, const struct Vector3_16* rot, int e, int f);

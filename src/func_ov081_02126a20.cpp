@@ -1,11 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov081_02126a20
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef short s16;
-
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);

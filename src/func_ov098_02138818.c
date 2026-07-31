@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct W4 { u32 w[4]; };
 
 extern struct W4 data_ov098_0213c4e0;

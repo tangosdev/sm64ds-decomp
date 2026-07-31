@@ -1,7 +1,4 @@
-typedef signed char s8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 #define LA(p) (((long long)(int)(p)))
 extern s16 data_02082214[];
 extern s8 data_ov092_0213208c[];
