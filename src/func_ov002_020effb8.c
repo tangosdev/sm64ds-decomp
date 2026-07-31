@@ -1,15 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020effb8
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
-
-
 #define FXMUL(a, b) ((s32)(u32)(((((long long)(a)) * (b)) + 0x800) >> 12))
 #define TERM(v, w) ((FXMUL(v, w) + 8) >> 4)
 

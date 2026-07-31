@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct OamAttr;
 extern int GetOwnerLanguage(void);
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(

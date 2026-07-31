@@ -1,17 +1,10 @@
+#include "types.h"
 // @symbol func_ov002_020e444c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_ClsnResult.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int Fix12i;
-
-
-
 extern void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int z);
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);

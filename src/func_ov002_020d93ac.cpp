@@ -1,14 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020d93ac
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
-
-
 extern "C" {
 int func_ov002_020d93ac(char *self);
 short GetAngleToCamera(int i);

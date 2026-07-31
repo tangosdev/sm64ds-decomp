@@ -1,8 +1,4 @@
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef int Fix12;
-
+#include "types.h"
 typedef struct { s32 x, y, z; } Vec3;
 typedef struct { s32 w[12]; } Mtx43;
 

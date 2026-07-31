@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov002_020e9840
 /* recovered: shared common types */
 #include "common.h"
@@ -5,11 +6,6 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
-
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void func_ov002_020e9590(char *self);
 extern int func_ov002_020e8dd8(unsigned char *self);

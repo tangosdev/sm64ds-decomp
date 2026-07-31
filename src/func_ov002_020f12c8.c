@@ -1,16 +1,10 @@
+#include "types.h"
 // @symbol func_ov002_020f12c8
 // @emits daObjBC_Switch_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjBC_Switch_c::Behavior - recovered from vtable slot identity */
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
 extern u8 IsAreaShowing(s32 idx);
 extern s32 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, s32 vol);
 extern void _ZN5Event6SetBitEj(u32 bit);

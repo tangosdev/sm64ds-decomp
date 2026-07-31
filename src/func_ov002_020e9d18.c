@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-typedef signed char s8;
-
+#include "types.h"
 enum { false, true };
 
 typedef struct Vec3 { int x, y, z; } Vec3;

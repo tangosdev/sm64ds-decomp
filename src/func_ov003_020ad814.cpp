@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov003_020ad814
 // @emits dScTitle_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -11,12 +12,6 @@
  * data_ov003_020b1180; otherwise moves the cursor by row (+0x35) or column
  * (+1) with repeat delay at +0x50, wrapping the index modulo 0x36.
  */
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 struct VObj {
     virtual void v0();
     virtual void v1();

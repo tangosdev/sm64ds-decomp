@@ -1,11 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef long long s64;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
+#include "types.h"
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
 extern int AngleDiff(int a, int b);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);

@@ -1,8 +1,5 @@
+#include "types.h"
 #pragma opt_propagation off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 struct P2 { int a, b; };
 
 extern int _ZNK6Player14GetBodyModelIDEjb(void* self, u32 a, int b);

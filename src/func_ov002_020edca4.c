@@ -1,11 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020edca4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 struct Actor;
 
 

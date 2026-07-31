@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, s32 x, s32 y, s32 z, void* rot, void* cb);
 

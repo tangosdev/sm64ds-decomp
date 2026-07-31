@@ -1,7 +1,4 @@
-typedef int s32;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 void func_ov002_020e4374(char* c, int* p1, int* p2)
 {
     int v;

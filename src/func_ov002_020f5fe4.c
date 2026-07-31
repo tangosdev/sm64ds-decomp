@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 extern void SetSubBg2Offset(int a, int b);

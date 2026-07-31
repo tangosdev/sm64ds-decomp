@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_ov002_020da9d4(void* p);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void _ZN6Player4HealEi(void* thiz, int amt);

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 extern u8 data_ov002_02109dcc[];
 extern int data_ov002_0210a6ec[];
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *self, unsigned int a, int b, int c, unsigned int d);

@@ -1,15 +1,8 @@
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef s32 Fix12;
-
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);

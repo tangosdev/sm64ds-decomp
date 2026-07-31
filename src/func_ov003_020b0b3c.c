@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov003_020b0b3c
 // @emits dScGameOver_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScGameOver_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX13SetBankForOBJEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);

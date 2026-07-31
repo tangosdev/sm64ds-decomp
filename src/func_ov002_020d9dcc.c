@@ -1,11 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef long long s64;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 extern int AngleDiff(int a, int b);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 

@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov003_020ada9c
 // @emits dScTitle_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScTitle_c::InitResources - recovered from vtable slot identity */
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern void UnloadArchives(void);
 extern void Enable3dEngines(void);
 extern void func_020233f4(void);

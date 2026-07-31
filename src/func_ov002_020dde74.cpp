@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 struct State;
 struct Player;
 extern "C" int _ZN6Player11ChangeStateERNS_5StateE(Player* thiz, State* s);

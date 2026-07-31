@@ -1,10 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
     void LinkSilverStarAndStarMarker(void* a, void* b);

@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 struct State;
 extern struct State data_ov002_02110034;
 extern int func_ov002_020d600c(void* p);

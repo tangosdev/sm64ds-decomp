@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct State;
 extern int _ZN6Player7IsStateERNS_5StateE(void* self, struct State* s);
 extern void func_ov002_020d8118(char* c);

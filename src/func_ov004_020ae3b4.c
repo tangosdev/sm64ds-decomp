@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int* func_02054efc(void);
 extern int* func_02054ea8(void);
 extern int* _ZN2G213GetBG2CharPtrEv(void);

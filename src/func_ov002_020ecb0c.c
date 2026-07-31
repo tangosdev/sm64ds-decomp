@@ -1,10 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Vec3 { s32 x, y, z; };
 struct Vec3_16f { s16 x, y, z; };
 struct Spawn { struct Vec3_16f rot; struct Vec3 pos; };

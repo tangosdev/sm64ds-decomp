@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020e7fcc
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int Fix12i;
-
-
 struct Callback;
 
 extern int _ZN9Animation8FinishedEv(void* anim);

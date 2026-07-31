@@ -1,10 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020e6edc
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
-typedef unsigned short u16;
 struct Actor;
 struct BCA_File;
 
