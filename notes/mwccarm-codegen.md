@@ -2509,3 +2509,25 @@ epilogue but ours does, the ROM's early-exit idiom differs from a plain in-loop 
 treat the dead-epilogue delta as a diagnostic fingerprint, not noise. (Related: 6al's
 trailing-bx-lr note - mwccarm appends one after a for(;;) whose exits are all early
 returns; that one the ROM DOES keep.)
+
+
+## 6ap. Volatile-store/plain-read split: place a scalar in the volatile hole WITHOUT losing value numbering (2026-07-30, func_0204a730 MATCHED)
+
+The 6al stack-layout rule (named scalars in decl order -> temps -> address-taken
+aggregates -> volatiles into the trailing hole) had a corollary conjecture: a scalar
+that must sit in the hole must be declared volatile, and volatile ACCESS kills value
+numbering, re-folding shifted-use chains. WRONG CONCLUSION - placement and access
+volatility are separable, same shape as 6an's coloring-vs-condition-code split:
+
+    u32 flags;                                  /* plain object */
+    *(volatile u32 *)&flags = *(u32 *)player;   /* the ONE write, through a volatile cast */
+    ... ((u32)(flags << K) >> 0x1f) ...          /* all reads plain */
+
+The volatile-cast WRITE marks the object volatile-touched for frame layout (it lands
+in the hole at [sp,#0x2c], after the aggregates), while every read stays a plain
+value-numberable load, so the ROM's lsl,lsl,lsr,str,lsr,str three-live-values shape
+survives. The mirror split (volatile decl, cast-away-volatile reads) does NOT work -
+mwcc tracks the object's declared volatility for VN, so the fold still dies; and
+(void)&flags address-taking moves the slot but breaks 34 words elsewhere. Landed
+func_0204a730 byte-identical together with the banked group-B recipe (u32 byte-hoist
+at function scope + s32 k demoted into the loop block after var_r5).
