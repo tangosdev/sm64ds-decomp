@@ -93,6 +93,7 @@ data_ov078_02126e0c kind:data(any) addr:0x02126e0c
 data_ov078_02126e18 kind:data(any) addr:0x02126e18
 KingBobOmb_SpawnInfo kind:data(any) addr:0x02126e28 ambiguous
 _ZTV10KingBobOmb kind:data(any) addr:0x02126e4c
+_ZTV12daBombking_c kind:data(any) addr:0x02126e4c
 data_ov078_02126ee0 kind:bss addr:0x02126ee0
 data_ov078_02126ee8 kind:bss addr:0x02126ee8
 data_ov078_02126ef0 kind:bss addr:0x02126ef0

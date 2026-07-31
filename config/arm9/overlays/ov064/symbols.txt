@@ -233,6 +233,7 @@ data_ov064_0211beb0 kind:data(any) addr:0x0211beb0
 data_ov064_0211bebc kind:data(any) addr:0x0211bebc
 LavaBubble_SpawnInfo kind:data(any) addr:0x0211bec8
 _ZTV10LavaBubble kind:data(any) addr:0x0211beec
+_ZTV7daBbl_c kind:data(any) addr:0x0211beec
 data_ov064_0211bf68 kind:data(any) addr:0x0211bf68
 data_ov064_0211bf70 kind:data(any) addr:0x0211bf70
 data_ov064_0211bf78 kind:data(any) addr:0x0211bf78
@@ -268,6 +269,7 @@ data_ov064_0211c2ec kind:data(any) addr:0x0211c2ec
 data_ov064_0211c2f8 kind:data(any) addr:0x0211c2f8
 JetStream_SpawnInfo kind:data(any) addr:0x0211c310
 _ZTV17BowserPuzzlePiece kind:data(any) addr:0x0211c334
+_ZTV18daWater_Hakidasi_c kind:data(any) addr:0x0211c334
 data_ov064_0211c3b0 kind:data(any) addr:0x0211c3b0
 data_ov064_0211c3b8 kind:data(any) addr:0x0211c3b8
 data_ov064_0211c3c0 kind:data(any) addr:0x0211c3c0
@@ -277,6 +279,7 @@ data_ov064_0211c3dc kind:data(any) addr:0x0211c3dc
 data_ov064_0211c3e8 kind:data(any) addr:0x0211c3e8
 WaterRing_SpawnInfo kind:data(any) addr:0x0211c3fc
 _ZTV9WaterRing kind:data(any) addr:0x0211c420
+_ZTV14daWater_Ring_c kind:data(any) addr:0x0211c420
 data_ov064_0211c49c kind:data(any) addr:0x0211c49c
 data_ov064_0211c4a4 kind:data(any) addr:0x0211c4a4
 data_ov064_0211c4ac kind:data(any) addr:0x0211c4ac
@@ -287,10 +290,12 @@ data_ov064_0211c4cc kind:data(any) addr:0x0211c4cc
 data_ov064_0211c4d8 kind:data(any) addr:0x0211c4d8
 TreasureChest_SpawnInfo kind:data(any) addr:0x0211c4e8
 _ZTV13TreasureChest kind:data(any) addr:0x0211c50c
+_ZTV11daObjTbox_c kind:data(any) addr:0x0211c50c
 data_ov064_0211c588 kind:data(any) addr:0x0211c588
 data_ov064_0211c594 kind:data(any) addr:0x0211c594
 Clam_SpawnInfo kind:data(any) addr:0x0211c5a4 ambiguous
 _ZTV4Clam kind:data(any) addr:0x0211c5c8
+_ZTV12daObjShell_c kind:data(any) addr:0x0211c5c8
 data_ov064_0211c610 kind:data(any) addr:0x0211c610 ambiguous
 data_ov064_0211c660 kind:bss addr:0x0211c660
 data_ov064_0211c668 kind:bss addr:0x0211c668

@@ -121,6 +121,7 @@ data_ov081_02128840 kind:data(any) addr:0x02128840
 data_ov081_0212884c kind:data(any) addr:0x0212884c
 Spindrift_SpawnInfo kind:data(any) addr:0x02128858 ambiguous
 _ZTV9Spindrift kind:data(any) addr:0x0212887c
+_ZTV8daHuwa_c kind:data(any) addr:0x0212887c
 data_ov081_021288f8 kind:data(any) addr:0x021288f8
 data_ov081_02128900 kind:data(any) addr:0x02128900
 data_ov081_02128908 kind:data(any) addr:0x02128908
@@ -149,12 +150,14 @@ data_ov081_021289b0 kind:data(any) addr:0x021289b0
 data_ov081_021289bc kind:data(any) addr:0x021289bc
 MrBlizzard_SpawnInfo kind:data(any) addr:0x021289cc
 _ZTV10MrBlizzard kind:data(any) addr:0x021289f0
+_ZTV11daSnowman_c kind:data(any) addr:0x021289f0
 data_ov081_02128a6c kind:data(any) addr:0x02128a6c
 data_ov081_02128a74 kind:data(any) addr:0x02128a74
 data_ov081_02128a7c kind:data(any) addr:0x02128a7c
 data_ov081_02128a88 kind:data(any) addr:0x02128a88
 Snowball_SpawnInfo kind:data(any) addr:0x02128a98
 _ZTV8Snowball kind:data(any) addr:0x02128abc
+_ZTV12daSnowball_c kind:data(any) addr:0x02128abc
 data_ov081_02128b38 kind:data(any) addr:0x02128b38
 data_ov081_02128b40 kind:data(any) addr:0x02128b40
 data_ov081_02128b48 kind:data(any) addr:0x02128b48
@@ -177,10 +180,12 @@ data_ov081_02128bc8 kind:data(any) addr:0x02128bc8
 data_ov081_02128bd4 kind:data(any) addr:0x02128bd4
 Moneybag_SpawnInfo kind:data(any) addr:0x02128be0
 _ZTV8Moneybag kind:data(any) addr:0x02128c04
+_ZTV8daGmch_c kind:data(any) addr:0x02128c04
 data_ov081_02128c80 kind:data(any) addr:0x02128c80
 data_ov081_02128c8c kind:data(any) addr:0x02128c8c
 IceBlock_SpawnInfo kind:data(any) addr:0x02128ca0
 _ZTV8IceBlock kind:data(any) addr:0x02128cc4
+_ZTV15daObjIceBlock_c kind:data(any) addr:0x02128cc4
 data_ov081_02128d60 kind:bss addr:0x02128d60
 data_ov081_02128d68 kind:bss addr:0x02128d68
 data_ov081_02128d70 kind:bss addr:0x02128d70

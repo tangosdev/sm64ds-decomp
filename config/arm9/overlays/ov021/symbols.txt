@@ -200,6 +200,7 @@ data_ov021_0211480c kind:data(any) addr:0x0211480c
 data_ov021_02114818 kind:data(any) addr:0x02114818
 RollingRock_SpawnInfo kind:data(any) addr:0x02114824 ambiguous
 _ZTV11RollingRock kind:data(any) addr:0x02114848
+_ZTV9daGrock_c kind:data(any) addr:0x02114848
 data_ov021_02114860 kind:data(any) addr:0x02114860 ambiguous
 data_ov021_02114874 kind:data(any) addr:0x02114874 ambiguous
 data_ov021_0211487c kind:data(any) addr:0x0211487c ambiguous

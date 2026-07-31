@@ -105,6 +105,7 @@ BasementWater_SpawnInfo kind:data(any) addr:0x021123e4 ambiguous
 data_ov012_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov012_02112404 kind:data(any) addr:0x02112404 ambiguous
 _ZTV12SwitchPillar kind:data(any) addr:0x02112408
+_ZTV14daObjC0Water_c kind:data(any) addr:0x02112408
 data_ov012_0211241c kind:data(any) addr:0x0211241c ambiguous
 data_ov012_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov012_02112434 kind:data(any) addr:0x02112434 ambiguous

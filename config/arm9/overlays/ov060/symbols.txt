@@ -213,7 +213,9 @@ data_ov060_0211a5e4 kind:data(any) addr:0x0211a5e4
 Bowser_SpawnInfo kind:data(any) addr:0x0211a5f4
 BowserTail_SpawnInfo kind:data(any) addr:0x0211a610
 _ZTV10BowserTail kind:data(any) addr:0x0211a634
+_ZTV11daKpaTail_c kind:data(any) addr:0x0211a634
 _ZTV6Bowser kind:data(any) addr:0x0211a6b8
+_ZTV7daKpa_c kind:data(any) addr:0x0211a6b8
 data_ov060_0211a734 kind:data(any) addr:0x0211a734
 data_ov060_0211a73c kind:data(any) addr:0x0211a73c
 data_ov060_0211a744 kind:data(any) addr:0x0211a744
@@ -234,10 +236,12 @@ data_ov060_0211a7b4 kind:data(any) addr:0x0211a7b4
 data_ov060_0211a7c0 kind:data(any) addr:0x0211a7c0
 BowserFire_SpawnInfo kind:data(any) addr:0x0211a7d0
 _ZTV10BowserFire kind:data(any) addr:0x0211a7f4
+_ZTV11daKpaFire_c kind:data(any) addr:0x0211a7f4
 data_ov060_0211a870 kind:data(any) addr:0x0211a870
 data_ov060_0211a87c kind:data(any) addr:0x0211a87c
 BowserFireSeaArena_SpawnInfo kind:data(any) addr:0x0211a88c
 _ZTV18BowserFireSeaArena kind:data(any) addr:0x0211a8b0
+_ZTV10daKpa2Bg_c kind:data(any) addr:0x0211a8b0
 data_ov060_0211a930 kind:data(any) addr:0x0211a930
 data_ov060_0211a938 kind:data(any) addr:0x0211a938
 data_ov060_0211a940 kind:data(any) addr:0x0211a940
@@ -254,11 +258,13 @@ data_ov060_0211aa50 kind:data(any) addr:0x0211aa50
 data_ov060_0211aa5c kind:data(any) addr:0x0211aa5c
 SpikeBomb_SpawnInfo kind:data(any) addr:0x0211aa68
 _ZTV17BowserSkyPlatform kind:data(any) addr:0x0211aa8c
+_ZTV9daKirai_c kind:data(any) addr:0x0211aa8c
 data_ov060_0211ab08 kind:data(any) addr:0x0211ab08
 data_ov060_0211ab14 kind:data(any) addr:0x0211ab14
 data_ov060_0211ab20 kind:data(any) addr:0x0211ab20
 BowserShockwaves_SpawnInfo kind:data(any) addr:0x0211ab30
 _ZTV16BowserShockwaves kind:data(any) addr:0x0211ab54
+_ZTV9daFRing_c kind:data(any) addr:0x0211ab54
 data_ov060_0211abe0 kind:bss addr:0x0211abe0
 data_ov060_0211abe8 kind:bss addr:0x0211abe8
 data_ov060_0211abf0 kind:bss addr:0x0211abf0

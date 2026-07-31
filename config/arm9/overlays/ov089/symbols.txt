@@ -37,6 +37,7 @@ data_ov089_02132b58 kind:data(any) addr:0x02132b58
 Key_SpawnInfo kind:data(any) addr:0x02132b68
 LastStar_SpawnInfo kind:data(any) addr:0x02132b84
 _ZTV3Key kind:data(any) addr:0x02132ba8
+_ZTV10daObjKey_c kind:data(any) addr:0x02132ba8
 data_ov089_02132c40 kind:bss addr:0x02132c40
 data_ov089_02132c48 kind:bss addr:0x02132c48
 data_ov089_02132c50 kind:bss addr:0x02132c50

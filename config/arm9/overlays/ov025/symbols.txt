@@ -134,6 +134,7 @@ data_ov025_021138dc kind:data(any) addr:0x021138dc
 PyramidStep_SpawnInfo kind:data(any) addr:0x021138f0 ambiguous
 data_ov025_021138fc kind:data(any) addr:0x021138fc ambiguous
 _ZTV11PyramidStep kind:data(any) addr:0x02113914
+_ZTV14daObjDpBrock_c kind:data(any) addr:0x02113914
 data_ov025_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov025_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov025_02113994 kind:data(any) addr:0x02113994

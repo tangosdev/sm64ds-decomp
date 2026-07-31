@@ -61,8 +61,7 @@ def build_name_index():
     fallback used only for symbols whose address is NOT encoded in the name."""
     idx = {}
     for module, path in R.iter_symbol_files(include_itcm_dtcm=True):
-        for (mod_addr), name in R.load_syms_file(path, module).items():
-            mod, addr = mod_addr
+        for name, (mod, addr) in R.iter_syms_pairs(path, module):
             idx.setdefault(name, (mod, addr))
     return idx
 

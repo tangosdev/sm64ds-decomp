@@ -191,6 +191,7 @@ data_ov029_02113d7c kind:data(any) addr:0x02113d7c
 WaterDiamond_SpawnInfo kind:data(any) addr:0x02113d90 ambiguous
 data_ov029_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 _ZTV9ArrowLift kind:data(any) addr:0x02113db4
+_ZTV15daObjWc_Obj03_c kind:data(any) addr:0x02113db4
 data_ov029_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 data_ov029_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 data_ov029_02113e30 kind:data(any) addr:0x02113e30
@@ -217,6 +218,7 @@ data_ov029_02114098 kind:data(any) addr:0x02114098
 data_ov029_021140a4 kind:data(any) addr:0x021140a4
 WDW_Water_SpawnInfo kind:data(any) addr:0x021140b8 ambiguous
 _ZTV19RotatingPlatformWdw kind:data(any) addr:0x021140dc
+_ZTV14daObjWc_Mizu_c kind:data(any) addr:0x021140dc
 data_ov029_021140ec kind:data(any) addr:0x021140ec ambiguous
 data_ov029_021140f8 kind:data(any) addr:0x021140f8 ambiguous
 data_ov029_02114108 kind:data(any) addr:0x02114108 ambiguous
@@ -224,6 +226,7 @@ data_ov029_0211415c kind:data(any) addr:0x0211415c
 data_ov029_02114168 kind:data(any) addr:0x02114168
 SwitchActivatedPlank_SpawnInfo kind:data(any) addr:0x0211417c ambiguous
 _ZTV20SwitchActivatedPlank kind:data(any) addr:0x021141a0
+_ZTV15daObjWc_Obj04_c kind:data(any) addr:0x021141a0
 data_ov029_021141cc kind:data(any) addr:0x021141cc ambiguous
 data_ov029_02114220 kind:bss addr:0x02114220
 data_ov029_02114228 kind:bss addr:0x02114228

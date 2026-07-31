@@ -112,6 +112,7 @@ data_ov035_02112b88 kind:data(any) addr:0x02112b88
 data_ov035_02112b94 kind:data(any) addr:0x02112b94
 SpinningPlatform_SpawnInfo kind:data(any) addr:0x02112ba8 ambiguous
 _ZTV17RotatingClockHand kind:data(any) addr:0x02112bcc
+_ZTV16daObjCtMecha11_c kind:data(any) addr:0x02112bcc
 data_ov035_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov035_02112bec kind:data(any) addr:0x02112bec ambiguous
 data_ov035_02112c08 kind:data(any) addr:0x02112c08 ambiguous

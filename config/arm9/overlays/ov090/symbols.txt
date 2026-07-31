@@ -85,6 +85,7 @@ data_ov090_0213412c kind:data(any) addr:0x0213412c
 data_ov090_02134138 kind:data(any) addr:0x02134138
 Skeeter_SpawnInfo kind:data(any) addr:0x02134144 ambiguous
 _ZTV7Skeeter kind:data(any) addr:0x02134168
+_ZTV9daMenbo_c kind:data(any) addr:0x02134168
 data_ov090_021341e4 kind:data(any) addr:0x021341e4
 data_ov090_021341ec kind:data(any) addr:0x021341ec
 data_ov090_021341f4 kind:data(any) addr:0x021341f4
@@ -101,12 +102,14 @@ data_ov090_021342e4 kind:data(any) addr:0x021342e4
 data_ov090_021342f0 kind:data(any) addr:0x021342f0
 CheepCheep_SpawnInfo kind:data(any) addr:0x02134300 ambiguous
 _ZTV10CheepCheep kind:data(any) addr:0x02134324
+_ZTV12daPukupuku_c kind:data(any) addr:0x02134324
 data_ov090_021343a0 kind:data(any) addr:0x021343a0
 data_ov090_021343a8 kind:data(any) addr:0x021343a8
 data_ov090_021343b0 kind:data(any) addr:0x021343b0
 data_ov090_021343bc kind:data(any) addr:0x021343bc
 Shark_SpawnInfo kind:data(any) addr:0x021343c8 ambiguous
 _ZTV5Shark kind:data(any) addr:0x021343ec
+_ZTV9daShark_c kind:data(any) addr:0x021343ec
 data_ov090_02134480 kind:bss addr:0x02134480
 data_ov090_02134488 kind:bss addr:0x02134488
 data_ov090_02134490 kind:bss addr:0x02134490

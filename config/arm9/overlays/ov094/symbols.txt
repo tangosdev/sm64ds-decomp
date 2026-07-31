@@ -37,6 +37,7 @@ data_ov094_02136a1c kind:data(any) addr:0x02136a1c
 data_ov094_02136a28 kind:data(any) addr:0x02136a28
 HootTheOwl_SpawnInfo kind:data(any) addr:0x02136a34 ambiguous
 _ZTV10HootTheOwl kind:data(any) addr:0x02136a58
+_ZTV7daOwl_c kind:data(any) addr:0x02136a58
 data_ov094_02136ae0 kind:bss addr:0x02136ae0
 data_ov094_02136ae8 kind:bss addr:0x02136ae8
 data_ov094_02136af0 kind:bss addr:0x02136af0

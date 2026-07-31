@@ -109,6 +109,7 @@ data_ov098_0213c388 kind:data(any) addr:0x0213c388
 ArrowSignLeft_SpawnInfo kind:data(any) addr:0x0213c398 ambiguous
 ArrowSignRight_SpawnInfo kind:data(any) addr:0x0213c3b4 ambiguous
 _ZTV14ArrowSignRight kind:data(any) addr:0x0213c3d8
+_ZTV15daObjYajirusi_c kind:data(any) addr:0x0213c3d8
 MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
 data_ov098_0213c458 kind:data(any) addr:0x0213c458
 data_ov098_0213c460 kind:data(any) addr:0x0213c460
@@ -141,6 +142,7 @@ data_ov098_0213c664 kind:data(any) addr:0x0213c664
 data_ov098_0213c670 kind:data(any) addr:0x0213c670
 Cannon_SpawnInfo kind:data(any) addr:0x0213c67c ambiguous
 _ZTV6Cannon kind:data(any) addr:0x0213c6a0
+_ZTV7daCnn_c kind:data(any) addr:0x0213c6a0
 data_ov098_0213c71c kind:data(any) addr:0x0213c71c
 data_ov098_0213c724 kind:data(any) addr:0x0213c724
 data_ov098_0213c72c kind:data(any) addr:0x0213c72c
@@ -148,6 +150,7 @@ data_ov098_0213c734 kind:data(any) addr:0x0213c734
 data_ov098_0213c740 kind:data(any) addr:0x0213c740
 WaterBomb_SpawnInfo kind:data(any) addr:0x0213c74c ambiguous
 _ZTV9WaterBomb kind:data(any) addr:0x0213c770
+_ZTV7daWbm_c kind:data(any) addr:0x0213c770
 data_ov098_0213c78c kind:data(any) addr:0x0213c78c ambiguous
 data_ov098_0213c800 kind:bss addr:0x0213c800
 data_ov098_0213c808 kind:bss addr:0x0213c808

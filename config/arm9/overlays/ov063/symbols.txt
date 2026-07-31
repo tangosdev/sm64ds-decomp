@@ -172,6 +172,7 @@ data_ov063_0211e7e0 kind:data(any) addr:0x0211e7e0
 _ZTV3Boo kind:data(any) addr:0x0211e828
 _ZTV10BigBooIcon kind:data(any) addr:0x0211e8ac
 _ZTV7BooCage kind:data(any) addr:0x0211e930
+_ZTV11daTBasket_c kind:data(any) addr:0x0211e930
 data_ov063_0211e9ac kind:data(any) addr:0x0211e9ac
 data_ov063_0211e9b4 kind:data(any) addr:0x0211e9b4
 data_ov063_0211e9bc kind:data(any) addr:0x0211e9bc
@@ -185,6 +186,7 @@ Bookshelf_SpawnInfo kind:data(any) addr:0x0211ea2c
 MerryGoRound_SpawnInfo kind:data(any) addr:0x0211ea48
 TrapDoor_SpawnInfo kind:data(any) addr:0x0211ea64
 _ZTV12MansionSteps kind:data(any) addr:0x0211ea88
+_ZTV11daTrsTrap_c kind:data(any) addr:0x0211ea88
 data_ov063_0211eb04 kind:data(any) addr:0x0211eb04
 data_ov063_0211eb10 kind:data(any) addr:0x0211eb10
 data_ov063_0211eb1c kind:data(any) addr:0x0211eb1c

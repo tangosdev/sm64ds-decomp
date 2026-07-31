@@ -189,6 +189,7 @@ data_ov016_02114c4c kind:data(any) addr:0x02114c4c
 data_ov016_02114c58 kind:data(any) addr:0x02114c58
 SlidingBox_SpawnInfo kind:data(any) addr:0x02114c68
 _ZTV23FloatOnWaterPlatformJrb kind:data(any) addr:0x02114c8c
+_ZTV13daSlide_Box_c kind:data(any) addr:0x02114c8c
 data_ov016_02114d20 kind:bss addr:0x02114d20
 data_ov016_02114d28 kind:bss addr:0x02114d28
 data_ov016_02114d30 kind:bss addr:0x02114d30

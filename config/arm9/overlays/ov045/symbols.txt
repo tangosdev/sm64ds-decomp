@@ -132,10 +132,12 @@ data_ov045_02112d74 kind:data(any) addr:0x02112d74
 data_ov045_02112d80 kind:data(any) addr:0x02112d80
 PoleLift_SpawnInfo kind:data(any) addr:0x02112d98 ambiguous
 _ZTV15FireSeaElevator kind:data(any) addr:0x02112dbc
+_ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
 data_ov045_02112e3c kind:data(any) addr:0x02112e3c
 data_ov045_02112e48 kind:data(any) addr:0x02112e48
 ExtendingPlatform_SpawnInfo kind:data(any) addr:0x02112e5c ambiguous
 _ZTV8PoleLift kind:data(any) addr:0x02112e80
+_ZTV17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e80
 data_ov045_02112efc kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
 data_ov045_02112f14 kind:data(any) addr:0x02112f14

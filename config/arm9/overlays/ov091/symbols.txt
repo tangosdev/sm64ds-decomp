@@ -118,6 +118,7 @@ data_ov091_02134c30 kind:data(any) addr:0x02134c30
 data_ov091_02134c34 kind:data(any) addr:0x02134c34
 data_ov091_02134c38 kind:data(any) addr:0x02134c38
 _ZTV25RotatingUpDownPlatformUtm kind:data(any) addr:0x02134c5c
+_ZTV23daObjRotateUpdownLift_c kind:data(any) addr:0x02134c5c
 data_ov091_02134cdc kind:data(any) addr:0x02134cdc
 data_ov091_02134d1c kind:data(any) addr:0x02134d1c
 data_ov091_02134e44 kind:data(any) addr:0x02134e44
@@ -129,6 +130,7 @@ data_ov091_02134e70 kind:data(any) addr:0x02134e70
 ArrowPathLift_SpawnInfo kind:data(any) addr:0x02134e80 ambiguous
 SquareMetalNetLift_SpawnInfo kind:data(any) addr:0x02134e9c ambiguous
 _ZTV22RotatingUpDownPlatform kind:data(any) addr:0x02134ec0
+_ZTV13daLinelift2_c kind:data(any) addr:0x02134ec0
 data_ov091_02134f40 kind:data(any) addr:0x02134f40
 data_ov091_02134f4c kind:data(any) addr:0x02134f4c
 SlidingPlatformBdw_SpawnInfo kind:data(any) addr:0x02134f60 ambiguous
@@ -163,6 +165,7 @@ data_ov091_0213536c kind:data(any) addr:0x0213536c
 data_ov091_02135378 kind:data(any) addr:0x02135378
 Fwoosh_SpawnInfo kind:data(any) addr:0x02135388 ambiguous
 _ZTV5Stump kind:data(any) addr:0x021353ac
+_ZTV10daHyuhyu_c kind:data(any) addr:0x021353ac
 data_ov091_02135440 kind:bss addr:0x02135440
 data_ov091_02135448 kind:bss addr:0x02135448
 data_ov091_02135450 kind:bss addr:0x02135450

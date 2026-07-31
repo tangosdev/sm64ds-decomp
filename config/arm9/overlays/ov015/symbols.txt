@@ -205,6 +205,7 @@ data_ov015_021143dc kind:data(any) addr:0x021143dc
 data_ov015_021143e8 kind:data(any) addr:0x021143e8
 KnockDownPlank_SpawnInfo kind:data(any) addr:0x021143fc ambiguous
 _ZTV13PoleBillboard kind:data(any) addr:0x02114420
+_ZTV17daObjBk_Botaosi_c kind:data(any) addr:0x02114420
 data_ov015_02114458 kind:data(any) addr:0x02114458 ambiguous
 data_ov015_02114498 kind:data(any) addr:0x02114498 ambiguous
 data_ov015_021144a0 kind:data(any) addr:0x021144a0
@@ -235,6 +236,7 @@ data_ov015_0211460c kind:data(any) addr:0x0211460c
 data_ov015_02114618 kind:data(any) addr:0x02114618
 TowerStep_SpawnInfo kind:data(any) addr:0x0211462c ambiguous
 _ZTV14MovingBarSmall kind:data(any) addr:0x02114650
+_ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
 data_ov015_021146d0 kind:data(any) addr:0x021146d0
 data_ov015_021146dc kind:data(any) addr:0x021146dc
 RotatingBridge_SpawnInfo kind:data(any) addr:0x021146f0 ambiguous

@@ -199,6 +199,7 @@ data_ov026_02113d0c kind:data(any) addr:0x02113d0c
 data_ov026_02113d18 kind:data(any) addr:0x02113d18
 Whirlpool_SpawnInfo kind:data(any) addr:0x02113d30 ambiguous
 _ZTV9Submarine kind:data(any) addr:0x02113d54
+_ZTV18daWater_Tatumaki_c kind:data(any) addr:0x02113d54
 data_ov026_02113d90 kind:data(any) addr:0x02113d90 ambiguous
 data_ov026_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 data_ov026_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
@@ -208,6 +209,7 @@ data_ov026_02113de0 kind:data(any) addr:0x02113de0
 data_ov026_02113dec kind:data(any) addr:0x02113dec
 WaterSuction_SpawnInfo kind:data(any) addr:0x02113e00 ambiguous
 _ZTV12WaterSuction kind:data(any) addr:0x02113e24
+_ZTV17daWater_Suikomi_c kind:data(any) addr:0x02113e24
 data_ov026_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 data_ov026_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 data_ov026_02113e88 kind:data(any) addr:0x02113e88 ambiguous

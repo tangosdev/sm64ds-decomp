@@ -101,6 +101,7 @@ ClockPaintingHandLong_SpawnInfo kind:data(any) addr:0x021121c0 ambiguous
 ClockPaintingHandShort_SpawnInfo kind:data(any) addr:0x021121dc ambiguous
 data_ov013_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 _ZTV22ClockPaintingHandShort kind:data(any) addr:0x02112200
+_ZTV12daObjClock_c kind:data(any) addr:0x02112200
 data_ov013_02112258 kind:data(any) addr:0x02112258 ambiguous
 data_ov013_0211227c kind:data(any) addr:0x0211227c ambiguous
 data_ov013_02112280 kind:bss addr:0x02112280
