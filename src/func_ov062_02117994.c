@@ -1,7 +1,4 @@
-typedef int Fix12;
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Entry { char pad[4]; void *file; };
 extern struct Entry *data_ov062_0211cee8[];
 extern int data_ov062_0211cf0c[];

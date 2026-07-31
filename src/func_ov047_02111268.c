@@ -1,8 +1,8 @@
+#include "types.h"
 // @symbol func_ov047_02111268
 // @emits daObjKm3_Kurumajiku_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjKm3_Kurumajiku_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
 struct Arg { void *m[3]; };
 
 extern int func_ov002_020b6c54(u8 *self, struct Arg *arg, unsigned int actorID);

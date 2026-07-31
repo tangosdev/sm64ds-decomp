@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov062_02118a50
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
@@ -5,9 +6,6 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *w);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, struct Vector3 *v);
 extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);

@@ -1,7 +1,4 @@
-
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
+#include "types.h"
 extern int func_0201267c(int a, void *b);
 void func_ov025_021119f4(char *c)
 {

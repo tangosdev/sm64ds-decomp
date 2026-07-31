@@ -1,7 +1,5 @@
 //cpp
-typedef int Fix12;
-typedef short s16;
-typedef unsigned short u16;
+#include "types.h"
 struct BCA_File;
 struct ModelAnim { void SetAnim(BCA_File *f, int a, Fix12 b, unsigned int c); };
 

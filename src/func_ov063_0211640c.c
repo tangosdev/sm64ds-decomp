@@ -1,18 +1,10 @@
+#include "types.h"
 // @symbol func_ov063_0211640c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 #pragma opt_propagation off
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-
-
-
-
 extern void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void _ZN9ModelBase12ApplyOpacityEj(void *self, u32 a, int z);

@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov029_02111bcc
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjWc_Obj05_c.h"
 // @emits daObjWc_Obj05_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjWc_Obj05_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern void func_020393a4(int* p, int v);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void* pos, unsigned e);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);

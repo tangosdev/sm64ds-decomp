@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 #define M(p) ((long long)(int)(p))
 
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

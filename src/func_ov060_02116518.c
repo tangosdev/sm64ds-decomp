@@ -1,6 +1,4 @@
-typedef int Fix12;
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, const void* f);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

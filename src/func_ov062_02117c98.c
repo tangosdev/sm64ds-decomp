@@ -1,9 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct { s32 x, y, z; } Vec3;
 typedef struct { s16 x, y, z; } V16;
 

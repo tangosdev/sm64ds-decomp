@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_ov063_0211adfc(char *p);
 extern void func_ov063_02118eac(void *c);
 extern void func_ov063_02118e5c(void *c);

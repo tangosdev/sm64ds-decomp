@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov062_0211a1f4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Player.h"
@@ -5,13 +6,6 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-
 struct VVec3 { volatile int x, y, z; };
 
 extern s8 data_0209f2f8;

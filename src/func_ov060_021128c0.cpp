@@ -1,18 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov060_021128c0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-typedef int Fix12;
-
-
 extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12 b, u32 c, u32 d, u32 e);

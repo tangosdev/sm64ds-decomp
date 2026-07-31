@@ -1,9 +1,7 @@
+#include "types.h"
 // @symbol func_ov060_021169f8
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-
-
 struct Actor;
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, void* c);
 extern void func_ov060_02116518(char* self, int a, int b, int c);

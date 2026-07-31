@@ -1,16 +1,10 @@
+#include "types.h"
 // @symbol func_ov025_021113f0
 // @emits daDgr_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daDgr_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 typedef struct { s32 x, y, z; } Vec3;
 
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);

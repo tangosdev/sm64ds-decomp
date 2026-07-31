@@ -1,11 +1,4 @@
-typedef signed int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int Fix12i;
-
+#include "types.h"
 struct ParticleCallback;
 
 typedef struct { s32 x, y, z; } Vec3;

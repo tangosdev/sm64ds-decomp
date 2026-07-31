@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov062_02116010
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void func_020ada40(void *c, void *v, void *a, int flag);
 extern void func_02012694(int a, void *p);

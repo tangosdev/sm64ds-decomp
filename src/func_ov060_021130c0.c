@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 #define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actorBase, int isTalk);

@@ -1,9 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern "C" int func_ov063_0211a3d0(void* p);
 extern "C" void func_0201267c(int a, char* b);
 extern "C" {

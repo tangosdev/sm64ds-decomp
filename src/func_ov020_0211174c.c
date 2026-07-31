@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 extern void *Actor_FindWithID(unsigned int id);
 extern int func_ov020_021115ac(void *thiz);
 extern void Sound_PlayBank0(unsigned int id, void *pos);

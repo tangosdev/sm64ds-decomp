@@ -1,9 +1,8 @@
+#include "types.h"
 /* The ROM reserves a 12-byte frame it never touches; two address-taken volatile locals
  * reserve it with no emitted code (plain or non-address-taken volatiles are DCE'd before
  * frame layout). The 6g u64-mask launder on &vel forces the ROM's `add r0,r4,#0xa4` base. */
-typedef unsigned short u16;
 typedef struct { int x, y, z; } Vec3;
-typedef unsigned int u32;
 #define LDR(p) ((int)((((long long)(int)(p)))))
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);

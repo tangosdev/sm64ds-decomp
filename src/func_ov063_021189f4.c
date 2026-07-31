@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *p);
 extern void func_ov063_02119074(char *c);

@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 void func_ov063_02118914(char *c)
 {
     int zero = 0;

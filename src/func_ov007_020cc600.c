@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef signed int s32;
-
+#include "types.h"
 struct E { u8 pad[4]; u32 unk4; };
 
 extern void SetSoundMode(int mode);

@@ -1,14 +1,7 @@
+#include "types.h"
 // @symbol func_ov062_021199ac
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
-
-
 extern void *_ZN5Actor18ClosestWithActorIDEj(void *thiz, u32 id);
 
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);

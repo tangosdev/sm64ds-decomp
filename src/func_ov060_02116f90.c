@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 id, u32 a, int fix, int t1, int t2, void *vec);
 extern void func_ov060_0211712c(void *self);

@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZN5Actor14GetSubtractionEss(void* actor, s16 a, s16 b);
 extern int _Z14ApproachLinearRsss(s16* dst, s16 target, int step);
 extern int func_ov060_02115744(void* c);

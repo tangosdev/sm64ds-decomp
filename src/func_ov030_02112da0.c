@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_ov030_021141a8(void *a, int m);
 extern int Vec3_Dist(void *a, void *b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);

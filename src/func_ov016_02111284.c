@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol func_ov016_02111284
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-
-
-
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* in, void* m, void* out);
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
