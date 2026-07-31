@@ -10,7 +10,7 @@ struct Player {
     int ChangeState(State &);
 };
 
-extern "C" int func_ov002_020bf30c(Player *c, int a);
+extern "C" int Player_ScaleByCharFactor(Player *c, int a);
 extern "C" int func_ov002_020d0178(Player *c, int a, int b);
 
 extern "C" int func_ov002_020d06c0(Player *p)
@@ -42,7 +42,7 @@ extern "C" int func_ov002_020d06c0(Player *p)
     return 0;
 
 cont:
-    if (*(int *)((char *)p + 0x98) > func_ov002_020bf30c(p, 0x14000))
+    if (*(int *)((char *)p + 0x98) > Player_ScaleByCharFactor(p, 0x14000))
         return 0;
 
     thresh = 0xa0;

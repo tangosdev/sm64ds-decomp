@@ -1,7 +1,7 @@
 typedef unsigned short u16;
 
 extern int func_0206152c(void);
-extern int func_02061428(int a, int b);
+extern int WM_CheckStateEx(int a, int b);
 extern void func_0206116c(void);
 extern void func_0205ba64(int idx, void *handler);
 
@@ -13,7 +13,7 @@ int func_02061674(void)
     int r;
     if (func_0206152c() != 0)
         return 3;
-    r = func_02061428(1, 0);
+    r = WM_CheckStateEx(1, 0);
     if (r != 0)
         return r;
     func_0206116c();

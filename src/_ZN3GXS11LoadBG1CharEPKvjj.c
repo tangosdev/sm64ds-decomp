@@ -5,13 +5,13 @@
 
 extern unsigned int RENDER_DMA_CHANNEL;
 
-extern void *func_02054e88(void);
+extern void *_ZN3G2S13GetBG1CharPtrEv(void);
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dst, unsigned int count);
 extern void MultiCopy_Int(const void *src, void *dst, unsigned int count);
 
 void _ZN3GXS11LoadBG1CharEPKvjj(const void *src, unsigned int offset, unsigned int count)
 {
-    void *base = func_02054e88();
+    void *base = _ZN3G2S13GetBG1CharPtrEv();
     unsigned int channel = RENDER_DMA_CHANNEL;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);

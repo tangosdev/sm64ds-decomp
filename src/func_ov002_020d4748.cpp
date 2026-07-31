@@ -5,7 +5,7 @@ int _ZN6Player6IsAnimEj(void*, unsigned int);
 void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
 int _ZNK6Player14GetBodyModelIDEjb(void*, unsigned int, int);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int, int, int);
-int func_ov002_020bf30c(void*, int);
+int Player_ScaleByCharFactor(void*, int);
 int _ZNK9Animation12WillHitFrameEi(void*, int);
 void func_ov002_020d4c30(void*);
 }
@@ -115,7 +115,7 @@ extern "C" void func_ov002_020d4748(char* c)
             int t = 0x1000 - *(int*)(c + 0x558);
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
             int v;
-            int diff = func_ov002_020bf30c(c, 0x1c000) - *(int*)(c + 0x98);
+            int diff = Player_ScaleByCharFactor(c, 0x1c000) - *(int*)(c + 0x98);
             v = (int)(((long long)diff * f + 0x800) >> 12);
             if (v < 0)
                 v = 0;

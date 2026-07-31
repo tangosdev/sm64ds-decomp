@@ -2,7 +2,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern void _ZN9Animation7AdvanceEv(void*);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
-extern void func_02038420(void*);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void*);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void*);
@@ -16,7 +16,7 @@ int func_ov071_02120028(char *c)
 {
     _ZN9Animation7AdvanceEv(c + 0x124);
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x160);
-    func_02038420(c + 0x194);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x194);
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x194)) {
         Vec3 v;
         int x, y, z;

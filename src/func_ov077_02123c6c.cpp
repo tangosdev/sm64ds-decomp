@@ -7,7 +7,7 @@
 extern "C" {
 
 struct RG { char buf[0x54]; };
-extern int func_02038420(void* w);
+extern int WithMeshClsn_UpdateDiscreteNoLava_veneer(void* w);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* w);
 extern int _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* v);
 extern int _ZN13RaycastGroundC1Ev(struct RG* r);
@@ -20,7 +20,7 @@ void func_ov077_02123c6c(char* c, void* w){
   struct Vector3 nrm;
   struct Vector3 pos;
   struct RG rg;
-  func_02038420(w);
+  WithMeshClsn_UpdateDiscreteNoLava_veneer(w);
   if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0) {
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(w) + 4, &nrm);
     *(unsigned char*)(((int)c + 0x41d) & 0xFFFFFFFFFFFFFFFF) ^= 1;

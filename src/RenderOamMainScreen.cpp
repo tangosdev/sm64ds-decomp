@@ -8,7 +8,7 @@ extern "C" void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     int show, struct OamAttr* attr, int a, int b, int c, int d,
     Fix12i e, Fix12i f, int g, int h);
 
-extern "C" void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4)
+extern "C" void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4)
 {
     char* g = data_ov004_020beb68;
     if (g == 0) return;

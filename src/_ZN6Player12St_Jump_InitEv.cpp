@@ -8,7 +8,7 @@ typedef unsigned char u8;
 extern "C" {
 extern int func_ov002_020e2be4(char *c);
 extern int func_ov002_020e2b6c(char *c);
-extern int func_ov002_020bf30c(char *c, int a);
+extern int Player_ScaleByCharFactor(char *c, int a);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *s);
 extern void func_ov002_020bf2d8(char *c, int a);
 extern void func_ov002_020e2ad0(char *c);
@@ -52,7 +52,7 @@ skipclear:
         *(u8 *)(c + 0x6e1) = 0;
 
     if (*(u8 *)(c + 0x6e1) == 2 && *(u8 *)(c + 0x6ff) == 0) {
-        if (*(int *)(c + 0x98) <= func_ov002_020bf30c(c, 0x14000))
+        if (*(int *)(c + 0x98) <= Player_ScaleByCharFactor(c, 0x14000))
             *(u8 *)(c + 0x6e1) = 0;
     }
 
@@ -74,8 +74,8 @@ skipclear:
         } else {
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x9c, 0x40000000, 0x1000, 0);
         }
-        if (*(int *)(c + 0x98) > func_ov002_020bf30c(c, 0x64000)) {
-            *(int *)(c + 0x98) = func_ov002_020bf30c(c, 0x64000);
+        if (*(int *)(c + 0x98) > Player_ScaleByCharFactor(c, 0x64000)) {
+            *(int *)(c + 0x98) = Player_ScaleByCharFactor(c, 0x64000);
         }
     }
 

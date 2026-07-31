@@ -16,7 +16,7 @@ u32 LoadCompressedFileAt(unsigned int fileID, void *target);
 void DecompressLZ16(const void *src, void *dst);
 int func_02053eb0(void);
 void SetSubBg1Offset(int a, int b);
-unsigned int func_02054e88(void);
+unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 void _ZN2GX16SetBankForSubOBJEt(unsigned int);
 void _ZN2GX15SetBankForSubBGEt(unsigned int);
 void *_ZN3G2S12GetBG1ScrPtrEv(void);
@@ -45,7 +45,7 @@ void dScMgTrampoline2_c_Kill(char *c) {
   data_0209d454 &= ~2;
   {
     s32 i = func_ov004_020ad674();
-    LoadCompressedFileAt(data_ov006_0213c610[i], (void*)func_02054e88());
+    LoadCompressedFileAt(data_ov006_0213c610[i], (void*)_ZN3G2S13GetBG1CharPtrEv());
   }
   LoadCompressedFileAt(0x5b, _ZN3G2S12GetBG1ScrPtrEv());
   _ZN2GX15SetBankForSubBGEt(self->unk_0a0);

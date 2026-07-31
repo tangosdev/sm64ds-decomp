@@ -5,7 +5,7 @@ struct State;
 struct Player;
 extern "C" int _ZN6Player11ChangeStateERNS_5StateE(Player* thiz, State* s);
 extern "C" int _ZN6Player7IsStateERNS_5StateE(Player* thiz, State* s);
-extern "C" int func_ov002_020bf30c(Player* c, int a);
+extern "C" int Player_ScaleByCharFactor(Player* c, int a);
 extern State data_ov002_021105d4;
 extern State data_ov002_02110034;
 extern State data_ov002_021101e4;
@@ -29,7 +29,7 @@ extern "C" int func_ov002_020dde74(char* thiz){
       *(u8*)(thiz + 0x703) != 0)
     goto change574;
 
-  if (*(int*)(thiz + 0x98) < func_ov002_020bf30c((Player*)thiz, 0x20000)) {
+  if (*(int*)(thiz + 0x98) < Player_ScaleByCharFactor((Player*)thiz, 0x20000)) {
     if (_ZN6Player7IsStateERNS_5StateE((Player*)thiz, &data_ov002_021101e4))
       goto change5bc;
     if (!_ZN6Player7IsStateERNS_5StateE((Player*)thiz, &data_ov002_0211019c))
@@ -38,8 +38,8 @@ extern "C" int func_ov002_020dde74(char* thiz){
       goto change574;
   }
 change5bc:
-  if (*(int*)(thiz + 0x98) < func_ov002_020bf30c((Player*)thiz, 0x24000))
-    *(int*)(thiz + 0x98) = func_ov002_020bf30c((Player*)thiz, 0x24000);
+  if (*(int*)(thiz + 0x98) < Player_ScaleByCharFactor((Player*)thiz, 0x24000))
+    *(int*)(thiz + 0x98) = Player_ScaleByCharFactor((Player*)thiz, 0x24000);
   return _ZN6Player11ChangeStateERNS_5StateE((Player*)thiz, &data_ov002_021105bc);
 
 change574:

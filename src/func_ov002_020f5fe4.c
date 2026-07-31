@@ -11,7 +11,7 @@ extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void* dst);
 extern void Deallocate(void* p);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern u32 func_02054e88(void);
+extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void func_02056434(const void* src, int offset, int count);
@@ -59,7 +59,7 @@ void func_ov002_020f5fe4(char* c)
     *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
 
     f = LoadFile(0x24f);
-    DecompressLZ16(f, (void*)func_02054e88());
+    DecompressLZ16(f, (void*)_ZN3G2S13GetBG1CharPtrEv());
     Deallocate((void*)f);
 
     f = LoadFile(0x250);

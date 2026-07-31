@@ -9,7 +9,7 @@ typedef unsigned short u16;
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern int func_ov004_020ad674(void);
 extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);
-extern void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 
 extern int data_020a0e68;
 
@@ -54,7 +54,7 @@ int dScMgJump2_c_Render(char* self)
                 int idx = func_ov004_020ad674();
                 DrawOamSprite((void*)data_ov006_0213cccc[idx][1], (void*)a1v, 0xc, (void*)0);
             } else {
-                func_ov004_020afa20(data_ov006_02134cf8, a1v, 0xc, -1, -1);
+                RenderOamMainScreen(data_ov006_02134cf8, a1v, 0xc, -1, -1);
             }
             a1v += 0x12;
         }

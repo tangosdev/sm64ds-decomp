@@ -7,7 +7,7 @@ struct WithMeshClsn {
     int IsOnGround() const;
     void ClearLimMovFlag();
 };
-extern "C" void func_02038420(void *p);
+extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
 extern "C" int func_02037e38(unsigned int *p);
 extern "C" void func_ov071_0211f498(char *c);
 extern "C" void Scuttlebug_SetState(char *c, int x);
@@ -17,7 +17,7 @@ struct CylinderClsn2 { void Clear(); void Update(); };
 extern "C" int func_ov071_0211f7d4(Actor *self)
 {
     char *s = (char*)self;
-    func_02038420(s + 0x194);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(s + 0x194);
     *(short*)(s + 0x8c) = *(short*)(s + 0x8c) + 0x1000;
     if (((WithMeshClsn*)(s + 0x194))->JustHitGround()) {
         if (func_02037e38((unsigned int*)((char*)((WithMeshClsn*)(s + 0x194))->GetFloorResult() + 4)) == 4) {

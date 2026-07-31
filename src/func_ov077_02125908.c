@@ -1,4 +1,4 @@
-extern void func_02038420(void *p);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *p);
@@ -16,7 +16,7 @@ int func_ov077_02125908(char *c)
 {
     int v;
 
-    func_02038420(c + 0x1e4);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x1e4);
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1e4) != 0)
     {
         *(int *)(c + 0xa8) = *(int *)(c + 0xa8) * -50 / 100;

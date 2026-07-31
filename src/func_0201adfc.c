@@ -13,7 +13,7 @@ extern volatile u32 data_0208eeac[];
 extern volatile u32 data_0209d74c[];
 extern volatile u32 data_0208ee8c[];
 
-unsigned int func_02054e88(void);
+unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 int func_02054d88(void);
 void MultiCopy_Int(int* dst, int* src, int len);
 
@@ -25,7 +25,7 @@ void func_0201adfc(void)
     u32* p;
 
     if (data_0209d698 != 0) {
-        p = (u32*)(func_02054e88() + 0x4000);
+        p = (u32*)(_ZN3G2S13GetBG1CharPtrEv() + 0x4000);
     } else {
         p = (u32*)(func_02054d88() + 0x4000);
     }
@@ -47,7 +47,7 @@ void func_0201adfc(void)
 
     n = data_0209d6f0[6] * 2;
     if (data_0209d698 != 0) {
-        p = (u32*)(func_02054e88() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
+        p = (u32*)(_ZN3G2S13GetBG1CharPtrEv() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
     } else {
         p = (u32*)(func_02054d88() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
     }

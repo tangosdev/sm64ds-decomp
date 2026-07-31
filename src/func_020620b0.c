@@ -1,17 +1,17 @@
 typedef unsigned short u16;
 typedef unsigned int u32;
-extern int func_02061428(int a, int b);
+extern int WM_CheckStateEx(int a, int b);
 extern void func_02062024(void *o);
-extern void func_0206165c(int i, int val);
+extern void WM_SetCallbackTable(int i, int val);
 extern void _ZN4CP1514FlushDataCacheEjj(u32 a, u32 b);
-extern int func_02061558(int a, int b, void *c);
+extern int WM_SendCommand(int a, int b, void *c);
 
 int func_020620b0(int self, char *o)
 {
     int r;
     u16 t12;
     int add0, add1;
-    r = func_02061428(1, 2);
+    r = WM_CheckStateEx(1, 2);
     if (r != 0) return r;
     if (o == 0) return 6;
     if (*(u16*)(o + 4) != 0) {
@@ -23,12 +23,12 @@ int func_020620b0(int self, char *o)
     add1 = *(u16*)(o + 0x34) + (t12 != 0 ? 6 : 0);
     if (add1 > 0x200) { ret6: return 6; }
     func_02062024(o);
-    func_0206165c(7, self);
+    WM_SetCallbackTable(7, self);
     _ZN4CP1514FlushDataCacheEjj((u32)o, 0x40);
     if (*(u16*)(o + 4) != 0) {
         _ZN4CP1514FlushDataCacheEjj(*(u32*)o, *(u16*)(o + 4));
     }
-    r = func_02061558(7, 1, o);
+    r = WM_SendCommand(7, 1, o);
     if (r == 0) return 2;
     return r;
 }

@@ -1,10 +1,10 @@
 typedef unsigned short u16;
 typedef unsigned int u32;
 extern int func_02061548(void);
-extern int func_02061428(int count, int a, int b, int c, int d, int e);
+extern int WM_CheckStateEx(int count, int a, int b, int c, int d, int e);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 a, u32 b);
-extern void func_0206165c(int i, int val);
-extern int func_02061558(int a, int b, int c);
+extern void WM_SetCallbackTable(int i, int val);
+extern int WM_SendCommand(int a, int b, int c);
 
 int func_02061d30(int self, unsigned int idx)
 {
@@ -12,7 +12,7 @@ int func_02061d30(int self, unsigned int idx)
     int* o;
     int r;
     h = func_02061548();
-    r = func_02061428(5, 7, 9, 8, 0xa, 0xb);
+    r = WM_CheckStateEx(5, 7, 9, 8, 0xa, 0xb);
     if (r != 0) return r;
     o = *(int**)(h + 4);
     {
@@ -26,8 +26,8 @@ int func_02061d30(int self, unsigned int idx)
             if (idx != 0) return 6;
         }
     }
-    func_0206165c(0xd, self);
-    r = func_02061558(0xd, 1, 1u << idx);
+    WM_SetCallbackTable(0xd, self);
+    r = WM_SendCommand(0xd, 1, 1u << idx);
     if (r == 0) return 2;
     return r;
 }

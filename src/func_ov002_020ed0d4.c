@@ -18,7 +18,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, 
 extern int func_ov002_020ec654(unsigned char* p);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
-extern void func_02038420(void* self);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* self);
 
 extern int data_020a0e68[];
 extern void* data_ov002_0210e6b0[];
@@ -161,6 +161,6 @@ void daWarpkun_c_Kill(char* self)
         int dist = Vec3_Dist(self + 0x5c, com + 0x5c);
         if (*(unsigned char*)(*(char**)(self + 0x38c) + 0x709) != 0) return;
         if (dist >= 0x190000) return;
-        func_02038420(self + 0x144);
+        WithMeshClsn_UpdateDiscreteNoLava_veneer(self + 0x144);
     }
 }

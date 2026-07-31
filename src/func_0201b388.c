@@ -19,7 +19,7 @@ extern int data_0208ee8c[];
 
 int _ZN3G2S13GetBG0CharPtrEv(void);
 void *func_02054ea8(void);
-unsigned int func_02054e88(void);
+unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 int func_02054d88(void);
 
 void func_0201b388(int a0)
@@ -47,7 +47,7 @@ void func_0201b388(int a0)
     }
     else if (data_0209d698 == 1)
     {
-        sl = (int *)(((char *)func_02054e88()) + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
+        sl = (int *)(((char *)_ZN3G2S13GetBG1CharPtrEv()) + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     }
     else
     {

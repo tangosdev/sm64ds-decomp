@@ -1,4 +1,4 @@
-extern int func_ov002_020bf30c(void *c, int a);
+extern int Player_ScaleByCharFactor(void *c, int a);
 extern int ApproachAngle(short *angle, int targetAngle, int invFactor, int maxDelta, int minDelta);
 
 void func_ov002_020d413c(char *self, int arg)
@@ -7,7 +7,7 @@ void func_ov002_020d413c(char *self, int arg)
     int diff;
     short s;
     if (*(unsigned char *)(self + 0x703)) return;
-    v = func_ov002_020bf30c(self, 0x1c000);
+    v = Player_ScaleByCharFactor(self, 0x1c000);
     diff = *(int *)(self + 0x98);
     if (diff < v) {
         *(short *)(self + 0x75e) = 0;

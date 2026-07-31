@@ -13,7 +13,7 @@ extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN3GXS15SetGraphicsModeEi(int a);
 extern s32 func_02030fa8(void);
 extern void* func_02054ea8(void);
-extern void* func_02054e88(void);
+extern void* _ZN3G2S13GetBG1CharPtrEv(void);
 extern void DecompressLZ16(const void* src, void* dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -69,7 +69,7 @@ void func_02030500(void)
     *(volatile u16*)0x400100a &= ~0x40;
 
     DecompressLZ16(data_020927b0[func_02030fa8()], func_02054ea8());
-    DecompressLZ16(data_020927b0[func_02030fa8()], func_02054e88());
+    DecompressLZ16(data_020927b0[func_02030fa8()], _ZN3G2S13GetBG1CharPtrEv());
 
     _ZN2GX10LoadBGPlttEPKvjj(&data_0209440c, 0, 0x40);
     _ZN3GXS10LoadBGPlttEPKvjj(&data_0209440c, 0, 0x40);

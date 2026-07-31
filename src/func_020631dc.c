@@ -7,7 +7,7 @@ typedef unsigned int u32;
 typedef unsigned long long u64;
 
 extern int func_02061548(void);
-extern int func_02061428(int count, ...);
+extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
 extern int func_02061c88(int idx, int b, int c);
@@ -34,7 +34,7 @@ int func_020631dc(u8 *self, int unitIdx, int mask, int elemSize, int flag)
     volatile unsigned zero;
 
     g = func_02061548();
-    r = func_02061428(2, 9, 0xa);
+    r = WM_CheckStateEx(2, 9, 0xa);
     if (r != 0)
         return r;
 

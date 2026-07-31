@@ -19,7 +19,7 @@ typedef struct {
 
 extern Ctx *data_020a89ac;
 
-int func_02061558(short a0, unsigned short count, ...)
+int WM_SendCommand(short a0, unsigned short count, ...)
 {
     int *buf;
     int *src;

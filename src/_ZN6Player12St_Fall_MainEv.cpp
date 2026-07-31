@@ -8,7 +8,7 @@ typedef int Fix12i;
 extern int func_ov002_020e28d4(void*, int, int);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern int func_ov002_020bedd4(void*);
-extern Fix12i func_ov002_020bf30c(void* c, Fix12i a);
+extern Fix12i Player_ScaleByCharFactor(void* c, Fix12i a);
 extern char data_ov002_02110424[];
 
 int Player::St_Fall_Main()
@@ -20,7 +20,7 @@ int Player::St_Fall_Main()
     return 1;
   }
   func_ov002_020bedd4(((void*)this));
-  if (*(int*)((char*)&mHorzSpeed) >= func_ov002_020bf30c(((void*)this), 0x28000))
-    *(int*)((char*)&mHorzSpeed) = func_ov002_020bf30c(((void*)this), 0x28000);
+  if (*(int*)((char*)&mHorzSpeed) >= Player_ScaleByCharFactor(((void*)this), 0x28000))
+    *(int*)((char*)&mHorzSpeed) = Player_ScaleByCharFactor(((void*)this), 0x28000);
   return 1;
 }

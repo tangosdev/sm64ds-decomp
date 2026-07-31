@@ -15,7 +15,7 @@ struct Node {
 };
 
 extern "C" void func_ov006_020c0aa8(void *c);
-extern "C" int  func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+extern "C" int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern "C" void func_ov006_020c1804(void *c);
 
 extern Node *data_ov006_02142578;
@@ -36,7 +36,7 @@ extern "C" int dScMgMCarlo2_c_Render(char *c)
         v = 0x270f;
     func_ov004_020b1ea4(0xe8, 0x28, v, 1, -1, 0, 0);
 
-    func_ov004_020afa20(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
+    RenderOamMainScreen(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 
     if (self->unk_5928 == 5)
         func_ov004_020b0d8c(c, 0xe0, 0xa0);

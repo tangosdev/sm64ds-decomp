@@ -13,7 +13,7 @@ struct Node {
 };
 
 extern "C" void func_ov006_020c0aa8(void *c);
-extern "C" int  func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+extern "C" int  RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern "C" void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 extern "C" void func_ov004_020b1e34(void *a0, int a1, int a2, int a3);
 extern "C" void func_ov006_020c1804(void *c);
@@ -45,11 +45,11 @@ extern "C" int dScMgCard_c_Render(char *c)
         sb = 0xc;
         for (; i < 6; i++) {
             if (i != skip)
-                func_ov004_020afa20(data_ov006_02134010[i], 0x28, sb, -1, -1);
+                RenderOamMainScreen(data_ov006_02134010[i], 0x28, sb, -1, -1);
             sb += 0x10;
         }
 
-        func_ov004_020afa20(data_ov006_02134028, 0x28, 0x38, -1, -1);
+        RenderOamMainScreen(data_ov006_02134028, 0x28, 0x38, -1, -1);
     }
 
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);

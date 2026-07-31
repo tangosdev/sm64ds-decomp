@@ -14,7 +14,7 @@ typedef s32 Fix12;
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
-extern Fix12 func_ov002_020bf30c(void* c, Fix12 a);
+extern Fix12 Player_ScaleByCharFactor(void* c, Fix12 a);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
@@ -43,7 +43,7 @@ int Player::St_TurnAround_Main()
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = func_ov002_020bf56c(((char*)this), sel);
         ApproachAngle((s16*)((char*)&mTargetAngleY), angle, 0x10, 0x1000, 0x200);
-        tmp = func_ov002_020bf30c(((char*)this), 0x28000);
+        tmp = Player_ScaleByCharFactor(((char*)this), 0x28000);
         _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), -tmp, r5v);
     } else {
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);

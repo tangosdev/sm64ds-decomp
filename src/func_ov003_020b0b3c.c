@@ -18,7 +18,7 @@ extern void *_ZN2G212GetBG2ScrPtrEv(void);
 extern void *_ZN2G212GetBG0ScrPtrEv(void);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern u32 func_02054e88(void);
+extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -131,7 +131,7 @@ int dScGameOver_c_InitResources(void *arg)
     } else {
         f = LoadFile(0xa00d);
     }
-    DecompressLZ16(f, (void *)func_02054e88());
+    DecompressLZ16(f, (void *)_ZN3G2S13GetBG1CharPtrEv());
     Deallocate((void *)f);
 
     f = LoadFile(0x9807);

@@ -40,7 +40,7 @@ extern void MultiStore_Int(int val, void *dst, int len);
 extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void SetBg1Offset(int a, int b);
-extern u32 func_02054e88(void);
+extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void SetSubBg1Offset(int a, int b);
 extern int func_02054d88(void);
@@ -157,7 +157,7 @@ void func_0201f32c(int arg0)
         data_0209d660 = 0;
     } else if (data_0209d698 == 1) {
         {
-            void *pa = (char *)func_02054e88() + 0x4000;
+            void *pa = (char *)_ZN3G2S13GetBG1CharPtrEv() + 0x4000;
             spC = 0;
             MultiStore_Int(spC, pa, 0x2000);
         }

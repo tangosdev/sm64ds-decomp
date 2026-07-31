@@ -18,7 +18,7 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void* v);
 extern int func_ov002_020d36d8(void* c, int arg);
-extern int func_ov002_020bf30c(void* c, int a);
+extern int Player_ScaleByCharFactor(void* c, int a);
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
 extern void func_ov002_020c18b0(void* c, int a);
@@ -61,8 +61,8 @@ int Player::St_Crawl_Main()
             *(int*)(anim3 + 0xc) = shifted;
             if (func_ov002_020d36d8(((char*)this), 1))
                 return 1;
-            int r4v = func_ov002_020bf30c(((char*)this), 0x8000);
-            int r2v = func_ov002_020bf30c(((char*)this), 0x1000);
+            int r4v = Player_ScaleByCharFactor(((char*)this), 0x8000);
+            int r2v = Player_ScaleByCharFactor(((char*)this), 0x1000);
             a = func_ov002_020bf224(((char*)this), r4v, r2v);
             b = 0x1000;
             ApproachAngle((s16*)((char*)&mTargetAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);

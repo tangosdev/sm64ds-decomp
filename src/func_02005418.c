@@ -24,7 +24,7 @@ extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 
 extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
-extern u32 func_02054e88(void);
+extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 extern int LoadFile(int handle);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -96,7 +96,7 @@ int dScBoot_c_Behavior(void *arg0)
                     } else {
                         lang = 0xa00d;
                     }
-                    LoadCompressedFileAt(lang, (void *)func_02054e88());
+                    LoadCompressedFileAt(lang, (void *)_ZN3G2S13GetBG1CharPtrEv());
                     f = LoadFile(0x9807);
                     _ZN3GXS10LoadBGPlttEPKvjj((const void *)f, 0, 0x1c0);
                     Deallocate((void *)f);

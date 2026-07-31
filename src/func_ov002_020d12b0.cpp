@@ -8,7 +8,7 @@ extern State data_ov002_02110574;
 extern State data_ov002_02110634;
 extern State data_ov002_0211061c;
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(void *self, State &s);
-extern "C" int func_ov002_020bf30c(void *c, int a);
+extern "C" int Player_ScaleByCharFactor(void *c, int a);
 
 extern "C" int func_ov002_020d12b0(u8 *self)
 {
@@ -17,7 +17,7 @@ extern "C" int func_ov002_020d12b0(u8 *self)
         self[0x6e2] = 2;
         _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110574);
     } else {
-        if (*(int *)(self + 0x98) >= func_ov002_020bf30c(self, 0xa000)) {
+        if (*(int *)(self + 0x98) >= Player_ScaleByCharFactor(self, 0xa000)) {
             _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_02110634);
         } else {
             _ZN6Player11ChangeStateERNS_5StateE(self, data_ov002_0211061c);

@@ -10,7 +10,7 @@ extern unsigned char data_0208f074[];
 extern unsigned char data_0209fcd8;
 extern unsigned char data_0209fc88;
 extern unsigned char data_0209fd20[];
-unsigned int func_02054e88(void);
+unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 int func_02054d88(void);
 void func_02031b84(char c)
 {
@@ -28,7 +28,7 @@ void func_02031b84(char c)
   else
     if (sh == 1)
   {
-    ip = (int *) (((char *) func_02054e88()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+    ip = (int *) (((char *) _ZN3G2S13GetBG1CharPtrEv()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
   }
   else
   {

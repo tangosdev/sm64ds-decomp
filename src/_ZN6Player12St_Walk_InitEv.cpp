@@ -7,7 +7,7 @@
 extern "C" {
 extern int _ZN6Player9GetHealthEv(void *c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *c, void *state);
-extern int func_ov002_020bf30c(void *c, int a);
+extern int Player_ScaleByCharFactor(void *c, int a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, unsigned int a, int b, int f, unsigned int d);
 extern void func_ov002_020d4540(void *p);
 extern void func_ov002_020caf68(void *self);
@@ -34,8 +34,8 @@ int Player::St_Walk_Init()
         return 1;
     }
 
-    if (mHorzSpeed > func_ov002_020bf30c(((char *)this), 0x28000)) {
-        mHorzSpeed = func_ov002_020bf30c(((char *)this), 0x28000);
+    if (mHorzSpeed > Player_ScaleByCharFactor(((char *)this), 0x28000)) {
+        mHorzSpeed = Player_ScaleByCharFactor(((char *)this), 0x28000);
     }
     if (mHorzSpeed < -0xe000) {
         mHorzSpeed = -0xe000;
@@ -68,7 +68,7 @@ merge:
     mPeakY = mPosY;
     mStateWork = 0;
     mStateArg = 0;
-    if (mHorzSpeed > func_ov002_020bf30c(((char *)this), 0x24000)) {
+    if (mHorzSpeed > Player_ScaleByCharFactor(((char *)this), 0x24000)) {
         mStateArg = 1;
     }
     *(unsigned short *)(((long long)(int)((char *)&mStateFlags))) &= ~0x100;

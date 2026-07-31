@@ -6,7 +6,7 @@ extern void _ZN5Actor24KillAndTrackInDeathTableEv(char* c);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, void* cyl);
 extern int LenVec3(void* v);
 extern void func_020383fc(void* p);
-extern void func_02038420(void* p);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
 extern char* _ZNK12WithMeshClsn14GetFloorResultEv(char* w);
 extern int func_02037e78(void* p);
@@ -24,7 +24,7 @@ void func_ov002_020b13e0(char* self){
   if (LenVec3(self+0xa4) > *(int*)(self+0x1c4))
     func_020383fc(self+0x1ac);
   else
-    func_02038420(self+0x1ac);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(self+0x1ac);
   if (!_ZNK12WithMeshClsn10IsOnGroundEv(self+0x1ac)) return;
   if (func_02037e78(_ZNK12WithMeshClsn14GetFloorResultEv(self+0x1ac) + 4) == 0) return;
   if (*(int*)(self+0xa8) > 0) return;

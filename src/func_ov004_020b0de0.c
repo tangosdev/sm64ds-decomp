@@ -1,6 +1,6 @@
 typedef int s32;
 s32 func_ov004_020ad674(void);
-void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern char* data_ov004_020bbfa8[];
 
 #define LAU(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
@@ -24,6 +24,6 @@ void func_ov004_020b0de0(char* c)
     }
     {
         int i = func_ov004_020ad674();
-        func_ov004_020afa20(*(int*)(data_ov004_020bbfa8[i] + 0x28), 0xc0, 0xb0, -1, -1);
+        RenderOamMainScreen(*(int*)(data_ov004_020bbfa8[i] + 0x28), 0xc0, 0xb0, -1, -1);
     }
 }

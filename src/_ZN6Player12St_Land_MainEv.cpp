@@ -18,7 +18,7 @@ extern void func_ov002_020c06fc(void* c, u32 arg);
 extern int func_ov002_020e3078(void* c, void* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int _ZN6Player6IsAnimEj(void* c, u32 a);
-extern int func_ov002_020bf30c(void* c, int a);
+extern int Player_ScaleByCharFactor(void* c, int a);
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
@@ -76,7 +76,7 @@ int Player::St_Land_Main()
     }
 
     _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed),
-        func_ov002_020bf224(((char*)this), func_ov002_020bf30c(((char*)this), 0x20000), 0),
+        func_ov002_020bf224(((char*)this), Player_ScaleByCharFactor(((char*)this), 0x20000), 0),
         0x4000);
 
     if (func_ov002_020e3078(((char*)this), data_ov002_0211052c) != 0) {
@@ -108,7 +108,7 @@ int Player::St_Land_Main()
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211013c) != 0
             && mStateStep != 0
-            && mHorzSpeed >= func_ov002_020bf30c(((char*)this), 0x1c000)) {
+            && mHorzSpeed >= Player_ScaleByCharFactor(((char*)this), 0x1c000)) {
             unk_760 = 0x4000;
         }
         return 1;

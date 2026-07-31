@@ -13,7 +13,7 @@ struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]
 struct ClsnResult;
 struct SurfaceInfo;
 
-extern "C" void func_02038420(void* p);
+extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
@@ -30,7 +30,7 @@ extern "C" void func_ov071_0211f148(char* a, char* w) {
     Vector3 normal;
     Vector3 wallnormal;
 
-    func_02038420(w);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(w);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(w)) {
         _ZN13RaycastGroundC1Ev(&rc);
         {

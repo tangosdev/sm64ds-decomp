@@ -7,7 +7,7 @@ extern "C" {
 extern void _ZN9Animation7AdvanceEv(void*);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
 extern void func_020383fc(void*);
-extern void func_02038420(void*);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void*);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);
@@ -24,7 +24,7 @@ int func_ov077_021253a4(char* c)
     if (*(int*)(c + 0x98) >= *(int*)(c + 0x1fc) || *(int*)(c + 0xa8) >= *(int*)(c + 0x1fc)) {
         func_020383fc(c + 0x1e4);
     } else {
-        func_02038420(c + 0x1e4);
+        WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x1e4);
     }
 
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1e4) || DecIfAbove0_Byte((unsigned char*)(c + 0x3e8)) == 0) {

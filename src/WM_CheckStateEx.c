@@ -4,7 +4,7 @@ extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
 extern unsigned int *data_020a89ac;
 
-int func_02061428(int count, ...)
+int WM_CheckStateEx(int count, ...)
 {
     int r;
     int *p;

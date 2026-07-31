@@ -2,7 +2,7 @@ typedef unsigned int u32;
 typedef unsigned short u16;
 
 extern int *func_02061548(void);
-extern int func_02061428(int a, int b, int c);
+extern int WM_CheckStateEx(int a, int b, int c);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 size);
 
 u32 func_02061b9c(void)
@@ -11,7 +11,7 @@ u32 func_02061b9c(void)
     int *p;
 
     r4 = func_02061548();
-    if (func_02061428(2, 7, 8) != 0)
+    if (WM_CheckStateEx(2, 7, 8) != 0)
         return 0;
 
     _ZN4CP1519InvalidateDataCacheEjj((u32)(r4[1] + 0x10), 4);
