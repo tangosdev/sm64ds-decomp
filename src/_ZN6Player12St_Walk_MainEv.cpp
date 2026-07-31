@@ -14,7 +14,7 @@ extern void ApproachAngle(short* cur, short target, int divisor, int band, int m
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
 extern int _ZN6Player12FinishedAnimEv(void* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void func_ov002_020d4540(void* c);
 extern void func_ov002_020cabe0(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);

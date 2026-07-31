@@ -13,7 +13,7 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void* v);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void* v);
 extern void func_ov002_020c9e18(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int cc);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void Player_AdvanceAnims(void* c);

@@ -9,7 +9,7 @@ struct CylinderClsn;
 struct WithMeshClsn;
 
 extern "C" {
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12 d);
+int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
 void _ZN9ActorBase18MarkForDestructionEv(void* self);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);

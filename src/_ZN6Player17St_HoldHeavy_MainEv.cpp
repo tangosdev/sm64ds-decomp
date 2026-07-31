@@ -16,7 +16,7 @@ extern void func_ov002_020da9d4(void* c);
 extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void func_ov002_020d4d88(void* c, int a, int b);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_0211013c[];

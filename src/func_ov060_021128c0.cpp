@@ -7,7 +7,7 @@
 #include "common.h"
 extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
-    void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12 b, u32 c, u32 d, u32 e);
+    void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12i b, u32 c, u32 d, u32 e);
     void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
     void func_02038408(void* p);
     void WithMeshClsn_UpdateContinuous_Veneer(void* p);

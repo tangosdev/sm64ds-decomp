@@ -1,5 +1,5 @@
 #include "types.h"
-extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
+extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
 extern int AngleDiff(int a, int b);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);

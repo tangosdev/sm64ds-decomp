@@ -18,8 +18,8 @@ extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& f);
 extern "C" void _ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr& f);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(ShadowModel* thiz);
 extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File& a, BTP_File& b);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim* thiz, BCA_File* f, int a, Fix12 b, u32 c);
-extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(TextureSequence* thiz, BTP_File& f, int a, Fix12 b, u32 c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim* thiz, BCA_File* f, int a, Fix12i b, u32 c);
+extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(TextureSequence* thiz, BTP_File& f, int a, Fix12i b, u32 c);
 
 extern SharedFilePtr data_ov085_0213074c;
 extern SharedFilePtr data_ov085_02130744;

@@ -8,10 +8,10 @@
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
-extern Fix12 Player_ScaleByCharFactor(void* c, Fix12 a);
+extern Fix12i Player_ScaleByCharFactor(void* c, Fix12i a);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 a);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, s16 a5);
 extern void Player_AdvanceAnims(void* c);

@@ -16,7 +16,7 @@ extern int Player_ScaleByCharFactor(void* c, int a);
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void Player_AdvanceAnims(void* c);
 

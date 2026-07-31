@@ -11,7 +11,7 @@ extern void func_ov002_020c06fc(char* c, u32 mask);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const Vector3& v);
 extern void func_ov002_020bf9d4(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
+extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
 extern void _Z15ApproachLinear2Rsss(s16* v, s16 target, s16 step);
 extern int _ZN6Player9GetHealthEv(void* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);

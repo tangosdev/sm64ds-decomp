@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern void ApproachLinear(struct Vector3 *a, const struct Vector3 *b, Fix12 f);
+extern void ApproachLinear(struct Vector3 *a, const struct Vector3 *b, Fix12i f);
 extern int func_ov094_02136188(void *c, void *p);
 extern int data_ov094_02136b60[];
 }

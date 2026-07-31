@@ -27,7 +27,7 @@ extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-    void *self, ShadowModel *sm, Matrix4x3 *mtx, Fix12 h, Fix12 g, unsigned int u);
+    void *self, ShadowModel *sm, Matrix4x3 *mtx, Fix12i h, Fix12i g, unsigned int u);
 extern struct Blob48 { int w[12]; } data_02082128;
 
 int func_ov074_021223bc(char *c)

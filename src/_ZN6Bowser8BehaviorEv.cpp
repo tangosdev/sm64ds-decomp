@@ -23,7 +23,7 @@ void MovingCylinderClsnWithPos::SetPosRelativeToActor(const Vector3&);
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
+extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern int data_0209e650;
 extern char* data_0209f318;
 }

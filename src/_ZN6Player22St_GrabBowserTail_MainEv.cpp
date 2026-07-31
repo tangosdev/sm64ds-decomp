@@ -5,7 +5,7 @@
 #include "Player.h"
 extern "C" {
 extern int _ZN6Player12FinishedAnimEv(char* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12i b, u32 d);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void* v);
 extern void func_ov002_020daa74(char* c);
 extern void _Z15ApproachLinear2Rsss(s16* ref, s16 target, s16 step);

@@ -6,7 +6,7 @@ struct Actor {
     Player *ClosestPlayer();
     short HorzAngleToCPlayer();
 };
-namespace Sound { void PlaySub(u32, u32, u32, Fix12, bool); }
+namespace Sound { void PlaySub(u32, u32, u32, Fix12i, bool); }
 extern "C" void func_0201f32c(int);
 extern "C" int func_ov085_0212e728(void *c, void *p);
 extern unsigned char data_0209d66c;

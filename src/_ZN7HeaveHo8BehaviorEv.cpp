@@ -16,7 +16,7 @@ int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *v);
 int func_02010844(void *unused, Vector3 *v, s16 angle);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *self, WithMeshClsn *wm, Fix12 a, s16 b, int c, int d, void *e);
+int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *self, WithMeshClsn *wm, Fix12i a, s16 b, int c, int d, void *e);
 void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
 void func_ov077_02126dac(char *t);
 void func_ov077_02126528(char *c);

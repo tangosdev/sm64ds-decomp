@@ -1,8 +1,8 @@
 #include "types.h"
 extern u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-    u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, const void* f);
+    u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, const void* f, void* g);
+    u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, const void* f, void* g);
 extern void* _ZN8Particle6System12FromUniqueIDEj(u32 id);
 
 void func_ov060_02116518(char* self, u32 kind, int a2, int a3)
@@ -23,7 +23,7 @@ void func_ov060_02116518(char* self, u32 kind, int a2, int a3)
 
         if (kind == 0x9a) {
             *(int*)((char*)o + 0x44) = (int)(((long long)(*(int*)(self + 0x360)) * 0x2800 + 0x800) >> 12);
-            *(int*)((char*)o + 0x4c) = (short)(Fix12)(((long long)(*(int*)(self + 0x360)) * 0xa66 + 0x800) >> 12);
+            *(int*)((char*)o + 0x4c) = (short)(Fix12i)(((long long)(*(int*)(self + 0x360)) * 0xa66 + 0x800) >> 12);
         }
     }
 
@@ -41,5 +41,5 @@ void func_ov060_02116518(char* self, u32 kind, int a2, int a3)
         return;
 
     *(int*)((char*)o + 0x44) = (int)(((long long)(*(int*)(self + 0x360)) * 0x2800 + 0x800) >> 12);
-    *(int*)((char*)o + 0x4c) = (short)(Fix12)(((long long)(*(int*)(self + 0x360)) * 0xa66 + 0x800) >> 12);
+    *(int*)((char*)o + 0x4c) = (short)(Fix12i)(((long long)(*(int*)(self + 0x360)) * 0xa66 + 0x800) >> 12);
 }

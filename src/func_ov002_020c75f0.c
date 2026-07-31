@@ -5,7 +5,7 @@ extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void *v);
 extern void func_ov002_020c2f64(void *c);
 extern void _ZN6Player4HealEi(void *c, int amt);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 anim, int a, Fix12i b, u32 d);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void *v);
 extern void func_02012694(u32 id, void *v);
 extern u8 data_0209f2fc;

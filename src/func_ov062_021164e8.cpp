@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 struct BCA_File;
-struct ModelAnim { void SetAnim(BCA_File *f, int a, Fix12 b, unsigned int c); };
+struct ModelAnim { void SetAnim(BCA_File *f, int a, Fix12i b, unsigned int c); };
 
 extern void *data_ov062_0211de00[];
 extern int data_ov062_0211dec0;

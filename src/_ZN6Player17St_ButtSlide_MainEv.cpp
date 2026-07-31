@@ -16,7 +16,7 @@ extern void func_ov002_020e25f0(char* c, int a);
 extern void func_ov002_020c18b0(char* c, int a);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, char* v);
 extern void func_ov002_020dc560(char* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void Player_AdvanceAnims(char* c);
 
