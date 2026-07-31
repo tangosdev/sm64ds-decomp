@@ -2635,9 +2635,23 @@ On `func_02038824` this bit a whole sweep: `scheduling`, `register_coloring`,
 inert, but they were never actually tested. Only `optimize_for_size`, `optimization_level`,
 `opt_dead_code` and `opt_propagation` demonstrably moved the output on that shape.
 
-**How to apply:** before recording a pragma as inert, prove the compiler HONOURS it -- find
-one source shape where it changes the output at all. If it never moves anything anywhere,
-suspect the name before believing the negative.
+**How to apply -- there is an exact screen, use it instead of guessing.** `-w illpragmas`
+makes mwccarm print `<file>:<line>: warning: illegal #pragma` and NAME THE LINE for every
+pragma it does not know, while staying silent on real ones. This is now in
+`match.py`'s `DEFAULT_FLAGS` (and therefore in `swarm.CPP_FLAGS`, which derives from it), and
+`compile_c` surfaces the warning even on a SUCCESSFUL compile, since a clean compile is
+exactly the case where a typo'd pragma would otherwise pass as "inert". It is a warning-only
+flag with no codegen effect: all banked matches were re-verified with it on.
+
+**Caveat that matters: `2004/b56` does NOT support `-w illpragmas`** -- it stays silent on a
+bogus pragma. The whole 1.2 line (base, sp2, sp2p3) does warn. So if you are working a
+function whose best version is b56, a single `--version 2004/b56` run will NOT screen your
+pragma names. Run `--all` (which compiles the 1.2 versions too) at least once, or screen the
+file against 1.2/sp2p3 explicitly, before recording any pragma result.
+
+If for some reason you cannot use the flag, the fallback is the old advice: prove the
+compiler HONOURS the pragma by finding one source shape where it changes output at all.
+`optimize_for_size on` is a reliable positive control -- it demonstrably moves output.
 
 ## 6at. Callee-saved rank is filled in TWO passes, and the address-constant class is a rotator (2026-07-31, PS_UpdateOkAndBackButtons 18 -> 9)
 
