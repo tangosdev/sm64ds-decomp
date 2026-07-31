@@ -1,13 +1,16 @@
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN18MovingCylinderClsnD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
+// @symbol _ZN4ToadD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_ModelAnim.h"
+#include "decl_MovingCylinderClsn.h"
+#include "decl_ShadowModel.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV11daKinopio_c */
 extern void *G0;
 int *_ZN4ToadD0Ev(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV11daKinopio_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x16c);
     _ZN9ModelAnimD1Ev((char *)t + 0x108);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);

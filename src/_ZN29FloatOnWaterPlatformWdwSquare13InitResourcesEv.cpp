@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "FloatOnWaterPlatformWdwSquare.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct Model { int d; };
@@ -20,11 +25,10 @@ extern SharedFilePtr data_ov029_02114250;
 extern SharedFilePtr data_ov029_02114248;
 extern CLPS_Block data_ov029_0211302c;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
-extern int func_ov029_021116e4;
 
-extern "C" int _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv(char* thiz)
+int FloatOnWaterPlatformWdwSquare::InitResources()
 {
-    char* c = thiz;
+    char* c = ((char*)this);
     {
         BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114250);
         _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, -1);

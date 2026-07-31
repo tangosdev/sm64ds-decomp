@@ -1,3 +1,6 @@
+// @symbol _ZN4Heap23SetupSolidHeapAsDefaultEjPS_i
+/* recovered: named members + shared header */
+#include "Heap.h"
 // Heap::SetupSolidHeapAsDefault: creates a SolidHeap, saves default to tmp, sets new heap as default
 
 typedef void Heap;

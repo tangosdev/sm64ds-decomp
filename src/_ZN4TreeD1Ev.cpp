@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN4TreeD1Ev
+/* recovered: named members + shared header */
+#include "Tree.h"
 extern "C" {
 extern int func_0207328c(void*, int, int, void*);
 extern void _ZN5ActorD2Ev(void*);

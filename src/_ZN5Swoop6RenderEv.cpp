@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN5Swoop6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Swoop.h"
 struct Base {
     virtual void v0();
     virtual void v1();
@@ -8,16 +11,15 @@ struct Base {
     virtual void m(int a);
 };
 
-extern "C" int _ZN5Swoop6RenderEv(char *c);
-extern "C" int _ZN5Swoop6RenderEv(char *c)
+int Swoop::Render()
 {
-    int flag = (*(int *)(c + 0xb0) & 0x40000) != 0;
+    int flag = (unk_0b0 & 0x40000) != 0;
     if (flag != 0) return 1;
-    if (*(unsigned char *)(c + 0x43c) == 1) {
-        Base *b = (Base *)(c + 0x300);
+    if (unk_43c == 1) {
+        Base *b = (Base *)((char *)&mModelAnim1);
         b->m(0);
     } else {
-        Base *b = (Base *)(c + 0x364);
+        Base *b = (Base *)((char *)&mModelAnim2);
         b->m(0);
     }
     return 1;

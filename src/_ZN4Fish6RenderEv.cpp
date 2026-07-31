@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN4Fish6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Fish.h"
 struct Base {
     virtual void v0();
     virtual void v1();
@@ -7,9 +10,11 @@ struct Base {
     virtual void v4();
     virtual void m(int);
 };
-extern "C" int _ZN4Fish6RenderEv(char *c) {
-    if (*(unsigned char*)(c + 0x159) == 0) {
-        Base *b = (Base*)(c + 0xd4);
+
+int Fish::Render()
+{
+    if (unk_159 == 0) {
+        Base *b = (Base*)((char *)&mModelAnim);
         b->m(0);
     }
     return 1;

@@ -1,3 +1,6 @@
+// @symbol _ZN4HeapD2Ev
+/* recovered: named members + shared header */
+#include "Heap.h"
 /* Heap::~Heap() at 0x0203ca10 -- base object destructor (D2).
  * A trivial destructor whose only effect is to reset the object's vtable pointer
  * (at offset 0x00) back to Heap's own vtable before the base subobject is torn

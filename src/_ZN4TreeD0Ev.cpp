@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN4TreeD0Ev
+/* recovered: named members + shared header */
+#include "Tree.h"
 extern "C" {
 extern int _ZTV4Tree[];
 extern int data_020a0eac[];

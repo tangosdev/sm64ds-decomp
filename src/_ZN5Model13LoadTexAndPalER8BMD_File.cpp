@@ -1,10 +1,13 @@
 //cpp
+// @symbol _ZN5Model13LoadTexAndPalER8BMD_File
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Model.h"
 typedef unsigned int u32;
 
 extern "C" {
 
-extern u32 data_020a4bd8;
-extern u32 data_020a4bcc;
 
 void Crash();
 u32 _ZN5Model27LoadCompressedTextureToVramEPcjPc(char *src, u32 size, char *dst);
@@ -13,8 +16,7 @@ void _ZN2GX16BeginLoadTexPlttEv();
 void _ZN2GX11LoadTexPlttEPKvjj(const void *src, u32 addr, u32 size);
 void _ZN2GX14EndLoadTexPlttEv();
 
-void _ZN5Model13LoadTexAndPalER8BMD_File(char *f)
-{
+void _ZN5Model13LoadTexAndPalER8BMD_File(struct Model *self) {
     u32 i;
     u32 ret;
     u32 sz;
@@ -25,10 +27,10 @@ void _ZN5Model13LoadTexAndPalER8BMD_File(char *f)
     u32 off;
 
     i = 0;
-    if (i < *(u32 *)(f + 0x14)) {
+    if (i < self->unk_014) {
       off = i;
       do {
-        t = *(char **)(f + 0x18) + off;
+        t = *(char **)((char *)&self->unk_018) + off;
         sz = *(u32 *)(t + 8);
         if (((*(u32 *)(t + 0x10) >> 26) & 7) == 5) {
             ret = _ZN5Model27LoadCompressedTextureToVramEPcjPc(
@@ -39,16 +41,16 @@ void _ZN5Model13LoadTexAndPalER8BMD_File(char *f)
         *(u32 *)(t + 0x10) = (*(u32 *)(t + 0x10) & ~0xffff) | ((ret >> 3) & 0xffff);
         i++;
         off += 0x14;
-      } while (i < *(u32 *)(f + 0x14));
+      } while (i < self->unk_014);
     }
 
     _ZN2GX16BeginLoadTexPlttEv();
 
     j = 0;
-    if (j < *(u32 *)(f + 0x1c)) {
+    if (j < self->unk_01c) {
       poff = j;
       do {
-        p = *(char **)(f + 0x20) + poff;
+        p = *(char **)((char *)&self->unk_020) + poff;
         sz = *(u32 *)(p + 8);
         if (data_020a4bcc + sz > data_020a4bd8) Crash();
         if (sz <= 8) {
@@ -62,7 +64,7 @@ void _ZN5Model13LoadTexAndPalER8BMD_File(char *f)
         }
         j++;
         poff += 0x10;
-      } while (j < *(u32 *)(f + 0x1c));
+      } while (j < self->unk_01c);
     }
 
     _ZN2GX14EndLoadTexPlttEv();

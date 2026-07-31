@@ -1,9 +1,12 @@
 //cpp
+// @symbol _ZN5Model14SetPolygonModeEi
+/* recovered: named members + shared header, real C++ method */
+#include "Model.h"
 extern "C" {
 void func_02046234(char* p, int mode);
 }
 
-extern "C" void _ZN5Model14SetPolygonModeEi(char* self, int mode)
+void Model::SetPolygonMode(int mode)
 {
-    func_02046234(self + 8, mode);
+    func_02046234(((char*)this) + 8, mode);
 }

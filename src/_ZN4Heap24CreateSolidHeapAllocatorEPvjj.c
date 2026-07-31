@@ -1,3 +1,6 @@
+// @symbol _ZN4Heap24CreateSolidHeapAllocatorEPvjj
+/* recovered: named members + shared header */
+#include "Heap.h"
 // Heap::CreateSolidHeapAllocator(void* address, u32 size, u32 flags)
 // Address: 0x0204ebc4
 // Try: compute avail only in second condition to defer sub

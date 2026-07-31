@@ -1,3 +1,6 @@
+// @symbol _ZN4Heap28CreateExpandingHeapAllocatorEPvjj
+/* recovered: named members + shared header */
+#include "Heap.h"
 // Heap::CreateExpandingHeapAllocator(void* address, u32 size, u32 flags)
 // Address: 0x0204e3c0
 // Inline avail expression in || to defer sub r3,r1,r0 after bhi

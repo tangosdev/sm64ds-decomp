@@ -1,3 +1,6 @@
+// @symbol _ZN4HeapD1Ev
+/* recovered: named members + shared header */
+#include "Heap.h"
 /* Heap::~Heap() at 0x0203ca44 -- complete object destructor (D1).
  * A trivial destructor whose only effect is to reset the object's vtable pointer
  * (at offset 0x00) back to Heap's own vtable. Returns void.

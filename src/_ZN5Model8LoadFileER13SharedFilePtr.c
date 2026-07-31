@@ -1,3 +1,6 @@
+// @symbol _ZN5Model8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header */
+#include "Model.h"
 /* Model::LoadFile (static) at 0x02017a3c
  * Loads a SharedFilePtr; if it's the first reference and file is non-null,
  * calls UpdateFileOffsets, AddToCommonModelDataArr, and ReallocateModelFile.

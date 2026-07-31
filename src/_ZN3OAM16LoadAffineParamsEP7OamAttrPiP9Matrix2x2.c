@@ -1,3 +1,6 @@
+// @symbol _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2
+/* recovered: named members + shared header */
+#include "OAM.h"
 struct OamAttr { unsigned short a, b, c, param; };
 
 #pragma opt_strength_reduction off

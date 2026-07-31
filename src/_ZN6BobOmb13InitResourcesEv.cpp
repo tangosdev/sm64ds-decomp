@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6BobOmb13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "BobOmb.h"
 typedef int Fix12;
 struct BMD_File;
 struct SharedFilePtr { int h; };
@@ -68,51 +71,51 @@ struct Obj {
     unsigned char f3f2, f3f3, f3f4, f3f5, f3f6;  /* 3f2..3f6 */
 };
 
-extern "C" int _ZN6BobOmb13InitResourcesEv(Obj* o)
+int BobOmb::InitResources()
 {
     BMD_File* bmd;
 
     Animation::LoadFile(data_ov102_0214e9c0);
     Animation::LoadFile(data_ov102_0214e9c8);
     bmd = Model::LoadFile(data_ov002_0210d9e0);
-    if (((ModelBase*)&o->f300)->SetFile(bmd, 1, -1) == 0)
+    if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, -1) == 0)
         return 0;
-    if (((ShadowModel*)&o->f364)->InitCylinder() == 0)
+    if (((ShadowModel*)&((Obj*)this)->f364)->InitCylinder() == 0)
         return 0;
 
-    o->f3f5 = (unsigned char)(o->f8 & 7);
-    o->f3ec = 0x2000;
-    func_ov102_0214c0b8(o);
-    ((MovingCylinderClsn*)&o->f110)->Init((Actor*)o, 0x3c000, 0x50000, 0x200004, 0xa6d380);
-    o->fa0 = -0x37000;
+    ((Obj*)this)->f3f5 = (unsigned char)(((Obj*)this)->f8 & 7);
+    ((Obj*)this)->f3ec = 0x2000;
+    func_ov102_0214c0b8(((Obj*)this));
+    ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x3c000, 0x50000, 0x200004, 0xa6d380);
+    ((Obj*)this)->fa0 = -0x37000;
 
-    if (o->f3f5 == 2) {
-        *(unsigned int*)(((int)o + 0x128) & 0xFFFFFFFFFFFFFFFF) |= 2;
-        *(unsigned int*)(((int)o + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1u;
-        o->f108 = 0;
-    } else if (o->f3f5 == 4) {
-        o->f108 = 0;
+    if (((Obj*)this)->f3f5 == 2) {
+        *(unsigned int*)(((int)((Obj*)this) + 0x128) & 0xFFFFFFFFFFFFFFFF) |= 2;
+        *(unsigned int*)(((int)((Obj*)this) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1u;
+        ((Obj*)this)->f108 = 0;
+    } else if (((Obj*)this)->f3f5 == 4) {
+        ((Obj*)this)->f108 = 0;
     } else {
-        o->f108 = 1;
+        ((Obj*)this)->f108 = 1;
     }
 
-    o->f3c4 = o->f5c;
-    o->f3c8 = o->f60;
-    o->f3cc = o->f64;
-    o->f394 = data_02082128;
-    o->f3e8 = 0;
-    o->f3ea = 0;
-    o->f80 = 0x1000;
-    o->f84 = 0x1000;
-    o->f88 = 0x1000;
-    o->f390 = 0;
-    o->f3f2 = 0;
-    ((WithMeshClsn*)&o->f144)->Init((Actor*)o, 0x32000, 0x32000, 0, 0);
-    ((WithMeshClsn*)&o->f144)->StartDetectingWater();
-    o->f3f3 = 1;
-    o->fc8 = 0;
-    o->f3e0 = 2;
-    o->f3f6 = 0;
-    o->f3f0 = o->f8e;
+    ((Obj*)this)->f3c4 = ((Obj*)this)->f5c;
+    ((Obj*)this)->f3c8 = ((Obj*)this)->f60;
+    ((Obj*)this)->f3cc = ((Obj*)this)->f64;
+    ((Obj*)this)->f394 = data_02082128;
+    ((Obj*)this)->f3e8 = 0;
+    ((Obj*)this)->f3ea = 0;
+    ((Obj*)this)->f80 = 0x1000;
+    ((Obj*)this)->f84 = 0x1000;
+    ((Obj*)this)->f88 = 0x1000;
+    ((Obj*)this)->f390 = 0;
+    ((Obj*)this)->f3f2 = 0;
+    ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
+    ((WithMeshClsn*)&((Obj*)this)->f144)->StartDetectingWater();
+    ((Obj*)this)->f3f3 = 1;
+    ((Obj*)this)->fc8 = 0;
+    ((Obj*)this)->f3e0 = 2;
+    ((Obj*)this)->f3f6 = 0;
+    ((Obj*)this)->f3f0 = ((Obj*)this)->f8e;
     return 1;
 }

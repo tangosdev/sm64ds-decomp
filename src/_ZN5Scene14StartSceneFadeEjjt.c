@@ -1,7 +1,11 @@
+// @symbol _ZN5Scene14StartSceneFadeEjjt
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Scene.h"
+/* recovered: named members + shared header */
+#include "Scene.h"
 typedef unsigned int u32;
 typedef unsigned short u16;
 
-extern int _ZN5Scene15SetSceneToSpawnEjj(u32 actorID, u32 param);
 
 struct FaderColor {
     int vtable_dummy; // 0x0

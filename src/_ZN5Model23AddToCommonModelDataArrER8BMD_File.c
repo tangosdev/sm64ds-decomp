@@ -1,7 +1,10 @@
-extern int data_0209cef8[];
-extern int data_0209cefc[];
+// @symbol _ZN5Model23AddToCommonModelDataArrER8BMD_File
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Model.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Model.h"
 extern int data_0208e738[];
-extern int _ZN5Model13LoadTexAndPalER8BMD_File(void*);
 
 void* _ZN5Model23AddToCommonModelDataArrER8BMD_File(void* a){
   char* p = (char*)data_0209cefc;

@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN5Stage11RenderModelEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Stage.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -40,15 +45,14 @@ struct ModelBase {
 };
 
 extern Info *data_0209f340;
-extern char data_020755d4;
 
 extern "C" void _ZN18TextureTransformer6UpdateER15ModelComponents(void *transformer, ModelComponents &mc);
 
-extern "C" void _ZN5Stage11RenderModelEv(char *self)
+void Stage::RenderModel()
 {
-    ModelComponents *mc = (ModelComponents *)(((long long)(int)(self + 0x874)) & 0xFFFFFFFFFFFFFFFFLL);
+    ModelComponents *mc = (ModelComponents *)(((long long)(int)((char *)&unk_874)));
     Inner *inner = *(Inner **)((char *)mc->sub + 8);
-    Slot *slot = (Slot *)(self + 0x8bc);
+    Slot *slot = (Slot *)((char *)&unk_8bc);
     int i;
 
     for (i = 0; i < data_0209f340->count; i++) {
@@ -63,10 +67,10 @@ extern "C" void _ZN5Stage11RenderModelEv(char *self)
                 idx++;
                 u32 flagsTest = *(volatile u32 *)&comp->flags;
                 if ((flagsTest & 0x1f0000) == 0x1f0000) {
-                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)));
                     *p &= ~0x80000000;
                 } else {
-                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)));
                     *p |= 0x80000000;
                 }
             }
@@ -77,7 +81,7 @@ extern "C" void _ZN5Stage11RenderModelEv(char *self)
             for (j = 0; j < inner->count; j++) {
                 u8 id = *idx;
                 Component *comp = (Component *)((char *)mc->components + id * 0x30);
-                *(u32 *)(((long long)(int)((char *)comp + 0x24)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x80000000;
+                *(u32 *)(((long long)(int)((char *)comp + 0x24))) |= 0x80000000;
                 idx++;
             }
         }
@@ -86,5 +90,5 @@ extern "C" void _ZN5Stage11RenderModelEv(char *self)
         inner = (Inner *)((char *)inner + 0x40);
     }
 
-    ((ModelBase *)(self + 0x86c))->Render(&data_020755d4);
+    ((ModelBase *)((char *)&unk_86c))->Render(&data_020755d4);
 }

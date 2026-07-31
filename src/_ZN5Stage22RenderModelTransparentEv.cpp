@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN5Stage22RenderModelTransparentEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Stage.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 
@@ -13,14 +18,13 @@ struct VBase {
 
 extern "C" {
 extern char *data_0209f340;
-extern char data_020755d4;
 }
 
-extern "C" void _ZN5Stage22RenderModelTransparentEv(char *c)
+void Stage::RenderModelTransparent()
 {
-    char *p = (char *)(((int)c + 0x874) & 0xFFFFFFFFFFFFFFFF);
+    char *p = (char *)(((int)((char *)this) + 0x874) & 0xFFFFFFFFFFFFFFFF);
     char *arr = *(char **)(*(char **)p + 8);
-    char *q = c + 0x8bc;
+    char *q = ((char *)this) + 0x8bc;
     int i;
     for (i = 0; i < *(u8 *)(data_0209f340 + 0x14); i++, q += 0xc, arr += 0x40) {
         if (*(u8 *)(q + 4) != 0) {
@@ -36,5 +40,5 @@ extern "C" void _ZN5Stage22RenderModelTransparentEv(char *c)
             }
         }
     }
-    ((VBase *)(c + 0x86c))->m5(&data_020755d4);
+    ((VBase *)((char *)&unk_86c))->m5(&data_020755d4);
 }

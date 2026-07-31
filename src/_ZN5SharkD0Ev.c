@@ -1,13 +1,16 @@
-extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN12WithMeshClsnD1Ev(void *);
+// @symbol _ZN5SharkD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_ModelAnim.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV9daShark_c */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
 extern void *G0;
 int *_ZN5SharkD0Ev(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV9daShark_c;
     _ZN9ModelAnimD1Ev((char *)t + 0x30c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x150);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x110);

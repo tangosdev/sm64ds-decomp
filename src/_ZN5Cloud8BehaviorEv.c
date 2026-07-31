@@ -1,6 +1,9 @@
+// @symbol _ZN5Cloud8BehaviorEv
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Cloud.h"
 extern int Vec3_Dist(void* a, void* b);
-extern void* FindWithActorID(unsigned int id, void* prev);
-extern int SetPolygonID(void* model, int id);
 
 #pragma opt_propagation off
 int _ZN5Cloud8BehaviorEv(char *c) {

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN5Stage16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "Stage.h"
 /* _ZN5Stage16CleanupResourcesEv @ 0x0202c9a8 (arm9, size 0x264)
  * Releases the level file handles, tears down fader/mesh-collider/message
  * state and unloads the level overlays/archive. Returns 1.
@@ -48,8 +51,9 @@ static inline void DestroyVirt(void **o)
     if (o)
         ((void (*)(void *))((void **)o[0])[1])((void *)o);
 }
+}
 
-int _ZN5Stage16CleanupResourcesEv(char *thiz)
+int Stage::CleanupResources()
 {
     u32 i;
 
@@ -65,13 +69,13 @@ int _ZN5Stage16CleanupResourcesEv(char *thiz)
     data_0209d4a8 = 0;
 
     {
-        void **o = *(void ***)(thiz + 0x9bc);
+        void **o = *(void ***)((char *)&unk_9bc);
         if (o)
             DestroyVirt(o);
     }
 
     {
-        char *e = thiz + 0x8bc;
+        char *e = ((char *)this) + 0x8bc;
         int j;
         for (j = 0; j < *(u8 *)(data_0209f340 + 0x14); j++, e += 0xc) {
             void **o = *(void ***)e;
@@ -95,9 +99,9 @@ int _ZN5Stage16CleanupResourcesEv(char *thiz)
     func_02073244(data_0209f324, 0x60, 8, _ZN9FaderWipeD1Ev);
     data_0209f324 = 0;
     CleanCommonModelDataArr();
-    _ZN16MeshColliderBase7DisableEv(thiz + 0x91c);
+    _ZN16MeshColliderBase7DisableEv((char *)&unk_91c);
     _ZN5Stage18ResetMeshCollidersEv();
-    func_01ffb0c8(thiz + 0x91c);
+    func_01ffb0c8((char *)&unk_91c);
     Deallocate();
     _Z19UnloadLevelOverlaysi(data_0209f2f8);
     if (data_0209f2f8 == 1)
@@ -128,5 +132,4 @@ int _ZN5Stage16CleanupResourcesEv(char *thiz)
         }
     }
     return 1;
-}
 }
