@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player13St_Shell_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_ClsnResult.h"
@@ -6,14 +7,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef long long s64;
-typedef s32 Fix12;
-
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov002_020eeca8(void* c, int arg);

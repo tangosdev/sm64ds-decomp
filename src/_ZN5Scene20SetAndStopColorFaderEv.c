@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef struct FaderBrightness {
     char pad[8];
     u32 state;  /* offset 8 */

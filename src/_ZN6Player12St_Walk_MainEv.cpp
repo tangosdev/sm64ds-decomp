@@ -1,17 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player12St_Walk_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020c5244(void);

@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player15St_Grabbed_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern "C" void Player_AdvanceAnims(char* self);
 extern "C" void _ZN6Player9DropActorEv(char* a);
 extern "C" unsigned int _ZNK6Player14GetBodyModelIDEjb(char* self, unsigned int a, int b);

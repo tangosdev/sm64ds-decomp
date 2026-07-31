@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-
+#include "types.h"
 struct Animation {
     void Advance();
 };

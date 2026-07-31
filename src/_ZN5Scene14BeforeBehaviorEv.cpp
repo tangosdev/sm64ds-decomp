@@ -1,11 +1,9 @@
 //cpp
+#include "types.h"
 /* Scene::BeforeBehavior() at 0x0202e3d4, size 0x1fc
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct A {
     virtual void v0();
     virtual void v1();

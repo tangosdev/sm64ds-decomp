@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Unagi8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Unagi.h"
-typedef short s16;
-typedef unsigned short u16;
-
 struct C;
 typedef void (C::*PMF)();
 

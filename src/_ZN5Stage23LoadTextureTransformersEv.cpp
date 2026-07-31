@@ -1,8 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Stage23LoadTextureTransformersEv
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
-typedef unsigned int u32;
 struct Entry { int x; void* bta; char pad[4]; };
 struct Info { char a[0x10]; struct Entry* entries; unsigned char count; };
 extern struct Info* data_0209f340;

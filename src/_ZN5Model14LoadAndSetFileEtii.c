@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct ModelBase16f9c {
     u32 vtable;
     void *unk04;

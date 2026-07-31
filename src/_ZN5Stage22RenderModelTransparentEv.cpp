@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Stage22RenderModelTransparentEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 struct VBase {
     virtual void m0();
     virtual void m1();

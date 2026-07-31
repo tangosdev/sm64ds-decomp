@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef struct ActorBase { char pad[0]; } ActorBase;
 typedef struct FaderBrightness { char pad[0]; } FaderBrightness;
 typedef struct Scene { char pad[0]; } Scene;

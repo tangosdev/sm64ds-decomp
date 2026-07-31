@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player15St_DeadPit_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
-
 extern "C" {
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);

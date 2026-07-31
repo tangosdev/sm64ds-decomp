@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 typedef struct {
     char data[0x50];
 } Model;

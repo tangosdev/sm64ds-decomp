@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player13InitFireYoshiEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned short u16;
-
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *st);
 extern int data_ov002_0211004c;
 

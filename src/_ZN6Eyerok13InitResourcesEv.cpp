@@ -1,17 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Eyerok13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
-
 extern int data_ov066_0211ae6c[];
 extern int data_ov066_0211ae4c[];
 extern int data_ov066_0211aeb4[];

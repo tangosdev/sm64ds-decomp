@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Bowser8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Bowser.h"
-typedef int Fix12;
-typedef short s16;
-typedef unsigned char u8;
-
-
 struct Actor {
     Actor* ClosestPlayer();
     static Actor* FindWithActorID(unsigned id, Actor* a);

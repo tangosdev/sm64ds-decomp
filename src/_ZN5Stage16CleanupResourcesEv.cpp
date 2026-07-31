@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Stage16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
@@ -6,10 +7,6 @@
  * Releases the level file handles, tears down fader/mesh-collider/message
  * state and unloads the level overlays/archive. Returns 1.
  */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned int u32;
-
 extern "C" {
 extern void *data_020756f0[];   /* 12 SharedFilePtr* released on cleanup */
 extern u8 data_0209f2d8;

@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 struct Matrix4x3 {
     s32 m[12];
 };

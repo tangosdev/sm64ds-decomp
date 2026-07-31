@@ -1,11 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Model13LoadTexAndPalER8BMD_File
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Model.h"
-typedef unsigned int u32;
-
 extern "C" {
 
 

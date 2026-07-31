@@ -1,18 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player14St_OnWall_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef long long s64;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void func_ov002_020c0364(char* c, u32 a);
 extern void func_ov002_020cabe0(char* c);

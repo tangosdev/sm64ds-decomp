@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Dorrie13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Dorrie.h"
-typedef int Fix12;
-typedef short s16;
-typedef unsigned char u8;
-
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* f);
