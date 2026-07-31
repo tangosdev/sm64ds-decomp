@@ -10,7 +10,7 @@ unsigned int func_0205c9b8(char *thiz, int arg1, unsigned int arg2) {
     int r4;
     int sz;
     sz = *(int*)(thiz + 0x24) + *(int*)(thiz + 0x2c) + 0x20;
-    r5 = ((unsigned int)(sz & 0xFFFFFFFFFFFFFFFF) + 0x1f) & ~0x1f;
+    r5 = ((unsigned int)(sz) + 0x1f) & ~0x1f;
     if (r5 > arg2) goto done;
     r4 = (arg1 + 0x1f) & ~0x1f;
     FS_InitFile(s);
@@ -27,7 +27,7 @@ unsigned int func_0205c9b8(char *thiz, int arg1, unsigned int arg2) {
     *(int*)(thiz + 0x28) = r4;
     *(int*)(thiz + 0x38) = arg1;
     *(int(**)(void))(thiz + 0x44) = func_0205d28c;
-    *(int *)(((int)thiz + 0x10) & 0xFFFFFFFFFFFFFFFF) |= 4;
+    *(int *)(((int)thiz + 0x10)) |= 4;
 done:
     return r5;
 }

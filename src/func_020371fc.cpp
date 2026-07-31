@@ -32,7 +32,7 @@ void func_020371fc(char* self)
     if (_ZN6Player7IsInAirEv(*(void**)(self + 0x14))) return;
     {
         Vector3 pos;
-        Vector3* objpos = (Vector3*)(((int)*(char**)(self + 0x14) + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        Vector3* objpos = (Vector3*)(((int)*(char**)(self + 0x14) + 0x5c));
         RaycastGround rg;
         pos.x = objpos->x;
         pos.y = objpos->y + *(int*)(self + 0x18);
@@ -43,7 +43,7 @@ void func_020371fc(char* self)
             int diff = objpos->y - cy;
             if (diff > 0 && diff < (*(int*)(self + 0x18) << 1)) {
                 objpos->y = cy;
-                *(unsigned char*)(((int)self + 0x90) & 0xFFFFFFFFFFFFFFFF) |= 4;
+                *(unsigned char*)(((int)self + 0x90)) |= 4;
                 _ZN10ClsnResultaSERKS_((ClsnResult*)(self + 0x94), &rg.clsn);
                 ((WithMeshClsn*)self)->SetGroundFlag();
             }

@@ -26,7 +26,7 @@ void *func_0205d044(void *pool)
     int f1 = (int)((*(volatile u32 *)(c + 0x10) & 0x20) != 0);
 
     if (f1 != 0) {
-        u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32 *p = (u32 *)(((int)(c + 0x10)));
         *p &= ~0x20;
 
         Node *head = *(Node **)(c + 0x18);
@@ -55,7 +55,7 @@ void *func_0205d044(void *pool)
                 int wasSet = (int)((*(volatile u32 *)(c + 0x10) & 0x10) != 0);
                 int notSet = (int)(wasSet == 0);
                 if (notSet != 0) {
-                    u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u32 *p = (u32 *)(((int)(c + 0x10)));
                     *p |= 0x10;
                 }
                 _ZN3IRQ7RestoreEj(irqSave);
@@ -80,7 +80,7 @@ void *func_0205d044(void *pool)
     {
         int f5 = (int)((*(volatile u32 *)(c + 0x10) & 0x10) != 0);
         if (f5 != 0) {
-            u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            u32 *p = (u32 *)(((int)(c + 0x10)));
             *p &= ~0x10;
             if (*(u32 *)(c + 0x4c) & 0x400) {
                 int buf[0x11];
@@ -97,7 +97,7 @@ void *func_0205d044(void *pool)
     {
         int f7 = (int)((*(volatile u32 *)(c + 0x10) & 0x40) != 0);
         if (f7 != 0) {
-            u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            u32 *p = (u32 *)(((int)(c + 0x10)));
             *p &= ~0x40;
             *p |= 8;
             OS_WakeupThread((u16 *)(c + 0xe));

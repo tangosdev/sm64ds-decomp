@@ -7,7 +7,7 @@ extern void func_0204fda4(char* obj);
 void func_0204fde8(char* obj) {
     if ((int)(*(int*)(obj + 0xc) << 0x1e) >> 0x1f) {
         void* p;
-        int* flags = (int*)(((int)obj + 0xc) & 0xFFFFFFFFFFFFFFFF);
+        int* flags = (int*)(((int)obj + 0xc));
         func_0205abb8(*(int*)(obj + 0x2c), 0, 1 << *(int*)(obj + 0x28), 0);
         *flags &= ~2;
         p = func_0205afb4();

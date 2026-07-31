@@ -95,7 +95,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         if (c1 != -1) {
             u32 v = *(int *)((int)h->f18 + c1 * t14 + 0x10);
             shift = (v >> 0x1a) & 7;
-            *(int *)(((int)e + 0x1c) & 0xFFFFFFFFFFFFFFFF) |= v;
+            *(int *)(((int)e + 0x1c)) |= v;
         }
         idx2 = h->f28[i].f8;
         if (idx2 != -1) {
@@ -127,12 +127,12 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
             e2 = (ElemB *)((int)d->f8 + o34);
             e2->f18 = 0;
             if (s2->f10 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18) & 0xFFFFFFFFFFFFFFFF) |= 1;
+                *(u16 *)(((int)e2 + 0x18)) |= 1;
             if (s2->f14 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18) & 0xFFFFFFFFFFFFFFFF) |= 1;
+                *(u16 *)(((int)e2 + 0x18)) |= 1;
             if (s2->f18 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18) & 0xFFFFFFFFFFFFFFFF) |= 1;
-            *(u16 *)(((int)e2 + 0x18) & 0xFFFFFFFFFFFFFFFF) |= e2[s2->f8].f18;
+                *(u16 *)(((int)e2 + 0x18)) |= 1;
+            *(u16 *)(((int)e2 + 0x18)) |= e2[s2->f8].f18;
             e2->fc = s2->f10;
             e2->f10 = s2->f14;
             e2->f14 = s2->f18;

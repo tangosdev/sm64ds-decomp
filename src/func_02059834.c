@@ -30,7 +30,7 @@ void func_02059834(void)
     u64 now;
     *(volatile unsigned short *)0x4000106 = 0;
     _ZN3IRQ11DisableIRQsEj(0x10);
-    *(int *)(((int)&data_023c0000 + 0x3ff8) & 0xFFFFFFFFFFFFFFFF) |= 0x10;
+    *(int *)(((int)&data_023c0000 + 0x3ff8)) |= 0x10;
     now = func_02059650();
     e = data_020a6444.head;
     if (e == 0) return;

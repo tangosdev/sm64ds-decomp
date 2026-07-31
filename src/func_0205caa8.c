@@ -11,7 +11,7 @@ int func_0205caa8(int *thiz)
         int *p;
         *(volatile int *)&thiz[4];
         func_0205c864(thiz);
-        *(int *)(((int)thiz + 0x10) & 0xFFFFFFFFFFFFFFFF) |= 0x80;
+        *(int *)(((int)thiz + 0x10)) |= 0x80;
         p = (int *)thiz[6];
         if (p != 0) {
             int n;
@@ -29,7 +29,7 @@ int func_0205caa8(int *thiz)
         thiz[11] = 0;
         thiz[13] = 0;
         thiz[12] = thiz[13];
-        *(int *)(((unsigned int)thiz + 0x10) & 0xFFFFFFFFFFFFFFFF) &= ~0xa2;
+        *(int *)(((unsigned int)thiz + 0x10)) &= ~0xa2;
     }
     _ZN3IRQ7RestoreEj(saved);
     return 1;

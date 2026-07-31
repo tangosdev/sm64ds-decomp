@@ -27,7 +27,7 @@ int func_0205d568(Node *node, int b, ...)
             return 0;
         }
     }
-    p = (unsigned int *)(((long long)(int)((char *)node + 0xc)) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (unsigned int *)(((long long)(int)((char *)node + 0xc)));
     *p |= 0x10;
     *p &= ~0x20;
     return 1;

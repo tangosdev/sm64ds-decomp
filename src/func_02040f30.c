@@ -103,7 +103,7 @@ void func_02040f30(void *arg0)
       {
         return;
       }
-      m = (Cmd *) ((((int) thiz) + 0x14) & 0xFFFFFFFFFFFFFFFFLL);
+      m = (Cmd *) ((((int) thiz) + 0x14));
       switch (m->kind)
       {
         case 1:
@@ -122,7 +122,7 @@ void func_02040f30(void *arg0)
           void *p = *((void **) (data_020a1fc0 + 0x1c));
           void *a0 = *((void **) (((char *) p) + 8));
           *((int *) (data_020a1fc0 + 0x1c)) = 0;
-          *((int *) ((((int) p) + 0x28) & 0xFFFFFFFFFFFFFFFFLL)) += *((int *) (((char *) p) + 0x34));
+          *((int *) ((((int) p) + 0x28))) += *((int *) (((char *) p) + 0x34));
           func_0205cd5c(a0, 0);
           return;
         }

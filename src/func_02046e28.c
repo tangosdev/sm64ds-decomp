@@ -10,7 +10,7 @@ struct Model { u8 pad0[4]; struct Material *materials; };
 
 extern void Crash(void);
 
-#define LAUNDER(p) ((volatile u32 *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(p) ((volatile u32 *)(int)(((long long)(int)(p))))
 
 void func_02046e28(struct Model *model, struct MatAnimData *anim, short frame)
 {

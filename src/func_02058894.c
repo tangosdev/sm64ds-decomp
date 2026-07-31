@@ -25,7 +25,7 @@ int func_02058894(struct Q *q, int val, int flag)
         int idx = (q->cap + q->head) % q->count;
         q->arr[idx] = val;
         {
-            int *headp = (int*)(((long long)((char*)q + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *headp = (int*)(((long long)((char*)q + 0x10)));
             *headp = *headp + 1;
         }
         OS_WakeupThread((char*)q + 2);

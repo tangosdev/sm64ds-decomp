@@ -20,8 +20,8 @@ void dWipe_c_AdvanceFade(char *obj)
     case 0:
         return;
     case 1:
-        *(int *)(((long long)(int)(obj + 0x1c)) & 0xffffffffffffffffLL) += self->unk_020;
-        *(int *)(((long long)(int)(obj + 0x20)) & 0xffffffffffffffffLL) += self->unk_024;
+        *(int *)(((long long)(int)(obj + 0x1c))) += self->unk_020;
+        *(int *)(((long long)(int)(obj + 0x20))) += self->unk_024;
         if (self->unk_01c >= 0x200000) {
             self->unk_01c = 0x200000;
             self->unk_00f = 0;
@@ -32,8 +32,8 @@ void dWipe_c_AdvanceFade(char *obj)
     case 2:
         return;
     case 3:
-        *(int *)(((long long)(int)(obj + 0x1c)) & 0xffffffffffffffffLL) += self->unk_020;
-        *(int *)(((long long)(int)(obj + 0x20)) & 0xffffffffffffffffLL) += self->unk_024;
+        *(int *)(((long long)(int)(obj + 0x1c))) += self->unk_020;
+        *(int *)(((long long)(int)(obj + 0x20))) += self->unk_024;
         if (self->unk_01c <= 0) {
             int b;
             self->unk_01c = 0;

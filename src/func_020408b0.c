@@ -37,7 +37,7 @@ void func_020408b0(unsigned short arg)
         p = (char *)data_020a0f54;
         data_020a0f28 = *(unsigned short *)(p + 0x36);
         p += 0x48;
-        ++*(unsigned short *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL);
+        ++*(unsigned short *)(int)(((long long)(int)(p)));
     }
     data_020a0f74 = _ZN6Memory8AllocateEji(0x420, 0x20);
     data_020a0f80 = _ZN6Memory8AllocateEji(0x100, 0x20);

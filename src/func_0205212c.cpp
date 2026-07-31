@@ -56,7 +56,7 @@ extern "C" void func_0205212c(Obj *self) {
         node = next;
     }
     IRQ::Restore(irq);
-    u32 *p = (u32*)(((int)self + 0xf0) & 0xFFFFFFFFFFFFFFFF);
+    u32 *p = (u32*)(((int)self + 0xf0));
     *p &= ~1u;
     *p &= ~4u;
     *p &= ~2u;

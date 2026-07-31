@@ -39,7 +39,7 @@ extern Globals data_020a1fc0;
 
 void func_02041e14(void)
 {
-    Sub *s = (Sub *)(((int)&data_020a1fc0 + 0x440) & 0xFFFFFFFFFFFFFFFF);
+    Sub *s = (Sub *)(((int)&data_020a1fc0 + 0x440));
     Cmd cmd;
     Cmd cmd2;
 
@@ -50,10 +50,10 @@ void func_02041e14(void)
         return;
     }
 
-    *(int *)(((int)s + 0x270c) & 0xFFFFFFFFFFFFFFFF) &= s->f2718;
-    *(int *)(((int)s + 0x2710) & 0xFFFFFFFFFFFFFFFF) &= s->f2718;
-    *(int *)(((int)s + 0x271c) & 0xFFFFFFFFFFFFFFFF) &= s->f2718;
-    *(int *)(((int)s + 0x2728) & 0xFFFFFFFFFFFFFFFF) &= s->f2718;
+    *(int *)(((int)s + 0x270c)) &= s->f2718;
+    *(int *)(((int)s + 0x2710)) &= s->f2718;
+    *(int *)(((int)s + 0x271c)) &= s->f2718;
+    *(int *)(((int)s + 0x2728)) &= s->f2718;
 
     if (s->f2720 != 0 && s->f2724 == 0) {
         int v = s->f272c;
@@ -132,7 +132,7 @@ void func_02041e14(void)
             break;
         case 2:
             found->kind = 3;
-            *(int *)(((long long)(int)((char *)s + 0x271c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~mask;
+            *(int *)(((long long)(int)((char *)s + 0x271c))) &= ~mask;
             break;
         }
 
@@ -146,6 +146,6 @@ void func_02041e14(void)
         cmd2.byte8 = (u8)c;
         func_020656d4((u16)mask, &cmd2, 9, (u32)func_02042160);
         s->f2714 = 1;
-        *(int *)(((long long)(int)((char *)s + 0x270c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~mask;
+        *(int *)(((long long)(int)((char *)s + 0x270c))) &= ~mask;
     }
 }

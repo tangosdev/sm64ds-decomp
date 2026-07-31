@@ -30,7 +30,7 @@ int dScMB_c_Behavior(void *arg0)
         data_0209d454 = 0x10;
         *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
         *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         break;
 
     case 1:
@@ -39,21 +39,21 @@ int dScMB_c_Behavior(void *arg0)
             *(int *)&data_020a0c64 = r;
             if (r == 0) break;
         }
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 2:
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 3:
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 4:
         func_0201a244((int)&func_02034fbc, 0, 0xf, 0, 0x1000);
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 5:
         if (func_0201a1bc() == 0) break;
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 6:
         if (func_0203d7b8() != 0) break;
@@ -61,18 +61,18 @@ int dScMB_c_Behavior(void *arg0)
         func_0200f13c();
         func_0203d930();
         func_020308b4();
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         /* fallthrough */
     case 7:
         if (func_020308a8() == 0) break;
         _ZN5Scene14StartSceneFadeEjjt(6, 0, 0x7fff);
         func_02012790(0x11f);
-        (*(int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x60)))++;
         break;
     }
 
     if (*(int *)(self + 0x60) < 8) {
-        (*(int *)(((int)self + 0x64) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(((int)self + 0x64)))++;
         if (*(int *)(self + 0x64) >= 0x1518) {
             data_0209fc54 = 1;
         }

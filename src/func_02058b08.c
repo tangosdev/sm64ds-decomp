@@ -27,12 +27,12 @@ void func_02058b08(struct Obj* self)
     for (;;) {
         if (self->f4 == 0) {
             self->f4 = cur;
-            *(int*)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(int*)(((int)self + 8)) += 1;
             func_020589ac(cur, self);
             break;
         }
         if (self->f4 == cur) {
-            *(int*)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(int*)(((int)self + 8)) += 1;
             break;
         }
         cur->f78 = self;

@@ -22,7 +22,7 @@ void func_0205cd5c(struct T *self, int arg)
     int b = (int)((self->flags & 0x100) != 0);
 
     if (b) {
-        u32 *f = (u32 *)(((int)self + 0x10) & 0xFFFFFFFFFFFFFFFF);
+        u32 *f = (u32 *)(((int)self + 0x10));
         u32 v;
         char *t;
         int r;
@@ -41,7 +41,7 @@ void func_0205cd5c(struct T *self, int arg)
     {
         char *p = self->th;
         u32 irq = func_02059d1c();
-        u32 *f = (u32 *)(((int)self + 0x10) & 0xFFFFFFFFFFFFFFFF);
+        u32 *f = (u32 *)(((int)self + 0x10));
 
         *(int *)(p + 0x14) = arg;
         *f = *f & ~0x200;
