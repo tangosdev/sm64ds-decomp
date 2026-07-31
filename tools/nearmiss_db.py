@@ -98,6 +98,14 @@ def evaluate(src, name, target):
 def load_db():
     db = {}
     for r in L.read_records(DB):        # corrupt lines are reported, not swallowed
+        # A row that parses as JSON but lacks addr/module is unkeyable. That used to raise
+        # out of key_of and take down every caller -- one bad ingest silently disabled the
+        # whole permuter crunch pipeline. Skip it loudly instead; the row keeps its place
+        # in the file so it can be repaired rather than lost.
+        if r.get("addr") is None or r.get("module") is None:
+            print(f"nearmiss_db: skipping unkeyable row (no addr/module): "
+                  f"{r.get('name') or '<unnamed>'}", file=sys.stderr)
+            continue
         db[L.key_of(r)] = r             # normalized: addr is stored as both hex str and int
     return db
 
