@@ -21,6 +21,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import match as M
 import modules as MOD
 import probe_versions as PV
+import srcpath as SP
 import swarm as S
 
 SRC = REPO / "src"
@@ -66,13 +67,16 @@ def src_texts(name, addr):
     content is a path into match/auto -- skip those. A match counts if ANY candidate
     reproduces it (the two dirs can hold different revisions of the same function)."""
     out = []
-    for base in (SRC / name, AUTO / f"0x{addr:08x}"):
-        for ext in (".c", ".cpp"):
-            p = base.with_suffix(ext)
-            if p.exists():
-                t = p.read_text(encoding="utf-8", errors="replace")
-                if not t.strip().startswith("C:") and "match\\auto" not in t and "match/auto" not in t:
-                    out.append(t)
+    # srcpath resolves the committed source wherever it lives; match/auto stays keyed by
+    # address and is composed here. Also drops the old `base.with_suffix(ext)`, which
+    # would have mangled any symbol containing a dot.
+    candidates = list(SP.paths_for(name))
+    candidates += [AUTO / f"0x{addr:08x}{ext}" for ext in (".c", ".cpp")]
+    for p in candidates:
+        if p.exists():
+            t = p.read_text(encoding="utf-8", errors="replace")
+            if not t.strip().startswith("C:") and "match\\auto" not in t and "match/auto" not in t:
+                out.append(t)
     return out
 
 
