@@ -22,7 +22,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
-extern int func_ov070_02120020(void* c, PMF* p);
+extern int FlyGuy_ChangeState(void* c, PMF* p);
 
 int FlyGuy::InitResources()
 {
@@ -44,6 +44,6 @@ int FlyGuy::InitResources()
     unk_3c0 = mPosX;
     unk_3c4 = mPosY;
     unk_3c8 = mPosZ;
-    func_ov070_02120020(((char*)this), &data_ov070_0212359c);
+    FlyGuy_ChangeState(((char*)this), &data_ov070_0212359c);
     return 1;
 }

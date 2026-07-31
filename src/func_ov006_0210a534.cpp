@@ -5,7 +5,7 @@ typedef unsigned int u32;
 extern "C" {
 int LoadFile(int handle);
 void DecompressLZ16(int src, void* dst);
-void func_ov004_020adc5c(int handle);
+void Ov004_Deallocate(int handle);
 void Deallocate(void* ptr);
 void func_020562b4(const void* src, u32 offset, u32 count);
 extern u8 data_0209d454;
@@ -18,7 +18,7 @@ extern "C" void func_ov006_0210a534(void){
   data_0209d454 |= 8;
   *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x214;
   DecompressLZ16(h, G2S::GetBG3CharPtr());
-  func_ov004_020adc5c(h);
+  Ov004_Deallocate(h);
   h = LoadFile(0x27);
   GXS::LoadBGPltt((void*)h, 0xa0, 0x160);
   Deallocate((void*)h);

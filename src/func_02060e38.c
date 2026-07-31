@@ -23,7 +23,7 @@ extern G data_020a8180;
 
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
-void func_0205807c(u16 *self);
+void OS_WakeupThread(u16 *self);
 void func_02058048(struct Obj *self);
 
 void func_02060e38(void) {
@@ -42,7 +42,7 @@ void func_02060e38(void) {
         val &= ~0xc;
         *pf = val;
     }
-    func_0205807c(&g->fd4);
+    OS_WakeupThread(&g->fd4);
     if (g->flags & 0x10) {
         func_02058048(&g->obj);
     }

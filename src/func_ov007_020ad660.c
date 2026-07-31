@@ -10,7 +10,7 @@ extern short data_02082214[];
 extern void func_ov007_020c92d0(void *a);
 extern void func_ov007_020c0638(void *a, int b, int c, int d);
 extern void func_ov007_020c02d8(void *a, int b, u16 c);
-extern void func_ov007_020bfacc(int a, int b, int c);
+extern void RequestScreenFade(int a, int b, int c);
 extern void func_ov007_020c1d8c(int a);
 extern int _ZN4cstd3divEii(int, int);
 extern void func_ov007_020ada70(void);
@@ -65,7 +65,7 @@ void func_ov007_020ad660(char *arg0)
         if (*(int *)(*(char **)(*(char **)data_ov007_0210342c + 0x40) + 0xc) != 0) {
             return;
         }
-        func_ov007_020bfacc(9, 0, (int)func_ov007_020ada70);
+        RequestScreenFade(9, 0, (int)func_ov007_020ada70);
         func_ov007_020c02d8(*(char **)(*(char **)(arg0 + 4) + 0x10), 0x18, 0x301);
         *(int *)(*(char **)(arg0 + 4) + 0xc) = 1;
         func_ov007_020c1d8c(0);

@@ -3,7 +3,7 @@ typedef unsigned short u16;
 
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 saved);
-extern void func_0205807c(u16 *p);
+extern void OS_WakeupThread(u16 *p);
 extern int func_0205c5e4(void *self, int a);
 extern void *func_0205d044(void *pool);
 
@@ -24,7 +24,7 @@ void func_0205cfa4(Node *self)
         u32 saved = _ZN3IRQ7DisableEv();
         int b = (int)((self->flags & 4) != 0);
         if (b != 0) {
-            func_0205807c(&self->f18);
+            OS_WakeupThread(&self->f18);
             return;
         }
         *(u32 *)(((u32)self + 0xc) & 0xFFFFFFFFFFFFFFFFull) |= 8u;

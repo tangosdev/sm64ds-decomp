@@ -1,4 +1,4 @@
-unsigned char *func_02071af8(unsigned char *p, int *out)
+unsigned char *ReadSignedVarInt(unsigned char *p, int *out)
 {
     int b0 = (signed char)p[0];
     if ((b0 & 1) == 0) {

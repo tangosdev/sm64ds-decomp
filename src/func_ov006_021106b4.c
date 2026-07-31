@@ -26,7 +26,7 @@ struct Obj {
 
 extern void func_ov006_0211470c(int *a, int *b);
 extern void func_0203d6d0(int *o, int *a, int *b);
-extern Fix12i func_0203d614(const void *v);
+extern Fix12i Vec2_Len(const void *v);
 extern void func_ov006_0210d8bc(char *c);
 extern void func_02012718(void *a, int b);
 
@@ -47,7 +47,7 @@ void func_ov006_021106b4(struct Obj *self)
     for (i = 0; i < self->mgr->count; i++) {
         func_ov006_0211470c(&s[0], (i >= 13) ? 0 : self->mgr->arr[i]);
         func_0203d6d0(&s[2], &self->x, &s[0]);
-        b = func_0203d614(&s[2]) < 0x4000;
+        b = Vec2_Len(&s[2]) < 0x4000;
         if (b) {
             self->f38 = 0x61;
             self->b31 = 0;

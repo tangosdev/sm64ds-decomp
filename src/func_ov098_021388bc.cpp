@@ -18,7 +18,7 @@ int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *p);
 int func_02037e78(int *p);
 void _ZN6Player9DropActorEv(void *p);
-void func_ov098_02138b28(void *c, int i);
+void Crate_SetState(void *c, int i);
 void _ZN12CylinderClsn5ClearEv(void *p);
 void func_ov098_02139850(void *c);
 void func_ov098_021396a4(void *c);
@@ -46,15 +46,15 @@ extern "C" void func_ov098_021388bc(char *c)
     flags = *(int *)(c + 0xb0);
     t = flags & 0x400;
     if (t != false) {
-        func_ov098_02138b28(c, 2);
+        Crate_SetState(c, 2);
     } else {
         t = flags & 0x2000;
         if (t != false) {
-            func_ov098_02138b28(c, 4);
+            Crate_SetState(c, 4);
         } else {
             t = flags & 0x100;
             if (t == false) {
-                func_ov098_02138b28(c, 0);
+                Crate_SetState(c, 0);
             }
         }
     }

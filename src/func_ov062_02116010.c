@@ -12,7 +12,7 @@ extern void func_020ada40(void *c, void *v, void *a, int flag);
 extern void func_02012694(int a, void *p);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void *c);
 extern int _ZN6Player7TryGrabER5Actor(void *p, void *a);
-extern void func_ov062_02116cd8(void *c, void *p);
+extern void Chuckya_ChangeState(void *c, void *p);
 extern int func_ov002_020db5f4(void *c, void *arg);
 extern int data_ov062_0211dea0[];
 
@@ -60,12 +60,12 @@ void func_ov062_02116010(char *c)
         *(int *)(c + 0x3f8) = (int)a;
         *(int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
         *(int *)(c + 0x98) = 0;
-        func_ov062_02116cd8(c, data_ov062_0211dea0);
+        Chuckya_ChangeState(c, data_ov062_0211dea0);
         return;
     }
     if (func_ov002_020db5f4(a, c) == 0)
         return;
     *(int *)(c + 0x3f8) = (int)a;
     *(int *)(c + 0x98) = 0;
-    func_ov062_02116cd8(c, data_ov062_0211def0);
+    Chuckya_ChangeState(c, data_ov062_0211def0);
 }

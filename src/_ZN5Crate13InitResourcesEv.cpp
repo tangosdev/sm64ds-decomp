@@ -11,7 +11,7 @@ extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(char* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(char* thiz, int f, char* m, int fix, short s, int blk);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(char* thiz, char* actor, int b, int d, void* v, int f);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(char* thiz);
-extern void func_ov098_02138b28(char* c, int i);
+extern void Crate_SetState(char* c, int i);
 extern char data_ov098_0213c4c8[];
 
 int Crate::InitResources()
@@ -34,7 +34,7 @@ int Crate::InitResources()
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
-    func_ov098_02138b28(((char*)this), 0);
+    Crate_SetState(((char*)this), 0);
     mEatingPlayer = 0;
     func_ov098_02138ce0(((char*)this));
     return 1;

@@ -28,12 +28,12 @@ void _ZN7Message16DisplayPauseTextEth(unsigned short n, unsigned char b) {
     s = _ZN3G2S12GetBG0ScrPtrEv();
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
-    func_0201d6a0(0x80, 0x20);
+    Message_DrawCenteredLine(0x80, 0x20);
     data_0209d6d4 = data_0209d6d4 + 1;
-    func_0201d6a0(0x260, 0x20);
+    Message_DrawCenteredLine(0x260, 0x20);
     data_0209d6d4 = data_0209d6d4 + 1;
-    func_0201d6a0(0x120, 0x20);
+    Message_DrawCenteredLine(0x120, 0x20);
     data_0209d6d4 = 0x28b;
-    func_0201d6a0(0x1c0, 0x20);
+    Message_DrawCenteredLine(0x1c0, 0x20);
 }
 }

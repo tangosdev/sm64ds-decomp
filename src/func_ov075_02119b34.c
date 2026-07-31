@@ -2,7 +2,7 @@ extern int func_0203da9c(void);
 extern int func_02033464(unsigned char a, signed char b, int c);
 extern void func_ov075_02115134(char* c);
 extern int func_020124c4(int a, int b, int c, int d);
-extern int func_ov001_020ab450(char* c, int a);
+extern int TouchArea_Update(char* c, int a);
 extern int func_ov075_02116d9c(int unused, int id);
 extern void func_ov001_020ab3f0(void *r0);
 extern void func_ov075_0211a148(char* c, int a, int b);
@@ -25,7 +25,7 @@ void func_ov075_02119b34(char* c) {
     if (data_0209fc5c[r5] == 0)
         return;
     if (r4 < 4) {
-        if (func_ov001_020ab450(c + 0x70, 0) == 0) {
+        if (TouchArea_Update(c + 0x70, 0) == 0) {
             if (func_ov075_02116d9c((int)c, 0) == 0)
                 return;
         }

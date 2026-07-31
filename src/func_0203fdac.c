@@ -1,4 +1,4 @@
-extern int func_0203fbfc(void);
+extern int Wireless_Reset(void);
 extern int func_0203fa50(void);
 extern void func_02040bb0(void);
 extern int data_020a0f5c;
@@ -13,13 +13,13 @@ void func_0203fdac(struct S *a) {
         case 0xa:
             switch (data_020a0f5c) {
             case 0:
-                func_0203fbfc();
+                Wireless_Reset();
                 return;
             case 3:
             case 4:
                 if (func_0203fa50() == 0) {
                     data_020a0f5c = 0;
-                    func_0203fbfc();
+                    Wireless_Reset();
                 } else {
                     data_020a0f94 = data_020a0f5c;
                     func_02040bb0();
@@ -42,7 +42,7 @@ void func_0203fdac(struct S *a) {
             return;
         default:
             data_020a0f5c = 0;
-            func_0203fbfc();
+            Wireless_Reset();
             return;
         }
     }

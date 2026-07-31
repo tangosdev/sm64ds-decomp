@@ -16,7 +16,7 @@ typedef void (*Callback)(void *arg, int code);
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 extern void func_0205c788(Node *self, int arg);
-extern void func_0205807c(u16 *self);
+extern void OS_WakeupThread(u16 *self);
 extern void func_0205d874(int *s);
 
 void *func_0205d044(void *pool)
@@ -68,7 +68,7 @@ void *func_0205d044(void *pool)
                 {
                     int nset = (int)((*(volatile u32 *)&head2->flags & 4) != 0);
                     if (nset != 0) {
-                        func_0205807c(&head2->queue);
+                        OS_WakeupThread(&head2->queue);
                         return 0;
                     }
                 }
@@ -100,7 +100,7 @@ void *func_0205d044(void *pool)
             u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
             *p &= ~0x40;
             *p |= 8;
-            func_0205807c((u16 *)(c + 0xe));
+            OS_WakeupThread((u16 *)(c + 0xe));
         }
     }
 

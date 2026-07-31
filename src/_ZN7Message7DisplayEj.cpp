@@ -19,7 +19,7 @@ void MultiStore16(int a, int b, int n);
 void _ZN7Message11DisplayTextEt(void* self);
 int _ZN3G2S13GetBG0CharPtrEv(void);
 int _ZN3G2S12GetBG0ScrPtrEv(void);
-void func_0201d6a0(int a, int b);
+void Message_DrawCenteredLine(int a, int b);
 }
 
 void Message::Display(unsigned int msg)
@@ -48,11 +48,11 @@ void Message::Display(unsigned int msg)
     s = _ZN3G2S12GetBG0ScrPtrEv();
     ls2 = 0x2ff;
     MultiStore16(ls2, s, 0x800);
-    func_0201d6a0(0xa0, 0x20);
+    Message_DrawCenteredLine(0xa0, 0x20);
     data_0209d6d4 = 0x279;
-    func_0201d6a0(0x140, 0x20);
+    Message_DrawCenteredLine(0x140, 0x20);
     data_0209d6d4 = 0x28b;
-    func_0201d6a0(0x1e0, 0x20);
+    Message_DrawCenteredLine(0x1e0, 0x20);
     data_0209d6d4 = 0x28f;
-    func_0201d6a0(0x280, 0x20);
+    Message_DrawCenteredLine(0x280, 0x20);
 }

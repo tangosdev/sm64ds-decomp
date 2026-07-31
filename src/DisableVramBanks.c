@@ -1,4 +1,4 @@
-unsigned short func_0205402c(unsigned short *r0)
+unsigned short DisableVramBanks(unsigned short *r0)
 {
     unsigned short flags = *r0;
     *r0 = 0;

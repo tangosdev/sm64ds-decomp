@@ -4,7 +4,7 @@ struct P6 { struct P2 lo, hi, tail; };
 
 extern void func_ov075_021160b4(void *);
 extern void func_020731dc(void *, void *, void **);
-extern void func_0203b98c(void);
+extern void NoOpDestructor(void);
 
 extern char data_ov075_0211d71c[];
 
@@ -149,86 +149,86 @@ void __sinit_ov075_0211bb00(void)
     p = (short *)(&data_ov075_0211d948);
     ((short *)(&data_ov075_0211d948))[0] = 0x80;
     ((short *)(&data_ov075_0211d948))[1] = 0x10;
-    func_020731dc((short *)(&data_ov075_0211d948), (void *)func_0203b98c, (void **)&data_ov075_0211d5fc);
+    func_020731dc((short *)(&data_ov075_0211d948), (void *)NoOpDestructor, (void **)&data_ov075_0211d5fc);
 
     p = (short *)(&data_ov075_0211d94c); p[0] = 0x3c; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6bc);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6bc);
     p = (short *)(&data_ov075_0211d950); p[0] = 0x1c; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6c8);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6c8);
 
     p = (short *)(&data_ov075_0211d954); p[0] = 8; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6e0);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6e0);
     p = (short *)(&data_ov075_0211d958); p[0] = 8; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6a4);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6a4);
     p = (short *)(&data_ov075_0211d95c); p[0] = 0x20; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6ec);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6ec);
     p = (short *)(&data_ov075_0211d960); p[0] = 0x30; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6f8);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6f8);
     p = (short *)(&data_ov075_0211d964); p[0] = 0x20; p[1] = 0x20;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d710);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d710);
     p = (short *)(&data_ov075_0211d968); p[0] = 0x28; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d698);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d698);
     p = (short *)(&data_ov075_0211d96c); p[0] = 0x58; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d5c0);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5c0);
     p = (short *)(&data_ov075_0211d970); p[0] = 0x78; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d5cc);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5cc);
     p = (short *)(&data_ov075_0211d974); p[0] = 0x20; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d5d8);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5d8);
     p = (short *)(&data_ov075_0211d978); p[0] = 0xa; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6b0);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6b0);
     p = (short *)(&data_ov075_0211d97c); p[0] = 0; p[1] = 0;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d5e4);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d5e4);
 
     {
         int sz = 0x20;
         int h = 0x10;
         ((short *)(&data_ov075_0211d72c))[0] = (short)sz;
         ((short *)(&data_ov075_0211d72c))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d72c), (void *)func_0203b98c, (void **)&data_ov075_0211d5f0);
+        func_020731dc((short *)(&data_ov075_0211d72c), (void *)NoOpDestructor, (void **)&data_ov075_0211d5f0);
     }
 
     p = (short *)(&data_ov075_0211d730); p[0] = 0x18; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d68c);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d68c);
     p = (short *)(&data_ov075_0211d734); p[0] = 0x1c; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d608);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d608);
     p = (short *)(&data_ov075_0211d738); p[0] = 0x1c; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d614);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d614);
     p = (short *)(&data_ov075_0211d73c); p[0] = 0x20; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d620);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d620);
 
     {
         int sz = 0x30;
         int h = 0x10;
         ((short *)(&data_ov075_0211d740))[0] = (short)sz;
         ((short *)(&data_ov075_0211d740))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d740), (void *)func_0203b98c, (void **)&data_ov075_0211d62c);
+        func_020731dc((short *)(&data_ov075_0211d740), (void *)NoOpDestructor, (void **)&data_ov075_0211d62c);
     }
 
     p = (short *)(&data_ov075_0211d744); p[0] = 0x30; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d638);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d638);
     p = (short *)(&data_ov075_0211d748); p[0] = 0x30; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d644);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d644);
     p = (short *)(&data_ov075_0211d74c); p[0] = 0x30; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d704);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d704);
     p = (short *)(&data_ov075_0211d750); p[0] = 0x18; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d650);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d650);
 
     {
         int sz = 0x20;
         int h = 0x10;
         ((short *)(&data_ov075_0211d754))[0] = (short)sz;
         ((short *)(&data_ov075_0211d754))[1] = (short)h;
-        func_020731dc((short *)(&data_ov075_0211d754), (void *)func_0203b98c, (void **)&data_ov075_0211d65c);
+        func_020731dc((short *)(&data_ov075_0211d754), (void *)NoOpDestructor, (void **)&data_ov075_0211d65c);
     }
 
     p = (short *)(&data_ov075_0211d758); p[0] = 0x20; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d6d4);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d6d4);
     p = (short *)(&data_ov075_0211d75c); p[0] = 0x28; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d668);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d668);
     p = (short *)(&data_ov075_0211d760); p[0] = 0x20; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d674);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d674);
     p = (short *)(&data_ov075_0211d764); p[0] = 0x30; p[1] = 0x10;
-    func_020731dc(p, (void *)func_0203b98c, (void **)&data_ov075_0211d680);
+    func_020731dc(p, (void *)NoOpDestructor, (void **)&data_ov075_0211d680);
 
     tmp = data_02086b58;
     ta = tmp.a;

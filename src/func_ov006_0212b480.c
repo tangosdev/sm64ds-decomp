@@ -11,7 +11,7 @@ typedef unsigned char u8;
 extern void *func_020adc74(void *arg);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
-extern void func_ov004_020adc5c(int handle);
+extern void Ov004_Deallocate(int handle);
 extern void *func_02054de8(void);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
@@ -53,30 +53,30 @@ int dScMgFlower_c_InitResources(void *arg0)
 
     h = (int)func_020adc74(&data_ov006_021401d0);
     DecompressLZ16(h, _ZN2G213GetBG2CharPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_021401f4);
     DecompressLZ16(h, func_02054de8());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140218);
     DecompressLZ16(h, _ZN2G212GetBG2ScrPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_0214023c);
     DecompressLZ16(h, _ZN3G2S12GetBG2ScrPtrEv());
     DecompressLZ16(h, _ZN3G2S12GetBG3ScrPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140260);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN2GX10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140284);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN3GXS10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
@@ -87,13 +87,13 @@ int dScMgFlower_c_InitResources(void *arg0)
     h = (int)func_020adc74(&data_ov006_021402a8);
     DecompressLZ16(h, (void *)0x6400000);
     DecompressLZ16(h, (void *)0x6600000);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_021402c4);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x100);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     func_020bc8a8 = 0x40;
     func_020bc898 = 0xa0;

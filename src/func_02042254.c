@@ -9,7 +9,7 @@ extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
 extern void func_020580f0(unsigned short *self);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
-extern int func_0205d3d4(char *a, char *b, int c);
+extern int FS_ReadFile(char *a, char *b, int c);
 extern void func_02041d28(char *base, void *node, int d);
 extern int func_0205d4cc(char *self);
 extern void func_02041a94(char *base, void *node);
@@ -49,7 +49,7 @@ void func_02042254(void)
                 char *ptr = sb + 0xc0;
                 for (; i < 3; i++) {
                     *(int *)(sb + i * 4 + 0xa0) = val;
-                    func_0205d3d4(sb + 0x38, ptr, 0x400);
+                    FS_ReadFile(sb + 0x38, ptr, 0x400);
                     val += 0x400;
                     ptr += 0x400;
                 }

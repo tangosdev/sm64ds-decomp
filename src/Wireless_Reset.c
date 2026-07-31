@@ -3,7 +3,7 @@ extern void func_02040aa4(void);
 extern void func_020402a0(void);
 extern int data_020a0f94;
 
-int func_0203fbfc(void)
+int Wireless_Reset(void)
 {
     int r = func_02062200((void *)func_020402a0);
     func_02040aa4();

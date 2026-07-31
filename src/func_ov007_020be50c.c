@@ -1,7 +1,7 @@
 extern int func_ov007_020c3df4(int a, void* b);
 extern void* func_ov007_020c3f00(int* r6, void* r4);
 extern int func_ov007_020c3ee8(int a, int b);
-extern void func_ov007_020c108c(char *c, int r1, int r2, int r3, int sp0);
+extern void Sprite_SetAnimation(char *c, int r1, int r2, int r3, int sp0);
 extern void func_0204dc84(char *p);
 extern void func_ov007_020be8b8(void);
 
@@ -48,7 +48,7 @@ void func_ov007_020be50c(void)
             ef0 = (int*)e[0];
             *(int*)(ef0[6]) = t2[3] + 0x10;
             *(char*)((char*)e + 0xa) = 8;
-            func_ov007_020c108c((char*)e[0], 0, 1, 0, 0);
+            Sprite_SetAnimation((char*)e[0], 0, 1, 0, 0);
             func_0204dc84((char*)((char*)data_ov007_02104bc0[1] + off));
             n = *(int**)data_ov007_02104bc0;
             i++;

@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern void func_ov062_02116cd8(void* c, void* p);
+extern void Chuckya_ChangeState(void* c, void* p);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern int ApproachAngle(short* angle, int target, int a, int b, int c);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
@@ -27,9 +27,9 @@ int func_ov062_021165e8(char* c)
     r = func_ov062_02115f84(c);
     if (r != 0 || *(unsigned char*)(c + 0x3e4) == 1) {
         if (r != 2)
-            func_ov062_02116cd8(c, &data_ov062_0211df00);
+            Chuckya_ChangeState(c, &data_ov062_0211df00);
         else
-            func_ov062_02116cd8(c, &data_ov062_0211de70);
+            Chuckya_ChangeState(c, &data_ov062_0211de70);
         return 1;
     }
 
@@ -63,7 +63,7 @@ int func_ov062_021165e8(char* c)
                     *(int*)(c + 0x3f0) = 2;
             } else {
                 if (Vec3_Dist((const void*)(c + 0x5c), (const void*)(c + 0x3cc)) > 0xc8000)
-                    func_ov062_02116cd8(c, &data_ov062_0211ded0);
+                    Chuckya_ChangeState(c, &data_ov062_0211ded0);
             }
         }
     }

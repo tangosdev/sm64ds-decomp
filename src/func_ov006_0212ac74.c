@@ -22,7 +22,7 @@ typedef struct Cell {
 } Cell;
 
 extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
-extern int func_0203d614(V2 *p);
+extern int Vec2_Len(V2 *p);
 extern void func_ov004_020b0aa0(int a);
 extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
@@ -98,7 +98,7 @@ int dScMgFlower_c_Behavior(char *c)
                         *(u8 *)(c + ii * 0x20 + 0x4f39) != 1) {
                         int v;
                         func_0203d6d0(&d1, q, (V2 *)(c + 0x5fb8));
-                        v = func_0203d614(&d1) < 0x18000 ? 1 : 0;
+                        v = Vec2_Len(&d1) < 0x18000 ? 1 : 0;
                         if (v != 0) {
                             func_02012754(0x109);
                             *(u8 *)(c + ii * 0x20 + 0x4f3a) = 1;
@@ -122,7 +122,7 @@ int dScMgFlower_c_Behavior(char *c)
                             *(u8 *)(c + i2 * 0x20 + 0x4f3a) != 1) {
                             int v2;
                             func_0203d6d0(&d2, q2, (V2 *)(c + 0x5fb8));
-                            v2 = func_0203d614(&d2) < 0x18000 ? 1 : 0;
+                            v2 = Vec2_Len(&d2) < 0x18000 ? 1 : 0;
                             if (v2 != 0) {
                                 *(u8 *)(c + i2 * 0x20 + 0x4f3a) = 1;
                                 *(int *)(c + i2 * 0x20 + 0x4f44) = 0;

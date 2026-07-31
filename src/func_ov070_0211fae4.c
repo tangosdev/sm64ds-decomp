@@ -9,7 +9,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(const void *a, const void *m, void *out);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int RandomIntInternal(int *seed);
-extern int func_ov070_02120020(void *c, void *p);
+extern int FlyGuy_ChangeState(void *c, void *p);
 
 extern signed char data_0209f2f8;
 extern int data_ov070_021235dc[];
@@ -42,7 +42,7 @@ int func_ov070_0211fae4(void *arg)
         *(short *)(c + 0x92) = 0;
         *(short *)(c + 0x100) = 0;
         *(int *)(c + 0xa8) = 0;
-        func_ov070_02120020(c, data_ov070_021235dc);
+        FlyGuy_ChangeState(c, data_ov070_021235dc);
         return 1;
     }
 
@@ -79,7 +79,7 @@ int func_ov070_0211fae4(void *arg)
     MulVec3Mat4x3(&vin, data_020a0e68, c + 0xa4);
 
     if (Vec3_Dist((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x3c0)) > 0x5dc000) {
-        func_ov070_02120020(c, data_ov070_0212359c);
+        FlyGuy_ChangeState(c, data_ov070_0212359c);
         return 1;
     }
 
@@ -93,9 +93,9 @@ int func_ov070_0211fae4(void *arg)
         *(int *)(c + 0xac) = 0;
         if (*(int *)(c + 0x3e0) == 0 ||
             (((unsigned int)RandomIntInternal(&data_0209e650) >> 8) & 1) == 0) {
-            func_ov070_02120020(c, data_ov070_021235cc);
+            FlyGuy_ChangeState(c, data_ov070_021235cc);
         } else {
-            func_ov070_02120020(c, data_ov070_0212358c);
+            FlyGuy_ChangeState(c, data_ov070_0212358c);
         }
     }
     }

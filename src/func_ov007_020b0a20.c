@@ -82,7 +82,7 @@ typedef struct Game {
 extern Game *data_ov007_0210342c;
 
 extern int func_ov007_020aebac(void);
-extern void func_ov007_020bfacc(int, int, int);
+extern void RequestScreenFade(int, int, int);
 extern void func_ov007_020b1fa4(int);
 extern void func_ov007_020b0da0(void);
 extern void func_ov007_020be980(Sub100 *, int, int);
@@ -111,7 +111,7 @@ void func_ov007_020b0a20(void)
     result = func_ov007_020aebac();
 
     if (mode == 0) {
-        func_ov007_020bfacc(4, 6, 0);
+        RequestScreenFade(4, 6, 0);
         func_ov007_020b1fa4(4);
         data_ov007_0210342c->unk100->unk18 = (void *)func_ov007_020b0da0;
         func_ov007_020be980(data_ov007_0210342c->unk100, 1, 0);
@@ -131,7 +131,7 @@ void func_ov007_020b0a20(void)
         }
     }
     if (mode == 0x1E) {
-        func_ov007_020bfacc(7, 0x18, 0);
+        RequestScreenFade(7, 0x18, 0);
     }
     if (data_ov007_0210342c->unk100->unk18 == 0) {
         if (e->unk18->unk0 != 0) {
@@ -171,7 +171,7 @@ void func_ov007_020b0a20(void)
         e->unk18->unk14 = (e->unk18->unk12 - 1) << 12;
     }
     if (flag5 != 0) {
-        func_ov007_020bfacc(3, 0xA, 0);
+        RequestScreenFade(3, 0xA, 0);
     }
     if (flag6 == 0) {
         return;

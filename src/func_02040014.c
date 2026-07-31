@@ -7,7 +7,7 @@ extern u8 data_020a0f9d[4];
 extern u16 data_020a0fbe[4][3];
 extern u16 data_020a0fa0[][3];
 
-extern int func_0203fbfc(void);
+extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
 extern void func_0205a61c(void *dst, void *src, int n);
 extern int func_02042748(u16 *a, u16 *b);
@@ -29,17 +29,17 @@ void func_02040014(char *a)
         data_020a0f24 = 0;
         switch (sel) {
         case 0:
-            func_0203fbfc();
+            Wireless_Reset();
             break;
         case 3:
             if (func_0203faa8() != 0)
                 return;
             data_020a0f5c = 0;
-            func_0203fbfc();
+            Wireless_Reset();
             break;
         case 4:
             data_020a0f5c = 4;
-            func_0203fbfc();
+            Wireless_Reset();
             break;
         }
         break;
@@ -87,5 +87,5 @@ void func_02040014(char *a)
 
 not_ready:
     data_020a0f5c = 0;
-    func_0203fbfc();
+    Wireless_Reset();
 }

@@ -1,6 +1,6 @@
 extern void func_0205d874(void *s);
 extern int func_0205d5e8(void *s, int b, int c, int d, int e);
-extern int func_0205d3d4(void *s, void *b, int c);
+extern int FS_ReadFile(void *s, void *b, int c);
 extern int func_0205d4cc(void *self);
 
 int func_0205dffc(char *self, int flag, int shift, int a3,
@@ -15,7 +15,7 @@ int func_0205dffc(char *self, int flag, int shift, int a3,
     if ((unsigned int)off >= (unsigned int)hi) return 0;
     func_0205d874(local);
     func_0205d5e8(local, a3, base + off, base + hi, -1);
-    func_0205d3d4(local, self, 0x20);
+    FS_ReadFile(local, self, 0x20);
     func_0205d4cc(local);
     *(int *)(self + 0x20) = flag;
     return 1;

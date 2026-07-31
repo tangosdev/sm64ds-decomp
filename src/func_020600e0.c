@@ -1,7 +1,7 @@
 unsigned int _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(unsigned int);
 void Crash(void);
-void func_0205807c(void* p);
+void OS_WakeupThread(void* p);
 typedef struct { int* f0; char pad4[4]; int f8; int fc; int f10; int f14; } G;
 extern G data_020a8180;
 void func_020600e0(int a0, int a1)
@@ -17,7 +17,7 @@ void func_020600e0(int a0, int a1)
         if (g->fc == 0) {
             g->f8 = -3;
             g->f14 = 0;
-            func_0205807c(&g->f10);
+            OS_WakeupThread(&g->f10);
         }
     }
     *g->f0 = 0;

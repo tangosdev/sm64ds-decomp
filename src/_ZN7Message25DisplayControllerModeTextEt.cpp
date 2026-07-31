@@ -37,6 +37,6 @@ void _ZN7Message25DisplayControllerModeTextEt(unsigned short n) {
     func_0201d418(0x1e9, 0x70);
     data_0209d6a8 = data_0209d6a8 << 1;
     data_0209d6d4 = data_0209d6d4 + 1;
-    func_0201d6a0(0x280, 0x20);
+    Message_DrawCenteredLine(0x280, 0x20);
 }
 }

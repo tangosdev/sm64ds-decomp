@@ -6,7 +6,7 @@
 /* dScMgSnowball_c::Behavior - recovered from vtable slot identity */
 extern void func_02012790(int a);
 extern void func_ov004_020b0aa0(int arg);
-extern int func_0203d614(int *p);
+extern int Vec2_Len(int *p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern void func_0203d6d0(int *o, int *a, int *b);
 extern void _Z14ApproachLinearRsss(short *a, short b, short cc);
@@ -102,7 +102,7 @@ int dScMgSnowball_c_Behavior(char *c) {
             s.a[1] = ((data_020a0deb[(unsigned int)idx * 4] - I(0xab74)) << 12) / 296;
             I(0xab70) = data_020a0dea[(unsigned int)idx * 4];
             I(0xab74) = data_020a0deb[(unsigned int)idx * 4];
-            if (func_0203d614(s.a) >= 0x400) {
+            if (Vec2_Len(s.a) >= 0x400) {
                 s.a[0] = 0;
                 s.a[1] = 0;
             }
@@ -125,7 +125,7 @@ int dScMgSnowball_c_Behavior(char *c) {
         }
 
         if (I(0xab60) != 0 || I(0xab64) != 0) {
-            if (func_0203d614((int*)AT(c,0xab60)) >= 0x8000 && func_0203d434((int*)ATS(0xab60)) != 0)
+            if (Vec2_Len((int*)AT(c,0xab60)) >= 0x8000 && func_0203d434((int*)ATS(0xab60)) != 0)
                 func_0203d630((int*)ATI(0xab60), 0x8000);
         }
         func_ov006_02125f68(c);
@@ -148,7 +148,7 @@ int dScMgSnowball_c_Behavior(char *c) {
         if (I(0xaba0) >= 0x37000)
             I(0xaba0) = 0x37000;
         func_0203d6d0(s.b, (int*)AT(C1,0xab38), (int*)AT(c,0xab50));
-        gate = (func_0203d614(s.b) >= 0x30000) ? 1 : 0;
+        gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
         if ((int)(((long long)gate)) != 0) {
             I(0xab50) = I(0xab38);
             I(0xab54) = I(0xab3c);
@@ -168,14 +168,14 @@ int dScMgSnowball_c_Behavior(char *c) {
         if (I(0xab6c) >= r4)
             I(0xab6c) = r4;
 
-        if (func_0203d614((int*)AT(c,0xab60)) >= 0x10) {
+        if (Vec2_Len((int*)AT(c,0xab60)) >= 0x10) {
             short *hp;
-            v = func_0203d614((int*)ATS(0xab60));
+            v = Vec2_Len((int*)ATS(0xab60));
             hp = (short*)AT(c,0xab78);
             q = __aeabi_idiv(v * 0x2710, I(0xaba0));
             *hp = *hp + (unsigned short)q;
             m = atan2(I(0xab60), I(0xab64));
-            ApproachLinear((short*)AT(c,0xab7c), (short)m, (short)(func_0203d614((int*)ATI(0xab60)) / 16));
+            ApproachLinear((short*)AT(c,0xab7c), (short)m, (short)(Vec2_Len((int*)ATI(0xab60)) / 16));
         }
 
         if (B(0xb9e5) == 1 || I(0xb9dc) <= 0) {
@@ -226,7 +226,7 @@ int dScMgSnowball_c_Behavior(char *c) {
         func_ov006_02125f68(c);
 
         if (I(0xab60) != 0 || I(0xab64) != 0) {
-            r7 = func_0203d614((int*)AT(c,0xab60));
+            r7 = Vec2_Len((int*)AT(c,0xab60));
             if (I(0xab3c) < 0xc0000)
                 r7 -= 0x80;
             if (r7 < 0) {
@@ -244,9 +244,9 @@ int dScMgSnowball_c_Behavior(char *c) {
         else
             B(0xb9f8) = 1;
 
-        if (func_0203d614((int*)AT(c,0xab60)) >= 0x10) {
+        if (Vec2_Len((int*)AT(c,0xab60)) >= 0x10) {
             short *hp;
-            v = func_0203d614((int*)ATS(0xab60));
+            v = Vec2_Len((int*)ATS(0xab60));
             hp = (short*)AT(c,0xab78);
             q = __aeabi_idiv(v * 0x2710, I(0xaba0));
             *hp = *hp + (unsigned short)q;
@@ -265,7 +265,7 @@ int dScMgSnowball_c_Behavior(char *c) {
     case 4:
         if (I(0xba0c) < 0x3c) {
             if (I(0xab60) != 0 || I(0xab64) != 0) {
-                r4 = func_0203d614((int*)AT(c,0xab60)) + 0x100;
+                r4 = Vec2_Len((int*)AT(c,0xab60)) + 0x100;
                 if (r4 >= 0x8000)
                     r4 = 0x8000;
                 if (func_0203d434((int*)ATS(0xab60)) != 0)
@@ -310,9 +310,9 @@ int dScMgSnowball_c_Behavior(char *c) {
             }
         }
 
-        if (func_0203d614((int*)AT(c,0xab60)) >= 0x10) {
+        if (Vec2_Len((int*)AT(c,0xab60)) >= 0x10) {
             short *hp;
-            v = func_0203d614((int*)ATS(0xab60));
+            v = Vec2_Len((int*)ATS(0xab60));
             hp = (short*)AT(c,0xab78);
             q = __aeabi_idiv(v * 0x2710, I(0xaba0));
             *hp = *hp + (unsigned short)q;

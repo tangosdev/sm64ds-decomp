@@ -61,7 +61,7 @@ extern int GetOwnerLanguage(void);
 extern void func_02057d00(void *dst, void *src, int flag);
 extern void *func_020adc74(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void func_ov004_020adc5c(void *p);
+extern void Ov004_Deallocate(void *p);
 extern u16 *_ZN2G212GetBG2ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void *func_02054fb0(void);
@@ -259,46 +259,46 @@ void func_ov006_02115b0c(char *c)
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, (void *)0x6400000);
         DecompressLZ16(d, (void *)0x6600000);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     func_02057d00(data_ov006_02142c40, data_ov006_0213f090, *(int *)(c + 0xbc) & 1);
     {
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, c + 0x4954);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     func_02057d00(data_ov006_02142c40, data_ov006_0213f0c0, *(int *)(c + 0xbc) & 1);
     {
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, c + 0x5154);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     if ((*(int *)(c + 8) & 0xff) == 0) {
         void *d = func_020adc74(data_ov006_0213f0f0);
         DecompressLZ16(d, _ZN2G212GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f120);
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f150);
         DecompressLZ16(d, func_02054fb0());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f17c);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     } else {
         void *d = func_020adc74(data_ov006_0213f1a8);
         DecompressLZ16(d, _ZN2G212GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f1d8);
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f208);
         DecompressLZ16(d, func_02054fb0());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f234);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
 
     *(int *)(c + 0x4000 + 0x668) = 0;

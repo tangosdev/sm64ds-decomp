@@ -4,7 +4,7 @@ typedef unsigned char u8;
 struct Sub { virtual void f(); };
 
 extern "C" {
-int func_ov001_020ab450(void *p, int f);
+int TouchArea_Update(void *p, int f);
 void func_ov001_020ab3f0(void *p);
 void func_02012790(int a);
 int GetSoundMode(void);
@@ -21,7 +21,7 @@ extern "C" u8 func_ov004_020b8f78(char *c)
     u8 st = *(u8 *)(c + 0x124);
     switch (st) {
     case 1:
-        if (func_ov001_020ab450(c + 0xb4, -1)) {
+        if (TouchArea_Update(c + 0xb4, -1)) {
             func_ov001_020ab3f0(c + 0xb4);
             *(u8 *)(c + 0x125) = 0x14;
             *(u8 *)(c + 0x124) = 2;
@@ -30,14 +30,14 @@ extern "C" u8 func_ov004_020b8f78(char *c)
             if (*(u8 *)(c + 0x59) != 0) {
                 int r6 = 0;
                 int mode = GetSoundMode();
-                if (func_ov001_020ab450(c + 0x48, -1) || func_ov001_020ab450(c + 0x24, -1)
-                    || func_ov001_020ab450(c + 0xd8, -1)) {
+                if (TouchArea_Update(c + 0x48, -1) || TouchArea_Update(c + 0x24, -1)
+                    || TouchArea_Update(c + 0xd8, -1)) {
                     if (mode == 2) mode = 0;
                     else mode = (mode + 1) & 0xff;
                     *(u8 *)(c + 0x34) = 0;
                     func_ov001_020ab3f0(c + 0x24);
                     r6 = 1;
-                } else if (func_ov001_020ab450(c, -1)) {
+                } else if (TouchArea_Update(c, -1)) {
                     if (mode == 0) mode = 2;
                     else mode = (mode - 1) & 0xff;
                     *(u8 *)(c + 0x10) = 0;
@@ -53,11 +53,11 @@ extern "C" u8 func_ov004_020b8f78(char *c)
             }
             if (*(u8 *)(c + 0x7d) != 0 && *(u8 *)(c + 0xa1) != 0) {
                 int r5 = 0;
-                if (func_ov001_020ab450(c + 0x6c, -1)) {
+                if (TouchArea_Update(c + 0x6c, -1)) {
                     r5 = -1;
-                } else if (func_ov001_020ab450(c + 0x90, -1)) {
+                } else if (TouchArea_Update(c + 0x90, -1)) {
                     r5 = 1;
-                } else if (func_ov001_020ab450(c + 0xfc, -1)) {
+                } else if (TouchArea_Update(c + 0xfc, -1)) {
                     r5 = (*(u8 *)(c + 0x7c) != 0) ? 1 : -1;
                 }
                 if (r5 < 0) {

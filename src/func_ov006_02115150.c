@@ -1,4 +1,4 @@
-extern int func_0203d614(const void* v);
+extern int Vec2_Len(const void* v);
 extern int func_0203d434(void* p);
 extern void func_0203d630(void* p, int m);
 
@@ -13,7 +13,7 @@ void func_ov006_02115150(char* self)
             *(int*)(((int)(self + i*8) + 0x4854) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(self + i*8 + 0x48d4);
             *(int*)(((int)(self + i*8) + 0x4858) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(self + i*8 + 0x48d8);
             {
-                int m = func_0203d614(obj) * 6 / 8;
+                int m = Vec2_Len(obj) * 6 / 8;
                 if (func_0203d434(obj)) {
                     func_0203d630(obj, m);
                 }

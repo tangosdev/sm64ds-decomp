@@ -1,7 +1,7 @@
 extern int data_020a0f5c;
 extern int data_020a0f94;
 extern unsigned short data_020a0f24;
-extern int func_0203fbfc(void);
+extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
 
 void func_0203fec4(unsigned short *p)
@@ -14,7 +14,7 @@ void func_0203fec4(unsigned short *p)
         {
         case 0:
         case 3:
-            func_0203fbfc();
+            Wireless_Reset();
             return;
         case 4:
             switch (p[4])
@@ -26,20 +26,20 @@ void func_0203fec4(unsigned short *p)
                 if (func_0203faa8() != 0)
                     return;
                 data_020a0f5c = 0;
-                func_0203fbfc();
+                Wireless_Reset();
                 return;
             case 9:
                 data_020a0f5c = 0;
                 if (data_020a0f94 == 2)
                     return;
-                func_0203fbfc();
+                Wireless_Reset();
                 return;
             case 6:
             case 8:
                 break;
             default:
                 data_020a0f5c = 0;
-                func_0203fbfc();
+                Wireless_Reset();
                 return;
             }
             break;
@@ -50,6 +50,6 @@ void func_0203fec4(unsigned short *p)
     else
     {
         data_020a0f5c = 0;
-        func_0203fbfc();
+        Wireless_Reset();
     }
 }

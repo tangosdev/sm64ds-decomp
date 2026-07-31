@@ -14,7 +14,7 @@ extern void func_0205c788(void *p, int arg);
 extern int func_0205d044(void *self);
 extern void func_0205cfa4(int x);
 extern u32 func_02059d1c(void);
-extern void func_0205807c(u16 *p);
+extern void OS_WakeupThread(u16 *p);
 extern void func_02059d30(u32 f);
 
 void func_0205cd5c(struct T *self, int arg)
@@ -45,7 +45,7 @@ void func_0205cd5c(struct T *self, int arg)
 
         *(int *)(p + 0x14) = arg;
         *f = *f & ~0x200;
-        func_0205807c(&self->pending);
+        OS_WakeupThread(&self->pending);
         func_02059d30(irq);
     }
 }

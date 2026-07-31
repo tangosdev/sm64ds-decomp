@@ -17,7 +17,7 @@ typedef struct {
     unsigned int a, b, c, d;
 } Args;
 
-extern int func_0205d3d4(int a, int b, int c);
+extern int FS_ReadFile(int a, int b, int c);
 extern void func_0205d874(int *s);
 extern int func_0205d23c(int *a, int b);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
@@ -53,7 +53,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
 
         if (a != 0) {
             base = a->rd - a->wr;
-            if (func_0205d3d4((int)a, (int)b, 0x160) < 0x160) {
+            if (FS_ReadFile((int)a, (int)b, 0x160) < 0x160) {
                 remain = 0;
             }
         } else {
@@ -76,19 +76,19 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             cur += 0x160;
             remain -= 0x160;
             func_0205d368((int *)a, base + ctx->wr, 0);
-            func_0205d3d4((int)a, (int)cur, ctx->f2c);
+            FS_ReadFile((int)a, (int)cur, ctx->f2c);
             cur += ctx->f2c;
             remain -= ctx->f2c;
 
             func_0205d368((int *)a, base + ctx->f30, 0);
-            func_0205d3d4((int)a, (int)cur, ctx->f3c);
+            FS_ReadFile((int)a, (int)cur, ctx->f3c);
             cur += ctx->f3c;
             remain -= ctx->f3c;
         }
 
         if (remain >= 0x88) {
             func_0205d368((int *)a, base + ctx->f80, 0);
-            func_0205d3d4((int)a, (int)cur, 0x88);
+            FS_ReadFile((int)a, (int)cur, 0x88);
             result = 1;
         }
 

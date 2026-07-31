@@ -32,8 +32,8 @@ void _ZN7Message19DisplayDontSaveTextEt(unsigned short n) {
     func_0201d418(0x105, 0xb0);
     data_0209d6d4 = 0x293;
     data_0209d6a8 = data_0209d6a8 << 1;
-    func_0201d6a0(0x285, 0xa);
+    Message_DrawCenteredLine(0x285, 0xa);
     data_0209d6d4 = data_0209d6d4 + 1;
-    func_0201d6a0(0x291, 0xa);
+    Message_DrawCenteredLine(0x291, 0xa);
 }
 }

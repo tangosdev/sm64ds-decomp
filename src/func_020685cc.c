@@ -1,7 +1,7 @@
 extern void func_0205d874(int *s);
 extern int func_0205d518(int *s, int a);
 extern void func_0205d4cc(int *s);
-extern void func_0205d3d4(int *s, int a, int b);
+extern void FS_ReadFile(int *s, int a, int b);
 
 int func_020685cc(int a, int b, int flag)
 {
@@ -27,7 +27,7 @@ int func_020685cc(int a, int b, int flag)
         return 0;
     }
 
-    func_0205d3d4(local, b, sz);
+    FS_ReadFile(local, b, sz);
     func_0205d4cc(local);
     return 1;
 }

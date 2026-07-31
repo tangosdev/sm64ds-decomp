@@ -21,7 +21,7 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern char* _ZN3G2S12GetBG3ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void func_ov006_020f2ec0(void* c);
-extern void func_ov004_020adc5c(int a);
+extern void Ov004_Deallocate(int a);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
@@ -115,7 +115,7 @@ int dScMgLuigi_c_InitResources(void* arg0) {
     func_ov006_020f2e20(c);
 
     *(int*)(c + 0x4000 + 0xf78) = 0;
-    func_ov004_020adc5c(r6);
+    Ov004_Deallocate(r6);
     func_ov004_020b04d0(0x30);
     *(volatile u16*)(c + 0x5100 + 0x72) = 0xa;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);

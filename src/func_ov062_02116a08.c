@@ -1,6 +1,6 @@
     extern int Vec3_Dist(void* a, void* b);
     extern int func_ov062_02115f84(char* c);
-    extern int func_ov062_02116cd8(void* c, void* p);
+    extern int Chuckya_ChangeState(void* c, void* p);
     extern void ApproachAngle(void* p, int target, int a, int b, int limit);
     extern char* _ZN5Actor13ClosestPlayerEv(char* self);
     extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(
@@ -33,9 +33,9 @@
         r = func_ov062_02115f84(c);
         if (r != 0 || *(unsigned char *)(c + 0x3e4) == 1) {
             if (r != 2) {
-                func_ov062_02116cd8(c, data_ov062_0211df00);
+                Chuckya_ChangeState(c, data_ov062_0211df00);
             } else {
-                func_ov062_02116cd8(c, data_ov062_0211de70);
+                Chuckya_ChangeState(c, data_ov062_0211de70);
             }
             return 1;
         }
@@ -57,13 +57,13 @@
 
             if (Vec3_Dist(c + 0x3c0, L.vd1) < 0x3e8000) {
                 *(int *)(c + 0x98) = 0;
-                func_ov062_02116cd8(c, data_ov062_0211de90);
+                Chuckya_ChangeState(c, data_ov062_0211de90);
             }
             return 1;
         }
 
         if (*(unsigned short *)(c + 0x100) == 0)
-            func_ov062_02116cd8(c, data_ov062_0211dee0);
+            Chuckya_ChangeState(c, data_ov062_0211dee0);
 
         return 1;
     }

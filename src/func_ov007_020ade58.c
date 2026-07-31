@@ -11,7 +11,7 @@ extern char *func_ov007_020aea6c(int a, void *b, void *c);
 extern void *func_ov007_020c11ac(int n);
 extern void func_ov007_020c10b0(void *a, void *b);
 extern void func_ov007_020c0af4(void *c, void *x);
-extern void func_ov007_020c108c(void *c, int r1, int r2, int r3, int sp0);
+extern void Sprite_SetAnimation(void *c, int r1, int r2, int r3, int sp0);
 
 typedef struct {
     void *state;   /* 0x0: ptr, first u16 is state id */
@@ -80,7 +80,7 @@ void *func_ov007_020ade58(int self)
             } else if (state == 0) {
                 *(int *)(*(char **)(*(char **)(r4 + 0x38) + 0x18) + sb * 4) =
                     *(int *)(*(int *)(sl + r7 * 4) + 0xc) + ((*(u8 **)(entry + 4))[sb] << 4);
-                func_ov007_020c108c(*(void **)(r4 + 0x38), zero, zero, zero, zero);
+                Sprite_SetAnimation(*(void **)(r4 + 0x38), zero, zero, zero, zero);
             }
 
             *(int *)(*(char **)(r4 + 0x18) + sb * 4) =
@@ -89,6 +89,6 @@ void *func_ov007_020ade58(int self)
         } while (sb < *(u8 *)(r4 + 0x1c));
     }
 
-    func_ov007_020c108c(s->obj, 0, 0, 0, 0);
+    Sprite_SetAnimation(s->obj, 0, 0, 0, 0);
     return s;
 }

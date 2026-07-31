@@ -12,7 +12,7 @@
 
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const struct Vector3* pos);
-extern void func_ov098_02138b28(char* c, int i);
+extern void Crate_SetState(char* c, int i);
 
 void Crate_Kill(char* self) {
     struct Vector3 vec;
@@ -31,5 +31,5 @@ void Crate_Kill(char* self) {
     ((int*)&vec2)[2] = ((int*)&vec)[2];
     _ZN5Actor19DisappearPoofDustAtERK7Vector3(self, &vec2);
     _ZN5Sound9PlayBank3EjRK7Vector3(0x41, (struct Vector3*)(self + 0x74));
-    func_ov098_02138b28(self, 6);
+    Crate_SetState(self, 6);
 }

@@ -18,7 +18,7 @@ extern char* _ZN2G212GetBG0ScrPtrEv(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern unsigned func_02054de8(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void func_ov004_020adc5c(void* p);
+extern void Ov004_Deallocate(void* p);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void func_ov006_020e668c(char* c);
 extern void func_ov006_020e6528(char* c);
@@ -92,7 +92,7 @@ int dScMgCurling2_c_InitResources(char* self)
     func_02056374(f, 0, 0x800);
     Deallocate(f);
 
-    func_ov004_020adc5c(r6);
+    Ov004_Deallocate(r6);
 
     DecompressLZ16(c7, (void*)0x6600000);
     _ZN3GXS11LoadOBJPlttEPKvjj(c8, 0, 0x100);

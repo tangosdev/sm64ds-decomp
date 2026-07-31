@@ -1,6 +1,6 @@
 extern void func_0205d874(int *s);
 extern void func_0205d5e8(int *s, void *this, int a, int b, int e);
-extern void func_0205d3d4(int *s, int x, int n);
+extern void FS_ReadFile(int *s, int x, int n);
 extern void func_0205d4cc(int *s);
 extern int func_0205d28c(void);
 
@@ -16,13 +16,13 @@ unsigned int func_0205c9b8(char *thiz, int arg1, unsigned int arg2) {
     func_0205d874(s);
     func_0205d5e8(s, thiz, *(int*)(thiz + 0x20),
                   *(int*)(thiz + 0x20) + *(int*)(thiz + 0x24), -1);
-    func_0205d3d4(s, r4, *(int*)(thiz + 0x24));
+    FS_ReadFile(s, r4, *(int*)(thiz + 0x24));
     func_0205d4cc(s);
     *(int*)(thiz + 0x20) = r4;
     r4 = r4 + *(int*)(thiz + 0x24);
     func_0205d5e8(s, thiz, *(int*)(thiz + 0x28),
                   *(int*)(thiz + 0x28) + *(int*)(thiz + 0x2c), -1);
-    func_0205d3d4(s, r4, *(int*)(thiz + 0x2c));
+    FS_ReadFile(s, r4, *(int*)(thiz + 0x2c));
     func_0205d4cc(s);
     *(int*)(thiz + 0x28) = r4;
     *(int*)(thiz + 0x38) = arg1;

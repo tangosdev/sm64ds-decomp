@@ -16,7 +16,7 @@ extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *actor, void *cyl);
 void func_020383fc(void *p);
 int func_ov098_02139228(void *c);
-void func_ov098_02138b28(void *c, int i);
+void Crate_SetState(void *c, int i);
 void _Z14ApproachLinearRiii(int *a, int b, int c);
 void func_ov098_02138e6c(void *c);
 void func_ov098_021390ec(void *c);
@@ -36,7 +36,7 @@ void func_ov098_02138734(char *c)
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
     func_020383fc(c + 0x320);
     if (func_ov098_02139228(c)) {
-        func_ov098_02138b28(c, 0);
+        Crate_SetState(c, 0);
         return;
     }
     _Z14ApproachLinearRiii((int *)(c + 0x98), 0, 0x555);

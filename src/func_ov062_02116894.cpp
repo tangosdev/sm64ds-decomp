@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 int func_ov062_02115f84(char* c);
-void func_ov062_02116cd8(void*, void*);
+void Chuckya_ChangeState(void*, void*);
 int AngleDiff(int a, int b);
 int ApproachAngle(void*, int, int, int, int);
 extern int data_ov062_0211dee0[];
@@ -13,7 +13,7 @@ int func_ov062_02116894(char* c){
     goto angle;
   }
   *(short*)(c+0x94) = *(short*)((c+0x300)+0xf4);
-  func_ov062_02116cd8(c, data_ov062_0211dee0);
+  Chuckya_ChangeState(c, data_ov062_0211dee0);
   *(short*)((c+0x300)+0xe8) = 0x1e;
   *(short*)((c+0x300)+0xf4) = *(short*)(c+0x94);
   return 1;

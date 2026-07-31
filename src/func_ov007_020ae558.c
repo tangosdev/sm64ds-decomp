@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 extern u8 data_ov007_0210342c[];
-extern void func_ov007_020c108c(char *c, int r1, int r2, int r3, int sp0);
+extern void Sprite_SetAnimation(char *c, int r1, int r2, int r3, int sp0);
 
 int func_ov007_020ae558(char *self)
 {
@@ -20,7 +20,7 @@ int func_ov007_020ae558(char *self)
 
     switch (sel) {
     case 0:  if (r6) ret = 1; break;
-    case 1:  if (r6) { if (ip_v == 1) func_ov007_020c108c(*(char**)(self + 4), 0, 0, 0, 0); } break;
+    case 1:  if (r6) { if (ip_v == 1) Sprite_SetAnimation(*(char**)(self + 4), 0, 0, 0, 0); } break;
     case 3:  if (r6) { if (lr_v == 1) ret = 7; else if (ip_v == 7) ret = 1; } break;
     case 2:  if (r6) { if (lr_v == 1) { if (ip_v != 2) ret = 4; } } break;
     case 4:  if (r6) { if (lr_v == 1) ret = 7; } break;
@@ -33,12 +33,12 @@ int func_ov007_020ae558(char *self)
             int t = (d == 1 || d == 3);
             if (lr_v == 1) {
                 if (t) {
-                    if (ip_v != 2) { ret = 0; if (ip_v == 1) func_ov007_020c108c(*(char**)(self + 4), 4, 0, 0, 0); }
+                    if (ip_v != 2) { ret = 0; if (ip_v == 1) Sprite_SetAnimation(*(char**)(self + 4), 4, 0, 0, 0); }
                     else ret = 1;
                 } else ret = 7;
             } else if (lr_v == 5) {
                 ret = 0;
-                func_ov007_020c108c(*(char**)(self + 4), 0, 1, 0, 0);
+                Sprite_SetAnimation(*(char**)(self + 4), 0, 1, 0, 0);
             } else ret = 1;
         }
         break;

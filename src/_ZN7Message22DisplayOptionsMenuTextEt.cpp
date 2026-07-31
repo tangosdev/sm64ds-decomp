@@ -31,6 +31,6 @@ void _ZN7Message22DisplayOptionsMenuTextEt(unsigned short n) {
     func_0201d418(0x197, 0x28);
     data_0209d6a8 = data_0209d6a8 << 1;
     data_0209d6d4 = 0x283;
-    func_0201d6a0(0x280, 0x20);
+    Message_DrawCenteredLine(0x280, 0x20);
 }
 }

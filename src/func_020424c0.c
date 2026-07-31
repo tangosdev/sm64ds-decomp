@@ -25,7 +25,7 @@ extern void _ZN3IRQ7RestoreEj(u32 irq);
 extern void* func_0205d23c(void* a, int b);
 extern void func_0205d874(int* s);
 extern int func_0205d5e8(char* self, int a1, int a2, int a3, int a4);
-extern int func_0205d3d4(int a, int b, int c);
+extern int FS_ReadFile(int a, int b, int c);
 extern int func_0205d4cc(char* self);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN4CP1516DrainWriteBufferEv(void);
@@ -80,7 +80,7 @@ void func_020424c0(void)
             data0 = p[0];
             end = roundedSize + data0;
             func_0205d5e8((char*)local, (int)sb, data0, end, -1);
-            func_0205d3d4((int)local, (int)buf, roundedSize);
+            FS_ReadFile((int)local, (int)buf, roundedSize);
             func_0205d4cc((char*)local);
             buf += roundedSize;
             j++;

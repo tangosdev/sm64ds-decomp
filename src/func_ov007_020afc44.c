@@ -4,7 +4,7 @@ extern void func_ov007_020b0244(void);
 extern void func_ov007_020b7d94(int kind);
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020c1d8c(int i);
-extern void func_ov007_020bfacc(int a, int b, int c);
+extern void RequestScreenFade(int a, int b, int c);
 extern void func_ov007_020b8188(int a, int b, int c);
 extern void func_ov007_020c0638(int a, int b, int c, int d);
 extern void func_ov007_020b8070(int n);
@@ -56,7 +56,7 @@ void func_ov007_020afc44(void)
     case 4:
         if (r6 == 0) {
             func_ov007_020c1d8c(0);
-            func_ov007_020bfacc(8, 0xa, 0);
+            RequestScreenFade(8, 0xa, 0);
             *(short*)(*(char**)(G + 0xc) + 2) = 0xb;
             func_ov007_020b8188(*(int*)(G + 0x58), *(int*)(G + 0x28), *(int*)(G + 0x60));
             *(int*)(r5) = 1;
@@ -120,7 +120,7 @@ void func_ov007_020afc44(void)
                     if (func_ov007_020b79e4() == 0) {
                         func_ov007_020c1d8c(0);
                         if (*(int*)(r8 + 4) == 2) {
-                            func_ov007_020bfacc(8, 0xa, 0);
+                            RequestScreenFade(8, 0xa, 0);
                             *(short*)(*(char**)(G + 0xc) + 2) = 0xb;
                         }
                         func_ov007_020b8188(*(int*)(G + 0x5c), *(int*)(G + 0x28), *(int*)(G + 0x60));
@@ -143,7 +143,7 @@ void func_ov007_020afc44(void)
                     }
                 } else {
                     int t;
-                    func_ov007_020bfacc(8, 8, 0);
+                    RequestScreenFade(8, 8, 0);
                     *(short*)(*(char**)(G + 0xc) + 2) = 0xa;
                     t = *(int*)(G + 0x58);
                     *(int*)(G + 0x58) = *(int*)(G + 0x5c);
@@ -163,7 +163,7 @@ void func_ov007_020afc44(void)
             if (*(short*)(r8 + 0xa) == 3) {
                 *(short*)(r8 + 2) = 0;
             } else {
-                func_ov007_020bfacc(8, 8, 0);
+                RequestScreenFade(8, 8, 0);
                 *(short*)(*(char**)(G + 0xc) + 2) = 0xa;
                 *(int*)(r4) = 1;
                 *(int*)(r4 + 4) = 1;

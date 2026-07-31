@@ -3,7 +3,7 @@ extern "C" {
 extern void func_ov007_020c32e8(void *a, int b, int c, int d);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, unsigned int a, unsigned int b);
-extern void func_ov007_020bfacc(int a, int b, int c);
+extern void RequestScreenFade(int a, int b, int c);
 extern void *data_ov007_0210342c;
 extern void func_ov007_020adb84(void);
 
@@ -33,6 +33,6 @@ void func_ov007_020ada70(void) {
     char *dst = (char*)(base + (n << 5));
     _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)dst, 0x20);
     _ZN3GXS11LoadOBJPlttEPKvjj(dst, 0x180, 0x20);
-    func_ov007_020bfacc(9, 2, (int)&func_ov007_020adb84);
+    RequestScreenFade(9, 2, (int)&func_ov007_020adb84);
 }
 }

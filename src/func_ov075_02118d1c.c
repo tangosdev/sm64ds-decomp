@@ -12,7 +12,7 @@ extern void func_ov075_0211a194(void* c, void* d);
 extern void func_02012790(u32 a);
 extern int func_0203d9b4(void);
 extern int func_ov075_02116d40(void* c);
-extern u8 func_ov001_020ab450(void* p, int i);
+extern u8 TouchArea_Update(void* p, int i);
 extern void func_02020078(u32 flags);
 extern void func_02020124(void);
 extern void func_0202029c(u32 idx);
@@ -67,7 +67,7 @@ void func_ov075_02118d1c(char* c){
             r5=r6;
             c+=0x70;
             for(; r5<4; r5++){
-                if(func_ov001_020ab450(c, r6)){
+                if(TouchArea_Update(c, r6)){
                     r6=1;
                     data_0209b2e4=r5;
                     break;

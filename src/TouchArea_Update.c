@@ -4,7 +4,7 @@ extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 
-int func_ov001_020ab450(char *c, int a1)
+int TouchArea_Update(char *c, int a1)
 {
     int ret;
     int flag;

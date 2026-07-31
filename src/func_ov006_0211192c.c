@@ -23,7 +23,7 @@ extern void func_ov006_02115008(void* p);
 extern void func_02012718(void* a, int b);
 extern void func_ov006_0211470c(int* a, int* b);
 extern void func_0203d6d0(int* o, int* a, int* b);
-extern int func_0203d614(const void* v);
+extern int Vec2_Len(const void* v);
 
 void func_ov006_0211192c(C* c)
 {
@@ -65,7 +65,7 @@ void func_ov006_0211192c(C* c)
                         int hit;
                         func_ov006_0211470c((int*)&bufA, (int*)m);
                         func_0203d6d0((int*)&bufB, &c->f8, (int*)&bufA);
-                        hit = func_0203d614((void*)&bufB) < 0x11000;
+                        hit = Vec2_Len((void*)&bufB) < 0x11000;
                         if (hit != 0) {
                             c->f3c = 4;
                             goto done;

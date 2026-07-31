@@ -19,7 +19,7 @@ u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
 void func_02057f54(void);
 
-void func_0205807c(u16 *self) {
+void OS_WakeupThread(u16 *self) {
     u32 r4 = _ZN3IRQ7DisableEv();
     u32 mask = *self;
     if (mask != 0) {

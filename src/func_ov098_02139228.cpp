@@ -28,7 +28,7 @@ extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern int func_02037e38(u32 *p);
-extern void func_ov098_02138b28(void *c, int i);
+extern void Crate_SetState(void *c, int i);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *out);
 extern int func_02037e58(u32 *p);
@@ -78,7 +78,7 @@ extern "C" int func_ov098_02139228(char *c)
     case 9:
         *(s32 *)(c + 0x5f0) = 0x64000;
         if (*(s32 *)(c + 0x5f0) == *(s32 *)(c + 0x5f4)) {
-            func_ov098_02138b28(c, 6);
+            Crate_SetState(c, 6);
             return 0;
         }
         break;

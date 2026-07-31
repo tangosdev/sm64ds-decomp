@@ -46,7 +46,7 @@ void _Z14ApproachLinearRiii(int* dst, int target, int step);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
-void func_ov098_02138b28(char* c, int i);
+void Crate_SetState(char* c, int i);
 void func_ov098_02139228(char* c);
 void func_ov098_02138e6c(char* c);
 void func_ov098_021390ec(char* c);
@@ -70,7 +70,7 @@ extern "C" void func_ov098_02138344(char* c) {
         *(int*)(c + 0x98) = *(unsigned char*)(c + 0x604) * 0x5000;
     }
     if (*(int*)(c + 0x98) == 0 && *(unsigned char*)(c + 0x604) == 0) {
-        func_ov098_02138b28(c, 0);
+        Crate_SetState(c, 0);
     }
     func_ov098_02139228(c);
     func_ov098_02138e6c(c);

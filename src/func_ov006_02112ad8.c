@@ -89,7 +89,7 @@ extern int func_ov006_021120d4(Obj *self, V2 *p);
 extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
-extern int func_0203d614(V2 *p);
+extern int Vec2_Len(V2 *p);
 extern void func_0203d480(V2 *out, V2 *in);
 extern int RandomIntInternal(int *seed);
 extern void func_ov006_021146f4(V2 *out, void *obj);
@@ -464,7 +464,7 @@ final_checks:
             func_0203d6d0(&moveDelta, position,
                 (V2 *)self->oldPos);
         }
-        dot = func_0203d614(&moveDelta);
+        dot = Vec2_Len(&moveDelta);
         state.depth += 0x80;
         state.flags[6]++;
     if (blocked == 1 && state.flags[6] < 0x21 && state.depth <= dot)
@@ -632,7 +632,7 @@ final_checks:
             hazardDelta.z -= hazardPos.z;
             hazardDelta.z *= 2;
             if (func_0203d5bc(&hazardDelta) < square) {
-                dot = self->radius + 0x10000 - func_0203d614(&hazardDelta);
+                dot = self->radius + 0x10000 - Vec2_Len(&hazardDelta);
                 if (self->radius < dot) {
                     other = i >= self->mgr->hazardCount ? (void *)0 : self->mgr->hazards[i];
                     func_ov006_0211470c(&hazardPos2, other);

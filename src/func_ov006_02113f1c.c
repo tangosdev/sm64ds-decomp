@@ -8,7 +8,7 @@ typedef struct V2 {
 } V2;
 
 extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
-extern int func_0203d614(V2 *p);
+extern int Vec2_Len(V2 *p);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
 extern void func_0203d480(V2 *out, V2 *in);
@@ -88,7 +88,7 @@ void func_ov006_02113f1c(char *c)
     } else {
         if ((*(int *)(*(char **)(c + 4) + 8) & 0xff) != 0) {
             func_0203d6d0(&d1, (V2 *)(c + 8), (V2 *)(c + 0x114));
-            t = func_0203d614(&d1) < 0x8000;
+            t = Vec2_Len(&d1) < 0x8000;
             if (t != 0) {
                 *(int *)LAUNDER(c + 0x11c) += 1;
                 goto after2;
@@ -145,7 +145,7 @@ bounce:
         }
     }
     if (*(int *)(c + 0x20) != 0 || *(int *)(c + 0x24) != 0) {
-        spd = func_0203d614((V2 *)(c + 0x20));
+        spd = Vec2_Len((V2 *)(c + 0x20));
         if (spd >= 0x8000)
             spd = 0x8000;
         if (func_0203d434((V2 *)(c + 0x20)) != 0)
@@ -171,9 +171,9 @@ bounce:
                 *(u8 *)(c + 0x129) = 1;
         }
     }
-    mag = func_0203d614((V2 *)(c + 0x20));
+    mag = Vec2_Len((V2 *)(c + 0x20));
     func_0203d6d0(&d2, (V2 *)(c + 8), (V2 *)(c + 0x10));
-    dist = func_0203d614(&d2);
+    dist = Vec2_Len(&d2);
     if (*(u8 *)(c + 0xcd) != 0)
         return;
     if (mag < dist)

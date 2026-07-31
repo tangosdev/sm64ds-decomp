@@ -15,7 +15,7 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int val, int dst, int len);
 extern void func_0201b6f8(int a);
 extern void func_0201b100(int a);
-void func_0201d6a0(int a, int b)
+void Message_DrawCenteredLine(int a, int b)
 {
   int new_var5;
   volatile int li;

@@ -16,7 +16,7 @@ extern void _ZN2GX16SetBankForSubOBJEt(u16 a);
 extern s32 func_ov004_020ad674(void);
 extern void *func_ov004_020adc68(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void func_ov004_020adc5c(void *p);
+extern void Ov004_Deallocate(void *p);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 len);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -62,12 +62,12 @@ void func_ov006_0210a708(char *obj)
         char *dst = (char *)0x6600000; dst += 0x4000;
         DecompressLZ16(p, dst);
     }
-    func_ov004_020adc5c(p);
+    Ov004_Deallocate(p);
     p = func_ov004_020adc68(0xc3);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(p, 0x100u);
     _ZN2GX11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
     _ZN3GXS11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
-    func_ov004_020adc5c(p);
+    Ov004_Deallocate(p);
     func_ov004_020b0d30();
     data_0208ee44 = 1;
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
