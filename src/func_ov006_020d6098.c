@@ -1,4 +1,4 @@
-extern void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern int data_ov006_021344ec[];
 
 typedef struct {
@@ -20,6 +20,6 @@ void func_ov006_020d6098(Obj* a0) {
         int yv = a0->recs[i].y >> 12;
         int k = a0->recs[i].idx;
         if (i != 0) k += 5;
-        func_ov004_020af68c((void*)data_ov006_021344ec[k], xv, yv, -1, -1);
+        Hud_RenderSprite((void*)data_ov006_021344ec[k], xv, yv, -1, -1);
     }
 }

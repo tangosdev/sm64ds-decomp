@@ -17,7 +17,7 @@ extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN3G2S12GetBG0ScrPtrEv(void);
 extern void *_ZN3G2S13GetBG0CharPtrEv(void);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern u8 data_0209d45c;
@@ -82,7 +82,7 @@ int dScMgTeresa_c_InitResources(char *self)
   *((volatile u32 *) 0x4001018) = 0;
   *((volatile u16 *) 0x400100c) = ((*((volatile u16 *) 0x400100c)) & 0x43) | 0x408;
   t = LoadFile(0x9f);
-  DecompressLZ16(t, (void *) func_02054de8());
+  DecompressLZ16(t, (void *) _ZN3G2S13GetBG2CharPtrEv());
   Deallocate(t);
   t = LoadFile(0xa0);
   _ZN3GXS10LoadBGPlttEPKvjj(t, 0x60, 0x1a0);

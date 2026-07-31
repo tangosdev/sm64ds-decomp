@@ -12,7 +12,7 @@ extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -64,7 +64,7 @@ int dScMgPachinko2_c_InitResources(void *arg0)
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x418;
 
-    b = (char *)func_02054de8();
+    b = (char *)_ZN3G2S13GetBG2CharPtrEv();
     spC = 0;
     MultiStore16(spC, b, 0x6000);
 

@@ -7,7 +7,7 @@ typedef struct V2 {
     int z;
 } V2;
 
-extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
+extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 extern int Vec2_Len(V2 *p);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
@@ -87,7 +87,7 @@ void func_ov006_02113f1c(char *c)
         *(int *)LAUNDER(c + 0x11c) += 1;
     } else {
         if ((*(int *)(*(char **)(c + 4) + 8) & 0xff) != 0) {
-            func_0203d6d0(&d1, (V2 *)(c + 8), (V2 *)(c + 0x114));
+            Vec2_Sub(&d1, (V2 *)(c + 8), (V2 *)(c + 0x114));
             t = Vec2_Len(&d1) < 0x8000;
             if (t != 0) {
                 *(int *)LAUNDER(c + 0x11c) += 1;
@@ -172,7 +172,7 @@ bounce:
         }
     }
     mag = Vec2_Len((V2 *)(c + 0x20));
-    func_0203d6d0(&d2, (V2 *)(c + 8), (V2 *)(c + 0x10));
+    Vec2_Sub(&d2, (V2 *)(c + 8), (V2 *)(c + 0x10));
     dist = Vec2_Len(&d2);
     if (*(u8 *)(c + 0xcd) != 0)
         return;

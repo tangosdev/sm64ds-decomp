@@ -5,7 +5,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::Render - recovered from vtable slot identity */
 extern void func_ov006_020c0aa8(void *a0);
-extern void func_ov004_020af68c(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b1bc8(void *a0, int a1, int a2, int a3);
 extern void func_ov004_020b1e34(void *a0, int a1, int a2, int a3);
 extern void func_ov006_020c1804(void *a0);
@@ -32,11 +32,11 @@ int dScMgBSC_c_Render(Obj *self) {
     if (self->count >= 1) {
         for (i = 0; i < 2; i++) {
             if (self->b1[i] < 3) {
-                func_ov004_020af68c(data_ov006_0213fe8c[self->b1[i]],
+                Hud_RenderSprite(data_ov006_0213fe8c[self->b1[i]],
                                     self->pos[i].x >> 12,
                                     self->pos[i].y >> 12, -1, -1);
             } else {
-                func_ov004_020af68c(
+                Hud_RenderSprite(
                     data_ov006_0213fe8c[self->b1[i] + self->b0[i] * 2],
                     self->pos[i].x >> 12,
                     self->pos[i].y >> 12, -1, -1);

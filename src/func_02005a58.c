@@ -13,7 +13,7 @@ extern void _ZN2GX16SetBankForSubOBJEt(unsigned short b);
 extern void DecompressLZ16(const void* src, void* dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern void* _ZN2G212GetBG0ScrPtrEv(void);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern void* _ZN3G2S12GetBG2ScrPtrEv(void);
 extern int func_0201a244(void* fn, int a, int b, int c, int d);
@@ -74,7 +74,7 @@ int dScBoot_c_InitResources(char* c)
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0x310;
     SetSubBg2Offset(0, 0);
 
-    DecompressLZ16(&data_020918c4, (void*)func_02054de8());
+    DecompressLZ16(&data_020918c4, (void*)_ZN3G2S13GetBG2CharPtrEv());
     _ZN3GXS10LoadBGPlttEPKvjj(&data_020914e0, 0, 2);
     _ZN3GXS10LoadBGPlttEPKvjj(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_02091570, _ZN3G2S12GetBG2ScrPtrEv());

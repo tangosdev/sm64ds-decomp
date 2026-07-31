@@ -1,4 +1,4 @@
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_ov006_021027e4(char *c, int x, int y, int layer);
 
@@ -39,7 +39,7 @@ void func_ov006_02102864(char *c)
     idx = n - 1;
     if (*(int *)(c + idx * 0x40 + 0x4000 + 0x660) != *(int *)(c + idx * 0x40 + 0x4000 + 0x678)
      || *(int *)(c + idx * 0x40 + 0x4000 + 0x664) != *(int *)(c + idx * 0x40 + 0x4000 + 0x67c)) {
-        char *dst = (char *)func_02054de8();
+        char *dst = (char *)_ZN3G2S13GetBG2CharPtrEv();
         int i2;
         tmp = 0;
         MultiStore16(tmp, dst, 0x6000);

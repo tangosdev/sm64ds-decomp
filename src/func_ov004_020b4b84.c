@@ -1,5 +1,5 @@
 typedef struct { int x, y; } V2;
-extern void func_0203d6d0(V2* o, int* a, int* b);
+extern void Vec2_Sub(V2* o, int* a, int* b);
 extern void func_0203d680(V2* out, V2* in, int scale);
 extern int data_ov004_020bc808[];
 
@@ -13,7 +13,7 @@ void func_ov004_020b4b84(char* c, int* in){
   *(unsigned char*)(c+0x22) = 1;
   *(int*)(c+0x10) = 0xc000;
   *(int*)(c+0x14) = 0xc000;
-  func_0203d6d0(&a, (int*)(c+0x10), (int*)(c+8));
+  Vec2_Sub(&a, (int*)(c+0x10), (int*)(c+8));
   func_0203d680(&b, &a, 0x100);
   *(int*)(c+0x18) = b.x;
   *(int*)(c+0x1c) = b.y;

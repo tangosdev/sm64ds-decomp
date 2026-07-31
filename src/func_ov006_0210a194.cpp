@@ -42,7 +42,7 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
 extern void *LoadFile(int);
-extern int func_02054de8(void);
+extern int _ZN3G2S13GetBG2CharPtrEv(void);
 extern void DecompressLZ16(void *, int);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
@@ -66,7 +66,7 @@ int dScMgRoulette_c_InitResources(char *c)
     f7 = LoadFile(0x71);
     f6 = LoadFile(0x1e4);
     f5 = LoadFile(0x70);
-    DecompressLZ16(f8, func_02054de8());
+    DecompressLZ16(f8, _ZN3G2S13GetBG2CharPtrEv());
     DecompressLZ16(f7, _ZN3G2S12GetBG2ScrPtrEv());
     DecompressLZ16(f6, _ZN3G2S12GetBG0ScrPtrEv());
     _ZN3GXS10LoadBGPlttEPKvjj(f5, 0x1a0, 0x60);

@@ -1,4 +1,4 @@
-extern void func_0203d6d0(int* o, int* a, int* b);
+extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d630(int *p, int m);
 
 extern int data_ov006_0213d56c;
@@ -47,7 +47,7 @@ void func_ov006_020f8320(struct Obj* o, int m)
     o->f_18 = ((m / 5) * 0x30) << 12;
     o->f_2a = (short)m;
 
-    func_0203d6d0(tmp, &o->f_14, &o->f_0c);
+    Vec2_Sub(tmp, &o->f_14, &o->f_0c);
     o->f_1c = tmp[0];
     o->f_20 = tmp[1];
     func_0203d630(&o->f_1c, 0x124);

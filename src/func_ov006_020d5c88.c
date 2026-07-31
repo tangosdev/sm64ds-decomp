@@ -1,4 +1,4 @@
-extern void func_ov004_020af68c(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void *data_ov006_02133ae0[];
 extern void *data_ov006_02133a70[];
 
@@ -25,7 +25,7 @@ void func_ov006_020d5c88(struct Big *b) {
             int idx = b->subs[i].idx;
             int a1 = xv >> 12;
             int a2 = yv >> 12;
-            func_ov004_020af68c((i != 0) ? data_ov006_02133a70[idx]
+            Hud_RenderSprite((i != 0) ? data_ov006_02133a70[idx]
                                          : data_ov006_02133ae0[idx],
                                 a1, a2, -1, 1);
         }

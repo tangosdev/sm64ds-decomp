@@ -2,7 +2,7 @@ extern void func_02017acc(void*, int);
 extern void func_02017b4c(void*, int);
 extern void func_020731dc(void*, void*, void*);
 extern int func_02017ab4[];
-extern int func_02017b34[];
+extern int SharedFilePtr_Destruct_Clsn[];
 extern int func_020072c0[];
 extern int data_ov009_02113c68[];
 extern int data_ov009_02113c70[];
@@ -56,7 +56,7 @@ void __sinit_ov009_02112524(void)
     func_02017acc(data_ov009_02113c68, 0x693);
     func_020731dc(data_ov009_02113c68, func_02017ab4, data_ov009_02113c78);
     func_02017b4c(data_ov009_02113c70, 0x694);
-    func_020731dc(data_ov009_02113c70, func_02017b34, data_ov009_02113cc0);
+    func_020731dc(data_ov009_02113c70, SharedFilePtr_Destruct_Clsn, data_ov009_02113cc0);
     *(unsigned int*)data_ov009_02113d8c = 0xfe94e000;
     *(unsigned int*)((char*)data_ov009_02113d8c + 4) = (unsigned int)-0x5a000;
     *(unsigned int*)((char*)data_ov009_02113d8c + 8) = 0xff60a000;

@@ -3,7 +3,7 @@ struct V2 { int x, y; };
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
 
 extern void func_ov006_020ce8a0(char* self, void* other, struct V2* a, struct V2* b);
-extern void func_0203d6d0(struct V2* o, struct V2* a, struct V2* b);
+extern void Vec2_Sub(struct V2* o, struct V2* a, struct V2* b);
 extern int func_0203d524(struct V2* a, struct V2* b);
 extern int data_ov006_0212e070[];
 extern int data_ov006_0213b324[2];
@@ -35,9 +35,9 @@ int func_ov006_020ce674(char* self, void* other) {
         t0.y = 0;
     }
 
-    func_0203d6d0(&d, &t0, &n);
-    func_0203d6d0(&e, &a, &n);
-    func_0203d6d0(&f, &b, &n);
+    Vec2_Sub(&d, &t0, &n);
+    Vec2_Sub(&e, &a, &n);
+    Vec2_Sub(&f, &b, &n);
     s0 = func_0203d524(&d, &e);
     s1 = func_0203d524(&d, &f);
     if (s0 < -1) s0 = -1; else if (s0 > 1) s0 = 1;
@@ -45,11 +45,11 @@ int func_ov006_020ce674(char* self, void* other) {
     if (s0 * s1 > 0) goto done;
     if (s0 == 0 && s1 == 0) goto done;
 
-    func_0203d6d0(&g, &a, &b);
+    Vec2_Sub(&g, &a, &b);
     d = g;
-    func_0203d6d0(&h, &t0, &a);
+    Vec2_Sub(&h, &t0, &a);
     e = h;
-    func_0203d6d0(&i, &n, &a);
+    Vec2_Sub(&i, &n, &a);
     f = i;
     s2 = func_0203d524(&d, &e);
     s3 = func_0203d524(&d, &f);

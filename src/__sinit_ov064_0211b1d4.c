@@ -32,7 +32,7 @@ extern char data_ov064_0211c8c8[];
 extern char data_ov064_0211c800[];
 extern char data_ov064_0211c8e0[];
 extern void func_02017ab4(void);
-extern void func_02017b34(void);
+extern void SharedFilePtr_Destruct_Clsn(void);
 
 typedef struct {
     int a, b;
@@ -81,7 +81,7 @@ void __sinit_ov064_0211b1d4(void) {
     func_02017acc(data_ov064_0211c848, 0x60d);
     func_020731dc(data_ov064_0211c848, func_02017ab4, data_ov064_0211c8c8);
     func_02017b4c(data_ov064_0211c800, 0x600);
-    func_020731dc(data_ov064_0211c800, func_02017b34, data_ov064_0211c8e0);
+    func_020731dc(data_ov064_0211c800, SharedFilePtr_Destruct_Clsn, data_ov064_0211c8e0);
 
     data_ov064_0211c904.p0 = data_ov064_0211bf80;
     data_ov064_0211c904.p1 = data_ov064_0211bf68;

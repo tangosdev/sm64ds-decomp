@@ -16,7 +16,7 @@ extern char* _ZN2G213GetBG2CharPtrEv(void);
 extern char* _ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(u16 val, char* dst, int nbytes);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern char* _ZN3G2S12GetBG3ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -82,7 +82,7 @@ int dScMgLuigi_c_InitResources(void* arg0) {
     {
         int f8;
         f8 = LoadFile(0x4b);
-        DecompressLZ16(f8, (void*)(func_02054de8() + 0x4000));
+        DecompressLZ16(f8, (void*)(_ZN3G2S13GetBG2CharPtrEv() + 0x4000));
         Deallocate((void*)f8);
 
         f8 = LoadFile(0x4c);

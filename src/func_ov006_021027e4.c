@@ -1,6 +1,6 @@
 typedef unsigned int u32;
 
-u32 func_02054de8(void);
+u32 _ZN3G2S13GetBG2CharPtrEv(void);
 
 #pragma opt_loop_invariants off
 void func_ov006_021027e4(int a0, int a1, int a2, int a3)
@@ -19,7 +19,7 @@ void func_ov006_021027e4(int a0, int a1, int a2, int a3)
             row = hi * 32;
             yb = s - 1;
             a1 = yb + j;
-            bp = (u32 *)func_02054de8();
+            bp = (u32 *)_ZN3G2S13GetBG2CharPtrEv();
             *(u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col) |= a3 << ((a1 & 7) * 4);
         }
     }

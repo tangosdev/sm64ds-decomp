@@ -2,7 +2,7 @@ extern void func_02017acc();
 extern void func_020731dc();
 extern void func_02017b4c();
 extern void func_02017ab4();
-extern void func_02017b34();
+extern void SharedFilePtr_Destruct_Clsn();
 
 typedef struct { int a, b; } S8;
 
@@ -20,11 +20,11 @@ void __sinit_ov015_02113048(void)
     func_02017acc(&g_9a4, 0x58d);
     func_020731dc(&g_9a4, func_02017ab4, &g_9c8);
     func_02017b4c(&g_9ac, 0x58e);
-    func_020731dc(&g_9ac, func_02017b34, &g_9d4);
+    func_020731dc(&g_9ac, SharedFilePtr_Destruct_Clsn, &g_9d4);
     func_02017acc(&g_9b4, 0x58b);
     func_020731dc(&g_9b4, func_02017ab4, &g_9e0);
     func_02017b4c(&g_99c, 0x58c);
-    func_020731dc(&g_99c, func_02017b34, &g_9bc);
+    func_020731dc(&g_99c, SharedFilePtr_Destruct_Clsn, &g_9bc);
 
     g_a24[0] = g_4b0;
     g_a24[1] = g_4f8;

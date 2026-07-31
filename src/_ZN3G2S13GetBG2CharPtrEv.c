@@ -1,4 +1,4 @@
-unsigned func_02054de8(void){
+unsigned _ZN3G2S13GetBG2CharPtrEv(void){
   int v1 = *(volatile int*)0x4001000;
   unsigned short v2 = *(volatile unsigned short*)0x400100c;
   if (!((v1 & 7) >= 5 && (v2 & 0x80)))

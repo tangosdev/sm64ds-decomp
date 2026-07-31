@@ -20,7 +20,7 @@ extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void *func_02054de8(void);
+extern void *_ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN3G2S13GetBG0CharPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -189,7 +189,7 @@ int dScMiniGm_c_InitResources(void *arg0)
     SetSubBg3Offset(*(int *)(c + 0x50), 0);
 
     f = LoadFile(0x53);
-    DecompressLZ16(f, func_02054de8());
+    DecompressLZ16(f, _ZN3G2S13GetBG2CharPtrEv());
     Deallocate((void *)f);
 
     f = LoadFile(0x5a);

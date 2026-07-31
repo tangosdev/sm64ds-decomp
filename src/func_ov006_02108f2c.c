@@ -26,7 +26,7 @@ typedef struct Thing {
 
 extern void _Z14ApproachLinearRiii(s32* v, s32 target, s32 step);
 extern int func_ov006_02108e24(Thing* t);
-extern void func_0203d6d0(s32* out, s32* a, Thing* b);
+extern void Vec2_Sub(s32* out, s32* a, Thing* b);
 extern void func_ov004_020b1b40(int c);
 extern void func_ov006_021094ac(Thing* t, s32* v);
 extern s16 func_ov006_02108650(s32 x, s32 z);
@@ -64,7 +64,7 @@ void func_ov006_02108f2c(Thing* t)
         s32 out[2];
         _Z14ApproachLinearRiii(&t->unk0, t->unk18, t->unk10);
         _Z14ApproachLinearRiii(&t->unk4, t->unk1C, t->unk14);
-        func_0203d6d0(out, &t->unk18, t);
+        Vec2_Sub(out, &t->unk18, t);
         if (out[0] != 0)
             return;
         if (out[1] != 0)
@@ -75,7 +75,7 @@ void func_ov006_02108f2c(Thing* t)
         s32 out[2];
         _Z14ApproachLinearRiii(&t->unk0, t->unk18, t->unk10);
         _Z14ApproachLinearRiii(&t->unk4, t->unk1C, t->unk14);
-        func_0203d6d0(out, &t->unk18, t);
+        Vec2_Sub(out, &t->unk18, t);
         if (out[0] != 0)
             return;
         if (out[1] == 0) {

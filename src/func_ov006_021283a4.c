@@ -8,7 +8,7 @@ extern void func_02012790(int a);
 extern void func_ov004_020b0aa0(int arg);
 extern int Vec2_Len(int *p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern void func_0203d6d0(int *o, int *a, int *b);
+extern void Vec2_Sub(int *o, int *a, int *b);
 extern void _Z14ApproachLinearRsss(short *a, short b, short cc);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int cc, int d, int e, const void *f, void *g);
 extern int *_ZN8Particle6System12FromUniqueIDEj(unsigned int a);
@@ -147,7 +147,7 @@ int dScMgSnowball_c_Behavior(char *c) {
 
         if (I(0xaba0) >= 0x37000)
             I(0xaba0) = 0x37000;
-        func_0203d6d0(s.b, (int*)AT(C1,0xab38), (int*)AT(c,0xab50));
+        Vec2_Sub(s.b, (int*)AT(C1,0xab38), (int*)AT(c,0xab50));
         gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
         if ((int)(((long long)gate)) != 0) {
             I(0xab50) = I(0xab38);

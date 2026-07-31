@@ -10,7 +10,7 @@ typedef unsigned char u8;
 
 extern int LoadFile(int handle);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void DecompressLZ16(int src, void *dst);
@@ -36,7 +36,7 @@ int dScMgSound_c_InitResources(void *arg0)
     data_0209d454 |= 4;
     r4 = LoadFile(0x98);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
-    DecompressLZ16(r4, (void *)func_02054de8());
+    DecompressLZ16(r4, (void *)_ZN3G2S13GetBG2CharPtrEv());
     Deallocate((void *)r4);
 
     r4 = LoadFile(0x99);

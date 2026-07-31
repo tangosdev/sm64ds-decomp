@@ -5,7 +5,7 @@ typedef struct { int x, y; } V2;
 
 extern void func_ov006_021146cc(int *a, int *b);
 extern void func_ov006_0211470c(int *a, int *b);
-extern void func_0203d6d0(V2 *o, V2 *a, V2 *b);
+extern void Vec2_Sub(V2 *o, V2 *a, V2 *b);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern int func_ov006_02111d6c(u8 *p);
 extern void func_ov006_021146e0(V2 *a, u8 *b);
@@ -59,7 +59,7 @@ void func_ov006_02115830(int a, int b, int c, u8 *d, u8 *e)
     *(int *)(e + 0xfc) = 3;
     func_ov006_0211470c(&A.x, (int *)d);
     func_ov006_0211470c(&B.x, (int *)e);
-    func_0203d6d0(&tmp, &A, &B);
+    Vec2_Sub(&tmp, &A, &B);
     delta = tmp;
     ang = _ZN4cstd5atan2E5Fix12IiES1_(delta.y, delta.x);
     if (func_ov006_02111d6c(d) != 0) {

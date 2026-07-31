@@ -27,7 +27,7 @@ typedef struct Obj9 {
 extern int data_020a0db0;
 
 extern void func_ov004_020b1bc8(char *, int, int, int);
-extern void func_ov004_020af68c(int, int, int, int, int);
+extern void Hud_RenderSprite(int, int, int, int, int);
 extern void func_ov004_020b2220(int, int, int, int, int, int, int);
 extern void Camera_UpdateMatrices(char *);
 extern void func_ov006_020c0aa8(char *);
@@ -53,7 +53,7 @@ int dScMgRoulette_c_Render(char *c)
             if (self->unk_53e6 < 8) {
                 if (data_020a0db0 & 8) {
                     s16 idx = self->unk_53d6;
-                    func_ov004_020af68c(data_ov006_02138c18,
+                    Hud_RenderSprite(data_ov006_02138c18,
                                         *(int *)(data_ov006_02142ab4 + idx * 8) >> 12,
                                         *(int *)(data_ov006_02142ab8 + idx * 8) >> 12,
                                         -1, 1);

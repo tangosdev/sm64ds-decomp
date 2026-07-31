@@ -3,7 +3,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
 extern int func_ov004_020ad674(void);
-extern void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov004_020b2444(int a, int b, int c, int d, int e, int f, int g);
 
@@ -15,7 +15,7 @@ void func_ov006_02107c50(short* a0, int a1)
 {
     int idx = func_ov004_020ad674();
     void* p = *(void**)((char*)data_ov006_0213e320[idx] + 0x50);
-    func_ov004_020af68c(p, 0xc, a1, -1, -1);
+    Hud_RenderSprite(p, 0xc, a1, -1, -1);
 
     func_ov004_020b2444(0x1e, a1, data_ov006_0212ed14[*(short*)((char*)a0 + 0x14)], 0, -1, 2, 0);
 

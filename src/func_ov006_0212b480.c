@@ -12,7 +12,7 @@ extern void *func_020adc74(void *arg);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
 extern void Ov004_Deallocate(int handle);
-extern void *func_02054de8(void);
+extern void *_ZN3G2S13GetBG2CharPtrEv(void);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
@@ -56,7 +56,7 @@ int dScMgFlower_c_InitResources(void *arg0)
     Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_021401f4);
-    DecompressLZ16(h, func_02054de8());
+    DecompressLZ16(h, _ZN3G2S13GetBG2CharPtrEv());
     Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140218);

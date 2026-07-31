@@ -59,7 +59,7 @@ extern Pair6 data_ov006_0213c0a8[];
 
 extern void func_ov006_020c225c(char *);
 extern int func_ov006_020c3050(char *);
-extern int func_02054de8(void);
+extern int _ZN3G2S13GetBG2CharPtrEv(void);
 extern void LoadCompressedFileAt(int, int);
 extern void *LoadFile(int);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(void *, unsigned int, unsigned int);
@@ -95,7 +95,7 @@ int dScMgCup_c_InitResources(char *c)
 
     data_0209d454 |= 4;
 
-    LoadCompressedFileAt(0x2b, func_02054de8() + 0x4000);
+    LoadCompressedFileAt(0x2b, _ZN3G2S13GetBG2CharPtrEv() + 0x4000);
     f = LoadFile(0x2c);
     _ZN3GXS10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
     Deallocate(f);

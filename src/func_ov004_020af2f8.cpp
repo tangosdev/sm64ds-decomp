@@ -14,7 +14,7 @@ extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int func_02054ea8(void);
 extern int _ZN3G2S13GetBG1CharPtrEv(void);
 extern int _ZN2G213GetBG2CharPtrEv(void);
-extern int func_02054de8(void);
+extern int _ZN3G2S13GetBG2CharPtrEv(void);
 extern int func_02054d88(void);
 extern int _ZN3G2S13GetBG3CharPtrEv(void);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
@@ -112,7 +112,7 @@ void func_ov004_020af2f8(char* sb, char en, int mode, int base)
             w4 = 0;
             MultiStore16(w4, t, 0x6000);
         }
-        t = func_02054de8();
+        t = _ZN3G2S13GetBG2CharPtrEv();
         w5 = 0;
         MultiStore16(w5, t, 0x6000);
         break;

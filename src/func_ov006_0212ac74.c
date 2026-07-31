@@ -21,7 +21,7 @@ typedef struct Cell {
     char pad[0x18];
 } Cell;
 
-extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
+extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 extern int Vec2_Len(V2 *p);
 extern void func_ov004_020b0aa0(int a);
 extern u8 data_020a0e40[];
@@ -97,7 +97,7 @@ int dScMgFlower_c_Behavior(char *c)
                         *(u8 *)(c + ii * 0x20 + 0x4f3a) != 1 &&
                         *(u8 *)(c + ii * 0x20 + 0x4f39) != 1) {
                         int v;
-                        func_0203d6d0(&d1, q, (V2 *)(c + 0x5fb8));
+                        Vec2_Sub(&d1, q, (V2 *)(c + 0x5fb8));
                         v = Vec2_Len(&d1) < 0x18000 ? 1 : 0;
                         if (v != 0) {
                             func_02012754(0x109);
@@ -121,7 +121,7 @@ int dScMgFlower_c_Behavior(char *c)
                         if (*(u8 *)(c + i2 * 0x20 + 0x4f38) != 0 &&
                             *(u8 *)(c + i2 * 0x20 + 0x4f3a) != 1) {
                             int v2;
-                            func_0203d6d0(&d2, q2, (V2 *)(c + 0x5fb8));
+                            Vec2_Sub(&d2, q2, (V2 *)(c + 0x5fb8));
                             v2 = Vec2_Len(&d2) < 0x18000 ? 1 : 0;
                             if (v2 != 0) {
                                 *(u8 *)(c + i2 * 0x20 + 0x4f3a) = 1;
@@ -142,7 +142,7 @@ int dScMgFlower_c_Behavior(char *c)
             if (data_020a0de8[k * 4] != 0) {
                 Cell *cells;
                 int j;
-                func_0203d6d0(&d3, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));
+                Vec2_Sub(&d3, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));
                 cells = (Cell *)(c + 0x4f3c);
                 j = self->unk_5fc8;
                 cells[j].x += d3.x;

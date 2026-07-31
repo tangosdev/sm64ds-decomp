@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 
-extern char *func_02054de8(void);
+extern char *_ZN3G2S13GetBG2CharPtrEv(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_ov006_020fbcb8(void *self, int x, int y, int k);
 
@@ -43,7 +43,7 @@ void func_ov006_020fbd38(void *arg0)
     pf18 = (int *)(a + 0x4ef0 + off);
     pf00 = (int *)(a + 0x4ed8 + off);
     if (*pf00 != *pf18 || *(int *)(a + 0x4edc + off) != *(int *)(a + 0x4ef4 + off)) {
-        buf = func_02054de8();
+        buf = _ZN3G2S13GetBG2CharPtrEv();
         fill = 0;
         MultiStore16(fill, buf, 0x6000);
         sx = (int *)(a + off + 0x4ed8);

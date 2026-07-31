@@ -1,4 +1,4 @@
-extern void func_0203d6d0(void* o, void* a, void* b);
+extern void Vec2_Sub(void* o, void* a, void* b);
 extern void func_0203d680(void* out, void* in, int scale);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int x);
 struct W2 { int a, b; };
@@ -9,7 +9,7 @@ void func_ov004_020b506c(char *c)
     struct V2 a;
     struct V2 b;
     *(int*)(c+0x10) = 0x80000;
-    func_0203d6d0(&a, c+0x10, c+8);
+    Vec2_Sub(&a, c+0x10, c+8);
     func_0203d680(&b, &a, 0xc0);
     *(int*)(c+0x18) = b.x;
     *(int*)(c+0x1c) = b.y;

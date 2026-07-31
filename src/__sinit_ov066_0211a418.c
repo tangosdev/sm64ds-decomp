@@ -6,7 +6,7 @@ extern int func_02017b4c(void*, int);
 extern void func_02017ab4(void);
 extern void func_02017984(void);
 extern void SharedFilePtr_Destruct_TexSeq(void);
-extern void func_02017b34(void);
+extern void SharedFilePtr_Destruct_Clsn(void);
 
 extern void* data_ov066_0211aeb4;
 extern void* data_ov066_0211aec4;
@@ -152,15 +152,15 @@ void __sinit_ov066_0211a418(void)
     SharedFilePtr_Construct_TexSeq(&data_ov066_0211ae9c, 0x33e);
     func_020731dc(&data_ov066_0211ae9c, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov066_0211af78);
     func_02017b4c(&data_ov066_0211ae24, 0x332);
-    func_020731dc(&data_ov066_0211ae24, (void*)&func_02017b34, (void**)&data_ov066_0211af84);
+    func_020731dc(&data_ov066_0211ae24, (void*)&SharedFilePtr_Destruct_Clsn, (void**)&data_ov066_0211af84);
     func_02017b4c(&data_ov066_0211aeac, 0x33b);
-    func_020731dc(&data_ov066_0211aeac, (void*)&func_02017b34, (void**)&data_ov066_0211af90);
+    func_020731dc(&data_ov066_0211aeac, (void*)&SharedFilePtr_Destruct_Clsn, (void**)&data_ov066_0211af90);
     func_02017b4c(&data_ov066_0211ae14, 0x33c);
-    func_020731dc(&data_ov066_0211ae14, (void*)&func_02017b34, (void**)&data_ov066_0211af9c);
+    func_020731dc(&data_ov066_0211ae14, (void*)&SharedFilePtr_Destruct_Clsn, (void**)&data_ov066_0211af9c);
     func_02017b4c(&data_ov066_0211ae1c, 0x343);
-    func_020731dc(&data_ov066_0211ae1c, (void*)&func_02017b34, (void**)&data_ov066_0211afa8);
+    func_020731dc(&data_ov066_0211ae1c, (void*)&SharedFilePtr_Destruct_Clsn, (void**)&data_ov066_0211afa8);
     func_02017b4c(&data_ov066_0211ae34, 0x345);
-    func_020731dc(&data_ov066_0211ae34, (void*)&func_02017b34, (void**)&data_ov066_0211afc0);
+    func_020731dc(&data_ov066_0211ae34, (void*)&SharedFilePtr_Destruct_Clsn, (void**)&data_ov066_0211afc0);
 
     data_ov066_0211b09c.x = data_ov066_0211ac50;
     data_ov066_0211b09c.y = data_ov066_0211ac48;

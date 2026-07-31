@@ -16,7 +16,7 @@ extern void MultiStore16(u16 val, char* dst, int nbytes);
 extern void func_02056554(const void* src, int offset, int count);
 extern char* _ZN2G212GetBG0ScrPtrEv(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void Ov004_Deallocate(void* p);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -82,7 +82,7 @@ int dScMgCurling2_c_InitResources(char* self)
     data_0209d454 |= 4;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0x814;
-    DecompressLZ16(r6, (void*)func_02054de8());
+    DecompressLZ16(r6, (void*)_ZN3G2S13GetBG2CharPtrEv());
 
     f = LoadFile(0x45);
     _ZN3GXS10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);

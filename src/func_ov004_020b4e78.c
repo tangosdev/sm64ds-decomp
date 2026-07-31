@@ -1,6 +1,6 @@
 extern void func_ov004_020b1b08(int x);
 extern int func_ov004_020b04c0(void);
-extern void func_0203d6d0(void* o, void* a, void* b);
+extern void Vec2_Sub(void* o, void* a, void* b);
 extern void func_0203d680(void* out, void* in, int scale);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int x);
 struct W2 { int a, b; };
@@ -16,7 +16,7 @@ void func_ov004_020b4e78(char *c)
     *(int*)(c+0xc) = 0xc000;
     *(int*)(c+0x10) = 0x80000;
     *(int*)(c+0x14) = ((-func_ov004_020b04c0()) - 0x10) << 12;
-    func_0203d6d0(&a, c+0x10, c+8);
+    Vec2_Sub(&a, c+0x10, c+8);
     func_0203d680(&b, &a, 0xc0);
     *(int*)(c+0x18) = b.x;
     *(int*)(c+0x1c) = b.y;

@@ -4,7 +4,7 @@ typedef unsigned char u8;
 typedef signed int s32;
 
 extern s32 func_ov004_020ad674(void);
-extern void func_ov004_020af68c(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
+extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 r3arg, s32 stack_arg);
 extern void **data_ov004_020bbfa8[];
 
 void func_ov004_020b0d8c(void *c, s32 arg1, s32 arg2)
@@ -14,5 +14,5 @@ void func_ov004_020b0d8c(void *c, s32 arg1, s32 arg2)
     s32 idx2 = func_ov004_020ad674();
     void **table = (void**)data_ov004_020bbfa8[idx2];
     void *fn = table[r4];
-    func_ov004_020af68c(fn, arg1, arg2, -1, -1);
+    Hud_RenderSprite(fn, arg1, arg2, -1, -1);
 }

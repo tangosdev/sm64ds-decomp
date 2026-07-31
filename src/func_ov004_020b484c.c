@@ -6,7 +6,7 @@ extern void func_0203d704(int* o, int* a, int* b);
 extern void func_0203d388(int* p, int angle);
 extern int RandomIntInternal(int* seed);
 extern void func_ov004_020adfc4(int c, short a1, int* a2, int* r3, int* sp0);
-extern void func_0203d47c(void);
+extern void NullDestructor_0203d47c(void);
 
 extern int data_ov004_020bf3f0;
 extern int data_ov004_020bf3fc[2];
@@ -50,7 +50,7 @@ void func_ov004_020b484c(char* c)
     if (flags == 0) {
         data_ov004_020bf3fc[0] = 0;
         data_ov004_020bf3fc[1] = 0xc0;
-        func_020731dc(data_ov004_020bf3fc, (void*)func_0203d47c, data_ov004_020bf404);
+        func_020731dc(data_ov004_020bf3fc, (void*)NullDestructor_0203d47c, data_ov004_020bf404);
         data_ov004_020bf3f0 = data_ov004_020bf3f0 | 1;
     }
 

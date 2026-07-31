@@ -4,7 +4,7 @@ extern char* data_ov004_020beb68;
 int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void*, int, int, int, int, int, int, int, int);
 int _ZN3OAM9RenderSubEP7OamAttriiii(void*, int, int, int, int);
 typedef int (*GetFn)(void*);
-void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4){
+void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4){
   char* g = data_ov004_020beb68;
   if(g == 0) return;
   if(*(int*)(g+0x4628) == 0){

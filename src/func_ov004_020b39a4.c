@@ -7,7 +7,7 @@ extern void func_0203d704(int* o, int* a, int* b);
 extern void func_0203d388(int *p, int angle);
 extern int RandomIntInternal(int* seed);
 extern void func_ov004_020adfc4(int c, short a1, int* a2, int* r3, int* sp0);
-extern void func_0203d47c(void);
+extern void NullDestructor_0203d47c(void);
 
 struct Pair { int a, b; };
 extern struct Pair data_ov004_020bc17c;
@@ -56,7 +56,7 @@ void func_ov004_020b39a4(char* c) {
     if (flags == 0) {
         data_ov004_020bf3f4[0] = 0;
         data_ov004_020bf3f4[1] = 0xc0;
-        func_020731dc((int)data_ov004_020bf3f4, (int)func_0203d47c, data_ov004_020bf410);
+        func_020731dc((int)data_ov004_020bf3f4, (int)NullDestructor_0203d47c, data_ov004_020bf410);
         data_ov004_020bf3ec = data_ov004_020bf3ec | 1;
     }
 

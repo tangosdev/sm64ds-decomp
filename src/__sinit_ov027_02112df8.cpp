@@ -21,7 +21,7 @@ extern char data_ov027_02113cd8[];
 extern char func_02017ab4[];
 extern char func_02017984[];
 extern char SharedFilePtr_Destruct_TexSeq[];
-extern char func_02017b34[];
+extern char SharedFilePtr_Destruct_Clsn[];
 
 struct S2 { int w[2]; };
 extern struct S2 data_ov027_021139d4;
@@ -43,7 +43,7 @@ void __sinit_ov027_02112df8(void) {
     SharedFilePtr_Construct_TexSeq(data_ov027_02113c94, 0x407);
     func_020731dc(data_ov027_02113c94, SharedFilePtr_Destruct_TexSeq, data_ov036_02113ccc);
     func_02017b4c(data_ov027_02113c6c, 0x3fc);
-    func_020731dc(data_ov027_02113c6c, func_02017b34, data_ov027_02113cd8);
+    func_020731dc(data_ov027_02113c6c, SharedFilePtr_Destruct_Clsn, data_ov027_02113cd8);
     data_ov027_02113ce4.a = data_ov027_021139d4;
     data_ov027_02113ce4.b = data_ov027_021139cc;
     data_ov027_02113ce4.c = data_ov027_021139dc;

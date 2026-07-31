@@ -7,7 +7,7 @@
 #pragma opt_strength_reduction off
 
 extern void func_0207328c(void *p, int a, int b, void *cb);
-extern void func_0203d47c(void);
+extern void NullDestructor_0203d47c(void);
 extern void func_ov004_020b0840(char *c, int arg);
 
 void dScMgSmartball_c_AfterCleanupResources(char *c, int mode)
@@ -129,8 +129,8 @@ void dScMgSmartball_c_AfterCleanupResources(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed74;
-                func_0207328c((char *)p + 0x4c, 3, 8, func_0203d47c);
-                func_0207328c((char *)p + 0x34, 3, 8, func_0203d47c);
+                func_0207328c((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                func_0207328c((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)data_ov006_0213ed10;
                 _ZN6Memory16operator_delete2EPv(p);
             }

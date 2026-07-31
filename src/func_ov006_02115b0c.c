@@ -81,7 +81,7 @@ extern void *func_ov006_0210e0d0(void *p, char *c, int i, V2 *pos);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_ov006_02114dd0(char *c);
-extern void func_0203d47c(void);
+extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
 
 extern int data_ov006_0213ec98[];
@@ -209,8 +209,8 @@ void func_ov006_02115b0c(char *c)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed74;
-                func_0207328c((char *)p + 0x4c, 3, 8, func_0203d47c);
-                func_0207328c((char *)p + 0x34, 3, 8, func_0203d47c);
+                func_0207328c((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                func_0207328c((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)data_ov006_0213ed10;
                 _ZN6Memory16operator_delete2EPv(p);
             }
@@ -309,7 +309,7 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x4000 + 0x674) = 0;
     *(int *)(c + 0x4000 + 0x680) = 0;
 
-    func_020733a8(pos, 0x19, 8, func_0203d738, func_0203d47c);
+    func_020733a8(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
 
     {
         int mask = 0x3ff;
@@ -823,5 +823,5 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x5000 + 0x998) = 0x100;
     SetSubBg0Offset(*(int *)(c + 0x5000 + 0x998), 0);
     func_ov006_02114dd0(c);
-    func_0207328c(pos, 0x19, 8, func_0203d47c);
+    func_0207328c(pos, 0x19, 8, NullDestructor_0203d47c);
 }

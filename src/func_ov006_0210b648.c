@@ -10,7 +10,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
-extern void func_ov004_020af68c(void *a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 extern void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
 extern int func_ov004_020ad674(void);
@@ -52,7 +52,7 @@ int dScMgSlot3_c_Render(char *c)
             for (i2 = 0; i2 < 3; i2++) {
                 int y;
                 for (j2 = 0, y = 0x30; j2 < 3; j2++) {
-                    func_ov004_020af68c(data_ov006_0213e9a4[*(u8 *)(p + j2 + 0x5031) * 3 + i2],
+                    Hud_RenderSprite(data_ov006_0213e9a4[*(u8 *)(p + j2 + 0x5031) * 3 + i2],
                                         y - (*(int *)((int)c + i2 * 4 + 0x4ff4) >> 12), 0x60, -1, -1);
                     y += 0x50;
                 }
@@ -68,7 +68,7 @@ int dScMgSlot3_c_Render(char *c)
                 row = a / 0x50;
                 rem = a % 0x50;
                 for (j2 = 0, y = 0x30; j2 < 4; j2++) {
-                    func_ov004_020af68c(data_ov006_0213e9a4[*(u8 *)(p + row + 0x501c) * 3 + i2],
+                    Hud_RenderSprite(data_ov006_0213e9a4[*(u8 *)(p + row + 0x501c) * 3 + i2],
                                         y - rem, 0x60, -1, -1);
                     row = (row + 1) % self->unk_503a;
                     y += 0x50;
@@ -110,7 +110,7 @@ int dScMgSlot3_c_Render(char *c)
             int y = 0x4c;
             for (i4 = 0; i4 < 3; i4++) {
                 if (*(u8 *)(c + i4 + 0x502e) != 0) {
-                    func_ov004_020af68c(&data_ov006_0213e5dc, slot * 0x50 + 0x30, y, -1, -1);
+                    Hud_RenderSprite(&data_ov006_0213e5dc, slot * 0x50 + 0x30, y, -1, -1);
                     count++;
                 }
                 y += 0x18;

@@ -8,7 +8,7 @@ extern void *data_ov006_0213e448;
 extern void *data_ov006_0213c154;
 extern "C" void func_ov006_020deac4(void);
 extern "C" void func_ov006_020e0634(void);
-extern "C" void func_0203d47c(void);
+extern "C" void NullDestructor_0203d47c(void);
 extern "C" void func_0203d738(void);
 
 extern "C" void *func_ov006_020e0574(void)
@@ -21,7 +21,7 @@ extern "C" void *func_ov006_020e0574(void)
         *(void **)p = &data_ov006_0213c154;
         func_ov006_020c33dc(p + 0x4f38);
         func_020733a8(p + 0x50e8, 0x20, 0x18, (void *)func_ov006_020e0634, (void *)func_ov006_020deac4);
-        func_020733a8(p + 0x53e8, 3, 8, (void *)func_0203d738, (void *)func_0203d47c);
+        func_020733a8(p + 0x53e8, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
     }
     return p;
 }

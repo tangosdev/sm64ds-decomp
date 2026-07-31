@@ -13,7 +13,7 @@ extern void DecompressLZ16(const void* src, void* dst);
 extern void* LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
 extern void Ov004_Deallocate(void* p);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -55,7 +55,7 @@ int dScMgCurling_c_InitResources(char* self)
         data_0209d454 |= 4;
         *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
         *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0x814;
-        DecompressLZ16(b, (void*)func_02054de8());
+        DecompressLZ16(b, (void*)_ZN3G2S13GetBG2CharPtrEv());
 
         f = LoadFile(0x33);
         _ZN3GXS10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);

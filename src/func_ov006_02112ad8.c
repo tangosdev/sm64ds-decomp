@@ -86,7 +86,7 @@ extern int func_ov006_02111ee8(Obj *self, V2 *p);
 extern int func_ov006_02111e90(Obj *self, V2 *p);
 extern int func_ov006_0211248c(Obj *self, V2 *p);
 extern int func_ov006_021120d4(Obj *self, V2 *p);
-extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
+extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
 extern int Vec2_Len(V2 *p);
@@ -394,7 +394,7 @@ final_checks:
                                     ? (void *)state.null3c
                                     : self->mgr->entities[entityLoopIndex];
                                 func_ov006_0211470c(&entityPos, other);
-                                func_0203d6d0(&entityDelta, (V2 *)self->pos,
+                                Vec2_Sub(&entityDelta, (V2 *)self->pos,
                                     &entityPos);
                                 delta = entityDelta;
                                 if (func_0203d5bc(&delta) <= 0x100000LL) {
@@ -413,7 +413,7 @@ final_checks:
                                             func_0203d388(&work, angle);
                                             work.x += self->pos[0];
                                             work.z += self->pos[1];
-                                            func_0203d6d0(&radialDelta, &work, &otherPos);
+                                            Vec2_Sub(&radialDelta, &work, &otherPos);
                                             delta = radialDelta;
                                             if (func_0203d5bc(&delta) < 0x40000LL) {
                                                 self->targetIndex = entityLoopIndex;
@@ -461,7 +461,7 @@ final_checks:
             *(int *)(((int)position) & 0xffffffffffffffffLL) -=
                 normal.x;
             *pz -= normal.z;
-            func_0203d6d0(&moveDelta, position,
+            Vec2_Sub(&moveDelta, position,
                 (V2 *)self->oldPos);
         }
         dot = Vec2_Len(&moveDelta);
