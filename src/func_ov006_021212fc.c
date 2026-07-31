@@ -1,22 +1,16 @@
-extern void func_ov006_0212093c(short* obj, int arg1);
-extern void func_ov006_02120c08(void);
+// @symbol func_ov006_021212fc
+// @emits dScMgTrampoline_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline_c::Render - recovered from vtable slot identity */
 extern int func_ov004_020ad674(void);
 extern void func_ov004_020afcf8(void* a0, void* a1, int a2, void* a3);
 extern int func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020b1a5c(int a0, int a1);
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
-extern void func_ov006_020cd270(void);
-extern void func_ov006_020d09e0(void);
 
-extern int data_ov006_0213b0ec;
-extern int* data_ov006_0213fb04[];
-extern int data_ov006_02134ecc;
-extern int data_ov006_02140588;
-extern int data_ov006_0212f0c8[];
-extern void* data_ov006_02134f08;
-extern void* data_ov006_02134f00[];
 
-int func_ov006_021212fc(int self)
+int dScMgTrampoline_c_Render(int self)
 {
     int count;
     int a1v;

@@ -1,3 +1,7 @@
+// @symbol func_ov006_020fedc4
+// @emits dScMgPachinko_c_Render
+/* recovered: renamed to Class_Method */
+/* dScMgPachinko_c::Render - recovered from vtable slot identity */
 void func_ov006_020fba48(void *c);
 void func_ov006_020fba28(void *c);
 void func_ov006_020fb74c(void *c);
@@ -9,7 +13,7 @@ void func_ov006_020fae20(void *c);
 void func_ov006_020fc144(void *c);
 void func_ov006_020fa7b8(void *c);
 
-int func_ov006_020fedc4(void *c)
+int dScMgPachinko_c_Render(void *c)
 {
     func_ov006_020fba48(c);
     func_ov006_020fba28(c);

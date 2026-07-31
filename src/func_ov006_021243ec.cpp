@@ -1,26 +1,22 @@
 //cpp
+// @symbol func_ov006_021243ec
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgTrampoline2_c.h"
+// @emits dScMgTrampoline2_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline2_c::InitResources - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
 typedef int s32;
 
 extern "C" {
-extern void func_ov006_021245a8(void *p);
-extern void _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
-extern void InitialiseVramGlobals(void);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void func_ov006_020c0134(void *cam);
-extern int func_ov006_020cae9c(void *p, int n);
-extern void func_ov006_02120d8c(void *a, int b);
-extern void func_ov006_020d0b2c(void);
-extern void func_ov006_020cef14(char *p, int n);
-extern void func_ov006_020ef0d4(int p, int n);
-extern void func_ov006_02122c04(int p, int n);
-extern void func_ov004_020b04d0(int v);
 
 extern u8 data_0209d45c;
-extern s16 data_02082414;
-extern int data_ov006_021421b4;
 }
 
 struct Base {
@@ -45,8 +41,9 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int func_ov006_021243ec(char *base)
+extern "C" int dScMgTrampoline2_c_InitResources(char *base)
 {
+    struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)base;
     s32 fov;
 
     func_ov006_021245a8(base);
@@ -56,21 +53,21 @@ extern "C" int func_ov006_021243ec(char *base)
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = _ZN4cstd4fdivEii(0xc0000, (s32)data_02082414);
-    *(s32 *)(base + 0x470c) = 0;
-    *(s32 *)(base + 0x4710) = -0x64000;
-    *(s32 *)(base + 0x4714) = 0;
-    *(s32 *)(base + 0x4718) = 0;
-    *(s32 *)(base + 0x471c) = 0;
-    *(s32 *)(base + 0x4720) = fov;
-    *(u16 *)(base + 0x4724) = 0x400;
+    self->unk_470c = 0;
+    self->unk_4710 = -0x64000;
+    self->unk_4714 = 0;
+    self->unk_4718 = 0;
+    self->unk_471c = 0;
+    self->unk_4720 = fov;
+    self->unk_4724 = 0x400;
     func_ov006_020c0134(base + 0x466c);
-    *(s32 *)(base + 0x47c8) = 0;
-    *(s32 *)(base + 0x47cc) = 0x82000;
-    *(s32 *)(base + 0x47d0) = 0;
-    *(s32 *)(base + 0x47d4) = 0;
-    *(s32 *)(base + 0x47d8) = 0;
-    *(s32 *)(base + 0x47dc) = fov;
-    *(u16 *)(base + 0x47e0) = 0x400;
+    self->unk_47c8 = 0;
+    self->unk_47cc = 0x82000;
+    self->unk_47d0 = 0;
+    self->unk_47d4 = 0;
+    self->unk_47d8 = 0;
+    self->unk_47dc = fov;
+    self->unk_47e0 = 0x400;
     func_ov006_020c0134(base + 0x4728);
     if (func_ov006_020cae9c(base + 0x500c, 5) == 0)
         return 0;

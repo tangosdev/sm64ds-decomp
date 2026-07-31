@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_02120248
+// @emits dScMgTeresa_c_OnYoshiTryEat_02120248
+/* recovered: renamed to Class_Method */
+/* dScMgTeresa_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
 void func_ov006_0211fbf8(char* p);
 void func_ov006_0211dd6c(char* p);
@@ -13,7 +17,7 @@ void Deallocate(void* ptr);
 }
 struct G2S { static char* GetBG0CharPtr(); };
 
-extern "C" void func_ov006_02120248(char* self, int reset)
+extern "C" void dScMgTeresa_c_OnYoshiTryEat_02120248(char* self, int reset)
 {
     volatile unsigned short val;
     if (reset == 0) {

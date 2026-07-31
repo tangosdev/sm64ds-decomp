@@ -1,12 +1,16 @@
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
-extern int func_ov007_020b6f4c(void);
+// @symbol func_ov007_020cc45c
+// @emits dScDSMT_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScDSMT_c::CleanupResources - recovered from vtable slot identity */
 extern void _ZN5Sound21UnsetPlayerVoiceGroupEv(void);
 extern void func_0203cbc0(void* a);
 extern int data_0209d4a8;
-extern int data_0209b340[];
 extern void* data_0209b33c;
 
-int func_ov007_020cc45c(void) {
+int dScDSMT_c_CleanupResources(void) {
     data_0209d4a8 = 0;
     _ZN5Scene20SetAndStopColorFaderEv();
     data_0209b340[0] = func_ov007_020b6f4c();

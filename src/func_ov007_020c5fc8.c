@@ -1,18 +1,21 @@
+// @symbol func_ov007_020c5fc8
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned short u16;
 typedef short s16;
 typedef long long s64;
 
-struct Vec3 { int x, y, z; };
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern int LenVec3(struct Vec3 *v);
+
+extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern int LenVec3(struct Vector3 *v);
 
 void func_ov007_020c5fc8(char *sb, int idx, int t)
 {
     int i;
     int k;
     int inv;
-    struct Vec3 cur;
-    struct Vec3 prev;
+    struct Vector3 cur;
+    struct Vector3 prev;
 
     i = 0;
     if ((int)*(u16 *)((*(char ***)(sb + 0x38))[idx] + 8) <= 0)
@@ -49,8 +52,8 @@ void func_ov007_020c5fc8(char *sb, int idx, int t)
             char *p = (*(char ***)(sb + 0x3c))[idx];
             char *arr = *(char **)(p + 8);
             char *seg = ((char **)arr)[i - 1];
-            SubVec3(&prev, &cur, (struct Vec3 *)(seg + 0xc));
-            *(int *)(seg + 8) = LenVec3((struct Vec3 *)(seg + 0xc));
+            SubVec3(&prev, &cur, (struct Vector3 *)(seg + 0xc));
+            *(int *)(seg + 8) = LenVec3((struct Vector3 *)(seg + 0xc));
         }
 
         prev = cur;

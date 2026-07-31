@@ -1,12 +1,14 @@
-extern void func_ov004_020adb1c(int arg);
+// @symbol func_ov006_0211c5d0
+// @emits dScMgSound_c_OnYoshiTryEat_0211c5d0
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSound_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov006_0211c478(int self);
 extern void func_ov006_0211c080(int self);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
-extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int n);
 
-extern int *g_020beb68;
 
-void func_ov006_0211c5d0(int self, int r1)
+void dScMgSound_c_OnYoshiTryEat_0211c5d0(int self, int r1)
 {
     int *p;
     int *q;

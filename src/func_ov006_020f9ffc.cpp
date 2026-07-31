@@ -1,4 +1,12 @@
 //cpp
+// @symbol func_ov006_020f9ffc
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgMCarlo2_c.h"
+// @emits dScMgMCarlo2_c_Render
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo2_c::Render - recovered from vtable slot identity */
 struct Node {
     virtual void m0();
     Node *next;
@@ -7,17 +15,14 @@ struct Node {
 };
 
 extern "C" void func_ov006_020c0aa8(void *c);
-extern "C" void func_ov004_020b1ea4(int a, int b, int c, int d, int e, int f, int g);
 extern "C" int  func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
-extern "C" void func_ov004_020b0d8c(void *c, int arg1, int arg2);
 extern "C" void func_ov006_020c1804(void *c);
 
-extern short data_ov006_02142564;
-extern int data_ov006_02133f18;
 extern Node *data_ov006_02142578;
 
-extern "C" int func_ov006_020f9ffc(char *c)
+extern "C" int dScMgMCarlo2_c_Render(char *c)
 {
+    struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
     short v;
     Node *n6;
     int i5;
@@ -33,7 +38,7 @@ extern "C" int func_ov006_020f9ffc(char *c)
 
     func_ov004_020afa20(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 
-    if (*(short *)(c + 0x5928) == 5)
+    if (self->unk_5928 == 5)
         func_ov004_020b0d8c(c, 0xe0, 0xa0);
 
     n6 = data_ov006_02142578;

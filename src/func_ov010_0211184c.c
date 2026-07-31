@@ -1,13 +1,15 @@
-struct V3 { int x, y, z; };
+// @symbol func_ov010_0211184c
+/* recovered: shared common types */
+#include "common.h"
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern short Vec3_HorzAngle(const struct V3* v0, const struct V3* v1);
-extern int Vec3_HorzDist(const struct V3* a, const struct V3* b);
+extern short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
+extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern short data_02082214[];
 void func_ov010_0211184c(char* c, char* arg2) {
     char* target;
     unsigned int id;
-    struct V3 va, vt;
-    struct V3 *sa, *st;
+    struct Vector3 va, vt;
+    struct Vector3 *sa, *st;
     short ang;
     short ang2;
     int dist;
@@ -23,8 +25,8 @@ void func_ov010_0211184c(char* c, char* arg2) {
     if (target == 0) return;
     b = (int)(*(unsigned short*)(arg2+0xc) == 0xbf);
     if (b == 0) return;
-    sa = (struct V3*)(((int)arg2 + 0x5c) & 0xFFFFFFFFFFFFFFFF);
-    st = (struct V3*)(((int)target + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    sa = (struct Vector3*)(((int)arg2 + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    st = (struct Vector3*)(((int)target + 0x5c) & 0xFFFFFFFFFFFFFFFF);
     va.x = sa->x;
     va.y = sa->y;
     va.z = sa->z;

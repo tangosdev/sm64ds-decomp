@@ -1,3 +1,11 @@
+// @symbol func_ov006_0212ac74
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgFlower_c.h"
+// @emits dScMgFlower_c_Behavior
+/* recovered: renamed to Class_Method */
+/* dScMgFlower_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -15,16 +23,7 @@ typedef struct Cell {
 
 extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
 extern int func_0203d614(V2 *p);
-extern void func_02012754(int id);
 extern void func_ov004_020b0aa0(int a);
-extern void func_ov004_020b0a54(int a);
-extern void func_ov004_020b0cac(int a, int a1, int a2, int a3, int arg5, short arg6);
-extern void func_ov006_020c3990(char *p);
-extern int func_ov006_020c3b80(char *p);
-extern void func_ov006_020c3908(char *p);
-extern void func_ov006_020c38b0(char *p);
-extern void func_ov006_020c3d18(char *p);
-extern void func_ov006_0212a654(char *p);
 extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
@@ -37,8 +36,9 @@ extern u8 data_020a0deb[];
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-int func_ov006_0212ac74(char *c)
+int dScMgFlower_c_Behavior(char *c)
 {
+    struct dScMgFlower_c *self = (struct dScMgFlower_c *)(void *)c;
     int i;
     int k;
     int t;
@@ -46,44 +46,44 @@ int func_ov006_0212ac74(char *c)
     V2 d2;
     V2 d3;
 
-    if (*(u8 *)(c + 0xc4) == 0) {
-        *(u8 *)(c + 0xc3) = 1;
-        *(u8 *)(c + 0xc4) = 1;
-        *(u16 *)(c + 0xc0) = 0;
+    if (self->unk_0c4 == 0) {
+        self->unk_0c3 = 1;
+        self->unk_0c4 = 1;
+        self->unk_0c0 = 0;
     }
-    if (*(int *)(c + 0x5fd0) > 0) {
-        if (*(int *)(c + 0x5fc8) == -1) {
+    if (self->unk_5fd0 > 0) {
+        if (self->unk_5fc8 == -1) {
             *(int *)LA(c + 0x5fd0) -= 1;
-            if (*(int *)(c + 0x5fd0) <= 0) {
-                if (*(int *)(c + 0x5fd8) >= 1)
-                    *(int *)(c + 0x5fec) = 2;
+            if (self->unk_5fd0 <= 0) {
+                if (self->unk_5fd8 >= 1)
+                    self->unk_5fec = 2;
             }
         } else {
-            *(int *)(c + 0x5fd0) = 0x3c;
+            self->unk_5fd0 = 0x3c;
         }
     }
-    switch (*(int *)(c + 0x5fe8)) {
+    switch (self->unk_5fe8) {
     case 0:
-        *(int *)(c + 0x5fc0) = *(int *)(c + 0x5fb8);
-        *(int *)(c + 0x5fc4) = *(int *)(c + 0x5fbc);
+        self->unk_5fc0 = self->unk_5fb8;
+        self->unk_5fc4 = self->unk_5fbc;
         k = data_020a0e40[0];
         if (data_020a0de8[k * 4] != 0) {
             int b = data_020a0deb[k * 4];
             int a = data_020a0dea[k * 4];
-            *(int *)(c + 0x5fb8) = (b ? a : a) << 12;
-            *(int *)(c + 0x5fbc) = b << 12;
+            self->unk_5fb8 = (b ? a : a) << 12;
+            self->unk_5fbc = b << 12;
         }
-        if (*(int *)(c + 0x5fe4) > 0x14) {
-            if (*(int *)(c + 0x5fd8) > 0) {
-                for (i = 0; i < *(int *)(c + 0x5fd8); i++) {
+        if (self->unk_5fe4 > 0x14) {
+            if (self->unk_5fd8 > 0) {
+                for (i = 0; i < self->unk_5fd8; i++) {
                     *(u8 *)(c + i * 0x20 + 0x4f39) = 1;
                     *(u8 *)(c + i * 0x20 + 0x4f3b) = 1;
                 }
-                *(int *)(c + 0x5fd8) = 0;
+                self->unk_5fd8 = 0;
                 func_02012754(0x10d);
                 func_ov004_020b0aa0(0x1d);
             }
-        } else if (*(int *)(c + 0x5fc8) < 0) {
+        } else if (self->unk_5fc8 < 0) {
             int t;
             if (data_020a0de8[k * 4] != 0 && data_020a0de9[k * 4] != 0)
                 t = 1;
@@ -104,17 +104,17 @@ int func_ov006_0212ac74(char *c)
                             *(u8 *)(c + ii * 0x20 + 0x4f3a) = 1;
                             *(int *)(c + ii * 0x20 + 0x4f44) = 0;
                             *(int *)(c + ii * 0x20 + 0x4f48) = 0;
-                            *(int *)(c + 0x5fc8) = ii;
-                            *(int *)(c + ii * 0x20 + 0x4f4c) = *(int *)(c + 0x5fb8);
-                            *(int *)(c + ii * 0x20 + 0x4f50) = *(int *)(c + 0x5fbc);
+                            self->unk_5fc8 = ii;
+                            *(int *)(c + ii * 0x20 + 0x4f4c) = self->unk_5fb8;
+                            *(int *)(c + ii * 0x20 + 0x4f50) = self->unk_5fbc;
                             func_ov004_020b0aa0(0x1d);
-                            *(int *)(c + 0x5fec) = 2;
+                            self->unk_5fec = 2;
                             break;
                         }
                     }
                     q = (V2 *)((char *)q + 0x20);
                 }
-                if (*(int *)(c + 0x5fc8) < 0) {
+                if (self->unk_5fc8 < 0) {
                     int i2;
                     V2 *q2 = (V2 *)(c + 0x4f3c);
                     for (i2 = 0; i2 < 0x16; i2++) {
@@ -127,9 +127,9 @@ int func_ov006_0212ac74(char *c)
                                 *(u8 *)(c + i2 * 0x20 + 0x4f3a) = 1;
                                 *(int *)(c + i2 * 0x20 + 0x4f44) = 0;
                                 *(int *)(c + i2 * 0x20 + 0x4f48) = 0;
-                                *(int *)(c + 0x5fc8) = i2;
-                                *(int *)(c + i2 * 0x20 + 0x4f4c) = *(int *)(c + 0x5fb8);
-                                *(int *)(c + i2 * 0x20 + 0x4f50) = *(int *)(c + 0x5fbc);
+                                self->unk_5fc8 = i2;
+                                *(int *)(c + i2 * 0x20 + 0x4f4c) = self->unk_5fb8;
+                                *(int *)(c + i2 * 0x20 + 0x4f50) = self->unk_5fbc;
                                 break;
                             }
                         }
@@ -144,87 +144,87 @@ int func_ov006_0212ac74(char *c)
                 int j;
                 func_0203d6d0(&d3, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));
                 cells = (Cell *)(c + 0x4f3c);
-                j = *(int *)(c + 0x5fc8);
+                j = self->unk_5fc8;
                 cells[j].x += d3.x;
                 *(int *)LB((char *)cells + j * 0x20 + 4) += d3.z;
             } else {
-                if (*(u8 *)(c + *(int *)(c + 0x5fc8) * 0x20 + 0x4f39) == 0) {
-                    *(u8 *)(c + *(int *)(c + 0x5fc8) * 0x20 + 0x4f39) = 1;
-                    if (*(u8 *)(c + *(int *)(c + 0x5fc8) * 0x20 + 0x4f3b) == 0) {
+                if (*(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f39) == 0) {
+                    *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f39) = 1;
+                    if (*(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3b) == 0) {
                         t = 1;
-                        *(u8 *)(c + *(int *)(c + 0x5fc8) * 0x20 + 0x4f3b) = 1;
+                        *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3b) = 1;
                         func_ov006_020c3990(c + 0x51f8);
                     }
                 }
-                *(u8 *)(c + *(int *)(c + 0x5fc8) * 0x20 + 0x4f3a) = 0;
-                *(int *)(c + 0x5fc8) = -1;
+                *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3a) = 0;
+                self->unk_5fc8 = -1;
             }
             if (t != 0) {
                 *(int *)LA(c + 0x5fd8) -= 1;
-                if (*(u8 *)(c + 0x5fcc) == 1) {
-                    *(u8 *)(c + 0x5fcc) = 0;
-                    if (*(int *)(c + 0x5fd8) >= 1) {
+                if (self->unk_5fcc == 1) {
+                    self->unk_5fcc = 0;
+                    if (self->unk_5fd8 >= 1) {
                         func_ov004_020b0aa0(0x1d);
                         func_ov004_020b0cac(0x13, 0x80, 0x18, 0, -1, 0xd);
-                        *(int *)(c + 0x5fec) = 3;
+                        self->unk_5fec = 3;
                         func_02012754(0x104);
                     }
                 } else {
-                    *(u8 *)(c + 0x5fcc) = 1;
-                    if (*(int *)(c + 0x5fd8) >= 1) {
+                    self->unk_5fcc = 1;
+                    if (self->unk_5fd8 >= 1) {
                         func_ov004_020b0aa0(0x1d);
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
-                        *(int *)(c + 0x5fec) = 1;
+                        self->unk_5fec = 1;
                         func_02012754(0x103);
                     }
                 }
-                *(int *)(c + 0x5fd0) = 0x3c;
+                self->unk_5fd0 = 0x3c;
             }
         }
-        if (*(int *)(c + 0x5fd8) <= 0 && *(u8 *)(c + 0x5fcd) == 1) {
-            if (*(int *)(c + 0x5fd4) > 0) {
+        if (self->unk_5fd8 <= 0 && self->unk_5fcd == 1) {
+            if (self->unk_5fd4 > 0) {
                 *(int *)LA(c + 0x5fd4) -= 1;
-                if (*(int *)(c + 0x5fd4) <= 0) {
-                    *(int *)(c + 0x5fe8) = 1;
+                if (self->unk_5fd4 <= 0) {
+                    self->unk_5fe8 = 1;
                     func_ov004_020b0a54(0xc);
                 }
                 if (func_ov006_020c3b80(c + 0x51f8) != 0) {
-                    if (*(u8 *)(c + 0x5fcc) == 1)
+                    if (self->unk_5fcc == 1)
                         func_ov006_020c3908(c + 0x51f8);
                     else
                         func_ov006_020c38b0(c + 0x51f8);
                 }
             } else {
                 func_ov004_020b0aa0(0x1d);
-                if (*(int *)(c + 0x5fe4) > 0x14) {
-                    if (*(u8 *)(c + 0x5fcd) == 1) {
+                if (self->unk_5fe4 > 0x14) {
+                    if (self->unk_5fcd == 1) {
                         func_02012754(0x106);
-                        *(int *)(c + 0x5fec) = 4;
-                        *(int *)(c + 0x5fd4) = 0x3c;
+                        self->unk_5fec = 4;
+                        self->unk_5fd4 = 0x3c;
                     }
                 } else {
-                if (*(u8 *)(c + 0x5fcc) == 1) {
-                    *(int *)(c + 0x5fec) = 0;
+                if (self->unk_5fcc == 1) {
+                    self->unk_5fec = 0;
                     *(int *)LA(c + 0x5fdc) += 1;
-                    *(int *)(c + 0x5fe0) = 0;
-                    if (*(int *)(c + 0x5fdc) >= 3) {
+                    self->unk_5fe0 = 0;
+                    if (self->unk_5fdc >= 3) {
                         func_ov004_020b0cac(0x12, 0x80, 0x18, 0, -1, 0xd);
                         func_02012754(0x107);
                         *(int *)LA(c + 0x5ff0) += 3;
-                        if (*(int *)(c + 0x5ff0) > 0x270f)
-                            *(int *)(c + 0x5ff0) = 0x270f;
+                        if (self->unk_5ff0 > 0x270f)
+                            self->unk_5ff0 = 0x270f;
                     } else {
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
                         func_02012754(0x108);
                         *(int *)LA(c + 0x5ff0) += 1;
-                        if (*(int *)(c + 0x5ff0) > 0x270f)
-                            *(int *)(c + 0x5ff0) = 0x270f;
+                        if (self->unk_5ff0 > 0x270f)
+                            self->unk_5ff0 = 0x270f;
                     }
                 } else {
-                    *(int *)(c + 0x5fec) = 4;
+                    self->unk_5fec = 4;
                     *(int *)LA(c + 0x5fe0) += 1;
-                    *(int *)(c + 0x5fdc) = 0;
-                    if (*(int *)(c + 0x5fe0) >= 3) {
+                    self->unk_5fdc = 0;
+                    if (self->unk_5fe0 >= 3) {
                         func_ov004_020b0cac(0x11, 0x80, 0x18, 0, -1, 0xd);
                         func_02012754(0x105);
                     } else {
@@ -232,7 +232,7 @@ int func_ov006_0212ac74(char *c)
                         func_02012754(0x106);
                     }
                 }
-                *(int *)(c + 0x5fd4) = 0x3c;
+                self->unk_5fd4 = 0x3c;
                 }
             }
         }
@@ -240,12 +240,12 @@ int func_ov006_0212ac74(char *c)
         break;
     case 1:
         if (func_ov006_020c3b80(c + 0x51f8) != 0) {
-            if (*(u8 *)(c + 0x5fcc) == 1)
+            if (self->unk_5fcc == 1)
                 func_ov006_020c3908(c + 0x51f8);
             else
                 func_ov006_020c38b0(c + 0x51f8);
         }
-        *(u8 *)(c + 0xc3) = 0;
+        self->unk_0c3 = 0;
         func_ov006_0212a654(c);
         break;
     default:

@@ -1,8 +1,13 @@
+// @symbol func_ov006_0212b480
+// @emits dScMgFlower_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgFlower_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern int func_ov004_020ad8b8(void);
 extern void *func_020adc74(void *arg);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
@@ -17,27 +22,12 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_ov006_0212a764(void *arg);
-extern void func_ov006_020c3d88(char *c);
-extern void func_ov006_020c3b2c(void *arg);
 
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int data_ov006_021401d0;
-extern int data_ov006_021401f4;
-extern int data_ov006_02140218;
-extern int data_ov006_0214023c;
-extern int data_ov006_02140260;
-extern int data_ov006_02140284;
-extern int data_ov006_021402a8;
-extern int data_ov006_021402c4;
-extern int func_020bc8a8;
-extern int func_020bc898;
-extern int func_020bc86c;
-extern int func_020bc8a4;
 
-int func_ov006_0212b480(void *arg0)
+int dScMgFlower_c_InitResources(void *arg0)
 {
     char *c = (char *)arg0;
     int h;

@@ -1,9 +1,12 @@
+// @symbol func_ov010_0211146c
+/* recovered: shared common types */
+#include "common.h"
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern short data_02082214[];
-struct M { int w[12]; };
-extern struct M data_020a0e68;
+
+extern struct Matrix4x3 data_020a0e68;
 void func_ov010_0211146c(char *c) {
     int a = (int)(*(unsigned short*)(c+0x8e)) >> 4;
     int a2 = a << 1;
@@ -20,5 +23,5 @@ void func_ov010_0211146c(char *c) {
     Matrix4x3_FromTranslation(&data_020a0e68, X, Y, Z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c+0x8e));
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(short*)(c+0x90));
-    *(struct M*)(c+0x33c) = data_020a0e68;
+    *(struct Matrix4x3*)(c+0x33c) = data_020a0e68;
 }

@@ -1,21 +1,22 @@
 //cpp
+// @symbol func_ov006_0212551c
+// @emits dScMgBSC_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgBSC_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef int s32;
 extern "C" {
 extern unsigned char data_0209d45c[];
-extern int data_ov006_0213fe78[];
 extern int data_0208ee44[];
 extern void func_ov006_0210a534(void);
 extern s32 func_ov004_020ad674(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern int LoadFile(int handle);
-extern void Deallocate(void *ptr);
 extern void func_ov006_020c0aa8(void *p);
 extern int func_ov006_020c1a88(void *p);
-extern void func_ov004_020b04d0(int v);
-extern void func_ov004_020b682c(void);
-extern int func_ov004_020ad8b8(void);
-int func_ov006_0212551c(void *self);
+int dScMgBSC_c_InitResources(void *self);
 }
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(void const *a, unsigned int b, unsigned int c);
 struct Obj {
@@ -26,7 +27,7 @@ struct Obj {
     virtual void v16();virtual void v17();virtual void v18(int x);
     char pad[0x10000];
 };
-int func_ov006_0212551c(void *self) {
+int dScMgBSC_c_InitResources(void *self) {
     Obj *o = (Obj *)self;
     char *c = (char *)self;
     int fh;

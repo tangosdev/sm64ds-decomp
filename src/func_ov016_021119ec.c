@@ -1,6 +1,11 @@
+// @symbol func_ov016_021119ec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct Vector3 { int x, y, z; };
+
 
 extern int Vec3_Dist(const void* a, const void* b);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void* pos, const void* target, int step);
@@ -9,16 +14,14 @@ extern void Matrix4x3_FromRotationY(void* m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, int ang);
 extern void MulVec3Mat4x3(const void* in, const void* m, void* out);
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
-extern int AngleDiff(int a, int b);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern void func_ov016_02111bf0(void* self, void* state);
 
 extern unsigned char data_0209f220;
 extern int data_020a0e68[];
-extern void* data_ov016_02114d9c;
 
 #pragma opt_propagation off
-#define LA(p) ((int*)(unsigned long)(((long long)(int)(unsigned long)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int*)(unsigned long)(((long long)(int)(unsigned long)(p))))
 
 int func_ov016_021119ec(char* c)
 {

@@ -1,24 +1,18 @@
+// @symbol func_ov006_021231ac
+// @emits dScMgTrampoline2_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline2_c::Render - recovered from vtable slot identity */
 typedef unsigned short u16;
 
 extern void func_0203cd80(int* m, short angle);
-extern void func_ov006_02120c08(void);
-extern void func_ov006_020eef58(void);
-extern int GetOwnerLanguage(void);
 extern int func_ov004_020ad674(void);
 extern void func_ov004_020afcf8(void* a0, void* a1, int a2, void* a3);
 extern void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020b1a5c(int a0, int a1);
-extern void func_ov006_020caadc(void);
-extern void func_ov006_020d09e0(void);
-extern void func_ov006_020ced84(void);
-extern void func_ov006_02122a4c(void);
 
-extern int data_ov006_0213b0f0;
-extern int data_ov006_02134ecc;
-extern int* data_ov006_0213fc48[];
-extern int data_ov006_02140830;
 
-int func_ov006_021231ac(char* self)
+int dScMgTrampoline2_c_Render(char* self)
 {
     int m[3];
     int count;

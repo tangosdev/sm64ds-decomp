@@ -1,3 +1,6 @@
+// @symbol func_ov009_0211145c
+/* recovered: shared common types */
+#include "common.h"
 // NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
 // proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
 // to a draft until someone reproduces the bytes from real C.
@@ -6,10 +9,10 @@
  * interleave for -0x14000 / 0xff06a000 / func_0201267c (same wall as sibling
  * 021116ec avoids by not calling after the stores).
  */
-struct V3 { int x, y, z; };
+
 extern char* _ZN5Actor13ClosestPlayerEv(void* self);
-extern int Vec3_Sub(struct V3* dst, void* a, void* b);
-extern int Vec3_HorzLen(struct V3* v);
+extern int Vec3_Sub(struct Vector3* dst, void* a, void* b);
+extern int Vec3_HorzLen(struct Vector3* v);
 extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p1, void* pos, void* rot, int a, int b);
 extern void func_ov009_02111224(char* c, int r1);
 extern int func_0201267c(unsigned int a, void* b);
@@ -19,8 +22,8 @@ extern int data_0209e650;
 void func_ov009_0211145c(char* c) {
     if (*(unsigned char*)(c + 0x180) != 0) {
         char* p;
-        struct V3 copy;
-        struct V3 diff;
+        struct Vector3 copy;
+        struct Vector3 diff;
         int n;
         p = _ZN5Actor13ClosestPlayerEv(c);
         if (p == 0) {

@@ -1,31 +1,21 @@
+// @symbol func_ov006_02118488
+// @emits dScMgSmartball_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSmartball_c::Behavior - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
 typedef void (*VFunc)(void*);
 
-extern void func_ov006_02115480(char* c);
-extern void func_ov006_02115150(char* c);
-extern void func_ov006_02115a5c(char* c);
-extern int func_ov006_021156f8(char* c);
-extern int func_ov006_02111d74(char* c);
-extern void func_ov004_020ae20c(void);
 extern void func_ov004_020b0aa0(int a);
-extern int func_ov006_02111dcc(char* p, int val);
-extern void func_ov006_02111e48(char* o);
-extern void func_ov006_0211470c(int* a, char* b);
-extern void func_ov006_02115598(char* c, int* src, int v2, int v3, int v5);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int s);
-extern void func_ov006_02114f98(char* self);
-extern void func_ov004_020b0a54(int a);
 extern unsigned int func_02012790(unsigned int a);
-extern void func_ov006_02114c04(char* c);
 
 extern unsigned char data_0209d454;
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
-extern int func_020bc888;
-extern int func_020bc864;
 
-int func_ov006_02118488(void* arg)
+int dScMgSmartball_c_Behavior(void* arg)
 {
     char* c = (char*)arg;
     int vec[3];

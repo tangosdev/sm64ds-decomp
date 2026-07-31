@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov006_021242cc
+// @emits dScMgTrampoline2_c_OnYoshiTryEat_021242cc
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline2_c::OnYoshiTryEat - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
@@ -25,24 +31,14 @@ typedef struct {
 } T;
 
 extern "C" void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
-extern "C" void func_ov006_020cad3c(int a);
-extern "C" void func_ov006_020cac9c(u32 a);
 extern "C" void func_ov006_020d0b04(u32 a);
-extern "C" void func_ov006_020cee5c(u32 a);
-extern "C" void func_ov006_020eeff0(void);
-extern "C" void func_ov006_02122b24(void);
-extern "C" void func_ov006_02120ca0(void);
 extern "C" s32 func_ov004_020ad674(void);
-extern "C" void func_ov006_020c8a9c(int a0, int a1);
-extern "C" int func_02054d88(void);
 extern "C" void MultiStore16(u16 val, char *dst, int nbytes);
 extern "C" void func_ov006_02124228(T *self);
 
 extern volatile s16 data_020a0dbc[];
-extern int data_ov006_021405bc;
-extern int data_ov006_0213fc20[];
 
-extern "C" void func_ov006_021242cc(T *self)
+extern "C" void dScMgTrampoline2_c_OnYoshiTryEat_021242cc(T *self)
 {
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
 

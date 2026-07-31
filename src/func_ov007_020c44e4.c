@@ -1,12 +1,16 @@
+// @symbol func_ov007_020c44e4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern int func_ov007_020c3df4(int a, int b);
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 
-struct Vec3i { int x, y, z; };
+
 
 int func_ov007_020c44e4(int count)
 {
@@ -30,8 +34,8 @@ int func_ov007_020c44e4(int count)
     *(u16*)(p + 0xc) = *(u16*)(p + 0xe);
 
     {
-        struct Vec3i z3 = {0, 0, 0};
-        *(struct Vec3i*)(p + 0x14) = z3;
+        struct Vector3 z3 = {0, 0, 0};
+        *(struct Vector3*)(p + 0x14) = z3;
 
     *(int*)(p + 0x24) = 0;
     *(int*)(p + 0x20) = *(int*)(p + 0x24);
@@ -42,8 +46,8 @@ int func_ov007_020c44e4(int count)
     *(u16*)(p + 0x34) = *(u16*)(p + 0x36);
 
         {
-            struct Vec3i z3b = {0, 0, 0};
-            *(struct Vec3i*)(p + 0x28) = z3b;
+            struct Vector3 z3b = {0, 0, 0};
+            *(struct Vector3*)(p + 0x28) = z3b;
         }
     }
 

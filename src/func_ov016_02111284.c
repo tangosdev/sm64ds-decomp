@@ -1,7 +1,10 @@
+// @symbol func_ov016_02111284
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef unsigned short u16;
 
-struct Vector3 { int x, y, z; };
+
 
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* in, void* m, void* out);
@@ -12,7 +15,7 @@ extern unsigned char data_0209f220;
 extern int data_ov016_02114dbc;
 extern int data_020a0e68[];
 
-#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p))))
 
 void func_ov016_02111284(char* c)
 {

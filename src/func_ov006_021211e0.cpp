@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_021211e0
+// @emits dScMgTrampoline_c_OnKicked
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline_c::OnKicked - recovered from vtable slot identity */
 extern "C" {
 int func_ov006_020e6e78(char* self);
 void SetBg2Offset(int a, int b);
@@ -6,7 +10,7 @@ int func_ov004_020b04c0(void);
 }
 extern "C" unsigned char data_0209d45c;
 
-extern "C" int func_ov006_021211e0(char* self)
+extern "C" int dScMgTrampoline_c_OnKicked(char* self)
 {
     if (!func_ov006_020e6e78(self))
         return 0;

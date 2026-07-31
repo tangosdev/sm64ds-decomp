@@ -1,16 +1,16 @@
 //cpp
-extern "C" int data_ov006_0213fb34;
+// @symbol func_ov006_02120880
+// @emits dScMgTrampoline_c_OnYoshiTryEat
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" int _ZTV17MgBounceAndPounce;
 extern "C" int data_020a0eac;
-extern "C" void func_ov006_02120938();
-extern "C" void func_ov006_020d1008();
-extern "C" void func_ov006_020ccfc8();
 extern "C" void func_0207328c(void *p, int a, int b, void (*fn)());
 extern "C" void _ZN8Particle10SysTrackerD1Ev(void *p);
-extern "C" void func_ov004_020b29c0(void *c);
-extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *heap);
 
-extern "C" void *func_ov006_02120880(char *thiz)
+extern "C" void *dScMgTrampoline_c_OnYoshiTryEat(char *thiz)
 {
     *(int**)thiz = &data_ov006_0213fb34;
     func_0207328c(thiz + 0x5cd0, 5, 0x24, &func_ov006_02120938);

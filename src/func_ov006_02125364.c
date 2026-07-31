@@ -1,11 +1,17 @@
-extern int func_ov004_020ad878(void);
-extern void func_ov004_020adb1c(int self);
+// @symbol func_ov006_02125364
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgBSC_c.h"
+// @emits dScMgBSC_c_OnYoshiTryEat_02125364
+/* recovered: renamed to Class_Method */
+/* dScMgBSC_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov004_020b66d4(void);
-extern int func_020bc7d4;
-void func_ov006_02125364(char* c, int mode){
+void dScMgBSC_c_OnYoshiTryEat_02125364(char* c, int mode){
+    struct dScMgBSC_c *self = (struct dScMgBSC_c *)(void *)c;
   if(mode != 4 && mode != 5 && mode == 3){
-    *(int*)(c+0xb4) = func_ov004_020ad878();
-    func_ov004_020adb1c(*(int*)(c+0xb4));
+    self->unk_0b4 = func_ov004_020ad878();
+    func_ov004_020adb1c(self->unk_0b4);
   }
   func_ov004_020b66d4();
   func_020bc7d4 = 1;

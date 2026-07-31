@@ -1,9 +1,13 @@
 //cpp
+// @symbol func_ov015_021113c0
+// @emits PoleBillboard_OnHitByMegaChar
+/* recovered: renamed to Class_Method */
+/* daObjBk_Botaosi_c::OnHitByMegaChar - recovered from vtable slot identity */
 struct Player {
     void IncMegaKillCount();
 };
 
-extern "C" void func_ov015_021113c0(char *c, void *arg) {
+extern "C" void PoleBillboard_OnHitByMegaChar(char *c, void *arg) {
     unsigned char v = *(unsigned char *)(c + 0x397);
     if (v >= 2) return;
     ((Player *)arg)->IncMegaKillCount();

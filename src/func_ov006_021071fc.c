@@ -1,16 +1,18 @@
-extern void func_ov004_020adb1c(int self);
+// @symbol func_ov006_021071fc
+// @emits dScMgPanel_c_OnYoshiTryEat_021071fc
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgPanel_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov004_020b0aa0(int arg);
 extern void func_ov006_021067a4(char *p);
 extern void func_ov006_021063a0(char *p);
 extern void func_ov006_02106168(char *p);
-extern void func_ov006_02104b24(char *p);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
-extern void SetSubBg0Offset(int a, int b);
 
 extern char *func_020beb68;
 extern unsigned char data_0209d454;
 
-void func_ov006_021071fc(char *self, int flag)
+void dScMgPanel_c_OnYoshiTryEat_021071fc(char *self, int flag)
 {
     char *p;
 

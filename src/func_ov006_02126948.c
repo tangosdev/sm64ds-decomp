@@ -1,13 +1,17 @@
+// @symbol func_ov006_02126948
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct V3 { int x, y; volatile int z; };
-struct M48 { int w[12]; };
+
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_ov006_020c0134(void *self);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
-extern struct M48 data_020a0e68;
-extern short data_02082314;
+extern struct Matrix4x3 data_020a0e68;
 
 #pragma opt_lifetimes off
 void func_ov006_02126948(char *c) {
@@ -40,5 +44,5 @@ void func_ov006_02126948(char *c) {
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(short *)(c + 0xab7c));
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short *)(c + 0xab78));
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short *)(c + 0xab7a));
-    *(struct M48 *)(c + 0xabc0) = data_020a0e68;
+    *(struct Matrix4x3 *)(c + 0xabc0) = data_020a0e68;
 }

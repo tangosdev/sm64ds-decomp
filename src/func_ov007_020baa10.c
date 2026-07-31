@@ -1,17 +1,17 @@
+// @symbol func_ov007_020baa10
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef long long s64;
 
 extern s16 data_02082214[];
-extern char* data_ov007_02104ba0;
 
-extern void func_ov007_020c92d0(char* p);
-extern int _ZN4cstd3modEii(int a, int b);
-extern int _ZN4cstd3divEii(int a, int b);
-extern int func_ov007_020c3ba8(int d);
 
-struct V3 { int x, y, z; };
+
 
 void func_ov007_020baa10(void)
 {
@@ -73,7 +73,7 @@ void func_ov007_020baa10(void)
     }
     case 5:
         if (counter == 0) {
-            *(struct V3*)(a + 0x70) = *(struct V3*)(a + 0x7c);
+            *(struct Vector3*)(a + 0x70) = *(struct Vector3*)(a + 0x7c);
             *(int*)(a + 0x8c) = 0;
             *(int*)(a + 0x88) = *(int*)(a + 0x8c);
         }

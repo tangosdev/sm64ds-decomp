@@ -1,35 +1,26 @@
+// @symbol func_ov007_020cc2cc
+// @emits dScDSMT_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Heap.h"
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScDSMT_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
-extern int func_0203da9c(void);
-extern u16* func_0203dabc(void);
-extern int func_0203dae4(void);
 extern int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
-extern int func_02013c84(int charID, void* dest, int fileIndex, void* src);
-extern void StartFile(s8 levelID, u8 entranceID);
-extern int func_0201a458(void);
 extern int _ZN4Heap10SetDefaultEv(int heap);
-extern int LoadArchive(int idx);
-extern void LoadTextNarcs(void);
-extern void _ZN4Heap6RescueEv(int heap);
-extern void LoadOverlay(int id);
 extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
 extern void StartMinigameMenu(u8 returnToRecRoom);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void* p);
 
-extern int data_ov007_02103260;
-extern unsigned short data_ov007_02104c28;
 extern char* data_0209b33c;
 extern char data_0209caa0;
-extern int data_0209d524;
-extern int overlay_64;
-extern int overlay_66;
 
-int func_ov007_020cc2cc(char* c)
+int dScDSMT_c_Behavior(char* c)
 {
     int result;
 

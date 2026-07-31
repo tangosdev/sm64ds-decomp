@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov014_02112ea8
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Vector3 { int x, y, z; };
+
 struct Sound { static void PlayBank3(unsigned int id, const Vector3 &v); };
 namespace Particle { struct System { static void *NewSimple(unsigned int t, Fix12 x, Fix12 y, Fix12 z); }; }
 struct MeshColliderBase { int pad; int IsEnabled(); void Disable(); };

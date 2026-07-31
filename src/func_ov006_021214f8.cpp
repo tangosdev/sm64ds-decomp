@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov006_021214f8
+// @emits dScMgTrampoline_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline_c::Behavior - recovered from vtable slot identity */
 struct C;
 typedef void (C::*PMF)();
 struct C {
@@ -6,14 +12,9 @@ struct C {
     PMF pmf;
 };
 extern "C" {
-extern int data_ov006_02140588;
-extern void func_ov006_02120c40(void);
-extern void func_ov006_0212157c(void *c);
-extern void func_ov006_021209ac(short *o);
-extern void func_ov004_020adb1c(int self);
 }
 
-extern "C" int func_ov006_021214f8(char *c)
+extern "C" int dScMgTrampoline_c_Behavior(char *c)
 {
     int saved = data_ov006_02140588;
     func_ov006_02120c40();

@@ -1,25 +1,17 @@
-extern void func_ov004_020b0cac(int a0, int a1, int a2, int a3, int a4, short a5);
+// @symbol func_ov006_021283a4
+// @emits dScMgSnowball_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSnowball_c::Behavior - recovered from vtable slot identity */
 extern void func_02012790(int a);
 extern void func_ov004_020b0aa0(int arg);
 extern int func_0203d614(int *p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern void func_0203d388(int *p, int angle);
-extern int func_0203d434(int *in);
-extern void func_0203d630(int *p, int m);
-extern void func_ov006_02125f68(char *c);
 extern void func_0203d6d0(int *o, int *a, int *b);
-extern void func_02012718(int a, int b);
 extern void _Z14ApproachLinearRsss(short *a, short b, short cc);
-extern void func_ov004_020adb1c(int self);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
-extern void func_ov004_020b67e8(int v);
-extern void func_ov004_020b0a54(int c);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int cc, int d, int e, const void *f, void *g);
 extern int *_ZN8Particle6System12FromUniqueIDEj(unsigned int a);
-extern void func_ov006_0212a2e0(char *c);
-extern void func_ov006_02125890(char *c);
-extern void func_ov006_02126948(char *c);
-extern int __aeabi_idiv(int a, int b);
 
 extern unsigned char data_020a0e40[];
 extern unsigned char data_020a0de8[];
@@ -27,10 +19,10 @@ extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
-#define LNDR(e) ((int)(((long long)(e))&0xFFFFFFFFFFFFFFFFLL))
-#define C1 ((char*)(void*)(int)(((long long)(int)(c))&0xFFFFFFFFFFFFFFFFLL))
-#define C2 ((char*)(void*)(int)(((long long)(int)(C1))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define LNDR(e) ((int)(((long long)(e))))
+#define C1 ((char*)(void*)(int)(((long long)(int)(c))))
+#define C2 ((char*)(void*)(int)(((long long)(int)(C1))))
 #define ATS(off) AT(C1,off)
 #define ATI(off) AT(C2,off)
 #define I(o) (*(int*)(c + (o)))
@@ -49,7 +41,7 @@ struct SPS {
     int cc[3];
 };
 
-int func_ov006_021283a4(char *c) {
+int dScMgSnowball_c_Behavior(char *c) {
     int r5, r4;
     int idx, r3rec, r7, j;
     struct SPS s;
@@ -157,7 +149,7 @@ int func_ov006_021283a4(char *c) {
             I(0xaba0) = 0x37000;
         func_0203d6d0(s.b, (int*)AT(C1,0xab38), (int*)AT(c,0xab50));
         gate = (func_0203d614(s.b) >= 0x30000) ? 1 : 0;
-        if ((int)(((long long)gate) & 0xFFFFFFFFFFFFFFFFLL) != 0) {
+        if ((int)(((long long)gate)) != 0) {
             I(0xab50) = I(0xab38);
             I(0xab54) = I(0xab3c);
             if (I(0xaba0) < 0x10000)

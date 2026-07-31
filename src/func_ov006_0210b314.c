@@ -1,15 +1,19 @@
+// @symbol func_ov006_0210b314
+// @emits dScMgSlot3_c_OnYoshiTryEat_0210b314
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSlot3_c::OnYoshiTryEat - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned int u32;
 
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
-extern void func_ov004_020adb1c(int self);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 extern void func_02012790(unsigned int id);
 
 #pragma opt_strength_reduction off
 
-void func_ov006_0210b314(char *c, int mode)
+void dScMgSlot3_c_OnYoshiTryEat_0210b314(char *c, int mode)
 {
     if (mode == 3 || mode == 0x12) {
         *(int *)(c + 0xa8) = 0xc;
@@ -23,9 +27,9 @@ void func_ov006_0210b314(char *c, int mode)
         func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
     } else if (mode == 4) {
         if (*(int *)(c + 0x5004) < 5) {
-            *(int *)(int)(((long long)(int)(c + 0x5004)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(int *)(int)(((long long)(int)(c + 0x5004))) += 1;
         }
-        *(int *)(int)(((long long)(int)(c + 0xbc)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(int *)(int)(((long long)(int)(c + 0xbc))) += 1;
         if (*(u32 *)(c + 0xbc) > 0x270e) {
             *(int *)(c + 0xbc) = 0x270e;
         }

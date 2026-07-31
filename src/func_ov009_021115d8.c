@@ -1,8 +1,9 @@
-
-struct V3 { int x, y, z; };
+// @symbol func_ov009_021115d8
+/* recovered: shared common types */
+#include "common.h"
 extern char* _ZN5Actor13ClosestPlayerEv(void* self);
-extern int Vec3_Sub(struct V3* dst, void* a, void* b);
-extern int Vec3_HorzLen(struct V3* v);
+extern int Vec3_Sub(struct Vector3* dst, void* a, void* b);
+extern int Vec3_HorzLen(struct Vector3* v);
 extern int func_0201267c(unsigned int a, void* b);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN9ActorBase18MarkForDestructionEv(char* t);
@@ -12,8 +13,8 @@ void func_ov009_021115d8(char* c) {
     if (*(unsigned char*)(c+0x180) != 0) {
         char* p2 = _ZN5Actor13ClosestPlayerEv(c);
         if (p2 != 0) {
-            struct V3 copy;
-            struct V3 diff;
+            struct Vector3 copy;
+            struct Vector3 diff;
             int len;
             Vec3_Sub(&diff, c+0x5c, p2+0x5c);
             copy.x = diff.x;

@@ -1,5 +1,13 @@
 //cpp
-/* func_ov006_0210a194 @ 0x0210a194 (ov006, size 0x26c)
+// @symbol func_ov006_0210a194
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgRoulette_c.h"
+// @emits dScMgRoulette_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScMgRoulette_c::InitResources - recovered from vtable slot identity */
+/* dScMgRoulette_c_InitResources @ 0x0210a194 (ov006, size 0x26c)
  * Minigame dual-screen graphics init: sets both sub BG layers, loads the
  * BG tiles/maps/palette and the shared OBJ tiles/palettes for both engines,
  * then initializes the board, cursor and slider objects.
@@ -33,27 +41,20 @@ extern "C" {
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-extern void func_ov004_020b04d0(int);
 extern void *LoadFile(int);
 extern int func_02054de8(void);
 extern void DecompressLZ16(void *, int);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(void *, unsigned int, unsigned int);
-extern void Deallocate(void *);
-extern void SetSubBg0Offset(int, int);
-extern void SetSubBg2Offset(int, int);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
-extern int func_ov006_021085c0(char *);
-extern int func_ov004_020ad8b8(void);
-extern void func_ov004_020b682c(void);
-extern void func_ov006_02107b70(char *);
 
-int func_ov006_0210a194(char *c)
+int dScMgRoulette_c_InitResources(char *c)
 {
+    struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;
     void *f8, *f7, *f6, *f5;
 
     func_ov004_020b04d0(0x20);
@@ -103,8 +104,8 @@ int func_ov006_0210a194(char *c)
     if (func_ov006_021085c0(c + 0x530c) == 0)
         return 0;
 
-    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
-    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
+    self->unk_0a8 = func_ov004_020ad8b8();
+    self->unk_0ac = self->unk_0a8;
     func_ov004_020b682c();
     func_ov006_02107b70(c + 0x52ac);
     ((VtObj *)c)->m18(-1);

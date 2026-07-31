@@ -1,21 +1,18 @@
+// @symbol func_ov007_020b0da0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef long long s64;
 
 extern short data_02082214[];
-extern void* data_ov007_0210342c;
-extern int data_ov007_02103340;
-extern int data_ov007_02103344;
 
-extern void* func_ov007_020aebac(void);
-extern void func_ov007_020bdeb0(int a);
-extern int _ZN4cstd3modEii(int a, int b);
-extern int _ZN4cstd3divEii(int a, int b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Matrix4x3_LoadIdentity(void* mat);
-extern void func_ov007_020c39f8(void* mat, int rx, int ry, int rz);
 
-struct V3 { int x, y, z; };
+
 
 #pragma opt_common_subs off
 void func_ov007_020b0da0(void* arg0) {
@@ -37,7 +34,7 @@ void func_ov007_020b0da0(void* arg0) {
     }
 
     {
-        struct V3 out;
+        struct Vector3 out;
         out.y = 0;
         out.x = 0;
         out.z = 0;
@@ -49,7 +46,7 @@ void func_ov007_020b0da0(void* arg0) {
                 if (a >= 0x60 && a <= 0xa0) {
                     int b = *(u16*)(rp + 0xa);
                     if (b >= 0x40 && b <= 0x80) {
-                        int* pflag = (int*)(((long long)(int)(st + 4)) & 0xFFFFFFFFFFFFFFFFLL);
+                        int* pflag = (int*)(((long long)(int)(st + 4)));
                         *pflag |= 2;
                         data_ov007_02103340 = counter;
                         func_ov007_020bdeb0(0x34);
@@ -133,6 +130,6 @@ void func_ov007_020b0da0(void* arg0) {
             }
         }
 
-        *(struct V3*)(mat + 0x24) = out;
+        *(struct Vector3*)(mat + 0x24) = out;
     }
 }

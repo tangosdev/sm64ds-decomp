@@ -1,8 +1,12 @@
+// @symbol func_ov016_021115c0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN7PathPtrC1Ev(void* self);
 extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern int AngleDiff(int a, int b);
 extern void _Z14ApproachLinearRsss(short* p, short a, short b);
 extern short Vec3_VertAngle(const void* a, const void* b);
 extern void Vec3_Sub(void* out, void* a, void* b);
@@ -13,18 +17,17 @@ extern void Vec3_MulScalar(void* out, void* v, int s);
 extern void SubVec3(void* a, void* b, void* c);
 extern void func_02012694(int a, void* p);
 
-extern char data_ov016_02114d7c;
 
-struct Vec3 { int x, y, z; };
 
-#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+
+#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p))))
 
 int func_ov016_021115c0(char* c)
 {
     char pp[8];
-    struct Vec3 node;
-    struct Vec3 diff;
-    struct Vec3 scaled;
+    struct Vector3 node;
+    struct Vector3 diff;
+    struct Vector3 scaled;
     int len;
     short ha;
 

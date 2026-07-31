@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov009_02111234
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -6,7 +9,7 @@ typedef unsigned int u32;
 typedef int s32;
 typedef long long s64;
 
-struct Vec3 { s32 x, y, z; };
+
 
 extern "C" {
     void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
@@ -31,9 +34,9 @@ extern "C" void func_ov009_02111234(void* self)
         return;
     }
 
-    Vec3 diff;
+    Vector3 diff;
     if (*(u8*)(c+0x180) != 0) {
-        Vec3 d1;
+        Vector3 d1;
         Vec3_Sub(&d1, (void*)(c+0x160), (void*)(c+0x5c));
         diff.x = d1.x;
         diff.y = d1.y;
@@ -42,7 +45,7 @@ extern "C" void func_ov009_02111234(void* self)
         *(s16*)(c+0x16c) = _ZN4cstd5atan2E5Fix12IiES1_(hl, *(s32*)(c+0x60) + 0xfd8f0000);
         *(s16*)(c+0x16e) = _ZN4cstd5atan2E5Fix12IiES1_(diff.z, diff.x);
     } else {
-        Vec3 d2;
+        Vector3 d2;
         Vec3_Sub(&d2, (void*)(f+0x5c), (void*)(c+0x5c));
         diff.x = d2.x;
         diff.y = d2.y;

@@ -1,4 +1,11 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov010_02111654
+/* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
+#include "daObjC1_Trap_c.h"
+// @emits daObjC1_Trap_c_InitResources
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjC1_Trap_c::InitResources - recovered from vtable slot identity */
 
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3* v, void* rot, int e, int f);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* p);
@@ -11,15 +18,12 @@ extern void func_020393c4(int* p, int v);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void* p, void* a);
 
 extern short data_02082214[];
-extern void* data_ov010_02112d08;
-extern void* data_ov010_02112d00;
-extern void* data_ov010_021122f8;
-extern int func_ov010_02111984[];
 
-int func_ov010_02111654(char* c)
+int daObjC1_Trap_c_InitResources(char* c)
 {
-    *(unsigned char*)(c + 0x3aa) = 0;
-    *(int*)(c + 0x3ac) = 0;
+    struct daObjC1_Trap_c *self = (struct daObjC1_Trap_c *)(void *)c;
+    self->unk_3aa = 0;
+    self->unk_3ac = 0;
 
     if ((*(int*)(c + 8) & 0xff) == 0xff) {
         struct Vector3 v;
@@ -28,37 +32,37 @@ int func_ov010_02111654(char* c)
         int x, y, z;
         void* sp;
 
-        *(unsigned char*)(c + 0x3ab) = 1;
-        *(int*)(c + 0x3a4) = 0;
+        self->unk_3ab = 1;
+        self->unk_3a4 = 0;
 
-        idx = ((int)(*(unsigned short*)(c + 0x8e)) >> 4) * 2;
+        idx = ((int)(self->unk_08e) >> 4) * 2;
         sx = data_02082214[idx + 1];
         sz = data_02082214[idx];
-        z = *(int*)(c + 0x64) + sz * 0x15d;
-        x = *(int*)(c + 0x5c) - sx * 0x15d;
-        y = *(int*)(c + 0x60);
+        z = self->unk_064 + sz * 0x15d;
+        x = self->unk_05c - sx * 0x15d;
+        y = self->unk_060;
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 0, &v, c + 0x8c, *(signed char*)(c + 0xcc), -1);
+        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 0, &v, c + 0x8c, self->unk_0cc, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
-        idx = ((int)(*(unsigned short*)(c + 0x8e)) >> 4) * 2;
+        idx = ((int)(self->unk_08e) >> 4) * 2;
         sz = data_02082214[idx];
         sx = data_02082214[idx + 1];
-        z = *(int*)(c + 0x64) - sz * 0x15d;
-        x = sx * 0x15d + *(int*)(c + 0x5c);
-        y = *(int*)(c + 0x60);
+        z = self->unk_064 - sz * 0x15d;
+        x = sx * 0x15d + self->unk_05c;
+        y = self->unk_060;
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 1, &v, c + 0x8c, *(signed char*)(c + 0xcc), -1);
+        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 1, &v, c + 0x8c, self->unk_0cc, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
         return 1;
     }
 
-    *(unsigned char*)(c + 0x3ab) = 0;
+    self->unk_3ab = 0;
     {
         void* f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov010_02112d08);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, f, 1, -1);
@@ -67,12 +71,12 @@ int func_ov010_02111654(char* c)
     func_ov010_021113f0(c);
     {
         void* f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov010_02112d00);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x370, 0x1000, *(short*)(c + 0x8e), &data_ov010_021122f8);
+        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x370, 0x1000, self->unk_08e, &data_ov010_021122f8);
     }
     func_020393c4((int*)(c + 0x124), (int)func_ov010_02111984);
     _ZN16MeshColliderBase6EnableEP5Actor(c + 0x124, c);
-    *(unsigned short*)(c + 0x3a8) = 0;
-    *(int*)(c + 0x3a0) = 0;
+    self->unk_3a8 = 0;
+    self->unk_3a0 = 0;
 
     if ((*(int*)(c + 8) & 0xff) == 1) {
         short* pa = (short*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);

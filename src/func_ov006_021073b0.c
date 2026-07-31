@@ -1,39 +1,31 @@
+// @symbol func_ov006_021073b0
+// @emits dScMgPanel_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgPanel_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
 extern int LoadFile(int handle);
-extern int func_02054d88(void);
 extern void DecompressLZ16(int src, void *dst);
-extern void Deallocate(void *p);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_02056314(void *dst, u32 offset, u32 len);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern int GetOwnerLanguage(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern char *_ZN3G2S13GetBG3CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_020562b4(const void *src, u32 offset, u32 count);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern void func_02056374(const void *src, u32 offset, u32 count);
-extern void func_020564f4(const void *src, int offset, int count);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void func_ov004_020b0aa0(int arg);
 extern void func_ov006_021067a4(void *p);
-extern void func_ov006_02106758(char *c);
 extern void func_ov006_021063a0(void *p);
 extern void func_ov006_02106168(void *p);
-extern void func_ov006_02105118(char *p);
-extern void func_ov006_02104b24(char *p);
-extern void func_ov004_020b04d0(int v);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int func_ov006_021073b0(void *arg0)
+int dScMgPanel_c_InitResources(void *arg0)
 {
     char *c = (char *)arg0;
     char *b;

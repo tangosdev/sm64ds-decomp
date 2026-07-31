@@ -1,17 +1,22 @@
+// @symbol func_ov006_02128fb8
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgSnowball_c.h"
+// @emits dScMgSnowball_c_OnKicked
+/* recovered: renamed to Class_Method */
+/* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
 typedef unsigned char u8;
 
-extern void SetBg2Offset(int a, int b);
-extern void SetBg3Offset(int a, int b);
-extern void SetSubBg2Offset(int a, int b);
-extern void SetSubBg3Offset(int a, int b);
 extern int func_ov004_020ae140(char *self);
 
-#define V (*(int *)(c + 0xab6c) >> 12)
+#define V (self->unk_ab6c >> 12)
 
-int func_ov006_02128fb8(char *c)
+int dScMgSnowball_c_OnKicked(char *c)
 {
-    if (*(int *)(c + 0x4628) == 0) {
-        if (*(u8 *)(c + 0xb9f8) == 0) {
+    struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
+    if (self->unk_4628 == 0) {
+        if (self->unk_b9f8 == 0) {
             *(volatile unsigned short *)0x4000304 |= 0x8000;
             SetBg2Offset(0, V);
             SetBg3Offset(0, V);

@@ -1,42 +1,33 @@
 //cpp
+// @symbol func_ov006_0210bdb0
+// @emits dScMgSlot3_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSlot3_c::InitResources - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
 extern "C" {
 
-extern int func_02054d88(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void Deallocate(void *ptr);
-extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern void func_02056314(void *dst, u32 offset, u32 len);
 extern void *func_02054de8(void);
 extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
-extern void func_ov006_020c2154(char *c);
-extern void func_ov006_020c1eb4(char *c);
 extern int RandomIntInternal(int *seed);
-extern void func_ov004_020b04d0(int v);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0209e650;
 extern int data_0208ee44;
-extern int func_020bc88c;
-extern int func_020bc878;
-extern int func_020bc8b8;
-extern int func_020bc888;
-extern int func_020bc860;
-extern int func_020bc890;
-extern int func_020bc8b4;
-extern int func_020bc864;
 
 }
 
@@ -62,7 +53,7 @@ struct Obj {
     virtual void m48(int a);
 };
 
-extern "C" int func_ov006_0210bdb0(void *arg0)
+extern "C" int dScMgSlot3_c_InitResources(void *arg0)
 {
     char *c = (char *)arg0;
 
