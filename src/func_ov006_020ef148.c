@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_020ef148
 // @emits dScMgJump2_c_Render
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
 /* dScMgJump2_c::Render - recovered from vtable slot identity */
-typedef unsigned short u16;
-
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern int GetGameLanguage(void);
 extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);

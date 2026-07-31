@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_020ee034
 // @emits dScMgJump_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgJump_c::Render - recovered from vtable slot identity */
-typedef unsigned short u16;
-
 typedef struct { int w[12]; } M48;
 typedef struct { int w[3]; } V3;
 

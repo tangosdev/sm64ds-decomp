@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 struct C;
 typedef void (C::*PMF0)();
 typedef void (C::*PMF1)(int);

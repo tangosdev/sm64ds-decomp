@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern char *_ZN3G2S13GetBG2CharPtrEv(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_ov006_020fbcb8(void *self, int x, int y, int k);

@@ -1,14 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020f74b4
 // @emits dScMgMemory2_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgMemory2_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int s32;
-
 extern "C" {
 void func_ov006_0210a534(void);
 s32 GetGameLanguage(void);

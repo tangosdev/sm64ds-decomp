@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 /* func_ov006_020e3078 at 0x020e3078 (ov006)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 struct C;
 typedef void (C::*PMF0)();
 typedef void (C::*PMF1)(int);

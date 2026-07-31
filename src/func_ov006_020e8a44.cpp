@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned char u8;
+#include "types.h"
 class C;
 typedef void (C::*PMF)(int);
 class C { public: int dummy; };

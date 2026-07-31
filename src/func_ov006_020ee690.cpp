@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020ee690
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -7,11 +8,6 @@
 // @emits dScMgJump_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* dScMgJump_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-
 extern "C" {
 extern s32 GetGameLanguage(void);
 extern int LoadFile(int handle);

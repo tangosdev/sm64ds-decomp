@@ -1,7 +1,5 @@
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef unsigned short u16;
-
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void *p);
 extern int _ZN9Animation8LoadFileER13SharedFilePtr(void *p);
 extern void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(int bmd, void *bma);

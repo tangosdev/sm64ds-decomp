@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_020e72c0
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,10 +7,6 @@
 // @emits dScMgTrampoline2_c_Kill
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::Kill - recovered from vtable slot identity */
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 int func_02053ea0(void);
 s32 GetGameLanguage(void);
 u32 LoadCompressedFileAt(unsigned int fileID, void *target);

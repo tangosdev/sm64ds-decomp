@@ -1,10 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 extern void func_ov006_020f1dbc(char *self, int idx);
 extern int data_ov006_0212e8d8[];
 extern short data_02082214[];

@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_020f8a3c
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,9 +7,6 @@
 // @emits dScMgMCarlo_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo_c::OnTurnIntoEgg - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned char u8;
-
 extern void FreeGfxSlotsById(int arg);
 extern int func_ov006_020c1718(void* p);
 extern void func_ov004_020b56c8(char* p);

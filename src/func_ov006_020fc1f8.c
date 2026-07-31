@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 extern u8 data_ov006_0212eb3c[];
 extern u8 data_ov006_0212eb34[];
 

@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern "C" int _Z15ApproachLinear2Rsss(s16 &v, s16 target, s16 step);
 extern "C" void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 extern "C" void func_ov006_020ec134(void *self);

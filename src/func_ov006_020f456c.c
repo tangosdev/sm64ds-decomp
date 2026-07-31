@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 typedef struct Car {
     u8 pad00[0x13];
     u8 b13;

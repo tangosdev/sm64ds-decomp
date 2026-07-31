@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern char data_023c0000[];
 extern volatile u16 data_04000006;
 extern int data_0209f608;

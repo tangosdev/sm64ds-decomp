@@ -1,9 +1,7 @@
+#include "types.h"
 /* func_ov006_020f4b30 — once at least 2 items are ready, mark slot
  * (11 - count) done (stride 0x18 array at 0x51a8), bump count; then per
  * mode: mode 1 -> state 4 at count >= 10, else state 3/4 at count >= 8. */
-
-typedef unsigned char u8;
-
 typedef struct {
     char _pad0[0x13];
     u8 done;     /* +0x13 */

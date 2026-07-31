@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_ov006_020ef794 at 0x020ef794 (ov006), size 0x64
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned char u8;
-typedef short s16;
-
 extern void func_ov006_020c7490(void);
 extern void func_ov006_020ef768(char *self);
 extern void func_ov006_020c42bc(void);

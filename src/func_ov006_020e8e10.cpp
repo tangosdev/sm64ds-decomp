@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" int func_ov004_020af770(int a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 
 struct Ent { u16 f0, f2, f4, f6; };

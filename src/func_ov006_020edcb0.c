@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern int LoadFile(int handle);
 extern int func_02054d88(void);
 extern void DecompressLZ16(int dst, int src);

@@ -1,12 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_020e3578
 // @emits dScMgCurling_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgCurling_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern char* func_020adc74(void* p);
 extern void* _ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(const void* src, void* dst);

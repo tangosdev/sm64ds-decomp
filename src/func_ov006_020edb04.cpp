@@ -1,13 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020edb04
 // @emits dScMgHanachan_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgHanachan_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef volatile unsigned int vu32;
-
 extern "C" void *LoadFile(int handle);
 extern "C" void DecompressLZ16(void *src, void *dst);
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);

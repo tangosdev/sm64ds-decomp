@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 void func_0203cd80(int* m, int x);
 void func_0203ccd4(int *m, short angle);
 
