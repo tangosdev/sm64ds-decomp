@@ -24,7 +24,7 @@ extern void ApproachAngle(short* cur, short target, int divisor, int band, int m
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void func_ov002_020d4d88(void* c, int a, int b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_0211013c[];
 extern u8 data_020a0e40;
@@ -121,6 +121,6 @@ int Player::St_HoldHeavy_Main()
     }
 
 end:
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

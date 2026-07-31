@@ -37,7 +37,7 @@ extern void func_ov002_020daa74(void*);
 extern void func_ov002_020cd218(void*, int, void*, void*);
 extern int func_ov002_020ceaf4(void*);
 extern int func_ov002_020ce5f8(void*);
-extern void func_ov002_020bedd4(void*);
+extern void Player_AdvanceAnims(void*);
 
 extern char data_ov002_021106ac[];
 extern char data_ov002_021101b4[];
@@ -288,7 +288,7 @@ int _ZN6Player12St_Swim_MainEv(char* c)
         *pa8 = *pa8 + func_ov002_020ceaf4(c);
     }
     if (func_ov002_020ce5f8(c) != 0) return 1;
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }
 }

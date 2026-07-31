@@ -12,7 +12,7 @@ extern "C" {
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 a, int b, int f, u32 g);
 extern int _ZN6Player12FinishedAnimEv(void *c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *c, void *s);
-extern void func_ov002_020bedd4(void *c);
+extern void Player_AdvanceAnims(void *c);
 extern u8 data_0209f250;
 extern int data_ov002_02110154[];
 }
@@ -55,6 +55,6 @@ int Player::St_Respawn_Main()
         }
         break;
     }
-    func_ov002_020bedd4(((char *)this));
+    Player_AdvanceAnims(((char *)this));
     return 1;
 }

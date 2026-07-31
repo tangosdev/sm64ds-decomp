@@ -22,7 +22,7 @@ extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
 extern void _Z15ApproachLinear2Rsss(s16* v, s16 target, s16 step);
 extern int _ZN6Player9GetHealthEv(void* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern int data_ov002_0211031c[];
 extern int data_ov002_0211010c[];
@@ -85,7 +85,7 @@ int Player::St_Thrown_Main()
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
             mTargetAngleY = mAngleY;
         }
-        func_ov002_020bedd4(((char*)this));
+        Player_AdvanceAnims(((char*)this));
         break;
     }
 

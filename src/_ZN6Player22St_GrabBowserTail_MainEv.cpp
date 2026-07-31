@@ -17,7 +17,7 @@ extern void func_ov002_020daa74(char* c);
 extern void _Z15ApproachLinear2Rsss(s16* ref, s16 target, s16 step);
 extern void func_02012694(u32 id, void* v);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
@@ -103,6 +103,6 @@ int Player::St_GrabBowserTail_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

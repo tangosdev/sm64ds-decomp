@@ -11,7 +11,7 @@ typedef unsigned int u32;
 typedef int s32;
 
 int func_02053ea0(void);
-s32 func_ov004_020ad674(void);
+s32 GetGameLanguage(void);
 u32 LoadCompressedFileAt(unsigned int fileID, void *target);
 void DecompressLZ16(const void *src, void *dst);
 int func_02053eb0(void);
@@ -27,10 +27,10 @@ void dScMgTrampoline2_c_Kill(char *c) {
     struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)c;
   self->unk_4660 = func_02053ea0();
   _ZN2GX16SetBankForSubOBJEt(0x100);
-  LoadCompressedFileAt(data_ov006_0213c5fc[func_ov004_020ad674()], (void*)0x6600000);
+  LoadCompressedFileAt(data_ov006_0213c5fc[GetGameLanguage()], (void*)0x6600000);
   {
     char *dst = (char*)0x6600000; dst += 0x2000;
-    DecompressLZ16((void*)data_ov006_0213c5e8[func_ov004_020ad674()], dst);
+    DecompressLZ16((void*)data_ov006_0213c5e8[GetGameLanguage()], dst);
   }
   _ZN2GX16SetBankForSubOBJEt(self->unk_4660);
   self->unk_0a0 = func_02053eb0();
@@ -44,7 +44,7 @@ void dScMgTrampoline2_c_Kill(char *c) {
   SetSubBg1Offset(0, 0);
   data_0209d454 &= ~2;
   {
-    s32 i = func_ov004_020ad674();
+    s32 i = GetGameLanguage();
     LoadCompressedFileAt(data_ov006_0213c610[i], (void*)_ZN3G2S13GetBG1CharPtrEv());
   }
   LoadCompressedFileAt(0x5b, _ZN3G2S12GetBG1ScrPtrEv());

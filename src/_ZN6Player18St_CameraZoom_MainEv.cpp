@@ -6,7 +6,7 @@ struct Player {
 };
 extern "C" void func_ov002_020cae10(char* c);
 extern "C" int func_ov002_020cac60(char* c);
-extern "C" void func_ov002_020bedd4(char* self);
+extern "C" void Player_AdvanceAnims(char* self);
 extern signed char data_02092110;
 extern State data_ov002_0211013c;
 extern unsigned char data_020a0e40;
@@ -34,6 +34,6 @@ int _ZN6Player18St_CameraZoom_MainEv(Player* thiz) {
         }
         func_ov002_020cac60(self);
     }
-    func_ov002_020bedd4(self);
+    Player_AdvanceAnims(self);
     return 1;
 }

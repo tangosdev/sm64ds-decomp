@@ -14,7 +14,7 @@ typedef int s32;
 typedef unsigned int u32;
 
 extern "C" {
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, int dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -63,7 +63,7 @@ extern "C" int dScMgJump2_c_InitResources(char *base)
     s32 fov;
     void *bmdFile;
 
-    a = LoadFile(data_ov006_0213cce0[func_ov004_020ad674()]);
+    a = LoadFile(data_ov006_0213cce0[GetGameLanguage()]);
     b = LoadFile(0xd1);
     DecompressLZ16(a, 0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)b, 0, 0x80);

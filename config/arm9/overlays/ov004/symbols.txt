@@ -1,5 +1,5 @@
 func_ov004_020ad660 kind:function(arm,size=0x14) addr:0x020ad660
-func_ov004_020ad674 kind:function(arm,size=0x80) addr:0x020ad674
+GetGameLanguage kind:function(arm,size=0x80) addr:0x020ad674
 func_ov004_020ad6f4 kind:function(arm,size=0x8) addr:0x020ad6f4
 func_ov004_020ad6fc kind:function(arm,size=0xa0) addr:0x020ad6fc
 func_ov004_020ad79c kind:function(arm,size=0xdc) addr:0x020ad79c

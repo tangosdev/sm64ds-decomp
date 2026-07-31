@@ -5,7 +5,7 @@
 extern void _Z14ApproachLinearRiii(int* p, int value, int speed);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* state);
-extern void func_ov002_020bedd4(char* self);
+extern void Player_AdvanceAnims(char* self);
 extern short data_02082214[];
 extern char data_ov002_0211013c[];
 
@@ -40,6 +40,6 @@ int Player::St_BowserEarthquake_Main()
         }
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

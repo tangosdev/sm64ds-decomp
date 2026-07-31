@@ -14,7 +14,7 @@ extern void func_ov002_020daa74(void*);
 extern void func_ov002_020da9d4(void*);
 extern int _ZN6Player12FinishedAnimEv(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
-extern void func_ov002_020bedd4(void*);
+extern void Player_AdvanceAnims(void*);
 extern int data_ov002_0211013c[];
 }
 
@@ -55,6 +55,6 @@ int Player::St_Throw_Main()
   }
   if(_ZN6Player12FinishedAnimEv(((char*)this)))
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_0211013c);
-  func_ov002_020bedd4(((char*)this));
+  Player_AdvanceAnims(((char*)this));
   return 1;
 }

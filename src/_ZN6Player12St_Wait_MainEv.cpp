@@ -16,7 +16,7 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int a, void* v);
 extern void func_ov002_020cabe0(void* c);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern void* data_0209f318;
 extern unsigned char data_020a0e40;
@@ -295,6 +295,6 @@ int Player::St_Wait_Main()
     }
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

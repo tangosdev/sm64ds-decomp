@@ -12,7 +12,7 @@ extern unsigned char data_ov006_0213e4d8[];
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b2444(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5, unsigned short a6);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void func_ov004_020af868(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov006_0210c234(unsigned char* o);
 
@@ -49,7 +49,7 @@ int _ZN3OAM7SECONDSE(unsigned char* t)
                     i++;
                 } while (i < *(t + 0x470b));
             }
-            func_ov004_020af868(data_ov006_0213e5ec[func_ov004_020ad674()][1], 0x50, 0x30, -1, 2, 0);
+            func_ov004_020af868(data_ov006_0213e5ec[GetGameLanguage()][1], 0x50, 0x30, -1, 2, 0);
             func_ov004_020b2444(0x60, 0x30, *(t + 0x470b) * 2, 0, 2, 2, 0x14);
         }
         if (*(t + 0x470a) != 0) {
@@ -59,7 +59,7 @@ int _ZN3OAM7SECONDSE(unsigned char* t)
                 func_ov004_020af770(data_ov006_0213e96c[*(t + 0x4709) + 6], pos, 0x40, -1, 2, 0x1000, 0);
                 pos += 0x10;
             }
-            func_ov004_020af868(data_ov006_0213e5ec[func_ov004_020ad674()][1], 0x50, 0x40, -1, 2, 0);
+            func_ov004_020af868(data_ov006_0213e5ec[GetGameLanguage()][1], 0x50, 0x40, -1, 2, 0);
             func_ov004_020b2444(0x60, 0x40, data_ov006_0213e4d8[*(t + 0x4709)], 0, 2, 2, 0x14);
         }
     }

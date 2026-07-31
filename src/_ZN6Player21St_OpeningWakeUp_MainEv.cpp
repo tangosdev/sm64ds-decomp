@@ -7,7 +7,7 @@ typedef unsigned int u32;
 
 extern int _ZN6Player12FinishedAnimEv(void* thiz);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, int a, int b, int c, u32 d);
-extern void func_ov002_020bedd4(void* thiz);
+extern void Player_AdvanceAnims(void* thiz);
 
 int Player::St_OpeningWakeUp_Main()
 {
@@ -29,6 +29,6 @@ int Player::St_OpeningWakeUp_Main()
     case 3:
         break;
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

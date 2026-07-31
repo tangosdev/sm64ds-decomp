@@ -13,7 +13,7 @@ typedef unsigned short u16;
 typedef int s32;
 
 extern "C" {
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void const *src, unsigned int offset, unsigned int size);
@@ -63,7 +63,7 @@ extern "C" int dScMgJump_c_InitResources(char *base)
     void *modelFile;
     int r;
 
-    idx = func_ov004_020ad674();
+    idx = GetGameLanguage();
     buf1 = LoadFile(data_ov006_0213cbc8[idx]);
     buf2 = LoadFile(0xd1);
     DecompressLZ16((void *)buf1, (void *)0x6400000);

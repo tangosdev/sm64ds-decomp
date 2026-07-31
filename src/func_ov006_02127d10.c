@@ -16,7 +16,7 @@ extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 extern void func_0203cd80(int *m, short angle);
 extern void func_ov006_02126a98(char *c);
 extern void func_ov004_020b2220(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 
 
 int dScMgSnowball_c_Render(char *c)
@@ -153,11 +153,11 @@ int dScMgSnowball_c_Render(char *c)
                     func_ov004_020b2444(0xac, r4, ones + 1, -1, -1, 1, 0);
                 }
                 {
-                    int idx = func_ov004_020ad674();
+                    int idx = GetGameLanguage();
                     func_ov004_020b0380(*(void**)((char*)data_ov006_0213fff0[idx] + 0xc), 0x5c, r4, 0);
                 }
                 {
-                    int idx = func_ov004_020ad674();
+                    int idx = GetGameLanguage();
                     func_ov004_020b0380(*(void**)((char*)data_ov006_0213fff0[idx] + 0x1c), 0x90, r4, 0);
                 }
             }

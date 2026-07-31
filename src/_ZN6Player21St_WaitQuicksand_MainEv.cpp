@@ -8,7 +8,7 @@ extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int func_ov007_020c5dec(void*,int);
 extern int func_ov002_020d22ec(void*,int);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 }
 
 int Player::St_WaitQuicksand_Main()
@@ -25,6 +25,6 @@ int Player::St_WaitQuicksand_Main()
     if(func_ov007_020c5dec(((char*)this),3)) return 1;
   }
   func_ov002_020d22ec(((char*)this),0);
-  func_ov002_020bedd4(((char*)this));
+  Player_AdvanceAnims(((char*)this));
   return 1;
 }

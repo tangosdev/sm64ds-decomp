@@ -15,7 +15,7 @@ extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, int b, u32 d);
 extern int _ZNK6Player14GetBodyModelIDEjb(char* c, u32 a, int b);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void* v);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
@@ -105,6 +105,6 @@ int Player::St_CeilingGrate_Main()
     }
 
     mPosY = r4 - 0x90000;
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

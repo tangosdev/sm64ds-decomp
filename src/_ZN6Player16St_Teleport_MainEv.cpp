@@ -24,7 +24,7 @@ extern void _ZN13RaycastGroundD1Ev(char* rc);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern u32 func_02012790(u32 a);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16* p, u16 a, s16 b);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern char* data_0209f318;
 extern int data_0209f32c;
@@ -105,6 +105,6 @@ int Player::St_Teleport_Main()
         break;
     }
     _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16*)0x4000050, 0x3f, mStateWork);
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

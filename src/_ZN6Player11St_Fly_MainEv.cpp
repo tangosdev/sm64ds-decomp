@@ -26,7 +26,7 @@ extern "C" void func_ov002_020e25f0(char *c, int a);
 extern "C" void MulVec3Mat4x3(void *dst, void *src, void *out);
 extern "C" void Vec3_MulScalarInPlace(s32 *v, s32 s);
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, void *s1, int s2);
-extern "C" void func_ov002_020bedd4(char *self);
+extern "C" void Player_AdvanceAnims(char *self);
 
 extern State data_ov002_0211004c;
 extern State data_ov002_021105a4;
@@ -155,6 +155,6 @@ skip:
         }
         *(s32 *)(c + 0x620) = func_02012194(*(char **)(c + 0x620), 0, 0x104, 3, r1, c + 0x74, 0);
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

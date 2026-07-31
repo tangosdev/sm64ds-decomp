@@ -20,7 +20,7 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u
 extern void func_ov002_020c06fc(void* c, u32 a);
 extern int func_ov002_020dd2f4(void* c);
 extern void func_ov002_020c0364(void* c, u32 a);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u16 data_0209f49c[];
 extern u8 data_020a0e40;
@@ -91,6 +91,6 @@ int Player::St_Crouch_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

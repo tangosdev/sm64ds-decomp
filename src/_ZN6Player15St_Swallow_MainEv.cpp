@@ -11,7 +11,7 @@ extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b
 extern int func_ov002_020ceaf4(char* c);
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern int data_0209ee90[];
 extern int data_ov002_0211067c;
@@ -74,6 +74,6 @@ L65ec:
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_0211013c);
         }
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

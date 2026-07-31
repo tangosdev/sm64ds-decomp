@@ -22,7 +22,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int cc);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 
 extern u8 data_020a0e40;
@@ -91,14 +91,14 @@ int Player::St_Cannon_Main()
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(mPosX, mPosY, mPosZ);
         if (mStateWork == 0)
             mAngX = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
-        func_ov002_020bedd4(((char*)this));
+        Player_AdvanceAnims(((char*)this));
         // fall through
     case 3:
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
             mStateStep = 1;
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110214);
         }
-        func_ov002_020bedd4(((char*)this));
+        Player_AdvanceAnims(((char*)this));
         break;
     }
     return 1;

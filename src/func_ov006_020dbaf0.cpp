@@ -56,7 +56,7 @@ extern char *data_ov004_020beb68;
 
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, u32);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, u32, u32);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, u32, u32);
@@ -76,7 +76,7 @@ int dScMgCard_c_InitResources(char *c)
     data_0209d454 = 0x18;
     f7 = LoadFile(0xbd);
     f6 = LoadFile(0xbe);
-    f5 = LoadFile(data_ov006_0213bcb0[func_ov004_020ad674()]);
+    f5 = LoadFile(data_ov006_0213bcb0[GetGameLanguage()]);
     f4 = LoadFile(0xbb);
     DecompressLZ16(f7, 0x6400000);
     _ZN2GX11LoadOBJPlttEPKvjj(f6, 0, 0x20);

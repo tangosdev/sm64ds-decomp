@@ -24,7 +24,7 @@ extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
@@ -119,6 +119,6 @@ int Player::St_Land_Main()
     }
 
 tail:
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

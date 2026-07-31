@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSmartball_c::Kill - recovered from vtable slot identity */
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
@@ -18,7 +18,7 @@ void dScMgSmartball_c_Kill(void)
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     SetSubBg1Offset(0, 0);
     data_0209d454[0] &= ~2;
-    f = func_ov004_020ad674();
+    f = GetGameLanguage();
     LoadCompressedFileAt(data_ov006_0213eccc[f], (void *)_ZN3G2S13GetBG1CharPtrEv());
     LoadCompressedFileAt(0x5b, _ZN3G2S12GetBG1ScrPtrEv());
 }

@@ -31,7 +31,7 @@ extern void func_ov002_020dc560(void* c);
 extern int func_ov002_020e0ccc(void* c, short* st);
 extern Fix12 _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, Fix12 b);
 extern void _Z15ApproachLinear2Rsss(short* cur, short target, short step);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
@@ -192,7 +192,7 @@ end:
         if (v >= 0x2aaa) v = 0x2aaa;
         _Z15ApproachLinear2Rsss((short*)((char*)&mAngX), v, 0x200);
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     mStateArg = mSlideType;
     return 1;
 }

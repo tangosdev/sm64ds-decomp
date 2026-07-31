@@ -19,7 +19,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, unsigned int id, int flags, int speed, unsigned int extra);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* thiz, unsigned int a, int b);
 extern int _ZN6Player12FinishedAnimEv(void* thiz);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern int data_ov002_0211013c[];
 }
@@ -134,6 +134,6 @@ int Player::St_NoControl_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

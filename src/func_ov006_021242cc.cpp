@@ -32,7 +32,7 @@ typedef struct {
 
 extern "C" void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
 extern "C" void func_ov006_020d0b04(u32 a);
-extern "C" s32 func_ov004_020ad674(void);
+extern "C" s32 GetGameLanguage(void);
 extern "C" void MultiStore16(u16 val, char *dst, int nbytes);
 extern "C" void func_ov006_02124228(T *self);
 
@@ -59,7 +59,7 @@ extern "C" void dScMgTrampoline2_c_OnYoshiTryEat_021242cc(T *self)
     func_ov006_020eeff0();
     func_ov006_02122b24();
     func_ov006_02120ca0();
-    func_ov006_020c8a9c(0, data_ov006_0213fc20[func_ov004_020ad674()]);
+    func_ov006_020c8a9c(0, data_ov006_0213fc20[GetGameLanguage()]);
 
     self->unk7BA4 = 0;
     self->unk7BA8 = 0;

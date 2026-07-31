@@ -16,7 +16,7 @@ extern int func_ov002_020d5cec(char *c);
 extern void Vec3_RotateYAndTranslate(Vector3 *res, Vector3 *trans, short angY, Vector3 *add);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *s);
 extern int _ZN6Player12FinishedAnimEv(char *c);
-extern void func_ov002_020bedd4(char *c);
+extern void Player_AdvanceAnims(char *c);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *thiz, void *v, u32 a, int b, u32 cc, u32 d, u32 e);
 
 extern int data_ov002_02110094[];
@@ -92,6 +92,6 @@ int Player::St_InYoshiMouth_Main()
         }
         break;
     }
-    func_ov002_020bedd4(((char *)this));
+    Player_AdvanceAnims(((char *)this));
     return 1;
 }

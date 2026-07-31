@@ -12,7 +12,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* self, const struct Vector3* pos, char* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* self);
-extern void func_ov002_020bedd4(char* self);
+extern void Player_AdvanceAnims(char* self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* self);
 extern int data_ov002_02110454[];
 extern short data_02082214[];
@@ -71,7 +71,7 @@ int _ZN6Player19St_TornadoSpin_MainEv(char* c)
         else
             *(int*)(c + 0x60) = *(int*)(c + 0x644);
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     _ZN13RaycastGroundD1Ev(&rc);
     return 1;
 }

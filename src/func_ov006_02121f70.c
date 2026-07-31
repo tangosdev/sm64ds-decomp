@@ -4,9 +4,9 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline_c::OnTurnIntoEgg - recovered from vtable slot identity */
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 int dScMgTrampoline_c_OnTurnIntoEgg(void)
 {
-    func_ov006_020c8a9c(0, data_ov006_0213fb18[func_ov004_020ad674()]);
+    func_ov006_020c8a9c(0, data_ov006_0213fb18[GetGameLanguage()]);
     return 1;
 }

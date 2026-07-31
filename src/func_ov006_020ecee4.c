@@ -7,7 +7,7 @@
 #pragma opt_common_subs off
 
 extern void func_ov004_020b1e34(void *a, int b, int c, int d);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void DrawOamSprite(void *a, int b, int c, int d);
 extern void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int g);
 
@@ -97,7 +97,7 @@ tail:
         Pair *p = PAIR1(self);
         Pair *g = &data_ov006_0213ca2c;
         if (!(p->a == g->a && (p->b == g->b || *(int *)(self + 0x4660) == 0))) {
-            int idx = func_ov004_020ad674();
+            int idx = GetGameLanguage();
             void *e = data_ov006_0213ca9c[idx];
             void *f = *(void **)((char *)e + 0xc);
             DrawOamSprite(f, 0x80, 0x10, 0);

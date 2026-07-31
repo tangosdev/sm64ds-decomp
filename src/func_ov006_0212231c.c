@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 
 extern int LoadFile(int handle);
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(int src, void *dst);
@@ -25,7 +25,7 @@ void func_ov006_0212231c(void *arg0)
     r8 = LoadFile(0xa5);
     r7 = LoadFile(0xa7);
     r6 = LoadFile(0xa6);
-    r5 = LoadFile(data_ov006_0213fadc[func_ov004_020ad674()]);
+    r5 = LoadFile(data_ov006_0213fadc[GetGameLanguage()]);
     r4 = LoadFile(0x108);
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;

@@ -1,6 +1,6 @@
 typedef int s32;
 extern s32 GetOwnerLanguage(void);
-s32 func_ov004_020ad674(void)
+s32 GetGameLanguage(void)
 {
     switch (GetOwnerLanguage())
     {

@@ -20,7 +20,7 @@ extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void* v);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_02110424[];
 extern u8 data_020a0e40;
@@ -91,6 +91,6 @@ int Player::St_SideFlip_Main()
         }
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

@@ -11,7 +11,7 @@ typedef int s32;
 
 extern "C" {
 void func_ov006_0210a534(void);
-s32 func_ov004_020ad674(void);
+s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *ptr);
@@ -37,7 +37,7 @@ extern "C" int dScMgMemory_c_InitResources(char *self)
 
     data_0209d45c = 0x11;
     func_ov006_0210a534();
-    a = LoadFile(data_ov006_0213d0c4[func_ov004_020ad674()]);
+    a = LoadFile(data_ov006_0213d0c4[GetGameLanguage()]);
     b = LoadFile(0xbb);
     DecompressLZ16(a, (void *)0x6400000);
     GX::LoadOBJPltt(b, 0, 0x100);

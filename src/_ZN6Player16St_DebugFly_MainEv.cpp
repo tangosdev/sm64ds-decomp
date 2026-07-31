@@ -9,7 +9,7 @@ typedef short s16;
 
 extern "C" int func_ov002_020bf224(int a, int b, int c);
 extern "C" void _ZN6Player11ChangeStateERNS_5StateE(char *self, void *st);
-extern "C" void func_ov002_020bedd4(char *self);
+extern "C" void Player_AdvanceAnims(char *self);
 
 extern u8 data_020a0e40;
 extern char data_0209f4a0[];
@@ -43,6 +43,6 @@ int Player::St_DebugFly_Main()
         _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_0211013c);
     }
 
-    func_ov002_020bedd4(((char *)this));
+    Player_AdvanceAnims(((char *)this));
     return 1;
 }

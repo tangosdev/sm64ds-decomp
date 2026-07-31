@@ -7,7 +7,7 @@
 typedef unsigned short u16;
 
 extern void func_0203cd80(int* m, short angle);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);
 extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 
@@ -41,7 +41,7 @@ int dScMgTrampoline2_c_Render(char* self)
             a1v -= 4;
         for (i = 0; i < 3; i++) {
             if (i >= count) {
-                int idx = func_ov004_020ad674();
+                int idx = GetGameLanguage();
                 DrawOamSprite((void*)data_ov006_0213fc48[idx][1], (void*)a1v, 0xc, (void*)0);
             } else {
                 RenderOamMainScreen(data_ov006_02134ecc, a1v, 0xc, -1, -1);

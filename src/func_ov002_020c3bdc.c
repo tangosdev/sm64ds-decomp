@@ -3,7 +3,7 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* p, unsigned int a, int b, Fix1
 extern int _ZN6Player12FinishedAnimEv(void* p);
 extern void func_0200eec8(void);
 extern void func_ov002_020c3cf0(void* p);
-extern void func_ov002_020bedd4(void* p);
+extern void Player_AdvanceAnims(void* p);
 
 #pragma optimize_for_size on
 void func_ov002_020c3bdc(char* c){
@@ -33,5 +33,5 @@ void func_ov002_020c3bdc(char* c){
       *(int*)(c + 0x60) = 0x15e000;
     }
   }
-  func_ov002_020bedd4(c);
+  Player_AdvanceAnims(c);
 }

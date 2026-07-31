@@ -18,7 +18,7 @@ extern void func_0200d3f8(void* cam, u8 playerID, void* ptr);
 extern int _Z15ApproachLinear2Rsss(s16* v, s16 target, s16 step);
 extern void func_0200d81c(void* cam, u8 playerID);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern int data_0209b454;
 extern char* data_0209f318;
@@ -123,6 +123,6 @@ int Player::St_Talk_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

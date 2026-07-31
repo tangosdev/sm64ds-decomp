@@ -1,5 +1,5 @@
 typedef long long s64;
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern void **data_ov006_021404c8;
 extern void **data_ov006_0213b0d8[];
@@ -15,7 +15,7 @@ void func_ov006_020c8af4(char *c)
     if (data_ov006_021404c8 != 0) {
         x = data_ov006_021404c8[*(short*)(c + 0x1a)];
     } else {
-        int idx2 = func_ov004_020ad674();
+        int idx2 = GetGameLanguage();
         x = data_ov006_0213b0d8[idx2][*(short*)(c + 0x1a)];
     }
     t = data_02082214[(*(unsigned short*)(c + 0x1c) >> 4) * 2];

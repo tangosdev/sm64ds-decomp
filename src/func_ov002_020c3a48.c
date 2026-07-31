@@ -5,7 +5,7 @@ extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b
 extern void func_ov002_020c37a4(char *self, char *arg);
 extern int _ZN6Player12FinishedAnimEv(char *c);
 extern void func_ov002_020c3cf0(char *self);
-extern void func_ov002_020bedd4(char *self);
+extern void Player_AdvanceAnims(char *self);
 
 int func_ov002_020c3a48(char *self)
 {
@@ -54,6 +54,6 @@ int func_ov002_020c3a48(char *self)
 
     *(int *)(self + 0x5c) = 0;
     *(int *)(self + 0x64) = *(int *)(self + 0x688);
-    func_ov002_020bedd4(self);
+    Player_AdvanceAnims(self);
     return 0;
 }

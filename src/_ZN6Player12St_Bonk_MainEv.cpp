@@ -19,7 +19,7 @@ extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 extern void func_0200d8c8(struct Camera* cam, const struct Vector3* v, int strength);
 
 extern struct Camera* data_0209f318;
@@ -87,7 +87,7 @@ finishedanim:
     }
 tail:
     if (mStateWork == 0) {
-        func_ov002_020bedd4(((char*)this));
+        Player_AdvanceAnims(((char*)this));
     }
     mPrevVertSpeed = mVertSpeed;
 ret1:

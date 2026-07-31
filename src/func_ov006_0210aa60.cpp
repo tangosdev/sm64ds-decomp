@@ -9,7 +9,7 @@ struct G2 { static void* GetBG1ScrPtr(); };
 
 extern "C" {
     void SetBg1Offset(int a, int b);
-    int func_ov004_020ad674(void);
+    int GetGameLanguage(void);
     void* func_02054ea8(void);
     unsigned int LoadCompressedFileAt(int fileID, void* target);
 }
@@ -28,7 +28,7 @@ extern "C" void dScMgSlot3_c_AfterClsn(void)
 
     data_0209d45c &= ~2;
 
-    idx = func_ov004_020ad674();
+    idx = GetGameLanguage();
     LoadCompressedFileAt(data_ov006_0213e614[idx], func_02054ea8());
     LoadCompressedFileAt(0x67, G2::GetBG1ScrPtr());
 

@@ -10,7 +10,7 @@ typedef struct { int w[12]; } M48;
 typedef struct { int w[3]; } V3;
 
 extern void func_ov004_020b1e34(void *a, int b, int c, int d);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
 extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern void func_0203cd80(int *m, short angle);
@@ -33,7 +33,7 @@ int dScMgJump_c_Render(void *self)
         a1v = 0x6e;
         for (i = 0; i < 3; i++) {
             if (i >= count) {
-                int idx = func_ov004_020ad674();
+                int idx = GetGameLanguage();
                 DrawOamSprite((void *)data_ov006_0213cbb4[idx][1], (void *)a1v, 0xc, (void *)0);
             } else {
                 RenderOamMainScreen(data_ov006_02134cf8, a1v, 0xc, -1, -1);

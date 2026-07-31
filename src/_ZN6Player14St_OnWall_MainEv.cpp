@@ -24,7 +24,7 @@ extern void _Z14ApproachLinearRsss(s16* v, s16 t, s16 s);
 extern int func_ov002_020bf224(char* c, int a, int b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
 extern int func_ov002_020d4d88(char* c, int a, int b);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
@@ -109,6 +109,6 @@ int Player::St_OnWall_Main()
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x5e, 0, 0x1000, 0);
         }
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

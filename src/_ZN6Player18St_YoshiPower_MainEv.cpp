@@ -39,7 +39,7 @@ extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void ApproachAngle(void*, short, int, int, int);
 extern void func_ov002_020daa74(char*);
-extern void func_ov002_020bedd4(char*);
+extern void Player_AdvanceAnims(char*);
 extern void _ZN9Animation7AdvanceEv(void*);
 
 extern short data_02082214[];
@@ -294,7 +294,7 @@ int _ZN6Player18St_YoshiPower_MainEv(char* c)
 
     default:
     common_tail:
-        func_ov002_020bedd4(c);
+        Player_AdvanceAnims(c);
         if (*(unsigned char*)(c+0x714) == 0 && *(unsigned char*)(c+0x6e3) != 6) {
             _ZN9Animation7AdvanceEv((char*)*(void**)(c+0x160) + 0x50);
         }

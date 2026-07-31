@@ -1,5 +1,5 @@
 typedef int s32;
-s32 func_ov004_020ad674(void);
+s32 GetGameLanguage(void);
 void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern char* data_ov004_020bbfa8[];
 
@@ -23,7 +23,7 @@ void func_ov004_020b0de0(char* c)
             return;
     }
     {
-        int i = func_ov004_020ad674();
+        int i = GetGameLanguage();
         RenderOamMainScreen(*(int*)(data_ov004_020bbfa8[i] + 0x28), 0xc0, 0xb0, -1, -1);
     }
 }

@@ -17,7 +17,7 @@ extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, int* pos, u32 
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, int* pos);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
 extern void func_ov002_020c9718(u8* c);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_0209f2d8;
 extern int data_ov002_021104fc[];
@@ -107,6 +107,6 @@ int Player::St_DeadPit_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

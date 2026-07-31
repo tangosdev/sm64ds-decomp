@@ -11,7 +11,7 @@ extern int _ZN6Player9GetHealthEv(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
 extern void func_ov007_020c5dec(void*,int);
 extern int func_ov002_020ceb7c(void*);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 extern int data_ov002_0211067c[];
 extern int data_ov002_021106ac[];
 extern int data_0209f32c[];
@@ -49,6 +49,6 @@ int Player::St_HurtWater_Main()
     }
   }
   func_ov002_020ceb7c(((char*)this));
-  func_ov002_020bedd4(((char*)this));
+  Player_AdvanceAnims(((char*)this));
   return 1;
 }

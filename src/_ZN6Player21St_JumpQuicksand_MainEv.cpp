@@ -10,7 +10,7 @@ extern char data_ov002_02110424;
 
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *, char *);
-extern void func_ov002_020bedd4(char *);
+extern void Player_AdvanceAnims(char *);
 }
 
 int Player::St_JumpQuicksand_Main()
@@ -25,6 +25,6 @@ int Player::St_JumpQuicksand_Main()
     } else {
         _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_02110424);
     }
-    func_ov002_020bedd4(((char *)this));
+    Player_AdvanceAnims(((char *)this));
     return 1;
 }

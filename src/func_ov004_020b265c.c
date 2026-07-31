@@ -13,7 +13,7 @@ extern void _ZN2GX12SetBankForBGEt(u16 a);
 extern void _ZN2GX13SetBankForOBJEt(u16 a);
 extern void _ZN2GX15SetBankForSubBGEt(u16 a);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 a);
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 extern void *func_ov004_020adc68(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
@@ -52,7 +52,7 @@ void func_ov004_020b265c(char *obj)
     data_0209d45c = 0x10;
     _ZN2GX15SetBankForSubBGEt(4);
     _ZN2GX16SetBankForSubOBJEt(8);
-    p = func_ov004_020adc68(data_ov004_020bbfe4[func_ov004_020ad674()]);
+    p = func_ov004_020adc68(data_ov004_020bbfe4[GetGameLanguage()]);
     {
         char *dst = (char *)0x6400000; dst += 0x4000;
         DecompressLZ16(p, dst);

@@ -19,7 +19,7 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void *v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *c, u32 a, int b, int d, u32 e);
 extern int _ZN6Player12FinishedAnimEv(char *c);
-extern void func_ov002_020bedd4(char *c);
+extern void Player_AdvanceAnims(char *c);
 
 extern u8 data_020a0e40;
 extern struct S18 data_0209f4a0[];
@@ -97,6 +97,6 @@ extern "C" int _ZN6Player23St_MetalWaterWater_MainEv(char *c)
             return 1;
         }
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

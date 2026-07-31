@@ -13,7 +13,7 @@ extern "C" void _ZN2GX10LoadBGPlttEPKvjj(const void *src, unsigned int offset, u
 extern "C" void _ZN3GXS10LoadBGPlttEPKvjj(const void *src, unsigned int offset, unsigned int size);
 extern "C" void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern "C" void func_0201f32c(int arg0);
-extern "C" int func_ov004_020ad674(void);
+extern "C" int GetGameLanguage(void);
 extern "C" void DecompressLZ16(void *src, void *dst);
 
 extern "C" unsigned char data_0209d45c;
@@ -105,7 +105,7 @@ extern "C" void dScMgBase_c_OnAimedAtWithEgg(Obj *self)
     int *vbase = (int *)0x6600000;
     int *vram = vbase + 0x1800;
     MultiCopy_Int(vram, (int *)(c + 0x2228), 0x2000);
-    int idx = func_ov004_020ad674();
+    int idx = GetGameLanguage();
     DecompressLZ16(data_ov004_020bbf94[idx], vram);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj((void *)(c + 0x2228), 0x2000);
 }

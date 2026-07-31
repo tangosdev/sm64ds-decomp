@@ -9,7 +9,7 @@
 /* dScMgMCarlo_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 extern void func_ov006_0210a534(void *c);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern int LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void func_ov006_020c0aa8(void *p);
@@ -36,7 +36,7 @@ extern "C" int dScMgMCarlo_c_InitResources(char *c)
 
     func_ov004_020b04d0(0x20);
     func_ov006_0210a534(c);
-    a = (void *)LoadFile(data_ov006_0213d5b4[func_ov004_020ad674()]);
+    a = (void *)LoadFile(data_ov006_0213d5b4[GetGameLanguage()]);
     b = (void *)LoadFile(0xbb);
     DecompressLZ16(a, (void *)0x6600000);
     GXS::LoadOBJPltt(b, 0, 0x100);

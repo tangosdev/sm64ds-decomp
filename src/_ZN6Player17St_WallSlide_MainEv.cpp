@@ -9,7 +9,7 @@ extern void func_ov002_020c2f64(void *c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *p, void *st);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(Fix12i x, Fix12i y, Fix12i z);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
-extern void func_ov002_020bedd4(void *p);
+extern void Player_AdvanceAnims(void *p);
 extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49e[];
 extern char data_ov002_0211013c;
@@ -53,6 +53,6 @@ int Player::St_WallSlide_Main()
     }
   }
   end:
-  func_ov002_020bedd4(((char *)this));
+  Player_AdvanceAnims(((char *)this));
   return 1;
 }

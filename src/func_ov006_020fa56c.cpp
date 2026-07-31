@@ -8,7 +8,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo2_c::InitResources - recovered from vtable slot identity */
 extern "C" void func_ov006_0210a534(void *c);
-extern "C" int func_ov004_020ad674(void);
+extern "C" int GetGameLanguage(void);
 extern "C" int LoadFile(int handle);
 extern "C" void DecompressLZ16(int src, int dst);
 extern "C" void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, unsigned int a, unsigned int b);
@@ -47,7 +47,7 @@ extern "C" int dScMgMCarlo2_c_InitResources(char *c)
     int f1, f2;
     func_ov004_020b04d0(0x20);
     func_ov006_0210a534(c);
-    handle = func_ov004_020ad674();
+    handle = GetGameLanguage();
     f1 = LoadFile(data_ov006_0213d744[handle]);
     f2 = LoadFile(0xbb);
     DecompressLZ16(f1, 0x6400000);

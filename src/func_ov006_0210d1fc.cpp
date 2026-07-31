@@ -25,7 +25,7 @@ extern char *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
@@ -115,8 +115,8 @@ extern "C" int dScMgSlot1_c_InitResources(void *arg0)
         MultiStore16(fill, d3, 0x800);
     }
 
-    LoadCompressedFileAt(data_ov006_0213e628[func_ov004_020ad674()], (void *)0x6400000);
-    LoadCompressedFileAt(data_ov006_0213e628[func_ov004_020ad674()], (void *)0x6600000);
+    LoadCompressedFileAt(data_ov006_0213e628[GetGameLanguage()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov006_0213e628[GetGameLanguage()], (void *)0x6600000);
 
     {
         int h = LoadFile(0xf1);

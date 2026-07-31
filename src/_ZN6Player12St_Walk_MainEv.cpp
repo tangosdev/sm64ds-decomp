@@ -24,7 +24,7 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u
 extern void func_ov002_020d4540(void* c);
 extern void func_ov002_020cabe0(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u8 data_020a0e40;
 extern u8 data_0209f4ae[];
@@ -116,6 +116,6 @@ label_29c:
     mStateWork = 1;
 
 end:
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

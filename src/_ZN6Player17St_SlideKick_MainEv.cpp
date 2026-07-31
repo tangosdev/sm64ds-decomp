@@ -23,7 +23,7 @@ extern int func_ov002_020c0688(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern int data_ov002_021104e4[];
 extern u8 data_020a0e40;
@@ -107,7 +107,7 @@ L18c:
     }
 
 L1d8:
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     mPrevVertSpeed = mVertSpeed;
     return 1;
 }

@@ -20,7 +20,7 @@ extern int _ZN6Player6IsAnimEj(void* c, u32 a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, s16 a5);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u16 data_0209f49e[];
 extern u8 data_020a0e40;
@@ -68,6 +68,6 @@ int Player::St_TurnAround_Main()
         mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePos), mHorzSpeed, 0);
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

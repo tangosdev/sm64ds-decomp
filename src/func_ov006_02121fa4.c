@@ -9,7 +9,7 @@
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
     unsigned short a, unsigned short b, int c, unsigned short d);
 extern void func_ov006_020d0b04(int a);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern int RandomIntInternal(int *seed);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 
@@ -43,7 +43,7 @@ void dScMgTrampoline_c_OnYoshiTryEat_02121fa4(char *o)
 
     func_ov006_020d0b04(self->unk_0bc);
     func_ov006_02120ca0();
-    func_ov006_020c8a9c(0, data_ov006_0213fb18[func_ov004_020ad674()]);
+    func_ov006_020c8a9c(0, data_ov006_0213fb18[GetGameLanguage()]);
 
     func_ov006_02120a44(o + 0x5d84);
 

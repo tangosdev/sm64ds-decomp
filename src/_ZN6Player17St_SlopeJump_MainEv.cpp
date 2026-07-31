@@ -5,7 +5,7 @@
 extern "C" {
 extern void _Z14ApproachLinearRiii(int*,int,int);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 extern char data_ov002_0211013c[];
 extern char data_ov002_02110034[];
 extern char data_ov002_021105bc[];
@@ -29,6 +29,6 @@ int Player::St_SlopeJump_Main()
       }
     }
   }
-  func_ov002_020bedd4(((char*)this));
+  Player_AdvanceAnims(((char*)this));
   return 1;
 }

@@ -19,7 +19,7 @@ extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern void func_ov002_020c5444(char* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void* v);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
@@ -61,6 +61,6 @@ int Player::St_StuckInGround_Main()
         break;
     }
 
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

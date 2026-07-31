@@ -25,7 +25,7 @@ extern int _ZN6Player12FinishedAnimEv(char *);
 extern int _ZN6Player9GetHealthEv(char *);
 extern void func_ov002_020c5dec(char *, int);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *, char *);
-extern void func_ov002_020bedd4(char *);
+extern void Player_AdvanceAnims(char *);
 
 int _ZN6Player16St_BurnLava_MainEv(char *c)
 {
@@ -88,7 +88,7 @@ int _ZN6Player16St_BurnLava_MainEv(char *c)
         }
     }
 
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }
 }

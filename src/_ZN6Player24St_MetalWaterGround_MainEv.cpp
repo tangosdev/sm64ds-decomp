@@ -16,7 +16,7 @@ extern int _ZN6Player6IsAnimEj(void*,unsigned int);
 extern int _ZN6Player12FinishedAnimEv(void*);
 extern int _ZNK6Player14GetBodyModelIDEjb(void*,unsigned int,int);
 extern void func_0201251c(int,int,void*,int);
-extern void func_ov002_020bedd4(void*);
+extern void Player_AdvanceAnims(void*);
 extern int data_0209f32c;
 extern unsigned char data_0209f49e;
 extern unsigned char data_020a0e40;
@@ -87,6 +87,6 @@ int Player::St_MetalWaterGround_Main()
             func_0201251c(0, 0xaa, (void*)((char*)&mCamSpacePos), mHorzSpeed);
         }
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

@@ -9,7 +9,7 @@ extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, Vector3* v, u3
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 sysHandle, u32 kind, s32 scale, s32 p1, s32 p2, void* pos16, void* cb);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* self, void* state);
 extern int func_ov002_020c5dec(char* c, int r1);
-extern void func_ov002_020bedd4(char* self);
+extern void Player_AdvanceAnims(char* self);
 
 extern void* data_ov002_0211013c;
 extern void* data_ov002_0211067c;
@@ -62,6 +62,6 @@ int _ZN6Player19St_Electrocute_MainEv(char *c)
         }
     }
 
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

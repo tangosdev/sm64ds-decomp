@@ -16,7 +16,7 @@ extern int func_ov002_020e28d4(void*, int, int);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern u32 _ZNK6Player14GetBodyModelIDEjb(void*, u32, int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32, void*);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 
 extern char data_ov002_02110424[];
 extern u8 data_020a0e40;
@@ -82,6 +82,6 @@ int Player::St_Jump_Main()
     }
   }
 
-  func_ov002_020bedd4(((void*)this));
+  Player_AdvanceAnims(((void*)this));
   return 1;
 }

@@ -8,7 +8,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 
-extern "C" void func_ov002_020bedd4(char* self);
+extern "C" void Player_AdvanceAnims(char* self);
 extern "C" void _ZN6Player9DropActorEv(char* a);
 extern "C" unsigned int _ZNK6Player14GetBodyModelIDEjb(char* self, unsigned int a, int b);
 
@@ -53,6 +53,6 @@ int Player::St_Grabbed_Main()
         pRate = (int*)((char*)pRate + 0xc);
         *pRate = 0x1000;
     }
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

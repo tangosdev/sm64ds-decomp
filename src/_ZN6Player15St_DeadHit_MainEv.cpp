@@ -19,7 +19,7 @@ extern void _Z14ApproachLinearRiii(int *v, int a, int b);
 extern u32 _ZNK6Player14GetBodyModelIDEjb(char *c, u32 a, bool b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *c, u32 a, int b, int d, u32 e);
 extern int _ZN6Player12FinishedAnimEv(char *c);
-extern void func_ov002_020bedd4(char *c);
+extern void Player_AdvanceAnims(char *c);
 
 extern u8 data_ov002_0211117c;
 }
@@ -71,7 +71,7 @@ int Player::St_DeadHit_Main()
     }
 
     if (mStateWork != 1)
-        func_ov002_020bedd4(((char *)this));
+        Player_AdvanceAnims(((char *)this));
     mPrevVertSpeed = mVertSpeed;
     return 1;
 }

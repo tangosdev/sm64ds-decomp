@@ -24,7 +24,7 @@ extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxSt
 extern void func_ov002_020c18b0(void* c, int a);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020d4d88(void* c, int a, int b);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern u8 data_020a0e40;
 extern s16 data_0209f4a0[];
@@ -84,6 +84,6 @@ int Player::St_Crawl_Main()
     }
 
     func_ov002_020d4d88(((char*)this), a, b);
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

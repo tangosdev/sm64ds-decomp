@@ -13,7 +13,7 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 extern void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 
 typedef struct T4fe4 {
     char pad[0x4fe4];
@@ -125,16 +125,16 @@ int dScMgSlot3_c_Render(char *c)
     func_ov004_020b1e34(c, 0xe0, 0x14, 1);
 
     if (self->unk_5000 == 3 && self->unk_5010 >= 0) {
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[func_ov004_020ad674()] + 8), self->unk_5010 * 0x50 + 0x20, 0x28, 0);
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[func_ov004_020ad674()] + 0x34), self->unk_5010 * 0x50 + 0x30, 0x28, 0);
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 8), self->unk_5010 * 0x50 + 0x20, 0x28, 0);
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 0x34), self->unk_5010 * 0x50 + 0x30, 0x28, 0);
         if (self->unk_5010 == 1) {
             func_ov004_020b2444(self->unk_5010 * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
         } else {
             func_ov004_020b2444(self->unk_5010 * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
         }
     } else if (self->unk_5000 == 4 && self->unk_5010 < 0) {
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[func_ov004_020ad674()] + 8), 0x70, 0x28, 0);
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[func_ov004_020ad674()] + 0x38), 0x80, 0x28, 0);
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 8), 0x70, 0x28, 0);
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 0x38), 0x80, 0x28, 0);
         func_ov004_020b2444(0x90, 0x28, 3, 0, 0, 0, 0x28);
     }
 

@@ -10,7 +10,7 @@ extern int func_ov002_020eeca8(void*, void*);
 extern int func_ov002_020e28d4(void*, int, int);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern int _ZN6Player7IsStateERNS_5StateE(void*, void*);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 extern char data_ov002_02110424[];
 extern unsigned char data_020a0e40[];
 extern unsigned short data_0209f49e[];
@@ -44,6 +44,6 @@ int Player::St_WallJump_Main()
       f(p);
     }
   }
-  func_ov002_020bedd4(((void*)this));
+  Player_AdvanceAnims(((void*)this));
   return 1;
 }

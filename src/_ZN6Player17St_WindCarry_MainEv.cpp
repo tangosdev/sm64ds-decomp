@@ -12,7 +12,7 @@ struct Player {
 
 extern "C" void func_ov002_020c2f64(void* c);
 extern "C" void func_ov002_020e28d4(void* c, int a, int b);
-extern "C" void func_ov002_020bedd4(char* self);
+extern "C" void Player_AdvanceAnims(char* self);
 extern "C" int __aeabi_idiv(int a, int b);
 
 extern State data_ov002_021105bc;
@@ -53,6 +53,6 @@ int Player::St_WindCarry_Main()
             *q = *q + 1;
         }
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

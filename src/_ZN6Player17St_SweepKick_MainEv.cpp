@@ -8,7 +8,7 @@ extern "C" {
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
 extern int func_ov002_020d8a50(void*,int);
 extern int _ZN6Player12FinishedAnimEv(void*);
-extern int func_ov002_020bedd4(void*);
+extern int Player_AdvanceAnims(void*);
 extern unsigned char data_020a0e40[];
 extern unsigned short data_0209f49e[];
 extern int data_ov002_021104e4[];
@@ -23,6 +23,6 @@ int Player::St_SweepKick_Main()
     *(char*)((char*)&mStateStep)=1;
     _ZN6Player11ChangeStateERNS_5StateE(((void*)this),data_ov002_021104e4);
   }
-  func_ov002_020bedd4(((void*)this));
+  Player_AdvanceAnims(((void*)this));
   return 1;
 }

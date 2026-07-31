@@ -19,7 +19,7 @@ struct Player {
 };
 
 extern void func_ov002_020e28d4(struct Player *thiz, int a, int b);
-extern void func_ov002_020bedd4(struct Player *thiz);
+extern void Player_AdvanceAnims(struct Player *thiz);
 extern void _ZN6Player11ChangeStateERNS_5StateE(struct Player *thiz, void *st);
 
 int _ZN6Player12St_Spin_MainEv(struct Player *thiz)
@@ -36,6 +36,6 @@ int _ZN6Player12St_Spin_MainEv(struct Player *thiz)
         thiz->field_a0 = -0xc000;
         *(s16 *)(int)(((long long)(int)((char *)thiz + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL) += 0x1800;
     }
-    func_ov002_020bedd4(thiz);
+    Player_AdvanceAnims(thiz);
     return 1;
 }

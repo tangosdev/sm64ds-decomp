@@ -14,7 +14,7 @@ extern void Player_DisableInteraction(char* c);
 extern void func_ov002_020c9e18(char* c);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int d, unsigned int e);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 
 extern unsigned char data_020a0e40;
 extern unsigned char data_0209f49c[];
@@ -117,6 +117,6 @@ int Player::St_Owl_Main()
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x58, 0, 0x1000, 0);
     }
     mTargetAngleY = mAngleY;
-    func_ov002_020bedd4(((char*)this));
+    Player_AdvanceAnims(((char*)this));
     return 1;
 }

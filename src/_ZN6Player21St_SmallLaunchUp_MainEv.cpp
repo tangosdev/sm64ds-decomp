@@ -6,7 +6,7 @@ extern "C" {
 struct State;
 extern State data_ov002_02110424;
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,State*);
-extern void func_ov002_020bedd4(void*);
+extern void Player_AdvanceAnims(void*);
 }
 
 int Player::St_SmallLaunchUp_Main()
@@ -14,6 +14,6 @@ int Player::St_SmallLaunchUp_Main()
   if(mIsAirborne==0){
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this),&data_ov002_02110424);
   }
-  func_ov002_020bedd4(((char*)this));
+  Player_AdvanceAnims(((char*)this));
   return 1;
 }

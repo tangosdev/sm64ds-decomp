@@ -11,7 +11,7 @@ extern void _ZN2GX17SetBankForTexPlttEt(u16 a);
 extern void func_02054748(int x);
 extern void _ZN2GX13SetBankForOBJEt(u16 a);
 extern void _ZN2GX12SetBankForBGEt(u16 a);
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void *func_ov004_020adc68(int id);
 extern void DecompressLZ16(void *src, void *dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -53,7 +53,7 @@ void func_ov006_020e7124(char *obj)
     func_02054748(0);
     _ZN2GX13SetBankForOBJEt(0x10);
     _ZN2GX12SetBankForBGEt(2);
-    p = func_ov004_020adc68(data_ov006_0213c5fc[func_ov004_020ad674()]);
+    p = func_ov004_020adc68(data_ov006_0213c5fc[GetGameLanguage()]);
     data_ov006_02141a4c = p;
     {
         char *dst = (char *)0x6400000;
