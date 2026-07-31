@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10StarMarker6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "StarMarker.h"
 extern "C" {
 
 struct Sub {
@@ -9,14 +12,13 @@ struct Sub {
     virtual void v4();
     virtual void m(int);
 };
-
-int _ZN10StarMarker6RenderEv(char *thiz)
-{
-    unsigned int b = *(unsigned char *)(thiz + 0x1db);
-    if ((b << 30) >> 31) {
-        ((Sub *)(thiz + 0x114))->m(0);
-    }
-    return 1;
 }
 
+int StarMarker::Render()
+{
+    unsigned int b = mFlags;
+    if ((b << 30) >> 31) {
+        ((Sub *)((char *)&mModel))->m(0);
+    }
+    return 1;
 }

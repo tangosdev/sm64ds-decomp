@@ -1,3 +1,6 @@
+// @symbol _ZN10FaderColorD1Ev
+/* recovered: named members + shared header */
+#include "FaderColor.h"
 /* FaderColor::~FaderColor() at 0x020175c4
  * Sets self->vtable to the FaderColor vtable, delegates to the base-subobject
  * destructor (func_020177c4, shared with Color::~Color), and returns self

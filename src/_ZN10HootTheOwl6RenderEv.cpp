@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10HootTheOwl6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "HootTheOwl.h"
 extern "C" {
 extern char data_ov094_02136b40[];
 }
@@ -10,8 +13,10 @@ struct O {
   virtual void m4();
   virtual void m5(int);
 };
-extern "C" int _ZN10HootTheOwl6RenderEv(char *t){
-  if(*(void**)(t+0x3c8) == (void*)data_ov094_02136b40) return 1;
-  ((O*)(t+0x30c))->m5(0);
+
+int HootTheOwl::Render()
+{
+  if(*(void**)((char *)&mCurrentState) == (void*)data_ov094_02136b40) return 1;
+  ((O*)((char *)&mModelAnim))->m5(0);
   return 1;
 }

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10SlidingIce6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "SlidingIce.h"
 struct VObj {
   virtual void f0();
   virtual void f1();
@@ -10,13 +13,15 @@ struct VObj {
 extern "C" {
 void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
-int _ZN10SlidingIce6RenderEv(char* c){
-  int x = *(unsigned short*)(c+0xc)==0x5d;
+}
+
+int SlidingIce::Render()
+{
+  int x = mActorID==0x5d;
   if(x){
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
-    ((VObj*)(c+0xd4))->m5(0);
+    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    ((VObj*)((char*)&mModel))->m5(0);
   }
   return 1;
-}
 }
