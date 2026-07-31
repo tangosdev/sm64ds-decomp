@@ -2484,3 +2484,28 @@ Stage::InitResources, 0204a730, 020412f0, Stage::PS_UpdateOkAndBackButtons, 0203
 moved NOTHING. The lever fires when the residue is a two-local callee-saved web-identity
 swap; it does not perturb scheduling knots or wider coloring webs. Sweep script pattern:
 flip (unsigned int|int|u32|s32) decls in the bank draft, abverify each.
+
+## 6ao. Flag-across-call rematerialization, and the for(;;) dead epilogue (2026-07-30, func_02072168)
+
+Two finds from the deep pass on the WM bytecode dispatcher (both currently OPEN, no
+counter-lever known):
+
+1. **mwccarm refuses to hold a cheap flag live across calls.** The ROM computes
+`and rX, op, #mask` into a callee-saved register BEFORE two `bl`s and does a bare
+`cmp rX, #0` after. Every mwccarm spelling instead REMATERIALIZES (`ands r1, op, #mask`)
+at the use site - the inverse of the usual too-much-CSE problem. Inert or worse:
+`volatile int` (stack spill, wrong shape), `unsigned char` (spurious narrowing AND),
+`(op & mask) != 0` bool cast (much worse), statement reordering,
+`#pragma opt_common_subs off` (regressed), `#pragma opt_propagation off` (regressed).
+The heuristic looks like remat-if-cheaper-than-spill with no source knob found yet. It
+recurs in ~10 of the dispatcher's 20 cases and dominates its div=195. Any future crack
+of this pattern unlocks func_02072168 nearly whole.
+
+2. **`for(;;)` containing a predicated early `return` emits a dead unreachable trailing
+epilogue** (20-byte minimal repro). `while(1)` and goto-loop forms behave identically;
+`#pragma optimize_for_size on` converts the predicated return to a branch-to-shared-tail
+(reachable, but not the ROM's predicated shape). If a target ROM function has NO dead
+epilogue but ours does, the ROM's early-exit idiom differs from a plain in-loop return -
+treat the dead-epilogue delta as a diagnostic fingerprint, not noise. (Related: 6al's
+trailing-bx-lr note - mwccarm appends one after a for(;;) whose exits are all early
+returns; that one the ROM DOES keep.)
