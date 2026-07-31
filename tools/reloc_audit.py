@@ -142,11 +142,13 @@ def object_reloc_dests(obj, func, name_index):
     return dests, size
 
 
-def winning_object(name, addr, size, mod):
+def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
     """Reproduce the match the way reverify does, but return the object that did it.
 
     Mirrors reverify_corpus.compiles_to so the audit measures exactly what reverify
-    blesses -- same sources, same version sweep, same any-symbol acceptance."""
+    blesses -- same sources, same version sweep, same any-symbol acceptance.
+    When ``candidate`` is supplied, verify that source file directly instead of
+    looking it up under ``src/``. This is the safe bridge for workbench artifacts."""
     import reverify_corpus as RV
     import swarm as S
     target = RV.rom_bytes(mod, addr, size)
@@ -157,17 +159,30 @@ def winning_object(name, addr, size, mod):
     # saw_source: src_texts yielded at least one candidate to try.
     # saw_len:    a candidate compiled to a function of the expected length.
     saw_source = saw_len = False
-    for src in RV.src_texts(name, addr):
+    candidate_path = pathlib.Path(candidate) if candidate is not None else None
+    if candidate_path is not None:
+        try:
+            sources = [(candidate_path.read_text(encoding="utf-8"), candidate_path)]
+        except OSError:
+            sources = []
+    else:
+        sources = [(src, None) for src in RV.src_texts(name, addr)]
+    for src, source_path in sources:
         saw_source = True
         attempts = ([(S.CPP_FLAGS, ".cpp")] if src.startswith("//cpp")
                     else [(M.DEFAULT_FLAGS, ".c"), (S.CPP_FLAGS, ".cpp")])
         for flags, suf in attempts:
-            fd, tmp = tempfile.mkstemp(suffix=suf)
-            os.close(fd)
-            pathlib.Path(tmp).write_text(src)
+            tmp = None
+            if source_path is None:
+                fd, tmp = tempfile.mkstemp(suffix=suf)
+                os.close(fd)
+                cfile = pathlib.Path(tmp)
+                cfile.write_text(src)
+            else:
+                cfile = source_path
             try:
                 for v in RV.ALL_VERSIONS:
-                    obj = M.compile_c(pathlib.Path(tmp), v, flags)
+                    obj = M.compile_c(cfile, v, flags, include_dirs)
                     if obj is None:
                         continue
                     import probe_versions as PV
@@ -193,7 +208,8 @@ def winning_object(name, addr, size, mod):
                         if ok:
                             return obj, sym, None
             finally:
-                pathlib.Path(tmp).unlink(missing_ok=True)
+                if tmp is not None:
+                    pathlib.Path(tmp).unlink(missing_ok=True)
     if not saw_source:
         return None, None, "no-source"      # no src/<name>.c|.cpp on disk to try
     if not saw_len:

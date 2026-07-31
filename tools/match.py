@@ -11,6 +11,9 @@ Usage:
     python tools/match.py --c match/f.c --func f --addr 0x02065a84 --size 0x10 \
         --version 1.2/sp2p3 --flags "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e"
 
+The repository's ``include/`` directory is always on the compiler search path.
+Use ``--include-dir`` for an additional candidate-specific header tree.
+
 Without --version, sweeps a default list of mwccarm versions and reports the best.
 """
 import argparse
@@ -27,6 +30,7 @@ MW = REPO / "tools" / "mwccarm"
 LICENSE = MW / "license.dat"
 ARM9 = REPO / "extracted" / "arm9_dec.bin"
 ARM9_BASE = 0x02004000
+INCLUDE = REPO / "include"
 
 DEFAULT_FLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc"
 SWEEP = ["1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
@@ -48,7 +52,8 @@ def target_bytes(addr: int, size: int, bin_path: pathlib.Path = ARM9, base: int 
     return data[off:off + size]
 
 
-def compile_c(cfile: pathlib.Path, version: str, flags: str) -> bytes | None:
+def compile_c(cfile: pathlib.Path, version: str, flags: str,
+              include_dirs=()) -> bytes | None:
     """Compile C -> object with the given mwccarm version. Returns object bytes."""
     exe = MW / version / "mwccarm.exe"
     if not exe.is_file():
@@ -57,14 +62,25 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str) -> bytes | None:
     with tempfile.TemporaryDirectory() as td:
         out_o = pathlib.Path(td) / "out.o"
         env = dict(os.environ, LM_LICENSE_FILE=str(LICENSE))
-        cmd = [str(exe), *flags.split(), "-c", str(cfile), "-o", str(out_o)]
+        # Candidate-specific includes come first so an external workbench can be
+        # verified against its own headers. The canonical repository include tree
+        # is always available and is the normal path used by committed sources.
+        search = [pathlib.Path(p).resolve() for p in include_dirs]
+        canonical = INCLUDE.resolve()
+        if canonical not in search:
+            search.append(canonical)
+        cmd = [str(exe), *flags.split()]
+        for inc in search:
+            cmd.extend(["-i", str(inc)])
+        cmd.extend(["-c", str(cfile), "-o", str(out_o)])
         try:
             r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=90)
         except subprocess.TimeoutExpired:
             print(f"  ! compile timed out ({version})")
             return None
         if r.returncode != 0 or not out_o.is_file():
-            print(f"  ! compile failed ({version}): {r.stderr.strip()[:200]}")
+            detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
+            print(f"  ! compile failed ({version}): {detail[:500]}")
             return None
         return out_o.read_bytes()
 
@@ -137,6 +153,8 @@ def main():
     ap.add_argument("--all", action="store_true", help="sweep every known version")
     ap.add_argument("--brief", action="store_true", help="terse: per-version pass/fail; diff only if none match")
     ap.add_argument("--flags", default=DEFAULT_FLAGS)
+    ap.add_argument("--include-dir", action="append", default=[],
+                    help="additional header search directory (repeatable; checked before repo include/)")
     ap.add_argument("--bin", default=None,
                     help="override target binary (e.g. an overlay) instead of arm9_dec.bin")
     ap.add_argument("--base", default=None, type=lambda x: int(x, 0),
@@ -206,7 +224,7 @@ def main():
     matched = []
     closest = None  # (ndiff, version, code, relocs) for a helpful diff when nothing matches
     for v in versions:
-        obj = compile_c(cfile, v, flags)
+        obj = compile_c(cfile, v, flags, args.include_dir)
         if obj is None:
             continue
         code, relocs = extract_func(obj, args.func)

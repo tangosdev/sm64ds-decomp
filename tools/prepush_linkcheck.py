@@ -18,7 +18,7 @@ Verdicts (from tools/linkcheck.py) and how they are treated:
 Files carrying a `// NONMATCHING` banner are drafts by definition and are skipped.
 
 Usage:
-  python tools/prepush_linkcheck.py --range origin/main..HEAD   # what a push would publish
+  python tools/prepush_linkcheck.py --range origin/main..HEAD   # changed src + header consumers
   python tools/prepush_linkcheck.py --files src/a.c src/b.cpp
   python tools/prepush_linkcheck.py --range origin/main..HEAD --json report.json
 
@@ -33,6 +33,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import affected_src as A  # noqa: E402
 
 # Fail closed. WRONG/NO-REPRO are false matches; ERROR means we could not get a verdict at
 # all, and a gate that waves through what it could not check is not a gate. BLIND and NO-SYM
@@ -53,12 +54,14 @@ def _load_symbol(name):
 
 def changed_src_files(rev_range):
     out = subprocess.run(
-        ["git", "diff", "--name-only", "--diff-filter=d", rev_range, "--", "src/"],
+        ["git", "diff", "--name-only", "--diff-filter=d", rev_range,
+         "--", "src/", "include/"],
         cwd=REPO, capture_output=True, text=True,
     )
     if out.returncode != 0:
         return []
-    return [f.strip() for f in out.stdout.splitlines() if f.strip().endswith((".c", ".cpp"))]
+    changed = [f.strip() for f in out.stdout.splitlines() if f.strip()]
+    return A.affected_sources(changed)
 
 
 def is_draft(path):

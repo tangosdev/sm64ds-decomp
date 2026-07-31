@@ -9,6 +9,8 @@ typedef unsigned int   u32;
 typedef signed char    s8;
 typedef signed short   s16;
 typedef signed int     s32;
+typedef unsigned long long u64;
+typedef signed long long   s64;
 
 /* 20.12 fixed-point scalar, as used by the SDK/game maths.
    Fix12i is the spelling used by most existing src/ files; both are the same type. */

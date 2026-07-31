@@ -32,6 +32,8 @@ Usage:
   python tools/linkcheck.py --module ov006 -j 10
   python tools/linkcheck.py --limit 200
   python tools/linkcheck.py --name func_02013a88 --addr 0x02013a88 --size 0x4c --module arm9
+  python tools/linkcheck.py --c ../workbench/f.cpp --include-dir ../workbench/include \
+      --name f --addr 0x02013a88 --size 0x4c --module arm9
   python tools/linkcheck.py --json out.json
 """
 import argparse
@@ -202,10 +204,10 @@ def link_function(code, addr, relocs):
     return bytes(buf), set(blind)
 
 
-def linkcheck(name, addr, size, mod, name_index):
+def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()):
     """Verdict + detail for one banked match."""
     import reverify_corpus as RV
-    obj, sym, err = RA.winning_object(name, addr, size, mod)
+    obj, sym, err = RA.winning_object(name, addr, size, mod, candidate, include_dirs)
     if obj is None:
         # A missing or wrong-length source is NOT a false match; give it a verdict
         # distinct from NO-REPRO so it does not read as "the source stopped matching".
@@ -258,11 +260,18 @@ def main():
     ap.add_argument("-j", "--jobs", type=int, default=8)
     ap.add_argument("--json", default=None)
     ap.add_argument("--name", default=None, help="link-check a single function")
+    ap.add_argument("--c", default=None,
+                    help="verify this candidate source instead of committed src/<name>.*")
+    ap.add_argument("--include-dir", action="append", default=[],
+                    help="additional candidate header search directory (repeatable)")
     ap.add_argument("--addr", default=None, type=lambda x: int(x, 0))
     ap.add_argument("--size", default=None, type=lambda x: int(x, 0))
     args = ap.parse_args()
 
     name_index = RA.build_name_index()
+
+    if args.c and not args.name:
+        ap.error("--c requires --name")
 
     if args.name:
         if args.addr is None or args.size is None:
@@ -280,7 +289,8 @@ def main():
         if args.addr is None or args.size is None:
             print(f"{args.name}: not in progress/matched.jsonl; pass --addr/--size/--module")
             return
-        r = linkcheck(args.name, args.addr, args.size, args.module or "arm9", name_index)
+        r = linkcheck(args.name, args.addr, args.size, args.module or "arm9", name_index,
+                      args.c, args.include_dir)
         print(json.dumps(r, indent=1))
         return
 
