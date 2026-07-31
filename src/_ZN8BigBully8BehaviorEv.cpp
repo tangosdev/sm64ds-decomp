@@ -1,0 +1,47 @@
+//cpp
+// @symbol _ZN8BigBully8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "BigBully.h"
+typedef unsigned char u8;
+typedef unsigned short u16;
+
+extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, u16* p);
+extern int func_ov064_02116d1c(void* c);
+extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);
+extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+
+int BigBully::Behavior()
+{
+    u8 s = unk_3fe;
+    if (s >= 4) {
+        if (mSecretSoundCounter != 0) {
+            if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+                mSecretSoundCounter = 0;
+        }
+        return func_ov064_02116d1c(((char*)this));
+    }
+    if (s == 3) {
+        int t;
+        int m;
+        int* p;
+        if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+            mSecretSoundCounter = 0;
+        t = unk_0a8 + unk_09c;
+        m = unk_0a0;
+        if (t >= m) m = t;
+        unk_0a8 = m;
+        p = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        *p = *p + unk_0a8;
+        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x174, 0);
+        if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+            u8* q;
+            func_0200fa8c(((char*)this), 0);
+            q = (u8*)(((int)((char*)this) + 0x3fe) & 0xFFFFFFFFFFFFFFFF);
+            *q = *q + 1;
+        }
+        func_ov064_02116bac(((char*)this));
+    }
+    return 1;
+}
