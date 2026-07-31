@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int data_ov102_0214ea48[];
 
 extern void _ZN13RaycastGroundC1Ev(void *self);

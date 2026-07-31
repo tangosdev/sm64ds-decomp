@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
 extern int _ZN6Player16IsInsideOfCannonEv(void *player);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *player);

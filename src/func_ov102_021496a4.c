@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol func_ov102_021496a4
 // @emits QuestionBlock_OnHitFromUnderneath
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjHatenaBlock_c::OnHitFromUnderneath - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
 void QuestionBlock_OnHitFromUnderneath(void *c, void *x) {
     if (*(int *)((char *)c + 0x3e8) == 1) return;
     *(int *)((char *)c + 0x9c) = -0x8000;

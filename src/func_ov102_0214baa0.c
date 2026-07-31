@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void func_0203568c(int *value, int target);

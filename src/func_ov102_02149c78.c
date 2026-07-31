@@ -1,5 +1,4 @@
-typedef int s32;
-typedef unsigned short u16;
+#include "types.h"
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *, void *, s32);
 void func_ov102_02149c78(void *c)
 {

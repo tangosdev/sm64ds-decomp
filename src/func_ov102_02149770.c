@@ -1,11 +1,10 @@
+#include "types.h"
 // @symbol func_ov102_02149770
 // @emits QuestionBlock_OnKicked
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjHatenaBlock_c::OnKicked - recovered from vtable slot identity */
-
-typedef unsigned char u8;
 void QuestionBlock_OnKicked(void *c, void *x) {
     if (*(int *)((char *)c + 0x3e8) == 1) return;
     int r = func_ov102_02149078(c);
