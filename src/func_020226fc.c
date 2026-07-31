@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct ParticleCallback;
 struct ParticleSys;
 

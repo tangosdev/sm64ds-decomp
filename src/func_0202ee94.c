@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned long long u64;
-
+#include "types.h"
 extern void MultiStore_Int(int val, int *dst, int len);
 extern u64 _ZN4cstd4sqrtEy(u64);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int, unsigned int);

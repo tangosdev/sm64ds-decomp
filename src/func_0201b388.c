@@ -1,9 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern u8 data_0209d668;
 extern u8 data_0209d6c0;
 extern u8 data_0209d6a8;

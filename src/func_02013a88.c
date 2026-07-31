@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_02013a88 at 0x02013a88
  * SaveData: clear 0x1000000 << currentCharacter bit in flags1, then SaveCurrentFile.
  * Player gets cap back (persisted).
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct SaveData {
     u32 magic8000;
     u32 flags1;

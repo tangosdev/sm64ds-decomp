@@ -1,7 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern s32 func_0200f0bc(void);
 extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern u32 LoadCompressedFileAt(u32 fileID, void *target);

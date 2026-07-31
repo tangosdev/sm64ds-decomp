@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u32 dat_0209f60c;          /* source index */
 extern volatile u32 dat_0209f608; /* working index */
 extern u8 dat_0209f648[];         /* table base (stride 0x300) */

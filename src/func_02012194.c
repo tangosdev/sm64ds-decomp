@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
 extern char data_0209b53c[];
 int func_02048a1c(int a0, int kind, int id);
 void* func_02011934(char* table, int id);

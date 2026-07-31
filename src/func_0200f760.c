@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern unsigned char *_ZN5Actor13ClosestPlayerEv(void *self);
 
 void func_0200f760(void *self, char *actor)

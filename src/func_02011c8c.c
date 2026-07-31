@@ -1,3 +1,4 @@
+#include "types.h"
 /* func_02011c8c — resets all sound player sequence limits from a default table.
  * Iterates 10 entries of a static array {s32 playerID, s32 maxSeq} at 0x0208e448,
  * calling Sound::Player::SetPlayableSeqCount(playerID, maxSeq) for each.
@@ -5,10 +6,6 @@
  * Callee: 0x0204fadc = Sound::Player::SetPlayableSeqCount(s32, s32)
  *   _ZN5Sound6Player19SetPlayableSeqCountEii
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 extern void _ZN5Sound6Player19SetPlayableSeqCountEii(s32 playerID, s32 maxSeq);
 
 typedef struct {

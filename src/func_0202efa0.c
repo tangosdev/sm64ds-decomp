@@ -1,3 +1,4 @@
+#include "types.h"
 /* func_0202efa0 at 0x0202efa0 (arm9 main)
  *
  * Builds a 192-entry (one per scanline) 4-byte-per-line blend/fade gradient
@@ -10,10 +11,6 @@
  * (duration = *(s32*)(self+0x1c)). Finally the whole 0x600 region is cache
  * flushed. Looks like a per-scanline capture/blend wipe effect table.
  */
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 

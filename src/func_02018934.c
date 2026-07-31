@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_02018934 at 0x02018934
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned int u32;
-
 extern void FS_InitFile(int *s);
 extern int func_02018d98(int *s, int a);
 extern void *_ZN4Heap9_AllocateEji(void *heap, u32 size, int align);

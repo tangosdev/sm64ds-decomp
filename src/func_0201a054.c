@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_020427f8(void);
 extern u32 func_02042784(void);
 extern void func_02053a8c(void);

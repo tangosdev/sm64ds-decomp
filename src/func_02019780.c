@@ -1,7 +1,5 @@
+#include "types.h"
 /* func_02019780 at 0x02019780 */
-
-typedef unsigned int u32;
-
 extern void func_02058c84(void);
 extern void func_0201a490(void);
 extern void func_02019ebc(void);

@@ -1,10 +1,7 @@
+#include "types.h"
 /* func_02013a44 at 0x02013a44
  * SaveData: test if 0x8000000 << currentCharacter bit is set in flags1.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct SaveData {
     u32 magic8000;
     u32 flags1;

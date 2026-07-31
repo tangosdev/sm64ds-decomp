@@ -1,9 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int s32;
-
+#include "types.h"
 struct FileSaveData {
     u32 magic8000;
     u32 flags1;

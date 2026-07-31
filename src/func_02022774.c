@@ -1,10 +1,4 @@
-typedef signed int s32;
-typedef unsigned int u32;
-typedef s32 Fix12i;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 /* PARTICLE_SYS_TRACKER is a global SysTracker*, so it IS the base pointer.
    Each access reloads the global since it's not cached. */
 extern char* PARTICLE_SYS_TRACKER;

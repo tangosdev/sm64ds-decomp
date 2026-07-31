@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_0202eddc
 // @emits dWipe_c_IsAtEnd
 /* recovered: renamed to Class_Method */
@@ -6,9 +7,6 @@
  * Attempt 5: use explicit early-return structure to get beq+bgt branch pattern.
  * ROM: beq -> ret1 block (add sp,#4; mov r0,#1; ldm; bx), bgt -> ret0 block.
  */
-typedef int s32;
-typedef unsigned int u32;
-
 struct FaderBrightness;
 extern int _ZN15FaderBrightness7IsAtEndEv(struct FaderBrightness* self);
 

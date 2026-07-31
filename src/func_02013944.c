@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 typedef struct FileSaveData {
     u32 magic8000;
     u32 flags1;

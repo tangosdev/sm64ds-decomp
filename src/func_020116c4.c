@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
 void func_02011ac4(void* slot, int counter, int a1, int a2, int a3, int s0, short s1);
 void func_02011698(char* table, char* n);
 

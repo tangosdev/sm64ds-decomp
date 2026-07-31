@@ -1,11 +1,7 @@
+#include "types.h"
 /* func_02022d44 at 0x02022d44 (60 bytes)
  * Particle::System::New wrapper -- passes args through and adds *tracker+0x7f0 as callback.
  */
-
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef unsigned char u8;
-
 struct ParticleCallback;
 struct ParticleSys;
 

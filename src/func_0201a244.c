@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern int _ZN6Memory8AllocateEji(u32 sz, int align);
 extern void func_02058200(void *c, int f, int a, int p, int s, int x);
 extern void func_02057f38(void *c, int v);

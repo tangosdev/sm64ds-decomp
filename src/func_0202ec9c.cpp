@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" {
 
 struct Obj;

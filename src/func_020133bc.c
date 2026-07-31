@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "types.h"
 extern void func_0204f070(void);
 extern void* _ZN6Memory8AllocateEj(u32 size);
 extern void* func_0205130c(u32 addr, u32 size);

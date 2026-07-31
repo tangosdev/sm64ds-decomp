@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(u32 irqBit, void (*handler)(void));
 extern void _ZN3IRQ13VBlankHandlerEv(void);
 

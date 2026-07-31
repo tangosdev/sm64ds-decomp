@@ -1,7 +1,5 @@
+#include "types.h"
 // func_0200e55c - find cutscene object by owner ID
-
-typedef unsigned int u32;
-
 struct Actor {
     void* vtable;    // 0x0
     u32 uniqueID;    // 0x4

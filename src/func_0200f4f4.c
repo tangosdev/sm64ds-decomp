@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 /* 4x3 matrix: 12 s32 values = 48 bytes */
 typedef struct {
     s32 m[12];

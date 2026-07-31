@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN7Message7AddCharEc(int c);
 
 struct S { u8 b[8]; };

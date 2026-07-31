@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_0202043c(void *self);
 
 void func_02020820(char *self, int *src, int arg2, int arg3, u8 arg5, u8 arg6)

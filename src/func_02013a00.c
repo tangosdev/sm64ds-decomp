@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 /* SAVE_DATA layout (partial):
  *   0x04 = flags    (u32)
  *   0x41 = charID   (u8)

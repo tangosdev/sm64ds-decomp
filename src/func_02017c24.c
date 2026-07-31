@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 LAST_USED_FILE_ID;
 extern void _ZN6Memory10DeallocateEPv(void *ptr);
 

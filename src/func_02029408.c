@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern u8 data_0209f250;
 extern void *data_0209f394[];
 extern int func_020bd828(void *p);

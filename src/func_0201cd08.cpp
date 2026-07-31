@@ -1,7 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned char u8;
-typedef short s16;
 extern void func_0201eaac(void);
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);

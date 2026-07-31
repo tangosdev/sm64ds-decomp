@@ -1,12 +1,10 @@
+#include "types.h"
 /* func_02017060 at 0x02017060
  * Reallocates a file/object on the game heap using its own reported size.
  * arg0 = ptr; if null returns 0.
  * Calls Heap::_Sizeof(gameHeap, ptr) [result discarded],
  * then calls func_020469e0(ptr) to get the target size,
  * then Heap::Reallocate(gameHeap, ptr, new_size). Returns result. */
-
-typedef unsigned int u32;
-
 struct Heap;
 
 extern struct Heap* gGameHeapPtr; /* at 0x020a0eac: Memory::gameHeapPtr */

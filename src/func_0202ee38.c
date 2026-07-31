@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_0202ee38
 // @emits dWipe_c_IsAtStart
 /* recovered: renamed to Class_Method */
@@ -10,9 +11,6 @@
  * ret1: return 1; ret0: return 0
  * Same stmdb+sub sp,#4 prologue = 0x5c total.
  */
-typedef int s32;
-typedef unsigned int u32;
-
 struct FaderBrightness;
 extern int _ZN15FaderBrightness9IsAtStartEv(struct FaderBrightness* self);
 

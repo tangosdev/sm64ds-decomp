@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_0201adac - calls Message::AddChar twice with font-encoded char and char+1.
  * Reads index from CURR_MSG_TEXT_CHAR bytes [3] and [4], looks up in gCharTable.
  * Attempt 3: correct types - S* (not S**), AddChar(int), u16 idx, reversed load order.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern void _ZN7Message7AddCharEc(int c);
 
 struct MsgTextChar {

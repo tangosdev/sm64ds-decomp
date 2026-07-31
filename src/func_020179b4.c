@@ -1,10 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed int s32;
-typedef signed short s16;
-typedef signed char s8;
-
+#include "types.h"
 struct SharedFilePtr { u16 fileID; u8 numRefs; char* filePtr; };
 struct BMD_File { u32 data; };
 struct ModelBase { u32 vtable; u32 unk04; };
