@@ -14,10 +14,16 @@ extern void func_ov002_020bedd4(char* c);
 extern int data_0209ee90[];
 extern int data_ov002_0211067c;
 extern int data_ov002_0211013c;
+}
 
-int _ZN6Player15St_Swallow_MainEv(char* c)
+struct Player {
+    int St_Swallow_Main();
+};
+
+int Player::St_Swallow_Main()
 {
-    void* p360;
+    char* c = (char*)this;
+void* p360;
 
     if (_ZNK9Animation12WillHitFrameEi((char*)(*(void**)(c + (_ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c + 8) & 0xff, 0) << 2) + 0xdc)) + 0x50, 3)) {
         func_ov002_020d71a0(c);
@@ -73,5 +79,5 @@ L65ec:
     }
     func_ov002_020bedd4(c);
     return 1;
-}
+
 }

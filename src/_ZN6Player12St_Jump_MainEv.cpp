@@ -19,9 +19,16 @@ extern u8 data_020a0e40;
 extern u8 data_0209f4ab[];
 extern u16 data_0209f49e[];
 extern int data_ov002_0211073c[];
+}
 
-int _ZN6Player12St_Jump_MainEv(void* c) {
-  func_ov002_020eeca8((char*)c + 0x380, c);
+struct Player {
+    int St_Jump_Main();
+};
+
+int Player::St_Jump_Main()
+{
+    void* c = (void*)this;
+func_ov002_020eeca8((char*)c + 0x380, c);
   func_ov002_020e28d4(c, 0xd00, 0x800);
 
   if (*(u8*)((char*)c + 0x6de) == 0) {
@@ -80,5 +87,5 @@ int _ZN6Player12St_Jump_MainEv(void* c) {
 
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

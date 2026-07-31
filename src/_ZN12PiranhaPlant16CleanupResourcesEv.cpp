@@ -5,8 +5,16 @@ extern void UnloadBlueCoinModel(void*);
 extern int data_ov084_02130dfc;
 extern int* data_ov084_021302f4;
 extern int data_ov002_0210da38;
-int _ZN12PiranhaPlant16CleanupResourcesEv(void* c){
-  int i;
+}
+
+struct PiranhaPlant {
+    int CleanupResources();
+};
+
+int PiranhaPlant::CleanupResources()
+{
+    void* c = (void*)this;
+int i;
   _ZN13SharedFilePtr7ReleaseEv(&data_ov084_02130dfc);
   for(i=0;i<6;i++){
     _ZN13SharedFilePtr7ReleaseEv((&data_ov084_021302f4)[i]);
@@ -14,5 +22,5 @@ int _ZN12PiranhaPlant16CleanupResourcesEv(void* c){
   UnloadBlueCoinModel(c);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da38);
   return 1;
-}
+
 }

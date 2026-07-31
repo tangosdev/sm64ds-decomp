@@ -19,10 +19,16 @@ extern int data_ov002_021101b4[];
 extern short data_02082214[];
 extern char* data_0209f318;
 extern unsigned char data_0209d660;
+}
 
-int _ZN6Player11St_Owl_MainEv(char* c)
+struct Player {
+    int St_Owl_Main();
+};
+
+int Player::St_Owl_Main()
 {
-    unsigned char st;
+    char* c = (char*)this;
+unsigned char st;
 
     *(int*)(c+0x684) = *(int*)(c+0x60);
     st = *(unsigned char*)(c+0x6e3);
@@ -114,5 +120,5 @@ int _ZN6Player11St_Owl_MainEv(char* c)
     *(short*)(c+0x94) = *(short*)(c+0x8e);
     func_ov002_020bedd4(c);
     return 1;
-}
+
 }

@@ -3,10 +3,16 @@ extern "C" {
 extern void func_ov002_020d718c(char*);
 extern void func_ov002_020d6790(char*);
 extern void func_ov002_020d71a0(char*);
+}
 
-int _ZN6Player21St_YoshiPower_CleanupEv(char* c)
+struct Player {
+    int St_YoshiPower_Cleanup();
+};
+
+int Player::St_YoshiPower_Cleanup()
 {
-    char* r2 = *(char**)(c+0x360);
+    char* c = (char*)this;
+char* r2 = *(char**)(c+0x360);
     if (r2 != 0) {
         int t = (int)((*(int*)(r2+0xb0) & 0x20000) != 0);
         if (t != 0) {
@@ -32,5 +38,5 @@ int _ZN6Player21St_YoshiPower_CleanupEv(char* c)
     }
 end:
     return 1;
-}
+
 }

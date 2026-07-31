@@ -20,10 +20,16 @@ extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
 extern int data_ov064_0211b93c;
 extern s16 data_02082214[];
+}
 
-int _ZN8BigBully13InitResourcesEv(char* c)
+struct BigBully {
+    int InitResources();
+};
+
+int BigBully::InitResources()
 {
-    int saved;
+    char* c = (char*)this;
+int saved;
 
     *(void**)(c + 0x330) = &data_ov064_0211b93c;
     saved = func_ov064_02116ec0(c);
@@ -83,5 +89,5 @@ int _ZN8BigBully13InitResourcesEv(char* c)
     *(u8*)(c + 0x3fe) = 0xff;
 done:
     return saved;
-}
+
 }

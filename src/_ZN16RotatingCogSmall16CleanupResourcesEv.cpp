@@ -7,8 +7,16 @@ extern char data_ov035_02112c78[];
 extern char data_ov056_02112c68[];
 extern char data_ov035_02112c70[];
 extern char data_ov035_02112c60[];
-int _ZN16RotatingCogSmall16CleanupResourcesEv(char *t){
-  if(*(int*)(t+0x32c)==0){
+}
+
+struct RotatingCogSmall {
+    int CleanupResources();
+};
+
+int RotatingCogSmall::CleanupResources()
+{
+    char * t = (char *)this;
+if(*(int*)(t+0x32c)==0){
     if(_ZN16MeshColliderBase9IsEnabledEv(t+0x124))
       _ZN16MeshColliderBase7DisableEv(t+0x124);
     _ZN13SharedFilePtr7ReleaseEv(data_ov035_02112c78);
@@ -21,5 +29,5 @@ int _ZN16RotatingCogSmall16CleanupResourcesEv(char *t){
       _ZN13SharedFilePtr7ReleaseEv(data_ov035_02112c60);
   }
   return 1;
-}
+
 }

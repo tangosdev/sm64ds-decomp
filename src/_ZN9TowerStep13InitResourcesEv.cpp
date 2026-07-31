@@ -11,8 +11,16 @@ extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vect
 extern void* data_ov015_02114a8c;
 extern void* data_ov015_02114a84;
 extern void* data_ov015_02113654;
-int _ZN9TowerStep13InitResourcesEv(char* c) {
-  void* f;
+}
+
+struct TowerStep {
+    int InitResources();
+};
+
+int TowerStep::InitResources()
+{
+    char* c = (char*)this;
+void* f;
   f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov015_02114a8c);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
   _ZN8Platform21UpdateModelPosAndRotYEv(c);
@@ -23,5 +31,5 @@ int _ZN9TowerStep13InitResourcesEv(char* c) {
   func_020393d4((int*)(c + 0x124), (void*)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   *(unsigned char*)(c + 0x31e) = 0x3c;
   return 1;
-}
+
 }

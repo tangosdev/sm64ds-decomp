@@ -1,8 +1,16 @@
 //cpp
 extern "C" {
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
-int _ZN6Player21St_SmallLaunchUp_InitEv(char* c){
-  *(unsigned char*)(c+0x71b)=0;
+}
+
+struct Player {
+    int St_SmallLaunchUp_Init();
+};
+
+int Player::St_SmallLaunchUp_Init()
+{
+    char* c = (char*)this;
+*(unsigned char*)(c+0x71b)=0;
   *(unsigned char*)(c+0x712)=1;
   *(unsigned char*)(c+0x70d)=0;
   *(unsigned char*)(c+0x6e1)=0;
@@ -15,5 +23,5 @@ int _ZN6Player21St_SmallLaunchUp_InitEv(char* c){
   *(short*)(c+0x8e)=*(short*)(c+0x94);
   *(short*)(c+0x90)=*(short*)(c+0x96);
   return 1;
-}
+
 }

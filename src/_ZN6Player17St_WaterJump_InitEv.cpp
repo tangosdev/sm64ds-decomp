@@ -3,8 +3,16 @@ extern "C" {
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int,void*);
 extern int func_ov002_020e25f0(void*,int);
-int _ZN6Player17St_WaterJump_InitEv(char* c){
-  *(char*)(c+0x71b)=0;
+}
+
+struct Player {
+    int St_WaterJump_Init();
+};
+
+int Player::St_WaterJump_Init()
+{
+    char* c = (char*)this;
+*(char*)(c+0x71b)=0;
   *(char*)(c+0x712)=1;
   *(char*)(c+0x70d)=0;
   *(char*)(c+0x6e1)=0;
@@ -16,5 +24,5 @@ int _ZN6Player17St_WaterJump_InitEv(char* c){
   _ZN5Sound9PlayBank0EjRK7Vector3(0x18,(char*)c+0x74);
   func_ov002_020e25f0(c,0);
   return 1;
-}
+
 }

@@ -12,10 +12,16 @@ extern int data_ov016_02114e74[];
 extern int data_ov016_02114e6c[];
 extern int data_ov016_02113bac[];
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+}
 
-int _ZN23FloatOnWaterPlatformJrb13InitResourcesEv(char* c)
+struct FloatOnWaterPlatformJrb {
+    int InitResources();
+};
+
+int FloatOnWaterPlatformJrb::InitResources()
 {
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_02114e74);
+    char* c = (char*)this;
+void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_02114e74);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, -1);
     func_ov016_021130a4(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
@@ -30,5 +36,5 @@ int _ZN23FloatOnWaterPlatformJrb13InitResourcesEv(char* c)
     *(unsigned char*)(c + 0x4f4) = 0;
     *(int*)(c + 0x4f0) = 0;
     return 1;
-}
+
 }

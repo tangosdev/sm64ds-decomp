@@ -5,8 +5,15 @@ extern char* data_ov006_02140554;
 void func_ov006_020c8f20(void*);
 void func_ov006_020ce46c(void*,int);
 void func_ov006_020c8a64(void);
-void _ZN6Player12St_Null_InitEv(void){
-  int i=0;
+}
+
+struct Player {
+    void St_Null_Init(void);
+};
+
+void Player::St_Null_Init(void)
+{
+int i=0;
   if(data_ov006_021405bc>0){
     int off=0;
     do{
@@ -17,5 +24,5 @@ void _ZN6Player12St_Null_InitEv(void){
     }while(i<data_ov006_021405bc);
   }
   func_ov006_020c8a64();
-}
+
 }

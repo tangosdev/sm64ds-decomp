@@ -4,8 +4,16 @@ extern int _ZN6Player15IsCollectingCapEv(void*);
 extern int func_ov002_020dc020(void*);
 extern int _ZN12CylinderClsn5ClearEv(void*);
 extern int _ZN12CylinderClsn6UpdateEv(void*);
-int _ZN6Player17St_PunchKick_InitEv(void* c){
-  *(int*)((char*)c+0x684)=*(int*)((char*)c+0x60);
+}
+
+struct Player {
+    int St_PunchKick_Init();
+};
+
+int Player::St_PunchKick_Init()
+{
+    void* c = (void*)this;
+*(int*)((char*)c+0x684)=*(int*)((char*)c+0x60);
   *(char*)((char*)c+0x726)=0;
   *(short*)((char*)c+0x6a4)=2;
   *(char*)((char*)c+0x6e6)=0;
@@ -18,5 +26,5 @@ int _ZN6Player17St_PunchKick_InitEv(void* c){
     _ZN12CylinderClsn5ClearEv((char*)c+0x314);
   }
   return 1;
-}
+
 }

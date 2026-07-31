@@ -5,8 +5,16 @@ extern int _ZN6Player17SetNoControlStateEhih(void*,unsigned char,int,unsigned ch
 extern int data_ov002_0211013c[];
 extern int _ZN6Player7ST_WAITE[];
 extern int data_ov002_0211043c[];
-int _ZN6Player13TryTalkToDoorEh(void* c, unsigned char a){
-  if(_ZN6Player7IsStateERNS_5StateE(c,data_ov002_0211013c)
+}
+
+struct Player {
+    int TryTalkToDoor(unsigned char a);
+};
+
+int Player::TryTalkToDoor(unsigned char a)
+{
+    void* c = (void*)this;
+if(_ZN6Player7IsStateERNS_5StateE(c,data_ov002_0211013c)
      || _ZN6Player7IsStateERNS_5StateE(c,_ZN6Player7ST_WAITE)
      || _ZN6Player7IsStateERNS_5StateE(c,data_ov002_0211043c)){
     *(unsigned char*)((char*)c+0x70c)=a;
@@ -14,5 +22,5 @@ int _ZN6Player13TryTalkToDoorEh(void* c, unsigned char a){
     return 1;
   }
   return 0;
-}
+
 }

@@ -18,10 +18,16 @@ extern int data_ov060_0211b1f8[];
 extern int data_ov060_0211b200[];
 extern int func_021115e4[];
 extern int func_021115f4[];
+}
 
-int _ZN16BowserShockwaves13InitResourcesEv(char* c)
+struct BowserShockwaves {
+    int InitResources();
+};
+
+int BowserShockwaves::InitResources()
 {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, (void*)_ZN5Model8LoadFileER13SharedFilePtr(&data_ov060_0211b208), 1, 0x13);
+    char* c = (char*)this;
+_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, (void*)_ZN5Model8LoadFileER13SharedFilePtr(&data_ov060_0211b208), 1, 0x13);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x174, (void*)data_ov060_0211b208[1], 1, 0x13);
 
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov060_0211b1f8);
@@ -53,5 +59,5 @@ int _ZN16BowserShockwaves13InitResourcesEv(char* c)
 
     *(short*)(c + 0x214) = 0;
     return 1;
-}
+
 }

@@ -9,10 +9,16 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void InvMat4x3(void* out, void* in);
 
 #define M(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+}
 
-int _ZN11VirtualDoor13InitResourcesEv(char* c)
+struct VirtualDoor {
+    int InitResources();
+};
+
+int VirtualDoor::InitResources()
 {
-    if (data_0209f2f8 == 8 && data_0209f220 != 1) {
+    char* c = (char*)this;
+if (data_0209f2f8 == 8 && data_0209f220 != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0) return 0;
     }
 
@@ -46,5 +52,5 @@ int _ZN11VirtualDoor13InitResourcesEv(char* c)
 
     *(int*)M(c + 0x60) += *(int*)(c + 0x84) >> 1;
     return 1;
-}
+
 }

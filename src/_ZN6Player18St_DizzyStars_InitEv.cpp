@@ -1,9 +1,13 @@
 //cpp
-extern "C" {
-int _ZN6Player18St_DizzyStars_InitEv(char *c)
+struct Player {
+    int St_DizzyStars_Init();
+};
+
+int Player::St_DizzyStars_Init()
 {
-    *(short *)(c + 0x6a4) = 0x12c;
+    char * c = (char *)this;
+*(short *)(c + 0x6a4) = 0x12c;
     *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x80;
     return 1;
-}
+
 }

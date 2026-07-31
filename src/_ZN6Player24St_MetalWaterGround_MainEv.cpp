@@ -21,10 +21,16 @@ extern short data_0209f4a0;
 extern int data_ov002_0211013c[];
 extern int data_ov002_021106c4[];
 extern int data_ov002_0211067c[];
+}
 
-int _ZN6Player24St_MetalWaterGround_MainEv(char* c)
+struct Player {
+    int St_MetalWaterGround_Main();
+};
+
+int Player::St_MetalWaterGround_Main()
 {
-    if(func_ov002_020cec2c(c)) return 1;
+    char* c = (char*)this;
+if(func_ov002_020cec2c(c)) return 1;
     int u703 = *(unsigned char*)(c+0x703);
     if((int)(data_0209f32c - 0x50000) < (int)(*(int*)(c+0x60) - 0xa000)){
         *(unsigned char*)(c+0x706) = 0;
@@ -86,6 +92,5 @@ int _ZN6Player24St_MetalWaterGround_MainEv(char* c)
     }
     func_ov002_020bedd4(c);
     return 1;
-}
 
 }

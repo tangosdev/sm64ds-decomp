@@ -1,13 +1,20 @@
 //cpp
-struct Vector3 { int x,y,z; };
 extern "C" {
 extern int data_ov002_021100f4[];
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int func_ov006_020e3078(void*,int*);
 extern int func_ov002_020d91e0(void*,int,int);
 extern int _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int,unsigned int,struct Vector3*);
-int _ZN6Player16St_BurnLava_InitEv(char* c){
-  *(char*)(c+0x712)=1;
+}
+
+struct Player {
+    int St_BurnLava_Init();
+};
+
+int Player::St_BurnLava_Init()
+{
+    char* c = (char*)this;
+*(char*)(c+0x712)=1;
   *(char*)(c+0x6e1)=0;
   *(char*)(c+0x6de)=1;
   *(char*)(c+0x6df)=0;
@@ -23,5 +30,5 @@ int _ZN6Player16St_BurnLava_InitEv(char* c){
   func_ov002_020d91e0(c,0x300,1);
   _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(c+0x6d9),0x23,(struct Vector3*)(c+0x74));
   return 1;
-}
+
 }

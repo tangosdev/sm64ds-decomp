@@ -6,8 +6,16 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned i
 extern int func_ov007_020c5dec(void*,int);
 extern int func_ov002_020d22ec(void*,int);
 extern int func_ov002_020bedd4(void*);
-int _ZN6Player21St_WaitQuicksand_MainEv(char* c){
-  int v=*(int*)(c+0x68c);
+}
+
+struct Player {
+    int St_WaitQuicksand_Main();
+};
+
+int Player::St_WaitQuicksand_Main()
+{
+    char* c = (char*)this;
+int v=*(int*)(c+0x68c);
   if(v<0x1e000){
     _ZN6Player11ChangeStateERNS_5StateE(c,&_ZN6Player7ST_WAITE);
     return 1;
@@ -21,5 +29,5 @@ int _ZN6Player21St_WaitQuicksand_MainEv(char* c){
   func_ov002_020d22ec(c,0);
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

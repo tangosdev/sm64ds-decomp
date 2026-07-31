@@ -14,8 +14,16 @@ extern int data_ov012_021124c8[];
 extern int data_ov012_02111c24[];
 extern int data_ov012_02111c90[];
 extern int data_0209caa0[];
-int _ZN12SwitchPillar13InitResourcesEv(char* c){
-  _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124d0);
+}
+
+struct SwitchPillar {
+    int InitResources();
+};
+
+int SwitchPillar::InitResources()
+{
+    char* c = (char*)this;
+_ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124d0);
   _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov012_021124c8);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, data_ov012_021124d0[1], 1, 0x14);
   _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(data_ov012_021124d0[1], data_ov012_02111c24);
@@ -30,5 +38,5 @@ int _ZN12SwitchPillar13InitResourcesEv(char* c){
     *(int*)(c+0x60) = *(int*)(c+0x334);
   }
   return 1;
-}
+
 }

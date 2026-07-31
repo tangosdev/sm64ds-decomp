@@ -1,6 +1,5 @@
 //cpp
 extern "C" {
-
 struct Sub {
     virtual void v0();
     virtual void v1();
@@ -9,14 +8,19 @@ struct Sub {
     virtual void v4();
     virtual void m(int);
 };
+}
 
-int _ZN10StarMarker6RenderEv(char *thiz)
+struct StarMarker {
+    int Render();
+};
+
+int StarMarker::Render()
 {
-    unsigned int b = *(unsigned char *)(thiz + 0x1db);
+    char * thiz = (char *)this;
+unsigned int b = *(unsigned char *)(thiz + 0x1db);
     if ((b << 30) >> 31) {
         ((Sub *)(thiz + 0x114))->m(0);
     }
     return 1;
-}
 
 }

@@ -16,10 +16,16 @@ extern char data_ov090_021345ac[];
 extern char data_ov090_021345cc[];
 
 struct PathPtr { int a; int b; };
+}
 
-int _ZN5Shark13InitResourcesEv(char* c)
+struct Shark {
+    int InitResources();
+};
+
+int Shark::InitResources()
 {
-    PathPtr p1;
+    char* c = (char*)this;
+PathPtr p1;
     PathPtr p2;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x30c,
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_021345a4), 1, -1);
@@ -41,5 +47,5 @@ int _ZN5Shark13InitResourcesEv(char* c)
     _ZNK7PathPtr7GetNodeER7Vector3j(&p2, c + 0x5c, *(int*)(c + 0x390));
     func_ov090_021338b4(c, data_ov090_021345cc);
     return 1;
-}
+
 }

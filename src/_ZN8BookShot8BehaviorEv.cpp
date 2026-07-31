@@ -9,10 +9,16 @@ extern void func_ov020_0211174c(void* c);
 extern void _ZN12CylinderClsn5ClearEv(void* thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN12CylinderClsn6UpdateEv(void* thiz);
+}
 
-int _ZN8BookShot8BehaviorEv(char* c)
+struct BookShot {
+    int Behavior();
+};
+
+int BookShot::Behavior()
 {
-    func_0200f760(c, c + 0x21c);
+    char* c = (char*)this;
+func_0200f760(c, c + 0x21c);
     if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x25c) != 0) {
         if (*(unsigned char*)(c + 0x107) != 0 && *(unsigned short*)(c + 0x104) == 5) {
             *(int*)(c + 0x428) = *(int*)(c + 0x424);
@@ -37,5 +43,5 @@ int _ZN8BookShot8BehaviorEv(char* c)
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x21c, *(Vector3*)(c + 0x438));
     _ZN12CylinderClsn6UpdateEv(c + 0x21c);
     return 1;
-}
+
 }

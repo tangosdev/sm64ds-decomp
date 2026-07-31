@@ -12,10 +12,16 @@ void _ZN5Actor8PoofDustEv(void* c);
 void func_02012694(int a, void* p);
 
 extern signed char data_0209f2f8;
+}
 
-int _ZN5Spiny8BehaviorEv(char* c)
+struct Spiny {
+    int Behavior();
+};
+
+int Spiny::Behavior()
 {
-    int s = *(int*)(c + 0x3d8);
+    char* c = (char*)this;
+int s = *(int*)(c + 0x3d8);
     if (s != 1 || _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1e4)) {
         s = *(int*)(c + 0x3d8);
         if (s != 4 && s != 5 && _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000)) {
@@ -37,5 +43,5 @@ int _ZN5Spiny8BehaviorEv(char* c)
     }
 done:
     return 1;
-}
+
 }

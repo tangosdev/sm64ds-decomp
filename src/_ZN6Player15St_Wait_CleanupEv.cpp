@@ -3,10 +3,16 @@ extern "C" {
 extern unsigned char data_0209f2d8;
 extern void* data_0209f318;
 extern int data_0209caa0[];
+}
 
-int _ZN6Player15St_Wait_CleanupEv(char* c)
+struct Player {
+    int St_Wait_Cleanup();
+};
+
+int Player::St_Wait_Cleanup()
 {
-    void* r4 = data_0209f318;
+    char* c = (char*)this;
+void* r4 = data_0209f318;
     (*(unsigned int*)(((int)r4 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~0x2000;
     *(unsigned char*)(c+0x721) = 0;
     do {
@@ -23,5 +29,5 @@ int _ZN6Player15St_Wait_CleanupEv(char* c)
         }
     } while (0);
     return 1;
-}
+
 }

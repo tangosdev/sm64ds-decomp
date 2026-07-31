@@ -9,10 +9,16 @@ extern void* data_ov074_0212292c[];
 extern char data_ov074_02123000;
 extern void* data_ov074_02122948[];
 extern char data_ov074_02123040;
+}
 
-int _ZN8Goomboss16CleanupResourcesEv(int* c)
+struct Goomboss {
+    int CleanupResources();
+};
+
+int Goomboss::CleanupResources()
 {
-    int i;
+    int* c = (int*)this;
+int i;
     int v = c[2];
     if (v == 0x1111) {
         return func_ov074_0212229c(c);
@@ -27,5 +33,5 @@ int _ZN8Goomboss16CleanupResourcesEv(int* c)
         _ZN13SharedFilePtr7ReleaseEv(data_ov074_02122948[i]);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov074_02123040);
     return 1;
-}
+
 }

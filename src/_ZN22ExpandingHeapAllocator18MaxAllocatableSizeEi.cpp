@@ -2,8 +2,16 @@
 extern "C" {
 int _ZN4cstd3absEi(int);
 struct EHA;
-int _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(EHA* thiz, int arg) {
-  int align = _ZN4cstd3absEi(arg);
+}
+
+struct ExpandingHeapAllocator {
+    int MaxAllocatableSize(int arg);
+};
+
+int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
+{
+    EHA* thiz = (EHA*)this;
+int align = _ZN4cstd3absEi(arg);
   unsigned int bestSize = 0;
   unsigned int bestOffset = -1;
   char* n = *(char**)((char*)thiz + 0x24);
@@ -22,5 +30,5 @@ int _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(EHA* thiz, int arg) {
     n = *(char**)(n + 0xc);
   }
   return bestSize;
-}
+
 }

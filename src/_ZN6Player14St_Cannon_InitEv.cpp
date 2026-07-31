@@ -3,8 +3,16 @@ extern "C" {
 extern int func_ov002_020c9e40(void*);
 extern int func_ov002_020dab14(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
-int _ZN6Player14St_Cannon_InitEv(char* c){
-  func_ov002_020c9e40(c);
+}
+
+struct Player {
+    int St_Cannon_Init();
+};
+
+int Player::St_Cannon_Init()
+{
+    char* c = (char*)this;
+func_ov002_020c9e40(c);
   *(unsigned char*)(c+0x706)=0;
   *(unsigned char*)(c+0x712)=1;
   *(unsigned char*)(c+0x70d)=0;
@@ -19,5 +27,5 @@ int _ZN6Player14St_Cannon_InitEv(char* c){
   *(unsigned char*)(c+0x6e5)=0;
   *(unsigned char*)(c+0x6f6)=1;
   return 1;
-}
+
 }

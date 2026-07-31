@@ -4,8 +4,16 @@ void _ZN13SharedFilePtr7ReleaseEv(void *);
 void UnloadBlueCoinModel(void *);
 extern int data_ov096_02137b20[];
 extern int data_ov096_02137b28[];
-int _ZN5Pokey16CleanupResourcesEv(char *c){
-  int id = *(unsigned short*)(c+0xc);
+}
+
+struct Pokey {
+    int CleanupResources();
+};
+
+int Pokey::CleanupResources()
+{
+    char * c = (char *)this;
+int id = *(unsigned short*)(c+0xc);
   int a = (id == 0xf0);
   if (a) {
     UnloadBlueCoinModel(c);
@@ -18,5 +26,5 @@ int _ZN5Pokey16CleanupResourcesEv(char *c){
     }
   }
   return 1;
-}
+
 }

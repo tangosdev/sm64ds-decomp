@@ -8,9 +8,16 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void* bmd, void* btp);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* self, void* btp, int a, int c, unsigned int n);
+}
 
-int _ZN9OneUpLogo13InitResourcesEv(char* self){
-  unsigned short n;
+struct OneUpLogo {
+    int InitResources();
+};
+
+int OneUpLogo::InitResources()
+{
+    char* self = (char*)this;
+unsigned short n;
   {
     unsigned int v = *(unsigned int*)(self+8);
     n = (unsigned short)(v > 8 ? 7 : (v - 1));
@@ -31,5 +38,5 @@ int _ZN9OneUpLogo13InitResourcesEv(char* self){
   *(int*)(self+0x138) = 0;
   *(int*)(self+0x148) = 0;
   return 1;
-}
+
 }

@@ -17,8 +17,16 @@ extern void _ZN13RaycastGroundD1Ev(void *self);
 extern int data_ov036_02113c00[];
 extern int data_ov018_02112c0c[];
 extern int data_ov056_02112c04[];
-int _ZN7SkiLift13InitResourcesEv(char *c) {
-    void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_02113c00);
+}
+
+struct SkiLift {
+    int InitResources();
+};
+
+int SkiLift::InitResources()
+{
+    char * c = (char *)this;
+void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_02113c00);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, m, 1, 1);
     for (int i = 0; i < 2; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov018_02112c0c[i]);
@@ -55,5 +63,5 @@ int _ZN7SkiLift13InitResourcesEv(char *c) {
     func_ov018_02111d28(c, 0);
     _ZN13RaycastGroundD1Ev(rg);
     return 1;
-}
+
 }

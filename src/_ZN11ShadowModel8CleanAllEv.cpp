@@ -2,8 +2,15 @@
 extern "C" {
 extern char* data_0209cef4;
 extern unsigned char data_0209ceec;
-void _ZN11ShadowModel8CleanAllEv(void){
-  if(data_0209cef4){
+}
+
+struct ShadowModel {
+    void CleanAll(void);
+};
+
+void ShadowModel::CleanAll(void)
+{
+if(data_0209cef4){
     do{
       char* n=data_0209cef4;
       char* nx=*(char**)(n+0x24);
@@ -13,5 +20,5 @@ void _ZN11ShadowModel8CleanAllEv(void){
     }while(data_0209cef4);
   }
   data_0209ceec=0;
-}
+
 }

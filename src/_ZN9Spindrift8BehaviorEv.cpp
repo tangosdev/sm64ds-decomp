@@ -19,10 +19,16 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *, void *);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *, void *, unsigned);
 extern int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *, void *, int, short, int, int, int);
 /* sig: (this, WithMeshClsn&, Fix12, short, bool, bool, Fix12) */
+}
 
-int _ZN9Spindrift8BehaviorEv(char *c)
+struct Spindrift {
+    int Behavior();
+};
+
+int Spindrift::Behavior()
 {
-    int r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x1d0, c + 0x110, 3);
+    char * c = (char *)this;
+int r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x1d0, c + 0x110, 3);
     if (r != 0) {
         if (r == 2)
             func_ov081_021237ec(c);
@@ -86,5 +92,5 @@ int _ZN9Spindrift8BehaviorEv(char *c)
     _ZN12CylinderClsn5ClearEv(c + 0x19c);
     _ZN12CylinderClsn6UpdateEv(c + 0x19c);
     return 1;
-}
+
 }

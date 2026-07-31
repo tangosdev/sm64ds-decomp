@@ -2,8 +2,16 @@
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* a, void* b);
-int _ZN9RabbitKey8BehaviorEv(char* c){
-  DecIfAbove0_Short((unsigned short*)(c+0x100));
+}
+
+struct RabbitKey {
+    int Behavior();
+};
+
+int RabbitKey::Behavior()
+{
+    char* c = (char*)this;
+DecIfAbove0_Short((unsigned short*)(c+0x100));
   void* o = *(void**)(c+0x188);
   if(*(int*)((char*)o+8)){
     char* base = (char*)o+8;
@@ -22,5 +30,5 @@ int _ZN9RabbitKey8BehaviorEv(char* c){
   *(int*)(c+0xac) = t;
   _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
   return 1;
-}
+
 }

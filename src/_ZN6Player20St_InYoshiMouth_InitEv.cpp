@@ -1,10 +1,16 @@
 //cpp
 extern "C" {
 extern void func_ov002_020bdb50(char *c, int arg);
+}
 
-int _ZN6Player20St_InYoshiMouth_InitEv(char *c)
+struct Player {
+    int St_InYoshiMouth_Init();
+};
+
+int Player::St_InYoshiMouth_Init()
 {
-    unsigned int r3;
+    char * c = (char *)this;
+unsigned int r3;
     char *slot;
     unsigned int r1;
 
@@ -18,5 +24,5 @@ int _ZN6Player20St_InYoshiMouth_InitEv(char *c)
     *(unsigned int *)slot = r1;
     *(unsigned char *)(c + 0x713) = (unsigned char)r3;
     return 1;
-}
+
 }

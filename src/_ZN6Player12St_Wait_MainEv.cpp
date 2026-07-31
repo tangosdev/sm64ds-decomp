@@ -30,10 +30,16 @@ extern int data_0209caa0[];
 extern unsigned char data_0209f49e[];
 extern int data_ov002_0211019c[];
 extern int data_ov002_0211013c[];
+}
 
-int _ZN6Player12St_Wait_MainEv(char* c)
+struct Player {
+    int St_Wait_Main();
+};
+
+int Player::St_Wait_Main()
 {
-    if ((unsigned short)(*(unsigned short*)(c+0x6ce) & 1)) {
+    char* c = (char*)this;
+if ((unsigned short)(*(unsigned short*)(c+0x6ce) & 1)) {
         func_ov002_020c0364(c, 3);
         return 1;
     }
@@ -299,5 +305,5 @@ int _ZN6Player12St_Wait_MainEv(char* c)
 
     func_ov002_020bedd4(c);
     return 1;
-}
+
 }

@@ -6,8 +6,16 @@ extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(voi
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 extern int data_ov060_0211b1d8[];
 struct V3 { int x,y,z; };
-int _ZN17BowserSkyPlatform8BehaviorEv(char* c){
-  int idx = *(int*)(c+0x170);
+}
+
+struct BowserSkyPlatform {
+    int Behavior();
+};
+
+int BowserSkyPlatform::Behavior()
+{
+    char* c = (char*)this;
+int idx = *(int*)(c+0x170);
   char* ent = (char*)&data_ov060_0211b1d8[idx*2];
   int adj = *(int*)(ent+4);
   char* self = c + (adj>>1);
@@ -24,5 +32,5 @@ int _ZN17BowserSkyPlatform8BehaviorEv(char* c){
   _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c+0x124, &v);
   _ZN12CylinderClsn6UpdateEv(c+0x124);
   return 1;
-}
+
 }

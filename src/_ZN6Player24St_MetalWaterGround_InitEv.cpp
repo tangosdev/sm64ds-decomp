@@ -1,8 +1,16 @@
 //cpp
 extern "C" {
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned, unsigned, void*);
-int _ZN6Player24St_MetalWaterGround_InitEv(char* c) {
-    int* p = *(int**)(c+0x358);
+}
+
+struct Player {
+    int St_MetalWaterGround_Init();
+};
+
+int Player::St_MetalWaterGround_Init()
+{
+    char* c = (char*)this;
+int* p = *(int**)(c+0x358);
     int b0 = (p != 0);
     if (b0) {
         int h = *(unsigned short*)((char*)p+0xc);
@@ -22,5 +30,5 @@ tail:
     if (*(int*)(c+0x98) >= 0x14000) *(int*)(c+0x98) = 0x14000;
     *(unsigned char*)(c+0x706) = 1;
     return 1;
-}
+
 }

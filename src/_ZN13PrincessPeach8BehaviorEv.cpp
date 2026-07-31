@@ -9,9 +9,16 @@ extern int func_ov085_02129fdc(void *c);
 }
 struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); };
 extern "C" {
-int _ZN13PrincessPeach8BehaviorEv(char *c)
+}
+
+struct PrincessPeach {
+    int Behavior();
+};
+
+int PrincessPeach::Behavior()
 {
-    func_ov085_0212a430(c);
+    char * c = (char *)this;
+func_ov085_0212a430(c);
     func_ov085_02129dbc(c);
     if (*(int*)(c + 0x354) != 1)
         _ZN9Animation7AdvanceEv(c + 0x124);
@@ -20,5 +27,5 @@ int _ZN13PrincessPeach8BehaviorEv(char *c)
     _ZN12CylinderClsn6UpdateEv(c + 0x160);
     func_ov085_02129fdc(c);
     return 1;
-}
+
 }

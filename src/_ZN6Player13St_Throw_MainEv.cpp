@@ -1,6 +1,4 @@
 //cpp
-// _ZN6Player13St_Throw_MainEv at 0x020dae6c
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" {
 extern int _Z14ApproachLinearRiii(int&, int, int);
 extern int _ZNK6Player14GetBodyModelIDEjb(void*, unsigned, int);
@@ -12,9 +10,16 @@ extern int _ZN6Player12FinishedAnimEv(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern void func_ov002_020bedd4(void*);
 extern int data_ov002_0211013c[];
+}
 
-int _ZN6Player13St_Throw_MainEv(char* c){
-  if(*(unsigned char*)(c+0x6de)==0){
+struct Player {
+    int St_Throw_Main();
+};
+
+int Player::St_Throw_Main()
+{
+    char* c = (char*)this;
+if(*(unsigned char*)(c+0x6de)==0){
     _Z14ApproachLinearRiii(*(int*)(c+0x98), 0, 0x1000);
   }
   if(*(char**)(c+0x358)){
@@ -51,5 +56,5 @@ int _ZN6Player13St_Throw_MainEv(char* c){
     _ZN6Player11ChangeStateERNS_5StateE(c,data_ov002_0211013c);
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

@@ -8,9 +8,16 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigne
 void _ZN11ShadowModel12InitCylinderEv(void*);
 extern char data_ov009_02113c20[];
 extern char data_ov009_02113c28[];
+}
 
-int _ZN4Bird13InitResourcesEv(char* self){
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov009_02113c20);
+struct Bird {
+    int InitResources();
+};
+
+int Bird::InitResources()
+{
+    char* self = (char*)this;
+void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov009_02113c20);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self+0xd4, m, 1, 1);
     void* a = _ZN9Animation8LoadFileER13SharedFilePtr(data_ov009_02113c28);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self+0xd4, a, 0, 0x1000, 0);
@@ -30,5 +37,5 @@ int _ZN4Bird13InitResourcesEv(char* self){
         *(int*)(self+0x17c) = zero;
     }
     return 1;
-}
+
 }

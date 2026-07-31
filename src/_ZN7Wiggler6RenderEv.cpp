@@ -4,8 +4,16 @@ extern int _ZN15TextureSequence6UpdateER15ModelComponents(void*, void*);
 }
 struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual int g5(void*); };
 extern "C" {
-int _ZN7Wiggler6RenderEv(char* c){
-  int i = 0;
+}
+
+struct Wiggler {
+    int Render();
+};
+
+int Wiggler::Render()
+{
+    char* c = (char*)this;
+int i = 0;
   char* p6 = c+0x110;
   char* p5 = c+0x368;
   char* p4 = c+0x408;
@@ -17,5 +25,5 @@ int _ZN7Wiggler6RenderEv(char* c){
     p4 += 0xc;
   }
   return 1;
-}
+
 }

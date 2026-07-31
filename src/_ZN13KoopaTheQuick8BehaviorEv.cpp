@@ -7,8 +7,16 @@ extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 extern void func_ov062_0211aac0(void* c);
 extern int data_ov062_0211e0a4[];
-int _ZN13KoopaTheQuick8BehaviorEv(char* c){
-  int idx = *(int*)(c+0x38c);
+}
+
+struct KoopaTheQuick {
+    int Behavior();
+};
+
+int KoopaTheQuick::Behavior()
+{
+    char* c = (char*)this;
+int idx = *(int*)(c+0x38c);
   char* ent = (char*)&data_ov062_0211e0a4[idx*2];
   int adj = *(int*)(ent+4);
   char* self = c + (adj>>1);
@@ -24,5 +32,5 @@ int _ZN13KoopaTheQuick8BehaviorEv(char* c){
   _ZN12CylinderClsn6UpdateEv(c+0x110);
   func_ov062_0211aac0(c);
   return 1;
-}
+
 }

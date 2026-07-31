@@ -2,8 +2,16 @@
 extern "C" {
 extern void Matrix4x3_FromRotationXYZExt(void* m, int x, int y, int z);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
-int _ZN8CccArena8BehaviorEv(char* c){
-  void* o = *(void**)(c+0x320);
+}
+
+struct CccArena {
+    int Behavior();
+};
+
+int CccArena::Behavior()
+{
+    char* c = (char*)this;
+void* o = *(void**)(c+0x320);
   if(*(int*)((char*)o+8)){
     char* base = (char*)o+8;
     int adj = *(int*)(base+4);
@@ -19,5 +27,5 @@ int _ZN8CccArena8BehaviorEv(char* c){
   *(int*)(c+0x11c) = *(int*)(c+0x64) >> 3;
   _ZN8Platform19UpdateClsnPosAndRotEv(c);
   return 1;
-}
+
 }

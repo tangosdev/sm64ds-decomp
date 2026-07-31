@@ -21,10 +21,16 @@ extern int data_ov002_0211010c[];
 extern int data_ov002_02110154[];
 extern int data_ov002_0210e160[];
 extern int data_ov002_020ff1b0[4];
+}
 
-int _ZN6Player12St_Walk_InitEv(char *c)
+struct Player {
+    int St_Walk_Init();
+};
+
+int Player::St_Walk_Init()
 {
-    if (_ZN6Player9GetHealthEv(c) == 0) {
+    char * c = (char *)this;
+if (_ZN6Player9GetHealthEv(c) == 0) {
         *(unsigned char *)(c + 0x6e3) = 1;
         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211010c);
         return 1;
@@ -102,5 +108,5 @@ merge:
         _ZN6Player17SetNoControlStateEhih(c, 0xd, -1, 0);
     }
     return 1;
-}
+
 }

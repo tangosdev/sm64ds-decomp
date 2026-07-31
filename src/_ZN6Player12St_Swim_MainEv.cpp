@@ -45,10 +45,16 @@ extern unsigned char data_020a0e40;
 extern unsigned short data_0209f49c;
 extern unsigned short data_0209f49e;
 extern char data_0209ee90[];
+}
 
-int _ZN6Player12St_Swim_MainEv(char* c)
+struct Player {
+    int St_Swim_Main();
+};
+
+int Player::St_Swim_Main()
 {
-    int t4;
+    char* c = (char*)this;
+int t4;
     volatile int pos[3];
     int* fr;
     int ang;
@@ -290,5 +296,5 @@ int _ZN6Player12St_Swim_MainEv(char* c)
     if (func_ov002_020ce5f8(c) != 0) return 1;
     func_ov002_020bedd4(c);
     return 1;
-}
+
 }

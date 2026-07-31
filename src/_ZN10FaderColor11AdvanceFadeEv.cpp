@@ -1,12 +1,17 @@
 //cpp
 extern "C" {
-
 void _ZN5Fader13AdvanceInterpEv(void* thiz);
 void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short* p, unsigned short a, int b);
+}
 
-void _ZN10FaderColor11AdvanceFadeEv(char* thiz)
+struct FaderColor {
+    void AdvanceFade();
+};
+
+void FaderColor::AdvanceFade()
 {
-    int old = *(int*)(thiz + 4);
+    char* thiz = (char*)this;
+int old = *(int*)(thiz + 4);
     _ZN5Fader13AdvanceInterpEv(thiz);
     if (*(int*)(thiz + 4) == old) return;
     {
@@ -21,6 +26,5 @@ void _ZN10FaderColor11AdvanceFadeEv(char* thiz)
             *(unsigned short*)0x4001050 = 0;
         }
     }
-}
 
 }

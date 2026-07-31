@@ -12,9 +12,16 @@ extern unsigned char data_020a0e40[];
 extern unsigned short data_0209f49e[];
 extern char data_ov002_0211052c[];
 extern int data_ov002_0211073c[];
+}
 
-int _ZN6Player16St_WallJump_MainEv(void* c) {
-  func_ov002_020eeca8((char*)c+0x380, c);
+struct Player {
+    int St_WallJump_Main();
+};
+
+int Player::St_WallJump_Main()
+{
+    void* c = (void*)this;
+func_ov002_020eeca8((char*)c+0x380, c);
   func_ov002_020e28d4(c, 0x1800, 0x800);
   if (*(unsigned char*)((char*)c+0x6de) == 0) {
     _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_02110424);
@@ -41,5 +48,5 @@ int _ZN6Player16St_WallJump_MainEv(void* c) {
   }
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

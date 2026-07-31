@@ -13,10 +13,16 @@ void HitDeathPlane(int arg);
 void FUN_020299f4(void);
 void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int a, int b, int f, unsigned int g);
 void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, char* v);
+}
 
-int _ZN6Player15St_DeadPit_InitEv(char* c)
+struct Player {
+    int St_DeadPit_Init();
+};
+
+int Player::St_DeadPit_Init()
 {
-    func_ov002_020dab14(c);
+    char* c = (char*)this;
+func_ov002_020dab14(c);
     if (*(char**)(c + 0x360) != 0) {
         int b = (*(u16*)(*(char**)(c + 0x360) + 0xc) == 0xbf);
         if (b) {
@@ -102,5 +108,5 @@ int _ZN6Player15St_DeadPit_InitEv(char* c)
         }
     }
     return 1;
-}
+
 }

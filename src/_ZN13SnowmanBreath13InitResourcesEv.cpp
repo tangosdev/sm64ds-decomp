@@ -12,10 +12,16 @@ extern int data_ov002_0210d9c0[];
 extern int data_020a0e68[];
 
 typedef struct { int w[12]; } M48;
+}
 
-int _ZN13SnowmanBreath13InitResourcesEv(char* c)
+struct SnowmanBreath {
+    int InitResources();
+};
+
+int SnowmanBreath::InitResources()
 {
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
+    char* c = (char*)this;
+_ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9c0);
     *(int*)(c + 0x5c) = 0x3fa770;
@@ -29,5 +35,5 @@ int _ZN13SnowmanBreath13InitResourcesEv(char* c)
     InvMat4x3(data_020a0e68, data_020a0e68);
     *(M48*)(c + 0x1394) = *(M48*)data_020a0e68;
     return 1;
-}
+
 }

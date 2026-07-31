@@ -1,6 +1,4 @@
 //cpp
-typedef short s16;
-struct V3 { int x, y, z; };
 extern "C" {
 int _ZN16MeshColliderBase9IsEnabledEv(void* self);
 void _ZN16MeshColliderBase7DisableEv(void* self);
@@ -9,9 +7,16 @@ void func_ov095_021358cc(void* c, void* a, void* b, int d, int e, int f, int g);
 void func_ov095_0213597c(char *t);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+}
 
-int _ZN9SeesawBob8BehaviorEv(char* c){
-    int b = (int)((*(int*)(c + 0xb0) & 8) != 0);
+struct SeesawBob {
+    int Behavior();
+};
+
+int SeesawBob::Behavior()
+{
+    char* c = (char*)this;
+int b = (int)((*(int*)(c + 0xb0) & 8) != 0);
     if (b != 0) {
         if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
             _ZN16MeshColliderBase7DisableEv(c + 0x124);
@@ -37,5 +42,5 @@ int _ZN9SeesawBob8BehaviorEv(char* c){
     }
     *(unsigned char*)(c + 0x326) = 0;
     return 1;
-}
+
 }

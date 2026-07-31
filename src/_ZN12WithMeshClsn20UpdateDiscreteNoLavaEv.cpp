@@ -1,6 +1,5 @@
 //cpp
 extern "C" {
-
 struct Vector3 { int x, y, z; };
 
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
@@ -14,10 +13,16 @@ extern int _ZN10SphereClsn10DetectClsnEv(void *self);
 extern void func_020371b0(void *clsn, int justHit);
 extern int _ZNK12WithMeshClsn16ShouldUpdatePosYEv(void *self);
 extern void func_020356d4(char *self);
+}
 
-void _ZN12WithMeshClsn20UpdateDiscreteNoLavaEv(char *self)
+struct WithMeshClsn {
+    void UpdateDiscreteNoLava();
+};
+
+void WithMeshClsn::UpdateDiscreteNoLava()
 {
-    int onGround;
+    char * self = (char *)this;
+int onGround;
     int sy;
     struct Vector3 v;
     struct Vector3 *p6c;
@@ -61,5 +66,5 @@ void _ZN12WithMeshClsn20UpdateDiscreteNoLavaEv(char *self)
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self))
         return;
     func_020356d4(self);
-}
+
 }

@@ -4,10 +4,16 @@ extern short data_02082214[];
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+}
 
-int _ZN11PyramidLift8BehaviorEv(char* c)
+struct PyramidLift {
+    int Behavior();
+};
+
+int PyramidLift::Behavior()
 {
-    switch (*(unsigned char*)(c + 0x3f6)) {
+    char* c = (char*)this;
+switch (*(unsigned char*)(c + 0x3f6)) {
     case 0:
         if (*(unsigned char*)(c + 0x3f7) != 0) {
             *(unsigned char*)(c + 0x3f6) = 1;
@@ -75,5 +81,5 @@ int _ZN11PyramidLift8BehaviorEv(char* c)
         _ZN8Platform19UpdateClsnPosAndRotEv(c);
     *(unsigned char*)(c + 0x3f7) = 0;
     return 1;
-}
+
 }

@@ -11,10 +11,16 @@ extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
 extern void func_ov002_020ed998(void *c);
 extern void func_ov002_020ed7f8(void *c);
 extern void func_ov002_020edca4(void *c);
+}
 
-int _ZN8YoshiEgg8BehaviorEv(char *self)
+struct YoshiEgg {
+    int Behavior();
+};
+
+int YoshiEgg::Behavior()
 {
-    Vec3 vin;
+    char * self = (char *)this;
+Vec3 vin;
     Vec3 vmid;
     Vec3 vout;
     func_ov002_020ed684(self);
@@ -54,5 +60,5 @@ int _ZN8YoshiEgg8BehaviorEv(char *self)
         func_ov002_020edca4(self);
     }
     return 1;
-}
+
 }

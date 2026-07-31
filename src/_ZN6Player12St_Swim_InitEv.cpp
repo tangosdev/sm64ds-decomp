@@ -5,8 +5,16 @@ extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned,unsigned,void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
 extern void func_0200d768(void*,unsigned char);
 extern int data_0209f318[];
-int _ZN6Player12St_Swim_InitEv(char* c){
-  func_ov002_020dab14(c);
+}
+
+struct Player {
+    int St_Swim_Init();
+};
+
+int Player::St_Swim_Init()
+{
+    char* c = (char*)this;
+func_ov002_020dab14(c);
   _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(c+0x6d9),0x2e,c+0x74);
   _ZN6Player7SetAnimEji5Fix12IiEj(c,0xa7,0x40000000,0x1000,0);
   *(char*)(c+0x6e3)=0;
@@ -22,5 +30,5 @@ int _ZN6Player12St_Swim_InitEv(char* c){
   *(char*)(c+0x70c)=0;
   *(short*)(c+0x6a8)=0;
   return 1;
-}
+
 }

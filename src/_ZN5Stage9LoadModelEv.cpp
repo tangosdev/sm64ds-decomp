@@ -3,10 +3,16 @@ extern "C" {
 extern char data_0209f340[];
 extern int data_0209f320;
 void _ZN5Model14LoadAndSetFileEtii(char* model, unsigned short id, int b, int c);
-void _ZN5Stage9LoadModelEv(char* self);
 }
-void _ZN5Stage9LoadModelEv(char* self) {
-    _ZN5Model14LoadAndSetFileEtii(self + 0x86c, *(unsigned short*)(*(char**)data_0209f340 + 8), 1, -1);
+
+struct Stage {
+    void LoadModel();
+};
+
+void Stage::LoadModel()
+{
+    char* self = (char*)this;
+_ZN5Model14LoadAndSetFileEtii(self + 0x86c, *(unsigned short*)(*(char**)data_0209f340 + 8), 1, -1);
     char* list;
     unsigned int count;
     char* node;
@@ -27,4 +33,5 @@ void _ZN5Stage9LoadModelEv(char* self) {
         node += 0x30;
     }
     data_0209f320 = (int)p;
+
 }

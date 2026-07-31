@@ -11,8 +11,16 @@ extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 struct SFP { void* a; void* b; void* c; };
 extern struct SFP data_ov052_021125a0;
-int _ZN14SquarePathLift13InitResourcesEv(char* c){
-  void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov052_021125a0.a);
+}
+
+struct SquarePathLift {
+    int InitResources();
+};
+
+int SquarePathLift::InitResources()
+{
+    char* c = (char*)this;
+void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov052_021125a0.a);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
   _ZN8Platform21UpdateModelPosAndRotYEv(c);
   _ZN8Platform19UpdateClsnPosAndRotEv(c);
@@ -23,5 +31,5 @@ int _ZN14SquarePathLift13InitResourcesEv(char* c){
   *(int*)(c+0x32c) = 1;
   *(int*)(c+0x98) = 0xa000;
   return 1;
-}
+
 }

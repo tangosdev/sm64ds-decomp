@@ -11,9 +11,16 @@ extern void _ZN12CylinderClsn6UpdateEv(void* p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern int data_ov098_0213c930[];
+}
 
-int _ZN9WaterBomb8BehaviorEv(char* c) {
-    if (func_ov098_0213b6e0(c)) {
+struct WaterBomb {
+    int Behavior();
+};
+
+int WaterBomb::Behavior()
+{
+    char* c = (char*)this;
+if (func_ov098_0213b6e0(c)) {
         func_ov098_0213b584(c);
         _ZN12CylinderClsn5ClearEv(c + 0x110);
         return 1;
@@ -50,5 +57,5 @@ int _ZN9WaterBomb8BehaviorEv(char* c) {
         DecIfAbove0_Short((unsigned short*)(c + 0x100));
     }
     return 1;
-}
+
 }

@@ -9,10 +9,16 @@ extern void func_ov015_0211166c(char *t);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern int func_ov015_021114f0(char *c);
+}
 
-int _ZN13PoleBillboard8BehaviorEv(char *c)
+struct PoleBillboard {
+    int Behavior();
+};
+
+int PoleBillboard::Behavior()
 {
-    switch (*(unsigned char *)(c + 0x397)) {
+    char * c = (char *)this;
+switch (*(unsigned char *)(c + 0x397)) {
     case 0:
         break;
     case 1: {
@@ -85,5 +91,5 @@ int _ZN13PoleBillboard8BehaviorEv(char *c)
         _ZN8Platform19UpdateClsnPosAndRotEv(c);
     func_ov015_021114f0(c);
     return 1;
-}
+
 }

@@ -6,8 +6,15 @@ extern int data_ov002_0210da38;
 extern int data_ov071_02123050;
 extern int* data_ov071_021226a4;
 extern void* data_ov071_021226a0;
-int _ZN3MrI16CleanupResourcesEv(void){
-  int i;
+}
+
+struct MrI {
+    int CleanupResources(void);
+};
+
+int MrI::CleanupResources(void)
+{
+int i;
   UnloadBlueCoinModel();
   _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da38);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov071_02123050);
@@ -16,5 +23,5 @@ int _ZN3MrI16CleanupResourcesEv(void){
   }
   _ZN13SharedFilePtr7ReleaseEv(data_ov071_021226a0);
   return 1;
-}
+
 }

@@ -14,9 +14,16 @@ extern void* data_ov023_02112088;
 extern void* _ZN32FloatOnWaterPlatformWdwRectangleD1Ev;
 extern void* data_ov064_0211ba4c;
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+}
 
-int _ZN8Squasher13InitResourcesEv(char* c) {
-  int bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov023_02112088);
+struct Squasher {
+    int InitResources();
+};
+
+int Squasher::InitResources()
+{
+    char* c = (char*)this;
+int bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov023_02112088);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, bmd, 1, -1);
   _ZN11ShadowModel10InitCuboidEv(c+0x324);
   func_ov026_02111308(c);
@@ -29,5 +36,5 @@ int _ZN8Squasher13InitResourcesEv(char* c) {
   *(short*)(c+0x320) = 0;
   *(char*)(c+0x322) = 0;
   return 1;
-}
+
 }

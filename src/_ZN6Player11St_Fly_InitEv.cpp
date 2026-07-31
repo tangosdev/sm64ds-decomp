@@ -4,8 +4,16 @@ extern int data_0209f318[];
 extern void func_ov002_020dab14(char*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern void func_0200d6f0(void*,unsigned char);
-int _ZN6Player11St_Fly_InitEv(char* c){
-  *(short*)(c+0x69e)=0;
+}
+
+struct Player {
+    int St_Fly_Init();
+};
+
+int Player::St_Fly_Init()
+{
+    char* c = (char*)this;
+*(short*)(c+0x69e)=0;
   *(short*)(c+0x69c)=0;
   *(short*)(c+0x92)=0;
   *(short*)(c+0x96)=0;
@@ -21,5 +29,5 @@ int _ZN6Player11St_Fly_InitEv(char* c){
   }
   func_0200d6f0((void*)data_0209f318[0], *(unsigned char*)(c+0x6d8));
   return 1;
-}
+
 }

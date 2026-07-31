@@ -10,10 +10,16 @@ extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void*
 extern int data_ov045_021131b0[];
 extern int data_ov045_021131a8[];
 extern int data_ov045_02112510[];
+}
 
-int _ZN15FireSeaElevator13InitResourcesEv(char* c)
+struct FireSeaElevator {
+    int InitResources();
+};
+
+int FireSeaElevator::InitResources()
 {
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
+    char* c = (char*)this;
+void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, -1);
     if (*(int*)(c + 8) != 0xffff) {
         int* p = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
@@ -27,5 +33,5 @@ int _ZN15FireSeaElevator13InitResourcesEv(char* c)
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
         c + 0x320, c, 0x35555, 0x258000, 0x280000c, 0);
     return 1;
-}
+
 }

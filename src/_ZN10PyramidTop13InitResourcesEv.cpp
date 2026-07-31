@@ -13,10 +13,16 @@ extern int data_ov024_02113968[];
 extern int data_ov024_02113960[];
 extern int data_ov024_021129f0[];
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+}
 
-int _ZN10PyramidTop13InitResourcesEv(char* c)
+struct PyramidTop {
+    int InitResources();
+};
+
+int PyramidTop::InitResources()
 {
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov024_02113968);
+    char* c = (char*)this;
+void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov024_02113968);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, m, 1, -1);
     func_ov024_021114c4(c);
     func_ov024_02111480(c);
@@ -35,5 +41,5 @@ int _ZN10PyramidTop13InitResourcesEv(char* c)
     *(short*)(c + 0x3b4) = 0;
     _ZN5Event8ClearBitEj(0xe);
     return 1;
-}
+
 }

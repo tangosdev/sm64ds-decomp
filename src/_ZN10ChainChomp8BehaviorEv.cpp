@@ -15,9 +15,16 @@ void _ZN12CylinderClsn5ClearEv(void* self);
 char* _ZN5Actor13ClosestPlayerEv(char* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
 extern int data_ov014_02114700[];
+}
 
-int _ZN10ChainChomp8BehaviorEv(char* c){
-    *(unsigned char*)(c + 0x61c) = 0;
+struct ChainChomp {
+    int Behavior();
+};
+
+int ChainChomp::Behavior()
+{
+    char* c = (char*)this;
+*(unsigned char*)(c + 0x61c) = 0;
     {
         int v = *(int*)(c + 0x5f0) + 0xc8000;
         if (*(int*)(c + 0x60) <= v) {
@@ -57,5 +64,5 @@ int _ZN10ChainChomp8BehaviorEv(char* c){
         _ZN12CylinderClsn6UpdateEv(c + 0x110);
     }
     return 1;
-}
+
 }

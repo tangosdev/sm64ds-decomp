@@ -12,10 +12,16 @@ int _ZN9Animation8FinishedEv(void *self);
 void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+}
 
-int _ZN6Thwomp8BehaviorEv(char *c)
+struct Thwomp {
+    int Behavior();
+};
+
+int Thwomp::Behavior()
 {
-    if (*(int *)(c + 0x398) < 2) {
+    char * c = (char *)this;
+if (*(int *)(c + 0x398) < 2) {
         if (*(unsigned char *)(c + 0x3a2) != 0)
             *(int *)(c + 0x398) = 2;
     }
@@ -91,5 +97,5 @@ int _ZN6Thwomp8BehaviorEv(char *c)
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
 done:
     return 1;
-}
+
 }

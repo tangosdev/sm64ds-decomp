@@ -8,10 +8,16 @@ extern int data_0209b0e8;
 extern void func_0200cb58(void *obj, int index);
 extern void func_0200c66c(void *self, void *base, int *a, int *b, int *c);
 extern void _ZN6Camera11ChangeStateEPNS_5StateE(void *self, void *st);
+}
 
-void _ZN6Camera14GoBehindPlayerEj(int self, unsigned int j)
+struct Camera {
+    void GoBehindPlayer(unsigned int j);
+};
+
+void Camera::GoBehindPlayer(unsigned int j)
 {
-    int slot4, slot8, slotc;
+    int self = (int)this;
+int slot4, slot8, slotc;
 
     if (j != data_0209f250)
         return;
@@ -31,5 +37,5 @@ void _ZN6Camera14GoBehindPlayerEj(int self, unsigned int j)
     if (slot4 == (int)&data_0208742c)
         return;
     _ZN6Camera11ChangeStateEPNS_5StateE((void *)self, &data_0209b0e8);
-}
+
 }

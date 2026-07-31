@@ -12,10 +12,16 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thi
 extern int data_ov096_02137ba8[];
 extern int data_ov096_02137bb0[];
 extern int func_02112968[];
+}
 
-int _ZN7Tornado13InitResourcesEv(char* c)
+struct Tornado {
+    int InitResources();
+};
+
+int Tornado::InitResources()
 {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x2c4, (void*)_ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137ba8), 1, 0x15);
+    char* c = (char*)this;
+_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x2c4, (void*)_ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137ba8), 1, 0x15);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov096_02137bb0);
     func_02016aac(c + 0x2c4, 0x16, 1);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x2c4, (void*)data_ov096_02137bb0[1], 0, 0x1000, 0);
@@ -42,5 +48,5 @@ int _ZN7Tornado13InitResourcesEv(char* c)
     *(int*)(c + 0x364) = 0;
     *(int*)(c + 0x368) = 0;
     return 1;
-}
+
 }

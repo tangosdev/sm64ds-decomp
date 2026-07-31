@@ -4,8 +4,16 @@ extern int func_ov002_020c9e40(void* c);
 extern int func_ov002_020dab14(void* c);
 struct PMF { int adj; int ptr; };
 extern struct PMF data_ov002_02110884[];
-int _ZN6Player17St_NoControl_InitEv(char* c){
-  *(unsigned char*)(c+0x6f6)=1;
+}
+
+struct Player {
+    int St_NoControl_Init();
+};
+
+int Player::St_NoControl_Init()
+{
+    char* c = (char*)this;
+*(unsigned char*)(c+0x6f6)=1;
   *(unsigned char*)(c+0x6e6)=0;
   func_ov002_020c9e40(c);
   func_ov002_020dab14(c);
@@ -25,5 +33,5 @@ int _ZN6Player17St_NoControl_InitEv(char* c){
   }
   f(obj);
   return 1;
-}
+
 }

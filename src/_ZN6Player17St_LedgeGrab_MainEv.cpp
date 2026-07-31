@@ -8,8 +8,16 @@ extern int _ZNK9Animation12WillHitFrameEi(void*,int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned,void*);
 extern int func_ov002_020bedd4(void*);
 extern int data_ov002_0211013c[];
-int _ZN6Player17St_LedgeGrab_MainEv(char* c){
-  if(_ZN6Player12FinishedAnimEv(c))
+}
+
+struct Player {
+    int St_LedgeGrab_Main();
+};
+
+int Player::St_LedgeGrab_Main()
+{
+    char* c = (char*)this;
+if(_ZN6Player12FinishedAnimEv(c))
     _ZN6Player11ChangeStateERNS_5StateE(c,data_ov002_0211013c);
   if(_ZN6Player6IsAnimEj(c,0x20)){
     int id=_ZNK6Player14GetBodyModelIDEjb(c,*(unsigned int*)(c+8)&0xff,0);
@@ -19,5 +27,5 @@ int _ZN6Player17St_LedgeGrab_MainEv(char* c){
   }
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

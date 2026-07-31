@@ -12,8 +12,16 @@ extern int func_ov002_020bedd4(void*);
 extern int data_ov002_0211067c[];
 extern int data_ov002_021106ac[];
 extern int data_0209f32c[];
-int _ZN6Player17St_HurtWater_MainEv(char* c){
-  if(func_ov002_020cec2c(c)) return 1;
+}
+
+struct Player {
+    int St_HurtWater_Main();
+};
+
+int Player::St_HurtWater_Main()
+{
+    char* c = (char*)this;
+if(func_ov002_020cec2c(c)) return 1;
   _Z14ApproachLinearRiii((int*)(c+0x98),0,0x800);
   int t=func_ov002_020ceaf4(c);
   _Z14ApproachLinearRiii((int*)(c+0xa8),t,0x800);
@@ -45,5 +53,5 @@ int _ZN6Player17St_HurtWater_MainEv(char* c){
   func_ov002_020ceb7c(c);
   func_ov002_020bedd4(c);
   return 1;
-}
+
 }

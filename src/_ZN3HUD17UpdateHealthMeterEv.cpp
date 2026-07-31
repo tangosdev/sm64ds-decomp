@@ -14,9 +14,16 @@ extern char *data_0209f394[];
 extern int data_0208ee44;
 extern unsigned char data_ov002_0211117c;
 extern unsigned char data_ov002_02111178;
+}
 
-void _ZN3HUD17UpdateHealthMeterEv(char *c) {
-    int chr = data_0209f250;
+struct HUD {
+    void UpdateHealthMeter();
+};
+
+void HUD::UpdateHealthMeter()
+{
+    char * c = (char *)this;
+int chr = data_0209f250;
     char *player = data_0209f394[chr];
     unsigned int health = (data_02092144[chr] >> 8) & 0xff;
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
@@ -134,5 +141,5 @@ void _ZN3HUD17UpdateHealthMeterEv(char *c) {
             *(unsigned char *)(c + 0x73) = 1;
         return;
     }
-}
+
 }

@@ -3,8 +3,15 @@ extern "C" {
 extern int _ZN12CylinderClsn5ClearEv(void*);
 extern int _ZN12CylinderClsn6UpdateEv(void*);
 extern char* data_ov002_02110a48[5];
-int _ZN4Tree8BehaviorEv(void){
-  char** pp = data_ov002_02110a48;
+}
+
+struct Tree {
+    int Behavior(void);
+};
+
+int Tree::Behavior(void)
+{
+char** pp = data_ov002_02110a48;
   int i;
   for(i=0;i<5;i++){
     char* p = *pp;
@@ -16,5 +23,5 @@ int _ZN4Tree8BehaviorEv(void){
     pp++;
   }
   return 1;
-}
+
 }

@@ -6,8 +6,16 @@ extern void LoadSilverStarAndNumber(void);
 extern int data_ov002_0210d9d8;
 extern int data_ov002_0210da30;
 extern int data_ov002_0210da18;
-int _ZN10BrickBlock13InitResourcesEv(char* c) {
-    *(signed char*)(c+0xd4) = *(int*)(c+8) & 0x7f;
+}
+
+struct BrickBlock {
+    int InitResources();
+};
+
+int BrickBlock::InitResources()
+{
+    char* c = (char*)this;
+*(signed char*)(c+0xd4) = *(int*)(c+8) & 0x7f;
     if (*(signed char*)(c+0xd4) == 0x7f) *(signed char*)(c+0xd4) = 0;
     switch (*(unsigned short*)(c+0xc)) {
     case 0x141:
@@ -29,5 +37,5 @@ int _ZN10BrickBlock13InitResourcesEv(char* c) {
         break;
     }
     return 1;
-}
+
 }

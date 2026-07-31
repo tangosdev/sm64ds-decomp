@@ -14,10 +14,16 @@ extern int data_ov033_021124f0[];
 extern int data_ov033_02111bc8[];
 extern int data_ov033_021124e8[];
 extern int data_ov033_02111c1c[];
+}
 
-int _ZN9TinyCover13InitResourcesEv(char* c)
+struct TinyCover {
+    int InitResources();
+};
+
+int TinyCover::InitResources()
 {
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov033_021124f0);
+    char* c = (char*)this;
+void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov033_021124f0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, 0x14);
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(void**)((char*)data_ov033_021124f0 + 4), data_ov033_02111bc8);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(c + 0x320, data_ov033_02111bc8, 0, 0x1000, 0);
@@ -29,5 +35,5 @@ int _ZN9TinyCover13InitResourcesEv(char* c)
     _ZN16MeshColliderBase6EnableEP5Actor(c + 0x124, c);
     *(int*)(c + 0x334) = *(int*)(c + 0x60) - 0x3c000;
     return _ZN5Event6GetBitEj(0xe) == 0;
-}
+
 }

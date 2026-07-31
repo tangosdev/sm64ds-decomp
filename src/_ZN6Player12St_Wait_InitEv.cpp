@@ -5,10 +5,16 @@ extern int _ZN6Player9GetHealthEv(void* c);
 
 extern unsigned char data_0209f2d8;
 extern int data_0209caa0[];
+}
 
-int _ZN6Player12St_Wait_InitEv(char* c)
+struct Player {
+    int St_Wait_Init();
+};
+
+int Player::St_Wait_Init()
 {
-    unsigned char f2d8;
+    char* c = (char*)this;
+unsigned char f2d8;
     int b0;
 
     *(unsigned char*)(c + 0x6e6) = 0;
@@ -55,5 +61,5 @@ L13c:
     }
     *(unsigned short*)(c + 0x6a4) = 0x384;
     return 1;
-}
+
 }

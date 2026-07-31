@@ -14,8 +14,16 @@ extern char data_ov077_02127c90;
 extern char data_ov077_02127c98;
 extern struct V3 data_ov077_02127a5c;
 extern char data_ov077_02127ce8;
-int _ZN7HeaveHo13InitResourcesEv(char* c){
-  struct V3 v;
+}
+
+struct HeaveHo {
+    int InitResources();
+};
+
+int HeaveHo::InitResources()
+{
+    char* c = (char*)this;
+struct V3 v;
   void* f;
   f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov077_02127c88);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x340, f, 1, -1);
@@ -41,5 +49,5 @@ int _ZN7HeaveHo13InitResourcesEv(char* c){
   *(int*)(c + 0x418) = *(int*)(c + 0x64);
   func_ov077_02126d5c(c, &data_ov077_02127ce8);
   return 1;
-}
+
 }

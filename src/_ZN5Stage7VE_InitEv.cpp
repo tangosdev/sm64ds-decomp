@@ -15,10 +15,15 @@ extern void SetBg2Offset(int a, int b);
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short *p, int val, short amt);
+}
 
-void _ZN5Stage7VE_InitEv(void)
+struct Stage {
+    void VE_Init(void);
+};
+
+void Stage::VE_Init(void)
 {
-    unsigned int a;
+unsigned int a;
     unsigned int b;
 
     a = data_0209d45c[0] ^ 0x10;
@@ -42,5 +47,5 @@ void _ZN5Stage7VE_InitEv(void)
     data_0209f290[0] = 0;
     _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short *)0x4000050, a | 0x20, -7);
     _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short *)0x4001050, b | 0x20, -7);
-}
+
 }

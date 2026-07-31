@@ -1,6 +1,4 @@
 //cpp
-// _ZN3HUD6RenderEv at 0x020fd5e0
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" {
 extern unsigned char data_0209f2d8;
 extern unsigned char data_0209fc9c;
@@ -23,9 +21,16 @@ void _ZN3HUD17RenderSilverStarsEv(void *);
 void _ZN3HUD15RenderTimeTimerEv(void *);
 void _ZN5Stage20RenderBouncingArrowsEv(void);
 void _ZN3HUD15RenderLifeCountEv(void *);
+}
 
-int _ZN3HUD6RenderEv(void *self) {
-    int b = (data_0209f2d8 == 1);
+struct HUD {
+    int Render();
+};
+
+int HUD::Render()
+{
+    void * self = (void *)this;
+int b = (data_0209f2d8 == 1);
     if (b) {
         if (data_0209fc9c != 0) goto end;
         if (((data_0209f2c4 | data_0209f20c | data_0209f294) & 0xff) == 0) {
@@ -69,5 +74,5 @@ int _ZN3HUD6RenderEv(void *self) {
     }
 end:
     return 1;
-}
+
 }

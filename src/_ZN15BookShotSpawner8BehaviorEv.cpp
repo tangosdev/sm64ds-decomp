@@ -7,10 +7,16 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int _ZN5Actor14GetSubtractionEss(void *thiz, short a, short b);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3 *pos, const Vector3_16 *r, int e, int f);
+}
 
-int _ZN15BookShotSpawner8BehaviorEv(char *c)
+struct BookShotSpawner {
+    int Behavior();
+};
+
+int BookShotSpawner::Behavior()
 {
-    if (*(unsigned short *)(c + 0xd4) > 0x28) {
+    char * c = (char *)this;
+if (*(unsigned short *)(c + 0xd4) > 0x28) {
         char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
         if (p != 0) {
 
@@ -34,5 +40,5 @@ int _ZN15BookShotSpawner8BehaviorEv(char *c)
         *pt = *pt + 1;
     }
     return 1;
-}
+
 }

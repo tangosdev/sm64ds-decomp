@@ -15,8 +15,16 @@ extern int data_ov015_02114534[];
 extern int data_ov034_02114538[];
 extern int data_ov015_0211453c[];
 extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
-int _ZN14KnockDownPlank13InitResourcesEv(char* c){
-  int b = (*(unsigned short*)((char*)c+0xc) == 0x35) ? 1 : 0;
+}
+
+struct KnockDownPlank {
+    int InitResources();
+};
+
+int KnockDownPlank::InitResources()
+{
+    char* c = (char*)this;
+int b = (*(unsigned short*)((char*)c+0xc) == 0x35) ? 1 : 0;
   if(b) *(int*)((char*)c+0x32c) = 1; else *(int*)((char*)c+0x32c) = 0;
   int j0 = *(int*)((char*)c+0x32c) * 0xc;
   int m = _ZN5Model8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov015_02114534 + j0));
@@ -37,5 +45,5 @@ int _ZN14KnockDownPlank13InitResourcesEv(char* c){
   *(int*)((char*)c+0x328) = *(int*)((char*)c+0x64);
   func_ov015_02111fb8(c, 5);
   return 1;
-}
+
 }

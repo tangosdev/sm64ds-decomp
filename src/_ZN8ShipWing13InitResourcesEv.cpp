@@ -14,8 +14,16 @@ extern int data_ov036_02114084[];
 extern int data_ov036_02112b48[];
 extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern void func_ov036_02111cc4();
-int _ZN8ShipWing13InitResourcesEv(char* c){
-  int m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_0211408c);
+}
+
+struct ShipWing {
+    int InitResources();
+};
+
+int ShipWing::InitResources()
+{
+    char* c = (char*)this;
+int m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_0211408c);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, m, 1, -1);
   _ZN8Platform21UpdateModelPosAndRotYEv(c);
   _ZN8Platform19UpdateClsnPosAndRotEv(c);
@@ -30,5 +38,5 @@ int _ZN8ShipWing13InitResourcesEv(char* c){
   *(int*)(c+0x4e0) = *(int*)(c+0x60);
   *(int*)(c+0x4e4) = *(int*)(c+0x64);
   return 1;
-}
+
 }
