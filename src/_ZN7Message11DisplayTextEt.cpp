@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN7Message11DisplayTextEt
+/* recovered: named members + shared header */
+#include "Message.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 

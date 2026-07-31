@@ -1,3 +1,6 @@
+// @symbol _ZN8SaveData19IsCharacterUnlockedEj
+/* recovered: named members + shared header */
+#include "SaveData.h"
 /* SaveData::IsCharacterUnlocked(u32 character) at 0x0201392c
  * Static method (no `this`); returns nonzero if the character's bit is set.
  * Tests bit `character` in the u32 SAVE_DATA.flags2 (the FileSaveData word at

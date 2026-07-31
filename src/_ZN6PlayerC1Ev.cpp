@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6PlayerC1Ev
+/* recovered: named members + shared header */
+#include "Player.h"
 extern "C" {
 extern int data_ov002_0210a83c[];
 void _ZN5ActorC2Ev(void*);

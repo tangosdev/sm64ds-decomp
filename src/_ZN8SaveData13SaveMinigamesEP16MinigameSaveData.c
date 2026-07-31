@@ -1,3 +1,6 @@
+// @symbol _ZN8SaveData13SaveMinigamesEP16MinigameSaveData
+/* recovered: named members + shared header */
+#include "SaveData.h"
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;

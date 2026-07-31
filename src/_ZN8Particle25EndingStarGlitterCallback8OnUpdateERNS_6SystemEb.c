@@ -1,13 +1,16 @@
+// @symbol _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Particle__EndingStarGlitterCallback.h"
 typedef signed int s32;
 typedef unsigned int u32;
 typedef int Bool;
 
 /* forward declarations */
-extern void func_02022260(void);
 
 extern int _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb(void* cb, void* sys, Bool active);
 
-extern void func_0204dab4(void* sys, void* buf, u32 count, u32 mask, void* fnptr);
 
 int _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb(void* cb, void* sys, Bool active)
 {

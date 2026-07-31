@@ -1,31 +1,34 @@
 //cpp
+// @symbol _ZN8Snowball13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Snowball.h"
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *file, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *thiz);
 extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, int r, int h, unsigned int a, unsigned int b);
 extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int r, int h, void *v, int b);
-extern "C" void func_ov081_021261d4(void *c, void *p);
 extern "C" char data_ov081_02128d90;
-extern "C" char data_ov081_02128eb4;
 
-extern "C" int _ZN8Snowball13InitResourcesEv(char *c)
+int Snowball::InitResources()
 {
     void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov081_02128d90);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x300, f, 1, -1) == 0) return 0;
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x300, f, 1, -1) == 0) return 0;
 
-    _ZN11ShadowModel12InitCylinderEv(c + 0x350);
+    _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
 
-    *(int*)(c + 0x9c) = -0x2000;
-    *(int*)(c + 0xa0) = -0x3c000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x110, c, 0x1e000, 0x1e000, 0x200004, 0x40010);
+    unk_09c = -0x2000;
+    unk_0a0 = -0x3c000;
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x40010);
 
-    *(int*)(c + 0x37c) = *(int*)(c + 0x5c);
-    *(int*)(c + 0x380) = *(int*)(c + 0x60);
-    *(int*)(c + 0x384) = *(int*)(c + 0x64);
-    *(int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) += 0x32000;
-    *(short*)(c + 0x8e) = *(short*)(c + 0x94);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x144, c, 0x14000, 0x14000, 0, 0);
+    unk_37c = mPosX;
+    unk_380 = mPosY;
+    unk_384 = mPosZ;
+    *(int*)(((long long)(int)((char *)&mPosY))) += 0x32000;
+    unk_08e = unk_094;
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x14000, 0x14000, 0, 0);
 
-    func_ov081_021261d4(c, &data_ov081_02128eb4);
+    func_ov081_021261d4(((char *)this), &data_ov081_02128eb4);
     return 1;
 }

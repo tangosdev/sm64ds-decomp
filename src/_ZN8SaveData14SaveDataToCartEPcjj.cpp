@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN8SaveData14SaveDataToCartEPcjj
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "SaveData.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -13,7 +18,6 @@ extern "C" {
     int func_02060484(int a, int b, int c, int d, int e, int f);
 }
 
-extern u8 data_020a4b40[8];
 
 extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char* data, u32 size, u32 fileID)
 {

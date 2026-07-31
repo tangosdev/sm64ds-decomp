@@ -1,12 +1,18 @@
 //cpp
+// @symbol _ZN6Player8BlowAwayEs
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 extern "C" {
-extern int data_ov002_0211037c[];
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
-void _ZN6Player8BlowAwayEs(char* c, short v){
-  if(*(unsigned char*)(c+0x6f9)) return;
-  if(*(unsigned char*)(c+0x6fd)) return;
-  *(short*)(c+0x94)=v;
-  *(short*)(c+0x8e)=(short)(v+0x8000);
-  _ZN6Player11ChangeStateERNS_5StateE(c,data_ov002_0211037c);
 }
+
+void Player::BlowAway(short v)
+{
+  if(mIsMetal) return;
+  if(mIsBalloon) return;
+  mTargetAngleY=v;
+  mAngleY=(short)(v+0x8000);
+  _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_0211037c);
 }

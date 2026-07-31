@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_
+/* recovered: named members + shared header */
+#include "Minimap.h"
 struct Vec3 { int x, y, z; };
 extern "C" {
 void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);

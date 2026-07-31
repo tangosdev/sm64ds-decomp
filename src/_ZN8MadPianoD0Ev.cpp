@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN8MadPianoD0Ev
+/* recovered: named members + shared header */
+#include "MadPiano.h"
 struct Heap;
 
 extern "C" void _ZN12WithMeshClsnD1Ev(void *thiz);

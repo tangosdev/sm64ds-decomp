@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN7Message30DisplayCourseNameForStarSelectEj
+/* recovered: named members + shared header, named members + shared header */
+#include "Message.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 
@@ -33,8 +36,7 @@ void func_0201b7cc(void);
 void func_0201b388(int a);
 }
 
-extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int courseID)
-{
+extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *self) {
     volatile unsigned short ls;
     volatile int li1;
     volatile int li2;
@@ -44,7 +46,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
     int div;
     int div2;
 
-    data_0209d6d4 = (short)(courseID + 0x196);
+    data_0209d6d4 = (short)((unsigned int)&self->unk_196);
     data_0209d660 = 0;
     func_0201eaac();
 

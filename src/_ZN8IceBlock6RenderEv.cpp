@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN8IceBlock6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "IceBlock.h"
 class Sub {
 public:
     virtual void F0();
@@ -9,12 +12,13 @@ public:
     virtual void F5(int* v);
 };
 
-extern "C" int _ZN8IceBlock6RenderEv(char *c) {
+int IceBlock::Render()
+{
     int v[3];
-    v[0] = *(int*)(c + 0x358);
-    v[1] = *(int*)(c + 0x358);
-    v[2] = *(int*)(c + 0x358);
-    Sub *sub = (Sub*)(c + 0xd4);
+    v[0] = mScale;
+    v[1] = mScale;
+    v[2] = mScale;
+    Sub *sub = (Sub*)((char *)&mModel);
     sub->F5(v);
     return 1;
 }

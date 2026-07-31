@@ -1,3 +1,6 @@
+// @symbol _ZN8SaveData17SetCharacterIntroEi
+/* recovered: named members + shared header */
+#include "SaveData.h"
 /* SaveData::SetCharacterIntro(s32 character) at 0x02013910
  * Static method (no `this`); marks an intro/flag bit as seen.
  * Sets bit `character` in the u32 SAVE_DATA.flags2 (the FileSaveData word at

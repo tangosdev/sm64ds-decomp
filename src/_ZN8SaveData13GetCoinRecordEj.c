@@ -1,3 +1,6 @@
+// @symbol _ZN8SaveData13GetCoinRecordEj
+/* recovered: named members + shared header */
+#include "SaveData.h"
 /* SaveData::GetCoinRecord(u32 courseID) at 0x0201366c
  * Static method (no `this`); returns the saved coin count for a main level.
  * Reads SAVE_DATA.coinRecords[courseID] -- a u8 array. See Save.h:

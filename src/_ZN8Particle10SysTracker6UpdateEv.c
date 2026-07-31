@@ -1,6 +1,9 @@
-extern int func_02021bec(void* p);
-extern int func_02049f58(void* p);
-void _ZN8Particle10SysTracker6UpdateEv(void* c) {
-    func_02021bec((char*)c + 8);
-    func_02049f58(*(void**)((char*)c + 4));
+// @symbol _ZN8Particle10SysTracker6UpdateEv
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Particle__SysTracker.h"
+void _ZN8Particle10SysTracker6UpdateEv(struct Particle__SysTracker *self) {
+    func_02021bec((char*)&self->unk_008);
+    func_02049f58(*(void**)((char*)&self->unk_004));
 }

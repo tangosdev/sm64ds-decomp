@@ -1,3 +1,6 @@
+// @symbol _ZN8SaveData26CountStarsCollectedInLevelEj
+/* recovered: named members + shared header */
+#include "SaveData.h"
 /* _ZN8SaveData26CountStarsCollectedInLevelEj at 0x02013768
  * Counts how many stars have been collected in a given course (0-7 stars).
  */

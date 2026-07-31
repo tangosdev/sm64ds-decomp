@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN7Minimap13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "Minimap.h"
 #pragma opt_strength_reduction off
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -37,7 +40,7 @@ extern s32 data_0209caa0[];
 extern s32 data_0209fc48;
 extern u8 data_ov002_02111150;
 
-extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
+int Minimap::InitResources()
 {
     u16 *p;
     s32 i;
@@ -93,39 +96,39 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
             || SublevelToLevel(data_0209f2f8) == -1)
         {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
-            *(s32*)(c + 0x1d8) = 0x100;
-            *(s32*)(c + 0x1dc) = 0x80;
+            unk_1d8 = 0x100;
+            unk_1dc = 0x80;
 
             if (SublevelToLevel(data_0209f2f8) == 4) {
-                *(s32*)(c + 0x1e0) = 0x258000;
-                *(s32*)(c + 0x1e4) = 0;
-                *(s32*)(c + 0x1e8) = 0x64000;
+                unk_1e0 = 0x258000;
+                unk_1e4 = 0;
+                unk_1e8 = 0x64000;
             } else if (SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3) {
-                *(s32*)(c + 0x1e0) = -0x2bc000;
-                *(s32*)(c + 0x1e4) = 0;
-                *(s32*)(c + 0x1e8) = -0x2bc000;
+                unk_1e0 = -0x2bc000;
+                unk_1e4 = 0;
+                unk_1e8 = -0x2bc000;
             } else {
                 SublevelToLevel(data_0209f2f8);
-                *(s32*)(c + 0x1e0) = 0;
-                *(s32*)(c + 0x1e4) = 0;
-                *(s32*)(c + 0x1e8) = 0;
+                unk_1e0 = 0;
+                unk_1e4 = 0;
+                unk_1e8 = 0;
             }
-            *(u8*)(c + 0x251) = 1;
+            unk_251 = 1;
         } else {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
-            *(s32*)(c + 0x1d8) = 0x80;
-            *(s32*)(c + 0x1dc) = 0x40;
-            *(s32*)(c + 0x1e0) = 0;
-            *(s32*)(c + 0x1e4) = 0;
-            *(s32*)(c + 0x1e8) = 0;
-            *(u8*)(c + 0x251) = 2;
+            unk_1d8 = 0x80;
+            unk_1dc = 0x40;
+            unk_1e0 = 0;
+            unk_1e4 = 0;
+            unk_1e8 = 0;
+            unk_251 = 2;
         }
         data_0209d454 |= 8;
     } else {
         data_0209d454 &= ~8;
     }
 
-    *(s32*)(c + 0x214) = GetMinimapScale(data_ov002_02111148);
+    unk_214 = GetMinimapScale(data_ov002_02111148);
 
     {
         int b1 = (data_0209f2d8 == 0);
@@ -133,36 +136,36 @@ extern "C" int _ZN7Minimap13InitResourcesEv(char *c)
             if (!(data_0209caa0[2] & 0x80)) {
                 int b3 = (data_0209fc48 != 0);
                 if (!b3) {
-                    *(s32*)(c + 0x218) = (*(s32*)(c + 0x214)) << 1;
-                    *(u16*)(c + 0x21c) = 0;
-                    *(u8*)(c + 0x255) = 1;
+                    unk_218 = (unk_214) << 1;
+                    unk_21c = 0;
+                    unk_255 = 1;
                     goto unk218_done;
                 }
             }
         }
-        *(s32*)(c + 0x218) = *(s32*)(c + 0x214);
-        *(u8*)(c + 0x255) = 0;
+        unk_218 = unk_214;
+        unk_255 = 0;
     unk218_done:;
     }
 
     data_ov002_02111150 = 0;
-    *(s32*)(c + 0x50) = 0x1000;
-    *(s32*)(c + 0x54) = 0;
-    *(s32*)(c + 0x58) = 0;
-    *(s32*)(c + 0x5c) = 0x1000;
-    *(s32*)(c + 0x200) = 0x1000;
-    *(s32*)(c + 0x204) = 0;
-    *(s32*)(c + 0x208) = 0;
-    *(s32*)(c + 0x20c) = 0x1000;
-    *(s32*)(c + 0x1ec) = 0;
-    *(s32*)(c + 0x210) = 0x1000;
-    *(s32*)(c + 0x90) = 0;
-    *(s32*)(c + 0x94) = 0;
-    *(s32*)(c + 0x98) = 0;
-    *(s32*)(c + 0x9c) = 0;
+    unk_050 = 0x1000;
+    unk_054 = 0;
+    unk_058 = 0;
+    mPosX = 0x1000;
+    unk_200 = 0x1000;
+    unk_204 = 0;
+    unk_208 = 0;
+    unk_20c = 0x1000;
+    unk_1ec = 0;
+    unk_210 = 0x1000;
+    unk_090 = 0;
+    unk_094 = 0;
+    unk_098 = 0;
+    unk_09c = 0;
 
-    *(s32*)(c + 0x1d4) = func_0202a958();
-    *(s32*)(c + 0x1d4) = ((*(s32*)(c + 0x1d8)) << 12) / (*(s32*)(c + 0x1d4)) / 10;
+    unk_1d4 = func_0202a958();
+    unk_1d4 = ((unk_1d8) << 12) / (unk_1d4) / 10;
 
     return 1;
 }

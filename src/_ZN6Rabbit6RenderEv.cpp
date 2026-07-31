@@ -1,8 +1,12 @@
 //cpp
+// @symbol _ZN6Rabbit6RenderEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Rabbit.h"
 extern "C" {
 extern signed char data_0209f2f8;
 extern signed char data_02092120;
-extern void func_ov085_0212c150(void* self);
 }
 
 struct VObj {
@@ -14,33 +18,33 @@ struct VObj {
     virtual void m14(void* arg);
 };
 
-extern "C" int _ZN6Rabbit6RenderEv(char* c)
+int Rabbit::Render()
 {
-    if (*(unsigned char*)(c + 0x428) == 1) return 1;
+    if (unk_428 == 1) return 1;
 
     {
-        int b = (*(int*)(c + 0xb0) & 0x40000) != 0;
+        int b = (unk_0b0 & 0x40000) != 0;
         if (b) return 1;
     }
 
-    *(int*)(c + 0x80) = 0x1500;
-    *(int*)(c + 0x88) = *(int*)(c + 0x80);
-    *(int*)(c + 0x84) = *(int*)(c + 0x88);
+    mScale = 0x1500;
+    unk_088 = mScale;
+    unk_084 = unk_088;
 
     {
-        int** base = (int**)(((long long)(int)(c + 0x308)) & 0xFFFFFFFFFFFFFFFFLL);
+        int** base = (int**)(((long long)(int)((char*)&unk_308)));
         int* r3 = base[0];
         char* r1 = (char*)base[1];
         for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {
-            *(int*)(r1 + 0x20) = *(int*)(c + 0x468);
+            *(int*)(r1 + 0x20) = unk_468;
             r1 += 0x30;
         }
     }
 
     if (data_0209f2f8 == 5 && data_02092120 == 3) {
-        func_ov085_0212c150(c);
+        func_ov085_0212c150(((char*)this));
     }
 
-    ((VObj*)(c + 0x300))->m14(c + 0x80);
+    ((VObj*)((char*)&mModelAnim))->m14((char*)&mScale);
     return 1;
 }

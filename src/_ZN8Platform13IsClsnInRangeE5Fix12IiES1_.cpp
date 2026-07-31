@@ -1,28 +1,30 @@
 //cpp
-struct Vector3 { int x,y,z; };
+// @symbol _ZN8Platform13IsClsnInRangeE5Fix12IiES1_
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Platform.h"
 extern "C" {
 extern void* _ZN5Actor13ClosestPlayerEv(void*);
 extern int Vec3_Dist(void*, void*);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
-extern void _ZN16MeshColliderBase7DisableEv(void*);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, int a, int b){
+int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(struct Platform *self, int a, int b) {
   struct Vector3 v;
-  v.x = *(int*)(c+0x5c);
-  v.y = *(int*)(c+0x60);
-  v.z = *(int*)(c+0x64);
-  if (a == 0) a = *(int*)(c+0xb8) << 3;
-  if (b == 0) v.y = v.y + *(int*)(c+0xb4);
+  v.x = self->mPosX;
+  v.y = self->mPosY;
+  v.z = self->mPosZ;
+  if (a == 0) a = self->unk_0b8 << 3;
+  if (b == 0) v.y = v.y + self->unk_0b4;
   else v.y = v.y + b;
-  void* p = _ZN5Actor13ClosestPlayerEv(c);
+  void* p = _ZN5Actor13ClosestPlayerEv(((char*)self));
   int d = Vec3_Dist(&v, (char*)p+0x5c);
   if (d > a) {
-    if (_ZN16MeshColliderBase9IsEnabledEv(c+0x124))
-      _ZN16MeshColliderBase7DisableEv(c+0x124);
+    if (_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
+      _ZN16MeshColliderBase7DisableEv((char*)&self->mMeshCollider);
     return 0;
   }
-  if (!_ZN16MeshColliderBase9IsEnabledEv(c+0x124))
-    _ZN16MeshColliderBase6EnableEP5Actor(c+0x124, c);
+  if (!_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
+    _ZN16MeshColliderBase6EnableEP5Actor(((char*)self)+0x124, ((char*)self));
   return 1;
 }
 }

@@ -1,14 +1,15 @@
 //cpp
+// @symbol _ZN7Message18DisplayPauseTextVSEt
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Message.h"
 extern "C" {
 extern short data_0209fce8;
-extern unsigned char data_0209fc78;
-extern unsigned char data_0209fc94;
-extern int func_02034504();
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
-extern void func_020341a8(int a, int b);
 
 void _ZN7Message18DisplayPauseTextVSEt(unsigned short n) {
     volatile int li;

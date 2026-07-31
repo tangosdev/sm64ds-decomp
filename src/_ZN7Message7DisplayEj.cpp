@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN7Message7DisplayEj
+/* recovered: named members + shared header, real C++ method */
+#include "Message.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 
@@ -19,7 +22,7 @@ int _ZN3G2S12GetBG0ScrPtrEv(void);
 void func_0201d6a0(int a, int b);
 }
 
-extern "C" void _ZN7Message7DisplayEj(void* self, unsigned int msg)
+void Message::Display(unsigned int msg)
 {
     volatile int li;
     volatile unsigned short ls;
@@ -34,7 +37,7 @@ extern "C" void _ZN7Message7DisplayEj(void* self, unsigned int msg)
     s = func_02054fb0();
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
-    _ZN7Message11DisplayTextEt(self);
+    _ZN7Message11DisplayTextEt(((void*)this));
     data_0209d6d4 = 0x276;
     data_0209d6c4 = 0;
     data_0209d668 = 1;
