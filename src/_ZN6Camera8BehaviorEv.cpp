@@ -1,4 +1,11 @@
 //cpp
+// @symbol _ZN6Camera8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_Camera.h"
+#include "decl_Particle.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Camera.h"
 typedef int s32;
 typedef unsigned int u32;
 typedef unsigned short u16;
@@ -13,22 +20,13 @@ extern "C" {
 extern int _ZN6Camera11ChangeStateEPNS_5StateE(void *thiz, void *state);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 extern short Vec3_VertAngle(const void *v1, const void *v0);
-extern void func_020089f8(void *camera);
-extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
-extern int func_0200ca50(void *self);
 extern void _Z14ApproachLinearRiii(int &dst, int target, int step);
 extern int _Z15ApproachLinear2Rsss(short &dst, short target, short step);
 extern void MulVec3Mat4x3(void *dst, void *src, void *out);
 extern int *Vec3_LslInPlace(int *v, int sh);
-extern int _ZNK6Camera12IsUnderwaterEv(void *self);
-extern u32 _ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj(
-    u32 uid, u32 eid, Fix12i x, Fix12i y, Fix12i z, const void *dir, u8 numNow);
-extern void func_0203dafc(int v);
 }
 
-extern u32 data_0208733c;
 extern s32 data_0209fc48;
-extern char data_0209b008;
 extern u8 data_0209f2c4;
 extern u8 data_0209f20c;
 extern u8 data_0209f294;
@@ -36,12 +34,11 @@ extern s32 data_0209b454;
 extern s8 data_0209f2f8;
 extern s32 data_0209f32c;
 extern s16 data_02082214[];
-extern char CAM_SPACE_CAM_POS_ASR_3;
 extern char data_0209b41c;
 
-extern "C" int _ZN6Camera8BehaviorEv(void *arg0)
+int Camera::Behavior()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)((void *)this);
     s32 spVec[3];
     s32 temp_r1;
     s32 r5;

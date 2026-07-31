@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6Cannon6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Cannon.h"
 struct Sub {
   virtual void v0();
   virtual void v1();
@@ -7,13 +10,15 @@ struct Sub {
   virtual void v4();
   virtual void m5(int);
 };
-extern "C" int _ZN6Cannon6RenderEv(char* c){
-  if(*(int*)(c+0x180) == 3){
-    if(*(unsigned char*)(c+0x185) >= 3) return 1;
+
+int Cannon::Render()
+{
+  if(unk_180 == 3){
+    if(unk_185 >= 3) return 1;
   }
-  Sub* o = (Sub*)(c+0xd4);
+  Sub* o = (Sub*)((char*)&mModel);
   o->m3();
-  Sub* o2 = (Sub*)(c+0xd4);
+  Sub* o2 = (Sub*)((char*)&mModel);
   o2->m5(0);
   return 1;
 }

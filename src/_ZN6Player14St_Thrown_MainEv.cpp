@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN6Player14St_Thrown_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -6,13 +11,11 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef s32 Fix12;
 
-struct Vector3 { int x, y, z; };
 
 extern "C" {
 extern void func_ov002_020bf90c(char* c);
 extern void func_ov002_020c06fc(char* c, u32 mask);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const Vector3& v);
-extern int func_ov002_020e2c84(char* c);
 extern void func_ov002_020bf9d4(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
@@ -26,69 +29,69 @@ extern int data_ov002_0211010c[];
 extern int data_ov002_0211013c[];
 }
 
-extern "C" int _ZN6Player14St_Thrown_MainEv(char* c)
+int Player::St_Thrown_Main()
 {
-    if (*(u16*)(c + 0x6a4) == 1) {
-        *(int*)(((int)c + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) |= 0x2000;
+    if (mStateTimer == 1) {
+        *(int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) |= 0x2000;
     }
-    func_ov002_020bf90c(c);
+    func_ov002_020bf90c(((char*)this));
 
-    u8 state = *(u8*)(c + 0x6e3);
+    u8 state = mStateStep;
     switch (state) {
     case 0:
-        if (*(u8*)(c + 0x6de) == 0) {
-            *(s16*)(c + 0x8c) = 0;
-            *(int*)(((int)c + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) &= ~0x2000;
-            func_ov002_020c06fc(c, 0x8000);
-            if (*(u8*)(c + 0x70c) == 0) {
-                *(u8*)(c + 0x70c) = 1;
-                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(u8*)(c + 0x6d9), 6, *(Vector3*)(c + 0x74));
+        if (mIsAirborne == 0) {
+            mAngX = 0;
+            *(int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) &= ~0x2000;
+            func_ov002_020c06fc(((char*)this), 0x8000);
+            if (mStateArg == 0) {
+                mStateArg = 1;
+                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, *(Vector3*)((char*)&mCamSpacePos));
             }
-            int r5 = func_ov002_020e2c84(c);
-            if (r5 != 2 && *(u8*)(c + 0x707) == 0) {
-                func_ov002_020bf9d4(c);
+            int r5 = func_ov002_020e2c84(((char*)this));
+            if (r5 != 2 && mIsInShallowWater == 0) {
+                func_ov002_020bf9d4(((char*)this));
             }
             if (r5 != 0) {
                 return 1;
             }
-            if (*(int*)(c + 0x558) == 0x1000) {
-                if (*(int*)(c + 0x98) == 0) {
-                    *(u8*)(c + 0x6e3) = 1;
+            if (unk_558 == 0x1000) {
+                if (mHorzSpeed == 0) {
+                    mStateStep = 1;
                     goto L1f8;
                 }
             } else {
-                _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211031c);
+                _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211031c);
                 return 1;
             }
         }
-        *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
-        *(int*)(c + 0x98) = (int)(((long long)*(int*)(c + 0x98) * 0xfae + 0x800) >> 12);
-        if (*(u8*)(c + 0x6de) != 0) {
-            int a = _ZN4cstd5atan2E5Fix12IiES1_(*(int*)(c + 0x98), *(int*)(c + 0xa8));
+        mAngleY = mTargetAngleY;
+        mHorzSpeed = (int)(((long long)mHorzSpeed * 0xfae + 0x800) >> 12);
+        if (mIsAirborne != 0) {
+            int a = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed, mVertSpeed);
             s16 b = a - 0x4000;
             if (b > 0x3000) b = 0x3000;
-            *(s16*)(c + 0x8c) = b;
+            mAngX = b;
         } else {
-            _Z15ApproachLinear2Rsss((s16*)(c + 0x8c), 0, 0x400);
+            _Z15ApproachLinear2Rsss((s16*)((char*)&mAngX), 0, 0x400);
         }
         break;
     case 1:
-        if (_ZN6Player9GetHealthEv(c) == 0) {
-            *(u8*)(c + 0x6e3) = 1;
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211010c);
+        if (_ZN6Player9GetHealthEv(((char*)this)) == 0) {
+            mStateStep = 1;
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211010c);
             return 1;
         }
-        if (_ZN6Player12FinishedAnimEv(c) != 0) {
-            _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
-            *(s16*)(c + 0x94) = *(s16*)(c + 0x8e);
+        if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
+            _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
+            mTargetAngleY = mAngleY;
         }
-        func_ov002_020bedd4(c);
+        func_ov002_020bedd4(((char*)this));
         break;
     }
 
 L1f8:
-    if (*(u8*)(c + 0x6de) == 0) {
-        func_ov002_020e2c84(c);
+    if (mIsAirborne == 0) {
+        func_ov002_020e2c84(((char*)this));
     }
     return 1;
 }

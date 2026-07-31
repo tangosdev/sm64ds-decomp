@@ -1,15 +1,21 @@
 //cpp
+// @symbol _ZN6Player22St_GrabBowserTail_InitEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 extern "C" {
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
-extern void func_0200d10c(void* cam, unsigned char id);
 extern int* data_0209f318;
-int _ZN6Player22St_GrabBowserTail_InitEv(char* c){
-  _ZN6Player7SetAnimEji5Fix12IiEj(c,0x81,0x40000000,0x1000,0);
-  *(unsigned char*)(c+0x6e3)=0;
-  *(short*)(c+0x69c)=0;
-  *(unsigned char*)(c+0x6e5)=0;
-  *(unsigned char*)(c+0x70c)=0;
-  func_0200d10c((void*)data_0209f318, *(unsigned char*)(c+0x6d8));
-  return 1;
 }
+
+int Player::St_GrabBowserTail_Init()
+{
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x81,0x40000000,0x1000,0);
+  mStateStep=0;
+  mAngleYSpeed=0;
+  mStateWork=0;
+  mStateArg=0;
+  func_0200d10c((void*)data_0209f318, mPlayerNo);
+  return 1;
 }

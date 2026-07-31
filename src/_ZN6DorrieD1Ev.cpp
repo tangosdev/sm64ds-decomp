@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6DorrieD1Ev
+/* recovered: named members + shared header */
+#include "Dorrie.h"
 extern "C" {
 extern void *_ZTV6Dorrie;
 extern void func_ov065_021180b8(void);

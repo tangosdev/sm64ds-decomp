@@ -1,8 +1,12 @@
 //cpp
+// @symbol _ZN6Coffin13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Coffin.h"
 typedef int Fix12;
 typedef short s16;
 
-struct Vector3 { int x, y, z; };
 struct Matrix4x3;
 struct SharedFilePtr;
 struct BMD_File;
@@ -35,7 +39,6 @@ extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
-extern void func_ov071_02122080(char* t);
 extern void func_020393d4(int* p, int v);
 
 extern SharedFilePtr data_ov071_021230d0;
@@ -46,10 +49,11 @@ extern CLPS_Block data_ov063_0211ebd8;
 
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern "C" int _ZN6Coffin13InitResourcesEv(char* self) {
-    ((ModelBase*)(self + 0xd4))->SetFile(Model::LoadFile(data_ov071_021230d0), 1, -1);
-    *(int*)(self + 0x9c) = -0x2000;
-    *(int*)(self + 0xa0) = -0x3c000;
+int Coffin::InitResources()
+{
+    ((ModelBase*)((char*)&mModel))->SetFile(Model::LoadFile(data_ov071_021230d0), 1, -1);
+    unk_09c = -0x2000;
+    unk_0a0 = -0x3c000;
     Vector3 in;
     Vector3 out;
     in.x = 0;
@@ -58,18 +62,18 @@ extern "C" int _ZN6Coffin13InitResourcesEv(char* self) {
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x8e));
+    Matrix4x3_FromRotationY(&data_020a0e68, unk_08e);
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     Vector3 res;
-    Vec3_Add(&res, (Vector3*)(self + 0x5c), &out);
-    *(int*)(self + 0x5c) = res.x;
-    *(int*)(self + 0x60) = res.y;
-    *(int*)(self + 0x64) = res.z;
-    func_ov071_02122080(self);
-    ((Platform*)self)->UpdateClsnPosAndRot();
-    ((MovingMeshCollider*)(self + 0x124))->SetFile(
+    Vec3_Add(&res, (Vector3*)((char*)&mPosX), &out);
+    mPosX = res.x;
+    mPosY = res.y;
+    mPosZ = res.z;
+    func_ov071_02122080(((char*)this));
+    ((Platform*)((char*)this))->UpdateClsnPosAndRot();
+    ((MovingMeshCollider*)((char*)&mMeshCollider))->SetFile(
         MeshCollider::LoadFile(data_ov071_021230d8),
-        *(Matrix4x3*)(self + 0x2ec), 0x199, *(s16*)(self + 0x8e), data_ov063_0211ebd8);
-    func_020393d4((int*)(self + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        *(Matrix4x3*)((char*)&unk_2ec), 0x199, unk_08e, data_ov063_0211ebd8);
+    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

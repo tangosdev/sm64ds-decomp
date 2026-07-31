@@ -1,3 +1,6 @@
+// @symbol _ZN6CameraC1Ev
+/* recovered: named members + shared header */
+#include "Camera.h"
 typedef unsigned int u32;
 typedef int s32;
 

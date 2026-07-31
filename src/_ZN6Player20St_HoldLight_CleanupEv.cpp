@@ -1,10 +1,14 @@
 //cpp
-extern "C" {
-int _ZN6Player20St_HoldLight_CleanupEv(char* c){
-  char* p = *(char**)(c + 0x358);
+// @symbol _ZN6Player20St_HoldLight_CleanupEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
+
+
+int Player::St_HoldLight_Cleanup()
+{
+  char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(((long long)(int)(p + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000;
+    *(unsigned int*)(((long long)(int)(p + 0xb0))) |= 0x4000;
   }
   return 1;
-}
 }

@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN6Player17St_SlideKick_MainEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
@@ -16,7 +21,6 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020c0688(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
-extern void func_ov002_020dbaec(void* c);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 extern void func_ov002_020bedd4(void* c);
@@ -24,49 +28,48 @@ extern void func_ov002_020bedd4(void* c);
 extern int data_ov002_021104e4[];
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
-extern int data_ov002_021101fc[];
 extern int data_ov002_021101b4[];
 }
 
-extern "C" int _ZN6Player17St_SlideKick_MainEv(char* c)
+int Player::St_SlideKick_Main()
 {
-    func_ov002_020bf90c(c);
-    if (*(u8*)(c + 0x6de) == 0) {
-        *(u8*)(c + 0x6e4) = 1;
-        func_ov002_020c06fc(c, 0x4000);
-        func_ov002_020dd2f4(c);
+    func_ov002_020bf90c(((char*)this));
+    if (mIsAirborne == 0) {
+        mIsSlidingOnGround = 1;
+        func_ov002_020c06fc(((char*)this), 0x4000);
+        func_ov002_020dd2f4(((char*)this));
     }
 
-    if (*(int*)(c + 0x98) != 0)
+    if (mHorzSpeed != 0)
         goto La8;
 
-    if (_ZN6Player12FinishedAnimEv(c) == 0)
+    if (_ZN6Player12FinishedAnimEv(((char*)this)) == 0)
         goto L1d8;
 
-    if (_ZN6Player6IsAnimEj(c, 0x67) == 0)
+    if (_ZN6Player6IsAnimEj(((char*)this), 0x67) == 0)
         goto L88;
 
-    _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x66, 0x40000000, 0x1000, 0);
+    _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x66, 0x40000000, 0x1000, 0);
     goto L1d8;
 
 L88:
-    *(s16*)(c + 0x94) = *(s16*)(c + 0x8e);
-    *(u8*)(c + 0x6e3) = 1;
-    _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021104e4);
+    mTargetAngleY = mAngleY;
+    mStateStep = 1;
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021104e4);
     goto L1d8;
 
 La8:
-    if (func_ov002_020c0688(c) == 0)
+    if (func_ov002_020c0688(((char*)this)) == 0)
         goto L14c;
 
-    if (*(u8*)(c + 0x6e5) == 0) {
-        if (*(int*)(c + 0x640) < 0) {
-            u16 bit = *(u16*)(c + 0x600 + 0xce) & 1;
+    if (mStateWork == 0) {
+        if (mPrevVertSpeed < 0) {
+            u16 bit = *(u16*)(((char*)this) + 0x600 + 0xce) & 1;
             if (bit == 0) {
-                int t = -*(int*)(c + 0x640);
+                int t = -mPrevVertSpeed;
                 if (t > 0x14000) t = 0x14000;
-                *(int*)(c + 0xa8) = t;
-                *(u8*)(c + 0x6e5) = 1;
+                mVertSpeed = t;
+                mStateWork = 1;
             }
         }
     }
@@ -74,37 +77,37 @@ La8:
     {
         u16 r1 = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
         if ((r1 & 1) || (r1 & 2)) {
-            if (*(u8*)(c + 0x70e) == 0) {
-                _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101fc);
+            if (mSlideType == 0) {
+                _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101fc);
             }
         }
     }
-    *(u8*)(c + 0x6e3) = 0;
+    mStateStep = 0;
     goto L18c;
 
 L14c:
-    *(u8*)(((int)c + 0x6e3) & 0xFFFFFFFFFFFFFFFF) =
-        *(u8*)(((int)c + 0x6e3) & 0xFFFFFFFFFFFFFFFF) + 1;
-    if (*(u8*)(c + 0x6e3) <= 0x1e)
+    *(u8*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) =
+        *(u8*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) + 1;
+    if (mStateStep <= 0x1e)
         goto L18c;
-    if (*(int*)(c + 0x60) - *(int*)(c + 0x644) <= 0x64000)
+    if (mPosY - mGroundY <= 0x64000)
         goto L18c;
-    _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
 
 L18c:
     {
-        int id = _ZNK6Player14GetBodyModelIDEjb(c, *(u32*)(c + 8) & 0xff, 0);
-        void* anim = *(void**)(c + (id << 2) + 0xdc);
+        int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+        void* anim = *(void**)(((char*)this) + (id << 2) + 0xdc);
         u32 w = *(u32*)((char*)(((long long)(int)((char*)anim + 0x50)) & 0xFFFFFFFFFFFFFFFFLL) + 8);
         if ((u16)(w >> 12) < 4)
             goto L1d8;
-        func_ov002_020dbaec(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x314);
-        _ZN12CylinderClsn6UpdateEv(c + 0x314);
+        func_ov002_020dbaec(((char*)this));
+        _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
+        _ZN12CylinderClsn6UpdateEv((char*)&mAttackClsn);
     }
 
 L1d8:
-    func_ov002_020bedd4(c);
-    *(int*)(c + 0x640) = *(int*)(c + 0xa8);
+    func_ov002_020bedd4(((char*)this));
+    mPrevVertSpeed = mVertSpeed;
     return 1;
 }

@@ -1,7 +1,12 @@
 //cpp
+// @symbol _ZN6Player17LostGrabbedObjectEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 extern "C" {
 int _ZN6Player6IsAnimEj(void*, unsigned int);
-int _ZN6Player17LostGrabbedObjectEv(void* c){
-  return _ZN6Player6IsAnimEj(c, 0x18) || _ZN6Player6IsAnimEj(c, 0x8b);
 }
+
+int Player::LostGrabbedObject()
+{
+  return _ZN6Player6IsAnimEj(((void*)this), 0x18) || _ZN6Player6IsAnimEj(((void*)this), 0x8b);
 }

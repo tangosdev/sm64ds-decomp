@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN6Player16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 typedef signed char s8;
@@ -29,170 +34,82 @@ extern char data_ov002_0210d9a8[];
 extern char data_ov002_0210d9c0[];
 extern char data_ov002_0210da38[];
 extern char data_ov002_0210da40[];
-extern char data_ov002_0210e1c8[];
-extern char data_ov002_0210e1d0[];
-extern char data_ov002_0210e1e0[];
-extern char data_ov002_0210e1e8[];
-extern char data_ov002_0210e230[];
-extern char data_ov002_0210e250[];
-extern char data_ov002_0210e270[];
-extern char data_ov002_0210e288[];
-extern char data_ov002_0210e2f0[];
-extern char data_ov002_0210e3b0[];
-extern char data_ov002_0210e3c8[];
 extern char data_ov002_0210e3d8[];
-extern char data_ov002_0210e3e0[];
-extern char data_ov002_0210e3e8[];
-extern char data_ov002_0210e400[];
-extern char data_ov002_0210e408[];
-extern char data_ov002_0210e430[];
-extern char data_ov002_0210e438[];
-extern char data_ov002_0210e450[];
-extern char data_ov002_0210e458[];
-extern char data_ov002_0210e460[];
-extern char data_ov002_0210e478[];
-extern char data_ov002_0210e4b8[];
-extern char data_ov002_0210e4c0[];
-extern char data_ov002_0210e4d0[];
-extern char data_ov002_0210e4e8[];
-extern char data_ov002_0210e4f0[];
-extern char data_ov002_0210e500[];
-extern char data_ov002_0210e538[];
-extern char data_ov002_0210e540[];
-extern char data_ov002_0210e588[];
-extern char data_ov002_0210e600[];
-extern char data_ov002_0210e620[];
-extern char data_ov002_0210e640[];
-extern char data_ov002_0210e660[];
-extern char data_ov002_0210e670[];
-extern char data_ov002_0210e680[];
-extern char data_ov002_0210e690[];
-extern char data_ov002_0210e6a0[];
-extern char data_ov002_0210e6b8[];
-extern char data_ov002_0210e6c0[];
-extern char data_ov002_0210e6e0[];
-extern char data_ov002_0210e6f8[];
-extern char data_ov002_0210e708[];
-extern char data_ov002_0210e728[];
-extern char data_ov002_0210e738[];
 extern char data_ov002_0210e750[];
-extern char data_ov002_0210e758[];
-extern char data_ov002_0210e770[];
-extern char data_ov002_0210e780[];
-extern char data_ov002_0210e788[];
-extern char data_ov002_0210e790[];
-extern char data_ov002_0210e798[];
-extern char data_ov002_0210e7a8[];
-extern char data_ov002_0210e7b0[];
-extern char data_ov002_0210e7e8[];
-extern char data_ov002_0210e7f0[];
-extern char data_ov002_0210e800[];
-extern char data_ov002_0210e818[];
-extern char data_ov002_0210e898[];
 extern char data_ov002_0210e8d0[];
-extern char data_ov002_0210e8e8[];
-extern char data_ov002_0210e910[];
-extern char data_ov002_0210e958[];
-extern char data_ov002_0210e9d0[];
-extern char data_ov002_0210e9e8[];
-extern char data_ov002_0210ea10[];
-extern char data_ov002_0210ea30[];
-extern char data_ov002_0210ea70[];
-extern char data_ov002_0210ea88[];
-extern char data_ov002_0210eac8[];
-extern char data_ov002_0210eaf0[];
-extern char data_ov002_0210eb00[];
-extern char data_ov002_0210eb10[];
 extern char data_ov002_0210eb20[];
-extern char data_ov002_0210eb38[];
-extern char data_ov002_0210eb58[];
-extern char data_ov002_0210eb70[];
-extern char data_ov002_0210eb88[];
-extern char data_ov002_0210eb90[];
-extern char data_ov002_0210eb98[];
-extern char data_ov002_0210eba8[];
 extern char data_ov002_0210ebb8[];
-extern char data_ov002_0210ebc8[];
 extern char data_ov002_0210ebd8[];
-extern char data_ov002_0210ec00[];
-extern char data_ov002_0210ec10[];
-extern char data_ov002_0210ec38[];
-extern char data_ov002_0210ec40[];
-extern char data_ov002_0210ec50[];
-extern char data_ov002_0210ec60[];
-extern char data_ov002_0210ec98[];
-extern char data_ov002_0210eca8[];
-extern char data_ov002_0210ecb8[];
 extern char data_ov002_02110aa4[];
 }
 
-extern "C" int _ZN6Player16CleanupResourcesEv(char *c)
+int Player::CleanupResources()
 {
     int i;
     u32 b;
 
-    func_ov002_020bdd2c(c);
-    func_ov002_020bdef0(c);
-    func_ov002_020bdd9c(c);
-    func_ov002_020e032c(c);
+    func_ov002_020bdd2c(((char *)this));
+    func_ov002_020bdef0(((char *)this));
+    func_ov002_020bdd9c(((char *)this));
+    func_ov002_020e032c(((char *)this));
     for (i = 0; i < 4; i++) {
         int j;
-        VB *p = *(VB **)(c + i * 4 + 0xdc);
+        VB *p = *(VB **)(((char *)this) + i * 4 + 0xdc);
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
-        p = *(VB **)(c + i * 4 + 0x154);
+        p = *(VB **)(((char *)this) + i * 4 + 0x154);
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         j = i + 4;
-        p = *(VB **)(c + j * 4 + 0x154);
+        p = *(VB **)(((char *)this) + j * 4 + 0x154);
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         {
-            int q = *(int *)(c + i * 4 + 0x27c);
+            int q = *(int *)(((char *)this) + i * 4 + 0x27c);
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(c + i * 4 + 0x28c);
+            q = *(int *)(((char *)this) + i * 4 + 0x28c);
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(c + j * 4 + 0x28c);
+            q = *(int *)(((char *)this) + j * 4 + 0x28c);
             if (q != 0)
                 func_0203cbc0(q);
         }
     }
     {
-        VB *p = *(VB **)(c + 0xec);
+        VB *p = *(VB **)((char *)&unk_0ec);
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
-        p = *(VB **)(c + 0x1d8);
+        p = *(VB **)((char *)&unk_1d8);
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
     }
     {
-        int q = *(int *)(c + 0x578);
+        int q = unk_578;
         if (q != 0)
             func_02073244(q, 0xc, 8, func_020072c0);
-        q = *(int *)(c + 0x57c);
+        q = unk_57c;
         if (q != 0)
             func_0203cbc0(q);
-        q = *(int *)(c + 0x588);
+        q = mHeldObjQueue;
         if (q != 0)
             func_0203cbc0(q);
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[*(int *)(c + 0x63c) + (*(int *)(c + 8) & 3)]);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[mCharFileBase + (mParam & 3)]);
     b = data_0209f2d8;
     b = b == 1;
     if (b != false_)
-        func_ov002_020bebd4(c);
+        func_ov002_020bebd4(((char *)this));
     _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210ec50);
     _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210ebb8);
     _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210ec60);
@@ -291,20 +208,20 @@ extern "C" int _ZN6Player16CleanupResourcesEv(char *c)
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210ec00);
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e728);
     }
-    if (*(u8 *)(c + 0x718) & 1)
+    if (mLoadedResourceFlags & 1)
         UnloadSilverStarAndNumber();
-    if (*(u8 *)(c + 0x718) & 2)
+    if (mLoadedResourceFlags & 2)
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da40);
-    if (*(u8 *)(c + 0x718) & 4)
+    if (mLoadedResourceFlags & 4)
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a0);
-    if (*(u8 *)(c + 0x718) & 8)
+    if (mLoadedResourceFlags & 8)
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9c0);
-    if (*(u8 *)(c + 0x718) & 0x10)
-        UnloadKeyModels(*(s8 *)(c + 0x719));
+    if (mLoadedResourceFlags & 0x10)
+        UnloadKeyModels(unk_719);
     b = data_0209f2d8;
     b = b == 1;
     if (b == false_) {
-        if (*(u8 *)(c + 0x718) & 0x20) {
+        if (mLoadedResourceFlags & 0x20) {
             _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e6f8);
             _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e7b0);
             _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e780);
@@ -312,11 +229,11 @@ extern "C" int _ZN6Player16CleanupResourcesEv(char *c)
     } else {
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e7b0);
     }
-    if (*(u8 *)(c + 0x718) & 0x40) {
-        u32 idx = *(u8 *)(c + 0x6dd);
-        if (idx == (u32)*(int *)(c + 8))
-            idx = *(u8 *)(c + 0x6dc);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[*(int *)(c + 0x63c) + idx]);
+    if (mLoadedResourceFlags & 0x40) {
+        u32 idx = mHatCharacter;
+        if (idx == (u32)mParam)
+            idx = unk_6dc;
+        _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[mCharFileBase + idx]);
     }
     return 1;
 }

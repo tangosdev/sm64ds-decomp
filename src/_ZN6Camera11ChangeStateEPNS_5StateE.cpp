@@ -1,19 +1,20 @@
 //cpp
-extern int data_0209b0c8;
-extern void FUN_02029a68(void);
-extern void func_020089f8(void *camera);
-extern int func_0200cae4(void *camera);
+// @symbol _ZN6Camera11ChangeStateEPNS_5StateE
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Camera.h"
 
-extern "C" int _ZN6Camera11ChangeStateEPNS_5StateE(void *camera, void *state) {
-    if ((*(unsigned int *)((unsigned char *)camera + 0x154) & 0x10) != 0)
+extern "C" int _ZN6Camera11ChangeStateEPNS_5StateE(struct Camera *self, void *state) {
+    if ((*(unsigned int *)((unsigned char *)&self->unk_154) & 0x10) != 0)
         return 0;
-    if (state != *(void **)((unsigned char *)camera + 0x138)) {
-        if (*(void **)((unsigned char *)camera + 0x138) == (void *)&data_0209b0c8) {
+    if (state != *(void **)((unsigned char *)&self->unk_138)) {
+        if (*(void **)((unsigned char *)&self->unk_138) == (void *)&data_0209b0c8) {
             FUN_02029a68();
-            func_020089f8(camera);
+            func_020089f8(((void *)self));
         }
-        *(void **)((unsigned char *)camera + 0x138) = state;
-        *(unsigned char *)((unsigned char *)camera + 0x1a6) = 0;
+        *(void **)((unsigned char *)&self->unk_138) = state;
+        *(unsigned char *)((unsigned char *)&self->unk_1a6) = 0;
     }
-    return func_0200cae4(camera);
+    return func_0200cae4(((void *)self));
 }

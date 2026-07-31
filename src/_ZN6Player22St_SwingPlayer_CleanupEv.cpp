@@ -1,11 +1,15 @@
 //cpp
-extern "C" {
-int _ZN6Player22St_SwingPlayer_CleanupEv(char* c){
-  char* p = *(char**)(c + 0x358);
+// @symbol _ZN6Player22St_SwingPlayer_CleanupEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
+
+
+int Player::St_SwingPlayer_Cleanup()
+{
+  char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(((long long)(int)(p + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x800;
+    *(unsigned int*)(((long long)(int)(p + 0xb0))) &= ~0x800;
   }
-  *(short*)(c + 0x94) = *(short*)(c + 0x8e);
+  mTargetAngleY = mAngleY;
   return 1;
-}
 }

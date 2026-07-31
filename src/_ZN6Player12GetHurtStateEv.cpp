@@ -1,10 +1,15 @@
 //cpp
+// @symbol _ZN6Player12GetHurtStateEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* st);
 extern int data_ov002_02110094[];
-int _ZN6Player12GetHurtStateEv(char* c){
-  if(_ZN6Player7IsStateERNS_5StateE(c, data_ov002_02110094))
-    return *(unsigned char*)(c+0x6e3) & 7;
-  return -1;
 }
+
+int Player::GetHurtState()
+{
+  if(_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_02110094))
+    return mStateStep & 7;
+  return -1;
 }
