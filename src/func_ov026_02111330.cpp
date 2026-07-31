@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov026_02111330
+// @emits daObjWlPolelift_c_Behavior
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjWlPolelift_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -6,7 +12,6 @@ typedef unsigned int u32;
 typedef int s32;
 typedef unsigned long long u64;
 
-struct Vector3 { int x, y, z; };
 
 extern "C" {
     unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -28,12 +33,11 @@ extern "C" {
     void _ZN13RaycastGroundD1Ev(void* self);
 }
 
-extern Vector3 data_ov026_02113a9c;
 
 struct RaycastGround { char pad[0x44]; s32 hitY; char pad2[8]; };
 
 
-extern "C" int func_ov026_02111330(void* self)
+extern "C" int daObjWlPolelift_c_Behavior(void* self)
 {
     u8* c = (u8*)self;
     Vector3 a, b, sub, rp, mul, rel;

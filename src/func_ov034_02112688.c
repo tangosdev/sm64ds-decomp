@@ -1,20 +1,24 @@
+// @symbol func_ov034_02112688
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Player.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 #pragma opt_strength_reduction off
 typedef unsigned char u8;
 typedef unsigned short u16;
-struct Vec3 { int x, y, z; };
+
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern int func_ov034_02112650(char *sl, char *p, char *a);
-extern void _ZN6Player6BounceE5Fix12IiE(void *self, int f);
 extern void func_0201267c(int a, void *b);
 extern void func_ov034_021125b8(char *sl, int i);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, struct Vec3 *v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
+extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, struct Vector3 *v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
 void func_ov034_02112688(char *sl)
 {
     int off; int zero; int i; char *a; char *p; int one; int two; int cc; int eight;
-    volatile struct Vec3 v0; struct Vec3 v; struct Vec3 hv;
+    volatile struct Vector3 v0; struct Vector3 v; struct Vector3 hv;
     off = 0x478; p = sl + off; i = 0; zero = 0; one = 1; two = 2; cc = 0xc000; eight = 8;
     for (; i < 5; i++, p += 0x40) {
-        unsigned int id; int flag; u16 type; struct Vec3 *src;
+        unsigned int id; int flag; u16 type; struct Vector3 *src;
         id = *(unsigned int *)(sl + (i << 6) + 0x49c);
         if (id == 0) continue;
         a = _ZN5Actor10FindWithIDEj(id);
@@ -22,7 +26,7 @@ void func_ov034_02112688(char *sl)
         type = *(u16 *)(a + 0xc);
         { int t = (int)(type == 0xbf); flag = t ? one : zero; }
         if (flag == 0) continue;
-        src = (struct Vec3 *)(((long long)(int)(a + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        src = (struct Vector3 *)(((long long)(int)(a + 0x5c)));
         v0.x = src->x; v0.y = src->y; v0.z = src->z;
         if (func_ov034_02112650(sl, p, a) != 0) {
             _ZN6Player6BounceE5Fix12IiE(a, 0x28000);

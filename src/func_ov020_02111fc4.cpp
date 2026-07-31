@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov020_02111fc4
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 
 struct Actor {
     virtual void v0();

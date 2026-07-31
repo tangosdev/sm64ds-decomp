@@ -1,9 +1,13 @@
-extern short data_ov036_02113b18;
-extern short data_ov036_02113b1c;
+// @symbol func_ov036_0211150c
+// @emits daObjRc_Kaitendai_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjRc_Kaitendai_c::InitResources - recovered from vtable slot identity */
 extern int data_ov036_02113b2c;
 extern int func_ov002_020b676c(int *self, void *arg, int val);
 
-int func_ov036_0211150c(int *self)
+int daObjRc_Kaitendai_c_InitResources(int *self)
 {
     short v;
     v = data_ov036_02113b18;

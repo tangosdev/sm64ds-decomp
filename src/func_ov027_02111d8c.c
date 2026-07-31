@@ -1,11 +1,14 @@
+// @symbol func_ov027_02111d8c
+// @emits daPgDfdr_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daPgDfdr_c::CleanupResources - recovered from vtable slot identity */
 extern void _ZN13SharedFilePtr7ReleaseEv(void*);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
-extern void _ZN16MeshColliderBase7DisableEv(void*);
 extern void* data_ov027_02113c7c;
-extern void* data_ov035_02112ca4[];
 extern void* data_ov027_02113c94;
 extern void* data_ov027_02113c6c;
-int func_ov027_02111d8c(char* c){
+int daPgDfdr_c_CleanupResources(char* c){
   int i;
   _ZN13SharedFilePtr7ReleaseEv(&data_ov027_02113c7c);
   for(i=0;i<3;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov035_02112ca4[i]);

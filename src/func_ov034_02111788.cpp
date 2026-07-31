@@ -1,12 +1,16 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov034_02111788
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Vec3D { int x, y, z; ~Vec3D() {} };
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const Vec3 *v);
+extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const Vector3 *v);
 extern "C" int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void *self, signed char *id, unsigned int starID, const Vec3 *pos, unsigned int how);
-extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void *self, signed char *id, unsigned int starID, const Vector3 *pos, unsigned int how);
 extern "C" void func_ov034_021125b8(void *c, int i);
 
 extern "C" int data_ov034_021138c4[];
@@ -15,14 +19,14 @@ extern "C" void func_ov034_02111788(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
     Vec3D starPos;
-    Vec3 v;
+    Vector3 v;
     int a, b;
     int i;
 
     if (DecIfAbove0_Byte(c + 0x8da) == 0) {
         unsigned int idx = *(unsigned char *)(c + 0x8dd);
         if (idx < 5) {
-            Vec3 *vp = (Vec3 *)(c + 0x3cc + idx * 0xc);
+            Vector3 *vp = (Vector3 *)(c + 0x3cc + idx * 0xc);
             v.x = vp->x;
             v.y = vp->y;
             v.z = vp->z;
@@ -64,7 +68,7 @@ extern "C" void func_ov034_02111788(void *thiz)
         starPos.y = py;
         starPos.z = pz;
     }
-    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(c, (signed char *)(c + 0x8e3), *(unsigned char *)(c + 0x8e2), (const Vec3 *)(c + 0x5c), 4);
+    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(c, (signed char *)(c + 0x8e3), *(unsigned char *)(c + 0x8e2), (const Vector3 *)(c + 0x5c), 4);
     _ZN5Sound22StopLoadedMusic_Layer3Ev();
     func_ov034_021125b8(c, 3);
 }

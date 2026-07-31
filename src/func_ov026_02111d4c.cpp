@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov026_02111d4c
+// @emits daObjWlSubmarine_c_AfterClsn
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjWlSubmarine_c::AfterClsn - recovered from vtable slot identity */
 
 struct Player {
     char pad[0x5c];
@@ -15,15 +20,13 @@ struct Actor {
 
 extern "C" int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
-extern "C" void func_ov026_02111ee0(void* c, void* p);
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern "C" void MulVec3Mat4x3(const Vector3* in, const void* m, Vector3* out);
 
-extern void* data_ov026_02113f3c;
 extern char data_020a0e68;
 
-extern "C" int func_ov026_02111d4c(char* c)
+extern "C" int daObjWlSubmarine_c_AfterClsn(char* c)
 {
     Player* pl = ((Actor*)c)->ClosestPlayer();
     if (pl != 0) {

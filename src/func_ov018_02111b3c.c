@@ -1,8 +1,12 @@
+// @symbol func_ov018_02111b3c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned short u16;
-struct Vector3 { int x, y, z; };
+
 extern char* _ZN5Actor13ClosestPlayerEv(void);
 extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
-extern void func_ov018_021123d0(char* c, int i);
 
 void func_ov018_02111b3c(char* c) {
   char* p = _ZN5Actor13ClosestPlayerEv();

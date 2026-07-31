@@ -1,10 +1,13 @@
-#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+// @symbol func_ov020_02111340
+/* recovered: shared common types */
+#include "common.h"
+#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off)))))
 extern int RandomIntInternal(void *p);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern int data_0209e650[];
-struct Vec3 { int x, y, z; };
-struct Vec3_16 { short x, y, z; };
+
+
 
 void func_ov020_02111340(char *c)
 {
@@ -16,8 +19,8 @@ void func_ov020_02111340(char *c)
         if (found == 0)
             return;
         {
-            struct Vec3 pos;
-            struct Vec3_16 rot;
+            struct Vector3 pos;
+            struct Vector3_16 rot;
             int *fp = (int *)AT(found, 0x5c);
             int mul = 0x1f4 * bit;
             int x = fp[0];

@@ -1,8 +1,11 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_ov019_0211131c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_PathPtr.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _Z11UpdateAngleRssis(short* a, short b, int n, short s);
-extern int _ZNK7PathPtr8NumNodesEv(void* p);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* p, struct Vec3* v, unsigned int i);
-extern short Vec3_HorzAngle(struct Vec3* a, struct Vec3* b);
+extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* p, struct Vector3* v, unsigned int i);
+extern short Vec3_HorzAngle(struct Vector3* a, struct Vector3* b);
 
 int func_ov019_0211131c(char* c) {
     _Z11UpdateAngleRssis(
@@ -13,9 +16,9 @@ int func_ov019_0211131c(char* c) {
     if (n >= _ZNK7PathPtr8NumNodesEv(c + 0x364) - 2) {
         *(short*)(c + 0x8e) = *(short*)(c + 0x94);
     } else {
-        struct Vec3 v;
+        struct Vector3 v;
         _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x364, &v, n + 1);
-        *(short*)(c + 0x8e) = Vec3_HorzAngle((struct Vec3*)(c + 0x5c), &v);
+        *(short*)(c + 0x8e) = Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &v);
     }
     {
         int *pv = (int *)(((int)c + 0x380) & 0xFFFFFFFFFFFFFFFF);

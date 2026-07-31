@@ -1,14 +1,17 @@
-extern void _ZN18MovingCylinderClsnD1Ev(void *);
+// @symbol func_ov027_02111924
+// @emits daPgDfdr_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_ModelAnim.h"
+#include "decl_MovingCylinderClsn.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daPgDfdr_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN15TextureSequenceD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
 extern void *G0;
-int *func_ov027_02111924(int *t)
+int *daPgDfdr_c_OnYoshiTryEat(int *t)
 {
     t[0] = (int)VT0;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x398);

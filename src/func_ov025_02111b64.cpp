@@ -1,20 +1,16 @@
 //cpp
+// @symbol func_ov025_02111b64
+// @emits daDkk_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daDkk_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12i;
-extern "C" void func_ov091_02133020(char* c);
-extern "C" void func_ov091_02132ff4(char* c);
-extern "C" void func_ov091_02132f04(char* c);
-extern "C" void func_ov091_02132e98(char* c);
-extern "C" void func_ov091_02132e64(char* c);
-extern "C" void func_ov025_02111a84(char* c);
-extern "C" void func_ov025_021119f4(char* c);
-extern "C" int func_ov025_021119a4(char* c);
 extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
-extern "C" void func_ov091_02133098(char* c);
 extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, Fix12i a, Fix12i b);
-extern "C" int func_ov091_02132dc0(char* c);
 extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
 
-extern "C" int func_ov025_02111b64(char* thiz)
+extern "C" int daDkk_c_Behavior(char* thiz)
 {
     char* c = thiz;
     switch (*(int*)(c + 0x398)) {

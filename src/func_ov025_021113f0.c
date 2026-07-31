@@ -1,3 +1,9 @@
+// @symbol func_ov025_021113f0
+// @emits daDgr_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daDgr_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
@@ -7,19 +13,16 @@ typedef int s32;
 
 typedef struct { s32 x, y, z; } Vec3;
 
-extern void func_ov025_02111344(char *t);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);
-extern void func_ov025_021112e0(char *self);
 extern void func_02012694(s32 a, void *b);
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(char *self, Vec3 *pos, s32 fix);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
-extern int func_ov025_0211123c(char *c);
 extern s16 data_02082214[];
 
-#define LAUNDER(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define LAUNDER(p) ((long long)(int)(p))
 
-int func_ov025_021113f0(char *self)
+int daDgr_c_Behavior(char *self)
 {
     s32 loc[6];
     s32 n;

@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov027_02111eb4
+// @emits daPgDfdr_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daPgDfdr_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *o, void *f, int a, int b);
@@ -11,7 +17,6 @@ extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *o, void *kcl, void *m, int fx, short s, void *clps);
 extern void func_020393d4(void *p, int v);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *o, void *act, int a, int b, unsigned c, unsigned d);
-extern void func_ov027_02111d70(void *c, int b);
 extern void _ZN13RaycastGroundC1Ev(void *o);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *o, void *v, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *o);
@@ -20,13 +25,11 @@ extern void _ZN13RaycastGroundD1Ev(void *o);
 extern char data_ov027_02113c7c;
 extern char data_ov027_02113c94;
 extern char data_ov027_02113c6c;
-extern char data_ov027_021130e8;
-extern void *data_ov027_02112ca4[3];
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
 struct RG { char pad[0x54]; };
 
-int func_ov027_02111eb4(void *cc)
+int daPgDfdr_c_InitResources(void *cc)
 {
     char *c = (char*)cc;
     int i;

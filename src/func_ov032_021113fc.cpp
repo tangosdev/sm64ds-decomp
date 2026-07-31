@@ -1,11 +1,16 @@
 //cpp
+// @symbol func_ov032_021113fc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vec3 { s32 x, y, z; };
+
 
 extern "C" {
     void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
@@ -19,8 +24,6 @@ extern "C" {
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 c, u32 d, u32 e);
 }
 
-extern Vec3 data_ov032_021137cc;
-extern Vec3 data_ov032_021137d8;
 extern int data_ov032_02113abc[];
 extern int data_ov032_02113a7c[];
 
@@ -28,7 +31,7 @@ extern "C" void func_ov032_021113fc(void* self)
 {
     u8* c = (u8*)self;
 
-    Vec3 v1;
+    Vector3 v1;
     v1.x = data_ov032_021137cc.x;
     v1.y = data_ov032_021137cc.y;
     v1.z = data_ov032_021137cc.z;
@@ -57,7 +60,7 @@ extern "C" void func_ov032_021113fc(void* self)
         }
     }
 
-    Vec3 v2;
+    Vector3 v2;
     v2.x = data_ov032_021137d8.x;
     v2.y = data_ov032_021137d8.y;
     v2.z = data_ov032_021137d8.z;
@@ -81,7 +84,7 @@ extern "C" void func_ov032_021113fc(void* self)
     if (s3b0 == data_ov032_02113abc) return;
     if (s3b0 == data_ov032_02113a7c) return;
 
-    Vec3 hv;
+    Vector3 hv;
     hv.x = *(s32*)(c+0x5c);
     hv.y = *(s32*)(c+0x60);
     hv.z = *(s32*)(c+0x64);

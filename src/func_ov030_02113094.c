@@ -1,3 +1,6 @@
+// @symbol func_ov030_02113094
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -5,8 +8,8 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 
 struct Actor;
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
+
+
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char* self, int a);

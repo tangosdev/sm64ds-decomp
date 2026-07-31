@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov032_02111350
+/* recovered: shared common types */
+#include "common.h"
 extern char* _ZN5Actor13ClosestPlayerEv(void);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);

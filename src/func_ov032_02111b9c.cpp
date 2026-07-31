@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov032_02111b9c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct BCA_File;
 
 extern "C" {
@@ -14,9 +19,6 @@ int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 int AngleDiff(int a, int b);
 short Vec3_VertAngle(const Vector3* a, const Vector3* b);
 
-extern int data_ov032_02113a50;
-extern int data_ov032_02113a8c;
-extern int data_ov032_02113a48;
 extern int data_ov032_02113a7c;
 extern int data_ov032_02113abc;
 extern int data_0209e650;

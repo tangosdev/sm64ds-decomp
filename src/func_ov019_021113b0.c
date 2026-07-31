@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov019_021113b0
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, struct Vector3 *out, unsigned int idx);
 extern int Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);

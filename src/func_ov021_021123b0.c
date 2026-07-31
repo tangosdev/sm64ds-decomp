@@ -1,18 +1,22 @@
+// @symbol func_ov021_021123b0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vec3 { int x, y, z; };
+
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void _ZN5Actor14TriplePoofDustEv(void *a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
-extern void func_ov021_02112294(void *c);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vec3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
+extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 
 void func_ov021_021123b0(char *c)
 {
@@ -56,7 +60,7 @@ void func_ov021_021123b0(char *c)
 
     if (*(u8*)(c + 0x3be) == 4) return;
     {
-        struct Vec3 v;
+        struct Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);

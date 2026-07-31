@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov025_021117dc
+// @emits daDgr_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daDgr_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct Model { int d; };
@@ -6,8 +12,6 @@ struct ModelBase { int d; };
 struct MeshCollider { int d; };
 struct MovingMeshCollider { int d; };
 
-extern "C" void func_ov025_02111344(char* t);
-extern "C" void func_ov025_021112e0(char* self);
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
 extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
@@ -20,7 +24,7 @@ extern SharedFilePtr data_ov025_02113a60;
 extern CLPS_Block data_ov025_02112c28;
 extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern "C" int func_ov025_021117dc(char* thiz)
+extern "C" int daDgr_c_InitResources(char* thiz)
 {
     char* c = thiz;
     func_ov025_02111344(c);

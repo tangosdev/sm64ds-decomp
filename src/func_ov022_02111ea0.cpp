@@ -1,4 +1,12 @@
 //cpp
+// @symbol func_ov022_02111ea0
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjFl_Seesaw_c.h"
+// @emits daObjFl_Seesaw_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjFl_Seesaw_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12;
 struct BMD_File;
 struct KCL_File;
@@ -16,19 +24,19 @@ struct MovingMeshCollider {
 extern SharedFilePtr data_ov022_021145a8;
 extern SharedFilePtr data_ov022_021145a0;
 extern CLPS_Block data_ov064_0211bacc;
-extern "C" void func_ov022_02111d48(char *t);
 extern "C" void func_020393d4(int *p, int v);
 extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 
-extern "C" int func_ov022_02111ea0(char *c)
+extern "C" int daObjFl_Seesaw_c_InitResources(char *c)
 {
+    struct daObjFl_Seesaw_c *self = (struct daObjFl_Seesaw_c *)(void *)c;
     BMD_File *f = Model::LoadFile(data_ov022_021145a8);
     ((ModelBase *)(c + 0xd4))->SetFile(f, 1, -1);
     func_ov022_02111d48(c);
     ((Platform *)c)->UpdateClsnPosAndRot();
     KCL_File *k = MeshCollider::LoadFile(data_ov022_021145a0);
-    ((MovingMeshCollider *)(c + 0x124))->SetFile(k, *(Matrix4x3 *)(c + 0x2ec), 0x1000, *(short *)(c + 0x8e), data_ov064_0211bacc);
+    ((MovingMeshCollider *)(c + 0x124))->SetFile(k, *(Matrix4x3 *)(c + 0x2ec), 0x1000, self->unk_08e, data_ov064_0211bacc);
     func_020393d4((int *)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-    *(short *)(c + 0x31e) = -0x10;
+    self->unk_31e = -0x10;
     return 1;
 }

@@ -1,3 +1,9 @@
+// @symbol func_ov026_021119c0
+// @emits daObjWlSubmarine_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjWlSubmarine_c::InitResources - recovered from vtable slot identity */
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, int, int, int);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *);
@@ -5,11 +11,8 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, int, void *, int, int, void *);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void *, void *);
-extern char data_ov026_02113ee4[];
-extern char data_ov026_02113edc[];
-extern char data_ov026_02112fd4[];
 extern char data_0209caa0[];
-int func_ov026_021119c0(char *c){
+int daObjWlSubmarine_c_InitResources(char *c){
   void *m = (void*)_ZN5Model8LoadFileER13SharedFilePtr(data_ov026_02113ee4);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4,(int)m,1,-1);
   _ZN8Platform21UpdateModelPosAndRotYEv(c);

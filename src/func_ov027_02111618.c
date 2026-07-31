@@ -1,13 +1,16 @@
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN18MovingCylinderClsnD1Ev(void *);
-extern void _ZN12WithMeshClsnD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
+// @symbol func_ov027_02111618
+// @emits daIDonketu_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_ModelAnim.h"
+#include "decl_MovingCylinderClsn.h"
+#include "decl_ShadowModel.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daIDonketu_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov002_020aed18(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
 extern void *G0;
-int *func_ov027_02111618(int *t)
+int *daIDonketu_c_OnYoshiTryEat(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

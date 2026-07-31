@@ -1,12 +1,14 @@
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
-extern int VT2[];
+// @symbol func_ov036_02111494
+// @emits daObjRc_Kaitendai_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daObjRc_Kaitendai_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *func_ov036_02111494(int *t)
+int *daObjRc_Kaitendai_c_OnYoshiTryEat(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

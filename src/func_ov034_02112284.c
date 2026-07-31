@@ -1,7 +1,11 @@
+// @symbol func_ov034_02112284
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);
-extern void _ZN7Message11PrepareTalkEv(void);
 extern void _ZN6Camera9SetFlag_3Ev(void* self);
 extern void func_0201267c(int anim, char* p);
 extern void func_ov034_021125b8(char* c, int i);
