@@ -29,7 +29,7 @@ void func_ov006_020f4b30(char* c)
     if (w->ready < 2)
         return;
     w->slots[0xb - w->count].done = 1;
-    (*(short*)((long long)(int)(c + 0x5328) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(short*)((long long)(int)(c + 0x5328)))++;
     mode = w->mode;
     if (mode == 1) {
         if (w->count >= 10)

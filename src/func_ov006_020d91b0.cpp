@@ -12,7 +12,7 @@ void func_ov006_020d5b10(char *c);
 int dScMgBomroom_c_Behavior(char *c)
 {
     if (*(unsigned short *)(c + 0x6200 + 0xf0) != 0) {
-        unsigned short *t = (unsigned short *)(((int)c + 0x62f0) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *t = (unsigned short *)(((int)c + 0x62f0));
         *t = *t - 1;
         if (*(short *)(c + 0x6200 + 0xf0) <= 0)
             *(short *)(c + 0x6200 + 0xf0) = 0;

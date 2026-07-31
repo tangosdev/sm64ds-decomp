@@ -5,7 +5,7 @@ extern void FreeGfxSlotsById(int arg);
 void func_ov006_020e97b0(char *c)
 {
     if (*(unsigned short*)(c + 0x5548) != 0) {
-        unsigned short *d = (unsigned short*)((int)(c + 0x5548) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *d = (unsigned short*)((int)(c + 0x5548));
         *d = *d - 1;
         if (*(short*)(c + 0x5548) < 0)
             *(short*)(c + 0x5548) = 0;

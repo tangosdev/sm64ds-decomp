@@ -63,7 +63,7 @@ void func_ov006_020ec134(struct C* c)
     g.x = 0;
     g.y = -0x10000;
     func_0203d388(&g, c->s7a[0]);
-    func_0203d704(&h, (V2*)((long long)(int)c->v18 & 0xFFFFFFFFFFFFFFFFLL) + 1, &g);
+    func_0203d704(&h, (V2*)((long long)(int)c->v18) + 1, &g);
     c->v18[0].x = h.x;
     c->v18[0].y = h.y;
 }

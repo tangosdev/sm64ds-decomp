@@ -47,7 +47,7 @@ void func_ov006_020f456c(Ctx *c)
 
     if (c->h5322 != 0)
     {
-        p = (u16 *)(int)(((long long)(int)((char *)c + 0x5322)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (u16 *)(int)(((long long)(int)((char *)c + 0x5322)));
         *p = (u16)(*p - 1);
         return;
     }

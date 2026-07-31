@@ -14,7 +14,7 @@ void dScMg3DEsp_c_OnYoshiTryEat_020e9c20(char* c, int a)
     func_ov006_020e984c(c);
     self->unk_553c = 0;
     if (a == 0) {
-        int* p = (int*)(((int)c + 0xbc) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0xbc));
         *p += 1;
         if (self->unk_0bc > 0x270e) self->unk_0bc = 0x270e;
     } else if (a == 0x12) {

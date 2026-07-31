@@ -12,7 +12,7 @@ void dScMgCoin_c_OnYoshiTryEat_020de5b0(char *c);
 void dScMgCoin_c_OnYoshiTryEat_020de5b0(char *c){
     struct dScMgCoin_c *self = (struct dScMgCoin_c *)(void *)c;
     if (self->unk_51db != 0) {
-        *(unsigned char*)(((int)c + 0x51da) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned char*)(((int)c + 0x51da)) += 1;
     } else {
         self->unk_51da = 0;
     }

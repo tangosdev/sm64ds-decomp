@@ -8,7 +8,7 @@ extern char *func_020beb68;
 void func_ov006_020f4888(char *self)
 {
     if (*(unsigned short *)(self + 0x5324) != 0) {
-        *(unsigned short *)(((int)self + 0x5324) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(unsigned short *)(((int)self + 0x5324)) -= 1;
         if (*(short *)(self + 0x5324) <= 0) {
             *(unsigned short *)(self + 0x5324) = 0;
             if (*(unsigned char *)(self + 0x5337) >= *(unsigned short *)(self + 0x532a)) {
@@ -16,7 +16,7 @@ void func_ov006_020f4888(char *self)
                     func_ov004_020b67f8();
                 func_ov004_020b0a54(4);
                 if (*(int *)(self + 0xb4) < 0x270f) {
-                    int *c = (int *)(((int)self + 0xb4) & 0xFFFFFFFFFFFFFFFF);
+                    int *c = (int *)(((int)self + 0xb4));
                     *c += 1;
                 }
                 if (*(int *)(self + 0xb4) > *(int *)(self + 0xb8))
@@ -26,7 +26,7 @@ void func_ov006_020f4888(char *self)
             } else {
                 func_ov004_020b0a54(5);
                 if (*(int *)(self + 0xb4) > 0) {
-                    int *c = (int *)(((int)self + 0xb4) & 0xFFFFFFFFFFFFFFFF);
+                    int *c = (int *)(((int)self + 0xb4));
                     *c -= 1;
                 }
                 func_ov006_020c0d68(self + 0x4f38);

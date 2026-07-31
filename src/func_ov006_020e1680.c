@@ -7,7 +7,7 @@ typedef unsigned long long u64;
 extern int _ZN4cstd4sqrtEy(u64);
 extern u8 data_ov006_0212e458[];
 
-#define M(p) ((int *)(int)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define M(p) ((int *)(int)((long long)(int)(p)))
 
 void func_ov006_020e1680(char *o)
 {

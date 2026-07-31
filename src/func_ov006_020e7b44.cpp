@@ -24,7 +24,7 @@ extern int data_ov006_0213c744[];
 
 extern "C" void func_ov006_020e7b44(char* c)
 {
-    int* p = (int*)(((int)c + 0x210) & 0xFFFFFFFFFFFFFFFFLL);
+    int* p = (int*)(((int)c + 0x210));
     int* d = data_ov006_0213c744;
     if (p[0] == d[0]) {
         if (p[1] == d[1]) return;

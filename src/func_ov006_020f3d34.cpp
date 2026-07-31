@@ -21,11 +21,11 @@ extern "C" void func_ov006_020f3d34(char *self)
         *(unsigned char *)(self + 0x51ba + b * 0x18) = 0;
         func_02012790(0x26);
         Sound::PlayBank2_2D(0x13d);
-        (*(unsigned char *)(((int)self + 0x5337) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(unsigned char *)(((int)self + 0x5337)))++;
         *(unsigned char *)(self + 0x5338) = 0;
     } else {
         func_02012790(0xe);
-        (*(unsigned char *)(((int)self + 0x533a) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(unsigned char *)(((int)self + 0x533a)))++;
         func_ov004_020b5dd4();
         Sound::PlayBank2_2D(0x13e);
         if (*(unsigned char *)(self + 0x533a) < *(unsigned char *)(self + 0x533b)) {

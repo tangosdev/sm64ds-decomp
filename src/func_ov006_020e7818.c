@@ -10,7 +10,7 @@ void func_ov006_020e7818(char* self)
             *(short*)(self + 0x17a) = *(short*)(self + 0x17c);
             sb = 1;
             if (*(short*)(self + 0x178) > 0) {
-                *(short*)(int)(((long long)(int)(self + 0x178)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+                *(short*)(int)(((long long)(int)(self + 0x178))) -= 1;
             }
         }
     }

@@ -22,12 +22,12 @@ extern "C" void func_ov006_020f5a64(char *c)
         *(unsigned char *)(c + 0x5000 + b * 0x18 + 0x1ba) = 0;
         func_02012790(0x26);
         Sound::PlayBank2_2D(0x13d);
-        *(unsigned char *)(((int)c + 0x5405) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned char *)(((int)c + 0x5405)) += 1;
         *(unsigned char *)(c + 0x5406) = 0;
     } else {
         func_02012790(0xe);
         Sound::PlayBank2_2D(0x13e);
-        *(unsigned char *)(((int)c + 0x5408) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned char *)(((int)c + 0x5408)) += 1;
         func_ov004_020b5dd4();
         if (*(unsigned char *)(c + 0x5408) < *(unsigned char *)(c + 0x5409)) {
             *sa = 5;

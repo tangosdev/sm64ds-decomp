@@ -6,5 +6,5 @@ void func_ov006_020f50c0(char *self)
 {
     func_ov006_020f50c0_cb(self);
     if (*(unsigned short *)(self + 0x5322))
-        *(unsigned short *)(((long long)(int)(self + 0x5322)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(unsigned short *)(((long long)(int)(self + 0x5322))) -= 1;
 }

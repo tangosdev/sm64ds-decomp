@@ -9,7 +9,7 @@ void func_ov006_020ded00(int this)
   {
     *((int *) (this + 4)) -= 6;
   }
-  if (DecIfAbove0_Byte((unsigned char *) ((this + 0x14) & 0xFFFFFFFFFFFFFFFF)))
+  if (DecIfAbove0_Byte((unsigned char *) ((this + 0x14))))
   {
     return;
   }

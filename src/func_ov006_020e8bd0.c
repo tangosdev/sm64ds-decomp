@@ -9,7 +9,7 @@ extern "C" void func_ov006_020e8bd0(char *c, int i)
     int x = *(int *)(b + off);
     x = x - (x >> 7);
     *(int *)(b + off) = x;
-    *(unsigned char *)(((int)c + 0x554e) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(unsigned char *)(((int)c + 0x554e)) += 1;
     {
         unsigned char ip = *(unsigned char *)(c + 0x554e);
         _ZN3G2x13SetBlendAlphaEPVttttt(

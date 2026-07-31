@@ -8,7 +8,7 @@ extern int data_ov006_0212e3d0[];
 extern int data_ov006_0212e3e8[];
 extern int data_0209d4b8;
 
-#define LB(a) (*(unsigned char*)(((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LB(a) (*(unsigned char*)(((long long)(int)(a))))
 
 struct Obj {
     virtual int v00(); virtual int v01(); virtual int v02(); virtual int v03();

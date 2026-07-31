@@ -27,7 +27,7 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
         else if (r == 1)
             FreeGfxSlotsById(9);
         self->unk_538a = 0;
-        *(s16*)(((int)c + 0x5388) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(s16*)(((int)c + 0x5388)) += 1;
         break;
     }
     case 0xf:
@@ -44,7 +44,7 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
                 func_ov004_020b5d74();
                 self->unk_538a = 0x1e;
             }
-            *(s16*)(((int)c + 0x5388) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(s16*)(((int)c + 0x5388)) += 1;
         }
         break;
     case 0x10:
@@ -52,7 +52,7 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
             int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
             func_ov006_020da4ac(c + 0x51a8, 0);
             if (r == -1) {
-                *(s16*)(((int)c + 0x5388) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(s16*)(((int)c + 0x5388)) += 1;
             } else {
                 return 1;
             }
@@ -77,7 +77,7 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
             b += 0x30;
         }
         self->unk_538a = 0x3c;
-        *(s16*)(((int)c + 0x5388) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(s16*)(((int)c + 0x5388)) += 1;
         break;
     }
     case 0x12:

@@ -28,7 +28,7 @@ void func_ov006_020e7428(void)
     k = 0;
     for (i = 0; i < 0x80; i++) {
         data_ov006_02141a54[i].attr01 = 0;
-        *(u32 *)&data_ov006_02141a54[(int)(((long long)i) & 0xFFFFFFFFFFFFFFFFLL)].attr2 = 0;
+        *(u32 *)&data_ov006_02141a54[(int)(((long long)i))].attr2 = 0;
     }
 
     y = 0;
@@ -38,7 +38,7 @@ void func_ov006_020e7428(void)
         tx = 0;
         for (; x < 0x100; x += 0x40) {
             data_ov006_02141a54[k].attr01 = ((y & 0xff) | 0xc0000c00) | ((x & 0x1ff) << 16);
-            data_ov006_02141a54[k].attr2 = (u16)(((int)(((long long)tx) & 0xFFFFFFFFFFFFFFFFLL) + ((int)(((long long)ty) & 0xFFFFFFFFFFFFFFFFLL) << 5)) | 0xf000);
+            data_ov006_02141a54[k].attr2 = (u16)(((int)(((long long)tx)) + ((int)(((long long)ty)) << 5)) | 0xf000);
             tx += 8;
             k++;
         }

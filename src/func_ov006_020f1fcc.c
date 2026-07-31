@@ -56,7 +56,7 @@ void func_ov006_020f1fcc(char *c)
 
         for (i = 0; i < 0x78; i++) {
             if (*(u8 *)(c + i + 0x52ed) == 1) {
-                u8 *p = (u8 *)(((long long)(int)(c + i + off)) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *p = (u8 *)(((long long)(int)(c + i + off)));
                 if (*p != 9) {
                     int dx2 = data_020a0de8[idx][2] - (((int *)(c + 0x47f8))[i] >> 12);
                     int dy2 = data_020a0de8[idx][3] - (((int *)(c + 0x49d8))[i] >> 12);

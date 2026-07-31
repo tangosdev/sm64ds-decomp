@@ -49,7 +49,7 @@ extern "C" void func_ov006_020e989c(C70 *cc)
 
     func_ov006_020e8d08(c);
     if (*(u16 *)(c + 0x5548) != 0) {
-        (*(u16 *)(int)(((long long)(int)(c + 0x5548)) & 0xFFFFFFFFFFFFFFFFLL))--;
+        (*(u16 *)(int)(((long long)(int)(c + 0x5548))))--;
         if (*(u16 *)(c + 0x5548) == 0x40) {
             if (*(u8 *)(c + 0x5550) != 0) {
                 int idx = func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0;
@@ -58,7 +58,7 @@ extern "C" void func_ov006_020e989c(C70 *cc)
                 if (func_020beb68 != 0) {
                     char *g = func_020beb68;
                     if (*(int *)(g + 0xb4) < 9999)
-                        (*(int *)(int)(((long long)(int)(g + 0xb4)) & 0xFFFFFFFFFFFFFFFFLL))++;
+                        (*(int *)(int)(((long long)(int)(g + 0xb4))))++;
                     if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
                         *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                 }
@@ -85,7 +85,7 @@ extern "C" void func_ov006_020e989c(C70 *cc)
                     func_ov004_020b67e8(0x15);
                 func_ov004_020b0a54(0);
             } else {
-                (*(int *)(int)(((long long)(int)(c + 0xbc)) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(int *)(int)(((long long)(int)(c + 0xbc))))++;
                 if (*(u32 *)(c + 0xbc) > 0x270e)
                     *(u32 *)(c + 0xbc) = 0x270e;
                 cc->v18(-1);
@@ -112,7 +112,7 @@ extern "C" void func_ov006_020e989c(C70 *cc)
         }
         if (b != 0)
             func_ov006_020e95a4(c);
-        (*(u16 *)(int)(((long long)(int)(c + 0x554c)) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u16 *)(int)(((long long)(int)(c + 0x554c))))++;
         if (*(u16 *)(c + 0x554c) == 0xb4)
             func_ov006_020e95a4(c);
         if (*(u16 *)(c + 0x554c) >= 0xb5)

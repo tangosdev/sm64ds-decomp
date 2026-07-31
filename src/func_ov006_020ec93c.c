@@ -20,11 +20,11 @@ void func_ov006_020ec93c(Obj* self) {
     s16 v = self->unk76;
     if (v < 0 && self->entries[0].val < -0x60000) {
         for (i = 0; i < 5; i++)
-            (*(int*)(((long long)(int)((char*)self + (i << 3) + 0x18)) & 0xFFFFFFFFFFFFFFFFLL)) += 0x170000;
+            (*(int*)(((long long)(int)((char*)self + (i << 3) + 0x18)))) += 0x170000;
         return;
     }
     if (v > 0 && self->entries[0].val > 0x160000) {
         for (i = 0; i < 5; i++)
-            (*(int*)(((unsigned long long)(unsigned int)((char*)self + (i << 3) + 0x18)) & 0xFFFFFFFFFFFFFFFFLL)) -= 0x170000;
+            (*(int*)(((unsigned long long)(unsigned int)((char*)self + (i << 3) + 0x18)))) -= 0x170000;
     }
 }

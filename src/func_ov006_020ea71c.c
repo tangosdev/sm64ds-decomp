@@ -25,18 +25,18 @@ void func_ov006_020ea71c(void)
                 e->pos = 0xb8000;
             if (e->phase == 0) {
                 if (e->timer != 0) {
-                    *(u16 *)(((int)e + 0xc) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                    *(u16 *)(((int)e + 0xc)) -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
-                    *(int *)(((int)e + 4) & 0xFFFFFFFFFFFFFFFF) += e->vel;
-                    *(int *)(((int)e + 8) & 0xFFFFFFFFFFFFFFFF) += 0x100;
+                    *(int *)(((int)e + 4)) += e->vel;
+                    *(int *)(((int)e + 8)) += 0x100;
                 } else {
                     e->timer = 0x40;
-                    *(u8 *)(((int)e + 0x10) & 0xFFFFFFFFFFFFFFFF) += 1;
+                    *(u8 *)(((int)e + 0x10)) += 1;
                 }
             } else {
                 if (e->timer != 0) {
-                    *(u16 *)(((int)e + 0xc) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                    *(u16 *)(((int)e + 0xc)) -= 1;
                     if ((s16)e->timer < 0)
                         e->timer = 0;
                 } else {

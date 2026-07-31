@@ -23,8 +23,8 @@ void func_ov006_020ea3d0(int *arg)
             *(int *)(f + 4) = 0x8000;
         ph = *(u8 *)(f + 0xe);
         if (ph == 0) {
-            *(int *)(((int)f + 4) & 0xFFFFFFFFFFFFFFFF) += *(int *)(f + 8);
-            *(int *)(((int)f + 8) & 0xFFFFFFFFFFFFFFFF) -= 0x100;
+            *(int *)(((int)f + 4)) += *(int *)(f + 8);
+            *(int *)(((int)f + 8)) -= 0x100;
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
                 data_ov006_02141ff0[i].t--;
@@ -34,7 +34,7 @@ void func_ov006_020ea3d0(int *arg)
                 return;
             }
             *(u8 *)(f + 0xc) = 0x40;
-            *(u8 *)(((int)f + 0xe) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(u8 *)(((int)f + 0xe)) += 1;
         } else if (ph == 1) {
             if (*(u8 *)(f + 0xc) != 0) {
                 int v;
@@ -45,12 +45,12 @@ void func_ov006_020ea3d0(int *arg)
                 return;
             }
             *(u8 *)(f + 0x10) = 0;
-            *(u8 *)(((int)f + 0xe) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(u8 *)(((int)f + 0xe)) += 1;
             {
                 char *g = func_020beb68;
                 if (g != 0) {
                     if (*(int *)(g + 0xb4) < 0x270f)
-                        *(int *)(((int)g + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+                        *(int *)(((int)g + 0xb4)) += 1;
                     if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
                         *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                 }
@@ -58,10 +58,10 @@ void func_ov006_020ea3d0(int *arg)
             func_ov004_020adb1c(func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0);
         } else {
             if (*(u8 *)(f + 0xf) != 0) {
-                *(u8 *)(((int)f + 0xc) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(u8 *)(((int)f + 0xc)) += 1;
                 if (*(u8 *)(f + 0xc) >= 8) {
                     *(u8 *)(f + 0xc) = 0;
-                    *(u8 *)(((int)f + 0xf) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                    *(u8 *)(((int)f + 0xf)) -= 1;
                     if (arg != 0)
                         _Z14ApproachLinearRiii(arg, 0x32, 1);
                 }

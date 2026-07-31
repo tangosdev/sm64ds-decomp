@@ -47,7 +47,7 @@ void func_ov006_020e2868(char *c, int idx)
     *p660 += (int)(((long long)sn * *p668 + 0x800) >> 12);
     cs = data_02082214[((*pang) >> 4) * 2];
     *p664 += (int)(((long long)cs * *p668 + 0x800) >> 12);
-    *(u16 *)(c + 0x4684 + m) += *(u16 *)((int)(((int)c + m) & 0xFFFFFFFFFFFFFFFF) + 0x4682);
+    *(u16 *)(c + 0x4684 + m) += *(u16 *)((int)(((int)c + m)) + 0x4682);
 
     x = *p660;
     z = *p664;
@@ -107,7 +107,7 @@ void func_ov006_020e2868(char *c, int idx)
     pd = (int *)(c + 0x4668 + m);
     if (*(int *)(c + 0x4668 + m) <= 0) {
         *p668 = 0;
-        *(u8 *)((int)(((long long)(int)(c + m)) & 0xFFFFFFFFFFFFFFFFLL) + 0x4688) = 2;
+        *(u8 *)((int)(((long long)(int)(c + m))) + 0x4688) = 2;
     }
 
     func_ov006_020e20bc(c, idx);

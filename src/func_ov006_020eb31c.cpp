@@ -9,7 +9,7 @@ struct C {
 
 extern "C" void func_ov006_020eb31c(char* c)
 {
-    short* t = (short*)(((int)c + 0x90) & 0xFFFFFFFFFFFFFFFF);
+    short* t = (short*)(((int)c + 0x90));
     short v = (short)(*t - 1);
     *t = v;
     if (*(short*)(c+0x90) == 0) {

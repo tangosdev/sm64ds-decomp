@@ -17,7 +17,7 @@ void func_ov006_020d8d84(char *self)
     func_ov006_020d836c(self);
 
     if (*(u16 *)(self + 0x62e8) != 0) {
-        (*(u16 *)(((long long)(int)(self + 0x62e8)) & 0xFFFFFFFFFFFFFFFFLL))--;
+        (*(u16 *)(((long long)(int)(self + 0x62e8))))--;
         if (*(s16 *)(self + 0x62e8) < 0)
             *(s16 *)(self + 0x62e8) = 0;
         return;

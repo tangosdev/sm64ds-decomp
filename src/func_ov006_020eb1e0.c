@@ -13,8 +13,8 @@ void func_ov006_020eb1e0(char *c)
 
     _Z14ApproachLinearRiii((int *)(c + 0x48), 0, 0x200);
     if (_Z15ApproachLinear2Rsss((short *)(c + 0x78), 0, 1) != 0) {
-        int *p10 = (int *)(((int)c + 0x10) & 0xFFFFFFFFFFFFFFFF);
-        int *pd = (int *)(((int)data_ov006_0213c984) & 0xFFFFFFFFFFFFFFFF);
+        int *p10 = (int *)(((int)c + 0x10));
+        int *pd = (int *)(((int)data_ov006_0213c984));
         if (p10[0] == pd[0] &&
             (p10[1] == pd[1] || *(int *)(c + 0x10) == 0)) {
             *(unsigned char *)(c + 0x94) = 1;

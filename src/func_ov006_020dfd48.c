@@ -14,7 +14,7 @@ void func_ov006_020dfd48(char *c)
     unsigned int r1;
     unsigned int r2;
 
-    (*(int *)(((int)c + 0x541c) & 0xFFFFFFFFFFFFFFFF))--;
+    (*(int *)(((int)c + 0x541c)))--;
     if (*(int *)(c + 0x541c) > 0) {
         return;
     }

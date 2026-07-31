@@ -2,8 +2,8 @@ int func_ov006_020da5e8(char *a, char *b);
 int func_ov006_020da5e8(char *a, char *b) {
     short arr1[6];
     short arr2[6];
-    short *p1 = (short *)(((int)arr1) & 0xFFFFFFFFFFFFFFFF);
-    short *p2 = (short *)(((int)arr2) & 0xFFFFFFFFFFFFFFFF);
+    short *p1 = (short *)(((int)arr1));
+    short *p2 = (short *)(((int)arr2));
     int max1, sec1;
     short max1i, sec1i;
     int max2, sec2;

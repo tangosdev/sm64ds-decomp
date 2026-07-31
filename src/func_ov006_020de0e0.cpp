@@ -10,7 +10,7 @@ extern unsigned char data_020a0de9[];
 extern "C" void func_ov006_020de0e0(char* self)
 {
   if (*(int*)(self+0x5000+0x1cc) == 0) return;
-  *(int*)(((int)self + 0x51cc) & 0xFFFFFFFFFFFFFFFF) -= 1;
+  *(int*)(((int)self + 0x51cc)) -= 1;
   unsigned int idx = data_020a0e40[0];
   int flag = 0;
   if (data_020a0de8[idx*4] != 0) {

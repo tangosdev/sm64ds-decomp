@@ -37,7 +37,7 @@ void func_ov006_020e2f78(char *c)
 
     if (t->f != 0)
     {
-        *(unsigned short *)(((int)c + 0x4ee2) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(unsigned short *)(((int)c + 0x4ee2)) -= 1;
         if ((short)t->f <= 0)
             t->f = 0;
         return;

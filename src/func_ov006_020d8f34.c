@@ -8,7 +8,7 @@ void func_ov006_020d8f34(char *c)
 {
     if (*(u16 *)(c + 0x62e8) == 0)
         return;
-    *(u16 *)(((long long)(int)(c + 0x62e8)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(u16 *)(((long long)(int)(c + 0x62e8))) -= 1;
     if (*(s16 *)(c + 0x62e8) > 0)
         return;
     *(u16 *)(c + 0x62e8) = 0;

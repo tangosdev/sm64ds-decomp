@@ -22,7 +22,7 @@ void func_ov006_020dc5c4(char *c, int i)
         *(u16 *)(c + 0x519c + off) = 0xb4;
         *(u8 *)(c + 0x51a1 + off) = 2;
         {
-            int *p = (int *)(((int)c + 0x51c8) & 0xFFFFFFFFFFFFFFFF);
+            int *p = (int *)(((int)c + 0x51c8));
             *st = 0;
             *counter = 0;
             *p = *p + 1;

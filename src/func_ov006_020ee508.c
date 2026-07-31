@@ -5,7 +5,7 @@ extern void func_ov006_020ee3bc(char *c);
 extern int data_ov006_02140428;
 extern int data_ov006_02140304;
 void func_ov006_020ee508(char *c){
-    int *acc = (int*)(((int)c + 0x500c) & 0xFFFFFFFFFFFFFFFF);
+    int *acc = (int*)(((int)c + 0x500c));
     *acc = *acc + (((int*)(c+0x5000))[4] >> 12);
     if(((int*)(c+0x5000))[3] > 0x1000){
         *acc -= 0x1000;

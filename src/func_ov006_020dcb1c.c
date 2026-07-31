@@ -14,8 +14,8 @@ void func_ov006_020dcb1c(char *o, int a1)
 {
     int i, j, k;
     char *b = o + a1 * 0x18;
-    int *px = (int *)(((int)b + 0x4ac0) & 0xFFFFFFFFFFFFFFFF);
-    int *pz = (int *)(((int)b + 0x4ac4) & 0xFFFFFFFFFFFFFFFF);
+    int *px = (int *)(((int)b + 0x4ac0));
+    int *pz = (int *)(((int)b + 0x4ac4));
     for (i = 0, j = 0, k = 1; i < 4; i++, o += 0x18, j += 2, k += 2) {
         if (*(u8 *)(o + 0x4d28) == 0) {
             *(u8 *)(o + 0x4d28) = 1;

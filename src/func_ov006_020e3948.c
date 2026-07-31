@@ -7,9 +7,9 @@ void func_ov006_020e3948(char *p)
         {
             if (*(unsigned short *)(p + 0x4ff0) != 0)
             {
-                *(unsigned short *)(int)(((long long)(int)(p + 0x4ff0)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
-                *(int *)(int)(((long long)(int)(p + 0x4fe4)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(p + 0x4fec);
-                *(int *)(int)(((long long)(int)(p + 0x4fec)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x40;
+                *(unsigned short *)(int)(((long long)(int)(p + 0x4ff0))) -= 1;
+                *(int *)(int)(((long long)(int)(p + 0x4fe4))) += *(int *)(p + 0x4fec);
+                *(int *)(int)(((long long)(int)(p + 0x4fec))) -= 0x40;
             }
             else
             {

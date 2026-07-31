@@ -26,10 +26,10 @@ struct Obj {
 
 extern "C" void func_ov006_020df1c0(char* c)
 {
-    *(int*)(((int)c + 0x541c) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(int*)(((int)c + 0x541c)) -= 1;
     if (*(int*)(c + 0x5000 + 0x41c) > 0) return;
     if (*(unsigned char*)(c + 0x5000 + 0x469) != 0) {
-        if (*(int*)(c + 0xb4) < 0x270f) *(int*)(((int)c + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+        if (*(int*)(c + 0xb4) < 0x270f) *(int*)(((int)c + 0xb4)) += 1;
         if (*(int*)(c + 0xb4) > *(int*)(c + 0xb8)) *(int*)(c + 0xb8) = *(int*)(c + 0xb4);
         func_ov004_020b0a54(0);
         *(int*)(c + 0x5000 + 0x418) = 7;

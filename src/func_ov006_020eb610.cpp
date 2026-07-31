@@ -7,8 +7,8 @@ int func_02012468(int a, int b, int c, int d, int e, int f, int g, int h);
 void func_ov006_020ebf20(char *p);
 }
 
-#define L(a) (*(int*)(((long long)(int)(a))      & 0xFFFFFFFFFFFFFFFFLL))
-#define M(a) (*(int*)(((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+#define L(a) (*(int*)(((long long)(int)(a))))
+#define M(a) (*(int*)(((long long)(unsigned)(a))))
 
 extern "C" void func_ov006_020eb610(char *c)
 {

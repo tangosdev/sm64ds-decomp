@@ -17,9 +17,9 @@ void dScMgLuigi_c_OnYoshiTryEat_020f3294(char *c, int arg1)
     int *q;
 
     if (*(unsigned char *)(c + 0x5000 + 0x459) != 0) {
-        *(unsigned char *)(((int)c + 0x5457) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned char *)(((int)c + 0x5457)) += 1;
 
-        q = (int *)(((int)c + 0xbc) & 0xFFFFFFFFFFFFFFFF);
+        q = (int *)(((int)c + 0xbc));
         *q += 1;
         if ((unsigned int)*(int *)(c + 0xbc) > 0x270e)
             *(int *)(c + 0xbc) = 0x270e;

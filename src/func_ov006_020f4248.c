@@ -56,7 +56,7 @@ void func_ov006_020f4248(char *self, int idx)
   *((u8 *) ((self + 0x532c) + s)) = *((u8 *) ((self + 0x51b8) + n));
   *((u8 *) ((self + 0x532e) + (*((u8 *) (self + 0x5338))))) = (u8) idx;
   {
-    u8 *pc = (u8 *) (((long long) ((int) (self + 0x5338))) & 0xFFFFFFFFFFFFFFFFLL);
+    u8 *pc = (u8 *) (((long long) ((int) (self + 0x5338))));
     *pc = (*pc) + 1;
   }
   *((u8 *) ((self + 0x51bc) + n)) = 3;
@@ -66,7 +66,7 @@ void func_ov006_020f4248(char *self, int idx)
     return;
   }
   {
-    u8 *pd = (u8 *) (((long long) ((int) (self + 0x533e))) & 0xFFFFFFFFFFFFFFFFLL);
+    u8 *pd = (u8 *) (((long long) ((int) (self + 0x533e))));
     *pd = (*pd) + 1;
   }
   func_ov004_020ad79c(*((int *) (self + 0xa8)), *((int *) (self + 0xb4)));

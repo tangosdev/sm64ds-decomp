@@ -23,7 +23,7 @@ void func_ov006_020deed8(int a0, void *a1, int a2, int a3, int s, int a5)
         if (r != 0) {
             if (a5_local == 2) {
                 if ((unsigned)(*(int *)(sl + 4) << 0x10) >> 0x1c == 3) {
-                    int *p = (int *)(((int)r + 4) & 0xFFFFFFFFFFFFFFFF);
+                    int *p = (int *)(((int)r + 4));
                     *p = (*p & ~0xf000) | 0x4000;
                 }
             }

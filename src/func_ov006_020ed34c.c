@@ -7,7 +7,7 @@ extern void func_ov006_020eb7f8(int c);
 void func_ov006_020ed34c(char *p)
 {
     int v;
-    *(int *)(((int)p + 0x466c) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(int *)(((int)p + 0x466c)) -= 1;
     v = *(int *)(p + 0x466c);
     if (v == 0)
     {

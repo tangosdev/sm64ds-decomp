@@ -38,7 +38,7 @@ void func_ov006_020dd658(char *self, int i) {
         *(u8 *)(self + 0x4675 + n) = 4;
         *(u8 *)(self + 0x4676 + n) = 0;
         *(u8 *)(self + 0x4677 + n) = 0;
-        (*(u16 *)(((long long)(int)(self + 0x4d08)) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u16 *)(((long long)(int)(self + 0x4d08))))++;
 
         {
             int v1 = *(s32 *)(self + 0x4664 + n);

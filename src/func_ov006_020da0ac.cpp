@@ -33,7 +33,7 @@ extern "C" void func_ov006_020da0ac(C *c, Src *s)
     c->f4 = s->f0;
     c->f8 = s->f4;
     {
-        int *b = (int *)(((int)c + 4) & 0xFFFFFFFFFFFFFFFF);
+        int *b = (int *)(((int)c + 4));
         c->fc = b[0];
         c->f10 = b[1];
     }

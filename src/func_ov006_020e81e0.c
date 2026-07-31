@@ -5,5 +5,5 @@ void func_ov006_020e81e0(char *self)
 {
     if (*(unsigned char *)(self + 0x5553)) return;
     *(unsigned char *)(self + 0x51f2) = 0x1e;
-    *(unsigned char *)(((long long)(int)(self + 0x5553)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(unsigned char *)(((long long)(int)(self + 0x5553))) += 1;
 }

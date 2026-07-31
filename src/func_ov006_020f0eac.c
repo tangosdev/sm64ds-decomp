@@ -9,14 +9,14 @@ void func_ov006_020f0eac(char *c)
 {
     if (*(u16 *)(c + 0x5172) != 0) {
         {
-            u8 *q = (u8 *)(((int)c + 0x51fb) & 0xFFFFFFFFFFFFFFFF);
+            u8 *q = (u8 *)(((int)c + 0x51fb));
             *q = *q + 1;
         }
         if (*(u8 *)(c + 0x51fb) < 0x3c)
             return;
         *(u8 *)(c + 0x51fb) = 0;
         {
-            u16 *p = (u16 *)(((int)c + 0x5172) & 0xFFFFFFFFFFFFFFFF);
+            u16 *p = (u16 *)(((int)c + 0x5172));
             *p = *p - 1;
         }
         if (*(s16 *)(c + 0x5172) <= 0)
