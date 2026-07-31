@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
 void func_0205b470(void *arg);

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN3IRQ11DisableIRQsEj(u32 mask);
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(u32 mask, void *handler);
 

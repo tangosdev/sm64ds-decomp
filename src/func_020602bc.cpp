@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" {
 extern char data_020a8180[];
 void OS_SleepThread(void *p);

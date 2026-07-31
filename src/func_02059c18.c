@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern long long func_02059650(void *obj);
 extern void func_02056e4c(u32 idx, u32 handler, u32 arg);
 extern void func_02059824(void);

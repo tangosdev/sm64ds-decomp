@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN4CP159EnableMPUEv(void);
 extern void _ZN4CP1510DisableMPUEv(void);
 

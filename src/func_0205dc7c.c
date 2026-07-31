@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct Node {
     struct Node* next;
     u32 lo;

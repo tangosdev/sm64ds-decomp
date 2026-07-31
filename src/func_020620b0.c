@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern int WM_CheckStateEx(int a, int b);
 extern void func_02062024(void *o);
 extern void WM_SetCallbackTable(int i, int val);

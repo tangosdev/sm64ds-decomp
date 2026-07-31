@@ -1,8 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern int WM_GetSystemWork(void);
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int savedState);

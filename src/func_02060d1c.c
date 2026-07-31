@@ -1,5 +1,4 @@
-
-typedef unsigned int u32;
+#include "types.h"
 extern char data_020a8180[];
 extern char data_020a8780[];
 extern void func_02060d98(u32 a, u32 b);

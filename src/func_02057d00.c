@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_02057ce8(void *arg0, u32 fmtAddr, u32 val);
 
 void func_02057d00(void *arg0, u32 fmt, ...)

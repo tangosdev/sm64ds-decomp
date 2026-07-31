@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN3IRQ11DisableIRQsEj(u32 mask);
 
 extern volatile u16 gCtrl1;    /* 0x020a644c */

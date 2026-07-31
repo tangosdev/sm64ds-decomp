@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern int func_02060ebc(void *obj);
 extern void func_02060e38(void);
 

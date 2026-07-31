@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_02059fa8(int ch);
 extern void func_02056e98(int a, void *cb, int arg6);
 extern void DMAStartTransfer(int a, int src, int dst, u32 ctrl);

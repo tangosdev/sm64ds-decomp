@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 int func_0205e89c(u32 *ctx)
 {
     if (ctx == 0) return 1;

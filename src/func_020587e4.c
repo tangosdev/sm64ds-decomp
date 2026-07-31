@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct MsgQueue {
     u16 queueSend;      /* 0x00 */
     u16 queueReceive;   /* 0x02 */

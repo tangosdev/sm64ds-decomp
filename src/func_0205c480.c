@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 int func_0205c480(unsigned char *a, unsigned char *b, int n)
 {
     int i;

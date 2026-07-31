@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
+#include "types.h"
 extern void _ZN3IRQ11DisableIRQsEj(u32 mask);
 extern u64 func_02059650(void);
 extern void func_02059c18(void *p);

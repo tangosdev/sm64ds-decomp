@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct S8180 {
     char pad0[0x18];
     u32 f18;

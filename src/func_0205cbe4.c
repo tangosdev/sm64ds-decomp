@@ -1,9 +1,6 @@
+#include "types.h"
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 typedef struct Node {
     u32 f0;
     struct Node *next;

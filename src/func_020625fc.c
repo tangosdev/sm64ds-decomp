@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_020625fc at 0x020625fc
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int a, int b, int c);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);

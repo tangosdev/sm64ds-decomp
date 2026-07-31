@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned int u32;
+#include "types.h"
 extern "C" {
 extern char data_020a8180[];
 extern int data_020a6134[];

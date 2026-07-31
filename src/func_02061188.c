@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 typedef void (*Handler)(void *msg);
 
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);

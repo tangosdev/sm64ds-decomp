@@ -1,10 +1,8 @@
+#include "types.h"
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int savedState);
 extern void * func_02059364(void *a, void *n);
 extern void * func_0205929c(void *a, void *n);
-
-typedef unsigned int u32;
-
 struct Elem { void *w0; void *w4; void *w8; };  /* 0xc */
 
 struct G637c {

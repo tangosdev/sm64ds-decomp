@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int data_020a9440[];
 extern int WM_CheckStateEx(int count, ...);
 extern void MultiCopy_Int(int *dst, int *src, int len);

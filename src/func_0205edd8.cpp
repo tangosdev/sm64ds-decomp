@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned short u16;
+#include "types.h"
 extern "C" {
 int IPCSend(int a, int b, int c);
 }

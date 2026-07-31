@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_02059624(u32 bit);
 extern void _ZN3IRQ11DisableIRQsEj(u32 mask);
 

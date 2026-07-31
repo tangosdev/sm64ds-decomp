@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct T {
     char pad0[0xc];
     u16 pending;

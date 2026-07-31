@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int a, int b, int c);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 size);

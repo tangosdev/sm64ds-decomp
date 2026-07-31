@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 extern void func_02058200(void *a, void *fn, int c, void *d, int e, int f);
