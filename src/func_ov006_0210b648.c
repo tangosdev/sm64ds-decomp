@@ -63,7 +63,7 @@ int dScMgSlot3_c_Render(char *c)
             int row, rem;
             int i2, j2;
             for (i2 = 0; i2 < 3; i2++) {
-                int a = *(int *)(((int)c + i2 * 4 + 0x4fe4) & 0xFFFFFFFFFFFFFFFF) >> 12;
+                int a = *(int *)(((int)c + i2 * 4 + 0x4fe4)) >> 12;
                 int y;
                 row = a / 0x50;
                 rem = a % 0x50;

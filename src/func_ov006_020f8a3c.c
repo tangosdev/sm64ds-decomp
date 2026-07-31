@@ -25,7 +25,7 @@ int dScMgMCarlo_c_OnTurnIntoEgg(char* c)
     switch (self->unk_60a8) {
     case 4:
         FreeGfxSlotsById(0x1d);
-        *(s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(s16*)(((int)c + 0x60a8)) += 1;
         break;
     case 5:
         if (func_ov006_020c1718(c + 0x4f38) != 0) {
@@ -37,7 +37,7 @@ int dScMgMCarlo_c_OnTurnIntoEgg(char* c)
                 func_ov004_020b56c8(data_ov006_0213d568);
             }
             self->unk_60ae = 0;
-            *(s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(s16*)(((int)c + 0x60a8)) += 1;
         }
         break;
     case 6: {
@@ -55,11 +55,11 @@ int dScMgMCarlo_c_OnTurnIntoEgg(char* c)
                     r3 = *(char**)(r3 + 4);
                 }
                 if (r3 != 0) *(u8*)(r3 + 0x2e) = 0;
-                *(s16*)(((int)c + 0x60ae) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(s16*)(((int)c + 0x60ae)) += 1;
             }
         } else {
             if (data_ov004_020bf9e4 <= 1)
-                *(s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(s16*)(((int)c + 0x60a8)) += 1;
         }
         break;
     }
@@ -69,7 +69,7 @@ int dScMgMCarlo_c_OnTurnIntoEgg(char* c)
             return 1;
         func_ov006_020f7994();
         self->unk_60aa = 0x1e;
-        *(s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(s16*)(((int)c + 0x60a8)) += 1;
         break;
     }
     case 8:

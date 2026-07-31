@@ -87,10 +87,10 @@ void func_ov006_02108f2c(Thing* t)
         s32* p;
         s32 q;
         d = func_020b9488;
-        p = (s32*)(((s32)t + 4) & 0xFFFFFFFFFFFFFFFF);
+        p = (s32*)(((s32)t + 4));
         q = -((t->unk30 - (d >> 1)) << 12) / d - 0x600;
         *p += (s32)((((s64)q << 14) + 0x800) >> 12);
-        *(s16*)(((s32)t + 0x30) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(s16*)(((s32)t + 0x30)) -= 1;
         if (t->unk30 == 0)
             t->unk32 = 6;
     } else if (state == 2) {

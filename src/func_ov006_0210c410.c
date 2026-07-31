@@ -12,7 +12,7 @@ void func_ov006_0210c410(char *c) {
             func_ov004_020b1b40(1);
             _ZN5Sound12PlayBank2_2DEj(0x149);
         }
-        int *p = (int *)(((int)c + 0x20) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)c + 0x20));
         *p = *p - 1;
     }
     func_ov001_020ab550(c);

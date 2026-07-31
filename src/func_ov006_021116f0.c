@@ -11,8 +11,8 @@ void func_ov006_021116f0(void *arg0)
     *(s32 *)(c + 0x14) = *(s32 *)(c + 0xc);
     if (*(s32 *)(c + 0x34) <= 0)
         return;
-    *(s32 *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFF) =
-        *(s32 *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFF) - 1;
+    *(s32 *)(((int)c + 0x34)) =
+        *(s32 *)(((int)c + 0x34)) - 1;
     if (*(s32 *)(c + 0x34) > 0)
         return;
     func_ov006_02114ec0(*(void **)(c + 4));

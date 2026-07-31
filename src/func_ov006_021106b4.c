@@ -40,7 +40,7 @@ void func_ov006_021106b4(struct Obj *self)
     self->f10 = self->x;
     self->f14 = self->y;
     if (self->f38 > 0) {
-        *(int *)(((int)self + 0x38) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(int *)(((int)self + 0x38)) -= 1;
         if (self->f38 == 0) self->b30 = 0;
         return;
     }
@@ -60,7 +60,7 @@ void func_ov006_021106b4(struct Obj *self)
             return;
         }
     }
-    *(int *)(((int)self + 0x34) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(int *)(((int)self + 0x34)) += 1;
     if (self->f34 < 0x3c) return;
     self->f34 = 0;
     if (self->b31 == 0) self->b31 = 1;

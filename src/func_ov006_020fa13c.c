@@ -17,7 +17,7 @@ int dScMgMCarlo2_c_Behavior(void* arg)
     switch (*(s16*)(c + 0x5928)) {
     case 1:
         {
-            s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)c + 0x5928));
             (*p)++;
         }
         if (c[0xc4] == 0) {
@@ -32,7 +32,7 @@ int dScMgMCarlo2_c_Behavior(void* arg)
             if (func_ov006_020f9668() == 0) {
                 *(s16*)(c + 0x592e) = 0;
                 {
-                    s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+                    s16* p = (s16*)(((int)c + 0x5928));
                     (*p)++;
                 }
             }
@@ -72,7 +72,7 @@ int dScMgMCarlo2_c_Behavior(void* arg)
                             func_ov004_020b0a54(0x12);
                             c[0xc3] = 0;
                             {
-                                s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+                                s16* p = (s16*)(((int)c + 0x5928));
                                 (*p)++;
                             }
                         }

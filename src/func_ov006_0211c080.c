@@ -12,7 +12,7 @@ extern int data_ov006_0212efb0[];
 extern u16 *data_ov006_0213f6fc[];
 
 #define RND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-#define LAUNDER(p) ((int)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define LAUNDER(p) ((int)((long long)(int)(p)))
 
 void func_ov006_0211c080(char *o)
 {

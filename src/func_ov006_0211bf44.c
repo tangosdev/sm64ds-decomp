@@ -59,7 +59,7 @@ void func_ov006_0211bf44(char* base, int slot)
     *(u16*)(entry + 0xf0) = 0;
     *(u8*)(entry + 0xf7) = 0;
     {
-        u8* counter = (u8*)(int)(((long long)(int)(base + 0x5624)) & 0xFFFFFFFFFFFFFFFFLL);
+        u8* counter = (u8*)(int)(((long long)(int)(base + 0x5624)));
         *counter = *counter + 1;
     }
     _ZN5Sound12PlayBank2_2DEj(0x201);

@@ -51,7 +51,7 @@ void func_ov006_0211192c(C* c)
             c->f3c = 4;
     } else if (c->f3c > 0) {
         {
-            int* p = (int*)((long long)(int)&c->f3c & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)((long long)(int)&c->f3c);
             *p = *p - 1;
         }
         if (c->f3c < 4) {
@@ -81,12 +81,12 @@ void func_ov006_0211192c(C* c)
 done:
     if (c->f34 == 1) {
         if (c->f3c <= 0) {
-            int* p = (int*)((long long)(int)&c->f28 & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)((long long)(int)&c->f28);
             *p += 0x1000;
             if (c->f28 > 0x7000)
                 c->f28 = 0x7000;
         } else {
-            int* p = (int*)((long long)(int)&c->f28 & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)((long long)(int)&c->f28);
             *p -= 0x1000;
             if (c->f28 < 0)
                 c->f28 = 0;

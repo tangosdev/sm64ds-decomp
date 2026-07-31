@@ -42,7 +42,7 @@ s32 func_ov006_020fee24(char *c)
         }
         if (*(u16 *)(c + 0x5c2a) != 0) {
             func_ov006_020fb7e0(c);
-            (*(u16 *)(((long long)(int)(c + 0x5c2a)) & 0xffffffffffffffffLL))--;
+            (*(u16 *)(((long long)(int)(c + 0x5c2a))))--;
         } else {
             func_ov006_020fdd40(c);
             func_ov006_020fe2bc(c);
@@ -59,7 +59,7 @@ s32 func_ov006_020fee24(char *c)
         break;
     case 2:
         if (*(u16 *)(c + 0x5c18) != 0) {
-            (*(u16 *)(((long long)(int)(c + 0x5c18)) & 0xffffffffffffffffLL))--;
+            (*(u16 *)(((long long)(int)(c + 0x5c18))))--;
             if (*(s16 *)(c + 0x5c18) <= 0) {
                 func_ov004_020b0a54((void *)0x10);
                 *(u8 *)(c + 0xc3) = 0;

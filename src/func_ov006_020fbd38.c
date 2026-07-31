@@ -7,7 +7,7 @@ extern void func_ov006_020fbcb8(void *self, int x, int y, int k);
 
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
-#define AC (*(int *)(((long long)((int)a + 0x5c14)) & 0xffffffffffffffffLL))
+#define AC (*(int *)(((long long)((int)a + 0x5c14))))
 
 void func_ov006_020fbd38(void *arg0)
 {

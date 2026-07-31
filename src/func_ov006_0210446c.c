@@ -19,11 +19,11 @@ void func_ov006_0210446c(char *o, int a1, int a2, int a3)
             *(u8 *)(o + off + 0x46ba) = 0;
             *(u8 *)(o + off + 0x46bb) = 0;
             *(u8 *)(o + off + 0x46b9) = a3;
-            *(int *)((char *)(((int)o + 0x46b0) & 0xFFFFFFFFFFFFFFFF) + off) = 0;
+            *(int *)((char *)(((int)o + 0x46b0)) + off) = 0;
             *(int *)(o + off + 0x46b4) = 0;
             *(int *)(o + off + 0x46a8) = a1;
             *(int *)(o + off + 0x46ac) = a2;
-            w = (int *)((char *)(((int)o + 0x46b0) & 0xFFFFFFFFFFFFFFFF) + off);
+            w = (int *)((char *)(((int)o + 0x46b0)) + off);
             if (a3 != 0) {
                 *(u8 *)(o + off + 0x46be) = 0;
             } else {

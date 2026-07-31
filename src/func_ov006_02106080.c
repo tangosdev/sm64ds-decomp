@@ -16,7 +16,7 @@ void func_ov006_02106080(char* self, int x)
     int i, j;
     for (i = 0; i < n2; i++) {
         for (j = 0; j < n1; j++) {
-            unsigned char* p = (unsigned char*)((((int)self + ((*(int*)(self + 0x4cbc)) * (b + i) + (a + j))) + 0x4f1e) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* p = (unsigned char*)((((int)self + ((*(int*)(self + 0x4cbc)) * (b + i) + (a + j))) + 0x4f1e));
             *p ^= 1;
         }
     }

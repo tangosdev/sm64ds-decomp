@@ -2,7 +2,7 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define RND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 
 struct O

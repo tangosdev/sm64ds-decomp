@@ -7,10 +7,10 @@ void func_ov006_0211d69c(char *obj)
     {
         return;
     }
-    (*(unsigned short *)(((long long)(int)(obj + 0x4c18)) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(unsigned short *)(((long long)(int)(obj + 0x4c18))))++;
     if (*(unsigned short *)(obj + 0x4c18) >= data_ov006_0212efdc[*(unsigned char *)(obj + 0x4c24)])
     {
-        (*(unsigned char *)(((long long)(int)(obj + 0x4c24)) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char *)(((long long)(int)(obj + 0x4c24))))++;
         *(unsigned short *)(obj + 0x4c18) = 0;
         if (*(unsigned char *)(obj + 0x4c24) & 1)
         {

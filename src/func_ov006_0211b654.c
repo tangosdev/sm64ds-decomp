@@ -24,9 +24,9 @@ void func_ov006_0211b654(struct Mgr* m, int n)
             if (m->slot[i].f1c == 0) {
                 m->slot[i].f1c = 1;
                 m->slot[i].f00 = *s00;
-                int* d04 = (int*)(((int)m + i * 0x24 + 0x51b4) & 0xFFFFFFFFFFFFFFFF);
+                int* d04 = (int*)(((int)m + i * 0x24 + 0x51b4));
                 *d04 = *s04 - 0x8000;
-                u16* d18 = (u16*)(((int)m + i * 0x24 + 0x51c8) & 0xFFFFFFFFFFFFFFFF);
+                u16* d18 = (u16*)(((int)m + i * 0x24 + 0x51c8));
                 m->slot[i].f10 = *d04;
                 m->slot[i].f1e = *g;
                 m->slot[i].f22 = *g;

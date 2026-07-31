@@ -11,7 +11,7 @@ void func_ov006_0210b1fc(char *p)
     }
 
     if (*(int *)(p + 0x500c) > 0) {
-        *(int *)(((int)p + 0x500c) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(int *)(((int)p + 0x500c)) -= 1;
         if (*(int *)(p + 0x500c) != 0)
             return;
         *(unsigned char *)(p + 0x503b) = *(unsigned char *)(p + 0x503c);
@@ -19,7 +19,7 @@ void func_ov006_0210b1fc(char *p)
         return;
     }
 
-    *(unsigned char *)(((int)p + 0x503e) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(unsigned char *)(((int)p + 0x503e)) -= 1;
     if (*(unsigned char *)(p + 0x503e) != 0)
         return;
 

@@ -17,14 +17,14 @@ void func_ov006_02104580(char *o)
     u32 r2;
 
     if (*(u8 *)(o + 0x46a5) == 0) {
-        *(u8 *)(((int)o + 0x46a6) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(u8 *)(((int)o + 0x46a6)) += 1;
         if (((*(u8 *)(o + 0x46a6) >> 1) & 1) != 0)
             *(int *)(o + 0x4694) = 0x2000;
         else
             *(int *)(o + 0x4694) = -0x2000;
 
         if (*(u8 *)(o + 0x46a7) != 0) {
-            *(u8 *)(((int)o + 0x46a7) & 0xFFFFFFFFFFFFFFFF) -= 1;
+            *(u8 *)(((int)o + 0x46a7)) -= 1;
         } else {
             r = ((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff;
             x = ((r * 7) >> 15) * 5;
@@ -41,20 +41,20 @@ void func_ov006_02104580(char *o)
         }
 
         if (*(u8 *)(o + 0x46a6) >= 0x3c) {
-            *(u8 *)(((int)o + 0x46a5) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(u8 *)(((int)o + 0x46a5)) += 1;
             *(u8 *)(o + 0x46a6) = 0;
             *(u8 *)(o + 0x46a7) = 0;
             *(int *)(o + 0x4694) = 0;
             *(int *)(o + 0x46a0) = 0x1000;
         }
     } else if (*(int *)(o + 0x4698) < 0x200000) {
-        *(int *)(((int)o + 0x4698) & 0xFFFFFFFFFFFFFFFF) += *(int *)(o + 0x46a0);
-        *(int *)(((int)o + 0x46a0) & 0xFFFFFFFFFFFFFFFF) += 0x200;
+        *(int *)(((int)o + 0x4698)) += *(int *)(o + 0x46a0);
+        *(int *)(((int)o + 0x46a0)) += 0x200;
         if (*(int *)(o + 0x4698) >= 0x200000)
             *(int *)(o + 0x4698) = 0x200000;
 
         if (*(u8 *)(o + 0x46a7) != 0) {
-            *(u8 *)(((int)o + 0x46a7) & 0xFFFFFFFFFFFFFFFF) -= 1;
+            *(u8 *)(((int)o + 0x46a7)) -= 1;
         } else {
             y = *(int *)(o + 0x4698) >> 12;
             if (y >= 0 && y <= 0xc0)

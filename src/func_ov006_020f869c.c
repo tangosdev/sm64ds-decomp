@@ -20,7 +20,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
     switch (*(s16*)(c + 0x60a8)) {
     case 1:
         {
-            s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)c + 0x60a8));
             (*p)++;
         }
         if (c[0xc4] == 0) {
@@ -35,7 +35,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
             if (func_ov006_020f7b10() == 0) {
                 *(s16*)(c + 0x60ae) = 0;
                 {
-                    s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                    s16* p = (s16*)(((int)c + 0x60a8));
                     (*p)++;
                 }
             }
@@ -75,7 +75,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
                                 char *g = func_020beb68;
                                 if (g != 0) {
                                     if (*(int *)(g + 0xb4) > 0)
-                                        *(int *)(((int)g + 0xb4) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                                        *(int *)(((int)g + 0xb4)) -= 1;
                                 }
                             }
                             func_ov006_020c0d68(c + 0x4f38);
@@ -89,7 +89,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
                             }
                             c[0xc3] = 0;
                             {
-                                s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                                s16* p = (s16*)(((int)c + 0x60a8));
                                 (*p)++;
                             }
                         }
@@ -98,7 +98,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
                             char *g = func_020beb68;
                             if (g != 0) {
                                 if (*(int *)(g + 0xb4) < 0x270f)
-                                    *(int *)(((int)g + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+                                    *(int *)(((int)g + 0xb4)) += 1;
                                 if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
                                     *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                             }
@@ -114,7 +114,7 @@ int dScMgMCarlo_c_Behavior(void* arg)
                         }
                         c[0xc3] = 0;
                         {
-                            s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                            s16* p = (s16*)(((int)c + 0x60a8));
                             (*p)++;
                         }
                     }

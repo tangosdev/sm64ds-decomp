@@ -28,7 +28,7 @@ void func_ov006_020f7ee4(char *c, int event)
 {
     switch (*(unsigned char *)(c + 0x2d)) {
     case 0:
-        *(short *)((long long)(c + 0x28) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(short *)((long long)(c + 0x28)) -= 1;
         if (*(short *)(c + 0x28) != 0)
             return;
         data_ov006_0213d56c--;

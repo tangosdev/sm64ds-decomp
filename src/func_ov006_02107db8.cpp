@@ -29,7 +29,7 @@ struct C {
 extern "C" void func_ov006_02107db8(C *c)
 {
     char *b = (char *)c;
-    short *p = (short *)(((int)b + 0xc2) & 0xFFFFFFFFFFFFFFFF);
+    short *p = (short *)(((int)b + 0xc2));
     *p = (short)(*p + *(short *)(b + 0xc8));
     *(short *)(*(int *)(b + 0x20) + 0x82) = (short)(-*(short *)(b + 0xc2));
     c->obj.v3();

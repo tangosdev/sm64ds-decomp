@@ -120,7 +120,7 @@ void func_ov006_02115b0c(char *c)
     func_ov004_020adb1c(0);
 
     for (int i = 0; i < 0xd; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4688)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4688)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -132,7 +132,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 8; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4720)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4720)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -144,7 +144,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 0x19; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x46bc)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -156,7 +156,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4740)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4740)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -168,7 +168,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 6; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x474c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x474c)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -180,7 +180,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4764)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4764)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -192,7 +192,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 2; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4770)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4770)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -346,7 +346,7 @@ void func_ov006_02115b0c(char *c)
                 p = func_ov006_02111b40(p, c, j, &tmp);
             }
             {
-                void **slot = (void **)(((long long)(int)(c + j * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+                void **slot = (void **)(((long long)(int)(c + j * 4 + 0x46bc)));
                 *slot = p;
                 if (*slot != 0)
                     *(int *)((char *)*slot + 0x34) = 0;
@@ -388,7 +388,7 @@ void func_ov006_02115b0c(char *c)
                 p = func_ov006_02111b40(p, c, n, &tmp);
             }
             {
-                void **slot = (void **)(((long long)(int)(c + n * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+                void **slot = (void **)(((long long)(int)(c + n * 4 + 0x46bc)));
                 *slot = p;
                 if (*slot != 0)
                     *(int *)((char *)*slot + 0x34) = 1;

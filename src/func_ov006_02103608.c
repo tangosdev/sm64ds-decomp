@@ -9,11 +9,11 @@ extern void func_ov006_02102d6c(char *o, int i);
 void func_ov006_02103608(char *o, int i)
 {
     int v660, v664, t660;
-    *(int *)((char *)(((int)o + 0x4660) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) += *(int *)(o + i * 0x40 + 0x4668);
-    *(int *)((char *)(((int)o + 0x4664) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) += *(int *)(o + i * 0x40 + 0x466c);
-    *(int *)((char *)(((int)o + 0x4684) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) += 0x20;
-    *(int *)((char *)(((int)o + 0x466c) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) += *(int *)(o + i * 0x40 + 0x4684);
-    *(u16 *)((char *)(((int)o + 0x4690) & 0xFFFFFFFFFFFFFFFF) + i * 0x40) += *(u16 *)(o + i * 0x40 + 0x4692);
+    *(int *)((char *)(((int)o + 0x4660)) + i * 0x40) += *(int *)(o + i * 0x40 + 0x4668);
+    *(int *)((char *)(((int)o + 0x4664)) + i * 0x40) += *(int *)(o + i * 0x40 + 0x466c);
+    *(int *)((char *)(((int)o + 0x4684)) + i * 0x40) += 0x20;
+    *(int *)((char *)(((int)o + 0x466c)) + i * 0x40) += *(int *)(o + i * 0x40 + 0x4684);
+    *(u16 *)((char *)(((int)o + 0x4690)) + i * 0x40) += *(u16 *)(o + i * 0x40 + 0x4692);
     if (*(int *)(o + i * 0x40 + 0x466c) >= 0x8000)
         *(int *)(o + i * 0x40 + 0x466c) = 0x8000;
     t660 = *(int *)(o + i * 0x40 + 0x4664);

@@ -7,7 +7,7 @@ void func_ov006_020f6830(char *o)
   if ((*((unsigned short *) (o + 0x53ec))) != 0)
   {
     i = 0x53ec;
-    *((unsigned short *) ((((int) o) + i) & 0xFFFFFFFFFFFFFFFF)) -= 1;
+    *((unsigned short *) ((((int) o) + i))) -= 1;
     return;
   }
   e = (unsigned char *) o;

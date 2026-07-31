@@ -36,31 +36,31 @@ int dScMgSmartball_c_Behavior(void* arg)
             (**(VFunc**)o)(o);
 
             for (i = 0; i < *(int*)(c + 0x4668); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x4688)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x4688)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x4670); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x46bc)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x466c); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x4720)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x4720)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x4674); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x4740)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x4740)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x4678); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x474c)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x474c)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x467c); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x4764)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x4764)));
                 (**(VFunc**)o)(o);
             }
             for (i = 0; i < *(int*)(c + 0x4680); i++) {
-                o = *(char**)(((long long)(int)(c + i * 4 + 0x4770)) & 0xFFFFFFFFFFFFFFFFLL);
+                o = *(char**)(((long long)(int)(c + i * 4 + 0x4770)));
                 (**(VFunc**)o)(o);
             }
 
@@ -85,7 +85,7 @@ int dScMgSmartball_c_Behavior(void* arg)
                 if (*(int*)(c + 0x5954) >= 0x3c) {
                     *(int*)(c + 0x4660) = 1;
                 } else {
-                    int* p = (int*)(((int)c + 0x5954) & 0xFFFFFFFFFFFFFFFF);
+                    int* p = (int*)(((int)c + 0x5954));
                     (*p)++;
                 }
             } else {
@@ -105,7 +105,7 @@ int dScMgSmartball_c_Behavior(void* arg)
             if (*(unsigned char*)(c + 0x595c) != 0) {
                 int t;
                 {
-                    int* p = (int*)(((int)c + 0x5958) & 0xFFFFFFFFFFFFFFFF);
+                    int* p = (int*)(((int)c + 0x5958));
                     (*p)++;
                 }
                 if (*(int*)(c + 0x5958) == 0xb4) {
@@ -143,13 +143,13 @@ int dScMgSmartball_c_Behavior(void* arg)
             data_0209d454 |= 1;
         }
         if (*(int*)(c + 0x5998) > 0) {
-            int* p = (int*)(((int)c + 0x5998) & 0xFFFFFFFFFFFFFFFF);
+            int* p = (int*)(((int)c + 0x5998));
             *p -= 4;
         } else {
             int flag = 0;
             *(int*)(c + 0x5998) = 0;
             if (*(int*)(c + 0x5960) < 0x12c) {
-                int* p = (int*)(((int)c + 0x5960) & 0xFFFFFFFFFFFFFFFF);
+                int* p = (int*)(((int)c + 0x5960));
                 (*p)++;
             } else {
                 int idx = data_020a0e40;
@@ -174,11 +174,11 @@ int dScMgSmartball_c_Behavior(void* arg)
     }
 
     if (*(int*)(c + 0x4784) > 0) {
-        int* p = (int*)(((int)c + 0x4784) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x4784));
         (*p)--;
     }
     if (*(int*)(c + 0x4788) > 0) {
-        int* p = (int*)(((int)c + 0x4788) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x4788));
         (*p)--;
     }
 

@@ -1,4 +1,4 @@
-#define A(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define A(p) ((int)(((long long)(int)(p))))
 extern unsigned short data_ov006_0212ee38[];
 
 void func_ov006_02119a18(char *b)

@@ -17,7 +17,7 @@ void dScMgPanel_c_OnYoshiTryEat_021071fc(char *self, int flag)
     char *p;
 
     if (flag == 0) {
-        int *q = (int *)(((int)self + 0xbc) & 0xFFFFFFFFFFFFFFFF);
+        int *q = (int *)(((int)self + 0xbc));
         *q += 1;
         if (*(unsigned int *)(self + 0xbc) > 0x270e)
             *(int *)(self + 0xbc) = 0x270e;

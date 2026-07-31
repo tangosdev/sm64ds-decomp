@@ -14,7 +14,7 @@ void func_ov006_020f6b78(char *this)
   {
   }
   {
-    short *p = (short *) (((int) (this + 0x53e8)) & 0xFFFFFFFFFFFFFFFF);
+    short *p = (short *) (((int) (this + 0x53e8)));
     *p = (*p) + 1;
   }
   r3 = this + 0x5300;

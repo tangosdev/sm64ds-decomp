@@ -58,7 +58,7 @@ void func_ov006_0210af64(char *c)
   i = 0;
   for (; i < 3; i++)
   {
-    if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x502e))) & 0xFFFFFFFFFFFFFFFFLL)))) == 0)
+    if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x502e))))))) == 0)
     {
       int *p = (int *) (c + (i * 4));
       int val;
@@ -66,11 +66,11 @@ void func_ov006_0210af64(char *c)
       int q2;
       u8 *dir;
       tab = data_ov006_0213e948;
-      p = (int *) ((int) (((long long) ((int) (((int) p) + 0x4fe4))) & 0xFFFFFFFFFFFFFFFFLL));
+      p = (int *) ((int) (((long long) ((int) (((int) p) + 0x4fe4)))));
       val = *p;
       ;
       q = (val >> 12) / 0x50;
-      if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x5040))) & 0xFFFFFFFFFFFFFFFFLL)))) == 1)
+      if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x5040))))))) == 1)
       {
         *p = val - tab[((*((u8 *) (c + 0x503d))) * 3) + i];
         if ((*p) < 0)
@@ -91,7 +91,7 @@ void func_ov006_0210af64(char *c)
         q2 = ((*p) >> 12) / 0x50;
         if (q2 != q)
         {
-          if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x5040))) & 0xFFFFFFFFFFFFFFFFLL)))) == new_var)
+          if ((*((u8 *) ((int) (((long long) ((int) ((c + i) + 0x5040))))))) == new_var)
           {
             *p = (q * 0x50) << 12;
           }
@@ -100,8 +100,8 @@ void func_ov006_0210af64(char *c)
             *p = (q2 * 0x50) << 12;
           }
           func_ov006_0210ab08(c, i);
-          *((u8 *) ((int) (((long long) ((int) ((c + i) + 0x502e))) & 0xFFFFFFFFFFFFFFFFLL))) = 1;
-          *((u8 *) ((int) (((long long) ((int) (c + 0x503d))) & 0xFFFFFFFFFFFFFFFFLL))) += new_var;
+          *((u8 *) ((int) (((long long) ((int) ((c + i) + 0x502e)))))) = 1;
+          *((u8 *) ((int) (((long long) ((int) (c + 0x503d)))))) += new_var;
           *((u8 *) (c + 0x503f)) = 0;
           _ZN5Sound12PlayBank2_2DEj(0x1a9);
         }

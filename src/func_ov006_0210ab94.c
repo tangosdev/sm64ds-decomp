@@ -9,9 +9,9 @@ void func_ov006_0210ab94(char* c){
     }
     if (*(unsigned char*)(c + 0x503e) >= 0x3c) return;
     {
-        int* a = (int*)(((int)c + 0x4ff4) & 0xFFFFFFFFFFFFFFFF);
-        int* b = (int*)(((int)c + 0x4ff8) & 0xFFFFFFFFFFFFFFFF);
-        int* d = (int*)(((int)c + 0x4ffc) & 0xFFFFFFFFFFFFFFFF);
+        int* a = (int*)(((int)c + 0x4ff4));
+        int* b = (int*)(((int)c + 0x4ff8));
+        int* d = (int*)(((int)c + 0x4ffc));
         *a = *a + 0x10000;
         *b = *b - 0x10000;
         *d = *d + 0x10000;

@@ -17,7 +17,7 @@ void *func_ov006_0210d6b8(void) {
     if (p) {
         func_ov004_020b2adc(p);
         *(void ***)p = data_ov006_0213eb40;
-        char *base = (char *)(((int)p + 0x4660) & 0xFFFFFFFFFFFFFFFF);
+        char *base = (char *)(((int)p + 0x4660));
         *(void **)base = (void *)&func_020ad494;
         *(void ***)base = data_ov006_0213e5d4;
         func_ov006_0210c2b0(p + 0x4684);

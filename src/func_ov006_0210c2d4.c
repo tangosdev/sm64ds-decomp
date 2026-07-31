@@ -20,8 +20,8 @@ void func_ov006_0210c2d4(char *c)
     if (v <= 0) {
         return;
     }
-    *(int *)(((int)c + 0x1c) & 0xFFFFFFFFFFFFFFFF) =
-        *(int *)(((int)c + 0x1c) & 0xFFFFFFFFFFFFFFFF) + 1;
+    *(int *)(((int)c + 0x1c)) =
+        *(int *)(((int)c + 0x1c)) + 1;
     func_ov004_020b1b08((void *)1);
     func_ov001_020ab3f0(c);
     sid = 0x163;

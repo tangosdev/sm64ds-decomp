@@ -7,9 +7,9 @@ void func_ov006_02105d20(char *c) {
     int tmp;
     if (*(unsigned char *)(c + 0x4fe9) == 0) return;
     if (*(unsigned char *)(c + 0x4feb) == 0) return;
-    tmp = *(volatile unsigned char *)(int *)(((int)c + 0x4feb) & 0xFFFFFFFFFFFFFFFF);
+    tmp = *(volatile unsigned char *)(int *)(((int)c + 0x4feb));
     --tmp;
-    *(volatile unsigned char *)(int *)(((int)c + 0x4feb) & 0xFFFFFFFFFFFFFFFF) = tmp;
+    *(volatile unsigned char *)(int *)(((int)c + 0x4feb)) = tmp;
     if (*(unsigned char *)(c + 0x4feb) != 0) return;
     found = 0;
     i = 0;

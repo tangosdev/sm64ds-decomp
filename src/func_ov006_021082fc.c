@@ -22,13 +22,13 @@ void func_ov006_021082fc(char *self)
     int t2 = _ZN4cstd4fdivEii(fm2, *(int *)(self + 0xb0));
     *(s16 *)(self + 0xc6) = (s16)t2;
 
-    s16 *pC0 = (s16 *)(((int)self + 0xc0) & 0xFFFFFFFFFFFFFFFF);
+    s16 *pC0 = (s16 *)(((int)self + 0xc0));
     *pC0 = *pC0 + *(s16 *)(self + 0xc6);
 
     *(int *)(self + 0xb4) = (int)(((s64)*(int *)(self + 0xb4) * 0xfe0 + 0x800) >> 12);
 
-    *(int *)(((int)self + 0xb4) & 0xFFFFFFFFFFFFFFFF) = *(int *)(((int)self + 0xb4) & 0xFFFFFFFFFFFFFFFF) + r4;
-    *(int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) = *(int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) + *(int *)(self + 0xb4);
+    *(int *)(((int)self + 0xb4)) = *(int *)(((int)self + 0xb4)) + r4;
+    *(int *)(((int)self + 0xb0)) = *(int *)(((int)self + 0xb0)) + *(int *)(self + 0xb4);
 
     int B = *(int *)(self + 0xb0);
     if (B > 0x4200) {

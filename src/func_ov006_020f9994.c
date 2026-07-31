@@ -18,7 +18,7 @@ void func_ov006_020f9994(char *c, int b)
     switch (*(unsigned char *)(c + 0x2d)) {
     case 0:
         {
-            short *p = (short *)(((long long)(int)(c + 0x28)) & 0xffffffffffffffffLL);
+            short *p = (short *)(((long long)(int)(c + 0x28)));
             short v = *(short *)p;
             *(short *)p = (short)(v - 1);
         }

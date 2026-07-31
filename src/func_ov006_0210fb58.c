@@ -14,8 +14,8 @@ typedef struct { int x, y; } V2;
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-#define LN(base, off) (*(int *)((((int)(base)) + (off)) & 0xFFFFFFFFFFFFFFFF))
-#define LM(base, off) (*(int *)((((unsigned int)(base)) + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LN(base, off) (*(int *)((((int)(base)) + (off))))
+#define LM(base, off) (*(int *)((((unsigned int)(base)) + (off))))
 
 void func_ov006_0210fb58(char *c)
 {

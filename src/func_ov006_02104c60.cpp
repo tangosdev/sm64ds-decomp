@@ -10,7 +10,7 @@ void func_ov006_02104c60(char *c)
 {
     unsigned short *ip;
     if (*(u8*)(c + 0x4000 + 0x684) == 0) return;
-    ip = (unsigned short*)(((int)c + 0x4680) & 0xFFFFFFFFFFFFFFFFLL);
+    ip = (unsigned short*)(((int)c + 0x4680));
     *ip = *ip - 1;
     if (*(short*)(c + 0x4600 + 0x80) <= 0) {
         *(short*)(c + 0x4600 + 0x80) = 0;

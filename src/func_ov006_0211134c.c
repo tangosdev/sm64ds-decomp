@@ -58,7 +58,7 @@ void func_ov006_0211134c(Obj *c)
         if (c->fc <= 0xa0000)
             return;
         {
-            int *pf38 = (int *)(((int)c + 0x38) & 0xFFFFFFFFFFFFFFFFLL);
+            int *pf38 = (int *)(((int)c + 0x38));
             *pf38 = *pf38 - (c->fc - 0xa0000);
         }
         return;
@@ -93,11 +93,11 @@ void func_ov006_0211134c(Obj *c)
     }
 
     {
-        int *pf24 = (int *)(((int)c + 0x24) & 0xFFFFFFFFFFFFFFFFLL);
+        int *pf24 = (int *)(((int)c + 0x24));
         *pf24 = *pf24 - (c->fc - 0xa0000) / 16;
     }
     {
-        int *pfc = (int *)(((int)c + 0xc) & 0xFFFFFFFFFFFFFFFFLL);
+        int *pfc = (int *)(((int)c + 0xc));
         *pfc = *pfc + c->f24;
     }
     if (c->fc < 0xa0000) {
