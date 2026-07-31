@@ -1,9 +1,13 @@
 //cpp
+// @symbol _ZN12CylinderClsnC2Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "CylinderClsn.h"
 extern "C" {
-extern int data_0208e6ec[];
-void _ZN12CylinderClsnC2Ev(void* c){
-  *(int*)((char*)c+0)=(int)data_0208e6ec;
-  *(int*)((char*)c+0x28)=0;
-  *(int*)((char*)c+0x2c)=0;
+void _ZN12CylinderClsnC2Ev(struct CylinderClsn *self) {
+  *(int*)((char*)&self->unk_000)=(int)data_0208e6ec;
+  *(int*)((char*)&self->unk_028)=0;
+  *(int*)((char*)&self->unk_02c)=0;
 }
 }

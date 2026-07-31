@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13RollingLogLll8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "RollingLogLll.h"
 typedef int Fix12i;
 struct Vector3_16f;
 struct CylinderClsn;
@@ -14,9 +17,9 @@ extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
 extern "C" unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     unsigned int a, unsigned int b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 
-extern "C" int _ZN13RollingLogLll8BehaviorEv(char* thiz)
+int RollingLogLll::Behavior()
 {
-    char* c = thiz;
+    char* c = ((char*)this);
     C* o = (C*)c;
     DecIfAbove0_Short((unsigned short*)(c + 0x110));
     {

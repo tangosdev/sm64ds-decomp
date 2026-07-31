@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13WaterfallMist8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "WaterfallMist.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 
@@ -33,9 +36,9 @@ extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 }
 
-extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
+int WaterfallMist::Behavior()
 {
-    char *c = (char *)thiz;
+    char *c = (char *)((Enemy *)this);
 
     if (*(u8 *)(c + 0x400) != 0xff) {
         if (((Flags3eb *)(c + 0x3eb))->f1 == 0) {
@@ -48,7 +51,7 @@ extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
             *(int *)(c + 0x40c) = 0x2000;
             *(u8 *)(c + 0x402) = 1;
             *(int *)(c + 0xa8) = 0xf000;
-            _ZN5Actor13SmallPoofDustEv(thiz);
+            _ZN5Actor13SmallPoofDustEv(((Enemy *)this));
         }
     }
 
@@ -61,8 +64,8 @@ extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
         _Z14ApproachLinearRiii((int *)(c + 0x80), *(int *)(c + 0x40c), 0x400);
         *(int *)(c + 0x88) = *(int *)(c + 0x80);
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
-        _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, c + 0x110);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(thiz, (WithMeshClsn *)(c + 0x144), 0);
+        _ZN5Actor9UpdatePosEP12CylinderClsn(((Enemy *)this), c + 0x110);
+        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
             if (*(int *)(c + 0x80) == 0x1000) {
                 *(u8 *)(c + 0x402) = 0;
@@ -73,7 +76,7 @@ extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
     {
         Holder *q = *(Holder **)(c + 0x3bc);
         if (q->fn != 0) {
-            (thiz->*(q->fn))();
+            (((Enemy *)this)->*(q->fn))();
         }
     }
 
@@ -85,7 +88,7 @@ extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
         ((VObj *)(c + 0x300))->v03();
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(thiz, (WithMeshClsn *)(c + 0x144)) != 0) {
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
         return 1;
     }
 
@@ -93,8 +96,8 @@ extern "C" int _ZN13WaterfallMist8BehaviorEv(Enemy *thiz)
         int v = *(int *)(c + 0x3f0);
         if (v != 4 && v != 0x11 && v != 6 && v != 8 && v != 0xc && v != 0xa
             && v != 0x13 && v != 0xf && v != 0x14 && v != 0x15 && v != 0x16 && v != 0xd) {
-            _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, c + 0x110);
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(thiz, (WithMeshClsn *)(c + 0x144), 0);
+            _ZN5Actor9UpdatePosEP12CylinderClsn(((Enemy *)this), c + 0x110);
+            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
         }
     }
 

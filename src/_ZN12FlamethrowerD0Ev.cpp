@@ -1,6 +1,10 @@
 //cpp
+// @symbol _ZN12FlamethrowerD0Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Flamethrower.h"
 extern "C" {
-extern int _ZTV12Flamethrower[];
 extern int func_020072c0[];
 extern int data_020a0eac[];
 extern int _ZN19CylinderClsnWithPosD1Ev[];

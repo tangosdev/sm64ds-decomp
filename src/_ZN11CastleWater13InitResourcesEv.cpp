@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11CastleWater13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "CastleWater.h"
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern "C" {
@@ -15,20 +18,21 @@ extern struct SharedFilePtr data_ov009_02113e88;
 extern struct CLPS_Block data_ov009_02112bf8;
 extern unsigned char data_0209f2d8;
 extern int data_0209caa0;
+}
 
-int _ZN11CastleWater13InitResourcesEv(unsigned char *self)
+int CastleWater::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov009_02113e90);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((unsigned char *)this) + 0xd4, bmd, 1, -1);
+    _ZN8Platform21UpdateModelPosAndRotYEv(((unsigned char *)this));
+    _ZN8Platform19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113e88);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x2ec), 0x1000,
-            *(s16 *)(self + 0x8e), data_ov009_02112bf8);
+            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&unk_2ec), 0x1000,
+            unk_08e, data_ov009_02112bf8);
     }
-    if ((*(int*)(self + 8) & 0xff) == 0xff) {
+    if ((unk_008 & 0xff) == 0xff) {
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) goto ret1;
         if ((*(int*)((char*)&data_0209caa0 + 8) & 0x80000) == 0) goto ret1;
@@ -40,5 +44,4 @@ int _ZN11CastleWater13InitResourcesEv(unsigned char *self)
     }
 ret1:
     return 1;
-}
 }

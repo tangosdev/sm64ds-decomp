@@ -1,15 +1,20 @@
 //cpp
+// @symbol _ZN13UpDownLiftBbh16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "UpDownLiftBbh.h"
 extern "C" {
-extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
-extern void _ZN16MeshColliderBase7DisableEv(void*);
 extern void _ZN13SharedFilePtr7ReleaseEv(void*);
 extern void* data_ov095_02136f68[];
 extern void* data_ov095_02136f74[];
-int _ZN13UpDownLiftBbh16CleanupResourcesEv(void* c){
-  if(_ZN16MeshColliderBase9IsEnabledEv((char*)c+0x124))
-    _ZN16MeshColliderBase7DisableEv((char*)c+0x124);
-  _ZN13SharedFilePtr7ReleaseEv(data_ov095_02136f68[*(int*)((char*)c+0x328)]);
-  _ZN13SharedFilePtr7ReleaseEv(data_ov095_02136f74[*(int*)((char*)c+0x328)]);
-  return 1;
 }
+
+int UpDownLiftBbh::CleanupResources()
+{
+  if(_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider))
+    _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+  _ZN13SharedFilePtr7ReleaseEv(data_ov095_02136f68[*(int*)((char*)&mVariant)]);
+  _ZN13SharedFilePtr7ReleaseEv(data_ov095_02136f74[*(int*)((char*)&mVariant)]);
+  return 1;
 }

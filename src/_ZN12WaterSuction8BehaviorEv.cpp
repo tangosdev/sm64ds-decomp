@@ -1,8 +1,12 @@
 //cpp
+// @symbol _ZN12WaterSuction8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "WaterSuction.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
-extern void func_ov026_02112324(void* c);
 extern void _ZN12CylinderClsn5ClearEv(void* a);
 extern void _ZN12CylinderClsn6UpdateEv(void* a);
 }
@@ -15,19 +19,20 @@ struct C {
     Obj* obj;
 };
 
-extern "C" int _ZN12WaterSuction8BehaviorEv(char* cc){
-    C* c = (C*)cc;
-    DecIfAbove0_Short((unsigned short*)(cc + 0x100));
+int WaterSuction::Behavior()
+{
+    C* c = (C*)((char*)this);
+    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
     Obj* o = c->obj;
     if (*(int*)((char*)o + 8) != 0) {
         (c->*(o->pmf))();
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(cc, cc + 0x110);
-    *(short*)(cc + 0x8c) = *(short*)(cc + 0x92);
-    *(short*)(cc + 0x8e) = *(short*)(cc + 0x94);
-    *(short*)(cc + 0x90) = *(short*)(cc + 0x96);
-    func_ov026_02112324(cc);
-    _ZN12CylinderClsn5ClearEv(cc + 0x110);
-    _ZN12CylinderClsn6UpdateEv(cc + 0x110);
+    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+    unk_08c = unk_092;
+    unk_08e = unk_094;
+    unk_090 = unk_096;
+    func_ov026_02112324(((char*)this));
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
     return 1;
 }

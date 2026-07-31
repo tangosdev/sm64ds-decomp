@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13PeachPainting6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "PeachPainting.h"
 struct Base {
     virtual int vf0(int);
     virtual int vf1(int);
@@ -11,8 +14,10 @@ struct Obj {
     char pad[0xd4];
     Base sub;
 };
-extern "C" int _ZN13PeachPainting6RenderEv(Obj *c) {
-    if (*(unsigned char*)((char*)c+0x124) == 0) return 1;
-    c->sub.vfunc(0);
+
+int PeachPainting::Render()
+{
+    if (*(unsigned char*)((char*)&mOpacity) == 0) return 1;
+    ((Obj *)this)->sub.vfunc(0);
     return 1;
 }

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13OneUpMushroom6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "OneUpMushroom.h"
 struct Obj {
     virtual void m0();
     virtual void m1();
@@ -8,22 +11,18 @@ struct Obj {
     virtual void func5(int x);
 };
 
-extern "C" {
-
-unsigned int _ZN13OneUpMushroom6RenderEv(char *self)
+unsigned int OneUpMushroom::Render()
 {
-    if (*(unsigned char *)(self + 0x38e) == 0 || *(unsigned char *)(self + 0x38f) == 0)
+    if (unk_38e == 0 || unk_38f == 0)
         return 1;
     {
-        int b = (*(unsigned int *)(self + 0xb0) & 0x40000) ? 1 : 0;
+        int b = (unk_0b0 & 0x40000) ? 1 : 0;
         if (b)
             return 1;
     }
     {
-        Obj *o = (Obj *)(self + 0x300);
+        Obj *o = (Obj *)((char *)&mModel);
         o->func5(0);
     }
     return 1;
-}
-
 }

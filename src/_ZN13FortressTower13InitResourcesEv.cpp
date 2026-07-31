@@ -1,27 +1,25 @@
 //cpp
+// @symbol _ZN13FortressTower13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "FortressTower.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
 struct Matrix4x3;
 struct CLPS_Block;
 
-extern "C" void *Model_LoadFile(void *fp);
-extern "C" void ModelBase_SetFile(void *self, void *bmd, int a, int b);
-extern "C" void Platform_UpdateModelPosAndRotY(void *self);
-extern "C" void Platform_UpdateClsnPosAndRot(void *self);
-extern "C" void *MeshCollider_LoadFile(void *fp);
-extern "C" void MovingMeshCollider_SetFile(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern "C" int IsStarCollectedInCurLevel(int a);
 
 extern void *data_ov102_0214e188[];
 extern void *data_ov102_0214e18c[];
-extern void *data_ov102_0214e190[];
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
 
-extern "C" int _ZN13FortressTower13InitResourcesEv(void *thiz)
+int FortressTower::InitResources()
 {
-    unsigned char *c = (unsigned char *)thiz;
+    unsigned char *c = (unsigned char *)((void *)this);
     unsigned short id = *(unsigned short *)(c + 0xc);
     unsigned char idx;
 

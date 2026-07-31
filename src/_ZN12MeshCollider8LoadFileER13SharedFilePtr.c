@@ -1,3 +1,6 @@
+// @symbol _ZN12MeshCollider8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header */
+#include "MeshCollider.h"
 typedef unsigned char u8;
 
 struct SharedFilePtr {

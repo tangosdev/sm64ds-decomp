@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11RollingRock13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "RollingRock.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -22,9 +25,9 @@ struct SharedFilePtr { void* file; void* bmd; };
 extern SharedFilePtr data_ov021_02114a50;
 extern short data_02082214[];
 
-extern "C" int _ZN11RollingRock13InitResourcesEv(void* self)
+int RollingRock::InitResources()
 {
-    u8* c = (u8*)self;
+    u8* c = (u8*)((void*)this);
     *(u8*)(c+0x3be) = (u8)(*(u32*)(c+8) & 0xf);
     *(u8*)(c+0x3c1) = 0xff;
     *(signed char*)(c+0x3c0) = -1;
@@ -38,7 +41,7 @@ extern "C" int _ZN11RollingRock13InitResourcesEv(void* self)
         if (_ZN11ShadowModel12InitCylinderEv((void*)(c+0x160)) == 0)
             return 0;
 
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1f8), self, 0x12c000, 0, 0, 0);
+        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1f8), ((void*)this), 0x12c000, 0, 0, 0);
         _ZN12WithMeshClsn13SetLimMovFlagEv((void*)(c+0x1f8));
         *(s32*)(c+0x3b8) = 0;
 
@@ -46,11 +49,11 @@ extern "C" int _ZN11RollingRock13InitResourcesEv(void* self)
             Vec3 pos;
             *(u8*)(c+0x3c1) = (u8)((*(u32*)(c+8) >> 8) & 0xf);
             pos.x = 0; pos.y = 0; pos.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), self, &pos, 0x10e000, 0x226000, 0x200004, 0x3c0);
+            _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0x10e000, 0x226000, 0x200004, 0x3c0);
         } else {
             Vec3 pos;
             pos.x = 0; pos.y = 0; pos.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), self, &pos, 0xf3000, 0x226000, 0x200004, 0x3c0);
+            _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0xf3000, 0x226000, 0x200004, 0x3c0);
 
             if (*(u8*)(c+0x3be) == 3) {
                 *(u8*)(c+0x3c1) = (u8)((*(u32*)(c+8) >> 8) & 0xf);
@@ -68,7 +71,7 @@ extern "C" int _ZN11RollingRock13InitResourcesEv(void* self)
     }
 
     if (*(u8*)(c+0x3be) != 1 && *(u8*)(c+0x3c1) != 0xff) {
-        *(u8*)(c+0x3c0) = _ZN5Actor9TrackStarEjj(self, *(u8*)(c+0x3c1), 2);
+        *(u8*)(c+0x3c0) = _ZN5Actor9TrackStarEjj(((void*)this), *(u8*)(c+0x3c1), 2);
     }
     *(s32*)(c+0x3c4) = 0;
     *(s32*)(c+0x10c) = 0;

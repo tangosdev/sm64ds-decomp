@@ -1,3 +1,6 @@
+// @symbol _ZN12CylinderClsnD1Ev
+/* recovered: named members + shared header */
+#include "CylinderClsn.h"
 /* CylinderClsn::~CylinderClsn() at 0x020150a8
  * Complete-object destructor (D1). Installs the CylinderClsn vtable, then runs
  * the base subobject destructor (func_02014fa4). Returns this.

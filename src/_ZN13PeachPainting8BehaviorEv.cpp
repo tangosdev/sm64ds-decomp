@@ -1,20 +1,23 @@
 //cpp
+// @symbol _ZN13PeachPainting8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "PeachPainting.h"
 struct Actor { int DistToCPlayer(); };
 namespace cstd { int fdiv(int a, int b); }
 struct ModelBase { void ApplyOpacity(unsigned int o, int x); };
 
-extern "C" int _ZN13PeachPainting8BehaviorEv(char *c)
+int PeachPainting::Behavior()
 {
-    int d = ((Actor *)c)->DistToCPlayer();
+    int d = ((Actor *)((char *)this))->DistToCPlayer();
     if (d >= 0xe10000) {
-        *(unsigned char *)(c + 0x124) = 0xff;
+        mOpacity = 0xff;
     } else if (d <= 0xbf4000) {
-        *(unsigned char *)(c + 0x124) = 0;
+        mOpacity = 0;
     } else {
         int q = cstd::fdiv(d - 0xbf4000, 0x21c000);
         int o = (int)(((long long)q * 0xff + 0x800) >> 12);
-        *(unsigned char *)(c + 0x124) = (unsigned char)(o >> 3);
+        mOpacity = (unsigned char)(o >> 3);
     }
-    ((ModelBase *)(c + 0xd4))->ApplyOpacity(*(unsigned char *)(c + 0x124), 1);
+    ((ModelBase *)((char *)&mModel))->ApplyOpacity(mOpacity, 1);
     return 1;
 }

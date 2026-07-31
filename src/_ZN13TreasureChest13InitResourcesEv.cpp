@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13TreasureChest13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "TreasureChest.h"
 struct SharedFilePtr { int x; };
 struct BMD_File;
 struct BCA_File;
@@ -17,19 +20,20 @@ extern SharedFilePtr data_ov002_0210da38;
 extern SharedFilePtr data_ov064_0211c96c;
 extern SharedFilePtr data_ov064_0211c964;
 
-extern "C" int _ZN13TreasureChest13InitResourcesEv(char* c) {
+int TreasureChest::InitResources()
+{
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da38);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4,
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4,
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov064_0211c96c), 1, -1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4,
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this) + 0xd4,
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov064_0211c964), 0x40000000, 0x1000, 0);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x138, (Actor*)c, 0x96000, 0x96000, 0x200004, 0);
-    func_ov064_0211a284(c);
-    *(unsigned char*)(c + 0x172) = *(int*)(c + 8);
-    *(unsigned char*)(c + 0x174) = (unsigned int)*(int*)(c + 8) >> 8;
-    if (*(unsigned char*)(c + 0x174) != 0xff) {
-        *(unsigned char*)(c + 0x175) = _ZN5Actor9TrackStarEjj(c, *(unsigned char*)(c + 0x174), 2);
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x138, (Actor*)((char*)this), 0x96000, 0x96000, 0x200004, 0);
+    func_ov064_0211a284(((char*)this));
+    unk_172 = unk_008;
+    unk_174 = (unsigned int)unk_008 >> 8;
+    if (unk_174 != 0xff) {
+        unk_175 = _ZN5Actor9TrackStarEjj(((char*)this), unk_174, 2);
     }
     return 1;
 }

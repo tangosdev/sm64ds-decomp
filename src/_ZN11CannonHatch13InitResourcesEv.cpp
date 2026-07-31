@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11CannonHatch13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "CannonHatch.h"
 typedef short s16;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern struct SharedFilePtr data_ov002_0210e12c;
@@ -15,23 +18,23 @@ void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Blo
 int IsCannonOpenInCurLevel(void);
 }
 
-extern "C" int _ZN11CannonHatch13InitResourcesEv(unsigned char *self)
+int CannonHatch::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e12c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((unsigned char *)this) + 0xd4, bmd, 1, -1);
+    _ZN8Platform21UpdateModelPosAndRotYEv(((unsigned char *)this));
+    _ZN8Platform19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov002_0210e124);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x2ec), 0x199,
-            *(s16 *)(self + 0x8e), data_ov002_0210d7f4);
+            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&unk_2ec), 0x199,
+            unk_08e, data_ov002_0210d7f4);
     }
-    *(int *)(self + 0x320) = *(int *)(self + 0x5c);
-    *(int *)(self + 0x324) = *(int *)(self + 0x60);
-    *(int *)(self + 0x328) = *(int *)(self + 0x64);
+    unk_320 = mPosX;
+    unk_324 = mPosY;
+    unk_328 = mPosZ;
     if (IsCannonOpenInCurLevel() != 0) {
-        *(unsigned char *)(self + 0x32e) = 1;
+        unk_32e = 1;
     }
     return 1;
 }

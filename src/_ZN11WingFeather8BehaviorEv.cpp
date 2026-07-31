@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11WingFeather8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "WingFeather.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -31,73 +34,74 @@ extern void* data_0209f318;
 
 #pragma opt_common_subs off
 
-extern "C" int _ZN11WingFeather8BehaviorEv(char* self) {
+int WingFeather::Behavior()
+{
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            void* p = _ZN5Actor13ClosestPlayerEv(self);
+            void* p = _ZN5Actor13ClosestPlayerEv(((char*)this));
             if (*(int*)((char*)p + 8) != 0 || _ZN6Player15IsCollectingCapEv(p) != 0) {
-                _ZN5Actor13SmallPoofDustEv(self);
-                _ZN9ActorBase18MarkForDestructionEv(self);
+                _ZN5Actor13SmallPoofDustEv(((char*)this));
+                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }
     }
 
-    *(u32*)(self + 0x380) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(u32*)(self + 0x380), 0x4a, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64), 0, 0);
+    unk_380 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    func_020383fc(self + 0x158);
+    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    func_020383fc((char*)&mWithMeshClsn);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x158) != 0) {
-        _Z15ApproachLinear2Rsss((short*)(self + 0x37c), 0, 0x50);
-        _Z14ApproachLinearRiii((int*)(self + 0x98), 0, 0x555);
-        if (DecIfAbove0_Byte((u8*)(self + 0x384)) == 0) {
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
-            _ZN9ActorBase18MarkForDestructionEv(self);
+    if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+        _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);
+        _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
+        if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
+            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
         }
     } else {
-        short* angp = (short*)((((s64)(self + 0x37c))) & 0xFFFFFFFFFFFFFFFFLL);
+        short* angp = (short*)((((s64)((char*)&unk_37c))));
         short old_ang = *angp;
         *angp = old_ang + 0x400;
-        u16 newv = *(u16*)((char*)(self + 0x300) + 0x7c);
+        u16 newv = *(u16*)((char*)((char*)&unk_300) + 0x7c);
         int idx = ((newv >> 4) << 1) + 1;
-        *(int*)(self + 0x98) = (int)(((s64)*(int*)(self + 0x378) * data_02082214[idx] + 0x800) >> 12);
+        unk_098 = (int)(((s64)unk_378 * data_02082214[idx] + 0x800) >> 12);
     }
 
-    _Z14ApproachLinearRiii((int*)(self + 0x378), 0x10000, 0x332);
+    _Z14ApproachLinearRiii((int*)((char*)&unk_378), 0x10000, 0x332);
 
     {
-        int idx2 = (*(u16*)(self + 0x37c) >> 4) << 1;
-        *(s16*)(self + 0x8c) = data_02082214[idx2] + 0x4000;
-        int idx3 = ((*(u16*)(self + 0x37c) >> 4) << 1) + 1;
-        *(s16*)(self + 0x90) = data_02082214[idx3] * 2 - 0x6000;
+        int idx2 = (unk_37c >> 4) << 1;
+        unk_08c = data_02082214[idx2] + 0x4000;
+        int idx3 = ((unk_37c >> 4) << 1) + 1;
+        unk_090 = data_02082214[idx3] * 2 - 0x6000;
     }
 
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            *(s16*)(self + 0x8e) = *(s16*)((char*)data_0209f318 + 0x17c) + 0x4000;
+            unk_08e = *(s16*)((char*)data_0209f318 + 0x17c) + 0x4000;
         }
     }
 
-    u32 id = *(u32*)(self + 0x148);
+    u32 id = unk_148;
     if (id != 0) {
         void* a = _ZN5Actor10FindWithIDEj(id);
         if (a != 0) {
             int eq = (*(u16*)((char*)a + 0xc) == 0xbf);
             if (eq) {
                 _ZN6Player16InitWingFeathersEb(a, 1);
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
-                _ZN9ActorBase18MarkForDestructionEv(self);
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
+                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(self + 0x124);
-    _ZN12CylinderClsn6UpdateEv(self + 0x124);
-    func_ov002_020b2c44(self);
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    func_ov002_020b2c44(((char*)this));
     return 1;
 }
