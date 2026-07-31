@@ -1,8 +1,13 @@
 //cpp
+// @symbol _ZN9SolidHeap14VDeallocateAllEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_SolidHeapAllocator.h"
+/* recovered: named members + shared header, real C++ method */
+#include "SolidHeap.h"
 extern "C" {
-extern void _ZN18SolidHeapAllocator5ResetEj(void*, unsigned int);
-
-void _ZN9SolidHeap14VDeallocateAllEv(char* self) {
-    _ZN18SolidHeapAllocator5ResetEj(*(void**)(self + 0x14), 3);
 }
+
+void SolidHeap::VDeallocateAll()
+{
+    _ZN18SolidHeapAllocator5ResetEj(*(void**)((char*)&unk_014), 3);
 }

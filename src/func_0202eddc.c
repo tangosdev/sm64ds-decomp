@@ -1,4 +1,8 @@
-/* func_0202eddc - IsAtEnd wrapper.
+// @symbol func_0202eddc
+// @emits dWipe_c_IsAtEnd
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsAtEnd - recovered from vtable slot identity */
+/* dWipe_c_IsAtEnd - IsAtEnd wrapper.
  * Attempt 5: use explicit early-return structure to get beq+bgt branch pattern.
  * ROM: beq -> ret1 block (add sp,#4; mov r0,#1; ldm; bx), bgt -> ret0 block.
  */
@@ -19,7 +23,7 @@ struct MyFader {
     s32 interpVal;  /* 0x1c */
 };
 
-int func_0202eddc(struct MyFader* self)
+int dWipe_c_IsAtEnd(struct MyFader* self)
 {
     int result;
     if (self->type == 1)

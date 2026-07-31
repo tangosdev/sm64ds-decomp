@@ -1,3 +1,8 @@
+// @symbol _ZN8YoshiEgg13InitResourcesEv
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "YoshiEgg.h"
 typedef int Fix12;
 
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
@@ -15,7 +20,6 @@ extern void LoadBlueCoinModel(void *p);
 
 extern char data_ov002_0210e6b0[];
 extern char data_ov002_0210eb78[];
-extern char *data_ov002_021000a0[];
 
 #pragma opt_strength_reduction off
 

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_0202ed7c
+// @emits dWipe_c_IsBetweenStartAndEnd
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsBetweenStartAndEnd - recovered from vtable slot identity */
 struct FaderBrightness {
     virtual void m00();
     virtual void m04();
@@ -13,7 +17,7 @@ struct FaderBrightness {
 
 extern "C" int _ZN15FaderBrightness20IsBetweenStartAndEndEv(struct FaderBrightness *thiz);
 
-extern "C" int func_0202ed7c(struct FaderBrightness *thiz)
+extern "C" int dWipe_c_IsBetweenStartAndEnd(struct FaderBrightness *thiz)
 {
     if (thiz->field_14 == 1)
         return _ZN15FaderBrightness20IsBetweenStartAndEndEv(thiz);

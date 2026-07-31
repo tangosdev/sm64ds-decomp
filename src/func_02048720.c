@@ -1,24 +1,23 @@
+// @symbol func_02048720
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-struct Vec3 { int x, y, z; };
+
 
 typedef struct {
     void *obj;
     int dist;
 } SoundSlot;
 
-extern u32 data_02099fac;
-extern int data_02099fb0;
 extern SoundSlot data_020a4bf8[2];
 extern SoundSlot data_020a4c18[];
 
-extern void *func_02050cdc(int kind, int id);
-extern int func_02049018(struct Vec3 *v);
-extern int func_0204fa2c(int *p, int a);
-extern void func_0204f934(int **p);
 
-void *func_02048720(struct Vec3 *v, int kind, int id)
+void *func_02048720(struct Vector3 *v, int kind, int id)
 {
     u32 lim;
     void *elem;

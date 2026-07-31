@@ -1,3 +1,6 @@
+// @symbol _ZN9ActorBase9SceneNodeC1Ev
+/* recovered: named members + shared header */
+#include "ActorBase.h"
 // ActorBase::SceneNode::SceneNode() - C1 constructor
 // Address: 0x0203b4c4
 

@@ -1,8 +1,9 @@
-struct Vector3 { int x, y, z; };
-extern void func_02007c9c(const struct Vector3 *v0, const struct Vector3 *v1, int *outDist, short *outVertAng, short *outHorzAng);
-extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
+// @symbol func_020070e8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern int ApproachAngle(short *angle, int targetAngle, int invFactor, int maxDelta, int minDelta);
-extern void func_02007c14(struct Vector3 *res, const struct Vector3 *trans, int mag, short ang, short angY);
 
 void func_020070e8(int *thiz, int p1, int p2, int p3, short flagV, short targetH, short flagH)
 {

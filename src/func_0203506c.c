@@ -1,34 +1,28 @@
+// @symbol func_0203506c
+// @emits dScMB_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Scene.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMB_c::InitResources - recovered from vtable slot identity */
 typedef int s32;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern void func_02053b98(void);
-extern void func_02030aa4(int arg);
-extern void func_0200f2cc(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void SetBg1Offset(int a, int b);
-extern void SetSubBg1Offset(int a, int b);
-extern void _ZN2GX6DispOnEv(void);
-extern void func_02034b1c(void *c, int a);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void *p);
 extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 
-extern u8 data_0209446c[];
-extern u8 data_0209444c[];
-extern u8 data_020945d0[];
 extern u8 data_0209d45c[];
 extern u8 data_0209d454[];
-extern u8 data_020a0c68[];
 extern u8 data_0209d4a8[];
 extern u8 data_0208ee44[];
 extern u8 func_0201a2f8[];
-extern u8 data_020a0c64[];
 
-int func_0203506c(void *arg0)
+int dScMB_c_InitResources(void *arg0)
 {
     void *self = arg0;
     volatile u16 sp4;

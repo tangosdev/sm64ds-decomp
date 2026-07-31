@@ -1,9 +1,15 @@
+// @symbol func_0200b0fc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_PathPtr.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
+
 
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
@@ -11,16 +17,11 @@ extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, struct Vector3 *out, uns
 extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
 extern int LenVec3(struct Vector3 *v);
 extern int NormalizeVec3IfNonZero(struct Vector3 *v);
-extern void func_0203cf00(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
 extern int DotVec3(const struct Vector3 *a, const struct Vector3 *b);
-extern unsigned int func_0203ad54(void *c);
-extern int _ZNK7PathPtr8NumNodesEv(void *self);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void Vec3_Add(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
 extern void Vec3_MulScalar(struct Vector3 *out, const struct Vector3 *in, int scale);
-extern int _ZNK7PathPtr5LoopsEv(void *self);
-extern unsigned int func_0203ad44(void *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern int func_020092c4(void *arg0, struct Vector3 *out, struct Vector3 *target);
 extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
@@ -122,7 +123,7 @@ void func_0200b0fc(char *c, char *a)
         lenBack = LenVec3(&diffBack);
         lenFwd = LenVec3(&tmp);
         if (lenFwd < lenBack) {
-            u8 *p = (u8*)((long long)(c + 0x1a7) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *p = (u8*)((long long)(c + 0x1a7));
             *p = *p + 1;
         }
     } else if (_ZNK7PathPtr5LoopsEv(path) != 0) {
@@ -146,7 +147,7 @@ void func_0200b0fc(char *c, char *a)
         lenA = LenVec3(&diffFwd2);
         lenB = LenVec3(&diffPrev);
         if (lenB < lenA) {
-            u8 *p = (u8*)((long long)(c + 0x1a7) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *p = (u8*)((long long)(c + 0x1a7));
             *p = *p - 1;
         }
     } else if (_ZNK7PathPtr5LoopsEv(path) != 0) {

@@ -1,3 +1,11 @@
+// @symbol func_02005418
+// @emits dScBoot_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Message.h"
+#include "decl_SaveData.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScBoot_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -15,30 +23,19 @@ extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 
-extern int func_0201a1bc(void);
-extern void func_0201fe08(void);
-extern void func_02005348(void *self);
-extern int func_0203da3c(void);
 extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
-extern int GetOwnerLanguage(void);
 extern u32 func_02054e88(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 extern int LoadFile(int handle);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void Deallocate(void *ptr);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
-extern void func_0201cd08(int arg);
-extern void SetSubBg0Offset(int a, int b);
-extern void SetSubBg1Offset(int a, int b);
 extern void func_02012790(int a);
-extern void _ZN7Message21DisplaySaveStatusTextEt(u16 a);
-extern void _ZN8SaveData16EraseAllSaveDataEv(void);
 
-#define LADR(p) ((void *)(unsigned int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LADR(p) ((void *)(unsigned int)(((long long)(int)(p))))
 
 #pragma opt_common_subs off
 
-int func_02005418(void *arg0)
+int dScBoot_c_Behavior(void *arg0)
 {
     char *c = (char *)arg0;
     u16 h58, h5a;

@@ -1,3 +1,8 @@
+// @symbol _ZN9Animation8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Animation.h"
+/* recovered: named members + shared header */
+#include "Animation.h"
 typedef unsigned char u8;
 
 struct SharedFilePtr {
@@ -7,7 +12,6 @@ struct SharedFilePtr {
 };
 
 extern void _ZN13SharedFilePtr8LoadFileEv(struct SharedFilePtr* fp);
-extern void _ZN9Animation17UpdateFileOffsets_ZN9AnimationER8BCA_File(char* file);
 
 char* _ZN9Animation8LoadFileER13SharedFilePtr(struct SharedFilePtr* filePtr)
 {

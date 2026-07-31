@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_0203842c
+/* recovered: shared common types */
+#include "common.h"
 
 extern "C" {
 int func_020393b4(void *p);
@@ -24,11 +27,11 @@ public:
     virtual int v7(void *arg);
 };
 
-struct Vec3 { int x, y, z; };
+
 
 struct Info {
     char pad0[0x5c];
-    Vec3 pos;
+    Vector3 pos;
     char pad1[0xb0 - 0x68];
     int pB0;
     int pB4;
@@ -56,8 +59,8 @@ extern "C" int func_0203842c(char *self)
         if (info != 0) {
             int active = (info->pB0 & 2) ? 1 : 0;
             if (active != 0) {
-                Vec3 v;
-                Vec3 *src = (Vec3 *)((unsigned long long)(unsigned int)((char *)info + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
+                Vector3 v;
+                Vector3 *src = (Vector3 *)((unsigned long long)(unsigned int)((char *)info + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
                 v.x = src->x;
                 v.y = src->y;
                 v.z = src->z;

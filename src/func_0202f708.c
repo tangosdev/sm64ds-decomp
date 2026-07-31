@@ -1,3 +1,9 @@
+// @symbol func_0202f708
+// @emits dWipe_c_SetForwardTime
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dWipe_c::SetForwardTime - recovered from vtable slot identity */
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -24,15 +30,11 @@ extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int addr, unsigned
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
 extern void func_0202f58c(struct MyFader *self);
-extern void func_0202f2c4(void);
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void (*handler)(void));
 extern void _ZN3IRQ10EnableIRQsEj(unsigned int irq);
-extern int func_02053c10(int enable);
 
-extern u8 data_0209f600[];
-extern u8 data_020926c8[];
 
-int func_0202f708(struct MyFader *self, u32 frames)
+int dWipe_c_SetForwardTime(struct MyFader *self, u32 frames)
 {
     if (self->state == 0 || self->state == 2) {
         int t;

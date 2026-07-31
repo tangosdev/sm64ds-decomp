@@ -1,9 +1,13 @@
 //cpp
+// @symbol _ZN9AnimationC2Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Animation.h"
 extern "C" {
-extern int data_0208e7e4[];
-void _ZN9AnimationC2Ev(void* c){
-  *(int*)((char*)c+0)=(int)data_0208e7e4;
-  *(int*)((char*)c+8)=0;
-  *(int*)((char*)c+0xc)=0x1000;
+void _ZN9AnimationC2Ev(struct Animation *self) {
+  *(int*)((char*)&self->unk_000)=(int)data_0208e7e4;
+  *(int*)((char*)&self->unk_008)=0;
+  *(int*)((char*)&self->unk_00c)=0x1000;
 }
 }

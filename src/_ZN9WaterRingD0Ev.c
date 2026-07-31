@@ -1,14 +1,17 @@
-extern void _ZN18TextureTransformerD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN12WithMeshClsnD1Ev(void *);
+// @symbol _ZN9WaterRingD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_Model.h"
+#include "decl_TextureTransformer.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV14daWater_Ring_c */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
 extern void *G0;
 int *_ZN9WaterRingD0Ev(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV14daWater_Ring_c;
     _ZN18TextureTransformerD1Ev((char *)t + 0x35c);
     _ZN5ModelD1Ev((char *)t + 0x30c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x150);

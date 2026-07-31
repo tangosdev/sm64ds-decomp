@@ -1,4 +1,10 @@
-/* func_ov002_020af2b0 at 0x020af2b0
+// @symbol func_ov002_020af2b0
+// @emits OneUpMushroom_OnTurnIntoEgg
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* da1up_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* OneUpMushroom_OnTurnIntoEgg at 0x020af2b0
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
@@ -8,14 +14,11 @@ typedef int Fix12i;
 struct Vec { Fix12i x, y, z; };
 struct Vector3_16;
 
-extern void func_ov002_020af684(void* self, int, int);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vec* v);
-extern void GiveLives(int delta);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, struct Vec* v, struct Vector3_16* rot, int e, int f);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* thiz);
-extern void func_ov002_020bdf8c(int);
 
-void func_ov002_020af2b0(char* c, int arg1)
+void OneUpMushroom_OnTurnIntoEgg(char* c, int arg1)
 {
     int t = *(int*)(c + 0x384);
     if (t == 0xb) {

@@ -1,15 +1,13 @@
 //cpp
+// @symbol _ZN9ActorBaseC1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "ActorBase.h"
 extern "C" {
 void _ZN9ActorBase9SceneNodeC1Ev(void);
 int func_0203b438(void);
 int func_02043810(void);
-extern int data_02099edc;
-extern int data_02099e70;
-extern int data_020a4b60;
-extern int data_020a4b54;
-extern int data_020a4b64;
-extern int data_020a4b48;
-extern int data_020a4b6c;
 extern int data_020a4bb8;
 }
 

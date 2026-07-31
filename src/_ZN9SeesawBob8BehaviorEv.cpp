@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9SeesawBob8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "SeesawBob.h"
 typedef short s16;
 struct V3 { int x, y, z; };
 extern "C" {
@@ -9,33 +12,34 @@ void func_ov095_021358cc(void* c, void* a, void* b, int d, int e, int f, int g);
 void func_ov095_0213597c(char *t);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+}
 
-int _ZN9SeesawBob8BehaviorEv(char* c){
-    int b = (int)((*(int*)(c + 0xb0) & 8) != 0);
+int SeesawBob::Behavior()
+{
+    int b = (int)((unk_0b0 & 8) != 0);
     if (b != 0) {
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
-            _ZN16MeshColliderBase7DisableEv(c + 0x124);
+        if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider)) {
+            _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
         }
         return 1;
     }
-    if (*(unsigned char*)(c + 0x326) == 0) {
-        func_ov095_021358cc(c, c + 0x8c, c + 0x324, 0, 6, 3, 3);
+    if (unk_326 == 0) {
+        func_ov095_021358cc(((char*)this), ((char*)this) + 0x8c, ((char*)this) + 0x324, 0, 6, 3, 3);
     }
     {
-        int s = *(short*)(c + 0x324);
+        int s = unk_324;
         if (s < 0) s = (short)-s;
         if (s > 0xa) {
-            *(int*)(c + 0x320) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
-                *(unsigned int*)(c + 0x320), 3, 0x8b, c + 0x74, 0);
+            unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                unk_320, 3, 0x8b, ((char*)this) + 0x74, 0);
         }
     }
-    if (*(short*)(c + 0x8c) > 0x2000) *(short*)(c + 0x8c) = 0x2000;
-    if (*(short*)(c + 0x8c) < -0x2000) *(short*)(c + 0x8c) = -0x2000;
-    func_ov095_0213597c(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (unk_08c > 0x2000) unk_08c = 0x2000;
+    if (unk_08c < -0x2000) unk_08c = -0x2000;
+    func_ov095_0213597c(((char*)this));
+    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
+        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
     }
-    *(unsigned char*)(c + 0x326) = 0;
+    unk_326 = 0;
     return 1;
-}
 }

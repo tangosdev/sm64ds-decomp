@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_020371fc
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor;
 struct ClsnResult { char data[0x34]; };
 

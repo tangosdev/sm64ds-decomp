@@ -1,9 +1,14 @@
+// @symbol func_0200d8c8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 /* Camera ground-pound jitter: if the target point is within range, accumulate
  * a jitter offset (unk134) scaled by 0x9000/distance, clamped to 0xc000. */
 
 typedef int Fix12i; /* 20.12 fixed-point */
 
-struct Vector3 { Fix12i x, y, z; }; /* 0xc */
+ /* 0xc */
 
 struct Camera {
 	char _pad0[0x8c];
@@ -16,7 +21,6 @@ struct Camera {
  *   0x0203cfdc = Vec3_Dist(const Vector3&, const Vector3&) -> Vec3_Dist
  *   0x02053258 = cstd::fdiv(int, int)                      -> _ZN4cstd4fdivEii */
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern int cstd_fdiv(int numerator, int denominator);
 
 void func_0200d8c8(struct Camera *cam, const struct Vector3 *v, int strength)
 {

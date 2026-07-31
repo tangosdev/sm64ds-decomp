@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9Butterfly13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "Butterfly.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -27,9 +30,9 @@ extern SFP data_ov100_02148668;
 extern SFP data_ov100_02148608;
 extern int data_0209e650;
 
-extern "C" int _ZN9Butterfly13InitResourcesEv(void* self)
+int Butterfly::InitResources()
 {
-    u8* c = (u8*)self;
+    u8* c = (u8*)((void*)this);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_02148600);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_02148668);
@@ -41,13 +44,13 @@ extern "C" int _ZN9Butterfly13InitResourcesEv(void* self)
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii((void*)(c+0x138), data_ov100_02148668.b, 1, 1) == 0) return 0;
     if (_ZN11ShadowModel12InitCylinderEv((void*)(c+0x1b0)) == 0) return 0;
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1d8), self, 0x32000, 0x32000, 0, 0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1d8), ((void*)this), 0x32000, 0x32000, 0, 0);
 
     Vec3 v;
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x394), self, &v, 0x32000, 0x64000, 0x200000, 0);
+    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj((void*)(c+0x394), ((void*)this), &v, 0x32000, 0x64000, 0x200000, 0);
 
     int sub = (int)(u8)(*(u32*)(c+8) & 0x30);
     if (sub != 0x10 && sub != 0x20) {

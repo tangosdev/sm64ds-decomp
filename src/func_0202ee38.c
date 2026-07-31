@@ -1,4 +1,8 @@
-/* func_0202ee38 - IsAtStart wrapper.
+// @symbol func_0202ee38
+// @emits dWipe_c_IsAtStart
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsAtStart - recovered from vtable slot identity */
+/* dWipe_c_IsAtStart - IsAtStart wrapper.
  * Attempt 1: same goto pattern as func_0202eddc. ROM structure:
  * if unk14==1: call IsAtStart, return result.
  * else if unk10==0: goto ret1 (return 1)
@@ -23,7 +27,7 @@ struct MyFader {
     s32 interpVal;  /* 0x1c */
 };
 
-int func_0202ee38(struct MyFader* self)
+int dWipe_c_IsAtStart(struct MyFader* self)
 {
     int result;
     if (self->type == 1)

@@ -1,12 +1,13 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_0200bec4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct Data02086f2c { int unk0, unk4, unk8; };
 extern struct Data02086f2c data_02086f2c;
 
-extern unsigned int func_020093f4(void *p, int x);
 extern void Vec3_RotateYAndTranslate(struct Vector3 *out, void *a, short ang, int *t);
 extern void _ZN11RaycastLineC1Ev(void *self);
-extern void func_0200897c(void *self, void *arg);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3 *out, void *self);
@@ -14,7 +15,6 @@ extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, const struct Vector3 *p, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void SubVec3(struct Vector3 *a, void *b, struct Vector3 *c);
-extern unsigned int func_020093d4(void *p, int a);
 extern int Vec3_HorzLen(void *v);
 extern void Vec3_MulScalar(void *out, void *in, int scale);
 extern void AddVec3(struct Vector3 *a, void *b, struct Vector3 *c);

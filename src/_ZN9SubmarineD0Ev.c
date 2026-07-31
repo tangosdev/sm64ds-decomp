@@ -1,12 +1,15 @@
-extern void _ZN18TextureTransformerD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
+// @symbol _ZN9SubmarineD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_ModelAnim.h"
+#include "decl_TextureTransformer.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV18daWater_Tatumaki_c */
 extern void func_ov002_020aed18(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
 extern void *G0;
 int *_ZN9SubmarineD0Ev(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV18daWater_Tatumaki_c;
     _ZN18TextureTransformerD1Ev((char *)t + 0x178);
     _ZN9ModelAnimD1Ev((char *)t + 0x114);
     func_ov002_020aed18(t);

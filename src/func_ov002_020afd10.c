@@ -1,15 +1,16 @@
+// @symbol func_ov002_020afd10
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef int Fix12i;
 
-struct Vec3 { Fix12i x, y, z; };
 
-extern void func_ov002_020aefb8(char* self);
+
 extern int func_ov002_020af218(char* c, int n);
-extern int _ZN5Actor15IsPlayerInRangeEi(void* thiz, int n);
-extern void func_ov002_020afc68(char* c);
 extern int func_ov002_020af248(char* c, int n);
-extern void func_ov002_020af3a8(char* c);
-extern void func_ov002_020aeee4(char* c);
 
 void func_ov002_020afd10(char* c)
 {

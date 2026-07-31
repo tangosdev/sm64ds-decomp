@@ -1,3 +1,9 @@
+// @symbol func_0202f928
+// @emits dWipe_c_SetBackwardTime
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dWipe_c::SetBackwardTime - recovered from vtable slot identity */
 /* The third parameter (param_2) is load-bearing: it arrives in r2 and is
  * forwarded to the guard call with zero instructions, which keeps r2 live
  * from entry to the call and forces the cached `type` into r3 as in the ROM.
@@ -15,12 +21,8 @@ extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(u32 irqBits, void (*handler)(void));
 extern void _ZN3IRQ10EnableIRQsEj(u32 irqBits);
-extern int func_02053c10(int enable);
 extern void func_0202f58c(void *self);
-extern void func_0202f2c4(void);
 
-extern u8 data_0209f604[];
-extern u8 data_020926cc[];
 
 struct MyFader {
     u32 unk00;
@@ -35,7 +37,7 @@ struct MyFader {
     u32 unk24;      /* 0x24 */
 };
 
-int func_0202f928(struct MyFader *self, u32 param_1, u32 param_2)
+int dWipe_c_SetBackwardTime(struct MyFader *self, u32 param_1, u32 param_2)
 {
     s32 type, unk10;
 

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9PowerStar13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "PowerStar.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -60,12 +63,12 @@ extern s32 _ZN9PowerStar13InitResourcesEv(void *arg0);
 #define S8(o) (*(s8 *)(t + (o)))
 #define U16(o) (*(u16 *)(t + (o)))
 #define S32(o) (*(s32 *)(t + (o)))
-#define LU32(o) (*(u32 *)((int)(((long long)(int)(t + (o))) & 0xFFFFFFFFFFFFFFFFLL)))
-#define LU16(o) (*(u16 *)((int)(((long long)(int)(t + (o))) & 0xFFFFFFFFFFFFFFFFLL)))
+#define LU32(o) (*(u32 *)((int)(((long long)(int)(t + (o))))))
+#define LU16(o) (*(u16 *)((int)(((long long)(int)(t + (o))))))
 
-s32 _ZN9PowerStar13InitResourcesEv(void *arg0)
+s32 PowerStar::InitResources()
 {
-    char *t = (char *)arg0;
+    char *t = (char *)((void *)this);
     s32 ret;
     s32 b;
     u32 p;
@@ -211,7 +214,7 @@ s32 _ZN9PowerStar13InitResourcesEv(void *arg0)
     S32(0x448) = S32(0x5c);
     S32(0x44c) = S32(0x60);
     S32(0x450) = S32(0x64);
-    q = (s32 *)((int)(((long long)(int)(t + 0x448)) & 0xFFFFFFFFFFFFFFFFLL));
+    q = (s32 *)((int)(((long long)(int)(t + 0x448))));
     S32(0x454) = q[0];
     S32(0x458) = q[1];
     S32(0x45c) = q[2];

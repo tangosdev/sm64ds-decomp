@@ -1,9 +1,12 @@
+// @symbol func_0200af20
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef long long s64;
-struct Vector3 { int x, y, z; };
+
 
 extern signed char data_0209f2f8;
-extern int data_02086f38[];
-extern int data_02086f48[];
 extern short data_02082214[];
 extern char data_0209f43c[];
 
@@ -74,5 +77,5 @@ void func_0200af20(char *c, struct Vector3 *v1, struct Vector3 *v2, short *out)
 
     *out = 0xe38;
     _ZN7Clipper13Func_020156DCEv(data_0209f43c, *(int *)(c + 0xf8), *out, *(int *)(c + 0xfc), *(int *)(c + 0x100));
-    *(int *)(int)(((long long)(int)(c + 0x154)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+    *(int *)(int)(((long long)(int)(c + 0x154))) &= ~1;
 }

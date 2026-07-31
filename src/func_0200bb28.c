@@ -1,3 +1,8 @@
+// @symbol func_0200bb28
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -9,24 +14,20 @@ typedef unsigned long long u64;
 extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
 extern u16 data_0209f49e[];
-extern s32 data_02086cc8[];
-extern s32 data_02086d50[];
 
 extern u32 func_02012790(u32 a);
 extern s32 ApproachAngle(s16* cur, s16 target, s32 div, s32 band, s32 step);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void _Z14ApproachLinearRsss(s16* p, s16 t, s16 r);
-extern void func_0200c9e0(void* c, s32* a, s32* b);
-extern s32 _ZN4cstd4sqrtEy(u64 v);
 extern void Vec3_RotateYAndTranslate(s32* out, s32* in, s16 ang, s32* src);
 extern s32 Math_Function_0203b14c(s32* p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern s32 _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(s32* v, s32* t, s32 rate);
 
-#define L0(p) ((s32)(((long long)(s32)(p)) & 0xFFFFFFFFFFFFFFFFLL))
-#define L1(p) ((s32)(((unsigned long long)(unsigned int)(p)) & 0xFFFFFFFFFFFFFFFFULL))
-#define L2(p) ((s32)((((long long)(s32)(p)) | 0LL) & 0xFFFFFFFFFFFFFFFFLL))
-#define L3(p) ((s32)(((unsigned long long)(s32)(p)) & 0xFFFFFFFFFFFFFFFFULL))
-struct Vec3 { s32 x, y, z; };
+#define L0(p) ((s32)(((long long)(s32)(p))))
+#define L1(p) ((s32)(((unsigned long long)(unsigned int)(p))ULL))
+#define L2(p) ((s32)((((long long)(s32)(p)) | 0LL)))
+#define L3(p) ((s32)(((unsigned long long)(s32)(p))ULL))
+
 
 
 
@@ -35,9 +36,9 @@ void func_0200bb28(char* c, char* a1)
 {
     s32 flag4000;
     s32 sp_speed;
-    struct Vec3 vsrc;
-    struct Vec3 vin;
-    struct Vec3 vout;
+    struct Vector3 vsrc;
+    struct Vector3 vin;
+    struct Vector3 vout;
     s32* tbl;
     s32 comp;
     s32 m;

@@ -1,11 +1,10 @@
-struct Vector3 {
-    int x, y, z;
-};
-
-extern int func_02008b4c(void* a0, void* p1, void* p2, void* tbl);
+// @symbol func_02009414
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern short Vec3_VertAngle(const struct Vector3 *v1, const struct Vector3 *v0);
-extern void func_020089f8(void *obj);
 
 int func_02009414(char *obj) {
     int r4 = 1;

@@ -1,30 +1,23 @@
-extern void _ZN2GX15DisableAllBanksEv(void);
+// @symbol func_02005a58
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScBoot_c.h"
+// @emits dScBoot_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScBoot_c::InitResources - recovered from vtable slot identity */
 extern void _ZN2GX12SetBankForBGEt(unsigned short b);
 extern void _ZN2GX13SetBankForOBJEt(unsigned short b);
 extern void _ZN2GX15SetBankForSubBGEt(unsigned short b);
 extern void _ZN2GX16SetBankForSubOBJEt(unsigned short b);
-extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
-extern void _ZN3GXS15SetGraphicsModeEi(int a);
-extern void _ZN2GX6DispOnEv(void);
-extern void SetBg0Offset(int a, int b);
-extern void* func_02054efc(void);
 extern void DecompressLZ16(const void* src, void* dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern void* _ZN2G212GetBG0ScrPtrEv(void);
-extern void SetSubBg0Offset(int a, int b);
-extern void SetSubBg1Offset(int a, int b);
-extern void SetSubBg2Offset(int a, int b);
 extern unsigned func_02054de8(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
 extern void* _ZN3G2S12GetBG2ScrPtrEv(void);
-extern void func_020233f4(void);
-extern void _ZN5Sound6Play2DEjj(unsigned int a, unsigned int b);
 extern int func_0201a244(void* fn, int a, int b, int c, int d);
 
-extern char data_020918c4;
-extern char data_020914e0;
-extern char data_020916d8;
-extern char data_02091570;
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 extern char data_0208ee44;
@@ -35,8 +28,9 @@ extern unsigned char data_0209f1e8;
 typedef unsigned int u32;
 typedef unsigned short u16;
 
-int func_02005a58(char* c)
+int dScBoot_c_InitResources(char* c)
 {
+    struct dScBoot_c *self = (struct dScBoot_c *)(void *)c;
     _ZN2GX15DisableAllBanksEv();
     _ZN2GX12SetBankForBGEt(1);
     _ZN2GX13SetBankForOBJEt(2);
@@ -90,10 +84,10 @@ int func_02005a58(char* c)
     *(volatile u32*)0x4000000 = (*(volatile u32*)0x4000000 & ~0x1f00) | 0x100;
     *(volatile u32*)0x4001000 = (*(volatile u32*)0x4001000 & ~0x1f00) | 0x400;
 
-    *(unsigned short*)(c + 0x50) = 0x3c;
-    *(unsigned char*)(c + 0x52) = 0;
-    *(unsigned char*)(c + 0x54) = 0;
-    *(unsigned char*)(c + 0x55) = 0;
+    self->unk_050 = 0x3c;
+    self->unk_052 = 0;
+    self->unk_054 = 0;
+    self->unk_055 = 0;
     *(int*)(&data_0208ee44) = 1;
     func_020233f4();
 

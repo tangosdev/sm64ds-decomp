@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov002_020ad660
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *o);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *o);
@@ -46,9 +49,9 @@ struct VB {
     virtual int m29();
 };
 
-struct M48 { int w[12]; };
 
-#define LAUNDER(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+
+#define LAUNDER(p) ((int)(((long long)(int)(p))))
 
 extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
 {
@@ -87,7 +90,7 @@ extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
             *(short *)(c + 0x8c), *(short *)(c + 0x8e), *(short *)(c + 0x90));
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0,
             (-((VB *)(void *)c)->m29()) >> 3, 0);
-        *(M48 *)(r5 + 0x1c) = *(M48 *)&data_020a0e68;
+        *(Matrix4x3 *)(r5 + 0x1c) = *(Matrix4x3 *)&data_020a0e68;
     }
     return 1;
 }

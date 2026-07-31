@@ -1,11 +1,11 @@
-struct Vec3 { int x, y, z; };
-extern void func_ov002_020aefb8(char* c);
+// @symbol func_ov002_020aff10
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
-extern void func_ov002_020af474(char* c);
-extern void func_ov002_020af3a8(char* c);
 extern void func_ov002_020af248(char* c, int n);
 extern void func_ov002_020af218(char* c, int n);
-extern void func_ov002_020aeee4(char* c);
 void func_ov002_020aff10(char* c){
   func_ov002_020aefb8(c);
   switch(*(int*)(c+0x388)){

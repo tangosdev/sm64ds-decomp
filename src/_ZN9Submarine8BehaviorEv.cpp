@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN9Submarine8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Submarine.h"
 typedef int (*dummy)();
 class C;
 typedef int (C::*PMF)();
@@ -10,43 +15,42 @@ extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int fx, int t1, int t2, int s4, int s5);
-extern void func_ov026_02111f30(char* c);
 extern void _ZN9Animation7AdvanceEv(void* thiz);
 }
 
-extern "C" int _ZN9Submarine8BehaviorEv(char* c)
+int Submarine::Behavior()
 {
     volatile int v[3];
     int x, y, z;
 
-    DecIfAbove0_Short((unsigned short*)(c + 0x100));
+    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
     {
-        char* obj = *(char**)(c + 0x110);
+        char* obj = *(char**)((char*)&unk_110);
         if (*(int*)(obj + 8) != 0) {
             PMF* pp = (PMF*)(obj + 8);
-            ((C*)c->**pp)();
+            ((C*)((char*)this)->**pp)();
         }
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
 
-    x = *(int*)(c + 0x5c);
+    x = mPosX;
     v[0] = x;
-    y = *(int*)(c + 0x60);
+    y = mPosY;
     v[1] = y;
-    z = *(int*)(c + 0x64);
+    z = mPosZ;
     v[2] = z;
     y += 0x384000;
     v[1] = y;
 
-    *(void**)(c + 0x1b8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(volatile unsigned int*)(c + 0x1b8), 0x139, v[0], v[1], z, 0, 0);
+    *(void**)((char*)&unk_1b8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        *(volatile unsigned int*)((char*)&unk_1b8), 0x139, v[0], v[1], z, 0, 0);
 
-    *(short*)(c + 0x8c) = *(short*)(c + 0x92);
-    *(short*)(c + 0x8e) = *(short*)(c + 0x94);
-    *(short*)(c + 0x90) = *(short*)(c + 0x96);
+    unk_08c = unk_092;
+    unk_08e = unk_094;
+    unk_090 = unk_096;
 
-    func_ov026_02111f30(c);
-    _ZN9Animation7AdvanceEv(c + 0x178);
-    _ZN9Animation7AdvanceEv(c + 0x164);
+    func_ov026_02111f30(((char*)this));
+    _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
+    _ZN9Animation7AdvanceEv((char*)&mAnimation);
     return 1;
 }

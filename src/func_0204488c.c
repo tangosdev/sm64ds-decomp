@@ -1,5 +1,10 @@
+// @symbol func_0204488c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { Fix12i x, y, z; };
+
 struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
 
 struct Part {
@@ -13,20 +18,8 @@ struct Entry {
     struct Part* parts;
 };
 
-extern void Geometry_MatrixMultiply3x3(void* m);
 extern void func_020458a8(struct Matrix3x3_Vecs* dst, struct Matrix3x3_Vecs* src);
-extern void func_020553a4(void* m);
-extern void func_02055388(void* m);
-extern void MulMat3x3Mat3x3(void* a, void* b, void* c);
-extern void func_02052514(void* dst, void* src);
-extern void func_02055998(int* m);
-extern void func_01ffde98(int a, int b, int c);
 
-extern void* data_020a4bd0;
-extern int data_020a4bd4;
-extern unsigned char data_020a4bbc;
-extern short data_020a4bc0;
-extern short data_020a4bc4;
 
 void func_0204488c(char* self, int index, int* color)
 {
