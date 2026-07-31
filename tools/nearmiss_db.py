@@ -372,7 +372,16 @@ def dedupe(args):
     seen, best, kept = {}, {}, []
     dups = 0
     for r in L.read_records(DB):                    # RAW rows, incl. union duplicates
-        key = L.key_of(r)                           # int/hex-str addr forms must collide
+        try:
+            key = L.key_of(r)                       # int/hex-str addr forms must collide
+        except (KeyError, TypeError, ValueError):
+            # A row with no resolvable (module, addr) cannot be deduped or matched. Skip
+            # it with a warning rather than aborting: one malformed salvage row must never
+            # crash the whole progress refresh (it did -- a row saved with name+label but
+            # no addr froze the public percent until repaired).
+            sys.stderr.write(f"nearmiss dedupe: skipping unkeyable row {r.get('name') or r.get('label') or '?'}\n")
+            kept.append(r)
+            continue
         div = r.get("divergences")
         div = div if isinstance(div, int) else 1 << 30
         floored = 1 if r.get("floor") else 0
