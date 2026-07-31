@@ -2638,3 +2638,44 @@ inert, but they were never actually tested. Only `optimize_for_size`, `optimizat
 **How to apply:** before recording a pragma as inert, prove the compiler HONOURS it -- find
 one source shape where it changes the output at all. If it never moves anything anywhere,
 suspect the name before believing the negative.
+
+## 6at. Callee-saved rank is filled in TWO passes, and the address-constant class is a rotator (2026-07-31, PS_UpdateOkAndBackButtons 18 -> 9)
+
+A three-web rotation over r5-r7 that survived decl order, scope depth, the 6y/6aq booster
+family at every placement, the 6h launder, C-vs-C++ TU, and a type sweep. Measuring the
+classes rather than permuting the source produced a model that predicts the coloring.
+
+**Model.** mwccarm assigns the callee-saved band in TWO passes, not one:
+
+1. **NORMAL-class** webs, in first-definition order, ascending from r5.
+2. **ADDRESS-CONSTANT-class** webs (rematerializable pointer constants, i.e. a pooled
+   `&global` or a pointer-typed literal), in first-definition order, after all normal webs.
+
+So a pooled base pointer is always pushed BELOW every ordinary local regardless of where it
+is defined, which is why ordering levers cannot move it. Confirmed three ways on this
+function: baseline normal `{0x1000, idx}` -> r5,r6 with addr `{ptr}` -> r7; retyping the
+`0x1000` local to `(int*)0x1000` moves it into the address class and it lands on r6, the
+ROM's slot; and typing a RUNTIME-valued local as `int*` changes nothing, because the class
+needs a pointer-typed CONSTANT, not merely pointer type.
+
+**New lever.** Casting a named integer local's constant initializer to a pointer type
+(`int *k = (int *)0x1000;`) moves that web into the address-constant class and pushes it one
+register UP. First time this rotator has been isolated; it is a deterministic way to reorder
+two callee-saved webs when decl order is inert.
+
+**The ROM's shape here is all three webs in ONE class ranked by definition order**
+(ptr 0x38 -> r5, 0x1000 0x44 -> r6, idx 0xa0 -> r7). Since `idx` is runtime-computed it can
+only be normal-class, so closing the last 9 words means getting the pooled `ptr` OUT of the
+address-constant class. Nothing tried reaches that.
+
+**Limitation of 6h worth recording there:** the u64-mask address launder moves a pooled
+global into normal birth-order allocation for SCRATCH registers (that is what 6h and 6aq
+measured), but it is a no-op on a CALLEE-SAVED web. Here it left the coloring untouched,
+made the booster inert, and re-hoisted the pool load to +0x30 (14 div). Do not assume 6h
+generalizes across the two register bands.
+
+**Separately steerable, worth 4 of the original 13:** an `x = (x & mask) | sl;` RMW emits
+`orr r3,r3,sl` when `mask` is a NAMED LOCAL and `orr r3,sl,r3` when it is an inline literal.
+Flipping the source operand order does nothing (mwcc canonicalizes commutative `|` before
+codegen); the discriminator is whether the AND's right operand is a named local. Splitting
+the RMW through a named temp reaches the same shape with the name kept.
