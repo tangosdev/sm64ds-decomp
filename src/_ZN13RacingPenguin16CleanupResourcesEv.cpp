@@ -1,6 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned int u32;
 struct SharedFilePtr { u32 data[4]; };
 void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 extern struct SharedFilePtr data_ov019_02113498;

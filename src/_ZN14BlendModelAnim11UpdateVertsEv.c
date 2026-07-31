@@ -1,10 +1,7 @@
+#include "types.h"
 /* BlendModelAnim::UpdateVerts at 0x02016578, size=0x4c
  * Updates bones, then calls Func_0204531c(data, unk64) (blend) or UpdateVertsUsingBones based on unk64.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;

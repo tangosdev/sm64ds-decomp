@@ -1,10 +1,7 @@
+#include "types.h"
 // NestedHeapIterator::FindNested(void* ptr) - static
 // Address: 0x0204dfe8
 // Finds the innermost NestedHeapIterator containing ptr; returns rootHeapIterator if none found
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 struct NestedHeapIterator;
 struct HeapAllocator;
 

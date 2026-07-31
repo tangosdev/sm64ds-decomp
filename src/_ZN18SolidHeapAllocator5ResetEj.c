@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef signed int s32;
-
+#include "types.h"
 extern void _ZN18SolidHeapAllocator10ResetStartEv(void* self);
 extern void _ZN18SolidHeapAllocator8ResetEndEv(void* self);
 

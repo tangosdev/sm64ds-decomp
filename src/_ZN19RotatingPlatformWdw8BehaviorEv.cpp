@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN19RotatingPlatformWdw8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformWdw.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef signed char s8;
-
 extern int IsAreaShowing(int idx);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void *m, void *actor);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);

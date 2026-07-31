@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct FreeList { void* begin; void* end; int flags; };
 
 void _ZN18SolidHeapAllocator10ResetStartEv(void* c)

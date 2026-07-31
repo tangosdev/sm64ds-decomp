@@ -1,11 +1,7 @@
+#include "types.h"
 /* TextureSequence::SetFile at 0x020159ac, size=0x54
  * Sets animation file; fast path (same file) just updates flags+speed.
  */
-
-typedef int s32;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 struct BTP_File {
     u16 numFrames;
 };

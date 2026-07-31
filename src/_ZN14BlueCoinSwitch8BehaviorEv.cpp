@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN14BlueCoinSwitch8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "BlueCoinSwitch.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
 extern void _ZN5Event8ClearBitEj(u32 bit);
 extern void _ZN5Event6SetBitEj(u32 bit);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* p);

@@ -1,8 +1,5 @@
+#include "types.h"
 // TextureSequence constructor - C++ style to get correct return value
-
-typedef int Fix12i;
-typedef unsigned int u32;
-
 struct Animation {
     void** vtable;
     Fix12i numFramesAndFlags;

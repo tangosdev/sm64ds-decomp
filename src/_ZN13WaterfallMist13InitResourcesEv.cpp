@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13WaterfallMist13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WaterfallMist.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-typedef signed char s8;
-
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);

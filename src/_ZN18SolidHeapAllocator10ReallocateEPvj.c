@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef signed int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void MultiStore_Int(s32 val, void* dst, u32 count);
 
 u32 _ZN18SolidHeapAllocator10ReallocateEPvj(void* c, void* ptr, u32 size)

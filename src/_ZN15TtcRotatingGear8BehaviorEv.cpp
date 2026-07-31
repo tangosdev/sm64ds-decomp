@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN15TtcRotatingGear8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "TtcRotatingGear.h"
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);

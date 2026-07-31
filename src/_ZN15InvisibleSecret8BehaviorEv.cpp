@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN15InvisibleSecret8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "InvisibleSecret.h"
-typedef unsigned char u8;
-
 struct V3 { int x, y, z; };
 
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);

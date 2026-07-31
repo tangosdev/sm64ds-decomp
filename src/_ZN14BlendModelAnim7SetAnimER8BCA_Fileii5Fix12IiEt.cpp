@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 /* BlendModelAnim::SetAnim at 0x020163e0, size=0x9c
  * Fast path (same file): update flags + speed only.
  * Slow path: store file, SetAnimation, then set up blend weight/step
  * (unk64 = current blend, unk68 = per-frame step = 1 / (numBlendFrames+1)).
  */
-
-typedef int s32;
-typedef unsigned short u16;
-
 struct BCA_File {
     u16 unk00;
     u16 numFrames;

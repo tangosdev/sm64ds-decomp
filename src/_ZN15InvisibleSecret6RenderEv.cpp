@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN15InvisibleSecret6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "InvisibleSecret.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern "C" {
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);

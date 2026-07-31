@@ -1,6 +1,4 @@
-typedef int Fix12i;
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 
 struct Fader {

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void* _ZN18SolidHeapAllocator16AllocateForwardsEPvjj(void* pair, u32 size, u32 align);
 extern void* _ZN18SolidHeapAllocator17AllocateBackwardsEPvjj(void* pair, u32 size, u32 align);
 

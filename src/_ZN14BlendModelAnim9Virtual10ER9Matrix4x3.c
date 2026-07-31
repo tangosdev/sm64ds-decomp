@@ -1,8 +1,5 @@
+#include "types.h"
 /* BlendModelAnim::Virtual10 at 0x02016518, size=0x60 */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;

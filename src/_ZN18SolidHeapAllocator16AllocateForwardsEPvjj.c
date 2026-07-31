@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol _ZN18SolidHeapAllocator16AllocateForwardsEPvjj
 /* recovered: named members + shared header */
 #include "SolidHeapAllocator.h"
-typedef unsigned int u32;
-typedef signed int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void MultiStore_Int(s32 val, void* dst, u32 count);
 
 void* _ZN18SolidHeapAllocator16AllocateForwardsEPvjj(void* freeBlockPair, u32 size, u32 align)

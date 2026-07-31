@@ -1,13 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13SnowmanBreath8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanBreath.h"
-typedef unsigned char u8;
-
-
 extern u8 data_0209f2d8[];
 
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);

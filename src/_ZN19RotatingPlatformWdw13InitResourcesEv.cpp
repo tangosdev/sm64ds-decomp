@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN19RotatingPlatformWdw13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformWdw.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef signed char s8;
-
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
 extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void *bta);
