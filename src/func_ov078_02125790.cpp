@@ -14,7 +14,7 @@ extern void MulMat4x3Mat4x3(void* d, Matrix4x3* a, Matrix4x3* b);
 extern void Vec3_Lsl(Vector3* d, Vector3* s, int sh);
 extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b);
 extern int _ZN9Animation8FinishedEv(void* a);
-extern void func_ov078_02125c48(char* c, void* p);
+extern void KingBobOmb_SetState(char* c, void* p);
 extern Matrix4x3 data_020a0e68;
 extern int data_ov078_0212703c;
 
@@ -47,7 +47,7 @@ extern "C" int func_ov078_02125790(char* self)
     _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v, 1);
   }
   if (_ZN9Animation8FinishedEv(self + 0x31c)) {
-    func_ov078_02125c48(self, &data_ov078_0212703c);
+    KingBobOmb_SetState(self, &data_ov078_0212703c);
   }
   return 1;
 }

@@ -1,7 +1,7 @@
 typedef unsigned int u32;
 extern char data_020a8180[];
 extern int data_020a6134[];
-void func_020580f0(void* p);
+void OS_SleepThread(void* p);
 void func_02060228(void* fn);
 int func_0206062c(void* g);
 extern unsigned int _ZN3IRQ7DisableEv(void);
@@ -15,7 +15,7 @@ int func_02060484(int a, int b, int c, int d, int e, int f)
     unsigned int irq = _ZN3IRQ7DisableEv();
     if (*(u32*)(g + 0x34) & 4) {
         do {
-            func_020580f0(g + 0xd4);
+            OS_SleepThread(g + 0xd4);
         } while (*(u32*)(g + 0x34) & 4);
     }
     *(u32*)AT(g, 0x34) |= 4;

@@ -11,7 +11,7 @@ extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern int ApproachAngle(void* dst, int target, int a, int b, int c);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void func_02012694(int id, void* v);
-extern void func_ov078_02125c48(char* c, void* p);
+extern void KingBobOmb_SetState(char* c, void* p);
 
 extern u8 data_0209f220;
 extern void* data_ov078_021270cc;
@@ -59,6 +59,6 @@ int func_ov078_02123d3c(char* c)
     }
 
     if (*(u16*)(c + 0x100) == 0)
-        func_ov078_02125c48(c, &data_ov078_021270cc);
+        KingBobOmb_SetState(c, &data_ov078_021270cc);
     return 1;
 }

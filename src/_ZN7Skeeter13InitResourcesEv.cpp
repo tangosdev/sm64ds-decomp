@@ -20,7 +20,7 @@ void _ZN13RaycastGroundC1Ev(RG* self);
 void _ZN4BgCh19StartDetectingWaterEv(RG* self);
 void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RG* self, const Vector3* v, Actor* a);
 int _ZN13RaycastGround10DetectClsnEv(RG* self);
-int func_02037e78(int* p);
+int SurfaceInfo_TestFlag0x20(int* p);
 void _ZN13RaycastGroundD1Ev(RG* self);
 int RandomIntInternal(int* seed);
 
@@ -101,7 +101,7 @@ extern "C" int _ZN7Skeeter13InitResourcesEv(char* c)
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, (Actor*)c);
         *(int*)(c+0x3a8) = data_02092138;
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
-            if (func_02037e78(rg.detect) != 0) {
+            if (SurfaceInfo_TestFlag0x20(rg.detect) != 0) {
                 *(unsigned char*)(c+0x39c) = 1;
                 *(int*)(c+0x3ac) = rg.detect[12];
             } else {

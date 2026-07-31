@@ -29,7 +29,7 @@ void func_0201eaac(void);
 void func_0201b6f8(int a);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(int a, int b, int n);
 void SetSubBg1Offset(int a, int b);
 void func_0201b7cc(void);
@@ -67,17 +67,17 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *se
     }
 
     {
-        int s1 = func_02054fb0();
+        int s1 = _ZN2G212GetBG3ScrPtrEv();
         ls = 0x2ff;
         MultiStore16(ls, s1, 0x800);
     }
 
     if (data_0209d6d4 >= 0x1a5) {
         data_0209d6c4 = 0;
-        q = (u16*)(func_02054fb0() + 0x400);
+        q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x400);
     } else {
         data_0209d6c4 = 1;
-        q = (u16*)(func_02054fb0() + 0x4c0);
+        q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x4c0);
     }
     div = 0;
     do {
@@ -113,7 +113,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *se
         MultiStore_Int(li2, p2, 0x800);
     }
 
-    q = (u16*)(func_02054fb0() + 0x240);
+    q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x240);
     div2 = 0;
     do {
         q[div2] = (u16)(div2 + 0x240);

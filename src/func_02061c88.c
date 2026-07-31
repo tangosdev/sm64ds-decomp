@@ -1,7 +1,7 @@
 extern int _ZN3IRQ7DisableEv(void);
 extern int func_0206152c(void);
 extern void _ZN3IRQ7RestoreEj(int token);
-extern char *func_02061548(void);
+extern char *WM_GetSystemWork(void);
 
 int func_02061c88(int idx, int b, int c)
 {
@@ -12,7 +12,7 @@ int func_02061c88(int idx, int b, int c)
         return r;
     }
     {
-        char *p = func_02061548() + idx * 4;
+        char *p = WM_GetSystemWork() + idx * 4;
         *(int *)(p + 0xac) = b;
         *(int *)(p + 0xec) = c;
     }

@@ -14,7 +14,7 @@ extern u8 data_0209d6a8;
 void func_0201eaac(void);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(int a, int b, int n);
 void _ZN7Message11DisplayTextEt(void* self);
 int _ZN3G2S13GetBG0CharPtrEv(void);
@@ -34,7 +34,7 @@ void Message::Display(unsigned int msg)
     p = func_02054d88() + 0x4000;
     li = 0;
     MultiStore_Int(li, p, 0x2000);
-    s = func_02054fb0();
+    s = _ZN2G212GetBG3ScrPtrEv();
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
     _ZN7Message11DisplayTextEt(((void*)this));

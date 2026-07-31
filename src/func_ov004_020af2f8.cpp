@@ -7,7 +7,7 @@ extern int _ZN2G212GetBG1ScrPtrEv(void);
 extern int _ZN3G2S12GetBG1ScrPtrEv(void);
 extern int _ZN2G212GetBG2ScrPtrEv(void);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
-extern int func_02054fb0(void);
+extern int _ZN2G212GetBG3ScrPtrEv(void);
 extern int _ZN3G2S12GetBG3ScrPtrEv(void);
 extern int func_02054efc(void);
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
@@ -72,7 +72,7 @@ void func_ov004_020af2f8(char* sb, char en, int mode, int base)
             break;
         case 3:
             if (*(unsigned char*)(sb + 0x68)) {
-                t = func_02054fb0();
+                t = _ZN2G212GetBG3ScrPtrEv();
                 t = t + off;
                 MultiStore16(v6 = val, t, 2);
             }

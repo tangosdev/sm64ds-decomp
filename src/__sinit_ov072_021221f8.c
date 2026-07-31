@@ -1,11 +1,11 @@
 extern void func_02017acc();
 extern void func_020731dc();
-extern void func_02017934();
+extern void SharedFilePtr_Construct_TexSeq();
 extern int data_ov072_02122bc4[];
 extern int data_ov072_02122bd4[];
 extern int data_ov072_02122bcc[];
 extern int func_02017ab4[];
-extern int func_0201791c[];
+extern int SharedFilePtr_Destruct_TexSeq[];
 extern int data_ov072_02122bdc[];
 extern int data_ov072_02122be8[];
 extern int data_ov072_02122bf4[];
@@ -25,10 +25,10 @@ void __sinit_ov072_021221f8(void)
 {
     func_02017acc(data_ov072_02122bc4, 0x2af);
     func_020731dc(data_ov072_02122bc4, func_02017ab4, data_ov072_02122bdc);
-    func_02017934(data_ov072_02122bd4, 0x2ae);
-    func_020731dc(data_ov072_02122bd4, func_0201791c, data_ov072_02122be8);
-    func_02017934(data_ov072_02122bcc, 0x2b0);
-    func_020731dc(data_ov072_02122bcc, func_0201791c, data_ov072_02122bf4);
+    SharedFilePtr_Construct_TexSeq(data_ov072_02122bd4, 0x2ae);
+    func_020731dc(data_ov072_02122bd4, SharedFilePtr_Destruct_TexSeq, data_ov072_02122be8);
+    SharedFilePtr_Construct_TexSeq(data_ov072_02122bcc, 0x2b0);
+    func_020731dc(data_ov072_02122bcc, SharedFilePtr_Destruct_TexSeq, data_ov072_02122bf4);
 
     data_ov072_02122c00[0] = *(struct S2*)data_ov072_02122874;
     data_ov072_02122c00[1] = *(struct S2*)data_ov072_02122854;

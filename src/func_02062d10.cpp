@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern "C" void *func_02061548(void);
+extern "C" void *WM_GetSystemWork(void);
 
 struct CP15 { static void InvalidateDataCache(u32 addr, u32 len); };
 
@@ -22,7 +22,7 @@ struct In {
 };
 
 extern "C" void func_02062d10(In *self) {
-    Ctx *c = (Ctx*)func_02061548();
+    Ctx *c = (Ctx*)WM_GetSystemWork();
     char *r4 = *(char**)((char*)c + (self->ua << 2) + 0xec);
     CP15::InvalidateDataCache((u32)(c->p4 + 0x184), 2);
     u16 v = *(u16*)(c->p4 + 0x100 + 0x84);

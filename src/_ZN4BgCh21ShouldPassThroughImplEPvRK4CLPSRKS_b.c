@@ -7,14 +7,14 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern int func_02037e78(int *p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e38(int *p);
 
 int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *p, int *clps, unsigned char *bg, int flag)
 {
     int r4 = 0;
 
-    if (func_02037e78(clps)) {
+    if (SurfaceInfo_TestFlag0x20(clps)) {
         r4 = 1;
         if (func_0203547c(bg) == 0) return r4;
     }

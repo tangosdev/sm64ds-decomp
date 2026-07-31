@@ -24,7 +24,7 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_02031028(int a);
 extern void func_02031b84(unsigned char c);
 extern void func_020319fc(int a);
-extern int func_02054fb0(void);
+extern int _ZN2G212GetBG3ScrPtrEv(void);
 extern int func_02054d88(void);
 
 void func_02033464(int arg0, int arg1, int arg2)
@@ -102,7 +102,7 @@ void func_02033464(int arg0, int arg1, int arg2)
         func_020319fc(0xc);
     } else {
         data_0209fc94 = 0;
-        d = (char*)(func_02054fb0() + (arg0 << 1));
+        d = (char*)(_ZN2G212GetBG3ScrPtrEv() + (arg0 << 1));
         sv2 = 0x2ff;
         MultiStore16(sv2, d, 0x80);
         func_02031028(0);
@@ -127,7 +127,7 @@ void func_02033464(int arg0, int arg1, int arg2)
             liC = 0;
             MultiStore_Int(liC, dst, 0x300);
         }
-        base = (volatile u16*)(func_02054fb0() + ((arg0 + (data_0209fc7c >> 3)) << 1));
+        base = (volatile u16*)(_ZN2G212GetBG3ScrPtrEv() + ((arg0 + (data_0209fc7c >> 3)) << 1));
         { u32 ch = data_0209fc78;
         x = ch + 0x200;
         v1 = ch + 0x20c; }

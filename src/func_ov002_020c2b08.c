@@ -3,7 +3,7 @@ typedef unsigned short u16;
 
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
-extern int func_02037e78(int *p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int Player_ScaleByCharFactor(void *c, int a);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
@@ -29,7 +29,7 @@ void func_ov002_020c2b08(void *arg0)
 
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
             return;
-        if (!func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
             return;
 
         limit = Player_ScaleByCharFactor(c, 0x20000);
@@ -44,7 +44,7 @@ void func_ov002_020c2b08(void *arg0)
     if (*(u16 *)(c + 0x6ba) != 0) {
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
             goto clear_timer;
-        if (!func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
             goto clear_timer;
 
         *(u8 *)(c + 0x707) = 1;
@@ -107,7 +107,7 @@ void func_ov002_020c2b08(void *arg0)
     *(u8 *)(c + 0x6ec) = 0;
     if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
         return;
-    if (func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)) != 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)) != 0)
         return;
     if (*(u8 *)(c + 0x707) != 0)
         return;

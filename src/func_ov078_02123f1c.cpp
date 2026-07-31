@@ -6,7 +6,7 @@ extern "C" int _ZN6Player9GetHealthEv(void);
 extern "C" void func_ov078_02123864(C* c);
 extern "C" void func_ov002_020db54c(int self, int a, int b, int d);
 extern "C" int _ZN9Animation8FinishedEv(void* anim);
-extern "C" void func_ov078_02125c48(C* c, void* p);
+extern "C" void KingBobOmb_SetState(C* c, void* p);
 extern char data_ov078_0212709c[];
 
 struct C {
@@ -35,7 +35,7 @@ extern "C" int func_ov078_02123f1c(C* c)
     return 1;
 L6c:
     if (_ZN9Animation8FinishedEv(&c->anim_31c)) {
-        func_ov078_02125c48(c, data_ov078_0212709c);
+        KingBobOmb_SetState(c, data_ov078_0212709c);
     }
     return 1;
 }

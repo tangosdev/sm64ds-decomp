@@ -1,4 +1,4 @@
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int func_0203d890(void);
 extern void func_020308b4(int levelID);
 extern int func_020308a8(void);
@@ -13,7 +13,7 @@ extern int data_ov075_0211d768[];
 
 void func_ov075_021192bc(char* self)
 {
-    *(int*)(self + 0x278) = func_020124c4(*(int*)(self + 0x278), 2, 0x11d, 0);
+    *(int*)(self + 0x278) = Sound_PlayIfNotActive(*(int*)(self + 0x278), 2, 0x11d, 0);
 
     switch (*(unsigned char*)(self + 0x282)) {
     case 0:

@@ -5,7 +5,7 @@ extern void _ZN3IRQ7RestoreEj(unsigned int saved);
 extern void func_0205c788(char *self, int arg);
 extern void func_0205d8d8(void *node, void *list);
 extern void func_0205cfa4(char *self);
-extern void func_020580f0(char *self);
+extern void OS_SleepThread(char *self);
 extern int func_0205cf5c(char *self);
 
 #pragma opt_loop_invariants off
@@ -47,7 +47,7 @@ int func_0205cdf4(char *self, int arg1)
         return 1;
     }
     do {
-        func_020580f0(self + 0x18);
+        OS_SleepThread(self + 0x18);
     } while ((int)self != *(int *)(list + 0x18));
     _ZN3IRQ7RestoreEj(saved);
 tail:

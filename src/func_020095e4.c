@@ -2,7 +2,7 @@ extern void FUN_02029ab0(void);
 extern int func_02008b08(void *cam);
 extern short func_02008abc(void *cam);
 extern short func_02008a70(void *cam);
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short a);
@@ -51,7 +51,7 @@ int func_020095e4(void *cam)
             *(short *)(c + 0x17e) = t;
         }
         if (*(short *)(c + 0x186) != old186 || *(short *)(c + 0x17e) != old17e) {
-            *(int *)(c + 0x158) = func_020124c4(*(int *)(c + 0x158), 3, 0x181, 0);
+            *(int *)(c + 0x158) = Sound_PlayIfNotActive(*(int *)(c + 0x158), 3, 0x181, 0);
         }
     }
 

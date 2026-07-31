@@ -1,5 +1,5 @@
 //cpp
-extern "C" void* func_02054fb0(void){
+extern "C" void* _ZN2G212GetBG3ScrPtrEv(void){
   unsigned int mode = *(volatile unsigned int*)0x4000000 & 7;
   unsigned short bg3cnt = *(volatile unsigned short*)0x400000e;
   unsigned int sbase = ((*(volatile unsigned int*)0x4000000 & 0x38000000) >> 0x1b) << 0x10;

@@ -6,7 +6,7 @@
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern char* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
-extern int func_ov078_02125c48(void* c, void* p);
+extern int KingBobOmb_SetState(void* c, void* p);
 extern void func_02012694(int a, void* b);
 extern void ApproachAngle(short* a, short b, short c, short d, int e);
 extern int data_ov078_0212703c[];
@@ -22,7 +22,7 @@ int func_ov078_02123aa0(char* c){
         struct Vector3 v = *(struct Vector3*)(p+0x5c);
         if(Vec3_Dist(c+0x4d4, &v) < 0x640000){
             if(*(int*)(c+0x4d8) - 0x64000 < v.y){
-                func_ov078_02125c48(c, data_ov078_0212703c);
+                KingBobOmb_SetState(c, data_ov078_0212703c);
                 return 1;
             }
         }
@@ -34,7 +34,7 @@ int func_ov078_02123aa0(char* c){
     ApproachAngle((short*)(c+0x94), ang, 5, 0x1000, 0x100);
     *(short*)(c+0x8e) = *(short*)(c+0x94);
     if(Vec3_Dist(c+0x5c, c+0x4e0) < 0x32000){
-        func_ov078_02125c48(c, data_ov078_0212710c);
+        KingBobOmb_SetState(c, data_ov078_0212710c);
     }
     return 1;
 }

@@ -44,7 +44,7 @@ extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void SetSubBg1Offset(int a, int b);
 extern int func_02054d88(void);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern void SetBg3Offset(int a, int b);
 extern void _ZN7Message6UpdateEv(void);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
@@ -176,11 +176,11 @@ void func_0201f32c(int arg0)
             MultiStore_Int(sp10, pa, 0x3000);
         }
         {
-            void *pb = func_02054fb0();
+            void *pb = _ZN2G212GetBG3ScrPtrEv();
             sp4 = 0x37f;
             MultiStore16(sp4, pb, 0x800);
         }
-        var_r8 = (char *)func_02054fb0() + 0x42;
+        var_r8 = (char *)_ZN2G212GetBG3ScrPtrEv() + 0x42;
         {
             u32 b4 = (data_0209f2d8 == 2);
             if (b4 != 0) {

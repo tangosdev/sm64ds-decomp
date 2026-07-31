@@ -4,7 +4,7 @@ extern "C" void func_02059d8c(int x);
 extern "C" int IPCSend(unsigned int a, unsigned int c, unsigned int b);
 
 typedef unsigned short u16;
-extern "C" void func_020580f0(u16 *x);
+extern "C" void OS_SleepThread(u16 *x);
 
 namespace CP15 {
     void FlushAndInvalidateDataCache(unsigned int a, unsigned int b);
@@ -56,7 +56,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
 
         saved = IRQ::Disable();
         while (thiz->f34 & 0x20) {
-            func_020580f0((u16 *)0);
+            OS_SleepThread((u16 *)0);
         }
         IRQ::Restore(saved);
 

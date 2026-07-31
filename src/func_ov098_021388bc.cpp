@@ -16,7 +16,7 @@ extern "C" {
 void func_020383fc(void *p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *p);
-int func_02037e78(int *p);
+int SurfaceInfo_TestFlag0x20(int *p);
 void _ZN6Player9DropActorEv(void *p);
 void Crate_SetState(void *c, int i);
 void _ZN12CylinderClsn5ClearEv(void *p);
@@ -33,7 +33,7 @@ extern "C" void func_ov098_021388bc(char *c)
 
     func_020383fc(c + 0x320);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
-        if (func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x320) + 4)) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x320) + 4)) != 0) {
             void *p = *(void **)(c + 0x5e4);
             if (p != 0) {
                 _ZN6Player9DropActorEv(p);

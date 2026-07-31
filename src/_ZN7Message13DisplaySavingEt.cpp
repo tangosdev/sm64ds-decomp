@@ -40,7 +40,7 @@ void func_0201eaac(void);
 void func_02012790(int id);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(int a, int b, int n);
 void SetBg3Offset(int a, int b);
 void _ZN7Message6UpdateEv(void);
@@ -103,11 +103,11 @@ extern "C" void _ZN7Message13DisplaySavingEt(unsigned short n)
     li = 0;
     MultiStore_Int(li, p, 0x2000);
 
-    s = func_02054fb0();
+    s = _ZN2G212GetBG3ScrPtrEv();
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
 
-    scr = (u8*)(func_02054fb0() + 0x42);
+    scr = (u8*)(_ZN2G212GetBG3ScrPtrEv() + 0x42);
     SetBg3Offset(-(int)data_0209d650, 4 - (int)data_0209d6cc);
 
     cols = data_0209d6a8;

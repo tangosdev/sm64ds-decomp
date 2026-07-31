@@ -1,4 +1,4 @@
-extern int *func_02061548(void);
+extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int a, int b);
 extern void WM_SetCallbackTable(int i, int val);
 extern int WM_SendCommand(int a, int b);
@@ -8,7 +8,7 @@ int func_020634fc(int a, int b, int c, int d, unsigned short e)
     int *p;
     short *hdr;
     int r;
-    p = func_02061548();
+    p = WM_GetSystemWork();
     r = WM_CheckStateEx(1, 2);
     if (r) return r;
     WM_SetCallbackTable(0x1e, a);

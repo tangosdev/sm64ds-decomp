@@ -10,7 +10,7 @@ typedef short s16;
 extern void func_02012694(int a, void* p);
 extern char* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
-extern int func_ov078_02125c48(void* c, void* p);
+extern int KingBobOmb_SetState(void* c, void* p);
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
 extern void ApproachAngle(short* a, short b, short c, short d, int e);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
@@ -50,7 +50,7 @@ int func_ov078_02125448(char* c)
         if (Vec3_Dist(c + 0x4d4, &v) > 0x640000
             || (*(int*)(c + 0x4d8) - 0xa000) > v.y) {
             *(int*)(c + 0x98) = 0;
-            func_ov078_02125c48(c, data_ov078_021270fc);
+            KingBobOmb_SetState(c, data_ov078_021270fc);
             return 1;
         }
 
@@ -77,13 +77,13 @@ int func_ov078_02125448(char* c)
                             if (_ZN6Player7TryGrabER5Actor(a, c) != 0) {
                                 *(int*)(c + 0x494) = (int)a;
                                 *(int*)(c + 0x98) = 0;
-                                func_ov078_02125c48(c, data_ov078_0212707c);
+                                KingBobOmb_SetState(c, data_ov078_0212707c);
                             }
                         }
                     } else if (func_ov002_020db5f4(a, c) != 0) {
                         *(int*)(c + 0x494) = (int)a;
                         *(int*)(c + 0x98) = 0;
-                        func_ov078_02125c48(c, data_ov078_0212706c);
+                        KingBobOmb_SetState(c, data_ov078_0212706c);
                     }
                 }
             }
@@ -116,7 +116,7 @@ int func_ov078_02125448(char* c)
                         v4a0 = *(int*)(c + 0x4a0);
                         if ((v4a0 == 2 && *(int*)(c + 0x428) == 0)
                             || (v4a0 == 1 && empty == 2)) {
-                            func_ov078_02125c48(c, data_ov078_0212704c);
+                            KingBobOmb_SetState(c, data_ov078_0212704c);
                             return 1;
                         }
                     }

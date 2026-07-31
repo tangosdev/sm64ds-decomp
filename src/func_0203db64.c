@@ -8,7 +8,7 @@ extern void func_02042778(void);
 extern void func_0203df40(void);
 extern int func_02040a94(void);
 extern void func_02040724(void);
-extern void func_020580f0(u16 *self);
+extern void OS_SleepThread(u16 *self);
 extern void func_0203d854(void);
 extern int func_0203d81c(void);
 extern void func_0203d918(void);
@@ -90,7 +90,7 @@ void func_0203db64(void *arg0, void *arg1)
         if (count == 0) {
             data_020a0f1c |= 1;
             func_02040724();
-            func_020580f0(0);
+            OS_SleepThread(0);
         }
 
         count = 0x258;
@@ -104,7 +104,7 @@ void func_0203db64(void *arg0, void *arg1)
         if (count == 0) {
             data_020a0f1c |= 1;
             func_02040724();
-            func_020580f0(0);
+            OS_SleepThread(0);
         }
 
         func_0203d854();
@@ -118,7 +118,7 @@ void func_0203db64(void *arg0, void *arg1)
         if (count == 0) {
             data_020a0f1c |= 1;
             func_02040724();
-            func_020580f0(0);
+            OS_SleepThread(0);
         }
 
         func_0203d918();
@@ -132,7 +132,7 @@ void func_0203db64(void *arg0, void *arg1)
         if (count == 0) {
             data_020a0f1c |= 1;
             func_02040724();
-            func_020580f0(0);
+            OS_SleepThread(0);
         }
     } else {
         func_02059eb0(&buf);

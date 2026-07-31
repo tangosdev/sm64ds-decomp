@@ -34,7 +34,7 @@ extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern unsigned char _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern int RandomIntInternal(int* seed);
-extern void func_ov078_02125c48(void* c, PMF* p);
+extern void KingBobOmb_SetState(void* c, PMF* p);
 
 int KingBobOmb::InitResources()
 {
@@ -94,6 +94,6 @@ int KingBobOmb::InitResources()
         *p = *p + 1;
     }
     *(short*)(((char*)this)+0x400+0xf8) = unk_08e;
-    func_ov078_02125c48(((char*)this), &data_ov078_0212710c);
+    KingBobOmb_SetState(((char*)this), &data_ov078_0212710c);
     return 1;
 }

@@ -20,7 +20,7 @@ struct RaycastGround {
     int DetectClsn();
 };
 
-extern "C" int func_02037e78(int* p);
+extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern "C" s8 data_0209f2f8;
 extern "C" int data_0209f32c;
 
@@ -53,7 +53,7 @@ int func_ov002_020b5ab4(char* c)
         rg.SetObjAndPos(vec, (Actor*)c);
         if (rg.DetectClsn() != 0) {
             *(int*)(c+0x324) = rg.field44;
-            if (func_02037e78(&rg.field14) != 0) {
+            if (SurfaceInfo_TestFlag0x20(&rg.field14) != 0) {
                 return 1;
             }
         }

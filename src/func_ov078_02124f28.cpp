@@ -6,7 +6,7 @@
 #include "common.h"
 extern "C" {
 extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* self, void* bca, int a, int b, int fix, unsigned short t);
-extern int func_ov078_02125c48(void* c, void* p);
+extern int KingBobOmb_SetState(void* c, void* p);
 extern int Vec3_Dist(const void* a, const void* b);
 extern void _ZN6Player9DropActorEv(void* self);
 extern int data_ov078_02126ee0[];
@@ -27,7 +27,7 @@ int func_ov078_02124f28(unsigned char* c)
     {
         unsigned char* obj = *(unsigned char**)(c + 0x494);
         if (obj == 0) {
-            func_ov078_02125c48(c, &data_ov078_0212708c);
+            KingBobOmb_SetState(c, &data_ov078_0212708c);
             return 1;
         }
         {
@@ -42,7 +42,7 @@ int func_ov078_02124f28(unsigned char* c)
 drop:
     _ZN6Player9DropActorEv(*(void**)(c + 0x494));
     *(int*)(c + 0x494) = 0;
-    func_ov078_02125c48(c, &data_ov078_0212708c);
+    KingBobOmb_SetState(c, &data_ov078_0212708c);
     return 1;
 
 flags:
@@ -68,7 +68,7 @@ flags:
             int* p354 = (int*)(((long long)(int)(c + 0x354)));
             *p354 = *p354 & ~2;
         }
-        func_ov078_02125c48(c, &data_ov078_0212708c);
+        KingBobOmb_SetState(c, &data_ov078_0212708c);
         {
             unsigned char* p = *(unsigned char**)(c + 0x494);
             if (p != 0) {

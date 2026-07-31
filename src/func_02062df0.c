@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);
 extern int func_020623ec(int a0, int a1, int a2, int a3, u16 a4, u16 a5);
@@ -24,7 +24,7 @@ int func_02062df0(u8 *self, u8 *sb, u8 *r8)
     int state;
     int r;
 
-    slot = func_02061548();
+    slot = WM_GetSystemWork();
     r = WM_CheckStateEx(2, 9, 0xa);
     if (r != 0)
         return r;

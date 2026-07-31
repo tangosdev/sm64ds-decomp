@@ -18,7 +18,7 @@ u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
 void func_02057f54(void);
 
-void func_020580f0(u16 *self) {
+void OS_SleepThread(u16 *self) {
     u32 r4 = _ZN3IRQ7DisableEv();
     struct Node *r2 = gNodeMgrP_020a612c->node;
     if (self != 0) {

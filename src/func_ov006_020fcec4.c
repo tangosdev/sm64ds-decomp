@@ -1,4 +1,4 @@
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern short data_02082214[];
 
 void func_ov006_020fcec4(char *c, int i)
@@ -22,7 +22,7 @@ void func_ov006_020fcec4(char *c, int i)
 
     x = (*(int *)(c + 0x4660 + n) + *(int *)(c + 0x4670 + n)) >> 12;
     y = (*(int *)(c + 0x4664 + n) + *(int *)(c + 0x4674 + n)) >> 12;
-    *(int *)(c + 0x467c + n) = func_020124c4(*(int *)(c + 0x467c + n), 2, 0x187, 0);
+    *(int *)(c + 0x467c + n) = Sound_PlayIfNotActive(*(int *)(c + 0x467c + n), 2, 0x187, 0);
     f = 0;
     if (x >= 0x130 || x <= -0x30) {
         f++;

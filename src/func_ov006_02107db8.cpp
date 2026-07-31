@@ -4,7 +4,7 @@
 #include "common.h"
 extern "C" {
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-int func_020124c4(int a, int b, int c, int d);
+int Sound_PlayIfNotActive(int a, int b, int c, int d);
 }
 extern int data_020a0e68;
 
@@ -41,8 +41,8 @@ extern "C" void func_ov006_02107db8(C *c)
         if (s == 0)
             return;
         if (s == 2)
-            *(int *)(b + 0xbc) = func_020124c4(*(int *)(b + 0xbc), 2, 0x158, 0);
+            *(int *)(b + 0xbc) = Sound_PlayIfNotActive(*(int *)(b + 0xbc), 2, 0x158, 0);
         else
-            *(int *)(b + 0xbc) = func_020124c4(*(int *)(b + 0xbc), 2, 0x157, 0);
+            *(int *)(b + 0xbc) = Sound_PlayIfNotActive(*(int *)(b + 0xbc), 2, 0x157, 0);
     }
 }

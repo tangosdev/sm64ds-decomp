@@ -5,7 +5,7 @@ typedef int s32;
 
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern void ApproachAngle(void* dst, int target, int a, int b, int e);
-extern int func_ov078_02125c48(void* c, void* p);
+extern int KingBobOmb_SetState(void* c, void* p);
 
 extern int data_ov078_0212702c[];
 
@@ -15,6 +15,6 @@ int func_ov078_02124470(char* c)
     ApproachAngle(c + 0x94, ang, 1, 0x500, 0x500);
     *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
     if (*(u16*)(c + 0x100) == 0)
-        func_ov078_02125c48(c, data_ov078_0212702c);
+        KingBobOmb_SetState(c, data_ov078_0212702c);
     return 1;
 }

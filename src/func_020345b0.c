@@ -29,7 +29,7 @@ extern u8 data_0209d45c;
 extern void func_02034504(void);
 extern int func_02054d88(void);
 extern void MultiStore_Int(int val, void *dst, int len);
-extern int func_02054fb0(void);
+extern int _ZN2G212GetBG3ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void SetBg3Offset(int a, int b);
 extern void func_020326ac(void);
@@ -78,12 +78,12 @@ void func_020345b0(int arg0)
     }
 
     {
-        void *s = (void *)func_02054fb0();
+        void *s = (void *)_ZN2G212GetBG3ScrPtrEv();
         ls = 0x37f;
         MultiStore16(ls, s, 0x800);
     }
 
-    scr = (char *)func_02054fb0() + 0x42;
+    scr = (char *)_ZN2G212GetBG3ScrPtrEv() + 0x42;
     SetBg3Offset(-(int)data_0209fc6c, 4 - (int)data_0209fce0);
 
     i = 0;

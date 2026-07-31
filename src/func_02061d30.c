@@ -1,6 +1,6 @@
 typedef unsigned short u16;
 typedef unsigned int u32;
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, int a, int b, int c, int d, int e);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 a, u32 b);
 extern void WM_SetCallbackTable(int i, int val);
@@ -11,7 +11,7 @@ int func_02061d30(int self, unsigned int idx)
     int h;
     int* o;
     int r;
-    h = func_02061548();
+    h = WM_GetSystemWork();
     r = WM_CheckStateEx(5, 7, 9, 8, 0xa, 0xb);
     if (r != 0) return r;
     o = *(int**)(h + 4);

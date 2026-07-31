@@ -7,7 +7,7 @@ extern char data_020a2400[];
 extern void *func_0205d23c(void *a, int b);
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
-extern void func_020580f0(unsigned short *self);
+extern void OS_SleepThread(unsigned short *self);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
 extern int FS_ReadFile(char *a, char *b, int c);
 extern void func_02041d28(char *base, void *node, int d);
@@ -34,7 +34,7 @@ void func_02042254(void)
                 _ZN3IRQ7RestoreEj(irq);
                 return;
             }
-            func_020580f0(0);
+            OS_SleepThread(0);
             sb = *(char **)(sub + 0x708);
         }
         _ZN3IRQ7RestoreEj(irq);

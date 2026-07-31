@@ -1,6 +1,6 @@
 typedef unsigned short u16;
 
-extern void *func_02061548(void);
+extern void *WM_GetSystemWork(void);
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
 
@@ -8,7 +8,7 @@ struct Obj { int f0; unsigned char *f4; };
 
 int func_020618b8(void)
 {
-    struct Obj *o = (struct Obj *)func_02061548();
+    struct Obj *o = (struct Obj *)WM_GetSystemWork();
     unsigned char *b;
     if (func_0206152c())
         return 0;

@@ -27,7 +27,7 @@ extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 
-extern int func_020124c4(int, int, int, int);
+extern int Sound_PlayIfNotActive(int, int, int, int);
 
 void func_ov006_0211134c(Obj *c)
 {
@@ -74,7 +74,7 @@ void func_ov006_0211134c(Obj *c)
         c->fc = c->f40 - c->f38 + 0xa0000;
         if (c->f14 == c->fc)
             return;
-        c->f44 = func_020124c4(c->f44, 2, 0x16c, 0);
+        c->f44 = Sound_PlayIfNotActive(c->f44, 2, 0x16c, 0);
         return;
     }
 

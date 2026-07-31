@@ -16,7 +16,7 @@ struct RaycastGround {
     int DetectClsn();
 };
 extern "C" void _ZN4BgCh19StartDetectingWaterEv(RaycastGround*);
-extern "C" int func_02037e78(int* p);
+extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern int data_0209f32c;
 
 extern "C" void func_ov002_020c72a4(void* thisptr)
@@ -34,7 +34,7 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     rg.SetObjAndPos(v, (Actor*)thisptr);
     _ZN4BgCh19StartDetectingWaterEv(&rg);
     if (rg.DetectClsn()) {
-        if (func_02037e78(&rg.f14) != 0) {
+        if (SurfaceInfo_TestFlag0x20(&rg.f14) != 0) {
             *(int*)(r4 + 0x64c) = *(int*)((char*)&rg + 0x44);
             data_0209f32c = *(int*)(r4 + 0x64c);
         }

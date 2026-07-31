@@ -3,7 +3,7 @@ typedef unsigned int u32;
 extern "C" {
 extern char data_020a8180[];
 extern int data_020a6134[];
-void func_020580f0(void* p);
+void OS_SleepThread(void* p);
 void func_02060228(void* fn);
 int func_0206071c(void* g);
 }
@@ -29,7 +29,7 @@ extern "C" int func_02060558(int a, int b, int c, int d, int e, int f)
     unsigned int irq = IRQ::Disable();
     if (g->flags & 4) {
         do {
-            func_020580f0(g->sub);
+            OS_SleepThread(g->sub);
         } while (g->flags & 4);
     }
     u32* fp = (u32*)(((unsigned long long)((int)g + 0x34)) & 0xFFFFFFFFFFFFFFFFULL);

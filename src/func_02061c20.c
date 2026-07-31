@@ -1,14 +1,14 @@
 typedef unsigned int u32;
 typedef unsigned char u8;
 
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int len);
 extern void MultiCopy32Bytes(int *src, int *dst, int len);
 
 int func_02061c20(int *arg)
 {
-    char *x = (char *)func_02061548();
+    char *x = (char *)WM_GetSystemWork();
     int r = func_0206152c();
     if (r != 0) return r;
     if (arg == 0) return 6;

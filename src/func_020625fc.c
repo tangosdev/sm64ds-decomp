@@ -5,7 +5,7 @@
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern int *func_02061548(void);
+extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int a, int b, int c);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int n);
 extern int func_02061ab0(void);
@@ -20,7 +20,7 @@ int func_020625fc(int arg0, int arg1, int arg2, int arg3, u16 arg4, u16 arg5,
     int *base;
     int r;
 
-    base = func_02061548();
+    base = WM_GetSystemWork();
     r = WM_CheckStateEx(2, 7, 8);
     if (r != 0)
         return r;

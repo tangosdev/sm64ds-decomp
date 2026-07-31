@@ -3,7 +3,7 @@ extern "C" {
 extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1514FlushDataCacheEjj(unsigned int a, unsigned int b);
 extern void WM_SetCallbackTable(int i, int val);
-extern char *func_02061548(void);
+extern char *WM_GetSystemWork(void);
 extern int WM_SendCommand(short a0, unsigned short count);
 
 int func_02061ee4(int a, char *b) {
@@ -18,7 +18,7 @@ int func_02061ee4(int a, char *b) {
     if (h < 1 || h > 0xe) return 6;
     _ZN4CP1514FlushDataCacheEjj((unsigned int)b, 0x20);
     WM_SetCallbackTable(0xa, a);
-    d = *(char**)(func_02061548() + 0xc);
+    d = *(char**)(WM_GetSystemWork() + 0xc);
     *(short*)(d) = 0xa;
     *(short*)(d + 2) = *(unsigned short*)(b + 4);
     *(int*)(d + 4) = *(int*)b;

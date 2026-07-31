@@ -16,7 +16,7 @@ extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
-extern char *func_02054fb0(void);
+extern char *_ZN2G212GetBG3ScrPtrEv(void);
 extern char *func_02054de8(void);
 extern char *_ZN3G2S13GetBG0CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -79,7 +79,7 @@ extern "C" int dScMgSlot1_c_InitResources(void *arg0)
         Deallocate((void *)h);
     }
     LoadCompressedFileAt(0x7c, _ZN2G212GetBG2ScrPtrEv());
-    LoadCompressedFileAt(0x7f, func_02054fb0());
+    LoadCompressedFileAt(0x7f, _ZN2G212GetBG3ScrPtrEv());
 
     data_0209d45c = 0x1c;
 

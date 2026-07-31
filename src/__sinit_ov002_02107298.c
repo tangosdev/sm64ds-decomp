@@ -1,6 +1,6 @@
 extern void func_02017acc();
 extern void func_020731dc();
-extern void func_02017934();
+extern void SharedFilePtr_Construct_TexSeq();
 extern int G0[];
 extern int G1[];
 extern int G2[];
@@ -11,6 +11,6 @@ void __sinit_ov002_02107298(void)
 {
     func_02017acc(G0, 1078);
     func_020731dc(G0, G1, G2);
-    func_02017934(G3, 1079);
+    SharedFilePtr_Construct_TexSeq(G3, 1079);
     func_020731dc(G3, G4, G5);
 }

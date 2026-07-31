@@ -9,7 +9,7 @@ extern void func_020383fc(void* p);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
 extern char* _ZNK12WithMeshClsn14GetFloorResultEv(char* w);
-extern int func_02037e78(void* p);
+extern int SurfaceInfo_TestFlag0x20(void* p);
 extern void func_02012694(int a, void* p);
 extern void _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(int a, int b, int c);
 extern void _ZN12WithMeshClsn18StopDetectingWaterEv(char* w);
@@ -26,7 +26,7 @@ void func_ov002_020b13e0(char* self){
   else
     WithMeshClsn_UpdateDiscreteNoLava_veneer(self+0x1ac);
   if (!_ZNK12WithMeshClsn10IsOnGroundEv(self+0x1ac)) return;
-  if (func_02037e78(_ZNK12WithMeshClsn14GetFloorResultEv(self+0x1ac) + 4) == 0) return;
+  if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(self+0x1ac) + 4) == 0) return;
   if (*(int*)(self+0xa8) > 0) return;
   func_02012694(0xe2, self+0x74);
   _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(*(int*)(self+0x5c), *(int*)(self+0x60), *(int*)(self+0x64));

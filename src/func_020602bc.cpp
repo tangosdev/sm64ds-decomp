@@ -3,7 +3,7 @@ typedef unsigned int u32;
 
 extern "C" {
 extern char data_020a8180[];
-void func_020580f0(void *p);
+void OS_SleepThread(void *p);
 }
 
 u32 _ZN3IRQ7DisableEv(void);
@@ -16,7 +16,7 @@ extern "C" void func_020602bc(void) {
         for (;;) {
             if (*(u32 *)(base + 0x34) & 8) break;
             *(void **)(base + 0xd0) = base + 0x3c;
-            func_020580f0(0);
+            OS_SleepThread(0);
         }
         _ZN3IRQ7RestoreEj(st);
         (*(void (**)(void *))(base + 0x30))(base);

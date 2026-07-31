@@ -29,7 +29,7 @@ extern u8 data_0209fcdc;
 void func_02034504(void);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(int a, int b, int n);
 void func_02031cd4(void *arg);
 void func_02031e00(void);
@@ -64,7 +64,7 @@ void func_02032f9c(int a)
     li = 0;
     MultiStore_Int(li, p, 0x2000);
 
-    s = func_02054fb0();
+    s = _ZN2G212GetBG3ScrPtrEv();
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
 
@@ -77,7 +77,7 @@ void func_02032f9c(int a)
 
     w = 0x100 - data_0209fc88;
     data_0209fc7c = (u8)((w >> 1) & 7);
-    q = (u16 *)(func_02054fb0() + 0x40) + (u16)(w / 8 >> 1);
+    q = (u16 *)(_ZN2G212GetBG3ScrPtrEv() + 0x40) + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
     n = (data_0209fc88 + c + 7) >> 3;
     i = 0;

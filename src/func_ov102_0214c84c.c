@@ -9,7 +9,7 @@ extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
-extern int func_02037e78(int *p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e84(int *p);
 extern int func_02037e38(unsigned int *p);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
@@ -43,7 +43,7 @@ void func_ov102_0214c84c(char *c)
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pv[3], c);
         if (_ZN13RaycastGround10DetectClsnEv(rg))
         {
-            if (func_02037e78((int *)(rg + 0x14)))
+            if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)))
             {
                 pv[1] = *(int *)(rg + 0x44) + 0x3c000;
                 *(int *)(c + 0x3d4) = 0;

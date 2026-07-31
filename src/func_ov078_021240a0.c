@@ -10,7 +10,7 @@ extern int _ZN6Player9StartTalkER9ActorBaseb(void* pl, char* c, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int f);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* pl, char* c, int m, void* v, int a, int b);
 extern void func_02012694(int a, void* b);
-extern void func_ov078_02125c48(char* c, void* pmf);
+extern void KingBobOmb_SetState(char* c, void* pmf);
 extern void _ZN5Actor15HugeLandingDustEb(char* c, int b);
 extern int Vec3_Dist(const void* a, const void* b);
 extern int RandomIntInternal(int* seed);
@@ -54,7 +54,7 @@ int func_ov078_021240a0(char* c)
                     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
                     if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl, c, (int)msg, c + 0x5c, 0, 0) != 0) {
                         func_02012694(0x12a, c + 0x74);
-                        func_ov078_02125c48(c, &data_ov078_0212705c);
+                        KingBobOmb_SetState(c, &data_ov078_0212705c);
                     }
                 }
             }
@@ -69,7 +69,7 @@ int func_ov078_021240a0(char* c)
         }
         if (*(unsigned short*)(c + 0x100) == 0) {
             *(int*)(c + 0x49c) = 0;
-            func_ov078_02125c48(c, &data_ov078_0212702c);
+            KingBobOmb_SetState(c, &data_ov078_0212702c);
             return 1;
         }
         if (Vec3_Dist(c + 0x4d4, c + 0x5c) < 0x258000) {

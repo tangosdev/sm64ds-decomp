@@ -1,6 +1,6 @@
 extern unsigned int _ZN3IRQ7DisableEv();
 extern void _ZN3IRQ7RestoreEj(unsigned int);
-extern void func_020580f0(unsigned short*);
+extern void OS_SleepThread(unsigned short*);
 extern void func_0205c788(char*, int);
 extern unsigned int (*data_02086758[])(char*);
 
@@ -61,7 +61,7 @@ int func_0205c5e4(char* self, int idx) {
             p = (unsigned short*)(r + 0xc);
             goto chk;
             do {
-                func_020580f0(p);
+                OS_SleepThread(p);
 chk:
                 busy = (*(unsigned int*)(r + 0x10) & 0x200) ? 1 : 0;
             } while (busy != 0);

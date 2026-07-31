@@ -63,7 +63,7 @@ extern "C" {
     void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
     void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void Deallocate(void *ptr);
-    void *func_02054fb0(void);
+    void *_ZN2G212GetBG3ScrPtrEv(void);
     void *_ZN3G2S13GetBG3CharPtrEv(void);
     void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void *_ZN3G2S12GetBG3ScrPtrEv(void);
@@ -129,14 +129,14 @@ extern "C" int dScMgAmida_c_InitResources(Obj *c)
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x1a0);
         _ZN2GX10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
         Deallocate(f);
-        LoadCompressedFileAt(0x21, func_02054fb0());
+        LoadCompressedFileAt(0x21, _ZN2G212GetBG3ScrPtrEv());
     } else {
         LoadCompressedFileAt(0x15, (void *)func_02054d88());
         f = (void *)LoadFile(0x16);
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x1a0);
         _ZN2GX10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
         Deallocate(f);
-        LoadCompressedFileAt(0x17, func_02054fb0());
+        LoadCompressedFileAt(0x17, _ZN2G212GetBG3ScrPtrEv());
     }
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x40c;

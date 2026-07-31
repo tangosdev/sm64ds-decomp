@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 a, u32 b);
 
@@ -11,7 +11,7 @@ char* func_020619ac(char* a, unsigned int idx)
     int n;
     char* local[16];
     int i;
-    h = func_02061548();
+    h = WM_GetSystemWork();
     if (func_0206152c() != 0) return 0;
     if (idx < 1) goto ret0;
     if (idx > 0xf) { ret0: return 0; }

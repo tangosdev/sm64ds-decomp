@@ -19,7 +19,7 @@ struct Obj {
 
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32);
-extern void func_020580f0(unsigned short *self);
+extern void OS_SleepThread(unsigned short *self);
 extern int func_0205cf5c(Obj *);
 
 int func_0205d3f4(Obj *t)
@@ -33,7 +33,7 @@ int func_0205d3f4(Obj *t)
             *(u32 *)(int)(((long long)(int)((int)t + 0xc)) & 0xFFFFFFFFFFFFFFFFLL) |= 4;
         }
         do {
-            func_020580f0(&t->queue);
+            OS_SleepThread(&t->queue);
             busy = (t->flags & 1) ? 1 : 0;
         } while ((int)(((long long)busy) & 0xFFFFFFFFFFFFFFFFLL) != 0);
     }

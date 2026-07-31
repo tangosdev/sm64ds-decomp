@@ -1,6 +1,6 @@
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
-extern void func_020580f0(void *this);
+extern void OS_SleepThread(void *this);
 extern void OS_WakeupThread(void *p);
 
 struct Q {
@@ -19,7 +19,7 @@ int func_02058894(struct Q *q, int val, int flag)
             _ZN3IRQ7RestoreEj(saved);
             return 0;
         }
-        func_020580f0(q);
+        OS_SleepThread(q);
     }
     {
         int idx = (q->cap + q->head) % q->count;

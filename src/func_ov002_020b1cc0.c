@@ -17,7 +17,7 @@ char *_ZNK12WithMeshClsn14GetFloorResultEv(char *w);
 int func_02037e58(char *s);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(char *s, Vector3 *v);
 int _ZNK12WithMeshClsn13JustHitGroundEv(char *w);
-int func_02037e78(char *s);
+int SurfaceInfo_TestFlag0x20(char *s);
 int Vec3_HorzLen(void *v);
 void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(char *c);
 int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
@@ -72,7 +72,7 @@ void func_ov002_020b1cc0(char *c)
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fl + 4, &n);
 
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1ac) != 0) {
-        if (func_02037e78(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) == 0) {
+        if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) == 0) {
             if (*(u16 *)(c + 0x3a8) > 0xf000)
                 *(u16 *)(c + 0x3a8) = 0xf;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x52, c + 0x74);
@@ -103,7 +103,7 @@ void func_ov002_020b1cc0(char *c)
 
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1ac) != 0)
         return;
-    if (func_02037e78(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) != 0)
+    if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) != 0)
         return;
 
     if (n.y != 0) {

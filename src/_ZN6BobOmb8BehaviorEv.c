@@ -16,7 +16,7 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*,void*);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void*,void*,unsigned int);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void*);
-extern int func_02037e78(int*);
+extern int SurfaceInfo_TestFlag0x20(int*);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void*);
 extern void func_ov102_0214beb4(void*);
 extern int func_ov102_0214b248(void*);
@@ -94,7 +94,7 @@ int _ZN6BobOmb8BehaviorEv(char *c)
             }
 
             if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x144)) {
-                if (func_02037e78((int*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(c+0x144)+4))) {
+                if (SurfaceInfo_TestFlag0x20((int*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(c+0x144)+4))) {
                     func_ov102_0214ae1c(c);
                     return 1;
                 }

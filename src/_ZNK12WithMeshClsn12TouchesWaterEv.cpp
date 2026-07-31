@@ -1,5 +1,5 @@
 //cpp
-extern "C" int func_02037e78(const void* p);
+extern "C" int SurfaceInfo_TestFlag0x20(const void* p);
 
 struct WithMeshClsn
 {
@@ -9,5 +9,5 @@ struct WithMeshClsn
 
 int WithMeshClsn::TouchesWater() const
 {
-    return func_02037e78((const char*)this + 0x34);
+    return SurfaceInfo_TestFlag0x20((const char*)this + 0x34);
 }

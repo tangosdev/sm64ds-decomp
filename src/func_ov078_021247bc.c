@@ -10,7 +10,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *src, void *m, void *dst);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
 extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
-extern void func_ov078_02125c48(void *c, void *p);
+extern void KingBobOmb_SetState(void *c, void *p);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *thiz, void *f, int a, int b, int fx, unsigned short t);
 extern void func_02012694(int a, void *p);
 extern void func_ov078_02125c24(void *c, int a);
@@ -84,7 +84,7 @@ int func_ov078_021247bc(void *thiz)
                 *(int *)(c + 0xa4) = 0;
                 *(int *)(c + 0xa8) = 0;
                 *(int *)(c + 0xac) = 0;
-                func_ov078_02125c48(c, &data_ov078_021270fc);
+                KingBobOmb_SetState(c, &data_ov078_021270fc);
                 return 1;
             }
         }
@@ -116,7 +116,7 @@ int func_ov078_021247bc(void *thiz)
                 if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl2, c, 0x94, &E, 0, 0) != 0) {
                     _ZN6Camera9SetFlag_3Ev(*(void **)&data_0209f318);
                     func_02012694(0x12a, c + 0x74);
-                    func_ov078_02125c48(c, &data_ov078_021270dc);
+                    KingBobOmb_SetState(c, &data_ov078_021270dc);
                 }
             }
         }

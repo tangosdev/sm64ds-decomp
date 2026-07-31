@@ -13,7 +13,7 @@ extern int Vec3_HorzLen(void* v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 extern int _ZN9Animation8FinishedEv(void* self);
-extern void func_ov078_02125c48(void* c, void* p);
+extern void KingBobOmb_SetState(void* c, void* p);
 
 extern int data_020a0e68[];
 extern int data_ov078_0212703c;
@@ -85,7 +85,7 @@ int func_ov078_021250f8(char* c) {
                 *(unsigned char*)(c + 0x504) = 0x64;
             }
         }
-        func_ov078_02125c48(c, &data_ov078_0212703c);
+        KingBobOmb_SetState(c, &data_ov078_0212703c);
     }
     return 1;
 }

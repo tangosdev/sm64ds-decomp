@@ -4,7 +4,7 @@ extern void _ZN13RaycastGroundC1Ev(struct RG*);
 extern void _ZN4BgCh19StartDetectingWaterEv(struct RG*);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RG*, const Vector3*, void*);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RG*);
-extern int func_02037e78(int* p);
+extern int SurfaceInfo_TestFlag0x20(int* p);
 extern void _ZN13RaycastGroundD1Ev(struct RG*);
 int func_ov002_020b3344(char* c){
   struct RG rg;
@@ -20,7 +20,7 @@ int func_ov002_020b3344(char* c){
   v.z = z;
   _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, c);
   if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
-    if (func_02037e78(rg.detect)) {
+    if (SurfaceInfo_TestFlag0x20(rg.detect)) {
       _ZN13RaycastGroundD1Ev(&rg);
       return 1;
     }

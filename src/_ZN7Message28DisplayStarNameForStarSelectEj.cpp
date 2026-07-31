@@ -30,7 +30,7 @@ void func_0201eaac(void);
 void func_0201b6f8(int a);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void func_0201b7cc(void);
 void func_0201b388(int a);
 }
@@ -61,7 +61,7 @@ extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int msg)
     li = 0;
     MultiStore_Int(li, p, 0x800);
 
-    q = (u16*)(func_02054fb0() + 0x180);
+    q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x180);
     for (i = 0; i < 0x40; i++) {
         q[i] = (u16)(i + 0x280);
     }

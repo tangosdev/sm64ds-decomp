@@ -3,7 +3,7 @@ typedef unsigned int u32;
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 extern void func_020589ac(void* node, void* self);
-extern void func_020580f0(void* self);
+extern void OS_SleepThread(void* self);
 
 struct Node {
     char pad_0[0x78];
@@ -36,7 +36,7 @@ void func_02058b08(struct Obj* self)
             break;
         }
         cur->f78 = self;
-        func_020580f0(self);
+        OS_SleepThread(self);
         cur->f78 = 0;
     }
 

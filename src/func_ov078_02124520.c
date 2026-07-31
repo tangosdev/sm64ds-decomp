@@ -16,7 +16,7 @@ extern void _ZN6Camera9SetLookAtERK7Vector3(void *cam, Vector3 *v);
 extern void _ZN6Camera6SetPosERK7Vector3(void *cam, Vector3 *v);
 extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);
-extern void func_ov078_02125c48(void *c, void *p);
+extern void KingBobOmb_SetState(void *c, void *p);
 
 extern void *data_0209f318;
 extern Matrix4x3 data_020a0e68;
@@ -93,7 +93,7 @@ int func_ov078_02124520(char *c)
     }
     *(unsigned int *)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
     if (_ZN9Animation8FinishedEv(c + 0x31c)) {
-        func_ov078_02125c48(c, &data_ov078_0212703c);
+        KingBobOmb_SetState(c, &data_ov078_0212703c);
     }
     return 1;
 }

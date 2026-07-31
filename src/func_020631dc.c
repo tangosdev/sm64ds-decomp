@@ -6,7 +6,7 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long long u64;
 
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);
 extern void MultiStore32Bytes(unsigned val, int *dst, int len);
@@ -33,7 +33,7 @@ int func_020631dc(u8 *self, int unitIdx, int mask, int elemSize, int flag)
     u16 bits;
     volatile unsigned zero;
 
-    g = func_02061548();
+    g = WM_GetSystemWork();
     r = WM_CheckStateEx(2, 9, 0xa);
     if (r != 0)
         return r;

@@ -11,7 +11,7 @@ extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern char *func_02054efc(void);
 extern char *func_02054ea8(void);
-extern char *func_02054fb0(void);
+extern char *_ZN2G212GetBG3ScrPtrEv(void);
 extern char *func_02054d88(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *src, unsigned int a, unsigned int b);
@@ -43,7 +43,7 @@ void func_ov006_02120f18(struct Obj *self, int arg1)
         charPtr = _ZN2G213GetBG2CharPtrEv();
         break;
     case 3:
-        scrPtr = func_02054fb0();
+        scrPtr = _ZN2G212GetBG3ScrPtrEv();
         charPtr = func_02054d88();
         break;
     default:

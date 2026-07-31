@@ -12,7 +12,7 @@ extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5);
 extern void func_02012694(int a, void* b);
-extern int func_ov078_02125c48(char* c, void* p);
+extern int KingBobOmb_SetState(char* c, void* p);
 
 extern unsigned char data_0209f220;
 
@@ -64,7 +64,7 @@ int func_ov078_021259ec(char* c)
                     if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(player, c, b, &v, 0, 0)) {
                         func_02012694(0x12a, c + 0x74);
                         *(unsigned char*)(c + 0x508) = 1;
-                        func_ov078_02125c48(c, &data_ov078_0212700c);
+                        KingBobOmb_SetState(c, &data_ov078_0212700c);
                     }
                 }
             }
@@ -72,7 +72,7 @@ int func_ov078_021259ec(char* c)
             dist = Vec3_Dist((struct Vector3*)(c + 0x5c), &ppos);
             if (dist < 0x258000) {
                 if (*(int*)(c + 0x4d8) - 0xa000 < ppos.y) {
-                    func_ov078_02125c48(c, &data_ov078_0212701c);
+                    KingBobOmb_SetState(c, &data_ov078_0212701c);
                 }
             }
         }

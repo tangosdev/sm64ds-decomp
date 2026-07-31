@@ -4,13 +4,13 @@ typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern "C" int func_02061548(void);
+extern "C" int WM_GetSystemWork(void);
 extern "C" void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 sz);
 extern "C" void MultiCopyHalf(const void *src, void *dst, u32 count);
 
 extern "C" void func_02062aa4(char *c)
 {
-    int h = func_02061548();
+    int h = WM_GetSystemWork();
     char *r5 = *(char **)(c + 0x1c);
     if (*(u16 *)(c + 2) == 0) {
         u32 r4;

@@ -6,7 +6,7 @@ extern u8 data_020a0deb[];
 extern int data_ov006_0213e948[];
 extern void func_ov006_0210ab08(char *c, int i);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
-extern int func_020124c4(int, int, int, int);
+extern int Sound_PlayIfNotActive(int, int, int, int);
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
 void func_ov006_0210af64(char *c)
@@ -109,7 +109,7 @@ void func_ov006_0210af64(char *c)
     }
   }
 
-  *((int *) (c + 0x5008)) = func_020124c4(*((int *) (c + 0x5008)), 2, 0x1a8, 0);
+  *((int *) (c + 0x5008)) = Sound_PlayIfNotActive(*((int *) (c + 0x5008)), 2, 0x1a8, 0);
   if ((*((u8 *) (c + 0x503d))) >= 3u)
   {
     *((u8 *) (c + 0x503e)) = 0x1e;

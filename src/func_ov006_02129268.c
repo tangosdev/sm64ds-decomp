@@ -12,7 +12,7 @@ typedef volatile unsigned short vu16;
 
 extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern unsigned func_02054de8(void);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern void *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 
@@ -63,7 +63,7 @@ int dScMgSnowball_c_InitResources(void *arg0)
 
     LoadCompressedFileAt(0xad, (u8 *)_ZN2G213GetBG2CharPtrEv() + 0x4000);
     LoadCompressedFileAt(0xad, (void *)(func_02054de8() + 0x4000));
-    LoadCompressedFileAt(0xac, func_02054fb0());
+    LoadCompressedFileAt(0xac, _ZN2G212GetBG3ScrPtrEv());
     LoadCompressedFileAt(0xac, _ZN3G2S12GetBG3ScrPtrEv());
 
     data_0209d45c |= 0xc;

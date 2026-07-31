@@ -1,5 +1,5 @@
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern void func_ov004_020b0aa0(int arg);
 
 void func_ov006_020f088c(char *c, int i)
@@ -15,7 +15,7 @@ void func_ov006_020f088c(char *c, int i)
     if (i == 0) {
         if (*ctr <= 0x35) {
             int *p = (int *)(c + 0x47ac + n);
-            *p = func_020124c4(*p, 2, 0x1b8, 0);
+            *p = Sound_PlayIfNotActive(*p, 2, 0x1b8, 0);
         }
     }
     {

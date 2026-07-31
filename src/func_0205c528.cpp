@@ -2,7 +2,7 @@
 extern "C" {
     int _ZN3IRQ7DisableEv(void);
     void _ZN3IRQ7RestoreEj(unsigned int);
-    void func_020580f0(void *p);
+    void OS_SleepThread(void *p);
 }
 
 struct Obj;
@@ -30,7 +30,7 @@ extern "C" void func_0205c528(Outer *thiz, int r1, int r7)
     case 6: {
         unsigned int saved = (unsigned int)_ZN3IRQ7DisableEv();
         while ((o->f10 & 0x200) ? 1 : 0) {
-            func_020580f0(&o->fc);
+            OS_SleepThread(&o->fc);
         }
         _ZN3IRQ7RestoreEj(saved);
         break;

@@ -2,7 +2,7 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern int *func_02061548(void);
+extern int *WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
 extern int WM_SendCommand(int a, int b, int c, int d, int e, int f, int g, int h, int i);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int len);
@@ -17,7 +17,7 @@ int func_02062428(int p0, int p1, int p2, int p3, unsigned short p4, unsigned sh
     int flag;
 
     x = 1;
-    handle = func_02061548();
+    handle = WM_GetSystemWork();
     ret = WM_CheckStateEx(2, 9, 0xa);
     if (ret != 0) return ret;
 

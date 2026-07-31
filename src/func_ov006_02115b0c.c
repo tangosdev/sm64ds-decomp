@@ -64,7 +64,7 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void Ov004_Deallocate(void *p);
 extern u16 *_ZN2G212GetBG2ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern void func_020733a8(void *p, int a, int b, void *cb1, void *cb2);
 extern void *_Znwj(u32 size);
@@ -281,7 +281,7 @@ void func_ov006_02115b0c(char *c)
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
         Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f150);
-        DecompressLZ16(d, func_02054fb0());
+        DecompressLZ16(d, _ZN2G212GetBG3ScrPtrEv());
         Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f17c);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());
@@ -294,7 +294,7 @@ void func_ov006_02115b0c(char *c)
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
         Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f208);
-        DecompressLZ16(d, func_02054fb0());
+        DecompressLZ16(d, _ZN2G212GetBG3ScrPtrEv());
         Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f234);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());

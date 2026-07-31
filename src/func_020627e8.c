@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern int func_02061548(void);
+extern int WM_GetSystemWork(void);
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int savedState);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);
@@ -25,7 +25,7 @@ void func_020627e8(u8 *self, int flag)
     volatile u16 zero;
     int ret;
 
-    ctx = func_02061548();
+    ctx = WM_GetSystemWork();
     saved = _ZN3IRQ7DisableEv();
     slot = H(0x408);
     if (*(u16 *)(self + ((u32)slot << 8)) != 0)

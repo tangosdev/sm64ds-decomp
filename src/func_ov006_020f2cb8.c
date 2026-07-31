@@ -4,7 +4,7 @@ typedef unsigned int u32;
 typedef int s32;
 
 int RandomIntInternal(int *seed);
-char *func_02054fb0(void);
+char *_ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(u16 val, char *dst, int nbytes);
 
 extern int data_0209d4b8;
@@ -49,11 +49,11 @@ void func_ov006_020f2cb8(char *c)
     n = 2;
     for (i = 0, off = 0; i < 8; i++, off += 0x20) {
         pb = (u8 *)(c + 0x5000);
-        dst = (u16 *)(func_02054fb0() + 0x1d8) + off;
+        dst = (u16 *)(_ZN2G212GetBG3ScrPtrEv() + 0x1d8) + off;
         idx = data_ov006_0213cdec[pb[0x45a]];
         idx += off;
         for (j = 0; j < 8; j++) {
-            v = ((u16 *)func_02054fb0())[idx];
+            v = ((u16 *)_ZN2G212GetBG3ScrPtrEv())[idx];
             MultiStore16(v, (char *)dst, n);
             idx++;
             dst++;

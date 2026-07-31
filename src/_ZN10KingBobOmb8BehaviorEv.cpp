@@ -21,7 +21,7 @@ extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int func_ov078_02125c48(void *c, void *p);
+extern int KingBobOmb_SetState(void *c, void *p);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
@@ -85,7 +85,7 @@ int KingBobOmb::Behavior()
         if (_ZNK12WithMeshClsn8IsOnWallEv(self + 0x110) != 0
             || _ZNK12WithMeshClsn10IsOnGroundEv(self + 0x110) == 0
             || (*(int *)(self + 0x4d8) - 0x28000) > *(int *)(self + 0x60)) {
-            func_ov078_02125c48(self, data_ov078_021270bc);
+            KingBobOmb_SetState(self, data_ov078_021270bc);
         }
     }
 

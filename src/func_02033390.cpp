@@ -10,7 +10,7 @@ extern u8 data_0209fc78;
 void func_02034504(void);
 int func_02054d88(void);
 void MultiStore_Int(int val, int *dst, int len);
-char* func_02054fb0(void);
+char* _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(u16 val, char *dst, int nbytes);
 }
 namespace G2S { char* GetBG0CharPtr(); char* GetBG0ScrPtr(); }
@@ -28,7 +28,7 @@ extern "C" void func_02033390(int sub)
         int *dst = (int*)(func_02054d88() + 0x4000);
         v = 0;
         MultiStore_Int(v, dst, 0x2000);
-        MultiStore16(fill = 0x2ff, func_02054fb0(), 0x800);
+        MultiStore16(fill = 0x2ff, _ZN2G212GetBG3ScrPtrEv(), 0x800);
     } else {
         volatile u16 fill;
         volatile s32 v;
