@@ -5,8 +5,8 @@ typedef int s32;
 extern int func_0201267c(int a, void *b);
 void func_ov025_021119f4(char *c)
 {
-    *(u8*)(((int)c + 0x39e) & 0xFFFFFFFFFFFFFFFFLL) =
-        *(u8*)(((int)c + 0x39e) & 0xFFFFFFFFFFFFFFFFLL) - 1;
+    *(u8*)(((int)c + 0x39e)) =
+        *(u8*)(((int)c + 0x39e)) - 1;
     if (*(u8 *)(c + 0x39e) != 0) return;
     if (*(u8 *)(c + 0x39f) != 4) {
         *(s32 *)(c + 0x398) = 5;

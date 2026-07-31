@@ -10,7 +10,7 @@ int func_ov032_02111254(char *c) {
     int d;
     if (pl == 0 || *(unsigned short*)(c+0x400+0x2a) != 0)
         return 0;
-    s = (int*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+    s = (int*)(((int)pl + 0x5c));
     *(int*)(c+0x418) = s[0];
     *(int*)(c+0x41c) = s[1];
     *(int*)(c+0x420) = s[2];

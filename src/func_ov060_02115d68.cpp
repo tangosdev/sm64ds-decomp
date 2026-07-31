@@ -13,7 +13,7 @@ extern "C" int _ZN6Player15IsCollectingCapEv(Player *p);
 extern "C" int _ZN6Player7TryGrabER5Actor(Player *p, Actor &a);
 
 extern "C" void func_ov060_02115d68(char *self) {
-    u32 *p = (u32 *)((char *)(((int)self + 0xec) & 0xFFFFFFFFFFFFFFFF));
+    u32 *p = (u32 *)((char *)(((int)self + 0xec)));
     Actor *r5 = _ZN5Actor10FindWithIDEj(*(u32 *)(self + 0x108));
     *p &= ~1u;
     if (*(s32 *)((char *)r5 + 0x40c) != 0x13) goto skip_13;
@@ -29,10 +29,10 @@ skip_13:
     if (_ZN6Player15IsCollectingCapEv((Player *)r4)) return;
     if (!_ZN6Player7TryGrabER5Actor((Player *)r4, *(Actor *)self)) return;
     s16 *ip = (s16 *)((char *)r5 + 0x8c);
-    *(s16 *)((char *)r4 + 0x8c) = *(s16 *)((int)ip & 0xFFFFFFFFFFFFFFFF);
+    *(s16 *)((char *)r4 + 0x8c) = *(s16 *)((int)ip);
     *(s16 *)((char *)r4 + 0x8e) = ip[1];
     *(s16 *)((char *)r4 + 0x90) = ip[2];
-    *(s16 *)((char *)r4 + 0x92) = *(s16 *)((int)ip & 0xFFFFFFFFFFFFFFFF);
+    *(s16 *)((char *)r4 + 0x92) = *(s16 *)((int)ip);
     *(s16 *)((char *)r4 + 0x94) = ip[1];
     *(s16 *)((char *)r4 + 0x96) = ip[2];
     *(s32 *)(self + 0x110) = 2;

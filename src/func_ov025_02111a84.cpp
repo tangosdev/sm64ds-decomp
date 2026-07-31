@@ -25,8 +25,8 @@ void func_ov025_02111a84(char* c)
     v[1].z = *(int*)(c + 0x64);
     _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, v[1], 0x7d0000);
     *(unsigned char*)(c + 0x39e) = 0x3c;
-    *(unsigned char*)(((int)c + 0x39f) & 0xFFFFFFFFFFFFFFFFLL) =
-        *(unsigned char*)(((int)c + 0x39f) & 0xFFFFFFFFFFFFFFFFLL) + 1;
+    *(unsigned char*)(((int)c + 0x39f)) =
+        *(unsigned char*)(((int)c + 0x39f)) + 1;
     *(int*)(c + 0x398) = 6;
     v[0].x = *(int*)(c + 0x5c);
     v[0].y = *(int*)(c + 0x60);

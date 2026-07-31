@@ -25,7 +25,7 @@ int func_ov030_02113094(char* self)
     {
         int b = (int)((*(u32*)(self + 0xb0) & 0x40000) != 0);
         if (b != 0) {
-            int p = (int)((((int)*(char**)(self + 0x3a8)) + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            int p = (int)((((int)*(char**)(self + 0x3a8)) + 0x5c));
             *(int*)(self + 0x5c) = *(int*)p;
             *(int*)(self + 0x60) = *(int*)(p + 4);
             *(int*)(self + 0x64) = *(int*)(p + 8);
@@ -39,9 +39,9 @@ int func_ov030_02113094(char* self)
             if (*(u8*)(self + 0x3c8) != 0) {
                 struct Actor* a = _ZN5Actor10FindWithIDEj(*(u32*)(self + 0x3ac));
                 *(char**)((char*)a + 0xd0) = *(char**)(self + 0x3a8);
-                *(u32*)(((int)a + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x40000;
+                *(u32*)(((int)a + 0xb0)) |= 0x40000;
             }
-            (*(u8*)(((int)self + 0x3c7) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)self + 0x3c7)))++;
         } else {
             int b3 = (int)((*(u32*)(self + 0xb0) & 0x20000) != 0);
             if (b3 != 0) break;
@@ -55,7 +55,7 @@ int func_ov030_02113094(char* self)
         int msg = (*(u8*)(self + 0x3c8) != 0) ? 0xc2 : 0xc3;
         if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(char**)(self + 0x3a8), self, (s16)msg, 0, 0, 0) != 0) {
             func_0201267c(0xd1, self + 0x74);
-            (*(u8*)(((int)self + 0x3c7) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)self + 0x3c7)))++;
         }
         {
             int b4 = (int)((*(u32*)(self + 0xb0) & 0x80000) != 0);
@@ -68,7 +68,7 @@ int func_ov030_02113094(char* self)
     case 2:
         if (_ZN6Player12GetTalkStateEv(*(char**)(self + 0x3a8)) == -1) {
             _ZN6Player9DropActorEv(*(char**)(self + 0x3a8));
-            (*(u8*)(((int)self + 0x3c7) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)self + 0x3c7)))++;
         }
         break;
     case 3: {

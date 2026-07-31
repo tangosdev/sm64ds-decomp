@@ -23,14 +23,14 @@ void func_ov063_02116a1c(void *cc)
 
     a = *(unsigned char *)(c + 0x5cc);
     if (a == 0) {
-        *(unsigned short *)(((int)c + 0x5d4) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+        *(unsigned short *)(((int)c + 0x5d4)) &= ~8;
         if (NumStars() < 0xf) {
             _ZN9ActorBase18MarkForDestructionEv(c);
             return;
         }
         if (((unsigned)(*(unsigned short *)(c + 0x5d4)) << 0x1b) >> 0x1f) {
-            unsigned short *fp = (unsigned short *)(((long long)(int)(c + 0x5d4)) & 0xFFFFFFFFFFFFFFFFLL);
-            unsigned char *st = (unsigned char *)(((long long)(int)(c + 0x5cc)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned short *fp = (unsigned short *)(((long long)(int)(c + 0x5d4)));
+            unsigned char *st = (unsigned char *)(((long long)(int)(c + 0x5cc)));
             *fp |= 8;
             *(unsigned char *)(c + 0x5c8) = 0xb4;
             scale = *(int *)(c + 0x584);
@@ -43,7 +43,7 @@ void func_ov063_02116a1c(void *cc)
         }
     } else if (a == 1) {
         if (*(int *)(c + 0x580) < 0x3e8000) {
-            unsigned char *st = (unsigned char *)(((long long)(int)(c + 0x5cc)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char *st = (unsigned char *)(((long long)(int)(c + 0x5cc)));
             *st += 1;
             func_0201267c(0xf8, c + 0x74);
         }
@@ -58,7 +58,7 @@ void func_ov063_02116a1c(void *cc)
             /* invert: laundered RMW as THEN, plain zero as ELSE
                -> movls/strbls + bls + unpredicated RMW */
             if (*(unsigned char *)(c + 0x5c8) > 0x14) {
-                unsigned char *p = (unsigned char *)(((long long)(int)(c + 0x5c8)) & 0xFFFFFFFFFFFFFFFFLL);
+                unsigned char *p = (unsigned char *)(((long long)(int)(c + 0x5c8)));
                 *p = (unsigned char)(*p - 0x14);
             } else {
                 *(unsigned char *)(c + 0x5c8) = 0;

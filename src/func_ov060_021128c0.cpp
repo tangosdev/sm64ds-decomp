@@ -62,11 +62,11 @@ extern "C" void func_ov060_021128c0(char* c)
         fn(base);
     }
 
-    *(u16*)(((int)c + 0x3fc) & 0xFFFFFFFFFFFFFFFFLL) =
-        *(u16*)(((int)c + 0x3fc) & 0xFFFFFFFFFFFFFFFFLL) + 1;
+    *(u16*)(((int)c + 0x3fc)) =
+        *(u16*)(((int)c + 0x3fc)) + 1;
     if (*(s32*)(c + 0x40c) != idx) {
         *(u8*)(c + 0x423) = 0;
-        *(u16*)((char*)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFFLL) + 0xfc) = 0;
+        *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
     }
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x360);
@@ -96,9 +96,9 @@ extern "C" void func_ov060_021128c0(char* c)
 
     if (data_ov060_02119268[idx] != 0) {
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
-            char* p400 = (char*)(((int)c + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
-            s32* px = (s32*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
-            s32* pz = (s32*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL);
+            char* p400 = (char*)(((int)c + 0x400));
+            s32* px = (s32*)(((int)c + 0x5c));
+            s32* pz = (s32*)(((int)c + 0x64));
             s16* tab = data_02082214;
             *(s32*)(c + 0x5c) = *(s32*)(c + 0x3c8);
             *(s32*)(c + 0x60) = *(s32*)(c + 0x3cc);
@@ -122,5 +122,5 @@ extern "C" void func_ov060_021128c0(char* c)
         return;
     *(s32*)(c + 0x40c) = 2;
     *(u8*)(c + 0x423) = 0;
-    *(u16*)((char*)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFFLL) + 0xfc) = 0;
+    *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
 }

@@ -12,5 +12,5 @@ void func_ov060_02113260(char *c)
     *(int *)(c + 0xa8) = 0;
     *(int *)(c + 0x9c) = 0;
     *(unsigned char *)(c + 0x426) = 0;
-    *(int *)(((int)c + 0x378) & 0xFFFFFFFFFFFFFFFF) |= 1;
+    *(int *)(((int)c + 0x378)) |= 1;
 }

@@ -84,12 +84,12 @@ void func_ov060_02114858(void *self)
       }
     }
     {
-      u16 *pt = (u16 *) ((((int) c) + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
+      u16 *pt = (u16 *) ((((int) c) + 0x400));
       *pt = (*pt) + 1;
     }
   }
   {
-    int *p = (int *) ((((int) c) + 0x418) & 0xFFFFFFFFFFFFFFFFLL);
+    int *p = (int *) ((((int) c) + 0x418));
     *p |= 0x20000;
   }
   if (Bowser_IsAnimAtLastFrame(c) == 0)
@@ -103,7 +103,7 @@ void func_ov060_02114858(void *self)
       func_ov060_02111cc0(c, 0x16, 0x40000000);
       func_02012694(0xb5, c + 0x74);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -111,7 +111,7 @@ void func_ov060_02114858(void *self)
     case 1:
       func_ov060_02111cc0(c, 0x15, 0);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -119,7 +119,7 @@ void func_ov060_02114858(void *self)
     case 2:
       func_ov060_02111cc0(c, 0x17, 0x40000000);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -127,7 +127,7 @@ void func_ov060_02114858(void *self)
     case 3:
       *((s32 *) (c + 0x40c)) = 0;
     {
-      int *p = (int *) (((long long) ((int) (c + 0x418))) & 0xFFFFFFFFFFFFFFFFLL);
+      int *p = (int *) (((long long) ((int) (c + 0x418))));
       *p &= ~0x20000;
     }
       return;

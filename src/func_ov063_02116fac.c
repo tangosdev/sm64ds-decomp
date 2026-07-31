@@ -19,8 +19,8 @@ struct Frame {
     int pad[10];
 };
 
-#define L16(c, off) ((u16*)(((int)(c) + (off)) & 0xFFFFFFFFFFFFFFFFLL))
-#define L8(c, off)  ((u8*)(((int)(c) + (off)) & 0xFFFFFFFFFFFFFFFFLL))
+#define L16(c, off) ((u16*)(((int)(c) + (off))))
+#define L8(c, off)  ((u8*)(((int)(c) + (off))))
 
 void func_ov063_02116fac(char* c)
 {

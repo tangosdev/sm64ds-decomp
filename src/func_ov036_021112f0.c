@@ -12,14 +12,14 @@ int daObjRcBuranko_c_Behavior(char *c)
 {
     struct daObjRcBuranko_c *self = (struct daObjRcBuranko_c *)(void *)c;
     if (self->unk_090 < 0) {
-        short *p = (short *)(((int)c + 0x31e) & 0xFFFFFFFFFFFFFFFF);
+        short *p = (short *)(((int)c + 0x31e));
         *p = *p + 4;
     } else {
-        short *p = (short *)(((int)c + 0x31e) & 0xFFFFFFFFFFFFFFFF);
+        short *p = (short *)(((int)c + 0x31e));
         *p = *p - 4;
     }
     {
-        short *q = (short *)(((int)c + 0x90) & 0xFFFFFFFFFFFFFFFF);
+        short *q = (short *)(((int)c + 0x90));
         *q = *q + ((short *)(c + 0x300))[15];
     }
     func_ov036_0211123c(c);

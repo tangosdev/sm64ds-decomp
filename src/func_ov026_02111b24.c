@@ -37,7 +37,7 @@ int func_ov026_02111b24(char* self)
         _Z14ApproachLinearRiii((int*)(self + 0x198), 0x100, 0x1000);
         _Z14ApproachLinearRiii((int*)(self + 0x194), *(int*)(self + 0x1ac) - 0x64000, 0x4000);
         {
-            s16* q = (s16*)(int)(((long long)(int)(self + 0x1b4)) & 0xFFFFFFFFFFFFFFFFLL);
+            s16* q = (s16*)(int)(((long long)(int)(self + 0x1b4)));
             *q += *(s16*)(self + 0x1b6);
         }
         v1.y = *(int*)(self + 0x194);
@@ -54,7 +54,7 @@ int func_ov026_02111b24(char* self)
             *(s16*)(player + 0x90) = 0;
         }
         {
-            int* pp = (int*)(int)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* pp = (int*)(int)(((long long)(int)(player + 0x5c)));
             pv.x = pp[0];
             pv.y = pp[1];
             pv.z = pp[2];

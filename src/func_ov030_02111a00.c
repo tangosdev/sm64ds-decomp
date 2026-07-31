@@ -21,7 +21,7 @@ int func_ov030_02111a00(char* c)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         c + 0xd4, data_ov030_02115bc8[*(unsigned char*)(c + 0x3ca)][1], 0, 0x1000, 0);
     {
-        unsigned char* p = (unsigned char*)(((int)c + 0x3ca) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char* p = (unsigned char*)(((int)c + 0x3ca));
         *(int*)(c + 0x130) = 0x1000;
         (*p)++;
     }

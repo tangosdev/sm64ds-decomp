@@ -13,7 +13,7 @@ int func_ov026_02111cb4(char *c)
   char *p = Actor_ClosestPlayer(c);
   if (p)
   {
-    struct Vec3 *sp = (struct Vec3 *) (((int) p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    struct Vec3 *sp = (struct Vec3 *) (((int) p + 0x5c));
     struct Vec3 t;
     t.x = sp->x;
     t.y = sp->y;

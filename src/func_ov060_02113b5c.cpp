@@ -66,7 +66,7 @@ extern "C" void func_ov060_02113b5c(char* c)
             if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x14c) == 0) {
                 *(s32*)(c + 0x98) = 0;
                 *(u8*)(c + 0x427) = 0;
-                u8* p = (u8*)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* p = (u8*)(((int)c + 0x423));
                 *p = *p + 1;
                 func_ov060_02111cc0(c, 0xd, 0x40000000);
             }
@@ -78,7 +78,7 @@ extern "C" void func_ov060_02113b5c(char* c)
     }
 
     if (func_ov060_02113d20(c) != 0) {
-        signed char* q = (signed char*)(((int)c + 0x41e) & 0xFFFFFFFFFFFFFFFFLL);
+        signed char* q = (signed char*)(((int)c + 0x41e));
         *q = *q - 1;
         if (*(signed char*)(c + 0x400 + 0x1e) <= 0) {
             *(s32*)(c + 0x40c) = 4;

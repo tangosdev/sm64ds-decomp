@@ -19,7 +19,7 @@ void func_ov062_0211b2fc(char* c){
   v[0].z = 0x14000;
   if (*(int*)(c+0x468) == 0 && *(int*)(c+0x44c) == 0) {
     if (*(unsigned short*)(c+0x444) == 0) {
-      short* a = (short*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF);
+      short* a = (short*)(((int)c + 0x94));
       *a = *a - 0x100;
     }
     v[0].z = 0x28000;

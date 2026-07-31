@@ -26,7 +26,7 @@ void func_ov060_02115518(char *self)
     }
       *((int *) (self + 0x40c)) = 6;
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       return;
@@ -77,7 +77,7 @@ void func_ov060_02115518(char *self)
       }
     }
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       func_02012694(0xb7, self + 0x74);
@@ -97,7 +97,7 @@ void func_ov060_02115518(char *self)
       *((int *) (self + 0x40c)) = 0;
     }
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       new_var = (u8 *) (self + 0x444);

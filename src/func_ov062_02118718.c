@@ -34,12 +34,12 @@ void func_ov062_02118718(char *c)
                 _ZN5Enemy24AngleAwayFromWallOrCliffER12WithMeshClsnRs(c, c + 0x144, (short*)(c + 0x3c2));
             if (!*(unsigned char*)(c + 0x3cc)) {
                 if (*(unsigned short*)(c + 0x3c8) != 0) {
-                    *(unsigned short*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                    *(unsigned short*)(((int)c + 0x3c8)) -= 1;
                 } else {
                     if (((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x8000)
-                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) -= ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                        *(short*)(((int)c + 0x3c2)) -= ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
                     else
-                        *(short*)(((int)c + 0x3c2) & 0xFFFFFFFFFFFFFFFF) += ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
+                        *(short*)(((int)c + 0x3c2)) += ((unsigned)RandomIntInternal(&data_0209e650) >> 16) & 0x1fff;
                     *(unsigned short*)(c + 0x3c8) = 0x14;
                 }
             }
@@ -67,7 +67,7 @@ void func_ov062_02118718(char *c)
 
     *(short*)(c + 0x94) = *(short*)(c + 0x3c2);
     *(int*)(c + 0x38c) = 2;
-    *(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) += *(int*)(c + 0x98) / 5;
+    *(int*)(((int)c + 0x98)) += *(int*)(c + 0x98) / 5;
     *(int*)(c + 0xa8) = dist / 30;
     func_ov062_02117994(c, 6);
     *(short*)(c + 0x3c6) = 0x14;

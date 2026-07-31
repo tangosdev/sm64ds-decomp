@@ -29,7 +29,7 @@ void func_ov060_021143b8(char* self)
             *(int*)(self + 0x5c) = *(int*)(self + 0x3c8);
             *(int*)(self + 0x64) = *(int*)(self + 0x3d0);
         }
-        (*(unsigned char*)(((int)self + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char*)(((int)self + 0x423)))++;
         *(int*)(self + 0x3f8) = 0x1000;
         return;
     }
@@ -47,11 +47,11 @@ void func_ov060_021143b8(char* self)
             func_0200fa04(self, vec, 0);
             func_ov060_02111cc0(self, 0xc, 0x40000000);
         }
-        *(int*)(((int)self + 0x418) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10000;
+        *(int*)(((int)self + 0x418)) &= ~0x10000;
         *(int*)(self + 0x98) = 0;
         *(int*)(self + 0xa8) = 0;
         *(int*)(self + 0x60) = *(int*)(self + 0x3cc);
-        (*(unsigned char*)(((int)self + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char*)(((int)self + 0x423)))++;
         func_ov060_02115b0c(self);
         if (*(unsigned char*)(self + 0x414) == 1) {
             void* a;

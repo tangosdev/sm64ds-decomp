@@ -24,14 +24,14 @@ int daObjWc_Obj05_c_Behavior(u8* thiz)
     case 0:
         if (thiz[0x32a] != 0) {
             if (thiz[0x32b] == 0) {
-                u8* p = (u8*)(((int)thiz + 0x32c) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* p = (u8*)(((int)thiz + 0x32c));
                 *p = *p + 1;
             }
         }
         thiz[0x32b] = thiz[0x32a];
         break;
     case 1: {
-        int* p60 = (int*)(((int)thiz + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p60 = (int*)(((int)thiz + 0x60));
         *p60 = *p60 - 0x14000;
         self->unk_324 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
             *(unsigned*)(thiz + 0x324), 3, 0x8d, thiz + 0x74, 0);
@@ -40,11 +40,11 @@ int daObjWc_Obj05_c_Behavior(u8* thiz)
             if (self->unk_060 <= v) {
                 self->unk_060 = v;
                 {
-                    u8* p = (u8*)(((int)thiz + 0x32c) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* p = (u8*)(((int)thiz + 0x32c));
                     *p = *p + 1;
                 }
                 {
-                    u8* base = (u8*)(((int)thiz + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* base = (u8*)(((int)thiz + 0x300));
                     *(u16*)(base + 0x28) = 0;
                 }
             }
@@ -58,7 +58,7 @@ int daObjWc_Obj05_c_Behavior(u8* thiz)
                 *(unsigned*)(thiz + 0x324), 3, 0x8d, thiz + 0x74, 0);
             self->unk_324 = snd;
             {
-                int* p60 = (int*)(((int)thiz + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+                int* p60 = (int*)(((int)thiz + 0x60));
                 *p60 = *p60 + 0xa000;
             }
             if (self->unk_060 >= self->unk_320) {
@@ -66,12 +66,12 @@ int daObjWc_Obj05_c_Behavior(u8* thiz)
                 thiz[0x32c] = 0;
                 {
                     /* Different launder spelling so CSE does not reuse case-2 head base */
-                    u8* b2 = (u8*)(((int)thiz + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* b2 = (u8*)(((int)thiz + 0x300));
                     *(u16*)(b2 + 0x28) = 0;
                 }
             }
         } else {
-            u16* p = (u16*)(((int)thiz + 0x328) & 0xFFFFFFFFFFFFFFFFLL);
+            u16* p = (u16*)(((int)thiz + 0x328));
             *p = *p + 1;
         }
         break;

@@ -18,7 +18,7 @@ int daObjFl_Seesaw_c_Behavior(char* c) {
   func_020393a4((int*)(c+0x124), 0x650000);
   if (DecIfAbove0_Byte((unsigned char*)(c+0x320)) == 0) {
     int r1;
-    s16* a = (s16*)(((int)c + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+    s16* a = (s16*)(((int)c + 0x8c));
     *a += self->unk_31e;
     r1 = self->unk_08c;
     if (r1 >= 0x400 || r1 <= -0x400) {

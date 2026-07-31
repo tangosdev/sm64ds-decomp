@@ -18,9 +18,9 @@ int daPgDfdr_c_Behavior(char* c){
   _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
   func_ov027_02111cfc(c);
   if(_ZN6Player16IsInsideOfCannonEv(_ZN5Actor13ClosestPlayerEv(c))){
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~2;
+    *(int *)(((int)c + 0xb0)) &= ~2;
   } else {
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 2;
+    *(int *)(((int)c + 0xb0)) |= 2;
   }
   _ZN9Animation7AdvanceEv(c+0x370);
   _ZN9Animation7AdvanceEv(c+0x384);

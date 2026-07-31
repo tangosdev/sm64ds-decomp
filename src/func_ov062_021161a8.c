@@ -19,7 +19,7 @@ int func_ov062_021161a8(char *c)
   }
   if (_ZN9Animation8FinishedEv(c + 0x350))
   {
-    int *q = (int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL);
+    int *q = (int *)(((long long)(int)(c + 0x128)));
     *q &= ~2;
     Chuckya_ChangeState(c, data_ov062_0211ded0);
   }

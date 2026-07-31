@@ -14,7 +14,7 @@ extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 extern void func_ov060_02113260(void *c);
 }
 
-#define LAUND(p) ((void *)((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)))
+#define LAUND(p) ((void *)((((long long)(int)(p)))))
 
 extern "C" int func_ov060_02112ee0(void *cc)
 {

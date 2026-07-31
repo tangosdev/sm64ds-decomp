@@ -16,7 +16,7 @@ extern "C" int daObjHmBskt_c_Behavior(char *c) {
     _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
     self->unk_08e = self->unk_08e + self->unk_098;
     if (self->unk_09c != 0) {
-        *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) = *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) & ~1;
+        *(int *)(((int)c + 0xb0)) = *(int *)(((int)c + 0xb0)) & ~1;
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char*)0);
         func_ov030_0211124c(c, c+0x320);
         int a0 = self->unk_060;

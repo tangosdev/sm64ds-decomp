@@ -31,7 +31,7 @@ extern "C" void func_ov034_02111788(void *thiz)
             v.y = vp->y;
             v.z = vp->z;
             _ZN5Actor10PoofDustAtERK7Vector3(c, &v);
-            (*(unsigned char *)(((int)c + 0x8dd) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(unsigned char *)(((int)c + 0x8dd)))++;
             *(unsigned char *)(c + 0x8da) = 5;
         }
     }
@@ -56,7 +56,7 @@ extern "C" void func_ov034_02111788(void *thiz)
     if (b != 0) return;
 
     if (*(unsigned char *)(c + 0x8dc) < 5) {
-        (*(unsigned char *)(((int)c + 0x8dc) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(unsigned char *)(((int)c + 0x8dc)))++;
         return;
     }
 

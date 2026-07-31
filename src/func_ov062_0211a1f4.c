@@ -49,7 +49,7 @@ void func_ov062_0211a1f4(char *a)
     switch (*(u8 *)(a + 0x390)) {
     case 0:
         if (_ZN6Player12Unk_020c4f40Et(*(int *)(a + 0x398), 0x5a) != 0)
-            (*(u8 *)(((int)a + 0x390) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8 *)(((int)a + 0x390)))++;
         return;
     case 1:
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1f, 0x14, 0x7f, 0x6b000, 0);
@@ -59,7 +59,7 @@ void func_ov062_0211a1f4(char *a)
         func_02012694(0x4d, a + 0x74);
         _ZN5Sound22LoadAndSetMusic_Layer2Ej(0x41);
         *(u8 *)(a + 0x3b5) = 1;
-        (*(u8 *)(((int)a + 0x390) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8 *)(((int)a + 0x390)))++;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e014[1], 0x40000000, 0x1000, 0);
         data_ov002_02111184 = 1;
         _ZN5Timer10StartTimerEv(&data_0209d4c8);

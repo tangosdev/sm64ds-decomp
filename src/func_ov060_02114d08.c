@@ -31,20 +31,20 @@ void func_ov060_02114d08(char* self)
     if (*(unsigned char*)(self + 0x423) == 0) {
         *(short*)(self + 0x3fe) = 0;
         if (func_ov060_02115744(self) == 0) return;
-        (*(unsigned char*)(((int)self + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char*)(((int)self + 0x423)))++;
         return;
     }
     if (*(unsigned char*)(self + 0x423) <= 2) {
         if (func_ov060_02115718(self) == 0) return;
-        (*(u16*)(((int)self + 0x3fe) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u16*)(((int)self + 0x3fe)))++;
         if (*(int*)(self + 0x418) & 0x20000) {
             if (*(u16*)(self + 0x3fe) < 5) return;
-            *(int*)(((int)self + 0x418) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20000;
+            *(int*)(((int)self + 0x418)) &= ~0x20000;
             return;
         }
         if (r4 >= 0x2000) return;
         *(int*)(self + 0x12c) = 0;
-        (*(unsigned char*)(((int)self + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char*)(((int)self + 0x423)))++;
         *(short*)(self + 0x3fe) = 0;
         return;
     }

@@ -12,7 +12,7 @@ void func_ov060_02113564(char *c)
     *(int *)(c + 0x9c) = -0x2000;
     *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x408) + 0x8000);
     *(short *)(c + 0x3fe) = 0;
-    *(unsigned char *)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(unsigned char *)(((int)c + 0x423)) += 1;
     *(int *)(c + 0x364) = 0xb4000;
     func_02012694(0xb1, (void *)(c + 0x74), 0xb4000);
 }

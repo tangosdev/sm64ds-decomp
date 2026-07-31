@@ -69,7 +69,7 @@ extern "C" int func_ov062_0211c2f4(char *self) {
 arrived:
     *(int *)(self + 0x460) = 7;
     if (*(u8 *)(self + 0x448) == 2 || (u8)(s8)(data_0209f2f8 - 0x18) <= 1) {
-        (*(int *)(((int)self + 0x474) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(int *)(((int)self + 0x474)))++;
         if (*(int *)(self + 0x474) >= 4)
             *(int *)(self + 0x474) = 0;
     } else if (func_ov062_0211b3ac(self) == 0) {
@@ -77,7 +77,7 @@ arrived:
         if (*(int *)(self + 0x474) != r) {
             *(int *)(self + 0x474) = r;
         } else {
-            int *p = (int *)(((int)self + 0x474) & 0xFFFFFFFFFFFFFFFF);
+            int *p = (int *)(((int)self + 0x474));
             (*p)++;
             *p &= 3;
         }

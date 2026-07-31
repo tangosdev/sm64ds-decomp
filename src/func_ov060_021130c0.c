@@ -2,7 +2,7 @@ typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-#define LAUND(p) ((void*)((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)))
+#define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actorBase, int isTalk);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);

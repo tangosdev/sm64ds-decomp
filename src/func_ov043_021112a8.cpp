@@ -16,7 +16,7 @@ int daObjKm1_Ukishima_c_Behavior(char *c)
     struct daObjKm1_Ukishima_c *self = (struct daObjKm1_Ukishima_c *)(void *)c;
     if (!DecIfAbove0_Byte((unsigned char *)(c + 0x31e))) {
         self->unk_31e = 0x3c;
-        *(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) = *(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) + 0x4000;
+        *(short *)(((int)c + 0x94)) = *(short *)(((int)c + 0x94)) + 0x4000;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
     _ZN8Platform21UpdateModelPosAndRotYEv(c);

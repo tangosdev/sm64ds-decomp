@@ -46,7 +46,7 @@ void func_ov063_0211873c(char* self)
         return;
     }
     if (*(u16*)(self + 0x500 + 0xc4) == 0) {
-        int* p = (int*)(((long long)(int)(self + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p = (int*)(((long long)(int)(self + 0x19c)));
         *(u8*)(self + 0x5cc) = 6;
         *p |= 1;
         *(u8*)(self + 0x5c9) = 0;

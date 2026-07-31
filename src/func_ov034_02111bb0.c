@@ -7,12 +7,12 @@ void func_ov034_02111bb0(char *p) {
     *(int*)(p+0x8e4) = 0;
     for (i = 0; i < 5; i++) {
         SetAnim(anim, ((void**)data_ov034_021138b0[i])[1], 0x40000000, 0x1000, 0);
-        int *f = (int*)(((int)(p + (i<<6)) + 0x490) & 0xFFFFFFFFFFFFFFFF);
+        int *f = (int*)(((int)(p + (i<<6)) + 0x490));
         *f |= 4;
         anim += 0x64;
     }
     if (*(unsigned char*)(p+0x8db) > 1) {
-        unsigned char *q = (unsigned char*)(((int)p + 0x8db) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char *q = (unsigned char*)(((int)p + 0x8db));
         *q = *q - 1;
     }
 }

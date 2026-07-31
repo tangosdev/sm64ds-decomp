@@ -14,7 +14,7 @@ int func_ov060_02113404(char* c) {
   if (*(int*)(c+0x134) == *(int*)(data_ov060_0211ac60+4)) {
     char* base = *(char**)(c+0x3a0);
     if (base != 0) {
-      int* o = (int*)(((int)base + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+      int* o = (int*)(((int)base + 0x5c));
       struct Vector3 v;
       s16 ang;
       v.x = o[0];

@@ -16,7 +16,7 @@ extern "C" void func_ov062_02118de8(char *c)
         return;
     }
     if (_ZNK9Animation12WillHitFrameEi(c + 0x350, (unsigned short)(_ZNK9Animation13GetFrameCountEv(c + 0x350) - 1)) != 0) {
-        unsigned short *hp = (unsigned short*)(((int)c + 0x3c4) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *hp = (unsigned short*)(((int)c + 0x3c4));
         *hp += 1;
     } else {
         func_ov062_02118058(c);

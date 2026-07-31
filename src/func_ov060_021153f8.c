@@ -7,7 +7,7 @@ extern int func_ov060_021156ec(void *c);
 extern void func_ov060_02111cc0(char *c, int idx, int extra);
 extern void func_ov060_02115518(void *c);
 
-#define P423(c) ((u8 *)(((long long)(int)((c) + 0x423)) & 0xFFFFFFFFFFFFFFFFLL))
+#define P423(c) ((u8 *)(((long long)(int)((c) + 0x423))))
 
 void func_ov060_021153f8(char *c)
 {

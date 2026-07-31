@@ -77,7 +77,7 @@ player_path:
     {
         int vec[3];
         unsigned int n;
-        int *p = (int *)(((int)r5 + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)r5 + 0x5c));
         vec[0] = p[0];
         vec[1] = p[1];
         vec[2] = p[2];

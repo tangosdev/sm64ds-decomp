@@ -7,7 +7,7 @@ extern int _ZN5Actor14GetSubtractionEss(char *self, s16 a, s16 b);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *self);
 void func_ov060_02114b60(char *c)
 {
-  int *pflag = (int *) ((((int) c) + 0x378) & 0xFFFFFFFFFFFFFFFFLL);
+  int *pflag = (int *) ((((int) c) + 0x378));
   *pflag |= 1;
   switch (*((u8 *) (c + 0x423)))
   {
@@ -23,7 +23,7 @@ void func_ov060_02114b60(char *c)
       return;
     }
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       *((s16 *) (c + 0x8e)) = *((s16 *) (c + 0x406));
@@ -32,12 +32,12 @@ void func_ov060_02114b60(char *c)
     case 1:
     {
       int r4 = 0;
-      u16 *pd = (u16 *) ((((int) c) + 0x3fe) & 0xFFFFFFFFFFFFFFFFLL);
+      u16 *pd = (u16 *) ((((int) c) + 0x3fe));
       char *base3 = c + 0x300;
       int sub;
       u16 h = *pd;
       u16 h2 = *((u16 *) (base3 + 0xfe));
-      *((u16 *) ((((int) c) + 0x3fe) & 0xFFFFFFFFFFFFFFFFLL)) = h - 1;
+      *((u16 *) ((((int) c) + 0x3fe))) = h - 1;
       if (h2 != 0)
       {
         *((int *) (c + 0x98)) = 0x64000;

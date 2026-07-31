@@ -54,7 +54,7 @@ void func_ov060_02113740(char *c)
         _ZN13RaycastGroundD1Ev(&rc);
     }
 
-    *(int*)(((long long)(int)(c + 0x418)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x10000;
+    *(int*)(((long long)(int)(c + 0x418))) |= 0x10000;
 
     switch (*(u8*)(c + 0x423)) {
     case 0:
@@ -68,7 +68,7 @@ void func_ov060_02113740(char *c)
         *p8c += 0x800;
         *p90 += 0x800;
         if ((*(s16*)(c + 0x8c) & 0xffff) == 0)
-            (*(u8*)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)c + 0x423)))++;
         func_ov060_02113a94(c);
         return;
     }
@@ -82,7 +82,7 @@ void func_ov060_02113740(char *c)
             *(int*)(c + 0x9c) = 0;
             *(u8*)(c + 0x41d) = 0xff;
             *(s16*)(c + 0x3fe) = 0;
-            (*(u8*)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)c + 0x423)))++;
             return;
         }
         func_ov060_02113a94(c);
@@ -105,7 +105,7 @@ void func_ov060_02113740(char *c)
             }
         }
         if (func_ov060_021145d4(c)) {
-            (*(u8*)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(((int)c + 0x423)))++;
             if (hit == 0) {
                 func_ov060_02115b0c(c);
             } else {
@@ -129,7 +129,7 @@ void func_ov060_02113740(char *c)
     case 3:
         if (Bowser_IsAnimAtLastFrame(c) != 0) {
             *(int*)(c + 0x40c) = 0;
-            *(int*)(((int)c + 0x418) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10000;
+            *(int*)(((int)c + 0x418)) &= ~0x10000;
             *(int*)(c + 0x9c) = -0x2000;
         }
         return;

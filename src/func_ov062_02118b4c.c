@@ -26,7 +26,7 @@ void func_ov062_02118b4c(char *self) {
     }
 
     if (*(int *)(self + 0x3b8) >= 0x61a8000) {
-        *(s16 *)(((int)self + 0x3c0) & 0xFFFFFFFFFFFFFFFF) += 0x8000;
+        *(s16 *)(((int)self + 0x3c0)) += 0x8000;
         *(int *)(self + 0x3b8) = 0;
     }
     if (*(u16 *)(self + 0x100) > 0x1e && *(int *)(self + 0x3b8) > 0x320000) {

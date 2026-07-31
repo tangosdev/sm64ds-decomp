@@ -9,7 +9,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
 
 void daObjTtFuta_c_OnGroundPounded(char *self, char *other)
 {
-    int *v = (int *)(((int)other + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int *v = (int *)(((int)other + 0x5c));
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x28, v[0], v[1], v[2]);
     _ZN5Sound9PlayBank3EjRK7Vector3(0xf, self + 0x74);
     _ZN5Event6SetBitEj(0xe);

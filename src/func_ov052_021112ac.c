@@ -19,7 +19,7 @@ int daObjEmmLog_c_Behavior(char *c)
     int s = *(short*)((char*)data_02082214 + (idx << 2));
     int m = (int)(((long long)self->unk_324 * s + 0x800) >> 12);
     self->unk_060 = self->unk_320 + m;
-    short *q = (short*)(((int)c + 0x31e) & 0xFFFFFFFFFFFFFFFF);
+    short *q = (short*)(((int)c + 0x31e));
     *q = (short)(*q + 0x200);
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);

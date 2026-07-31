@@ -13,7 +13,7 @@ void func_ov060_02115060(char *c)
     {
       func_ov060_021150c4(c);
     }
-    (*((unsigned char *) ((((unsigned int) c) + 0x415) & 0xFFFFFFFFFFFFFFFF)))++;
+    (*((unsigned char *) ((((unsigned int) c) + 0x415))))++;
     return;
   }
   *((unsigned char *) (c + 0x415)) = 0;

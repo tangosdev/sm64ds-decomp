@@ -31,7 +31,7 @@ int func_ov032_02111830(char *c)
         }
     }
     if (*(int*)(c + 0x424) > 0 && *(int*)(c + 0x424) < 5) {
-        int *p424 = (int*)(((int)c + 0x424) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p424 = (int*)(((int)c + 0x424));
         (*p424)++;
         if (*(int*)(c + 0x424) == 4) {
 
@@ -95,8 +95,8 @@ afterblock: ;
                 *(s16*)(c + 0x400 + 0x2a) = 0x64;
                 *(s16*)(c + 0x400 + 0x30) = *(s16*)(c + 0x8e);
                 *(int*)(c + 0xb0) = 3;
-                *(int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
-                *(int*)(((int)c + 0x168) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+                *(int*)(((int)c + 0x128)) &= ~2;
+                *(int*)(((int)c + 0x168)) &= ~2;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x34c, data_ov032_02113a50[1], 0, 0x1000, 0);
                 func_ov032_02111ff4(c, &data_ov032_02113a8c);
                 return 1;

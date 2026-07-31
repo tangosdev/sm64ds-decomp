@@ -26,7 +26,7 @@ void func_ov062_02118588(char *c)
         }
     }
     if (match != 0) {
-        int *hp = (int *)(((long long)(int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *hp = (int *)(((long long)(int)(c + 0x98)));
         *(int *)(c + 0x390) = 0;
         *(int *)(c + 0x38c) = 4;
         *hp = *hp / 2;
@@ -40,7 +40,7 @@ void func_ov062_02118588(char *c)
 
     {
         if (*(unsigned short *)(c + 0x3c6) != 0) {
-            unsigned short *q = (unsigned short *)(((long long)(int)(c + 0x3c6)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned short *q = (unsigned short *)(((long long)(int)(c + 0x3c6)));
             char *p = c + 0x300;
             *q = (unsigned short)(*q - 1);
             if (*(unsigned short *)(p + 0xc6) != 0)

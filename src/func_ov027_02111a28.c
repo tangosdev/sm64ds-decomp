@@ -6,7 +6,7 @@ extern int data_ov027_02113c8c[];
 int func_ov027_02111a28(char* c) {
     int d = *(int*)(c+0x3d4);
     if (d == 0) {
-        unsigned char* p = (unsigned char*)(((int)c + 0x3d9) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char* p = (unsigned char*)(((int)c + 0x3d9));
         *p = *p + 1;
         if (*(unsigned char*)(c+0x3d9) >= 9) *(unsigned char*)(c+0x3d9) = 0;
         func_ov027_02111d70(c, 0);
@@ -18,7 +18,7 @@ int func_ov027_02111a28(char* c) {
             *(int*)(c+0x98) = d;
             *(int*)(c+0x3d4) = 0;
         } else {
-            int* q = (int*)(((int)c + 0x3d4) & 0xFFFFFFFFFFFFFFFF);
+            int* q = (int*)(((int)c + 0x3d4));
             *q = *q - v;
         }
     }

@@ -1,7 +1,7 @@
 typedef short s16;
 typedef unsigned short u16;
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, void* v, void* cb);

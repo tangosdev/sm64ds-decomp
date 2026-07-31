@@ -13,31 +13,31 @@ int daObjKm2_Agaru_c_Behavior(char *c)
     switch (self->unk_327) {
     case 0:
         if (self->unk_326 != 0)
-            *(unsigned char*)(((int)c + 0x327) & 0xFFFFFFFFFFFFFFFF) =
-                *(unsigned char*)(((int)c + 0x327) & 0xFFFFFFFFFFFFFFFF) + 1;
+            *(unsigned char*)(((int)c + 0x327)) =
+                *(unsigned char*)(((int)c + 0x327)) + 1;
         break;
     case 1:
         if (self->unk_324 >= 0x14) {
             int lim;
-            *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) =
-                *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) + 0xa000;
+            *(int*)(((int)c + 0x60)) =
+                *(int*)(((int)c + 0x60)) + 0xa000;
             lim = self->unk_320 + 0x5dc000;
             if (self->unk_060 >= lim) {
                 self->unk_060 = lim;
-                *(unsigned char*)(((int)c + 0x327) & 0xFFFFFFFFFFFFFFFF) =
-                    *(unsigned char*)(((int)c + 0x327) & 0xFFFFFFFFFFFFFFFF) + 1;
+                *(unsigned char*)(((int)c + 0x327)) =
+                    *(unsigned char*)(((int)c + 0x327)) + 1;
                 self->unk_324 = 0;
             }
         } else {
-            *(unsigned short*)(((int)c + 0x324) & 0xFFFFFFFFFFFFFFFF) =
-                *(unsigned short*)(((int)c + 0x324) & 0xFFFFFFFFFFFFFFFF) + 1;
+            *(unsigned short*)(((int)c + 0x324)) =
+                *(unsigned short*)(((int)c + 0x324)) + 1;
         }
         break;
     case 2:
         if (self->unk_324 >= 0x14) {
             int lim;
-            *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) =
-                *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) - 0xa000;
+            *(int*)(((int)c + 0x60)) =
+                *(int*)(((int)c + 0x60)) - 0xa000;
             lim = self->unk_320;
             if (self->unk_060 <= lim) {
                 self->unk_060 = lim;
@@ -45,8 +45,8 @@ int daObjKm2_Agaru_c_Behavior(char *c)
                 self->unk_324 = 0;
             }
         } else {
-            *(unsigned short*)(((int)c + 0x324) & 0xFFFFFFFFFFFFFFFF) =
-                *(unsigned short*)(((int)c + 0x324) & 0xFFFFFFFFFFFFFFFF) + 1;
+            *(unsigned short*)(((int)c + 0x324)) =
+                *(unsigned short*)(((int)c + 0x324)) + 1;
         }
         break;
     }

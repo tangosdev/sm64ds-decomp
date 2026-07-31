@@ -12,7 +12,7 @@ void func_ov063_02117650(char *self)
     struct Vector3 ppos;
     struct Vector3 npos;
     char *p;
-    int neg1 = (int)(-1LL & 0xffffffffffffffffLL);
+    int neg1 = (int)(-1LL);
 
     p = (char *)_ZN5Actor13ClosestPlayerEv();
     if (p == 0) {
@@ -20,7 +20,7 @@ void func_ov063_02117650(char *self)
     }
 
     {
-        int *pp = (int *)(((long long)(int)(p + 0x5c)) & 0xffffffffffffffffLL);
+        int *pp = (int *)(((long long)(int)(p + 0x5c)));
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];

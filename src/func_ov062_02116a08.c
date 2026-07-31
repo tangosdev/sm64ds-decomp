@@ -50,7 +50,7 @@
                 *(unsigned int *)(c + 0x3ec), 3, 0x18a, c + 0x74, 0);
 
         if (pl != 0 && *(unsigned short *)(c + 0x3e8) == 0) {
-            pos = (int *)(((int)pl + 0x5c) & 0xffffffffffffffffLL);
+            pos = (int *)(((int)pl + 0x5c));
             L.vd1[0] = pos[0];
             L.vd1[1] = pos[1];
             L.vd1[2] = pos[2];

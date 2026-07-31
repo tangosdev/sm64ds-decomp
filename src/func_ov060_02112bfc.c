@@ -34,7 +34,7 @@ void func_ov060_02112bfc(char* c){
         i += 1;
     }
     if (r6 != 0) {
-        short* q = (short*)(((int)found + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+        short* q = (short*)(((int)found + 0x8c));
         *(int*)(c + 0x40c) = 0;
         *(short*)(found + 0x31e) = 0;
         *(short*)(found + 0x320) = 0;

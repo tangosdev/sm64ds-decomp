@@ -26,21 +26,21 @@ int func_ov030_02112c14(void *arg0)
   s16 s;
   int mul = 0x4b000;
   int rnd = 0x800;
-  *((int *) ((int) (((s64) ((int) (c + 0xb0))) & 0xFFFFFFFFFFFFFFFFLL))) &= ~0x80000;
+  *((int *) ((int) (((s64) ((int) (c + 0xb0)))))) &= ~0x80000;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d08[1], 0x40000000, 0x1000, 0);
   *((int *) (c + 0x98)) = 0xa000;
   *((int *) (c + 0xa8)) = 0;
   other = *((u8 **) (c + 0x3a8));
-  pos = (int *) ((int) (((s64) ((int) (c + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL));
+  pos = (int *) ((int) (((s64) ((int) (c + 0x5c)))));
   s = *((s16 *) (other + 0x8e));
   *((s16 *) (c + 0x8e)) = s;
   s = *((s16 *) (c + 0x8e));
-  py = (int *) ((int) (((s64) ((int) (c + 0x60))) & 0xFFFFFFFFFFFFFFFFLL));
-  pz = (int *) ((int) (((s64) ((int) (c + 0x64))) & 0xFFFFFFFFFFFFFFFFLL));
+  py = (int *) ((int) (((s64) ((int) (c + 0x60)))));
+  pz = (int *) ((int) (((s64) ((int) (c + 0x64)))));
   *((s16 *) (c + 0x94)) = s;
   other = *((u8 **) (c + 0x3a8));
   {
-    int *op = (int *) ((int) (((s64) ((int) (other + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL));
+    int *op = (int *) ((int) (((s64) ((int) (other + 0x5c)))));
     int t0 = op[0];
     *((int *) (c + 0x5c)) = t0;
     int t1 = op[1];

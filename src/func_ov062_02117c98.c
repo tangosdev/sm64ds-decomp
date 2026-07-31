@@ -7,7 +7,7 @@ typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vec3;
 typedef struct { s16 x, y, z; } V16;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_020ada40(void* self, void* v, void* a, int f);
@@ -39,7 +39,7 @@ void func_ov062_02117c98(void* self)
         return;
 
     flags = *(s32*)(c + 0x130);
-    r5 = (int)(((long long)(int)0) & 0xFFFFFFFFFFFFFFFFLL);
+    r5 = (int)(((long long)(int)0));
 
     if (flags & 0x10) {
         V16 v;
@@ -90,7 +90,7 @@ void func_ov062_02117c98(void* self)
         struct { Vec3 sv; Vec3 hv; } L;
         int shell;
         shell = (*(u16*)(f + 0xc) == 0xbf) ? 1 : r5;
-        if ((int)(((long long)shell) & 0xFFFFFFFFFFFFFFFFLL) == 0)
+        if ((int)(((long long)shell)) == 0)
             goto tail;
         if (*(u8*)(f + 0x6f9) != 0) {
             if (*(s32*)(c + 0x390) == 0) {

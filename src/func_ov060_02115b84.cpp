@@ -12,11 +12,11 @@ extern "C" void func_ov060_02115b84(char* c) {
   int idx = *(int*)(c + 0x110);
   (((C*)c)->*data_ov060_0211ae9c[idx])();
   if (*(int*)(r5 + 0x40c) == 4) {
-    int* f = (int*)(((int)c + 0xec) & 0xFFFFFFFFFFFFFFFF);
+    int* f = (int*)(((int)c + 0xec));
     *f = *f | 1;
   }
   {
-    unsigned short* h = (unsigned short*)(((int)c + 0x114) & 0xFFFFFFFFFFFFFFFF);
+    unsigned short* h = (unsigned short*)(((int)c + 0x114));
     *h = *h + 1;
   }
   if (idx != *(int*)(c + 0x110)) {
