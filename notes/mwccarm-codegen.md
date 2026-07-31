@@ -2577,3 +2577,64 @@ the case and rotates r4/r5/r6 across an unrelated tail).
 which compiler produced it. This function sat at "12" for weeks because that was its 1.2
 score; it was 5 on b56 the whole time. Sweep `--all` before believing any row's number, and
 before calling anything a floor.
+
+## 6ar. A LICM-hoisted address local colors by its DECLARED TYPE, not by ordering (2026-07-31, func_02038824 MATCHED)
+
+Closing `func_02038824` (20 -> 0 on 2004/b56, and 25 -> 5 on the whole 1.2 line). The
+residual was one r4/r5 two-web swap plus a 9-word prologue schedule cluster that rides on
+it: ROM colors the hoisted `pos` (`self + 0x3c`) r5 and the shared distance-temp/flags web
+r4, and every plain spelling mirrors both.
+
+**The lever is the local's declared TYPE:**
+
+```c
+int pos = (int)self + 0x3c;              /* matches */
+...
+if (Vec3_Dist((void*)pos, &v) > r5 + limit) continue;
+```
+
+versus the natural `char *pos = self + 0x3c;`. This is NOT a cast-on-the-expression
+effect. Keeping a pointer local and moving the arithmetic inside it,
+`char *pos = (char *)((int)self + 0x3c);`, only reaches 12. The int-typed local is what
+flips the pair.
+
+**Why every ordering lever was inert.** `pos` is LICM-hoisted out of the loop, and a
+hoisted value's web is pinned to the rank of its ORIGINAL scope. It cannot be pushed below
+an in-loop temp by declaration order or scope depth. Callee-saved rank on this function
+otherwise tracks source order of first definition, descending (`limit` r8 > `i` r7 >
+`o` r6 > `pos` r5 > temp r4). When a two-web swap involves a loop-invariant that mwcc
+hoists, skip the ordering family entirely and go to the type of the carrying local.
+
+**Inert here (output bitwise identical at 20):** the entire 6y/6aq booster family on `pos`,
+on the temp, and on `flags`, at after-def and before-use placements; deeper scope for
+`pos`; the temp at loop scope after `sl`, as decl-with-initializer, and merged with `flags`
+(3 decl positions); `pos` declared after the temp's first assignment (the front end
+canonicalizes it away); `pos` retyped `struct Vec3 *`, `const char *`, `unsigned char *`;
+`&self[0x3c]` vs `self + 0x3c`.
+
+**Regressive:** `pos` at loop top or via a laundered loop-top copy (30); `pos` uninit at
+function scope assigned deep (38); `pos` at function top (39); temp at loop top before `o`
+(27); `opt_propagation off` (98). **Size-breaking (0x210 vs 0x214):** inlining
+`self + 0x3c` into the call, or a tight nested block around def and use, both of which lose
+the hoist.
+
+## 6as. TOOLING TRAP: mwccarm silently ignores unknown pragmas, so a typo reads as "inert"
+
+**Verified directly 2026-07-31.** Adding `#pragma zzz_not_a_real_pragma off` to a MATCHING
+source compiles clean, emits no diagnostic, and produces BYTE-IDENTICAL output -- the
+function still matches. A real pragma on the same source (`opt_propagation off`) moves 105
+words. mwccarm accepts any `#pragma <identifier>` and drops the ones it does not know.
+
+**Consequence:** every "pragma X is inert" line in this file is only evidence if X is a
+real mwccarm pragma. A misspelled or invented pragma name is indistinguishable from a
+genuinely inert one in a divergence sweep, and it will be recorded as a tried-and-failed
+lever that nobody re-tries.
+
+On `func_02038824` this bit a whole sweep: `scheduling`, `register_coloring`,
+`global_optimizer` and `peephole` all returned the baseline number and were logged as
+inert, but they were never actually tested. Only `optimize_for_size`, `optimization_level`,
+`opt_dead_code` and `opt_propagation` demonstrably moved the output on that shape.
+
+**How to apply:** before recording a pragma as inert, prove the compiler HONOURS it -- find
+one source shape where it changes the output at all. If it never moves anything anywhere,
+suspect the name before believing the negative.
