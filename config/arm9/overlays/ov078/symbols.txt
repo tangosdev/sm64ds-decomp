@@ -40,6 +40,7 @@ func_ov078_021259ec kind:function(arm,size=0x1dc) addr:0x021259ec
 func_ov078_02125bc8 kind:function(arm,size=0x5c) addr:0x02125bc8
 func_ov078_02125c24 kind:function(arm,size=0x24) addr:0x02125c24
 func_ov078_02125c48 kind:function(arm,size=0x50) addr:0x02125c48
+KingBobOmb_SetState kind:function(arm,size=0x50) addr:0x02125c48
 func_ov078_02125c98 kind:function(arm,size=0x148) addr:0x02125c98
 func_ov078_02125de0 kind:function(arm,size=0x1ac) addr:0x02125de0
 func_ov078_02125f8c kind:function(arm,size=0x68) addr:0x02125f8c

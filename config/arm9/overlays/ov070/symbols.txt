@@ -15,6 +15,7 @@ func_ov070_0211fd60 kind:function(arm,size=0x38) addr:0x0211fd60
 func_ov070_0211fd98 kind:function(arm,size=0x210) addr:0x0211fd98
 func_ov070_0211ffa8 kind:function(arm,size=0x78) addr:0x0211ffa8
 func_ov070_02120020 kind:function(arm,size=0x50) addr:0x02120020
+FlyGuy_ChangeState kind:function(arm,size=0x50) addr:0x02120020
 func_ov070_02120070 kind:function(arm,size=0xe0) addr:0x02120070
 _ZN6FlyGuy16CleanupResourcesEv kind:function(arm,size=0x6c) addr:0x02120150
 _ZN6FlyGuy16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021201bc

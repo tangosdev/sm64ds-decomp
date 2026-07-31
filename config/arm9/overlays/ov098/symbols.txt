@@ -27,6 +27,7 @@ func_ov098_021389cc kind:function(arm,size=0x2c) addr:0x021389cc
 func_ov098_021389f8 kind:function(arm,size=0x120) addr:0x021389f8
 func_ov098_02138b18 kind:function(arm,size=0x10) addr:0x02138b18
 func_ov098_02138b28 kind:function(arm,size=0x48) addr:0x02138b28
+Crate_SetState kind:function(arm,size=0x48) addr:0x02138b28
 func_ov098_02138b70 kind:function(arm,size=0x48) addr:0x02138b70
 func_ov098_02138bb8 kind:function(arm,size=0x44) addr:0x02138bb8
 func_ov098_02138bfc kind:function(arm,size=0xe4) addr:0x02138bfc

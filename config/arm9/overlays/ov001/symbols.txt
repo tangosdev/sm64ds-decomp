@@ -18,6 +18,7 @@ func_ov001_020ab3c4 kind:function(arm,size=0x2c) addr:0x020ab3c4
 func_ov001_020ab3f0 kind:function(arm,size=0x2c) addr:0x020ab3f0
 func_ov001_020ab41c kind:function(arm,size=0x34) addr:0x020ab41c
 func_ov001_020ab450 kind:function(arm,size=0xfc) addr:0x020ab450
+TouchArea_Update kind:function(arm,size=0xfc) addr:0x020ab450
 func_ov001_020ab54c kind:function(arm,size=0x4) addr:0x020ab54c
 func_ov001_020ab550 kind:function(arm,size=0x60) addr:0x020ab550
 func_ov001_020ab5b0 kind:function(arm,size=0x48) addr:0x020ab5b0

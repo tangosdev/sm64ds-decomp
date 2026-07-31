@@ -51,6 +51,7 @@ func_ov066_02119348 kind:function(arm,size=0x50) addr:0x02119348
 func_ov066_02119398 kind:function(arm,size=0xb4) addr:0x02119398
 func_ov066_0211944c kind:function(arm,size=0x8) addr:0x0211944c
 func_ov066_02119454 kind:function(arm,size=0x50) addr:0x02119454
+Eyerok_SetState kind:function(arm,size=0x50) addr:0x02119454
 func_ov066_021194a4 kind:function(arm,size=0x58) addr:0x021194a4
 func_ov066_021194fc kind:function(arm,size=0x158) addr:0x021194fc
 _ZN6Eyerok16CleanupResourcesEv kind:function(arm,size=0x14c) addr:0x02119654
