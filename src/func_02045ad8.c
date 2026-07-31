@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 gTexPlttCur;    /* 0x020a4bcc */
 extern u32 gTexPlttEnd;    /* 0x020a4bd8 */
 

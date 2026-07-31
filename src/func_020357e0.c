@@ -1,8 +1,7 @@
+#include "types.h"
 /* func_020357e0
  * Attempt 1: calls BgCh::StopDetectingWater on this+0x134 then this+0x20.
  */
-typedef unsigned int u32;
-
 struct BgCh { u32 _pad[1]; };
 
 extern void func_02035414(struct BgCh* self);

@@ -1,8 +1,6 @@
+#include "types.h"
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int savedState);
-
-typedef unsigned int u32;
-
 typedef struct {
     char pad[0xb50];
     u32 field_b50;

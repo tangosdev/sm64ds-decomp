@@ -1,7 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-
+#include "types.h"
 typedef struct SrcA {
     int f0, f4, f8, fc, f10;
     u16 f14, f16;

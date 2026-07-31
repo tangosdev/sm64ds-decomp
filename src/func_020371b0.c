@@ -1,6 +1,4 @@
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Actor {
     char pad[0xa4];
     int speed_x; /* 0xa4 */

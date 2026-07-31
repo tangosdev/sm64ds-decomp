@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct MatAnimComp { u8 pad0; u8 which; u16 base; };
 struct MatAnimEntry { u16 matIdx; u8 pad2[6]; struct MatAnimComp comp[13]; };
 struct Material { u8 pad0[0x24]; u32 polyAttr; u32 diffAmb; u32 specEmi; };

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct Sub Sub;
 struct Sub {
     char _pad[0x24];

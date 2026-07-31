@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 /* Hardware IO registers */
 static volatile u32 * const REG_IE = (volatile u32 *)0x04000210;
 static volatile u32 * const REG_IF = (volatile u32 *)0x04000214;

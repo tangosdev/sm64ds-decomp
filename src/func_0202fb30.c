@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void IRQ_DisableIRQs(u32 mask);
 extern int func_02053c10(int enable);
 extern void IRQ_SetIRQHandler(u32 irq, void *handler);

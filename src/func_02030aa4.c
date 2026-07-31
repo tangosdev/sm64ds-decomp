@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 extern void func_0203da2c(int v);
 extern void func_0203da4c(void);
 extern u8 data_0209fc5c[];

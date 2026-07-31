@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct InitArrays {
     int ptrs[0x10];
     int zeros1[0x10];

@@ -1,9 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
 extern int func_02054d88(void);
 extern void MultiCopy_Int(int *dst, int *src, int len);
 

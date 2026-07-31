@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int func_0203d9b4(void);
 extern int func_0203d950(int i);
 extern void func_02020214(unsigned int flags);
