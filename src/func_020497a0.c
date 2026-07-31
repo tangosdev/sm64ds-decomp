@@ -1,6 +1,4 @@
-typedef signed short s16;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct EchoChan {
     int l;
     int r;

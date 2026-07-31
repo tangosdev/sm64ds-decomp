@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern s32 RENDER_DMA_CHANNEL;
 
 void *_ZN2G212GetBG3ScrPtrEv(void);

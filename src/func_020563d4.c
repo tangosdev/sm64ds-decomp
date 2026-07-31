@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 gDmaChannel;
 
 extern void *_ZN2G212GetBG2ScrPtrEv(void);

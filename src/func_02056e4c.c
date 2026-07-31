@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct TimerIRQEntry {
     u32 handler;    /* +0 */
     u32 active;     /* +4 */

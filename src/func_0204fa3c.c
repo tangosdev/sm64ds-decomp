@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *func_020511d4(void *a, u32 elemSize, u32 p2, u32 p3, u32 p4);
 extern void *func_0205130c(unsigned int addr, unsigned int size);
 extern void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void *iter, void *alloc);

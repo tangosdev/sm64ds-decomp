@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern u16 data_020a6088[];
 
 void func_02053d9c(void)

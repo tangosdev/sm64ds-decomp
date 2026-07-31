@@ -1,9 +1,4 @@
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 typedef struct {

@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_02049f58 at 0x02049f58
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern void func_0204a730(void* o, void* n);
 extern int func_0204d8e8(void* p, void* n);
 extern void func_0204d9a0(void* p, int v);

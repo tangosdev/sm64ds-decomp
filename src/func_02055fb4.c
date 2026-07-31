@@ -1,9 +1,7 @@
+#include "types.h"
 /* func_02055fb4 at 0x02055fb4 (likely _ZN3GXS11LoadBG3CharEPKvjj)
  * Loads BG3 char data using DMA if a channel is assigned, else CPU copy.
  */
-
-typedef unsigned int u32;
-
 extern u32 RENDER_DMA_CHANNEL;
 
 extern void *_ZN3G2S13GetBG3CharPtrEv(void);

@@ -1,8 +1,6 @@
+#include "types.h"
 /* func_02054118 @ 0x02054118 -- clear BG ext-palette enable bit in sub-engine
  * DISPCNT, then unmap the VRAM bank back to LCDC via func_020541b8. */
-typedef unsigned short u16;
-typedef volatile unsigned long vu32;
-
 extern u16 func_020541b8(u16 *bankBitsPtr);
 extern u16 data_020a609e;
 

@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol func_0204ae2c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-
 struct H2 { u16 a, b; };
 
 struct Src {

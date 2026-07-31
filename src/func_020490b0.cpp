@@ -1,9 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-
-typedef int s32;
-typedef unsigned short u16;
-
 extern s32 data_020a4c5c[];
 extern s32 data_020a4c4c[];
 extern u16 data_020a4c48[];

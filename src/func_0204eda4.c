@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 struct Pair { void* a; u32 idx; };
 
 extern int func_0205d568(int r0, struct Pair p);

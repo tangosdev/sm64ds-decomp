@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef signed int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct SolidHeapWithIter {
     void* allocator;       // 0x00
     void* nhi_first;       // 0x04

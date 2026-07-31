@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_0204d9f0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
@@ -6,13 +7,6 @@
 /* func_0204d9f0 at 0x0204d9f0, size=0x5c
  * LCG RNG: generates 2 random values for x,y (z=0), normalizes the vector.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
-
-
-
 extern void NormalizeVec3(const struct Vector3* src, struct Vector3* dst);
 
 void func_0204d9f0(struct Vector3* out)

@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Elem { u8 pad0[4]; u16 f4; u8 pad6[2]; u8 f8; u8 f9; };
 
 extern int *func_02050c14(u32 id);

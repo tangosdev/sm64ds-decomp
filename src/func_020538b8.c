@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_020538b8 at 0x020538b8
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef int s32;
-typedef short s16;
-typedef unsigned short u16;
-
 extern s32 _ZN4cstd4fdivEii(s32 numerator, s32 denominator);
 extern s16 data_02086214[];
 

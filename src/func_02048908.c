@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_02048908 at 0x02048908
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern int data_02099fa8;
 extern int data_02099fac;
 extern u16 data_02099fa4;
