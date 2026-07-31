@@ -3,22 +3,20 @@
  * starts a word copy, then waits again until completion.
  */
 
-typedef unsigned int u32;
-typedef unsigned char u8;
+#include "nitro/hw/registers.h"
 
 extern void DMAStartTransferFB(u8 channel, u32 src, u32 dest, u32 ctrl);
-
-static volatile u32* const DMA_BASE = (volatile u32*)0x040000b0;
 
 void DMASyncWordTransfer(u8 channel, u32 src, u32 dest, u32 len)
 {
     volatile u32 *cnt;
     if (len == 0)
         return;
-    cnt = DMA_BASE + (channel * 3 + 2);
-    while (*cnt & 0x80000000)
+    cnt = REG_DMA_CNT_PTR(channel);
+    while (*cnt & DMA_CONTROL_ENABLE)
         ;
-    DMAStartTransferFB(channel, src, dest, (len >> 2) | 0x84000000);
-    while (*cnt & 0x80000000)
+    DMAStartTransferFB(channel, src, dest,
+                       (len >> 2) | DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT);
+    while (*cnt & DMA_CONTROL_ENABLE)
         ;
 }

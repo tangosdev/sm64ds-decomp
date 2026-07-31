@@ -1,13 +1,5 @@
 //cpp
-typedef int Fix12i;
-
-struct Vector3 {
-    Fix12i x, y, z;
-};
-
-struct Matrix4x3 {
-    Fix12i m[12];
-};
+#include "math/Matrix.hpp"
 
 extern "C" void NormalizeVec3(Vector3 *v, Vector3 *out);
 extern "C" void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);

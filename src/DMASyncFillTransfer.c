@@ -14,7 +14,8 @@
  * entry exactly like the ROM).
  */
 
-typedef unsigned int u32;
+#include "nitro/hw/registers.h"
+
 typedef volatile u32 vu32;
 
 extern void DMAStartTransferFB(u32 channel, void *src, void *dst, u32 cnt);
@@ -23,21 +24,21 @@ void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size)
 {
     vu32 *dmaCtrl;
     vu32 *fillReg;
-    u32 *dmaBase;
 
     if (size == 0)
         return;
 
-    dmaBase = (u32 *)0x040000b0;
-    dmaCtrl = (vu32 *)dmaBase + (channel * 3 + 2);
+    dmaCtrl = REG_DMA_CNT_PTR(channel);
 
-    while (*dmaCtrl & 0x80000000)
+    while (*dmaCtrl & DMA_CONTROL_ENABLE)
         ;
 
-    fillReg = (vu32 *)(((u32)0x040000e0 + (channel << 2)) & 0xFFFFFFFFFFFFFFFF);
+    fillReg = (vu32 *)(REG_DMA_FILL_ADDR(channel) & 0xFFFFFFFFFFFFFFFF);
     *fillReg = data;
-    DMAStartTransferFB(channel, (void *)fillReg, dst, (size >> 2) | 0x85000000);
+    DMAStartTransferFB(channel, (void *)fillReg, dst,
+                       (size >> 2) | DMA_CONTROL_ENABLE |
+                           DMA_CONTROL_32_BIT | DMA_CONTROL_SRC_FIXED);
 
-    while (*dmaCtrl & 0x80000000)
+    while (*dmaCtrl & DMA_CONTROL_ENABLE)
         ;
 }
