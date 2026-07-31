@@ -2462,3 +2462,18 @@ void func_02071644(void *obj, int len) {   /* decimal digit-string increment w/ 
 `bx lr` is byte 0x50-0x53.) Rule: when a tiny symbol is a bare epilogue, a lone `bx lr`, or
 a catch-island shape (starts mid-frame, uses fp/r4-r7 it never set), check whether the
 PREVIOUS symbol's compiled form simply extends over it before believing any floor label.
+
+## 6an. Signedness is a coloring lever separable from condition codes (2026-07-30, GX::LoadTex)
+
+GX::LoadTex sat at div=16 as a pure r4/r5 web-identity swap (`base`->r4/`top`->r5 vs the
+ROM's r5/r4) with both locals typed `unsigned int`. Retyping BOTH as plain `int` flips the
+allocator's rank assignment and lands the ROM's coloring (16->7). Signed vs unsigned is a
+RANK input like the local's width (6al): int and unsigned int locals do not rank equally.
+
+The catch and the second half of the lever: the retype drags the COMPARISONS signed
+(`lt/ge` where the ROM has `lo/hs`, 7 residual divs). Do NOT fix that with `(int)` casts
+on the operands - fix it by leaving the comparisons in mixed signed/unsigned form so C's
+usual arithmetic conversions promote them back to unsigned (`int top` vs `unsigned offset`
+compares unsigned, emitting lo/hs) while the LOCALS keep their signed rank. Coloring reads
+the declared type; the condition code reads the promoted comparison type. The two are
+independently steerable (7->0, byte-identical, 1.2/sp2p3).
