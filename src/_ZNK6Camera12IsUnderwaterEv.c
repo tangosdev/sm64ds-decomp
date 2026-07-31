@@ -1,10 +1,8 @@
+#include "types.h"
 /* Camera::IsUnderwater() const at 0x0200d890
  * Returns the IS_UNDERWATER (1<<0) bit of the camera flags word (@0x154).
  * Keeps the masked value (`flags & 1`) exactly as the original returns it.
  */
-
-typedef unsigned int u32;
-
 enum CameraFlags {
     IS_UNDERWATER = 1 << 0,
 };

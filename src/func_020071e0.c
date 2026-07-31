@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 extern void ApproachLinear(int *val, int target, int step);

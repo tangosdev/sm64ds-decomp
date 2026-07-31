@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol _ZN8SaveData13GetCoinRecordEj
 /* recovered: named members + shared header */
 #include "SaveData.h"
@@ -10,10 +11,6 @@
  * symbol is not yet in symbols.txt (wildcard pooled-global reloc, so this
  * extern name is not byte-verified). Kept as a named u8[] over data_0209cad2.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 extern u8 SAVE_DATA_COIN_RECORDS[]; /* &SAVE_DATA.coinRecords[0], 0x0209cad2 */
 
 u8 _ZN8SaveData13GetCoinRecordEj(u32 courseID)

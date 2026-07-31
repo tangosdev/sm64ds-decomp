@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct FileSaveData { int _00; int _04; };
 
 extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(void* data, u32 size, u32 count);

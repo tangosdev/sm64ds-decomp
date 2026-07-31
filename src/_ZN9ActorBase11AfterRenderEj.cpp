@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9ActorBase11AfterRenderEj
 /* recovered: named members + shared header, real C++ method */
 #include "ActorBase.h"
@@ -6,9 +7,6 @@
  * Post-render hook; vfSuccess is the VirtualFuncSuccess code from Render().
  * Base ActorBase does nothing; leaf classes override.
  */
-
-typedef unsigned int u32;
-
 struct ActorBase;
 
 void ActorBase::AfterRender(unsigned int vfSuccess_)

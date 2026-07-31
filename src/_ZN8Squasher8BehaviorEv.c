@@ -1,7 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Vec3 { int x, y, z; };
 
 extern int _ZN5Actor13DistToCPlayerEv(char *self);

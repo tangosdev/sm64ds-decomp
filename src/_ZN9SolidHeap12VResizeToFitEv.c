@@ -1,7 +1,5 @@
+#include "types.h"
 /* SolidHeap::VResizeToFit at 0x0203c33c */
-
-typedef unsigned int u32;
-
 struct Heap {
     void* vtable;
     void* heapStart;

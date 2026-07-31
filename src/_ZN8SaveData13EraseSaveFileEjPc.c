@@ -1,12 +1,8 @@
+#include "types.h"
 /* _ZN8SaveData13EraseSaveFileEjPc at 0x02013cd4
  * Erases a save file slot by writing defaults then saving to cart.
  * Returns 1 on success, 0 on failure.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef char s8;
-
 struct FileSaveData { char data[0x44]; };
 
 extern void _ZN8SaveData16SetDefaultValuesEP12FileSaveData(struct FileSaveData* data);

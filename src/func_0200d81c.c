@@ -1,9 +1,7 @@
+#include "types.h"
 /* func_0200d81c at 0x0200d81c
  * Camera method: if playerID == CURR_PLAYER_ID, call Camera::ChangeState(state).
  */
-
-typedef unsigned char u8;
-
 struct Camera_State;
 struct Camera;
 

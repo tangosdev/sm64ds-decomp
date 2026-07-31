@@ -1,7 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 class C;
 typedef int (C::*PMF)();
 

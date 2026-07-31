@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
+#include "types.h"
 extern s32 ApproachAngle(s16 *target, s16 from, s16 start, s16 speed, s16 max);
 extern void func_02009e70(void *self);
 typedef struct CameraDef CameraDef;

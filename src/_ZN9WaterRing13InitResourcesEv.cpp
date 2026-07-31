@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9WaterRing13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WaterRing.h"
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
-
 struct Actor;
 struct BMD_File;
 struct BTA_File;

@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_02005a58
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -24,10 +25,6 @@ extern char data_0208ee44;
 extern char data_0209f5e8;
 extern void func_0201a2f8(void);
 extern unsigned char data_0209f1e8;
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 int dScBoot_c_InitResources(char* c)
 {
     struct dScBoot_c *self = (struct dScBoot_c *)(void *)c;

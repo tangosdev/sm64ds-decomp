@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol _ZN8SaveData19IsCharacterUnlockedEj
 /* recovered: named members + shared header */
 #include "SaveData.h"
@@ -11,10 +12,6 @@
  * reloc, name not byte-verified). The [2] index and `1 << n` shift are
  * load-bearing.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 extern s32 SAVE_DATA[]; /* &SAVE_DATA as s32[]; [2] == flags2, base 0x0209caa0 */
 
 s32 _ZN8SaveData19IsCharacterUnlockedEj(u32 character)

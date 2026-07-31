@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9OneUpLogo6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "OneUpLogo.h"
-typedef unsigned short u16;
-
 struct VObj {
     virtual void f0();
     virtual void f1();

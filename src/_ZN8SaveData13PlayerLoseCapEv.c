@@ -1,10 +1,7 @@
+#include "types.h"
 /* _ZN8SaveData13PlayerLoseCapEv at 0x02013ad4
  * SaveData::PlayerLoseCap - sets 0x1000000 << currentCharacter bit in flags1.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct SaveData {
     u32 magic8000;
     u32 flags1;

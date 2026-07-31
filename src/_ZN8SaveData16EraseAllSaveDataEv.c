@@ -1,13 +1,10 @@
+#include "types.h"
 /* _ZN8SaveData16EraseAllSaveDataEv at 0x02013e0c
  * Erases all three save files and resets minigame data.
  * Returns OR of all operation results (0 = all succeeded).
  */
 
 extern unsigned char SAVE_DATA[];
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 extern u32 _ZN8SaveData13EraseSaveFileEjPc(u32 fileID, char *saveArea);
 extern void _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData(void *mgData);
 extern u32 _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(void *mgData);

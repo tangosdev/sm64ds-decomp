@@ -1,10 +1,7 @@
+#include "types.h"
 /* _ZN8SaveData15SaveCurrentFileEv at 0x02013b9c
  * Saves the current file and minigame data.
  */
-
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 struct MinigameSaveData { char data[0x2e4]; };
 
 extern u8 SAVE_DATA[];               /* 0x0209caa0 */

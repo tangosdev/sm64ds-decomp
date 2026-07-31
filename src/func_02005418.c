@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_02005418
 // @emits dScBoot_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -6,10 +7,6 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScBoot_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern u8 data_0209f5bc[];
 
 extern u8 data_0209f1e8;

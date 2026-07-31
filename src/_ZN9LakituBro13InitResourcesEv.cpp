@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9LakituBro13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "LakituBro.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int Fix12;
-
 struct SharedFilePtr { int f0; void* f4; };
 struct BMD_File; struct BTP_File; struct BCA_File;
 struct ModelBase {};

@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9FaderWipe11AdvanceFadeEv
 /* recovered: named members + shared header, real C++ method */
 #include "FaderWipe.h"
-typedef unsigned short u16;
-typedef int Fix12i;
-
 void _ZN5Fader13AdvanceInterpEv(void* thiz);
 void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16* p, u16 a, int b);
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);

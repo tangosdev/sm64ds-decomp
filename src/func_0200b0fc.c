@@ -1,16 +1,10 @@
+#include "types.h"
 // @symbol func_0200b0fc
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, struct Vector3 *out, unsigned int idx);

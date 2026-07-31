@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct Heap {
     char pad0[4];
     int field4;     /* 0x4 */

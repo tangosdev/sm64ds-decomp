@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8SaveData14SaveDataToCartEPcjj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "SaveData.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern "C" {
     int func_0203da3c(void);
     int func_0206045c(void);

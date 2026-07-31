@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9ActorBase14BeforeBehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "ActorBase.h"
-typedef unsigned char u8;
-
 int ActorBase::BeforeBehavior()
 {
   if(mMarkedForDestruction!=0) goto ret0;
