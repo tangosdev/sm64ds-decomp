@@ -1,7 +1,5 @@
+#include "types.h"
 // Actor::FindEgg - find the egg actor that hit us
-
-typedef unsigned int u32;
-
 struct CylinderClsn {
     void* vtable;
     int radius;

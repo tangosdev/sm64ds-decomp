@@ -1,10 +1,7 @@
+#include "types.h"
 // Heap::InitializeGameHeap(u32 size, Heap* root)
 // Address: 0x0203c24c
 // Creates an ExpandingHeap and stores it to Memory::gameHeapPtr
-
-typedef unsigned int u32;
-typedef int s32;
-
 struct Heap {
     void* heapStart;
     u32   heapSize;

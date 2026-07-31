@@ -1,10 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Enemy12KillByAttackER5Actor
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Enemy.h"
-typedef unsigned short u16;
 extern "C" void _ZN5Enemy12KillByAttackER5Actor(void *self, void *actor, void *c2, void *c3)
 {
     void *r8 = self;

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 GXi_DmaId;  /* RENDER_DMA_CHANNEL: 0x02099fd0 */
 extern u32 GXi_SavedTexPlttBankB; /* 0x020a60b4 */
 extern u32 GXi_SavedTexPlttBankA; /* 0x020a60b0 */

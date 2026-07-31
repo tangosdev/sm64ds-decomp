@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void* data_02099fe4;
 extern char data_020a60c4[];
 void* _ZN3IRQ13GetIRQHandlerEj(u32 mask){

@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 struct Matrix2x2 { int m[4]; };
 
 extern "C" {

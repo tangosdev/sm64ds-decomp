@@ -1,6 +1,4 @@
-typedef int s32;
-typedef unsigned char u8;
-
+#include "types.h"
 int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char *self, char *clsn, char *player)
 {
     volatile s32 pad[4];

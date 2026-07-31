@@ -1,8 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct VObj {
     virtual void v0();
     virtual void v1();

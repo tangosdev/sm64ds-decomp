@@ -1,7 +1,5 @@
 //cpp
-typedef long long s64;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct {
     int head[4];         /* 0x00 */
     char result[0x60];   /* 0x10 */

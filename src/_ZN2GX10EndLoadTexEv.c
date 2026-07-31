@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern s32 RENDER_DMA_CHANNEL;    /* 0x02099fd0 */
 extern u32 GX_texBank;            /* 0x020a60b8 */
 extern u32 GX_texSlotA;           /* 0x020a60ac */

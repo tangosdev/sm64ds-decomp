@@ -1,3 +1,4 @@
+#include "types.h"
 /* GX::LoadTexPltt at 0x02056924
  * Loads a texture palette into VRAM. If a DMA channel is configured
  * (RENDER_DMA_CHANNEL != -1), uses async DMA; otherwise uses MultiCopy_Int.
@@ -9,10 +10,6 @@
  * Unknown callee at 0x02059fd0 is a DMA transfer function:
  *   func_02059fd0(dmaChannel, src, dest, size, 0, 0)
  */
-
-typedef unsigned int u32;
-typedef int s32;
-
 extern u32 GX_texPlttSlotBase;   /* 0x020a60b0: palette VRAM base address */
 extern s32 RENDER_DMA_CHANNEL;   /* 0x02099fd0: DMA channel (-1 if none) */
 

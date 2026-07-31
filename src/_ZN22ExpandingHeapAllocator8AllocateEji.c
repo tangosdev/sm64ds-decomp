@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef signed int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void* _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(void* self, u32 size, u32 align);
 extern void* _ZN22ExpandingHeapAllocator16AllocateForwardsEjj(void* self, u32 size, u32 align);
 

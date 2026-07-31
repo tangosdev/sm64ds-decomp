@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 struct VramReg { u16 w0; u16 pad[9]; u16 f14; };
 extern struct VramReg gVramReg;
 extern void Vram__Map(u16 bits);

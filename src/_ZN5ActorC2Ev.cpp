@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5ActorC2Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Actor.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
 extern "C" {
 extern int data_0208e4b8;
 extern int data_0208e3a4;

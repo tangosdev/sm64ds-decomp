@@ -1,5 +1,4 @@
-
-typedef unsigned short u16;
+#include "types.h"
 struct VramReg
 {
   u16 w0;

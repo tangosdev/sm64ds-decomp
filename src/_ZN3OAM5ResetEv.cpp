@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" {
 void MultiCopy_Int(int *dst, int *src, int len);
 void MultiCopy32Bytes(int *src, int *dst, int len);

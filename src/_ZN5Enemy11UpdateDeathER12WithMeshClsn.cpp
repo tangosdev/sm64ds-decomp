@@ -1,10 +1,10 @@
 //cpp
+#include "types.h"
 struct WithMeshClsn;
 struct Enemy;
 typedef int (Enemy::*PMF)(WithMeshClsn&);
 extern PMF data_ov002_0210dbc0[];
 extern "C" {
-typedef unsigned int u32;
 extern void DecIfAbove0_Short(short *p);
 extern int _ZN5Actor9UpdatePosEP12CylinderClsn(Enemy *thiz, void *clsn);
 extern int _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *clsn, u32 sel);

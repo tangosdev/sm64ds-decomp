@@ -1,9 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int s32;
-
+#include "types.h"
 /* DMA transfer function for GX (nitroSDK internal) */
 extern void FUN_02059fd0(u32 dmaId, const void* src, void* dst, u32 size, u32 unk0, u32 unk1);
 extern void MultiCopy_Int(const void* src, void* dst, u32 count);

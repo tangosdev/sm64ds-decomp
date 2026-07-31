@@ -1,9 +1,7 @@
+#include "types.h"
 // Actor::MakeVanishLuigiWork(CylinderClsn&): clears bit 1 of the cylinder's
 // flags (+0x18), then re-sets it if the closest player has +0x6fb set
 // (vanish-cap state). Callee: _ZN5Actor13ClosestPlayerEv @ 0x02010ad8.
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 
 void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, char *clsn)

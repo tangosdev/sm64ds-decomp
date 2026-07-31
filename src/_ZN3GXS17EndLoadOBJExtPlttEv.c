@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern u32 GXi_DmaId;  /* RENDER_DMA_CHANNEL: 0x02099fd0 */
 extern u32 GXi_SavedSubOBJExtPlttBank; /* saved bank: 0x020a60a8 */
 
