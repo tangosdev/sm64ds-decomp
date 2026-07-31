@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov073_02122200
+// @emits ChiefChilly_Kill
+/* recovered: renamed to Class_Method */
+/* daKing_Donketu_c::Kill - recovered from vtable slot identity */
 typedef short s16;
 struct CylinderClsn;
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, CylinderClsn* c);
@@ -8,7 +12,7 @@ extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* a);
 extern int data_02092138;
 
-extern "C" int func_ov073_02122200(char* thiz)
+extern "C" int ChiefChilly_Kill(char* thiz)
 {
     char* c = thiz;
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);

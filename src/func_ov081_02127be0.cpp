@@ -1,9 +1,12 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { unsigned short x, y, z; };
+// @symbol func_ov081_02127be0
+/* recovered: shared common types */
+#include "common.h"
+
+struct Vector3_16_local { unsigned short x, y, z; };
 struct ActorBase { void MarkForDestruction(); };
 struct Actor {
-    static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16* v16, int e, int f);
+    static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16_local* v16, int e, int f);
 };
 
 extern "C" void func_ov081_02127be0(char* c)
@@ -20,7 +23,7 @@ extern "C" void func_ov081_02127be0(char* c)
     pos.z = src->z;
 
     char* o2 = *(char**)(c + 0x364);
-    Vector3_16 rot;
+    Vector3_16_local rot;
     {
         int b = *(unsigned short*)(o2 + 0x8e);
         int a = *(unsigned short*)(o2 + 0x8c);

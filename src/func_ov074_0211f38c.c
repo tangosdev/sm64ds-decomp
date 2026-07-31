@@ -1,16 +1,20 @@
+// @symbol func_ov074_0211f38c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef long long s64;
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
+
+
 extern u16 DecIfAbove0_Short(u16* p);
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern s16 data_02082214[];
-extern u8 data_ov074_02122d80[];
 
 int func_ov074_0211f38c(u8* c){
     struct Vector3 p0, p1;
@@ -53,7 +57,7 @@ int func_ov074_0211f38c(u8* c){
         ang.x=Vec3_VertAngle(&p1, &p0);
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);
         {
-            u8* pc=(u8*)(((long long)(int)(c+0x602))&0xFFFFFFFFFFFFFFFFLL);
+            u8* pc=(u8*)(((long long)(int)(c+0x602)));
             *pc+=1;
         }
         *(short*)((c+0x500)+0xfc)=2;

@@ -1,4 +1,12 @@
 //cpp
+// @symbol func_ov075_0211a410
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScEntry_c.h"
+// @emits dScEntry_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScEntry_c::InitResources - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -36,22 +44,19 @@ extern "C" {
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern void* data_0209b2e8;
 extern u8 data_020a0e40;
 extern u8 data_0209f4ae[];
-extern void* data_ov075_0211d71c;
 extern void* data_0209d4a8;
-extern u8 data_0209b2f0[];
 extern s32 data_0208ee44;
-extern u8 data_02092778;
 
-extern "C" int func_ov075_0211a410(char* c)
+extern "C" int dScEntry_c_InitResources(char* c)
 {
+    struct dScEntry_c *self = (struct dScEntry_c *)(void *)c;
     Enable3dEngines();
     func_0200f2cc();
 
     {
-        int b = (*(u16*)(c + 0xc) == 7);
+        int b = (self->unk_00c == 7);
         if (b || *(s32*)(c + 8) != 0 || func_0203d9b4() != 0) {
             LoadTextNarcs();
             LoadArchive(0);
@@ -87,19 +92,19 @@ extern "C" int func_ov075_0211a410(char* c)
     SetSubBg3Offset(0, 0);
     data_0209d454 = 0x18;
 
-    *(u8*)(c + 0x283) = 0;
-    *(u8*)(c + 0x284) = 0;
-    *(u8*)(c + 0x285) = 0;
+    self->unk_283 = 0;
+    self->unk_284 = 0;
+    self->unk_285 = 0;
 
     if (data_0209b2e8 != 0) {
         Deallocate(data_0209b2e8);
         data_0209b2e8 = 0;
     }
-    *(u8*)(c + 0x287) = 0;
+    self->unk_287 = 0;
     LoadFont3D();
 
     {
-        int b6 = (*(u16*)(c + 0xc) == 6);
+        int b6 = (self->unk_00c == 6);
         if (b6) {
             func_ov075_02116ad4(c);
             if (*(s32*)(c + 8) == 0) {
@@ -123,7 +128,7 @@ extern "C" int func_ov075_0211a410(char* c)
     _ZN5Sound16LoadInitialGroupEi(0x2b);
 
     {
-        int b6b = (*(u16*)(c + 0xc) == 6);
+        int b6b = (self->unk_00c == 6);
         if (b6b) {
             if (*(u32*)(c + 8) < 2) {
                 _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4c);

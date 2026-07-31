@@ -1,22 +1,19 @@
+// @symbol func_ov085_0212b4b4
+// @emits PrincessPeach_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daPeach_c::Kill - recovered from vtable slot identity */
 
 typedef int s32;
 typedef short s16;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
-typedef struct 
-{
-  s32 x;
-  s32 y;
-  s32 z;
-} Vector3;
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void func_ov085_0212bc78(void *c, void *p);
-extern int func_ov085_0212a788(void *c);
 extern void func_02012694(int a, void *b);
-extern void func_02022a4c(s32 x, s32 y, s32 z);
-extern int func_02022cbc(int a, int b, s32 x, s32 y, s32 z, int f);
 extern void _ZN7PathPtrC1Ev(void *);
 extern void _ZN7PathPtr6FromIDEj(void *, u32);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *, Vector3 *, u32);
@@ -27,10 +24,8 @@ extern s32 LenVec3(const Vector3 *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int AngleDiff(int a, int b);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
-extern char data_ov085_0213069c[];
-int func_ov085_0212b4b4(char *c)
+int PrincessPeach_Kill(char *c)
 {
   void *pl;
   char pathptr[8];
@@ -119,7 +114,7 @@ int func_ov085_0212b4b4(char *c)
     *((s32 *) (c + 0x60)) = node.y;
     *((s32 *) (c + 0x64)) = node.z;
     {
-      s32 *p = (s32 *) ((int) (((long long) ((int) (c + 0x448))) & 0xFFFFFFFFFFFFFFFFLL));
+      s32 *p = (s32 *) ((int) (((long long) ((int) (c + 0x448)))));
       *p = (*p) + (*((s32 *) (c + 0x44c)));
     }
     if ((*((s32 *) (c + 0x448))) >= (*((s32 *) (c + 0x444))))

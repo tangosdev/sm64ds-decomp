@@ -1,6 +1,9 @@
+// @symbol func_ov081_0212423c
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct Vector3 { int x, y, z; };
+
 
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;

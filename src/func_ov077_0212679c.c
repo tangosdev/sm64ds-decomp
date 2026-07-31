@@ -1,5 +1,8 @@
-struct Vec3 { int x, y, z; };
-
+// @symbol func_ov077_0212679c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
@@ -8,14 +11,12 @@ extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRsss(short *r, short a, short b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
-extern int __aeabi_idiv(int a, int b);
-extern char data_ov077_02127d18[];
 extern char data_ov077_02127cf8[];
 
 int func_ov077_0212679c(char *c)
 {
-    struct Vec3 pv;
-    struct Vec3 *pp;
+    struct Vector3 pv;
+    struct Vector3 *pp;
     int dist;
     char *p;
     unsigned short spd;
@@ -36,7 +37,7 @@ int func_ov077_0212679c(char *c)
     p = (char *)_ZN5Actor13ClosestPlayerEv(c);
     if (p != 0) {
         /* u64 launder forces base materialization after the null cmp */
-        pp = (struct Vec3 *)(void *)(unsigned long long)(unsigned long)(p + 0x5c);
+        pp = (struct Vector3 *)(void *)(unsigned long long)(unsigned long)(p + 0x5c);
         pv.x = pp->x;
         pv.y = pp->y;
         pv.z = pp->z;

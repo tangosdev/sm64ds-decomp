@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov084_0212ccb4
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct Camera {
     char pad[0x80];

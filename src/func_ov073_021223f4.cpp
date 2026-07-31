@@ -1,5 +1,9 @@
 //cpp
-// func_ov073_021223f4 at 0x021223f4
+// @symbol func_ov073_021223f4
+// @emits CccArena_Kill
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjEwbIce_c::Kill - recovered from vtable slot identity */
+// CccArena_Kill at 0x021223f4
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov073).
 struct Vector3 { int x, y, z; };
 extern "C" {
@@ -7,8 +11,8 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int 
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& vec);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 }
-extern "C" void func_ov073_021223f4(char* c);
-void func_ov073_021223f4(char* c) {
+extern "C" void CccArena_Kill(char* c);
+void CccArena_Kill(char* c) {
     Vector3 vec;
     Vector3 vec2;
     vec.x = *(int*)(c + 0x5c);

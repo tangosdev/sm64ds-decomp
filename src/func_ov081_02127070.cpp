@@ -1,7 +1,12 @@
 //cpp
+// @symbol func_ov081_02127070
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern "C" void ApproachLinear(s16& v, s16 target, s16 step);
@@ -24,9 +29,6 @@ struct Obj {
     char field1e4[0x3d0-0x1e4];
     Vector3 target;       // 0x3d0
 };
-extern "C" int func_ov081_02126950(void* self, void* clsn);
-extern "C" void func_ov081_02126758(void* self);
-extern "C" void func_ov081_021265c8(void* self);
 
 extern "C" int func_ov081_02127070(Obj* self)
 {

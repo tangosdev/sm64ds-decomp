@@ -1,12 +1,16 @@
+// @symbol func_ov085_0212aaec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef int Fix12;
-struct Vector3 { int x, y, z; };
+
 
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern int _ZN6Player12GetTalkStateEv(void *p);
 extern int _Z14ApproachLinearRsss(s16 *p, s16 a, s16 b);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12 dist, int loop);
-extern void _ZN7Message11PrepareTalkEv(void);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *ab, unsigned int id, const struct Vector3 *v, unsigned int a, unsigned int b);
 extern void _ZN7Message7EndTalkEv(void);
 extern int func_ov085_0212bc78(void *c, void *p);

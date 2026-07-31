@@ -1,12 +1,15 @@
 //cpp
+// @symbol func_ov075_02114300
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x,y,z; };
-struct Vector3_16f { short x,y,z; };
+
+
 struct Matrix4x3;
 struct Sub { char pad[0x24]; char m[0x30]; };
 extern "C" void MulVec3Mat4x3(Matrix4x3* m, Vector3* in, Vector3* out);
 extern "C" void Vec3_MulScalarInPlace(Vector3* v, Fix12i s);
-extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, int d, int e, const Vector3_16f* f, void* g);
+extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, int d, int e, const Vector3_16* f, void* g);
 struct C {
     char pad0[0x14];
     char* mtxbase;
@@ -25,5 +28,5 @@ extern "C" void func_ov075_02114300(C* c)
     MulVec3Mat4x3((Matrix4x3*)s->m, &c->v1c, &tmp);
     Vec3_MulScalarInPlace(&tmp, 0x8000);
     tmp.y += 0x28000;
-    c->field_14c = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(c->field_14c, 0x140, tmp.x, tmp.y, tmp.z, (Vector3_16f*)0, (void*)0);
+    c->field_14c = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(c->field_14c, 0x140, tmp.x, tmp.y, tmp.z, (Vector3_16*)0, (void*)0);
 }

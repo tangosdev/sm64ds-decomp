@@ -1,14 +1,16 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov078_02125950
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Player { int GetTalkState(); };
 
 extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void ApproachLinear(short &v, short t, short step);
 extern "C" void _ZN7Message7EndTalkEv();
-extern "C" void func_02011d44();
-extern "C" void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int x);
 extern "C" void func_ov078_02125c48(char *c, void *p);
-extern void *data_ov078_0212701c;
 
 extern "C" int func_ov078_02125950(char *c)
 {

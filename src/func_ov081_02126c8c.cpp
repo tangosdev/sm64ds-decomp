@@ -1,10 +1,14 @@
 //cpp
+// @symbol func_ov081_02126c8c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
+
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern int data_ov081_02128edc[];
 }
 
 struct Base {

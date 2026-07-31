@@ -1,16 +1,19 @@
 //cpp
+// @symbol func_ov079_02123e60
+// @emits Whomp_OnHitByMegaChar
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daBtn_c::OnHitByMegaChar - recovered from vtable slot identity */
 extern "C" {
-struct Vector3 { int x, y, z; };
 extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 extern void func_02012694(int a, void* v);
 extern void func_ov079_02123d4c(void* out, void* c);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void* thiz);
-extern void _ZN16MeshColliderBase7DisableEv(void* thiz);
 
-void func_ov079_02123e60(char* c, void* player)
+void Whomp_OnHitByMegaChar(char* c, void* player)
 {
     if (*(unsigned char*)(c + 0x414) != 0) return;
     if (*(int*)(c + 0x10c) == 8) return;

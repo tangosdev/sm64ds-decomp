@@ -1,6 +1,13 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+// @symbol func_ov081_02123910
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Enemy.h"
+#include "decl_Player.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
+
 
 struct VObj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -15,12 +22,7 @@ struct VObj {
 
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player(void* self, Vector3_16* v, void* player, int unused);
-extern void func_ov081_021237ec(void* c);
-extern int _ZN6Player9IsOnShellEv(void* p);
-extern int func_ov002_020e10a8(void* p);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* cyl, void* player);
-extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, int f);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned n, int f, unsigned a, unsigned b, unsigned c);
 }

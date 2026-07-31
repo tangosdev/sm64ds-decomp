@@ -1,32 +1,32 @@
+// @symbol func_ov078_02125448
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct Vec3 { int x, y, z; };
+
 
 extern void func_02012694(int a, void* p);
-extern int func_ov078_02123804(char* c);
-extern void func_ov078_02123864(char* c);
 extern char* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
 extern int func_ov078_02125c48(void* c, void* p);
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
 extern void ApproachAngle(short* a, short b, short c, short d, int e);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern int AngleDiff(int a, int b);
 extern int _ZN6Player7TryGrabER5Actor(void* p, void* a);
 extern int func_ov002_020db5f4(char* c, char* arg);
 extern int _ZN5Actor13DistToCPlayerEv(void* c);
 
 extern int data_ov078_021270fc[];
 extern int data_ov078_0212707c[];
-extern int data_ov078_0212706c[];
 extern unsigned char data_0209f220[];
-extern int data_ov078_0212704c[];
 
 int func_ov078_02125448(char* c)
 {
     char* p;
     char* a;
-    struct Vec3 v;
+    struct Vector3 v;
     int isType;
     int index;
     int empty;
@@ -46,7 +46,7 @@ int func_ov078_02125448(char* c)
 
     p = _ZN5Actor13ClosestPlayerEv(c);
     if (p != 0) {
-        v = *(struct Vec3*)(p + 0x5c);
+        v = *(struct Vector3*)(p + 0x5c);
         if (Vec3_Dist(c + 0x4d4, &v) > 0x640000
             || (*(int*)(c + 0x4d8) - 0xa000) > v.y) {
             *(int*)(c + 0x98) = 0;
@@ -57,7 +57,7 @@ int func_ov078_02125448(char* c)
         ApproachAngle((short*)(c + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(c), 0xa, 0x200, 0x100);
         {
             s16 ang = *(s16*)(c + 0x94);
-            int* pf = (int*)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* pf = (int*)(((long long)(int)(c + 0xb0)));
             *(s16*)(c + 0x8e) = ang;
             *pf = *pf & ~0x80;
         }
@@ -71,7 +71,7 @@ int func_ov078_02125448(char* c)
                     if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) > 0x2800) {
                         if ((*(int*)(c + 0x39c) & 0x1000) != 0) {
                             {
-                                int* pf = (int*)(((long long)(unsigned)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL);
+                                int* pf = (int*)(((long long)(unsigned)(c + 0xb0)));
                                 *pf = *pf | 0x80;
                             }
                             if (_ZN6Player7TryGrabER5Actor(a, c) != 0) {

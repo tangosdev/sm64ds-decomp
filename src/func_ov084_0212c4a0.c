@@ -1,5 +1,9 @@
+// @symbol func_ov084_0212c4a0
+// @emits Goomba_Kill
+/* recovered: renamed to Class_Method */
+/* daKrb_c::Kill - recovered from vtable slot identity */
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int, void*);
-void func_ov084_0212c4a0(char* r5) {
+void Goomba_Kill(char* r5) {
     void* r1;
     r1 = _ZN5Actor15FindWithActorIDEjPS_(0xe, 0);
     while (r1) {

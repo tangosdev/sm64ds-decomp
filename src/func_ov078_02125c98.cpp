@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov078_02125c98
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov078_02125c98 at 0x02125c98 (ov078), size 0x148
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
@@ -14,12 +17,12 @@ struct RaycastGround {
   void SetObjAndPos(const Vector3& pos, Actor* a);
   int DetectClsn();
 };
-struct Mtx { int w[12]; };
+
 extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 }
-extern Mtx data_02082128;
+extern Matrix4x3 data_02082128;
 
 extern "C" void func_ov078_02125c98(char* c) {
   int h = *(int*)(c+0x60);
@@ -41,7 +44,7 @@ extern "C" void func_ov078_02125c98(char* c) {
   int r8 = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
   if (r8 < 0xa000)
     r8 = 0xa000;
-  *(Mtx*)(c+0x434) = data_02082128;
+  *(Matrix4x3*)(c+0x434) = data_02082128;
   *(int*)(c+0x458) = *(int*)(c+0x5c) >> 3;
   *(int*)(c+0x45c) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x460) = *(int*)(c+0x64) >> 3;

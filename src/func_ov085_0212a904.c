@@ -1,10 +1,12 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_ov085_0212a904
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+/* recovered: shared common types */
+#include "common.h"
 extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 extern int ApproachAngle(void *p, int from, int start, int speed, int max);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *thiz, void *actor, unsigned int msg, const struct Vector3 *vec, unsigned int a, unsigned int b);
 extern void func_02012790(int a);
-extern void _ZN7Message13DisplaySavingEt(unsigned short a);
 extern void _ZN7Message7EndTalkEv(void);
 extern void func_ov085_0212bc78(void *c, void *p);
 

@@ -1,11 +1,16 @@
 //cpp
+// @symbol func_ov074_0211fd74
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vec3 { s32 x, y, z; };
+
 
 extern "C" {
     int func_ov074_02121a20(void* c, int idx);
@@ -23,7 +28,6 @@ extern "C" {
     int __aeabi_idiv(int a, int b);
 }
 
-extern u8 data_ov074_02122d80[];
 
 extern "C" void func_ov074_0211fd74(void* self)
 {
@@ -48,9 +52,9 @@ L90:;
     if (_ZN9Animation8FinishedEv((void*)(c+0x260)) == 0) return;
     if (DecIfAbove0_Short((u16*)(c+0x5fc)) != 0) return;
 
-    Vec3 pos;
+    Vector3 pos;
     func_ov074_0212087c(&pos, self, *(u8*)(c+0x602));
-    Vec3 pp;
+    Vector3 pp;
     pp.x = pos.x;
     pp.y = pos.y;
     pp.z = pos.z;
@@ -64,7 +68,7 @@ L90:;
     u8* sp2 = (u8*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
         0xc8, sid, &pos, (void*)(c+0x8c), *(signed char*)(c+0xcc), -1);
     *(s32*)(sp2+0x43c) = *(s32*)(c+4);
-    Vec3 v2;
+    Vector3 v2;
     v2.x = *(s32*)(c+0x5d0);
     v2.y = *(s32*)(c+0x5d4);
     v2.z = *(s32*)(c+0x5d8);

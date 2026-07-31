@@ -1,7 +1,13 @@
 //cpp
+// @symbol func_ov077_02124d08
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 struct WithMeshClsn;
 struct Actor;
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
@@ -14,7 +20,6 @@ extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern "C" void _ZN4BgCh19StartDetectingToxicEv(void* self);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-extern "C" int func_02037e20(int* p);
 extern "C" void _ZN5Actor8PoofDustEv(void* self);
 extern "C" void func_02012694(int a, void* b);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* self);
@@ -24,7 +29,6 @@ extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* o
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
 extern "C" s16 func_02010844(void* unused, Vector3* v, s16 angle);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
-extern "C" void* _ZNK12WithMeshClsn13GetWallResultEv(void* self);
 
 extern "C" void func_ov077_02124d08(char* a, char* w) {
     RaycastGround rc;

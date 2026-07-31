@@ -1,6 +1,9 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { unsigned short x, y, z; };
+// @symbol func_ov084_0212a580
+/* recovered: shared common types */
+#include "common.h"
+
+struct Vector3_16_local { unsigned short x, y, z; };
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -10,14 +13,14 @@ extern short data_02082214[];
 }
 
 struct CapEnemy {
-    void UpdateCapPos(const Vector3&, const Vector3_16&);
+    void UpdateCapPos(const Vector3&, const Vector3_16_local&);
 };
 
 extern "C" void func_ov084_0212a580(char* c){
-    Vector3_16 s16;
+    Vector3_16_local s16;
     Vector3 pos;
     Vector3 arg;
-    Vector3_16 arg16;
+    Vector3_16_local arg16;
 
     Matrix4x3_FromRotationY(c + 0x38c, *(short*)(c + 0x8e));
     *(int*)(c + 0x3b0) = *(int*)(c + 0x5c) >> 3;

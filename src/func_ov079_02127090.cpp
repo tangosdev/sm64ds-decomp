@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov079_02127090
+// @emits daObjBkKillerdai_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjBkKillerdai_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr { int x; };
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
@@ -15,10 +19,10 @@ extern int data_ov079_02127f64[];
 extern signed char data_0209f2f8;
 extern int data_0209caa0[];
 extern unsigned char data_0209f220;
-int func_ov079_02127090(void *self);
+int daObjBkKillerdai_c_InitResources(void *self);
 }
 
-int func_ov079_02127090(void *self)
+int daObjBkKillerdai_c_InitResources(void *self)
 {
     char *c = (char*)self;
     void *m;

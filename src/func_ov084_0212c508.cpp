@@ -1,23 +1,22 @@
 //cpp
+// @symbol func_ov084_0212c508
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef signed char s8;
 typedef unsigned char u8;
-struct Vector3 { int x, y, z; };
+
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern "C" int func_ov084_0212cac0(char *c);
-extern "C" int IsCannonOpenInCurLevel(void);
 extern "C" void func_ov084_0212c960(char *c, int i);
 extern "C" int _ZN6Player12GetTalkStateEv(char *c);
 extern "C" int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);
-extern "C" int func_ov084_0212caa8(char *c);
 extern "C" s8 NumRedCoins(void);
-extern "C" void func_ov084_0212c9f0(char *c, int arg1, unsigned int arg2);
-extern "C" int ObjectMessageIDToActualMessageID(int id);
 extern "C" int func_ov084_0212ca60(char *c);
 extern "C" void func_02012790(int a);
 extern int data_0209caa0[];
-extern u8 data_0209f288;
 extern s8 data_0209f2f8;
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
@@ -116,7 +115,7 @@ extern "C" void func_ov084_0212c508(char *self)
                 goto skip_inc;
         do_inc:
             {
-                u8 *p = (u8 *)(((long long)(int)(self + 0x1eb)) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *p = (u8 *)(((long long)(int)(self + 0x1eb)));
                 *p = (u8)(*p + 1);
             }
         skip_inc:

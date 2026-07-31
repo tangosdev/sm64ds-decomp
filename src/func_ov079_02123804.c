@@ -1,16 +1,20 @@
+// @symbol func_ov079_02123804
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
+
 
 extern s16 data_02082214[];
 extern int* data_ov079_021275ec[];
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
-extern int AngleDiff(int a, int b);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* self, const struct Vector3* pos, u32 n, int fix, s16 s);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* self, void* bca, int n, int fix, u32 flags);
 

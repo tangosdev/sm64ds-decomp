@@ -1,13 +1,16 @@
 //cpp
+// @symbol func_ov085_0212bedc
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Vector3 { int x; int y; int z; };
-struct Mtx43 { int m[12]; };
+struct Vector3_local { int x; int y; int z; };
 
-extern "C" int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
+
+extern "C" int Vec3_HorzDist(const Vector3_local *a, const Vector3_local *b);
+extern "C" short Vec3_HorzAngle(const Vector3_local *v0, const Vector3_local *v1);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
-extern "C" void MulVec3Mat4x3(const Vector3 *v, const Mtx43 *m, Vector3 *res);
-extern "C" void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
+extern "C" void MulVec3Mat4x3(const Vector3_local *v, const Matrix4x3 *m, Vector3_local *res);
+extern "C" void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 
 struct ShadowModel;
 struct Matrix4x3;
@@ -16,7 +19,7 @@ struct Actor {
     void DropShadowRadHeight(ShadowModel &, Matrix4x3 &, Fix12, Fix12, unsigned int);
 };
 
-extern Mtx43 data_020a0e68;
+extern Matrix4x3 data_020a0e68;
 
 struct Obj {
     char pad5c[0x5c];
@@ -25,14 +28,14 @@ struct Obj {
     int v64;
     char pad3c0[0x3c0 - 0x68];
     char shadowmodel[0x28];
-    Mtx43 mtx;
+    Matrix4x3 mtx;
 };
 
 extern "C" void func_ov085_0212bedc(Obj *c)
 {
-    Vector3 v;
-    Vector3 res;
-    Vector3 vd;
+    Vector3_local v;
+    Vector3_local res;
+    Vector3_local vd;
 
     v.x = 0; v.y = 0; v.z = 0;
     res.x = 0; res.y = 0; res.z = 0;
@@ -42,8 +45,8 @@ extern "C" void func_ov085_0212bedc(Obj *c)
     vd.y = c->v60;
     vd.z = c->v64;
     vd.x = 0x1086000;
-    v.z = Vec3_HorzDist((Vector3 *)&c->v5c, &vd);
-    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((Vector3 *)&c->v5c, &vd));
+    v.z = Vec3_HorzDist((Vector3_local *)&c->v5c, &vd);
+    Matrix4x3_FromRotationY(&data_020a0e68, Vec3_HorzAngle((Vector3_local *)&c->v5c, &vd));
     MulVec3Mat4x3(&v, &data_020a0e68, &res);
     {
         int t;

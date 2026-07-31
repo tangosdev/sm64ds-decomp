@@ -1,9 +1,9 @@
-struct Vec3 { int x, y, z; };
-struct Matrix4x3 { int m[12]; };
-
+// @symbol func_ov078_02125de0
+/* recovered: shared common types */
+#include "common.h"
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
-extern void Vec3_Lsl(struct Vec3 *d, struct Vec3 *s, int sh);
+extern void Vec3_Lsl(struct Vector3 *d, struct Vector3 *s, int sh);
 extern unsigned int _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
@@ -11,7 +11,7 @@ extern struct Matrix4x3 data_020a0e68;
 
 void func_ov078_02125de0(char *c)
 {
-    struct Vec3 lv;
+    struct Vector3 lv;
     int i;
 
     Matrix4x3_FromRotationY(c + 0x2e8, *(short*)(c + 0x8e));
@@ -27,7 +27,7 @@ void func_ov078_02125de0(char *c)
     *(int*)(c + 0x4ec) = *(int*)(c + 0x4c8);
     *(int*)(c + 0x4f0) = *(int*)(c + 0x4cc);
     *(int*)(c + 0x4f4) = *(int*)(c + 0x4d0);
-    Vec3_Lsl(&lv, (struct Vec3*)(c + 0x4ec), 3);
+    Vec3_Lsl(&lv, (struct Vector3*)(c + 0x4ec), 3);
     *(int*)(c + 0x4ec) = lv.x;
     *(int*)(c + 0x4f0) = lv.y;
     *(int*)(c + 0x4f4) = lv.z;

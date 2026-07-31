@@ -1,5 +1,8 @@
 //cpp
-struct Mtx { int w[12]; };
+// @symbol func_ov085_0212c150
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 extern void func_0203c178(void *m, int a, int b, int c);
 extern void MulMat3x3Mat3x3(void *a, void *b, void *c);
@@ -12,8 +15,8 @@ extern "C" void _ZN9ModelAnim6RenderEPK7Vector3(void *self, void *v);
 extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int a, unsigned int b);
 void func_ov085_0212c150(void *self) {
     char *c = (char *)self;
-    Mtx tmp;
-    tmp = *(Mtx *)(c + 0x31c);
+    Matrix4x3 tmp;
+    tmp = *(Matrix4x3 *)(c + 0x31c);
     *(int *)(c + 0x340) = 0x421800 - *(int *)(c + 0x340);
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MulMat3x3Mat3x3((void *)(c + 0x31c), &data_020a0e68, (void *)(c + 0x31c));
@@ -23,5 +26,5 @@ void func_ov085_0212c150(void *self) {
     _ZN9ModelBase12ApplyOpacityEj((void *)(c + 0x300), 0xff, 0);
     func_02016b24((void *)(c + 0x300), 0x80);
     func_02016acc((void *)(c + 0x300), 0x40);
-    *(Mtx *)(c + 0x31c) = tmp;
+    *(Matrix4x3 *)(c + 0x31c) = tmp;
 }

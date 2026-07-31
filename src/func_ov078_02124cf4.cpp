@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov078_02124cf4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct ActorBase;
 
 extern "C" {
@@ -12,8 +17,6 @@ int Player_StartTalk(void* self, ActorBase& a, bool b);
 void Sound_ChangeMusicVolume(unsigned int a, int fix);
 int Player_ShowMessage(void* self, ActorBase& a, unsigned int b, const Vector3* v, unsigned int d, unsigned int e);
 
-extern int data_ov078_021270ac;
-extern int data_ov078_021270ec;
 extern int data_ov078_0212705c;
 extern unsigned char data_0209f220;
 }

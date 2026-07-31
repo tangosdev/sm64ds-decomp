@@ -1,5 +1,8 @@
 //cpp
-struct Matrix4x3 { int m[12]; };
+// @symbol func_ov081_021254d8
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); };
 

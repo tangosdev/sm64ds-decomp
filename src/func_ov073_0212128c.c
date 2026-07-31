@@ -1,11 +1,12 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_ov073_0212128c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern int _ZN6Player12GetTalkStateEv(void* self);
-extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
-extern void func_02011d08(void);
 extern int func_ov073_0212157c(void* c, void* p);
 
 extern void* data_0209f318;

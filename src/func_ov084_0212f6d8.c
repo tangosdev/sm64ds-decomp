@@ -1,18 +1,22 @@
+// @symbol func_ov084_0212f6d8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
 
-extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
+
 extern void func_0201267c(unsigned int a, void *p);
 extern void _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN6Player16IncMegaKillCountEv(void *player);
 extern void func_02012694(unsigned int a, void *p);
-extern void func_ov084_0212ebb4(void *c);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 
 void func_ov084_0212f6d8(char *c)

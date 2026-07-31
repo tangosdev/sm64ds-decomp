@@ -1,10 +1,13 @@
+// @symbol func_ov084_0212ddbc
+/* recovered: shared common types */
+#include "common.h"
 typedef int s32;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef signed short s16;
 typedef long long s64;
 
-struct Vec3 { int x, y, z; };
+
 
 extern int _Z14ApproachLinearRiii(s32 *p, int a, int b);
 extern int _ZN9Animation8FinishedEv(void *a);
@@ -22,7 +25,7 @@ extern s16 data_02082214[];
 
 void func_ov084_0212ddbc(char *c)
 {
-    struct Vec3 pos;
+    struct Vector3 pos;
     s16 ang;
     int b;
     int speed;
@@ -91,8 +94,8 @@ cold:
     if (*(s32 *)(c + 0x204) <= (*(s32 *)(c + 0x210) >> 1))
         return;
     {
-        u32 *p18c = (u32 *)(((long long)(int)(c + 0x18c)) & 0xFFFFFFFFFFFFFFFFLL);
-        u32 *pb0 = (u32 *)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32 *p18c = (u32 *)(((long long)(int)(c + 0x18c)));
+        u32 *pb0 = (u32 *)(((long long)(int)(c + 0xb0)));
         *p18c &= ~1u;
         *pb0 |= 0x10000000u;
     }

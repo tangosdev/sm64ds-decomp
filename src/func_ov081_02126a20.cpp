@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov081_02126a20
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef unsigned char u8;
 typedef short s16;
@@ -15,8 +18,8 @@ extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12Ii
 
 extern Mtx43 data_020a0e68;
 
-struct Vec3i { int x, y, z; };
-extern Vec3i data_ov081_02128ef8;
+
+extern Vector3 data_ov081_02128ef8;
 
 struct VObj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();

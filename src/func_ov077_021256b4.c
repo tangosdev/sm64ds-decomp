@@ -1,12 +1,16 @@
+// @symbol func_ov077_021256b4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef long long s64;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
-struct Vector3 { int x, y, z; };
+
 extern s16 data_02082214[];
 extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
-#define LA(p) ((int)(((s64)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((s64)(int)(p))))
 int func_ov077_021256b4(char *o)
 {
     char *d0;

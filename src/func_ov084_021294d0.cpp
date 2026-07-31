@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov084_021294d0
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern char* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
@@ -14,7 +17,7 @@ extern void _ZN10ClsnResultD1Ev(void*);
 extern int data_02099368[];
 }
 
-struct V3 { int x, y, z; };
+
 
 extern "C" void func_ov084_021294d0(char* c)
 {
@@ -27,7 +30,7 @@ extern "C" void func_ov084_021294d0(char* c)
         func_ov084_021296cc(c);
         _ZN5Enemy9SpawnCoinEv(c);
         func_ov084_02129498(c);
-        V3 v;
+        Vector3 v;
         v.x = 0; v.y = 0x6c000; v.z = 0;
         _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v);
         *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
@@ -72,7 +75,7 @@ action:
         *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
         *(int*)(c + 0x60) = *(int*)(c + 0x420);
         *(int*)(c + 0x64) = *(int*)(c + 0x424);
-        V3 v2;
+        Vector3 v2;
         v2.x = 0; v2.y = 0x6c000; v2.z = 0;
         _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v2);
         _ZN8CapEnemy15RespawnIfHasCapEv(c);

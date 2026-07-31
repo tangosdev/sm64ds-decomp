@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov085_0212db04
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, Vector3* v);

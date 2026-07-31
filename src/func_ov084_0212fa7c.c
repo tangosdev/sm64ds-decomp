@@ -1,19 +1,22 @@
+// @symbol func_ov084_0212fa7c
+// @emits FirePiranhaPlantBig_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daFPkn_c::Kill - recovered from vtable slot identity */
 typedef struct BCA_File BCA_File;
 
 extern int _ZN9Animation8FinishedEv(void *a);
-extern int _ZNK9Animation12WillHitFrameEi(void *a, int f);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, BCA_File *f, int a, int fix, unsigned int j);
-extern int func_ov084_0212f1d0(char *c);
 extern void func_02012694(int a, void *v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
-extern void func_ov084_0212ef00(char *self);
 
 extern int *data_ov084_02130df4;
-extern int *data_ov084_02130e0c;
 
-void func_ov084_0212fa7c(char *c) {
+void FirePiranhaPlantBig_Kill(char *c) {
     *(unsigned char *)(c + 0x45c) = 1;
     if (_ZN9Animation8FinishedEv(c + 0x160) || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0)) {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, (BCA_File *)((int *)&data_ov084_02130df4)[1], 0, 0x1000, 0);

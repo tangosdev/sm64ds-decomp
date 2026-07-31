@@ -1,4 +1,8 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_ov081_02125208
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct PathPtr { int a, b; };
 
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
@@ -7,16 +11,14 @@ extern int func_ov081_02125488(void *c, void *p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
 extern void _ZN7PathPtrC1Ev(struct PathPtr *self);
 extern void _ZN7PathPtr6FromIDEj(struct PathPtr *self, unsigned int id);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(struct PathPtr *self, struct Vec3 *v, unsigned int i);
-extern short Vec3_HorzAngle(struct Vec3 *a, struct Vec3 *b);
+extern void _ZNK7PathPtr7GetNodeER7Vector3j(struct PathPtr *self, struct Vector3 *v, unsigned int i);
+extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
 extern void ApproachAngle(void *p, int a, int b, int c, int d);
-extern int AngleDiff(int a, int b);
 extern char data_ov081_02128d88[];
-extern char data_ov081_02128e74[];
 
 int func_ov081_02125208(char *c) {
     struct PathPtr p;
-    struct Vec3 node;
+    struct Vector3 node;
     int st;
     int z;
     int n;
@@ -36,9 +38,9 @@ int func_ov081_02125208(char *c) {
     _ZN7PathPtrC1Ev(&p);
     _ZN7PathPtr6FromIDEj(&p, *(unsigned int*)(c + 0x418));
     _ZNK7PathPtr7GetNodeER7Vector3j(&p, &node, *(unsigned int*)(c + 0x424));
-    ApproachAngle(c + 0x94, Vec3_HorzAngle((struct Vec3*)(c + 0x5c), &node), 1, 0x1000, 0x500);
+    ApproachAngle(c + 0x94, Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &node), 1, 0x1000, 0x500);
 
-    if (AngleDiff(*(short*)(c + 0x94), Vec3_HorzAngle((struct Vec3*)(c + 0x5c), &node)) >= 0x100) {
+    if (AngleDiff(*(short*)(c + 0x94), Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &node)) >= 0x100) {
         goto exit;
     }
 

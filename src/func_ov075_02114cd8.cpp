@@ -1,5 +1,8 @@
 //cpp
-struct Matrix4x3 { int m[12]; };
+// @symbol func_ov075_02114cd8
+/* recovered: shared common types */
+#include "common.h"
+
 struct Obj;
 extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *mf, short angY);

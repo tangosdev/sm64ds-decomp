@@ -1,11 +1,14 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov073_0211fe8c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct ActorBase;
 
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern void _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* actor);
-extern void func_ov073_0211f144(void* actor);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
@@ -15,7 +18,6 @@ extern int func_ov073_0212157c(void* c, void* p);
 
 extern void* data_0209f318;
 extern int data_020a0e68[];
-extern void* data_ov073_021233e0;
 
 int func_ov073_0211fe8c(char* c) {
     struct Vector3 look, pos, in, out;

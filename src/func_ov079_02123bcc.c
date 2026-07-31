@@ -1,5 +1,8 @@
+// @symbol func_ov079_02123bcc
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16; typedef unsigned short u16; typedef long long s64;
-struct Vector3 { int x, y, z; };
+
 extern int Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern s16 data_02082214[];
 

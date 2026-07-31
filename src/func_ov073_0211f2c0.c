@@ -1,7 +1,6 @@
-struct Mtx43
-{
-  int m[12];
-};
+// @symbol func_ov073_0211f2c0
+/* recovered: shared common types */
+#include "common.h"
 struct V3
 {
   int x;
@@ -16,7 +15,7 @@ extern void Matrix4x3_FromRotationY(void *m, short angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void *data_0209f318;
-extern struct Mtx43 data_020a0e68;
+extern struct Matrix4x3 data_020a0e68;
 extern char data_ov073_02123360;
 extern char data_ov073_021233c0;
 extern char data_ov073_021233f0;
@@ -36,7 +35,7 @@ void func_ov073_0211f2c0(char *c, int strength)
   int y;
   int z;
   func_0200d8c8(data_0209f318, c + 0x5c, strength);
-  data_020a0e68 = *((struct Mtx43 *) (c + 0x328));
+  data_020a0e68 = *((struct Matrix4x3 *) (c + 0x328));
   MulMat4x3Mat4x3(((char *) (*((void **) (c + 0x320)))) + ((*((int *) (c + 0x4bc))) * 0x30), &data_020a0e68, &data_020a0e68);
   *((int *) ((((int) c) + 0x4bc) & 0xFFFFFFFFFFFFFFFF)) ^= 1;
   ty = *((int *) (((char *) (&data_020a0e68)) + 0x28));

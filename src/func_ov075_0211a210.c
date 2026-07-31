@@ -1,10 +1,13 @@
+// @symbol func_ov075_0211a210
+// @emits dScEntry_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScEntry_c::CleanupResources - recovered from vtable slot identity */
 extern void func_020308b4(signed char levelID);
-extern void Deallocate(void *ptr);
-extern void *data_0209b2e8;
 extern void *data_0209d4a8;
 extern void _ZN5Sound21UnsetPlayerVoiceGroupEv(void);
-extern void CleanCommonModelDataArr(void);
-int func_ov075_0211a210(signed char levelID)
+int dScEntry_c_CleanupResources(signed char levelID)
 {
     func_020308b4(levelID);
     if (data_0209b2e8 != (void *)0) {

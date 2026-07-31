@@ -1,8 +1,11 @@
+// @symbol func_ov078_021240a0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
-extern void func_ov078_02125c24(char* c, int a);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(char* c);
 extern void ApproachAngle(short* p, int target, int a, int b, int c);
-extern int AngleDiff(int a, int b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* pl, char* c, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int f);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* pl, char* c, int m, void* v, int a, int b);
@@ -17,15 +20,14 @@ extern void _ZN6Player12Unk_020c6a10Ej(void* p, unsigned int a);
 
 extern unsigned char data_0209f220;
 extern char data_ov078_0212705c;
-extern char data_ov078_0212702c;
 extern int data_0209e650;
 
-struct V3 { int x, y, z; };
+
 
 int func_ov078_021240a0(char* c)
 {
 #pragma opt_propagation off
-    struct V3 v;
+    struct Vector3 v;
     short msg;
     int lim;
 
@@ -100,7 +102,7 @@ int func_ov078_021240a0(char* c)
                 if (a != 0) {
                     int b = (int)(*(unsigned short*)(a + 0xc) == 0xbf);
                     if (b != 0) {
-                        v = *(struct V3*)(a + 0x5c);
+                        v = *(struct Vector3*)(a + 0x5c);
                         if (*(int*)(c + 0x60) > v.y)
                             _ZN6Player12Unk_020c6a10Ej(a, 1);
                     }

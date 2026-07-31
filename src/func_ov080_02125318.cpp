@@ -1,5 +1,9 @@
 //cpp
-// func_ov080_02125318 at 0x02125318
+// @symbol func_ov080_02125318
+// @emits CrazedCrate_OnTurnIntoEgg
+/* recovered: shared common types, renamed to Class_Method */
+/* daBttBk_c::OnTurnIntoEgg - recovered from vtable slot identity */
+// CrazedCrate_OnTurnIntoEgg at 0x02125318
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov080).
 struct Vector3 { int x, y, z; };
 
@@ -12,8 +16,8 @@ void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 void _ZN9ActorBase18MarkForDestructionEv(void* self);
 }
 
-extern "C" void func_ov080_02125318(char* self, void* player);
-void func_ov080_02125318(char* self, void* player) {
+extern "C" void CrazedCrate_OnTurnIntoEgg(char* self, void* player);
+void CrazedCrate_OnTurnIntoEgg(char* self, void* player) {
     if (_ZN6Player15IsCollectingCapEv(player)) {
         _ZN5Actor15GivePlayerCoinsER6Playerhj(self, player, 5, 0);
     }

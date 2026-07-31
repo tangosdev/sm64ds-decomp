@@ -1,5 +1,8 @@
 //cpp
-struct Vector3{int x,y,z;};
+// @symbol func_ov081_02126700
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C"{
 void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void*,Vector3 const&,unsigned int,int,short);
 void _ZN5Actor8PoofDustEv(void*);
