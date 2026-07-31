@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct { u8 pad; u8 lo:4; u8 hi:4; } Entry094;
 typedef struct { int a, b; } Pair6;
 

@@ -1,10 +1,6 @@
+#include "types.h"
 /* func_ov006_020d893c — zero-init all 0x70 entries (stride 0x40, array at 0x4660):
  * 11 words, 4 halfwords, 10 bytes per entry. */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 typedef struct {
     u32 w0;      /* +0x00 */
     u32 w1;

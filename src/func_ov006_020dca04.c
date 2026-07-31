@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 

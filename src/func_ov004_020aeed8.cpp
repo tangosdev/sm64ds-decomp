@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov004_020aeed8
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -7,10 +8,6 @@
 // @emits dScMgBase_c_OnAimedAtWithEggReturnVec
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnAimedAtWithEggReturnVec - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern "C" u8 data_0209d45c;
 extern "C" u8 data_0209d454;
 extern "C" u8 data_0209d460;

@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct Item {
     u32 w0;
     u32 val : 10;

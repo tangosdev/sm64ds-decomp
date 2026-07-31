@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void func_ov004_020aea78(void *self, int a1, int a2, int a3);
 

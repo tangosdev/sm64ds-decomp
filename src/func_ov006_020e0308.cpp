@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020e0308
 // @emits dScMgCup_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -11,9 +12,6 @@
  * the three sliders from the table at data_ov006_0213c0a8, then calls
  * virtual +0x48 with mode 3.
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct VtObj {
     virtual void d0();
     virtual void d1();

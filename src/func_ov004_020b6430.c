@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b653c(int arg);

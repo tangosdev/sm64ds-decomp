@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov005_020c1a20
 // @emits dScMiniGm_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
@@ -5,10 +6,6 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMiniGm_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 v);

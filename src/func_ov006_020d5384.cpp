@@ -1,16 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020d5384
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgAmida_c.h"
 // @emits dScMgAmida_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgAmida_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
-
 struct Obj {
     virtual void v00();
     virtual void v04();

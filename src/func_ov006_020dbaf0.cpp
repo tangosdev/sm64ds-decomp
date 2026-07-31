@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020dbaf0
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -12,10 +13,6 @@
  * engines, sets blending, patches the OAM attr template list, spawns the two
  * rows of 5 slot sprites, and resets the shared counters.
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 typedef struct Slot6 {
     char b[0x30];
 } Slot6;

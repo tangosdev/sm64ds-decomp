@@ -1,7 +1,4 @@
-typedef int s32;
-typedef unsigned int u32;
-typedef short s16;
-
+#include "types.h"
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int i, int fix, u32 j);
 extern int _Z14ApproachLinearRsss(s16 *a, s16 b, s16 c);

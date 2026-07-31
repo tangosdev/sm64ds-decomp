@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_ov006_020d5d90(char *o, int i);
 
 #pragma opt_common_subs off

@@ -1,13 +1,10 @@
+#include "types.h"
 /* func_ov006_020c833c @ 0x020c833c (ov006, size 0x264)
  * Bob-omb/enemy bounce update: on despawn timer expiry cleans up; plays the
  * bounce SFX on anim frames 12/24 near the camera plane; reflects and damps
  * the x-velocity at +/-0x6c000, restarting the walk anim; handles touch
  * states 1/2; otherwise steers the facing angle toward the motion sign.
  */
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
 extern int data_ov006_0214041c;
 extern char *data_ov006_0213b098[];
 extern int data_ov006_0213b008;

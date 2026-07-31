@@ -1,13 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov004_020af094
 // @emits dScMgBase_c_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-typedef unsigned short u16;
-typedef short s16;
-
 extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *addr, unsigned int size);
 extern "C" void _ZN2GX10LoadBGPlttEPKvjj(const void *src, unsigned int offset, unsigned int size);
 extern "C" void _ZN3GXS10LoadBGPlttEPKvjj(const void *src, unsigned int offset, unsigned int size);

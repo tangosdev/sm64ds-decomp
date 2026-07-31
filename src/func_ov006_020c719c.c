@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern void func_ov006_020c6f8c(int);
 extern void func_ov006_020c8658(void *c);
 extern void func_ov006_020c8a9c(int a0, int a1);

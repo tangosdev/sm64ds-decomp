@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_ov006_020dde28 — bump per-entry timer (stride 0x1c array at 0x4660);
  * when it reaches the table threshold for the current frame index, advance
  * the frame index (mod 4) and reset the timer.
  * Data: data_ov006_0212e32c = u16 threshold table. */
-
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern u16 data_ov006_0212e32c[];
 
 typedef struct {

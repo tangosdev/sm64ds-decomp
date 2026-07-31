@@ -1,7 +1,4 @@
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_020731dc(int a, int b, void **node);
 extern void func_0203d704(int* o, int* a, int* b);
 extern void func_0203d388(int *p, int angle);

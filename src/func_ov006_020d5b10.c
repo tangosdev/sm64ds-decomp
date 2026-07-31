@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 extern void func_ov006_020d8904(char* p);
 extern void SetBg2Offset(int a, int b);

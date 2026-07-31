@@ -1,8 +1,4 @@
-typedef signed short s16;
-typedef unsigned short u16;
-typedef long long s64;
-typedef unsigned long long u64;
-
+#include "types.h"
 extern s16 data_02082214[];
 
 extern s64 _ZN4cstd4sqrtEy(u64 x);

@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 int func_ov006_020da4ac(char *self, s16 *out)
 {
     s16 counts[6] = {0};
