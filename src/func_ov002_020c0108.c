@@ -22,7 +22,7 @@ extern char data_ov002_0211025c;
 extern s32 data_ov002_020ff200[];
 extern s16 data_02082214[];
 
-#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off)))))
 
 int func_ov002_020c0108(char *self, int p1)
 {

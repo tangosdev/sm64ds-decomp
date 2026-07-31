@@ -68,7 +68,7 @@ void func_ov002_020bcdf0(char *self)
     if (*(int *)(self + 8) == 0) {
         if (cur.id == 0xbb) {
             id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-            anim = (char *)(((long long)(int)((char *)((int *)(self + 0xdc))[id] + 0x50)) & 0xffffffffffffffffLL);
+            anim = (char *)(((long long)(int)((char *)((int *)(self + 0xdc))[id] + 0x50)));
             frame = (unsigned int)(*(int *)(anim + 8) << 4) >> 0x10;
             if (frame >= 0x1e)
                 goto particle;
@@ -102,6 +102,6 @@ particle:
     cur.id = base[*(u8 *)(self + 0x728) + 1].id;
     cur.val = base[*(u8 *)(self + 0x728) + 1].val;
     if (cur.id != 0) {
-        *(u8 *)(((long long)(int)(self + 0x728)) & 0xffffffffffffffffLL) += 1;
+        *(u8 *)(((long long)(int)(self + 0x728))) += 1;
     }
 }

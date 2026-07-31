@@ -8,7 +8,7 @@ void func_02065f08(int idx){
   r1 = *(unsigned short*)(b + 0x1d40);
   r3 = *(unsigned short*)(b + 0x1d42);
   if(r3 <= r1 && r1 <= r3 + 2){
-    unsigned short* p = (unsigned short*)(((int)b + 0x1d40) & 0xFFFFFFFFFFFFFFFF);
+    unsigned short* p = (unsigned short*)(((int)b + 0x1d40));
     *p = *p + 1;
     return;
   }

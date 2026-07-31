@@ -17,7 +17,7 @@ void func_ov002_020afe4c(char* c) {
         }
         func_ov002_020af474(c);
         if (*(unsigned short*)(c+0x100) == 0x25) {
-            *(int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+            *(int *)(((int)c + 0x128)) &= ~1;
             *(int*)(c+0x388) = 1;
             *(int*)(c+0x98) = 0x8000;
         }

@@ -46,7 +46,7 @@ void func_02060918(u32 a0, u32 a1, u32 a2, u32 a3, u32 a4, u32 a5, int a6)
         OS_SleepThread(&t->fd4);
     }
     {
-        u32 *p34 = (u32 *)(((int)t + 0x34) & 0xFFFFFFFFFFFFFFFF);
+        u32 *p34 = (u32 *)(((int)t + 0x34));
         *p34 |= 4;
     }
     IRQ_Restore(mask);

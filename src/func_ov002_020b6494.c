@@ -13,11 +13,11 @@ int func_ov002_020b6494(char* c){
     _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     return 1;
   }
-  *(u16*)(((int)c + 0x328) & 0xFFFFFFFFFFFFFFFF) += 0x100;
+  *(u16*)(((int)c + 0x328)) += 0x100;
   {
-    u16 h = (u16)(((s64)*(s16*)(c+0x328)) & 0xFFFFFFFFFFFFFFFF);
-    *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) =
-      *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF)
+    u16 h = (u16)(((s64)*(s16*)(c+0x328)));
+    *(int*)(((int)c + 0x60)) =
+      *(int*)(((int)c + 0x60))
       - (int)((((s64)*(int*)(c+0x324) * data_02082214[(h >> 4) * 2]) + 0x800) >> 0xc);
   }
   {

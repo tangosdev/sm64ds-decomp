@@ -27,17 +27,17 @@ u8 *func_02065c2c(u8 *src, u8 *dst)
     case 8:
     {
       int lo = src[1];
-      u16 *p = (u16 *) ((((int) dst) + 2) & 0xFFFFFFFFFFFFFFFFLL);
+      u16 *p = (u16 *) ((((int) dst) + 2));
       r4 = src + 3;
       *((u16 *) (dst + 2)) = lo & 0xff;
-      *((u16 *) ((((int) dst) + 2) & 0xFFFFFFFFFFFFFFFFLL)) = (*p) | ((src[2] << 8) & 0xff00);
+      *((u16 *) ((((int) dst) + 2))) = (*p) | ((src[2] << 8) & 0xff00);
     }
       break;
 
     case 9:
     {
       int lo = src[1];
-      u16 *p = (u16 *) ((((int) dst) + 2) & 0xFFFFFFFFFFFFFFFFLL);
+      u16 *p = (u16 *) ((((int) dst) + 2));
       *((u16 *) (dst + 2)) = lo & 0xff;
       {
         int hi = src[2];

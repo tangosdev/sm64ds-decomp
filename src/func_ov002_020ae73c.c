@@ -17,10 +17,10 @@ void func_ov002_020ae73c(char* c, char* arg)
         *(int*)(c + 0x98) = 0x14000;
 
     {
-        int *p = (int *)(((int)(c) + 0x98) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)(c) + 0x98));
         *p = *p / 6;
     }
     *(s16*)(c + 0x102) = 8;
-    *(int *)(((int)(c) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)(c) + 0xb0)) &= ~1;
     _ZN5Sound9PlayBank0EjRK7Vector3(0xa, c + 0x74);
 }

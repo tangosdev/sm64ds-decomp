@@ -28,7 +28,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
     int r;
 
     if (!(*(volatile int *)&thiz->f34 & 2)) {
-        int *p = (int *)(((int)thiz + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)thiz + 0x34));
         *p |= 2;
         if (func_0205ba3c(0xb, 1) == 0) {
             do {
@@ -43,7 +43,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
 
     do {
         thiz->f4 = v;
-        *(int *)(((int)thiz + 0x34) & 0xFFFFFFFFFFFFFFFFLL) |= 0x20;
+        *(int *)(((int)thiz + 0x34)) |= 0x20;
 
         while (IPCSend(0xb, v, 1) < 0) {
         }

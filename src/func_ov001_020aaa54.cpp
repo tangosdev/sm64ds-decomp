@@ -21,7 +21,7 @@ extern signed char data_0209f2f8;
 
 /* Route the +0x1b flag-byte address through 64-bit arithmetic so it is
  * materialized (add rX,base,#0x1b) for the read-modify-write, matching the ROM. */
-#define FLAGS1B(p) (*(u8*)(((int)(p) + 0x1b) & 0xffffffffffffffffLL))
+#define FLAGS1B(p) (*(u8*)(((int)(p) + 0x1b)))
 
 struct Node {
     u8 pad0[4];

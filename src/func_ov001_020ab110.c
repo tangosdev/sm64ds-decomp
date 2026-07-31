@@ -48,7 +48,7 @@ void func_ov001_020ab110(char *r4)
     *((int *)(r4 + 0x10)) = 0;
     *inline_fn(r4, 0x14) = -1;
     *((unsigned char *)(r4 + 0x1b)) = 0;
-    unsigned char *flag = (unsigned char *)(((long long)(int)(r4 + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL);
+    unsigned char *flag = (unsigned char *)(((long long)(int)(r4 + 0x1b)));
     *flag |= 4;
     new_var = r4 + 0x18;
     *((unsigned char *)new_var) = 3;

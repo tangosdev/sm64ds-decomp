@@ -36,7 +36,7 @@ void func_02060e38(void) {
 
     *g->f0 = 0;
     s = _ZN3IRQ7DisableEv();
-    pf = (u32 *)((gi + 0x34) & 0xFFFFFFFFFFFFFFFF);
+    pf = (u32 *)((gi + 0x34));
     {
         u32 val = *pf;
         val &= ~0xc;

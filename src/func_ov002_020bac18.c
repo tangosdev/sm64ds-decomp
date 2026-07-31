@@ -6,9 +6,9 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int bankId, const Vector3 *pos);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *thiz);
 
-#define LM(p) ((u8*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LMS(p) ((short*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LMI(p) ((int*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LM(p) ((u8*)(int)(((long long)(int)(p))))
+#define LMS(p) ((short*)(int)(((long long)(int)(p))))
+#define LMI(p) ((int*)(int)(((long long)(int)(p))))
 
 int func_ov002_020bac18(char *c)
 {

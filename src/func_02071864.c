@@ -38,7 +38,7 @@ void func_02071864(Obj *t, Wrap *w)
     t->b6c = (f80 != 0);
     t->h68 = data[1] << 4;
     p = data + 2;
-    *(u16 *)(int)(((long long)(int)((int)t + 0x68)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000;
+    *(u16 *)(int)(((long long)(int)((int)t + 0x68))) |= 0x4000;
     p = func_02071a50(p, &t->w60);
     if (f40) {
         p = func_02071a50(p, &t->w64);

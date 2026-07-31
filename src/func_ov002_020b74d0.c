@@ -31,7 +31,7 @@ int func_ov002_020b74d0(char *c) {
 
     {
         char *p = *(char **)(c + 0x3c0);
-        char *q = (char *)(((int)(p + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+        char *q = (char *)(((int)(p + 0x8c)));
         *(s16 *)(c + 0x92) = *(s16 *)(q + 0);
         *(s16 *)(c + 0x94) = *(s16 *)(q + 2);
         *(s16 *)(c + 0x96) = *(s16 *)(q + 4);
@@ -42,7 +42,7 @@ int func_ov002_020b74d0(char *c) {
 
     {
         char *p = *(char **)(c + 0x3c0);
-        char *q = (char *)(((int)(p + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        char *q = (char *)(((int)(p + 0x5c)));
         *(int *)(c + 0x5c) = *(int *)(q + 0);
         *(int *)(c + 0x60) = *(int *)(q + 4);
         *(int *)(c + 0x64) = *(int *)(q + 8);

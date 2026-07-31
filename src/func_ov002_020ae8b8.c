@@ -21,5 +21,5 @@ void func_ov002_020ae8b8(char* c, char* arg)
         *(int*)(c + 0x98) = 0xa000;
         *(int*)(c + 0xa8) = 0x28000;
     }
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)c + 0xb0)) &= ~1;
 }

@@ -9,7 +9,7 @@ void func_ov001_020ab550(char *c)
     if (v <= 0) {
         return;
     }
-    p = (int *)(((int)c + 0xc) & 0xFFFFFFFFFFFFFFFF);
+    p = (int *)(((int)c + 0xc));
     *p = *p - data_0208ee44;
     v = *(int *)(c + 0xc);
     if (v > 0) {

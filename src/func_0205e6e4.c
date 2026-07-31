@@ -23,12 +23,12 @@ int func_0205e6e4(struct Obj* obj, u8* p, int count) {
 body:
   {
     int i = obj->f1c;
-    *(int *)(((int)obj + 0x1c) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int *)(((int)obj + 0x1c)) += 1;
     obj->buf[i] = *p;
   }
-  *(int *)(((int)obj + 0x14) & 0xFFFFFFFFFFFFFFFF) += 8;
+  *(int *)(((int)obj + 0x14)) += 8;
   if (obj->f14 == 0) {
-    *(int *)(((int)obj + 0x18) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int *)(((int)obj + 0x18)) += 1;
     if (obj->f18 == 0) obj->f64 = 1;
   }
   if (obj->f1c == 0x40) func_0205e3d4(obj);

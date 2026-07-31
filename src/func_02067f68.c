@@ -59,7 +59,7 @@ void func_02067f68(void)
             MultiCopyHalf(*(u8 **)(data_020a9d2c + 4) + 0x35e + i * 0x16, dst, 0x16);
             count++;
             dst += 0x16;
-            *(u16 *)(((int)*(u8 **)(data_020a9d2c + 4) + 0x4a8) & 0xFFFFFFFFFFFFFFFF) |= 2 << i;
+            *(u16 *)(((int)*(u8 **)(data_020a9d2c + 4) + 0x4a8)) |= 2 << i;
             if (count == 4) {
                 break;
             }

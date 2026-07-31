@@ -18,7 +18,7 @@ void func_ov001_020ab228(char* c, char* a1, int idx, int a3, unsigned char a5){
     *(unsigned char*)(c+0x1a) = 0;
     *(unsigned char*)(c+0x1b) = 0;
     {
-        unsigned char *p1b = (unsigned char *)(int)(((long long)(int)(c + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p1b = (unsigned char *)(int)(((long long)(int)(c + 0x1b)));
         *p1b = (*p1b & ~1) | (a5 & 1);
     }
     if(a5!=0 || a3==3) func_ov001_020aa6cc(idx);

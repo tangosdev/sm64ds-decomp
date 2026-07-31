@@ -71,12 +71,12 @@ int func_ov002_020c04e0(char *c)
     accel = (int)(((long long)accelBase * speed + 0x800) >> 12);
 
     if (angDiff < 0x4000) {
-        int *p = (int *)(((int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)(c + 0x98)));
         int v = *p + (int)(((long long)accel * horzLen + 0x800) >> 12);
         *p = v;
         return v;
     } else {
-        int *p = (int *)(((int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)(c + 0x98)));
         int v = *p - (int)(((long long)accel * horzLen + 0x800) >> 12);
         *p = v;
         return v;

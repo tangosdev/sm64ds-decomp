@@ -16,7 +16,7 @@ void func_02060188(int a0, int a1)
         g->f8 = a0;
         g->f14 = a1;
     }
-    { int* pc = (int*)((gi + 0xc) & 0xFFFFFFFFFFFFFFFF); *pc = *pc + 1; }
+    { int* pc = (int*)((gi + 0xc)); *pc = *pc + 1; }
     *g->f0 = 0;
     _ZN3IRQ7RestoreEj(s);
 }

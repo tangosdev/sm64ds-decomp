@@ -21,7 +21,7 @@ void func_ov002_020bdb50(char* c, int arg) {
         int b1 = (*(unsigned short*)(obj+0xc) == 0xbf);
         if (b1) {
             func_ov002_020d5cec();
-            (*(unsigned short *)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFF)) &= ~2;
+            (*(unsigned short *)(((int)c + 0x6ce))) &= ~2;
         } else {
             char* vt = *(char**)obj;
             (*(void(**)(char*, char*))(vt+0x4c))(obj, c);

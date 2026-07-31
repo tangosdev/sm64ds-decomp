@@ -49,7 +49,7 @@ void func_ov002_020b10e4(char* c)
                     int dist = Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)(ac + 0x5c));
                     if (dist < (radius << 3) && dy <= 0x1f4000 && dy >= 0) {
                         *(int*)(c + 0x398) = *(int*)(ac + 0x60) + 0x32000;
-                        ((struct BF3ae*)((long long)(c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL))->sel = 1;
+                        ((struct BF3ae*)((long long)(c + 0x3ae)))->sel = 1;
                         return;
                     }
                 }
@@ -77,12 +77,12 @@ void func_ov002_020b10e4(char* c)
             _ZNK10ClsnResult6CopyToERS_(rl + 0x10, cr);
             if (_ZNK10ClsnResult9GetClsnIDEv(cr) != (u32)-1 &&
                 _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(cr)) != 0) {
-                ((struct BF3ae*)((long long)(c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL))->sel = 0;
+                ((struct BF3ae*)((long long)(c + 0x3ae)))->sel = 0;
             } else {
                 Vector3 pos;
                 _ZN11RaycastLine10GetClsnPosEv(&pos, rl);
                 *(int*)(c + 0x398) = pos.y;
-                ((struct BF3ae*)((long long)(c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL))->sel = 1;
+                ((struct BF3ae*)((long long)(c + 0x3ae)))->sel = 1;
             }
         }
         _ZN10ClsnResultD1Ev(cr);

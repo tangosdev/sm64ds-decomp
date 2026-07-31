@@ -73,7 +73,7 @@ void func_ov001_020aa420(void) {
         if (reqFlag == 0) {
             if (node != 0) {
                 do {
-                    *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+                    *(u8 *)(((long long)(int)((char *)node + 0x1b))) &= ~2;
                     if (node->field19 == 1) {
                         *flagByte = 1;
                     }
@@ -100,7 +100,7 @@ void func_ov001_020aa420(void) {
                     if (node->flags.b0) {
                         if (node->soundHandle == -1) {
                             node->soundHandle = func_0202a8e0(node->field4, node->field18);
-                            *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+                            *(u8 *)(((long long)(int)((char *)node + 0x1b))) |= 2;
                             func_ov001_020aa6b0(node, 1);
                         }
                         handled = 1;
@@ -114,7 +114,7 @@ void func_ov001_020aa420(void) {
                         if (node->flags.b3) {
                             best = node;
                         } else {
-                            *(u8 *)(((long long)(int)((char *)node + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 8;
+                            *(u8 *)(((long long)(int)((char *)node + 0x1b))) |= 8;
                         }
                     }
                 } else {
@@ -125,7 +125,7 @@ void func_ov001_020aa420(void) {
         }
 
         if (func_ov001_020aa7b8(i, best) != 0) {
-            *(u8 *)(((long long)(int)((char *)best + 0x1b)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+            *(u8 *)(((long long)(int)((char *)best + 0x1b))) |= 2;
             best->soundHandle = func_0202a8e0(best->field4, best->field18);
             func_ov001_020aa6b0(best, 1);
             func_ov001_020aa6e4(i, best->field19, best);

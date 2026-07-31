@@ -16,7 +16,7 @@ int func_02063718(char *p, char *q)
 {
     int t;
     int ret = 0;
-    int *st = (int *)((long long)(unsigned int)(p + 0x9c) & 0xFFFFFFFFFFFFFFFFLL);
+    int *st = (int *)((long long)(unsigned int)(p + 0x9c));
     int b;
     int i;
     char *ptr;
@@ -40,7 +40,7 @@ int func_02063718(char *p, char *q)
             if ((*(u16 *)(p + 8) >> i) & 1)
                 func_020647fc(ptr, *(int *)(p + 0x18), ptr + 0x1c, ((int *)p + i)[7]);
         }
-        if (*(int *)((long long)(unsigned int)(p + 0x9c) & 0xFFFFFFFFFFFFFFFFLL) == 4)
+        if (*(int *)((long long)(unsigned int)(p + 0x9c)) == 4)
             ret = func_02064e18(q, *(u16 *)(p + 8), *(u8 *)(p + 0xc), *(int *)(p + 0x14), 0);
         else
             ret = func_02064cd8(q, *(u16 *)(p + 8), *(u8 *)(p + 0xc), *(int *)(p + 0x14), 0);
@@ -53,7 +53,7 @@ int func_02063718(char *p, char *q)
             if ((*(u16 *)(p + 8) >> i) & 1)
                 func_020647fc(ptr, *(int *)(p + 0x18), (void *)((int *)p + i)[23], ((int *)p + i)[7]);
         }
-        if (*(int *)((long long)(unsigned int)(p + 0x9c) & 0xFFFFFFFFFFFFFFFFLL) == 4)
+        if (*(int *)((long long)(unsigned int)(p + 0x9c)) == 4)
             ret = func_02064e18(q, *(u16 *)(p + 8), *(u8 *)(p + 0xc), *(int *)(p + 0x14), 0);
         else
             ret = func_02064cd8(q, *(u16 *)(p + 8), *(u8 *)(p + 0xc), *(int *)(p + 0x14), 0);
@@ -64,6 +64,6 @@ int func_02063718(char *p, char *q)
         ret = func_02064a94(q, *(u16 *)(p + 8), *(u8 *)(p + 0xc), p + 0x14, *(u8 *)(p + 0x1d));
         break;
     }
-    *(int *)((long long)(unsigned int)(p + 0x9c) & 0xFFFFFFFFFFFFFFFFLL) = 0;
+    *(int *)((long long)(unsigned int)(p + 0x9c)) = 0;
     return ret;
 }

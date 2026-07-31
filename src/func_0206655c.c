@@ -10,7 +10,7 @@ extern void CpuCopy8(void *dst, void *src, int n);
 extern int func_02066fec(u32 a, int b, int c);
 extern u16 func_02065ef8(u16 a, u16 b);
 
-#define LD(t, x) ((t *)((((long long)(int)(x))) & 0xFFFFFFFFFFFFFFFFLL))
+#define LD(t, x) ((t *)((((long long)(int)(x)))))
 
 void func_0206655c(void *arg0, u32 arg1)
 {

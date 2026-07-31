@@ -68,7 +68,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             a = (Ctx *)localbuf;
             base = localbuf[10] - localbuf[8];
             CpuCopy8(ctx, cur, 0x160);
-            *(unsigned int *)((long long)(int)(cur + 0x60) & 0xFFFFFFFFFFFFFFFFLL) |= 0x406000;
+            *(unsigned int *)((long long)(int)(cur + 0x60)) |= 0x406000;
         }
 
         threshold = ctx->f2c + 0x160 + ctx->f3c;

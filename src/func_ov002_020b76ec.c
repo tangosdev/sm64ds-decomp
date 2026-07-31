@@ -28,8 +28,8 @@ int func_ov002_020b76ec(char *self)
     *(int *)(self + 0xc8) = 0;
     *(u8 *)(self + 0x403) = 1;
 
-    *(u32 *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x40000u;
-    *(u32 *)(((int)self + 0x12c) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000u;
+    *(u32 *)(((int)self + 0xb0)) &= ~0x40000u;
+    *(u32 *)(((int)self + 0x12c)) &= ~0x8000u;
 
     if (*(int *)(self + 0x3c0) == 0) {
         *(void **)(self + 0x3c0) = _ZN5Actor13ClosestPlayerEv(self);

@@ -22,7 +22,7 @@ int func_ov002_020b7330(char* self)
     if (state == 0xa || state == 0xf) {
         char* closest = (char*)_ZN5Actor13ClosestPlayerEv(self);
         if (closest != 0) {
-            s16* src = (s16*)((long long)(int)(closest + 0x8c) & 0xFFFFFFFFFFFFFFFFLL);
+            s16* src = (s16*)((long long)(int)(closest + 0x8c));
             *(s16*)(self + 0x92) = src[0];
             *(s16*)(self + 0x94) = src[1];
             *(s16*)(self + 0x96) = src[2];

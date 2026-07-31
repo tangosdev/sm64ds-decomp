@@ -18,7 +18,7 @@ extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
 
 extern "C" int daObjAbuku_c_Behavior(char* self)
 {
-    *(short*)(((int)self + 0x10c) & 0xFFFFFFFFFFFFFFFF) += 0x400;
+    *(short*)(((int)self + 0x10c)) += 0x400;
     int v = *(volatile unsigned short*)(self + 0x10c);
     int x = v >> 4;
     short tv = data_02082214[2*x + 1];

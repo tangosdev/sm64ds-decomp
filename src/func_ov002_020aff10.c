@@ -13,7 +13,7 @@ void func_ov002_020aff10(char* c){
     if(*(unsigned short*)(c+0x100) == 0) _ZN5Sound9PlayBank3EjRK7Vector3(0x68, c+0x74);
     func_ov002_020af474(c);
     if(*(unsigned short*)(c+0x100) != 0x25) break;
-    *(int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int*)(((int)c + 0x128)) &= ~1;
     *(int*)(c+0x388) = 1;
     *(int*)(c+0x98) = 0x2000;
     break;

@@ -13,7 +13,7 @@ void func_020600e0(int a0, int a1)
         Crash();
     } else {
         if (g->f14 != a1) Crash();
-        { int* pc = (int*)((gi + 0xc) & 0xFFFFFFFFFFFFFFFF); *pc = *pc - 1; }
+        { int* pc = (int*)((gi + 0xc)); *pc = *pc - 1; }
         if (g->fc == 0) {
             g->f8 = -3;
             g->f14 = 0;

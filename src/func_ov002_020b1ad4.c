@@ -29,7 +29,7 @@ void func_ov002_020b1ad4(char *self)
         if (data_0209f2f8 == 0xb) v <<= 1;
         *(int *)(self + 0x98) = v;
         *(int *)(self + 0xa8) = 0x14000;
-        ((struct Bits3ae *)(int)(((long long)(int)(self + 0x3ae)) & 0xFFFFFFFFFFFFFFFFLL))->field++;
+        ((struct Bits3ae *)(int)(((long long)(int)(self + 0x3ae))))->field++;
         _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x1ac);
         *(short *)(self + 0x3a8) = 0x1c2;
     }
