@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol func_ov007_020c5fc8
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
-
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern int LenVec3(struct Vector3 *v);
 

@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_02127d10
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -8,10 +9,6 @@
 /* dScMgSnowball_c::Render - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int s32;
-
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 extern void func_0203cd80(int *m, short angle);
 extern void func_ov006_02126a98(char *c);

@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 typedef struct { int f[12]; } Blk;
 
 #define LS(a) (*(short*)(((long long)(int)(a))))

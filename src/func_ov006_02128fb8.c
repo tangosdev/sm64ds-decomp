@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_02128fb8
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,8 +7,6 @@
 // @emits dScMgSnowball_c_OnKicked
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
-typedef unsigned char u8;
-
 extern int func_ov004_020ae140(char *self);
 
 #define V (self->unk_ab6c >> 12)

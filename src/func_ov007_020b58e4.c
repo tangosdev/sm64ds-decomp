@@ -1,7 +1,4 @@
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern u8 data_ov007_0210342c[];
 inline char *inline_fn(char *arg0)
 {

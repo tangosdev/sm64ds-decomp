@@ -1,11 +1,6 @@
 //cpp
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 typedef struct Pair {
     s32 x;
     s32 y;

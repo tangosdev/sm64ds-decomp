@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 data_ov007_02104be8;
 extern u32 data_ov007_02104be0;
 

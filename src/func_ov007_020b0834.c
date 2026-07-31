@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_ov007_020c0638(int a, int b, int c, int d);
 extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b2614(int a, int b, int c);

@@ -1,12 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_0212551c
 // @emits dScMgBSC_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef int s32;
 extern "C" {
 extern unsigned char data_0209d45c[];
 extern int data_0208ee44[];

@@ -1,7 +1,5 @@
+#include "types.h"
 #pragma opt_propagation off
-
-typedef unsigned int u32;
-
 #define reg_G3_TEXIMAGE_PARAM (*(volatile u32 *)0x040004a8)
 
 static inline void G3_TexImageParam(u32 addr, u32 texFmt, u32 texGen, u32 sizeS, u32 sizeT,

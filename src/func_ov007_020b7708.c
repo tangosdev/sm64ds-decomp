@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_ov007_020b7708 — lazily create particle system slot idx in the table
  * at data_ov007_02103450 via Particle::Manager::AddSystem(data_ov007_0210344c,
  * 0, pos), then set flag bit1 (+0x1c) on the new system.
  */
-
-typedef unsigned int u32;
-
 struct PtclSys {
     char _pad0[0x1c];
     u32 flags;            /* 0x1c */

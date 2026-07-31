@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Anim {
     char pad[0x20];
     int mode;     /* 0x20 */

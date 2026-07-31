@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_020541a4(void);
 extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN2GX12SetBankForBGEt(u16 x);

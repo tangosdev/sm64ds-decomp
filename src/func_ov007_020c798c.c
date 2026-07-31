@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct Thing {
     int *field0;
     int field4;

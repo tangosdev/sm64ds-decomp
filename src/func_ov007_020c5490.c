@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
-typedef long long s64;
-
+#include "types.h"
 void func_ov007_020c5490(char* obj, int* m)
 {
     int i;

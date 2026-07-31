@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct Obj {
     u8 f0;
     u8 f1;

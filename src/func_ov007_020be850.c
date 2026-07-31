@@ -1,5 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
+#include "types.h"
 extern char* data_ov007_0210342c;
 
 int func_ov007_020be850(void) {

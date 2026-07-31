@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern void Matrix4x3_LoadIdentity(void* mat);
 extern void func_ov007_020c39f8(void* mat, int a, int b, int c);
 extern void MulMat4x3Mat4x3(void* d, void* a, void* b);

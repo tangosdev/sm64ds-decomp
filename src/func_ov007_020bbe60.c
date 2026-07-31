@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 extern void func_ov007_020c6784(void *self, int count, int p2, int p3, int p4, int p5, int mode);
 
 extern char *data_ov007_0210342c;

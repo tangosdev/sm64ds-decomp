@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov006_0212ac74
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -6,10 +7,6 @@
 // @emits dScMgFlower_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 typedef struct V2 {
     int x;
     int z;

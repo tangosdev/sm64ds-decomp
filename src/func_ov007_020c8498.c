@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_ov007_020c86c4(void* p);
 extern void func_ov007_020c897c(void* p);
 extern void func_ov007_020c8970(void* p);

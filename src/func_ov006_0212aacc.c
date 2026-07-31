@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_0212aacc
 // @emits dScMgFlower_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::Render - recovered from vtable slot identity */
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-
 extern s16 data_02082214[];
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5, u16 a6);

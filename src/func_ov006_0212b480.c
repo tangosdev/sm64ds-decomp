@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_0212b480
 // @emits dScMgFlower_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void *func_020adc74(void *arg);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);

@@ -1,6 +1,4 @@
-
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern void *data_ov007_02103370[];
 extern u16 data_ov007_020d7584[];
 extern void *(*data_ov007_02103368)(u16);

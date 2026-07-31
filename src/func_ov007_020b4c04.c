@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern void *func_ov007_020c3df4(int a, int b);
 extern void *func_ov007_020aea6c(int a, void *b, void *c);
 extern void *func_ov007_020c44e4(u8 x);

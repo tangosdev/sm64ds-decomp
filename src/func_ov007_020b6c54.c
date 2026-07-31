@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN3G3X13SetClearColorEtiiib(u16 color, int r, int g, int b, int alpha);
 
 void func_ov007_020b6c54(void) {

@@ -1,7 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 struct S {
     s32 mode;
     u32 flags;

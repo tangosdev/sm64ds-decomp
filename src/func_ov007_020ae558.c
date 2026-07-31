@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 extern u8 data_ov007_0210342c[];
 extern void Sprite_SetAnimation(char *c, int r1, int r2, int r3, int sp0);
 
