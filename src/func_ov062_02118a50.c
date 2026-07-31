@@ -1,14 +1,16 @@
+// @symbol func_ov062_02118a50
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
-struct Vector3 { int x, y, z; };
+
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *w);
-extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *w);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, struct Vector3 *v);
 extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);
-extern void func_ov062_02118004(void *c, int a1);
-extern void func_ov062_02117994(char *c, int idx);
-extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
-extern void func_ov062_021175c0(void *c);
 extern int _ZN9Animation8FinishedEv(void *anim);
 
 void func_ov062_02118a50(char *c)
@@ -26,7 +28,7 @@ void func_ov062_02118a50(char *c)
 
     {
         if (*(u16 *)(c + 0x3c6) != 0) {
-            u16 *p = (u16 *)(((long long)(int)(c + 0x3c6)) & 0xFFFFFFFFFFFFFFFFLL);
+            u16 *p = (u16 *)(((long long)(int)(c + 0x3c6)));
             *p = (u16)(*p - 1);
             if (*(u16 *)((c + 0x300) + 0xc6) != 0) return;
             func_ov062_02117994(c, 8); return;

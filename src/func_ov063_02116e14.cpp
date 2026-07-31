@@ -1,12 +1,15 @@
 //cpp
+// @symbol func_ov063_02116e14
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct V3 { int x, y, z; };
+
 extern "C" {
 void func_ov063_02119e38(char* c, int a, int b, int d);
 int func_ov063_0211a0dc(char* c);
 int func_ov063_0211adb4(char* c);
 void func_0201267c(int a, void* p);
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct V3*, void*, int, int);
+int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 
 void func_ov063_02116e14(char* c){
     *(unsigned short*)(((int)c + 0x5d4) & 0xFFFFFFFFFFFFFFFF) &= ~0x40;
@@ -32,7 +35,7 @@ void func_ov063_02116e14(char* c){
     *(unsigned char*)(c + 0x5cc) = 3;
     {
         char* r = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-            *(unsigned short*)(c + 0x4a0), 0, (struct V3*)(c + 0x504), 0,
+            *(unsigned short*)(c + 0x4a0), 0, (struct Vector3*)(c + 0x504), 0,
             *(signed char*)(c + 0x5d0), -1);
         if (r != 0) {
             *(int*)(r + 0xa4) = 0;

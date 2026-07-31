@@ -1,5 +1,6 @@
-struct V3 { int x, y, z; };
-
+// @symbol func_ov065_0211ac0c
+/* recovered: shared common types */
+#include "common.h"
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* b, void* c);
 extern void AddVec3(void* a, void* b, void* c);
@@ -8,8 +9,8 @@ extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S
 
 void func_ov065_0211ac0c(int c)
 {
-    struct V3 v1;
-    struct V3 v2;
+    struct Vector3 v1;
+    struct Vector3 v2;
     int d;
 
     d = *(int*)(c + 0x60) - *(int*)(c + 0x338);

@@ -1,4 +1,9 @@
 //cpp
+// @symbol func_ov060_021128c0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -6,7 +11,7 @@ typedef unsigned int u32;
 typedef int s32;
 typedef long long s64;
 typedef int Fix12;
-struct Vector3 { s32 x, y, z; };
+
 
 extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
@@ -24,7 +29,6 @@ extern "C" {
 
 struct TabEnt { int off; int idx; };
 extern TabEnt data_ov060_0211aed4[];
-extern u8 data_ov060_02119268[];
 extern s16 data_02082214[];
 
 extern "C" void func_ov060_021128c0(char* c)

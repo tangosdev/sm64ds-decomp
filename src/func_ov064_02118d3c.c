@@ -1,6 +1,11 @@
+// @symbol func_ov064_02118d3c
+// @emits LavaBubble_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daBbl_c::Kill - recovered from vtable slot identity */
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_ov064_02118c48(void *c);
-void func_ov064_02118d3c(char *c){
+void LavaBubble_Kill(char *c){
   if (*(unsigned char*)(c+0x33a) != 0) {
     unsigned int id = *(unsigned int*)(c+0x320);
     if (id != 0) {

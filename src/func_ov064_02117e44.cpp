@@ -1,4 +1,11 @@
 //cpp
+// @symbol func_ov064_02117e44
+// @emits daObjFl_Amilift_c_InitResources
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_PathPtr.h"
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjFl_Amilift_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -16,7 +23,6 @@ extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEs
 extern "C" void func_020393d4(void *p, void *v);
 extern "C" void func_020393c4(void *p, void *v);
 extern "C" void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
-extern "C" int _ZNK7PathPtr8NumNodesEv(void *self);
 extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int idx);
 extern "C" void func_ov064_02117a14(char *self, Vector3 *a, Vector3 *b);
 
@@ -24,11 +30,10 @@ extern SharedFilePtr data_ov064_0211c730;
 extern SharedFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
-extern "C" void func_ov064_02117fd4();
 
 struct V3 { int x, y, z; };
 
-extern "C" int func_ov064_02117e44(char *self)
+extern "C" int daObjFl_Amilift_c_InitResources(char *self)
 {
     BMD_File *bmd;
     KCL_File *kcl;

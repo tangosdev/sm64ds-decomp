@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x,y,z; };
+// @symbol func_ov064_02116110
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 int _ZN5Actor13ClosestPlayerEv(char *self);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);

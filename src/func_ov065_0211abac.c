@@ -1,12 +1,15 @@
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
+// @symbol func_ov065_0211abac
+// @emits daObjCtMecha05_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_ShadowModel.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daObjCtMecha05_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *func_ov065_0211abac(int *t)
+int *daObjCtMecha05_c_OnYoshiTryEat(int *t)
 {
     t[0] = (int)VT0;
     _ZN11ShadowModelD1Ev((char *)t + 0x33c);

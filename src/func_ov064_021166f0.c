@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov064_021166f0
+/* recovered: shared common types */
+#include "common.h"
 extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern void _Z14ApproachLinearRsss(short *a, short b, short c);
 struct Actor { char pad; };

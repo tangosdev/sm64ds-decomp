@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov062_02116dbc
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Matrix4x3 { int w[12]; };
+
 struct ShadowModel;
 
 extern Matrix4x3 data_02082128;

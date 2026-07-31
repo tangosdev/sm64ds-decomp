@@ -1,6 +1,6 @@
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-
+// @symbol func_ov070_0211f48c
+/* recovered: shared common types */
+#include "common.h"
 char* _ZN5Actor13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 void ApproachAngle(short* p, int target, int a, int b, int limit);

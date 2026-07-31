@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov063_02118ddc
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x,y,z; };
+
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* v, const void* w, int s0, int s1);
 extern int func_02012694(int a, char* p);
 void func_ov063_02118ddc(char* c){

@@ -1,8 +1,12 @@
+// @symbol func_ov064_0211915c
+// @emits daObjFl_Coin_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daObjFl_Coin_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
 
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
 
-int func_ov064_0211915c(char *a)
+int daObjFl_Coin_c_Behavior(char *a)
 {
     switch (*(u8 *)(a + 0xd5)) {
     case 0:

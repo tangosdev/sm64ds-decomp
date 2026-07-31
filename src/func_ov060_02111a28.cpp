@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov060_02111a28
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct V3 { int x, y, z; };
+
 struct G { int w[2]; };
 extern G data_ov060_0211acb0;
 extern G data_ov060_0211ac00;
@@ -59,13 +62,13 @@ void func_ov060_02111a28(char *c)
         return;
 
     if (r1 == 1) {
-        V3 dust;
+        Vector3 dust;
         dust.x = *(int *)(c + 0x3d4);
         dust.y = *(int *)(c + 0x3d8);
         dust.z = *(int *)(c + 0x3dc);
         _ZN5Actor17HugeLandingDustAtER7Vector3b(c, &dust, 0);
     } else {
-        V3 dust;
+        Vector3 dust;
         dust.x = *(int *)(c + 0x3e0);
         dust.y = *(int *)(c + 0x3e4);
         dust.z = *(int *)(c + 0x3e8);
@@ -73,7 +76,7 @@ void func_ov060_02111a28(char *c)
     }
     _ZN5Sound4PlayEjjRK7Vector3(3, 0xb0, c + 0x74);
     {
-        V3 quake;
+        Vector3 quake;
         quake.x = *(int *)(c + 0x5c);
         quake.y = *(int *)(c + 0x60);
         quake.z = *(int *)(c + 0x64);

@@ -1,6 +1,9 @@
+// @symbol func_ov072_0211f330
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 typedef long long s64;
-struct Vector3 { int x, y, z; };
+
 extern void func_020383fc(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern char* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);

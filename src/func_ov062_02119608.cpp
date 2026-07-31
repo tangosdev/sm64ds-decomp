@@ -1,5 +1,9 @@
 //cpp
-extern "C" int func_ov062_02119608(void *c) {
+// @symbol func_ov062_02119608
+// @emits Koopa_OnAimedAtWithEgg
+/* recovered: renamed to Class_Method */
+/* daNknk_c::OnAimedAtWithEgg - recovered from vtable slot identity */
+extern "C" int Koopa_OnAimedAtWithEgg(void *c) {
     unsigned short v = *(unsigned short*)((char*)c + 0xc);
     int r;
     if (v == 0xcb) r = 1; else r = 0;

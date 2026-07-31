@@ -1,11 +1,14 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov071_02120a48
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" char *_ZN5Actor22ClosestNonVanishPlayerEv(void *self);
 extern "C" int Vec3_Dist(const void *a, const void *b);
 extern "C" short Vec3_HorzAngle(const void *a, const void *b);
-extern "C" int AngleDiff(int a, int b);
 extern "C" int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, Vector3 *a, Vector3 *b, bool c);
-extern "C" void func_ov071_02121634(void *self, int a);
 extern "C" void func_ov071_02120a48(char *c)
 {
     char *p = _ZN5Actor22ClosestNonVanishPlayerEv(c);

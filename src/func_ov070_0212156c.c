@@ -1,6 +1,8 @@
-struct V3 { int x, y, z; };
+// @symbol func_ov070_0212156c
+/* recovered: shared common types */
+#include "common.h"
 extern short data_02082214[];
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct V3 *pos, void *v16, int d, int e);
+void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3 *pos, void *v16, int d, int e);
 void func_0201267c(int a, void *p);
 void func_ov070_02121880(void *c, int i);
 void _ZN9Animation7AdvanceEv(void *thiz);
@@ -12,7 +14,7 @@ void _ZN12CylinderClsn6UpdateEv(void *thiz);
 
 int func_ov070_0212156c(char *c){
   if(*(int*)(c+0x398) == 0x1e){
-    struct V3 pos;
+    struct Vector3 pos;
     int idx = (int)*(unsigned short*)(c+0x8e) >> 4;
     int s = data_02082214[idx*2+1];
     int cn = data_02082214[idx*2];

@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov064_02117a44
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, void* c);
 int Vec3_HorzDist(const void* a, const void* b);

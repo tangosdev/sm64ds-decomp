@@ -1,7 +1,12 @@
 //cpp
+// @symbol func_ov071_0211f148
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 struct WithMeshClsn;
 struct Actor;
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
@@ -18,7 +23,6 @@ extern "C" void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
-extern "C" void* _ZNK12WithMeshClsn13GetWallResultEv(void* self);
 
 extern "C" void func_ov071_0211f148(char* a, char* w) {
     RaycastGround rc;

@@ -1,5 +1,8 @@
+// @symbol func_ov066_02116c6c
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Vector3 { int x, y, z; };
+
 extern int _ZN9Animation8FinishedEv(void* self);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void* self, const struct Vector3* v);

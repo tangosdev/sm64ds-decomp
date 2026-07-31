@@ -1,13 +1,17 @@
 //cpp
+// @symbol func_ov070_02121438
+// @emits Amp_Kill
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daBrq_c::Kill - recovered from vtable slot identity */
 extern "C" {
-struct Vector3 { int x, y, z; };
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern int data_ov070_021234c4;
 }
 
-extern "C" int func_ov070_02121438(char* c)
+extern "C" int Amp_Kill(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
     int* p_b0 = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);

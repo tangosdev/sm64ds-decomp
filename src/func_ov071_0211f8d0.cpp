@@ -1,9 +1,12 @@
 //cpp
+// @symbol func_ov071_0211f8d0
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef long long s64;
 
-struct Vector3 { int x, y, z; };
+
 
 extern "C" {
 int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);

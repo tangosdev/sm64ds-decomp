@@ -1,3 +1,8 @@
+// @symbol func_ov063_0211640c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 #pragma opt_propagation off
 typedef int s32;
 typedef unsigned int u32;
@@ -5,10 +10,10 @@ typedef unsigned short u16;
 typedef signed short s16;
 typedef unsigned char u8;
 
-struct Matrix4x3 { int m[12]; };
-struct Vec3 { int x, y, z; };
 
-extern void Vec3_Asr(struct Vec3 *d, struct Vec3 *s, int sh);
+
+
+extern void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void _ZN9ModelBase12ApplyOpacityEj(void *self, u32 a, int z);
 extern void func_020167a4(void *p);
@@ -16,13 +21,12 @@ extern void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *p);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int a, int b, u32 g);
-extern void func_ov063_021160d4(void *c);
 
 extern struct Matrix4x3 data_020a0e68;
 
 void func_ov063_0211640c(char *c)
 {
-    struct Vec3 pos, t1, t2;
+    struct Vector3 pos, t1, t2;
     s16 ang;
 
     if (((u32)(*(u16 *)(c + 0x5d4) << 0x1c) >> 0x1f) == 0)

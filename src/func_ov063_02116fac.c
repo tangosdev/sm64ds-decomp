@@ -1,3 +1,8 @@
+// @symbol func_ov063_02116fac
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned short u16;
 typedef unsigned char u8;
 typedef unsigned int u32;
@@ -7,11 +12,10 @@ extern void func_0201267c(unsigned int id, void* p);
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRsss(short* p, short target, int step);
-extern char* func_ov063_0211a964(char* c, int n);
 
-struct Vec3 { int x, y, z; };
+
 struct Frame {
-    struct Vec3 v;
+    struct Vector3 v;
     int pad[10];
 };
 

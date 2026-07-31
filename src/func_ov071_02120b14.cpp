@@ -1,12 +1,15 @@
 //cpp
+// @symbol func_ov071_02120b14
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vec3 { s32 x, y, z; };
-struct Vec3_16f { s16 x, y, z; };
+
+
 
 extern "C" {
     void* _ZN5Actor7FindEggER12CylinderClsn(void* self, void* c);
@@ -57,7 +60,7 @@ idCheck:
         return;
     }
 
-    struct Vec3 hv;
+    struct Vector3 hv;
     hv.x = *(s32*)(c+0x5c);
     hv.y = *(s32*)(c+0x60);
     hv.z = *(s32*)(c+0x64);

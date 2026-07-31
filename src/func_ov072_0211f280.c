@@ -1,3 +1,6 @@
+// @symbol func_ov072_0211f280
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov072_0211f280 at 0x0211f280
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov072).
@@ -6,7 +9,7 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 
 struct Actor;
-struct Vector3 { int x, y, z; };
+
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct Actor* actor, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);

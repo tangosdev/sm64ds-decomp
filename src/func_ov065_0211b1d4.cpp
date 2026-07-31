@@ -1,11 +1,15 @@
 //cpp
+// @symbol func_ov065_0211b1d4
+// @emits daObjCtMecha05_c_InitResources
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjCtMecha05_c::InitResources - recovered from vtable slot identity */
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
-extern "C" void *ModelLoadFile(void *fp);
 struct ModelBase { void SetFile(BMD_File *f, int b, int c); };
 struct ShadowModel { void InitCuboid(); };
 struct Platform { void UpdateModelPosAndRotY(); void UpdateClsnPosAndRot(); };
-extern "C" void *MeshColliderLoadFile(void *fp);
 struct MovingMeshCollider {
     void SetFile(KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
 };
@@ -21,16 +25,11 @@ struct RaycastGround {
     int DetectClsn();
     ~RaycastGround();
 };
-extern "C" char data_ov065_0211d904;
-extern "C" char data_ov065_0211d90c;
-extern "C" char func_02112258;
 extern "C" unsigned char data_0209f2c0;
-extern "C" short data_ov065_0211c0c8;
-extern "C" void UpdatePosWithTransformSym();
 
 struct V3 { int x, y, z; };
 
-extern "C" int func_ov065_0211b1d4(char *self)
+extern "C" int daObjCtMecha05_c_InitResources(char *self)
 {
     void *mf = ModelLoadFile(&data_ov065_0211d904);
     ((ModelBase*)(self + 0xd4))->SetFile((BMD_File*)mf, 1, -1);

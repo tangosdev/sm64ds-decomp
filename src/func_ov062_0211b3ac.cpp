@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov062_0211b3ac
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
-struct Vector3 { int x, y, z; };
+
 struct PathPtr { int a, b; };
 extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern "C" void _ZN7PathPtrC1Ev(PathPtr* self);
@@ -20,7 +23,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     int bestDist;
 
     {
-        int *ctr = (int *)(((long long)(int)(sl + 0x460)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *ctr = (int *)(((long long)(int)(sl + 0x460)));
         *ctr = *ctr + 1;
         *ctr = *ctr & 7;
     }
@@ -36,7 +39,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     best.x = bestIdx; best.y = bestIdx; best.z = bestIdx;
 
     if (player != 0) {
-        int *pp = (int *)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *pp = (int *)(((long long)(int)(player + 0x5c)));
         ppos.x = *pp;
         i = bestIdx;
         ppos.y = pp[1];

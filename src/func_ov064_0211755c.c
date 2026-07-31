@@ -1,5 +1,10 @@
-extern int func_ov064_02116110(char* self, short step);
-int func_ov064_0211755c(char* self){
+// @symbol func_ov064_0211755c
+// @emits daBDonketu_c_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daBDonketu_c::Kill - recovered from vtable slot identity */
+int daBDonketu_c_Kill(char* self){
     if(*(unsigned short*)(self+0x100) < 0xa){
         *(int*)(self+0x98) = 0;
         int r = func_ov064_02116110(self, 0x700);

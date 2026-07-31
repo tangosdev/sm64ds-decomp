@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov062_0211a740
+// @emits Koopa_Kill
+/* recovered: shared common types, renamed to Class_Method */
+/* daNknk_c::Kill - recovered from vtable slot identity */
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -19,13 +23,13 @@ extern int data_ov062_0211e034[];
 extern s8 data_0209f2f8;
 extern u8 data_0209d684;
 extern char data_0209d4c8[];
-extern "C" void func_ov062_0211a740(char* c)
+extern "C" void Koopa_Kill(char* c)
 {
     switch (*(u8*)(c + 0x390)) {
     case 0:
         if (_Z14ApproachLinearRsss((s16*)(c + 0x94), *(s16*)(c + 0x3a8), 0x800) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x300), (void*)data_ov062_0211e03c[1], 0, 0x1000, 0);
-            *(u8*)((((long long)(int)(c + 0x390)) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
+            *(u8*)((((long long)(int)(c + 0x390)))) += 1;
             func_0201267c(0xec, c + 0x74);
             if (*(int*)(*(int*)(c + 0x398) + 8) == 0) {
                 func_02012790(0xa);
@@ -57,7 +61,7 @@ extern "C" void func_ov062_0211a740(char* c)
                 v.z = z;
             }
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x398), c, msg, &v, 1, 0) != 0)
-                *(u8*)((((long long)(int)(c + 0x390)) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
+                *(u8*)((((long long)(int)(c + 0x390)))) += 1;
         }
         return;
     case 2:

@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov065_02117404
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" {
 int Vec3_Dist(const Vector3* a, const Vector3* b);

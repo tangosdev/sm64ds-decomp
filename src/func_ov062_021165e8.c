@@ -1,9 +1,12 @@
+// @symbol func_ov062_021165e8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern int func_ov062_02115f84(void* c);
 extern void func_ov062_02116cd8(void* c, void* p);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern int ApproachAngle(short* angle, int target, int a, int b, int c);
-extern int AngleDiff(int a, int b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
 extern int Vec3_Dist(const void* a, const void* b);
 
@@ -11,14 +14,14 @@ extern char data_ov062_0211df00;
 extern char data_ov062_0211de70;
 extern char data_ov062_0211ded0;
 
-struct Vec3 { int x, y, z; };
+
 
 int func_ov062_021165e8(char* c)
 {
     char* player;
     int r;
-    volatile struct Vec3 pos;
-    struct Vec3* pp;
+    volatile struct Vector3 pos;
+    struct Vector3* pp;
 
     player = (char*)_ZN5Actor13ClosestPlayerEv(c);
     r = func_ov062_02115f84(c);
@@ -33,7 +36,7 @@ int func_ov062_021165e8(char* c)
     if (player == 0)
         return 1;
 
-    pp = (struct Vec3*)(int)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    pp = (struct Vector3*)(int)(((long long)(int)(player + 0x5c)));
     pos.x = pp->x;
     pos.y = pp->y;
     pos.z = pp->z;

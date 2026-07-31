@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov072_0211f65c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 int Vec3_HorzDist(const void* a, const void* b);
 short Vec3_HorzAngle(const void* a, const void* b);
@@ -14,7 +19,6 @@ void func_ov072_0211f158(void* c);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 void func_ov072_0211f330(void* c, void* p);
 void func_ov072_0211f280(void* c);
-extern Vector3 data_ov072_02122b58;
 }
 
 extern "C" int func_ov072_0211f65c(unsigned char* thiz)

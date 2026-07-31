@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov060_02112434
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct C;
 typedef void (C::*PMF)();

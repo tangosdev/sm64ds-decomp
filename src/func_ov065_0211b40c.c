@@ -1,5 +1,8 @@
+// @symbol func_ov065_0211b40c
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
-struct Matrix4x3 { int w[12]; };
+
 void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
    void* self, void* sm, struct Matrix4x3* m, int f, int g, u32 h);
 void func_ov065_0211b40c(char* c){

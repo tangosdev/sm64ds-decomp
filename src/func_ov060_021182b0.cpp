@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov060_021182b0
+// @emits daKpa3Bg_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daKpa3Bg_c::InitResources - recovered from vtable slot identity */
 struct BMD_File; struct KCL_File; struct Actor; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 struct Vector3;
@@ -23,8 +27,8 @@ extern "C" CLPS_Block* data_ov060_0211a980[];
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern "C" void func_ov060_021183f4();
 
-extern "C" int func_ov060_021182b0(char* self);
-int func_ov060_021182b0(char* self)
+extern "C" int daKpa3Bg_c_InitResources(char* self);
+int daKpa3Bg_c_InitResources(char* self)
 {
     int idx = *(int*)(self + 8) & 0xf;
     *(unsigned char*)(self + 0x329) = (unsigned char)idx;

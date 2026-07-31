@@ -1,11 +1,16 @@
 //cpp
+// @symbol func_ov062_0211c2f4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
+
 
 struct PathPtr {
     int a;
@@ -20,12 +25,10 @@ extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int ApproachAngle(void *p, int target, int a, int b, int c);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int LenVec3(Vector3 *v);
-extern int func_ov062_0211b3ac(void *c);
 extern int RandomIntInternal(int *seed);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out);
 extern void func_ov062_0211c658(void *c, void *p);
-extern int AngleDiff(int a, int b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(void *out, Vector3 *in, int s);
 extern void SubVec3(void *a, void *b, void *c);

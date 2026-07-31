@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov062_02116d28
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Matrix4x3 { int m[12]; };
+
 struct ShadowModel;
 struct Actor {
     void DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &mtx, Fix12 a, int b, unsigned int c);

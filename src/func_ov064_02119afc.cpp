@@ -1,8 +1,13 @@
 //cpp
+// @symbol func_ov064_02119afc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
-struct Vector3 { int x, y, z; };
+
 
 extern "C" {
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* t, const Vector3& v);
@@ -13,7 +18,6 @@ short _ZN5Actor18HorzAngleToCPlayerEv(void* t);
 void _ZN6Player4HealEi(void* p, int amt);
 void func_ov064_02119ecc(void* c, void* p);
 extern Vector3 data_ov064_0211c3d0;
-extern int data_ov064_0211c944;
 }
 
 static inline void CopyVec(Vector3* d, const Vector3* s)

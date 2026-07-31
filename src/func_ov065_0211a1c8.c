@@ -1,3 +1,11 @@
+// @symbol func_ov065_0211a1c8
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjCtMecha03_c.h"
+// @emits daObjCtMecha03_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daObjCtMecha03_c::Behavior - recovered from vtable slot identity */
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -5,8 +13,6 @@ typedef unsigned char u8;
 extern u16 DecIfAbove0_Short(u16* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
 extern int RandomIntInternal(int* seed);
-extern int func_ov065_0211a114(char* c);
-extern void func_ov065_02119fe8(char* self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
 
@@ -15,8 +21,9 @@ extern int data_0209e650;
 
 #define I16(off) (*(short*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 
-int func_ov065_0211a1c8(char* c)
+int daObjCtMecha03_c_Behavior(char* c)
 {
+    struct daObjCtMecha03_c *self = (struct daObjCtMecha03_c *)(void *)c;
     if (data_0209f2c0 != 3) {
         if (*(unsigned short*)(c + 0x300 + 0x26) != 0) {
             if (DecIfAbove0_Short((u16*)(c + 0x326)) == 0) {
@@ -54,7 +61,7 @@ int func_ov065_0211a1c8(char* c)
             }
             I16(0x322) = I16(0x322) + *(short*)(c + 0x300 + 0x24);
         }
-        *(short*)(c + 0x90) = *(short*)(c + 0x300 + 0x22);
+        self->unk_090 = *(short*)(c + 0x300 + 0x22);
     }
 
     func_ov065_0211a114(c);

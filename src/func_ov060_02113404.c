@@ -1,9 +1,12 @@
+// @symbol func_ov060_02113404
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct Vector3 { int x, y, z; };
-extern int func_ov060_02112350(void* c);
+
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern int _ZN5Actor14GetSubtractionEss(void* self, short a, short b);
-extern char data_ov060_0211ac60[];
 
 int func_ov060_02113404(char* c) {
   int r = 0;

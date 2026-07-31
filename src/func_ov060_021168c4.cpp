@@ -1,6 +1,11 @@
 //cpp
+// @symbol func_ov060_021168c4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 struct CylinderClsn;
 struct Actor;
 struct WithMeshClsn { int JustHitGround() const; };
@@ -11,7 +16,6 @@ struct Actor {
 };
 struct ActorBase { void MarkForDestruction(); };
 extern "C" int func_ov060_02116518(char* c, int a, int b, int d);
-extern "C" int func_ov060_021172c8(unsigned char* p, unsigned int n);
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
 
 extern "C" void func_ov060_021168c4(char* c)

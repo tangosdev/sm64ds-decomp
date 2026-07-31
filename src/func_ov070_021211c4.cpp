@@ -1,8 +1,12 @@
 //cpp
+// @symbol func_ov070_021211c4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
+
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_ov070_02121880(void* c, int n);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 

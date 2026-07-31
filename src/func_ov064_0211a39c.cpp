@@ -1,13 +1,17 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov064_0211a39c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Vec3_16 {};
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(char*);
 extern char* _ZN5Actor13ClosestPlayerEv(char*);
-extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char*, Vec3*, unsigned int, int, unsigned short, char*);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, Vec3*, Vec3_16*, int, int);
+extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char*, Vector3*, unsigned int, int, unsigned short, char*);
+extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
 extern int _ZN9Animation8FinishedEv(char*);
-extern void func_ov064_0211a6ec(char*, int);
 
 void func_ov064_0211a39c(char* c)
 {
@@ -16,7 +20,7 @@ void func_ov064_0211a39c(char* c)
     {
         char* p = _ZN5Actor13ClosestPlayerEv(c);
 
-        Vec3 v1;
+        Vector3 v1;
         v1.x = *(int*)(c + 0x5c);
         v1.y = *(int*)(c + 0x60);
         v1.z = *(int*)(c + 0x64);
@@ -24,7 +28,7 @@ void func_ov064_0211a39c(char* c)
 
         if (*(unsigned char*)(c + 0x173) == 0)
         {
-            Vec3 v2;
+            Vector3 v2;
             v2.x = v1.x;
             v2.y = v1.y;
             v2.z = v1.z;

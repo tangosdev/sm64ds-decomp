@@ -1,14 +1,17 @@
+// @symbol func_ov060_021145d4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
 extern void func_0200fa04(void *c, void *v, int flag);
-extern void func_ov060_02111cc0(void *c, int a, int b);
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player7IsInAirEv(void *p);
-extern int func_ov002_020c56f0(unsigned char* c, int arg);
 
-struct V3 { int x, y, z; };
+
 
 int func_ov060_021145d4(char *c){
-  struct V3 v;
+  struct Vector3 v;
   int b;
   if(_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)){
     *(int*)(c + 0x98) = 0;

@@ -1,11 +1,16 @@
 //cpp
+// @symbol func_ov065_02116364
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vec3 { s32 x, y, z; };
+
 struct V3A { int w[3]; };
 
 extern "C" {
@@ -27,15 +32,14 @@ extern int data_020a0e68;
 struct SFP { void* a; void* b; };
 extern SFP data_ov065_0211d600;
 extern int data_ov065_0211d670;
-extern int data_ov065_0211d680;
 
 extern "C" int func_ov065_02116364(void* self)
 {
     u8* c = (u8*)self;
-    struct { Vec3 pp; Vec3 spv; Vec3 sout; Vec3 d; Vec3 tgt; } L;
+    struct { Vector3 pp; Vector3 spv; Vector3 sout; Vector3 d; Vector3 tgt; } L;
     u8* pl = (u8*)_ZN5Actor22ClosestNonVanishPlayerEv(self);
     if (pl != 0) {
-        *(V3A*)(int)(((long long)(int)&L.pp) & 0xFFFFFFFFFFFFFFFFLL) = *(V3A*)(int)(((long long)(int)(pl + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        *(V3A*)(int)(((long long)(int)&L.pp)) = *(V3A*)(int)(((long long)(int)(pl + 0x5c)));
         L.tgt = L.pp;
         *(s16*)(c+0x3e0) = Vec3_HorzAngle((void*)(c+0x5c), &L.tgt);
         ApproachAngle((void*)(c+0x94), *(s16*)(c+0x3e0), 1, 0x500, 0x500);
@@ -58,7 +62,7 @@ extern "C" int func_ov065_02116364(void* self)
                 *(s32*)(sp2+0xa4) = L.sout.x;
                 *(s32*)(sp2+0xa8) = L.sout.y;
                 *(s32*)(sp2+0xac) = L.sout.z;
-                *(s32*)(int)(((long long)(int)(c + 0x3dc)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+                *(s32*)(int)(((long long)(int)(c + 0x3dc))) += 1;
                 *(u16*)(c+0x100) = 4;
             }
         }
@@ -66,7 +70,7 @@ extern "C" int func_ov065_02116364(void* self)
 
     if (_ZN9Animation8FinishedEv((void*)(c+0x350)) != 0) {
         if (pl != 0) {
-            s32* dsrc = (s32*)(int)(((long long)(int)(pl + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            s32* dsrc = (s32*)(int)(((long long)(int)(pl + 0x5c)));
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];

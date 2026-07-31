@@ -1,10 +1,13 @@
+// @symbol func_ov062_021199ac
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef int s32;
 typedef unsigned int u32;
 
-struct Vector3 { s32 x, y, z; };
+
 
 extern void *_ZN5Actor18ClosestWithActorIDEj(void *thiz, u32 id);
 
@@ -52,7 +55,7 @@ int func_ov062_021199ac(char *self)
         fixed2 = (s32)(((long long)selfK * 0xb33 + 0x800) >> 12);
         if (fixed1 < fixed2)
             return 1;
-        *(s32 *)(((long long)(int)(self + 0x98)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x2000;
+        *(s32 *)(((long long)(int)(self + 0x98))) -= 0x2000;
         goto ret0;
     } else {
         if (dist >= 0x12c000)

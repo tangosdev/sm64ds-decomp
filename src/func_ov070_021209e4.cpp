@@ -1,12 +1,15 @@
 //cpp
+// @symbol func_ov070_021209e4
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 typedef long long s64;
-struct Vec3 { int x, y, z; };
-struct Vector3 { int x, y, z; };
+
+
 struct Animation { void Advance(); };
 
 void _Z14ApproachLinearRiii(int *val, int target, int step);
-void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 *v, unsigned int d);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_ov070_02120644(char *c);
@@ -47,7 +50,7 @@ int func_ov070_021209e4(char *c) {
         *(int*)(c + 0x418) = (int)(((s64)ip * sinv + 0x800) >> 0xc);
     }
 
-    AddVec3((Vec3*)(c + 0x404), (Vec3*)(c + 0x410), (Vec3*)(c + 0x404));
+    AddVec3((Vector3*)(c + 0x404), (Vector3*)(c + 0x410), (Vector3*)(c + 0x404));
 
     *(short*)(c + 0x42e) = (short)(*(short*)(c + 0x42e) + 0x4000);
 

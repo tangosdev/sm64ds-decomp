@@ -1,10 +1,17 @@
+// @symbol func_ov062_0211a1f4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Player.h"
+#include "decl_Timer.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-struct Vec3 { int x, y, z; };
+
 struct VVec3 { volatile int x, y, z; };
 
 extern s8 data_0209f2f8;
@@ -15,19 +22,12 @@ extern int data_ov062_0211e014[];
 extern int data_ov062_0211e024[];
 extern int data_ov062_0211e02c[];
 
-extern int _ZN6Player12Unk_020c4f40Et(int p, u16 a);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);
 extern int _ZN6Player12GetTalkStateEv(int p);
 extern void func_02012694(u32 a, void *b);
-extern void _ZN5Sound22LoadAndSetMusic_Layer2Ej(u32 a);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int a, u32 b, int e);
-extern void _ZN5Timer10StartTimerEv(void *t);
 extern void func_0201267c(u32 a, void *b);
-extern int func_ov062_02119af0(char *p);
-extern void func_ov062_02119800(void *c);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN5Timer9StopTimerEv(void *t);
-extern int func_ov062_021199ac(void *c);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int _ZN5Actor14GetSubtractionEss(void *c, s16 a, int b);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);
@@ -35,7 +35,6 @@ extern int Vec3_Dist(const void *a, const void *b);
 extern void _Z14ApproachLinearRiii(int *r, int a, int b);
 extern void _Z14ApproachLinearRsss(s16 *r, s16 a, s16 b);
 extern int _ZN9Animation8FinishedEv(void *a);
-extern void func_ov062_02119954(void *c);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int x, int y, int z);
 

@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov065_0211a358
+// @emits daObjCtMecha03_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjCtMecha03_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -8,7 +14,6 @@ struct CLPS_Block;
 extern struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, int, int);
 extern void _ZN11ShadowModel10InitCuboidEv(void *thisp);
-extern "C" int func_ov065_0211a114(char *c);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thisp);
 extern struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -20,11 +25,9 @@ extern "C" void func_020393d4(int *p, int v);
 extern struct SharedFilePtr data_ov065_0211d88c;
 extern struct SharedFilePtr data_ov065_0211d894;
 extern unsigned char data_0209f2c0;
-extern short data_ov065_0211c0b0[];
-extern int func_02112198;
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
-extern "C" int func_ov065_0211a358(char *self) {
+extern "C" int daObjCtMecha03_c_InitResources(char *self) {
     struct BMD_File *bmd;
     struct KCL_File *kcl;
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov065_0211d88c);
