@@ -58,7 +58,7 @@ int PyramidLift::InitResources()
             *(int*)(ip+0x380) = mPosY;
             prod = n * k;
             *(int*)(ip+0x384) = mPosZ;
-            py = (int*)(((int)ip + 0x380) & 0xFFFFFFFFFFFFFFFFLL);
+            py = (int*)(((int)ip + 0x380));
             *py = *py - prod;
             ip = ip + 0xc;
         } while (n < 10);

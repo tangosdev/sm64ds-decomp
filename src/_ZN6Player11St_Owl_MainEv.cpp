@@ -43,7 +43,7 @@ int Player::St_Owl_Main()
     switch (st) {
     case 0:
         if (mAttachOffsetY <= mPosY) {
-            (*(unsigned char*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(unsigned char*)(((int)((char*)this) + 0x6e3)))++;
             mVertAccel = -0x2c00;
         }
         if (mIsAirborne != 0) {

@@ -38,10 +38,10 @@ int Player::St_Teleport_Main()
     switch (mStateStep) {
     case 0:
         if (mOpacity > 1) {
-            (*(u8*)(((int)((char*)this) + 0x6f5) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(u8*)(((int)((char*)this) + 0x6f5)))--;
             break;
         }
-        (*(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8*)(((int)((char*)this) + 0x6e5)))++;
         if (mStateWork >= 0x10) {
             Obj* obj = GetTeleportDestObj((u8)(unk_6e8 - 1));
             int tx = obj->x << 12;
@@ -69,10 +69,10 @@ int Player::St_Teleport_Main()
                 if (data_0209f32c > mPosY + 0x64000)
                     mIsUnderwater = 1;
             }
-            (*(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(u8*)(((int)((char*)this) + 0x6e5)))--;
             break;
         }
-        (*(u8*)(((int)((char*)this) + 0x6f5) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8*)(((int)((char*)this) + 0x6f5)))++;
         func_02020388(mPlayerNo);
         if (mOpacity >= 0x1f) {
             int hit = 0;

@@ -19,7 +19,7 @@ int Player::St_Squish_Init()
   *(unsigned char*)((char*)&unk_716) = 1;
   *(int*)((char*)&mAttachOffsetY) = *(int*)((char*)&mPosY);
   {
-    int *p = (int *)(((int)((void*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFF);
+    int *p = (int *)(((int)((void*)this) + 0x2ec));
     *p |= 4;
   }
   return 1;

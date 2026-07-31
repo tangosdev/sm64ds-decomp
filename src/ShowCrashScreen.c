@@ -90,7 +90,7 @@ void ShowCrashScreen(void)
             int *tail;
             { i = 0; if (i < 17) do { nds_printf(scr + (i + 3) * 0x40 + 0x28, data_0208e5e4,
                     &buf.c[i * 3], regs[i]); i++; } while (i < 17); }
-            tail = (int *)(int)(((long long)(int)(data_0209cddc + 0x19)) & 0xFFFFFFFFFFFFFFFFLL);
+            tail = (int *)(int)(((long long)(int)(data_0209cddc + 0x19)));
             nds_printf(scr + 0x528, data_0208e5f0, tail[0]);
             nds_printf(scr + 0x568, data_0208e5fc, tail[1]);
         }

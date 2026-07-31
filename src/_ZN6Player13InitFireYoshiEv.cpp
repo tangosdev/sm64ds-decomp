@@ -9,7 +9,7 @@ extern int data_ov002_0211004c;
 
 void Player::InitFireYoshi()
 {
-    u16 *p = (u16 *)(((int)((char *)this) + 0x6ce) & 0xFFFFFFFFFFFFFFFFLL);
+    u16 *p = (u16 *)(((int)((char *)this) + 0x6ce));
     *p |= 0x1000;
     if (mObjInMouth == 0)
         return;

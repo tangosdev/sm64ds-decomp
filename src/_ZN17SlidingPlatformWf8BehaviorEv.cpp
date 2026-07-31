@@ -18,7 +18,7 @@ int SlidingPlatformWf::Behavior()
 {
   if (DecIfAbove0_Byte((unsigned char*)((char*)&unk_31e)) == 0) {
     if (DecIfAbove0_Short((unsigned short*)((char*)&unk_320)) == 0) {
-      s16* a = (s16*)(((int)((char*)this) + 0x94) & 0xffffffffffffffff);
+      s16* a = (s16*)(((int)((char*)this) + 0x94));
       s16 v = data_ov091_02134504[unk_322];
       unk_320 = v;
       *a += 0x8000;

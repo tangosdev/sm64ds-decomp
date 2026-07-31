@@ -42,11 +42,11 @@ int PyramidStep::InitResources()
         case 0:
             break;
         case 1:
-            *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0xfa000;
-            *(unsigned short*)(((int)((char *)this) + 0x370) & 0xFFFFFFFFFFFFFFFF) += 0x32;
+            *(int*)(((int)((char *)this) + 0x60)) -= 0xfa000;
+            *(unsigned short*)(((int)((char *)this) + 0x370)) += 0x32;
             break;
         case 2:
-            *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0x1f4000;
+            *(int*)(((int)((char *)this) + 0x60)) -= 0x1f4000;
             unk_372 = 1;
             unk_0a8 = v;
             break;

@@ -64,11 +64,11 @@ void Stage::CheckCameraInput()
                                 if (mask == 0) mask = 0x200;
                             }
                             if ((data_020a0de8[i].touched && data_020a0de8[i].held) ? 1 : 0)
-                                *(u16*)(((int)cam + 6) & 0xFFFFFFFFFFFFFFFFLL) |= mask;
+                                *(u16*)(((int)cam + 6)) |= mask;
                             else
-                                *(u16*)(((int)cam + 6) & 0xFFFFFFFFFFFFFFFFLL) |= mask & (mask ^ data_0209f368[i]);
+                                *(u16*)(((int)cam + 6)) |= mask & (mask ^ data_0209f368[i]);
                             data_0209f368[i] = mask;
-                            *(u16*)(((int)cam + 4) & 0xFFFFFFFFFFFFFFFFLL) |= mask;
+                            *(u16*)(((int)cam + 4)) |= mask;
                             *st = 1;
                         }
                     } else if (*st == 1) {
@@ -87,7 +87,7 @@ void Stage::CheckCameraInput()
                         && ((state2 == 1 && data_020a0de8[i].x >= 0xd7 && data_020a0de8[i].y >= 0x8d)
                             || (state2 == 2 && data_020a0de8[i].x >= 0xd7 && data_020a0de8[i].y >= 0x73 && data_020a0de8[i].y < 0x97))) {
                         data_ov002_02111180 = 0x10;
-                        *(u16*)(((int)cam + 6) & 0xFFFFFFFFFFFFFFFFLL) |= 0x8000;
+                        *(u16*)(((int)cam + 6)) |= 0x8000;
                         *st = 2;
                         cam->f14 = 0;
                     } else if (*st == 2) {

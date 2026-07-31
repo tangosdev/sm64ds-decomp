@@ -19,7 +19,7 @@ int FireSeaElevator::InitResources()
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);
     if (unk_008 != 0xffff) {
-        int* p = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)((char*)this) + 0x60));
         *p -= 0x12c000;
     }
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));

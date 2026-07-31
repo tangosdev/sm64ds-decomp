@@ -48,7 +48,7 @@ int SnowmanBreath::Behavior()
                 break;
             }
             {
-                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2) & 0xFFFFFFFFFFFFFFFF);
+                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2));
                 *state = *state + 1;
             }
             break;
@@ -63,7 +63,7 @@ int SnowmanBreath::Behavior()
                 break;
             }
             {
-                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2) & 0xFFFFFFFFFFFFFFFF);
+                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2));
                 *state = *state + 1;
             }
             break;
@@ -76,7 +76,7 @@ int SnowmanBreath::Behavior()
         }
     } else {
         if (func_ov027_02112618(((char *)this)) != 0) {
-            int *timer = (int *)(((int)((char *)this) + 0x13c8) & 0xFFFFFFFFFFFFFFFF);
+            int *timer = (int *)(((int)((char *)this) + 0x13c8));
             *timer = *timer + 1;
             base = ((char *)this) + 0x1000;
             if ((*(int *)(base + 0x3c8) & 7) != 0) {

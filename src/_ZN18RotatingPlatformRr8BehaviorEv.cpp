@@ -25,7 +25,7 @@ int RotatingPlatformRr::Behavior()
         unk_08c = unk_110 + (int)((((s64)data_02082214[idx + 1] << 11) + 0x800) >> 12);
     }
     {
-        u16 *p = (u16 *)(((int)((char*)this) + 0x116) & 0xFFFFFFFFFFFFFFFF);
+        u16 *p = (u16 *)(((int)((char*)this) + 0x116));
         *p = *p + 1;
     }
     if (unk_119 != 0) {

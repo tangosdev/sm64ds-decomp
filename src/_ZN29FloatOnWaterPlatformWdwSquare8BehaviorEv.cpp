@@ -19,7 +19,7 @@ int FloatOnWaterPlatformWdwSquare::Behavior()
         if (((u8*)this)[0x326] != 0) {
             func_02012694(0x17b, ((u8*)this) + 0x74);
             {
-                u8* p = (u8*)(((int)((u8*)this) + 0x327) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* p = (u8*)(((int)((u8*)this) + 0x327));
                 *p = *p + 1;
             }
         }
@@ -29,17 +29,17 @@ int FloatOnWaterPlatformWdwSquare::Behavior()
     case 3:
         _ZN5Actor9UpdatePosEP12CylinderClsn(((u8*)this), 0);
         {
-            int* p = (int*)(((int)((u8*)this) + 0x320) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)(((int)((u8*)this) + 0x320));
             *p = *p + unk_098;
         }
         if (unk_320 >= 0x177000) {
             unk_320 = 0;
             {
-                u8* p = (u8*)(((int)((u8*)this) + 0x327) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* p = (u8*)(((int)((u8*)this) + 0x327));
                 *p = *p + 1;
             }
             {
-                u8* base = (u8*)(((int)((u8*)this) + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* base = (u8*)(((int)((u8*)this) + 0x300));
                 *(u16*)(base + 0x24) = 0;
             }
         }
@@ -48,24 +48,24 @@ int FloatOnWaterPlatformWdwSquare::Behavior()
     case 4:
         if (*(u16*)((u8*)(((unsigned)((u8*)this) + 0x300)) + 0x24) >= 0x3c) {
             {
-                s16* p = (s16*)(((int)((u8*)this) + 0x94) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* p = (s16*)(((int)((u8*)this) + 0x94));
                 *p = *p + 0x8000;
             }
             if (((u8*)this)[0x327] == 4) {
                 ((u8*)this)[0x327] = 0;
             } else {
                 {
-                    u8* p = (u8*)(((int)((u8*)this) + 0x327) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8* p = (u8*)(((int)((u8*)this) + 0x327));
                     *p = *p + 1;
                 }
                 func_02012694(0x17b, ((u8*)this) + 0x74);
             }
             {
-                u8* b2 = (u8*)(((int)((u8*)this) + 0x300) & 0xFFFFFFFFFFFFFFFFLL);
+                u8* b2 = (u8*)(((int)((u8*)this) + 0x300));
                 *(u16*)(b2 + 0x24) = 0;
             }
         } else {
-            u16* p = (u16*)(((int)((u8*)this) + 0x324) & 0xFFFFFFFFFFFFFFFFLL);
+            u16* p = (u16*)(((int)((u8*)this) + 0x324));
             *p = *p + 1;
         }
         break;

@@ -12,8 +12,8 @@ struct Platform {
 
 int DonutBlock::Behavior()
 {
-    short *s = (short *)(((int)((char *)this) + 0x8e) & 0xFFFFFFFFFFFFFFFF);
-    short *t = (short *)(((int)((char *)this) + 0x300) & 0xFFFFFFFFFFFFFFFF);
+    short *s = (short *)(((int)((char *)this) + 0x8e));
+    short *t = (short *)(((int)((char *)this) + 0x300));
     *s = (short)(*s + t[0x1e / 2]);
     int b = (int)((unk_0b0 & 8) != 0);
     if (b != 0) {

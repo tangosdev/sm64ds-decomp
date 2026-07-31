@@ -19,7 +19,7 @@ int PyramidTag::Behavior()
     }
     char* a = _ZN5Actor10FindWithIDEj(id);
     if(a){
-      unsigned char* p = (unsigned char*)(((int)a + 0x3b6) & 0xFFFFFFFFFFFFFFFF);
+      unsigned char* p = (unsigned char*)(((int)a + 0x3b6));
       *p += 1;
     }
     _ZN9ActorBase18MarkForDestructionEv(((char*)this));

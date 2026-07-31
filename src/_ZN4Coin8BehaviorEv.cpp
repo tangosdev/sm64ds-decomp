@@ -24,7 +24,7 @@ extern void _ZN12CylinderClsn6UpdateEv(char *c);
 int Coin::Behavior()
 {
     if ((unsigned int)(unk_3ae << 0x1e) >> 0x1f) {
-        *(unsigned char *)(((int)((char *)this) + 0x3ae) & 0xFFFFFFFFFFFFFFFF) &= ~2;
+        *(unsigned char *)(((int)((char *)this) + 0x3ae)) &= ~2;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x30, ((char *)this) + 0x74);
     }
     if ((int)(mActorID == 0x122) != 0) {
@@ -32,7 +32,7 @@ int Coin::Behavior()
             mAreaId = -1;
     }
     if (func_ov002_020b10a0(((char *)this)) != 0) return 1;
-    *(short *)(((int)((char *)this) + 0x8e) & 0xFFFFFFFFFFFFFFFF) += 0xc00;
+    *(short *)(((int)((char *)this) + 0x8e)) += 0xc00;
     if (func_ov002_020b12ec(((char *)this)) != 0) {
         func_ov002_020b14d8(((char *)this));
         _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);

@@ -17,16 +17,16 @@ int FireSeaElevator::Behavior()
     if (unk_008 != 0xffff) {
         int idx = unk_354 >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
-        *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) =
-            *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) + (int)(((long long)s * 0x7000 + 0x800) >> 12);
+        *(int*)(((int)((char *)this) + 0x60)) =
+            *(int*)(((int)((char *)this) + 0x60)) + (int)(((long long)s * 0x7000 + 0x800) >> 12);
     } else {
         int idx = unk_354 >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
-        *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) =
-            *(int*)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) - (int)(((long long)s * 0x3000 + 0x800) >> 12);
+        *(int*)(((int)((char *)this) + 0x60)) =
+            *(int*)(((int)((char *)this) + 0x60)) - (int)(((long long)s * 0x3000 + 0x800) >> 12);
     }
-    *(short*)(((int)((char *)this) + 0x354) & 0xFFFFFFFFFFFFFFFF) =
-        *(short*)(((int)((char *)this) + 0x354) & 0xFFFFFFFFFFFFFFFF) + 0x100;
+    *(short*)(((int)((char *)this) + 0x354)) =
+        *(short*)(((int)((char *)this) + 0x354)) + 0x100;
     _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
     if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
         _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));

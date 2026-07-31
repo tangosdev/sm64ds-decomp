@@ -22,5 +22,5 @@ extern "C" void _ZN5Actor25OnAimedAtWithEggReturnVecEv(Vec *ret, Base *self)
     ret->x = *(s32 *)(a + 0x5c);
     ret->y = *(s32 *)(a + 0x60);
     ret->z = *(s32 *)(a + 0x64);
-    *(s32 *)(((long long)(int)((char *)ret + 4)) & 0xFFFFFFFFFFFFFFFFLL) += self->m74();
+    *(s32 *)(((long long)(int)((char *)ret + 4))) += self->m74();
 }

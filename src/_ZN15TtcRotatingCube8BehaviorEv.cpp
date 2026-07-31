@@ -25,17 +25,17 @@ int TtcRotatingCube::Behavior()
             if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
                 break;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x5b, ((char *)this) + 0x74);
-            (*(u8 *)(((int)((char *)this) + 0x376) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8 *)(((int)((char *)this) + 0x376)))++;
             unk_0a8 = -0x5000;
             break;
         case 1:
-            *(int *)(((int)((char *)this) + 0xa8) & 0xFFFFFFFFFFFFFFFF) += 0x800;
-            *(int *)(((int)((char *)this) + 0x370) & 0xFFFFFFFFFFFFFFFF) += unk_0a8;
+            *(int *)(((int)((char *)this) + 0xa8)) += 0x800;
+            *(int *)(((int)((char *)this) + 0x370)) += unk_0a8;
             if (unk_370 < 0)
                 break;
             unk_370 = 0;
             mWaitTimer = 6;
-            (*(u8 *)(((int)((char *)this) + 0x376) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8 *)(((int)((char *)this) + 0x376)))++;
             break;
         case 2:
             if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
@@ -47,7 +47,7 @@ int TtcRotatingCube::Behavior()
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
                 mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650) % 7 * 0x14 + 5;
-            *(s16 *)(((int)((char *)this) + 0x378) & 0xFFFFFFFFFFFFFFFF) += data_ov065_0211cfa8[unk_377];
+            *(s16 *)(((int)((char *)this) + 0x378)) += data_ov065_0211cfa8[unk_377];
             break;
         }
     }

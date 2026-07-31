@@ -93,11 +93,11 @@ skipclear:
     *(int *)(c + 0x98) = (int)(((long long)*(int *)(c + 0x98) * 0xccc + 0x800) >> 12);
 
     if (AngleDiff(*(s16 *)(c + 0x94), *(s16 *)(c + 0x8e)) >= 0x4000) {
-        *(int *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) >>= 2;
+        *(int *)(((int)c + 0x98)) >>= 2;
     }
 
     if (func_ov002_020c19d0(c, 0x64, 0x32) != 0) {
-        *(u16 *)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFF) |= 0x200;
+        *(u16 *)(((int)c + 0x6ce)) |= 0x200;
         *(int *)(c + 0x98) = 0;
     }
     return 1;

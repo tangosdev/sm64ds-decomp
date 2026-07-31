@@ -12,7 +12,7 @@ int IceSlideManager::Behavior()
   switch (unk_0d6) {
   case 0:
     if (_ZN5Actor13DistToCPlayerEv(((char*)this)) < 0x180000) {
-      unsigned char* p = (unsigned char*)(((int)((char*)this) + 0xd6) & 0xFFFFFFFFFFFFFFFF);
+      unsigned char* p = (unsigned char*)(((int)((char*)this) + 0xd6));
       _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
       *p += 1;
     }

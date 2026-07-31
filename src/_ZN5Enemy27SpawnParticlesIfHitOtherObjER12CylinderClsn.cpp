@@ -20,11 +20,11 @@ int _ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(char* self, char* cls
                 }
             }
         }
-        f = (int*)(((int)clsn + 0x18) & 0xFFFFFFFFFFFFFFFF);
+        f = (int*)(((int)clsn + 0x18));
         *f = *f | 0x20000;
         goto done;
     }
-    f = (int*)(((int)clsn + 0x18) & 0xFFFFFFFFFFFFFFFF);
+    f = (int*)(((int)clsn + 0x18));
     *f = *f & ~0x20000;
 done:
     return 0;

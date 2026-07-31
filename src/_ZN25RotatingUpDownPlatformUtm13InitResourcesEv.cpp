@@ -44,7 +44,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     void *kcl;
 
     if (mSpawnParam == 0xffff) {
-        int *p = (int*)(((int)((char *)this) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int*)(((int)((char *)this) + 0xb0));
         *p = *p & ~2;
         _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(((char *)this), 0, 0x1000, 0, 0);
         return 1;

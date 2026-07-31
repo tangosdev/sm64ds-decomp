@@ -26,8 +26,8 @@ int PyramidStep::Behavior()
         break;
     }
     {
-        unsigned short* p370 = (unsigned short*)(((int)c + 0x370) & 0xFFFFFFFFFFFFFFFF);
-        int* p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short* p370 = (unsigned short*)(((int)c + 0x370));
+        int* p60 = (int*)(((int)c + 0x60));
         *p370 = (unsigned short)(*p370 + 1);
         *p60 = *p60 + *(int*)(c + 0xa8);
     }

@@ -66,7 +66,7 @@ int BigMovingIceBlock::Behavior()
     }
 
     if (looped) {
-        int *pn = (int *)(((int)((char *)this) + 0x328) & 0xFFFFFFFFFFFFFFFF);
+        int *pn = (int *)(((int)((char *)this) + 0x328));
         *pn = *pn + mPathDir;
         if (mPathNodeIdx < 0) {
             if (_ZNK7PathPtr5LoopsEv((char *)&mPath))
@@ -74,7 +74,7 @@ int BigMovingIceBlock::Behavior()
             else {
                 int *pn2;
                 mPathDir = 1;
-                pn2 = (int *)(((unsigned int)((char *)this) + 0x328) & 0xFFFFFFFFFFFFFFFF);
+                pn2 = (int *)(((unsigned int)((char *)this) + 0x328));
                 *pn2 = *pn2 + mPathDir * 2;
             }
         }
@@ -84,7 +84,7 @@ int BigMovingIceBlock::Behavior()
             else {
                 int *pn3;
                 mPathDir = -1;
-                pn3 = (int *)(((int)((char *)&mPathNodeIdx)) & 0xFFFFFFFFFFFFFFFF);
+                pn3 = (int *)(((int)((char *)&mPathNodeIdx)));
                 *pn3 = *pn3 + mPathDir * 2;
             }
         }

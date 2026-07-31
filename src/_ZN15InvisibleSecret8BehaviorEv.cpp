@@ -17,17 +17,17 @@ int InvisibleSecret::Behavior()
 
     if (unk_14c != 0) return 1;
 
-    *(int *)((int)((char *)&mVertSpeed) & 0xFFFFFFFFFFFFFFFFLL) += unk_09c;
+    *(int *)((int)((char *)&mVertSpeed)) += unk_09c;
     if (mVertSpeed < unk_0a0)
         mVertSpeed = unk_0a0;
-    *(int *)((int)((char *)&mPosY) & 0xFFFFFFFFFFFFFFFFLL) += mVertSpeed;
+    *(int *)((int)((char *)&mPosY)) += mVertSpeed;
 
     switch (unk_14e) {
     case 0:
         if (mPosY < mStartPosY) {
             mPosY = mStartPosY;
             mVertSpeed = 0xf000;
-            (*(u8 *)((int)((char *)&unk_14e) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8 *)((int)((char *)&unk_14e)))++;
         }
         break;
     case 1:
@@ -44,7 +44,7 @@ int InvisibleSecret::Behavior()
     if (unk_138 != 0) {
         char *other = _ZN5Actor10FindWithIDEj(unk_138);
         if (other != 0) {
-            struct V3 *op = (struct V3 *)((int)(other + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            struct V3 *op = (struct V3 *)((int)(other + 0x5c));
             int oy;
             pos.x = op->x;
             pos.y = oy = op->y;

@@ -25,7 +25,7 @@ void _ZN3IRQ13DmaTimHandlerEv(u32 idx)
   {
     fn(data_020a60c4[idx].arg);
   }
-  *(volatile u32 *)(((int)data_023c0000 + 0x3ff8) & 0xFFFFFFFFFFFFFFFF) |= mask;
+  *(volatile u32 *)(((int)data_023c0000 + 0x3ff8)) |= mask;
   if (data_020a60c4[idx].flag != 0)
   {
     return;

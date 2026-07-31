@@ -25,7 +25,7 @@ int RotatingPlatformWdw::Behavior()
     mAreaId = -1;
 
     /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40] */
-    if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300) & 0xFFFFFFFFFFFFFFFFLL) + 0x40)) == 0) {
+    if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
         mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
         if (_ZN16MeshColliderBase9IsEnabledEv((u8 *)&mMeshCollider) != 0) {
             _ZN16MeshColliderBase7DisableEv((u8 *)&mMeshCollider);
@@ -39,12 +39,12 @@ int RotatingPlatformWdw::Behavior()
     t = mTargetPosY;
     if (mPosY != t) {
         if (mPosY < t) {
-            int *p = (int *)(((int)((u8 *)this) + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+            int *p = (int *)(((int)((u8 *)this) + 0x60));
             *p = *p + 0xa000;
             if (mPosY > mTargetPosY)
                 mPosY = mTargetPosY;
         } else {
-            int *p = (int *)(((int)((u8 *)this) + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+            int *p = (int *)(((int)((u8 *)this) + 0x60));
             *p = *p - 0xa000;
             if (mPosY < mTargetPosY)
                 mPosY = mTargetPosY;
@@ -58,7 +58,7 @@ int RotatingPlatformWdw::Behavior()
 
     {
         /* angle at 0x342: pool offset 0x342 */
-        s16 *q = (s16 *)(((int)((u8 *)this) + 0x342) & 0xFFFFFFFFFFFFFFFFLL);
+        s16 *q = (s16 *)(((int)((u8 *)this) + 0x342));
         *q = (s16)(*q + 0x200);
         /* index from (u16)angle at 0x342 via 0x300+0x42 */
         i = *(u16 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x42) >> 4;

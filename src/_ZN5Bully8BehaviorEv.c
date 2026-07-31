@@ -42,7 +42,7 @@ int _ZN5Bully8BehaviorEv(char* self) {
             }
             void* f = _ZN5Actor10FindWithIDEj(*(unsigned*)(self + 0x3fc));
             if (f) {
-                *(u8*)(((long long)(int)((char*)f + 0x3fe)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+                *(u8*)(((long long)(int)((char*)f + 0x3fe))) += 1;
             }
         }
         return 1;

@@ -49,9 +49,9 @@ int Camera::Behavior()
     *(s32 *)(c + 0xd4) = *(s32 *)(c + 0x8c);
     *(s32 *)(c + 0xd8) = *(s32 *)(c + 0x90);
     *(s32 *)(c + 0xdc) = *(s32 *)(c + 0x94);
-    *(u32 *)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x1000u;
+    *(u32 *)(((int)c + 0x154)) &= ~0x1000u;
     if (*(u32 *)(c + 0x140) != (u32)&data_0208733c) {
-        *(u32 *)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x60u;
+        *(u32 *)(((int)c + 0x154)) &= ~0x60u;
     }
     temp_r1 = *(s32 *)(c + 0x154);
     if (!(temp_r1 & 8)) {
@@ -60,7 +60,7 @@ int Camera::Behavior()
     } else {
 block_7:
         if (temp_r1 & 0xc000) {
-            *(u32 *)((long long)(int)(c + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~0xc000u;
+            *(u32 *)((long long)(int)(c + 0x154)) &= ~0xc000u;
             _ZN6Camera11ChangeStateEPNS_5StateE(c, &data_0209b008);
         }
         *(s16 *)(c + 0x17c) = Vec3_HorzAngle(c + 0x80, c + 0x8c);
@@ -85,15 +85,15 @@ block_7:
                 if (_Z15ApproachLinear2Rsss(*(short *)(c + 0x18c), 0, 0x10) != 0) {
                     *(s16 *)(c + 0x18a) = 0;
                 } else {
-                    *(s16 *)(((long long)(int)(c + 0x18a)) & 0xFFFFFFFFFFFFFFFFLL) =
-                        (s16)(*(s16 *)(((long long)(int)(c + 0x18a)) & 0xFFFFFFFFFFFFFFFFLL) + 0x3000);
+                    *(s16 *)(((long long)(int)(c + 0x18a))) =
+                        (s16)(*(s16 *)(((long long)(int)(c + 0x18a))) + 0x3000);
                 }
             }
         }
         if (*(s16 *)(c + 0x18e) != 0) {
-            *(s16 *)(((long long)(int)(c + 0x192)) & 0xFFFFFFFFFFFFFFFFLL) =
-                (s16)(*(s16 *)(((long long)(int)(c + 0x192)) & 0xFFFFFFFFFFFFFFFFLL) + *(s16 *)(c + 0x194));
-            _Z15ApproachLinear2Rsss(*(short *)(((long long)(int)(c + 0x18e)) & 0xFFFFFFFFFFFFFFFFLL), 0, *(s16 *)(c + 0x190));
+            *(s16 *)(((long long)(int)(c + 0x192))) =
+                (s16)(*(s16 *)(((long long)(int)(c + 0x192))) + *(s16 *)(c + 0x194));
+            _Z15ApproachLinear2Rsss(*(short *)(((long long)(int)(c + 0x18e))), 0, *(s16 *)(c + 0x190));
         }
         {
             int condA = 1;
@@ -143,16 +143,16 @@ block_7:
             if (!(*(s32 *)(c + 0x154) & 1)) {
                 if (*(u8 *)(m + 0x706) != 0 || *(u8 *)(m + 0x707) != 0) {
                     if (*(s32 *)(c + 0x90) <= t2) {
-                        *(u32 *)((long long)(int)(c + 0x154) & 0xFFFFFFFFFFFFFFFFLL) |= 1u;
+                        *(u32 *)((long long)(int)(c + 0x154)) |= 1u;
                     }
                 }
             } else if (*(s32 *)(c + 0x90) > t2) {
-                *(u32 *)((long long)(int)(c + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~1u;
+                *(u32 *)((long long)(int)(c + 0x154)) &= ~1u;
             }
         }
     }
     {
-        u32 *pf = (u32 *)(((long long)(int)(c + 0x154)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32 *pf = (u32 *)(((long long)(int)(c + 0x154)));
         *pf &= 0xfff8fdfbu;
         if (*(s32 *)(c + 0x118) != 0) {
             *(s32 *)(c + 0x118) = 0;

@@ -17,7 +17,7 @@ int _ZN5Unagi6RenderEv(struct Unagi *self) {
     dp = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
         short mv = ((short*)(((char*)self) + 0x400 + 0x18))[i];
-        unsigned short* curr = (unsigned short*)(((int)base + 0x1e) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short* curr = (unsigned short*)(((int)base + 0x1e));
         *curr = *curr + (unsigned short)(short)(mv * dp->w2);
         dp++;
         base += 0x34;

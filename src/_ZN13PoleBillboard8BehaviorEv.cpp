@@ -28,14 +28,14 @@ int _ZN13PoleBillboard8BehaviorEv(char *c)
             *(short *)(c + 0x390) = 0;
             *(unsigned char *)(c + 0x397) = 0;
         } else {
-            *(short *)(((int)c + 0x394) & 0xFFFFFFFFFFFFFFFFLL) -= 8;
+            *(short *)(((int)c + 0x394)) -= 8;
         }
-        *(short *)(((int)c + 0x390) & 0xFFFFFFFFFFFFFFFFLL) += 0x400;
+        *(short *)(((int)c + 0x390)) += 0x400;
         break;
     }
     case 2: {
-        short *p392 = (short *)(((long long)(int)(c + 0x392)) & 0xFFFFFFFFFFFFFFFFLL);
-        short *p8c = (short *)(((long long)(int)(c + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *p392 = (short *)(((long long)(int)(c + 0x392)));
+        short *p8c = (short *)(((long long)(int)(c + 0x8c)));
         int amt = *(signed char *)(c + 0x396) << 0x17;
         *p392 = *p392 + (amt >> 16);
         *p8c = *p8c + *(short *)(c + 0x300 + 0x92);
@@ -43,7 +43,7 @@ int _ZN13PoleBillboard8BehaviorEv(char *c)
             if (*(short *)(c + 0x8c) < -0x4000) {
                 *(short *)(c + 0x8c) = -0x4000;
                 *(short *)(c + 0x392) = 0;
-                (*(unsigned char *)(((int)c + 0x397) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(unsigned char *)(((int)c + 0x397)))++;
                 struct Vector3 pos;
                 pos.x = *(int *)(c + 0x5c);
                 pos.y = *(int *)(c + 0x60);
@@ -52,8 +52,8 @@ int _ZN13PoleBillboard8BehaviorEv(char *c)
                 _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vector3 *)(c + 0x74));
             }
         } else {
-            *(int *)(((int)c + 0x38c) & 0xFFFFFFFFFFFFFFFFLL) += 0x2000;
-            *(int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x38c);
+            *(int *)(((int)c + 0x38c)) += 0x2000;
+            *(int *)(((int)c + 0x60)) += *(int *)(c + 0x38c);
             {
                 int lim = *(int *)(c + 0x388) + 0x46000;
                 if (*(int *)(c + 0x60) > lim) {
@@ -63,7 +63,7 @@ int _ZN13PoleBillboard8BehaviorEv(char *c)
             if (*(short *)(c + 0x8c) > 0x4000) {
                 *(short *)(c + 0x8c) = 0x4000;
                 *(short *)(c + 0x392) = 0;
-                (*(unsigned char *)(((int)c + 0x397) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(unsigned char *)(((int)c + 0x397)))++;
                 struct Vector3 pos;
                 pos.x = *(int *)(c + 0x5c);
                 pos.y = *(int *)(c + 0x60);

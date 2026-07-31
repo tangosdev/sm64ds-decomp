@@ -84,7 +84,7 @@ check_param2:
     if (mVariant != 2)
         goto ret0_a;
     /* u64-mask forces add r2,r4,#0x3f4 materialization (ROM shape) */
-    *(int*)(((int)((char*)this) + 0x3f4) & 0xFFFFFFFFFFFFFFFFLL) -= 0x80000;
+    *(int*)(((int)((char*)this) + 0x3f4)) -= 0x80000;
     unk_410 = 8;
     if (unk_410 >= unk_40c)
         unk_410 = 4;

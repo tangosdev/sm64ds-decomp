@@ -34,7 +34,7 @@ int _ZN11VirtualDoor8BehaviorEv(char *c) {
             InvMat4x3(&data_020a0e68, &data_020a0e68);
             MulVec3Mat4x3(out1, &data_020a0e68, player + 0x5c);
         }
-        *(int *)((((int)c) + 0x98) & 0xFFFFFFFFFFFFFFFFLL) -= 0x20000;
+        *(int *)((((int)c) + 0x98)) -= 0x20000;
         if (*(int *)(c + 0x98) < -0x300000) {
             *(int *)(c + 0x98) = -0x300000;
             if (data_02092110 < 0) {
@@ -87,8 +87,7 @@ int _ZN11VirtualDoor8BehaviorEv(char *c) {
                                             func_02012790(0x19);
                                         }
                                     } else {
-                                        int t = (signed char)(int)((*(unsigned int *)(c + 8) >> 0x18) &
-                                                                   0xFFFFFFFFFFFFFFFFLL);
+                                        int t = (signed char)(int)((*(unsigned int *)(c + 8) >> 0x18));
                                         if (t == 0x1b || t == 0x12) {
                                             func_ov002_020b0a0c(c);
                                             _ZN5Scene20SetAndStopColorFaderEv();

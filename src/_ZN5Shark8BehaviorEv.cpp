@@ -51,7 +51,7 @@ extern "C" int _ZN5Shark8BehaviorEv(char* c)
         Vec3_Sub(&diff, (Vector3*)(c + 0x5c), &node);
         len = LenVec3(&diff);
         if (len == 0 || len <= 0x258000) {
-            (*(int*)(((int)c + 0x390) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(int*)(((int)c + 0x390)))++;
             if (*(int*)(c + 0x390) >= *(int*)(c + 0x38c))
                 *(int*)(c + 0x390) = 0;
         }

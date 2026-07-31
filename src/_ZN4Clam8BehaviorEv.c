@@ -39,7 +39,7 @@ int _ZN4Clam8BehaviorEv(char *c)
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10c, u.v1[0], u.v1[1], u.v1[2]);
             *(u16 *)(c + 0x170) = 0xa;
             *(u16 *)(c + 0x16e) = 0;
-            *(int *)(int)(((long long)(int)(c + 0x150)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+            *(int *)(int)(((long long)(int)(c + 0x150))) &= ~1;
         } else {
             if (*(u16 *)(c + 0x16e) > 0x96 &&
                 _ZN5Actor13DistToCPlayerEv(c) < 0x1f4000) {
@@ -55,7 +55,7 @@ int _ZN4Clam8BehaviorEv(char *c)
                     *(int *)(data_ov064_0211c9cc + 4), 0x40000000, 0x1000, 0);
             } else {
                 if (*(u16 *)(c + 0x170) != 0)
-                    (*(u16 *)(int)(((long long)(int)(c + 0x170)) & 0xFFFFFFFFFFFFFFFFLL))--;
+                    (*(u16 *)(int)(((long long)(int)(c + 0x170))))--;
             }
         }
         break;
@@ -68,18 +68,18 @@ int _ZN4Clam8BehaviorEv(char *c)
         } else {
             if (_ZNK9Animation12WillHitFrameEi(c + 0x124, 8) == 0) {
                 if (_ZNK9Animation12WillHitFrameEi(c + 0x124, 0xf) != 0)
-                    *(int *)(int)(((long long)(int)(c + 0x150)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+                    *(int *)(int)(((long long)(int)(c + 0x150))) |= 1;
             }
         }
         break;
     }
 
-    (*(u16 *)(int)(((long long)(int)(c + 0x16e)) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(u16 *)(int)(((long long)(int)(c + 0x16e))))++;
 
     if (*(int *)(c + 0x15c) != 0) {
         char *p = _ZN5Actor10FindWithIDEj(*(int *)(c + 0x15c));
         if (p != 0) {
-            int isPlayer = (int)(((long long)(*(u16 *)(p + 0xc) == 0xbf)) & 0xFFFFFFFFFFFFFFFFLL);
+            int isPlayer = (int)(((long long)(*(u16 *)(p + 0xc) == 0xbf)));
             if (isPlayer != 0) {
                 u.v3[0] = *(int *)(c + 0x5c);
                 u.v3[1] = *(int *)(c + 0x60);

@@ -33,7 +33,7 @@ extern "C" int _ZN10BowserFire13InitResourcesEv(char* c) {
     *(int*)(c + 0x36c) = 0;
     *(unsigned char*)(c + 0x378) = (*(unsigned int*)(c + 8) >> 4) & 3;
     if (*(int*)(c + 0x35c) == 0)
-        *(int*)(((int)c + 0x2e8) & 0xFFFFFFFFFFFFFFFF) |= 1;
+        *(int*)(((int)c + 0x2e8)) |= 1;
     *(int*)(c + 0x360) = 0x2000;
     *(int*)(c + 0x380) = 0;
     *(int*)(c + 0x37c) = *(int*)(c + 0x380);

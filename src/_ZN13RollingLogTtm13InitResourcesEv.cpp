@@ -48,7 +48,7 @@ int RollingLogTtm::InitResources()
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
-    py = (int *)(((int)((char *)this) + 0x384) & 0xFFFFFFFFFFFFFFFFLL);
+    py = (int *)(((int)((char *)this) + 0x384));
     unk_380 = mPosX;
     unk_384 = mPosY;
     unk_388 = mPosZ;

@@ -22,7 +22,7 @@ void StarMarker::SpawnRedCoinStarIfNecessary()
   star = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, mStarID, &v, 0, mAreaId, -1);
   if(star == 0) return;
   _ZN9PowerStar13AddStarMarkerEv(star);
-  *(unsigned short*)(((int)star + 0x4a2) & 0xFFFFFFFFFFFFFFFF) |= 0x1000;
+  *(unsigned short*)(((int)star + 0x4a2)) |= 0x1000;
   *(int*)(star+0x434) = unk_004;
-  *(unsigned char*)(((int)((char*)this) + 0x1db) & 0xFFFFFFFFFFFFFFFF) |= 4;
+  *(unsigned char*)(((int)((char*)this) + 0x1db)) |= 4;
 }

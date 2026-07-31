@@ -35,7 +35,7 @@ void Enemy::SpawnMegaCharParticles(Actor &a, char *p)
     dst.x = *(s32 *)(self + 0x5c);
     dst.y = *(s32 *)(self + 0x60);
     {
-        Vector3 *pv = (Vector3 *)(((long long)(int)(ap + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        Vector3 *pv = (Vector3 *)(((long long)(int)(ap + 0x5c)));
         dst.z = *(s32 *)(self + 0x64);
         src.x = pv->x;
         src.y = pv->y;

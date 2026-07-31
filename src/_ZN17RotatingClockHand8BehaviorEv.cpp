@@ -26,7 +26,7 @@ int RotatingClockHand::Behavior()
             unk_322 = unk_320;
         } else {
             if ((int)unk_320 < (int)unk_322 - 5) {
-                short *q = (short*)(((int)((char *)this) + 0x92) & 0xFFFFFFFFFFFFFFFF);
+                short *q = (short*)(((int)((char *)this) + 0x92));
                 *q = (short)(*q * unk_31e);
             } else {
                 unk_092 = 0;
@@ -36,7 +36,7 @@ int RotatingClockHand::Behavior()
     func_020393a4((int*)((char *)&mMeshCollider), 0x180000);
     func_02039394((int*)((char *)&mMeshCollider), 0x1000);
     {
-        short *s = (short*)(((int)((char *)this) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+        short *s = (short*)(((int)((char *)this) + 0x8c));
         *s = (short)(*s + unk_092);
     }
     func_ov035_021118a8(((char *)this));

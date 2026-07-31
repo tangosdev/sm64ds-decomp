@@ -30,11 +30,11 @@ void MeshColliderBase::UpdatePosWithVelocity(MeshColliderBase& a1, Actor* a2, Cl
     this->m12(vel);
     a3.x = a3.x + vel.x;
     {
-        int* py = (int*)(((long long)(int)&a3.y) & 0xFFFFFFFFFFFFFFFFLL);
+        int* py = (int*)(((long long)(int)&a3.y));
         *py = *py + vel.y;
     }
     {
-        int* pz = (int*)(((long long)(int)&a3.z) & 0xFFFFFFFFFFFFFFFFLL);
+        int* pz = (int*)(((long long)(int)&a3.z));
         *pz = *pz + vel.z;
     }
 }

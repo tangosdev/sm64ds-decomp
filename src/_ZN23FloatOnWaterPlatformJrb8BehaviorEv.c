@@ -31,27 +31,27 @@ int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(char *a)
             _ZN9ActorBase18MarkForDestructionEv(a);
             break;
         }
-        (*(u8 *)(((int)a + 0x4f4) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8 *)(((int)a + 0x4f4)))++;
         /* fallthrough */
     case 1:
         _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
         WithMeshClsn_UpdateContinuous_Veneer(a + 0x324);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x324)) {
-            (*(u8 *)(((int)a + 0x4f4) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8 *)(((int)a + 0x4f4)))++;
             *(int *)(a + 0x4e0) = *(int *)(a + 0x5c);
             *(int *)(a + 0x4e4) = *(int *)(a + 0x60);
             *(int *)(a + 0x4e8) = *(int *)(a + 0x64);
         }
         break;
     case 2: {
-        s16 *src = (s16 *)(((int)*(char **)(a + 0x320) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+        s16 *src = (s16 *)(((int)*(char **)(a + 0x320) + 0x8c));
         int spd;
         *(s16 *)(a + 0x8c) = src[0];
         *(s16 *)(a + 0x8e) = src[1];
         *(s16 *)(a + 0x90) = src[2];
         *(s16 *)(a + 0x94) = *(s16 *)(a + 0x8e);
         *(int *)(a + 0x98) = data_02082214[(*(u16 *)(a + 0x8c) >> 4) * 2] * 0x8c;
-        *(int *)(((int)a + 0x4ec) & 0xFFFFFFFFFFFFFFFF) += *(int *)(a + 0x98);
+        *(int *)(((int)a + 0x4ec)) += *(int *)(a + 0x98);
         spd = *(int *)(a + 0x4ec);
         if (spd >= 0x4ff000)
             *(int *)(a + 0x4ec) = 0x4ff000;

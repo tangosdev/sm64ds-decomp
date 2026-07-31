@@ -70,7 +70,7 @@ int Pokey::InitResources()
             *(void**)((char*)&unk_390) = _ZN5Actor10FindWithIDEj(mParam);
             unk_394 = 0;
             {
-                int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c) & 0xFFFFFFFFFFFFFFFF);
+                int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c));
                 unk_36c = p[0];
                 unk_370 = p[1];
                 unk_374 = p[2];

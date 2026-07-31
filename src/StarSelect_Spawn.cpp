@@ -15,7 +15,7 @@ void* StarSelect_Spawn(void){
     _ZN9ActorBaseC1Ev(p);
     *(void***)p = (void**)data_0208e4b8;
     *(void***)p = (void**)_ZTV5Stage;
-    unsigned char* fl = (unsigned char*)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF);
+    unsigned char* fl = (unsigned char*)(((int)p + 0x13));
     *fl |= 1;
     *fl |= 4;
     *(void***)p = (void**)data_ov003_020b1704;

@@ -14,7 +14,7 @@ extern MinimapState data_0209f3c4;
 
 void UpdateMinimap(MinimapDesc *desc, u32 a, u32 b, u32 c, u32 d)
 {
-    *(MinimapDesc *)(((long long)(int)&data_0209f3c8) & 0xFFFFFFFFFFFFFFFFLL) = *desc;
+    *(MinimapDesc *)(((long long)(int)&data_0209f3c8)) = *desc;
     data_0209f3c4.f14 = a;
     data_0209f3c4.f18 = b;
     data_0209f3c4.f1c = c;

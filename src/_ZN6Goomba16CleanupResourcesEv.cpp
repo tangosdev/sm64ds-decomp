@@ -27,7 +27,7 @@ int Goomba::CleanupResources()
     if (id != 0) {
       char* a = _ZN5Actor10FindWithIDEj(id);
       if (a != 0) {
-        unsigned char *p = (unsigned char*)(((int)a + 0x602) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p = (unsigned char*)(((int)a + 0x602));
         *p = *p - 1;
       }
     }

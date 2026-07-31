@@ -9,6 +9,6 @@ void _ZN18SolidHeapAllocator10ResetStartEv(void* c)
 
     begin = *(void **)((char *)c + 0x18);
     fl = (struct FreeList *)((char *)c + 0x24);
-    *(void **)(((long long)(int)fl) & 0xFFFFFFFFFFFFFFFFLL) = begin;
+    *(void **)(((long long)(int)fl)) = begin;
     fl->flags = 0;
 }

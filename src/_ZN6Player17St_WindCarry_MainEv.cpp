@@ -39,7 +39,7 @@ int Player::St_WindCarry_Main()
             else
                 speed = __aeabi_idiv(0x2710000, (val + 0xc8000) >> 12);
             if (*(int*)(c + 0xa8) < speed) {
-                int* p = (int*)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFF);
+                int* p = (int*)(((int)c + 0xa8));
                 *p = *p + (speed >> 3);
                 if (*(int*)(c + 0xa8) > speed) *(int*)(c + 0xa8) = speed;
             }
@@ -49,7 +49,7 @@ int Player::St_WindCarry_Main()
     if (*(u8*)(c + 0x6e3) == 0 && FinishedAnim() != 0) {
         SetAnim(0x73, 0, 0x1000, 0);
         {
-            u8* q = (u8*)(((int)c + 0x6e3) & 0xFFFFFFFFFFFFFFFF);
+            u8* q = (u8*)(((int)c + 0x6e3));
             *q = *q + 1;
         }
     }

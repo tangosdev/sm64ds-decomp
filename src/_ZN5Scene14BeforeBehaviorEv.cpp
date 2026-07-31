@@ -79,7 +79,7 @@ int _ZN5Scene14BeforeBehaviorEv(char* self)
 
     if ((*(u8*)(self + 0x13) & 1) != 0) {
         if (func_020431c4(self) == 0) {
-            u8* p13 = (u8*)(((long long)(int)(self + 0x13)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8* p13 = (u8*)(((long long)(int)(self + 0x13)));
             *p13 &= ~1;
             *p13 &= ~4;
         }

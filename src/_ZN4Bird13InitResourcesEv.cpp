@@ -21,7 +21,7 @@ int Bird::InitResources()
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, a, 0, 0x1000, 0);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     {
-        int *p60 = (int *)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p60 = (int *)(((int)((char*)this) + 0x60));
         int y = *p60;
         int zero = 0;
         *p60 = y + 0xa000;

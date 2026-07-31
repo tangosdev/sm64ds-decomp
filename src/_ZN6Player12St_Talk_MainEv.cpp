@@ -38,8 +38,8 @@ int Player::St_Talk_Main()
     if (mNoCtrlKind == 0) {
         char* p = *(char**)((char*)&mTalkActor);
         if (p != 0)
-            *(u32*)(((int)p + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x800000;
-        *(u32*)(((int)((char*)this) + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x800000;
+            *(u32*)(((int)p + 0xb0)) |= 0x800000;
+        *(u32*)(((int)((char*)this) + 0xb0)) |= 0x800000;
         data_0209b454 |= 0x800000;
         mNoCtrlKind = 1;
     }
@@ -101,7 +101,7 @@ int Player::St_Talk_Main()
             mTargetAngleY = mAngleY;
             char* cam = data_0209f318;
             func_0200d81c(cam, mPlayerNo);
-            *(u32*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+            *(u32*)(((int)cam + 0x154)) &= ~8;
             unk_742 = 4;
         }
         break;

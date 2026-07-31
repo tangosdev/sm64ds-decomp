@@ -23,9 +23,9 @@ void Player::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3)
   if (p1 == old) return;
   unk_6dc = (unsigned char)old;
   mHatCharacter = (unsigned char)p1;
-  *(unsigned short*)((char*)(((int)((char*)this) + 0x700) & 0xFFFFFFFFFFFFFFFF) + 0x3c) = 1;
+  *(unsigned short*)((char*)(((int)((char*)this) + 0x700)) + 0x3c) = 1;
   if (p1 != mCharacter) {
-    *(unsigned short*)((char*)(((int)((char*)this) + 0x73c) & 0xFFFFFFFFFFFFFFFF)) |= 0x8000;
+    *(unsigned short*)((char*)(((int)((char*)this) + 0x73c))) |= 0x8000;
   }
   func_ov002_020bdb50(((char*)this), p2);
   func_ov002_020bda48(((char*)this));

@@ -10,7 +10,7 @@ int RollingIronBall::CleanupResources()
     char *file = *(char **)((char *)&unk_3a8);
 
     if (file != 0) {
-        (*(unsigned char *)(((int)file + 0x3d2) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(unsigned char *)(((int)file + 0x3d2)))--;
     }
 
     _ZN13SharedFilePtr7ReleaseEv(&data_ov100_02148668);

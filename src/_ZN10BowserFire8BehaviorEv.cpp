@@ -15,9 +15,9 @@ struct CylinderClsn { void Clear(); void Update(); };
 int BowserFire::Behavior()
 {
     Actor *self = (Actor*)((char *)this);
-    *(int*)(((int)((char *)this) + 0x370) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int*)(((int)((char *)this) + 0x370)) += 1;
     (self->*data_ov060_0211afb4[unk_35c].pmf)();
-    *(unsigned short*)(((int)((char *)this) + 0x374) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
     if (unk_09c != 0) {
         WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
         if (unk_35c != 4) {

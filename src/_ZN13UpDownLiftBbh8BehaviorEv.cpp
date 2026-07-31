@@ -21,7 +21,7 @@ int UpDownLiftBbh::Behavior()
     *(void**)((char*)&unk_324) = _ZN5Actor13ClosestPlayerEv(((char*)this));
     old = mState;
     (((Plat*)((char*)this))->*data_ov095_02137910[old])();
-    *(u16*)(((int)((char*)this) + 0x344) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(u16*)(((int)((char*)this) + 0x344)) += 1;
     if (old != mState) *(u16*)(((char*)&unk_300) + 0x44) = 0;
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
     if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)

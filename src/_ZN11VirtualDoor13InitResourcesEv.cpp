@@ -8,7 +8,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void InvMat4x3(void* out, void* in);
 
-#define M(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define M(p) ((int)(((long long)(int)(p))))
 
 int _ZN11VirtualDoor13InitResourcesEv(char* c)
 {

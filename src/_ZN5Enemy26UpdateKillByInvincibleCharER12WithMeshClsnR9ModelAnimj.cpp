@@ -49,7 +49,7 @@ struct VB {
 
 struct M48 { int w[12]; };
 
-#define LAUNDER(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(p) ((int)(((long long)(int)(p))))
 
 extern "C" int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
     void *cc, void *ww, void *mm, unsigned int flags)

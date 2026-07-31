@@ -75,7 +75,7 @@ int StarMarker::InitResources()
         void *sp;
         sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, mStarID | 0x60, ((char *)this) + 0x5c, (void *)0, (s8)mAreaId, -1);
         if (sp != 0) {
-            u16 *p = (u16 *)(((int)sp + 0x4a2) & 0xFFFFFFFFFFFFFFFFLL);
+            u16 *p = (u16 *)(((int)sp + 0x4a2));
             *p = (u16)(*p | 0x80);
         }
         _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x114, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211093c), 1, 0x18);
@@ -86,7 +86,7 @@ int StarMarker::InitResources()
     if (kind == 4) {
         u8 *p;
         mState = 2;
-        p = (u8 *)(((int)((char *)this) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (u8 *)(((int)((char *)this) + 0x1db));
         *p = (u8)(*p | 2);
         v4.x = 0;
         v4.y = -0x50000;
@@ -102,15 +102,15 @@ int StarMarker::InitResources()
     } else if (kind & 1) {
         mState = 1;
         if (kind & 2) {
-            u8 *p = (u8 *)(((int)((char *)this) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *p = (u8 *)(((int)((char *)this) + 0x1db));
             *p = (u8)((*p & ~1) | 1);
         }
         {
-            u8 *p = (u8 *)(((int)((char *)this) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *p = (u8 *)(((int)((char *)this) + 0x1db));
             *p = (u8)(*p | 8);
         }
     } else {
-        u8 *p = (u8 *)(((int)((char *)this) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL);
+        u8 *p = (u8 *)(((int)((char *)this) + 0x1db));
         u8 nv = (u8)((((int)kind >> 1) & 1) ^ 1);
         *p = (u8)((*p & ~2) | ((nv & 1) << 1));
     }
@@ -134,7 +134,7 @@ int StarMarker::InitResources()
     }
 
     if (((u32)(mFlags << 0x1e) >> 0x1f) == 0) {
-        s32 *p = (s32 *)(((int)((char *)this) + 0xec) & 0xFFFFFFFFFFFFFFFFLL);
+        s32 *p = (s32 *)(((int)((char *)this) + 0xec));
         *p = *p | 1;
     }
     r3 = 0;

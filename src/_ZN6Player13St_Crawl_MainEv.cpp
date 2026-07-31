@@ -57,7 +57,7 @@ int Player::St_Crawl_Main()
             }
             int shifted = mHorzSpeed >> 2;
             int id3 = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
-            char* anim3 = (char*)(((long long)(int)((char*)((int*)((char*)&mBodyModels))[id3] + 0x50)) & 0xffffffffffffffffLL);
+            char* anim3 = (char*)(((long long)(int)((char*)((int*)((char*)&mBodyModels))[id3] + 0x50)));
             *(int*)(anim3 + 0xc) = shifted;
             if (func_ov002_020d36d8(((char*)this), 1))
                 return 1;

@@ -100,7 +100,7 @@ int Stage::Render() {
         Renderable* t = *(Renderable**)((char*)this + 0x9bc);
         if (t != 0) {
             int* dst = (int*)((char*)t + 0x1c);
-            int* src = (int*)((long long)(int)(data_0209f318 + 0x8c) & 0xFFFFFFFFFFFFFFFFLL);
+            int* src = (int*)((long long)(int)(data_0209f318 + 0x8c));
             dst[9] = src[0] >> 3;
             dst[10] = src[1] >> 3;
             dst[11] = src[2] >> 3;
@@ -133,7 +133,7 @@ int Stage::Render() {
             char* p = data_0209f394[j];
             if (p != 0) {
                 u8 bit = *(u8*)(p + 0x6ff);
-                int* q = (int*)((long long)(int)(p + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+                int* q = (int*)((long long)(int)(p + 0x5c));
                 x ^= (u8)(q[2] ^ (q[0] ^ q[1]));
                 y |= (u8)((bit & 1) << j);
             }

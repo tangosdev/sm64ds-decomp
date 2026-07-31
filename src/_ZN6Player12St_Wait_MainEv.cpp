@@ -175,7 +175,7 @@ int Player::St_Wait_Main()
         }
         }
         if (func_ov002_020d22ec(((char*)this), 0)) {
-            (*(unsigned int*)(((int)r4 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~0x2000;
+            (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
         }
         break;
@@ -203,7 +203,7 @@ int Player::St_Wait_Main()
         }
         if (*(unsigned short*)(data_0209f49e+data_020a0e40*0x18) & 2) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211019c);
-            (*(unsigned int*)(((int)r4 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~0x2000;
+            (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, ((char*)this)+0x74);
             return 1;
         }

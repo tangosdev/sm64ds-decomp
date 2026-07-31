@@ -26,9 +26,9 @@ void HUD::UpdateHealthMeter()
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
         return;
     if (mHealthMeterHoldTimer != 0)
-        *(unsigned short *)((((int)((char *)this)) + 0x6a) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+        *(unsigned short *)((((int)((char *)this)) + 0x6a)) -= data_0208ee44;
     if (mHealthTickTimer != 0)
-        *(unsigned short *)((((int)((char *)this)) + 0x6c) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+        *(unsigned short *)((((int)((char *)this)) + 0x6c)) -= data_0208ee44;
     if (_ZN5Event6GetBitEj(0x1d)) {
         unsigned char s = mHealthMeterState;
         if (s != 0) {
@@ -54,7 +54,7 @@ void HUD::UpdateHealthMeter()
     case 1:
         if (mHealthMeterHoldTimer == 0) {
             if (mHealthMeterY != 0x19) {
-                *(short *)((((int)((char *)this)) + 0x68) & 0xFFFFFFFFFFFFFFFFLL) -= 4;
+                *(short *)((((int)((char *)this)) + 0x68)) -= 4;
                 if (mHealthMeterY <= 0x19)
                     mHealthMeterY = 0x19;
             }
@@ -124,7 +124,7 @@ void HUD::UpdateHealthMeter()
     case 5:
         if (mHealthMeterHoldTimer != 0)
             return;
-        *(short *)((((int)((char *)this)) + 0x68) & 0xFFFFFFFFFFFFFFFFLL) -= 4;
+        *(short *)((((int)((char *)this)) + 0x68)) -= 4;
         if (mHealthMeterY >= -0x18)
             return;
         mHealthMeterY = -0x18;

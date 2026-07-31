@@ -16,7 +16,7 @@ int Amp::Behavior()
 {
     int *p;
     func_ov070_02120d34(((char *)this));
-    p = (int *)(((int)((char *)this) + 0x414) & 0xFFFFFFFFFFFFFFFF);
+    p = (int *)(((int)((char *)this) + 0x414));
     *p += data_ov070_0212365c[1];
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x1d8, ((char *)this) + 0x410);
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);

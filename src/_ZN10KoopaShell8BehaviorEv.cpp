@@ -49,7 +49,7 @@ int _ZN10KoopaShell8BehaviorEv(char *c)
         if (*(u8 *)(c + 0x107) != 0) {
             *(s16 *)(c + 0x3bc) = *(s16 *)(c + 0x94);
             func_ov102_0214d1f8(c, &data_ov102_0214ea78);
-            *(u32 *)(int)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x80000;
+            *(u32 *)(int)(((long long)(int)(c + 0xb0))) &= ~0x80000;
             *(u8 *)(c + 0x107) = 0;
         }
         func_ov102_0214ce60(c);

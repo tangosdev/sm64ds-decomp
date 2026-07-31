@@ -54,7 +54,7 @@ int Fish::Behavior()
             (((C*)this)->*data_ov100_02148a1c[((C*)this)->idx].pmf)();
             _ZN5Actor9UpdatePosEP12CylinderClsn(((C*)this), 0);
             {
-                int* cp = (int*)(((int)((C*)this) + 0x150) & 0xFFFFFFFFFFFFFFFF);
+                int* cp = (int*)(((int)((C*)this) + 0x150));
                 *cp = *cp + 1;
             }
         }

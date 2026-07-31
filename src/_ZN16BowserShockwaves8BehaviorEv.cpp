@@ -19,7 +19,7 @@ int BowserShockwaves::Behavior()
   int d;
   int s;
   int m0, m1, m2, m3;
-  ((*(unsigned short *)(((int)((char*)this) + 0x214) & 0xFFFFFFFFFFFFFFFF)))++;
+  ((*(unsigned short *)(((int)((char*)this) + 0x214))))++;
   pl = (char*)_ZN5Actor13ClosestPlayerEv(((char*)this));
   n = *(unsigned short*)(((char*)this)+0x200+0x14);
   s = n * 0x22;

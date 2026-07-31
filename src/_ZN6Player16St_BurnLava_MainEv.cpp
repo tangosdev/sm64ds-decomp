@@ -63,13 +63,13 @@ int _ZN6Player16St_BurnLava_MainEv(char *c)
     if (*(u8 *)(c + 0x6e3) == 0) {
         func_ov002_020e28d4(c, 0x1000, 0x1000);
         if (*(u8 *)(c + 0x6de) == 0) {
-            (*(u8 *)(int)(((long long)(int)(c + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8 *)(int)(((long long)(int)(c + 0x6e5))))++;
             if (*(u8 *)(c + 0x6e5) >= 3) {
                 _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x17, 0x40000000, 0x1000, 0);
                 *(int *)(c + 0x98) = 0;
-                (*(u8 *)(int)(((long long)(int)(c + 0x6e3)) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(u8 *)(int)(((long long)(int)(c + 0x6e3))))++;
             } else {
-                (*(int *)(int)(((long long)(int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL)) >>= 1;
+                (*(int *)(int)(((long long)(int)(c + 0x98)))) >>= 1;
                 *(u8 *)(c + 0x6de) = 1;
                 *(u8 *)(c + 0x6df) = 0;
                 if (*(u8 *)(c + 0x6e5) == 1)

@@ -25,23 +25,23 @@ int StarMarker::Behavior()
         if (mStarID == data_0209f344[data_0209f208]) {
             mAppearTimer = 0;
             if (((unsigned int)(mFlags << 0x1f) >> 0x1f) == 0) {
-                *(unsigned char *)((((int)((char *)this)) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
-                *(int *)((((int)((char *)this)) + 0xec) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+                *(unsigned char *)((((int)((char *)this)) + 0x1db)) |= 2;
+                *(int *)((((int)((char *)this)) + 0xec)) &= ~1;
             }
         } else {
             mAppearTimer = 0x2a;
         }
-        *(unsigned char *)((((int)((char *)this)) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL) &= ~8;
+        *(unsigned char *)((((int)((char *)this)) + 0x1db)) &= ~8;
     }
     if (mState != 0) {
         if (mAppearTimer != 0) {
             if (((unsigned int)(mFlags << 0x1e) >> 0x1f) == 0) {
                 if (mStarID == data_0209f344[data_0209f208]) {
-                    *(unsigned short *)((((int)((char *)this)) + 0x1d4) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+                    *(unsigned short *)((((int)((char *)this)) + 0x1d4)) -= 1;
                     if (mAppearTimer == 0) {
                         if (((unsigned int)(mFlags << 0x1f) >> 0x1f) == 0) {
-                            *(unsigned char *)((((int)((char *)this)) + 0x1db) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
-                            *(int *)((((int)((char *)this)) + 0xec) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+                            *(unsigned char *)((((int)((char *)this)) + 0x1db)) |= 2;
+                            *(int *)((((int)((char *)this)) + 0xec)) &= ~1;
                         }
                     }
                 }
@@ -50,7 +50,7 @@ int StarMarker::Behavior()
         Matrix4x3_FromTranslation(((char *)this) + 0x130, mPosX >> 3, mPosY >> 3,
                                   mPosZ >> 3);
     } else {
-        *(short *)((((int)((char *)this)) + 0x8e) & 0xFFFFFFFFFFFFFFFFLL) += 0x400;
+        *(short *)((((int)((char *)this)) + 0x8e)) += 0x400;
         Matrix4x3_FromRotationY(((char *)this) + 0x130, unk_08e);
         unk_154 = mPosX >> 3;
         unk_158 = mPosY >> 3;

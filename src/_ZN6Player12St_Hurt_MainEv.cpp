@@ -71,8 +71,8 @@ extern "C" int _ZN6Player12St_Hurt_MainEv(char* c)
             func_ov002_020d98b4(c);
             return 1;
         }
-        *(s32*)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x80;
-        *(unsigned char*)(((long long)(int)(c + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL) &= 0xf0;
+        *(s32*)(((long long)(int)(c + 0xb0))) &= ~0x80;
+        *(unsigned char*)(((long long)(int)(c + 0x6e5))) &= 0xf0;
         if (_ZN6Player12FinishedAnimEv(c)) {
             if ((*(u8*)(c + 0x6e3) & 1) == 0) {
                 *(s16*)(c + 0x94) = *(s16*)(c + 0x94) + 0x8000;

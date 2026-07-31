@@ -90,8 +90,8 @@ int BobOmb::InitResources()
     ((Obj*)this)->fa0 = -0x37000;
 
     if (((Obj*)this)->f3f5 == 2) {
-        *(unsigned int*)(((int)((Obj*)this) + 0x128) & 0xFFFFFFFFFFFFFFFF) |= 2;
-        *(unsigned int*)(((int)((Obj*)this) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1u;
+        *(unsigned int*)(((int)((Obj*)this) + 0x128)) |= 2;
+        *(unsigned int*)(((int)((Obj*)this) + 0xb0)) &= ~1u;
         ((Obj*)this)->f108 = 0;
     } else if (((Obj*)this)->f3f5 == 4) {
         ((Obj*)this)->f108 = 0;

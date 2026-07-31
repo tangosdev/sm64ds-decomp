@@ -23,12 +23,12 @@ int _ZN6Player15St_Talk_CleanupEv(Player* this_)
 {
     void* p = this_->field368;
     if (p) {
-        *(u32*)(((long long)(int)((char*)p + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x800000;
+        *(u32*)(((long long)(int)((char*)p + 0xb0))) &= ~0x800000;
         this_->field368 = 0;
     }
-    *(u32*)(((long long)(int)((char*)this_ + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x800000;
+    *(u32*)(((long long)(int)((char*)this_ + 0xb0))) &= ~0x800000;
     data_0209b454 &= ~0x800000;
-    *(u32*)(((long long)(int)((char*)data_0209f318 + 0x154)) & 0xFFFFFFFFFFFFFFFFLL) &= ~8;
+    *(u32*)(((long long)(int)((char*)data_0209f318 + 0x154))) &= ~8;
     if (this_->flag725) {
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x39);
         this_->flag725 = 0;

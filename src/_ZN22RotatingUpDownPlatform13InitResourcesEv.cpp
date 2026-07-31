@@ -49,7 +49,7 @@ int RotatingUpDownPlatform::InitResources()
     _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
 
     if (Vec3_equal(((char*)this) + 0x338, ((char*)this) + 0x32c)) {
-        int* p = (int*)(((int)((char*)this) + 0x328) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p = (int*)(((int)((char*)this) + 0x328));
         *p = *p + 1;
         _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
     }

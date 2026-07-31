@@ -20,7 +20,7 @@ int Player::St_Climb_Init() {
     char* self = (char*)this;
     Player_ReleaseHeldActor(self);
 
-    int* bitfield = (int*)(((int)self + 0x2ec) & 0xFFFFFFFFFFFFFFFF);
+    int* bitfield = (int*)(((int)self + 0x2ec));
     *bitfield |= 4;
     *bitfield &= ~8;
 

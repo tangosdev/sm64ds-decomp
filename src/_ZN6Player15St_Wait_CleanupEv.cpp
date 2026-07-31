@@ -11,7 +11,7 @@ extern int data_0209caa0[];
 int Player::St_Wait_Cleanup()
 {
     void* r4 = data_0209f318;
-    (*(unsigned int*)(((int)r4 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~0x2000;
+    (*(unsigned int*)(((int)r4 + 0x154))) &= ~0x2000;
     mSleepStage = 0;
     do {
         unsigned char v = data_0209f2d8;

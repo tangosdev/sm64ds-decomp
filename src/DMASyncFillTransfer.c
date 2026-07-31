@@ -4,7 +4,7 @@
  * then starts a source-fixed word DMA from that register (ctrl 0x85000000 =
  * enable | 32-bit | src-fixed | immediate) and waits for completion.
  *
- * The identity `& 0xFFFFFFFFFFFFFFFF` on the fill-register address is the
+ * The identity `` on the fill-register address is the
  * u64-laundering idiom (see notes/mwccarm-codegen.md, 6m): it routes the
  * address through 64-bit arithmetic so mwccarm cannot fold it into the
  * store's addressing mode, which makes the compiler materialize the address
@@ -34,7 +34,7 @@ void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size)
     while (*dmaCtrl & 0x80000000)
         ;
 
-    fillReg = (vu32 *)(((u32)0x040000e0 + (channel << 2)) & 0xFFFFFFFFFFFFFFFF);
+    fillReg = (vu32 *)(((u32)0x040000e0 + (channel << 2)));
     *fillReg = data;
     DMAStartTransferFB(channel, (void *)fillReg, dst, (size >> 2) | 0x85000000);
 

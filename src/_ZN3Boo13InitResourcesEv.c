@@ -44,8 +44,8 @@ extern struct H data_020a0e68;
 #define U32(o) (*(unsigned int *)(c + (o)))
 #define S32(o) (*(int *)(c + (o)))
 #define PTR(o) (*(char **)(c + (o)))
-#define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL))
-#define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c & 0xFFFFFFFFFFFFFFFFLL) + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL))
+#define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4)))
+#define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c) + 0x5d4)))
 
 int _ZN3Boo13InitResourcesEv(char *c)
 {
@@ -124,7 +124,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
         U16(0x4a0) = 0xd4;
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov063_0211edec);
     } else if (U8(0x5cf) == 0 || U8(0x5cf) == 1 || U8(0x5cf) == 2 || U8(0x5cf) == 6 || (unsigned)(unsigned char)(U8(0x5cf) + 0xf8) <= 3) {
-        *(int *)((long long)(c + 0x1a0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x8000;
+        *(int *)((long long)(c + 0x1a0)) |= 0x8000;
         FLAGS16 |= 2;
         if (U8(0x5cf) == 6) {
             U16(0x4a0) = 0x120;
@@ -242,7 +242,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
         }
     } else {
         if ((unsigned)U8(0x5cf) < 0xc) {
-            *(int *)((long long)(c + 0x19c) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+            *(int *)((long long)(c + 0x19c)) |= 1;
         }
         if (U8(0x5cf) == 4) {
             S8(0xcc) = -1;

@@ -7,14 +7,14 @@
 
 int BowserFireSeaArena::Behavior()
 {
-    short *a = (short *)(((int)((char *)this) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
-    short *b = (short *)(((int)((char *)this) + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+    short *a = (short *)(((int)((char *)this) + 0x8c));
+    short *b = (short *)(((int)((char *)this) + 0x8e));
 
     *a = *a + unk_31e;
     *b = *b + unk_320;
 
     {
-        short *d = (short *)(((int)((char *)this) + 0x90) & 0xFFFFFFFFFFFFFFFF);
+        short *d = (short *)(((int)((char *)this) + 0x90));
         *d = *d + unk_322;
     }
 

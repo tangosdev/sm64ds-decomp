@@ -78,7 +78,7 @@ skip:
                 }
             } else {
                 *(s32 *)(c + 0x9c) = -0x2000;
-                *(s32 *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) = *(s32 *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) + 0xe00;
+                *(s32 *)(((int)c + 0x98)) = *(s32 *)(((int)c + 0x98)) + 0xe00;
             }
             if (this->FinishedAnim() != 0) {
                 *(s32 *)(c + 0x9c) = 0;
@@ -122,7 +122,7 @@ skip:
             if (*(u8 *)(c + 0x70c) == 0) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(0xb9, c + 0x74);
                 func_ov002_020e25f0(c, 2);
-                *(u8 *)(((int)c + 0x70c) & 0xFFFFFFFFFFFFFFFF) = *(u8 *)(((int)c + 0x70c) & 0xFFFFFFFFFFFFFFFF) + 1;
+                *(u8 *)(((int)c + 0x70c)) = *(u8 *)(((int)c + 0x70c)) + 1;
             }
             {
                 char *m = *(char **)(c + this->GetBodyModelID(*(u32 *)(c + 8) & 0xff, 0) * 4 + 0xdc);

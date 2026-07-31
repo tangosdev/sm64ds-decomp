@@ -15,9 +15,9 @@ int RotatingPlatformRr::InitResources()
   unk_118 = unk_008 & 1;
   unk_119 = (unk_008 >> 8) & 1;
   if (unk_118 != 0) {
-    *(s16 *)(((int)((char*)this) + 0x8c) & 0xFFFFFFFFFFFFFFFF) += 0x2400;
-    *(s16 *)(((int)((char*)this) + 0x8e) & 0xFFFFFFFFFFFFFFFF) += 0x8000;
-    *(s16 *)(((int)((char*)this) + 0x90) & 0xFFFFFFFFFFFFFFFF) += 0x8000;
+    *(s16 *)(((int)((char*)this) + 0x8c)) += 0x2400;
+    *(s16 *)(((int)((char*)this) + 0x8e)) += 0x8000;
+    *(s16 *)(((int)((char*)this) + 0x90)) += 0x8000;
   }
   unk_110 = unk_08c;
   unk_112 = unk_08e;

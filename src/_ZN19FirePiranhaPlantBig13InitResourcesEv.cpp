@@ -70,7 +70,7 @@ extern "C" int _ZN19FirePiranhaPlantBig13InitResourcesEv(char *c)
         *(int *)(c + 0x210) = 0x800;
         *(int *)(c + 0x214) = 0x52;
         *(int *)(c + 0x1ec) = 1;
-        *(int *)(((int)c + 0x190) & 0xFFFFFFFFFFFFFFFF) |= 0x8000;
+        *(int *)(((int)c + 0x190)) |= 0x8000;
     } else {
         cond = (id == 0xfd);
         if (cond != 0) {

@@ -44,7 +44,7 @@ int TTC_MovingBar::Behavior() {
 
             {
                 s16 *p = (s16 *)(
-                    ((int)c + 0x92) & 0xFFFFFFFFFFFFFFFFLL);
+                    ((int)c + 0x92));
                 *p *= (s16)-1;
             }
         }
@@ -58,7 +58,7 @@ int TTC_MovingBar::Behavior() {
 
     {
         s16 *p = (s16 *)(
-            ((int)c + 0x94) & 0xFFFFFFFFFFFFFFFFLL);
+            ((int)c + 0x94));
         *p = (s16)(*p + *(s16 *)((char *)c + 0x96));
     }
 

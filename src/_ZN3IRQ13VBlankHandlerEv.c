@@ -21,6 +21,6 @@ void _ZN3IRQ13VBlankHandlerEv(void)
   }
   new_var = &data_0209d4fc;
   OS_WakeupThread(new_var);
-  *(int *)(((int)data_023c0000 + 0x3ff8) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+  *(int *)(((int)data_023c0000 + 0x3ff8)) |= 1;
   func_02019100();
 }

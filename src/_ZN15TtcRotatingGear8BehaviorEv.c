@@ -56,7 +56,7 @@ Lchk:
         }
 
         {
-            u8 *tog = (u8 *)(((int)c + 0x32e) & 0xFFFFFFFFFFFFFFFF);
+            u8 *tog = (u8 *)(((int)c + 0x32e));
             u8 tv = *tog;
             *tog = tv ^ 1;
             {

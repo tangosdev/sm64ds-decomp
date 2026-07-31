@@ -26,7 +26,7 @@ int RotatingCogSmall::Behavior()
 
     if (_Z14ApproachLinearRsss((short*)((char*)&unk_08e), unk_322, 0xc8) != 0 &&
         DecIfAbove0_Short((unsigned short*)((char*)&unk_31e)) == 0) {
-        short* p = (short*)(((int)((char*)this) + 0x322) & 0xFFFFFFFFFFFFFFFF);
+        short* p = (short*)(((int)((char*)this) + 0x322));
         *p = *p + unk_324;
         unsigned char k = data_0209f2c0[0];
         unk_31e = data_ov035_02111ef4[mRotationState][k];

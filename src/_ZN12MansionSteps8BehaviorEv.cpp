@@ -17,10 +17,10 @@ int MansionSteps::Behavior()
   int idx = unk_140;
   C* obj = (C*)((char*)this);
   (obj->*data_ov063_0211ef38[idx])();
-  unsigned short* ctr = (unsigned short*)(((int)((char*)this) + 0x14c) & 0xFFFFFFFFFFFFFFFF);
+  unsigned short* ctr = (unsigned short*)(((int)((char*)this) + 0x14c));
   *ctr = *ctr + 1;
   if (before != unk_150) {
-    unsigned short* base = (unsigned short*)(((int)((char*)this) + 0x100) & 0xFFFFFFFFFFFFFFFF);
+    unsigned short* base = (unsigned short*)(((int)((char*)this) + 0x100));
     base[0x4c/2] = 0;
   }
   func_ov063_0211c684(((char*)this));

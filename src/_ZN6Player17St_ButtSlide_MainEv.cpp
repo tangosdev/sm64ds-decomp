@@ -48,7 +48,7 @@ int Player::St_ButtSlide_Main()
                 mStateWork = 0;
                 break;
             }
-            (*(u8*)(((int)((char*)this) + 0x6e7) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8*)(((int)((char*)this) + 0x6e7)))++;
             if (mSlideStoppedTimer >= 0x1e) {
                 unk_6e6 = 2;
                 mStateWork = 0;
@@ -89,7 +89,7 @@ int Player::St_ButtSlide_Main()
             }
             if (mStateWork == 0 && unk_558 >= 0xfc1) {
                 mVertSpeed = -mPrevVertSpeed / 2;
-                (*(u8*)(((int)((char*)this) + 0x6e5) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(u8*)(((int)((char*)this) + 0x6e5)))++;
             } else {
                 unk_6e6 = 0;
                 mVertSpeed = 0;
@@ -98,7 +98,7 @@ int Player::St_ButtSlide_Main()
         } else {
             func_ov002_020dc560(((char*)this));
         }
-        (*(u8*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8*)(((int)((char*)this) + 0x6e3)))++;
         if (mStateStep > 0x1e
             && mPosY - mGroundY > 0x1f4000) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);

@@ -20,7 +20,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         if(_ZN5Event6GetBitEj(self->unk_3a4) == 0) break;
 
         {
-            unsigned char* st_ptr = (unsigned char*)(((int)((char*)self) + 0x3a2) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* st_ptr = (unsigned char*)(((int)((char*)self) + 0x3a2));
             *st_ptr = *st_ptr + 1;
         }
 

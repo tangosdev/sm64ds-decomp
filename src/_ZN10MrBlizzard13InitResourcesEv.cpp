@@ -116,7 +116,7 @@ int MrBlizzard::InitResources()
         unk_0b0 = 0x10000000;
         func_ov081_02125488(((char *)this), &data_ov081_02128e54);
     } else {
-        *(s32 *)(((int)((char *)this) + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0x118000;
+        *(s32 *)(((int)((char *)this) + 0x60)) -= 0x118000;
         func_ov081_02125488(((char *)this), &data_ov081_02128e84);
         if (mType == 3) {
             unk_108 = 0;

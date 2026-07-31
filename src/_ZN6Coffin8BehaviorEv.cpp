@@ -23,7 +23,7 @@ int Coffin::Behavior()
 
     {
         unsigned short *timer =
-            (unsigned short *)(((int)((char *)this) + 0x328) & 0xFFFFFFFFFFFFFFFFLL);
+            (unsigned short *)(((int)((char *)this) + 0x328));
         *timer = *timer + 1;
     }
     func_ov071_02122414(((char *)this));

@@ -22,7 +22,7 @@ extern char *data_0209f340;
 
 void Stage::RenderModelTransparent()
 {
-    char *p = (char *)(((int)((char *)this) + 0x874) & 0xFFFFFFFFFFFFFFFF);
+    char *p = (char *)(((int)((char *)this) + 0x874));
     char *arr = *(char **)(*(char **)p + 8);
     char *q = ((char *)this) + 0x8bc;
     int i;
@@ -33,9 +33,9 @@ void Stage::RenderModelTransparent()
             for (j = 0; j < *(u16 *)(arr + 0x30); j++) {
                 char *e = *(char **)(p + 4) + *bp * 0x30;
                 if ((*(int *)(e + 0x24) & 0x1f0000) != 0x1f0000)
-                    *(int *)(((int)e + 0x24) & 0xFFFFFFFFFFFFFFFF) &= ~0x80000000;
+                    *(int *)(((int)e + 0x24)) &= ~0x80000000;
                 else
-                    *(int *)(((int)e + 0x24) & 0xFFFFFFFFFFFFFFFF) |= 0x80000000;
+                    *(int *)(((int)e + 0x24)) |= 0x80000000;
                 bp++;
             }
         }

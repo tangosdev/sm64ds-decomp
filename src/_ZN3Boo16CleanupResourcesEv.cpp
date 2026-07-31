@@ -48,7 +48,7 @@ int Boo::CleanupResources()
     if (((O *)this)->f494 != 0) {
         ((O *)this)->f48c = _ZN5Actor10FindWithIDEj(((O *)this)->f494);
         if (((O *)this)->f48c != 0) {
-            cnt = (int *)(((int)((O *)this)->f48c + 0x5a0) & 0xFFFFFFFFFFFFFFFF);
+            cnt = (int *)(((int)((O *)this)->f48c + 0x5a0));
             (*cnt)++;
         }
         ((O *)this)->f48c = 0;

@@ -10,13 +10,13 @@ int RotatingPlatformLll::Behavior()
 {
     func_020393a4((int*)((char*)&mMeshCollider), 0x150000);
     if (unk_324) {
-        int* py = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int* py = (int*)(((int)((char*)this) + 0x60));
         *py = *py - 0x2000;
         int lim = unk_320 - 0xc8000;
         if (mPosY < lim) mPosY = lim;
         unk_324 = 0;
     } else {
-        int* py = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int* py = (int*)(((int)((char*)this) + 0x60));
         *py = *py + 0x2000;
         int lim = unk_320;
         if (mPosY > lim) mPosY = lim;

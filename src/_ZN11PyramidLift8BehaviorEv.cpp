@@ -30,7 +30,7 @@ int PyramidLift::Behavior()
             unk_0a8 = -0xa000;
         }
         {
-            unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
             *pa = *pa + 1;
         }
         break;
@@ -41,11 +41,11 @@ int PyramidLift::Behavior()
         int* p = (int*)(((char*)this) + idx * 0xc + 0x380);
         int lim = *p + 0x14000;
         if (v <= lim) {
-            unsigned char *pb = (unsigned char*)(((int)((char*)this) + 0x3f8) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char *pb = (unsigned char*)(((int)((char*)this) + 0x3f8));
             *pb = *pb + 1;
         }
         {
-            int *py = (int*)(((int)((char*)this) + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+            int *py = (int*)(((int)((char*)this) + 0x60));
             *py = *py + unk_0a8;
         }
         if (mPosY < 0x80000) {
@@ -64,7 +64,7 @@ int PyramidLift::Behavior()
         int d = (int)(((long long)s * 0xa + 0x800) >> 0xc);
         mPosY = d + 0x80000;
         {
-            unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
             if (mShakeTimer >= 8) {
                 unk_0a8 = z;
                 mPosY = 0x80000;

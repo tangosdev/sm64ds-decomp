@@ -46,8 +46,8 @@ int Player::St_LedgeHang_Main()
     if (mStateStep == 0) {
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x21, 0, 0x1000, 0);
-            *(u8*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) =
-                *(u8*)(((int)((char*)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) + 1;
+            *(u8*)(((int)((char*)this) + 0x6e3)) =
+                *(u8*)(((int)((char*)this) + 0x6e3)) + 1;
         }
     } else {
         if ((!func_ov002_020cfaf0(((char*)this))

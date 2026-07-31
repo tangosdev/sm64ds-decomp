@@ -114,7 +114,7 @@ int UnchainedChomp::Behavior()
         Vec3_Sub(&diff, (Vector3 *)(c + 0x5c), &node);
 
         if (LenVec3(&diff) < 0x190000) {
-            *(int *)(((long long)(int)(c + 0x6b4)) & 0xffffffffffffffffLL) += 1;
+            *(int *)(((long long)(int)(c + 0x6b4))) += 1;
             if (*(int *)(c + 0x6b4) >= *(int *)(c + 0x6b0)) {
                 *(int *)(c + 0x6b4) = 0;
             }

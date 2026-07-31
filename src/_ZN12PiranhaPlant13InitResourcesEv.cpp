@@ -53,7 +53,7 @@ extern "C" int _ZN12PiranhaPlant13InitResourcesEv(char* c)
     *(int*)(c + 0x448) = *(int*)(c + 0x64);
     {
         s16 *tbl = data_02082214;
-        Vector3* home = (Vector3*)(((int)c + 0x440) & 0xFFFFFFFFFFFFFFFFLL);
+        Vector3* home = (Vector3*)(((int)c + 0x440));
         *(Vector3*)(c + 0x44c) = *home;
         unsigned short angh = *(unsigned short*)(c + 0x8e);
         int ang = angh >> 4;

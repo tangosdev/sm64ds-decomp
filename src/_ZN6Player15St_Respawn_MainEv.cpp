@@ -34,7 +34,7 @@ int Player::St_Respawn_Main()
             if (mIsAirborne == 0) {
                 u32 zero = 0;
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char *)this), 0x55, 0x40000000, 0x1000, zero);
-                *(u8 *)(((int)((char *)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(u8 *)(((int)((char *)this) + 0x6e3)) += 1;
             }
         }
         break;
@@ -43,7 +43,7 @@ int Player::St_Respawn_Main()
         if (_ZN6Player12FinishedAnimEv(((char *)this)) != 0) {
             int z = 0;
             _ZN6Player7SetAnimEji5Fix12IiEj(((char *)this), 0x47, z, 0x1000, z);
-            *(u8 *)(((int)((char *)this) + 0x6e3) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(u8 *)(((int)((char *)this) + 0x6e3)) += 1;
         }
         break;
     case 2:

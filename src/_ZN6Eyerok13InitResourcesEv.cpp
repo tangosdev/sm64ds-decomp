@@ -133,7 +133,7 @@ int Eyerok::InitResources()
 
     if (*(s32*)(c + 0x49C) == 0) {
         void* r;
-        *(s32*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL) -= 0x7C000;
+        *(s32*)(((int)c + 0x64)) -= 0x7C000;
         *(s32*)(c + 0x4A4) = *(s32*)(c + 0x5C);
         *(s32*)(c + 0x4A8) = *(s32*)(c + 0x60);
         *(s32*)(c + 0x4AC) = *(s32*)(c + 0x64);
@@ -170,15 +170,15 @@ int Eyerok::InitResources()
         *(s32*)(c + 0x4B8) = *(s32*)(c + 0x64);
         if (*(s32*)(c + 0x49C) == 1) {
             _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae14[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112c08);
-            *(s32*)(((int)c + 0x4A4) & 0xFFFFFFFFFFFFFFFFLL) -= 0x31F000;
+            *(s32*)(((int)c + 0x4A4)) -= 0x31F000;
         } else {
             _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
-            *(s32*)(((int)c + 0x4A4) & 0xFFFFFFFFFFFFFFFFLL) += 0x31F000;
+            *(s32*)(((int)c + 0x4A4)) += 0x31F000;
         }
         func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         func_020398fc(c + 0x674);
-        *(s32*)(((int)c + 0x4AC) & 0xFFFFFFFFFFFFFFFFLL) -= 0x32000;
+        *(s32*)(((int)c + 0x4AC)) -= 0x32000;
         *(s8*)(c + 0x4D8) = 3;
         data_ov066_0211ae00 = 0;
         func_ov066_02119454(c, data_ov066_0211b05c);
