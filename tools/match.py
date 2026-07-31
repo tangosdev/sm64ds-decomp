@@ -149,7 +149,19 @@ def main():
                     help="skip the reloc-destination check (loose byte-only compare)")
     ap.add_argument("--module", default="arm9",
                     help="module name for --strict-relocs config lookup (arm9, ov006, ...)")
+    ap.add_argument("--cpp-check", action="store_true",
+                    help="lint C++ file header and symbol naming conventions")
     args = ap.parse_args()
+
+    cfile = pathlib.Path(args.c)
+    if args.cpp_check and cfile.is_file():
+        text = cfile.read_text(encoding="utf-8", errors="ignore")
+        if cfile.suffix == ".cpp" and not text.startswith("//cpp"):
+            print(f"  [cpp-check] Warning: {cfile.name} is a .cpp file but lacks '//cpp' header on line 1")
+        if text.startswith("//cpp") and cfile.suffix == ".c":
+            print(f"  [cpp-check] Warning: {cfile.name} has '//cpp' header but extension is .c (should be .cpp)")
+        if cfile.stem.startswith("_Z") and args.func and args.func != cfile.stem:
+            print(f"  [cpp-check] Warning: function '{args.func}' does not match file symbol name '{cfile.stem}'")
 
     strict = None
     if args.strict_relocs:
