@@ -2679,3 +2679,44 @@ generalizes across the two register bands.
 Flipping the source operand order does nothing (mwcc canonicalizes commutative `|` before
 codegen); the discriminator is whether the AND's right operand is a named local. Splitting
 the RMW through a named temp reaches the same shape with the name kept.
+
+## 6au. volatile-on-the-OBJECT plus an inline access beats a named pointer (2026-07-31, PS_UpdateOkAndBackButtons MATCHED)
+
+Closing `_ZN5Stage25PS_UpdateOkAndBackButtonsEb` (18 -> 9 -> 0, byte-identical on 1.2/base,
+1.2/sp2, 1.2/sp2p3 AND 2004/b56). 6at correctly diagnosed the last 9 words as a coloring
+rotation needing the pooled base out of the address-constant class, but the fix is not
+"de-rematerialize the pointer". It is two coupled changes that only work together:
+
+```c
+extern volatile int data_02075610[];        /* 1. volatile on the OBJECT */
+...
+for (j = 0; j < data_02075610[idx]; j++)    /* 2. NO named pointer, index inline */
+```
+
+Three measured states, which is what makes the mechanism clear:
+
+- **Named pointer local** (`int *ptr = data_02075610`): the base enters the
+  address-constant class, is colored after every normal web, and lands in r7. This is the
+  entire 9-word miss, and it DOMINATES -- a named `volatile int *` pointer to the volatile
+  array still sits at 9. The address-class assignment wins over the volatility.
+- **Plain inline access, no volatile:** the base rematerializes in normal birth order but
+  into a SCRATCH register, and the loop bound is cached, so the tail reload disappears and
+  the function comes out three words SHORT (0x148).
+- **volatile + inline:** the bound is re-read every iteration (the ROM reloads at +0xc0 and
+  +0x114), which keeps the base live across the inner loop so it must take a callee-saved
+  register -- but it gets there via the normal-birth path, not the address-constant class.
+  Result: ptr r5 / 0x1000 r6 / idx r7, exactly the ROM. The volatile restores the three
+  missing words and rotates the coloring in one move.
+
+**Generalisation.** When 6at says a pooled base is stuck in the address-constant class, the
+lever is to DELETE the named pointer rather than to launder it, and then to restore whatever
+reloads the inlining optimised away. `volatile` on the object is the cheapest way to force
+those reloads, and unlike `volatile` on a local it costs no stack slot.
+
+**Inert / regressive on this shape (6as-screened):** union int-to-pointer pun (not folded --
+forces a real stack round-trip and SPILLS the base, +2 words); a struct member holding the
+pointer (folds back to the pool load, 14); runtime-cancel identities
+`&arr[base] - base` and `&arr[i] - i` (folded back to the pooled constant, 14); an `int`
+holding the address with an inline `(int*)` cast at the index site (stays address-class, 14);
+`opt_common_subs off` and `opt_strength_reduction off` (honoured but byte-identical here --
+these are established-real pragmas, verified by a zero-byte disassembly diff, not 6as typos).
