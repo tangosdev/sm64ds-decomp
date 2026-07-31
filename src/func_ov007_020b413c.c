@@ -30,8 +30,8 @@ typedef struct G2 {
     R8 *f17c;
 } G2;
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
-#define MASK(p) ((void*)(int)(((long long)(int)(p))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define MASK(p) ((void*)(int)(((long long)(int)(p))))
 
 extern G2 *data_ov007_0210342c;
 extern unsigned char data_ov007_020d7610[];

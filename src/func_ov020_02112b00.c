@@ -37,7 +37,7 @@ typedef struct {
 void func_ov020_02112b00(char *c)
 {
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x1bc);
-    (*(u16 *)(((int)c + 0x39e) & 0xFFFFFFFFFFFFFFFF))++;
+    (*(u16 *)(((int)c + 0x39e)))++;
 
     if (ST->counter <= 0x46) {
         if (ST->counter < 0x32)
@@ -51,7 +51,7 @@ void func_ov020_02112b00(char *c)
         }
     } else {
         if (ST->timer != 0) {
-            (*(u16 *)(((int)c + 0x3a0) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(u16 *)(((int)c + 0x3a0)))--;
             if (ST->timer == 0) {
                 void *player;
                 func_0201267c(0x5d, c + 0x74);
@@ -59,7 +59,7 @@ void func_ov020_02112b00(char *c)
                 if (player == 0)
                     return;
                 {
-                    Vector3 *pp = (Vector3 *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    Vector3 *pp = (Vector3 *)(((int)player + 0x5c));
                     Vector3 playerPos;
                     Vector3 diff;
                     s32 r;
@@ -76,7 +76,7 @@ void func_ov020_02112b00(char *c)
                 }
             } else {
                 if (ST->timer > 0x14) {
-                    *(s16 *)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF) += 0x2710;
+                    *(s16 *)(((int)c + 0x8e)) += 0x2710;
                 }
             }
         } else {

@@ -15,7 +15,7 @@ void func_ov006_0211fd44(char *c)
     func_ov006_0211f6fc(c);
     func_ov006_0211e184(c);
     if (*(unsigned short *)(c + 0x4c0c) == 0) return;
-    *(unsigned short *)(((int)c + 0x4c0c) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(unsigned short *)(((int)c + 0x4c0c)) -= 1;
     if (*(short *)(c + 0x4c0c) > 0) return;
     *(unsigned short *)(c + 0x4c0c) = 0;
     if (*(unsigned char *)(c + 0x4000 + 0xc1f) != 0) {
@@ -24,7 +24,7 @@ void func_ov006_0211fd44(char *c)
         p = func_020beb68;
         if (p != 0) {
             if (p->b4 < 0x270f) {
-                *(int *)(((int)p + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(int *)(((int)p + 0xb4)) += 1;
             }
             if (p->b4 > p->b8) {
                 p->b8 = p->b4;

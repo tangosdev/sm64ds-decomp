@@ -6,8 +6,8 @@ extern s16 data_02082214[];
 
 void func_ov007_020bffb8(char *c)
 {
-    s32 *out = (s32 *)(((int)c + 8) & 0xFFFFFFFFFFFFFFFF);
-    s32 *base = (s32 *)(((int)c + 0x14) & 0xFFFFFFFFFFFFFFFF);
+    s32 *out = (s32 *)(((int)c + 8));
+    s32 *base = (s32 *)(((int)c + 0x14));
     s32 angleA = *(u16 *)(c + 0x30);
     s32 angleB = *(u16 *)(c + 0x32);
     s32 indexA;

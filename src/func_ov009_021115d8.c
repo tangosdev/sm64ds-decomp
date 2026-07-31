@@ -35,5 +35,5 @@ void func_ov009_021115d8(char* c) {
     *(short*)(c+0x92) = 5000 - (unsigned int)RandomIntInternal(&data_0209e650) % 4000;
     *(int*)(c+0x174) = 0x28000;
     *(int*)(c+0x17c) = 3;
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x10000;
+    *(int *)(((int)c + 0xb0)) &= ~0x10000;
 }

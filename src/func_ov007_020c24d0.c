@@ -27,11 +27,11 @@ void func_ov007_020c24d0(struct S *s, int arg1)
         return;
     if (arg1 >= s->count)
         return;
-    (*(unsigned short *)(((int)s + 8) & 0xFFFFFFFFFFFFFFFF))--;
+    (*(unsigned short *)(((int)s + 8)))--;
     if (arg1 == s->count)
         return;
 
-    i = (int)(((long long)arg1) & 0xFFFFFFFFFFFFFFFF);
+    i = (int)(((long long)arg1));
     while (i < s->count) {
         switch (s->state) {
         case 0:

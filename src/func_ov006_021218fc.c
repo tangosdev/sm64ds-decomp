@@ -54,7 +54,7 @@ void func_ov006_021218fc(char *c)
             {
                 int amt = data_ov006_02140588 * 2;
                 if (amt > 0xb4) amt = 0xb4;
-                *(int *)(((int)c + 0x5d90) & 0xFFFFFFFFFFFFFFFFLL) -= amt;
+                *(int *)(((int)c + 0x5d90)) -= amt;
             }
         }
     }

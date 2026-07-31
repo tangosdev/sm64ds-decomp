@@ -3,7 +3,7 @@ typedef short s16;
 
 typedef struct { int f[12]; } Blk;
 
-#define LS(a) (*(short*)(((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LS(a) (*(short*)(((long long)(int)(a))))
 
 extern void func_ov007_020bc968(char *c, void *other);
 extern void func_ov007_020bc894(char *c);

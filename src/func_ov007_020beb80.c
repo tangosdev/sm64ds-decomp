@@ -12,14 +12,14 @@ extern void func_02053380(void *a, void *b);
 void func_ov007_020beb80(char *self) {
     char *B = *(char **)(*(char **)(self + 4));
     char *P = *(char **)(B + 0xc);
-    int *q = (int *)(int)(((long long)(unsigned)(P + 0x18)) & 0xFFFFFFFFFFFFFFFFLL);
+    int *q = (int *)(int)(((long long)(unsigned)(P + 0x18)));
     int r;
     Vec3s dd;
     char *e;
     int frames;
     int vel;
     int sc;
-    Vec3i *tp = (Vec3i *)(int)(((long long)(int)(P + 0x24)) & 0xFFFFFFFFFFFFFFFFLL);
+    Vec3i *tp = (Vec3i *)(int)(((long long)(int)(P + 0x24)));
     r = func_020538b8(q[0], q[2]);
     dd.x = (short)(tp->x - *(int *)(self + 0xc));
     dd.y = (short)(tp->y - *(int *)(self + 0x10));
@@ -50,10 +50,10 @@ void func_ov007_020beb80(char *self) {
             }
             *(u8 *)(e + 0x58) = (u8)(((frames << 2) >> 12) + 1);
             *(int *)(e + 0x4c) = vel;
-            *(int *)(((int)e + 0x1c) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+            *(int *)(((int)e + 0x1c)) &= ~2;
             *(Vec3i *)(e + 0x20) = *tp;
         } else {
-            *(int *)(((int)e + 0x1c) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+            *(int *)(((int)e + 0x1c)) |= 2;
         }
     }
 }

@@ -36,5 +36,5 @@ void func_ov006_0211e5cc(char* c)
     if (found != 0)
         return;
     FreeGfxSlotsById(0xc);
-    (*(u8*)((long long)(int)(c + 0x4c20) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(u8*)((long long)(int)(c + 0x4c20)))++;
 }

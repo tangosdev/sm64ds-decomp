@@ -14,7 +14,7 @@ void func_ov007_020c684c(char *o)
     *(int *)(o + 0x88) = *(int *)(o + 0x8c);
     *(Vec3 *)(o + 0x7c) = *(Vec3 *)(o + 0x70);
     *(Vec3 *)(o + 0x98) = *(Vec3 *)(o + 0x70);
-    tp = (Vec3 *)(((long long)(int)&tmp) & 0xFFFFFFFFFFFFFFFFLL);
+    tp = (Vec3 *)(((long long)(int)&tmp));
     tp->a = 0;
     tp->b = 0;
     tp->c = 0;

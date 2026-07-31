@@ -47,7 +47,7 @@ void func_ov007_020c55bc(struct Self *self, int m1, int m2)
             do {
                 row = (int *)self->f2c[i];
                 p = self->f34[i][j];
-                q = (int *)(((int)p + 0xc) & 0xFFFFFFFFFFFFFFFFLL);
+                q = (int *)(((int)p + 0xc));
                 b7c = self->f7c;
                 b80 = self->f80;
                 e = (int *)((char *)row + k);

@@ -7,7 +7,7 @@ extern int* _ZN3G2S13GetBG0CharPtrEv(void);
 extern void func_ov006_0211e55c(char* c, int idx);
 extern void func_02012718(void* a, int b);
 
-#define A(a) (*(u8*)(((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL))
+#define A(a) (*(u8*)(((long long)(int)(a))))
 
 void func_ov006_0211e8a8(char* c, int idx)
 {

@@ -21,7 +21,7 @@ extern "C" void func_ov020_02111fc4(char* thiz)
     Vector3 v;
     char* p = _ZN5Actor13ClosestPlayerEv();
     {
-        int* s = (int*)(int)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+        int* s = (int*)(int)(((int)p + 0x5c));
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];
@@ -35,7 +35,7 @@ extern "C" void func_ov020_02111fc4(char* thiz)
     *(int*)(c + 0x98) = 0x5000;
     *(short*)(c + 0x100) = 0;
     {
-        int* p234 = (int*)(int)(((int)c + 0x234) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p234 = (int*)(int)(((int)c + 0x234));
         *p234 = *p234 & ~1;
     }
     func_0201267c(0x166, c + 0x74);

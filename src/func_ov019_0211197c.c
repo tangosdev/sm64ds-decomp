@@ -3,7 +3,7 @@ typedef unsigned int u32;
 
 typedef struct { int x, y, z; } Vector3;
 
-#define LB(off) (*(u8 *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LB(off) (*(u8 *)(((int)c + (off))))
 
 extern int func_ov019_0211131c(void *self);
 extern void func_ov019_021113b0(void *self);
@@ -54,7 +54,7 @@ int func_ov019_0211197c(void *self)
             }
             {
                 u8 *o = *(u8 **)(c + 0x378);
-                u8 *p = (u8 *)(((int)o + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                u8 *p = (u8 *)(((int)o + 0x5c));
                 Vector3 v;
                 v.x = *(int *)p;
                 v.y = *(int *)(p + 4);
@@ -90,7 +90,7 @@ int func_ov019_0211197c(void *self)
             }
             {
                 u8 *o = *(u8 **)(c + 0x378);
-                u8 *p = (u8 *)(((int)o + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                u8 *p = (u8 *)(((int)o + 0x5c));
                 Vector3 v;
                 v.x = *(int *)p;
                 v.y = *(int *)(p + 4);

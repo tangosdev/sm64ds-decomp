@@ -72,7 +72,7 @@ void *func_ov007_020b4c04(int arg0)
             if (arg0 != 0) {
                 *(s16 *)(r6 + 0xc) = 0x48;
             } else {
-                s32 *p = (s32 *)(((long long)(int)(r6 + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+                s32 *p = (s32 *)(((long long)(int)(r6 + 0x10)));
                 *p = *p + 0xc;
             }
         }

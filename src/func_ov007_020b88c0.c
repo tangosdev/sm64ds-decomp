@@ -40,7 +40,7 @@ void func_ov007_020b88c0(void)
         r = i;
         do {
             data_ov007_02103484[r] = 4;
-            data_ov007_02103484[(int)(((long long)r) & 0xFFFFFFFFFFFFFFFFLL) + w - 1] = 6;
+            data_ov007_02103484[(int)(((long long)r)) + w - 1] = 6;
             i++;
             r += w;
         } while (i < h);

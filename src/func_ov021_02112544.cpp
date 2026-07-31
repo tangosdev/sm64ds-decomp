@@ -61,8 +61,8 @@ extern "C" void func_ov021_02112544(char* self)
                 *(int*)(self + 0x3b8), 3, 0x8a, self + 0x74, 0);
         }
         {
-            int *pa4 = (int *)(int)(((long long)(int)(self + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL);
-            int *pac = (int *)(int)(((long long)(int)(self + 0xac)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *pa4 = (int *)(int)(((long long)(int)(self + 0xa4)));
+            int *pac = (int *)(int)(((long long)(int)(self + 0xac)));
             *pa4 = *pa4 + normal.x * 5;
             *pac = *pac + normal.z * 5;
         }

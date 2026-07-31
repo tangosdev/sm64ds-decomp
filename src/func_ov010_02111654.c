@@ -79,7 +79,7 @@ int daObjC1_Trap_c_InitResources(char* c)
     self->unk_3a0 = 0;
 
     if ((*(int*)(c + 8) & 0xff) == 1) {
-        short* pa = (short*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        short* pa = (short*)(((int)c + 0x8e));
         *pa = *pa + 0x8000;
     }
     return 1;

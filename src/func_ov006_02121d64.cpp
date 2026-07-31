@@ -27,7 +27,7 @@ extern "C" void func_ov006_02121d64(char *c)
     int counter;
 
     func_ov006_020d0ac0();
-    *(int *)(((long long)(int)(c + 0x5d90)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(int *)(((long long)(int)(c + 0x5d90))) -= 1;
     counter = *(int *)(c + 0x5d90);
 
     if (counter == 0) {
@@ -59,7 +59,7 @@ extern "C" void func_ov006_02121d64(char *c)
         *(s16 *)(c + 0x5db0) = (s16)(mixRaw >> 12);
         *(s16 *)(c + 0x5db2) = data_ov006_0212e048;
 
-        *(s16 *)(((long long)(int)(c + 0x5db2)) & 0xFFFFFFFFFFFFFFFFLL) +=
+        *(s16 *)(((long long)(int)(c + 0x5db2))) +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) &
                               ~0x80000000) >> 19) -
                0x800) << 2) >> 12);

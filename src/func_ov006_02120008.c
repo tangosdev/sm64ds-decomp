@@ -13,7 +13,7 @@ void func_ov006_02120008(char *c)
   if (g[0xb] != 0)
   {
     new_var = ((int) c) + 0x4c16;
-    *((unsigned short *) (new_var & 0xFFFFFFFFFFFFFFFF)) = (*((unsigned short *) (new_var & 0xFFFFFFFFFFFFFFFF))) - 1;
+    *((unsigned short *) (new_var)) = (*((unsigned short *) (new_var))) - 1;
     if (((unsigned short *) (c + 0x4c00))[0xb] == 0)
     {
       FreeGfxSlotsById(0xd);

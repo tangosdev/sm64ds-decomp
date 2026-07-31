@@ -22,7 +22,7 @@ int func_ov007_020c25fc(struct S *self, int a1, int a2, int a3, int e, int v)
         self->f28[self->f8] = a2;
         func_ov007_020c2d44(self, self->f8);
         {
-            unsigned short *p = (unsigned short *)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned short *p = (unsigned short *)(((int)self + 8));
             *p = *p + 1;
         }
         if (func_ov007_020c2dfc(self, self->f8 - 1, v) != 0)

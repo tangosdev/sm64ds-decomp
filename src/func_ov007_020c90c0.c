@@ -10,7 +10,7 @@ void func_ov007_020c90c0(char *c)
 
     {
         int speed = *(int *)(c + 8);
-        short *pos = (short *)(((int)c + 0xc) & 0xFFFFFFFFFFFFFFFF);
+        short *pos = (short *)(((int)c + 0xc));
         short old = *pos;
 
         speed <<= 16;

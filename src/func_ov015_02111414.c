@@ -5,7 +5,7 @@ void func_ov015_02111414(char* c, char* other) {
     short ang;
     if (*(unsigned char*)(c+0x397) >= 2) return;
     if (*(unsigned char*)(c+0x397) == 0)
-        (*(unsigned char*)(long long)(((int)c + 0x397) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(unsigned char*)(long long)(((int)c + 0x397)))++;
     ang = Vec3_HorzAngle(c+0x5c, other+0x5c);
     d = AngleDiff(ang, *(short*)(c+0x8e));
     if (d < 0x2000) {
@@ -19,7 +19,7 @@ set1:
     if (*(unsigned char*)(c+0x397) == 1) {
         if (*(short*)(c+0x394) >= 0x320) {
             if (*(int*)(other+0x60) > *(int*)(c+0x60) + 0x64000)
-                (*(unsigned char*)(long long)(((int)c + 0x397) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(unsigned char*)(long long)(((int)c + 0x397)))++;
         }
     }
     *(short*)(c+0x394) = 0x640;

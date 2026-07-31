@@ -12,7 +12,7 @@ extern int func_ov019_021122dc(void* c, int s);
 extern int data_ov019_02113460[];
 extern int data_ov019_02113470[];
 
-#define LB(off) (*(unsigned char *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LB(off) (*(unsigned char *)(((int)c + (off))))
 
 int func_ov019_02111dec(char* c) {
     switch (*(unsigned char*)(c+0x38f)) {
@@ -24,7 +24,7 @@ int func_ov019_02111dec(char* c) {
     case 1:
         _Z11UpdateAngleRssis(
             (short*)(c+0x94),
-            *(short *)((char *)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFF) + 0x8c),
+            *(short *)((char *)(((int)c + 0x300)) + 0x8c),
             2, 0x800);
         *(short*)(c+0x8e) = *(short*)(c+0x94);
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x174);

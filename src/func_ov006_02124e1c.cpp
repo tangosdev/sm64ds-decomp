@@ -10,5 +10,5 @@ extern "C" void func_ov006_02124e1c(char* c)
     if (b == 0) return;
 
     *(int*)(c + 0x51bc) = 0x1e;
-    (*(int *)(((int)c + 0x51b8) & 0xFFFFFFFFFFFFFFFF)) += 1;
+    (*(int *)(((int)c + 0x51b8))) += 1;
 }

@@ -122,8 +122,8 @@ int func_ov007_020bb09c(void)
             if (n <= 0) return n;
             {
                 char* e = *(char**)(*(char**)(r5 + 0x38) + (n - 1) * 4);
-                int* p14 = (int*)(((long long)(int)(r5 + 0x14)) & 0xFFFFFFFFFFFFFFFFLL);
-                int* p8 = (int*)(((long long)(int)(r5 + 8)) & 0xFFFFFFFFFFFFFFFFLL);
+                int* p14 = (int*)(((long long)(int)(r5 + 0x14)));
+                int* p8 = (int*)(((long long)(int)(r5 + 8)));
                 *p14 = *p14 - *(unsigned short*)(e + 0xa);
                 *p8 = *p8 - 1;
                 *(short*)(*(char**)((char*)BA0 + 8) + 2) = 6;
@@ -145,8 +145,8 @@ int func_ov007_020bb09c(void)
         if (n >= lim) return lim;
         {
             char* e = *(char**)(*(char**)(r5 + 0x38) + n * 4);
-            int* p14 = (int*)(((long long)(int)(r5 + 0x14)) & 0xFFFFFFFFFFFFFFFFLL);
-            int* p8 = (int*)(((long long)(int)(r5 + 8)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p14 = (int*)(((long long)(int)(r5 + 0x14)));
+            int* p8 = (int*)(((long long)(int)(r5 + 8)));
             *p14 = *p14 + *(unsigned short*)(e + 0xa);
             *p8 = *p8 + 1;
             *(short*)(*(char**)(*(char* volatile*)&data_ov007_02104ba0 + 8) + 2) = 7;

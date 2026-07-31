@@ -49,8 +49,8 @@ void func_ov020_02111c30(char *c)
         return;
     }
 
-    (*(u16 *)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFF))++;
-    if (*(u16 *)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFF) < 5)
+    (*(u16 *)(((int)c + 0x100)))++;
+    if (*(u16 *)(((int)c + 0x100)) < 5)
         return;
 
     func_ov020_021112b0(c);

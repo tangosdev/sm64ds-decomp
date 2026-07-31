@@ -16,7 +16,7 @@ typedef struct Obj {
     u8 unk5fcd;
 } Obj;
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 #define A1(off) ((int)M((int)M((char *)self + (int)M(i) * 32) + (off)))
 #define A2(off) ((int)M((int)M((char *)self + (unsigned)i * 32) + (off)))
 #define B1(off) (*(u8 *)A1(off))

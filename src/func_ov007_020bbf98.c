@@ -7,7 +7,7 @@ void func_ov007_020bbf98(int** o, unsigned int mask){
   if (n <= 0) return;
   off = i;
   do {
-    fld = (int*)(((int)((char*)base[1] + off) + 0x24) & 0xFFFFFFFFFFFFFFFF);
+    fld = (int*)(((int)((char*)base[1] + off) + 0x24));
     i++;
     fld[0] = (fld[0] & ~0xf) | mask;
     off += 0x30;

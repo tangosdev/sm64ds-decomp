@@ -11,9 +11,9 @@ int daObjClockHuriko_c_Behavior(char* c)
     if (data_02092110[0] <= 0) {
         short* p90 = (short*)(c + 0x90);
         if (*p90 > 0) {
-            *(short*)(((long long)(int)(c + 0x124)) & 0xffffffffffffffffLL) -= 8;
+            *(short*)(((long long)(int)(c + 0x124))) -= 8;
         } else {
-            *(short*)(((long long)(int)(c + 0x124)) & 0xffffffffffffffffLL) += 8;
+            *(short*)(((long long)(int)(c + 0x124))) += 8;
         }
         *p90 = (short)(*p90 + *(short*)(c + 0x124));
         short w = *(short*)(c + 0x124);

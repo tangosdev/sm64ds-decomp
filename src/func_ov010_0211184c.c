@@ -25,8 +25,8 @@ void func_ov010_0211184c(char* c, char* arg2) {
     if (target == 0) return;
     b = (int)(*(unsigned short*)(arg2+0xc) == 0xbf);
     if (b == 0) return;
-    sa = (struct Vector3*)(((int)arg2 + 0x5c) & 0xFFFFFFFFFFFFFFFF);
-    st = (struct Vector3*)(((int)target + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    sa = (struct Vector3*)(((int)arg2 + 0x5c));
+    st = (struct Vector3*)(((int)target + 0x5c));
     va.x = sa->x;
     va.y = sa->y;
     va.z = sa->z;

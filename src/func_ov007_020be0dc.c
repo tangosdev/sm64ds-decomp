@@ -76,7 +76,7 @@ int func_ov007_020be0dc(void)
         }
 
         {
-            int *pp = (int *)(((int)BASE1 + 0x18) & 0xFFFFFFFFFFFFFFFF);
+            int *pp = (int *)(((int)BASE1 + 0x18));
             int d = func_020538b8(pp[0], pp[2]);
             int e = _ZN4cstd3divEii(d << 0xc, 0xffff);
             unsigned int scale = ((e * 0x12) >> 0xc) & 0xff;

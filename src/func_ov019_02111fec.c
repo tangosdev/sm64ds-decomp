@@ -12,7 +12,7 @@ int _ZN6Player18HasFinishedTalkingEv(void* p);
 
 extern unsigned char data_0209d684;
 
-#define LB(off) (*(unsigned char *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LB(off) (*(unsigned char *)(((int)c + (off))))
 
 int func_ov019_02111fec(char* c) {
     switch (*(unsigned char*)(c + 0x38f)) {

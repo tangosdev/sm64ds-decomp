@@ -4,7 +4,7 @@
 typedef unsigned short u16;
 typedef struct { int x, y, z; } Vec3;
 typedef unsigned int u32;
-#define LDR(p) ((int)((((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)))
+#define LDR(p) ((int)((((long long)(int)(p)))))
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern int _ZN5Actor24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);

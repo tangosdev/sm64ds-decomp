@@ -29,5 +29,5 @@ void func_ov007_020ca578(char* self, int i, int j, int t)
         val = (int)(((s64)(0x1000 - t) * lo + (s64)t * hi) >> 0xc);
     }
 
-    *(int*)(((int)lr + 0x18) & 0xFFFFFFFFFFFFFFFFLL) += val;
+    *(int*)(((int)lr + 0x18)) += val;
 }

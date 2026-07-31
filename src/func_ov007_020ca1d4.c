@@ -17,7 +17,7 @@ void func_ov007_020ca1d4(char *self, int arg1) {
             }
         }
     } else {
-        (*(int *)(((int)self + 4) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(int *)(((int)self + 4)))--;
         if (*(int *)(self + 4) <= 0)
             *(int *)(self + 4) = 0;
     }

@@ -40,7 +40,7 @@ int func_ov007_020c65bc(struct T *t, int a1, int a2, int a3)
     if (func_ov007_020c25fc(b, a1 << 12, a2 << 12, g->f8, g->fc, g->f10) != 0)
     {
       int idx = m + 1;
-      int *p = (int *)(((int)t + 0x14) & 0xFFFFFFFFFFFFFFFF);
+      int *p = (int *)(((int)t + 0x14));
       b->f20[idx] = a3;
       *p = *p + 1;
       func_ov007_020bfe4c(t->fa8, b->f24[idx], b->f28[idx], -(*((int *) (t->fa8 + 0x2c))), t->f24 + (idx * 0xc));
