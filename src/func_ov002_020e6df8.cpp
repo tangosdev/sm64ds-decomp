@@ -30,7 +30,7 @@ void func_ov002_020e6df8(char* c)
       c + 0x110, c, &v, 0x64000, 0x96000, 1, 0);
   }
   {
-    unsigned short* p = (unsigned short*)(((int)c + 0x4a2) & 0xFFFFFFFFFFFFFFFF);
+    unsigned short* p = (unsigned short*)(((int)c + 0x4a2));
     *p = (*p & ~1) | 1;
     *p = *p | 2;
   }

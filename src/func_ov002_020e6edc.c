@@ -25,7 +25,7 @@ void func_ov002_020e6edc(char* c)
     v.z = data_ov002_0210aa0c.z;
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c+0x110, (struct Actor*)c, &v, 0x64000, 0x96000, 1, 0);
     *(int*)(c+0x440) = 0xc;
-    p = (u16*)(((int)c + 0x4a2) & 0xFFFFFFFFFFFFFFFF);
+    p = (u16*)(((int)c + 0x4a2));
     *p = (*p & ~1) | 1;
     *p |= 2;
 }

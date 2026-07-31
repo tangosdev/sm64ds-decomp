@@ -14,7 +14,7 @@ extern void _ZN11RaycastLine10GetClsnPosEv(Vector3* res, void* self);
 
 /* the -= 0x4000 goes through a materialized base (add r1,c,#0x60; ldr/str [r1]);
    the (long long)-mask launder is what stops mwcc folding it to [c,#0x60]. */
-#define LDR_I(p) (*(int*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LDR_I(p) (*(int*)(int)(((long long)(int)(p))))
 
 void func_ov002_020ce798(char* c)
 {

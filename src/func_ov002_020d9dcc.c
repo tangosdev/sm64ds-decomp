@@ -21,7 +21,7 @@ int func_ov002_020d9dcc(char* c)
         return 0;
 
     p = *(char**)(c + 0x358);
-    if (p == 0 || (int)(((long long)(*(u16*)(p + 0xc) == 0xbf)) & 0xFFFFFFFFFFFFFFFFLL) == 0)
+    if (p == 0 || (int)(((long long)(*(u16*)(p + 0xc) == 0xbf))) == 0)
         return 0;
 
     if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) == 0 || *(u8*)(c + 0x6de) != 0) {
@@ -50,8 +50,8 @@ int func_ov002_020d9dcc(char* c)
             return 0;
         }
         if (AngleDiff(*(s16*)(c + 0x8e), *(s16*)(c + 0x69c)) >= 0x4000) {
-            *(u8*)(((int)c + 0x6e5) & 0xFFFFFFFFFFFFFFFF) += 1;
-            *(s16*)(((int)c + 0x69c) & 0xFFFFFFFFFFFFFFFF) += 0x4000;
+            *(u8*)(((int)c + 0x6e5)) += 1;
+            *(s16*)(((int)c + 0x69c)) += 0x4000;
         }
     } else {
         if (diff > 0) {
@@ -59,8 +59,8 @@ int func_ov002_020d9dcc(char* c)
             return 0;
         }
         if (AngleDiff(*(s16*)(c + 0x8e), *(s16*)(c + 0x69c)) >= 0x4000) {
-            *(u8*)(((int)c + 0x6e5) & 0xFFFFFFFFFFFFFFFF) -= 1;
-            *(s16*)(((int)c + 0x69c) & 0xFFFFFFFFFFFFFFFF) -= 0x4000;
+            *(u8*)(((int)c + 0x6e5)) -= 1;
+            *(s16*)(((int)c + 0x69c)) -= 0x4000;
         }
     }
 

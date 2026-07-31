@@ -72,8 +72,8 @@ isbf_ret0:
         return 1;
     case 7:
         if (*(u8*)(self + 0x714) != 0) goto case7_ret1;
-        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x40000;
-        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20000;
+        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0))) |= 0x40000;
+        *(int*)(((long long)(int)(*(int*)(self + 0x360) + 0xb0))) &= ~0x20000;
         *(u8*)(self + 0x714) = 1;
 case7_ret1:
         return 1;

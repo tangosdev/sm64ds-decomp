@@ -13,8 +13,8 @@ void func_ov002_020ea824(char* c)
     char* o = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x434));
     if (o == 0) { _ZN9ActorBase18MarkForDestructionEv(c); return; }
     if (Vec3_HorzDist(c + 0x5c, o + 0x5c) < *(int*)(c + 0x98)) {
-        int* src = (int*)(((long long)(int)(o + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
-        int* yp = (int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* src = (int*)(((long long)(int)(o + 0x5c)));
+        int* yp = (int*)(((long long)(int)(c + 0x60)));
         *(int*)(c + 0x5c) = src[0];
         *(int*)(c + 0x60) = src[1];
         *(int*)(c + 0x64) = src[2];

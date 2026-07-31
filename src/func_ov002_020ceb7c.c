@@ -17,7 +17,7 @@ extern void func_0200d72c(struct Camera *thiz, unsigned char playerID);
    (ldr rN,[pc]; add rN,c,rN) because 0x6e5 is not an ARM rotated immediate;
    the (long long)-mask launder is what stops mwcc folding it to [c,#0x6e5]. */
 #define LAUNDER_U8(p) \
-    ((unsigned char *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+    ((unsigned char *)(int)(((long long)(int)(p))))
 
 void func_ov002_020ceb7c(struct Camera *c)
 {

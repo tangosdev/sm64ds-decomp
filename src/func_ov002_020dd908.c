@@ -16,7 +16,7 @@ void func_ov002_020dd908(char* sb){
     int* p;
     if(o == 0) continue;
     if(*(int*)(o+0x37c) == 0) continue;
-    p = (int*)(((int)(o+0x5c)) & 0xFFFFFFFFFFFFFFFF);
+    p = (int*)(((int)(o+0x5c)));
     v.x = p[0];
     v.y = p[1];
     v.z = p[2];

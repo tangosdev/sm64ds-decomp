@@ -49,7 +49,7 @@ extern "C" int func_ov002_020c8b78(char *self) {
         Vec3_RotateYAndTranslate(&v, self + 0x5c, *(s16 *)(self + 0x8e), data_ov002_0210f824);
         *(u8 *)(self + 0x722) = 1;
         {
-            u16 *fl = (u16 *)(((int)self + 0x6ce) & 0xFFFFFFFFFFFFFFFF);
+            u16 *fl = (u16 *)(((int)self + 0x6ce));
             *fl |= 0x400;
         }
         {

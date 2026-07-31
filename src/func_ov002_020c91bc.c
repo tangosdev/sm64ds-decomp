@@ -8,7 +8,7 @@ extern int data_ov002_0211013c;
 int func_ov002_020c91bc(char* c)
 {
     if (data_0209d660 != 0) return 1;
-    *(int *)((int)(c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x800000;
+    *(int *)((int)(c + 0xb0)) &= ~0x800000;
     data_0209b454 &= ~0x800000;
     if (_ZN6Player12FinishedAnimEv(c)) {
         if (*(unsigned char*)(c + 0x706) != 0)

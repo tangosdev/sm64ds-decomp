@@ -2,7 +2,7 @@ typedef unsigned int u32;
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
 extern int func_ov002_020cc01c(char *c);
 
-#define LA(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((long long)(int)(p))))
 
 int func_ov002_020cbea8(char *c)
 {

@@ -5,7 +5,7 @@ extern void func_ov002_020e7d08(char *p);
 void func_ov002_020ea7ac(char* c){
   if(*(int*)(c+0xa8) <= -0x18000){
     func_ov002_020e9464(c);
-    *(int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int*)(((int)c + 0x128)) &= ~1;
   }else{
     if(*(int*)(c+0x9c) == 0){
       *(int*)(c+0x440) = 4;

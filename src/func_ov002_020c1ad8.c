@@ -32,7 +32,7 @@ int func_ov002_020c1ad8(char* self, int ang)
     }
     if (func_ov002_020c19d0(self, 0x50, 0x32) == 0) return 0;
 
-    a = (int)((long long)(a + 0x8000) & 0xFFFFFFFFFFFFFFFFLL);
+    a = (int)((long long)(a + 0x8000));
     d = AngleDiff(*(s16*)(self + 0x6d2), (s16)a);
     if (d < 0x4000) {
         if (d < 0x1555) {

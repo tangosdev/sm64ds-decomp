@@ -19,22 +19,22 @@ void func_ov002_020e640c(char *c)
 
     id = _ZNK6Player14GetBodyModelIDEjb(c, *(u32 *)(c + 8) & 0xff, 0);
     {
-        int *p = (int *)(int)(((long long)(int)(*(s32 *)(c + 0xdc + id * 4) + 8)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(int)(((long long)(int)(*(s32 *)(c + 0xdc + id * 4) + 8)));
         md = (char *)p[2];
         mp = (char *)p[0];
     }
     r4p = *(char **)(mp + 8);
 
-    *(u16 *)(int)(((long long)(int)(md + 0x1bc)) & 0xFFFFFFFFFFFFFFFFLL) += *(s16 *)(c + 0x75e);
-    *(u16 *)(int)(((long long)(unsigned int)(md + 0x1be)) & 0xFFFFFFFFFFFFFFFFLL) += *(s16 *)(c + 0x760);
+    *(u16 *)(int)(((long long)(int)(md + 0x1bc))) += *(s16 *)(c + 0x75e);
+    *(u16 *)(int)(((long long)(unsigned int)(md + 0x1be))) += *(s16 *)(c + 0x760);
 
     {
         int b = *(u8 *)(c + 0x742);
         if (b == 0) {
         } else if (b == 1) {
-            *(u16 *)(int)(((long long)(int)(md + 0x326)) & 0xFFFFFFFFFFFFFFFFLL) += *(u16 *)(c + 0x762);
-            *(u16 *)(int)(((long long)(unsigned int)(md + 0x328)) & 0xFFFFFFFFFFFFFFFFLL) += *(u16 *)(c + 0x764);
-            *(u16 *)(int)(((long long)(int)(md + 0x32a)) & 0xFFFFFFFFFFFFFFFFLL) += *(u16 *)(c + 0x766);
+            *(u16 *)(int)(((long long)(int)(md + 0x326))) += *(u16 *)(c + 0x762);
+            *(u16 *)(int)(((long long)(unsigned int)(md + 0x328))) += *(u16 *)(c + 0x764);
+            *(u16 *)(int)(((long long)(int)(md + 0x32a))) += *(u16 *)(c + 0x766);
         } else if (b == 2) {
             *(s16 *)(md + 0x326) = *(s16 *)(c + 0x762);
             *(s16 *)(md + 0x328) = *(s16 *)(c + 0x764);
@@ -78,7 +78,7 @@ void func_ov002_020e640c(char *c)
                 *(s32 *)(c + 0x754) = *(s32 *)(c + 0x748);
                 *(s32 *)(c + 0x758) = *(s32 *)(c + 0x74c);
                 {
-                    u8 *q = (u8 *)(((long long)(int)(c + 0x743)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8 *q = (u8 *)(((long long)(int)(c + 0x743)));
                     (*q)++;
                 }
             } else {

@@ -42,7 +42,7 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
 
     if (*(int *)(self + 8) == 2 && flag == 0) {
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50) & 0xFFFFFFFFFFFFFFFFLL);
+        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50));
         w = *(u32 *)(anim + 8);
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, 0x2800, (w << 4) >> 16);
     } else {

@@ -32,7 +32,7 @@ int func_ov002_020c92fc(char *self)
         *(unsigned short *)(self + 0x6a4) = 0x14;
         *(u8 *)(self + 0x6e3) = 0x14;
         *(int *)(self + 0xa8) = 0;
-        *(int *)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x800000;
+        *(int *)((int)(self + 0xb0)) |= 0x800000;
         data_0209b454 |= 0x800000;
         return 0;
     }

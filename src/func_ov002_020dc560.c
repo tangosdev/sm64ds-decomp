@@ -9,7 +9,7 @@ extern unsigned char data_020a0e40;
 extern char data_0209f4a0[];
 extern short data_02082214[];
 
-#define ADDR(p) ((int *)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define ADDR(p) ((int *)(((long long)(int)(p))))
 
 void func_ov002_020dc560(char *self)
 {

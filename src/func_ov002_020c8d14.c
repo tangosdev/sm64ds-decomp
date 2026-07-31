@@ -54,7 +54,7 @@ int func_ov002_020c8d14(char *self)
     }
 
     id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-    anim = (char *)(((long long)(int)((char *)((int *)(self + 0xdc))[id] + 0x50)) & 0xffffffffffffffffLL);
+    anim = (char *)(((long long)(int)((char *)((int *)(self + 0xdc))[id] + 0x50)));
     if ((unsigned int)(*(int *)(anim + 8) << 4) >> 0x10 >= 0x2f) {
         if (*(u8 *)(self + 0x706) == 0) {
             if (func_ov002_020d22ec(self, 0))

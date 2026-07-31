@@ -15,7 +15,7 @@ int func_ov002_020d5c6c(char* c)
         if (func_ov002_020d600c(p))
             goto change;
     }
-    *(u16*)(void*)(int)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2;
+    *(u16*)(void*)(int)(((long long)(int)(c + 0x6ce))) &= ~2;
     return 0;
 change:
     _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_02110034);

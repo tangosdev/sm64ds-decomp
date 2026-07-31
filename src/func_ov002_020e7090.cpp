@@ -7,8 +7,8 @@ extern void func_02012790(int a);
 extern int data_0209b454;
 void func_ov002_020e7090(char* c, int arg){
   *(int*)(c+0x438) = arg;
-  *(int*)((*(int*)(c+0x438)+0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x4000000;
-  *(int*)(((int)c+0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x4000000;
+  *(int*)((*(int*)(c+0x438)+0xb0)) |= 0x4000000;
+  *(int*)(((int)c+0xb0)) |= 0x4000000;
   data_0209b454 |= 0x4000000;
   func_ov002_020e6fbc(c, 0);
   *(unsigned char*)(c+0x49c) = 1;

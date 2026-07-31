@@ -11,7 +11,7 @@ int func_ov002_020d853c(char* c, char* o) {
     int j = (*(unsigned char*)(c + 0x6e2) << 1) & 0xff;
     unsigned idx = _ZNK6Player14GetBodyModelIDEjb(c, *(int*)(c + 8) & 0xff, 0);
     char* mp = *(char**)(c + 0xdc + idx * 4);
-    int v = ((int*)(((long long)(int)(mp + 0x50)) & 0xFFFFFFFFFFFFFFFFLL))[2];
+    int v = ((int*)(((long long)(int)(mp + 0x50))))[2];
     int k = (unsigned short)(v >> 12);
     if (k < data_ov002_0210a5dc[j] || k > data_ov002_0210a5dc[j + 1]) return 1;
     if (AngleDiff(Vec3_HorzAngle(c + 0x5c, o + 0x5c), *(short*)(c + 0x8e)) < 0x4000) return 0;

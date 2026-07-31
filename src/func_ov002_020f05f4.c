@@ -11,7 +11,7 @@ void func_ov002_020f05f4(char* c)
         a = (char*)_ZN5Actor15FindWithActorIDEjPS_(0xb4, a);
         if (a == 0) return;
         if (*(unsigned char*)(c + 0x10d) == *(unsigned char*)(a + 0x1d9)) {
-            int* base = (int*)(((long long)(int)(a + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* base = (int*)(((long long)(int)(a + 0x5c)));
             Vector3 pos;
             pos.x = base[0];
             pos.y = base[1];

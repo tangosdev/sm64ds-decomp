@@ -24,7 +24,7 @@ void func_ov002_020d71ec(char* p, int arg1)
 
     if (arg1 != 2) {
         model = *(char**)(p + _ZNK6Player14GetBodyModelIDEjb(p, *(u32*)(p + 8) & 0xff, 0) * 4 + 0xdc);
-        sub = (char*)(((long long)(int)(model + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+        sub = (char*)(((long long)(int)(model + 0x50)));
         shifted = ((u32)*(int*)(sub + 8) << 4) >> 0x10;
         *(struct P2*)&arr[0] = data_ov002_0210a34c;
         *(struct P2*)&arr[2] = data_ov002_0210a084;
@@ -37,7 +37,7 @@ void func_ov002_020d71ec(char* p, int arg1)
         if (arg1 == 1) {
             val = data_ov002_020ff0f8[shifted];
             model = *(char**)(p + _ZNK6Player14GetBodyModelIDEjb(p, *(u32*)(p + 8) & 0xff, 0) * 4 + 0xdc);
-            sub = (char*)(((long long)(int)(model + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+            sub = (char*)(((long long)(int)(model + 0x50)));
             val = ((u32)val << 0x10) >> 4;
             *(int*)(sub + 8) = val;
             *(int*)(*(int*)(p + 0x160) + 0x58) = val;

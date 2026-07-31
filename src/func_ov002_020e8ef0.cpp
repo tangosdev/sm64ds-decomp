@@ -56,12 +56,12 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         int b = (*(u16*)(c + 0xc) == 0xb3);
         if (b) {
             *(u32*)(c + 0x440) = 0xd;
-            *(u16*)(((int)c + 0x4a2) & 0xFFFFFFFFFFFFFFFFLL) &= ~4;
+            *(u16*)(((int)c + 0x4a2)) &= ~4;
             *(u16*)(c + 0x490) = 0;
             *(u32*)(c + 0x4b8) = 0;
             *(u32*)(c + 0x4b4) = *(u32*)(c + 0x4b8);
             func_02012790(0x2d);
-            *(u32*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+            *(u32*)(((int)c + 0x128)) |= 1;
             _ZN12CylinderClsn5ClearEv(c + 0x110);
             func_ov002_020e6fbc(c, 0x14);
             *(u8*)(c + 0x49c) = 1;
@@ -155,12 +155,12 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         int b4 = (data_0209f2d8 == 1);
         if (!b4) {
             void* pp = *(void**)(c + 0x438);
-            *(u32*)(((int)pp + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
-            *(u32*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
+            *(u32*)(((int)pp + 0xb0)) |= 0x4000000;
+            *(u32*)(((int)c + 0xb0)) |= 0x4000000;
             data_0209b454 |= 0x4000000;
         }
     }
-    *(u32*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+    *(u32*)(((int)c + 0x128)) |= 1;
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     {
         int b5 = (*(u16*)(c + 0xc) == 0xb2);

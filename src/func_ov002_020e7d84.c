@@ -6,7 +6,7 @@ void func_ov002_020e7d84(char* c)
 {
     func_02012694(0x53, c + 0x74);
     {
-        unsigned char* f = (unsigned char*)(((int)c + 0x1db) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char* f = (unsigned char*)(((int)c + 0x1db));
         *f = (*f & ~1) | 1;
         *f &= ~2;
     }

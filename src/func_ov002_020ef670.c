@@ -105,14 +105,14 @@ void func_ov002_020ef670(char *c)
 
     if (looped == 0) return;
 
-    *(int *)(((int)c + 0x438) & 0xFFFFFFFFFFFFFFFF) += *(int *)(c + 0x43c);
+    *(int *)(((int)c + 0x438)) += *(int *)(c + 0x43c);
     if (*(int *)(c + 0x438) < 0) {
         if (_ZNK7PathPtr5LoopsEv(c + 0x430)) {
             *(int *)(c + 0x438) = _ZNK7PathPtr8NumNodesEv(c + 0x430) - 1;
         } else {
             *(unsigned char *)(c + 0x42b) = 0x14;
             *(int *)(c + 0x43c) = 1;
-            *(int *)(((unsigned)c + 0x438) & 0xFFFFFFFFFFFFFFFF) += *(int *)(c + 0x43c) * 2;
+            *(int *)(((unsigned)c + 0x438)) += *(int *)(c + 0x43c) * 2;
         }
     }
     if (*(int *)(c + 0x438) >= _ZNK7PathPtr8NumNodesEv(c + 0x430)) {
@@ -123,7 +123,7 @@ void func_ov002_020ef670(char *c)
         } else {
             *(unsigned char *)(c + 0x42b) = 0x14;
             *(int *)(c + 0x43c) = -1;
-            *(int *)(((long long)(int)(c + 0x438)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x43c) * 2;
+            *(int *)(((long long)(int)(c + 0x438))) += *(int *)(c + 0x43c) * 2;
         }
     }
 

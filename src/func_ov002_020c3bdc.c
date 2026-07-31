@@ -18,7 +18,7 @@ void func_ov002_020c3bdc(char* c){
     *(int*)(c + 0x9c) = -0x2000;
     if (*(unsigned char*)(c + 0x6de) == 0){
       _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x55, 0x40000000, 0x1000, 0);
-      *(unsigned char *)(((int)c + 0x6e5) & 0xFFFFFFFFFFFFFFFF) += 1;
+      *(unsigned char *)(((int)c + 0x6e5)) += 1;
     }
   } else {
     if (_ZN6Player12FinishedAnimEv(c)){

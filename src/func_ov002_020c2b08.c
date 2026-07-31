@@ -55,7 +55,7 @@ void func_ov002_020c2b08(void *arg0)
         }
 
         *(u16 *)(c + 0x6ba) = 0;
-        *(int *)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x690);
+        *(int *)(((long long)(int)(c + 0x60))) += *(int *)(c + 0x690);
         if (*(int *)(c + 0x60) < *(int *)(c + 0x644))
             *(int *)(c + 0x60) = *(int *)(c + 0x644);
         return;

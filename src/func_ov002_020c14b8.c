@@ -94,8 +94,8 @@ void func_ov002_020c14b8(void *arg0)
         }
     }
 
-    *(unsigned short *)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-    *(unsigned short *)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10;
+    *(unsigned short *)(((long long)(int)(c + 0x6ce))) &= ~1;
+    *(unsigned short *)(((long long)(int)(c + 0x6ce))) &= ~0x10;
     func_ov002_020c133c(c);
 
     if (savedY != (int)0x80000000)

@@ -48,7 +48,7 @@ void func_ov002_020c75f0(char *c)
         case 7:
             *(u8 *)(c + 0x6de) = 1;
             *(u8 *)(c + 0x6df) = 0;
-            *(int *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL) >>= 2;
+            *(int *)(((int)c + 0x98)) >>= 2;
             *(int *)(c + 0xa8) = -(*(int *)(c + 0xa8) >> 2);
             *(u8 *)(c + 0x70c) = 0;
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x13, 0x40000000, 0x1000, 0);

@@ -72,7 +72,7 @@ extern "C" void func_ov002_020d4748(char* c)
     } else {
         int i3 = data_020a0e40 * 0x18;
         if (*(unsigned char*)((char*)&data_0209f4ac + i3) != 0) {
-            unsigned char* p = (unsigned char*)(((long long)(int)(c + 0x6e3)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char* p = (unsigned char*)(((long long)(int)(c + 0x6e3)));
             unsigned char d;
             int b;
             int i4;

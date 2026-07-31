@@ -21,11 +21,11 @@ void func_ov002_020cd448(char* self) {
     if (fl & 2) {
         if (*(short*)((char*)&data_0209f4a4 + data_020a0e40 * 0x18) != 0) goto tail;
         if (*(short*)(self + 0x92) > 0) {
-            short* q = (short*)(((int)self + 0x92) & 0xffffffffffffffff);
+            short* q = (short*)(((int)self + 0x92));
             *q += 0x200;
             if (*(short*)(self + 0x92) > 0x3f00) *(short*)(self + 0x92) = 0x3f00;
         } else {
-            short* q = (short*)(((int)self + 0x92) & 0xffffffffffffffff);
+            short* q = (short*)(((int)self + 0x92));
             *q -= 0x200;
             if (*(short*)(self + 0x92) < -0x3f00) *(short*)(self + 0x92) = -0x3f00;
         }

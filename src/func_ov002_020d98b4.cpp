@@ -14,7 +14,7 @@ extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 
 void func_ov002_020d98b4(char* self){
   int t = func_ov002_020beb38(self);
-  *(unsigned short*)(((int)self + 0x6a4) & 0xFFFFFFFFFFFFFFFF) -= t;
+  *(unsigned short*)(((int)self + 0x6a4)) -= t;
   {
     short* q = (short*)(self + 0x600);
     if (q[0x52] < 0) q[0x52] = 0;
@@ -31,6 +31,6 @@ void func_ov002_020d98b4(char* self){
     *(void**)(self+0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
       *(unsigned int*)(self+0x628), 0xd6, s.x, s.y, s.z, 0, 0);
   }
-  *(int*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 0x80;
+  *(int*)(((int)self + 0xb0)) |= 0x80;
 }
 }

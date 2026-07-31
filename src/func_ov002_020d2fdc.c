@@ -32,7 +32,7 @@ int func_ov002_020d2fdc(char *self)
 
     if (data_0209f49c[data_020a0e40].flags & 0x800) {
         if (*(u8 *)(self + 0x6e5) < 0x1e) {
-            *(u8 *)(((int)self + 0x6e5) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(u8 *)(((int)self + 0x6e5)) += 1;
             r5 = *(u8 *)(self + 0x6e5) * 0x111 + 0x1000;
         } else {
             *(u8 *)(self + 0x6ed) = 0x1e;
@@ -82,7 +82,7 @@ int func_ov002_020d2fdc(char *self)
                 _ZN6Player7SetAnimEji5Fix12IiEj(self, 0xd, 0x40000000, 0x1000, 0);
                 *(u8 *)(self + 0x6e3) = 1;
             }
-            *(int *)(((int)(char *)data_0209f318 + 0x154) & 0xFFFFFFFFFFFFFFFFLL) |= 0x2000;
+            *(int *)(((int)(char *)data_0209f318 + 0x154)) |= 0x2000;
         }
     } else {
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0xf, 0, 0x1000, 0);

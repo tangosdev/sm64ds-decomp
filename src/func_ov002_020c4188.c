@@ -25,7 +25,7 @@ int func_ov002_020c4188(char* self)
     switch (*(u8*)(self + 0x71f)) {
     case 0:
         if (*(u8*)(self + 0x71e) == 6) {
-            (*(u8*)((int)(self + 0x71f) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)((int)(self + 0x71f)))++;
             goto case1;
         }
         if (*(u8*)(self + 0x71e) < 7) {
@@ -33,38 +33,38 @@ int func_ov002_020c4188(char* self)
         } else {
             _ZN6Camera9SetFlag_3Ev(p);
         }
-        (*(u8*)((int)(self + 0x71f) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u8*)((int)(self + 0x71f)))++;
         if (*(u8*)(self + 0x71e) >= 7) {
             break;
         }
         return 0;
     case 1:
     case1:
-        *(int*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x800000;
+        *(int*)((int)(self + 0xb0)) |= 0x800000;
         data_0209b454 |= 0x800000;
         *(u8*)(self + 0x720) = 0xa;
-        (*(u8*)((int)(self + 0x71f) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u8*)((int)(self + 0x71f)))++;
         break;
     case 2:
         if (*(u8*)(self + 0x720) != 0) {
-            (*(u8*)((int)(self + 0x720) & 0xFFFFFFFFFFFFFFFFLL))--;
+            (*(u8*)((int)(self + 0x720)))--;
             break;
         }
         func_0201f32c(data_ov002_020ff26c[*(u8*)(self + 0x71e) - 1]);
         if (*(u8*)(self + 0x71e) == 6) {
             *(void**)(self + 0x364) = _ZN5Actor13SpawnSoundObjEj(self, 5);
         }
-        (*(u8*)((int)(self + 0x71f) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u8*)((int)(self + 0x71f)))++;
         break;
     case 3:
         if (data_0209d660 != 0) {
             break;
         }
-        (*(u8*)((int)(self + 0x71f) & 0xFFFFFFFFFFFFFFFFLL))++;
-        *(int*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x800000;
+        (*(u8*)((int)(self + 0x71f)))++;
+        *(int*)((int)(self + 0xb0)) &= ~0x800000;
         data_0209b454 &= ~0x800000;
         if (*(u8*)(self + 0x71e) >= 7) {
-            *(int*)(((int)p + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~8;
+            *(int*)(((int)p + 0x154)) &= ~8;
         }
         func_0200d81c(p, *(u8*)(self + 0x6d8));
         if (*(u8*)(self + 0x71e) == 6) {
@@ -80,7 +80,7 @@ int func_ov002_020c4188(char* self)
         }
         *(u8*)(self + 0x71e) = 0;
         *(u8*)(self + 0x71f) = 0;
-        *(int*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x800000;
+        *(int*)((int)(self + 0xb0)) &= ~0x800000;
         data_0209b454 &= ~0x800000;
         break;
     }
