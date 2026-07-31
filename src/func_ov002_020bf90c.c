@@ -1,6 +1,4 @@
-typedef int Fix12i;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_02022b04(Fix12i x, Fix12i y, Fix12i z);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(Fix12i x, Fix12i y, Fix12i z);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);

@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned int u32;
-typedef int Fix12i;
-
+#include "types.h"
 typedef struct { u8 pad[0x18]; } Rec18;
 
 extern u8 data_020a0e40;

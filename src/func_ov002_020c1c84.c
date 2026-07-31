@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern int func_ov002_020cf700(void* p);
 extern int func_ov002_020e0478(void* p);
 extern int AngleDiff(int a, int b);

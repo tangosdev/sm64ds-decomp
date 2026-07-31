@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern int func_ov002_020c1e44(void* a, int x);
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, void* st);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(void* thiz);

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
 extern int func_ov002_020cc01c(char *c);
 

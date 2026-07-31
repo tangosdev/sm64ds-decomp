@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern s16 ReadUnalignedShort(u8* p);
 extern int AngleDiff(int a, int b);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, int a, int b, int c, u32 d);

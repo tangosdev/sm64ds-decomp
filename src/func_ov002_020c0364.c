@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-
+#include "types.h"
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, void* st);
 extern int AngleDiff(int a, int b);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* thiz, void* st);

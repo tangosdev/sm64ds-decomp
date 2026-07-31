@@ -1,8 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020b993c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef long long s64;
 struct ShadowModel; struct Matrix4x3;
 
 extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char* self, struct ShadowModel* sm, struct Matrix4x3* m, int fix, int t, u32 f);

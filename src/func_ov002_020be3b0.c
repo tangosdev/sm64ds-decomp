@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov002_020be3b0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_ModelAnim2.h"
@@ -5,14 +6,6 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-
-
 extern u32 _ZNK6Player14GetBodyModelIDEjb(char* c, u32 a, char b);
 extern void _ZN5Model14SetPolygonModeEi(void* self, int mode);
 extern int func_ov002_020becf4(char* self, int v, int arg2);

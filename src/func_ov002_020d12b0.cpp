@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 struct State;
 extern u8 data_020a0e40;
 extern u8 data_0209f49e[];

@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020c8d14
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-
-
-
 extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void func_ov002_020c9e18(char *self);

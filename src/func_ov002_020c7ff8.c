@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *data_0209f318;
 extern void func_0200d4b0(void *g, u8 playerID, int x);
 extern void func_0200d508(void *g, u8 playerID);

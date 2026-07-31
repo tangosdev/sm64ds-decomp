@@ -1,8 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" {
 
 struct V16 { u16 x, y, z; };

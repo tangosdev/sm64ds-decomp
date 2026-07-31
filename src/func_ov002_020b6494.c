@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
+#include "types.h"
 extern s16 data_02082214[];
 extern u16 DecIfAbove0_Short(u16* p);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, int a, int b);

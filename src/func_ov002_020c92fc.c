@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZNK6Player14GetBodyModelIDEjb(char *self, unsigned int a, int b);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
 extern int _ZN6Player12FinishedAnimEv(char *self);

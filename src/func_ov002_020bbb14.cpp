@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020bbb14
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-
-
-
 extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);

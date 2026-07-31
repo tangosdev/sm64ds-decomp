@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern int SurfaceInfo_TestFlag0x20(int *p);

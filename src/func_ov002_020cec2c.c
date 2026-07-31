@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov002_020cec2c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
@@ -7,12 +8,6 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed char s8;
-
-
-
 extern void _ZN6Player4HealEi(char *self, int a);
 extern int _ZN6Player9GetHealthEv(char *self);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const struct Vector3 *v, unsigned int d);

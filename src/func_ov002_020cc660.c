@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
+#include "types.h"
 extern s32 ApproachAngle(s16 *target, s16 from, s16 start, s16 speed, s16 max);
 void func_ov002_020cc660(char *self, int angle){
  s16 v,w; int delta; int third;

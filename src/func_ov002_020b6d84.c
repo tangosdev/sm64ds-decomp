@@ -1,10 +1,8 @@
+#include "types.h"
 // @symbol func_ov002_020b6d84
 // @emits daObjLava_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjLava_c::Behavior - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef int Fix12;
-
 struct Vec3 {
     Fix12 x, y, z;
 };

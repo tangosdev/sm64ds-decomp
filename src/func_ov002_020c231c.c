@@ -1,16 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020c231c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-
-
 extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, void *state);
