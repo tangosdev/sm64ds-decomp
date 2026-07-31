@@ -59,6 +59,13 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
     if not exe.is_file():
         print(f"  ! no compiler at {version}")
         return None
+    # Cross-run the Windows compiler under an emulator when asked: the PR-validator
+    # sandbox runs this in a Linux container and sets MWCCARM_LAUNCHER=wine so the PE is
+    # invoked via Wine. Unset on native Windows -> the exe is run directly, so this is a
+    # no-op for every existing caller. (Wine was verified byte-transparent: the native and
+    # container corpus link-checks are identical.) This lives here so the build box can run
+    # stock repo tooling instead of a hand-patched fork of match.py.
+    launcher = os.environ.get("MWCCARM_LAUNCHER", "").split()
     with tempfile.TemporaryDirectory() as td:
         out_o = pathlib.Path(td) / "out.o"
         env = dict(os.environ, LM_LICENSE_FILE=str(LICENSE))
@@ -69,7 +76,7 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
         canonical = INCLUDE.resolve()
         if canonical not in search:
             search.append(canonical)
-        cmd = [str(exe), *flags.split()]
+        cmd = [*launcher, str(exe), *flags.split()]
         for inc in search:
             cmd.extend(["-i", str(inc)])
         cmd.extend(["-c", str(cfile), "-o", str(out_o)])

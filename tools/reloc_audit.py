@@ -162,7 +162,12 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
     candidate_path = pathlib.Path(candidate) if candidate is not None else None
     if candidate_path is not None:
         try:
-            sources = [(candidate_path.read_text(encoding="utf-8"), candidate_path)]
+            # errors="replace": the text is only used for the //cpp sniff -- mwccarm reads
+            # the file itself -- and a stray non-UTF-8 byte must not raise UnicodeDecodeError
+            # and take down a verdict. (Windows cp1252 round-trips have corrupted repo JSONL
+            # this way before; do not narrow this to a bare OSError catch.)
+            sources = [(candidate_path.read_text(encoding="utf-8", errors="replace"),
+                        candidate_path)]
         except OSError:
             sources = []
     else:

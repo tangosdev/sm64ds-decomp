@@ -63,6 +63,29 @@ It recompiles each draft, keeps the closest, and records the divergence. The nea
 is now saved; do **not** also leave it in `src/`. A batch that is "12 matched + 3
 near-misses" is **12** `src/` files plus one DB ingest — never 15 `src/` files.
 
+## Shared headers (`include/`)
+
+`src/` files may `#include` from `include/` (`types.h`, `launder.h`, `Timer.hpp`, …) instead
+of re-declaring private typedefs. `include/` is always on the compiler search path — you do
+not pass a flag for it.
+
+**A header change is not a local change.** Editing a field width, a field order, or a typedef
+moves the codegen of every file that includes it, including files your diff never mentions.
+So:
+
+- Before pushing a header edit, list what it touches and verify all of it:
+  ```
+  python tools/affected_src.py include/types.h        # who consumes it
+  python tools/prepush_linkcheck.py --range origin/main..HEAD   # verifies consumers too
+  ```
+- `validate` expands changed headers to their consumers and compiles every one. A header PR
+  that breaks a consumer goes **red**, and a header edit touching more than ~200 sources is
+  refused for human review rather than auto-validated.
+- Adding a `#include` to a matched file means **deleting** the local typedefs it replaces —
+  C99 rejects a duplicate typedef, and C++ rejects a duplicate `struct` definition.
+- Don't add a type to a shared header speculatively. A name in `include/` is a claim that
+  every consumer agrees on it; a wrong shared type is far more expensive than a local one.
+
 ## Match logging (WHO / HOW / tries)
 
 | Extra | Store | Rule |

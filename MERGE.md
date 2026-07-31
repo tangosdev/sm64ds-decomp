@@ -27,6 +27,13 @@ function, follow this.
   `Stage::PS_Update`) **fails `validate` by design** — a non-matching file cannot byte-reproduce,
   and `main`'s current copy fails the same way. Review it and merge with an admin override
   (`gh pr merge <n> --admin --squash`). These are progress, not byte-matches.
+- **Header PRs** (anything touching `include/`) are byte-checked like match PRs, but on the
+  *consumers*: `validate` expands each changed header through the reverse include graph
+  (`tools/affected_src.py`) and compiles every source that includes it. Green means the header
+  edit is codegen-neutral for everything that uses it. Two verdicts to read carefully:
+  *"changed header(s) have no source consumer yet"* is a real pass (a header landing ahead of
+  its users); *"the validation clone has no tools/affected_src.py"* is a **build-box problem,
+  not a PR problem** — pull on the box and re-run, never override it.
 - **Near-miss DB / notes / tooling PRs** have no `src` match to byte-check; review for sanity
   and merge.
 - **Drafts:** never merge someone else's draft. That is the author saying "not ready."
