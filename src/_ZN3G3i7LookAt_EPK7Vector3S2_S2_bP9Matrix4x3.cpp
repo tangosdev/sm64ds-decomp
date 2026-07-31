@@ -1,5 +1,5 @@
 //cpp
-#include "math/Matrix.hpp"
+#include "math/Matrix.h"
 
 extern "C" void NormalizeVec3(Vector3 *v, Vector3 *out);
 extern "C" void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
@@ -55,17 +55,17 @@ void LookAt_(const Vector3 *at, const Vector3 *up, const Vector3 *eye,
         return;
     }
 
-    mat->m[0] = right.x;
-    mat->m[1] = up2.x;
-    mat->m[2] = forward.x;
-    mat->m[3] = right.y;
-    mat->m[4] = up2.y;
-    mat->m[5] = forward.y;
-    mat->m[6] = right.z;
-    mat->m[7] = up2.z;
-    mat->m[8] = forward.z;
-    mat->m[9] = tx;
-    mat->m[10] = ty;
-    mat->m[11] = tz;
+    mat->r.m[0] = right.x;
+    mat->r.m[1] = up2.x;
+    mat->r.m[2] = forward.x;
+    mat->r.m[3] = right.y;
+    mat->r.m[4] = up2.y;
+    mat->r.m[5] = forward.y;
+    mat->r.m[6] = right.z;
+    mat->r.m[7] = up2.z;
+    mat->r.m[8] = forward.z;
+    mat->t.x = tx;
+    mat->t.y = ty;
+    mat->t.z = tz;
 }
 }

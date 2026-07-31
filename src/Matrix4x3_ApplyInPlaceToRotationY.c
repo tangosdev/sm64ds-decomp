@@ -2,7 +2,7 @@
  * Builds a rotation-Y matrix on the stack, then multiplies mF by it in-place.
  */
 
-#include "math/Matrix.hpp"
+#include "math/Matrix.h"
 
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, s16 angY);
 extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
