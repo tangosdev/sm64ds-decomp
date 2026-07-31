@@ -2720,3 +2720,51 @@ pointer (folds back to the pool load, 14); runtime-cancel identities
 holding the address with an inline `(int*)` cast at the index site (stays address-class, 14);
 `opt_common_subs off` and `opt_strength_reduction off` (honoured but byte-identical here --
 these are established-real pragmas, verified by a zero-byte disassembly diff, not 6as typos).
+
+## 6av. The outgoing-arg phi coalesce: a build delta no register-resident construct breaks (2026-07-31, Stage::InitResources)
+
+A negative worth recording precisely, because it is cheap to re-grind and about 40 constructs
+have now died on it.
+
+**Shape.** A variable assigned on both arms of a branch and then passed as an argument:
+
+```c
+int bank = 0x36;
+if (soundGroup == 0) { ...; bank = table[level2 * 3]; }
+Sound::LoadGroupAndSetBank(soundGroup, bank);
+```
+
+ROM colors `bank`'s phi web to a NON-argument register and emits one shared merge copy
+`mov r1,r2` at the join, which both paths flow through. Every mwccarm build we own -- the
+whole 1.2 line and 2004/b56 -- coalesces the phi DIRECTLY into the outgoing argument register,
+so the merge copy never exists and the branch jumps 4 bytes further, straight to the call.
+
+**Why it is a trap.** On this function a `u8` variable's truncation (`and rX,rX,#0xff`)
+accidentally makes the SIZE correct while being the wrong instruction. So the function reads
+as "4 words differ, size fine" and looks like an ordinary coloring miss, when in fact the two
+defects are coupled: removing the truncation (int variable, or a direct one-step index) always
+lets the coalesce happen and the function drops 4 bytes SHORT. A match needs no truncation AND
+the phi off the argument register AND the merge copy, all at once.
+
+**The one construct that does reproduce the copy costs too much.** A memory-resident
+volatile or address-taken temp (`volatile int arg1 = bank;`) buys the copy but pays a stack
+slot, overshooting by 4. Note this is the exact opposite of 6au, where `volatile` on an OBJECT
+was free: volatile on a LOCAL is memory-resident and always costs a slot. Do not confuse the
+two levers.
+
+**What would be needed:** the phi's web must be live simultaneously with whatever holds the
+base, to create interference that blocks the coalesce. Every free way to force that (no fold,
+no extra instruction) has been tried.
+
+**Inert (~40 constructs, none pragmas so no 6as risk):** int vs u8 variable; one-step vs
+two-step indexing; a named int index; the 6h u64 launder on the table base, on the passed
+VALUE, and as a laundered named arg temp; the 6w comma-operator argument form; an explicit
+if/else phi; a ternary phi; a named read before the assignment; the 6y/6aq booster on the
+variable, on the other argument, and on the table base at several placements; a 6ar int-typed
+base local dereferenced through a cast; the operand swap `(i)[table]`; a 6at `u8 * const`
+named base with a named int index; a volatile LOAD via `*(volatile u8*)`; relocating the
+initialized declaration to the branch; the uninit-decl split in six orders; naming the guard
+read in five declaration positions.
+
+**Class:** register-coalescer build delta, same family as 6ag's first-access-fold. Route it to
+the permuter, not to a construct hunt.
