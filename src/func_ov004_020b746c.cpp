@@ -15,7 +15,7 @@ struct Obj {
   virtual int m_18();               /* slot 6 -> 0x18 */
   virtual int m_1c();               /* slot 7 -> 0x1c */
 };
-extern "C" void func_ov004_020b0aa0(int arg);
+extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void func_ov004_020ae20c(void);
 extern "C" void func_ov004_020ae2c8(void);
 extern "C" void func_ov004_020b29a0(Base* c, void* arg);
@@ -30,7 +30,7 @@ extern "C" void func_ov004_020b746c(char* c){
     if (r5->m_4c(*(void**)(c + 0x18)) == 0)
       return;
     data_0209f5bc->m_c(0x1e, 0);
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
     func_ov004_020b29a0(r5, *(void**)(c + 0x18));

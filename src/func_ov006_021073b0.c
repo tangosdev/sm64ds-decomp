@@ -17,7 +17,7 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_021067a4(void *p);
 extern void func_ov006_021063a0(void *p);
 extern void func_ov006_02106168(void *p);
@@ -129,7 +129,7 @@ int dScMgPanel_c_InitResources(void *arg0)
     Deallocate((void *)r5);
     Deallocate((void *)f);
 
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov006_021067a4(arg0);
     func_ov006_02106758(c);
 

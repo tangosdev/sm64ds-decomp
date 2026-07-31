@@ -6,7 +6,7 @@
 // @emits dScMgCoin_c_OnYoshiTryEat_020de5b0
 /* recovered: renamed to Class_Method */
 /* dScMgCoin_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern void func_ov004_020b0aa0(int n);
+extern void FreeGfxSlotsById(int n);
 extern int func_ov004_020adc1c(void);
 void dScMgCoin_c_OnYoshiTryEat_020de5b0(char *c);
 void dScMgCoin_c_OnYoshiTryEat_020de5b0(char *c){
@@ -19,7 +19,7 @@ void dScMgCoin_c_OnYoshiTryEat_020de5b0(char *c){
     self->unk_0a8 = 0;
     self->unk_0ac = self->unk_0a8;
     func_ov006_020ddf9c(c);
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov006_020dd334(c);
     func_ov006_020dc7b4(c);
     func_ov006_020dc2f8(c);

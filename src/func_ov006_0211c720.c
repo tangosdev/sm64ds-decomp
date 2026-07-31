@@ -15,7 +15,7 @@ typedef short s16;
 
 extern char *data_ov004_020beb68;
 
-extern void func_ov004_020b0aa0(int);
+extern void FreeGfxSlotsById(int);
 extern void func_ov006_020c2594(char *);
 
 int dScMgSound_c_Behavior(char *c)
@@ -28,7 +28,7 @@ int dScMgSound_c_Behavior(char *c)
         if (*(u16 *)(c + 0x5618) != 0) {
             (*(u16 *)(int)(((long long)(int)(c + 0x5618))))--;
             if (*(u16 *)(c + 0x5618) == 0) {
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
                 if (*(u8 *)(c + 0xc4) == 0) {
                     *(u8 *)(c + 0xc3) = 1;
                     *(u8 *)(c + 0xc4) = 1;

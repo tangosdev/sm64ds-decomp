@@ -7,7 +7,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cc);
-extern void func_020383fc(void* p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern s16 data_ov002_021000a8[];
 void func_ov002_020ec9c4(char* c){
   if (*(unsigned char*)(c + 0x41d) != 0){
@@ -34,5 +34,5 @@ void func_ov002_020ec9c4(char* c){
   _ZN12CylinderClsn6UpdateEv(c + 0x110);
   if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144))
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-  func_020383fc(c + 0x144);
+  WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
 }

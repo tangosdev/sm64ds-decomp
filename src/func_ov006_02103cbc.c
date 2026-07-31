@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgPachinko2_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern void func_ov004_020b0aa0(int n);
+extern void FreeGfxSlotsById(int n);
 void dScMgPachinko2_c_OnYoshiTryEat_02103cbc(char *c, int n){
     *(int*)(c+0x5000+0x660) = 0;
     if(n == 0x10){
@@ -14,6 +14,6 @@ void dScMgPachinko2_c_OnYoshiTryEat_02103cbc(char *c, int n){
         *(int*)(c+0xbc) = 0;
         if(*(unsigned int*)(c+0xbc) > 0x270e) *(int*)(c+0xbc) = 0x270e;
     }
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov006_02103bfc(c);
 }

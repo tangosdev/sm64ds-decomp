@@ -8,7 +8,7 @@ struct B {
   virtual int m(int a);
 };
 extern "C" {
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b29a0(void* c, int arg);
 extern B* data_ov004_020beb68;
 void func_ov004_020b78f4(char* c) {
@@ -17,7 +17,7 @@ void func_ov004_020b78f4(char* c) {
   r4 = data_ov004_020beb68;
   if (r4 == 0) return;
   if (r4->m(*(int*)(c + 0x18)) == 0) return;
-  func_ov004_020b0aa0(0x1d);
+  FreeGfxSlotsById(0x1d);
   func_ov004_020b29a0(r4, *(int*)(c + 0x18));
   *(int*)(c + 0x1c) = 0;
   *(int*)(c + 0x18) = -1;

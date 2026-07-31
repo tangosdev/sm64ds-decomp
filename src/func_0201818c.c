@@ -12,7 +12,7 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void func_020185c0(void *buf, int x);
 extern void FS_CloseFile(void *a);
 extern int _ZN6Memory8AllocateEji(unsigned int, int);
-extern void func_0205a61c(int a, int b, unsigned int c);
+extern void CpuCopy8(int a, int b, unsigned int c);
 extern void func_02018770(void);
 extern void _ZN4CP1514FlushDataCacheEjj(unsigned int a, unsigned int b);
 extern unsigned int func_02018a24(unsigned int i);
@@ -36,7 +36,7 @@ int func_0201818c(unsigned int arg0, int arg1)
             size = obj.end - obj.cur;
             FS_CloseFile(&obj);
             mem = _ZN6Memory8AllocateEji(size, 0x20);
-            func_0205a61c(p, mem, size);
+            CpuCopy8(p, mem, size);
         }
         func_02018770();
         if (arg1 != 0)

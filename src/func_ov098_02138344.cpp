@@ -41,7 +41,7 @@ struct Obj {
 
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
-void func_020383fc(void* p);
+void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
@@ -61,7 +61,7 @@ void func_ov098_021397c8(char* c);
 
 extern "C" void func_ov098_02138344(char* c) {
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
-    func_020383fc(c + 0x320);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x555);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
         _ZN5Sound9PlayBank3EjRK7Vector3(0x51, (struct Vector3*)(c + 0x74));

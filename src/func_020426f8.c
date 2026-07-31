@@ -4,10 +4,10 @@
  * Register trace: mov r0,r2; mov r2,r3; bl 0x0205a61c(src=arg2,dst=arg1,size=arg3)
  */
 
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_020426f8(int arg0, void *dst, const void *src, unsigned int size)
 {
-    func_0205a61c(src, dst, size);
+    CpuCopy8(src, dst, size);
     return 0;
 }

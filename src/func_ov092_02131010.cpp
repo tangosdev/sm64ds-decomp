@@ -11,7 +11,7 @@ extern "C" {
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int func_ov002_020de328(void);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
-void func_020383fc(void *a);
+void WithMeshClsn_UpdateContinuous_Veneer(void *a);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, const Vector3 *v, int fix);
 void func_02012694(int a, int *t);
@@ -50,7 +50,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
     }
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, 0);
-    func_020383fc(thiz + 0x324);
+    WithMeshClsn_UpdateContinuous_Veneer(thiz + 0x324);
     {
         int g = _ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x324);
         if (g == 0) return g;

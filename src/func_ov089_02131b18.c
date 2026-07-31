@@ -8,7 +8,7 @@ typedef unsigned int u32;
 
 
 
-extern void func_020383fc(char *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(char *p);
 extern char *data_0209f318;
 extern int data_0209b454;
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
@@ -28,7 +28,7 @@ void func_ov089_02131b18(char *c)
     struct Vector3 v;
     u8 st;
 
-    func_020383fc(c + 0x260);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x260);
 
     st = *(u8 *)(c + 0x442);
     if (st == 0)

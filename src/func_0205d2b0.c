@@ -9,10 +9,10 @@ struct Unk0205d2b0 {
     void *unk1c;  /* 0x1c */
 };
 
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_0205d2b0(struct Unk0205d2b0 *thiz, const void *src, unsigned int offset, unsigned int size)
 {
-    func_0205a61c(src, (char *)thiz->unk1c + offset, size);
+    CpuCopy8(src, (char *)thiz->unk1c + offset, size);
     return 0;
 }

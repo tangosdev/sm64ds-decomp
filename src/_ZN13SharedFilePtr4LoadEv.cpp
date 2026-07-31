@@ -23,7 +23,7 @@ void DecompressLZ16(void *src, void *dst);
 void func_020185c0(void *buf, unsigned int x);
 void FS_CloseFile(void *a);
 int _ZN6Memory8AllocateEji(unsigned int size, int align);
-void func_0205a61c(void *a, void *b, unsigned int c);
+void CpuCopy8(void *a, void *b, unsigned int c);
 void func_02018770(void);
 void _ZN4CP1514FlushDataCacheEjj(unsigned int a, unsigned int b);
 void Crash(void);
@@ -58,7 +58,7 @@ void *SharedFilePtr::Load()
             size = obj.end - obj.cur;
             FS_CloseFile(&obj);
             mem = _ZN6Memory8AllocateEji(size, 0x20);
-            func_0205a61c((void *)p, (void *)mem, size);
+            CpuCopy8((void *)p, (void *)mem, size);
         }
         func_02018770();
         _ZN4CP1514FlushDataCacheEjj((unsigned int)mem, size);
@@ -90,7 +90,7 @@ void *SharedFilePtr::Load()
         csize = fsize - 4;
         fsize = t;
         int tmp = _ZN6Memory8AllocateEj(csize);
-        func_0205a61c(cp, (void *)tmp, csize);
+        CpuCopy8(cp, (void *)tmp, csize);
         _ZN6Memory10DeallocateEPv((void *)raw);
         raw = _ZN6Memory8AllocateEj(fsize);
         DecompressLZ16((void *)tmp, (void *)raw);

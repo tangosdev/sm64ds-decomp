@@ -23,7 +23,7 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void func_ov004_020b0d30(void);
 extern void _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
 extern void InitialiseVramGlobals(void);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 
 extern int func_020beb6c;
 extern u8 data_0209d45c;
@@ -72,7 +72,7 @@ void func_ov006_0210a708(char *obj)
     data_0208ee44 = 1;
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     data_020beb74[1] = (int)obj;
     data_0209d4a8 = (void **)data_020beb74;
     *(vu32 *)0x40004ccu = 0x7fff;

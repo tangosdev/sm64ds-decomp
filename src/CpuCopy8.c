@@ -8,7 +8,7 @@
 // halfword-shift copy (mismatched src/dst parity) or a word+halfword bulk copy, closing with
 // the same edge RMW tail. The hand-tuned alignment ladder and edge RMW are not C-expressible.
 // Per asm policy; counts as matched (asm-primitive policy), not a C transcription.
-asm void func_0205a61c(void)
+asm void CpuCopy8(void)
 {
     cmp r2, #0
     bxeq lr

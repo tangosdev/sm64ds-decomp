@@ -3,7 +3,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef int s32;
 
-extern void func_0205a61c(const void *src, void *dst, u32 size);  /* memcpy-like */
+extern void CpuCopy8(const void *src, void *dst, u32 size);  /* memcpy-like */
 extern int func_02065af0(void *pkt);
 
 struct Pkt {
@@ -25,7 +25,7 @@ int func_020656d4(u16 arg0, const void *arg1, s32 arg2, u32 arg3)
     pkt.field08 = arg0;
     pkt.field00 = 10;
     pkt.field10 = arg3;
-    func_0205a61c(arg1, pkt.data14, arg2);
+    CpuCopy8(arg1, pkt.data14, arg2);
     pkt.field1d = (u8)arg2;
     return func_02065af0(&pkt);
 }

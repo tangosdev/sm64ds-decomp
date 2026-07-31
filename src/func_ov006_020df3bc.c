@@ -5,7 +5,7 @@ extern unsigned char data_020a0deb[];
 extern unsigned char data_020a0dea[];
 
 extern void func_ov006_020def80(char* c, int i);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 
 #pragma opt_common_subs off
@@ -44,7 +44,7 @@ void func_ov006_020df3bc(char* c)
 
         *(int*)(c + 0x5000 + 0x418) = 5;
         *(int*)(c + 0x5000 + 0x41c) = 0x3c;
-        func_ov004_020b0aa0(0x1d);
+        FreeGfxSlotsById(0x1d);
 
         {
             unsigned int idx2 = data_020a0e40[0];

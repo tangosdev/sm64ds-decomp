@@ -1,7 +1,7 @@
 
 typedef unsigned char u8;
 typedef unsigned short u16;
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern char *data_020a9db8;
 u8 *func_02065c2c(u8 *src, u8 *dst)
 {
@@ -19,7 +19,7 @@ u8 *func_02065c2c(u8 *src, u8 *dst)
       {
         return 0;
       }
-      func_0205a61c(r4, dst + 3, *((int *) (g + 0x31c)));
+      CpuCopy8(r4, dst + 3, *((int *) (g + 0x31c)));
       r4 = r4 + (*((int *) ((data_020a9db8 + 0x1000) + 0x31c)));
     }
       break;
@@ -44,7 +44,7 @@ u8 *func_02065c2c(u8 *src, u8 *dst)
         r4 = src + 3;
         *p = (*p) | ((hi << 8) & 0xff00);
       }
-      func_0205a61c(r4, dst + 4, *((int *) ((data_020a9db8 + 0x1000) + 0x31c)));
+      CpuCopy8(r4, dst + 4, *((int *) ((data_020a9db8 + 0x1000) + 0x31c)));
       r4 = r4 + (*((int *) ((data_020a9db8 + 0x1000) + 0x31c)));
     }
       break;

@@ -19,7 +19,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(char *thiz, Vecto
 extern int _ZN13RaycastGround10DetectClsnEv(char *thiz);
 extern void _ZN13RaycastGroundD1Ev(char *thiz);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
-extern void func_020383fc(void *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *thiz);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thiz);
 extern void func_020393a4(int *p, int v);
@@ -62,7 +62,7 @@ int daObjPushblock_c_Behavior(char *c)
             self->unk_098 = 0;
         }
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-        func_020383fc(c + 0x320);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
         _ZN8Platform21UpdateModelPosAndRotYEv(c);
         _ZN8Platform19UpdateClsnPosAndRotEv(c);
         _ZN13RaycastGroundD1Ev(ray);

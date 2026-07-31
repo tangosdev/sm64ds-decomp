@@ -13,11 +13,11 @@ struct WithMeshClsn {
 };
 namespace cstd { int fdiv(int a, int b); }
 
-extern "C" void func_020383fc(void* c);
+extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* c);
 
 extern "C" void func_ov070_02121d50(int* self, WithMeshClsn* clsn) {
     Vector3 n;
-    func_020383fc(clsn);
+    WithMeshClsn_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         ((SurfaceInfo*)((char*)clsn->GetFloorResult() + 4))->CopyNormalTo(n);
         if (n.y != 0) {

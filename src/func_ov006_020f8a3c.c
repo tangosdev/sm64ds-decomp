@@ -9,7 +9,7 @@
 typedef short s16;
 typedef unsigned char u8;
 
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern int func_ov006_020c1718(void* p);
 extern void func_ov004_020b56c8(char* p);
 extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s);
@@ -24,7 +24,7 @@ int dScMgMCarlo_c_OnTurnIntoEgg(char* c)
     struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
     switch (self->unk_60a8) {
     case 4:
-        func_ov004_020b0aa0(0x1d);
+        FreeGfxSlotsById(0x1d);
         *(s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF) += 1;
         break;
     case 5:

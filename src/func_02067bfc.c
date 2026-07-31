@@ -21,7 +21,7 @@ extern int FS_ReadFile(int a, int b, int c);
 extern void FS_InitFile(int *s);
 extern int func_0205d23c(int *a, int b);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
-extern int func_0205a61c(void *a, void *b, int c);
+extern int CpuCopy8(void *a, void *b, int c);
 extern int func_0205d368(int *o, int r1, int sel);
 extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
@@ -67,7 +67,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             func_0205d5e8((char *)localbuf, node, 0, ctx->f80 + 0x88, -1);
             a = (Ctx *)localbuf;
             base = localbuf[10] - localbuf[8];
-            func_0205a61c(ctx, cur, 0x160);
+            CpuCopy8(ctx, cur, 0x160);
             *(unsigned int *)((long long)(int)(cur + 0x60) & 0xFFFFFFFFFFFFFFFFLL) |= 0x406000;
         }
 

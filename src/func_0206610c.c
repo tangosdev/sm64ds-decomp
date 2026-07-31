@@ -15,7 +15,7 @@ typedef struct Rec {
     u16 b;
 } Rec;
 extern u8 *func_02065d5c(Rec *src, u8 *dst);
-extern void func_0205a61c(void *dst, void *src, unsigned int n);
+extern void CpuCopy8(void *dst, void *src, unsigned int n);
 extern void func_02067f2c(u32 size, u32 arg1, u32 dest);
 
 int func_0206610c(void)
@@ -59,7 +59,7 @@ int func_0206610c(void)
     r.a = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
     r.b = *(u16 *)(data_020a9db8 + *(u8 *)(data_020a9db8 + 0x1000 + 0x525) * 0x5c4 + 0x1d00 + 0x40);
 
-    func_0205a61c((void *)out.f8, func_02065d5c(&r, (u8 *)data_020a9db8), out.f4);
+    CpuCopy8((void *)out.f8, func_02065d5c(&r, (u8 *)data_020a9db8), out.f4);
 
     idxByte = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
     rec = data_020a9db8 + idxByte * 0x5c4;

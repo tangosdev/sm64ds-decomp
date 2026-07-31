@@ -10,7 +10,7 @@ typedef struct ClsnResult {
     int h, i, j;
 } ClsnResult;
 
-extern void func_020383fc(void *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 extern void *func_0203567c(void *p);
@@ -28,7 +28,7 @@ int func_ov030_02112a84(char *a)
 {
     ClsnResult res;
 
-    func_020383fc(a + 0x194);
+    WithMeshClsn_UpdateContinuous_Veneer(a + 0x194);
     if (_ZNK12WithMeshClsn13JustHitGroundEv(a + 0x194) || _ZNK12WithMeshClsn10IsOnGroundEv(a + 0x194)) {
         int b;
         u16 id;

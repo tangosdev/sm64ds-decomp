@@ -9,7 +9,7 @@ void func_ov006_0211dd6c(char* p);
 void func_ov006_0211d7b4(char* p);
 void func_ov006_0211f77c(char* p);
 void MultiStore16(unsigned short val, char* dst, int nbytes);
-void func_ov004_020b0aa0(int arg);
+void FreeGfxSlotsById(int arg);
 void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 int LoadFile(int handle);
 int DecompressLZ16(int handle, int dst);
@@ -39,7 +39,7 @@ extern "C" void dScMgTeresa_c_OnYoshiTryEat_02120248(char* self, int reset)
     val = 0x1111;
     MultiStore16(val, dst, 0x6000);
     *(int*)(self + 0x4be8) = 0;
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     *(short*)(self + 0x4c16) = 0x20;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
     int h = LoadFile(0x101);

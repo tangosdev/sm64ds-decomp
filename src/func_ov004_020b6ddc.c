@@ -1,4 +1,4 @@
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_02012790(int x);
 extern void func_ov004_020b7460(void *c);
 extern int func_ov004_020b04c0(void);
@@ -33,7 +33,7 @@ void func_ov004_020b6ddc(char *c)
                 flag = 1;
         }
         if (flag != 0) {
-            func_ov004_020b0aa0(7);
+            FreeGfxSlotsById(7);
             func_02012790(0x62);
             *(struct P2 *)(c + 0x10) = data_02086b58;
             func_ov004_020b7460(c);

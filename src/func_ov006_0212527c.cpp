@@ -8,7 +8,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" int func_ov006_020c1718(int* r0);
-extern "C" void func_ov004_020b0aa0(int arg);
+extern "C" void FreeGfxSlotsById(int arg);
 
 extern short data_ov004_020bf9e4;
 
@@ -20,10 +20,10 @@ extern "C" int dScMgBSC_c_OnTurnIntoEgg(char* c, int mode)
     if (self->unk_51b8 == 0xd) {
         if (func_ov006_020c1718((int*)(c + 0x4f38)) != 0) {
             if (mode == 4) {
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
                 self->unk_51b8 = 9;
             } else if (mode == 5) {
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
                 self->unk_51b8 = 0xa;
             }
         } else {

@@ -6,7 +6,7 @@ typedef unsigned int u32;
 
 extern void func_0205a588(void *dst, int val, int len);
 extern u8 *func_02065d5c(void *src, void *dst);
-extern void func_0205a61c(void *dst, void *src, int len);
+extern void CpuCopy8(void *dst, void *src, int len);
 extern int func_02067f2c(u32 a, u32 b, u32 c);
 
 extern char *data_020a9db8;
@@ -60,7 +60,7 @@ int func_020662c0(void)
     local.b = found;
     ret = func_02065d5c(&local, data_020a9db8);
     if (ret != 0)
-        func_0205a61c((char *)data_020a9db8 + 0x1788 + found * 0x5c4, ret, 0xe4);
+        CpuCopy8((char *)data_020a9db8 + 0x1788 + found * 0x5c4, ret, 0xe4);
 
     return func_02067f2c(0xea, mask, (u32)data_020a9db8);
 }

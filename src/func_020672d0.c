@@ -1,4 +1,4 @@
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -12,7 +12,7 @@ void func_020672d0(char *thiz, int a1, int a2, int a3, int a4)
         src = base + 2;
     else
         src = 0;
-    func_0205a61c(src, thiz, 0x3c);
+    CpuCopy8(src, thiz, 0x3c);
     *(u16 *)(thiz + 0x3c) = 0x10;
     *(u16 *)(thiz + 0x44) = *(u16 *)(thiz + 0xc);
     *(u16 *)(thiz + 0x46) = *(u16 *)(thiz + 0xe);

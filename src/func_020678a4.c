@@ -1,6 +1,6 @@
 typedef unsigned int u32;
 extern void func_020676e0(void *in, void *tbl, void *dst, void *aux);
-extern void func_0205a61c(void *dst, void *src, u32 size);
+extern void CpuCopy8(void *dst, void *src, u32 size);
 extern int data_0208685c[];
 void func_020678a4(int *out, int *in, void *dst)
 {
@@ -18,5 +18,5 @@ void func_020678a4(int *out, int *in, void *dst)
         p += 0x10;
         t += 1;
     }
-    func_0205a61c(dst, (char *)out + 0x3c, 0x88);
+    CpuCopy8(dst, (char *)out + 0x3c, 0x88);
 }

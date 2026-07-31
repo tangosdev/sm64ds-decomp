@@ -4,7 +4,7 @@ extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 s);
 extern int func_02065ae0(void);
 extern void func_02065ad0(int v);
-extern void func_0205a61c(void *a, void *b, int n);
+extern void CpuCopy8(void *a, void *b, int n);
 
 struct Node {
     int f0;        /* 0x0 */
@@ -42,7 +42,7 @@ int func_020658c0(struct Node *node, int a1, void *a2, int a3, int arg5, u16 arg
     node->f0 = a1;
     node->f4 = arg5;
     node->f30 = arg6;
-    func_0205a61c(a2, (char *)node + 8, 0x20);
+    CpuCopy8(a2, (char *)node + 8, 0x20);
     _ZN3IRQ7RestoreEj(irq);
     return 1;
 }

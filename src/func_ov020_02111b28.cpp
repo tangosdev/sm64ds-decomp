@@ -3,7 +3,7 @@ extern "C" {
 void _ZN9Animation7AdvanceEv(void* self);
 void AddVec3(void* a, void* b, void* c);
 int func_ov020_02111418(char* c);
-void func_020383fc(void* c);
+void WithMeshClsn_UpdateContinuous_Veneer(void* c);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 void func_ov020_02112110(char* c);
 int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
@@ -19,7 +19,7 @@ void func_ov020_02111b28(char* c){
   }
   AddVec3(c+0x5c, c+0xa4, c+0x5c);
   if (func_ov020_02111418(c) != 0) return;
-  func_020383fc(c+0x25c);
+  WithMeshClsn_UpdateContinuous_Veneer(c+0x25c);
   if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x25c) != 0) {
     *(unsigned char*)(c+0x108) = 0;
     func_ov020_02112110(c);

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgPanel_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_021067a4(char *p);
 extern void func_ov006_021063a0(char *p);
 extern void func_ov006_02106168(char *p);
@@ -34,7 +34,7 @@ void dScMgPanel_c_OnYoshiTryEat_021071fc(char *self, int flag)
         func_ov004_020adb1c(p != 0 ? *(int *)(p + 0xb4) : 0);
     }
 
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov006_021067a4(self);
     func_ov006_021063a0(self);
     func_ov006_02106168(self);

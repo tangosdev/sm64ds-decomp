@@ -1,6 +1,6 @@
 extern void func_ov006_020def80(char *c, int i);
 extern int RandomIntInternal(int *seed);
-extern void func_ov004_020b0aa0(int n);
+extern void FreeGfxSlotsById(int n);
 
 extern int data_0209e650;
 extern unsigned char data_ov006_0213c094[];
@@ -54,7 +54,7 @@ void func_ov006_020dfd48(char *c)
     *(int *)(c + 0x541c) = 0x1e;
     *(unsigned char *)(c + 0x546d) = 0xff;
     *(int *)(c + 0x5458) = 0;
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
 
     r0 = (unsigned int)RandomIntInternal(&data_0209e650);
     r2 = (r0 % 10) + 1;

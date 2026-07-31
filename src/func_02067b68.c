@@ -3,7 +3,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
 extern void func_0205a588(void *dst, int val, unsigned int size);
-extern void func_0205a61c(void *a, void *b, unsigned int size);
+extern void CpuCopy8(void *a, void *b, unsigned int size);
 struct S { unsigned int f0; unsigned char *f4; unsigned char *f8; unsigned int fc; };
 void func_02067b68(struct S *s, unsigned int start, unsigned int end, int flag) {
     unsigned int f0 = s->f0;
@@ -16,5 +16,5 @@ void func_02067b68(struct S *s, unsigned int start, unsigned int end, int flag) 
     if (end > top) end = top;
     if (start >= end) return;
     if (flag) func_0205a588(s->f8 + start, 0, end - start);
-    else func_0205a61c(s->f4 + start, s->f8 + start, end - start);
+    else CpuCopy8(s->f4 + start, s->f8 + start, end - start);
 }

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void func_0205a61c(int dst, int src, unsigned int n);
+extern void CpuCopy8(int dst, int src, unsigned int n);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 extern void _ZN4CP1516DrainWriteBufferEv(void);
 extern int func_02060f60(void *o, int a, int b);
@@ -12,7 +12,7 @@ void func_0206062c(char *self) {
         unsigned int n = *(unsigned int*)(self + 0x20);
         int dst = *(int*)(self + 0x18);
         if (n > 0x100) n = 0x100;
-        func_0205a61c(dst, (int)e0, n);
+        CpuCopy8(dst, (int)e0, n);
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((unsigned int)e0, n);
         _ZN4CP1516DrainWriteBufferEv();
         *(int*)(*(char**)self + 0xc) = (int)e0;

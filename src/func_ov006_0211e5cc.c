@@ -1,10 +1,10 @@
 /* func_ov006_0211e5cc — once no entry (stride 0x24, 16 of them) is active
- * with stage <= 2, trigger func_ov004_020b0aa0(0xc) and bump the one-shot
+ * with stage <= 2, trigger FreeGfxSlotsById(0xc) and bump the one-shot
  * latch byte at 0x4c20 (skipped while the latch is set). */
 
 typedef unsigned char u8;
 
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 
 typedef struct {
     char _pad0[0x4677];
@@ -35,6 +35,6 @@ void func_ov006_0211e5cc(char* c)
     }
     if (found != 0)
         return;
-    func_ov004_020b0aa0(0xc);
+    FreeGfxSlotsById(0xc);
     (*(u8*)((long long)(int)(c + 0x4c20) & 0xFFFFFFFFFFFFFFFFLL))++;
 }

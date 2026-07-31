@@ -22,7 +22,7 @@ struct Obj2v {
 extern "C" {
 extern Obj* data_0209f5bc;
 extern Obj2v* data_ov004_020beb68;
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov004_020b29a0(void* c, int arg);
 
 void func_ov004_020b841c(char* c) {
@@ -31,7 +31,7 @@ void func_ov004_020b841c(char* c) {
     if (r5 == 0) return;
     if (r5->m18(*(int*)(c + 0x18)) == 0) return;
     data_0209f5bc->v3(0x1e, 0);
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov004_020b29a0(r5, *(int*)(c + 0x18));
     *(int*)(c + 0x1c) = 0;
     *(int*)(c + 0x18) = -1;

@@ -9,7 +9,7 @@ typedef unsigned short u16;
 
 extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
-extern void func_020383fc(void* p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
@@ -47,7 +47,7 @@ void func_ov002_020bbb14(char* self)
         *pa = *pa + 0x2000;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    func_020383fc(self + 0x3c8);
+    WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8) != 0 ||
         _ZNK12WithMeshClsn8IsOnWallEv(self + 0x3c8) != 0 ||

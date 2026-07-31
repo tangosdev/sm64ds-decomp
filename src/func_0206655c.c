@@ -6,7 +6,7 @@ extern u8 *data_020a9db8;
 
 extern void func_02065c2c(u8 *a, u8 *b);
 extern int func_02065de4(void *a, u32 b);
-extern void func_0205a61c(void *dst, void *src, int n);
+extern void CpuCopy8(void *dst, void *src, int n);
 extern int func_02066fec(u32 a, int b, int c);
 extern u16 func_02065ef8(u16 a, u16 b);
 
@@ -44,10 +44,10 @@ void func_0206655c(void *arg0, u32 arg1)
     case 7:
         if (phase == 2 && func_02065de4(buf, arg1) == 1) {
             i = arg1 - 1;
-            func_0205a61c(data_020a9db8 + 0x1538 + i * 32, buf + 0x14, 0x1d);
+            CpuCopy8(data_020a9db8 + 0x1538 + i * 32, buf + 0x14, 0x1d);
             ((int *)(data_020a9db8 + 0x14a8))[i] = *(int *)(buf + 0x14);
             *(u16 *)(data_020a9db8 + i * 2 + 0x148a) = *(u16 *)(buf + 0x2e);
-            func_0205a61c(buf + 0x18, data_020a9db8 + 0x1340 + i * 0x16, 0x16);
+            CpuCopy8(buf + 0x18, data_020a9db8 + 0x1340 + i * 0x16, 0x16);
             {
                 u8 *pp = data_020a9db8 + 0x1340 + i * 0x16;
                 *pp = (u8)((*pp & ~0xf0) | (((u8)arg1 & 0xf) << 4));

@@ -14,7 +14,7 @@ struct Obj {
 
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *actor, void *cyl);
-void func_020383fc(void *p);
+void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 int func_ov098_02139228(void *c);
 void Crate_SetState(void *c, int i);
 void _Z14ApproachLinearRiii(int *a, int b, int c);
@@ -34,7 +34,7 @@ void func_ov098_02138734(char *c);
 void func_ov098_02138734(char *c)
 {
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
-    func_020383fc(c + 0x320);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     if (func_ov098_02139228(c)) {
         Crate_SetState(c, 0);
         return;

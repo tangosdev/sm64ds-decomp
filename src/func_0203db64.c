@@ -2,7 +2,7 @@ typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern void func_0205a61c(void *dst, void *src, int n);
+extern void CpuCopy8(void *dst, void *src, int n);
 extern void func_0205a588(void *dst, int c, int n);
 extern void func_02042778(void);
 extern void func_0203df40(void);
@@ -57,8 +57,8 @@ void func_0203db64(void *arg0, void *arg1)
     int b;
 
     data_020a0ef0 = 0;
-    func_0205a61c(arg0, data_020a1064, 0x40);
-    func_0205a61c(arg1, data_020a0fec, 0x1c);
+    CpuCopy8(arg0, data_020a1064, 0x40);
+    CpuCopy8(arg1, data_020a0fec, 0x1c);
     func_0205a588(data_020a1040, 0, 0x24);
     func_0205a588(data_020a0fb8, 0, 0x18);
     func_0205a588(data_020a0fa0, 0, 0x18);
@@ -143,8 +143,8 @@ void func_0203db64(void *arg0, void *arg1)
         data_020a10fc.hi = 0;
         data_020a10a4.hi = data_020a10fc.hi;
         data_020a10a4.b1 = data_020a10fc.b1;
-        func_0205a61c(buf.unk4, data_020a10fe, buf.unk18 * 2);
-        func_0205a61c(buf.unk4, data_020a10a6, buf.unk18 * 2);
+        CpuCopy8(buf.unk4, data_020a10fe, buf.unk18 * 2);
+        CpuCopy8(buf.unk4, data_020a10a6, buf.unk18 * 2);
         data_020a0f00 = buf.unk0;
         func_02059f2c(data_020a0fb8);
         func_02059f2c(data_020a0fa0);

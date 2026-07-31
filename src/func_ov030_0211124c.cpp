@@ -3,14 +3,14 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern void func_020383fc(void*);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, void*, void*, int, int);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 
 int func_ov030_0211124c(char *c, char *mc){
-  func_020383fc(mc);
+  WithMeshClsn_UpdateContinuous_Veneer(mc);
   int g = _ZNK12WithMeshClsn10IsOnGroundEv(mc);
   if(!g) return g;
   _ZN9ActorBase18MarkForDestructionEv(*(void**)(c+0x4dc));

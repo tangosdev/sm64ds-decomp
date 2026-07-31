@@ -5,7 +5,7 @@ typedef signed short s16;
 typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vector3;
 
-extern void func_020383fc(void *);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *);
 extern void func_ov020_02113148(void *, void *, void *, int, int, int, int);
 extern void func_0201267c(int, void *);
 extern void *_ZN5Actor13ClosestPlayerEv(void *);
@@ -36,7 +36,7 @@ typedef struct {
 
 void func_ov020_02112b00(char *c)
 {
-    func_020383fc(c + 0x1bc);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1bc);
     (*(u16 *)(((int)c + 0x39e) & 0xFFFFFFFFFFFFFFFF))++;
 
     if (ST->counter <= 0x46) {

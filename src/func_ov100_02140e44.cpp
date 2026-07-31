@@ -14,7 +14,7 @@ void* _ZN5Actor13ClosestPlayerEv(void* self);
 s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 s16 Vec3_VertAngle(void* v1, void* v0);
-void func_020383fc(void* c);
+void WithMeshClsn_UpdateContinuous_Veneer(void* c);
 int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
 int func_02035638(void* c);
@@ -59,7 +59,7 @@ extern "C" void func_ov100_02140e44(char* c)
         _Z14ApproachLinearRsss((s16*)(c + 0x92), Vec3_VertAngle(c + 0x5c, (char*)player + 0x5c), 0x320);
     }
 
-    func_020383fc(c + 0x1d8);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1d8);
 
     {
         int noId = (*(int*)(c + 0x3b8) == 0);

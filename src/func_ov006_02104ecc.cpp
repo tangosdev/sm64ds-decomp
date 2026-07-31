@@ -1,5 +1,5 @@
 //cpp
-extern "C" void func_ov004_020b0aa0(int arg);
+extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void func_ov006_02106048(char* c);
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 
@@ -15,7 +15,7 @@ extern "C" void func_ov006_02104ecc(char* c)
     *(unsigned char*)(c + 0x4675) = 4;
     *(int*)(c + 0x4660) = 0x10000;
     *(int*)(c + 0x4664) = 0x24000;
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     if (*(unsigned char*)(c + 0xc4) == 0) {
         *(unsigned char*)(c + 0xc3) = 1;
         *(unsigned char*)(c + 0xc4) = 1;

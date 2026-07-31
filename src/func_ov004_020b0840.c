@@ -8,7 +8,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::AfterCleanupResources - recovered from vtable slot identity */
 extern void func_ov004_020ad90c(void);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_0203cbc0(void);
 extern void func_02012e1c(void);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int x);
@@ -23,7 +23,7 @@ void dScMgBase_c_AfterCleanupResources(char* c, int arg){
       func_ov004_020ad90c();
     data_0209d4a8[0] = 0;
     data_ov004_020beb74[1] = 0;
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     if (data_ov004_020beb60[0] != 0) {
       func_0203cbc0();
       data_ov004_020beb60[0] = 0;

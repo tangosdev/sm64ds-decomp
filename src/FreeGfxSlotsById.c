@@ -7,7 +7,7 @@ struct E
   char pad2[0x134 - 0x24];
 };
 extern struct E data_ov004_020bf648[];
-void func_ov004_020b0aa0(int arg)
+void FreeGfxSlotsById(int arg)
 {
   int i;
   struct E *p;

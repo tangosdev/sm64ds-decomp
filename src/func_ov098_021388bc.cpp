@@ -13,7 +13,7 @@ struct Obj {
 };
 
 extern "C" {
-void func_020383fc(void *p);
+void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *p);
 int SurfaceInfo_TestFlag0x20(int *p);
@@ -31,7 +31,7 @@ extern "C" void func_ov098_021388bc(char *c)
     int flags;
     bool t;
 
-    func_020383fc(c + 0x320);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
         if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x320) + 4)) != 0) {
             void *p = *(void **)(c + 0x5e4);

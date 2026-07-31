@@ -14,7 +14,7 @@ extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsign
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern void _Z14ApproachLinearRsss(short *v, short target, short step);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void func_020383fc(void *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -82,7 +82,7 @@ cont:
     }
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    func_020383fc(c + 0x108);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x108);
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x108) != 0) {
         int n[3];
         void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x108);

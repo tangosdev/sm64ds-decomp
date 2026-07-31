@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 typedef signed int s32;
 
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_020feba8(void *c);
 extern void func_ov006_020fc844(u8 *c);
 extern void func_ov006_020fae90(u8 *c);
@@ -26,7 +26,7 @@ s32 func_ov006_020fee24(char *c)
 {
     switch (*(s32 *)(c + 0x5c10)) {
     case 0:
-        func_ov004_020b0aa0(0x1d);
+        FreeGfxSlotsById(0x1d);
         func_ov006_020feba8(c);
         func_ov006_020fc844((u8 *)c);
         func_ov006_020fae90((u8 *)c);

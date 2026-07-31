@@ -21,7 +21,7 @@ extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 len);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void func_ov004_020b0d30(void);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 
 extern int data_ov004_020beb6c;
 extern u8 data_0209d45c;
@@ -71,6 +71,6 @@ void func_ov004_020b265c(char *obj)
     data_ov004_020beb74[1] = (int)obj;
     data_0209d4a8 = (void **)data_ov004_020beb74;
     func_ov004_020b0d30();
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     data_0208ee44 = 1;
 }

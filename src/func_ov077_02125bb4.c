@@ -10,7 +10,7 @@ typedef int Fix12i;
 
 
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *p);
-extern void func_020383fc(void *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void func_02012694(int id, void *pos);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
@@ -38,7 +38,7 @@ int func_ov077_02125bb4(char *c)
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
     func_ov077_021250a8(c);
     _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1e4);
-    func_020383fc(c + 0x1e4);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);
 
     r4 = func_ov077_02124ce4(c);
     if (r4) {

@@ -49,7 +49,7 @@ extern int func_02061c20(int *arg);
 extern void *func_020671b4(u16 idx);
 extern int func_02067250(u16 a);
 extern int func_0206703c(u16 arg0, int sel);
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02067138(u16 idx);
 extern void func_02068a54(void);
 
@@ -149,7 +149,7 @@ void func_0203e20c(void)
                         cnt2 += 1;
                     }
                     *pIdx = oneVal;
-                    func_0205a61c(found, base1112, 0x16);
+                    CpuCopy8(found, base1112, 0x16);
                     data_020a0f08 += 1;
                 } else if (func_02067250(idx) == 0xA) {
                     func_0206703c(idx, 0);

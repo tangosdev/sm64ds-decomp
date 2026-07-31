@@ -1,10 +1,10 @@
-extern void func_ov004_020b0aa0(int);
+extern void FreeGfxSlotsById(int);
 typedef struct { char pad[0x1a]; short field_1a; char pad2[4]; } Elem;
 extern Elem data_ov004_020bebe8[];
 extern char data_ov004_020bf3e8[];
 
 void func_ov004_020b0d30(void) {
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     int i = 0;
     do {
         data_ov004_020bebe8[i].field_1a = 0;

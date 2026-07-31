@@ -8,7 +8,7 @@
 /* dScMgCard_c::OnTurnIntoEgg - recovered from vtable slot identity */
 typedef short s16;
 
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern int func_ov006_020c1718(void* p);
 extern void func_ov004_020b56c8(int a);
 extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s);
@@ -23,9 +23,9 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
     case 0xe: {
         int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
         if (r == -1)
-            func_ov004_020b0aa0(0xa);
+            FreeGfxSlotsById(0xa);
         else if (r == 1)
-            func_ov004_020b0aa0(9);
+            FreeGfxSlotsById(9);
         self->unk_538a = 0;
         *(s16*)(((int)c + 0x5388) & 0xFFFFFFFFFFFFFFFF) += 1;
         break;
@@ -58,7 +58,7 @@ int dScMgCard_c_OnTurnIntoEgg(char* c)
             }
         } else {
             if (_Z15ApproachLinear2Rsss((s16*)(c + 0x538a), 0, 1) != 0)
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
         }
         break;
     case 0x11: {

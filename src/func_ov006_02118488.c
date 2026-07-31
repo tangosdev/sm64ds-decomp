@@ -7,7 +7,7 @@
 #pragma opt_strength_reduction off
 typedef void (*VFunc)(void*);
 
-extern void func_ov004_020b0aa0(int a);
+extern void FreeGfxSlotsById(int a);
 extern unsigned int func_02012790(unsigned int a);
 
 extern unsigned char data_0209d454;
@@ -110,7 +110,7 @@ int dScMgSmartball_c_Behavior(void* arg)
                 }
                 if (*(int*)(c + 0x5958) == 0xb4) {
                     func_ov004_020ae20c();
-                    func_ov004_020b0aa0(0x1d);
+                    FreeGfxSlotsById(0x1d);
                 }
                 t = *(int*)(c + 0x5958);
                 if (t >= 0xb4 && t % 0x1e == 0) {

@@ -2,7 +2,7 @@ extern int WM_CheckStateEx(int a, int b);
 extern void _ZN4CP1514FlushDataCacheEjj(unsigned int a, unsigned int b);
 extern void WM_SetCallbackTable(int i, int val);
 extern int *WM_GetSystemWork(void);
-extern void func_0205a61c(void *src, void *dst, unsigned int size);
+extern void CpuCopy8(void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, int v, unsigned int size);
 extern int WM_SendCommand(int a, int b);
 
@@ -21,7 +21,7 @@ int func_02061e38(int a, int b, void *c)
     *(short*)q = 0xc;
     q[1] = b;
     if (c != 0) {
-        func_0205a61c(c, (char*)q + 8, 0x18);
+        CpuCopy8(c, (char*)q + 8, 0x18);
     } else {
         func_0205a588((char*)q + 8, 0, 0x18);
     }

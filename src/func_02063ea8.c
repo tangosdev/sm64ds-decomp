@@ -2,7 +2,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-extern void func_0205a61c(int a, void *b, int c);
+extern void CpuCopy8(int a, void *b, int c);
 extern int func_02065a74(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, int a3);
@@ -53,7 +53,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
         for (;;) {
             switch (r6) {
             case 1:
-                func_0205a61c(r8, r5 + 1, sp8);
+                CpuCopy8(r8, r5 + 1, sp8);
                 r8 += 1;
                 r7 += 1;
                 r6 = fp;
@@ -62,7 +62,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             {
                 u16 t;
                 int v;
-                func_0205a61c(r8, r5 + 8, fp);
+                CpuCopy8(r8, r5 + 8, fp);
                 r8 += 2;
                 r7 += 2;
                 t = *(u16 *)(r5 + 8);
@@ -82,7 +82,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 3:
             {
                 u8 v;
-                func_0205a61c(r8, r5 + 2, sp1C);
+                CpuCopy8(r8, r5 + 2, sp1C);
                 v = *(u8 *)(r5 + 1);
                 r8 += 1;
                 r7 += 1;
@@ -117,7 +117,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 break;
             }
             case 10:
-                func_0205a61c(r8, r5 + 0xD, sp2C);
+                CpuCopy8(r8, r5 + 0xD, sp2C);
                 r8 += 1;
                 r7 += 1;
                 r6 = sp30;
@@ -128,7 +128,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 *(u8 *)r5 = 2;
                 return r7 + 9;
             case 4:
-                func_0205a61c(r8, r5 + 0xA, fp);
+                CpuCopy8(r8, r5 + 0xA, fp);
                 r8 += 2;
                 r7 += 2;
                 if (*(u8 *)(r5 + 1) == 3) {
@@ -138,8 +138,8 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 5:
             {
                 u8 v;
-                func_0205a61c(r8, r5 + 6, 2);
-                func_0205a61c(r8 + 2, r5 + 4, 2);
+                CpuCopy8(r8, r5 + 6, 2);
+                CpuCopy8(r8 + 2, r5 + 4, 2);
                 if (func_02065a74() != 0) {
                     func_02065ba0(*(short *)(r5 + 4));
                     func_02065bb0(*(short *)(r5 + 6));
@@ -163,7 +163,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 7:
             {
                 u8 v;
-                func_0205a61c(r8, r5 + 0x10, r4);
+                CpuCopy8(r8, r5 + 0x10, r4);
                 v = *(u8 *)(r5 + 1);
                 r8 += 4;
                 r7 += 4;
@@ -203,7 +203,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
             case 8:
             {
                 u8 v;
-                func_0205a61c(r8, r5 + 0x14, r4);
+                CpuCopy8(r8, r5 + 0x14, r4);
                 v = *(u8 *)(r5 + 1);
                 r8 += 4;
                 r7 += 4;

@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef short s16;
 typedef int s32;
 
-extern void func_0205a61c(int a, int b, int c);
+extern void CpuCopy8(int a, int b, int c);
 
 void func_02064554(int self, int sel, int idx, s16 a3)
 {
@@ -37,7 +37,7 @@ void func_02064554(int self, int sel, int idx, s16 a3)
                 break;
             }
             *(s8 *)(o + 0x1d) = v;
-            func_0205a61c(*(s32 *)(c + 0x20), (int)(o + 0x14), *(u8 *)(o + 0x1d));
+            CpuCopy8(*(s32 *)(c + 0x20), (int)(o + 0x14), *(u8 *)(o + 0x1d));
         }
         break;
     case 12:

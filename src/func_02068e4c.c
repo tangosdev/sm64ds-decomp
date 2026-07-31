@@ -5,7 +5,7 @@ extern int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(int state);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore16(int val, char *dst, int nbytes);
-extern void func_0205a61c(u16 *a, char *b, int c);
+extern void CpuCopy8(u16 *a, char *b, int c);
 extern int func_02069038(void);
 extern char *data_020a9db8;
 extern int data_020a9db4;
@@ -65,7 +65,7 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5)
     }
     while (j < 0x10);
   }
-  func_0205a61c(a1, (char *) (base2 + 0x1300), 0x16);
+  CpuCopy8(a1, (char *) (base2 + 0x1300), 0x16);
   *((u16 *) (base1 + 0x1400)) = 0x100;
   *((u16 *) (base1 + 0x1402)) = 8;
   *((u16 *) (base1 + 0x1e18)) = 0;

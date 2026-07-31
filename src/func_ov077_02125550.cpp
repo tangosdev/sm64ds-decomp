@@ -8,7 +8,7 @@
 
 
 extern "C" {
-extern void func_020383fc(void* p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void* p);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
@@ -31,7 +31,7 @@ extern "C" int func_ov077_02125550(char* c)
     *(short*)(c + 0x8c) = *(short*)(c + 0x8c) + 0x4e20;
 
     if (*(int*)(c + 0x98) >= *(int*)(c + 0x1fc) || *(int*)(c + 0xa8) >= *(int*)(c + 0x1fc)) {
-        func_020383fc(c + 0x1e4);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);
     } else {
         WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x1e4);
     }

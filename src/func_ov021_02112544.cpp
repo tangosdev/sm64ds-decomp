@@ -11,7 +11,7 @@ struct Vec3 {
 
 extern "C" {
 
-extern void func_020383fc(void* p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern void* _ZNK12WithMeshClsn14GetFloorResultEv(void* p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* info, Vec3* out);
@@ -38,7 +38,7 @@ extern "C" void func_ov021_02112544(char* self)
     Vec3 pos;
     Vec3 walln;
 
-    func_020383fc(self + 0x1f8);
+    WithMeshClsn_UpdateContinuous_Veneer(self + 0x1f8);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x1f8) != 0) {
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn14GetFloorResultEv(self + 0x1f8) + 4, &normal);
 

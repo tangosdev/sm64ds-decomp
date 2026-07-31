@@ -18,7 +18,7 @@ extern "C" {
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12 b, u32 c, u32 d, u32 e);
     void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
     void func_02038408(void* p);
-    void func_020383fc(void* p);
+    void WithMeshClsn_UpdateContinuous_Veneer(void* p);
     int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
     void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
     void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
@@ -74,7 +74,7 @@ extern "C" void func_ov060_021128c0(char* c)
     if (*(u8*)(c + 0x414) == 1)
         func_02038408(c + 0x14c);
     else
-        func_020383fc(c + 0x14c);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x14c);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
         void* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x14c);

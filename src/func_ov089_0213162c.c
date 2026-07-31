@@ -13,7 +13,7 @@ typedef unsigned int u32;
 
 extern char *data_0209f318;
 extern int data_0209b454;
-extern void func_020383fc(char *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(char *p);
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
 extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct Vector3 *v);
@@ -44,7 +44,7 @@ void func_ov089_0213162c(char *c)
             *(u32 *)(c + 0x464), 0x81, v.x, v.y, v.z, 0, 0);
     }
     if (*(u8 *)(c + 0x442) >= 2)
-        func_020383fc(c + 0x260);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x260);
 
     switch (*(u8 *)(c + 0x442)) {
     case 0: {

@@ -23,7 +23,7 @@ typedef struct Cell {
 
 extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
 extern int Vec2_Len(V2 *p);
-extern void func_ov004_020b0aa0(int a);
+extern void FreeGfxSlotsById(int a);
 extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
@@ -81,7 +81,7 @@ int dScMgFlower_c_Behavior(char *c)
                 }
                 self->unk_5fd8 = 0;
                 func_02012754(0x10d);
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
             }
         } else if (self->unk_5fc8 < 0) {
             int t;
@@ -107,7 +107,7 @@ int dScMgFlower_c_Behavior(char *c)
                             self->unk_5fc8 = ii;
                             *(int *)(c + ii * 0x20 + 0x4f4c) = self->unk_5fb8;
                             *(int *)(c + ii * 0x20 + 0x4f50) = self->unk_5fbc;
-                            func_ov004_020b0aa0(0x1d);
+                            FreeGfxSlotsById(0x1d);
                             self->unk_5fec = 2;
                             break;
                         }
@@ -164,7 +164,7 @@ int dScMgFlower_c_Behavior(char *c)
                 if (self->unk_5fcc == 1) {
                     self->unk_5fcc = 0;
                     if (self->unk_5fd8 >= 1) {
-                        func_ov004_020b0aa0(0x1d);
+                        FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x13, 0x80, 0x18, 0, -1, 0xd);
                         self->unk_5fec = 3;
                         func_02012754(0x104);
@@ -172,7 +172,7 @@ int dScMgFlower_c_Behavior(char *c)
                 } else {
                     self->unk_5fcc = 1;
                     if (self->unk_5fd8 >= 1) {
-                        func_ov004_020b0aa0(0x1d);
+                        FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
                         self->unk_5fec = 1;
                         func_02012754(0x103);
@@ -195,7 +195,7 @@ int dScMgFlower_c_Behavior(char *c)
                         func_ov006_020c38b0(c + 0x51f8);
                 }
             } else {
-                func_ov004_020b0aa0(0x1d);
+                FreeGfxSlotsById(0x1d);
                 if (self->unk_5fe4 > 0x14) {
                     if (self->unk_5fcd == 1) {
                         func_02012754(0x106);

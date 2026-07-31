@@ -1,7 +1,7 @@
 //cpp
 extern "C" void _Z14ApproachLinearRsss(short* cur, short to, short step);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
-extern "C" void func_020383fc(void* p);
+extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern "C" int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
@@ -24,7 +24,7 @@ struct Obj {
 extern "C" void func_ov002_020bba28(char* self){
     _Z14ApproachLinearRsss((short*)(self + 0x8c), 0x4000, 0x1000);
     _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    func_020383fc(self + 0x3c8);
+    WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8)
         || _ZNK12WithMeshClsn8IsOnWallEv(self + 0x3c8)
         || _ZNK12WithMeshClsn12TouchesWaterEv(self + 0x3c8)) {

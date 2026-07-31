@@ -5,7 +5,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::Behavior - recovered from vtable slot identity */
 extern void func_02012790(int a);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 extern int Vec2_Len(int *p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern void Vec2_Sub(int *o, int *a, int *b);
@@ -83,7 +83,7 @@ int dScMgSnowball_c_Behavior(char *c) {
         if (I(0xb9fc) > 0) {
             IA(0xb9fc) -= 1;
             if (I(0xb9fc) == 0)
-                func_ov004_020b0aa0(0xc);
+                FreeGfxSlotsById(0xc);
         }
 
         idx = data_020a0e40[0];

@@ -15,7 +15,7 @@ void _ZN5Actor13SmallPoofDustEv(void* self);
 void _ZN9ActorBase18MarkForDestructionEv(void* self);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
-void func_020383fc(void* p);
+void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 void _Z15ApproachLinear2Rsss(short* ref, short target, short rate);
 void _Z14ApproachLinearRiii(int* ref, int target, int rate);
@@ -52,7 +52,7 @@ int WingFeather::Behavior()
         unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
-    func_020383fc((char*)&mWithMeshClsn);
+    WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
         _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);

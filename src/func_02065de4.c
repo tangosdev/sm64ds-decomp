@@ -2,7 +2,7 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 extern char *data_020a9db8;
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 int func_02065de4(u8 *a0, int idx)
 {
   int new_var;
@@ -24,7 +24,7 @@ int func_02065de4(u8 *a0, int idx)
   new_var = (int) g;
   {
     int stride = *((int *) ((g + 0x1000) + 0x31c));
-    func_0205a61c(a0 + 3, row + (r5 * stride), stride);
+    CpuCopy8(a0 + 3, row + (r5 * stride), stride);
   }
   {
     ((u32 *) (g + 0x1718))[i] |= 1u << r5;

@@ -4,7 +4,7 @@ typedef unsigned char u8;
 extern void FS_InitFile(int* s);
 extern void func_0205c4e4(void* self, int value);
 extern int func_0205c5e4(void* self, int x);
-extern void func_0205a61c(const void* src, void* dst, unsigned int size);
+extern void CpuCopy8(const void* src, void* dst, unsigned int size);
 extern const unsigned char data_0209a044[];
 
 int func_0205bc88(char* c)
@@ -124,9 +124,9 @@ int func_0205bc88(char* c)
             else
                 nb = 3;
 
-            func_0205a61c(g0, buf, nb);
+            CpuCopy8(g0, buf, nb);
             pos += nb;
-            func_0205a61c(data_0209a044, buf + pos, 2);
+            CpuCopy8(data_0209a044, buf + pos, 2);
         }
 
         func_0205c4e4(it, curr);
@@ -144,7 +144,7 @@ int func_0205bc88(char* c)
             }
             {
                 int k = *(int*)(tok + 0x10) + 1;
-                func_0205a61c(tok + 0x14, (buf + count) - k, k);
+                CpuCopy8(tok + 0x14, (buf + count) - k, k);
                 count -= k;
             }
         } else {
@@ -164,7 +164,7 @@ int func_0205bc88(char* c)
                         if (*(int*)(tok + 0xc) != 0 &&
                             *(u16*)(tok + 4) == curr) {
                             int ln = *(int*)(tok + 0x10);
-                            func_0205a61c(tok + 0x14,
+                            CpuCopy8(tok + 0x14,
                                           (buf + count) - ln, ln);
                             count -= ln;
                             break;

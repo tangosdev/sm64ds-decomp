@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWing.h"
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
-void func_020383fc(void* p);
+void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 int _ZN5Actor13DistToCPlayerEv(void* p);
 void _ZN5Actor14TriplePoofDustEv(void* p);
@@ -28,7 +28,7 @@ int ShipWing::Behavior()
         break;
     case 1:
         _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
-        func_020383fc((char*)&mWithMeshClsn);
+        WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) == 0) {
             if (_ZN5Actor13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
