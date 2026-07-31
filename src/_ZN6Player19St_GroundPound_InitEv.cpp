@@ -3,14 +3,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 typedef int Fix12i;
-extern int func_ov002_020dab14(void*);
+extern int Player_ReleaseHeldActor(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
 extern int _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 
 int Player::St_GroundPound_Init()
 {
   unsigned int anim;
-  func_ov002_020dab14(((void*)this));
+  Player_ReleaseHeldActor(((void*)this));
   *(char*)((char*)&mJumpComboStage)=0;
   *(int*)((char*)&mVertSpeed)=0;
   *(int*)((char*)&mHorzSpeed)=0;

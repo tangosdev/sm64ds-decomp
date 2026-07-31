@@ -1,4 +1,4 @@
-void func_ov002_020c9e40(char *self)
+void Player_DisableInteraction(char *self)
 {
     unsigned int tmp;
     char *slot;

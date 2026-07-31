@@ -5,7 +5,7 @@ extern struct Actor* _ZN5Actor22ClosestNonVanishPlayerEv(void* self);
 extern Fix12i Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 extern short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern short AngleDiff(short a, short b);
-extern void func_ov071_021202ec(char* c, int mode);
+extern void Scuttlebug_SetState(char* c, int mode);
 void func_ov071_0211f0b4(char* c) {
     struct Actor* p;
     Fix12i d;
@@ -19,5 +19,5 @@ void func_ov071_0211f0b4(char* c) {
     if (AngleDiff(ang, *(short*)(c+0x8e)) > 0x12c) return;
     *(Fix12i*)(c+0x3a0) = d;
     *(short*)(c+0x3a4) = ang;
-    func_ov071_021202ec(c, 3);
+    Scuttlebug_SetState(c, 3);
 }

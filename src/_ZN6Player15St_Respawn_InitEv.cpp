@@ -1,6 +1,6 @@
 //cpp
 struct Player;
-extern "C" void func_ov002_020c9e40(Player*);
+extern "C" void Player_DisableInteraction(Player*);
 extern "C" void func_02035860(void*, void*);
 extern "C" void func_0200cf40(char*);
 extern unsigned char data_0209f250;
@@ -17,7 +17,7 @@ int _ZN6Player15St_Respawn_InitEv(Player* thiz) {
     int* ptr_60 = (int*)(self + 0x60);
     int* ptr_380 = (int*)(self + 0x380);
     int* ptr_5c = (int*)(self + 0x5c);
-    func_ov002_020c9e40(thiz);
+    Player_DisableInteraction(thiz);
     *(int*)(self + 0x5c) = *(int*)(self + 0x53c);
     *(int*)(self + 0x60) = *(int*)(self + 0x540);
     *(int*)(self + 0x64) = *(int*)(self + 0x544);

@@ -10,7 +10,7 @@ struct WithMeshClsn {
 extern "C" void func_02038420(void *p);
 extern "C" int func_02037e38(unsigned int *p);
 extern "C" void func_ov071_0211f498(char *c);
-extern "C" void func_ov071_021202ec(char *c, int x);
+extern "C" void Scuttlebug_SetState(char *c, int x);
 extern "C" void func_ov071_0211f29c(char *c);
 struct CylinderClsn2 { void Clear(); void Update(); };
 
@@ -35,7 +35,7 @@ extern "C" int func_ov071_0211f7d4(Actor *self)
         *(short*)(s + 0x8c) = z;
         *(short*)(s + 0x8e) = ang;
         *(short*)(s + 0x90) = z;
-        func_ov071_021202ec(s, 2);
+        Scuttlebug_SetState(s, 2);
     }
     self->UpdatePos((CylinderClsn*)(s + 0x160));
     func_ov071_0211f29c(s);

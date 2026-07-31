@@ -1,5 +1,5 @@
 extern int func_ov060_02111cc0(char *c, int a, int b);
-extern int func_ov060_02115a30(char *c);
+extern int Bowser_IsAnimAtLastFrame(char *c);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN12WithMeshClsn15ClearGroundFlagEv(char *c);
 extern short data_02082214[];
@@ -12,7 +12,7 @@ void func_ov060_021125f0(char *c)
 
     func_ov060_02111cc0(c, 0xe, 0x40000000);
     if (*(int *)(c + 0x410) == 3) {
-        if (func_ov060_02115a30(c) == 0)
+        if (Bowser_IsAnimAtLastFrame(c) == 0)
             return;
     }
     *(unsigned char *)(c + 0x425) = 0;

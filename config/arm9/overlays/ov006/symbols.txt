@@ -1,6 +1,6 @@
 func_ov006_020bfec0 kind:function(arm,size=0x138) addr:0x020bfec0
 func_ov006_020bfff8 kind:function(arm,size=0x13c) addr:0x020bfff8
-func_ov006_020c0134 kind:function(arm,size=0x130) addr:0x020c0134
+Camera_UpdateMatrices kind:function(arm,size=0x130) addr:0x020c0134
 func_ov006_020c0264 kind:function(arm,size=0xa0) addr:0x020c0264
 func_ov006_020c0304 kind:function(arm,size=0x60) addr:0x020c0304
 func_ov006_020c0364 kind:function(arm,size=0x218) addr:0x020c0364
@@ -687,7 +687,7 @@ func_ov006_020e6d8c kind:function(arm,size=0xc) addr:0x020e6d8c
 func_ov006_020e6d98 kind:function(arm,size=0xc) addr:0x020e6d98
 func_ov006_020e6da4 kind:function(arm,size=0x10) addr:0x020e6da4
 func_ov006_020e6db4 kind:function(arm,size=0x3c) addr:0x020e6db4
-func_ov006_020e6df0 kind:function(arm,size=0x4c) addr:0x020e6df0
+Sound_PlayBank1Panned kind:function(arm,size=0x4c) addr:0x020e6df0
 func_ov006_020e6e3c kind:function(arm,size=0x10) addr:0x020e6e3c
 func_ov006_020e6e4c kind:function(arm,size=0x8) addr:0x020e6e4c
 func_ov006_020e6e54 kind:function(arm,size=0x24) addr:0x020e6e54

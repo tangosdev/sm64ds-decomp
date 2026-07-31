@@ -2,7 +2,7 @@
 typedef int Fix12i;
 struct PMF;
 extern "C" void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
-extern "C" void func_ov073_0212157c(void* c, PMF* p);
+extern "C" void ChiefChilly_ChangeState(void* c, PMF* p);
 extern "C" void _Z14ApproachLinearRiii(int& v, int a, int b);
 extern "C" int _ZN9Animation8FinishedEv(void* anim);
 extern PMF data_ov073_021233c0;
@@ -41,9 +41,9 @@ extern "C" int func_ov073_02120c7c(C* c)
     if (c->field_4c9 == 1) {
         *(unsigned char*)(((int)c + 0x4cb) & 0xFFFFFFFFFFFFFFFFull) -= 1;
         if (c->field_4cb != 0)
-            func_ov073_0212157c(c, &data_ov073_021233c0);
+            ChiefChilly_ChangeState(c, &data_ov073_021233c0);
         else
-            func_ov073_0212157c(c, &data_ov073_021233d0);
+            ChiefChilly_ChangeState(c, &data_ov073_021233d0);
         return 1;
     }
     _Z14ApproachLinearRiii(c->field_98, 0, 0x1000);
@@ -52,7 +52,7 @@ extern "C" int func_ov073_02120c7c(C* c)
         if (b < 0xa) {
             c->field_98 = 0;
             c->field_94 = c->field_8e;
-            func_ov073_0212157c(c, &data_ov073_02123360);
+            ChiefChilly_ChangeState(c, &data_ov073_02123360);
         }
     }
     return 1;

@@ -7,7 +7,7 @@ extern void func_0200fa04(void* c, void* v, int a);
 extern void func_ov060_02111cc0(char* c, int idx, int b);
 extern void func_ov060_02115b0c(char* c);
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* p);
-extern int func_ov060_02115a30(void* o);
+extern int Bowser_IsAnimAtLastFrame(void* o);
 
 void func_ov060_021143b8(char* self)
 {
@@ -63,7 +63,7 @@ void func_ov060_021143b8(char* self)
         }
         return;
     }
-    if (func_ov060_02115a30(self) != 0) {
+    if (Bowser_IsAnimAtLastFrame(self) != 0) {
         *(int*)(self + 0x40c) = 0;
     }
 }

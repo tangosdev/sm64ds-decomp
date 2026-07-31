@@ -3,14 +3,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void func_ov002_020c9e40(char*c);
+extern void Player_DisableInteraction(char*c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned,void*);
 }
 
 int Player::St_Teleport_Init()
 {
-  func_ov002_020c9e40(((char*)this));
+  Player_DisableInteraction(((char*)this));
   mStateWork=0;
   mStateStep=0;
   mHorzSpeed=0;

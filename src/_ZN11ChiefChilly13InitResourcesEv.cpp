@@ -29,7 +29,7 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, Vector3* v, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
-extern int func_ov073_0212157c(void* c, PMF* p);
+extern int ChiefChilly_ChangeState(void* c, PMF* p);
 
 int ChiefChilly::InitResources()
 {
@@ -80,6 +80,6 @@ int ChiefChilly::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    func_ov073_0212157c(((char*)this), &data_ov073_02123330);
+    ChiefChilly_ChangeState(((char*)this), &data_ov073_02123330);
     return 1;
 }

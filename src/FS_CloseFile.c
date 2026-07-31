@@ -1,6 +1,6 @@
 extern int func_0205cdf4(void *self, int arg);
 
-int func_0205d4cc(char *self)
+int FS_CloseFile(char *self)
 {
     if (func_0205cdf4(self, 8) == 0)
         return 0;

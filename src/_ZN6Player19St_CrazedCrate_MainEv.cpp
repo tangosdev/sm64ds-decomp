@@ -14,7 +14,7 @@ extern void func_ov002_020e0f38(void*, int);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3&, unsigned int, int, short);
 extern void func_ov002_020d718c(void*);
-extern void func_ov002_020dab14(void*);
+extern void Player_ReleaseHeldActor(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
 extern char data_ov002_0211031c;
@@ -65,7 +65,7 @@ int Player::St_CrazedCrate_Main() {
                 _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, pos, 5, 0xf000, 0);
                 func_ov002_020d718c(self);
             } else {
-                func_ov002_020dab14(self);
+                Player_ReleaseHeldActor(self);
             }
             _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211031c);
             _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x43, 0x40000000, 0x1000, 0);

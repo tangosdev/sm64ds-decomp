@@ -15,7 +15,7 @@ struct NestedHeapIterator {
 
 extern "C" {
 void func_020520dc(void *self);
-void func_0205d4cc(void *p);
+void FS_CloseFile(void *p);
 void func_020520a4(HeapAllocator *node);
 }
 
@@ -43,7 +43,7 @@ extern "C" void func_0205212c(Obj *self) {
     func_020520dc(self);
     int b = (int)((self->u50 & 0x10) != 0);
     if (b != 0) {
-        func_0205d4cc((char*)self + 0x44);
+        FS_CloseFile((char*)self + 0x44);
     }
     u32 irq = IRQ::Disable();
     HeapAllocator *node = data_020a5bc8.Next(0);

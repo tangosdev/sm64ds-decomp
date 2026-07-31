@@ -1,5 +1,5 @@
 //cpp
-// func_ov060_02115a30 at 0x02115a30 -- matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
+// Bowser_IsAnimAtLastFrame at 0x02115a30 -- matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
 class Animation {
 public:
     int Finished();
@@ -12,6 +12,6 @@ struct Obj {
     Animation anim;
 };
 
-extern "C" bool func_ov060_02115a30(Obj* o) {
+extern "C" bool Bowser_IsAnimAtLastFrame(Obj* o) {
     return o->anim.Finished() || o->anim.WillHitFrame((unsigned short)(o->anim.GetFrameCount() - 1));
 }

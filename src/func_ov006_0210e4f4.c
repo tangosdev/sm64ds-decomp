@@ -7,7 +7,7 @@ typedef unsigned int u32;
 
 extern int GetOwnerLanguage(void);
 extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020b0104(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int _ZN4cstd4fdivEii(int a, int b);
 
 extern void *data_ov006_021381f0[];
@@ -135,8 +135,8 @@ void func_ov006_0210e4f4(T *t)
             vec[1] = 0;
             vec[2] = 0;
             vec[3] = 0x1000;
-            func_ov004_020b0104(data_ov006_02137fb8[idx], (j % 3 - 1) * 0x18 + (t->unk8 >> 12), (j / 3 - 1) * 0x18 + (t->unkC >> 12), -1, 1, vec);
-            func_ov004_020b0104(data_ov006_02137fb8[0], (j % 3 - 1) * 0x18 + (t->unk8 >> 12), (j / 3 - 1) * 0x18 + (t->unkC >> 12), -1, 1, vec);
+            RenderOamBothScreens(data_ov006_02137fb8[idx], (j % 3 - 1) * 0x18 + (t->unk8 >> 12), (j / 3 - 1) * 0x18 + (t->unkC >> 12), -1, 1, vec);
+            RenderOamBothScreens(data_ov006_02137fb8[0], (j % 3 - 1) * 0x18 + (t->unk8 >> 12), (j / 3 - 1) * 0x18 + (t->unkC >> 12), -1, 1, vec);
         }
     }
 

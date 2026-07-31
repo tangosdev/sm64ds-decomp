@@ -2,13 +2,13 @@
 // @symbol _ZN6Player12St_Talk_InitEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-extern int func_ov002_020c9e40(void* c);
+extern int Player_DisableInteraction(void* c);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int a, int b, int f, unsigned int g);
 
 int Player::St_Talk_Init()
 {
   mIsControlDisabled=1;
-  func_ov002_020c9e40(((char*)this));
+  Player_DisableInteraction(((char*)this));
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x47,0,0x1000,0);
   mAngleYSpeed=0;
   mHorzSpeed=0;

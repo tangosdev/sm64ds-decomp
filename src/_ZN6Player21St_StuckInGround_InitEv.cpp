@@ -5,8 +5,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern int func_ov002_020c9e40(void*);
-extern int func_ov002_020dab14(void*);
+extern int Player_DisableInteraction(void*);
+extern int Player_ReleaseHeldActor(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int,void*);
 extern int func_ov002_020c5444(void*);
@@ -14,8 +14,8 @@ extern int func_ov002_020c5444(void*);
 
 int Player::St_StuckInGround_Init()
 {
-  func_ov002_020c9e40(((void*)this));
-  func_ov002_020dab14(((void*)this));
+  Player_DisableInteraction(((void*)this));
+  Player_ReleaseHeldActor(((void*)this));
   unsigned char idx = *(unsigned char*)((char*)&mStateStep);
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), data_ov002_0210a560[idx], 0x40000000, 0x1000, 0);
   _ZN5Sound9PlayBank0EjRK7Vector3(*(int*)((char*)&mGroundSoundType)+0x80, (char*)((void*)this)+0x74);

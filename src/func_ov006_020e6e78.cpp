@@ -6,7 +6,7 @@
 /* recovered: renamed to Class_Method */
 /* dScMgJump2_c::OnKicked - recovered from vtable slot identity */
 extern "C" int func_ov004_020ae140(void* self);
-extern "C" void func_ov006_020c0134(int arg);
+extern "C" void Camera_UpdateMatrices(int arg);
 
 extern unsigned char data_0209f5f8;
 
@@ -21,7 +21,7 @@ extern "C" int dScMgJump2_c_OnKicked(char* self)
             *(unsigned short*)(self + 0x4664) = 0;
         int v = (int)(self + 0x466c + (*(unsigned short*)(self + 0x4664)) * 0xbc);
         data_ov006_02141a44 = v;
-        func_ov006_020c0134(v);
+        Camera_UpdateMatrices(v);
         if (*(unsigned short*)(self + 0x4664) == 1) {
             func_ov006_020e7508();
         } else {

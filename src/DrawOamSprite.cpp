@@ -12,7 +12,7 @@ struct Base {
 namespace OAM { void Render(bool a, OamAttr *b, int c, int d, int e, int f, Matrix2x2 *g); }
 extern "C" Base *data_ov004_020beb68;
 
-extern "C" void func_ov004_020afcf8(void *arg0, void *arg1, int arg2, void *arg3)
+extern "C" void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3)
 {
     Base *g = data_ov004_020beb68;
     if (g == 0) return;

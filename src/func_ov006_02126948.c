@@ -6,7 +6,7 @@
 struct V3 { int x, y; volatile int z; };
 
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern void func_ov006_020c0134(void *self);
+extern void Camera_UpdateMatrices(void *self);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
@@ -26,7 +26,7 @@ void func_ov006_02126948(char *c) {
         *(int *)(c + 0x4710) = 0;
         *(int *)(c + 0x4714) = t;
         *(short *)(c + 0x4718) = 0x200;
-        func_ov006_020c0134(c + 0x4660);
+        Camera_UpdateMatrices(c + 0x4660);
     } else {
         *(int *)(c + 0x4700) = 0;
         *(int *)(c + 0x4704) = -0x60000;
@@ -35,7 +35,7 @@ void func_ov006_02126948(char *c) {
         *(int *)(c + 0x4710) = 0;
         *(int *)(c + 0x4714) = t;
         *(short *)(c + 0x4718) = 0x200;
-        func_ov006_020c0134(c + 0x4660);
+        Camera_UpdateMatrices(c + 0x4660);
     }
     y = *(int *)(c + 0xab6c) - *(int *)(c + 0xab3c) + 0x110000;
     x = *(int *)(c + 0xab38) - 0x80000;

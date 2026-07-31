@@ -8,7 +8,7 @@
 
 extern void func_ov004_020b1e34(void *a, int b, int c, int d);
 extern int func_ov004_020ad674(void);
-extern void func_ov004_020afcf8(void *a, int b, int c, int d);
+extern void DrawOamSprite(void *a, int b, int c, int d);
 extern void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int g);
 
 typedef struct { int a; int b; } Pair;
@@ -100,7 +100,7 @@ tail:
             int idx = func_ov004_020ad674();
             void *e = data_ov006_0213ca9c[idx];
             void *f = *(void **)((char *)e + 0xc);
-            func_ov004_020afcf8(f, 0x80, 0x10, 0);
+            DrawOamSprite(f, 0x80, 0x10, 0);
             func_ov004_020b2220(0x80, 0x28, *(void **)(self + 0x4670), 1, -1, 0x800, 0);
         }
     }

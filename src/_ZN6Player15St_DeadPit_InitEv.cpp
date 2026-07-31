@@ -9,9 +9,9 @@ typedef unsigned char u8;
 extern u8 data_0209f2d8;
 extern u8 data_0209f250;
 
-int func_ov002_020dab14(char* c);
+int Player_ReleaseHeldActor(char* c);
 void func_ov002_020d5cec(char* c);
-void func_ov002_020c9e40(char* c);
+void Player_DisableInteraction(char* c);
 void HitDeathPlane(int arg);
 void FUN_020299f4(void);
 void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int a, int b, int f, unsigned int g);
@@ -20,7 +20,7 @@ void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, char*
 
 int Player::St_DeadPit_Init()
 {
-    func_ov002_020dab14(((char*)this));
+    Player_ReleaseHeldActor(((char*)this));
     if (*(char**)((char*)&mObjInMouth) != 0) {
         int b = (*(u16*)(*(char**)((char*)&mObjInMouth) + 0xc) == 0xbf);
         if (b) {
@@ -34,7 +34,7 @@ int Player::St_DeadPit_Init()
         *(int*)(((int)*(char**)((char*)&mObjInMouth) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x20000;
         *(char**)((char*)&mObjInMouth) = 0;
     }
-    func_ov002_020c9e40(((char*)this));
+    Player_DisableInteraction(((char*)this));
     {
         int t = 0;
         mIsBodyClsnEnabled = t;

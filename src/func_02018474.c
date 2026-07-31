@@ -4,7 +4,7 @@
  */
 struct V2 { int x, y; };
 
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 extern int func_02018dc4(int buf, struct V2 ab);
 extern void Crash(void);
 extern int func_020184e0(int *buf, unsigned int c, unsigned int d);
@@ -12,7 +12,7 @@ extern int func_020184e0(int *buf, unsigned int c, unsigned int d);
 int func_02018474(int a, int b, int c, int d, ...)
 {
     int buf[0x11];
-    func_0205d874(buf);
+    FS_InitFile(buf);
     if (func_02018dc4((int)buf, *(struct V2 *)&a) == 0) {
         Crash();
         return 0;

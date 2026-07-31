@@ -5,7 +5,7 @@
 extern int _ZN4cstd4fdivEii(int, int);
 extern short data_02082214[];
 extern void* data_ov006_02137630[];
-extern void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5);
+extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 
 void func_ov006_021104c0(char* self)
@@ -30,8 +30,8 @@ void func_ov006_021104c0(char* self)
             vec._01 = a;
             vec._10 = -a;
             vec._11 = b;
-            func_ov004_020b0104(data_ov006_02137630[idx], *(int*)(self + 8) >> 12, *(int*)(self + 0xc) >> 12, -1, 0, &vec);
-            func_ov004_020b0104(data_ov006_02137630[2], *(int*)(self + 8) >> 12, (*(int*)(self + 0xc) >> 12) + 5, -1, 2, &vec);
+            RenderOamBothScreens(data_ov006_02137630[idx], *(int*)(self + 8) >> 12, *(int*)(self + 0xc) >> 12, -1, 0, &vec);
+            RenderOamBothScreens(data_ov006_02137630[2], *(int*)(self + 8) >> 12, (*(int*)(self + 0xc) >> 12) + 5, -1, 2, &vec);
         } else {
             if (*(unsigned char*)(self + 0x31) != 0) {
                 func_ov004_020afdd0(data_ov006_02137630[0], *(int*)(self + 8) >> 12, *(int*)(self + 0xc) >> 12, -1, 0);

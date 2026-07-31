@@ -17,7 +17,7 @@ extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 extern void func_0205c788(Node *self, int arg);
 extern void OS_WakeupThread(u16 *self);
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 
 void *func_0205d044(void *pool)
 {
@@ -84,7 +84,7 @@ void *func_0205d044(void *pool)
             *p &= ~0x10;
             if (*(u32 *)(c + 0x4c) & 0x400) {
                 int buf[0x11];
-                func_0205d874(buf);
+                FS_InitFile(buf);
                 buf[2] = (int)c;
                 {
                     Callback cb = *(Callback *)(c + 0x48);

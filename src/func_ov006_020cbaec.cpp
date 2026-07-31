@@ -26,7 +26,7 @@ int _ZN4cstd4fdivEii(int a, int b);
 void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, const void *f, void *g);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thisPtr, void *file, int i, int fix, unsigned int flags);
-void func_ov006_020e6df0(int a0, int a1, int a2);
+void Sound_PlayBank1Panned(int a0, int a1, int a2);
 int func_ov006_020e6e3c(int a, int b);
 void func_ov006_020cb838(char *c);
 }
@@ -107,7 +107,7 @@ extern "C" void func_ov006_020cbaec(char *c)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void *)(c + 0x6c), data_ov006_0214059c, 0x40000000, 0x800, 0);
 
     *(int *)(c + 0xc4) = 0;
-    func_ov006_020e6df0(0, 4, *(int *)(c + 0x1c));
+    Sound_PlayBank1Panned(0, 4, *(int *)(c + 0x1c));
 
     func_ov006_020e6e3c(0x1b5, *(int *)(c + 0x1c));
 

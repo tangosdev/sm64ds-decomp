@@ -3,7 +3,7 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3j();
 extern int _ZNK12WithMeshClsn10IsOnGroundEv();
 extern int func_ov073_0211f2c0();
 extern int func_02012694();
-extern int func_ov073_0212157c();
+extern int ChiefChilly_ChangeState();
 extern int data_ov073_021233b0[];
 
 int func_ov073_02120844(int *t)
@@ -14,7 +14,7 @@ int func_ov073_02120844(int *t)
         func_ov073_0211f2c0(t, 0x7d0000);
         func_02012694(0x16c, (char*)t + 0x74);
         t[0x26] = 0;
-        func_ov073_0212157c(t, data_ov073_021233b0);
+        ChiefChilly_ChangeState(t, data_ov073_021233b0);
     }
     return 1;
 }

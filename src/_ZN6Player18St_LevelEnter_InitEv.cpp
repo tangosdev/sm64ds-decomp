@@ -24,7 +24,7 @@ int _ZN8SaveData16HasPlayerLostCapEv(void);
 void _ZN6Player7SetAnimEji5Fix12IiEj(void* self, u32 anim, int a, int fix, u32 b);
 int _ZNK6Player14GetBodyModelIDEjb(void* self, u32 a, int b);
 void _ZN9Animation8SetFlagsEi(void* self, int flags);
-void func_ov002_020c9e40(char* self);
+void Player_DisableInteraction(char* self);
 void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, Vector3* pos, void* actor);
 int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
@@ -62,7 +62,7 @@ int Player::St_LevelEnter_Init()
     }
 
     unk_719 = -1;
-    func_ov002_020c9e40(((char*)this));
+    Player_DisableInteraction(((char*)this));
     mJumpComboStage = 0;
     mHorzSpeed = 0;
     mStateArg = 0;

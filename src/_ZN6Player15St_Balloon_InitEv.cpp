@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern int func_ov002_020dab14(void*);
+extern int Player_ReleaseHeldActor(void*);
 extern int data_0209f318[];
 extern int data_ov002_0210e750[];
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
@@ -13,7 +13,7 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,void*,int,int,unsig
 
 int Player::St_Balloon_Init()
 {
-  func_ov002_020dab14(((char*)this));
+  Player_ReleaseHeldActor(((char*)this));
   mIsInAirState=1;
   mIsFallScreaming=0;
   if(mVertSpeed >= 0x10000) mVertSpeed=0x10000;

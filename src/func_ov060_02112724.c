@@ -6,7 +6,7 @@ typedef struct Vector3 {
 
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern void func_ov060_02111cc0(char *c, int idx, int a);
-extern int func_ov060_02115a30(char *o);
+extern int Bowser_IsAnimAtLastFrame(char *o);
 extern short data_02082214[];
 
 void func_ov060_02112724(char *c)
@@ -29,7 +29,7 @@ void func_ov060_02112724(char *c)
         (*(unsigned char *)(c + 0x425))++;
         break;
     case 1:
-        if (func_ov060_02115a30(c)) {
+        if (Bowser_IsAnimAtLastFrame(c)) {
             func_ov060_02111cc0(c, 9, 0);
             (*(unsigned char *)(c + 0x425))++;
         }

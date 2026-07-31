@@ -1,4 +1,4 @@
-extern void func_ov071_021202ec(void* t, int n);
+extern void Scuttlebug_SetState(void* t, int n);
 extern void _ZN12CylinderClsn5ClearEv(void* clsn);
 
 int func_ov071_0211fa54(void* thiz)
@@ -15,7 +15,7 @@ int func_ov071_0211fa54(void* thiz)
         int v = *(int*)(c + 0xb0);
         int b1 = (int)((v & 0x80000) != 0);
         if (b1 != 0) {
-            func_ov071_021202ec(c, 7);
+            Scuttlebug_SetState(c, 7);
             goto done;
         }
         {
@@ -27,7 +27,7 @@ int func_ov071_0211fa54(void* thiz)
             if (b3 != 0) goto done;
         }
         *(int*)(c + 0xd0) = 0;
-        func_ov071_021202ec(c, 2);
+        Scuttlebug_SetState(c, 2);
     }
 done:
     _ZN12CylinderClsn5ClearEv(c + 0x160);

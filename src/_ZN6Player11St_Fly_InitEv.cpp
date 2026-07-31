@@ -4,7 +4,7 @@
 #include "Player.h"
 extern "C" {
 extern int data_0209f318[];
-extern void func_ov002_020dab14(char*);
+extern void Player_ReleaseHeldActor(char*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern void func_0200d6f0(void*,unsigned char);
 }
@@ -16,7 +16,7 @@ int Player::St_Fly_Init()
   unk_092=0;
   unk_096=0;
   mTargetAngleY=mAngleY;
-  func_ov002_020dab14(((char*)this));
+  Player_ReleaseHeldActor(((char*)this));
   if(mStateStep==0){
     mVertSpeed=0x5d000;
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x4a,0x40000000,0x1000,0);

@@ -1,4 +1,4 @@
-extern void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5);
+extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern unsigned short data_ov006_0212e314[];
 extern void* data_ov006_0213bf0c[];
 
@@ -36,7 +36,7 @@ void func_ov006_020dd594(Self* self) {
             a2 = v4 >> 12;
             a4 = (flag >= 3) ? 1 : 0;
             idx = data_ov006_0212e314[self->e[i].b18];
-            func_ov004_020b0104(data_ov006_0213bf0c[idx], a1, a2, -1, a4, 0);
+            RenderOamBothScreens(data_ov006_0213bf0c[idx], a1, a2, -1, a4, 0);
         }
     }
 }

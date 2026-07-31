@@ -20,7 +20,7 @@ extern "C" {
     void func_ov060_02115a84(char* c, char* arg);
     int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
     int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
-    int func_ov060_02115a30(char* c);
+    int Bowser_IsAnimAtLastFrame(char* c);
     int func_ov060_02113d20(char* c);
 }
 
@@ -72,7 +72,7 @@ extern "C" void func_ov060_02113b5c(char* c)
             }
         }
     } else {
-        if (func_ov060_02115a30(c) != 0) {
+        if (Bowser_IsAnimAtLastFrame(c) != 0) {
             *(s32*)(c + 0x40c) = 0;
         }
     }

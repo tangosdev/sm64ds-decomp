@@ -1,9 +1,9 @@
-// @symbol func_ov006_020c0134
+// @symbol Camera_UpdateMatrices
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-/* func_ov006_020c0134 at 0x020c0134
+/* Camera_UpdateMatrices at 0x020c0134
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
@@ -32,7 +32,7 @@ extern int _ZN7Clipper13Func_020156DCEv(void *,int,int,int,int);
 extern short data_02082214[];
 extern char data_0209f43c[];
 
-void func_ov006_020c0134(struct Camera *self)
+void Camera_UpdateMatrices(struct Camera *self)
 {
     struct Vector3 up;
     struct Vector3 v1c;

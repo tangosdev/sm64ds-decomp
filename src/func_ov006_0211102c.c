@@ -4,7 +4,7 @@
  */
 extern short data_02082214[];
 extern void* data_ov006_02138a08[];
-extern void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5);
+extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
 
 void func_ov006_0211102c(char* self)
 {
@@ -18,6 +18,6 @@ void func_ov006_0211102c(char* self)
     vec[1] = a;
     vec[2] = -a;
 
-    func_ov004_020b0104(data_ov006_02138a08[0], *(int*)(self + 8) >> 12, *(int*)(self + 0xc) >> 12, -1, 1, vec);
-    func_ov004_020b0104(data_ov006_02138a08[1], *(int*)(self + 8) >> 12, (*(int*)(self + 0xc) >> 12) + 5, -1, 2, vec);
+    RenderOamBothScreens(data_ov006_02138a08[0], *(int*)(self + 8) >> 12, *(int*)(self + 0xc) >> 12, -1, 1, vec);
+    RenderOamBothScreens(data_ov006_02138a08[1], *(int*)(self + 8) >> 12, (*(int*)(self + 0xc) >> 12) + 5, -1, 2, vec);
 }

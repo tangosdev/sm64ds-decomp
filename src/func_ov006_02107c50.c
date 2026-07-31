@@ -4,7 +4,7 @@
  */
 extern int func_ov004_020ad674(void);
 extern void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5);
+extern void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5);
 extern void func_ov004_020b2444(int a, int b, int c, int d, int e, int f, int g);
 
 extern void* data_ov006_0213e320[];
@@ -21,7 +21,7 @@ void func_ov006_02107c50(short* a0, int a1)
 
     {
         int b = a1 + 0x10;
-        func_ov004_020b0104(data_ov006_02138c3c, 0x20, b, -1, 1, (void*)0);
+        RenderOamBothScreens(data_ov006_02138c3c, 0x20, b, -1, 1, (void*)0);
         func_ov004_020b2444(0x2e, b, *(short*)((char*)a0 + 0x16), 0, -1, 1, 0);
     }
 }

@@ -10,7 +10,7 @@ typedef signed char s8;
 extern void func_02012694(int a, void *b);
 extern void func_ov060_02111cc0(char *c, int idx, int m);
 extern void func_ov060_02115a84(char *c, char *arg);
-extern int func_ov060_02115a30(char *c);
+extern int Bowser_IsAnimAtLastFrame(char *c);
 
 void func_ov060_021146d0(char *c) {
     if (*(u16*)(c + 0x300 + 0xfc) == 0) {
@@ -53,7 +53,7 @@ void func_ov060_021146d0(char *c) {
             return;
         }
         if (st != 2) return;
-        if (func_ov060_02115a30(c) != 0) {
+        if (Bowser_IsAnimAtLastFrame(c) != 0) {
             if (*(s8*)(c + 0x400 + 0x1e) == 1) *(int*)(c + 0x40c) = 3;
             else *(int*)(c + 0x40c) = 0;
         }

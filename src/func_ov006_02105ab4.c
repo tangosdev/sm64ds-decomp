@@ -1,5 +1,5 @@
 extern void func_ov004_020af868(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern void func_ov004_020afcf8(void *a0, int a1, int a2, int a3);
+extern void DrawOamSprite(void *a0, int a1, int a2, int a3);
 extern void *data_ov006_021427d4[];
 extern unsigned char data_ov006_0213dd34[];
 
@@ -64,12 +64,12 @@ void func_ov006_02105ab4(Obj *o)
             {
                 int p = o->parr[i];
                 int q = o->q;
-                func_ov004_020afcf8(data_ov006_021427d4[p * 3 + q], x, y, z2);
+                DrawOamSprite(data_ov006_021427d4[p * 3 + q], x, y, z2);
             }
             else
             {
                 int p = o->parr[i];
-                func_ov004_020afcf8(data_ov006_021427d4[p * 3], x, y, z3);
+                DrawOamSprite(data_ov006_021427d4[p * 3], x, y, z3);
             }
         }
     }

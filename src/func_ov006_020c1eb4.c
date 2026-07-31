@@ -4,7 +4,7 @@
 /* func_ov006_020c1eb4 at 0x020c1eb4
  *
  * Camera preset init: sets eye/target vectors and angle, then
- * tail-calls func_ov006_020c0134. Sibling of func_ov006_020c225c.
+ * tail-calls Camera_UpdateMatrices. Sibling of func_ov006_020c225c.
  */
 
 struct Matrix4x3_local { int data[12]; };
@@ -19,7 +19,7 @@ struct Camera {
     short angle;               /* 0xb8 */
 };
 
-extern void func_ov006_020c0134(struct Camera *self);
+extern void Camera_UpdateMatrices(struct Camera *self);
 
 void func_ov006_020c1eb4(struct Camera *self)
 {
@@ -30,5 +30,5 @@ void func_ov006_020c1eb4(struct Camera *self)
     self->target.y = 0xf000;
     self->target.z = 0x32000;
     self->angle = 0xb00;
-    func_ov006_020c0134(self);
+    Camera_UpdateMatrices(self);
 }

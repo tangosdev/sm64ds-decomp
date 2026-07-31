@@ -9,7 +9,7 @@ extern "C" void Player_IncMegaKillCount(void *p);
 extern "C" int Actor_JumpedOnByPlayer(void *self, void *clsn, void *player);
 extern "C" void Player_Bounce(void *p, int fix);
 extern "C" int Player_Hurt(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
-extern "C" int func_ov071_021202ec(void *c, int i);
+extern "C" int Scuttlebug_SetState(void *c, int i);
 
 extern "C" void func_ov071_0211f29c(void *thiz)
 {
@@ -38,7 +38,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
 
     b = (int)((*(int *)(c + 0xb0) & 0x20000) != 0);
     if (b != 0) {
-        func_ov071_021202ec(c, 6);
+        Scuttlebug_SetState(c, 6);
         return;
     }
 
@@ -54,7 +54,7 @@ extern "C" void func_ov071_0211f29c(void *thiz)
         *(short *)(c + 0x94) = Vec3_HorzAngle(r4 + 0x5c, c + 0x5c);
         *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x94) + 0x8000);
         Player_IncMegaKillCount(r4);
-        func_ov071_021202ec(c, 8);
+        Scuttlebug_SetState(c, 8);
         return;
     }
 
@@ -73,6 +73,6 @@ extern "C" void func_ov071_0211f29c(void *thiz)
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
         if (Player_Hurt(r4, v, 1, 0xc000, 1, 0, 1) != 0)
-            func_ov071_021202ec(c, 4);
+            Scuttlebug_SetState(c, 4);
     }
 }

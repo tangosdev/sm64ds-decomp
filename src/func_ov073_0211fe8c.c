@@ -14,7 +14,7 @@ extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
-extern int func_ov073_0212157c(void* c, void* p);
+extern int ChiefChilly_ChangeState(void* c, void* p);
 
 extern void* data_0209f318;
 extern int data_020a0e68[];
@@ -65,7 +65,7 @@ int func_ov073_0211fe8c(char* c) {
     _ZN6Camera6SetPosERK7Vector3(cam, &pos);
 
     if (*(unsigned short*)(c + 0x100) == 0) {
-        func_ov073_0212157c(c, &data_ov073_021233e0);
+        ChiefChilly_ChangeState(c, &data_ov073_021233e0);
     }
     return 1;
 }

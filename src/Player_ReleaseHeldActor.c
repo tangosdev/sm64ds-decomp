@@ -1,6 +1,6 @@
 extern void func_ov002_020db54c(char* p, int a, int b, int d);
 
-int func_ov002_020dab14(char* c)
+int Player_ReleaseHeldActor(char* c)
 {
     char* p = *(char**)(c + 0x358);
     int ok = (int)(p != 0);

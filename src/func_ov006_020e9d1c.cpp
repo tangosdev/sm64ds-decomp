@@ -7,7 +7,7 @@
 // @emits dScMg3DEsp_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMg3DEsp_c::Render - recovered from vtable slot identity */
-extern "C" void func_ov006_020c0134(char *c);
+extern "C" void Camera_UpdateMatrices(char *c);
 
 struct ModelComponents;
 struct TextureTransformer { void Update(ModelComponents &m); };
@@ -28,7 +28,7 @@ extern "C" int dScMg3DEsp_c_Render(char *c)
     self->unk_4710 = 0xe0000;
     self->unk_4714 = 0x40000;
     self->unk_4718 = 0xc00;
-    func_ov006_020c0134(c + 0x4660);
+    Camera_UpdateMatrices(c + 0x4660);
     ((TextureTransformer *)(c + 0x51f4))->Update(*(ModelComponents *)(c + 0x4f40));
     ((Obj *)(c + 0x4f38))->vcall(0);
     func_ov006_020e7b44(c + 0x4fd8);

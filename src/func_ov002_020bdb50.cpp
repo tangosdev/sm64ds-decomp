@@ -1,12 +1,12 @@
 //cpp
 extern "C" {
 extern void func_ov002_020bdc18(char* c);
-extern void func_ov002_020dab14(char* c);
+extern void Player_ReleaseHeldActor(char* c);
 extern void func_ov002_020d71a0(char* p);
 extern void func_ov002_020d5cec(void);
 void func_ov002_020bdb50(char* c, int arg) {
     func_ov002_020bdc18(c);
-    func_ov002_020dab14(c);
+    Player_ReleaseHeldActor(c);
     if (arg != 0) return;
     if (*(int*)(c+0x360) == 0) return;
     func_ov002_020d71a0(c);

@@ -24,7 +24,7 @@ extern int func_ov060_021145d4(void *c);
 extern void func_ov060_02115b0c(void *c);
 extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
 extern void func_ov060_02115018(void *c);
-extern int func_ov060_02115a30(void *c);
+extern int Bowser_IsAnimAtLastFrame(void *c);
 
 void func_ov060_02113740(char *c)
 {
@@ -127,7 +127,7 @@ void func_ov060_02113740(char *c)
         return;
     }
     case 3:
-        if (func_ov060_02115a30(c) != 0) {
+        if (Bowser_IsAnimAtLastFrame(c) != 0) {
             *(int*)(c + 0x40c) = 0;
             *(int*)(((int)c + 0x418) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10000;
             *(int*)(c + 0x9c) = -0x2000;

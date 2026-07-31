@@ -44,7 +44,7 @@ extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
 extern void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* pos, void* cb);
 extern int func_ov002_020d7030(char* self, void* other);
-extern void func_ov002_020c9e40(char* self);
+extern void Player_DisableInteraction(char* self);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const struct Vector3* pos);
 extern void func_ov002_020db8d8(char* self);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
@@ -126,7 +126,7 @@ int func_ov002_020d6998(char* self)
             int r;
             if (func_ov002_020d7030(self, other) == 0) goto react;
             r = ((VObj*)other)->V18();
-            if (r == 4) func_ov002_020c9e40(self);
+            if (r == 4) Player_DisableInteraction(self);
             return 1;
         }
     }

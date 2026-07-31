@@ -1,6 +1,6 @@
 //cpp
 extern "C" int func_02012694(int a, int* b);
-extern "C" int func_ov060_02115a30(void* o);
+extern "C" int Bowser_IsAnimAtLastFrame(void* o);
 extern "C" void func_ov060_02111cc0(void* o, int a, int b);
 extern "C" int _ZNK9Animation12WillHitFrameEi(void* self, int frame);
 
@@ -16,7 +16,7 @@ extern "C" void func_ov060_02114e9c(char* c)
             func_02012694(0xb5, (int*)(c + 0x74));
         }
     }
-    if (func_ov060_02115a30(c) == 0) return;
+    if (Bowser_IsAnimAtLastFrame(c) == 0) return;
     if (*(int*)(c + 0x134) == data_ov060_0211ac20[1]) {
         func_ov060_02111cc0(c, 6, 0x40000000);
         return;

@@ -1,7 +1,7 @@
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-extern void func_0205d874(int* s);
+extern void FS_InitFile(int* s);
 extern void func_0205c4e4(void* self, int value);
 extern int func_0205c5e4(void* self, int x);
 extern void func_0205a61c(const void* src, void* dst, unsigned int size);
@@ -21,7 +21,7 @@ int func_0205bc88(char* c)
 
     g0 = *(char**)(c + 8);
     m = c + 0x2c;
-    func_0205d874((int*)it);
+    FS_InitFile((int*)it);
     *(char**)(it + 8) = *(char**)(c + 8);
 
     b = (*(int*)(c + 0xc) & 0x20) ? 1 : 0;

@@ -7,7 +7,7 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
-extern void func_ov071_021202ec(void*, int);
+extern void Scuttlebug_SetState(void*, int);
 extern void func_ov071_0211f29c(void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
@@ -37,7 +37,7 @@ int func_ov071_02120028(char *c)
         *(int*)(c + 0x394) = *(int*)(c + 0x60);
         *(int*)(c + 0x398) = *(int*)(c + 0x64);
         *(int*)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x10000001;
-        func_ov071_021202ec(c, 2);
+        Scuttlebug_SetState(c, 2);
     }
     func_ov071_0211f29c(c);
     _ZN12CylinderClsn5ClearEv(c + 0x160);

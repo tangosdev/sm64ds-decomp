@@ -9,7 +9,7 @@ void func_ov006_020c94e0(char *c);
 void func_ov006_020bfec0(void *a0, void *a1, short *a2);
 int _Z14ApproachLinearRiii(int *v, int step, int rate);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thisPtr, void *file, int i, int fix, unsigned int flags);
-void func_ov006_020e6df0(int a0, int a1, int a2);
+void Sound_PlayBank1Panned(int a0, int a1, int a2);
 int _Z14ApproachLinearRsss(short *v, short step, short rate);
 void func_ov006_020c9fe4(char *c);
 }
@@ -73,7 +73,7 @@ L70:
             *(void **)data_ov006_0213b22c[*(int *)(c + 0x60)], 0x40000000, 0x800, 0);
 
         *(int *)(c + 0xd0) = 0;
-        func_ov006_020e6df0(0, *(int *)(c + 0x60), *(int *)(c + 0x24));
+        Sound_PlayBank1Panned(0, *(int *)(c + 0x60), *(int *)(c + 0x24));
 
         {
             long long ll = *(long long *)&data_ov006_0213b14c;

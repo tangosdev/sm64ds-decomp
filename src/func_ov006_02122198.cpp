@@ -15,7 +15,7 @@ typedef int s32;
 extern "C" {
 
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
-extern void func_ov006_020c0134(void *cam);
+extern void Camera_UpdateMatrices(void *cam);
 
 extern u8 data_0209d45c;
 
@@ -64,7 +64,7 @@ extern "C" int dScMgTrampoline_c_InitResources(char *base)
     self->unk_471c = 0;
     self->unk_4720 = fov;
     self->unk_4724 = 0x400;
-    func_ov006_020c0134(base + 0x466c);
+    Camera_UpdateMatrices(base + 0x466c);
     self->unk_47c8 = 0;
     self->unk_47cc = 0x82000;
     self->unk_47d0 = 0;
@@ -72,7 +72,7 @@ extern "C" int dScMgTrampoline_c_InitResources(char *base)
     self->unk_47d8 = 0;
     self->unk_47dc = fov;
     self->unk_47e0 = 0x400;
-    func_ov006_020c0134(base + 0x4728);
+    Camera_UpdateMatrices(base + 0x4728);
     if (func_ov006_020cd658((unsigned char *)(base + 0x500c), 4) == 0)
         return 0;
     func_ov006_02120d8c(base + 0x5cd0, 5);

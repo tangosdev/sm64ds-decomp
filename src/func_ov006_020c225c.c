@@ -18,7 +18,7 @@ struct Camera {
     short angle;               /* 0xb8 */
 };
 
-extern void func_ov006_020c0134(struct Camera *self);
+extern void Camera_UpdateMatrices(struct Camera *self);
 
 void func_ov006_020c225c(struct Camera *self)
 {
@@ -29,5 +29,5 @@ void func_ov006_020c225c(struct Camera *self)
     self->target.y = 0;
     self->target.z = 0x2d000;
     self->angle = 0x800;
-    func_ov006_020c0134(self);
+    Camera_UpdateMatrices(self);
 }

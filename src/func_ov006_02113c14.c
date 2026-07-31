@@ -25,7 +25,7 @@ struct Obj {
 extern int func_ov006_021115c4(unsigned char *p);
 extern void func_ov006_0211470c(int *a, int *b);
 extern long long func_0203d5bc(int *p);
-extern void func_ov004_020b0104(void *a0, int a1, int a2, int a3, int a4, void *a5);
+extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern void *data_ov006_021382e0[];
 extern void *data_ov006_021382f8[];
 
@@ -63,7 +63,7 @@ void func_ov006_02113c14(struct Obj *c)
     }
 
     if ((c->mgr->flags & 0xff) == 0)
-        func_ov004_020b0104(data_ov006_021382e0[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
+        RenderOamBothScreens(data_ov006_021382e0[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
     else
-        func_ov004_020b0104(data_ov006_021382f8[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
+        RenderOamBothScreens(data_ov006_021382f8[1], (c->x + 0x800) >> 12, ((c->y + 0x800) >> 12) + 5, -1, 2, 0);
 }

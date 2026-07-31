@@ -1,7 +1,7 @@
 extern int func_ov060_0211469c(void *c);
 extern void func_02012694(int a, char *b, int cnt);
 extern int func_ov060_021145d4(void *c);
-extern int func_ov060_02115a30(void *c);
+extern int Bowser_IsAnimAtLastFrame(void *c);
 
 void func_ov060_02114300(char *c)
 {
@@ -24,6 +24,6 @@ void func_ov060_02114300(char *c)
             *p = *p + 1;
         }
     } else {
-        if (func_ov060_02115a30(c)) *(int*)(c + 0x40c) = 0;
+        if (Bowser_IsAnimAtLastFrame(c)) *(int*)(c + 0x40c) = 0;
     }
 }

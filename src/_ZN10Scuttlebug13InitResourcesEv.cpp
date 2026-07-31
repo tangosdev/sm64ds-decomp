@@ -12,7 +12,7 @@ struct WithMeshClsn { void Init(Actor *a, int b, int c, void *d, int e); void St
 extern "C" char data_ov071_02122f88;
 struct Blob48 { int w[12]; };
 extern "C" Blob48 data_02082128;
-extern "C" void func_ov071_021202ec(Actor *self, int type);
+extern "C" void Scuttlebug_SetState(Actor *self, int type);
 extern "C" int func_ov071_0211f524(char *c);
 
 int Scuttlebug::InitResources()
@@ -34,9 +34,9 @@ int Scuttlebug::InitResources()
     *(int*)(s + 0x394) = *(int*)(s + 0x60);
     *(int*)(s + 0x398) = *(int*)(s + 0x64);
     if (*(int*)(s + 8) != 0)
-        func_ov071_021202ec(((Actor *)this), 0);
+        Scuttlebug_SetState(((Actor *)this), 0);
     else
-        func_ov071_021202ec(((Actor *)this), 2);
+        Scuttlebug_SetState(((Actor *)this), 2);
     *(char*)(s + 0x3aa) = 3;
     *(int*)(s + 0x9c) = -0x2000;
     *(int*)(s + 0xa0) = -0x3c000;

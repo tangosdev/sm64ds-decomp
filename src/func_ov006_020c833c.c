@@ -17,7 +17,7 @@ extern void func_ov006_020c7c68(char *);
 extern int _ZNK9Animation12WillHitFrameEi(char *, int);
 extern void func_ov006_020e6e3c(int, int);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *, void *, int, int, unsigned int);
-extern void func_ov006_020e6df0(int, int, int);
+extern void Sound_PlayBank1Panned(int, int, int);
 extern void func_ov006_020c8270(char *);
 extern void func_ov006_020c7ba4(char *);
 extern void _Z11UpdateAngleRssis(char *, int, int, int);
@@ -43,7 +43,7 @@ void func_ov006_020c833c(char *c)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x4c,
                 *(void **)data_ov006_0213b098[*(int *)(c + 0x44)], 0x40000000, 0x800, 0);
             *(int *)(c + 0xa4) = 0;
-            func_ov006_020e6df0(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
+            Sound_PlayBank1Panned(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
         }
     } else if (*(int *)(c + 0x14) > 0x6c000 && *(int *)(c + 0x20) > 0) {
         *(int *)(c + 0x20) = -(int)((*(int *)(c + 0x20) * 0xd00LL + 0x800) >> 12);
@@ -52,7 +52,7 @@ void func_ov006_020c833c(char *c)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x4c,
                 *(void **)data_ov006_0213b098[*(int *)(c + 0x44)], 0x40000000, 0x800, 0);
             *(int *)(c + 0xa4) = 0;
-            func_ov006_020e6df0(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
+            Sound_PlayBank1Panned(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
         }
     } else {
         u16 t = *(u16 *)(c + 0x10);

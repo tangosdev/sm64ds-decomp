@@ -7,7 +7,7 @@ extern "C" {
 int _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
 void InitialiseVramGlobals(void);
 void func_ov004_020b04d0(int v);
-void func_ov006_020c0134(void* self);
+void Camera_UpdateMatrices(void* self);
 int func_020179b4(void* r0, void* r1, int r2);
 void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, void* bta, int a, int b, unsigned int d);
@@ -67,7 +67,7 @@ extern "C" int dScMg3DEsp_c_InitResources(void* arg0)
     *(int*)(c + 0x4000 + 0x710) = 0xe0000;
     *(int*)(c + 0x4000 + 0x714) = 0x40000;
     *(volatile unsigned short*)(c + 0x4700 + 0x18) = 0xc00;
-    func_ov006_020c0134((void*)(c + 0x4660));
+    Camera_UpdateMatrices((void*)(c + 0x4660));
 
     if (func_020179b4(&data_ov006_02141e9c, (void*)(c + 0x4f38), 1) == 0) return 0;
 

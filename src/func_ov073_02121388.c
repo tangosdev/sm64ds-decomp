@@ -12,7 +12,7 @@ extern void _Z14ApproachLinearRsss(short* p, short a, short b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void* p);
-extern int func_ov073_0212157c(void* c, void* p);
+extern int ChiefChilly_ChangeState(void* c, void* p);
 
 extern void* data_0209f318;
 extern void* data_ov073_02123350;
@@ -72,7 +72,7 @@ int func_ov073_02121388(char* c) {
 
         if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
             func_02012694(0x12a, c + 0x74);
-            func_ov073_0212157c(c, &data_ov073_02123350);
+            ChiefChilly_ChangeState(c, &data_ov073_02123350);
         }
     }
     return 1;

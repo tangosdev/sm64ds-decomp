@@ -18,12 +18,12 @@ typedef struct {
 } Args;
 
 extern int FS_ReadFile(int a, int b, int c);
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 extern int func_0205d23c(int *a, int b);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
 extern int func_0205a61c(void *a, void *b, int c);
 extern int func_0205d368(int *o, int r1, int sel);
-extern int func_0205d4cc(char *self);
+extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 
@@ -62,7 +62,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             if (ctx->f80 == 0) {
                 ctx->f80 = 0x1000000;
             }
-            func_0205d874(localbuf);
+            FS_InitFile(localbuf);
             node = func_0205d23c(&data_0209a080, 3);
             func_0205d5e8((char *)localbuf, node, 0, ctx->f80 + 0x88, -1);
             a = (Ctx *)localbuf;
@@ -95,7 +95,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
         func_0205d368((int *)a, base, 0);
 
         if (flag) {
-            func_0205d4cc((char *)localbuf);
+            FS_CloseFile((char *)localbuf);
             if (result) {
                 args.a = ctx->wr;
                 rgn = data_0209a07c;

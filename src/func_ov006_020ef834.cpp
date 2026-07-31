@@ -19,7 +19,7 @@ extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, int dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
-extern void func_ov006_020c0134(void *cam);
+extern void Camera_UpdateMatrices(void *cam);
 extern int func_ov006_020c4684(void *ptr, int n);
 extern int func_ov006_020c7574(void *base, int count);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
@@ -83,7 +83,7 @@ extern "C" int dScMgJump2_c_InitResources(char *base)
     self->unk_471c = 0;
     self->unk_4720 = fov;
     self->unk_4724 = 0x800;
-    func_ov006_020c0134(base + 0x466c);
+    Camera_UpdateMatrices(base + 0x466c);
 
     self->unk_47c8 = 0;
     self->unk_47cc = 0x82000;
@@ -92,7 +92,7 @@ extern "C" int dScMgJump2_c_InitResources(char *base)
     self->unk_47d8 = 0;
     self->unk_47dc = fov;
     self->unk_47e0 = 0x800;
-    func_ov006_020c0134(base + 0x4728);
+    Camera_UpdateMatrices(base + 0x4728);
 
     if (func_ov006_020c4684(base + 0x5234, 6) == 0)
         return 0;

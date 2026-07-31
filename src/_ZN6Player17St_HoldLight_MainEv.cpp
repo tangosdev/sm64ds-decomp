@@ -23,7 +23,7 @@ extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int func_ov002_020e0ccc(void* c, short* st);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);
 extern int func_ov002_020c5244(void* c);
-extern int func_ov002_020dab14(void* c);
+extern int Player_ReleaseHeldActor(void* c);
 extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
 extern int func_ov002_020bf224(void* c, int a, int b);
 extern void func_ov002_020d4d88(void* c, int a, int b);
@@ -82,7 +82,7 @@ int Player::St_HoldLight_Main()
     }
 
     if (mSinkDepth > 0x19000) {
-        func_ov002_020dab14(((char*)this));
+        Player_ReleaseHeldActor(((char*)this));
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         return 1;
     }
@@ -128,7 +128,7 @@ int Player::St_HoldLight_Main()
             return 1;
         }
         if (flags & 0x400) {
-            if (func_ov002_020dab14(((char*)this))) {
+            if (Player_ReleaseHeldActor(((char*)this))) {
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
             }
             return 1;

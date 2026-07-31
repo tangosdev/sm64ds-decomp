@@ -1,12 +1,12 @@
 //cpp
-// func_ov004_020b0104 at 0x020b0104
+// RenderOamBothScreens at 0x020b0104
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov004).
 extern "C" {
 extern char* data_ov004_020beb68;
 extern int data_ov004_020beb6c;
 int _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int, void*, int, int, int, int, void*);
 typedef int (*GetFn)(void*);
-void func_ov004_020b0104(void* a0, int a1, int a2, int a3, int a4, void* a5){
+void RenderOamBothScreens(void* a0, int a1, int a2, int a3, int a4, void* a5){
   char* g = data_ov004_020beb68;
   if(g == 0) return;
   if(*(int*)(g+0x4628) == 0){

@@ -9,7 +9,7 @@ struct WithMeshClsn { int IsOnGround() const; };
 
 extern "C" {
 void func_ov060_02111cc0(char *c, int idx, int fix);
-int func_ov060_02115a30(void *o);
+int Bowser_IsAnimAtLastFrame(void *o);
 void _Z14ApproachLinearRsss(short *dst, short target, short step);
 int _Z14ApproachLinearRiii(int *dst, int target, int step);
 unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -25,13 +25,13 @@ extern "C" void func_ov060_02113d8c(char *r4)
     case 0:
         func_ov060_02111cc0(r4, 0x18, 0x40000000);
         *(u16 *)(r4 + 0x3fe) = 0;
-        if (func_ov060_02115a30(r4) != 0)
+        if (Bowser_IsAnimAtLastFrame(r4) != 0)
             *(u8 *)(r4 + 0x423) = 1;
         break;
     case 1:
         func_ov060_02111cc0(r4, 0x19, 0);
         *(int *)(r4 + 0x98) = 0x2a000;
-        if (func_ov060_02115a30(r4) != 0) {
+        if (Bowser_IsAnimAtLastFrame(r4) != 0) {
             u16 *p = (u16 *)(((long long)(int)(r4 + 0x3fe)) & 0xFFFFFFFFFFFFFFFFLL);
             *p = *p + 1;
             if (*(u16 *)((r4 + 0x300) + 0xfe) > 0xa)
@@ -55,7 +55,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
         break;
     case 2:
         *(int *)(r4 + 0x98) = 0;
-        if (func_ov060_02115a30(r4) != 0) {
+        if (Bowser_IsAnimAtLastFrame(r4) != 0) {
             if (*(u8 *)(r4 + 0x414) == 2)
                 *(u16 *)(r4 + 0x3fc) = 0xa;
             else

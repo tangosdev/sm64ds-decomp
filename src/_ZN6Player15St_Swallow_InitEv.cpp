@@ -5,7 +5,7 @@
 extern "C" {
 struct State; extern State data_ov002_02110034;
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,State*);
-extern int func_ov002_020c9e40(void*);
+extern int Player_DisableInteraction(void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 }
 
@@ -15,7 +15,7 @@ int Player::St_Swallow_Init()
     void* o=*(void**)((char*)&mObjInMouth);
     int(*f)(void*)=*(int(**)(void*))(*(char**)o+0x48);
     if(f(o)==4){
-      func_ov002_020c9e40(((char*)this));
+      Player_DisableInteraction(((char*)this));
     }
     int eq = *(unsigned short*)(*(char**)((char*)&mObjInMouth)+0xc)==0xbf;
     if(eq!=0){

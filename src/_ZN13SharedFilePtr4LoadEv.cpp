@@ -21,7 +21,7 @@ unsigned int func_02018ac4(unsigned int *p);
 int _ZN6Memory8AllocateEj(unsigned int size);
 void DecompressLZ16(void *src, void *dst);
 void func_020185c0(void *buf, unsigned int x);
-void func_0205d4cc(void *a);
+void FS_CloseFile(void *a);
 int _ZN6Memory8AllocateEji(unsigned int size, int align);
 void func_0205a61c(void *a, void *b, unsigned int c);
 void func_02018770(void);
@@ -56,7 +56,7 @@ void *SharedFilePtr::Load()
             struct Obj obj;
             func_020185c0(&obj, fileID);
             size = obj.end - obj.cur;
-            func_0205d4cc(&obj);
+            FS_CloseFile(&obj);
             mem = _ZN6Memory8AllocateEji(size, 0x20);
             func_0205a61c((void *)p, (void *)mem, size);
         }
@@ -81,7 +81,7 @@ void *SharedFilePtr::Load()
     int r = func_02018d48(&obj2, (void *)raw, fsize);
     if (r != fsize)
         return 0;
-    func_0205d4cc(&obj2);
+    FS_CloseFile(&obj2);
     func_02018770();
     if (func_02018568(raw) != 0) {
         unsigned int t;

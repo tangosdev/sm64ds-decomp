@@ -3,7 +3,7 @@ typedef unsigned char u8;
 typedef int s32;
 
 extern void func_ov004_020af948(void* a, int b, int c, void* m);
-extern void func_ov004_020afcf8(void* a, int b, int c, void* m);
+extern void DrawOamSprite(void* a, int b, int c, void* m);
 extern void* data_ov006_02139c6c[];
 
 typedef struct {
@@ -31,7 +31,7 @@ void func_ov006_02129690(Obj* a)
             int bb = a->arr[i].a >> 12;
             int cc = (a->arr[i].b - a->fixed) >> 12;
             func_ov004_020af948(data_ov006_02139c6c[a->arr[i].f1f], bb, cc, 0);
-            func_ov004_020afcf8(data_ov006_02139c6c[a->arr[i].f20], bb, cc, 0);
+            DrawOamSprite(data_ov006_02139c6c[a->arr[i].f20], bb, cc, 0);
         }
     }
 }

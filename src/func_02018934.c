@@ -4,14 +4,14 @@
  */
 typedef unsigned int u32;
 
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 extern int func_02018d98(int *s, int a);
 extern void *_ZN4Heap9_AllocateEji(void *heap, u32 size, int align);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
 extern int func_02018d48(int *s, void *buf, int n);
 extern int func_0204ee40(void *a, void *b, void *c);
 extern void _ZN4Heap11_DeallocateEPv(void *heap, void *ptr);
-extern void func_0205d4cc(int *s);
+extern void FS_CloseFile(int *s);
 
 void *func_02018934(void *arg0, int arg1, void *heap)
 {
@@ -21,7 +21,7 @@ void *func_02018934(void *arg0, int arg1, void *heap)
     void *p60;
     int diff, aligned;
 
-    func_0205d874(buf);
+    FS_InitFile(buf);
     func_02018d98(buf, arg1);
     diff = buf[9] - buf[8];
     aligned = (diff + 0xf) & ~0xf;
@@ -34,6 +34,6 @@ void *func_02018934(void *arg0, int arg1, void *heap)
     } else {
         _ZN4Heap11_DeallocateEPv(heap, ptr);
     }
-    func_0205d4cc(buf);
+    FS_CloseFile(buf);
     return result;
 }

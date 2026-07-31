@@ -14,7 +14,7 @@ void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int _ZN4cstd4fdivEii(int a, int b);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void *thisPtr, void *file, int i, int fix, unsigned int flags);
-void func_ov006_020e6df0(int a0, int a1, int a2);
+void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void func_ov006_020cbd7c(char *c);
 }
 
@@ -88,7 +88,7 @@ extern "C" void func_ov006_020cbfd8(char *c)
         0x40000000, 0x800, 0);
 
     *(int *)(c + 0xc4) = 0;
-    func_ov006_020e6df0(
+    Sound_PlayBank1Panned(
         0, *(int *)(c + 0x58), *(int *)(c + 0x1c));
 
     {

@@ -29,7 +29,7 @@ extern int data_020a0db0;
 extern void func_ov004_020b1bc8(char *, int, int, int);
 extern void func_ov004_020af68c(int, int, int, int, int);
 extern void func_ov004_020b2220(int, int, int, int, int, int, int);
-extern void func_ov006_020c0134(char *);
+extern void Camera_UpdateMatrices(char *);
 extern void func_ov006_020c0aa8(char *);
 extern void func_ov006_020c1804(char *);
 
@@ -97,7 +97,7 @@ int dScMgRoulette_c_Render(char *c)
                 self->unk_4708 = f2;
             }
             self->unk_4718 = hval;
-            func_ov006_020c0134(c + 0x4660);
+            Camera_UpdateMatrices(c + 0x4660);
         } else {
             func_ov006_020c0aa8(c + 0x4660);
         }

@@ -1,6 +1,6 @@
 typedef unsigned short u16;
 
-void func_0205d874(int *s)
+void FS_InitFile(int *s)
 {
     s[0] = 0;
     s[1] = s[0];

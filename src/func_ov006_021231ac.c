@@ -8,7 +8,7 @@ typedef unsigned short u16;
 
 extern void func_0203cd80(int* m, short angle);
 extern int func_ov004_020ad674(void);
-extern void func_ov004_020afcf8(void* a0, void* a1, int a2, void* a3);
+extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);
 extern void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
 
 
@@ -42,7 +42,7 @@ int dScMgTrampoline2_c_Render(char* self)
         for (i = 0; i < 3; i++) {
             if (i >= count) {
                 int idx = func_ov004_020ad674();
-                func_ov004_020afcf8((void*)data_ov006_0213fc48[idx][1], (void*)a1v, 0xc, (void*)0);
+                DrawOamSprite((void*)data_ov006_0213fc48[idx][1], (void*)a1v, 0xc, (void*)0);
             } else {
                 func_ov004_020afa20(data_ov006_02134ecc, a1v, 0xc, -1, -1);
             }

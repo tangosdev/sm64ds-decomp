@@ -8,7 +8,7 @@ extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 extern void _Z14ApproachLinearRsss(short *, short, short);
 extern int func_ov073_0211f61c(void *c);
-extern int func_ov073_0212157c(void *c, void *p);
+extern int ChiefChilly_ChangeState(void *c, void *p);
 
 extern int data_020a0e68[];
 extern short data_02082214[];
@@ -28,7 +28,7 @@ int func_ov073_02120910(char *c)
 
     if (*(unsigned short *)(c + 0x100) == 0) {
         *(c + 0x4cb) = 1;
-        func_ov073_0212157c(c, data_ov073_02123340);
+        ChiefChilly_ChangeState(c, data_ov073_02123340);
         *(c + 0x4ca) = 1;
         *(short *)(c + 0x94) = *(short *)(c + 0x8e);
         return 1;
@@ -56,7 +56,7 @@ int func_ov073_02120910(char *c)
         ((s64)*(int *)(c + 0x4d0) * data_02082214[((unsigned short)(short)*(int *)(c + 0x4b4) >> 4) * 2] + 0x800) >> 12,
         0x400);
     if (func_ov073_0211f61c(c)) {
-        func_ov073_0212157c(c, data_ov073_021233f0);
+        ChiefChilly_ChangeState(c, data_ov073_021233f0);
     }
     return 1;
 }
