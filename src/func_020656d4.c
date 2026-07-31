@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 extern void CpuCopy8(const void *src, void *dst, u32 size);  /* memcpy-like */
 extern int func_02065af0(void *pkt);
 

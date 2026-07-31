@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_0205a588(void *dst, int val, int len);
 extern u8 *func_02065d5c(void *src, void *dst);
 extern void CpuCopy8(void *dst, void *src, int len);

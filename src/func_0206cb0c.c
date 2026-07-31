@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern int func_0206cf7c(int arg0);
 
 #pragma optimize_for_size on

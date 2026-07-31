@@ -1,15 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020afa98
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
-
-
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vector3 *v);
 extern int func_ov002_020af248(char *c, int n);
 

@@ -1,10 +1,5 @@
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed char s8;
-
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 prev);
 

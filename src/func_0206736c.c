@@ -1,8 +1,8 @@
+#include "types.h"
 /* func_0206736c at 0x0206736c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned int u32;
 extern u32 data_0208685c[];
 extern int func_02067480(u32 idx, u32 addr, u32 size);
 

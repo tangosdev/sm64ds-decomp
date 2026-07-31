@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_02071910 at 0x02071910, size 0x64
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned short u16;
-
 #pragma opt_strength_reduction off
 void* func_02071910(char* self)
 {

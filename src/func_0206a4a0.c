@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_0206a3a4(int arg0, int *out);
 extern void func_0206a458(int *out);
 extern void func_0206a424(int *out);

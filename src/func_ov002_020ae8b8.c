@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 enum { false, true };
 
 extern u16 data_ov002_020ff01c[];

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *aux);
 extern void CpuCopy8(void *dst, void *src, u32 size);
 extern int data_0208685c[];

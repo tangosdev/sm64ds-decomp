@@ -1,13 +1,10 @@
+#include "types.h"
 /* func_020690b0 @ 0x020690b0 (arm9, size 0x868)   [mwccarm 1.2/sp2p3, 2004/b56]
  * Wireless (WM) message-dispatch state machine. data_020a9db4 is the work-buffer
  * base; g+0x1f00 is a 16-entry table of 0x180-byte records, each holding a
  * WMBssDesc copy at +0xc0 (so +0xca/+0xcc/+0xce are the BSSID halfwords, +0xf6
  * gameInfoLength and +0xf8 the 0x80-byte gameInfo).
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern char *data_020a9db4;
 extern char *data_020a9db8;
 extern u16 data_020a9db0;

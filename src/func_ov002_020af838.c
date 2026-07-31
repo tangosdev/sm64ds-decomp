@@ -1,10 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020af838
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int Fix12i;
-
-
 struct Vector3_16;
 
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, struct Vector3* v, struct Vector3_16* rot, int e, int f);

@@ -1,6 +1,4 @@
-
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 extern int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(int state);
 extern void MultiStore_Int(int val, int *dst, int len);

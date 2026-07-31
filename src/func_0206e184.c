@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int func_0206e218(void *buf, int code);
 extern void cstd_strncpy(char *d, const char *s, u32 n);
 

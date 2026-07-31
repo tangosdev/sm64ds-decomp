@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int func_02071698(void *thiz, int val);
 extern void func_02071644(void *thiz, int val);
 

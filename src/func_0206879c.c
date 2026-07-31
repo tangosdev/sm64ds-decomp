@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern char *data_020a9db4;
 
 struct Pair { s16 a; s16 b; };

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern u32 _ZN3IRQ11SetIRQStateEb_false(void); /* 0x0206da18 */
 extern u32 _ZN3IRQ11SetFIQStateEb_false(void); /* 0x0206d9cc */
 extern u32 _ZN4CP1517MPUGetDataRegion7Ev(void); /* 0x0206daa4 */

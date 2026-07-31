@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 void func_ov001_020ab5b0(char* r0, int r1, short r2, short r3, short s4, short s5){
   *(int*)(r0+0x14) = r1;
   *(u16*)(r0+4) = r2;

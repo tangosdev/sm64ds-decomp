@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void CpuCopy8(void *src, int dest, int size);
 
 int func_02064c2c(int dest, u16 a, u8 b, int c, int d, void *p, int n)

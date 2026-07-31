@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 char *func_020706b0(char *dst, const char *src) {
     u8 *s = (u8*)src;
     u8 *d = (u8*)dst;

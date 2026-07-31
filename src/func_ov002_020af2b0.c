@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov002_020af2b0
 // @emits OneUpMushroom_OnTurnIntoEgg
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
@@ -8,9 +9,6 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-typedef unsigned int u32;
-typedef int Fix12i;
-
 struct Vec { Fix12i x, y, z; };
 struct Vector3_16;
 

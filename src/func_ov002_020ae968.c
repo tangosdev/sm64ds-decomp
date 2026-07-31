@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 enum { false, true };
 
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* v);

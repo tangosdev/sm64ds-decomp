@@ -1,14 +1,10 @@
+#include "types.h"
 // @symbol func_ov002_020afd10
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int Fix12i;
-
-
-
 extern int func_ov002_020af218(char* c, int n);
 extern int func_ov002_020af248(char* c, int n);
 
