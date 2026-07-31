@@ -2785,7 +2785,7 @@ the permuter, not to a construct hunt.
 
 ### 6as addendum: the recognised-pragma vocabulary, and three corrections it produced
 
-`reference/mwccarm-pragmas.txt` now holds the **246 pragma names mwccarm actually parses**,
+`notes/mwccarm-pragmas.txt` now holds the **246 pragma names mwccarm actually parses**,
 derived by pulling every lowercase identifier out of `mwccarm.exe` and screening each one
 INDIVIDUALLY with `-w illpragmas`. Individual screening matters: `#pragma warning off`
 suppresses the diagnostic for every line after it, so a batched scan inflates the accepted
