@@ -23,7 +23,6 @@ func_ov062_02116b80 kind:function(arm,size=0x78) addr:0x02116b80
 func_ov062_02116bf8 kind:function(arm,size=0x80) addr:0x02116bf8
 func_ov062_02116c78 kind:function(arm,size=0x60) addr:0x02116c78
 func_ov062_02116cd8 kind:function(arm,size=0x50) addr:0x02116cd8
-Chuckya_ChangeState kind:function(arm,size=0x50) addr:0x02116cd8
 func_ov062_02116d28 kind:function(arm,size=0x94) addr:0x02116d28
 func_ov062_02116dbc kind:function(arm,size=0xc4) addr:0x02116dbc
 func_ov062_02116e80 kind:function(arm,size=0x5c) addr:0x02116e80

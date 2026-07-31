@@ -50,7 +50,6 @@ func_ov030_02114124 kind:function(arm,size=0x10) addr:0x02114124
 func_ov030_02114134 kind:function(arm,size=0x3c) addr:0x02114134
 func_ov030_02114170 kind:function(arm,size=0x38) addr:0x02114170
 func_ov030_021141a8 kind:function(arm,size=0x1c) addr:0x021141a8
-Ukiki_ChangeState kind:function(arm,size=0x1c) addr:0x021141a8
 _ZN13RollingLogTtm16CleanupResourcesEv kind:function(arm,size=0x68) addr:0x021141c4
 _ZN13RollingLogTtm16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211422c
 _ZN13RollingLogTtm6RenderEv kind:function(arm,size=0x48) addr:0x02114230

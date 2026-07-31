@@ -1,0 +1,6 @@
+int func_020126e8(int a){
+  int r = a * 0x4c / 0x100000 + 0x1a;
+  if (r < 0x1a) return 0x1a;
+  if (r > 0x66) return 0x66;
+  return r;
+}
