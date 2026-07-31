@@ -1,20 +1,22 @@
+// @symbol func_ov002_020c231c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vec3 { s32 x, y, z; };
 
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern void func_ov002_020c14b8(void *self);
+
+extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, void *state);
 extern int _ZN6Player6IsAnimEj(void *self, u32 id);
-extern int func_ov002_020c2270(void *self, struct Vec3 *a, struct Vec3 *b);
 
 extern char data_ov002_0211013c;
-extern char data_ov002_02110184;
 extern char data_ov002_02110304;
 extern char data_ov002_02110364;
 extern char data_ov002_021104e4;
@@ -24,8 +26,8 @@ extern s16 data_02082214[];
 
 int func_ov002_020c231c(char *self)
 {
-    struct Vec3 tmp;
-    struct Vec3 pos;
+    struct Vector3 tmp;
+    struct Vector3 pos;
     u8 f70f;
     s32 p60;
     s32 d;
@@ -40,11 +42,11 @@ int func_ov002_020c231c(char *self)
         if (f70f == 0)
             return 0;
 
-        SubVec3((struct Vec3 *)(self + 0x5c), (struct Vec3 *)(self + 0x548), &tmp);
+        SubVec3((struct Vector3 *)(self + 0x5c), (struct Vector3 *)(self + 0x548), &tmp);
         tmp.x >>= 1;
         tmp.y >>= 1;
         tmp.z >>= 1;
-        AddVec3((struct Vec3 *)(self + 0x548), &tmp, (struct Vec3 *)(self + 0x5c));
+        AddVec3((struct Vector3 *)(self + 0x548), &tmp, (struct Vector3 *)(self + 0x5c));
         func_ov002_020c14b8(self);
 
         if (*(s32 *)(self + 0x644) == (s32)0x80000000)
@@ -81,7 +83,7 @@ int func_ov002_020c231c(char *self)
                 pos.x = xx;
                 pos.y = p60;
                 pos.z = zz;
-                if (func_ov002_020c2270(self, (struct Vec3 *)(self + 0x5c), &pos))
+                if (func_ov002_020c2270(self, (struct Vector3 *)(self + 0x5c), &pos))
                     return 1;
             }
         }

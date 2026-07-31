@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020cede0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(void* self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
@@ -9,7 +14,6 @@ extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern int func_02037e78(int* p);
 extern void _ZN13RaycastGroundD1Ev(void* self);
 extern int data_0209f32c;
-extern int data_0209212c;
 extern signed char data_0209f2f8;
 }
 

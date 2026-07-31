@@ -1,13 +1,17 @@
+// @symbol func_ov002_020df840
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef int s32;
 
-struct Vector3 { int x, y, z; };
+
 
 extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
-extern char data_ov002_02110244;
 
 struct Player {
     char pad8[8];

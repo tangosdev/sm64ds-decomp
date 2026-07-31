@@ -1,11 +1,15 @@
 //cpp
+// @symbol func_ov002_020b5e58
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
 
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
-extern "C" void func_ov002_020b5b98(char *t);
 extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -13,21 +17,20 @@ extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEs
 extern "C" void func_020393c4(void *p, void *v);
 extern "C" void func_020393d4(void *p, void *v);
 
-struct V3 { int x, y, z; };
+
 struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, V3 *v, void *a);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vector3 *v, void *a);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
-extern char func_ov002_020b5fc4;
 extern char _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern "C" signed char data_0209f2f8;
 
 extern "C" int func_ov002_020b5e58(char *self, char *fp)
 {
     RaycastGround rg;
-    V3 v;
+    Vector3 v;
     BMD_File *bmd;
     KCL_File *kcl;
     int vy, vz, vx;

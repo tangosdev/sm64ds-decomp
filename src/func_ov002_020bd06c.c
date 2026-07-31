@@ -1,11 +1,14 @@
+// @symbol func_ov002_020bd06c
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef short s16;
 typedef signed char s8;
 
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
+
+
 typedef struct ActorBase ActorBase;
 
 extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);

@@ -1,21 +1,22 @@
-struct Vec3 { int x, y, z; };
-extern void func_ov002_020c37a4(void *c, struct Vec3 *v);
+// @symbol func_ov002_020c38a0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *self, unsigned int a, int b, int cc, unsigned int d);
-extern void func_ov002_020c3148(void *c);
-extern int func_ov002_020c2fec(void *c, struct Vec3 *out);
-extern int Vec3_HorzLen(struct Vec3 *v);
+extern int Vec3_HorzLen(struct Vector3 *v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void _Z15ApproachLinear2Rsss(short *r, short a, short b);
 
-#define LA(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((long long)(int)(p))))
 
 void func_ov002_020c38a0(char *c)
 {
     struct {
-        struct Vec3 a;
-        struct Vec3 d;
-        struct Vec3 e;
-        struct Vec3 b;
+        struct Vector3 a;
+        struct Vector3 d;
+        struct Vector3 e;
+        struct Vector3 b;
     } s;
     int hlen;
     int ang;

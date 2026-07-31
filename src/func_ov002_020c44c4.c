@@ -1,3 +1,9 @@
+// @symbol func_ov002_020c44c4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_SaveData.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
@@ -5,24 +11,17 @@ typedef short s16;
 typedef unsigned int u32;
 typedef int Fix12i;
 
-struct Vector3 { Fix12i x, y, z; };
+
 
 extern u8 data_0209f2d8;
 extern int data_0209caa0[];
 extern s8 data_0209f2f8;
 extern u8 data_0209f264;
-extern u32 data_ov002_0210e14c;
-extern struct Vector3 data_ov002_0210f3b0;
-extern void* data_ov002_0210f350;
 extern void func_020072c0(void);
 
-extern int SublevelToLevel(int i);
-extern unsigned int _ZN8SaveData26CountStarsCollectedInLevelEj(unsigned int level);
 extern void func_020731dc(int a, int b, void** node);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, short angle, int* src);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int id, const void* pos, unsigned int a, unsigned int b);
-extern void func_ov100_02145070(int v);
-extern int func_ov100_02145014(void);
 extern void func_02012694(unsigned int id, const struct Vector3* v);
 extern unsigned int func_02012790(unsigned int a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, unsigned int a, int b, int fix, unsigned int d);

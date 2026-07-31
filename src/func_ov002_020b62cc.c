@@ -1,11 +1,14 @@
+// @symbol func_ov002_020b62cc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
-struct Vector3 { int x, y, z; };
-struct Matrix4x3 { int w[12]; };
+
+
 extern struct Matrix4x3 data_020a0e68;
 extern void InvMat4x3(struct Matrix4x3 *d, struct Matrix4x3 *s);
 extern void MulVec3Mat4x3(struct Vector3 *v, struct Matrix4x3 *m, struct Vector3 *out);
-extern void Quaternion_FromVector3(int *q, struct Vector3 *a, struct Vector3 *b);
-extern void Quaternion_Normalize(int *q);
 
 void func_ov002_020b62cc(unsigned char *self, unsigned char *arg)
 {

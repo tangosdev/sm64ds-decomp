@@ -1,21 +1,25 @@
+// @symbol func_ov002_020e7fcc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef int Fix12i;
 
-struct Vec { Fix12i x, y, z; };
+
 struct Callback;
 
 extern int _ZN9Animation8FinishedEv(void* anim);
-extern void func_ov002_020e8244(struct Vec* out, void* thiz);
+extern void func_ov002_020e8244(struct Vector3* out, void* thiz);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, Fix12i x, Fix12i y, Fix12i z, const void* rot, struct Callback* cb);
-extern int _ZNK9Animation12WillHitFrameEi(void* anim, int frame);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 effect, Fix12i x, Fix12i y, Fix12i z);
 
 void func_ov002_020e7fcc(char* c)
 {
     void* obj;
-    struct Vec v1;
-    struct Vec v2;
+    struct Vector3 v1;
+    struct Vector3 v2;
 
     obj = *(void**)(c + 0x31c);
 

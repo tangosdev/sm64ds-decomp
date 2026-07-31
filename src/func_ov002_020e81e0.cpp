@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov002_020e81e0
+/* recovered: shared common types */
+#include "common.h"
 
-struct Vector3_16f { int x, y, z; };
+
 
 struct Obj {
     char pad5c[0x5c];
@@ -15,12 +18,12 @@ namespace Particle {
 struct Callback;
 struct System {
     static System *New(unsigned int a, unsigned int b, int c, int d, int e,
-                       const Vector3_16f *p, Callback *cb);
+                       const Vector3 *p, Callback *cb);
 };
 }
 
 extern "C" void func_ov002_020e81e0(Obj *self) {
-    Vector3_16f v;
+    Vector3 v;
     v.x = self->f5c;
     v.y = self->f60;
     v.z = self->f64;

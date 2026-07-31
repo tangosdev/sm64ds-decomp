@@ -1,15 +1,17 @@
+// @symbol func_ov002_020e86ec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+/* recovered: shared common types */
+#include "common.h"
 struct Flags { unsigned short b0 : 1, b1 : 1, b2 : 1, b3 : 1, fld : 2; };
-struct V3 { int x, y, z; };
+
 
 extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* c);
-extern void _ZN12WithMeshClsn15ClearGroundFlagEv(void* c);
-extern void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void* c);
-extern void _ZN12WithMeshClsn18StopDetectingWaterEv(void* c);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* c);
 extern void _ZN13RaycastGroundC1Ev(void* r);
 extern void _ZN13RaycastGroundD1Ev(void* r);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* r);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* r, struct V3* p, void* a);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* r, struct Vector3* p, void* a);
 extern int _ZN13RaycastGround10DetectClsnEv(void* r);
 extern int func_02037e78(void* p);
 extern void func_ov002_020e9448(void* p);
@@ -17,7 +19,7 @@ extern void func_ov002_020e9448(void* p);
 extern int data_0209f32c;
 
 void func_ov002_020e86ec(char* self) {
-    struct V3 v;
+    struct Vector3 v;
     char rc[0x54];
     int tx, ty, tz, ta;
 

@@ -1,10 +1,12 @@
+// @symbol func_ov002_020ef670
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_PathPtr.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-extern int func_ov002_020efebc(int *p);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void func_ov002_020efbdc(char *c);
-extern int _ZNK7PathPtr5LoopsEv(void *p);
-extern int _ZNK7PathPtr8NumNodesEv(void *p);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, void *out, unsigned idx);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
@@ -12,19 +14,15 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern int Vec3_HorzDist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern short Vec3_VertAngle(void *a, void *b);
-extern int AngleDiff(int a, int b);
 extern void _Z14ApproachLinearRsss(short *r, short a, short b);
-extern int func_ov002_020efe68(char *c);
 extern void Vec3_MulScalar(void *out, void *v, int s);
 extern void SubVec3(void *a, void *b, void *c);
-extern int func_ov002_020efe7c(int *p);
-extern void func_ov002_020efa54(char *c, int i);
 
-struct V3 { int x, y, z; };
+
 
 void func_ov002_020ef670(char *c)
 {
-    struct V3 prev, node, diff1, diff2, scaled1, scaled2;
+    struct Vector3 prev, node, diff1, diff2, scaled1, scaled2;
     int looped;
     int ad2;
     int ad1;

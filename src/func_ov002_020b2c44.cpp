@@ -1,14 +1,17 @@
 //cpp
+// @symbol func_ov002_020b2c44
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef short s16;
 typedef int Fix12i;
 
-struct Vec3 { Fix12i x, y, z; };
+
 struct Mtx43 { Fix12i a[12]; };
 struct RaycastGround { char buf[0x68 - 0x18]; };
 
 extern "C" {
-void Vec3_Asr(struct Vec3 *d, struct Vec3 *s, int sh);
+void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 void Matrix4x3_FromTranslation(struct Mtx43 *m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 ang);
@@ -17,7 +20,7 @@ void Matrix4x3_FromRotationY(void *m, int angle);
 void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, Fix12i a, Fix12i b, u32 u);
 void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vec3 *v, void *actor);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 }
@@ -28,11 +31,11 @@ extern unsigned char data_0209f2d8;
 extern "C" void func_ov002_020b2c44(char *c)
 {
     struct RaycastGround rg;
-    struct Vec3 pos;
-    struct Vec3 v;
+    struct Vector3 pos;
+    struct Vector3 v;
     int b;
 
-    Vec3_Asr(&v, (struct Vec3 *)(c + 0x5c), 3);
+    Vec3_Asr(&v, (struct Vector3 *)(c + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16 *)(c + 0x8e));
     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(s16 *)(c + 0x90));

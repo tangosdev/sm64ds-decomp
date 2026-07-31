@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020c72a4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor;
 struct RaycastGround {
     char pad0[0x14];
@@ -12,8 +17,6 @@ struct RaycastGround {
 };
 extern "C" void _ZN4BgCh19StartDetectingWaterEv(RaycastGround*);
 extern "C" int func_02037e78(int* p);
-extern "C" void func_ov002_020c71e0(void*);
-extern int data_0209212c;
 extern int data_0209f32c;
 
 extern "C" void func_ov002_020c72a4(void* thisptr)

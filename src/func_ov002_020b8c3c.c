@@ -1,12 +1,15 @@
-extern void _ZN12WithMeshClsnD1Ev(void *);
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
+// @symbol func_ov002_020b8c3c
+// @emits daObjPushblock_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daObjPushblock_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *func_ov002_020b8c3c(int *t)
+int *daObjPushblock_c_OnYoshiTryEat(int *t)
 {
     t[0] = (int)VT0;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x320);

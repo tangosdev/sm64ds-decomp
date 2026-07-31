@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020b4714
+/* recovered: shared common types */
+#include "common.h"
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* from);
 extern void _ZN5Actor13LandingDustAtER7Vector3b(char* thiz, struct Vector3* v, int flag);
 extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, struct Vector3* pos, void* rot, int e, int f);
@@ -12,7 +14,7 @@ void func_ov002_020b4714(char* a) {
             struct Vector3 v;
             struct Vector3* p;
             char* spawned;
-            p = (struct Vector3*)(((long long)(int)(b + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            p = (struct Vector3*)(((long long)(int)(b + 0x5c)));
             v.x = p->x;
             v.y = p->y;
             v.z = p->z;

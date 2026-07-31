@@ -1,7 +1,10 @@
+// @symbol func_ov002_020f6f48
+/* recovered: shared common types */
+#include "common.h"
 typedef int s32;
 typedef short s16;
 typedef long long s64;
-struct Vector3 { s32 x, y, z; };
+
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern void ApproachAngle(s16* target, s16 cur, int a, int step, int flag);

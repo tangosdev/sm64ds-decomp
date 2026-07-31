@@ -1,23 +1,26 @@
+// @symbol func_ov002_020b5c4c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned short u16;
 typedef signed short s16;
 
-struct Vec3 { int x, y, z; };
+
 
 extern void func_020393a4(int *p, int v);
-extern int func_ov002_020b5ab4(char *c);
 extern int _Z14ApproachLinearRiii(int *p, int value, int speed);
 extern short data_02082214[];
 extern int Vec3_HorzDist(void *a, void *b);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern void _Z14ApproachLinearRsss(short *p, short value, short speed);
-extern void func_ov002_020b5b98(char *c);
 extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 
 int func_ov002_020b5c4c(char *c)
 {
-    struct Vec3 tpos;
+    struct Vector3 tpos;
     int dist;
     short atanRes;
     short angleDiff;
@@ -30,7 +33,7 @@ int func_ov002_020b5c4c(char *c)
     if (func_ov002_020b5ab4(c) != 0) {
         if (_Z14ApproachLinearRiii((int *)(c + 0x330),
                 *(void **)(c + 0x33c) != 0 ? -0x28000 : 0, 0x5000) != 0) {
-            short *ctr = (short *)((long long)(int)(c + 0x338) & 0xFFFFFFFFFFFFFFFFLL);
+            short *ctr = (short *)((long long)(int)(c + 0x338));
             short cval = *ctr;
             char *st = c + 0x300;
             *ctr = (short)(cval + 0xa00);
@@ -44,7 +47,7 @@ int func_ov002_020b5c4c(char *c)
             val1 = val2;
         } else {
             char *target = *(char **)(c + 0x33c);
-            struct Vec3 *tp = (struct Vec3 *)((long long)(int)(target + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            struct Vector3 *tp = (struct Vector3 *)((long long)(int)(target + 0x5c));
             tpos.x = tp->x;
             tpos.y = tp->y;
             tpos.z = tp->z;

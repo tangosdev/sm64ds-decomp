@@ -1,8 +1,11 @@
+// @symbol func_ov002_020ce5f8
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-struct Vector3 { int x, y, z; };
+
 
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* st);
 extern int func_ov002_020ceb54(char* c);
@@ -41,7 +44,7 @@ int func_ov002_020ce5f8(char* c) {
 
     if (func_ov002_020ceb54(c) == 0) {
         if (*(u8*)(c + 0x70c) == 0) {
-            *(u8*)((((long long)(int)(c + 0x70c))) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+            *(u8*)((((long long)(int)(c + 0x70c)))) |= 1;
             _ZN5Sound9PlayBank0EjRK7Vector3(0x17, (struct Vector3*)(c + 0x74));
             *(int*)(c + 0x628) = 0;
         }

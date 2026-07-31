@@ -1,10 +1,12 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020ed0d4
+// @emits daWarpkun_c_Kill
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daWarpkun_c::Kill - recovered from vtable slot identity */
 
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern void Matrix4x3_FromRotationZXYExt(void* m, int x, int y, int z);
 extern void MulVec3Mat4x3(void* a, void* m, void* out);
-extern int func_ov002_020cf700(void* c);
-extern int func_ov002_020d0d2c(void* c);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern void Vec3_Add(void* out, void* a, void* b);
 extern int Vec3_HorzDist(void* a, void* b);
@@ -14,7 +16,6 @@ extern void Math_Function_0203b14c(void* ptr, int target, int rate, int limit, i
 extern void ApproachAngle(void* cur, short target, int divisor, int band, int maxStep);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int a, int b, unsigned int c);
 extern int func_ov002_020ec654(unsigned char* p);
-extern void func_ov002_020ed738(char* c);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
 extern void func_02038420(void* self);
@@ -23,7 +24,7 @@ extern int data_020a0e68[];
 extern void* data_ov002_0210e6b0[];
 extern void* data_ov002_0210eb78[];
 
-void func_ov002_020ed0d4(char* self)
+void daWarpkun_c_Kill(char* self)
 {
     struct Vector3 in, out;
     char* com;
@@ -35,7 +36,7 @@ void func_ov002_020ed0d4(char* self)
 
     com = *(char**)(self + 0x38c);
     *(int*)(self + 0x3f4) = -0x68000;
-    p = (int*)((((long long)(int)(com + 0xa4))) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (int*)((((long long)(int)(com + 0xa4))));
     *(int*)(self + 0xa4) = p[0];
     *(int*)(self + 0xa8) = p[1];
     *(int*)(self + 0xac) = p[2];
@@ -55,8 +56,8 @@ void func_ov002_020ed0d4(char* self)
             if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
                 *(short*)(self + 0x3e4) = *(short*)(*(char**)(self + 0x38c) + 0x8c);
                 *(short*)(self + 0x3e8) = *(short*)(*(char**)(self + 0x38c) + 0x90);
-                pt1 = (int*)((((long long)(int)(com + 0x68))) & 0xFFFFFFFFFFFFFFFFLL);
-                pt2 = (int*)((((long long)(int)(com + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL);
+                pt1 = (int*)((((long long)(int)(com + 0x68))));
+                pt2 = (int*)((((long long)(int)(com + 0x5c))));
                 t1.x = pt1[0];
                 t1.y = pt1[1];
                 t1.z = pt1[2];
@@ -78,8 +79,8 @@ void func_ov002_020ed0d4(char* self)
         } else {
             *(short*)(self + 0x3e4) = *(short*)(com + 0x8c);
             *(short*)(self + 0x3e8) = *(short*)(com + 0x90);
-            pv1 = (int*)((((long long)(int)(com + 0x68))) & 0xFFFFFFFFFFFFFFFFLL);
-            pv2 = (int*)((((long long)(int)(com + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL);
+            pv1 = (int*)((((long long)(int)(com + 0x68))));
+            pv2 = (int*)((((long long)(int)(com + 0x5c))));
             v1.x = pv1[0];
             v1.y = pv1[1];
             v1.z = pv1[2];

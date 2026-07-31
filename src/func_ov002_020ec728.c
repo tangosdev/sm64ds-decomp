@@ -1,9 +1,12 @@
+// @symbol func_ov002_020ec728
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
-extern unsigned char func_ov002_020ec640(char* p);
+
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* thiz, const struct Vector3* v, unsigned int n, Fix12i f, short s);
 extern int func_ov002_020ec628(char* p);
-extern void func_ov002_020ec80c(char* thiz, const struct Vector3* v, int a, Fix12i f, int s);
 
 void func_ov002_020ec728(char* c)
 {

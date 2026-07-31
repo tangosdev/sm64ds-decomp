@@ -1,18 +1,22 @@
 //cpp
+// @symbol func_ov002_020b33dc
+// @emits daObjAbuku_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjAbuku_c::Behavior - recovered from vtable slot identity */
 typedef long long s64;
 extern short data_02082214[];
 extern "C" void _Z14ApproachLinearRiii(int* p, int b, int c);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, void* c);
 extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HealEi(char* self, int amt);
-extern "C" void func_ov002_020b330c(char* c);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
-extern "C" int func_ov002_020b3344(char* c);
 extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
 extern "C" void _ZN12CylinderClsn5ClearEv(char* cl);
 extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
 
-extern "C" int func_ov002_020b33dc(char* self)
+extern "C" int daObjAbuku_c_Behavior(char* self)
 {
     *(short*)(((int)self + 0x10c) & 0xFFFFFFFFFFFFFFFF) += 0x400;
     int v = *(volatile unsigned short*)(self + 0x10c);

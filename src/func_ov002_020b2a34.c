@@ -1,12 +1,15 @@
-extern void func_ov002_020b16c4(char* c, char* p);
-extern void func_ov002_020b1674(char* c, char* p);
-extern void func_ov002_020b1884(char* c, char* p);
+// @symbol func_ov002_020b2a34
+// @emits Coin_OnTurnIntoEgg
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daCoin_c::OnTurnIntoEgg - recovered from vtable slot identity */
 
-void func_ov002_020b2a34(char* c, char* p)
+void Coin_OnTurnIntoEgg(char* c, char* p)
 {
     int state = *(int*)(c + 0x3a0);
     if (state == 1) {
-        *(int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) += 0x50000;
+        *(int*)(((long long)(int)(c + 0x60))) += 0x50000;
         func_ov002_020b16c4(c, p);
         return;
     }

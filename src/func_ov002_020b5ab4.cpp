@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov002_020b5ab4
+/* recovered: shared common types */
+#include "common.h"
 typedef int s32;
 typedef signed char s8;
-struct Vector3 { s32 x, y, z; };
+
 struct Actor;
 
 struct RaycastGround {

@@ -1,3 +1,6 @@
+// @symbol func_ov002_020effb8
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -5,16 +8,16 @@ typedef unsigned short u16;
 typedef int s32;
 typedef unsigned int u32;
 
-struct Vec3 { s32 x, y, z; };
+
 
 #define FXMUL(a, b) ((s32)(u32)(((((long long)(a)) * (b)) + 0x800) >> 12))
 #define TERM(v, w) ((FXMUL(v, w) + 8) >> 4)
 
-extern s32 Vec3_Equal(struct Vec3 *a, struct Vec3 *b);
+extern s32 Vec3_Equal(struct Vector3 *a, struct Vector3 *b);
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 
-void func_ov002_020effb8(struct Vec3 *out, s32 t, struct Vec3 *a, struct Vec3 *b,
-                         struct Vec3 *c, struct Vec3 *d)
+void func_ov002_020effb8(struct Vector3 *out, s32 t, struct Vector3 *a, struct Vector3 *b,
+                         struct Vector3 *c, struct Vector3 *d)
 {
     s32 s0, s1;
     s32 t4, u, u4;

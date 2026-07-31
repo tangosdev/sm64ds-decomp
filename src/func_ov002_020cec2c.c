@@ -1,3 +1,8 @@
+// @symbol func_ov002_020cec2c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov002_020cec2c at 0x020cec2c (ov002), size 0x184
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
@@ -6,9 +11,8 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef signed char s8;
 
-struct Vector3 { int x, y, z; };
 
-extern int func_ov002_020ceb54(char *p);
+
 extern void _ZN6Player4HealEi(char *self, int a);
 extern int _ZN6Player9GetHealthEv(char *self);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const struct Vector3 *v, unsigned int d);
@@ -51,7 +55,7 @@ int func_ov002_020cec2c(char *self)
     }
 
     {
-        u16 *p = (u16 *)(((long long)(int)(self + 0x6ca)) & 0xFFFFFFFFFFFFFFFFLL);
+        u16 *p = (u16 *)(((long long)(int)(self + 0x6ca)));
         *p = *p + 1;
     }
 

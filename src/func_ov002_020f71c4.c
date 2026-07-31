@@ -1,9 +1,13 @@
+// @symbol func_ov002_020f71c4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int p2, int p3, int p4, void* p5, void* p6);
-extern unsigned short data_0209b274;
 
-struct Vector3 { int x, y, z; };
+
 
 int func_ov002_020f71c4(char* c, int a, int arg)
 {

@@ -1,3 +1,8 @@
+// @symbol func_ov002_020ea9d0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -5,7 +10,7 @@ typedef unsigned short u16;
 typedef int s32;
 typedef unsigned int u32;
 
-struct Vec3 { s32 x, y, z; };
+
 struct Vec1 { s32 a; };
 
 extern s32 data_0209b454;
@@ -17,21 +22,19 @@ extern void func_02012694(u32 id, void *v);
 extern void func_ov002_020e9448(void *p);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
 extern s32 Vec3_HorzDist(void *a, void *b);
-extern void func_ov002_020e947c(void *c, struct Vec3 *p, s32 n);
+extern void func_ov002_020e947c(void *c, struct Vector3 *p, s32 n);
 extern s32 func_ov002_020e8dd8(void *self);
-extern void func_ov002_020e7e24(void *self);
-extern void func_ov002_020e7d08(void *self);
 
 void func_ov002_020ea9d0(void *arg0)
 {
     char *c = (char *)arg0;
     char *other;
     s32 area;
-    struct Vec3 *op;
-    struct Vec3 v0;
-    struct Vec3 v1;
-    struct Vec3 v2;
-    struct Vec3 v3;
+    struct Vector3 *op;
+    struct Vector3 v0;
+    struct Vector3 v1;
+    struct Vector3 v2;
+    struct Vector3 v3;
 
     if (*(u8 *)(c + 0x49d) != 0) {
         func_ov002_020e9590(c);
@@ -40,7 +43,7 @@ void func_ov002_020ea9d0(void *arg0)
             return;
         }
     }
-    *(u32 *)((int)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL)) |= 0x4000000;
+    *(u32 *)((int)(((long long)(int)(c + 0xb0)))) |= 0x4000000;
     data_0209b454 |= 0x4000000;
     *(u16 *)(c + 0x496) = 0;
     func_02012694(0x57, c + 0x74);
@@ -53,7 +56,7 @@ void func_ov002_020ea9d0(void *arg0)
             *(s32 *)(c + 0x440) = 3;
         } else {
             *(s32 *)(c + 0x440) = 2;
-            op = (struct Vec3 *)((int)(((long long)(int)(other + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL));
+            op = (struct Vector3 *)((int)(((long long)(int)(other + 0x5c))));
             *(struct Vec1 *)&v0.x = *(struct Vec1 *)&op->x;
             *(struct Vec1 *)&v0.y = *(struct Vec1 *)&op->y;
             *(struct Vec1 *)&v0.z = *(struct Vec1 *)&op->z;

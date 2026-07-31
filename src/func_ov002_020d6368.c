@@ -1,9 +1,13 @@
+// @symbol func_ov002_020d6368
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef long long s64;
 typedef struct { int x, y, z; } Vec3;
-struct Vector3_16 { short x, y, z; };
+
 
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec3 *pos, void *rot, int e, int f);
-extern int func_ov002_020d6334(void *self, int val);
 extern short data_02082214[];
 
 #pragma opt_strength_reduction off

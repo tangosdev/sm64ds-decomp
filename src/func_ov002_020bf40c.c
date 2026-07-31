@@ -1,20 +1,22 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_ov002_020bf40c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct RaycastGround { char pad[0x50]; };
 extern unsigned char NumStars(void);
-extern void AddVec3(struct Vec3* a, struct Vec3* b, struct Vec3* c);
-extern void func_0200d858(void* self, const struct Vec3* offset);
+extern void AddVec3(struct Vector3* a, struct Vector3* b, struct Vector3* c);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* r);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* r, struct Vec3* p, char* a);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* r, struct Vector3* p, char* a);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* r);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* r);
-extern struct Vec3 data_ov002_0210a590;
 extern void* data_0209f318;
 int func_ov002_020bf40c(char* c){
-  struct Vec3 pos;
-  struct Vec3 off;
+  struct Vector3 pos;
+  struct Vector3 off;
   struct RaycastGround rg;
   if(NumStars() < 0x50 || *(int*)(c+8) != 0){
-    AddVec3((struct Vec3*)(c+0x5c), &data_ov002_0210a590, (struct Vec3*)(c+0x5c));
+    AddVec3((struct Vector3*)(c+0x5c), &data_ov002_0210a590, (struct Vector3*)(c+0x5c));
     off.x = data_ov002_0210a590.x;
     off.y = data_ov002_0210a590.y;
     off.z = data_ov002_0210a590.z;

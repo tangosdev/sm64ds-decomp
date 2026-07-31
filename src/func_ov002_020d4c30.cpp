@@ -1,12 +1,14 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020d4c30
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 typedef int Fix12i;
 
-extern "C" unsigned int func_02022d00(unsigned int uniqueID, unsigned int effectID,
-                                      Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern "C" void func_0201251c(int a, int b, int c, int d);
 extern int data_0209f32c;
-extern int data_0208e430;
 
 struct Sound {
     static void PlayBank0(unsigned int id, const Vector3 &v);

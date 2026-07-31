@@ -1,10 +1,12 @@
-struct V3 { int x, y, z; };
+// @symbol func_ov002_020c9a04
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, unsigned int a, int b, int f, unsigned int g);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 
 void func_ov002_020c9a04(char *c)
 {
-    struct V3 v;
+    struct Vector3 v;
 
     *(unsigned char *)(c + 0x6e3) = 0x11;
     _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x9a, 0x40000000, 0x1000, 0);

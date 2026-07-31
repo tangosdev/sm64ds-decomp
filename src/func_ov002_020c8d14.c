@@ -1,9 +1,13 @@
+// @symbol func_ov002_020c8d14
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 
-struct V3 { int x, y, z; };
+
 
 extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
-extern int _ZNK9Animation12WillHitFrameEi(void *thiz, int f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void func_ov002_020c9e18(char *self);
 extern int func_ov002_020d22ec(char *self, int arg);
@@ -14,7 +18,7 @@ extern int data_ov002_0211013c;
 
 int func_ov002_020c8d14(char *self)
 {
-    struct V3 v;
+    struct Vector3 v;
     int val;
     int id;
     char *anim;

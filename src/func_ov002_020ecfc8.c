@@ -1,9 +1,13 @@
+// @symbol func_ov002_020ecfc8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* f, int a, Fix12i b, unsigned int d);
 extern int func_ov002_020ec654(void* c);
-extern void* func_ov002_020edb3c(void* c, int a, int b);
 extern void func_0203568c(void* p, int v);
 extern s16 Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void func_ov002_020edca4(void* c);

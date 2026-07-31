@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov002_020e7d08
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Vector3 { int x, y, z; };
+
 struct Actor;
 
 struct RaycastGround {

@@ -1,3 +1,6 @@
+// @symbol func_ov002_020d8d10
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov002_020d8d10 at 0x020d8d10
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
@@ -12,13 +15,13 @@ struct Callback;
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, Fix12i x, Fix12i y, Fix12i z, const void* rot, struct Callback* cb);
 
-struct Vector3_16f { s16 x, y, z; };
-struct Vec { Fix12i x, y, z; };
+
+
 struct Self { char pad0[8]; int state; char pad2[0x82]; s16 angle; };
 
-void func_ov002_020d8d10(struct Self* self, struct Vec* pos)
+void func_ov002_020d8d10(struct Self* self, struct Vector3* pos)
 {
-    struct Vector3_16f vec;
+    struct Vector3_16 vec;
 
     vec.x = data_02082214[((unsigned short)(short)(self->angle + 0x8000) >> 4) * 2];
     vec.y = 0;

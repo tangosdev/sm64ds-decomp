@@ -1,32 +1,29 @@
+// @symbol func_ov002_020d8a50
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
+
 struct RaycastLine { int head[5]; int surf; int rest[25]; };
 
 extern int _ZNK6Player14GetBodyModelIDEjb(char* p, unsigned int j, int b);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void func_ov002_020dbf4c(char* c);
-extern void func_ov002_020dbe70(char* c);
-extern void func_ov002_020dbd94(char* c);
-extern void func_ov002_020dbbc0(char* c);
-extern void func_ov002_020d8854(char* self);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
-extern int _ZNK9Animation12WillHitFrameEi(void* a, int frame);
-extern void func_ov002_020ef070(void* a, char* self);
-extern void func_ov002_020eeeb8(void* a, char* self);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, struct Vector3* v);
 extern void _ZN11RaycastLineC1Ev(struct RaycastLine* r);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(struct RaycastLine* r, struct Vector3* a, struct Vector3* b, void* actor);
 extern int _ZN11RaycastLine10DetectClsnEv(struct RaycastLine* r);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* n);
 extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3* ret, struct RaycastLine* r);
-extern void func_ov002_020d8d10(char* self, struct Vector3* pos);
 extern void _ZN11RaycastLineD1Ev(struct RaycastLine* r);
 
-extern u16 data_ov002_0210a5cc[];
 extern s16 data_02082214[];
 
 void func_ov002_020d8a50(char* self, int which)
@@ -38,7 +35,7 @@ void func_ov002_020d8a50(char* self, int which)
     int frame;
 
     model = *(char**)(self + _ZNK6Player14GetBodyModelIDEjb(self, *(u32*)(self + 8) & 0xff, 0) * 4 + 0xdc);
-    anim = (char*)((long long)(int)(model + 0x50) & 0xFFFFFFFFFFFFFFFFLL);
+    anim = (char*)((long long)(int)(model + 0x50));
     frame = (u16)(*(int*)(anim + 8) >> 12);
     if (frame < data_ov002_0210a5cc[i2] || frame > data_ov002_0210a5cc[i2 + 1]) {
         flag = 0;
@@ -86,7 +83,7 @@ void func_ov002_020d8a50(char* self, int which)
             return;
     }
 
-    *(u16*)((long long)(int)(self + 0x6ce) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x20;
+    *(u16*)((long long)(int)(self + 0x6ce)) &= ~0x20;
     _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, (struct Vector3*)(self + 0x74));
 
     {

@@ -1,14 +1,18 @@
 //cpp
+// @symbol func_ov002_020bf9d4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 // func_ov002_020bf9d4 at 0x020bf9d4
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
-struct VecFx32 { int x, y, z; };
+
 extern "C" {
 int func_0200fccc(char* s, int r1);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
-extern int data_0208e430;
 }
 extern "C" void func_ov002_020bf9d4(char* c){
-  VecFx32 v;
+  Vector3 v;
   if (data_0208e430 == 0x2e) return;
   if (*(unsigned char*)(c + 0x703) == 0){
     func_0200fccc(c, 0);

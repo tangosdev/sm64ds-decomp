@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov002_020b8fe0
+// @emits daObjPushblock_c_InitResources
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjPushblock_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -22,9 +28,8 @@ extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
 extern SharedFilePtr data_ov002_0210df9c;
 extern SharedFilePtr data_ov002_0210df94;
-extern char data_ov002_0210d7b4;
 
-extern "C" int func_ov002_020b8fe0(char *self)
+extern "C" int daObjPushblock_c_InitResources(char *self)
 {
     RaycastGround rg;
     V3 v;

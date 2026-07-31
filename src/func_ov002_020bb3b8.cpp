@@ -1,5 +1,9 @@
 //cpp
-// func_ov002_020bb3b8 at 0x020bb3b8
+// @symbol func_ov002_020bb3b8
+// @emits SignPost_Kill
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjTatefuda_c::Kill - recovered from vtable slot identity */
+// SignPost_Kill at 0x020bb3b8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 struct Vector3 { int x, y, z; };
 
@@ -10,8 +14,8 @@ void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 int func_ov002_020bae9c(void* self);
 }
 
-extern "C" int func_ov002_020bb3b8(char* self);
-int func_ov002_020bb3b8(char* self) {
+extern "C" int SignPost_Kill(char* self);
+int SignPost_Kill(char* self) {
     Vector3 vec;
     Vector3 vec2;
     int x = *(int*)(self + 0x5c);

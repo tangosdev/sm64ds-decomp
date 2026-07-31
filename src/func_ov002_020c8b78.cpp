@@ -1,9 +1,12 @@
 //cpp
+// @symbol func_ov002_020c8b78
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 
-struct Vector3 { int x, y, z; };
+
 struct ActorBase {};
 struct Animation { char pad[0x50]; int WillHitFrame(int) const; };
 

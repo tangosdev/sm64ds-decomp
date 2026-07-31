@@ -1,4 +1,12 @@
 //cpp
+// @symbol func_ov002_020f06c0
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daSCoin_c.h"
+// @emits daSCoin_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daSCoin_c::Behavior - recovered from vtable slot identity */
 class ActorBase {
 public:
     void MarkForDestruction();
@@ -13,26 +21,24 @@ public:
     void Update();
 };
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern "C" void func_ov002_020f05f4(void *o);
-extern "C" void func_ov002_020f051c(void *o);
-extern "C" void func_ov002_020f0438(void *o);
 
-extern "C" int func_ov002_020f06c0(char *c)
+extern "C" int daSCoin_c_Behavior(char *c)
 {
-    if (*(unsigned char *)(c + 0x113)) {
+    struct daSCoin_c *self = (struct daSCoin_c *)(void *)c;
+    if (self->unk_113) {
         if (DecIfAbove0_Byte((unsigned char *)(c + 0x113)) == 0) {
             func_ov002_020f05f4(c);
             ((ActorBase *)c)->MarkForDestruction();
         }
         return 1;
     }
-    if (*(unsigned char *)(c + 0x10f) == 0) {
-        unsigned char st = *(unsigned char *)(c + 0x10e);
+    if (self->unk_10f == 0) {
+        unsigned char st = self->unk_10e;
         if (st == 0 || st == 0xf) {
             {
                 Actor *o = 0;
-                *(unsigned char *)(c + 0x10f) = 1;
-                *(int *)(c + 0x108) = *(int *)(c + 4);
+                self->unk_10f = 1;
+                self->unk_108 = *(int *)(c + 4);
                 for (;;) {
                     o = Actor::FindWithActorID(0x149, o);
                     if (o == 0) break;
@@ -44,16 +50,16 @@ extern "C" int func_ov002_020f06c0(char *c)
             }
         }
     }
-    if (*(unsigned char *)(c + 0x10f) == 1 && *(unsigned char *)(c + 0x110) == 5) {
+    if (self->unk_10f == 1 && self->unk_110 == 5) {
         ((ActorBase *)c)->MarkForDestruction();
         return 1;
     }
     func_ov002_020f051c(c);
-    if (*(int *)(c + 0xf8)) {
+    if (self->unk_0f8) {
         func_ov002_020f0438(c);
     }
     ((CylinderClsn *)(c + 0xd4))->Clear();
-    if (*(unsigned char *)(c + 0x111) == 0) {
+    if (self->unk_111 == 0) {
         ((CylinderClsn *)(c + 0xd4))->Update();
     }
     return 1;

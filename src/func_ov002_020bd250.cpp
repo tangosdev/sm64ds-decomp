@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020bd250
+/* recovered: shared common types */
+#include "common.h"
+
 struct Player {
     void Hurt(const Vector3&, unsigned int, int, unsigned int, unsigned int, unsigned int);
 };

@@ -1,14 +1,14 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020c8a4c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Player { unsigned int SetAnim(unsigned int, int, int, unsigned int); };
 extern "C" short Vec3_HorzAngle(const Vector3*, const Vector3*);
-extern "C" int func_02053274(const Vector3*, const Vector3*);
 extern "C" void func_020731dc(void*, void*, void*);
 extern "C" void Vec3_RotateYAndTranslate(Vector3*, const Vector3*, int, const Vector3*);
-extern "C" void func_ov002_020ca108(char* c);
-extern int data_ov002_0210e150;
-extern int data_ov002_0210f8cc[3];
-extern int data_ov002_0210f89c;
 extern void func_020072c0(void);
 
 extern "C" int func_ov002_020c8a4c(char* self);

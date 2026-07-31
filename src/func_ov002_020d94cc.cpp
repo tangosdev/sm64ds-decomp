@@ -1,10 +1,13 @@
 //cpp
+// @symbol func_ov002_020d94cc
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 typedef short s16;
 typedef signed char s8;
 
-struct Vector3 { int x, y, z; };
+
 
 extern "C" {
 int func_ov002_020d94cc(char *self);

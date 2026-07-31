@@ -1,14 +1,17 @@
+// @symbol func_ov002_020edca4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 
 struct Actor;
-struct Vector3 { int x, y, z; };
 
-extern void func_ov002_020ec728(char* c);
+
 extern int func_ov002_020ec610(unsigned char* p);
 extern void _ZN5Actor11UntrackStarERa(struct Actor* self, signed char* r);
 extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3* pos, const void* v, int e, int f);
-extern void func_ov002_020e7218(char* c, char* a, int x);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int b, int c, int d);
 extern void _ZN9ActorBase18MarkForDestructionEv(struct Actor* self);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const struct Vector3* pos);

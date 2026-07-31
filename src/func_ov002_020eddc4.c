@@ -1,3 +1,8 @@
+// @symbol func_ov002_020eddc4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov002_020eddc4 at 0x020eddc4
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
@@ -6,13 +11,12 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 
 struct Actor;
-struct Vector3 { int x, y, z; };
+
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 extern int func_ov002_020ed63c(char* c, int i);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct Actor* self, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);
 extern void func_ov002_020edca4(char* c);
-extern void func_ov002_020ec728(char* c);
 
 int func_ov002_020eddc4(char* self)
 {

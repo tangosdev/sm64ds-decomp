@@ -1,10 +1,13 @@
+// @symbol func_ov002_020e6edc
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
 typedef unsigned short u16;
 struct Actor;
 struct BCA_File;
-struct Vector3 { s32 x, y, z; };
+
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* self, struct BCA_File* f, int a, int fix, u32 b);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, const struct Vector3* pos, int r, u32 f1, u32 f2, u32 f3);
 extern char data_ov002_02110934[];

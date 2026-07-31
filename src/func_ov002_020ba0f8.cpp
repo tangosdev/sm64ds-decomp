@@ -1,9 +1,13 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020ba0f8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" void func_ov002_020ba01c(void* c, int a, int b, int d, int e);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, struct Vector3* v);
-extern "C" void func_ov002_020e7104(void* p, int n);
 extern void _ZN5Event8ClearBitEj(unsigned int n);
 extern "C" void func_ov002_020ba4d8(void* c, int i);
 

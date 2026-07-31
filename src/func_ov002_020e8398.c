@@ -1,10 +1,13 @@
+// @symbol func_ov002_020e8398
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef long long s64;
 enum { false, true };
 struct ShadowModel;
 struct Matrix4x3;
-struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+
+extern struct Matrix4x3 data_02082128;
 extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char *self, struct ShadowModel *sm, struct Matrix4x3 *m, int fix, int t, u32 f);
 
 #pragma opt_common_subs off
@@ -46,7 +49,7 @@ void func_ov002_020e8398(char *c)
 
     t = delta + 0x28000;
 
-    *(struct M48 *)(c + 0x3fc) = data_02082128;
+    *(struct Matrix4x3 *)(c + 0x3fc) = data_02082128;
 
     *(int *)(c + 0x420) = *(int *)(c + 0x5c) >> 3;
     *(int *)(c + 0x424) = *(int *)(c + 0x60) >> 3;

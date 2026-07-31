@@ -1,6 +1,9 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+// @symbol func_ov002_020b7e1c
+/* recovered: shared common types */
+#include "common.h"
+
+
 struct WithMeshClsn { int IsOnGround() const; };
 struct ActorBase { void MarkForDestruction(); };
 struct Actor : ActorBase {
