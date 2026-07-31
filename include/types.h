@@ -25,4 +25,24 @@ typedef struct Vector3s {
     s16 x, y, z;
 } Vector3s;
 
+
+/* Floating-point aliases. */
+typedef float  f32;
+typedef double f64;
+
+/* Volatile aliases for memory-mapped hardware registers. */
+typedef volatile unsigned char  vu8;
+typedef volatile signed char    vs8;
+typedef volatile unsigned short vu16;
+typedef volatile signed short   vs16;
+typedef volatile unsigned int   vu32;
+typedef volatile signed int     vs32;
+
+/* Small enum: how an actor responds to being eaten by Yoshi. */
+typedef int OnYoshiEatReturnVal;
+
+#ifndef __cplusplus
+typedef int bool;  /* a keyword in C++, an ordinary identifier in C */
+#endif
+
 #endif /* TYPES_H */
