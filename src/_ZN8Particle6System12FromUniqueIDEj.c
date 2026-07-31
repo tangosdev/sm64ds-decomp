@@ -1,6 +1,5 @@
+#include "types.h"
 // Particle::System::FromUniqueID - looks up a Particle::System by unique ID
-typedef unsigned int u32;
-
 struct ParticleSysTracker {
     u32 unk0;
     u32 unk4;

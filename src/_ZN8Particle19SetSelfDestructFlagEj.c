@@ -1,7 +1,7 @@
+#include "types.h"
 // @symbol _ZN8Particle19SetSelfDestructFlagEj
 /* recovered: named members + shared header */
 #include "Particle.h"
-typedef unsigned int u32;
 extern char* data_0209ee74;
 void _ZN8Particle19SetSelfDestructFlagEj(u32 idx)
 {

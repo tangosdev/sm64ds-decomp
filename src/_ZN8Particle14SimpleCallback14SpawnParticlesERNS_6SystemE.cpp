@@ -1,7 +1,5 @@
 //cpp
-typedef signed short s16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct SomeGlobal { char pad[4]; void* p; };
 extern SomeGlobal* data_0209ee74;
 

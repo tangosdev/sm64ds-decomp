@@ -1,6 +1,4 @@
-typedef signed int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct ParticleNode {
     void* next;
     void* prev;

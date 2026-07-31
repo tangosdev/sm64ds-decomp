@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 struct Model {
     u32 data[0x14]; /* 0x50 bytes */
 };

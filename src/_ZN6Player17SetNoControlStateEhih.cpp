@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player17SetNoControlStateEhih
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
 struct State;
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, struct State* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* thiz, struct State* s);

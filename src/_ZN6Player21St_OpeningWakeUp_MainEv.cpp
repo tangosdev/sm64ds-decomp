@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player21St_OpeningWakeUp_MainEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern int _ZN6Player12FinishedAnimEv(void* thiz);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, int a, int b, int c, u32 d);
 extern void Player_AdvanceAnims(void* thiz);

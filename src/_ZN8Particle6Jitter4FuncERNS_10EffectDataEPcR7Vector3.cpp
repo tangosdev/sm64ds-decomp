@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__Jitter.h"
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
 extern "C" void _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3(struct Particle__Jitter *self, char* p, int* v) {
     u32 s;
     int r;

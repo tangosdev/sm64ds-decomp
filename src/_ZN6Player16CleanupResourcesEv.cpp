@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef signed char s8;
-
 enum { false_, true_ };
 
 struct VB { virtual void v0(); virtual void v1(); };

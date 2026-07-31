@@ -1,15 +1,11 @@
 //cpp
+#include "types.h"
 /* _ZN6Player16St_BurnLava_MainEv @ 0x020d5038 (ov002, size 0x264)
  * Player burn-in-lava state: kills the player once outside battle levels,
  * spawns smoke/steam particles with the burn SFX, then runs the 3-hop
  * bounce (halving y-velocity, hop height 0x14000/0xa000) until the burnt
  * anim finishes, then leaves via state change or death.
  */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern u8 data_ov002_0211117c;
 extern s8 data_0209f2f8;
 extern s16 data_02082214[];

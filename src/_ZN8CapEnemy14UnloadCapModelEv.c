@@ -1,10 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed int s32;
-typedef signed short s16;
-typedef signed char s8;
-
+#include "types.h"
 struct CapEnemy {
     u8 pad[0x113];
     u8 capID;     // 0x113

@@ -1,13 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player16SetRealCharacterEj
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_ModelAnim2.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct SharedFilePtr;
 
 extern "C" void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self);

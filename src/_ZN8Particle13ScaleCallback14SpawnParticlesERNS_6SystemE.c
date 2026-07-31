@@ -1,11 +1,5 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct System;
-
-typedef short s16;
-
 struct ScaleCallback {
     u32 vtable;     /* 0x00 */
     u16 unk04;      /* 0x04 */

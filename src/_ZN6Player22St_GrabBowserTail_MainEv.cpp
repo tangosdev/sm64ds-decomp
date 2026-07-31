@@ -1,14 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player22St_GrabBowserTail_MainEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12 b, u32 d);

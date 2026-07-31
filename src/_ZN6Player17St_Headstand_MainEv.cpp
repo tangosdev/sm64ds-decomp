@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player17St_Headstand_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct Obj {
     virtual void v0();
     virtual void v1();

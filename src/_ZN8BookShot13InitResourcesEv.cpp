@@ -1,8 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8BookShot13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "BookShot.h"
-typedef unsigned int u32;
 struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
 typedef struct { int w[2]; } SharedFilePtr;
 

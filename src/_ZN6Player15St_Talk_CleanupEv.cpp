@@ -1,8 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct Player {
     char _pad0[0xb0];
     u32 flagB0;            /* 0xb0 */

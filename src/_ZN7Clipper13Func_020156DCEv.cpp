@@ -1,11 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN7Clipper13Func_020156DCEv
 /* recovered: named members + shared header */
 #include "Clipper.h"
-typedef int Fix12i;
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern "C" {
 
 void _ZN7Clipper13Func_0201559CEv(void* self);

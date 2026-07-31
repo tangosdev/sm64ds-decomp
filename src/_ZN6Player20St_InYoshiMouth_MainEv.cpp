@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player20St_InYoshiMouth_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-
 extern "C" {
 extern int func_ov002_020d5cec(char *c);
 extern void Vec3_RotateYAndTranslate(Vector3 *res, Vector3 *trans, short angY, Vector3 *add);

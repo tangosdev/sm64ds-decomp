@@ -1,17 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player17St_PunchKick_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void func_ov002_020d8a50(void* c, u32 a);
 extern void _Z14ApproachLinearRiii(int* a, int b, int c);

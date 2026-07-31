@@ -1,9 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed short s16;
-
+#include "types.h"
 extern "C" {
     void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int vol, int t);
     int func_0201fb4c(void);

@@ -1,11 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player21St_JumpQuicksand_MainEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern char data_ov002_02110424;
 
 extern "C" {

@@ -1,10 +1,9 @@
+#include "types.h"
 // @symbol _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__EndingStarGlitterCallback.h"
-typedef signed int s32;
-typedef unsigned int u32;
 typedef int Bool;
 
 /* forward declarations */

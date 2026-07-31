@@ -1,14 +1,9 @@
 //cpp
+#include "types.h"
 // @symbol _ZN7Minimap13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Minimap.h"
 #pragma opt_strength_reduction off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 extern "C" {
     int func_0202a980(void);
     int LoadFile(int handle);
