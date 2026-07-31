@@ -2,7 +2,7 @@ extern int func_02017acc(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
 extern void func_02017ab4(void);
-extern void func_02017984(void);
+extern void SharedFilePtr_Destruct_Anim(void);
 
 extern void* data_ov073_02123298;
 extern void* data_ov073_021232cc;
@@ -79,19 +79,19 @@ void __sinit_ov073_02122874(void)
     func_02017acc(&data_ov073_02123298, 0x359);
     func_020731dc(&data_ov073_02123298, (void*)&func_02017ab4, (void**)&data_ov073_021232cc);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_02123280, 0x355);
-    func_020731dc(&data_ov073_02123280, (void*)&func_02017984, (void**)&data_ov073_021232d8);
+    func_020731dc(&data_ov073_02123280, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_021232d8);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_021232a0, 0x356);
-    func_020731dc(&data_ov073_021232a0, (void*)&func_02017984, (void**)&data_ov073_021232e4);
+    func_020731dc(&data_ov073_021232a0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_021232e4);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_02123288, 0x35b);
-    func_020731dc(&data_ov073_02123288, (void*)&func_02017984, (void**)&data_ov073_021232f0);
+    func_020731dc(&data_ov073_02123288, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_021232f0);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_021232a8, 0x354);
-    func_020731dc(&data_ov073_021232a8, (void*)&func_02017984, (void**)&data_ov073_021232fc);
+    func_020731dc(&data_ov073_021232a8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_021232fc);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_02123290, 0x357);
-    func_020731dc(&data_ov073_02123290, (void*)&func_02017984, (void**)&data_ov073_02123308);
+    func_020731dc(&data_ov073_02123290, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_02123308);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_021232b0, 0x358);
-    func_020731dc(&data_ov073_021232b0, (void*)&func_02017984, (void**)&data_ov073_02123314);
+    func_020731dc(&data_ov073_021232b0, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_02123314);
     _ZN13SharedFilePtr9ConstructEj(&data_ov073_021232b8, 0x35a);
-    func_020731dc(&data_ov073_021232b8, (void*)&func_02017984, (void**)&data_ov073_021232c0);
+    func_020731dc(&data_ov073_021232b8, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov073_021232c0);
 
     data_ov073_02123330.x = data_ov073_02122ff0;
     data_ov073_02123330.y = data_ov073_02123000;

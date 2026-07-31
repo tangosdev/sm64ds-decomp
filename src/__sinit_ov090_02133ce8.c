@@ -2,7 +2,7 @@ extern void func_02017acc();
 extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4();
-extern void func_02017984();
+extern void SharedFilePtr_Destruct_Anim();
 
 typedef struct { int a, b; } S8;
 
@@ -23,13 +23,13 @@ void __sinit_ov090_02133ce8(void)
     func_02017acc(&data_ov090_021344a0, 0x39f);
     func_020731dc(&data_ov090_021344a0, func_02017ab4, &data_ov090_021344c0);
     _ZN13SharedFilePtr9ConstructEj(&data_ov090_02134488, 0x3a0);
-    func_020731dc(&data_ov090_02134488, func_02017984, &data_ov090_021344d8);
+    func_020731dc(&data_ov090_02134488, SharedFilePtr_Destruct_Anim, &data_ov090_021344d8);
     _ZN13SharedFilePtr9ConstructEj(&data_ov090_02134480, 0x3a1);
-    func_020731dc(&data_ov090_02134480, func_02017984, &data_ov090_021344a8);
+    func_020731dc(&data_ov090_02134480, SharedFilePtr_Destruct_Anim, &data_ov090_021344a8);
     _ZN13SharedFilePtr9ConstructEj(&data_ov090_02134490, 0x3a2);
-    func_020731dc(&data_ov090_02134490, func_02017984, &data_ov090_021344cc);
+    func_020731dc(&data_ov090_02134490, SharedFilePtr_Destruct_Anim, &data_ov090_021344cc);
     _ZN13SharedFilePtr9ConstructEj(&data_ov090_02134498, 0x3a3);
-    func_020731dc(&data_ov090_02134498, func_02017984, &data_ov090_021344b4);
+    func_020731dc(&data_ov090_02134498, SharedFilePtr_Destruct_Anim, &data_ov090_021344b4);
 
     data_ov090_021344f4[0] = data_ov090_02134110; data_ov090_021344f4[1] = data_ov090_02134108;
     data_ov090_02134504[0] = data_ov090_02134118; data_ov090_02134504[1] = data_ov090_021340f8;

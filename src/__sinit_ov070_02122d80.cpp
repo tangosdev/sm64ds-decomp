@@ -16,7 +16,7 @@ extern char data_ov070_02123638[];
 extern char data_ov070_021235ec[];
 extern char data_ov070_02123650[];
 extern char func_02017ab4[];
-extern char func_02017984[];
+extern char SharedFilePtr_Destruct_Anim[];
 extern char SharedFilePtr_Destruct_TexSeq[];
 extern char func_020072c0[];
 extern char data_ov070_02123644[];
@@ -39,9 +39,9 @@ void __sinit_ov070_02122d80(void) {
     func_02017acc(data_ov070_02123604, 0x2b3);
     func_020731dc(data_ov070_02123604, func_02017ab4, data_ov070_02123620);
     _ZN13SharedFilePtr9ConstructEj(data_ov070_021235f4, 0x2b2);
-    func_020731dc(data_ov070_021235f4, func_02017984, data_ov070_0212362c);
+    func_020731dc(data_ov070_021235f4, SharedFilePtr_Destruct_Anim, data_ov070_0212362c);
     _ZN13SharedFilePtr9ConstructEj(data_ov070_0212360c, 0x2b5);
-    func_020731dc(data_ov070_0212360c, func_02017984, data_ov070_02123638);
+    func_020731dc(data_ov070_0212360c, SharedFilePtr_Destruct_Anim, data_ov070_02123638);
     SharedFilePtr_Construct_TexSeq(data_ov070_021235ec, 0x2b4);
     func_020731dc(data_ov070_021235ec, SharedFilePtr_Destruct_TexSeq, data_ov070_02123650);
 

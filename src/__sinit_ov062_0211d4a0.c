@@ -2,7 +2,7 @@ extern int func_02017acc();
 extern void func_020731dc();
 extern int _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4(void);
-extern void func_02017984(void);
+extern void SharedFilePtr_Destruct_Anim(void);
 
 extern char data_ov062_0211db48[];
 extern char data_ov062_0211db30[];
@@ -42,17 +42,17 @@ void __sinit_ov062_0211d4a0(void)
     func_02017acc(data_ov062_0211e00c, 0x3ba);
     func_020731dc(data_ov062_0211e00c, func_02017ab4, data_ov062_0211e050);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e014, 0x3c6);
-    func_020731dc(data_ov062_0211e014, func_02017984, data_ov062_0211e068);
+    func_020731dc(data_ov062_0211e014, SharedFilePtr_Destruct_Anim, data_ov062_0211e068);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e024, 0x3c4);
-    func_020731dc(data_ov062_0211e024, func_02017984, data_ov062_0211e074);
+    func_020731dc(data_ov062_0211e024, SharedFilePtr_Destruct_Anim, data_ov062_0211e074);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e01c, 0x3c5);
-    func_020731dc(data_ov062_0211e01c, func_02017984, data_ov062_0211e080);
+    func_020731dc(data_ov062_0211e01c, SharedFilePtr_Destruct_Anim, data_ov062_0211e080);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e034, 0x3c2);
-    func_020731dc(data_ov062_0211e034, func_02017984, data_ov062_0211e08c);
+    func_020731dc(data_ov062_0211e034, SharedFilePtr_Destruct_Anim, data_ov062_0211e08c);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e03c, 0x3c3);
-    func_020731dc(data_ov062_0211e03c, func_02017984, data_ov062_0211e098);
+    func_020731dc(data_ov062_0211e03c, SharedFilePtr_Destruct_Anim, data_ov062_0211e098);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e02c, 0x3bf);
-    func_020731dc(data_ov062_0211e02c, func_02017984, data_ov062_0211e044);
+    func_020731dc(data_ov062_0211e02c, SharedFilePtr_Destruct_Anim, data_ov062_0211e044);
     _ZN13SharedFilePtr9ConstructEj(data_ov062_0211e004, 0x3be);
-    func_020731dc(data_ov062_0211e004, func_02017984, data_ov062_0211e05c);
+    func_020731dc(data_ov062_0211e004, SharedFilePtr_Destruct_Anim, data_ov062_0211e05c);
 }

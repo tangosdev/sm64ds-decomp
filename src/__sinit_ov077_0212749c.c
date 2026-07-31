@@ -1,6 +1,6 @@
 extern int _ZN13SharedFilePtr9ConstructEj();
 extern void func_020731dc();
-extern void func_02017984(void);
+extern void SharedFilePtr_Destruct_Anim(void);
 extern char data_ov077_02127c14[];
 extern char data_ov077_02127c1c[];
 
@@ -37,7 +37,7 @@ extern struct Dst data_ov077_02127c28;
 void __sinit_ov077_0212749c(void)
 {
     _ZN13SharedFilePtr9ConstructEj(data_ov077_02127c14, 0x42b);
-    func_020731dc(data_ov077_02127c14, &func_02017984, data_ov077_02127c1c);
+    func_020731dc(data_ov077_02127c14, &SharedFilePtr_Destruct_Anim, data_ov077_02127c1c);
     data_ov077_02127c28.p0 = data_ov077_02127928;
     data_ov077_02127c28.p1 = data_ov077_02127910;
     data_ov077_02127c28.p2 = data_ov077_02127908;

@@ -25,7 +25,7 @@ extern char data_ov100_02148734[];
 extern char data_ov100_02148820[];
 extern void _ZN13SharedFilePtr9ConstructEj();
 extern char data_ov100_02148744[];
-extern void func_02017984(void);
+extern void SharedFilePtr_Destruct_Anim(void);
 extern char data_ov100_021487a8[];
 
 struct P2 { int a, b; };
@@ -84,7 +84,7 @@ void __sinit_ov100_02147698(void)
     func_02017acc(data_ov100_02148734, 0x446);
     func_020731dc(data_ov100_02148734, func_02017ab4, data_ov100_02148820);
     _ZN13SharedFilePtr9ConstructEj(data_ov100_02148744, 0x9c08);
-    func_020731dc(data_ov100_02148744, func_02017984, data_ov100_021487a8);
+    func_020731dc(data_ov100_02148744, SharedFilePtr_Destruct_Anim, data_ov100_021487a8);
 
     tmp = data_02086b58;
     data_ov100_021488b4.lo = tmp;
