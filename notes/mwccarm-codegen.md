@@ -2462,3 +2462,72 @@ void func_02071644(void *obj, int len) {   /* decimal digit-string increment w/ 
 `bx lr` is byte 0x50-0x53.) Rule: when a tiny symbol is a bare epilogue, a lone `bx lr`, or
 a catch-island shape (starts mid-frame, uses fp/r4-r7 it never set), check whether the
 PREVIOUS symbol's compiled form simply extends over it before believing any floor label.
+
+## 6an. Signedness is a coloring lever separable from condition codes (2026-07-30, GX::LoadTex)
+
+GX::LoadTex sat at div=16 as a pure r4/r5 web-identity swap (`base`->r4/`top`->r5 vs the
+ROM's r5/r4) with both locals typed `unsigned int`. Retyping BOTH as plain `int` flips the
+allocator's rank assignment and lands the ROM's coloring (16->7). Signed vs unsigned is a
+RANK input like the local's width (6al): int and unsigned int locals do not rank equally.
+
+The catch and the second half of the lever: the retype drags the COMPARISONS signed
+(`lt/ge` where the ROM has `lo/hs`, 7 residual divs). Do NOT fix that with `(int)` casts
+on the operands - fix it by leaving the comparisons in mixed signed/unsigned form so C's
+usual arithmetic conversions promote them back to unsigned (`int top` vs `unsigned offset`
+compares unsigned, emitting lo/hs) while the LOCALS keep their signed rank. Coloring reads
+the declared type; the condition code reads the promoted comparison type. The two are
+independently steerable (7->0, byte-identical, 1.2/sp2p3).
+
+Scope check (same night): a mechanical signedness sweep (singles, pairs, all-flip; 581
+compiles) across the seven other stuck arm9 residues (0202ffec, CapEnemy::GetCapState,
+Stage::InitResources, 0204a730, 020412f0, Stage::PS_UpdateOkAndBackButtons, 02038824)
+moved NOTHING. The lever fires when the residue is a two-local callee-saved web-identity
+swap; it does not perturb scheduling knots or wider coloring webs. Sweep script pattern:
+flip (unsigned int|int|u32|s32) decls in the bank draft, abverify each.
+
+## 6ao. Flag-across-call rematerialization, and the for(;;) dead epilogue (2026-07-30, func_02072168)
+
+Two finds from the deep pass on the WM bytecode dispatcher (both currently OPEN, no
+counter-lever known):
+
+1. **mwccarm refuses to hold a cheap flag live across calls.** The ROM computes
+`and rX, op, #mask` into a callee-saved register BEFORE two `bl`s and does a bare
+`cmp rX, #0` after. Every mwccarm spelling instead REMATERIALIZES (`ands r1, op, #mask`)
+at the use site - the inverse of the usual too-much-CSE problem. Inert or worse:
+`volatile int` (stack spill, wrong shape), `unsigned char` (spurious narrowing AND),
+`(op & mask) != 0` bool cast (much worse), statement reordering,
+`#pragma opt_common_subs off` (regressed), `#pragma opt_propagation off` (regressed).
+The heuristic looks like remat-if-cheaper-than-spill with no source knob found yet. It
+recurs in ~10 of the dispatcher's 20 cases and dominates its div=195. Any future crack
+of this pattern unlocks func_02072168 nearly whole.
+
+2. **`for(;;)` containing a predicated early `return` emits a dead unreachable trailing
+epilogue** (20-byte minimal repro). `while(1)` and goto-loop forms behave identically;
+`#pragma optimize_for_size on` converts the predicated return to a branch-to-shared-tail
+(reachable, but not the ROM's predicated shape). If a target ROM function has NO dead
+epilogue but ours does, the ROM's early-exit idiom differs from a plain in-loop return -
+treat the dead-epilogue delta as a diagnostic fingerprint, not noise. (Related: 6al's
+trailing-bx-lr note - mwccarm appends one after a for(;;) whose exits are all early
+returns; that one the ROM DOES keep.)
+
+
+## 6ap. Volatile-store/plain-read split: place a scalar in the volatile hole WITHOUT losing value numbering (2026-07-30, func_0204a730 MATCHED)
+
+The 6al stack-layout rule (named scalars in decl order -> temps -> address-taken
+aggregates -> volatiles into the trailing hole) had a corollary conjecture: a scalar
+that must sit in the hole must be declared volatile, and volatile ACCESS kills value
+numbering, re-folding shifted-use chains. WRONG CONCLUSION - placement and access
+volatility are separable, same shape as 6an's coloring-vs-condition-code split:
+
+    u32 flags;                                  /* plain object */
+    *(volatile u32 *)&flags = *(u32 *)player;   /* the ONE write, through a volatile cast */
+    ... ((u32)(flags << K) >> 0x1f) ...          /* all reads plain */
+
+The volatile-cast WRITE marks the object volatile-touched for frame layout (it lands
+in the hole at [sp,#0x2c], after the aggregates), while every read stays a plain
+value-numberable load, so the ROM's lsl,lsl,lsr,str,lsr,str three-live-values shape
+survives. The mirror split (volatile decl, cast-away-volatile reads) does NOT work -
+mwcc tracks the object's declared volatility for VN, so the fold still dies; and
+(void)&flags address-taking moves the slot but breaks 34 words elsewhere. Landed
+func_0204a730 byte-identical together with the banked group-B recipe (u32 byte-hoist
+at function scope + s32 k demoted into the loop block after var_r5).
