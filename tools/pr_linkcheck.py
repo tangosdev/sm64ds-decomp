@@ -83,6 +83,43 @@ def build_symbol_index():
     return idx
 
 
+def _changed_paths(base):
+    """Paths this branch adds, modifies, or RENAMES, relative to ``base``.
+
+    Renames have to be in scope. ``--diff-filter=AM`` excludes ``R``, and git pairs a
+    moved file as a rename whenever the content is similar enough -- so `git mv` plus an
+    edit to the `#include` line lands as `R098`, is filtered out, and the branch is
+    reported green having compiled nothing. That is exactly the shape of a directory
+    reorganisation, and of any change that renames a file to its real symbol while
+    touching the body.
+
+    The one rename that is genuinely safe to skip is a move that keeps the filename AND
+    the content byte-for-byte (`R100`, same basename): the symbol is unchanged, and the
+    bytes cannot move because headers resolve from `-i include`, never relative to the
+    source's own directory (candidates are compiled from a temp copy -- see
+    reloc_audit.winning_object). A rename that changes the basename changes the symbol
+    the file claims, so it is re-checked even at 100% similarity."""
+    out = subprocess.run(
+        ["git", "diff", "--name-status", "-M", "--diff-filter=AMR", f"{base}...HEAD"],
+        cwd=REPO, capture_output=True, text=True, check=True).stdout
+    paths = []
+    for line in out.splitlines():
+        fields = line.split("\t")
+        if len(fields) < 2:
+            continue
+        status = fields[0]
+        if status.startswith("R") and len(fields) >= 3:
+            old, new = fields[1], fields[2]
+            if (status == "R100"
+                    and pathlib.PurePosixPath(old).name
+                    == pathlib.PurePosixPath(new).name):
+                continue
+            paths.append(new)
+        else:
+            paths.append(fields[1])
+    return paths
+
+
 def changed_src_files(args):
     """Every compiled file the PR/branch puts at risk.
 
@@ -99,10 +136,7 @@ def changed_src_files(args):
             cwd=REPO, capture_output=True, text=True, check=True).stdout
         paths = out.splitlines()
     else:
-        out = subprocess.run(
-            ["git", "diff", "--name-only", "--diff-filter=AM", f"{args.base}...HEAD"],
-            cwd=REPO, capture_output=True, text=True, check=True).stdout
-        paths = out.splitlines()
+        paths = _changed_paths(args.base)
     keep, headers = [], []
     for p in paths:
         p = p.strip().replace("\\", "/")
