@@ -2782,3 +2782,30 @@ read in five declaration positions.
 
 **Class:** register-coalescer build delta, same family as 6ag's first-access-fold. Route it to
 the permuter, not to a construct hunt.
+
+### 6as addendum: the recognised-pragma vocabulary, and three corrections it produced
+
+`reference/mwccarm-pragmas.txt` now holds the **246 pragma names mwccarm actually parses**,
+derived by pulling every lowercase identifier out of `mwccarm.exe` and screening each one
+INDIVIDUALLY with `-w illpragmas`. Individual screening matters: `#pragma warning off`
+suppresses the diagnostic for every line after it, so a batched scan inflates the accepted
+set (725 vs the true 246).
+
+Three corrections fell straight out of it, all of which had been recorded as evidence:
+
+- **`generateconditionalassignments` is not a pragma. The real name is
+  `opt_generateconditionalassignments`.** The 150-variant `func_02068398` campaign recorded
+  this lever as inert; it was never applied. (Re-run with the correct name: still 1 word, so
+  the floor survives -- but the earlier evidence was void.)
+- **`scheduling` is not a pragma.** Scheduling is controlled by the `-opt schedule` /
+  `-opt noschedule` COMMAND-LINE flag. Any "`#pragma scheduling off` is inert" line is
+  meaningless, including ones asserted this session on the grounds that the token appears in
+  the binary -- appearing in the binary is not the same as being pragma-exposed.
+- **`long_calls` is not a pragma.** `src/func_ov065_0211aacc.c` carried
+  `#pragma long_calls on` plus a comment crediting it for the pooled
+  `ldr ip,[pc,#8]; bx ip` tail-call. It was silently ignored; the file matches on all 12
+  builds with the line removed. Comment corrected.
+
+**Practical rule:** a pragma result is evidence only if the name is in that file. Proving a
+real pragma inert is a finding; proving a fake one inert is noise that then gets cited as a
+closed avenue.
