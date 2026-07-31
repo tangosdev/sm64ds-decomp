@@ -40,7 +40,7 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x92) = *(s16 *)(c + 0x570);
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x572);
             *(s16 *)(c + 0x96) = *(s16 *)(c + 0x574);
-            s16 *src = (s16 *)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFF);
+            s16 *src = (s16 *)(((int)c + 0x92));
             *(s16 *)(c + 0x8c) = src[0];
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
@@ -49,7 +49,7 @@ extern "C" void func_ov063_0211934c(char *c)
             if (cap == 0)
                 return;
             {
-                u16 *p = (u16 *)(((int)cap + 0x5d4) & 0xFFFFFFFFFFFFFFFF);
+                u16 *p = (u16 *)(((int)cap + 0x5d4));
                 *p &= ~2;
             }
         }
@@ -62,7 +62,7 @@ extern "C" void func_ov063_0211934c(char *c)
         if (_ZN6Player9StartTalkER9ActorBaseb(r4, c, 1) == 0)
             return;
         {
-            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)));
             *q = *q + 1;
         }
         return;
@@ -73,7 +73,7 @@ extern "C" void func_ov063_0211934c(char *c)
         *(void **)(c + 0x48c) = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x490));
         found = *(void **)(c + 0x48c);
         if (found != 0) {
-            s32 *cnt = (s32 *)(((long long)(int)((char *)found + 0x180)) & 0xFFFFFFFFFFFFFFFFLL);
+            s32 *cnt = (s32 *)(((long long)(int)((char *)found + 0x180)));
             *cnt = *cnt + 1;
         }
         found = *(void **)(c + 0x48c);
@@ -84,7 +84,7 @@ extern "C" void func_ov063_0211934c(char *c)
         }
         *(void **)(c + 0x48c) = 0;
         {
-            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)));
             *q = *q + 1;
         }
         func_0201267c(0xf8, c + 0x74);
@@ -102,13 +102,13 @@ extern "C" void func_ov063_0211934c(char *c)
             if (found != 0 && *(s32 *)((char *)found + 0x180) == 5) {
                 func_ov063_02116244((char *)found);
                 {
-                    u16 *p = (u16 *)(((long long)(int)(c + 0x5c6)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u16 *p = (u16 *)(((long long)(int)(c + 0x5c6)));
                     *p = *p + 1;
                 }
             }
         }
         {
-            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(((long long)(int)(c + 0x5ce)));
             *q = *q + 1;
         }
         return;
@@ -116,7 +116,7 @@ extern "C" void func_ov063_0211934c(char *c)
     case 3:
         if (*(u16 *)(c + 0x500 + 0xc6) != 0) {
             if (_ZN5Sound15PlaySecretSoundEP5ActorPt(
-                    c, (u16 *)(((long long)(int)(c + 0x5c6)) & 0xFFFFFFFFFFFFFFFFLL)) == 0)
+                    c, (u16 *)(((long long)(int)(c + 0x5c6)))) == 0)
                 return;
             _ZN9ActorBase18MarkForDestructionEv(c);
             if (((*(u8 *)(c + 0x113)) & 0xf) >= 6)
@@ -131,7 +131,7 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x92) = *(s16 *)(c + 0x570);
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x572);
             *(s16 *)(c + 0x96) = *(s16 *)(c + 0x574);
-            s16 *src = (s16 *)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFF);
+            s16 *src = (s16 *)(((int)c + 0x92));
             *(s16 *)(c + 0x8c) = src[0];
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
@@ -140,7 +140,7 @@ extern "C" void func_ov063_0211934c(char *c)
             if (cap2 == 0)
                 return;
             {
-                u16 *p = (u16 *)(((int)cap2 + 0x5d4) & 0xFFFFFFFFFFFFFFFF);
+                u16 *p = (u16 *)(((int)cap2 + 0x5d4));
                 *p &= ~2;
             }
         }
@@ -159,14 +159,14 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x92) = *(s16 *)(c + 0x570);
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x572);
             *(s16 *)(c + 0x96) = *(s16 *)(c + 0x574);
-            s16 *src = (s16 *)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFF);
+            s16 *src = (s16 *)(((int)c + 0x92));
             *(s16 *)(c + 0x8c) = src[0];
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
             
             cap3 = _ZN8CapEnemy15RespawnIfHasCapEv(c);
             if (cap3 != 0) {
-                u16 *p = (u16 *)(((int)cap3 + 0x5d4) & 0xFFFFFFFFFFFFFFFF);
+                u16 *p = (u16 *)(((int)cap3 + 0x5d4));
                 *p &= ~2;
             }
         }

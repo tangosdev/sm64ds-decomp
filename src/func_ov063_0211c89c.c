@@ -22,7 +22,7 @@ void func_ov063_0211c89c(char *c) {
     }
     p = _ZN5Actor13ClosestPlayerEv(c);
     {
-        int *q = (int*)(((long long)(int)(p + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *q = (int*)(((long long)(int)(p + 0x5c)));
         pp.x = q[0];
         pp.y = q[1];
         pp.z = q[2];
@@ -38,7 +38,7 @@ void func_ov063_0211c89c(char *c) {
             Vec3_Dist((Vec3*)(c + 0x5c), &pp) < 0x320000) {
             short a = Vec3_HorzAngle((Vec3*)(c + 0x5c), &pp);
             if (a <= -0x7000 || a >= 0x7000)
-                *(u8*)(((long long)(int)(c + 0x157)) & 0xFFFFFFFFFFFFFFFFLL) |= 8;
+                *(u8*)(((long long)(int)(c + 0x157))) |= 8;
         }
         {
             u8 m = *(u8*)(c + 0x157) & 7;
@@ -48,7 +48,7 @@ void func_ov063_0211c89c(char *c) {
             }
             if (m == 1) return;
             if (m == 3) return;
-            *(u8*)(((long long)(int)(c + 0x157)) & 0xFFFFFFFFFFFFFFFFLL) &= 8;
+            *(u8*)(((long long)(int)(c + 0x157))) &= 8;
         }
         return;
     case 1:
@@ -63,7 +63,7 @@ void func_ov063_0211c89c(char *c) {
         }
         return;
     case 2:
-        *(int*)(((long long)(int)(c + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL) += 0x5000;
+        *(int*)(((long long)(int)(c + 0x5c))) += 0x5000;
         *(int*)(c + 0x148) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x148), 3, 0x8d, (Vec3*)(c + 0x74), 0);
         _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e));
         if (*(u16*)(c + 0x100 + 0x4c) > 0x65)

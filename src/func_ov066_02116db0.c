@@ -53,7 +53,7 @@ int func_ov066_02116db0(void *thiz)
         if (*(int *)(c + 0x498) == 0) {
             char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
             if (p != 0) {
-                Vec3 *pp = (Vec3 *)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                 *(int *)(c + 0x4bc) = pp->x;
                 *(int *)(c + 0x4c0) = pp->y;
                 *(int *)(c + 0x4c4) = pp->z;
@@ -70,8 +70,8 @@ int func_ov066_02116db0(void *thiz)
                 Matrix4x3_FromRotationY(data_020a0e68, ang);
                 MulVec3Mat4x3(&in, data_020a0e68, &out);
 
-                *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) += out.x;
-                *(int *)(((int)c + 0x4c4) & 0xFFFFFFFFFFFFFFFF) += out.z;
+                *(int *)(((int)c + 0x4bc)) += out.x;
+                *(int *)(((int)c + 0x4c4)) += out.z;
             }
 
             if ((unsigned short)(*(int *)(c + 0x3b8) >> 0xc) == 0)

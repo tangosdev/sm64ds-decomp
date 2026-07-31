@@ -11,7 +11,7 @@ int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 int func_0201267c(int, void*);
 int func_ov071_0211fd58(char* c){
   _ZN9Animation7AdvanceEv(c+0x124);
-  int* p = (int*)(((int)c + 0x3a0) & 0xFFFFFFFFFFFFFFFF);
+  int* p = (int*)(((int)c + 0x3a0));
   *p -= 0xf000;
   if(*(int*)(c+0x3a0) <= 0){
     char* b = c+0x300;

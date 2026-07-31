@@ -32,8 +32,8 @@ extern "C" void func_ov064_02118e24(void *thiz, int a1, int a2, int a3)
     }
 
     {
-        int *px = (int *)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFF);
-        int *pz = (int *)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFF);
+        int *px = (int *)(((int)c + 0x5c));
+        int *pz = (int *)(((int)c + 0x64));
         *px += a1;
         *pz += a2;
     }

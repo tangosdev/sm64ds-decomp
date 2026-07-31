@@ -24,25 +24,25 @@ extern "C" void func_ov063_0211975c(char* self) {
         *(s16*)(self + 0x92) = *(s16*)(self + 0x570);
         *(s16*)(self + 0x94) = *(s16*)(self + 0x572);
         *(s16*)(self + 0x96) = *(s16*)(self + 0x574);
-        s16* src = (s16*)(((int)self + 0x92) & 0xFFFFFFFFFFFFFFFF);
+        s16* src = (s16*)(((int)self + 0x92));
         *(s16*)(self + 0x8c) = src[0];
         *(s16*)(self + 0x8e) = src[1];
         *(s16*)(self + 0x90) = src[2];
         char* r = (char*)_ZN8CapEnemy15RespawnIfHasCapEv(self);
         if (r == 0) return;
         {
-            u16* p = (u16*)(((int)r + 0x5d4) & 0xFFFFFFFFFFFFFFFF);
+            u16* p = (u16*)(((int)r + 0x5d4));
             *p &= ~2;
         }
     } else {
         *(u8*)(self + 0x5cc) = 5;
         *(u8*)(self + 0x5ce) = 0;
         {
-            int* q = (int*)(((int)self + 0x19c) & 0xFFFFFFFFFFFFFFFF);
+            int* q = (int*)(((int)self + 0x19c));
             *q |= 1;
         }
         {
-            u16* p = (u16*)(((int)self + 0x5d4) & 0xFFFFFFFFFFFFFFFF);
+            u16* p = (u16*)(((int)self + 0x5d4));
             *p &= ~8;
         }
     }

@@ -21,8 +21,8 @@ extern s16 data_02082214[];
 extern u8 data_0209f2c0;
 extern int data_0209e650;
 
-#define I32(off) (*(int*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
-#define I8(off)  (*(u8*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
+#define I32(off) (*(int*)(((int)c + (off))))
+#define I8(off)  (*(u8*)(((int)c + (off))))
 
 int daObjCtMecha05_c_Behavior(char* c)
 {

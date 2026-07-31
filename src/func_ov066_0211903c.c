@@ -76,7 +76,7 @@ int func_ov066_0211903c(char* self) {
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
             }
 
-            *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce) & 0xFFFFFFFFFFFFFFFF) |= 0x400;
+            *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce)) |= 0x400;
             _ZN7Message11PrepareTalkEv();
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
                 *(int*)(self + 0x498) = 1;
@@ -86,7 +86,7 @@ int func_ov066_0211903c(char* self) {
     } else {
         if (*(void**)(self + 0x490) != 0) {
             if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x490)) < 0) {
-                *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+                *(int*)(((int)cam + 0x154)) &= ~8;
                 _ZN7Message7EndTalkEv();
                 if (data_ov066_0211abe0 == 3) {
                     _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);

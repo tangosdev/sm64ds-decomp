@@ -13,13 +13,13 @@ int func_ov064_02119d28(char* c) {
     func_ov064_02119afc(c);
     if (*(u16*)(c + 0x100) < 0x1e) {
         if (*(u8*)(c + 0x380) >= 2) {
-            u8 *p = (u8*)(((int)c + 0x380) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *p = (u8*)(((int)c + 0x380));
             *p = *p - 1;
         }
     }
     spd = (*(int*)(c + 0x37c) == 1) ? 0x333 : 0x199;
     {
-        int *q = (int*)(((int)c + 0x374) & 0xFFFFFFFFFFFFFFFFLL);
+        int *q = (int*)(((int)c + 0x374));
         *q = *q + 0x1000;
     }
     {
@@ -31,13 +31,13 @@ int func_ov064_02119d28(char* c) {
         _Z14ApproachLinearRiii((int*)(c + 0x80), v, spd);
     }
     {
-        int *q = (int*)(((int)c + 0x378) & 0xFFFFFFFFFFFFFFFFLL);
+        int *q = (int*)(((int)c + 0x378));
         *q = *q + 0x800;
     }
     {
         s16 b = *(int*)(c + 0x378);
         int idx2 = ((u16)b >> 4) * 2;
-        s16 *w = (s16*)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFFLL);
+        s16 *w = (s16*)(((int)c + 0x92));
         *w = *w + (int)((((s64)data_02082214[idx2] << 8) + 0x800) >> 12);
     }
     *(int*)(c + 0x88) = *(int*)(c + 0x80);

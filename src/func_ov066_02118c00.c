@@ -16,7 +16,7 @@ s32 func_ov066_02118c00(char* c) {
         data_ov066_0211ae0c = data_ov066_0211abe0;
     }
     {
-        unsigned char* p = (unsigned char*)(((int)c + 0x4d9) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char* p = (unsigned char*)(((int)c + 0x4d9));
         *p += 1;
     }
     data_ov066_0211ae10 += 1;

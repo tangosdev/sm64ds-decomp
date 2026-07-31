@@ -31,7 +31,7 @@ int func_ov072_021201d4(char *self)
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10f, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x110, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
-            st = (unsigned char *)(((int)self + 0x334) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char *)(((int)self + 0x334));
             *st = *st + 1;
         }
         break;

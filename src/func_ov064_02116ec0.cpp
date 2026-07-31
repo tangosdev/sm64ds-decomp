@@ -70,7 +70,7 @@ extern "C" int func_ov064_02116ec0(Obj* obj)
     {
         int b = (obj->fc == 0xd9);
         if (b) {
-            *(int *)(((int)obj + 0x358) & 0xFFFFFFFFFFFFFFFF) |= 0x40000;
+            *(int *)(((int)obj + 0x358)) |= 0x40000;
         }
     }
     obj->f3a8 = obj->f5c;

@@ -13,7 +13,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a
 int func_ov070_02120910(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
-    *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int*)(((int)c + 0xb0)) &= ~1;
     *(int*)(c + 0x9c) = -0x2000;
     *(int*)(c + 0xa0) = -0x3c000;
     *(int*)(c + 0x5c) = *(int*)(c + 0x404);

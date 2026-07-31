@@ -12,7 +12,7 @@ int daObjFl_Coin_c_Behavior(char *a)
     case 0:
         if (*(u8 *)(a + 0xd4) == 3) {
             if (_ZN5Actor13DistToCPlayerEv(a) < 0x3e8000) {
-                (*(u8 *)(((int)a + 0xd5) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(u8 *)(((int)a + 0xd5)))++;
             }
         }
         break;

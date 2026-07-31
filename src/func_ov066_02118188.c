@@ -73,7 +73,7 @@ int func_ov066_02118188(void *thiz)
                     *(int *)(c + 0x4a0) = 4;
                     break;
                 }
-                *(int *)(((int)c + 0x494) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(int *)(((int)c + 0x494)) += 1;
             }
         }
 

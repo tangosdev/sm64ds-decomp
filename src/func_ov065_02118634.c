@@ -39,7 +39,7 @@ void func_ov065_02118634(char* self)
     }
 
     if (*(int*)(self + 0x1130) != 0 || found != 0) {
-        (*(u8*)(((int)self + 0x11b4) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(u8*)(((int)self + 0x11b4)))++;
         *(int*)(self + 0x98) = 0;
         *(s16*)(self + 0x11a6) = 0;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0xec, data_ov065_0211d768[1], 0x40000000, 0x1000, 0);
@@ -72,7 +72,7 @@ void func_ov065_02118634(char* self)
         }
 
         {
-            s16* pang = (s16*)(((int)self + 0x8e) & 0xFFFFFFFFFFFFFFFFLL);
+            s16* pang = (s16*)(((int)self + 0x8e));
             *pang = *pang + *(s16*)(self + 0x11a6);
         }
         *(s16*)(self + 0x94) = *(s16*)(self + 0x8e);

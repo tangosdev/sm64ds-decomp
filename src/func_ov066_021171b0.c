@@ -25,12 +25,12 @@ int func_ov066_021171b0(void *thiz)
         if (p == 0)
             break;
         {
-            Vec3 *pp = (Vec3 *)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+            Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
             *(int *)(c + 0x4bc) = pp->x;
             *(int *)(c + 0x4c0) = pp->y;
             *(int *)(c + 0x4c4) = pp->z;
         }
-        *(int *)(((int)c + 0x4c4) & 0xFFFFFFFFFFFFFFFF) -= 0xc8000;
+        *(int *)(((int)c + 0x4c4)) -= 0xc8000;
         if (*(int *)(c + 0x4c4) < (int)0xff3ae000) {
             *(int *)(c + 0x4c4) = (int)0xff3ae000;
         } else if (*(int *)(c + 0x4c4) > (int)0xff8c6000) {
@@ -40,13 +40,13 @@ int func_ov066_021171b0(void *thiz)
             *(short *)(c + 0x94) = -0x4000;
             *(int *)(c + 0x4bc) = 0x334000;
             if (*(int *)(c + 0x49c) == 1) {
-                *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) -= 0xf2000;
+                *(int *)(((int)c + 0x4bc)) -= 0xf2000;
             }
         } else {
             *(short *)(c + 0x94) = 0x4000;
             *(int *)(c + 0x4bc) = (int)0xffe8e000;
             if (*(int *)(c + 0x49c) == 1) {
-                *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) -= 0xf2000;
+                *(int *)(((int)c + 0x4bc)) -= 0xf2000;
             }
         }
         func_02012694(0x144, c + 0x74);
@@ -109,7 +109,7 @@ int func_ov066_021171b0(void *thiz)
         *(int *)(c + 0x98) = 0;
         func_ov066_02116ac4(c, 0x7d0000);
         *(unsigned short *)(c + 0x4d0) = 0xf;
-        *(int *)(((int)c + 0x494) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(int *)(((int)c + 0x494)) += 1;
         if (*(int *)(c + 0x494) < 3)
             *(int *)(c + 0x4a0) = 3;
         else

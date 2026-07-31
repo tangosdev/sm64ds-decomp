@@ -39,7 +39,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
                 func_0201267c(0x114, thiz + 0x74);
                 *(int*)(thiz + 0xa8) = 0x1d000;
                 *(int*)(thiz + 0x98) = 0xe000;
-                st = (unsigned char*)(((int)thiz + 0x3a2) & 0xFFFFFFFFFFFFFFFFLL);
+                st = (unsigned char*)(((int)thiz + 0x3a2));
                 *st = *st + 1;
             }
         }
@@ -57,7 +57,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
             *(short*)(thiz + 0x8c) = 0;
             *(short*)(thiz + 0x8e) = (short)-0x4000;
             *(int*)(thiz + 0x98) = 0;
-            st = (unsigned char*)(((int)thiz + 0x3a2) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char*)(((int)thiz + 0x3a2));
             *st = *st + 1;
         }
         break;

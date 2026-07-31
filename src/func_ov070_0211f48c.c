@@ -12,7 +12,7 @@ int _ZN9Animation8FinishedEv(void* a);
 int FlyGuy_ChangeState(void* c, void* p);
 extern char data_ov070_0212359c[];
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 
 int func_ov070_0211f48c(char* c) {
     char* pl;

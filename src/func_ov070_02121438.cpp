@@ -14,7 +14,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a
 extern "C" int Amp_Kill(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
-    int* p_b0 = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+    int* p_b0 = (int*)(((int)c + 0xb0));
     *p_b0 = *p_b0 & ~1;
     *(int*)(c + 0x9c) = -0x2000;
     *(int*)(c + 0xa0) = -0x3c000;

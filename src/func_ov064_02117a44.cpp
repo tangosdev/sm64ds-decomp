@@ -26,13 +26,13 @@ extern "C" int func_ov064_02117a44(char* c) {
     *(int*)(c+0x64) = *(int*)(c+0x350);
     r = 1;
     if (*(unsigned char*)(c+0x33b) == 1) {
-      ++*(int*)(((int)c + 0x344) & 0xFFFFFFFFFFFFFFFF);
+      ++*(int*)(((int)c + 0x344));
       if (*(int*)(c+0x344) >= *(int*)(c+0x340)) {
         *(int*)(c+0x344) = *(int*)(c+0x340) - 2;
         r = -1;
       }
     } else {
-      --*(int*)(((int)c + 0x344) & 0xFFFFFFFFFFFFFFFF);
+      --*(int*)(((int)c + 0x344));
       if (*(int*)(c+0x344) < 0) {
         *(int*)(c+0x344) = r;
         r = -1;

@@ -1,6 +1,6 @@
 struct S{int w[3];}; extern struct S data_ov066_0211ad18;
 void func_ov066_021162e8(int* c){
-    int* p=(int*)(((long long)(int)((char*)c+0x338))&0xFFFFFFFFFFFFFFFFLL);
+    int* p=(int*)(((long long)(int)((char*)c+0x338)));
     *p|=2;
     *(int*)((char*)c+0x324)=0x64000;
     *(int*)((char*)c+0x328)=0x64000;

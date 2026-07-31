@@ -10,7 +10,7 @@ extern "C" void func_ov064_021163c0(char *c)
 {
     if (*(unsigned short *)(c + 0x100) == 0) {
         if (((WithMeshClsn *)(c + 0x174))->IsOnGround()) {
-            *(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) = (short)((*(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF)) + 0x8000);
+            *(short *)(((int)c + 0x94)) = (short)((*(short *)(((int)c + 0x94))) + 0x8000);
         }
     }
     *(int *)(c + 0x98) = 0x5000;

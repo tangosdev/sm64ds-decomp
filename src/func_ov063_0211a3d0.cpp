@@ -23,7 +23,7 @@ extern "C" int func_ov063_0211a3d0(char* c)
         *(s32*)(c + 0x98) = 0x28000;
         *(s16*)(c + 0x94) = *(s16*)(*(char**)(c + 0x484) + 0x8e);
         *(s32*)(c + 0x5a0) = 1;
-        *(u16*)(((int)c + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL) &= ~4;
+        *(u16*)(((int)c + 0x5d4)) &= ~4;
         goto fall;
     }
 
@@ -56,7 +56,7 @@ extern "C" int func_ov063_0211a3d0(char* c)
         *(void**)(c + 0x48c) = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x490));
         if (*(void**)(c + 0x48c) != 0) {
             if (*(u8*)(c + 0x5cf) != 2) {
-                *(s32*)(((int)*(char**)(c + 0x48c) + 0x180) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+                *(s32*)(((int)*(char**)(c + 0x48c) + 0x180)) += 1;
             }
             func_ov063_02116244(*(char**)(c + 0x48c));
         }
@@ -66,7 +66,7 @@ extern "C" int func_ov063_0211a3d0(char* c)
 
 fall:
     *(s32*)(c + 0xa8) = 0x5000;
-    *(s16*)(((int)c + 0x90) & 0xFFFFFFFFFFFFFFFFLL) += 0x800;
-    *(s16*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFFLL) += 0x800;
+    *(s16*)(((int)c + 0x90)) += 0x800;
+    *(s16*)(((int)c + 0x8e)) += 0x800;
     return 0;
 }

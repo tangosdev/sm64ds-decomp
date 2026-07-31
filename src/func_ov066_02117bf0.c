@@ -45,11 +45,11 @@ int func_ov066_02117bf0(void *thiz)
         if (data_ov066_0211ae0c == *(int *)(c + 0x49c)) {
             char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
             if (p != 0) {
-                Vec3 *pp = (Vec3 *)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                 *(int *)(c + 0x4bc) = pp->x;
                 *(int *)(c + 0x4c0) = pp->y;
                 *(int *)(c + 0x4c4) = pp->z;
-                *(int *)(((int)c + 0x4c4) & 0xFFFFFFFFFFFFFFFF) -= 0xc8000;
+                *(int *)(((int)c + 0x4c4)) -= 0xc8000;
                 if (*(int *)(c + 0x4c4) < -0xc52000)
                     *(int *)(c + 0x4c4) = -0xc52000;
                 else if (*(int *)(c + 0x4c4) > -0x73a000)
@@ -58,14 +58,14 @@ int func_ov066_02117bf0(void *thiz)
             if (*(int *)(c + 0x4c4) > -0xa68000) {
                 if (*(int *)(c + 0x4bc) < 0) {
                     if (*(int *)(c + 0x49c) == 1)
-                        *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) += 0x1c2000;
+                        *(int *)(((int)c + 0x4bc)) += 0x1c2000;
                     else
-                        *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) += 0x12c000;
+                        *(int *)(((int)c + 0x4bc)) += 0x12c000;
                 } else {
                     if (*(int *)(c + 0x49c) == 1)
-                        *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) -= 0x12c000;
+                        *(int *)(((int)c + 0x4bc)) -= 0x12c000;
                     else
-                        *(int *)(((int)c + 0x4bc) & 0xFFFFFFFFFFFFFFFF) -= 0x1c2000;
+                        *(int *)(((int)c + 0x4bc)) -= 0x1c2000;
                 }
             }
             func_02012694(0x144, c + 0x74);
@@ -82,7 +82,7 @@ int func_ov066_02117bf0(void *thiz)
             if (func_ov066_02116a68(c) == 0) {
                 char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
                 if (p != 0) {
-                    Vec3 *pp = (Vec3 *)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                     v.x = pp->x;
                     v.y = pp->y;
                     v.z = pp->z;
@@ -103,9 +103,9 @@ int func_ov066_02117bf0(void *thiz)
     case 2:
         if (*(int *)(c + 0x4c8) < 0x2710) {
             if (*(unsigned short *)(c + 0x4d0) != 0)
-                *(int *)(((int)c + 0x4c8) & 0xFFFFFFFFFFFFFFFF) += 0x1a;
+                *(int *)(((int)c + 0x4c8)) += 0x1a;
             else
-                *(int *)(((int)c + 0x4c8) & 0xFFFFFFFFFFFFFFFF) += 0x130;
+                *(int *)(((int)c + 0x4c8)) += 0x130;
         }
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0x258000, *(int *)(c + 0x4c8));
         if (func_ov066_02116b78(c) == 1) {

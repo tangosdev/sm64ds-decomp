@@ -20,7 +20,7 @@ int func_ov071_02120860(char* c)
         _ZN9Animation8SetFlagsEi(c + 0x138, 0x40000000);
         *(int*)(c + 0x144) = 0x1000;
         *(int*)(c + 0x140) = 0;
-        st = (unsigned char*)(((int)c + 0x214) & 0xFFFFFFFFFFFFFFFFLL);
+        st = (unsigned char*)(((int)c + 0x214));
         *st = *st + 1;
         /* fall through */
     case 2:
@@ -30,7 +30,7 @@ int func_ov071_02120860(char* c)
             _ZN9Animation8SetFlagsEi(c + 0x138, 0x40000000);
             *(int*)(c + 0x144) = 0x1000;
             *(int*)(c + 0x140) = 0;
-            st = (unsigned char*)(((int)c + 0x214) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char*)(((int)c + 0x214));
             *st = *st + 1;
         }
         _ZN9Animation7AdvanceEv(c + 0x138);
@@ -38,7 +38,7 @@ int func_ov071_02120860(char* c)
     case 3:
     case 6:
         if (_ZN9Animation8FinishedEv(c + 0x138) != 0) {
-            st = (unsigned char*)(((int)c + 0x214) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char*)(((int)c + 0x214));
             *st = *st + 1;
         }
         _ZN9Animation7AdvanceEv(c + 0x138);

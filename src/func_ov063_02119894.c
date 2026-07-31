@@ -6,7 +6,7 @@ extern void func_ov063_02119b1c(char *c);
 
 void func_ov063_02119894(char *c)
 {
-    *(unsigned short *)(((int)c + 0x5d4) & 0xFFFFFFFFFFFFFFFF) &= ~0x40;
+    *(unsigned short *)(((int)c + 0x5d4)) &= ~0x40;
     if (*(unsigned short *)(c + 0x100) == 0) {
         unsigned r0 = (unsigned)RandomIntInternal(&data_0209e650);
         *(int *)(c + 0x588) = (int)(((r0 >> 16) & 0xfff) * 5);

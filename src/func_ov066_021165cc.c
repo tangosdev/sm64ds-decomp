@@ -26,7 +26,7 @@ void func_ov066_021165cc(char* c)
     }
     *(int*)(c + 0x3bc) = 0x1000;
     {
-        int* p = (int*)(((int)c + 0x33c) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x33c));
         *p = *p & 0xfffbd82f;
         *(int*)(c + 0xb0) = 0;
     }

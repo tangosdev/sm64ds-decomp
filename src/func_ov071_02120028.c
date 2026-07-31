@@ -36,7 +36,7 @@ int func_ov071_02120028(char *c)
         *(int*)(c + 0x390) = *(int*)(c + 0x5c);
         *(int*)(c + 0x394) = *(int*)(c + 0x60);
         *(int*)(c + 0x398) = *(int*)(c + 0x64);
-        *(int*)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x10000001;
+        *(int*)(((long long)(int)(c + 0xb0))) |= 0x10000001;
         Scuttlebug_SetState(c, 2);
     }
     func_ov071_0211f29c(c);

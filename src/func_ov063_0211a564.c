@@ -23,7 +23,7 @@ int func_ov063_0211a564(char *c, int arg1)
             goto ret0;
         }
     }
-    (*(int *)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFF)) &= ~1;
+    (*(int *)(((int)c + 0x19c))) &= ~1;
     func_ov063_0211a6f0(c);
     *(unsigned char *)(c + 0x5cc) = 1;
     return 1;

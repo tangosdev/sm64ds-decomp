@@ -61,7 +61,7 @@ int func_ov070_0211fd98(char *c)
     if (Vec3_Dist(c + 0x5c, c + 0x3c0) < 0x5dc000) {
         p = _ZN5Actor22ClosestNonVanishPlayerEv(c);
         if (p) {
-            int *pos = (int *)(((int)p + 0x5c) & 0xffffffffffffffffLL);
+            int *pos = (int *)(((int)p + 0x5c));
             t.x = pos[0];
             t.y = pos[1];
             t.z = pos[2];

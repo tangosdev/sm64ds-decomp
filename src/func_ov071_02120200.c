@@ -2,7 +2,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* p);
 
 int func_ov071_02120200(char* c)
 {
-    int* p = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+    int* p = (int*)(((int)c + 0xb0));
     int z;
     short ang;
 

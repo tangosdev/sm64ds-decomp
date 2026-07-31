@@ -26,14 +26,14 @@ int SnowmanBody_Kill(char *c)
         *(void **)(c + 0x32c) = _ZN5Actor13ClosestPlayerEv(c);
         if (Vec3_HorzDist(c + 0x5c, *(char **)(c + 0x32c) + 0x5c) < 0x118000) {
             if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(c + 0x32c), c, 1)) {
-                st = (unsigned char *)(((int)c + 0x334) & 0xFFFFFFFFFFFFFFFFLL);
+                st = (unsigned char *)(((int)c + 0x334));
                 *st = *st + 1;
             }
         }
         break;
     case 1:
         if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x32c), c, 0xb1, &v, 0, 2)) {
-            st = (unsigned char *)(((int)c + 0x334) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char *)(((int)c + 0x334));
             *st = *st + 1;
         }
         break;
@@ -49,7 +49,7 @@ int SnowmanBody_Kill(char *c)
                 0,
                 *(signed char *)(c + 0xcc),
                 -1);
-            st = (unsigned char *)(((int)c + 0x334) & 0xFFFFFFFFFFFFFFFFLL);
+            st = (unsigned char *)(((int)c + 0x334));
             *st = *st + 1;
         }
         break;

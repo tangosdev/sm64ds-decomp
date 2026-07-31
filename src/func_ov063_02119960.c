@@ -2,7 +2,7 @@ extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern void func_ov063_02119e38(void *c, int a, int b, int d);
 extern void func_ov063_02119b1c(char *c);
-#define M(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define M(p) ((long long)(int)(p))
 void func_ov063_02119960(char *c)
 {
     unsigned short *p = (unsigned short *)(int)M(c + 0x5d4);

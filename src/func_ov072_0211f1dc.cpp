@@ -15,7 +15,7 @@ int func_ov072_0211f1dc(char* c){
   *(short*)(c+0x94) = *(short*)(c+0x8e);
   if (d < *(int*)(c+0x398)) {
     n = _ZNK7PathPtr8NumNodesEv(c+0x380);
-    idx = (int*)(((int)c + 0x388) & 0xFFFFFFFFFFFFFFFFLL);
+    idx = (int*)(((int)c + 0x388));
     *idx = *idx + 1;
     if (*(int*)(c+0x388) >= n - 1) return 1;
   }

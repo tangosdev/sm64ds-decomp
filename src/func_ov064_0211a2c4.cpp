@@ -25,5 +25,5 @@ extern "C" void WaterRing_Kill(char *thiz)
             *(unsigned char*)(thiz + 0x174),
             v, 4);
     }
-    *(int*)(((int)thiz + 0xb0) & 0xFFFFFFFFFFFFFFFF) |= 1;
+    *(int*)(((int)thiz + 0xb0)) |= 1;
 }

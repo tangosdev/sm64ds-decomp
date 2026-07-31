@@ -20,30 +20,30 @@ int func_ov071_0212070c(char* c)
     if (delta > hi) {
         v = *(int *)(c + 0x1f4);
         if (v >= 0) {
-            p = (int *)(((int)c + 0x1f4) & 0xFFFFFFFFFFFFFFFF);
+            p = (int *)(((int)c + 0x1f4));
             *p = *p + delta;
             *(unsigned char *)(c + 0x216) = 0x2e;
         } else {
             if (*(unsigned char *)(c + 0x216) == 0)
                 *(int *)(c + 0x1f4) = 0;
-            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216) & 0xFFFFFFFFFFFFFFFF));
+            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
         }
     } else if (delta < -hi) {
         v = *(int *)(c + 0x1f4);
         /* fallthrough ADD when v <= 0 (target: bgt to Dec) */
         if (v <= 0) {
-            p = (int *)(((int)c + 0x1f4) & 0xFFFFFFFFFFFFFFFF);
+            p = (int *)(((int)c + 0x1f4));
             *p = *p + delta;
             *(unsigned char *)(c + 0x216) = 0x2e;
         } else {
             if (*(unsigned char *)(c + 0x216) == 0)
                 *(int *)(c + 0x1f4) = 0;
-            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216) & 0xFFFFFFFFFFFFFFFF));
+            DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
         }
     } else {
         if (*(unsigned char *)(c + 0x216) == 0)
             *(int *)(c + 0x1f4) = 0;
-        DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216) & 0xFFFFFFFFFFFFFFFF));
+        DecIfAbove0_Byte((unsigned char *)(((int)c + 0x216)));
     }
 
     v = *(int *)(c + 0x1f4);

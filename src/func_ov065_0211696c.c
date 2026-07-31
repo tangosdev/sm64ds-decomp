@@ -32,10 +32,10 @@ void func_ov065_0211696c(char* c)
     *(int*)(c + 0x3c0) = data_020a0e68[9];
     *(int*)(c + 0x3c4) = data_020a0e68[10];
     *(int*)(c + 0x3c8) = data_020a0e68[11];
-    *(int*)(((int)c + 0x3c0) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-    *(int*)(((int)c + 0x3c4) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-    *(int*)(((int)c + 0x3c4) & 0xFFFFFFFFFFFFFFFF) -= 0xa000;
-    *(int*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF) <<= 3;
+    *(int*)(((int)c + 0x3c0)) <<= 3;
+    *(int*)(((int)c + 0x3c4)) <<= 3;
+    *(int*)(((int)c + 0x3c4)) -= 0xa000;
+    *(int*)(((int)c + 0x3c8)) <<= 3;
 
     Matrix4x3_FromTranslation(data_020a0e68,
         *(int*)(c + 0x5c) >> 3,

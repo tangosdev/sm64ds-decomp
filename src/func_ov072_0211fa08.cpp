@@ -15,12 +15,12 @@ int func_ov072_0211fa08(char* c){
   switch(*(unsigned char*)(c+0x3a2)){
   case 0:
     if(_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(int*)(c+0x390), c, 0xb0, v, 0, 0) == 0) break;
-    st = (unsigned char*)(((int)c + 0x3a2) & 0xFFFFFFFFFFFFFFFFLL);
+    st = (unsigned char*)(((int)c + 0x3a2));
     *st = *st + 1;
     break;
   case 1:
     if(_ZN6Player12GetTalkStateEv((void*)*(int*)(c+0x390)) != -1) break;
-    st = (unsigned char*)(((int)c + 0x3a2) & 0xFFFFFFFFFFFFFFFFLL);
+    st = (unsigned char*)(((int)c + 0x3a2));
     *st = *st + 1;
     break;
   case 2:

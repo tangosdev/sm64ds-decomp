@@ -12,7 +12,7 @@ void BooCage_Kill(char *c) {
         return;
     }
     *(short*)(c + 0x100 + 0x3a) = 0x80;
-    t = (short *)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+    t = (short *)(((int)c + 0x8e));
     *t = (short)(*t + *(short*)(c + 0x100 + 0x3a));
     func_ov063_0211c82c(c);
     *(unsigned int*)(c + 0x148) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x148), 3, 0x8f, c + 0x74, 0);

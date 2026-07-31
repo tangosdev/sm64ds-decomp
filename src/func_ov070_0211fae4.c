@@ -34,7 +34,7 @@ int func_ov070_0211fae4(void *arg)
             *(int *)(c + 0x3c0) = *(int *)(c + 0x5c);
             *(int *)(c + 0x3c4) = *(int *)(c + 0x60);
             *(int *)(c + 0x3c8) = *(int *)(c + 0x64);
-            *(int *)(((int)c + 0x3c4) & 0xFFFFFFFFFFFFFFFFLL) += 0xc8000;
+            *(int *)(((int)c + 0x3c4)) += 0xc8000;
         }
         *(int *)(c + 0x5c) = *(int *)(c + 0x68);
         *(int *)(c + 0x60) = *(int *)(c + 0x6c);
@@ -51,7 +51,7 @@ int func_ov070_0211fae4(void *arg)
     vin.z = 0;
 
     {
-    int *q = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+    int *q = (int *)(((int)player + 0x5c));
     vb.x = q[0];
     vb.y = q[1];
     vb.z = q[2];
