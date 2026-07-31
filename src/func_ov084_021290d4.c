@@ -20,7 +20,7 @@ void func_ov084_021290d4(char *c)
     }
     else
     {
-      *((unsigned short *) ((((int) c) + new_var) & 0xFFFFFFFFFFFFFFFF)) = (*((unsigned short *) ((((int) c) + 0x458) & 0xFFFFFFFFFFFFFFFF))) - 1;
+      *((unsigned short *) ((((int) c) + new_var))) = (*((unsigned short *) ((((int) c) + 0x458)))) - 1;
     }
     return;
   }

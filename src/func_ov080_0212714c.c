@@ -33,10 +33,10 @@ int func_ov080_0212714c(char *c, int *p2)
     if (*(u8 *)(c + 0x342) == 0) {
         if (DecIfAbove0_Byte((u8 *)((int)c + 0x33e))) {
             if (*(s16 *)((c + 0x300) + 0x3c) > 0) {
-                s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+                s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
                 *p = (s16)(*p - 0x10);
             } else {
-                s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+                s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
                 *p = (s16)(*p + 0x10);
             }
             v = *(s16 *)((c + 0x300) + 0x3c);
@@ -46,10 +46,10 @@ int func_ov080_0212714c(char *c, int *p2)
             v = *(s16 *)((c + 0x300) + 0x3c);
             if (v != 0x100) {
                 if (v > 0x100) {
-                    s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+                    s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
                     *p = (s16)(*p - 0x10);
                 } else {
-                    s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+                    s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
                     *p = (s16)(*p + 0x10);
                 }
                 v = *(s16 *)((c + 0x300) + 0x3c);
@@ -64,10 +64,10 @@ int func_ov080_0212714c(char *c, int *p2)
         AngleDiff(horz, *(s16 *)(c + 0x8e));
         ang = AngleDiff(horz, *(s16 *)(c + 0x8e));
         if (ang > 0x4000) {
-            s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+            s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
             *p = (s16)(*p - 0x10);
         } else {
-            s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)) & 0xFFFFFFFFFFFFFFFFLL);
+            s16 *p = (s16 *)(int)(((long long)(int)(c + 0x33c)));
             *p = (s16)(*p + 0x10);
         }
         v = *(s16 *)((c + 0x300) + 0x3c);
@@ -108,7 +108,7 @@ int func_ov080_0212714c(char *c, int *p2)
         *(u8 *)(c + 0x33e) = 0xa;
     }
     {
-        s16 *px = (s16 *)(int)(((long long)(int)(c + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+        s16 *px = (s16 *)(int)(((long long)(int)(c + 0x8c)));
         *px = (s16)(*px + *(s16 *)((c + 0x300) + 0x3c));
     }
     {

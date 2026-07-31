@@ -37,7 +37,7 @@ int func_ov078_02123d3c(char* c)
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);
-        *(s16*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) += 0x1000;
+        *(s16*)(((int)c + 0x94)) += 0x1000;
         *(int*)(c + 0x98) = 0;
     } else {
         s16 a = Vec3_HorzAngle((Vector3*)(c + 0x5c), &v);

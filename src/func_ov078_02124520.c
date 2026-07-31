@@ -61,7 +61,7 @@ int func_ov078_02124520(char *c)
     }
     player = *(char **)(c + 0x430);
     if (_ZN6Player12GetTalkStateEv(player) != -1) {
-        pp = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        pp = (int *)(((int)player + 0x5c));
         in.x = 0;
         in.y = 0;
         in.z = 0;
@@ -91,7 +91,7 @@ int func_ov078_02124520(char *c)
         *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
         return 1;
     }
-    *(unsigned int *)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+    *(unsigned int *)(((int)cam + 0x154)) &= ~8;
     if (_ZN9Animation8FinishedEv(c + 0x31c)) {
         KingBobOmb_SetState(c, &data_ov078_0212703c);
     }

@@ -37,7 +37,7 @@ void func_ov073_0211f2c0(char *c, int strength)
   func_0200d8c8(data_0209f318, c + 0x5c, strength);
   data_020a0e68 = *((struct Matrix4x3 *) (c + 0x328));
   MulMat4x3Mat4x3(((char *) (*((void **) (c + 0x320)))) + ((*((int *) (c + 0x4bc))) * 0x30), &data_020a0e68, &data_020a0e68);
-  *((int *) ((((int) c) + 0x4bc) & 0xFFFFFFFFFFFFFFFF)) ^= 1;
+  *((int *) ((((int) c) + 0x4bc))) ^= 1;
   ty = *((int *) (((char *) (&data_020a0e68)) + 0x28));
   tx = *((int *) (((char *) (&data_020a0e68)) + 0x24));
   src.y = ty;

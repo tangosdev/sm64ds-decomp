@@ -6,7 +6,7 @@ void func_ov084_0212a6f8(char *c)
 {
     *(int *)(c + 0x98) = 0;
     if (*(unsigned short *)(c + 0x400 + 0x54)) {
-        *(unsigned short *)(((int)c + 0x454) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(unsigned short *)(((int)c + 0x454)) -= 1;
     }
     if (*(unsigned short *)(c + 0x400 + 0x54))
         return;

@@ -48,7 +48,7 @@ int func_ov078_021250f8(char* c) {
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
                 player = _ZN5Actor13ClosestPlayerEv(c);
                 if (player != 0) {
-                    int* q = (int*)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];

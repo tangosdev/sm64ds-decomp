@@ -96,7 +96,7 @@ int func_ov073_021200e0(u8* thiz)
             if (*(int*)(thiz + 0x4b4) == 0) {
                 SetAnim(thiz + 0x30c, data_ov073_02123290[1], 4, 0x40000000, 0x1000, 0);
             }
-            *(int*)(((int)thiz + 0x4b4) & 0xFFFFFFFFFFFFFFFF) += 1;
+            *(int*)(((int)thiz + 0x4b4)) += 1;
             if (*(int*)(thiz + 0x4b4) < 0x82) {
                 return 1;
             }

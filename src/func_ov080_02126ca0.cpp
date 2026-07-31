@@ -103,7 +103,7 @@ extern "C" int daPicGate_c_InitResources(char* c)
         unsigned int f = *(unsigned int*)(c + 8);
         if ((unsigned char)((f >> 8) & 0x1f) == 4) {
             if ((unsigned char)((f >> 0xd) & 3) == 1) {
-                int* pb0 = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+                int* pb0 = (int*)(((int)c + 0xb0));
                 *pb0 = *pb0 & ~3;
             }
         }
@@ -114,7 +114,7 @@ extern "C" int daPicGate_c_InitResources(char* c)
             if ((unsigned char)((f >> 0xd) & 3) == 1) {
                 self->unk_1b0 = self->unk_05c;
                 if (data_0209caa0[2] & 0x40000) {
-                    int* p = (int*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    int* p = (int*)(((int)c + 0x5c));
                     *p = *p + 0x802000;
                 }
             }

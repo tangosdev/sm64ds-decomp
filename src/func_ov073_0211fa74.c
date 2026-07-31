@@ -52,7 +52,7 @@ int func_ov073_0211fa74(char* c) {
     func_02012694(0xbb, c + 0x74);
     if (found != 0) {
         struct Vector3 fp;
-        int pv = (int)(((int)found + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        int pv = (int)(((int)found + 0x5c));
         fp.x = *(int*)pv;
         fp.y = *(int*)(pv + 4);
         fp.z = *(int*)(pv + 8);
@@ -60,7 +60,7 @@ int func_ov073_0211fa74(char* c) {
         _ZN9ActorBase18MarkForDestructionEv(found);
     }
     if (spawned != 0) {
-        *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+        *(int*)(((int)cam + 0x154)) &= ~8;
         _ZN9ActorBase18MarkForDestructionEv(c);
     }
 end:

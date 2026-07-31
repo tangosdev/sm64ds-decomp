@@ -15,10 +15,10 @@ void func_ov079_021249f0(char* c)
         *(int*)(c + 0x98) = 0;
         *(int*)(c + 0x328) = 0x2000;
         if (*(unsigned short*)(c + 0x100) >= 0x20) {
-            unsigned char* p = (unsigned char*)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char* p = (unsigned char*)(((int)c + 0x40c));
             (*p)++;
         } else {
-            short *p94 = (short*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFFLL);
+            short *p94 = (short*)(((int)c + 0x94));
             *p94 = *p94 + 0x400;
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
         }

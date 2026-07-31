@@ -39,7 +39,7 @@ int func_ov073_0212128c(char* c)
     _ZN6Camera6SetPosERK7Vector3(cam, &ps);
 
     if (_ZN6Player12GetTalkStateEv(player) == -1) {
-        *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+        *(int*)(((int)cam + 0x154)) &= ~8;
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
         func_02011d08();
         ChiefChilly_ChangeState(c, &data_ov073_02123360);

@@ -25,7 +25,7 @@ extern "C" void func_ov079_02125240(char *c){
   *(int*)(c+0xa8) = 0;
   func_01ffb098(c+0x418);
   func_01ffb0bc(c+0x418);
-  *(unsigned char *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF) += 1;
+  *(unsigned char *)(((int)c + 0x40c)) += 1;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x2cc, data_ov079_021275ec[(unsigned char)c[0x414]*5+1]->f, 0x40000000, 0x1000, 0);
   v.x = *(int*)(c+0x5c);
   v.y = *(int*)(c+0x60);

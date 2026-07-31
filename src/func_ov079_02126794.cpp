@@ -6,12 +6,12 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
 void func_ov079_02126794(char* c) {
   if (*(unsigned short*)(c + 0x100) == 0) {
     *(int*)(c + 0x98) = -0x1e000;
-    int* p128 = (int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
+    int* p128 = (int*)(((int)c + 0x128));
     *p128 |= 1;
   }
-  short* p8c = (short*)(((int)c + 0x8c) & 0xFFFFFFFFFFFFFFFF);
-  int* p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
-  unsigned short* p100 = (unsigned short*)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFF);
+  short* p8c = (short*)(((int)c + 0x8c));
+  int* p60 = (int*)(((int)c + 0x60));
+  unsigned short* p100 = (unsigned short*)(((int)c + 0x100));
   *p8c += 0x2000;
   *p60 += 0x14000;
   if (*p100 <= 0x5a) return;

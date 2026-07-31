@@ -6,8 +6,8 @@ void func_ov079_02124530(char* c){
     _ZN9Animation7AdvanceEv(c + 0x31c);
     if (_ZN9Animation8FinishedEv(c + 0x31c)) {
         short* a = (short*)(c + 0x8c);
-        if (*(unsigned char*)(c + 0x414)) { int* q = (int*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF); *q = *q + 0xe0; }
-        else { int* q = (int*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF); *q = *q + 0x140; }
+        if (*(unsigned char*)(c + 0x414)) { int* q = (int*)(((int)c + 0x3c8)); *q = *q + 0xe0; }
+        else { int* q = (int*)(((int)c + 0x3c8)); *q = *q + 0x140; }
         *a = *a + *(int*)(c + 0x3c8);
         if (*(short*)(c + 0x8c) > 0x4000) {
             *(int*)(c + 0x3c8) = 0;
@@ -25,7 +25,7 @@ void func_ov079_02124530(char* c){
         return;
     }
     {
-        int* p = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x60));
         *p = *p + ((*(unsigned char*)(c + 0x414) + 1) << 15);
     }
 }

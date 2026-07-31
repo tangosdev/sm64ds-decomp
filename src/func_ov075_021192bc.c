@@ -22,9 +22,9 @@ void func_ov075_021192bc(char* self)
             int r = func_0203d890();
             if (v == r) {
                 func_020308b4(r);
-                (*(unsigned char*)(((int)self + 0x282) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(unsigned char*)(((int)self + 0x282)))++;
             } else {
-                (*(int*)(((int)self + 0x268) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(int*)(((int)self + 0x268)))++;
                 if (*(int*)(self + 0x268) >= 0x384) {
                     data_0209fc54 = 1;
                 }
@@ -33,7 +33,7 @@ void func_ov075_021192bc(char* self)
         break;
     case 1:
         if (func_020308a8() != 0) {
-            (*(unsigned char*)(((int)self + 0x282) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(unsigned char*)(((int)self + 0x282)))++;
         }
         break;
     case 2:
@@ -41,7 +41,7 @@ void func_ov075_021192bc(char* self)
             int r = func_0203d8fc();
             if (r != 0) {
                 func_020308b4(r);
-                (*(unsigned char*)(((int)self + 0x282) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(unsigned char*)(((int)self + 0x282)))++;
             }
         }
         break;
@@ -61,7 +61,7 @@ void func_ov075_021192bc(char* self)
     }
 
     if (*(unsigned char*)(self + 0x282) < 1) return;
-    (*(int*)(((int)self + 0x274) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(int*)(((int)self + 0x274)))++;
     if (*(int*)(self + 0x274) >= 0xa8c) {
         data_0209fc54 = 1;
     }

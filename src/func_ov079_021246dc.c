@@ -33,7 +33,7 @@ void func_ov079_021246dc(void *thiz)
         case 0:
             if (Player_StartTalk(*(void **)(c + 0x3ac), c, 1) == 0)
                 return;
-            (*(unsigned char *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(unsigned char *)(((int)c + 0x40c)))++;
             return;
         case 1:
             if (Player_GetTalkState(*(void **)(c + 0x3ac)) != 0)
@@ -41,7 +41,7 @@ void func_ov079_021246dc(void *thiz)
             {
                 int idx = *(int *)(c + 0x3ec);
                 unsigned char *other = *(unsigned char **)(c + idx * 4 + 0x39c);
-                Vec3 *op = (Vec3 *)((unsigned char *)(((int)other + 0x5c) & 0xFFFFFFFFFFFFFFFF));
+                Vec3 *op = (Vec3 *)((unsigned char *)(((int)other + 0x5c)));
                 unsigned short ang;
                 int i;
                 short mag = 0x10e;
@@ -55,14 +55,14 @@ void func_ov079_021246dc(void *thiz)
                 pos.z = data_02082214[i * 2 + 1] * mag + pos.z;
                 if (Player_ShowMessage(*(void **)(c + 0x3ac), c, 0xa5, &pos, 0, 0) == 0)
                     return;
-                (*(unsigned char *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(unsigned char *)(((int)c + 0x40c)))++;
                 func_0201267c(0x133, c + 0x74);
             }
             return;
         case 2:
             if (Player_GetTalkState(*(void **)(c + 0x3ac)) != -1)
                 return;
-            (*(unsigned char *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(unsigned char *)(((int)c + 0x40c)))++;
             return;
         case 3:
             *(int *)(c + 0x3b0) = 9;

@@ -44,7 +44,7 @@ void func_ov079_02125b44(char* c)
             void* p = *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c);
             if (*(int*)((char*)p + 0x60) >= *(int*)(c + 0x60) - 0xa000) {
                 if (_ZN6Player9StartTalkER9ActorBaseb(p, c, 1) != 0) {
-                    u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+                    u8 *st = (u8 *)(((int)c + 0x40c));
                     (*st)++;
                 }
                 break;
@@ -54,7 +54,7 @@ void func_ov079_02125b44(char* c)
         break;
     case 1:
         if (_Z14ApproachLinearRsss((s16*)(c + 0x94), *(s16*)(c + 0x300 + 0xb8), 0x800) != 0) {
-            u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *st = (u8 *)(((int)c + 0x40c));
             (*st)++;
         }
         *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
@@ -67,7 +67,7 @@ void func_ov079_02125b44(char* c)
             int y;
             {
                 void *p = *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c);
-                int *src = (int*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+                int *src = (int*)(((int)p + 0x5c));
                 pos[0] = src[0];
                 pos[1] = src[1];
                 pos[2] = src[2];
@@ -81,7 +81,7 @@ void func_ov079_02125b44(char* c)
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
                     *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c),
                     c, 0xa4, pos, 0, 0) != 0) {
-                u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *st = (u8 *)(((int)c + 0x40c));
                 (*st)++;
                 _ZN7Message11PrepareTalkEv();
                 func_0201267c(0x133, c + 0x74);
@@ -90,7 +90,7 @@ void func_ov079_02125b44(char* c)
         break;
     case 3:
         if (data_0209d660 != 0) {
-            u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *st = (u8 *)(((int)c + 0x40c));
             (*st)++;
         }
         break;
@@ -100,14 +100,14 @@ void func_ov079_02125b44(char* c)
             func_02011d38();
             _ZN7Message7EndTalkEv();
             {
-                u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *st = (u8 *)(((int)c + 0x40c));
                 (*st)++;
             }
         }
         break;
     case 5:
         if (_ZN6Player12GetTalkStateEv(*(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c)) == -1) {
-            u8 *st = (u8 *)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *st = (u8 *)(((int)c + 0x40c));
             (*st)++;
         }
         break;

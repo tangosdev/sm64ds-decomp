@@ -51,7 +51,7 @@ int func_ov073_02120910(char *c)
     Vec3_ApproachHorz(c + 0x5c, &in, 0x14000);
     *(short *)(c + 0x8e) = Vec3_HorzAngle(c + 0x5c, c + 0x3d8);
     *(short *)(c + 0x94) = *(short *)(c + 0x8e) + 0x8000;
-    *(int *)(((int)c + 0x4b4) & 0xFFFFFFFFFFFFFFFF) += 0x500;
+    *(int *)(((int)c + 0x4b4)) += 0x500;
     _Z14ApproachLinearRsss((short *)(c + 0x8c),
         ((s64)*(int *)(c + 0x4d0) * data_02082214[((unsigned short)(short)*(int *)(c + 0x4b4) >> 4) * 2] + 0x800) >> 12,
         0x400);

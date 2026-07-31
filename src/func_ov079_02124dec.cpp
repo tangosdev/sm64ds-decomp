@@ -31,7 +31,7 @@ extern "C" void func_ov079_02124dec(char* c)
                 _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w1, 5, 0x8000, 0);
                 *(int*)(c + 0x3b0) = 8;
             } else {
-                unsigned char* p = (unsigned char*)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFFLL);
+                unsigned char* p = (unsigned char*)(((int)c + 0x40c));
                 (*p)++;
             }
         } else {

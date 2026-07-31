@@ -15,7 +15,7 @@ int func_ov072_021214dc(void *thiz)
         int f = *(int *)(c + 0xb0);
         int b0 = (int)((f & 0x40000) != 0);
         if (b0 != 0) {
-            (*(volatile unsigned char *)(((int)c + 0x36e) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(volatile unsigned char *)(((int)c + 0x36e)))++;
         } else {
             int b1 = (int)((f & 0x20000) != 0);
             if (b1 != 0) break;
@@ -30,7 +30,7 @@ int func_ov072_021214dc(void *thiz)
         unsigned int a, b;
         if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x360), c, 0xb2, 0, a = 0, b = 0)) {
             func_0201267c(0xf2, c + 0x74);
-            (*(volatile unsigned char *)(((int)c + 0x36e) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(volatile unsigned char *)(((int)c + 0x36e)))++;
         }
         int b2 = (int)((*(int *)(c + 0xb0) & 0x80000) != 0);
         if (b2 != 0) {
@@ -41,7 +41,7 @@ int func_ov072_021214dc(void *thiz)
     case 2:
         if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x360)) == -1) {
             _ZN6Player9DropActorEv(*(void **)(c + 0x360));
-            (*(volatile unsigned char *)(((int)c + 0x36e) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(volatile unsigned char *)(((int)c + 0x36e)))++;
         }
         break;
     case 3:

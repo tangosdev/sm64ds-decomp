@@ -10,7 +10,7 @@ extern s16 SINE_TABLE[];
 void func_ov079_02124638(char* obj)
 {
     u8 old = *(u8 *)(obj + 0x400);
-    u8 *p = (u8 *)(((int)obj + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
+    u8 *p = (u8 *)(((int)obj + 0x400));
     u8 v = *p;
     *p = (u8)(v - 1);
     if (old != 0) {

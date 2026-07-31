@@ -16,7 +16,7 @@ int func_ov081_021245e8(void* thiz)
             char* obj = data_0209f394[i];
             if (obj != 0) {
                 int dist;
-                int* s = (int*)(((long long)(obj + 0x5c)) & 0xFFFFFFFFFFFFFFFF);
+                int* s = (int*)(((long long)(obj + 0x5c)));
                 v.x = s[0];
                 v.y = s[1];
                 v.z = s[2];

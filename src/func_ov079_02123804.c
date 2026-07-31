@@ -26,7 +26,7 @@ void func_ov079_02123804(char* self, char* other)
     int ang;
 
     {
-        int* q = (int*)(((int)other + 0x68) & 0xFFFFFFFFFFFFFFFFLL);
+        int* q = (int*)(((int)other + 0x68));
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];
@@ -77,7 +77,7 @@ void func_ov079_02123804(char* self, char* other)
         }
         {
             struct Vector3 pos;
-            int* q = (int*)(((int)other + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            int* q = (int*)(((int)other + 0x5c));
             pos.x = q[0];
             pos.y = q[1];
             pos.z = q[2];

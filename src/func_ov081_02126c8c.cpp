@@ -47,7 +47,7 @@ struct Base {
 extern "C" int func_ov081_02126c8c(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
-    *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int*)(((int)c + 0xb0)) &= ~1;
     *(int*)(c + 0x98) = 0xa000;
     *(int*)(c + 0xa8) = 0x28000;
     *(unsigned char*)(c + 0x3f2) = 0x2d;

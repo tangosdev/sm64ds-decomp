@@ -47,7 +47,7 @@ int func_ov073_02120ed0(void *self)
             } else {
                 *(s16 *)(c + 0x100) = 0;
                 *(int *)(c + 0x4d0) = 0x1000;
-                (*(u8 *)(((int)c + 0x4c8) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(u8 *)(((int)c + 0x4c8)))++;
                 func_02012694(0x169, c + 0x74);
                 break;
             }

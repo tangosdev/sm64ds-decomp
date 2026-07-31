@@ -60,7 +60,7 @@ int func_ov081_02125208(char *c) {
 
 label_ec:
     {
-        int *pState = (int*)(((int)c + 0x408) & 0xFFFFFFFFFFFFFFFF);
+        int *pState = (int*)(((int)c + 0x408));
         *pState = *pState + 1;
         if (*(int*)(c + 0x408) < 0xb) {
             return 1;

@@ -12,12 +12,12 @@ void func_ov079_02124ed4(char* c)
         if (*(unsigned char*)(c + 0x402) != 0) {
             *(unsigned char*)(c + 0x402) = 0;
             {
-                unsigned char* p401 = (unsigned char*)(((int)c + 0x401) & 0xFFFFFFFFFFFFFFFF);
+                unsigned char* p401 = (unsigned char*)(((int)c + 0x401));
                 *p401 = *p401 - 1;
             }
             func_02012694(0x134, c + 0x74);
             {
-                int* p = (int*)(((int)*(int*)(c + 0x3ac) + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+                int* p = (int*)(((int)*(int*)(c + 0x3ac) + 0x5c));
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(3, p[0], p[1], p[2]);
             }
             if (*(unsigned char*)(c + 0x401) == 0) {
@@ -28,7 +28,7 @@ void func_ov079_02124ed4(char* c)
                 *(int*)(c + 0x3ac) = 0;
                 _ZN9Animation7AdvanceEv(c + 0x330);
                 {
-                    unsigned char* p40c = (unsigned char*)(((int)c + 0x40c) & 0xFFFFFFFFFFFFFFFF);
+                    unsigned char* p40c = (unsigned char*)(((int)c + 0x40c));
                     *p40c = *p40c + 1;
                 }
             }
@@ -38,16 +38,16 @@ void func_ov079_02124ed4(char* c)
     } else {
         unsigned short v;
         {
-            unsigned short* p3fc = (unsigned short*)(((int)c + 0x3fc) & 0xFFFFFFFFFFFFFFFF);
+            unsigned short* p3fc = (unsigned short*)(((int)c + 0x3fc));
             *p3fc = *p3fc + 1;
         }
         v = *(unsigned short*)(c + 0x300 + 0xfc);
         if (v <= 10) {
             if ((int)v % 2) {
-                int* p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+                int* p60 = (int*)(((int)c + 0x60));
                 *p60 = *p60 + 0x10000;
             } else {
-                int* p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+                int* p60 = (int*)(((int)c + 0x60));
                 *p60 = *p60 - 0x10000;
             }
             return;

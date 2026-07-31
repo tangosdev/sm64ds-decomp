@@ -37,7 +37,7 @@ extern "C" int func_ov081_02124b98(char* c) {
                 player = _ZN5Actor13ClosestPlayerEv(c);
                 if (player != 0) {
                     int angle;
-                    int* q = (int*)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];

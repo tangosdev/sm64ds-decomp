@@ -63,7 +63,7 @@ int daBgSnwmn_c_InitResources(char *c)
         self->unk_060 = *(int *)(rg + 0x44);
     else
         self->unk_060 = v[1];
-    (*(int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF)) += 0xc3000;
+    (*(int *)(((int)c + 0x60))) += 0xc3000;
     self->unk_09c = 0;
     self->unk_0a0 = 0;
     self->unk_080 = 0x1800;

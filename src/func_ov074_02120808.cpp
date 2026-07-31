@@ -11,5 +11,5 @@ extern "C" void func_ov074_02120808(char* c)
     if (AngleDiff(ang, _ZN5Actor18HorzAngleToCPlayerEv(c)) <= 0x4000)
         return;
     func_ov074_02121a4c(c, 6);
-    *(int *)(((int)(c + 0x5f0)) & 0xFFFFFFFFFFFFFFFF) *= -1;
+    *(int *)(((int)(c + 0x5f0))) *= -1;
 }

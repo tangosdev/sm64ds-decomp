@@ -30,7 +30,7 @@ int func_ov073_021203ac(void *thiz)
         *(int *)(c + 0xa8) = 0x5a000;
         *(int *)(c + 0x9c) = -neg;
         {
-            unsigned char *p = (unsigned char *)(((long long)(int)(c + 0x4c4)) & 0xFFFFFFFFFFFFFFFFLL);
+            unsigned char *p = (unsigned char *)(((long long)(int)(c + 0x4c4)));
             *p = *p + 1;
             *p = *p & 7;
         }
@@ -76,7 +76,7 @@ mainblock:
         func_ov073_0211f2c0(c, 0x7d0000);
         func_02012694(0x16d, c + 0x74);
         {
-            int *cnt = (int *)(((long long)(int)(c + 0x4b8)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *cnt = (int *)(((long long)(int)(c + 0x4b8)));
             *cnt = *cnt + 1;
         }
         if (*(int *)(c + 0x4b8) > 7) {

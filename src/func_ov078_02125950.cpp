@@ -15,7 +15,7 @@ extern "C" void KingBobOmb_SetState(char *c, void *p);
 extern "C" int func_ov078_02125950(char *c)
 {
     char *r5 = *(char **)(c + 0x430);
-    int *src = (int *)(((int)(r5) + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int *src = (int *)(((int)(r5) + 0x5c));
     Vector3 v;
     int t = src[0];
     Vector3 *arg0 = (Vector3 *)(c + 0x5c);

@@ -48,9 +48,9 @@ extern "C" void func_ov081_021254d8(char *c)
             *(int*)(c + 0x440) = data_020a0e68.m[9];
             *(int*)(c + 0x444) = data_020a0e68.m[10];
             *(int*)(c + 0x448) = data_020a0e68.m[11];
-            *(int*)(((int)c + 0x440) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-            *(int*)(((int)c + 0x444) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-            *(int*)(((int)c + 0x448) & 0xFFFFFFFFFFFFFFFF) <<= 3;
+            *(int*)(((int)c + 0x440)) <<= 3;
+            *(int*)(((int)c + 0x444)) <<= 3;
+            *(int*)(((int)c + 0x448)) <<= 3;
             *(int*)((char*)actor + 0x5c) = *(int*)(c + 0x440);
             *(int*)((char*)actor + 0x60) = *(int*)(c + 0x444);
             *(int*)((char*)actor + 0x64) = *(int*)(c + 0x448);
@@ -72,9 +72,9 @@ extern "C" void func_ov081_021254d8(char *c)
     *(int*)(c + 0x434) = data_020a0e68.m[9];
     *(int*)(c + 0x438) = data_020a0e68.m[10];
     *(int*)(c + 0x43c) = data_020a0e68.m[11];
-    *(int*)(((int)c + 0x434) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-    *(int*)(((int)c + 0x438) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-    *(int*)(((int)c + 0x43c) & 0xFFFFFFFFFFFFFFFF) <<= 3;
+    *(int*)(((int)c + 0x434)) <<= 3;
+    *(int*)(((int)c + 0x438)) <<= 3;
+    *(int*)(((int)c + 0x43c)) <<= 3;
 
     if (*(int*)(c + 0x41c) != 0)
         return;

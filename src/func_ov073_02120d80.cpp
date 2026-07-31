@@ -16,8 +16,8 @@ int func_ov073_02120d80(char *c)
     *(int *)(c + 0x368) = fix;
     ang = _ZN5Actor18HorzAngleToCPlayerEv(c);
     *(short *)(c + 0x94) = ang;
-    *(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) =
-        (short)((int)*(short *)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF) + 0x8000);
+    *(short *)(((int)c + 0x94)) =
+        (short)((int)*(short *)(((int)c + 0x94)) + 0x8000);
     return 1;
 }
 }

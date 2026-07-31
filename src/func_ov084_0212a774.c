@@ -42,7 +42,7 @@ void func_ov084_0212a774(char *c)
         *(void **)(c + 0x444) = data_ov084_02130228[*(s32 *)(c + 0x460)];
         _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1b4);
         {
-            s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)) & 0xFFFFFFFFFFFFFFFFLL);
+            s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)));
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
             *f198 = *f198 & ~0x20000;
         }
@@ -52,7 +52,7 @@ void func_ov084_0212a774(char *c)
         return;
     }
     if (h <= 0x3c) {
-        *(u16 *)(((long long)(int)(c + 0x452)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(u16 *)(((long long)(int)(c + 0x452))) -= 1;
         if (*(u16 *)(c + 0x400 + 0x52) == 0) {
             func_ov084_021296cc(c);
             _ZN5Enemy9SpawnCoinEv(c);
@@ -83,7 +83,7 @@ void func_ov084_0212a774(char *c)
             }
         }
         {
-            s32 *p98 = (s32 *)(((long long)(int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+            s32 *p98 = (s32 *)(((long long)(int)(c + 0x98)));
             *p98 >>= 1;
         }
         {
@@ -102,7 +102,7 @@ void func_ov084_0212a774(char *c)
         } else if (*(u8 *)(c + 0x467) <= 2) {
             func_02012694(0x13b, c + 0x74);
         }
-        *(u8 *)(((long long)(int)(c + 0x467)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(u8 *)(((long long)(int)(c + 0x467))) += 1;
     } else {
         if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4) != 0) {
             _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1b4);
@@ -119,7 +119,7 @@ void func_ov084_0212a774(char *c)
         func_020aea30(c, a, c + 0x1b4, 7);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
         {
-            s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)) & 0xFFFFFFFFFFFFFFFFLL);
+            s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)));
             *f198 |= 1;
         }
     }

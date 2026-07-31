@@ -32,11 +32,11 @@ void func_ov084_0212934c(char* c)
             if (((Flags*)(c + 0x468))->flag)
                 return;
             func_02012694(0xd0, c + 0x74);
-            fp = (unsigned char *)(((int)c + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+            fp = (unsigned char *)(((int)c + 0x468));
             *fp |= 2;
             return;
         }
-        fp = (unsigned char *)(((int)c + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+        fp = (unsigned char *)(((int)c + 0x468));
         *fp &= ~2;
         return;
     }
@@ -46,11 +46,11 @@ void func_ov084_0212934c(char* c)
             if (((Flags*)(c + 0x468))->flag)
                 return;
             func_02012694(0xd0, c + 0x74);
-            fp = (unsigned char *)(((int)c + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+            fp = (unsigned char *)(((int)c + 0x468));
             *fp |= 2;
             return;
         }
-        fp = (unsigned char *)(((int)c + 0x468) & 0xFFFFFFFFFFFFFFFFLL);
+        fp = (unsigned char *)(((int)c + 0x468));
         *fp &= ~2;
     }
 }

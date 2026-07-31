@@ -24,7 +24,7 @@ int func_ov074_021207b8(struct Obj* self)
 {
     if (func_ov074_02121a20(self, 6)) {
         if (_ZN9Animation8FinishedEv(&self->anim)) {
-            *(s16*)(((long long)(int)((char*)self + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL) += 0x8000;
+            *(s16*)(((long long)(int)((char*)self + 0x8e))) += 0x8000;
             return 1;
         }
     }

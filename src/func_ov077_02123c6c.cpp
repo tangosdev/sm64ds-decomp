@@ -23,7 +23,7 @@ void func_ov077_02123c6c(char* c, void* w){
   WithMeshClsn_UpdateDiscreteNoLava_veneer(w);
   if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0) {
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(w) + 4, &nrm);
-    *(unsigned char*)(((int)c + 0x41d) & 0xFFFFFFFFFFFFFFFF) ^= 1;
+    *(unsigned char*)(((int)c + 0x41d)) ^= 1;
   }
   pos.x = *(int*)(c+0x5c);
   pos.y = *(int*)(c+0x60);

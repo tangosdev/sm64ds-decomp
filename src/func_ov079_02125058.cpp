@@ -33,7 +33,7 @@ extern "C" void func_ov079_02125058(char* c, char* a)
         Vector3* p;
         s32 x, y, z;
         if (DecIfAbove0_Byte((u8*)(c + 0x406)) == 0) return;
-        p = (Vector3*)(((long long)(int)(a + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (Vector3*)(((long long)(int)(a + 0x5c)));
         x = p->x; v1.x = x;
         y = p->y; v1.y = y;
         z = p->z; v1.z = z;
@@ -47,7 +47,7 @@ extern "C" void func_ov079_02125058(char* c, char* a)
         s32 x, y, z;
         u32 t = *(s32*)(c + 0x3b0);
         if (t - 1 > 1) return;
-        p = (Vector3*)(((long long)(int)(a + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (Vector3*)(((long long)(int)(a + 0x5c)));
         x = p->x; v2.x = x;
         y = p->y; v2.y = y;
         z = p->z; v2.z = z;

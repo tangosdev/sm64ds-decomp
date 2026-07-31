@@ -14,19 +14,19 @@ int func_ov081_02124894(char* c)
     /* Source written as (>0 ? sub : add) so mwccarm inversion emits the
        ROM's le/add arm first, then the unconditional sub arm. */
     if (*(int*)(c + 0x408) > 0)
-        *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) =
-            *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) - 0x200;
+        *(s16*)(((int)c + 0x414)) =
+            *(s16*)(((int)c + 0x414)) - 0x200;
     else
-        *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) =
-            *(s16*)(((int)c + 0x414) & 0xFFFFFFFFFFFFFFFF) + 0x200;
+        *(s16*)(((int)c + 0x414)) =
+            *(s16*)(((int)c + 0x414)) + 0x200;
 
     {
-        s16 *ang = (s16*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFF);
+        s16 *ang = (s16*)(((int)c + 0x94));
         *ang = *ang + *(s16*)((c + 0x400) + 0x14);
     }
     ApproachAngle((s16*)(c + 0x8c), -0x2800, 1, 0x500, 0x500);
     {
-        int *p = (int*)(((int)c + 0x410) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int*)(((int)c + 0x410));
         *p = *p + 1;
     }
     if (*(int*)(c + 0x410) <= 0x28) goto done;

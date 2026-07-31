@@ -34,8 +34,8 @@ void func_ov080_02123c24(char *c)
     state = ((unsigned int)raw << 4) >> 16;
 
     if (state == 6) {
-        int *p150 = (int *)(((int)c + 0x150) & 0xFFFFFFFFFFFFFFFF);
-        int *pb0 = (int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+        int *p150 = (int *)(((int)c + 0x150));
+        int *pb0 = (int *)(((int)c + 0xb0));
         *p150 = *p150 & ~1;
         *pb0 = *pb0 | 0x10000000;
     }
@@ -88,7 +88,7 @@ void func_ov080_02123c24(char *c)
             struct Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+            int *pb = (int *)(((int)player + 0x5c));
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];

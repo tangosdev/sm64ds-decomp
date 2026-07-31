@@ -65,7 +65,7 @@ int func_ov078_021247bc(void *thiz)
                 *(int *)(c + 0xa8) = 0x1e000;
         }
         *(int *)(c + 0xac) = vC.z;
-        *(int *)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFF) += *(int *)(c + 0x9c);
+        *(int *)(((int)c + 0xa8)) += *(int *)(c + 0x9c);
         vA.x = *(int *)(c + 0x5c);
         vA.y = *(int *)(c + 0x60);
         vA.z = *(int *)(c + 0x64);

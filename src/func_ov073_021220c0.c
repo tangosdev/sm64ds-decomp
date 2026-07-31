@@ -10,7 +10,7 @@ int func_ov073_021220c0(char* c)
 {
     *(int*)(c + 0x328) = 0x400;
     if (DecIfAbove0_Short((unsigned short*)(c + 0x330)) != 0) {
-        unsigned short* q = (unsigned short*)(((int)c + 0x332) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short* q = (unsigned short*)(((int)c + 0x332));
         int t;
         *q += 0x800;
         t = *(int*)(c + 0x328);

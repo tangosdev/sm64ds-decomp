@@ -17,10 +17,10 @@ void func_ov079_0212538c(char *c)
     if (*(unsigned short *)(c + 0x100) < 8) return;
     short *a = (short *)(c + 0x8c);
     if (*(unsigned char *)(c + 0x414)) {
-        int *q = (int *)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF);
+        int *q = (int *)(((int)c + 0x3c8));
         *q += 0x130;
     } else {
-        int *q = (int *)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF);
+        int *q = (int *)(((int)c + 0x3c8));
         *q += 0x100;
     }
     *a = *a + *(int *)(c + 0x3c8);

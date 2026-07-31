@@ -11,8 +11,8 @@ int func_ov079_02123bcc(char *self) {
     int dist, rangle, idx, hc, hs, idx2, nx, nz;
     char *sub; char *p; s16 cosv, sinv, sin2, cos2;
     int a0, a1, a2, raw, ang;
-    sub = *(char**)(((int)self + (*(int*)(self+0x3ec))*4 + 0x39c) & 0xFFFFFFFFFFFFFFFFLL);
-    p = (char*)(((int)sub + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+    sub = *(char**)(((int)self + (*(int*)(self+0x3ec))*4 + 0x39c));
+    p = (char*)(((int)sub + 0x5c));
     v[0] = *(int*)p; v[1] = *(int*)(p+4); v[2] = *(int*)(p+8);
     if (v[1] > *(int*)(self+0x60)) return 0;
     dist = Vec3_HorzDist((struct Vector3*)v, (struct Vector3*)(self+0x5c));
@@ -34,7 +34,7 @@ int func_ov079_02123bcc(char *self) {
             nx = (s16)sin2 * 5 + vx;
             nz = (s16)cos2 * 5 + vz;
             i = *(int*)(self+0x3ec);
-            sub = *(char**)(((int)self + i*4 + 0x39c) & 0xFFFFFFFFFFFFFFFFLL);
+            sub = *(char**)(((int)self + i*4 + 0x39c));
             *(int*)(sub+0x5c) = nx;
             *(int*)(sub+0x60) = vy;
             *(int*)(sub+0x64) = nz;

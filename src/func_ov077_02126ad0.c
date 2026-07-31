@@ -56,7 +56,7 @@ int func_ov077_02126ad0(char* c)
 
     player = (char*)_ZN5Actor13ClosestPlayerEv(c);
     if (player != 0) {
-        struct Vector3* src = (struct Vector3*)(((long)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFF);
+        struct Vector3* src = (struct Vector3*)(((long)(player + 0x5c)));
         pp.x = src->x;
         pp.y = src->y;
         pp.z = src->z;
