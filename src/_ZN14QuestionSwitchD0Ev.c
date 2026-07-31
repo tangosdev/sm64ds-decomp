@@ -1,21 +1,23 @@
-extern void _ZN9ModelAnimD1Ev(void *);
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int _ZTV14QuestionSwitch[];
+// @symbol _ZN14QuestionSwitchD0Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_ModelAnim.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "QuestionSwitch.h"
 extern int _ZTV17ExclamationSwitch[];
 extern void *data_020a0eac;
-int *_ZN14QuestionSwitchD0Ev(int *t)
-{
-    t[0] = (int)_ZTV14QuestionSwitch;
-    _ZN9ModelAnimD1Ev((char *)t + 0x6b4);
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x4ec);
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x324);
-    t[0] = (int)_ZTV17ExclamationSwitch;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
+int *_ZN14QuestionSwitchD0Ev(struct QuestionSwitch *self) {
+    ((int *)self)[0] = (int)_ZTV14QuestionSwitch;
+    _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
+    _ZN18MovingMeshColliderD1Ev((char *)&self->mMovingMeshCollider);
+    _ZN18MovingMeshColliderD1Ev((char *)&self->unk_324);
+    ((int *)self)[0] = (int)_ZTV17ExclamationSwitch;
+    _ZN18MovingMeshColliderD1Ev((char *)&self->unk_124);
+    _ZN5ModelD1Ev((char *)&self->mModel);
+    _ZN5ActorD2Ev(((int *)self));
+    _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
+    return ((int *)self);
 }

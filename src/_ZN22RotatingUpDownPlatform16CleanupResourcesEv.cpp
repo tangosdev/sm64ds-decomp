@@ -1,13 +1,18 @@
 //cpp
+// @symbol _ZN22RotatingUpDownPlatform16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "RotatingUpDownPlatform.h"
 extern "C" {
 extern int _ZN13SharedFilePtr7ReleaseEv(void*);
 extern int _ZN16MeshColliderBase7DisableEv(void*);
 extern void* data_ov091_021344fc[];
 extern void* data_ov091_021344f4[];
-int _ZN22RotatingUpDownPlatform16CleanupResourcesEv(char* c){
-  _ZN13SharedFilePtr7ReleaseEv(data_ov091_021344fc[*(unsigned char*)(c+0x352)]);
-  _ZN13SharedFilePtr7ReleaseEv(data_ov091_021344f4[*(unsigned char*)(c+0x352)]);
-  _ZN16MeshColliderBase7DisableEv(c+0x124);
-  return 1;
 }
+
+int RotatingUpDownPlatform::CleanupResources()
+{
+  _ZN13SharedFilePtr7ReleaseEv(data_ov091_021344fc[mVariant]);
+  _ZN13SharedFilePtr7ReleaseEv(data_ov091_021344f4[mVariant]);
+  _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+  return 1;
 }

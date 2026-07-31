@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN15TtcRotatingCube13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "TtcRotatingCube.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -33,13 +38,9 @@ extern "C" {
 }
 
 extern void *data_ov065_0211cfd0[];
-extern void *data_ov065_0211c0a8[];
-extern s16 data_ov065_0211cfa8[];
 extern void *data_ov065_0211cfd4[];
-extern void *data_ov065_0211cfd8[];
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f2c0;
-extern u8 data_ov065_0211cfa4[];
 extern s32 data_020a0e68[];
 
 struct RaycastGround {
@@ -48,9 +49,9 @@ struct RaycastGround {
     char pad2[0xc];
 };
 
-extern "C" int _ZN15TtcRotatingCube13InitResourcesEv(void *self)
+int TtcRotatingCube::InitResources()
 {
-    u8 *c = (u8 *)self;
+    u8 *c = (u8 *)((void *)this);
     u16 id = *(u16 *)(c + 0xc);
 
     if (id != 0x6c) {
@@ -76,8 +77,8 @@ extern "C" int _ZN15TtcRotatingCube13InitResourcesEv(void *self)
 
     *(s16 *)(c + 0x300 + 0x78) = data_ov065_0211cfa8[*(u8 *)(c + 0x377)];
 
-    func_ov065_0211990c(self);
-    func_ov065_021198a0(self);
+    func_ov065_0211990c(((void *)this));
+    func_ov065_021198a0(((void *)this));
 
     idx = *(u8 *)(c + 0x377);
     if (idx == 0) {

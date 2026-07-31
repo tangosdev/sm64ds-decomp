@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN19FirePiranhaPlantBig6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "FirePiranhaPlantBig.h"
 struct V3 { int x, y, z; };
 struct Obj {
     virtual void v0();
@@ -9,18 +12,18 @@ struct Obj {
     virtual void m5(V3* p);
 };
 
-extern "C" int _ZN19FirePiranhaPlantBig6RenderEv(char* c)
+int FirePiranhaPlantBig::Render()
 {
-    int v = *(int*)(c + 0x204);
+    int v = mScale;
     int b;
-    if (v == 0 || (b = (*(int*)(c + 0xb0) & 0x40000) != 0, b != 0)) {
+    if (v == 0 || (b = (unk_0b0 & 0x40000) != 0, b != 0)) {
         return 1;
     }
     V3 s;
     s.x = v;
     s.y = v;
     s.z = v;
-    Obj* o = (Obj*)(c + 0x110);
+    Obj* o = (Obj*)((char*)&mModelAnim);
     o->m5(&s);
     return 1;
 }

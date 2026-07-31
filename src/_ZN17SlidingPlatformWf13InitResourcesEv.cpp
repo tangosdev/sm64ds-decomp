@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN17SlidingPlatformWf13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "SlidingPlatformWf.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -23,9 +26,9 @@ extern u16 data_ov091_02134514[];
 extern u16 data_ov091_02134504[];
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 
-extern "C" int _ZN17SlidingPlatformWf13InitResourcesEv(void* self)
+int SlidingPlatformWf::InitResources()
 {
-    u8* c = (u8*)self;
+    u8* c = (u8*)((void*)this);
     u16 t = *(u16*)(c+0xc);
     switch (t) {
         case 0x37: *(u8*)(c+0x322) = 6; break;
@@ -51,8 +54,8 @@ extern "C" int _ZN17SlidingPlatformWf13InitResourcesEv(void* self)
     *(s32*)(c+0x324) = *(s32*)(c+0x5c);
     *(s32*)(c+0x328) = *(s32*)(c+0x60);
     *(s32*)(c+0x32c) = *(s32*)(c+0x64);
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN8Platform21UpdateModelPosAndRotYEv(((void*)this));
+    _ZN8Platform19UpdateClsnPosAndRotEv(((void*)this));
 
     if (*(u8*)(c+0x322) == 6) {
         int oi = *(u8*)(c+0x322) * 0xc;

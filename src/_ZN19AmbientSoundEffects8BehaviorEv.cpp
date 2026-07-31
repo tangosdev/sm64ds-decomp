@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN19AmbientSoundEffects8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "AmbientSoundEffects.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -18,12 +23,10 @@ int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int d, int e);
 extern u8 data_0209f250;
 extern char* data_0209f394[];
 extern int data_020a0ebc[];
-extern int data_0208e434;
 extern u8 data_0209caa0[];
 extern char* data_0209f318;
-extern void* data_ov002_02110af8;
 
-extern "C" int _ZN19AmbientSoundEffects8BehaviorEv(char* self)
+int AmbientSoundEffects::Behavior()
 {
     int vol;
     int flag;
@@ -32,10 +35,10 @@ extern "C" int _ZN19AmbientSoundEffects8BehaviorEv(char* self)
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub(diff, (int*)(data_0209f394[data_0209f250] + 0x5c), (int*)(self + 0x5c));
-    Vec3_RotateYAndTranslate(rotated, data_020a0ebc, *(s16*)(self + 0x8e), diff);
+    Vec3_Sub(diff, (int*)(data_0209f394[data_0209f250] + 0x5c), (int*)((char*)&unk_05c));
+    Vec3_RotateYAndTranslate(rotated, data_020a0ebc, mAngleY, diff);
 
-    if (*(int*)(self + 8) == 1) {
+    if (mParam == 1) {
         int z = rotated[2];
         int x = rotated[0];
         int az = (z < 0) ? -z : z;
@@ -63,7 +66,7 @@ extern "C" int _ZN19AmbientSoundEffects8BehaviorEv(char* self)
                 int d;
                 vol = 0;
                 flag = 0x7f;
-                d = AngleDiff(*(s16*)(self + 0x8e), *(s16*)(data_0209f318 + 0x17c)) - 0x2000;
+                d = AngleDiff(mAngleY, *(s16*)(data_0209f318 + 0x17c)) - 0x2000;
                 if (d < 0)
                     d = 0;
                 else if (d > 0x4000)
@@ -81,15 +84,15 @@ extern "C" int _ZN19AmbientSoundEffects8BehaviorEv(char* self)
             _ZN3Fog4InitEt5Fix12IiES1_(fog, 0, (u16)depth, color);
     }
 
-    if (*(int*)(self + 0x98) == 0) {
+    if (unk_098 == 0) {
         if (func_ov100_02144f84() == 0)
             return 1;
-        *(int*)(self + 0x98) = 1;
+        unk_098 = 1;
     }
 
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2e, vol, flag, 0x1451, 0) != 0) {
         if (flag == 0)
-            *(int*)(self + 0x98) = 0;
+            unk_098 = 0;
     }
     return 1;
 }

@@ -1,3 +1,6 @@
+// @symbol _ZN18SolidHeapAllocator16AllocateForwardsEPvjj
+/* recovered: named members + shared header */
+#include "SolidHeapAllocator.h"
 typedef unsigned int u32;
 typedef signed int s32;
 typedef unsigned short u16;

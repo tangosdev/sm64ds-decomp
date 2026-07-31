@@ -1,5 +1,9 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol _ZN21MegaMushroomCreateTag8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "MegaMushroomCreateTag.h"
 typedef int Fix12i;
 
 extern "C" Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
@@ -31,45 +35,43 @@ struct Actor : ActorBase {
     static Actor *FindWithActorID(unsigned int id, Actor *after);
 };
 
-extern void func_ov002_020b4714(void *self);
-extern void func_ov002_020b47ec(void *self);
 
-extern "C" int _ZN21MegaMushroomCreateTag8BehaviorEv(Actor *self)
+int MegaMushroomCreateTag::Behavior()
 {
     Actor *o;
-    int isTarget = (int)(self->actorID == 0x140);
+    int isTarget = (int)(((Actor *)this)->actorID == 0x140);
     if (isTarget) {
-        if (!self->b10b) {
+        if (!((Actor *)this)->b10b) {
             o = Actor::FindWithActorID(0x1b, 0);
             while (o) {
-                if (Vec3_Dist(&self->pos, &o->pos) < 0x96000) {
-                    self->b108 = 1;
-                    o->p32c = self;
-                    self->b10b = 1;
+                if (Vec3_Dist(&((Actor *)this)->pos, &o->pos) < 0x96000) {
+                    ((Actor *)this)->b108 = 1;
+                    o->p32c = ((Actor *)this);
+                    ((Actor *)this)->b10b = 1;
                     return 1;
                 }
                 o = Actor::FindWithActorID(0x1b, o);
             }
-            self->b10b = 1;
+            ((Actor *)this)->b10b = 1;
         }
     }
-    if (!self->b10a) {
+    if (!((Actor *)this)->b10a) {
         o = Actor::FindWithActorID(0x13f, 0);
         while (o) {
-            if (self->b109 == o->b109) self->b10a = 1;
+            if (((Actor *)this)->b109 == o->b109) ((Actor *)this)->b10a = 1;
             o = Actor::FindWithActorID(0x13f, o);
         }
-        if (!self->b10a) self->MarkForDestruction();
+        if (!((Actor *)this)->b10a) ((Actor *)this)->MarkForDestruction();
     }
-    isTarget = (int)(self->actorID == 0x140);
+    isTarget = (int)(((Actor *)this)->actorID == 0x140);
     if (isTarget) {
-        if (self->b108 == 1) {
-            if (self->b10c) func_ov002_020b4714(self);
+        if (((Actor *)this)->b108 == 1) {
+            if (((Actor *)this)->b10c) func_ov002_020b4714(((Actor *)this));
         } else {
-            func_ov002_020b47ec(self);
+            func_ov002_020b47ec(((Actor *)this));
         }
     }
-    self->clsn.Clear();
-    self->clsn.Update();
+    ((Actor *)this)->clsn.Clear();
+    ((Actor *)this)->clsn.Update();
     return 1;
 }

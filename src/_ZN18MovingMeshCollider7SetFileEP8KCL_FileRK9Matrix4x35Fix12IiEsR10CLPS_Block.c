@@ -1,14 +1,13 @@
+// @symbol _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "MovingMeshCollider.h"
 
 struct KCL_File;
 struct CLPS_Block;
-typedef struct 
-{
-  int m[12];
-} Matrix4x3;
 extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(void *thiz, void *f, void *b);
-extern void func_02039624(char *o);
 extern void InvMat4x3(void *dst, void *src);
-extern int func_02053200(int x);
 extern void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 extern void func_02039e18(void *thiz, int *vec, void *p);
 extern Matrix4x3 data_020a0e68;

@@ -1,13 +1,15 @@
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
+// @symbol _ZN19OrangeBallBillboardD0Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "OrangeBallBillboard.h"
 extern void *G0;
-int *_ZN19OrangeBallBillboardD0Ev(int *t)
-{
-    t[0] = (int)VT0;
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
-    return t;
+int *_ZN19OrangeBallBillboardD0Ev(struct OrangeBallBillboard *self) {
+    ((int *)self)[0] = (int)VT0;
+    _ZN5ModelD1Ev((char *)&self->mModel);
+    _ZN5ActorD2Ev(((int *)self));
+    _ZN6Memory10DeallocateEPvP4Heap(((int *)self), G0);
+    return ((int *)self);
 }

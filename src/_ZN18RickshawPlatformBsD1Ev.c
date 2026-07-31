@@ -1,3 +1,6 @@
+// @symbol _ZN18RickshawPlatformBsD1Ev
+/* recovered: named members + shared header */
+#include "RickshawPlatformBs.h"
 extern int _ZTV18RickshawPlatformBs[];
 extern int data_ov002_02108d94[];
 extern int _ZTV17ExclamationSwitch[];
@@ -5,14 +8,14 @@ extern int func_0207328c(void*,int,int,void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN5ActorD2Ev(void*);
-int _ZN18RickshawPlatformBsD1Ev(char* c){
-  *(int*)c=(int)_ZTV18RickshawPlatformBs;
-  *(int*)c=(int)data_ov002_02108d94;
-  func_0207328c(c+0x4b0,5,0x1c8,(void*)_ZN18MovingMeshColliderD1Ev);
-  func_0207328c(c+0x320,5,0x50,(void*)_ZN5ModelD1Ev);
-  *(int*)c=(int)_ZTV17ExclamationSwitch;
-  _ZN18MovingMeshColliderD1Ev(c+0x124);
-  _ZN5ModelD1Ev(c+0xd4);
-  _ZN5ActorD2Ev(c);
-  return (int)c;
+int _ZN18RickshawPlatformBsD1Ev(struct RickshawPlatformBs *self) {
+  *(int*)((char*)self)=(int)_ZTV18RickshawPlatformBs;
+  *(int*)((char*)self)=(int)data_ov002_02108d94;
+  func_0207328c(((char*)self)+0x4b0,5,0x1c8,(void*)_ZN18MovingMeshColliderD1Ev);
+  func_0207328c(((char*)self)+0x320,5,0x50,(void*)_ZN5ModelD1Ev);
+  *(int*)((char*)self)=(int)_ZTV17ExclamationSwitch;
+  _ZN18MovingMeshColliderD1Ev((char*)&self->mMovingMeshCollider);
+  _ZN5ModelD1Ev((char*)&self->mModel);
+  _ZN5ActorD2Ev(((char*)self));
+  return (int)((char*)self);
 }

@@ -1,3 +1,6 @@
+// @symbol _ZN22ExpandingHeapAllocator14SizeofInternalEPv
+/* recovered: named members + shared header */
+#include "ExpandingHeapAllocator.h"
 /* ExpandingHeapAllocator::SizeofInternal(void* userPtr) at 0x0204e084
  * Returns the allocated size of a block given a user pointer. The block's
  * MemoryNode header sits immediately before the user data; its `size` field (see

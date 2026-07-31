@@ -1,3 +1,6 @@
+// @symbol _ZN15FaderBrightnessD1Ev
+/* recovered: named members + shared header */
+#include "FaderBrightness.h"
 /* FaderBrightness::~FaderBrightness() at 0x02017814
  * Sets self->vtable to the FaderBrightness vtable, delegates to its base
  * (Fader) subobject destructor (func_02017838), and returns self

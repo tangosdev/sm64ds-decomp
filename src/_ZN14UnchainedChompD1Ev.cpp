@@ -1,11 +1,15 @@
 //cpp
+// @symbol _ZN14UnchainedChompD1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Model.h"
+#include "decl_ModelAnim.h"
+#include "decl_ShadowModel.h"
+#include "decl_WithMeshClsn.h"
+/* recovered: named members + shared header */
+#include "UnchainedChomp.h"
 extern "C" void func_0207328c(void* p, int n, int sz, void* dtor);
-extern "C" void _ZN11ShadowModelD1Ev(void*);
-extern "C" void _ZN9ModelAnimD1Ev(void*);
-extern "C" void _ZN12WithMeshClsnD1Ev(void*);
 extern "C" void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern "C" int func_ov002_020aed18(int* x);
-extern "C" void _ZN5ModelD1Ev(void*);
 
 extern int _ZTV14UnchainedChomp;
 extern "C" void func_02011508(void);

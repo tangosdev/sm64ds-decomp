@@ -1,3 +1,6 @@
+// @symbol _ZN18MovingMeshColliderD1Ev
+/* recovered: named members + shared header */
+#include "MovingMeshCollider.h"
 /* MovingMeshCollider::~MovingMeshCollider() at 0x0203a470
  * Complete-object destructor. Installs the MovingMeshCollider vtable, then runs
  * the base subobject destructor (func_020397fc). Returns this.
