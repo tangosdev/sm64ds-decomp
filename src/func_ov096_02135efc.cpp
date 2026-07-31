@@ -1,12 +1,15 @@
 //cpp
+// @symbol func_ov096_02135efc
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef short s16;
 typedef int Fix12i;
 
-struct Vec3 { Fix12i x, y, z; };
+
 struct Mtx43 { Fix12i a[12]; };
 
-extern "C" void Vec3_Asr(struct Vec3* d, struct Vec3* s, int sh);
+extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
@@ -31,7 +34,7 @@ enum Bool { FALSE, TRUE };
 
 extern "C" void func_ov096_02135efc(char* c)
 {
-    struct Vec3 v;
+    struct Vector3 v;
     enum Bool b;
 
     if (*(int*)(c + 0x38c) == 5) {
@@ -39,7 +42,7 @@ extern "C" void func_ov096_02135efc(char* c)
         if (b) {
             int y1, y2;
 
-            Vec3_Asr(&v, (struct Vec3*)(c + 0x5c), 3);
+            Vec3_Asr(&v, (struct Vector3*)(c + 0x5c), 3);
             Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
 
             y1 = ((VObj*)c)->m29() >> 3;

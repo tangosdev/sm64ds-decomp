@@ -1,11 +1,14 @@
 //cpp
+// @symbol func_ov091_02133d30
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef int Fix12i;
 typedef short s16;
 typedef unsigned short u16;
 typedef signed char s8;
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 
 extern "C" {
 void func_02012694(u32 id, void *pos);
@@ -24,9 +27,9 @@ extern s16 data_02082214[];
 extern int data_0209e650;
 extern void *data_ov091_021356d0;
 
-struct Vector3_16f { s16 x, y, z; };
-struct Vec { Fix12i x, y, z; };
-struct Info { Vector3_16f vec; Vec pos; };
+
+
+struct Info { Vector3_16 vec; Vector3 pos; };
 
 struct Self {
     char pad0[0x5c];
@@ -50,7 +53,7 @@ struct Self {
 extern "C" int func_ov091_02133d30(Self *self)
 {
     Info info;
-    Vec tgt;
+    Vector3 tgt;
     void *spawned;
     void *player;
     s16 ang;

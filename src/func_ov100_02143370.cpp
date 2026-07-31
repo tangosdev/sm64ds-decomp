@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov100_02143370
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
+
 extern void _ZN11RaycastLineC1Ev(void* self);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* act);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);

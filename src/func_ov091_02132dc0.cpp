@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov091_02132dc0
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor {
     virtual void f00(); virtual void f01(); virtual void f02(); virtual void f03();
     virtual void f04(); virtual void f05(); virtual void f06(); virtual void f07();

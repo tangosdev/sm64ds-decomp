@@ -1,4 +1,9 @@
 //cpp
+// @symbol func_ov098_02139228
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int s32;
 typedef unsigned int u32;
 typedef short s16;
@@ -6,7 +11,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef long long s64;
 
-struct Vector3 { s32 x, y, z; };
+
 
 struct C {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -28,14 +33,11 @@ extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *out);
 extern int func_02037e58(u32 *p);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
-extern int func_ov002_020f02c8(int x);
 extern int func_ov002_020f030c(int x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
 extern void Vec3_MulScalarInPlace(int *v, int s);
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
-extern int AngleDiff(int a, int b);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern int func_ov002_020f035c(u32 sel, int r1);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, const Vector3 *pos);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32 z);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);

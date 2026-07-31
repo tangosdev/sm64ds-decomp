@@ -1,19 +1,22 @@
+// @symbol func_ov085_0212e19c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
-struct Vector3 { int x, y, z; };
+
 
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);
 extern void func_02012790(int x);
 extern int _ZN6Player12GetTalkStateEv(void* self);
-extern int func_ov085_0212e728(void* c, void* p);
 
 extern unsigned char data_0209d6bc;
 extern unsigned char data_0209f284;
-extern int data_ov085_02130830[];
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 int func_ov085_0212e19c(char* c)
 {

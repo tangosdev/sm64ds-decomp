@@ -1,7 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov092_021311b0
+/* recovered: shared common types */
+#include "common.h"
+
 typedef short s16;
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LA(p) (((long long)(int)(p)))
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);

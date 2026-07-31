@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov100_02142918
+// @emits Butterfly_Kill
+/* recovered: renamed to Class_Method */
+/* daBtfly_c::Kill - recovered from vtable slot identity */
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
@@ -26,7 +30,7 @@ void _ZN12CylinderClsn6UpdateEv(void* c);
 
 extern s16 data_02082214[];
 
-extern "C" void func_ov100_02142918(char* c)
+extern "C" void Butterfly_Kill(char* c)
 {
     int r;
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
@@ -52,8 +56,8 @@ extern "C" void func_ov100_02142918(char* c)
         ang = *(u16*)(c + 0x94);
         *(int*)(c + 0xac) = (int)(((long long)*(int*)(c + 0x98) * data_02082214[((ang >> 4) << 1) + 1] + 0x800) >> 12);
         {
-            int* pa4 = (int*)((((long long)(int)(c + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL));
-            int* pac = (int*)((((long long)(int)(c + 0xac)) & 0xFFFFFFFFFFFFFFFFLL));
+            int* pa4 = (int*)((((long long)(int)(c + 0xa4))));
+            int* pac = (int*)((((long long)(int)(c + 0xac))));
             *pa4 = *pa4 - *(int*)(c + 0xe0) * 3;
             *pac = *pac - *(int*)(c + 0xe8) * 3;
             *(int*)(c + 0x98) = Vec3_HorzLen(pa4);
@@ -65,8 +69,8 @@ extern "C" void func_ov100_02142918(char* c)
         goto Lend;
 
     {
-        int* pa4 = (int*)((((long long)(int)(c + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL));
-        int* pac = (int*)((((long long)(int)(c + 0xac)) & 0xFFFFFFFFFFFFFFFFLL));
+        int* pa4 = (int*)((((long long)(int)(c + 0xa4))));
+        int* pac = (int*)((((long long)(int)(c + 0xac))));
         *pa4 = *pa4 + *(int*)(c + 0xd4) * 3;
         *pac = *pac + *(int*)(c + 0xdc) * 3;
         *(int*)(c + 0x98) = Vec3_HorzLen(pa4);

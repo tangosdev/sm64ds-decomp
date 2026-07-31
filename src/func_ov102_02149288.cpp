@@ -1,5 +1,8 @@
 //cpp
-struct Vector3{ int x,y,z; };
+// @symbol func_ov102_02149288
+/* recovered: shared common types */
+#include "common.h"
+
 struct Vector3_16;
 extern "C" {
 void func_ov102_02149684(Vector3* v, void* c);

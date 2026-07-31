@@ -1,4 +1,9 @@
 //cpp
+// @symbol func_ov098_0213a794
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
@@ -10,14 +15,13 @@ extern "C" void _ZN13RaycastGroundC1Ev(void* self);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* actor);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern "C" void _ZN13RaycastGroundD1Ev(void* self);
-extern void func_ov098_0213a8ec();
 
-struct V3 { int x, y, z; };
+
 struct RG { char b[0x4c]; };
 
 extern "C" int func_ov098_0213a794(char* self, char** fp){
   RG rc;
-  V3 v;
+  Vector3 v;
   int r2;
   int y;
   _ZN9ModelBase7SetFileEP8BMD_Fileii(self+0xd4, _ZN5Model8LoadFileER13SharedFilePtr((void*)fp[0]), 1, -1);

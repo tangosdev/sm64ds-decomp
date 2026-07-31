@@ -1,12 +1,17 @@
 //cpp
+// @symbol func_ov100_0214542c
+// @emits daDoor_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daDoor_c::CleanupResources - recovered from vtable slot identity */
 struct V { virtual void v0(); virtual void v1(); };
 struct Elem { void* a; void* b; char pad[8]; };
 extern Elem data_ov100_02148204[];
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void* p);
-extern void UnloadKeyModels(int i);
 extern void* data_ov100_02148744;
-int func_ov100_0214542c(char* c) {
+int daDoor_c_CleanupResources(char* c) {
   int idx = *(int*)(c + 8);
   Elem* e = &data_ov100_02148204[idx];
   V* obj;

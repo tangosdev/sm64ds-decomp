@@ -1,3 +1,8 @@
+// @symbol func_ov100_02144a38
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned int u32;
 typedef int s32;
 typedef int Fix12i;
@@ -5,30 +10,18 @@ typedef short s16;
 typedef unsigned char u8;
 typedef signed char s8;
 
-struct Vector3 { Fix12i x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
 
-extern int data_ov100_02148720;
-extern int data_ov100_02148718;
-extern int data_ov100_0214871c;
-extern struct Vector3 data_ov100_02148880;
-extern struct Vector3 data_ov100_0214879c;
-extern struct Vector3 data_ov100_021487f0;
-extern void* data_ov100_02148850;
-extern void* data_ov100_02148790;
-extern void* data_ov100_021487d8;
+
+
 extern void func_020072c0(void);
 extern char data_ov100_02148204[];
-extern char data_ov100_02148704;
 
 extern void _ZN6Player11OpenBigDoorEv(void* p);
 extern void func_020731dc(int a, int b, void** node);
-extern void func_ov100_02145170(char* r0, char* r1, struct Vector3* a, struct Vector3* b);
 extern void Vec3_RotateYAndTranslate(void* dst, void* src, short angle, void* unk);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
     u32 actorID, u32 param1, const struct Vector3* pos, const struct Vector3_16* rot,
     s32 areaID, s32 deathTableID);
-extern void func_ov089_0213115c(char* c, int i);
 
 int func_ov100_02144a38(char* c, char* p)
 {

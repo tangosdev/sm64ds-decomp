@@ -1,3 +1,7 @@
+// @symbol func_ov098_0213b7e8
+// @emits Cannon_Kill
+/* recovered: renamed to Class_Method */
+/* daCnn_c::Kill - recovered from vtable slot identity */
 typedef unsigned char u8;
 typedef unsigned short u16;
 
@@ -7,7 +11,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern char *_ZN5Actor13ClosestPlayerEv(char *self);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 
-void func_ov098_0213b7e8(char *c)
+void Cannon_Kill(char *c)
 {
     int state = *(int *)(c + 0x3c0);
     if (state == 0) {

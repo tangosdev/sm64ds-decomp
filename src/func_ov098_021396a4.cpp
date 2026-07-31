@@ -1,9 +1,12 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov098_021396a4
+/* recovered: shared common types */
+#include "common.h"
+
 struct RaycastGround { char buf[0x68 - 0x18]; };
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vec3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
@@ -16,7 +19,7 @@ void func_ov098_021396a4(void *self)
 {
     char *c = (char*)self;
     struct RaycastGround rg;
-    struct Vec3 v;
+    struct Vector3 v;
     int r5;
     int r4;
 

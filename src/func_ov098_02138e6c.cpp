@@ -1,9 +1,12 @@
 //cpp
+// @symbol func_ov098_02138e6c
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vec3 { int x, y, z; };
+
 
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
@@ -21,7 +24,7 @@ extern "C" {
 void func_ov098_02138b28(void *c, int i);
 void *_ZN5Actor10FindWithIDEj(u32 id);
 int _ZN6Player7TryGrabER5Actor(void *f, void *a);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vec3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 }
 
 extern "C" void func_ov098_02138e6c(char *c)
@@ -88,7 +91,7 @@ extern "C" void func_ov098_02138e6c(char *c)
     if (b == 0) return;
 
     {
-        struct Vec3 v;
+        struct Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);

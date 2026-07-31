@@ -1,27 +1,31 @@
+// @symbol func_ov100_02146828
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
-struct V3 { int x, y, z; };
-struct V16 { s16 x, y, z; };
+
+
 
 extern int data_0209caa0[];
 extern int data_0209f32c[];
 extern int data_0209e650;
 
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern void Vec3_Sub(struct V3* out, void* a, void* b);
-extern int Vec3_HorzLen(struct V3* v);
+extern void Vec3_Sub(struct Vector3* out, void* a, void* b);
+extern int Vec3_HorzLen(struct Vector3* v);
 extern int RandomIntInternal(int* seed);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
-extern void func_ov100_0214629c(void* actor, int a);
 
 #pragma opt_loop_invariants off
 void func_ov100_02146828(char* self)
 {
-    struct V3 diff;
-    struct V16 rot;
-    struct V3 pos;
+    struct Vector3 diff;
+    struct Vector3_16 rot;
+    struct Vector3 pos;
     int n;
     int i;
     unsigned int kind;
@@ -41,7 +45,7 @@ void func_ov100_02146828(char* self)
     }
 
     {
-        struct V16 *sr = (struct V16*)(self + 0x92);
+        struct Vector3_16 *sr = (struct Vector3_16*)(self + 0x92);
         n = *(int*)(self + 8) & 0xf;
         rot = *sr;
         *(u8*)(self + 0x158) = 0;
@@ -78,7 +82,7 @@ void func_ov100_02146828(char* self)
                 0x158, kind, &pos, &rot, *(signed char*)(self + 0xcc), -1);
             if (a != 0) {
                 func_ov100_0214629c(a, *(int*)(self + 4));
-                (*(u8*)(((long long)(int)(self + 0x158)) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(u8*)(((long long)(int)(self + 0x158))))++;
             }
         }
     }

@@ -1,10 +1,14 @@
 //cpp
+// @symbol func_ov100_0214109c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
-struct Vector3 { int x,y,z; };
-struct Vector3_16 { short x,y,z; };
+
+
 extern "C" {
 extern int Actor_Spawn(unsigned a, unsigned b, const struct Vector3 *pos, const struct Vector3_16 *rot, int i, int j);
-extern void ActorBase_MarkForDestruction(void *c);
 extern void Actor_SetRanges(void *c, Fix12 a, Fix12 b, Fix12 d, Fix12 e);
 
 void func_ov100_0214109c(void *t) {

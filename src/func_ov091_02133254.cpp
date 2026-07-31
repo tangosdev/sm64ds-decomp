@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov091_02133254
+/* recovered: shared common types */
+#include "common.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -18,10 +21,10 @@ extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File &b, B
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, BTP_File *f, int a, int fix, unsigned int u);
 extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
 
-struct V3 { int x, y, z; };
+
 struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, V3 *v, void *a);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vector3 *v, void *a);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
@@ -30,7 +33,7 @@ extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Ve
 extern "C" int func_ov091_02133254(char *self)
 {
     RaycastGround rg;
-    V3 v;
+    Vector3 v;
     BMD_File *bmd;
     KCL_File *kcl;
     void **p320;

@@ -1,11 +1,15 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov091_021334b8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
 extern "C" int _ZN5Actor18GetBitInDeathTableEv(void *c);
 extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, Vector3 const &v, unsigned int n, int f, short s);
-extern "C" void _ZN5Actor17TrackInDeathTableEv(void *c);
-extern "C" void func_ov091_02133498(char *c);
 
 extern "C" void func_ov091_021334b8(char *c, int flag)
 {

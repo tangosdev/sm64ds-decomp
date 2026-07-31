@@ -1,14 +1,17 @@
+// @symbol func_ov100_021412d8
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
 typedef signed char s8;
 
-struct Vec3 { int x, y, z; };
-struct Vec3_16 { s16 x, y, z; };
+
+
 
 extern int _ZN5Actor13DistToCPlayerEv(void* self);
 extern unsigned int RandomIntInternal(void* g);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vec3* pos, const struct Vec3_16* rot, int e, int f);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* pos, const struct Vector3_16* rot, int e, int f);
 
 extern int data_0209e650;
 
@@ -25,11 +28,11 @@ void func_ov100_021412d8(char* sl)
             int sel;
             int i;
             int mask = typ & 0x30;
-            struct Vec3_16 rot;
+            struct Vector3_16 rot;
             int two = 2;
             int three = 3;
             i = 1;
-            rot = *(struct Vec3_16*)(sl + 0x92);
+            rot = *(struct Vector3_16*)(sl + 0x92);
             for (; i < 3; i++) {
                 if (i == sb) {
                     sel = 1;
@@ -40,7 +43,7 @@ void func_ov100_021412d8(char* sl)
                 }
                 rot.y = (s16)(rot.y + (s16)(RandomIntInternal(&data_0209e650) >> 0x10));
                 _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x150, mask | (sel << 6),
-                    (struct Vec3*)(sl + 0x5c), &rot, (int)*(s8*)(sl + 0xcc), -1);
+                    (struct Vector3*)(sl + 0x5c), &rot, (int)*(s8*)(sl + 0xcc), -1);
             }
             if (sb == 0) {
                 *(u8*)(sl + 0x3f0) = 1;

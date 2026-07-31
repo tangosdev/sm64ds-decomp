@@ -1,22 +1,21 @@
+// @symbol func_ov100_02145c58
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Player.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov100_02145c58 at 0x02145c58
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov100).
  */
-extern int func_ov100_02145e74(char* a, char* b);
 extern unsigned char NumStars(void);
-extern int func_ov100_02144f84(void);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(char* p, char* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
 extern void _ZN6Player11OpenBigDoorEv(char* p);
 extern int func_ov100_02145f68(char* c, void* p, char* b);
-extern int _ZN6Player13TryTalkToDoorEh(char* p, unsigned char x);
-extern void func_ov100_02145e10(char* a, char* b);
 
-struct Vec3 { int x, y, z; };
 
-extern signed char data_ov100_02148390[];
+
 extern char data_0209caa0[];
-extern char data_ov100_02148984[];
-extern char data_ov100_02148994[];
 
 int func_ov100_02145c58(char* a, char* b) {
     signed char* entry;

@@ -1,16 +1,19 @@
+// @symbol func_ov089_02131b18
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-#define L(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define L(p) ((long long)(int)(p))
 
-struct V3 { int x, y, z; };
+
 
 extern void func_020383fc(char *p);
 extern char *data_0209f318;
 extern int data_0209b454;
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
-extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct V3 *v);
-extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct V3 *v);
+extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
+extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct Vector3 *v);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *p);
@@ -22,7 +25,7 @@ extern void func_ov089_02131df4(char *thiz, char *player);
 void func_ov089_02131b18(char *c)
 {
     char *cam = data_0209f318;
-    struct V3 v;
+    struct Vector3 v;
     u8 st;
 
     func_020383fc(c + 0x260);
@@ -82,8 +85,8 @@ case1:
     }
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x260) == 0)
         return;
-    _ZN6Camera9SetLookAtERK7Vector3(cam, (struct V3 *)(int)L(c + 0x44c));
-    _ZN6Camera6SetPosERK7Vector3(cam, (struct V3 *)(int)L(c + 0x458));
+    _ZN6Camera9SetLookAtERK7Vector3(cam, (struct Vector3 *)(int)L(c + 0x44c));
+    _ZN6Camera6SetPosERK7Vector3(cam, (struct Vector3 *)(int)L(c + 0x458));
     {
         int *cf = (int *)(int)L(cam + 0x154);
         int *b0 = (int *)(int)L(c + 0xb0);

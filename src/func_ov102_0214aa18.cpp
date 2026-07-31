@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov102_0214aa18
+/* recovered: shared common types */
+#include "common.h"
 struct CylinderClsn { void Clear(); void Update(); };
 struct WithMeshClsn;
 struct Actor { void UpdatePos(CylinderClsn *c); };
@@ -9,7 +12,7 @@ extern "C" void func_ov102_0214ad40(char *c);
 extern "C" void func_ov102_0214c0b8(char *c);
 extern "C" void func_0200fc44(char *c, void *v, int x);
 
-struct V3 { int x, y, z; };
+
 
 extern "C" int func_ov102_0214aa18(Actor *self)
 {
@@ -26,7 +29,7 @@ extern "C" int func_ov102_0214aa18(Actor *self)
         ((CylinderClsn*)(s + 0x110))->Clear();
         ((CylinderClsn*)(s + 0x110))->Update();
         if (((WithMeshClsn2*)(s + 0x144))->JustHitGround()) {
-            V3 v;
+            Vector3 v;
             v.x = *(int*)(s + 0x5c);
             v.y = *(int*)(s + 0x60);
             v.z = *(int*)(s + 0x64);

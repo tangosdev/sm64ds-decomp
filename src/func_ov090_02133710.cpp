@@ -1,4 +1,7 @@
 //cpp
+// @symbol func_ov090_02133710
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* out, void* m, void* in);
@@ -6,11 +9,11 @@ extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(voi
 extern void* _ZN5Actor10FindWithIDEj(unsigned int);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void*, void*, unsigned int, int, unsigned int, unsigned int, unsigned int);
 extern int data_020a0e68[];
-struct V3 { int x, y, z; };
+
 
 void func_ov090_02133710(char* c) {
-    struct V3 v;
-    struct V3 v2;
+    struct Vector3 v;
+    struct Vector3 v2;
     void* a;
     *(int*)(((int)c + 0x384) & 0xFFFFFFFFFFFFFFFF) += 1;
     if (*(int*)(c + 0x384) > 2) *(int*)(c + 0x384) = 0;

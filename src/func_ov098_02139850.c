@@ -1,22 +1,23 @@
+// @symbol func_ov098_02139850
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vector3 { int x, y, z; };
-struct M4x3 { int w[12]; };
 
-extern int data_ov098_0213bf60[];
-extern int data_ov098_0213bf64[];
-extern int data_ov098_0213bf68[];
+
+
 
 extern int func_ov002_020e496c(char* c);
 extern int _ZN6Player14IsFrontSlidingEv(char* p);
 extern int _ZN6Player17LostGrabbedObjectEv(char* p);
 extern void Math_Function_0203b14c(char* dst, int a, int b, int c, int d);
 extern char* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(char* self, char* player, const struct Vector3* v);
-extern void Matrix4x3_FromRotationZXYExt(void* m, int x, int y, int z);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* self);
 
 void func_ov098_02139850(char* self)
@@ -44,7 +45,7 @@ void func_ov098_02139850(char* self)
         Math_Function_0203b14c(self + 0x4fc, *(int*)((char*)data_ov098_0213bf68 + r5 * 0xc), 0x800, 0x3e8000, 4);
         {
             char* res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(self, *(char**)(self + 0x5e4), (struct Vector3*)(self + 0x4f4));
-            *(struct M4x3*)(self + 0xf0) = *(struct M4x3*)res;
+            *(struct Matrix4x3*)(self + 0xf0) = *(struct Matrix4x3*)res;
         }
         *(u32*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
     }

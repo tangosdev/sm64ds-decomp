@@ -1,16 +1,20 @@
-/* func_ov098_02139070 at 0x02139070
+// @symbol func_ov098_02139070
+// @emits Crate_Kill
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjBlockS_c::Kill - recovered from vtable slot identity */
+/* Crate_Kill at 0x02139070
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
  */
-struct Vector3 { int x, y, z; };
 
-extern void func_ov098_02138e08(char* c);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, const struct Vector3* vec);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const struct Vector3* pos);
 extern void func_ov098_02138b28(char* c, int i);
 
-void func_ov098_02139070(char* self) {
+void Crate_Kill(char* self) {
     struct Vector3 vec;
     struct Vector3 vec2;
     int x, y, z;

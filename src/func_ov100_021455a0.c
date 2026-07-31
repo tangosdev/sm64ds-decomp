@@ -1,3 +1,9 @@
+// @symbol func_ov100_021455a0
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daDoor_c.h"
+// @emits daDoor_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daDoor_c::InitResources - recovered from vtable slot identity */
 enum { false, true };
 
 typedef struct { int x, y, z; } Vec3;
@@ -42,8 +48,9 @@ extern int data_ov100_02148914;
 extern int data_ov100_021488b4;
 extern void func_ov100_021453d8(char *c, void *p, int a2);
 
-int func_ov100_021455a0(char *c)
+int daDoor_c_InitResources(char *c)
 {
+    struct daDoor_c *self = (struct daDoor_c *)(void *)c;
     unsigned int idx;
     struct Entry *e;
     void *f;
@@ -67,7 +74,7 @@ int func_ov100_021455a0(char *c)
         data_ov100_02148710 |= 1;
     }
 
-    Vec3_RotateYAndTranslate(c + 0x5c, c + 0x5c, *(short *)(c + 0x8e), &data_ov100_021487c0);
+    Vec3_RotateYAndTranslate(c + 0x5c, c + 0x5c, self->unk_08e, &data_ov100_021487c0);
 
     idx = *(unsigned int *)(c + 8);
     e = &data_ov100_02148204[idx];
@@ -82,11 +89,11 @@ int func_ov100_021455a0(char *c)
         } else if (e->b9 >= 0) {
             unsigned int t = *(unsigned int *)(c + 8);
             if (t >= 9 && t <= 0xd) {
-                *(signed char *)(c + 0x144) = (signed char)(t - 8);
-                LoadKeyModels(*(signed char *)(c + 0x144) + 1);
-                *(void **)(c + 0x13c) = func_02132894[*(signed char *)(c + 0x144) + 1];
+                self->unk_144 = (signed char)(t - 8);
+                LoadKeyModels(self->unk_144 + 1);
+                *(void **)(c + 0x13c) = func_02132894[self->unk_144 + 1];
                 if (*(int *)(c + 8) == 0xc)
-                    *(signed char *)(c + 0x144) = 0;
+                    self->unk_144 = 0;
             } else {
                 *(void **)(c + 0x13c) = &data_ov089_02132c50;
             }
@@ -100,7 +107,7 @@ int func_ov100_021455a0(char *c)
 
     Vec3_Asr(&tmp, (Vec3 *)(c + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short *)(c + 0x8e));
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->unk_08e);
     *(Mtx43 *)(c + 0xf0) = data_020a0e68;
 
     if (e->sfp2 != 0) {
@@ -115,31 +122,31 @@ int func_ov100_021455a0(char *c)
 
     {
         int w;
-        y = *(int *)(c + 0x60);
-        z = *(int *)(c + 0x64);
-        x = *(int *)(c + 0x5c);
+        y = self->unk_060;
+        z = self->unk_064;
+        x = self->unk_05c;
         w = y + 0xb4000;
-        *(int *)(c + 0xa4) = x;
-        *(int *)(c + 0xa8) = w;
+        self->unk_0a4 = x;
+        self->unk_0a8 = w;
         {
             unsigned char bi = data_0209f250;
-            *(int *)(c + 0xac) = z;
+            self->unk_0ac = z;
             r4 = data_0209f394[bi];
         }
     }
     func_ov100_02145370(c);
 
-    v = *(int *)(c + 0x80);
+    v = self->unk_080;
     if (v < 0)
         v = -v;
     if (v > 0x4b000)
         goto big;
-    v = *(int *)(c + 0x84);
+    v = self->unk_084;
     if (v < 0)
         v = -v;
     if (v > 0x32000)
         goto big;
-    v = *(int *)(c + 0x88);
+    v = self->unk_088;
     if (v < 0)
         v = -v;
     if (v > 0x1f4000)

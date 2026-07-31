@@ -1,7 +1,11 @@
-extern int func_ov102_02149078(void *c);
+// @symbol func_ov102_02149710
+// @emits QuestionBlock_OnHitByMegaChar
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjHatenaBlock_c::OnHitByMegaChar - recovered from vtable slot identity */
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
-extern void func_ov102_02149da8(void *c, int i);
-void func_ov102_02149710(void *c, void *player)
+void QuestionBlock_OnHitByMegaChar(void *c, void *player)
 {
     if (*(int*)((char*)c+0x3e8) == 1) return;
     if (func_ov102_02149078(c) != 0) return;

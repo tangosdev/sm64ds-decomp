@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov090_021330c8
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 struct MovingCylinderClsnWithPos { int d; };
 struct Player;
 

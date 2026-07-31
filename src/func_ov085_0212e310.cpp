@@ -1,7 +1,11 @@
 //cpp
+// @symbol func_ov085_0212e310
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-typedef struct { int x, y, z; } Vector3;
-struct Matrix4x3 { int m[12]; };
+
 
 extern void *_ZN5Actor13ClosestPlayerEv(void);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fix, bool loop);
@@ -12,10 +16,8 @@ extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 *cur, const Vector3
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern void _Z14ApproachLinearRsss(short *cur, short tgt, short step);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern int func_ov085_0212e728(void *c, void *p);
 
 extern struct Matrix4x3 data_020a0e68;
-extern char data_ov085_02130810[];
 
 int func_ov085_0212e310(char *c)
 {

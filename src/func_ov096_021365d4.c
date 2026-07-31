@@ -1,9 +1,11 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_ov096_021365d4
+/* recovered: shared common types */
+#include "common.h"
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 void func_ov096_021358c8(char* c);
 int func_ov096_02135838(char* c);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vec3* pos, const void* rot, int e, int f);
+void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* pos, const void* rot, int e, int f);
 void func_ov096_02136928(char* c, int n);
 char* func_ov096_021357b4(char* c);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
@@ -30,7 +32,7 @@ int func_ov096_021365d4(char* c) {
     if (func_ov096_02135838(c) < 4) {
         if (DecIfAbove0_Byte((unsigned char*)(c + 0x3ac)) == 0) {
             void* sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-                0xf1, *(unsigned int*)(c + 4), (struct Vec3*)(c + 0x5c), c + 0x8c,
+                0xf1, *(unsigned int*)(c + 4), (struct Vector3*)(c + 0x5c), c + 0x8c,
                 *(signed char*)(c + 0xcc), -1);
             if (sp != 0) {
                 *(void**)(c + 0x394) = sp;

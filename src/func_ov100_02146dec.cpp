@@ -1,18 +1,22 @@
 //cpp
+// @symbol func_ov100_02146dec
+// @emits daObjPathLift_c_OnYoshiTryEat
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_ShadowModel.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjPathLift_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
-extern void _ZN11ShadowModelD1Ev(void*);
 extern void func_0207328c(void* arr, int count, int size, void(*dtor)(void*));
-extern void _ZN18MovingMeshColliderD1Ev(void*);
-extern void _ZN5ModelD1Ev(void*);
-extern void _ZN5ActorD2Ev(void*);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
-extern void* data_ov100_0214857c[];
 extern void* data_ov002_0210af70[];
 extern void* _ZTV17ExclamationSwitch[];
 extern void* data_020a0eac;
 
 
-void* func_ov100_02146dec(char* p){
+void* daObjPathLift_c_OnYoshiTryEat(char* p){
   *(void***)p = (void**)data_ov100_0214857c;
   _ZN11ShadowModelD1Ev(p+0x450);
   *(void***)p = (void**)data_ov002_0210af70;

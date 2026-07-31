@@ -1,10 +1,15 @@
 //cpp
+// @symbol func_ov100_02141fb0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-struct Vec3 { int x, y, z; };
-struct Vec3s { short x, y, z; };
+
+
 
 struct Obj {
     virtual u32 v00(); virtual u32 v01(); virtual u32 v02(); virtual u32 v03();
@@ -19,14 +24,13 @@ struct Obj {
 };
 
 extern "C" void *_ZN5Actor10FindWithIDEj(u32 id);
-extern "C" void func_020ada40(char *c, Vec3s *s, void *a, int z);
-extern "C" void _ZN12WithMeshClsn15ClearGroundFlagEv(void *p);
+extern "C" void func_020ada40(char *c, Vector3_16 *s, void *a, int z);
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern "C" void _ZN5Actor8PoofDustEv(void *a);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *a);
 extern "C" void func_02012694(int a, void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
-extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, Vec3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
+extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 
 extern "C" void func_ov100_02141fb0(Obj *thiz)
 {
@@ -45,7 +49,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
     if (*(u8*)(a + 0x6fb) != 0) return;
     fl = *(u32*)(c + 0x394);
     if ((fl & 0x10) != 0) {
-        Vec3s s;
+        Vector3_16 s;
         u32 r = thiz->m();
         *(int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) += r;
         s.x = 0; s.y = 0; s.z = 0;
@@ -66,7 +70,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
         return;
     }
     {
-        Vec3 v;
+        Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);

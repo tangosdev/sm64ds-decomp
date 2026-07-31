@@ -1,24 +1,27 @@
+// @symbol func_ov089_021311c0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 
-#define L(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define L(p) ((long long)(int)(p))
 
-struct V3 { int x, y, z; };
+
 
 extern char *data_0209f318;
 extern int data_0209b454;
-extern int data_0209b490;
 extern char data_020a0e68;
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
-extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct V3 *v);
+extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, int b);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 a, void *v);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *a, void *b, int c);
-extern void Vec3_ApproachHorz(void *a, void *b, int c);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov089_02131dcc(char *c, char *p);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -32,9 +35,9 @@ extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 
 void func_ov089_021311c0(char *c)
 {
-    struct V3 v;
-    struct V3 z1;
-    struct V3 z2;
+    struct Vector3 v;
+    struct Vector3 z1;
+    struct Vector3 z2;
     char *cam = data_0209f318;
 
     switch (*(u8 *)(c + 0x442)) {
@@ -93,7 +96,7 @@ void func_ov089_021311c0(char *c)
         v.z = *(int *)(c + 0x64);
         v.y = v.y + 0x64000;
         _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(c + 0x434, &v, 0x28000);
-        _ZN6Camera9SetLookAtERK7Vector3(cam, (struct V3 *)(c + 0x434));
+        _ZN6Camera9SetLookAtERK7Vector3(cam, (struct Vector3 *)(c + 0x434));
         z2.x = 0;
         z2.y = 0;
         z2.z = 0;

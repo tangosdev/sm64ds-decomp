@@ -1,9 +1,12 @@
+// @symbol func_ov098_0213a984
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef unsigned short u16;
 
-struct Mtx { int w[12]; };
 
-extern void Matrix4x3_FromTranslation(struct Mtx* m, int x, int y, int z);
+
+extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 extern s16 data_02082214[];
 
 void func_ov098_0213a984(char *c)
@@ -13,7 +16,7 @@ void func_ov098_0213a984(char *c)
     char *p;
     int idx;
 
-    Matrix4x3_FromTranslation((struct Mtx*)(c + 0xf0),
+    Matrix4x3_FromTranslation((struct Matrix4x3*)(c + 0xf0),
         *(int*)(c + 0x5c) >> 3,
         *(int*)(c + 0x60) >> 3,
         *(int*)(c + 0x64) >> 3);

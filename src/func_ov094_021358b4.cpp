@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x,y,z; };
+// @symbol func_ov094_021358b4
+/* recovered: shared common types */
+#include "common.h"
+
 typedef int Fix12;
 typedef unsigned char u8;
 extern "C" {
