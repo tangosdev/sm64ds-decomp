@@ -19,6 +19,7 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec, size 0x3c4) | lunavyqo (Grok) | 2026-08-01 | **released** — floor(register allocation two-web rank tie) **match-words=8** / nearmiss **div=11** tip re-banked; residual av/diff r3↔ip at +0x128; 50+ pure-C variants flat; API clm_ee8a4a30ee3e released |
 | ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo (Grok) | 2026-07-31 | **released** — floor(ordering) **div=3** tip banked; residual pool s r3 vs r0 with sound call (same under 1.2/* and 2004/b56); 70+ pure-C variants; tip+floor in nearmiss/db.jsonl |
 | ov080 func_ov080_021261f4 (0x021261f4, size 0x2f8) | lunavyqo (Grok) | 2026-07-30 | **released** — near-miss **101→9→5** banked in nearmiss/db.jsonl; levers: park-z + `volatile` 2nd-vtx z-load; residual pack 4a8 **5w** r2/r3 wall (same class as 25460 / notes ov075_0211a948); CLAIMS.md only |
 | ov091 func_ov091_021339fc (0x021339fc, size 0x270) | lunavyqo (Grok) | 2026-07-30 | **released** — pure-C near-miss **div=86** banked + floor(constprop): newHat=1 folds to orr#1 (drops r4/r6 frame); only opaque asm hatch byte-matches (policy NONMATCHING). Micro-lab+version sweep. CLAIMS.md only (API key expired) |
