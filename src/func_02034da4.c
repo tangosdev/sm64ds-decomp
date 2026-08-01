@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_02034da4
-// @emits dScMB_c_Behavior
+// recovered name: dScMB_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -14,7 +14,7 @@ extern void func_02012790(int x);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMB_c_Behavior(void *arg0)
+int func_02034da4(void *arg0)
 {
     char *self = (char *)arg0;
 

@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
-// @emits dScMgBase_c_BeforeInitResources
+// recovered name: dScMgBase_c_BeforeInitResources
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeInitResources - recovered from vtable slot identity */
 struct Obj {
@@ -30,7 +30,7 @@ extern char data_0209f61c[];
 extern unsigned char data_0209d460[];
 extern unsigned char data_0209d458[];
 
-int dScMgBase_c_BeforeInitResources(char* c)
+int func_ov004_020b0930(char* c)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     if (_ZN5Scene19BeforeInitResourcesEv(c) == 0) return 0;

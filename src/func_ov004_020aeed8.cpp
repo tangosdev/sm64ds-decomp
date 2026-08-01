@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
-// @emits dScMgBase_c_OnAimedAtWithEggReturnVec
+// recovered name: dScMgBase_c_OnAimedAtWithEggReturnVec
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnAimedAtWithEggReturnVec - recovered from vtable slot identity */
 extern "C" u8 data_0209d45c;
@@ -46,7 +46,7 @@ struct Obj {
     virtual int f68();
 };
 
-extern "C" void dScMgBase_c_OnAimedAtWithEggReturnVec(char* c)
+extern "C" void func_ov004_020aeed8(char* c)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     Obj* o = (Obj*)c;

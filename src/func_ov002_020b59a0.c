@@ -1,8 +1,8 @@
 // @symbol func_ov002_020b59a0
-// @emits BlueFlame_OnYoshiTryEat
+// recovered name: BlueFlame_OnYoshiTryEat
 /* recovered: renamed to Class_Method */
 /* daObjFire_c::OnYoshiTryEat - recovered from vtable slot identity */
-int BlueFlame_OnYoshiTryEat(void)
+int func_ov002_020b59a0(void)
 {
     return 5;
 }

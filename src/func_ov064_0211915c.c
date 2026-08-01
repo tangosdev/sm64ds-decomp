@@ -1,11 +1,11 @@
 #include "types.h"
 // @symbol func_ov064_0211915c
-// @emits daObjFl_Coin_c_Behavior
+// recovered name: daObjFl_Coin_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjFl_Coin_c::Behavior - recovered from vtable slot identity */
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
 
-int daObjFl_Coin_c_Behavior(char *a)
+int func_ov064_0211915c(char *a)
 {
     switch (*(u8 *)(a + 0xd5)) {
     case 0:

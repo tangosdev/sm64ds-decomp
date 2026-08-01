@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov002_020b38a0
-// @emits BigBrickBlock_Kill
+// recovered name: BigBrickBlock_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -14,7 +14,7 @@ extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, const struct Vector3 *v);
 extern void _ZN5Actor13SpawnSoundObjEj(char *thiz, u32 a);
 extern void _ZN9ActorBase18MarkForDestructionEv(char *thiz);
 
-void BigBrickBlock_Kill(char *c)
+void func_ov002_020b38a0(char *c)
 {
     struct Vector3 tmp[4];
     u32 kind;

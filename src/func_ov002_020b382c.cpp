@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov002_020b382c
-// @emits BigBrickBlock_OnGroundPounded
+// recovered name: BigBrickBlock_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* daObjBlockL_c::OnGroundPounded - recovered from vtable slot identity */
 struct Arg { char pad[8]; int f8; };
@@ -14,7 +14,7 @@ struct Obj {
   virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
   virtual void v28(); virtual void v29(); virtual void v30(); virtual void target();
 };
-extern "C" void BigBrickBlock_OnGroundPounded(Obj* o, Arg* a) {
+extern "C" void func_ov002_020b382c(Obj* o, Arg* a) {
   if (a->f8 == 3) return;
   int b = (*(unsigned short*)((char*)o+0xc) == 0x11);
   if (b != 0) {

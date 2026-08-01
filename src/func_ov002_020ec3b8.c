@@ -1,5 +1,5 @@
 // @symbol func_ov002_020ec3b8
-// @emits daWarpkun_c_OnYoshiTryEat
+// recovered name: daWarpkun_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_MovingCylinderClsn.h"
@@ -7,7 +7,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daWarpkun_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daWarpkun_c_OnYoshiTryEat(int *t)
+int *func_ov002_020ec3b8(int *t)
 {
     t[0] = (int)VT0;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);

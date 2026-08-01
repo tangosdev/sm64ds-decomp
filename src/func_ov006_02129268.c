@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_02129268
-// @emits dScMgSnowball_c_InitResources
+// recovered name: dScMgSnowball_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -27,7 +27,7 @@ extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMgSnowball_c_InitResources(void *arg0)
+int func_ov006_02129268(void *arg0)
 {
     u8 *r4 = (u8 *)arg0;
     void *buf;

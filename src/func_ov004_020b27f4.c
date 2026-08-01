@@ -1,5 +1,5 @@
 // @symbol func_ov004_020b27f4
-// @emits dScMgBase_c_AfterClsn
+// recovered name: dScMgBase_c_AfterClsn
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -8,7 +8,7 @@ extern int GetGameLanguage(void);
 extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char data_0209d45c[];
 
-void dScMgBase_c_AfterClsn(void)
+void func_ov004_020b27f4(void)
 {
     int f;
     *(volatile unsigned short *)0x400000a = *(volatile unsigned short *)0x400000a & ~3;

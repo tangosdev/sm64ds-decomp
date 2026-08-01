@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
-// @emits dScMgBase_c_AfterCleanupResources
+// recovered name: dScMgBase_c_AfterCleanupResources
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::AfterCleanupResources - recovered from vtable slot identity */
 extern void func_ov004_020ad90c(void);
@@ -16,7 +16,7 @@ extern int data_0209b308[];
 extern int data_0209d4a8[];
 extern int data_ov004_020beb60[];
 
-void dScMgBase_c_AfterCleanupResources(char* c, int arg){
+void func_ov004_020b0840(char* c, int arg){
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
   if (arg == 2) {
     if (data_0209b308[4] == 0)

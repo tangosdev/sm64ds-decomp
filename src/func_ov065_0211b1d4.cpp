@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov065_0211b1d4
-// @emits daObjCtMecha05_c_InitResources
+// recovered name: daObjCtMecha05_c_InitResources
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -29,7 +29,7 @@ extern "C" unsigned char data_0209f2c0;
 
 struct V3 { int x, y, z; };
 
-extern "C" int daObjCtMecha05_c_InitResources(char *self)
+extern "C" int func_ov065_0211b1d4(char *self)
 {
     void *mf = ModelLoadFile(&data_ov065_0211d904);
     ((ModelBase*)(self + 0xd4))->SetFile((BMD_File*)mf, 1, -1);

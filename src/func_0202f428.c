@@ -4,12 +4,12 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dWipe_c.h"
-// @emits dWipe_c_AdvanceFade
+// recovered name: dWipe_c_AdvanceFade
 /* recovered: renamed to Class_Method */
 /* dWipe_c::AdvanceFade - recovered from vtable slot identity */
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(unsigned short *p, unsigned short a, int b);
 
-void dWipe_c_AdvanceFade(char *obj)
+void func_0202f428(char *obj)
 {
     struct dWipe_c *self = (struct dWipe_c *)(void *)obj;
     if (self->unk_014 == 1) {

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjCtMecha03_c.h"
-// @emits daObjCtMecha03_c_Behavior
+// recovered name: daObjCtMecha03_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjCtMecha03_c::Behavior - recovered from vtable slot identity */
 extern u16 DecIfAbove0_Short(u16* p);
@@ -18,7 +18,7 @@ extern int data_0209e650;
 
 #define I16(off) (*(short*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 
-int daObjCtMecha03_c_Behavior(char* c)
+int func_ov065_0211a1c8(char* c)
 {
     struct daObjCtMecha03_c *self = (struct daObjCtMecha03_c *)(void *)c;
     if (data_0209f2c0 != 3) {

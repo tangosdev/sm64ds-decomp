@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjBC_Switch_c.h"
-// @emits daObjBC_Switch_c_InitResources
+// recovered name: daObjBC_Switch_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjBC_Switch_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12i;
@@ -21,7 +21,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393c4(void* p, void* v);
 
 
-int daObjBC_Switch_c_InitResources(char* c)
+int func_ov002_020f1468(char* c)
 {
     struct daObjBC_Switch_c *self = (struct daObjBC_Switch_c *)(void *)c;
     void* bmd;

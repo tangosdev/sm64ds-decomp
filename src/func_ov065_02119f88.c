@@ -1,5 +1,5 @@
 // @symbol func_ov065_02119f88
-// @emits daObjCtMecha03_c_OnYoshiTryEat
+// recovered name: daObjCtMecha03_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -9,7 +9,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjCtMecha03_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjCtMecha03_c_OnYoshiTryEat(int *t)
+int *func_ov065_02119f88(int *t)
 {
     t[0] = (int)VT0;
     _ZN11ShadowModelD1Ev((char *)t + 0x330);

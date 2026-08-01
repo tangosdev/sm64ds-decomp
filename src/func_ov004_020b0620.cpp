@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov004_020b0620
-// @emits dScMgBase_c_BeforeBehavior
+// recovered name: dScMgBase_c_BeforeBehavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -44,7 +44,7 @@ extern int data_0208ee44;
 
 
 #pragma opt_strength_reduction off
-extern "C" int dScMgBase_c_BeforeBehavior(char *self)
+extern "C" int func_ov004_020b0620(char *self)
 {
     int mode;
     unsigned short flags;

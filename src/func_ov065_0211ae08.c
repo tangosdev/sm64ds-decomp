@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjCtMecha05_c.h"
-// @emits daObjCtMecha05_c_Behavior
+// recovered name: daObjCtMecha05_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjCtMecha05_c::Behavior - recovered from vtable slot identity */
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
@@ -21,7 +21,7 @@ extern int data_0209e650;
 #define I32(off) (*(int*)(((int)c + (off))))
 #define I8(off)  (*(u8*)(((int)c + (off))))
 
-int daObjCtMecha05_c_Behavior(char* c)
+int func_ov065_0211ae08(char* c)
 {
     struct daObjCtMecha05_c *self = (struct daObjCtMecha05_c *)(void *)c;
     if (data_0209f2c0 == 3) {

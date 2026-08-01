@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daSCoin_c.h"
-// @emits daSCoin_c_Behavior
+// recovered name: daSCoin_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daSCoin_c::Behavior - recovered from vtable slot identity */
 class ActorBase {
@@ -22,7 +22,7 @@ public:
 };
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-extern "C" int daSCoin_c_Behavior(char *c)
+extern "C" int func_ov002_020f06c0(char *c)
 {
     struct daSCoin_c *self = (struct daSCoin_c *)(void *)c;
     if (self->unk_113) {

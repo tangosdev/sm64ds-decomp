@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_0212aacc
-// @emits dScMgFlower_c_Render
+// recovered name: dScMgFlower_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -12,7 +12,7 @@ extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5
 
 struct S2 { int a, b; };
 
-int dScMgFlower_c_Render(char* self)
+int func_ov006_0212aacc(char* self)
 {
     int i;
     u8 (*barr)[0x20] = (u8 (*)[0x20])self;

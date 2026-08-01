@@ -1,12 +1,12 @@
 // @symbol func_ov002_020ec4c4
-// @emits daWarpkun_c_InitResources
+// recovered name: daWarpkun_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daWarpkun_c::InitResources - recovered from vtable slot identity */
 
 typedef int Fix12i;
 extern int _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *, Fix12i, Fix12i, Fix12i, Fix12i);
 extern int _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, void *, Fix12i, Fix12i, unsigned int, unsigned int);
-int daWarpkun_c_InitResources(void *c)
+int func_ov002_020ec4c4(void *c)
 {
   int v = *((int *) (((char *) c) + 8));
   int r = (((*((int *) (((char *) c) + 8))) & 0xf) + 1) << 0x12;

@@ -1,5 +1,5 @@
 // @symbol func_ov002_020f03f4
-// @emits daSCoin_c_OnYoshiTryEat
+// recovered name: daSCoin_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_MovingCylinderClsn.h"
@@ -7,7 +7,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daSCoin_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daSCoin_c_OnYoshiTryEat(int *t)
+int *func_ov002_020f03f4(int *t)
 {
     t[0] = (int)VT0;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);

@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov002_020f12c8
-// @emits daObjBC_Switch_c_Behavior
+// recovered name: daObjBC_Switch_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -16,7 +16,7 @@ extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 extern s32 _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 
-s32 daObjBC_Switch_c_Behavior(void *arg0)
+s32 func_ov002_020f12c8(void *arg0)
 {
     char *c = (char *)arg0;
     u16 t;

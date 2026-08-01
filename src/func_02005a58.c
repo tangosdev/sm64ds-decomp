@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScBoot_c.h"
-// @emits dScBoot_c_InitResources
+// recovered name: dScBoot_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScBoot_c::InitResources - recovered from vtable slot identity */
 extern void _ZN2GX12SetBankForBGEt(unsigned short b);
@@ -25,7 +25,7 @@ extern char data_0208ee44;
 extern char data_0209f5e8;
 extern void func_0201a2f8(void);
 extern unsigned char data_0209f1e8;
-int dScBoot_c_InitResources(char* c)
+int func_02005a58(char* c)
 {
     struct dScBoot_c *self = (struct dScBoot_c *)(void *)c;
     _ZN2GX15DisableAllBanksEv();

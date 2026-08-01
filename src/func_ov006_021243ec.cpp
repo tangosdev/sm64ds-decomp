@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
-// @emits dScMgTrampoline2_c_InitResources
+// recovered name: dScMgTrampoline2_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -37,7 +37,7 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int dScMgTrampoline2_c_InitResources(char *base)
+extern "C" int func_ov006_021243ec(char *base)
 {
     struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)base;
     s32 fov;

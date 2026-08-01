@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov004_020af094
-// @emits dScMgBase_c_OnAimedAtWithEgg
+// recovered name: dScMgBase_c_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -52,7 +52,7 @@ struct Obj : Base {
     char pad[0x4700];
 };
 
-extern "C" void dScMgBase_c_OnAimedAtWithEgg(Obj *self)
+extern "C" void func_ov004_020af094(Obj *self)
 {
     char *c = (char *)self;
 

@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_0203506c
-// @emits dScMB_c_InitResources
+// recovered name: dScMB_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -18,7 +18,7 @@ extern u8 data_0209d4a8[];
 extern u8 data_0208ee44[];
 extern u8 func_0201a2f8[];
 
-int dScMB_c_InitResources(void *arg0)
+int func_0203506c(void *arg0)
 {
     void *self = arg0;
     volatile u16 sp4;

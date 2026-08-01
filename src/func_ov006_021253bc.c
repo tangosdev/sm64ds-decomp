@@ -1,5 +1,5 @@
 // @symbol func_ov006_021253bc
-// @emits dScMgBSC_c_Render
+// recovered name: dScMgBSC_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -25,7 +25,7 @@ typedef struct Obj {
     unsigned char b1[2];
 } Obj;
 
-int dScMgBSC_c_Render(Obj *self) {
+int func_ov006_021253bc(Obj *self) {
     int i;
 
     func_ov006_020c0aa8(&self->f4660);

@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_0202f928
-// @emits dWipe_c_SetBackwardTime
+// recovered name: dWipe_c_SetBackwardTime
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -32,7 +32,7 @@ struct MyFader {
     u32 unk24;      /* 0x24 */
 };
 
-int dWipe_c_SetBackwardTime(struct MyFader *self, u32 param_1, u32 param_2)
+int func_0202f928(struct MyFader *self, u32 param_1, u32 param_2)
 {
     s32 type, unk10;
 

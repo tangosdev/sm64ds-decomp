@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov064_02117220
-// @emits daDonketu_c_AfterClsn
+// recovered name: daDonketu_c_AfterClsn
 /* recovered: shared common types, renamed to Class_Method */
 /* daDonketu_c::AfterClsn - recovered from vtable slot identity */
 typedef unsigned char u8; typedef signed char s8; typedef short s16;
@@ -12,7 +12,7 @@ struct Actor {
 Actor* Actor::Spawn(unsigned, unsigned, const Vector3&, const Vector3_16*, int, int);
 Actor* Actor::FindWithID(unsigned);
 extern "C" { extern int RandomIntInternal(void* seed); extern int data_0209e650; extern int func_ov064_0211616c(void* thiz); }
-extern "C" void daDonketu_c_AfterClsn(char* self) {
+extern "C" void func_ov064_02117220(char* self) {
     if (func_ov064_0211616c(self) == 0) return;
     int pz = *(int*)(self + 0x64);
     int py = *(int*)(self + 0x60) + 0x136000;

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSnowball_c.h"
-// @emits dScMgSnowball_c_Render
+// recovered name: dScMgSnowball_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::Render - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
@@ -16,7 +16,7 @@ extern void func_ov004_020b2220(int a1, int a2, int a3, int a4, int a5, int a6, 
 extern s32 GetGameLanguage(void);
 
 
-int dScMgSnowball_c_Render(char *c)
+int func_ov006_02127d10(char *c)
 {
     struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
     int m[3];

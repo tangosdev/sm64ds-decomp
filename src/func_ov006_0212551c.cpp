@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov006_0212551c
-// @emits dScMgBSC_c_InitResources
+// recovered name: dScMgBSC_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -15,7 +15,7 @@ extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern int LoadFile(int handle);
 extern void func_ov006_020c0aa8(void *p);
 extern int func_ov006_020c1a88(void *p);
-int dScMgBSC_c_InitResources(void *self);
+int func_ov006_0212551c(void *self);
 }
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(void const *a, unsigned int b, unsigned int c);
 struct Obj {
@@ -26,7 +26,7 @@ struct Obj {
     virtual void v16();virtual void v17();virtual void v18(int x);
     char pad[0x10000];
 };
-int dScMgBSC_c_InitResources(void *self) {
+int func_ov006_0212551c(void *self) {
     Obj *o = (Obj *)self;
     char *c = (char *)self;
     int fh;
