@@ -4,3 +4,195 @@
     .ctor       start:0x02112fc4 end:0x02112fd4 kind:rodata align:4
     .data       start:0x02112fe0 end:0x02113be0 kind:data align:32
     .bss        start:0x02113be0 end:0x02113d20 kind:bss align:32
+src/_ZN10SlidingIceD1Ev.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/_ZN10SlidingIceD0Ev.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov027_0211123c.cpp:
+    complete
+    .text start:0x0211123c end:0x02111264
+
+src/_ZN10SlidingIce16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x02111264 end:0x021112b4
+
+src/_ZN10SlidingIce6RenderEv.cpp:
+    complete
+    .text start:0x021112b4 end:0x02111304
+
+src/_ZN10SlidingIce8BehaviorEv.cpp:
+    complete
+    .text start:0x02111304 end:0x02111440
+
+src/_ZN10SlidingIce13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111440 end:0x02111564
+
+src/SlidingIce_Spawn.c:
+    complete
+    .text start:0x02111564 end:0x02111594
+
+src/SlidingIceSpawner_Spawn.c:
+    complete
+    .text start:0x02111594 end:0x021115c4
+
+src/func_ov027_021115c4.c:
+    .text start:0x021115c4 end:0x02111618
+
+src/func_ov027_02111618.c:
+    .text start:0x02111618 end:0x02111680
+
+src/func_ov027_02111680.c:
+    complete
+    .text start:0x02111680 end:0x021116f0
+
+src/func_ov027_021116f0.cpp:
+    .text start:0x021116f0 end:0x02111770
+
+src/func_ov027_02111770.c:
+    complete
+    .text start:0x02111770 end:0x0211181c
+
+src/func_ov027_0211181c.cpp:
+    complete
+    .text start:0x0211181c end:0x0211186c
+
+src/ChillBully_Spawn.c:
+    .text start:0x0211186c end:0x021118c8
+
+src/func_ov027_021118c8.c:
+    .text start:0x021118c8 end:0x02111924
+
+src/func_ov027_02111924.c:
+    .text start:0x02111924 end:0x02111994
+
+src/func_ov027_02111994.cpp:
+    complete
+    .text start:0x02111994 end:0x02111a28
+
+src/func_ov027_02111a28.c:
+    complete
+    .text start:0x02111a28 end:0x02111b2c
+
+src/func_ov027_02111b2c.cpp:
+    complete
+    .text start:0x02111b2c end:0x02111c48
+
+src/func_ov027_02111c48.c:
+    complete
+    .text start:0x02111c48 end:0x02111ca8
+
+src/func_ov027_02111ca8.cpp:
+    complete
+    .text start:0x02111ca8 end:0x02111cfc
+
+src/func_ov027_02111cfc.cpp:
+    complete
+    .text start:0x02111cfc end:0x02111d38
+
+src/func_ov027_02111d38.cpp:
+    complete
+    .text start:0x02111d38 end:0x02111d70
+
+src/func_ov027_02111d70.c:
+    complete
+    .text start:0x02111d70 end:0x02111d8c
+
+src/func_ov027_02111d8c.c:
+    complete
+    .text start:0x02111d8c end:0x02111dfc
+
+src/func_ov027_02111dfc.c:
+    complete
+    .text start:0x02111dfc end:0x02111e00
+
+src/func_ov027_02111e00.cpp:
+    complete
+    .text start:0x02111e00 end:0x02111e34
+
+src/func_ov027_02111e34.cpp:
+    .text start:0x02111e34 end:0x02111eb4
+
+src/func_ov027_02111eb4.cpp:
+    .text start:0x02111eb4 end:0x0211207c
+
+src/func_ov027_0211207c.c:
+    .text start:0x0211207c end:0x021120c4
+
+src/_ZN13SnowmanBreathD1Ev.cpp:
+    .text start:0x021120c4 end:0x02112104
+
+src/_ZN13SnowmanBreathD0Ev.cpp:
+    .text start:0x02112104 end:0x02112158
+
+src/func_ov027_02112158.c:
+    complete
+    .text start:0x02112158 end:0x02112170
+
+src/func_ov027_02112170.cpp:
+    complete
+    .text start:0x02112170 end:0x0211233c
+
+src/func_ov027_0211233c.cpp:
+    complete
+    .text start:0x0211233c end:0x021123b0
+
+src/func_ov027_021123b0.c:
+    complete
+    .text start:0x021123b0 end:0x02112424
+
+src/func_ov027_02112424.c:
+    complete
+    .text start:0x02112424 end:0x02112480
+
+src/func_ov027_02112480.cpp:
+    complete
+    .text start:0x02112480 end:0x021124e4
+
+src/func_ov027_021124e4.c:
+    complete
+    .text start:0x021124e4 end:0x021125a8
+
+src/func_ov027_021125a8.c:
+    complete
+    .text start:0x021125a8 end:0x02112618
+
+src/func_ov027_02112618.cpp:
+    complete
+    .text start:0x02112618 end:0x02112700
+
+src/_ZN13SnowmanBreath16CleanupResourcesEv.c:
+    complete
+    .text start:0x02112700 end:0x0211273c
+
+src/_ZN13SnowmanBreath16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0211273c end:0x02112740
+
+src/_ZN13SnowmanBreath6RenderEv.cpp:
+    .text start:0x02112740 end:0x021127a4
+
+src/_ZN13SnowmanBreath8BehaviorEv.cpp:
+    .text start:0x021127a4 end:0x021129dc
+
+src/_ZN13SnowmanBreath13InitResourcesEv.cpp:
+    complete
+    .text start:0x021129dc end:0x02112ab4
+
+src/SnowmanBreath_Spawn.cpp:
+    complete
+    .text start:0x02112ab4 end:0x02112b14
+
+src/__sinit_ov027_02112cb0.c:
+    .init start:0x02112cb0 end:0x02112d1c
+
+src/__sinit_ov027_02112d1c.c:
+    .init start:0x02112d1c end:0x02112df8
+
+src/__sinit_ov027_02112df8.cpp:
+    .init start:0x02112df8 end:0x02112f70
+
+src/__sinit_ov027_02112f70.c:
+    .init start:0x02112f70 end:0x02112fc4

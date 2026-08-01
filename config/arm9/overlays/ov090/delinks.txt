@@ -3,3 +3,273 @@
     .ctor       start:0x021340c4 end:0x021340d4 kind:rodata align:4
     .data       start:0x021340e0 end:0x02134480 kind:data align:32
     .bss        start:0x02134480 end:0x021345e0 kind:bss align:32
+src/_ZN7SkeeterD1Ev.c:
+    complete
+    .text start:0x02130f00 end:0x02130f40
+
+src/_ZN7SkeeterD0Ev.c:
+    complete
+    .text start:0x02130f40 end:0x02130f94
+
+src/func_ov090_02130f94.c:
+    complete
+    .text start:0x02130f94 end:0x021310b4
+
+src/func_ov090_021310b4.c:
+    .text start:0x021310b4 end:0x02131378
+
+src/func_ov090_02131378.cpp:
+    complete
+    .text start:0x02131378 end:0x021314a0
+
+src/func_ov090_021314a0.cpp:
+    complete
+    .text start:0x021314a0 end:0x02131584
+
+src/func_ov090_02131584.c:
+    complete
+    .text start:0x02131584 end:0x02131608
+
+src/func_ov090_02131608.cpp:
+    complete
+    .text start:0x02131608 end:0x02131648
+
+src/func_ov090_02131648.cpp:
+    complete
+    .text start:0x02131648 end:0x02131a74
+
+src/func_ov090_02131a74.cpp:
+    complete
+    .text start:0x02131a74 end:0x02131ac4
+
+src/func_ov090_02131ac4.cpp:
+    complete
+    .text start:0x02131ac4 end:0x02131b94
+
+src/func_ov090_02131b94.cpp:
+    complete
+    .text start:0x02131b94 end:0x02131c48
+
+src/func_ov090_02131c48.c:
+    complete
+    .text start:0x02131c48 end:0x02131db0
+
+src/func_ov090_02131db0.c:
+    complete
+    .text start:0x02131db0 end:0x02131e00
+
+src/func_ov090_02131e00.cpp:
+    complete
+    .text start:0x02131e00 end:0x02131e50
+
+src/func_ov090_02131e50.c:
+    complete
+    .text start:0x02131e50 end:0x02131edc
+
+src/_ZN7Skeeter16CleanupResourcesEv.c:
+    complete
+    .text start:0x02131edc end:0x02131f30
+
+src/_ZN7Skeeter16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02131f30 end:0x02131f34
+
+src/_ZN7Skeeter6RenderEv.cpp:
+    complete
+    .text start:0x02131f34 end:0x02131f88
+
+src/_ZN7Skeeter8BehaviorEv.cpp:
+    .text start:0x02131f88 end:0x0213235c
+
+src/_ZN7Skeeter13InitResourcesEv.cpp:
+    complete
+    .text start:0x0213235c end:0x02132618
+
+src/func_ov090_02132618.c:
+    complete
+    .text start:0x02132618 end:0x02132620
+
+src/func_ov090_02132620.cpp:
+    complete
+    .text start:0x02132620 end:0x0213264c
+
+src/func_ov090_0213264c.c:
+    complete
+    .text start:0x0213264c end:0x02132654
+
+src/Skeeter_Spawn.c:
+    complete
+    .text start:0x02132654 end:0x0213269c
+
+src/_ZN8MantaRayD1Ev.c:
+    complete
+    .text start:0x0213269c end:0x021326dc
+
+src/_ZN8MantaRayD0Ev.c:
+    complete
+    .text start:0x021326dc end:0x02132730
+
+src/func_ov090_02132730.cpp:
+    complete
+    .text start:0x02132730 end:0x021327e4
+
+src/func_ov090_021327e4.cpp:
+    complete
+    .text start:0x021327e4 end:0x02132a58
+
+src/func_ov090_02132a58.cpp:
+    complete
+    .text start:0x02132a58 end:0x02132ac4
+
+src/func_ov090_02132ac4.cpp:
+    complete
+    .text start:0x02132ac4 end:0x02132b14
+
+src/func_ov090_02132b14.c:
+    complete
+    .text start:0x02132b14 end:0x02132c1c
+
+src/_ZN8MantaRay16CleanupResourcesEv.c:
+    complete
+    .text start:0x02132c1c end:0x02132c64
+
+src/_ZN8MantaRay16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02132c64 end:0x02132c68
+
+src/_ZN8MantaRay6RenderEv.cpp:
+    complete
+    .text start:0x02132c68 end:0x02132c94
+
+src/_ZN8MantaRay8BehaviorEv.cpp:
+    complete
+    .text start:0x02132c94 end:0x02132e38
+
+src/_ZN8MantaRay13InitResourcesEv.cpp:
+    complete
+    .text start:0x02132e38 end:0x02132fe8
+
+src/MantaRay_Spawn.c:
+    complete
+    .text start:0x02132fe8 end:0x02133034
+
+src/_ZN10CheepCheepD1Ev.c:
+    complete
+    .text start:0x02133034 end:0x02133074
+
+src/_ZN10CheepCheepD0Ev.c:
+    complete
+    .text start:0x02133074 end:0x021330c8
+
+src/func_ov090_021330c8.cpp:
+    complete
+    .text start:0x021330c8 end:0x02133190
+
+src/func_ov090_02133190.c:
+    complete
+    .text start:0x02133190 end:0x021331c4
+
+src/func_ov090_021331c4.c:
+    complete
+    .text start:0x021331c4 end:0x02133200
+
+src/func_ov090_02133200.c:
+    complete
+    .text start:0x02133200 end:0x02133290
+
+src/func_ov090_02133290.c:
+    complete
+    .text start:0x02133290 end:0x021332e8
+
+src/func_ov090_021332e8.cpp:
+    complete
+    .text start:0x021332e8 end:0x02133338
+
+src/func_ov090_02133338.c:
+    complete
+    .text start:0x02133338 end:0x021333ac
+
+src/_ZN10CheepCheep16CleanupResourcesEv.c:
+    complete
+    .text start:0x021333ac end:0x021333dc
+
+src/_ZN10CheepCheep16OnPendingDestroyEv.c:
+    complete
+    .text start:0x021333dc end:0x021333e0
+
+src/_ZN10CheepCheep6RenderEv.cpp:
+    complete
+    .text start:0x021333e0 end:0x02133430
+
+src/_ZN10CheepCheep8BehaviorEv.cpp:
+    .text start:0x02133430 end:0x02133530
+
+src/_ZN10CheepCheep13InitResourcesEv.cpp:
+    .text start:0x02133530 end:0x02133634
+
+src/CheepCheep_Spawn.c:
+    complete
+    .text start:0x02133634 end:0x0213367c
+
+src/_ZN5SharkD1Ev.c:
+    complete
+    .text start:0x0213367c end:0x021336bc
+
+src/_ZN5SharkD0Ev.c:
+    complete
+    .text start:0x021336bc end:0x02133710
+
+src/func_ov090_02133710.cpp:
+    complete
+    .text start:0x02133710 end:0x02133830
+
+src/func_ov090_02133830.c:
+    complete
+    .text start:0x02133830 end:0x0213387c
+
+src/func_ov090_0213387c.c:
+    complete
+    .text start:0x0213387c end:0x021338b4
+
+src/func_ov090_021338b4.cpp:
+    complete
+    .text start:0x021338b4 end:0x02133904
+
+src/func_ov090_02133904.c:
+    complete
+    .text start:0x02133904 end:0x02133978
+
+src/_ZN5Shark16CleanupResourcesEv.c:
+    complete
+    .text start:0x02133978 end:0x021339a8
+
+src/_ZN5Shark16OnPendingDestroyEv.c:
+    complete
+    .text start:0x021339a8 end:0x021339ac
+
+src/_ZN5Shark6RenderEv.cpp:
+    complete
+    .text start:0x021339ac end:0x021339d8
+
+src/_ZN5Shark8BehaviorEv.cpp:
+    complete
+    .text start:0x021339d8 end:0x02133b98
+
+src/_ZN5Shark13InitResourcesEv.cpp:
+    .text start:0x02133b98 end:0x02133ca0
+
+src/Shark_Spawn.c:
+    complete
+    .text start:0x02133ca0 end:0x02133ce8
+
+src/__sinit_ov090_02133ce8.c:
+    .init start:0x02133ce8 end:0x02133ea8
+
+src/__sinit_ov090_02133ea8.c:
+    .init start:0x02133ea8 end:0x02133f4c
+
+src/__sinit_ov090_02133f4c.c:
+    .init start:0x02133f4c end:0x02134020
+
+src/__sinit_ov090_02134020.c:
+    .init start:0x02134020 end:0x021340c4

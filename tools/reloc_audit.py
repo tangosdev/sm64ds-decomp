@@ -181,7 +181,11 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                 fd, tmp = tempfile.mkstemp(suffix=suf)
                 os.close(fd)
                 cfile = pathlib.Path(tmp)
-                cfile.write_text(src)
+                # encoding is not optional here: 42 files in src/ contain non-ASCII
+                # (arrows and box characters in codegen comments), and on Windows the
+                # default is cp1252, which raises UnicodeEncodeError and degrades the
+                # file's verdict to ERROR - which prepush_linkcheck treats as blocking.
+                cfile.write_text(src, encoding="utf-8")
             else:
                 cfile = source_path
             try:

@@ -4,3 +4,198 @@
     .ctor       start:0x02112da4 end:0x02112db8 kind:rodata align:4
     .data       start:0x02112dc0 end:0x02113ea0 kind:data align:32
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
+src/func_ov026_021111a0.c:
+    .text start:0x021111a0 end:0x021111e0
+
+src/func_ov026_021111e0.c:
+    .text start:0x021111e0 end:0x02111234
+
+src/func_ov026_02111234.cpp:
+    complete
+    .text start:0x02111234 end:0x021112a4
+
+src/func_ov026_021112a4.c:
+    complete
+    .text start:0x021112a4 end:0x021112e4
+
+src/func_ov026_021112e4.c:
+    complete
+    .text start:0x021112e4 end:0x02111308
+
+src/func_ov026_02111308.cpp:
+    complete
+    .text start:0x02111308 end:0x02111330
+
+src/func_ov026_02111330.cpp:
+    complete
+    .text start:0x02111330 end:0x02111598
+
+src/func_ov026_02111598.cpp:
+    .text start:0x02111598 end:0x02111678
+
+src/func_ov026_02111678.c:
+    .text start:0x02111678 end:0x021116c8
+
+src/func_ov026_021116c8.c:
+    .text start:0x021116c8 end:0x0211170c
+
+src/func_ov026_0211170c.c:
+    .text start:0x0211170c end:0x02111764
+
+src/func_ov026_02111764.c:
+    .text start:0x02111764 end:0x021117a8
+
+src/func_ov026_021117a8.cpp:
+    complete
+    .text start:0x021117a8 end:0x021117d0
+
+src/func_ov026_021117d0.c:
+    complete
+    .text start:0x021117d0 end:0x021117d8
+
+src/func_ov026_021117d8.c:
+    complete
+    .text start:0x021117d8 end:0x02111888
+
+src/BowserShutter_Spawn.c:
+    complete
+    .text start:0x02111888 end:0x021118b8
+
+src/func_ov026_021118b8.c:
+    .text start:0x021118b8 end:0x021118fc
+
+src/func_ov026_021118fc.c:
+    .text start:0x021118fc end:0x02111954
+
+src/func_ov026_02111954.c:
+    .text start:0x02111954 end:0x02111998
+
+src/func_ov026_02111998.cpp:
+    complete
+    .text start:0x02111998 end:0x021119c0
+
+src/func_ov026_021119c0.c:
+    complete
+    .text start:0x021119c0 end:0x02111a70
+
+src/Submarine_Spawn.c:
+    complete
+    .text start:0x02111a70 end:0x02111aa0
+
+src/_ZN9SubmarineD1Ev.c:
+    complete
+    .text start:0x02111aa0 end:0x02111ad8
+
+src/_ZN9SubmarineD0Ev.c:
+    complete
+    .text start:0x02111ad8 end:0x02111b24
+
+src/func_ov026_02111b24.c:
+    complete
+    .text start:0x02111b24 end:0x02111cb4
+
+src/func_ov026_02111cb4.c:
+    complete
+    .text start:0x02111cb4 end:0x02111d4c
+
+src/func_ov026_02111d4c.cpp:
+    .text start:0x02111d4c end:0x02111ed8
+
+src/func_ov026_02111ed8.c:
+    complete
+    .text start:0x02111ed8 end:0x02111ee0
+
+src/func_ov026_02111ee0.cpp:
+    complete
+    .text start:0x02111ee0 end:0x02111f30
+
+src/func_ov026_02111f30.c:
+    complete
+    .text start:0x02111f30 end:0x02111fa4
+
+src/_ZN9Submarine16CleanupResourcesEv.c:
+    complete
+    .text start:0x02111fa4 end:0x02111fd4
+
+src/_ZN9Submarine16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02111fd4 end:0x02111fd8
+
+src/_ZN9Submarine6RenderEv.cpp:
+    complete
+    .text start:0x02111fd8 end:0x0211200c
+
+src/_ZN9Submarine8BehaviorEv.cpp:
+    .text start:0x0211200c end:0x021120ec
+
+src/_ZN9Submarine13InitResourcesEv.cpp:
+    .text start:0x021120ec end:0x021121bc
+
+src/Whirlpool_Spawn.c:
+    complete
+    .text start:0x021121bc end:0x021121fc
+
+src/_ZN12WaterSuctionD1Ev.c:
+    complete
+    .text start:0x021121fc end:0x02112234
+
+src/_ZN12WaterSuctionD0Ev.c:
+    complete
+    .text start:0x02112234 end:0x02112280
+
+src/func_ov026_02112280.c:
+    complete
+    .text start:0x02112280 end:0x021122b0
+
+src/func_ov026_021122b0.c:
+    complete
+    .text start:0x021122b0 end:0x021122cc
+
+src/func_ov026_021122cc.c:
+    complete
+    .text start:0x021122cc end:0x021122d4
+
+src/func_ov026_021122d4.cpp:
+    complete
+    .text start:0x021122d4 end:0x02112324
+
+src/func_ov026_02112324.c:
+    complete
+    .text start:0x02112324 end:0x02112328
+
+src/_ZN12WaterSuction16CleanupResourcesEv.c:
+    complete
+    .text start:0x02112328 end:0x02112330
+
+src/_ZN12WaterSuction16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02112330 end:0x02112334
+
+src/_ZN12WaterSuction6RenderEv.c:
+    complete
+    .text start:0x02112334 end:0x0211233c
+
+src/_ZN12WaterSuction8BehaviorEv.cpp:
+    .text start:0x0211233c end:0x021123c8
+
+src/_ZN12WaterSuction13InitResourcesEv.cpp:
+    .text start:0x021123c8 end:0x02112450
+
+src/WaterSuction_Spawn.c:
+    complete
+    .text start:0x02112450 end:0x02112490
+
+src/__sinit_ov026_02112b7c.c:
+    .init start:0x02112b7c end:0x02112bbc
+
+src/__sinit_ov026_02112bbc.c:
+    .init start:0x02112bbc end:0x02112c28
+
+src/__sinit_ov026_02112c28.c:
+    .init start:0x02112c28 end:0x02112c94
+
+src/__sinit_ov026_02112c94.c:
+    .init start:0x02112c94 end:0x02112d68
+
+src/__sinit_ov026_02112d68.c:
+    .init start:0x02112d68 end:0x02112da4

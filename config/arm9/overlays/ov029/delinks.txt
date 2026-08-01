@@ -4,3 +4,235 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
+src/func_ov029_021111a0.c:
+    .text start:0x021111a0 end:0x021111f0
+
+src/func_ov029_021111f0.c:
+    .text start:0x021111f0 end:0x02111254
+
+src/func_ov029_02111254.c:
+    complete
+    .text start:0x02111254 end:0x02111340
+
+src/FloatOnWaterPlatformWdwSquare_Spawn.c:
+    .text start:0x02111340 end:0x0211137c
+
+src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c:
+    .text start:0x0211137c end:0x021113c0
+
+src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
+    .text start:0x021113c0 end:0x02111418
+
+src/_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv.cpp:
+    .text start:0x02111418 end:0x0211145c
+
+src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp:
+    complete
+    .text start:0x0211145c end:0x02111484
+
+src/_ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv.cpp:
+    .text start:0x02111484 end:0x021115f8
+
+src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp:
+    complete
+    .text start:0x021115f8 end:0x021116c4
+
+src/func_ov029_021116c4.cpp:
+    complete
+    .text start:0x021116c4 end:0x021116e4
+
+src/func_ov029_021116e4.c:
+    complete
+    .text start:0x021116e4 end:0x021116f8
+
+src/ArrowLift_Spawn.c:
+    complete
+    .text start:0x021116f8 end:0x02111728
+
+src/_ZN9ArrowLiftD1Ev.cpp:
+    .text start:0x02111728 end:0x02111760
+
+src/_ZN9ArrowLiftD0Ev.c:
+    complete
+    .text start:0x02111760 end:0x021117ac
+
+src/func_ov029_021117ac.cpp:
+    complete
+    .text start:0x021117ac end:0x02111850
+
+src/func_ov029_02111850.cpp:
+    complete
+    .text start:0x02111850 end:0x021118c8
+
+src/func_ov029_021118c8.c:
+    complete
+    .text start:0x021118c8 end:0x02111908
+
+src/_ZN9ArrowLift16CleanupResourcesEv.c:
+    complete
+    .text start:0x02111908 end:0x0211192c
+
+src/_ZN9ArrowLift6RenderEv.cpp:
+    complete
+    .text start:0x0211192c end:0x02111954
+
+src/_ZN9ArrowLift8BehaviorEv.cpp:
+    .text start:0x02111954 end:0x02111a04
+
+src/_ZN9ArrowLift13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111a04 end:0x02111a84
+
+src/WaterDiamond_Spawn.c:
+    complete
+    .text start:0x02111a84 end:0x02111ac4
+
+src/func_ov029_02111ac4.c:
+    .text start:0x02111ac4 end:0x02111b08
+
+src/func_ov029_02111b08.c:
+    .text start:0x02111b08 end:0x02111b60
+
+src/func_ov029_02111b60.c:
+    complete
+    .text start:0x02111b60 end:0x02111ba4
+
+src/func_ov029_02111ba4.cpp:
+    complete
+    .text start:0x02111ba4 end:0x02111bcc
+
+src/func_ov029_02111bcc.c:
+    complete
+    .text start:0x02111bcc end:0x02111d6c
+
+src/func_ov029_02111d6c.cpp:
+    .text start:0x02111d6c end:0x02111e40
+
+src/func_ov029_02111e40.cpp:
+    complete
+    .text start:0x02111e40 end:0x02111e60
+
+src/func_ov029_02111e60.c:
+    complete
+    .text start:0x02111e60 end:0x02111e74
+
+src/CageLift_Spawn.c:
+    complete
+    .text start:0x02111e74 end:0x02111ea4
+
+src/func_ov029_02111ea4.c:
+    .text start:0x02111ea4 end:0x02111ef4
+
+src/func_ov029_02111ef4.c:
+    .text start:0x02111ef4 end:0x02111f58
+
+src/func_ov029_02111f58.c:
+    complete
+    .text start:0x02111f58 end:0x02112044
+
+src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
+    .text start:0x02112044 end:0x02112080
+
+src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
+    .text start:0x02112080 end:0x021120d0
+
+src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
+    .text start:0x021120d0 end:0x02112134
+
+src/_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv.c:
+    complete
+    .text start:0x02112134 end:0x02112148
+
+src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.c:
+    complete
+    .text start:0x02112148 end:0x02112168
+
+src/RotatingPlatformWdw_Spawn.c:
+    .text start:0x02112168 end:0x021121a4
+
+src/_ZN19RotatingPlatformWdwD1Ev.c:
+    .text start:0x021121a4 end:0x021121f0
+
+src/_ZN19RotatingPlatformWdwD0Ev.c:
+    .text start:0x021121f0 end:0x02112250
+
+src/func_ov029_02112250.cpp:
+    complete
+    .text start:0x02112250 end:0x021122b4
+
+src/func_ov029_021122b4.c:
+    complete
+    .text start:0x021122b4 end:0x021122dc
+
+src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp:
+    .text start:0x021122dc end:0x02112320
+
+src/_ZN19RotatingPlatformWdw6RenderEv.cpp:
+    complete
+    .text start:0x02112320 end:0x02112354
+
+src/_ZN19RotatingPlatformWdw8BehaviorEv.cpp:
+    .text start:0x02112354 end:0x021124d0
+
+src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp:
+    .text start:0x021124d0 end:0x021125f8
+
+src/WDW_Water_Spawn.c:
+    complete
+    .text start:0x021125f8 end:0x02112630
+
+src/_ZN20SwitchActivatedPlankD1Ev.c:
+    .text start:0x02112630 end:0x0211267c
+
+src/_ZN20SwitchActivatedPlankD0Ev.c:
+    .text start:0x0211267c end:0x021126dc
+
+src/func_ov029_021126dc.c:
+    complete
+    .text start:0x021126dc end:0x02112710
+
+src/func_ov029_02112710.c:
+    complete
+    .text start:0x02112710 end:0x02112750
+
+src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp:
+    .text start:0x02112750 end:0x02112794
+
+src/_ZN20SwitchActivatedPlank6RenderEv.cpp:
+    complete
+    .text start:0x02112794 end:0x021127cc
+
+src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp:
+    complete
+    .text start:0x021127cc end:0x021128b0
+
+src/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp:
+    .text start:0x021128b0 end:0x02112964
+
+src/SwitchActivatedPlank_Spawn.c:
+    complete
+    .text start:0x02112964 end:0x0211299c
+
+src/__sinit_ov029_02112b38.c:
+    .init start:0x02112b38 end:0x02112ba4
+
+src/__sinit_ov029_02112ba4.c:
+    .init start:0x02112ba4 end:0x02112c10
+
+src/__sinit_ov029_02112c10.c:
+    .init start:0x02112c10 end:0x02112c4c
+
+src/__sinit_ov029_02112c4c.c:
+    .init start:0x02112c4c end:0x02112cb8
+
+src/__sinit_ov029_02112cb8.c:
+    .init start:0x02112cb8 end:0x02112d24
+
+src/__sinit_ov029_02112d24.c:
+    .init start:0x02112d24 end:0x02112d90
+
+src/__sinit_ov029_02112d90.c:
+    .init start:0x02112d90 end:0x02112dfc
+
+src/__sinit_ov029_02112dfc.c:
+    .init start:0x02112dfc end:0x02112e68

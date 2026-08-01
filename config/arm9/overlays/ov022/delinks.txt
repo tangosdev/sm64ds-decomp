@@ -4,3 +4,285 @@
     .ctor       start:0x021130f8 end:0x02113120 kind:rodata align:4
     .data       start:0x02113140 end:0x02114500 kind:data align:32
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
+src/func_ov022_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov022_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov022_0211123c.cpp:
+    complete
+    .text start:0x0211123c end:0x02111284
+
+src/func_ov022_02111284.cpp:
+    complete
+    .text start:0x02111284 end:0x021112ac
+
+src/func_ov022_021112ac.c:
+    complete
+    .text start:0x021112ac end:0x0211149c
+
+src/func_ov022_0211149c.c:
+    complete
+    .text start:0x0211149c end:0x02111558
+
+src/func_ov022_02111558.c:
+    complete
+    .text start:0x02111558 end:0x02111564
+
+src/func_ov022_02111564.c:
+    complete
+    .text start:0x02111564 end:0x02111578
+
+src/VolcanoRing_Spawn.c:
+    complete
+    .text start:0x02111578 end:0x021115a8
+
+src/func_ov022_021115a8.c:
+    .text start:0x021115a8 end:0x021115f8
+
+src/func_ov022_021115f8.c:
+    .text start:0x021115f8 end:0x0211165c
+
+src/func_ov022_0211165c.c:
+    .text start:0x0211165c end:0x02111670
+
+src/func_ov022_02111670.c:
+    complete
+    .text start:0x02111670 end:0x02111688
+
+src/RotatingPlatformLll_Spawn.c:
+    .text start:0x02111688 end:0x021116c4
+
+src/_ZN19RotatingPlatformLllD1Ev.c:
+    .text start:0x021116c4 end:0x02111708
+
+src/_ZN19RotatingPlatformLllD0Ev.c:
+    .text start:0x02111708 end:0x02111760
+
+src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp:
+    .text start:0x02111760 end:0x021117a4
+
+src/_ZN19RotatingPlatformLll6RenderEv.cpp:
+    complete
+    .text start:0x021117a4 end:0x021117cc
+
+src/_ZN19RotatingPlatformLll8BehaviorEv.cpp:
+    .text start:0x021117cc end:0x02111870
+
+src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp:
+    .text start:0x02111870 end:0x0211191c
+
+src/func_ov022_0211191c.cpp:
+    complete
+    .text start:0x0211191c end:0x0211193c
+
+src/func_ov022_0211193c.c:
+    complete
+    .text start:0x0211193c end:0x02111950
+
+src/FloatOnLavaPlatform_Spawn.c:
+    complete
+    .text start:0x02111950 end:0x02111980
+
+src/func_ov022_02111980.c:
+    .text start:0x02111980 end:0x021119c4
+
+src/func_ov022_021119c4.c:
+    .text start:0x021119c4 end:0x02111a1c
+
+src/func_ov022_02111a1c.c:
+    complete
+    .text start:0x02111a1c end:0x02111a64
+
+src/func_ov022_02111a64.c:
+    .text start:0x02111a64 end:0x02111aa8
+
+src/func_ov022_02111aa8.cpp:
+    complete
+    .text start:0x02111aa8 end:0x02111ad0
+
+src/func_ov022_02111ad0.c:
+    complete
+    .text start:0x02111ad0 end:0x02111bdc
+
+src/func_ov022_02111bdc.cpp:
+    .text start:0x02111bdc end:0x02111c7c
+
+src/LavaBridge_Spawn.c:
+    complete
+    .text start:0x02111c7c end:0x02111cac
+
+src/func_ov022_02111cac.c:
+    .text start:0x02111cac end:0x02111cf0
+
+src/func_ov022_02111cf0.c:
+    .text start:0x02111cf0 end:0x02111d48
+
+src/func_ov022_02111d48.c:
+    complete
+    .text start:0x02111d48 end:0x02111d90
+
+src/func_ov022_02111d90.c:
+    .text start:0x02111d90 end:0x02111dd4
+
+src/func_ov022_02111dd4.cpp:
+    complete
+    .text start:0x02111dd4 end:0x02111dfc
+
+src/func_ov022_02111dfc.c:
+    complete
+    .text start:0x02111dfc end:0x02111ea0
+
+src/func_ov022_02111ea0.cpp:
+    .text start:0x02111ea0 end:0x02111f3c
+
+src/LavaSeesaw_Spawn.c:
+    complete
+    .text start:0x02111f3c end:0x02111f6c
+
+src/_ZN21FloatingFloorLllSmallD1Ev.c:
+    .text start:0x02111f6c end:0x02111fbc
+
+src/_ZN21FloatingFloorLllSmallD0Ev.c:
+    .text start:0x02111fbc end:0x02112020
+
+src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c:
+    complete
+    .text start:0x02112020 end:0x02112040
+
+src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c:
+    complete
+    .text start:0x02112040 end:0x021120b8
+
+src/FloatingFloorLllSmall_Spawn.c:
+    .text start:0x021120b8 end:0x021120f4
+
+src/FloatingFloorLllBig_Spawn.c:
+    .text start:0x021120f4 end:0x02112130
+
+src/_ZN19FloatingFloorLllBigD1Ev.c:
+    .text start:0x02112130 end:0x02112174
+
+src/_ZN19FloatingFloorLllBigD0Ev.c:
+    .text start:0x02112174 end:0x021121cc
+
+src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp:
+    .text start:0x021121cc end:0x02112210
+
+src/_ZN19FloatingFloorLllBig6RenderEv.cpp:
+    complete
+    .text start:0x02112210 end:0x02112238
+
+src/_ZN19FloatingFloorLllBig8BehaviorEv.cpp:
+    complete
+    .text start:0x02112238 end:0x021122ac
+
+src/_ZN19FloatingFloorLllBig13InitResourcesEv.cpp:
+    .text start:0x021122ac end:0x02112350
+
+src/LavaPlank_Spawn.c:
+    complete
+    .text start:0x02112350 end:0x02112380
+
+src/func_ov022_02112380.c:
+    .text start:0x02112380 end:0x021123d0
+
+src/func_ov022_021123d0.c:
+    .text start:0x021123d0 end:0x02112434
+
+src/func_ov022_02112434.c:
+    .text start:0x02112434 end:0x02112448
+
+src/func_ov022_02112448.c:
+    .text start:0x02112448 end:0x0211245c
+
+src/FallBlockLll_Spawn.c:
+    .text start:0x0211245c end:0x02112498
+
+src/_ZN12FallBlockLllD1Ev.c:
+    .text start:0x02112498 end:0x021124e8
+
+src/_ZN12FallBlockLllD0Ev.c:
+    .text start:0x021124e8 end:0x0211254c
+
+src/_ZN12FallBlockLll16CleanupResourcesEv.cpp:
+    .text start:0x0211254c end:0x02112560
+
+src/_ZN12FallBlockLll8BehaviorEv.cpp:
+    complete
+    .text start:0x02112560 end:0x02112590
+
+src/_ZN12FallBlockLll13InitResourcesEv.cpp:
+    .text start:0x02112590 end:0x021125a4
+
+src/RollingLogLll_Spawn.c:
+    .text start:0x021125a4 end:0x021125e0
+
+src/_ZN13RollingLogLllD1Ev.cpp:
+    .text start:0x021125e0 end:0x02112610
+
+src/_ZN13RollingLogLllD0Ev.c:
+    complete
+    .text start:0x02112610 end:0x02112654
+
+src/func_ov022_02112654.cpp:
+    complete
+    .text start:0x02112654 end:0x021126ac
+
+src/func_ov022_021126ac.c:
+    complete
+    .text start:0x021126ac end:0x02112710
+
+src/func_ov022_02112710.c:
+    complete
+    .text start:0x02112710 end:0x02112790
+
+src/func_ov022_02112790.cpp:
+    complete
+    .text start:0x02112790 end:0x021127e0
+
+src/_ZN13RollingLogLll16CleanupResourcesEv.c:
+    complete
+    .text start:0x021127e0 end:0x02112800
+
+src/_ZN13RollingLogLll8BehaviorEv.cpp:
+    complete
+    .text start:0x02112800 end:0x021128b8
+
+src/_ZN13RollingLogLll13InitResourcesEv.cpp:
+    .text start:0x021128b8 end:0x02112918
+
+src/VolcanoFire_Spawn.c:
+    complete
+    .text start:0x02112918 end:0x02112950
+
+src/__sinit_ov022_02112ca8.c:
+    .init start:0x02112ca8 end:0x02112d14
+
+src/__sinit_ov022_02112d14.c:
+    .init start:0x02112d14 end:0x02112d80
+
+src/__sinit_ov022_02112d80.c:
+    .init start:0x02112d80 end:0x02112dec
+
+src/__sinit_ov022_02112dec.c:
+    .init start:0x02112dec end:0x02112e58
+
+src/__sinit_ov022_02112e58.c:
+    .init start:0x02112e58 end:0x02112ec0
+
+src/__sinit_ov022_02112ec0.c:
+    .init start:0x02112ec0 end:0x02112f78
+
+src/__sinit_ov022_02112f78.c:
+    .init start:0x02112f78 end:0x02112fe4
+
+src/__sinit_ov022_02112fe4.c:
+    .init start:0x02112fe4 end:0x02113050
+
+src/__sinit_ov022_02113050.c:
+    .init start:0x02113050 end:0x021130bc
+
+src/__sinit_ov022_021130bc.c:
+    .init start:0x021130bc end:0x021130f8

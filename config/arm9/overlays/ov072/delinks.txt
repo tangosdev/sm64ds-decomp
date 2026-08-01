@@ -4,3 +4,360 @@
     .ctor       start:0x02122708 end:0x02122718 kind:rodata align:4
     .data       start:0x02122720 end:0x02122b20 kind:data align:32
     .bss        start:0x02122b20 end:0x02122de0 kind:bss align:32
+src/_ZN11SnowmanBodyD1Ev.cpp:
+    .text start:0x0211f000 end:0x0211f048
+
+src/_ZN11SnowmanBodyD0Ev.c:
+    complete
+    .text start:0x0211f048 end:0x0211f0a4
+
+src/func_ov072_0211f0a4.c:
+    complete
+    .text start:0x0211f0a4 end:0x0211f158
+
+src/func_ov072_0211f158.cpp:
+    complete
+    .text start:0x0211f158 end:0x0211f1dc
+
+src/func_ov072_0211f1dc.cpp:
+    complete
+    .text start:0x0211f1dc end:0x0211f280
+
+src/func_ov072_0211f280.c:
+    complete
+    .text start:0x0211f280 end:0x0211f330
+
+src/func_ov072_0211f330.c:
+    complete
+    .text start:0x0211f330 end:0x0211f3e4
+
+src/func_ov072_0211f3e4.c:
+    complete
+    .text start:0x0211f3e4 end:0x0211f48c
+
+src/func_ov072_0211f48c.cpp:
+    complete
+    .text start:0x0211f48c end:0x0211f578
+
+src/func_ov072_0211f578.c:
+    complete
+    .text start:0x0211f578 end:0x0211f598
+
+src/func_ov072_0211f598.c:
+    complete
+    .text start:0x0211f598 end:0x0211f63c
+
+src/func_ov072_0211f63c.c:
+    complete
+    .text start:0x0211f63c end:0x0211f65c
+
+src/func_ov072_0211f65c.cpp:
+    complete
+    .text start:0x0211f65c end:0x0211f804
+
+src/func_ov072_0211f804.c:
+    complete
+    .text start:0x0211f804 end:0x0211f81c
+
+src/func_ov072_0211f81c.cpp:
+    .text start:0x0211f81c end:0x0211f9c4
+
+src/func_ov072_0211f9c4.c:
+    complete
+    .text start:0x0211f9c4 end:0x0211fa08
+
+src/func_ov072_0211fa08.cpp:
+    complete
+    .text start:0x0211fa08 end:0x0211faf0
+
+src/func_ov072_0211faf0.c:
+    complete
+    .text start:0x0211faf0 end:0x0211fb14
+
+src/func_ov072_0211fb14.cpp:
+    complete
+    .text start:0x0211fb14 end:0x0211fb7c
+
+src/func_ov072_0211fb7c.c:
+    complete
+    .text start:0x0211fb7c end:0x0211fc3c
+
+src/func_ov072_0211fc3c.cpp:
+    complete
+    .text start:0x0211fc3c end:0x0211fc78
+
+src/func_ov072_0211fc78.cpp:
+    complete
+    .text start:0x0211fc78 end:0x0211fcb0
+
+src/func_ov072_0211fcb0.c:
+    complete
+    .text start:0x0211fcb0 end:0x0211fccc
+
+src/_ZN11SnowmanBody16CleanupResourcesEv.c:
+    complete
+    .text start:0x0211fccc end:0x0211fcf0
+
+src/_ZN11SnowmanBody16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0211fcf0 end:0x0211fcf4
+
+src/_ZN11SnowmanBody6RenderEv.cpp:
+    complete
+    .text start:0x0211fcf4 end:0x0211fd24
+
+src/_ZN11SnowmanBody8BehaviorEv.cpp:
+    .text start:0x0211fd24 end:0x0211fd54
+
+src/_ZN11SnowmanBody13InitResourcesEv.cpp:
+    .text start:0x0211fd54 end:0x0211fedc
+
+src/SnowmanBody_Spawn.c:
+    complete
+    .text start:0x0211fedc end:0x0211ff34
+
+src/_ZN11SnowmanHeadD1Ev.cpp:
+    .text start:0x0211ff34 end:0x0211ff7c
+
+src/_ZN11SnowmanHeadD0Ev.c:
+    complete
+    .text start:0x0211ff7c end:0x0211ffd8
+
+src/func_ov072_0211ffd8.c:
+    complete
+    .text start:0x0211ffd8 end:0x0212001c
+
+src/func_ov072_0212001c.c:
+    complete
+    .text start:0x0212001c end:0x02120180
+
+src/func_ov072_02120180.c:
+    complete
+    .text start:0x02120180 end:0x021201d4
+
+src/func_ov072_021201d4.c:
+    complete
+    .text start:0x021201d4 end:0x02120308
+
+src/func_ov072_02120308.c:
+    complete
+    .text start:0x02120308 end:0x02120358
+
+src/func_ov072_02120358.c:
+    complete
+    .text start:0x02120358 end:0x02120430
+
+src/func_ov072_02120430.c:
+    complete
+    .text start:0x02120430 end:0x02120450
+
+src/func_ov072_02120450.cpp:
+    .text start:0x02120450 end:0x02120514
+
+src/func_ov072_02120514.c:
+    complete
+    .text start:0x02120514 end:0x02120560
+
+src/func_ov072_02120560.cpp:
+    complete
+    .text start:0x02120560 end:0x0212059c
+
+src/func_ov072_0212059c.cpp:
+    complete
+    .text start:0x0212059c end:0x021205d4
+
+src/func_ov072_021205d4.c:
+    complete
+    .text start:0x021205d4 end:0x021205f0
+
+src/_ZN11SnowmanHead16CleanupResourcesEv.c:
+    complete
+    .text start:0x021205f0 end:0x02120634
+
+src/_ZN11SnowmanHead16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02120634 end:0x02120638
+
+src/_ZN11SnowmanHead6RenderEv.cpp:
+    complete
+    .text start:0x02120638 end:0x0212066c
+
+src/_ZN11SnowmanHead8BehaviorEv.cpp:
+    .text start:0x0212066c end:0x0212069c
+
+src/_ZN11SnowmanHead13InitResourcesEv.cpp:
+    .text start:0x0212069c end:0x021207d4
+
+src/SnowmanHead_Spawn.c:
+    complete
+    .text start:0x021207d4 end:0x02120824
+
+src/func_ov072_02120824.c:
+    .text start:0x02120824 end:0x02120874
+
+src/func_ov072_02120874.c:
+    .text start:0x02120874 end:0x021208d8
+
+src/func_ov072_021208d8.cpp:
+    complete
+    .text start:0x021208d8 end:0x02120980
+
+src/func_ov072_02120980.c:
+    complete
+    .text start:0x02120980 end:0x021209bc
+
+src/func_ov072_021209bc.c:
+    complete
+    .text start:0x021209bc end:0x021209c0
+
+src/func_ov072_021209c0.cpp:
+    complete
+    .text start:0x021209c0 end:0x02120a08
+
+src/func_ov072_02120a08.cpp:
+    complete
+    .text start:0x02120a08 end:0x02120a44
+
+src/func_ov072_02120a44.c:
+    complete
+    .text start:0x02120a44 end:0x02120c00
+
+src/func_ov072_02120c00.c:
+    .text start:0x02120c00 end:0x02120c58
+
+src/_ZN11BabyPenguinD1Ev.cpp:
+    .text start:0x02120c58 end:0x02120ca0
+
+src/_ZN11BabyPenguinD0Ev.c:
+    complete
+    .text start:0x02120ca0 end:0x02120cfc
+
+src/func_ov072_02120cfc.c:
+    complete
+    .text start:0x02120cfc end:0x02120d04
+
+src/func_ov072_02120d04.cpp:
+    complete
+    .text start:0x02120d04 end:0x02120ddc
+
+src/func_ov072_02120ddc.c:
+    complete
+    .text start:0x02120ddc end:0x02120e20
+
+src/func_ov072_02120e20.cpp:
+    complete
+    .text start:0x02120e20 end:0x02120e50
+
+src/func_ov072_02120e50.cpp:
+    complete
+    .text start:0x02120e50 end:0x02120f14
+
+src/func_ov072_02120f14.cpp:
+    complete
+    .text start:0x02120f14 end:0x02120fd4
+
+src/func_ov072_02120fd4.cpp:
+    complete
+    .text start:0x02120fd4 end:0x021210c4
+
+src/func_ov072_021210c4.cpp:
+    complete
+    .text start:0x021210c4 end:0x021212c0
+
+src/func_ov072_021212c0.cpp:
+    complete
+    .text start:0x021212c0 end:0x02121368
+
+src/func_ov072_02121368.c:
+    complete
+    .text start:0x02121368 end:0x021214dc
+
+src/func_ov072_021214dc.c:
+    complete
+    .text start:0x021214dc end:0x02121640
+
+src/func_ov072_02121640.c:
+    complete
+    .text start:0x02121640 end:0x02121670
+
+src/func_ov072_02121670.c:
+    complete
+    .text start:0x02121670 end:0x02121758
+
+src/func_ov072_02121758.c:
+    complete
+    .text start:0x02121758 end:0x021217ac
+
+src/func_ov072_021217ac.cpp:
+    .text start:0x021217ac end:0x02121890
+
+src/func_ov072_02121890.c:
+    complete
+    .text start:0x02121890 end:0x021218dc
+
+src/func_ov072_021218dc.cpp:
+    complete
+    .text start:0x021218dc end:0x02121a28
+
+src/func_ov072_02121a28.c:
+    complete
+    .text start:0x02121a28 end:0x02121a84
+
+src/func_ov072_02121a84.c:
+    complete
+    .text start:0x02121a84 end:0x02121c94
+
+src/func_ov072_02121c94.c:
+    complete
+    .text start:0x02121c94 end:0x02121cdc
+
+src/func_ov072_02121cdc.cpp:
+    complete
+    .text start:0x02121cdc end:0x02121d18
+
+src/func_ov072_02121d18.cpp:
+    complete
+    .text start:0x02121d18 end:0x02121d50
+
+src/func_ov072_02121d50.c:
+    complete
+    .text start:0x02121d50 end:0x02121d6c
+
+src/_ZN11BabyPenguin16CleanupResourcesEv.c:
+    complete
+    .text start:0x02121d6c end:0x02121db0
+
+src/_ZN11BabyPenguin16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02121db0 end:0x02121db4
+
+src/_ZN11BabyPenguin6RenderEv.cpp:
+    complete
+    .text start:0x02121db4 end:0x02121e08
+
+src/_ZN11BabyPenguin8BehaviorEv.cpp:
+    complete
+    .text start:0x02121e08 end:0x02121e84
+
+src/_ZN11BabyPenguin13InitResourcesEv.cpp:
+    .text start:0x02121e84 end:0x02121fa0
+
+src/func_ov072_02121fa0.c:
+    complete
+    .text start:0x02121fa0 end:0x02121fac
+
+src/BabyPenguin_Spawn.c:
+    complete
+    .text start:0x02121fac end:0x02121ffc
+
+src/__sinit_ov072_02122018.c:
+    .init start:0x02122018 end:0x021221f8
+
+src/__sinit_ov072_021221f8.c:
+    .init start:0x021221f8 end:0x02122350
+
+src/__sinit_ov072_02122350.c:
+    .init start:0x02122350 end:0x02122414
+
+src/__sinit_ov072_02122414.c:
+    .init start:0x02122414 end:0x02122708

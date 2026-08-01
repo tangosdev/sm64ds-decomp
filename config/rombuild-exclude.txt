@@ -1,0 +1,29 @@
+# Functions that cannot be carved into their own delink object, by symbol name.
+# tools/enroll.py skips these; their address ranges stay inside the module's gap
+# object, so the ROM build still covers them - just not from a separate file.
+# Lines starting with '#' are comments.
+
+# --- main: the 0x0206d9dc / 0x0206da28 secondary-entry-point cluster ---
+# func_0206ce90, func_0206cee0 and func_0206d868 arm_call 0x0206d9dc and 0x0206da28.
+# Neither address has a symbol: they are secondary entry points 0x10 bytes inside
+# func_0206d9cc and func_0206da18. dsd names such a target with a local label
+# (.L_0206d9dc), and a local label cannot be referenced from outside the object that
+# defines it:
+#   "Imported symbol .L_0206d9dc ... is local, it cannot be used in relocation"
+# So the callers and the targets must stay in one object. Excluding just the three
+# callers is not enough - carving any function between them splits the span - so the
+# whole run from the first caller to the last target stays in the gap.
+# Giving 0x0206d9dc and 0x0206da28 real symbols in config/arm9/symbols.txt would
+# recover all twelve.
+func_0206ce90
+func_0206cec0
+func_0206cee0
+func_0206cf7c
+func_0206cf98
+func_0206d32c
+func_0206d868
+func_0206d890
+func_0206d8c4
+func_0206d940
+func_0206d9cc
+func_0206da18

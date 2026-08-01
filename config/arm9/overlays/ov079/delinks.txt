@@ -4,3 +4,264 @@
     .ctor       start:0x02127b88 end:0x02127b98 kind:rodata align:4
     .data       start:0x02127ba0 end:0x02128140 kind:data align:32
     .bss        start:0x02128140 end:0x021283a0 kind:bss align:32
+src/_ZN5WhompD1Ev.c:
+    complete
+    .text start:0x02123740 end:0x02123798
+
+src/_ZN5WhompD0Ev.c:
+    complete
+    .text start:0x02123798 end:0x02123804
+
+src/func_ov079_02123804.c:
+    complete
+    .text start:0x02123804 end:0x02123a8c
+
+src/func_ov079_02123a8c.cpp:
+    .text start:0x02123a8c end:0x02123b54
+
+src/func_ov079_02123b54.c:
+    complete
+    .text start:0x02123b54 end:0x02123b60
+
+src/func_ov079_02123b60.c:
+    complete
+    .text start:0x02123b60 end:0x02123bcc
+
+src/func_ov079_02123bcc.c:
+    complete
+    .text start:0x02123bcc end:0x02123d4c
+
+src/func_ov079_02123d4c.cpp:
+    complete
+    .text start:0x02123d4c end:0x02123e60
+
+src/func_ov079_02123e60.cpp:
+    .text start:0x02123e60 end:0x02123f34
+
+src/func_ov079_02123f34.c:
+    complete
+    .text start:0x02123f34 end:0x02124008
+
+src/func_ov079_02124008.c:
+    complete
+    .text start:0x02124008 end:0x02124188
+
+src/func_ov079_02124188.c:
+    complete
+    .text start:0x02124188 end:0x021243e0
+
+src/func_ov079_021243e0.c:
+    complete
+    .text start:0x021243e0 end:0x02124530
+
+src/func_ov079_02124530.c:
+    complete
+    .text start:0x02124530 end:0x02124638
+
+src/func_ov079_02124638.c:
+    complete
+    .text start:0x02124638 end:0x021246d8
+
+src/func_ov079_021246d8.c:
+    complete
+    .text start:0x021246d8 end:0x021246dc
+
+src/func_ov079_021246dc.c:
+    complete
+    .text start:0x021246dc end:0x021249f0
+
+src/func_ov079_021249f0.c:
+    complete
+    .text start:0x021249f0 end:0x02124b08
+
+src/func_ov079_02124b08.c:
+    complete
+    .text start:0x02124b08 end:0x02124dec
+
+src/func_ov079_02124dec.cpp:
+    complete
+    .text start:0x02124dec end:0x02124ed4
+
+src/func_ov079_02124ed4.c:
+    complete
+    .text start:0x02124ed4 end:0x02125058
+
+src/func_ov079_02125058.cpp:
+    complete
+    .text start:0x02125058 end:0x0212522c
+
+src/func_ov079_0212522c.c:
+    complete
+    .text start:0x0212522c end:0x02125240
+
+src/func_ov079_02125240.cpp:
+    .text start:0x02125240 end:0x0212538c
+
+src/func_ov079_0212538c.c:
+    complete
+    .text start:0x0212538c end:0x021254b4
+
+src/func_ov079_021254b4.c:
+    complete
+    .text start:0x021254b4 end:0x02125504
+
+src/func_ov079_02125504.c:
+    complete
+    .text start:0x02125504 end:0x021256d4
+
+src/func_ov079_021256d4.c:
+    complete
+    .text start:0x021256d4 end:0x021258fc
+
+src/func_ov079_021258fc.c:
+    complete
+    .text start:0x021258fc end:0x02125b44
+
+src/func_ov079_02125b44.c:
+    complete
+    .text start:0x02125b44 end:0x02125eb0
+
+src/_ZN5Whomp16CleanupResourcesEv.cpp:
+    .text start:0x02125eb0 end:0x02125f78
+
+src/_ZN5Whomp6RenderEv.cpp:
+    complete
+    .text start:0x02125f78 end:0x02125fcc
+
+src/_ZN5Whomp8BehaviorEv.cpp:
+    complete
+    .text start:0x02125fcc end:0x02126164
+
+src/_ZN5Whomp13InitResourcesEv.cpp:
+    .text start:0x02126164 end:0x02126588
+
+src/WhompKing_Spawn.c:
+    complete
+    .text start:0x02126588 end:0x021265e8
+
+src/Whomp_Spawn.c:
+    complete
+    .text start:0x021265e8 end:0x02126648
+
+src/_ZN10BulletBillD1Ev.c:
+    complete
+    .text start:0x02126648 end:0x02126698
+
+src/_ZN10BulletBillD0Ev.c:
+    complete
+    .text start:0x02126698 end:0x021266fc
+
+src/func_ov079_021266fc.c:
+    complete
+    .text start:0x021266fc end:0x02126704
+
+src/func_ov079_02126704.c:
+    complete
+    .text start:0x02126704 end:0x02126794
+
+src/func_ov079_02126794.cpp:
+    complete
+    .text start:0x02126794 end:0x0212682c
+
+src/func_ov079_0212682c.c:
+    complete
+    .text start:0x0212682c end:0x02126a18
+
+src/_ZN10BulletBill16CleanupResourcesEv.c:
+    complete
+    .text start:0x02126a18 end:0x02126a48
+
+src/_ZN10BulletBill6RenderEv.cpp:
+    complete
+    .text start:0x02126a48 end:0x02126a84
+
+src/_ZN10BulletBill8BehaviorEv.cpp:
+    complete
+    .text start:0x02126a84 end:0x02126c44
+
+src/_ZN10BulletBill13InitResourcesEv.c:
+    complete
+    .text start:0x02126c44 end:0x02126d64
+
+src/BulletBill_Spawn.c:
+    complete
+    .text start:0x02126d64 end:0x02126dbc
+
+src/func_ov079_02126dbc.c:
+    .text start:0x02126dbc end:0x02126e00
+
+src/func_ov079_02126e00.c:
+    .text start:0x02126e00 end:0x02126e58
+
+src/func_ov079_02126e58.cpp:
+    complete
+    .text start:0x02126e58 end:0x02126ecc
+
+src/func_ov079_02126ecc.cpp:
+    .text start:0x02126ecc end:0x02126f04
+
+src/func_ov079_02126f04.c:
+    complete
+    .text start:0x02126f04 end:0x02126f64
+
+src/func_ov079_02126f64.cpp:
+    complete
+    .text start:0x02126f64 end:0x02126f8c
+
+src/func_ov079_02126f8c.cpp:
+    .text start:0x02126f8c end:0x02127090
+
+src/func_ov079_02127090.cpp:
+    complete
+    .text start:0x02127090 end:0x021271b4
+
+src/BillBlaster_Spawn.c:
+    complete
+    .text start:0x021271b4 end:0x021271e4
+
+src/_ZN12FortressWallD1Ev.c:
+    .text start:0x021271e4 end:0x02127228
+
+src/_ZN12FortressWallD0Ev.c:
+    .text start:0x02127228 end:0x02127280
+
+src/func_ov079_02127280.cpp:
+    complete
+    .text start:0x02127280 end:0x021272e0
+
+src/func_ov079_021272e0.cpp:
+    complete
+    .text start:0x021272e0 end:0x02127300
+
+src/_ZN12FortressWall16CleanupResourcesEv.cpp:
+    .text start:0x02127300 end:0x02127364
+
+src/_ZN12FortressWall6RenderEv.cpp:
+    complete
+    .text start:0x02127364 end:0x021273a4
+
+src/_ZN12FortressWall8BehaviorEv.cpp:
+    .text start:0x021273a4 end:0x02127494
+
+src/_ZN12FortressWall13InitResourcesEv.cpp:
+    .text start:0x02127494 end:0x0212757c
+
+src/FortressWall_Spawn.c:
+    complete
+    .text start:0x0212757c end:0x021275ac
+
+src/FortressWallBreakable_Spawn.c:
+    complete
+    .text start:0x021275ac end:0x021275dc
+
+src/__sinit_ov079_02127618.c:
+    .init start:0x02127618 end:0x021279d4
+
+src/__sinit_ov079_021279d4.c:
+    .init start:0x021279d4 end:0x02127a10
+
+src/__sinit_ov079_02127a10.c:
+    .init start:0x02127a10 end:0x02127acc
+
+src/__sinit_ov079_02127acc.c:
+    .init start:0x02127acc end:0x02127b88

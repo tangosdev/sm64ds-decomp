@@ -4,3 +4,605 @@
     .ctor       start:0x0211a4bc end:0x0211a4d4 kind:rodata align:4
     .data       start:0x0211a4e0 end:0x0211abe0 kind:data align:32
     .bss        start:0x0211abe0 end:0x0211b240 kind:bss align:32
+src/_ZN6BowserD1Ev.cpp:
+    .text start:0x02111900 end:0x02111950
+
+src/_ZN6BowserD0Ev.c:
+    complete
+    .text start:0x02111950 end:0x021119b4
+
+src/_ZN10BowserTailD1Ev.cpp:
+    .text start:0x021119b4 end:0x021119e4
+
+src/_ZN10BowserTailD0Ev.c:
+    complete
+    .text start:0x021119e4 end:0x02111a28
+
+src/func_ov060_02111a28.cpp:
+    complete
+    .text start:0x02111a28 end:0x02111c68
+
+src/func_ov060_02111c68.c:
+    complete
+    .text start:0x02111c68 end:0x02111cc0
+
+src/func_ov060_02111cc0.cpp:
+    complete
+    .text start:0x02111cc0 end:0x02111f08
+
+src/func_ov060_02111f08.c:
+    complete
+    .text start:0x02111f08 end:0x02112350
+
+src/func_ov060_02112350.c:
+    complete
+    .text start:0x02112350 end:0x021123a0
+
+src/func_ov060_021123a0.c:
+    complete
+    .text start:0x021123a0 end:0x021123c8
+
+src/func_ov060_021123c8.c:
+    complete
+    .text start:0x021123c8 end:0x021123dc
+
+src/func_ov060_021123dc.c:
+    complete
+    .text start:0x021123dc end:0x02112434
+
+src/func_ov060_02112434.cpp:
+    complete
+    .text start:0x02112434 end:0x021125f0
+
+src/func_ov060_021125f0.c:
+    complete
+    .text start:0x021125f0 end:0x02112724
+
+src/func_ov060_02112724.c:
+    complete
+    .text start:0x02112724 end:0x021128c0
+
+src/func_ov060_021128c0.cpp:
+    complete
+    .text start:0x021128c0 end:0x02112ba8
+
+src/func_ov060_02112ba8.cpp:
+    complete
+    .text start:0x02112ba8 end:0x02112bfc
+
+src/func_ov060_02112bfc.c:
+    complete
+    .text start:0x02112bfc end:0x02112d48
+
+src/func_ov060_02112d48.c:
+    complete
+    .text start:0x02112d48 end:0x02112ddc
+
+src/func_ov060_02112ddc.cpp:
+    complete
+    .text start:0x02112ddc end:0x02112ee0
+
+src/func_ov060_02112ee0.cpp:
+    complete
+    .text start:0x02112ee0 end:0x021130c0
+
+src/func_ov060_021130c0.c:
+    complete
+    .text start:0x021130c0 end:0x02113260
+
+src/func_ov060_02113260.c:
+    complete
+    .text start:0x02113260 end:0x021132a4
+
+src/func_ov060_021132a4.c:
+    complete
+    .text start:0x021132a4 end:0x02113404
+
+src/func_ov060_02113404.c:
+    complete
+    .text start:0x02113404 end:0x021134ac
+
+src/func_ov060_021134ac.c:
+    complete
+    .text start:0x021134ac end:0x02113564
+
+src/func_ov060_02113564.c:
+    complete
+    .text start:0x02113564 end:0x021135fc
+
+src/func_ov060_021135fc.c:
+    complete
+    .text start:0x021135fc end:0x02113710
+
+src/func_ov060_02113710.c:
+    complete
+    .text start:0x02113710 end:0x02113740
+
+src/func_ov060_02113740.c:
+    complete
+    .text start:0x02113740 end:0x02113a94
+
+src/func_ov060_02113a94.c:
+    complete
+    .text start:0x02113a94 end:0x02113b5c
+
+src/func_ov060_02113b5c.cpp:
+    complete
+    .text start:0x02113b5c end:0x02113d20
+
+src/func_ov060_02113d20.cpp:
+    .text start:0x02113d20 end:0x02113d8c
+
+src/func_ov060_02113d8c.cpp:
+    complete
+    .text start:0x02113d8c end:0x02113fcc
+
+src/func_ov060_02113fcc.c:
+    complete
+    .text start:0x02113fcc end:0x02113ff4
+
+src/func_ov060_02113ff4.c:
+    complete
+    .text start:0x02113ff4 end:0x021140c0
+
+src/func_ov060_021142b4.c:
+    complete
+    .text start:0x021142b4 end:0x02114300
+
+src/func_ov060_02114300.c:
+    complete
+    .text start:0x02114300 end:0x021143b8
+
+src/func_ov060_021143b8.c:
+    complete
+    .text start:0x021143b8 end:0x021145a8
+
+src/func_ov060_021145a8.c:
+    complete
+    .text start:0x021145a8 end:0x021145d4
+
+src/func_ov060_021145d4.c:
+    complete
+    .text start:0x021145d4 end:0x0211469c
+
+src/func_ov060_0211469c.cpp:
+    complete
+    .text start:0x0211469c end:0x021146d0
+
+src/func_ov060_021146d0.c:
+    complete
+    .text start:0x021146d0 end:0x02114858
+
+src/func_ov060_02114858.c:
+    complete
+    .text start:0x02114858 end:0x02114b60
+
+src/func_ov060_02114b60.c:
+    complete
+    .text start:0x02114b60 end:0x02114d08
+
+src/func_ov060_02114d08.c:
+    complete
+    .text start:0x02114d08 end:0x02114e9c
+
+src/func_ov060_02114e9c.cpp:
+    complete
+    .text start:0x02114e9c end:0x02114f88
+
+src/func_ov060_02114f88.c:
+    complete
+    .text start:0x02114f88 end:0x02114ff8
+
+src/func_ov060_02114ff8.c:
+    complete
+    .text start:0x02114ff8 end:0x02115018
+
+src/func_ov060_02115018.c:
+    complete
+    .text start:0x02115018 end:0x02115060
+
+src/func_ov060_02115060.c:
+    complete
+    .text start:0x02115060 end:0x021150c4
+
+src/func_ov060_021150c4.c:
+    complete
+    .text start:0x021150c4 end:0x021150d0
+
+src/func_ov060_021150d0.cpp:
+    complete
+    .text start:0x021150d0 end:0x021151d4
+
+src/func_ov060_021151d4.c:
+    complete
+    .text start:0x021151d4 end:0x02115314
+
+src/func_ov060_02115314.c:
+    complete
+    .text start:0x02115314 end:0x021153f8
+
+src/func_ov060_021153f8.c:
+    complete
+    .text start:0x021153f8 end:0x021154e8
+
+src/func_ov060_021154e8.c:
+    complete
+    .text start:0x021154e8 end:0x02115518
+
+src/func_ov060_02115518.c:
+    complete
+    .text start:0x02115518 end:0x021156ec
+
+src/func_ov060_021156ec.c:
+    complete
+    .text start:0x021156ec end:0x02115718
+
+src/func_ov060_02115718.c:
+    complete
+    .text start:0x02115718 end:0x02115744
+
+src/func_ov060_02115744.c:
+    complete
+    .text start:0x02115744 end:0x0211577c
+
+src/func_ov060_0211577c.c:
+    complete
+    .text start:0x0211577c end:0x02115a30
+
+src/Bowser_IsAnimAtLastFrame.cpp:
+    complete
+    .text start:0x02115a30 end:0x02115a84
+
+src/func_ov060_02115a84.cpp:
+    complete
+    .text start:0x02115a84 end:0x02115b0c
+
+src/func_ov060_02115b0c.c:
+    complete
+    .text start:0x02115b0c end:0x02115b84
+
+src/func_ov060_02115b84.cpp:
+    complete
+    .text start:0x02115b84 end:0x02115c1c
+
+src/func_ov060_02115c1c.c:
+    complete
+    .text start:0x02115c1c end:0x02115d50
+
+src/func_ov060_02115d50.c:
+    complete
+    .text start:0x02115d50 end:0x02115d68
+
+src/func_ov060_02115d68.cpp:
+    complete
+    .text start:0x02115d68 end:0x02115e80
+
+src/_ZN6Bowser16CleanupResourcesEv.c:
+    complete
+    .text start:0x02115e80 end:0x02115f00
+
+src/_ZN10BowserTail16CleanupResourcesEv.c:
+    complete
+    .text start:0x02115f00 end:0x02115f08
+
+src/_ZN6Bowser16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02115f08 end:0x02115f0c
+
+src/_ZN6Bowser6RenderEv.cpp:
+    complete
+    .text start:0x02115f0c end:0x02115f5c
+
+src/_ZN10BowserTail6RenderEv.c:
+    complete
+    .text start:0x02115f5c end:0x02115f64
+
+src/_ZN6Bowser8BehaviorEv.cpp:
+    .text start:0x02115f64 end:0x02116078
+
+src/_ZN10BowserTail8BehaviorEv.cpp:
+    .text start:0x02116078 end:0x02116130
+
+src/_ZN6Bowser13InitResourcesEv.c:
+    complete
+    .text start:0x02116130 end:0x021163b4
+
+src/_ZN10BowserTail13InitResourcesEv.cpp:
+    complete
+    .text start:0x021163b4 end:0x021163f0
+
+src/BowserTail_Spawn.c:
+    complete
+    .text start:0x021163f0 end:0x02116428
+
+src/Bowser_Spawn.c:
+    complete
+    .text start:0x02116428 end:0x02116484
+
+src/_ZN10BowserFireD1Ev.c:
+    complete
+    .text start:0x02116484 end:0x021164c4
+
+src/_ZN10BowserFireD0Ev.c:
+    complete
+    .text start:0x021164c4 end:0x02116518
+
+src/func_ov060_02116518.c:
+    complete
+    .text start:0x02116518 end:0x02116740
+
+src/func_ov060_02116740.cpp:
+    complete
+    .text start:0x02116740 end:0x021167c8
+
+src/func_ov060_021167c8.c:
+    complete
+    .text start:0x021167c8 end:0x021167ec
+
+src/func_ov060_021167ec.c:
+    complete
+    .text start:0x021167ec end:0x021168c4
+
+src/func_ov060_021168c4.cpp:
+    .text start:0x021168c4 end:0x021169b0
+
+src/func_ov060_021169b0.c:
+    complete
+    .text start:0x021169b0 end:0x021169f8
+
+src/func_ov060_021169f8.c:
+    complete
+    .text start:0x021169f8 end:0x02116b18
+
+src/func_ov060_02116b18.c:
+    complete
+    .text start:0x02116b18 end:0x02116b68
+
+src/func_ov060_02116b68.c:
+    complete
+    .text start:0x02116b68 end:0x02116c68
+
+src/func_ov060_02116c68.c:
+    complete
+    .text start:0x02116c68 end:0x02116d78
+
+src/func_ov060_02116f74.c:
+    complete
+    .text start:0x02116f74 end:0x02116f90
+
+src/func_ov060_02116f90.c:
+    complete
+    .text start:0x02116f90 end:0x0211712c
+
+src/func_ov060_0211712c.c:
+    complete
+    .text start:0x0211712c end:0x021171e8
+
+src/func_ov060_021171e8.c:
+    complete
+    .text start:0x021171e8 end:0x0211722c
+
+src/func_ov060_0211722c.c:
+    complete
+    .text start:0x0211722c end:0x021172c8
+
+src/func_ov060_021172c8.c:
+    complete
+    .text start:0x021172c8 end:0x021172e0
+
+src/func_ov060_021172e0.cpp:
+    complete
+    .text start:0x021172e0 end:0x0211747c
+
+src/func_ov060_0211747c.c:
+    complete
+    .text start:0x0211747c end:0x02117624
+
+src/func_ov060_02117624.cpp:
+    complete
+    .text start:0x02117624 end:0x021176c4
+
+src/_ZN10BowserFire16CleanupResourcesEv.c:
+    complete
+    .text start:0x021176c4 end:0x021176cc
+
+src/_ZN10BowserFire6RenderEv.c:
+    complete
+    .text start:0x021176cc end:0x021176d4
+
+src/_ZN10BowserFire8BehaviorEv.cpp:
+    .text start:0x021176d4 end:0x02117790
+
+src/_ZN10BowserFire13InitResourcesEv.cpp:
+    complete
+    .text start:0x02117790 end:0x02117938
+
+src/BowserFire_Spawn.c:
+    complete
+    .text start:0x02117938 end:0x02117980
+
+src/_ZN18BowserFireSeaArenaD1Ev.c:
+    .text start:0x02117980 end:0x021179d4
+
+src/_ZN18BowserFireSeaArenaD0Ev.c:
+    .text start:0x021179d4 end:0x02117a3c
+
+src/func_ov060_02117a3c.c:
+    complete
+    .text start:0x02117a3c end:0x02117a64
+
+src/func_ov060_02117a64.c:
+    complete
+    .text start:0x02117a64 end:0x02117ae0
+
+src/func_ov060_02117ae0.c:
+    complete
+    .text start:0x02117ae0 end:0x02117b58
+
+src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp:
+    .text start:0x02117b58 end:0x02117b9c
+
+src/_ZN18BowserFireSeaArena6RenderEv.cpp:
+    complete
+    .text start:0x02117b9c end:0x02117bc8
+
+src/_ZN18BowserFireSeaArena8BehaviorEv.cpp:
+    .text start:0x02117bc8 end:0x02117c30
+
+src/_ZN18BowserFireSeaArena13InitResourcesEv.cpp:
+    .text start:0x02117c30 end:0x02117cdc
+
+src/BowserFireSeaArena_Spawn.c:
+    complete
+    .text start:0x02117cdc end:0x02117d1c
+
+src/func_ov060_02117d1c.c:
+    .text start:0x02117d1c end:0x02117d60
+
+src/func_ov060_02117d60.c:
+    .text start:0x02117d60 end:0x02117db8
+
+src/func_ov060_02117db8.c:
+    complete
+    .text start:0x02117db8 end:0x021180e0
+
+src/func_ov060_021180e0.cpp:
+    complete
+    .text start:0x021180e0 end:0x021181b4
+
+src/func_ov060_021181b4.c:
+    complete
+    .text start:0x021181b4 end:0x021181e8
+
+src/func_ov060_021181e8.c:
+    complete
+    .text start:0x021181e8 end:0x0211822c
+
+src/func_ov060_0211822c.cpp:
+    complete
+    .text start:0x0211822c end:0x02118254
+
+src/func_ov060_02118254.cpp:
+    complete
+    .text start:0x02118254 end:0x021182b0
+
+src/func_ov060_021182b0.cpp:
+    .text start:0x021182b0 end:0x021183cc
+
+src/func_ov060_021183cc.c:
+    complete
+    .text start:0x021183cc end:0x021183f4
+
+src/func_ov060_021183f4.c:
+    complete
+    .text start:0x021183f4 end:0x02118408
+
+src/BowserSkyPlatform_Spawn.c:
+    complete
+    .text start:0x02118408 end:0x02118438
+
+src/_ZN17BowserSkyPlatformD1Ev.cpp:
+    .text start:0x02118438 end:0x02118470
+
+src/_ZN17BowserSkyPlatformD0Ev.c:
+    complete
+    .text start:0x02118470 end:0x021184bc
+
+src/func_ov060_021184bc.c:
+    complete
+    .text start:0x021184bc end:0x02118544
+
+src/func_ov060_02118544.c:
+    complete
+    .text start:0x02118544 end:0x021185c4
+
+src/func_ov060_021185c4.c:
+    complete
+    .text start:0x021185c4 end:0x02118690
+
+src/func_ov060_02118690.c:
+    complete
+    .text start:0x02118690 end:0x021186d8
+
+src/func_ov060_021186d8.c:
+    complete
+    .text start:0x021186d8 end:0x02118728
+
+src/func_ov060_02118728.c:
+    complete
+    .text start:0x02118728 end:0x02118834
+
+src/func_ov060_02118834.c:
+    complete
+    .text start:0x02118834 end:0x021188e8
+
+src/func_ov060_021188e8.c:
+    complete
+    .text start:0x021188e8 end:0x02118970
+
+src/func_ov060_02118970.c:
+    complete
+    .text start:0x02118970 end:0x02118ab0
+
+src/_ZN17BowserSkyPlatform16CleanupResourcesEv.c:
+    complete
+    .text start:0x02118ab0 end:0x02118ad4
+
+src/_ZN17BowserSkyPlatform6RenderEv.cpp:
+    complete
+    .text start:0x02118ad4 end:0x02118b2c
+
+src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
+    .text start:0x02118b2c end:0x02118bb4
+
+src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp:
+    .text start:0x02118bb4 end:0x02118cbc
+
+src/SpikeBomb_Spawn.c:
+    complete
+    .text start:0x02118cbc end:0x02118cfc
+
+src/_ZN16BowserShockwavesD1Ev.c:
+    complete
+    .text start:0x02118cfc end:0x02118d64
+
+src/_ZN16BowserShockwavesD0Ev.c:
+    complete
+    .text start:0x02118d64 end:0x02118de0
+
+src/_ZN16BowserShockwaves16CleanupResourcesEv.c:
+    complete
+    .text start:0x02118de0 end:0x02118e1c
+
+src/_ZN16BowserShockwaves6RenderEv.cpp:
+    complete
+    .text start:0x02118e1c end:0x02118eb8
+
+src/_ZN16BowserShockwaves8BehaviorEv.cpp:
+    complete
+    .text start:0x02118eb8 end:0x02119004
+
+src/_ZN16BowserShockwaves13InitResourcesEv.cpp:
+    .text start:0x02119004 end:0x021191f4
+
+src/BowserShockwaves_Spawn.c:
+    complete
+    .text start:0x021191f4 end:0x02119264
+
+src/__sinit_ov060_021195dc.c:
+    .init start:0x021195dc end:0x02119df0
+
+src/__sinit_ov060_02119df0.c:
+    .init start:0x02119df0 end:0x02119f94
+
+src/__sinit_ov060_02119f94.c:
+    .init start:0x02119f94 end:0x0211a000
+
+src/__sinit_ov060_0211a000.c:
+    .init start:0x0211a000 end:0x0211a388
+
+src/__sinit_ov060_0211a388.c:
+    .init start:0x0211a388 end:0x0211a428
+
+src/__sinit_ov060_0211a428.c:
+    .init start:0x0211a428 end:0x0211a4bc

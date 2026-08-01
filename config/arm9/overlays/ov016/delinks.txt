@@ -4,3 +4,192 @@
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
     .data       start:0x02113ae0 end:0x02114d20 kind:data align:32
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
+src/_ZN5UnagiD1Ev.c:
+    complete
+    .text start:0x021111a0 end:0x02111208
+
+src/_ZN5UnagiD0Ev.cpp:
+    .text start:0x02111208 end:0x02111284
+
+src/func_ov016_02111284.c:
+    complete
+    .text start:0x02111284 end:0x02111534
+
+src/func_ov016_02111534.c:
+    complete
+    .text start:0x02111534 end:0x021115a4
+
+src/BookSwitch_Spawn.c:
+    complete
+    .text start:0x021115a4 end:0x021115c0
+
+src/func_ov016_021115c0.c:
+    complete
+    .text start:0x021115c0 end:0x02111718
+
+src/func_ov016_02111718.cpp:
+    complete
+    .text start:0x02111718 end:0x02111758
+
+src/func_ov016_02111758.cpp:
+    .text start:0x02111758 end:0x02111860
+
+src/func_ov016_02111860.cpp:
+    complete
+    .text start:0x02111860 end:0x021118b4
+
+src/func_ov016_021118b4.cpp:
+    .text start:0x021118b4 end:0x02111994
+
+src/func_ov016_02111994.cpp:
+    complete
+    .text start:0x02111994 end:0x021119ec
+
+src/func_ov016_021119ec.c:
+    complete
+    .text start:0x021119ec end:0x02111bac
+
+src/func_ov016_02111bac.cpp:
+    complete
+    .text start:0x02111bac end:0x02111bf0
+
+src/func_ov016_02111bf0.cpp:
+    complete
+    .text start:0x02111bf0 end:0x02111c40
+
+src/_ZN5Unagi16CleanupResourcesEv.c:
+    complete
+    .text start:0x02111f38 end:0x02111f80
+
+src/_ZN5Unagi16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02111f80 end:0x02111f84
+
+src/_ZN5Unagi6RenderEv.c:
+    complete
+    .text start:0x02111f84 end:0x02112010
+
+src/_ZN5Unagi8BehaviorEv.cpp:
+    .text start:0x02112010 end:0x021121c0
+
+src/_ZN5Unagi13InitResourcesEv.cpp:
+    .text start:0x021121c0 end:0x02112588
+
+src/Unagi_Spawn.c:
+    complete
+    .text start:0x02112588 end:0x0211260c
+
+src/_ZN6ShipUpD1Ev.c:
+    .text start:0x0211260c end:0x02112650
+
+src/_ZN6ShipUpD0Ev.c:
+    .text start:0x02112650 end:0x021126a8
+
+src/func_ov016_021126a8.c:
+    complete
+    .text start:0x021126a8 end:0x021126f0
+
+src/_ZN6ShipUp16CleanupResourcesEv.cpp:
+    .text start:0x021126f0 end:0x02112744
+
+src/_ZN6ShipUp6RenderEv.cpp:
+    complete
+    .text start:0x02112744 end:0x0211276c
+
+src/_ZN6ShipUp8BehaviorEv.cpp:
+    .text start:0x0211276c end:0x0211283c
+
+src/_ZN6ShipUp13InitResourcesEv.cpp:
+    .text start:0x0211283c end:0x021129a0
+
+src/ShipUp_Spawn.c:
+    complete
+    .text start:0x021129a0 end:0x021129d0
+
+src/ShipDown_Spawn.c:
+    complete
+    .text start:0x021129d0 end:0x02112a00
+
+src/func_ov016_02112a00.c:
+    .text start:0x02112a00 end:0x02112a44
+
+src/func_ov016_02112a44.c:
+    .text start:0x02112a44 end:0x02112a9c
+
+src/func_ov016_02112a9c.c:
+    complete
+    .text start:0x02112a9c end:0x02112ae4
+
+src/func_ov016_02112ae4.c:
+    .text start:0x02112ae4 end:0x02112b28
+
+src/func_ov016_02112b28.cpp:
+    complete
+    .text start:0x02112b28 end:0x02112b50
+
+src/func_ov016_02112b50.c:
+    complete
+    .text start:0x02112b50 end:0x02112e1c
+
+src/func_ov016_02112e1c.c:
+    complete
+    .text start:0x02112e1c end:0x02112ec4
+
+src/RockPillar_Spawn.c:
+    complete
+    .text start:0x02112ec4 end:0x02112ef4
+
+src/func_ov016_02112ef4.c:
+    .text start:0x02112ef4 end:0x02112f44
+
+src/func_ov016_02112f44.c:
+    .text start:0x02112f44 end:0x02112fa8
+
+src/func_ov016_02112fa8.c:
+    .text start:0x02112fa8 end:0x02112fbc
+
+src/FloatOnWaterPlatformJrb_Spawn.c:
+    .text start:0x02112fbc end:0x02112ff8
+
+src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:
+    .text start:0x02112ff8 end:0x02113044
+
+src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
+    .text start:0x02113044 end:0x021130a4
+
+src/func_ov016_021130a4.c:
+    complete
+    .text start:0x021130a4 end:0x021130ec
+
+src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv.cpp:
+    .text start:0x021130ec end:0x02113130
+
+src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp:
+    complete
+    .text start:0x02113130 end:0x02113158
+
+src/_ZN23FloatOnWaterPlatformJrb8BehaviorEv.c:
+    complete
+    .text start:0x02113158 end:0x02113434
+
+src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp:
+    .text start:0x02113434 end:0x02113510
+
+src/SlidingBox_Spawn.c:
+    complete
+    .text start:0x02113510 end:0x0211354c
+
+src/__sinit_ov016_021136ec.c:
+    .init start:0x021136ec end:0x021138bc
+
+src/__sinit_ov016_021138bc.c:
+    .init start:0x021138bc end:0x02113978
+
+src/__sinit_ov016_02113978.c:
+    .init start:0x02113978 end:0x021139e4
+
+src/__sinit_ov016_021139e4.c:
+    .init start:0x021139e4 end:0x02113a50
+
+src/__sinit_ov016_02113a50.c:
+    .init start:0x02113a50 end:0x02113abc
