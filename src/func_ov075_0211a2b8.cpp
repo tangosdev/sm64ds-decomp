@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov075_0211a2b8
-// @emits dScEntry_c_Behavior
+// recovered name: dScEntry_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -37,7 +37,7 @@ struct Self {
     u8 f285;
 };
 
-extern "C" int dScEntry_c_Behavior(Self *c)
+extern "C" int func_ov075_0211a2b8(Self *c)
 {
     char *cc = (char *)c;
 

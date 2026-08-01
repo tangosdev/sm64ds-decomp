@@ -1,9 +1,9 @@
 //cpp
 // @symbol func_ov084_0212b30c
-// @emits Goomba_OnAimedAtWithEgg
+// recovered name: Goomba_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daKrb_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-extern "C" int Goomba_OnAimedAtWithEgg(char *c) {
+extern "C" int func_ov084_0212b30c(char *c) {
     unsigned short v = *(unsigned short*)(c + 0xc);
     int b = (v == (unsigned short)0xc8) ? 1 : 0;
     if (b) return 0x41000;

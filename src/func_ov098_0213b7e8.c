@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov098_0213b7e8
-// @emits Cannon_Kill
+// recovered name: Cannon_Kill
 /* recovered: renamed to Class_Method */
 /* daCnn_c::Kill - recovered from vtable slot identity */
 extern int _Z14ApproachLinearRiii(int *v, int step, int rate);
@@ -9,7 +9,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern char *_ZN5Actor13ClosestPlayerEv(char *self);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 
-void Cannon_Kill(char *c)
+void func_ov098_0213b7e8(char *c)
 {
     int state = *(int *)(c + 0x3c0);
     if (state == 0) {

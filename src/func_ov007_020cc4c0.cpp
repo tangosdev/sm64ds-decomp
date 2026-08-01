@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov007_020cc4c0
-// @emits dScDSMT_c_InitResources
+// recovered name: dScDSMT_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -25,7 +25,7 @@ extern unsigned char data_0209f1e0;
 extern int data_0209d4a8;
 extern int data_0208ee44;
 
-extern "C" int dScDSMT_c_InitResources(char *self)
+extern "C" int func_ov007_020cc4c0(char *self)
 {
     if (data_0209f1e0 != 0)
         data_0209b340[1] = 1;

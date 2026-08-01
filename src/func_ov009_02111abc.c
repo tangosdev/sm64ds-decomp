@@ -1,5 +1,5 @@
 // @symbol func_ov009_02111abc
-// @emits daObjMcWater_c_OnYoshiTryEat
+// recovered name: daObjMcWater_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -9,7 +9,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjMcWater_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjMcWater_c_OnYoshiTryEat(int *t)
+int *func_ov009_02111abc(int *t)
 {
     t[0] = (int)VT0;
     _ZN18TextureTransformerD1Ev((char *)t + 0x320);

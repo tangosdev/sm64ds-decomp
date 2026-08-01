@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMiniGm_c.h"
-// @emits dScMiniGm_c_Behavior
+// recovered name: dScMiniGm_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMiniGm_c::Behavior - recovered from vtable slot identity */
 
@@ -18,7 +18,7 @@ extern unsigned char data_0209b300;
 extern int data_0209e650;
 extern unsigned char data_0209b304;
 
-int dScMiniGm_c_Behavior(char* c) {
+int func_ov005_020c14a0(char* c) {
     struct dScMiniGm_c *self = (struct dScMiniGm_c *)(void *)c;
     if ((data_020a0e5a[data_020a0e40 << 1] & 0xfff) != 0) {
         func_02012790(0xe);

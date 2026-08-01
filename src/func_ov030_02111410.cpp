@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov030_02111410
-// @emits daObjHmBskt_c_InitResources
+// recovered name: daObjHmBskt_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjHmBskt_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12i;
@@ -21,7 +21,7 @@ extern struct SharedFilePtr data_ov030_02115c88;
 extern struct SharedFilePtr data_ov030_02115c80;
 extern struct CLPS_Block data_ov030_02114ee4;
 
-int daObjHmBskt_c_InitResources(char *self){
+int func_ov030_02111410(char *self){
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov030_02115c88);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
     *(int*)(self + 0x9c) = 0;

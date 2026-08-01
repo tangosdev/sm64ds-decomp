@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov005_020c1a20
-// @emits dScMiniGm_c_InitResources
+// recovered name: dScMiniGm_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -43,7 +43,7 @@ typedef struct Entry {
 
 extern Entry data_ov005_020c24d8[];
 
-int dScMiniGm_c_InitResources(void *arg0)
+int func_ov005_020c1a20(void *arg0)
 {
     char *c = (char *)arg0;
     int i, j;

@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov085_0212b4b4
-// @emits PrincessPeach_Kill
+// recovered name: PrincessPeach_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -20,7 +20,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
-int PrincessPeach_Kill(char *c)
+int func_ov085_0212b4b4(char *c)
 {
   void *pl;
   char pathptr[8];

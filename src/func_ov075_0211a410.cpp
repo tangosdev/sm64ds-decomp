@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScEntry_c.h"
-// @emits dScEntry_c_InitResources
+// recovered name: dScEntry_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScEntry_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -44,7 +44,7 @@ extern u8 data_0209f4ae[];
 extern void* data_0209d4a8;
 extern s32 data_0208ee44;
 
-extern "C" int dScEntry_c_InitResources(char* c)
+extern "C" int func_ov075_0211a410(char* c)
 {
     struct dScEntry_c *self = (struct dScEntry_c *)(void *)c;
     Enable3dEngines();

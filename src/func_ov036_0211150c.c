@@ -1,5 +1,5 @@
 // @symbol func_ov036_0211150c
-// @emits daObjRc_Kaitendai_c_InitResources
+// recovered name: daObjRc_Kaitendai_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -7,7 +7,7 @@
 extern int data_ov036_02113b2c;
 extern int func_ov002_020b676c(int *self, void *arg, int val);
 
-int daObjRc_Kaitendai_c_InitResources(int *self)
+int func_ov036_0211150c(int *self)
 {
     short v;
     v = data_ov036_02113b18;

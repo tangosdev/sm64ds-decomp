@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov007_020cc2cc
-// @emits dScDSMT_c_Behavior
+// recovered name: dScDSMT_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Heap.h"
 #include "decl_Scene.h"
@@ -16,7 +16,7 @@ extern void StartMinigameMenu(u8 returnToRecRoom);
 extern char* data_0209b33c;
 extern char data_0209caa0;
 
-int dScDSMT_c_Behavior(char* c)
+int func_ov007_020cc2cc(char* c)
 {
     int result;
 

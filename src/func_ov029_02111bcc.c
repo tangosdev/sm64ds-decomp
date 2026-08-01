@@ -2,7 +2,7 @@
 // @symbol func_ov029_02111bcc
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjWc_Obj05_c.h"
-// @emits daObjWc_Obj05_c_Behavior
+// recovered name: daObjWc_Obj05_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjWc_Obj05_c::Behavior - recovered from vtable slot identity */
 extern void func_020393a4(int* p, int v);
@@ -12,7 +12,7 @@ extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
 extern void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void* self, void* mat, s16 s);
 
-int daObjWc_Obj05_c_Behavior(u8* thiz)
+int func_ov029_02111bcc(u8* thiz)
 {
     struct daObjWc_Obj05_c *self = (struct daObjWc_Obj05_c *)(void *)thiz;
     func_020393a4((int*)(thiz + 0x124), 0x250000);

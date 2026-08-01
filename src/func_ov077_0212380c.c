@@ -1,8 +1,8 @@
 // @symbol func_ov077_0212380c
-// @emits Lakitu_OnAimedAtWithEgg
+// recovered name: Lakitu_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daJgm_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int Lakitu_OnAimedAtWithEgg(void)
+int func_ov077_0212380c(void)
 {
     return 245760;
 }

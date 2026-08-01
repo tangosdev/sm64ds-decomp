@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov070_02121438
-// @emits Amp_Kill
+// recovered name: Amp_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -11,7 +11,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 }
 
-extern "C" int Amp_Kill(char* c)
+extern "C" int func_ov070_02121438(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
     int* p_b0 = (int*)(((int)c + 0xb0));

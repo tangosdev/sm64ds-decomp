@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov098_02139e44
-// @emits Crate_OnGroundPounded
+// recovered name: Crate_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* daObjBlockS_c::OnGroundPounded - recovered from vtable slot identity */
 struct Base {
@@ -37,4 +37,4 @@ struct Base {
     virtual void v30();
     virtual void v31();
 };
-extern "C" void Crate_OnGroundPounded(Base *c) { c->v31(); }
+extern "C" void func_ov098_02139e44(Base *c) { c->v31(); }

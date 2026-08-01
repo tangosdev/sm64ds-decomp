@@ -1,5 +1,5 @@
 // @symbol func_ov007_020cc45c
-// @emits dScDSMT_c_CleanupResources
+// recovered name: dScDSMT_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -10,7 +10,7 @@ extern void func_0203cbc0(void* a);
 extern int data_0209d4a8;
 extern void* data_0209b33c;
 
-int dScDSMT_c_CleanupResources(void) {
+int func_ov007_020cc45c(void) {
     data_0209d4a8 = 0;
     _ZN5Scene20SetAndStopColorFaderEv();
     data_0209b340[0] = func_ov007_020b6f4c();

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov090_021327e4
-// @emits Skeeter_Kill
+// recovered name: Skeeter_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daMenbo_c::Kill - recovered from vtable slot identity */
 typedef short s16;
@@ -19,7 +19,7 @@ void func_02012790(u32 a);
 void* _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(void* self, const Vector3& v, u32 n, int b, u16 t, void* p);
 }
 
-extern "C" int Skeeter_Kill(char* c)
+extern "C" int func_ov090_021327e4(char* c)
 {
     void* o;
     Vector3 num1;

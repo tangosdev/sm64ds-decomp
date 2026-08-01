@@ -1,9 +1,9 @@
 //cpp
 // @symbol func_ov098_02137ccc
-// @emits ArrowSignRight_Kill
+// recovered name: ArrowSignRight_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjYajirusi_c::Kill - recovered from vtable slot identity */
-// ArrowSignRight_Kill at 0x020bb3b8
+// func_ov098_02137ccc at 0x020bb3b8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 struct Vector3 { int x, y, z; };
 
@@ -14,8 +14,8 @@ void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 int _ZN9ActorBase18MarkForDestructionEv(void* self);
 }
 
-extern "C" int ArrowSignRight_Kill(char* self);
-int ArrowSignRight_Kill(char* self) {
+extern "C" int func_ov098_02137ccc(char* self);
+int func_ov098_02137ccc(char* self) {
     Vector3 vec;
     Vector3 vec2;
     int x = *(int*)(self + 0x5c);

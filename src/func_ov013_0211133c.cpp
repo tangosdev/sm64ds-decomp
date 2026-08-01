@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov013_0211133c
-// @emits daObjClockHuriko_c_InitResources
+// recovered name: daObjClockHuriko_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -9,7 +9,7 @@ extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern int __sinit_ov045_02112280[];
-int daObjClockHuriko_c_InitResources(char *c){
+int func_ov013_0211133c(char *c){
   void *f = _ZN5Model8LoadFileER13SharedFilePtr((void*)__sinit_ov045_02112280);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
   data_ov054_02111238(c);

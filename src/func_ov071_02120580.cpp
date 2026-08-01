@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov071_02120580
-// @emits Scuttlebug_OnTurnIntoEgg
+// recovered name: Scuttlebug_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* daSpd_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" {
@@ -9,7 +9,7 @@ extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(void* a, void* p, unsigned cha
 extern void _ZN6Player20RegisterEggCoinCountEjbb(void* p, unsigned int n, int b1, int b2);
 extern void Scuttlebug_SetState(void* a, int idx);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
-void Scuttlebug_OnTurnIntoEgg(char* a, void* p) {
+void func_ov071_02120580(char* a, void* p) {
   volatile int force_stack;
   int *bp;
   int t;

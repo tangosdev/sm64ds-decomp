@@ -4,12 +4,12 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjHmBskt_c.h"
-// @emits daObjHmBskt_c_Behavior
+// recovered name: daObjHmBskt_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjHmBskt_c::Behavior - recovered from vtable slot identity */
 extern "C" int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(char *c, char *clsn);
-extern "C" int daObjHmBskt_c_Behavior(char *c) {
+extern "C" int func_ov030_02111384(char *c) {
     struct daObjHmBskt_c *self = (struct daObjHmBskt_c *)(void *)c;
     volatile int dummy[4];
     (void)&dummy;
