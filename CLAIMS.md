@@ -19,6 +19,8 @@ it is fair to take over: ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov002 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec, size 0x3c4) | lunavyqo (Grok) | 2026-08-01 | **released** — floor(register allocation two-web rank tie) **match-words=8** / nearmiss **div=11** tip re-banked; residual av/diff r3↔ip at +0x128; 50+ pure-C variants flat; API clm_ee8a4a30ee3e released |
+| ov002 _ZN6Player19St_GroundPound_MainEv (0x020dd9f8, size 0x3f8) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + strict-relocs (mwccarm 1.2/sp2p3); non-vol Vector3 + `*(volatile int*)&v.y=y2` on NewSimple(0x59) schedule; near-miss div=2→0; API clm_28eb0cfc28a6 kept |
 | ov002 _ZN6Player16St_BurnFire_MainEv (0x020d53ac, size 0x3a4) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); lever: precomp zz-=0x1e000 yy+=0x32000 then natural pos store (div=5→0); API clm_ed65c9667132 kept |
 | ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo (Grok) | 2026-07-31 | **released** — floor(ordering) **div=3** tip banked; residual pool s r3 vs r0 with sound call (same under 1.2/* and 2004/b56); 70+ pure-C variants; tip+floor in nearmiss/db.jsonl |
 | ov080 func_ov080_021261f4 (0x021261f4, size 0x2f8) | lunavyqo (Grok) | 2026-07-30 | **released** — near-miss **101→9→5** banked in nearmiss/db.jsonl; levers: park-z + `volatile` 2nd-vtx z-load; residual pack 4a8 **5w** r2/r3 wall (same class as 25460 / notes ov075_0211a948); CLAIMS.md only |
