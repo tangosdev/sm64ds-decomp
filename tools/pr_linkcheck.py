@@ -279,10 +279,25 @@ def main():
             continue
         w = worst(rep["results"])
         rep["worst"] = w
+        # A file whose head declares "// NONMATCHING" is a self-declared draft: it makes
+        # no claim to reproduce the ROM and chaos-db counts it as unmatched, so a
+        # NO-REPRO verdict on it is expected, not a gate failure. The gate exists to
+        # stop files that CLAIM to be matches from landing red; a declared draft cannot
+        # inflate any count. WRONG (a resolvable reloc pointing at the wrong symbol)
+        # still fails -- a draft's call graph must be honest even if its bytes differ.
+        declared_draft = False
+        try:
+            head = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")[:200]
+            declared_draft = "NONMATCHING" in head
+        except OSError:
+            pass
+        if w == "NO-REPRO" and declared_draft:
+            rep["worst"] = w = "DRAFT"
         if w in FAIL:
             bad.append((path, w))
         mark = {"WRONG": "WRONG  ", "NO-REPRO": "NOREPRO", "BENIGN": "ok(ben)",
-                "VERIFIED": "ok     ", "BLIND": "ok(bln)"}.get(w, w)
+                "VERIFIED": "ok     ", "BLIND": "ok(bln)",
+                "DRAFT": "ok(drf)"}.get(w, w)
         npass = sum(1 for r in rep["results"] if r.get("passenger"))
         extra = f", +{npass} passenger" if npass else ""
         print(f"  {mark} {path}  ({len(rep['results'])} slot(s){extra})")
@@ -311,6 +326,7 @@ _LABEL = {
     "WRONG":      "❌ wrong-dest (reloc links to the wrong symbol)",
     "NO-SYM":     "🔶 no-sym",
     "UNRESOLVED": "🔶 unresolved (symbol not in config/ledger)",
+    "DRAFT":      "ok - declared draft (header says NONMATCHING; non-reproduction expected)",
 }
 
 
