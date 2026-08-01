@@ -14,5 +14,5 @@ void ActorBase::AfterInitResources(unsigned int a)
   volatile int* p=data_02099f24; bool b=(p[0]==3); if(b){ *(bool*)((char*)&unk_010)=true; return; }
   func_0204405c(data_020a4b78, ((char*)this)+0x28);
   func_0204405c(data_020a4b98, ((char*)this)+0x38);
-  *(bool*)((char*)&unk_00e)=true;
+  *(bool*)((char*)&aliveState)=true;
 }

@@ -11,24 +11,26 @@ into a bootable ROM.
     dsd lcf      -> build/arm9.lcf + build/objects.txt
     mwldarm      -> build/final_link.o     + build/build/*.bin per region
     dsd rom config / rom build             -> build/sm64ds.nds
-    dsd check modules                      -> byte-diff every module vs the ROM
+    rombuild_check.py                      -> byte-diff every module vs the ROM
 
 A module is "green" when its linked bytes equal the retail module, so a green build
 with N functions enrolled is proof those N functions' source is the real thing.
 
 Usage:
-    python tools/rombuild.py                 # full build + verify
+    python tools/rombuild.py                 # stock ROM build + verify
+    python tools/rombuild.py --profile mods  # explicitly include mods/
     python tools/rombuild.py --no-rom        # link and verify, skip .nds packaging
-    python tools/rombuild.py --no-check      # skip the module byte-diff
+    python tools/rombuild.py --no-check      # skip fidelity analysis (unchecked output)
     python tools/rombuild.py -j 16           # parallel compiles
 
 See notes/rom-build.md for the milestones and the enrollment rules.
 """
 import argparse
 import concurrent.futures
+import hashlib
+import json
 import os
 import pathlib
-import shutil
 import subprocess
 import sys
 
@@ -37,8 +39,11 @@ DSD = REPO / "tools" / "bin" / "dsd.exe"
 MW = REPO / "tools" / "mwccarm"
 LICENSE = MW / "license.dat"
 INCLUDE = REPO / "include"
-CONFIG = REPO / "config" / "arm9" / "config.yaml"
+CONFIG_ROOT = REPO / "config" / "arm9"
 BUILD = REPO / "build"
+sys.path.insert(0, str(REPO / "tools"))
+import rombuild_check as RBC  # noqa: E402
+import rombuild_profile as RP  # noqa: E402
 
 # Default compiler for the ROM build. The repo pins 1.2/sp2p3 as the canonical
 # matching compiler, but the recovered 2004 build 0056 (notes/mwccarm-codegen.md 6ai)
@@ -87,19 +92,25 @@ def launcher():
     return os.environ.get("MWCCARM_LAUNCHER", "").split()
 
 
+class BuildError(RuntimeError):
+    def __init__(self, phase, returncode, output):
+        super().__init__(f"{phase} failed (exit {returncode})")
+        self.phase = phase
+        self.returncode = returncode
+        self.output = output
+
+
 def run(cmd, what, quiet_patterns=()):
     r = subprocess.run(cmd, capture_output=True, text=True,
                        env=dict(os.environ, LM_LICENSE_FILE=str(LICENSE)), cwd=REPO)
     out = "\n".join(l for l in (r.stdout + r.stderr).splitlines()
                     if not any(p in l for p in quiet_patterns))
     if r.returncode != 0:
-        print(f"!! {what} failed (exit {r.returncode})")
-        print(out[:4000])
-        sys.exit(1)
+        raise BuildError(what, r.returncode, out)
     return out
 
 
-def enrolled():
+def enrolled(config_root=CONFIG_ROOT):
     """Every `src/` file carved out by a `complete` file entry in a delinks.txt.
 
     A file entry is an unindented path ending in ':'; the indented lines that follow
@@ -107,7 +118,7 @@ def enrolled():
     from ROM bytes instead, so the file is configured but not yet source-built.
     """
     files, path, saw_complete = [], None, False
-    for delinks in sorted((REPO / "config").rglob("delinks.txt")):
+    for delinks in sorted(pathlib.Path(config_root).rglob("delinks.txt")):
         for line in delinks.read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
@@ -121,7 +132,28 @@ def enrolled():
         if path and saw_complete:
             files.append(path)
         path, saw_complete = None, False
-    return sorted(set(files))
+    checked = []
+    for rel in sorted(set(files)):
+        pure = pathlib.PurePosixPath(rel.replace("\\", "/"))
+        if (pure.is_absolute() or ".." in pure.parts or len(pure.parts) < 2
+                or pure.parts[0] not in ("src", "mods")
+                or pure.suffix not in (".c", ".cpp")):
+            raise BuildError("profile", 1, f"unsafe complete delinks source path: {rel}")
+        raw_target = REPO / pathlib.Path(*pure.parts)
+        target = raw_target.resolve()
+        try:
+            target.relative_to(REPO.resolve())
+        except ValueError:
+            raise BuildError("profile", 1, f"source path escapes repository: {rel}")
+        path_parts = (raw_target, *raw_target.parents)
+        crosses_symlink = any(
+            part.is_symlink() for part in path_parts
+            if part != REPO and REPO in part.parents
+        )
+        if not target.is_file() or crosses_symlink:
+            raise BuildError("profile", 1, f"missing or symlinked complete source: {rel}")
+        checked.append(pure.as_posix())
+    return checked
 
 
 def compile_one(rel, vers=None):
@@ -151,71 +183,128 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 8)
-    ap.add_argument("--rom-out", default=str(BUILD / "sm64ds.nds"))
+    ap.add_argument("--profile", choices=RP.PROFILES, default="stock",
+                    help="stock (default, verified src only) or mods (intentional divergences)")
+    ap.add_argument("--rom-out", default=None,
+                    help="output ROM (default build/sm64ds.nds or build/sm64ds-mod.nds)")
+    ap.add_argument("--report-json",
+                    help="structured report (default follows the selected profile)")
     ap.add_argument("--no-rom", action="store_true", help="stop after linking")
-    ap.add_argument("--no-check", action="store_true", help="skip dsd check modules")
+    ap.add_argument("--no-check", action="store_true",
+                    help="skip module/source fidelity analysis; report status is unchecked")
     ap.add_argument("--arm7-bios", help="passed to dsd rom build if your dump needs it")
     args = ap.parse_args()
 
-    for tool in (DSD, MW / VERSION / "mwccarm.exe", MW / LD_VERSION / "mwldarm.exe"):
-        if not tool.is_file():
-            sys.exit(f"missing {tool} - see notes/setup-mwccarm.md")
-    if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
-        sys.exit("no extracted ROM - run tools/unpack.py on your own dump first")
+    report_path = pathlib.Path(args.report_json or
+                               BUILD / ("rombuild-report.json" if args.profile == "stock"
+                                        else "rombuild-mod-report.json"))
+    rom_out = args.rom_out or str(BUILD / ("sm64ds.nds" if args.profile == "stock"
+                                          else "sm64ds-mod.nds"))
+    report = {"schemaVersion": 1, "profile": args.profile, "status": "running",
+              "romOut": rom_out, "phases": []}
 
-    # Gap objects first: delinks.txt drives which ranges dsd carves out for us.
-    print("[1/6] dsd delink")
-    run([str(DSD), "delink", "-c", str(CONFIG)], "dsd delink",
-        quiet_patterns=("No module for relocation",))
+    def save_report():
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2) + "\n",
+                               encoding="utf-8", newline="\n")
 
-    print("[2/6] dsd lcf")
-    run([str(DSD), "lcf", "-c", str(CONFIG)], "dsd lcf")
+    try:
+        for tool in (DSD, MW / VERSION / "mwccarm.exe", MW / LD_VERSION / "mwldarm.exe"):
+            if not tool.is_file():
+                raise BuildError("preflight", 1,
+                                 f"missing {tool} - see notes/setup-mwccarm.md")
+        if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
+            raise BuildError("preflight", 1,
+                             "no extracted ROM - run tools/unpack.py on your own dump first")
+        profile = RP.prepare_profile(args.profile)
+        config_root = profile["configRoot"]
+        config_yaml = profile["configYaml"]
+        report["profileConfig"] = str(config_root.relative_to(REPO))
+        report["modReplacements"] = profile["modReplacements"]
+        report["modGapFallbacks"] = profile["modGapFallbacks"]
 
-    srcs = enrolled()
-    vers = versions()
-    n_alt = sum(1 for s in srcs if pathlib.Path(s).stem in vers)
-    print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
-          + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
-    failures = []
-    if srcs:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-            for rel, err in ex.map(lambda s: compile_one(s, vers), srcs):
-                if err:
-                    failures.append((rel, err))
-    if failures:
-        print(f"!! {len(failures)} file(s) failed to compile:")
-        for rel, err in failures[:10]:
-            print(f"   {rel}: {err.splitlines()[0] if err else ''}")
-        sys.exit(1)
+        # Gap objects first: delinks.txt drives which ranges dsd carves out for us.
+        print(f"profile: {args.profile} ({len(profile['modReplacements'])} mod source replacement(s), "
+              f"{len(profile['modGapFallbacks'])} ROM-gap fallback(s))")
+        print("[1/6] dsd delink")
+        run([str(DSD), "delink", "-c", str(config_yaml)], "dsd delink",
+            quiet_patterns=("No module for relocation",))
+        report["phases"].append("dsd delink")
 
-    print("[4/6] mwldarm")
-    run([*launcher(), str(MW / LD_VERSION / "mwldarm.exe"), *LDFLAGS.split(),
-         f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),
-         "-o", str(BUILD / "final_link.o")], "mwldarm")
+        print("[2/6] dsd lcf")
+        run([str(DSD), "lcf", "-c", str(config_yaml)], "dsd lcf")
+        report["phases"].append("dsd lcf")
 
-    if args.no_rom:
-        print("[5/6] skipped (--no-rom)")
-    else:
-        print("[5/6] dsd rom config + rom build")
-        run([str(DSD), "rom", "config", "--elf", str(BUILD / "final_link.o"),
-             "--config", str(CONFIG)], "dsd rom config")
-        cmd = [str(DSD), "rom", "build", "--config", str(BUILD / "build" / "rom_config.yaml"),
-               "--rom", args.rom_out]
-        if args.arm7_bios:
-            cmd += ["--arm7-bios", args.arm7_bios]
-        run(cmd, "dsd rom build", quiet_patterns=("Compressing arm9 overlay",))
-        print(f"      -> {args.rom_out}")
+        srcs = enrolled(config_root)
+        vers = versions()
+        n_alt = sum(1 for s in srcs if pathlib.Path(s).stem in vers)
+        report["enrolledFiles"] = len(srcs)
+        report["alternateToolchainFiles"] = n_alt
+        print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
+              + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
+        failures = []
+        if srcs:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
+                for rel, err in ex.map(lambda s: compile_one(s, vers), srcs):
+                    if err:
+                        failures.append((rel, err))
+        if failures:
+            detail = "\n".join(f"{rel}: {err}" for rel, err in failures[:10])
+            raise BuildError("mwccarm", 1, detail)
+        report["phases"].append("mwccarm")
 
-    if args.no_check:
-        print("[6/6] skipped (--no-check)")
-        return
-    print("[6/6] dsd check modules")
-    out = run([str(DSD), "check", "modules", "-c", str(CONFIG), "--fail"],
-              "dsd check modules", quiet_patterns=(": OK",))
-    if out.strip():
-        print(out)
-    print(f"\nAll modules match the ROM. {len(srcs)} function(s) built from src/.")
+        print("[4/6] mwldarm")
+        run([*launcher(), str(MW / LD_VERSION / "mwldarm.exe"), *LDFLAGS.split(),
+             f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),
+             "-o", str(BUILD / "final_link.o")], "mwldarm")
+        report["phases"].append("mwldarm")
+
+        if args.no_rom:
+            print("[5/6] skipped (--no-rom)")
+        else:
+            print("[5/6] dsd rom config + rom build")
+            run([str(DSD), "rom", "config", "--elf", str(BUILD / "final_link.o"),
+                 "--config", str(config_yaml)], "dsd rom config")
+            cmd = [str(DSD), "rom", "build", "--config",
+                   str(BUILD / "build" / "rom_config.yaml"), "--rom", rom_out]
+            if args.arm7_bios:
+                cmd += ["--arm7-bios", args.arm7_bios]
+            run(cmd, "dsd rom build", quiet_patterns=("Compressing arm9 overlay",))
+            print(f"      -> {rom_out}")
+            report["phases"].append("dsd rom build")
+            rom_path = pathlib.Path(rom_out)
+            if not rom_path.is_absolute():
+                rom_path = REPO / rom_path
+            if rom_path.is_file():
+                report["romArtifact"] = {
+                    "path": str(rom_path),
+                    "bytes": rom_path.stat().st_size,
+                    "sha256": hashlib.sha256(rom_path.read_bytes()).hexdigest(),
+                }
+
+        if args.no_check:
+            print("[6/6] skipped (--no-check)")
+            report["status"] = "unchecked"
+            save_report()
+            return 0
+        print("[6/6] analyze module and source fidelity")
+        analysis = RBC.analyze(config_root, args.profile)
+        RBC.print_report(analysis)
+        report["analysis"] = analysis
+        report["status"] = "passed" if analysis["passed"] else "failed"
+        save_report()
+        return 0 if analysis["passed"] else 1
+    except (BuildError, RP.ProfileError) as exc:
+        phase = exc.phase if isinstance(exc, BuildError) else "profile"
+        output = exc.output if isinstance(exc, BuildError) else str(exc)
+        code = exc.returncode if isinstance(exc, BuildError) else 1
+        print(f"!! {phase} failed (exit {code})")
+        print(output[:4000])
+        report["status"] = "error"
+        report["failure"] = {"phase": phase, "returncode": code, "output": output[:4000]}
+        save_report()
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

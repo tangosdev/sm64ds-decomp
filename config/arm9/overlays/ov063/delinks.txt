@@ -4,543 +4,543 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211edc0 kind:data align:32
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
-src/_ZN3BooD1Ev.c:
+src/actors/Boo/_ZN3BooD1Ev.c:
     complete
     .text start:0x02115ee0 end:0x02115f48
 
-src/_ZN3BooD0Ev.c:
+src/actors/Boo/_ZN3BooD0Ev.c:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
-src/_ZN7BooCageD1Ev.c:
+src/actors/BooCage/_ZN7BooCageD1Ev.c:
     complete
     .text start:0x02115fc4 end:0x0211600c
 
-src/_ZN7BooCageD0Ev.c:
+src/actors/BooCage/_ZN7BooCageD0Ev.c:
     complete
     .text start:0x0211600c end:0x02116068
 
-src/_ZN10BigBooIconD1Ev.cpp:
+src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp:
     .text start:0x02116068 end:0x0211608c
 
-src/_ZN10BigBooIconD0Ev.c:
+src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
     complete
     .text start:0x0211608c end:0x021160c4
 
-src/func_ov063_021160c4.c:
+src/unnamed/ov063/func_ov063_021160c4.c:
     complete
     .text start:0x021160c4 end:0x021160d4
 
-src/func_ov063_021160d4.c:
+src/unnamed/ov063/func_ov063_021160d4.c:
     complete
     .text start:0x021160d4 end:0x02116190
 
-src/func_ov063_02116190.c:
+src/unnamed/ov063/func_ov063_02116190.c:
     complete
     .text start:0x02116190 end:0x02116244
 
-src/func_ov063_02116244.c:
+src/unnamed/ov063/func_ov063_02116244.c:
     complete
     .text start:0x02116244 end:0x021162c8
 
-src/func_ov063_021162c8.cpp:
+src/unnamed/ov063/func_ov063_021162c8.cpp:
     complete
     .text start:0x021162c8 end:0x021163d0
 
-src/func_ov063_021163d0.c:
+src/unnamed/ov063/func_ov063_021163d0.c:
     complete
     .text start:0x021163d0 end:0x0211640c
 
-src/func_ov063_0211640c.c:
+src/unnamed/ov063/func_ov063_0211640c.c:
     complete
     .text start:0x0211640c end:0x021166ac
 
-src/func_ov063_021169c4.cpp:
+src/unnamed/ov063/func_ov063_021169c4.cpp:
     complete
     .text start:0x021169c4 end:0x02116a1c
 
-src/func_ov063_02116a1c.c:
+src/unnamed/ov063/func_ov063_02116a1c.c:
     complete
     .text start:0x02116a1c end:0x02116bf0
 
-src/func_ov063_02116bf0.c:
+src/unnamed/ov063/func_ov063_02116bf0.c:
     complete
     .text start:0x02116bf0 end:0x02116bf4
 
-src/func_ov063_02116bf4.c:
+src/unnamed/ov063/func_ov063_02116bf4.c:
     complete
     .text start:0x02116bf4 end:0x02116d38
 
-src/func_ov063_02116d38.c:
+src/unnamed/ov063/func_ov063_02116d38.c:
     complete
     .text start:0x02116d38 end:0x02116d98
 
-src/func_ov063_02116d98.c:
+src/unnamed/ov063/func_ov063_02116d98.c:
     complete
     .text start:0x02116d98 end:0x02116dbc
 
-src/func_ov063_02116dbc.c:
+src/unnamed/ov063/func_ov063_02116dbc.c:
     complete
     .text start:0x02116dbc end:0x02116df0
 
-src/func_ov063_02116df0.c:
+src/unnamed/ov063/func_ov063_02116df0.c:
     complete
     .text start:0x02116df0 end:0x02116e14
 
-src/func_ov063_02116e14.cpp:
+src/unnamed/ov063/func_ov063_02116e14.cpp:
     complete
     .text start:0x02116e14 end:0x02116f48
 
-src/func_ov063_02116f48.cpp:
+src/unnamed/ov063/func_ov063_02116f48.cpp:
     .text start:0x02116f48 end:0x02116fac
 
-src/func_ov063_02116fac.c:
+src/unnamed/ov063/func_ov063_02116fac.c:
     complete
     .text start:0x02116fac end:0x021172a8
 
-src/func_ov063_021172a8.c:
+src/unnamed/ov063/func_ov063_021172a8.c:
     complete
     .text start:0x021172a8 end:0x02117364
 
-src/func_ov063_02117364.c:
+src/unnamed/ov063/func_ov063_02117364.c:
     complete
     .text start:0x02117364 end:0x02117650
 
-src/func_ov063_02117650.c:
+src/unnamed/ov063/func_ov063_02117650.c:
     complete
     .text start:0x02117650 end:0x0211776c
 
-src/func_ov063_0211776c.cpp:
+src/unnamed/ov063/func_ov063_0211776c.cpp:
     complete
     .text start:0x0211776c end:0x021177b0
 
-src/func_ov063_021177b0.c:
+src/unnamed/ov063/func_ov063_021177b0.c:
     complete
     .text start:0x021177b0 end:0x02117b0c
 
-src/func_ov063_02117b0c.c:
+src/unnamed/ov063/func_ov063_02117b0c.c:
     complete
     .text start:0x02117b0c end:0x02117cdc
 
-src/func_ov063_02118458.c:
+src/unnamed/ov063/func_ov063_02118458.c:
     complete
     .text start:0x02118458 end:0x0211873c
 
-src/func_ov063_0211873c.c:
+src/unnamed/ov063/func_ov063_0211873c.c:
     complete
     .text start:0x0211873c end:0x02118914
 
-src/func_ov063_02118914.c:
+src/unnamed/ov063/func_ov063_02118914.c:
     complete
     .text start:0x02118914 end:0x021189f4
 
-src/func_ov063_021189f4.c:
+src/unnamed/ov063/func_ov063_021189f4.c:
     complete
     .text start:0x021189f4 end:0x02118b2c
 
-src/func_ov063_02118b2c.c:
+src/unnamed/ov063/func_ov063_02118b2c.c:
     complete
     .text start:0x02118b2c end:0x02118b98
 
-src/func_ov063_02118b98.c:
+src/unnamed/ov063/func_ov063_02118b98.c:
     .text start:0x02118b98 end:0x02118cd8
 
-src/func_ov063_02118cd8.c:
+src/unnamed/ov063/func_ov063_02118cd8.c:
     complete
     .text start:0x02118cd8 end:0x02118ddc
 
-src/func_ov063_02118ddc.cpp:
+src/unnamed/ov063/func_ov063_02118ddc.cpp:
     complete
     .text start:0x02118ddc end:0x02118e5c
 
-src/func_ov063_02118e5c.c:
+src/unnamed/ov063/func_ov063_02118e5c.c:
     complete
     .text start:0x02118e5c end:0x02118ea0
 
-src/func_ov063_02118ea0.c:
+src/unnamed/ov063/func_ov063_02118ea0.c:
     complete
     .text start:0x02118ea0 end:0x02118eac
 
-src/func_ov063_02118eac.c:
+src/unnamed/ov063/func_ov063_02118eac.c:
     complete
     .text start:0x02118eac end:0x02118f24
 
-src/func_ov063_02118f24.c:
+src/unnamed/ov063/func_ov063_02118f24.c:
     complete
     .text start:0x02118f24 end:0x02118f50
 
-src/func_ov063_02118f50.c:
+src/unnamed/ov063/func_ov063_02118f50.c:
     complete
     .text start:0x02118f50 end:0x02118f74
 
-src/func_ov063_02118f74.c:
+src/unnamed/ov063/func_ov063_02118f74.c:
     complete
     .text start:0x02118f74 end:0x02119074
 
-src/func_ov063_02119074.c:
+src/unnamed/ov063/func_ov063_02119074.c:
     complete
     .text start:0x02119074 end:0x02119274
 
-src/func_ov063_02119274.c:
+src/unnamed/ov063/func_ov063_02119274.c:
     complete
     .text start:0x02119274 end:0x021192d4
 
-src/func_ov063_021192d4.c:
+src/unnamed/ov063/func_ov063_021192d4.c:
     complete
     .text start:0x021192d4 end:0x0211934c
 
-src/func_ov063_0211934c.cpp:
+src/unnamed/ov063/func_ov063_0211934c.cpp:
     complete
     .text start:0x0211934c end:0x0211975c
 
-src/func_ov063_0211975c.cpp:
+src/unnamed/ov063/func_ov063_0211975c.cpp:
     complete
     .text start:0x0211975c end:0x02119870
 
-src/func_ov063_02119870.c:
+src/unnamed/ov063/func_ov063_02119870.c:
     complete
     .text start:0x02119870 end:0x02119894
 
-src/func_ov063_02119894.c:
+src/unnamed/ov063/func_ov063_02119894.c:
     complete
     .text start:0x02119894 end:0x02119960
 
-src/func_ov063_02119960.c:
+src/unnamed/ov063/func_ov063_02119960.c:
     complete
     .text start:0x02119960 end:0x02119a2c
 
-src/func_ov063_02119a2c.c:
+src/unnamed/ov063/func_ov063_02119a2c.c:
     complete
     .text start:0x02119a2c end:0x02119a50
 
-src/func_ov063_02119a50.c:
+src/unnamed/ov063/func_ov063_02119a50.c:
     complete
     .text start:0x02119a50 end:0x02119ab0
 
-src/func_ov063_02119ab0.c:
+src/unnamed/ov063/func_ov063_02119ab0.c:
     complete
     .text start:0x02119ab0 end:0x02119b1c
 
-src/func_ov063_02119b1c.c:
+src/unnamed/ov063/func_ov063_02119b1c.c:
     complete
     .text start:0x02119b1c end:0x02119b84
 
-src/func_ov063_02119b84.c:
+src/unnamed/ov063/func_ov063_02119b84.c:
     complete
     .text start:0x02119b84 end:0x02119bb0
 
-src/func_ov063_02119bb0.c:
+src/unnamed/ov063/func_ov063_02119bb0.c:
     complete
     .text start:0x02119bb0 end:0x02119c18
 
-src/func_ov063_02119c18.c:
+src/unnamed/ov063/func_ov063_02119c18.c:
     complete
     .text start:0x02119c18 end:0x02119c58
 
-src/func_ov063_02119c58.cpp:
+src/unnamed/ov063/func_ov063_02119c58.cpp:
     complete
     .text start:0x02119c58 end:0x02119cc0
 
-src/func_ov063_02119cc0.c:
+src/unnamed/ov063/func_ov063_02119cc0.c:
     complete
     .text start:0x02119cc0 end:0x02119e38
 
-src/func_ov063_02119e38.c:
+src/unnamed/ov063/func_ov063_02119e38.c:
     complete
     .text start:0x02119e38 end:0x0211a030
 
-src/func_ov063_0211a030.c:
+src/unnamed/ov063/func_ov063_0211a030.c:
     complete
     .text start:0x0211a030 end:0x0211a0a8
 
-src/func_ov063_0211a0a8.c:
+src/unnamed/ov063/func_ov063_0211a0a8.c:
     complete
     .text start:0x0211a0a8 end:0x0211a0dc
 
-src/func_ov063_0211a0dc.cpp:
+src/unnamed/ov063/func_ov063_0211a0dc.cpp:
     .text start:0x0211a0dc end:0x0211a3d0
 
-src/func_ov063_0211a3d0.cpp:
+src/unnamed/ov063/func_ov063_0211a3d0.cpp:
     complete
     .text start:0x0211a3d0 end:0x0211a564
 
-src/func_ov063_0211a564.c:
+src/unnamed/ov063/func_ov063_0211a564.c:
     complete
     .text start:0x0211a564 end:0x0211a634
 
-src/func_ov063_0211a634.c:
+src/unnamed/ov063/func_ov063_0211a634.c:
     complete
     .text start:0x0211a634 end:0x0211a6f0
 
-src/func_ov063_0211a6f0.c:
+src/unnamed/ov063/func_ov063_0211a6f0.c:
     complete
     .text start:0x0211a6f0 end:0x0211a718
 
-src/func_ov063_0211a718.c:
+src/unnamed/ov063/func_ov063_0211a718.c:
     complete
     .text start:0x0211a718 end:0x0211a76c
 
-src/func_ov063_0211a76c.c:
+src/unnamed/ov063/func_ov063_0211a76c.c:
     complete
     .text start:0x0211a76c end:0x0211a810
 
-src/func_ov063_0211a810.c:
+src/unnamed/ov063/func_ov063_0211a810.c:
     complete
     .text start:0x0211a810 end:0x0211a8a4
 
-src/func_ov063_0211a8a4.cpp:
+src/unnamed/ov063/func_ov063_0211a8a4.cpp:
     complete
     .text start:0x0211a8a4 end:0x0211a960
 
-src/func_ov063_0211a960.c:
+src/unnamed/ov063/func_ov063_0211a960.c:
     complete
     .text start:0x0211a960 end:0x0211a964
 
-src/func_ov063_0211a964.c:
+src/unnamed/ov063/func_ov063_0211a964.c:
     complete
     .text start:0x0211a964 end:0x0211aa34
 
-src/func_ov063_0211aa34.c:
+src/unnamed/ov063/func_ov063_0211aa34.c:
     complete
     .text start:0x0211aa34 end:0x0211ab68
 
-src/func_ov063_0211ab68.c:
+src/unnamed/ov063/func_ov063_0211ab68.c:
     complete
     .text start:0x0211ab68 end:0x0211ad00
 
-src/func_ov063_0211ad00.c:
+src/unnamed/ov063/func_ov063_0211ad00.c:
     complete
     .text start:0x0211ad00 end:0x0211adb4
 
-src/func_ov063_0211adb4.c:
+src/unnamed/ov063/func_ov063_0211adb4.c:
     complete
     .text start:0x0211adb4 end:0x0211adfc
 
-src/func_ov063_0211adfc.c:
+src/unnamed/ov063/func_ov063_0211adfc.c:
     complete
     .text start:0x0211adfc end:0x0211ae1c
 
-src/_ZN7BooCage16CleanupResourcesEv.c:
+src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.c:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
-src/_ZN3Boo16CleanupResourcesEv.cpp:
+src/actors/Boo/_ZN3Boo16CleanupResourcesEv.cpp:
     .text start:0x0211ae40 end:0x0211af6c
 
-src/_ZN3Boo16OnPendingDestroyEv.c:
+src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c:
     complete
     .text start:0x0211af6c end:0x0211af70
 
-src/_ZN3Boo6RenderEv.cpp:
+src/actors/Boo/_ZN3Boo6RenderEv.cpp:
     .text start:0x0211af70 end:0x0211b078
 
-src/_ZN7BooCage6RenderEv.cpp:
+src/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
     complete
     .text start:0x0211b078 end:0x0211b0a4
 
-src/_ZN7BooCage8BehaviorEv.cpp:
+src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
-src/_ZN3Boo13InitResourcesEv.c:
+src/actors/Boo/_ZN3Boo13InitResourcesEv.c:
     .text start:0x0211b9bc end:0x0211c35c
 
-src/_ZN7BooCage13InitResourcesEv.cpp:
+src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp:
     .text start:0x0211c35c end:0x0211c444
 
-src/_ZN10BigBooIcon13InitResourcesEv.cpp:
+src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp:
     complete
     .text start:0x0211c444 end:0x0211c480
 
-src/func_ov063_0211c480.cpp:
+src/unnamed/ov063/func_ov063_0211c480.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 
-src/BigBooIcon_Spawn.c:
+src/actors/BigBooIcon/BigBooIcon_Spawn.c:
     complete
     .text start:0x0211c4a0 end:0x0211c4d0
 
-src/BooCage_Spawn.c:
+src/actors/BooCage/BooCage_Spawn.c:
     complete
     .text start:0x0211c4d0 end:0x0211c520
 
-src/BigBoo_Spawn.cpp:
+src/actors/BigBoo/BigBoo_Spawn.cpp:
     complete
     .text start:0x0211c520 end:0x0211c590
 
-src/Boo_Spawn.cpp:
+src/actors/Boo/Boo_Spawn.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
-src/_ZN12MansionStepsD1Ev.cpp:
+src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
     .text start:0x0211c600 end:0x0211c638
 
-src/_ZN12MansionStepsD0Ev.c:
+src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
     complete
     .text start:0x0211c638 end:0x0211c684
 
-src/func_ov063_0211c684.c:
+src/unnamed/ov063/func_ov063_0211c684.c:
     complete
     .text start:0x0211c684 end:0x0211c6f8
 
-src/func_ov063_0211c6f8.cpp:
+src/unnamed/ov063/func_ov063_0211c6f8.cpp:
     complete
     .text start:0x0211c6f8 end:0x0211c770
 
-src/func_ov063_0211c770.c:
+src/unnamed/ov063/func_ov063_0211c770.c:
     complete
     .text start:0x0211c770 end:0x0211c7b0
 
-src/func_ov063_0211c7b0.c:
+src/unnamed/ov063/func_ov063_0211c7b0.c:
     complete
     .text start:0x0211c7b0 end:0x0211c82c
 
-src/func_ov063_0211c82c.c:
+src/unnamed/ov063/func_ov063_0211c82c.c:
     complete
     .text start:0x0211c82c end:0x0211c89c
 
-src/func_ov063_0211c89c.c:
+src/unnamed/ov063/func_ov063_0211c89c.c:
     complete
     .text start:0x0211c89c end:0x0211cae8
 
-src/func_ov063_0211cae8.c:
+src/unnamed/ov063/func_ov063_0211cae8.c:
     complete
     .text start:0x0211cae8 end:0x0211cb54
 
-src/func_ov063_0211cb54.c:
+src/unnamed/ov063/func_ov063_0211cb54.c:
     complete
     .text start:0x0211cb54 end:0x0211cc18
 
-src/func_ov063_0211cc18.c:
+src/unnamed/ov063/func_ov063_0211cc18.c:
     complete
     .text start:0x0211cc18 end:0x0211cdec
 
-src/_ZN12MansionSteps16CleanupResourcesEv.cpp:
+src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
     .text start:0x0211cdec end:0x0211ce30
 
-src/_ZN12MansionSteps16OnPendingDestroyEv.c:
+src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c:
     complete
     .text start:0x0211ce30 end:0x0211ce34
 
-src/_ZN12MansionSteps6RenderEv.cpp:
+src/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp:
     complete
     .text start:0x0211ce34 end:0x0211ce74
 
-src/_ZN12MansionSteps8BehaviorEv.cpp:
+src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp:
     .text start:0x0211ce74 end:0x0211cf00
 
-src/func_ov063_0211d270.cpp:
+src/unnamed/ov063/func_ov063_0211d270.cpp:
     complete
     .text start:0x0211d270 end:0x0211d28c
 
-src/func_ov063_0211d28c.c:
+src/unnamed/ov063/func_ov063_0211d28c.c:
     complete
     .text start:0x0211d28c end:0x0211d2a0
 
-src/TrapDoor_Spawn.c:
+src/actors/TrapDoor/TrapDoor_Spawn.c:
     complete
     .text start:0x0211d2a0 end:0x0211d2e0
 
-src/MerryGoRound_Spawn.c:
+src/actors/MerryGoRound/MerryGoRound_Spawn.c:
     complete
     .text start:0x0211d2e0 end:0x0211d320
 
-src/Bookshelf_Spawn.c:
+src/actors/Bookshelf/Bookshelf_Spawn.c:
     complete
     .text start:0x0211d320 end:0x0211d360
 
-src/MansionSteps_Spawn.c:
+src/actors/MansionSteps/MansionSteps_Spawn.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
-src/_ZN12FallBlockBbhD1Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.c:
     .text start:0x0211d3a0 end:0x0211d3f0
 
-src/_ZN12FallBlockBbhD0Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:
     .text start:0x0211d3f0 end:0x0211d454
 
-src/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
+src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
     .text start:0x0211d454 end:0x0211d468
 
-src/_ZN12FallBlockBbh13InitResourcesEv.cpp:
+src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
     .text start:0x0211d468 end:0x0211d47c
 
-src/FallBlockBbh_Spawn.c:
+src/actors/FallBlockBbh/FallBlockBbh_Spawn.c:
     .text start:0x0211d47c end:0x0211d4b8
 
-src/_ZN8MadPianoD1Ev.c:
+src/actors/MadPiano/_ZN8MadPianoD1Ev.c:
     complete
     .text start:0x0211d4b8 end:0x0211d54c
 
-src/_ZN8MadPianoD0Ev.cpp:
+src/actors/MadPiano/_ZN8MadPianoD0Ev.cpp:
     complete
     .text start:0x0211d54c end:0x0211d5f4
 
-src/func_ov063_0211d5f4.c:
+src/unnamed/ov063/func_ov063_0211d5f4.c:
     complete
     .text start:0x0211d5f4 end:0x0211d828
 
-src/func_ov063_0211d828.cpp:
+src/unnamed/ov063/func_ov063_0211d828.cpp:
     complete
     .text start:0x0211d828 end:0x0211d88c
 
-src/func_ov063_0211d88c.c:
+src/unnamed/ov063/func_ov063_0211d88c.c:
     complete
     .text start:0x0211d88c end:0x0211d8cc
 
-src/func_ov063_0211d8cc.cpp:
+src/unnamed/ov063/func_ov063_0211d8cc.cpp:
     complete
     .text start:0x0211d8cc end:0x0211dba4
 
-src/func_ov063_0211dba4.c:
+src/unnamed/ov063/func_ov063_0211dba4.c:
     complete
     .text start:0x0211dba4 end:0x0211dbb8
 
-src/func_ov063_0211dbb8.c:
+src/unnamed/ov063/func_ov063_0211dbb8.c:
     complete
     .text start:0x0211dbb8 end:0x0211dd78
 
-src/func_ov063_0211dd78.c:
+src/unnamed/ov063/func_ov063_0211dd78.c:
     complete
     .text start:0x0211dd78 end:0x0211dd84
 
-src/func_ov063_0211dd84.c:
+src/unnamed/ov063/func_ov063_0211dd84.c:
     complete
     .text start:0x0211dd84 end:0x0211ddac
 
-src/func_ov063_0211ddac.cpp:
+src/unnamed/ov063/func_ov063_0211ddac.cpp:
     complete
     .text start:0x0211ddac end:0x0211ddf4
 
-src/func_ov063_0211ddf4.cpp:
+src/unnamed/ov063/func_ov063_0211ddf4.cpp:
     complete
     .text start:0x0211ddf4 end:0x0211de3c
 
-src/_ZN8MadPiano16CleanupResourcesEv.cpp:
+src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp:
     .text start:0x0211de3c end:0x0211de8c
 
-src/_ZN8MadPiano6RenderEv.cpp:
+src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp:
     complete
     .text start:0x0211de8c end:0x0211deb8
 
-src/_ZN8MadPiano8BehaviorEv.cpp:
+src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp:
     .text start:0x0211deb8 end:0x0211dfac
 
-src/_ZN8MadPiano13InitResourcesEv.cpp:
+src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp:
     .text start:0x0211dfac end:0x0211e128
 
-src/MadPiano_Spawn.cpp:
+src/actors/MadPiano/MadPiano_Spawn.cpp:
     complete
     .text start:0x0211e128 end:0x0211e1c0
 
-src/__sinit_ov063_0211e29c.c:
+src/unnamed/ov063/__sinit_ov063_0211e29c.c:
     .init start:0x0211e29c end:0x0211e3cc
 
-src/__sinit_ov063_0211e3cc.c:
+src/unnamed/ov063/__sinit_ov063_0211e3cc.c:
     .init start:0x0211e3cc end:0x0211e590
 
-src/__sinit_ov063_0211e590.c:
+src/unnamed/ov063/__sinit_ov063_0211e590.c:
     .init start:0x0211e590 end:0x0211e5fc
 
-src/__sinit_ov063_0211e5fc.c:
+src/unnamed/ov063/__sinit_ov063_0211e5fc.c:
     .init start:0x0211e5fc end:0x0211e6fc

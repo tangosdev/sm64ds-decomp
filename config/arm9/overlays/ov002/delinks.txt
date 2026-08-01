@@ -2981,6 +2981,9 @@ src/func_ov002_020d5338.cpp:
     complete
     .text start:0x020d5338 end:0x020d53ac
 
+src/_ZN6Player16St_BurnFire_MainEv.cpp:
+    .text start:0x020d53ac end:0x020d5750
+
 src/_ZN6Player16St_BurnFire_InitEv.cpp:
     complete
     .text start:0x020d5750 end:0x020d57d8
@@ -3074,6 +3077,9 @@ src/func_ov002_020d6998.cpp:
 
 src/func_ov002_020d6c60.cpp:
     .text start:0x020d6c60 end:0x020d6dac
+
+src/func_ov002_020d6dac.c:
+    .text start:0x020d6dac end:0x020d7030
 
 src/func_ov002_020d7030.cpp:
     complete
@@ -3461,6 +3467,9 @@ src/_ZN6Player22St_GroundPound_CleanupEv.cpp:
     complete
     .text start:0x020dd9e0 end:0x020dd9f8
 
+src/_ZN6Player19St_GroundPound_MainEv.cpp:
+    .text start:0x020dd9f8 end:0x020dddf0
+
 src/_ZN6Player19St_GroundPound_InitEv.cpp:
     .text start:0x020dddf0 end:0x020dde74
 
@@ -3572,6 +3581,9 @@ src/func_ov002_020df7f4.cpp:
 src/func_ov002_020df840.c:
     complete
     .text start:0x020df840 end:0x020df8f0
+
+src/func_ov002_020df8f0.c:
+    .text start:0x020df8f0 end:0x020dfdf0
 
 src/_ZN6Player11St_Fly_MainEv.cpp:
     .text start:0x020dfdf0 end:0x020e027c
@@ -3815,6 +3827,9 @@ src/func_ov002_020e4bb8.c:
 
 src/_ZN6Player8BehaviorEv.cpp:
     .text start:0x020e4d24 end:0x020e558c
+
+src/_ZN6Player13InitResourcesEv.cpp:
+    .text start:0x020e558c end:0x020e5948
 
 src/func_ov002_020e5948.c:
     complete

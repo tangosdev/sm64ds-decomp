@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 /* ActorBase::AfterCleanupResources(u32 vfSuccess) at 0x02043b2c
  *
@@ -6,7 +7,7 @@
  *   func_0203b27c(&gGlobalB, &this->behavNode);   (this+0x28)
  *   if (this->unk4C) Heap::_Destroy(this->unk4C);
  *   if (this->unk48) func_02044334(this->unk48);
- *   this->OnPendingDestroy();                      virtual call at vtable+0x40
+ *   this->~ActorBase();                            virtual call at vtable+0x40
  *   Memory::Deallocate(this, Memory::gameHeapPtr);
  *
  * NOTE: compiled as C++ (the virtual-call codegen `mov r0,r4; ldr r1,[r0]`
@@ -46,7 +47,9 @@ struct ActorBase {
   virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
   virtual void v8(); virtual void v9(); virtual void v10(); virtual void v11();
   virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-  virtual void OnPendingDestroy();  /* index 16 -> vtable +0x40 */
+  virtual void Destructor();        /* index 16 -> vtable+0x40 = ~ActorBase (D1).
+                                       NOT OnPendingDestroy, which is slot 12 /
+                                       vtable+0x30 -- see notes/actor-vtables.md. */
   virtual void AfterCleanupResources(u32 vfSuccess);
 };
 
@@ -56,6 +59,6 @@ void ActorBase::AfterCleanupResources(u32 vfSuccess) {
   func_0203b27c(&gGlobalB, &this->behavNode);
   if (this->unk4C) Heap_Destroy(this->unk4C);
   if (this->unk48) func_02044334(this->unk48);
-  this->OnPendingDestroy();
+  this->Destructor();   /* ~ActorBase, then free below */
   Memory_Deallocate(this, Memory_gameHeapPtr);
 }

@@ -82,7 +82,7 @@ def _handle_from(name: str, email: str) -> str:
     return m.group(1) if m else (email.split("@")[0].lower() or name.strip())
 
 
-def first_matchers() -> dict[str, str]:
+def first_matchers(rev="HEAD") -> dict[str, str]:
     """{'src/name.ext': handle} crediting each currently-tracked file to the FIRST
     contributor to land the match it descends from. Credit belongs to whoever matched a
     function first; a later duplicate submission of the same function does not steal it.
@@ -104,7 +104,7 @@ def first_matchers() -> dict[str, str]:
     # degrade to delete+add and the mass-renamer wrongly inherits every matcher's credit.
     out = subprocess.run(
         ["git", "-c", "diff.renameLimit=0", "log", "--reverse", "--diff-filter=ADR", "-M",
-         "--format=%x01%an%x02%ae", "--name-status", "--", "src/"],
+         "--format=%x01%an%x02%ae", "--name-status", rev, "--", "src/"],
         cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
     origin: dict[str, str] = {}   # live path -> author of the earliest add in its lineage
     handle = None
@@ -162,7 +162,7 @@ def first_matchers() -> dict[str, str]:
     return origin
 
 
-def match_finishers() -> dict[str, str]:
+def match_finishers(rev="HEAD") -> dict[str, str]:
     """{'src/name.ext': handle} crediting whoever FIRST turned a NONMATCHING draft into a
     real byte-match -- the person who actually matched the function.
 
@@ -190,7 +190,7 @@ def match_finishers() -> dict[str, str]:
     REC, FLD, SUB = "\x01", "\x02", "\x03"
     out = subprocess.run(
         ["git", "log", "--full-history", "--reverse",
-         f"--format={REC}%H{FLD}%an{SUB}%ae", "--name-status", "-M", "--", "src/"],
+         f"--format={REC}%H{FLD}%an{SUB}%ae", "--name-status", "-M", rev, "--", "src/"],
         cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
 
     commits: list[tuple[str, str, list]] = []
