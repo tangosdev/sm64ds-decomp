@@ -2892,3 +2892,51 @@ Rule amendment: "launder ONLY the RMW sites" holds for the ADDRESS-MATERIALIZATI
 (that is what the ROM's RMW/single-use anatomy dictates). But for ORDERING residue between
 two chains, the launder is a scheduling-class demotion you can apply to EITHER side: launder
 the chain that must YIELD, not the one that must lead.
+
+## 6ay. Four new axes tested on the arm9 floors, all closed (2026-08-01, post-#960 theory sweep)
+
+After #960 landed the last two matchable arm9 functions, four genuinely untried axes were
+run against the five remaining floors (InitResources 4, OAM::Render 2, 0202ffec 2,
+LoadTex 5, func_02009e70 96). All four came back negative with real controls. Recorded so
+none of them is ever re-spent.
+
+**(1) TU composition is DEAD.** Nintendo compiled multi-function TUs, we compile
+single-function ones -- tested whether any allocator tie-break rides on TU-level state.
+Non-static DCE-safe control functions before AND after the target, then REAL ROM-adjacent
+neighbor merges (CleanupResources + InitResources in ROM order, six conflicting extern
+types reconciled, the neighbor re-verified byte-matching its own extent from inside the
+merged TU): zero bytes moved, byte- and reloc-level identical, on both floor classes
+tested. TRAP FOUND on the way: mwccarm does NOT finalize a function's codegen at its
+closing brace -- a `#pragma opt_*` toggle AFTER the function retroactively changes its
+bytes (OAM::Render shrank 8 bytes when a restore line alone was appended). Consequence
+for the readable-tree migration: a matched draft that relies on unscoped
+`#pragma opt_* off` cannot be folded into a multi-function TU as-is; the required restore
+changes its own output. Audit pragma-carrying drafts before any TU consolidation.
+
+**(2) The version x flags grid is DEAD.** 16 versions x 8 -O variants x 4 floors = 512
+cells: the 12 wrong-size versions (1.2/sp3, sp4, all 2.0/*) are wrong-size at EVERY -O
+level, and no cell anywhere beats canonical. On the two control-flow-heavy floors the
+`,p` bias is load-bearing for size itself. Version axis now closed across the whole
+optimizer space, not just at canonical flags.
+
+**(3) Hidden flags are DEAD, and here is the fast enumeration method.**
+`-help all,secret,obsolete,ignored,deprecated,meaningless,compatible` -- the `secret`
+keyword is itself unlisted -- prints the compiler's full flag table (546 lines vs 513),
+exposing all 8 flags invisible to `-help all`. Newly screened inert: -lines, -browse,
+-[no]force_compile, -linkername, -inline always, -allow_byte, -warn_byte. The only one
+with codegen effect is -avoid_byte, already documented in 6ah (ROM does not use it).
+Use the -help secret line instead of strings-mining next time.
+
+**(4) Goto-pin CFG restructure and the REAL permuter are DEAD on these floors.**
+Goto/label surgery on InitResources' bank phi: inert or regressive (goto cascades into a
+full basic-block reschedule, 4 -> 20). OAM::Render's prologue transposition is immune to
+ALL body-level restructuring (6 variants byte-identical) -- it is a pre-body,
+parameter-count-driven filler-zip decision, a true build discriminator. The real
+decomp-permuter (first actual run on this residue, 6,512 candidates, 8 min, -j8) never
+improved func_0202ffec's smull-operand score: the smull field and its operand's physical
+register are one joint allocation decision. func_02009e70's RC4 cluster narrowed:
+pragma-toggle/named-CSE/temp-split/block-boundary all byte-inert, reorder regresses;
+same coloring-priority class as 0202ffec.
+
+Permuter operational note (Windows): --quiet or --stop-on-zero stall permuter.py with
+stdout-flush OSErrors; run plain with output redirected (~14 cand/sec at -j8).
