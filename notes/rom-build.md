@@ -22,7 +22,8 @@ rest of each module is supplied from delinked ROM bytes. All four milestones are
 ```
 python tools/eligible.py             # classify: which files may be compiled in
 python tools/enroll.py --complete-list build/eligible-names.txt
-python tools/rombuild.py             # build and verify
+python tools/rombuild.py             # build and verify the stock profile (default)
+python tools/rombuild.py --profile mods  # intentionally include mods/
 python tools/rombuild_check.py       # per-function byte diff, names any culprit
 python tools/rombuild_diag.py        # explain a mismatch: which symbol does it name?
 python tools/rombuild_versions.py build/bad.txt --write   # per-file compiler overrides
@@ -32,6 +33,27 @@ python tools/rombuild_versions.py build/bad.txt --write   # per-file compiler ov
 `config/**/delinks.txt`; everything else comes from ROM bytes. Enrolling more source is
 therefore a config edit, not a code change. `--no-rom` stops after linking for fast
 iteration.
+
+### Stock and mod profiles
+
+The tracked `delinks.txt` files may keep a convenient `mods/<symbol>.c` enrollment, but
+that no longer makes an ordinary build modded. `rombuild.py` generates a disposable
+config under `build/rombuild-config/`:
+
+- `--profile stock` is the default. Each `mods/<symbol>.c` entry is redirected in the
+  generated config to its verified `src/<symbol>.c` counterpart. If no verified source
+  counterpart exists, that range falls back to retail gap bytes. The tracked config and
+  the useful mod source are not edited.
+- `--profile mods` preserves explicit `mods/` entries and writes
+  `build/sm64ds-mod.nds`.
+
+Stock validation rejects every executable-module byte difference. Mod validation permits
+differences only inside the address ranges explicitly enrolled from `mods/`, and fails if
+an enrolled mod did not actually alter its range. Both profiles write structured reports:
+`build/rombuild-report.json` for stock and `build/rombuild-mod-report.json` for mods.
+The reports keep module fidelity separate from source reconstruction: the former answers
+"does the linked code reproduce retail?"; the latter answers "how many functions and
+code bytes in this output came from our source?"
 
 **The compiler default is `2004/b56`** (`rombuild.VERSION`), with per-file exceptions in
 `config/rombuild-versions.txt`. The **linker** is always 1.2/sp2p3 (`LD_VERSION`) because
@@ -547,9 +569,9 @@ flyover) → the opening cutscene → gameplay on the castle grounds, with the H
 touch-screen minimap, 2D and 3D all correct. No BIOS files and no `--arm7-bios` needed.
 
 **Intentional divergences live in `mods/`, not `src/`.** `src/` must byte-reproduce the
-ROM, so a modified function goes in `mods/<Symbol>.c` and the module's `delinks.txt`
-file entry points there instead. Switching between stock and modded is a one-word path
-edit; nothing else in the pipeline changes.
+ROM, so a modified function goes in `mods/<Symbol>.c`. Select it explicitly with
+`python tools/rombuild.py --profile mods`; the normal command remains stock even when a
+tracked `delinks.txt` entry points at that mod.
 
 `mods/Player_ScaleByCharFactor.c` (shift 12 → 11, doubling the scale factor) built
 cleanly and landed exactly as intended: **3 bytes changed**, both at the shift
@@ -567,9 +589,9 @@ mwldarm, into a linked overlay that is byte-identical everywhere except the thre
 that changed, packaged into a ROM that boots and plays differently. That is the
 deliverable.
 
-`mods/` is where an intentional divergence lives; `tools/enroll.py` prefers
-`mods/<symbol>.c` over `src/<symbol>.c` by file existence, so deleting the mod file
-reverts to stock and `python tools/rombuild.py` is green again.
+`mods/` is where an intentional divergence lives; `tools/enroll.py` may still prefer
+`mods/<symbol>.c` when regenerating tracked enrollment, while the generated stock build
+profile safely redirects it back to `src/<symbol>.c`.
 
 ## Constraints
 

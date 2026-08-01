@@ -1,8 +1,8 @@
-name: PR link validation
+name: PR validation
 
 # Uses pull_request_target so repo secrets (the relay token) are available even
 # for fork PRs. SAFE because this workflow never checks out or runs PR code — it
-# only sends the PR number + head sha to the relay. The actual compile/linkcheck
+# only sends the PR number + immutable head/base SHAs to the relay. The actual validation
 # happens on the self-hosted worker behind the maintainer's NAT, sandboxed there.
 on:
   pull_request_target:
@@ -36,11 +36,15 @@ jobs:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
           SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
+          payload=$(jq -n --arg repo "$REPO" --argjson pr "$PR" \
+            --arg sha "$SHA" --arg baseSha "$BASE_SHA" \
+            '{repo:$repo,pr:$pr,sha:$sha,baseSha:$baseSha}')
           resp=$(curl -sS -X POST "$RELAY/api/pr-validate" \
             -H "X-Api-Key: $TOKEN" -H "Content-Type: application/json" \
-            -d "{\"repo\":\"$REPO\",\"pr\":$PR,\"sha\":\"$SHA\"}")
+            --data "$payload")
           echo "$resp"
           jobId=$(echo "$resp" | jq -r '.jobId // empty')
           if [ -z "$jobId" ]; then echo "relay did not return a jobId"; exit 1; fi
@@ -74,6 +78,7 @@ jobs:
           {
             echo "summary<<EOF"; jq -r '.summary // ""' result.json; echo "EOF"
             echo "details<<EOF"; jq -r '.details // ""' result.json; echo "EOF"
+            echo "reportMarkdown<<EOF"; jq -r '.reportMarkdown // ""' result.json; echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
       - name: Comment result
@@ -82,21 +87,27 @@ jobs:
           STATUS: ${{ steps.poll.outputs.status }}
           SUMMARY: ${{ steps.poll.outputs.summary }}
           DETAILS: ${{ steps.poll.outputs.details }}
+          REPORT_MARKDOWN: ${{ steps.poll.outputs.reportMarkdown }}
         with:
           script: |
-            const { STATUS, SUMMARY, DETAILS } = process.env;
+            const { STATUS, SUMMARY, DETAILS, REPORT_MARKDOWN } = process.env;
             const icon = STATUS === 'Passed' ? '✅'
                        : STATUS === 'Failed' ? '❌'
                        : '⚠️';
             const marker = '<!-- pr-link-validation -->';
-            let body = `${marker}\n### ${icon} PR link validation — ${STATUS}\n\n${SUMMARY || ''}`;
+            let body = `${marker}\n### ${icon} PR validation — ${STATUS}\n\n${SUMMARY || ''}`;
+            if (REPORT_MARKDOWN && REPORT_MARKDOWN.trim()) {
+              body += `\n\n${REPORT_MARKDOWN.trim()}`;
+            }
             if (DETAILS && DETAILS.trim()) {
               // DETAILS is a markdown table from pr_linkcheck --md. Wrap it in a
               // <details> fold; the blank lines let GitHub render the markdown
               // inside (a code fence would show it as raw ASCII instead).
               body += `\n\n<details><summary>Per-file link-check detail</summary>\n\n${DETAILS.trim()}\n\n</details>`;
             }
-            body += `\n\n<sub>Each changed \`src/*.c|*.cpp\` is compiled and its relocated bytes compared to the binary data on a private build box. Passing requires every changed file to reproduce the ROM byte-for-byte with correct relocation targets — this catches WRONG-DEST relocations and non-reproducing near-misses that ledger-scoped linkcheck skips.</sub>`;
+            body += REPORT_MARKDOWN && REPORT_MARKDOWN.trim()
+              ? `\n\n<sub>The private worker commits a test merge, builds the stock ROM profile, compares every executable module, measures matched and source-built code, checks contributor lineage, and verifies affected relocations. The mod profile is opt-in and is not part of this merge gate.</sub>`
+              : `\n\n<sub>Each changed \`src/*.c|*.cpp\` is compiled and its relocated bytes compared to the binary data on a private build box. Passing requires every changed file to reproduce the ROM byte-for-byte with correct relocation targets — this catches WRONG-DEST relocations and non-reproducing near-misses that ledger-scoped linkcheck skips.</sub>`;
             const { owner, repo } = context.repo;
             const issue_number = context.payload.pull_request.number;
             const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
@@ -107,7 +118,7 @@ jobs:
               await github.rest.issues.createComment({ owner, repo, issue_number, body });
             }
 
-      - name: Fail the check if validation failed
-        if: steps.poll.outputs.status == 'Failed'
+      - name: Fail the check unless validation passed
+        if: steps.poll.outputs.status != 'Passed'
         run: |
-          echo "PR link validation failed"; exit 1
+          echo "PR validation did not pass"; exit 1
