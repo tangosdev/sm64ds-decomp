@@ -2783,6 +2783,13 @@ read in five declaration positions.
 **Class:** register-coalescer build delta, same family as 6ag's first-access-fold. Route it to
 the permuter, not to a construct hunt.
 
+**6av addendum (2026-08-01):** the permuter route is structurally BLOCKED here: the function
+is cpp-only (the boolean-materialization idiom at insn 9 needs the C++ frontend; c99 collapses
+it to compare-and-branch), and the permuter's mutation engine is C-only, so sweeps silently
+no-op on it. Same caveat applies to any //cpp near-miss routed to crunch.py/batch.py. Pragma
+space and sibling census are closed (see the DB row); the only remaining route is a recovered
+pre-1.2/V0.6.1 compiler build.
+
 ### 6as addendum: the recognised-pragma vocabulary, and three corrections it produced
 
 `notes/mwccarm-pragmas.txt` now holds the **246 pragma names mwccarm actually parses**,
