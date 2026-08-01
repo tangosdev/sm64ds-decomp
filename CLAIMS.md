@@ -18,6 +18,7 @@ it is fair to take over: ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 |---|---|---|---|
 | ov002 func_ov002_020d6dac (0x020d6dac, size 0x284) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56** and 1.2/sp2p3); lever: m2i=load+0x90 before GetBodyModelID + Mul temps a0/a1/a2 for r0-scale/arg order; from near-miss div=7→4→0; API clm_d3cd782ed8b6 kept |
 | ov002 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec, size 0x3c4) | lunavyqo (Grok) | 2026-08-01 | **released** — floor(register allocation two-web rank tie) **match-words=8** / nearmiss **div=11** tip re-banked; residual av/diff r3↔ip at +0x128; 50+ pure-C variants flat; API clm_ee8a4a30ee3e released |
