@@ -12,10 +12,10 @@ void func_ov006_020d1a3c(char *c);
 void func_ov006_020d1958(char *c);
 void func_ov006_020d1ba0(char *c);
 void func_ov006_020d27dc(char *c);
-void func_ov004_020b0aa0(int a);
+void FreeGfxSlotsById(int a);
 void func_ov004_020adb1c(int a);
 void func_ov004_020b0a54(int a);
-int func_0203d614(int *v);
+int Vec2_Len(int *v);
 int func_0203d434(int *v);
 void func_0203d630(int *v, int m);
 int RandomIntInternal(int *seed);
@@ -159,7 +159,7 @@ extern "C" int func_ov006_020d4b7c(char *c)
         if (I(0x53c4) > 0) {
             IA(0x53c4) -= 1;
             if (I(0x53c4) <= 0) {
-                func_ov004_020b0aa0(0xd);
+                FreeGfxSlotsById(0xd);
                 if (B(0xc4) == 0) {
                     B(0xc3) = 1;
                     B(0xc4) = 1;
@@ -224,7 +224,7 @@ extern "C" int func_ov006_020d4b7c(char *c)
             if (BP(p, 0x477c) != 0) {
                 IAP(p, 0x4768) += IP(p, 0x4770);
                 IAP(p, 0x476c) += IP(p, 0x4774);
-                t = func_0203d614(vp) * 7 / 8;
+                t = Vec2_Len(vp) * 7 / 8;
                 if (func_0203d434(vp) != 0)
                     func_0203d630(vp, t);
                 *(int*)AT(p, 0x4778) = *(int*)AT(p, 0x4778) + 1;

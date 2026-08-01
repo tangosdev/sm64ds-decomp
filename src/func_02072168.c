@@ -2,7 +2,7 @@
  * Bytecode-VM dispatcher for the wireless callback stream; sibling of func_020690b0.
  * s+8 = IP into the byte stream, s+4 = more-data flag, c+0x18 = data segment base,
  * c+0x1c = int[] locals table. Refill via func_02071910/02072dac/020731fc/02071864;
- * LEB128 operands via func_02071af8 (signed) / func_02071a50 (unsigned). Opcode bits:
+ * LEB128 operands via ReadSignedVarInt (signed) / func_02071a50 (unsigned). Opcode bits:
  * 0x20/0x40 select array-indexed vs base-relative operand source, 0x80 restores s+8
  * from the checkpoint; cases 0xc/0xf early-return when the IP reaches `end`.
  *
@@ -29,7 +29,7 @@ extern int func_02071910(char *c, char *s);
 extern void func_02072dac(int a, char *s);
 extern void func_020731fc(void);
 extern void func_02071864(char *c, char *s);
-extern unsigned char *func_02071af8(unsigned char *p, int *out);
+extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern int func_01ffadf0(int a, int b);
 
@@ -54,7 +54,7 @@ void func_02072168(char *c, char *s, char *end) {
         switch (op & 0x1f) {
         case 1: {
             int v0;
-            func_02071af8(p + 1, &v0);
+            ReadSignedVarInt(p + 1, &v0);
             (*(int *)(((long long)(int)(s + 8)) & 0xFFFFFFFFFFFFFFFFLL)) += v0;
             break;
         }
@@ -62,7 +62,7 @@ void func_02072168(char *c, char *s, char *end) {
             int v0;
             unsigned char *q;
             int fp;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             ((F2)fp)((int)(*(char **)(c + 0x18) + v0), neg1);
             *(unsigned char **)(s + 8) = q + 4;
@@ -78,7 +78,7 @@ void func_02072168(char *c, char *s, char *end) {
             int t;
             fl = op & 0x40;
             fl = fl ? fl : fl;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v1);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -99,7 +99,7 @@ void func_02072168(char *c, char *s, char *end) {
             int a;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -119,7 +119,7 @@ void func_02072168(char *c, char *s, char *end) {
             int fp;
             int n;
             int b;
-            q = func_02071a50(func_02071a50(func_02071af8(p + 1, &v0), &v1), &v2);
+            q = func_02071a50(func_02071a50(ReadSignedVarInt(p + 1, &v0), &v1), &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             b = (int)(*(char **)(c + 0x18) + v0);
@@ -144,7 +144,7 @@ void func_02072168(char *c, char *s, char *end) {
             int a;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v1);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -165,7 +165,7 @@ void func_02072168(char *c, char *s, char *end) {
             int a;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v1);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -187,8 +187,8 @@ void func_02072168(char *c, char *s, char *end) {
             int t;
             int a;
             fl = op & 0x20;
-            q = func_02071af8(
-                func_02071af8(func_02071af8(p + 1, &v0), &v1), &v2);
+            q = ReadSignedVarInt(
+                ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1), &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if ((op & 0x40) != 0)
@@ -219,7 +219,7 @@ void func_02072168(char *c, char *s, char *end) {
             fl = op & 0x20;
             fl = fl ? fl : fl;
             q = func_02071a50(
-                func_02071a50(func_02071af8(func_02071af8(p + 1, &v0), &v1), &v2), &v3);
+                func_02071a50(ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1), &v2), &v3);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -246,7 +246,7 @@ void func_02072168(char *c, char *s, char *end) {
             int a;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -267,7 +267,7 @@ void func_02072168(char *c, char *s, char *end) {
             int t;
             int a;
             fl = op & 0x20;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v1);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if ((op & 0x40) != 0)
@@ -290,7 +290,7 @@ void func_02072168(char *c, char *s, char *end) {
             unsigned char *q;
             if (end == (char *)p)
                 return;
-            q = func_02071af8(func_02071a50(p + 5, &v0), &v1);
+            q = ReadSignedVarInt(func_02071a50(p + 5, &v0), &v1);
             *(unsigned char **)(s + 8) = q;
             break;
         }
@@ -299,7 +299,7 @@ void func_02072168(char *c, char *s, char *end) {
             unsigned char *q;
             char *e;
             int fp;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             e = *(char **)(c + 0x18) + v0;
             fp = *(int *)(e + 8);
             if (fp != 0) {
@@ -318,7 +318,7 @@ void func_02072168(char *c, char *s, char *end) {
             unsigned char *q;
             if (end == (char *)p)
                 return;
-            q = func_02071af8(func_02071a50(func_02071a50(p + 1, &v0), &v1), &v2);
+            q = ReadSignedVarInt(func_02071a50(func_02071a50(p + 1, &v0), &v1), &v2);
             *(unsigned char **)(s + 8) = q + v0 * 4;
             break;
         }
@@ -334,9 +334,9 @@ void func_02072168(char *c, char *s, char *end) {
             int a;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v1);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v1);
             k = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
-            q = func_02071af8(q + 4, &v2);
+            q = ReadSignedVarInt(q + 4, &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -361,9 +361,9 @@ void func_02072168(char *c, char *s, char *end) {
             int b;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(func_02071af8(p + 1, &v0), &v2);
+            q = ReadSignedVarInt(ReadSignedVarInt(p + 1, &v0), &v2);
             fl2 = *q++ & 0x20;
-            q = func_02071af8(func_02071af8(q, &v1), &v3);
+            q = ReadSignedVarInt(ReadSignedVarInt(q, &v1), &v3);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             if (fl != 0)
@@ -391,10 +391,10 @@ void func_02072168(char *c, char *s, char *end) {
             int n;
             fl = op & 0x20;
             fl = fl ? fl : fl;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             fl2 = *q++ & 0x20;
             fl2 = fl2 ? fl2 : fl2;
-            q = func_02071a50(func_02071af8(q, &v1), &v2);
+            q = func_02071a50(ReadSignedVarInt(q, &v1), &v2);
             fp = q[0] | (q[1] << 8) | (q[2] << 16) | (q[3] << 24);
             adv = q + 4;
             {
@@ -422,7 +422,7 @@ void func_02072168(char *c, char *s, char *end) {
         case 0x13: {
             int v0;
             unsigned char *q;
-            q = func_02071af8(p + 1, &v0);
+            q = ReadSignedVarInt(p + 1, &v0);
             *(unsigned char **)(s + 8) = q;
             break;
         }

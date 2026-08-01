@@ -62,7 +62,7 @@ extern void func_0200b0fc(void *self, void *a, s32 b);
 extern void func_0200b990(void *self, void *a, s32 b);
 extern void func_0200c9e0(void *self, s32 *a, s32 *b);
 extern u32 func_02012790(u32 a);
-extern s32 func_020124c4(s32 a, s32 b, s32 c);
+extern s32 Sound_PlayIfNotActive(s32 a, s32 b, s32 c);
 
 extern void _ZN11RaycastLineC1Ev(void *t);
 extern void _ZN11RaycastLineD1Ev(void *t);
@@ -523,7 +523,7 @@ L_AE14:
     } else {
         data_0209b000 = 0;
         if (*(s32 *)(self + 0x154) & 0x60) {
-            *(s32 *)(self + 0x158) = func_020124c4(*(s32 *)(self + 0x158), 2, 0x43);
+            *(s32 *)(self + 0x158) = Sound_PlayIfNotActive(*(s32 *)(self + 0x158), 2, 0x43);
         }
     }
 L_TAIL:

@@ -31,7 +31,7 @@ extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *c, unsigned int anim, int a, i
 extern int _ZNK6Player14GetBodyModelIDEjb(char *c, unsigned int a, int b);
 extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
 extern void _Z14ApproachLinearRiii(int *cur, int target, int step);
-extern void func_ov002_020bedd4(char *c);
+extern void Player_AdvanceAnims(char *c);
 }
 
 extern "C" int _ZN6Player16St_BurnFire_MainEv(char *c)
@@ -135,6 +135,6 @@ extern "C" int _ZN6Player16St_BurnFire_MainEv(char *c)
     }
 
     _Z14ApproachLinearRiii((int *)(c + 0x98), speed, 0x1000);
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

@@ -23,7 +23,7 @@ void _ZN12CylinderClsn5ClearEv(char* self);
 void _ZN12CylinderClsn6UpdateEv(char* self);
 void _ZN6Player11ChangeStateERNS_5StateE(char* self, void* state);
 int func_ov002_020d36d8(char* c, int arg);
-void func_ov002_020bedd4(char* self);
+void Player_AdvanceAnims(char* self);
 }
 
 extern void* data_0209f318;
@@ -146,6 +146,6 @@ extern "C" int _ZN6Player19St_GroundPound_MainEv(char* self)
         }
         func_ov002_020d36d8(self, 1);
     }
-    func_ov002_020bedd4(self);
+    Player_AdvanceAnims(self);
     return 1;
 }
