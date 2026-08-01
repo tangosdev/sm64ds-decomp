@@ -8,8 +8,9 @@
  *
  * EXTENT: the compiled object is 0x88c bytes and is byte-identical to the ROM over
  * 0x02072168..0x020729f4. The final 12 bytes are func_020729e8, the severed epilogue
- * the symbol table split off (notes/mwccarm-codegen.md 9a(3)); this file is the real
- * source of those bytes, banked and re-verified at the combined 0x88c extent.
+ * the symbol table had split off (notes/mwccarm-codegen.md 9a(3)); the symbol map
+ * now merges the pair (func_02072168 size 0x88c) and this file is the source of
+ * the full extent.
  *
  * Load-bearing spellings (do not "clean up"):
  *   - case 1's u64 no-op mask keeps the s+8 RMW address materialized (6g launder).
