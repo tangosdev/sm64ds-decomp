@@ -1,11 +1,11 @@
-    extern void BlendModelAnim_SetAnim(void *self, void *bca, int a, int b, int fix, unsigned short t);
-    extern void ApproachLinear(short *p, int target, int step);
+    extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
+    extern void _Z14ApproachLinearRsss(short *p, int target, int step);
     extern short Vec3_HorzAngle(void *a, void *b);
     extern short Vec3_VertAngle(void *a, void *b);
     extern void Matrix4x3_FromRotationY(void *m, int angle);
     extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
     extern void MulVec3Mat4x3(void *in, void *m, void *out);
-    extern int WithMeshClsn_IsOnGround(void *self);
+    extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
     extern void func_ov073_0211f2c0(void *self, int v);
     extern int func_02012694(int a, void *pos);
     extern void ChiefChilly_ChangeState(void *c, void *p);
@@ -25,13 +25,13 @@
 
         if (*(unsigned short *)(c + 0x100) == 1) {
             *(int *)(c + 0xa8) = 0x5a000;
-            BlendModelAnim_SetAnim(c + 0x30c, (&data_ov073_021232a8)[1], 4, 0, 0x1000, 0);
+            _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c + 0x30c, (&data_ov073_021232a8)[1], 4, 0, 0x1000, 0);
             *(int *)(c + 0x368) = 0x2000;
         }
         return 1;
 
     mainblock:
-        ApproachLinear((short *)(c + 0x8c), 0, 0x2000);
+        _Z14ApproachLinearRsss((short *)(c + 0x8c), 0, 0x2000);
         if (*(unsigned char *)(c + 0x4cb) == 2) {
             src = (int *)(c + 0x448 + *(unsigned char *)(c + 0x4c4) * 0xc);
             v[0] = src[0];
@@ -61,7 +61,7 @@
             }
             *(int *)(c + 0xac) = out[2];
         }
-        if (WithMeshClsn_IsOnGround(c + 0x150) != 0) {
+        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x150) != 0) {
             *(unsigned char *)(c + 0x4c5) = *(unsigned char *)(c + 0x4c4);
             *(int *)(c + 0x98) = 0;
             *(int *)(c + 0xa4) = 0;
