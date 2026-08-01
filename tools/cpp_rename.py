@@ -19,6 +19,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
 import demangle as DM
+import srcpath as SP
 
 def load_verified_symbols():
     """Load map of addr -> symbol_name from verified.tsv, actor_renames.tsv, and symbols.txt."""
@@ -77,11 +78,10 @@ def find_renamable_files(target_addr=None):
     verified_map = load_verified_symbols()
     renames = []  # list of dict(src_path, new_name, new_path, symbol, is_cpp)
 
-    src_dir = REPO / "src"
-    if not src_dir.is_dir():
+    if not SP.SRC.is_dir():
         return renames
 
-    for path in src_dir.iterdir():
+    for path in SP.iter_sources():
         if path.suffix not in (".c", ".cpp"):
             continue
 
@@ -108,7 +108,8 @@ def find_renamable_files(target_addr=None):
             is_cpp = new_sym.startswith("_Z")
             new_ext = ".cpp" if is_cpp else path.suffix
             new_filename = f"{new_sym}{new_ext}"
-            new_path = src_dir / new_filename
+            # A symbol rename must not flatten an already-organized subsystem.
+            new_path = path.with_name(new_filename)
 
             if new_path != path:
                 renames.append({
@@ -170,6 +171,7 @@ def apply_rename(item):
 
     # 1. Git move file
     subprocess.run(["git", "mv", str(old_p), str(new_p)], check=True, cwd=str(REPO))
+    SP.invalidate()
 
     # 2. Ensure //cpp header if it's a C++ file
     if item["is_cpp"]:

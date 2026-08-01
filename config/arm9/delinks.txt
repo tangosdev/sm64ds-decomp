@@ -2399,26 +2399,26 @@ src/func_02017278.c:
     complete
     .text start:0x02017278 end:0x020172c0
 
-src/_ZN9FaderWipe14LoadAndSetFileEt.cpp:
+src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp:
     complete
     .text start:0x020172c0 end:0x020172d8
 
-src/_ZN9FaderWipe11AdvanceFadeEv.cpp:
+src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp:
     .text start:0x020172d8 end:0x02017418
 
-src/_ZN9FaderWipeD0Ev.c:
+src/engine/fader/_ZN9FaderWipeD0Ev.c:
     complete
     .text start:0x02017418 end:0x02017450
 
-src/_ZN9FaderWipeD1Ev.c:
+src/engine/fader/_ZN9FaderWipeD1Ev.c:
     complete
     .text start:0x02017450 end:0x02017480
 
-src/_ZN9FaderWipeC1Ev.c:
+src/engine/fader/_ZN9FaderWipeC1Ev.c:
     complete
     .text start:0x02017480 end:0x020174e0
 
-src/_ZN10FaderColor11AdvanceFadeEv.cpp:
+src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp:
     complete
     .text start:0x020174e0 end:0x02017574
 
@@ -2426,46 +2426,46 @@ src/_ZN5ColorD1Ev.c:
     complete
     .text start:0x02017574 end:0x02017598
 
-src/_ZN10FaderColorD0Ev.c:
+src/engine/fader/_ZN10FaderColorD0Ev.c:
     complete
     .text start:0x02017598 end:0x020175c4
 
-src/_ZN10FaderColorD1Ev.c:
+src/engine/fader/_ZN10FaderColorD1Ev.c:
     complete
     .text start:0x020175c4 end:0x020175e8
 
-src/_ZN5Fader13AdvanceInterpEv.cpp:
+src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp:
     .text start:0x020175e8 end:0x02017610
 
-src/_ZN15FaderBrightness10SetToStartEv.cpp:
+src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp:
     complete
     .text start:0x02017610 end:0x0201761c
 
-src/_ZN15FaderBrightness8SetToEndEv.cpp:
+src/engine/fader/_ZN15FaderBrightness8SetToEndEv.cpp:
     complete
     .text start:0x0201761c end:0x02017628
 
-src/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp:
+src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp:
     complete
     .text start:0x02017628 end:0x02017670
 
-src/_ZN15FaderBrightness7IsAtEndEv.cpp:
+src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp:
     complete
     .text start:0x02017670 end:0x02017684
 
-src/_ZN15FaderBrightness9IsAtStartEv.cpp:
+src/engine/fader/_ZN15FaderBrightness9IsAtStartEv.cpp:
     complete
     .text start:0x02017684 end:0x02017698
 
-src/_ZN15FaderBrightness14SetForwardTimeEj.cpp:
+src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp:
     complete
     .text start:0x02017698 end:0x020176d8
 
-src/_ZN15FaderBrightness15SetBackwardTimeEj.cpp:
+src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp:
     complete
     .text start:0x020176d8 end:0x02017720
 
-src/_ZN15FaderBrightness11AdvanceFadeEv.cpp:
+src/engine/fader/_ZN15FaderBrightness11AdvanceFadeEv.cpp:
     complete
     .text start:0x02017720 end:0x020177c4
 
@@ -2473,11 +2473,11 @@ src/func_020177c4.c:
     complete
     .text start:0x020177c4 end:0x020177e8
 
-src/_ZN15FaderBrightnessD0Ev.c:
+src/engine/fader/_ZN15FaderBrightnessD0Ev.c:
     complete
     .text start:0x020177e8 end:0x02017814
 
-src/_ZN15FaderBrightnessD1Ev.c:
+src/engine/fader/_ZN15FaderBrightnessD1Ev.c:
     complete
     .text start:0x02017814 end:0x02017838
 
@@ -2485,10 +2485,10 @@ src/func_02017838.c:
     complete
     .text start:0x02017838 end:0x02017848
 
-src/_ZN5FaderD0Ev.c:
+src/engine/fader/_ZN5FaderD0Ev.c:
     .text start:0x02017848 end:0x0201786c
 
-src/_ZN5FaderD1Ev.c:
+src/engine/fader/_ZN5FaderD1Ev.c:
     complete
     .text start:0x0201786c end:0x0201787c
 
@@ -3806,14 +3806,14 @@ src/UpdateMinimap.c:
     complete
     .text start:0x02029854 end:0x020298a0
 
-src/StartEntranceFaderWipe.c:
+src/engine/fader/StartEntranceFaderWipe.c:
     .text start:0x020298a0 end:0x020298d8
 
 src/StartExitCharacterWipe.c:
     complete
     .text start:0x020298d8 end:0x020298fc
 
-src/StartExitFaderWipe.c:
+src/engine/fader/StartExitFaderWipe.c:
     .text start:0x020298fc end:0x02029934
 
 src/FUN_02029934.cpp:

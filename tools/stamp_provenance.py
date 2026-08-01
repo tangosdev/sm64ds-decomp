@@ -61,6 +61,7 @@ from match_provenance import (  # noqa: E402
     TOKEN_HELP,
 )
 from nearmiss_db import locked, load_db, save_db  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 
 FUNC_RE = re.compile(
@@ -157,7 +158,7 @@ def run_match(
 
 
 def default_src_path(module: str, name: str, ext: str = "c") -> pathlib.Path:
-    return get_repo() / "src" / module / f"{name}.{ext}"
+    return SP.new_path_for(name, ext)
 
 
 def resolve_input_path(p: pathlib.Path) -> pathlib.Path:
@@ -245,6 +246,7 @@ def main() -> None:
         root = configure(args.repo)
     except SystemExit:
         raise
+    SP.set_root(root)
     print(f"REPO = {root}")
 
     try:

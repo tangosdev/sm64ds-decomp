@@ -34,11 +34,14 @@ Caveats worth knowing before you trust a hit:
 """
 import argparse
 import collections
-import glob
 import json
 import os
+import pathlib
 import re
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 
 CALL_RE = re.compile(r'\b(func_(?:ov\d+_)?[0-9a-f]{8})\s*\(')
 TYPE_KEYWORDS = ('char', 'int', 'void', 'unsigned', 'signed', 'short', 'long', 'struct',
@@ -90,29 +93,26 @@ def nargs(inner):
 
 def _already_matched(repo, name):
     """True only if src/<name> exists AND byte-reproduces (i.e. is not a NONMATCHING hatch)."""
-    for ext in ('.c', '.cpp'):
-        path = os.path.join(repo, 'src', name + ext)
-        if not os.path.exists(path):
-            continue
-        try:
-            head = open(path, encoding='utf-8', errors='ignore').read(400)
-        except OSError:
-            return False
-        return 'NONMATCHING' not in head
-    return False
+    path = SP.path_for(name)
+    if path is None:
+        return False
+    try:
+        head = path.read_text(encoding='utf-8', errors='ignore')[:400]
+    except OSError:
+        return False
+    return 'NONMATCHING' not in head
 
 
 def matched_sources(repo):
     """Yield (stem, text) for every src/ file that byte-reproduces the ROM."""
-    for path in sorted(glob.glob(os.path.join(repo, 'src', '*.c')) +
-                       glob.glob(os.path.join(repo, 'src', '*.cpp'))):
+    for path in SP.iter_sources():
         try:
-            text = open(path, encoding='utf-8', errors='ignore').read()
+            text = path.read_text(encoding='utf-8', errors='ignore')
         except OSError:
             continue
         if 'NONMATCHING' in text[:400]:
             continue                      # not authoritative -- does not reproduce the ROM
-        yield os.path.basename(path).rsplit('.', 1)[0], strip_comments(text)
+        yield path.stem, strip_comments(text)
 
 
 def build_indexes(repo):
@@ -138,7 +138,7 @@ def build_indexes(repo):
     return definitions, calls
 
 
-def audit(repo, only=None):
+def _audit(repo, only=None):
     definitions, calls = build_indexes(repo)
     db = os.path.join(repo, 'nearmiss', 'db.jsonl')
     own_bad, callee_bad = [], []
@@ -203,6 +203,15 @@ def audit(repo, only=None):
                                    call_sites=dict(observed) if observed else None,
                                    divergences=d.get('divergences')))
     return own_bad, callee_bad, len(definitions)
+
+
+def audit(repo, only=None):
+    """Audit a checkout while keeping srcpath's process-global root scoped."""
+    saved = SP.set_root(pathlib.Path(repo).resolve())
+    try:
+        return _audit(repo, only)
+    finally:
+        SP.set_root(saved[0])
 
 
 def main():

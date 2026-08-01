@@ -28,6 +28,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import match as M           # noqa: E402
 import modules as MOD       # noqa: E402
+import srcpath as SP        # noqa: E402
 from rombuild import CFLAGS, REPO, VERSION, VERSIONS_FILE, versions  # noqa: E402
 
 SYM = re.compile(
@@ -79,8 +80,7 @@ def main():
         if n not in info:
             return n, None
         label, addr, size = info[n]
-        src = next((REPO / "src" / (n + e) for e in (".c", ".cpp")
-                    if (REPO / "src" / (n + e)).is_file()), None)
+        src = SP.path_for(n)
         if src is None:
             return n, None
         # The build's flags, not match.py's defaults: sweeping with different flags

@@ -28,8 +28,11 @@ import collections
 import pathlib
 import re
 import struct
+import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 TABLE = 0x02090864
 N_ACTORS = 391
 ARM9_BASE = 0x02004000
@@ -290,7 +293,7 @@ def main():
         repl_all = {old: new for _, _, old, new, _ in renames}
         pat = re.compile(r"\b(?:func|data)_(?:ov\d+_)?[0-9a-fA-F]{8}\b")
         touched = 0
-        for p in (REPO / "src").glob("*.c*"):
+        for p in SP.iter_sources():
             t = p.read_text(errors="ignore")
             t2 = pat.sub(lambda m: repl_all.get(m.group(0), m.group(0)), t)
             if t2 != t:
@@ -300,11 +303,12 @@ def main():
 
         # keep the src/<symbol>.c invariant: rename files whose stem was renamed
         moved = 0
-        for p in list((REPO / "src").glob("*.c*")):
+        for p in list(SP.iter_sources()):
             new = repl_all.get(p.stem)
             if new:
                 p.rename(p.with_name(new + "".join(p.suffixes)))
                 moved += 1
+        SP.invalidate()
         print(f"RENAMED {moved} src files")
 
         # sync the local (gitignored) progress ledgers so linkcheck/progress

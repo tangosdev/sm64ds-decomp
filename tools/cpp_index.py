@@ -22,6 +22,7 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import demangle as DM
 import ledger as L
+import srcpath as SP
 
 def load_all_symbols():
     """Load symbols from symbols.txt and overlay symbol files."""
@@ -102,10 +103,9 @@ def load_all_symbols():
 def load_src_matched(known_symbols):
     """Return dict of symbol_name -> filepath for matched src/ files."""
     matched = {}
-    src_dir = REPO / "src"
     known_set = set(known_symbols)
-    if src_dir.is_dir():
-        for path in src_dir.iterdir():
+    if SP.SRC.is_dir():
+        for path in SP.iter_sources():
             if path.suffix in (".c", ".cpp"):
                 stem = path.stem
                 rel_path = str(path.relative_to(REPO))

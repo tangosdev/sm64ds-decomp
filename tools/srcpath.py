@@ -4,9 +4,10 @@ AGENTS.md fixes the convention: one matched function per file, and the filename 
 symbol. That used to be spelled `SRC / f"{name}.{ext}"` inline in a dozen tools, which is
 what kept `src/` a permanently flat directory of 11,203 files: giving any one file a home
 meant finding and fixing every copy. Every one of those call sites now comes through here
--- chaos_db_ci, clone, enroll, import_symbols, knowledge, ledger, name_evidence,
-nonmatching, progress, rebuild_ledger, reconcile_names, reverify_corpus, verify_mangled,
-worklist -- so the directory is a decision this module makes alone.
+-- actor_names, chaos_db_ci, clone, cpp_index, cpp_rename, enroll, import_symbols,
+knowledge, ledger, name_evidence, nonmatching, progress, rebuild_ledger,
+reconcile_names, reverify_corpus, rombuild_versions, sigaudit, stamp_provenance,
+verify_mangled, worklist -- so the directory is a decision this module makes alone.
 
 The convention itself does not change: filename is still the symbol, still one function
 per file. `enroll` is the one that makes this load-bearing rather than cosmetic -- it
