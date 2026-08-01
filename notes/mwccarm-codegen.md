@@ -2035,6 +2035,31 @@ Note for CI: the self-hosted validate box needs `2004/b56` installed before any
 b56-only match can be committed to src/, otherwise it cannot reproduce them and the
 files would land red. Run `tools/recover_cw2004.py` there first.
 
+### 6ai addendum: the 0057-0071 public hunt is EXHAUSTED (2026-08-01)
+
+A systematic enumeration closed the public-recovery route for the builds between 0056
+and 0072. Findings, so nobody re-spends this search:
+
+- The Metrowerks FTP `CWARM` folder is capped at the Oct 20 2004 update (build 56)
+  across TWO independent archive.org crawl snapshots; the folder's own index.html
+  confirms nothing was ever posted after it.
+- The `ARM_R1.2.x` updates (Dec 2002) are IDE patch cabs with no compiler, ~2 years
+  too old regardless.
+- CodeWarrior for Symbian (3.1 full installer AND the 3.1.1 update) ships NO mwccarm:
+  both cab volumes were carved 100% -- it is an IDE/debugger front end driving ARM GCC
+  via XML adapters, same as the S60 SDK (arm-epoc-pe-gcc). The era's Symbian products
+  are not mwccarm carriers at all.
+- The NitroSDK 3.0 leak's cw.zip is Jan/Apr 2006, i.e. build 72+, redundant with
+  1.2/sp2p3.
+- The dsi/ TWL builds (1.1-1.6sp2, nine of them) were swept against the floors the
+  same day: all structurally wrong-era (smaller code, 999 everywhere).
+
+Remaining routes are all non-public: a CodeWarrior for NITRO V0.5-V0.6.1 SDK leak
+surfacing, or NDA-era Nintendo/Metrowerks archives. Until one appears, the five arm9
+floors (InitResources 4, OAM::Render 2, 0202ffec 2, LoadTex 5, func_02009e70 96) are
+at their true resting state: every source-side axis is closed with evidence in the
+near-miss DB.
+
 ## 6aj. Uninit-decl split: vreg birth order follows the DECLARATION LINE, not first assignment (2026-07-27, Opus→Fable on func_ov007_020c3fe4)
 
 The decl-order rules (2, 6e, 6k, 6q) all assume declarations carry initializers, which
