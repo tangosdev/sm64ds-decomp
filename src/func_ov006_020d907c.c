@@ -2,7 +2,7 @@ extern void func_ov006_020d893c(char *c);
 extern void func_ov004_020adb1c(int self);
 extern void func_ov006_020d669c(char *c);
 extern void func_ov006_020d63ac(char *c);
-extern void func_ov006_St_InYoshiMouth_Cleanup(char *c);
+extern void _ZN6Player23St_InYoshiMouth_CleanupEv(char *c);
 extern void func_ov006_020d5dd4(char *c);
 extern void func_ov006_020d5c60(char *c);
 extern void func_ov006_020d5b00(char *c);
@@ -25,7 +25,7 @@ void func_ov006_020d907c(char *c)
     func_ov004_020adb1c(0);
     func_ov006_020d669c(c);
     func_ov006_020d63ac(c);
-    func_ov006_St_InYoshiMouth_Cleanup(c);
+    _ZN6Player23St_InYoshiMouth_CleanupEv(c);
     func_ov006_020d5dd4(c);
     func_ov006_020d5c60(c);
     func_ov006_020d5b00(c);

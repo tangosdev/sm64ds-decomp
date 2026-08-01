@@ -1,5 +1,5 @@
 extern void func_ov002_020aefa4(char *self);
-extern void Sound_PlayBank3(unsigned int, const void *);
+extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int, const void *);
 extern void func_ov002_020af0c0(char *self);
 extern void func_ov002_020aefb8(char *self);
 extern void func_ov002_020aeee4(char *self);
@@ -18,7 +18,7 @@ void func_ov002_020af950(char *self)
       *((int *)(self + 0x388)) = 3;
       *((unsigned char *)(self + 0x38e)) = 1;
       func_ov002_020aefa4(self);
-      Sound_PlayBank3(0x68, self + 0x74);
+      _ZN5Sound9PlayBank3EjRK7Vector3(0x68, self + 0x74);
       *((unsigned int *)(((long long)(int)(self + 0xb0)))) &= ~1;
       return;
 

@@ -1,20 +1,20 @@
 extern void func_02017acc();
 extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
-extern int G4[];
-extern int G5[];
-extern int G6[];
-extern int G7[];
+extern int data_ov064_0211c9c4[];
+extern int func_02017ab4[];
+extern int data_ov064_0211c9ec[];
+extern int data_ov064_0211c9cc[];
+extern int SharedFilePtr_Destruct_Anim[];
+extern int data_ov064_0211c9d4[];
+extern int data_ov064_0211c9bc[];
+extern int data_ov064_0211c9e0[];
 void __sinit_ov064_0211b698(void)
 {
-    func_02017acc(G0, 1164);
-    func_020731dc(G0, G1, G2);
-    _ZN13SharedFilePtr9ConstructEj(G3, 1166);
-    func_020731dc(G3, G4, G5);
-    _ZN13SharedFilePtr9ConstructEj(G6, 1165);
-    func_020731dc(G6, G4, G7);
+    func_02017acc(data_ov064_0211c9c4, 1164);
+    func_020731dc(data_ov064_0211c9c4, func_02017ab4, data_ov064_0211c9ec);
+    _ZN13SharedFilePtr9ConstructEj(data_ov064_0211c9cc, 1166);
+    func_020731dc(data_ov064_0211c9cc, SharedFilePtr_Destruct_Anim, data_ov064_0211c9d4);
+    _ZN13SharedFilePtr9ConstructEj(data_ov064_0211c9bc, 1165);
+    func_020731dc(data_ov064_0211c9bc, SharedFilePtr_Destruct_Anim, data_ov064_0211c9e0);
 }

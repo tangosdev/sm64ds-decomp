@@ -1,5 +1,5 @@
 extern void func_ov006_020e1608(char *this);
-extern void PlayBank2_2D(unsigned int);
+extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern void func_ov004_020adb1c(int self);
 extern void func_ov006_020e2dbc(char *c);
 
@@ -50,7 +50,7 @@ void func_ov006_020e2f78(char *c)
         t->f = 0x80;
         t->flag = 1;
         sum = 0;
-        PlayBank2_2D(0x1bc);
+        _ZN5Sound12PlayBank2_2DEj(0x1bc);
         for (i = 0; i < 5; i++)
             sum += t->arr[i].cc;
         func_ov004_020adb1c(sum);

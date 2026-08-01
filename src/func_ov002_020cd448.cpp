@@ -1,6 +1,6 @@
 //cpp
 extern "C" int func_ov002_020c18b0(char* self, int x);
-extern "C" void ApproachLinear2(short&, short, short);
+extern "C" void _Z15ApproachLinear2Rsss(short&, short, short);
 extern unsigned char data_020a0e40;
 extern short data_0209f4a4;
 
@@ -15,7 +15,7 @@ void func_ov002_020cd448(char* self) {
         before = *(short*)(self + 0x8c);
         func_ov002_020c18b0(self, 0);
         if (before < *(short*)(self + 0x8c)) goto tail;
-        ApproachLinear2(*(short*)(self + 0x92), *(short*)(self + 0x8c), 0x200);
+        _Z15ApproachLinear2Rsss(*(short*)(self + 0x92), *(short*)(self + 0x8c), 0x200);
         goto tail;
     }
     if (fl & 2) {
@@ -31,6 +31,6 @@ void func_ov002_020cd448(char* self) {
         }
     }
 tail:
-    ApproachLinear2(*(short*)(self + 0x69e), *(short*)(self + 0x90), 0x200);
+    _Z15ApproachLinear2Rsss(*(short*)(self + 0x69e), *(short*)(self + 0x90), 0x200);
     *(short*)(self + 0x90) = *(short*)(self + 0x69e);
 }

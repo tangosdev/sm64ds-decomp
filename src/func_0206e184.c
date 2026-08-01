@@ -1,6 +1,6 @@
 #include "types.h"
 extern int func_0206e218(void *buf, int code);
-extern void cstd_strncpy(char *d, const char *s, u32 n);
+extern void _ZN4cstd7strncpyEPcPKcj(char *d, const char *s, u32 n);
 
 u32 func_0206e184(char *dst, u16 *src, u32 max)
 {
@@ -21,7 +21,7 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
         len = func_0206e218(bp, code);
         if (total + len > max)
             break;
-        cstd_strncpy(dst + total, bp, len);
+        _ZN4cstd7strncpyEPcPKcj(dst + total, bp, len);
         total += len;
         if (total > max)
             break;

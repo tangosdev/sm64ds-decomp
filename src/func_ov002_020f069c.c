@@ -1,11 +1,11 @@
 // @symbol func_ov002_020f069c
-// @emits daSCoin_c_CleanupResources
+// recovered name: daSCoin_c_CleanupResources
 /* recovered: renamed to Class_Method */
 /* daSCoin_c::CleanupResources - recovered from vtable slot identity */
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-int daSCoin_c_CleanupResources(void)
+extern int data_ov002_0210d9a8[];
+int func_ov002_020f069c(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a8);
     return 1;
 }

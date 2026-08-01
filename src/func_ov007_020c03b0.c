@@ -14,7 +14,7 @@ typedef struct Arg {
     Node *head;
 } Arg;
 
-extern int data_020d7d6c[];
+extern int data_ov007_020d7d6c[];
 extern void func_ov007_020c076c(Node *node, int flags);
 
 void func_ov007_020c03b0(Arg *arg) {
@@ -51,7 +51,7 @@ void func_ov007_020c03b0(Arg *arg) {
         pri = node->f4;
         if (idx >= 0 && idx <= 3 && pri >= 0 && pri <= 3 && arr_b[idx] == 0) {
             arr_a[idx] = node;
-            if (node->f8 == 1 && (mask & data_020d7d6c[idx]) != 0) {
+            if (node->f8 == 1 && (mask & data_ov007_020d7d6c[idx]) != 0) {
                 func_ov007_020c076c(node, arg->flags);
                 if (bit1) {
                     switch (idx) {

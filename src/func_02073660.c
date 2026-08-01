@@ -7,14 +7,14 @@
 
 struct Obj { void **vtable; };
 
-extern void *vtable_0209a774[];
-extern void *baseDtor_020736b0(struct Obj *thiz);       /* 0x020736b0 */
+extern void *data_0209a774[];
+extern void *func_020736b0(struct Obj *thiz);       /* 0x020736b0 */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr); /* 0x0203cbcc */
 
 struct Obj *func_02073660(struct Obj *thiz)
 {
-    thiz->vtable = (void **)vtable_0209a774;
-    baseDtor_020736b0(thiz);
+    thiz->vtable = (void **)data_0209a774;
+    func_020736b0(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }
