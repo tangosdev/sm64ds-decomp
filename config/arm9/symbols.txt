@@ -3532,6 +3532,7 @@ data_0208e37c kind:data(any) addr:0x0208e37c
 data_0208e380 kind:data(any) addr:0x0208e380
 data_0208e384 kind:data(any) addr:0x0208e384
 data_0208e390 kind:data(any) addr:0x0208e390
+_ZTV5Actor kind:data(any) addr:0x0208e3a4
 data_0208e3a4 kind:data(any) addr:0x0208e3a4
 data_0208e420 kind:data(any) addr:0x0208e420
 data_0208e424 kind:data(any) addr:0x0208e424
@@ -3545,6 +3546,7 @@ data_0208e440 kind:data(any) addr:0x0208e440
 data_0208e444 kind:data(any) addr:0x0208e444
 data_0208e448 kind:data(any) addr:0x0208e448
 data_0208e498 kind:data(any) addr:0x0208e498
+_ZTV12ActorDerived kind:data(any) addr:0x0208e4b8
 data_0208e4b8 kind:data(any) addr:0x0208e4b8
 data_0208e500 kind:data(any) addr:0x0208e500
 data_0208e504 kind:data(any) addr:0x0208e504
@@ -4366,6 +4368,7 @@ data_02099eb4 kind:data(any) addr:0x02099eb4
 data_02099ebc kind:data(any) addr:0x02099ebc
 data_02099ec4 kind:data(any) addr:0x02099ec4
 data_02099ecc kind:data(any) addr:0x02099ecc
+_ZTV9ActorBase kind:data(any) addr:0x02099edc
 data_02099edc kind:data(any) addr:0x02099edc
 data_02099f24 kind:data(any) addr:0x02099f24
 data_02099f28 kind:data(any) addr:0x02099f28
