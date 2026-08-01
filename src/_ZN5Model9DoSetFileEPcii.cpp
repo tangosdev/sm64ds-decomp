@@ -1,30 +1,25 @@
 //cpp
 // @symbol _ZN5Model9DoSetFileEPcii
-/* recovered: named members + shared header, real C++ method */
 #include "Model.h"
 extern "C" {
-int _ZN5Model23AddToCommonModelDataArrER8BMD_File(void*);
-unsigned int func_02046564(void*);
-void* _ZN6Memory13operator_new2Ej(unsigned int);
-int func_020462d0(void*, void*, void*);
-int _ZN15ModelComponents21UpdateVertsUsingBonesEv(void*);
-int func_02016b24(void*, int);
-int _ZN5Model12SetPolygonIDEi(void*, int);
+u32 func_02046564(BMD_File *file);
+void *_ZN6Memory13operator_new2Ej(u32 size);
+void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
+void func_02016b24(Model *self, int flags);
 }
 
-int Model::DoSetFile(char * file_, int a, int b)
+int Model::DoSetFile(char *file_, int a, int b)
 {
-    void* file = (void*)file_;
-
-  void* buffer;
-  _ZN5Model23AddToCommonModelDataArrER8BMD_File(file);
-  *(void**)((char*)&unk_04c) = _ZN6Memory13operator_new2Ej(func_02046564(file));
-  buffer = *(void**)((char*)&unk_04c);
-  if (buffer == 0) return 0;
-  func_020462d0((char*)((void*)this)+8, file, buffer);
-  _ZN15ModelComponents21UpdateVertsUsingBonesEv((char*)&unk_008);
-  if (a != 0) func_02016b24(((void*)this), 0x8000);
-  if (b < 0) return 1;
-  _ZN5Model12SetPolygonIDEi(((void*)this), b & 0xff);
-  return 1;
+    BMD_File *file = (BMD_File *)file_;
+    void *buffer;
+    AddToCommonModelDataArr(*file);
+    transformsBuf = _ZN6Memory13operator_new2Ej(func_02046564(file));
+    buffer = transformsBuf;
+    if (buffer == 0) return 0;
+    func_020462d0(&data, file, buffer);
+    data.UpdateVertsUsingBones();
+    if (a != 0) func_02016b24(this, 0x8000);
+    if (b < 0) return 1;
+    SetPolygonID(b & 0xff);
+    return 1;
 }

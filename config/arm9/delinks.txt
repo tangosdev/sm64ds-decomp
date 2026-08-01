@@ -2283,11 +2283,11 @@ src/func_02016b24.c:
     complete
     .text start:0x02016b24 end:0x02016b78
 
-src/_ZN5Model6RenderEPK7Vector3.c:
+src/_ZN5Model6RenderEPK7Vector3.cpp:
     complete
     .text start:0x02016b78 end:0x02016bb8
 
-src/_ZN5Model9Virtual10ER9Matrix4x3.c:
+src/_ZN5Model9Virtual10ER9Matrix4x3.cpp:
     complete
     .text start:0x02016bb8 end:0x02016bf8
 
@@ -2324,11 +2324,11 @@ src/func_02016e70.c:
     complete
     .text start:0x02016e70 end:0x02016f08
 
-src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.c:
+src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp:
     complete
     .text start:0x02016f08 end:0x02016f9c
 
-src/_ZN5Model14LoadAndSetFileEtii.c:
+src/_ZN5Model14LoadAndSetFileEtii.cpp:
     complete
     .text start:0x02016f9c end:0x02016fd4
 
@@ -2543,7 +2543,7 @@ src/func_02017a24.c:
     complete
     .text start:0x02017a24 end:0x02017a3c
 
-src/_ZN5Model8LoadFileER13SharedFilePtr.c:
+src/_ZN5Model8LoadFileER13SharedFilePtr.cpp:
     complete
     .text start:0x02017a3c end:0x02017a8c
 
@@ -7229,7 +7229,7 @@ src/func_02045ad8.c:
     complete
     .text start:0x02045ad8 end:0x02045b58
 
-src/_ZN5Model17LoadTextureToVramEPcj.c:
+src/_ZN5Model17LoadTextureToVramEPcj.cpp:
     complete
     .text start:0x02045c10 end:0x02045c60
 

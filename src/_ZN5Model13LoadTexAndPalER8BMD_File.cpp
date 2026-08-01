@@ -1,72 +1,68 @@
 //cpp
-#include "types.h"
 // @symbol _ZN5Model13LoadTexAndPalER8BMD_File
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
 #include "Model.h"
 extern "C" {
-
-
+extern u32 data_020a4bcc;
+extern u32 data_020a4bd8;
 void Crash();
-u32 _ZN5Model27LoadCompressedTextureToVramEPcjPc(char *src, u32 size, char *dst);
-u32 _ZN5Model17LoadTextureToVramEPcj(char *src, u32 size);
-void _ZN2GX16BeginLoadTexPlttEv();
-void _ZN2GX11LoadTexPlttEPKvjj(const void *src, u32 addr, u32 size);
-void _ZN2GX14EndLoadTexPlttEv();
+}
 
-void _ZN5Model13LoadTexAndPalER8BMD_File(struct Model *self) {
+struct GX {
+    static void BeginLoadTexPltt();                          /* _ZN2GX16BeginLoadTexPlttEv */
+    static void LoadTexPltt(const void *src, u32 addr, u32 size);
+    static void EndLoadTexPltt();
+};
+
+void Model::LoadTexAndPal(BMD_File &file)
+{
     u32 i;
     u32 ret;
     u32 sz;
-    char *p;
+    BMD_Palette *p;
     u32 poff;
     u32 j;
-    char *t;
+    BMD_Texture *t;
     u32 off;
 
     i = 0;
-    if (i < self->unk_014) {
-      off = i;
-      do {
-        t = *(char **)((char *)&self->unk_018) + off;
-        sz = *(u32 *)(t + 8);
-        if (((*(u32 *)(t + 0x10) >> 26) & 7) == 5) {
-            ret = _ZN5Model27LoadCompressedTextureToVramEPcjPc(
-                *(char **)(t + 4), sz, *(char **)(t + 4) + sz);
-        } else {
-            ret = _ZN5Model17LoadTextureToVramEPcj(*(char **)(t + 4), sz);
-        }
-        *(u32 *)(t + 0x10) = (*(u32 *)(t + 0x10) & ~0xffff) | ((ret >> 3) & 0xffff);
-        i++;
-        off += 0x14;
-      } while (i < self->unk_014);
+    if (i < file.numTextures) {
+        off = i;
+        do {
+            t = (BMD_Texture *)((char *)file.textures + off);
+            sz = t->size;
+            if (((t->flags >> 26) & 7) == 5) {
+                ret = LoadCompressedTextureToVram(t->data, sz, t->data + sz);
+            } else {
+                ret = LoadTextureToVram(t->data, sz);
+            }
+            t->flags = (t->flags & ~0xffff) | ((ret >> 3) & 0xffff);
+            i++;
+            off += sizeof(BMD_Texture);
+        } while (i < file.numTextures);
     }
 
-    _ZN2GX16BeginLoadTexPlttEv();
+    GX::BeginLoadTexPltt();
 
     j = 0;
-    if (j < self->unk_01c) {
-      poff = j;
-      do {
-        p = *(char **)((char *)&self->unk_020) + poff;
-        sz = *(u32 *)(p + 8);
-        if (data_020a4bcc + sz > data_020a4bd8) Crash();
-        if (sz <= 8) {
-            _ZN2GX11LoadTexPlttEPKvjj(*(const void **)(p + 4), data_020a4bcc, sz);
-            *(u32 *)(p + 0xc) = data_020a4bcc;
-            data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
-        } else {
-            data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
-            _ZN2GX11LoadTexPlttEPKvjj(*(const void **)(p + 4), data_020a4bd8, sz);
-            *(u32 *)(p + 0xc) = data_020a4bd8;
-        }
-        j++;
-        poff += 0x10;
-      } while (j < self->unk_01c);
+    if (j < file.numPalettes) {
+        poff = j;
+        do {
+            p = (BMD_Palette *)((char *)file.palettes + poff);
+            sz = p->size;
+            if (data_020a4bcc + sz > data_020a4bd8) Crash();
+            if (sz <= 8) {
+                GX::LoadTexPltt(p->data, data_020a4bcc, sz);
+                p->vramOffset = data_020a4bcc;
+                data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
+            } else {
+                data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
+                GX::LoadTexPltt(p->data, data_020a4bd8, sz);
+                p->vramOffset = data_020a4bd8;
+            }
+            j++;
+            poff += sizeof(BMD_Palette);
+        } while (j < file.numPalettes);
     }
 
-    _ZN2GX14EndLoadTexPlttEv();
-}
-
+    GX::EndLoadTexPltt();
 }

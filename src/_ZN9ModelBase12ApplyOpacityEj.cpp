@@ -1,9 +1,9 @@
 //cpp
-extern "C" {
-void func_020461b4(char* p, unsigned int a);
-}
+// @symbol _ZN9ModelBase12ApplyOpacityEj
+#include "ModelBase.h"
+extern "C" void func_020461b4(ModelComponents *data, u32 a);
 
-extern "C" void _ZN9ModelBase12ApplyOpacityEj(char* self, unsigned int a)
+void ModelBase::ApplyOpacity(u32 a)
 {
-    func_020461b4(self + 8, a);
+    func_020461b4(&data, a);
 }
