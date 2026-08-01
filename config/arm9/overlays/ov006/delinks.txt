@@ -1336,6 +1336,9 @@ src/func_ov006_020d11a0.cpp:
     complete
     .text start:0x020d11a0 end:0x020d122c
 
+src/func_ov006_020d122c.c:
+    .text start:0x020d122c end:0x020d1450
+
 src/func_ov006_020d1450.c:
     complete
     .text start:0x020d1450 end:0x020d14c0
@@ -1356,6 +1359,9 @@ src/func_ov006_020d2580.c:
     complete
     .text start:0x020d2580 end:0x020d25fc
 
+src/func_ov006_020d25fc.c:
+    .text start:0x020d25fc end:0x020d27dc
+
 src/func_ov006_020d3624.cpp:
     complete
     .text start:0x020d3624 end:0x020d3668
@@ -1371,6 +1377,9 @@ src/func_ov006_020d452c.c:
 src/func_ov006_020d48dc.cpp:
     complete
     .text start:0x020d48dc end:0x020d4b7c
+
+src/func_ov006_020d4b7c.c:
+    .text start:0x020d4b7c end:0x020d52f0
 
 src/func_ov006_020d52f0.c:
     complete
@@ -1582,6 +1591,9 @@ src/func_ov006_020d7604.c:
 src/func_ov006_020d7778.c:
     complete
     .text start:0x020d7778 end:0x020d777c
+
+src/func_ov006_020d777c.c:
+    .text start:0x020d777c end:0x020d7958
 
 src/func_ov006_020d7958.c:
     complete
@@ -3304,6 +3316,9 @@ src/func_ov006_020ef4ec.c:
 src/func_ov006_020ef580.c:
     complete
     .text start:0x020ef580 end:0x020ef5ac
+
+src/func_ov006_020ef5ac.c:
+    .text start:0x020ef5ac end:0x020ef768
 
 src/func_ov006_020ef768.c:
     complete
@@ -5535,6 +5550,9 @@ src/func_ov006_021126b4.c:
     complete
     .text start:0x021126b4 end:0x021128fc
 
+src/func_ov006_021128fc.c:
+    .text start:0x021128fc end:0x02112ad8
+
 src/func_ov006_02112ad8.c:
     .text start:0x02112ad8 end:0x02113c14
 
@@ -6626,6 +6644,9 @@ src/func_ov006_02123c78.c:
     complete
     .text start:0x02123c78 end:0x02123cb4
 
+src/func_ov006_02123cb4.c:
+    .text start:0x02123cb4 end:0x02124040
+
 src/func_ov006_02124040.c:
     complete
     .text start:0x02124040 end:0x02124088
@@ -6971,6 +6992,12 @@ src/__sinit_ov006_02130f00.c:
 
 src/__sinit_ov006_02130f64.c:
     .init start:0x02130f64 end:0x021311c8
+
+src/__sinit_ov006_021311c8.c:
+    .init start:0x021311c8 end:0x021314e4
+
+src/__sinit_ov006_021314e4.c:
+    .init start:0x021314e4 end:0x021318a0
 
 src/__sinit_ov006_021318a0.c:
     .init start:0x021318a0 end:0x0213195c

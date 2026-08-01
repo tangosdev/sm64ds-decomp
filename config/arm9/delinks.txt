@@ -69,6 +69,9 @@ src/func_02005ed8.c:
 src/_ZN8CapEnemy21DestroyIfCapNotNeededEv.cpp:
     .text start:0x02005f0c end:0x02005fa0
 
+src/_ZN8CapEnemy11GetCapStateEv.cpp:
+    .text start:0x02005fa0 end:0x02006054
+
 src/_ZN8CapEnemy15RespawnIfHasCapEv.cpp:
     .text start:0x02006054 end:0x020060f4
 
@@ -11655,6 +11658,9 @@ src/func_02071f88.c:
 src/func_02072014.c:
     complete
     .text start:0x02072014 end:0x02072168
+
+src/func_02072168.c:
+    .text start:0x02072168 end:0x020729f4
 
 src/func_020729f4.c:
     complete
