@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RacingPenguin.h"
 extern "C" unsigned char NumStars(void);
-extern "C" void Actor_SetRanges(void *self, int a, int b, int cc, int d);
+extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int cc, int d);
 
 
 int RacingPenguin::InitResources()
@@ -33,7 +33,7 @@ int RacingPenguin::InitResources()
         *(int *)(c + 0x84) = 0x1000;
         *(int *)(c + 0x88) = 0x1999;
         WithMeshClsn_Init(c + 0x1a8, c, 0xd0000, 0xd0000, 0, 0);
-        Actor_SetRanges(c, 0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
+        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(c, 0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
     } else {
         MovingCylinderClsn_Init(c + 0x174, c, 0x82000, 0x12c000, 0x800004, 0);
         *(int *)(c + 0x80) = 0x1000;

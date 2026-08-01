@@ -1,5 +1,5 @@
 extern void func_ov027_02111d70(char* c, int x);
-extern void Actor_UpdatePos(char* c, void* cyl);
+extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* c, void* cyl);
 extern void func_0201267c(int a, char* b);
 extern int data_ov027_02113c74[];
 extern int data_ov027_02113c8c[];
@@ -22,7 +22,7 @@ int func_ov027_02111a28(char* c) {
             *q = *q - v;
         }
     }
-    Actor_UpdatePos(c, (void*)(c+0x398));
+    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (void*)(c+0x398));
     {
         int t = *(int*)(c+0x378);
         int w = data_ov027_02113c74[1];

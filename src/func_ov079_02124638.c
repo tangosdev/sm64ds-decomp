@@ -1,5 +1,5 @@
 #include "types.h"
-extern s16 SINE_TABLE[];
+extern s16 data_02082214[];
 
 void func_ov079_02124638(char* obj)
 {
@@ -16,7 +16,7 @@ void func_ov079_02124638(char* obj)
         {
             s32 amp = (s32)((t - 0x50) << 6);
             u16 ang = (u16)(s16)(t << 13);
-            *(s16 *)(obj + 0x8c) = (s16)(((s64)amp * SINE_TABLE[(ang >> 4) * 2] + 0x800) >> 12);
+            *(s16 *)(obj + 0x8c) = (s16)(((s64)amp * data_02082214[(ang >> 4) * 2] + 0x800) >> 12);
         }
         return;
     }

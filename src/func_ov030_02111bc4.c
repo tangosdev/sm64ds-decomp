@@ -1,7 +1,7 @@
 extern int func_ov030_021141a8(void *a, int b);
-extern void *Actor_ClosestPlayer(void *a);
-extern void *Actor_FindWithID(unsigned int id);
-extern int Player_TryGrab(void *p, void *a);
+extern void *_ZN5Actor13ClosestPlayerEv(void *a);
+extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern int _ZN6Player7TryGrabER5Actor(void *p, void *a);
 
 int func_ov030_02111bc4(void *thiz)
 {
@@ -27,13 +27,13 @@ int func_ov030_02111bc4(void *thiz)
         return 0;
 
     if ((*(int *)(c + 0x180) & 0x40000) && *(int *)(c + 0x3b4) != 2) {
-        *(void **)(c + 0x3a8) = Actor_ClosestPlayer(c);
+        *(void **)(c + 0x3a8) = _ZN5Actor13ClosestPlayerEv(c);
         *(int *)(c + 0x3b8) = *(int *)(c + 0x3b4);
         func_ov030_021141a8(c, 2);
         return 1;
     }
 
-    r4 = (unsigned char *)Actor_FindWithID(*(unsigned int *)(c + 0x184));
+    r4 = (unsigned char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x184));
     if (r4 == 0 || (b = (int)(*(unsigned short *)(r4 + 0xc) == 0xbf)) == 0)
         return 0;
 
@@ -47,7 +47,7 @@ int func_ov030_02111bc4(void *thiz)
         return 0;
 
     if (*(int *)(c + 0x180) & 0x1000) {
-        if (Player_TryGrab(r4, c)) {
+        if (_ZN6Player7TryGrabER5Actor(r4, c)) {
             *(void **)(c + 0x3a8) = r4;
             b = (int)(*(unsigned short *)(c + 0xc) == 0x10b);
             if (b != 0) {

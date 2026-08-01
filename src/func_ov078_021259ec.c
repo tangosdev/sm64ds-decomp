@@ -6,7 +6,7 @@
 #include "common.h"
 struct ActorBase;
 
-extern void ApproachLinear(short* a, short b, short c);
+extern void _Z14ApproachLinearRsss(short* a, short b, short c);
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int b);
@@ -38,7 +38,7 @@ int func_ov078_021259ec(char* c)
         }
     }
 
-    ApproachLinear((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
+    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
 
     if (func_ov078_02123804(c) == 1) {

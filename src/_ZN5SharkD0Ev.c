@@ -7,7 +7,7 @@
 /* vtable identified: VT0 = _ZTV9daShark_c */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN5SharkD0Ev(int *t)
 {
     t[0] = (int)_ZTV9daShark_c;
@@ -15,6 +15,6 @@ int *_ZN5SharkD0Ev(int *t)
     _ZN12WithMeshClsnD1Ev((char *)t + 0x150);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x110);
     func_ov002_020aed18(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

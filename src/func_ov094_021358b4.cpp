@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern void ApproachLinear(struct Vector3 *a, const struct Vector3 *b, Fix12i f);
+extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(struct Vector3 *a, const struct Vector3 *b, Fix12i f);
 extern int func_ov094_02136188(void *c, void *p);
 extern int data_ov094_02136b60[];
 }
@@ -29,7 +29,7 @@ extern "C" int func_ov094_021358b4(void *t) {
             *p += 0x64000;
         }
     } else {
-        ApproachLinear((struct Vector3*)(c+0x5c), (struct Vector3*)(c+0x3d8), 0x2000);
+        _Z14ApproachLinearR7Vector3RKS_5Fix12IiE((struct Vector3*)(c+0x5c), (struct Vector3*)(c+0x3d8), 0x2000);
         if (*(u8*)(c+0x3e4) < 0x1f) {
             u8 *cd = (u8*)(((int)c + 0x3e4));
             *cd = *cd + 1;

@@ -5,11 +5,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "OrangeBallBillboard.h"
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN19OrangeBallBillboardD0Ev(struct OrangeBallBillboard *self) {
-    ((int *)self)[0] = (int)VT0;
+    ((int *)self)[0] = (int)_ZTV19OrangeBallBillboard;
     _ZN5ModelD1Ev((char *)&self->mModel);
     _ZN5ActorD2Ev(((int *)self));
-    _ZN6Memory10DeallocateEPvP4Heap(((int *)self), G0);
+    _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
     return ((int *)self);
 }

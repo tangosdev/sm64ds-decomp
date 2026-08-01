@@ -1,16 +1,16 @@
 //cpp
-extern "C" void *Actor_FindEgg(void *self, void *clsn);
-extern "C" void Actor_SpawnCoins(void *self, void *pos, unsigned int a, int fix, short b);
-extern "C" void Actor_PoofDust(void *self);
+extern "C" void *_ZN5Actor7FindEggER12CylinderClsn(void *self, void *clsn);
+extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int a, int fix, short b);
+extern "C" void _ZN5Actor8PoofDustEv(void *self);
 extern "C" void func_02012694(int a, void *pos);
-extern "C" void ActorBase_MarkForDestruction(void *self);
-extern "C" void *Actor_FindWithID(unsigned int id);
+extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern "C" void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void func_ov077_02125e94(void *c, int i);
-extern "C" int Player_IsOnShell(void *p);
-extern "C" void Sound_PlayBank0(unsigned int id, void *pos);
+extern "C" int _ZN6Player9IsOnShellEv(void *p);
+extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *pos);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
-extern "C" void Player_IncMegaKillCount(void *p);
-extern "C" void Player_Hurt(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
+extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
+extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
 
 extern "C" void func_ov077_02124eb0(void *thiz)
 {
@@ -18,15 +18,15 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     unsigned char *r4;
     int b;
 
-    if (Actor_FindEgg(c, c + 0x1b0) != 0) {
+    if (_ZN5Actor7FindEggER12CylinderClsn(c, c + 0x1b0) != 0) {
         int v[3];
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        Actor_SpawnCoins(c, v, 1, 0x2000, 0);
-        Actor_PoofDust(c);
+        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 1, 0x2000, 0);
+        _ZN5Actor8PoofDustEv(c);
         func_02012694(0xc4, c + 0x74);
-        ActorBase_MarkForDestruction(c);
+        _ZN9ActorBase18MarkForDestructionEv(c);
         return;
     }
 
@@ -34,7 +34,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         unsigned int id = *(unsigned int *)(c + 0x1d4);
         if (id == 0)
             return;
-        r4 = (unsigned char *)Actor_FindWithID(id);
+        r4 = (unsigned char *)_ZN5Actor10FindWithIDEj(id);
     }
     if (r4 == 0)
         return;
@@ -50,11 +50,11 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     }
 
     if ((*(int *)(c + 0x1d0) & 0x403c0)
-        || Player_IsOnShell(r4) != 0
+        || _ZN6Player9IsOnShellEv(r4) != 0
         || *(unsigned char *)(r4 + 0x6f9) != 0) {
         if (*(int *)(c + 0x3d8) != 1)
             return;
-        Sound_PlayBank0(0xb5, c + 0x74);
+        _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, c + 0x74);
         *(unsigned char **)(c + 0x3d4) = r4;
         func_ov077_02125e94(c, 2);
         return;
@@ -62,7 +62,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
 
     if (*(int *)(c + 0x1d0) & 0x10) {
         *(short *)(c + 0x94) = Vec3_HorzAngle(r4 + 0x5c, c + 0x5c);
-        Player_IncMegaKillCount(r4);
+        _ZN6Player16IncMegaKillCountEv(r4);
         func_ov077_02125e94(c, 5);
         return;
     }
@@ -75,6 +75,6 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        Player_Hurt(r4, v, 2, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, v, 2, 0xc000, 1, 0, 1);
     }
 }

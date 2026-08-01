@@ -1,19 +1,19 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
-extern int G4[];
-extern int G5[];
-extern int G6[];
+extern int data_ov070_02123530[];
+extern int data_ov070_02123520[];
+extern int data_ov070_02123518[];
+extern int data_ov070_02123510[];
+extern int data_ov070_02123528[];
+extern int data_ov070_02123508[];
+extern int data_ov070_02123500[];
 int _ZN6FlyGuy16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
-    _ZN13SharedFilePtr7ReleaseEv(G3);
-    _ZN13SharedFilePtr7ReleaseEv(G4);
-    _ZN13SharedFilePtr7ReleaseEv(G5);
-    _ZN13SharedFilePtr7ReleaseEv(G6);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123530);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123520);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123518);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123510);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123528);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123508);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov070_02123500);
     return 1;
 }

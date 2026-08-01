@@ -1,16 +1,16 @@
 extern void func_02017acc();
 extern void func_020731dc();
 extern void func_02017b4c();
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
-extern int G4[];
-extern int G5[];
+extern int data_ov047_02112638[];
+extern int func_02017ab4[];
+extern int data_ov047_02112640[];
+extern int data_ov047_02112630[];
+extern int SharedFilePtr_Destruct_Clsn[];
+extern int data_ov047_0211264c[];
 void __sinit_ov047_021117b4(void)
 {
-    func_02017acc(G0, 1663);
-    func_020731dc(G0, G1, G2);
-    func_02017b4c(G3, 1664);
-    func_020731dc(G3, G4, G5);
+    func_02017acc(data_ov047_02112638, 1663);
+    func_020731dc(data_ov047_02112638, func_02017ab4, data_ov047_02112640);
+    func_02017b4c(data_ov047_02112630, 1664);
+    func_020731dc(data_ov047_02112630, SharedFilePtr_Destruct_Clsn, data_ov047_0211264c);
 }
