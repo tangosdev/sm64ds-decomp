@@ -2,7 +2,7 @@
 // @symbol func_ov100_021454c8
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daDoor_c.h"
-// @emits daDoor_c_Render
+// recovered name: daDoor_c_Render
 /* recovered: renamed to Class_Method */
 /* daDoor_c::Render - recovered from vtable slot identity */
 extern "C" {
@@ -10,7 +10,7 @@ extern unsigned char IsAreaShowing(int idx);
 }
 struct V1 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 struct V2 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void n(int); virtual void m(int); };
-extern "C" int daDoor_c_Render(char* c){
+extern "C" int func_ov100_021454c8(char* c){
     struct daDoor_c *self = (struct daDoor_c *)(void *)c;
   if(IsAreaShowing((char)self->unk_08c)==0){
     if(IsAreaShowing((char)self->unk_090)==0) goto done;

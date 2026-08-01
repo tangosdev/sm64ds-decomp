@@ -1,7 +1,5 @@
 //cpp
-typedef int Fix12i;
-typedef unsigned short u16;
-
+#include "types.h"
 struct Node {
     Node *next;       /* 0x00 */
     char pad4[4];

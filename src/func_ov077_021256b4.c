@@ -1,13 +1,9 @@
+#include "types.h"
 // @symbol func_ov077_021256b4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern s16 data_02082214[];
 extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 #define LA(p) ((int)(((s64)(int)(p))))

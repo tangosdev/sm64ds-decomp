@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u16 ReadUnalignedUshort(u8* p);
 extern u16 data_0209b274;
 extern u8 data_020a0e40;

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct { u32 a, b; } Pair;
 
 extern Pair data_ov006_0213b1f4;

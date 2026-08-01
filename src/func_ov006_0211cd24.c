@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #define E_W0  (*(int*)((char*)self + 0x4bd0 + off))
 #define E_W8  (*(int*)((char*)self + 0x4bd8 + off))
 #define E_HC  (*(unsigned short*)((char*)self + 0x4bdc + off))

@@ -1,5 +1,4 @@
-typedef long long s64;
-typedef unsigned short u16;
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);

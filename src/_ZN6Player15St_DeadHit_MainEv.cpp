@@ -1,16 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player15St_DeadHit_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern "C" {
 extern void func_ov002_020d94cc(char *c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, void *v);

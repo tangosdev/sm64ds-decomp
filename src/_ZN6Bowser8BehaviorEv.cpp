@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Bowser8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Bowser.h"
-typedef int Fix12;
-typedef short s16;
-typedef unsigned char u8;
-
-
 struct Actor {
     Actor* ClosestPlayer();
     static Actor* FindWithActorID(unsigned id, Actor* a);
@@ -27,7 +23,7 @@ void MovingCylinderClsnWithPos::SetPosRelativeToActor(const Vector3&);
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
+extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern int data_0209e650;
 extern char* data_0209f318;
 }

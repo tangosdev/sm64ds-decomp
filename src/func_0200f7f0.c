@@ -1,6 +1,4 @@
-typedef int Fix12i;
-typedef unsigned short u16;
-
+#include "types.h"
 struct Actor { char _pad[0xd4]; };
 
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);

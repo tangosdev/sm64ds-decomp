@@ -3,10 +3,10 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSlot1_c.h"
-// @emits dScMgSlot1_c_OnYoshiTryEat_0210c674
+// recovered name: dScMgSlot1_c_OnYoshiTryEat_0210c674
 /* recovered: renamed to Class_Method */
 /* dScMgSlot1_c::OnYoshiTryEat - recovered from vtable slot identity */
-void dScMgSlot1_c_OnYoshiTryEat_0210c674(char* c, int i){
+void func_ov006_0210c674(char* c, int i){
     struct dScMgSlot1_c *self = (struct dScMgSlot1_c *)(void *)c;
   if(i == 4){
     self->unk_4706 = self->unk_4709;

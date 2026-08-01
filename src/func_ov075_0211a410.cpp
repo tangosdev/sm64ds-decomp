@@ -1,18 +1,13 @@
 //cpp
+#include "types.h"
 // @symbol func_ov075_0211a410
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScEntry_c.h"
-// @emits dScEntry_c_InitResources
+// recovered name: dScEntry_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScEntry_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 extern "C" {
     void Enable3dEngines(void);
     void func_0200f2cc(void);
@@ -49,7 +44,7 @@ extern u8 data_0209f4ae[];
 extern void* data_0209d4a8;
 extern s32 data_0208ee44;
 
-extern "C" int dScEntry_c_InitResources(char* c)
+extern "C" int func_ov075_0211a410(char* c)
 {
     struct dScEntry_c *self = (struct dScEntry_c *)(void *)c;
     Enable3dEngines();

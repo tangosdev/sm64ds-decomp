@@ -1,18 +1,10 @@
+#include "types.h"
 // @symbol func_ov074_02120d74
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 #define false 0
-
-typedef signed char s8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-
-
 extern short data_02082214[];
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);

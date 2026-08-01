@@ -1,10 +1,9 @@
+#include "types.h"
 /* func_ov006_02120b30 at 0x02120b30
  *
  * Initializes a particle/effect descriptor with fixed parameters and
  * tail-calls func_ov006_02120bc8.
  */
-typedef unsigned short u16;
-
 struct Desc {
     char _pad0[4];
     int a;       /* +0x04 = 0x110000 */

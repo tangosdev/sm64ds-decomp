@@ -17,7 +17,7 @@ int func_ov091_02133f60(char *c)
     struct Vector3 *src;
     if (pl == 0) goto done;
 
-    src = (struct Vector3*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    src = (struct Vector3*)(((int)pl + 0x5c));
     v.x = src->x;
     v.y = src->y;
     v.z = src->z;

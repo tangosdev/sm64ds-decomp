@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MontyMoleRock.h"
-extern "C" void *Actor_Spawn(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
+extern "C" void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern "C" int RandomIntInternal(int *seed);
 
 extern int data_0209e650;
@@ -43,7 +43,7 @@ int MontyMoleRock::Behavior()
             unsigned char *s;
             int r;
 
-            s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
@@ -53,7 +53,7 @@ int MontyMoleRock::Behavior()
             *(int *)(s + 0xa8) = 0x5000;
             *(int *)(s + 0xac) = 0;
 
-            s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);

@@ -11,7 +11,7 @@ extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char *self, void 
 extern int _ZN6Player7IsInAirEv(char *p);
 extern int func_ov002_020d9298(char *c);
 extern void func_ov002_020db8bc(u8 *p, u8 val);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12 x, Fix12 y, Fix12 z);
+extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const Vector3 *pos);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const Vector3 *pos);
 }

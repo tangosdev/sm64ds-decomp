@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_0204a5c8(void* o);
 
 typedef struct Node {

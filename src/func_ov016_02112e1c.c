@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjKi_Hasira_c.h"
-// @emits daObjKi_Hasira_c_InitResources
+// recovered name: daObjKi_Hasira_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjKi_Hasira_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12;
@@ -15,7 +15,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, void*, void*, int, int);
 
-int daObjKi_Hasira_c_InitResources(char* c) {
+int func_ov016_02112e1c(char* c) {
     struct daObjKi_Hasira_c *self = (struct daObjKi_Hasira_c *)(void *)c;
   void* mdl;
   void* kcl;

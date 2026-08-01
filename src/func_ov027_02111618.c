@@ -1,5 +1,5 @@
 // @symbol func_ov027_02111618
-// @emits daIDonketu_c_OnYoshiTryEat
+// recovered name: daIDonketu_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_ModelAnim.h"
 #include "decl_MovingCylinderClsn.h"
@@ -10,7 +10,7 @@
 /* daIDonketu_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov002_020aed18(void *);
 extern void *G0;
-int *daIDonketu_c_OnYoshiTryEat(int *t)
+int *func_ov027_02111618(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

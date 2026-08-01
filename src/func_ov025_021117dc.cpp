@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov025_021117dc
-// @emits daDgr_c_InitResources
+// recovered name: daDgr_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -24,7 +24,7 @@ extern SharedFilePtr data_ov025_02113a60;
 extern CLPS_Block data_ov025_02112c28;
 extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern "C" int daDgr_c_InitResources(char* thiz)
+extern "C" int func_ov025_021117dc(char* thiz)
 {
     char* c = thiz;
     func_ov025_02111344(c);

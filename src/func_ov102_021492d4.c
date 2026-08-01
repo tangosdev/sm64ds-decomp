@@ -1,10 +1,7 @@
+#include "types.h"
 // @symbol func_ov102_021492d4
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-
-
 extern void func_ov102_02149684(int* dst, int* src);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
 extern char data_020a0edc[];

@@ -1,16 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020ea9d0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
-
 struct Vec1 { s32 a; };
 
 extern s32 data_0209b454;

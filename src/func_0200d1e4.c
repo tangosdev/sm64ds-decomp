@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern unsigned int func_020093f4(void *p, int x);
 extern unsigned int func_020093d4(void *p, int a);
 extern void Vec3_RotateYAndTranslate(void *dst, void *src, short angle, void *unk);

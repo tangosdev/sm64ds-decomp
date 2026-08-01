@@ -1,16 +1,12 @@
+#include "types.h"
 // @symbol func_ov007_020cc2cc
-// @emits dScDSMT_c_Behavior
+// recovered name: dScDSMT_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Heap.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScDSMT_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 extern int _ZN4Heap10SetDefaultEv(int heap);
@@ -20,7 +16,7 @@ extern void StartMinigameMenu(u8 returnToRecRoom);
 extern char* data_0209b33c;
 extern char data_0209caa0;
 
-int dScDSMT_c_Behavior(char* c)
+int func_ov007_020cc2cc(char* c)
 {
     int result;
 

@@ -1,9 +1,7 @@
 //cpp
+#include "types.h"
 /* ExpandingHeap::VGetNodeID() at 0x0203c3e0 -- Heap vtable slot (VGetNodeID).
  * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-
-typedef unsigned int u32;
-
 class ExpandingHeapAllocator
 {
 public:

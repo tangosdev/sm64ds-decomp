@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct Obj {
     char pad[0x64];
     u32 unk64;

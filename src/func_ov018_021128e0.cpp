@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov018_021128e0
-// @emits IceSheet_OnGroundPounded
+// recovered name: IceSheet_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* daObjIceBoard_c::OnGroundPounded - recovered from vtable slot identity */
 struct C {
@@ -14,7 +14,7 @@ struct C {
   virtual void p28(); virtual void p29(); virtual void p30(); virtual void f7c();
 };
 struct A { char pad[8]; int kind; };
-extern "C" void IceSheet_OnGroundPounded(C *c, A *a){
+extern "C" void func_ov018_021128e0(C *c, A *a){
   if(a == 0) return;
   if(a->kind != 2) return;
   c->f7c();

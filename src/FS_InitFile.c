@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 void FS_InitFile(int *s)
 {
     s[0] = 0;

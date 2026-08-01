@@ -1,12 +1,10 @@
+#include "types.h"
 /* _ZN4Clam8BehaviorEv @ 0x0211aa58 (ov064, size 0x26c)
  * Chain-chomp-like enemy bark/lunge update: state 0 barks on anim frame
  * 0x19 (smoke puff, 10-frame shake), lunges (state 1) after 150 frames if
  * the player is near; state 1 returns to idle after 150 frames, toggling
  * the collision bit on anim frames 8/15. Hurts a touched player each frame.
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern char data_ov064_0211c9cc[];
 extern char data_ov064_0211c9bc[];
 

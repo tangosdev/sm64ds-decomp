@@ -8,9 +8,9 @@
  * raw data_0209b478 label.
  */
 
-extern unsigned char PLAYER_VOICE_GROUP; /* 0x0209b478 */
+extern unsigned char data_0209b478; /* 0x0209b478 */
 
 void _ZN5Sound21UnsetPlayerVoiceGroupEv(void)
 {
-    PLAYER_VOICE_GROUP = 0;
+    data_0209b478 = 0;
 }

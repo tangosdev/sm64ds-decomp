@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player20St_CeilingGrate_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* st);
 extern int _ZN6Player12FinishedAnimEv(char* c);

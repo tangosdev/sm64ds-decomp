@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct Obj Obj;
 
 typedef struct Owner {

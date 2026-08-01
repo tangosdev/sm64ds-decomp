@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov062_0211b3ac
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-
 struct PathPtr { int a, b; };
 extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern "C" void _ZN7PathPtrC1Ev(PathPtr* self);

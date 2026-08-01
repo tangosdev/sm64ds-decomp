@@ -3,7 +3,7 @@ typedef int Fix12i;
 extern void func_ov096_02136e54(Actor* t, int x);
 extern Actor* _ZN5Actor13ClosestPlayerEv(Actor* self);
 extern Fix12i Vec3_HorzDist(const void* a, const void* b);
-#define M(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define M(p) ((long long)(int)(p))
 void func_ov096_02136fd4(Actor* thiz)
 {
     char* c = (char*)thiz;

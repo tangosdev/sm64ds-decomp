@@ -1,2 +1,2 @@
-extern unsigned char G[];
-void func_0201ef38(void) { G[0] &= ~8; }
+extern unsigned char data_0209d45c[];
+void func_0201ef38(void) { data_0209d45c[0] &= ~8; }

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov027_02111eb4
-// @emits daPgDfdr_c_InitResources
+// recovered name: daPgDfdr_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -29,7 +29,7 @@ extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vec
 
 struct RG { char pad[0x54]; };
 
-int daPgDfdr_c_InitResources(void *cc)
+int func_ov027_02111eb4(void *cc)
 {
     char *c = (char*)cc;
     int i;

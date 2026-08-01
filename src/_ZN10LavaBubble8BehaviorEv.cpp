@@ -1,17 +1,15 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10LavaBubble8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "LavaBubble.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int Fix12;
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct CylinderClsn;
 struct WithMeshClsn;
 
 extern "C" {
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12 d);
+int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
 void _ZN9ActorBase18MarkForDestructionEv(void* self);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);

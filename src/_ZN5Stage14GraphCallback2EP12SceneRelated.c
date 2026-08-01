@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol _ZN5Stage14GraphCallback2EP12SceneRelated
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
 // Stage::GraphCallback2 - sets BG3 affine transform from SceneRelated
-typedef int s32;
-typedef unsigned short u16;
-typedef volatile u16 vu16;
-
 struct Matrix2x2 {
     s32 unk0;
     s32 unk4;

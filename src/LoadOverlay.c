@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 void func_02018c00(void *dst, int a, int id);
 int func_0203d7b8(void);
 struct Pair;

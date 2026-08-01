@@ -1,5 +1,5 @@
 extern void *_ZTV4View;
-extern void *_ZTV12ActorDerived;
+extern void *data_0208e4b8;
 extern void *_ZN9ActorBaseD2Ev(void *self);
 
 struct View {
@@ -9,7 +9,7 @@ struct View {
 void *_ZN4ViewD1Ev(struct View *self)
 {
     self->vtable = &_ZTV4View;
-    self->vtable = &_ZTV12ActorDerived;
+    self->vtable = &data_0208e4b8;
     _ZN9ActorBaseD2Ev(self);
     return self;
 }

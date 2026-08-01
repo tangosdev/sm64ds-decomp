@@ -2,7 +2,7 @@
 // @symbol func_ov018_0211123c
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjSm_Lift_c.h"
-// @emits daObjSm_Lift_c_OnHitByMegaChar
+// recovered name: daObjSm_Lift_c_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
 /* daObjSm_Lift_c::OnHitByMegaChar - recovered from vtable slot identity */
 struct Player {
@@ -13,7 +13,7 @@ struct Platform {
     void KillByMegaChar(Player &);
 };
 
-extern "C" void daObjSm_Lift_c_OnHitByMegaChar(char *c, void *p) {
+extern "C" void func_ov018_0211123c(char *c, void *p) {
     struct daObjSm_Lift_c *self = (struct daObjSm_Lift_c *)(void *)c;
     ((Player *)p)->IncMegaKillCount();
     ((Platform *)c)->KillByMegaChar(*(Player *)p);

@@ -1,7 +1,4 @@
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
+#include "types.h"
 extern void func_02012694(int a, void *b);
 extern int _ZN5Actor14GetSubtractionEss(char *self, s16 a, s16 b);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *self);

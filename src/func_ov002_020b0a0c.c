@@ -1,12 +1,8 @@
+#include "types.h"
 /* func_ov002_020b0a0c at 0x020b0a0c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
-
-typedef signed char s8;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u32 d, s8 e);
 extern u8 data_0209f2c0[];
 

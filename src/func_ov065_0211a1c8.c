@@ -1,15 +1,12 @@
+#include "types.h"
 // @symbol func_ov065_0211a1c8
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjCtMecha03_c.h"
-// @emits daObjCtMecha03_c_Behavior
+// recovered name: daObjCtMecha03_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjCtMecha03_c::Behavior - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern u16 DecIfAbove0_Short(u16* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
 extern int RandomIntInternal(int* seed);
@@ -21,7 +18,7 @@ extern int data_0209e650;
 
 #define I16(off) (*(short*)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFFLL))
 
-int daObjCtMecha03_c_Behavior(char* c)
+int func_ov065_0211a1c8(char* c)
 {
     struct daObjCtMecha03_c *self = (struct daObjCtMecha03_c *)(void *)c;
     if (data_0209f2c0 != 3) {

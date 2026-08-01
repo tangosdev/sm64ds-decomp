@@ -1,18 +1,9 @@
+#include "types.h"
 // @symbol func_ov100_02144a38
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int s32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
-
-
-
 extern void func_020072c0(void);
 extern char data_ov100_02148204[];
 

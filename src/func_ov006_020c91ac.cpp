@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern "C" {
 void func_ov006_020ca2ec(void *c);
 int _ZNK9Animation12WillHitFrameEi(void *thisPtr, int frame);

@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player9DropActorEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned int u32;
-typedef unsigned long long u64;
 struct State;
 struct Player;
 extern "C" int _ZN6Player7IsStateERNS_5StateE(Player* thiz, State* s);

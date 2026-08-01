@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player14St_Squish_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern u8 data_ov002_0211117c;
 extern char data_ov002_0211013c;
 extern char data_ov002_021101b4;

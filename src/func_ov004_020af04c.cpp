@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov004_020af04c
-// @emits dScMgBase_c_OnHitFromUnderneath
+// recovered name: dScMgBase_c_OnHitFromUnderneath
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -43,7 +43,7 @@ struct Obj : Base {
     char pad[0x4627];
 };
 
-extern "C" void dScMgBase_c_OnHitFromUnderneath(Obj *self) {
+extern "C" void func_ov004_020af04c(Obj *self) {
     func_02012e1c((char*)self);
     *(int*)((char*)self + 0x4628) = 0;
     func_ov004_020b91fc((char*)self + 0xf4);

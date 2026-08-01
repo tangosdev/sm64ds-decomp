@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct {
     u32   unk0;
     void *ptr;      /* +4 */

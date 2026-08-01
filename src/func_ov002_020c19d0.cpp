@@ -1,7 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 extern "C" {
 void _ZN11RaycastLineC1Ev(void* self);
 void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* act);

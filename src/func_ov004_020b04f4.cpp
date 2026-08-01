@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
-// @emits dScMgBase_c_BeforeRender
+// recovered name: dScMgBase_c_BeforeRender
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeRender - recovered from vtable slot identity */
 // NONMATCHING: register allocation (div=17). Logic verified correct vs ROM; not
@@ -18,7 +18,7 @@ extern "C" int _ZN5Scene12BeforeRenderEv(struct Scene *);
 
 struct Ent { char pad[0x1a]; s16 f; char pad2[4]; };
 
-extern "C" int dScMgBase_c_BeforeRender(void *c)
+extern "C" int func_ov004_020b04f4(void *c)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     int i;

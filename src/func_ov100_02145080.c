@@ -17,7 +17,7 @@ int func_ov100_02145080(char* c, void* arg1)
             goto ret1;
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x2b, 0x7f, 0, 0x7222, 0);
         {
-            unsigned char* p = (unsigned char*)(((int)c + 0x145) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* p = (unsigned char*)(((int)c + 0x145));
             *p += 1;
         }
         return 0;

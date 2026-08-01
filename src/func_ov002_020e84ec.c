@@ -1,13 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020e84ec
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef short s16;
-
-
-
 struct Flags { unsigned short b0 : 1; };
 
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);

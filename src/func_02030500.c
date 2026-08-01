@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-
+#include "types.h"
 extern void func_02019028(void);
 extern void _ZN2GX15DisableAllBanksEv(void);
 extern void _ZN2GX12SetBankForBGEt(u16 b);

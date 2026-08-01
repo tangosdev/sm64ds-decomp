@@ -33,10 +33,10 @@ int func_ov085_0212d73c(char *c)
     _Z14ApproachLinearRiii((int *)(c + 0x98), 0x28000, 0x2000);
     _Z14ApproachLinearRsss((s16 *)(c + 0x94), Vec3_HorzAngle((Vector3 *)(c + 0x5c), &data_ov085_0213084c), (s16)*(int *)(c + 0x2cc));
     *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
-    *(int *)(((int)c + 0x2cc) & 0xFFFFFFFFFFFFFFFF) += 5;
+    *(int *)(((int)c + 0x2cc)) += 5;
     if (*(int *)(c + 0x2cc) > 0x800)
         *(int *)(c + 0x2cc) = 0x800;
-    *(int *)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int *)(((int)c + 0x2c8)) += 1;
     if (*(int *)(c + 0x2c8) < 0x19)
         return 1;
     v[1].x = -0x50c000;

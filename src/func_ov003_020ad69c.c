@@ -1,5 +1,5 @@
 // @symbol func_ov003_020ad69c
-// @emits dScTitle_c_OnYoshiTryEat
+// recovered name: dScTitle_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -9,7 +9,7 @@ extern int _ZTV5Stage[];
 extern int data_0208e4b8[];
 extern void *data_020a0eac;
 
-int *dScTitle_c_OnYoshiTryEat(int *t)
+int *func_ov003_020ad69c(int *t)
 {
     t[0] = (int)data_ov003_020b1650;
     t[0] = (int)_ZTV5Stage;

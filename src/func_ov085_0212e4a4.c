@@ -25,7 +25,7 @@ int func_ov085_0212e4a4(unsigned int self)
             *(int *)(self + 0x5c) = v.x;
             *(int *)(self + 0x60) = v.y;
             *(int *)(self + 0x64) = v.z;
-            *(int *)(((long long)((int)(self + 0x5c))) & 0xFFFFFFFFFFFFFFFFLL) -= 0x3e8000;
+            *(int *)(((long long)((int)(self + 0x5c)))) -= 0x3e8000;
             *(int *)(self + 0x60) = *(int *)(p + 0x644) + 0x3e8000;
             *(int *)(self + 0x2a4) = *(int *)(self + 0x5c);
             *(int *)(self + 0x2a8) = *(int *)(self + 0x60);

@@ -1,15 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020f897c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int s32;
-typedef short s16;
-typedef signed char s8;
-typedef unsigned char u8;
-
-
-
-
 extern void* _ZN5Actor18ClosestWithActorIDEj(void* self, u32 id);
 extern int RandomIntInternal(int* seed);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);

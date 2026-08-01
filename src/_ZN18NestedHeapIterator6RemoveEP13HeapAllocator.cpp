@@ -1,11 +1,9 @@
 //cpp
+#include "types.h"
 // @symbol _ZN18NestedHeapIterator6RemoveEP13HeapAllocator
 /* recovered: named members + shared header, real C++ method */
 #include "NestedHeapIterator.h"
 struct HeapAllocator;
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 struct NHI { void* head; void* tail; u16 count; u16 off; };
 
 void NestedHeapIterator::Remove(HeapAllocator * node_)

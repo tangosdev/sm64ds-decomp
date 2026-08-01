@@ -1,7 +1,4 @@
-
-typedef short s16;
-typedef unsigned int u32;
-typedef int Fix12i;
+#include "types.h"
 extern int data_0209f32c;
 extern int data_020a0e68;
 extern void *data_ov032_02113a50[];

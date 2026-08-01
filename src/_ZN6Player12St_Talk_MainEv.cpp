@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player12St_Talk_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-typedef int s32;
-
 extern "C" {
 extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 vol, int t);
 extern int _ZN6Player6IsAnimEj(void* c, u32 a);

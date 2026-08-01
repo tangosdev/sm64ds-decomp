@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13UpDownLiftBbh13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -9,9 +10,6 @@
  * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  * natural signed /2 spelling; mwcc synthesizes add/lsr#31/asr#1 itself and
  * self-schedules the byte store into the ROM slot */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(int sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);

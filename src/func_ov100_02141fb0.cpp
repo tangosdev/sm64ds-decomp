@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov100_02141fb0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
-
 struct Obj {
     virtual u32 v00(); virtual u32 v01(); virtual u32 v02(); virtual u32 v03();
     virtual u32 v04(); virtual u32 v05(); virtual u32 v06(); virtual u32 v07();
@@ -51,7 +45,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
     if ((fl & 0x10) != 0) {
         Vector3_16 s;
         u32 r = thiz->m();
-        *(int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) += r;
+        *(int *)(((int)c + 0x60)) += r;
         s.x = 0; s.y = 0; s.z = 0;
         func_020ada40(c, &s, a, 0);
         _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x110);

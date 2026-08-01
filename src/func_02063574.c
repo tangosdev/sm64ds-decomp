@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 extern int func_020614d0(void);
 extern void WM_SetCallbackTable(int i, int val);
 extern int WM_SendCommand(int a, int b, int c, int d, int e);

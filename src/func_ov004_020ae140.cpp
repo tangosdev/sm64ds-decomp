@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov004_020ae140
-// @emits dScMgBase_c_OnKicked
+// recovered name: dScMgBase_c_OnKicked
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnKicked - recovered from vtable slot identity */
 struct Obj {
@@ -16,9 +16,9 @@ struct Obj {
     virtual void method78();
 };
 
-extern "C" int dScMgBase_c_OnKicked(Obj* self);
+extern "C" int func_ov004_020ae140(Obj* self);
 
-int dScMgBase_c_OnKicked(Obj* self) {
+int func_ov004_020ae140(Obj* self) {
     void* base = (char*)self + 0x4000;
     int v2 = *(int*)((char*)base + 0x628);
     int v1 = *(int*)((char*)base + 0x62c);

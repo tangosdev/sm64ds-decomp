@@ -1,17 +1,16 @@
+#include "types.h"
 /* _ZN12MeshColliderC1Ev - MeshCollider constructor.
  * Attempt 3: constructor returns self (C++ C1 ctors return this).
  * ROM has mov r0,r4 before final str+epilogue - this is "return self" pattern.
  * Adding return self fixes: pool offset (0x18->0x1c) AND mov r0,r4 at +0x20.
  */
-typedef unsigned int u32;
-
 struct MeshColliderBase { u32 _pad[8]; }; /* sizeof=0x20 */
 
 extern void _ZN16MeshColliderBaseC2Ev(struct MeshColliderBase* self);
 
 extern void func_02038228(u32* obj);
 
-extern void* MeshCollider_vtable;
+extern void* _ZTV12MeshCollider;
 
 struct MeshCollider {
     void* vtable;                 /* 0x00 */
@@ -24,7 +23,7 @@ struct MeshCollider {
 struct MeshCollider* _ZN12MeshColliderC1Ev(struct MeshCollider* self)
 {
     _ZN16MeshColliderBaseC2Ev((struct MeshColliderBase*)self);
-    self->vtable = &MeshCollider_vtable;
+    self->vtable = &_ZTV12MeshCollider;
     func_02038228(&self->fld24);
     self->fld20 = 0;
     return self;

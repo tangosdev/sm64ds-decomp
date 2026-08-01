@@ -13,12 +13,12 @@ struct PathPtr {
 };
 
 extern "C" {
-BMD_File* Model_LoadFile(SharedFilePtr& p);
-int ModelBase_SetFile(void* self, BMD_File* f, int a, int b);
-void Animation_LoadFile(SharedFilePtr& p);
+BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& p);
+int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
+void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& p);
 void LoadSilverStarAndNumber(void);
-void ShadowModel_InitCylinder(void* self);
-void MovingCylinderClsnWithPos_Init(void* self, Actor* a, const Vector3& v, int fix12, int c, unsigned int d, unsigned int e);
+void _ZN11ShadowModel12InitCylinderEv(void* self);
+void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, const Vector3& v, int fix12, int c, unsigned int d, unsigned int e);
 void func_ov100_02143b18(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov002_0211092c;
@@ -32,29 +32,29 @@ extern int data_ov100_021486f4;
 
 extern "C" int _ZN14UnchainedChomp13InitResourcesEv(unsigned char* thiz)
 {
-    Model_LoadFile(data_ov002_0211092c);
-    ModelBase_SetFile(thiz + 0x30c, Model_LoadFile(data_ov100_021486bc), 1, -1);
-    Model_LoadFile(data_ov100_021486a4);
-    Animation_LoadFile(data_ov100_021486ac);
-    Animation_LoadFile(data_ov100_021486b4);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0211092c);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(thiz + 0x30c, _ZN5Model8LoadFileER13SharedFilePtr(data_ov100_021486bc), 1, -1);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov100_021486a4);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021486ac);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021486b4);
     LoadSilverStarAndNumber();
 
     {
         int i = 0;
         unsigned char* p = thiz + 0x370;
         do {
-            ModelBase_SetFile(p, *(BMD_File**)((char*)&data_ov100_021486a4 + 4), 1, -1);
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(p, *(BMD_File**)((char*)&data_ov100_021486a4 + 4), 1, -1);
             i++;
             p += 0x50;
         } while (i < 6);
     }
 
-    ShadowModel_InitCylinder(thiz + 0x640);
+    _ZN11ShadowModel12InitCylinderEv(thiz + 0x640);
     {
         int i = 0;
         unsigned char* p = thiz + 0x550;
         do {
-            ShadowModel_InitCylinder(p);
+            _ZN11ShadowModel12InitCylinderEv(p);
             i++;
             p += 0x28;
         } while (i < 6);
@@ -78,7 +78,7 @@ extern "C" int _ZN14UnchainedChomp13InitResourcesEv(unsigned char* thiz)
         v.x = data_ov100_02148008[0];
         v.y = data_ov100_02148008[1];
         v.z = data_ov100_02148008[2];
-        MovingCylinderClsnWithPos_Init(thiz + 0x110, (Actor*)thiz, v,
+        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(thiz + 0x110, (Actor*)thiz, v,
             0xaa000, 0x140000, 0x200004, 0x6010);
     }
 

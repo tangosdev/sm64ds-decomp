@@ -3,12 +3,12 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMg3DEsp_c.h"
-// @emits dScMg3DEsp_c_OnYoshiTryEat_020e9c20
+// recovered name: dScMg3DEsp_c_OnYoshiTryEat_020e9c20
 /* recovered: renamed to Class_Method */
 /* dScMg3DEsp_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern char* func_020beb68;
 
-void dScMg3DEsp_c_OnYoshiTryEat_020e9c20(char* c, int a)
+void func_ov006_020e9c20(char* c, int a)
 {
     struct dScMg3DEsp_c *self = (struct dScMg3DEsp_c *)(void *)c;
     func_ov006_020e984c(c);

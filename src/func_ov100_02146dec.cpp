@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov100_02146dec
-// @emits daObjPathLift_c_OnYoshiTryEat
+// recovered name: daObjPathLift_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -16,7 +16,7 @@ extern void* _ZTV17ExclamationSwitch[];
 extern void* data_020a0eac;
 
 
-void* daObjPathLift_c_OnYoshiTryEat(char* p){
+void* func_ov100_02146dec(char* p){
   *(void***)p = (void**)data_ov100_0214857c;
   _ZN11ShadowModelD1Ev(p+0x450);
   *(void***)p = (void**)data_ov002_0210af70;

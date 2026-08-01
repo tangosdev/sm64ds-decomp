@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 extern u8 IsAreaShowing(int idx);

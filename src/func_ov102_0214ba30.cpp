@@ -16,7 +16,7 @@ extern "C" void func_ov102_0214ba30(char* c)
     }
     func_ov102_0214c0b8(c);
     {
-        int* f = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+        int* f = (int*)(((int)c + 0xb0));
         *f = *f | 0x10000001;
     }
     *(unsigned char*)(c + 0x3f3) = 1;

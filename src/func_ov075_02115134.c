@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 extern int func_ov075_02115290(int dummy, int col);
 extern void func_ov075_021149d0(char* dst, int val);
 extern void func_02012790(int x);

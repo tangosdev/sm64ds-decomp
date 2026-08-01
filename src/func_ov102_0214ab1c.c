@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
 extern int _ZN6Player16IsInsideOfCannonEv(void *player);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *player);
@@ -22,7 +20,7 @@ int func_ov102_0214ab1c(u8 *self)
         goto ret0;
     }
 
-    *(unsigned int *)(((int)(self + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10000000u;
+    *(unsigned int *)(((int)(self + 0xb0))) &= ~0x10000000u;
 
     void *player = *(void **)(self + 0xd0);
     if (player != 0) {
@@ -33,7 +31,7 @@ int func_ov102_0214ab1c(u8 *self)
             goto shocked;
         }
         if (func_ov102_0214b248(self) == 0) {
-            *(unsigned int *)(((int)(self) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0xe0000u;
+            *(unsigned int *)(((int)(self) + 0xb0)) &= ~0xe0000u;
             self[0x107] = 0;
             return 1;
         }
@@ -49,7 +47,7 @@ after_cannon:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, *(void **)((char *)&data_ov102_0214e9c0 + 4), 0, 0x1000, 0);
         *(u16 *)(self + 0x3e8) = 0x200;
         *(int *)(self + 0x9c) = -0x2000;
-        *(unsigned int *)(((int)(self + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) &= ~2u;
+        *(unsigned int *)(((int)(self + 0x128))) &= ~2u;
     }
 
     if (r4 == 2) {
@@ -64,7 +62,7 @@ after_cannon:
 
     if (self[0x107] != 0) {
         if (*(u16 *)(self + 0x104) == 5) {
-            *(unsigned int *)(((int)(self + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x8000u;
+            *(unsigned int *)(((int)(self + 0x128))) &= ~0x8000u;
         }
     }
 

@@ -1,19 +1,19 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
-extern int G4[];
-extern int G5[];
-extern int G6[];
+extern int data_ov002_0210da40[];
+extern int data_ov002_0210d9a0[];
+extern int data_ov002_0210d9c0[];
+extern int data_ov062_0211e0fc[];
+extern int data_ov062_0211e114[];
+extern int data_ov062_0211e10c[];
+extern int data_ov062_0211e104[];
 int _ZN6Klepto16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
-    _ZN13SharedFilePtr7ReleaseEv(G3);
-    _ZN13SharedFilePtr7ReleaseEv(G4);
-    _ZN13SharedFilePtr7ReleaseEv(G5);
-    _ZN13SharedFilePtr7ReleaseEv(G6);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da40);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9c0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0fc);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e114);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e10c);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e104);
     return 1;
 }

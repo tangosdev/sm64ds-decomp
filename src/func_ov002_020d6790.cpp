@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 struct Obj {
   virtual int v0(); virtual int v1(); virtual int v2(); virtual int v3();
   virtual int v4(); virtual int v5(); virtual int v6(); virtual int v7();

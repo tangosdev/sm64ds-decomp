@@ -37,7 +37,7 @@ extern "C" int func_ov102_0214aa18(Actor *self)
         }
         if (((WithMeshClsn2*)(s + 0x144))->IsOnGround() == 0)
             return 1;
-        int *fl = (int*)(((int)s + 0x128) & 0xFFFFFFFFFFFFFFFF);
+        int *fl = (int*)(((int)s + 0x128));
         *fl = *fl & ~2;
         *(unsigned char*)(s + 0x3f5) = 3;
         func_ov102_0214c0b8(s);

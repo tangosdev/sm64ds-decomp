@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void func_ov066_02119454(void* c, void* p);
 extern int RandomIntInternal(int* seed);

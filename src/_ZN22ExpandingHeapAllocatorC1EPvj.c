@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol _ZN22ExpandingHeapAllocatorC1EPvj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_HeapAllocator.h"
@@ -7,9 +8,6 @@
 // magic 'HPXE', zeroes the two u16 counters at +0x34/+0x36, clears bit 0 of
 // the +0x36 flags, creates the initial free node ('FR') spanning the heap
 // range at +0x18/+0x1c, and initializes the node list head/tail at +0x24.
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 typedef struct {
     void *start;
     void *end;

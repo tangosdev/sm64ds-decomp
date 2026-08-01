@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8Particle10SysTracker10InitialiseEv
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_Heap.h"
@@ -6,10 +7,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__SysTracker.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern "C" void DecompressLZ16(const void* src, void* dst);
 
 

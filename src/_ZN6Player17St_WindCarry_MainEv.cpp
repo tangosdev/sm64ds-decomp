@@ -1,12 +1,10 @@
 //cpp
-typedef int Fix12;
-typedef unsigned char u8;
-
+#include "types.h"
 struct State;
 struct Player {
     int St_WindCarry_Main();
     void ChangeState(State& st);
-    int SetAnim(unsigned int a, int b, Fix12 c, unsigned int d);
+    int SetAnim(unsigned int a, int b, Fix12i c, unsigned int d);
     int FinishedAnim();
 };
 

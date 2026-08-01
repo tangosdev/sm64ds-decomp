@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov014_021115ec
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
 extern "C" {
     void _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *snd);
     void *_ZN5Actor10FindWithIDEj(unsigned id);

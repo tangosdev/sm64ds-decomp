@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" void *WM_GetSystemWork(void);
 
 struct CP15 { static void InvalidateDataCache(u32 addr, u32 len); };

@@ -1,17 +1,13 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_021243ec
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
-// @emits dScMgTrampoline2_c_InitResources
+// recovered name: dScMgTrampoline2_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-
 extern "C" {
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void Camera_UpdateMatrices(void *cam);
@@ -41,7 +37,7 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int dScMgTrampoline2_c_InitResources(char *base)
+extern "C" int func_ov006_021243ec(char *base)
 {
     struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)base;
     s32 fov;

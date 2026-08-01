@@ -1,15 +1,9 @@
+#include "types.h"
 // @symbol func_ov100_02146828
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-
-
-
 extern int data_0209caa0[];
 extern int data_0209f32c[];
 extern int data_0209e650;

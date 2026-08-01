@@ -1,9 +1,9 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020b36dc
-// @emits BigBrickBlock_OnKicked
+// recovered name: BigBrickBlock_OnKicked
 /* recovered: renamed to Class_Method */
 /* daObjBlockL_c::OnKicked - recovered from vtable slot identity */
-typedef unsigned short u16;
 struct State { int pad[2]; int field8; };
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
@@ -17,7 +17,7 @@ struct Base {
     virtual void m();
 };
 
-extern "C" void BigBrickBlock_OnKicked(Base *self, struct State *st)
+extern "C" void func_ov002_020b36dc(Base *self, struct State *st)
 {
     int b1 = (int)(*(u16 *)((char *)self + 0xc) == 0x2e);
     int r1;

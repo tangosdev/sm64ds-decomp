@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjFl_Seesaw_c.h"
-// @emits daObjFl_Seesaw_c_InitResources
+// recovered name: daObjFl_Seesaw_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjFl_Seesaw_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12;
@@ -27,7 +27,7 @@ extern CLPS_Block data_ov064_0211bacc;
 extern "C" void func_020393d4(int *p, int v);
 extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 
-extern "C" int daObjFl_Seesaw_c_InitResources(char *c)
+extern "C" int func_ov022_02111ea0(char *c)
 {
     struct daObjFl_Seesaw_c *self = (struct daObjFl_Seesaw_c *)(void *)c;
     BMD_File *f = Model::LoadFile(data_ov022_021145a8);

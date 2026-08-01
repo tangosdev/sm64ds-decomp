@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern char data_020a4d54[];
 extern char data_020a4d60[];
 

@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int Fix12i;
+#include "types.h"
 #define LAUNDER16(p) ((u16 *)(int)(((long long)(int)(p))))
 extern "C" {
 extern u8 data_0209f2d8;

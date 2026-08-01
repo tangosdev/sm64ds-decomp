@@ -1,10 +1,9 @@
+#include "types.h"
 // @symbol _ZN18SolidHeapAllocatorC1EPvj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_HeapAllocator.h"
 /* recovered: named members + shared header */
 #include "SolidHeapAllocator.h"
-typedef unsigned int u32;
-
 struct FreeList { void* begin; void* end; int flags; };
 
 

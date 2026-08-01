@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *func_02071910(void *a, void *b);
 extern void func_02072dac(void *x, void *b);
 /* Unprototyped on purpose: the two call sites pass different argument lists.

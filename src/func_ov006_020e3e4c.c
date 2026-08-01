@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 void func_ov006_020e3e4c(char *base, int i)
 {
     int n = i * 0x24;

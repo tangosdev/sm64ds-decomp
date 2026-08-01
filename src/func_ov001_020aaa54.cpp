@@ -1,9 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 int _ZN6Player15IsCollectingCapEv(void* p);
 int func_ov001_020aa960(int x, void* arg);
 void* _ZN5Actor10FindWithIDEj(u32 id);

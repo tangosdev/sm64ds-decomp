@@ -9,7 +9,7 @@ typedef short s16;
 
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern "C" void ApproachLinear(s16& v, s16 target, s16 step);
+extern "C" void _Z14ApproachLinearRsss(s16& v, s16 target, s16 step);
 struct CylinderClsn { void Clear(); void Update(); };
 struct Animation { void Advance(); };
 struct Actor { void UpdatePos(CylinderClsn* c); };
@@ -38,7 +38,7 @@ extern "C" int func_ov081_02127070(Obj* self)
         self->f94 = self->f8e;
         self->f98 = d;
     } else {
-        ApproachLinear(self->f8e, Vec3_HorzAngle(&self->pos, &self->target), 0x2bc);
+        _Z14ApproachLinearRsss(self->f8e, Vec3_HorzAngle(&self->pos, &self->target), 0x2bc);
         self->f94 = self->f8e;
     }
     ((Animation*)self->anim)->Advance();

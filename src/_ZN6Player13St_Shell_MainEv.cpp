@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player13St_Shell_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_ClsnResult.h"
@@ -6,14 +7,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef long long s64;
-typedef s32 Fix12;
-
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov002_020eeca8(void* c, int arg);
@@ -27,7 +20,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern void func_ov002_020e28d4(char* c, int a, int b);
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void Player_AdvanceAnims(char* c);
 
 extern u8 data_020a0e40;

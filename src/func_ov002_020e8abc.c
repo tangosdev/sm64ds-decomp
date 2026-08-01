@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void func_02035860(char *o, void *src);

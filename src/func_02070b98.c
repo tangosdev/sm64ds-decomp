@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
 void func_02070c68(void* x);
 void func_020715e0(void* thiz, int val);
 

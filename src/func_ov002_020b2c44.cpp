@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020b2c44
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef short s16;
-typedef int Fix12i;
-
-
 struct Mtx43 { Fix12i a[12]; };
 struct RaycastGround { char buf[0x68 - 0x18]; };
 

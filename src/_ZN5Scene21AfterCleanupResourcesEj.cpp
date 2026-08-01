@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" {
   unsigned char data_02092660;
   void _ZN9ActorBase21AfterCleanupResourcesEj(void* thiz, u32 x);

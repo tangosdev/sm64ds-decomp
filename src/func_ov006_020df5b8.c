@@ -1,10 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef short s16;
-typedef unsigned int u32;
-
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_ov006_020deaf0(char* p, int key, int a, int b);
 extern int RandomIntInternal(int* seed);

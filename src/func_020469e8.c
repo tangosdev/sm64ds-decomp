@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 struct Entry {
     u16 id;     /* +0x00 */
     u16 p2;

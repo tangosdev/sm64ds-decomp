@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov100_02140e44
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
-
-
 extern "C" {
 void _Z14ApproachLinearRiii(int* p, int a, int b);
 void* _ZN5Actor13ClosestPlayerEv(void* self);
@@ -29,7 +24,7 @@ void _ZN12CylinderClsn6UpdateEv(void* c);
 
 extern s16 data_02082214[];
 
-#define L(p) ((int)(((s64)(int)(p)) & 0xffffffffffffffffLL))
+#define L(p) ((int)(((s64)(int)(p))))
 
 extern "C" void func_ov100_02140e44(char* c)
 {

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 extern int data_ov006_0212efec[];
 
 extern int* _ZN3G2S13GetBG0CharPtrEv(void);

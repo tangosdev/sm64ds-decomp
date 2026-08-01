@@ -1,9 +1,6 @@
+#include "types.h"
 // ExpandingHeap::VDeallocate(void* ptr)
 // Address: 0x0203c50c
-
-typedef unsigned int u32;
-typedef int s32;
-
 struct ExpandingHeapAllocator;
 
 extern void _ZN22ExpandingHeapAllocator10DeallocateEPv(struct ExpandingHeapAllocator* self, void* ptr);

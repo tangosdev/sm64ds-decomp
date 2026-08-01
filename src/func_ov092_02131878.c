@@ -5,7 +5,7 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int data_ov092_02132074[];
 extern int data_ov092_02132080[];
 extern short data_02082214[];
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LA(p) (((long long)(int)(p)))
 
 void func_ov092_02131878(char* c, char* a1, unsigned int a2){
   unsigned char f = *(unsigned char*)(c+0x575);

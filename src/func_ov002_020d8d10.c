@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov002_020d8d10
 /* recovered: shared common types */
 #include "common.h"
@@ -5,11 +6,6 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned short u16;
-
 extern s16 data_02082214[];
 struct Callback;
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

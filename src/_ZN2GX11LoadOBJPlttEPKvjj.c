@@ -5,10 +5,10 @@ extern void DMASyncHalfTransfer(int channel, const void* src, void* dest, unsign
 extern void MultiCopyHalf(const void* src, void* dest, unsigned int count);
 
 // The global at 0x02099fd0: DMA channel number (or -1)
-extern int gDMAChannel;
+extern int data_02099fd0;
 
 void _ZN2GX11LoadOBJPlttEPKvjj(const void* src, unsigned int offset, unsigned int size) {
-    int channel = gDMAChannel;
+    int channel = data_02099fd0;
     if (channel != -1) {
         DMASyncHalfTransfer(channel, src, (void*)((char*)0x05000200 + offset), size);
     } else {

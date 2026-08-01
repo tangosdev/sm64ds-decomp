@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "daObjC1_Trap_c.h"
-// @emits daObjC1_Trap_c_InitResources
+// recovered name: daObjC1_Trap_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjC1_Trap_c::InitResources - recovered from vtable slot identity */
 
@@ -19,7 +19,7 @@ extern void _ZN16MeshColliderBase6EnableEP5Actor(void* p, void* a);
 
 extern short data_02082214[];
 
-int daObjC1_Trap_c_InitResources(char* c)
+int func_ov010_02111654(char* c)
 {
     struct daObjC1_Trap_c *self = (struct daObjC1_Trap_c *)(void *)c;
     self->unk_3aa = 0;

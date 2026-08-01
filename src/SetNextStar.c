@@ -1,6 +1,5 @@
+#include "types.h"
 extern int SublevelToLevel(int i);
-
-typedef unsigned char u8;
 extern signed char data_02092110;
 extern u8 data_0209f1f0;
 extern u8 data_0209f2d8;

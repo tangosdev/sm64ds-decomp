@@ -1,11 +1,7 @@
+#include "types.h"
 /* func_ov002_020c8540 at 0x020c8540 (ov002)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
 extern int _ZNK6Player14GetBodyModelIDEjb(void* thiz, unsigned int a, int b);
 extern int _ZNK9Animation12WillHitFrameEi(void* thiz, int f);
 extern void func_0201f32c(int arg0);

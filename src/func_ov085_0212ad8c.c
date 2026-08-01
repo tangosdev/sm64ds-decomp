@@ -4,8 +4,8 @@ extern struct G data_ov085_021305c0;
 
 int func_ov085_0212ad8c(char *c)
 {
-    int *a = (int *)(((int)c + 0x12c) & 0xFFFFFFFFFFFFFFFF);
-    int *b = (int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
+    int *a = (int *)(((int)c + 0x12c));
+    int *b = (int *)(((int)c + 0x128));
     *(int *)(c + 0x9c) = -0x1000;
     *(unsigned char *)(c + 0x426) = 1;
     *a &= ~0x1000;

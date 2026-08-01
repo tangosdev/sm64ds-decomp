@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov007_020b0da0
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
 extern short data_02082214[];
 
 extern int _ZN4cstd4fdivEii(int a, int b);

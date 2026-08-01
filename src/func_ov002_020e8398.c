@@ -1,8 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020e8398
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef long long s64;
 enum { false, true };
 struct ShadowModel;
 struct Matrix4x3;

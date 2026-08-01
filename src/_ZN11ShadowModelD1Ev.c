@@ -21,22 +21,22 @@ struct ShadowModel {
     struct ShadowModel *next; /* 0x24 */
 };
 
-extern void *vtbl_ShadowModel[];
-extern struct ShadowModel *gShadowModelListHead; /* 0x0209cef4 */
-extern void ModelBase_dtor(struct ShadowModel *thiz); /* 0x020170b8 */
+extern void *_ZTV11ShadowModel[];
+extern struct ShadowModel *data_0209cef4; /* 0x0209cef4 */
+extern void _ZN9ModelBaseD2Ev(struct ShadowModel *thiz); /* 0x020170b8 */
 
 struct ShadowModel *_ZN11ShadowModelD1Ev(struct ShadowModel *thiz)
 {
     struct ShadowModel *prev;
     struct ShadowModel *next;
 
-    thiz->vtable = (void *)vtbl_ShadowModel;
+    thiz->vtable = (void *)_ZTV11ShadowModel;
 
     prev = thiz->prev;
     if (prev) {
         prev->next = thiz->next;
-    } else if (gShadowModelListHead == thiz) {
-        gShadowModelListHead = thiz->next;
+    } else if (data_0209cef4 == thiz) {
+        data_0209cef4 = thiz->next;
     }
 
     next = thiz->next;
@@ -47,6 +47,6 @@ struct ShadowModel *_ZN11ShadowModelD1Ev(struct ShadowModel *thiz)
     thiz->prev = 0;
     thiz->next = 0;
 
-    ModelBase_dtor(thiz);
+    _ZN9ModelBaseD2Ev(thiz);
     return thiz;
 }

@@ -1,7 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 extern void func_ov004_020af948(void* a, int b, int c, void* m);
 extern void DrawOamSprite(void* a, int b, int c, void* m);
 extern void* data_ov006_02139c6c[];

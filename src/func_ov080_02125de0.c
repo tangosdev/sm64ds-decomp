@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void func_ov080_02125d64(char* c);
 extern char data_ov080_021277a8[];
 

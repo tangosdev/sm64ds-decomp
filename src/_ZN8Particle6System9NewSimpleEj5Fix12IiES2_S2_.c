@@ -9,7 +9,7 @@ struct ParticleSysTracker {
     void* manager; // at +4
 };
 
-extern struct ParticleSysTracker* PARTICLE_SYS_TRACKER;
+extern struct ParticleSysTracker* data_0209ee74;
 extern void* _ZN8Particle7Manager9AddSystemEiR7Vector3(void* mgr, u32 uniqueID, Vector3* pos);
 
 void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 uniqueID, s32 x, s32 y, s32 z) {
@@ -20,6 +20,6 @@ void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 uniqueID, s32 x, s32 y,
     pos.x = xv;
     pos.y = yv;
     pos.z = zv;
-    void* mgr = PARTICLE_SYS_TRACKER->manager;
+    void* mgr = data_0209ee74->manager;
     return _ZN8Particle7Manager9AddSystemEiR7Vector3(mgr, uniqueID, &pos);
 }

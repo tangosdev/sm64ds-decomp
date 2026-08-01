@@ -1,9 +1,5 @@
 //cpp
-typedef int s32;
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
+#include "types.h"
 extern "C" int _ZN4cstd4fdivEii(int a, int b);
 extern s16 data_02082214[];
 

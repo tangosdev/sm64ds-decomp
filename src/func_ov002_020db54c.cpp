@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020db54c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned short u16;
-
 struct State;
 extern "C" void func_02035860(void *a, struct Vector3 *v);
 extern struct State data_ov002_021101cc;

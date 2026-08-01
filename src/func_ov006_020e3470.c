@@ -1,14 +1,14 @@
 // @symbol func_ov006_020e3470
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCurling_c.h"
-// @emits dScMgCurling_c_OnYoshiTryEat_020e3470
+// recovered name: dScMgCurling_c_OnYoshiTryEat_020e3470
 /* recovered: renamed to Class_Method */
 /* dScMgCurling_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov006_020e3388(void*);
 extern void func_ov006_020e3250(void*);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void*,unsigned short,unsigned short,unsigned short,unsigned short);
 extern int func_ov004_020adc1c(void);
-void dScMgCurling_c_OnYoshiTryEat_020e3470(unsigned char* c){
+void func_ov006_020e3470(unsigned char* c){
     struct dScMgCurling_c *self = (struct dScMgCurling_c *)(void *)c;
   self->unk_4eac=0;
   func_ov006_020e3388(c);

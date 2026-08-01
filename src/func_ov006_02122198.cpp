@@ -1,17 +1,13 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_02122198
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline_c.h"
-// @emits dScMgTrampoline_c_InitResources
+// recovered name: dScMgTrampoline_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline_c::InitResources - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
 extern "C" {
 
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
@@ -43,7 +39,7 @@ struct Obj {
     virtual void m48(int a);
 };
 
-extern "C" int dScMgTrampoline_c_InitResources(char *base)
+extern "C" int func_ov006_02122198(char *base)
 {
     struct dScMgTrampoline_c *self = (struct dScMgTrampoline_c *)(void *)base;
     s32 fov;

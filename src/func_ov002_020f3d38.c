@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
+#include "types.h"
 void func_ov002_020f3d38(char *c, int i)
 {
     int off = i * 0x4c;

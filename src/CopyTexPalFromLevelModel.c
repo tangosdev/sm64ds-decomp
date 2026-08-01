@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct Tex { char* name; char pad[0x10]; };   /* stride 0x14 */
 struct Pal { char* name; char pad[0xc]; };     /* stride 0x10 */
 

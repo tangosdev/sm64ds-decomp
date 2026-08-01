@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 

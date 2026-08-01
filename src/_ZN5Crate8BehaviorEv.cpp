@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Crate8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Actor.h"
@@ -6,10 +7,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Crate.h"
 /* _ZN5Crate8BehaviorEv at 0x02139b0c */
-typedef unsigned int u32;
-typedef unsigned char u8;
-
-
 enum Bool { FALSE, TRUE };
 
 extern u32 data_0209b454;

@@ -1,11 +1,8 @@
+#include "types.h"
 /* DMASyncWordTransfer at 0x0205a160
  * Synchronous 32-bit DMA transfer: waits for the DMA channel to be free,
  * starts a word copy, then waits again until completion.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 extern void DMAStartTransferFB(u8 channel, u32 src, u32 dest, u32 ctrl);
 
 static volatile u32* const DMA_BASE = (volatile u32*)0x040000b0;

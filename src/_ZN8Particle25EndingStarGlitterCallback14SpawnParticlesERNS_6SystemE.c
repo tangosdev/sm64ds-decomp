@@ -1,11 +1,7 @@
+#include "types.h"
 // @symbol _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE
 /* recovered: named members + shared header */
 #include "Particle__EndingStarGlitterCallback.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef int s32;
-typedef short s16;
-
 struct System;
 
 /* EndingStarGlitterCallback fields at large offsets (around 0x300) */

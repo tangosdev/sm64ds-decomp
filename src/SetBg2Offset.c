@@ -1,2 +1,2 @@
-extern short A[]; extern short B[];
-void SetBg2Offset(int a, int b) { A[0] = a; B[0] = b; }
+extern short data_0209d49c[]; extern short data_0209d478[];
+void SetBg2Offset(int a, int b) { data_0209d49c[0] = a; data_0209d478[0] = b; }

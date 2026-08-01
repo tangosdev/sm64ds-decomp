@@ -1,7 +1,4 @@
-
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 extern void func_02012718(void *a, int b);
 extern u8 data_020a0e40;
 extern u8 data_020a0de8[];

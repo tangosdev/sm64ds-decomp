@@ -3,3 +3,209 @@
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
     .data       start:0x02112a00 end:0x02114020 kind:data align:32
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
+src/func_ov036_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov036_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov036_0211123c.c:
+    complete
+    .text start:0x0211123c end:0x02111284
+
+src/func_ov036_02111284.c:
+    .text start:0x02111284 end:0x021112c8
+
+src/func_ov036_021112c8.cpp:
+    complete
+    .text start:0x021112c8 end:0x021112f0
+
+src/func_ov036_021112f0.c:
+    complete
+    .text start:0x021112f0 end:0x0211137c
+
+src/func_ov036_0211137c.cpp:
+    .text start:0x0211137c end:0x02111414
+
+src/SwingingPlatform_Spawn.c:
+    complete
+    .text start:0x02111414 end:0x02111444
+
+src/func_ov036_02111444.c:
+    .text start:0x02111444 end:0x02111494
+
+src/func_ov036_02111494.c:
+    .text start:0x02111494 end:0x021114f8
+
+src/func_ov036_021114f8.c:
+    complete
+    .text start:0x021114f8 end:0x0211150c
+
+src/func_ov036_0211150c.c:
+    complete
+    .text start:0x0211150c end:0x02111544
+
+src/RotatingPlatformRr_Spawn.c:
+    .text start:0x02111544 end:0x02111580
+
+src/_ZN18RotatingPlatformRrD1Ev.cpp:
+    .text start:0x02111580 end:0x021115b0
+
+src/_ZN18RotatingPlatformRrD0Ev.c:
+    complete
+    .text start:0x021115b0 end:0x021115f4
+
+src/_ZN18RotatingPlatformRr16CleanupResourcesEv.c:
+    complete
+    .text start:0x021115f4 end:0x02111618
+
+src/func_ov036_02111618.c:
+    complete
+    .text start:0x02111618 end:0x0211169c
+
+src/_ZN18RotatingPlatformRr6RenderEv.cpp:
+    complete
+    .text start:0x0211169c end:0x021116c0
+
+src/_ZN18RotatingPlatformRr8BehaviorEv.cpp:
+    .text start:0x021116c0 end:0x02111854
+
+src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp:
+    .text start:0x02111854 end:0x02111904
+
+src/ShipWing_Spawn.c:
+    complete
+    .text start:0x02111904 end:0x0211193c
+
+src/_ZN8ShipWingD1Ev.c:
+    .text start:0x0211193c end:0x02111988
+
+src/_ZN8ShipWingD0Ev.c:
+    .text start:0x02111988 end:0x021119e8
+
+src/_ZN8ShipWing16CleanupResourcesEv.cpp:
+    .text start:0x021119e8 end:0x02111a2c
+
+src/_ZN8ShipWing16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02111a2c end:0x02111a30
+
+src/_ZN8ShipWing6RenderEv.cpp:
+    complete
+    .text start:0x02111a30 end:0x02111a64
+
+src/_ZN8ShipWing8BehaviorEv.cpp:
+    .text start:0x02111a64 end:0x02111bb8
+
+src/_ZN8ShipWing13InitResourcesEv.cpp:
+    .text start:0x02111bb8 end:0x02111ca4
+
+src/func_ov036_02111ca4.cpp:
+    complete
+    .text start:0x02111ca4 end:0x02111cc4
+
+src/func_ov036_02111cc4.c:
+    complete
+    .text start:0x02111cc4 end:0x02111cd8
+
+src/DonutBlock_Spawn.c:
+    complete
+    .text start:0x02111cd8 end:0x02111d14
+
+src/_ZN10DonutBlockD1Ev.c:
+    .text start:0x02111d14 end:0x02111d58
+
+src/_ZN10DonutBlockD0Ev.c:
+    .text start:0x02111d58 end:0x02111db0
+
+src/_ZN10DonutBlock16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x02111db0 end:0x02111df8
+
+src/_ZN10DonutBlock6RenderEv.cpp:
+    complete
+    .text start:0x02111df8 end:0x02111e20
+
+src/_ZN10DonutBlock8BehaviorEv.cpp:
+    .text start:0x02111e20 end:0x02111eb0
+
+src/_ZN10DonutBlock13InitResourcesEv.cpp:
+    .text start:0x02111eb0 end:0x02111f5c
+
+src/ArmedRotatingPlatform_Spawn.c:
+    complete
+    .text start:0x02111f5c end:0x02111f8c
+
+src/_ZN21ArmedRotatingPlatformD1Ev.cpp:
+    complete
+    .text start:0x02111f8c end:0x0211200c
+
+src/_ZN21ArmedRotatingPlatformD0Ev.c:
+    complete
+    .text start:0x0211200c end:0x021120a0
+
+src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp:
+    .text start:0x021120a0 end:0x021120b4
+
+src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp:
+    .text start:0x021120b4 end:0x021120c8
+
+src/TrickyTriangles_Spawn.cpp:
+    complete
+    .text start:0x021120c8 end:0x02112158
+
+src/func_ov036_02112158.cpp:
+    complete
+    .text start:0x02112158 end:0x021121c8
+
+src/func_ov036_021121c8.cpp:
+    complete
+    .text start:0x021121c8 end:0x0211224c
+
+src/func_ov036_0211224c.cpp:
+    complete
+    .text start:0x0211224c end:0x021122c0
+
+src/func_ov036_021122c0.cpp:
+    complete
+    .text start:0x021122c0 end:0x02112318
+
+src/func_ov036_02112318.cpp:
+    complete
+    .text start:0x02112318 end:0x02112378
+
+src/func_ov036_02112378.cpp:
+    complete
+    .text start:0x02112378 end:0x021123c8
+
+src/func_ov036_021123c8.cpp:
+    complete
+    .text start:0x021123c8 end:0x0211244c
+
+src/func_ov036_0211244c.cpp:
+    .text start:0x0211244c end:0x02112538
+
+src/FlyingCarpet_Spawn.cpp:
+    complete
+    .text start:0x02112538 end:0x021125b0
+
+src/__sinit_ov036_021125b0.c:
+    .init start:0x021125b0 end:0x0211261c
+
+src/__sinit_ov036_0211261c.c:
+    .init start:0x0211261c end:0x02112688
+
+src/__sinit_ov036_02112688.c:
+    .init start:0x02112688 end:0x021126c8
+
+src/__sinit_ov036_021126c8.c:
+    .init start:0x021126c8 end:0x02112730
+
+src/__sinit_ov036_02112730.c:
+    .init start:0x02112730 end:0x0211279c
+
+src/__sinit_ov036_0211279c.c:
+    .init start:0x0211279c end:0x02112944
+
+src/__sinit_ov036_02112944.c:
+    .init start:0x02112944 end:0x021129dc

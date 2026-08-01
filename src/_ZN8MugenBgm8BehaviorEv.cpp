@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8MugenBgm8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MugenBgm.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
 typedef struct 
 {
   s32 x;

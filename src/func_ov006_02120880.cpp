@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_02120880
-// @emits dScMgTrampoline_c_OnYoshiTryEat
+// recovered name: dScMgTrampoline_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern "C" int data_020a0eac;
 extern "C" void __destroy_arr(void *p, int a, int b, void (*fn)());
 extern "C" void _ZN8Particle10SysTrackerD1Ev(void *p);
 
-extern "C" void *dScMgTrampoline_c_OnYoshiTryEat(char *thiz)
+extern "C" void *func_ov006_02120880(char *thiz)
 {
     *(int**)thiz = &data_ov006_0213fb34;
     __destroy_arr(thiz + 0x5cd0, 5, 0x24, &func_ov006_02120938);

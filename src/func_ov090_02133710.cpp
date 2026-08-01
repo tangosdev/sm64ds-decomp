@@ -15,7 +15,7 @@ void func_ov090_02133710(char* c) {
     struct Vector3 v;
     struct Vector3 v2;
     void* a;
-    *(int*)(((int)c + 0x384) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int*)(((int)c + 0x384)) += 1;
     if (*(int*)(c + 0x384) > 2) *(int*)(c + 0x384) = 0;
     v.x = 0;
     v.y = 0;

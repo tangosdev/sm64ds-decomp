@@ -11,7 +11,7 @@ void func_ov084_0212f204(char* r4){
   {
     char* p = *(char**)(r4 + 0x460);
     if (p != 0) {
-      struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+      struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c));
       v.x = pp->x;
       v.y = pp->y;
       v.z = pp->z;

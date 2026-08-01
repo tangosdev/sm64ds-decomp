@@ -1,8 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 enum Bool { FALSE, TRUE };
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);

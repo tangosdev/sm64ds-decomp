@@ -1,17 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov074_0211fd74
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-
-
 extern "C" {
     int func_ov074_02121a20(void* c, int idx);
     int func_ov074_021207b8(void* c);

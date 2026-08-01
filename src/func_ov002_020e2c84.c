@@ -1,12 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020e2c84
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
-
 struct Camera;
 
 extern int func_ov002_020e3078(char *self, void *s);

@@ -1,15 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_02129268
-// @emits dScMgSnowball_c_InitResources
+// recovered name: dScMgSnowball_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef volatile unsigned int vu32;
-typedef volatile unsigned short vu16;
-
 extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void *_ZN2G212GetBG3ScrPtrEv(void);
@@ -32,7 +27,7 @@ extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMgSnowball_c_InitResources(void *arg0)
+int func_ov006_02129268(void *arg0)
 {
     u8 *r4 = (u8 *)arg0;
     void *buf;

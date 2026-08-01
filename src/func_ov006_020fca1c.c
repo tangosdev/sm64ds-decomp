@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #pragma opt_common_subs off
 
 extern void func_ov006_020fb8fc(char *c, int a2, int a3, int a4, int a5, int a6);

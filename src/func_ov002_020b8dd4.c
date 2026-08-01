@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjPushblock_c.h"
-// @emits daObjPushblock_c_Behavior
+// recovered name: daObjPushblock_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjPushblock_c::Behavior - recovered from vtable slot identity */
 typedef short s16;
@@ -29,7 +29,7 @@ extern int Vec3_Dist(Vector3 *a, Vector3 *b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
 
-int daObjPushblock_c_Behavior(char *c)
+int func_ov002_020b8dd4(char *c)
 {
     struct daObjPushblock_c *self = (struct daObjPushblock_c *)(void *)c;
     Vector3 v;

@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 struct BF { u16 pad : 7; u16 b7 : 1; u16 b8 : 1; u16 b9 : 1; u16 rest : 6; };
 
 enum { false, true };

@@ -4,3 +4,160 @@
     .ctor       start:0x0211242c end:0x02112444 kind:rodata align:4
     .data       start:0x02112460 end:0x02113180 kind:data align:32
     .bss        start:0x02113180 end:0x02113280 kind:bss align:32
+src/func_ov045_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov045_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov045_0211123c.c:
+    complete
+    .text start:0x0211123c end:0x02111274
+
+src/func_ov045_02111274.cpp:
+    complete
+    .text start:0x02111274 end:0x0211129c
+
+src/func_ov045_0211129c.c:
+    complete
+    .text start:0x0211129c end:0x021113ec
+
+src/func_ov045_021113ec.c:
+    complete
+    .text start:0x021113ec end:0x021114a8
+
+src/func_ov045_021114a8.cpp:
+    complete
+    .text start:0x021114a8 end:0x021114c8
+
+src/func_ov045_021114c8.c:
+    complete
+    .text start:0x021114c8 end:0x021114dc
+
+src/FireSeaElevator_Spawn.c:
+    complete
+    .text start:0x021114dc end:0x0211150c
+
+src/_ZN15FireSeaElevatorD1Ev.c:
+    .text start:0x0211150c end:0x02111558
+
+src/_ZN15FireSeaElevatorD0Ev.c:
+    .text start:0x02111558 end:0x021115b8
+
+src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp:
+    .text start:0x021115b8 end:0x021115f0
+
+src/_ZN15FireSeaElevator6RenderEv.cpp:
+    complete
+    .text start:0x021115f0 end:0x02111618
+
+src/_ZN15FireSeaElevator8BehaviorEv.cpp:
+    .text start:0x02111618 end:0x02111738
+
+src/_ZN15FireSeaElevator13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111738 end:0x02111808
+
+src/PoleLift_Spawn.c:
+    complete
+    .text start:0x02111808 end:0x02111840
+
+src/_ZN8PoleLiftD1Ev.cpp:
+    .text start:0x02111840 end:0x02111878
+
+src/_ZN8PoleLiftD0Ev.c:
+    complete
+    .text start:0x02111878 end:0x021118c4
+
+src/func_ov045_021118c4.cpp:
+    complete
+    .text start:0x021118c4 end:0x021118f8
+
+src/func_ov045_021118f8.c:
+    complete
+    .text start:0x021118f8 end:0x02111938
+
+src/_ZN8PoleLift16CleanupResourcesEv.cpp:
+    .text start:0x02111938 end:0x02111970
+
+src/_ZN8PoleLift16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02111970 end:0x02111974
+
+src/_ZN8PoleLift6RenderEv.cpp:
+    complete
+    .text start:0x02111974 end:0x021119c0
+
+src/_ZN8PoleLift8BehaviorEv.cpp:
+    complete
+    .text start:0x021119c0 end:0x02111a30
+
+src/_ZN8PoleLift13InitResourcesEv.cpp:
+    .text start:0x02111a30 end:0x02111ad4
+
+src/ExtendingPlatform_Spawn.c:
+    complete
+    .text start:0x02111ad4 end:0x02111b14
+
+src/func_ov045_02111b14.c:
+    .text start:0x02111b14 end:0x02111b64
+
+src/func_ov045_02111b64.c:
+    .text start:0x02111b64 end:0x02111bc8
+
+src/func_ov045_02111bc8.c:
+    .text start:0x02111bc8 end:0x02111bdc
+
+src/func_ov045_02111bdc.c:
+    .text start:0x02111bdc end:0x02111bf4
+
+src/FloatingFloorBfs_Spawn.c:
+    .text start:0x02111bf4 end:0x02111c30
+
+src/_ZN16FloatingFloorBfsD1Ev.c:
+    .text start:0x02111c30 end:0x02111c80
+
+src/_ZN16FloatingFloorBfsD0Ev.c:
+    .text start:0x02111c80 end:0x02111ce4
+
+src/_ZN16FloatingFloorBfs16CleanupResourcesEv.c:
+    .text start:0x02111ce4 end:0x02111cf8
+
+src/_ZN16FloatingFloorBfs13InitResourcesEv.c:
+    .text start:0x02111cf8 end:0x02111d0c
+
+src/TiltingPlatformBfs_Spawn.c:
+    .text start:0x02111d0c end:0x02111d48
+
+src/_ZN12FallBlockBfsD1Ev.c:
+    .text start:0x02111d48 end:0x02111d98
+
+src/_ZN12FallBlockBfsD0Ev.c:
+    .text start:0x02111d98 end:0x02111dfc
+
+src/_ZN12FallBlockBfs16CleanupResourcesEv.c:
+    .text start:0x02111dfc end:0x02111e10
+
+src/_ZN12FallBlockBfs13InitResourcesEv.c:
+    .text start:0x02111e10 end:0x02111e24
+
+src/FallBlockBfs_Spawn.c:
+    .text start:0x02111e24 end:0x02111e60
+
+src/__sinit_ov045_021121a8.c:
+    .init start:0x021121a8 end:0x02112214
+
+src/__sinit_ov045_02112214.c:
+    .init start:0x02112214 end:0x02112280
+
+src/__sinit_ov045_02112280.c:
+    .init start:0x02112280 end:0x021122ec
+
+src/__sinit_ov045_021122ec.c:
+    .init start:0x021122ec end:0x02112358
+
+src/__sinit_ov045_02112358.c:
+    .init start:0x02112358 end:0x021123c0
+
+src/__sinit_ov045_021123c0.c:
+    .init start:0x021123c0 end:0x0211242c

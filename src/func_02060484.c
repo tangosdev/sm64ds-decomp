@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern char data_020a8180[];
 extern int data_020a6134[];
 void OS_SleepThread(void* p);

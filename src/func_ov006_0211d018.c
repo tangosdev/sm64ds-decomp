@@ -1,8 +1,4 @@
-
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned char u8;
+#include "types.h"
 void func_ov006_0211d018(char *base, int idx)
 {
   int off = idx * 0x1c;

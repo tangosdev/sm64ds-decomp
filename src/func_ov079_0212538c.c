@@ -1,19 +1,19 @@
 // Per-frame update: advance two sub-animations, seed a velocity from a table when a
 // phase counter is zero, bail early below phase 8, then integrate an angle and derive a
 // clamped speed (two variants by a mode flag). Sibling of func_ov079_02124530.
-extern void func_ov079_g0(void *p);
-extern void func_ov079_g1(void *p);
-extern void func_ov079_g2(void *p);
+extern void func_01ffb0b0(void *p);
+extern void func_01ffb0a4(void *p);
+extern void _ZN9Animation7AdvanceEv(void *p);
 extern void func_0201267c(int a, void *p);
-extern int data_021275e4[];
+extern int data_ov079_021275e4[];
 
 void func_ov079_0212538c(char *c)
 {
-    func_ov079_g0(c + 0x418);
-    func_ov079_g1(c + 0x418);
-    func_ov079_g2(c + 0x31c);
+    func_01ffb0b0(c + 0x418);
+    func_01ffb0a4(c + 0x418);
+    _ZN9Animation7AdvanceEv(c + 0x31c);
     if (*(unsigned short *)(c + 0x100) == 0)
-        *(int *)(c + 0xa8) = data_021275e4[*(unsigned char *)(c + 0x414)];
+        *(int *)(c + 0xa8) = data_ov079_021275e4[*(unsigned char *)(c + 0x414)];
     if (*(unsigned short *)(c + 0x100) < 8) return;
     short *a = (short *)(c + 0x8c);
     if (*(unsigned char *)(c + 0x414)) {

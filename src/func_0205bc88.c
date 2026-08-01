@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void FS_InitFile(int* s);
 extern void func_0205c4e4(void* self, int value);
 extern int func_0205c5e4(void* self, int x);

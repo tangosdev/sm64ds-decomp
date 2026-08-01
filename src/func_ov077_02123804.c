@@ -1,8 +1,8 @@
 // @symbol func_ov077_02123804
-// @emits Lakitu_OnYoshiTryEat
+// recovered name: Lakitu_OnYoshiTryEat
 /* recovered: renamed to Class_Method */
 /* daJgm_c::OnYoshiTryEat - recovered from vtable slot identity */
-int Lakitu_OnYoshiTryEat(void)
+int func_ov077_02123804(void)
 {
     return 6;
 }

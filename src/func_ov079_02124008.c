@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
 void Matrix4x3_ApplyInPlaceToRotationX(void*, s16);

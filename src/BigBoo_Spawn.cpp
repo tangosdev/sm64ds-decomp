@@ -1,6 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned int u32;
 void* _ZN9ActorBasenwEj(u32 sz);
 void _ZN8CapEnemyC2Ev(void* t);
 void _ZN25MovingCylinderClsnWithPosC1Ev(void* t);

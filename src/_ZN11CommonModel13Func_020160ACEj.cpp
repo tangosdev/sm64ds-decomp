@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct Holder {
     char _pad[0x24];
     u32 count;

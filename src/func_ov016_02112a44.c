@@ -1,5 +1,5 @@
 // @symbol func_ov016_02112a44
-// @emits daObjKi_Hasira_c_OnYoshiTryEat
+// recovered name: daObjKi_Hasira_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -8,7 +8,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjKi_Hasira_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjKi_Hasira_c_OnYoshiTryEat(int *t)
+int *func_ov016_02112a44(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

@@ -1,5 +1,5 @@
 // @symbol func_ov006_02118ae4
-// @emits dScMgSmartball_c_Kill
+// recovered name: dScMgSmartball_c_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern unsigned char data_0209d454[];
 
-void dScMgSmartball_c_Kill(void)
+void func_ov006_02118ae4(void)
 {
     int f;
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 4;

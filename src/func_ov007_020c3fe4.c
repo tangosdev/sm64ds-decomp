@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 struct Inner {
     s32 x;      /* 0x00 */
     s32 y;      /* 0x04 */

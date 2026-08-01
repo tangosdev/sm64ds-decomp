@@ -1,10 +1,10 @@
 // @symbol func_ov006_0212aa74
-// @emits dScMgFlower_c_OnYoshiTryEat_0212aa74
+// recovered name: dScMgFlower_c_OnYoshiTryEat_0212aa74
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::OnYoshiTryEat - recovered from vtable slot identity */
-/* dScMgFlower_c_OnYoshiTryEat_0212aa74 at 0x0212aa74
+/* func_ov006_0212aa74 at 0x0212aa74
  *
  * Wraps a counter at this+0x5fe4 (increments while <= 0x14, else resets
  * to 0), then updates the sub-object at this+0x51f8 (func_ov006_020c3bc8)
@@ -17,7 +17,7 @@
  * block instead of folding into the this+0x5000 base and if-converting.
  */
 
-void dScMgFlower_c_OnYoshiTryEat_0212aa74(char *self)
+void func_ov006_0212aa74(char *self)
 {
     if (*(int *)(self + 0x5fe4) <= 0x14) {
         (*(volatile int *)(((long long)(int)(self + 0x5fe4))))++;

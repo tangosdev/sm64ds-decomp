@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void CpuCopy8(int a, void *b, int n);
 extern char data_020a0fb8[];
 extern int data_020a0f70;

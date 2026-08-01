@@ -4,3 +4,147 @@
     .ctor       start:0x02113734 end:0x02113740 kind:rodata align:4
     .data       start:0x02113760 end:0x021149a0 kind:data align:32
     .bss        start:0x021149a0 end:0x02114aa0 kind:bss align:32
+src/_ZN12WorkElevatorD1Ev.cpp:
+    complete
+    .text start:0x021111a0 end:0x02111214
+
+src/_ZN12WorkElevatorD0Ev.c:
+    complete
+    .text start:0x02111214 end:0x0211129c
+
+src/func_ov021_0211129c.c:
+    complete
+    .text start:0x0211129c end:0x02111434
+
+src/func_ov021_02111434.c:
+    .text start:0x02111434 end:0x021115dc
+
+src/_ZN12WorkElevator16CleanupResourcesEv.cpp:
+    .text start:0x021115dc end:0x02111650
+
+src/_ZN12WorkElevator6RenderEv.cpp:
+    complete
+    .text start:0x02111650 end:0x021116c8
+
+src/func_ov021_02111ec4.c:
+    complete
+    .text start:0x02111ec4 end:0x02111edc
+
+src/func_ov021_02111edc.cpp:
+    complete
+    .text start:0x02111edc end:0x02111f1c
+
+src/func_ov021_02111f1c.c:
+    complete
+    .text start:0x02111f1c end:0x02111f34
+
+src/func_ov021_02111f34.cpp:
+    complete
+    .text start:0x02111f34 end:0x02111f74
+
+src/func_ov021_02111f74.c:
+    complete
+    .text start:0x02111f74 end:0x02111f8c
+
+src/func_ov021_02111f8c.cpp:
+    complete
+    .text start:0x02111f8c end:0x02111fcc
+
+src/func_ov021_02111fcc.c:
+    complete
+    .text start:0x02111fcc end:0x02111fe4
+
+src/func_ov021_02111fe4.c:
+    complete
+    .text start:0x02111fe4 end:0x02112024
+
+src/func_ov021_02112024.cpp:
+    complete
+    .text start:0x02112024 end:0x02112128
+
+src/func_ov021_02112128.c:
+    complete
+    .text start:0x02112128 end:0x02112168
+
+src/WorkElevator_Spawn.cpp:
+    complete
+    .text start:0x02112168 end:0x021121e8
+
+src/_ZN11RollingRockD1Ev.c:
+    complete
+    .text start:0x021121e8 end:0x02112230
+
+src/_ZN11RollingRockD0Ev.c:
+    complete
+    .text start:0x02112230 end:0x0211228c
+
+src/func_ov021_0211228c.c:
+    complete
+    .text start:0x0211228c end:0x02112294
+
+src/func_ov021_02112294.c:
+    complete
+    .text start:0x02112294 end:0x021122fc
+
+src/func_ov021_021122fc.cpp:
+    complete
+    .text start:0x021122fc end:0x021123b0
+
+src/func_ov021_021123b0.c:
+    complete
+    .text start:0x021123b0 end:0x02112544
+
+src/func_ov021_02112544.cpp:
+    .text start:0x02112544 end:0x021127b4
+
+src/func_ov021_021127b4.c:
+    complete
+    .text start:0x021127b4 end:0x021127f8
+
+src/_ZN11RollingRock16CleanupResourcesEv.c:
+    complete
+    .text start:0x021127f8 end:0x0211281c
+
+src/_ZN11RollingRock6RenderEv.cpp:
+    complete
+    .text start:0x0211281c end:0x02112854
+
+src/_ZN11RollingRock8BehaviorEv.c:
+    complete
+    .text start:0x02112854 end:0x02112b2c
+
+src/_ZN11RollingRock13InitResourcesEv.cpp:
+    complete
+    .text start:0x02112b2c end:0x02112d64
+
+src/RollingRock_Spawn.c:
+    complete
+    .text start:0x02112d64 end:0x02112db4
+
+src/_ZN10ShutterHmcD1Ev.c:
+    .text start:0x02112db4 end:0x02112e04
+
+src/_ZN10ShutterHmcD0Ev.c:
+    .text start:0x02112e04 end:0x02112e68
+
+src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
+    .text start:0x02112e68 end:0x02112e7c
+
+src/_ZN10ShutterHmc8BehaviorEv.cpp:
+    complete
+    .text start:0x02112e7c end:0x02112ec0
+
+src/_ZN10ShutterHmc13InitResourcesEv.cpp:
+    .text start:0x02112ec0 end:0x02112ed4
+
+src/ShutterHmc_Spawn.c:
+    .text start:0x02112ed4 end:0x02112f10
+
+src/__sinit_ov021_02113500.c:
+    .init start:0x02113500 end:0x02113688
+
+src/__sinit_ov021_02113688.c:
+    .init start:0x02113688 end:0x021136c8
+
+src/__sinit_ov021_021136c8.c:
+    .init start:0x021136c8 end:0x02113734

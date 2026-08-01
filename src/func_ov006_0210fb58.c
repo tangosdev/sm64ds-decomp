@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);

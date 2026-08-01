@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 typedef struct Actor {
     char pad[0xb0];
     u32 flags;

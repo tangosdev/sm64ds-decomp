@@ -1,11 +1,9 @@
+#include "types.h"
 /* func_ov006_02105de4 @ 0x02105de4 (ov006, size 0x264)
  * Touch-grid minigame: find the cursor slot whose fixed-point position is
  * within 16px of the level's target cell, mark it captured, flip a 2x2/3x3
  * quad of grid cells around it and start their flash timers.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 typedef struct Obj {
     char _p0[0x4cb8];
     int count;                       /* 0x4cb8 */

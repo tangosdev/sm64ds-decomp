@@ -1,5 +1,5 @@
-extern void *_ZTV5Scene;
-extern void *_ZTV12ActorDerived;
+extern void *_ZTV5Stage;
+extern void *data_0208e4b8;
 extern void *_ZN9ActorBaseD2Ev(void *self);
 
 struct Scene {
@@ -8,8 +8,8 @@ struct Scene {
 
 void *_ZN5SceneD1Ev(struct Scene *self)
 {
-    self->vtable = &_ZTV5Scene;
-    self->vtable = &_ZTV12ActorDerived;
+    self->vtable = &_ZTV5Stage;
+    self->vtable = &data_0208e4b8;
     _ZN9ActorBaseD2Ev(self);
     return self;
 }

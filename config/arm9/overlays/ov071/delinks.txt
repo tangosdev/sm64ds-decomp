@@ -4,3 +4,339 @@
     .ctor       start:0x02122b30 end:0x02122b40 kind:rodata align:4
     .data       start:0x02122b60 end:0x02122f80 kind:data align:32
     .bss        start:0x02122f80 end:0x02123100 kind:bss align:32
+src/_ZN10ScuttlebugD1Ev.cpp:
+    .text start:0x0211f000 end:0x0211f048
+
+src/_ZN10ScuttlebugD0Ev.c:
+    complete
+    .text start:0x0211f048 end:0x0211f0a4
+
+src/func_ov071_0211f0a4.c:
+    complete
+    .text start:0x0211f0a4 end:0x0211f0ac
+
+src/func_ov071_0211f0ac.c:
+    complete
+    .text start:0x0211f0ac end:0x0211f0b4
+
+src/func_ov071_0211f0b4.c:
+    complete
+    .text start:0x0211f0b4 end:0x0211f148
+
+src/func_ov071_0211f148.cpp:
+    .text start:0x0211f148 end:0x0211f29c
+
+src/func_ov071_0211f29c.cpp:
+    complete
+    .text start:0x0211f29c end:0x0211f498
+
+src/func_ov071_0211f498.c:
+    complete
+    .text start:0x0211f498 end:0x0211f524
+
+src/func_ov071_0211f524.cpp:
+    complete
+    .text start:0x0211f524 end:0x0211f694
+
+src/func_ov071_0211f694.c:
+    complete
+    .text start:0x0211f694 end:0x0211f6f8
+
+src/func_ov071_0211f6f8.cpp:
+    complete
+    .text start:0x0211f6f8 end:0x0211f7d4
+
+src/func_ov071_0211f7d4.c:
+    .text start:0x0211f7d4 end:0x0211f8d0
+
+src/func_ov071_0211f8d0.cpp:
+    complete
+    .text start:0x0211f8d0 end:0x0211fa54
+
+src/func_ov071_0211fa54.c:
+    complete
+    .text start:0x0211fa54 end:0x0211fb0c
+
+src/func_ov071_0211fb0c.c:
+    complete
+    .text start:0x0211fb0c end:0x0211fb24
+
+src/func_ov071_0211fb24.cpp:
+    .text start:0x0211fb24 end:0x0211fbf4
+
+src/func_ov071_0211fbf4.c:
+    complete
+    .text start:0x0211fbf4 end:0x0211fc60
+
+src/func_ov071_0211fc60.c:
+    complete
+    .text start:0x0211fc60 end:0x0211fcd4
+
+src/func_ov071_0211fcd4.c:
+    complete
+    .text start:0x0211fcd4 end:0x0211fd58
+
+src/func_ov071_0211fd58.cpp:
+    complete
+    .text start:0x0211fd58 end:0x0211fe38
+
+src/func_ov071_0211fe38.c:
+    complete
+    .text start:0x0211fe38 end:0x0211fee4
+
+src/func_ov071_0211fee4.cpp:
+    complete
+    .text start:0x0211fee4 end:0x0211ff84
+
+src/func_ov071_0211ff84.c:
+    complete
+    .text start:0x0211ff84 end:0x02120028
+
+src/func_ov071_02120028.c:
+    complete
+    .text start:0x02120028 end:0x02120130
+
+src/func_ov071_02120130.c:
+    complete
+    .text start:0x02120130 end:0x021201b4
+
+src/func_ov071_021201b4.cpp:
+    complete
+    .text start:0x021201b4 end:0x02120200
+
+src/func_ov071_02120200.c:
+    complete
+    .text start:0x02120200 end:0x02120278
+
+src/func_ov071_02120278.cpp:
+    complete
+    .text start:0x02120278 end:0x021202b4
+
+src/func_ov071_021202b4.cpp:
+    complete
+    .text start:0x021202b4 end:0x021202ec
+
+src/Scuttlebug_SetState.c:
+    complete
+    .text start:0x021202ec end:0x02120308
+
+src/_ZN10Scuttlebug16CleanupResourcesEv.c:
+    complete
+    .text start:0x02120308 end:0x02120338
+
+src/_ZN10Scuttlebug16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02120338 end:0x0212033c
+
+src/_ZN10Scuttlebug6RenderEv.cpp:
+    complete
+    .text start:0x0212033c end:0x02120398
+
+src/_ZN10Scuttlebug8BehaviorEv.cpp:
+    .text start:0x02120398 end:0x021203f8
+
+src/_ZN10Scuttlebug13InitResourcesEv.cpp:
+    .text start:0x021203f8 end:0x02120580
+
+src/func_ov071_02120580.cpp:
+    complete
+    .text start:0x02120580 end:0x02120618
+
+src/Scuttlebug_Spawn.c:
+    complete
+    .text start:0x02120618 end:0x02120668
+
+src/_ZN3MrID1Ev.cpp:
+    .text start:0x02120668 end:0x021206b0
+
+src/_ZN3MrID0Ev.c:
+    complete
+    .text start:0x021206b0 end:0x0212070c
+
+src/func_ov071_0212070c.c:
+    complete
+    .text start:0x0212070c end:0x02120860
+
+src/func_ov071_02120860.cpp:
+    complete
+    .text start:0x02120860 end:0x021209c8
+
+src/func_ov071_021209c8.cpp:
+    complete
+    .text start:0x021209c8 end:0x02120a20
+
+src/func_ov071_02120a20.c:
+    complete
+    .text start:0x02120a20 end:0x02120a48
+
+src/func_ov071_02120a48.cpp:
+    .text start:0x02120a48 end:0x02120b14
+
+src/func_ov071_02120b14.cpp:
+    complete
+    .text start:0x02120b14 end:0x02120c90
+
+src/func_ov071_02120c90.cpp:
+    complete
+    .text start:0x02120c90 end:0x02120d30
+
+src/func_ov071_0212110c.c:
+    complete
+    .text start:0x0212110c end:0x021211e0
+
+src/func_ov071_021214f4.c:
+    complete
+    .text start:0x021214f4 end:0x0212152c
+
+src/func_ov071_0212152c.c:
+    .text start:0x0212152c end:0x02121570
+
+src/func_ov071_02121570.c:
+    complete
+    .text start:0x02121570 end:0x021215c0
+
+src/func_ov071_021215c0.cpp:
+    complete
+    .text start:0x021215c0 end:0x021215fc
+
+src/func_ov071_021215fc.cpp:
+    complete
+    .text start:0x021215fc end:0x02121634
+
+src/func_ov071_02121634.c:
+    complete
+    .text start:0x02121634 end:0x02121650
+
+src/_ZN3MrI16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x02121650 end:0x021216b4
+
+src/_ZN3MrI16OnPendingDestroyEv.c:
+    complete
+    .text start:0x021216b4 end:0x021216b8
+
+src/_ZN3MrI6RenderEv.cpp:
+    complete
+    .text start:0x021216b8 end:0x021216ec
+
+src/_ZN3MrI8BehaviorEv.cpp:
+    complete
+    .text start:0x021216ec end:0x02121734
+
+src/BigMrI_Spawn.c:
+    complete
+    .text start:0x021219cc end:0x02121a1c
+
+src/MrI_Spawn.c:
+    complete
+    .text start:0x02121a1c end:0x02121a6c
+
+src/_ZN14MrI_ProjectileD1Ev.cpp:
+    .text start:0x02121a6c end:0x02121aac
+
+src/_ZN14MrI_ProjectileD0Ev.c:
+    complete
+    .text start:0x02121aac end:0x02121b00
+
+src/func_ov071_02121b00.c:
+    complete
+    .text start:0x02121b00 end:0x02121b08
+
+src/func_ov071_02121b08.c:
+    complete
+    .text start:0x02121b08 end:0x02121b50
+
+src/func_ov071_02121b50.c:
+    complete
+    .text start:0x02121b50 end:0x02121ba4
+
+src/func_ov071_02121ba4.cpp:
+    .text start:0x02121ba4 end:0x02121c6c
+
+src/func_ov071_02121c6c.cpp:
+    complete
+    .text start:0x02121c6c end:0x02121d08
+
+src/_ZN14MrI_Projectile16CleanupResourcesEv.c:
+    complete
+    .text start:0x02121d08 end:0x02121d10
+
+src/_ZN14MrI_Projectile16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02121d10 end:0x02121d14
+
+src/_ZN14MrI_Projectile6RenderEv.cpp:
+    complete
+    .text start:0x02121d14 end:0x02121d80
+
+src/_ZN14MrI_Projectile8BehaviorEv.cpp:
+    .text start:0x02121d80 end:0x02121eb4
+
+src/_ZN14MrI_Projectile13InitResourcesEv.cpp:
+    .text start:0x02121eb4 end:0x02121f9c
+
+src/MrI_Projectile_Spawn.c:
+    complete
+    .text start:0x02121f9c end:0x02121fe4
+
+src/_ZN6CoffinD1Ev.c:
+    .text start:0x02121fe4 end:0x02122028
+
+src/_ZN6CoffinD0Ev.c:
+    .text start:0x02122028 end:0x02122080
+
+src/func_ov071_02122080.c:
+    complete
+    .text start:0x02122080 end:0x021220c8
+
+src/func_ov071_021220c8.cpp:
+    .text start:0x021220c8 end:0x02122194
+
+src/func_ov071_02122194.c:
+    complete
+    .text start:0x02122194 end:0x021221bc
+
+src/func_ov071_021221bc.c:
+    complete
+    .text start:0x021221bc end:0x021223b0
+
+src/func_ov071_021223b0.c:
+    complete
+    .text start:0x021223b0 end:0x021223c8
+
+src/func_ov071_021223c8.cpp:
+    complete
+    .text start:0x021223c8 end:0x02122414
+
+src/func_ov071_02122414.cpp:
+    complete
+    .text start:0x02122414 end:0x02122460
+
+src/_ZN6Coffin16CleanupResourcesEv.cpp:
+    .text start:0x02122460 end:0x021224a4
+
+src/_ZN6Coffin6RenderEv.cpp:
+    complete
+    .text start:0x021224a4 end:0x021224cc
+
+src/_ZN6Coffin8BehaviorEv.cpp:
+    .text start:0x021224cc end:0x0212255c
+
+src/_ZN6Coffin13InitResourcesEv.cpp:
+    .text start:0x0212255c end:0x02122670
+
+src/Coffin_Spawn.c:
+    complete
+    .text start:0x02122670 end:0x021226a0
+
+src/__sinit_ov071_021226ac.c:
+    .init start:0x021226ac end:0x021228c8
+
+src/__sinit_ov071_021228c8.c:
+    .init start:0x021228c8 end:0x02122a1c
+
+src/__sinit_ov071_02122a1c.c:
+    .init start:0x02122a1c end:0x02122a64
+
+src/__sinit_ov071_02122a64.c:
+    .init start:0x02122a64 end:0x02122b30

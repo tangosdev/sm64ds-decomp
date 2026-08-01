@@ -1,5 +1,5 @@
 // @symbol func_ov072_0212001c
-// @emits SnowmanBody_Kill
+// recovered name: SnowmanBody_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daBgSnmBdy_c::Kill - recovered from vtable slot identity */
 struct Vec3 { int x, y, z; };
@@ -12,7 +12,7 @@ extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned id, unsigned 
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern int _Z14ApproachLinearRsss(short *p, short to, short step);
 
-int SnowmanBody_Kill(char *c)
+int func_ov072_0212001c(char *c)
 {
     struct Vec3 v;
     unsigned char *st;

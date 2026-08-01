@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN20TtcConveyorBeltLarge8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -8,10 +9,6 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern void func_020393c4(int* p, int v);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern int _Z14ApproachLinearRiii(int* r, int t, int step);

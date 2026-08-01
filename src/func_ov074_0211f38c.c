@@ -1,15 +1,9 @@
+#include "types.h"
 // @symbol func_ov074_0211f38c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef long long s64;
-
-
 extern u16 DecIfAbove0_Short(u16* p);
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);

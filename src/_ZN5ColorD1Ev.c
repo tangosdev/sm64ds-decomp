@@ -3,12 +3,12 @@
  * destructor (func_020177c4), and returns self (ARM C++ dtor ABI).
  */
 
-extern int _ZTV5Color[];           /* vtable for Color */
+extern int data_0208eb2c[];           /* vtable for Color */
 extern int func_020177c4(int *self); /* base-subobject destructor */
 
 int _ZN5ColorD1Ev(int *self)
 {
-    self[0] = (int)_ZTV5Color;  /* +0x00 vptr */
+    self[0] = (int)data_0208eb2c;  /* +0x00 vptr */
     func_020177c4(self);
     return (int)self;
 }

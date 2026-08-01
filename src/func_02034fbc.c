@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern int LoadArchive(int idx);
 extern void *func_0201a458(void);
 extern void *_ZN4Heap10SetDefaultEv(void *h);

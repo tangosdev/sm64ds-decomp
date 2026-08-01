@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Actor;
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);

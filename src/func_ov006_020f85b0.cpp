@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020f85b0
-// @emits dScMgMCarlo_c_Render
+// recovered name: dScMgMCarlo_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo_c::Render - recovered from vtable slot identity */
 struct Node {
@@ -19,7 +19,7 @@ void func_ov006_020c1804(char* p);
 }
 extern Node* data_ov006_02142504;
 
-extern "C" int dScMgMCarlo_c_Render(char* c)
+extern "C" int func_ov006_020f85b0(char* c)
 {
     func_ov006_020c0aa8(c + 0x4660);
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);

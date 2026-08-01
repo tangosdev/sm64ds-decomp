@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020eec9c
-// @emits dScMgJump2_c_OnYoshiTryEat
+// recovered name: dScMgJump2_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_Player.h"
@@ -12,8 +12,8 @@ extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
 extern void *_ZTV17MgBounceAndPounce[];
 extern void *data_020a0eac;
-void *dScMgJump2_c_OnYoshiTryEat(char *c);
-void *dScMgJump2_c_OnYoshiTryEat(char *c) {
+void *func_ov006_020eec9c(char *c);
+void *func_ov006_020eec9c(char *c) {
     *(void ***)c = data_ov006_0213ccfc;
     _ZN5ModelD1Ev(c + 0x5a14);
     __destroy_arr(c + 0x57d4, 0x10, 0x24, (void*)&func_ov006_020eed64);

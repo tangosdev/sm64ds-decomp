@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct { u16 flags; char pad[22]; } Entry24;
 
 extern u8 data_020a0e40;

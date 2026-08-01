@@ -1,5 +1,4 @@
-
-typedef unsigned char u8;
+#include "types.h"
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f264;
 extern void _ZN9PowerStar13AddStarMarkerEv(void);

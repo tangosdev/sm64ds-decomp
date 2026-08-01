@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern u8 NumStars(void);
 extern int func_020138dc(void);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);

@@ -1,7 +1,6 @@
+#include "types.h"
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
-typedef unsigned int u32;
-
 typedef struct {
     int flag;
     char pad0[0x10];

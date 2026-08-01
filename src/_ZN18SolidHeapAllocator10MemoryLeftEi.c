@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern int _ZN4cstd3absEi(int x);
 
 int _ZN18SolidHeapAllocator10MemoryLeftEi(void *c, int align)

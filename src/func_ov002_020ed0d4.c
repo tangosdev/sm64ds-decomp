@@ -1,5 +1,5 @@
 // @symbol func_ov002_020ed0d4
-// @emits daWarpkun_c_Kill
+// recovered name: daWarpkun_c_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -24,7 +24,7 @@ extern int data_020a0e68[];
 extern void* data_ov002_0210e6b0[];
 extern void* data_ov002_0210eb78[];
 
-void daWarpkun_c_Kill(char* self)
+void func_ov002_020ed0d4(char* self)
 {
     struct Vector3 in, out;
     char* com;

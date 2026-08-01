@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_0201964c at 0x0201964c
  * Timer constructor: calls ResetTimer() then returns this.
  * Likely Timer::Timer() C1 constructor.
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 struct Timer {
     u32 field0;
     u32 field4;

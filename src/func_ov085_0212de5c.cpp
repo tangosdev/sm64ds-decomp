@@ -1,14 +1,12 @@
 //cpp
-typedef int Fix12;
-typedef unsigned int u32;
-
+#include "types.h"
 struct PMF;
 struct Player;
 struct Actor {
     Player *ClosestPlayer();
     short HorzAngleToCPlayer();
 };
-namespace Sound { void PlaySub(u32, u32, u32, Fix12, bool); }
+namespace Sound { void PlaySub(u32, u32, u32, Fix12i, bool); }
 extern "C" void func_0201f32c(int);
 extern "C" int func_ov085_0212e728(void *c, void *p);
 extern unsigned char data_0209d66c;
@@ -46,7 +44,7 @@ extern "C" int func_ov085_0212de5c(PlayerObj *c)
     c->v8c = 0x1000;
     c->v90 = 0x800;
     {
-        int *pp = (int *)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFF);
+        int *pp = (int *)(((int)c + 0x2c8));
         int n = *pp + 1;
         *pp = n;
     }

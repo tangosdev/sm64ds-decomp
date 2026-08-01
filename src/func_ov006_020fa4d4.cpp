@@ -4,12 +4,12 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo2_c.h"
-// @emits dScMgMCarlo2_c_OnYoshiTryEat_020fa4d4
+// recovered name: dScMgMCarlo2_c_OnYoshiTryEat_020fa4d4
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo2_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
 extern void func_ov006_020c1604(char* c, int unused, short a2, void* a3);
-void dScMgMCarlo2_c_OnYoshiTryEat_020fa4d4(char* c) {
+void func_ov006_020fa4d4(char* c) {
     struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
   func_ov006_020f9760(c + 0x51a8);
   data_ov006_0213d6fc = 0;

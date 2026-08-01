@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
 extern "C" {
 extern int _ZN6Player8HasNoCapEv(char* c);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void* v);

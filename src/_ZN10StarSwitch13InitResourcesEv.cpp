@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern "C" void LoadSilverStarAndNumber(void);
 extern "C" int _ZN5Model8LoadFileER13SharedFilePtr(int p);
 extern "C" void _ZN5Event8ClearBitEj(unsigned int b);

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov052_02111348
-// @emits daObjEmmLog_c_InitResources
+// recovered name: daObjEmmLog_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjEmmLog_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12i;
@@ -21,7 +21,7 @@ extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEs
 struct DataT { SharedFilePtr* a; SharedFilePtr* b; CLPS_Block* c; };
 extern DataT data_ov052_021124d4;
 
-extern "C" int daObjEmmLog_c_InitResources(char* thiz)
+extern "C" int func_ov052_02111348(char* thiz)
 {
     char* c = thiz;
     {

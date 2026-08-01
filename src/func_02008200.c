@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern struct Actor *func_0200e6d8(unsigned int arg0);
 extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 

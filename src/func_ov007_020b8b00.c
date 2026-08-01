@@ -1,6 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int func_ov007_020c3598(int a, int b, s8 *c, int d);
 extern void func_ov007_020b8d48(void *obj, unsigned int v);
 extern u8 data_ov007_020d7a38[];

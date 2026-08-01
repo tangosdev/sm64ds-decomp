@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 /* ExpandingHeapAllocator::Reallocate(void* ptr, u32 size) at 0x0204e1e8
  * Grows a block in place by swallowing the free node that directly follows it,
  * or shrinks it and hands the tail back to the free list.
@@ -6,10 +7,6 @@
  * The user pointer sits 0x10 bytes past its MemoryNode header; the allocator's
  * free-node list head lives at this+0x24, and this+0x20 holds the flag word whose
  * low bit asks for freshly-gained bytes to be zero filled. */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern "C" {
 
 struct MemoryNode {

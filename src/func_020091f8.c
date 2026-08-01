@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int func_020092c4(void *a, void *b, int c);
 extern void func_0200928c(void *cam);
 extern int ApproachAngle(void *p, int target, int a, int b, int c);

@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player12Unk_020c6a10Ej
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned int u32;
-typedef unsigned char u8;
-
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, void* st);
 extern int func_ov002_020d91e0(void* thiz, u32 a, int b);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void* v);

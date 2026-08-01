@@ -1,5 +1,5 @@
 // @symbol func_ov006_0211c5d0
-// @emits dScMgSound_c_OnYoshiTryEat_0211c5d0
+// recovered name: dScMgSound_c_OnYoshiTryEat_0211c5d0
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -8,7 +8,7 @@ extern void func_ov006_0211c478(int self);
 extern void func_ov006_0211c080(int self);
 
 
-void dScMgSound_c_OnYoshiTryEat_0211c5d0(int self, int r1)
+void func_ov006_0211c5d0(int self, int r1)
 {
     int *p;
     int *q;

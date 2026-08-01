@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov091_02133d30
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned short u16;
-typedef signed char s8;
-
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 
 extern "C" {

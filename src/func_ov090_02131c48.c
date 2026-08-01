@@ -26,7 +26,7 @@ int func_ov090_02131c48(char* c)
     if (*(u16*)(c + 0x394) == 0
         && _ZNK12WithMeshClsn8IsOnWallEv(c + 0x150)
         && AngleDiff(*(s16*)(c + 0x94), *(s16*)(c + 0x39a)) < 0x200) {
-        s16* p = (s16*)(((int)c + 0x39a) & 0xFFFFFFFFFFFFFFFF);
+        s16* p = (s16*)(((int)c + 0x39a));
         *p = *p + 0x4000;
         *(s16*)(c + 0x394) = 8;
     }
@@ -35,7 +35,7 @@ int func_ov090_02131c48(char* c)
         ApproachAngle((s16*)(c + 0x94), *(s16*)(c + 0x39a), 1, 0x1000, 0x1000);
     } else {
         if (_ZN9Animation8FinishedEv(c + 0x35c)) {
-            int* q = (int*)(((int)c + 0x390) & 0xFFFFFFFFFFFFFFFF);
+            int* q = (int*)(((int)c + 0x390));
             *q = *q + 1;
             if (*(int*)(c + 0x390) > 0x14)
                 func_ov090_02131e00(c, &data_ov090_02134504);

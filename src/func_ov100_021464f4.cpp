@@ -24,7 +24,7 @@ extern "C" void func_ov100_021464f4(char *c){
     *(int*)(c+0x130) = 0x1000;
   }
   if(*(int*)(c+0x98) < *(int*)(c+0x144)){
-    int *p98 = (int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF);
+    int *p98 = (int*)(((int)c + 0x98));
     *p98 += 0x800;
   }
   pl = _ZN5Actor13ClosestPlayerEv(c);

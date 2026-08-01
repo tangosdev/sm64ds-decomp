@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-
+#include "types.h"
 extern s16 Vec3_HorzAngle(const void* v0, const void* v1);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void* v);
 extern unsigned short data_ov002_020ff01c[];

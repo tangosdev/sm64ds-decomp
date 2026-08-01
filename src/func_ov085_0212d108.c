@@ -25,7 +25,7 @@ int func_ov085_0212d108(char* c)
     int zero;
     Vector3* ppos;
 
-    ap = (s16*)(((long long)(int)(c + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+    ap = (s16*)(((long long)(int)(c + 0x8c)));
     *ap = (s16)(*ap + 0x1000);
     if (*(unsigned short*)(c + 0x100) != 0) {
         return 1;
@@ -36,7 +36,7 @@ int func_ov085_0212d108(char* c)
     }
 
     zero = 0;
-    ppos = (Vector3*)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    ppos = (Vector3*)(((long long)(int)(player + 0x5c)));
     v.x = zero;
     v.y = zero;
     v.z = zero;

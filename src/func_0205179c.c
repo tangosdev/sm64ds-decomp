@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern int* _ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned int id);
 extern int* _ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj(unsigned int id);
 extern int func_02051514(int a, int b);

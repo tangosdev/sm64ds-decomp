@@ -1,7 +1,5 @@
+#include "types.h"
 // func_02045d9c - Display/3D init: enable DTCM, configure DISPCNT, call G3X setup
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern void _ZN4CP1510EnableDTCMEv(void);
 extern void _ZN3G3X13SetClearColorEtiiib(u16 color, int r, int g, int b, int alpha);
 extern u16 func_02053ed0(void);

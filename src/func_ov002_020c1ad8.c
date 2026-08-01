@@ -1,10 +1,7 @@
+#include "types.h"
 /* func_ov002_020c1ad8 at 0x020c1ad8 (ov002)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern int func_ov002_020c0434(char* c);
 extern void func_ov002_020c0364(char* c, unsigned int arg);
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* st);

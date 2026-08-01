@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13WaterfallMist8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "WaterfallMist.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 struct WithMeshClsn;
 struct Enemy { char pad[0x800]; };
 typedef void (Enemy::*PMF)();

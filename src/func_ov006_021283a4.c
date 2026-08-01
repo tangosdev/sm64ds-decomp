@@ -1,5 +1,5 @@
 // @symbol func_ov006_021283a4
-// @emits dScMgSnowball_c_Behavior
+// recovered name: dScMgSnowball_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -41,7 +41,7 @@ struct SPS {
     int cc[3];
 };
 
-int dScMgSnowball_c_Behavior(char *c) {
+int func_ov006_021283a4(char *c) {
     int r5, r4;
     int idx, r3rec, r7, j;
     struct SPS s;

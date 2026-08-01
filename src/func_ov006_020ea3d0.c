@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern void _Z14ApproachLinearRiii(int *p, int target, int step);
 extern void func_ov004_020adb1c(int self);
 extern char *func_020beb68;

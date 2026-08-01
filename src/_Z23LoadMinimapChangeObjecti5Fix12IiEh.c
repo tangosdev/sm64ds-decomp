@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef int Fix12i;
-
+#include "types.h"
 struct Node {
     int f0;          /* 0x00 value */
     u8 f4;           /* 0x04 */

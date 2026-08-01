@@ -1,9 +1,9 @@
-extern char* data_02103360;
-extern char* data_0210342c;
+extern char* data_ov007_02103360;
+extern char* data_ov007_0210342c;
 extern void func_ov007_020b3d30(int a);
 
 void func_ov007_020b3c54(int a, int mode) {
-    short st = **(short**)data_02103360;
+    short st = **(short**)data_ov007_02103360;
     switch (st) {
         case 0:
         case 1:
@@ -20,7 +20,7 @@ void func_ov007_020b3c54(int a, int mode) {
         case 12:
         case 13:
             mode = 2;
-            *(int*)(data_0210342c + 0x180) = st;
+            *(int*)(data_ov007_0210342c + 0x180) = st;
             break;
         case 14:
         case 15:
@@ -41,6 +41,6 @@ void func_ov007_020b3c54(int a, int mode) {
         default:
             break;
     }
-    *(int*)(data_02103360 + 8) = mode;
-    func_ov007_020b3d30(*(int*)(data_02103360 + 4));
+    *(int*)(data_ov007_02103360 + 8) = mode;
+    func_ov007_020b3d30(*(int*)(data_ov007_02103360 + 4));
 }

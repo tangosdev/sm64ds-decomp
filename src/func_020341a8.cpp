@@ -1,6 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned char u8;
 extern short data_0209fce8;
 extern int data_0209fd08;
 extern int *data_0209fcf8;

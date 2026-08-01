@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern unsigned char func_02071988(void);
 
 int func_020719ec(int unused, unsigned char *buf, unsigned int *pcount)

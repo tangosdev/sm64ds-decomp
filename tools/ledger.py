@@ -29,6 +29,9 @@ import sys
 import time
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
+
 SRC = REPO / "src"
 MATCHED = REPO / "progress" / "matched.jsonl"
 NONMATCHING = REPO / "progress" / "nonmatching.jsonl"
@@ -240,8 +243,7 @@ def bank(record, src_text):
                   f"at {owner}", file=sys.stderr)
             return "refused"
 
-        existing = [p for p in (SRC / f"{name}.c", SRC / f"{name}.cpp")
-                    if p.exists()]
+        existing = SP.paths_for(name)
         if existing:
             # Adoption: the file already on disk IS this verified source (typical
             # after merging a contributor's PR - src arrives via git, the local
@@ -286,7 +288,10 @@ def bank(record, src_text):
                           f"new .{ext}; resolve by hand", file=sys.stderr)
                     return "refused"
 
-        (SRC / f"{name}.{ext}").write_text(body, encoding="utf-8")
+        dest = SP.new_path_for(name, ext)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(body, encoding="utf-8")
+        SP.invalidate()
         _append_line(MATCHED, rec)
         _drop_nonmatching(k)
     return "banked"

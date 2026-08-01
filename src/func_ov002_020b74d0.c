@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);

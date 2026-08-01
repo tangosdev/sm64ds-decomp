@@ -1,11 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-
+#include "types.h"
 struct Locals {
     s16 acc[3];
     int tmp[3];
@@ -77,21 +71,21 @@ extern "C" void func_ov084_0212d564(char* c)
     sx = data_02082214[((u16)locals.acc[0] >> 4) * 2] * 0x32;
     sy = data_02082214[((u16)locals.acc[1] >> 4) * 2];
 
-    px = (int*)(int)(((long long)(int)(c + 0x1f8)) & 0xFFFFFFFFFFFFFFFFLL);
+    px = (int*)(int)(((long long)(int)(c + 0x1f8)));
     *px = *px + (int)(((s64)sx * sy + 0x800) >> 12);
 
     flag = (*(u16*)(c + 0xc) == 0xfb);
     if (flag != false) {
-        py = (int*)(int)(((long long)(int)(c + 0x1fc)) & 0xFFFFFFFFFFFFFFFFLL);
+        py = (int*)(int)(((long long)(int)(c + 0x1fc)));
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         *py = *py - (0x19000 - v);
     } else {
-        py = (int*)(int)(((long long)(int)(c + 0x1fc)) & 0xFFFFFFFFFFFFFFFFLL);
+        py = (int*)(int)(((long long)(int)(c + 0x1fc)));
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         *py = *py - (0x32000 - v);
     }
 
-    pz = (int*)(int)(((long long)(int)(c + 0x200)) & 0xFFFFFFFFFFFFFFFFLL);
+    pz = (int*)(int)(((long long)(int)(c + 0x200)));
     sz = data_02082214[((u16)locals.acc[1] >> 4) * 2 + 1];
     *pz = *pz + (int)(((s64)sx * sz + 0x800) >> 12);
 

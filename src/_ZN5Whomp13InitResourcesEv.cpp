@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Whomp13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Whomp.h"
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 struct SharedFilePtr;
 struct BMD_File;
 struct BTP_File;

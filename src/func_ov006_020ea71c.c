@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 typedef struct Ent71c {
     int _0;      /* 0x00 */
     int pos;     /* 0x04 */

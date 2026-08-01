@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
+#include "types.h"
 enum { false, true };
 
 extern int func_ov002_020d5c6c(char* c);

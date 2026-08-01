@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void MultiStore_Int(int val, void *dst, int len);
 extern void func_02031b84(int c);
 

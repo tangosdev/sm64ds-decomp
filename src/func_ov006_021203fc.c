@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_021203fc
-// @emits dScMgTeresa_c_InitResources
+// recovered name: dScMgTeresa_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgTeresa_c::InitResources - recovered from vtable slot identity */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void *LoadFile(int handle);
@@ -22,7 +19,7 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-int dScMgTeresa_c_InitResources(char *self)
+int func_ov006_021203fc(char *self)
 {
   void *f1;
   void *f2;

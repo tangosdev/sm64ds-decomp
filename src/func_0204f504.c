@@ -28,10 +28,10 @@ extern HeapAllocator* _ZN18NestedHeapIterator4NextEP13HeapAllocator(NestedHeapIt
 extern void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(NestedHeapIteratorT* iter, HeapAllocator* node);
 
 // Array at 0x020a4d6c
-extern IndexEntry gHeapTable[];
+extern IndexEntry data_020a4d6c[];
 
 void* func_0204f504(int index, void* unk) {
-    IndexEntry* entry = &gHeapTable[index];
+    IndexEntry* entry = &data_020a4d6c[index];
     HeapAllocator* first = _ZN18NestedHeapIterator4NextEP13HeapAllocator(&entry->iter, 0);
     if (first == 0)
         return 0;

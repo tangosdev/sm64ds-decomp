@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int Fix12i;
-
+#include "types.h"
 extern u8 data_0209f2fc;
 extern signed char data_02092124;
 extern void LoadKeyModels(int idx);

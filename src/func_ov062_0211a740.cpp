@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov062_0211a740
-// @emits Koopa_Kill
+// recovered name: Koopa_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daNknk_c::Kill - recovered from vtable slot identity */
 typedef short s16;
@@ -23,7 +23,7 @@ extern int data_ov062_0211e034[];
 extern s8 data_0209f2f8;
 extern u8 data_0209d684;
 extern char data_0209d4c8[];
-extern "C" void Koopa_Kill(char* c)
+extern "C" void func_ov062_0211a740(char* c)
 {
     switch (*(u8*)(c + 0x390)) {
     case 0:

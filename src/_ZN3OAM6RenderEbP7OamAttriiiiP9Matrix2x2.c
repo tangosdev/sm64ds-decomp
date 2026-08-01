@@ -1,16 +1,10 @@
+#include "types.h"
 // @symbol _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_OAM.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "OAM.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
 typedef struct OamAttr {
     u32 yb : 8, objMode : 2, mode : 2, mosaic : 1, dep : 1, shape : 2, xc : 9, aff : 5, size : 2;
     u32 tile : 10, prio : 2, pal : 4, hi2 : 16;

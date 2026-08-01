@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN19AmbientSoundEffects8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "AmbientSoundEffects.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-
 extern "C" {
 void Vec3_Sub(int* out, int* a, int* b);
 void Vec3_RotateYAndTranslate(int* out, int* in, short angle, int* src);

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef struct ActorDerived { char pad[0]; } ActorDerived;
 
 extern void _ZN9ActorBase18MarkForDestructionEv(ActorDerived* self);

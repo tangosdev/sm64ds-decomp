@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN10StarMarker13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "StarMarker.h"
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 struct Vec3 { s32 x, y, z; };
 struct RaycastGround { char pad[0x50]; };
 

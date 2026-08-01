@@ -14,7 +14,7 @@ extern "C" void func_ov102_0214bd20(char* c)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, (void*)data_ov102_0214e9c8.w[1], 0, 0x1000, 0);
     func_ov102_0214b384(c, 0x96);
     {
-        int* p = (int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x128));
         *p = *p | 2;
         *p = *p & ~4;
     }

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "daObjPathLift_c.h"
-// @emits daObjPathLift_c_Behavior
+// recovered name: daObjPathLift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjPathLift_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12i;
@@ -20,7 +20,7 @@ struct MeshColliderBase { int IsEnabled(); void Enable(void *a); };
 struct Platform3 { int IsClsnInRange(Fix12i a, int b); };
 extern unsigned char data_0209f2d8;
 
-extern "C" int daObjPathLift_c_Behavior(char* c)
+extern "C" int func_ov100_021470f4(char* c)
 {
     struct daObjPathLift_c *self = (struct daObjPathLift_c *)(void *)c;
     func_ov002_020efcf4(c);

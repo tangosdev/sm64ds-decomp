@@ -1,10 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 extern void *data_0209d70c;
 extern s16 data_0209d6d4;
 extern u8 data_0209d660;

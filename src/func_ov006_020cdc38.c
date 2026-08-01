@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef signed int s32;
-
+#include "types.h"
 void func_ov006_020cdc38(void *arg0)
 {
     *(u16 *)(((long long)(int)((char *)arg0 + 0x9a))) += 0x100;

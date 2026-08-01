@@ -1,7 +1,18 @@
 //cpp
-// NONMATCHING: register allocation (div=22). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+/* func_02038824 @ 0x02038824 (arm9, size 0x214)   [mwccarm 2004/b56]
+ * Lever (notes 6ar): the hoisted address local is declared `int pos = (int)self + 0x3c;`,
+ * NOT `char *pos = self + 0x3c;`. The local's DECLARED TYPE is the lever, not a cast on
+ * the expression: keeping a pointer local and moving the arithmetic into it
+ * (`char *pos = (char *)((int)self + 0x3c);`) only reaches 12. Retyping the local to int
+ * flips the r4/r5 two-web swap (pos -> r4, the shared distance-temp/flags web -> r5) and
+ * the 9-word prologue schedule cluster falls out with it. Do not "clean up" pos back to a
+ * pointer or drop the (void*) cast at the Vec3_Dist call.
+ * Ordering levers cannot reach this: pos is LICM-hoisted, so its web is pinned to the rank
+ * of its ORIGINAL scope and cannot be pushed below an in-loop temp by decl-order or
+ * scope-depth edits. The 6y/6aq booster family is entirely inert here.
+ * Also takes 1.2/base|sp2|sp2p3 from 25 divergences to 5, so it is a better source shape
+ * rather than a b56 artifact. Link-verified: VERIFIED, 0 diffs, 0 blind.
+ */
 struct Vec3 { int x, y, z; };
 
 struct A {
@@ -51,7 +62,7 @@ extern "C" int func_02038824(char *self)
         struct B *sl = func_020393b4(o);
         if (func_02035354(self, sl) != 0) continue;
         if (sl != 0 && ((sl->vb0 & 2) ? one : zero)) {
-            char *pos = self + 0x3c;
+            int pos = (int)self + 0x3c;
             struct Vec3 v;
             struct Vec3 *src = &sl->pos;
             int r5;
@@ -66,7 +77,7 @@ extern "C" int func_02038824(char *self)
             } else {
                 v.y = v.y + func_0203938c(o);
             }
-            if (Vec3_Dist(pos, &v) > r5 + limit) continue;
+            if (Vec3_Dist((void*)pos, &v) > r5 + limit) continue;
         }
         int flags = o->f8(self);
         if (flags == 0) continue;

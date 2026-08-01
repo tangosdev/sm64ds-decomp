@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-
+#include "types.h"
 struct Obj {
     virtual int m00(); virtual int m01(); virtual int m02(); virtual int m03();
     virtual int m04(); virtual int m05(); virtual int m06(); virtual int m07();

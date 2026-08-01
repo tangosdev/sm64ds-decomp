@@ -1,8 +1,8 @@
 // @symbol func_ov091_02134498
-// @emits Stump_OnYoshiTryEat
+// recovered name: Stump_OnYoshiTryEat
 /* recovered: renamed to Class_Method */
 /* daHyuhyu_c::OnYoshiTryEat - recovered from vtable slot identity */
-int Stump_OnYoshiTryEat(void)
+int func_ov091_02134498(void)
 {
     return 4;
 }

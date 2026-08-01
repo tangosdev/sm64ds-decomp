@@ -1,28 +1,21 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player14St_OnWall_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef long long s64;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void func_ov002_020c0364(char* c, u32 a);
 extern void func_ov002_020cabe0(char* c);
 extern int func_ov002_020c5244();
 extern int func_ov002_020d36d8(char* c, int a);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12 a, int b);
+extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, int b);
 extern void _Z14ApproachLinearRsss(s16* v, s16 t, s16 s);
 extern int func_ov002_020bf224(char* c, int a, int b);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern int func_ov002_020d4d88(char* c, int a, int b);
 extern void Player_AdvanceAnims(char* c);
 
@@ -99,7 +92,7 @@ int Player::St_OnWall_Main()
                 mTargetAngleY = ang - 0x4000;
                 anim = 0x5c;
             }
-            Fix12 spd = (Fix12)(((s64)mHorzSpeed * 0x600 + 0x800) >> 12);
+            Fix12i spd = (Fix12i)(((s64)mHorzSpeed * 0x600 + 0x800) >> 12);
             if (spd < 0x400)
                 spd = 0x400;
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), anim, 0, spd, 0);

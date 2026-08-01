@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned char u8;
+#include "types.h"
 extern "C" {
 void func_02012d64(void);
 void func_02013524(int *a, int b, int c);

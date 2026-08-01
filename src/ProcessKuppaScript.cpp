@@ -1,11 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed char s8;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern "C" {
     short ReadUnalignedShort(unsigned char* p);
     unsigned int ReadUnalignedInt(unsigned char* p);
@@ -30,9 +24,6 @@ extern "C" {
     extern void* data_0209f318;
     extern s8 data_02092110;
 }
-
-typedef int Fix12i;
-
 struct FaderBrightness {
     Fix12i currInterp;
     Fix12i speed;

@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 struct RollingLogLll {
     char pad[0x10c];
     char *sub;

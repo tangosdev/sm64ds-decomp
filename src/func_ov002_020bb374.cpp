@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov002_020bb374
-// @emits SignPost_OnHitByMegaChar
+// recovered name: SignPost_OnHitByMegaChar
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Platform.h"
 /* recovered: renamed to Class_Method */
@@ -8,7 +8,7 @@
 extern "C" {
 extern void _ZN6Player16IncMegaKillCountEv(void*);
 extern void func_02012694(int a, void* b);
-void SignPost_OnHitByMegaChar(char* self, void* p){
+void func_ov002_020bb374(char* self, void* p){
   _ZN6Player16IncMegaKillCountEv(p);
   func_02012694(0x1d, self+0x74);
   _ZN8Platform14KillByMegaCharER6Player(self, p);

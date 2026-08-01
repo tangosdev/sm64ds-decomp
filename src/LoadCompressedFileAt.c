@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *func_0201817c(u16 fileID);
 extern u32 func_02018ac4(void *buffer);
 extern void DecompressLZ16(void *source, void *dest);

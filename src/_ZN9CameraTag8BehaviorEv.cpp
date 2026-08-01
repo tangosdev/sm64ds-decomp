@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9CameraTag8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "CameraTag.h"
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned char u8;
-
 struct Vec3 { Fix12i x, y, z; };
 
 extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);

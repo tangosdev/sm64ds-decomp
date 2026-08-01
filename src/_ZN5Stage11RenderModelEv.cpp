@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Stage11RenderModelEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 struct Info {
     char pad[0x14];
     u8 count;

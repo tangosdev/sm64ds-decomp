@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_02031b84(int c);
 
 struct S { u8 b[8]; };

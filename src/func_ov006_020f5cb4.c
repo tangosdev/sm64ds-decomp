@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 typedef struct Car {
     /* 0x00 */ s32 x;
     /* 0x04 */ u8 unk04[0x12 - 0x04];

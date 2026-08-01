@@ -3,13 +3,13 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgRoulette_c.h"
-// @emits dScMgRoulette_c_OnYoshiTryEat_021095cc
+// recovered name: dScMgRoulette_c_OnYoshiTryEat_021095cc
 /* recovered: renamed to Class_Method */
 /* dScMgRoulette_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov004_020b66d4(void);
 extern int *func_020beb68;
 
-void dScMgRoulette_c_OnYoshiTryEat_021095cc(char *this)
+void func_ov006_021095cc(char *this)
 {
     struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)this;
     int i;

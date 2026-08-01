@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 void func_ov006_021001ac(char* p)
 {
     int i;

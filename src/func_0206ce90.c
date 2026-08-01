@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern void _ZN3IRQ11SetFIQStateEb(s32 state);
 extern void _ZN3IRQ11SetIRQStateEb(s32 state);
 extern void func_02057014(u32 arg);

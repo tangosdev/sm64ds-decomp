@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 extern void Vec3_AsrInPlace(Vec3 *v, int n);

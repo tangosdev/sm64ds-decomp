@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov064_02117e44
-// @emits daObjFl_Amilift_c_InitResources
+// recovered name: daObjFl_Amilift_c_InitResources
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_PathPtr.h"
 #include "decl_common.h"
@@ -33,7 +33,7 @@ extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResul
 
 struct V3 { int x, y, z; };
 
-extern "C" int daObjFl_Amilift_c_InitResources(char *self)
+extern "C" int func_ov064_02117e44(char *self)
 {
     BMD_File *bmd;
     KCL_File *kcl;

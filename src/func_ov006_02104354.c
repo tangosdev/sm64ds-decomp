@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #pragma opt_common_subs off
 
 void func_ov006_02104354(char *q)

@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN14EnemySwitchTag13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "EnemySwitchTag.h"
-typedef unsigned int u32;
-typedef signed char s8;
-typedef unsigned char u8;
-
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;

@@ -3,13 +3,13 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMemory2_c.h"
-// @emits dScMgMemory2_c_OnYoshiTryEat_020f7394
+// recovered name: dScMgMemory2_c_OnYoshiTryEat_020f7394
 /* recovered: renamed to Class_Method */
 /* dScMgMemory2_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov004_020b66d4(void *o);
 extern char *func_020beb68;
 
-void dScMgMemory2_c_OnYoshiTryEat_020f7394(char *c)
+void func_ov006_020f7394(char *c)
 {
     struct dScMgMemory2_c *self = (struct dScMgMemory2_c *)(void *)c;
     char *o;

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020e6e78
-// @emits dScMgJump2_c_OnKicked
+// recovered name: dScMgJump2_c_OnKicked
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern "C" void Camera_UpdateMatrices(int arg);
 
 extern unsigned char data_0209f5f8;
 
-extern "C" int dScMgJump2_c_OnKicked(char* self)
+extern "C" int func_ov006_020e6e78(char* self)
 {
     if (func_ov004_020ae140(self) == 0) return 0;
     if (*(int*)(self + 0x4628) == 0) {

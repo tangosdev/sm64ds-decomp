@@ -1,8 +1,4 @@
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed int s32;
+#include "types.h"
 extern char data_020a2400[];
 extern char data_020a1fc0[];
 extern void func_02041224(char *thiz, int n);

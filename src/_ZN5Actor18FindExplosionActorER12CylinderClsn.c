@@ -1,7 +1,5 @@
+#include "types.h"
 // Actor::FindExplosionActor - find the actor that caused an explosion hit
-
-typedef unsigned int u32;
-
 struct CylinderClsn {
     void* vtable;
     int radius;

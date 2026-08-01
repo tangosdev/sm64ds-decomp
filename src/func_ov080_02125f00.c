@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "types.h"
 void func_ov080_02125f00(u32* c){
   *(int*)((char*)c+0x140)=0;
   *(int*)((char*)c+0x144)=0;

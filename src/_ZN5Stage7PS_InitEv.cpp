@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern "C" int SublevelToLevel(int i);
 
 struct Sound {

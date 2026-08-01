@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-
+#include "types.h"
 extern int _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x);
 extern int AngleDiff(int a, int b);
 extern int func_ov002_020c0cbc(void* c);

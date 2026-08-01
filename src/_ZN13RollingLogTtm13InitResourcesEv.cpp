@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13RollingLogTtm13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
@@ -6,11 +7,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RollingLogTtm.h"
 #define false 0
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);

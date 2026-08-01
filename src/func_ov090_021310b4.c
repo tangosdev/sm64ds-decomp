@@ -40,7 +40,7 @@ void func_ov090_021310b4(char* c)
 
     if (*(unsigned int*)(c + 0x134) == 0) return;
     if ((p = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
-    flags = (int)(((long long)*(int*)(c + 0x130)) & 0xFFFFFFFFFFFFFFFFLL);
+    flags = (int)(((long long)*(int*)(c + 0x130)));
 
     if (flags & 0x2400) {
         *(int*)(c + 0x10c) = 2;
@@ -88,7 +88,7 @@ void func_ov090_021310b4(char* c)
     }
     {
         int b = (*(unsigned short*)(p + 0xc) == 0xbf) ? 1 : 0;
-        if ((int)(((long long)b) & 0xFFFFFFFFFFFFFFFFLL) == 0) return;
+        if ((int)(((long long)b)) == 0) return;
     }
     if (*(unsigned char*)(p + 0x6f9) == 1 || _ZN6Player9IsOnShellEv(p) == 1) {
         cv.x = *(int*)(c + 0x5c);

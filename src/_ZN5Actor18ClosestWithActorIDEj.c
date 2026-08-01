@@ -14,7 +14,7 @@ struct Actor {
 /* Resolved callees (symbols/verified.tsv):
  *   0x02010ef0 = Actor::FindWithActorID(u32 actorID, Actor* searchStart)
  *   0x0203cfdc = Vec3_Dist(const Vector3&, const Vector3&) */
-extern struct Actor *Actor_FindWithActorID(unsigned int actorID, struct Actor *searchStart);
+extern struct Actor *_ZN5Actor15FindWithActorIDEjPS_(unsigned int actorID, struct Actor *searchStart);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 
 struct Actor *_ZN5Actor18ClosestWithActorIDEj(struct Actor *self, unsigned int actorID) {
@@ -23,7 +23,7 @@ struct Actor *_ZN5Actor18ClosestWithActorIDEj(struct Actor *self, unsigned int a
     Fix12i closestDist = 0x7fffffff;
 
     for (;;) {
-        actor = Actor_FindWithActorID(actorID, actor);
+        actor = _ZN5Actor15FindWithActorIDEjPS_(actorID, actor);
         if (!actor)
             break;
         if (actor != self) {

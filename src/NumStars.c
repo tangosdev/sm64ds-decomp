@@ -1,10 +1,7 @@
+#include "types.h"
 /* NumStars at 0x0201367c
  * Counts total stars collected across all levels and all star slots.
  */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int s32;
-
 extern int IsStarCollected(s8 courseID, s32 starID);
 
 u8 NumStars(void)

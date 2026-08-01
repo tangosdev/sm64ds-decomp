@@ -1,10 +1,10 @@
 // @symbol func_ov027_02111680
-// @emits daIDonketu_c_Kill
+// recovered name: daIDonketu_c_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daIDonketu_c::Kill - recovered from vtable slot identity */
-int daIDonketu_c_Kill(char* self){
+int func_ov027_02111680(char* self){
     if(*(unsigned short*)(self+0x100) < 0xa){
         *(int*)(self+0x98) = 0;
         int r = func_ov064_02116110(self, 0x700);

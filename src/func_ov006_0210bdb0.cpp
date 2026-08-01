@@ -1,14 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_0210bdb0
-// @emits dScMgSlot3_c_InitResources
+// recovered name: dScMgSlot3_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSlot3_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern "C" {
 
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
@@ -53,7 +50,7 @@ struct Obj {
     virtual void m48(int a);
 };
 
-extern "C" int dScMgSlot3_c_InitResources(void *arg0)
+extern "C" int func_ov006_0210bdb0(void *arg0)
 {
     char *c = (char *)arg0;
 

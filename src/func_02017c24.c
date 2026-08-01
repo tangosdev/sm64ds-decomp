@@ -1,7 +1,5 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-extern u32 LAST_USED_FILE_ID;
+#include "types.h"
+extern u32 data_0209d3bc;
 extern void _ZN6Memory10DeallocateEPv(void *ptr);
 
 struct Obj {
@@ -12,7 +10,7 @@ struct Obj {
 
 void func_02017c24(struct Obj *self)
 {
-    LAST_USED_FILE_ID = self->fileID;
+    data_0209d3bc = self->fileID;
     _ZN6Memory10DeallocateEPv(self->data);
     self->data = 0;
 }

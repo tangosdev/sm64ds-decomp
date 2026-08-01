@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct Entry {
     int field_0;     /* 0x0 */
     int field_4;     /* 0x4 */

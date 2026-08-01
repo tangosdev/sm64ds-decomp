@@ -26,6 +26,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import nearmiss_db as NM
 import categorize_misses as CAT
 import ledger as L
+import srcpath as SP
 
 SRC = REPO / "src"
 TOTAL_FUNCS = 11390
@@ -45,7 +46,10 @@ def _record(name, src, reason, div, addr, size, module):
         body = first + "\n" + hdr + rest
     else:
         body = hdr + body
-    (SRC / f"{name}.{ext}").write_text(body)
+    dest = SP.new_path_for(name, ext)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(body)
+    SP.invalidate()
     L.append_nonmatching({"addr": addr, "name": name, "size": size,
                           "module": module, "divergences": div, "reason": reason})
 

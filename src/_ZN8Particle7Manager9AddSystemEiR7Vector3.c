@@ -1,11 +1,9 @@
+#include "types.h"
 // @symbol _ZN8Particle7Manager9AddSystemEiR7Vector3
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__Manager.h"
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 

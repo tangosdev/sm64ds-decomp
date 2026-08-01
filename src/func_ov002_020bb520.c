@@ -1,11 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020bb520
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
 enum { false, true };
 
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);

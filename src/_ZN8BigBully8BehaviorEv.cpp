@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8BigBully8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, u16* p);
 extern int func_ov064_02116d1c(void* c);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);

@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 int RandomIntInternal(int *seed);
 char *_ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(u16 val, char *dst, int nbytes);

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov004_020b08f0
-// @emits dScMgBase_c_AfterInitResources
+// recovered name: dScMgBase_c_AfterInitResources
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::AfterInitResources - recovered from vtable slot identity */
 extern "C" {
@@ -21,7 +21,7 @@ struct Scene {
     void AfterInitResources(unsigned int flags);
 };
 
-extern "C" void dScMgBase_c_AfterInitResources(Scene* self, unsigned int flags) {
+extern "C" void func_ov004_020b08f0(Scene* self, unsigned int flags) {
     self->targetMethod();
     LoadFont(2);
     func_ov004_020ae330();

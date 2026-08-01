@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern void ApproachAngle(void* dst, int target, int a, int b, int e);
 extern int KingBobOmb_SetState(void* c, void* p);

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct CacheInfo {
     u32 unk0;
     u32 base;

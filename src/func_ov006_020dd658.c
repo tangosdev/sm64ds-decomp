@@ -1,7 +1,4 @@
-typedef int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Pair { int a; int b; };
 
 extern int data_ov006_0212e418[];

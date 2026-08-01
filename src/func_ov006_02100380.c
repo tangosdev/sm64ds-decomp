@@ -1,9 +1,6 @@
+#include "types.h"
 /* func_ov006_02100380 — for each of 16 active entries (stride 0x18 array at
  * 0x5330): every 8 ticks bump a stage byte; after 4 stages clear the entry. */
-
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 typedef struct {
     char _pad0[0x5330];
     u16 timer;   /* +0x5330 */

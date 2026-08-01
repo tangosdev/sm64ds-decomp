@@ -1,8 +1,5 @@
+#include "types.h"
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int data_ov006_0212ec30[];
 

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9RabbitKey6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
@@ -8,10 +9,6 @@
  * bump the angle at this+0x8e by 0x500; run func_ov085_0212d2b8(this); then
  * virtual-call slot +0x14 on the sub-object at this+0x110 with arg 0. Returns 1.
  */
-
-typedef unsigned int u32;
-typedef signed short s16;
-
 struct SubVt {
     char _pad0[0x14];
     void (*fn14)(void* self, int a); /* 0x14 */

@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-
+#include "types.h"
 struct Node {
     void* x0;
     struct Node* next;  /* 0x4 */

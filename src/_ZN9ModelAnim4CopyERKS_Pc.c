@@ -1,14 +1,9 @@
+#include "types.h"
 /* _ZN9ModelAnim4CopyERKS_Pc at 0x02016714 (52 bytes)
  * ModelAnim::Copy -- copies animation data from another ModelAnim into this one.
  * If newFile != NULL, stores newFile at this->file (0x60); otherwise copies src->file.
  * Also calls Animation::Copy (base class copy) on the sub-object at +0x50.
  */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef short s16;
-typedef int Fix12i;
-
 struct Animation {
     u32 vtable;
     Fix12i numFramesAndFlags;

@@ -50,7 +50,7 @@ int func_ov100_02144528(char* c, char* pl)
                 if (data_ov100_02148704[0] != 0)
                     _ZN6Player11OpenBigDoorEv(pl);
             } else {
-                unsigned char* q = (unsigned char*)(((int)c + 0x145) & 0xFFFFFFFFFFFFFFFF);
+                unsigned char* q = (unsigned char*)(((int)c + 0x145));
                 *q += 1;
             }
         } else {

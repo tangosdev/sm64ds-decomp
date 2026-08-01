@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_0210bcb0
-// @emits dScMgSlot3_c_Behavior
+// recovered name: dScMgSlot3_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -25,7 +25,7 @@ extern unsigned char data_0209d45c;
 
 extern "C" int RandomIntInternal(int *seed);
 
-extern "C" int dScMgSlot3_c_Behavior(Obj *self) {
+extern "C" int func_ov006_0210bcb0(Obj *self) {
     int i;
     unsigned char t;
 

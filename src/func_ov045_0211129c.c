@@ -1,13 +1,13 @@
 // @symbol func_ov045_0211129c
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjKm2_Agaru_c.h"
-// @emits daObjKm2_Agaru_c_Behavior
+// recovered name: daObjKm2_Agaru_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjKm2_Agaru_c::Behavior - recovered from vtable slot identity */
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
-int daObjKm2_Agaru_c_Behavior(char *c)
+int func_ov045_0211129c(char *c)
 {
     struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
     switch (self->unk_327) {

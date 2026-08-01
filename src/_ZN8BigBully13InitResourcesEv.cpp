@@ -1,16 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN8BigBully13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef short s16;
-typedef unsigned int u32;
-
 typedef struct Actor Actor;
 struct RaycastGround { char buf[0x50]; };
 

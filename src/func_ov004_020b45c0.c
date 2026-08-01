@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
+#include "types.h"
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern int func_02053200(int x);
 struct M { int _00, _01, _10, _11; };

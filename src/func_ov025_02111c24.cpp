@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "daDkk_c.h"
-// @emits daDkk_c_InitResources
+// recovered name: daDkk_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* daDkk_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -14,7 +14,7 @@ extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, voi
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZN11RaycastLine10GetClsnPosEv(void* out, void* self);
 extern void _ZN11RaycastLineD1Ev(void* self);
-int daDkk_c_InitResources(char* c)
+int func_ov025_02111c24(char* c)
 {
     struct daDkk_c *self = (struct daDkk_c *)(void *)c;
     *(void**)(c + 0x320) = data_ov025_02113814;

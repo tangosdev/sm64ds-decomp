@@ -4,3 +4,71 @@
     .ctor       start:0x02112028 end:0x02112030 kind:rodata align:4
     .data       start:0x02112040 end:0x02112c60 kind:data align:32
     .bss        start:0x02112c60 end:0x02112ce0 kind:bss align:32
+src/_ZN16RotatingCogSmallD1Ev.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/_ZN16RotatingCogSmallD0Ev.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp:
+    .text start:0x0211123c end:0x021112c4
+
+src/_ZN16RotatingCogSmall6RenderEv.cpp:
+    complete
+    .text start:0x021112c4 end:0x021112ec
+
+src/_ZN16RotatingCogSmall8BehaviorEv.cpp:
+    complete
+    .text start:0x021112ec end:0x021114e0
+
+src/_ZN16RotatingCogSmall13InitResourcesEv.cpp:
+    .text start:0x021114e0 end:0x0211165c
+
+src/RotatingCogSmall_Spawn.c:
+    complete
+    .text start:0x0211165c end:0x0211168c
+
+src/func_ov035_0211168c.c:
+    complete
+    .text start:0x0211168c end:0x021116bc
+
+src/RotatingClockHand_Spawn.c:
+    complete
+    .text start:0x021116bc end:0x021116ec
+
+src/_ZN17RotatingClockHandD1Ev.c:
+    .text start:0x021116ec end:0x02111738
+
+src/_ZN17RotatingClockHandD0Ev.c:
+    .text start:0x02111738 end:0x02111798
+
+src/func_ov035_02111798.c:
+    complete
+    .text start:0x02111798 end:0x021118a8
+
+src/func_ov035_021118a8.c:
+    complete
+    .text start:0x021118a8 end:0x021118f0
+
+src/_ZN17RotatingClockHand16CleanupResourcesEv.cpp:
+    .text start:0x021118f0 end:0x02111934
+
+src/_ZN17RotatingClockHand6RenderEv.cpp:
+    complete
+    .text start:0x02111934 end:0x0211195c
+
+src/_ZN17RotatingClockHand8BehaviorEv.cpp:
+    .text start:0x0211195c end:0x02111a98
+
+src/_ZN17RotatingClockHand13InitResourcesEv.cpp:
+    .text start:0x02111a98 end:0x02111b98
+
+src/SpinningPlatform_Spawn.c:
+    complete
+    .text start:0x02111b98 end:0x02111bd0
+
+src/__sinit_ov035_02111f04.c:
+    .init start:0x02111f04 end:0x02111fc0
+
+src/__sinit_ov035_02111fc0.c:
+    .init start:0x02111fc0 end:0x02112028

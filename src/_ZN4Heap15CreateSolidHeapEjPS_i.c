@@ -1,7 +1,7 @@
+#include "types.h"
 // @symbol _ZN4Heap15CreateSolidHeapEjPS_i
 /* recovered: named members + shared header */
 #include "Heap.h"
-typedef unsigned int u32;
 struct Heap;
 struct SolidHeapAllocator;
 struct HeapS {

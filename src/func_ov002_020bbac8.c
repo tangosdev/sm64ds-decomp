@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_ov002_020bbac8 — teleport self to linked actor's position (+100fx up),
  * clear two fields, move the link pointer from 0x59c to 0x5a0.
  * No callees.
  */
-
-typedef unsigned int u32;
-
 typedef struct Vec3 {
     int x, y, z;
 } Vec3;

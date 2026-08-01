@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern void _ZN5Model12SetPolygonIDEi(void* m, int id);
 
 void func_ov063_0211aa34(char* self)

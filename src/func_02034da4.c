@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_02034da4
-// @emits dScMB_c_Behavior
+// recovered name: dScMB_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMB_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern void DecompressLZ16(void *src, int dst);
 extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 extern void func_020308b4(void);
@@ -17,7 +14,7 @@ extern void func_02012790(int x);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMB_c_Behavior(void *arg0)
+int func_02034da4(void *arg0)
 {
     char *self = (char *)arg0;
 

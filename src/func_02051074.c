@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef struct SolidHeapAllocator SolidHeapAllocator;
 extern u32 _ZN18SolidHeapAllocator10MemoryLeftEi(SolidHeapAllocator *self, u32 align);
 u32 func_02051074(SolidHeapAllocator **pHeap)

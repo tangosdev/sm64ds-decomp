@@ -1,5 +1,5 @@
 // @symbol func_ov010_021111ec
-// @emits daObjC1_Trap_c_OnYoshiTryEat
+// recovered name: daObjC1_Trap_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -8,7 +8,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjC1_Trap_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjC1_Trap_c_OnYoshiTryEat(int *t)
+int *func_ov010_021111ec(int *t)
 {
     t[0] = (int)VT0;
     _ZN5ModelD1Ev((char *)t + 0x320);

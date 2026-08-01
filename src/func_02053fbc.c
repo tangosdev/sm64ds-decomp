@@ -1,8 +1,6 @@
+#include "types.h"
 /* func_02053fbc @ 0x02053fbc -- clear OBJ ext-palette enable bit in main-engine
  * DISPCNT, then disable the VRAM bank assignment via DisableVramBanks. */
-typedef unsigned short u16;
-typedef volatile unsigned long vu32;
-
 extern u16 DisableVramBanks(u16 *bankBitsPtr);
 extern u16 data_020a6098;
 

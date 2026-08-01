@@ -4,3 +4,138 @@
     .ctor       start:0x02114078 end:0x0211407c kind:rodata align:4
     .data       start:0x02114080 end:0x02114620 kind:data align:32
     .bss        start:0x02114620 end:0x021148e0 kind:bss align:32
+src/_ZN7WigglerD1Ev.c:
+    complete
+    .text start:0x021111a0 end:0x021112b0
+
+src/_ZN7WigglerD0Ev.c:
+    complete
+    .text start:0x021112b0 end:0x021113d4
+
+src/func_ov034_021113d4.c:
+    complete
+    .text start:0x021113d4 end:0x02111520
+
+src/func_ov034_02111520.c:
+    complete
+    .text start:0x02111520 end:0x02111588
+
+src/func_ov034_02111588.cpp:
+    complete
+    .text start:0x02111588 end:0x021115c0
+
+src/func_ov034_021115c0.c:
+    complete
+    .text start:0x021115c0 end:0x021115cc
+
+src/func_ov034_021115cc.cpp:
+    complete
+    .text start:0x021115cc end:0x02111720
+
+src/func_ov034_02111720.c:
+    complete
+    .text start:0x02111720 end:0x02111788
+
+src/func_ov034_02111788.cpp:
+    .text start:0x02111788 end:0x02111974
+
+src/func_ov034_02111974.c:
+    complete
+    .text start:0x02111974 end:0x021119ac
+
+src/func_ov034_021119ac.c:
+    complete
+    .text start:0x021119ac end:0x02111a0c
+
+src/func_ov034_02111a0c.cpp:
+    complete
+    .text start:0x02111a0c end:0x02111a64
+
+src/func_ov034_02111a64.c:
+    complete
+    .text start:0x02111a64 end:0x02111bb0
+
+src/func_ov034_02111bb0.c:
+    complete
+    .text start:0x02111bb0 end:0x02111c48
+
+src/func_ov034_02111c48.c:
+    complete
+    .text start:0x02111c48 end:0x02111e4c
+
+src/func_ov034_02111e4c.c:
+    complete
+    .text start:0x02111e4c end:0x02111e68
+
+src/func_ov034_02111e68.c:
+    complete
+    .text start:0x02111e68 end:0x02112020
+
+src/func_ov034_02112020.c:
+    complete
+    .text start:0x02112020 end:0x021120ac
+
+src/func_ov034_021120ac.cpp:
+    complete
+    .text start:0x021120ac end:0x02112270
+
+src/func_ov034_02112270.c:
+    complete
+    .text start:0x02112270 end:0x02112284
+
+src/func_ov034_02112284.c:
+    complete
+    .text start:0x02112284 end:0x02112330
+
+src/func_ov034_02112330.cpp:
+    complete
+    .text start:0x02112330 end:0x02112348
+
+src/func_ov034_02112348.c:
+    complete
+    .text start:0x02112348 end:0x02112484
+
+src/func_ov034_02112484.cpp:
+    complete
+    .text start:0x02112484 end:0x021125b8
+
+src/func_ov034_021125b8.cpp:
+    complete
+    .text start:0x021125b8 end:0x02112604
+
+src/func_ov034_02112604.cpp:
+    complete
+    .text start:0x02112604 end:0x02112650
+
+src/func_ov034_02112650.c:
+    complete
+    .text start:0x02112650 end:0x02112688
+
+src/func_ov034_02112688.c:
+    complete
+    .text start:0x02112688 end:0x02112874
+
+src/func_ov034_02112874.c:
+    complete
+    .text start:0x02112874 end:0x021129ec
+
+src/func_ov034_021129ec.c:
+    complete
+    .text start:0x021129ec end:0x02112a5c
+
+src/_ZN7Wiggler16CleanupResourcesEv.c:
+    complete
+    .text start:0x02112a5c end:0x02112af4
+
+src/_ZN7Wiggler6RenderEv.cpp:
+    complete
+    .text start:0x02112af4 end:0x02112b5c
+
+src/_ZN7Wiggler13InitResourcesEv.cpp:
+    .text start:0x0211323c end:0x021136a4
+
+src/Wiggler_Spawn.c:
+    .text start:0x021136a4 end:0x02113820
+
+src/__sinit_ov034_021138ec.c:
+    .init start:0x021138ec end:0x02114078

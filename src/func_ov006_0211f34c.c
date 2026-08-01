@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 void func_ov006_0211f34c(char *o, int i)
 {
     int m = i * 0x24;

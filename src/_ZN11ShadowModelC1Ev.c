@@ -30,7 +30,7 @@ extern void _ZN9ModelBaseC1Ev(struct ModelBase *thiz);
 struct ShadowModel *_ZN11ShadowModelC1Ev(struct ShadowModel *thiz)
 {
     _ZN9ModelBaseC1Ev((struct ModelBase *)thiz);
-    thiz->vtable = _ZTV11ShadowModel + 2;
+    thiz->vtable = _ZTV11ShadowModel;
     thiz->matPtr = 0;
     thiz->prev = 0;
     thiz->next = 0;

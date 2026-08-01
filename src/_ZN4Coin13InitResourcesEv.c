@@ -1,15 +1,8 @@
+#include "types.h"
 #pragma opt_common_subs off
 
 #define false 0
 #define true 1
-
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 typedef struct { void* sfp; void* bmd; } FileEntry;
 typedef struct { u32 w[12]; } Blob48;
 

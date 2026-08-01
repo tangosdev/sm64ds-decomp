@@ -1,5 +1,4 @@
-typedef signed short s16;
-typedef unsigned char u8;
+#include "types.h"
 extern u8 data_ov004_020bf3e8[];
 void func_ov004_020b3194(void *c)
 {

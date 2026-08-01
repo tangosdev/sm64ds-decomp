@@ -1,5 +1,5 @@
 // @symbol func_ov012_02111370
-// @emits daObjC0_Switch_c_InitResources
+// recovered name: daObjC0_Switch_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -13,7 +13,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
 extern int data_0209caa0[];
 
-int daObjC0_Switch_c_InitResources(char* c){
+int func_ov012_02111370(char* c){
   void* mdl;
   void* kcl;
   mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124a8);

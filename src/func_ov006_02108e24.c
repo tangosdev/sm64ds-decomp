@@ -1,6 +1,4 @@
-
-typedef short s16;
-typedef unsigned char u8;
+#include "types.h"
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern int data_ov006_021428c8;
 extern u8 data_020a0e40;

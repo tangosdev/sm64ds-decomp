@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void MultiCopy_Int(void *dst, void *src, int n);
 extern void func_02065bf4(void);
 extern int func_02065c1c(void);

@@ -1,9 +1,9 @@
+#include "types.h"
 // @symbol _ZN4HeapC1EPvjP4Heap
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Heap.h"
-typedef unsigned int u32;
 struct Heap;
 struct HeapS {
     void *vtable;

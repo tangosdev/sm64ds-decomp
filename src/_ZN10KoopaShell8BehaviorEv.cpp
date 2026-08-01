@@ -1,13 +1,9 @@
 //cpp
+#include "types.h"
 /* _ZN10KoopaShell8BehaviorEv @ 0x0214d2e8 (ov102, size 0x264)
  * Enemy main behavior dispatcher: yoshi-eat handling, state PMF call,
  * collision update and ground/wall reactions.
  */
-typedef int s32;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 struct C {};
 typedef int (C::*PMF)();
 struct EState {

@@ -1,5 +1,4 @@
-    typedef unsigned char u8;
-    
+#include "types.h"
     extern void func_ov006_020def80(void *self, int i);
     extern void func_ov006_020c2594(void *c);
     extern void func_ov004_020b1b78(void *c, int val);

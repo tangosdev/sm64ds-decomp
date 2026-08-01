@@ -1,11 +1,11 @@
 // @symbol func_ov002_020b2a34
-// @emits Coin_OnTurnIntoEgg
+// recovered name: Coin_OnTurnIntoEgg
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daCoin_c::OnTurnIntoEgg - recovered from vtable slot identity */
 
-void Coin_OnTurnIntoEgg(char* c, char* p)
+void func_ov002_020b2a34(char* c, char* p)
 {
     int state = *(int*)(c + 0x3a0);
     if (state == 1) {

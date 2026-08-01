@@ -1,11 +1,8 @@
+#include "types.h"
 // @symbol func_ov006_0212101c
-// @emits dScMgTrampoline_c_OnAttacked2
+// recovered name: dScMgTrampoline_c_OnAttacked2
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline_c::OnAttacked2 - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-
 typedef struct UnkObj UnkObj;
 struct UnkObj {
     int (**vt)(UnkObj*);
@@ -23,7 +20,7 @@ void func_02012718(void* a, int b);
 int func_02054d88(void);
 void MultiStore16(u16 val, void* dst, int nbytes);
 
-int dScMgTrampoline_c_OnAttacked2(char* self)
+int func_ov006_0212101c(char* self)
 {
     volatile u16 z;
     Vec2s v1;

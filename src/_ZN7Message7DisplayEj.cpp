@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN7Message7DisplayEj
 /* recovered: named members + shared header, real C++ method */
 #include "Message.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern "C" {
 extern u8 data_0209d660;
 extern short data_0209d6d4;

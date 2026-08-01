@@ -1,10 +1,9 @@
+#include "types.h"
 /* func_ov006_020efdac at 0x020efdac
  *
  * Copies a global index (data_0209f60c -> data_0209f608) and tail-calls
  * MultiCopy_Int to copy the 0x300-byte record at that index to 0x04000040.
  */
-typedef unsigned int u32;
-
 struct Record { char _pad[0x300]; };
 
 extern u32 data_0209f60c;

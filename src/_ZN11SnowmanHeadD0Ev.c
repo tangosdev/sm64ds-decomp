@@ -8,7 +8,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV12daBgSnmHed_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN11SnowmanHeadD0Ev(int *t)
 {
     t[0] = (int)_ZTV12daBgSnmHed_c;
@@ -17,6 +17,6 @@ int *_ZN11SnowmanHeadD0Ev(int *t)
     _ZN15TextureSequenceD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

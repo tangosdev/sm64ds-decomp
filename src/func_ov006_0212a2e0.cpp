@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 class C { public: int dummy; };
 typedef void (C::*PMF)(int);
 

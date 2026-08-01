@@ -4,13 +4,13 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgJump_c.h"
-// @emits dScMgJump_c_OnTurnIntoEgg
+// recovered name: dScMgJump_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgJump_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" short _Z15ApproachLinear2Rsss(short &r, short b, short c);
 extern "C" void func_02012790(int a0);
 
-extern "C" int dScMgJump_c_OnTurnIntoEgg(char *thiz, int sel)
+extern "C" int func_ov006_020ee8dc(char *thiz, int sel)
 {
     struct dScMgJump_c *self = (struct dScMgJump_c *)(void *)thiz;
     if (sel == 0) {

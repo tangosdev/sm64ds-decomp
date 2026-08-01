@@ -1,6 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned short u16;
 short* _ZN2G212GetBG0ScrPtrEv(void);
 void MultiStore16(u16 val, short* dst, int n);
 struct E { volatile signed char* ptr; int pad; };

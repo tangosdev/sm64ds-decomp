@@ -1,11 +1,6 @@
+#include "types.h"
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
 extern int WM_GetSystemWork(void);
 extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1519InvalidateDataCacheEjj(u32 addr, u32 len);

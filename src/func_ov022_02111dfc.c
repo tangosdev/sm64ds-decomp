@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjFl_Seesaw_c.h"
-// @emits daObjFl_Seesaw_c_Behavior
+// recovered name: daObjFl_Seesaw_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjFl_Seesaw_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12;
@@ -13,7 +13,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12 a, Fix12 b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
 
-int daObjFl_Seesaw_c_Behavior(char* c) {
+int func_ov022_02111dfc(char* c) {
     struct daObjFl_Seesaw_c *self = (struct daObjFl_Seesaw_c *)(void *)c;
   func_020393a4((int*)(c+0x124), 0x650000);
   if (DecIfAbove0_Byte((unsigned char*)(c+0x320)) == 0) {

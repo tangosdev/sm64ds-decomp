@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 typedef struct HeapAllocator HeapAllocator;
 
 typedef struct NestedHeapIterator {

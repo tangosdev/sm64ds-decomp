@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_ov062_02117724(void *c, int a, int b, int d, int e);
 extern int func_ov062_02117b60(void *c);
 extern int _Z14ApproachLinearRiii(int *val, int target, int step);

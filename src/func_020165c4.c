@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 func_020462bc(int a);
 extern void* _ZN6Memory13operator_new2Ej(u32 size);
 extern void func_020462b4(int* p, int v);

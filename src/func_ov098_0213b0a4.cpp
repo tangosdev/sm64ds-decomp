@@ -2,7 +2,7 @@
 extern "C" {
 void _Z14ApproachLinearRsss(short&, short, short);
 struct Vector3;
-namespace Sound { void PlayBank3(unsigned int, const Vector3&); }
+namespace Sound { void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int, const Vector3&); }
 
 void func_ov098_0213b0a4(char *c)
 {
@@ -14,7 +14,7 @@ void func_ov098_0213b0a4(char *c)
     {
         short t = *(short*)(c + 0x100 + 0x7a);
         if (r5 != t && *(short*)(c + 0x94) == t)
-            Sound::PlayBank3(0x14d, *(const Vector3*)(c + 0x74));
+            Sound::_ZN5Sound9PlayBank3EjRK7Vector3(0x14d, *(const Vector3*)(c + 0x74));
     }
     if (*(short*)(c + 0x92) != *(short*)(c + 0x100 + 0x78)) return;
     if (*(short*)(c + 0x94) == *(short*)(c + 0x100 + 0x7a)) {

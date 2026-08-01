@@ -1,10 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef signed int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Sub {
     /* 0x00 */ s32 unk00;
     /* 0x04 */ s32 unk04;

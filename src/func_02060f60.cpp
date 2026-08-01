@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 extern "C" int func_0205ba3c(int bit, int word);
 extern "C" void func_02059d8c(int x);
 extern "C" int IPCSend(unsigned int a, unsigned int c, unsigned int b);
-
-typedef unsigned short u16;
 extern "C" void OS_SleepThread(u16 *x);
 
 namespace CP15 {

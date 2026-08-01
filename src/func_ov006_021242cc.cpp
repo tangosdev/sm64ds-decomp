@@ -1,16 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_021242cc
-// @emits dScMgTrampoline2_c_OnYoshiTryEat_021242cc
+// recovered name: dScMgTrampoline2_c_OnYoshiTryEat_021242cc
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::OnYoshiTryEat - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
 typedef struct {
     u8 pad0[0xbc];
     u32 unkBC;
@@ -38,7 +33,7 @@ extern "C" void func_ov006_02124228(T *self);
 
 extern volatile s16 data_020a0dbc[];
 
-extern "C" void dScMgTrampoline2_c_OnYoshiTryEat_021242cc(T *self)
+extern "C" void func_ov006_021242cc(T *self)
 {
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
 

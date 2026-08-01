@@ -24,7 +24,7 @@ struct Dst {
     struct Pair p4;
     struct Pair p5;
 };
-extern struct Dst data_ov064_0211c98c_d;
+extern struct Dst data_ov064_0211c98c;
 
 void __sinit_ov064_0211b59c(void)
 {
@@ -32,10 +32,10 @@ void __sinit_ov064_0211b59c(void)
     func_020731dc(data_ov064_0211c96c, &func_02017ab4, data_ov064_0211c974);
     _ZN13SharedFilePtr9ConstructEj(data_ov064_0211c964, 0x4a7);
     func_020731dc(data_ov064_0211c964, &SharedFilePtr_Destruct_Anim, data_ov064_0211c980);
-    data_ov064_0211c98c_d.p0 = data_ov064_0211c4c4;
-    data_ov064_0211c98c_d.p1 = data_ov064_0211c4bc;
-    data_ov064_0211c98c_d.p2 = data_ov064_0211c4b4;
-    data_ov064_0211c98c_d.p3 = data_ov064_0211c4a4;
-    data_ov064_0211c98c_d.p4 = data_ov064_0211c4ac;
-    data_ov064_0211c98c_d.p5 = data_ov064_0211c49c;
+    data_ov064_0211c98c.p0 = data_ov064_0211c4c4;
+    data_ov064_0211c98c.p1 = data_ov064_0211c4bc;
+    data_ov064_0211c98c.p2 = data_ov064_0211c4b4;
+    data_ov064_0211c98c.p3 = data_ov064_0211c4a4;
+    data_ov064_0211c98c.p4 = data_ov064_0211c4ac;
+    data_ov064_0211c98c.p5 = data_ov064_0211c49c;
 }

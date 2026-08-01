@@ -1,15 +1,12 @@
+#include "types.h"
 // @symbol func_ov006_020e72c0
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
-// @emits dScMgTrampoline2_c_Kill
+// recovered name: dScMgTrampoline2_c_Kill
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::Kill - recovered from vtable slot identity */
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 int func_02053ea0(void);
 s32 GetGameLanguage(void);
 u32 LoadCompressedFileAt(unsigned int fileID, void *target);
@@ -23,7 +20,7 @@ void *_ZN3G2S12GetBG1ScrPtrEv(void);
 
 extern unsigned char data_0209d454;
 
-void dScMgTrampoline2_c_Kill(char *c) {
+void func_ov006_020e72c0(char *c) {
     struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)c;
   self->unk_4660 = func_02053ea0();
   _ZN2GX16SetBankForSubOBJEt(0x100);

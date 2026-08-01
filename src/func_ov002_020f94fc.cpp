@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daSoundObj_c.h"
-// @emits daSoundObj_c_Behavior
+// recovered name: daSoundObj_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daSoundObj_c::Behavior - recovered from vtable slot identity */
 struct C;
@@ -15,7 +15,7 @@ extern "C" {
 void _ZN9ActorBase18MarkForDestructionEv(C* c);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int d, int f, bool g);
 
-int daSoundObj_c_Behavior(char* cc)
+int func_ov002_020f94fc(char* cc)
 {
     struct daSoundObj_c *self = (struct daSoundObj_c *)(void *)cc;
     C* c = (C*)cc;

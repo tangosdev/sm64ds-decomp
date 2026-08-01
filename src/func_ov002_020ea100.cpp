@@ -1,9 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern int func_ov002_020e73ac(char *arg);
 extern int _ZN6Player12Unk_020c9e5cEh(void *thisPtr, int state);
 extern void func_ov002_020e6fbc(char *c, int arg);

@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);

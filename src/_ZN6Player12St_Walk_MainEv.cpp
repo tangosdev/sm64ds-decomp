@@ -1,17 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player12St_Walk_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
 extern int func_ov002_020c5244(void);
@@ -20,7 +14,7 @@ extern void ApproachAngle(short* cur, short target, int divisor, int band, int m
 extern int _ZN6Player6IsAnimEj(void* c, u32 anim);
 extern int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5);
 extern int _ZN6Player12FinishedAnimEv(void* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void func_ov002_020d4540(void* c);
 extern void func_ov002_020cabe0(void* c);
 extern int _ZNK6Player14GetBodyModelIDEjb(void* c, u32 a, int b);

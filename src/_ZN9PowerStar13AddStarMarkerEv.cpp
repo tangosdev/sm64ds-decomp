@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9PowerStar13AddStarMarkerEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PowerStar.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern void SetStarMarker(int i, int v1, int v2);
 extern int IsStarCollectedInCurLevel(int starID);
 extern int data_0209f40c[];

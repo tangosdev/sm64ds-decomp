@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 namespace G2S { u16 *GetBG1ScrPtr(); }
 
 extern u8 data_0209f2e4;

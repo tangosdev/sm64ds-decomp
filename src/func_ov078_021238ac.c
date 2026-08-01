@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct Vec3 { int x, y, z; };
 struct M12 { int w[12]; };
 

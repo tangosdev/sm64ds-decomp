@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN15RotatingFirebar8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Player.h"
@@ -7,10 +8,6 @@
 #include "RotatingFirebar.h"
 #pragma opt_propagation off
 #pragma opt_dead_assignments off
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define LI(v) ((int)(((long long)(v))))
 

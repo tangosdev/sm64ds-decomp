@@ -1,10 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-typedef volatile unsigned int vu32;
-typedef volatile unsigned short vu16;
-
+#include "types.h"
 extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN3GXS15SetGraphicsModeEi(int a);
 extern void func_ov004_020b2980(void);

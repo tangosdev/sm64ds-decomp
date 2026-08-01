@@ -1,16 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov060_021172e0
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef int s32;
-typedef int Fix12i;
-typedef short s16;
-typedef signed char s8;
-
-
-
-
 extern "C" {
     void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
     void _ZN9ActorBase18MarkForDestructionEv(void* self);

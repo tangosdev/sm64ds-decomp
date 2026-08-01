@@ -1,10 +1,9 @@
+#include "types.h"
 // @symbol _ZN5Stage17PS_UpdateSaveMenuEb
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
 extern u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
 
 void _ZN5Stage17PS_UpdateSaveMenuEb(int b)

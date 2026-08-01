@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u8 data_0209fcdc[];
 extern u8 data_0209fc78[];
 extern u8 data_0209fc88[];

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 typedef struct Vec3 { int x, y, z; } Vec3;

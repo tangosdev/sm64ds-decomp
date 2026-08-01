@@ -1,3 +1,4 @@
+#include "types.h"
 // @symbol func_ov034_02112688
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Player.h"
@@ -5,9 +6,6 @@
 /* recovered: shared common types */
 #include "common.h"
 #pragma opt_strength_reduction off
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void func_0201267c(int a, void *b);
 extern void func_ov034_021125b8(char *sl, int i);

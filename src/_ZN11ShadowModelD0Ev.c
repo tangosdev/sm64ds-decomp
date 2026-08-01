@@ -5,7 +5,7 @@ struct ShadowModel {
     struct ShadowModel *next;   /* 0x24 */
 };
 extern void *_ZTV11ShadowModel[];
-extern struct ShadowModel *SHADOW_MODEL_LIST_HEAD;   /* 0x0209cef4 */
+extern struct ShadowModel *data_0209cef4;   /* 0x0209cef4 */
 extern void _ZN9ModelBaseD2Ev(struct ShadowModel *thiz);
 extern void _ZN6Memory16operator_delete2EPv(void *ptr);
 
@@ -15,8 +15,8 @@ struct ShadowModel *_ZN11ShadowModelD0Ev(struct ShadowModel *thiz)
 
     if (thiz->prev)
         thiz->prev->next = thiz->next;
-    else if (SHADOW_MODEL_LIST_HEAD == thiz)
-        SHADOW_MODEL_LIST_HEAD = thiz->next;
+    else if (data_0209cef4 == thiz)
+        data_0209cef4 = thiz->next;
 
     if (thiz->next)
         thiz->next->prev = thiz->prev;

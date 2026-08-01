@@ -1,13 +1,13 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
-extern int G2[];
-extern int G3[];
+extern int data_ov094_02136ae0[];
+extern int data_ov094_02136af8[];
+extern int data_ov094_02136ae8[];
+extern int data_ov094_02136af0[];
 int _ZN10HootTheOwl16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
-    _ZN13SharedFilePtr7ReleaseEv(G3);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136ae0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136af8);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136ae8);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136af0);
     return 1;
 }

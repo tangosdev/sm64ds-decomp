@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 extern int RandomIntInternal(int *seed);
 extern s16 data_02082214[];
 extern int data_0209d4b8;

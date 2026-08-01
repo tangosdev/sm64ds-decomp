@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned char u8;
+#include "types.h"
 struct C; typedef void (C::*PMF)();
 extern PMF data_ov002_0211075c[];
 struct Obj { char pad[0x118]; void *f118; };

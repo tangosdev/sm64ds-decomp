@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN6Player16InitWingFeathersEb(void* p, int b);

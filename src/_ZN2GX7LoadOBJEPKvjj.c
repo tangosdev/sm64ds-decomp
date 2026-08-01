@@ -3,7 +3,7 @@
  * Uses DMA channel if available, else CPU copy.
  */
 
-extern unsigned int RENDER_DMA_CHANNEL;
+extern unsigned int data_02099fd0;
 
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dst, unsigned int count);
 extern void MultiCopy_Int(const void *src, void *dst, unsigned int count);
@@ -12,7 +12,7 @@ extern void MultiCopy_Int(const void *src, void *dst, unsigned int count);
 
 void _ZN2GX7LoadOBJEPKvjj(const void *src, unsigned int offset, unsigned int count)
 {
-    unsigned int channel = RENDER_DMA_CHANNEL;
+    unsigned int channel = data_02099fd0;
     unsigned int base = 0x6400000;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);

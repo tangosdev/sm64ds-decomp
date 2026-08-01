@@ -1,3 +1,4 @@
+#include "types.h"
 /* func_0200897c @ 0x0200897c, size 0x5c, ARM.
  * Camera-cluster member taking (Camera *self, void *arg).
  * Always runs func_02035414(arg). Then, if the camera's owner Actor
@@ -12,10 +13,6 @@
  * bare `bne`; a `u8` bool masks with `ands #0xff`; only the (int-width) enum
  * bool gives the exact `cmp r0, #0`.
  */
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 enum Bool { FALSE, TRUE };
 
 typedef struct Actor {

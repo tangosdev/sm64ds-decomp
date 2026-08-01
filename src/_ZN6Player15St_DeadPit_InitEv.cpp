@@ -1,11 +1,9 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player15St_DeadPit_InitEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern u8 data_0209f2d8;
 extern u8 data_0209f250;
 

@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern unsigned func_02062734(char* base, unsigned mask, unsigned acc, int count);
 
 unsigned func_02062778(char* a, unsigned short* b, int c)

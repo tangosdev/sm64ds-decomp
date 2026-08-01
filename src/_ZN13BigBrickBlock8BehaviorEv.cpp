@@ -1,12 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13BigBrickBlock8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigBrickBlock.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern "C" int _ZN5Event6GetBitEj(unsigned int a);
 extern "C" void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *after);
 extern "C" void func_020393a4(int *p, int v);

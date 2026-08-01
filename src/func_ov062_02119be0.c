@@ -4,14 +4,14 @@ typedef struct Vec3 {
 
 extern int Vec3_Dist(Vec3* a, Vec3* b);
 extern short Vec3_HorzAngle(Vec3* a, Vec3* b);
-extern int Player_StartTalk(void* player, void* actor, int flag);
-extern int Player_GetTalkState(void* player);
-extern int Player_ShowMessage(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
-extern void ModelAnim_SetAnim(void* anim, void* file, int idx, int speed, unsigned int flags);
-extern void Sound_StopLoadedMusic_Layer2(void);
+extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int flag);
+extern int _ZN6Player12GetTalkStateEv(void* player);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int idx, int speed, unsigned int flags);
+extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
 extern void func_0201277c(unsigned int id);
-extern int ApproachLinear(short* val, short target, short step);
-extern void Actor_UntrackAndSpawnStar(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
+extern int _Z14ApproachLinearRsss(short* val, short target, short step);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
 
 extern void* data_ov062_0211e03c[];
 extern void* data_ov062_0211e034[];
@@ -48,13 +48,13 @@ void func_ov062_02119be0(char* self)
         }
         if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (Player_StartTalk(*(void**)(self + 0x398), self, 1) == 0)
+        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(self + 0x398), self, 1) == 0)
             return;
         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vec3*)(self + 0x5c), &playerPos);
         (*(unsigned char*)(((int)self + 0x390)))++;
-        ModelAnim_SetAnim(self + 0x300, data_ov062_0211e03c[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, data_ov062_0211e03c[1], 0, 0x1000, 0);
         if (*(unsigned char*)(self + 0x3b4) == 0) {
-            Sound_StopLoadedMusic_Layer2();
+            _ZN5Sound22StopLoadedMusic_Layer2Ev();
             func_0201277c(0x4d);
             *(unsigned char*)(self + 0x3b5) = 0;
             *(unsigned char*)(self + 0x3b4) = 1;
@@ -62,7 +62,7 @@ void func_ov062_02119be0(char* self)
         *(unsigned char*)(self + 0x3b3) = 0;
         return;
     case 1:
-        if (ApproachLinear((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)
+        if (_Z14ApproachLinearRsss((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         *(short*)(self + 0x8e) = *(short*)(self + 0x94);
         return;
@@ -83,7 +83,7 @@ void func_ov062_02119be0(char* self)
             *(unsigned char*)(self + 0x3b3) = 1;
             msg = 0x9f;
         }
-        x = Player_GetTalkState(*(void**)(self + 0x398));
+        x = _ZN6Player12GetTalkStateEv(*(void**)(self + 0x398));
         if (x != 0)
             return;
         x = *(int*)(self + 0x5c);
@@ -92,21 +92,21 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (Player_ShowMessage(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 3:
-        if (Player_GetTalkState(*(void**)(self + 0x398)) != 0xFFFFFFFF)
+        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0xFFFFFFFF)
             return;
         (*(unsigned char*)(((int)self + 0x390)))++;
-        ModelAnim_SetAnim(self + 0x300, data_ov062_0211e034[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, data_ov062_0211e034[1], 0, 0x1000, 0);
         *(unsigned short*)(self + 0x100) = 0x3c;
         if (*(unsigned char*)(self + 0x3af) != 0) {
             starPos.x = *(int*)(self + 0x5c);
             starPos.y = *(int*)(self + 0x60);
             starPos.z = *(int*)(self + 0x64);
             starPos.y += 0x64000;
-            Actor_UntrackAndSpawnStar(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
+            _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
             return;
         }
         if (*(unsigned char*)(self + 0x3b3) == 1) {
@@ -123,18 +123,18 @@ void func_ov062_02119be0(char* self)
         }
         if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (Player_StartTalk(*(void**)(self + 0x398), self, 0) != 0)
+        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(self + 0x398), self, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 5:
-        if (Player_GetTalkState(*(void**)(self + 0x398)) != 0)
+        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0)
             return;
         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vec3*)(self + 0x5c), (Vec3*)(*(char**)(self + 0x398) + 0x5c));
-        ModelAnim_SetAnim(self + 0x300, data_ov062_0211e03c[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, data_ov062_0211e03c[1], 0, 0x1000, 0);
         (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 6:
-        if (ApproachLinear((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)
+        if (_Z14ApproachLinearRsss((short*)(self + 0x94), *(short*)(self + 0x3a8), 0x800) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         *(short*)(self + 0x8e) = *(short*)(self + 0x94);
         return;
@@ -145,7 +145,7 @@ void func_ov062_02119be0(char* self)
                 msg = 0xa0;
             else
                 msg = 0xa1;
-            x = Player_GetTalkState(p);
+            x = _ZN6Player12GetTalkStateEv(p);
             if (x != 0)
                 return;
         }
@@ -155,14 +155,14 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (Player_ShowMessage(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 8:
-        if (Player_GetTalkState(*(void**)(self + 0x398)) != 0xFFFFFFFF)
+        if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x398)) != 0xFFFFFFFF)
             return;
         *(unsigned char*)(self + 0x390) = 4;
-        ModelAnim_SetAnim(self + 0x300, data_ov062_0211e034[1], 0, 0x1000, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x300, data_ov062_0211e034[1], 0, 0x1000, 0);
         return;
     }
 }

@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef short s16;
-typedef signed char s8;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int SublevelToLevel(int i);
 extern void func_020070e8(void *a, int b, int c, int d, int e, int f, int g);
 extern s8 data_0209f2f8;

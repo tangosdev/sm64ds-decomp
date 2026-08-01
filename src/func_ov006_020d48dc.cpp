@@ -1,9 +1,7 @@
 //cpp
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
     virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();

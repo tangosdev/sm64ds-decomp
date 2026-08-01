@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct V3 { int x, y, z; };
 
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);

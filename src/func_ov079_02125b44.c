@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZN9Animation8FinishedEv(void* self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, int rate, unsigned int flags);
 extern void _ZN9Animation7AdvanceEv(void* self);

@@ -1,11 +1,9 @@
+#include "types.h"
 // @symbol _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_CylinderClsn.h"
 /* recovered: named members + shared header */
 #include "MovingCylinderClsn.h"
-typedef int Fix12i;
-typedef unsigned int u32;
-
 struct Actor { void* vtable; };
 
 

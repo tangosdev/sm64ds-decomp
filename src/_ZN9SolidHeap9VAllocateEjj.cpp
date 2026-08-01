@@ -1,9 +1,7 @@
 //cpp
+#include "types.h"
 /* SolidHeap::VAllocate(unsigned, unsigned) at 0x0203c6ac -- Heap vtable slot.
  * Forwards to the allocator (SolidHeapAllocator* at this+0x14). */
-
-typedef unsigned int u32;
-
 class SolidHeapAllocator
 {
 public:

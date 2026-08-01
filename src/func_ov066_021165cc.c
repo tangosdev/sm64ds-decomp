@@ -1,6 +1,4 @@
-typedef int Fix12i;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int data_ov066_0211ae54[];
 extern int data_ov066_0211ae3c[];
 extern int data_ov066_0211ae94[];

@@ -1,5 +1,5 @@
 // @symbol func_ov084_0212fa7c
-// @emits FirePiranhaPlantBig_Kill
+// recovered name: FirePiranhaPlantBig_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
@@ -16,7 +16,7 @@ extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsig
 
 extern int *data_ov084_02130df4;
 
-void FirePiranhaPlantBig_Kill(char *c) {
+void func_ov084_0212fa7c(char *c) {
     *(unsigned char *)(c + 0x45c) = 1;
     if (_ZN9Animation8FinishedEv(c + 0x160) || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0)) {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, (BCA_File *)((int *)&data_ov084_02130df4)[1], 0, 0x1000, 0);

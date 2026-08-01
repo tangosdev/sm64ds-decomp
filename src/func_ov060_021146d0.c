@@ -1,12 +1,8 @@
+#include "types.h"
 /* func_ov060_021146d0 at 0x021146d0 (ov060), size 0x188
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 extern void func_02012694(int a, void *b);
 extern void func_ov060_02111cc0(char *c, int idx, int m);
 extern void func_ov060_02115a84(char *c, char *arg);

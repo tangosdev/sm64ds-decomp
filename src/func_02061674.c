@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern int func_0206152c(void);
 extern int WM_CheckStateEx(int a, int b);
 extern void func_0206116c(void);

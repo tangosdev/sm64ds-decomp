@@ -1,6 +1,5 @@
+#include "types.h"
 #pragma opt_loop_invariants off
-typedef unsigned char u8;
-
 struct Obj {
   char pad00[0x14];
   int f14;       // 0x14

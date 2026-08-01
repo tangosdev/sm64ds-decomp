@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern char* _ZN5Actor15FindWithActorIDEjPS_(u32 actorID, char* prev);
 extern char* _ZN5Actor10FindWithIDEj(u32 id);
 extern int RandomIntInternal(int* seed);

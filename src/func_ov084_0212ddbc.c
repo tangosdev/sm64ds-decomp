@@ -1,14 +1,7 @@
+#include "types.h"
 // @symbol func_ov084_0212ddbc
 /* recovered: shared common types */
 #include "common.h"
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef long long s64;
-
-
-
 extern int _Z14ApproachLinearRiii(s32 *p, int a, int b);
 extern int _ZN9Animation8FinishedEv(void *a);
 extern void func_0201267c(int a, void *p);

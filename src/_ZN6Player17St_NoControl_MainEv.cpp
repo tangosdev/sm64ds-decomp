@@ -1,16 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player17St_NoControl_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-typedef int s32;
-
 extern "C" {
 extern short GetAngleToCamera(int i);
 extern void func_ov002_020c9718(char* c);

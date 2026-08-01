@@ -1,13 +1,10 @@
+#include "types.h"
 // @symbol func_ov006_020de704
-// @emits dScMgCoin_c_InitResources
+// recovered name: dScMgCoin_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgCoin_c::InitResources - recovered from vtable slot identity */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -19,7 +16,7 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
 
-int dScMgCoin_c_InitResources(void *arg0) {
+int func_ov006_020de704(void *arg0) {
     char *c = (char*)arg0;
     int a, b, d;
 

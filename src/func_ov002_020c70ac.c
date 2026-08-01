@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 void func_ov002_020c70ac(char* c) {
     if (*(u16*)(c+0x6a4) != 0) {
         *(int*)(c+0xa8) = 0;

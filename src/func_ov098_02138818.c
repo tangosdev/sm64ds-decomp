@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct W4 { u32 w[4]; };
 
 extern struct W4 data_ov098_0213c4e0;
@@ -31,5 +30,5 @@ void func_ov098_02138818(char *self)
     *(void **)(self + 0x5e8) = *(void **)(self + 0x5e4);
     *(void **)(self + 0x5e4) = 0;
 
-    *(int *)(((long long)(int)(self + 0x57c)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x2000;
+    *(int *)(((long long)(int)(self + 0x57c))) |= 0x2000;
 }

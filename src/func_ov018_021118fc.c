@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 struct Actor { char pad[0xc]; unsigned short kind; };
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 struct Actor* func_ov018_021118fc(char* c) {

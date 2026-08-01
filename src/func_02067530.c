@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "types.h"
 extern char* data_020a9db8;
 
 struct Out { int f0; u32 f4; int f8; u8 fc; };

@@ -1,9 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int Vec3_HorzLen(void *v);
 extern int AngleDiff(int a, int b);
 extern int func_ov002_020c031c(void *c);

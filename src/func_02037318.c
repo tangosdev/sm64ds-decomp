@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int _ZN6Player7IsInAirEv(void *player);
 

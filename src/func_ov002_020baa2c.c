@@ -1,12 +1,8 @@
+#include "types.h"
 /* func_ov002_020baa2c at 0x020baa2c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
-
-typedef int s32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct Vector3;
 extern s32 Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 

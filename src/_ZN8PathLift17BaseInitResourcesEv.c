@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 void *_ZN9ActorBasenwEj(u32 sz);
 void func_ov004_020b2adc(void *p);
 void func_020733a8(void *o, int a, int b, void *f1, void *f2);

@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 int func_02068514(u16 *p)
 {
     u16 v = *p++;

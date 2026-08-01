@@ -1,9 +1,4 @@
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 extern char *data_ov007_0210342c;
 extern int data_ov007_02103428;
 

@@ -1,10 +1,7 @@
 //cpp
+#include "types.h"
 // func_ov098_0213a36c at 0x0213a36c
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct CylinderClsn;
 
 struct Actor {

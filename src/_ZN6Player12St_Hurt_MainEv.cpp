@@ -1,10 +1,5 @@
 //cpp
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" {
 extern void func_ov002_020d9a4c(char *c);
 extern void func_ov002_020d99a4(unsigned char *self);

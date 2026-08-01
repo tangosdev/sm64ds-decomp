@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_ov002_020e930c at 0x020e930c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-typedef unsigned char u8;
-
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern int func_ov002_020e8ef0(void* a, void* b);

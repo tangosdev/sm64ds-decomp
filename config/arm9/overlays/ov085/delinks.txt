@@ -4,3 +4,495 @@
     .ctor       start:0x0212fdf0 end:0x0212fe08 kind:rodata align:4
     .data       start:0x0212fe20 end:0x02130480 kind:data align:32
     .bss        start:0x02130480 end:0x02130880 kind:bss align:32
+src/_ZN4ToadD1Ev.cpp:
+    .text start:0x02129020 end:0x02129060
+
+src/_ZN4ToadD0Ev.c:
+    complete
+    .text start:0x02129060 end:0x021290b4
+
+src/func_ov085_021290b4.c:
+    complete
+    .text start:0x021290b4 end:0x021291ac
+
+src/func_ov085_021291ac.c:
+    complete
+    .text start:0x021291ac end:0x0212943c
+
+src/func_ov085_0212943c.cpp:
+    .text start:0x0212943c end:0x02129470
+
+src/func_ov085_02129470.cpp:
+    complete
+    .text start:0x02129470 end:0x021294f0
+
+src/func_ov085_021294f0.cpp:
+    complete
+    .text start:0x021294f0 end:0x02129524
+
+src/func_ov085_02129524.cpp:
+    complete
+    .text start:0x02129524 end:0x02129570
+
+src/func_ov085_02129570.cpp:
+    complete
+    .text start:0x02129570 end:0x021295bc
+
+src/func_ov085_021295bc.c:
+    complete
+    .text start:0x021295bc end:0x021297e8
+
+src/_ZN4Toad16CleanupResourcesEv.cpp:
+    .text start:0x021297e8 end:0x02129854
+
+src/_ZN4Toad6RenderEv.cpp:
+    complete
+    .text start:0x02129854 end:0x02129878
+
+src/_ZN4Toad13InitResourcesEv.c:
+    complete
+    .text start:0x02129a7c end:0x02129cd0
+
+src/Toad_Spawn.c:
+    complete
+    .text start:0x02129cd0 end:0x02129d18
+
+src/_ZN13PrincessPeachD1Ev.cpp:
+    .text start:0x02129d18 end:0x02129d60
+
+src/_ZN13PrincessPeachD0Ev.c:
+    complete
+    .text start:0x02129d60 end:0x02129dbc
+
+src/func_ov085_02129dbc.cpp:
+    .text start:0x02129dbc end:0x02129ebc
+
+src/func_ov085_02129ebc.cpp:
+    complete
+    .text start:0x02129ebc end:0x02129f8c
+
+src/func_ov085_02129f8c.c:
+    .text start:0x02129f8c end:0x02129fdc
+
+src/func_ov085_02129fdc.cpp:
+    complete
+    .text start:0x02129fdc end:0x0212a0b8
+
+src/func_ov085_0212a0b8.c:
+    complete
+    .text start:0x0212a0b8 end:0x0212a0e8
+
+src/func_ov085_0212a0e8.c:
+    complete
+    .text start:0x0212a0e8 end:0x0212a148
+
+src/func_ov085_0212a148.c:
+    complete
+    .text start:0x0212a148 end:0x0212a150
+
+src/func_ov085_0212a150.c:
+    complete
+    .text start:0x0212a150 end:0x0212a19c
+
+src/func_ov085_0212a19c.c:
+    complete
+    .text start:0x0212a19c end:0x0212a1d4
+
+src/func_ov085_0212a1d4.c:
+    complete
+    .text start:0x0212a1d4 end:0x0212a220
+
+src/func_ov085_0212a220.c:
+    complete
+    .text start:0x0212a220 end:0x0212a328
+
+src/func_ov085_0212a328.c:
+    complete
+    .text start:0x0212a328 end:0x0212a37c
+
+src/func_ov085_0212a37c.cpp:
+    complete
+    .text start:0x0212a37c end:0x0212a3ec
+
+src/func_ov085_0212a3ec.c:
+    complete
+    .text start:0x0212a3ec end:0x0212a430
+
+src/func_ov085_0212a430.cpp:
+    complete
+    .text start:0x0212a430 end:0x0212a46c
+
+src/func_ov085_0212a46c.cpp:
+    complete
+    .text start:0x0212a46c end:0x0212a4a4
+
+src/func_ov085_0212a4a4.c:
+    complete
+    .text start:0x0212a4a4 end:0x0212a4c0
+
+src/_ZN13PrincessPeach16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212a4c0 end:0x0212a504
+
+src/_ZN13PrincessPeach16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212a504 end:0x0212a508
+
+src/_ZN13PrincessPeach6RenderEv.cpp:
+    complete
+    .text start:0x0212a508 end:0x0212a52c
+
+src/_ZN13PrincessPeach8BehaviorEv.cpp:
+    .text start:0x0212a52c end:0x0212a588
+
+src/_ZN13PrincessPeach13InitResourcesEv.cpp:
+    .text start:0x0212a588 end:0x0212a684
+
+src/PrincessPeach_Spawn.c:
+    complete
+    .text start:0x0212a684 end:0x0212a6d4
+
+src/_ZN6RabbitD1Ev.c:
+    complete
+    .text start:0x0212a6d4 end:0x0212a724
+
+src/_ZN6RabbitD0Ev.c:
+    complete
+    .text start:0x0212a724 end:0x0212a788
+
+src/func_ov085_0212a788.c:
+    complete
+    .text start:0x0212a788 end:0x0212a828
+
+src/func_ov085_0212a828.cpp:
+    complete
+    .text start:0x0212a828 end:0x0212a904
+
+src/func_ov085_0212a904.c:
+    complete
+    .text start:0x0212a904 end:0x0212aaa4
+
+src/func_ov085_0212aaa4.c:
+    complete
+    .text start:0x0212aaa4 end:0x0212aaec
+
+src/func_ov085_0212aaec.c:
+    complete
+    .text start:0x0212aaec end:0x0212ac3c
+
+src/func_ov085_0212ac3c.c:
+    complete
+    .text start:0x0212ac3c end:0x0212ac4c
+
+src/func_ov085_0212ac4c.c:
+    complete
+    .text start:0x0212ac4c end:0x0212ad8c
+
+src/func_ov085_0212ad8c.c:
+    complete
+    .text start:0x0212ad8c end:0x0212ae08
+
+src/func_ov085_0212ae08.c:
+    complete
+    .text start:0x0212ae08 end:0x0212b3fc
+
+src/func_ov085_0212b3fc.c:
+    complete
+    .text start:0x0212b3fc end:0x0212b444
+
+src/func_ov085_0212b444.c:
+    complete
+    .text start:0x0212b444 end:0x0212b478
+
+src/func_ov085_0212b478.c:
+    complete
+    .text start:0x0212b478 end:0x0212b4b4
+
+src/func_ov085_0212b4b4.c:
+    complete
+    .text start:0x0212b4b4 end:0x0212b75c
+
+src/func_ov085_0212b75c.cpp:
+    complete
+    .text start:0x0212b75c end:0x0212b86c
+
+src/func_ov085_0212b86c.c:
+    complete
+    .text start:0x0212b86c end:0x0212b8a0
+
+src/func_ov085_0212b8a0.c:
+    complete
+    .text start:0x0212b8a0 end:0x0212b8dc
+
+src/func_ov085_0212bc14.c:
+    complete
+    .text start:0x0212bc14 end:0x0212bc78
+
+src/func_ov085_0212bc78.cpp:
+    complete
+    .text start:0x0212bc78 end:0x0212bcc8
+
+src/func_ov085_0212bcc8.c:
+    complete
+    .text start:0x0212bcc8 end:0x0212bdbc
+
+src/func_ov085_0212bdbc.cpp:
+    complete
+    .text start:0x0212bdbc end:0x0212bedc
+
+src/func_ov085_0212bedc.cpp:
+    .text start:0x0212bedc end:0x0212c004
+
+src/_ZN6Rabbit16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212c004 end:0x0212c070
+
+src/_ZN6Rabbit16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212c070 end:0x0212c074
+
+src/_ZN6Rabbit6RenderEv.cpp:
+    .text start:0x0212c074 end:0x0212c150
+
+src/func_ov085_0212c150.cpp:
+    complete
+    .text start:0x0212c150 end:0x0212c230
+
+src/_ZN6Rabbit8BehaviorEv.c:
+    complete
+    .text start:0x0212c230 end:0x0212c7fc
+
+src/_ZN6Rabbit13InitResourcesEv.cpp:
+    .text start:0x0212c7fc end:0x0212cc18
+
+src/func_ov085_0212cc18.c:
+    complete
+    .text start:0x0212cc18 end:0x0212cc2c
+
+src/Rabbit_Spawn.c:
+    complete
+    .text start:0x0212cc2c end:0x0212cc88
+
+src/_ZN9RabbitKeyD1Ev.c:
+    complete
+    .text start:0x0212cc88 end:0x0212ccc0
+
+src/_ZN9RabbitKeyD0Ev.c:
+    complete
+    .text start:0x0212ccc0 end:0x0212cd0c
+
+src/func_ov085_0212cd0c.cpp:
+    complete
+    .text start:0x0212cd0c end:0x0212cd80
+
+src/func_ov085_0212cd80.c:
+    complete
+    .text start:0x0212cd80 end:0x0212d038
+
+src/func_ov085_0212d038.c:
+    complete
+    .text start:0x0212d038 end:0x0212d108
+
+src/func_ov085_0212d108.c:
+    complete
+    .text start:0x0212d108 end:0x0212d24c
+
+src/func_ov085_0212d24c.c:
+    complete
+    .text start:0x0212d24c end:0x0212d268
+
+src/func_ov085_0212d268.cpp:
+    complete
+    .text start:0x0212d268 end:0x0212d2b8
+
+src/func_ov085_0212d2b8.cpp:
+    complete
+    .text start:0x0212d2b8 end:0x0212d374
+
+src/_ZN9RabbitKey16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212d374 end:0x0212d398
+
+src/_ZN9RabbitKey16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212d398 end:0x0212d39c
+
+src/_ZN9RabbitKey6RenderEv.cpp:
+    .text start:0x0212d39c end:0x0212d3ec
+
+src/_ZN9RabbitKey8BehaviorEv.cpp:
+    complete
+    .text start:0x0212d3ec end:0x0212d46c
+
+src/_ZN9RabbitKey13InitResourcesEv.cpp:
+    complete
+    .text start:0x0212d46c end:0x0212d4e8
+
+src/RabbitKey_Spawn.c:
+    complete
+    .text start:0x0212d4e8 end:0x0212d528
+
+src/_ZN9LakituBroD1Ev.c:
+    complete
+    .text start:0x0212d528 end:0x0212d578
+
+src/_ZN9LakituBroD0Ev.c:
+    complete
+    .text start:0x0212d578 end:0x0212d5dc
+
+src/func_ov085_0212d5dc.cpp:
+    complete
+    .text start:0x0212d5dc end:0x0212d724
+
+src/func_ov085_0212d724.c:
+    complete
+    .text start:0x0212d724 end:0x0212d73c
+
+src/func_ov085_0212d73c.c:
+    complete
+    .text start:0x0212d73c end:0x0212d8ec
+
+src/func_ov085_0212d8ec.c:
+    complete
+    .text start:0x0212d8ec end:0x0212d9b8
+
+src/func_ov085_0212d9b8.c:
+    complete
+    .text start:0x0212d9b8 end:0x0212db04
+
+src/func_ov085_0212db04.cpp:
+    complete
+    .text start:0x0212db04 end:0x0212dbdc
+
+src/func_ov085_0212dbdc.c:
+    complete
+    .text start:0x0212dbdc end:0x0212dcfc
+
+src/func_ov085_0212dcfc.c:
+    complete
+    .text start:0x0212dcfc end:0x0212dd10
+
+src/func_ov085_0212dd10.cpp:
+    complete
+    .text start:0x0212dd10 end:0x0212ddc4
+
+src/func_ov085_0212ddc4.cpp:
+    complete
+    .text start:0x0212ddc4 end:0x0212de5c
+
+src/func_ov085_0212de5c.cpp:
+    .text start:0x0212de5c end:0x0212df84
+
+src/func_ov085_0212df84.cpp:
+    .text start:0x0212df84 end:0x0212e078
+
+src/func_ov085_0212e078.cpp:
+    complete
+    .text start:0x0212e078 end:0x0212e180
+
+src/func_ov085_0212e180.c:
+    complete
+    .text start:0x0212e180 end:0x0212e19c
+
+src/func_ov085_0212e19c.c:
+    complete
+    .text start:0x0212e19c end:0x0212e2ec
+
+src/func_ov085_0212e2ec.c:
+    complete
+    .text start:0x0212e2ec end:0x0212e310
+
+src/func_ov085_0212e310.cpp:
+    .text start:0x0212e310 end:0x0212e480
+
+src/func_ov085_0212e480.c:
+    complete
+    .text start:0x0212e480 end:0x0212e4a4
+
+src/func_ov085_0212e4a4.c:
+    .text start:0x0212e4a4 end:0x0212e59c
+
+src/func_ov085_0212e59c.c:
+    complete
+    .text start:0x0212e59c end:0x0212e5ac
+
+src/func_ov085_0212e5ac.c:
+    complete
+    .text start:0x0212e5ac end:0x0212e720
+
+src/func_ov085_0212e720.c:
+    complete
+    .text start:0x0212e720 end:0x0212e728
+
+src/func_ov085_0212e728.cpp:
+    complete
+    .text start:0x0212e728 end:0x0212e778
+
+src/func_ov085_0212e778.cpp:
+    complete
+    .text start:0x0212e778 end:0x0212e858
+
+src/func_ov085_0212e858.c:
+    complete
+    .text start:0x0212e858 end:0x0212ea90
+
+src/_ZN9LakituBro16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212ea90 end:0x0212eacc
+
+src/_ZN9LakituBro16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212eacc end:0x0212ead0
+
+src/_ZN9LakituBro6RenderEv.cpp:
+    complete
+    .text start:0x0212ead0 end:0x0212eb18
+
+src/_ZN9LakituBro8BehaviorEv.cpp:
+    .text start:0x0212eb18 end:0x0212ebec
+
+src/_ZN9LakituBro13InitResourcesEv.cpp:
+    .text start:0x0212ebec end:0x0212ed54
+
+src/LakituBro_Spawn.c:
+    complete
+    .text start:0x0212ed54 end:0x0212edac
+
+src/_ZN8WallSignD1Ev.c:
+    .text start:0x0212edac end:0x0212edf8
+
+src/_ZN8WallSignD0Ev.c:
+    .text start:0x0212edf8 end:0x0212ee58
+
+src/_ZN8WallSign16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212ee58 end:0x0212ee7c
+
+src/_ZN8WallSign6RenderEv.cpp:
+    complete
+    .text start:0x0212ee7c end:0x0212eea4
+
+src/_ZN8WallSign13InitResourcesEv.cpp:
+    .text start:0x0212f1b0 end:0x0212f244
+
+src/WallSign_Spawn.c:
+    complete
+    .text start:0x0212f244 end:0x0212f27c
+
+src/__sinit_ov085_0212f2a8.c:
+    .init start:0x0212f2a8 end:0x0212f3a0
+
+src/__sinit_ov085_0212f3a0.c:
+    .init start:0x0212f3a0 end:0x0212f5ec
+
+src/__sinit_ov085_0212f5ec.c:
+    .init start:0x0212f5ec end:0x0212f9bc
+
+src/__sinit_ov085_0212f9bc.c:
+    .init start:0x0212f9bc end:0x0212fa40
+
+src/__sinit_ov085_0212fa40.c:
+    .init start:0x0212fa40 end:0x0212fdb0
+
+src/__sinit_ov085_0212fdb0.c:
+    .init start:0x0212fdb0 end:0x0212fdf0

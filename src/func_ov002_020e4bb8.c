@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_ov002_020be3b0(char* c);
 extern u32 _ZNK6Player14GetBodyModelIDEjb(char* c, u32 a, char b);
 extern void _ZN10ModelAnim24CopyERKS_Pcj(void* self, void* src, char* p, u32 n);

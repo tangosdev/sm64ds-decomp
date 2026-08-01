@@ -9,14 +9,14 @@ struct Obj {
     void **vtable; /* 0x0 */
 };
 
-extern void *vtable_02099368[];
+extern void *data_02099368[];
 
 extern void func_02037ee4(void *sub);                    /* 0x02037ee4 */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr);  /* 0x0203cbcc */
 
 struct Obj *func_02038114(struct Obj *thiz)
 {
-    thiz->vtable = (void **)vtable_02099368;
+    thiz->vtable = (void **)data_02099368;
     func_02037ee4((char *)thiz + 4);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;

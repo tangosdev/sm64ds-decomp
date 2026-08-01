@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
+#include "types.h"
 extern int func_0200f0bc(void);
 extern u16* _ZN3G2S12GetBG2ScrPtrEv(void);
 extern u16* _ZN3G2S12GetBG3ScrPtrEv(void);

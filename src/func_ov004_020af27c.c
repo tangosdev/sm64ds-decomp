@@ -3,11 +3,11 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
-// @emits dScMgBase_c_OnHitByMegaChar
+// recovered name: dScMgBase_c_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnHitByMegaChar - recovered from vtable slot identity */
 
-void dScMgBase_c_OnHitByMegaChar(void *c)
+void func_ov004_020af27c(void *c)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     if (self->unk_4630 != 0) return;

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 typedef struct V3 { int x, y, z; } V3;
 typedef struct RaycastLine { char pad[0x14]; char surf[0x64]; } RaycastLine;
 

@@ -1,9 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN4Fish13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Fish.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
 extern int _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);

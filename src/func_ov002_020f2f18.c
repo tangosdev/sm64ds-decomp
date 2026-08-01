@@ -1,6 +1,4 @@
-typedef int s32;
-typedef unsigned char u8;
-
+#include "types.h"
 void func_ov002_020f2f18(char* c, int a, int b)
 {
     int i = 0;

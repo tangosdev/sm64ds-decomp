@@ -1,5 +1,5 @@
 // @symbol func_ov002_020bb27c
-// @emits SignPost_OnGroundPounded
+// recovered name: SignPost_OnGroundPounded
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjTatefuda_c::OnGroundPounded - recovered from vtable slot identity */
 typedef unsigned char u8;
@@ -13,7 +13,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
    emits `add rN, self, #off` + `ldr/str [rN]`. */
 #define LD(p) ((int)(((long long)(int)(p))))
 
-void SignPost_OnGroundPounded(char* self, char* arg){
+void func_ov002_020bb27c(char* self, char* arg){
   if (*(u8*)(self+0x58e) == 0) return;
   if (*(u8*)(self+0x58f) != 0) return;
   _ZN5Sound9PlayBank3EjRK7Vector3(0x62, (struct Vector3*)(self+0x74));

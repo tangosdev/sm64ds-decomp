@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN2GX12BeginLoadTexEv(void);
 extern u32 _ZN2GX7LoadTexEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN2GX10EndLoadTexEv(void);

@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 extern int _ZNK9Animation12WillHitFrameEi(void* anim, int frame);
 
 void func_ov006_020e8214(char* c)

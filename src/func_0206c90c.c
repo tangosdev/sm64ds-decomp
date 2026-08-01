@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 typedef struct { int a, b, c, d; } S;
 int func_0206c90c(S s){
     char* q = (char*)&s + 7;

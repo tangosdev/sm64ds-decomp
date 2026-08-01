@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct Obj {
     int w0, w4, w8, wC, w10; /* 0x00 */
     int w14;                 /* 0x14 */

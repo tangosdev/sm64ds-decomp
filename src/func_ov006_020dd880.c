@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void func_ov006_020ddcf8(char *c, int idx);
 

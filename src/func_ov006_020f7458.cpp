@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020f7458
-// @emits dScMgMemory2_c_Behavior
+// recovered name: dScMgMemory2_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMgMemory2_c::Behavior - recovered from vtable slot identity */
 struct C; typedef void (C::*PMF)();
@@ -9,7 +9,7 @@ extern "C" Entry data_ov006_021423e0[];
 struct C { char pad[0x53d4]; int idx; };
 extern "C" void func_ov004_020b65e4(void);
 extern "C" int func_ov006_020c19d0(void* p);
-extern "C" int dScMgMemory2_c_Behavior(C* c) {
+extern "C" int func_ov006_020f7458(C* c) {
     (c->*(data_ov006_021423e0[c->idx].pmf))();
     func_ov004_020b65e4();
     func_ov006_020c19d0((char*)c + 0x4f38);

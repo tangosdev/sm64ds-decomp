@@ -1,12 +1,9 @@
 //cpp
+#include "types.h"
 // @symbol func_ov100_02142918
-// @emits Butterfly_Kill
+// recovered name: Butterfly_Kill
 /* recovered: renamed to Class_Method */
 /* daBtfly_c::Kill - recovered from vtable slot identity */
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern "C" {
 void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void* self, void* c);
 int func_020ad660(void* a, void* b, void* d, int e);
@@ -30,7 +27,7 @@ void _ZN12CylinderClsn6UpdateEv(void* c);
 
 extern s16 data_02082214[];
 
-extern "C" void Butterfly_Kill(char* c)
+extern "C" void func_ov100_02142918(char* c)
 {
     int r;
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);

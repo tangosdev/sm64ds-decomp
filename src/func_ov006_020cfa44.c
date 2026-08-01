@@ -1,7 +1,4 @@
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 #define LA(p) ((int)(((s64)(int)(p))))

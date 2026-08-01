@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020d9638
-// @emits dScMgCard_c_OnYoshiTryEat
+// recovered name: dScMgCard_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,8 +10,8 @@ extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
 extern void *data_ov006_0213e448[];
 extern void *data_020a0eac;
-void *dScMgCard_c_OnYoshiTryEat(char *c);
-void *dScMgCard_c_OnYoshiTryEat(char *c) {
+void *func_ov006_020d9638(char *c);
+void *func_ov006_020d9638(char *c) {
     *(void ***)c = data_ov006_0213bdb4;
     __destroy_arr(c + 0x5298, 5, 0x30, (void*)&func_ov006_020d96f0);
     __destroy_arr(c + 0x51a8, 5, 0x30, (void*)&func_ov006_020d96e0);

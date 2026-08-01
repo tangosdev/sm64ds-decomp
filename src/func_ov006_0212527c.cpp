@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBSC_c.h"
-// @emits dScMgBSC_c_OnTurnIntoEgg
+// recovered name: dScMgBSC_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgBSC_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" int func_ov006_020c1718(int* r0);
@@ -12,7 +12,7 @@ extern "C" void FreeGfxSlotsById(int arg);
 
 extern short data_ov004_020bf9e4;
 
-extern "C" int dScMgBSC_c_OnTurnIntoEgg(char* c, int mode)
+extern "C" int func_ov006_0212527c(char* c, int mode)
 {
     struct dScMgBSC_c *self = (struct dScMgBSC_c *)(void *)c;
     int st;

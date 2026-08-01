@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_0210aa60
-// @emits dScMgSlot3_c_AfterClsn
+// recovered name: dScMgSlot3_c_AfterClsn
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -16,7 +16,7 @@ extern "C" {
 
 extern unsigned char data_0209d45c;
 
-extern "C" void dScMgSlot3_c_AfterClsn(void)
+extern "C" void func_ov006_0210aa60(void)
 {
     int idx;
 

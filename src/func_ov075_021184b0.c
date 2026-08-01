@@ -1,6 +1,5 @@
 //cpp
-typedef int Fix12;
-typedef unsigned char u8;
+#include "types.h"
 struct OamAttr { unsigned short attr0, attr1, attr2, attr3; };
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, OamAttr*, int, int, int, int, int, int, int, int);
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int, OamAttr*, int, int, int, int, int, int);

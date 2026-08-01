@@ -9,10 +9,10 @@
  * Call target: 0x02015cb4
  */
 struct Obj { void *vtable; };
-extern void base_dtor_MaterialChanger(struct Obj *thiz); /* 0x02015cb4 */
+extern void _ZN9AnimationD2Ev(struct Obj *thiz); /* 0x02015cb4 */
 struct Obj *_ZN15MaterialChangerD1Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)vtbl_MaterialChanger;
-    base_dtor_MaterialChanger(thiz);
+    thiz->vtable = (void *)_ZTV15MaterialChanger;
+    _ZN9AnimationD2Ev(thiz);
     return thiz;
 }

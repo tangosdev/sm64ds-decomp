@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 /* Three-stop RGB555 colour ramp entry. */
 struct ColorRamp
 {

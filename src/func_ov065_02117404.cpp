@@ -6,7 +6,7 @@
 
 extern "C" {
 int Vec3_Dist(const Vector3* a, const Vector3* b);
-int WithMeshClsn_IsOnWall(void* self);
+int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
 short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 void func_ov065_02117944(unsigned char* c, void* p);
 void Matrix4x3_FromRotationY(void* m, int angle);
@@ -26,7 +26,7 @@ extern "C" int func_ov065_02117404(unsigned char* thiz)
     v.z = 0;
     int dist = Vec3_Dist((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x424));
     if (dist <= 0x1f4000) {
-        if (WithMeshClsn_IsOnWall(thiz + 0x144) == 0) goto skip;
+        if (_ZNK12WithMeshClsn8IsOnWallEv(thiz + 0x144) == 0) goto skip;
     }
     *(short*)(thiz + 0x434) = Vec3_HorzAngle((Vector3*)(thiz + 0x5c), (Vector3*)(thiz + 0x424));
     if (*(unsigned short*)(thiz + 0x100) < 0x14) *(unsigned short*)(thiz + 0x100) = 0x14;

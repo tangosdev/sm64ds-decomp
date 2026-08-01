@@ -15,17 +15,17 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
 {
     if (flag != 0) {
         unsigned char n = *(unsigned char *)(c + 0x31e);
-        int *p = (int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)c + 0x60));
         int m = n * 0x3c;
         int y = *p;
         *p = y - (m << 12);
         *(unsigned char *)(c + 0x31e) = 0;
     } else {
-        int *p = (int *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)c + 0x60));
         int y = *p;
         *p = y - 0x3c000;
         int off = 0x31e;
-        unsigned char *q = (unsigned char *)(((int)c + off) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *q = (unsigned char *)(((int)c + off));
         *q = *q - 1;
     }
     *(unsigned char *)(c + 0x31f) = 0xf;

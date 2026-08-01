@@ -9,9 +9,9 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned, int, int, int);
 int _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void*, struct Vector3*, int);
 int func_0201267c(int, void*);
 void func_ov091_02132f04(char* c){
-  int *pa8 = (int*)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFFLL);
+  int *pa8 = (int*)(((int)c + 0xa8));
   int a = *pa8;
-  int *p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL);
+  int *p60 = (int*)(((int)c + 0x60));
   a = a - 0x4000;
   *pa8 = a;
   a = *p60 + *(int*)(c+0xa8);

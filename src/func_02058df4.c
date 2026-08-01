@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern char data_023c0000;
 extern void func_00000600(void);
 extern void func_00000000(void);

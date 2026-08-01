@@ -32,7 +32,15 @@ ARM9 = REPO / "extracted" / "arm9_dec.bin"
 ARM9_BASE = 0x02004000
 INCLUDE = REPO / "include"
 
-DEFAULT_FLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc"
+# -w illpragmas is a WARNING flag only (no codegen effect, verified: all banked matches still
+# match with it on). It exists here because mwccarm SILENTLY ACCEPTS an unknown #pragma by
+# default, so a typo'd or invented pragma name compiles clean and leaves the output unchanged
+# -- indistinguishable from a genuinely inert lever. Whole sweeps have recorded "pragma X is
+# inert" for pragmas the compiler never honoured. With this flag it prints
+# "<file>:<line>: warning: illegal #pragma" and names the line; compile_c surfaces that even
+# on a successful compile. See notes/mwccarm-codegen.md 6as.
+DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
+                 "-gccext,on -msgstyle gcc -w illpragmas")
 SWEEP = ["1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
          "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3",
          # The recovered 2004 build 0056 (see #776 / notes 6ai):
@@ -89,6 +97,13 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
             detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
             print(f"  ! compile failed ({version}): {detail[:500]}")
             return None
+        # A SUCCESSFUL compile can still be telling you the lever you are measuring does not
+        # exist. mwccarm accepts any unknown #pragma silently, so without this the sweep just
+        # reports the baseline number and the pragma gets banked as "inert". Surface it.
+        for line in (r.stdout + r.stderr).splitlines():
+            if "illegal #pragma" in line:
+                print(f"  ! {line.strip()}  <- mwccarm does NOT know this pragma; "
+                      f"it is not being applied (see notes 6as)")
         return out_o.read_bytes()
 
 
@@ -174,7 +189,19 @@ def main():
                     help="skip the reloc-destination check (loose byte-only compare)")
     ap.add_argument("--module", default="arm9",
                     help="module name for --strict-relocs config lookup (arm9, ov006, ...)")
+    ap.add_argument("--cpp-check", action="store_true",
+                    help="lint C++ file header and symbol naming conventions")
     args = ap.parse_args()
+
+    cfile = pathlib.Path(args.c)
+    if args.cpp_check and cfile.is_file():
+        text = cfile.read_text(encoding="utf-8", errors="ignore")
+        if cfile.suffix == ".cpp" and not text.startswith("//cpp"):
+            print(f"  [cpp-check] Warning: {cfile.name} is a .cpp file but lacks '//cpp' header on line 1")
+        if text.startswith("//cpp") and cfile.suffix == ".c":
+            print(f"  [cpp-check] Warning: {cfile.name} has '//cpp' header but extension is .c (should be .cpp)")
+        if cfile.stem.startswith("_Z") and args.func and args.func != cfile.stem:
+            print(f"  [cpp-check] Warning: function '{args.func}' does not match file symbol name '{cfile.stem}'")
 
     strict = None
     if args.strict_relocs:

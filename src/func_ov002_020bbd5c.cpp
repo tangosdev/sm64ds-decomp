@@ -1,6 +1,6 @@
 //cpp
 struct C; typedef void (C::*PMF)();
 struct Entry { PMF pmf[2]; };
-extern Entry TABLE[];
+extern Entry data_ov002_0210e084[];
 struct C { char pad[0x354]; int idx; };
-extern "C" void func_ov002_020bbd5c(C *c, int i) { c->idx = i; int j = c->idx; (c->*TABLE[j].pmf[0])(); }
+extern "C" void func_ov002_020bbd5c(C *c, int i) { c->idx = i; int j = c->idx; (c->*data_ov002_0210e084[j].pmf[0])(); }

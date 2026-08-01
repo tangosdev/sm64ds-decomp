@@ -1,12 +1,7 @@
+#include "types.h"
 // @symbol func_ov002_020ce5f8
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-
-
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* st);
 extern int func_ov002_020ceb54(char* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const struct Vector3* pos);

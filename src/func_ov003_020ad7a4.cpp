@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov003_020ad7a4
-// @emits dScTitle_c_Render
+// recovered name: dScTitle_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,7 +11,7 @@ extern char data_0209e674[];
 }
 struct OamTmp { int x; };
 namespace OAM { void EnableSubOAM(OamTmp*); }
-extern "C" int dScTitle_c_Render(void)
+extern "C" int func_ov003_020ad7a4(void)
 {
     OamTmp tmp;
     OAM::EnableSubOAM(&tmp);

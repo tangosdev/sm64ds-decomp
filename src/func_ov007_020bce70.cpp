@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Sub {
     char pad2[2];
     short field2;

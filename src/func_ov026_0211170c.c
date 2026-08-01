@@ -1,5 +1,5 @@
 // @symbol func_ov026_0211170c
-// @emits daObjWlKoopaShutter_c_OnYoshiTryEat
+// recovered name: daObjWlKoopaShutter_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -8,7 +8,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjWlKoopaShutter_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjWlKoopaShutter_c_OnYoshiTryEat(int *t)
+int *func_ov026_0211170c(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

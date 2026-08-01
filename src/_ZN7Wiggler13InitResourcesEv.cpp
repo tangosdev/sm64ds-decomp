@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN7Wiggler13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Wiggler.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 extern int _ZN5Actor9TrackStarEjj(void *self, u32 a, u32 b);
 extern void _ZN5Model8LoadFileER13SharedFilePtr(void *shared);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);

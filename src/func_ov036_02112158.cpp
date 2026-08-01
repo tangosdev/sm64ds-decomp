@@ -3,20 +3,20 @@ extern "C" {
 extern int data_ov036_02113f9c[];
 extern int data_ov002_0210af70[];
 extern int _ZTV17ExclamationSwitch[];
-void ModelAnim_dtor(void*);
+void _ZN9ModelAnimD1Ev(void*);
 void __destroy_arr(void*,int,int,void*);
-void MovingMeshCollider_dtor(void*);
-void Model_dtor(void*);
-void Actor_dtor(void*);
+void _ZN18MovingMeshColliderD1Ev(void*);
+void _ZN5ModelD1Ev(void*);
+void _ZN5ActorD2Ev(void*);
 }
 extern "C" int func_ov036_02112158(char* c){
   *(int**)c=(int*)data_ov036_02113f9c;
-  ModelAnim_dtor(c+0x450);
+  _ZN9ModelAnimD1Ev(c+0x450);
   *(int**)c=(int*)data_ov002_0210af70;
-  __destroy_arr(c+0x320,3,0x50,(void*)Model_dtor);
+  __destroy_arr(c+0x320,3,0x50,(void*)_ZN5ModelD1Ev);
   *(int**)c=(int*)_ZTV17ExclamationSwitch;
-  MovingMeshCollider_dtor(c+0x124);
-  Model_dtor(c+0xd4);
-  Actor_dtor(c);
+  _ZN18MovingMeshColliderD1Ev(c+0x124);
+  _ZN5ModelD1Ev(c+0xd4);
+  _ZN5ActorD2Ev(c);
   return (int)c;
 }

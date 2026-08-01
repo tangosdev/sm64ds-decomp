@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef long long s64;
+#include "types.h"
 struct Elem { int a, b, c; };
 
 extern void func_ov007_020bfe4c(void* p, int b, int c, int d, int* e);

@@ -1,13 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol func_ov098_02138e6c
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
     virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
@@ -51,7 +46,7 @@ extern "C" void func_ov098_02138e6c(char *c)
     if (*(u32*)(c + 0x588) == 0) return;
 
     if ((*(u32*)(c + 0x584) & 0x40000) != 0) {
-        u32 *pp = (u32 *)(((int)c + 0x57c) & 0xFFFFFFFFFFFFFFFF);
+        u32 *pp = (u32 *)(((int)c + 0x57c));
         *(u8*)(c + 0x606) = 0x3c;
         *pp = *pp & ~0x8000u;
     }

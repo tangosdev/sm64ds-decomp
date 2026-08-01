@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjWc_Obj05_c.h"
-// @emits daObjWc_Obj05_c_InitResources
+// recovered name: daObjWc_Obj05_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjWc_Obj05_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -18,7 +18,7 @@ extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
-int daObjWc_Obj05_c_InitResources(char* c)
+int func_ov029_02111d6c(char* c)
 {
     struct daObjWc_Obj05_c *self = (struct daObjWc_Obj05_c *)(void *)c;
     void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_0211428c);

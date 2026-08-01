@@ -1,13 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020b781c
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef signed short s16;
-typedef unsigned short u16;
-
-
-
 extern short data_02082214[];
 
 extern void func_ov002_020b6fcc(void *self);

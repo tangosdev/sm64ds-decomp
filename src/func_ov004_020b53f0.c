@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int func_ov004_020b04c0(void);
 extern void func_ov004_020b4b84(char* c, int* in);
 extern void func_ov004_020b5368(void);

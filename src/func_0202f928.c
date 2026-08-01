@@ -1,5 +1,6 @@
+#include "types.h"
 // @symbol func_0202f928
-// @emits dWipe_c_SetBackwardTime
+// recovered name: dWipe_c_SetBackwardTime
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -8,12 +9,6 @@
  * forwarded to the guard call with zero instructions, which keeps r2 live
  * from entry to the call and forces the cached `type` into r3 as in the ROM.
  * Without it every spelling colors `type` to r2 (3-word regperm miss). */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-
 struct FaderBrightness;
 extern int _ZN15FaderBrightness15SetBackwardTimeEj(struct FaderBrightness *self, u32 time, u32 c);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
@@ -37,7 +32,7 @@ struct MyFader {
     u32 unk24;      /* 0x24 */
 };
 
-int dWipe_c_SetBackwardTime(struct MyFader *self, u32 param_1, u32 param_2)
+int func_0202f928(struct MyFader *self, u32 param_1, u32 param_2)
 {
     s32 type, unk10;
 

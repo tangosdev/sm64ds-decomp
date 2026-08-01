@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int func_ov030_02111b20(void *self);

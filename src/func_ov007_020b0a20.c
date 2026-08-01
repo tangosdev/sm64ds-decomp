@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef signed short s16;
-
+#include "types.h"
 typedef struct SubC {
     int unk0;
     char pad4[8];

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 #pragma opt_strength_reduction off
 
 struct Px {

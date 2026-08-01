@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_02107358
-// @emits dScMgPanel_c_Behavior
+// recovered name: dScMgPanel_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -8,7 +8,7 @@
 extern "C" {
 struct Ent{ int a; int b; };
 extern Ent data_ov006_02142888[];
-int dScMgPanel_c_Behavior(char* c){
+int func_ov006_02107358(char* c){
   int idx=*(int*)(c+0x4000+0xca8);
   Ent* e=&data_ov006_02142888[idx];
   int adj=e->b;

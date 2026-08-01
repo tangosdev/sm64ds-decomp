@@ -1,0 +1,19 @@
+# Per-file mwccarm version overrides for the ROM build, as: <symbol> <version>.
+# tools/rombuild.py and tools/eligible.py compile these with the named version instead
+# of the default (see rombuild.VERSION).
+#
+# A function counts as matched if SOME toolchain version reproduces it, and match.py
+# sweeps a list - so a single-version link produces the wrong bytes for the ones
+# matched elsewhere, even though the source is correct.
+#
+# Regenerate with:
+#   python tools/rombuild_check.py --out build/bad.txt
+#   python tools/rombuild_versions.py build/bad.txt --write
+func_02062428 1.2/base
+func_0206a6d0 1.2/base
+func_ov006_020ded00 1.2/base
+func_ov006_02111e90 1.2/base
+func_ov013_021112a8 1.2/base
+func_ov015_02111e80 1.2/base
+func_ov081_02127558 1.2/base
+func_ov084_0212f460 1.2/base

@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct Camera {
     char pad[0x154];
     u32 flags;

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9ActorBase13AfterBehaviorEj
 /* recovered: named members + shared header, real C++ method */
 #include "ActorBase.h"
@@ -6,9 +7,6 @@
  * Post-behavior hook; vfSuccess is the VirtualFuncSuccess code from Behavior().
  * Base ActorBase does nothing; leaf classes override.
  */
-
-typedef unsigned int u32;
-
 struct ActorBase;
 
 void ActorBase::AfterBehavior(unsigned int vfSuccess_)

@@ -1,10 +1,10 @@
 // @symbol func_ov006_020e67f0
-// @emits dScMgCurling2_c_Render
+// recovered name: dScMgCurling2_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgCurling2_c::Render - recovered from vtable slot identity */
-int dScMgCurling2_c_Render(int c){
+int func_ov006_020e67f0(int c){
   extern int func_ov004_020adc1c();
   extern int func_ov004_020b19f0();
   func_ov004_020adc1c();

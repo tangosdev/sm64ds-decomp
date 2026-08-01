@@ -1,7 +1,6 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
 struct State;
 struct ActorBase;
 

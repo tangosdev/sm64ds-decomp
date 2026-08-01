@@ -1,6 +1,4 @@
-
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
 struct OamAttr;
 void _ZN3OAM9RenderSubEP7OamAttriiii(struct OamAttr *a, int b, int c, int d, int e);
 int RandomIntInternal(int *seed);

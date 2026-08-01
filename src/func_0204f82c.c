@@ -1,9 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-typedef short s16;
-
+#include "types.h"
 extern s16 data_02086384[];
 extern int func_0205acfc(int a, int b, int c);
 

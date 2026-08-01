@@ -1,14 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov084_0212c508
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef unsigned char u8;
-
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern "C" void func_ov084_0212c960(char *c, int i);
 extern "C" int _ZN6Player12GetTalkStateEv(char *c);

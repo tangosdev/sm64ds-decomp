@@ -15,13 +15,13 @@ extern "C" int func_ov091_02133c6c(char* c){
   v.x = 0;
   v.y = 0;
   v.z = 0x1e000;
-  a = (short*)(((int)c + 0x92) & 0xFFFFFFFFFFFFFFFFLL);
+  a = (short*)(((int)c + 0x92));
   *a = (short)(*a - 0x80);
   Matrix4x3_FromRotationY(data_020a0e68, *(short*)(c+0x94));
   Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short*)(c+0x92));
   MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)(c+0xa4));
   {
-    unsigned short *hp = (unsigned short*)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFFLL);
+    unsigned short *hp = (unsigned short*)(((int)c + 0x100));
     if (*hp == 0
         || _ZNK12WithMeshClsn10IsOnGroundEv(c+0x144) != 0
         || _ZNK12WithMeshClsn8IsOnWallEv(c+0x144) != 0

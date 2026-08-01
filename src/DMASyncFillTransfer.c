@@ -1,3 +1,4 @@
+#include "types.h"
 /* DMASyncFillTransfer at 0x0205a1b4
  * Synchronous 32-bit DMA fill: waits for the DMA channel to be free, writes
  * the fill value into the channel's DMA fill register (0x040000E0 + ch*4),
@@ -13,10 +14,6 @@
  * writeback `str r2,[r1,r0,lsl#2]!` (and, in turn, evacuates dst to ip at
  * entry exactly like the ROM).
  */
-
-typedef unsigned int u32;
-typedef volatile u32 vu32;
-
 extern void DMAStartTransferFB(u32 channel, void *src, void *dst, u32 cnt);
 
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size)

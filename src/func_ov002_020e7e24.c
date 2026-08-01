@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 struct Actor {
     char pad[0x49e];
     unsigned char obj; /* 0x49e */

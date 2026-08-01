@@ -1,15 +1,10 @@
+#include "types.h"
 // @symbol func_ov002_020d8a50
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
-
 struct RaycastLine { int head[5]; int surf; int rest[25]; };
 
 extern int _ZNK6Player14GetBodyModelIDEjb(char* p, unsigned int j, int b);

@@ -4,13 +4,13 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daIDonketu_c.h"
-// @emits daIDonketu_c_AfterClsn
+// recovered name: daIDonketu_c_AfterClsn
 /* recovered: renamed to Class_Method */
 /* daIDonketu_c::AfterClsn - recovered from vtable slot identity */
 extern "C" {
 extern void _ZN5Actor14TriplePoofDustEv(void*);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void*,void*,unsigned int,void*,unsigned int);
-int daIDonketu_c_AfterClsn(char* c){
+int func_ov027_021116f0(char* c){
     struct daIDonketu_c *self = (struct daIDonketu_c *)(void *)c;
   int r=func_ov064_0211616c(c);
   if(r==0) return r;

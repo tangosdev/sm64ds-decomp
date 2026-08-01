@@ -1,13 +1,9 @@
+#include "types.h"
 // @symbol func_ov063_02116fac
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef signed short s16;
-
 extern void func_0201267c(unsigned int id, void* p);
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
 extern short Vec3_HorzAngle(const void* a, const void* b);

@@ -1,15 +1,12 @@
+#include "types.h"
 // @symbol func_ov006_0212ac74
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgFlower_c.h"
-// @emits dScMgFlower_c_Behavior
+// recovered name: dScMgFlower_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::Behavior - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 typedef struct V2 {
     int x;
     int z;
@@ -36,7 +33,7 @@ extern u8 data_020a0deb[];
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-int dScMgFlower_c_Behavior(char *c)
+int func_ov006_0212ac74(char *c)
 {
     struct dScMgFlower_c *self = (struct dScMgFlower_c *)(void *)c;
     int i;

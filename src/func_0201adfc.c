@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "types.h"
 #define LM(x) ((u32*)(long long)(int)(x))
 
 extern u8 data_0209d698;

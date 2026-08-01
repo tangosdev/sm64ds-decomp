@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 #define LAUND(p) ((void *)((((long long)(int)(p)))))
 
 extern void *_ZN5Actor13ClosestPlayerEv(void *o);

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13UpDownLiftBbh8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "UpDownLiftBbh.h"
@@ -11,10 +12,6 @@ extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* c);
 extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
 extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
 extern "C" int _ZN6Player7IsInAirEv(void* c);
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 int UpDownLiftBbh::Behavior()
 {
     int old;

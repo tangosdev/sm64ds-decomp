@@ -1,18 +1,9 @@
+#include "types.h"
 // @symbol func_ov098_02139850
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
-
-
-
 extern int func_ov002_020e496c(char* c);
 extern int _ZN6Player14IsFrontSlidingEv(char* p);
 extern int _ZN6Player17LostGrabbedObjectEv(char* p);
@@ -47,7 +38,7 @@ void func_ov098_02139850(char* self)
             char* res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(self, *(char**)(self + 0x5e4), (struct Vector3*)(self + 0x4f4));
             *(struct Matrix4x3*)(self + 0xf0) = *(struct Matrix4x3*)res;
         }
-        *(u32*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x4000000;
+        *(u32*)(((int)self + 0xb0)) |= 0x4000000;
     }
     return;
 
@@ -66,7 +57,7 @@ other:
         *(int*)(self + 0x4f8) = 0;
         *(int*)(self + 0x4fc) = 0;
         if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x320) != 0) {
-            *(u32*)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x4000000;
+            *(u32*)(((int)self + 0xb0)) &= ~0x4000000;
         }
     }
 }

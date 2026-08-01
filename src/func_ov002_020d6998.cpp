@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol func_ov002_020d6998
 /* recovered: shared common types */
 #include "common.h"
@@ -24,14 +25,6 @@ struct VObj {
     virtual int V18();
 };
 extern "C" {
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-
-
-
-
 typedef int (*VFunc)(void*);
 
 extern int func_ov002_020bea7c(char* c);

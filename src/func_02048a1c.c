@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern u32 data_02099fac;
 extern int data_020a4bec;
 int func_02049018(int *p);

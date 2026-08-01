@@ -1,12 +1,10 @@
+#include "types.h"
 // @symbol func_ov062_0211ba84
-// @emits KoopaFlag_Kill
+// recovered name: KoopaFlag_Kill
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daRFlag_c::Kill - recovered from vtable slot identity */
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
 extern char *_ZN5Actor13ClosestPlayerEv(char *self);
 extern int func_ov062_0211c658(char *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -20,7 +18,7 @@ extern void *data_ov062_0211e17c;
 extern signed char data_0209f2f8;
 extern int data_020a0e68[];
 
-int KoopaFlag_Kill(char *c)
+int func_ov062_0211ba84(char *c)
 {
     Vector3 v;
     Vector3 t;

@@ -1,9 +1,5 @@
+#include "types.h"
 enum { false, true };
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 typedef struct Node {
     struct Node* prev;
     struct Node* next;

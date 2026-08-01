@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov002_020b33dc
-// @emits daObjAbuku_c_Behavior
+// recovered name: daObjAbuku_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -16,7 +16,7 @@ extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Ca
 extern "C" void _ZN12CylinderClsn5ClearEv(char* cl);
 extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
 
-extern "C" int daObjAbuku_c_Behavior(char* self)
+extern "C" int func_ov002_020b33dc(char* self)
 {
     *(short*)(((int)self + 0x10c)) += 0x400;
     int v = *(volatile unsigned short*)(self + 0x10c);

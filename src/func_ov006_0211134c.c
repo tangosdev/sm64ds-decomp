@@ -1,6 +1,5 @@
+#include "types.h"
 #pragma opt_propagation off
-typedef unsigned char u8;
-
 typedef struct Obj {
     char _0[4];
     char *p;

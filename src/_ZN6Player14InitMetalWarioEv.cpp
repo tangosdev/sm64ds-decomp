@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player14InitMetalWarioEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_ModelAnim2.h"
@@ -6,10 +7,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 extern "C" void func_ov002_020bda48(char *self);
 extern "C" u32 _ZNK6Player14GetBodyModelIDEjb(char *self, u32 a, bool b);
 extern "C" void func_ov002_020bd9ec(char *self, u32 a);

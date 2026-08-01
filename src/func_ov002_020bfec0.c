@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* st);
 extern int _ZN6Player7IsInAirEv(char* self);
 extern int func_ov002_020e3078(char* self, void* s);

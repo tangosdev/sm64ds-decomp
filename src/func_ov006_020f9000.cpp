@@ -1,7 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Node {
     virtual void m0();
     virtual void m1(s16 i);

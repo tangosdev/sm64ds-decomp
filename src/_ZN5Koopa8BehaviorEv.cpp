@@ -1,14 +1,11 @@
 //cpp
+#include "types.h"
 // @symbol _ZN5Koopa8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Enemy.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Koopa.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *self, void *wm, void *ma, unsigned int j);
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, void *c);
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *c);

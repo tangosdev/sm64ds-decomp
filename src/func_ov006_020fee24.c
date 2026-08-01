@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-
+#include "types.h"
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_020feba8(void *c);
 extern void func_ov006_020fc844(u8 *c);

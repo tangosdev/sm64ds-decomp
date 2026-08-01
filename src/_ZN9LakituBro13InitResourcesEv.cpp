@@ -1,13 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN9LakituBro13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "LakituBro.h"
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int Fix12;
-
 struct SharedFilePtr { int f0; void* f4; };
 struct BMD_File; struct BTP_File; struct BCA_File;
 struct ModelBase {};
@@ -21,8 +18,8 @@ extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& f);
 extern "C" void _ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr& f);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(ShadowModel* thiz);
 extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File& a, BTP_File& b);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim* thiz, BCA_File* f, int a, Fix12 b, u32 c);
-extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(TextureSequence* thiz, BTP_File& f, int a, Fix12 b, u32 c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim* thiz, BCA_File* f, int a, Fix12i b, u32 c);
+extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(TextureSequence* thiz, BTP_File& f, int a, Fix12i b, u32 c);
 
 extern SharedFilePtr data_ov085_0213074c;
 extern SharedFilePtr data_ov085_02130744;

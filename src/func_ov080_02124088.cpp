@@ -1,15 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov080_02124088
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-
-
 #define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern "C" {

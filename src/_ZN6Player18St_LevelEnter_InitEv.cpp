@@ -1,17 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player18St_LevelEnter_InitEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-
-
 typedef struct RaycastGround {
     char pre[0x10];
     char result[0x34];

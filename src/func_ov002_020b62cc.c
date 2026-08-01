@@ -1,11 +1,9 @@
+#include "types.h"
 // @symbol func_ov002_020b62cc
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef unsigned char u8;
-
-
 extern struct Matrix4x3 data_020a0e68;
 extern void InvMat4x3(struct Matrix4x3 *d, struct Matrix4x3 *s);
 extern void MulVec3Mat4x3(struct Vector3 *v, struct Matrix4x3 *m, struct Vector3 *out);

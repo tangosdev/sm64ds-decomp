@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13RollingLogTtm8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
@@ -10,7 +11,6 @@ struct Vector3_16;
 struct Actor;
 
 extern "C" {
-typedef unsigned int u32;
 extern int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *thiz, int d);
 extern Actor *_ZN5Actor13ClosestPlayerEv(Actor *thiz);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 *c, const Vector3_16 *d, int e, int f);

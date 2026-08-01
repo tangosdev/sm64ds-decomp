@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern u8 data_ov006_0212ee30[];
 
 struct Slot {

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 typedef struct { int w[12]; } M48;
 
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);

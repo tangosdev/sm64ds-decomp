@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN7Message30DisplayCourseNameForStarSelectEj
 /* recovered: named members + shared header, named members + shared header */
 #include "Message.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 struct StarEntry {
     int m0;
     u16 m4;

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_0212497c
-// @emits dScMgBSC_c_OnYoshiTryEat
+// recovered name: dScMgBSC_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,8 +11,8 @@ extern void _ZN8Particle10SysTrackerD1Ev(void *);
 extern void NullDestructor_0203d47c();
 extern void *data_ov006_0213e448[];
 extern void *data_020a0eac;
-void *dScMgBSC_c_OnYoshiTryEat(char *c);
-void *dScMgBSC_c_OnYoshiTryEat(char *c) {
+void *func_ov006_0212497c(char *c);
+void *func_ov006_0212497c(char *c) {
     *(void ***)c = data_ov006_0213fec8;
     __destroy_arr(c + 0x51a8, 2, 8, (void*)&NullDestructor_0203d47c);
     func_ov006_020c1c64(c + 0x4f38);

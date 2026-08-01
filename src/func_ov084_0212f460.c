@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-
+#include "types.h"
 extern "C" {
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned, unsigned, unsigned, int, int);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(

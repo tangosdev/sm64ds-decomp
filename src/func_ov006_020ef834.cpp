@@ -1,18 +1,13 @@
 //cpp
+#include "types.h"
 // @symbol func_ov006_020ef834
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgJump2_c.h"
-// @emits dScMgJump2_c_InitResources
+// recovered name: dScMgJump2_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgJump2_c::InitResources - recovered from vtable slot identity */
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
 extern "C" {
 extern s32 GetGameLanguage(void);
 extern int LoadFile(int handle);
@@ -56,7 +51,7 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int dScMgJump2_c_InitResources(char *base)
+extern "C" int func_ov006_020ef834(char *base)
 {
     struct dScMgJump2_c *self = (struct dScMgJump2_c *)(void *)base;
     int a, b;

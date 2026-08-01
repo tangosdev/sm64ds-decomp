@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int WM_GetSystemWork(void);
 extern int func_0206152c(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int addr, unsigned int len);

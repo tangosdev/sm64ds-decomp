@@ -1,10 +1,10 @@
 extern void _ZN13SharedFilePtr7ReleaseEv();
-extern int G0[];
-extern int G1[];
-extern int G2[];
+extern int data_ov006_02140850[];
+extern int data_ov006_02140858[];
+extern int data_ov006_02140848[];
 void func_ov006_020ceedc(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov006_02140850);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov006_02140858);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov006_02140848);
 }

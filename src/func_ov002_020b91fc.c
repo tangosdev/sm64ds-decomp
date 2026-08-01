@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "types.h"
 struct Vector3_16f;
 struct Callback;
 extern u8 DecIfAbove0_Byte(u8* p);

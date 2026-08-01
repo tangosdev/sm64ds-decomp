@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 #define LP(p) ((long long)(int)(p))
 
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);

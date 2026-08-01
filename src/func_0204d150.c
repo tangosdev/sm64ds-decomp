@@ -1,5 +1,4 @@
-
-typedef unsigned char u8;
+#include "types.h"
 #pragma opt_strength_reduction off
 void func_0204d150(char *r0, char *r1, int r2)
 {

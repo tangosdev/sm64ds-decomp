@@ -1,11 +1,11 @@
 
-extern int data_ov006_0212eed0[];
+extern int data_ov006_0212eeac[];
 extern int data_ov006_0212ee88[];
 void func_ov006_0211a048(char *c, int idx)
 {
   int off = idx * 0x24;
   *((unsigned char *) (((c + off) + 0x5000) + 0x1cd)) = 1;
-  *((int *) ((c + 0x51b0) + off)) = (*((int *) ((c + 0x51b0) + off))) + data_ov006_0212eed0[*((unsigned char *) ((c + 0x51d2) + off))];
+  *((int *) ((c + 0x51b0) + off)) = (*((int *) ((c + 0x51b0) + off))) + data_ov006_0212eeac[*((unsigned char *) ((c + 0x51d2) + off))];
   if (off && off)
   {
   }

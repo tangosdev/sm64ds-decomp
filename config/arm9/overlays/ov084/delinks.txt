@@ -4,3 +4,403 @@
     .ctor       start:0x02130860 end:0x0213086c kind:rodata align:4
     .data       start:0x02130880 end:0x02130cc0 kind:data align:32
     .bss        start:0x02130cc0 end:0x02130ee0 kind:bss align:32
+src/_ZN6GoombaD1Ev.c:
+    complete
+    .text start:0x02129020 end:0x02129070
+
+src/_ZN6GoombaD0Ev.c:
+    complete
+    .text start:0x02129070 end:0x021290d4
+
+src/func_ov084_021290d4.c:
+    complete
+    .text start:0x021290d4 end:0x02129168
+
+src/func_ov084_02129168.cpp:
+    .text start:0x02129168 end:0x02129238
+
+src/func_ov084_02129238.cpp:
+    .text start:0x02129238 end:0x0212934c
+
+src/func_ov084_0212934c.c:
+    complete
+    .text start:0x0212934c end:0x02129498
+
+src/func_ov084_02129498.c:
+    complete
+    .text start:0x02129498 end:0x021294d0
+
+src/func_ov084_021294d0.cpp:
+    complete
+    .text start:0x021294d0 end:0x021296b0
+
+src/func_ov084_021296b0.c:
+    complete
+    .text start:0x021296b0 end:0x021296cc
+
+src/func_ov084_021296cc.c:
+    .text start:0x021296cc end:0x02129864
+
+src/func_ov084_02129864.c:
+    complete
+    .text start:0x02129864 end:0x021298d0
+
+src/func_ov084_021298d0.c:
+    complete
+    .text start:0x021298d0 end:0x02129a00
+
+src/func_ov084_02129a00.c:
+    .text start:0x02129a00 end:0x02129c9c
+
+src/func_ov084_02129c9c.c:
+    complete
+    .text start:0x02129c9c end:0x02129cf4
+
+src/func_ov084_02129cf4.c:
+    complete
+    .text start:0x02129cf4 end:0x02129ed4
+
+src/func_ov084_02129ed4.c:
+    .text start:0x02129ed4 end:0x0212a580
+
+src/func_ov084_0212a580.cpp:
+    .text start:0x0212a580 end:0x0212a6f8
+
+src/func_ov084_0212a6f8.c:
+    complete
+    .text start:0x0212a6f8 end:0x0212a774
+
+src/func_ov084_0212a774.c:
+    .text start:0x0212a774 end:0x0212aab0
+
+src/func_ov084_0212aab0.cpp:
+    complete
+    .text start:0x0212aab0 end:0x0212ab48
+
+src/func_ov084_0212ab48.c:
+    complete
+    .text start:0x0212ab48 end:0x0212abd4
+
+src/func_ov084_0212abd4.c:
+    complete
+    .text start:0x0212abd4 end:0x0212af74
+
+src/func_ov084_0212af74.c:
+    complete
+    .text start:0x0212af74 end:0x0212b2dc
+
+src/func_ov084_0212b2dc.c:
+    complete
+    .text start:0x0212b2dc end:0x0212b30c
+
+src/func_ov084_0212b30c.cpp:
+    complete
+    .text start:0x0212b30c end:0x0212b344
+
+src/func_ov084_0212b344.cpp:
+    .text start:0x0212b344 end:0x0212b510
+
+src/_ZN6Goomba16CleanupResourcesEv.cpp:
+    .text start:0x0212b510 end:0x0212b5b8
+
+src/_ZN6Goomba16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212b5b8 end:0x0212b5bc
+
+src/_ZN6Goomba6RenderEv.cpp:
+    .text start:0x0212b5bc end:0x0212b6ec
+
+src/_ZN6Goomba8BehaviorEv.cpp:
+    .text start:0x0212b6ec end:0x0212bc30
+
+src/_ZN6Goomba13InitResourcesEv.cpp:
+    .text start:0x0212bc30 end:0x0212bfc0
+
+src/func_ov084_0212bfc0.cpp:
+    complete
+    .text start:0x0212bfc0 end:0x0212bff8
+
+src/GoombaLarge_Spawn.c:
+    complete
+    .text start:0x0212bff8 end:0x0212c054
+
+src/GoombaSmall_Spawn.c:
+    complete
+    .text start:0x0212c054 end:0x0212c0b0
+
+src/Goomba_Spawn.c:
+    complete
+    .text start:0x0212c0b0 end:0x0212c10c
+
+src/_ZN11BobOmbBuddyD1Ev.cpp:
+    .text start:0x0212c10c end:0x0212c14c
+
+src/_ZN11BobOmbBuddyD0Ev.c:
+    complete
+    .text start:0x0212c14c end:0x0212c1a0
+
+src/func_ov084_0212c1a0.c:
+    complete
+    .text start:0x0212c1a0 end:0x0212c4a0
+
+src/func_ov084_0212c4a0.c:
+    complete
+    .text start:0x0212c4a0 end:0x0212c508
+
+src/func_ov084_0212c508.cpp:
+    .text start:0x0212c508 end:0x0212c89c
+
+src/func_ov084_0212c89c.c:
+    complete
+    .text start:0x0212c89c end:0x0212c8b0
+
+src/func_ov084_0212c8b0.cpp:
+    complete
+    .text start:0x0212c8b0 end:0x0212c92c
+
+src/func_ov084_0212c92c.cpp:
+    .text start:0x0212c92c end:0x0212c960
+
+src/func_ov084_0212c960.cpp:
+    complete
+    .text start:0x0212c960 end:0x0212c9a8
+
+src/func_ov084_0212c9a8.cpp:
+    complete
+    .text start:0x0212c9a8 end:0x0212c9f0
+
+src/func_ov084_0212c9f0.c:
+    complete
+    .text start:0x0212c9f0 end:0x0212ca60
+
+src/func_ov084_0212ca60.c:
+    complete
+    .text start:0x0212ca60 end:0x0212caa8
+
+src/func_ov084_0212caa8.c:
+    complete
+    .text start:0x0212caa8 end:0x0212cac0
+
+src/func_ov084_0212cac0.c:
+    complete
+    .text start:0x0212cac0 end:0x0212cae0
+
+src/func_ov084_0212cae0.c:
+    complete
+    .text start:0x0212cae0 end:0x0212ccb4
+
+src/func_ov084_0212ccb4.cpp:
+    complete
+    .text start:0x0212ccb4 end:0x0212cda0
+
+src/func_ov084_0212cda0.c:
+    complete
+    .text start:0x0212cda0 end:0x0212ce50
+
+src/func_ov084_0212ce50.cpp:
+    complete
+    .text start:0x0212ce50 end:0x0212cf10
+
+src/_ZN11BobOmbBuddy16CleanupResourcesEv.c:
+    complete
+    .text start:0x0212cf10 end:0x0212cf40
+
+src/_ZN11BobOmbBuddy6RenderEv.cpp:
+    complete
+    .text start:0x0212cf40 end:0x0212cf6c
+
+src/_ZN11BobOmbBuddy8BehaviorEv.cpp:
+    .text start:0x0212cf6c end:0x0212d028
+
+src/_ZN11BobOmbBuddy13InitResourcesEv.cpp:
+    .text start:0x0212d028 end:0x0212d200
+
+src/BobOmbBuddy_Spawn.c:
+    complete
+    .text start:0x0212d200 end:0x0212d248
+
+src/_ZN19FirePiranhaPlantBigD1Ev.c:
+    complete
+    .text start:0x0212d248 end:0x0212d288
+
+src/_ZN19FirePiranhaPlantBigD0Ev.c:
+    complete
+    .text start:0x0212d288 end:0x0212d2dc
+
+src/func_ov084_0212d2dc.c:
+    complete
+    .text start:0x0212d2dc end:0x0212d42c
+
+src/func_ov084_0212d42c.c:
+    complete
+    .text start:0x0212d42c end:0x0212d560
+
+src/func_ov084_0212d560.c:
+    complete
+    .text start:0x0212d560 end:0x0212d564
+
+src/func_ov084_0212d564.c:
+    complete
+    .text start:0x0212d564 end:0x0212d86c
+
+src/func_ov084_0212d86c.c:
+    complete
+    .text start:0x0212d86c end:0x0212dc30
+
+src/func_ov084_0212dc30.c:
+    complete
+    .text start:0x0212dc30 end:0x0212ddbc
+
+src/func_ov084_0212ddbc.c:
+    complete
+    .text start:0x0212ddbc end:0x0212e010
+
+src/func_ov084_0212e010.cpp:
+    complete
+    .text start:0x0212e010 end:0x0212e4e0
+
+src/func_ov084_0212e4e0.c:
+    complete
+    .text start:0x0212e4e0 end:0x0212e554
+
+src/_ZN19FirePiranhaPlantBig16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x0212e554 end:0x0212e5a8
+
+src/_ZN19FirePiranhaPlantBig6RenderEv.cpp:
+    complete
+    .text start:0x0212e5a8 end:0x0212e614
+
+src/_ZN19FirePiranhaPlantBig8BehaviorEv.cpp:
+    .text start:0x0212e614 end:0x0212e774
+
+src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp:
+    complete
+    .text start:0x0212e774 end:0x0212e998
+
+src/func_ov084_0212e998.c:
+    complete
+    .text start:0x0212e998 end:0x0212e9d4
+
+src/func_ov084_0212e9d4.cpp:
+    complete
+    .text start:0x0212e9d4 end:0x0212e9f8
+
+src/func_ov084_0212e9f8.cpp:
+    complete
+    .text start:0x0212e9f8 end:0x0212ea18
+
+src/FirePiranhaPlant_Spawn.c:
+    complete
+    .text start:0x0212ea18 end:0x0212ea60
+
+src/FirePiranhaPlantSmall_Spawn.c:
+    complete
+    .text start:0x0212ea60 end:0x0212eaa8
+
+src/FirePiranhaPlantBig_Spawn.c:
+    complete
+    .text start:0x0212eaa8 end:0x0212eaf0
+
+src/_ZN12PiranhaPlantD1Ev.c:
+    complete
+    .text start:0x0212eaf0 end:0x0212eb48
+
+src/_ZN12PiranhaPlantD0Ev.c:
+    complete
+    .text start:0x0212eb48 end:0x0212ebb4
+
+src/func_ov084_0212ebb4.c:
+    complete
+    .text start:0x0212ebb4 end:0x0212ec04
+
+src/func_ov084_0212ec04.c:
+    complete
+    .text start:0x0212ec04 end:0x0212ec58
+
+src/func_ov084_0212ec58.c:
+    complete
+    .text start:0x0212ec58 end:0x0212ec60
+
+src/func_ov084_0212ec60.c:
+    complete
+    .text start:0x0212ec60 end:0x0212ef00
+
+src/func_ov084_0212ef00.c:
+    complete
+    .text start:0x0212ef00 end:0x0212f1d0
+
+src/func_ov084_0212f1d0.c:
+    complete
+    .text start:0x0212f1d0 end:0x0212f204
+
+src/func_ov084_0212f204.c:
+    complete
+    .text start:0x0212f204 end:0x0212f298
+
+src/func_ov084_0212f298.c:
+    complete
+    .text start:0x0212f298 end:0x0212f2dc
+
+src/func_ov084_0212f2dc.c:
+    complete
+    .text start:0x0212f2dc end:0x0212f33c
+
+src/func_ov084_0212f33c.cpp:
+    complete
+    .text start:0x0212f33c end:0x0212f460
+
+src/func_ov084_0212f460.c:
+    complete
+    .text start:0x0212f460 end:0x0212f588
+
+src/func_ov084_0212f588.cpp:
+    complete
+    .text start:0x0212f588 end:0x0212f630
+
+src/func_ov084_0212f630.cpp:
+    complete
+    .text start:0x0212f630 end:0x0212f6d8
+
+src/func_ov084_0212f6d8.c:
+    complete
+    .text start:0x0212f6d8 end:0x0212fa7c
+
+src/func_ov084_0212fa7c.c:
+    complete
+    .text start:0x0212fa7c end:0x0212fc10
+
+src/func_ov084_0212fc10.c:
+    .text start:0x0212fc10 end:0x0212fc84
+
+src/_ZN12PiranhaPlant16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x0212fc84 end:0x0212fcd8
+
+src/_ZN12PiranhaPlant16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212fcd8 end:0x0212fcdc
+
+src/_ZN12PiranhaPlant6RenderEv.cpp:
+    complete
+    .text start:0x0212fcdc end:0x0212fd4c
+
+src/_ZN12PiranhaPlant8BehaviorEv.cpp:
+    .text start:0x0212fd4c end:0x0212feb4
+
+src/_ZN12PiranhaPlant13InitResourcesEv.cpp:
+    complete
+    .text start:0x0212feb4 end:0x02130110
+
+src/PiranhaPlant_Spawn.c:
+    complete
+    .text start:0x02130110 end:0x02130174
+
+src/__sinit_ov084_0213035c.c:
+    .init start:0x0213035c end:0x02130558
+
+src/__sinit_ov084_02130558.c:
+    .init start:0x02130558 end:0x02130654
+
+src/__sinit_ov084_02130654.c:
+    .init start:0x02130654 end:0x02130860

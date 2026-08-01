@@ -1,9 +1,9 @@
 //cpp
 // @symbol func_ov062_02119628
-// @emits Koopa_OnTurnIntoEgg
+// recovered name: Koopa_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* daNknk_c::OnTurnIntoEgg - recovered from vtable slot identity */
-/* Koopa_OnTurnIntoEgg at 0x02119628 (ov062), size 0x80
+/* func_ov062_02119628 at 0x02119628 (ov062), size 0x80
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
@@ -21,7 +21,7 @@ extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player20RegisterEggCoinCountEjbb(void *p, unsigned int a, bool b, bool c);
 extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(void *self, void *p, unsigned char b, unsigned int n);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
-void Koopa_OnTurnIntoEgg(Actor *c, void *player) {
+void func_ov062_02119628(Actor *c, void *player) {
 #pragma optimize_for_size on
     if (c->f108 == 3) {
         if (c->Slot18() == 6 && _ZN6Player15IsCollectingCapEv(player) == 0) {

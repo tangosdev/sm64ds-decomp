@@ -1,5 +1,5 @@
 // @symbol func_ov006_020ecee4
-// @emits dScMgHanachan_c_Render
+// recovered name: dScMgHanachan_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -22,7 +22,7 @@ extern Pair data_ov006_0213ca3c;
 extern Pair data_ov006_0213ca34;
 extern Pair data_ov006_0213ca2c;
 
-int dScMgHanachan_c_Render(void *a0)
+int func_ov006_020ecee4(void *a0)
 {
     char *self = (char *)a0;
     int i;

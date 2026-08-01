@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-typedef volatile unsigned int vu32;
-
+#include "types.h"
 extern void func_ov004_020b290c(void);
 extern void func_ov004_020b2980(void);
 extern void _ZN2GX12SetBankForBGEt(u16 a);
@@ -30,7 +25,7 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_ov006_0213e42c[];
 extern int data_0208ee44;
-extern int data_020beb74[];
+extern int data_ov000_020beb74[];
 extern void **data_0209d4a8;
 
 void func_ov006_0210a708(char *obj)
@@ -73,8 +68,8 @@ void func_ov006_0210a708(char *obj)
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
-    data_020beb74[1] = (int)obj;
-    data_0209d4a8 = (void **)data_020beb74;
+    data_ov000_020beb74[1] = (int)obj;
+    data_0209d4a8 = (void **)data_ov000_020beb74;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }

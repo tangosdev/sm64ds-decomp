@@ -1,3 +1,4 @@
+#include "types.h"
 /* ActorBase::AfterCleanupResources(u32 vfSuccess) at 0x02043b2c
  *
  * Only runs when vfSuccess == VS_SUCCESS (2); otherwise returns immediately.
@@ -12,8 +13,6 @@
  * only reproduces from a real C++ virtual dispatch; a function-pointer-through-
  * a-data-field reads the vtable from r4 directly and swaps those two words).
  */
-
-typedef unsigned int u32;
 struct Heap;
 struct SceneNode { char b[0x14]; };
 struct PListNode { char b[0x10]; };

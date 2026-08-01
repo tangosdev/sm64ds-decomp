@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo_c.h"
-// @emits dScMgMCarlo_c_OnYoshiTryEat_020f8c68
+// recovered name: dScMgMCarlo_c_OnYoshiTryEat_020f8c68
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo_c::OnYoshiTryEat - recovered from vtable slot identity */
 void func_ov006_020f7c10(char* p);
@@ -11,7 +11,7 @@ void func_ov006_020c1604(char* c, int unused, short a2, int a3);
 void func_ov004_020b66d4(char* p);
 
 
-void dScMgMCarlo_c_OnYoshiTryEat_020f8c68(char* c)
+void func_ov006_020f8c68(char* c)
 {
     struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
     func_ov006_020f7c10(c + 0x51a8);

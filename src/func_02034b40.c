@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern int func_02034d34(void* thiz);
 extern void _ZN3OAM5ResetEv(void);
 extern s32 func_0200f0bc(void);

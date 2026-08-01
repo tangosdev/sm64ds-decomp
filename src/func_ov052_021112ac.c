@@ -1,7 +1,7 @@
 // @symbol func_ov052_021112ac
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjEmmLog_c.h"
-// @emits daObjEmmLog_c_Behavior
+// recovered name: daObjEmmLog_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjEmmLog_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12;
@@ -10,7 +10,7 @@ extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, Fix12 a, int b);
 extern short data_02082214[];
-int daObjEmmLog_c_Behavior(char *c)
+int func_ov052_021112ac(char *c)
 {
     struct daObjEmmLog_c *self = (struct daObjEmmLog_c *)(void *)c;
     func_020393a4((int*)(c + 0x124), 0x600000);

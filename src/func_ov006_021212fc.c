@@ -1,5 +1,5 @@
 // @symbol func_ov006_021212fc
-// @emits dScMgTrampoline_c_Render
+// recovered name: dScMgTrampoline_c_Render
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern int RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 
 
-int dScMgTrampoline_c_Render(int self)
+int func_ov006_021212fc(int self)
 {
     int count;
     int a1v;

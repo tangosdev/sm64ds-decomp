@@ -1,17 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol func_ov062_0211c2f4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned int u32;
-
-
-
 struct PathPtr {
     int a;
     int b;

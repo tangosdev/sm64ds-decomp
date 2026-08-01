@@ -1,6 +1,4 @@
-
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 void func_ov002_020f2a88(char *c, int i)
 {
   unsigned long new_var;

@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // @symbol _ZN13HeapAllocatorC1EjPvPvj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_NestedHeapIterator.h"
@@ -6,9 +7,6 @@
 /* recovered: named members + shared header */
 #include "HeapAllocator.h"
 extern "C" {
-
-typedef unsigned int u32;
-
 extern void* _ZN18NestedHeapIterator10FindNestedEPv(void* ptr);
 extern void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void* iter, void* node);
 

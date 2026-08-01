@@ -1,12 +1,8 @@
 //cpp
+#include "types.h"
 // @symbol _ZN11RollingRock13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "RollingRock.h"
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 struct Vec3 { s32 x, y, z; };
 struct Actor;
 
@@ -17,7 +13,7 @@ extern "C" {
     void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* w, void* a, int r, int rr, void* v, void* vv);
     void _ZN12WithMeshClsn13SetLimMovFlagEv(void* w);
     void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
-    // r0=this, r1=actor, r2=&pos, r3=r(Fix12), [sp]=rr, [sp+4]=e, [sp+8]=f
+    // r0=this, r1=actor, r2=&pos, r3=r(Fix12i), [sp]=rr, [sp+4]=e, [sp+8]=f
     u8 _ZN5Actor9TrackStarEjj(void* a, u32 x, u32 y);
 }
 

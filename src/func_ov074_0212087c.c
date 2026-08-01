@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
+#include "types.h"
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define LI(v) ((int)(((long long)(v))))
 

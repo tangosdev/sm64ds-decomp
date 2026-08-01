@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef short s16;
-
+#include "types.h"
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
 extern void Vec3_Asr(void* d, void* s, int sh);

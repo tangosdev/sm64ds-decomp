@@ -1,16 +1,10 @@
 //cpp
+#include "types.h"
 // @symbol _ZN6Player17St_ButtSlide_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef s32 Fix12;
-
 extern "C" {
 extern void func_ov002_020bf90c(char* c);
 extern void func_ov002_020c06fc(char* c, u32 a);
@@ -22,7 +16,7 @@ extern void func_ov002_020e25f0(char* c, int a);
 extern void func_ov002_020c18b0(char* c, int a);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, char* v);
 extern void func_ov002_020dc560(char* c);
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12 b, u32 d);
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void Player_AdvanceAnims(char* c);
 

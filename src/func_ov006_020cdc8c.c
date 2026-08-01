@@ -1,7 +1,5 @@
+#include "types.h"
 #pragma opt_propagation off
-typedef int s32;
-typedef unsigned short u16;
-
 extern int _ZN4cstd4fdivEii(int a, int b);
 
 void func_ov006_020cdc8c(char *self)

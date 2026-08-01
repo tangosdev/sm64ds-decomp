@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_0210d7e0
-// @emits dScMgSmartball_c_OnYoshiTryEat
+// recovered name: dScMgSmartball_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern "C" void NullDestructor_0203d47c(void);
 extern "C" void* data_020a0eac;
 struct Heap;
 namespace Memory { void Deallocate(void*, Heap*); }
-extern "C" void* dScMgSmartball_c_OnYoshiTryEat(void* c) {
+extern "C" void* func_ov006_0210d7e0(void* c) {
     *(int**)c = &data_ov006_0213eefc;
     __destroy_arr((char*)c + 0x599c, 0x40, 0x24, (void*)&func_ov006_0210d894);
     __destroy_arr((char*)c + 0x48d4, 0x10, 8, (void*)&NullDestructor_0203d47c);
