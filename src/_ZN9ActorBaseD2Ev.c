@@ -3,9 +3,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "ActorBase.h"
+extern void *_ZTV9ActorBase[];   /* 0x02099edc */
 int *_ZN9ActorBaseD2Ev(struct ActorBase *self) {
-    ((int *)self)[0] = (int)VT0;
-    func_020440e8((char *)&self->unk_038);
-    func_020440e8((char *)&self->unk_028);
+    ((int *)self)[0] = (int)_ZTV9ActorBase;
+    func_020440e8((char *)&self->renderNode);
+    func_020440e8((char *)&self->behavNode);
     return ((int *)self);
 }

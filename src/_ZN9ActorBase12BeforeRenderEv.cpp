@@ -5,7 +5,7 @@
 #include "ActorBase.h"
 int ActorBase::BeforeRender()
 {
-  if(mMarkedForDestruction!=0) goto ret0;
+  if(shouldBeKilled!=0) goto ret0;
   if((unk_013&8)==0) goto ret1;
 ret0:
   return 0;
