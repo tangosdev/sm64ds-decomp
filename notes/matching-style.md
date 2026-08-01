@@ -215,7 +215,11 @@ Also spelled `u16 *p = (u16*)(((int)c + 0x4c0c) & 0xFFFFFFFFFFFFFFFFULL); *p = *
 
 **Two constraints, both load-bearing:**
 1. **Launder ONLY the RMW sites.** Laundering the single-use accesses too will diverge -- the ROM
-   folds those.
+   folds those. EXCEPTION (2026-08-01, codegen notes 6ax): this rule governs the
+   address-materialization split. For pure ORDERING residue between two chains the mask is a
+   scheduling-class demotion that can go on EITHER side -- CapEnemy::GetCapState matched by
+   laundering the plain single-use read and leaving the RMW alone. Launder the chain that must
+   yield, not the one that must lead.
 2. **Use textually distinct macros for distinct addresses.** One shared macro CSEs the laundered
    addresses together into callee-saved registers and inflates the frame (observed: `sub sp,#0xc`
    appearing from nowhere). This is the 6ak "textual variance is a handle on value-numbering" rule

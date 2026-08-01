@@ -1,7 +1,16 @@
 //cpp
-// NONMATCHING: missing logic (ROM does more) (div=8). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+/* CapEnemy::GetCapState @ 0x02005fa0 (arm9, size 0xb4)   [mwccarm 1.2/base, 1.2/sp2, 1.2/sp2p3, 2004/b56]
+ * Returns 2 if the cap flag is clear, 0 if the closest player already wears this
+ * cap slot (or the release bit is clear), else consumes the cap: clears the flag,
+ * latches field_f4 into field_b0, masks the slot bits, returns 1.
+ *
+ * Load-bearing spelling (do not "clean up"): the u64 no-op mask sits on the PLAIN
+ * field_f4 READ, not on the RMW site. This is the deliberate inverse of the
+ * matching-style.md RMW-launder rule: demoting the single-use load out of its
+ * fold-onto-[r4,#0xf4] value-numbering class lets the RMW-pool chain lead the
+ * tail interleave (A,B,A,B), which no spelling of the RMW side reaches. The
+ * masked field_113 RMW address is the standard 6g launder.
+ */
 struct CapEnemy {
     int GetCapState();
     char pad[0xb0];
@@ -44,10 +53,7 @@ int CapEnemy::GetCapState() {
     }
 
     field_111 = 0;
-    const int off = 0x113;
-    int tmp = field_f4;
-    unsigned char *p2 = (unsigned char *)this + off;
-    field_b0 = tmp;
-    *p2 = *p2 & 7;
+    field_b0 = *(int *)(((long long)(int)&field_f4) & 0xFFFFFFFFFFFFFFFFLL);
+    *(unsigned char *)(((int)this + 0x113) & 0xFFFFFFFFFFFFFFFFULL) &= 7;
     return 1;
 }

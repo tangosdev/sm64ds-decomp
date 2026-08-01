@@ -2809,3 +2809,52 @@ Three corrections fell straight out of it, all of which had been recorded as evi
 **Practical rule:** a pragma result is evidence only if the name is in that file. Proving a
 real pragma inert is a finding; proving a fake one inert is noise that then gets cited as a
 closed avenue.
+
+## 6aw. The sub-identity beats commutative canonicalization: `a - (-b)` where `a + b` re-canonicalizes (2026-08-01, func_02072168 MATCHED)
+
+The last real divergence on func_02072168 (12 -> 0) was a 9-word scratch-register rotation
+in one two-armed statement (case 9's `b = <mem> + v1`). The mechanism, decoded from the
+assignment pattern: mwccarm canonicalizes the commutative add to +(simple, complex) --
+`a + v1` and `v1 + a` compile IDENTICALLY (both re-canonicalize to +(v1, a)) -- and then
+walks operands right-to-left assigning scratch registers. The ROM's tree is +(a, v1), so
+its walk hits v1 last (r0) where ours hit it first. No cast, unary +, `(0, v1)` comma,
+`| 0`, `+ 0`, u64 mask on either operand, or arm-local temp moved a byte: everything that
+compiles to the same value re-canonicalizes with it, and temps rotate the whole web (12 ->
+262).
+
+The lever: spell the add as a SUBTRACTION, `b = <mem> - (-v1)`. Subtraction is not
+commutative, so canonicalization leaves the operand order alone; late strength reduction
+then folds `- (-x)` back to the plain add rN,rN,rM with +(a, v1) order intact. One edit,
+9 words, byte-exact. Semantics are exact on ARM (two's-complement wraparound; the negate
+of INT_MIN folds through the same add).
+
+Scope note: this is the first known construct that steers CANONICAL OPERAND ORDER of a
+commutative op, which 0202ffec's smull floor and several ordering floors were declared
+unreachable over. When a diff shows a pure scratch-register rotation around one
+commutative op, try the sub-identity before calling it a floor.
+
+Landing note (split-symbol carriers, extends 9a(3)): func_02072168 is banked and
+re-verified at the COMBINED 0x88c extent (0x02072168..0x020729f4) because its compiled
+object also emits func_020729e8, the severed 12-byte epilogue. matched.jsonl carries size
+2188; the symbol map still lists both symbols. src/func_020729e8.c stays as a documented
+stub.
+
+## 6ax. Inverse RMW-launder: demote the PLAIN read to let the RMW chain lead an interleave (2026-08-01, CapEnemy::GetCapState MATCHED)
+
+GetCapState's "leader-of-interleave" floor (two equal-height chains, registers identical,
+ROM leads A,B,A,B with the RMW-pool chain, mwcc leads B,A,B,A with the plain-load chain)
+fell to the exact INVERSE of the matching-style.md RMW rule: launder the plain single-use
+field_f4 READ with the u64 no-op mask and leave the RMW site alone.
+
+    field_b0 = *(int *)(((long long)(int)&field_f4) & 0xFFFFFFFFFFFFFFFFLL);
+
+Instruction selection is unchanged (the load still folds to ldr r1,[r4,#0xf4]) -- the mask
+only demotes the load out of its default value-numbering/scheduling class, and that demotion
+alone flips which chain leads. Every documented spelling of the RMW side (naming, casting,
+block-scoping, splitting, comma-fusing, 22 probes re-verified 2026-08-01) is inert or
+regressive.
+
+Rule amendment: "launder ONLY the RMW sites" holds for the ADDRESS-MATERIALIZATION split
+(that is what the ROM's RMW/single-use anatomy dictates). But for ORDERING residue between
+two chains, the launder is a scheduling-class demotion you can apply to EITHER side: launder
+the chain that must YIELD, not the one that must lead.
