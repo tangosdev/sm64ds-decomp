@@ -1,2 +1,2 @@
-extern unsigned short G[];
-void func_0203d868(void) { G[6] |= 4096; }
+extern unsigned short data_020a1040[];
+void func_0203d868(void) { data_020a1040[6] |= 4096; }

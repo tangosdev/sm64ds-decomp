@@ -1,5 +1,5 @@
 #include "types.h"
-extern s32 RENDER_DMA_CHANNEL;
+extern s32 data_02099fd0;
 
 void *_ZN2G212GetBG3ScrPtrEv(void);
 void DMASyncHalfTransfer(s32 channel, void *dst, void *src, u32 len);
@@ -7,7 +7,7 @@ void MultiCopyHalf(void *dst, void *src, u32 len);
 
 void func_02056314(void *dst, u32 offset, u32 len) {
     void *ip = _ZN2G212GetBG3ScrPtrEv();
-    s32 chan = RENDER_DMA_CHANNEL;
+    s32 chan = data_02099fd0;
     if (chan != -1) {
         DMASyncHalfTransfer(chan, dst, (char *)ip + offset, len);
     } else {

@@ -1,2 +1,2 @@
-extern int G[];
-void func_0201361c(int n) { G[18] |= 1 << n; }
+extern int data_0209caa0[];
+void func_0201361c(int n) { data_0209caa0[18] |= 1 << n; }

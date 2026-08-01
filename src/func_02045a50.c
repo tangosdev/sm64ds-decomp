@@ -1,6 +1,6 @@
 #include "types.h"
-extern u32 gTexPlttCur;    /* 0x020a4bcc */
-extern u32 gTexPlttEnd;    /* 0x020a4bd8 */
+extern u32 data_020a4bcc;    /* 0x020a4bcc */
+extern u32 data_020a4bd8;    /* 0x020a4bd8 */
 
 extern void Crash(void);
 extern void _ZN2GX16BeginLoadTexPlttEv(void);
@@ -12,17 +12,17 @@ u32 func_02045a50(const void *src, u32 size)
     u32 slot;
     u32 end;
 
-    slot = gTexPlttCur;
-    end  = gTexPlttEnd;
+    slot = data_020a4bcc;
+    end  = data_020a4bd8;
 
     if (slot + size > end)
         Crash();
 
-    gTexPlttEnd -= (size + 0xf) & 0xfff0;
+    data_020a4bd8 -= (size + 0xf) & 0xfff0;
 
     _ZN2GX16BeginLoadTexPlttEv();
-    _ZN2GX11LoadTexPlttEPKvjj(src, gTexPlttEnd, size);
+    _ZN2GX11LoadTexPlttEPKvjj(src, data_020a4bd8, size);
     _ZN2GX14EndLoadTexPlttEv();
 
-    return gTexPlttEnd;
+    return data_020a4bd8;
 }

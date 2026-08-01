@@ -4,7 +4,7 @@
  * the global VRAM register, then calls Vram__Map with those bits.
  * Returns the original bits value.
  */
-extern u16 gVramReg;  /* at 0x020a6088 */
+extern u16 data_020a6088;  /* at 0x020a6088 */
 extern void Vram__Map(u16 bits);
 
 u16 func_020541b8(u16 *bankBitsPtr)
@@ -13,7 +13,7 @@ u16 func_020541b8(u16 *bankBitsPtr)
 
     bits = *bankBitsPtr;
     *bankBitsPtr = 0;
-    gVramReg = gVramReg | bits;
+    data_020a6088 = data_020a6088 | bits;
     Vram__Map(bits);
     return bits;
 }

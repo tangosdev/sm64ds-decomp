@@ -12,12 +12,12 @@ struct SaveData {
 
 extern int _ZN8SaveData16CanPlayerHaveCapEv(void);
 extern int func_020139b8(void);
-extern struct SaveData SAVE_DATA;
+extern struct SaveData data_0209caa0;
 
 void func_02013a88(void)
 {
     if (!_ZN8SaveData16CanPlayerHaveCapEv())
         return;
-    SAVE_DATA.flags1 = SAVE_DATA.flags1 & ~(0x1000000u << SAVE_DATA.currentCharacter);
+    data_0209caa0.flags1 = data_0209caa0.flags1 & ~(0x1000000u << data_0209caa0.currentCharacter);
     func_020139b8();
 }

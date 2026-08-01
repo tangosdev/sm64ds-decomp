@@ -9,7 +9,7 @@ extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ10RestoreAllEj(u32 state);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 
-static u32 AtomicSwap(u32 val, LockObj *addr);
+static u32 func_0205a74c(u32 val, LockObj *addr);
 
 u32 func_02057198(u32 val, LockObj *addr, void (*cleanupFn)(void), u32 useAll)
 {
@@ -21,7 +21,7 @@ u32 func_02057198(u32 val, LockObj *addr, void (*cleanupFn)(void), u32 useAll)
     else
         state = _ZN3IRQ7DisableEv();
 
-    old = AtomicSwap(val, addr);
+    old = func_0205a74c(val, addr);
     if (old == 0)
     {
         if (cleanupFn)

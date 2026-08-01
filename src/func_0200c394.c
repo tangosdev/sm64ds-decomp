@@ -6,7 +6,7 @@ extern int data_02087184, data_020871fc, data_02087224, data_0208733c, data_0208
 
 void Vec3_Sub(Vec3 *out, Vec3 *a, Vec3 *b);
 int LenVec3(Vec3 *v);
-int cstd_fdiv(int a, int b);
+int _ZN4cstd4fdivEii(int a, int b);
 void Vec3_MulScalarInPlace(Vec3 *v, int s);
 void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
 void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
@@ -67,7 +67,7 @@ body:
                     *(int *)(self + 0x12c) = (int)(((long long)*(int *)(self + 0x12c) * 0x1800 + 0x800) >> 12);
                 }
                 if (g == 0x2f && *(int *)(self + 0x12c) > 0xc0000) {
-                    int s = cstd_fdiv(0xc0000, *(int *)(self + 0x12c) << 1);
+                    int s = _ZN4cstd4fdivEii(0xc0000, *(int *)(self + 0x12c) << 1);
                     Vec3_MulScalarInPlace(&local, s);
                     Vec3_Add(&local2, a3, &local);
                     *(int *)(self + 0x120) = local2.x;

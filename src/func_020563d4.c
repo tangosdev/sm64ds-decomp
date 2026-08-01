@@ -1,5 +1,5 @@
 #include "types.h"
-extern u32 gDmaChannel;
+extern u32 data_02099fd0;
 
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
 extern void DMASyncHalfTransfer(u32 channel, const void *src, void *dst, u32 count);
@@ -11,7 +11,7 @@ void func_020563d4(const void *src, u32 offset, u32 count)
     u32 ch;
 
     bgPtr = _ZN2G212GetBG2ScrPtrEv();
-    ch = gDmaChannel;
+    ch = data_02099fd0;
     if (ch != (u32)~0)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
     else

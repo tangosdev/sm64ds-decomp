@@ -28,7 +28,7 @@ void func_0200d8c8(struct Camera *cam, const struct Vector3 *v, int strength)
 	if (strength <= dist)
 		return;
 
-	Fix12i offset = (Fix12i)(((long long)cstd_fdiv(strength, dist) * 0x9000 + 0x800) >> 12);
+	Fix12i offset = (Fix12i)(((long long)_ZN4cstd4fdivEii(strength, dist) * 0x9000 + 0x800) >> 12);
 
 	if (offset <= cam->unk134)
 		return;

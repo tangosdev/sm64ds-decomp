@@ -13,14 +13,14 @@ struct Obj {
     unsigned char byte_f;   /* 0x0f */
 };
 
-extern void *vtable_0202fbc8[];                       /* 0x020926f0 */
+extern void *data_020926f0[];                       /* 0x020926f0 */
 extern void func_0202fb30(struct Obj *thiz);          /* 0x0202fb30 */
 extern void _ZN5ColorD1Ev(struct Obj *thiz);          /* 0x02017574 */
 extern void _ZN6Memory16operator_delete2EPv(void *p); /* 0x0203cbcc */
 
 struct Obj *func_0202fbc8(struct Obj *thiz)
 {
-    thiz->vtable = (void **)vtable_0202fbc8;
+    thiz->vtable = (void **)data_020926f0;
     if (thiz->byte_f == 1)
         func_0202fb30(thiz);
     _ZN5ColorD1Ev(thiz);

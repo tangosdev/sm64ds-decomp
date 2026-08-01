@@ -7,19 +7,19 @@ struct Actor {
 };
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern u8 CURR_PLAYER_ID;
-extern struct Actor* PLAYER_ARR[];
-extern u32 KS_PLAYER_IDS[];
+extern u8 data_0209f250;
+extern struct Actor* data_0209f394[];
+extern u32 data_0209b284[];
 
 struct Actor* func_0200e6d8(u32 arg0) {
     struct Actor* player;
     struct Actor* result;
 
-    player = PLAYER_ARR[CURR_PLAYER_ID];
+    player = data_0209f394[data_0209f250];
     if (arg0 == player->param1) {
         result = player;
     } else {
-        result = _ZN5Actor10FindWithIDEj(KS_PLAYER_IDS[arg0]);
+        result = _ZN5Actor10FindWithIDEj(data_0209b284[arg0]);
     }
     return result;
 }

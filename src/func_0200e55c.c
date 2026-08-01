@@ -7,10 +7,10 @@ struct Actor {
 };
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern u32 CUTSCENE_OBJECT_IDS[];
+extern u32 data_0209b2a4[];
 
 struct Actor* func_0200e55c(u32 ownerID) {
-    u32* ids = CUTSCENE_OBJECT_IDS;
+    u32* ids = data_0209b2a4;
     int i = 0;
     struct Actor* a;
     do {

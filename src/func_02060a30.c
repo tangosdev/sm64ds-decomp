@@ -6,10 +6,10 @@ typedef struct {
     void (*vtable)(void *);
 } SomeObj;
 
-extern SomeObj gObj2;  /* 0x020a8780 */
+extern SomeObj data_020a8780;  /* 0x020a8780 */
 
 void func_02060a30(void) {
-    SomeObj *obj = &gObj2;
+    SomeObj *obj = &data_020a8780;
     if (func_02060ebc(obj)) {
         obj->vtable(obj);
     }

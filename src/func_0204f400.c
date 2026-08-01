@@ -19,19 +19,19 @@ extern HeapAllocator* _ZN18NestedHeapIterator4NextEP13HeapAllocator(NestedHeapIt
 extern void _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_(NestedHeapIteratorT* iter, HeapAllocator* pos, HeapAllocator* node);
 
 // The global NestedHeapIterator struct at 0x020a4d60
-extern NestedHeapIteratorT gHeapList;
+extern NestedHeapIteratorT data_020a4d60;
 
 void func_0204f400(HeapAllocator* self) {
     HeapAllocator* cur;
-    cur = _ZN18NestedHeapIterator4NextEP13HeapAllocator(&gHeapList, 0);
+    cur = _ZN18NestedHeapIterator4NextEP13HeapAllocator(&data_020a4d60, 0);
     if (cur != 0) {
         for (;;) {
             if (self->sortKey < cur->sortKey)
                 break;
-            cur = _ZN18NestedHeapIterator4NextEP13HeapAllocator(&gHeapList, cur);
+            cur = _ZN18NestedHeapIterator4NextEP13HeapAllocator(&data_020a4d60, cur);
             if (cur == 0)
                 break;
         }
     }
-    _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_(&gHeapList, cur, self);
+    _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_(&data_020a4d60, cur, self);
 }
