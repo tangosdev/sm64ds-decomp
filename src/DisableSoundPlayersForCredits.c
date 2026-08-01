@@ -13,7 +13,7 @@ typedef struct {
     s32 maxSeq;
 } SoundPlayerDefault;
 
-extern SoundPlayerDefault gSoundPlayerDefaults[10];  /* 0x0208e448 */
+extern SoundPlayerDefault data_0208e448[10];  /* 0x0208e448 */
 
 void DisableSoundPlayersForCredits(void)
 {
@@ -21,5 +21,5 @@ void DisableSoundPlayersForCredits(void)
     s32 zero;
     zero = 0;
     for (i = 0; i < 10; i++)
-        _ZN5Sound6Player19SetPlayableSeqCountEii(gSoundPlayerDefaults[i].playerID, zero);
+        _ZN5Sound6Player19SetPlayableSeqCountEii(data_0208e448[i].playerID, zero);
 }

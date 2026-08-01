@@ -15,8 +15,8 @@ struct ExpandingHeap {
 };
 
 extern struct ExpandingHeap* _ZN4Heap19CreateExpandingHeapEjPS_i(u32 size, struct Heap* root, s32 align);
-extern struct ExpandingHeap* _ZN6Memory11gameHeapPtrE;
+extern struct ExpandingHeap* data_020a0eac;
 
 void _ZN4Heap18InitializeGameHeapEjPS_(u32 size, struct Heap* root) {
-    _ZN6Memory11gameHeapPtrE = _ZN4Heap19CreateExpandingHeapEjPS_i(size, root, 4);
+    data_020a0eac = _ZN4Heap19CreateExpandingHeapEjPS_i(size, root, 4);
 }

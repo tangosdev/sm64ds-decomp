@@ -1,6 +1,6 @@
 #include "types.h"
 /* BlendModelAnim::UpdateVerts at 0x02016578, size=0x4c
- * Updates bones, then calls Func_0204531c(data, unk64) (blend) or UpdateVertsUsingBones based on unk64.
+ * Updates bones, then calls func_0204531c(data, unk64) (blend) or UpdateVertsUsingBones based on unk64.
  */
 struct ModelComponents {
     void* modelFile;
@@ -27,7 +27,7 @@ struct BlendModelAnim {
 };
 
 extern void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(struct ModelComponents* data, void* file, s32 frame);
-extern void Func_0204531c(struct ModelComponents* data, s32 unk64);
+extern void func_0204531c(struct ModelComponents* data, s32 unk64);
 extern void _ZN15ModelComponents21UpdateVertsUsingBonesEv(struct ModelComponents* data);
 
 void _ZN14BlendModelAnim11UpdateVertsEv(struct BlendModelAnim* thiz)
@@ -36,7 +36,7 @@ void _ZN14BlendModelAnim11UpdateVertsEv(struct BlendModelAnim* thiz)
     _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&thiz->data, thiz->file, (u32)(currFrame << 4) >> 0x10);
     if (thiz->unk64 < 0x1000)
     {
-        Func_0204531c(&thiz->data, thiz->unk64);
+        func_0204531c(&thiz->data, thiz->unk64);
     }
     else
     {

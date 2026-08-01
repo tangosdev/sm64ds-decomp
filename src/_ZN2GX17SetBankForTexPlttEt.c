@@ -1,10 +1,10 @@
 #include "types.h"
 struct VramReg { u16 w0; u16 pad[4]; u16 fa; };
-extern struct VramReg gVramReg;
+extern struct VramReg data_020a6088;
 extern void Vram__Map(u16 bits);
 void _ZN2GX17SetBankForTexPlttEt(u16 x){
-    gVramReg.w0 = ~x & (gVramReg.w0 | gVramReg.fa);
-    gVramReg.fa = x;
+    data_020a6088.w0 = ~x & (data_020a6088.w0 | data_020a6088.fa);
+    data_020a6088.fa = x;
     switch (x) {
     case 0x40:
         *(volatile unsigned char*)0x4000246 = 0x83;
@@ -23,5 +23,5 @@ void _ZN2GX17SetBankForTexPlttEt(u16 x){
     case 0:
         break;
     }
-    Vram__Map(gVramReg.w0);
+    Vram__Map(data_020a6088.w0);
 }

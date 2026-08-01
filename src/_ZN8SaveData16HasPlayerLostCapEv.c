@@ -10,11 +10,11 @@ struct SaveData {
 };
 
 extern int _ZN8SaveData16CanPlayerHaveCapEv(void);
-extern struct SaveData SAVE_DATA;
+extern struct SaveData data_0209caa0;
 
 int _ZN8SaveData16HasPlayerLostCapEv(void)
 {
     if (!_ZN8SaveData16CanPlayerHaveCapEv())
         return 0;
-    return SAVE_DATA.flags1 & (0x1000000u << SAVE_DATA.currentCharacter);
+    return data_0209caa0.flags1 & (0x1000000u << data_0209caa0.currentCharacter);
 }

@@ -1,2 +1,2 @@
-extern unsigned char G;
-int GetOwnerLanguage(void) { return G; }
+extern unsigned char data_020a0f00;
+int GetOwnerLanguage(void) { return data_020a0f00; }

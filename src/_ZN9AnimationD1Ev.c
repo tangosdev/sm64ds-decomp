@@ -6,9 +6,9 @@
  * (slot 0x0) and returns. The three Fix12i members need no teardown.
  */
 
-extern int _ZTV9Animation[];  /* vtable for Animation */
+extern int data_0208e7e4[];  /* vtable for Animation */
 
 void _ZN9AnimationD1Ev(int *self)
 {
-    self[0] = (int)_ZTV9Animation;  /* +0x00 vptr */
+    self[0] = (int)data_0208e7e4;  /* +0x00 vptr */
 }

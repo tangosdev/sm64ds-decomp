@@ -6,8 +6,8 @@ extern void MultiCopy_Int(void* src, void* dest, u32 size);
 extern void DecompressLZ16(void* src, void* dest);
 extern void _ZN7Message10LoadTextVSEv(void);
 
-extern u8 CONNECTION_ERROR;
-extern s16 dat_0209fce8;
+extern u8 data_0209fc9c;
+extern s16 data_0209fce8;
 
 void LoadFont3D(void)
 {
@@ -25,6 +25,6 @@ void LoadFont3D(void)
 
     _ZN7Message10LoadTextVSEv();
 
-    CONNECTION_ERROR = 0;
-    dat_0209fce8 = -1;
+    data_0209fc9c = 0;
+    data_0209fce8 = -1;
 }

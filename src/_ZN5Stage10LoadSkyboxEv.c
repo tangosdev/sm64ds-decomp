@@ -13,7 +13,7 @@ extern void* _Znwj(u32 size);
 extern void* _ZN5ModelC1Ev(void* this);
 extern void _ZN5Model14LoadAndSetFileEtii(void* this, u16 fileID, s32 a, s32 b);
 
-extern u16 gSkyboxFileTable[];
+extern u16 data_02075620[];
 
 void _ZN5Stage10LoadSkyboxEv(Stage* self) {
     u32 skyboxID = _ZN5Stage11GetSkyboxIDEv(self);
@@ -23,6 +23,6 @@ void _ZN5Stage10LoadSkyboxEv(Stage* self) {
         model = (Model*)_ZN5ModelC1Ev(model);
     }
     self->skyboxModel = model;
-    u16 fileID = gSkyboxFileTable[skyboxID - 1];
+    u16 fileID = data_02075620[skyboxID - 1];
     _ZN5Model14LoadAndSetFileEtii(self->skyboxModel, fileID, 0, 2);
 }

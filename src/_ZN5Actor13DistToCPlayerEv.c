@@ -13,10 +13,10 @@ typedef int Fix12i; /* 20.12 fixed-point */
 struct Actor;
 
 extern struct Actor *_ZN5Actor13ClosestPlayerEv(void);
-extern Fix12i gClosestPlayerDist; /* @ 0x0208e380 */
+extern Fix12i data_0208e380; /* @ 0x0208e380 */
 
 Fix12i _ZN5Actor13DistToCPlayerEv(struct Actor *self)
 {
     _ZN5Actor13ClosestPlayerEv();
-    return gClosestPlayerDist;
+    return data_0208e380;
 }

@@ -3,7 +3,7 @@
  * ActorBase is the root class; no base dtor to chain to. It destroys its two
  * ProcessingListNode members (renderNode @0x38, behavNode @0x28, reverse order)
  * then frees itself.
- *   [this+0] = _ZTV9ActorBase (0x02099edc)
+ *   [this+0] = data_02099edc (0x02099edc)
  *   ProcessingListNode::~ProcessingListNode(this+0x38)   (0x020440e8)
  *   ProcessingListNode::~ProcessingListNode(this+0x28)
  *   Memory::Deallocate(this, Memory::gameHeapPtr)        (0x0203c1e8)
@@ -19,17 +19,17 @@ struct ActorBase {
     char renderNode[0x10];  /* 0x38 */
 };
 
-extern void *_ZTV9ActorBase[];
+extern void *data_02099edc[];
 
-extern void _ZN18ProcessingListNodeD2Ev(void *node);   /* 0x020440e8 */
+extern void func_020440e8(void *node);   /* 0x020440e8 */
 extern void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, struct Heap *heap); /* 0x0203c1e8 */
-extern struct Heap *_ZN6Memory11gameHeapPtrE;          /* 0x020a0eac */
+extern struct Heap *data_020a0eac;          /* 0x020a0eac */
 
 struct ActorBase *_ZN9ActorBaseD0Ev(struct ActorBase *thiz)
 {
-    thiz->vtable = (void **)_ZTV9ActorBase;
-    _ZN18ProcessingListNodeD2Ev(thiz->renderNode);
-    _ZN18ProcessingListNodeD2Ev(thiz->behavNode);
-    _ZN6Memory10DeallocateEPvP4Heap(thiz, _ZN6Memory11gameHeapPtrE);
+    thiz->vtable = (void **)data_02099edc;
+    func_020440e8(thiz->renderNode);
+    func_020440e8(thiz->behavNode);
+    _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;
 }

@@ -23,15 +23,15 @@ struct CapEnemy {
     struct CapIcon capIcon;  /* 0x164 */
 };
 
-extern u32 _ZTV8CapEnemy[];
+extern u32 data_ov002_02108284[];
 extern void _ZN5EnemyC2Ev(struct CapEnemy*);
 extern void _ZN5ModelC1Ev(struct Model*);
-extern void _ZN7CapIconC1Ev(struct CapIcon*);
+extern void data_ov000_020ab3c4(struct CapIcon*);
 
 struct CapEnemy* _ZN8CapEnemyC2Ev(struct CapEnemy* this) {
     _ZN5EnemyC2Ev(this);
-    this->vtable = (u32)_ZTV8CapEnemy;
+    this->vtable = (u32)data_ov002_02108284;
     _ZN5ModelC1Ev(&this->capModel);
-    _ZN7CapIconC1Ev(&this->capIcon);
+    data_ov000_020ab3c4(&this->capIcon);
     return this;
 }

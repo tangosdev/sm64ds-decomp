@@ -10,11 +10,11 @@ struct Heap {
 };
 
 extern void* _ZN4Heap8AllocateEji(struct Heap* self, u32 size, s32 align);
-extern struct Heap* _ZN6Memory14defaultHeapPtrE;
+extern struct Heap* data_020a0ea0;
 
 void* _ZN6Memory8AllocateEjiP4Heap(u32 size, s32 align, struct Heap* heap) {
     if (!heap) {
-        heap = _ZN6Memory14defaultHeapPtrE;
+        heap = data_020a0ea0;
     }
     return _ZN4Heap8AllocateEji(heap, size, align);
 }

@@ -6,9 +6,9 @@
  * (slot 0x0) and returns. The currInterp/speed Fix12i members need no teardown.
  */
 
-extern int _ZTV5Fader[];  /* vtable for Fader */
+extern int data_0208eafc[];  /* vtable for Fader */
 
 void _ZN5FaderD1Ev(int *self)
 {
-    self[0] = (int)_ZTV5Fader;  /* +0x00 vptr */
+    self[0] = (int)data_0208eafc;  /* +0x00 vptr */
 }

@@ -11,7 +11,7 @@ struct Manager {
     struct Node *first;
 };
 
-extern struct Manager gManager_0x020a6134;
+extern struct Manager data_020a6134;
 
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
@@ -21,7 +21,7 @@ void OS_WakeupThread(u16 *self) {
     u32 r4 = _ZN3IRQ7DisableEv();
     u32 mask = *self;
     if (mask != 0) {
-        struct Node *node = gManager_0x020a6134.first;
+        struct Node *node = data_020a6134.first;
         if (node != 0) {
             u32 r1 = 1;
             do {

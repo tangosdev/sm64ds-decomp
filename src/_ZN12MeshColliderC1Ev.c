@@ -10,7 +10,7 @@ extern void _ZN16MeshColliderBaseC2Ev(struct MeshColliderBase* self);
 
 extern void func_02038228(u32* obj);
 
-extern void* MeshCollider_vtable;
+extern void* _ZTV12MeshCollider;
 
 struct MeshCollider {
     void* vtable;                 /* 0x00 */
@@ -23,7 +23,7 @@ struct MeshCollider {
 struct MeshCollider* _ZN12MeshColliderC1Ev(struct MeshCollider* self)
 {
     _ZN16MeshColliderBaseC2Ev((struct MeshColliderBase*)self);
-    self->vtable = &MeshCollider_vtable;
+    self->vtable = &_ZTV12MeshCollider;
     func_02038228(&self->fld24);
     self->fld20 = 0;
     return self;

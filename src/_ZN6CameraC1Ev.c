@@ -11,7 +11,7 @@ typedef struct {
     Matrix4x3 mat; /* offset 0x50 */
 } Camera;
 
-extern u32 _ZTV12ActorDerived;
+extern u32 data_0208e4b8;
 extern u32 _ZTV4View;
 extern u32 _ZTV6Camera;
 
@@ -23,7 +23,7 @@ Camera* _ZN6CameraC1Ev(Camera* this) {
     this = _ZN9ActorBasenwEj(0x1a8);
     if (this != 0) {
         _ZN9ActorBaseC1Ev(this);
-        this->vtable = &_ZTV12ActorDerived;
+        this->vtable = &data_0208e4b8;
         this->vtable = &_ZTV4View;
         Matrix4x3_LoadIdentity(&this->mat);
         this->vtable = &_ZTV6Camera;

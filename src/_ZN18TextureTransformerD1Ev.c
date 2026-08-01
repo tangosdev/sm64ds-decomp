@@ -9,10 +9,10 @@
  * Call target: 0x02015cb4
  */
 struct Obj { void *vtable; };
-extern void base_dtor_TextureTransformer(struct Obj *thiz); /* 0x02015cb4 */
+extern void _ZN9AnimationD2Ev(struct Obj *thiz); /* 0x02015cb4 */
 struct Obj *_ZN18TextureTransformerD1Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)vtbl_TextureTransformer;
-    base_dtor_TextureTransformer(thiz);
+    thiz->vtable = (void *)_ZTV18TextureTransformer;
+    _ZN9AnimationD2Ev(thiz);
     return thiz;
 }

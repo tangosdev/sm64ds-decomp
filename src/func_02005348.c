@@ -1,5 +1,5 @@
 
-extern unsigned short *G2S_GetBG1ScrPtr(void);
+extern unsigned short *_ZN3G2S12GetBG1ScrPtrEv(void);
 void func_02005348(void *self)
 {
   unsigned char *s = (unsigned char *) self;
@@ -20,7 +20,7 @@ void func_02005348(void *self)
       v = 0x1000;
     }
     v = (unsigned short) v;
-    base = (unsigned short *) (((char *) G2S_GetBG1ScrPtr()) + 0x4c0);
+    base = (unsigned short *) (((char *) _ZN3G2S12GetBG1ScrPtrEv()) + 0x4c0);
     new_var = v;
     row = base + (i * 0x10);
     for (j = 0; j < 0x10; j++)

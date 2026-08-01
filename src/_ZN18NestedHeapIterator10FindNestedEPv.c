@@ -21,10 +21,10 @@ struct HeapAllocator {
 
 extern struct HeapAllocator* _ZN18NestedHeapIterator19RecursiveFindNestedEPv(
     struct NestedHeapIterator* self, void* ptr);
-extern struct NestedHeapIterator _ZN6Memory16rootHeapIteratorE;
+extern struct NestedHeapIterator data_020a4d38;
 
 struct NestedHeapIterator* _ZN18NestedHeapIterator10FindNestedEPv(void* ptr) {
-    struct NestedHeapIterator* root = &_ZN6Memory16rootHeapIteratorE;
+    struct NestedHeapIterator* root = &data_020a4d38;
     struct HeapAllocator* found = _ZN18NestedHeapIterator19RecursiveFindNestedEPv(root, ptr);
     if (found) {
         return &found->nestedHeapIt;

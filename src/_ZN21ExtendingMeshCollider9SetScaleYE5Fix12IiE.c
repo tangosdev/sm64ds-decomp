@@ -6,10 +6,10 @@ typedef struct ExtendingMeshCollider {
     Fix12i invScaleY;
 } ExtendingMeshCollider;
 
-extern Fix12i cstd_reciprocal(Fix12i x);
+extern Fix12i func_02053200(Fix12i x);
 
 void _ZN21ExtendingMeshCollider9SetScaleYE5Fix12IiE(ExtendingMeshCollider* this, Fix12i newScaleY) {
     this->scaleY = newScaleY;
     if (this->scaleY == 0) return;
-    this->invScaleY = cstd_reciprocal(this->scaleY);
+    this->invScaleY = func_02053200(this->scaleY);
 }

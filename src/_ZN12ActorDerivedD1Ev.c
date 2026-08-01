@@ -4,11 +4,11 @@
  * Base dtor call target: 0x02043d48
  */
 struct Obj { void *vtable; };
-extern void *vtbl_ActorDerived[];
-extern void base_dtor_ActorDerived(struct Obj *thiz); /* 0x02043d48 */
+extern void *data_0208e4b8[];
+extern void _ZN9ActorBaseD2Ev(struct Obj *thiz); /* 0x02043d48 */
 struct Obj *_ZN12ActorDerivedD1Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)vtbl_ActorDerived;
-    base_dtor_ActorDerived(thiz);
+    thiz->vtable = (void *)data_0208e4b8;
+    _ZN9ActorBaseD2Ev(thiz);
     return thiz;
 }

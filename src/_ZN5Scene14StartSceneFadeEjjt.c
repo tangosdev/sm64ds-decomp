@@ -11,10 +11,10 @@ struct FaderColor {
     u16 color;        // 0xc
 };
 
-extern struct FaderColor DEFAULT_SCENE_FADER;
+extern struct FaderColor data_0209f5e8;
 
 void _ZN5Scene14StartSceneFadeEjjt(u32 actorID, u32 param, u16 fadeColor) {
     if (_ZN5Scene15SetSceneToSpawnEjj(actorID, param)) {
-        DEFAULT_SCENE_FADER.color = fadeColor;
+        data_0209f5e8.color = fadeColor;
     }
 }

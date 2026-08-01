@@ -14,12 +14,12 @@ struct ParticleSysEntry {
     void* system; // at +0xc: pointer to the Particle::System
 };
 
-extern struct ParticleSysTracker* PARTICLE_SYS_TRACKER;
+extern struct ParticleSysTracker* data_0209ee74;
 
 extern struct ParticleSysEntry* _ZNK8Particle10SysTracker8Contents8FindDataEj(void* contents, u32 uniqueID);
 
 void* _ZN8Particle6System12FromUniqueIDEj(u32 uniqueID) {
     struct ParticleSysEntry* entry = _ZNK8Particle10SysTracker8Contents8FindDataEj(
-        (unsigned char*)PARTICLE_SYS_TRACKER + 8, uniqueID);
+        (unsigned char*)data_0209ee74 + 8, uniqueID);
     return entry->system;
 }
