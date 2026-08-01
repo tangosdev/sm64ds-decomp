@@ -50,7 +50,7 @@ extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
   self->unk_0ce = data_0208e378;
   {
     void** base = *(void***)&data_020a4bb8;
-    int idx = self->mActorID;
+    int idx = self->actorID;
     char* s = (char*)base[idx];
     self->mFlags = *(int*)(s+8);
     {

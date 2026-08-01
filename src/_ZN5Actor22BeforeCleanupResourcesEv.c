@@ -1,20 +1,17 @@
-typedef int s32;
+//cpp
+// @symbol _ZN5Actor22BeforeCleanupResourcesEv
+/* Actor::BeforeCleanupResources() at 0x02011220 -- vtable slot 4.
+ *
+ * Normalises the ActorBase result to 0 or 1.
+ *
+ * Kept as a .c filename with the //cpp marker; see the note in
+ * src/_ZN5Actor18AfterInitResourcesEj.c.
+ */
+#include "Actor.h"
 
-struct ActorBase {
-    char _pad[0x50];
-};
-
-struct Actor {
-    struct ActorBase base;
-    char _pad2[0x70];
-};
-
-extern s32 _ZN9ActorBase22BeforeCleanupResourcesEv(struct ActorBase *self);
-
-s32 _ZN5Actor22BeforeCleanupResourcesEv(struct Actor *self)
+int Actor::BeforeCleanupResources()
 {
-    s32 res = _ZN9ActorBase22BeforeCleanupResourcesEv((struct ActorBase*)self);
-    if (res != 0)
+    if (ActorBase::BeforeCleanupResources() != 0)
         return 1;
     return 0;
 }

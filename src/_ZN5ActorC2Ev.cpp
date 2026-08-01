@@ -54,7 +54,7 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
     }
     self->mAreaId = data_0209b44c;
     self->unk_0ce = data_0208e378;
-    entry = (int*)(((int**)data_020a4bb8)[self->mActorID]);
+    entry = (int*)(((int**)data_020a4bb8)[self->actorID]);
     self->mFlags = entry[2];
     b = (data_0209f2d8 == 2);
     if (b != 0)
