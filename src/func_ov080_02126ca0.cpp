@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daPicGate_c.h"
-// @emits daPicGate_c_InitResources
+// recovered name: daPicGate_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daPicGate_c::InitResources - recovered from vtable slot identity */
 struct C;
@@ -20,7 +20,7 @@ extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b,
 extern Disp data_ov080_02128628[];
 extern int data_0209caa0[];
 
-extern "C" int daPicGate_c_InitResources(char* c)
+extern "C" int func_ov080_02126ca0(char* c)
 {
     struct daPicGate_c *self = (struct daPicGate_c *)(void *)c;
     unsigned int m = (unsigned char)((*(unsigned int*)(c + 8) >> 0xd) & 3);

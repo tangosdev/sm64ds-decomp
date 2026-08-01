@@ -1,5 +1,5 @@
 // @symbol func_ov100_02144424
-// @emits daDoor_c_OnYoshiTryEat
+// recovered name: daDoor_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
@@ -7,7 +7,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daDoor_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daDoor_c_OnYoshiTryEat(int *t)
+int *func_ov100_02144424(int *t)
 {
     t[0] = (int)VT0;
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);

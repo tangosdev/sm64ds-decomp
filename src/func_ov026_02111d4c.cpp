@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov026_02111d4c
-// @emits daObjWlSubmarine_c_AfterClsn
+// recovered name: daObjWlSubmarine_c_AfterClsn
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -26,7 +26,7 @@ extern "C" void MulVec3Mat4x3(const Vector3* in, const void* m, Vector3* out);
 
 extern char data_020a0e68;
 
-extern "C" int daObjWlSubmarine_c_AfterClsn(char* c)
+extern "C" int func_ov026_02111d4c(char* c)
 {
     Player* pl = ((Actor*)c)->ClosestPlayer();
     if (pl != 0) {

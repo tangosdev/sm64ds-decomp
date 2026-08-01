@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov003_020b0b3c
-// @emits dScGameOver_c_InitResources
+// recovered name: dScGameOver_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -26,7 +26,7 @@ extern u8 data_0209d454;
 extern u8 data_0209f204;
 extern int data_0208ee44;
 
-int dScGameOver_c_InitResources(void *arg)
+int func_ov003_020b0b3c(void *arg)
 {
     char *c = (char *)arg;
     int f;

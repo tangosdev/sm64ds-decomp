@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov100_0214542c
-// @emits daDoor_c_CleanupResources
+// recovered name: daDoor_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,7 +11,7 @@ extern Elem data_ov100_02148204[];
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void* p);
 extern void* data_ov100_02148744;
-int daDoor_c_CleanupResources(char* c) {
+int func_ov100_0214542c(char* c) {
   int idx = *(int*)(c + 8);
   Elem* e = &data_ov100_02148204[idx];
   V* obj;

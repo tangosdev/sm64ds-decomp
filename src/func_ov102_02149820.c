@@ -1,11 +1,11 @@
 #include "types.h"
 // @symbol func_ov102_02149820
-// @emits QuestionBlock_OnGroundPounded
+// recovered name: QuestionBlock_OnGroundPounded
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjHatenaBlock_c::OnGroundPounded - recovered from vtable slot identity */
-void QuestionBlock_OnGroundPounded(void *c, void *x) {
+void func_ov102_02149820(void *c, void *x) {
     if (*(int *)((char *)c + 0x3e8) == 1) return;
     int r = func_ov102_02149078(c);
     if (r != 0) return;

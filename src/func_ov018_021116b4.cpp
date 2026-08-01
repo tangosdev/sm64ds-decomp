@@ -2,7 +2,7 @@
 // @symbol func_ov018_021116b4
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjSm_Lift_c.h"
-// @emits daObjSm_Lift_c_InitResources
+// recovered name: daObjSm_Lift_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjSm_Lift_c::InitResources - recovered from vtable slot identity */
 struct PathPtr { char b[8]; };
@@ -24,7 +24,7 @@ extern int data_ov018_02112f48[];
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
 extern int func_ov018_02111804[];
 
-int daObjSm_Lift_c_InitResources(char* c){
+int func_ov018_021116b4(char* c){
     struct daObjSm_Lift_c *self = (struct daObjSm_Lift_c *)(void *)c;
   self->unk_334 = *(int*)(c+8) & 0xff;
   if(self->unk_334 == 0xff) return 0;

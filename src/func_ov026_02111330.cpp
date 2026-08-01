@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov026_02111330
-// @emits daObjWlPolelift_c_Behavior
+// recovered name: daObjWlPolelift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -30,7 +30,7 @@ extern "C" {
 struct RaycastGround { char pad[0x44]; s32 hitY; char pad2[8]; };
 
 
-extern "C" int daObjWlPolelift_c_Behavior(void* self)
+extern "C" int func_ov026_02111330(void* self)
 {
     u8* c = (u8*)self;
     Vector3 a, b, sub, rp, mul, rel;

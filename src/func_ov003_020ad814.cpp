@@ -1,12 +1,12 @@
 //cpp
 #include "types.h"
 // @symbol func_ov003_020ad814
-// @emits dScTitle_c_Behavior
+// recovered name: dScTitle_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScTitle_c::Behavior - recovered from vtable slot identity */
-/* dScTitle_c_Behavior @ 0x020ad814 (ov003, size 0x26c)
+/* func_ov003_020ad814 @ 0x020ad814 (ov003, size 0x26c)
  * Level-select cursor update: on confirm (or minigame-active flag) starts the
  * scene fade / loads the picked level from the 8-byte entry table at
  * data_ov003_020b1180; otherwise moves the cursor by row (+0x35) or column
@@ -37,7 +37,7 @@ extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void func_ov003_020ad6ec(char *c);
 
-int dScTitle_c_Behavior(char *c)
+int func_ov003_020ad814(char *c)
 {
     if (data_0209f5bc->v5()) {
         int r3 = 0;

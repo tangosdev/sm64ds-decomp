@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov027_02111e34
-// @emits daPgDfdr_c_Behavior
+// recovered name: daPgDfdr_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Player.h"
 #include "decl_common.h"
@@ -14,7 +14,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* a);
 extern void _ZN12CylinderClsn6UpdateEv(void* a);
 extern void func_ov027_02111994(char* c);
 
-int daPgDfdr_c_Behavior(char* c){
+int func_ov027_02111e34(char* c){
   _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
   func_ov027_02111cfc(c);
   if(_ZN6Player16IsInsideOfCannonEv(_ZN5Actor13ClosestPlayerEv(c))){

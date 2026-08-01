@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov079_02126f8c
-// @emits daObjBkKillerdai_c_Behavior
+// recovered name: daObjBkKillerdai_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjBkKillerdai_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12;
@@ -27,7 +27,7 @@ Actor* Actor_s::ClosestPlayer();
 Actor* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
 int Platform::IsClsnInRange(Fix12, Fix12);
 
-extern "C" int daObjBkKillerdai_c_Behavior(char* c) {
+extern "C" int func_ov079_02126f8c(char* c) {
     Platform* self = (Platform*)c;
     if (self->UpdateKillByMegaChar(0x2000, 0, 0, 0xc8000))
         return 1;

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "daObjPathLift_c.h"
-// @emits daObjPathLift_c_InitResources
+// recovered name: daObjPathLift_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjPathLift_c::InitResources - recovered from vtable slot identity */
 struct Actor;
@@ -32,7 +32,7 @@ extern int data_ov002_0210d9f0;
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern unsigned char data_0209f2d8;
 
-extern "C" int daObjPathLift_c_InitResources(char* c) {
+extern "C" int func_ov100_021471e0(char* c) {
     struct daObjPathLift_c *self = (struct daObjPathLift_c *)(void *)c;
   Vector3 pos;
   _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9f0);

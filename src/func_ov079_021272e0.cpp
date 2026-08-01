@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov079_021272e0
-// @emits FortressWall_OnHitByCannonBlastedChar
+// recovered name: FortressWall_OnHitByCannonBlastedChar
 /* recovered: renamed to Class_Method */
 /* daObjBk_Kabe_c::OnHitByCannonBlastedChar - recovered from vtable slot identity */
 struct Base {
@@ -37,4 +37,4 @@ struct Base {
     virtual void v30();
     virtual void v31();
 };
-extern "C" void FortressWall_OnHitByCannonBlastedChar(Base *c) { c->v31(); }
+extern "C" void func_ov079_021272e0(Base *c) { c->v31(); }

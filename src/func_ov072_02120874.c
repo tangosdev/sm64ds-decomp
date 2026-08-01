@@ -1,5 +1,5 @@
 // @symbol func_ov072_02120874
-// @emits daBgSnwmn_c_OnYoshiTryEat
+// recovered name: daBgSnwmn_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -10,7 +10,7 @@
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *G0;
-int *daBgSnwmn_c_OnYoshiTryEat(int *t)
+int *func_ov072_02120874(int *t)
 {
     t[0] = (int)VT0;
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x1b0);

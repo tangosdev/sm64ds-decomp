@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov003_020af86c
-// @emits dScStarSel_c_CleanupResources
+// recovered name: dScStarSel_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,7 +11,7 @@ public:
 };
 
 
-extern "C" int dScStarSel_c_CleanupResources(void) {
+extern "C" int func_ov003_020af86c(void) {
     CleanCommonModelDataArr();
     Sound::UnsetPlayerVoiceGroup();
     unsigned short *p = (unsigned short *)0x4000304;

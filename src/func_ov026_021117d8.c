@@ -1,5 +1,5 @@
 // @symbol func_ov026_021117d8
-// @emits daObjWlKoopaShutter_c_InitResources
+// recovered name: daObjWlKoopaShutter_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -12,7 +12,7 @@ extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, int, void *, int, int, void *);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void *, void *);
 extern char data_0209caa0[];
-int daObjWlKoopaShutter_c_InitResources(char *c){
+int func_ov026_021117d8(char *c){
   void *m = (void*)_ZN5Model8LoadFileER13SharedFilePtr(data_ov026_02113ebc);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4,(int)m,1,-1);
   _ZN8Platform21UpdateModelPosAndRotYEv(c);

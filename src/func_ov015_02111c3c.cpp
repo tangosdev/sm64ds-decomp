@@ -1,9 +1,9 @@
 //cpp
 // @symbol func_ov015_02111c3c
-// @emits KnockDownPlank_Kill
+// recovered name: KnockDownPlank_Kill
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjBk_Dossunbar_c::Kill - recovered from vtable slot identity */
-// KnockDownPlank_Kill at 0x02111c3c
+// func_ov015_02111c3c at 0x02111c3c
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov015).
 struct Vector3 { int x, y, z; };
 
@@ -14,8 +14,8 @@ void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 void _ZN9ActorBase18MarkForDestructionEv(void* self);
 }
 
-extern "C" void KnockDownPlank_Kill(char* self);
-void KnockDownPlank_Kill(char* self) {
+extern "C" void func_ov015_02111c3c(char* self);
+void func_ov015_02111c3c(char* self) {
     Vector3 vec;
     Vector3 vec2;
     vec.x = *(int*)(self + 0x5c);

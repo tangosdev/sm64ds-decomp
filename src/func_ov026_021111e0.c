@@ -1,5 +1,5 @@
 // @symbol func_ov026_021111e0
-// @emits daObjWlPolelift_c_OnYoshiTryEat
+// recovered name: daObjWlPolelift_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -9,7 +9,7 @@
 /* daObjWlPolelift_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void *G0;
-int *daObjWlPolelift_c_OnYoshiTryEat(int *t)
+int *func_ov026_021111e0(int *t)
 {
     t[0] = (int)VT0;
     _ZN11ShadowModelD1Ev((char *)t + 0x188);

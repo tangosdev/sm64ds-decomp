@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov072_02121368
-// @emits daBgSnwmn_c_Kill
+// recovered name: daBgSnwmn_c_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -10,7 +10,7 @@ extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3
 
 #define M(p) ((s64)(int)(p))
 
-int daBgSnwmn_c_Kill(char *self)
+int func_ov072_02121368(char *self)
 {
     struct Vector3 v;
     char *other;

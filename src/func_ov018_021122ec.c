@@ -3,13 +3,13 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjSm_Lift_c.h"
-// @emits daObjSm_Lift_c_AfterClsn
+// recovered name: daObjSm_Lift_c_AfterClsn
 /* recovered: renamed to Class_Method */
 /* daObjSm_Lift_c::AfterClsn - recovered from vtable slot identity */
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigned int);
 extern int _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*,int,int,int,unsigned int);
 extern int func_ov030_02113be8[];
-int daObjSm_Lift_c_AfterClsn(char* c){
+int func_ov018_021122ec(char* c){
     struct daObjSm_Lift_c *self = (struct daObjSm_Lift_c *)(void *)c;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c+0xd4, data_ov027_02113bf0[1], 0, 0x1000, 0);
   self->unk_130=0x1000;

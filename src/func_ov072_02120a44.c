@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daBgSnwmn_c.h"
-// @emits daBgSnwmn_c_InitResources
+// recovered name: daBgSnwmn_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daBgSnwmn_c::InitResources - recovered from vtable slot identity */
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
@@ -24,7 +24,7 @@ extern void _ZN13RaycastGroundD1Ev(void *self);
 
 extern int data_ov072_02122c70[];
 
-int daBgSnwmn_c_InitResources(char *c)
+int func_ov072_02120a44(char *c)
 {
     struct daBgSnwmn_c *self = (struct daBgSnwmn_c *)(void *)c;
     char rg[0x50];

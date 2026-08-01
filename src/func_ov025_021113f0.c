@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov025_021113f0
-// @emits daDgr_c_Behavior
+// recovered name: daDgr_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -16,7 +16,7 @@ extern s16 data_02082214[];
 
 #define LAUNDER(p) ((long long)(int)(p))
 
-int daDgr_c_Behavior(char *self)
+int func_ov025_021113f0(char *self)
 {
     s32 loc[6];
     s32 n;

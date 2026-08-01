@@ -1,5 +1,5 @@
 // @symbol func_ov022_02111cf0
-// @emits daObjFl_Seesaw_c_OnYoshiTryEat
+// recovered name: daObjFl_Seesaw_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -8,7 +8,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjFl_Seesaw_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *daObjFl_Seesaw_c_OnYoshiTryEat(int *t)
+int *func_ov022_02111cf0(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

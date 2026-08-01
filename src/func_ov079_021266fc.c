@@ -1,8 +1,8 @@
 // @symbol func_ov079_021266fc
-// @emits BulletBill_OnAimedAtWithEgg
+// recovered name: BulletBill_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daKlr_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int BulletBill_OnAimedAtWithEgg(void)
+int func_ov079_021266fc(void)
 {
     return 0;
 }

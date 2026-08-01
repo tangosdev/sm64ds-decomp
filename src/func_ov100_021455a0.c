@@ -1,7 +1,7 @@
 // @symbol func_ov100_021455a0
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daDoor_c.h"
-// @emits daDoor_c_InitResources
+// recovered name: daDoor_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daDoor_c::InitResources - recovered from vtable slot identity */
 enum { false, true };
@@ -48,7 +48,7 @@ extern int data_ov100_02148914;
 extern int data_ov100_021488b4;
 extern void func_ov100_021453d8(char *c, void *p, int a2);
 
-int daDoor_c_InitResources(char *c)
+int func_ov100_021455a0(char *c)
 {
     struct daDoor_c *self = (struct daDoor_c *)(void *)c;
     unsigned int idx;

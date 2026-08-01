@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov025_02111b64
-// @emits daDkk_c_Behavior
+// recovered name: daDkk_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
 extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, Fix12i a, Fix12i b);
 extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
 
-extern "C" int daDkk_c_Behavior(char* thiz)
+extern "C" int func_ov025_02111b64(char* thiz)
 {
     char* c = thiz;
     switch (*(int*)(c + 0x398)) {

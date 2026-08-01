@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov018_02111368
-// @emits daObjSm_Lift_c_Behavior
+// recovered name: daObjSm_Lift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjSm_Lift_c::Behavior - recovered from vtable slot identity */
 typedef unsigned char u8;
@@ -38,7 +38,7 @@ extern s16 data_02082214[];
 struct Vector3 { int x, y, z; };
 struct PathPtrObj { int a, b; };
 
-extern "C" int daObjSm_Lift_c_Behavior(char* self)
+extern "C" int func_ov018_02111368(char* self)
 {
     struct PathPtrObj path;
     struct Vector3 nodeA, nodeB, diff, scaled;
