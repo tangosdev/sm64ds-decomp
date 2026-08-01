@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline_c.h"
-// @emits dScMgTrampoline_c_OnYoshiTryEat_02121fa4
+// recovered name: dScMgTrampoline_c_OnYoshiTryEat_02121fa4
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
@@ -16,7 +16,7 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern volatile short data_020a0dbc[];
 extern int data_0209e650;
 
-void dScMgTrampoline_c_OnYoshiTryEat_02121fa4(char *o)
+void func_ov006_02121fa4(char *o)
 {
     struct dScMgTrampoline_c *self = (struct dScMgTrampoline_c *)(void *)o;
     volatile unsigned short fill;

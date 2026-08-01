@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_021214f8
-// @emits dScMgTrampoline_c_Behavior
+// recovered name: dScMgTrampoline_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -14,7 +14,7 @@ struct C {
 extern "C" {
 }
 
-extern "C" int dScMgTrampoline_c_Behavior(char *c)
+extern "C" int func_ov006_021214f8(char *c)
 {
     int saved = data_ov006_02140588;
     func_ov006_02120c40();

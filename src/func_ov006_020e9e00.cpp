@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020e9e00
-// @emits dScMg3DEsp_c_Behavior
+// recovered name: dScMg3DEsp_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -12,7 +12,7 @@ extern "C" PMF data_ov006_02141f2c[];
 extern "C" void func_ov006_020e8a44(C *self);
 extern "C" void _ZN9Animation7AdvanceEv(void *anim);
 
-extern "C" int dScMg3DEsp_c_Behavior(C *self)
+extern "C" int func_ov006_020e9e00(C *self)
 {
     char *f = (char *)self;
     int idx = *(int *)(f + 0x553c);

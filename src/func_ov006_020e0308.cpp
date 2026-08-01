@@ -1,12 +1,12 @@
 //cpp
 #include "types.h"
 // @symbol func_ov006_020e0308
-// @emits dScMgCup_c_InitResources
+// recovered name: dScMgCup_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgCup_c::InitResources - recovered from vtable slot identity */
-/* dScMgCup_c_InitResources @ 0x020e0308 (ov006, size 0x26c)
+/* func_ov006_020e0308 @ 0x020e0308 (ov006, size 0x26c)
  * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the
  * board tiles/map/palette files, sets the touch UI margins, initializes
  * the three sliders from the table at data_ov006_0213c0a8, then calls
@@ -65,7 +65,7 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 
-int dScMgCup_c_InitResources(char *c)
+int func_ov006_020e0308(char *c)
 {
     void *f;
 

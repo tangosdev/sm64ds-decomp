@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov006_0210d1fc
-// @emits dScMgSlot1_c_InitResources
+// recovered name: dScMgSlot1_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -55,7 +55,7 @@ struct Obj {
     virtual void m48(int a);   /* vtable offset 0x48 */
 };
 
-extern "C" int dScMgSlot1_c_InitResources(void *arg0)
+extern "C" int func_ov006_0210d1fc(void *arg0)
 {
     char *c = (char *)arg0;
     volatile unsigned short fill;

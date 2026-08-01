@@ -1,5 +1,5 @@
 // @symbol func_ov006_020e76e4
-// @emits dScMg3DEsp_c_OnYoshiTryEat
+// recovered name: dScMg3DEsp_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_TextureTransformer.h"
@@ -9,7 +9,7 @@
 extern void _ZN8Particle10SysTrackerD1Ev(void*);
 extern int data_ov006_0213e448;
 extern void* data_020a0eac;
-void* dScMg3DEsp_c_OnYoshiTryEat(char* p){
+void* func_ov006_020e76e4(char* p){
   *(int*)p = (int)&data_ov006_0213c8c4;
   _ZN18TextureTransformerD1Ev(p + 0x51f4);
   func_ov006_020e80d8(p + 0x4fd8);

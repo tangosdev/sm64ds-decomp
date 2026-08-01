@@ -1,5 +1,5 @@
 // @symbol func_ov006_021071fc
-// @emits dScMgPanel_c_OnYoshiTryEat_021071fc
+// recovered name: dScMgPanel_c_OnYoshiTryEat_021071fc
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -12,7 +12,7 @@ extern void func_ov006_02106168(char *p);
 extern char *func_020beb68;
 extern unsigned char data_0209d454;
 
-void dScMgPanel_c_OnYoshiTryEat_021071fc(char *self, int flag)
+void func_ov006_021071fc(char *self, int flag)
 {
     char *p;
 

@@ -3,10 +3,10 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgAmida_c.h"
-// @emits dScMgAmida_c_OnYoshiTryEat_020d52f0
+// recovered name: dScMgAmida_c_OnYoshiTryEat_020d52f0
 /* recovered: renamed to Class_Method */
 /* dScMgAmida_c::OnYoshiTryEat - recovered from vtable slot identity */
-void dScMgAmida_c_OnYoshiTryEat_020d52f0(char *c, int arg)
+void func_ov006_020d52f0(char *c, int arg)
 {
     struct dScMgAmida_c *self = (struct dScMgAmida_c *)(void *)c;
     if (arg == 0) {

@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_020e6894
-// @emits dScMgCurling2_c_InitResources
+// recovered name: dScMgCurling2_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -26,7 +26,7 @@ extern int func_ov004_020adc1c(void);
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 
-int dScMgCurling2_c_InitResources(char* self)
+int func_ov006_020e6894(char* self)
 {
     char* r6 = func_020adc74(&data_ov006_0213c5a0);
     void* f;

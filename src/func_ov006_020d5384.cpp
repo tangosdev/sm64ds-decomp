@@ -3,7 +3,7 @@
 // @symbol func_ov006_020d5384
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgAmida_c.h"
-// @emits dScMgAmida_c_InitResources
+// recovered name: dScMgAmida_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgAmida_c::InitResources - recovered from vtable slot identity */
 struct Obj {
@@ -74,7 +74,7 @@ extern "C" {
     extern u8 data_0209d454;
 }
 
-extern "C" int dScMgAmida_c_InitResources(Obj *c)
+extern "C" int func_ov006_020d5384(Obj *c)
 {
     struct dScMgAmida_c *self = (struct dScMgAmida_c *)(void *)c;
     volatile u16 sp4;

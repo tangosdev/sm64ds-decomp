@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMg3DEsp_c.h"
-// @emits dScMg3DEsp_c_Render
+// recovered name: dScMg3DEsp_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMg3DEsp_c::Render - recovered from vtable slot identity */
 extern "C" void Camera_UpdateMatrices(char *c);
@@ -14,7 +14,7 @@ struct TextureTransformer { void Update(ModelComponents &m); };
 
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void vcall(int); };
 
-extern "C" int dScMg3DEsp_c_Render(char *c)
+extern "C" int func_ov006_020e9d1c(char *c)
 {
     struct dScMg3DEsp_c *self = (struct dScMg3DEsp_c *)(void *)c;
     func_ov006_020e81a4(c);

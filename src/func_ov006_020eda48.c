@@ -3,12 +3,12 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgHanachan_c.h"
-// @emits dScMgHanachan_c_OnYoshiTryEat_020eda48
+// recovered name: dScMgHanachan_c_OnYoshiTryEat_020eda48
 /* recovered: renamed to Class_Method */
 /* dScMgHanachan_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern char* func_020beb68;
 
-void dScMgHanachan_c_OnYoshiTryEat_020eda48(char* c, int state)
+void func_ov006_020eda48(char* c, int state)
 {
     struct dScMgHanachan_c *self = (struct dScMgHanachan_c *)(void *)c;
     if (state == 1) {

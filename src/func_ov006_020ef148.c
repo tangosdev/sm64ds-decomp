@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_020ef148
-// @emits dScMgJump2_c_Render
+// recovered name: dScMgJump2_c_Render
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
@@ -15,7 +15,7 @@ extern int data_020a0e68;
 struct M48 { int w[12]; };
 struct S3 { int a, b, c; };
 
-int dScMgJump2_c_Render(char* self)
+int func_ov006_020ef148(char* self)
 {
     struct S3 local;
     void* p;

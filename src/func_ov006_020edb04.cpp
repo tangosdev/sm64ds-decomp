@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 // @symbol func_ov006_020edb04
-// @emits dScMgHanachan_c_InitResources
+// recovered name: dScMgHanachan_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -23,7 +23,7 @@ struct Obj {
     int unkAC;
 };
 
-extern "C" int dScMgHanachan_c_InitResources(Obj *obj)
+extern "C" int func_ov006_020edb04(Obj *obj)
 {
     void *a;
     void *b;

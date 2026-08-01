@@ -1,11 +1,11 @@
 #include "types.h"
 // @symbol func_ov006_0211c720
-// @emits dScMgSound_c_Behavior
+// recovered name: dScMgSound_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgSound_c::Behavior - recovered from vtable slot identity */
-/* dScMgSound_c_Behavior @ 0x0211c720 (ov006, size 0x264)
+/* func_ov006_0211c720 @ 0x0211c720 (ov006, size 0x264)
  * Slot-machine style minigame state machine (state at +0x5608):
  * 0=init, 1=intro countdown (+0x5618), 2=result countdown (+0x5616) with
  * win/lose handling and 9999-capped win counter, 3=retry countdown.
@@ -15,7 +15,7 @@ extern char *data_ov004_020beb68;
 extern void FreeGfxSlotsById(int);
 extern void func_ov006_020c2594(char *);
 
-int dScMgSound_c_Behavior(char *c)
+int func_ov006_0211c720(char *c)
 {
     switch (*(int *)(c + 0x5608)) {
     case 0:

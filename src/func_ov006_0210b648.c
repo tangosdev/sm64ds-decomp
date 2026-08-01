@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSlot3_c.h"
-// @emits dScMgSlot3_c_Render
+// recovered name: dScMgSlot3_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgSlot3_c::Render - recovered from vtable slot identity */
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
@@ -22,7 +22,7 @@ extern char *data_ov006_0213e5ec[];
 
 #pragma opt_strength_reduction off
 
-int dScMgSlot3_c_Render(char *c)
+int func_ov006_0210b648(char *c)
 {
     struct dScMgSlot3_c *self = (struct dScMgSlot3_c *)(void *)c;
     int i, j;

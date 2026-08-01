@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_021073b0
-// @emits dScMgPanel_c_InitResources
+// recovered name: dScMgPanel_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -22,7 +22,7 @@ extern void func_ov006_02106168(void *p);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMgPanel_c_InitResources(void *arg0)
+int func_ov006_021073b0(void *arg0)
 {
     char *c = (char *)arg0;
     char *b;

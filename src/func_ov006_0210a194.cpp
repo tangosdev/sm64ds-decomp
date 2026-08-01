@@ -5,10 +5,10 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgRoulette_c.h"
-// @emits dScMgRoulette_c_InitResources
+// recovered name: dScMgRoulette_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgRoulette_c::InitResources - recovered from vtable slot identity */
-/* dScMgRoulette_c_InitResources @ 0x0210a194 (ov006, size 0x26c)
+/* func_ov006_0210a194 @ 0x0210a194 (ov006, size 0x26c)
  * Minigame dual-screen graphics init: sets both sub BG layers, loads the
  * BG tiles/maps/palette and the shared OBJ tiles/palettes for both engines,
  * then initializes the board, cursor and slider objects.
@@ -50,7 +50,7 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
 
-int dScMgRoulette_c_InitResources(char *c)
+int func_ov006_0210a194(char *c)
 {
     struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;
     void *f8, *f7, *f6, *f5;

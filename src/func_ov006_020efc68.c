@@ -1,13 +1,13 @@
 #include "types.h"
 // @symbol func_ov006_020efc68
-// @emits dScMgLuigi_c_AfterCleanupResources
+// recovered name: dScMgLuigi_c_AfterCleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgLuigi_c::AfterCleanupResources - recovered from vtable slot identity */
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void *handler);
 extern int func_ov004_020b0840(int a, int b);
-int dScMgLuigi_c_AfterCleanupResources(int a, int irq){
+int func_ov006_020efc68(int a, int irq){
     if(irq == 2 && _ZN3IRQ13GetIRQHandlerEj(2) == (void*)func_ov006_020efcf8){
         u16 ime;
         do {

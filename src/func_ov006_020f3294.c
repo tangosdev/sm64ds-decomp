@@ -1,5 +1,5 @@
 // @symbol func_ov006_020f3294
-// @emits dScMgLuigi_c_OnYoshiTryEat_020f3294
+// recovered name: dScMgLuigi_c_OnYoshiTryEat_020f3294
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,7 +11,7 @@ extern char *func_020beb68;
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
 
-void dScMgLuigi_c_OnYoshiTryEat_020f3294(char *c, int arg1)
+void func_ov006_020f3294(char *c, int arg1)
 {
     char *p;
     int *q;

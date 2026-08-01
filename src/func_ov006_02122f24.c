@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_02122f24
-// @emits dScMgTrampoline2_c_OnAttacked2
+// recovered name: dScMgTrampoline2_c_OnAttacked2
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::OnAttacked2 - recovered from vtable slot identity */
 extern char* data_0209f5bc;
@@ -13,7 +13,7 @@ void func_02012718(void* a, int b);
 int func_02054d88(void);
 void MultiStore16(u16 val, char* dst, int nbytes);
 
-int dScMgTrampoline2_c_OnAttacked2(char* self)
+int func_ov006_02122f24(char* self)
 {
     u16 buf[5];
 

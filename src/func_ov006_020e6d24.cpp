@@ -2,7 +2,7 @@
 // @symbol func_ov006_020e6d24
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
-// @emits dScMgTrampoline2_c_OnAimedAtWithEgg
+// recovered name: dScMgTrampoline2_c_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 extern "C" {
@@ -15,9 +15,9 @@ void _ZN2GX16SetBankForSubOBJEt(unsigned short x);
 void func_ov004_020af094(void *c);
 extern void *data_ov006_02141a48[];
 extern unsigned char data_0209e660;
-void dScMgTrampoline2_c_OnAimedAtWithEgg(char *c);
+void func_ov006_020e6d24(char *c);
 }
-void dScMgTrampoline2_c_OnAimedAtWithEgg(char *c) {
+void func_ov006_020e6d24(char *c) {
     struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)c;
     func_ov006_020e73c4();
     _ZN3GXS11LoadOBJPlttEPKvjj(data_ov006_02141a48[0], 0x100, 0x100);

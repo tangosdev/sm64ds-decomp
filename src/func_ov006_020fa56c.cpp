@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo2_c.h"
-// @emits dScMgMCarlo2_c_InitResources
+// recovered name: dScMgMCarlo2_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo2_c::InitResources - recovered from vtable slot identity */
 extern "C" void func_ov006_0210a534(void *c);
@@ -40,7 +40,7 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int dScMgMCarlo2_c_InitResources(char *c)
+extern "C" int func_ov006_020fa56c(char *c)
 {
     struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
     int handle;

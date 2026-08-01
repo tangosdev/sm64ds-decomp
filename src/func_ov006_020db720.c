@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// @emits dScMgCard_c_OnTurnIntoEgg
+// recovered name: dScMgCard_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::OnTurnIntoEgg - recovered from vtable slot identity */
 typedef short s16;
@@ -16,7 +16,7 @@ extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s);
 extern s16 data_ov004_020bf9e4;
 extern void* func_020beb68;
 
-int dScMgCard_c_OnTurnIntoEgg(char* c)
+int func_ov006_020db720(char* c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     switch (self->unk_5388) {

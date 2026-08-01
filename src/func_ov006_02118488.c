@@ -1,5 +1,5 @@
 // @symbol func_ov006_02118488
-// @emits dScMgSmartball_c_Behavior
+// recovered name: dScMgSmartball_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -15,7 +15,7 @@ extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
 
-int dScMgSmartball_c_Behavior(void* arg)
+int func_ov006_02118488(void* arg)
 {
     char* c = (char*)arg;
     int vec[3];

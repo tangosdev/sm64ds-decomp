@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_020d9244
-// @emits dScMgBomroom_c_InitResources
+// recovered name: dScMgBomroom_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -19,7 +19,7 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMgBomroom_c_InitResources(void *arg0)
+int func_ov006_020d9244(void *arg0)
 {
     char *c = (char *)arg0;
     char *b;

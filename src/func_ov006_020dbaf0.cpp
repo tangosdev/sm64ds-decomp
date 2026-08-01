@@ -5,10 +5,10 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// @emits dScMgCard_c_InitResources
+// recovered name: dScMgCard_c_InitResources
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::InitResources - recovered from vtable slot identity */
-/* dScMgCard_c_InitResources @ 0x020dbaf0 (ov006, size 0x264)
+/* func_ov006_020dbaf0 @ 0x020dbaf0 (ov006, size 0x264)
  * Minigame graphics init: loads/decompresses the OBJ tiles+palettes for both
  * engines, sets blending, patches the OAM attr template list, spawns the two
  * rows of 5 slot sprites, and resets the shared counters.
@@ -61,7 +61,7 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *, int, int, int, int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
 
-int dScMgCard_c_InitResources(char *c)
+int func_ov006_020dbaf0(char *c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     void *f7, *f6, *f5, *f4;

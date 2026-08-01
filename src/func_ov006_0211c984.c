@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_0211c984
-// @emits dScMgSound_c_InitResources
+// recovered name: dScMgSound_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -19,7 +19,7 @@ extern void func_ov006_0211c080(void *p);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int dScMgSound_c_InitResources(void *arg0)
+int func_ov006_0211c984(void *arg0)
 {
     u8 *r7 = (u8 *)arg0;
     int r6, r5, r4;

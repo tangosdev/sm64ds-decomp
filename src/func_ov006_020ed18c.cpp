@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020ed18c
-// @emits dScMgHanachan_c_Behavior
+// recovered name: dScMgHanachan_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@
 struct C;
 typedef void (C::*PMF)();
 
-extern "C" int dScMgHanachan_c_Behavior(char *c)
+extern "C" int func_ov006_020ed18c(char *c)
 {
     data_ov006_02141fcc = data_ov006_02141fcc + 0x800;
     (((C *)c)->*(*(PMF *)(c + 0x4660)))();

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// @emits dScMgCard_c_OnYoshiTryEat_020db9dc
+// recovered name: dScMgCard_c_OnYoshiTryEat_020db9dc
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void func_ov006_020c1604(char *c, int unused, short a2, int a3);
@@ -13,7 +13,7 @@ extern int data_ov006_0214176c;
 extern int data_ov006_02141768;
 extern int data_ov006_02141770;
 
-void dScMgCard_c_OnYoshiTryEat_020db9dc(char *c)
+void func_ov006_020db9dc(char *c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     int i;

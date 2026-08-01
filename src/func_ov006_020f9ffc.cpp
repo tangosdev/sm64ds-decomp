@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo2_c.h"
-// @emits dScMgMCarlo2_c_Render
+// recovered name: dScMgMCarlo2_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo2_c::Render - recovered from vtable slot identity */
 struct Node {
@@ -20,7 +20,7 @@ extern "C" void func_ov006_020c1804(void *c);
 
 extern Node *data_ov006_02142578;
 
-extern "C" int dScMgMCarlo2_c_Render(char *c)
+extern "C" int func_ov006_020f9ffc(char *c)
 {
     struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
     short v;

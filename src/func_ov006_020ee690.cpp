@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "dScMgJump_c.h"
-// @emits dScMgJump_c_InitResources
+// recovered name: dScMgJump_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* dScMgJump_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -50,7 +50,7 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int dScMgJump_c_InitResources(char *base)
+extern "C" int func_ov006_020ee690(char *base)
 {
     struct dScMgJump_c *self = (struct dScMgJump_c *)(void *)base;
     s32 idx;

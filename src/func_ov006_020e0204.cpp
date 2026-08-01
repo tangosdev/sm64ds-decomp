@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020e0204
-// @emits dScMgCup_c_Behavior
+// recovered name: dScMgCup_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -19,7 +19,7 @@ typedef struct Frame {
 extern "C" Frame *data_ov006_0213c0d8[];
 
 
-extern "C" int dScMgCup_c_Behavior(char *o)
+extern "C" int func_ov006_020e0204(char *o)
 {
     int i;
     (((C *)o)->*data_ov006_02141870[*(int *)(o + 0x5418)])();

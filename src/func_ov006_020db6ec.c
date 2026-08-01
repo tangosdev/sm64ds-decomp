@@ -3,11 +3,11 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// @emits dScMgCard_c_OnGroundPounded
+// recovered name: dScMgCard_c_OnGroundPounded
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::OnGroundPounded - recovered from vtable slot identity */
 
-int dScMgCard_c_OnGroundPounded(void *this) {
+int func_ov006_020db6ec(void *this) {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)this;
     int x = self->unk_0b4;
     int v;

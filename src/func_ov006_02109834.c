@@ -4,10 +4,10 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgRoulette_c.h"
-// @emits dScMgRoulette_c_Render
+// recovered name: dScMgRoulette_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgRoulette_c::Render - recovered from vtable slot identity */
-/* dScMgRoulette_c_Render @ 0x02109834 (ov006, size 0x26c)
+/* func_ov006_02109834 @ 0x02109834 (ov006, size 0x26c)
  * Race minigame frame update: updates the racers back-to-front, plays the
  * countdown beep (volume ramps over the last 3 seconds), shows the winner
  * banner with per-rank colors, and refreshes the board.
@@ -30,7 +30,7 @@ extern void Camera_UpdateMatrices(char *);
 extern void func_ov006_020c0aa8(char *);
 extern void func_ov006_020c1804(char *);
 
-int dScMgRoulette_c_Render(char *c)
+int func_ov006_02109834(char *c)
 {
     struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);

@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_ov006_020e9e70
-// @emits dScMg3DEsp_c_InitResources
+// recovered name: dScMg3DEsp_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
 /* dScMg3DEsp_c::InitResources - recovered from vtable slot identity */
 extern "C" {
@@ -43,7 +43,7 @@ struct Obj {
     virtual void v48(int arg);
 };
 
-extern "C" int dScMg3DEsp_c_InitResources(void* arg0)
+extern "C" int func_ov006_020e9e70(void* arg0)
 {
     char* c = (char*)arg0;
     M48 tmp;

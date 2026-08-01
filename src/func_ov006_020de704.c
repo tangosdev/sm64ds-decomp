@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_020de704
-// @emits dScMgCoin_c_InitResources
+// recovered name: dScMgCoin_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -16,7 +16,7 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
 
-int dScMgCoin_c_InitResources(void *arg0) {
+int func_ov006_020de704(void *arg0) {
     char *c = (char*)arg0;
     int a, b, d;
 

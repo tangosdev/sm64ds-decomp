@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// @emits dScMgCard_c_Render
+// recovered name: dScMgCard_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgCard_c::Render - recovered from vtable slot identity */
 struct Node {
@@ -20,7 +20,7 @@ extern "C" void func_ov006_020c1804(void *c);
 
 extern int data_ov006_02134028;
 
-extern "C" int dScMgCard_c_Render(char *c)
+extern "C" int func_ov006_020da9c4(char *c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
     int skip;

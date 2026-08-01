@@ -1,6 +1,6 @@
 #include "types.h"
 // @symbol func_ov006_0210b314
-// @emits dScMgSlot3_c_OnYoshiTryEat_0210b314
+// recovered name: dScMgSlot3_c_OnYoshiTryEat_0210b314
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -11,7 +11,7 @@ extern void func_02012790(unsigned int id);
 
 #pragma opt_strength_reduction off
 
-void dScMgSlot3_c_OnYoshiTryEat_0210b314(char *c, int mode)
+void func_ov006_0210b314(char *c, int mode)
 {
     if (mode == 3 || mode == 0x12) {
         *(int *)(c + 0xa8) = 0xc;

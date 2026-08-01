@@ -1,5 +1,5 @@
 // @symbol func_ov006_020fa13c
-// @emits dScMgMCarlo2_c_Behavior
+// recovered name: dScMgMCarlo2_c_Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
@@ -10,7 +10,7 @@ extern int func_ov006_020c1718(void* p);
 extern void func_ov006_020c19d0(void* c);
 
 
-int dScMgMCarlo2_c_Behavior(void* arg)
+int func_ov006_020fa13c(void* arg)
 {
     unsigned char* c = (unsigned char*)arg;
 

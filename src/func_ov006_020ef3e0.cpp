@@ -2,7 +2,7 @@
 // @symbol func_ov006_020ef3e0
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgJump2_c.h"
-// @emits dScMgJump2_c_Behavior
+// recovered name: dScMgJump2_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMgJump2_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12;
@@ -13,9 +13,9 @@ extern "C" {
 unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned int a, unsigned int b, Fix12 c, Fix12 d, Fix12 e, const Vector3_16f* f);
 void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 void func_ov006_020eef90(void);
-int dScMgJump2_c_Behavior(char *c);
+int func_ov006_020ef3e0(char *c);
 }
-int dScMgJump2_c_Behavior(char *c)
+int func_ov006_020ef3e0(char *c)
 {
     struct dScMgJump2_c *self = (struct dScMgJump2_c *)(void *)c;
     self->unk_5a6c =
