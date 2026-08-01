@@ -32,6 +32,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 import modules as MOD
 import relocs as R
 import sweep as SW
@@ -64,11 +65,8 @@ def retarget(src, old, new):
 
 
 def read_src(name):
-    for ext in ("c", "cpp"):
-        p = SRC / f"{name}.{ext}"
-        if p.exists():
-            return p.read_text(encoding="utf-8")
-    return None
+    p = SP.path_for(name)
+    return p.read_text(encoding="utf-8") if p else None
 
 
 def main():

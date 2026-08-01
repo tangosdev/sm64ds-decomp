@@ -35,6 +35,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 import match as M           # noqa: E402
 import modules as MOD       # noqa: E402
 from rombuild import VERSION as BUILD_VERSION  # noqa: E402
@@ -86,9 +87,7 @@ def main():
 
     jobs = []
     skipped = collections.Counter()
-    for f in sorted(SRC.iterdir()):
-        if f.suffix not in (".c", ".cpp"):
-            continue
+    for f in SP.iter_sources():
         head = f.read_text(encoding="utf-8", errors="ignore")[:400]
         ms, me = SYMBOL_RE.search(head), EMITS_RE.search(head)
         if not ms or not me:

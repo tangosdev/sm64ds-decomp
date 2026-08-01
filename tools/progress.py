@@ -25,6 +25,8 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
 README = REPO / "README.md"
 README_START = "<!-- progress:start -->"
@@ -75,10 +77,8 @@ def synced_from_src():
             name, sz = m.group(1), int(m.group(2), 16)
             n += 1
             total_bytes += sz
-            f = SRC / f"{name}.c"
-            if not f.is_file():
-                f = SRC / f"{name}.cpp"
-            if f.is_file():
+            f = SP.path_for(name)
+            if f is not None:
                 # a "// NONMATCHING" hatch has a src file but is NOT a byte-match;
                 # do not count it toward matched progress
                 if "NONMATCHING" not in f.read_text(errors="ignore")[:200]:

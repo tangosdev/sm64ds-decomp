@@ -1,15 +1,17 @@
 """One place that answers "where does symbol X live in src/".
 
 AGENTS.md fixes the convention: one matched function per file, and the filename IS the
-symbol. A dozen tools encode that as `SRC / f"{name}.{ext}"` inline -- reverify_corpus,
-ledger, rebuild_ledger, progress, clone, nonmatching, chaos_db_ci, import_symbols,
-knowledge, recurring, sigaudit, dataset/build_sft. The convention is right; having it
-written out twelve times is what makes `src/` a permanently flat directory of 11,203
-files, because giving any of those files a home means finding and fixing every copy.
+symbol. That used to be spelled `SRC / f"{name}.{ext}"` inline in a dozen tools, which is
+what kept `src/` a permanently flat directory of 11,203 files: giving any one file a home
+meant finding and fixing every copy. Every one of those call sites now comes through here
+-- chaos_db_ci, clone, enroll, import_symbols, knowledge, ledger, name_evidence,
+nonmatching, progress, rebuild_ledger, reconcile_names, reverify_corpus, verify_mangled,
+worklist -- so the directory is a decision this module makes alone.
 
-This module is that fix. The convention does not change -- filename is still the symbol,
-still one function per file. Only the *directory* becomes something a single function
-decides.
+The convention itself does not change: filename is still the symbol, still one function
+per file. `enroll` is the one that makes this load-bearing rather than cosmetic -- it
+writes each source's path into `config/**/delinks.txt` for the ROM link, so a file that
+moves has to stay findable or its function silently drops back to ROM bytes.
 
 WHY THERE IS NO COMMITTED INDEX
 -------------------------------
@@ -60,6 +62,22 @@ def invalidate():
     """Drop the scan cache. Call after writing or moving files in a long-lived process."""
     global _scan_cache
     _scan_cache = None
+
+
+def set_root(repo):
+    """Resolve against a different checkout. Returns the previous ``(REPO, SRC)``.
+
+    Reassigning REPO/SRC by hand works, but silently keeps a scan cache built from the
+    old tree -- a confusing way to fail. Tools that accept a redirected source directory
+    (worklist did, and its tests rely on it) go through this instead, so the cache
+    invariant is not something a caller can forget.
+    """
+    global REPO, SRC
+    saved = (REPO, SRC)
+    REPO = pathlib.Path(repo)
+    SRC = REPO / "src"
+    invalidate()
+    return saved
 
 
 def paths_for(symbol):

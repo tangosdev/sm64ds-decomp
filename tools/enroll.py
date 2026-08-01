@@ -33,6 +33,8 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG, SRC = REPO / "config", REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 # An intentional divergence from the ROM lives in mods/<symbol>.c and takes precedence
 # over src/<symbol>.c for that one function. Keeping it a file-existence rule (rather
 # than a hand-edited delinks.txt entry) is what makes regeneration idempotent: a mod
@@ -108,8 +110,14 @@ def candidates():
             if name in skip_names:
                 skipped["on the exclude list"] += 1
                 continue
-            f = next((d2 / (name + e) for d2 in (MODS, SRC) for e in (".c", ".cpp")
-                      if (d2 / (name + e)).is_file()), None)
+            # mods/ still resolves flat -- it is a handful of deliberate divergences
+            # and has no reason to grow directories. src/ goes through srcpath, so a
+            # file in a subdirectory is still found; the entry written below is
+            # f.relative_to(REPO), so the delinks path follows the file automatically.
+            f = next((MODS / (name + e) for e in (".c", ".cpp")
+                      if (MODS / (name + e)).is_file()), None)
+            if f is None:
+                f = SP.path_for(name)
             if f is None:
                 skipped["no src file"] += 1
                 continue

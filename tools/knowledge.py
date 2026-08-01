@@ -19,6 +19,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 import demangle as DM
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
@@ -46,7 +47,7 @@ def build_kb():
     kb = {}
     if not SRC.is_dir():
         return kb
-    for f in list(SRC.glob("*.c")) + list(SRC.glob("*.cpp")):
+    for f in SP.iter_sources():
         sig = _parse_def(f.read_text(errors="ignore"), f.stem)
         if sig:
             kb[f.stem] = sig

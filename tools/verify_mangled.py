@@ -16,6 +16,8 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 MATCHED = REPO / "progress" / "matched.jsonl"
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 VERSION = "1.2/sp2p3"
 
 
@@ -53,7 +55,7 @@ npass = nfail = 0
 fails = []
 for d in rows:
     name = d["name"]
-    cfile = SRC / (name + ".c")
+    cfile = SP.path_for(name) or SRC / (name + ".c")
     cmd = [
         sys.executable, str(REPO / "tools" / "match.py"),
         "--c", str(cfile), "--func", name,

@@ -22,6 +22,7 @@ import argparse
 import collections
 import json
 import pathlib
+import sys
 import re
 import subprocess
 import time
@@ -29,6 +30,8 @@ import time
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
@@ -338,13 +341,9 @@ def main():
             if not m:
                 continue
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
-            src_path = None
-            for ext in ("c", "cpp"):
-                f = SRC / f"{name}.{ext}"
-                if f.is_file():
-                    src_path = f"src/{name}.{ext}"
-                    break
-            head = (SRC / src_path.split("/", 1)[1]).read_text(errors="ignore")[:200] if src_path else ""
+            f = SP.path_for(name)
+            src_path = f.relative_to(REPO).as_posix() if f else None
+            head = f.read_text(errors="ignore")[:200] if f else ""
             matched = bool(src_path) and "NONMATCHING" not in head
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,

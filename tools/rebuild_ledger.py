@@ -18,11 +18,14 @@ matched.jsonl is gitignored, so this only ever touches local state.
 """
 import json
 import pathlib
+import sys
 import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
 
 FUNC_RE = re.compile(
@@ -53,8 +56,7 @@ def main():
             # NONMATCHING draft (e.g. src/NAME.c) can shadow a landed match (NAME.cpp),
             # so never let the first extension found decide it (chaos_db_ci.py has the
             # same .c-first blind spot -- see tools/rebuild_ledger).
-            srcs = [SRC / f"{name}.{ext}" for ext in ("c", "cpp")
-                    if (SRC / f"{name}.{ext}").is_file()]
+            srcs = SP.paths_for(name)
             if not any("NONMATCHING" not in f.read_text(errors="ignore")[:200]
                        for f in srcs):
                 continue

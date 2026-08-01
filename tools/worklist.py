@@ -26,6 +26,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 import swarm as S
 import relocs as R
 import modules as MOD
@@ -35,7 +36,6 @@ import demangle as DM
 import claims_md as CLM
 import ledger as L
 
-REPO_SRC = pathlib.Path(__file__).resolve().parent.parent / "src"
 PCREL = re.compile(r"\[pc,#(0x[0-9a-fA-F]+|\d+)\]")
 BRANCH = re.compile(r"b(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)?$")   # b<cond>, not bl/blx/bx
 
@@ -70,11 +70,7 @@ def read_src_text(name):
     # "is this matched?" sees the banner and wrongly treats the function as unmatched --
     # resurrecting it as a fan-out/permuter target and a near-miss-DB ghost. Prefer a real
     # match over a NONMATCHING draft when both exist.
-    texts = []
-    for ext in ("c", "cpp"):
-        p = REPO_SRC / f"{name}.{ext}"
-        if p.exists():
-            texts.append(p.read_text(encoding="utf-8"))
+    texts = [p.read_text(encoding="utf-8") for p in SP.paths_for(name)]
     for t in texts:
         if "// NONMATCHING" not in t[:200]:
             return t
@@ -113,7 +109,7 @@ def is_policy_done(src):
 def target_is_done(done, label, addr, name):
     """Treat the source tree as authoritative when the generated ledger lags."""
     return ((label, addr) in done
-            or any((REPO_SRC / f"{name}.{ext}").exists() for ext in ("c", "cpp")))
+            or bool(SP.paths_for(name)))
 
 
 def callee_set(addr, ins, relocs, syms):

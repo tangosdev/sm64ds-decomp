@@ -32,6 +32,7 @@ Usage:
 """
 import argparse
 import pathlib
+import sys
 import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
@@ -44,6 +45,8 @@ SOURCES = [
 ]
 CONFIG = REPO / "config"
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 OUT = REPO / "symbols" / "verified.tsv"
 _DATA_REF_RE = re.compile(r"\b(data_(?:ov\d+_)?[0-9a-fA-F]{8})\b")
 
@@ -72,7 +75,7 @@ def our_symbols():
 def src_referenced_data():
     """The set of data_<addr> names currently referenced by name in src/."""
     refs = set()
-    for s in list(SRC.glob("*.c")) + list(SRC.glob("*.cpp")):
+    for s in SP.iter_sources():
         text = s.read_text(errors="ignore")
         if "data_" in text:
             refs.update(_DATA_REF_RE.findall(text))
@@ -166,7 +169,7 @@ def main():
     if src_renames:
         pat = re.compile(r"\b(" + "|".join(re.escape(k) for k in src_renames) + r")\b")
         touched = 0
-        for src in list(SRC.glob("*.c")) + list(SRC.glob("*.cpp")):
+        for src in SP.iter_sources():
             text = src.read_text(errors="ignore")
             if "data_" not in text:
                 continue

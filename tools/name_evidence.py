@@ -19,16 +19,14 @@ from collections import Counter
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SRC = REPO / "src"
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath as SP  # noqa: E402
 FUNC_RE = re.compile(r"\bfunc_(?:ov\d+_)?[0-9a-fA-F]{6,8}\b")
 NAMED_CALL_RE = re.compile(r"\b(_ZN[0-9A-Za-z_]+|[A-Z][A-Za-z0-9_]*::[A-Za-z0-9_]+|[A-Za-z_][A-Za-z0-9_]*)\s*\(")
 
 
 def src_path(sym):
-    for ext in (".c", ".cpp"):
-        p = SRC / f"{sym}{ext}"
-        if p.exists():
-            return p
-    return None
+    return SP.path_for(sym)
 
 
 def callers(sym):
@@ -111,7 +109,7 @@ def main():
         (open(args.json, "w") if args.json else sys.stdout).write(json.dumps(out, indent=2))
         return
     if args.worklist:
-        syms = sorted(set(m.group(0) for f in SRC.glob("*")
+        syms = sorted(set(m.group(0) for f in SP.iter_sources()
                           for m in [FUNC_RE.fullmatch(f.stem)] if m))
         scored = []
         for s in syms:
