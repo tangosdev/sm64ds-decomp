@@ -3,8 +3,8 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 extern "C" {
-int ApproachLinear_s(short* val, short target, short step);
-int ApproachLinear_i(int* val, int target, int step);
+int _Z14ApproachLinearRsss(short* val, short target, short step);
+int _Z14ApproachLinearRiii(int* val, int target, int step);
 void func_ov084_0212d42c(void* self);
 int _ZN9Animation8FinishedEv(void* anim);
 void func_02012694(unsigned int a, char* p);
@@ -38,7 +38,7 @@ extern "C" void func_ov084_0212e010(char* self)
     if (*(u8*)(self + 0x21d) != 0) {
         short* hp = (short*)(((long long)(int)(self + 0x8e)));
         *hp = (s16)(*hp + *(s16*)(self + 0x218));
-        ApproachLinear_s((short*)(self + 0x218), 0, 0xc8);
+        _Z14ApproachLinearRsss((short*)(self + 0x218), 0, 0xc8);
         func_ov084_0212d42c(self);
         if (_ZN9Animation8FinishedEv(self + 0x160) == 0)
             return;
@@ -52,7 +52,7 @@ extern "C" void func_ov084_0212e010(char* self)
     }
 
     func_ov084_0212d2dc(self);
-    if (ApproachLinear_i((int*)(self + 0x204), 0, *(int*)(self + 0x214)) == 0)
+    if (_Z14ApproachLinearRiii((int*)(self + 0x204), 0, *(int*)(self + 0x214)) == 0)
         return;
     {
         u32* p0 = (u32*)(((long long)(int)(self + 0xb0)));

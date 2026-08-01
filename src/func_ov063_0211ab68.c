@@ -18,10 +18,10 @@ extern void func_020072c0(void);
 
 extern void func_020731dc(struct Vec3* a, void (*b)(void), void** node);
 extern u8 NumStars(void);
-extern void MarkForDestruction(char* o);
+extern void _ZN9ActorBase18MarkForDestructionEv(char* o);
 extern void Vec3_Add(struct Vec3* out, struct Vec3* a, struct Vec3* b);
 extern int RandomIntInternal(int* seed);
-extern void Actor_Spawn(u32 id, u32 param, struct Vec3* pos, struct Vec3_16* rot, int a, int b);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, struct Vec3* pos, struct Vec3_16* rot, int a, int b);
 
 void func_ov063_0211ab68(char* obj) {
     struct Vec3 pos;
@@ -53,7 +53,7 @@ void func_ov063_0211ab68(char* obj) {
     }
 
     if (NumStars() < 15) {
-        MarkForDestruction(obj);
+        _ZN9ActorBase18MarkForDestructionEv(obj);
         return;
     }
 
@@ -66,7 +66,7 @@ void func_ov063_0211ab68(char* obj) {
         rot.y = *(s16*)(obj + 0x94);
         rot.z = *(s16*)(obj + 0x96);
         rot.y = (u32)RandomIntInternal(&data_0209e650) >> 16;
-        Actor_Spawn(0xd1, 0xfff6, &pos, &rot, *(s8*)(obj + 0x5d0), -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xd1, 0xfff6, &pos, &rot, *(s8*)(obj + 0x5d0), -1);
     }
-    MarkForDestruction(obj);
+    _ZN9ActorBase18MarkForDestructionEv(obj);
 }

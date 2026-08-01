@@ -5,12 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV11daKpaTail_c */
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN10BowserTailD0Ev(int *t)
 {
     t[0] = (int)_ZTV11daKpaTail_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -1,9 +1,9 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
+extern int data_ov062_0211e0d4[];
+extern int data_ov062_0211e0dc[];
 int _ZN9KoopaFlag16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0d4);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0dc);
     return 1;
 }

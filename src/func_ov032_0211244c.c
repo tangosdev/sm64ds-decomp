@@ -4,13 +4,13 @@ extern void _ZN25MovingCylinderClsnWithPosC1Ev(void *);
 extern void _ZN12WithMeshClsnC1Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
 extern void _ZN11ShadowModelC1Ev(void *);
-extern int VT0[];
+extern int data_ov032_02113824[];
 int *func_ov032_0211244c(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(1080);
     if (p) {
         _ZN5EnemyC2Ev(p);
-        p[0] = (int)VT0;
+        p[0] = (int)data_ov032_02113824;
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x110);
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x150);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x190);

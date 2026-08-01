@@ -7,7 +7,7 @@
 /* vtable identified: VT0 = _ZTV11daC_Jugem_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN9LakituBroD0Ev(int *t)
 {
     t[0] = (int)_ZTV11daC_Jugem_c;
@@ -17,6 +17,6 @@ int *_ZN9LakituBroD0Ev(int *t)
     _ZN9ModelAnimD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
     func_ov002_020aed18(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

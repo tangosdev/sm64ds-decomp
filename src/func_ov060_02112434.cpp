@@ -13,7 +13,7 @@ extern "C" {
 extern PmfEnt data_ov060_0211aeb4[];
 int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-int Actor_GetSubtraction(void* self, short a, short b);
+int _ZN5Actor14GetSubtractionEss(void* self, short a, short b);
 }
 
 struct C {
@@ -29,8 +29,8 @@ extern "C" void func_ov060_02112434(unsigned char* thiz)
     *(int*)(thiz + 0x3f4) = Vec3_HorzDist((Vector3*)(thiz + 0x5c), &zero);
     *(short*)(thiz + 0x408) = Vec3_HorzAngle((Vector3*)(thiz + 0x5c), &zero);
 
-    int s0 = Actor_GetSubtraction(thiz, *(short*)(thiz + 0x8e), *(short*)(thiz + 0x406));
-    int s1 = Actor_GetSubtraction(thiz, *(short*)(thiz + 0x8e), *(short*)(thiz + 0x408));
+    int s0 = _ZN5Actor14GetSubtractionEss(thiz, *(short*)(thiz + 0x8e), *(short*)(thiz + 0x406));
+    int s1 = _ZN5Actor14GetSubtractionEss(thiz, *(short*)(thiz + 0x8e), *(short*)(thiz + 0x408));
 
     *(int*)(int)(((long long)(int)(thiz + 0x418))) &= ~0xff;
     if (s0 < 0x2000)

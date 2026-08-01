@@ -1,10 +1,10 @@
-extern char* ClosestPlayer(char* c);
+extern char* _ZN5Actor13ClosestPlayerEv(char* c);
 extern int Vec3_HorzDist(void* a, void* b);
 extern int data_ov032_02113abc[];
 extern int data_ov032_02113a7c[];
 extern int data_0209f32c[];
 int func_ov032_02111254(char *c) {
-    char *pl = ClosestPlayer(c);
+    char *pl = _ZN5Actor13ClosestPlayerEv(c);
     int *s;
     int *t;
     int d;

@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWing.h"
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+extern int data_ov036_0211408c[];
 
 int ShipWing::CleanupResources()
 {
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
         _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov036_0211408c);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov036_02114084);
     return 1;
 }

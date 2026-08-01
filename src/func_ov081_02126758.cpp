@@ -1,14 +1,14 @@
 //cpp
-extern "C" void *Actor_FindEgg(void *self, void *clsn);
-extern "C" void Sound_PlayBank0(unsigned int id, void *pos);
+extern "C" void *_ZN5Actor7FindEggER12CylinderClsn(void *self, void *clsn);
+extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *pos);
 extern "C" void func_ov081_02126700(void *c);
-extern "C" void *Actor_FindWithID(unsigned int id);
-extern "C" int Player_IsOnShell(void *p);
+extern "C" void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" short Vec3_HorzAngle(void *a, void *b);
-extern "C" void Player_IncMegaKillCount(void *p);
-extern "C" int Actor_JumpedOnByPlayer(void *self, void *clsn, void *player);
-extern "C" void Player_Bounce(void *p, int fix);
-extern "C" void Player_Hurt(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
+extern "C" void _ZN6Player16IncMegaKillCountEv(void *p);
+extern "C" int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void *self, void *clsn, void *player);
+extern "C" void _ZN6Player6BounceE5Fix12IiE(void *p, int fix);
+extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
 extern "C" int func_ov081_0212777c(void *c, int i);
 
 extern "C" void func_ov081_02126758(void *thiz)
@@ -17,8 +17,8 @@ extern "C" void func_ov081_02126758(void *thiz)
     unsigned char *r4;
     int b;
 
-    if (Actor_FindEgg(c, c + 0x1b0) != 0) {
-        Sound_PlayBank0(9, c + 0x74);
+    if (_ZN5Actor7FindEggER12CylinderClsn(c, c + 0x1b0) != 0) {
+        _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov081_02126700(c);
         return;
     }
@@ -27,7 +27,7 @@ extern "C" void func_ov081_02126758(void *thiz)
         unsigned int id = *(unsigned int *)(c + 0x1d4);
         if (id == 0)
             return;
-        r4 = (unsigned char *)Actor_FindWithID(id);
+        r4 = (unsigned char *)_ZN5Actor10FindWithIDEj(id);
     }
     if (r4 == 0)
         return;
@@ -43,9 +43,9 @@ extern "C" void func_ov081_02126758(void *thiz)
     }
 
     if ((*(int *)(c + 0x1d0) & 0x66fe0)
-        || Player_IsOnShell(r4) != 0
+        || _ZN6Player9IsOnShellEv(r4) != 0
         || *(unsigned char *)(r4 + 0x6f9) != 0) {
-        Sound_PlayBank0(9, c + 0x74);
+        _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov081_02126700(c);
         return;
     }
@@ -53,15 +53,15 @@ extern "C" void func_ov081_02126758(void *thiz)
     if (*(int *)(c + 0x1d0) & 0x10) {
         *(short *)(c + 0x94) = Vec3_HorzAngle(r4 + 0x5c, c + 0x5c);
         *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x94) + 0x8000);
-        Player_IncMegaKillCount(r4);
+        _ZN6Player16IncMegaKillCountEv(r4);
         func_ov081_0212777c(c, 8);
         return;
     }
 
-    if (Actor_JumpedOnByPlayer(c, c + 0x1b0, r4) != 0) {
+    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x1b0, r4) != 0) {
         if (*(int *)(c + 0x3e0) == 0)
             return;
-        Player_Bounce(r4, 0x28000);
+        _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
         func_ov081_02126700(c);
         return;
     }
@@ -74,6 +74,6 @@ extern "C" void func_ov081_02126758(void *thiz)
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        Player_Hurt(r4, v, 2, 0xc000, 1, 0, 1);
+        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r4, v, 2, 0xc000, 1, 0, 1);
     }
 }
