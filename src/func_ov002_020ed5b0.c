@@ -7,7 +7,7 @@ void func_ov002_020ed5b0(char* c)
     int* sp;
     short* m;
     src = *(char**)(c + 0x38c);
-    sp = (int*)((long long)(int)(src + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+    sp = (int*)((long long)(int)(src + 0x5c));
     *(int*)(c + 0x5c) = sp[0];
     *(int*)(c + 0x60) = sp[1];
     *(int*)(c + 0x64) = sp[2];
@@ -17,7 +17,7 @@ void func_ov002_020ed5b0(char* c)
     *(int*)(c + 0x3dc) = *(int*)(c + 0x60);
     *(int*)(c + 0x3e0) = *(int*)(c + 0x64);
     src = *(char**)(c + 0x38c);
-    m = (short*)((long long)(int)(src + 0x8c) & 0xFFFFFFFFFFFFFFFFLL);
+    m = (short*)((long long)(int)(src + 0x8c));
     *(short*)(c + 0x3e4) = m[0];
     *(short*)(c + 0x3e6) = m[1];
     *(short*)(c + 0x3e8) = m[2];

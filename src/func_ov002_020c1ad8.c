@@ -1,10 +1,7 @@
+#include "types.h"
 /* func_ov002_020c1ad8 at 0x020c1ad8 (ov002)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern int func_ov002_020c0434(char* c);
 extern void func_ov002_020c0364(char* c, unsigned int arg);
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* st);
@@ -32,7 +29,7 @@ int func_ov002_020c1ad8(char* self, int ang)
     }
     if (func_ov002_020c19d0(self, 0x50, 0x32) == 0) return 0;
 
-    a = (int)((long long)(a + 0x8000) & 0xFFFFFFFFFFFFFFFFLL);
+    a = (int)((long long)(a + 0x8000));
     d = AngleDiff(*(s16*)(self + 0x6d2), (s16)a);
     if (d < 0x4000) {
         if (d < 0x1555) {

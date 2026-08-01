@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_0206a3a4(int arg0, int *out);
 extern void func_0206a458(int *out);
 extern void func_0206a424(int *out);
@@ -45,7 +42,7 @@ int func_0206a4a0(void)
     if (card->w8 != *(int *)(io + 0xac) && card->b0) {
     setflag:
         {
-            u8 *p = (u8 *)(((int)card + 5) & 0xFFFFFFFFFFFFFFFF);
+            u8 *p = (u8 *)(((int)card + 5));
             ret = 0;
             *p |= 2;
         }

@@ -1,12 +1,10 @@
+#include "types.h"
 /* Scene::BeforeRender — delegates to ActorBase::BeforeRender and returns its result as bool.
  * ActorBase::BeforeRender returns 0 or non-zero; Scene converts to bool (0 or 1).
  *
  * Callee: 0x02043ac8 = ActorBase::BeforeRender()
  *   _ZN9ActorBase12BeforeRenderEv
  */
-
-typedef unsigned int u32;
-
 struct Scene;
 
 extern int _ZN9ActorBase12BeforeRenderEv(struct Scene* self);

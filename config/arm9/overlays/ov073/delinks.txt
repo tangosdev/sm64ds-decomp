@@ -3,3 +3,273 @@
     .ctor       start:0x02122f34 end:0x02122f3c kind:rodata align:4
     .data       start:0x02122f40 end:0x02123280 kind:data align:32
     .bss        start:0x02123280 end:0x021234e0 kind:bss align:32
+src/_ZN11ChiefChillyD1Ev.c:
+    complete
+    .text start:0x0211f000 end:0x0211f098
+
+src/_ZN11ChiefChillyD0Ev.c:
+    complete
+    .text start:0x0211f098 end:0x0211f144
+
+src/func_ov073_0211f144.c:
+    complete
+    .text start:0x0211f144 end:0x0211f2c0
+
+src/func_ov073_0211f2c0.c:
+    complete
+    .text start:0x0211f2c0 end:0x0211f494
+
+src/func_ov073_0211f494.c:
+    complete
+    .text start:0x0211f494 end:0x0211f61c
+
+src/func_ov073_0211f61c.c:
+    complete
+    .text start:0x0211f61c end:0x0211fa74
+
+src/func_ov073_0211fa74.c:
+    complete
+    .text start:0x0211fa74 end:0x0211fbec
+
+src/func_ov073_0211fbec.c:
+    complete
+    .text start:0x0211fbec end:0x0211fbf4
+
+src/func_ov073_0211fbf4.cpp:
+    complete
+    .text start:0x0211fbf4 end:0x0211fc70
+
+src/func_ov073_0211fc70.c:
+    complete
+    .text start:0x0211fc70 end:0x0211fc78
+
+src/func_ov073_0211fc78.c:
+    complete
+    .text start:0x0211fc78 end:0x0211fe84
+
+src/func_ov073_0211fe84.c:
+    complete
+    .text start:0x0211fe84 end:0x0211fe8c
+
+src/func_ov073_0211fe8c.c:
+    complete
+    .text start:0x0211fe8c end:0x0212000c
+
+src/func_ov073_0212000c.cpp:
+    complete
+    .text start:0x0212000c end:0x0212005c
+
+src/func_ov073_0212005c.cpp:
+    complete
+    .text start:0x0212005c end:0x02120098
+
+src/func_ov073_02120098.cpp:
+    complete
+    .text start:0x02120098 end:0x021200e0
+
+src/func_ov073_021200e0.c:
+    complete
+    .text start:0x021200e0 end:0x02120390
+
+src/func_ov073_02120390.c:
+    complete
+    .text start:0x02120390 end:0x021203ac
+
+src/func_ov073_021203ac.c:
+    complete
+    .text start:0x021203ac end:0x021205f0
+
+src/func_ov073_021205f0.c:
+    complete
+    .text start:0x021205f0 end:0x02120610
+
+src/func_ov073_02120610.c:
+    complete
+    .text start:0x02120610 end:0x0212081c
+
+src/func_ov073_0212081c.c:
+    complete
+    .text start:0x0212081c end:0x02120844
+
+src/func_ov073_02120844.c:
+    complete
+    .text start:0x02120844 end:0x021208e4
+
+src/func_ov073_021208e4.c:
+    complete
+    .text start:0x021208e4 end:0x02120910
+
+src/func_ov073_02120910.c:
+    complete
+    .text start:0x02120910 end:0x02120ad8
+
+src/func_ov073_02120ad8.c:
+    complete
+    .text start:0x02120ad8 end:0x02120b78
+
+src/func_ov073_02120b78.c:
+    complete
+    .text start:0x02120b78 end:0x02120c08
+
+src/func_ov073_02120c08.c:
+    complete
+    .text start:0x02120c08 end:0x02120c7c
+
+src/func_ov073_02120c7c.cpp:
+    complete
+    .text start:0x02120c7c end:0x02120d80
+
+src/func_ov073_02120d80.cpp:
+    complete
+    .text start:0x02120d80 end:0x02120dec
+
+src/func_ov073_02120dec.c:
+    complete
+    .text start:0x02120dec end:0x02120e60
+
+src/func_ov073_02120e60.cpp:
+    complete
+    .text start:0x02120e60 end:0x02120ed0
+
+src/func_ov073_02120ed0.c:
+    complete
+    .text start:0x02120ed0 end:0x0212122c
+
+src/func_ov073_0212122c.c:
+    complete
+    .text start:0x0212122c end:0x0212128c
+
+src/func_ov073_0212128c.c:
+    complete
+    .text start:0x0212128c end:0x02121378
+
+src/func_ov073_02121378.c:
+    complete
+    .text start:0x02121378 end:0x02121388
+
+src/func_ov073_02121388.c:
+    complete
+    .text start:0x02121388 end:0x02121538
+
+src/func_ov073_02121538.cpp:
+    complete
+    .text start:0x02121538 end:0x0212157c
+
+src/ChiefChilly_ChangeState.cpp:
+    complete
+    .text start:0x0212157c end:0x021215cc
+
+src/func_ov073_021215cc.c:
+    complete
+    .text start:0x021215cc end:0x021217e0
+
+src/_ZN11ChiefChilly16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x021217e0 end:0x0212186c
+
+src/_ZN11ChiefChilly16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212186c end:0x02121870
+
+src/_ZN11ChiefChilly6RenderEv.cpp:
+    complete
+    .text start:0x02121870 end:0x021218a0
+
+src/_ZN11ChiefChilly8BehaviorEv.cpp:
+    complete
+    .text start:0x021218a0 end:0x02121ccc
+
+src/_ZN11ChiefChilly13InitResourcesEv.cpp:
+    .text start:0x02121ccc end:0x02121ec0
+
+src/func_ov073_02121ec0.c:
+    complete
+    .text start:0x02121ec0 end:0x02121ec8
+
+src/ChiefChilly_Spawn.cpp:
+    .text start:0x02121ec8 end:0x02121f90
+
+src/_ZN8CccArenaD1Ev.c:
+    .text start:0x02121f90 end:0x02121fd4
+
+src/_ZN8CccArenaD0Ev.c:
+    .text start:0x02121fd4 end:0x0212202c
+
+src/func_ov073_0212202c.c:
+    complete
+    .text start:0x0212202c end:0x02122034
+
+src/func_ov073_02122034.cpp:
+    complete
+    .text start:0x02122034 end:0x021220c0
+
+src/func_ov073_021220c0.c:
+    complete
+    .text start:0x021220c0 end:0x021221e0
+
+src/func_ov073_021221e0.c:
+    complete
+    .text start:0x021221e0 end:0x02122200
+
+src/func_ov073_02122200.cpp:
+    complete
+    .text start:0x02122200 end:0x021222c8
+
+src/func_ov073_021222c8.c:
+    complete
+    .text start:0x021222c8 end:0x021222ec
+
+src/func_ov073_021222ec.c:
+    complete
+    .text start:0x021222ec end:0x0212239c
+
+src/func_ov073_0212239c.c:
+    complete
+    .text start:0x0212239c end:0x021223a4
+
+src/func_ov073_021223a4.cpp:
+    complete
+    .text start:0x021223a4 end:0x021223f4
+
+src/func_ov073_021223f4.cpp:
+    complete
+    .text start:0x021223f4 end:0x02122464
+
+src/_ZN8CccArena16CleanupResourcesEv.cpp:
+    .text start:0x02122464 end:0x021224c8
+
+src/_ZN8CccArena6RenderEv.cpp:
+    complete
+    .text start:0x021224c8 end:0x021224f0
+
+src/_ZN8CccArena8BehaviorEv.cpp:
+    .text start:0x021224f0 end:0x02122578
+
+src/_ZN8CccArena13InitResourcesEv.cpp:
+    .text start:0x02122578 end:0x02122730
+
+src/func_ov073_02122730.c:
+    complete
+    .text start:0x02122730 end:0x021227d0
+
+src/func_ov073_021227d0.c:
+    complete
+    .text start:0x021227d0 end:0x021227e4
+
+src/CccSmallIce_Spawn.c:
+    complete
+    .text start:0x021227e4 end:0x02122814
+
+src/CccBigIce_Spawn.c:
+    complete
+    .text start:0x02122814 end:0x02122844
+
+src/CccArena_Spawn.c:
+    complete
+    .text start:0x02122844 end:0x02122874
+
+src/__sinit_ov073_02122874.c:
+    .init start:0x02122874 end:0x02122d48
+
+src/__sinit_ov073_02122d48.c:
+    .init start:0x02122d48 end:0x02122f34

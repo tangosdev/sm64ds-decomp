@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 struct Col { u16 a, b, c, d; };
 
 extern volatile struct Col data_020a0df8[];

@@ -8,7 +8,7 @@ void func_ov006_020fbad4(char *c)
     unsigned short v = *((unsigned short *) (r2 + 0xfa));
     if (v != 0)
     {
-      unsigned short *p = (unsigned short *) (((long long) ((int) (c + 0x4cfa))) & 0xFFFFFFFFFFFFFFFFLL);
+      unsigned short *p = (unsigned short *) (((long long) ((int) (c + 0x4cfa))));
       *p = (*p) - 1;
       if ((*((short *) ((c + 0x4c00) + 0xfa))) < 0)
       {

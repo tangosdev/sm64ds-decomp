@@ -1,7 +1,7 @@
 void func_ov006_020c1f04(char *c, int *src);
 void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 void func_ov006_020c1ef8(int *p);
-void func_ov004_020b0aa0(int arg);
+void FreeGfxSlotsById(int arg);
 
 void func_ov006_0210b1fc(char *p)
 {
@@ -11,7 +11,7 @@ void func_ov006_0210b1fc(char *p)
     }
 
     if (*(int *)(p + 0x500c) > 0) {
-        *(int *)(((int)p + 0x500c) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(int *)(((int)p + 0x500c)) -= 1;
         if (*(int *)(p + 0x500c) != 0)
             return;
         *(unsigned char *)(p + 0x503b) = *(unsigned char *)(p + 0x503c);
@@ -19,11 +19,11 @@ void func_ov006_0210b1fc(char *p)
         return;
     }
 
-    *(unsigned char *)(((int)p + 0x503e) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(unsigned char *)(((int)p + 0x503e)) -= 1;
     if (*(unsigned char *)(p + 0x503e) != 0)
         return;
 
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
 
     {
         int *q = (int *)(p + 0x5000);

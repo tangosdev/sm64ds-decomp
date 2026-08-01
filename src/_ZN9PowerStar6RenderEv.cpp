@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9PowerStar6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "PowerStar.h"
 struct Thing { int x; };
 
 struct Sub {
@@ -25,18 +28,19 @@ struct Obj {
     unsigned short b2 : 1;  /* bit 2 */
 };
 
-extern "C" int _ZN9PowerStar6RenderEv(Obj *self) {
+int PowerStar::Render()
+{
     int locked;
-    if (self->arg80.x == 0) goto done;
-    locked = (self->fb0 & 0x40000) != 0;
+    if (((Obj *)this)->arg80.x == 0) goto done;
+    locked = (((Obj *)this)->fb0 & 0x40000) != 0;
     if (locked) goto done;
-    if (self->b1) goto callit;
+    if (((Obj *)this)->b1) goto callit;
 done:
     return 1;
 callit:
-    if (!self->b2)
-        self->sub30c.m5(&self->arg80);
+    if (!((Obj *)this)->b2)
+        ((Obj *)this)->sub30c.m5(&((Obj *)this)->arg80);
     else
-        self->sub370.m5(&self->arg80);
+        ((Obj *)this)->sub370.m5(&((Obj *)this)->arg80);
     return 1;
 }

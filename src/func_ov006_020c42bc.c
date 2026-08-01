@@ -47,7 +47,7 @@ void func_ov006_020c42bc(void)
             ai = &oi->vel;
             for (j = t + 1; j < data_ov006_02140328; j++) {
                 if (func_ov006_020c4710(&data_ov006_02140324[j]) != 0) {
-                    oj = (struct Obj*)((long long)(int)&data_ov006_02140324[j] & 0xFFFFFFFFFFFFFFFFLL);
+                    oj = (struct Obj*)((long long)(int)&data_ov006_02140324[j]);
                     pj = &oj->pos;
                     Vec3_Sub(&v1, pi, pj);
                     Vec3_Sub(&v2, ai, &oj->vel);

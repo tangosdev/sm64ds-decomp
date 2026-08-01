@@ -16,10 +16,10 @@ void func_ov063_0211a76c(char* c, int cond, int val)
     if (cond == 0) return;
 
     {
-        short* p8e = (short*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        short* p8e = (short*)(((int)c + 0x8e));
         *p8e = *p8e + data_ov063_0211e7e0[*(unsigned short*)(c + 0x100)];
         {
-            short* p90 = (short*)(((int)c + 0x90) & 0xFFFFFFFFFFFFFFFF);
+            short* p90 = (short*)(((int)c + 0x90));
             *p90 = *p90 + data_ov063_0211e7e0[*(unsigned short*)(c + 0x100)];
         }
     }

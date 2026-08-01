@@ -1,32 +1,35 @@
 //cpp
+// @symbol _ZN10BowserFire8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "BowserFire.h"
 struct Actor;
 typedef void (Actor::*PMF)();
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov060_0211afb4[];
-extern "C" void func_02038420(void *p);
+extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-extern "C" void func_ov060_02116740(char* c);
-extern "C" void func_ov060_02117624(char *c);
 struct CylinderClsn { void Clear(); void Update(); };
 
-extern "C" int _ZN10BowserFire8BehaviorEv(char *thiz)
+int BowserFire::Behavior()
 {
-    Actor *self = (Actor*)thiz;
-    *(int*)(((int)thiz + 0x370) & 0xFFFFFFFFFFFFFFFF) += 1;
-    (self->*data_ov060_0211afb4[*(int*)(thiz + 0x35c)].pmf)();
-    *(unsigned short*)(((int)thiz + 0x374) & 0xFFFFFFFFFFFFFFFF) += 1;
-    if (*(int*)(thiz + 0x9c) != 0) {
-        func_02038420(thiz + 0x110);
-        if (*(int*)(thiz + 0x35c) != 4) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x110) != 0) {
-                *(int*)(thiz + 0xa8) = 0;
-                *(int*)(thiz + 0x9c) = 0;
+    Actor *self = (Actor*)((char *)this);
+    *(int*)(((int)((char *)this) + 0x370)) += 1;
+    (self->*data_ov060_0211afb4[unk_35c].pmf)();
+    *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
+    if (unk_09c != 0) {
+        WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
+        if (unk_35c != 4) {
+            if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
+                unk_0a8 = 0;
+                unk_09c = 0;
             }
         }
     }
-    func_ov060_02116740(thiz);
-    func_ov060_02117624(thiz);
-    ((CylinderClsn*)(thiz + 0x2d0))->Clear();
-    ((CylinderClsn*)(thiz + 0x2d0))->Update();
+    func_ov060_02116740(((char *)this));
+    func_ov060_02117624(((char *)this));
+    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Clear();
+    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Update();
     return 1;
 }

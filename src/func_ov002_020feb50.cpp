@@ -1,12 +1,8 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-struct Vector3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov002_020feb50
+/* recovered: shared common types */
+#include "common.h"
 extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void _ZN5Sound4PlayEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 const & v);
 extern "C" void _ZN5Actor13SmallPoofDustEv(char* self);
@@ -38,7 +34,7 @@ extern "C" void func_ov002_020feb50(char* self) {
         *(s32*)(self + 0x354) = 1;
         _ZN5Sound4PlayEjjRK7Vector3(0, 0xa5, *(Vector3*)(self + 0x74));
         {
-            s16* p = (s16*)(((int)self + 0x94) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)self + 0x94));
             *p = *p - 0x8000;
         }
         *(s32*)(self + 0xa4) = 0;

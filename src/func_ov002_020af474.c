@@ -1,5 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
+#include "types.h"
 extern s16 data_02082214[];
 
 void func_ov002_020af474(char* o)
@@ -12,7 +11,7 @@ void func_ov002_020af474(char* o)
     }
 
     {
-        s16* p = (s16*)(((long long)(int)(o + 0x92)) & 0xFFFFFFFFFFFFFFFFLL);
+        s16* p = (s16*)(((long long)(int)(o + 0x92)));
         *p = *p - 0x1000;
     }
 

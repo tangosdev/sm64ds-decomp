@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov084_0212b344
+// recovered name: Goomba_OnTurnIntoEgg
+/* recovered: renamed to Class_Method */
+/* daKrb_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" {
 void _ZN8CapEnemy15RespawnIfHasCapEv(char *self);
 int _ZN6Player15IsCollectingCapEv(char *p);

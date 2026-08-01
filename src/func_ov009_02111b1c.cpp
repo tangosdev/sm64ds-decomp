@@ -1,15 +1,17 @@
 //cpp
+// @symbol func_ov009_02111b1c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 struct Vector3_16;
 
 extern "C" void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
     unsigned int a, unsigned int b, const Vector3&, const Vector3_16*, int, int);
 
 extern unsigned char data_0209f2d8[];
-extern Vector3 data_ov009_02113de0[];
-extern Vector3 data_ov009_02113e34[];
-extern Vector3 data_ov009_02113d8c[];
 struct D0209caa0 { int a, b, c; };
 extern D0209caa0 data_0209caa0;
 

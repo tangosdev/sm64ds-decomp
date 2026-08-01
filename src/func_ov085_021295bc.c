@@ -1,6 +1,6 @@
-struct Matrix4x3 { int m[12]; };
-struct Vec3 { int x, y, z; };
-
+// @symbol func_ov085_021295bc
+/* recovered: shared common types */
+#include "common.h"
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, short angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, short angX);

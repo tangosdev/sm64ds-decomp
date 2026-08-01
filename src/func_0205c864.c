@@ -1,6 +1,6 @@
 extern int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int);
-extern void func_020580f0(void *p);
+extern void OS_SleepThread(void *p);
 
 int func_0205c864(int *thiz)
 {
@@ -15,13 +15,13 @@ int func_0205c864(int *thiz)
         if (b == 0) {
             goto setflag;
         }
-        *(int *)(((long long)(int)((char*)thiz + 0x10)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x40;
+        *(int *)(((long long)(int)((char*)thiz + 0x10))) |= 0x40;
         do {
-            func_020580f0((char*)thiz + 0xe);
+            OS_SleepThread((char*)thiz + 0xe);
         } while ((*(int*)((char*)thiz + 0x10) & 0x40) ? 1 : 0);
         goto done;
     setflag:
-        *(int *)(((long long)(int)((char*)thiz + 0x10)) & 0xFFFFFFFFFFFFFFFFLL) |= 8;
+        *(int *)(((long long)(int)((char*)thiz + 0x10))) |= 8;
     done:
         ;
     }

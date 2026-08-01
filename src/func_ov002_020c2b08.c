@@ -1,10 +1,8 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
-extern int func_02037e78(int *p);
-extern int func_ov002_020bf30c(void *c, int a);
+extern int SurfaceInfo_TestFlag0x20(int *p);
+extern int Player_ScaleByCharFactor(void *c, int a);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
@@ -29,10 +27,10 @@ void func_ov002_020c2b08(void *arg0)
 
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
             return;
-        if (!func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
             return;
 
-        limit = func_ov002_020bf30c(c, 0x20000);
+        limit = Player_ScaleByCharFactor(c, 0x20000);
         if (*(int *)(c + 0x98) >= limit)
             *(u16 *)(c + 0x6ba) = 0x3c;
         else
@@ -44,7 +42,7 @@ void func_ov002_020c2b08(void *arg0)
     if (*(u16 *)(c + 0x6ba) != 0) {
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
             goto clear_timer;
-        if (!func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
             goto clear_timer;
 
         *(u8 *)(c + 0x707) = 1;
@@ -55,14 +53,14 @@ void func_ov002_020c2b08(void *arg0)
         }
 
         *(u16 *)(c + 0x6ba) = 0;
-        *(int *)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0x690);
+        *(int *)(((long long)(int)(c + 0x60))) += *(int *)(c + 0x690);
         if (*(int *)(c + 0x60) < *(int *)(c + 0x644))
             *(int *)(c + 0x60) = *(int *)(c + 0x644);
         return;
 
     big_block:
         {
-            int limit2 = func_ov002_020bf30c(c, 0x28000);
+            int limit2 = Player_ScaleByCharFactor(c, 0x28000);
 
             if (*(int *)(c + 0x98) < limit2) {
                 if (*(u16 *)(c + 0x6ba) >= 0x1e)
@@ -107,7 +105,7 @@ void func_ov002_020c2b08(void *arg0)
     *(u8 *)(c + 0x6ec) = 0;
     if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
         return;
-    if (func_02037e78((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)) != 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)) != 0)
         return;
     if (*(u8 *)(c + 0x707) != 0)
         return;

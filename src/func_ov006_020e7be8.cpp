@@ -7,7 +7,7 @@ extern void func_ov006_020e7818(void*);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int, unsigned int, int, int, int, const void*, void*);
 extern int data_ov006_0213c704[2];
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 void func_ov006_020e7be8(char* c)
 {

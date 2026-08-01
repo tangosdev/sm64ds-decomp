@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov060_02115b0c
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3* pos, void* rot, int e, int f);
 

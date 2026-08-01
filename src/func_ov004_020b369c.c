@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_ov004_020b369c at 0x020b369c
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov004).
  */
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
 extern s16 data_02082214[];
 struct M { int _00, _01, _10, _11; };
 extern void func_ov004_020b1c68(void* a0, int a1, int a2, int a3, int a4, struct M* a5);

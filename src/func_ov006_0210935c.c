@@ -2,7 +2,7 @@ extern struct P { int x, y; } data_ov006_02142ab4[];
 extern struct P data_ov006_02142ab8[];
 void func_ov006_02109530(int *out, int *a, int scale);
 
-#define LNDR(e) ((int)(((long long)(e)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LNDR(e) ((int)(((long long)(e))))
 
 struct S {
     char pad[0x18];

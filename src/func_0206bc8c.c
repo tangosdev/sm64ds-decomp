@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned long long u64;
-
+#include "types.h"
 #define READ8(a) ((((int)(a)) & 1) ? (((*(u16 *)((a) - 1)) & 0xff00) >> 8) : ((*(u16 *)(a)) & 0xff))
 
 #pragma opt_strength_reduction off

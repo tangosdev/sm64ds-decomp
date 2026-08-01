@@ -1,3 +1,7 @@
+// @symbol func_ov022_02111670
+// recovered name: daObjFl_Koma_D_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjFl_Koma_D_c::InitResources - recovered from vtable slot identity */
 struct Arg { void *m[3]; };
 
 extern int func_ov002_020b676c(unsigned char *self, struct Arg *a, short arg2);

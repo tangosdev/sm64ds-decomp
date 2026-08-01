@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 enum IPCStatus {
     IPC_SUCCESS = 0,
     IPC_ERROR = -1,

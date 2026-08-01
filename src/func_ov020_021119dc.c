@@ -8,13 +8,13 @@
         char* c = (char*)thiz;
         func_0203568c((int*)(c + 0x25c), 0x64000);
         if (*(unsigned short*)(c + 0x104) != 0) {
-            unsigned short* p = (unsigned short*)(((int)c + 0x104) & 0xFFFFFFFFFFFFFFFF);
+            unsigned short* p = (unsigned short*)(((int)c + 0x104));
             *p = (unsigned short)(*p - 1);
             if (*(unsigned short*)(c + 0x104) != 0) {
-                int* q = (int*)(((int)c + 0x234) & 0xFFFFFFFFFFFFFFFF);
+                int* q = (int*)(((int)c + 0x234));
                 *q = *q | 1;
             } else {
-                int* q = (int*)(((int)c + 0x234) & 0xFFFFFFFFFFFFFFFF);
+                int* q = (int*)(((int)c + 0x234));
                 *q = *q & ~1;
             }
         }

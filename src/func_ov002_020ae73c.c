@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-
+#include "types.h"
 extern s16 Vec3_HorzAngle(const void* v0, const void* v1);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void* v);
 extern unsigned short data_ov002_020ff01c[];
@@ -17,10 +14,10 @@ void func_ov002_020ae73c(char* c, char* arg)
         *(int*)(c + 0x98) = 0x14000;
 
     {
-        int *p = (int *)(((int)(c) + 0x98) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)(c) + 0x98));
         *p = *p / 6;
     }
     *(s16*)(c + 0x102) = 8;
-    *(int *)(((int)(c) + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)(c) + 0xb0)) &= ~1;
     _ZN5Sound9PlayBank0EjRK7Vector3(0xa, c + 0x74);
 }

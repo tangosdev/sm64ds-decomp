@@ -1,10 +1,13 @@
 //cpp
-struct VecFx32 { int x, y, z; };
+// @symbol func_ov002_020c5444
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 }
 extern "C" void func_ov002_020c5444(char* c){
-  VecFx32 v;
+  Vector3 v;
   ((int*)&v)[0] = *(int*)(c + 0x5c);
   ((int*)&v)[1] = *(int*)(c + 0x60);
   ((int*)&v)[2] = *(int*)(c + 0x64);

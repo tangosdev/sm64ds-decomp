@@ -3,7 +3,7 @@
  * destructor and returns this. Enemy (0x110) : Actor (0xd4) : ActorBase.
  */
 
-extern void *_ZTV5Enemy;                 /* Enemy vtable (wildcard reloc) */
+extern void *data_ov002_021081e4;                 /* Enemy vtable (wildcard reloc) */
 extern void *_ZN5ActorD2Ev(void *self);  /* Actor::~Actor (already named) */
 
 struct Enemy {
@@ -12,7 +12,7 @@ struct Enemy {
 
 void *_ZN5EnemyD2Ev(struct Enemy *self)
 {
-    self->vtable = &_ZTV5Enemy;
+    self->vtable = &data_ov002_021081e4;
     _ZN5ActorD2Ev(self);
     return self;
 }

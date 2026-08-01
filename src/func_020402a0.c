@@ -1,7 +1,7 @@
 extern int func_0203fc74(void);
 extern void func_02040638(void);
 extern int func_0203fbc4(void);
-extern int func_0203fbfc(void);
+extern int Wireless_Reset(void);
 extern int func_0203fb5c(void);
 
 extern int data_020a0f5c;
@@ -24,12 +24,12 @@ void func_020402a0(struct S *self)
         func_02040638();
         if (func_0203fbc4() != 0) return;
         data_020a0f5c = 0;
-        func_0203fbfc();
+        Wireless_Reset();
         return;
     case 4:
         if (func_0203fb5c() != 0) return;
         data_020a0f5c = 0;
-        func_0203fbfc();
+        Wireless_Reset();
         return;
     }
     return;

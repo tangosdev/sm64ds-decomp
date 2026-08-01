@@ -5,7 +5,7 @@ struct Vector3 {
     int x, y, z;
 };
 
-extern int func_ov002_020dab14(char*);
+extern int Player_ReleaseHeldActor(char*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, const Vector3&);
 extern int func_ov002_020e3078(void*, void*);
@@ -18,9 +18,9 @@ public:
 
 int Player::St_Climb_Init() {
     char* self = (char*)this;
-    func_ov002_020dab14(self);
+    Player_ReleaseHeldActor(self);
 
-    int* bitfield = (int*)(((int)self + 0x2ec) & 0xFFFFFFFFFFFFFFFF);
+    int* bitfield = (int*)(((int)self + 0x2ec));
     *bitfield |= 4;
     *bitfield &= ~8;
 

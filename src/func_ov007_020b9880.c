@@ -1,11 +1,5 @@
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-
 extern void *func_ov007_020c3df4(int a, int b);
 extern void *func_ov007_020c690c(int a0, int a1, int a2, int a3, void *a4, void *a5);
 extern void *func_ov007_020c9388(int a);

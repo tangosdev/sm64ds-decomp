@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov002_020db8d8
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vec3 { int x, y, z; };
+
 extern unsigned char data_0209f2d8;
 extern int _ZNK6Player14GetBodyModelIDEjb(void *c, unsigned int a, bool b);
 extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
@@ -9,10 +12,10 @@ extern void func_ov002_020dc174(char *c, void *r1, int r2, int r3, unsigned int 
 
 void func_ov002_020db8d8(char *self)
 {
-    volatile Vec3 backup;
-    Vec3 tmp;
-    Vec3 dir;
-    Vec3 scaled;
+    volatile Vector3 backup;
+    Vector3 tmp;
+    Vector3 dir;
+    Vector3 scaled;
     int model;
     char *m;
     int b;

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov080_02126c60
+// recovered name: daPicGate_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daPicGate_c::Behavior - recovered from vtable slot identity */
 struct C;
 typedef int (C::*PMF)();
 struct Entry { char pad[0x8]; PMF pmf; };

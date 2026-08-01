@@ -181,10 +181,12 @@ PyramidTop_SpawnInfo kind:data(any) addr:0x02113804 ambiguous
 PyramidTag_SpawnInfo kind:data(any) addr:0x02113820 ambiguous
 data_ov024_0211382c kind:data(any) addr:0x0211382c ambiguous
 _ZTV10PyramidTag kind:data(any) addr:0x02113844
+_ZTV21daObjDlPyramidDummy_c kind:data(any) addr:0x02113844
 data_ov024_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov024_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov024_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 _ZTV10PyramidTop kind:data(any) addr:0x021138c8
+_ZTV16daObjDlPyramid_c kind:data(any) addr:0x021138c8
 data_ov024_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 data_ov024_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov024_021138fc kind:data(any) addr:0x021138fc ambiguous

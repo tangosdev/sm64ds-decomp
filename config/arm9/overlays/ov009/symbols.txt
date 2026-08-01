@@ -147,6 +147,7 @@ data_ov009_0211391c kind:data(any) addr:0x0211391c
 data_ov009_02113928 kind:data(any) addr:0x02113928
 Bird_SpawnInfo kind:data(any) addr:0x02113934 ambiguous
 _ZTV4Bird kind:data(any) addr:0x02113958
+_ZTV9daSBird_c kind:data(any) addr:0x02113958
 data_ov009_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov009_02113998 kind:data(any) addr:0x02113998 ambiguous
 data_ov009_021139b0 kind:data(any) addr:0x021139b0 ambiguous
@@ -171,6 +172,7 @@ Flag_SpawnInfo kind:data(any) addr:0x02113b7c ambiguous
 data_ov009_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov009_02113b90 kind:data(any) addr:0x02113b90 ambiguous
 _ZTV8DockPole kind:data(any) addr:0x02113ba0
+_ZTV10daMcFlag_c kind:data(any) addr:0x02113ba0
 data_ov009_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 data_ov009_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov009_02113c20 kind:bss addr:0x02113c20

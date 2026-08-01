@@ -1,3 +1,6 @@
+// @symbol _ZN7ClipperD1Ev
+/* recovered: named members + shared header */
+#include "Clipper.h"
 /* Clipper::~Clipper() at 0x02015720
  * Trivial destructor: stores the Clipper vtable pointer into self->vtable
  * (slot 0x0) and returns. No members need teardown.

@@ -1,10 +1,7 @@
+#include "types.h"
 /* ModelAnim::Virtual10 at 0x0201682c, size=0x40
  * Updates bones from animation then calls Model::Virtual10 with a transform.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;

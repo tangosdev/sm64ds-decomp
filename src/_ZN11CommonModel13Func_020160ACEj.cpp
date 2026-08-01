@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct Holder {
     char _pad[0x24];
     u32 count;
@@ -32,7 +31,7 @@ void CommonModel::Func_020160AC(u32 arg)
     u32 i;
 
     for (i = 0; i < n; i++) {
-        u32 *f = (u32 *)(((long long)(int)((char *)p + 0x24)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32 *f = (u32 *)(((long long)(int)((char *)p + 0x24)));
         *f |= arg;
         p++;
     }

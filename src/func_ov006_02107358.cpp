@@ -1,7 +1,11 @@
 //cpp
+// @symbol func_ov006_02107358
+// recovered name: dScMgPanel_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgPanel_c::Behavior - recovered from vtable slot identity */
 extern "C" {
-extern int func_ov006_02104ac4(void*);
-extern int func_ov006_02104354(void*);
 struct Ent{ int a; int b; };
 extern Ent data_ov006_02142888[];
 int func_ov006_02107358(char* c){

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct Vec3 { int x, y, z; };
 struct M12 { int w[12]; };
 
@@ -31,7 +30,7 @@ int func_ov078_021238ac(char *c)
     }
 
     {
-        int *f = (int *)(((long long)(int)((char *)cam + 0x154)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *f = (int *)(((long long)(int)((char *)cam + 0x154)));
         *f &= ~8;
     }
     v.x = 0;

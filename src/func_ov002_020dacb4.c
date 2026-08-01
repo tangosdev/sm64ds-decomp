@@ -17,9 +17,9 @@ int func_ov002_020dacb4(char *p, char *actor)
     int t;
 
     *(char **)(p + 0x358) = actor;
-    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x400;
-    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x2000;
-    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x100;
+    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0))) &= ~0x400;
+    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0))) &= ~0x2000;
+    *(int *)(((long long)(int)(*(char **)(p + 0x358) + 0xb0))) |= 0x100;
     *(int *)(p + 0x98) = 0;
 
     if (*(unsigned char *)(p + 0x706) != 0) {

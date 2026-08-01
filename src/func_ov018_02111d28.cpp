@@ -1,5 +1,8 @@
 //cpp
-struct Matrix4x3 { int m[12]; };
+// @symbol func_ov018_02111d28
+/* recovered: shared common types */
+#include "common.h"
+
 struct ShadowModel;
 struct Actor {
     void DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &mf, int c, int d, unsigned int e);

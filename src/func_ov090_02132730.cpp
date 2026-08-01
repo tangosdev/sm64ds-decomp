@@ -1,6 +1,11 @@
 //cpp
+// @symbol func_ov090_02132730
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 struct MovingCylinderClsnWithPos { int d; };
 struct Actor;
 struct Player;
@@ -11,7 +16,6 @@ extern "C" Player* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player*, const Vector3&, unsigned int, Fix12i, unsigned int, unsigned int, unsigned int);
 
-extern Vector3 data_ov090_02134200;
 
 extern "C" void func_ov090_02132730(char* thiz)
 {

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
+#include "types.h"
 struct E {
     s32 f0;       /* 0x00 */
     s32 f4;       /* 0x04 */

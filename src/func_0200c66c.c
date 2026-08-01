@@ -117,7 +117,7 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
                     *out1 = (void*)&data_020873dc;
                     if (*(unsigned char*)((char*)*out2 + 1) == 2) {
                         if (*(void**)(self + 0x140) != *out1)
-                            *(u32*)(((int)self + 0x154) & 0xFFFFFFFFFFFFFFFF) |= 4;
+                            *(u32*)(((int)self + 0x154)) |= 4;
                     }
                     res = hval;
                 } else if (b0 == 6) {
@@ -138,7 +138,7 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
                         }
                     }
                 }
-                *(u32*)(((int)self + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~0x100;
+                *(u32*)(((int)self + 0x154)) &= ~0x100;
             }
         }
         if (*out1 != (void*)&data_02087094) *(void**)(self + 0x140) = *out1;

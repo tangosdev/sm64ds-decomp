@@ -13,7 +13,7 @@ int func_ov085_0212dd10(char* c)
     {
         short v = *(short*)(c + 0x8e);
         short w = v + 0x8000;
-        int* t = (int*)(((int)c + 0x2c8) & 0xFFFFFFFFFFFFFFFF);
+        int* t = (int*)(((int)c + 0x2c8));
         *(short*)(p + 0x8c) = 0;
         *(short*)(p + 0x8e) = w;
         *(short*)(p + 0x90) = 0;

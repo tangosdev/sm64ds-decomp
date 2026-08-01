@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_ov006_020d836c(char* c);
 extern int func_ov004_020adbc0(void);
 extern void func_ov004_020adb1c(int a);
@@ -15,7 +12,7 @@ void func_ov006_020d89c4(char* self)
     func_ov006_020d836c(self);
 
     if (*(u16*)(self + 0x62e8) != 0) {
-        (*(u16*)(((long long)(int)(self + 0x62e8)) & 0xFFFFFFFFFFFFFFFFLL))--;
+        (*(u16*)(((long long)(int)(self + 0x62e8))))--;
         if (*(s16*)(self + 0x62e8) < 0)
             *(u16*)(self + 0x62e8) = 0;
         return;
@@ -23,7 +20,7 @@ void func_ov006_020d89c4(char* self)
 
     for (j = 0; j < 0x70; j++) {
         u8 *row = (u8*)self + j*0x40;
-        u8 *q = (u8*)(((long long)(int)(row + 0x4698)) & 0xFFFFFFFFFFFFFFFFLL);
+        u8 *q = (u8*)(((long long)(int)(row + 0x4698)));
         if (*q == 2) {
             if (((u8 (*)[0x40])(self + 0x4000))[j][0x697] == 6
              && ((u8 (*)[0x40])(self + 0x4000))[j][0x69b] == 4) {

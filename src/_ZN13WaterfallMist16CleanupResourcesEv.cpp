@@ -1,8 +1,12 @@
 //cpp
+// @symbol _ZN13WaterfallMist16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "WaterfallMist.h"
 extern "C" {
 void _ZN13SharedFilePtr7ReleaseEv(void* fp);
 }
-extern void* data_ov002_020ff0ac[];
 extern void* data_ov002_0210de50;
 extern void* data_ov002_0210de60;
 extern void* data_ov002_0210de48;
@@ -16,11 +20,13 @@ extern void* data_ov002_0210de58;
 extern void* data_ov002_0210de18;
 extern void* data_ov002_0210de30;
 extern void* data_ov002_0210de38;
-extern "C" int _ZN13WaterfallMist16CleanupResourcesEv(char* c){
-  int i = *(int*)(c + 0x3f4);
+
+int WaterfallMist::CleanupResources()
+{
+  int i = mModelIndex;
   if (i >= 3) return 1;
   _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff0ac[i]);
-  switch (*(int*)(c + 0x3f0)) {
+  switch (mType) {
   case 0xf:
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de50);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de60);

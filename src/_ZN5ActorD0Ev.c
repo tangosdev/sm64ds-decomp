@@ -11,9 +11,9 @@
  *   - return this
  *
  * Pool literals (relocations, wildcarded by matcher):
- *   0x0208e3a4 = _ZTV5Actor
+ *   0x0208e3a4 = data_0208e3a4
  *   0x0209b468 = global passed as first arg to the 0x0203b27c teardown
- *   0x0208e4b8 = _ZTV12ActorDerived
+ *   0x0208e4b8 = data_0208e4b8
  *   0x020a0eac = Memory::gameHeapPtr
  * Calls:
  *   0x0203b27c = teardown(global, &actorSub)   (unnamed)
@@ -29,24 +29,24 @@ struct Actor {
     /* Actor-specific subobject begins at 0x50 */
 };
 
-extern void *_ZTV5Actor[];
-extern void *_ZTV12ActorDerived[];
+extern void *data_0208e3a4[];
+extern void *data_0208e4b8[];
 
-extern void Actor_TeardownA(void *global, void *actorSub);   /* 0x0203b27c */
-extern void Actor_TeardownB(void *actorSub);                 /* 0x02044104 */
+extern void func_0203b27c(void *global, void *actorSub);   /* 0x0203b27c */
+extern void func_02044104(void *actorSub);                 /* 0x02044104 */
 extern void _ZN9ActorBaseD2Ev(struct Actor *thiz);           /* 0x02043d48 */
-extern void Memory_Deallocate(void *ptr, struct Heap *heap); /* 0x0203c1e8 */
+extern void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, struct Heap *heap); /* 0x0203c1e8 */
 
-extern void *Actor_TeardownGlobal;                           /* 0x0209b468 */
-extern struct Heap *Memory_gameHeapPtr;                      /* 0x020a0eac */
+extern void *data_0209b468;                           /* 0x0209b468 */
+extern struct Heap *data_020a0eac;                      /* 0x020a0eac */
 
 struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
 {
-    thiz->vtable = (void *)_ZTV5Actor;
-    Actor_TeardownA(&Actor_TeardownGlobal, (char *)thiz + 0x50);
-    Actor_TeardownB((char *)thiz + 0x50);
-    thiz->vtable = (void *)_ZTV12ActorDerived;
+    thiz->vtable = (void *)data_0208e3a4;
+    func_0203b27c(&data_0209b468, (char *)thiz + 0x50);
+    func_02044104((char *)thiz + 0x50);
+    thiz->vtable = (void *)data_0208e4b8;
     _ZN9ActorBaseD2Ev(thiz);
-    Memory_Deallocate(thiz, Memory_gameHeapPtr);
+    _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;
 }

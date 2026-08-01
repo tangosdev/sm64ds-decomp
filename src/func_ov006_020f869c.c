@@ -1,28 +1,17 @@
+// @symbol func_ov006_020f869c
+// recovered name: dScMgMCarlo_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo_c::Behavior - recovered from vtable slot identity */
 typedef short s16;
 
-extern int func_ov006_020f7b10(void);
-extern int func_ov006_020f7a90(void);
 extern int func_ov006_020c1718(void* p);
-extern void func_ov006_020c1164(void* t, int a1, void* a2);
-extern int func_ov006_020f7b90(void);
-extern int func_ov006_020c16b4(void* c);
-extern void func_ov006_020c0d68(void* c);
-extern void func_ov004_020b0a54(int a);
-extern void func_ov004_020ad79c(int a, int b);
-extern void func_ov004_020adb1c(int a);
-extern void func_ov006_020c0c80(void* c);
 extern void func_ov004_020b65e4(void);
 extern void func_ov006_020c19d0(void* c);
-extern void func_ov006_020f7740(void);
 
 extern char *func_020beb68;
-extern int data_ov006_0213d574;
-extern int data_ov006_0213d564;
-extern int data_ov006_0213d56c;
-extern int data_ov006_0213d570;
 extern int data_ov006_0213d568;
-extern int data_ov006_021424fc;
-extern int data_ov006_02142508;
 
 int func_ov006_020f869c(void* arg)
 {
@@ -31,7 +20,7 @@ int func_ov006_020f869c(void* arg)
     switch (*(s16*)(c + 0x60a8)) {
     case 1:
         {
-            s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)c + 0x60a8));
             (*p)++;
         }
         if (c[0xc4] == 0) {
@@ -46,7 +35,7 @@ int func_ov006_020f869c(void* arg)
             if (func_ov006_020f7b10() == 0) {
                 *(s16*)(c + 0x60ae) = 0;
                 {
-                    s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                    s16* p = (s16*)(((int)c + 0x60a8));
                     (*p)++;
                 }
             }
@@ -86,7 +75,7 @@ int func_ov006_020f869c(void* arg)
                                 char *g = func_020beb68;
                                 if (g != 0) {
                                     if (*(int *)(g + 0xb4) > 0)
-                                        *(int *)(((int)g + 0xb4) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                                        *(int *)(((int)g + 0xb4)) -= 1;
                                 }
                             }
                             func_ov006_020c0d68(c + 0x4f38);
@@ -100,7 +89,7 @@ int func_ov006_020f869c(void* arg)
                             }
                             c[0xc3] = 0;
                             {
-                                s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                                s16* p = (s16*)(((int)c + 0x60a8));
                                 (*p)++;
                             }
                         }
@@ -109,7 +98,7 @@ int func_ov006_020f869c(void* arg)
                             char *g = func_020beb68;
                             if (g != 0) {
                                 if (*(int *)(g + 0xb4) < 0x270f)
-                                    *(int *)(((int)g + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+                                    *(int *)(((int)g + 0xb4)) += 1;
                                 if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
                                     *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                             }
@@ -125,7 +114,7 @@ int func_ov006_020f869c(void* arg)
                         }
                         c[0xc3] = 0;
                         {
-                            s16* p = (s16*)(((int)c + 0x60a8) & 0xFFFFFFFFFFFFFFFF);
+                            s16* p = (s16*)(((int)c + 0x60a8));
                             (*p)++;
                         }
                     }

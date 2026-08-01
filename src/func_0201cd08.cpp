@@ -1,14 +1,13 @@
 //cpp
+#include "types.h"
 extern "C" {
-typedef unsigned char u8;
-typedef short s16;
 extern void func_0201eaac(void);
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 extern void func_0201d418(int a, int b);
-extern void func_0201d6a0(int a, int b);
+extern void Message_DrawCenteredLine(int a, int b);
 extern u8 data_0209d660;
 extern u8 data_0209d668;
 extern u8 data_0209d6a8;
@@ -32,8 +31,8 @@ void func_0201cd08(int arg)
     func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
     data_0209d6d4 = 0x293;
     data_0209d6a8 = data_0209d6a8 << 1;
-    func_0201d6a0(0x285, 0xa);
+    Message_DrawCenteredLine(0x285, 0xa);
     data_0209d6d4 = data_0209d6d4 + 1;
-    func_0201d6a0(0x291, 0xa);
+    Message_DrawCenteredLine(0x291, 0xa);
 }
 }

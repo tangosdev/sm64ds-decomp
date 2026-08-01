@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct S8180 {
     char pad0[0x18];
     u32 f18;
@@ -24,10 +23,10 @@ extern struct S8180 data_020a8180;
 extern char data_020a8780;
 extern struct S6134 data_020a6134;
 
-extern u32 IRQ_Disable(void);
-extern void IRQ_Restore(u32);
+extern u32 _ZN3IRQ7DisableEv(void);
+extern void _ZN3IRQ7RestoreEj(u32);
 
-void func_020580f0(void *p);
+void OS_SleepThread(void *p);
 void func_02059f58(int a);
 int func_02060b64(char *p);
 void func_0206090c(void);
@@ -41,15 +40,15 @@ void func_02060918(u32 a0, u32 a1, u32 a2, u32 a3, u32 a4, u32 a5, int a6)
     char *cb = &data_020a8780;
     u32 mask;
 
-    mask = IRQ_Disable();
+    mask = _ZN3IRQ7DisableEv();
     while (t->f34 & 4) {
-        func_020580f0(&t->fd4);
+        OS_SleepThread(&t->fd4);
     }
     {
-        u32 *p34 = (u32 *)(((int)t + 0x34) & 0xFFFFFFFFFFFFFFFF);
+        u32 *p34 = (u32 *)(((int)t + 0x34));
         *p34 |= 4;
     }
-    IRQ_Restore(mask);
+    _ZN3IRQ7RestoreEj(mask);
 
     t->f24 = a0;
     t->f18 = a1;

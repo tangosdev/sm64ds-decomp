@@ -1,8 +1,6 @@
+#include "types.h"
 extern int _ZN4cstd6strcmpEPKcS1_(const char* a, const char* b);
 extern void Crash(void);
-
-typedef unsigned int u32;
-
 typedef struct {
     const char* name;
     char pad[0xc];

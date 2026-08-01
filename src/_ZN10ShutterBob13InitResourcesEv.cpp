@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10ShutterBob13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "ShutterBob.h"
 class Actor {};
 class MeshColliderBase {
 public:
@@ -8,8 +11,9 @@ public:
 extern int func_ov002_020bad10(void *c, void **f);
 extern int data_ov014_021145c4;
 
-extern "C" int _ZN10ShutterBob13InitResourcesEv(char *c) {
-    int r4 = func_ov002_020bad10(c, (void **)&data_ov014_021145c4);
-    ((MeshColliderBase *)(c + 0x124))->Enable((Actor *)c);
+int ShutterBob::InitResources()
+{
+    int r4 = func_ov002_020bad10(((char *)this), (void **)&data_ov014_021145c4);
+    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Enable((Actor *)((char *)this));
     return r4;
 }

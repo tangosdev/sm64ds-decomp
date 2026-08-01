@@ -24,7 +24,7 @@ extern "C" void func_ov002_020b92c4(void* c) {
         int w2 = (int)(((long long)v2 * 0xfa0 + 0x800) >> 12);
         *(int*)((char*)c + 0x80) = w2;
         // materialized base for halfword at offset >= 0x100
-        short* p = (short*)(((int)c + 0x3c8) & 0xFFFFFFFFFFFFFFFF);
+        short* p = (short*)(((int)c + 0x3c8));
         *p = *p + 0x2000;
     } else {
         int ret = ApproachLinear(*(int*)((char*)c + 0x84), 0xfa0, 0x199);

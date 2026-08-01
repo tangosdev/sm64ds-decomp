@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void PrepareVsMode(void);
 extern void LoadLevelNoReturn(u32 levelID, u32 arg1, u32 arg2, u32 arg3);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);

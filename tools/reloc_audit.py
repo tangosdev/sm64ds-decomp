@@ -61,8 +61,7 @@ def build_name_index():
     fallback used only for symbols whose address is NOT encoded in the name."""
     idx = {}
     for module, path in R.iter_symbol_files(include_itcm_dtcm=True):
-        for (mod_addr), name in R.load_syms_file(path, module).items():
-            mod, addr = mod_addr
+        for name, (mod, addr) in R.iter_syms_pairs(path, module):
             idx.setdefault(name, (mod, addr))
     return idx
 
@@ -162,7 +161,12 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
     candidate_path = pathlib.Path(candidate) if candidate is not None else None
     if candidate_path is not None:
         try:
-            sources = [(candidate_path.read_text(encoding="utf-8"), candidate_path)]
+            # errors="replace": the text is only used for the //cpp sniff -- mwccarm reads
+            # the file itself -- and a stray non-UTF-8 byte must not raise UnicodeDecodeError
+            # and take down a verdict. (Windows cp1252 round-trips have corrupted repo JSONL
+            # this way before; do not narrow this to a bare OSError catch.)
+            sources = [(candidate_path.read_text(encoding="utf-8", errors="replace"),
+                        candidate_path)]
         except OSError:
             sources = []
     else:
@@ -177,7 +181,11 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                 fd, tmp = tempfile.mkstemp(suffix=suf)
                 os.close(fd)
                 cfile = pathlib.Path(tmp)
-                cfile.write_text(src)
+                # encoding is not optional here: 42 files in src/ contain non-ASCII
+                # (arrows and box characters in codegen comments), and on Windows the
+                # default is cp1252, which raises UnicodeEncodeError and degrades the
+                # file's verdict to ERROR - which prepush_linkcheck treats as blocking.
+                cfile.write_text(src, encoding="utf-8")
             else:
                 cfile = source_path
             try:

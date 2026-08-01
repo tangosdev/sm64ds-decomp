@@ -48,7 +48,7 @@ int func_ov065_02116744(char *c)
 
     pl = _ZN5Actor22ClosestNonVanishPlayerEv(c);
     if (pl != 0) {
-        pos = (int *)(((int)pl + 0x5c) & 0xffffffffffffffffLL);
+        pos = (int *)(((int)pl + 0x5c));
         dp[0] = pos[0];
         dp[1] = pos[1];
         dp[2] = pos[2];

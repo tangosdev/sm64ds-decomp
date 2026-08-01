@@ -141,6 +141,7 @@ UkikiThief_SpawnInfo kind:data(any) addr:0x02115b90
 UkikiStar_SpawnInfo kind:data(any) addr:0x02115bac ambiguous
 data_ov030_02115bc8 kind:data(any) addr:0x02115bc8
 _ZTV13RollingLogTtm kind:data(any) addr:0x02115bfc
+_ZTV7daMky_c kind:data(any) addr:0x02115bfc
 data_ov030_02115c80 kind:bss addr:0x02115c80
 data_ov030_02115c88 kind:bss addr:0x02115c88
 data_ov030_02115c90 kind:bss addr:0x02115c90

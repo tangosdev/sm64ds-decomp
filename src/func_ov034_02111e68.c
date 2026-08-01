@@ -74,7 +74,7 @@ void func_ov034_02111e68(char *c)
             *((int *) (c + 0x9c)) = -0x4000;
           }
         }
-        (*(int *)(((int)data_0209f318 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~8;
+        (*(int *)(((int)data_0209f318 + 0x154))) &= ~8;
         *((unsigned char *) (c + 0x8e1)) = 0;
         func_ov034_021125b8(c, 4);
       }

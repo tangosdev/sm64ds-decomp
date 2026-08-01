@@ -1,9 +1,5 @@
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int Fix12;
-extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 anim, int a, Fix12 b, u32 d);
+#include "types.h"
+extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *c, u32 anim, int a, Fix12i b, u32 d);
 extern int _ZNK6Player14GetBodyModelIDEjb(void *c, u32 id, int b);
 extern int RandomIntInternal(int *seed);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void *v);

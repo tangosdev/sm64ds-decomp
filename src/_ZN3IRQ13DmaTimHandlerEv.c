@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
+#include "types.h"
 extern void _ZN3IRQ11DisableIRQsEj(u32 mask);
 typedef struct
 {
@@ -25,7 +24,7 @@ void _ZN3IRQ13DmaTimHandlerEv(u32 idx)
   {
     fn(data_020a60c4[idx].arg);
   }
-  *(volatile u32 *)(((int)data_023c0000 + 0x3ff8) & 0xFFFFFFFFFFFFFFFF) |= mask;
+  *(volatile u32 *)(((int)data_023c0000 + 0x3ff8)) |= mask;
   if (data_020a60c4[idx].flag != 0)
   {
     return;

@@ -13,7 +13,7 @@ void _ZN8CapEnemy15RespawnIfHasCapEv(void* self);
 void _ZN5Actor19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 int func_ov084_021298d0(char* c){
     int r4 = _ZN5Enemy11UpdateDeathER12WithMeshClsn(c, c + 0x1b4);

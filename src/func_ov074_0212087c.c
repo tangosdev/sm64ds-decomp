@@ -1,10 +1,6 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
-#define LI(v) ((int)(((long long)(v)) & 0xFFFFFFFFFFFFFFFFLL))
+#include "types.h"
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define LI(v) ((int)(((long long)(v))))
 
 extern char* _ZN5Actor13ClosestPlayerEv(void* self);
 extern short data_02082214[];

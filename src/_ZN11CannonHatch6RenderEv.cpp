@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11CannonHatch6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "CannonHatch.h"
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
 struct Sub {
@@ -9,12 +12,14 @@ struct Obj {
   char pad[0xd4];
   Sub sub;
 };
-extern "C" int _ZN11CannonHatch6RenderEv(Obj* c){
-  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)c + 8) & 0xff) == 1)
+
+int CannonHatch::Render()
+{
+  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)&mParam) & 0xff) == 1)
     return 1;
-  if (*(unsigned char*)((char*)c + 0x32e) != 0)
+  if (*(unsigned char*)((char*)&unk_32e) != 0)
     return 1;
-  Sub* b = &c->sub;
+  Sub* b = &((Obj*)this)->sub;
   b->m14(0);
   return 1;
 }

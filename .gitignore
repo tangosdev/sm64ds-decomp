@@ -61,6 +61,18 @@ tools/claims_key.txt
 tools/claims_handle.txt
 /scratchpad/
 
+# ML / LoRA training work: datasets are derived from the match corpus and the
+# checkpoints are large binaries. Local-only, and never near a match PR.
+/tools/dataset/
+/notes/training/
+/notes/training.zip
+/unsloth_compiled_cache/
+/out/
+/wsl-bridge/
+
+# local MCP server wiring (machine-specific, may hold endpoints or tokens)
+/.mcp.json
+
 # generated Chaos Viewer data: the shared copy lives on the chaos-data branch
 # (raw URL in tangos.json / chaosviewer.config.json); regenerate locally on
 # demand with tools/chaos_db_ci.py. Never commit it to main - it goes stale and

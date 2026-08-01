@@ -5,7 +5,7 @@ void func_ov006_020e2dbc(char *c)
     if (*(unsigned char*)(c + 0x4ee7) == 0) return;
     if (*(unsigned short*)(c + 0x4ee0) != 0)
     {
-        *(unsigned short *)(((int)c + 0x4ee0) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(unsigned short *)(((int)c + 0x4ee0)) -= 1;
         if ((short)*(unsigned short*)(c + 0x4ee0) <= 0)
             *(unsigned short*)(c + 0x4ee0) = 0;
         return;
@@ -27,7 +27,7 @@ void func_ov006_020e2dbc(char *c)
     }
     if (*(unsigned char*)(c + 0x4ee6) != 0)
         _ZN5Sound12PlayBank2_2DEj(0x1d7);
-    (*(unsigned char *)(((int)c + 0x4ee6) & 0xFFFFFFFFFFFFFFFF))++;
+    (*(unsigned char *)(((int)c + 0x4ee6)))++;
     *(int*)(c + 0x4eb0) = 0x80000;
     *(int*)(c + 0x4eb4) = 0xb0000;
     *(unsigned char*)(c + 0x4ee4) = 0;

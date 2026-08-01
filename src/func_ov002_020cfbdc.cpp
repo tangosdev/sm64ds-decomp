@@ -1,12 +1,16 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020cfbdc
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_ClsnResult.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_ov002_020d0948(void *self);
 extern void _ZN11RaycastLineC1Ev(void *self);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, void *a, void *b, void *act);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
@@ -58,9 +62,9 @@ extern "C" int func_ov002_020cfbdc(char *self)
     _ZN11RaycastLineC1Ev(rl);
     _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &pts[1], &pts[2], self);
     if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
-        *(int *)((int)(self + 0x5c) & 0xFFFFFFFFFFFFFFFFLL) += r5 * 0x60;
-        *(int *)((int)(self + 0x60) & 0xFFFFFFFFFFFFFFFFLL) -= 0x80000;
-        *(int *)((int)(self + 0x64) & 0xFFFFFFFFFFFFFFFFLL) += r5 * 0x60;
+        *(int *)((int)(self + 0x5c)) += r5 * 0x60;
+        *(int *)((int)(self + 0x60)) -= 0x80000;
+        *(int *)((int)(self + 0x64)) += r5 * 0x60;
         _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_021101b4);
         _ZN11RaycastLineD1Ev(rl);
         return 1;

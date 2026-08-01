@@ -1,14 +1,11 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct V2 {
     int x;
     int z;
 } V2;
 
-extern void func_0203d6d0(V2 *out, V2 *a, V2 *b);
-extern int func_0203d614(V2 *p);
+extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
+extern int Vec2_Len(V2 *p);
 extern int func_0203d434(V2 *p);
 extern void func_0203d630(V2 *p, int scale);
 extern void func_0203d480(V2 *out, V2 *in);
@@ -19,7 +16,7 @@ extern void func_ov006_02111e48(char *c);
 extern void func_ov006_021128fc(char *c);
 extern void func_ov006_02112ad8(char *c);
 
-#define LAUNDER(p) ((int)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define LAUNDER(p) ((int)((long long)(int)(p)))
 
 void func_ov006_02113f1c(char *c)
 {
@@ -87,8 +84,8 @@ void func_ov006_02113f1c(char *c)
         *(int *)LAUNDER(c + 0x11c) += 1;
     } else {
         if ((*(int *)(*(char **)(c + 4) + 8) & 0xff) != 0) {
-            func_0203d6d0(&d1, (V2 *)(c + 8), (V2 *)(c + 0x114));
-            t = func_0203d614(&d1) < 0x8000;
+            Vec2_Sub(&d1, (V2 *)(c + 8), (V2 *)(c + 0x114));
+            t = Vec2_Len(&d1) < 0x8000;
             if (t != 0) {
                 *(int *)LAUNDER(c + 0x11c) += 1;
                 goto after2;
@@ -145,7 +142,7 @@ bounce:
         }
     }
     if (*(int *)(c + 0x20) != 0 || *(int *)(c + 0x24) != 0) {
-        spd = func_0203d614((V2 *)(c + 0x20));
+        spd = Vec2_Len((V2 *)(c + 0x20));
         if (spd >= 0x8000)
             spd = 0x8000;
         if (func_0203d434((V2 *)(c + 0x20)) != 0)
@@ -171,9 +168,9 @@ bounce:
                 *(u8 *)(c + 0x129) = 1;
         }
     }
-    mag = func_0203d614((V2 *)(c + 0x20));
-    func_0203d6d0(&d2, (V2 *)(c + 8), (V2 *)(c + 0x10));
-    dist = func_0203d614(&d2);
+    mag = Vec2_Len((V2 *)(c + 0x20));
+    Vec2_Sub(&d2, (V2 *)(c + 8), (V2 *)(c + 0x10));
+    dist = Vec2_Len(&d2);
     if (*(u8 *)(c + 0xcd) != 0)
         return;
     if (mag < dist)

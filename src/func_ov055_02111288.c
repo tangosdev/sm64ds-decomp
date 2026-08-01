@@ -1,6 +1,6 @@
 int func_ov055_02111288(char *dst, char *src)
 {
-    int *vec = (int *)(((int)src + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int *vec = (int *)(((int)src + 0x5c));
     int x = vec[0];
     int z = vec[2];
     int y = vec[1];

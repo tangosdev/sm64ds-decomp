@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
+#include "types.h"
 extern short data_02082214[];
 extern int func_ov007_020c3ba8(int);
 extern int _ZN4cstd3divEii(int, int);
@@ -59,13 +57,13 @@ void func_ov007_020ca308(char *self, char *t, int i)
                     p = ((int *)p)[j];
                     p = *(int *)p;
                     p = ((int *)p)[cur];
-                    *(int *)((p + 0x18) & 0xFFFFFFFFFFFFFFFFLL) += val;
+                    *(int *)((p + 0x18)) += val;
                 } else if (i == 1) {
                     int p = *(int *)(*(int *)(t + 4) + 8);
                     p = ((int *)p)[cur];
                     p = *(int *)p;
                     p = ((int *)p)[j];
-                    *(int *)((p + 0x18) & 0xFFFFFFFFFFFFFFFFLL) += val;
+                    *(int *)((p + 0x18)) += val;
                 }
                 j++;
                 ph += step;

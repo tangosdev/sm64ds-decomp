@@ -1,13 +1,17 @@
-extern void _ZN12WithMeshClsnD1Ev(void *);
+// @symbol _ZN8BookShotD1Ev
+/* recovered: named members + shared header, vtable identified, globals resolved, declarations from a shared header */
+#include "decl_Model.h"
+#include "decl_ModelAnim.h"
+#include "decl_ShadowModel.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified, globals resolved */
+/* resolved: VT0 = _ZTV8BookShot */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
-extern void _ZN11ShadowModelD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN9ModelAnimD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern int VT0[];
 int *_ZN8BookShotD1Ev(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV8BookShot;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x25c);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x21c);
     _ZN11ShadowModelD1Ev((char *)t + 0x1c4);

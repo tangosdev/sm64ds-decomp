@@ -1,11 +1,14 @@
 //cpp
+// @symbol func_ov098_0213b6e0
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 extern void *_ZN5Actor10FindWithIDEj(unsigned);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *thiz, const void *v, unsigned, int, unsigned, unsigned, unsigned);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned, int, int, int);
 extern int func_ov098_0213b63c(char *c);
 
-struct Vector3 { int x, y, z; };
+
 
 int func_ov098_0213b6e0(char *c) {
     Vector3 vec;

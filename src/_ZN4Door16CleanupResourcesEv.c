@@ -1,7 +1,7 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+extern int data_ov100_02148934[];
 int _ZN4Door16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov100_02148934);
     return 1;
 }

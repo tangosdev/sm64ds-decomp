@@ -2,7 +2,7 @@
 extern "C" {
 extern void ApproachAngle(void* p, short a, int b, int cc, int d);
 extern int AngleDiff(int a, int b);
-extern void func_ov062_02116cd8(void* c, void* p);
+extern void Chuckya_ChangeState(void* c, void* p);
 extern int data_ov062_0211dee0;
 }
 
@@ -15,7 +15,7 @@ extern "C" int func_ov062_021167c0(char* c){
     }
     if (*(unsigned short*)(c + 0x100) == 0) {
         *(short*)(c + 0x3e8) = 0x1e;
-        func_ov062_02116cd8(c, &data_ov062_0211dee0);
+        Chuckya_ChangeState(c, &data_ov062_0211dee0);
     }
     return 1;
 }

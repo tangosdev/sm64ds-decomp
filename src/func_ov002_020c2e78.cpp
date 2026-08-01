@@ -12,7 +12,7 @@ void func_ov002_020c2e78(char* c){
     return;
   }
   *(unsigned char*)(c+0x6e8) = w;
-  unsigned short *p = (unsigned short*)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFF);
+  unsigned short *p = (unsigned short*)(((int)c + 0x6ce));
   *p |= 8;
 }
 }

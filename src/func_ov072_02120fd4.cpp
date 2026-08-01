@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-int func_020383fc(void* c);
+int WithMeshClsn_UpdateContinuous_Veneer(void* c);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
 void* _ZNK12WithMeshClsn14GetFloorResultEv(void* c);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, int* out);
@@ -14,7 +14,7 @@ void func_ov072_02120fd4(int* self, void* clsn)
     int n1[3];
     int b = (int)((self[0xb0/4] & 0x4000) != 0);
     if (b != 0) return;
-    func_020383fc(clsn);
+    WithMeshClsn_UpdateContinuous_Veneer(clsn);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn14GetFloorResultEv(clsn)+4, n0);
         if (n0[1] != 0) {

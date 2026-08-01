@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN5Actor10FindWithIDEj
+/* recovered: named members + shared header */
+#include "Actor.h"
 extern "C" {
 struct Actor;
 extern struct Actor* data_0209b468;

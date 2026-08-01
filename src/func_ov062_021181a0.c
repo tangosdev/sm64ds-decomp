@@ -12,7 +12,7 @@ void func_ov062_021181a0(char *c) {
     }
     if (_ZN9Animation8FinishedEv(c + 0x350) == 0) return;
     {
-        unsigned short *p = (unsigned short*)(((int)c + 0x3c4) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *p = (unsigned short*)(((int)c + 0x3c4));
         *p = (unsigned short)(*p + 1);
     }
     {

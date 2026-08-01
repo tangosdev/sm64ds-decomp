@@ -33,7 +33,7 @@ int func_ov084_021298d0(char* c){
         }
     }
     /* u64-mask launder: force add r2,r5,#0x198 materialization (sibling ov084 idiom) */
-    *(int*)(((int)c + 0x198) & 0xFFFFFFFFFFFFFFFFULL) |= 0x20000;
+    *(int*)(((int)c + 0x198)ULL) |= 0x20000;
     _ZN12CylinderClsn5ClearEv(c + 0x180);
     _ZN12CylinderClsn6UpdateEv(c + 0x180);
 

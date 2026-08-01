@@ -252,6 +252,7 @@ data_ov022_02114434 kind:data(any) addr:0x02114434
 data_ov022_02114440 kind:data(any) addr:0x02114440
 VolcanoFire_SpawnInfo kind:data(any) addr:0x02114458 ambiguous
 _ZTV13RollingLogLll kind:data(any) addr:0x0211447c
+_ZTV21daObj_volcanoCannon_c kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous
 data_ov022_02114500 kind:bss addr:0x02114500
 data_ov022_02114508 kind:bss addr:0x02114508

@@ -1,2 +1,2 @@
-extern int A[]; extern char B[];
-void func_0202b090(int a, int b) { A[0] = a; B[0] = b; }
+extern int data_0209f330[]; extern char data_0209f2d0[];
+void func_0202b090(int a, int b) { data_0209f330[0] = a; data_0209f2d0[0] = b; }

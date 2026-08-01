@@ -15,7 +15,7 @@ extern "C" void func_ov084_0212aab0(char *c)
     }
     if (((WithMeshClsn *)(c + 0x1b4))->IsOnGround()) {
         *(int *)(c + 0x434) = 0;
-        int *p = (int *)(((int)c + 0x198) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)c + 0x198));
         *p &= ~4;
     } else {
         ApproachLinear(*(short *)(c + 0x94), *(short *)(c + 0x45c), 0x800);

@@ -1,13 +1,16 @@
-extern void *_ZN9ActorBasenwEj(unsigned);
-extern void _ZN8PlatformC2Ev(void *);
-extern int VT0[];
-extern int VT1[];
+// @symbol RickshawPlatformBs_Spawn
+/* recovered: vtable identified, declarations from a shared header */
+#include "decl_ActorBase.h"
+#include "decl_Platform.h"
+#include "decl_common.h"
+/* recovered: vtable identified */
+/* vtable identified: VT0 = _ZTV17daObjKm3_Kuruma_c */
 int *RickshawPlatformBs_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(800);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)VT0;
+        p[0] = (int)_ZTV17daObjKm3_Kuruma_c;
         p[0] = (int)VT1;
     }
     return p;

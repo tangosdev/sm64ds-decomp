@@ -14,7 +14,7 @@ extern "C" void func_ov002_020af684(char* self, int target, char* player){
         if (found == 0)
             break;
         if (target == *(int*)((char*)found + 0x384)) {
-            (*(int *)(((int)found + 0x390) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(int *)(((int)found + 0x390)))--;
             break;
         }
     }

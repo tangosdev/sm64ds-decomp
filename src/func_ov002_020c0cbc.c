@@ -16,7 +16,7 @@ int func_ov002_020c0cbc(char* c){
     case 2: t = 0; break;
   }
   if(*(int*)(c+0x558) <= t){
-    (*(unsigned short *)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFF)) |= 1;
+    (*(unsigned short *)(((int)c + 0x6ce))) |= 1;
     return 1;
   }
   return 0;

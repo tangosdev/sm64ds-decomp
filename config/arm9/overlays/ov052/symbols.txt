@@ -102,6 +102,7 @@ data_ov052_021125ac kind:data(any) addr:0x021125ac
 data_ov052_021125b8 kind:data(any) addr:0x021125b8
 SquarePathLift_SpawnInfo kind:data(any) addr:0x021125cc ambiguous
 _ZTV14SquarePathLift kind:data(any) addr:0x021125f0
+_ZTV14daObjEmmYuka_c kind:data(any) addr:0x021125f0
 data_ov052_02112610 kind:data(any) addr:0x02112610 ambiguous
 data_ov052_02112680 kind:bss addr:0x02112680
 data_ov052_02112688 kind:bss addr:0x02112688

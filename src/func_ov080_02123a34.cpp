@@ -1,10 +1,14 @@
 //cpp
-struct V16 { short x, y, z; };
-struct V3 { int x, y, z; };
+// @symbol func_ov080_02123a34
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+/* recovered: shared common types */
+#include "common.h"
+
+
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void*);
-extern int _ZNK9Animation12WillHitFrameEi(void*, int);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, V3*, V16*, int, int);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, Vector3*, Vector3_16*, int, int);
 extern int _ZN5Actor13DistToCPlayerEv(void*);
 extern void func_0201267c(unsigned int, void*);
 extern int _ZN9Animation8FinishedEv(void*);
@@ -18,15 +22,15 @@ extern "C" void func_ov080_02123a34(char* c)
 {
     _ZN9Animation7AdvanceEv(c + 0x124);
     if (_ZNK9Animation12WillHitFrameEi(c + 0x124, 0xa)) {
-        V16 v16;
-        V3 pos;
+        Vector3_16 v16;
+        Vector3 pos;
         unsigned short ax, ay;
         void* a;
         int d;
         short s;
         int idx;
         int px, py, pz;
-        V16* pAng = &v16;
+        Vector3_16* pAng = &v16;
 
         ax = *(unsigned short*)(c + 0x8c);
         ay = *(unsigned short*)(c + 0x8e);

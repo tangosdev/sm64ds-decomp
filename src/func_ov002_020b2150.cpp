@@ -1,6 +1,11 @@
 //cpp
+// @symbol func_ov002_020b2150
+// recovered name: VirtualDoor_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daChScene_c::Kill - recovered from vtable slot identity */
 extern "C" {
-extern void func_ov002_020b13e0(void*);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 void func_ov002_020b2150(char* c){

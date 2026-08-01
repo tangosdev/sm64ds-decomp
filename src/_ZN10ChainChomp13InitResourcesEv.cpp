@@ -1,21 +1,22 @@
 //cpp
+// @symbol _ZN10ChainChomp13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "ChainChomp.h"
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, int t, unsigned int a, unsigned int b);
-extern "C" void func_ov014_02111ebc(void *c, int i);
 extern "C" void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 
-extern char data_ov014_02114968;
-extern char data_ov014_02114978;
 extern char data_ov014_02114980;
 extern char data_ov014_02114970;
-extern int data_ov014_02114700[];
 
-extern "C" int _ZN10ChainChomp13InitResourcesEv(void *thiz)
+int ChainChomp::InitResources()
 {
-    unsigned char *c = (unsigned char *)thiz;
+    unsigned char *c = (unsigned char *)((void *)this);
     void *f;
         int i;
     unsigned char *p;
@@ -89,11 +90,11 @@ extern "C" int _ZN10ChainChomp13InitResourcesEv(void *thiz)
     *(unsigned char *)((unsigned char *)spawned + 0x320) = (unsigned char)one;
     *(int *)(c + 0x60c) = 0;
 
-    px = (int *)(((long long)(int)(c + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    px = (int *)(((long long)(int)(c + 0x5c)));
     *px = *px + 0xc8000;
-    py = (int *)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
+    py = (int *)(((long long)(int)(c + 0x60)));
     *py = *py + 0xc8000;
-    pz = (int *)(((long long)(int)(c + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+    pz = (int *)(((long long)(int)(c + 0x64)));
     *pz = *pz + 0xc8000;
 
     *(int *)(c + 0x5f8) = 0x50000;

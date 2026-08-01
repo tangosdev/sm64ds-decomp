@@ -10,7 +10,7 @@ extern int data_0209f3e8[];
 extern unsigned char data_ov001_020ad62c[];
 extern int* data_ov001_020ad634[];
 
-#define LAUNDER_U8_PTR(p) ((unsigned char*)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER_U8_PTR(p) ((unsigned char*)(((long long)(int)(p))))
 
 void func_ov001_020aadac(void) {
     char* fp = data_0209f394;

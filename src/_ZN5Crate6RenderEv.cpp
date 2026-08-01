@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN5Crate6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Crate.h"
 struct Sub {
   virtual void v0();
   virtual void v1();
@@ -7,13 +10,15 @@ struct Sub {
   virtual void v4();
   virtual void m5(int);
 };
-extern "C" int _ZN5Crate6RenderEv(char* c){
-  if(*(int*)(c+0x560) == 6) return 1;
+
+int Crate::Render()
+{
+  if(unk_560 == 6) return 1;
   {
-    int b = (int)((*(int*)(c+0xb0) & 0x40000) != 0);
+    int b = (int)((unk_0b0 & 0x40000) != 0);
     if(b) return 1;
   }
-  Sub* o = (Sub*)(c+0xd4);
+  Sub* o = (Sub*)((char*)&mModel);
   o->m5(0);
   return 1;
 }

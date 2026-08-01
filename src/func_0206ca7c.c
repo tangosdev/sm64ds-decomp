@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 struct Ring
 {
     u16 head;

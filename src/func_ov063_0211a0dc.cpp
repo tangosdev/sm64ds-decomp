@@ -30,7 +30,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
     if (*(s32*)(c + 0x1a4) & 0x207e0) {
         void* found;
 
-        *(u32*)(int)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
         found = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
         if (found) {
             *(void**)(c + 0x488) = found;
@@ -39,7 +39,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
                 int isBf = (int)(*(u16*)((char*)found + 0xc) == 0xbf);
                 if (isBf) {
                     if (*(s32*)((char*)found + 8) == 3) {
-                        u16* p = (u16*)(((long long)(int)(c + 0x5d4)) & 0xFFFFFFFFFFFFFFFFLL);
+                        u16* p = (u16*)(((long long)(int)(c + 0x5d4)));
                         *p |= 0x40;
                     }
                 }
@@ -57,7 +57,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
         return 0;
 
     if (*(u8*)((char*)r4 + 0x6f9) != 0) {
-        *(u32*)(int)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
         *(void**)(c + 0x488) = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
         return 1;
     }
@@ -101,7 +101,7 @@ found_kind:
             void* found2;
             s16 v[3];
 
-            *(u32*)(int)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+            *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
             found2 = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
             if (!found2)
                 goto ret0;
@@ -113,7 +113,7 @@ found_kind:
             func_020ada40(c, v, found2, 0);
 
             {
-                s16* ap = (s16*)(int)(((long long)(int)(c + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL);
+                s16* ap = (s16*)(int)(((long long)(int)(c + 0x8e)));
                 *ap = (s16)(*ap + 0x8000);
             }
             return 1;

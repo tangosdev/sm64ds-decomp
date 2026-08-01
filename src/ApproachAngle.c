@@ -5,7 +5,7 @@ int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep)
     int diff;
     short c;
     c = *cur;
-    diff = (int)(((long long)(short)(target - c)) & 0xFFFFFFFFFFFFFFFFLL);
+    diff = (int)(((long long)(short)(target - c)));
     if (c != target) {
         int step = (short)__aeabi_idiv(diff, divisor);
         if (step > maxStep || step < -maxStep) {

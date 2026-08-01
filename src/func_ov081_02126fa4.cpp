@@ -10,7 +10,7 @@ int func_ov081_02126fa4(char *self)
     int b;
     b = (*(int *)(self + 0xb0) & 0x40000) != 0;
     if (b) {
-        int *sv = (int *)(((long long)(int)(*(char **)(self + 0xd0) + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *sv = (int *)(((long long)(int)(*(char **)(self + 0xd0) + 0x5c)));
         *(int *)(self + 0x5c) = sv[0];
         *(int *)(self + 0x60) = sv[1];
         *(int *)(self + 0x64) = sv[2];

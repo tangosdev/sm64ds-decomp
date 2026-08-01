@@ -1,7 +1,7 @@
 #include "types.h"
 
 
-extern Fix12i func_0203d614(const Vector3* v);
+extern Fix12i Vec2_Len(const Vector3* v);
 extern int func_0203d434(Fix12i* in);
 extern void func_0203d630(int *p, int m);
 extern int RandomIntInternal(int* seed);
@@ -30,7 +30,7 @@ void func_ov006_02114c04(char* o)
         if (*(unsigned char*)(b + 0x59bc)) {
             L(b + 0x59a4) += *(int*)(b + 0x59ac);
             L(b + 0x59a8) += *(int*)(b + 0x59b0);
-            d = func_0203d614((const Vector3*)v) * 7 / 8;
+            d = Vec2_Len((const Vector3*)v) * 7 / 8;
             if (func_0203d434((Fix12i*)v))
                 func_0203d630((int*)v, d);
             N(b + 0x59b4)++;

@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 /* ExpandingHeap::VDeallocateAll() at 0x0203c4b0 -- Heap vtable slot.
  * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14),
  * passing the InvokeDeallocate trampoline as the visitor. */
-
-typedef unsigned int u32;
-
 class ExpandingHeapAllocator
 {
 public:

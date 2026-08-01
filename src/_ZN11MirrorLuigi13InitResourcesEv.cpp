@@ -1,36 +1,27 @@
 //cpp
+// @symbol _ZN11MirrorLuigi13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "MirrorLuigi.h"
 struct M48 { int w[12]; };
 
-extern "C" void *Model_LoadFile(void *fp);
-extern "C" void ModelBase_SetFile(void *self, void *bmd, int a, int b);
-extern "C" void func_02016acc(void *self, int v);
 extern "C" void func_02016b24(void *self, int v);
-extern "C" void TextureSequence_Prepare(void *bmd, void *btp);
-extern "C" void TextureSequence_SetFile(void *self, void *btp, int a, int fix, unsigned int b);
-extern "C" int ShadowModel_InitCylinder(void *self);
-extern "C" void *Animation_LoadFile(void *fp);
-extern "C" void ModelAnim_SetAnim(void *self, void *bca, int a, int fix, unsigned int b);
 extern "C" void Vec3_Asr(void *d, void *s, int sh);
 extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void *m, int angY);
-extern "C" void func_ov055_021112c4(void *c, void *p, int a2);
 
 extern void *data_ov002_0210ebb8;
 extern void *data_ov002_0210eb20;
 extern void *data_ov002_0210e8d0;
 extern void *data_ov002_0210ebd8;
-extern void *data_ov002_0210eaa0;
 extern int data_020a0e68;
 extern unsigned char data_0209f250;
 extern int data_0209f394[];
-extern void *data_ov055_02111b70;
-extern int data_ov055_02111a90;
-extern int data_ov055_02111b68;
-extern int data_ov055_02111b6c;
 
-extern "C" int _ZN11MirrorLuigi13InitResourcesEv(void *thiz)
+int MirrorLuigi::InitResources()
 {
-    unsigned char *c = (unsigned char *)thiz;
+    unsigned char *c = (unsigned char *)((void *)this);
     int t[3];
 
     ModelBase_SetFile(c + 0xd4, Model_LoadFile(&data_ov002_0210ebb8), 1, -1);

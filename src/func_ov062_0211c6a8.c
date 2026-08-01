@@ -32,9 +32,9 @@ void func_ov062_0211c6a8(char* c)
             *(int*)(c + 0x450) = data_020a0e68[9];
             *(int*)(c + 0x454) = data_020a0e68[10];
             *(int*)(c + 0x458) = data_020a0e68[11];
-            *(int*)(((int)c + 0x450) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-            *(int*)(((int)c + 0x454) & 0xFFFFFFFFFFFFFFFF) <<= 3;
-            *(int*)(((int)c + 0x458) & 0xFFFFFFFFFFFFFFFF) <<= 3;
+            *(int*)(((int)c + 0x450)) <<= 3;
+            *(int*)(((int)c + 0x454)) <<= 3;
+            *(int*)(((int)c + 0x458)) <<= 3;
             if (*(int*)(c + 0x468) == 1)
             {
                 Matrix4x3_FromTranslation(data_020a0e68, -0xd000, 0x3000, -0x4000);

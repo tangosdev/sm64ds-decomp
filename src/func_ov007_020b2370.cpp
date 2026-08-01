@@ -5,7 +5,7 @@ void func_ov007_020be9ac(void* a, void* b, void* c);
 void func_ov007_020bbff0(void* c);
 }
 extern char* data_ov007_0210342c;
-#define LAUNDER(x) ((char*)(int)(((long long)(int)(x)) & 0xffffffffffffffffLL))
+#define LAUNDER(x) ((char*)(int)(((long long)(int)(x))))
 
 extern "C" void func_ov007_020b2370(void){
   char* g = *(char**)&data_ov007_0210342c;

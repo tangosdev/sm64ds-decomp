@@ -13,7 +13,7 @@ struct Node* func_0204d8e8(struct List* l, struct Node* n){
       n->prev->next = n->next;
     }
   }
-  int* pCnt = (int*)(((int)l + 4) & 0xFFFFFFFFFFFFFFFF);
+  int* pCnt = (int*)(((int)l + 4));
   *pCnt = *pCnt - 1;
   return n;
 }

@@ -1,3 +1,8 @@
+// @symbol func_02009374
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 /* func_02009374 @ 0x02009374, size 0x60, ARM.
  * Camera member: scans the 12-slot STAR_MARKERS array; for each live marker,
  * computes the squared 3D distance (Fix12, 64-bit) from the camera's ownerPos
@@ -7,9 +12,7 @@
 
 typedef int Fix12i; /* 20.12 fixed point */
 
-struct Vector3 {
-    Fix12i x, y, z;
-};
+
 
 /* Marker actor: only its world position (Actor::pos @ 0x5c) is touched here. */
 struct Actor {
@@ -24,8 +27,6 @@ struct Camera {
 };
 
 extern struct Actor *STAR_MARKERS[12];                  /* 0x0209f40c */
-extern long long Vec3_DistSq(const struct Vector3 *a,   /* 0x0203cf94 */
-                             const struct Vector3 *b);
 
 int func_02009374(struct Camera *self) {
     int i;

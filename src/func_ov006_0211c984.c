@@ -1,21 +1,20 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
+// @symbol func_ov006_0211c984
+// recovered name: dScMgSound_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSound_c::InitResources - recovered from vtable slot identity */
 extern int LoadFile(int handle);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern unsigned func_02054de8(void);
-extern void Deallocate(void *ptr);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_02056374(const void *src, u32 offset, u32 count);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void DecompressLZ16(int src, void *dst);
 extern void func_ov006_020c225c(void *p);
 extern int func_ov006_020c3050(void *p);
 extern void func_ov006_0211c478(void *p);
 extern void func_ov006_0211c080(void *p);
-extern void func_ov004_020b6808(void);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
@@ -34,7 +33,7 @@ int func_ov006_0211c984(void *arg0)
     data_0209d454 |= 4;
     r4 = LoadFile(0x98);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
-    DecompressLZ16(r4, (void *)func_02054de8());
+    DecompressLZ16(r4, (void *)_ZN3G2S13GetBG2CharPtrEv());
     Deallocate((void *)r4);
 
     r4 = LoadFile(0x99);

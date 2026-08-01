@@ -3,11 +3,11 @@
 typedef void Heap;
 
 extern Heap* _ZN6Memory14defaultHeapPtrE;
-extern Heap* _ZN6Memory10tmpHeapPtrE;
+extern Heap* data_020a0ea8;
 
 extern Heap* _ZN4Heap10SetDefaultEv(Heap* self);
 
 void _ZN4Heap20RestoreFromTemporaryEv(void) {
-    _ZN4Heap10SetDefaultEv(_ZN6Memory10tmpHeapPtrE);
-    _ZN6Memory10tmpHeapPtrE = (Heap*)0;
+    _ZN4Heap10SetDefaultEv(data_020a0ea8);
+    data_020a0ea8 = (Heap*)0;
 }

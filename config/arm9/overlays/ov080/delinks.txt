@@ -4,3 +4,331 @@
     .ctor       start:0x02127f60 end:0x02127f6c kind:rodata align:4
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
     .bss        start:0x021283c0 end:0x02128860 kind:bss align:32
+src/_ZN9MontyMoleD1Ev.cpp:
+    .text start:0x02123740 end:0x02123778
+
+src/_ZN9MontyMoleD0Ev.c:
+    complete
+    .text start:0x02123778 end:0x021237c4
+
+src/_ZN13MontyMoleRockD1Ev.c:
+    complete
+    .text start:0x021237c4 end:0x02123804
+
+src/_ZN13MontyMoleRockD0Ev.c:
+    complete
+    .text start:0x02123804 end:0x02123858
+
+src/func_ov080_02123858.c:
+    complete
+    .text start:0x02123858 end:0x02123860
+
+src/func_ov080_02123860.c:
+    complete
+    .text start:0x02123860 end:0x02123924
+
+src/func_ov080_02123924.cpp:
+    complete
+    .text start:0x02123924 end:0x02123a34
+
+src/func_ov080_02123a34.cpp:
+    .text start:0x02123a34 end:0x02123c24
+
+src/func_ov080_02123c24.c:
+    complete
+    .text start:0x02123c24 end:0x02123ecc
+
+src/func_ov080_02123ecc.cpp:
+    .text start:0x02123ecc end:0x02123fcc
+
+src/func_ov080_02123fcc.cpp:
+    complete
+    .text start:0x02123fcc end:0x02124088
+
+src/func_ov080_02124088.cpp:
+    .text start:0x02124088 end:0x02124208
+
+src/func_ov080_02124208.c:
+    complete
+    .text start:0x02124208 end:0x02124360
+
+src/func_ov080_02124360.c:
+    .text start:0x02124360 end:0x021243d8
+
+src/func_ov080_021243d8.c:
+    complete
+    .text start:0x021243d8 end:0x02124418
+
+src/func_ov080_02124418.c:
+    complete
+    .text start:0x02124418 end:0x02124458
+
+src/_ZN9MontyMole16CleanupResourcesEv.c:
+    complete
+    .text start:0x02124458 end:0x021244b4
+
+src/_ZN13MontyMoleRock16CleanupResourcesEv.c:
+    complete
+    .text start:0x021244b4 end:0x021244d8
+
+src/_ZN9MontyMole6RenderEv.cpp:
+    complete
+    .text start:0x021244d8 end:0x02124500
+
+src/_ZN13MontyMoleRock6RenderEv.cpp:
+    complete
+    .text start:0x02124500 end:0x02124530
+
+src/_ZN9MontyMole8BehaviorEv.cpp:
+    complete
+    .text start:0x02124530 end:0x0212459c
+
+src/_ZN13MontyMoleRock8BehaviorEv.cpp:
+    .text start:0x0212459c end:0x0212478c
+
+src/_ZN9MontyMole13InitResourcesEv.cpp:
+    .text start:0x0212478c end:0x021248b4
+
+src/_ZN13MontyMoleRock13InitResourcesEv.cpp:
+    complete
+    .text start:0x021248b4 end:0x02124998
+
+src/MontyMoleRock_Spawn.c:
+    complete
+    .text start:0x02124998 end:0x021249e0
+
+src/MontyMole_Spawn.c:
+    complete
+    .text start:0x021249e0 end:0x02124a20
+
+src/_ZN11CrazedCrateD1Ev.cpp:
+    .text start:0x02124a20 end:0x02124a68
+
+src/_ZN11CrazedCrateD0Ev.c:
+    complete
+    .text start:0x02124a68 end:0x02124ac4
+
+src/func_ov080_02124ac4.c:
+    complete
+    .text start:0x02124ac4 end:0x02124acc
+
+src/func_ov080_02124acc.cpp:
+    complete
+    .text start:0x02124acc end:0x02124c3c
+
+src/func_ov080_02124c3c.cpp:
+    complete
+    .text start:0x02124c3c end:0x02124e60
+
+src/func_ov080_02124e60.c:
+    complete
+    .text start:0x02124e60 end:0x02124eb0
+
+src/func_ov080_02124eb0.c:
+    complete
+    .text start:0x02124eb0 end:0x02124edc
+
+src/func_ov080_02124edc.cpp:
+    complete
+    .text start:0x02124edc end:0x02124fec
+
+src/func_ov080_02124fec.c:
+    complete
+    .text start:0x02124fec end:0x0212500c
+
+src/func_ov080_0212500c.cpp:
+    complete
+    .text start:0x0212500c end:0x0212509c
+
+src/func_ov080_0212509c.c:
+    complete
+    .text start:0x0212509c end:0x021250c8
+
+src/func_ov080_021250c8.cpp:
+    complete
+    .text start:0x021250c8 end:0x02125104
+
+src/func_ov080_02125104.cpp:
+    complete
+    .text start:0x02125104 end:0x0212513c
+
+src/func_ov080_0212513c.c:
+    complete
+    .text start:0x0212513c end:0x02125158
+
+src/_ZN11CrazedCrate16CleanupResourcesEv.c:
+    complete
+    .text start:0x02125158 end:0x0212517c
+
+src/_ZN11CrazedCrate16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0212517c end:0x02125180
+
+src/_ZN11CrazedCrate6RenderEv.cpp:
+    complete
+    .text start:0x02125180 end:0x021251cc
+
+src/_ZN11CrazedCrate8BehaviorEv.cpp:
+    .text start:0x021251cc end:0x021251ec
+
+src/_ZN11CrazedCrate13InitResourcesEv.cpp:
+    .text start:0x021251ec end:0x02125318
+
+src/func_ov080_02125318.cpp:
+    complete
+    .text start:0x02125318 end:0x021253b4
+
+src/CrazedCrate_Spawn.c:
+    complete
+    .text start:0x021253b4 end:0x02125404
+
+src/func_ov080_02125404.c:
+    complete
+    .text start:0x02125404 end:0x02125428
+
+src/func_ov080_02125428.c:
+    .text start:0x02125428 end:0x02125460
+
+src/func_ov080_0212555c.c:
+    complete
+    .text start:0x0212555c end:0x02125630
+
+src/func_ov080_02125630.cpp:
+    complete
+    .text start:0x02125630 end:0x021256f8
+
+src/func_ov080_021256f8.c:
+    complete
+    .text start:0x021256f8 end:0x02125940
+
+src/func_ov080_02125940.c:
+    complete
+    .text start:0x02125940 end:0x02125af0
+
+src/func_ov080_02125af0.c:
+    complete
+    .text start:0x02125af0 end:0x02125bb0
+
+src/func_ov080_02125bb0.c:
+    complete
+    .text start:0x02125bb0 end:0x02125cd4
+
+src/func_ov080_02125cd4.c:
+    .text start:0x02125cd4 end:0x02125d08
+
+src/func_ov080_02125d08.c:
+    complete
+    .text start:0x02125d08 end:0x02125d64
+
+src/func_ov080_02125d64.c:
+    complete
+    .text start:0x02125d64 end:0x02125de0
+
+src/func_ov080_02125de0.c:
+    complete
+    .text start:0x02125de0 end:0x02125f00
+
+src/func_ov080_02125f00.c:
+    complete
+    .text start:0x02125f00 end:0x02125fd0
+
+src/func_ov080_02125fd0.c:
+    complete
+    .text start:0x02125fd0 end:0x02126120
+
+src/func_ov080_02126120.c:
+    complete
+    .text start:0x02126120 end:0x02126124
+
+src/func_ov080_02126124.c:
+    complete
+    .text start:0x02126124 end:0x021261f4
+
+src/func_ov080_021264ec.c:
+    complete
+    .text start:0x021264ec end:0x021265ec
+
+src/func_ov080_021265ec.c:
+    .text start:0x021265ec end:0x0212677c
+
+src/func_ov080_0212677c.c:
+    complete
+    .text start:0x0212677c end:0x021269b8
+
+src/func_ov080_021269b8.c:
+    complete
+    .text start:0x021269b8 end:0x02126a54
+
+src/func_ov080_02126a54.c:
+    complete
+    .text start:0x02126a54 end:0x02126bfc
+
+src/func_ov080_02126bfc.c:
+    complete
+    .text start:0x02126bfc end:0x02126c1c
+
+src/func_ov080_02126c1c.c:
+    complete
+    .text start:0x02126c1c end:0x02126c20
+
+src/func_ov080_02126c20.cpp:
+    complete
+    .text start:0x02126c20 end:0x02126c60
+
+src/func_ov080_02126c60.cpp:
+    complete
+    .text start:0x02126c60 end:0x02126ca0
+
+src/func_ov080_02126ca0.cpp:
+    .text start:0x02126ca0 end:0x02126f8c
+
+src/Painting_Spawn.c:
+    complete
+    .text start:0x02126f8c end:0x02126fbc
+
+src/func_ov080_02126fbc.c:
+    .text start:0x02126fbc end:0x02127014
+
+src/func_ov080_02127014.c:
+    .text start:0x02127014 end:0x02127058
+
+src/func_ov080_02127058.c:
+    complete
+    .text start:0x02127058 end:0x02127094
+
+src/func_ov080_02127094.c:
+    complete
+    .text start:0x02127094 end:0x021270dc
+
+src/func_ov080_021270dc.c:
+    complete
+    .text start:0x021270dc end:0x02127124
+
+src/func_ov080_02127124.cpp:
+    complete
+    .text start:0x02127124 end:0x0212714c
+
+src/func_ov080_0212714c.c:
+    complete
+    .text start:0x0212714c end:0x021274ac
+
+src/func_ov080_021274ac.c:
+    complete
+    .text start:0x021274ac end:0x0212758c
+
+src/func_ov080_0212758c.c:
+    complete
+    .text start:0x0212758c end:0x02127658
+
+src/func_ov080_02127658.c:
+    complete
+    .text start:0x02127658 end:0x0212766c
+
+src/__sinit_ov080_021278c0.c:
+    .init start:0x021278c0 end:0x02127a60
+
+src/__sinit_ov080_02127a60.c:
+    .init start:0x02127a60 end:0x02127b2c
+
+src/__sinit_ov080_02127b2c.c:
+    .init start:0x02127b2c end:0x02127f60

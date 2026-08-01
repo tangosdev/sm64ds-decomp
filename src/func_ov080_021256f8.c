@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int m[12]; } Mtx;
 

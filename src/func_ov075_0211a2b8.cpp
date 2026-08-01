@@ -1,12 +1,15 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
+// @symbol func_ov075_0211a2b8
+// recovered name: dScEntry_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScEntry_c::Behavior - recovered from vtable slot identity */
 extern "C" {
     void func_020551f0(void *s, int v);
     int func_ov075_02119dc4(void *c, void *arg);
     extern int data_0209fc68;
-    extern int data_ov075_0211d930;
 }
 
 struct VObj {
@@ -39,9 +42,9 @@ extern "C" int func_ov075_0211a2b8(Self *c)
     char *cc = (char *)c;
 
     if (c->f285 != 0) {
-        (*(u8 *)(((long long)(int)(cc + 0x284)) & 0xffffffffffffffffLL))++;
+        (*(u8 *)(((long long)(int)(cc + 0x284))))++;
         if ((c->f284 & 1) == 0) {
-            (*(u8 *)(((long long)(int)(cc + 0x283)) & 0xffffffffffffffffLL))--;
+            (*(u8 *)(((long long)(int)(cc + 0x283))))--;
             func_020551f0((void *)0x4001050, c->f283);
             if (c->f283 == 0) {
                 *(u16 *)0x4001050 = 0;

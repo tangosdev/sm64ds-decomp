@@ -1,13 +1,17 @@
 //cpp
+// @symbol _ZN13FortressTower8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "FortressTower.h"
 extern "C" {
 int _ZN16MeshColliderBase9IsEnabledEv(void* c);
 void _ZN16MeshColliderBase6EnableEP5Actor(void* c, void* a);
 int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 extern unsigned char data_0209f2d8[];
+}
 
-int _ZN13FortressTower8BehaviorEv(char* c)
+int FortressTower::Behavior()
 {
-    unsigned short id = *(unsigned short*)(c+0xc);
+    unsigned short id = unk_00c;
     int r1 = 0;
     switch (id) {
     case 0x31: r1 = 0x900000; break;
@@ -19,11 +23,10 @@ int _ZN13FortressTower8BehaviorEv(char* c)
     }
     int on = (data_0209f2d8[0] == 1);
     if (on) {
-        if (!_ZN16MeshColliderBase9IsEnabledEv((char*)c+0x124))
-            _ZN16MeshColliderBase6EnableEP5Actor((char*)c+0x124, c);
+        if (!_ZN16MeshColliderBase9IsEnabledEv((char*)&mMovingMeshCollider))
+            _ZN16MeshColliderBase6EnableEP5Actor((char*)((char*)this)+0x124, ((char*)this));
     } else {
-        _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, r1, 0);
+        _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), r1, 0);
     }
     return 1;
-}
 }

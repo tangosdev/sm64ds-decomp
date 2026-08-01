@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned int u32;
-typedef int Fix12i;
-
+#include "types.h"
 typedef struct { u8 pad[0x18]; } Rec18;
 
 extern u8 data_020a0e40;
@@ -42,7 +37,7 @@ void func_ov002_020d1f78(void *selfPtr, u32 param)
 
     if (*(int *)(self + 8) == 2 && flag == 0) {
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50) & 0xFFFFFFFFFFFFFFFFLL);
+        anim = (char *)((long long)(((int *)(self + 0xdc))[id] + 0x50));
         w = *(u32 *)(anim + 8);
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x3f, 0, 0x2800, (w << 4) >> 16);
     } else {

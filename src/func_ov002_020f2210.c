@@ -1,8 +1,6 @@
-#define LP(x) ((void*)(int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LI(x) ((int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
+#define LP(x) ((void*)(int)(((long long)(int)(x))))
+#define LI(x) ((int)(((long long)(int)(x))))
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 

@@ -1,15 +1,13 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void func_0203568c(int *value, int target);
 extern void func_02035684(int *value, int target);
 
 #define LAUNDER_PTR(ptr) \
-    ((int *)(int)(((long long)(int)(ptr)) & 0xffffffffffffffffLL))
+    ((int *)(int)(((long long)(int)(ptr))))
 #define LAUNDER_32(base, offset) \
-    ((int *)(int)(((long long)((int)(base) + (offset))) & 0xffffffffffffffffLL))
+    ((int *)(int)(((long long)((int)(base) + (offset)))))
 
 void func_ov102_0214baa0(char *self)
 {

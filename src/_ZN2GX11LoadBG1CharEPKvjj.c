@@ -3,7 +3,7 @@
  * Calls G2::GetBG1CharPtr()-equivalent (0x2054ea8) to get base, then DMA or CPU copy.
  */
 
-extern unsigned int RENDER_DMA_CHANNEL;
+extern unsigned int data_02099fd0;
 
 extern void *func_02054ea8(void);
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dst, unsigned int count);
@@ -12,7 +12,7 @@ extern void MultiCopy_Int(const void *src, void *dst, unsigned int count);
 void _ZN2GX11LoadBG1CharEPKvjj(const void *src, unsigned int offset, unsigned int count)
 {
     void *base = func_02054ea8();
-    unsigned int channel = RENDER_DMA_CHANNEL;
+    unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {

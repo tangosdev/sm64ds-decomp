@@ -1,10 +1,14 @@
+// @symbol func_ov072_02120874
+// recovered name: daBgSnwmn_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_ShadowModel.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daBgSnwmn_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
-extern void _ZN11ShadowModelD1Ev(void *);
 extern void _ZN15TextureSequenceD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
 extern void *G0;
 int *func_ov072_02120874(int *t)
 {

@@ -1,22 +1,17 @@
 //cpp
-extern "C" void Actor_MakeVanishLuigiWork(void *self, void *clsn);
-extern "C" void *Actor_FindWithID(unsigned int id);
-extern "C" void Player_Hurt(void *self, void *pos, unsigned int a, int fix, unsigned int b, unsigned int cc, unsigned int d);
-extern "C" int WithMeshClsn_IsOnGround(void *self);
-extern "C" void *Actor_Spawn(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
+// @symbol _ZN13MontyMoleRock8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "MontyMoleRock.h"
+extern "C" void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern "C" int RandomIntInternal(int *seed);
-extern "C" void ActorBase_MarkForDestruction(void *self);
-extern "C" void Actor_UpdatePos(void *self, void *clsn);
-extern "C" void Enemy_UpdateWMClsn(void *self, void *w, unsigned int j);
-extern "C" void func_ov080_02124418(void *t);
-extern "C" void CylinderClsn_Clear(void *self);
-extern "C" void CylinderClsn_Update(void *self);
 
 extern int data_0209e650;
 
-extern "C" int _ZN13MontyMoleRock8BehaviorEv(void *thiz)
+int MontyMoleRock::Behavior()
 {
-    unsigned char *c = (unsigned char *)thiz;
+    unsigned char *c = (unsigned char *)((void *)this);
     unsigned char *o;
 
     Actor_MakeVanishLuigiWork(c, c + 0x160);
@@ -48,7 +43,7 @@ extern "C" int _ZN13MontyMoleRock8BehaviorEv(void *thiz)
             unsigned char *s;
             int r;
 
-            s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
@@ -58,7 +53,7 @@ extern "C" int _ZN13MontyMoleRock8BehaviorEv(void *thiz)
             *(int *)(s + 0xa8) = 0x5000;
             *(int *)(s + 0xac) = 0;
 
-            s = (unsigned char *)Actor_Spawn(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);

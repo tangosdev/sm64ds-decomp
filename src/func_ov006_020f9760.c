@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct Node {
     void* vt;
     struct Node* prev;

@@ -212,11 +212,13 @@ _ZTV15BookShotSpawner kind:data(any) addr:0x021148d8
 data_ov020_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov020_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 _ZTV8BookShot kind:data(any) addr:0x0211495c
+_ZTV8daBook_c kind:data(any) addr:0x0211495c
 data_ov020_021149d8 kind:data(any) addr:0x021149d8
 data_ov020_021149e4 kind:data(any) addr:0x021149e4
 HauntedChair_SpawnInfo kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
 _ZTV12HauntedChair kind:data(any) addr:0x02114a14
+_ZTV9daChair_c kind:data(any) addr:0x02114a14
 data_ov020_02114a18 kind:data(any) addr:0x02114a18 ambiguous
 data_ov020_02114aa0 kind:bss addr:0x02114aa0
 data_ov020_02114aa8 kind:bss addr:0x02114aa8

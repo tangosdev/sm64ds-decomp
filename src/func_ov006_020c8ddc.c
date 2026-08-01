@@ -8,7 +8,7 @@ int func_ov006_020c8ddc(char *c)
     int result;
     int flag;
 
-    p = (int *)(((long long)(int)(c + 0x70)) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (int *)(((long long)(int)(c + 0x70)));
     d = data_ov006_0213b13c;
     result = 0;
     flag = 1;
@@ -21,7 +21,7 @@ int func_ov006_020c8ddc(char *c)
     }
 after1:
     if (flag != 0) {
-        p = (int *)(((long long)(unsigned)(c + 0x70)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (int *)(((long long)(unsigned)(c + 0x70)));
         d = data_ov006_0213b144;
         flag = 1;
         if (p[0] == d[0]) {

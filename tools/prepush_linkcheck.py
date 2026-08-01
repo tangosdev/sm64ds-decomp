@@ -61,7 +61,14 @@ def changed_src_files(rev_range):
     if out.returncode != 0:
         return []
     changed = [f.strip() for f in out.stdout.splitlines() if f.strip()]
-    return A.affected_sources(changed)
+    expanded = A.affected_sources(changed)
+    # Say so when headers pulled in files the diff never named. A silent expansion from 2
+    # files to 300 reads as a hung gate; a silent expansion to 0 reads as "checked, clean".
+    headers = [f for f in changed if f.endswith((".h", ".hpp"))]
+    if headers:
+        print(f"{len(headers)} changed header(s) fan out to {len(expanded)} source file(s) "
+              f"to verify", flush=True)
+    return expanded
 
 
 def is_draft(path):

@@ -17,7 +17,7 @@ void func_ov060_021134ac(void* thiz)
             func_ov060_02111cc0(c, 5, 0x40000000);
         }
         {
-            int* p = (int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF);
+            int* p = (int*)(((int)c + 0x98));
             *p = *p >> 1;
         }
     }
@@ -25,7 +25,7 @@ void func_ov060_021134ac(void* thiz)
         if (!_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x14c)) {
             *(int*)(c + 0x98) = 0;
             {
-                unsigned char* p = (unsigned char*)(((int)c + 0x423) & 0xFFFFFFFFFFFFFFFF);
+                unsigned char* p = (unsigned char*)(((int)c + 0x423));
                 *p = *p + 1;
             }
         }

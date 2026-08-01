@@ -1,3 +1,7 @@
+// @symbol func_ov002_020b81e0
+// recovered name: WaterfallMist_OnTurnIntoEgg
+/* recovered: renamed to Class_Method */
+/* daObjMarioCap_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern int _ZN6Player17SetNoControlStateEhih(char* p, unsigned char a, int b, unsigned char d);
 extern void _ZN6Player18SetNewHatCharacterEjjb(char* p, unsigned int a, unsigned int b, int d);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* bca, int a, int b, unsigned int e);

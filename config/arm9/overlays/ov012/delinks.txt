@@ -4,3 +4,62 @@
     .ctor       start:0x02111b60 end:0x02111b68 kind:rodata align:4
     .data       start:0x02111b80 end:0x021124a0 kind:data align:32
     .bss        start:0x021124a0 end:0x02112500 kind:bss align:32
+src/func_ov012_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov012_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov012_0211123c.c:
+    complete
+    .text start:0x0211123c end:0x021112ec
+
+src/func_ov012_021112ec.c:
+    complete
+    .text start:0x021112ec end:0x02111324
+
+src/func_ov012_02111324.cpp:
+    complete
+    .text start:0x02111324 end:0x0211134c
+
+src/func_ov012_0211134c.cpp:
+    complete
+    .text start:0x0211134c end:0x02111370
+
+src/func_ov012_02111370.c:
+    complete
+    .text start:0x02111370 end:0x02111420
+
+src/SwitchPillar_Spawn.c:
+    complete
+    .text start:0x02111420 end:0x02111450
+
+src/_ZN12SwitchPillarD1Ev.c:
+    .text start:0x02111450 end:0x0211149c
+
+src/_ZN12SwitchPillarD0Ev.c:
+    .text start:0x0211149c end:0x021114fc
+
+src/_ZN12SwitchPillar16CleanupResourcesEv.cpp:
+    .text start:0x021114fc end:0x02111540
+
+src/_ZN12SwitchPillar6RenderEv.cpp:
+    complete
+    .text start:0x02111540 end:0x02111574
+
+src/_ZN12SwitchPillar8BehaviorEv.cpp:
+    .text start:0x02111574 end:0x0211164c
+
+src/_ZN12SwitchPillar13InitResourcesEv.cpp:
+    complete
+    .text start:0x0211164c end:0x02111730
+
+src/BasementWater_Spawn.c:
+    complete
+    .text start:0x02111730 end:0x02111768
+
+src/__sinit_ov012_02111a88.c:
+    .init start:0x02111a88 end:0x02111af4
+
+src/__sinit_ov012_02111af4.c:
+    .init start:0x02111af4 end:0x02111b60

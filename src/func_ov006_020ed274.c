@@ -8,7 +8,7 @@ void func_ov006_020ed274(char *c)
     int idx;
     int b;
     int w0, w1;
-    *(int *)(((int)c + 0x466c) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(int *)(((int)c + 0x466c)) -= 1;
     if (*(int *)(c + 0x4000 + 0x66c) != 0)
     {
         idx = data_020a0e40[0];

@@ -1,16 +1,10 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef signed short s16;
-typedef unsigned short u16;
-typedef signed int s32;
-typedef unsigned int u32;
-typedef signed long long s64;
-extern s16 SINE_TABLE[];
+#include "types.h"
+extern s16 data_02082214[];
 
 void func_ov079_02124638(char* obj)
 {
     u8 old = *(u8 *)(obj + 0x400);
-    u8 *p = (u8 *)(((int)obj + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
+    u8 *p = (u8 *)(((int)obj + 0x400));
     u8 v = *p;
     *p = (u8)(v - 1);
     if (old != 0) {
@@ -22,7 +16,7 @@ void func_ov079_02124638(char* obj)
         {
             s32 amp = (s32)((t - 0x50) << 6);
             u16 ang = (u16)(s16)(t << 13);
-            *(s16 *)(obj + 0x8c) = (s16)(((s64)amp * SINE_TABLE[(ang >> 4) * 2] + 0x800) >> 12);
+            *(s16 *)(obj + 0x8c) = (s16)(((s64)amp * data_02082214[(ang >> 4) * 2] + 0x800) >> 12);
         }
         return;
     }

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov079_02127090
+// recovered name: daObjBkKillerdai_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjBkKillerdai_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr { int x; };
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);

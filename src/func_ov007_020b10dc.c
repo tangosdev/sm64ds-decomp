@@ -3,7 +3,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov007).
  */
 extern void func_ov007_020bdeb0(int x);
-extern void func_ov007_020bfacc(int a, int b, void* p);
+extern void RequestScreenFade(int a, int b, void* p);
 extern void func_ov007_020b1fa4(int self);
 extern void func_ov007_020b2764(int x);
 extern char data_ov007_0210342c[];
@@ -26,7 +26,7 @@ void func_ov007_020b10dc(void) {
         break;
     }
     if (t == 0x3c) {
-        func_ov007_020bfacc(5, 3, func_ov007_020b16f0);
+        RequestScreenFade(5, 3, func_ov007_020b16f0);
         func_ov007_020b1fa4(1);
         return;
     }

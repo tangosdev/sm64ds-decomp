@@ -1,11 +1,11 @@
 extern int func_02017a24(void*, int);
 extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
-extern int func_02017934(void*, int);
+extern int SharedFilePtr_Construct_TexSeq(void*, int);
 
 extern void func_02017a0c(void);
-extern void func_02017984(void);
-extern void func_0201791c(void);
+extern void SharedFilePtr_Destruct_Anim(void);
+extern void SharedFilePtr_Destruct_TexSeq(void);
 
 extern void* data_ov006_02141e9c;
 extern void* data_ov006_02141eb0;
@@ -73,18 +73,18 @@ void __sinit_ov006_02130a08(void)
     func_020731dc(&data_ov006_02141e94, (void*)&func_02017a0c, (void**)&data_ov006_02141ed4);
 
     _ZN13SharedFilePtr9ConstructEj(&data_ov006_02141e5c, 0x1eb);
-    func_020731dc(&data_ov006_02141e5c, (void*)&func_02017984, (void**)&data_ov006_02141ee0);
+    func_020731dc(&data_ov006_02141e5c, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov006_02141ee0);
     _ZN13SharedFilePtr9ConstructEj(&data_ov006_02141e7c, 0x1ec);
-    func_020731dc(&data_ov006_02141e7c, (void*)&func_02017984, (void**)&data_ov006_02141eec);
+    func_020731dc(&data_ov006_02141e7c, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov006_02141eec);
     _ZN13SharedFilePtr9ConstructEj(&data_ov006_02141e8c, 0x1e9);
-    func_020731dc(&data_ov006_02141e8c, (void*)&func_02017984, (void**)&data_ov006_02141ef8);
+    func_020731dc(&data_ov006_02141e8c, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov006_02141ef8);
     _ZN13SharedFilePtr9ConstructEj(&data_ov006_02141e84, 0x1ea);
-    func_020731dc(&data_ov006_02141e84, (void*)&func_02017984, (void**)&data_ov006_02141f04);
+    func_020731dc(&data_ov006_02141e84, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov006_02141f04);
     _ZN13SharedFilePtr9ConstructEj(&data_ov006_02141e6c, 0x1ed);
-    func_020731dc(&data_ov006_02141e6c, (void*)&func_02017984, (void**)&data_ov006_02141f10);
+    func_020731dc(&data_ov006_02141e6c, (void*)&SharedFilePtr_Destruct_Anim, (void**)&data_ov006_02141f10);
 
-    func_02017934(&data_ov006_02141e64, 0x1e8);
-    func_020731dc(&data_ov006_02141e64, (void*)&func_0201791c, (void**)&data_ov006_02141ea4);
+    SharedFilePtr_Construct_TexSeq(&data_ov006_02141e64, 0x1e8);
+    func_020731dc(&data_ov006_02141e64, (void*)&SharedFilePtr_Destruct_TexSeq, (void**)&data_ov006_02141ea4);
 
     data_ov006_02141f2c[0] = data_ov006_0213c6cc;
     data_ov006_02141f2c[1] = data_ov006_0213c6fc;

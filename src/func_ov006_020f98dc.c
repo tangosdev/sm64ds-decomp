@@ -1,7 +1,7 @@
 extern int data_020a0db0;
 extern unsigned short data_ov006_0213d770[];
 extern int data_ov006_021425a8[];
-void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
+void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
 void func_ov006_020f98dc(char *thiz)
 {
@@ -16,7 +16,7 @@ void func_ov006_020f98dc(char *thiz)
         int idx = (*(unsigned char*)(thiz + 0x2c) + 1) * 5
                   + (*(int*)(thiz + 0x24) >> 12);
         unsigned short e = data_ov006_0213d770[idx];
-        func_ov004_020af68c(
+        Hud_RenderSprite(
             (void*)data_ov006_021425a8[e],
             (*(int*)(thiz + 0xc) >> 12) + 0x18,
             (*(int*)(thiz + 0x10) >> 12) + 0x18,

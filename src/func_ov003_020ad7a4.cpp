@@ -1,8 +1,12 @@
 //cpp
+// @symbol func_ov003_020ad7a4
+// recovered name: dScTitle_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScTitle_c::Render - recovered from vtable slot identity */
 extern "C" {
 extern int data_0209b2f4;
-extern int data_0209b2f8;
-extern int data_0209e664;
 extern char data_0209e674[];
 }
 struct OamTmp { int x; };

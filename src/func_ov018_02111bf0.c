@@ -11,7 +11,7 @@ struct ClsnResult {
   void* vt;
   struct SurfaceInfo info;
 };
-void func_02038420(void* w);
+void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* w);
 int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn* w);
 void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo* s, Vector3* v);
@@ -22,7 +22,7 @@ void _ZN10ClsnResultD1Ev(struct ClsnResult* r);
 extern void* data_02099368;
 
 void func_ov018_02111bf0(char* c, WithMeshClsn* w){
-  func_02038420(w);
+  WithMeshClsn_UpdateDiscreteNoLava_veneer(w);
   if (_ZNK12WithMeshClsn10IsOnGroundEv(w) != 0) {
     Vector3 n;
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(w) + 4), &n);

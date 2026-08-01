@@ -5,7 +5,7 @@ void func_ov006_0210e3e8(int *self) {
     self[4] = self[2];
     self[5] = self[3];
     if (self[0xd] > 0) {
-        *(int *)(((long long)(int)(b + 0x34)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(int *)(((long long)(int)(b + 0x34))) -= 1;
     }
     if (b[0x31] != 1) return;
     if (func_ov006_0210e120(self)) {

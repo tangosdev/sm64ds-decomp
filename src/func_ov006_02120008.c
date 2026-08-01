@@ -1,4 +1,4 @@
-void func_ov004_020b0aa0(int arg);
+void FreeGfxSlotsById(int arg);
 void func_ov006_0211e318(char *c);
 void func_ov006_0211f9fc(char *c);
 void func_ov006_0211f6fc(char *c);
@@ -13,10 +13,10 @@ void func_ov006_02120008(char *c)
   if (g[0xb] != 0)
   {
     new_var = ((int) c) + 0x4c16;
-    *((unsigned short *) (new_var & 0xFFFFFFFFFFFFFFFF)) = (*((unsigned short *) (new_var & 0xFFFFFFFFFFFFFFFF))) - 1;
+    *((unsigned short *) (new_var)) = (*((unsigned short *) (new_var))) - 1;
     if (((unsigned short *) (c + 0x4c00))[0xb] == 0)
     {
-      func_ov004_020b0aa0(0xd);
+      FreeGfxSlotsById(0xd);
       if ((*((unsigned char *) (c + 0xc4))) == 0)
       {
         *((unsigned char *) (c + 0xc3)) = 1;

@@ -1,6 +1,7 @@
-struct Vector3 { int x, y, z; };
-
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+// @symbol func_ov084_0212dc30
+/* recovered: shared common types */
+#include "common.h"
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern int _Z14ApproachLinearRiii(int *cur, int target, int step);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);

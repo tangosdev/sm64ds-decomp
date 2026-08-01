@@ -6,10 +6,10 @@ extern "C" int _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb(void* thi
 int _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb(void* thiz, System* sys, int b) {
     Node* node = sys->head;
     if (b) {
-        int* flags = (int*)(((long)sys + 0x1c) & 0xFFFFFFFFFFFFFFFF);
+        int* flags = (int*)(((long)sys + 0x1c));
         *flags &= ~2;
     } else {
-        int* flags = (int*)(((long)sys + 0x1c) & 0xFFFFFFFFFFFFFFFF);
+        int* flags = (int*)(((long)sys + 0x1c));
         *flags |= 2;
         if (node == 0) return 0;
     }

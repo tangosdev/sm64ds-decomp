@@ -14,7 +14,7 @@ extern int func_0201267c(int a, void *pos);
 extern void *data_ov019_021134a8[];
 extern void *data_ov019_02113468[];
 
-#define LB(off) (*(unsigned char *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LB(off) (*(unsigned char *)(((int)c + (off))))
 
 int func_ov019_02111558(void *thiz)
 {
@@ -63,7 +63,7 @@ int func_ov019_02111558(void *thiz)
         if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == 2) {
             if (*(unsigned char *)(c + 0x395) == 0) {
                 _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(
-                    c, (signed char *)(((int)c + 0x396) & 0xFFFFFFFFFFFFFFFF),
+                    c, (signed char *)(((int)c + 0x396)),
                     (unsigned int)(unsigned char)((*(unsigned int *)(c + 8) >> 8) & 0xf),
                     c + 0x5c, 4);
             }

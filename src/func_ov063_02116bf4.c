@@ -3,8 +3,8 @@
     
     void func_ov063_02116bf4(char* c)
     {
-        unsigned short *ip = (unsigned short *)(((long long)(int)(c + 0x5d4)) & 0xFFFFFFFFFFFFFFFFLL);
-        int *r3 = (int *)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned short *ip = (unsigned short *)(((long long)(int)(c + 0x5d4)));
+        int *r3 = (int *)(((long long)(int)(c + 0x19c)));
         unsigned char st;
     
         *ip = (unsigned short)(*ip & ~8);
@@ -26,12 +26,12 @@
                         *(int*)(p + 0x498) = *(int*)(c + 0x498);
                     }
                     {
-                        unsigned char *q = (unsigned char *)(((long long)(int)(c + 0x5cb)) & 0xFFFFFFFFFFFFFFFFLL);
+                        unsigned char *q = (unsigned char *)(((long long)(int)(c + 0x5cb)));
                         *q = *q + 1;
                     }
                 }
                 {
-                    unsigned char *q = (unsigned char *)(((long long)(int)(c + 0x5cc)) & 0xFFFFFFFFFFFFFFFFLL);
+                    unsigned char *q = (unsigned char *)(((long long)(int)(c + 0x5cc)));
                     *q = *q + 1;
                 }
             }

@@ -48,7 +48,7 @@ int func_ov084_02129a00(char *self) {
         }
     } else if (r4 == 3) {
         if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x1b4))
-            *(int *)(((int)self + 0x98) & 0xFFFFFFFFFFFFFFFF) >>= 1;
+            *(int *)(((int)self + 0x98)) >>= 1;
     }
 
     if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(self, self + 0x180) != 0) {
@@ -56,7 +56,7 @@ int func_ov084_02129a00(char *self) {
         *(int *)(self + 0x10c) = 7;
         func_020aea30(self, actor, self + 0x1b4, 7);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, (void *)((int *)&data_ov084_02130ce0)[1], 0x40000000, 0x1000, 0);
-        *(int *)(((int)self + 0x198) & 0xFFFFFFFFFFFFFFFF) |= 1;
+        *(int *)(((int)self + 0x198)) |= 1;
         return 1;
     }
 
@@ -70,7 +70,7 @@ int func_ov084_02129a00(char *self) {
                 _ZN12CylinderClsn6UpdateEv(self + 0x180);
             } else if (s == 5) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, (void *)((int *)&data_ov084_02130ce0)[1], 0x40000000, 0x1000, 0);
-                *(s16 *)(((int)self + 0x94) & 0xFFFFFFFFFFFFFFFF) += 0x8000;
+                *(s16 *)(((int)self + 0x94)) += 0x8000;
                 *(int *)(self + 0x98) = -*(int *)(self + 0x98);
                 _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File((void *)((int *)&data_ov084_02130cf8)[1], &data_ov084_0213088c);
                 _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(self + 0x3fc, &data_ov084_0213088c, 0x40000000, 0x1000, 0);

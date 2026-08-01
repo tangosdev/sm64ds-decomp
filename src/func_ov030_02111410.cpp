@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov030_02111410
+// recovered name: daObjHmBskt_c_InitResources
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjHmBskt_c::InitResources - recovered from vtable slot identity */
 typedef int Fix12i;
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;

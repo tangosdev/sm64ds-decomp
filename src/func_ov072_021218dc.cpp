@@ -21,16 +21,16 @@ extern "C" int func_ov072_021218dc(char* self){
     if(_ZN9Animation8FinishedEv(self+0x124)){
       _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self+0xd4, data_ov072_02122cac[1], 0, 0x1000, 0);
       *(int*)(self+0x130)=0x1000;
-      pb=(unsigned char*)(((int)self+0x36e) & 0xFFFFFFFFFFFFFFFFLL); (*pb)++;
+      pb=(unsigned char*)(((int)self+0x36e)); (*pb)++;
     }
     break;
   case 1:
-    pi=(int*)(((int)self+0x98) & 0xFFFFFFFFFFFFFFFFLL);
+    pi=(int*)(((int)self+0x98));
     *pi = *pi - 0x3000;
     if(*(int*)(self+0x98) < 0){
       _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self+0xd4, data_ov072_02122ca4[1], 0x40000000, 0x1000, 0);
       *(int*)(self+0x98)=0;
-      pb=(unsigned char*)(((int)self+0x36e) & 0xFFFFFFFFFFFFFFFFLL); (*pb)++;
+      pb=(unsigned char*)(((int)self+0x36e)); (*pb)++;
     }
     break;
   case 2:

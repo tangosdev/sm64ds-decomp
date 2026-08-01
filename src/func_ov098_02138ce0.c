@@ -1,11 +1,14 @@
+// @symbol func_ov098_02138ce0
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
     void *thiz, void *actor, void *vec, int fix, int t, unsigned u1, unsigned u2);
 
-struct Vec3 { int x, y, z; };
+
 
 void func_ov098_02138ce0(char *c)
 {
-    struct Vec3 zero, a1, a2;
+    struct Vector3 zero, a1, a2;
 
     *(int *)(c + 0x5f0) = 0;
     *(int *)(c + 0x5f4) = 0;
@@ -23,9 +26,9 @@ void func_ov098_02138ce0(char *c)
     *(int *)(c + 0xa8) = 0;
     *(int *)(c + 0xac) = 0;
 
-    ((struct Vec3 *)(((long long)(int)&zero) & 0xFFFFFFFFFFFFFFFFLL))->x = 0;
-    ((struct Vec3 *)(((long long)(int)&zero) & 0xFFFFFFFFFFFFFFFFLL))->y = 0;
-    ((struct Vec3 *)(((long long)(int)&zero) & 0xFFFFFFFFFFFFFFFFLL))->z = 0;
+    ((struct Vector3 *)(((long long)(int)&zero)))->x = 0;
+    ((struct Vector3 *)(((long long)(int)&zero)))->y = 0;
+    ((struct Vector3 *)(((long long)(int)&zero)))->z = 0;
 
     a1.x = zero.x;
     a1.y = zero.y;

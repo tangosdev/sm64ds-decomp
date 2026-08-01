@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 extern void Vec3_AsrInPlace(Vec3 *v, int n);
@@ -105,8 +102,8 @@ void func_ov060_02117db8(char *self) {
     }
 
     {
-        int *pa = (int *)(((int)self + 0xa8) & 0xFFFFFFFFFFFFFFFF);
-        int *pypos = (int *)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int *pa = (int *)(((int)self + 0xa8));
+        int *pypos = (int *)(((int)self + 0x60));
         *pa = *pa + *(int *)(self + 0x9c);
         if (*(int *)(self + 0xa8) <= *(int *)(self + 0xa0))
             *(int *)(self + 0xa8) = *(int *)(self + 0xa0);
@@ -114,6 +111,6 @@ void func_ov060_02117db8(char *self) {
     }
     if ((u16)*(u16 *)(self + 0x326) > 0x12cu)
         _ZN9ActorBase18MarkForDestructionEv(self);
-    (*(u16 *)(((int)self + 0x326) & 0xFFFFFFFFFFFFFFFF))++;
+    (*(u16 *)(((int)self + 0x326)))++;
     (void)live;
 }

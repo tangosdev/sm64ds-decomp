@@ -145,6 +145,7 @@ Goomba_SpawnInfo kind:data(any) addr:0x021308ec
 GoombaSmall_SpawnInfo kind:data(any) addr:0x02130908
 GoombaLarge_SpawnInfo kind:data(any) addr:0x02130924
 _ZTV6Goomba kind:data(any) addr:0x02130948
+_ZTV7daKrb_c kind:data(any) addr:0x02130948
 data_ov084_021309c4 kind:data(any) addr:0x021309c4
 data_ov084_021309cc kind:data(any) addr:0x021309cc
 data_ov084_021309d4 kind:data(any) addr:0x021309d4
@@ -155,12 +156,14 @@ data_ov084_021309f4 kind:data(any) addr:0x021309f4
 data_ov084_02130a00 kind:data(any) addr:0x02130a00
 BobOmbBuddy_SpawnInfo kind:data(any) addr:0x02130a14
 _ZTV11BobOmbBuddy kind:data(any) addr:0x02130a38
+_ZTV14daRedBombhei_c kind:data(any) addr:0x02130a38
 data_ov084_02130ab4 kind:data(any) addr:0x02130ab4
 data_ov084_02130ac0 kind:data(any) addr:0x02130ac0
 FirePiranhaPlant_SpawnInfo kind:data(any) addr:0x02130acc
 FirePiranhaPlantBig_SpawnInfo kind:data(any) addr:0x02130ae8
 FirePiranhaPlantSmall_SpawnInfo kind:data(any) addr:0x02130b04
 _ZTV19FirePiranhaPlantBig kind:data(any) addr:0x02130b28
+_ZTV8daFPkn_c kind:data(any) addr:0x02130b28
 data_ov084_02130ba4 kind:data(any) addr:0x02130ba4
 data_ov084_02130bac kind:data(any) addr:0x02130bac
 data_ov084_02130bb4 kind:data(any) addr:0x02130bb4
@@ -174,6 +177,7 @@ data_ov084_02130bec kind:data(any) addr:0x02130bec
 data_ov084_02130bf8 kind:data(any) addr:0x02130bf8
 PiranhaPlant_SpawnInfo kind:data(any) addr:0x02130c04
 _ZTV12PiranhaPlant kind:data(any) addr:0x02130c28
+_ZTV7daPkn_c kind:data(any) addr:0x02130c28
 data_ov084_02130cc0 kind:bss addr:0x02130cc0
 data_ov084_02130cc8 kind:bss addr:0x02130cc8
 data_ov084_02130cd0 kind:bss addr:0x02130cd0

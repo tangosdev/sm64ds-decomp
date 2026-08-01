@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef signed int s32;
-
+#include "types.h"
 typedef struct Entry {
     u8 unk00; u8 unk01; u8 unk02; u8 unk03;
     s32 unk04; s32 unk08; s32 unk0c; s32 unk10;
@@ -16,7 +14,7 @@ typedef struct Obj {
     u8 unk5fcd;
 } Obj;
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 #define A1(off) ((int)M((int)M((char *)self + (int)M(i) * 32) + (off)))
 #define A2(off) ((int)M((int)M((char *)self + (unsigned)i * 32) + (off)))
 #define B1(off) (*(u8 *)A1(off))

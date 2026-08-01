@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov084_0212e9f8
+// recovered name: FirePiranhaPlantBig_OnYoshiTryEat
+/* recovered: renamed to Class_Method */
+/* daFPkn_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" int func_ov084_0212e9f8(void *c) {
     unsigned short v = *(unsigned short*)((char*)c + 0xc);
     int r;

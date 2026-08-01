@@ -1,6 +1,6 @@
 extern void *func_ov007_020c3df4(int a, int b);
 extern void func_ov007_020c10ec(void *c);
-extern void func_ov007_020c108c(void *c, int r1, int r2, int r3, int sp0);
+extern void Sprite_SetAnimation(void *c, int r1, int r2, int r3, int sp0);
 
 void *func_ov007_020c11ac(int n){
   char *o = (char*)func_ov007_020c3df4(0, 0x44);
@@ -11,6 +11,6 @@ void *func_ov007_020c11ac(int n){
   }
   func_ov007_020c10ec(o);
   *(unsigned char*)(o+0x1c) = (unsigned char)n;
-  func_ov007_020c108c(o, 0, 1, 0, 0);
+  Sprite_SetAnimation(o, 0, 1, 0, 0);
   return o;
 }

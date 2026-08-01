@@ -1,21 +1,21 @@
 //cpp
-extern "C" void func_02021b98(void *base);
+// @symbol _ZN8Particle10SysTrackerD1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Particle.h"
 extern "C" void func_0203cbc0(void *p);
-extern "C" void _ZN6Memory10DeallocateEPv(void *p);
-extern void *data_0209ee80;
-extern char data_02075f14[];
 extern void *data_0209ee74;
 
-extern "C" void *_ZN8Particle10SysTrackerD1Ev(char *thiz)
-{
+extern "C" void *_ZN8Particle10SysTrackerD1Ev(struct Particle *self) {
     if (data_0209ee80 != 0) {
-        func_02021b98(thiz + 8);
+        func_02021b98((char *)&self->unk_008);
         func_0203cbc0(data_0209ee80);
         data_0209ee80 = 0;
     }
-    if (*(void **)thiz != (void *)data_02075f14) {
-        _ZN6Memory10DeallocateEPv(*(void **)thiz);
+    if (*(void **)((char *)self) != (void *)data_02075f14) {
+        _ZN6Memory10DeallocateEPv(*(void **)((char *)self));
     }
     data_0209ee74 = 0;
-    return thiz;
+    return ((char *)self);
 }

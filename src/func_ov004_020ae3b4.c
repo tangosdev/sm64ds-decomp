@@ -1,12 +1,11 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int* func_02054efc(void);
 extern int* func_02054ea8(void);
 extern int* _ZN2G213GetBG2CharPtrEv(void);
 extern int* func_02054d88(void);
 extern int* _ZN3G2S13GetBG0CharPtrEv(void);
-extern int* func_02054e88(void);
-extern int* func_02054de8(void);
+extern int* _ZN3G2S13GetBG1CharPtrEv(void);
+extern int* _ZN3G2S13GetBG2CharPtrEv(void);
 extern int* _ZN3G2S13GetBG3CharPtrEv(void);
 extern void MultiCopy_Int(void* a, void* b, int n);
 
@@ -69,8 +68,8 @@ void func_ov004_020ae3b4(char* obj, int cx, int cy, int val, int n)
                         goto inc;
                     switch (*(int*)(obj + 0x6c)) {
                     case 0: base = _ZN3G2S13GetBG0CharPtrEv(); break;
-                    case 1: base = func_02054e88(); break;
-                    case 2: base = func_02054de8(); break;
+                    case 1: base = _ZN3G2S13GetBG1CharPtrEv(); break;
+                    case 2: base = _ZN3G2S13GetBG2CharPtrEv(); break;
                     case 3: base = _ZN3G2S13GetBG3CharPtrEv(); break;
                     default: return;
                     }

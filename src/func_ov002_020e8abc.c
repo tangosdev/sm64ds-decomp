@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void func_02035860(char *o, void *src);
@@ -26,8 +24,8 @@ void func_ov002_020e8abc(char *self)
         func_02035860(self + 0x150, self + 0x5c);
         *(int *)(self + 0x440) = *(int *)(self + 0x444);
         func_ov002_020e9464(self);
-        *(int *)(((long long)(int)(self + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
-        f = (u16 *)(((long long)(int)(self + 0x4a2)) & 0xFFFFFFFFFFFFFFFFLL);
+        *(int *)(((long long)(int)(self + 0x128))) |= 1;
+        f = (u16 *)(((long long)(int)(self + 0x4a2)));
         *f &= ~2;
         *f |= 8;
         *f &= ~0x30;
@@ -35,7 +33,7 @@ void func_ov002_020e8abc(char *self)
             return;
         }
         {
-            u8 *q = (u8 *)(((long long)(int)(a + 0x1db)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(((long long)(int)(a + 0x1db)));
             *q &= ~1;
             *q |= 2;
         }

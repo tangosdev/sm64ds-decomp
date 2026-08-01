@@ -18,7 +18,7 @@ extern s32 data_020a0e68[];
 extern int ApproachAngle(s16* angle, int target, int step, int maxDelta, int minDelta);
 extern int _ZN9Animation8FinishedEv(void* thiz);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thisp, void* bca, int a, int fix, unsigned int j);
-extern void func_ov070_02120020(void* c, void* p);
+extern void FlyGuy_ChangeState(void* c, void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* thiz);
 extern void* _ZN5Actor22ClosestNonVanishPlayerEv(void* thiz);
 extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
@@ -48,10 +48,10 @@ int func_ov070_0211f6e0(char* c)
         }
         if (*(s32*)(c + 0x3dc) == 1) {
             if (data_0209f2f8 != 0x16)
-                *(s32 *)(((long long)(s32)(c + 0x3c4)) & 0xFFFFFFFFFFFFFFFFLL) += 0x12c000;
+                *(s32 *)(((long long)(s32)(c + 0x3c4))) += 0x12c000;
             *(s32*)(c + 0x3d8) = 0;
             *(u16*)(c + 0x3cc) = 0x5a;
-            func_ov070_02120020(c, &data_ov070_0212359c);
+            FlyGuy_ChangeState(c, &data_ov070_0212359c);
             return 1;
         }
     }
@@ -63,7 +63,7 @@ int func_ov070_0211f6e0(char* c)
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
         }
         *(u16*)(c + 0x92) = 0;
-        func_ov070_02120020(c, &data_ov070_021235dc);
+        FlyGuy_ChangeState(c, &data_ov070_021235dc);
         return 1;
     }
 
@@ -75,7 +75,7 @@ int func_ov070_0211f6e0(char* c)
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
         }
         *(u16*)(c + 0x92) = 0;
-        func_ov070_02120020(c, &data_ov070_021235dc);
+        FlyGuy_ChangeState(c, &data_ov070_021235dc);
         return 1;
     }
 
@@ -84,7 +84,7 @@ int func_ov070_0211f6e0(char* c)
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
-            *(s32 *)(((long long)(s32)(c + 0x3c4)) & 0xFFFFFFFFFFFFFFFFLL) += 0xc8000;
+            *(s32 *)(((long long)(s32)(c + 0x3c4))) += 0xc8000;
         }
         *(s32*)(c + 0x5c) = *(s32*)(c + 0x68);
         *(s32*)(c + 0x60) = *(s32*)(c + 0x6c);
@@ -92,7 +92,7 @@ int func_ov070_0211f6e0(char* c)
         *(u16*)(c + 0x92) = 0;
         *(u16*)(c + 0x100) = 0;
         *(u32*)(c + 0xa8) = 0;
-        func_ov070_02120020(c, &data_ov070_021235dc);
+        FlyGuy_ChangeState(c, &data_ov070_021235dc);
         return 1;
     }
 

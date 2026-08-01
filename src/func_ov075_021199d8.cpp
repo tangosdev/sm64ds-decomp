@@ -58,13 +58,13 @@ extern "C" void func_ov075_021199d8(char* c)
             ang -= 0x2000;
         } while (1);
 
-        *(int*)(((long long)(int)(c + 0x26c)) & 0xFFFFFFFFFFFFFFFFLL) += 0x800;
+        *(int*)(((long long)(int)(c + 0x26c))) += 0x800;
 
         if (flag == zero)
             *(int*)(c + 0x270) = 0x78;
     } else {
         OAM::RenderSub(attr, 0x80, 0x1c);
-        *(int*)(((long long)(int)(c + 0x270)) & 0xFFFFFFFFFFFFFFFFLL) -=
+        *(int*)(((long long)(int)(c + 0x270))) -=
             data_0208ee44;
         *(int*)(c + 0x26c) = 0;
     }

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov090_02132620
+// recovered name: Skeeter_OnTurnIntoEgg
+/* recovered: renamed to Class_Method */
+/* daMenbo_c::OnTurnIntoEgg - recovered from vtable slot identity */
 class Player;
 
 class Actor {

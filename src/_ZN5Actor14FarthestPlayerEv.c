@@ -12,10 +12,10 @@
 struct Actor;
 
 extern struct Actor *_ZN5Actor13ClosestPlayerEv(void);
-extern struct Actor *gFarthestPlayer; /* @ 0x0209b450 */
+extern struct Actor *data_0209b450; /* @ 0x0209b450 */
 
 struct Actor *_ZN5Actor14FarthestPlayerEv(struct Actor *self)
 {
     _ZN5Actor13ClosestPlayerEv();
-    return gFarthestPlayer;
+    return data_0209b450;
 }

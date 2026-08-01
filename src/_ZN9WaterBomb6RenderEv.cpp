@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9WaterBomb6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "WaterBomb.h"
 struct Obj {
     virtual void v0();
     virtual void v1();
@@ -7,11 +10,12 @@ struct Obj {
     virtual void v4();
     virtual void m(void *arg);
 };
-extern "C" int _ZN9WaterBomb6RenderEv(char *c)
+
+int WaterBomb::Render()
 {
-    if (*(int *)(c + 0x3c8) != 0) {
-        Obj *o = (Obj *)(c + 0x300);
-        o->m(c + 0x80);
+    if (unk_3c8 != 0) {
+        Obj *o = (Obj *)((char *)&mModel);
+        o->m((char *)&unk_080);
     }
     return 1;
 }

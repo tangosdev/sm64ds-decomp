@@ -13,11 +13,11 @@ typedef struct Actor Actor;
 
 extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
 
-extern u32 CUTSCENE_OBJECT_IDS[0x10]; /* 0x0209b2a4 */
+extern u32 data_0209b2a4[0x10]; /* 0x0209b2a4 */
 
 Actor* func_0200e4e4(u32 param1)
 {
-    u32* slot = CUTSCENE_OBJECT_IDS;
+    u32* slot = data_0209b2a4;
     s32 i = 0;
     for (;;) {
         if (*slot == 0) {

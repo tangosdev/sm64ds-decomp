@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 extern u8 GetControllerMode(int a0);
 extern void func_0205a588(void *a, int b, int c);
 extern u8 data_0209f21c;

@@ -8,7 +8,7 @@ struct Player {
     int IsState(State &s);
 };
 
-extern "C" int func_ov002_020bf30c(void *c, int a);
+extern "C" int Player_ScaleByCharFactor(void *c, int a);
 extern "C" int func_02037e38(unsigned int *p);
 extern State data_ov002_0211013c;
 extern State data_ov002_021101b4;
@@ -21,7 +21,7 @@ extern "C" void func_ov002_020c29d4(Player *self)
     if (*(unsigned char *)(base + 0x703) != 0) return;
     unsigned char flags = *(unsigned char *)(base + 0x6eb);
     if ((flags & 1) && !(flags & 0x80)) {
-        if (*(int *)(base + 0x98) >= func_ov002_020bf30c(self, 0x28000)) {
+        if (*(int *)(base + 0x98) >= Player_ScaleByCharFactor(self, 0x28000)) {
             if (self->IsState(data_ov002_0211013c)) {
                 *(short *)(base + 0x6bc) = 0x1e;
             } else if (self->IsState(data_ov002_021101b4)

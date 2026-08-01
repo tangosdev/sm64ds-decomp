@@ -5,7 +5,7 @@ extern struct G data_ov071_02122f88;
 
 int func_ov071_0211fe38(char *c)
 {
-    int *p3a0 = (int *)(((long long)(int)(c + 0x3a0)) & 0xFFFFFFFFFFFFFFFFLL);
+    int *p3a0 = (int *)(((long long)(int)(c + 0x3a0)));
     *(int *)(c + 0x9c) = -0x2000;
     *(int *)(c + 0xa0) = -0x3c000;
     *(int *)(c + 0x98) = 0xf000;

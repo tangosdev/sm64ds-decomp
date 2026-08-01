@@ -59,7 +59,7 @@ int func_ov022_021112ac(void *thiz)
             *(void **)((unsigned char *)s + 0x10c) = c;
             *(int *)((unsigned char *)s + 0x118) = *(int *)(c + 0x60);
             {
-                unsigned short *t = (unsigned short *)((long long)(int)(c + 0x324) & 0xFFFFFFFFFFFFFFFFLL);
+                unsigned short *t = (unsigned short *)((long long)(int)(c + 0x324));
                 *t = *t + 1;
             }
             *(unsigned char *)(c + 0x31f) = 2;
@@ -67,7 +67,7 @@ int func_ov022_021112ac(void *thiz)
         break;
     }
 
-    ip = (short *)((long long)(int)(c + 0x94) & 0xFFFFFFFFFFFFFFFFLL);
+    ip = (short *)((long long)(int)(c + 0x94));
     *ip = (short)(*ip + *(short *)(c + 0x96));
     *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     func_020393a4(c + 0x124, 0x780000);

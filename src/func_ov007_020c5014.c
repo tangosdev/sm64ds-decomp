@@ -1,6 +1,6 @@
 extern int _ZN4cstd3divEii(int, int);
 
-#define AMAT(p) (*(int*)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define AMAT(p) (*(int*)((long long)(int)(p)))
 
 #pragma opt_common_subs off
 int func_ov007_020c5014(char* c, int x) {

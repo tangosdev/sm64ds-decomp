@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9HugeCover13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "HugeCover.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
 struct Model { int d; };
@@ -26,9 +29,9 @@ extern BTA_File data_ov032_02112f64;
 extern SharedFilePtr data_ov032_02113af4;
 extern CLPS_Block data_ov032_02112fb8;
 
-extern "C" int _ZN9HugeCover13InitResourcesEv(char* thiz)
+int HugeCover::InitResources()
 {
-    char* c = thiz;
+    char* c = ((char*)this);
     {
         BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(*(SharedFilePtr*)&data_ov032_02113afc);
         _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, 0x14);

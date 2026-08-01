@@ -12,5 +12,5 @@ void func_0206853c(char *self, void *src, unsigned int flags, int s)
     *(unsigned char *)(self + 0x358) = (unsigned char)cnt;
     *(short *)(self + 0x35a) = (short)(flags | 1);
     *(short *)(self + 0x35c) = (short)s;
-    *(unsigned char *)(((long long)(int)(self + 0x4ac)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(unsigned char *)(((long long)(int)(self + 0x4ac))) += 1;
 }

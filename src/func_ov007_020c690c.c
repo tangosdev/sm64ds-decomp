@@ -1,7 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void* func_ov007_020c3df4(int a, int size);
 extern void func_ov007_020c684c(void* self);
 extern void* func_ov007_020c844c(void* p, int q);

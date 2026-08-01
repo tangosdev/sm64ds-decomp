@@ -1,6 +1,6 @@
 enum { false, true };
 
-extern void func_ov098_02138b28(void *c, int i);
+extern void Crate_SetState(void *c, int i);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
 extern void func_ov098_02139850(void *self);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
@@ -15,7 +15,7 @@ void func_ov098_02138238(void *thiz)
   t1 = t1 != 0;
 
   if (t1 != false) {
-    func_ov098_02138b28(c, 3);
+    Crate_SetState(c, 3);
   } else {
     int t2;
     t2 = flags & 0x20000;
@@ -25,7 +25,7 @@ void func_ov098_02138238(void *thiz)
       t3 = flags & 0x40000;
       t3 = t3 != 0;
       if (t3 == false) {
-        func_ov098_02138b28(c, 4);
+        Crate_SetState(c, 4);
       }
     }
   }
@@ -38,7 +38,7 @@ void func_ov098_02138238(void *thiz)
     if (t4 == false) {
       void *p = *(void **)(c + 0xd0);
       if (p != 0) {
-        int *src = (int *)(int)(((long long)(int)((char *)p + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *src = (int *)(int)(((long long)(int)((char *)p + 0x5c)));
         *(int *)(c + 0x5c) = src[0];
         *(int *)(c + 0x60) = src[1];
         *(int *)(c + 0x64) = src[2];

@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov072_021217ac
+/* recovered: shared common types */
+#include "common.h"
+
 class Actor;
 extern "C" int func_ov072_02121d50(Actor *a);
 extern "C" int func_0201267c(int id, void *p);

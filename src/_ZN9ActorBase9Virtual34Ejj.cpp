@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned int u32;
-
+#include "types.h"
 struct Heap;
 struct ActorBase;
 

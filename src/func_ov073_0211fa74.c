@@ -1,19 +1,18 @@
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+// @symbol func_ov073_0211fa74
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _Z14ApproachLinearRiii(int* p, int t, int s);
 extern void _ZN7Message7EndTalkEv(void);
-extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-extern void func_02011cfc(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void func_0200fa8c(void* t, int a);
 extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b);
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* prev);
 extern void func_02012694(int a, void* p);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, void* pos);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
-extern void func_ov073_0211f144(void* c);
 extern void* data_0209f318;
 
 int func_ov073_0211fa74(char* c) {
@@ -53,7 +52,7 @@ int func_ov073_0211fa74(char* c) {
     func_02012694(0xbb, c + 0x74);
     if (found != 0) {
         struct Vector3 fp;
-        int pv = (int)(((int)found + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        int pv = (int)(((int)found + 0x5c));
         fp.x = *(int*)pv;
         fp.y = *(int*)(pv + 4);
         fp.z = *(int*)(pv + 8);
@@ -61,7 +60,7 @@ int func_ov073_0211fa74(char* c) {
         _ZN9ActorBase18MarkForDestructionEv(found);
     }
     if (spawned != 0) {
-        *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+        *(int*)(((int)cam + 0x154)) &= ~8;
         _ZN9ActorBase18MarkForDestructionEv(c);
     }
 end:

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10ChainChomp6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "ChainChomp.h"
 struct A;
 struct B {
     virtual void m0();
@@ -9,12 +12,13 @@ struct B {
     virtual void m5(A* arg);
 };
 
-extern "C" int _ZN10ChainChomp6RenderEv(char *c) {
-    B *b = (B*)(c+0x150);
-    b->m5((A*)(c+0x80));
+int ChainChomp::Render()
+{
+    B *b = (B*)((char *)&mModelAnim);
+    b->m5((A*)((char *)&mScaleX));
     
     int j = 0;
-    char *p2 = c + 0x1dc;
+    char *p2 = ((char *)this) + 0x1dc;
     for (;;) {
         B *b2 = (B*)p2;
         b2->m5((A*)0);

@@ -1,10 +1,8 @@
 //cpp
+#include "types.h"
 /* ExpandingHeap::VSizeof(void*) at 0x0203c444 -- Heap vtable slot.
  * Node headers carry their own size, so this ignores `this` and forwards
  * to the static ExpandingHeapAllocator::SizeofInternal(void*). */
-
-typedef unsigned int u32;
-
 class ExpandingHeapAllocator
 {
 public:

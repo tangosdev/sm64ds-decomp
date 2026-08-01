@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned short u16;
+#include "types.h"
 typedef void* (*Vfn)();
 
 struct Animation { void Advance(); };

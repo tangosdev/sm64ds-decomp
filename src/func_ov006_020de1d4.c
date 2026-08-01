@@ -3,7 +3,7 @@ extern void func_ov006_020dc370(void*);
 
 void func_ov006_020de1d4(char* c) {
   if (*(int*)((c + 0x5000) + 0x1cc) != 0) {
-    int* p = (int*)(int)(((long long)(int)(c + 0x51cc)) & 0xFFFFFFFFFFFFFFFFLL);
+    int* p = (int*)(int)(((long long)(int)(c + 0x51cc)));
     *p = *p - 1;
     if (*(int*)((c + 0x5000) + 0x1cc) < 0)
       *(int*)((c + 0x5000) + 0x1cc) = 0;

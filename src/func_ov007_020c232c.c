@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 void func_ov007_020c232c(char* o) {
     int a, b, c;
     if (*(int*)(o + 0x24) == 0) return;

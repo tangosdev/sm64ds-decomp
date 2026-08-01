@@ -8,10 +8,10 @@ void func_ov006_0210713c(char* c) {
     *(unsigned char*)(c + 0x4fe8) = 2;
     return;
   }
-  *(unsigned char*)(((int)c + 0x4fe7) & 0xFFFFFFFFFFFFFFFF) += 1;
+  *(unsigned char*)(((int)c + 0x4fe7)) += 1;
   if (*(unsigned char*)(c + 0x4fe7) >= 8) {
     *(unsigned char*)(c + 0x4fe7) = 0;
-    *(unsigned char*)(((int)c + 0x4fe8) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(unsigned char*)(((int)c + 0x4fe8)) -= 1;
   }
   if (*(unsigned char*)(c + 0x4fe8) == 0)
     *(int*)(c + 0x4ca8) = 2;

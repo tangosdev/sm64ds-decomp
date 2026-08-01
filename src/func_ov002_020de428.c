@@ -1,6 +1,7 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-struct Vector3 { Fix12i x, y, z; };
+#include "types.h"
+// @symbol func_ov002_020de428
+/* recovered: shared common types */
+#include "common.h"
 struct Actor {
     char pad74[0x74];
     struct Vector3 vec; /* 0x74 */

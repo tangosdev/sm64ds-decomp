@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern int data_0209d4b8;
 int RandomIntInternal(int *seed);
 
@@ -20,7 +18,7 @@ void func_ov006_020f4cd8(char *c)
         for (k = 4; k < 12; k++) {
             slot = (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 4 >> 15) + 1;
             for (;;) {
-                q = (u8 *)(((int)c + slot + 0x5330) & 0xFFFFFFFFFFFFFFFF);
+                q = (u8 *)(((int)c + slot + 0x5330));
                 if (*q < 2) {
                     *(u8 *)(p + 0x51b8) = slot;
                     *q += 1;
@@ -44,7 +42,7 @@ void func_ov006_020f4cd8(char *c)
         for (i = 2; i < 12; i++) {
             slot = (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 5 >> 15) + 1;
             for (;;) {
-                q = (u8 *)(((int)c + slot + 0x5330) & 0xFFFFFFFFFFFFFFFF);
+                q = (u8 *)(((int)c + slot + 0x5330));
                 if (*q < 2) {
                     *(u8 *)(p + 0x51b8) = slot;
                     *q += 1;
@@ -68,7 +66,7 @@ void func_ov006_020f4cd8(char *c)
         for (i = 0; i < 12; i++) {
             slot = (int)((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 6 >> 15) + 1;
             for (;;) {
-                q = (u8 *)(((int)c + slot + 0x5330) & 0xFFFFFFFFFFFFFFFF);
+                q = (u8 *)(((int)c + slot + 0x5330));
                 if (*q < 2) {
                     *(u8 *)(p + 0x51b8) = slot;
                     *q += 1;

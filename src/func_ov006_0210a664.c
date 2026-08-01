@@ -1,9 +1,14 @@
+// @symbol func_ov006_0210a664
+// recovered name: dScMgFlower_c_BeforeRender
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Particle.h"
+/* recovered: renamed to Class_Method */
+/* dScMgFlower_c::BeforeRender - recovered from vtable slot identity */
 typedef int Bool;
 
 struct Scene;
 
 extern Bool func_ov004_020b04f4(struct Scene* self);
-extern void _ZN8Particle9RenderAllEv(void);
 
 Bool func_ov006_0210a664(struct Scene* self)
 {

@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed int s32;
-
+#include "types.h"
 typedef struct {
     u32 lock;
     u16 owner;

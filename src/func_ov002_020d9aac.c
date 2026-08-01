@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _Z14ApproachLinearRiii(int* v, int target, int step);
 
 void func_ov002_020d9aac(char* c)

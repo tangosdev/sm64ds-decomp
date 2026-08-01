@@ -1,10 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-
+#include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 typedef struct Node { struct Node *next; struct Node *prev; } Node;
@@ -116,7 +110,7 @@ void func_0204c304(Particle *self, u8 *mgr, List *freelist)
             p->h3a = self->h3a;
 
         {
-            Bf40 *q = (Bf40 *)(((s64)(int)((u8 *)p + 0x40)) & 0xFFFFFFFFFFFFFFFFLL);
+            Bf40 *q = (Bf40 *)(((s64)(int)((u8 *)p + 0x40)));
             q->f0 = (u16)((self->bf40.f0 * (self->bf40.f5 + 1)) >> 5);
             q->f5 = 0x1f;
         }

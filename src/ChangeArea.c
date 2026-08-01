@@ -1,14 +1,14 @@
 typedef signed char s8;
 
-extern s8 AREA_ID;
+extern s8 data_02092120;
 
 extern void HideArea(void);
 extern void ShowArea(int areaID);
 
 void ChangeArea(int areaID)
 {
-    if (AREA_ID >= 0)
+    if (data_02092120 >= 0)
         HideArea();
-    AREA_ID = (s8)areaID;
+    data_02092120 = (s8)areaID;
     ShowArea(areaID);
 }

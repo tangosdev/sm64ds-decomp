@@ -1,4 +1,9 @@
-typedef unsigned int u32;
+#include "types.h"
+// @symbol _ZN4HeapC1EPvjP4Heap
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Heap.h"
 struct Heap;
 struct HeapS {
     void *vtable;
@@ -7,7 +12,6 @@ struct HeapS {
     struct Heap *parentHeap;
     u32 flags;
 };
-extern void *data_02099d90;
 void _ZN4HeapC1EPvjP4Heap(struct HeapS *heap, void *start, u32 size, struct Heap *root) {
   heap->vtable = &data_02099d90;
   heap->heapStart = start;

@@ -1,7 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 typedef struct {
     char _0[4];
     int f4;

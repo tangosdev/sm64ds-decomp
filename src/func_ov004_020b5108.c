@@ -1,4 +1,4 @@
-extern void func_0203d6d0(int* o, int* a, int* b);
+extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d680(int* out, const int* in, int scale);
 extern void func_ov004_020b1b08(int x);
 struct P { int w[2]; };
@@ -14,7 +14,7 @@ void func_ov004_020b5108(char* c, int* in)
     *(int*)(c + 0xc) = 0xc000;
     *(int*)(c + 0x10) = in[0];
     *(int*)(c + 0x14) = in[1];
-    func_0203d6d0(loc0, (int*)(c + 0x10), (int*)(c + 8));
+    Vec2_Sub(loc0, (int*)(c + 0x10), (int*)(c + 8));
     func_0203d680(loc2, loc0, 0x100);
     struct P* bc = &data_ov004_020bc800;
     *(int*)(c + 0x18) = loc2[0];

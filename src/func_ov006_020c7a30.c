@@ -1,8 +1,4 @@
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
+#include "types.h"
 extern int _Z15ApproachLinear2Rsss(short *v, short t, short s);
 extern void func_ov006_020c8270(char *c);
 extern void func_ov006_020c85a0(char *c);

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* st);
 extern int _ZN6Player7IsInAirEv(char* self);
 extern int func_ov002_020e3078(char* self, void* s);
@@ -34,7 +32,7 @@ int func_ov002_020bfec0(char* self)
         return 0;
     }
 
-    *(u8*)(((long long)(int)(self + 0x6eb)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+    *(u8*)(((long long)(int)(self + 0x6eb))) |= 1;
 
     {
         int flag = *(int*)(self + 0x354);
@@ -64,15 +62,15 @@ int func_ov002_020bfec0(char* self)
 
     switch (state) {
     case 6:
-        *(int*)(((long long)(int)(self + 0x68c)) & 0xFFFFFFFFFFFFFFFFLL) += inc;
+        *(int*)(((long long)(int)(self + 0x68c))) += inc;
         if (*(int*)(self + 0x68c) >= 0xa000) *(int*)(self + 0x68c) = 0xa000;
         goto ret0;
     case 7:
-        *(int*)(((long long)(int)(self + 0x68c)) & 0xFFFFFFFFFFFFFFFFLL) += inc;
+        *(int*)(((long long)(int)(self + 0x68c))) += inc;
         if (*(int*)(self + 0x68c) >= 0x3c000) *(int*)(self + 0x68c) = 0x3c000;
         goto ret0;
     case 8:
-        *(int*)(((long long)(int)(self + 0x68c)) & 0xFFFFFFFFFFFFFFFFLL) += inc;
+        *(int*)(((long long)(int)(self + 0x68c))) += inc;
         if (*(int*)(self + 0x68c) < 0xa0000) goto ret0;
         /* fallthrough */
     case 9:

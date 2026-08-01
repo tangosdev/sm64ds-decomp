@@ -10,5 +10,5 @@ void func_ov098_021381e8(char *c)
     func_ov098_02138ce0(c);
     func_ov098_02139850(c);
     func_ov098_021397c8(c);
-    (*(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF)) &= ~0xe0000;
+    (*(int *)(((int)c + 0xb0))) &= ~0xe0000;
 }

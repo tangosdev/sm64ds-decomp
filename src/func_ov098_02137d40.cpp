@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov098_02137d40
+// recovered name: ArrowSignRight_OnAttacked1
+/* recovered: renamed to Class_Method */
+/* daObjYajirusi_c::OnAttacked1 - recovered from vtable slot identity */
 struct VT{ int (*f[64])(void*); };
 struct O{ VT* vt; };
 extern "C" void func_ov098_02137d40(O* c, char* o){

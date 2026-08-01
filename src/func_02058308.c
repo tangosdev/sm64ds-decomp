@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 typedef struct {
     char pad[0x14];
     int slots[16];

@@ -11,7 +11,7 @@ void func_ov006_020f1ef8(char *o, int p1)
     v = *(int *)(o + 0xbc);
     while (v >= 5) v -= 5;
     if (v != 4)
-        *(unsigned short *)(((int)o + 0x516a) & 0xFFFFFFFFFFFFFFFF) += 8;
+        *(unsigned short *)(((int)o + 0x516a)) += 8;
     if (p1 == 0)
         *(short *)(o + 0x516a) = 0x80;
     *(unsigned char *)(o + 0x5459) = (unsigned char)p1;

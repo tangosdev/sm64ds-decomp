@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_ov006_02100554 at 0x02100554
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
  */
-typedef unsigned char u8;
-
 extern int func_ov004_020adbe0(void);
 extern void func_ov006_021004f4(void *c, int a);
 extern void func_ov006_021006f4(void *c);

@@ -1,9 +1,7 @@
+#include "types.h"
 // Latches +0x8/+0xc into +0x10/+0x14, then unless byte +0x44 == 1 or +0x40 <= 0
 // eases the s16 angle at +0x32 toward 0x3000 by 0x200 steps (clamped), and tail
 // calls func_ov006_0210d93c.
-typedef short s16;
-typedef unsigned char u8;
-
 typedef struct Obj {
     char _pad0[8];     // 0x00
     int x8;            // 0x08
@@ -24,10 +22,10 @@ void func_ov006_0210e014(Obj* self) {
     self->x14 = self->xc;
     if (self->x44 != 1 && self->x40 > 0) {
         if (self->x32 < 0x3000) {
-            (*(s16*)(((long long)(int)((char*)self + 0x32)) & 0xFFFFFFFFFFFFFFFFLL)) += 0x200;
+            (*(s16*)(((long long)(int)((char*)self + 0x32)))) += 0x200;
             if (self->x32 >= 0x3000) self->x32 = 0x3000;
         } else {
-            (*(s16*)(((unsigned long long)(unsigned int)((char*)self + 0x32)) & 0xFFFFFFFFFFFFFFFFLL)) -= 0x200;
+            (*(s16*)(((unsigned long long)(unsigned int)((char*)self + 0x32)))) -= 0x200;
             if (self->x32 < 0x3000) self->x32 = 0x3000;
         }
     }

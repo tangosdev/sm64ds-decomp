@@ -1,11 +1,14 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
+// @symbol func_ov006_020f53e4
+// recovered name: dScMgMemory_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgMemory_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 void func_ov006_0210a534(void);
-s32 func_ov004_020ad674(void);
+s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *ptr);
@@ -23,8 +26,6 @@ namespace GXS { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int func_020bc7d4;
-extern int data_ov006_0213d0c4[];
 
 extern "C" int func_ov006_020f53e4(char *self)
 {
@@ -33,7 +34,7 @@ extern "C" int func_ov006_020f53e4(char *self)
 
     data_0209d45c = 0x11;
     func_ov006_0210a534();
-    a = LoadFile(data_ov006_0213d0c4[func_ov004_020ad674()]);
+    a = LoadFile(data_ov006_0213d0c4[GetGameLanguage()]);
     b = LoadFile(0xbb);
     DecompressLZ16(a, (void *)0x6400000);
     GX::LoadOBJPltt(b, 0, 0x100);

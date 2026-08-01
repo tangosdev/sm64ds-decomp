@@ -1,10 +1,11 @@
-struct Vec3 { int x, y, z; };
-
+// @symbol func_ov007_020c775c
+/* recovered: shared common types */
+#include "common.h"
 struct E {
-    struct Vec3 **p0;   // 0x0
-    struct Vec3 **p1;   // 0x4
+    struct Vector3 **p0;   // 0x0
+    struct Vector3 **p1;   // 0x4
     int len;            // 0x8
-    struct Vec3 v;      // 0xc
+    struct Vector3 v;      // 0xc
 };
 
 struct T {
@@ -15,8 +16,8 @@ struct T {
     int f10;            // 0x10
 };
 
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern int LenVec3(struct Vec3 *v);
+extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern int LenVec3(struct Vector3 *v);
 
 void func_ov007_020c775c(struct T *t)
 {

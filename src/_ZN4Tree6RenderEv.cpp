@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN4Tree6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Tree.h"
 extern "C" {
 struct Vec3 { int x, y, z; };
 extern int data_ov002_02110a48;
@@ -19,11 +22,11 @@ struct ModelBase {
     virtual void m(int arg);
 };
 
-extern "C" int _ZN4Tree6RenderEv(char *self)
+int Tree::Render()
 {
     char *base = (char *)data_0209f318;
     int *iter = &data_ov002_02110a48;
-    char *sl = self + 0xd4;
+    char *sl = ((char *)this) + 0xd4;
     int i = 0;
     int z5 = 0;
     int z4 = 0;

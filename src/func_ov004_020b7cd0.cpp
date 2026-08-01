@@ -12,7 +12,7 @@ struct Base {
   virtual int m_4c(void* arg);   /* slot 19 -> 0x4c */
 };
 extern "C" void func_ov004_020ae20c(void);
-extern "C" void func_ov004_020b0aa0(int arg);
+extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void func_ov004_020ae2c8(void);
 extern "C" void func_ov004_020b29a0(Base* c, void* arg);
 extern Base* data_ov004_020beb68;
@@ -38,7 +38,7 @@ extern "C" void func_ov004_020b7cd0(char* c){
     data_ov004_020bc7d4 = 0;
     data_ov004_020bfa24 = 0;
     func_ov004_020ae20c();
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     *(int*)(c + 0x1c) = 0xb4;
     {
         int a = data_ov004_020bc904.a;
@@ -54,7 +54,7 @@ extern "C" void func_ov004_020b7cd0(char* c){
       return;
     if (r5->m_4c(*(void**)(c + 0x18)) == 0)
       return;
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov004_020ae20c();
     func_ov004_020ae2c8();
     func_ov004_020b29a0(r5, *(void**)(c + 0x18));

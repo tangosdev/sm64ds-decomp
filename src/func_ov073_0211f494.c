@@ -11,7 +11,7 @@ void func_ov073_0211f494(char *a, char *b)
     Vec3 t, p, q, d;
     int ay, ax, vx, tmp, cos_ax, sin_ax, cos_ay, sin_ay, rx, ry, rz;
     int y0;
-    int *bp = (int *)(((int)b + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int *bp = (int *)(((int)b + 0x5c));
 
     p.x = *(int *)(a + 0x5c);
     y0 = *(int *)(a + 0x60);

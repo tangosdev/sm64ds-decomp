@@ -19,7 +19,7 @@ Node *func_0204d958(List *list)
             head->next->prev = 0;
         }
         {
-            int *cp = (int *)(((int)list + 4) & 0xFFFFFFFFFFFFFFFF);
+            int *cp = (int *)(((int)list + 4));
             *cp = *cp - 1;
         }
     }

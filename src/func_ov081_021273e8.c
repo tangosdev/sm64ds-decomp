@@ -1,3 +1,7 @@
+// @symbol func_ov081_021273e8
+// recovered name: Snowball_Kill
+/* recovered: renamed to Class_Method */
+/* daSnowball_c::Kill - recovered from vtable slot identity */
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char*, void*, int, int, unsigned int);
 struct S2 { int w[2]; };
 extern struct S2 data_ov081_02128ee4;

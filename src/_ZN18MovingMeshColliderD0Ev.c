@@ -11,13 +11,13 @@ struct MovingMeshCollider {
 
 extern void *_ZTV18MovingMeshCollider[];
 
-extern void *MovingMeshColliderD2(struct MovingMeshCollider *thiz);  /* 0x020397fc */
+extern void *func_020397fc(struct MovingMeshCollider *thiz);  /* 0x020397fc */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr);              /* 0x0203cbcc */
 
 struct MovingMeshCollider *_ZN18MovingMeshColliderD0Ev(struct MovingMeshCollider *thiz)
 {
     thiz->vtable = (void **)_ZTV18MovingMeshCollider;
-    MovingMeshColliderD2(thiz);
+    func_020397fc(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

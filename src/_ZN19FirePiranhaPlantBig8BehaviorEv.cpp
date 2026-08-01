@@ -1,63 +1,62 @@
 //cpp
+// @symbol _ZN19FirePiranhaPlantBig8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "FirePiranhaPlantBig.h"
 extern "C" {
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(char *thiz, char *clsn);
-extern int func_ov084_0212d564(char *);
 extern void _ZN9Animation7AdvanceEv(char *thiz);
-extern int func_ov084_0212e4e0(char *);
-extern int func_ov084_0212e010(char *);
-extern int func_ov084_0212ddbc(char *);
-extern int func_ov084_0212dc30(char *);
-extern int func_ov084_0212d86c(char *);
 extern void _ZN12CylinderClsn5ClearEv(char *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(char *thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *thiz, char *v);
 }
 
-extern "C" int _ZN19FirePiranhaPlantBig8BehaviorEv(char *c)
+int FirePiranhaPlantBig::Behavior()
 {
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x174);
-    int b = (*(int *)(c + 0xb0) & 0x60000) != 0;
+    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x174);
+    int b = (unk_0b0 & 0x60000) != 0;
     if (b != 0) {
-        func_ov084_0212d564(c);
+        func_ov084_0212d564(((char *)this));
         return 1;
     }
-    _ZN9Animation7AdvanceEv(c + 0x160);
-    int s = *(int *)(c + 0x1ec);
+    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    int s = mState;
     switch (s) {
     case 0:
-        func_ov084_0212e4e0(c);
+        func_ov084_0212e4e0(((char *)this));
         break;
     case 1:
-        func_ov084_0212e010(c);
+        func_ov084_0212e010(((char *)this));
         break;
     case 2:
-        func_ov084_0212ddbc(c);
+        func_ov084_0212ddbc(((char *)this));
         break;
     case 3:
-        func_ov084_0212dc30(c);
+        func_ov084_0212dc30(((char *)this));
         break;
     case 4:
         break;
     }
     {
-        char * p = c + 0x100;
+        char * p = ((char *)this) + 0x100;
         *(unsigned short *)p = *(unsigned short *)p + 1;
-        if (s != *(int *)(c + 0x1ec))
+        if (s != mState)
             *(unsigned short *)p = 0;
     }
-    func_ov084_0212d86c(c);
-    func_ov084_0212d564(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x174);
-    *(int *)(c + 0x178) = *(int *)(c + 0x204) * *(int *)(c + 0x208);
-    *(int *)(c + 0x17c) = *(int *)(c + 0x204) * *(int *)(c + 0x20c);
-    _ZN12CylinderClsn6UpdateEv(c + 0x174);
-    _ZN12CylinderClsn5ClearEv(c + 0x1a8);
-    int b2 = *(unsigned short *)(c + 0xc) == 0xfc;
+    func_ov084_0212d86c(((char *)this));
+    func_ov084_0212d564(((char *)this));
+    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
+    unk_178 = mScale * unk_208;
+    unk_17c = mScale * unk_20c;
+    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
+    int b2 = unk_00c == 0xfc;
     if (b2 == 0
-        && (unsigned int)(*(int *)(c + 0x1ec) - 2) <= 1
-        && *(int *)(c + 0x204) == *(int *)(c + 0x210)) {
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x1a8, c + 0x1f8);
-        _ZN12CylinderClsn6UpdateEv(c + 0x1a8);
+        && (unsigned int)(mState - 2) <= 1
+        && mScale == unk_210) {
+        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x1a8, ((char *)this) + 0x1f8);
+        _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsnWithPos);
     }
     return 1;
 }

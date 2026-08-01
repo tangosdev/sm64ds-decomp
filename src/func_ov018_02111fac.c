@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *target, void *self, int b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int _Z14ApproachLinearRsss(void *dst, short a, short b);

@@ -4,3 +4,30 @@
     .ctor       start:0x02112bb4 end:0x02112bb8 kind:rodata align:4
     .data       start:0x02112bc0 end:0x02113400 kind:data align:32
     .bss        start:0x02113400 end:0x02113440 kind:bss align:32
+src/_ZN17BigMovingIceBlockD1Ev.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/_ZN17BigMovingIceBlockD0Ev.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/_ZN17BigMovingIceBlock16CleanupResourcesEv.c:
+    complete
+    .text start:0x0211123c end:0x02111284
+
+src/_ZN17BigMovingIceBlock6RenderEv.cpp:
+    complete
+    .text start:0x02111284 end:0x021112ac
+
+src/_ZN17BigMovingIceBlock8BehaviorEv.cpp:
+    .text start:0x021112ac end:0x021114e0
+
+src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp:
+    complete
+    .text start:0x021114e0 end:0x02111594
+
+src/BigMovingIceBlock_Spawn.c:
+    complete
+    .text start:0x02111594 end:0x021115cc
+
+src/__sinit_ov056_02112b48.c:
+    .init start:0x02112b48 end:0x02112bb4

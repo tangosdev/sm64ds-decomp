@@ -1,3 +1,6 @@
+// @symbol func_020084b0
+/* recovered: shared common types */
+#include "common.h"
 // func_020084b0 @ 0x020084b0 - Camera/Actor member, size 0x50.
 // Reads a packed unaligned Vector3_16 (x,y,z s16) from a data record,
 // converts each component to Fix12i (<<12) and stores them as a Vector3
@@ -6,7 +9,7 @@
 typedef short s16;
 typedef int s32;
 
-struct Vector3 { s32 x, y, z; };
+
 
 struct Camera {
     char pad[0x8c];

@@ -1,41 +1,42 @@
 //cpp
+// @symbol _ZN8BookShot8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "BookShot.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
 extern void func_0200f760(void* a, void* b);
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void* thiz, void* w);
-extern void func_ov020_0211216c(void* c);
-extern void func_ov020_02112080(void* c);
-extern void func_ov020_0211174c(void* c);
 extern void _ZN12CylinderClsn5ClearEv(void* thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN12CylinderClsn6UpdateEv(void* thiz);
+}
 
-int _ZN8BookShot8BehaviorEv(char* c)
+int BookShot::Behavior()
 {
-    func_0200f760(c, c + 0x21c);
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x25c) != 0) {
-        if (*(unsigned char*)(c + 0x107) != 0 && *(unsigned short*)(c + 0x104) == 5) {
-            *(int*)(c + 0x428) = *(int*)(c + 0x424);
-            *(int*)(c + 0x424) = 5;
-            *(unsigned char*)(c + 0x107) = 0;
-            *(int*)(c + 0xa8) = 0;
-            *(int*)(c + 0x98) = 0x8000;
+    func_0200f760(((char*)this), ((char*)this) + 0x21c);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x25c) != 0) {
+        if (unk_107 != 0 && unk_104 == 5) {
+            unk_428 = mState;
+            mState = 5;
+            unk_107 = 0;
+            unk_0a8 = 0;
+            unk_098 = 0x8000;
         }
-        func_ov020_0211216c(c);
+        func_ov020_0211216c(((char*)this));
         return 1;
     }
-    switch (*(int*)(c + 0x420)) {
+    switch (unk_420) {
     case 0:
-        func_ov020_02112080(c);
+        func_ov020_02112080(((char*)this));
         break;
     case 1:
-        func_ov020_0211174c(c);
+        func_ov020_0211174c(((char*)this));
         break;
     }
-    func_ov020_0211216c(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x21c);
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x21c, *(Vector3*)(c + 0x438));
-    _ZN12CylinderClsn6UpdateEv(c + 0x21c);
+    func_ov020_0211216c(((char*)this));
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x21c, *(Vector3*)((char*)&unk_438));
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
     return 1;
-}
 }

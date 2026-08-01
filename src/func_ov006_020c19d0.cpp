@@ -18,13 +18,13 @@ extern "C" void func_ov006_020c19d0(char* thiz)
     }
     _ZN14BlendModelAnim7AdvanceEv(c + 0x1c);
     if (_Z15ApproachLinear2Rsss(*(short*)(c + 0x1e0), 0, 1) != 0) {
-        short* p = (short*)(((int)c + 0x1e2) & 0xFFFFFFFFFFFFFFFF);
+        short* p = (short*)(((int)c + 0x1e2));
         *p = *p + 1;
         if (*(short*)(c + 0x100 + 0xe2) > 7)
             *(short*)(c + 0x100 + 0xe2) = 1;
         *(short*)(c + 0x1e0) = data_ov006_0212b89c[*(short*)(c + 0x100 + 0xe2)];
     }
-    short* q = (short*)(((int)c + 0x1e4) & 0xFFFFFFFFFFFFFFFF);
+    short* q = (short*)(((int)c + 0x1e4));
     *q = *q + 0x400;
     func_ov006_020c07e8(c + 0xdc);
 }

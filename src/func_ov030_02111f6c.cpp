@@ -4,7 +4,7 @@ typedef struct { int x, y, z; } Vector3;
 typedef struct WithMeshClsn WithMeshClsn;
 typedef struct SurfaceInfo SurfaceInfo;
 void func_020383f0(void* p);
-void func_020383fc(void* p);
+void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn* w);
 void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo* s, Vector3* v);
@@ -17,7 +17,7 @@ void func_ov030_02111f6c(char* c, WithMeshClsn* w){
   if (b != 0) return;
   int bb = (int)(*(unsigned short*)(c+0xc) == 0x10b);
   if (bb != 0 && *(int*)(c+0x3b4) != 9) func_020383f0(c+0x194);
-  else func_020383fc(c+0x194);
+  else WithMeshClsn_UpdateContinuous_Veneer(c+0x194);
   if (_ZNK12WithMeshClsn10IsOnGroundEv(w) != 0) {
     Vector3 n;
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(w) + 4), &n);

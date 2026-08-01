@@ -1,2 +1,2 @@
-extern int *G;
-int func_0206045c(void) { return G[1]; }
+extern int *data_020a8760;
+int func_0206045c(void) { return data_020a8760[1]; }

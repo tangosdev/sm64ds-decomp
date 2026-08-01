@@ -1,3 +1,4 @@
+#include "types.h"
 extern void *_ZN9ActorBasenwEj(unsigned);
 extern void _ZN9ActorBaseC1Ev(void *);
 
@@ -7,9 +8,6 @@ extern int data_020943c4[];
 extern int data_0208eafc[];
 extern int data_0208eacc[];
 extern int data_0208eb2c[];
-
-typedef unsigned char u8;
-
 void *func_020352b4(void)
 {
     char *p = (char *)_ZN9ActorBasenwEj(0x68);

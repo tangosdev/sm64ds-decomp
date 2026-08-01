@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 int func_02071698(u8* base, int idx)
 {
     u8* p = base + 5 + idx;

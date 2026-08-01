@@ -1,10 +1,12 @@
-extern void func_ov002_020f6514(unsigned char* self, void* tbl, unsigned char arg);
+// @symbol func_ov002_020f7038
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int p2, int p3, int p4, void* p5, void* p6);
-extern unsigned short data_0209b274;
-extern int data_ov002_0210bc88;
 
-struct Vector3 { int x, y, z; };
+
 
 int func_ov002_020f7038(char* c, int a, int arg)
 {
@@ -15,11 +17,11 @@ int func_ov002_020f7038(char* c, int a, int arg)
     }
     if (*(int*)(c + 0x60) >= 0x514000) {
         if (*(int*)(c + 0xf8) < 0x3c000) {
-            *(int*)(((long long)(int)(c + 0xf8)) & 0xFFFFFFFFFFFFFFFFLL) += 0x5000;
+            *(int*)(((long long)(int)(c + 0xf8))) += 0x5000;
         }
     } else {
         if (*(int*)(c + 0xf8) > 0x1a000) {
-            *(int*)(((long long)(int)(c + 0xf8)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x2000;
+            *(int*)(((long long)(int)(c + 0xf8))) -= 0x2000;
         }
     }
     {
@@ -28,7 +30,7 @@ int func_ov002_020f7038(char* c, int a, int arg)
             func_ov002_020f6514((unsigned char*)obj, &data_ov002_0210bc88, 1);
         }
     }
-    *(int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) -=
+    *(int*)(((long long)(int)(c + 0x60))) -=
         (int)(((long long)*(int*)(c + 0xf8) * 0x199 + 0x800) >> 12);
     {
         struct Vector3 pos;

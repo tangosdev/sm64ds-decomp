@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_0204a5c8 at 0x0204a5c8, size 0x168
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern void func_0204af3c(void* p);
 extern void func_0204af38(void* p);
 extern void func_0204b244(void* self, void* node);

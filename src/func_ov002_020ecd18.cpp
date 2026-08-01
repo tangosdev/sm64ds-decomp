@@ -1,11 +1,5 @@
 //cpp
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Vec3 { s32 x, y, z; Vec3() {} Vec3(const Vec3 &o) { x = o.x; y = o.y; z = o.z; } };
 
 extern "C" {
@@ -23,7 +17,7 @@ extern s32 func_ov002_020ed6cc(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-extern void func_020383fc(void *self);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
 }
 struct VObj {
     virtual void v00();
@@ -136,5 +130,5 @@ void func_ov002_020ecd18(void *arg0)
         _ZN12CylinderClsn6UpdateEv(c + 0x110);
     if (o == 0)
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    func_020383fc(c + 0x144);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
 }

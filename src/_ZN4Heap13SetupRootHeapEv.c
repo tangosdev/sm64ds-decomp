@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 struct Heap;
 struct HeapS;
 extern void *data_020a0ea4;

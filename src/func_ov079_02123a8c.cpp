@@ -1,5 +1,10 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov079_02123a8c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct Actor {
     virtual void vf00();  virtual void vf01();  virtual void vf02();  virtual void vf03();
@@ -14,12 +19,11 @@ struct Actor {
 };
 
 extern "C" int Vec3_Dist(void* a, void* b);
-extern "C" int _ZN16MeshColliderBase9IsEnabledEv(void* m);
 extern "C" void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* actor);
 
 extern "C" int func_ov079_02123a8c(Actor *self)
 {
-    Vec3 v;
+    Vector3 v;
 
     if (*(unsigned char*)((char*)self + 0x404) == 0)
         return 0;

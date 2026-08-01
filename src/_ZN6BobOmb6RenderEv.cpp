@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6BobOmb6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "BobOmb.h"
 struct VBase {
     virtual void method0() = 0;
     virtual void method1() = 0;
@@ -7,14 +10,16 @@ struct VBase {
     virtual void method4() = 0;
     virtual void method5(char *arg);
 };
-extern "C" int _ZN6BobOmb6RenderEv(char *c) {
+
+int BobOmb::Render()
+{
     int result = 1;
-    if (*(unsigned char*)(c + 0x3f3) != 0) {
-        int flags = *(int*)(c + 0xb0);
+    if (unk_3f3 != 0) {
+        int flags = unk_0b0;
         int b = (flags & 0x40000) != 0;
         if (!b) {
-            VBase *obj = (VBase*)(c + 0x300);
-            obj->method5(c + 0x80);
+            VBase *obj = (VBase*)((char *)&mModelAnim);
+            obj->method5((char *)&unk_080);
         }
     }
     return result;

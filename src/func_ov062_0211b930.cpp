@@ -1,8 +1,11 @@
 //cpp
+// @symbol func_ov062_0211b930
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 struct BCA_File;
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+
+
 
 struct BlendModelAnim {
     int SetAnim(BCA_File& f, int a, int b, Fix12 spd, unsigned short t);

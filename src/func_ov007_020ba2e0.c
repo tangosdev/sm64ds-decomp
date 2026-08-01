@@ -43,6 +43,6 @@ void func_ov007_020ba2e0(void)
     data_ov007_02104ba0->x40 = 0x1000;
     data_ov007_02104ba0->x44->x18 = 0x800;
     data_ov007_02104ba0->x3c = data_ov007_02104ba0->x44->x18;
-    (*(int *)((long long)(int)((char *)data_ov007_02104ba0 + 0x24) & 0xFFFFFFFFFFFFFFFFLL)) += 1;
+    (*(int *)((long long)(int)((char *)data_ov007_02104ba0 + 0x24))) += 1;
     data_ov007_02104ba0->f8->f2 = 5;
 }

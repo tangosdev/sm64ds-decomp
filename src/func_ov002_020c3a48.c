@@ -5,7 +5,7 @@ extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b
 extern void func_ov002_020c37a4(char *self, char *arg);
 extern int _ZN6Player12FinishedAnimEv(char *c);
 extern void func_ov002_020c3cf0(char *self);
-extern void func_ov002_020bedd4(char *self);
+extern void Player_AdvanceAnims(char *self);
 
 int func_ov002_020c3a48(char *self)
 {
@@ -20,7 +20,7 @@ int func_ov002_020c3a48(char *self)
         if (_ZNK9Animation12WillHitFrameEi(anim, 0x5a)) {
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char *)(self + 0x6d9), 0, self + 0x74);
-            *(unsigned char *)(((long long)(int)(self + 0x6e5)) & 0xffffffffffffffffLL) += 1;
+            *(unsigned char *)(((long long)(int)(self + 0x6e5))) += 1;
         }
     } else {
         int buf[6];
@@ -32,7 +32,7 @@ int func_ov002_020c3a48(char *self)
         buf[5] = 0;
         func_ov002_020c37a4(self, (char *)(buf + 3));
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
-        anim = (char *)(((long long)(int)(*(char **)(self + (id << 2) + 0xdc) + 0x50)) & 0xffffffffffffffffLL);
+        anim = (char *)(((long long)(int)(*(char **)(self + (id << 2) + 0xdc) + 0x50)));
         r5 = (unsigned int)(*(int *)(anim + 8) << 4) >> 0x10;
         if (r5 == 0x6d || r5 == 0x8d) {
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
@@ -45,7 +45,7 @@ int func_ov002_020c3a48(char *self)
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char *)(self + 0x6d9), 4, self + 0x74);
             break;
         }
-        *(int *)(((long long)(int)(self + 0x688)) & 0xffffffffffffffffLL) -= 0x21000;
+        *(int *)(((long long)(int)(self + 0x688))) -= 0x21000;
         if (_ZN6Player12FinishedAnimEv(self)) {
             func_ov002_020c3cf0(self);
             return 1;
@@ -54,6 +54,6 @@ int func_ov002_020c3a48(char *self)
 
     *(int *)(self + 0x5c) = 0;
     *(int *)(self + 0x64) = *(int *)(self + 0x688);
-    func_ov002_020bedd4(self);
+    Player_AdvanceAnims(self);
     return 0;
 }

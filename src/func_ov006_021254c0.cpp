@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_021254c0
+// recovered name: dScMgBSC_c_Behavior
+/* recovered: renamed to Class_Method */
+/* dScMgBSC_c::Behavior - recovered from vtable slot identity */
 struct C; typedef void (C::*PMF)();
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov006_02142f94[];

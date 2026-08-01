@@ -16,7 +16,7 @@ void func_ov006_020f120c(char *base, int idx)
     *((int *) ((base + (i * 0x14)) + 0x4664)) = *((int *) ((base + (idx * 4)) + 0x49d8));
     *((int *) ((base + (i * 0x14)) + 0x4668)) = 0x1100;
     *((unsigned char *) ((base + (i * 0x14)) + 0x4672)) = 0;
-    *((unsigned short *) ((((int) base) + 0x5172) & 0xFFFFFFFFFFFFFFFF)) -= 0xa;
+    *((unsigned short *) ((((int) base) + 0x5172))) -= 0xa;
     if ((*((short *) (base + 0x5172))) < 0)
     {
       *((short *) (base + 0x5172)) = 0;

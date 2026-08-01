@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct MatAnimComp { u8 pad0; u8 which; u16 base; };
 struct MatAnimEntry { u16 matIdx; u8 pad2[6]; struct MatAnimComp comp[13]; };
 struct Material { u8 pad0[0x24]; u32 polyAttr; u32 diffAmb; u32 specEmi; };
@@ -10,7 +7,7 @@ struct Model { u8 pad0[4]; struct Material *materials; };
 
 extern void Crash(void);
 
-#define LAUNDER(p) ((volatile u32 *)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(p) ((volatile u32 *)(int)(((long long)(int)(p))))
 
 void func_02046e28(struct Model *model, struct MatAnimData *anim, short frame)
 {

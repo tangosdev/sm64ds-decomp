@@ -1,10 +1,7 @@
+#include "types.h"
 /* ModelAnim::UpdateVerts at 0x0201686c, size=0x30
  * Updates bone transforms then vertex positions from animation.
  */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;

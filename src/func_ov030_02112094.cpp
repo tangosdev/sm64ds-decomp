@@ -1,9 +1,14 @@
 //cpp
+// @symbol func_ov030_02112094
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef struct M4x3 { int w[12]; } M4x3;
 
-struct Vec3 { int x, y, z; };
-struct Vec3s { short x, y, z; };
-struct Bundle { Vec3s rot; short _p; Vec3 trans; int _tail[2]; };
+
+
+struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
 
 extern "C" {
 extern int _ZN6Player14IsFrontSlidingEv(void*);
@@ -16,7 +21,6 @@ extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* out);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern char data_ov030_02115ddc[];
 extern M4x3 data_020a0e68;
 void func_ov030_02112094(void* self);
 }

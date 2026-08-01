@@ -1,33 +1,34 @@
 //cpp
+// @symbol _ZN10MrBlizzard8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_SaveData.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "MrBlizzard.h"
 struct C;
 typedef int (C::*PMF)();
 struct C { char pad[0x3f8]; PMF* pp; };
-struct Vector3 { int x, y, z; };
 extern "C" {
-extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned n);
 extern int _ZN5Enemy11UpdateDeathER12WithMeshClsn(void* self, void* wm);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned a, unsigned b, const Vector3* v, const void* p, int e, int f);
 extern void func_02012694(int a, void* p);
-extern void func_ov081_021254d8(void* self);
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cyl);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, unsigned n);
-extern void func_ov081_021243cc(void* self);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 extern void _ZN12CylinderClsn6UpdateEv(void* self);
 extern void _ZN9Animation7AdvanceEv(void* self);
-extern char data_ov081_02128e94;
 extern char data_ov081_02128e24;
 extern char data_ov081_02128e84;
 extern char data_ov081_02128e64;
 }
 
-extern "C" int _ZN10MrBlizzard8BehaviorEv(C* self)
+int MrBlizzard::Behavior()
 {
-    char* c = (char*)self;
+    char* c = (char*)((C*)this);
     void* r5;
     char* p;
     if (*(int*)(c + 0x41c) == 3) {
@@ -59,8 +60,8 @@ extern "C" int _ZN10MrBlizzard8BehaviorEv(C* self)
         return 1;
     }
     if (*(int*)(c + 0x41c) == 2
-        && (char*)self->pp != &data_ov081_02128e94
-        && (char*)self->pp != &data_ov081_02128e24
+        && (char*)((C*)this)->pp != &data_ov081_02128e94
+        && (char*)((C*)this)->pp != &data_ov081_02128e24
         && _ZN8SaveData16HasPlayerLostCapEv()
         && *(int*)(c + 0x400) == 0) {
 
@@ -81,18 +82,18 @@ extern "C" int _ZN10MrBlizzard8BehaviorEv(C* self)
     *(short*)(c + 0x8e) = *(short*)(c + 0x94);
     *(short*)(c + 0x90) = *(short*)(c + 0x96);
     DecIfAbove0_Short((unsigned short*)(c + 0x100));
-    if (*(void**)((char*)self->pp + 8) != 0) {
-        PMF* p = self->pp + 1;
-        (self->**p)();
+    if (*(void**)((char*)((C*)this)->pp + 8) != 0) {
+        PMF* p = ((C*)this)->pp + 1;
+        (((C*)this)->**p)();
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
     if (*(int*)(c + 0x41c) == 0)
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
     func_ov081_021254d8(c);
-    if ((char*)self->pp != &data_ov081_02128e84
-        && (char*)self->pp != &data_ov081_02128e64
-        && (char*)self->pp != &data_ov081_02128e94
-        && (char*)self->pp != &data_ov081_02128e24)
+    if ((char*)((C*)this)->pp != &data_ov081_02128e84
+        && (char*)((C*)this)->pp != &data_ov081_02128e64
+        && (char*)((C*)this)->pp != &data_ov081_02128e94
+        && (char*)((C*)this)->pp != &data_ov081_02128e24)
         func_ov081_021243cc(c);
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     {

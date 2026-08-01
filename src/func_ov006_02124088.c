@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern void func_ov006_020d0ac0(void);
 extern int func_02054d88(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
@@ -24,7 +21,7 @@ void func_ov006_02124088(char *c)
     int counter;
 
     func_ov006_020d0ac0();
-    *(int *)(((long long)(int)(c + 0x7b84)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(int *)(((long long)(int)(c + 0x7b84))) -= 1;
     counter = *(int *)(c + 0x7b84);
 
     if (counter == 0) {
@@ -54,7 +51,7 @@ void func_ov006_02124088(char *c)
         *(s16 *)(c + 0x7b9c) = (s16)(mixRaw >> 12);
         *(s16 *)(c + 0x7b9e) = data_ov006_0212e048;
 
-        *(s16 *)(((long long)(int)(c + 0x7b9e)) & 0xFFFFFFFFFFFFFFFFLL) +=
+        *(s16 *)(((long long)(int)(c + 0x7b9e))) +=
             ((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & ~0x80000000) >> 19) - 0x800) << 2) >> 12);
 
         func_ov004_020ae5c4(c, old9c, old9e, *(s16 *)(c + 0x7b9c), *(s16 *)(c + 0x7b9e), 2, 0xc);

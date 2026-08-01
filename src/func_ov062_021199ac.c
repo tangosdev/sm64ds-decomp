@@ -1,11 +1,7 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
-struct Vector3 { s32 x, y, z; };
-
+#include "types.h"
+// @symbol func_ov062_021199ac
+/* recovered: shared common types */
+#include "common.h"
 extern void *_ZN5Actor18ClosestWithActorIDEj(void *thiz, u32 id);
 
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
@@ -52,7 +48,7 @@ int func_ov062_021199ac(char *self)
         fixed2 = (s32)(((long long)selfK * 0xb33 + 0x800) >> 12);
         if (fixed1 < fixed2)
             return 1;
-        *(s32 *)(((long long)(int)(self + 0x98)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x2000;
+        *(s32 *)(((long long)(int)(self + 0x98))) -= 0x2000;
         goto ret0;
     } else {
         if (dist >= 0x12c000)

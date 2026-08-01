@@ -1,12 +1,10 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-
+#include "types.h"
+// @symbol func_ov002_020b76ec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern u8 data_0209f2d8[];
-extern void GiveLives(int delta);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 a, const struct Vector3 *p);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
@@ -24,8 +22,8 @@ int func_ov002_020b76ec(char *self)
     *(int *)(self + 0xc8) = 0;
     *(u8 *)(self + 0x403) = 1;
 
-    *(u32 *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x40000u;
-    *(u32 *)(((int)self + 0x12c) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000u;
+    *(u32 *)(((int)self + 0xb0)) &= ~0x40000u;
+    *(u32 *)(((int)self + 0x12c)) &= ~0x8000u;
 
     if (*(int *)(self + 0x3c0) == 0) {
         *(void **)(self + 0x3c0) = _ZN5Actor13ClosestPlayerEv(self);

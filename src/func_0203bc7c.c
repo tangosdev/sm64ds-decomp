@@ -1,8 +1,6 @@
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
-
-typedef unsigned short u16;
-
 typedef struct InputPair
 {
     u16 cur;

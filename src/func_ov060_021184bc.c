@@ -9,7 +9,7 @@ void func_ov060_021184bc(char *c)
     char *a;
 
     ClearSpikeBomb(*(int *)(c + 0x1a8));
-    *(int *)(((int)c + 0x13c) & 0xFFFFFFFFFFFFFFFF) |= 1;
+    *(int *)(((int)c + 0x13c)) |= 1;
     *(int *)(c + 0x170) = 3;
     a = 0;
     for (i = 0; i < 8; i++)

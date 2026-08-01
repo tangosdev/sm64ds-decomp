@@ -25,7 +25,7 @@ extern "C" void func_ov002_020ea90c(char* self)
             *(s32*)(self + 0xa8) = 0x18000;
             *(s32*)(self + 0x440) = 3;
         } else {
-            Vector3* pp = (Vector3*)(((long long)(int)(other + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            Vector3* pp = (Vector3*)(((long long)(int)(other + 0x5c)));
             Vector3 v;
             int yv;
             v.x = pp->x;

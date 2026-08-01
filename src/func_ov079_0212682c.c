@@ -1,9 +1,4 @@
-
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
+#include "types.h"
 struct Vec3
 {
   int x;
@@ -29,7 +24,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
 void func_ov079_0212682c(char *c)
 {
   struct Vec3 sum;
-  u16 counter = *((u16 *) ((((int) c) + 0x100) & 0xFFFFFFFFFFFFFFFF));
+  u16 counter = *((u16 *) ((((int) c) + 0x100)));
   char *new_var;
   if (counter < 0x28)
   {
@@ -62,7 +57,7 @@ void func_ov079_0212682c(char *c)
   if ((*((u16 *) (c + 0x100))) == 0x32)
   {
     func_0201267c(0xd4, c + 0x74);
-    *((s32 *) ((((int) c) + 0x128) & 0xFFFFFFFFFFFFFFFF)) &= ~1;
+    *((s32 *) ((((int) c) + 0x128))) &= ~1;
   }
   {
     int hit = 0;

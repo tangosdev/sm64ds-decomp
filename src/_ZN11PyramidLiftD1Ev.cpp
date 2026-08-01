@@ -1,20 +1,24 @@
 //cpp
+// @symbol _ZN11PyramidLiftD1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "PyramidLift.h"
 extern "C" {
-extern void func_0207328c(void*,int,int,void*);
-extern void _ZN5ModelD1Ev(void*);
-extern void _ZN18MovingMeshColliderD1Ev(void*);
-extern void _ZN5ActorD2Ev(void*);
-extern int data_ov027_021139d4[];
+extern void __destroy_arr(void*,int,int,void*);
 extern int func_020072c0();
 extern int _ZTV17ExclamationSwitch[];
-void* _ZN11PyramidLiftD1Ev(char* c){
-  *(int**)c = data_ov027_021139d4;
-  func_0207328c(c+0x37c, 0xa, 0xc, (void*)func_020072c0);
-  _ZN5ModelD1Ev(c+0x320);
-  *(int**)c = _ZTV17ExclamationSwitch;
-  _ZN18MovingMeshColliderD1Ev(c+0x124);
-  _ZN5ModelD1Ev(c+0xd4);
-  _ZN5ActorD2Ev(c);
-  return c;
+void* _ZN11PyramidLiftD1Ev(struct PyramidLift *self) {
+  *(int**)((char*)self) = data_ov027_021139d4;
+  __destroy_arr(((char*)self)+0x37c, 0xa, 0xc, (void*)func_020072c0);
+  _ZN5ModelD1Ev((char*)&self->mModel2);
+  *(int**)((char*)self) = _ZTV17ExclamationSwitch;
+  _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
+  _ZN5ModelD1Ev((char*)&self->mModel1);
+  _ZN5ActorD2Ev(((char*)self));
+  return ((char*)self);
 }
 }

@@ -1,9 +1,7 @@
 //cpp
+#include "types.h"
 /* ExpandingHeap::VReallocate(void*, unsigned) at 0x0203c568 -- Heap vtable slot.
  * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-
-typedef unsigned int u32;
-
 class ExpandingHeapAllocator
 {
 public:

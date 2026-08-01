@@ -17,13 +17,13 @@ typedef struct {
     unsigned int a, b, c, d;
 } Args;
 
-extern int func_0205d3d4(int a, int b, int c);
-extern void func_0205d874(int *s);
+extern int FS_ReadFile(int a, int b, int c);
+extern void FS_InitFile(int *s);
 extern int func_0205d23c(int *a, int b);
 extern int func_0205d5e8(char *self, int a1, int a2, int a3, int a4);
-extern int func_0205a61c(void *a, void *b, int c);
+extern int CpuCopy8(void *a, void *b, int c);
 extern int func_0205d368(int *o, int r1, int sel);
-extern int func_0205d4cc(char *self);
+extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int a, unsigned int b);
 
@@ -53,7 +53,7 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
 
         if (a != 0) {
             base = a->rd - a->wr;
-            if (func_0205d3d4((int)a, (int)b, 0x160) < 0x160) {
+            if (FS_ReadFile((int)a, (int)b, 0x160) < 0x160) {
                 remain = 0;
             }
         } else {
@@ -62,13 +62,13 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             if (ctx->f80 == 0) {
                 ctx->f80 = 0x1000000;
             }
-            func_0205d874(localbuf);
+            FS_InitFile(localbuf);
             node = func_0205d23c(&data_0209a080, 3);
             func_0205d5e8((char *)localbuf, node, 0, ctx->f80 + 0x88, -1);
             a = (Ctx *)localbuf;
             base = localbuf[10] - localbuf[8];
-            func_0205a61c(ctx, cur, 0x160);
-            *(unsigned int *)((long long)(int)(cur + 0x60) & 0xFFFFFFFFFFFFFFFFLL) |= 0x406000;
+            CpuCopy8(ctx, cur, 0x160);
+            *(unsigned int *)((long long)(int)(cur + 0x60)) |= 0x406000;
         }
 
         threshold = ctx->f2c + 0x160 + ctx->f3c;
@@ -76,26 +76,26 @@ int func_02067bfc(Ctx *a, Ctx *b, unsigned int c)
             cur += 0x160;
             remain -= 0x160;
             func_0205d368((int *)a, base + ctx->wr, 0);
-            func_0205d3d4((int)a, (int)cur, ctx->f2c);
+            FS_ReadFile((int)a, (int)cur, ctx->f2c);
             cur += ctx->f2c;
             remain -= ctx->f2c;
 
             func_0205d368((int *)a, base + ctx->f30, 0);
-            func_0205d3d4((int)a, (int)cur, ctx->f3c);
+            FS_ReadFile((int)a, (int)cur, ctx->f3c);
             cur += ctx->f3c;
             remain -= ctx->f3c;
         }
 
         if (remain >= 0x88) {
             func_0205d368((int *)a, base + ctx->f80, 0);
-            func_0205d3d4((int)a, (int)cur, 0x88);
+            FS_ReadFile((int)a, (int)cur, 0x88);
             result = 1;
         }
 
         func_0205d368((int *)a, base, 0);
 
         if (flag) {
-            func_0205d4cc((char *)localbuf);
+            FS_CloseFile((char *)localbuf);
             if (result) {
                 args.a = ctx->wr;
                 rgn = data_0209a07c;

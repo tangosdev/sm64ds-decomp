@@ -1,8 +1,4 @@
-
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef long long s64;
+#include "types.h"
 extern void func_ov007_020c1448(void *a, int b, int c, int d, int e);
 extern void func_ov007_020c1404(void *c);
 extern int _ZN4cstd3divEii(int a, int b);

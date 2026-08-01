@@ -14,8 +14,8 @@ void func_ov007_020c831c(struct S *s, int shift, int r2arg)
             func_02053320(s->s1c >> r2arg, &s->v10, &s->v4, &s->v4);
         }
         *s->p += s->v4 >> r2arg;
-        *(int *)(((unsigned long long)((int)s->p + 4)) & 0xFFFFFFFFFFFFFFFF) += s->v8 >> r2arg;
-        *(int *)(((unsigned long long)((int)s->p + 8)) & 0xFFFFFFFFFFFFFFFF) += s->vc >> r2arg;
+        *(int *)(((unsigned long long)((int)s->p + 4))) += s->v8 >> r2arg;
+        *(int *)(((unsigned long long)((int)s->p + 8))) += s->vc >> r2arg;
     }
     s->v18 = 0;
     s->v14 = s->v18;

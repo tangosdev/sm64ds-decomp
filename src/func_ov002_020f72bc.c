@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Callback;
 
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -14,7 +10,7 @@ int func_ov002_020f72bc(char* c)
     *(u32*)(c + 0x84) = 0x3000;
     *(u32*)(c + 0x88) = 0x3000;
     {
-        s16* p = (s16*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+        s16* p = (s16*)(((int)c + 0x8e));
         *p = *p + 0x400;
     }
     *(u8*)(c + 0x102) = 0x1f;

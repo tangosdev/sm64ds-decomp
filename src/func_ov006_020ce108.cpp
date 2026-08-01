@@ -1,5 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov006_020ce108
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
@@ -11,11 +16,7 @@ extern int DotVec3(const Vector3 *a, const Vector3 *b);
 extern int NormalizeVec3IfNonZero(Vector3 *v);
 extern void Vec3_MulScalarInPlace(Vector3 *v, int s);
 
-extern int data_ov006_0213b33c[2];
 extern Vector3 data_020a0ebc;
-extern int data_ov006_0212e070[];
-extern int data_ov006_021405b4[];
-extern int data_ov006_021405a8[];
 }
 
 struct Obj {
@@ -83,14 +84,14 @@ extern "C" void func_ov006_020ce108(char *a, Obj *o)
         Vec3_MulScalar(&t1, &vA, *(int *)(a + 0x88));
         AddVec3(p1, &t1, p1);
         AddVec3(&acc, &vA, &acc);
-        *(short *)(((int)o + 0x22) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(short *)(((int)o + 0x22)) += 1;
     } else if (lenB < 0xE000 && NormalizeVec3IfNonZero(&vB) != 0) {
         Vec3_MulScalarInPlace(&vB, 0xE000 - lenB);
         vB.y <<= 1;
         Vec3_MulScalar(&t2, &vB, *(int *)(a + 0x88));
         AddVec3(p1, &t2, p1);
         AddVec3(&acc, &vB, &acc);
-        *(short *)(((int)o + 0x22) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(short *)(((int)o + 0x22)) += 1;
     }
 
     Vec3_MulScalar(&t3, &acc, 0x100);

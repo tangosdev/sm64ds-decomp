@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov079_021272e0
+// recovered name: FortressWall_OnHitByCannonBlastedChar
+/* recovered: renamed to Class_Method */
+/* daObjBk_Kabe_c::OnHitByCannonBlastedChar - recovered from vtable slot identity */
 struct Base {
     virtual void v0();
     virtual void v1();

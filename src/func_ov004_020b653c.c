@@ -1,4 +1,4 @@
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void func_ov004_020b1de8(int a, int b, int c, int d);
 extern void func_ov004_020af948(void *a, int b, int c, int d);
 extern void func_ov004_020b2444(int a, int b, int c, int d, int e, int f, int g);
@@ -13,11 +13,11 @@ void func_ov004_020b653c(int arg)
     if (arg < 0) absv = -arg; else absv = arg;
 
     if (arg >= 0) {
-        int idx = func_ov004_020ad674();
+        int idx = GetGameLanguage();
         r4 = 0x14;
         r6 = *(int *)(data_ov004_020bc83c[idx] + 0x34);
     } else {
-        int idx = func_ov004_020ad674();
+        int idx = GetGameLanguage();
         r4 = 0x28;
         r6 = *(int *)(data_ov004_020bc83c[idx] + 0x38);
     }

@@ -21,7 +21,7 @@ void* func_ov075_0211a740(void)
         *(char**)p = data_0208e4b8;
         *(char**)p = _ZTV5Stage;
         {
-            unsigned char* f = (unsigned char*)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* f = (unsigned char*)(((int)p + 0x13));
             *f |= 1;
             *f |= 4;
         }

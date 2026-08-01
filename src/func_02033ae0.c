@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);

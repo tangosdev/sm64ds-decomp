@@ -1,13 +1,9 @@
+#include "types.h"
 /* func_ov100_021424c0 @ 0x021424c0 (ov100, size 0x26c)
  * Bob-omb buddy/enemy walk update: handles yoshi-eat (poof on eaten),
  * steering toward the current target angle, water/ground handling with
  * landing dust and rolling sound, speed cap 0x23000, and collision update.
  */
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(char *, char *);
 extern int func_ov002_020ad660(char *, char *, char *, int);
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
@@ -57,7 +53,7 @@ int func_ov100_021424c0(char *c)
         *(u8 *)(c + 0x3d0) = 3;
         if (*(u8 *)(c + 0x3d0) != 4 && _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
             *(int *)(c + 0xa8) = 0;
-            *(int *)(int)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL) += 0xf000;
+            *(int *)(int)(((long long)(int)(c + 0x60))) += 0xf000;
         } else {
             func_ov100_02142130(c);
         }
@@ -86,8 +82,8 @@ int func_ov100_021424c0(char *c)
             } else if (*(u8 *)(c + 0x3d0) == 4) {
                 _Z14ApproachLinearRiii(c + 0x98, 0x23000, 0x400);
             } else {
-                *(int *)(int)(((long long)(int)(c + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0xd4);
-                *(int *)(int)(((long long)(int)(c + 0xac)) & 0xFFFFFFFFFFFFFFFFLL) += *(int *)(c + 0xdc);
+                *(int *)(int)(((long long)(int)(c + 0xa4))) += *(int *)(c + 0xd4);
+                *(int *)(int)(((long long)(int)(c + 0xac))) += *(int *)(c + 0xdc);
                 *(int *)(c + 0x98) = Vec3_HorzLen(c + 0xa4);
             }
         }

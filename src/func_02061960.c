@@ -1,10 +1,10 @@
-extern void *func_02061548(void);
+extern void *WM_GetSystemWork(void);
 extern int func_020614d0(void);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned addr, unsigned len);
 
 unsigned short func_02061960(void)
 {
-    unsigned char *o = (unsigned char *)func_02061548();
+    unsigned char *o = (unsigned char *)WM_GetSystemWork();
     if (func_020614d0() != 0) return 0;
     {
         unsigned char *p = *(unsigned char **)(o + 4);

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov002_020b3788
+// recovered name: BigBrickBlock_OnAttacked2
+/* recovered: renamed to Class_Method */
+/* daObjBlockL_c::OnAttacked2 - recovered from vtable slot identity */
 struct Sub { virtual void v0(); };
 extern "C" {
 void func_ov002_020b3788(char *c, char *arg1){

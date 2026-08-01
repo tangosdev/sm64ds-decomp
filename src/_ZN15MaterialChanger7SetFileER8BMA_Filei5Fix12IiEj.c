@@ -1,11 +1,8 @@
+#include "types.h"
 /* _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj at 0x020157ac
  * Sets the BMA file for a MaterialChanger. If the file is the same, updates flags and speed.
  * If different, stores the file and calls SetAnimation with the file's frame count.
  */
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 struct BMA_File { u16 numFrames; };
 
 struct Animation {

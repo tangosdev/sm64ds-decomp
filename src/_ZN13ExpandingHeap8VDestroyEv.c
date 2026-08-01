@@ -1,9 +1,7 @@
+#include "types.h"
 // ExpandingHeap::VDestroy()
 // Address: 0x0203c72c
 // Destroys the allocator and sets allocator ptr to NULL
-
-typedef unsigned int u32;
-
 struct HeapAllocator;
 
 extern void _ZN13HeapAllocator7DestroyEv(struct HeapAllocator* self);

@@ -1,8 +1,5 @@
+#include "types.h"
 #pragma opt_propagation off
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 void func_02012718(void *a, int b);
 
 typedef struct { u8 f0, f1, f2, f3; } Tab;

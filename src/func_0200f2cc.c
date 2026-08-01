@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN2GX15DisableAllBanksEv(void);
 extern void _ZN2GX13SetBankForTexEt(u16 v);
 extern void _ZN2GX17SetBankForTexPlttEt(u16 v);

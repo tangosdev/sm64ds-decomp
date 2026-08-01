@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11PyramidStep13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "PyramidStep.h"
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
@@ -14,39 +17,40 @@ void func_020393d4(int *p, int v);
 extern struct SharedFilePtr data_ov025_02113ab8;
 extern struct SharedFilePtr data_ov025_02113ab0;
 extern struct CLPS_Block data_ov025_02112ce8;
+}
 
-int _ZN11PyramidStep13InitResourcesEv(char *self){
+int PyramidStep::InitResources()
+{
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov025_02113ab8);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0x320, bmd, 1, -1);
-    func_ov025_02111e30(self);
-    func_ov025_02111dec(self);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x320, bmd, 1, -1);
+    func_ov025_02111e30(((char *)this));
+    func_ov025_02111dec(((char *)this));
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov025_02113ab0);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x374), 0x1000,
-            *(s16 *)(self + 0x8e), data_ov025_02112ce8);
+            ((char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((char *)&unk_374), 0x1000,
+            unk_08e, data_ov025_02112ce8);
     }
-    func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&mMovingMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     {
         int v = 0x5000;
-        int k = *(int*)(self + 8) & 3;
-        *(int*)(self + 0xa8) = -v;
-        *(unsigned char*)(self + 0x372) = 0;
-        *(s16*)(self + 0x370) = 0;
+        int k = unk_008 & 3;
+        unk_0a8 = -v;
+        unk_372 = 0;
+        unk_370 = 0;
         switch (k) {
         case 0:
             break;
         case 1:
-            *(int*)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0xfa000;
-            *(unsigned short*)(((int)self + 0x370) & 0xFFFFFFFFFFFFFFFF) += 0x32;
+            *(int*)(((int)((char *)this) + 0x60)) -= 0xfa000;
+            *(unsigned short*)(((int)((char *)this) + 0x370)) += 0x32;
             break;
         case 2:
-            *(int*)(((int)self + 0x60) & 0xFFFFFFFFFFFFFFFF) -= 0x1f4000;
-            *(unsigned char*)(self + 0x372) = 1;
-            *(int*)(self + 0xa8) = v;
+            *(int*)(((int)((char *)this) + 0x60)) -= 0x1f4000;
+            unk_372 = 1;
+            unk_0a8 = v;
             break;
         }
     }
     return 1;
-}
 }

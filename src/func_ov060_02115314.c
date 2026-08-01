@@ -12,7 +12,7 @@ void func_ov060_02115314(char* c)
         } else {
             *(int*)(c + 0x40c) = 0xe;
         }
-        unsigned char* q = (unsigned char*)(((int)c + 0x415) & 0xFFFFFFFFFFFFFFFF);
+        unsigned char* q = (unsigned char*)(((int)c + 0x415));
         *q = *q + 1;
         *(int*)(c + 0x3f8) = 0x1000;
     } else {

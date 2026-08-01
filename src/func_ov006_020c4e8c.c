@@ -1,4 +1,4 @@
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 int func_ov006_020e6e3c(int a, int b);
 void func_ov006_020c4d3c(char* c);
 extern short data_02082214[];

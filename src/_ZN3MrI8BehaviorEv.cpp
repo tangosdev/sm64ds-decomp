@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN3MrI8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "MrI.h"
 extern "C" {
     void func_ov071_021215c0(void *c);
     void func_0200f760(void *c, void *p);
@@ -10,12 +13,13 @@ struct CylinderClsn {
     void Update();
 };
 
-extern "C" int _ZN3MrI8BehaviorEv(char *c) {
-    func_ov071_021215c0(c);
-    func_0200f760(c, c + 0x174);
-    *(short*)(c + 0x20c) = *(short*)(c + 0x8e);
-    ((CylinderClsn*)(c + 0x174))->Clear();
-    ((CylinderClsn*)(c + 0x174))->Update();
-    func_ov071_02120c90(c);
+int MrI::Behavior()
+{
+    func_ov071_021215c0(((char *)this));
+    func_0200f760(((char *)this), ((char *)this) + 0x174);
+    unk_20c = unk_08e;
+    ((CylinderClsn*)((char *)&mMovingCylinderClsnWithPos))->Clear();
+    ((CylinderClsn*)((char *)&mMovingCylinderClsnWithPos))->Update();
+    func_ov071_02120c90(((char *)this));
     return 1;
 }

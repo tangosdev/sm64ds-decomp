@@ -16,14 +16,14 @@ void func_ov074_0211fa74(char* c)
             unsigned char* p;
             b = func_ov074_021207b8(a);
             if (b == 0) return;
-            p = (unsigned char*)(((int)a + 0x603) & 0xFFFFFFFFFFFFFFFF);
+            p = (unsigned char*)(((int)a + 0x603));
             *p = *p + 1;
             func_ov074_02121a4c(a, 0);
             func_02012694(0x15c, a + 0x74);
             return;
         }
         {
-            unsigned char* p = (unsigned char*)(((int)a + 0x603) & 0xFFFFFFFFFFFFFFFF);
+            unsigned char* p = (unsigned char*)(((int)a + 0x603));
             *p = *p + 1;
         }
         func_ov074_02121a4c(a, 0);

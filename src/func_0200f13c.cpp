@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
+#include "types.h"
 extern "C" {
 s32 func_0200f0bc(void);
 u32 LoadCompressedFileAt(unsigned int fileID, void *target);

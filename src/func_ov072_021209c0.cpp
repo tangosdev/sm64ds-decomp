@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov072_021209c0
+// recovered name: daBgSnwmn_c_Render
+/* recovered: renamed to Class_Method */
+/* daBgSnwmn_c::Render - recovered from vtable slot identity */
 extern "C" {
 extern int _ZN15TextureSequence6UpdateER15ModelComponents(void*, void*);
 }

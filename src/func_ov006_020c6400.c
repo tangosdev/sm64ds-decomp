@@ -11,7 +11,7 @@ void func_ov006_020c6400(char *self)
     Vec3 diff, scaled;
     int x, y;
     {
-        short *pa = (short*)(((long long)(int)(self+0xea)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *pa = (short*)(((long long)(int)(self+0xea)));
         *pa += 0x200;
     }
     Vec3_Sub(&diff, (Vec3*)(self+0xb4), (Vec3*)(self+0x9c));

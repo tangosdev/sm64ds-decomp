@@ -1,13 +1,11 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned long long u64;
-
-struct Vector3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov026_02111330
+// recovered name: daObjWlPolelift_c_Behavior
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjWlPolelift_c::Behavior - recovered from vtable slot identity */
 extern "C" {
     unsigned short DecIfAbove0_Short(unsigned short* p);
     void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, Vector3* out, unsigned int idx);
@@ -28,7 +26,6 @@ extern "C" {
     void _ZN13RaycastGroundD1Ev(void* self);
 }
 
-extern Vector3 data_ov026_02113a9c;
 
 struct RaycastGround { char pad[0x44]; s32 hitY; char pad2[8]; };
 

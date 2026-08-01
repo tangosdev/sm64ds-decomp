@@ -36,7 +36,7 @@ void func_ov002_020e8244(int* out, char* b)
     Vec3_LslInPlace((void*)(b + 0x4a8), 3);
     AddVec3((struct V3*)(b + 0x4a8), (struct V3*)(b + 0x5c), (struct V3*)(b + 0x4a8));
     {
-        int* p = (int*)((int)(((long long)(int)(b + 0x4ac)) & 0xFFFFFFFFFFFFFFFFLL));
+        int* p = (int*)((int)(((long long)(int)(b + 0x4ac))));
         *p = *(int*)(*(char**)(b + 0x31c) + 0xc) * 0xd + *p;
     }
     out[0] = *(int*)(b + 0x4a8);

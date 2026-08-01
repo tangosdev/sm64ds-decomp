@@ -22,10 +22,10 @@ struct Actor {
 
 extern struct Actor *_ZN5Actor13ClosestPlayerEv(void);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern struct Actor *gFarthestPlayer; /* @ 0x0209b450 */
+extern struct Actor *data_0209b450; /* @ 0x0209b450 */
 
 s16 _ZN5Actor18HorzAngleToFPlayerEv(struct Actor *self)
 {
     _ZN5Actor13ClosestPlayerEv();
-    return Vec3_HorzAngle(&self->pos, &gFarthestPlayer->pos);
+    return Vec3_HorzAngle(&self->pos, &data_0209b450->pos);
 }

@@ -1,5 +1,5 @@
 //cpp
-extern "C" void func_0203d6d0(int* o, int* a, int* b);
+extern "C" void Vec2_Sub(int* o, int* a, int* b);
 extern "C" void func_0203d680(int* out, int* in, int scale);
 extern "C" int func_ov006_020da8e4(void);
 
@@ -29,7 +29,7 @@ extern "C" void func_ov006_020da00c(C* c){
     c->f8 = c->f10;
     c->f8 = c->m2();
     c->f4 = 0x80000;
-    func_0203d6d0(&buf[0], &c->fc, &c->f4);
+    Vec2_Sub(&buf[0], &c->fc, &c->f4);
     func_0203d680(&buf[2], &buf[0], 0x100);
     c->f14 = buf[2];
     c->f18 = buf[3];

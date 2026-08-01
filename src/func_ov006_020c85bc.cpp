@@ -13,7 +13,7 @@ extern "C" void func_ov006_020c85bc(char *o)
     *(unsigned char *)(o + 0x35) = 1;
     int zero = 0;
     *(int *)(o + 0x18) = zero;
-    int *base = (int *)(((int)o + 0x20) & 0xFFFFFFFFFFFFFFFF);
+    int *base = (int *)(((int)o + 0x20));
     *base = *base << 1;
     *(int *)(o + 0x24) = data_ov006_0213b00c;
     *(short *)(o + 0x10) = (short)zero;

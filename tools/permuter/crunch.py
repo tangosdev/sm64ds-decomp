@@ -110,7 +110,12 @@ def main():
     ap.add_argument("--skip-attempted", action="store_true",
                     help="skip names in progress/refine_attempted.txt (e.g. while a "
                          "refine batch is in flight on them)")
+    ap.add_argument("--module", default=None,
+                    help="comma list of modules to keep (e.g. 'arm9'). Without it the pile "
+                         "is every module, so a module-specific push spends most of its "
+                         "budget off-target.")
     args = ap.parse_args()
+    mods = {m.strip() for m in args.module.split(",")} if args.module else None
     i, n = (int(x) for x in args.shard.split("/"))
 
     attempted = set()
@@ -123,7 +128,8 @@ def main():
         db = DB.load_db()
         pile = sorted((r for r in db.values()
                        if r.get("divergences") is not None and 0 < r["divergences"] <= args.max_div
-                       and r["name"] not in attempted),
+                       and r["name"] not in attempted
+                       and (mods is None or r.get("module") in mods)),
                       key=lambda r: (r["divergences"], r["module"], str(r["addr"])))
         if args.category:
             import json as _json

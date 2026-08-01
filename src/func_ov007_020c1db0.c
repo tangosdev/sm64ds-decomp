@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 typedef struct Vec4 { u16 a, b, c, d; } Vec4;
 
 typedef struct T {

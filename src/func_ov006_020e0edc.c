@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 void func_ov006_020e0edc(char *c, int idx)
 {
     char *b = c;

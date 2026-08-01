@@ -1,13 +1,15 @@
-extern void _ZN18MovingMeshColliderD1Ev(void *);
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern int VT0[];
-extern int VT1[];
-extern int VT2[];
+// @symbol func_ov015_02112bd0
+/* recovered: vtable identified, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_MovingMeshCollider.h"
+#include "decl_common.h"
+/* recovered: vtable identified */
+/* vtable identified: VT0 = _ZTV17daObjBk_Ukisima_c; VT1 = _ZTV10dBgActor_c */
 int *func_ov015_02112bd0(int *t)
 {
-    t[0] = (int)VT0;
-    t[0] = (int)VT1;
+    t[0] = (int)_ZTV17daObjBk_Ukisima_c;
+    t[0] = (int)_ZTV10dBgActor_c;
     t[0] = (int)VT2;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

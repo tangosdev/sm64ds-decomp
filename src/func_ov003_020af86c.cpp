@@ -1,10 +1,15 @@
 //cpp
+// @symbol func_ov003_020af86c
+// recovered name: dScStarSel_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScStarSel_c::CleanupResources - recovered from vtable slot identity */
 class Sound {
 public:
     static void UnsetPlayerVoiceGroup();
 };
 
-extern void CleanCommonModelDataArr(void);
 
 extern "C" int func_ov003_020af86c(void) {
     CleanCommonModelDataArr();

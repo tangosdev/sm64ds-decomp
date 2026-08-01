@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Vec3 { int x, y, z; };
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);

@@ -1,10 +1,11 @@
 //cpp
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
+// @symbol func_ov006_020d5384
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "dScMgAmida_c.h"
+// recovered name: dScMgAmida_c_InitResources
+/* recovered: renamed to Class_Method */
+/* dScMgAmida_c::InitResources - recovered from vtable slot identity */
 struct Obj {
     virtual void v00();
     virtual void v04();
@@ -57,7 +58,7 @@ extern "C" {
     void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
     void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void Deallocate(void *ptr);
-    void *func_02054fb0(void);
+    void *_ZN2G212GetBG3ScrPtrEv(void);
     void *_ZN3G2S13GetBG3CharPtrEv(void);
     void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void *_ZN3G2S12GetBG3ScrPtrEv(void);
@@ -75,19 +76,20 @@ extern "C" {
 
 extern "C" int func_ov006_020d5384(Obj *c)
 {
+    struct dScMgAmida_c *self = (struct dScMgAmida_c *)(void *)c;
     volatile u16 sp4;
     volatile u16 sp6;
     void *f;
 
-    *(int *)((char *)c + 0x470c) = _ZN6Memory8AllocateEj(0x15800);
-    *(int *)((char *)c + 0x4710) = _ZN6Memory8AllocateEj(0x15800);
+    self->unk_470c = _ZN6Memory8AllocateEj(0x15800);
+    self->unk_4710 = _ZN6Memory8AllocateEj(0x15800);
 
     if (c->v90() != 0) {
-        *(int *)((char *)c + 0x4700) = 0x78;
-        *(int *)((char *)c + 0x53e4) = 2;
+        self->unk_4700 = 0x78;
+        self->unk_53e4 = 2;
     } else {
-        *(int *)((char *)c + 0x4700) = 0x98;
-        *(int *)((char *)c + 0x53e4) = 2;
+        self->unk_4700 = 0x98;
+        self->unk_53e4 = 2;
     }
 
     data_0208ee44 = 1;
@@ -122,14 +124,14 @@ extern "C" int func_ov006_020d5384(Obj *c)
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x1a0);
         _ZN2GX10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
         Deallocate(f);
-        LoadCompressedFileAt(0x21, func_02054fb0());
+        LoadCompressedFileAt(0x21, _ZN2G212GetBG3ScrPtrEv());
     } else {
         LoadCompressedFileAt(0x15, (void *)func_02054d88());
         f = (void *)LoadFile(0x16);
         _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)f, 0x1a0);
         _ZN2GX10LoadBGPlttEPKvjj(f, 0x60, 0x1a0);
         Deallocate(f);
-        LoadCompressedFileAt(0x17, func_02054fb0());
+        LoadCompressedFileAt(0x17, _ZN2G212GetBG3ScrPtrEv());
     }
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x40c;
@@ -192,8 +194,8 @@ extern "C" int func_ov006_020d5384(Obj *c)
         Deallocate(f);
     }
 
-    *(int *)((char *)c + 0x53d4) = 0;
-    *(int *)((char *)c + 0x53e8) = *(int *)((char *)c + 0xbc) * 5;
+    self->unk_53d4 = 0;
+    self->unk_53e8 = self->unk_0bc * 5;
     func_ov006_020d3ba0(c);
     return 1;
 }

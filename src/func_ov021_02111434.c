@@ -1,3 +1,6 @@
+// @symbol func_ov021_02111434
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 typedef short s16;
 
@@ -13,11 +16,9 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12 x, Fix12 y, Fix12 z);
 
-struct M48 {
-    int w[12];
-};
 
-extern struct M48 data_020a0e68;
+
+extern struct Matrix4x3 data_020a0e68;
 extern const int data_ov021_02114a20[];
 extern const s16 data_ov021_02114740[];
 
@@ -28,7 +29,7 @@ static asm unsigned conv_ov021(unsigned x) {
 
 int func_ov021_02111434(char *c)
 {
-    struct M48 mtx;
+    struct Matrix4x3 mtx;
     int i;
     char *src;
     char *tr;
@@ -46,7 +47,7 @@ int func_ov021_02111434(char *c)
     Matrix4x3_ApplyInPlaceToRotationZ((struct Matrix4x3 *)(&data_020a0e68), *((s16 *)(c + 0x90)));
     rv = 1;
     Matrix4x3_ApplyInPlaceToRotationY((struct Matrix4x3 *)(&data_020a0e68), *((s16 *)(c + 0x8e)));
-    *((struct M48 *)(c + 0xf0)) = data_020a0e68;
+    *((struct Matrix4x3 *)(c + 0xf0)) = data_020a0e68;
     src = c + 0xf0;
     tr = (char *)(&data_ov021_02114a20[0]);
     i = 0;
@@ -63,11 +64,11 @@ int func_ov021_02111434(char *c)
                 v[rv] = ny - 0x1e000;
             }
         }
-        *((struct M48 *)(&data_020a0e68)) = *((struct M48 *)src);
+        *((struct Matrix4x3 *)(&data_020a0e68)) = *((struct Matrix4x3 *)src);
         Vec3_Asr(vo, (void *)v, 3);
         Matrix4x3_ApplyInPlaceToTranslation((struct Matrix4x3 *)(&data_020a0e68), vo[0], vo[rv], vo[2]);
         Matrix4x3_ApplyInPlaceToRotationY((struct Matrix4x3 *)(&data_020a0e68), data_ov021_02114740[i]);
-        *((struct M48 *)(obj + 0x33c)) = data_020a0e68;
+        *((struct Matrix4x3 *)(obj + 0x33c)) = data_020a0e68;
         tr += 0xc;
         obj += 0x50;
     }

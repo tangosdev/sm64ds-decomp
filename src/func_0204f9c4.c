@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_0204f9c4 at 0x0204f9c4
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned char u8;
-
 extern void func_0204f5a0(u8 *thiz, int arg1);
 
 extern u8 data_020a4d6c[];

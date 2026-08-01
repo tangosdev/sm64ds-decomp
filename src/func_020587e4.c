@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct MsgQueue {
     u16 queueSend;      /* 0x00 */
     u16 queueReceive;   /* 0x02 */
@@ -12,8 +10,8 @@ struct MsgQueue {
 
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
-void func_020580f0(u16 *self);
-void func_0205807c(u16 *self);
+void OS_SleepThread(u16 *self);
+void OS_WakeupThread(u16 *self);
 
 int func_020587e4(struct MsgQueue *self, u32 *msg, int flags) {
     u32 enabled = _ZN3IRQ7DisableEv();
@@ -23,15 +21,15 @@ int func_020587e4(struct MsgQueue *self, u32 *msg, int flags) {
             _ZN3IRQ7RestoreEj(enabled);
             return 0;
         }
-        func_020580f0(&self->queueReceive);
+        OS_SleepThread(&self->queueReceive);
     }
 
     if (msg != 0) {
         *msg = self->msgArray[self->firstIndex];
     }
     self->firstIndex = (self->firstIndex + 1) % self->msgCount;
-    *(int *)(((long long)(int)&self->usedCount) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
-    func_0205807c(&self->queueSend);
+    *(int *)(((long long)(int)&self->usedCount)) -= 1;
+    OS_WakeupThread(&self->queueSend);
 
     _ZN3IRQ7RestoreEj(enabled);
     return 1;

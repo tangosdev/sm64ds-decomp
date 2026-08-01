@@ -1,7 +1,7 @@
 extern unsigned char func_02072d90(void *p);
 extern void func_020731fc(void);
 extern unsigned char func_020729f4(void *p);
-extern unsigned char *func_02071af8(unsigned char *p, int *out);
+extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 
 struct Arr21 {
     int w[21];
@@ -72,7 +72,7 @@ int func_02072014(int *c, int *arg)
         }
     }
 done:
-    func_02071af8((unsigned char *)(l.a[2] + 1), &tmp);
+    ReadSignedVarInt((unsigned char *)(l.a[2] + 1), &tmp);
     base = l.cpart.f6;
     bt = base + tmp;
     c[0] = *(int *)(bt + 4);

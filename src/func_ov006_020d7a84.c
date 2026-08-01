@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
-
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
@@ -26,7 +22,7 @@ void func_ov006_020d7a84(char *c, int i)
         s16 tv = data_02082214[
             ((*(u16 *)(c + i * 0x40 + 0x468c) >> 4) * 2) + 1];
 
-        *(int *)((char *)(((int)c + 0x4660) & 0xFFFFFFFFFFFFFFFF) +
+        *(int *)((char *)(((int)c + 0x4660)) +
                   i * 0x40) +=
             (int)(((s64)tv *
                    *(int *)(c + i * 0x40 + 0x4670) + 0x800) >> 12);
@@ -36,7 +32,7 @@ void func_ov006_020d7a84(char *c, int i)
         s16 tv = data_02082214[
             (*(u16 *)(c + i * 0x40 + 0x468c) >> 4) * 2];
 
-        *(int *)((char *)(((int)c + 0x4664) & 0xFFFFFFFFFFFFFFFF) +
+        *(int *)((char *)(((int)c + 0x4664)) +
                   i * 0x40) +=
             (int)(((s64)tv *
                    *(int *)(c + i * 0x40 + 0x4670) + 0x800) >> 12);

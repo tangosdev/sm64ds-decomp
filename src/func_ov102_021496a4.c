@@ -1,7 +1,10 @@
-extern int func_ov102_02149078(void *c);
-extern void func_ov102_02149da8(void *c, int i);
-typedef unsigned char u8;
-typedef short s16;
+#include "types.h"
+// @symbol func_ov102_021496a4
+// recovered name: QuestionBlock_OnHitFromUnderneath
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjHatenaBlock_c::OnHitFromUnderneath - recovered from vtable slot identity */
 void func_ov102_021496a4(void *c, void *x) {
     if (*(int *)((char *)c + 0x3e8) == 1) return;
     *(int *)((char *)c + 0x9c) = -0x8000;

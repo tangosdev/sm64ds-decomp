@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern "C" {
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern int _Z15ApproachLinear2Rsss(s16 *a, s16 b, s16 c);

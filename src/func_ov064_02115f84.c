@@ -1,3 +1,7 @@
+// @symbol func_ov064_02115f84
+// recovered name: daBDonketu_c_OnAimedAtWithEgg
+/* recovered: renamed to Class_Method */
+/* daBDonketu_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 struct UnknownStruct {
     char pad[0x24];
     int value;

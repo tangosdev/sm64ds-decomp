@@ -1,14 +1,9 @@
 //cpp
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" {
 extern int func_ov002_020e2be4(char *c);
 extern int func_ov002_020e2b6c(char *c);
-extern int func_ov002_020bf30c(char *c, int a);
+extern int Player_ScaleByCharFactor(char *c, int a);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *s);
 extern void func_ov002_020bf2d8(char *c, int a);
 extern void func_ov002_020e2ad0(char *c);
@@ -52,7 +47,7 @@ skipclear:
         *(u8 *)(c + 0x6e1) = 0;
 
     if (*(u8 *)(c + 0x6e1) == 2 && *(u8 *)(c + 0x6ff) == 0) {
-        if (*(int *)(c + 0x98) <= func_ov002_020bf30c(c, 0x14000))
+        if (*(int *)(c + 0x98) <= Player_ScaleByCharFactor(c, 0x14000))
             *(u8 *)(c + 0x6e1) = 0;
     }
 
@@ -74,8 +69,8 @@ skipclear:
         } else {
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x9c, 0x40000000, 0x1000, 0);
         }
-        if (*(int *)(c + 0x98) > func_ov002_020bf30c(c, 0x64000)) {
-            *(int *)(c + 0x98) = func_ov002_020bf30c(c, 0x64000);
+        if (*(int *)(c + 0x98) > Player_ScaleByCharFactor(c, 0x64000)) {
+            *(int *)(c + 0x98) = Player_ScaleByCharFactor(c, 0x64000);
         }
     }
 
@@ -93,11 +88,11 @@ skipclear:
     *(int *)(c + 0x98) = (int)(((long long)*(int *)(c + 0x98) * 0xccc + 0x800) >> 12);
 
     if (AngleDiff(*(s16 *)(c + 0x94), *(s16 *)(c + 0x8e)) >= 0x4000) {
-        *(int *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) >>= 2;
+        *(int *)(((int)c + 0x98)) >>= 2;
     }
 
     if (func_ov002_020c19d0(c, 0x64, 0x32) != 0) {
-        *(u16 *)(((int)c + 0x6ce) & 0xFFFFFFFFFFFFFFFF) |= 0x200;
+        *(u16 *)(((int)c + 0x6ce)) |= 0x200;
         *(int *)(c + 0x98) = 0;
     }
     return 1;

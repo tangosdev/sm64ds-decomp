@@ -42,20 +42,20 @@ void func_ov006_02110e28(struct C* c)
     func_0203d388(&c->v[6], c->angle);
     func_0203d388(&c->v[7], c->angle);
 
-    *(int*)(((int)c + 0x38) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x40) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x44) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x48) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x4c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x54) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x58) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x68) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x6c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
-    *(int*)(((int)c + 0x70) & 0xFFFFFFFFFFFFFFFFLL) += c->dx;
-    *(int*)(((int)c + 0x74) & 0xFFFFFFFFFFFFFFFFLL) += c->dy;
+    *(int*)(((int)c + 0x38)) += c->dx;
+    *(int*)(((int)c + 0x3c)) += c->dy;
+    *(int*)(((int)c + 0x40)) += c->dx;
+    *(int*)(((int)c + 0x44)) += c->dy;
+    *(int*)(((int)c + 0x48)) += c->dx;
+    *(int*)(((int)c + 0x4c)) += c->dy;
+    *(int*)(((int)c + 0x50)) += c->dx;
+    *(int*)(((int)c + 0x54)) += c->dy;
+    *(int*)(((int)c + 0x58)) += c->dx;
+    *(int*)(((int)c + 0x5c)) += c->dy;
+    *(int*)(((int)c + 0x60)) += c->dx;
+    *(int*)(((int)c + 0x64)) += c->dy;
+    *(int*)(((int)c + 0x68)) += c->dx;
+    *(int*)(((int)c + 0x6c)) += c->dy;
+    *(int*)(((int)c + 0x70)) += c->dx;
+    *(int*)(((int)c + 0x74)) += c->dy;
 }

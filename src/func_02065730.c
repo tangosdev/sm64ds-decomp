@@ -1,3 +1,4 @@
+#include "types.h"
 /* func_02065730 at 0x02065730
  * Builds a 0x9c-byte struct on the stack, fills it from args/copies,
  * then calls func_02065af0(sp). Returns void.
@@ -15,10 +16,6 @@
  *
  * Parameters: r0=u16 type, r1=u32, r2=const void* src1, r3=u32, (stack)void* src2, (stack)u32 extra
  */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern void MultiCopy_Int(const void *src, void *dst, u32 size);  /* 0x0205a490 */
 extern void func_02065af0(void *pkt);
 

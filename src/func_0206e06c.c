@@ -28,13 +28,13 @@ int func_0206e06c(S6e06c *p)
         return 0;
 
     if (p->b8 >= 3)
-        *(unsigned int *)(((int)p + 8) & 0xFFFFFFFFFFFFFFFF) = (*(unsigned int *)(((int)p + 8) & 0xFFFFFFFFFFFFFFFF) & ~7) | 2;
+        *(unsigned int *)(((int)p + 8)) = (*(unsigned int *)(((int)p + 8)) & ~7) | 2;
 
     if (p->b8 == 2)
         *(int *)((char *)p + 0x28) = 0;
 
     if (p->b8 != 1) {
-        *(unsigned int *)(((int)p + 8) & 0xFFFFFFFFFFFFFFFF) &= ~7;
+        *(unsigned int *)(((int)p + 8)) &= ~7;
         return 0;
     }
 
@@ -43,7 +43,7 @@ int func_0206e06c(S6e06c *p)
         *(int *)((char *)p + 0x28) = 0;
         return -1;
     }
-    *(unsigned int *)(((int)p + 8) & 0xFFFFFFFFFFFFFFFF) &= ~7;
+    *(unsigned int *)(((int)p + 8)) &= ~7;
     *(int *)((char *)p + 0x18) = 0;
     *(int *)((char *)p + 0x28) = 0;
     return 0;

@@ -1,11 +1,12 @@
+#include "types.h"
+// @symbol _ZN5Model8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header */
+#include "Model.h"
 /* Model::LoadFile (static) at 0x02017a3c
  * Loads a SharedFilePtr; if it's the first reference and file is non-null,
  * calls UpdateFileOffsets, AddToCommonModelDataArr, and ReallocateModelFile.
  * Returns the BMD_File pointer.
  */
-
-typedef unsigned char u8;
-
 struct SharedFilePtr {
     unsigned short fileID;  /* 0x00 */
     u8 numRefs;             /* 0x02 */

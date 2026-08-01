@@ -1,8 +1,8 @@
 extern short data_02082214[];
 void func_ov063_0211a810(char *r0, int cond)
 {
-    int *f = (int *)(((long long)(int)(r0 + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL);
-    unsigned short *h = (unsigned short *)(((long long)(int)(r0 + 0x5d4)) & 0xFFFFFFFFFFFFFFFFLL);
+    int *f = (int *)(((long long)(int)(r0 + 0x19c)));
+    unsigned short *h = (unsigned short *)(((long long)(int)(r0 + 0x5d4)));
     *f |= 1;
     *h &= ~4;
     *(short *)(r0 + 0x5b4) = *(short *)(r0 + 0x94);

@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" {
 int func_0203da3c(void);
 u32 func_0206045c(void);

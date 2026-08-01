@@ -1,7 +1,10 @@
-extern int func_ov081_0212423c();
+// @symbol func_ov081_02124e64
+// recovered name: Spindrift_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daHuwa_c::Kill - recovered from vtable slot identity */
 extern int func_ov081_02125488();
-extern int func_ov081_021245e8();
-extern int data_ov081_02128e34[];
 extern int data_ov081_02128e64[];
 int func_ov081_02124e64(char *c){
   func_ov081_0212423c(c, 0);

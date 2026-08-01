@@ -1,8 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
+#include "types.h"
 enum { false = 0, true = 1 };
 
 typedef struct Thing {
@@ -26,7 +22,7 @@ typedef struct Thing {
 
 extern void _Z14ApproachLinearRiii(s32* v, s32 target, s32 step);
 extern int func_ov006_02108e24(Thing* t);
-extern void func_0203d6d0(s32* out, s32* a, Thing* b);
+extern void Vec2_Sub(s32* out, s32* a, Thing* b);
 extern void func_ov004_020b1b40(int c);
 extern void func_ov006_021094ac(Thing* t, s32* v);
 extern s16 func_ov006_02108650(s32 x, s32 z);
@@ -64,7 +60,7 @@ void func_ov006_02108f2c(Thing* t)
         s32 out[2];
         _Z14ApproachLinearRiii(&t->unk0, t->unk18, t->unk10);
         _Z14ApproachLinearRiii(&t->unk4, t->unk1C, t->unk14);
-        func_0203d6d0(out, &t->unk18, t);
+        Vec2_Sub(out, &t->unk18, t);
         if (out[0] != 0)
             return;
         if (out[1] != 0)
@@ -75,7 +71,7 @@ void func_ov006_02108f2c(Thing* t)
         s32 out[2];
         _Z14ApproachLinearRiii(&t->unk0, t->unk18, t->unk10);
         _Z14ApproachLinearRiii(&t->unk4, t->unk1C, t->unk14);
-        func_0203d6d0(out, &t->unk18, t);
+        Vec2_Sub(out, &t->unk18, t);
         if (out[0] != 0)
             return;
         if (out[1] == 0) {
@@ -87,10 +83,10 @@ void func_ov006_02108f2c(Thing* t)
         s32* p;
         s32 q;
         d = func_020b9488;
-        p = (s32*)(((s32)t + 4) & 0xFFFFFFFFFFFFFFFF);
+        p = (s32*)(((s32)t + 4));
         q = -((t->unk30 - (d >> 1)) << 12) / d - 0x600;
         *p += (s32)((((s64)q << 14) + 0x800) >> 12);
-        *(s16*)(((s32)t + 0x30) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(s16*)(((s32)t + 0x30)) -= 1;
         if (t->unk30 == 0)
             t->unk32 = 6;
     } else if (state == 2) {

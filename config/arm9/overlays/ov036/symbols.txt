@@ -176,6 +176,7 @@ ShipWing_SpawnInfo kind:data(any) addr:0x02113c14 ambiguous
 data_ov036_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov036_02113c28 kind:data(any) addr:0x02113c28 ambiguous
 _ZTV18RotatingPlatformRr kind:data(any) addr:0x02113c38
+_ZTV14daObjRc_Hane_c kind:data(any) addr:0x02113c38
 data_ov036_02113c48 kind:data(any) addr:0x02113c48 ambiguous
 data_ov036_02113cb4 kind:data(any) addr:0x02113cb4
 data_ov036_02113cc0 kind:data(any) addr:0x02113cc0
@@ -184,6 +185,7 @@ DonutBlock_SpawnInfo kind:data(any) addr:0x02113cd4 ambiguous
 data_ov036_02113cec kind:data(any) addr:0x02113cec ambiguous
 data_ov036_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
 _ZTV8ShipWing kind:data(any) addr:0x02113cf8
+_ZTV16daObjRc_Tikuwa_c kind:data(any) addr:0x02113cf8
 data_ov036_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov036_02113d78 kind:data(any) addr:0x02113d78
 data_ov036_02113d84 kind:data(any) addr:0x02113d84

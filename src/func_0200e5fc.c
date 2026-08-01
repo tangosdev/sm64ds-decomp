@@ -17,7 +17,7 @@ void* func_0200e5fc(u32 idx) {
     if (data_0209b284[idx] != 0) return 0;
     flag = 0x11;
     b = (data_0209f2d8 == 2) ? 1 : 0;
-    if ((int)(((long long)b) & 0xFFFFFFFFFFFFFFFFLL) != 0) {
+    if ((int)(((long long)b)) != 0) {
         if (_ZN8SaveData19IsCharacterUnlockedEj(idx) == 0) return 0;
         flag = 0;
     }

@@ -1,3 +1,8 @@
+#include "types.h"
+// @symbol func_0202ee38
+// recovered name: dWipe_c_IsAtStart
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsAtStart - recovered from vtable slot identity */
 /* func_0202ee38 - IsAtStart wrapper.
  * Attempt 1: same goto pattern as func_0202eddc. ROM structure:
  * if unk14==1: call IsAtStart, return result.
@@ -6,9 +11,6 @@
  * ret1: return 1; ret0: return 0
  * Same stmdb+sub sp,#4 prologue = 0x5c total.
  */
-typedef int s32;
-typedef unsigned int u32;
-
 struct FaderBrightness;
 extern int _ZN15FaderBrightness9IsAtStartEv(struct FaderBrightness* self);
 

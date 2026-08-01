@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN10DonutBlock8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "DonutBlock.h"
 typedef int Fix12;
 struct MeshColliderBase { bool IsEnabled(); void Disable(); };
 struct Platform {
@@ -7,18 +10,18 @@ struct Platform {
     void UpdateClsnPosAndRot();
 };
 
-extern "C" int _ZN10DonutBlock8BehaviorEv(char *c)
+int DonutBlock::Behavior()
 {
-    short *s = (short *)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
-    short *t = (short *)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFF);
+    short *s = (short *)(((int)((char *)this) + 0x8e));
+    short *t = (short *)(((int)((char *)this) + 0x300));
     *s = (short)(*s + t[0x1e / 2]);
-    int b = (int)((*(int *)(c + 0xb0) & 8) != 0);
+    int b = (int)((unk_0b0 & 8) != 0);
     if (b != 0) {
-        if (((MeshColliderBase *)(c + 0x124))->IsEnabled())
-            ((MeshColliderBase *)(c + 0x124))->Disable();
+        if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
+            ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
         return 1;
     }
-    Platform *p = (Platform *)c;
+    Platform *p = (Platform *)((char *)this);
     p->UpdateModelPosAndRotY();
     if (p->IsClsnInRange(0, 0))
         p->UpdateClsnPosAndRot();

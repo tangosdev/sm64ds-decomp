@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct FreeList
 {
     void *begin;
@@ -21,7 +20,7 @@ int _ZN18SolidHeapAllocator9SaveStateEj(void *c, u32 arg)
     int *p;
 
     fb = inline_fn(c);
-    saved = *(void **)(((long long)(int)fb) & 0xFFFFFFFFFFFFFFFFLL);
+    saved = *(void **)(((long long)(int)fb));
     p = (int *)_ZN18SolidHeapAllocator16AllocateForwardsEPvjj(fb, 0x10, 4);
     if (!p)
         return 0;

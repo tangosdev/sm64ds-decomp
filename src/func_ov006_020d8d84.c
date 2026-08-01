@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_ov006_020d836c(char *c);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int i);
 extern void func_ov006_020d634c(char *c, int i);
@@ -17,7 +14,7 @@ void func_ov006_020d8d84(char *self)
     func_ov006_020d836c(self);
 
     if (*(u16 *)(self + 0x62e8) != 0) {
-        (*(u16 *)(((long long)(int)(self + 0x62e8)) & 0xFFFFFFFFFFFFFFFFLL))--;
+        (*(u16 *)(((long long)(int)(self + 0x62e8))))--;
         if (*(s16 *)(self + 0x62e8) < 0)
             *(s16 *)(self + 0x62e8) = 0;
         return;

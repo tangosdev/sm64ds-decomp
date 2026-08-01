@@ -1,5 +1,9 @@
-extern int func_ov006_020e6e78(void *p);
-extern void SetBg2Offset(int a, int b);
+// @symbol func_ov006_021230e8
+// recovered name: dScMgTrampoline2_c_OnKicked
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline2_c::OnKicked - recovered from vtable slot identity */
 extern unsigned char data_0209d45c[];
 
 int func_ov006_021230e8(void *thiz)

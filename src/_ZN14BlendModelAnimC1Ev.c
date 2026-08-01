@@ -1,10 +1,7 @@
+#include "types.h"
 /* _ZN14BlendModelAnimC1Ev at 0x020166d4 (64 bytes)
  * BlendModelAnim::BlendModelAnim() constructor - returns this.
  */
-
-typedef unsigned int u32;
-typedef int Fix12i;
-
 struct Animation {
     u32 vtable;
     Fix12i numFramesAndFlags;

@@ -22,7 +22,7 @@ void func_ov002_020cd71c(char *self)
 
     if (target > 0) {
         if (*(s16 *)(self + 0x69c) < 0) {
-            s16 *q = (s16 *)(((int)self + 0x69c) & 0xFFFFFFFFFFFFFFFFLL);
+            s16 *q = (s16 *)(((int)self + 0x69c));
             *q = *q + 0x40;
             if (*(s16 *)(self + 0x69c) > c)
                 *(s16 *)(self + 0x69c) = c;
@@ -31,7 +31,7 @@ void func_ov002_020cd71c(char *self)
         }
     } else if (target < 0) {
         if (*(s16 *)(self + 0x69c) > 0) {
-            s16 *q = (s16 *)(((int)self + 0x69c) & 0xFFFFFFFFFFFFFFFFLL);
+            s16 *q = (s16 *)(((int)self + 0x69c));
             *q = *q - 0x40;
             if (*(s16 *)(self + 0x69c) < -c)
                 *(s16 *)(self + 0x69c) = -c;
@@ -43,7 +43,7 @@ void func_ov002_020cd71c(char *self)
     }
 
     {
-        s16 *q = (s16 *)(((int)self + 0x8e) & 0xFFFFFFFFFFFFFFFFLL);
+        s16 *q = (s16 *)(((int)self + 0x8e));
         *q = *q + *(s16 *)(self + 0x69c);
     }
     *(s16 *)(self + 0x90) = -(*(s16 *)(self + 0x69c) << 3);

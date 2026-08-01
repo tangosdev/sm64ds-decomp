@@ -11,7 +11,7 @@ extern unsigned char data_0208f074[];
 extern unsigned char data_0209d6a4;
 extern unsigned char data_0209d6b0;
 extern unsigned char data_0209d710[];
-unsigned int func_02054e88(void);
+unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 int func_02054d88(void);
 }
 
@@ -31,7 +31,7 @@ void Message::AddChar(char c)
     if (data_0209d698 == 2)
         ip = (int *)((char *)data_0209d6f8 + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     else if (data_0209d698 == 1)
-        ip = (int *)((char *)func_02054e88() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+        ip = (int *)((char *)_ZN3G2S13GetBG1CharPtrEv() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     else
         ip = (int *)((char *)func_02054d88() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
 

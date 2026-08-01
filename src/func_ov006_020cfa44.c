@@ -1,10 +1,7 @@
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
-#define LA(p) ((int)(((s64)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((s64)(int)(p))))
 
 extern s16 data_02082214[];
 extern void func_ov006_020cfc74(char *o);

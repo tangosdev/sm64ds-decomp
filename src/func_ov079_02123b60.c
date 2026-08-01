@@ -1,3 +1,7 @@
+// @symbol func_ov079_02123b60
+// recovered name: Whomp_OnAimedAtWithEgg
+/* recovered: renamed to Class_Method */
+/* daBtn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 extern short data_02082214[];
 int func_ov079_02123b60(char* c){
     int idx;

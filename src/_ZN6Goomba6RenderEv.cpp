@@ -1,6 +1,11 @@
 //cpp
+// @symbol _ZN6Goomba6RenderEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_CapEnemy.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Goomba.h"
 #pragma opt_common_subs off
-struct Vector3 { int x, y, z; };
 
 struct Sub {
     virtual void m0();
@@ -12,38 +17,36 @@ struct Sub {
 };
 
 extern "C" {
-extern int data_ov084_02130258[];
 extern void _ZN15MaterialChanger6UpdateER15ModelComponents(char* self, void* model);
-extern void _ZN8CapEnemy14RenderCapModelEPK7Vector3(char* c, const Vector3* v);
 }
 
-extern "C" int _ZN6Goomba6RenderEv(char* c)
+int Goomba::Render()
 {
     int locked;
     volatile Vector3 backup;
 
-    locked = (*(unsigned int*)(c + 0xb0) & 0x40000) != 0;
-    if (locked || *(unsigned char*)(c + 0x111) != 0) return 1;
+    locked = (unk_0b0 & 0x40000) != 0;
+    if (locked || unk_111 != 0) return 1;
 
-    backup.x = *(int*)(c + 0x80);
-    backup.y = *(int*)(c + 0x84);
-    backup.z = *(int*)(c + 0x88);
+    backup.x = mScaleX;
+    backup.y = mScaleY;
+    backup.z = mScaleZ;
 
-    if (*(int*)(c + 0x10c) == 1) {
-        *(int*)(c + 0x80) = (int)(((long long)*(int*)(c + 0x80) * data_ov084_02130258[*(int*)(c + 0x460)] + 0x800) >> 12);
-        *(int*)(c + 0x84) = (int)(((long long)*(int*)(c + 0x84) * data_ov084_02130258[*(int*)(c + 0x460)] + 0x800) >> 12);
-        *(int*)(c + 0x88) = (int)(((long long)*(int*)(c + 0x88) * data_ov084_02130258[*(int*)(c + 0x460)] + 0x800) >> 12);
+    if (mDeathType == 1) {
+        mScaleX = (int)(((long long)mScaleX * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
+        mScaleY = (int)(((long long)mScaleY * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
+        mScaleZ = (int)(((long long)mScaleZ * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
     }
 
     {
-        Sub* b = (Sub*)(c + 0x370);
-        b->m5((Vector3*)(c + 0x80));
+        Sub* b = (Sub*)((char*)&mModelAnim);
+        b->m5((Vector3*)((char*)&mScaleX));
     }
 
-    *(int*)(c + 0x80) = backup.x;
-    *(int*)(c + 0x84) = backup.y;
-    *(int*)(c + 0x88) = backup.z;
-    _ZN15MaterialChanger6UpdateER15ModelComponents(c + 0x3fc, c + 0x378);
-    _ZN8CapEnemy14RenderCapModelEPK7Vector3(c, 0);
+    mScaleX = backup.x;
+    mScaleY = backup.y;
+    mScaleZ = backup.z;
+    _ZN15MaterialChanger6UpdateER15ModelComponents(((char*)this) + 0x3fc, ((char*)this) + 0x378);
+    _ZN8CapEnemy14RenderCapModelEPK7Vector3(((char*)this), 0);
     return 1;
 }

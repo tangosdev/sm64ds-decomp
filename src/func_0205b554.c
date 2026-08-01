@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
 
 void func_0205b554(char *p)

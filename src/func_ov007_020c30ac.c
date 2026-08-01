@@ -1,13 +1,15 @@
-struct Vec3 { int x, y, z; };
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-int func_ov007_020c30ac(struct Vec3 *arr, int count, struct Vec3 *target, int arg4, int *out)
+// @symbol func_ov007_020c30ac
+/* recovered: shared common types */
+#include "common.h"
+extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, int arg4, int *out)
 {
-    struct Vec3 diff; long long d2; int i; int bestIdx;
+    struct Vector3 diff; long long d2; int i; int bestIdx;
     long long best = 0x7fffffffffffffffLL;
     for (i = 0; i < count; i++) {
         SubVec3(arr, target, &diff);
         d2 = (long long)diff.x * diff.x + (long long)diff.y * diff.y + (long long)diff.z * diff.z;
-        arr = (struct Vec3 *)((char *)arr + 0xc);
+        arr = (struct Vector3 *)((char *)arr + 0xc);
         if (d2 < best) { bestIdx = i; best = d2; }
     }
     if (arg4 < 0 || (long long)arg4 * arg4 >= best) {

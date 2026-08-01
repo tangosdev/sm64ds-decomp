@@ -1,13 +1,16 @@
+// @symbol func_ov081_02124f7c
+/* recovered: shared common types */
+#include "common.h"
 extern void func_02012694(int a0, void *a1);
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned a, unsigned b, int c, int d, int e, const void *f, void *g);
 
-struct Vec3 { int x, y, z; };
+
 
 int func_ov081_02124f7c(char *thiz)
 {
     int n;
-    struct Vec3 pos;
+    struct Vector3 pos;
     void *cb;
 
     *(int *)(thiz + 0xa8) = 0x3c000;

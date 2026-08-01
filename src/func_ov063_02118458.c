@@ -37,13 +37,13 @@ void func_ov063_02118458(void* self)
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x380,
                     *(void**)(&data_ov063_0211edd4 + 1), 0x40000000, 0x1000, 0);
             } else if (*(u8*)(c + 0x5d2) != 0) {
-                *(u8*)(((long long)(int)(c + 0x5d2)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+                *(u8*)(((long long)(int)(c + 0x5d2))) -= 1;
                 *(int*)(c + 0x3d8) = 0;
                 func_02012694(0x158, c + 0x74);
             } else {
                 int rnd;
                 *(u8*)(c + 0x5cc) = 1;
-                *(int*)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+                *(int*)(((long long)(int)(c + 0x19c))) &= ~1;
                 rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
                 *(u16*)(c + 0x5be) = rnd + 0xb4;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x380,
@@ -52,7 +52,7 @@ void func_ov063_02118458(void* self)
         } else {
             int rnd;
             *(u8*)(c + 0x5cc) = 1;
-            *(int*)(((long long)(int)(c + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+            *(int*)(((long long)(int)(c + 0x19c))) &= ~1;
             rnd = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) & 0x3f;
             *(u16*)(c + 0x5be) = rnd + 0xb4;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x380,

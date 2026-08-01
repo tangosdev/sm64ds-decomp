@@ -1,8 +1,11 @@
+// @symbol func_ov002_020b14d8
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
 enum { false = 0, true = 1 };
 
-struct M12 { int w[12]; };
+
 
 struct BF3ae {
     unsigned char b0 : 1;
@@ -24,8 +27,8 @@ void func_ov002_020b14d8(char *c)
     *(int*)(c + 0x108) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x10c) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x110) = *(int*)(c + 0x64) >> 3;
-    *(struct M12*)(c + 0x120) = *(struct M12*)(c + 0xe4);
-    *(struct M12*)(c + 0x368) = *(struct M12*)data_02082128;
+    *(struct Matrix4x3*)(c + 0x120) = *(struct Matrix4x3*)(c + 0xe4);
+    *(struct Matrix4x3*)(c + 0x368) = *(struct Matrix4x3*)data_02082128;
     *(int*)(c + 0x38c) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x390) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x394) = *(int*)(c + 0x64) >> 3;

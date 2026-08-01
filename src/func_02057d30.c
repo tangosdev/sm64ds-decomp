@@ -13,5 +13,5 @@ void func_02057d30(RingS *s, const char *src, int len) {
         s->buf[i] = src[i];
     }
     s->count -= n;
-    *(int *)(((long long)(int)((char *)s + 4)) & 0xFFFFFFFFFFFFFFFFLL) += len;
+    *(int *)(((long long)(int)((char *)s + 4))) += len;
 }

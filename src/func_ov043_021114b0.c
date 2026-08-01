@@ -1,4 +1,8 @@
-typedef unsigned char u8;
+#include "types.h"
+// @symbol func_ov043_021114b0
+// recovered name: daObjKm1_Kurumajiku_c_CleanupResources
+/* recovered: renamed to Class_Method */
+/* daObjKm1_Kurumajiku_c::CleanupResources - recovered from vtable slot identity */
 struct Arg { void *m[3]; };
 
 extern int func_ov002_020b6ac8(u8 *self, struct Arg *arg);

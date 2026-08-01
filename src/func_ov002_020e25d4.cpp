@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020e25d4
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, const Vector3 *v);
 

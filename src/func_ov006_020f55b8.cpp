@@ -1,10 +1,12 @@
 //cpp
+// @symbol func_ov006_020f55b8
+// recovered name: dScMgMemory2_c_OnYoshiTryEat
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgMemory2_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
-extern int func_ov006_020c1c64(char *t);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
-extern void func_ov004_020b29c0(void *c);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern void *data_ov006_0213d4d4[];
 extern void *data_ov006_0213e448[];
 extern void *data_020a0eac;
 void *func_ov006_020f55b8(char *c);

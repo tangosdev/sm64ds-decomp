@@ -1,10 +1,11 @@
+#include "types.h"
+// @symbol _ZN15TextureSequence8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header */
+#include "TextureSequence.h"
 /* TextureSequence::LoadFile (static) at 0x020178e4
  * Loads a SharedFilePtr; if first reference and file is non-null, calls TextureSequence::UpdateFileOffsets.
  * Returns the BTP_File pointer.
  */
-
-typedef unsigned char u8;
-
 struct SharedFilePtr {
     unsigned short fileID;  /* 0x00 */
     u8 numRefs;             /* 0x02 */

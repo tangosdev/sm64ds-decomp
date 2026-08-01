@@ -1,7 +1,10 @@
-struct Vec3 { int x, y, z; };
-extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+// @symbol func_ov006_020c6088
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void _Z14ApproachLinearRsss(short *a, short b, short c);
-extern void func_ov006_020c49d8(void *c);
 
 void func_ov006_020c6088(char *c)
 {
@@ -44,7 +47,7 @@ after_y:
 after_x:;
     }
 
-    AddVec3((struct Vec3*)(c + 0x9c), (struct Vec3*)(c + 0xa8), (struct Vec3*)(c + 0x9c));
+    AddVec3((struct Vector3*)(c + 0x9c), (struct Vector3*)(c + 0xa8), (struct Vector3*)(c + 0x9c));
     if (*(int*)(c + 0xa8) > 0)
         _Z14ApproachLinearRsss((short*)(c + 0xe6), 0x3000, 0x200);
     else

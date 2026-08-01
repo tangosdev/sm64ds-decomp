@@ -1,10 +1,5 @@
 //cpp
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern "C" {
 extern void func_ov002_020d9a4c(char *c);
 extern void func_ov002_020d99a4(unsigned char *self);
@@ -16,7 +11,7 @@ extern void func_ov002_020bf9d4(char* c);
 extern void func_ov002_020d98b4(char* self);
 extern int _ZN6Player12FinishedAnimEv(char* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
-extern void func_ov002_020bedd4(char* c);
+extern void Player_AdvanceAnims(char* c);
 extern int func_ov002_020e2c84(char *self);
 
 extern int data_ov002_0211067c;
@@ -71,8 +66,8 @@ extern "C" int _ZN6Player12St_Hurt_MainEv(char* c)
             func_ov002_020d98b4(c);
             return 1;
         }
-        *(s32*)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x80;
-        *(unsigned char*)(((long long)(int)(c + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL) &= 0xf0;
+        *(s32*)(((long long)(int)(c + 0xb0))) &= ~0x80;
+        *(unsigned char*)(((long long)(int)(c + 0x6e5))) &= 0xf0;
         if (_ZN6Player12FinishedAnimEv(c)) {
             if ((*(u8*)(c + 0x6e3) & 1) == 0) {
                 *(s16*)(c + 0x94) = *(s16*)(c + 0x94) + 0x8000;
@@ -95,7 +90,7 @@ extern "C" int _ZN6Player12St_Hurt_MainEv(char* c)
     }
 
     if ((*(u8*)(c + 0x6e5) & 0xf) == 0) {
-        func_ov002_020bedd4(c);
+        Player_AdvanceAnims(c);
     }
     *(s32*)(c + 0x640) = *(s32*)(c + 0xa8);
     if (*(u8*)(c + 0x6de) == 0) {

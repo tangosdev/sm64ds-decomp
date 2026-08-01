@@ -1,8 +1,5 @@
+#include "types.h"
 // func_02014f5c - find player by ID and call some player function
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 struct Actor {
     void* vtable;
     u32 uniqueID;

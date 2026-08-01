@@ -1,14 +1,17 @@
+// @symbol func_ov081_021249f4
+/* recovered: shared common types */
+#include "common.h"
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned a, unsigned b, int c, int d, int e, const void *f, void *g);
 extern int ApproachAngle(short *angle, int target, int a, int b, int max);
 extern void func_ov081_02125488(void *c, void *p);
 extern char data_ov081_02128e84[];
 
-struct Vec3 { int x, y, z; };
+
 
 int func_ov081_021249f4(char *c)
 {
-    struct Vec3 pos;
+    struct Vector3 pos;
     void *cb;
     int t;
 
@@ -36,7 +39,7 @@ int func_ov081_021249f4(char *c)
         func_ov081_02125488(c, data_ov081_02128e84);
     }
     {
-        short *ang = (short *)(((long long)(int)(c + 0x94)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *ang = (short *)(((long long)(int)(c + 0x94)));
         *ang = (short)(*ang + 0x2000);
         *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     }

@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 struct S657 {
     int kind;        /* +0 */
     int pad4;        /* +4 */

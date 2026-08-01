@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov002_020c179c
+/* recovered: shared common types */
+#include "common.h"
 // func_ov002_020c179c at 0x020c179c
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
-struct Vector3 { int x, y, z; };
+
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(void* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* act);

@@ -1,6 +1,9 @@
+// @symbol func_ov081_0212423c
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct Vector3 { int x, y, z; };
+
 
 extern s16 data_ov081_021289a4;
 extern s16 data_ov081_021289a6;
@@ -30,7 +33,7 @@ void func_ov081_0212423c(char* self, int idx)
         return;
 
     {
-        int* pp = (int*)(((int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* pp = (int*)(((int)(player + 0x5c)));
         int py = pp[1];
         int pz = pp[2];
         v.x = pp[0];
@@ -53,7 +56,7 @@ void func_ov081_0212423c(char* self, int idx)
     }
 
     if (AngleDiff(ang, *(s16*)(self + 0x8e)) > 0x200) {
-        p414 = (s16*)(((int)self + 0x414) & 0xFFFFFFFFFFFFFFFFLL);
+        p414 = (s16*)(((int)self + 0x414));
         lim = -0x2000;
         *p414 = *p414 - 0x100;
         if (*(s16*)(self + 0x400 + 0x14) >= lim)
@@ -64,7 +67,7 @@ void func_ov081_0212423c(char* self, int idx)
     }
 
     {
-        int* p410 = (int*)(((int)self + 0x410) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p410 = (int*)(((int)self + 0x410));
         *p410 = *p410 + 1;
     }
     if (*(int*)(self + 0x410) > 0x28) {
@@ -76,7 +79,7 @@ void func_ov081_0212423c(char* self, int idx)
 
 full_tail:
     *(int*)(self + 0x410) = 0;
-    ApproachAngle((s16*)(((int)self + 0x414) & 0xFFFFFFFFFFFFFFFFLL), 0, 1, 0x500, 0x500);
+    ApproachAngle((s16*)(((int)self + 0x414)), 0, 1, 0x500, 0x500);
 
 second:
     ApproachAngle((s16*)(self + 0x8c), *(s16*)(self + 0x414), *p4, *p6, *p8);

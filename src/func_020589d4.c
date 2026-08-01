@@ -8,10 +8,10 @@ int func_020589d4(struct Obj* o){
   int ret;
   if(o->field4 == 0){
     o->field4 = g;
-    *(int *)(((int)o + 8) & 0xFFFFFFFFFFFFFFFF) = *(int *)(((int)o + 8) & 0xFFFFFFFFFFFFFFFF) + 1;
+    *(int *)(((int)o + 8)) = *(int *)(((int)o + 8)) + 1;
     ret = 1;
   } else if(o->field4 == g){
-    *(int *)(((int)o + 8) & 0xFFFFFFFFFFFFFFFF) = *(int *)(((int)o + 8) & 0xFFFFFFFFFFFFFFFF) + 1;
+    *(int *)(((int)o + 8)) = *(int *)(((int)o + 8)) + 1;
     ret = 1;
   } else {
     ret = 0;

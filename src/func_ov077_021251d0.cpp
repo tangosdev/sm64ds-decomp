@@ -1,11 +1,14 @@
 //cpp
+// @symbol func_ov077_021251d0
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 void Vec3_Asr(void* d, void* s, int sh);
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-struct M48 { int w[12]; };
-extern M48 data_020a0e68;
+
+extern Matrix4x3 data_020a0e68;
 }
 struct Base {
   virtual void v0();
@@ -52,5 +55,5 @@ extern "C" void func_ov077_021251d0(void* c)
       *(short*)(r4+0x8c), *(short*)(r4+0x8e), *(short*)(r4+0x90));
   int r2 = b->m();
   Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-r2) >> 3, 0);
-  *(M48*)(r4+0x140) = data_020a0e68;
+  *(Matrix4x3*)(r4+0x140) = data_020a0e68;
 }

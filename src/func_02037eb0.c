@@ -1,8 +1,10 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_02037eb0
+/* recovered: shared common types */
+#include "common.h"
 struct AB { int a; int b; };
-struct Obj { int a; int b; struct Vec3 v; };
+struct Obj { int a; int b; struct Vector3 v; };
 
-void func_02037eb0(struct Obj *o, struct AB ab, struct Vec3 *v)
+void func_02037eb0(struct Obj *o, struct AB ab, struct Vector3 *v)
 {
     o->a = ab.a;
     o->b = ab.b;

@@ -1,3 +1,6 @@
+// @symbol func_ov030_02111734
+/* recovered: shared common types */
+#include "common.h"
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN11RaycastLineC1Ev(void* self);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* actor);
@@ -10,11 +13,11 @@ extern void func_ov030_02112094(void* c);
 extern char data_0209f43c;
 extern char data_0209b3ec;
 
-struct Vec3 { int x, y, z; };
+
 
 void func_ov030_02111734(char* c)
 {
-    struct Vec3 a, b, out, asr;
+    struct Vector3 a, b, out, asr;
     char rc[0x7c];
 
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x3cb)))

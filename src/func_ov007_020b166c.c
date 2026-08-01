@@ -1,7 +1,7 @@
 extern char *data_ov007_0210342c;
 extern void func_ov007_020c1d8c(int i);
 extern void func_ov007_020b2764(int n);
-extern void func_ov007_020bfacc(int r0, int r1, int r2);
+extern void RequestScreenFade(int r0, int r1, int r2);
 extern void func_ov007_020b16f0(void);
 
 void func_ov007_020b166c(void)
@@ -13,7 +13,7 @@ void func_ov007_020b166c(void)
     func_ov007_020c1d8c(0);
     func_ov007_020b2764(0x1000);
     if (r4)
-        func_ov007_020bfacc(1, 2, (int)func_ov007_020b16f0);
+        RequestScreenFade(1, 2, (int)func_ov007_020b16f0);
     else
-        func_ov007_020bfacc(2, 3, (int)func_ov007_020b16f0);
+        RequestScreenFade(2, 3, (int)func_ov007_020b16f0);
 }

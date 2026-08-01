@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov006_020e0204
+// recovered name: dScMgCup_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgCup_c::Behavior - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
 
 class C { public: int dummy; };
@@ -12,24 +18,21 @@ typedef struct Frame {
 
 extern "C" Frame *data_ov006_0213c0d8[];
 
-extern "C" void func_ov006_020dedfc(char *o, int a, int b, int i);
-extern "C" void func_ov006_020debfc(char *p);
-extern "C" void func_ov006_020c2b8c(char *p);
 
 extern "C" int func_ov006_020e0204(char *o)
 {
     int i;
     (((C *)o)->*data_ov006_02141870[*(int *)(o + 0x5418)])();
     for (i = 0; i < 3; i++) {
-        Frame *f = &data_ov006_0213c0d8[*(int *)(((int)o + i * 4 + 0x5434) & 0xFFFFFFFFFFFFFFFF)][*(int *)(o + i * 4 + 0x5440)];
+        Frame *f = &data_ov006_0213c0d8[*(int *)(((int)o + i * 4 + 0x5434))][*(int *)(o + i * 4 + 0x5440)];
         int n = f->b;
         if (n != 0) {
-            *(int *)(((int)o + i * 4 + 0x544c) & 0xFFFFFFFFFFFFFFFF) += 1;
-            if (*(int *)(((int)o + i * 4 + 0x544c) & 0xFFFFFFFFFFFFFFFF) >= n) {
-                *(int *)(((int)o + i * 4 + 0x544c) & 0xFFFFFFFFFFFFFFFF) = 0;
-                *(int *)(((int)o + i * 4 + 0x5440) & 0xFFFFFFFFFFFFFFFF) += 1;
-                func_ov006_020dedfc(o, *(int *)(((int)o + i * 4 + 0x5434) & 0xFFFFFFFFFFFFFFFF),
-                                    *(int *)(((int)o + i * 4 + 0x5440) & 0xFFFFFFFFFFFFFFFF), i);
+            *(int *)(((int)o + i * 4 + 0x544c)) += 1;
+            if (*(int *)(((int)o + i * 4 + 0x544c)) >= n) {
+                *(int *)(((int)o + i * 4 + 0x544c)) = 0;
+                *(int *)(((int)o + i * 4 + 0x5440)) += 1;
+                func_ov006_020dedfc(o, *(int *)(((int)o + i * 4 + 0x5434)),
+                                    *(int *)(((int)o + i * 4 + 0x5440)), i);
             }
         }
     }

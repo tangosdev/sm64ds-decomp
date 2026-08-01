@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
 {
     u8 ch = (u8)c;

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN14UnknownVsEntry6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "UnknownVsEntry.h"
 extern "C" {
 void _ZN11ShadowModel9RenderAllEv(void);
 void _ZN8Particle10SysTracker6UpdateEv(void* p);
@@ -16,23 +19,24 @@ struct Sub {
     virtual void m(int);
 };
 
-extern "C" int _ZN14UnknownVsEntry6RenderEv(char* c) {
-    Sub* s = (Sub*)(c + 0x86c);
+int UnknownVsEntry::Render()
+{
+    Sub* s = (Sub*)((char*)&mModel);
     s->m(0);
     _ZN11ShadowModel9RenderAllEv();
-    _ZN8Particle10SysTracker6UpdateEv(c + 0x50);
+    _ZN8Particle10SysTracker6UpdateEv((char*)&mParticle);
     int i = 0;
-    char* p = c + 0x920;
+    char* p = ((char*)this) + 0x920;
     do {
         func_ov075_02114be4(p);
         i++;
         p += 0x158;
     } while (i < 4);
-    if (*(unsigned char*)(c + 0xf40)) {
-        Sub* s2 = (Sub*)(c + 0x8bc);
+    if (unk_f40) {
+        Sub* s2 = (Sub*)((char*)&mModelAnim);
         s2->m(0);
     }
-    func_ov075_0211b3d8(c + 0xe80);
+    func_ov075_0211b3d8((char*)&unk_e80);
     _ZN8Particle9RenderAllEv();
     return 1;
 }

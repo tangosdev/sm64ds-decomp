@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct Foo {
     int w0;
     int w4;

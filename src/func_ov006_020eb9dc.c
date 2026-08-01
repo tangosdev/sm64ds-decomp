@@ -30,9 +30,9 @@ struct Obj {
 
 void func_ov006_020eb9dc(struct Obj* c, int v)
 {
-    short* h = (short*)(int)(((long long)(int)&c->h8c) & 0xFFFFFFFFFFFFFFFFLL);
-    struct P2* p = (struct P2*)(int)(((long long)(int)&c->m8) & 0xFFFFFFFFFFFFFFFFLL);
-    struct P2* g = (struct P2*)(int)(((long long)(int)&data_ov006_0213c9f4) & 0xFFFFFFFFFFFFFFFFLL);
+    short* h = (short*)(int)(((long long)(int)&c->h8c));
+    struct P2* p = (struct P2*)(int)(((long long)(int)&c->m8));
+    struct P2* g = (struct P2*)(int)(((long long)(int)&data_ov006_0213c9f4));
 
     (*h)++;
     if (p->a == g->a &&

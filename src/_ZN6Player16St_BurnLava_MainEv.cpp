@@ -1,15 +1,11 @@
 //cpp
+#include "types.h"
 /* _ZN6Player16St_BurnLava_MainEv @ 0x020d5038 (ov002, size 0x264)
  * Player burn-in-lava state: kills the player once outside battle levels,
  * spawns smoke/steam particles with the burn SFX, then runs the 3-hop
  * bounce (halving y-velocity, hop height 0x14000/0xa000) until the burnt
  * anim finishes, then leaves via state change or death.
  */
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern u8 data_ov002_0211117c;
 extern s8 data_0209f2f8;
 extern s16 data_02082214[];
@@ -25,7 +21,7 @@ extern int _ZN6Player12FinishedAnimEv(char *);
 extern int _ZN6Player9GetHealthEv(char *);
 extern void func_ov002_020c5dec(char *, int);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *, char *);
-extern void func_ov002_020bedd4(char *);
+extern void Player_AdvanceAnims(char *);
 
 int _ZN6Player16St_BurnLava_MainEv(char *c)
 {
@@ -63,13 +59,13 @@ int _ZN6Player16St_BurnLava_MainEv(char *c)
     if (*(u8 *)(c + 0x6e3) == 0) {
         func_ov002_020e28d4(c, 0x1000, 0x1000);
         if (*(u8 *)(c + 0x6de) == 0) {
-            (*(u8 *)(int)(((long long)(int)(c + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8 *)(int)(((long long)(int)(c + 0x6e5))))++;
             if (*(u8 *)(c + 0x6e5) >= 3) {
                 _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x17, 0x40000000, 0x1000, 0);
                 *(int *)(c + 0x98) = 0;
-                (*(u8 *)(int)(((long long)(int)(c + 0x6e3)) & 0xFFFFFFFFFFFFFFFFLL))++;
+                (*(u8 *)(int)(((long long)(int)(c + 0x6e3))))++;
             } else {
-                (*(int *)(int)(((long long)(int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL)) >>= 1;
+                (*(int *)(int)(((long long)(int)(c + 0x98)))) >>= 1;
                 *(u8 *)(c + 0x6de) = 1;
                 *(u8 *)(c + 0x6df) = 0;
                 if (*(u8 *)(c + 0x6e5) == 1)
@@ -88,7 +84,7 @@ int _ZN6Player16St_BurnLava_MainEv(char *c)
         }
     }
 
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }
 }

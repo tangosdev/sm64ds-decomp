@@ -10,7 +10,7 @@ int func_ov090_021314a0(char* c){
   if(p == 0) goto out;
   if(AngleDiff(*(short*)(c+0x94), _ZN5Actor18HorzAngleToCPlayerEv(c)) >= 0x2000) goto out;
   {
-    int* sv = (int*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int* sv = (int*)(((int)p + 0x5c));
     int v[3];
     v[0] = sv[0];
     v[1] = sv[1];

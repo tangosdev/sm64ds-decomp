@@ -6,7 +6,7 @@ extern void func_ov002_020db54c(int a, int b, int c, int d);
 extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
 extern void func_02012694(int a, char* b, int c);
 extern int _ZN9Animation8FinishedEv(void* self);
-extern void func_ov078_02125c48(char* c, void* p);
+extern void KingBobOmb_SetState(char* c, void* p);
 extern int data_ov078_021270fc[];
 
 int func_ov078_02123c20(char* c){
@@ -30,7 +30,7 @@ int func_ov078_02123c20(char* c){
         }
     }
     if(_ZN9Animation8FinishedEv(c+0x31c)){
-        func_ov078_02125c48(c, data_ov078_021270fc);
+        KingBobOmb_SetState(c, data_ov078_021270fc);
     }
     return 1;
 }

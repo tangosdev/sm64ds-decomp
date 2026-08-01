@@ -1,3 +1,6 @@
+// @symbol _ZN3OAM9RenderSubEP7OamAttriiii
+/* recovered: named members + shared header */
+#include "OAM.h"
 /* _ZN3OAM9RenderSubEP7OamAttriiii at 0x0202199c, size=0x54
  * OAM::RenderSub(OamAttri* data, s32 x, s32 y, s32 palette, s32 priority) -
  * Calls OAM::Render(true, data, x, y, palette, priority, 0x1000, 0x1000, 0, -1).

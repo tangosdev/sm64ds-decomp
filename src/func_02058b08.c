@@ -1,9 +1,8 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 extern void func_020589ac(void* node, void* self);
-extern void func_020580f0(void* self);
+extern void OS_SleepThread(void* self);
 
 struct Node {
     char pad_0[0x78];
@@ -27,16 +26,16 @@ void func_02058b08(struct Obj* self)
     for (;;) {
         if (self->f4 == 0) {
             self->f4 = cur;
-            *(int*)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(int*)(((int)self + 8)) += 1;
             func_020589ac(cur, self);
             break;
         }
         if (self->f4 == cur) {
-            *(int*)(((int)self + 8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(int*)(((int)self + 8)) += 1;
             break;
         }
         cur->f78 = self;
-        func_020580f0(self);
+        OS_SleepThread(self);
         cur->f78 = 0;
     }
 

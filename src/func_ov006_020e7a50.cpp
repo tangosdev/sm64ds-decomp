@@ -3,14 +3,14 @@ extern "C" {
 extern void* data_ov006_02141e94;
 extern void* data_ov006_02141e6c;
 int _ZN13SharedFilePtr7ReleaseEv(void*);
-extern void func_0207328c(void*,int,int,void*);
+extern void __destroy_arr(void*,int,int,void*);
 void _ZN15MaterialChangerD1Ev(void);
 void _ZN9ModelAnimD1Ev(void);
 void* func_ov006_020e7a50(char* c){
   _ZN13SharedFilePtr7ReleaseEv(&data_ov006_02141e94);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov006_02141e6c);
-  func_0207328c(c+0x12c,3,0x14,(void*)_ZN15MaterialChangerD1Ev);
-  func_0207328c(c,3,0x64,(void*)_ZN9ModelAnimD1Ev);
+  __destroy_arr(c+0x12c,3,0x14,(void*)_ZN15MaterialChangerD1Ev);
+  __destroy_arr(c,3,0x64,(void*)_ZN9ModelAnimD1Ev);
   return c;
 }
 }

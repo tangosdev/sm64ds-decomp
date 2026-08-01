@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_02011af8(void *c, int a1, int a2, int a3, int s0, short s1);
 extern void func_02011698(char *table, char *n);
 

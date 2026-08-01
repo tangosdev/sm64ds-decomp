@@ -1,11 +1,6 @@
 //cpp
+#include "types.h"
 #pragma opt_strength_reduction off
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int s32;
-
 typedef struct Pair {
     s32 x;
     s32 y;
@@ -49,7 +44,7 @@ extern s32 data_02092768[4];
 #define I(o) (*(s32 *)(c + (o)))
 #define H(o) (*(u16 *)(c + (o)))
 #define B(o) (*(u8 *)(c + (o)))
-#define AT(p, o) ((void *)(int)(((long long)(int)((char *)(p) + (o))) & 0xffffffffffffffffLL))
+#define AT(p, o) ((void *)(int)(((long long)(int)((char *)(p) + (o)))))
 
 extern "C" void func_ov006_021279b0(char *c)
 {

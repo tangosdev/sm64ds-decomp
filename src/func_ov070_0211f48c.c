@@ -1,6 +1,6 @@
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-
+// @symbol func_ov070_0211f48c
+/* recovered: shared common types */
+#include "common.h"
 char* _ZN5Actor13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 void ApproachAngle(short* p, int target, int a, int b, int limit);
@@ -9,10 +9,10 @@ short Vec3_VertAngle(void* a, void* b);
 void* _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, void* pos, void* vel, int a, int b, unsigned int d);
 void func_02012694(int a, void* p);
 int _ZN9Animation8FinishedEv(void* a);
-int func_ov070_02120020(void* c, void* p);
+int FlyGuy_ChangeState(void* c, void* p);
 extern char data_ov070_0212359c[];
 
-#define M(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
+#define M(p) ((long long)(int)(p))
 
 int func_ov070_0211f48c(char* c) {
     char* pl;
@@ -50,7 +50,7 @@ hitframe:
     if (_ZN9Animation8FinishedEv(c+0x350) != 0) {
         *(int*)(c+0x358) = 0;
         *(short*)(c + 0x3cc) = 0x5a;
-        func_ov070_02120020(c, data_ov070_0212359c);
+        FlyGuy_ChangeState(c, data_ov070_0212359c);
     }
     return 1;
 }

@@ -1,6 +1,8 @@
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-
+// @symbol func_ov002_020b42e4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct Actor {
     char pad4[4];
     int f4;     // 0x4
@@ -9,7 +11,6 @@ struct Actor {
 };
 
 extern void _ZN5Actor11UntrackStarERa(char *thiz, signed char *star);
-extern void func_ov002_020b41b8(int *dst, char *src);
 extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
     unsigned int a, unsigned int b, const struct Vector3 *pos,
     const struct Vector3_16 *rot, int e, int f);

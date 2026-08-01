@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void *data_ov007_02104c20;
 extern void *data_ov007_02104c24;
 extern void *data_ov007_02104c1c;

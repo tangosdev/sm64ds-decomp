@@ -50,7 +50,7 @@ extern "C" int _ZN8MantaRay8BehaviorEv(char* c)
         Vec3_Sub(&diff, (Vector3*)(c + 0x5c), &node);
         len = LenVec3(&diff);
         if (len == 0 || len <= 0x258000) {
-            (*(int*)(((int)c + 0x384) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(int*)(((int)c + 0x384)))++;
             if (*(int*)(c + 0x384) >= *(int*)(c + 0x380))
                 *(int*)(c + 0x384) = 0;
         }

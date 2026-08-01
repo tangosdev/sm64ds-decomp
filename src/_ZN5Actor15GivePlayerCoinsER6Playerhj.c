@@ -50,7 +50,7 @@ void _ZN5Actor15GivePlayerCoinsER6Playerhj(void *c, void *p, unsigned char h, u3
   amt = h * data_02075238[j];
   GiveCoins(*((unsigned char *) (((char *) p) + 0x6d8)), amt);
   _ZN6Player4HealEi(p, amt << 8);
-  src = (struct Vector3 *) (((int) p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+  src = (struct Vector3 *) (((int) p + 0x5c));
   vec.x = src->x;
   vec.y = src->y;
   vec.z = src->z;

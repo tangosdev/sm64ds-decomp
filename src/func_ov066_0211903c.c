@@ -1,20 +1,18 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_ov066_0211903c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void _ZN6Player17SetNoControlStateEhih(void* self, unsigned char a, int b, unsigned char c);
 extern void func_020092c4(void* cam, void* out, void* target);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void _ZN7Message11PrepareTalkEv(void);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, struct Vector3* v, unsigned int d, unsigned int e);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void _ZN7Message7EndTalkEv(void);
-extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
-extern void func_02011d2c(void);
-extern void func_ov066_02119454(void* c, void* p);
-extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-extern void func_02011cfc(void);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void* self, signed char* a, unsigned int b, struct Vector3* v, unsigned int d);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
@@ -24,7 +22,6 @@ extern void* data_0209f318;
 extern int data_020a0e68[];
 extern unsigned char data_ov066_0211abe0;
 extern unsigned char data_ov066_0211ae0c;
-extern void* data_ov066_0211b0cc;
 
 int func_ov066_0211903c(char* self) {
     struct Vector3 v1, v2, in, out, star;
@@ -79,7 +76,7 @@ int func_ov066_0211903c(char* self) {
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
             }
 
-            *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce) & 0xFFFFFFFFFFFFFFFF) |= 0x400;
+            *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce)) |= 0x400;
             _ZN7Message11PrepareTalkEv();
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
                 *(int*)(self + 0x498) = 1;
@@ -89,7 +86,7 @@ int func_ov066_0211903c(char* self) {
     } else {
         if (*(void**)(self + 0x490) != 0) {
             if (_ZN6Player12GetTalkStateEv(*(void**)(self + 0x490)) < 0) {
-                *(int*)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+                *(int*)(((int)cam + 0x154)) &= ~8;
                 _ZN7Message7EndTalkEv();
                 if (data_ov066_0211abe0 == 3) {
                     _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);

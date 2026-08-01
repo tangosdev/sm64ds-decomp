@@ -1,6 +1,6 @@
 typedef int s32;
 extern void *data_ov006_02133a5c;
-extern void func_ov004_020af68c(void *fn, s32 a, s32 b, s32 c, s32 d);
+extern void Hud_RenderSprite(void *fn, s32 a, s32 b, s32 c, s32 d);
 
 void func_ov006_0211e460(char *c)
 {
@@ -11,7 +11,7 @@ void func_ov006_0211e460(char *c)
             int v4 = *(int *)(c + 0x48a4) >> 12;
             if (v4 <= 8) v4 = 8;
             if (v4 >= 0xb8) v4 = 0xb8;
-            func_ov004_020af68c(data_ov006_02133a5c, v0, v4, -1, -1);
+            Hud_RenderSprite(data_ov006_02133a5c, v0, v4, -1, -1);
         }
         c += 0xc;
     }

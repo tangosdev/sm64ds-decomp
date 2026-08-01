@@ -1,6 +1,6 @@
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-
+// @symbol func_ov060_021167ec
+/* recovered: shared common types */
+#include "common.h"
 struct Actor {
     char pad[0x92];
     short f92;   /* 0x92 */

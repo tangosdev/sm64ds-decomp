@@ -1,6 +1,5 @@
 //cpp
-typedef int Fix12;
-typedef unsigned char u8;
+#include "types.h"
 struct OamAttr { unsigned short attr0, attr1, attr2, attr3; };
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, OamAttr*, int, int, int, int, int, int, int, int);
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int, OamAttr*, int, int, int, int, int, int);
@@ -13,7 +12,7 @@ extern OamAttr data_ov075_0211cb84;
 extern OamAttr *data_ov075_0211c9f4[];
 extern OamAttr *data_ov075_0211c9e0[];
 
-#define LADR(p) ((int *)(unsigned int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LADR(p) ((int *)(unsigned int)(((long long)(int)(p))))
 
 extern "C" void func_ov075_021184b0(char *sl)
 {

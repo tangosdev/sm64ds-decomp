@@ -1,3 +1,8 @@
+// @symbol func_ov080_02123c24
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern int _ZN9Animation8FinishedEv(void *anim);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -6,12 +11,10 @@ extern int RandomIntInternal(int *seed);
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 
-struct Vector3 { int x, y, z; };
+
 
 extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
-extern int AngleDiff(int a, int b);
 
-extern int data_ov080_021276c4[];
 extern int data_0209e650[];
 
 struct G { int w[2]; };
@@ -31,8 +34,8 @@ void func_ov080_02123c24(char *c)
     state = ((unsigned int)raw << 4) >> 16;
 
     if (state == 6) {
-        int *p150 = (int *)(((int)c + 0x150) & 0xFFFFFFFFFFFFFFFF);
-        int *pb0 = (int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+        int *p150 = (int *)(((int)c + 0x150));
+        int *pb0 = (int *)(((int)c + 0xb0));
         *p150 = *p150 & ~1;
         *pb0 = *pb0 | 0x10000000;
     }
@@ -85,7 +88,7 @@ void func_ov080_02123c24(char *c)
             struct Vector3 pos;
             short horz;
             int diff;
-            int *pb = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+            int *pb = (int *)(((int)player + 0x5c));
             pos.x = pb[0];
             pos.y = pb[1];
             pos.z = pb[2];

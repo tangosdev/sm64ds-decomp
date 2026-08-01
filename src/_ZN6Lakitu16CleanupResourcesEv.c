@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed int s32;
-
+#include "types.h"
 struct SharedFilePtr { u16 fileID; u8 numRefs; char* filePtr; };
 
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);

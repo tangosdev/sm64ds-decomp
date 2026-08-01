@@ -1,7 +1,4 @@
-typedef signed char s8;
-typedef short s16;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct Sb {
     int p0;
     int f4;
@@ -30,8 +27,8 @@ typedef struct G2 {
     R8 *f17c;
 } G2;
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
-#define MASK(p) ((void*)(int)(((long long)(int)(p))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define MASK(p) ((void*)(int)(((long long)(int)(p))))
 
 extern G2 *data_ov007_0210342c;
 extern unsigned char data_ov007_020d7610[];

@@ -1,23 +1,28 @@
 //cpp
+// @symbol _ZN6Player14St_Cannon_InitEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
 extern "C" {
-extern int func_ov002_020c9e40(void*);
-extern int func_ov002_020dab14(void*);
+extern int Player_DisableInteraction(void*);
+extern int Player_ReleaseHeldActor(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
-int _ZN6Player14St_Cannon_InitEv(char* c){
-  func_ov002_020c9e40(c);
-  *(unsigned char*)(c+0x706)=0;
-  *(unsigned char*)(c+0x712)=1;
-  *(unsigned char*)(c+0x70d)=0;
-  *(unsigned char*)(c+0x6de)=1;
-  *(unsigned char*)(c+0x6df)=0;
-  func_ov002_020dab14(c);
-  *(unsigned char*)(c+0x6e3)=0;
-  _ZN6Player7SetAnimEji5Fix12IiEj(c,0x73,0,0x1000,0);
-  *(int*)(c+0x9c)=-0x1200;
-  *(unsigned char*)(c+0x6f5)=0;
-  *(unsigned char*)(c+0x713)=0;
-  *(unsigned char*)(c+0x6e5)=0;
-  *(unsigned char*)(c+0x6f6)=1;
-  return 1;
 }
+
+int Player::St_Cannon_Init()
+{
+  Player_DisableInteraction(((char*)this));
+  mIsUnderwater=0;
+  mIsInAirState=1;
+  mIsFallScreaming=0;
+  mIsAirborne=1;
+  mLandSoundPlayed=0;
+  Player_ReleaseHeldActor(((char*)this));
+  mStateStep=0;
+  _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x73,0,0x1000,0);
+  mVertAccel=-0x1200;
+  mOpacity=0;
+  mIsBodyClsnEnabled=0;
+  mStateWork=0;
+  mIsControlDisabled=1;
+  return 1;
 }

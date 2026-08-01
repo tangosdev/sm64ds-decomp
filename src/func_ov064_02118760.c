@@ -1,3 +1,7 @@
+// @symbol func_ov064_02118760
+// recovered name: RotatingFirebar_AfterClsn
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjFl_KomaU_c::AfterClsn - recovered from vtable slot identity */
 typedef unsigned int u32;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };

@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern u16 data_02099fcc;
 extern u16 data_020a6084;
 void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c){

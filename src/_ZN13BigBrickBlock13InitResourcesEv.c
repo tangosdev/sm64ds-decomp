@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
+#include "types.h"
 enum { false = 0, true = 1 };
 
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);

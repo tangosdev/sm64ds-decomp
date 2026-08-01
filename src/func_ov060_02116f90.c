@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 id, u32 a, int fix, int t1, int t2, void *vec);
 extern void func_ov060_0211712c(void *self);
@@ -21,10 +18,10 @@ void func_ov060_02116f90(char *self) {
     if (*(int *)(self + 0x36c) == 0) {
         *(int *)(self + 0x37c) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
             *(int *)(self + 0x37c), 0x9e, *(int *)(self + 0x5c), *(int *)(self + 0x60) + 0x37000, *(int *)(self + 0x64), 0);
-        *(int *)(((int)self + 0x2e8) & 0xFFFFFFFFFFFFFFFF) |= 1;
+        *(int *)(((int)self + 0x2e8)) |= 1;
         func_ov060_0211712c(self);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x110)) {
-            (*(int *)(((int)self + 0x36c) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(int *)(((int)self + 0x36c)))++;
             if (*(int *)(self + 0x35c) == 7) {
                 *(int *)(self + 0x360) = 0x6000;
             } else {
@@ -38,9 +35,9 @@ void func_ov060_02116f90(char *self) {
         }
     } else {
         func_ov060_02116518(self, 0x9c, 1, *(int *)(self + 0x360) * 0xc);
-        *(int *)(((int)self + 0x2e8) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+        *(int *)(((int)self + 0x2e8)) &= ~1;
         if (*(u16 *)(self + 0x374) > *(int *)(self + 0x360) * 0xa / 0x1000 + 5) {
-            *(int *)(((int)self + 0x360) & 0xFFFFFFFFFFFFFFFF) -= 0x266;
+            *(int *)(((int)self + 0x360)) -= 0x266;
             if (*(int *)(self + 0x360) <= 0)
                 func_ov060_021172e0(self);
         }

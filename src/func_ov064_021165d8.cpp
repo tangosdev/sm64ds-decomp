@@ -44,9 +44,9 @@ extern "C" void func_ov064_021165d8(unsigned char* c)
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x174) != 0
         && _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000) != 0) {
-        *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(int*)(((int)c + 0xb0)) |= 1;
     } else {
-        *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+        *(int*)(((int)c + 0xb0)) &= ~1;
     }
 
     ((Base*)c)->m33();

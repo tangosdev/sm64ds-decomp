@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9KoopaFlag13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "KoopaFlag.h"
 typedef int Fix12;
 struct SharedFilePtr;
 struct BMD_File;
@@ -24,14 +27,14 @@ struct MovingCylinderClsn {
 extern SharedFilePtr data_ov062_0211e0d4;
 extern SharedFilePtr data_ov062_0211e0dc;
 
-extern "C" int _ZN9KoopaFlag13InitResourcesEv(char* c)
+int KoopaFlag::InitResources()
 {
-    ((ModelBase*)(c + 0x108))->SetFile(
+    ((ModelBase*)((char*)&mModelAnim))->SetFile(
         (BMD_File*)Model::LoadFile(data_ov062_0211e0d4), 1, -1);
-    ((ModelAnim*)(c + 0x108))->SetAnim(
+    ((ModelAnim*)((char*)&mModelAnim))->SetAnim(
         (BCA_File*)Animation::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
-    ((MovingCylinderClsn*)(c + 0xd4))->Init((Actor*)c, 0x35555, 0x294000, 0x280000c, 0);
-    *(unsigned char*)(c + 0x16e) = 0xff;
-    *(short*)(c + 0x16c) = 0;
+    ((MovingCylinderClsn*)((char*)&mMovingCylinderClsn))->Init((Actor*)((char*)this), 0x35555, 0x294000, 0x280000c, 0);
+    unk_16e = 0xff;
+    mVictoryTimer = 0;
     return 1;
 }

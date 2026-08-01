@@ -1,6 +1,6 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
 
-#define LAUNDER(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define LAUNDER(p) ((long long)(int)(p))
 
 struct Obj {
     char pad0[0x60];

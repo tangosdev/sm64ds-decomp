@@ -1,3 +1,7 @@
+// @symbol func_ov091_021335d4
+// recovered name: daObjPile_c_OnHitByMegaChar
+/* recovered: renamed to Class_Method */
+/* daObjPile_c::OnHitByMegaChar - recovered from vtable slot identity */
 extern void _ZN6Player16IncMegaKillCountEv(void*);
 extern void _ZN5Actor8PoofDustEv(void*);
 extern int func_02012694(int a, void* b);

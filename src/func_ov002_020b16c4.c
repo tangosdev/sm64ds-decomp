@@ -19,7 +19,7 @@ extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsig
                                                           int e, int f);
 extern void _ZN9PowerStar13AddStarMarkerEv(void *o);
 
-#define LAUNDER(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(p) ((int)(((long long)(int)(p))))
 
 void func_ov002_020b16c4(void *cc, void *pp)
 {

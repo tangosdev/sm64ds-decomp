@@ -1,7 +1,11 @@
-extern void _ZN5ModelD1Ev(void *);
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
+// @symbol func_ov013_021111d0
+// recovered name: daObjClockHuriko_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* daObjClockHuriko_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
 int *func_ov013_021111d0(int *t)
 {

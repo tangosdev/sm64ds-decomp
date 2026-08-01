@@ -1,17 +1,17 @@
-extern int func_02061548(void);
-extern int func_02061428(int count, ...);
+extern int WM_GetSystemWork(void);
+extern int WM_CheckStateEx(int count, ...);
 extern void _ZN4CP1519InvalidateDataCacheEjj(unsigned int a, unsigned int b);
 
 struct H { char p0[4]; char *f4; };
 
 int func_02061ab0(void)
 {
-    struct H *h = (struct H *)func_02061548();
+    struct H *h = (struct H *)WM_GetSystemWork();
     char *p;
     int flag;
     int v;
 
-    if (func_02061428(2, 7, 8) != 0) return 0;
+    if (WM_CheckStateEx(2, 7, 8) != 0) return 0;
 
     _ZN4CP1519InvalidateDataCacheEjj((unsigned int)(h->f4 + 0x10), 4);
     p = h->f4;

@@ -1,15 +1,15 @@
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void func_ov006_021027e4(char *c, int x, int y, int layer);
 
-#define LA(p) (*(int *)((((int)(p)) + 0x5664) & 0xFFFFFFFFFFFFFFFF))
-#define LB(p) (*(int *)((((unsigned int)(p)) + 0x5664) & 0xFFFFFFFFFFFFFFFF))
-#define LC(p) (*(int *)(((int)((p) + 0x5664)) & 0xFFFFFFFFFFFFFFFF))
-#define LD(p) (*(int *)(((unsigned int)((p) + 0x5664)) & 0xFFFFFFFFFFFFFFFF))
-#define LE(p) (*(int *)(((long long)((int)(p) + 0x5664)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LF(p) (*(int *)(((long long)((unsigned int)(p) + 0x5664)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LG(p) (*(int *)(((unsigned long long)((int)(p) + 0x5664)) & 0xFFFFFFFFFFFFFFFFLL))
-#define LH(p) (*(int *)(((unsigned long long)((unsigned int)(p) + 0x5664)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) (*(int *)((((int)(p)) + 0x5664)))
+#define LB(p) (*(int *)((((unsigned int)(p)) + 0x5664)))
+#define LC(p) (*(int *)(((int)((p) + 0x5664))))
+#define LD(p) (*(int *)(((unsigned int)((p) + 0x5664))))
+#define LE(p) (*(int *)(((long long)((int)(p) + 0x5664))))
+#define LF(p) (*(int *)(((long long)((unsigned int)(p) + 0x5664))))
+#define LG(p) (*(int *)(((unsigned long long)((int)(p) + 0x5664))))
+#define LH(p) (*(int *)(((unsigned long long)((unsigned int)(p) + 0x5664))))
 
 #pragma opt_loop_invariants off
 #pragma opt_dead_assignments off
@@ -39,12 +39,12 @@ void func_ov006_02102864(char *c)
     idx = n - 1;
     if (*(int *)(c + idx * 0x40 + 0x4000 + 0x660) != *(int *)(c + idx * 0x40 + 0x4000 + 0x678)
      || *(int *)(c + idx * 0x40 + 0x4000 + 0x664) != *(int *)(c + idx * 0x40 + 0x4000 + 0x67c)) {
-        char *dst = (char *)func_02054de8();
+        char *dst = (char *)_ZN3G2S13GetBG2CharPtrEv();
         int i2;
         tmp = 0;
         MultiStore16(tmp, dst, 0x6000);
 
-        i2 = (int)((long long)idx & 0xFFFFFFFFFFFFFFFFLL);
+        i2 = (int)((long long)idx);
         p1 = (int *)(c + i2 * 0x40 + 0x4660);
         p2 = (int *)(c + i2 * 0x40 + 0x4664);
         k = 0;
@@ -134,7 +134,7 @@ void func_ov006_02102864(char *c)
         } while (k < 2);
     }
     {
-        int i3 = (int)((unsigned long long)idx & 0xFFFFFFFFFFFFFFFFLL);
+        int i3 = (int)((unsigned long long)idx);
         *(int *)(c + i3 * 0x40 + 0x4000 + 0x678) = *(int *)(c + i3 * 0x40 + 0x4000 + 0x660);
         *(int *)(c + i3 * 0x40 + 0x4000 + 0x67c) = *(int *)(c + i3 * 0x40 + 0x4000 + 0x664);
     }

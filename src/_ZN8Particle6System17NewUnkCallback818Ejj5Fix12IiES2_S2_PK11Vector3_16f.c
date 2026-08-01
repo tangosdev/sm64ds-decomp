@@ -1,8 +1,5 @@
-typedef signed int s32;
-typedef unsigned int u32;
-typedef s32 Fix12i;
-
-extern char* PARTICLE_SYS_TRACKER;
+#include "types.h"
+extern char* data_0209ee74;
 
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID,
@@ -14,5 +11,5 @@ u32 _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
 {
     return _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         uniqueID, effectID, x, y, z, dir,
-        (void*)(PARTICLE_SYS_TRACKER + 0x818));
+        (void*)(data_0209ee74 + 0x818));
 }

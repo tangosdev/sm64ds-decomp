@@ -1,5 +1,5 @@
 extern int func_0203da9c(void);
-extern int func_ov001_020ab450(void *p, int x);
+extern int TouchArea_Update(void *p, int x);
 extern int func_ov075_02116d9c(void *self, int id);
 extern void SetControllerMode(unsigned char mode);
 extern void func_02020028(int a, unsigned char b);
@@ -14,8 +14,8 @@ void func_ov075_0211763c(void *thiz)
     unsigned char *s = (unsigned char *)thiz;
     int w = func_0203da9c();
 
-    if (func_ov001_020ab450(s + 0xdc, -1) != 0
-        || func_ov001_020ab450(s + 0x100, -1) != 0
+    if (TouchArea_Update(s + 0xdc, -1) != 0
+        || TouchArea_Update(s + 0x100, -1) != 0
         || (data_020a0e5a[w << 1] & 8) != 0
         || (data_020a0e5a[w << 1] & 4) != 0
         || (func_ov075_02116d9c(s, -1) != 0 && s[0x281] == 3)) {
@@ -34,7 +34,7 @@ void func_ov075_0211763c(void *thiz)
         return;
     }
 
-    if (func_ov001_020ab450(s + 0x70, -1) != 0
+    if (TouchArea_Update(s + 0x70, -1) != 0
         || (func_ov075_02116d9c(s, -1) != 0 && s[0x281] == 0)) {
         s[0x281] = 0;
         if (s[0x80] != 0) {
@@ -53,7 +53,7 @@ void func_ov075_0211763c(void *thiz)
         return;
     }
 
-    if (func_ov001_020ab450(s + 0x94, -1) != 0
+    if (TouchArea_Update(s + 0x94, -1) != 0
         || (func_ov075_02116d9c(s, -1) != 0 && s[0x281] == 1)) {
         s[0x281] = 1;
         if (s[0xa4] != 0) {
@@ -72,7 +72,7 @@ void func_ov075_0211763c(void *thiz)
         return;
     }
 
-    if (func_ov001_020ab450(s + 0xb8, -1) != 0
+    if (TouchArea_Update(s + 0xb8, -1) != 0
         || (func_ov075_02116d9c(s, -1) != 0 && s[0x281] == 2)) {
         s[0x281] = 2;
         if (s[0xc8] != 0) {

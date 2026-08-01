@@ -1,6 +1,9 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+// @symbol _ZN14UnchainedChomp8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "UnchainedChomp.h"
 struct CylinderClsn;
 struct Actor;
 typedef void (Actor::*PMF)();
@@ -9,14 +12,11 @@ struct Holder { char pad[8]; PMF fn; };
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _Z14ApproachLinearRiii(int &x, int target, int step);
-extern void func_ov100_02143b68(char *c);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(Actor *thiz, CylinderClsn *c);
-extern int func_ov100_02143370(char *c);
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern void func_02012694(int, void *);
 extern void _ZN5Actor15HugeLandingDustEb(Actor *thiz, bool b);
-extern int __aeabi_idiv(int a, int b);
 extern Actor *_ZN5Actor13ClosestPlayerEv(Actor *thiz);
 extern Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
 extern void _ZN7PathPtrC1Ev(void *thiz);
@@ -32,9 +32,9 @@ extern unsigned char data_0209f2d8[];
 
 struct Actor { char pad[0x800]; };
 
-extern "C" int _ZN14UnchainedChomp8BehaviorEv(Actor *thiz)
+int UnchainedChomp::Behavior()
 {
-    char *c = (char *)thiz;
+    char *c = (char *)((Actor *)this);
     DecIfAbove0_Short((unsigned short *)(c + 0x6ca));
     DecIfAbove0_Short((unsigned short *)(c + 0x6a8));
     if (DecIfAbove0_Short((unsigned short *)(c + 0x6a6)) != 0) {
@@ -43,7 +43,7 @@ extern "C" int _ZN14UnchainedChomp8BehaviorEv(Actor *thiz)
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
         func_ov100_02143b68(c);
         *(int *)(c + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, (CylinderClsn *)(c + 0x110));
+        _ZN5Actor9UpdatePosEP12CylinderClsn(((Actor *)this), (CylinderClsn *)(c + 0x110));
         if (func_ov100_02143370(c) != 0) {
             *(int *)(c + 0xa0) = 0;
         }
@@ -57,26 +57,26 @@ extern "C" int _ZN14UnchainedChomp8BehaviorEv(Actor *thiz)
     {
         Holder *q = *(Holder **)(c + 0x668);
         if (q->fn != 0) {
-            (thiz->*(q->fn))();
+            (((Actor *)this)->*(q->fn))();
         }
     }
 
     *(int *)(c + 0x98) = 0x17000;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, (CylinderClsn *)(c + 0x110));
+    _ZN5Actor9UpdatePosEP12CylinderClsn(((Actor *)this), (CylinderClsn *)(c + 0x110));
 
     if (func_ov100_02143370(c) != 0) {
         if (*(unsigned short *)(c + 0x6a8) == 0) {
             func_02012694(0x39, c + 0x74);
         }
         *(int *)(c + 0xa8) = 0x14000;
-        _ZN5Actor15HugeLandingDustEb(thiz, true);
+        _ZN5Actor15HugeLandingDustEb(((Actor *)this), true);
     }
 
     int flag = (data_0209f2d8[0] == 1);
     if (flag != 0 && *(unsigned short *)(c + 0x6ca) == 0) {
         int q16 = __aeabi_idiv(0x10000, *(int *)(c + 0x6b4));
         short spd = (short)q16;
-        Actor *pl = _ZN5Actor13ClosestPlayerEv(thiz);
+        Actor *pl = _ZN5Actor13ClosestPlayerEv(((Actor *)this));
         (void)pl;
 
         volatile Vector3 v;
@@ -114,7 +114,7 @@ extern "C" int _ZN14UnchainedChomp8BehaviorEv(Actor *thiz)
         Vec3_Sub(&diff, (Vector3 *)(c + 0x5c), &node);
 
         if (LenVec3(&diff) < 0x190000) {
-            *(int *)(((long long)(int)(c + 0x6b4)) & 0xffffffffffffffffLL) += 1;
+            *(int *)(((long long)(int)(c + 0x6b4))) += 1;
             if (*(int *)(c + 0x6b4) >= *(int *)(c + 0x6b0)) {
                 *(int *)(c + 0x6b4) = 0;
             }
@@ -131,7 +131,7 @@ extern "C" int _ZN14UnchainedChomp8BehaviorEv(Actor *thiz)
         func_ov100_02143b68(c);
         _ZN12CylinderClsn5ClearEv(c + 0x110);
 
-        Actor *p = _ZN5Actor13ClosestPlayerEv(thiz);
+        Actor *p = _ZN5Actor13ClosestPlayerEv(((Actor *)this));
         if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0) {
             _ZN12CylinderClsn6UpdateEv(c + 0x110);
         }

@@ -1,10 +1,11 @@
-struct Vec3 { int x, y, z; };
-
+// @symbol func_ov002_020efcf4
+/* recovered: shared common types */
+#include "common.h"
 extern int func_ov002_020efe9c(int *p);
 extern int _ZNK7PathPtr8NumNodesEv(void *p);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, struct Vec3 *out, unsigned int idx);
-extern void Vec3_Sub(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
-extern int LenVec3(struct Vec3 *v);
+extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, struct Vector3 *out, unsigned int idx);
+extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
+extern int LenVec3(struct Vector3 *v);
 extern int _ZNK7PathPtr5LoopsEv(void *p);
 
 void func_ov002_020efcf4(int *sl) {
@@ -14,7 +15,7 @@ void func_ov002_020efcf4(int *sl) {
     int i;
     int r6;
     char *obj;
-    struct Vec3 node;
+    struct Vector3 node;
     int one;
 
     if (func_ov002_020efe9c(sl) == 0)
@@ -33,9 +34,9 @@ void func_ov002_020efcf4(int *sl) {
 
         if (i == 0) {
             if (idx < _ZNK7PathPtr8NumNodesEv(c + 0x430) && idx >= 0) {
-                struct Vec3 diff;
+                struct Vector3 diff;
                 _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x430, &node, idx);
-                Vec3_Sub(&diff, &node, (struct Vec3 *)(c + 0x5c));
+                Vec3_Sub(&diff, &node, (struct Vector3 *)(c + 0x5c));
                 if (LenVec3(&diff) < 0xc8000) {
                     if (found == 0) {
                         found = one;

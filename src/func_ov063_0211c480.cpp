@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov063_0211c480
+// recovered name: Boo_OnYoshiTryEat
+/* recovered: renamed to Class_Method */
+/* daTrs_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" int func_ov063_0211c480(void *c) {
     unsigned short v = *(unsigned short*)((char*)c + 0xc);
     int r;

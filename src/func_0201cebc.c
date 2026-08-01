@@ -8,7 +8,7 @@
     extern void MultiStore_Int(int val, int *dst, int len);
     extern int _ZN3G2S12GetBG0ScrPtrEv(void);
     extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-    extern void func_0201d6a0(int a, int b);
+    extern void Message_DrawCenteredLine(int a, int b);
 
     void func_0201cebc(short a0)
     {
@@ -30,7 +30,7 @@
             v = 0x2ff;
             MultiStore16(v, dst, 0x800);
         }
-        func_0201d6a0(0x100, 0x20);
+        Message_DrawCenteredLine(0x100, 0x20);
         data_0209d6d4 = 0x27e;
-        func_0201d6a0(0x1c0, 0x20);
+        Message_DrawCenteredLine(0x1c0, 0x20);
     }

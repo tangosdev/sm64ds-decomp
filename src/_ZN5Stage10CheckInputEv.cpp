@@ -1,11 +1,5 @@
 //cpp
-typedef signed char s8;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 struct TouchData { u8 touched; u8 tapped; u8 x; u8 y; };
 struct PadData { u16 held; u16 pressed; };
 struct Ctrl {

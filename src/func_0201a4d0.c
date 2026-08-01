@@ -1,6 +1,6 @@
-extern void func_020580f0(void*);
+extern void OS_SleepThread(void*);
 extern char data_0209d4fc[];
 
 void func_0201a4d0(void) {
-    func_020580f0(data_0209d4fc);
+    OS_SleepThread(data_0209d4fc);
 }

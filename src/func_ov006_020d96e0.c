@@ -1,2 +1,2 @@
-extern int G[];
-void func_ov006_020d96e0(int *p) { p[0] = (int)G; }
+extern int data_ov006_0213bccc[];
+void func_ov006_020d96e0(int *p) { p[0] = (int)data_ov006_0213bccc; }

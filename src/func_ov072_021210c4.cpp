@@ -1,5 +1,8 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov072_021210c4
+/* recovered: shared common types */
+#include "common.h"
+
 struct RaycastGround { char buf[0x68 - 0x18]; };
 extern "C" {
 extern int _ZN6Player14IsFrontSlidingEv(void*);
@@ -7,13 +10,13 @@ extern int _ZN6Player17LostGrabbedObjectEv(void*);
 extern void* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vec3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, unsigned int t2);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 extern char data_ov072_02122d3c[];
-struct M4x3 { int w[12]; };
+
 
 void func_ov072_021210c4(void *self);
 }
@@ -24,7 +27,7 @@ void func_ov072_021210c4(void *self)
     int idx;
     void *res;
     struct RaycastGround rg;
-    struct Vec3 v;
+    struct Vector3 v;
     int r5;
     int r4;
     long long tmp;
@@ -38,7 +41,7 @@ void func_ov072_021210c4(void *self)
             idx = (idx + 2) & 0xff;
         }
         res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x360), data_ov072_02122d3c + idx * 0xc);
-        *(struct M4x3*)(c + 0xf0) = *(struct M4x3*)res;
+        *(struct Matrix4x3*)(c + 0xf0) = *(struct Matrix4x3*)res;
     } else {
         Matrix4x3_FromRotationY(c + 0xf0, *(short*)(c + 0x8e));
         *(int*)(c + 0x114) = *(int*)(c + 0x5c) >> 3;

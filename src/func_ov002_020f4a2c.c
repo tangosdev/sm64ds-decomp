@@ -96,7 +96,7 @@ void func_ov002_020f4a2c(char *c, int i)
         char *p = c;
         for (j = 0; j < 4; j++) {
             if (*(unsigned char *)(p + 0x44) != 0) {
-                *(unsigned char *)(((long long)(int)(p + 0x47)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+                *(unsigned char *)(((long long)(int)(p + 0x47))) += 1;
                 *(unsigned short *)(p + 0x3c) = 0;
                 *(unsigned char *)(p + 0x48) = 0;
                 *(int *)(p + 0x10) = 0x38000;

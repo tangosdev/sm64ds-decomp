@@ -1,13 +1,11 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u16 ReadUnalignedUshort(u8* p);
 extern u16 data_0209b274;
 extern u8 data_020a0e40;
 extern u16 data_0209f49e;
 extern u16 data_0209f49c;
 
-#define LAUNDER(x) ((int)(((long long)(int)(x)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(x) ((int)(((long long)(int)(x))))
 
 int func_ov002_020bd3a0(char* p0, u8* p1, unsigned int p2)
 {

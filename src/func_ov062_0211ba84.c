@@ -1,7 +1,10 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef short s16;
-typedef struct { int x, y, z; } Vector3;
+#include "types.h"
+// @symbol func_ov062_0211ba84
+// recovered name: KoopaFlag_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daRFlag_c::Kill - recovered from vtable slot identity */
 extern char *_ZN5Actor13ClosestPlayerEv(char *self);
 extern int func_ov062_0211c658(char *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -10,7 +13,6 @@ extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void MulVec3Mat4x3(const Vector3 *v, void *m, Vector3 *out);
-extern void func_ov062_0211b51c(char *c);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(char *self);
 extern void *data_ov062_0211e17c;
 extern signed char data_0209f2f8;

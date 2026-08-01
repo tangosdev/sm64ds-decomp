@@ -1,3 +1,9 @@
+// @symbol func_ov006_0212aa74
+// recovered name: dScMgFlower_c_OnYoshiTryEat_0212aa74
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgFlower_c::OnYoshiTryEat - recovered from vtable slot identity */
 /* func_ov006_0212aa74 at 0x0212aa74
  *
  * Wraps a counter at this+0x5fe4 (increments while <= 0x14, else resets
@@ -10,13 +16,11 @@
  * counter address is rematerialized from the literal pool in its own
  * block instead of folding into the this+0x5000 base and if-converting.
  */
-extern void func_ov006_020c3bc8(void *sub);
-extern void func_ov006_0212a764(void *self);
 
 void func_ov006_0212aa74(char *self)
 {
     if (*(int *)(self + 0x5fe4) <= 0x14) {
-        (*(volatile int *)(((long long)(int)(self + 0x5fe4)) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(volatile int *)(((long long)(int)(self + 0x5fe4))))++;
     } else {
         *(int *)(self + 0x5fe4) = 0;
     }

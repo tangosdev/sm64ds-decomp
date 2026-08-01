@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov009_02111c74
+// recovered name: daObjMcWater_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjMcWater_c::InitResources - recovered from vtable slot identity */
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct DataPtr { int f[2]; };

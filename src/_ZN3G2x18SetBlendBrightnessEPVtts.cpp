@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN3G2x18SetBlendBrightnessEPVtts
+/* recovered: named members + shared header */
+#include "G2x.h"
 extern "C" void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short *p, unsigned short val, short amt);
 void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short *p, unsigned short val, short amt)
 {

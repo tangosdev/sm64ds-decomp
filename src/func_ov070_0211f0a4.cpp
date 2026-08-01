@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov070_0211f0a4
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct Actor {
     void SmallPoofDust();

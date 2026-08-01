@@ -1,15 +1,8 @@
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef s32 Fix12;
-
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
@@ -18,16 +11,16 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, s32 a, s32 
 extern void func_ov002_020bec2c(void* p);
 extern void* _Znwj(u32 sz);
 extern void* _ZN10ModelAnim2C1Ev(void* thiz);
-extern void _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(void* thiz, u32 a, s32 b, Fix12 c, u16 d);
+extern void _ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt(void* thiz, u32 a, s32 b, Fix12i c, u16 d);
 extern s32 func_ov002_020e6bb0(void* p);
 extern void func_ov002_020e6780(void* p);
 extern void* _ZN9ModelAnimC1Ev(void* thiz);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, Fix12 fx, u32 j);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, Fix12i fx, u32 j);
 extern void* _ZN5ModelC1Ev(void* thiz);
 extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern s32 _ZNK6Player14GetBodyModelIDEjb(void* thiz, u32 a, s32 b);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void* bmd, void* btp);
-extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* thiz, void* f, s32 i, Fix12 fx, u32 j);
+extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* thiz, void* f, s32 i, Fix12i fx, u32 j);
 
 extern s8 data_0209f310[];
 extern u8 data_0209f2d8;
@@ -157,7 +150,7 @@ void func_ov002_020e5948(void* arg0)
 
     if (data_0209f310[*(u8*)(c + 0x6D8)] != 0) {
         LoadSilverStarAndNumber();
-        *(u8*)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(u8*)(((long long)(int)(c + 0x718))) |= 1;
     }
 
     {
@@ -167,15 +160,15 @@ void func_ov002_020e5948(void* arg0)
         switch (b) {
         case 0:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
-            *(u8*)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+            *(u8*)(((long long)(int)(c + 0x718))) |= 2;
             break;
         case 1:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);
-            *(u8*)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL) |= 4;
+            *(u8*)(((long long)(int)(c + 0x718))) |= 4;
             break;
         case 2:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9c0);
-            *(u8*)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL) |= 8;
+            *(u8*)(((long long)(int)(c + 0x718))) |= 8;
             break;
         }
     }
@@ -343,7 +336,7 @@ void func_ov002_020e5948(void* arg0)
             _ZN9ModelBase7SetFileEP8BMD_Fileii(*(void**)(c + 0x1D8), _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da38), 1, -1);
 
             if (data_0209f2f8 != 2 && data_0209f2f8 != 5 && data_0209f2f8 != 4) {
-                *(u8*)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x20;
+                *(u8*)(((long long)(int)(c + 0x718))) |= 0x20;
                 p = _Znwj(0x78);
                 if (p != 0) {
                     p = _ZN10ModelAnim2C1Ev(p);

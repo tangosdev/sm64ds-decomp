@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned short u16;
+#include "types.h"
 struct Vec3 { int v[3]; };
 
 extern "C" {

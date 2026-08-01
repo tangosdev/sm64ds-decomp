@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 #pragma opt_common_subs off
 
 extern int _ZN4cstd4sqrtEy(unsigned long long val);

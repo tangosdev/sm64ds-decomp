@@ -18,7 +18,7 @@ extern void _ZN10ClsnResultD1Ev(void *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
 extern void _ZN4BgCh19StartDetectingToxicEv(void *self);
 extern void _ZN4BgCh21StopDetectingOrdinaryEv(void *self);
-extern int func_02037e78(int *p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e20(int *p);
 extern void func_ov002_020c133c(void *a);
 extern void _ZN13RaycastGroundD1Ev(void *self);
@@ -85,7 +85,7 @@ void func_ov002_020c14b8(void *arg0)
     _ZN4BgCh21StopDetectingOrdinaryEv(rg);
     _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos, c);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
-        if (func_02037e78((int *)(rg + 0x14)) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)) != 0) {
             *(int *)(c + 0x64c) = *(int *)(rg + 0x44);
             data_0209f32c = *(int *)(c + 0x64c);
         }
@@ -94,8 +94,8 @@ void func_ov002_020c14b8(void *arg0)
         }
     }
 
-    *(unsigned short *)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-    *(unsigned short *)(((long long)(int)(c + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x10;
+    *(unsigned short *)(((long long)(int)(c + 0x6ce))) &= ~1;
+    *(unsigned short *)(((long long)(int)(c + 0x6ce))) &= ~0x10;
     func_ov002_020c133c(c);
 
     if (savedY != (int)0x80000000)

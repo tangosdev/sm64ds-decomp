@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN3Key8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Key.h"
 typedef void (*VoidFn)();
 
 extern "C" {
@@ -11,7 +16,6 @@ extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(void* d, void* a, void* b);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern void func_ov089_02131f54(void* c);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
@@ -25,40 +29,40 @@ extern int data_ov089_02132b40[];
 extern int data_ov089_02132ca4[];
 }
 
-#define LAUNDER(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define LAUNDER(p) ((long long)(int)(p))
 struct C { virtual void dummy(); };
 typedef void (C::*PMF)();
 struct PmfEntry { PMF pmf; };
 extern PmfEntry data_ov089_02132cec[];
 #define PMFTABLE data_ov089_02132cec
 
-extern "C" int _ZN3Key8BehaviorEv(char* c)
+int Key::Behavior()
 {
     int vec[3];
     int p7[3];
     int pe[3];
-    int v = *(int*)(c + 0x448);
+    int v = unk_448;
 
     if (v != 0) {
         if (v == 3) {
             {
-                char* o = *(char**)(c + 0x110);
+                char* o = *(char**)((char*)&unk_110);
                 if (o != 0) {
                     int* s = (int*)(int)LAUNDER(o + 0x5c);
-                    *(int*)(c + 0x5c) = s[0];
-                    *(int*)(c + 0x60) = s[1];
-                    *(int*)(c + 0x64) = s[2];
+                    mPosX = s[0];
+                    mPosY = s[1];
+                    mPosZ = s[2];
                     {
-                        char* o2 = *(char**)(c + 0x110);
+                        char* o2 = *(char**)((char*)&unk_110);
                         int ang = *(short*)(o2 + 0x8e);
-                        *(short*)(c + 0x8e) = ang;
+                        unk_08e = ang;
                     }
                 }
             }
-            if (_ZN9Animation8FinishedEv(c + 0x164) == 0) {
-                Matrix4x3_FromTranslation(&data_020a0e68, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c + 0x8e));
-                MulMat4x3Mat4x3(*(void**)(c + 0x128), &data_020a0e68, &data_020a0e68);
+            if (_ZN9Animation8FinishedEv((char*)&mAnimation) == 0) {
+                Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, unk_08e);
+                MulMat4x3Mat4x3(*(void**)((char*)&unk_128), &data_020a0e68, &data_020a0e68);
                 {
                     char* m = &data_020a0e68;
                     int t0 = *(int*)(m + 0x24);
@@ -68,59 +72,59 @@ extern "C" int _ZN3Key8BehaviorEv(char* c)
                     vec[0] = t0;
                     vec[1] = t1;
                 }
-                SubVec3(vec, c + 0x5c, vec);
+                SubVec3(vec, ((char*)this) + 0x5c, vec);
                 Vec3_LslInPlace(vec, 3);
-                AddVec3(vec, c + 0x5c, vec);
-                vec[1] = *(int*)(*(char**)(c + 0x124) + 0xc) * 0x23 + vec[1];
+                AddVec3(vec, ((char*)this) + 0x5c, vec);
+                vec[1] = *(int*)(*(char**)((char*)&unk_124) + 0xc) * 0x23 + vec[1];
                 vec[1] = vec[1] - 0x48000;
-                *(void**)(c + 0x464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x464), 0x82, vec[0], vec[1], vec[2], 0, 0);
-                *(void**)(c + 0x468) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(unsigned int*)(c + 0x468), 0x83, vec[0], vec[1], vec[2], 0, 0);
+                *(void**)((char*)&unk_464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_464, 0x82, vec[0], vec[1], vec[2], 0, 0);
+                *(void**)((char*)&unk_468) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_468, 0x83, vec[0], vec[1], vec[2], 0, 0);
             }
         }
 
-        _ZN9Animation7AdvanceEv(c + 0x164);
-        func_ov089_02131f54(c);
-        if (_ZN9Animation8FinishedEv(c + 0x164)) {
-            int b = (*(unsigned short*)(c + 0xc) == 0x11a);
+        _ZN9Animation7AdvanceEv((char*)&mAnimation);
+        func_ov089_02131f54(((char*)this));
+        if (_ZN9Animation8FinishedEv((char*)&mAnimation)) {
+            int b = (mActorID == 0x11a);
             if (b != 0) {
-                if (*(int*)(c + 0x174) != data_ov089_02132c40[1])
-                    _ZN9ActorBase18MarkForDestructionEv(c);
+                if (unk_174 != data_ov089_02132c40[1])
+                    _ZN9ActorBase18MarkForDestructionEv(((char*)this));
             }
         }
         return 1;
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x260)) {
-        func_ov089_02131f54(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x220);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x260)) {
+        func_ov089_02131f54(((char*)this));
+        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
         return 1;
     }
-    *(int*)(c + 0xd0) = 0;
-    if (*(short*)(c + 0x440) > 0x400) {
-        short* q = (short*)(int)LAUNDER(c + 0x440);
+    mEatingPlayer = 0;
+    if (mSpinSpeed > 0x400) {
+        short* q = (short*)(int)LAUNDER((char*)&mSpinSpeed);
         *q = *q - 0x100;
-    } else if (*(short*)(c + 0x440) == 0) {
-        *(short*)(c + 0x440) = 0x400;
+    } else if (mSpinSpeed == 0) {
+        mSpinSpeed = 0x400;
     }
     {
-        short* ang = (short*)(int)LAUNDER(c + 0x8e);
-        *ang = *ang + *(short*)(c + 0x440);
+        short* ang = (short*)(int)LAUNDER((char*)&unk_08e);
+        *ang = *ang + mSpinSpeed;
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    (((C*)c)->*PMFTABLE[*(int*)(c + 0x444)].pmf)();
-    func_ov089_02131f54(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x220);
-    if (*(int*)(c + 0x444) == 7) {
+    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    (((C*)((char*)this))->*PMFTABLE[mState].pmf)();
+    func_ov089_02131f54(((char*)this));
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    if (mState == 7) {
         p7[0] = data_ov089_02132b40[0];
         p7[1] = data_ov089_02132b40[1];
         p7[2] = data_ov089_02132b40[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x220, p7);
+        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, p7);
     } else {
         pe[0] = data_ov089_02132ca4[0];
         pe[1] = data_ov089_02132ca4[1];
         pe[2] = data_ov089_02132ca4[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x220, pe);
+        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, pe);
     }
-    _ZN12CylinderClsn6UpdateEv(c + 0x220);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
     return 1;
 }

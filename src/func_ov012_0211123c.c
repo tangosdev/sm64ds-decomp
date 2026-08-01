@@ -1,3 +1,7 @@
+// @symbol func_ov012_0211123c
+// recovered name: daObjC0_Switch_c_OnGroundPounded
+/* recovered: renamed to Class_Method */
+/* daObjC0_Switch_c::OnGroundPounded - recovered from vtable slot identity */
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
@@ -6,7 +10,7 @@ void func_ov012_0211123c(char* c) {
     int* q;
     char* p;
     if (*(unsigned char*)(c+0x31e)) return;
-    q = (int*)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
+    q = (int*)(((long long)(int)(c + 0x60)));
     *q -= 0x64000;
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);

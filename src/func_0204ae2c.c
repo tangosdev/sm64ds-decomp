@@ -1,8 +1,7 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-struct V3 { int x, y, z; };
+#include "types.h"
+// @symbol func_0204ae2c
+/* recovered: shared common types */
+#include "common.h"
 struct H2 { u16 a, b; };
 
 struct Src {
@@ -23,7 +22,7 @@ struct Obj {
     int m14;     /* 0x14 */
     void *m18;   /* 0x18 */
     int m1c;     /* 0x1c */
-    struct V3 m20;  /* 0x20 */
+    struct Vector3 m20;  /* 0x20 */
     int m2c;     /* 0x2c */
     int m30;     /* 0x30 */
     int m34;     /* 0x34 */
@@ -47,7 +46,7 @@ struct Obj {
     int m70;     /* 0x70 */
 };
 
-void func_0204ae2c(struct Obj *o, void *p18, struct V3 *src3)
+void func_0204ae2c(struct Obj *o, void *p18, struct Vector3 *src3)
 {
     o->m18 = p18;
     o->m1c = 0;

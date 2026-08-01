@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13KoopaTheQuick6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "KoopaTheQuick.h"
 struct Model {
   virtual void v0();
   virtual void v1();
@@ -8,11 +11,11 @@ struct Model {
   virtual void v5(void* p);
   void HideMaterial(int a, int b);
 };
-extern "C" {
-int _ZN13KoopaTheQuick6RenderEv(char* c){
-  Model* m = (Model*)(c+0x300);
+
+int KoopaTheQuick::Render()
+{
+  Model* m = (Model*)((char*)&mModelAnim);
   m->HideMaterial(0, 1);
-  ((Model*)(c+0x300))->v5(c+0x80);
+  ((Model*)((char*)&mModelAnim))->v5((char*)&mScaleX);
   return 1;
-}
 }

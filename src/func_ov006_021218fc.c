@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern int data_ov006_02140588;
 extern int data_ov006_0213b0ec;
 extern int data_ov006_0214058c;
@@ -54,7 +51,7 @@ void func_ov006_021218fc(char *c)
             {
                 int amt = data_ov006_02140588 * 2;
                 if (amt > 0xb4) amt = 0xb4;
-                *(int *)(((int)c + 0x5d90) & 0xFFFFFFFFFFFFFFFFLL) -= amt;
+                *(int *)(((int)c + 0x5d90)) -= amt;
             }
         }
     }

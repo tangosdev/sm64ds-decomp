@@ -50,7 +50,7 @@ unsigned char *func_0206fd6c(unsigned char *format_string, char **arg, print_for
     f.field_width           = 0;
     f.precision             = 0;
 
-    s = (unsigned char *)(((long long)(int)(format_string + 1)) & 0xFFFFFFFFFFFFFFFFLL);
+    s = (unsigned char *)(((long long)(int)(format_string + 1)));
     if ((c = *s) == '%') {
         f.conversion_char = (unsigned char)c;
         *format = f;

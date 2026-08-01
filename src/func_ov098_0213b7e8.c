@@ -1,6 +1,8 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
+// @symbol func_ov098_0213b7e8
+// recovered name: Cannon_Kill
+/* recovered: renamed to Class_Method */
+/* daCnn_c::Kill - recovered from vtable slot identity */
 extern int _Z14ApproachLinearRiii(int *v, int step, int rate);
 extern void func_ov098_0213b63c(char *c);
 extern int _ZN4cstd4fdivEii(int a, int b);
@@ -18,7 +20,7 @@ void func_ov098_0213b7e8(char *c)
             }
         } else {
             if (_Z14ApproachLinearRiii((int *)(c + 0x3bc), 0x300, *(int *)(c + 0x3b8)) != 0)
-                *(int *)(((int)c + 0x3c0) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(int *)(((int)c + 0x3c0)) += 1;
         }
         *(int *)(c + 0x3b8) = _ZN4cstd4fdivEii((int)(((long long)*(int *)(c + 0x3b8) * 0xb00 + 0x800) >> 12), 0x1000);
         *(int *)(c + 0x84) = *(int *)(c + 0x3bc);
@@ -28,7 +30,7 @@ void func_ov098_0213b7e8(char *c)
         int approach = _Z14ApproachLinearRiii((int *)(c + 0x3bc), 0x1000, *(int *)(c + 0x3b8));
         if (approach != 0) {
             char *player;
-            int *pst = (int *)(((int)c + 0x3c0) & 0xFFFFFFFFFFFFFFFF);
+            int *pst = (int *)(((int)c + 0x3c0));
             *pst = *pst + 1;
             *(int *)(c + 0xa8) = (*(u8 *)(c + 0x3b6) << 13) + 0x30000;
             *(int *)(c + 0x98) = 0x6000;

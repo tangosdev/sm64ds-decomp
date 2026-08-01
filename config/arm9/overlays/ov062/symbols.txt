@@ -22,7 +22,7 @@ func_ov062_02116a08 kind:function(arm,size=0x178) addr:0x02116a08
 func_ov062_02116b80 kind:function(arm,size=0x78) addr:0x02116b80
 func_ov062_02116bf8 kind:function(arm,size=0x80) addr:0x02116bf8
 func_ov062_02116c78 kind:function(arm,size=0x60) addr:0x02116c78
-func_ov062_02116cd8 kind:function(arm,size=0x50) addr:0x02116cd8
+Chuckya_ChangeState kind:function(arm,size=0x50) addr:0x02116cd8
 func_ov062_02116d28 kind:function(arm,size=0x94) addr:0x02116d28
 func_ov062_02116dbc kind:function(arm,size=0xc4) addr:0x02116dbc
 func_ov062_02116e80 kind:function(arm,size=0x5c) addr:0x02116e80
@@ -162,11 +162,13 @@ data_ov062_0211d9ac kind:data(any) addr:0x0211d9ac
 Chuckya_SpawnInfo kind:data(any) addr:0x0211d9bc ambiguous
 data_ov062_0211d9c0 kind:data(any) addr:0x0211d9c0 ambiguous
 _ZTV7Chuckya kind:data(any) addr:0x0211d9e0
+_ZTV10daHolhei_c kind:data(any) addr:0x0211d9e0
 data_ov062_0211da5c kind:data(any) addr:0x0211da5c
 data_ov062_0211da68 kind:data(any) addr:0x0211da68
 Koopa_SpawnInfo kind:data(any) addr:0x0211da74
 KoopaSmall_SpawnInfo kind:data(any) addr:0x0211da90
 _ZTV5Koopa kind:data(any) addr:0x0211dab4
+_ZTV8daNknk_c kind:data(any) addr:0x0211dab4
 data_ov062_0211db30 kind:data(any) addr:0x0211db30
 data_ov062_0211db38 kind:data(any) addr:0x0211db38
 data_ov062_0211db40 kind:data(any) addr:0x0211db40
@@ -177,10 +179,12 @@ data_ov062_0211db60 kind:data(any) addr:0x0211db60
 data_ov062_0211db6c kind:data(any) addr:0x0211db6c
 KoopaTheQuick_SpawnInfo kind:data(any) addr:0x0211db78
 _ZTV13KoopaTheQuick kind:data(any) addr:0x0211db9c
+_ZTV7daRNk_c kind:data(any) addr:0x0211db9c
 data_ov062_0211dc18 kind:data(any) addr:0x0211dc18
 data_ov062_0211dc24 kind:data(any) addr:0x0211dc24
 KoopaFlag_SpawnInfo kind:data(any) addr:0x0211dc30
 _ZTV9KoopaFlag kind:data(any) addr:0x0211dc54
+_ZTV9daRFlag_c kind:data(any) addr:0x0211dc54
 data_ov062_0211dcd0 kind:data(any) addr:0x0211dcd0
 data_ov062_0211dcd8 kind:data(any) addr:0x0211dcd8
 data_ov062_0211dce0 kind:data(any) addr:0x0211dce0
@@ -195,6 +199,7 @@ data_ov062_0211dd20 kind:data(any) addr:0x0211dd20
 data_ov062_0211dd2c kind:data(any) addr:0x0211dd2c
 Klepto_SpawnInfo kind:data(any) addr:0x0211dd38
 _ZTV6Klepto kind:data(any) addr:0x0211dd5c
+_ZTV9daJango_c kind:data(any) addr:0x0211dd5c
 data_ov062_0211dde0 kind:bss addr:0x0211dde0
 data_ov062_0211dde8 kind:bss addr:0x0211dde8
 data_ov062_0211ddf0 kind:bss addr:0x0211ddf0

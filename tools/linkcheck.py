@@ -204,10 +204,18 @@ def link_function(code, addr, relocs):
     return bytes(buf), set(blind)
 
 
-def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()):
-    """Verdict + detail for one banked match."""
+def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=(),
+              obj=None, sym=None):
+    """Verdict + detail for one banked match.
+
+    Normally compiles the source that defines `name` (reloc_audit.winning_object) and
+    checks the reproduced bytes. A caller that already holds the compiled object -- e.g.
+    pr_linkcheck checking a compiler-emitted passenger (a this-adjusting thunk or a weak
+    dtor/ctor copy) that has no source file of its own -- passes obj=<object bytes> and
+    sym=<symbol to extract> so the symbol is link-checked straight from that object."""
     import reverify_corpus as RV
-    obj, sym, err = RA.winning_object(name, addr, size, mod, candidate, include_dirs)
+    if obj is None:
+        obj, sym, err = RA.winning_object(name, addr, size, mod, candidate, include_dirs)
     if obj is None:
         # A missing or wrong-length source is NOT a false match; give it a verdict
         # distinct from NO-REPRO so it does not read as "the source stopped matching".

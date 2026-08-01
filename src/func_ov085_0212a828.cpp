@@ -17,7 +17,7 @@ void func_ov085_0212a828(char* c)
     if ((*(int*)(c + 0x130) & 0x1000) == 0) return;
     if (_ZN6Player7TryGrabER5Actor(o, c) == 0) return;
     *(void**)(c + 0x45c) = o;
-    *(int*)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF) |= 2;
+    *(int*)(((int)c + 0x128)) |= 2;
     if (*(unsigned char*)(c + 0x426) == 0) {
         func_ov085_0212bc78(c, data_ov085_021306ac);
     } else {

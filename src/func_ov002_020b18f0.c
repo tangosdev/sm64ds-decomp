@@ -1,13 +1,16 @@
+// @symbol func_ov002_020b18f0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { Fix12i x, y, z; };
+
 struct Vector3_16;
 extern int _ZN5Event6GetBitEj(unsigned int b);
-extern int SublevelToLevel(int i);
 extern void _ZN5Event6SetBitEj(unsigned int b);
 extern void _ZN9PowerStar13AddStarMarkerEv(char* c);
 extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3* v, struct Vector3_16* rot, int e, int f);
 extern signed char data_0209f2f8;
-extern short data_0209f358[];
 
 void func_ov002_020b18f0(char* c)
 {
@@ -19,7 +22,7 @@ void func_ov002_020b18f0(char* c)
     if (SublevelToLevel(data_0209f2f8) >= 0xf) return;
     if (c == 0) return;
     if (data_0209f358[*(unsigned char*)(c + 0x6d8)] < 0x64) return;
-    p = (struct Vector3*)(((long long)(int)(c + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (struct Vector3*)(((long long)(int)(c + 0x5c)));
     vec.x = p->x;
     y = p->y;
     vec.y = y;

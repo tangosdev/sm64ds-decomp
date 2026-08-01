@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZNK6Player14GetBodyModelIDEjb(void* thiz, u32 a, u32 b);
 extern int _ZNK9Animation12WillHitFrameEi(void* anim, int frame);
 extern void func_02012694(u32 a, void* v);

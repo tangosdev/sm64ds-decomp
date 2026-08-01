@@ -1,9 +1,13 @@
-extern void *_ZN9ActorBasenwEj(unsigned);
-extern void _ZN5ActorC2Ev(void *);
-extern int VT[];
+// @symbol AmbientSoundEffects_Spawn
+/* recovered: globals resolved, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_ActorBase.h"
+#include "decl_common.h"
+/* recovered: globals resolved */
+/* resolved: VT = _ZTV14EnemySwitchTag */
 int *AmbientSoundEffects_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(216);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)VT; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV14EnemySwitchTag; }
     return p;
 }

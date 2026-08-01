@@ -1,5 +1,8 @@
+// @symbol func_ov080_02125d64
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 extern Fix12i Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 
 struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */

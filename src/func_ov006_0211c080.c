@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern u8 data_ov006_0212ee10[];
@@ -12,7 +9,7 @@ extern int data_ov006_0212efb0[];
 extern u16 *data_ov006_0213f6fc[];
 
 #define RND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
-#define LAUNDER(p) ((int)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define LAUNDER(p) ((int)((long long)(int)(p)))
 
 void func_ov006_0211c080(char *o)
 {

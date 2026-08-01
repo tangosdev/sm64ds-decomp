@@ -1,10 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed int s32;
-typedef volatile unsigned int vu32;
-typedef volatile unsigned short vu16;
-
+#include "types.h"
 extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN3GXS15SetGraphicsModeEi(int a);
 extern void func_ov004_020b2980(void);
@@ -13,15 +7,15 @@ extern void _ZN2GX12SetBankForBGEt(u16 a);
 extern void _ZN2GX13SetBankForOBJEt(u16 a);
 extern void _ZN2GX15SetBankForSubBGEt(u16 a);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 a);
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 extern void *func_ov004_020adc68(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void func_ov004_020adc5c(void *p);
+extern void Ov004_Deallocate(void *p);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 len);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void func_ov004_020b0d30(void);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 
 extern int data_ov004_020beb6c;
 extern u8 data_0209d45c;
@@ -52,7 +46,7 @@ void func_ov004_020b265c(char *obj)
     data_0209d45c = 0x10;
     _ZN2GX15SetBankForSubBGEt(4);
     _ZN2GX16SetBankForSubOBJEt(8);
-    p = func_ov004_020adc68(data_ov004_020bbfe4[func_ov004_020ad674()]);
+    p = func_ov004_020adc68(data_ov004_020bbfe4[GetGameLanguage()]);
     {
         char *dst = (char *)0x6400000; dst += 0x4000;
         DecompressLZ16(p, dst);
@@ -61,16 +55,16 @@ void func_ov004_020b265c(char *obj)
         char *dst = (char *)0x6600000; dst += 0x4000;
         DecompressLZ16(p, dst);
     }
-    func_ov004_020adc5c(p);
+    Ov004_Deallocate(p);
     p = func_ov004_020adc68(0xc3);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(p, 0x100u);
     _ZN2GX11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
     _ZN3GXS11LoadOBJPlttEPKvjj(p, 0x100u, 0x100u);
-    func_ov004_020adc5c(p);
+    Ov004_Deallocate(p);
     data_0209d454 = 0x10;
     data_ov004_020beb74[1] = (int)obj;
     data_0209d4a8 = (void **)data_ov004_020beb74;
     func_ov004_020b0d30();
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     data_0208ee44 = 1;
 }

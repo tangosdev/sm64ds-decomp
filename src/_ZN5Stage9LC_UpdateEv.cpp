@@ -1,11 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef short s16;
-typedef signed int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 extern "C" {
 int IsButtonInputValid(void);
 void _ZN5Stage17UpdateMenuButtonsEb(int b);

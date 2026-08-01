@@ -1,19 +1,21 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov078_02125950
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Player { int GetTalkState(); };
 
 extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void ApproachLinear(short &v, short t, short step);
 extern "C" void _ZN7Message7EndTalkEv();
-extern "C" void func_02011d44();
-extern "C" void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int x);
-extern "C" void func_ov078_02125c48(char *c, void *p);
-extern void *data_ov078_0212701c;
+extern "C" void KingBobOmb_SetState(char *c, void *p);
 
 extern "C" int func_ov078_02125950(char *c)
 {
     char *r5 = *(char **)(c + 0x430);
-    int *src = (int *)(((int)(r5) + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    int *src = (int *)(((int)(r5) + 0x5c));
     Vector3 v;
     int t = src[0];
     Vector3 *arg0 = (Vector3 *)(c + 0x5c);
@@ -27,7 +29,7 @@ extern "C" int func_ov078_02125950(char *c)
         _ZN7Message7EndTalkEv();
         func_02011d44();
         _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
-        func_ov078_02125c48(c, &data_ov078_0212701c);
+        KingBobOmb_SetState(c, &data_ov078_0212701c);
     }
     return 1;
 }

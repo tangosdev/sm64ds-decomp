@@ -5,7 +5,7 @@ void func_02037b5c(char* c)
 {
     unsigned char* f;
     func_02037b1c(c);
-    f = (unsigned char*)(((int)c + 0x70) & 0xFFFFFFFFFFFFFFFF);
+    f = (unsigned char*)(((int)c + 0x70));
     *f &= ~1;
     *f &= ~4;
     *f &= ~8;

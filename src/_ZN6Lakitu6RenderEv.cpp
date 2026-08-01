@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6Lakitu6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "Lakitu.h"
 struct ModelComponents;
 struct TextureSequence { void Update(ModelComponents &m); };
 struct VObj {
@@ -10,17 +13,17 @@ struct VObj {
     virtual void m(int x);
 };
 
-extern "C" int _ZN6Lakitu6RenderEv(char *c)
+int Lakitu::Render()
 {
-    int b = (int)((*(int *)(c + 0xb0) & 0x40000) != 0);
+    int b = (int)((unk_0b0 & 0x40000) != 0);
     if (b != 0)
         return 1;
-    ((TextureSequence *)(c + 0x1b0))->Update(*(ModelComponents *)(c + 0xdc));
-    ((VObj *)(c + 0xd4))->m(0);
-    if (*(int *)(c + 0x3f4) == 1) {
-        unsigned int v = ((unsigned int)(*(int *)(c + 0x12c) << 4)) >> 0x10;
+    ((TextureSequence *)((char *)&mTextureSequence))->Update(*(ModelComponents *)((char *)&unk_0dc));
+    ((VObj *)((char *)&mModelAnim))->m(0);
+    if (unk_3f4 == 1) {
+        unsigned int v = ((unsigned int)(unk_12c << 4)) >> 0x10;
         if (v >= 0x19 && v <= 0x3a)
-            ((VObj *)(c + 0x138))->m(0);
+            ((VObj *)((char *)&mModel))->m(0);
     }
     return 1;
 }

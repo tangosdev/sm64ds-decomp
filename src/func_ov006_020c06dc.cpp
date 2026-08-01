@@ -1,10 +1,13 @@
 //cpp
+// @symbol func_ov006_020c06dc
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct Matrix4x3 { int w[12]; };
-struct Mtx43 { int w[12]; };
+
+
 
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3* mF, s16 angX);
-extern "C" void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
+extern "C" void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3* mF, s16 angY);
 
 extern Matrix4x3 data_020a0e68;
@@ -29,7 +32,7 @@ extern "C" void func_ov006_020c06dc(char* thiz)
         char* m = *(char**)(c + 0x2c);
         *(Matrix4x3*)(m + 0x120) = data_020a0e68;
     }
-    Matrix4x3_FromTranslation((Mtx43*)&data_020a0e68, *(int*)(c + 0xc8), *(int*)(c + 0xcc), *(int*)(c + 0xd0));
+    Matrix4x3_FromTranslation((Matrix4x3*)&data_020a0e68, *(int*)(c + 0xc8), *(int*)(c + 0xcc), *(int*)(c + 0xd0));
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short*)(c + 0xea));
     *(Matrix4x3*)(c + 0x34) = data_020a0e68;
 }

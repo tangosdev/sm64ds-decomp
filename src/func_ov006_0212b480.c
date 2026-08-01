@@ -1,13 +1,15 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-extern int func_ov004_020ad8b8(void);
+#include "types.h"
+// @symbol func_ov006_0212b480
+// recovered name: dScMgFlower_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgFlower_c::InitResources - recovered from vtable slot identity */
 extern void *func_020adc74(void *arg);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(int src, void *dst);
-extern void func_ov004_020adc5c(int handle);
-extern void *func_02054de8(void);
+extern void Ov004_Deallocate(int handle);
+extern void *_ZN3G2S13GetBG2CharPtrEv(void);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
@@ -17,25 +19,10 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_ov006_0212a764(void *arg);
-extern void func_ov006_020c3d88(char *c);
-extern void func_ov006_020c3b2c(void *arg);
 
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int data_ov006_021401d0;
-extern int data_ov006_021401f4;
-extern int data_ov006_02140218;
-extern int data_ov006_0214023c;
-extern int data_ov006_02140260;
-extern int data_ov006_02140284;
-extern int data_ov006_021402a8;
-extern int data_ov006_021402c4;
-extern int func_020bc8a8;
-extern int func_020bc898;
-extern int func_020bc86c;
-extern int func_020bc8a4;
 
 int func_ov006_0212b480(void *arg0)
 {
@@ -63,30 +50,30 @@ int func_ov006_0212b480(void *arg0)
 
     h = (int)func_020adc74(&data_ov006_021401d0);
     DecompressLZ16(h, _ZN2G213GetBG2CharPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_021401f4);
-    DecompressLZ16(h, func_02054de8());
-    func_ov004_020adc5c(h);
+    DecompressLZ16(h, _ZN3G2S13GetBG2CharPtrEv());
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140218);
     DecompressLZ16(h, _ZN2G212GetBG2ScrPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_0214023c);
     DecompressLZ16(h, _ZN3G2S12GetBG2ScrPtrEv());
     DecompressLZ16(h, _ZN3G2S12GetBG3ScrPtrEv());
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140260);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN2GX10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_02140284);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x1a0);
     _ZN3GXS10LoadBGPlttEPKvjj((const void *)h, 0x60, 0x1a0);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
@@ -97,13 +84,13 @@ int func_ov006_0212b480(void *arg0)
     h = (int)func_020adc74(&data_ov006_021402a8);
     DecompressLZ16(h, (void *)0x6400000);
     DecompressLZ16(h, (void *)0x6600000);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     h = (int)func_020adc74(&data_ov006_021402c4);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(h, 0x100);
     _ZN2GX11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
-    func_ov004_020adc5c(h);
+    Ov004_Deallocate(h);
 
     func_020bc8a8 = 0x40;
     func_020bc898 = 0xa0;

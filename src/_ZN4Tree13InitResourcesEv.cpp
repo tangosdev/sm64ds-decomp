@@ -27,7 +27,7 @@ int _ZN4Tree13InitResourcesEv(char* self) {
     *(int*)(p + 8) = *(int*)(self + 0x64);
     Vec3_AsrInPlace(p, 3);
     {
-        int* q = (int*)(((int)p + 4) & 0xFFFFFFFFFFFFFFFF);
+        int* q = (int*)(((int)p + 4));
         *q = *q + 0x1e000;
     }
     ((CylinderClsnWithPos*)(p + 0xc))->Init(*(Vector3*)(self + 0x5c), 0x35555, 0x1f4000, 0x380000c, 0);

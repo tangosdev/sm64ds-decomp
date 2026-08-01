@@ -3,9 +3,9 @@
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *, void *);
-void func_020383fc(void *);
+void WithMeshClsn_UpdateContinuous_Veneer(void *);
 int func_ov098_02139228(void *);
-void func_ov098_02138b28(void *, int);
+void Crate_SetState(void *, int);
 void _Z14ApproachLinearRiii(int *, int, int);
 void func_ov098_02138e6c(void *);
 void func_ov098_021390ec(void *);
@@ -34,9 +34,9 @@ extern "C" void func_ov098_021384fc(void *c);
 void func_ov098_021384fc(void *c) {
     char *b = (char *)c;
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, b + 0x564);
-    func_020383fc(b + 0x320);
+    WithMeshClsn_UpdateContinuous_Veneer(b + 0x320);
     if (func_ov098_02139228(c)) {
-        func_ov098_02138b28(c, 0);
+        Crate_SetState(c, 0);
         return;
     }
     _Z14ApproachLinearRiii((int *)(b + 0x98), 0, 0x555);

@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 extern int func_ov006_020c2994(char* c);
 extern u8 data_020a0e40;
 extern u8 data_020a0de8[];
@@ -30,12 +28,12 @@ extern u8 data_020a0deb[];
             b -= o2; \
             int o3 = *(int*)((c) + 0x190); \
             int o4 = *(int*)((c) + 0x198); \
-            *(int*)(((s64)(int)((c) + 0x18c)) & 0xFFFFFFFFFFFFFFFFLL) += (a - o1) >> 2; \
-            *(int*)(((s64)(int)((c) + 0x194)) & 0xFFFFFFFFFFFFFFFFLL) += b >> 2; \
+            *(int*)(((s64)(int)((c) + 0x18c))) += (a - o1) >> 2; \
+            *(int*)(((s64)(int)((c) + 0x194))) += b >> 2; \
             o3 = m - o3; \
-            *(int*)(((s64)(int)((c) + 0x190)) & 0xFFFFFFFFFFFFFFFFLL) += o3 >> 2; \
+            *(int*)(((s64)(int)((c) + 0x190))) += o3 >> 2; \
             o4 = m - o4; \
-            *(int*)(((s64)(int)((c) + 0x198)) & 0xFFFFFFFFFFFFFFFFLL) += o4 >> 2; \
+            *(int*)(((s64)(int)((c) + 0x198))) += o4 >> 2; \
         } \
     }
 

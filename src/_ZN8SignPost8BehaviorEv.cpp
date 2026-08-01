@@ -4,7 +4,7 @@ typedef unsigned char u8;
 
 struct Vector3 { int x, y, z; };
 enum Bool { FALSE, TRUE };
-#define LD(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LD(p) ((int)(((long long)(int)(p))))
 
 extern "C" unsigned int data_0209b454;
 

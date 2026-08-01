@@ -1,8 +1,5 @@
+#include "types.h"
 /* BlendModelAnim::Virtual10 at 0x02016518, size=0x60 */
-
-typedef int s32;
-typedef unsigned int u32;
-
 struct ModelComponents {
     void* modelFile;
     void* materials;
@@ -32,7 +29,7 @@ struct BlendModelAnim {
 };
 
 extern void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(struct ModelComponents* data, void* file, s32 frame);
-extern void Func_0204531c(struct ModelComponents* data, s32 unk64);
+extern void func_0204531c(struct ModelComponents* data, s32 unk64);
 extern void _ZN5Model9Virtual10ER9Matrix4x3(struct BlendModelAnim* thiz, struct Matrix4x3* mat);
 
 void _ZN14BlendModelAnim9Virtual10ER9Matrix4x3(struct BlendModelAnim* thiz, struct Matrix4x3* mat)
@@ -41,7 +38,7 @@ void _ZN14BlendModelAnim9Virtual10ER9Matrix4x3(struct BlendModelAnim* thiz, stru
     _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&thiz->data, thiz->file, (u32)(currFrame << 4) >> 0x10);
     if (thiz->unk64 < 0x1000)
     {
-        Func_0204531c(&thiz->data, thiz->unk64);
+        func_0204531c(&thiz->data, thiz->unk64);
     }
     else
     {

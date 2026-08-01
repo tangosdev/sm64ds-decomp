@@ -36,12 +36,12 @@ void func_ov002_020e1c20(char *c)
       *((int *) (c + 0x98)) = (int) (((((long long) (*((int *) (c + 0x98)))) * 0xf00) + 0x800) >> 12);
       if ((*((int *) (c + 0xa8))) < 0)
       {
-        int *p = (int *) (((long long) (c + 0xa8)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *) (((long long) (c + 0xa8)));
         *p = *p + 0xc00;
       }
       else
       {
-        int *p = (int *) (((long long) (c + 0xa8)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *) (((long long) (c + 0xa8)));
         *p = *p + 0x1000;
       }
       if ((*((int *) (c + 0xa8))) < 0x11000)
@@ -80,7 +80,7 @@ void func_ov002_020e1c20(char *c)
       _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x3f, 0, 0x1000, 0);
       {
         int id;
-        char *p = (char *) (((long long) ((int) ((*((char **) ((c + 0xdc) + (_ZNK6Player14GetBodyModelIDEjb(c, (*((int *) (c + 8))) & 0xff, 0) * 4)))) + 0x50))) & 0xFFFFFFFFFFFFFFFFLL);
+        char *p = (char *) (((long long) ((int) ((*((char **) ((c + 0xdc) + (_ZNK6Player14GetBodyModelIDEjb(c, (*((int *) (c + 8))) & 0xff, 0) * 4)))) + 0x50))));
         *((int *) (p + 0xc)) = 0x4000;
       }
     }

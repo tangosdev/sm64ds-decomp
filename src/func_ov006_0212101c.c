@@ -1,7 +1,8 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-
+#include "types.h"
+// @symbol func_ov006_0212101c
+// recovered name: dScMgTrampoline_c_OnAttacked2
+/* recovered: renamed to Class_Method */
+/* dScMgTrampoline_c::OnAttacked2 - recovered from vtable slot identity */
 typedef struct UnkObj UnkObj;
 struct UnkObj {
     int (**vt)(UnkObj*);

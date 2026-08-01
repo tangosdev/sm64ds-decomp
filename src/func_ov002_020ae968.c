@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 enum { false, true };
 
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* v);
@@ -17,6 +16,6 @@ void func_ov002_020ae968(char* c, char* arg)
     } else {
         *(int*)(c + 0x98) = 0x14000;
     }
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)c + 0xb0)) &= ~1;
     _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c + 0x74));
 }

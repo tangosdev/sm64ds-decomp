@@ -1,14 +1,16 @@
 //cpp
-extern "C" char *_ZN10ClsnResultaSERKS_(char *thiz, const char *o)
-{
-    *(long long *)(thiz + 4) = *(const long long *)(o + 4);
-    *(int *)(thiz + 0xc) = *(const int *)(o + 0xc);
-    *(int *)(thiz + 0x10) = *(const int *)(o + 0x10);
-    *(int *)(thiz + 0x14) = *(const int *)(o + 0x14);
-    *(unsigned short *)(thiz + 0x18) = *(const unsigned short *)(o + 0x18);
-    *(unsigned short *)(thiz + 0x1a) = *(const unsigned short *)(o + 0x1a);
-    *(int *)(thiz + 0x1c) = *(const int *)(o + 0x1c);
-    *(int *)(thiz + 0x20) = *(const int *)(o + 0x20);
-    *(int *)(thiz + 0x24) = *(const int *)(o + 0x24);
-    return thiz;
+// @symbol _ZN10ClsnResultaSERKS_
+/* recovered: named members + shared header */
+#include "ClsnResult.h"
+extern "C" char *_ZN10ClsnResultaSERKS_(struct ClsnResult *self, const char *o) {
+    self->unk_004 = *(const long long *)(o + 4);
+    self->unk_00c = *(const int *)(o + 0xc);
+    self->unk_010 = *(const int *)(o + 0x10);
+    self->unk_014 = *(const int *)(o + 0x14);
+    self->unk_018 = *(const unsigned short *)(o + 0x18);
+    self->unk_01a = *(const unsigned short *)(o + 0x1a);
+    self->unk_01c = *(const int *)(o + 0x1c);
+    self->unk_020 = *(const int *)(o + 0x20);
+    self->unk_024 = *(const int *)(o + 0x24);
+    return ((char *)self);
 }

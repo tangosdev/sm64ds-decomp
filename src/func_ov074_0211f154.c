@@ -1,8 +1,11 @@
+// @symbol func_ov074_0211f154
+/* recovered: shared common types */
+#include "common.h"
 /* func_ov074_0211f154 at 0x0211f154
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov074).
  */
-struct Vector3 { int x, y, z; };
+
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);

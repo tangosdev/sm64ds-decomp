@@ -1,14 +1,10 @@
+#include "types.h"
 /* func_ov002_020c8714 @ 0x020c8714 (ov002, size 0x268)
  * Player cap-power ending update: while active, ducks the music, damps the
  * forward speed (or launches on variant 1), and streams the sparkle trail;
  * when the anim finishes either spawns the cap-return actor with the level
  * fanfare (mode 0x10) or spawns the star and hands the player to it.
  */
-typedef unsigned short u16;
-typedef signed char s8;
-typedef unsigned char u8;
-typedef long long s64;
-
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(int, int);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *, unsigned int, int, int, unsigned int);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(int, unsigned int, int, int, int, int, int);

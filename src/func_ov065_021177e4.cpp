@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov065_021177e4
+// recovered name: Snufit_Kill
+/* recovered: renamed to Class_Method */
+/* daYurei_Mucho_c::Kill - recovered from vtable slot identity */
 struct Vector3 {
     int x, y, z;
     Vector3(int a, int b, int c) : x(a), y(b), z(c) {}

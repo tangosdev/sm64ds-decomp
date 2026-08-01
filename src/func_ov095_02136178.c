@@ -14,7 +14,7 @@ void func_ov095_02136178(char* c)
 
     _Z14ApproachLinearRiii((int*)(c + 0xa8), -0xa000, -0x2000);
     {
-        int* p = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+        int* p = (int*)(((int)c + 0x60));
         int v = *p + *(int*)(c + 0xa8);
         *p = v;
     }

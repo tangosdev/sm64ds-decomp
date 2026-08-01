@@ -14,7 +14,7 @@ extern void func_ov002_020e0f38(void*, int);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3&, unsigned int, int, short);
 extern void func_ov002_020d718c(void*);
-extern void func_ov002_020dab14(void*);
+extern void Player_ReleaseHeldActor(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
 extern char data_ov002_0211031c;
@@ -36,12 +36,12 @@ int Player::St_CrazedCrate_Main() {
             t += 0x8000;
             *(s16*)(self + 0x8e) = t;
             int half = 0x800;
-            int* xpos = (int*)(int)(((long long)(int)(self + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* xpos = (int*)(int)(((long long)(int)(self + 0x5c)));
             int* zpos;
             *(s16*)(self + 0x94) = *(s16*)(self + 0x8e);
             *xpos += (int)(((s64)*(int*)(self + 0x98)
                      * data_02082214[(((int)*(u16*)(self + 0x94) >> 4) << 1) + 1] + half) >> 12);
-            zpos = (int*)(int)(((long long)(int)(self + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+            zpos = (int*)(int)(((long long)(int)(self + 0x64)));
             *zpos += (int)(((s64)*(int*)(self + 0x98)
                      * data_02082214[((int)*(u16*)(self + 0x94) >> 4) << 1] + half) >> 12);
         }
@@ -51,7 +51,7 @@ int Player::St_CrazedCrate_Main() {
 
     if (*(u8*)(self + 0x6de) == 0) {
         if (*(u8*)(self + 0x6e1) < 2) {
-            (*(u8*)(int)(((long long)(int)(self + 0x6e1)) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(u8*)(int)(((long long)(int)(self + 0x6e1))))++;
             func_ov002_020e0f38(self, *(u8*)(self + 0x6e1));
         } else {
             if (*(int*)(self + 8) == 3) {
@@ -65,7 +65,7 @@ int Player::St_CrazedCrate_Main() {
                 _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, pos, 5, 0xf000, 0);
                 func_ov002_020d718c(self);
             } else {
-                func_ov002_020dab14(self);
+                Player_ReleaseHeldActor(self);
             }
             _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211031c);
             _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x43, 0x40000000, 0x1000, 0);

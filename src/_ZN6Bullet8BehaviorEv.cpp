@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN6Bullet8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Bullet.h"
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 
 struct CylinderClsn { int dummy; };
@@ -19,7 +24,6 @@ struct Holder {
     PMF pmf;   // function-pointer word at offset 8
 };
 
-extern "C" void func_ov002_020fed7c(char* c);
 
 struct CC {
     void Clear();
@@ -31,27 +35,28 @@ extern "C" void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Actor* a, WithMeshClsn*
 extern "C" void _ZN12CylinderClsn5ClearEv(void* c);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
 
-extern "C" int _ZN6Bullet8BehaviorEv(Actor* a) {
-    DecIfAbove0_Short((unsigned short*)((char*)a + 0x100));
-    Holder* h = a->h;
+int Bullet::Behavior()
+{
+    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+    Holder* h = ((Actor*)this)->h;
     if (h->pmf != 0) {
-        (a->*(h->pmf))();
+        (((Actor*)this)->*(h->pmf))();
     }
     {
-        int spd = *(int*)((char*)a + 0xa8);
-        int pos = *(int*)((char*)a + 0x9c);
-        int lim = *(int*)((char*)a + 0xa0);
-        int ac = *(int*)((char*)a + 0xac);
+        int spd = *(int*)((char*)&unk_0a8);
+        int pos = *(int*)((char*)&unk_09c);
+        int lim = *(int*)((char*)&unk_0a0);
+        int ac = *(int*)((char*)&unk_0ac);
         int np = spd + pos;
         if (np >= lim) lim = np;
-        *(int*)((char*)a + 0xa8) = lim;
-        *(int*)((char*)a + 0xac) = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(a, (CylinderClsn*)((char*)a + 0x110));
+        *(int*)((char*)&unk_0a8) = lim;
+        *(int*)((char*)&unk_0ac) = ac;
+        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Actor*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
     }
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(a, (WithMeshClsn*)((char*)a + 0x144), 0);
-    *(short*)((char*)a + 0x8e) = *(short*)((char*)a + 0x94);
-    func_ov002_020fed7c((char*)a);
-    _ZN12CylinderClsn5ClearEv((char*)a + 0x110);
-    _ZN12CylinderClsn6UpdateEv((char*)a + 0x110);
+    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Actor*)this), (WithMeshClsn*)((char*)&mWithMeshClsn), 0);
+    *(short*)((char*)&unk_08e) = *(short*)((char*)&unk_094);
+    func_ov002_020fed7c((char*)((Actor*)this));
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
     return 1;
 }

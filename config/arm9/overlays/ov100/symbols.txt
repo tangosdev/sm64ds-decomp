@@ -154,6 +154,7 @@ data_ov100_02147e60 kind:data(any) addr:0x02147e60
 data_ov100_02147e6c kind:data(any) addr:0x02147e6c
 Butterfly_SpawnInfo kind:data(any) addr:0x02147e78
 _ZTV9Butterfly kind:data(any) addr:0x02147e9c
+_ZTV9daBtfly_c kind:data(any) addr:0x02147e9c
 data_ov100_02147f18 kind:data(any) addr:0x02147f18
 data_ov100_02147f20 kind:data(any) addr:0x02147f20
 data_ov100_02147f28 kind:data(any) addr:0x02147f28
@@ -163,6 +164,7 @@ data_ov100_02147f40 kind:data(any) addr:0x02147f40
 data_ov100_02147f4c kind:data(any) addr:0x02147f4c
 RollingIronBall_SpawnInfo kind:data(any) addr:0x02147f58
 _ZTV15RollingIronBall kind:data(any) addr:0x02147f7c
+_ZTV7daIbl_c kind:data(any) addr:0x02147f7c
 data_ov100_02147ff8 kind:data(any) addr:0x02147ff8
 data_ov100_02148000 kind:data(any) addr:0x02148000
 data_ov100_02148008 kind:data(any) addr:0x02148008
@@ -204,6 +206,7 @@ data_ov100_02148380 kind:data(any) addr:0x02148380
 data_ov100_02148390 kind:data(any) addr:0x02148390
 StarDoor_SpawnInfo kind:data(any) addr:0x021483a8
 _ZTV4Door kind:data(any) addr:0x021483cc
+_ZTV12daStarGate_c kind:data(any) addr:0x021483cc
 data_ov100_02148448 kind:data(any) addr:0x02148448
 data_ov100_02148450 kind:data(any) addr:0x02148450
 data_ov100_02148458 kind:data(any) addr:0x02148458
@@ -215,6 +218,7 @@ data_ov100_02148480 kind:data(any) addr:0x02148480
 data_ov100_0214848c kind:data(any) addr:0x0214848c
 Fish_SpawnInfo kind:data(any) addr:0x02148498
 _ZTV4Fish kind:data(any) addr:0x021484bc
+_ZTV8daFish_c kind:data(any) addr:0x021484bc
 data_ov100_02148538 kind:data(any) addr:0x02148538
 data_ov100_02148544 kind:data(any) addr:0x02148544
 PathLift_SpawnInfo kind:data(any) addr:0x02148558

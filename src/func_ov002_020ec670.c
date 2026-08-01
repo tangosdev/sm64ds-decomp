@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct ClsnResult;
 struct Actor;
 extern int func_0203567c(int p);

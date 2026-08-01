@@ -1,14 +1,14 @@
-extern int func_02061428(int a, int b);
-extern void func_0206165c(int i, int val);
-extern int func_02061558(int a, int b);
+extern int WM_CheckStateEx(int a, int b);
+extern void WM_SetCallbackTable(int i, int val);
+extern int WM_SendCommand(int a, int b);
 
 int func_020621b8(int this)
 {
     int r;
-    r = func_02061428(1, 2);
+    r = WM_CheckStateEx(1, 2);
     if (r != 0) return r;
-    func_0206165c(2, this);
-    r = func_02061558(2, 0);
+    WM_SetCallbackTable(2, this);
+    r = WM_SendCommand(2, 0);
     if (r == 0) return 2;
     return r;
 }

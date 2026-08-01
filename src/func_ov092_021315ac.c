@@ -1,7 +1,10 @@
-struct Vector3 { int x,y,z; };
+// @symbol func_ov092_021315ac
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
 extern void func_02012694(int a, void* p);
-extern void func_ov092_02131578(char* c);
 void func_ov092_021315ac(char *c){
   *(int*)(c+0x98)=0;
   if(!*(unsigned short*)(c+0x500+0x64)){

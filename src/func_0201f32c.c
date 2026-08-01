@@ -1,10 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 extern void *data_0209d70c;
 extern s16 data_0209d6d4;
 extern u8 data_0209d660;
@@ -40,11 +34,11 @@ extern void MultiStore_Int(int val, void *dst, int len);
 extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void SetBg1Offset(int a, int b);
-extern u32 func_02054e88(void);
+extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void SetSubBg1Offset(int a, int b);
 extern int func_02054d88(void);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern void SetBg3Offset(int a, int b);
 extern void _ZN7Message6UpdateEv(void);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
@@ -157,7 +151,7 @@ void func_0201f32c(int arg0)
         data_0209d660 = 0;
     } else if (data_0209d698 == 1) {
         {
-            void *pa = (char *)func_02054e88() + 0x4000;
+            void *pa = (char *)_ZN3G2S13GetBG1CharPtrEv() + 0x4000;
             spC = 0;
             MultiStore_Int(spC, pa, 0x2000);
         }
@@ -176,11 +170,11 @@ void func_0201f32c(int arg0)
             MultiStore_Int(sp10, pa, 0x3000);
         }
         {
-            void *pb = func_02054fb0();
+            void *pb = _ZN2G212GetBG3ScrPtrEv();
             sp4 = 0x37f;
             MultiStore16(sp4, pb, 0x800);
         }
-        var_r8 = (char *)func_02054fb0() + 0x42;
+        var_r8 = (char *)_ZN2G212GetBG3ScrPtrEv() + 0x42;
         {
             u32 b4 = (data_0209f2d8 == 2);
             if (b4 != 0) {

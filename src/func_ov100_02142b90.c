@@ -1,11 +1,7 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
-struct Vector3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov100_02142b90
+/* recovered: shared common types */
+#include "common.h"
 extern signed char data_0209f2f8;
 extern void* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
@@ -30,7 +26,7 @@ void func_ov100_02142b90(char* c)
     if (pl == 0) return;
 
     {
-        struct Vector3* pp = (struct Vector3*)(((long long)(int)((char*)pl + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        struct Vector3* pp = (struct Vector3*)(((long long)(int)((char*)pl + 0x5c)));
         pos.x = pp->x;
         pos.y = pp->y;
         pos.z = pp->z;
@@ -60,7 +56,7 @@ void func_ov100_02142b90(char* c)
             (struct Vector3*)(c + 0x5c), (const void*)(c + 0x92), cc, -1);
         if (a == 0) return;
         {
-            u8* cnt = (u8*)(((long long)(int)(c + 0x3d2)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8* cnt = (u8*)(((long long)(int)(c + 0x3d2)));
             *cnt = *cnt + 1;
         }
         *(int*)((char*)a + 0x3a8) = (int)c;

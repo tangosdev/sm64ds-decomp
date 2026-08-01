@@ -1,9 +1,9 @@
 //cpp
-struct Vector3 { int x,y,z; };
-typedef unsigned short u16;
-typedef short s16;
-
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#include "types.h"
+// @symbol func_ov092_021313b0
+/* recovered: shared common types */
+#include "common.h"
+#define LA(p) (((long long)(int)(p)))
 
 struct PathPtr {
     int GetNode(Vector3 &v, unsigned int i) const;

@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov072_02120f14
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor;
 struct RaycastGround { char buf[0x54]; };
 

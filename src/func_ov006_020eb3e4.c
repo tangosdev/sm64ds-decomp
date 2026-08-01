@@ -13,10 +13,10 @@ void func_ov006_020eb3e4(char *c)
     short cnt;
 
     _Z14ApproachLinearRiii((int *)(c + 0x48), 0, 0x200);
-    *(short *)(((int)c + 0x78) & 0xFFFFFFFFFFFFFFFF) -= 1;
+    *(short *)(((int)c + 0x78)) -= 1;
     if (*(short *)(c + 0x78) == 0) {
-        int *p10 = (int *)(((int)c + 0x10) & 0xFFFFFFFFFFFFFFFF);
-        int *pd = (int *)(((int)data_ov006_0213ca44) & 0xFFFFFFFFFFFFFFFF);
+        int *p10 = (int *)(((int)c + 0x10));
+        int *pd = (int *)(((int)data_ov006_0213ca44));
         if (p10[0] == pd[0] &&
             (p10[1] == pd[1] || *(int *)(c + 0x10) == 0)) {
             *(unsigned char *)(c + 0x94) = 1;

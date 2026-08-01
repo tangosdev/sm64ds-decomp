@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 #pragma opt_common_subs off
 
 extern int RandomIntInternal(int *seed);
@@ -10,7 +7,7 @@ extern int data_0209d4b8;
 void func_ov006_020e8928(char *o, int idx)
 {
     if (*(u16 *)(o + idx * 0x20 + 0x52d2) != 0) {
-        *(u16 *)((char *)(((int)o + 0x52d2) & 0xFFFFFFFFFFFFFFFF) + idx * 0x20) -= 1;
+        *(u16 *)((char *)(((int)o + 0x52d2)) + idx * 0x20) -= 1;
         if (*(short *)(o + idx * 0x20 + 0x52d2) < 0)
             *(u16 *)(o + idx * 0x20 + 0x52d2) = 0;
     } else {

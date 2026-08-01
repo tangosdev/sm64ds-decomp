@@ -14,7 +14,7 @@ extern "C" void func_ov006_020eb018(char *c)
     C *o = (C*)c;
     (o->*(o->pmf))();
     if (*(unsigned char*)(c + 0x95) != 5) return;
-    *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int*)(((int)c + 0x60)) += 1;
     {
         int i = 0;
         int max = 0x200;

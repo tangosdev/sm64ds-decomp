@@ -1,13 +1,16 @@
+// @symbol _ZN13RaycastGroundC1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "RaycastGround.h"
 extern void func_02035514(void* c);
 extern int* func_0203819c(void* t);
-extern unsigned int data_02099264[];
-extern unsigned int data_02099274[];
 
-void* _ZN13RaycastGroundC1Ev(char* c){
-    func_02035514(c);
-    func_0203819c(c + 0x10);
-    *(unsigned int**)c = data_02099264;
-    *(unsigned int**)(c + 0x10) = data_02099274;
-    *(int*)(c + 0x4c) = 0x1f4000;
-    return c;
+void* _ZN13RaycastGroundC1Ev(struct RaycastGround *self) {
+    func_02035514(((char*)self));
+    func_0203819c((char*)&self->unk_010);
+    *(unsigned int**)((char*)self) = data_02099264;
+    *(unsigned int**)((char*)&self->unk_010) = data_02099274;
+    self->unk_04c = 0x1f4000;
+    return ((char*)self);
 }

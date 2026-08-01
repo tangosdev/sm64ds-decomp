@@ -8,7 +8,7 @@ void _ZN9Animation7AdvanceEv(struct Animation* a) {
     if ((f & 0xc0000000) == 0) {
         a->frame = (a->frame + a->speed + (int)len) % (int)len;
     } else {
-        int *pFrame = (int *)(((int)a + 8) & 0xFFFFFFFFFFFFFFFF);
+        int *pFrame = (int *)(((int)a + 8));
         *pFrame = *pFrame + a->speed;
         if (a->frame < 0) {
             a->frame = 0;

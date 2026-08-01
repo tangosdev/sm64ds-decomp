@@ -1,12 +1,14 @@
+// @symbol func_ov006_020ecee4
+// recovered name: dScMgHanachan_c_Render
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgHanachan_c::Render - recovered from vtable slot identity */
 #pragma opt_common_subs off
 
 extern void func_ov004_020b1e34(void *a, int b, int c, int d);
-extern void func_ov006_020ea670(void);
-extern void func_ov006_020ea350(void);
-extern void func_ov006_020eac38(void *a);
-extern void func_ov006_020ea914(void *a);
-extern int func_ov004_020ad674(void);
-extern void func_ov004_020afcf8(void *a, int b, int c, int d);
+extern int GetGameLanguage(void);
+extern void DrawOamSprite(void *a, int b, int c, int d);
 extern void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int g);
 
 typedef struct { int a; int b; } Pair;
@@ -15,12 +17,10 @@ typedef struct { int a; int b; } Pair;
 #define PAIR1(s) ((Pair *)(int)(((unsigned long long)(unsigned int)((char *)(s) + 0x4660)) & 0xFFFFFFFFFFFFFFFFULL))
 
 extern Pair data_ov006_0213c9ac;
-extern int data_ov006_0213c958;
 extern Pair data_ov006_0213c994;
 extern Pair data_ov006_0213ca3c;
 extern Pair data_ov006_0213ca34;
 extern Pair data_ov006_0213ca2c;
-extern void *data_ov006_0213ca9c[];
 
 int func_ov006_020ecee4(void *a0)
 {
@@ -97,10 +97,10 @@ tail:
         Pair *p = PAIR1(self);
         Pair *g = &data_ov006_0213ca2c;
         if (!(p->a == g->a && (p->b == g->b || *(int *)(self + 0x4660) == 0))) {
-            int idx = func_ov004_020ad674();
+            int idx = GetGameLanguage();
             void *e = data_ov006_0213ca9c[idx];
             void *f = *(void **)((char *)e + 0xc);
-            func_ov004_020afcf8(f, 0x80, 0x10, 0);
+            DrawOamSprite(f, 0x80, 0x10, 0);
             func_ov004_020b2220(0x80, 0x28, *(void **)(self + 0x4670), 1, -1, 0x800, 0);
         }
     }

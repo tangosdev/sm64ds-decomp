@@ -1,8 +1,11 @@
-extern void func_ov004_020adb1c(int self);
-extern void func_ov004_020b0aa0(int arg);
+// @symbol func_ov006_020f3294
+// recovered name: dScMgLuigi_c_OnYoshiTryEat_020f3294
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgLuigi_c::OnYoshiTryEat - recovered from vtable slot identity */
+extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_020f2ec0(char *c);
-extern void func_ov006_020f2e20(char *c);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
 extern char *func_020beb68;
 extern unsigned char data_0209d45c;
@@ -14,9 +17,9 @@ void func_ov006_020f3294(char *c, int arg1)
     int *q;
 
     if (*(unsigned char *)(c + 0x5000 + 0x459) != 0) {
-        *(unsigned char *)(((int)c + 0x5457) & 0xFFFFFFFFFFFFFFFF) += 1;
+        *(unsigned char *)(((int)c + 0x5457)) += 1;
 
-        q = (int *)(((int)c + 0xbc) & 0xFFFFFFFFFFFFFFFF);
+        q = (int *)(((int)c + 0xbc));
         *q += 1;
         if ((unsigned int)*(int *)(c + 0xbc) > 0x270e)
             *(int *)(c + 0xbc) = 0x270e;
@@ -35,7 +38,7 @@ void func_ov006_020f3294(char *c, int arg1)
         func_ov004_020adb1c(p != 0 ? *(int *)(p + 0xb4) : 0);
     }
 
-    func_ov004_020b0aa0(0x1d);
+    FreeGfxSlotsById(0x1d);
     func_ov006_020f2ec0(c);
     func_ov006_020f2e20(c);
 

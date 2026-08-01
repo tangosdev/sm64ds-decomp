@@ -1,11 +1,11 @@
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
-extern int G1[];
-extern int G2[];
+extern int data_ov002_0210d9e0[];
+extern int data_ov102_0214e9c0[];
+extern int data_ov102_0214e9c8[];
 int _ZN6BobOmb16CleanupResourcesEv(void)
 {
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9e0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e9c0);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov102_0214e9c8);
     return 1;
 }

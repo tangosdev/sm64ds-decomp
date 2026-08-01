@@ -10,8 +10,8 @@ extern "C" void func_ov080_02123fcc(char* thiz)
 {
     char* c = thiz;
     {
-        int* p150 = (int*)(((int)c + 0x150) & 0xFFFFFFFFFFFFFFFF);
-        int* pb0 = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+        int* p150 = (int*)(((int)c + 0x150));
+        int* pb0 = (int*)(((int)c + 0xb0));
         *p150 = *p150 | 1;
         *pb0 = *pb0 & ~0x10000000;
     }

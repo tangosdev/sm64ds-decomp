@@ -1,10 +1,7 @@
+#include "types.h"
 /* func_ov006_020e2c08 at 0x020e2c08 (ov006)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
 extern void func_ov006_020e1dc8(char* self, int idx);
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);

@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 extern void func_02013868(int t, int x);
 extern void _ZN6Player17SetNoControlStateEhih(void* p, u8 a, int b, u8 c);
 extern int data_0209caa0[];

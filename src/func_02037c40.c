@@ -21,9 +21,9 @@ struct Obj {
     void **vtable38;   /* 0x38 */
 };
 
-extern void *vtable_02099338[];
-extern void *vtable_02099348[];
-extern void *vtable_02099358[];
+extern void *data_02099338[];
+extern void *data_02099348[];
+extern void *data_02099358[];
 
 extern void _ZN10ClsnResultD1Ev(void *thiz);   /* 0x02038144 */
 extern void func_0203ac1c(void *thiz);          /* 0x0203ac1c */
@@ -33,9 +33,9 @@ extern void _ZN6Memory16operator_delete2EPv(void *ptr); /* 0x0203cbcc */
 
 struct Obj *func_02037c40(struct Obj *thiz)
 {
-    thiz->vtable = (void **)vtable_02099338;
-    thiz->vtable10 = (void **)vtable_02099348;
-    thiz->vtable38 = (void **)vtable_02099358;
+    thiz->vtable = (void **)data_02099338;
+    thiz->vtable10 = (void **)data_02099348;
+    thiz->vtable38 = (void **)data_02099358;
     _ZN10ClsnResultD1Ev((char *)thiz + 0xc4);
     _ZN10ClsnResultD1Ev((char *)thiz + 0x9c);
     _ZN10ClsnResultD1Ev((char *)thiz + 0x74);

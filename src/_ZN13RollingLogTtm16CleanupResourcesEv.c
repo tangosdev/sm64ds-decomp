@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 struct SharedFilePtr { u32 data[4]; };
 
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);

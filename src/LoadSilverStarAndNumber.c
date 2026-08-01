@@ -1,8 +1,8 @@
 extern void _ZN5Model8LoadFileER13SharedFilePtr();
-extern int G0[];
-extern int G1[];
+extern int data_ov002_0210da28[];
+extern int data_ov002_02110954[];
 void LoadSilverStarAndNumber(void)
 {
-    _ZN5Model8LoadFileER13SharedFilePtr(G0);
-    _ZN5Model8LoadFileER13SharedFilePtr(G1);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da28);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_02110954);
 }

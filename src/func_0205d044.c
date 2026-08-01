@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct Node {
     void *unk0;
     struct Node *next;
@@ -16,8 +14,8 @@ typedef void (*Callback)(void *arg, int code);
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 extern void func_0205c788(Node *self, int arg);
-extern void func_0205807c(u16 *self);
-extern void func_0205d874(int *s);
+extern void OS_WakeupThread(u16 *self);
+extern void FS_InitFile(int *s);
 
 void *func_0205d044(void *pool)
 {
@@ -26,7 +24,7 @@ void *func_0205d044(void *pool)
     int f1 = (int)((*(volatile u32 *)(c + 0x10) & 0x20) != 0);
 
     if (f1 != 0) {
-        u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+        u32 *p = (u32 *)(((int)(c + 0x10)));
         *p &= ~0x20;
 
         Node *head = *(Node **)(c + 0x18);
@@ -55,7 +53,7 @@ void *func_0205d044(void *pool)
                 int wasSet = (int)((*(volatile u32 *)(c + 0x10) & 0x10) != 0);
                 int notSet = (int)(wasSet == 0);
                 if (notSet != 0) {
-                    u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+                    u32 *p = (u32 *)(((int)(c + 0x10)));
                     *p |= 0x10;
                 }
                 _ZN3IRQ7RestoreEj(irqSave);
@@ -68,7 +66,7 @@ void *func_0205d044(void *pool)
                 {
                     int nset = (int)((*(volatile u32 *)&head2->flags & 4) != 0);
                     if (nset != 0) {
-                        func_0205807c(&head2->queue);
+                        OS_WakeupThread(&head2->queue);
                         return 0;
                     }
                 }
@@ -80,11 +78,11 @@ void *func_0205d044(void *pool)
     {
         int f5 = (int)((*(volatile u32 *)(c + 0x10) & 0x10) != 0);
         if (f5 != 0) {
-            u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            u32 *p = (u32 *)(((int)(c + 0x10)));
             *p &= ~0x10;
             if (*(u32 *)(c + 0x4c) & 0x400) {
                 int buf[0x11];
-                func_0205d874(buf);
+                FS_InitFile(buf);
                 buf[2] = (int)c;
                 {
                     Callback cb = *(Callback *)(c + 0x48);
@@ -97,10 +95,10 @@ void *func_0205d044(void *pool)
     {
         int f7 = (int)((*(volatile u32 *)(c + 0x10) & 0x40) != 0);
         if (f7 != 0) {
-            u32 *p = (u32 *)(((int)(c + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            u32 *p = (u32 *)(((int)(c + 0x10)));
             *p &= ~0x40;
             *p |= 8;
-            func_0205807c((u16 *)(c + 0xe));
+            OS_WakeupThread((u16 *)(c + 0xe));
         }
     }
 

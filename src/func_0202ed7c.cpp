@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_0202ed7c
+// recovered name: dWipe_c_IsBetweenStartAndEnd
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsBetweenStartAndEnd - recovered from vtable slot identity */
 struct FaderBrightness {
     virtual void m00();
     virtual void m04();

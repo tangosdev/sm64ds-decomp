@@ -98,6 +98,14 @@ def evaluate(src, name, target):
 def load_db():
     db = {}
     for r in L.read_records(DB):        # corrupt lines are reported, not swallowed
+        # A row that parses as JSON but lacks addr/module is unkeyable. That used to raise
+        # out of key_of and take down every caller -- one bad ingest silently disabled the
+        # whole permuter crunch pipeline. Skip it loudly instead; the row keeps its place
+        # in the file so it can be repaired rather than lost.
+        if r.get("addr") is None or r.get("module") is None:
+            print(f"nearmiss_db: skipping unkeyable row (no addr/module): "
+                  f"{r.get('name') or '<unnamed>'}", file=sys.stderr)
+            continue
         db[L.key_of(r)] = r             # normalized: addr is stored as both hex str and int
     return db
 
@@ -372,7 +380,16 @@ def dedupe(args):
     seen, best, kept = {}, {}, []
     dups = 0
     for r in L.read_records(DB):                    # RAW rows, incl. union duplicates
-        key = L.key_of(r)                           # int/hex-str addr forms must collide
+        try:
+            key = L.key_of(r)                       # int/hex-str addr forms must collide
+        except (KeyError, TypeError, ValueError):
+            # A row with no resolvable (module, addr) cannot be deduped or matched. Skip
+            # it with a warning rather than aborting: one malformed salvage row must never
+            # crash the whole progress refresh (it did -- a row saved with name+label but
+            # no addr froze the public percent until repaired).
+            sys.stderr.write(f"nearmiss dedupe: skipping unkeyable row {r.get('name') or r.get('label') or '?'}\n")
+            kept.append(r)
+            continue
         div = r.get("divergences")
         div = div if isinstance(div, int) else 1 << 30
         floored = 1 if r.get("floor") else 0

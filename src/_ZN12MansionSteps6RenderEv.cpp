@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN12MansionSteps6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "MansionSteps.h"
 struct Base {
     virtual int vf0(int);
     virtual int vf1(int);
@@ -11,8 +14,10 @@ struct Obj {
     char pad[0xd4];
     Base sub;
 };
-extern "C" int _ZN12MansionSteps6RenderEv(Obj *c) {
-    if (*(unsigned char*)((char*)c+0x156) == 0) return 1;
-    c->sub.vfunc(0);
+
+int MansionSteps::Render()
+{
+    if (*(unsigned char*)((char*)&unk_156) == 0) return 1;
+    ((Obj *)this)->sub.vfunc(0);
     return 1;
 }

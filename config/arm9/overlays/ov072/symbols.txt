@@ -114,6 +114,7 @@ data_ov072_02122780 kind:data(any) addr:0x02122780
 data_ov072_0212278c kind:data(any) addr:0x0212278c
 SnowmanBody_SpawnInfo kind:data(any) addr:0x0212279c ambiguous
 _ZTV11SnowmanBody kind:data(any) addr:0x021227c0
+_ZTV12daBgSnmBdy_c kind:data(any) addr:0x021227c0
 data_ov072_0212283c kind:data(any) addr:0x0212283c
 data_ov072_02122844 kind:data(any) addr:0x02122844
 data_ov072_0212284c kind:data(any) addr:0x0212284c
@@ -126,6 +127,7 @@ data_ov072_0212287c kind:data(any) addr:0x0212287c
 data_ov072_02122888 kind:data(any) addr:0x02122888
 SnowmanHead_SpawnInfo kind:data(any) addr:0x02122898 ambiguous
 _ZTV11SnowmanHead kind:data(any) addr:0x021228bc
+_ZTV12daBgSnmHed_c kind:data(any) addr:0x021228bc
 data_ov072_02122938 kind:data(any) addr:0x02122938
 data_ov072_02122944 kind:data(any) addr:0x02122944
 data_ov072_02122954 kind:data(any) addr:0x02122954 ambiguous
@@ -146,6 +148,7 @@ data_ov072_02122a54 kind:data(any) addr:0x02122a54
 data_ov072_02122a60 kind:data(any) addr:0x02122a60
 BabyPenguin_SpawnInfo kind:data(any) addr:0x02122a6c ambiguous
 _ZTV11BabyPenguin kind:data(any) addr:0x02122a90
+_ZTV9daPgBby_c kind:data(any) addr:0x02122a90
 data_ov072_02122b20 kind:bss addr:0x02122b20
 data_ov072_02122b28 kind:bss addr:0x02122b28
 data_ov072_02122b34 kind:bss addr:0x02122b34

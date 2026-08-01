@@ -25,8 +25,8 @@ struct Obj {
 };
 
 extern void func_ov006_0211470c(int *a, int *b);
-extern void func_0203d6d0(int *o, int *a, int *b);
-extern Fix12i func_0203d614(const void *v);
+extern void Vec2_Sub(int *o, int *a, int *b);
+extern Fix12i Vec2_Len(const void *v);
 extern void func_ov006_0210d8bc(char *c);
 extern void func_02012718(void *a, int b);
 
@@ -40,14 +40,14 @@ void func_ov006_021106b4(struct Obj *self)
     self->f10 = self->x;
     self->f14 = self->y;
     if (self->f38 > 0) {
-        *(int *)(((int)self + 0x38) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(int *)(((int)self + 0x38)) -= 1;
         if (self->f38 == 0) self->b30 = 0;
         return;
     }
     for (i = 0; i < self->mgr->count; i++) {
         func_ov006_0211470c(&s[0], (i >= 13) ? 0 : self->mgr->arr[i]);
-        func_0203d6d0(&s[2], &self->x, &s[0]);
-        b = func_0203d614(&s[2]) < 0x4000;
+        Vec2_Sub(&s[2], &self->x, &s[0]);
+        b = Vec2_Len(&s[2]) < 0x4000;
         if (b) {
             self->f38 = 0x61;
             self->b31 = 0;
@@ -60,7 +60,7 @@ void func_ov006_021106b4(struct Obj *self)
             return;
         }
     }
-    *(int *)(((int)self + 0x34) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(int *)(((int)self + 0x34)) += 1;
     if (self->f34 < 0x3c) return;
     self->f34 = 0;
     if (self->b31 == 0) self->b31 = 1;

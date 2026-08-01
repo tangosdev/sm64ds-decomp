@@ -1,8 +1,6 @@
+#include "types.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-
-typedef unsigned char u8;
-
 extern u8 data_ov007_02104bd4[];
 extern u8 data_ov007_0210342c[];
 

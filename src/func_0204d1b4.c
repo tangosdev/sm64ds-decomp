@@ -1,7 +1,4 @@
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
 extern int __aeabi_idiv(int a, int b);
 extern u32 data_020a4d30;
 struct Dst

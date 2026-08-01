@@ -1,9 +1,8 @@
+#include "types.h"
 /* func_ov006_020ff4ec at 0x020ff4ec
  *
  * Resets two 0x20-byte slot entries: flag=1, id=0xff, two counters=0.
  */
-typedef unsigned char u8;
-
 struct Slot {
     u8 active;   /* +0x00 (this+0x563b) */
     u8 count;    /* +0x01 */

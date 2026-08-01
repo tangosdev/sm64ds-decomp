@@ -4,7 +4,7 @@ void func_ov015_02111eec(char *c)
 {
   Math_Function_0203b0fc((int *)(c + 0x5c), *(int *)(c + 0x320) - 0x168000, 0x800, 0x46000);
   {
-    int *p = (int *)(((int)c + 0x334) & 0xFFFFFFFFFFFFFFFF);
+    int *p = (int *)(((int)c + 0x334));
     *p = *p - 1;
   }
   if (*(int *)(c + 0x334) > 0)

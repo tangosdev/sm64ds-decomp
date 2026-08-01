@@ -10,7 +10,7 @@ struct Obj581 {
 extern "C" void _ZN3IRQ7DisableEv(void);
 extern void func_02058a44(struct Obj581 *o);
 extern void func_02058488(int target);
-extern void func_0205807c(void *p);
+extern void OS_WakeupThread(void *p);
 extern void func_02057f54(void);
 extern struct Obj581 *data_020a612c;
 extern int data_020a6148[];
@@ -24,6 +24,6 @@ void func_020581a8(void) {
     func_02058488((int)o);
     data_020a6148[o->idx] = 0;
     o->field64 = 2;
-    func_0205807c(o->sub90);
+    OS_WakeupThread(o->sub90);
     func_02057f54();
 }

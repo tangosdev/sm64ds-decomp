@@ -1,16 +1,17 @@
+// @symbol func_ov077_02125bb4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Particle.h"
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 
-struct Vector3 {
-    int x, y, z;
-};
+
 
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *p);
-extern void func_ov077_021250a8(void *c);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *p);
-extern void func_020383fc(void *p);
-extern int func_ov077_02124ce4(void *c);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void func_02012694(int id, void *pos);
-extern void _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(Fix12i x, Fix12i y, Fix12i z);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     Fix12i x, Fix12i y, Fix12i z,
@@ -18,7 +19,6 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
 extern void _ZN5Actor8PoofDustEv(void *c);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
-extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *p);
 extern void func_ov077_02125e94(void *c, int a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(int id, void *pos);
@@ -38,7 +38,7 @@ int func_ov077_02125bb4(char *c)
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
     func_ov077_021250a8(c);
     _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1e4);
-    func_020383fc(c + 0x1e4);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);
 
     r4 = func_ov077_02124ce4(c);
     if (r4) {
@@ -75,7 +75,7 @@ int func_ov077_02125bb4(char *c)
             *(short *)(c + 0x8e) = *(short *)(c + 0x94);
             *(short *)(c + 0x90) = *(short *)(c + 0x96);
             _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1e4);
-            *(unsigned int *)(((long long)(int)(c + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x10000000u;
+            *(unsigned int *)(((long long)(int)(c + 0xb0))) |= 0x10000000u;
             func_ov077_02125e94(c, 1);
         } else {
             x = *(int *)(c + 0x5c);

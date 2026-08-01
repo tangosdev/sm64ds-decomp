@@ -8,7 +8,7 @@ extern "C" int _ZN5Actor15IsPlayerInRangeEi(void *self, int r);
 extern "C" void func_ov002_020afc68(unsigned char *self)
 {
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
-        int *p = (int *)(((int)self + 0x98) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)self + 0x98));
         *p += 0x19000;
         *(int *)(self + 0xa8) = 0;
     } else {

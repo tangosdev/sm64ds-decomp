@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *this_, void *file, int a, int b);
 extern int _ZN13SharedFilePtr7ReleaseEv(void *sfp);
@@ -45,12 +43,12 @@ int _ZN8CapEnemy6AddCapEj(struct CapEnemy *this_, unsigned int param)
         return _ZN13SharedFilePtr7ReleaseEv(func_020ff028[this_->f113]);
     }
 
-    *(int *)(((long long)(int)((char *)this_ + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
+    *(int *)(((long long)(int)((char *)this_ + 0xb0))) &= ~1;
     func_ov001_020ab228((char *)this_ + 0x164, (char *)this_, this_->f113, this_->f112, this_->f110 != 0);
 
     int result = func_02005e28((unsigned char *)this_);
     if (result != 0) {
-        unsigned char *p = (unsigned char *)(((long long)(int)((char *)this_ + 0x113)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p = (unsigned char *)(((long long)(int)((char *)this_ + 0x113)));
         result = *p | 0x80;
         *p = result;
     }

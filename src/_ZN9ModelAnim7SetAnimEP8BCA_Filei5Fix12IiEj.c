@@ -1,10 +1,7 @@
+#include "types.h"
 /* ModelAnim::SetAnim at 0x02016748, size=0x5c
  * Sets animation; fast path (same file) updates flags+speed only.
  */
-
-typedef int s32;
-typedef unsigned short u16;
-
 struct BCA_File {
     u16 unk00;
     u16 numFrames;

@@ -3,7 +3,7 @@ extern "C" int LoadFile(int handle);
 extern "C" int func_ov004_020adc4c(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
-extern "C" unsigned int func_02054e88(void);
+extern "C" unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 extern "C" int func_02054d88(void);
 extern "C" void MultiCopy_Int(int *dst, int *src, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
@@ -30,7 +30,7 @@ extern "C" void LoadFont(unsigned char arg)
         GX::LoadBGPltt((void *)(file + 2), 2, 0x20);
         Deallocate((void *)file);
     } else if (data_0209d698 == 1) {
-        MultiCopy_Int((int *)r4, (int *)func_02054e88(), 0x4000);
+        MultiCopy_Int((int *)r4, (int *)_ZN3G2S13GetBG1CharPtrEv(), 0x4000);
         file = LoadFile(0x237);
         GXS::LoadBGPltt((void *)file, 0x40, 0x20);
         Deallocate((void *)file);

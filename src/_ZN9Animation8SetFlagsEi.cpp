@@ -1,6 +1,10 @@
 //cpp
-extern "C" {
-void _ZN9Animation8SetFlagsEi(void* c,int flags){
-  *(unsigned int*)((char*)c+4)=(*(unsigned int*)((char*)c+4)&0x3fffffff)|flags;
-}
+// @symbol _ZN9Animation8SetFlagsEi
+/* recovered: named members + shared header, real C++ method */
+#include "Animation.h"
+
+
+void Animation::SetFlags(int flags)
+{
+  *(unsigned int*)((char*)&mFrameCountAndFlags)=(*(unsigned int*)((char*)&mFrameCountAndFlags)&0x3fffffff)|flags;
 }

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern char* LoadFile(int id);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);

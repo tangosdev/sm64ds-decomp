@@ -1,9 +1,9 @@
-struct Vec3 { int x, y, z; };
-extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern void func_ov007_020c7560(void *self, int a, int b);
-extern void func_ov007_020c7b2c(int a, int b, int c);
-extern void func_ov007_020c81a0(void *node, int a, int b);
-extern void func_ov007_020c831c(void *s, int a, int b);
+// @symbol func_ov007_020c5188
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 #define DIVR(x) ((int)(((long long)(x) * -1000 + 0x800) >> 12))
 
@@ -20,17 +20,17 @@ void func_ov007_020c5188(char *sb, int arg1)
     int v18;
     int v1c;
     int v20;
-    struct Vec3 backup;
+    struct Vector3 backup;
     int *r7;
     int *r6;
 
     p = arg1;
     stride = *(int *)(*(char **)(sb + 0x1c) + 4);
     count = 1 << p;
-    backup = *(struct Vec3 *)(sb + 0x70);
+    backup = *(struct Vector3 *)(sb + 0x70);
     r7 = (int *)(sb + 0xb8);
     r6 = (int *)(sb + 0xc4);
-    AddVec3((struct Vec3 *)(sb + 0x88), (struct Vec3 *)(sb + 0x70), (struct Vec3 *)(sb + 0x70));
+    AddVec3((struct Vector3 *)(sb + 0x88), (struct Vector3 *)(sb + 0x70), (struct Vector3 *)(sb + 0x70));
 
     oc = 0;
     if (count > 0) {
@@ -84,5 +84,5 @@ void func_ov007_020c5188(char *sb, int arg1)
         } while (oc < count);
     }
 
-    *(struct Vec3 *)(sb + 0x70) = backup;
+    *(struct Vector3 *)(sb + 0x70) = backup;
 }

@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN9WaterBomb13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "WaterBomb.h"
 typedef int Fix12;
 struct BMD_File;
 struct SharedFilePtr { int h; };
@@ -48,67 +51,67 @@ struct Obj {
     int f3c8;                /* 0x3c8 */
 };
 
-extern "C" int _ZN9WaterBomb13InitResourcesEv(Obj* o)
+int WaterBomb::InitResources()
 {
     BMD_File* bmd;
     int kind;
 
-    kind = o->f8 & 0xf;
-    o->f3c8 = kind;
+    kind = ((Obj*)this)->f8 & 0xf;
+    ((Obj*)this)->f3c8 = kind;
 
-    if (o->f3c8 == 2)
+    if (((Obj*)this)->f3c8 == 2)
     {
         bmd = Model::LoadFile(data_ov002_0210da38);
-        if (((ModelBase*)&o->f300)->SetFile(bmd, 1, 0x16) == 0)
+        if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
         Model::LoadFile(data_ov002_0210da38);
         bmd = Model::LoadFile(data_ov098_0213c91c);
-        if (((ModelBase*)&o->f300)->SetFile(bmd, 1, 0x16) == 0)
+        if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, 0x16) == 0)
             return 0;
     }
 
-    if (((ShadowModel*)&o->f350)->InitCylinder() == 0)
+    if (((ShadowModel*)&((Obj*)this)->f350)->InitCylinder() == 0)
         return 0;
 
-    if (o->f3c8 == 0)
-        o->f3c4 = 0;
+    if (((Obj*)this)->f3c8 == 0)
+        ((Obj*)this)->f3c4 = 0;
     else
-        o->f3c4 = 1;
+        ((Obj*)this)->f3c4 = 1;
 
-    if (o->f3c8 != 0)
+    if (((Obj*)this)->f3c8 != 0)
     {
-        if (o->f3c8 == 2)
+        if (((Obj*)this)->f3c8 == 2)
         {
-            o->f80 = 0x800;
-            o->f84 = 0x800;
-            o->f88 = 0x800;
-            ((MovingCylinderClsn*)&o->f110)->Init((Actor*)o, 0x14000, 0x28000, 0x200004, 0);
-            ((WithMeshClsn*)&o->f144)->Init((Actor*)o, 0x1e000, 0x1e000, 0, 0);
+            ((Obj*)this)->f80 = 0x800;
+            ((Obj*)this)->f84 = 0x800;
+            ((Obj*)this)->f88 = 0x800;
+            ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x14000, 0x28000, 0x200004, 0);
+            ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
-            o->f80 = 0x1000;
-            o->f84 = 0x1000;
-            o->f88 = 0x1000;
-            ((MovingCylinderClsn*)&o->f110)->Init((Actor*)o, 0x28000, 0x50000, 0x204004, 0);
-            ((WithMeshClsn*)&o->f144)->Init((Actor*)o, 0x32000, 0x32000, 0, 0);
+            ((Obj*)this)->f80 = 0x1000;
+            ((Obj*)this)->f84 = 0x1000;
+            ((Obj*)this)->f88 = 0x1000;
+            ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x28000, 0x50000, 0x204004, 0);
+            ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
         }
     }
 
-    o->f100 = 0;
-    o->f3b6 = 0;
-    *(short*)((char*)o + 0x300 + 0xb4) = 0;
-    o->f3a8 = o->f5c;
-    o->f3ac = o->f60;
-    o->f3b0 = o->f64;
+    ((Obj*)this)->f100 = 0;
+    ((Obj*)this)->f3b6 = 0;
+    *(short*)((char*)((Obj*)this) + 0x300 + 0xb4) = 0;
+    ((Obj*)this)->f3a8 = ((Obj*)this)->f5c;
+    ((Obj*)this)->f3ac = ((Obj*)this)->f60;
+    ((Obj*)this)->f3b0 = ((Obj*)this)->f64;
 
-    if ((unsigned int)(o->f3c8 - 1) <= 1)
+    if ((unsigned int)(((Obj*)this)->f3c8 - 1) <= 1)
     {
-        o->f9c = -0x3000;
-        o->fa0 = -0x50000;
+        ((Obj*)this)->f9c = -0x3000;
+        ((Obj*)this)->fa0 = -0x50000;
     }
 
     return 1;

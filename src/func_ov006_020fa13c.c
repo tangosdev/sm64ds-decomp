@@ -1,22 +1,14 @@
+// @symbol func_ov006_020fa13c
+// recovered name: dScMgMCarlo2_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo2_c::Behavior - recovered from vtable slot identity */
 typedef short s16;
 
-extern int func_ov006_020f9668(void);
-extern int func_ov006_020f95f0(void);
 extern int func_ov006_020c1718(void* p);
-extern void func_ov006_020c1164(void* t, int a1, void* a2);
-extern int func_ov006_020f96e0(void);
-extern int func_ov006_020c16b4(void* c);
-extern void func_ov006_020c0d68(void* c);
-extern void func_ov004_020b0a54(int a);
 extern void func_ov006_020c19d0(void* c);
-extern void func_ov006_020f9000(void);
 
-extern int data_ov006_0213d700;
-extern int data_ov006_0213d6fc;
-extern s16 data_ov006_0213d6f4;
-extern s16 data_ov006_0213d6f8;
-extern int data_ov006_02142570;
-extern int data_ov006_02142574;
 
 int func_ov006_020fa13c(void* arg)
 {
@@ -25,7 +17,7 @@ int func_ov006_020fa13c(void* arg)
     switch (*(s16*)(c + 0x5928)) {
     case 1:
         {
-            s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+            s16* p = (s16*)(((int)c + 0x5928));
             (*p)++;
         }
         if (c[0xc4] == 0) {
@@ -40,7 +32,7 @@ int func_ov006_020fa13c(void* arg)
             if (func_ov006_020f9668() == 0) {
                 *(s16*)(c + 0x592e) = 0;
                 {
-                    s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+                    s16* p = (s16*)(((int)c + 0x5928));
                     (*p)++;
                 }
             }
@@ -80,7 +72,7 @@ int func_ov006_020fa13c(void* arg)
                             func_ov004_020b0a54(0x12);
                             c[0xc3] = 0;
                             {
-                                s16* p = (s16*)(((int)c + 0x5928) & 0xFFFFFFFFFFFFFFFF);
+                                s16* p = (s16*)(((int)c + 0x5928));
                                 (*p)++;
                             }
                         }

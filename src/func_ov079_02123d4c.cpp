@@ -29,8 +29,8 @@ extern "C" void func_ov079_02123d4c(int* out, char* a){
         out[0] = out[0] + (int)(((s64)m * data_02082214[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
         d = ((struct Obj*)a)->m1d();
         {
-            int* p1 = (int*)(((int)out + 4) & 0xFFFFFFFFFFFFFFFF);
-            int* p2 = (int*)(((int)out + 8) & 0xFFFFFFFFFFFFFFFF);
+            int* p1 = (int*)(((int)out + 4));
+            int* p2 = (int*)(((int)out + 8));
             *p1 = *p1 + d;
             *p2 = *p2 + (int)(((s64)m * data_02082214[((unsigned short)*(unsigned short*)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         }

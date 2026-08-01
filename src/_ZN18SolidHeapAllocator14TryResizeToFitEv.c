@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-typedef signed int s32;
+#include "types.h"
 struct H { void* begin; void* end; };
 s32 _ZN18SolidHeapAllocator14TryResizeToFitEv(void* self)
 {

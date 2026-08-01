@@ -6,11 +6,11 @@ void func_ov006_0210265c(char *c)
     unsigned short *h;
     unsigned short t;
     if (*(unsigned short *)(c + 0x5674) == 0) return;
-    q = (unsigned char *)(((int)c + 0x5679) & 0xFFFFFFFFFFFFFFFF);
+    q = (unsigned char *)(((int)c + 0x5679));
     *q += 1;
     if (*(unsigned char *)(c + 0x5679) < 0x3c) return;
     *(unsigned char *)(c + 0x5679) = 0;
-    h = (unsigned short *)(((int)c + 0x5674) & 0xFFFFFFFFFFFFFFFF);
+    h = (unsigned short *)(((int)c + 0x5674));
     *h -= 1;
     t = *(unsigned short *)(c + 0x5674);
     if (t > 0xa)

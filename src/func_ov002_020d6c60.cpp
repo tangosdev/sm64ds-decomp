@@ -1,16 +1,19 @@
 //cpp
-extern "C" int func_ov002_020d82f0(void* c);
+// @symbol func_ov002_020d6c60
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 extern "C" void func_ov002_020d7030(void* c, void* d);
 extern "C" void _ZN6Player18SetNewHatCharacterEjjb(void* self, unsigned int j1, unsigned int j2, int b);
-extern "C" void func_ov002_020c9e40(void* c);
-extern "C" int func_ov002_020d5f34(char* c, void* st);
+extern "C" void Player_DisableInteraction(void* c);
 extern "C" void func_ov002_020d71ec(void* c, int x);
 
-struct V3 { int x, y, z; };
+
 
 extern "C" int func_ov002_020d6c60(char* p0, char* p1){
-  V3 v;
+  Vector3 v;
   int b;
   int y;
   int* q;
@@ -32,7 +35,7 @@ l48:
   if(sp == 0) goto ret0b;
   func_ov002_020d7030(p0, sp);
   _ZN6Player18SetNewHatCharacterEjjb(p1, *(unsigned char*)(p0+0x6d9), 0, 0);
-  func_ov002_020c9e40(p0);
+  Player_DisableInteraction(p0);
   return 1;
 leq:
   if(func_ov002_020d5f34(p1, p0) == 0) goto ret0b;
@@ -40,7 +43,7 @@ leq:
   q = (int*)(((int)p1 + 0xb0) & 0xFFFFFFFFFFFFFFFFull);
   *q = *q | 0x20000;
   func_ov002_020d71ec(p0, 1);
-  func_ov002_020c9e40(p0);
+  Player_DisableInteraction(p0);
   return 1;
 ret0b:
   return 0;

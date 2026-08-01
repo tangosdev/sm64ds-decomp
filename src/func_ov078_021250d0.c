@@ -1,4 +1,4 @@
-#define LAUNDER_ADDR(x) ((int)(((long long)(int)(x)) & 0xffffffffffffffffLL))
+#define LAUNDER_ADDR(x) ((int)(((long long)(int)(x))))
 
 int func_ov078_021250d0(char *c)
 {

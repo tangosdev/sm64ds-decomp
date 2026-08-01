@@ -1,15 +1,19 @@
 //cpp
+// @symbol func_ov006_020e9e70
+// recovered name: dScMg3DEsp_c_InitResources
+/* recovered: shared common types, renamed to Class_Method */
+/* dScMg3DEsp_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 int _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
 void InitialiseVramGlobals(void);
 void func_ov004_020b04d0(int v);
-void func_ov006_020c0134(void* self);
+void Camera_UpdateMatrices(void* self);
 int func_020179b4(void* r0, void* r1, int r2);
 void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, void* bta, int a, int b, unsigned int d);
 int func_ov006_020e7fe8(char* c);
 int LoadFile(int handle);
-unsigned func_02054de8(void);
+unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 void DecompressLZ16(int src, void* dst);
 void Deallocate(void* p);
 void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, unsigned int a, unsigned int b);
@@ -63,7 +67,7 @@ extern "C" int func_ov006_020e9e70(void* arg0)
     *(int*)(c + 0x4000 + 0x710) = 0xe0000;
     *(int*)(c + 0x4000 + 0x714) = 0x40000;
     *(volatile unsigned short*)(c + 0x4700 + 0x18) = 0xc00;
-    func_ov006_020c0134((void*)(c + 0x4660));
+    Camera_UpdateMatrices((void*)(c + 0x4660));
 
     if (func_020179b4(&data_ov006_02141e9c, (void*)(c + 0x4f38), 1) == 0) return 0;
 
@@ -86,7 +90,7 @@ extern "C" int func_ov006_020e9e70(void* arg0)
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16(f, (void*)(func_02054de8() + 0x4000));
+    DecompressLZ16(f, (void*)(_ZN3G2S13GetBG2CharPtrEv() + 0x4000));
     Deallocate((void*)f);
 
     f = LoadFile(0x13);

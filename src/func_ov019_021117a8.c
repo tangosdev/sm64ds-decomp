@@ -8,7 +8,7 @@ extern int func_ov019_0211140c(int* self, void* clsn);
 extern void func_0201267c(int a, void* p);
 extern int func_ov019_021122dc(void* c, int s);
 
-#define LB(off) (*(unsigned char *)(((int)c + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LB(off) (*(unsigned char *)(((int)c + (off))))
 
 #pragma opt_common_subs off
 int func_ov019_021117a8(char* c) {
@@ -18,11 +18,11 @@ int func_ov019_021117a8(char* c) {
         int n = _ZNK7PathPtr8NumNodesEv(c+0x364);
         _ZNK7PathPtr7GetNodeER7Vector3j(c+0x364, node, n - 1);
         *(int*)(c+0x380) = Vec3_Dist(c+0x5c, node);
-        *(short *)((char *)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFF) + 0x8c) =
+        *(short *)((char *)(((int)c + 0x300)) + 0x8c) =
             Vec3_HorzAngle(c+0x5c, node);
         _Z14ApproachLinearRsss(
             (short*)(c+0x8e),
-            *(short *)((char *)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFF) + 0x8c),
+            *(short *)((char *)(((int)c + 0x300)) + 0x8c),
             0x200);
         *(short*)(c+0x94) = *(short*)(c+0x8e);
         if (*(int*)(c+0x380) < *(int*)(c+0x98)) {

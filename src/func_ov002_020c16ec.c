@@ -1,5 +1,10 @@
+// @symbol func_ov002_020c16ec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct SurfaceInfo { char dummy; };
-struct Vector3 { int x, y, z; };
+
 
 struct Obj {
     char pad554[0x554];
@@ -15,11 +20,7 @@ struct Obj {
     int f670;   // 0x670
 };
 
-extern int func_02037e90(int *p);
 extern int func_02037e38(unsigned int *p);
-extern int func_02037e48(unsigned int *p);
-extern int func_02037e68(unsigned int *p);
-extern int func_02037e84(int *p);
 extern int func_02037e58(unsigned int *p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo *s, struct Vector3 *out);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);

@@ -1,8 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
-
+#include "types.h"
 struct M { int _00; int _01; int _10; int _11; };
 extern "C" {
 extern int _ZN4cstd4fdivEii(int, int);

@@ -21,7 +21,7 @@ int func_ov072_02120358(void *thiz)
             v[2] = *(int *)(c + 0x64);
             v[1] = y + 0xfa000;
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x32c), c, 0xaf, v, 0, 0)) {
-                (*(volatile unsigned char *)(((int)c + 0x334) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(volatile unsigned char *)(((int)c + 0x334)))++;
             }
         }
         break;

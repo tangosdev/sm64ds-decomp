@@ -1,19 +1,16 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-typedef int Fix12;
-struct Vector3 { s32 x, y, z; };
-
+#include "types.h"
+// @symbol func_ov060_021128c0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
     void* _ZN5Actor10FindWithIDEj(u32 id);
-    void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12 b, u32 c, u32 d, u32 e);
+    void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12i b, u32 c, u32 d, u32 e);
     void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
     void func_02038408(void* p);
-    void func_020383fc(void* p);
+    void WithMeshClsn_UpdateContinuous_Veneer(void* p);
     int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
     void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
     void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
@@ -24,7 +21,6 @@ extern "C" {
 
 struct TabEnt { int off; int idx; };
 extern TabEnt data_ov060_0211aed4[];
-extern u8 data_ov060_02119268[];
 extern s16 data_02082214[];
 
 extern "C" void func_ov060_021128c0(char* c)
@@ -58,11 +54,11 @@ extern "C" void func_ov060_021128c0(char* c)
         fn(base);
     }
 
-    *(u16*)(((int)c + 0x3fc) & 0xFFFFFFFFFFFFFFFFLL) =
-        *(u16*)(((int)c + 0x3fc) & 0xFFFFFFFFFFFFFFFFLL) + 1;
+    *(u16*)(((int)c + 0x3fc)) =
+        *(u16*)(((int)c + 0x3fc)) + 1;
     if (*(s32*)(c + 0x40c) != idx) {
         *(u8*)(c + 0x423) = 0;
-        *(u16*)((char*)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFFLL) + 0xfc) = 0;
+        *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
     }
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x360);
@@ -70,7 +66,7 @@ extern "C" void func_ov060_021128c0(char* c)
     if (*(u8*)(c + 0x414) == 1)
         func_02038408(c + 0x14c);
     else
-        func_020383fc(c + 0x14c);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x14c);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
         void* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x14c);
@@ -92,9 +88,9 @@ extern "C" void func_ov060_021128c0(char* c)
 
     if (data_ov060_02119268[idx] != 0) {
         if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
-            char* p400 = (char*)(((int)c + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
-            s32* px = (s32*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
-            s32* pz = (s32*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL);
+            char* p400 = (char*)(((int)c + 0x400));
+            s32* px = (s32*)(((int)c + 0x5c));
+            s32* pz = (s32*)(((int)c + 0x64));
             s16* tab = data_02082214;
             *(s32*)(c + 0x5c) = *(s32*)(c + 0x3c8);
             *(s32*)(c + 0x60) = *(s32*)(c + 0x3cc);
@@ -118,5 +114,5 @@ extern "C" void func_ov060_021128c0(char* c)
         return;
     *(s32*)(c + 0x40c) = 2;
     *(u8*)(c + 0x423) = 0;
-    *(u16*)((char*)(((int)c + 0x300) & 0xFFFFFFFFFFFFFFFFLL) + 0xfc) = 0;
+    *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
 }

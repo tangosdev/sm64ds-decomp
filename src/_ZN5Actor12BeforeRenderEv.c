@@ -1,3 +1,4 @@
+#include "types.h"
 /* Actor::BeforeRender — checks flags before rendering.
  * Calls ActorBase::BeforeRender(); if it returns 0, returns 0.
  * Otherwise checks: WRONG_AREA (bit5=0x20) -> return 0,
@@ -7,9 +8,6 @@
  * Callee: 0x02043ac8 = ActorBase::BeforeRender()
  *   _ZN9ActorBase12BeforeRenderEv
  */
-
-typedef unsigned int u32;
-
 struct Actor {
     char _pad[0xb0];
     u32 flags;

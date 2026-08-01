@@ -5,12 +5,12 @@ extern int data_ov045_02112cb0[];
 extern int func_02017ab4[];
 extern int data_ov035_02112cc0[];
 extern int data_ov035_02112cb8[];
-extern int func_02017b34[];
+extern int SharedFilePtr_Destruct_Clsn[];
 extern int data_ov035_02112ccc[];
 void __sinit_ov035_02111fc0(void)
 {
     func_02017acc(data_ov045_02112cb0, 1488);
     func_020731dc(data_ov045_02112cb0, func_02017ab4, data_ov035_02112cc0);
     func_02017b4c(data_ov035_02112cb8, 1489);
-    func_020731dc(data_ov035_02112cb8, func_02017b34, data_ov035_02112ccc);
+    func_020731dc(data_ov035_02112cb8, SharedFilePtr_Destruct_Clsn, data_ov035_02112ccc);
 }

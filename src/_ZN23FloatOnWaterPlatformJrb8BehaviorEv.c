@@ -9,7 +9,7 @@ extern short data_02082214[];
 extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void func_020383fc(void *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, struct Vector3 *out);
@@ -31,27 +31,27 @@ int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(char *a)
             _ZN9ActorBase18MarkForDestructionEv(a);
             break;
         }
-        (*(u8 *)(((int)a + 0x4f4) & 0xFFFFFFFFFFFFFFFF))++;
+        (*(u8 *)(((int)a + 0x4f4)))++;
         /* fallthrough */
     case 1:
         _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
-        func_020383fc(a + 0x324);
+        WithMeshClsn_UpdateContinuous_Veneer(a + 0x324);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x324)) {
-            (*(u8 *)(((int)a + 0x4f4) & 0xFFFFFFFFFFFFFFFF))++;
+            (*(u8 *)(((int)a + 0x4f4)))++;
             *(int *)(a + 0x4e0) = *(int *)(a + 0x5c);
             *(int *)(a + 0x4e4) = *(int *)(a + 0x60);
             *(int *)(a + 0x4e8) = *(int *)(a + 0x64);
         }
         break;
     case 2: {
-        s16 *src = (s16 *)(((int)*(char **)(a + 0x320) + 0x8c) & 0xFFFFFFFFFFFFFFFF);
+        s16 *src = (s16 *)(((int)*(char **)(a + 0x320) + 0x8c));
         int spd;
         *(s16 *)(a + 0x8c) = src[0];
         *(s16 *)(a + 0x8e) = src[1];
         *(s16 *)(a + 0x90) = src[2];
         *(s16 *)(a + 0x94) = *(s16 *)(a + 0x8e);
         *(int *)(a + 0x98) = data_02082214[(*(u16 *)(a + 0x8c) >> 4) * 2] * 0x8c;
-        *(int *)(((int)a + 0x4ec) & 0xFFFFFFFFFFFFFFFF) += *(int *)(a + 0x98);
+        *(int *)(((int)a + 0x4ec)) += *(int *)(a + 0x98);
         spd = *(int *)(a + 0x4ec);
         if (spd >= 0x4ff000)
             *(int *)(a + 0x4ec) = 0x4ff000;
@@ -61,7 +61,7 @@ int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(char *a)
         *(int *)(a + 0x64) = *(int *)(a + 0x4e8) + (int)(((long long)*(int *)(a + 0x4ec) * data_02082214[(*(u16 *)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         *(int *)(a + 0x98) = 0;
         _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
-        func_020383fc(a + 0x324);
+        WithMeshClsn_UpdateContinuous_Veneer(a + 0x324);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x324)) {
             void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(a + 0x324);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &normal);

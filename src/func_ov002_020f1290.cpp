@@ -1,4 +1,10 @@
 //cpp
+// @symbol func_ov002_020f1290
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjBC_Switch_c.h"
+// recovered name: daObjBC_Switch_c_Render
+/* recovered: renamed to Class_Method */
+/* daObjBC_Switch_c::Render - recovered from vtable slot identity */
 struct Base {
     virtual void v0();
     virtual void v1();
@@ -9,7 +15,8 @@ struct Base {
 };
 
 extern "C" int func_ov002_020f1290(char *o) {
-    if (*(int *)(o + 0x60) > *(int *)(o + 0x320)) {
+    struct daObjBC_Switch_c *self = (struct daObjBC_Switch_c *)(void *)o;
+    if (self->unk_060 > self->unk_320) {
         Base *bp = (Base *)(o + 0xd4);
         bp->m(0);
     }

@@ -10,7 +10,7 @@ void func_ov006_020c9d7c(char *c)
 {
     unsigned int r;
     int r5;
-    *(short*)(((long long)(int)(c + 0x6c)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(short*)(((long long)(int)(c + 0x6c))) -= 1;
     if (*(short*)(c + 0x6c) == 0) {
     *(int*)(c + 0x28) = 0x100000;
     r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;

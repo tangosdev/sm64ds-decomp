@@ -1,8 +1,12 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov071_021220c8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 extern "C" void _Z14ApproachLinearRsss(short &dst, short a, short b);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" void func_ov071_021223c8(void *c, int i);
 extern "C" void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, Vector3 *v);
 
 extern "C" void func_ov071_021220c8(char *c)

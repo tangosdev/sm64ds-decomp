@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_0210a4e8
+// recovered name: dScMgSingle3DBase_c_OnYoshiTryEat
+/* recovered: renamed to Class_Method */
+/* dScMgSingle3DBase_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" {
 extern int _ZN8Particle10SysTrackerD1Ev(void*);
 extern int func_ov004_020b29c0(void*);

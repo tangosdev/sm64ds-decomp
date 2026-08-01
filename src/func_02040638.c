@@ -1,9 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int s32;
-
+#include "types.h"
 extern void MultiCopy_Int(void* dst, void* src, u32 count);
 
 typedef struct ObjWithField0a {
@@ -11,12 +6,12 @@ typedef struct ObjWithField0a {
     u16 field0a;
 } ObjWithField0a;
 
-extern ObjWithField0a* UNK_020a0f44;   /* 0x020a0f44 - pointer to object */
-extern void*           UNK_020a1064;   /* 0x020a1064 - copy destination buffer */
-extern u16             UNK_020a0f20;   /* 0x020a0f20 - counter */
+extern ObjWithField0a* data_020a0f44;   /* 0x020a0f44 - pointer to object */
+extern void*           data_020a1064;   /* 0x020a1064 - copy destination buffer */
+extern u16             data_020a0f20;   /* 0x020a0f20 - counter */
 
 void func_02040638(void) {
-    MultiCopy_Int(&UNK_020a1064, UNK_020a0f44, 0x40);
-    UNK_020a0f20 = UNK_020a0f20 + 1;
-    UNK_020a0f44->field0a = UNK_020a0f20;
+    MultiCopy_Int(&data_020a1064, data_020a0f44, 0x40);
+    data_020a0f20 = data_020a0f20 + 1;
+    data_020a0f44->field0a = data_020a0f20;
 }

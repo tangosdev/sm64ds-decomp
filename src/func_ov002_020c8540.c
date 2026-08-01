@@ -1,11 +1,7 @@
+#include "types.h"
 /* func_ov002_020c8540 at 0x020c8540 (ov002)
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-
 extern int _ZNK6Player14GetBodyModelIDEjb(void* thiz, unsigned int a, int b);
 extern int _ZNK9Animation12WillHitFrameEi(void* thiz, int f);
 extern void func_0201f32c(int arg0);
@@ -46,10 +42,10 @@ int func_ov002_020c8540(char* self)
         anim = (char*)((int*)(self + 0xdc))[id] + 0x50;
         if (_ZNK9Animation12WillHitFrameEi(anim, data_ov002_020ff110[s8])) {
             char* o;
-            { int* p = (int*)((long long)(int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL); *p |= 0x800000; }
+            { int* p = (int*)((long long)(int)(self + 0xb0)); *p |= 0x800000; }
             o = *(char**)(self + 0x368);
             if (o != 0) {
-                int* p = (int*)((long long)(int)(o + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+                int* p = (int*)((long long)(int)(o + 0xb0));
                 *p &= ~0x800000;
             }
             data_0209b454 |= 0x800000;
@@ -61,10 +57,10 @@ int func_ov002_020c8540(char* self)
         char* o;
         if (data_0209d660 != 0) return 1;
         data_0209b454 &= ~0x800000;
-        { int* p = (int*)((long long)(int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL); *p &= ~0x800000; }
+        { int* p = (int*)((long long)(int)(self + 0xb0)); *p &= ~0x800000; }
         o = *(char**)(self + 0x368);
         if (o != 0) {
-            int* p = (int*)((long long)(int)(o + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)((long long)(int)(o + 0xb0));
             *p |= 0x800000;
             *(char**)(self + 0x368) = 0;
         }

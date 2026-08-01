@@ -1,5 +1,5 @@
 //cpp
-typedef unsigned char u8;
+#include "types.h"
 struct C;
 typedef void (C::*PMF)(int);
 extern "C" {

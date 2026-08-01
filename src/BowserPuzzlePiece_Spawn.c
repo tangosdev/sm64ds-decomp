@@ -1,9 +1,13 @@
-extern void *_ZN9ActorBasenwEj(unsigned);
-extern void _ZN8PlatformC2Ev(void *);
-extern int VT[];
+// @symbol BowserPuzzlePiece_Spawn
+/* recovered: globals resolved, declarations from a shared header */
+#include "decl_ActorBase.h"
+#include "decl_Platform.h"
+#include "decl_common.h"
+/* recovered: globals resolved */
+/* resolved: VT = _ZTV19BowserPuzzleManager */
 int *BowserPuzzlePiece_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(828);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)VT; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV19BowserPuzzleManager; }
     return p;
 }

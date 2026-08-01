@@ -1,5 +1,4 @@
-    typedef unsigned char u8;
-    
+#include "types.h"
     extern void func_ov006_020def80(void *self, int i);
     extern void func_ov006_020c2594(void *c);
     extern void func_ov004_020b1b78(void *c, int val);
@@ -13,11 +12,11 @@
     {
         int r4;
         int i;
-        int *pc = (int *)(((int)self + 0x541c) & 0xFFFFFFFFFFFFFFFFLL);
+        int *pc = (int *)(((int)self + 0x541c));
         *pc = *pc - 1;
         if (*(int *)(self + 0x5000 + 0x41c) > 0) return;
         for (i = 0; i < 3; i++) {
-            u8 *q = (u8 *)(((int)self + i + 0x5465) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(((int)self + i + 0x5465));
             if (*q == 0) {
                 *q = 1;
                 func_ov006_020def80(self, i);

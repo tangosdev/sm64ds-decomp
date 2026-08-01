@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 struct S18 { short f0; char pad[0x16]; };
 
 extern u8 data_020a0e40;
@@ -11,7 +9,7 @@ extern void func_ov002_020cd448(char* self);
 
 /* the += / -= on 0x92 go through a materialized base (add r1,c,#0x92;
    ldrsh/strh [r1]); the (long long)-mask launder stops mwcc folding it. */
-#define LS16(p) (*(short*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LS16(p) (*(short*)(int)(((long long)(int)(p))))
 
 void func_ov002_020cd550(char* c)
 {

@@ -9,8 +9,8 @@ extern int func_ov007_020c44c4(char* p);
 
 #pragma opt_propagation off
 void func_ov007_020b8690(void) {
-    int *pa = (int *)(int)((long long)(int)&data_ov007_0210345c & 0xFFFFFFFFFFFFFFFFLL);
-    short *pb = (short *)(int)((long long)(int)&data_ov007_02103458 & 0xFFFFFFFFFFFFFFFFLL);
+    int *pa = (int *)(int)((long long)(int)&data_ov007_0210345c);
+    short *pb = (short *)(int)((long long)(int)&data_ov007_02103458);
     int v = 0;
     *pa = v;
     *pb = v;

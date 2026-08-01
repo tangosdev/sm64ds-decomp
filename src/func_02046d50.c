@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 typedef struct { s16 res; s16 pad; int name; } E8;
 
 int func_020471ac(const void* tbl, const char* name);

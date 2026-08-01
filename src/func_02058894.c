@@ -1,7 +1,7 @@
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
-extern void func_020580f0(void *this);
-extern void func_0205807c(void *p);
+extern void OS_SleepThread(void *this);
+extern void OS_WakeupThread(void *p);
 
 struct Q {
     char pad4[4];
@@ -19,16 +19,16 @@ int func_02058894(struct Q *q, int val, int flag)
             _ZN3IRQ7RestoreEj(saved);
             return 0;
         }
-        func_020580f0(q);
+        OS_SleepThread(q);
     }
     {
         int idx = (q->cap + q->head) % q->count;
         q->arr[idx] = val;
         {
-            int *headp = (int*)(((long long)((char*)q + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *headp = (int*)(((long long)((char*)q + 0x10)));
             *headp = *headp + 1;
         }
-        func_0205807c((char*)q + 2);
+        OS_WakeupThread((char*)q + 2);
         _ZN3IRQ7RestoreEj(saved);
         return 1;
     }

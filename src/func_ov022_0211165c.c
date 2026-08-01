@@ -1,4 +1,9 @@
-extern int func_020b66a8(void *self, void *data);
+// @symbol func_ov022_0211165c
+// recovered name: daObjFl_Koma_D_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjFl_Koma_D_c::CleanupResources - recovered from vtable slot identity */
 extern int data_ov022_02113da4[];
 int func_ov022_0211165c(void *self)
 {

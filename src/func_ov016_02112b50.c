@@ -19,7 +19,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern s16 data_02082214[];
 extern void *data_0209f318;
 #pragma opt_common_subs off
-inline int inline_fn(int arg0) { return arg0 & 0xFFFFFFFFFFFFFFFFLL; }
+inline int inline_fn(int arg0) { return arg0; }
 
 int func_ov016_02112b50(char *c)
 {

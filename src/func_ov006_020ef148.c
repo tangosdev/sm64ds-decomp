@@ -1,22 +1,16 @@
-typedef unsigned short u16;
-
-extern void func_ov004_020b1a5c(int a0, int a1);
-extern void func_ov006_020eef58(void);
-extern void func_ov006_020ef2b8(void);
+#include "types.h"
+// @symbol func_ov006_020ef148
+// recovered name: dScMgJump2_c_Render
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* dScMgJump2_c::Render - recovered from vtable slot identity */
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void func_02045e44(void* self, unsigned int value, int index);
-extern void func_ov006_020c70d0(void);
-extern void func_ov006_020c425c(void);
-extern int func_ov004_020ad674(void);
-extern void func_ov004_020afcf8(void* a0, void* a1, int a2, void* a3);
-extern void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+extern int GetGameLanguage(void);
+extern void DrawOamSprite(void* a0, void* a1, int a2, void* a3);
+extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 
-extern int data_ov006_02140308;
 extern int data_020a0e68;
-extern int data_ov006_0213ccb0;
-extern int data_ov006_02140428;
-extern int data_ov006_02134cf8;
-extern int* data_ov006_0213cccc[];
 
 struct M48 { int w[12]; };
 struct S3 { int a, b, c; };
@@ -44,7 +38,7 @@ int func_ov006_020ef148(char* self)
     }
     *(int*)((char*)p + 0x18) = *(int*)(self + 0x5a64);
     {
-        void** vobj = (void**)(((long long)(int)(self + 0x5a14)) & 0xFFFFFFFFFFFFFFFFLL);
+        void** vobj = (void**)(((long long)(int)(self + 0x5a14)));
         (*(void(**)(void*, void*))((char*)*vobj + 0x14))((void*)vobj, &local);
     }
 
@@ -56,10 +50,10 @@ int func_ov006_020ef148(char* self)
         count = data_ov006_02140428;
         for (i = 0; i < 3; i++) {
             if (i >= count) {
-                int idx = func_ov004_020ad674();
-                func_ov004_020afcf8((void*)data_ov006_0213cccc[idx][1], (void*)a1v, 0xc, (void*)0);
+                int idx = GetGameLanguage();
+                DrawOamSprite((void*)data_ov006_0213cccc[idx][1], (void*)a1v, 0xc, (void*)0);
             } else {
-                func_ov004_020afa20(data_ov006_02134cf8, a1v, 0xc, -1, -1);
+                RenderOamMainScreen(data_ov006_02134cf8, a1v, 0xc, -1, -1);
             }
             a1v += 0x12;
         }

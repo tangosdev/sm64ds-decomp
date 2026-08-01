@@ -1,9 +1,5 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef int s32;
-
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#include "types.h"
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern s32 data_ov006_0212eb44[];
 

@@ -35,7 +35,7 @@ extern "C" void func_ov006_0210ac3c(char* c)
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x503e)) == 0) {
         if (*(int*)(c + 0x5000) == 3) {
             if (*(int*)(c + 0xb4) < 0x270f)
-                *(int*)(((int)c + 0xb4) & 0xFFFFFFFFFFFFFFFF) += 1;
+                *(int*)(((int)c + 0xb4)) += 1;
             if (*(int*)(c + 0xb4) > *(int*)(c + 0xb8))
                 *(int*)(c + 0xb8) = *(int*)(c + 0xb4);
             ((Obj*)c)->v18(4);
@@ -54,10 +54,10 @@ extern "C" void func_ov006_0210ac3c(char* c)
             return;
         if (*(int*)(c + 0x5014) <= 0)
             return;
-        *(int*)(((int)c + 0x5014) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(int*)(((int)c + 0x5014)) -= 1;
         func_ov004_020b1ba0(c, 1);
         Sound::PlayBank2_2D(0x149);
-        *(unsigned char*)(((int)c + 0x503e) & 0xFFFFFFFFFFFFFFFF) += 5;
+        *(unsigned char*)(((int)c + 0x503e)) += 5;
         return;
     }
 

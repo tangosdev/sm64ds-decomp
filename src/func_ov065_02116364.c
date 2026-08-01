@@ -1,10 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef long long s64;
-
+#include "types.h"
 typedef struct { s32 x, y, z; } Vec3;
 
 void* _ZN5Actor22ClosestNonVanishPlayerEv(void* self);
@@ -63,7 +57,7 @@ int func_ov065_02116364(void* self)
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(s16*)(c + 0x8c));
                 MulVec3Mat4x3(&spv, &data_020a0e68, &sout);
                 *(s32*)(sp2 + 0xa4) = sout.x;
-                cnt = (s32*)((s64)(s32)(c + 0x3dc) & 0xFFFFFFFFFFFFFFFFLL);
+                cnt = (s32*)((s64)(s32)(c + 0x3dc));
                 *(s32*)(sp2 + 0xa8) = sout.y;
                 *(s32*)(sp2 + 0xac) = sout.z;
                 *cnt = *cnt + 1;
@@ -73,7 +67,7 @@ int func_ov065_02116364(void* self)
     }
     if (_ZN9Animation8FinishedEv((void*)(c + 0x350)) != 0) {
         if (pl != 0) {
-            s32 *bp = (s32*)((s64)(s32)(pl + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+            s32 *bp = (s32*)((s64)(s32)(pl + 0x5c));
             d.x = bp[0];
             d.y = bp[1];
             d.z = bp[2];

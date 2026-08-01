@@ -15,7 +15,7 @@ int func_0205cb68(int *self, int a1, int a2, int a3, int a4, int a5, int a6, int
     self[0x11] = self[0xf]; /* 0x44 = self[0x3c] */
     self[0xe] = 0;   /* 0x38 */
     {
-        int *pp = (int *)(((int)self + 0x10) & 0xFFFFFFFFFFFFFFFF);
+        int *pp = (int *)(((int)self + 0x10));
         *pp |= 2;    /* 0x10 */
     }
     return 1;

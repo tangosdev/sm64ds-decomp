@@ -31,7 +31,7 @@ int RaycastGround::DetectClsn()
         ClsnObj* p = func_020393b4(obj);
         if (func_02035354(this, p) != 0) continue;
         if (p != 0 && ((p->flags & 2) ? flag : 0) != 0) {
-            int* pv = (int*)(((long long)(int)&p->vec[0]) & 0xFFFFFFFFFFFFFFFFLL);
+            int* pv = (int*)(((long long)(int)&p->vec[0]));
             pos.x = pv[0];
             pos.y = pv[1];
             pos.z = pv[2];
@@ -43,7 +43,7 @@ int RaycastGround::DetectClsn()
             } else {
                 pos.y = pos.y + func_0203938c(obj);
             }
-            Vec3* selfpos = (Vec3*)(((long long)(int)&this->f38) & 0xFFFFFFFFFFFFFFFFLL);
+            Vec3* selfpos = (Vec3*)(((long long)(int)&this->f38));
             if (selfpos->y < pos.y - thr) continue;
             if (Vec3_HorzDist(selfpos, &pos) > thr) continue;
         }

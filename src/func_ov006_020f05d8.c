@@ -1,5 +1,5 @@
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
-extern void func_ov004_020b0aa0(int arg);
+extern void FreeGfxSlotsById(int arg);
 
 void func_ov006_020f05d8(char *c, int i)
 {
@@ -22,7 +22,7 @@ void func_ov006_020f05d8(char *c, int i)
         *a = 0x80000;
         *(unsigned char *)(c + n + 0x47b4) = 0;
         *(unsigned char *)(c + n + 0x47b7) = 0;
-        func_ov004_020b0aa0(0xd);
+        FreeGfxSlotsById(0xd);
     } else {
         *b = *b + 0x140;
         if (v > 0x80) return;

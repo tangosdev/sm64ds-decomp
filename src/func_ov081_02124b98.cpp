@@ -1,8 +1,13 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov081_02124b98
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 
 extern "C" void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern "C" int _ZNK9Animation12WillHitFrameEi(void* self, int frame);
 extern "C" void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern "C" int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern "C" void Matrix4x3_FromRotationY(void* m, int ang);
@@ -13,7 +18,6 @@ extern "C" int _ZN9Animation8FinishedEv(void* self);
 extern "C" void func_ov081_02125488(void* c, void* p);
 
 extern "C" int data_020a0e68[];
-extern "C" void* data_ov081_02128e14;
 
 extern "C" int func_ov081_02124b98(char* c) {
     Vector3 in, out, v[2];
@@ -33,7 +37,7 @@ extern "C" int func_ov081_02124b98(char* c) {
                 player = _ZN5Actor13ClosestPlayerEv(c);
                 if (player != 0) {
                     int angle;
-                    int* q = (int*)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];

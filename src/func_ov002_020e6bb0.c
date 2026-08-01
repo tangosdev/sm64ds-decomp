@@ -10,7 +10,7 @@ int *func_ov002_020e6bb0(char *self)
     char *src;
     unsigned int i;
 
-    pp = (char **)(((long long)(int)(self + 8)) & 0xFFFFFFFFFFFFFFFFLL);
+    pp = (char **)(((long long)(int)(self + 8)));
     base = *pp;
     count = *(unsigned int *)(base + 0x24);
     out = (int *)_ZN6Memory13operator_new2Ej(count << 2);

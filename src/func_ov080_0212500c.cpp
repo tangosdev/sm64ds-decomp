@@ -3,12 +3,12 @@ struct CylinderClsn { void Clear(); void Update(); };
 struct WithMeshClsn { int JustHitGround() const; int IsOnGround() const; };
 struct Actor { void UpdatePos(CylinderClsn *cc); };
 
-extern "C" void func_02038420(WithMeshClsn *w);
+extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(WithMeshClsn *w);
 extern "C" void func_ov080_02124acc(char *c);
 
 extern "C" int func_ov080_0212500c(char *c)
 {
-    func_02038420((WithMeshClsn *)(c + 0x180));
+    WithMeshClsn_UpdateDiscreteNoLava_veneer((WithMeshClsn *)(c + 0x180));
     if (((WithMeshClsn *)(c + 0x180))->JustHitGround()) {
         int v = *(int *)(c + 0xa8) * -0x3c;
         *(int *)(c + 0xa8) = v / 100;

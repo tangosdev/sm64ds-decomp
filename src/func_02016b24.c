@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 struct Obj {
     char pad[8];
     char* p8;
@@ -12,7 +11,7 @@ void func_02016b24(struct Obj* o, u32 mask)
     char* p = o->pc;
     u32 i;
     for (i = 0; i < count; i++) {
-        *(u32*)(((int)p + 0x24) & 0xFFFFFFFFFFFFFFFFLL) |= mask;
+        *(u32*)(((int)p + 0x24)) |= mask;
         p += 0x30;
     }
 }

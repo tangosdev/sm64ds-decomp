@@ -4,7 +4,7 @@ typedef int s32;
 extern void func_020733a8(char *self, int a, int b, void *f1, void *f2);
 extern int GetSoundMode(void);
 extern void func_ov004_020b8dc0(char *self, int a, int b, s16 c, s16 e);
-extern s32 func_ov004_020ad674(void);
+extern s32 GetGameLanguage(void);
 
 extern void func_ov004_020b9280(void);
 extern void func_ov004_020b9430(void);
@@ -20,10 +20,10 @@ char *func_ov004_020b92c4(char *c) {
     func_ov004_020b8dc0(c + 0x48, 0, GetSoundMode(), 0xac, 0x38);
     func_ov004_020b8dc0(c, 2, 0, 0x64, 0x38);
     func_ov004_020b8dc0(c + 0x24, 3, 0, 0xf4, 0x38);
-    func_ov004_020b8dc0(c + 0xd8, 4, 0, (s16)(SH(data_ov004_020bfe74, func_ov004_020ad674()) + 0x18), 0x38);
+    func_ov004_020b8dc0(c + 0xd8, 4, 0, (s16)(SH(data_ov004_020bfe74, GetGameLanguage()) + 0x18), 0x38);
     func_ov004_020b8dc0(c + 0x6c, 1, 0, 0x8c, 0x68);
     func_ov004_020b8dc0(c + 0x90, 1, 0, 0xcc, 0x68);
-    func_ov004_020b8dc0(c + 0xfc, 5, 0, (s16)(SH(data_ov004_020bfe88, func_ov004_020ad674()) + 0x18), 0x68);
+    func_ov004_020b8dc0(c + 0xfc, 5, 0, (s16)(SH(data_ov004_020bfe88, GetGameLanguage()) + 0x18), 0x68);
     func_ov004_020b8dc0(c + 0xb4, 6, 0, 0x80, 0xa8);
 
     *(int *)(c + 0x120) = 8;

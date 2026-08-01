@@ -1,5 +1,5 @@
 extern void func_0205b504(int i);
-extern void func_0205a86c(int a, int b, int c, int d, int e);
+extern void Snd_SendCommand(int a, int b, int c, int d, int e);
 
 void func_0205abb8(int a, int b, int c, int d)
 {
@@ -12,5 +12,5 @@ void func_0205abb8(int a, int b, int c, int d)
         i++;
         mask >>= 1;
     }
-    func_0205a86c(0xa, a, b, c, d);
+    Snd_SendCommand(0xa, a, b, c, d);
 }

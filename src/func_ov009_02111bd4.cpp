@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov009_02111bd4
+// recovered name: daObjMcWater_c_CleanupResources
+/* recovered: renamed to Class_Method */
+/* daObjMcWater_c::CleanupResources - recovered from vtable slot identity */
 extern "C" {
 int _ZN13SharedFilePtr7ReleaseEv(void*);
 int _ZN16MeshColliderBase9IsEnabledEv(void*);

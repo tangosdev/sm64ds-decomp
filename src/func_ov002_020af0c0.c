@@ -1,5 +1,5 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 extern short data_02082214[];
 #define SINE_TABLE data_02082214
 extern char* _ZN5Actor13ClosestPlayerEv(void*);

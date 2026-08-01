@@ -1,12 +1,6 @@
+#include "types.h"
 // MeshCollider::MeshCollider() - C1 constructor returning this
 // Address: 0x020398c8
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int Fix12i;
-
 struct MeshColliderBase {
     void* vtable;             // 0x00
     void* actor;              // 0x04

@@ -3,10 +3,10 @@ extern void _ZN18MovingCylinderClsnD1Ev(void *);
 extern void _ZN12WithMeshClsnD1Ev(void *);
 extern void _ZN9ModelAnimD1Ev(void *);
 extern void func_ov002_020aed18(void *);
-extern int VT0[];
+extern int data_ov064_0211b768[];
 int *func_ov064_02115ee0(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)data_ov064_0211b768;
     _ZN11ShadowModelD1Ev((char *)t + 0x370);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x174);

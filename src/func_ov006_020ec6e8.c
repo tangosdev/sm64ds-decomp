@@ -39,7 +39,7 @@ void func_ov006_020ec6e8(char *c)
         int rb;
         s16 a;
         s16 d;
-        *(s16*)(int)(((long long)(int)(c + 0x78)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(s16*)(int)(((long long)(int)(c + 0x78))) -= 1;
         if (*(s16*)(c + 0x78) >= 0) return;
         *(s16*)(c + 0x78) = (s16)((((int)((unsigned int)(RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 19) * 0x1e) >> 12) + 0x3c);
         ra = RandomIntInternal(&data_0209e650);

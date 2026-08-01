@@ -35,7 +35,7 @@ void func_02064470(struct Self *self, int r1, int r2)
     self->fd = e->b2;
     if ((self->f8 & mask) == 0) goto after;
     {
-        unsigned short *p8 = (unsigned short *)(((int)self + 8) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short *p8 = (unsigned short *)(((int)self + 8));
         *p8 = *p8 & ~mask;
     }
 

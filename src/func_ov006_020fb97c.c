@@ -1,4 +1,4 @@
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void func_0205a448(unsigned short val, void* dst, int nbytes);
 extern void func_ov006_020fe1a8(char* p);
 extern void func_ov006_020fc1b4(char* base, int val);
@@ -21,7 +21,7 @@ void func_ov006_020fb97c(char* c){
   *(int*)(c + 0x5c10) = 2;
   *(short*)(c + 0x5c18) = 0x40;
   {
-    unsigned r = func_02054de8();
+    unsigned r = _ZN3G2S13GetBG2CharPtrEv();
     sp = 0;
     func_0205a448(sp, (void*)r, 0x6000);
   }

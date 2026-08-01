@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov015_0211233c
+// recovered name: MovingBarSmall_Kill
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjBk_Lift_c::Kill - recovered from vtable slot identity */
 extern "C" {
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, void *v);

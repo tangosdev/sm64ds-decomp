@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern int func_02034d34(void* thiz);
 extern void _ZN3OAM5ResetEv(void);
 extern s32 func_0200f0bc(void);
@@ -59,14 +55,14 @@ int func_02034b40(char* self)
             } while (1);
 
             if (*(u8*)(self + 0xe) != 0) {
-                *(int*)(((long long)(int)(self + 8)) & 0xFFFFFFFFFFFFFFFFLL) += (data_0208ee44 << 10);
+                *(int*)(((long long)(int)(self + 8))) += (data_0208ee44 << 10);
                 if (arr[0] == 0)
                     *(u8*)(self + 0xc) = 0x78;
             }
         } else {
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, attr, 0x80, 0x80, -1, -1, 0x1000, 0x1000, 0, -1);
             _ZN3OAM9RenderSubEP7OamAttrii(attr, 0x80, 0x80);
-            *(unsigned char*)(((long long)(int)(self + 0xc)) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+            *(unsigned char*)(((long long)(int)(self + 0xc))) -= data_0208ee44;
             *(int*)(self + 8) = 0;
         }
     }

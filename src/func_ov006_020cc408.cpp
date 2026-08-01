@@ -1,8 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-
+#include "types.h"
 extern "C" {
 void func_ov006_020cbfd8(void *c);
 void func_ov006_020cbaec(void *c);
@@ -91,13 +88,13 @@ L70:
 
 L130:
     func_ov006_020e6e3c(0x1b3, v);
-    *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+    *(int *)(((int)c + 0x34)) *= -1;
     goto L180;
 
 L150:
     if (*(u16 *)(c + 0x18) == 3) {
         ((VtObj *)c)->m4();
-        *(int *)(((int)c + 0x34) & 0xFFFFFFFFFFFFFFFFLL) *= -1;
+        *(int *)(((int)c + 0x34)) *= -1;
     }
 
 L180:

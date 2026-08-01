@@ -1,7 +1,8 @@
 //cpp
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
+// @symbol _ZN15InvisibleSecret6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "InvisibleSecret.h"
 extern "C" {
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
@@ -18,7 +19,7 @@ struct Obj {
     virtual void m(int a);
 };
 
-extern "C" int _ZN15InvisibleSecret6RenderEv(char* c)
+int InvisibleSecret::Render()
 {
     if (data_0209b454 & 0x4000000) {
         void* a = 0;
@@ -27,19 +28,19 @@ extern "C" int _ZN15InvisibleSecret6RenderEv(char* c)
             if ((a = _ZN5Actor15FindWithActorIDEjPS_(id, a)) == 0)
                 break;
             if (*(int*)((char*)a + 0x43c) == 6 && *(u16*)((char*)a + 0x496) == 0x64) {
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }
     }
 
-    if (*(u16*)(c + 0x14c) != 0) {
-        u16* p = (u16*)(int)(((long long)(int)(c + 0x14c)) & 0xFFFFFFFFFFFFFFFFLL);
+    if (unk_14c != 0) {
+        u16* p = (u16*)(int)(((long long)(int)((char*)&unk_14c)));
         *p = *p - 1;
         return 1;
     }
 
-    _ZN15TextureSequence6UpdateER15ModelComponents(c + 0x124, c + 0xdc);
-    ((Obj*)(c + 0xd4))->m(0);
+    _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x124, ((char*)this) + 0xdc);
+    ((Obj*)((char*)&mModel))->m(0);
     return 1;
 }

@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov021_02112024
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x,y,z; };
-struct Matrix4x3 { int m[12]; };
+
+
 void InvMat4x3(struct Matrix4x3* d, struct Matrix4x3* s);
 void MulVec3Mat4x3(struct Vector3* v, struct Matrix4x3* m, struct Vector3* out);
 void Quaternion_FromVector3(void* q, struct Vector3* axis, struct Vector3* v);

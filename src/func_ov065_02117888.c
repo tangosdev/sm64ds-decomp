@@ -10,7 +10,7 @@ int func_ov065_02117888(char* c)
     char* p = _ZN5Actor22ClosestNonVanishPlayerEv();
     if (p) {
         Vector3 v;
-        int* q = (int*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        int* q = (int*)(((int)p + 0x5c));
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];

@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov084_0212bfc0
+// recovered name: Goomba_OnYoshiTryEat
+/* recovered: renamed to Class_Method */
+/* daKrb_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern "C" int func_ov084_0212bfc0(char *c) {
     unsigned short v = *(unsigned short*)(c + 0xc);
     int b = (v == (unsigned short)0xc8) ? 1 : 0;

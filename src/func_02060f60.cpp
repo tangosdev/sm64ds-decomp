@@ -1,10 +1,9 @@
 //cpp
+#include "types.h"
 extern "C" int func_0205ba3c(int bit, int word);
 extern "C" void func_02059d8c(int x);
 extern "C" int IPCSend(unsigned int a, unsigned int c, unsigned int b);
-
-typedef unsigned short u16;
-extern "C" void func_020580f0(u16 *x);
+extern "C" void OS_SleepThread(u16 *x);
 
 namespace CP15 {
     void FlushAndInvalidateDataCache(unsigned int a, unsigned int b);
@@ -28,7 +27,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
     int r;
 
     if (!(*(volatile int *)&thiz->f34 & 2)) {
-        int *p = (int *)(((int)thiz + 0x34) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)thiz + 0x34));
         *p |= 2;
         if (func_0205ba3c(0xb, 1) == 0) {
             do {
@@ -43,7 +42,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
 
     do {
         thiz->f4 = v;
-        *(int *)(((int)thiz + 0x34) & 0xFFFFFFFFFFFFFFFFLL) |= 0x20;
+        *(int *)(((int)thiz + 0x34)) |= 0x20;
 
         while (IPCSend(0xb, v, 1) < 0) {
         }
@@ -56,7 +55,7 @@ extern "C" int func_02060f60(T *thiz, int v, int count) {
 
         saved = IRQ::Disable();
         while (thiz->f34 & 0x20) {
-            func_020580f0((u16 *)0);
+            OS_SleepThread((u16 *)0);
         }
         IRQ::Restore(saved);
 

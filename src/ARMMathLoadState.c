@@ -1,6 +1,4 @@
-typedef unsigned long long u64;
-typedef unsigned short u16;
-
+#include "types.h"
 struct ARMMathState {
     u64 div_numer;
     u64 div_denom;

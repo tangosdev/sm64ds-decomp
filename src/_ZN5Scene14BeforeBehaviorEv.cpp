@@ -1,11 +1,9 @@
 //cpp
+#include "types.h"
 /* Scene::BeforeBehavior() at 0x0202e3d4, size 0x1fc
  * Matched byte-for-byte with mwccarm 1.2/sp2p3
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 struct A {
     virtual void v0();
     virtual void v1();
@@ -79,7 +77,7 @@ int _ZN5Scene14BeforeBehaviorEv(char* self)
 
     if ((*(u8*)(self + 0x13) & 1) != 0) {
         if (func_020431c4(self) == 0) {
-            u8* p13 = (u8*)(((long long)(int)(self + 0x13)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8* p13 = (u8*)(((long long)(int)(self + 0x13)));
             *p13 &= ~1;
             *p13 &= ~4;
         }

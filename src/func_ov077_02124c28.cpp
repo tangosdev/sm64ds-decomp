@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov077_02124c28
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor;
 
 struct RaycastGround {
@@ -12,7 +15,7 @@ extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround*);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround*, const Vector3&, Actor*);
 extern "C" void _ZN4BgCh19StartDetectingWaterEv(void*);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround*);
-extern "C" int func_02037e78(int* p);
+extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround*);
 extern "C" void _ZN4BgCh18StopDetectingWaterEv(void*);
 
@@ -35,7 +38,7 @@ extern "C" int func_ov077_02124c28(char* c)
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, pos, (Actor*)c);
         _ZN4BgCh19StartDetectingWaterEv(&rg);
         if (_ZN13RaycastGround10DetectClsnEv(&rg) == 0) goto fail;
-        r = func_02037e78(rg.m14);
+        r = SurfaceInfo_TestFlag0x20(rg.m14);
         if (r != 0) {
             *(int*)(c + 0x3dc) = rg.m44;
         } else {

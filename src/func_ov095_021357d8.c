@@ -1,12 +1,13 @@
+#include "types.h"
+// @symbol func_ov095_021357d8
+// recovered name: SeesawBob_OnGroundPounded
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjSeesaw_c::OnGroundPounded - recovered from vtable slot identity */
 #pragma opt_propagation off
-
-typedef short s16;
-typedef unsigned short u16;
-typedef long long s64;
 extern int Vec3_Dist(void *a, void *b);
 extern s16 Vec3_HorzAngle(void *a, void *b);
-extern int func_ov095_0213579c(void *self, void *p);
-extern int AngleDiff(int a, int b);
 extern s16 data_02082214[];
 
 void func_ov095_021357d8(char *a, char *b)
@@ -24,7 +25,7 @@ void func_ov095_021357d8(char *a, char *b)
     prod = (int)(((s64)dist * n + 0x800) >> 12);
     idx = idx + 1;
 
-    p = (s16 *)(((s64)(int)(a + 0x8c)) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (s16 *)(((s64)(int)(a + 0x8c)));
     cur = *p;
     v = (int)(((s64)prod * data_02082214[idx] + 0x800) >> 12);
     v = (v + ((unsigned)(v >> 11) >> 20)) << 4;

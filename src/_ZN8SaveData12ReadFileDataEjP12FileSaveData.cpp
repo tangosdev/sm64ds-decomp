@@ -1,7 +1,8 @@
 //cpp
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
+// @symbol _ZN8SaveData12ReadFileDataEjP12FileSaveData
+/* recovered: named members + shared header */
+#include "SaveData.h"
 struct FileSaveData { char data[0x44]; };
 
 extern "C" {
@@ -22,7 +23,7 @@ extern "C" int _ZN8SaveData12ReadFileDataEjP12FileSaveData(u32 fileID, struct Fi
         return 0;
     }
     {
-        int* p = (int*)(((long long)(int)(r5 + 0xc)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p = (int*)(((long long)(int)(r5 + 0xc)));
         *p = *p & *(int*)((char*)&data_0209caa0 + 0x48);
     }
     return 1;

@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_ov075_02116028(int *p, int v);
 extern int LoadFile(int handle);
 extern void func_ov075_02116030(void *c, int v);

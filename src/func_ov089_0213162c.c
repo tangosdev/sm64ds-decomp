@@ -1,20 +1,20 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
+#include "types.h"
+// @symbol func_ov089_0213162c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+#define L(p) ((long long)(int)(p))
 
-#define L(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
 
-struct V3 { int x, y, z; };
 
 extern char *data_0209f318;
 extern int data_0209b454;
-extern int data_02111b68;
-extern void func_020383fc(char *p);
+extern void WithMeshClsn_UpdateContinuous_Veneer(char *p);
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
-extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct V3 *v);
-extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct V3 *v);
+extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
+extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct Vector3 *v);
 extern char *_ZN5Actor13ClosestPlayerEv(char *c);
-extern void func_ov089_02130fb4(char *c, int *p, int n);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *p);
@@ -28,7 +28,7 @@ extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 
 void func_ov089_0213162c(char *c)
 {
-    struct V3 v;
+    struct Vector3 v;
     int p[3];
     char *cam = data_0209f318;
 
@@ -41,7 +41,7 @@ void func_ov089_0213162c(char *c)
             *(u32 *)(c + 0x464), 0x81, v.x, v.y, v.z, 0, 0);
     }
     if (*(u8 *)(c + 0x442) >= 2)
-        func_020383fc(c + 0x260);
+        WithMeshClsn_UpdateContinuous_Veneer(c + 0x260);
 
     switch (*(u8 *)(c + 0x442)) {
     case 0: {
@@ -153,8 +153,8 @@ void func_ov089_0213162c(char *c)
         *tm = *tm + 1;
         if (*tm < 0x1e)
             return;
-        _ZN6Camera9SetLookAtERK7Vector3(cam, (struct V3 *)(c + 0x44c));
-        _ZN6Camera6SetPosERK7Vector3(cam, (struct V3 *)(c + 0x458));
+        _ZN6Camera9SetLookAtERK7Vector3(cam, (struct Vector3 *)(c + 0x44c));
+        _ZN6Camera6SetPosERK7Vector3(cam, (struct Vector3 *)(c + 0x458));
         cf = (int *)(int)L(cam + 0x154);
         *cf &= ~8;
         b0 = (int *)(int)L(c + 0xb0);

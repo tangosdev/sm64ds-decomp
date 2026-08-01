@@ -9,7 +9,7 @@ struct C {
 };
 extern "C" int func_0200cae4(C* c){
   if(c->flags & 0x4000){
-    volatile unsigned int* flags = (volatile unsigned int*)(((int)c + 0x154) & 0xFFFFFFFFFFFFFFFF);
+    volatile unsigned int* flags = (volatile unsigned int*)(((int)c + 0x154));
     *flags &= ~0x4000u;
     *flags |= 0x8000u;
   }

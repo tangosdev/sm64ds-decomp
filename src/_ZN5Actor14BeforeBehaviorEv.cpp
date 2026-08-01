@@ -31,7 +31,7 @@ int _ZN5Actor14BeforeBehaviorEv(char* self)
 
     signed char c = *(signed char*)(self + 0xcc);
     if (c >= 0 && !IsAreaShowing(c)) {
-        *(u32*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x38;
+        *(u32*)((int)(self + 0xb0)) |= 0x38;
         *(int*)(self + 0x74) = 0x7fffffff;
         *(int*)(self + 0x78) = 0x7fffffff;
         *(int*)(self + 0x7c) = 0x7fffffff;
@@ -55,17 +55,17 @@ int _ZN5Actor14BeforeBehaviorEv(char* self)
             if (data_0209f274)
                 thresh <<= 1;
             if (r > thresh) {
-                *(u32*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x18;
+                *(u32*)((int)(self + 0xb0)) |= 0x18;
                 if (*(u32*)(self + 0xb0) & 0x10000)
                     return 0;
             } else {
-                u32* p = (u32*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+                u32* p = (u32*)((int)(self + 0xb0));
                 *p &= ~0x38;
                 if (r > *(int*)(self + 0xc0))
                     *p |= 0x10;
             }
         } else {
-            *(u32*)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x38;
+            *(u32*)((int)(self + 0xb0)) &= ~0x38;
         }
     }
 

@@ -2,9 +2,9 @@
 extern "C" {
 extern void EnterBigBoosHaunt(void);
 int func_ov002_020c8f0c(char* c){
-  int *p0 = (int*)(((int)c + 0x80) & 0xFFFFFFFFFFFFFFFF);
-  int *p1 = (int*)(((int)c + 0x84) & 0xFFFFFFFFFFFFFFFF);
-  int *p2 = (int*)(((int)c + 0x88) & 0xFFFFFFFFFFFFFFFF);
+  int *p0 = (int*)(((int)c + 0x80));
+  int *p1 = (int*)(((int)c + 0x84));
+  int *p2 = (int*)(((int)c + 0x88));
   *p0 -= 0x80;
   *p1 -= 0x80;
   *p2 -= 0x80;

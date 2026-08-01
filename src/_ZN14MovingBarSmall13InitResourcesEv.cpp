@@ -1,9 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 extern "C" {
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);

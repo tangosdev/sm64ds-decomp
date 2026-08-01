@@ -1,3 +1,8 @@
+// @symbol func_ov034_02112348
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void Vec3_Sub(void* out, void* a, void* b);
 extern int LenVec3(void* v);
 extern char* _ZN5Actor13ClosestPlayerEv(void* c);
@@ -10,14 +15,13 @@ extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 
 extern int data_0209e650[];
-extern unsigned char data_ov034_0211433c[];
 extern int data_ov034_02114488[];
 
-struct Vec3 { int x, y, z; };
+
 
 void func_ov034_02112348(char* c)
 {
-    struct Vec3 v;
+    struct Vector3 v;
     int len;
     char* player;
 

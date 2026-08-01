@@ -12,7 +12,7 @@ struct Entry {
     int f10;
 };
 
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 extern void func_02018598(struct P *c, unsigned int arg);
 extern int func_02018dc4(int a, struct P v);
 extern int LoadArchive(int idx);
@@ -26,7 +26,7 @@ int func_020185c0(int a0, unsigned int a1)
 {
     int result = 0;
 
-    func_0205d874((int *)a0);
+    FS_InitFile((int *)a0);
 
     if (a1 < 0x8000) {
         struct P arg;

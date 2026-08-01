@@ -1,10 +1,12 @@
-typedef unsigned short u16;
-extern void *_ZN3IRQ13GetIRQHandlerEj(unsigned int irq);
-extern void _ZN3IRQ11DisableIRQsEj(unsigned int mask);
-extern int func_02053c10(int enable);
+#include "types.h"
+// @symbol func_ov006_020efc68
+// recovered name: dScMgLuigi_c_AfterCleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgLuigi_c::AfterCleanupResources - recovered from vtable slot identity */
 extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void *handler);
 extern int func_ov004_020b0840(int a, int b);
-extern void func_ov006_020efcf8(void);
 int func_ov006_020efc68(int a, int irq){
     if(irq == 2 && _ZN3IRQ13GetIRQHandlerEj(2) == (void*)func_ov006_020efcf8){
         u16 ime;

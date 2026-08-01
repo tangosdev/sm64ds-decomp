@@ -2531,3 +2531,281 @@ mwcc tracks the object's declared volatility for VN, so the fold still dies; and
 (void)&flags address-taking moves the slot but breaks 34 words elsewhere. Landed
 func_0204a730 byte-identical together with the banked group-B recipe (u32 byte-hoist
 at function scope + s32 k demoted into the loop block after var_r5).
+## 6aq. Booster direction on CALLER-saved pairs is inverted, and it must ride the BASE (2026-07-31, func_020412f0 MATCHED)
+
+Closing `func_020412f0` (5 -> 0 on 2004/b56) refines 6y lever 1. That lever was measured on
+callee-saved webs, where boosting a value pulls it toward the LOWER-numbered register. On a
+caller-saved r2/r3 pair the booster pushes the boosted web toward the HIGHER-numbered
+register instead. Reading 6y's direction across to scratch registers costs a whole sweep:
+a 20-variant hand pass and a first agent pass both boosted the wrong web and stalled at 5.
+
+**Shape.** A byte-triple store into a pooled global, `data_020a2409[r6] = b9; d9[1] = ba;
+d9[2] = bb;`. ROM holds the pool base in r3 and the derived `base + r6` in r2, and gives the
+LOWER register to the LONGER-lived derived pointer. Every plain spelling inverts both.
+
+**Fix.** Three conditions must hold simultaneously; any one alone is inert:
+
+```c
+u8 *b9b = data_020a2409;      /* 1. base is a NAMED local, declared FIRST */
+u8 *d9  = b9b + r6;           /* 2. derived comes from the LOCAL, not the symbol again */
+u8 b9v = ((volatile Msg *)m)->b9;
+u8 bav = ((volatile Msg *)m)->ba;
+b9b = b9b ? b9b : b9b;        /* 3. booster on the BASE (the SHORTER-lived web) */
+b9b[r6] = b9v;
+d9[1] = bav;
+d9[2] = m->bb;
+```
+
+Boost the shorter-lived web to push it UP; the longer-lived one then falls into the lower
+register. Also improves 1.2/base|sp2|sp2p3 from 12 to 7, so it is a better source shape, not
+a b56 artifact.
+
+**Inert on this shape (stayed at exactly 5):** booster on the DERIVED pointer at three
+placements (after its def, after the first store, doubled); the named base hoisted to the
+function-scope decl list; block-scope decl order in six orderings; a named base declared
+after the derived; `&arr[i]` vs `arr + i`; dropping the volatile temps; the 6h u64 address
+launder on the base, on both pooled bases, and on the derived; `opt_lifetimes off`;
+`scheduling off`.
+
+**Actively harmful here (record as regressions, not neutrals):** derived declared in a
+deeper nested block than the base store (14 div, rotates r0-r3 across the whole window); the
+6w comma-operator serializing the derived's def into its first use (14 div, same rotation);
+6q identity reuse of an existing function-scope pointer as the derived (50 div, leaks out of
+the case and rotates r4/r5/r6 across an unrelated tail).
+
+**Process note.** The near-miss DB stores ONE divergence number per row with no record of
+which compiler produced it. This function sat at "12" for weeks because that was its 1.2
+score; it was 5 on b56 the whole time. Sweep `--all` before believing any row's number, and
+before calling anything a floor.
+
+## 6ar. A LICM-hoisted address local colors by its DECLARED TYPE, not by ordering (2026-07-31, func_02038824 MATCHED)
+
+Closing `func_02038824` (20 -> 0 on 2004/b56, and 25 -> 5 on the whole 1.2 line). The
+residual was one r4/r5 two-web swap plus a 9-word prologue schedule cluster that rides on
+it: ROM colors the hoisted `pos` (`self + 0x3c`) r5 and the shared distance-temp/flags web
+r4, and every plain spelling mirrors both.
+
+**The lever is the local's declared TYPE:**
+
+```c
+int pos = (int)self + 0x3c;              /* matches */
+...
+if (Vec3_Dist((void*)pos, &v) > r5 + limit) continue;
+```
+
+versus the natural `char *pos = self + 0x3c;`. This is NOT a cast-on-the-expression
+effect. Keeping a pointer local and moving the arithmetic inside it,
+`char *pos = (char *)((int)self + 0x3c);`, only reaches 12. The int-typed local is what
+flips the pair.
+
+**Why every ordering lever was inert.** `pos` is LICM-hoisted out of the loop, and a
+hoisted value's web is pinned to the rank of its ORIGINAL scope. It cannot be pushed below
+an in-loop temp by declaration order or scope depth. Callee-saved rank on this function
+otherwise tracks source order of first definition, descending (`limit` r8 > `i` r7 >
+`o` r6 > `pos` r5 > temp r4). When a two-web swap involves a loop-invariant that mwcc
+hoists, skip the ordering family entirely and go to the type of the carrying local.
+
+**Inert here (output bitwise identical at 20):** the entire 6y/6aq booster family on `pos`,
+on the temp, and on `flags`, at after-def and before-use placements; deeper scope for
+`pos`; the temp at loop scope after `sl`, as decl-with-initializer, and merged with `flags`
+(3 decl positions); `pos` declared after the temp's first assignment (the front end
+canonicalizes it away); `pos` retyped `struct Vec3 *`, `const char *`, `unsigned char *`;
+`&self[0x3c]` vs `self + 0x3c`.
+
+**Regressive:** `pos` at loop top or via a laundered loop-top copy (30); `pos` uninit at
+function scope assigned deep (38); `pos` at function top (39); temp at loop top before `o`
+(27); `opt_propagation off` (98). **Size-breaking (0x210 vs 0x214):** inlining
+`self + 0x3c` into the call, or a tight nested block around def and use, both of which lose
+the hoist.
+
+## 6as. TOOLING TRAP: mwccarm silently ignores unknown pragmas, so a typo reads as "inert"
+
+**Verified directly 2026-07-31.** Adding `#pragma zzz_not_a_real_pragma off` to a MATCHING
+source compiles clean, emits no diagnostic, and produces BYTE-IDENTICAL output -- the
+function still matches. A real pragma on the same source (`opt_propagation off`) moves 105
+words. mwccarm accepts any `#pragma <identifier>` and drops the ones it does not know.
+
+**Consequence:** every "pragma X is inert" line in this file is only evidence if X is a
+real mwccarm pragma. A misspelled or invented pragma name is indistinguishable from a
+genuinely inert one in a divergence sweep, and it will be recorded as a tried-and-failed
+lever that nobody re-tries.
+
+On `func_02038824` this bit a whole sweep: `scheduling`, `register_coloring`,
+`global_optimizer` and `peephole` all returned the baseline number and were logged as
+inert, but they were never actually tested. Only `optimize_for_size`, `optimization_level`,
+`opt_dead_code` and `opt_propagation` demonstrably moved the output on that shape.
+
+**How to apply -- there is an exact screen, use it instead of guessing.** `-w illpragmas`
+makes mwccarm print `<file>:<line>: warning: illegal #pragma` and NAME THE LINE for every
+pragma it does not know, while staying silent on real ones. This is now in
+`match.py`'s `DEFAULT_FLAGS` (and therefore in `swarm.CPP_FLAGS`, which derives from it), and
+`compile_c` surfaces the warning even on a SUCCESSFUL compile, since a clean compile is
+exactly the case where a typo'd pragma would otherwise pass as "inert". It is a warning-only
+flag with no codegen effect: all banked matches were re-verified with it on.
+
+**Caveat that matters: `2004/b56` does NOT support `-w illpragmas`** -- it stays silent on a
+bogus pragma. The whole 1.2 line (base, sp2, sp2p3) does warn. So if you are working a
+function whose best version is b56, a single `--version 2004/b56` run will NOT screen your
+pragma names. Run `--all` (which compiles the 1.2 versions too) at least once, or screen the
+file against 1.2/sp2p3 explicitly, before recording any pragma result.
+
+If for some reason you cannot use the flag, the fallback is the old advice: prove the
+compiler HONOURS the pragma by finding one source shape where it changes output at all.
+`optimize_for_size on` is a reliable positive control -- it demonstrably moves output.
+
+## 6at. Callee-saved rank is filled in TWO passes, and the address-constant class is a rotator (2026-07-31, PS_UpdateOkAndBackButtons 18 -> 9)
+
+A three-web rotation over r5-r7 that survived decl order, scope depth, the 6y/6aq booster
+family at every placement, the 6h launder, C-vs-C++ TU, and a type sweep. Measuring the
+classes rather than permuting the source produced a model that predicts the coloring.
+
+**Model.** mwccarm assigns the callee-saved band in TWO passes, not one:
+
+1. **NORMAL-class** webs, in first-definition order, ascending from r5.
+2. **ADDRESS-CONSTANT-class** webs (rematerializable pointer constants, i.e. a pooled
+   `&global` or a pointer-typed literal), in first-definition order, after all normal webs.
+
+So a pooled base pointer is always pushed BELOW every ordinary local regardless of where it
+is defined, which is why ordering levers cannot move it. Confirmed three ways on this
+function: baseline normal `{0x1000, idx}` -> r5,r6 with addr `{ptr}` -> r7; retyping the
+`0x1000` local to `(int*)0x1000` moves it into the address class and it lands on r6, the
+ROM's slot; and typing a RUNTIME-valued local as `int*` changes nothing, because the class
+needs a pointer-typed CONSTANT, not merely pointer type.
+
+**New lever.** Casting a named integer local's constant initializer to a pointer type
+(`int *k = (int *)0x1000;`) moves that web into the address-constant class and pushes it one
+register UP. First time this rotator has been isolated; it is a deterministic way to reorder
+two callee-saved webs when decl order is inert.
+
+**The ROM's shape here is all three webs in ONE class ranked by definition order**
+(ptr 0x38 -> r5, 0x1000 0x44 -> r6, idx 0xa0 -> r7). Since `idx` is runtime-computed it can
+only be normal-class, so closing the last 9 words means getting the pooled `ptr` OUT of the
+address-constant class. Nothing tried reaches that.
+
+**Limitation of 6h worth recording there:** the u64-mask address launder moves a pooled
+global into normal birth-order allocation for SCRATCH registers (that is what 6h and 6aq
+measured), but it is a no-op on a CALLEE-SAVED web. Here it left the coloring untouched,
+made the booster inert, and re-hoisted the pool load to +0x30 (14 div). Do not assume 6h
+generalizes across the two register bands.
+
+**Separately steerable, worth 4 of the original 13:** an `x = (x & mask) | sl;` RMW emits
+`orr r3,r3,sl` when `mask` is a NAMED LOCAL and `orr r3,sl,r3` when it is an inline literal.
+Flipping the source operand order does nothing (mwcc canonicalizes commutative `|` before
+codegen); the discriminator is whether the AND's right operand is a named local. Splitting
+the RMW through a named temp reaches the same shape with the name kept.
+
+## 6au. volatile-on-the-OBJECT plus an inline access beats a named pointer (2026-07-31, PS_UpdateOkAndBackButtons MATCHED)
+
+Closing `_ZN5Stage25PS_UpdateOkAndBackButtonsEb` (18 -> 9 -> 0, byte-identical on 1.2/base,
+1.2/sp2, 1.2/sp2p3 AND 2004/b56). 6at correctly diagnosed the last 9 words as a coloring
+rotation needing the pooled base out of the address-constant class, but the fix is not
+"de-rematerialize the pointer". It is two coupled changes that only work together:
+
+```c
+extern volatile int data_02075610[];        /* 1. volatile on the OBJECT */
+...
+for (j = 0; j < data_02075610[idx]; j++)    /* 2. NO named pointer, index inline */
+```
+
+Three measured states, which is what makes the mechanism clear:
+
+- **Named pointer local** (`int *ptr = data_02075610`): the base enters the
+  address-constant class, is colored after every normal web, and lands in r7. This is the
+  entire 9-word miss, and it DOMINATES -- a named `volatile int *` pointer to the volatile
+  array still sits at 9. The address-class assignment wins over the volatility.
+- **Plain inline access, no volatile:** the base rematerializes in normal birth order but
+  into a SCRATCH register, and the loop bound is cached, so the tail reload disappears and
+  the function comes out three words SHORT (0x148).
+- **volatile + inline:** the bound is re-read every iteration (the ROM reloads at +0xc0 and
+  +0x114), which keeps the base live across the inner loop so it must take a callee-saved
+  register -- but it gets there via the normal-birth path, not the address-constant class.
+  Result: ptr r5 / 0x1000 r6 / idx r7, exactly the ROM. The volatile restores the three
+  missing words and rotates the coloring in one move.
+
+**Generalisation.** When 6at says a pooled base is stuck in the address-constant class, the
+lever is to DELETE the named pointer rather than to launder it, and then to restore whatever
+reloads the inlining optimised away. `volatile` on the object is the cheapest way to force
+those reloads, and unlike `volatile` on a local it costs no stack slot.
+
+**Inert / regressive on this shape (6as-screened):** union int-to-pointer pun (not folded --
+forces a real stack round-trip and SPILLS the base, +2 words); a struct member holding the
+pointer (folds back to the pool load, 14); runtime-cancel identities
+`&arr[base] - base` and `&arr[i] - i` (folded back to the pooled constant, 14); an `int`
+holding the address with an inline `(int*)` cast at the index site (stays address-class, 14);
+`opt_common_subs off` and `opt_strength_reduction off` (honoured but byte-identical here --
+these are established-real pragmas, verified by a zero-byte disassembly diff, not 6as typos).
+
+## 6av. The outgoing-arg phi coalesce: a build delta no register-resident construct breaks (2026-07-31, Stage::InitResources)
+
+A negative worth recording precisely, because it is cheap to re-grind and about 40 constructs
+have now died on it.
+
+**Shape.** A variable assigned on both arms of a branch and then passed as an argument:
+
+```c
+int bank = 0x36;
+if (soundGroup == 0) { ...; bank = table[level2 * 3]; }
+Sound::LoadGroupAndSetBank(soundGroup, bank);
+```
+
+ROM colors `bank`'s phi web to a NON-argument register and emits one shared merge copy
+`mov r1,r2` at the join, which both paths flow through. Every mwccarm build we own -- the
+whole 1.2 line and 2004/b56 -- coalesces the phi DIRECTLY into the outgoing argument register,
+so the merge copy never exists and the branch jumps 4 bytes further, straight to the call.
+
+**Why it is a trap.** On this function a `u8` variable's truncation (`and rX,rX,#0xff`)
+accidentally makes the SIZE correct while being the wrong instruction. So the function reads
+as "4 words differ, size fine" and looks like an ordinary coloring miss, when in fact the two
+defects are coupled: removing the truncation (int variable, or a direct one-step index) always
+lets the coalesce happen and the function drops 4 bytes SHORT. A match needs no truncation AND
+the phi off the argument register AND the merge copy, all at once.
+
+**The one construct that does reproduce the copy costs too much.** A memory-resident
+volatile or address-taken temp (`volatile int arg1 = bank;`) buys the copy but pays a stack
+slot, overshooting by 4. Note this is the exact opposite of 6au, where `volatile` on an OBJECT
+was free: volatile on a LOCAL is memory-resident and always costs a slot. Do not confuse the
+two levers.
+
+**What would be needed:** the phi's web must be live simultaneously with whatever holds the
+base, to create interference that blocks the coalesce. Every free way to force that (no fold,
+no extra instruction) has been tried.
+
+**Inert (~40 constructs, none pragmas so no 6as risk):** int vs u8 variable; one-step vs
+two-step indexing; a named int index; the 6h u64 launder on the table base, on the passed
+VALUE, and as a laundered named arg temp; the 6w comma-operator argument form; an explicit
+if/else phi; a ternary phi; a named read before the assignment; the 6y/6aq booster on the
+variable, on the other argument, and on the table base at several placements; a 6ar int-typed
+base local dereferenced through a cast; the operand swap `(i)[table]`; a 6at `u8 * const`
+named base with a named int index; a volatile LOAD via `*(volatile u8*)`; relocating the
+initialized declaration to the branch; the uninit-decl split in six orders; naming the guard
+read in five declaration positions.
+
+**Class:** register-coalescer build delta, same family as 6ag's first-access-fold. Route it to
+the permuter, not to a construct hunt.
+
+### 6as addendum: the recognised-pragma vocabulary, and three corrections it produced
+
+`notes/mwccarm-pragmas.txt` now holds the **246 pragma names mwccarm actually parses**,
+derived by pulling every lowercase identifier out of `mwccarm.exe` and screening each one
+INDIVIDUALLY with `-w illpragmas`. Individual screening matters: `#pragma warning off`
+suppresses the diagnostic for every line after it, so a batched scan inflates the accepted
+set (725 vs the true 246).
+
+Three corrections fell straight out of it, all of which had been recorded as evidence:
+
+- **`generateconditionalassignments` is not a pragma. The real name is
+  `opt_generateconditionalassignments`.** The 150-variant `func_02068398` campaign recorded
+  this lever as inert; it was never applied. (Re-run with the correct name: still 1 word, so
+  the floor survives -- but the earlier evidence was void.)
+- **`scheduling` is not a pragma.** Scheduling is controlled by the `-opt schedule` /
+  `-opt noschedule` COMMAND-LINE flag. Any "`#pragma scheduling off` is inert" line is
+  meaningless, including ones asserted this session on the grounds that the token appears in
+  the binary -- appearing in the binary is not the same as being pragma-exposed.
+- **`long_calls` is not a pragma.** `src/func_ov065_0211aacc.c` carried
+  `#pragma long_calls on` plus a comment crediting it for the pooled
+  `ldr ip,[pc,#8]; bx ip` tail-call. It was silently ignored; the file matches on all 12
+  builds with the line removed. Comment corrected.
+
+**Practical rule:** a pragma result is evidence only if the name is in that file. Proving a
+real pragma inert is a finding; proving a fake one inert is noise that then gets cited as a
+closed avenue.

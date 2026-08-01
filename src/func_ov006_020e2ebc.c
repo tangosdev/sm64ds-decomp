@@ -6,7 +6,7 @@ void func_ov006_020e2ebc(char *thiz)
     int i;
     char *p;
     if (*(unsigned short*)(thiz + 0x4ee2) != 0) {
-        *(unsigned short*)(((int)thiz + 0x4ee2) & 0xFFFFFFFFFFFFFFFF) -= 1;
+        *(unsigned short*)(((int)thiz + 0x4ee2)) -= 1;
         if (*(short*)(thiz + 0x4ee2) <= 0)
             *(unsigned short*)(thiz + 0x4ee2) = 0;
         return;

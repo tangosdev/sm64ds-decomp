@@ -1,3 +1,4 @@
+#include "types.h"
 // MATCHING (abverify MATCH, mwccarm 1.2/sp2p3, canonical flags)
 /* func_ov006_02115b0c at 0x02115b0c (ov006), size 0x18bc (6,332 bytes, 1583 insns)
  * Compiler mwccarm 1.2/sp2p3, flags:
@@ -47,24 +48,20 @@
  *    un-strength-reduced; does not break the div/mod-by-32 shift idioms.
  */
 #pragma opt_strength_reduction off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 typedef struct V2 { int x, y; } V2;
 
 extern void func_ov004_020adb1c(int a);
 extern void _ZN6Memory16operator_delete2EPv(void *p);
-extern void func_0207328c(void *p, int a, int b, void *cb);
+extern void __destroy_arr(void *p, int a, int b, void *cb);
 extern void func_ov004_020b04d0(int a);
 extern int GetOwnerLanguage(void);
 extern void func_02057d00(void *dst, void *src, int flag);
 extern void *func_020adc74(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void func_ov004_020adc5c(void *p);
+extern void Ov004_Deallocate(void *p);
 extern u16 *_ZN2G212GetBG2ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern void func_020733a8(void *p, int a, int b, void *cb1, void *cb2);
 extern void *_Znwj(u32 size);
@@ -81,7 +78,7 @@ extern void *func_ov006_0210e0d0(void *p, char *c, int i, V2 *pos);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void SetSubBg0Offset(int x, int y);
 extern void func_ov006_02114dd0(char *c);
-extern void func_0203d47c(void);
+extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
 
 extern int data_ov006_0213ec98[];
@@ -120,7 +117,7 @@ void func_ov006_02115b0c(char *c)
     func_ov004_020adb1c(0);
 
     for (int i = 0; i < 0xd; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4688)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4688)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -132,7 +129,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 8; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4720)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4720)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -144,7 +141,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 0x19; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x46bc)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -156,7 +153,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4740)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4740)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -168,7 +165,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 6; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x474c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x474c)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -180,7 +177,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4764)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4764)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -192,7 +189,7 @@ void func_ov006_02115b0c(char *c)
         }
     }
     for (int i = 0; i < 2; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4770)) & 0xFFFFFFFFFFFFFFFFLL);
+        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4770)));
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -209,8 +206,8 @@ void func_ov006_02115b0c(char *c)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed74;
-                func_0207328c((char *)p + 0x4c, 3, 8, func_0203d47c);
-                func_0207328c((char *)p + 0x34, 3, 8, func_0203d47c);
+                __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)data_ov006_0213ed10;
                 _ZN6Memory16operator_delete2EPv(p);
             }
@@ -259,46 +256,46 @@ void func_ov006_02115b0c(char *c)
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, (void *)0x6400000);
         DecompressLZ16(d, (void *)0x6600000);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     func_02057d00(data_ov006_02142c40, data_ov006_0213f090, *(int *)(c + 0xbc) & 1);
     {
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, c + 0x4954);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     func_02057d00(data_ov006_02142c40, data_ov006_0213f0c0, *(int *)(c + 0xbc) & 1);
     {
         void *d = func_020adc74(data_ov006_02142c40);
         DecompressLZ16(d, c + 0x5154);
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
     if ((*(int *)(c + 8) & 0xff) == 0) {
         void *d = func_020adc74(data_ov006_0213f0f0);
         DecompressLZ16(d, _ZN2G212GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f120);
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f150);
-        DecompressLZ16(d, func_02054fb0());
-        func_ov004_020adc5c(d);
+        DecompressLZ16(d, _ZN2G212GetBG3ScrPtrEv());
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f17c);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     } else {
         void *d = func_020adc74(data_ov006_0213f1a8);
         DecompressLZ16(d, _ZN2G212GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f1d8);
         DecompressLZ16(d, _ZN3G2S12GetBG2ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f208);
-        DecompressLZ16(d, func_02054fb0());
-        func_ov004_020adc5c(d);
+        DecompressLZ16(d, _ZN2G212GetBG3ScrPtrEv());
+        Ov004_Deallocate(d);
         d = func_020adc74(data_ov006_0213f234);
         DecompressLZ16(d, _ZN3G2S12GetBG3ScrPtrEv());
-        func_ov004_020adc5c(d);
+        Ov004_Deallocate(d);
     }
 
     *(int *)(c + 0x4000 + 0x668) = 0;
@@ -309,7 +306,7 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x4000 + 0x674) = 0;
     *(int *)(c + 0x4000 + 0x680) = 0;
 
-    func_020733a8(pos, 0x19, 8, func_0203d738, func_0203d47c);
+    func_020733a8(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
 
     {
         int mask = 0x3ff;
@@ -346,7 +343,7 @@ void func_ov006_02115b0c(char *c)
                 p = func_ov006_02111b40(p, c, j, &tmp);
             }
             {
-                void **slot = (void **)(((long long)(int)(c + j * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+                void **slot = (void **)(((long long)(int)(c + j * 4 + 0x46bc)));
                 *slot = p;
                 if (*slot != 0)
                     *(int *)((char *)*slot + 0x34) = 0;
@@ -388,7 +385,7 @@ void func_ov006_02115b0c(char *c)
                 p = func_ov006_02111b40(p, c, n, &tmp);
             }
             {
-                void **slot = (void **)(((long long)(int)(c + n * 4 + 0x46bc)) & 0xFFFFFFFFFFFFFFFFLL);
+                void **slot = (void **)(((long long)(int)(c + n * 4 + 0x46bc)));
                 *slot = p;
                 if (*slot != 0)
                     *(int *)((char *)*slot + 0x34) = 1;
@@ -823,5 +820,5 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x5000 + 0x998) = 0x100;
     SetSubBg0Offset(*(int *)(c + 0x5000 + 0x998), 0);
     func_ov006_02114dd0(c);
-    func_0207328c(pos, 0x19, 8, func_0203d47c);
+    __destroy_arr(pos, 0x19, 8, NullDestructor_0203d47c);
 }

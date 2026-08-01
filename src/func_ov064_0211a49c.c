@@ -4,5 +4,5 @@ void func_ov064_0211a49c(char *c)
         *(unsigned short *)(c + 0x170) = 0x2d;
     }
 
-    *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)c + 0xb0)) &= ~1;
 }

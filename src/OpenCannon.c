@@ -1,2 +1,2 @@
-extern int G[];
-void OpenCannon(int n) { G[4] |= 1 << n; }
+extern int data_0209caa0[];
+void OpenCannon(int n) { data_0209caa0[4] |= 1 << n; }

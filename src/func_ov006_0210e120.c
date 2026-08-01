@@ -4,7 +4,7 @@
  */
 typedef struct { int x, y; } Vec2;
 extern void func_ov006_0211470c(int *a, int *b);
-extern int func_0203d614(Vec2 *v);
+extern int Vec2_Len(Vec2 *v);
 int func_ov006_0210e120(int *self)
 {
     int i;
@@ -17,7 +17,7 @@ int func_ov006_0210e120(int *self)
             delta = pos;
             delta.x -= self[2];
             delta.y -= self[3];
-            if (func_0203d614(&delta) < 0x12000)
+            if (Vec2_Len(&delta) < 0x12000)
                 return 0;
         }
     }

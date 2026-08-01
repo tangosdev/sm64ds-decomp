@@ -1,4 +1,4 @@
-extern int func_ov004_020ad674(void);
+extern int GetGameLanguage(void);
 extern void func_ov004_020af948(void* a, int b, int c, void* m);
 
 typedef struct {
@@ -21,7 +21,7 @@ void func_ov006_020ea670(void){
         if(e->flag!=0){
             int sb=e->x>>12;
             int r8=e->y>>12;
-            int idx=func_ov004_020ad674();
+            int idx=GetGameLanguage();
             void *obj=data_ov006_0213ca9c[idx];
             func_ov004_020af948(*(void**)((char*)obj+0x38), sb-0x10, r8, a);
             func_ov004_020af948(*(void**)(data_ov006_02137cd8+0xa4), sb, r8, b);

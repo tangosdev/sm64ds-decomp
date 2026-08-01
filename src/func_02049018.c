@@ -1,5 +1,7 @@
-struct Vec3 { int x, y, z; };
-int func_02049018(struct Vec3 *v)
+// @symbol func_02049018
+/* recovered: shared common types */
+#include "common.h"
+int func_02049018(struct Vector3 *v)
 {
     int tx = v->x >> 12;
     int ty = (v->y >> 12) * 2;

@@ -16,6 +16,6 @@ void *_ZN13SharedFilePtr8LoadFileEv(struct SharedFilePtr *self)
         return 0;
     }
 
-    *(unsigned char *)(((long long)(int)((char *)self + 2)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(unsigned char *)(((long long)(int)((char *)self + 2))) += 1;
     return self->filePtr;
 }

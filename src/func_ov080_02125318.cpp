@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov080_02125318
+// recovered name: CrazedCrate_OnTurnIntoEgg
+/* recovered: shared common types, renamed to Class_Method */
+/* daBttBk_c::OnTurnIntoEgg - recovered from vtable slot identity */
 // func_ov080_02125318 at 0x02125318
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov080).
 struct Vector3 { int x, y, z; };

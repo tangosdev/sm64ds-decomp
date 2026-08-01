@@ -1,4 +1,11 @@
 //cpp
+// @symbol _ZN8MantaRay6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "MantaRay.h"
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 struct Derived { char pad[0x30c]; Base base; };
-extern "C" int _ZN8MantaRay6RenderEv(Derived *d) { Base *b = &d->base; b->m(0); return 1; }
+
+int MantaRay::Render()
+{
+ Base *b = &((Derived *)this)->base; b->m(0); return 1;
+}

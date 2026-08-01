@@ -1,8 +1,7 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef int s32;
-typedef short s16;
-
+#include "types.h"
+// @symbol _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE
+/* recovered: named members + shared header */
+#include "Particle__EndingStarGlitterCallback.h"
 struct System;
 
 /* EndingStarGlitterCallback fields at large offsets (around 0x300) */
@@ -28,18 +27,17 @@ struct StarGlitterSystem {
 
 extern void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void* cb, struct StarGlitterSystem* sys);
 
-void _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE(void* cb, struct StarGlitterSystem* sys)
-{
+void _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE(struct Particle__EndingStarGlitterCallback *self, struct StarGlitterSystem* sys) {
     void** p;
     u32 ip;
     s16 val;
 
     p  = (void**)sys->ptr18;
-    ip = *(u32*)((char*)cb + 0x308);
+    ip = *(u32*)((char*)&self->unk_308);
     ((u32*)*p)[1] = ip;
 
-    val = *(s16*)((char*)cb + 0x30c);
+    val = *(s16*)((char*)&self->unk_30c);
     sys->unk48 = val;
 
-    _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(cb, sys);
+    _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(((void*)self), sys);
 }

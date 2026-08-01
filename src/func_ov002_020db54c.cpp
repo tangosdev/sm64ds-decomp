@@ -1,6 +1,8 @@
 //cpp
-typedef unsigned short u16;
-struct Vector3 { int x, y, z; };
+#include "types.h"
+// @symbol func_ov002_020db54c
+/* recovered: shared common types */
+#include "common.h"
 struct State;
 extern "C" void func_02035860(void *a, struct Vector3 *v);
 extern struct State data_ov002_021101cc;
@@ -16,7 +18,7 @@ extern "C" void func_ov002_020db54c(unsigned char *self, int a, int b, short c)
     if (node != 0) {
         int bb = (int)(*(u16 *)((char *)node + 0xc) == 0xbf);
         if (bb != 0) {
-            struct Vector3 *src = (struct Vector3 *)(((int)node + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+            struct Vector3 *src = (struct Vector3 *)(((int)node + 0x5c));
             struct Vector3 v;
             int ty;
             v.x = src->x;

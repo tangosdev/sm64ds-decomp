@@ -1,33 +1,24 @@
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
+// @symbol func_ov006_021203fc
+// recovered name: dScMgTeresa_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgTeresa_c::InitResources - recovered from vtable slot identity */
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void *LoadFile(int handle);
 extern void *_ZN2G213GetBG2CharPtrEv(void);
 extern void DecompressLZ16(void *src, void *dst);
-extern void Deallocate(void *p);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_02056314(void *dst, u32 offset, u32 len);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN3G2S12GetBG0ScrPtrEv(void);
-extern void func_ov004_020af2f8(char *self, int a, int b, int c);
 extern void *_ZN3G2S13GetBG0CharPtrEv(void);
-extern unsigned func_02054de8(void);
+extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_02056374(const void *src, u32 offset, u32 count);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void func_ov004_020b04d0(int v);
-extern void func_ov006_0211fbf8(char *p);
-extern void func_ov006_0211d7b4(char *p);
-extern void func_ov006_0211dd6c(char *p);
-extern void func_ov006_0211f77c(char *p);
-extern void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
-extern int func_020bc880;
-extern int func_020bc884;
 int func_ov006_021203fc(char *self)
 {
   void *f1;
@@ -88,7 +79,7 @@ int func_ov006_021203fc(char *self)
   *((volatile u32 *) 0x4001018) = 0;
   *((volatile u16 *) 0x400100c) = ((*((volatile u16 *) 0x400100c)) & 0x43) | 0x408;
   t = LoadFile(0x9f);
-  DecompressLZ16(t, (void *) func_02054de8());
+  DecompressLZ16(t, (void *) _ZN3G2S13GetBG2CharPtrEv());
   Deallocate(t);
   t = LoadFile(0xa0);
   _ZN3GXS10LoadBGPlttEPKvjj(t, 0x60, 0x1a0);

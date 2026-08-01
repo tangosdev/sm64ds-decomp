@@ -1,8 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
+#include "types.h"
 enum Bool { FALSE, TRUE };
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
@@ -51,11 +47,11 @@ int func_ov066_0211603c(char *self)
         goto other;
 
     if (*(u8 *)(actor + 0x6f9) == 1) {
-        (*(s8 *)(((int)self + 0x4d8) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(s8 *)(((int)self + 0x4d8)))--;
         hit = 1;
     }
     if (flags & 0x10) {
-        (*(s8 *)(((int)self + 0x4d8) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(s8 *)(((int)self + 0x4d8)))--;
         if (*(s8 *)(self + 0x4d8) <= 0)
             _ZN6Player16IncMegaKillCountEv(actor);
         hit = 1;
@@ -66,11 +62,11 @@ other:
         if (flags & 0x427e0) {
             if (flags & 0x40) {
                 if (*(int *)(actor + 8) == 2)
-                    (*(s8 *)(((int)self + 0x4d8) & 0xFFFFFFFFFFFFFFFF))--;
+                    (*(s8 *)(((int)self + 0x4d8)))--;
             }
             if (flags & 0x40000)
                 *(s16 *)(self + 0x4d4) = 1;
-            (*(s8 *)(((int)self + 0x4d8) & 0xFFFFFFFFFFFFFFFF))--;
+            (*(s8 *)(((int)self + 0x4d8)))--;
             hit = 1;
         }
     }

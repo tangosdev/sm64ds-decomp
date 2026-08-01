@@ -1,9 +1,13 @@
-struct Vec3 { int x, y, z; };
+// @symbol func_ov007_020c6174
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct Elem {
-    struct Vec3 **a;   /* 0x0 */
-    struct Vec3 **b;   /* 0x4 */
+    struct Vector3 **a;   /* 0x0 */
+    struct Vector3 **b;   /* 0x4 */
     int len;           /* 0x8 */
-    struct Vec3 v;     /* 0xc */
+    struct Vector3 v;     /* 0xc */
 };
 struct Node {
     char pad[8];
@@ -13,10 +17,10 @@ struct Node {
 struct T {
     int p0, p4, p8;
     char pad[0x2c - 0xc];
-    struct Vec3 **p2c;   /* 0x2c */
+    struct Vector3 **p2c;   /* 0x2c */
     char pad2[0x38 - 0x30];
     struct Node **p38;   /* 0x38 */
-    struct Vec3 **p3c;   /* 0x3c */
+    struct Vector3 **p3c;   /* 0x3c */
     struct Elem **p40;   /* 0x40 */
     struct Elem **p44;   /* 0x44 */
     unsigned short *p48; /* 0x48 */
@@ -25,10 +29,8 @@ struct T {
     unsigned short *p54; /* 0x54 */
 };
 
-extern void func_ov007_020c7694(struct Vec3 *a, struct Vec3 *b);
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern int LenVec3(struct Vec3 *v);
-extern void func_ov007_020c775c(struct Vec3 *t);
+extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern int LenVec3(struct Vector3 *v);
 
 void func_ov007_020c6174(struct T *t, int idx, int flag)
 {

@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef int Fix12i;
-
+#include "types.h"
 extern u32 func_02022a4c(Fix12i x, Fix12i y, Fix12i z);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void* dir);
 extern int _ZN6Player7IsStateERNS_5StateE(char* self, void* st);

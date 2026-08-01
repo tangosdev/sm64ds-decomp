@@ -1,15 +1,18 @@
 //cpp
+// @symbol _ZN6ShipUp16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "ShipUp.h"
 extern "C" {
-extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
-extern void _ZN16MeshColliderBase7DisableEv(void*);
 extern void _ZN13SharedFilePtr7ReleaseEv(void*);
-extern void* data_ov016_021136e4[];
-extern void* data_ov016_021136dc[];
-int _ZN6ShipUp16CleanupResourcesEv(char* c){
-  if(_ZN16MeshColliderBase9IsEnabledEv(c+0x124))
-    _ZN16MeshColliderBase7DisableEv(c+0x124);
-  _ZN13SharedFilePtr7ReleaseEv(data_ov016_021136e4[*(unsigned char*)(c+0x31e)]);
-  _ZN13SharedFilePtr7ReleaseEv(data_ov016_021136dc[*(unsigned char*)(c+0x31e)]);
-  return 1;
 }
+
+int ShipUp::CleanupResources()
+{
+  if(_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider))
+    _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+  _ZN13SharedFilePtr7ReleaseEv(data_ov016_021136e4[mModelIndex]);
+  _ZN13SharedFilePtr7ReleaseEv(data_ov016_021136dc[mModelIndex]);
+  return 1;
 }

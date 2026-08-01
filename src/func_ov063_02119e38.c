@@ -19,12 +19,12 @@ void func_ov063_02119e38(char *thiz, int a1, short a2, int a3) {
     if ((unsigned int)(*(unsigned short*)(thiz + 0x500 + 0xd4) << 0x17) >> 0x1f) {
     } else {
       if (*(unsigned short*)(thiz + 0x500 + 0xbe) != 0) {
-        unsigned short *q = (unsigned short*)(((long long)(int)(thiz + 0x5be)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned short *q = (unsigned short*)(((long long)(int)(thiz + 0x5be)));
         *q = *q - 1;
       }
     }
     if (*(unsigned short*)(thiz + 0x500 + 0xc4) != 0) {
-      unsigned short *q = (unsigned short*)(((long long)(int)(thiz + 0x5c4)) & 0xFFFFFFFFFFFFFFFFLL);
+      unsigned short *q = (unsigned short*)(((long long)(int)(thiz + 0x5c4)));
       *q = *q - 1;
     }
 

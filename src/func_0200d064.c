@@ -7,7 +7,7 @@ void func_0200d064(int param_1, unsigned int param_2)
   if (param_2 == tmp)
   {
     volatile int dummy;
-    unsigned int *addr = (unsigned int *) ((param_1 + 0x154) & 0xFFFFFFFFFFFFFFFF);
+    unsigned int *addr = (unsigned int *) ((param_1 + 0x154));
     unsigned int val = *addr;
     val &= ~2u;
     *addr = val;

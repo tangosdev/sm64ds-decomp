@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef int s32;
-
+#include "types.h"
 typedef struct Car {
     u8 pad00[0x13];
     u8 b13;
@@ -47,7 +44,7 @@ void func_ov006_020f456c(Ctx *c)
 
     if (c->h5322 != 0)
     {
-        p = (u16 *)(int)(((long long)(int)((char *)c + 0x5322)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (u16 *)(int)(((long long)(int)((char *)c + 0x5322)));
         *p = (u16)(*p - 1);
         return;
     }

@@ -2,7 +2,7 @@ extern int func_02017acc();
 extern void func_020731dc();
 extern int func_02017b4c();
 extern void func_02017ab4(void);
-extern void func_02017b34(void);
+extern void SharedFilePtr_Destruct_Clsn(void);
 
 extern char data_ov073_02123428[];
 extern char data_ov073_02123494[];
@@ -40,11 +40,11 @@ void __sinit_ov073_02122d48(void)
     func_02017acc(data_ov073_02123440, 0x5eb);
     func_020731dc(data_ov073_02123440, func_02017ab4, data_ov073_0212347c);
     func_02017b4c(data_ov073_02123448, 0x5e8);
-    func_020731dc(data_ov073_02123448, func_02017b34, data_ov073_02123488);
+    func_020731dc(data_ov073_02123448, SharedFilePtr_Destruct_Clsn, data_ov073_02123488);
     func_02017b4c(data_ov073_02123450, 0x5ea);
-    func_020731dc(data_ov073_02123450, func_02017b34, data_ov073_02123458);
+    func_020731dc(data_ov073_02123450, SharedFilePtr_Destruct_Clsn, data_ov073_02123458);
     func_02017b4c(data_ov073_02123438, 0x5ec);
-    func_020731dc(data_ov073_02123438, func_02017b34, data_ov073_02123464);
+    func_020731dc(data_ov073_02123438, SharedFilePtr_Destruct_Clsn, data_ov073_02123464);
 
     data_ov073_021234b0[0] = data_ov073_02123134;
     data_ov073_021234b0[1] = data_ov073_0212312c;

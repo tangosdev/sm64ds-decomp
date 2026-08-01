@@ -1,6 +1,6 @@
 int func_ov072_02120308(char *base)
 {
-    *(int *)(((int)base + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int *)(((int)base + 0xb0)) &= ~1;
     *(int *)(base + 0x9c) = -0x2000;
     *(int *)(base + 0xa0) = -0x3c000;
     *(int *)(base + 0xa8) = 0x2d000;

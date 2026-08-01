@@ -34,11 +34,11 @@ void func_ov006_02107ea8(char *self)
         (int)((((long long)(*(int *)(self + 0xb8)) * 0x500) + 0x800) >> 12),
         *(int *)(self + 0xb0));
 
-    *(short *)(((int)self + 0xc0) & 0xFFFFFFFFFFFFFFFF) += *(short *)(self + 0xc6);
+    *(short *)(((int)self + 0xc0)) += *(short *)(self + 0xc6);
 
     *(int *)(self + 0xb4) = (int)((((long long)(*(int *)(self + 0xb4)) * 0x600) + 0x800) >> 12);
-    *(int *)(((int)self + 0xb4) & 0xFFFFFFFFFFFFFFFF) += d1;
-    *(int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFF) += *(int *)(self + 0xb4);
+    *(int *)(((int)self + 0xb4)) += d1;
+    *(int *)(((int)self + 0xb0)) += *(int *)(self + 0xb4);
 
     if (*(int *)(self + 0xb0) > 0x2c00) {
         *(int *)(self + 0xb0) = 0x2c00;

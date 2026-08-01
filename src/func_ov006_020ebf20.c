@@ -16,7 +16,7 @@ struct C {
 };
 
 extern void _Z11UpdateAngleRssis(s16* p, s16 tgt, int step, s16 amt);
-extern void func_0203d6d0(V2* o, V2* a, V2* b);
+extern void Vec2_Sub(V2* o, V2* a, V2* b);
 extern int func_0203d434(V2* in);
 extern void func_0203d630(V2* p, int m);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -53,7 +53,7 @@ void func_ov006_020ebf20(struct C* c)
     for (; i < 5; i++) {
         j = i - 1;
         pj = &c->v18[j];
-        func_0203d6d0(&d, &c->v18[i], pj);
+        Vec2_Sub(&d, &c->v18[i], pj);
         if (func_0203d434(&d) != 0) {
             s16 a, prev, diff;
             func_0203d630(&d, c->w4c[i] + i * 0x2000);

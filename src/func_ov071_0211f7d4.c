@@ -7,17 +7,17 @@ struct WithMeshClsn {
     int IsOnGround() const;
     void ClearLimMovFlag();
 };
-extern "C" void func_02038420(void *p);
+extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
 extern "C" int func_02037e38(unsigned int *p);
 extern "C" void func_ov071_0211f498(char *c);
-extern "C" void func_ov071_021202ec(char *c, int x);
+extern "C" void Scuttlebug_SetState(char *c, int x);
 extern "C" void func_ov071_0211f29c(char *c);
 struct CylinderClsn2 { void Clear(); void Update(); };
 
 extern "C" int func_ov071_0211f7d4(Actor *self)
 {
     char *s = (char*)self;
-    func_02038420(s + 0x194);
+    WithMeshClsn_UpdateDiscreteNoLava_veneer(s + 0x194);
     *(short*)(s + 0x8c) = *(short*)(s + 0x8c) + 0x1000;
     if (((WithMeshClsn*)(s + 0x194))->JustHitGround()) {
         if (func_02037e38((unsigned int*)((char*)((WithMeshClsn*)(s + 0x194))->GetFloorResult() + 4)) == 4) {
@@ -29,13 +29,13 @@ extern "C" int func_ov071_0211f7d4(Actor *self)
         WithMeshClsn *wm = (WithMeshClsn*)(s + 0x194);
         *(int*)(s + 0xa8) = 0;
         wm->ClearLimMovFlag();
-        *(int *)(((long long)(int)(s + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(int *)(((long long)(int)(s + 0xb0))) |= 1;
         short z = 0;
         short ang = *(short*)(s + 0x94);
         *(short*)(s + 0x8c) = z;
         *(short*)(s + 0x8e) = ang;
         *(short*)(s + 0x90) = z;
-        func_ov071_021202ec(s, 2);
+        Scuttlebug_SetState(s, 2);
     }
     self->UpdatePos((CylinderClsn*)(s + 0x160));
     func_ov071_0211f29c(s);

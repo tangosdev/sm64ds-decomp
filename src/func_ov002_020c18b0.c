@@ -2,7 +2,7 @@ typedef struct { int x, y, z; } Vector3;
 
 extern int func_ov002_020c179c(char *self, int angle);
 extern int func_02010844(void *unused, Vector3 *v, short angle);
-extern int func_ov002_020bf30c(void *c, int a);
+extern int Player_ScaleByCharFactor(void *c, int a);
 extern int __aeabi_idiv(int a, int b);
 extern short data_02082214[];
 
@@ -25,7 +25,7 @@ void func_ov002_020c18b0(char *self, int p1)
     }
     if (p1 == 0) return;
     {
-        int r0v = func_ov002_020bf30c(self, 0x28000);
+        int r0v = Player_ScaleByCharFactor(self, 0x28000);
         int divr = __aeabi_idiv(*(int *)(self + 0x98) << 12, r0v);
         *(short *)(self + 0x8c) = (short)(int)(((long long)*(short *)(self + 0x8c) * divr + 0x800) >> 12);
         *(short *)(self + 0x90) = (short)(int)(((long long)*(short *)(self + 0x90) * divr + 0x800) >> 12);

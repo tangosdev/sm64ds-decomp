@@ -1,15 +1,8 @@
+#include "types.h"
 #pragma opt_common_subs off
 
 #define false 0
 #define true 1
-
-typedef unsigned char u8;
-typedef signed char s8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
 typedef struct { void* sfp; void* bmd; } FileEntry;
 typedef struct { u32 w[12]; } Blob48;
 
@@ -56,8 +49,8 @@ int _ZN4Coin13InitResourcesEv(char* c)
         *(s32*)(c + 0xa8) = 0x14000;
         *(s32*)(c + 0x9c) = -0x4000;
         *(s32*)(c + 0xa0) = -0x37000;
-        *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) =
-            (*(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) & ~0xe0) | 0x40;
+        *(u8*)(((int)c + 0x3ae)) =
+            (*(u8*)(((int)c + 0x3ae)) & ~0xe0) | 0x40;
         goto shared140;
     }
     if (t == 1 || t == 7) {
@@ -68,7 +61,7 @@ int _ZN4Coin13InitResourcesEv(char* c)
     }
     /* default */
     *(s32*)(c + 0xa8) = 0x24000;
-    *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) |= 2;
+    *(u8*)(((int)c + 0x3ae)) |= 2;
     goto block_11;
 case5:
     {
@@ -82,11 +75,11 @@ case5:
 block_11:
     *(s32*)(c + 0x9c) = -0x4000;
     *(s32*)(c + 0xa0) = -0x37000;
-    *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) &= ~0xe0;
+    *(u8*)(((int)c + 0x3ae)) &= ~0xe0;
     goto shared140;
 case17:
-    *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) =
-        (*(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) & ~0xe0) | 0xe0;
+    *(u8*)(((int)c + 0x3ae)) =
+        (*(u8*)(((int)c + 0x3ae)) & ~0xe0) | 0xe0;
     *(s32*)(c + 0x398) = *(s32*)(c + 0x60) - 0x1f4000;
     if (*(s32*)(c + 0x3a4) == 7) {
         r5 = 0x32000;
@@ -165,7 +158,7 @@ shared140:;
     t = *(s32*)(c + 0x3a4);
     if (t == 8) {
         *(s16*)(c + 0x3a8) = 0x2d;
-        *(s32*)(((int)c + 0x190) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(s32*)(((int)c + 0x190)) |= 1;
     } else {
         if (t == 6) {
             int b3;
@@ -173,7 +166,7 @@ shared140:;
             b3 = (b3 == 1);
             if (b3 == false) {
                 *(u16*)(c + 0x3a8) = 0xffffu;
-                *(s32*)(((int)c + 0x190) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+                *(s32*)(((int)c + 0x190)) |= 1;
                 goto after438;
             }
         }
@@ -181,8 +174,8 @@ shared140:;
     after438:;
     }
 
-    *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) =
-        (*(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) & ~1) | 1;
+    *(u8*)(((int)c + 0x3ae)) =
+        (*(u8*)(((int)c + 0x3ae)) & ~1) | 1;
 
     t = *(s32*)(c + 0x3a4);
     if (t == 1 || t == 7) {
@@ -197,12 +190,12 @@ shared140:;
 case17b:
     *(u8*)(c + 0x3aa) = 0;
     if (*(s32*)(c + 0x3a0) == 2 && (u32)*(u8*)(c + 0x3ab) < 8) {
-        *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) &= ~1;
-        *(s32*)(((int)c + 0x190) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
+        *(u8*)(((int)c + 0x3ae)) &= ~1;
+        *(s32*)(((int)c + 0x190)) |= 1;
     }
 switch2end:;
 
-    *(u8*)(((int)c + 0x3ae) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x1c;
+    *(u8*)(((int)c + 0x3ae)) &= ~0x1c;
     *(s32*)(c + 0xd4) = 0;
     return 1;
 }

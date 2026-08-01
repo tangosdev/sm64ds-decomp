@@ -12,11 +12,11 @@ extern "C" int func_ov002_020da9d4(char* self){
         if (e)
             func_ov002_020db54c(s, 0x10000, 0x10000, *(short*)(self + 0x8e));
     }
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
     *p &= ~0x4000;
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
     *p |= 0x2000;
-    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0) & 0xFFFFFFFFFFFFFFFF);
+    p = (int*)(((int)*(char**)(self + 0x358) + 0xb0));
     *p &= ~0x100;
     *(char**)(self + 0x358) = 0;
     return 1;

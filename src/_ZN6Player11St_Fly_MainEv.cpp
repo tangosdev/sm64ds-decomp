@@ -1,11 +1,5 @@
 //cpp
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 struct State;
 
 struct Player {
@@ -26,7 +20,7 @@ extern "C" void func_ov002_020e25f0(char *c, int a);
 extern "C" void MulVec3Mat4x3(void *dst, void *src, void *out);
 extern "C" void Vec3_MulScalarInPlace(s32 *v, s32 s);
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, void *s1, int s2);
-extern "C" void func_ov002_020bedd4(char *self);
+extern "C" void Player_AdvanceAnims(char *self);
 
 extern State data_ov002_0211004c;
 extern State data_ov002_021105a4;
@@ -78,7 +72,7 @@ skip:
                 }
             } else {
                 *(s32 *)(c + 0x9c) = -0x2000;
-                *(s32 *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) = *(s32 *)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFF) + 0xe00;
+                *(s32 *)(((int)c + 0x98)) = *(s32 *)(((int)c + 0x98)) + 0xe00;
             }
             if (this->FinishedAnim() != 0) {
                 *(s32 *)(c + 0x9c) = 0;
@@ -122,7 +116,7 @@ skip:
             if (*(u8 *)(c + 0x70c) == 0) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(0xb9, c + 0x74);
                 func_ov002_020e25f0(c, 2);
-                *(u8 *)(((int)c + 0x70c) & 0xFFFFFFFFFFFFFFFF) = *(u8 *)(((int)c + 0x70c) & 0xFFFFFFFFFFFFFFFF) + 1;
+                *(u8 *)(((int)c + 0x70c)) = *(u8 *)(((int)c + 0x70c)) + 1;
             }
             {
                 char *m = *(char **)(c + this->GetBodyModelID(*(u32 *)(c + 8) & 0xff, 0) * 4 + 0xdc);
@@ -155,6 +149,6 @@ skip:
         }
         *(s32 *)(c + 0x620) = func_02012194(*(char **)(c + 0x620), 0, 0x104, 3, r1, c + 0x74, 0);
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

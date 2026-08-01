@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct {
     int f0;          /* 0x00 */
     void* f4;        /* 0x04 */
@@ -61,7 +59,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     } else if (slot < 6) {
         if (c->cells[slot - 3] == 1 && c->cells[slot + 3] == 1) {
@@ -69,7 +67,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot - 3] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     } else {
         if (c->cells[slot - 6] == 1 && c->cells[slot - 3] == 1) {
@@ -77,7 +75,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot - 6] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     }
     i = slot % 3;
@@ -87,7 +85,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot / 3 + 3] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     } else if (i == 1) {
         if (c->cells[slot - 1] == 1 && c->cells[slot + 1] == 1) {
@@ -95,7 +93,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot / 3 + 3] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     } else {
         if (c->cells[slot - 2] == 1 && c->cells[slot - 1] == 1) {
@@ -103,7 +101,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[slot / 3 + 3] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
     }
     switch (slot) {
@@ -113,7 +111,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[6] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         break;
     case 2:
@@ -122,7 +120,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[7] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         break;
     case 4:
@@ -131,14 +129,14 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[6] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         if (c->cells[2] == 1 && c->cells[6] == 1) {
             c->lines[7] = 0x21d;
             c->f94 = 0xb5;
             c->marks[7] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         break;
     case 6:
@@ -147,7 +145,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[7] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         break;
     case 8:
@@ -156,7 +154,7 @@ void func_ov006_0210ef48(void* arg, int i)
             c->f94 = 0xb5;
             c->marks[6] = 1;
             count += 1;
-            (*(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFLL))++;
+            (*(int*)(((int)c + 0x98)))++;
         }
         break;
     }

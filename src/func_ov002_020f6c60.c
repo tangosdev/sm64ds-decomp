@@ -1,9 +1,4 @@
-
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 typedef struct 
 {
   s32 x;
@@ -48,7 +43,7 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
     AddVec3((Vec3 *) (c + 0x5c), (Vec3 *) (data_0209f318 + 0x8c), (Vec3 *) (c + 0x5c));
     if (arg2 > 0x2bc)
     {
-      *((s32 *) ((((int) c) + 0x60) & 0xFFFFFFFFFFFFFFFF)) -= 0x96000;
+      *((s32 *) ((((int) c) + 0x60))) -= 0x96000;
     }
     if (arg2 != data_ov002_0210b614)
     {

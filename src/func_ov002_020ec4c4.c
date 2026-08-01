@@ -1,3 +1,7 @@
+// @symbol func_ov002_020ec4c4
+// recovered name: daWarpkun_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daWarpkun_c::InitResources - recovered from vtable slot identity */
 
 typedef int Fix12i;
 extern int _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *, Fix12i, Fix12i, Fix12i, Fix12i);

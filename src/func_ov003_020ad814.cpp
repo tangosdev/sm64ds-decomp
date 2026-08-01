@@ -1,16 +1,17 @@
 //cpp
+#include "types.h"
+// @symbol func_ov003_020ad814
+// recovered name: dScTitle_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScTitle_c::Behavior - recovered from vtable slot identity */
 /* func_ov003_020ad814 @ 0x020ad814 (ov003, size 0x26c)
  * Level-select cursor update: on confirm (or minigame-active flag) starts the
  * scene fade / loads the picked level from the 8-byte entry table at
  * data_ov003_020b1180; otherwise moves the cursor by row (+0x35) or column
  * (+1) with repeat delay at +0x50, wrapping the index modulo 0x36.
  */
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 struct VObj {
     virtual void v0();
     virtual void v1();
@@ -26,8 +27,6 @@ extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
 extern u16 data_020a0e58[];
 extern u32 data_0209b2f4;
-extern s8 data_ov003_020b1180[];
-extern u8 data_ov003_020b1181[];
 extern u8 data_0209f2d8;
 extern u16 data_0209f5e8[];
 
@@ -35,9 +34,6 @@ extern "C" {
 extern void func_02012790(int idx);
 extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
-extern void LoadLevelNoReturn(int levelID, u32 a1, u32 a2, u32 a3);
-extern void SetPlayerGlobals(void);
-extern void SetNumPlayers(int n);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void func_ov003_020ad6ec(char *c);
 

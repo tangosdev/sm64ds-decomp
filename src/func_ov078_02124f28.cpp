@@ -1,13 +1,17 @@
 //cpp
+// @symbol func_ov078_02124f28
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
 extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* self, void* bca, int a, int b, int fix, unsigned short t);
-extern int func_ov078_02125c48(void* c, void* p);
+extern int KingBobOmb_SetState(void* c, void* p);
 extern int Vec3_Dist(const void* a, const void* b);
 extern void _ZN6Player9DropActorEv(void* self);
 extern int data_ov078_02126ee0[];
-extern int data_ov078_0212708c;
 
-struct Vec3 { int x, y, z; };
+
 
 int func_ov078_02124f28(unsigned char* c)
 {
@@ -23,11 +27,11 @@ int func_ov078_02124f28(unsigned char* c)
     {
         unsigned char* obj = *(unsigned char**)(c + 0x494);
         if (obj == 0) {
-            func_ov078_02125c48(c, &data_ov078_0212708c);
+            KingBobOmb_SetState(c, &data_ov078_0212708c);
             return 1;
         }
         {
-            Vec3 copy = *(Vec3*)(obj + 0x5c);
+            Vector3 copy = *(Vector3*)(obj + 0x5c);
             if (Vec3_Dist(c + 0x4d4, &copy) > 0x640000)
                 goto drop;
             if (*(int*)(c + 0x4d8) - 0xa000 <= copy.y)
@@ -38,7 +42,7 @@ int func_ov078_02124f28(unsigned char* c)
 drop:
     _ZN6Player9DropActorEv(*(void**)(c + 0x494));
     *(int*)(c + 0x494) = 0;
-    func_ov078_02125c48(c, &data_ov078_0212708c);
+    KingBobOmb_SetState(c, &data_ov078_0212708c);
     return 1;
 
 flags:
@@ -61,10 +65,10 @@ flags:
             *(short*)(c + 0x8e) = t;
         }
         {
-            int* p354 = (int*)(((long long)(int)(c + 0x354)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p354 = (int*)(((long long)(int)(c + 0x354)));
             *p354 = *p354 & ~2;
         }
-        func_ov078_02125c48(c, &data_ov078_0212708c);
+        KingBobOmb_SetState(c, &data_ov078_0212708c);
         {
             unsigned char* p = *(unsigned char**)(c + 0x494);
             if (p != 0) {

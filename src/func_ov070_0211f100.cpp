@@ -15,7 +15,7 @@ extern u32 data_ov070_02123528[];
 
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
-extern void func_ov070_02120020(void* c, void* p);
+extern void FlyGuy_ChangeState(void* c, void* p);
 extern int func_020aea30(void* c, void* p, int a, int b);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, Fix12 f);
@@ -41,7 +41,7 @@ extern "C" void func_ov070_0211f100(char* c)
     r4 = *(s32*)(c + 0x130);
     if (r4 & 0x40000) {
         *(s32*)(c + 0x3d8) = 1;
-        func_ov070_02120020(c, &data_ov070_021235bc);
+        FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
     if (r4 & 0x20) {
@@ -51,7 +51,7 @@ extern "C" void func_ov070_0211f100(char* c)
     }
     if (r4 & 0x67c0) {
         *(s32*)(c + 0x3d8) = 0;
-        func_ov070_02120020(c, &data_ov070_021235bc);
+        FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
@@ -74,13 +74,13 @@ extern "C" void func_ov070_0211f100(char* c)
         _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(c, r5, (char*)0);
         _ZN6Player16IncMegaKillCountEv(r5);
         func_02012694(0x1d, c + 0x74);
-        func_ov070_02120020(c, &data_ov070_021235bc);
+        FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 
     if (*(u8*)((char*)r5 + 0x6f9) == 1 || _ZN6Player9IsOnShellEv(r5) == 1) {
         *(s32*)(c + 0x3d8) = 0;
-        func_ov070_02120020(c, &data_ov070_021235bc);
+        FlyGuy_ChangeState(c, &data_ov070_021235bc);
         return;
     }
 

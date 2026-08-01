@@ -1,6 +1,7 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
+// @symbol _ZN18NestedHeapIteratorC1Ej
+/* recovered: named members + shared header */
+#include "NestedHeapIterator.h"
 struct Iter {
     void* head;
     void* tail;

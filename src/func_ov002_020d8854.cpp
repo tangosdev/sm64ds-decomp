@@ -1,10 +1,13 @@
 //cpp
+// @symbol func_ov002_020d8854
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vec3 { int x, y, z; };
+
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void Vec3_RotateYAndTranslate(struct Vec3* out, struct Vec3* in, int ang, struct Vec3* tr);
+extern void Vec3_RotateYAndTranslate(struct Vector3* out, struct Vector3* in, int ang, struct Vector3* tr);
 extern int func_ov002_020d8944(char* a, char* b, char* other);
-extern void func_ov002_020d8d10(char* self, struct Vec3* v);
+extern void func_ov002_020d8d10(char* self, struct Vector3* v);
 
 void func_ov002_020d8854(char* self){
   char* other = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(self+0x338));
@@ -22,13 +25,13 @@ void func_ov002_020d8854(char* self){
     }
   }
   {
-    struct Vec3 out;
-    struct Vec3 tr;
-    struct Vec3 cp;
+    struct Vector3 out;
+    struct Vector3 tr;
+    struct Vector3 cp;
     tr.x = 0;
     tr.y = 0x50000;
     tr.z = 0x64000;
-    Vec3_RotateYAndTranslate(&out, (struct Vec3*)(self+0x5c), *(short*)(self+0x8e), &tr);
+    Vec3_RotateYAndTranslate(&out, (struct Vector3*)(self+0x5c), *(short*)(self+0x8e), &tr);
     cp = out;
     func_ov002_020d8d10(self, &cp);
   }

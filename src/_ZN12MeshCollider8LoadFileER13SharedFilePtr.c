@@ -1,5 +1,7 @@
-typedef unsigned char u8;
-
+#include "types.h"
+// @symbol _ZN12MeshCollider8LoadFileER13SharedFilePtr
+/* recovered: named members + shared header */
+#include "MeshCollider.h"
 struct SharedFilePtr {
     unsigned short fileID;
     u8 numRefs;

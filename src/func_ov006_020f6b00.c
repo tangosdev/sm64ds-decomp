@@ -12,7 +12,7 @@ void func_ov006_020f6b00(char *this)
     new_var = this + 0x5300;
     *((unsigned char *) ((this + (idx * 0x18)) + 0x51bb)) = 1;
     {
-        short *p = (short *) (((long long)(this + 0x53e8)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *p = (short *) (((long long)(this + 0x53e8)));
         *p = (*p) + 1;
     }
     if ((*((short *) (new_var + 0xe8))) >= data_ov006_0212e924[*((unsigned char *) (this + 0x540a))])

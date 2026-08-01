@@ -17,7 +17,7 @@ int func_ov002_020b12ec(char *self)
     }
     r3 = 0;
     *(unsigned int *)(self + 0xd0) = r3;
-    slot = (char *)(((long long)(int)(self + 0xb0)) & 0xFFFFFFFFFFFFFFFFLL);
+    slot = (char *)(((long long)(int)(self + 0xb0)));
     r1 = *(unsigned int *)slot;
     r1 &= ~0xe0000u;
     *(unsigned int *)slot = r1;

@@ -1,12 +1,14 @@
+// @symbol _ZN7MinimapD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV6dMap_c; VT1 = _ZTV7dBase_c */
 extern void _ZN9ActorBaseD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
 extern void *G0;
 int *_ZN7MinimapD0Ev(int *t)
 {
-    t[0] = (int)VT0;
-    t[0] = (int)VT1;
+    t[0] = (int)_ZTV6dMap_c;
+    t[0] = (int)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, G0);
     return t;

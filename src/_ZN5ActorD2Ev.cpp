@@ -1,17 +1,20 @@
 //cpp
+// @symbol _ZN5ActorD2Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Actor.h"
 extern "C" {
 extern int data_0208e3a4[];
 extern int data_0209b468[];
 extern int data_0208e4b8[];
-extern void func_0203b27c(int a, int c);
-extern void func_02044104(int a);
 extern void _ZN9ActorBaseD2Ev(int c);
-int _ZN5ActorD2Ev(int c) {
-  *(int*)c = (int)data_0208e3a4;
-  func_0203b27c((int)data_0209b468, c+0x50);
-  func_02044104(c+0x50);
-  *(int*)c = (int)data_0208e4b8;
-  _ZN9ActorBaseD2Ev(c);
-  return c;
+int _ZN5ActorD2Ev(struct Actor *self) {
+  *(int*)((int)self) = (int)data_0208e3a4;
+  func_0203b27c((int)data_0209b468, ((int)self)+0x50);
+  func_02044104((int)&self->unk_050);
+  *(int*)((int)self) = (int)data_0208e4b8;
+  _ZN9ActorBaseD2Ev(((int)self));
+  return ((int)self);
 }
 }

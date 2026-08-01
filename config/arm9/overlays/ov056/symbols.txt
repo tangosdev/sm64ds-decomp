@@ -150,6 +150,7 @@ data_ov056_02113320 kind:data(any) addr:0x02113320
 data_ov056_0211332c kind:data(any) addr:0x0211332c
 BigMovingIceBlock_SpawnInfo kind:data(any) addr:0x02113344 ambiguous
 _ZTV17BigMovingIceBlock kind:data(any) addr:0x02113368
+_ZTV18daObjEwmIceBlock_c kind:data(any) addr:0x02113368
 data_ov056_021133a8 kind:data(any) addr:0x021133a8 ambiguous
 data_ov056_02113400 kind:bss addr:0x02113400
 data_ov056_02113408 kind:bss addr:0x02113408

@@ -1,10 +1,8 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef short s16;
-
-struct Vector3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov002_020d2e74
+/* recovered: shared common types */
+#include "common.h"
 struct Player {
     char pad8[8];
     int field_8;             /* 0x8 */

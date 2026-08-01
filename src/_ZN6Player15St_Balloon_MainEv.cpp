@@ -31,7 +31,7 @@ extern "C" State data_ov002_021105a4;
 extern "C" s32 _ZN6Player15St_Balloon_MainEv(char *c)
 {
     if (*(u8 *)(c + 0x70c) != 0) {
-        (*(u8 *)(((int)c + 0x70c) & 0xFFFFFFFFFFFFFFFF))--;
+        (*(u8 *)(((int)c + 0x70c)))--;
     }
     *(s32 *)(c + 0x684) = *(s32 *)(c + 0x60);
     *(s32 *)(c + 0x9c) = 0;
@@ -53,13 +53,13 @@ extern "C" s32 _ZN6Player15St_Balloon_MainEv(char *c)
 
     if ((flags & 2) && *(u16 *)(c + 0x6a6) == 0) {
         if (*(u16 *)(c + 0x6a4) == 0) {
-            *(s32 *)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFF) += 0xc000;
+            *(s32 *)(((int)c + 0xa8)) += 0xc000;
             if (*(s32 *)(c + 0xa8) < 0xc000)
                 *(s32 *)(c + 0xa8) = 0xc000;
             if (*(s32 *)(c + 0xa8) > 0x10000)
                 *(s32 *)(c + 0xa8) = 0x10000;
         } else {
-            *(s32 *)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFF) += 0x6000;
+            *(s32 *)(((int)c + 0xa8)) += 0x6000;
             if (*(s32 *)(c + 0xa8) < 0x6000)
                 *(s32 *)(c + 0xa8) = 0x6000;
             if (*(s32 *)(c + 0xa8) > 0xc000)

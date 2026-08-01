@@ -4,3 +4,59 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
+src/func_ov052_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov052_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov052_0211123c.c:
+    complete
+    .text start:0x0211123c end:0x02111284
+
+src/func_ov052_02111284.cpp:
+    complete
+    .text start:0x02111284 end:0x021112ac
+
+src/func_ov052_021112ac.c:
+    complete
+    .text start:0x021112ac end:0x02111348
+
+src/func_ov052_02111348.cpp:
+    complete
+    .text start:0x02111348 end:0x02111410
+
+src/func_ov052_02111410.c:
+    complete
+    .text start:0x02111410 end:0x02111440
+
+src/_ZN14SquarePathLiftD1Ev.c:
+    .text start:0x02111440 end:0x02111484
+
+src/_ZN14SquarePathLiftD0Ev.c:
+    .text start:0x02111484 end:0x021114dc
+
+src/_ZN14SquarePathLift16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x021114dc end:0x02111524
+
+src/_ZN14SquarePathLift6RenderEv.cpp:
+    complete
+    .text start:0x02111524 end:0x0211154c
+
+src/_ZN14SquarePathLift8BehaviorEv.cpp:
+    .text start:0x0211154c end:0x0211177c
+
+src/_ZN14SquarePathLift13InitResourcesEv.cpp:
+    complete
+    .text start:0x0211177c end:0x02111830
+
+src/SquarePathLift_Spawn.c:
+    complete
+    .text start:0x02111830 end:0x02111868
+
+src/__sinit_ov052_02111b64.c:
+    .init start:0x02111b64 end:0x02111bd0
+
+src/__sinit_ov052_02111bd0.c:
+    .init start:0x02111bd0 end:0x02111c3c

@@ -6,7 +6,7 @@ void func_ov074_021216f4(char *c)
 {
   if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x40c))
   {
-    *((short *) (((int) c + 0x5f4) & 0xFFFFFFFFFFFFFFFF)) += *((short *) (c + 0x5f6));
+    *((short *) (((int) c + 0x5f4))) += *((short *) (c + 0x5f6));
     *((int *) (c + 0x5c)) = (int) (((((long long) data_02082214[((*((unsigned short *) (c + 0x5f4))) >> 4) << 1]) * 0x546000) + 0x800) >> 12);
     *((int *) (c + 0x64)) = (int) (((((long long) data_02082214[(((*((unsigned short *) (c + 0x5f4))) >> 4) << 1) + 1]) * 0x546000) + 0x800) >> 12);
   }

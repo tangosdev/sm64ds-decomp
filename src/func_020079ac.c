@@ -19,8 +19,8 @@ int func_020079ac(char *self, unsigned char *p, int tag) {
         *(int*)(self + 0xb4) = *(int*)(self + 0x84);
         *(int*)(self + 0xb8) = *(int*)(self + 0x88);
     }
-    *(short*)(((int)self + 0x1a2) & 0xFFFFFFFFFFFFFFFF) -= ReadUnalignedShort(p);
-    *(short*)(((int)self + 0x1a4) & 0xFFFFFFFFFFFFFFFF) += ReadUnalignedShort(p + 2);
+    *(short*)(((int)self + 0x1a2)) -= ReadUnalignedShort(p);
+    *(short*)(((int)self + 0x1a4)) += ReadUnalignedShort(p + 2);
     func_02007c9c((const Vector3*)(self + 0x8c), (const Vector3*)(self + 0xb0),
                   &dist, &vert, &horz);
     vert = (short)(vert + *(short*)(self + 0x1a2));

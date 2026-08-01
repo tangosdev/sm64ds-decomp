@@ -26,5 +26,5 @@ void func_ov066_02116390(void* thiz)
             _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x448, data_ov066_0211aebc[1], 0x40000000, 0x1000, 0);
         *(unsigned short*)(c + 0x66c) = 8;
     }
-    *(unsigned char*)(((int)c + 0x66e) & 0xFFFFFFFFFFFFFFFF) ^= 1;
+    *(unsigned char*)(((int)c + 0x66e)) ^= 1;
 }

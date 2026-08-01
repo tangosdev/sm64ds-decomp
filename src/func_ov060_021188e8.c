@@ -1,10 +1,7 @@
+#include "types.h"
 /* func_ov060_021188e8 — set flag bit0 (0x13c), grow the uniform scale
  * (0x80/0x84/0x88) as timer(0x1ac) * 0x9000 / 14 + 0x1000; at timer == 0x1c
  * call func_ov060_021184bc and bump the timer. */
-
-typedef unsigned int u32;
-typedef unsigned short u16;
-
 extern void func_ov060_021184bc(char* c);
 
 typedef struct {
@@ -22,12 +19,12 @@ void func_ov060_021188e8(char* c)
 {
     Work* w = (Work*)c;
     int scale;
-    (*(u32*)((long long)(int)(c + 0x13c) & 0xFFFFFFFFFFFFFFFFLL)) |= 1;
+    (*(u32*)((long long)(int)(c + 0x13c))) |= 1;
     scale = (w->timer * 9 << 12) / 14 + 0x1000;
     w->scaleX = scale;
     w->scaleY = scale;
     w->scaleZ = scale;
     if (w->timer == 0x1c)
         func_ov060_021184bc(c);
-    (*(u16*)((long long)(int)(c + 0x1ac) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(u16*)((long long)(int)(c + 0x1ac)))++;
 }

@@ -1,10 +1,8 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-struct Vec3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov098_02138e6c
+/* recovered: shared common types */
+#include "common.h"
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
     virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
@@ -18,10 +16,10 @@ struct Base {
 };
 
 extern "C" {
-void func_ov098_02138b28(void *c, int i);
+void Crate_SetState(void *c, int i);
 void *_ZN5Actor10FindWithIDEj(u32 id);
 int _ZN6Player7TryGrabER5Actor(void *f, void *a);
-void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vec3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
+void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 }
 
 extern "C" void func_ov098_02138e6c(char *c)
@@ -36,11 +34,11 @@ extern "C" void func_ov098_02138e6c(char *c)
     {
         int b1 = (int)((fl & 0x20000) != 0);
         if (b1 != 0) {
-            func_ov098_02138b28(c, 5);
+            Crate_SetState(c, 5);
         } else {
             int b2 = (int)((fl & 0x40000) != 0);
             if (b2 != 0) {
-                func_ov098_02138b28(c, 5);
+                Crate_SetState(c, 5);
             }
         }
     }
@@ -48,7 +46,7 @@ extern "C" void func_ov098_02138e6c(char *c)
     if (*(u32*)(c + 0x588) == 0) return;
 
     if ((*(u32*)(c + 0x584) & 0x40000) != 0) {
-        u32 *pp = (u32 *)(((int)c + 0x57c) & 0xFFFFFFFFFFFFFFFF);
+        u32 *pp = (u32 *)(((int)c + 0x57c));
         *(u8*)(c + 0x606) = 0x3c;
         *pp = *pp & ~0x8000u;
     }
@@ -78,7 +76,7 @@ extern "C" void func_ov098_02138e6c(char *c)
     if ((fl & 0x1000) != 0) {
         if (_ZN6Player7TryGrabER5Actor(a, c) == 0) return;
         *(void**)(c + 0x5e4) = a;
-        func_ov098_02138b28(c, 1);
+        Crate_SetState(c, 1);
         return;
     }
 
@@ -88,7 +86,7 @@ extern "C" void func_ov098_02138e6c(char *c)
     if (b == 0) return;
 
     {
-        struct Vec3 v;
+        struct Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);

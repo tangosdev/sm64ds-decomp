@@ -56,7 +56,7 @@ extern "C" void func_ov006_020f300c(char *o)
         return;
 
     for (i = 0; i < 0x78; i++) {
-        unsigned char *p = (unsigned char *)(((int)o + i + 0x53dd) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p = (unsigned char *)(((int)o + i + 0x53dd));
         if (*p == 1)
             *p = 0;
     }
@@ -64,7 +64,7 @@ extern "C" void func_ov006_020f300c(char *o)
     if (*(unsigned short *)(o + 0x516a) == 0)
         return;
     *(unsigned short *)(o + 0x5164) = 1;
-    *(unsigned short *)(((int)o + 0x516a) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(unsigned short *)(((int)o + 0x516a)) -= 1;
     if (*(short *)(o + 0x516a) > 0)
         return;
     *(unsigned short *)(o + 0x516a) = 0;

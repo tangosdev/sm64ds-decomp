@@ -1,5 +1,5 @@
-extern int func_0203db4c(int a0, int a1);
+extern int GetPlayerFlagByte(int a0, int a1);
 unsigned char IsPlayerWarping(int a0)
 {
-    return (func_0203db4c(a0, 0) & 0x70) >> 4;
+    return (GetPlayerFlagByte(a0, 0) & 0x70) >> 4;
 }

@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern void func_ov007_020c86c4(void* p);
 extern void func_ov007_020c897c(void* p);
 extern void func_ov007_020c8970(void* p);
@@ -25,7 +24,7 @@ void func_ov007_020c8498(char* r5)
     if(*(int*)(r5 + 8) == 0) return;
 
     if(*(int*)(r5 + 8) == 1){
-        int* v14 = (int*)((((long long)(int)(r5 + 0x14)) & 0xFFFFFFFFFFFFFFFFLL));
+        int* v14 = (int*)((((long long)(int)(r5 + 0x14))));
         *v14 += *(int*)(r5 + 0x18);
         if(*(int*)(r5 + 0x14) > 0x1000){
             *(int*)(r5 + 0x14) = 0x1000;

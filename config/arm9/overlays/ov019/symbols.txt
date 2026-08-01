@@ -102,6 +102,7 @@ data_ov019_021132d0 kind:data(any) addr:0x021132d0
 data_ov019_021132dc kind:data(any) addr:0x021132dc
 RacingPenguin_SpawnInfo kind:data(any) addr:0x021132ec ambiguous
 _ZTV13RacingPenguin kind:data(any) addr:0x02113310
+_ZTV10daPgRcer_c kind:data(any) addr:0x02113310
 data_ov019_02113344 kind:data(any) addr:0x02113344 ambiguous
 data_ov019_0211338c kind:data(any) addr:0x0211338c
 data_ov019_02113398 kind:data(any) addr:0x02113398

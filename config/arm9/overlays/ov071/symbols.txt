@@ -27,7 +27,7 @@ func_ov071_021201b4 kind:function(arm,size=0x4c) addr:0x021201b4
 func_ov071_02120200 kind:function(arm,size=0x78) addr:0x02120200
 func_ov071_02120278 kind:function(arm,size=0x3c) addr:0x02120278
 func_ov071_021202b4 kind:function(arm,size=0x38) addr:0x021202b4
-func_ov071_021202ec kind:function(arm,size=0x1c) addr:0x021202ec
+Scuttlebug_SetState kind:function(arm,size=0x1c) addr:0x021202ec
 _ZN10Scuttlebug16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02120308
 _ZN10Scuttlebug16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02120338
 _ZN10Scuttlebug6RenderEv kind:function(arm,size=0x5c) addr:0x0212033c
@@ -119,6 +119,7 @@ data_ov071_02122bf0 kind:data(any) addr:0x02122bf0
 data_ov071_02122bfc kind:data(any) addr:0x02122bfc
 Scuttlebug_SpawnInfo kind:data(any) addr:0x02122c08 ambiguous
 _ZTV10Scuttlebug kind:data(any) addr:0x02122c2c
+_ZTV7daSpd_c kind:data(any) addr:0x02122c2c
 data_ov071_02122ca8 kind:data(any) addr:0x02122ca8
 data_ov071_02122cb0 kind:data(any) addr:0x02122cb0
 data_ov071_02122cb8 kind:data(any) addr:0x02122cb8
@@ -130,10 +131,12 @@ data_ov071_02122ce4 kind:data(any) addr:0x02122ce4
 MrI_SpawnInfo kind:data(any) addr:0x02122cf0 ambiguous
 BigMrI_SpawnInfo kind:data(any) addr:0x02122d0c ambiguous
 _ZTV3MrI kind:data(any) addr:0x02122d30
+_ZTV8daEykn_c kind:data(any) addr:0x02122d30
 data_ov071_02122dac kind:data(any) addr:0x02122dac
 data_ov071_02122db8 kind:data(any) addr:0x02122db8
 MrI_Projectile_SpawnInfo kind:data(any) addr:0x02122dc4 ambiguous
 _ZTV14MrI_Projectile kind:data(any) addr:0x02122de8
+_ZTV8daEyBm_c kind:data(any) addr:0x02122de8
 data_ov071_02122e64 kind:data(any) addr:0x02122e64
 data_ov071_02122e6c kind:data(any) addr:0x02122e6c
 data_ov071_02122e74 kind:data(any) addr:0x02122e74

@@ -1,5 +1,10 @@
+// @symbol func_ov060_021169b0
+// recovered name: Bowser_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+/* recovered: renamed to Class_Method */
+/* daKpa_c::Kill - recovered from vtable slot identity */
 extern int RandomIntInternal(int* seed);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* thiz);
 extern int data_0209e650;
 
 void func_ov060_021169b0(char* thiz) {

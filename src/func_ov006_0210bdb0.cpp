@@ -1,42 +1,30 @@
 //cpp
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
+// @symbol func_ov006_0210bdb0
+// recovered name: dScMgSlot3_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSlot3_c::InitResources - recovered from vtable slot identity */
 extern "C" {
 
-extern int func_02054d88(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void Deallocate(void *ptr);
-extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern void func_02056314(void *dst, u32 offset, u32 len);
-extern void *func_02054de8(void);
+extern void *_ZN3G2S13GetBG2CharPtrEv(void);
 extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
-extern void func_ov006_020c2154(char *c);
-extern void func_ov006_020c1eb4(char *c);
 extern int RandomIntInternal(int *seed);
-extern void func_ov004_020b04d0(int v);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0209e650;
 extern int data_0208ee44;
-extern int func_020bc88c;
-extern int func_020bc878;
-extern int func_020bc8b8;
-extern int func_020bc888;
-extern int func_020bc860;
-extern int func_020bc890;
-extern int func_020bc8b4;
-extern int func_020bc864;
 
 }
 
@@ -103,7 +91,7 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
     *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
 
-    LoadCompressedFileAt(0x77, func_02054de8());
+    LoadCompressedFileAt(0x77, _ZN3G2S13GetBG2CharPtrEv());
     LoadCompressedFileAt(0x76, _ZN3G2S12GetBG2ScrPtrEv());
     LoadCompressedFileAt(0xeb, (void *)0x6600000);
 

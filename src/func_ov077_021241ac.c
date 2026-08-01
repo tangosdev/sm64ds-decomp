@@ -1,9 +1,6 @@
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 extern s16 data_02082214[];
-#define LA(p) ((int)(((s64)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((s64)(int)(p))))
 
 int func_ov077_021241ac(char *o)
 {

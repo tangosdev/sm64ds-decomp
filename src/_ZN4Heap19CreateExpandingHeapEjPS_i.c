@@ -1,4 +1,7 @@
-typedef unsigned int u32;
+#include "types.h"
+// @symbol _ZN4Heap19CreateExpandingHeapEjPS_i
+/* recovered: named members + shared header */
+#include "Heap.h"
 struct Heap;
 struct ExpandingHeapAllocator;
 struct HeapS {

@@ -1,13 +1,17 @@
+// @symbol func_ov014_02112788
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12;
 typedef short s16;
-extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
 
-struct M48 { int w[12]; };
-extern const struct M48 data_02082128;
+
+extern const struct Matrix4x3 data_02082128;
 
 void func_ov014_02112788(char* c) {
-    struct M48 tmp;
+    struct Matrix4x3 tmp;
     int i;
     int t;
     char* m;
@@ -32,7 +36,7 @@ void func_ov014_02112788(char* c) {
     e = c;
     o = c;
     for (; i < 7; i++) {
-        *(struct M48*)(m+0x1c) = tmp;
+        *(struct Matrix4x3*)(m+0x1c) = tmp;
         *(int*)(o+0x21c) = *(int*)(e+0x524) >> 3;
         *(int*)(o+0x220) = *(int*)(e+0x528) >> 3;
         *(int*)(o+0x224) = *(int*)(e+0x52c) >> 3;

@@ -1,5 +1,5 @@
 extern void Crash(void);
-#define LD(x) (((int)(x)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LD(x) (((int)(x)))
 void func_020676e0(unsigned *self, unsigned *mode_p, unsigned *out, unsigned *cursor)
 {
     unsigned mode = *mode_p;

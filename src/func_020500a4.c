@@ -43,7 +43,7 @@ void func_020500a4(struct T *thiz)
         thiz->f30(e6, e5, quot, thiz->f8, thiz->f34);
     }
     {
-        int *pf18 = (int *)((int)&thiz->f18 & 0xFFFFFFFFFFFFFFFF);
+        int *pf18 = (int *)((int)&thiz->f18);
         *pf18 = *pf18 + 1;
         if (thiz->f18 >= thiz->f2c) thiz->f18 = 0;
     }

@@ -1,5 +1,8 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov075_0211b458
+/* recovered: shared common types */
+#include "common.h"
+
 struct Foo;
 typedef void (Foo::*PMF)();
 extern "C" {

@@ -43,7 +43,7 @@ extern "C" void func_ov006_020de26c(char *self) {
     if (count != 0) return;
 
     if (((int *)(self + 0x5000))[0x73] != 0) {
-        *(int *)(((long long)(int)(self + 0x51cc)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(int *)(((long long)(int)(self + 0x51cc))) -= 1;
         if (((int *)(self + 0x5000))[0x73] == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] == 0)
             func_ov006_020dc348(self);
         if (((int *)(self + 0x5000))[0x73] == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] != 0) {

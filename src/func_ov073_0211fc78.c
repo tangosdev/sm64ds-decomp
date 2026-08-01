@@ -1,23 +1,24 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_ov073_0211fc78
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
-extern void func_ov073_0211f144(void* actor);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* in, void* m, void* out);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void _ZN7Message11PrepareTalkEv(void);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void* p);
-extern int func_ov073_0212157c(void* c, void* p);
+extern int ChiefChilly_ChangeState(void* c, void* p);
 
 extern void* data_0209f318;
 extern int data_020a0e68[];
-extern void* data_ov073_02123410;
 
 int func_ov073_0211fc78(char* c) {
     struct Vector3 msgpos[2];
@@ -77,7 +78,7 @@ int func_ov073_0211fc78(char* c) {
             _ZN6Camera9SetFlag_3Ev(cam);
             if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3e4), c, msg, &msgpos[1], 0, 2)) {
                 func_02012694(0x12a, (void*)(c + 0x74));
-                func_ov073_0212157c(c, &data_ov073_02123410);
+                ChiefChilly_ChangeState(c, &data_ov073_02123410);
             }
         }
     }

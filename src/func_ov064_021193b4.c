@@ -1,7 +1,4 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 struct Vec3 { int x, y, z; };
 struct Vec3_16 { s16 x, y, z; };
 
@@ -23,7 +20,7 @@ extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(
 
 extern int data_020a0e68;
 
-#define M(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+#define M(p) ((long long)(int)(p))
 
 int func_ov064_021193b4(char *c)
 {

@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov019_0211127c
+/* recovered: shared common types */
+#include "common.h"
+
 typedef int Fix12i;
 
 struct PathPtr {

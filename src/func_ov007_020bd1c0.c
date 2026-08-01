@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct { int a, b, c; } S12;
 
 extern char* data_ov007_0210342c;

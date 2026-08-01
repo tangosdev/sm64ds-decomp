@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZNK6Player14GetBodyModelIDEjb(char *self, unsigned int a, int b);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
 extern int _ZN6Player12FinishedAnimEv(char *self);
@@ -32,7 +31,7 @@ int func_ov002_020c92fc(char *self)
         *(unsigned short *)(self + 0x6a4) = 0x14;
         *(u8 *)(self + 0x6e3) = 0x14;
         *(int *)(self + 0xa8) = 0;
-        *(int *)((int)(self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 0x800000;
+        *(int *)((int)(self + 0xb0)) |= 0x800000;
         data_0209b454 |= 0x800000;
         return 0;
     }

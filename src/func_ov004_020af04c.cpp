@@ -1,6 +1,11 @@
 //cpp
+// @symbol func_ov004_020af04c
+// recovered name: dScMgBase_c_OnHitFromUnderneath
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::OnHitFromUnderneath - recovered from vtable slot identity */
 extern "C" void func_02012e1c(char *c);
-extern "C" void func_ov004_020b91fc(char *c);
 extern "C" void Enable3dEngines();
 
 struct Base {

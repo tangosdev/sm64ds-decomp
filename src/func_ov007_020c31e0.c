@@ -1,8 +1,4 @@
-
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef long long s64;
-typedef unsigned long long u64;
+#include "types.h"
 inline s64 inline_fn(int arg0)
 {
   return (s64) arg0;

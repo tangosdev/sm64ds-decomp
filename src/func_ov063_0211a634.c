@@ -19,7 +19,7 @@ int func_ov063_0211a634(char *thiz, int arg)
         rv = 0;
         goto done;
     }
-    pf = (int*)(((int)thiz + 0x19c) & 0xFFFFFFFFFFFFFFFF);
+    pf = (int*)(((int)thiz + 0x19c));
     *pf &= ~1;
     func_ov063_0211a6f0(thiz);
     *(unsigned char*)(thiz + 0x5cc) = 1;

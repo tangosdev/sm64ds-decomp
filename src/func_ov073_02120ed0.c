@@ -7,7 +7,7 @@ enum { false, true };
 
 typedef struct { int x, y, z; } Vector3;
 
-extern void func_ov073_0212157c(void *c, void *p);
+extern void ChiefChilly_ChangeState(void *c, void *p);
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void *self);
 extern int AngleDiff(int a, int b);
 extern void func_02012694(int a, void *p);
@@ -32,7 +32,7 @@ int func_ov073_02120ed0(void *self)
     u8 *c = (u8 *)self;
 
     if (c[0x4c9] == 1) {
-        func_ov073_0212157c(c, &data_ov073_02123390);
+        ChiefChilly_ChangeState(c, &data_ov073_02123390);
         return 1;
     }
 
@@ -47,7 +47,7 @@ int func_ov073_02120ed0(void *self)
             } else {
                 *(s16 *)(c + 0x100) = 0;
                 *(int *)(c + 0x4d0) = 0x1000;
-                (*(u8 *)(((int)c + 0x4c8) & 0xFFFFFFFFFFFFFFFF))++;
+                (*(u8 *)(((int)c + 0x4c8)))++;
                 func_02012694(0x169, c + 0x74);
                 break;
             }

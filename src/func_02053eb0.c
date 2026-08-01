@@ -1,2 +1,2 @@
-extern unsigned short G[];
-int func_02053eb0(void) { return G[9]; }
+extern unsigned short data_020a6088[];
+int func_02053eb0(void) { return data_020a6088[9]; }

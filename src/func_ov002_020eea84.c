@@ -42,7 +42,7 @@ int func_ov002_020eea84(char *self, char *player)
         if (_ZNK10ClsnResult9GetClsnIDEv(&res) != 0xffffffff) {
             actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&res));
             if (actor != 0 && (b = (int)(*(u16 *)(actor + 0xc) == 0x3a)) != 0) {
-                { int *s = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF); v.x = s[0]; v.y = s[1]; v.z = s[2]; }
+                { int *s = (int *)(((int)player + 0x5c)); v.x = s[0]; v.y = s[1]; v.z = s[2]; }
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v, 3, 0xc000, 1, 0, 1);
                 _ZN10ClsnResultD1Ev(&res);
                 return 1;
@@ -56,7 +56,7 @@ int func_ov002_020eea84(char *self, char *player)
         if (_ZNK10ClsnResult9GetClsnIDEv(wr) != 0xffffffff) {
             actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(wr));
             if (actor != 0 && (b = (int)(*(u16 *)(actor + 0xc) == 0x139)) != 0) {
-                { int *s = (int *)(((int)actor + 0x5c) & 0xFFFFFFFFFFFFFFFF); v2.x = s[0]; v2.y = s[1]; v2.z = s[2]; }
+                { int *s = (int *)(((int)actor + 0x5c)); v2.x = s[0]; v2.y = s[1]; v2.z = s[2]; }
                 if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v2, 1, 0xc000, 1, 0, 1) != 0)
                     _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, actor + 0x74);
                 return 1;

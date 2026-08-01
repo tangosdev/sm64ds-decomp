@@ -216,7 +216,7 @@ void func_0204c584(u8 *self, List *list)
             *(u16 *)(p + 0x3a) = def->tex;
         }
         {
-            u16 *q = (u16 *)(((s64)(int)(p + 0x40)) & 0xFFFFFFFFFFFFFFFFLL);
+            u16 *q = (u16 *)(((s64)(int)(p + 0x40)));
             *q = (u16)((*q & ~0x1f) | (*(u8 *)(self + 0x59) & 0x1f));
             *q = (u16)((*q & ~0x3e0) | 0x3e0);
         }

@@ -105,20 +105,57 @@ def first_matchers() -> dict[str, str]:
         cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
     origin: dict[str, str] = {}   # live path -> author of the earliest add in its lineage
     handle = None
+    adds: list[str] = []
+    dels: list[str] = []
+
+    def flush(who):
+        """Apply one commit's adds/deletes, pairing a same-stem delete+add as a rename.
+
+        Promoting a matched function to a real C++ method changes its extension
+        (src/F.c -> src/F.cpp) and rewrites enough of the body that git's similarity
+        check falls under the rename threshold, so it arrives here as delete+add. That
+        is still the SAME function, so ending the lineage would hand the original
+        matcher's credit to whoever did the promotion (it moved 85 matches off five
+        contributors before this pairing existed). Pairing is deliberately limited to a
+        delete and an add of the same stem IN ONE COMMIT, which cannot be confused with
+        the false-match case the delete rule exists for: that is a delete in one commit
+        and a corrected add in a later one.
+        """
+        by_stem = {d.rsplit(".", 1)[0]: d for d in dels}
+        paired = set()
+        for new in adds:
+            old = by_stem.get(new.rsplit(".", 1)[0])
+            if old is not None and old != new:
+                origin[new] = origin.pop(old, who)   # same function, new extension
+                paired.add(old)
+                paired.add(new)
+        for a in adds:
+            if a not in paired:
+                origin.setdefault(a, who)
+        for d in dels:
+            if d not in paired:
+                origin.pop(d, None)
+        adds.clear()
+        dels.clear()
+
     for line in out.splitlines():
         if line.startswith("\x01"):
+            if handle:
+                flush(handle)
             name, _, email = line[1:].partition("\x02")
             handle = _handle_from(name, email)
         elif handle and line and line[0] in "ADR":
             parts = line.split("\t")
             code = parts[0]
             if code.startswith("A") and len(parts) >= 2:
-                origin.setdefault(parts[1].strip(), handle)
+                adds.append(parts[1].strip())
             elif code.startswith("D") and len(parts) >= 2:
-                origin.pop(parts[1].strip(), None)
+                dels.append(parts[1].strip())
             elif code.startswith("R") and len(parts) >= 3:
                 old, new = parts[1].strip(), parts[2].strip()
                 origin[new] = origin.pop(old, handle)  # carry the matcher's credit forward
+    if handle:
+        flush(handle)
     return origin
 
 

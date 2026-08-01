@@ -6,7 +6,7 @@ extern int _ZNK9Animation12WillHitFrameEi(char *anim, int f);
 extern int func_ov002_020db54c(int p, int a, int b, int s);
 extern int func_02012694(int id, void *pos);
 extern int _ZN9Animation8FinishedEv(char *anim);
-extern int func_ov062_02116cd8(char *c, void *p);
+extern int Chuckya_ChangeState(char *c, void *p);
 extern int data_ov062_0211ded0[];
 
 int func_ov062_021161a8(char *c)
@@ -19,9 +19,9 @@ int func_ov062_021161a8(char *c)
   }
   if (_ZN9Animation8FinishedEv(c + 0x350))
   {
-    int *q = (int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL);
+    int *q = (int *)(((long long)(int)(c + 0x128)));
     *q &= ~2;
-    func_ov062_02116cd8(c, data_ov062_0211ded0);
+    Chuckya_ChangeState(c, data_ov062_0211ded0);
   }
   return 1;
 }

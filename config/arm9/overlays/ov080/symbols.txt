@@ -113,9 +113,11 @@ data_ov080_02127fd8 kind:data(any) addr:0x02127fd8
 MontyMole_SpawnInfo kind:data(any) addr:0x02127fec ambiguous
 MontyMoleRock_SpawnInfo kind:data(any) addr:0x02128008 ambiguous
 _ZTV13MontyMoleRock kind:data(any) addr:0x0212802c
+_ZTV14daChoro_Rock_c kind:data(any) addr:0x0212802c
 data_ov080_02128070 kind:data(any) addr:0x02128070 ambiguous
 data_ov080_0212808c kind:data(any) addr:0x0212808c ambiguous
 _ZTV9MontyMole kind:data(any) addr:0x021280b0
+_ZTV11daChoropu_c kind:data(any) addr:0x021280b0
 data_ov080_0212812c kind:data(any) addr:0x0212812c
 data_ov080_02128134 kind:data(any) addr:0x02128134
 data_ov080_0212813c kind:data(any) addr:0x0212813c
@@ -126,6 +128,7 @@ data_ov080_0212815c kind:data(any) addr:0x0212815c
 data_ov080_02128168 kind:data(any) addr:0x02128168
 CrazedCrate_SpawnInfo kind:data(any) addr:0x02128174 ambiguous
 _ZTV11CrazedCrate kind:data(any) addr:0x02128198
+_ZTV9daBttBk_c kind:data(any) addr:0x02128198
 data_ov080_02128214 kind:data(any) addr:0x02128214
 data_ov080_0212821c kind:data(any) addr:0x0212821c
 data_ov080_02128224 kind:data(any) addr:0x02128224

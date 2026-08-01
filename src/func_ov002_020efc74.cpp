@@ -1,15 +1,18 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov002_020efc74
+/* recovered: shared common types */
+#include "common.h"
+
 struct Obj {
     virtual void v0();
     virtual void v1();
     virtual void v2();
     virtual void v3();
     virtual void v4();
-    virtual void v5(Vec3* p);
+    virtual void v5(Vector3* p);
 };
 extern "C" int func_ov002_020efe9c(int* self);
-extern Vec3 data_ov002_0210af00;
+extern Vector3 data_ov002_0210af00;
 extern "C" void func_ov002_020efc74(void* self) {
     char* p = (char*)self;
     if (func_ov002_020efe9c((int*)self) == 0) return;
@@ -17,7 +20,7 @@ extern "C" void func_ov002_020efc74(void* self) {
     int i = 0;
     Obj* obj = (Obj*)(p + 0x320);
     do {
-        Vec3 local = data_ov002_0210af00;
+        Vector3 local = data_ov002_0210af00;
         obj->v5(&local);
         i++;
         obj = (Obj*)((char*)obj + 0x50);

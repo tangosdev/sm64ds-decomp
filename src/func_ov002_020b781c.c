@@ -1,8 +1,9 @@
-typedef signed short s16;
-typedef unsigned short u16;
-
-struct Vector3 { int x, y, z; };
-
+#include "types.h"
+// @symbol func_ov002_020b781c
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern short data_02082214[];
 
 extern void func_ov002_020b6fcc(void *self);
@@ -13,7 +14,6 @@ extern char *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *out);
 extern int func_02037e58(void *p);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern int func_ov002_020f02c8(int x);
 extern void func_ov002_020f030c(int x);
 extern int Vec3_HorzLen(void *v);
 extern void Vec3_MulScalarInPlace(void *v, int s);

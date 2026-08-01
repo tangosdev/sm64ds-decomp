@@ -1,4 +1,4 @@
-typedef unsigned char u8;
+#include "types.h"
 extern void _ZN6Player11OpenBigDoorEv(void *player);
 extern void func_ov100_02144950(void *a, void *b, int c);
 void func_ov100_021446f8(void *r0, void *r1) {

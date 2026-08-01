@@ -1,11 +1,11 @@
 //cpp
-extern "C" void func_ov006_020eb610(char *c);
-extern "C" void func_ov006_020eb558(char *c);
-extern "C" void func_ov006_020ea71c();
-extern "C" void func_ov006_020ea3d0(char *c);
+// @symbol func_ov006_020ed18c
+// recovered name: dScMgHanachan_c_Behavior
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgHanachan_c::Behavior - recovered from vtable slot identity */
 
-extern unsigned short data_ov006_02141fcc;
-extern int data_ov006_0213c958;
 
 struct C;
 typedef void (C::*PMF)();

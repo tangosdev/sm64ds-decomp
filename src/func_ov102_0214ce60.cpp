@@ -1,13 +1,16 @@
 //cpp
+// @symbol func_ov102_0214ce60
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
-struct M48 { int w[12]; };
+
+
 struct Player;
 struct ShadowModel;
 struct Matrix4x3;
 
 struct Actor {
-    M48& UpdateCarry(Player& p, const Vector3& v);
+    Matrix4x3& UpdateCarry(Player& p, const Vector3& v);
     void DropShadowRadHeight(ShadowModel& sm, Matrix4x3& m, Fix12i a, int b, unsigned int c);
 };
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
@@ -20,7 +23,7 @@ extern "C" void func_ov102_0214ce60(char* c)
         v.x = 0x1e000;
         v.y = -0x1e000;
         v.z = 0x32000;
-        *(M48*)(c + 0x31c) = ((Actor*)c)->UpdateCarry(*(Player*)*(void**)(c + 0x3c0), v);
+        *(Matrix4x3*)(c + 0x31c) = ((Actor*)c)->UpdateCarry(*(Player*)*(void**)(c + 0x3c0), v);
     } else {
         Matrix4x3_FromRotationY(c + 0x31c, *(short*)(c + 0x8e));
         *(int*)(c + 0x340) = *(int*)(c + 0x5c) >> 3;

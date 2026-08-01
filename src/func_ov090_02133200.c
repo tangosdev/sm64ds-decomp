@@ -1,14 +1,15 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
+// @symbol func_ov090_02133200
+// recovered name: MantaRay_Kill
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daManta_c::Kill - recovered from vtable slot identity */
 extern s32 Vec3_Dist(void* a, void* b);
 extern s16 Vec3_HorzAngle(void* a, void* b);
 extern int ApproachAngle(s16* angle, int target, int invFactor, int maxDelta, int minDelta);
 extern int func_ov090_021332e8(void* c, void* p);
 
-extern int data_ov090_02134584[];
 
 int func_ov090_02133200(char* c)
 {

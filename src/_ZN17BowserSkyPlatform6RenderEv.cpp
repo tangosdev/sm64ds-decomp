@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN17BowserSkyPlatform6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "BowserSkyPlatform.h"
 struct Sub {
     virtual void v0();
     virtual void v1();
@@ -7,9 +10,11 @@ struct Sub {
     virtual void v4();
     virtual void m(int);
 };
-extern "C" int _ZN17BowserSkyPlatform6RenderEv(unsigned char* c) {
-    if (*(int*)(c + 0x170) != 0) return 1;
-    if (*(unsigned char*)(c + 0x1ae) < 8) return 1;
-    ((Sub*)(c + 0xd4))->m(0);
+
+int BowserSkyPlatform::Render()
+{
+    if (unk_170 != 0) return 1;
+    if (unk_1ae < 8) return 1;
+    ((Sub*)((unsigned char*)&mModel))->m(0);
     return 1;
 }

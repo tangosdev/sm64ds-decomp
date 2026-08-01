@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_02051bd0 at 0x02051bd0
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern int *_ZN5Sound23InfoInstrumentBankEntry9GetWithIDEj(unsigned int id);
 extern int func_0204f63c(void **p, int idx, int r7);
 extern int func_020509b0(unsigned int i);

@@ -40,7 +40,7 @@ void func_ov002_020d9c70(char *o)
     *(short *)(p + 0x96) = 0;
     {
         char *q = *(char **)(o + 0x358);
-        short *r = (short *)(int)(((long long)(int)(q + 0x92)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *r = (short *)(int)(((long long)(int)(q + 0x92)));
         short first = r[0];
         *(short *)(q + 0x8c) = first;
         *(short *)(q + 0x8e) = r[1];

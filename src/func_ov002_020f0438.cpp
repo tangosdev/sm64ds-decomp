@@ -1,5 +1,8 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov002_020f0438
+/* recovered: shared common types */
+#include "common.h"
+
 struct Actor {
   char pad[0x5c];
   Vector3 pos;          // 0x5c

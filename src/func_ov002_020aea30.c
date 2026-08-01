@@ -18,7 +18,7 @@ struct C {
 };
 extern "C" void func_ov002_020aea30(C* c, int a, int b) {
   if (c->f10c == 0) return;
-  (*(unsigned int*)((long long)(int)((char*)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL)) &= ~0x10000000;
+  (*(unsigned int*)((long long)(int)((char*)c + 0xb0))) &= ~0x10000000;
   c->f102 = 0;
   (c->*data_ov002_0210db80[c->f10c - 1])(a, b);
   c->f9c = -0x2000;

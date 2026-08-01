@@ -4,7 +4,7 @@
  */
 extern void *data_020a5bb8;
 extern int func_0205d368(int *o, int r1, int sel);
-extern int func_0205d3d4(int *o, int a1, unsigned int len);
+extern int FS_ReadFile(int *o, int a1, unsigned int len);
 
 int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigned int off)
 {
@@ -24,5 +24,5 @@ int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigned int off)
     if (func_0205d368((int *)(G + 0x30), *(int *)entry + off, 0) == 0)
         return -1;
 
-    return func_0205d3d4((int *)(G + 0x30), a1, len);
+    return FS_ReadFile((int *)(G + 0x30), a1, len);
 }

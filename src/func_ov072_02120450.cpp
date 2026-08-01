@@ -1,10 +1,14 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov072_02120450
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 typedef int Fix12i;
 
 void ApproachLinear(short& v, short target, short step);
 struct Animation { void Advance(); };
-extern "C" void func_ov072_021205d4(void* c, int a);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
 struct ActorBase {};

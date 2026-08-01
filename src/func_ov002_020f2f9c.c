@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZN8SaveData19IsCharacterUnlockedEj(u32 c);
 extern int func_ov002_020f5a94(void);
 

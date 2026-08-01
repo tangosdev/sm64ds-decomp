@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u32 data_ov007_02102dd8;
 extern u32 data_ov007_02103464;
 extern u8 data_ov007_02102df8[];
@@ -75,7 +72,7 @@ void func_ov007_020b8d48(int a, int c)
         u32 s = *src++ & palmask;
         *dst = (*dst & mask) | (s << shift);
         if (rem != 0) {
-            u32 *d2 = (u32 *)(int)(((long long)(int)(dst + 8)) & 0xFFFFFFFFFFFFFFFFLL);
+            u32 *d2 = (u32 *)(int)(((long long)(int)(dst + 8)));
             *d2 = (*d2 & ~mask) | (s >> rshift);
         }
         dst++;

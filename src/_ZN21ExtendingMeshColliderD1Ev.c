@@ -1,3 +1,6 @@
+// @symbol _ZN21ExtendingMeshColliderD1Ev
+/* recovered: named members + shared header */
+#include "ExtendingMeshCollider.h"
 /* ExtendingMeshCollider::~ExtendingMeshCollider() at 0x0203ab68
  * Complete-object destructor. Installs the ExtendingMeshCollider vtable, then
  * runs the base subobject destructor (func_0203a420). Returns this.

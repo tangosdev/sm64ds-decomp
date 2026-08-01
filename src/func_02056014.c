@@ -3,7 +3,7 @@
  * Uses DMA channel if available, else CPU copy.
  */
 
-extern unsigned int RENDER_DMA_CHANNEL;
+extern unsigned int data_02099fd0;
 
 extern void *func_02054d88(void);
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dst, unsigned int count);
@@ -12,7 +12,7 @@ extern void MultiCopy_Int(const void *src, void *dst, unsigned int count);
 void func_02056014(const void *src, unsigned int offset, unsigned int count)
 {
     void *base = func_02054d88();
-    unsigned int channel = RENDER_DMA_CHANNEL;
+    unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {

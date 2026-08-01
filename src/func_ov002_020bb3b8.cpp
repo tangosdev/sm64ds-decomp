@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov002_020bb3b8
+// recovered name: SignPost_Kill
+/* recovered: shared common types, renamed to Class_Method */
+/* daObjTatefuda_c::Kill - recovered from vtable slot identity */
 // func_ov002_020bb3b8 at 0x020bb3b8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 struct Vector3 { int x, y, z; };

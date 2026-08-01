@@ -151,6 +151,7 @@ data_ov085_0212fe5c kind:data(any) addr:0x0212fe5c
 Toad_SpawnInfo kind:data(any) addr:0x0212fe6c
 data_ov085_0212fe88 kind:data(any) addr:0x0212fe88
 _ZTV4Toad kind:data(any) addr:0x0212feb8
+_ZTV11daKinopio_c kind:data(any) addr:0x0212feb8
 data_ov085_0212ff34 kind:data(any) addr:0x0212ff34
 data_ov085_0212ff3c kind:data(any) addr:0x0212ff3c
 data_ov085_0212ff44 kind:data(any) addr:0x0212ff44
@@ -165,6 +166,7 @@ data_ov085_0212ff84 kind:data(any) addr:0x0212ff84
 data_ov085_0212ff90 kind:data(any) addr:0x0212ff90
 PrincessPeach_SpawnInfo kind:data(any) addr:0x0212ff9c
 _ZTV13PrincessPeach kind:data(any) addr:0x0212ffc0
+_ZTV9daPeach_c kind:data(any) addr:0x0212ffc0
 data_ov085_0212ffff kind:data(any) addr:0x0212ffff
 data_ov085_0213003c kind:data(any) addr:0x0213003c
 data_ov085_02130044 kind:data(any) addr:0x02130044
@@ -186,6 +188,7 @@ data_ov085_021300bc kind:data(any) addr:0x021300bc
 data_ov085_021300c8 kind:data(any) addr:0x021300c8
 Rabbit_SpawnInfo kind:data(any) addr:0x021300d4
 _ZTV6Rabbit kind:data(any) addr:0x021300f8
+_ZTV7daMip_c kind:data(any) addr:0x021300f8
 data_ov085_02130174 kind:data(any) addr:0x02130174
 data_ov085_0213017c kind:data(any) addr:0x0213017c
 data_ov085_02130184 kind:data(any) addr:0x02130184
@@ -194,6 +197,7 @@ data_ov085_02130194 kind:data(any) addr:0x02130194
 data_ov085_021301a0 kind:data(any) addr:0x021301a0
 RabbitKey_SpawnInfo kind:data(any) addr:0x021301b4 ambiguous
 _ZTV9RabbitKey kind:data(any) addr:0x021301d8
+_ZTV15daObj_Mip_Key_c kind:data(any) addr:0x021301d8
 data_ov085_0213020b kind:data(any) addr:0x0213020b ambiguous
 data_ov085_02130212 kind:data(any) addr:0x02130212 ambiguous
 data_ov085_02130254 kind:data(any) addr:0x02130254
@@ -222,10 +226,12 @@ data_ov085_02130304 kind:data(any) addr:0x02130304
 data_ov085_02130310 kind:data(any) addr:0x02130310
 LakituBro_SpawnInfo kind:data(any) addr:0x02130320 ambiguous
 _ZTV9LakituBro kind:data(any) addr:0x02130344
+_ZTV11daC_Jugem_c kind:data(any) addr:0x02130344
 data_ov085_021303c0 kind:data(any) addr:0x021303c0
 data_ov085_021303cc kind:data(any) addr:0x021303cc
 WallSign_SpawnInfo kind:data(any) addr:0x021303dc
 _ZTV8WallSign kind:data(any) addr:0x02130400
+_ZTV13daObjKanban_c kind:data(any) addr:0x02130400
 data_ov085_02130480 kind:bss addr:0x02130480
 data_ov085_02130488 kind:bss addr:0x02130488
 data_ov085_02130490 kind:bss addr:0x02130490

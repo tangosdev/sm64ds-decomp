@@ -15,7 +15,7 @@ int func_ov072_0211fb7c(char *c) {
     func_0203568c((int*)(c + 0x180), *(int*)(c + 0x398));
     func_02035684((int*)(c + 0x180), *(int*)(c + 0x398));
     _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(c, *(int*)(c + 0x398), *(int*)(c + 0x398), 0x1000000, 0x1000000);
-    p = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (int*)(((int)c + 0xb0));
     *p = *p | 1;
     *(int*)(c + 0x394) = 0;
     return 1;

@@ -7,7 +7,7 @@ struct Base {
   virtual void v16(); virtual void v17(); virtual void v18();
   virtual int m(void* arg);
 };
-extern "C" void func_ov004_020b0aa0(int arg);
+extern "C" void FreeGfxSlotsById(int arg);
 extern "C" void func_ov004_020ae20c(void);
 extern "C" void func_ov004_020ae2c8(void);
 extern "C" void func_ov004_020b29a0(Base* c, void* arg);
@@ -23,7 +23,7 @@ extern "C" void func_ov004_020b7eac(char* c){
     return;
   if (o->m(*(void**)(c + 0x18)) == 0)
     return;
-  func_ov004_020b0aa0(0x1d);
+  FreeGfxSlotsById(0x1d);
   func_ov004_020ae20c();
   func_ov004_020ae2c8();
   func_ov004_020b29a0(o, *(void**)(c + 0x18));

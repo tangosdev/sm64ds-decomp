@@ -10,5 +10,5 @@ void func_ov084_02129c9c(char *c)
   new_var = c;
   *((int *) (new_var + 0xa8)) = data_ov084_02130248[*((int *) (new_var + 0x460))];
   _ZN12WithMeshClsn15ClearGroundFlagEv(new_var + 0x1b4);
-  *((int *) ((char *)(((int)(new_var + 0x198) & 0xFFFFFFFFFFFFFFFF) + 0))) |= 4;
+  *((int *) ((char *)(((int)(new_var + 0x198)) + 0))) |= 4;
 }

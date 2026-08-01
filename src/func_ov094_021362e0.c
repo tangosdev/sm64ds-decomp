@@ -1,7 +1,10 @@
+// @symbol func_ov094_021362e0
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 typedef short s16;
 
-struct Vec3 { Fix12i x, y, z; };
+
 struct Mtx43 { Fix12i a[12]; };
 
 extern struct Mtx43 data_020a0e68;
@@ -10,7 +13,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(struct Mtx43* m, int x, int y
 
 void func_ov094_021362e0(char* c)
 {
-    struct Vec3 v;
+    struct Vector3 v;
     char* m;
     int z = 0;
     if (*(int*)(c + 0x3cc) == 0) return;

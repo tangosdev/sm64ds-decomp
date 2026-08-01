@@ -36,7 +36,7 @@ struct Player3 {
 };
 
 void func_ov002_020ada40(Player3* r0, short* r1, void* r2) {
-    *(int *)(((int)r0 + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~0x10000001;
+    *(int *)(((int)r0 + 0xb0)) &= ~0x10000001;
     r0->ang = Vec3_HorzAngle((const Vector3*)((char*)r2+0x5c), &r0->pos);
     r0->f98 = 0xa000;
     r0->fa8 = 0x28000;

@@ -1,5 +1,8 @@
-struct Vector3 { int x, y, z; };
-extern void func_ov091_02131cb0(void *c, const struct Vector3 *v0, const struct Vector3 *v1);
+// @symbol func_ov091_02132000
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 
 void func_ov091_02132000(char *c)
 {

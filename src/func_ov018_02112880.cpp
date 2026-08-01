@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov018_02112880
+// recovered name: IceSheet_Kill
+/* recovered: renamed to Class_Method */
+/* daObjIceBoard_c::Kill - recovered from vtable slot identity */
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned, void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned, int, int, int);

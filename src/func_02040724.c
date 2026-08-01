@@ -1,6 +1,6 @@
 extern unsigned int data_020a0f94;
 extern int data_020a0f5c;
-extern int func_0203fbfc(void);
+extern int Wireless_Reset(void);
 
 void func_02040724(void)
 {
@@ -15,7 +15,7 @@ void func_02040724(void)
     case 3:
     case 4:
         data_020a0f5c = 0;
-        func_0203fbfc();
+        Wireless_Reset();
         break;
     }
 }

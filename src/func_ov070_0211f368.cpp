@@ -1,11 +1,15 @@
 //cpp
+// @symbol func_ov070_0211f368
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
 extern "C" unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e, void* f);
 extern "C" void ApproachAngle(short* v, int a, int b, int c, int d);
 extern "C" void _Z14ApproachLinearRsss(short* v, int a, int b);
-extern "C" int func_ov070_0211f0a4(void* c);
 
 extern "C" int func_ov070_0211f368(char* c)
 {

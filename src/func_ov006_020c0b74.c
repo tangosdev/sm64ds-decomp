@@ -14,7 +14,7 @@ void func_ov006_020c0b74(char *p) {
         return;
     }
     if (*(void **)(p + 0x7c) == *(void **)(p + 0x24c) && _ZNK9Animation12WillHitFrameEi(p + 0x6c, 0)) {
-        *(short *)((long long)(int)(p + 0x1d8) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+        *(short *)((long long)(int)(p + 0x1d8)) -= 1;
         if (((Obj *)p)->field_1d8 == 0) {
             _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(p + 0x1c, *(void **)(p + 0x254), 0, 0x40000000, 0x800, 0);
             return;

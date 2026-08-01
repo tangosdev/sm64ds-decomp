@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 extern void _ZN5Model12SetPolygonIDEi(void* m, int id);
 
 void func_ov063_0211aa34(char* self)
@@ -12,12 +11,12 @@ void func_ov063_0211aa34(char* self)
             if (cur + 0x14 >= tgt) {
                 *(u8*)(self + 0x5c8) = tgt;
             } else {
-                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)));
                 *p += 0x14;
             }
         } else {
             if (cur - 0x14 > tgt) {
-                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)) & 0xFFFFFFFFFFFFFFFFLL);
+                u8 *p = (u8*)(((long long)(int)(self + 0x5c8)));
                 *p -= 0x14;
             } else {
                 *(u8*)(self + 0x5c8) = tgt;

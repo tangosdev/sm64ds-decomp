@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov070_021204ec
+// recovered name: FlyGuy_OnTurnIntoEgg
+/* recovered: renamed to Class_Method */
+/* daPropeller_Heyho_c::OnTurnIntoEgg - recovered from vtable slot identity */
 class Player;
 
 class Actor {

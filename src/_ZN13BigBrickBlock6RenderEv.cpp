@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN13BigBrickBlock6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "BigBrickBlock.h"
 extern "C" int _ZN5Event6GetBitEj(unsigned int bit);
 
 struct V3 { int x, y, z; };
@@ -13,13 +16,14 @@ struct Sub {
   virtual void m(V3* p);
 };
 
-extern "C" int _ZN13BigBrickBlock6RenderEv(char* c){
-  int b = (*(unsigned short*)(c+0xc) == 0x13);
+int BigBrickBlock::Render()
+{
+  int b = (mActorId == 0x13);
   if (b != 0) {
-    if (!(_ZN5Event6GetBitEj(*(unsigned char*)(c+0x320)) != 0 && *(unsigned char*)(c+0x31e) == 0)) {
+    if (!(_ZN5Event6GetBitEj(mEventID) != 0 && unk_31e == 0)) {
       return 1;
     } else {
-      char* o = *(char**)(c+0x324);
+      char* o = *(char**)((char*)&mSwitch);
       if (o != 0) {
         unsigned short d = (unsigned short)(*(unsigned short*)(o+0x33a) - *(unsigned short*)(o+0x338));
         if (d < 0x2d) {
@@ -28,12 +32,12 @@ extern "C" int _ZN13BigBrickBlock6RenderEv(char* c){
       }
     }
   }
-  int b2 = (*(unsigned short*)(c+0xc) == 0x10);
+  int b2 = (mActorId == 0x10);
   if (b2 != 0) {
     V3 v = data_ov002_021089e0;
-    ((Sub*)(c+0xd4))->m(&v);
+    ((Sub*)((char*)&mModel))->m(&v);
   } else {
-    ((Sub*)(c+0xd4))->m(0);
+    ((Sub*)((char*)&mModel))->m(0);
   }
   return 1;
 }

@@ -1,7 +1,4 @@
-
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "types.h"
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int flag);
 extern int _ZN6Player12GetTalkStateEv(void *player);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *player, void *actor, unsigned int msg, void *pos, unsigned int a, unsigned int b);
@@ -26,7 +23,7 @@ void func_ov060_02115518(char *self)
     }
       *((int *) (self + 0x40c)) = 6;
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       return;
@@ -77,7 +74,7 @@ void func_ov060_02115518(char *self)
       }
     }
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       func_02012694(0xb7, self + 0x74);
@@ -97,7 +94,7 @@ void func_ov060_02115518(char *self)
       *((int *) (self + 0x40c)) = 0;
     }
     {
-      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424))) & 0xFFFFFFFFFFFFFFFFLL));
+      u8 *p = (u8 *) ((void *) (((long long) ((int) (self + 0x424)))));
       *p = (*p) + 1;
     }
       new_var = (u8 *) (self + 0x444);

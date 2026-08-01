@@ -1,61 +1,65 @@
 //cpp
+// @symbol _ZN3HUD17UpdateHealthMeterEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "HUD.h"
 extern "C" {
 extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern void func_02012790(int id);
 extern int _ZN6Player7IsInAirEv(void *p);
-extern void GiveLives(int n);
 
 extern unsigned char data_0209f250;
 extern unsigned char data_0209f2c4;
 extern unsigned char data_0209f20c;
 extern unsigned char data_0209f294;
-extern short data_02092144[];
 extern char *data_0209f394[];
 extern int data_0208ee44;
 extern unsigned char data_ov002_0211117c;
-extern unsigned char data_ov002_02111178;
+}
 
-void _ZN3HUD17UpdateHealthMeterEv(char *c) {
+void HUD::UpdateHealthMeter()
+{
     int chr = data_0209f250;
     char *player = data_0209f394[chr];
     unsigned int health = (data_02092144[chr] >> 8) & 0xff;
     if ((unsigned char)(data_0209f2c4 | data_0209f20c | data_0209f294) != 0)
         return;
-    if (*(unsigned short *)(c + 0x6a) != 0)
-        *(unsigned short *)((((int)c) + 0x6a) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
-    if (*(unsigned short *)(c + 0x6c) != 0)
-        *(unsigned short *)((((int)c) + 0x6c) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
+    if (mHealthMeterHoldTimer != 0)
+        *(unsigned short *)((((int)((char *)this)) + 0x6a)) -= data_0208ee44;
+    if (mHealthTickTimer != 0)
+        *(unsigned short *)((((int)((char *)this)) + 0x6c)) -= data_0208ee44;
     if (_ZN5Event6GetBitEj(0x1d)) {
-        unsigned char s = *(unsigned char *)(c + 0x73);
+        unsigned char s = mHealthMeterState;
         if (s != 0) {
             if (s < 5)
-                *(unsigned char *)(c + 0x73) = 5;
+                mHealthMeterState = 5;
         }
     }
-    switch (*(unsigned char *)(c + 0x73)) {
+    switch (mHealthMeterState) {
     case 0:
         if (*(unsigned char *)(player + 0x706) != 0) {
-            *(unsigned short *)(c + 0x68) = 0x39;
-            *(unsigned char *)(c + 0x73) = 1;
+            mHealthMeterY = 0x39;
+            mHealthMeterState = 1;
             return;
         }
         if (data_ov002_0211117c <= health)
             return;
-        *(unsigned short *)(c + 0x68) = 0x39;
+        mHealthMeterY = 0x39;
         data_ov002_0211117c = *(volatile unsigned char *)&data_ov002_0211117c - 1;
-        *(unsigned short *)(c + 0x6c) = 0x1e;
-        *(unsigned short *)(c + 0x6a) = 0x5a;
-        *(unsigned char *)(c + 0x73) = 1;
+        mHealthTickTimer = 0x1e;
+        mHealthMeterHoldTimer = 0x5a;
+        mHealthMeterState = 1;
         return;
     case 1:
-        if (*(unsigned short *)(c + 0x6a) == 0) {
-            if (*(short *)(c + 0x68) != 0x19) {
-                *(short *)((((int)c) + 0x68) & 0xFFFFFFFFFFFFFFFFLL) -= 4;
-                if (*(short *)(c + 0x68) <= 0x19)
-                    *(short *)(c + 0x68) = 0x19;
+        if (mHealthMeterHoldTimer == 0) {
+            if (mHealthMeterY != 0x19) {
+                *(short *)((((int)((char *)this)) + 0x68)) -= 4;
+                if (mHealthMeterY <= 0x19)
+                    mHealthMeterY = 0x19;
             }
         }
-        if (*(unsigned short *)(c + 0x6c) != 0)
+        if (mHealthTickTimer != 0)
             return;
         {
             unsigned char cur = data_ov002_0211117c;
@@ -63,7 +67,7 @@ void _ZN3HUD17UpdateHealthMeterEv(char *c) {
                 if ((int)(health - cur) > 1) {
                     data_ov002_0211117c = cur + 1;
                     func_02012790(0xd);
-                    *(unsigned short *)(c + 0x6c) = 0x10;
+                    mHealthTickTimer = 0x10;
                     return;
                 }
                 data_ov002_0211117c = health;
@@ -74,16 +78,16 @@ void _ZN3HUD17UpdateHealthMeterEv(char *c) {
                     return;
                 if (data_ov002_02111178 == 1) {
                     data_ov002_02111178 = 3;
-                    *(unsigned char *)(c + 0x73) = 2;
+                    mHealthMeterState = 2;
                 } else {
-                    *(unsigned short *)(c + 0x6a) = 0x3c;
-                    *(unsigned char *)(c + 0x73) = 4;
+                    mHealthMeterHoldTimer = 0x3c;
+                    mHealthMeterState = 4;
                 }
                 return;
             }
             if (cur > health) {
                 data_ov002_0211117c = cur - 1;
-                *(unsigned short *)(c + 0x6c) = 0x1e;
+                mHealthTickTimer = 0x1e;
                 return;
             }
             if (cur != 8)
@@ -94,45 +98,44 @@ void _ZN3HUD17UpdateHealthMeterEv(char *c) {
                 return;
             if (data_ov002_02111178 == 1) {
                 data_ov002_02111178 = 3;
-                *(unsigned char *)(c + 0x73) = 2;
+                mHealthMeterState = 2;
             } else {
-                *(unsigned short *)(c + 0x6a) = 0x3c;
-                *(unsigned char *)(c + 0x73) = 4;
+                mHealthMeterHoldTimer = 0x3c;
+                mHealthMeterState = 4;
             }
         }
         return;
     case 2:
         if (data_ov002_02111178 == 4) {
-            *(unsigned short *)(c + 0x6a) = 0x3c;
-            *(unsigned char *)(c + 0x73) = 3;
+            mHealthMeterHoldTimer = 0x3c;
+            mHealthMeterState = 3;
         }
         return;
     case 3:
-        if (*(unsigned short *)(c + 0x6a) != 0)
+        if (mHealthMeterHoldTimer != 0)
             return;
         GiveLives(-1);
         func_02012790(0x40);
         data_ov002_02111178 = 5;
-        *(unsigned short *)(c + 0x6a) = 0x3c;
-        *(unsigned char *)(c + 0x73) = 4;
+        mHealthMeterHoldTimer = 0x3c;
+        mHealthMeterState = 4;
         return;
     case 4:
     case 5:
-        if (*(unsigned short *)(c + 0x6a) != 0)
+        if (mHealthMeterHoldTimer != 0)
             return;
-        *(short *)((((int)c) + 0x68) & 0xFFFFFFFFFFFFFFFFLL) -= 4;
-        if (*(short *)(c + 0x68) >= -0x18)
+        *(short *)((((int)((char *)this)) + 0x68)) -= 4;
+        if (mHealthMeterY >= -0x18)
             return;
-        *(short *)(c + 0x68) = -0x18;
-        if (*(unsigned char *)(c + 0x73) == 4)
-            *(unsigned char *)(c + 0x73) = 0;
+        mHealthMeterY = -0x18;
+        if (mHealthMeterState == 4)
+            mHealthMeterState = 0;
         else
-            *(unsigned char *)(c + 0x73) = 6;
+            mHealthMeterState = 6;
         return;
     case 6:
         if (_ZN5Event6GetBitEj(0x1d) == 0)
-            *(unsigned char *)(c + 0x73) = 1;
+            mHealthMeterState = 1;
         return;
     }
-}
 }

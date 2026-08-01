@@ -1,15 +1,11 @@
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _Z15ApproachLinear2Riii(int *p, int a, int b);
 extern int _Z14ApproachLinearRiii(int *p, int a, int b);
 extern void func_ov006_020cf124(char *c);
 extern int data_020a0db0;
 extern s16 data_02082214[];
 
-#define LA(p) ((int)(((s64)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LA(p) ((int)(((s64)(int)(p))))
 
 void func_ov006_020cf820(char *c)
 {

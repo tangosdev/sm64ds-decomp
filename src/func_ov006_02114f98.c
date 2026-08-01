@@ -3,5 +3,5 @@
 // the ROM instead of splitting the large offset.
 void func_ov006_02114f98(char *self)
 {
-    *(unsigned int *)(((long long)(int)(self + 0x5994)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(unsigned int *)(((long long)(int)(self + 0x5994))) += 1;
 }

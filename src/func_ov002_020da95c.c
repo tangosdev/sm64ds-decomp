@@ -1,4 +1,4 @@
-#define ADDR(p) ((int *)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define ADDR(p) ((int *)(((long long)(int)(p))))
 
 #pragma opt_propagation off
 int func_ov002_020da95c(char *c)

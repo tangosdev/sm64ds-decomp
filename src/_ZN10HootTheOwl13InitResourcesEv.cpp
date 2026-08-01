@@ -1,0 +1,60 @@
+//cpp
+// @symbol _ZN10HootTheOwl13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "HootTheOwl.h"
+extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
+extern void _ZN11ShadowModel12InitCylinderEv(void*);
+extern void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void*, void*, int*, int, int, unsigned int, unsigned int);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
+extern int func_ov094_02136188(void*, void*);
+extern int IsStarCollectedInCurLevel(int);
+extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern void* data_ov094_02136b40;
+extern signed char data_0209f2f8;
+extern unsigned char data_0209f220;
+#define LA(p) ((int*)(unsigned)(((long long)(unsigned)(unsigned)(p))))
+
+int HootTheOwl::InitResources()
+{
+    int v0[3];
+    void* f;
+    int zero = 0;
+    int* fl;
+    int grav = 0x1e000;
+
+    f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov094_02136ae0);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x30c, f, 1, -1);
+    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov094_02136af8);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov094_02136ae8);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov094_02136af0);
+    v0[0] = data_ov094_02136a1c[0];
+    v0[1] = data_ov094_02136a1c[1];
+    v0[2] = data_ov094_02136a1c[2];
+    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this)+0x110, ((char*)this), v0, 0x64000, 0x64000, 0x800004, 0);
+
+    unk_3cc = zero;
+    fl = LA((char*)&unk_128);
+    {
+        int t = *fl;
+        *fl = t | 2;
+    }
+    unk_0a0 = -grav;
+    unk_3f0 = 0x1000;
+    unk_3e4 = 0x1f;
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x150, ((char*)this), 0x50000, 0x64000, (void*)zero, zero);
+    func_ov094_02136188(((char*)this), &data_ov094_02136b40);
+
+    if (data_0209f2f8 != 7) goto ret1;
+    if (data_0209f220 != 1) {
+        if (IsStarCollectedInCurLevel(1) != 0) goto ret1;
+    }
+    _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+    return 0;
+ret1:
+    return 1;
+}

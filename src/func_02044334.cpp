@@ -17,7 +17,7 @@ extern "C" void func_02044334(Obj *self)
         return;
     if (self->f4 == 0)
         return;
-    ctr = (short *)(((int)self + 6) & 0xFFFFFFFFFFFFFFFF);
+    ctr = (short *)(((int)self + 6));
     *ctr = *ctr - 1;
     if (self->f6 < 0)
         return;

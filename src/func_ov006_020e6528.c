@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int RandomIntInternal(int* seed);
 extern void SetBg2Offset(int a, int b);
 extern void SetBg0Offset(int a, int b);

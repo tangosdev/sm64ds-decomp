@@ -7,7 +7,7 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(char *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *self);
 extern int *_ZNK12WithMeshClsn14GetFloorResultEv(char *self);
-extern int func_02037e78(int *p);
+extern int SurfaceInfo_TestFlag0x20(int *p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3 *pos);
 extern void func_ov002_020b13e0(char *self);
 extern void func_ov002_020b1384(char *c);
@@ -29,12 +29,12 @@ void func_ov002_020b1ad4(char *self)
         if (data_0209f2f8 == 0xb) v <<= 1;
         *(int *)(self + 0x98) = v;
         *(int *)(self + 0xa8) = 0x14000;
-        ((struct Bits3ae *)(int)(((long long)(int)(self + 0x3ae)) & 0xFFFFFFFFFFFFFFFFLL))->field++;
+        ((struct Bits3ae *)(int)(((long long)(int)(self + 0x3ae))))->field++;
         _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x1ac);
         *(short *)(self + 0x3a8) = 0x1c2;
     }
     if (_ZNK12WithMeshClsn13JustHitGroundEv(self + 0x1ac)) {
-        if (func_02037e78(_ZNK12WithMeshClsn14GetFloorResultEv(self + 0x1ac) + 1) == 0) {
+        if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(self + 0x1ac) + 1) == 0) {
             _ZN5Sound9PlayBank3EjRK7Vector3(0x52, (const Vector3 *)(self + 0x74));
             *(int *)(self + 0xa8) = 0x19000;
         }

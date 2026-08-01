@@ -17,7 +17,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
-extern int func_ov062_02116cd8(void* c, PMF* p);
+extern int Chuckya_ChangeState(void* c, PMF* p);
 int _ZN7Chuckya13InitResourcesEv(char* c) {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov062_0211ddf0), 1, -1);
     _ZN11ShadowModel12InitCylinderEv(c+0x368);
@@ -39,6 +39,6 @@ int _ZN7Chuckya13InitResourcesEv(char* c) {
     *(int*)(c+0x3d8) = *(int*)(c+0x5c);
     *(int*)(c+0x3dc) = *(int*)(c+0x60);
     *(int*)(c+0x3e0) = *(int*)(c+0x64);
-    func_ov062_02116cd8(c, &data_ov062_0211dee0);
+    Chuckya_ChangeState(c, &data_ov062_0211dee0);
     return 1;
 }

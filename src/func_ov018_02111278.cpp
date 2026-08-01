@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov018_02111278
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x,y,z; };
-struct Matrix4x3 { int m[12]; };
+
+
 void Vec3_Asr(struct Vector3* d, struct Vector3* s, int n);
 void Matrix4x3_FromTranslation(struct Matrix4x3* mF, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3* mF, short angY);

@@ -103,6 +103,7 @@ data_ov079_02127eac kind:data(any) addr:0x02127eac
 data_ov079_02127eb8 kind:data(any) addr:0x02127eb8
 BulletBill_SpawnInfo kind:data(any) addr:0x02127ec4
 _ZTV10BulletBill kind:data(any) addr:0x02127ee8
+_ZTV7daKlr_c kind:data(any) addr:0x02127ee8
 data_ov079_02127f64 kind:data(any) addr:0x02127f64
 data_ov079_02127f70 kind:data(any) addr:0x02127f70
 data_ov079_02127f7c kind:data(any) addr:0x02127f7c

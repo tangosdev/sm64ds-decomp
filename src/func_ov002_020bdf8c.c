@@ -12,6 +12,6 @@ void func_ov002_020bdf8c(char* c){
   }
   *(unsigned char*)(c+0x703) = 1;
   *(unsigned short*)(c+0x600+0xc2) = 0x258;
-  (*(unsigned int *)(((int)data_0209f318 + 0x154) & 0xFFFFFFFFFFFFFFFF)) |= 0x80;
+  (*(unsigned int *)(((int)data_0209f318 + 0x154))) |= 0x80;
   func_ov002_020bd9ec(c, 0x31);
 }

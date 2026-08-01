@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32, int);
 extern int _ZN6Player12GetTalkStateEv(void*);
 extern void _ZN7Message13DisplaySavingEt(u16);

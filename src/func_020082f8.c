@@ -1,7 +1,4 @@
-typedef int Fix12i;
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 extern u16 data_0209b274;
 

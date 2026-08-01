@@ -1,8 +1,13 @@
 //cpp
+// @symbol _ZN13ExpandingHeap22VMaxAllocationUnitSizeEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_ExpandingHeapAllocator.h"
+/* recovered: named members + shared header, real C++ method */
+#include "ExpandingHeap.h"
 extern "C" {
-extern unsigned int _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(void*, int);
-
-unsigned int _ZN13ExpandingHeap22VMaxAllocationUnitSizeEv(char* self) {
-    return _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(*(void**)(self + 0x14), 4);
 }
+
+unsigned int ExpandingHeap::VMaxAllocationUnitSize()
+{
+    return _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(*(void**)((char*)&unk_014), 4);
 }

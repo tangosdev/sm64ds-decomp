@@ -4,3 +4,144 @@
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
     .data       start:0x02112b60 end:0x02113c20 kind:data align:32
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
+src/_ZN4BirdD1Ev.cpp:
+    .text start:0x021111a0 end:0x021111d8
+
+src/_ZN4BirdD0Ev.c:
+    complete
+    .text start:0x021111d8 end:0x02111224
+
+src/func_ov009_02111224.c:
+    complete
+    .text start:0x02111224 end:0x02111234
+
+src/func_ov009_02111234.cpp:
+    complete
+    .text start:0x02111234 end:0x0211145c
+
+src/func_ov009_021115d8.c:
+    complete
+    .text start:0x021115d8 end:0x021116ec
+
+src/func_ov009_021116ec.cpp:
+    complete
+    .text start:0x021116ec end:0x0211183c
+
+src/_ZN4Bird16CleanupResourcesEv.c:
+    complete
+    .text start:0x0211183c end:0x0211186c
+
+src/_ZN4Bird16OnPendingDestroyEv.c:
+    complete
+    .text start:0x0211186c end:0x02111870
+
+src/_ZN4Bird6RenderEv.cpp:
+    complete
+    .text start:0x02111870 end:0x02111898
+
+src/_ZN4Bird8BehaviorEv.cpp:
+    complete
+    .text start:0x02111898 end:0x0211197c
+
+src/_ZN4Bird13InitResourcesEv.cpp:
+    complete
+    .text start:0x0211197c end:0x02111a30
+
+src/Bird_Spawn.c:
+    complete
+    .text start:0x02111a30 end:0x02111a70
+
+src/func_ov009_02111a70.c:
+    .text start:0x02111a70 end:0x02111abc
+
+src/func_ov009_02111abc.c:
+    .text start:0x02111abc end:0x02111b1c
+
+src/func_ov009_02111b1c.cpp:
+    complete
+    .text start:0x02111b1c end:0x02111bd4
+
+src/func_ov009_02111bd4.cpp:
+    complete
+    .text start:0x02111bd4 end:0x02111c18
+
+src/func_ov009_02111c18.cpp:
+    complete
+    .text start:0x02111c18 end:0x02111c4c
+
+src/func_ov009_02111c4c.cpp:
+    complete
+    .text start:0x02111c4c end:0x02111c74
+
+src/func_ov009_02111c74.cpp:
+    complete
+    .text start:0x02111c74 end:0x02111d8c
+
+src/CastleWater_Spawn.c:
+    .text start:0x02111d8c end:0x02111dc4
+
+src/_ZN11CastleWaterD1Ev.c:
+    .text start:0x02111dc4 end:0x02111e08
+
+src/_ZN11CastleWaterD0Ev.c:
+    .text start:0x02111e08 end:0x02111e60
+
+src/_ZN11CastleWater16CleanupResourcesEv.cpp:
+    .text start:0x02111e60 end:0x02111ea4
+
+src/_ZN11CastleWater16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02111ea4 end:0x02111ea8
+
+src/_ZN11CastleWater6RenderEv.cpp:
+    complete
+    .text start:0x02111ea8 end:0x02111ed0
+
+src/_ZN11CastleWater8BehaviorEv.cpp:
+    .text start:0x02111ed0 end:0x02111f40
+
+src/_ZN11CastleWater13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111f40 end:0x02112048
+
+src/DockPole_Spawn.c:
+    complete
+    .text start:0x02112048 end:0x02112078
+
+src/_ZN8DockPoleD1Ev.cpp:
+    .text start:0x02112078 end:0x021120a8
+
+src/_ZN8DockPoleD0Ev.c:
+    complete
+    .text start:0x021120a8 end:0x021120ec
+
+src/_ZN8DockPole16CleanupResourcesEv.c:
+    complete
+    .text start:0x021120ec end:0x0211211c
+
+src/_ZN8DockPole6RenderEv.cpp:
+    complete
+    .text start:0x0211211c end:0x02112144
+
+src/_ZN8DockPole8BehaviorEv.cpp:
+    complete
+    .text start:0x02112144 end:0x02112190
+
+src/_ZN8DockPole13InitResourcesEv.cpp:
+    .text start:0x02112190 end:0x021121f0
+
+src/Flag_Spawn.c:
+    complete
+    .text start:0x021121f0 end:0x02112228
+
+src/__sinit_ov009_02112458.c:
+    .init start:0x02112458 end:0x02112524
+
+src/__sinit_ov009_02112524.c:
+    .init start:0x02112524 end:0x02112a5c
+
+src/__sinit_ov009_02112a5c.c:
+    .init start:0x02112a5c end:0x02112ac8
+
+src/__sinit_ov009_02112ac8.c:
+    .init start:0x02112ac8 end:0x02112b34

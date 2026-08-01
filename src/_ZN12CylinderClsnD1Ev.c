@@ -1,14 +1,17 @@
+// @symbol _ZN12CylinderClsnD1Ev
+/* recovered: named members + shared header */
+#include "CylinderClsn.h"
 /* CylinderClsn::~CylinderClsn() at 0x020150a8
  * Complete-object destructor (D1). Installs the CylinderClsn vtable, then runs
  * the base subobject destructor (func_02014fa4). Returns this.
  */
 
-extern int _ZTV12CylinderClsn[];   // vtable (wildcard reloc, not byte-verified)
+extern int data_0208e6ec[];   // vtable (wildcard reloc, not byte-verified)
 extern void func_02014fa4(void* self); // base subobject destructor
 
 void* _ZN12CylinderClsnD1Ev(void* self)
 {
-    *(int*)self = (int)_ZTV12CylinderClsn; // set vptr
+    *(int*)self = (int)data_0208e6ec; // set vptr
     func_02014fa4(self);
     return self;
 }

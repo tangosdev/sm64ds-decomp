@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
+#include "types.h"
 extern void func_0203f650(int x);
 extern void func_0203f8a4(void);
 extern void func_0203f714(void);

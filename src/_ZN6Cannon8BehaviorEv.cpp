@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN6Cannon8BehaviorEv
+/* recovered: named members + shared header, real C++ method */
+#include "Cannon.h"
 extern "C" {
 int func_ov098_0213a984(void* c);
 void _ZN12CylinderClsn5ClearEv(void* self);
@@ -16,13 +19,13 @@ struct C {
     unsigned char flag; // 0x184
 };
 
-extern "C" int _ZN6Cannon8BehaviorEv(C* c)
+int Cannon::Behavior()
 {
-    if (c->flag != 1) {
-        (c->*data_ov098_0213c8fc[c->idx].pmf)();
+    if (((C*)this)->flag != 1) {
+        (((C*)this)->*data_ov098_0213c8fc[((C*)this)->idx].pmf)();
     }
-    func_ov098_0213a984(c);
-    _ZN12CylinderClsn5ClearEv((char*)c + 0x124);
-    _ZN12CylinderClsn6UpdateEv((char*)c + 0x124);
+    func_ov098_0213a984(((C*)this));
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
     return 1;
 }

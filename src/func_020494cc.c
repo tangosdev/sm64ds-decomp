@@ -1,6 +1,5 @@
+#include "types.h"
 /* func_020494cc at 0x020494cc, size=0x298 (sibling of func_0204921c) */
-typedef unsigned short u16;
-
 extern u16 data_020a4c48[];
 extern int data_020a4c4c[];
 extern int data_020a4c54[];

@@ -98,6 +98,17 @@ def load_syms_file(path, module: str | None = None):
     return d
 
 
+def iter_syms_pairs(path, module: str | None = None):
+    """Yield ``(name, (module, addr))`` for every symbols.txt line, without keying by
+    address, so aliases (two names at one address -- a guessed vtable name and its
+    RTTI-recovered real name) are both preserved instead of one overwriting the other."""
+    key_module = normalize_module(module) if module is not None else None
+    for line in pathlib.Path(path).read_text(errors="ignore").splitlines():
+        m = _SYM_RE.match(line)
+        if m:
+            yield m.group(1), (key_module, int(m.group(2), 16))
+
+
 def load_relocs():
     return load_relocs_file(RELOCS)
 

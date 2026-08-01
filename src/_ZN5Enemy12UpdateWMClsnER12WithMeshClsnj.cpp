@@ -9,9 +9,9 @@ struct Vector3 { s32 x, y, z; };
 struct SurfaceInfo { s32 pad; };
 
 extern void func_020383f0(struct WithMeshClsn *);
-extern void func_02038420(struct WithMeshClsn *);
+extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(struct WithMeshClsn *);
 extern void func_02038414(struct WithMeshClsn *);
-extern void func_020383fc(struct WithMeshClsn *);
+extern void WithMeshClsn_UpdateContinuous_Veneer(struct WithMeshClsn *);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(struct WithMeshClsn *);
 extern struct SurfaceInfo *_ZNK12WithMeshClsn14GetFloorResultEv(struct WithMeshClsn *);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo *, struct Vector3 *);
@@ -27,9 +27,9 @@ void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(struct Enemy *thiz, struct WithMes
 
     switch (sel) {
     case 1: func_020383f0(clsn); break;
-    case 2: func_02038420(clsn); break;
+    case 2: WithMeshClsn_UpdateDiscreteNoLava_veneer(clsn); break;
     case 3: func_02038414(clsn); break;
-    default: func_020383fc(clsn); break;
+    default: WithMeshClsn_UpdateContinuous_Veneer(clsn); break;
     }
     if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
 

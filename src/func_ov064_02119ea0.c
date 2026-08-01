@@ -1,3 +1,7 @@
+// @symbol func_ov064_02119ea0
+// recovered name: BowserPuzzlePiece_Kill
+/* recovered: renamed to Class_Method */
+/* daWater_Hakidasi_c::Kill - recovered from vtable slot identity */
 typedef signed short s16;
 typedef int s32;
 extern s32 _ZN5Actor18HorzAngleToCPlayerEv(void* self);

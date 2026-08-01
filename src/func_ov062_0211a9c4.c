@@ -7,8 +7,8 @@ struct Vec3
 
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern int Vec3_Dist(struct Vec3 *a, struct Vec3 *b);
-extern int StartTalk(void *thiz, void *ref, int b);
-extern void *FindWithActorID(unsigned id, void *p);
+extern int _ZN6Player9StartTalkER9ActorBaseb(void *thiz, void *ref, int b);
+extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned id, void *p);
 extern short Vec3_HorzAngle(struct Vec3 *a, struct Vec3 *b);
 
 void func_ov062_0211a9c4(char *c)
@@ -36,10 +36,10 @@ void func_ov062_0211a9c4(char *c)
     if (Vec3_Dist((struct Vec3 *)(c + 0x5c), &v) >= 0xc8000)
         return;
 
-    if (StartTalk(*(void **)(c + 0x398), c, 1) == 0)
+    if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(c + 0x398), c, 1) == 0)
         return;
 
-    a = (char *)FindWithActorID(0xcd, 0);
+    a = (char *)_ZN5Actor15FindWithActorIDEjPS_(0xcd, 0);
     if (a == 0)
         return;
 

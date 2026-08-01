@@ -1,11 +1,9 @@
+#include "types.h"
 /* func_ov007_020b9ca8 @ 0x020b9ca8 (ov007, size 0x264)
  * Minigame cursor/pen update: advances the shared pen state, spawns the
  * touch feedback (sound id 0x25..0x28 by rhythm), fades the music with pen
  * hold time, and updates the frame counter at +0x28.
  */
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern char *data_ov007_0210342c;
 extern char *data_ov007_02104ba0;
 
@@ -87,6 +85,6 @@ void func_ov007_020b9ca8(void)
         *(u16 *)(*(char **)(data_ov007_0210342c + 0x54)) != 0) {
         *(int *)(data_ov007_02104ba0 + 0x28) = 0;
     } else {
-        (*(int *)(int)(((long long)(int)(data_ov007_02104ba0 + 0x28)) & 0xFFFFFFFFFFFFFFFFLL))++;
+        (*(int *)(int)(((long long)(int)(data_ov007_02104ba0 + 0x28))))++;
     }
 }

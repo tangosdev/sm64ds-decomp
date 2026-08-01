@@ -17,7 +17,7 @@ void func_ov006_02104920(char *c, int idx)
         SetSubBg0Offset(0, 0);
         data_0209d454 &= ~1;
         func_02012790(0x12f);
-        *(unsigned char *)(((int)c + 0x4fe2) & 0xffffffffffffffff) -= 1;
+        *(unsigned char *)(((int)c + 0x4fe2)) -= 1;
         return;
     }
     *(int *)(c + 0x468c + n) = data_ov006_0212ed00[cnt >> 3];

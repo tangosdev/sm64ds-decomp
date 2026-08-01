@@ -1,3 +1,7 @@
+// @symbol func_ov077_021258dc
+// recovered name: Lakitu_Kill
+/* recovered: renamed to Class_Method */
+/* daJgm_c::Kill - recovered from vtable slot identity */
 extern void _ZN12CylinderClsn5ClearEv(void *);
 int func_ov077_021258dc(char *c)
 {

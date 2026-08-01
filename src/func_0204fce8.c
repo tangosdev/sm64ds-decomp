@@ -21,7 +21,7 @@ void func_0204fce8(int *thiz, void *arg)
   }
 
   ((FP) thiz[6])(arg, thiz[0xc], data_020a5538, q, thiz[2], thiz[7]);
-  pcount = (int *) (((int) thiz + 0x20) & 0xFFFFFFFFFFFFFFFF);
+  pcount = (int *) (((int) thiz + 0x20));
   (*pcount)++;
   if (thiz[8] >= thiz[5])
   {

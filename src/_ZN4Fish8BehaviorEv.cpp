@@ -1,4 +1,9 @@
 //cpp
+// @symbol _ZN4Fish8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "Fish.h"
 struct C;
 typedef void (C::*PMF)();
 struct Entry { PMF pmf; };
@@ -8,7 +13,6 @@ struct M48 { int w[12]; };
 extern "C" M48 data_020a0e68;
 
 extern "C" int* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern "C" int func_ov100_0214639c(int* p);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(C* c);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(C* c, int clsn);
 extern "C" void Vec3_Asr(Vec3* d, Vec3* s, int sh);
@@ -36,30 +40,30 @@ struct C {
     unsigned char flag; // 0x159
 };
 
-extern "C" int _ZN4Fish8BehaviorEv(C* c)
+int Fish::Behavior()
 {
     Vec3 v;
     int* r;
-    if (c->flag != 0) {
-        (c->*data_ov100_02148a1c[c->idx].pmf)();
+    if (((C*)this)->flag != 0) {
+        (((C*)this)->*data_ov100_02148a1c[((C*)this)->idx].pmf)();
     } else {
-        r = _ZN5Actor10FindWithIDEj(c->id);
+        r = _ZN5Actor10FindWithIDEj(((C*)this)->id);
         if (r == 0 || func_ov100_0214639c(r) != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN9ActorBase18MarkForDestructionEv(((C*)this));
         } else {
-            (c->*data_ov100_02148a1c[c->idx].pmf)();
-            _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+            (((C*)this)->*data_ov100_02148a1c[((C*)this)->idx].pmf)();
+            _ZN5Actor9UpdatePosEP12CylinderClsn(((C*)this), 0);
             {
-                int* cp = (int*)(((int)c + 0x150) & 0xFFFFFFFFFFFFFFFF);
+                int* cp = (int*)(((int)((C*)this) + 0x150));
                 *cp = *cp + 1;
             }
         }
-        Vec3_Asr(&v, &c->pos, 3);
+        Vec3_Asr(&v, &((C*)this)->pos, 3);
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        c->f8e = c->f94;
-        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, c->f8e);
-        c->mtx = data_020a0e68;
-        _ZN9Animation7AdvanceEv(&c->anim);
+        ((C*)this)->f8e = ((C*)this)->f94;
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, ((C*)this)->f8e);
+        ((C*)this)->mtx = data_020a0e68;
+        _ZN9Animation7AdvanceEv(&((C*)this)->anim);
     }
     return 1;
 }

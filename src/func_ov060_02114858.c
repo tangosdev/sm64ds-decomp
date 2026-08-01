@@ -20,7 +20,7 @@ typedef struct
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 cc, const Vector3 *v, u32 e);
 extern int RandomIntInternal(int *seed);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 f, const Vector3 *v, const Vector3_16 *r, int a, int b);
-extern int func_ov060_02115a30(void *o);
+extern int Bowser_IsAnimAtLastFrame(void *o);
 extern void func_ov060_02111cc0(char *c, int idx, int a);
 extern void func_02012694(int a, void *p);
 struct TabEnt
@@ -84,15 +84,15 @@ void func_ov060_02114858(void *self)
       }
     }
     {
-      u16 *pt = (u16 *) ((((int) c) + 0x400) & 0xFFFFFFFFFFFFFFFFLL);
+      u16 *pt = (u16 *) ((((int) c) + 0x400));
       *pt = (*pt) + 1;
     }
   }
   {
-    int *p = (int *) ((((int) c) + 0x418) & 0xFFFFFFFFFFFFFFFFLL);
+    int *p = (int *) ((((int) c) + 0x418));
     *p |= 0x20000;
   }
-  if (func_ov060_02115a30(c) == 0)
+  if (Bowser_IsAnimAtLastFrame(c) == 0)
   {
     return;
   }
@@ -103,7 +103,7 @@ void func_ov060_02114858(void *self)
       func_ov060_02111cc0(c, 0x16, 0x40000000);
       func_02012694(0xb5, c + 0x74);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -111,7 +111,7 @@ void func_ov060_02114858(void *self)
     case 1:
       func_ov060_02111cc0(c, 0x15, 0);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -119,7 +119,7 @@ void func_ov060_02114858(void *self)
     case 2:
       func_ov060_02111cc0(c, 0x17, 0x40000000);
     {
-      u8 *ps = (u8 *) ((((int) c) + 0x423) & 0xFFFFFFFFFFFFFFFFLL);
+      u8 *ps = (u8 *) ((((int) c) + 0x423));
       *ps = (*ps) + 1;
     }
       return;
@@ -127,7 +127,7 @@ void func_ov060_02114858(void *self)
     case 3:
       *((s32 *) (c + 0x40c)) = 0;
     {
-      int *p = (int *) (((long long) ((int) (c + 0x418))) & 0xFFFFFFFFFFFFFFFFLL);
+      int *p = (int *) (((long long) ((int) (c + 0x418))));
       *p &= ~0x20000;
     }
       return;

@@ -1,12 +1,9 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
+// @symbol func_ov065_021180d4
+/* recovered: shared common types */
+#include "common.h"
 struct Actor;
-struct Vector3 { int x, y, z; };
+
 struct Vector3_16;
 
 extern s16 data_02082214[];
@@ -44,8 +41,7 @@ int func_ov065_021180d4(char* self)
         int idx;
         int speed;
 
-        pv = (struct Vector3*)(((long long)(int)((char*)actor + 0x5c)) &
-                   0xFFFFFFFFFFFFFFFFLL);
+        pv = (struct Vector3*)(((long long)(int)((char*)actor + 0x5c)));
         vec.x = pv->x;
         vec.y = pv->y;
         vec.z = pv->z;

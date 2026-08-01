@@ -1,7 +1,7 @@
+#include "types.h"
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
 #pragma optimize_for_size on
-typedef unsigned int u32;
 #define LM(x) ((int*)(long long)(int)(x))
 #define EB(t, n) ((struct Arr *)((char *)(t) + ((n) << 4)))
 #define LM2(x) ((int*)(long long)(unsigned)(x))

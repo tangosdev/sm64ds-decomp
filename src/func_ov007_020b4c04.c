@@ -1,9 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 extern void *func_ov007_020c3df4(int a, int b);
 extern void *func_ov007_020aea6c(int a, void *b, void *c);
 extern void *func_ov007_020c44e4(u8 x);
@@ -72,7 +67,7 @@ void *func_ov007_020b4c04(int arg0)
             if (arg0 != 0) {
                 *(s16 *)(r6 + 0xc) = 0x48;
             } else {
-                s32 *p = (s32 *)(((long long)(int)(r6 + 0x10)) & 0xFFFFFFFFFFFFFFFFLL);
+                s32 *p = (s32 *)(((long long)(int)(r6 + 0x10)));
                 *p = *p + 0xc;
             }
         }

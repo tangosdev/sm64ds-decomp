@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov080_02123924
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { Fix12i x, y, z; };
+
 struct BCA_File;
 struct AnimData { int f[2]; };
 extern "C" {
@@ -25,7 +28,7 @@ void func_ov080_02123924(char* c){
         struct Vector3 v;
         Fix12i* q;
         if (p == 0) return;
-        q = (Fix12i*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFFLL);
+        q = (Fix12i*)(((int)p + 0x5c));
         v.x = q[0];
         v.y = q[1];
         v.z = q[2];

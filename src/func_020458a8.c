@@ -1,3 +1,6 @@
+// @symbol func_020458a8
+/* recovered: shared common types */
+#include "common.h"
 /* func_020458a8 at 0x020458a8, size=0x38
  * Normalizes each of 3 source Vector3s into corresponding destination Vector3s.
  * NormalizeVec3(src, dst): normalizes src into dst.
@@ -5,7 +8,7 @@
 
 typedef int Fix12i;
 
-struct Vector3 { Fix12i x, y, z; };
+
 
 struct Matrix3x3_Vecs {
     struct Vector3 v0;

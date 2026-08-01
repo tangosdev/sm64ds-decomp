@@ -78,7 +78,7 @@ int _ZN4Toad13InitResourcesEv(char* r4)
                 goto after_inc;
         }
         {
-            u16 *pm = (u16*)(((long long)(int)(r4 + 0x208)) & 0xFFFFFFFFFFFFFFFFLL);
+            u16 *pm = (u16*)(((long long)(int)(r4 + 0x208)));
             *pm = (u16)(*pm + 1);
         }
     after_inc: ;

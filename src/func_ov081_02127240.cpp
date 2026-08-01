@@ -16,7 +16,7 @@ int func_ov081_02127240(char* c){
       *(int*)(c+0x98)=0x12000;
       *(int*)(c+0xa8)=0x1e000;
       func_0201267c(0x77, c+0x74);
-      (*(unsigned char*)(((int)c + 0x3f1) & 0xFFFFFFFFFFFFFFFF))++;
+      (*(unsigned char*)(((int)c + 0x3f1)))++;
     }
     break;
   case 1:

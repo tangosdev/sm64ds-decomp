@@ -1,11 +1,5 @@
+#include "types.h"
 #pragma opt_strength_reduction off
-typedef unsigned int u32;
-typedef int s32;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-
 extern u8 data_0209d660;
 extern u8 data_0209d6a8;
 extern u8 data_0209d65c;
@@ -30,7 +24,7 @@ extern u8 data_0208f074[];
 extern void func_0201eaac(void);
 extern int func_02054d88(void);
 extern void MultiStore_Int(int val, void *dst, int len);
-extern void *func_02054fb0(void);
+extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern void MultiStore16(u16 val, void *dst, int nbytes);
 extern void SetBg3Offset(int a, int b);
 extern void func_0201b7cc(void);
@@ -59,14 +53,14 @@ void func_0201d850(u32 arg0)
         MultiStore_Int(sp4, pa, 0x2000);
     }
     {
-        void *pb = func_02054fb0();
+        void *pb = _ZN2G212GetBG3ScrPtrEv();
         sp0 = 0x2ff;
         MultiStore16(sp0, pb, 0x800);
     }
     SetBg3Offset(0, 0);
 
     if (arg0 < 0xf) {
-        char *ep = (char *)(((int)data_0209d708 + 0x1468) & 0xFFFFFFFFFFFFFFFFLL);
+        char *ep = (char *)(((int)data_0209d708 + 0x1468));
         s32 base;
         s32 num;
         s32 n;
@@ -89,7 +83,7 @@ void func_0201d850(u32 arg0)
         func_0201b388(data_0209d6a8);
         data_0209d6c0 = 1;
         n = data_0209d6a8;
-        p = (u16 *)func_02054fb0() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)_ZN2G212GetBG3ScrPtrEv() + (var_r4 + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
             p[i] = (u16)(var_r5 + i);
             *(u16 *)((char *)(p + i) + 0x40) = (u16)(n + (var_r5 + i));
@@ -127,7 +121,7 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)func_02054fb0() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)_ZN2G212GetBG3ScrPtrEv() + (var_r4 + ((0x20 - n) >> 1));
         i = 0;
         if (i < n) {
             tile = var_r5;
@@ -188,7 +182,7 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)func_02054fb0() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)_ZN2G212GetBG3ScrPtrEv() + (var_r4 + ((0x20 - n) >> 1));
         i = 0;
         if (i < n) {
             tile = var_r5;
@@ -225,7 +219,7 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)func_02054fb0() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)_ZN2G212GetBG3ScrPtrEv() + (var_r4 + ((0x20 - n) >> 1));
         i = 0;
         if (i < n) {
             tile = var_r5;
@@ -247,7 +241,7 @@ L_r4_else:
 
     data_0209d6b8 = 0;
     {
-        char *ep = (char *)(((int)data_0209d708 + 0x1470) & 0xFFFFFFFFFFFFFFFFLL);
+        char *ep = (char *)(((int)data_0209d708 + 0x1470));
         s32 base;
         s32 n;
         s32 tile;
@@ -261,7 +255,7 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)func_02054fb0() +
+        p = (u16 *)_ZN2G212GetBG3ScrPtrEv() +
             ((u16)(var_r4 + 0x40) + ((0x20 - n) >> 1));
         i = 0;
         if (i < n) {

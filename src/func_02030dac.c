@@ -1,7 +1,5 @@
+#include "types.h"
 extern int func_0203d890(void);
-
-typedef unsigned char u8;
-typedef signed char s8;
 extern u8 data_0209fc5c[];
 extern s8 data_0209fc64[];
 extern u8 data_0209fc50;

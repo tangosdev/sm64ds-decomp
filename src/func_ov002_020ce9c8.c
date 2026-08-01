@@ -1,7 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-typedef int Fix12i;
-
+#include "types.h"
 extern u32 func_02022c80(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir);
 extern u32 func_02022cbc(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void* dir);

@@ -1,9 +1,12 @@
+// @symbol func_ov100_021415bc
+/* recovered: shared common types */
+#include "common.h"
 #pragma opt_common_subs off
-#define M(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
-struct Vec3 { int x, y, z; };
+#define M(p) ((long long)(int)(p))
+
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
-extern void Vec3_Sub(struct Vec3 *out, void *a, void *b);
-extern int Vec3_HorzLen(struct Vec3 *v);
+extern void Vec3_Sub(struct Vector3 *out, void *a, void *b);
+extern int Vec3_HorzLen(struct Vector3 *v);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
@@ -13,8 +16,8 @@ extern short data_02082214[];
 void func_ov100_021415bc(char *c)
 {
     char *player;
-    struct Vec3 v;
-    struct Vec3 d;
+    struct Vector3 v;
+    struct Vector3 d;
 
     *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
     *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
@@ -61,13 +64,13 @@ void func_ov100_021415bc(char *c)
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
 
         {
-        int *p = (int *)(((long long)(int)(c + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((long long)(int)(c + 0x60)));
         *p = *p - ((int)(((long long)*(int *)(c + 0x98)
             * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
             + (short)data_02082214[
             ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
             * (short)20 / 4);
-        int *cnt = (int *)(((long long)(int)(c + 0x3e8)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *cnt = (int *)(((long long)(int)(c + 0x3e8)));
         *cnt = *cnt + 1;
         if (*(int *)(c + 0x3e8) > 100)
             *(int *)(c + 0x3e8) = 0;

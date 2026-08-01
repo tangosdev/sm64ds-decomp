@@ -24,11 +24,11 @@ extern "C" void _ZN16MeshColliderBase25UpdateAngsWithAngularVelYERS_P5ActorR10Cl
 {
     int angY = self->GetAngularVelY();
     if (a6) {
-        short* py = (short*)(((long long)(int)&a6->y) & 0xFFFFFFFFFFFFFFFFLL);
+        short* py = (short*)(((long long)(int)&a6->y));
         *py = *py + angY;
     }
     if (a5) {
-        short* py = (short*)(((long long)(int)&a5->y) & 0xFFFFFFFFFFFFFFFFLL);
+        short* py = (short*)(((long long)(int)&a5->y));
         *py = *py + angY;
     }
 }

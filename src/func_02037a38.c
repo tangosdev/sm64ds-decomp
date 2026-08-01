@@ -1,5 +1,7 @@
-struct Vec3 { int x, y, z; };
-struct Obj { char pad[0x4c]; struct Vec3 d; struct Vec3 a; struct Vec3 b; };
+// @symbol func_02037a38
+/* recovered: shared common types */
+#include "common.h"
+struct Obj { char pad[0x4c]; struct Vector3 d; struct Vector3 a; struct Vector3 b; };
 
 void func_02037a38(struct Obj *o)
 {

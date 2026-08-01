@@ -4,7 +4,7 @@ extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
 extern void _ZN16MeshColliderBase7DisableEv(void*);
 
-#define LD(p) ((int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LD(p) ((int)(((long long)(int)(p))))
 
 int func_ov002_020b4bfc(char* c)
 {

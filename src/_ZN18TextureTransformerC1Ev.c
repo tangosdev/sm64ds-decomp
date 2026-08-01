@@ -1,6 +1,10 @@
-extern void _ZN9AnimationC2Ev(void* self);
+// @symbol _ZN18TextureTransformerC1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "TextureTransformer.h"
 
-extern unsigned int _ZTV18TextureTransformer[];
 
 typedef struct {
     unsigned int* vtable;

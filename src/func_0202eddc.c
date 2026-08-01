@@ -1,10 +1,12 @@
+#include "types.h"
+// @symbol func_0202eddc
+// recovered name: dWipe_c_IsAtEnd
+/* recovered: renamed to Class_Method */
+/* dWipe_c::IsAtEnd - recovered from vtable slot identity */
 /* func_0202eddc - IsAtEnd wrapper.
  * Attempt 5: use explicit early-return structure to get beq+bgt branch pattern.
  * ROM: beq -> ret1 block (add sp,#4; mov r0,#1; ldm; bx), bgt -> ret0 block.
  */
-typedef int s32;
-typedef unsigned int u32;
-
 struct FaderBrightness;
 extern int _ZN15FaderBrightness7IsAtEndEv(struct FaderBrightness* self);
 

@@ -6,13 +6,13 @@ struct ModelBase {
     void *vtable; /* 0x00 */
     void *res;    /* 0x04 */
 };
-extern void *vtbl_ModelBase[];
-extern void ModelBase_FreeRes(void *res); /* 0x02018144 */
+extern void *data_0208e87c[];
+extern void Deallocate(void *res); /* 0x02018144 */
 struct ModelBase *_ZN9ModelBaseD1Ev(struct ModelBase *thiz)
 {
-    thiz->vtable = (void *)vtbl_ModelBase;
+    thiz->vtable = (void *)data_0208e87c;
     if (thiz->res != 0) {
-        ModelBase_FreeRes(thiz->res);
+        Deallocate(thiz->res);
     }
     return thiz;
 }

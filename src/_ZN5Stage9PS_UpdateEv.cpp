@@ -1,4 +1,5 @@
 //cpp
+#include "types.h"
 // Cases 0/2/3/8/0xa..0x13 BYTE-EXACT.
 /*
  * Stage::PS_Update @ 0x0202635c size 0x30ac, mwccarm 1.2/sp2p3 -O4,p -lang c++
@@ -21,13 +22,6 @@
  *   after the displayed-level normalization, makes MWCC schedule the case-1
  *   literal loads in ROM order without changing behavior.
  */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef short s16;
-typedef signed int s32;
-typedef unsigned int u32;
-
 extern "C" {
 int IsButtonInputValid(void);
 int func_02029408(void);
@@ -114,7 +108,7 @@ extern u8 data_020a0de9[]; /* touch: pressed  [slot*4]   */
 extern volatile u8 data_020a0dea[]; /* touch: x        [slot*4]   */
 extern volatile u8 data_020a0deb[]; /* touch: y        [slot*4]   */
 
-#define DE8P(off) ((u8 *)((long long)(int)(data_020a0de8 + (off)) & 0xFFFFFFFFFFFFFFFFLL))
+#define DE8P(off) ((u8 *)((long long)(int)(data_020a0de8 + (off))))
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
 

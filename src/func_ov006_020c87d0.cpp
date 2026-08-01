@@ -1,11 +1,10 @@
 //cpp
+#include "types.h"
 /* func_ov006_020c87d0 at 0x020c87d0 (ov006), size 0x16c
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
 typedef struct { int w[2]; } SharedFilePtr;
-typedef unsigned short u16;
-
 extern "C" {
 
 extern SharedFilePtr data_ov006_02140450;

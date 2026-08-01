@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct G9d2c {
     u8 pad0[4];      /* 0 */
     u8 *p;           /* 4 */

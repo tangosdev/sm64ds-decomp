@@ -1,4 +1,6 @@
-struct Mtx43 { int m[12]; };
+// @symbol func_ov102_02149ff0
+/* recovered: shared common types */
+#include "common.h"
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern int data_0209caa0[];
 
@@ -13,5 +15,5 @@ void func_ov102_02149ff0(char *c)
     int b = (int)(*(unsigned short *)(c + 0xc) == 0x14);
     if (b == 0)
         return;
-    *(struct Mtx43 *)(c + 0x33c) = *(struct Mtx43 *)(c + 0xf0);
+    *(struct Matrix4x3 *)(c + 0x33c) = *(struct Matrix4x3 *)(c + 0xf0);
 }

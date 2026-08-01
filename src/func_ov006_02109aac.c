@@ -22,8 +22,8 @@ extern void func_ov004_020b65e4(void);
 extern unsigned char data_ov006_02142ab4[];
 extern char *func_020beb68;
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
-#define LNDR(e) ((int)(((long long)(e))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define LNDR(e) ((int)(((long long)(e))))
 #define I(o) (*(int*)(c + (o)))
 #define H(o) (*(short*)(c + (o)))
 #define B(o) (*(unsigned char*)(c + (o)))

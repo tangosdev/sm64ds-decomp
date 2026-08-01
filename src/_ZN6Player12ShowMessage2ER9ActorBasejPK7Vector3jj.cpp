@@ -68,7 +68,7 @@ int _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(char *thiz, ActorBase *act
 finish:
     *(u8 *)(thiz + 0x6e5) = 0;
     *(u8 *)(thiz + 0x70c) = d & 3;
-    *(u8 *)(((long long)(thiz + 0x70c)) & 0xFFFFFFFFFFFFFFFFLL) |= (e & 3) << 2;
+    *(u8 *)(((long long)(thiz + 0x70c))) |= (e & 3) << 2;
 
     if (!(data_ov002_0210e15c & 1)) {
         data_ov002_0210f224[0] = 0;

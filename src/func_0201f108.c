@@ -1,6 +1,5 @@
+#include "types.h"
 // func_0201f108 - fills BG0 screen buffer with sequential tile indices 0..0x3ff
-typedef unsigned short u16;
-
 extern u16* _ZN3G2S12GetBG0ScrPtrEv(void);
 
 void func_0201f108(void) {

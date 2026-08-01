@@ -63,7 +63,7 @@ extern "C" int _ZN7Skeeter8BehaviorEv(void* self)
         if (*(u8*)(c + 0x3a1) == 3) {
             _Z14ApproachLinearRsss((s16*)(c + 0x8c), -32767, 0x500);
             if (AngleDiff(*(s16*)(c + 0x8c), -32767) < 0x1000) {
-                s16* p8e = (s16*)(((int)c + 0x8e) & 0xFFFFFFFFFFFFFFFF);
+                s16* p8e = (s16*)(((int)c + 0x8e));
                 *p8e += 0x1000;
             }
         }

@@ -120,7 +120,7 @@ int _ZN6Rabbit8BehaviorEv(void* arg0)
                     } else if (temp_r1 == 1 && _ZN6Player12GetTalkStateEv(temp_r4) == -1) {
                         _ZN6Player9DropActorEv(temp_r4);
                         *(u8*)(c + 0x427) = 2;
-                        *(u16*)(((long long)(int)((char*)temp_r4 + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL) |= 0x800;
+                        *(u16*)(((long long)(int)((char*)temp_r4 + 0x6ce))) |= 0x800;
                     }
                 }
             }
@@ -136,7 +136,7 @@ int _ZN6Rabbit8BehaviorEv(void* arg0)
                 _ZN12CylinderClsn6UpdateEv(c + 0x110);
         }
         if (*(u8*)(c + 0x107) == 1) {
-            *(u8*)(((long long)(int)(c + 0x42a)) & 0xFFFFFFFFFFFFFFFFLL) = *(u8*)(((long long)(int)(c + 0x42a)) & 0xFFFFFFFFFFFFFFFFLL) + 1;
+            *(u8*)(((long long)(int)(c + 0x42a))) = *(u8*)(((long long)(int)(c + 0x42a))) + 1;
             if (*(u8*)(c + 0x42a) > 0x96) {
                 *(u8*)(c + 0x107) = 0;
                 *(u8*)(c + 0x42a) = 0;

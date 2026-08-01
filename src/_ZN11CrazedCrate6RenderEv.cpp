@@ -1,4 +1,7 @@
 //cpp
+// @symbol _ZN11CrazedCrate6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "CrazedCrate.h"
 class Sub {
 public:
     virtual void F0();
@@ -9,12 +12,13 @@ public:
     virtual void F5(int n);
 };
 
-extern "C" int _ZN11CrazedCrate6RenderEv(char *c) {
-    int r1 = *(int*)(c + 0xb0);
+int CrazedCrate::Render()
+{
+    int r1 = unk_0b0;
     r1 = r1 & 0x40000;
     r1 = r1 ? 1 : 0;
     if (r1) return 1;
-    Sub *sub = (Sub*)(c + 0xd4);
+    Sub *sub = (Sub*)((char *)&mModel);
     sub->F5(0);
     return 1;
 }

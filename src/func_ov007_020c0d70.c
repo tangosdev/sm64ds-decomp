@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Anim {
     char pad[0x20];
     int mode;     /* 0x20 */
@@ -18,7 +16,7 @@ struct AnimData {
     u32 count;      /* 0xc */
 };
 
-#define AT16(p, off) (*(short *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT16(p, off) (*(short *)(int)(((long long)(int)((char *)(p) + (off)))))
 
 void func_ov007_020c0d70(struct Anim *a, struct AnimData *d)
 {

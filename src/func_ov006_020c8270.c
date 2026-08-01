@@ -4,7 +4,7 @@ extern struct Pair data_ov006_0213b068;
 extern struct Pair data_ov006_0213b078;
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int b, int f, unsigned int g);
 extern void func_02012718(void* a, int b);
-extern void func_ov006_020e6df0(int a0, char* a1, void* a2);
+extern void Sound_PlayBank1Panned(int a0, char* a1, void* a2);
 
 void func_ov006_020c8270(char* c)
 {
@@ -13,13 +13,13 @@ void func_ov006_020c8270(char* c)
     int t0, t1;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)(c + 0x4c), data_ov006_0214041c, 0x40000000, 0x800, 0);
     *(int*)(c + 0xa4) = 0;
-    p = (struct Pair*)(((int)c + 0x3c) & 0xFFFFFFFFFFFFFFFF);
+    p = (struct Pair*)(((int)c + 0x3c));
     g = &data_ov006_0213b068;
     if (p->a == g->a &&
         (p->b == g->b || *(int*)(c + 0x3c) == 0)) {
         func_02012718((void*)0x110, *(short*)(c + 0x36) << 12);
     } else {
-        func_ov006_020e6df0(0, (char*)4, *(void**)(c + 0x14));
+        Sound_PlayBank1Panned(0, (char*)4, *(void**)(c + 0x14));
     }
     func_02012718((void*)0x1b5, *(short*)(c + 0x36) << 12);
     t0 = data_ov006_0213b078.a;

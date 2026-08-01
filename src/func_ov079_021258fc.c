@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int _ZN9Animation8FinishedEv(void *a);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int e);
 extern int Vec3_HorzDist(const void *a, const void *b);
@@ -61,7 +59,7 @@ void func_ov079_021258fc(char *self)
             self + 0x2cc,
             *(void **)((char *)data_ov079_021275ec[*(u8 *)(self + 0x414) * 5 + 3] + 4),
             0, 0x1000, 0);
-        p = (int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (int *)(((int)self + 0xb0));
         *p = *p & ~0x2000000;
         goto after_dist;
     }

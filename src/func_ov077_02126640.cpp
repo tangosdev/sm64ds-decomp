@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov077_02126640
+// recovered name: Spiny_Kill
+/* recovered: renamed to Class_Method */
+/* daTgz_c::Kill - recovered from vtable slot identity */
 struct Vector3 { int x, y, z; Vector3() {} };
 extern "C" {
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);

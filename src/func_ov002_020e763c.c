@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef signed char s8;
-
+#include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
 
 typedef struct Sub {
@@ -38,8 +36,8 @@ void func_ov002_020e763c(char *self)
     switch (((Sub *)(self + 0x400))->state) {
     case 0:
     {
-        int *s1 = (int *)(((int)cam + 0x80) & 0xFFFFFFFFFFFFFFFFLL);
-        int *s2 = (int *)(((int)cam + 0x8c) & 0xFFFFFFFFFFFFFFFFLL);
+        int *s1 = (int *)(((int)cam + 0x80));
+        int *s2 = (int *)(((int)cam + 0x8c));
         *(int *)(self + 0x460) = s1[0];
         *(int *)(self + 0x464) = s1[1];
         *(int *)(self + 0x468) = s1[2];
@@ -51,7 +49,7 @@ void func_ov002_020e763c(char *self)
         _ZN6Camera9SetFlag_3Ev(cam);
         if (func_ov002_020e7c90(self, cam) == 0)
             func_ov002_020e7934(self, cam);
-        *(u16 *)(((int)self + 0x496) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(u16 *)(((int)self + 0x496)) += 1;
         break;
     case 1:
         if (*(int *)(self + 0x440) != 2)
@@ -60,8 +58,8 @@ void func_ov002_020e763c(char *self)
         break;
     case 0x64:
     {
-        int *s1 = (int *)(((int)cam + 0x80) & 0xFFFFFFFFFFFFFFFFLL);
-        int *s2 = (int *)(((int)cam + 0x8c) & 0xFFFFFFFFFFFFFFFFLL);
+        int *s1 = (int *)(((int)cam + 0x80));
+        int *s2 = (int *)(((int)cam + 0x8c));
         *(int *)(self + 0x460) = s1[0];
         *(int *)(self + 0x464) = s1[1];
         *(int *)(self + 0x468) = s1[2];
@@ -72,7 +70,7 @@ void func_ov002_020e763c(char *self)
         _ZN6Camera9SetFlag_3Ev(cam);
         if (func_ov002_020e7c90(self, cam) == 0)
             func_ov002_020e7934(self, cam);
-        *(u16 *)(((int)self + 0x496) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(u16 *)(((int)self + 0x496)) += 1;
         break;
     case 0x65:
         _ZN6Camera9SetLookAtERK7Vector3(cam, &v);
@@ -82,17 +80,17 @@ void func_ov002_020e763c(char *self)
     case 0x1f4:
         _ZN6Camera9SetLookAtERK7Vector3(cam, (Vec3 *)(self + 0x460));
         _ZN6Camera6SetPosERK7Vector3(cam, (Vec3 *)(self + 0x46c));
-        *(u16 *)(((int)self + 0x496) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(u16 *)(((int)self + 0x496)) += 1;
         break;
     case 0x1f5:
-        *(int *)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFFLL) &= ~8;
-        *(int *)(((int)self + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) &= ~0x4000000;
+        *(int *)(((int)cam + 0x154)) &= ~8;
+        *(int *)(((int)self + 0xb0)) &= ~0x4000000;
         data_0209b454 &= ~0x4000000;
         ((Sub *)(self + 0x400))->state = 0xffff;
         *(s8 *)(self + 0xcc) = ((Sub *)(self + 0x400))->flag;
         break;
     default:
-        *(u16 *)(((int)self + 0x496) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+        *(u16 *)(((int)self + 0x496)) += 1;
         break;
     }
 }

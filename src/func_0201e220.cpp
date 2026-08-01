@@ -5,7 +5,7 @@ extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
-extern void func_0201d6a0(int a, int b);
+extern void Message_DrawCenteredLine(int a, int b);
 
 void func_0201e220(int arg) {
     volatile int li;
@@ -18,17 +18,17 @@ void func_0201e220(int arg) {
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
     if (arg == 0) {
-        func_0201d6a0(0x160, 0x20);
+        Message_DrawCenteredLine(0x160, 0x20);
         data_0209d6d4 = data_0209d6d4 + 1;
-        func_0201d6a0(0x200, 0x20);
+        Message_DrawCenteredLine(0x200, 0x20);
         data_0209d6d4 = data_0209d6d4 + 1;
-        func_0201d6a0(0xc0, 0x20);
+        Message_DrawCenteredLine(0xc0, 0x20);
     } else {
-        func_0201d6a0(0xc0, 0x20);
+        Message_DrawCenteredLine(0xc0, 0x20);
         data_0209d6d4 = data_0209d6d4 + 1;
-        func_0201d6a0(0x160, 0x20);
+        Message_DrawCenteredLine(0x160, 0x20);
         data_0209d6d4 = data_0209d6d4 + 1;
-        func_0201d6a0(0x200, 0x20);
+        Message_DrawCenteredLine(0x200, 0x20);
     }
 }
 }

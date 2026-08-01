@@ -43,5 +43,5 @@ void func_ov006_021250e4(char* base)
         *(unsigned short*)(base + 0xc0) = 0;
     }
 
-    *(int*)(((int)base + 0x51b8) & 0xFFFFFFFFFFFFFFFF) += 1;
+    *(int*)(((int)base + 0x51b8)) += 1;
 }

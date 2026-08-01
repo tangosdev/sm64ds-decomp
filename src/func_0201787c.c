@@ -1,10 +1,8 @@
+#include "types.h"
 /* func_0201787c at 0x0201787c
  * SharedFilePtr LoadFile variant: loads file, if first ref and non-null, calls Model::UpdateFileOffsets.
  * Returns the raw file pointer.
  */
-
-typedef unsigned char u8;
-
 struct SharedFilePtr {
     unsigned short fileID;  /* 0x00 */
     u8 numRefs;             /* 0x02 */

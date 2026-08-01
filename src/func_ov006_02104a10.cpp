@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-namespace Sound { void PlayBank2_2D(unsigned int); }
+namespace Sound { void _ZN5Sound12PlayBank2_2DEj(unsigned int); }
 void SetSubBg0Offset(int a, int b);
 extern int data_ov006_0212ecec[];
 
@@ -23,7 +23,7 @@ void func_ov006_02104a10(char *c, int idx)
         unsigned short st;
         *dst = t;
         st = *(unsigned short*)(c + m + 0x4600 + 0x90);
-        if (st == 1 || st == 0x11) Sound::PlayBank2_2D(0x1fc);
+        if (st == 1 || st == 0x11) Sound::_ZN5Sound12PlayBank2_2DEj(0x1fc);
         SetSubBg0Offset(0, *dst);
     }
 }

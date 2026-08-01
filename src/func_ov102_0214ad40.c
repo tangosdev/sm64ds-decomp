@@ -17,7 +17,7 @@ void func_ov102_0214ad40(char *c)
     func_ov102_0214b384(c, 4);
     *(unsigned char *)(c + 0x3f5) = 3;
     {
-        int *p = (int *)(((int)c + 0x128) & 0xFFFFFFFFFFFFFFFF);
+        int *p = (int *)(((int)c + 0x128));
         int v = *p;
         *p = v & ~2;
     }

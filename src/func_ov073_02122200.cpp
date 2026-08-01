@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov073_02122200
+// recovered name: ChiefChilly_Kill
+/* recovered: renamed to Class_Method */
+/* daKing_Donketu_c::Kill - recovered from vtable slot identity */
 typedef short s16;
 struct CylinderClsn;
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, CylinderClsn* c);

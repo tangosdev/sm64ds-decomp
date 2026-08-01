@@ -1,9 +1,7 @@
 //cpp
+#include "types.h"
 /* Heap::InitializeRootHeap() at 0x0203cae8 -- clears Memory::rootParamOffset
  * then tail-calls Heap::SetupRootHeap(). */
-
-typedef unsigned int u32;
-
 namespace Memory
 {
     extern u32 rootParamOffset;

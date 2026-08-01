@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov004_020ae140
+// recovered name: dScMgBase_c_OnKicked
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::OnKicked - recovered from vtable slot identity */
 struct Obj {
     virtual void v00(); virtual void v04(); virtual void v08(); virtual void v0c();
     virtual void v10(); virtual void v14(); virtual void v18(); virtual void v1c();

@@ -12,7 +12,7 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* self, const struct Vector3* pos, char* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* self);
-extern void func_ov002_020bedd4(char* self);
+extern void Player_AdvanceAnims(char* self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* self);
 extern int data_ov002_02110454[];
 extern short data_02082214[];
@@ -30,9 +30,9 @@ int _ZN6Player19St_TornadoSpin_MainEv(char* c)
     if (spd < 0) {
         *(int*)(c + 0xa8) = 0x1000;
     } else if (spd < 0x3c000) {
-        *(int*)(((s64)(int)(c + 0xa8)) & 0xFFFFFFFFFFFFFFFFLL) += 0x1000;
+        *(int*)(((s64)(int)(c + 0xa8))) += 0x1000;
     }
-    *(int*)(((s64)(int)(c + 0x688)) & 0xFFFFFFFFFFFFFFFFLL) += *(int*)(c + 0xa8);
+    *(int*)(((s64)(int)(c + 0x688))) += *(int*)(c + 0xa8);
     if (*(int*)(c + 0x688) < 0)
         *(int*)(c + 0x688) = 0;
     if (*(int*)(c + 0x688) > *(int*)(*(char**)(c + 0x364) + 0xdc) || (*(u8*)(c + 0x6e9) & 4) != 0) {
@@ -43,8 +43,8 @@ int _ZN6Player19St_TornadoSpin_MainEv(char* c)
         return 1;
     }
     if (*(s16*)(c + 0x69c) < 0x3000)
-        *(s16*)(((s64)(int)(c + 0x69c)) & 0xFFFFFFFFFFFFFFFFLL) += 0x100;
-    *(s16*)(((s64)(int)(c + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL) += *(s16*)(c + 0x69c);
+        *(s16*)(((s64)(int)(c + 0x69c))) += 0x100;
+    *(s16*)(((s64)(int)(c + 0x8e))) += *(s16*)(c + 0x69c);
     {
         int v = *(s16*)(c + 0x69c);
         if (v >= 0x1000) v = 0x1000;
@@ -71,7 +71,7 @@ int _ZN6Player19St_TornadoSpin_MainEv(char* c)
         else
             *(int*)(c + 0x60) = *(int*)(c + 0x644);
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     _ZN13RaycastGroundD1Ev(&rc);
     return 1;
 }

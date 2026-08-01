@@ -1,14 +1,17 @@
-extern int _ZN16MeshColliderBase9IsEnabledEv(void* m);
-extern void _ZN16MeshColliderBase7DisableEv(void* m);
+// @symbol func_ov079_021243e0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* actor);
 extern void* _ZN5Actor13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(void* a, void* b);
 
-struct Vec3 { int x, y, z; };
+
 
 int func_ov079_021243e0(char* c, int r4)
 {
-    struct Vec3 v;
+    struct Vector3 v;
     char* player;
     int dist;
     int y;

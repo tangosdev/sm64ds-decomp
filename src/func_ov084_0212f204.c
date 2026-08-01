@@ -1,4 +1,6 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov084_0212f204
+/* recovered: shared common types */
+#include "common.h"
 extern char* _ZN5Actor13ClosestPlayerEv(void);
 extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 extern short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
@@ -9,7 +11,7 @@ void func_ov084_0212f204(char* r4){
   {
     char* p = *(char**)(r4 + 0x460);
     if (p != 0) {
-      struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+      struct Vector3* pp = (struct Vector3*)(((int)p + 0x5c));
       v.x = pp->x;
       v.y = pp->y;
       v.z = pp->z;

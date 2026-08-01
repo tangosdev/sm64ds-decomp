@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov006_020f85b0
+// recovered name: dScMgMCarlo_c_Render
+/* recovered: renamed to Class_Method */
+/* dScMgMCarlo_c::Render - recovered from vtable slot identity */
 struct Node {
     virtual void f0();
     Node* next;

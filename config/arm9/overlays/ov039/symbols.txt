@@ -50,6 +50,7 @@ data_ov039_02111824 kind:data(any) addr:0x02111824
 Cloud_SpawnInfo kind:data(any) addr:0x02111834 ambiguous
 data_ov039_02111844 kind:data(any) addr:0x02111844 ambiguous
 _ZTV5Cloud kind:data(any) addr:0x02111858
+_ZTV11daObjKumo_c kind:data(any) addr:0x02111858
 data_ov039_021118e0 kind:bss addr:0x021118e0
 data_ov039_021118e4 kind:bss addr:0x021118e4
 data_ov039_021118ec kind:bss addr:0x021118ec

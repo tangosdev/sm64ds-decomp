@@ -1,10 +1,14 @@
+// @symbol func_ov030_02111b20
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_PathPtr.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, struct Vector3* v, unsigned int i);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern s16 Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void _Z11UpdateAngleRssis(short* p, short a, int b, short c);
-extern int _ZNK7PathPtr8NumNodesEv(void* self);
 
 int func_ov030_02111b20(char* c) {
   struct Vector3 v;
@@ -19,7 +23,7 @@ int func_ov030_02111b20(char* c) {
   *(s16*)(c+0x94) = *(s16*)(c+0x8e);
   if (d < *(int*)(c+0x98)) {
     n = _ZNK7PathPtr8NumNodesEv(c+0x398);
-    p = (int*)((long long)(int)(c + 0x3a0) & 0xFFFFFFFFFFFFFFFFLL);
+    p = (int*)((long long)(int)(c + 0x3a0));
     n = n - 1;
     *p = *p + 1;
     if (*(int*)(c+0x3a0) >= n) return 1;

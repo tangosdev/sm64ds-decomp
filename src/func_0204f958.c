@@ -1,8 +1,8 @@
+#include "types.h"
 /* func_0204f958 at 0x0204f958
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-typedef unsigned char u8;
 extern u8 *_ZN18NestedHeapIterator4NextEP13HeapAllocator(void *iter, void *alloc);
 extern void func_0204f558(u8 *thiz, int val);
 extern char data_020a4d6c[];

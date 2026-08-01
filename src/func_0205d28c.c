@@ -3,10 +3,10 @@
  * returns 0. Identical structure but different bl encoding (different distance).
  */
 
-extern void func_0205a61c(const void *src, void *dst, unsigned int size);
+extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_0205d28c(int arg0, void *dst, const void *src, unsigned int size)
 {
-    func_0205a61c(src, dst, size);
+    CpuCopy8(src, dst, size);
     return 0;
 }

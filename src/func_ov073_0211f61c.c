@@ -25,7 +25,7 @@ extern void func_02012694(int a, void* b);
 extern int RandomIntInternal(u16* seed);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3* v, void* rot, s32 e, s32 f);
 extern int _ZN8SaveData19IsCharacterUnlockedEj(u32 id);
-extern void func_ov073_0212157c(void* c, void* p);
+extern void ChiefChilly_ChangeState(void* c, void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12 x, Fix12 y, Fix12 z);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void* thiz, struct BCA_File* f, int i, int j, Fix12 fx, u16 k);
@@ -141,7 +141,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
         {
             void* anim = *(void**)(c + 0x37c);
             if (anim != &data_ov073_021233d0 && anim != &data_ov073_021233a0) {
-                func_ov073_0212157c(c, &data_ov073_021233a0);
+                ChiefChilly_ChangeState(c, &data_ov073_021233a0);
             }
         }
         return 1;
@@ -168,7 +168,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
         *py = (s16)(*py + 0x8000);
     }
     func_02012694(0x16a, c + 0x74);
-    func_ov073_0212157c(c, &data_ov073_02123360);
+    ChiefChilly_ChangeState(c, &data_ov073_02123360);
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(c + 0x30c, (struct BCA_File*)data_ov073_021232a0[1], 4, 0x40000000, 0x1000, 0);
     *(s32*)(c + 0x368) = 0x1000;
     *(u8*)(c + 0x4c8) = 2;

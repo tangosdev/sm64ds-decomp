@@ -1,6 +1,4 @@
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern u8 data_020a0e40;
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
@@ -36,7 +34,7 @@ void func_ov006_020e91a0(char* self, int idx)
     if (w > 0x18) return;
 
     {
-        u8* pc = (u8*)((long long)(int)(self + 0x554f) & 0xFFFFFFFFFFFFFFFFLL);
+        u8* pc = (u8*)((long long)(int)(self + 0x554f));
         *pc = *pc + 1;
     }
     *(s16*)(self + 0x5214 + n) = 0x20;

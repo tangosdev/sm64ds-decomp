@@ -1,7 +1,5 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 struct GXState {
     u16 lcdc;
     u16 pad;

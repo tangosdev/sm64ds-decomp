@@ -1,8 +1,5 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef signed char s8;
-
+#include "types.h"
 extern "C" {
 void _ZN9Animation7AdvanceEv(void* self);
 int _ZNK9Animation13GetFrameCountEv(void* self);
@@ -48,13 +45,13 @@ extern "C" int func_ov100_02144730(char* self, char* arg1)
         *(s8*)(arg1 + 0xcc) = t;
         ChangeArea(t);
         {
-            int* p = (int*)(((long long)(int)(*(char**)&data_0209f318 + 0x154)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)(((long long)(int)(*(char**)&data_0209f318 + 0x154)));
             *p &= ~0xc00;
         }
         func_02012694(*(int*)(self + 8) == 0x10 ? 7 : 5, self + 0x74);
     } else if (*(s8*)(self + 0x144) != 0) {
         if (_ZNK9Animation12WillHitFrameEi(self + 0x124, (u16)(_ZNK9Animation13GetFrameCountEv(self + 0x124) - 0x1c)) != 0) {
-            int* p = (int*)(((long long)(int)(*(char**)&data_0209f318 + 0x154)) & 0xFFFFFFFFFFFFFFFFLL);
+            int* p = (int*)(((long long)(int)(*(char**)&data_0209f318 + 0x154)));
             *p &= ~0xc00;
             if (*(int*)(self + 8) != 0xd) {
                 _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(&data_0209caa0 + 0x41), 0x21, self + 0x74);

@@ -18,6 +18,6 @@ void func_ov006_02115680(char *p, int idx)
             } while (i < *(int *)(p + 0x4674));
         }
     }
-    idx = (int)(((long long)idx) & 0xFFFFFFFFFFFFFFFFLL);
+    idx = (int)(((long long)idx));
     *(int *)(p + idx * 4 + 0x4784) = 0x14;
 }

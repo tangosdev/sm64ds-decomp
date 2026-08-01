@@ -1,4 +1,9 @@
-extern void func_ov004_020af094(void* a);
+// @symbol func_ov006_0210aa3c
+// recovered name: dScMgSlot3_c_OnAimedAtWithEgg
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* dScMgSlot3_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 
 void func_ov006_0210aa3c(void* a)
 {

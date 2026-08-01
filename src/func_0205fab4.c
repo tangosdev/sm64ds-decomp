@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern int func_0205fbd0(int v);
 
 int func_0205fab4(int x)

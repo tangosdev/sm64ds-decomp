@@ -1,9 +1,7 @@
+#include "types.h"
 // Serializes a small record into a byte stream: writes the type byte, then
 // for type 4 appends the two halfwords at +2 and +4 little-endian. Returns
 // the advanced stream pointer, or 0 for type 0 / unknown types.
-typedef unsigned char u8;
-typedef unsigned short u16;
-
 typedef struct Rec {
     u8 type;
     char _pad;

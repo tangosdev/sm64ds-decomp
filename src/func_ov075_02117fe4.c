@@ -1,11 +1,9 @@
+#include "types.h"
 /* func_ov075_02117fe4 @ 0x02117fe4 (ov075, size 0x264)
  * Per-player two-digit counter HUD: renders tens/ones OAM digits for each
  * player, then every 3 calls toggles a blink flag and refreshes per-player
  * state.
  */
-typedef unsigned char u8;
-typedef unsigned int u32;
-
 extern u8 data_0209fc50;
 extern u8 data_0209b2ec[];
 extern u8 data_0209b2f0[];
@@ -46,7 +44,7 @@ void func_ov075_02117fe4(char *c)
                 p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zT, data_ov075_0211c8b0, yT,
                                                             xbase + xoff, eight, minus1, sz, zT);
                 if (p != 0) {
-                    int *q = (int *)(int)(((long long)(int)(p + 1)) & 0xFFFFFFFFFFFFFFFFLL);
+                    int *q = (int *)(int)(((long long)(int)(p + 1)));
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
@@ -54,19 +52,19 @@ void func_ov075_02117fe4(char *c)
             p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zO, data_ov075_0211c8b0, yO,
                                                         xbase + xoff, eight, minus1, sz, zO);
             if (p != 0) {
-                int *q = (int *)(int)(((long long)(int)(p + 1)) & 0xFFFFFFFFFFFFFFFFLL);
+                int *q = (int *)(int)(((long long)(int)(p + 1)));
                 int val = *q;
                 *q = (val & ~0x3ff) | ((((u32)(val << 22) >> 22) + n % 10) & 0x3ff);
             }
         } while (xoff += stride, ++i < count);
     }
 
-    (*(int *)(int)(((long long)(int)(c + 0x268)) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(int *)(int)(((long long)(int)(c + 0x268))))++;
     if (*(int *)(c + 0x268) < 3)
         return;
 
     *(int *)(c + 0x268) = 0;
-    *(int *)(int)(((long long)(int)(c + 0x26c)) & 0xFFFFFFFFFFFFFFFFLL) ^= 1;
+    *(int *)(int)(((long long)(int)(c + 0x26c))) ^= 1;
 
     if (count <= 0)
         return;

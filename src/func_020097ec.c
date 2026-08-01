@@ -30,7 +30,7 @@ int func_020097ec(Obj *obj)
     Vec3i *src;
 
     func_0200cb58(obj, 0x18);
-    src = (Vec3i *)(((int)obj->other + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+    src = (Vec3i *)(((int)obj->other + 0x5c));
     obj->vec.x = src->x;
     obj->vec.y = src->y;
     obj->vec.z = src->z;

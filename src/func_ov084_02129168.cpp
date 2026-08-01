@@ -1,16 +1,17 @@
 //cpp
+// @symbol func_ov084_02129168
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_WithMeshClsn.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
+
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern int Vec3_HorzLen(void* v);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* thiz);
-extern void _ZN12WithMeshClsn12Unk_0203589cEv(void* thiz);
-extern void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void* thiz);
-extern void _ZN12WithMeshClsn15ClearGroundFlagEv(void* thiz);
 extern void func_02012694(int a, void* v);
-extern int data_ov084_02130cc0[];
 
 void func_ov084_02129168(char* c, char* actor)
 {

@@ -1,9 +1,8 @@
 //cpp
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned int u32;
-
-struct Vector3 { int x, y, z; };
+#include "types.h"
+// @symbol func_ov098_021390ec
+/* recovered: shared common types */
+#include "common.h"
 struct ClsnResult { int GetClsnID() const; };
 struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
 struct WithMeshClsn {

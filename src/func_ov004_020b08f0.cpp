@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov004_020b08f0
+// recovered name: dScMgBase_c_AfterInitResources
+/* recovered: renamed to Class_Method */
+/* dScMgBase_c::AfterInitResources - recovered from vtable slot identity */
 extern "C" {
     void LoadFont(int n);
     void func_ov004_020ae330();

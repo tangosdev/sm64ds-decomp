@@ -1,9 +1,4 @@
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
+#include "types.h"
 extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 

@@ -1,13 +1,18 @@
 //cpp
+// @symbol _ZN10ShutterBob8BehaviorEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "ShutterBob.h"
 class Platform {
 public:
 void UpdateClsnPosAndRot();
 };
 
-extern "C" int func_ov002_020bac18();
 
-extern "C" int _ZN10ShutterBob8BehaviorEv(Platform *r5) {
+int ShutterBob::Behavior()
+{
 int r4 = func_ov002_020bac18();
-r5->UpdateClsnPosAndRot();
+((Platform *)this)->UpdateClsnPosAndRot();
 return r4;
 }

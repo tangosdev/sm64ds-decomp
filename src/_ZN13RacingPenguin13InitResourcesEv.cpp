@@ -1,28 +1,16 @@
 //cpp
-extern "C" void *Model_LoadFile(void *fp);
-extern "C" void ModelBase_SetFile(void *self, void *bmd, int a, int b);
-extern "C" void *Animation_LoadFile(void *fp);
-extern "C" void *TextureSequence_LoadFile(void *fp);
-extern "C" void TextureSequence_Prepare(void *bmd, void *btp);
-extern "C" int ShadowModel_InitCylinder(void *self);
+// @symbol _ZN13RacingPenguin13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "RacingPenguin.h"
 extern "C" unsigned char NumStars(void);
-extern "C" void MovingCylinderClsn_Init(void *self, void *actor, int fix, int t, unsigned int a, unsigned int b);
-extern "C" void WithMeshClsn_Init(void *self, void *actor, int fix, int t, void *v16, int u);
-extern "C" void Actor_SetRanges(void *self, int a, int b, int cc, int d);
-extern "C" unsigned char Actor_TrackStar(void *self, unsigned int a, unsigned int b);
-extern "C" void PathPtr_FromID(void *self, unsigned int id);
-extern "C" void PathPtr_GetNode(void *self, void *v, unsigned int j);
-extern "C" void func_ov019_021114ec(void *c);
-extern "C" void func_ov019_021122dc(void *c, int i);
-extern "C" void func_ov019_021113b0(void *c);
+extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int cc, int d);
 
-extern void *data_ov019_02113498;
-extern void *data_ov019_02112788[];
-extern void *data_ov019_0211277c[];
 
-extern "C" int _ZN13RacingPenguin13InitResourcesEv(void *thiz)
+int RacingPenguin::InitResources()
 {
-    unsigned char *c = (unsigned char *)thiz;
+    unsigned char *c = (unsigned char *)((void *)this);
     int i;
 
     ModelBase_SetFile(c + 0xd4, Model_LoadFile(&data_ov019_02113498), 1, 1);
@@ -45,7 +33,7 @@ extern "C" int _ZN13RacingPenguin13InitResourcesEv(void *thiz)
         *(int *)(c + 0x84) = 0x1000;
         *(int *)(c + 0x88) = 0x1999;
         WithMeshClsn_Init(c + 0x1a8, c, 0xd0000, 0xd0000, 0, 0);
-        Actor_SetRanges(c, 0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
+        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(c, 0xf0000, 0xf0000, 0x1c20000, 0x1c20000);
     } else {
         MovingCylinderClsn_Init(c + 0x174, c, 0x82000, 0x12c000, 0x800004, 0);
         *(int *)(c + 0x80) = 0x1000;

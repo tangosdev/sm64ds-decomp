@@ -1,6 +1,6 @@
 //cpp
 extern "C" int func_ov002_020c18b0(char* self, int x);
-extern "C" void ApproachLinear2(short&, short, short);
+extern "C" void _Z15ApproachLinear2Rsss(short&, short, short);
 extern unsigned char data_020a0e40;
 extern short data_0209f4a4;
 
@@ -15,22 +15,22 @@ void func_ov002_020cd448(char* self) {
         before = *(short*)(self + 0x8c);
         func_ov002_020c18b0(self, 0);
         if (before < *(short*)(self + 0x8c)) goto tail;
-        ApproachLinear2(*(short*)(self + 0x92), *(short*)(self + 0x8c), 0x200);
+        _Z15ApproachLinear2Rsss(*(short*)(self + 0x92), *(short*)(self + 0x8c), 0x200);
         goto tail;
     }
     if (fl & 2) {
         if (*(short*)((char*)&data_0209f4a4 + data_020a0e40 * 0x18) != 0) goto tail;
         if (*(short*)(self + 0x92) > 0) {
-            short* q = (short*)(((int)self + 0x92) & 0xffffffffffffffff);
+            short* q = (short*)(((int)self + 0x92));
             *q += 0x200;
             if (*(short*)(self + 0x92) > 0x3f00) *(short*)(self + 0x92) = 0x3f00;
         } else {
-            short* q = (short*)(((int)self + 0x92) & 0xffffffffffffffff);
+            short* q = (short*)(((int)self + 0x92));
             *q -= 0x200;
             if (*(short*)(self + 0x92) < -0x3f00) *(short*)(self + 0x92) = -0x3f00;
         }
     }
 tail:
-    ApproachLinear2(*(short*)(self + 0x69e), *(short*)(self + 0x90), 0x200);
+    _Z15ApproachLinear2Rsss(*(short*)(self + 0x69e), *(short*)(self + 0x90), 0x200);
     *(short*)(self + 0x90) = *(short*)(self + 0x69e);
 }

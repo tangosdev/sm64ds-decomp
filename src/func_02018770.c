@@ -5,13 +5,13 @@
 
 typedef signed char s8;
 
-extern s8 unk_0208eb54; /* global state byte */
+extern s8 data_0208eb54; /* global state byte */
 extern void UnloadArchive(void);
 
 void func_02018770(void) {
-    if (unk_0208eb54 < 0) {
+    if (data_0208eb54 < 0) {
         return;
     }
     UnloadArchive();
-    unk_0208eb54 = -1;
+    data_0208eb54 = -1;
 }

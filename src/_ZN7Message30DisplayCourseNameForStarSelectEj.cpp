@@ -1,7 +1,8 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
+// @symbol _ZN7Message30DisplayCourseNameForStarSelectEj
+/* recovered: named members + shared header, named members + shared header */
+#include "Message.h"
 struct StarEntry {
     int m0;
     u16 m4;
@@ -26,15 +27,14 @@ void func_0201eaac(void);
 void func_0201b6f8(int a);
 int func_02054d88(void);
 void MultiStore_Int(int a, int b, int n);
-int func_02054fb0(void);
+int _ZN2G212GetBG3ScrPtrEv(void);
 void MultiStore16(int a, int b, int n);
 void SetSubBg1Offset(int a, int b);
 void func_0201b7cc(void);
 void func_0201b388(int a);
 }
 
-extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int courseID)
-{
+extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *self) {
     volatile unsigned short ls;
     volatile int li1;
     volatile int li2;
@@ -44,7 +44,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
     int div;
     int div2;
 
-    data_0209d6d4 = (short)(courseID + 0x196);
+    data_0209d6d4 = (short)((unsigned int)&self->unk_196);
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -65,17 +65,17 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
     }
 
     {
-        int s1 = func_02054fb0();
+        int s1 = _ZN2G212GetBG3ScrPtrEv();
         ls = 0x2ff;
         MultiStore16(ls, s1, 0x800);
     }
 
     if (data_0209d6d4 >= 0x1a5) {
         data_0209d6c4 = 0;
-        q = (u16*)(func_02054fb0() + 0x400);
+        q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x400);
     } else {
         data_0209d6c4 = 1;
-        q = (u16*)(func_02054fb0() + 0x4c0);
+        q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x4c0);
     }
     div = 0;
     do {
@@ -93,7 +93,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
 
     data_0209d6c0 = 1;
     {
-        StarEntry* e = (StarEntry*)(int)(((long long)(int)((char*)data_0209d708 + 0x1470)) & 0xFFFFFFFFFFFFFFFFLL);
+        StarEntry* e = (StarEntry*)(int)(((long long)(int)((char*)data_0209d708 + 0x1470)));
         data_0209d6f0 = e;
         sum = data_0209d6fc + 0x28;
         sum += data_0209d70c[1];
@@ -111,7 +111,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(unsigned int cours
         MultiStore_Int(li2, p2, 0x800);
     }
 
-    q = (u16*)(func_02054fb0() + 0x240);
+    q = (u16*)(_ZN2G212GetBG3ScrPtrEv() + 0x240);
     div2 = 0;
     do {
         q[div2] = (u16)(div2 + 0x240);

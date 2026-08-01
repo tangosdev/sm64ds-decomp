@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov071_0211f6f8
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Vector3 { int x, y, z; };
+
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int n, const Vector3& v);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, int a, int b, unsigned int e);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
@@ -21,7 +24,7 @@ struct Base {
 extern "C" int func_ov071_0211f6f8(char* c)
 {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, *(Vector3*)(c + 0x74));
-    *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~1;
+    *(int*)(((int)c + 0xb0)) &= ~1;
     *(int*)(c + 0x98) = 0xa000;
     *(int*)(c + 0xa8) = 0x28000;
     *(short*)(c + 0x3a8) = 0x2d;

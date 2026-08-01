@@ -1,10 +1,4 @@
-typedef signed char s8;
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 struct Vec3 { s32 x, y, z; };
 struct Vec3_16f { s16 x, y, z; };
 struct Spawn { struct Vec3_16f rot; struct Vec3 pos; };
@@ -26,7 +20,7 @@ extern s32 func_ov002_020ed6cc(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-extern void func_020383fc(void *self);
+extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
 
 void func_ov002_020ecb0c(void *arg0)
 {
@@ -106,5 +100,5 @@ void func_ov002_020ecb0c(void *arg0)
     if (flag == 1)
         _ZN12CylinderClsn6UpdateEv(c + 0x110);
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    func_020383fc(c + 0x144);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
 }

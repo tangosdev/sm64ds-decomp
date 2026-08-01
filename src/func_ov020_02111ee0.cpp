@@ -20,7 +20,7 @@ int func_ov020_02111ee0(char* c){
     *(unsigned char*)(c+0x450) = 1;
     *(short*)(c+0x100) = 0;
     {
-      int* p60 = (int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFF);
+      int* p60 = (int*)(((int)c + 0x60));
       *p60 = *p60 + 0x32000;
     }
     *(int*)(c+0x43c) = -0x19000;

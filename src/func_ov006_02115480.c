@@ -7,12 +7,12 @@ void func_ov006_02115480(char *o)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        int *A = (int *)(((int)(o + i * 4) + 0x478c) & 0xFFFFFFFFFFFFFFFF);
-        int *E = (int *)(((int)(o + i * 4) + 0x47f0) & 0xFFFFFFFFFFFFFFFF);
-        int *D0 = (int *)(((int)(o + i * 8) + 0x47c8) & 0xFFFFFFFFFFFFFFFF);
-        int *D1 = (int *)(((int)(o + i * 8) + 0x47cc) & 0xFFFFFFFFFFFFFFFF);
-        int *B = (int *)(((int)(o + i * 4) + 0x47a0) & 0xFFFFFFFFFFFFFFFF);
-        int *C = (int *)(((int)(o + i * 4) + 0x47b4) & 0xFFFFFFFFFFFFFFFF);
+        int *A = (int *)(((int)(o + i * 4) + 0x478c));
+        int *E = (int *)(((int)(o + i * 4) + 0x47f0));
+        int *D0 = (int *)(((int)(o + i * 8) + 0x47c8));
+        int *D1 = (int *)(((int)(o + i * 8) + 0x47cc));
+        int *B = (int *)(((int)(o + i * 4) + 0x47a0));
+        int *C = (int *)(((int)(o + i * 4) + 0x47b4));
         if (*A > 0) {
             if (*E > 0) {
                 *E -= 1;

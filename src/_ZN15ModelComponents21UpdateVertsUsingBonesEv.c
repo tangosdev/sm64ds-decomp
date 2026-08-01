@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef int s32;
-
+#include "types.h"
 struct BMD_File {
     u32 scaleShift;  /* 0x00 */
     u32 numBones;    /* 0x04 */

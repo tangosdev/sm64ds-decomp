@@ -1,8 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-
+#include "types.h"
 extern u8 data_020a0e40;
 extern u16 data_0209f49c[];
 extern char data_ov002_02110424;
@@ -19,7 +15,7 @@ struct Player {
 };
 
 extern void func_ov002_020e28d4(struct Player *thiz, int a, int b);
-extern void func_ov002_020bedd4(struct Player *thiz);
+extern void Player_AdvanceAnims(struct Player *thiz);
 extern void _ZN6Player11ChangeStateERNS_5StateE(struct Player *thiz, void *st);
 
 int _ZN6Player12St_Spin_MainEv(struct Player *thiz)
@@ -31,11 +27,11 @@ int _ZN6Player12St_Spin_MainEv(struct Player *thiz)
     }
     if (*(u16*)((char*)data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) {
         thiz->field_a0 = -0x9000;
-        *(s16 *)(int)(((long long)(int)((char *)thiz + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL) += 0x2000;
+        *(s16 *)(int)(((long long)(int)((char *)thiz + 0x8e))) += 0x2000;
     } else {
         thiz->field_a0 = -0xc000;
-        *(s16 *)(int)(((long long)(int)((char *)thiz + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL) += 0x1800;
+        *(s16 *)(int)(((long long)(int)((char *)thiz + 0x8e))) += 0x1800;
     }
-    func_ov002_020bedd4(thiz);
+    Player_AdvanceAnims(thiz);
     return 1;
 }

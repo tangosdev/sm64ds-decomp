@@ -1,7 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol func_ov092_021311b0
+/* recovered: shared common types */
+#include "common.h"
+
 typedef short s16;
-#define LA(p) (((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL)
+#define LA(p) (((long long)(int)(p)))
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
@@ -15,7 +18,7 @@ int func_02037e84(void *p);
 void func_0203568c(void *p, int v);
 void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, Vector3 *pos, int fix);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int b, int cc, int d);
-void func_020383fc(void *self);
+void WithMeshClsn_UpdateContinuous_Veneer(void *self);
 void func_02012694(int a, void *pos);
 }
 extern "C" void func_ov092_021311b0(void *thiz)
@@ -40,7 +43,7 @@ extern "C" void func_ov092_021311b0(void *thiz)
     saved[0] = *(int *)(c + 0x5c);
     saved[1] = *(int *)(c + 0x60);
     saved[2] = *(int *)(c + 0x64);
-    func_020383fc(c + 0x324);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x324);
 
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x324) != 0) {
         _ZN5Actor14TriplePoofDustEv(c);

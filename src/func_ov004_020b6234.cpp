@@ -1,7 +1,7 @@
 //cpp
 namespace Sound { void PlayBank2_2D(unsigned int id); }
 extern "C" void func_02012790(int a);
-extern "C" void ApproachLinear(int &x, int target, int step);
+extern "C" void _Z14ApproachLinearRiii(int &x, int target, int step);
 
 struct G { int v; };
 extern G *data_ov004_020beb68;
@@ -32,7 +32,7 @@ extern "C" void func_ov004_020b6234(void) {
         return;
     }
     data_ov004_020bfa10 = 1;
-    ApproachLinear(data_ov004_020bfa18, data_ov004_020bc7d0, 1);
+    _Z14ApproachLinearRiii(data_ov004_020bfa18, data_ov004_020bc7d0, 1);
     data_ov004_020bfa00 = data_ov004_020bfa18 - 1;
     Sound::PlayBank2_2D(0x14e);
     data_ov004_020bfa20 = (void *)func_ov004_020b5f6c;

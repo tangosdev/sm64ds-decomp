@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-
+#include "types.h"
 struct Obj {
     char pad[0x64];
     u32 unk64;
@@ -10,13 +8,13 @@ struct Obj {
 
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
-void func_020580f0(u16 *self);
+void OS_SleepThread(u16 *self);
 
 void func_0205816c(struct Obj *self) {
     u32 r4 = _ZN3IRQ7DisableEv();
     u32 r1 = self->unk64;
     if (r1 != 2) {
-        func_020580f0(&self->unk90);
+        OS_SleepThread(&self->unk90);
     }
     _ZN3IRQ7RestoreEj(r4);
 }

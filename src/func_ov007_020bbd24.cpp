@@ -29,7 +29,7 @@ extern "C" int func_ov007_020bbd24(int param)
     if (r5 == 1) {
         data_ov007_02104ba0->f34 = 0;
     } else if (r5 == 0) {
-        int *fp = (int *)(((int)data_ov007_02104ba0 + 0x34) & 0xFFFFFFFFFFFFFFFF);
+        int *fp = (int *)(((int)data_ov007_02104ba0 + 0x34));
         *fp += r4;
     }
 
@@ -37,7 +37,7 @@ extern "C" int func_ov007_020bbd24(int param)
 
     switch (param) {
     case 0: {
-        int *q = (int *)(((int)&data_ov007_02104b9c->f4->f50) & 0xFFFFFFFFFFFFFFFF);
+        int *q = (int *)(((int)&data_ov007_02104b9c->f4->f50));
         int v = *q;
         if (v <= 0x5000) {
             *q = v + 0x7d0;

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-    int ApproachLinear(int& v, int a, int b);
+    int _Z14ApproachLinearRiii(int& v, int a, int b);
     void func_02012790(int a);
 }
 
@@ -10,7 +10,7 @@ extern char* data_ov006_02142aa4[];
 
 extern "C" int func_ov006_02107a6c(void)
 {
-    if (ApproachLinear(data_ov006_021428d0, 0, 1) != 0) {
+    if (_Z14ApproachLinearRiii(data_ov006_021428d0, 0, 1) != 0) {
         int idx;
         data_ov006_0213e2dc = data_ov006_0213e2dc + 1;
         idx = data_ov006_0213e2dc;

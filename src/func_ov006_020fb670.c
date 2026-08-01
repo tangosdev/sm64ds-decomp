@@ -31,6 +31,6 @@ void func_ov006_020fb670(char *obj)
     r = (((unsigned int) RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff;
     *((short *) ((obj + 0x5b00) + 0xc4)) = (short) ((((r << 5) >> 15) << 2) + 0x200);
   }
-  unsigned char *bp = (unsigned char *) (((int) obj + 0x5c34) & 0xFFFFFFFFFFFFFFFF);
+  unsigned char *bp = (unsigned char *) (((int) obj + 0x5c34));
   *bp = *bp + 1;
 }

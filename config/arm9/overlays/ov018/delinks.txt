@@ -4,3 +4,190 @@
     .ctor       start:0x02112e6c end:0x02112e78 kind:rodata align:4
     .data       start:0x02112e80 end:0x02113bc0 kind:data align:32
     .bss        start:0x02113bc0 end:0x02113cc0 kind:bss align:32
+src/func_ov018_021111a0.c:
+    .text start:0x021111a0 end:0x021111e4
+
+src/func_ov018_021111e4.c:
+    .text start:0x021111e4 end:0x0211123c
+
+src/func_ov018_0211123c.cpp:
+    complete
+    .text start:0x0211123c end:0x02111278
+
+src/func_ov018_02111278.cpp:
+    complete
+    .text start:0x02111278 end:0x021112fc
+
+src/func_ov018_021112fc.c:
+    complete
+    .text start:0x021112fc end:0x02111340
+
+src/func_ov018_02111340.cpp:
+    complete
+    .text start:0x02111340 end:0x02111368
+
+src/func_ov018_02111368.cpp:
+    complete
+    .text start:0x02111368 end:0x021116b4
+
+src/func_ov018_021116b4.cpp:
+    complete
+    .text start:0x021116b4 end:0x021117e8
+
+src/func_ov018_021117e8.cpp:
+    complete
+    .text start:0x021117e8 end:0x02111804
+
+src/func_ov018_02111804.c:
+    complete
+    .text start:0x02111804 end:0x02111818
+
+src/SkiLift_Spawn.c:
+    complete
+    .text start:0x02111818 end:0x02111848
+
+src/_ZN7SkiLiftD1Ev.cpp:
+    .text start:0x02111848 end:0x02111898
+
+src/_ZN7SkiLiftD0Ev.c:
+    complete
+    .text start:0x02111898 end:0x021118fc
+
+src/func_ov018_021118fc.c:
+    complete
+    .text start:0x021118fc end:0x02111968
+
+src/func_ov018_02111968.c:
+    complete
+    .text start:0x02111968 end:0x02111a48
+
+src/func_ov018_02111a48.c:
+    complete
+    .text start:0x02111a48 end:0x02111b3c
+
+src/func_ov018_02111b3c.c:
+    complete
+    .text start:0x02111b3c end:0x02111bf0
+
+src/func_ov018_02111bf0.c:
+    complete
+    .text start:0x02111bf0 end:0x02111d28
+
+src/func_ov018_02111d28.cpp:
+    .text start:0x02111d28 end:0x02111e28
+
+src/func_ov018_02111e28.cpp:
+    complete
+    .text start:0x02111e28 end:0x02111f1c
+
+src/func_ov018_02111f1c.cpp:
+    .text start:0x02111f1c end:0x02111fac
+
+src/func_ov018_02111fac.c:
+    complete
+    .text start:0x02111fac end:0x021121dc
+
+src/func_ov018_021121dc.cpp:
+    complete
+    .text start:0x021121dc end:0x02112234
+
+src/func_ov018_02112234.c:
+    complete
+    .text start:0x02112234 end:0x021122ec
+
+src/func_ov018_021122ec.c:
+    complete
+    .text start:0x021122ec end:0x0211235c
+
+src/func_ov018_0211235c.cpp:
+    complete
+    .text start:0x0211235c end:0x02112398
+
+src/func_ov018_02112398.cpp:
+    complete
+    .text start:0x02112398 end:0x021123d0
+
+src/func_ov018_021123d0.c:
+    complete
+    .text start:0x021123d0 end:0x021123ec
+
+src/_ZN7SkiLift16CleanupResourcesEv.cpp:
+    complete
+    .text start:0x021123ec end:0x02112450
+
+src/_ZN7SkiLift16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02112450 end:0x02112454
+
+src/_ZN7SkiLift6RenderEv.cpp:
+    complete
+    .text start:0x02112454 end:0x02112480
+
+src/_ZN7SkiLift8BehaviorEv.cpp:
+    .text start:0x02112480 end:0x021124d0
+
+src/_ZN7SkiLift13InitResourcesEv.cpp:
+    .text start:0x021124d0 end:0x0211267c
+
+src/MotherPenguin_Spawn.c:
+    complete
+    .text start:0x0211267c end:0x021126d4
+
+src/func_ov018_021126d4.c:
+    complete
+    .text start:0x021126d4 end:0x021126f8
+
+src/func_ov018_021126f8.c:
+    .text start:0x021126f8 end:0x02112730
+
+src/func_ov018_02112730.cpp:
+    .text start:0x02112730 end:0x0211278c
+
+src/PowerStarCreate_Spawn.c:
+    complete
+    .text start:0x0211278c end:0x021127bc
+
+src/_ZN8IceSheetD1Ev.c:
+    .text start:0x021127bc end:0x02112800
+
+src/_ZN8IceSheetD0Ev.c:
+    .text start:0x02112800 end:0x02112858
+
+src/func_ov018_02112858.cpp:
+    complete
+    .text start:0x02112858 end:0x02112880
+
+src/func_ov018_02112880.cpp:
+    complete
+    .text start:0x02112880 end:0x021128e0
+
+src/func_ov018_021128e0.cpp:
+    complete
+    .text start:0x021128e0 end:0x02112924
+
+src/_ZN8IceSheet16CleanupResourcesEv.cpp:
+    .text start:0x02112924 end:0x02112968
+
+src/_ZN8IceSheet6RenderEv.cpp:
+    complete
+    .text start:0x02112968 end:0x02112990
+
+src/_ZN8IceSheet8BehaviorEv.cpp:
+    complete
+    .text start:0x02112990 end:0x021129c0
+
+src/_ZN8IceSheet13InitResourcesEv.cpp:
+    .text start:0x021129c0 end:0x02112a44
+
+src/IceSheet_Spawn.c:
+    complete
+    .text start:0x02112a44 end:0x02112a74
+
+src/__sinit_ov018_02112c14.c:
+    .init start:0x02112c14 end:0x02112c80
+
+src/__sinit_ov018_02112c80.cpp:
+    .init start:0x02112c80 end:0x02112e00
+
+src/__sinit_ov018_02112e00.c:
+    .init start:0x02112e00 end:0x02112e6c

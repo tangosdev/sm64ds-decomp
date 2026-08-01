@@ -20,5 +20,5 @@ void func_0204d9a0(struct List* list, struct Node* node)
         list->tail->next = node;
         list->tail = node;
     }
-    *(int*)(((int)list + 4) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(int*)(((int)list + 4)) += 1;
 }

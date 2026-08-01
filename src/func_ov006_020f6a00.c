@@ -11,7 +11,7 @@ void func_ov006_020f6a00(char *this)
   idx = ((((unsigned short) (*((unsigned short *) ((this + 0x5300) + 0xea)))) << 1) - 1) - (*((short *) ((this + 0x5300) + 0xe8)));
   *((unsigned char *) ((this + (idx * 0x18)) + 0x51bb)) = 1;
   {
-    short *sp = (short *) (((int) this + 0x53e8) & 0xFFFFFFFFFFFFFFFF);
+    short *sp = (short *) (((int) this + 0x53e8));
     *sp = (*sp) + 1;
   }
   this = this + 0x5000;

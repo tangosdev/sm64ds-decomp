@@ -1,4 +1,4 @@
-typedef unsigned short u16;
+#include "types.h"
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* t);
 

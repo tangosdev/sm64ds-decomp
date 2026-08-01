@@ -16,7 +16,7 @@ extern void _ZN6Camera9SetLookAtERK7Vector3(void *cam, Vector3 *v);
 extern void _ZN6Camera6SetPosERK7Vector3(void *cam, Vector3 *v);
 extern void _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);
-extern void func_ov078_02125c48(void *c, void *p);
+extern void KingBobOmb_SetState(void *c, void *p);
 
 extern void *data_0209f318;
 extern Matrix4x3 data_020a0e68;
@@ -61,7 +61,7 @@ int func_ov078_02124520(char *c)
     }
     player = *(char **)(c + 0x430);
     if (_ZN6Player12GetTalkStateEv(player) != -1) {
-        pp = (int *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        pp = (int *)(((int)player + 0x5c));
         in.x = 0;
         in.y = 0;
         in.z = 0;
@@ -91,9 +91,9 @@ int func_ov078_02124520(char *c)
         *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
         return 1;
     }
-    *(unsigned int *)(((int)cam + 0x154) & 0xFFFFFFFFFFFFFFFF) &= ~8;
+    *(unsigned int *)(((int)cam + 0x154)) &= ~8;
     if (_ZN9Animation8FinishedEv(c + 0x31c)) {
-        func_ov078_02125c48(c, &data_ov078_0212703c);
+        KingBobOmb_SetState(c, &data_ov078_0212703c);
     }
     return 1;
 }

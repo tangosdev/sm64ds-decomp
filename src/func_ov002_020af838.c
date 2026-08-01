@@ -1,15 +1,15 @@
-typedef unsigned int u32;
-typedef int Fix12i;
-
-struct Vec { Fix12i x, y, z; };
+#include "types.h"
+// @symbol func_ov002_020af838
+/* recovered: shared common types */
+#include "common.h"
 struct Vector3_16;
 
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, struct Vec* v, struct Vector3_16* rot, int e, int f);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, struct Vector3* v, struct Vector3_16* rot, int e, int f);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* thiz);
 
 void func_ov002_020af838(char* c)
 {
-    struct Vec vec;
+    struct Vector3 vec;
 
     vec.x = *(Fix12i*)(c + 0x378);
     vec.y = *(Fix12i*)(c + 0x37c);

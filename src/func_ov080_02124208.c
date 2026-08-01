@@ -1,12 +1,16 @@
+// @symbol func_ov080_02124208
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Player.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
-extern void _ZN6Player6BounceE5Fix12IiE(void* player, int v);
 extern void _ZN6Player16IncMegaKillCountEv(void* player);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* player, void* pos, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);
-extern void func_ov080_02124088(void* self);
 extern void func_02012694(int a, void* p);
 
-struct Vec3 { int x, y, z; };
+
 
 void func_ov080_02124208(char* c)
 {
@@ -50,7 +54,7 @@ void func_ov080_02124208(char* c)
     }
 
     {
-        struct Vec3 pos;
+        struct Vector3 pos;
         pos.x = *(int*)(c + 0x5c);
         pos.y = *(int*)(c + 0x60);
         pos.z = *(int*)(c + 0x64);

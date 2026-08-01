@@ -17,7 +17,7 @@ void func_ov007_020c92d0(char *state)
         *(short *)(state + 10) = *(short *)(state + 8);
         *(int *)(state + 4) = 0;
     } else if ((unsigned int)*(int *)(state + 12) < 0xffffffffU) {
-        int *counter = (int *)(((long long)((int)state + 12)) & 0xffffffffffffffffLL);
+        int *counter = (int *)(((long long)((int)state + 12)));
         ++*counter;
     }
 

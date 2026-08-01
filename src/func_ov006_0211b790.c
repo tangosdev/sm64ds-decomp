@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 void func_ov006_0211b790(char* base)
 {
     if (*(u8*)(base + 0x5626) == 0) {

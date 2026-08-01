@@ -1,7 +1,4 @@
-typedef signed int s32;
-typedef signed long long s64;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void _ZN4cstd16reciprocal_asyncE5Fix12IiE(s32 x);
 extern void func_02053008(s32 x);
 extern s64 _ZN4cstd11ldiv_resultEv(void);

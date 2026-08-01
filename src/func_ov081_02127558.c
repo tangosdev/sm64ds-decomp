@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef short s16;
-
+#include "types.h"
 extern int _Z15ApproachLinear2Riii(int* p, int a, int b);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* actor, int a, int b, unsigned int c, unsigned int d);
 extern int _ZN5Actor13DistToCPlayerEv(void* thiz);

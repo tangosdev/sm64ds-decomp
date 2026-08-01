@@ -4,7 +4,7 @@ extern void func_ov006_020f56f8(char* p);
 void func_ov006_020f639c(char* c)
 {
     if (*(unsigned short*)(c + 0x5300 + 0xe2)) {
-        unsigned short* q = (unsigned short*)(((int)c + 0x53e2) & 0xFFFFFFFFFFFFFFFF);
+        unsigned short* q = (unsigned short*)(((int)c + 0x53e2));
         *q = *q - 1;
         return;
     }

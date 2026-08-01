@@ -1,7 +1,10 @@
-extern int VT[];
-extern void _ZN5ActorD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern void *HEAP;
+// @symbol func_ov002_020b6d4c
+// recovered name: daObjLava_c_OnYoshiTryEat
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjLava_c::OnYoshiTryEat - recovered from vtable slot identity */
 int *func_ov002_020b6d4c(int *t)
 {
     t[0] = (int)VT;

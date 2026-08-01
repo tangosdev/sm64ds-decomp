@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern void func_ov063_02119e38(void* self, int m, int a, int b);
 extern int func_ov063_0211a0dc(void* self);
 extern void func_02012694(int id, void* p);
@@ -46,7 +44,7 @@ void func_ov063_0211873c(char* self)
         return;
     }
     if (*(u16*)(self + 0x500 + 0xc4) == 0) {
-        int* p = (int*)(((long long)(int)(self + 0x19c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int* p = (int*)(((long long)(int)(self + 0x19c)));
         *(u8*)(self + 0x5cc) = 6;
         *p |= 1;
         *(u8*)(self + 0x5c9) = 0;

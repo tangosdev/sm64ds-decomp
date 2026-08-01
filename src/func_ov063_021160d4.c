@@ -33,6 +33,6 @@ void func_ov063_021160d4(char *c)
   SubVec3((Vec3 *) (c + 0x534), (Vec3 *) (c + 0x5c), (Vec3 *) (c + 0x534));
   SubVec3((Vec3 *) (c + 0x534), (Vec3 *) (c + 0x540), (Vec3 *) (c + 0x534));
   Vec3_MulScalarInPlace((Vec3 *) (c + 0x534), 0x6800);
-  p = (int *) (((int) c + 0x53c) & 0xFFFFFFFFFFFFFFFF);
+  p = (int *) (((int) c + 0x53c));
   *p += *((int *) (c + 0x598));
 }

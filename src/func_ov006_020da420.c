@@ -3,7 +3,7 @@ void func_ov006_020da420(char *c){
     int i;
     char *p;
     short arr[6];
-    short *a = (short *)(((int)arr) & 0xFFFFFFFFFFFFFFFF);
+    short *a = (short *)(((int)arr));
     a[0] = 0;
     a[1] = 0;
     a[2] = 0;

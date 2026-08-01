@@ -1,11 +1,4 @@
-typedef signed int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int Fix12i;
-
+#include "types.h"
 struct ParticleCallback;
 
 typedef struct { s32 x, y, z; } Vec3;
@@ -45,14 +38,14 @@ void func_ov063_02117364(void* c)
     pos.z = *(s32*)((char*)c + 0x64);
 
     if (((Sub*)((char*)c + 0x500))->fc2 != 0)
-        (*(u16*)(((int)c + 0x5c2) & 0xFFFFFFFFFFFFFFFFLL))--;
+        (*(u16*)(((int)c + 0x5c2)))--;
 
     if (*(u8*)((char*)c + 0x5c9) == 0) {
         if (*(u8*)((char*)c + 0x5c8) == 0) {
             if (((Sub*)((char*)c + 0x500))->fc2 != 0)
                 return;
             {
-                FlagW* fw = (FlagW*)(((int)c + 0x5d4) & 0xFFFFFFFFFFFFFFFFLL);
+                FlagW* fw = (FlagW*)(((int)c + 0x5d4));
                 fw->flag ^= 1;
             }
             func_ov063_02117650(c);
@@ -85,7 +78,7 @@ void func_ov063_02117364(void* c)
     if (((Sub*)((char*)c + 0x500))->fc2 != 0)
         return;
     *(u8*)((char*)c + 0x5cc) = 1;
-    *(u32*)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFFLL) &= ~1u;
+    *(u32*)(((int)c + 0x19c)) &= ~1u;
     ((Sub*)((char*)c + 0x500))->fbe = ((u32)RandomIntInternal(&data_0209e650) >> 16 & 0x3f) + 0x3c;
     ((Sub*)((char*)c + 0x500))->fc4 = ((u32)RandomIntInternal(&data_0209e650) >> 16) % 150 + 0x12c;
     *(u32*)((char*)c + 0x5dc) = 0;

@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 extern void* _ZN18NestedHeapIterator4NextEP13HeapAllocator(void* self, void* cur);
 
 void* _ZN18NestedHeapIterator19RecursiveFindNestedEPv(void* self, void* addr)

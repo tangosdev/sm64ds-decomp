@@ -1,36 +1,36 @@
+// @symbol func_ov084_0212c1a0
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 
-struct Vec3 { int x, y, z; };
 
-extern s16 Vec3_HorzAngle(struct Vec3* v0, struct Vec3* v1);
+
+extern s16 Vec3_HorzAngle(struct Vector3* v0, struct Vector3* v1);
 extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
-extern void func_ov084_0212c9f0(char* c, int arg1, unsigned int arg2);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
-extern void OpenCannonInCurLevel(void);
 extern void func_ov084_0212c960(char* c, int a);
-extern int func_ov084_0212cae0(char* c);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_ov002_020bc990(void* actor);
-extern int func_ov084_0212ccb4(char* c);
 
 extern char* data_0209f318;
 extern signed char data_0209f2f8;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 void func_ov084_0212c1a0(char* c)
 {
     char* r5 = *(char**)(c + 0x194);
     char* r4 = data_0209f318;
-    struct Vec3 v;
+    struct Vector3 v;
     s16 ang;
     int* src = (int*)AT(r5, 0x5c);
 
     v.x = src[0];
     v.y = src[1];
     v.z = src[2];
-    ang = Vec3_HorzAngle((struct Vec3*)(c + 0x5c), &v);
+    ang = Vec3_HorzAngle((struct Vector3*)(c + 0x5c), &v);
 
     switch (*(unsigned char*)(c + 0x1e8)) {
     case 0:

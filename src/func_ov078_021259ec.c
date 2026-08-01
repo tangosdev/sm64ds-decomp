@@ -1,21 +1,20 @@
-struct Vector3 { int x, y, z; };
+// @symbol func_ov078_021259ec
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Message.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 struct ActorBase;
 
-extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
-extern void func_02011cfc(void);
-extern void ApproachLinear(short* a, short b, short c);
-extern int func_ov078_02123804(char* c);
+extern void _Z14ApproachLinearRsss(short* a, short b, short c);
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int b);
-extern void _ZN7Message11PrepareTalkEv(void);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5);
 extern void func_02012694(int a, void* b);
-extern int func_ov078_02125c48(char* c, void* p);
+extern int KingBobOmb_SetState(char* c, void* p);
 
 extern unsigned char data_0209f220;
-extern void* data_ov078_0212700c;
-extern void* data_ov078_0212701c;
 
 int func_ov078_021259ec(char* c)
 {
@@ -26,7 +25,7 @@ int func_ov078_021259ec(char* c)
     unsigned int b;
 
     if (*(unsigned char*)(c + 0x506) == 1) {
-        unsigned char *p = (unsigned char*)(((long long)(int)(c + 0x50a)) & 0xFFFFFFFFFFFFFFFFLL);
+        unsigned char *p = (unsigned char*)(((long long)(int)(c + 0x50a)));
         *p += 1;
         if (*(unsigned char*)(c + 0x50a) > 0xc8) {
             *(int*)(c + 0xb0) = 0x10000003;
@@ -39,7 +38,7 @@ int func_ov078_021259ec(char* c)
         }
     }
 
-    ApproachLinear((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
+    _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x4f8), 0x800);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
 
     if (func_ov078_02123804(c) == 1) {
@@ -65,7 +64,7 @@ int func_ov078_021259ec(char* c)
                     if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(player, c, b, &v, 0, 0)) {
                         func_02012694(0x12a, c + 0x74);
                         *(unsigned char*)(c + 0x508) = 1;
-                        func_ov078_02125c48(c, &data_ov078_0212700c);
+                        KingBobOmb_SetState(c, &data_ov078_0212700c);
                     }
                 }
             }
@@ -73,7 +72,7 @@ int func_ov078_021259ec(char* c)
             dist = Vec3_Dist((struct Vector3*)(c + 0x5c), &ppos);
             if (dist < 0x258000) {
                 if (*(int*)(c + 0x4d8) - 0xa000 < ppos.y) {
-                    func_ov078_02125c48(c, &data_ov078_0212701c);
+                    KingBobOmb_SetState(c, &data_ov078_0212701c);
                 }
             }
         }

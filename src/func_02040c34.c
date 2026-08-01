@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 typedef struct InitArrays {
     int ptrs[0x10];
     int zeros1[0x10];
@@ -13,7 +12,7 @@ extern void _ZN4CP1516DrainWriteBufferEv(void);
 extern int func_02061c88(int a, int b, int c);
 extern void Crash(void);
 extern void func_0205d89c(int x);
-extern void func_0205d874(int *s);
+extern void FS_InitFile(int *s);
 extern void func_020652fc(int a, int b, int c);
 extern void func_020424c0(void);
 extern void func_0205a588(void *p, int v, int n);
@@ -79,7 +78,7 @@ void func_02040c34(int a0, int a1, int a2, int a3, int a4)
                 if (next < end) {
                     do {
                         *(void**)node = node + 0xcc0;
-                        func_0205d874((int*)(node + 0x38));
+                        FS_InitFile((int*)(node + 0x38));
                         *(int*)(node + 0x80) = (int)zero;
                         *(int*)(node + 0x7c) = (int)zero;
                         *(int*)(node + 0x88) = (((int)node + 0xcc00cc0) - (int)saved) / 0xcc0;

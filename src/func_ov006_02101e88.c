@@ -1,10 +1,7 @@
+#include "types.h"
 #pragma opt_common_subs off
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
 extern int RandomIntInternal(int* seed);
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int* data_ov006_0213db84[];
 extern int data_0209d4b8;
 
@@ -55,5 +52,5 @@ void func_ov006_02101e88(char* p, int i)
         }
     }
 
-    *(int*)(p + 0x5000 + (i << 6) + 0x28c) = func_020124c4(*(int*)(p + 0x5000 + (i << 6) + 0x28c), 2, 0x198, 0);
+    *(int*)(p + 0x5000 + (i << 6) + 0x28c) = Sound_PlayIfNotActive(*(int*)(p + 0x5000 + (i << 6) + 0x28c), 2, 0x198, 0);
 }

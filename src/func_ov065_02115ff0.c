@@ -70,7 +70,7 @@ void func_ov065_02115ff0(char* c)
         return;
     }
     {
-        int b = (int)(((long long)(*(unsigned short*)(p + 0xc) == 0xbf)) & 0xFFFFFFFFFFFFFFFFLL);
+        int b = (int)(((long long)(*(unsigned short*)(p + 0xc) == 0xbf)));
         if (b == 0) return;
     }
     if (*(unsigned char*)(p + 0x6f9) == 1 || _ZN6Player9IsOnShellEv(p) == 1) {

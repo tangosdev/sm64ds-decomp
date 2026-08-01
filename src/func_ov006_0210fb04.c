@@ -3,7 +3,7 @@ extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
 void func_ov006_0210fb04(char* self)
 {
     if (*(unsigned char*)(self + 0x73) != 0) {
-        ++*(int*)(((int)self + 0x78) & 0xFFFFFFFFFFFFFFFF);
+        ++*(int*)(((int)self + 0x78));
         return;
     }
     *(unsigned char*)(self + 0x74) = 1;

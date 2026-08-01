@@ -1,3 +1,4 @@
+#include "types.h"
 /* Actor::DropShadowRadHeight — drops a shadow with radius/depth (not XYZ).
  * Reads flags@0xb0, tests OFF_SHADOW_RANGE (bit4=0x10).
  * If flag is set, returns immediately; otherwise calls ShadowModel::InitModel
@@ -7,11 +8,6 @@
  * Callee: 0x02015e64 = ShadowModel::InitModel(Matrix4x3*, Fix12i, Fix12i, Fix12i, u8)
  *   _ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j
  */
-
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef int Fix12i;
-
 struct Matrix4x3;
 struct ShadowModel;
 

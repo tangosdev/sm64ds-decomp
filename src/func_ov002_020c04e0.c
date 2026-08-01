@@ -1,9 +1,4 @@
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int Vec3_HorzLen(void *v);
 extern int AngleDiff(int a, int b);
 extern int func_ov002_020c031c(void *c);
@@ -71,12 +66,12 @@ int func_ov002_020c04e0(char *c)
     accel = (int)(((long long)accelBase * speed + 0x800) >> 12);
 
     if (angDiff < 0x4000) {
-        int *p = (int *)(((int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)(c + 0x98)));
         int v = *p + (int)(((long long)accel * horzLen + 0x800) >> 12);
         *p = v;
         return v;
     } else {
-        int *p = (int *)(((int)(c + 0x98)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int *)(((int)(c + 0x98)));
         int v = *p - (int)(((long long)accel * horzLen + 0x800) >> 12);
         *p = v;
         return v;

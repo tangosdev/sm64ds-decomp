@@ -1,10 +1,8 @@
-typedef unsigned int u32;
-typedef unsigned char u8;
-
+#include "types.h"
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern int func_ov006_0210fa40(char *c);
 extern void func_ov006_02115598(int a, void *v, int c, int d, int e);
 extern void func_ov006_02114fb4(int a, int b);
@@ -14,8 +12,8 @@ typedef struct { int x, y; } V2;
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-#define LN(base, off) (*(int *)((((int)(base)) + (off)) & 0xFFFFFFFFFFFFFFFF))
-#define LM(base, off) (*(int *)((((unsigned int)(base)) + (off)) & 0xFFFFFFFFFFFFFFFF))
+#define LN(base, off) (*(int *)((((int)(base)) + (off))))
+#define LM(base, off) (*(int *)((((unsigned int)(base)) + (off))))
 
 void func_ov006_0210fb58(char *c)
 {
@@ -75,7 +73,7 @@ void func_ov006_0210fb58(char *c)
             LM(c + ic * 8, 0x38) -= 0x30000;
     }
     if (func_ov006_0210fa40(c) == 0) {
-        *(int *)(c + 0x84) = func_020124c4(*(int *)(c + 0x84), 2, 0x1a6, 0);
+        *(int *)(c + 0x84) = Sound_PlayIfNotActive(*(int *)(c + 0x84), 2, 0x1a6, 0);
     } else {
         *(int *)(c + 0x84) = 0;
     }

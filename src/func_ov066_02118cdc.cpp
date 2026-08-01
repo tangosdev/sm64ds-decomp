@@ -34,7 +34,7 @@ int func_ov066_02118cdc(char* c) {
         } else {
             data_ov066_0211ae0c = data_ov066_0211abe0;
         }
-        volatile int* tmp = (volatile int*)(((int)c + 0x494) & 0xFFFFFFFFFFFFFFFF);
+        volatile int* tmp = (volatile int*)(((int)c + 0x494));
         *tmp = *tmp + 1;
         *tmp = *tmp & 1;
     }

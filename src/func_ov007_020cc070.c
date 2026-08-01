@@ -1,9 +1,10 @@
-extern void func_02017254(void *);
+// @symbol func_ov007_020cc070
+// recovered name: dScDSMT_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: vtable identified, renamed to Class_Method */
+/* dScDSMT_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN9ActorBaseD2Ev(void *);
-extern void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
-extern int VT0[];
-extern int VT1[];
-extern int VT2[];
 extern void *G0;
 int *func_ov007_020cc070(int *t)
 {

@@ -1,7 +1,10 @@
 //cpp
+// @symbol func_ov080_02124c3c
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
 typedef long long s64;
-struct Vector3 { int x, y, z; };
+
 struct Mtx43 { int a[12]; };
 extern "C" {
 void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);

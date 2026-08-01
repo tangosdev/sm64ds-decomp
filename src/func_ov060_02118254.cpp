@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov060_02118254
+// recovered name: daKpa3Bg_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daKpa3Bg_c::Behavior - recovered from vtable slot identity */
 struct C;
 typedef void (C::*PMF)();
 struct Entry { PMF pmf; };

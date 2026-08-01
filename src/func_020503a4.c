@@ -1,6 +1,4 @@
-typedef unsigned int u32;
-typedef long long s64;
-
+#include "types.h"
 typedef struct G {
     int f0, f4, f8, fc, f10, f14, f18, f1c, f20, f24, f28, f2c, f30, f34;
     char f38[0x10];

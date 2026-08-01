@@ -1,25 +1,28 @@
 //cpp
-struct Mtx43 { int m[12]; };
-struct Vec3 { int x, y, z; };
-extern int func_ov078_02123804(char* c);
+// @symbol func_ov078_02125790
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
+
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* a);
 extern void ApproachAngle(short* p, int target, int step, int band, int max);
-extern int _ZNK9Animation12WillHitFrameEi(void* a, int f);
-extern void func_ov078_02125c24(char* c, int v);
 extern void func_02012694(int a, void* b);
-extern void MulMat4x3Mat4x3(void* d, Mtx43* a, Mtx43* b);
-extern void Vec3_Lsl(Vec3* d, Vec3* s, int sh);
-extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vec3* v, int b);
+extern void MulMat4x3Mat4x3(void* d, Matrix4x3* a, Matrix4x3* b);
+extern void Vec3_Lsl(Vector3* d, Vector3* s, int sh);
+extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b);
 extern int _ZN9Animation8FinishedEv(void* a);
-extern void func_ov078_02125c48(char* c, void* p);
-extern Mtx43 data_020a0e68;
+extern void KingBobOmb_SetState(char* c, void* p);
+extern Matrix4x3 data_020a0e68;
 extern int data_ov078_0212703c;
 
 extern "C" int func_ov078_02125790(char* self)
 {
-  Vec3 s;
-  Vec3 d;
-  Vec3 v;
+  Vector3 s;
+  Vector3 d;
+  Vector3 v;
   if (func_ov078_02123804(self) == 1) return 1;
   ApproachAngle((short*)(self + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(self), 1, 0x500, 0x500);
   *(short*)(self + 0x8e) = *(short*)(self + 0x94);
@@ -29,7 +32,7 @@ extern "C" int func_ov078_02125790(char* self)
     s.x = 0;
     s.y = 0;
     s.z = 0;
-    data_020a0e68 = *(Mtx43*)(self + 0x2e8);
+    data_020a0e68 = *(Matrix4x3*)(self + 0x2e8);
     MulMat4x3Mat4x3((char*)*(void**)(self + 0x2e0) + 0x120, &data_020a0e68, &data_020a0e68);
     s.x = data_020a0e68.m[9];
     s.y = data_020a0e68.m[10];
@@ -44,7 +47,7 @@ extern "C" int func_ov078_02125790(char* self)
     _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v, 1);
   }
   if (_ZN9Animation8FinishedEv(self + 0x31c)) {
-    func_ov078_02125c48(self, &data_ov078_0212703c);
+    KingBobOmb_SetState(self, &data_ov078_0212703c);
   }
   return 1;
 }

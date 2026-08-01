@@ -1,7 +1,7 @@
 struct P8 { int a; int b; };
 extern void func_ov006_020debb4(char* a, int b);
 extern void func_ov006_020deed8(int a0, void *a1, int a2, int a3, int a4, int a5);
-extern void func_ov004_020af68c(void* a0, int a1, int a2, int a3, int a4);
+extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b2574(int arg0, int arg1);
 extern void func_ov004_020b1e34(void* a, int b, int c, int d);
 extern void func_ov006_020c29dc(char *c);
@@ -48,7 +48,7 @@ int func_ov006_020e0068(char *c)
     }
 
     if (*(int*)(c + 0x5418) == 4 || *(int*)(c + 0x5418) == 5) {
-        func_ov004_020af68c(data_ov006_02139df4, 0x92, 0x20,
+        Hud_RenderSprite(data_ov006_02139df4, 0x92, 0x20,
             (*(unsigned char*)(c + 0x5468) == 2) ? 4 : -1, -1);
     }
 

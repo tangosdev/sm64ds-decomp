@@ -1,5 +1,4 @@
-typedef unsigned short u16;
-
+#include "types.h"
 u16 func_02061960(void);
 
 typedef struct {

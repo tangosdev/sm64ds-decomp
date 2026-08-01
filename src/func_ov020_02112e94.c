@@ -1,6 +1,7 @@
-struct Vec3 { int x, y, z; };
-
-#define LAUNDER(p) ((long long)(int)(p) & 0xFFFFFFFFFFFFFFFFLL)
+// @symbol func_ov020_02112e94
+/* recovered: shared common types */
+#include "common.h"
+#define LAUNDER(p) ((long long)(int)(p))
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int Vec3_Dist(const void *a, const void *b);

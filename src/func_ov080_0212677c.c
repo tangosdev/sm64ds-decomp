@@ -1,8 +1,4 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned char u8;
-
+#include "types.h"
 extern void func_ov080_02125fd0(char *c);
 extern void MulMat4x3Mat4x3(const void *a, const void *b, void *out);
 extern void func_020553a4(void *m);

@@ -29,7 +29,7 @@ void func_02041d28(char *r7, struct R6 *r6)
 
     if ((&data_020a1fc0)[3] != 0) {
         int bit;
-        int *q = (int *)(((int)r7 + 0x270c) & 0xFFFFFFFFFFFFFFFF);
+        int *q = (int *)(((int)r7 + 0x270c));
         mask = r6->f84;
         r6->f84 = 0;
         *q |= mask;

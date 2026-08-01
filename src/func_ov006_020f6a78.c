@@ -1,11 +1,8 @@
+#include "types.h"
 /* func_ov006_020f6a78 — once at least 3 items are queued, mark slot
  * (total*2 - 1 - count) done (stride 0x18 array at 0x51a8), bump count;
  * when count reaches the per-mode threshold (data_ov006_0212e93c),
  * set state 5 (mode 1) or 4 (otherwise). */
-
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 extern int data_ov006_0212e93c[];
 
 typedef struct {
@@ -34,7 +31,7 @@ void func_ov006_020f6a78(char* c)
     if (w->ready < 3)
         return;
     w->slots[w->total * 2 - 1 - w->count].done = 1;
-    (*(short*)((long long)(int)(c + 0x53e8) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(short*)((long long)(int)(c + 0x53e8)))++;
     mode = w->mode;
     if (w->count < data_ov006_0212e93c[mode])
         return;

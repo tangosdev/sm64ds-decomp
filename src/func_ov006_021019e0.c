@@ -1,4 +1,4 @@
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern short data_02082214[];
 
 #pragma opt_common_subs off
@@ -23,5 +23,5 @@ void func_ov006_021019e0(char *c, int i)
         *(unsigned short *)(c + 0x5290 + (i << 6)) += 0x40;
     }
 
-    *(int *)(c + (i << 6) + 0x5000 + 0x28c) = func_020124c4(*(int *)(c + (i << 6) + 0x5000 + 0x28c), 2, 0x198, 0);
+    *(int *)(c + (i << 6) + 0x5000 + 0x28c) = Sound_PlayIfNotActive(*(int *)(c + (i << 6) + 0x5000 + 0x28c), 2, 0x198, 0);
 }

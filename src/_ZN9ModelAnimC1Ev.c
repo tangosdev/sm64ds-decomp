@@ -1,8 +1,11 @@
-extern void _ZN5ModelC2Ev(void* self);
-extern void _ZN9AnimationC2Ev(void* self);
+// @symbol _ZN9ModelAnimC1Ev
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_Model.h"
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "ModelAnim.h"
 
-extern unsigned int _ZTV9ModelAnim[];
-extern unsigned int VTable_Animation_ModelAnimThunk[];
 
 typedef struct {
     unsigned int* vtable;
@@ -12,11 +15,11 @@ typedef struct {
     unsigned int unk60;
 } ModelAnim;
 
-ModelAnim* _ZN9ModelAnimC1Ev(ModelAnim* this) {
-    _ZN5ModelC2Ev(this);
-    _ZN9AnimationC2Ev((char*)this + 0x50);
-    this->vtable = _ZTV9ModelAnim;
-    this->anim_vtable = VTable_Animation_ModelAnimThunk;
-    this->unk60 = 0;
-    return this;
+ModelAnim* _ZN9ModelAnimC1Ev(struct ModelAnim *self) {
+    _ZN5ModelC2Ev(((ModelAnim*)self));
+    _ZN9AnimationC2Ev((char*)&self->mAnimation);
+    ((ModelAnim*)self)->vtable = _ZTV9ModelAnim;
+    ((ModelAnim*)self)->anim_vtable = VTable_Animation_ModelAnimThunk;
+    ((ModelAnim*)self)->unk60 = 0;
+    return ((ModelAnim*)self);
 }

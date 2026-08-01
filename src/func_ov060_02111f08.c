@@ -1,5 +1,6 @@
-struct Vector3 { int x, y, z; };
-
+// @symbol func_ov060_02111f08
+/* recovered: shared common types */
+#include "common.h"
 extern void* data_0209f318;
 extern short data_02082214[];
 
@@ -32,7 +33,7 @@ int func_ov060_02111f08(void* arg0)
     switch (*(unsigned char*)(self + 0x444)) {
     case 0:
         _ZN6Camera9SetFlag_3Ev(cam);
-        pv = (struct Vector3*)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        pv = (struct Vector3*)(((long long)(int)(player + 0x5c)));
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
@@ -48,7 +49,7 @@ int func_ov060_02111f08(void* arg0)
         *(int*)(self + 0x43c) = *(int*)(self + 0x60) + 0xc8000;
         *(int*)(self + 0x440) = *(int*)(self + 0x64) + (int)(((long long)v * data_02082214[k * 2 + 1] + 0x800) >> 12);
         _ZN6Camera6SetPosERK7Vector3(cam, (struct Vector3*)(self + 0x438));
-        p = (unsigned char*)(((long long)(int)(self + 0x444)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (unsigned char*)(((long long)(int)(self + 0x444)));
         *p = *p + 1;
         break;
     case 1:
@@ -56,16 +57,16 @@ int func_ov060_02111f08(void* arg0)
         if (_ZN6Player7IsInAirEv(player) != 0)
             *(unsigned char*)(self + 0x445) = 0;
         else {
-            p = (unsigned char*)(((long long)(int)(self + 0x445)) & 0xFFFFFFFFFFFFFFFFLL);
+            p = (unsigned char*)(((long long)(int)(self + 0x445)));
             *p = *p + 1;
         }
         if (*(unsigned char*)(self + 0x445) > 0x1e) {
-            p = (unsigned char*)(((long long)(int)(self + 0x444)) & 0xFFFFFFFFFFFFFFFFLL);
+            p = (unsigned char*)(((long long)(int)(self + 0x444)));
             *p = *p + 1;
         }
         break;
     case 2:
-        pv = (struct Vector3*)(((long long)(int)(player + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        pv = (struct Vector3*)(((long long)(int)(player + 0x5c)));
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
@@ -82,7 +83,7 @@ int func_ov060_02111f08(void* arg0)
         _Z14ApproachLinearRiii((int*)(self + 0x434), *(int*)(self + 0x64), 0x1e000);
         func_020092c4(cam, (char*)cam + 0x8c, self + 0x438);
         if (func_020092c4(cam, (char*)cam + 0x80, self + 0x42c) != 0) {
-            p = (unsigned char*)(((long long)(int)(self + 0x444)) & 0xFFFFFFFFFFFFFFFFLL);
+            p = (unsigned char*)(((long long)(int)(self + 0x444)));
             *p = *p + 1;
         }
         break;
@@ -103,7 +104,7 @@ int func_ov060_02111f08(void* arg0)
             return 1;
         break;
     case 4:
-        *(int*)(((long long)(int)((char*)cam + 0x154)) & 0xFFFFFFFFFFFFFFFFLL) &= ~8;
+        *(int*)(((long long)(int)((char*)cam + 0x154))) &= ~8;
         break;
     default:
         break;

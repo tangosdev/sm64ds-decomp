@@ -1,5 +1,4 @@
-typedef unsigned int u32;
-
+#include "types.h"
 extern u32 func_0205b988(u32 a, u32 b, u32 c);
 extern void Crash(void);
 

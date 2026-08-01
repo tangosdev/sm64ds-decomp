@@ -2,7 +2,7 @@ extern int func_02017acc();
 extern void func_020731dc();
 extern int _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4(void);
-extern void func_02017984(void);
+extern void SharedFilePtr_Destruct_Anim(void);
 
 extern char data_ov085_021304f4[];
 extern char data_ov085_02130538[];
@@ -39,19 +39,19 @@ void __sinit_ov085_0212f3a0(void)
     func_02017acc(data_ov085_021304f4, 0x3f3);
     func_020731dc(data_ov085_021304f4, func_02017ab4, data_ov085_02130538);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304d4, 0x3f7);
-    func_020731dc(data_ov085_021304d4, func_02017984, data_ov085_02130544);
+    func_020731dc(data_ov085_021304d4, SharedFilePtr_Destruct_Anim, data_ov085_02130544);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304c4, 0x3f9);
-    func_020731dc(data_ov085_021304c4, func_02017984, data_ov085_02130550);
+    func_020731dc(data_ov085_021304c4, SharedFilePtr_Destruct_Anim, data_ov085_02130550);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304e4, 0x3f6);
-    func_020731dc(data_ov085_021304e4, func_02017984, data_ov085_021304fc);
+    func_020731dc(data_ov085_021304e4, SharedFilePtr_Destruct_Anim, data_ov085_021304fc);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304ec, 0x3f0);
-    func_020731dc(data_ov085_021304ec, func_02017984, data_ov085_02130508);
+    func_020731dc(data_ov085_021304ec, SharedFilePtr_Destruct_Anim, data_ov085_02130508);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304cc, 0x3f1);
-    func_020731dc(data_ov085_021304cc, func_02017984, data_ov085_02130514);
+    func_020731dc(data_ov085_021304cc, SharedFilePtr_Destruct_Anim, data_ov085_02130514);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304dc, 0x3f2);
-    func_020731dc(data_ov085_021304dc, func_02017984, data_ov085_02130520);
+    func_020731dc(data_ov085_021304dc, SharedFilePtr_Destruct_Anim, data_ov085_02130520);
     _ZN13SharedFilePtr9ConstructEj(data_ov085_021304bc, 0x3f4);
-    func_020731dc(data_ov085_021304bc, func_02017984, data_ov085_0213052c);
+    func_020731dc(data_ov085_021304bc, SharedFilePtr_Destruct_Anim, data_ov085_0213052c);
 
     data_ov085_0213055c[0] = data_ov085_0212ff7c;
     data_ov085_0213055c[1] = data_ov085_0212ff64;

@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct T {
     u8 pad[0x46c0];
     u8 grid[3][0x15];
@@ -41,7 +40,7 @@ int func_ov006_0210c500(struct T *p)
     }
     if (ok) {
         if (p->f708 < 2) {
-            u8 *q = (u8 *)(int)(((long long)(int)((u8 *)p + 0x4708)) & 0xFFFFFFFFFFFFFFFFLL);
+            u8 *q = (u8 *)(int)(((long long)(int)((u8 *)p + 0x4708)));
             *q = *q + 1;
         }
         p->f709 = first;

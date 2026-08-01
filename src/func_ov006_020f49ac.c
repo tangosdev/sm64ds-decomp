@@ -5,7 +5,7 @@ void func_ov006_020f49ac(char *c)
     char *e;
     unsigned short *t;
     if (*(unsigned short *)(c + 0x5300 + 0x22) != 0) {
-        t = (unsigned short *)(((int)c + 0x5322) & 0xFFFFFFFFFFFFFFFF);
+        t = (unsigned short *)(((int)c + 0x5322));
         *t = *t - 1;
         if (*(short *)(c + 0x5300 + 0x22) > 0)
             return;

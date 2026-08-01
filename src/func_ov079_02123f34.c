@@ -24,7 +24,7 @@ void func_ov079_02123f34(char* self)
         Vec3* p;
         if (obj == 0)
             continue;
-        p = (Vec3*)(((long long)(int)(obj + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p = (Vec3*)(((long long)(int)(obj + 0x5c)));
         v.x = p->x;
         v.y = p->y;
         v.z = p->z;

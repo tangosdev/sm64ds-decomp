@@ -1,7 +1,7 @@
 extern int data_020a8064[2];
 extern int data_020a806c[2];
 extern int data_020a8074;
-extern void func_0205a61c(void *dst, void *src, int n);
+extern void CpuCopy8(void *dst, void *src, int n);
 extern int func_02018cbc(char *self, int flag, int shift, int a3, int a5, int a6, int a7, int a8);
 
 int func_02018c00(int *thiz, int flag, int index)
@@ -11,7 +11,7 @@ int func_02018c00(int *thiz, int flag, int index)
     if (ptr != 0) {
         int off = index << 5;
         if ((unsigned int)off >= (unsigned int)base[1]) return 0;
-        func_0205a61c((void*)(ptr + off), thiz, 0x20);
+        CpuCopy8((void*)(ptr + off), thiz, 0x20);
         thiz[8] = flag;
         return 1;
     }

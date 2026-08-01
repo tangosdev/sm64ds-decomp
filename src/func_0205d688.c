@@ -6,8 +6,8 @@ int func_0205d688(char *self, int a1, int a2, int a3)
   int a3v;
   int oldpos;
   oldpos = *((int *) (self + 0x28));
-  n = (int) (((long long) a2) & 0xFFFFFFFFFFFFFFFFLL);
-  a3v = (int) (((long long) a3) & 0xFFFFFFFFFFFFFFFFLL);
+  n = (int) (((long long) a2));
+  a3v = (int) (((long long) a3));
   {
     int avail = (*((int *) (self + 0x24))) - oldpos;
     if (n > avail)
@@ -24,7 +24,7 @@ int func_0205d688(char *self, int a1, int a2, int a3)
   *((int *) (self + 0x34)) = n;
   if (a3v == 0)
   {
-    *((int *) (((long long) ((int) (self + 0xc))) & 0xFFFFFFFFFFFFFFFFLL)) |= 4;
+    *((int *) (((long long) ((int) (self + 0xc))))) |= 4;
   }
   func_0205cdf4(self, 0);
   if (a3v == 0)

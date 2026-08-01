@@ -1,6 +1,4 @@
-typedef signed int s32;
-typedef unsigned int u32;
-
+#include "types.h"
 typedef struct ParticleNode {
     void* next;
     void* prev;
@@ -31,7 +29,7 @@ typedef struct ParticleSys {
     ParticleList particleList; /* 0x08 */
 } ParticleSys;
 
-extern s32 WATER_HEIGHT;
+extern s32 data_0209f32c;
 
 extern int _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb(void* cb, ParticleSys* sys, int active);
 
@@ -41,7 +39,7 @@ int _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb(void* cb, Partic
     Particle* p;
 
     p = sys->particleList.first;
-    waterAsr3 = WATER_HEIGHT >> 3;
+    waterAsr3 = data_0209f32c >> 3;
     if (p != 0)
     {
         do

@@ -17,7 +17,7 @@ void _ZN5Model6RenderEPK7Vector3(void* self, void* v);
 void _ZN15TextureSequence6UpdateER15ModelComponents(void* self, void* mc);
 }
 
-#define LAUNDER(x) ((char*)((long long)(int)(x) & 0xFFFFFFFFFFFFFFFFLL))
+#define LAUNDER(x) ((char*)((long long)(int)(x)))
 
 extern "C" void func_ov075_02114be4(char* c) {
     char *h, *comp;

@@ -1,9 +1,6 @@
+#include "types.h"
 /* func_ov006_020d61dc — bump per-slot timer (stride 0x10 array at 0x6280);
  * every 5 ticks reset it and bump level; at level >= 4 set state=2, timer=0x20. */
-
-typedef unsigned short u16;
-typedef unsigned char u8;
-
 typedef struct {
     char _pad0[8];
     u16 timer;   /* +0x08 */

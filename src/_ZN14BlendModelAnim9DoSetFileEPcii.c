@@ -1,8 +1,5 @@
+#include "types.h"
 /* BlendModelAnim::DoSetFile at 0x02016604 */
-
-typedef unsigned int u32;
-typedef signed int s32;
-
 struct BlendModelAnim {
     u32 vtable;
 };

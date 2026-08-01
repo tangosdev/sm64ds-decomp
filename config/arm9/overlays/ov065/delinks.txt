@@ -4,3 +4,535 @@
     .ctor       start:0x0211cae0 end:0x0211cb08 kind:rodata align:4
     .data       start:0x0211cb20 end:0x0211d600 kind:data align:32
     .bss        start:0x0211d600 end:0x0211da00 kind:bss align:32
+src/_ZN6SnufitD1Ev.c:
+    complete
+    .text start:0x02115ee0 end:0x02115f28
+
+src/_ZN6SnufitD0Ev.c:
+    complete
+    .text start:0x02115f28 end:0x02115f84
+
+src/func_ov065_02115f84.c:
+    complete
+    .text start:0x02115f84 end:0x02115ff0
+
+src/func_ov065_02115ff0.c:
+    .text start:0x02115ff0 end:0x021162c0
+
+src/func_ov065_021162c0.c:
+    complete
+    .text start:0x021162c0 end:0x02116328
+
+src/func_ov065_02116328.c:
+    complete
+    .text start:0x02116328 end:0x02116364
+
+src/func_ov065_02116364.c:
+    complete
+    .text start:0x02116364 end:0x02116588
+
+src/func_ov065_02116588.cpp:
+    complete
+    .text start:0x02116588 end:0x021165d8
+
+src/func_ov065_021165d8.cpp:
+    complete
+    .text start:0x021165d8 end:0x0211672c
+
+src/func_ov065_0211672c.c:
+    complete
+    .text start:0x0211672c end:0x02116744
+
+src/func_ov065_02116744.c:
+    complete
+    .text start:0x02116744 end:0x021168a8
+
+src/func_ov065_021168a8.cpp:
+    complete
+    .text start:0x021168a8 end:0x0211691c
+
+src/func_ov065_0211691c.cpp:
+    complete
+    .text start:0x0211691c end:0x0211696c
+
+src/func_ov065_0211696c.c:
+    complete
+    .text start:0x0211696c end:0x02116ae8
+
+src/_ZN6Snufit16CleanupResourcesEv.c:
+    complete
+    .text start:0x02116ae8 end:0x02116b30
+
+src/_ZN6Snufit16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02116b30 end:0x02116b34
+
+src/_ZN6Snufit6RenderEv.cpp:
+    complete
+    .text start:0x02116b34 end:0x02116b84
+
+src/_ZN6Snufit8BehaviorEv.cpp:
+    .text start:0x02116b84 end:0x02116e10
+
+src/_ZN6Snufit13InitResourcesEv.cpp:
+    .text start:0x02116e10 end:0x02116f0c
+
+src/func_ov065_02116f0c.c:
+    complete
+    .text start:0x02116f0c end:0x02116f14
+
+src/func_ov065_02116f14.cpp:
+    complete
+    .text start:0x02116f14 end:0x02116f40
+
+src/func_ov065_02116f40.c:
+    complete
+    .text start:0x02116f40 end:0x02116f48
+
+src/Snufit_Spawn.c:
+    complete
+    .text start:0x02116f48 end:0x02116f98
+
+src/_ZN5SwoopD1Ev.c:
+    complete
+    .text start:0x02116f98 end:0x02116fe8
+
+src/_ZN5SwoopD0Ev.c:
+    complete
+    .text start:0x02116fe8 end:0x0211704c
+
+src/func_ov065_0211704c.c:
+    .text start:0x0211704c end:0x02117404
+
+src/func_ov065_02117404.cpp:
+    complete
+    .text start:0x02117404 end:0x021175b0
+
+src/func_ov065_021175b0.c:
+    complete
+    .text start:0x021175b0 end:0x02117624
+
+src/func_ov065_02117624.c:
+    complete
+    .text start:0x02117624 end:0x021176fc
+
+src/func_ov065_021176fc.cpp:
+    complete
+    .text start:0x021176fc end:0x02117780
+
+src/func_ov065_02117780.c:
+    complete
+    .text start:0x02117780 end:0x021177e4
+
+src/func_ov065_021177e4.cpp:
+    .text start:0x021177e4 end:0x02117888
+
+src/func_ov065_02117888.c:
+    complete
+    .text start:0x02117888 end:0x021178fc
+
+src/func_ov065_021178fc.c:
+    complete
+    .text start:0x021178fc end:0x02117944
+
+src/func_ov065_02117944.cpp:
+    complete
+    .text start:0x02117944 end:0x02117994
+
+src/func_ov065_02117994.c:
+    complete
+    .text start:0x02117994 end:0x02117aa4
+
+src/_ZN5Swoop16CleanupResourcesEv.c:
+    complete
+    .text start:0x02117aa4 end:0x02117aec
+
+src/_ZN5Swoop16OnPendingDestroyEv.c:
+    complete
+    .text start:0x02117aec end:0x02117af0
+
+src/_ZN5Swoop6RenderEv.cpp:
+    complete
+    .text start:0x02117af0 end:0x02117b64
+
+src/_ZN5Swoop8BehaviorEv.cpp:
+    .text start:0x02117b64 end:0x02117d80
+
+src/_ZN5Swoop13InitResourcesEv.cpp:
+    .text start:0x02117d80 end:0x02117eac
+
+src/func_ov065_02117eac.c:
+    complete
+    .text start:0x02117eac end:0x02117eb4
+
+src/func_ov065_02117eb4.cpp:
+    complete
+    .text start:0x02117eb4 end:0x02117ee0
+
+src/func_ov065_02117ee0.c:
+    complete
+    .text start:0x02117ee0 end:0x02117ee8
+
+src/Swoop_Spawn.c:
+    complete
+    .text start:0x02117ee8 end:0x02117f40
+
+src/_ZN6DorrieD1Ev.cpp:
+    complete
+    .text start:0x02117f40 end:0x02117fa8
+
+src/_ZN6DorrieD0Ev.cpp:
+    .text start:0x02117fa8 end:0x02118024
+
+src/_ZN9DorrieCapD1Ev.c:
+    complete
+    .text start:0x02118024 end:0x02118064
+
+src/_ZN9DorrieCapD0Ev.c:
+    complete
+    .text start:0x02118064 end:0x021180b8
+
+src/func_ov065_021180b8.c:
+    complete
+    .text start:0x021180b8 end:0x021180d4
+
+src/func_ov065_021180d4.c:
+    complete
+    .text start:0x021180d4 end:0x02118248
+
+src/func_ov065_02118248.cpp:
+    complete
+    .text start:0x02118248 end:0x021182e4
+
+src/func_ov065_021182e4.cpp:
+    complete
+    .text start:0x021182e4 end:0x021183c8
+
+src/func_ov065_021183c8.c:
+    complete
+    .text start:0x021183c8 end:0x02118634
+
+src/func_ov065_02118634.c:
+    complete
+    .text start:0x02118634 end:0x02118838
+
+src/func_ov065_02118c4c.c:
+    complete
+    .text start:0x02118c4c end:0x02118cc4
+
+src/func_ov065_02118cc4.c:
+    complete
+    .text start:0x02118cc4 end:0x02118d04
+
+src/_ZN6Dorrie16CleanupResourcesEv.cpp:
+    .text start:0x02118d04 end:0x02118d80
+
+src/_ZN6Dorrie6RenderEv.cpp:
+    complete
+    .text start:0x02118d80 end:0x02118da8
+
+src/_ZN9DorrieCap6RenderEv.cpp:
+    complete
+    .text start:0x02118da8 end:0x02118df0
+
+src/_ZN6Dorrie8BehaviorEv.cpp:
+    complete
+    .text start:0x02118df0 end:0x021190a8
+
+src/_ZN9DorrieCap8BehaviorEv.cpp:
+    .text start:0x021190a8 end:0x02119210
+
+src/func_ov065_02119210.c:
+    complete
+    .text start:0x02119210 end:0x02119228
+
+src/_ZN6Dorrie13InitResourcesEv.cpp:
+    .text start:0x02119228 end:0x021194e8
+
+src/_ZN9DorrieCap13InitResourcesEv.cpp:
+    .text start:0x021194e8 end:0x0211956c
+
+src/func_ov065_0211956c.c:
+    complete
+    .text start:0x0211956c end:0x02119594
+
+src/func_ov065_02119594.c:
+    complete
+    .text start:0x02119594 end:0x021195bc
+
+src/func_ov065_021195bc.c:
+    complete
+    .text start:0x021195bc end:0x021195d0
+
+src/func_ov065_021195d0.c:
+    complete
+    .text start:0x021195d0 end:0x021195e4
+
+src/func_ov065_021195e4.c:
+    complete
+    .text start:0x021195e4 end:0x021195ec
+
+src/DorrieCap_Spawn.c:
+    complete
+    .text start:0x021195ec end:0x02119634
+
+src/Dorrie_Spawn.cpp:
+    complete
+    .text start:0x02119634 end:0x021196bc
+
+src/func_ov065_021196bc.c:
+    complete
+    .text start:0x021196bc end:0x021196d8
+
+src/_ZN15TtcRotatingCubeD1Ev.c:
+    .text start:0x021196d8 end:0x0211972c
+
+src/_ZN15TtcRotatingCubeD0Ev.c:
+    .text start:0x0211972c end:0x02119794
+
+src/func_ov065_02119794.c:
+    complete
+    .text start:0x02119794 end:0x021198a0
+
+src/func_ov065_021198a0.cpp:
+    complete
+    .text start:0x021198a0 end:0x0211990c
+
+src/func_ov065_0211990c.c:
+    complete
+    .text start:0x0211990c end:0x02119984
+
+src/_ZN15TtcRotatingCube16CleanupResourcesEv.cpp:
+    .text start:0x02119984 end:0x021199fc
+
+src/_ZN15TtcRotatingCube6RenderEv.cpp:
+    complete
+    .text start:0x021199fc end:0x02119a50
+
+src/_ZN15TtcRotatingCube8BehaviorEv.cpp:
+    .text start:0x02119a50 end:0x02119c38
+
+src/_ZN15TtcRotatingCube13InitResourcesEv.cpp:
+    .text start:0x02119c38 end:0x02119ebc
+
+src/TtcRotatingPrism_Spawn.c:
+    complete
+    .text start:0x02119ebc end:0x02119efc
+
+src/TtcRotatingCube_Spawn.c:
+    complete
+    .text start:0x02119efc end:0x02119f3c
+
+src/func_ov065_02119f3c.c:
+    .text start:0x02119f3c end:0x02119f88
+
+src/func_ov065_02119f88.c:
+    .text start:0x02119f88 end:0x02119fe8
+
+src/func_ov065_02119fe8.cpp:
+    complete
+    .text start:0x02119fe8 end:0x0211a114
+
+src/func_ov065_0211a114.c:
+    complete
+    .text start:0x0211a114 end:0x0211a15c
+
+src/func_ov065_0211a15c.c:
+    .text start:0x0211a15c end:0x0211a1a0
+
+src/func_ov065_0211a1a0.cpp:
+    complete
+    .text start:0x0211a1a0 end:0x0211a1c8
+
+src/func_ov065_0211a1c8.c:
+    .text start:0x0211a1c8 end:0x0211a358
+
+src/func_ov065_0211a358.cpp:
+    .text start:0x0211a358 end:0x0211a45c
+
+src/func_ov065_0211a45c.c:
+    .text start:0x0211a45c end:0x0211a494
+
+src/_ZN20TtcConveyorBeltLargeD1Ev.c:
+    .text start:0x0211a494 end:0x0211a4e8
+
+src/_ZN20TtcConveyorBeltLargeD0Ev.c:
+    .text start:0x0211a4e8 end:0x0211a550
+
+src/func_ov065_0211a550.c:
+    complete
+    .text start:0x0211a550 end:0x0211a638
+
+src/_ZN20TtcConveyorBeltLarge16CleanupResourcesEv.cpp:
+    .text start:0x0211a638 end:0x0211a69c
+
+src/_ZN20TtcConveyorBeltLarge6RenderEv.cpp:
+    complete
+    .text start:0x0211a69c end:0x0211a6d0
+
+src/_ZN20TtcConveyorBeltLarge8BehaviorEv.cpp:
+    .text start:0x0211a6d0 end:0x0211a870
+
+src/_ZN20TtcConveyorBeltLarge13InitResourcesEv.cpp:
+    .text start:0x0211a870 end:0x0211aa38
+
+src/func_ov065_0211aa38.c:
+    complete
+    .text start:0x0211aa38 end:0x0211aacc
+
+src/func_ov065_0211aacc.c:
+    complete
+    .text start:0x0211aacc end:0x0211aae0
+
+src/TtcConveyorBeltLarge_Spawn.c:
+    complete
+    .text start:0x0211aae0 end:0x0211ab20
+
+src/TtcConveyorBeltSmall_Spawn.c:
+    complete
+    .text start:0x0211ab20 end:0x0211ab60
+
+src/func_ov065_0211ab60.c:
+    .text start:0x0211ab60 end:0x0211abac
+
+src/func_ov065_0211abac.c:
+    .text start:0x0211abac end:0x0211ac0c
+
+src/func_ov065_0211ac0c.c:
+    complete
+    .text start:0x0211ac0c end:0x0211ad04
+
+src/func_ov065_0211ad04.c:
+    .text start:0x0211ad04 end:0x0211ad48
+
+src/func_ov065_0211ad48.cpp:
+    complete
+    .text start:0x0211ad48 end:0x0211ad70
+
+src/func_ov065_0211ad70.c:
+    complete
+    .text start:0x0211ad70 end:0x0211ae08
+
+src/func_ov065_0211ae08.c:
+    complete
+    .text start:0x0211ae08 end:0x0211b1d4
+
+src/func_ov065_0211b1d4.cpp:
+    .text start:0x0211b1d4 end:0x0211b328
+
+src/TTC_MovingBar_Spawn.c:
+    .text start:0x0211b328 end:0x0211b360
+
+src/_ZN13TTC_MovingBarD1Ev.c:
+    .text start:0x0211b360 end:0x0211b3ac
+
+src/_ZN13TTC_MovingBarD0Ev.c:
+    .text start:0x0211b3ac end:0x0211b40c
+
+src/func_ov065_0211b40c.c:
+    complete
+    .text start:0x0211b40c end:0x0211b47c
+
+src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp:
+    .text start:0x0211b47c end:0x0211b4e0
+
+src/_ZN13TTC_MovingBar6RenderEv.cpp:
+    complete
+    .text start:0x0211b4e0 end:0x0211b508
+
+src/_ZN13TTC_MovingBar8BehaviorEv.cpp:
+    complete
+    .text start:0x0211b508 end:0x0211b640
+
+src/_ZN13TTC_MovingBar13InitResourcesEv.cpp:
+    .text start:0x0211b640 end:0x0211b780
+
+src/TtcRotatingTriangle_Spawn.c:
+    complete
+    .text start:0x0211b780 end:0x0211b7b8
+
+src/TtcRotatingGear_Spawn.c:
+    complete
+    .text start:0x0211b7b8 end:0x0211b7f0
+
+src/_ZN15TtcRotatingGearD1Ev.c:
+    .text start:0x0211b7f0 end:0x0211b834
+
+src/_ZN15TtcRotatingGearD0Ev.c:
+    .text start:0x0211b834 end:0x0211b88c
+
+src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp:
+    .text start:0x0211b88c end:0x0211b8d0
+
+src/_ZN15TtcRotatingGear6RenderEv.cpp:
+    complete
+    .text start:0x0211b8d0 end:0x0211b8f8
+
+src/_ZN15TtcRotatingGear8BehaviorEv.c:
+    complete
+    .text start:0x0211b8f8 end:0x0211ba88
+
+src/_ZN15TtcRotatingGear13InitResourcesEv.cpp:
+    .text start:0x0211ba88 end:0x0211bb7c
+
+src/TtcMovingCubeB_Spawn.c:
+    complete
+    .text start:0x0211bb7c end:0x0211bbac
+
+src/TtcMovingCubeA_Spawn.c:
+    complete
+    .text start:0x0211bbac end:0x0211bbdc
+
+src/_ZN14TtcMovingCubeAD1Ev.c:
+    .text start:0x0211bbdc end:0x0211bc28
+
+src/_ZN14TtcMovingCubeAD0Ev.c:
+    .text start:0x0211bc28 end:0x0211bc88
+
+src/func_ov065_0211bc88.cpp:
+    complete
+    .text start:0x0211bc88 end:0x0211bd20
+
+src/_ZN14TtcMovingCubeA16CleanupResourcesEv.cpp:
+    .text start:0x0211bd20 end:0x0211bd64
+
+src/_ZN14TtcMovingCubeA6RenderEv.cpp:
+    complete
+    .text start:0x0211bd64 end:0x0211bd8c
+
+src/_ZN14TtcMovingCubeA13InitResourcesEv.cpp:
+    .text start:0x0211bf04 end:0x0211c040
+
+src/TTC_MovingBeam_Spawn.c:
+    complete
+    .text start:0x0211c040 end:0x0211c078
+
+src/__sinit_ov065_0211c110.c:
+    .init start:0x0211c110 end:0x0211c2a8
+
+src/__sinit_ov065_0211c2a8.c:
+    .init start:0x0211c2a8 end:0x0211c440
+
+src/__sinit_ov065_0211c440.c:
+    .init start:0x0211c440 end:0x0211c660
+
+src/__sinit_ov065_0211c660.c:
+    .init start:0x0211c660 end:0x0211c76c
+
+src/__sinit_ov065_0211c76c.c:
+    .init start:0x0211c76c end:0x0211c7d8
+
+src/__sinit_ov065_0211c7d8.c:
+    .init start:0x0211c7d8 end:0x0211c890
+
+src/__sinit_ov065_0211c890.c:
+    .init start:0x0211c890 end:0x0211c8fc
+
+src/__sinit_ov065_0211c8fc.c:
+    .init start:0x0211c8fc end:0x0211c9b8
+
+src/__sinit_ov065_0211c9b8.c:
+    .init start:0x0211c9b8 end:0x0211ca74
+
+src/__sinit_ov065_0211ca74.c:
+    .init start:0x0211ca74 end:0x0211cae0

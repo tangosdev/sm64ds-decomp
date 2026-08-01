@@ -16,7 +16,7 @@ struct Obj {
 };
 
 extern "C" void func_ov006_020c9efc(char* c){
-  *(short*)(((int)c+0x6c) & 0xFFFFFFFFFFFFFFFFLL) = *(short*)(((int)c+0x6c) & 0xFFFFFFFFFFFFFFFFLL) - 1;
+  *(short*)(((int)c+0x6c)) = *(short*)(((int)c+0x6c)) - 1;
   if(*(short*)(c+0x6c)==0){
     func_ov006_020c8c78(*(short*)(c+0x56),0xc0);
     data_ov006_02140598=data_ov006_02140598-1;

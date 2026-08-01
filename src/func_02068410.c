@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct G9d2c {
     char pad[0xc];
     u8 state;   /* 0xc */

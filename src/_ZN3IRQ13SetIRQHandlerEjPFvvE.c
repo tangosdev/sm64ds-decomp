@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef void(*Fn)(void);
 extern Fn data_02099fe4[];
 struct Ent{ Fn fn; int en; int pad; };

@@ -1,14 +1,17 @@
 //cpp
+// @symbol func_ov016_021118b4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern "C" {
-struct Matrix4x3 { int m[12]; };
-typedef struct { int x, y, z; } Vector3;
+
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX);
 extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vector3 *cur, const Vector3 *tgt, int step);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int func_02012694(unsigned int id, void *pos);
-extern int func_ov018_02111bf0(void *self, void *arg);
 extern struct Matrix4x3 data_020a0e68;
 extern void *data_ov016_02114dbc;
 

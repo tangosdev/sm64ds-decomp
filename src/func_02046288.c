@@ -4,7 +4,7 @@ struct Obj { void *pad0; struct Element *arr; };
 void func_02046288(struct Obj *self, unsigned int value, int index)
 {
     struct Element *e = &self->arr[index];
-    unsigned int *flags = (unsigned int *)(((long long)(int)&e->flags) & 0xFFFFFFFFFFFFFFFFLL);
+    unsigned int *flags = (unsigned int *)(((long long)(int)&e->flags));
     *flags &= ~0x30;
     *flags |= value << 4;
 }

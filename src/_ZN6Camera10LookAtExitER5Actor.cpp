@@ -24,7 +24,7 @@ void Camera::LookAtExit(struct Actor &actor)
     *(s16 *)((char *)this + 0x186) = -*(s16 *)(a + 0x8e);
     ChangeState(&data_0209b0f8);
     {
-        int *fp = (int *)(((int)this + 0x154) & 0xFFFFFFFFFFFFFFFF);
+        int *fp = (int *)(((int)this + 0x154));
         *fp |= 0x10;
     }
 }

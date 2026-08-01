@@ -1,18 +1,16 @@
 //cpp
-typedef int Fix12;
-typedef unsigned char u8;
-
+#include "types.h"
 struct State;
 struct Player {
     int St_WindCarry_Main();
     void ChangeState(State& st);
-    int SetAnim(unsigned int a, int b, Fix12 c, unsigned int d);
+    int SetAnim(unsigned int a, int b, Fix12i c, unsigned int d);
     int FinishedAnim();
 };
 
 extern "C" void func_ov002_020c2f64(void* c);
 extern "C" void func_ov002_020e28d4(void* c, int a, int b);
-extern "C" void func_ov002_020bedd4(char* self);
+extern "C" void Player_AdvanceAnims(char* self);
 extern "C" int __aeabi_idiv(int a, int b);
 
 extern State data_ov002_021105bc;
@@ -39,7 +37,7 @@ int Player::St_WindCarry_Main()
             else
                 speed = __aeabi_idiv(0x2710000, (val + 0xc8000) >> 12);
             if (*(int*)(c + 0xa8) < speed) {
-                int* p = (int*)(((int)c + 0xa8) & 0xFFFFFFFFFFFFFFFF);
+                int* p = (int*)(((int)c + 0xa8));
                 *p = *p + (speed >> 3);
                 if (*(int*)(c + 0xa8) > speed) *(int*)(c + 0xa8) = speed;
             }
@@ -49,10 +47,10 @@ int Player::St_WindCarry_Main()
     if (*(u8*)(c + 0x6e3) == 0 && FinishedAnim() != 0) {
         SetAnim(0x73, 0, 0x1000, 0);
         {
-            u8* q = (u8*)(((int)c + 0x6e3) & 0xFFFFFFFFFFFFFFFF);
+            u8* q = (u8*)(((int)c + 0x6e3));
             *q = *q + 1;
         }
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }

@@ -1,9 +1,4 @@
-typedef signed short s16;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
 typedef struct {
@@ -97,7 +92,7 @@ void func_0204bbd8(Self *self, Node *node)
     *(volatile u32 *)0x40004a4 = v;
     *(volatile u32 *)0x40004a4;
     {
-        Cnt74 *qq = (Cnt74 *)(u32)(((s64)(int)((char *)c + 0x74)) & 0xFFFFFFFFFFFFFFFFLL);
+        Cnt74 *qq = (Cnt74 *)(u32)(((s64)(int)((char *)c + 0x74)));
         qq->count++;
         if (c->cnt.count > c->cnt.limit)
             qq->count = c->cnt.start;

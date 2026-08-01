@@ -1,4 +1,8 @@
 //cpp
+// @symbol func_ov100_02145550
+// recovered name: daDoor_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daDoor_c::Behavior - recovered from vtable slot identity */
 struct Base {};
 typedef void (Base::*PMF)(int);
 struct CallbackNode {

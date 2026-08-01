@@ -1,6 +1,5 @@
 //cpp
-typedef unsigned char u8;
-
+#include "types.h"
 struct Obj {
     virtual int m00(); virtual int m01(); virtual int m02(); virtual int m03();
     virtual int m04(); virtual int m05(); virtual int m06(); virtual int m07();
@@ -51,7 +50,7 @@ extern "C" void func_ov006_020d1a3c(void *p)
             if (*(int *)(base + 0x53d8) >= 5) {
                 *(u8 *)(base + 0x53dc) = 1;
             } else {
-                *(int *)(((long long)(int)(base + 0x53d8)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+                *(int *)(((long long)(int)(base + 0x53d8))) += 1;
                 *(u8 *)(base + 0x53dc) = 0;
             }
             *(u8 *)(base + 0x53de) = 1;

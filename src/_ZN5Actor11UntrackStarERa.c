@@ -1,12 +1,8 @@
+#include "types.h"
 /* _ZN5Actor11UntrackStarERa at 0x0200ff60
  * Actor::UntrackStar(s8& starID)
  * If starID >= 0, calls SetStarMarker to clear it, then sets starID = -1.
  */
-
-typedef signed char s8;
-typedef unsigned char u8;
-typedef int s32;
-
 struct Actor;
 
 extern void SetStarMarker(s32 id, struct Actor *starMarker, u8 type); /* 0x0202a660 */

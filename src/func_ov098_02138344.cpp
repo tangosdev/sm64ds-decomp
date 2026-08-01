@@ -1,5 +1,8 @@
 //cpp
-struct Vec3 { int x, y, z; };
+// @symbol func_ov098_02138344
+/* recovered: shared common types */
+#include "common.h"
+
 
 struct Obj {
     virtual void v0();
@@ -38,12 +41,12 @@ struct Obj {
 
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
-void func_020383fc(void* p);
+void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
-void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vec3* v);
+void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
-void func_ov098_02138b28(char* c, int i);
+void Crate_SetState(char* c, int i);
 void func_ov098_02139228(char* c);
 void func_ov098_02138e6c(char* c);
 void func_ov098_021390ec(char* c);
@@ -58,16 +61,16 @@ void func_ov098_021397c8(char* c);
 
 extern "C" void func_ov098_02138344(char* c) {
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
-    func_020383fc(c + 0x320);
+    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x555);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x51, (struct Vec3*)(c + 0x74));
+        _ZN5Sound9PlayBank3EjRK7Vector3(0x51, (struct Vector3*)(c + 0x74));
         DecIfAbove0_Byte((unsigned char*)(c + 0x604));
         *(int*)(c + 0xa8) = *(unsigned char*)(c + 0x604) * 0xa000;
         *(int*)(c + 0x98) = *(unsigned char*)(c + 0x604) * 0x5000;
     }
     if (*(int*)(c + 0x98) == 0 && *(unsigned char*)(c + 0x604) == 0) {
-        func_ov098_02138b28(c, 0);
+        Crate_SetState(c, 0);
     }
     func_ov098_02139228(c);
     func_ov098_02138e6c(c);

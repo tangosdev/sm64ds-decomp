@@ -1,5 +1,10 @@
 //cpp
-struct Matrix4x3 { int m[12]; };
+// @symbol func_ov075_021152d4
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
+
 struct Vector3;
 namespace G3i {
     void PerspectiveW_(int a1, int a2, int a3, int a4, int a5, int a6, bool b, Matrix4x3 *m);
@@ -9,7 +14,6 @@ extern "C" void _Z13CopyToViewMatPK9Matrix4x3(const Matrix4x3 *m);
 namespace Clipper { void Func_020156DC(void *a, int b, int c, int d, int e); }
 
 extern "C" short data_02082614[];
-extern "C" int data_ov075_0211c660;
 extern "C" int data_0209f43c;
 
 extern "C" void func_ov075_021152d4(char *self)

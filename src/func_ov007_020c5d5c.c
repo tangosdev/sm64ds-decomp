@@ -9,7 +9,7 @@ int func_ov007_020c5d5c(int *o)
     int *p = ((int **) o[0xe])[i];
     unsigned short h = *((unsigned short *) (((char *) p) + 8));
     int *t = (int *) (((char *) p) + 0x20)[0];
-    sum += ((int *) (*((int **) (((char *) p) + (0x20 & 0xFFFFFFFFFFFFFFFFu)))))[h - 1];
+    sum += ((int *) (*((int **) (((char *) p) + (0x20u)))))[h - 1];
   }
 
   return sum;

@@ -1,15 +1,11 @@
+#include "types.h"
 /* func_02022d00 at 0x02022d00 (68 bytes)
  * Particle::System::New wrapper -- passes args through and adds tracker->unk7f4 as callback.
  */
-
-typedef unsigned int u32;
-typedef int Fix12i;
-typedef unsigned char u8;
-
 struct ParticleCallback;
 struct ParticleSys;
 
-extern struct ParticleSys *PARTICLE_SYS_TRACKER; /* 0x0209ee74 */
+extern struct ParticleSys *data_0209ee74; /* 0x0209ee74 */
 
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z,
@@ -19,5 +15,5 @@ u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void
 {
     return _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         uniqueID, effectID, x, y, z, dir,
-        (struct ParticleCallback *)((u8 *)PARTICLE_SYS_TRACKER + 0x7f4));
+        (struct ParticleCallback *)((u8 *)data_0209ee74 + 0x7f4));
 }

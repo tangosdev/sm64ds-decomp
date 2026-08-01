@@ -1,15 +1,19 @@
-struct Vector3 { int x, y, z; };
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
-extern int ApproachLinear(int* ref, int target, int step);
+// @symbol func_ov085_0212cd80
+// recovered name: Rabbit_Kill
+/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+#include "decl_Message.h"
+#include "decl_Player.h"
+#include "decl_common.h"
+/* recovered: shared common types, renamed to Class_Method */
+/* daMip_c::Kill - recovered from vtable slot identity */
+#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+extern int _Z14ApproachLinearRiii(int* ref, int target, int step);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int f, unsigned char g);
 extern void func_02012790(int a);
-extern void _ZN7Message13DisplaySavingEt(unsigned short a);
-extern void func_ov085_0212cd0c(void* self);
 extern void StartMinigameMenu(unsigned char a);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const void* pos, unsigned int a, unsigned int b);
-extern int _ZN6Player18HasFinishedTalkingEv(void* p);
 
 extern unsigned char data_0209d684;
 extern unsigned char data_0209d660;
@@ -28,7 +32,7 @@ int func_ov085_0212cd80(char* self)
     v.y = s[1];
     v.z = s[2];
     v.y = s[1] + 0xc8000;
-    ApproachLinear((int*)(self + 0x60), s[1] + 0xc8000, 0xa000);
+    _Z14ApproachLinearRiii((int*)(self + 0x60), s[1] + 0xc8000, 0xa000);
 
     *(int*)(self + 0x5c) = v.x;
     *(int*)(self + 0x64) = v.z;

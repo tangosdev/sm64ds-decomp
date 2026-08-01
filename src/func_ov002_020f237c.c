@@ -22,7 +22,7 @@ extern void SetSubBg1Offset(int a, int b);
 
 void func_ov002_020f237c(struct Obj* self)
 {
-    *(s16*)(((long long)(int)((char*)self->scroll + 2)) & 0xFFFFFFFFFFFFFFFFLL) -= 1;
+    *(s16*)(((long long)(int)((char*)self->scroll + 2))) -= 1;
     self->scroll->x0 += 1;
     SetSubBg0Offset(self->scroll->x0, self->scroll->y0);
     SetSubBg1Offset(self->scroll->x1, self->scroll->y1);

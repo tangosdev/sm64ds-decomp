@@ -1,21 +1,24 @@
 //cpp
-struct Vec3 { int x, y, z; };
-struct Mtx43 { int w[12]; };
-extern "C" Mtx43 data_020a0e68;
-extern "C" void Vec3_Asr(Vec3* d, Vec3* s, int sh);
-extern "C" void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
+// @symbol func_ov085_0212d2b8
+/* recovered: shared common types */
+#include "common.h"
+
+
+extern "C" Matrix4x3 data_020a0e68;
+extern "C" void Vec3_Asr(Vector3* d, Vector3* s, int sh);
+extern "C" void Matrix4x3_FromTranslation(Matrix4x3* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *thiz, void *sm, void *mtx, int f, int t, unsigned int u);
 
 extern "C" void func_ov085_0212d2b8(char *thiz)
 {
-    Vec3 v;
-    Vec3_Asr(&v, (Vec3*)(thiz + 0x5c), 3);
+    Vector3 v;
+    Vec3_Asr(&v, (Vector3*)(thiz + 0x5c), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68,
         *(short*)(thiz + 0x8c), *(short*)(thiz + 0x8e), *(short*)(thiz + 0x90));
-    *(Mtx43*)(thiz + 0x12c) = data_020a0e68;
+    *(Matrix4x3*)(thiz + 0x12c) = data_020a0e68;
     Matrix4x3_FromTranslation(&data_020a0e68,
         *(int*)(thiz + 0x5c) >> 3,
         (*(int*)(thiz + 0x60) - 0x32000) >> 3,

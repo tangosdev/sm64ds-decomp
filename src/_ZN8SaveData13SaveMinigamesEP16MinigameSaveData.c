@@ -1,9 +1,7 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef int s32;
-
+#include "types.h"
+// @symbol _ZN8SaveData13SaveMinigamesEP16MinigameSaveData
+/* recovered: named members + shared header */
+#include "SaveData.h"
 struct MinigameSaveData;
 
 extern int _ZN8SaveData14SaveDataToCartEPcjj(void* data, u32 size, u32 count);

@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov002_020c47f4
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
-struct Vector3 { Fix12i x, y, z; };
+
 extern "C" {
 short Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
 int _Z15ApproachLinear2Rsss(short& dst, short to, short step);

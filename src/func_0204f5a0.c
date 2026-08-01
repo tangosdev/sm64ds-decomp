@@ -1,5 +1,4 @@
-typedef unsigned char u8;
-
+#include "types.h"
 struct Obj2;
 
 extern void func_0204f3e0(void *c);

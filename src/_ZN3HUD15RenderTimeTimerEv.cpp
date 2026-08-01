@@ -1,4 +1,10 @@
 //cpp
+// @symbol _ZN3HUD15RenderTimeTimerEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_Timer.h"
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "HUD.h"
 // _ZN3HUD15RenderTimeTimerEv at 0x020fb96c (ov002)
 struct OamAttr;
 
@@ -13,12 +19,11 @@ extern struct OamAttr _ZN3OAM7MINUTESE;
 extern struct OamAttr data_ov002_0210c6c0;
 extern struct OamAttr* data_ov000_020aba70[];
 
-extern int GetOwnerLanguage(void);
-extern unsigned long long _ZN5Timer7GetTimeEv(void* thiz);
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int sub, struct OamAttr* attr, int x, int y, int a, int b, int sx, int sy, int c, int d);
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int sub, struct OamAttr* attr, int x, int y, int a, int b, void* m);
+}
 
-void _ZN3HUD15RenderTimeTimerEv(void* thisptr)
+void HUD::RenderTimeTimer()
 {
     unsigned long long t;
     unsigned long long min;
@@ -62,6 +67,4 @@ void _ZN3HUD15RenderTimeTimerEv(void* thisptr)
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &data_ov002_0210c6c0, 0xdb, 0x1e, -1, 1, 0);
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov000_020aba70[centi / 10], 0xe8, 0x16, -1, 1, 0);
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov000_020aba70[centi % 10], 0xf0, 0x16, -1, 1, 0);
-}
-
 }

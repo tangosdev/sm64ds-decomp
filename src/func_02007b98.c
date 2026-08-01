@@ -1,8 +1,11 @@
+// @symbol func_02007b98
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 typedef int Fix12i;
 
-struct Vector3 {
-    Fix12i x, y, z;
-};
+
 
 struct Actor {
     char pad0[0x5c];
@@ -25,7 +28,6 @@ struct Data {
 
 extern short ReadUnalignedShort(const void *p);
 extern void AddVec3(const struct Vector3 *a, const struct Vector3 *b, struct Vector3 *dest);
-extern int func_02007cec(void *self, const struct Vector3 *v, int a);
 
 int func_02007b98(struct Camera *cam, struct Data *data) {
     struct Vector3 v;

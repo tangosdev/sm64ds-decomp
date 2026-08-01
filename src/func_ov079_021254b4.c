@@ -7,5 +7,5 @@ void func_ov079_021254b4(char *c)
     if (!_ZNK9Animation12WillHitFrameEi(c + 0x31c, 0xf))
         return;
     *(int *)(c + 0x3b0) = 4;
-    (*(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF)) |= 0x2000000;
+    (*(int *)(((int)c + 0xb0))) |= 0x2000000;
 }

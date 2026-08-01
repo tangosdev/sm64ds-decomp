@@ -32,12 +32,12 @@ extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void func_ov002_020bd928(void*, unsigned int);
 extern void func_ov002_020bd8c0(void*, unsigned int);
-extern void func_ov002_020dab14(void*);
+extern void Player_ReleaseHeldActor(void*);
 extern void func_ov002_020daa74(void*);
 extern void func_ov002_020cd218(void*, int, void*, void*);
 extern int func_ov002_020ceaf4(void*);
 extern int func_ov002_020ce5f8(void*);
-extern void func_ov002_020bedd4(void*);
+extern void Player_AdvanceAnims(void*);
 
 extern char data_ov002_021106ac[];
 extern char data_ov002_021101b4[];
@@ -263,7 +263,7 @@ int _ZN6Player12St_Swim_MainEv(char* c)
             if (has == 0) goto case8_block107;
         } else {
         case8_block107:
-            func_ov002_020dab14(c);
+            Player_ReleaseHeldActor(c);
             func_ov002_020cd2c4(c);
             func_ov002_020bd8c0(c, 0x33);
             *(unsigned char*)(c+0x6f7) = 0;
@@ -288,7 +288,7 @@ int _ZN6Player12St_Swim_MainEv(char* c)
         *pa8 = *pa8 + func_ov002_020ceaf4(c);
     }
     if (func_ov002_020ce5f8(c) != 0) return 1;
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }
 }

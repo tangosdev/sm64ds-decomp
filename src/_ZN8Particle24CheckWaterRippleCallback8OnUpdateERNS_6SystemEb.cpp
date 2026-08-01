@@ -27,9 +27,9 @@ bool Particle::CheckWaterRippleCallback::OnUpdate(Particle::System &sys, bool b)
 {
     Particle::Node *node = (Particle::Node*)sys.f0[2];
     if (b) {
-        *(int *)(((int)&sys + 0x1c) & 0xFFFFFFFFFFFFFFFF) &= ~2;
+        *(int *)(((int)&sys + 0x1c)) &= ~2;
     } else {
-        *(int *)(((int)&sys + 0x1c) & 0xFFFFFFFFFFFFFFFF) |= 2;
+        *(int *)(((int)&sys + 0x1c)) |= 2;
         if (node == 0) return false;
     }
     while (node != 0) {

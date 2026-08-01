@@ -1,6 +1,4 @@
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
 extern void func_02056554(const void* src, int offset, int count);
 extern void func_02056494(const void* src, int offset, int count);

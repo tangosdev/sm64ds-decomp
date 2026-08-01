@@ -49,7 +49,7 @@ int func_ov085_0212ae08(char *c)
 
     if (*(s32 *)(c + 0x41c) == 0) {
         {
-            int *ps = (int *)(((long long)(int)(pl + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *ps = (int *)(((long long)(int)(pl + 0x5c)));
             pv.x = ps[0];
             pv.y = ps[1];
             pv.z = ps[2];
@@ -187,7 +187,7 @@ int func_ov085_0212ae08(char *c)
     /* talk ended */
     _ZN6Player9DropActorEv(pl);
     {
-        s32 *p128 = (s32 *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL);
+        s32 *p128 = (s32 *)(((long long)(int)(c + 0x128)));
         *p128 = *p128 & ~2;
     }
     *(s32 *)(c + 0x98) = 0;
@@ -240,7 +240,7 @@ int func_ov085_0212ae08(char *c)
             func_02012790(0xa);
             *(u8 *)(c + 0x427) = 0;
             {
-                u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL);
+                u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
                 *pf = (u16)(*pf | 0x800);
             }
         }
@@ -249,7 +249,7 @@ int func_ov085_0212ae08(char *c)
 no_spawn:
     if (*(u8 *)(c + 0x427) == 2) {
         {
-            u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL);
+            u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
             *pf = (u16)(*pf & ~0x800);
         }
         *(u8 *)(c + 0x427) = 0;
@@ -272,7 +272,7 @@ do_306bc:
     goto final_return;
 flag_path:
     {
-        u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)) & 0xFFFFFFFFFFFFFFFFLL);
+        u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
         *pf = (u16)(*pf | 0x800);
     }
     *(char **)(c + 0x460) = pl;

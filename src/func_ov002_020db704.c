@@ -1,6 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-
+#include "types.h"
 extern int _Z14ApproachLinearRiii(int *p, int value, int speed);
 
 extern int data_ov002_020ff230[];

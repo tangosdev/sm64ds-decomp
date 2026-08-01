@@ -6,7 +6,7 @@ extern void func_ov007_020bf304(void);
 extern void func_ov007_020b6544(void);
 extern void func_ov007_020bcba8(int i);
 extern void func_ov007_020bca40(int i);
-extern void func_ov007_020bfacc(int a, int b, int c);
+extern void RequestScreenFade(int a, int b, int c);
 extern void func_ov007_020bd1c0(int i);
 extern void func_ov007_020b131c(void);
 extern char *data_ov007_0210342c;
@@ -51,7 +51,7 @@ extern "C" void func_ov007_020b066c(void)
                 break;
             case 1:
                 *(short*)(*(char**)(bb + 8) + 2) = 0xa;
-                func_ov007_020bfacc(3, 0xa, 0);
+                RequestScreenFade(3, 0xa, 0);
                 break;
             }
         }

@@ -21,7 +21,7 @@ void func_ov074_02120bb8(char *self, char *p1, char *p2, int mode)
     dst.y = *(s32*)(self + 0x60);
     dst.z = *(s32*)(self + 0x64);
     {
-        Vector3 *pv = (Vector3*)(((long long)(int)(p1 + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+        Vector3 *pv = (Vector3*)(((long long)(int)(p1 + 0x5c)));
         src.x = pv->x;
         src.y = pv->y;
         src.z = pv->z;

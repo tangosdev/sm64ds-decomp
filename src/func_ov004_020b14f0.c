@@ -1,6 +1,6 @@
 typedef long long s64;
 
-#define AT(p,off) ((int*)(int)(((s64)(int)((char*)(p)+(off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((int*)(int)(((s64)(int)((char*)(p)+(off)))))
 
 extern int func_ov004_020ad6f4(void* self, int a);
 extern int func_ov004_020adc3c(void* self);

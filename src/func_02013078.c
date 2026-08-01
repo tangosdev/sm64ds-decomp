@@ -5,7 +5,7 @@ extern int data_0208e434;
 extern signed char data_02092120;
 extern int data_0209b48c;
 extern int data_0208e438;
-extern int func_020124c4(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 
 int func_02013078(void)
 {
@@ -36,7 +36,7 @@ int func_02013078(void)
             result = flag ? 0 : 2;
     } else if (state == 0xc) {
         if (data_02092120 == 0)
-            data_0209b48c = func_020124c4(data_0209b48c, 3, 0x18d, 0);
+            data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
         result = (data_02092120 == 0) ? 4 : 3;
     } else if (state == 0xd) {
         result = (*(int *)(obj + 0x60) < (int)0xffe3e000) ? 5 : 6;

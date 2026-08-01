@@ -1,6 +1,10 @@
 //cpp
+// @symbol _ZN5Model13GetVramOffsetEj
+/* recovered: named members + shared header, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header */
+#include "Model.h"
 extern "C" {
-extern int data_020a4bdc;
 extern int data_020a4be0;
 extern int data_020a4be8;
 extern int data_020a4bc8;

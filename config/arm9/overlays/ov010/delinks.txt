@@ -3,3 +3,133 @@
     .ctor       start:0x0211219c end:0x021121a8 kind:rodata align:4
     .data       start:0x021121c0 end:0x02112d00 kind:data align:32
     .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
+src/func_ov010_021111a0.c:
+    .text start:0x021111a0 end:0x021111ec
+
+src/func_ov010_021111ec.c:
+    .text start:0x021111ec end:0x0211124c
+
+src/func_ov010_0211124c.c:
+    complete
+    .text start:0x0211124c end:0x0211125c
+
+src/func_ov010_0211125c.c:
+    complete
+    .text start:0x0211125c end:0x02111284
+
+src/func_ov010_02111284.c:
+    complete
+    .text start:0x02111284 end:0x021112b4
+
+src/func_ov010_021112b4.c:
+    complete
+    .text start:0x021112b4 end:0x02111320
+
+src/func_ov010_02111320.c:
+    complete
+    .text start:0x02111320 end:0x0211139c
+
+src/func_ov010_0211139c.cpp:
+    complete
+    .text start:0x0211139c end:0x021113f0
+
+src/func_ov010_021113f0.c:
+    complete
+    .text start:0x021113f0 end:0x0211146c
+
+src/func_ov010_0211146c.c:
+    complete
+    .text start:0x0211146c end:0x02111554
+
+src/func_ov010_02111554.cpp:
+    .text start:0x02111554 end:0x021115a8
+
+src/func_ov010_021115a8.cpp:
+    complete
+    .text start:0x021115a8 end:0x021115e0
+
+src/func_ov010_021115e0.cpp:
+    complete
+    .text start:0x021115e0 end:0x02111654
+
+src/func_ov010_02111654.c:
+    complete
+    .text start:0x02111654 end:0x0211184c
+
+src/func_ov010_0211184c.c:
+    complete
+    .text start:0x0211184c end:0x02111984
+
+src/func_ov010_02111984.c:
+    complete
+    .text start:0x02111984 end:0x02111998
+
+src/Trap_Spawn.c:
+    .text start:0x02111998 end:0x021119d0
+
+src/_ZN4TrapD1Ev.cpp:
+    .text start:0x021119d0 end:0x02111a08
+
+src/_ZN4TrapD0Ev.c:
+    complete
+    .text start:0x02111a08 end:0x02111a54
+
+src/func_ov010_02111a54.c:
+    complete
+    .text start:0x02111a54 end:0x02111a94
+
+src/_ZN4Trap16CleanupResourcesEv.c:
+    complete
+    .text start:0x02111a94 end:0x02111ab8
+
+src/_ZN4Trap6RenderEv.cpp:
+    complete
+    .text start:0x02111ab8 end:0x02111ae0
+
+src/_ZN4Trap8BehaviorEv.cpp:
+    .text start:0x02111ae0 end:0x02111d20
+
+src/_ZN4Trap13InitResourcesEv.cpp:
+    .text start:0x02111d20 end:0x02111dd0
+
+src/LightBeam_Spawn.c:
+    complete
+    .text start:0x02111dd0 end:0x02111e10
+
+src/_ZN13PeachPaintingD1Ev.cpp:
+    .text start:0x02111e10 end:0x02111e40
+
+src/_ZN13PeachPaintingD0Ev.c:
+    complete
+    .text start:0x02111e40 end:0x02111e84
+
+src/func_ov010_02111e84.c:
+    complete
+    .text start:0x02111e84 end:0x02111ec4
+
+src/_ZN13PeachPainting16CleanupResourcesEv.c:
+    complete
+    .text start:0x02111ec4 end:0x02111ee8
+
+src/_ZN13PeachPainting6RenderEv.cpp:
+    complete
+    .text start:0x02111ee8 end:0x02111f28
+
+src/_ZN13PeachPainting8BehaviorEv.cpp:
+    .text start:0x02111f28 end:0x02111fc0
+
+src/_ZN13PeachPainting13InitResourcesEv.cpp:
+    .text start:0x02111fc0 end:0x02112004
+
+src/PeachPainting_Spawn.c:
+    complete
+    .text start:0x02112004 end:0x0211203c
+
+src/__sinit_ov010_0211203c.c:
+    .init start:0x0211203c end:0x0211211c
+
+src/__sinit_ov010_0211211c.c:
+    .init start:0x0211211c end:0x0211215c
+
+src/__sinit_ov010_0211215c.c:
+    .init start:0x0211215c end:0x0211219c

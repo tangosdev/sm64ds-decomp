@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "types.h"
 typedef void (*IrqFn)(int);
 
 struct G6460 {

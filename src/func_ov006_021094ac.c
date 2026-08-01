@@ -1,4 +1,4 @@
-extern void func_0203d6d0(int *out, int *a, int *b);
+extern void Vec2_Sub(int *out, int *a, int *b);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int x);
 typedef struct S {
@@ -13,7 +13,7 @@ void func_ov006_021094ac(S *this, int *src) {
     int v[2];
     this->a = src[0];
     this->b = src[1];
-    func_0203d6d0(v, &this->a, (int *)this);
+    Vec2_Sub(v, &this->a, (int *)this);
     this->x = v[0];
     this->y = v[1];
     if (func_0203d434(&this->x)) {

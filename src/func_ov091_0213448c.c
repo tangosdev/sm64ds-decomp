@@ -1,3 +1,7 @@
+// @symbol func_ov091_0213448c
+// recovered name: Stump_OnTurnIntoEgg
+/* recovered: renamed to Class_Method */
+/* daHyuhyu_c::OnTurnIntoEgg - recovered from vtable slot identity */
 /* func_ov091_0213448c @ 0x213448c (ov091) -- tail-call veneer to _ZN9ActorBase18MarkForDestructionEv (0x2043824).
  * ldr ip, [pc]; bx ip; .word 0x2043824
  */

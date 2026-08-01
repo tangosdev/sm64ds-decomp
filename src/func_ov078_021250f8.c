@@ -1,19 +1,19 @@
-struct Vector3 { int x, y, z; };
-
-extern int func_ov078_02123804(char* c);
-extern void func_ov078_02123864(char* c);
+// @symbol func_ov078_021250f8
+/* recovered: shared common types, declarations from a shared header */
+#include "decl_Animation.h"
+#include "decl_common.h"
+/* recovered: shared common types */
+#include "common.h"
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void func_ov102_0214b384(void* a, int b);
-extern int _ZNK9Animation12WillHitFrameEi(void* self, int frame);
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void Matrix4x3_FromRotationY(void* m, int ang);
 extern int Vec3_HorzLen(void* v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
-extern void func_ov102_0214ad14(void* c);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 extern int _ZN9Animation8FinishedEv(void* self);
-extern void func_ov078_02125c48(void* c, void* p);
+extern void KingBobOmb_SetState(void* c, void* p);
 
 extern int data_020a0e68[];
 extern int data_ov078_0212703c;
@@ -48,7 +48,7 @@ int func_ov078_021250f8(char* c) {
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
                 player = _ZN5Actor13ClosestPlayerEv(c);
                 if (player != 0) {
-                    int* q = (int*)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+                    int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
@@ -85,7 +85,7 @@ int func_ov078_021250f8(char* c) {
                 *(unsigned char*)(c + 0x504) = 0x64;
             }
         }
-        func_ov078_02125c48(c, &data_ov078_0212703c);
+        KingBobOmb_SetState(c, &data_ov078_0212703c);
     }
     return 1;
 }

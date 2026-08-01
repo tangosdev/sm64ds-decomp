@@ -42,20 +42,20 @@ void func_ov006_0210d93c(struct C* c)
     func_0203d388(&c->v[6], c->angle);
     func_0203d388(&c->v[7], c->angle);
 
-    *(int*)(((int)c + 0x48) & 0xFFFFFFFFFFFFFFFFLL) += c->dx - 0x10000;
-    *(int*)(((int)c + 0x4c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFLL) += c->dx - 0x10000;
-    *(int*)(((int)c + 0x54) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x58) & 0xFFFFFFFFFFFFFFFFLL) += c->dx - 0x10000;
-    *(int*)(((int)c + 0x5c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFLL) += c->dx - 0x10000;
-    *(int*)(((int)c + 0x64) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x68) & 0xFFFFFFFFFFFFFFFFLL) += c->dx + 0x10000;
-    *(int*)(((int)c + 0x6c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x70) & 0xFFFFFFFFFFFFFFFFLL) += c->dx + 0x10000;
-    *(int*)(((int)c + 0x74) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x78) & 0xFFFFFFFFFFFFFFFFLL) += c->dx + 0x10000;
-    *(int*)(((int)c + 0x7c) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
-    *(int*)(((int)c + 0x80) & 0xFFFFFFFFFFFFFFFFLL) += c->dx + 0x10000;
-    *(int*)(((int)c + 0x84) & 0xFFFFFFFFFFFFFFFFLL) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x48)) += c->dx - 0x10000;
+    *(int*)(((int)c + 0x4c)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x50)) += c->dx - 0x10000;
+    *(int*)(((int)c + 0x54)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x58)) += c->dx - 0x10000;
+    *(int*)(((int)c + 0x5c)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x60)) += c->dx - 0x10000;
+    *(int*)(((int)c + 0x64)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x68)) += c->dx + 0x10000;
+    *(int*)(((int)c + 0x6c)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x70)) += c->dx + 0x10000;
+    *(int*)(((int)c + 0x74)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x78)) += c->dx + 0x10000;
+    *(int*)(((int)c + 0x7c)) += c->dy + 0x28000;
+    *(int*)(((int)c + 0x80)) += c->dx + 0x10000;
+    *(int*)(((int)c + 0x84)) += c->dy + 0x28000;
 }

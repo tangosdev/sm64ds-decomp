@@ -1,10 +1,4 @@
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
-typedef long long s64;
-
+#include "types.h"
 extern int func_ov020_02111418(char *c);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern int _Z14ApproachLinearRiii(s32 *, int, int);
@@ -49,8 +43,8 @@ void func_ov020_02111c30(char *c)
         return;
     }
 
-    (*(u16 *)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFF))++;
-    if (*(u16 *)(((int)c + 0x100) & 0xFFFFFFFFFFFFFFFF) < 5)
+    (*(u16 *)(((int)c + 0x100)))++;
+    if (*(u16 *)(((int)c + 0x100)) < 5)
         return;
 
     func_ov020_021112b0(c);

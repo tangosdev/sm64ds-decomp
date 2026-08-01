@@ -1,7 +1,4 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
+#include "types.h"
 extern void *data_020a9db8;
 extern u8 data_020a9d28;
 
@@ -78,7 +75,7 @@ int func_02067928(void *a, void *b)
     *(u16*)((char*)data_020a9db8 + 0x1d46 + idx * 0x5c4) = 1;
     *(void**)((char*)data_020a9db8 + idx * 0x5c4 + 0x1d3c) = b;
     *(u8*)((char*)data_020a9db8 + idx * 0x5c4 + 0x1d4a) = 1;
-    *(u8*)((((int)data_020a9db8) + 0x1524) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+    *(u8*)((((int)data_020a9db8) + 0x1524)) += 1;
 
     _ZN3IRQ7RestoreEj(state);
     return 1;

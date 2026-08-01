@@ -10,7 +10,7 @@ void func_ov074_0212018c(char *c)
 {
     if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x5c8)) != -1)
         return;
-    (*(int *)(((int)data_0209f318 + 0x154) & 0xFFFFFFFFFFFFFFFF)) &= ~8;
+    (*(int *)(((int)data_0209f318 + 0x154))) &= ~8;
     _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
     func_02011d20();
     _ZN7Message7EndTalkEv();

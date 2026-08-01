@@ -1,6 +1,9 @@
 //cpp
+// @symbol func_ov065_02119fe8
+/* recovered: shared common types */
+#include "common.h"
 typedef short s16;
-struct Vector3 { int x, y, z; };
+
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
 
 extern "C" void Matrix4x3_FromRotationZXYExt(void* m, int x, int y, int z);

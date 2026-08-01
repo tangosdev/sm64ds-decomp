@@ -12,7 +12,7 @@ struct A {
     unsigned char f2d;
 };
 
-extern void func_0203d6d0(int* o, int* a, int* b);
+extern void Vec2_Sub(int* o, int* a, int* b);
 extern void func_0203d630(int *p, int m);
 
 extern short data_ov006_0213d6f4[];
@@ -45,7 +45,7 @@ void func_ov006_020f9db8(struct A *o, int a)
     o->f18 = ((a / 5) * 0x30) << 12;
     o->f2a = (short)a;
 
-    func_0203d6d0(v, &o->f14, &o->f0c);
+    Vec2_Sub(v, &o->f14, &o->f0c);
 
     o->f1c = v[0];
     o->f20 = v[1];
