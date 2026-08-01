@@ -13,10 +13,7 @@
      `mov r0, #0` above the two save loads.
    - The round-1 K read goes through a volatile pointer. Register pressure in
      the round-1 body is what keeps K[0] un-hoisted in the ROM; rounds 2..4
-     hoist their K into the preheader on their own.
-   - The Intermediate_Hash[1..4] updates use the u64 identity launder so each
-     one materializes its own base register (`add r3, ip, #4` etc.) instead of
-     folding into `[ip, #4]`. */
+     hoist their K into the preheader on their own. */
 
 typedef struct
 {

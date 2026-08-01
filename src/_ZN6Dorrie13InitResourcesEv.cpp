@@ -63,7 +63,7 @@ int Dorrie::InitResources()
         unk_1194 = mPosX;
         unk_1198 = mPosY;
         unk_119c = mPosZ;
-        /* u64-mask launder: materialize add r2,sl,#0x5c; ldr/str [r2] */
+        /* cast launder: materialize add r2,sl,#0x5c; ldr/str [r2] */
         *(int*)(((int)((char*)this) + 0x5c)) += 0x7d0000;
     }
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
