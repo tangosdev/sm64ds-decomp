@@ -16,7 +16,7 @@ void _ZN2GX7LoadTexEPKvjj(const void*, unsigned int, unsigned int);
 void _ZN2GX10EndLoadTexEv();
 
 #pragma opt_common_subs off
-void _ZN5Model27LoadCompressedTextureToVramEPcjPc(char* src, unsigned int size, char* dst){
+void _ZN5Model27LoadCompressedTextureToVramEPcjS0_(char* src, unsigned int size, char* dst){
   if ((data_020a4be8 - data_020a4bc8) < size) Crash();
   _ZN2GX12BeginLoadTexEv();
   _ZN2GX7LoadTexEPKvjj(src, data_020a4bc8, size);

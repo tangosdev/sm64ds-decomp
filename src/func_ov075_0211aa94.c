@@ -1,4 +1,4 @@
-void *_ZN5Model27LoadCompressedTextureToVramEPcjPc(char *a, unsigned int b, char *c);
+void *_ZN5Model27LoadCompressedTextureToVramEPcjS0_(char *a, unsigned int b, char *c);
 int func_02045ad8(void *p);
 unsigned int func_02045a50(const void *src, unsigned int size);
 
@@ -13,7 +13,7 @@ int func_ov075_0211aa94(char *c, char *b)
     d = *(char **)(b + 0x28);
     e = *(char **)(b + 0x20);
 
-    *(int *)(c + 0x88) = (int)_ZN5Model27LoadCompressedTextureToVramEPcjPc(
+    *(int *)(c + 0x88) = (int)_ZN5Model27LoadCompressedTextureToVramEPcjS0_(
         *(char **)(a + 4), *(unsigned int *)(a + 8),
         *(char **)(a + 4) + *(unsigned int *)(a + 8));
     sz = *(int *)(e + 8);
