@@ -225,6 +225,15 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
                 "reason": err, "diffs": [], "blind": 0}
     target = RV.rom_bytes(mod, addr, size)
     code, _ = M.extract_func(obj, sym)
+    if (code is not None and target is not None and len(code) > len(target)
+            and len(code) - len(target) <= 0x40):
+        # Split-symbol carrier (notes 9a(3)): the compiled function extends over the
+        # following severed fragment(s). Widen the target to the full compiled span so
+        # every byte -- overhang included -- must still match the ROM. Strictly
+        # stronger than the plain extent check; a wrong-sized near miss cannot pass.
+        ext = RV.rom_bytes(mod, addr, len(code))
+        if ext is not None and len(ext) == len(code):
+            target = ext
     if code is None or len(code) != len(target):
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}", "verdict": "NO-SYM",
                 "reason": "len-mismatch", "diffs": [], "blind": 0}

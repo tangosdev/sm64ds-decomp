@@ -209,10 +209,25 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                     candidate_syms = [name] + [s for s in candidate_syms if s != name]
                     for sym in candidate_syms:
                         code, relocs = M.extract_func(obj, sym)
-                        if code is None or len(code) != len(target):
+                        if code is None:
                             continue
+                        tgt = target
+                        if len(code) != len(tgt):
+                            # Split-symbol carrier (notes 9a(3)): a function whose compiled
+                            # form extends over the following severed fragment(s), e.g.
+                            # func_02072168 emitting func_020729e8's 12-byte epilogue. Accept
+                            # ONLY if the full compiled span is byte-identical to the ROM,
+                            # overhang included -- strictly stronger than the plain check, so
+                            # a wrong-sized near miss cannot slip through. 0x40 bounds the
+                            # overhang to fragment scale.
+                            if not (len(code) > len(tgt) and len(code) - len(tgt) <= 0x40):
+                                continue
+                            ext = RV.rom_bytes(mod, addr, len(code))
+                            if ext is None or len(ext) != len(code):
+                                continue
+                            tgt = ext
                         saw_len = True
-                        ok, _ = M.compare(target, code, relocs, verbose=False)
+                        ok, _ = M.compare(tgt, code, relocs, verbose=False)
                         if ok:
                             return obj, sym, None
             finally:
