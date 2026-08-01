@@ -37,13 +37,13 @@ extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
   {
     short* q = (short*)data_0209b45c;
     if (q) {
-      self->unk_08c = q[0];
-      self->unk_08e = q[1];
-      self->unk_090 = q[2];
+      self->mAngleX = q[0];
+      self->mAngleY = q[1];
+      self->mAngleZ = q[2];
       q = (short*)data_0209b45c;
-      self->unk_092 = q[0];
-      self->unk_094 = q[1];
-      self->unk_096 = q[2];
+      self->mPrevAngleX = q[0];
+      self->mPrevAngleY = q[1];
+      self->mPrevAngleZ = q[2];
     }
   }
   self->mAreaId = data_0209b44c;

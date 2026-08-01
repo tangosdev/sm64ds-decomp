@@ -69,15 +69,15 @@ int WingFeather::Behavior()
 
     {
         int idx2 = (unk_37c >> 4) << 1;
-        unk_08c = data_02082214[idx2] + 0x4000;
+        mAngleX = data_02082214[idx2] + 0x4000;
         int idx3 = ((unk_37c >> 4) << 1) + 1;
-        unk_090 = data_02082214[idx3] * 2 - 0x6000;
+        mAngleZ = data_02082214[idx3] * 2 - 0x6000;
     }
 
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            unk_08e = *(s16*)((char*)data_0209f318 + 0x17c) + 0x4000;
+            mAngleY = *(s16*)((char*)data_0209f318 + 0x17c) + 0x4000;
         }
     }
 

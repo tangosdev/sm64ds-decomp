@@ -15,7 +15,7 @@ struct MadPiano {
     s32 unk_06c;            /* 0x06c */
     s32 unk_070;            /* 0x070 */
     u8  pad_074[0x1a];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0xc];
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */

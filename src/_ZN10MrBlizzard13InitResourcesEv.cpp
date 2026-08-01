@@ -92,8 +92,8 @@ int MrBlizzard::InitResources()
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
         ((char *)this) + 0x110, ((char *)this), &v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
-    unk_08e = unk_094;
-    unk_414 = unk_08e;
+    mAngleY = mPrevAngleY;
+    unk_414 = mAngleY;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
         ((char *)this) + 0x150, ((char *)this), 0x14000, 0xf000, 0, 0);
 

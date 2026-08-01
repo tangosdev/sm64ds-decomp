@@ -16,7 +16,7 @@ struct KnockDownPlank {
     u8  pad_061[0x3];
     u8  unk_064;            /* 0x064 */
     u8  pad_065[0x29];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];

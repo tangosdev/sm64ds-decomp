@@ -53,7 +53,7 @@ int HeaveHo::Behavior()
     if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn)) {
         void *fr = _ZNK12WithMeshClsn14GetFloorResultEv((char *)&mWithMeshClsn);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &v);
-        r5 = func_02010844(((char *)this), &v, unk_08e);
+        r5 = func_02010844(((char *)this), &v, mAngleY);
     }
 
     b = _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
@@ -72,7 +72,7 @@ writeback:
     unk_418 = mPosZ;
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 2);
 
-    unk_08e = unk_094;
+    mAngleY = mPrevAngleY;
     func_ov077_02126dac(((char *)this));
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) && *(void **)((char *)&unk_3fc) != (void *)data_ov077_02127cd8) {

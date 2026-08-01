@@ -17,9 +17,9 @@ struct VirtualDoor {
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    u16 unk_090;            /* 0x090 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    u16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x6];
     s32 unk_098;            /* 0x098 */
     u8  pad_09c[0x38];

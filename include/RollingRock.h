@@ -16,11 +16,11 @@ struct RollingRock {
     u8  pad_068[0x24];
     u8  unk_08c;            /* 0x08c */
     u8  pad_08d[0x1];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x2];
     u8  unk_092;            /* 0x092 */
     u8  pad_093[0x1];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
     s32 unk_098;            /* 0x098 */
     u8  pad_09c[0x30];

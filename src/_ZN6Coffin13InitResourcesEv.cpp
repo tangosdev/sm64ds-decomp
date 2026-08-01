@@ -62,7 +62,7 @@ int Coffin::InitResources()
     out.x = 0;
     out.y = 0;
     out.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, unk_08e);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MulVec3Mat4x3(&in, &data_020a0e68, &out);
     Vector3 res;
     Vec3_Add(&res, (Vector3*)((char*)&mPosX), &out);
@@ -73,7 +73,7 @@ int Coffin::InitResources()
     ((Platform*)((char*)this))->UpdateClsnPosAndRot();
     ((MovingMeshCollider*)((char*)&mMeshCollider))->SetFile(
         MeshCollider::LoadFile(data_ov071_021230d8),
-        *(Matrix4x3*)((char*)&unk_2ec), 0x199, unk_08e, data_ov063_0211ebd8);
+        *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
     func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

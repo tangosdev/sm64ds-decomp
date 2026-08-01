@@ -34,8 +34,8 @@ int DorrieCap::Behavior()
   mPosX = *(int*)p;
   mPosY = *(int*)(p+4);
   mPosZ = *(int*)(p+8);
-  unk_08c = *(short*)(*(char**)((char*)&unk_174)+0xe4);
-  unk_08e = *(short*)(*(char**)((char*)&unk_174)+0x8e);
+  mAngleX = *(short*)(*(char**)((char*)&unk_174)+0xe4);
+  mAngleY = *(short*)(*(char**)((char*)&unk_174)+0x8e);
   if(((unsigned int)unk_0ef << 30) >> 31){
     func_ov065_02118c4c(((char*)this));
     if(func_ov065_021180d4(((char*)this)) != 0){

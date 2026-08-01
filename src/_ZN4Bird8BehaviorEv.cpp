@@ -31,9 +31,9 @@ int Bird::Behavior()
   int tmp[3];
   Vec3_Asr(tmp, ((char*)this)+0x5c, 3);
   Matrix4x3_FromTranslation(&data_020a0e68, tmp[0], tmp[1], tmp[2]);
-  unk_08e = unk_094;
-  Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, unk_090);
-  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, unk_08e);
+  mAngleY = mPrevAngleY;
+  Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
+  Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
   *(struct Mtx*)((char*)&unk_0f0) = data_020a0e68;
   _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(((char*)this), ((char*)this)+0x138, ((char*)this)+0xf0, 0x1e000, 0x7d0000, 0xf);
   _ZN9Animation7AdvanceEv((char*)&mAnimation);

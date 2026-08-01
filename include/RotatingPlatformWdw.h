@@ -14,7 +14,7 @@ struct RotatingPlatformWdw {
     u8  pad_064[0x8];
     s32 unk_06c;            /* 0x06c */
     u8  pad_070[0x1e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];

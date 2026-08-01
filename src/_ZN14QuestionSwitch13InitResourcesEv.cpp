@@ -35,11 +35,11 @@ int QuestionSwitch::InitResources()
 
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_0210dd58);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x324, f, ((char *)this) + 0x2ec, 0x199, unk_08e, &data_ov002_0210d8b4);
+        ((char *)this) + 0x324, f, ((char *)this) + 0x2ec, 0x199, mAngleY, &data_ov002_0210d8b4);
 
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_0210dd50);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x4ec, f, ((char *)this) + 0x2ec, 0x199, unk_08e, &data_ov002_0210d774);
+        ((char *)this) + 0x4ec, f, ((char *)this) + 0x2ec, 0x199, mAngleY, &data_ov002_0210d774);
 
     func_020393c4((int *)((char *)&unk_324), (int)&func_ov002_020b56c4);
 

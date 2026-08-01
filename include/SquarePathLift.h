@@ -14,7 +14,7 @@ struct SquarePathLift {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x8];
     s32 mMoveSpeed;            /* 0x098 */
     u8  pad_09c[0x38];

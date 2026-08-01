@@ -39,9 +39,9 @@ int Unagi::Behavior()
         }
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
-    unk_08c = unk_092;
-    unk_08e = unk_094;
-    unk_090 = unk_096;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
     func_ov016_02111c40(((char*)this));
 
     id = *(unsigned*)((char*)&mStarUniqueID);

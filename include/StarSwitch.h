@@ -13,7 +13,7 @@ struct StarSwitch {
     u8  pad_00e[0x52];
     u8  unk_060;            /* 0x060 */
     u8  pad_061[0x2d];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
     u8  unk_0b0;            /* 0x0b0 */
     u8  pad_0b1[0x1b];

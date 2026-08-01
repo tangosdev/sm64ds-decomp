@@ -70,9 +70,9 @@ int Goomba::Behavior()
                 mPosX = unk_41c;
                 mPosY = unk_420;
                 mPosZ = unk_424;
-                unk_08c = 0;
-                unk_08e = 0;
-                unk_090 = 0;
+                mAngleX = 0;
+                mAngleY = 0;
+                mAngleZ = 0;
                 _ZN8CapEnemy15RespawnIfHasCapEv(((char*)this));
                 func_ov084_021296cc(((char*)this));
             }

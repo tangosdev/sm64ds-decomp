@@ -49,9 +49,9 @@ int SnowmanBody::InitResources()
     unk_33c = mPosX;
     unk_340 = mPosY;
     unk_344 = mPosZ;
-    unk_348 = unk_08c;
-    unk_34a = unk_08e;
-    unk_34c = unk_090;
+    unk_348 = mAngleX;
+    unk_34a = mAngleY;
+    unk_34c = mAngleZ;
     unk_3a4 = 0x5a;
     func_ov072_0211fcb0(((char*)this), 0);
     unk_390 = 0;

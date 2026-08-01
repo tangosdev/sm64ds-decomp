@@ -72,9 +72,9 @@ int ChiefChilly::InitResources()
         }
     }
     unk_4c5 = 0xff;
-    unk_094 = _ZN5Actor18HorzAngleToCPlayerEv(((char*)this));
-    unk_08e = unk_094;
-    *(short*)(((char*)this)+0x400+0xc6) = unk_08e;
+    mPrevAngleY = _ZN5Actor18HorzAngleToCPlayerEv(((char*)this));
+    mAngleY = mPrevAngleY;
+    *(short*)(((char*)this)+0x400+0xc6) = mAngleY;
     unk_4bc = 2;
     unk_4cb = 3;
     mScaleX = 0x1000;

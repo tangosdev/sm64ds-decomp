@@ -14,8 +14,8 @@ struct Squasher {
     u8  pad_068[0xc];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x17];
-    s16 unk_08c;            /* 0x08c */
-    u16 unk_08e;            /* 0x08e */
+    s16 mAngleX;            /* 0x08c */
+    u16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];

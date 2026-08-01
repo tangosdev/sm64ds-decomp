@@ -41,14 +41,14 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
     {
         s16* q = data_0209b45c;
         if (q != 0) {
-            self->unk_08c = q[0];
-            self->unk_08e = q[1];
-            self->unk_090 = q[2];
+            self->mAngleX = q[0];
+            self->mAngleY = q[1];
+            self->mAngleZ = q[2];
             {
                 s16* q2 = data_0209b45c;
-                self->unk_092 = q2[0];
-                self->unk_094 = q2[1];
-                self->unk_096 = q2[2];
+                self->mPrevAngleX = q2[0];
+                self->mPrevAngleY = q2[1];
+                self->mPrevAngleZ = q2[2];
             }
         }
     }

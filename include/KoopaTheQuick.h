@@ -24,9 +24,9 @@ struct KoopaTheQuick {
     u8  pad_089[0x3];
     u8  unk_08c;            /* 0x08c */
     u8  pad_08d[0x1];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
     u8  unk_09c;            /* 0x09c */
     u8  pad_09d[0x3];

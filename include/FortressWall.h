@@ -17,7 +17,7 @@ struct FortressWall {
     u8  pad_061[0x3];
     u8  unk_064;            /* 0x064 */
     u8  pad_065[0x29];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
     u8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];

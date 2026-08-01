@@ -12,7 +12,7 @@ struct SwitchPillar {
     u8  pad_064[0x10];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x19];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x7];

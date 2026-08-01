@@ -15,9 +15,9 @@ struct Spindrift {
     s32 unk_06c;            /* 0x06c */
     s32 unk_070;            /* 0x070 */
     u8  pad_074[0x1a];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x1a];
     u32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x50];

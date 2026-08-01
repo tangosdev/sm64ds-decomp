@@ -30,9 +30,9 @@ int Swoop::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d6a0);
     unk_0a0 = -0xa000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x110, (Actor*)((char*)this), 0x28000, 0x28000, 0x200000, 0x7eff0);
-    unk_08e = unk_094;
-    unk_092 = -0x8000;
-    unk_08c = unk_092;
+    mAngleY = mPrevAngleY;
+    mPrevAngleX = -0x8000;
+    mAngleX = mPrevAngleX;
     unk_43c = 0;
     unk_35c = 0x1000;
     unk_3c0 = 0x1000;

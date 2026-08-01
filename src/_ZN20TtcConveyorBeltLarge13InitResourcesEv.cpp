@@ -119,7 +119,7 @@ int TtcConveyorBeltLarge::InitResources()
         (KCL_File *)kf,
         *(Matrix4x3 *)((char *)&unk_2ec),
         0x199,
-        unk_08e,
+        mAngleY,
         *(CLPS_Block *)data_ov065_0211d19c[e].a);
 
     func_020393c4(

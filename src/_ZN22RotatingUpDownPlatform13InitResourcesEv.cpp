@@ -33,7 +33,7 @@ int RotatingUpDownPlatform::InitResources()
         _ZN12MeshCollider8LoadFileER13SharedFilePtr((void*)data_ov091_021344f4[idx]),
         ((char*)this) + 0x2ec,
         0x199,
-        unk_08e,
+        mAngleY,
         (void*)data_ov091_02134e5c[idx]);
 
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
@@ -54,7 +54,7 @@ int RotatingUpDownPlatform::InitResources()
         _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
     }
 
-    unk_350 = unk_08e;
+    unk_350 = mAngleY;
     unk_34c = 0;
     unk_356 = 0;
     return 1;

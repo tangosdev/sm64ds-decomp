@@ -17,7 +17,7 @@ struct QuestionBlock {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x2];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x10];
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];

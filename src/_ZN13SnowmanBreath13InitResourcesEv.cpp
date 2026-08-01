@@ -25,11 +25,11 @@ int SnowmanBreath::InitResources()
     mPosX = 0x3fa770;
     mPosY = 0xcb2000;
     mPosZ = 0x46988e;
-    unk_08e = 0x5d30;
+    mAngleY = 0x5d30;
     Vec3 v;
     Vec3_Asr(&v, ((char*)this) + 0x5c, 3);
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationY(data_020a0e68, unk_08e);
+    Matrix4x3_ApplyInPlaceToRotationY(data_020a0e68, mAngleY);
     InvMat4x3(data_020a0e68, data_020a0e68);
     *(M48*)((char*)&unk_1394) = *(M48*)data_020a0e68;
     return 1;

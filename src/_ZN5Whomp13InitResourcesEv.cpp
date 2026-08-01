@@ -127,11 +127,11 @@ int Whomp::InitResources()
     if (idx == 0) {
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
-            0x199, unk_08e, &data_ov079_02127ba0);
+            0x199, mAngleY, &data_ov079_02127ba0);
     } else {
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
-            0x1000, unk_08e, &func_021135d4);
+            0x1000, mAngleY, &func_021135d4);
     }
 
     func_01ffb0bc((char *)&mMovingMeshCollider);
@@ -150,7 +150,7 @@ int Whomp::InitResources()
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
 
     unk_3b0 = 0;
-    *(s16 *)(((char *)this) + 0x300 + 0xb8) = unk_094;
+    *(s16 *)(((char *)this) + 0x300 + 0xb8) = mPrevAngleY;
     unk_40c = 0;
     *(s16 *)(((char *)this) + 0x300 + 0xfc) = 0;
 
@@ -161,9 +161,9 @@ int Whomp::InitResources()
     unk_3bc = mPosX;
     unk_3c0 = mPosY;
     unk_3c4 = mPosZ;
-    *(s16 *)(((char *)this) + 0x300 + 0xe6) = unk_08c;
-    *(s16 *)(((char *)this) + 0x300 + 0xe8) = unk_08e;
-    *(s16 *)(((char *)this) + 0x300 + 0xea) = unk_090;
+    *(s16 *)(((char *)this) + 0x300 + 0xe6) = mAngleX;
+    *(s16 *)(((char *)this) + 0x300 + 0xe8) = mAngleY;
+    *(s16 *)(((char *)this) + 0x300 + 0xea) = mAngleZ;
 
     if (mIsKing != 0) {
         unk_09c = -0x8000;

@@ -21,11 +21,11 @@ int ArrowLift::Behavior()
         p = _ZN5Actor10FindWithIDEj(unk_158);
         if (p != 0) {
             if (mPosY == *(int*)(p+0x60)) {
-                if (unk_08e == 0) unk_15d = 0;
+                if (mAngleY == 0) unk_15d = 0;
             }
             if (mPosY != *(int*)(p+0x334)) {
                 unk_15d = 0;
-                unk_08e = 0;
+                mAngleY = 0;
             }
         }
     }

@@ -43,7 +43,7 @@ int RotatingPlatformWdw::InitResources()
 
     k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114304);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124, k, ((char *)this) + 0x2ec, 0x1000, unk_08e, &data_ov029_02112fec);
+        ((char *)this) + 0x124, k, ((char *)this) + 0x2ec, 0x1000, mAngleY, &data_ov029_02112fec);
     _ZN16MeshColliderBase6EnableEP5Actor(((char *)this) + 0x124, ((char *)this));
 
     unk_340 = (u8)mAreaId;

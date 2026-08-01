@@ -55,13 +55,13 @@ int Key::Behavior()
                     {
                         char* o2 = *(char**)((char*)&unk_110);
                         int ang = *(short*)(o2 + 0x8e);
-                        unk_08e = ang;
+                        mAngleY = ang;
                     }
                 }
             }
             if (_ZN9Animation8FinishedEv((char*)&mAnimation) == 0) {
                 Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, unk_08e);
+                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
                 MulMat4x3Mat4x3(*(void**)((char*)&unk_128), &data_020a0e68, &data_020a0e68);
                 {
                     char* m = &data_020a0e68;
@@ -107,7 +107,7 @@ int Key::Behavior()
         mSpinSpeed = 0x400;
     }
     {
-        short* ang = (short*)(int)LAUNDER((char*)&unk_08e);
+        short* ang = (short*)(int)LAUNDER((char*)&mAngleY);
         *ang = *ang + mSpinSpeed;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);

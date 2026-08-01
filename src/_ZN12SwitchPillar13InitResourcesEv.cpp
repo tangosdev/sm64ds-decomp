@@ -26,7 +26,7 @@ int SwitchPillar::InitResources()
   _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char*)this)+0x320, data_ov012_02111c24, 0, 0x1000, 0);
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, data_ov012_021124c8[1], ((char*)this)+0x2ec, 0x1000, unk_08e, data_ov012_02111c90);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, data_ov012_021124c8[1], ((char*)this)+0x2ec, 0x1000, mAngleY, data_ov012_02111c90);
   _ZN16MeshColliderBase6EnableEP5Actor(((char*)this)+0x124, ((char*)this));
   int v = mPosY - 0x4b0000;
   mLoweredY = v;

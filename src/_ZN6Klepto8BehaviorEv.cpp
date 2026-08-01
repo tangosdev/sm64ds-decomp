@@ -50,9 +50,9 @@ int Klepto::Behavior()
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn1));
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
 
-    unk_08c = unk_092;
-    unk_08e = unk_094;
-    unk_090 = unk_096;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
     func_ov062_0211c6a8(((char *)this));
 
     unsigned int actorId = mHeldActorID;

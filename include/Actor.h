@@ -33,12 +33,12 @@ struct Actor {
     s32 mCamSpacePosY;            /* 0x078 */
     s32 mCamSpacePosZ;            /* 0x07c */
     u8  pad_080[0xc];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
-    s16 unk_092;            /* 0x092 */
-    s16 unk_094;            /* 0x094 */
-    s16 unk_096;            /* 0x096 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
+    s16 mPrevAngleX;            /* 0x092 */
+    s16 mPrevAngleY;            /* 0x094 */
+    s16 mPrevAngleZ;            /* 0x096 */
     u8  unk_098;            /* 0x098 */
     u8  pad_099[0x3];
     u8  unk_09c;            /* 0x09c */

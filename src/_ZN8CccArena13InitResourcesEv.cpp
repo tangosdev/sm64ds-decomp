@@ -42,7 +42,7 @@ int CccArena::InitResources()
     idx = (unsigned char)((char *)this)[0x32c];
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov073_021231bc + idx * 0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, f, 1, -1);
-    Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, unk_08c, unk_08e, unk_090);
+    Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
     unk_114 = mPosX >> 3;
     unk_118 = mPosY >> 3;
     unk_11c = mPosZ >> 3;
@@ -52,7 +52,7 @@ int CccArena::InitResources()
         unsigned char i = (unsigned char)((char *)this)[0x32c];
         f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(int*)(data_ov073_021231c0 + i * 0xc));
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, unk_08e, *(int*)(data_ov073_021231c4 + i * 0xc));
+            ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, mAngleY, *(int*)(data_ov073_021231c4 + i * 0xc));
     }
 
     func_020393d4(((char *)this) + 0x124, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);

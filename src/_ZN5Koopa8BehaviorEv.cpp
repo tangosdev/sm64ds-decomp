@@ -86,8 +86,8 @@ int Koopa::Behavior()
         }
 
         {
-            int ang = unk_094;
-            unk_08e = (s16)ang;
+            int ang = mPrevAngleY;
+            mAngleY = (s16)ang;
             {
                 u16 *p100 = (u16 *)(((long long)(int)((char *)&unk_100)));
                 *p100 = (u16)(*p100 + 1);

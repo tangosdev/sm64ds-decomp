@@ -22,14 +22,14 @@ int Crate::InitResources()
     unk_4e8 = mPosX;
     unk_4ec = mPosY;
     unk_4f0 = mPosZ;
-    unk_500 = unk_08c;
-    unk_502 = unk_08e;
-    unk_504 = unk_090;
+    unk_500 = mAngleX;
+    unk_502 = mAngleY;
+    unk_504 = mAngleZ;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(*(char**)(f)), 1, -1);
     _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
-        ((char*)this) + 0x2ec, 0x199, unk_08e, *(int*)(f + 8));
+        ((char*)this) + 0x2ec, 0x199, mAngleY, *(int*)(f + 8));
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
     unk_09c = -0x2000;

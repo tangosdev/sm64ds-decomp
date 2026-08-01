@@ -137,7 +137,7 @@ int RotatingUpDownPlatformUtm::Behavior()
     if (r4 < 0) {
         r4 = 9;
     }
-    Matrix4x3_FromRotationY(data_020a0e68, unk_08e);
+    Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
     MulVec3Mat4x3(data_ov091_02134cdc + mVariant * 0x78 + mWaypointIndex * 0xc,
                   data_020a0e68, &sp10);
     MulVec3Mat4x3(data_ov091_02134cdc + mVariant * 0x78 + r4 * 0xc,
@@ -152,7 +152,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         s16 *b300 = (s16 *)((char *)&unk_300);
         int mul = *(s16 *)((char *)b300 + 0xa4);
         int base = *(s16 *)((char *)b300 + 0xa2);
-        unk_08c = (s16)(base + (int)((short)(((long long)mul * fd + 0x800) >> 12)));
+        mAngleX = (s16)(base + (int)((short)(((long long)mul * fd + 0x800) >> 12)));
     }
 
     if (len2 == 0 || len2 <= r5) {

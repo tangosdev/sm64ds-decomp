@@ -15,7 +15,7 @@ struct StarMarker {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];

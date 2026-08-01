@@ -29,7 +29,7 @@ int Flamethrower::InitResources()
 
     count = 0xc;
     if (data_0209f2f8 == 0xc) count = 9;
-    Matrix4x3_FromRotationXYZExt(((char *)this) + 0x434, unk_08c, unk_08e, unk_090);
+    Matrix4x3_FromRotationXYZExt(((char *)this) + 0x434, mAngleX, mAngleY, mAngleZ);
     zero = 0;
     flag = 0;
     i = 0;

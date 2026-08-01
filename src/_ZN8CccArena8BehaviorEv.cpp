@@ -20,7 +20,7 @@ int CccArena::Behavior()
     else fn=*(void**)base;
     ((void(*)(char*))fn)(self);
   }
-  Matrix4x3_FromRotationXYZExt(((char*)this)+0xf0, unk_08c, unk_08e, unk_090);
+  Matrix4x3_FromRotationXYZExt(((char*)this)+0xf0, mAngleX, mAngleY, mAngleZ);
   unk_114 = mPosX >> 3;
   unk_118 = mPosY >> 3;
   unk_11c = mPosZ >> 3;

@@ -45,9 +45,9 @@ int Submarine::Behavior()
     *(void**)((char*)&unk_1b8) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         *(volatile unsigned int*)((char*)&unk_1b8), 0x139, v[0], v[1], z, 0, 0);
 
-    unk_08c = unk_092;
-    unk_08e = unk_094;
-    unk_090 = unk_096;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
 
     func_ov026_02111f30(((char*)this));
     _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);

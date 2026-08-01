@@ -17,9 +17,9 @@ struct RotatingUpDownPlatformUtm {
     u8  pad_068[0xc];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x17];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x1e];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x18];

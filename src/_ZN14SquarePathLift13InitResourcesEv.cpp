@@ -23,7 +23,7 @@ int SquarePathLift::InitResources()
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   void* f2 = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov052_021125a0.b);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f2, ((char*)this)+0x2ec, 0x199, unk_08e, data_ov052_021125a0.c);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f2, ((char*)this)+0x2ec, 0x199, mAngleY, data_ov052_021125a0.c);
   func_020393d4((int*)((char*)&mMeshCollider), &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   _ZN7PathPtr6FromIDEj(((char*)this)+0x320, mParam&0xff);
   mPathDir = 1;

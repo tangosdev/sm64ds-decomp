@@ -35,7 +35,7 @@ int RotatingClockHand::InitResources()
     ((Platform*)((char *)this))->UpdateClsnPosAndRot();
     void *kf = MeshColliderLoadFile(&data_ov035_02112cb8);
     ((MovingMeshCollider*)((char *)&mMeshCollider))->SetFile((KCL_File*)kf,
-        *(Matrix4x3*)((char *)&unk_2ec), 0x1000, unk_08e, data_ov035_02112238);
+        *(Matrix4x3*)((char *)&unk_2ec), 0x1000, mAngleY, data_ov035_02112238);
     func_020393d4(((char *)this) + 0x124, (void*)&UpdatePosWithTransformSym);
     func_020396c0(((char *)this) + 0x124, 0);
     V3 v;

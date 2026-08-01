@@ -27,7 +27,7 @@ int TinyCover::InitResources()
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov033_021124e8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x1000, unk_08e, data_ov033_02111c1c);
+        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x1000, mAngleY, data_ov033_02111c1c);
     _ZN16MeshColliderBase6EnableEP5Actor(((char*)this) + 0x124, ((char*)this));
     unk_334 = mPosY - 0x3c000;
     return _ZN5Event6GetBitEj(0xe) == 0;

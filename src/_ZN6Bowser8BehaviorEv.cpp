@@ -36,12 +36,12 @@ int Bowser::Behavior()
         unk_406 = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(Actor**)((char*)&mTargetPlayer) + 0x5c));
         unk_3ec = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(Actor**)((char*)&mTargetPlayer) + 0x5c));
     } else {
-        unk_406 = unk_08e;
+        unk_406 = mAngleY;
         unk_3ec = ~0x80000000;
     }
     func_ov060_02112434(((char*)this));
     func_ov060_02111a28(((char*)this));
-    unk_094 = unk_08e;
+    mPrevAngleY = mAngleY;
     unk_130 = unk_3f8;
     ((Animation*)((char*)&mAnimation))->Advance();
     func_ov060_0211577c(((char*)this));

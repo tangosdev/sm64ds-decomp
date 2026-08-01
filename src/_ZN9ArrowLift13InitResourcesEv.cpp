@@ -18,6 +18,6 @@ int ArrowLift::InitResources()
   unk_158 = 0;
   unk_15c = mParam & 1;
   unk_15d = 0;
-  unk_08e = 0;
+  mAngleY = 0;
   return 1;
 }

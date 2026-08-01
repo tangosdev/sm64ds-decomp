@@ -32,7 +32,7 @@ int HeaveHo::InitResources()
   v.y = data_ov077_02127a5c.y;
   v.z = data_ov077_02127a5c.z;
   _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this) + 0x144, ((char*)this), &v, 0x54000, 0x32000, 0x200004, 0);
-  unk_08e = unk_094;
+  mAngleY = mPrevAngleY;
   _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
   unk_400 = 0;
   unk_404 = mPosX;

@@ -30,7 +30,7 @@ int Snufit::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d608);
     unk_0a0 = -0x1e000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x110, (Actor*)((char*)this), 0x38000, 0x7e000, 0x200000, 0x7eff0);
-    unk_08e = unk_094;
+    mAngleY = mPrevAngleY;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (Actor*)((char*)this), 0x46000, 0, 0, 0);
     unk_108 = 1;
     unk_10a = 1;

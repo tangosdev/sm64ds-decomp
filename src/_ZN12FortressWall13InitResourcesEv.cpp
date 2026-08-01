@@ -34,7 +34,7 @@ int FortressWall::InitResources()
         {
             int idx2 = unk_31e;
             void *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov079_0212805c[idx2].p);
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, unk_08e, data_ov079_02128060[idx2].p);
+            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY, data_ov079_02128060[idx2].p);
         }
     }
     return 1;

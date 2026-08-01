@@ -15,9 +15,9 @@ struct CameraTag {
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     u8  pad_088[0x4];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

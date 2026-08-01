@@ -78,7 +78,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x1d, 0xffff, &v, 0, mAreaId, -1);
     }
 
-    Matrix4x3_FromRotationY(&data_020a0e68, unk_08e);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
 
     {
         char *tbl = data_ov091_02134cdc;
@@ -104,7 +104,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     idx395 = (unsigned char)((char *)this)[0x395];
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c34 + idx395 * 0xc));
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, unk_08e,
+        ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY,
         *(void**)((char*)data_ov091_02134c38 + idx395 * 0xc));
 
     func_020393d4(((char *)this) + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
@@ -120,9 +120,9 @@ int RotatingUpDownPlatformUtm::InitResources()
     if (_ZN13RaycastGround10DetectClsnEv(&rg))
         unk_37c = rg.f44;
 
-    unk_380 = unk_08c;
-    unk_382 = unk_08e;
-    unk_384 = unk_090;
+    unk_380 = mAngleX;
+    unk_382 = mAngleY;
+    unk_384 = mAngleZ;
 
     _ZN13RaycastGroundD1Ev(&rg);
     return 1;

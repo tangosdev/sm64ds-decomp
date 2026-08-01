@@ -26,7 +26,7 @@ int Snowball::InitResources()
     unk_380 = mPosY;
     unk_384 = mPosZ;
     *(int*)(((long long)(int)((char *)&mPosY))) += 0x32000;
-    unk_08e = unk_094;
+    mAngleY = mPrevAngleY;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x14000, 0x14000, 0, 0);
 
     func_ov081_021261d4(((char *)this), &data_ov081_02128eb4);

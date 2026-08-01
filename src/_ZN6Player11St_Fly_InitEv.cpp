@@ -13,8 +13,8 @@ int Player::St_Fly_Init()
 {
   unk_69e=0;
   mAngleYSpeed=0;
-  unk_092=0;
-  unk_096=0;
+  mPrevAngleX=0;
+  mPrevAngleZ=0;
   mTargetAngleY=mAngleY;
   Player_ReleaseHeldActor(((char*)this));
   if(mStateStep==0){

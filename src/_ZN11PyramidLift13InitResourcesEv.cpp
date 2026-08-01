@@ -35,7 +35,7 @@ int PyramidLift::InitResources()
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov025_02113ad8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this)+0x124, kcl, (Matrix4x3*)((char*)&unk_2ec), 0x199, unk_08e, &data_ov025_02112d08);
+        ((char*)this)+0x124, kcl, (Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, &data_ov025_02112d08);
     func_020393d4(((char*)this)+0x124, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this)+0x124, &func_ov025_021125dc);
     {

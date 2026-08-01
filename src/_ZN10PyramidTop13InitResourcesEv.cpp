@@ -23,7 +23,7 @@ int PyramidTop::InitResources()
     func_ov024_02111480(((char*)this));
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov024_02113960);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, mc, ((char*)this) + 0x370, 0x199, unk_08e, data_ov024_021129f0);
+        ((char*)this) + 0x124, mc, ((char*)this) + 0x370, 0x199, mAngleY, data_ov024_021129f0);
     func_020393d4(((char*)this) + 0x124, (void*)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     _ZN16MeshColliderBase6EnableEP5Actor(((char*)this) + 0x124, ((char*)this));
     unk_3a0 = mPosX;

@@ -51,7 +51,7 @@ int StarMarker::Behavior()
                                   mPosZ >> 3);
     } else {
         *(short *)((((int)((char *)this)) + 0x8e)) += 0x400;
-        Matrix4x3_FromRotationY(((char *)this) + 0x130, unk_08e);
+        Matrix4x3_FromRotationY(((char *)this) + 0x130, mAngleY);
         unk_154 = mPosX >> 3;
         unk_158 = mPosY >> 3;
         unk_15c = mPosZ >> 3;

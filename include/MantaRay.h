@@ -14,12 +14,12 @@ struct MantaRay {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x24];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
-    s16 unk_092;            /* 0x092 */
-    s16 unk_094;            /* 0x094 */
-    s16 unk_096;            /* 0x096 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
+    s16 mPrevAngleX;            /* 0x092 */
+    s16 mPrevAngleY;            /* 0x094 */
+    s16 mPrevAngleZ;            /* 0x096 */
     u8  pad_098[0x4];
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */

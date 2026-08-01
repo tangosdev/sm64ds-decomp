@@ -51,7 +51,7 @@ int TTC_MovingBar::InitResources()
         _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d360 + i * 0xc)),
         ((char *)this) + 0x2ec,
         0x199,
-        unk_08e,
+        mAngleY,
         *(void **)(data_ov065_0211d364 + i * 0xc));
 
     func_020393d4((int *)((char *)&mMeshCollider), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);

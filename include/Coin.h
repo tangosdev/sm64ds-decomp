@@ -18,7 +18,7 @@ struct Coin {
     u8  pad_065[0xf];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x1f];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */

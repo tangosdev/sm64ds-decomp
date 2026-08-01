@@ -12,7 +12,7 @@ struct ArrowLift {
     u8  pad_00c[0x54];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2a];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];

@@ -16,5 +16,5 @@ void Platform::UpdateClsnPosAndRot()
     unk_310 = mPosX;
     unk_314 = mPosY;
     unk_318 = mPosZ;
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s((MMC*)((char*)&mMeshCollider), o->m, unk_08e);
+    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s((MMC*)((char*)&mMeshCollider), o->m, mAngleY);
 }

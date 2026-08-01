@@ -22,7 +22,7 @@ int CameraTag::Behavior()
 
     obj = data_0209f394[data_0209f250];
     Vec3_Sub(&d, (struct Vec3*)(obj + 0x5c), (struct Vec3*)((char*)&unk_05c));
-    Vec3_RotateYAndTranslate(&r, &data_020a0ebc, unk_08e, &d);
+    Vec3_RotateYAndTranslate(&r, &data_020a0ebc, mAngleY, &d);
 
     v = r.x;
     if (v < 0) v = -v;
@@ -32,7 +32,7 @@ int CameraTag::Behavior()
                 int z = r.z;
                 int az = (z < 0) ? -z : z;
                 if (az > 0x64000 && az < 0x190000) {
-                    int area = (z < 0) ? unk_08c : unk_090;
+                    int area = (z < 0) ? mAngleX : mAngleZ;
                     *(char*)(obj + 0xcc) = (char)area;
                     ChangeArea((char)area);
                 }

@@ -59,9 +59,9 @@ struct Player {
     s16 mAngX;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     s16 mAngZ;            /* 0x090 */
-    s16 unk_092;            /* 0x092 */
+    s16 mPrevAngleX;            /* 0x092 */
     s16 mTargetAngleY;            /* 0x094 */
-    s16 unk_096;            /* 0x096 */
+    s16 mPrevAngleZ;            /* 0x096 */
     s32 mHorzSpeed;            /* 0x098 */
     s32 mVertAccel;            /* 0x09c */
     s32 mTerminalVelocity;            /* 0x0a0 */

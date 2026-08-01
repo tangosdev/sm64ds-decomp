@@ -17,9 +17,9 @@ struct Platform {
     u8  pad_068[0xc];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x19];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
     s32 unk_098;            /* 0x098 */
     s32 unk_09c;            /* 0x09c */

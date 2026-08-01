@@ -123,8 +123,8 @@ check_param0:
     _ZN7PathPtr6FromIDEj(&path3, mPathID);
     _ZNK7PathPtr7GetNodeER7Vector3j(&path3, ((char*)this) + 0x5c, 0);
     _ZNK7PathPtr7GetNodeER7Vector3j(&path3, ((char*)this) + 0x5c, 1);
-    unk_094 = Vec3_HorzAngle(((char*)this) + 0x5c, (char*)&node);
-    unk_08e = unk_094;
+    mPrevAngleY = Vec3_HorzAngle(((char*)this) + 0x5c, (char*)&node);
+    mAngleY = mPrevAngleY;
     func_ov016_02111bf0(((char*)this), &data_ov016_02114dbc);
     goto tail;
 ret0_c:
@@ -141,8 +141,8 @@ tail:
         *(int*)(r3 + 0x450) = mPosZ;
         r3 += 0xc;
     }
-    unk_428 = unk_08c;
-    unk_42a = unk_08e;
-    unk_42c = unk_090;
+    unk_428 = mAngleX;
+    unk_42a = mAngleY;
+    unk_42c = mAngleZ;
     return 1;
 }

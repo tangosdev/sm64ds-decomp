@@ -93,7 +93,7 @@ int KingBobOmb::InitResources()
         int *p = (int*)(((long long)(int)((char*)&unk_4a0)));
         *p = *p + 1;
     }
-    *(short*)(((char*)this)+0x400+0xf8) = unk_08e;
+    *(short*)(((char*)this)+0x400+0xf8) = mAngleY;
     KingBobOmb_SetState(((char*)this), &data_ov078_0212710c);
     return 1;
 }

@@ -16,9 +16,9 @@ struct SnowmanBody {
     u8  pad_068[0x18];
     u8  mScaleX;            /* 0x080 */
     u8  pad_081[0xb];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x42];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];

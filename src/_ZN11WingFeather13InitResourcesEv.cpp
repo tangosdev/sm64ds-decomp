@@ -37,11 +37,11 @@ int WingFeather::InitResources()
     func_ov002_020b2c44(((char *)this));
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x158, (Actor *)((char *)this), 0x28000, 0xa000, 0, 0);
 
-    unk_08c = 0x4000;
-    unk_090 = -0x4000;
+    mAngleX = 0x4000;
+    mAngleZ = -0x4000;
     b = (data_0209f2d8 == 1);
     if (!b) {
-        unk_08e = ((Sub *)(data_0209f318 + 0x100))->f7c + 0x4000;
+        mAngleY = ((Sub *)(data_0209f318 + 0x100))->f7c + 0x4000;
     }
     unk_384 = 0xb4;
     unk_0a8 = 0x3000;

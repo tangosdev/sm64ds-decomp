@@ -66,7 +66,7 @@ int Spindrift::Behavior()
             unk_398 = Vec3_HorzAngle(((char *)this) + 0x5c, ((char *)this) + 0x38c);
         after_st0:
             _Z14ApproachLinearRsss(((char *)this) + 0x8e, unk_398, 0x200);
-            unk_094 = unk_08e;
+            mPrevAngleY = mAngleY;
         }
         break;
     case 1:

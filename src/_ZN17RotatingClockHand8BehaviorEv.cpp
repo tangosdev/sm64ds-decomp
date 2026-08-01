@@ -16,7 +16,7 @@ extern int data_0209e650[];
 int RotatingClockHand::Behavior()
 {
     unsigned char idx = data_0209f2c0[0];
-    unk_092 = data_ov035_02112b80[idx];
+    mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short((char *)&unk_320) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal((char*)data_0209e650) >> 16);
@@ -29,7 +29,7 @@ int RotatingClockHand::Behavior()
                 short *q = (short*)(((int)((char *)this) + 0x92));
                 *q = (short)(*q * unk_31e);
             } else {
-                unk_092 = 0;
+                mPrevAngleX = 0;
             }
         }
     }
@@ -37,7 +37,7 @@ int RotatingClockHand::Behavior()
     func_02039394((int*)((char *)&mMeshCollider), 0x1000);
     {
         short *s = (short*)(((int)((char *)this) + 0x8c));
-        *s = (short)(*s + unk_092);
+        *s = (short)(*s + mPrevAngleX);
     }
     func_ov035_021118a8(((char *)this));
     func_ov035_02111798(((char *)this));

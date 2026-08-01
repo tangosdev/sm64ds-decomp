@@ -35,8 +35,8 @@ int MrI_Projectile::Behavior()
         r.z = unk_098;
         r.x = 0;
         r.y = 0;
-        Matrix4x3_FromRotationY(data_020a0e68, unk_094);
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, unk_092);
+        Matrix4x3_FromRotationY(data_020a0e68, mPrevAngleY);
+        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
         MulVec3Mat4x3(&r, data_020a0e68, ((char*)this) + 0xa4);
         *(Vector3*)((char*)&unk_0a4) = *(Vector3*)((char*)&unk_0a4);
         _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), ((char*)this) + 0xfc);

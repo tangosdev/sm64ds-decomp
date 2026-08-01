@@ -24,7 +24,7 @@ int ShipWing::InitResources()
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov036_02114084);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, k, ((char*)this)+0x2ec, 0x1000, unk_08e, data_ov036_02112b48);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, k, ((char*)this)+0x2ec, 0x1000, mAngleY, data_ov036_02112b48);
   func_020393d4(((char*)this)+0x124, (void*)_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   func_020393c4(((char*)this)+0x124, (void*)func_ov036_02111cc4);
   _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x320, ((char*)this), 0x32000, 0x64000, 0, 0);

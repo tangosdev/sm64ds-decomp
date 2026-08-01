@@ -10,8 +10,8 @@ struct FloatingFloorLllBig {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x28];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];

@@ -24,9 +24,9 @@ int FloatingFloorLllBig::InitResources()
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov022_02114618);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, kcl, ((char*)this)+0x2ec, 0x1000, unk_08e, data_ov064_0211ba6c);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, kcl, ((char*)this)+0x2ec, 0x1000, mAngleY, data_ov064_0211ba6c);
   func_020393d4(((char*)this)+0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   unk_320 = mPosY;
-  unk_324 = unk_08c;
+  unk_324 = mAngleX;
   return 1;
 }

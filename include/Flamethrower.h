@@ -10,9 +10,9 @@ struct Flamethrower {
     u8  pad_000[0x5c];
     u8  unk_05c;            /* 0x05c */
     u8  pad_05d[0x2f];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
 #ifdef __cplusplus
     /* methods */
     int InitResources();

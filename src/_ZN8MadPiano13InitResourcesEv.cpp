@@ -43,7 +43,7 @@ int MadPiano::InitResources()
     }
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov063_0211ef88);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x199, unk_08e, &data_ov063_0211ecb8);
+        ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x199, mAngleY, &data_ov063_0211ecb8);
     func_ov063_0211d88c(((char *)this));
     func_ov063_0211d828(((char *)this));
     func_ov063_0211d5f4(((char *)this));

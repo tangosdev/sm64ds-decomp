@@ -30,7 +30,7 @@ int Snowball::Behavior()
     unk_0ac = tmp;
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn));
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
-    unk_08e = unk_094;
+    mAngleY = mPrevAngleY;
     func_ov081_02126224(((char *)this));
     _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
     void *p = _ZN5Actor13ClosestPlayerEv(((char *)this));

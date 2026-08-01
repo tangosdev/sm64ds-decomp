@@ -10,7 +10,7 @@ struct BookShotSpawner {
     u8  pad_000[0x5c];
     u8  unk_05c;            /* 0x05c */
     u8  pad_05d[0x31];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x2];
     u8  unk_092;            /* 0x092 */
     u8  pad_093[0x39];

@@ -54,7 +54,7 @@ int SignPost::InitResources()
 
     void *kf = MeshColliderLoadFile(&data_ov002_0210e05c);
     ((MovingMeshCollider*)((char *)&mMeshCollider))->SetFile((KCL_File*)kf,
-        *(Matrix4x3*)((char *)&unk_2ec), 0x199, unk_08e, data_ov002_0210d714);
+        *(Matrix4x3*)((char *)&unk_2ec), 0x199, mAngleY, data_ov002_0210d714);
 
     ((MovingCylinderClsn*)((char *)&mMovingCylinderClsn))->Init((Actor*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
@@ -62,9 +62,9 @@ int SignPost::InitResources()
     unk_3b0 = mPosX;
     unk_3b4 = mPosY;
     unk_3b8 = mPosZ;
-    unk_3bc = unk_08c;
-    unk_3be = unk_08e;
-    unk_3c0 = unk_090;
+    unk_3bc = mAngleX;
+    unk_3be = mAngleY;
+    unk_3c0 = mAngleZ;
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
 

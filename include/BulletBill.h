@@ -14,12 +14,12 @@ struct BulletBill {
     u8  pad_068[0xc];
     u8  unk_074;            /* 0x074 */
     u8  pad_075[0x17];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
-    s16 unk_092;            /* 0x092 */
-    s16 unk_094;            /* 0x094 */
-    s16 unk_096;            /* 0x096 */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
+    s16 mPrevAngleX;            /* 0x092 */
+    s16 mPrevAngleY;            /* 0x094 */
+    s16 mPrevAngleZ;            /* 0x096 */
     u8  pad_098[0x68];
     s16 unk_100;            /* 0x100 */
     u8  pad_102[0xe];

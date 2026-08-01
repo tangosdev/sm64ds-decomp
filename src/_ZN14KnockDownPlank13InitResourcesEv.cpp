@@ -28,7 +28,7 @@ int KnockDownPlank::InitResources()
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   int j = *(int*)((char*)&mVariant) * 0xc;
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov034_02114538 + j));
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)((char*)this)+0x124, k, (char*)((char*)this)+0x2ec, 0x1000, unk_08e, *(void**)((char*)data_ov015_0211453c + j));
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)((char*)this)+0x124, k, (char*)((char*)this)+0x2ec, 0x1000, mAngleY, *(void**)((char*)data_ov015_0211453c + j));
   func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   int tmp[3];
   tmp[0] = 0x1000; tmp[1] = 0; tmp[2] = 0;

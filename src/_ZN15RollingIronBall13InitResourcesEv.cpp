@@ -48,7 +48,7 @@ int RollingIronBall::InitResources()
             _ZNK7PathPtr7GetNodeER7Vector3j(((char *)this) + 0x3f4, ((char *)this) + 0x3e8, unk_3d8);
         }
         func_ov100_0214233c(((char *)this));
-        unk_094 = unk_3ba;
+        mPrevAngleY = unk_3ba;
         unk_3c8 = *(int *)&data_02092138;
         d = *(signed char *)&data_0209f2f8;
         if (d == 0x19) {

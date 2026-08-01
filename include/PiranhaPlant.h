@@ -16,9 +16,9 @@ struct PiranhaPlant {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x2];
-    u16 unk_08e;            /* 0x08e */
+    u16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x1a];
     u8  unk_0b0;            /* 0x0b0 */
     u8  pad_0b1[0x4f];

@@ -23,7 +23,7 @@ int FloatOnWaterPlatformJrb::InitResources()
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov016_02114e6c);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, unk_08e, data_ov016_02113bac);
+        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov016_02113bac);
     func_020393d4(((char*)this) + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x324, ((char*)this), 0x14000, 0x14000, 0, 0);
     unk_09c = -0x2000;

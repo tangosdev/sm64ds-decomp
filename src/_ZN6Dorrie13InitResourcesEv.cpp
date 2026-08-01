@@ -45,7 +45,7 @@ int Dorrie::InitResources()
         for (j = 0; j < 7; j++) {
             void* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211c08c[j]);
             _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-                mmc, kcl, mtx, 0x1000, unk_08e, data_ov065_0211cd68[j]);
+                mmc, kcl, mtx, 0x1000, mAngleY, data_ov065_0211cd68[j]);
             if ((unsigned)j <= 2) {
                 func_020393d4(mmc, _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
                 if (j == 2)

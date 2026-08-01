@@ -43,7 +43,7 @@ int CheepCheep::InitResources()
     unk_374 = mPosX;
     unk_378 = mPosY;
     unk_37c = mPosZ;
-    unk_08e = unk_094;
+    mAngleY = mPrevAngleY;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
         (void *)((char *)&mWithMeshClsn), (struct Actor *)((char *)this), 0x1e000, 0x1e000, 0, 0);
 
