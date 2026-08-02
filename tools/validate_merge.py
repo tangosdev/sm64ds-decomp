@@ -237,8 +237,18 @@ def _link_state(rows):
         # rows too so the report schema is easy for another worker to produce.
         if isinstance(row, dict) and "results" in row:
             if row.get("results"):
+                # pr_linkcheck downgrades a TU whose head declares NONMATCHING
+                # from NO-REPRO to worst=DRAFT (#968): a self-declared draft
+                # makes no claim to reproduce, so its non-reproduction is
+                # expected. That downgrade lives on the GROUP row only; the
+                # per-slot results still say NO-REPRO, so carry it down or the
+                # flattened tally re-blocks what pr_linkcheck already excused.
+                draft = row.get("worst") == "DRAFT"
                 for result in row["results"]:
-                    flattened.append({"file": row.get("file"), **result})
+                    flat = {"file": row.get("file"), **result}
+                    if draft and str(flat.get("verdict")) == "NO-REPRO":
+                        flat["verdict"] = "DRAFT"
+                    flattened.append(flat)
             else:
                 flattened.append({"file": row.get("file"),
                                   "verdict": row.get("worst") or
