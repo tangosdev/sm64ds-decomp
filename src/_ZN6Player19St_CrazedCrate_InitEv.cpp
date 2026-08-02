@@ -22,7 +22,7 @@ int Player::St_CrazedCrate_Init()
   mLandSoundPlayed = 0;
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x43, 0x40000000, 0x1000, 0);
   func_ov002_020e0f38(((char*)this), mJumpComboStage);
-  mTargetAngleY = mAngleY;
+  mPrevAngleY = mAngleY;
   *(int*)(((long long)(int)((char*)&mBodyClsnFlags))) |= 0x20;
   return 1;
 }

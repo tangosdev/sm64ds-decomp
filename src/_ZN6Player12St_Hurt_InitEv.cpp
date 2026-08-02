@@ -16,7 +16,7 @@ int Player::St_Hurt_Init()
     char* m;
     u8 old;
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a6d4[mStateStep & 7], 0x40000000, 0x1000, 0);
-    mid = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+    mid = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
     m = *(char**)(((char*)this) + mid*4 + 0xdc);
     m = (char*)(((unsigned int)m + 0x50) & 0xFFFFFFFFU);
     *(int*)(m + 8) = 0;

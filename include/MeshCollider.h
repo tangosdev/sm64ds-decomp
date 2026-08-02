@@ -35,14 +35,38 @@ struct KCL_Tri {
     u16 unk_02;
     u16 posIdx;            /* 0x04 */
     u16 normalIdx;         /* 0x06 */
-    u8 pad_08[8];
+    /* The three edge normals and the surface attribute, read by the ITCM octree
+       walk MeshCollider::DetectClsn(RaycastLine&) at 0x01ffb0fc. `attribute` goes
+       to the CLPS lookup as a RAW INDEX with no masking, so in this game the KCL
+       attribute word is the CLPS index. */
+    u16 edgeNormal1Idx;    /* 0x08 */
+    u16 edgeNormal2Idx;    /* 0x0a */
+    u16 edgeNormal3Idx;    /* 0x0c */
+    u16 attribute;         /* 0x0e */
 };
 
 struct KCL_File {
     s32 (*positions)[3];   /* 0x00 - file-relative, fixed up on load */
     s16 (*normals)[3];     /* 0x04 */
     KCL_Tri *tris;         /* 0x08 */
-    char *unk_0c;          /* 0x0c */
+    char *unk_0c;          /* 0x0c - the octree, indexed below */
+
+    /* Octree geometry. UpdateFileOffsets relocates only 0x00..0x0c, so nothing
+       from here on is a pointer. Positions and this origin are stored at 1/64 of
+       a Fix12i unit (`lsl #6` on read) and face normals with 1.0 == 0x400
+       (`lsl #2`), so none of these is typed Fix12i. */
+    s32 unk_10;
+    Vector3 origin;        /* 0x14 - .y pinned by MeshCollider::GetOctreeOriginY;
+                              read as one Vector3 by DetectClsn, which materialises
+                              file+0x14 once and reads [r0], [r0,#4], [r0,#8] */
+    u32 xMask;             /* 0x20 */
+    u32 yMask;             /* 0x24 - pinned by MeshCollider::GetUnkOctreeY */
+    u32 zMask;             /* 0x28 */
+    /* index = (z>>coordShift)<<zShift | (y>>coordShift)<<yShift | (x>>coordShift),
+       then coordShift is decremented once per level of descent. */
+    u32 coordShift;        /* 0x2c */
+    u32 yShift;            /* 0x30 */
+    u32 zShift;            /* 0x34 */
 };
 
 struct MeshCollider : MeshColliderBase {
@@ -75,6 +99,10 @@ struct MeshCollider : MeshColliderBase {
 
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, CLPS_Block &clps);
+    /* Both ITCM, both reading kclFile->origin.y out of the file's 1/64 scale.
+       GetUnkOctreeY adds the octree's Y extent, giving its far edge. */
+    Fix12i GetOctreeOriginY() const;   /* 0x01ffb0ec */
+    Fix12i GetUnkOctreeY() const;      /* 0x01ffb0d0 */
 
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);

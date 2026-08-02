@@ -25,8 +25,8 @@ int Player::St_HurtWater_Main()
   _Z14ApproachLinearRiii((int*)((char*)&mVertSpeed),t,0x800);
   if(_ZN6Player12FinishedAnimEv(((char*)this))){
     if((mStateStep&1)==0){
-      mTargetAngleY=mTargetAngleY+0x8000;
-      mAngleY=mTargetAngleY;
+      mPrevAngleY=mPrevAngleY+0x8000;
+      mAngleY=mPrevAngleY;
     }
     if(_ZN6Player9GetHealthEv(((char*)this))){
       if(mIsMetal==0)

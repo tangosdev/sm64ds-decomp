@@ -44,7 +44,7 @@ int Player::St_SideFlip_Main()
             u16 r0v = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
             if (r0v & 0x400) {
                 if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211052c)) {
-                    mTargetAngleY = mAngleY;
+                    mPrevAngleY = mAngleY;
                 }
             }
             if (func_ov002_020e2664(((char*)this))) {
@@ -67,7 +67,7 @@ int Player::St_SideFlip_Main()
                 mVertAccel = -0x3400;
             }
         } else {
-            if (mParam == 1
+            if (param1 == 1
                 && _ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211052c)) {
                 unk_6e6 = 0;
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110454);
@@ -76,7 +76,7 @@ int Player::St_SideFlip_Main()
         }
 
         if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_021101e4)) {
-            int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+            int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
             void* anim = *(void**)(((char*)this) + (id << 2) + 0xdc);
             u32 w = *(u32*)((char*)(((long long)(int)((char*)anim + 0x50))) + 8);
             if ((u16)(w >> 12) == 0x10) {

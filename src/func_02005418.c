@@ -5,6 +5,7 @@
 #include "decl_Message.h"
 #include "decl_SaveData.h"
 #include "decl_common.h"
+#include "MessageBank.h"
 /* recovered: renamed to Class_Method */
 /* dScBoot_c::Behavior - recovered from vtable slot identity */
 extern u8 data_0209f5bc[];
@@ -50,7 +51,7 @@ int func_02005418(void *arg0)
             }
             return 1;
         }
-        func_0201fe08();
+        LoadMessageBankForLanguage();
     }
 
     {

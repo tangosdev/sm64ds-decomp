@@ -47,7 +47,7 @@ int Player::St_Teleport_Main()
             mPosZ = tz;
             mAreaId = obj->param & 0xf;
             mAngleY = ((obj->param >> 4) & 0xf) << 12;
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
             mGroundY = 0x80000000;
             unk_64c = 0x80000000;
             func_02035860(((char*)this) + 0x380, ((char*)this) + 0x5c);

@@ -27,13 +27,13 @@ void Player::InitMetalWario()
         _ZN6Player18TurnOffToonShadingEj(((char *)this), b);
         _ZN6Player18TurnOffToonShadingEj(((char *)this), unk_6dc);
         unk_73c = 0;
-        mParam = mHatCharacter;
+        param1 = mHatCharacter;
         unk_71a = 0;
     }
 
     mIsMetal = 1;
 
-    v = mParam;
+    v = param1;
     id = _ZNK6Player14GetBodyModelIDEjb(((char *)this), v & 0xff, 0);
     _ZN10ModelAnim24CopyERKS_Pcj(
         *(void **)(((char *)this) + id * 4 + 0xdc),

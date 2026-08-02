@@ -5,6 +5,11 @@
 # main never gets byte-match checked. This runs the same link verification locally (this box
 # has the ROM + toolchain) and refuses the push if a src/ file does not reproduce the ROM.
 #
+# It also checks contributor attribution. `validate` fails a merge when credit moves off its
+# matcher, but that verdict costs a full merge validation on the build box and only arrives
+# once a PR is open -- and the mistake is invisible in review, because every file still
+# byte-matches. See tools/prepush_attribution.py.
+#
 # Install:
 #   cp tools/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 # Bypass once (you had better be sure):
@@ -31,6 +36,16 @@ remote_ref_check() {
     if ! python tools/prepush_linkcheck.py --range "$range"; then
       echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
       return 1
+    fi
+
+    # Attribution is a comparison, so it needs a real base. A brand-new remote branch has
+    # nothing to compare against and nothing can have moved yet.
+    if [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+      echo "pre-push: checking contributor attribution in $range"
+      if ! python tools/prepush_attribution.py --base "$remote_sha" --head "$local_sha"; then
+        echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+        return 1
+      fi
     fi
   done
   return 0

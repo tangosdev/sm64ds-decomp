@@ -5,7 +5,7 @@
 # permuter's candidates are scored against the exact build we match to.
 set -e
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
-CC="$REPO/tools/mwccarm/1.2/sp2p3/mwccarm.exe"
+CC="$REPO/tools/mwccarm/2004/b56/mwccarm.exe"
 export LM_LICENSE_FILE="$REPO/tools/mwccarm/license.dat"
 C_FILE="$1"   # $2 is "-o", $3 is the output object
 O_FILE="$3"

@@ -11,10 +11,10 @@ int Player::St_LedgeGrab_Init()
 {
   if(mStateStep){
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x20,0x40000000,0x1000,0);
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x1a,(void*)((char*)&mCamSpacePos));
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x1a,(void*)((char*)&mCamSpacePosX));
   } else {
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x23,0x40000000,0x1000,0);
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x17,(void*)((char*)&mCamSpacePos));
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x17,(void*)((char*)&mCamSpacePosX));
   }
   return 1;
 }

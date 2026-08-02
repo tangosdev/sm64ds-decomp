@@ -542,5 +542,5 @@ src/unnamed/ov063/__sinit_ov063_0211e3cc.c:
 src/unnamed/ov063/__sinit_ov063_0211e590.c:
     .init start:0x0211e590 end:0x0211e5fc
 
-src/unnamed/ov063/__sinit_ov063_0211e5fc.c:
+src/actors/MadPiano/__sinit_ov063_0211e5fc.c:
     .init start:0x0211e5fc end:0x0211e6fc

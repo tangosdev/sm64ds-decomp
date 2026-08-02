@@ -71,6 +71,19 @@ no sooner. Give the box more CPU before adding a second worker slot, and if a sl
 ever added, give it its own clone — jobs share `build/` and would otherwise overwrite
 each other's objects.
 
+## What a pull request sees
+
+The workflow submits and exits; the relay owns everything visible after that. It drives
+one check run and one comment, both edited in place as the job moves through
+received → validating → verdict, so a pull request can tell "queued behind other work"
+from "building right now" from "nothing is happening" — which matters because the queue
+runs one job at a time and a wait is normal rather than a fault.
+
+`https://tangos.dev/validator` shows the queue itself: depth, what is building and for
+how long, and recent verdicts. Note that worker liveness there is inferred from work in
+progress, not from the heartbeat — only claiming a job records one, so a worker mid-build
+looks silent for the entire build.
+
 ## Giving up on work nobody is waiting for
 
 With one build slot, the queue's worst enemy is spending it on a verdict that will never
@@ -79,9 +92,12 @@ be read. Two cases produce those, and both now end the job instead of running it
 - **A newer push.** GitHub gates merging on the latest commit, so once a pull request is
   pushed again, its older head's verdict is unreadable. Submitting a job retires that
   pull request's other in-flight heads as `Superseded`.
-- **A cancelled Action.** The run that asked for the verdict has gone away, so the
-  workflow posts to `/api/pr-validate/{id}/cancel` from an `if: cancelled()` step and the
-  job becomes `Cancelled`.
+- **An explicit release.** `POST /api/pr-validate/{id}/cancel` marks a job `Cancelled`.
+  The workflow does not call it: since it submits and exits, a cancelled run has nothing
+  left to cancel. This is for the case the queue cannot infer — a job that is stuck, or
+  one an operator has decided nobody wants. It is also the only way to free a job whose
+  worker died mid-build without waiting out the sweeper's ceiling, because `Enqueue`
+  hands back the in-flight job for a commit and so a re-run alone cannot replace it.
 
 Both are terminal, both report the check as GitHub's `cancelled` conclusion rather than a
 pass or a failure, and neither can be overwritten afterwards — a worker only notices

@@ -33,12 +33,12 @@ int Player::St_Thrown_Main()
     switch (state) {
     case 0:
         if (mIsAirborne == 0) {
-            mAngX = 0;
+            mAngleX = 0;
             *(int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFULL) &= ~0x2000;
             func_ov002_020c06fc(((char*)this), 0x8000);
             if (mStateArg == 0) {
                 mStateArg = 1;
-                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, *(Vector3*)((char*)&mCamSpacePos));
+                _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, *(Vector3*)((char*)&mCamSpacePosX));
             }
             int r5 = func_ov002_020e2c84(((char*)this));
             if (r5 != 2 && mIsInShallowWater == 0) {
@@ -57,15 +57,15 @@ int Player::St_Thrown_Main()
                 return 1;
             }
         }
-        mAngleY = mTargetAngleY;
+        mAngleY = mPrevAngleY;
         mHorzSpeed = (int)(((long long)mHorzSpeed * 0xfae + 0x800) >> 12);
         if (mIsAirborne != 0) {
             int a = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed, mVertSpeed);
             s16 b = a - 0x4000;
             if (b > 0x3000) b = 0x3000;
-            mAngX = b;
+            mAngleX = b;
         } else {
-            _Z15ApproachLinear2Rsss((s16*)((char*)&mAngX), 0, 0x400);
+            _Z15ApproachLinear2Rsss((s16*)((char*)&mAngleX), 0, 0x400);
         }
         break;
     case 1:
@@ -76,7 +76,7 @@ int Player::St_Thrown_Main()
         }
         if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
         }
         Player_AdvanceAnims(((char*)this));
         break;

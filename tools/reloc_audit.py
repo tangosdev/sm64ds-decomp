@@ -276,17 +276,38 @@ def classify(cand_name, cand_mod, cand_addr, cfg, sym_index):
     return "WRONG-DEST"
 
 
+def known_modules():
+    """Normalized module IDs that actually have a relocs file.
+
+    The authority for "is this a real module", so a caller cannot verify against a
+    module ID that does not exist. Cheap enough to recompute; the paths are globbed
+    once per call and no file is read."""
+    return {m for m, _path in R.iter_reloc_files(include_itcm_dtcm=True)}
+
+
 def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym_index):
     """Per-reloc destination verdicts for an in-hand object. Shared by the audit
     and the match gate (match.py --strict-relocs).
 
     Returns (rows, missing) where rows is a list of dicts (one per object reloc in
     the function) and missing is the count of config relocs the candidate lacks.
-    Returns (None, reason) if the function symbol isn't in the object."""
+    Returns (None, reason) if the function symbol isn't in the object, or if `mod`
+    is not a module this repo has relocations for.
+
+    That second case used to fall through to an empty cfgmap, which is the most
+    dangerous possible failure for a gate: every reloc classified against cfg=None,
+    nothing came back WRONG-DEST, and the caller reported a clean strict-reloc pass
+    having checked nothing. A wrong callee under `--module arm9/itcm` (the path-style
+    spelling; the module ID is `itcm`) verified as a MATCH. Refuse the spelling
+    instead -- an unknown module is a caller bug, not an empty result."""
+    normalized = R.normalize_module(mod)
+    if normalized not in known_modules():
+        return None, (f"unknown module {mod!r} (normalizes to {normalized!r}); "
+                      f"expected one of arm9, itcm, dtcm, ovNNN")
     dests, size_or_reason = object_reloc_dests(obj, sym, name_index)
     if dests is None:
         return None, size_or_reason
-    cfgmap = config_relocs.get(R.normalize_module(mod), {})
+    cfgmap = config_relocs.get(normalized, {})
     cand_offsets = {o for o, *_ in dests}
     rows = []
     for o, symname, cmod, caddr in dests:

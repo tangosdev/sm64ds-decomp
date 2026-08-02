@@ -52,7 +52,7 @@ int Player::St_Headstand_Main()
             *p = *p + mAngleYSpeed;
         }
         if (*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) {
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_02110724);
             return 1;
         }

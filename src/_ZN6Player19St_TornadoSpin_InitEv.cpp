@@ -21,6 +21,6 @@ int Player::St_TornadoSpin_Init()
   mLandSoundPlayed=0;
   func_0200d6b4(*(void**)data_0209f318, mPlayerNo);
   mAttachOffsetY=mPosY - *(int*)(mAttachedActor+0x60);
-  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x26,(void*)((char*)&mCamSpacePos));
+  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x26,(void*)((char*)&mCamSpacePosX));
   return 1;
 }

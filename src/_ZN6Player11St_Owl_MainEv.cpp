@@ -116,7 +116,7 @@ int Player::St_Owl_Main()
     if (_ZN6Player12FinishedAnimEv(((char*)this))) {
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x58, 0, 0x1000, 0);
     }
-    mTargetAngleY = mAngleY;
+    mPrevAngleY = mAngleY;
     Player_AdvanceAnims(((char*)this));
     return 1;
 }

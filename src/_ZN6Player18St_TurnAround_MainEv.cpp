@@ -36,7 +36,7 @@ int Player::St_TurnAround_Main()
         angle = (s16)(raw + 0x8000);
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = func_ov002_020bf56c(((char*)this), sel);
-        ApproachAngle((s16*)((char*)&mTargetAngleY), angle, 0x10, 0x1000, 0x200);
+        ApproachAngle((s16*)((char*)&mPrevAngleY), angle, 0x10, 0x1000, 0x200);
         tmp = Player_ScaleByCharFactor(((char*)this), 0x28000);
         _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), -tmp, r5v);
     } else {
@@ -44,7 +44,7 @@ int Player::St_TurnAround_Main()
         return 1;
     }
 
-    ApproachAngle((s16*)((char*)&mAngleY), mTargetAngleY, 8, 0x2000, 0x800);
+    ApproachAngle((s16*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
 
     if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) != 0) {
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101e4);
@@ -59,7 +59,7 @@ int Player::St_TurnAround_Main()
         }
     } else {
         func_ov002_020bf88c(((char*)this));
-        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePos), mHorzSpeed, 0);
+        mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
     }
 
     Player_AdvanceAnims(((char*)this));

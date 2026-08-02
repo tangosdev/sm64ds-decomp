@@ -25,7 +25,7 @@ int Player::St_SideFlip_Init()
   *(int*)((char*)&mVertSpeed)=0x3e000;
   func_ov002_020e2ad0(((void*)this));
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), 0x4d, 0x40000000, 0x1000, 0);
-  *(short*)((char*)&mTargetAngleY) = *(short*)((char*)&mDesiredAngleY);
+  *(short*)((char*)&mPrevAngleY) = *(short*)((char*)&mDesiredAngleY);
   *(short*)((char*)&mAngleY) = *(short*)((char*)&mDesiredAngleY) + 0x8000;
   func_ov002_020e25f0(((void*)this), 0);
   return 1;

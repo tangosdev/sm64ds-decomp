@@ -107,7 +107,7 @@ compiles it and hands you back the EXACT new diff to iterate from. Do NOT reason
 first - one guess actually compiled beats ten argued in your head. End EVERY turn with a code \
 block; never spend a turn only speculating.
 
-COMPILER: mwccarm 1.2/sp2p3. Flags (C): -O4,p -enum int -lang c99 -char signed -interworking \
+COMPILER: mwccarm 2004/b56. Flags (C): -O4,p -enum int -lang c99 -char signed -interworking \
 -proc arm946e -gccext,on -msgstyle gcc
 If the draft starts with //cpp keep that exact first line (C++).
 

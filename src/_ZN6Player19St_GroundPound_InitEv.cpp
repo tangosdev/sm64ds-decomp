@@ -14,7 +14,7 @@ int Player::St_GroundPound_Init()
   *(char*)((char*)&mJumpComboStage)=0;
   *(int*)((char*)&mVertSpeed)=0;
   *(int*)((char*)&mHorzSpeed)=0;
-  *(short*)((char*)&mTargetAngleY)=*(short*)((char*)&mAngleY);
+  *(short*)((char*)&mPrevAngleY)=*(short*)((char*)&mAngleY);
   anim=0x3b;
   if (*(unsigned char*)((char*)&mIsMega)) anim=0xa3;
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), anim, 0x40000000, 0x1000, 0);

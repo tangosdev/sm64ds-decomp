@@ -15,7 +15,7 @@ int Player::St_Fly_Init()
   mAngleYSpeed=0;
   mPrevAngleX=0;
   mPrevAngleZ=0;
-  mTargetAngleY=mAngleY;
+  mPrevAngleY=mAngleY;
   Player_ReleaseHeldActor(((char*)this));
   if(mStateStep==0){
     mVertSpeed=0x5d000;

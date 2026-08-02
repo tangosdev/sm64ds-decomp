@@ -102,7 +102,7 @@ int Player::CleanupResources()
         if (q != 0)
             func_0203cbc0(q);
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[mCharFileBase + (mParam & 3)]);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[mCharFileBase + (param1 & 3)]);
     b = data_0209f2d8;
     b = b == 1;
     if (b != false_)
@@ -228,7 +228,7 @@ int Player::CleanupResources()
     }
     if (mLoadedResourceFlags & 0x40) {
         u32 idx = mHatCharacter;
-        if (idx == (u32)mParam)
+        if (idx == (u32)param1)
             idx = unk_6dc;
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[mCharFileBase + idx]);
     }

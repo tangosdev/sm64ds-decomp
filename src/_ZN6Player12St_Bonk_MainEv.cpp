@@ -64,7 +64,7 @@ int Player::St_Bonk_Main()
     }
 willhit:
     {
-        u32 arg = (u8)mParam;
+        u32 arg = (u8)param1;
         int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
         char* anim = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
         if (_ZNK9Animation12WillHitFrameEi(anim, 0x2e) != 0) {
@@ -75,8 +75,8 @@ willhit:
 finishedanim:
     mStateWork = 0;
     if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
-        mTargetAngleY = mTargetAngleY + 0x8000;
-        mAngleY = mTargetAngleY;
+        mPrevAngleY = mPrevAngleY + 0x8000;
+        mAngleY = mPrevAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         return 1;
     }

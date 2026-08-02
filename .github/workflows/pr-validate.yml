@@ -1,5 +1,12 @@
 name: PR validation
 
+# Submits the PR to the validation relay and exits. The verdict does NOT come back
+# through this workflow — the relay posts it directly to the pull request as the
+# Tangos Validator app: a "PR validation" check run, plus the usual comment. Watch
+# for those, not for this job.
+#
+# This job going green means "submitted", nothing more.
+#
 # Uses pull_request_target so repo secrets (the relay token) are available even
 # for fork PRs. SAFE because this workflow never checks out or runs PR code — it
 # only sends the PR number + immutable head/base SHAs to the relay. The actual validation
@@ -8,8 +15,9 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
-permissions:
-  pull-requests: write
+# No permissions needed. This workflow no longer comments — the app does, under its
+# own identity — so the default read-only token is enough to submit and exit.
+permissions: {}
 
 concurrency:
   # Key on the head SHA, not the PR number. Grouping by PR number meant every new event for
@@ -17,19 +25,20 @@ concurrency:
   # (the console auto-pushes matched batches) could never finish a validation: each check went
   # queued -> cancelled and the PR never reached a verdict, leaving it unmergeable and, worse,
   # looking "clean" at a glance because an unconcluded check reads as UNSTABLE rather than red.
-  # Per-SHA grouping still collapses duplicate events for the SAME commit (reopen, re-request)
-  # into one run, which is the actual waste worth avoiding; a genuinely new commit deserves its
-  # own check. Cost is that a superseded commit may finish a run nobody reads - ~30s on the
-  # build box, cheap next to a PR that can never be merged.
+  # Per-SHA grouping still collapses duplicate events for the SAME commit (reopen, re-request).
+  #
+  # Cancelling matters much less than it used to: this job is a single POST and exits in
+  # seconds, and cancelling it never un-submitted the job it had already sent anyway. The
+  # relay is what actually prevents duplicate work now — submitting a commit it is already
+  # validating returns the in-flight job instead of queueing a second build.
   group: pr-validate-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  submit:
     runs-on: ubuntu-latest
     steps:
       - name: Submit validation job
-        id: submit
         env:
           RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
           TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
@@ -48,61 +57,5 @@ jobs:
           echo "$resp"
           jobId=$(echo "$resp" | jq -r '.jobId // empty')
           if [ -z "$jobId" ]; then echo "relay did not return a jobId"; exit 1; fi
-          echo "jobId=$jobId" >> "$GITHUB_OUTPUT"
-
-      - name: Wait for result
-        id: poll
-        env:
-          RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
-          TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
-          JOB: ${{ steps.submit.outputs.jobId }}
-        run: |
-          set -euo pipefail
-          status=""
-          for i in $(seq 1 240); do   # up to ~40 min (240 * 10s)
-            r=$(curl -sS "$RELAY/api/pr-validate/$JOB" -H "X-Api-Key: $TOKEN")
-            status=$(echo "$r" | jq -r '.status // empty')
-            case "$status" in
-              # Superseded and Cancelled are terminal too. The relay retires an older head
-              # as soon as a newer push arrives, and without them this run would keep a
-              # runner polling for forty minutes waiting on a verdict nobody will produce.
-              Passed|Failed|Error|Superseded|Cancelled)
-                echo "$r" > result.json
-                break ;;
-            esac
-            sleep 10
-          done
-          if [ ! -f result.json ]; then
-            echo "status=Timeout" >> "$GITHUB_OUTPUT"
-            echo 'summary=Validation timed out — is the build-box worker running?' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          # Logged, not exported: the relay writes the pull request comment itself, so
-          # nothing downstream reads these and the report can be 100KB.
-          jq -r '"summary: \(.summary // "")"' result.json
-
-      - name: Fail the check unless validation passed
-        # Superseded and Cancelled are not verdicts, so they must not fail this run. A newer
-        # commit already owns the gate, and failing here would leave a red mark on a commit
-        # nobody is merging while saying nothing about whether the code is good.
-        if: >-
-          steps.poll.outputs.status != 'Passed'
-          && steps.poll.outputs.status != 'Superseded'
-          && steps.poll.outputs.status != 'Cancelled'
-        run: |
-          echo "PR validation did not pass"; exit 1
-
-      - name: Release the relay job if this run was cancelled
-        # Cancelling a run never used to un-submit the job it had already sent, so the
-        # worker kept building for a run that had gone away -- on a box with one build slot,
-        # that is the next PR's queue time. Best-effort by design: if the relay cannot be
-        # reached, the job simply runs as it always did.
-        if: cancelled() && steps.submit.outputs.jobId != ''
-        env:
-          RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
-          TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
-          JOB: ${{ steps.submit.outputs.jobId }}
-        run: |
-          curl -sS -X POST "$RELAY/api/pr-validate/$JOB/cancel" \
-            -H "X-Api-Key: $TOKEN" --max-time 20 || true
+          echo "Submitted $jobId. The verdict will arrive on this PR as the"
+          echo "'PR validation' check run, posted by the relay — not by this workflow."

@@ -16,7 +16,7 @@ int Player::St_LedgeHang_Init()
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x21, 0, 0x1000, 0);
   }
   *(unsigned short*)(((char*)this)+0x600+0xa6) = 2;
-  mTargetAngleY = mAngleY;
+  mPrevAngleY = mAngleY;
   mVertSpeed = 0;
   mHorzSpeed = 0;
   mIsAirborne = 0;

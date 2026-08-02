@@ -56,6 +56,31 @@ so the source controls the allocation:
     case specifically, so wall #1 remains largely unsolved even here — but the void* cast is
     worth testing on our materialization near-misses.
 
+## Virtual dispatch (found here, not in pret)
+
+11. **A virtual call must be a REAL virtual call.** Where the ROM dispatches through a
+    vtable, hand-rolling it as `(*(fn**)this)[N](this, ...)` reproduces the right
+    *instructions* but not the right *register*: mwccarm's own dispatch sequence reads
+    `this` from the incoming argument register, a hand-rolled call reads it from the
+    callee-saved copy the allocator made for the post-call uses.
+
+    ```
+    ROM:  ldr r3,[r0]     <- compiler-generated dispatch
+    ours: ldr r3,[r6]     <- hand-rolled function-pointer call
+    ```
+
+    Found on `MeshCollider::GetSurfaceInfo` (0x01ffd920), where that one word was the whole
+    residual: five source variants, declaration-order permutation, hoisting the address
+    computation, caching the loaded field, and a full version sweep were all inert against
+    it. Declaring the class with its virtuals in `_ZTV` order and writing an ordinary
+    `GetNormal(idx, normal)` call matched immediately.
+
+    Cost: it needs a real class declaration with the correct slot index, so it is not a
+    local edit. But it is decisive where it applies, and no permuter can reach it — the
+    two forms are semantically identical, so nothing short of changing the call's *kind*
+    moves the register. Check this before spending a session on a one-word divergence
+    anywhere near a `ldr rX,[rY]; ldr rX,[rX,#imm]; blx rX` sequence.
+
 ## How to apply
 
 For a register-pressure / stack-shuffle near-miss (the common wall-#2 shape): hold the logic

@@ -25,7 +25,7 @@ int Player::St_NoControl_Main()
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
         if (func_0200ee68() == 0) {
             mAngleY = GetAngleToCamera(mPlayerNo);
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
         }
     }
 
@@ -108,7 +108,7 @@ int Player::St_NoControl_Main()
         }
         break;
     case 23: {
-        int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+        int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
         char* anim = (char*)((int*)((char*)&mBodyModels))[id] + 0x50;
         if (_ZNK9Animation12WillHitFrameEi(anim, 0x1c))
             unk_71a = 0;

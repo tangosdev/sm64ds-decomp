@@ -23,7 +23,7 @@ int Player::St_DebugFly_Main()
     mClsnFlags = 0;
 
     if (*(s16 *)(data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
-        mTargetAngleY = mDesiredAngleY;
+        mPrevAngleY = mDesiredAngleY;
         mHorzSpeed = func_ov002_020bf224((int)((char *)this), 0x50000, 0);
     }
 

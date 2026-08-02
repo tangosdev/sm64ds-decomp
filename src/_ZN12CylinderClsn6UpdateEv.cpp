@@ -7,11 +7,13 @@
 extern "C" {
 }
 
+/* Link this node in at the head of the active list. The mirror of the unlink
+   that the destructors run; see include/CylinderClsn.h. */
 void CylinderClsn::Update()
 {
-  if(unk_018 & 1) return;
+  if(flags & 1) return;
   void* h = data_0209cee8;
-  *(void**)((char*)&unk_02c) = h;
+  *(void**)&next = h;
   if(data_0209cee8) *(void**)((char*)data_0209cee8+0x28) = ((char*)this);
   data_0209cee8 = ((char*)this);
 }

@@ -71,25 +71,33 @@ struct Actor : ActorDerived {
     s32 mCamSpacePosX;      /* 0x074 */
     s32 mCamSpacePosY;      /* 0x078 */
     s32 mCamSpacePosZ;      /* 0x07c */
-    u8  pad_080[0xc];
+    /* 0x080..0x08b and the 0x098..0x0ab block below were bare padding and u8
+       placeholders here, while Player.h -- describing the same bytes -- named
+       them and typed them s32. Player is right, and the evidence is outside
+       Player: BooCage::InitResources and MadPiano::InitResources write -0x4000
+       and -0x2000 to 0x09c and -0x46000 / -0x3c000 to 0x0a0, which are fix12
+       gravity and terminal velocity, not bytes. Player::St_Walk_Main passes
+       0x098 as a 32-bit argument.
+
+       These were deliberately left wrong until now: nothing compiled against
+       Actor's copies, so no gate could prove a change either way. Now that
+       Player inherits them, 62 files using mHorzSpeed and 49 using mVertSpeed
+       resolve through this header, and a wrong width fails immediately. */
+    s32 mScaleX;            /* 0x080 */
+    s32 mScaleY;            /* 0x084 */
+    s32 mScaleZ;            /* 0x088 */
     s16 mAngleX;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */
     s16 mPrevAngleX;            /* 0x092 */
     s16 mPrevAngleY;            /* 0x094 */
     s16 mPrevAngleZ;            /* 0x096 */
-    u8  unk_098;            /* 0x098 */
-    u8  pad_099[0x3];
-    u8  unk_09c;            /* 0x09c */
-    u8  pad_09d[0x3];
-    u8  unk_0a0;            /* 0x0a0 */
-    u8  pad_0a1[0x3];
-    u8  unk_0a4;            /* 0x0a4 */
-    u8  pad_0a5[0x3];
-    u8  unk_0a8;            /* 0x0a8 */
-    u8  pad_0a9[0x3];
-    u8  unk_0ac;            /* 0x0ac */
-    u8  pad_0ad[0x3];
+    s32 mHorzSpeed;         /* 0x098 */
+    s32 mVertAccel;         /* 0x09c -- fix12, negative (gravity) */
+    s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
+    u8  pad_0a4[0x4];       /* likely the same physics block; unproven */
+    s32 mVertSpeed;         /* 0x0a8 */
+    u8  pad_0ac[0x4];       /* likely the same physics block; unproven */
     u32 mFlags;             /* 0x0b0 -- bit 0x10000 suppresses behaviour */
     s32 unk_0b4;            /* 0x0b4 */
     s32 unk_0b8;            /* 0x0b8 -- clip radius; 0 skips the camera transform */
@@ -167,25 +175,21 @@ struct Actor {
     s32 mCamSpacePosX;      /* 0x074 */
     s32 mCamSpacePosY;
     s32 mCamSpacePosZ;
-    u8  pad_080[0xc];
+    s32 mScaleX;            /* 0x080 */
+    s32 mScaleY;
+    s32 mScaleZ;
     s16 mAngleX;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */
     s16 mPrevAngleX;        /* 0x092 */
     s16 mPrevAngleY;        /* 0x094 */
     s16 mPrevAngleZ;        /* 0x096 */
-    u8  unk_098;
-    u8  pad_099[0x3];
-    u8  unk_09c;
-    u8  pad_09d[0x3];
-    u8  unk_0a0;
-    u8  pad_0a1[0x3];
-    u8  unk_0a4;
-    u8  pad_0a5[0x3];
-    u8  unk_0a8;
-    u8  pad_0a9[0x3];
-    u8  unk_0ac;
-    u8  pad_0ad[0x3];
+    s32 mHorzSpeed;         /* 0x098 */
+    s32 mVertAccel;         /* 0x09c */
+    s32 mTerminalVelocity;  /* 0x0a0 */
+    u8  pad_0a4[0x4];
+    s32 mVertSpeed;         /* 0x0a8 */
+    u8  pad_0ac[0x4];
     u32 mFlags;             /* 0x0b0 */
     s32 unk_0b4;
     s32 unk_0b8;

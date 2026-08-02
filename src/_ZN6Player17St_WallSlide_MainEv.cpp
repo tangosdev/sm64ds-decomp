@@ -33,7 +33,7 @@ int Player::St_WallSlide_Main()
     {
       _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*((int *) ((char *)&mPosX)), *((int *) ((char *)&mPosY)), *((int *) ((char *)&mPosZ)));
     }
-    *((int *) ((char *)&mLoopingSoundHandle)) = func_0201226c(*((int *) ((char *)&mLoopingSoundHandle)), 0, (*((int *) ((char *)&mGroundSoundType))) + 0xe2, (int) ((char *)&mCamSpacePos), *((int *) ((char *)&mHorzSpeed)), 0);
+    *((int *) ((char *)&mLoopingSoundHandle)) = func_0201226c(*((int *) ((char *)&mLoopingSoundHandle)), 0, (*((int *) ((char *)&mGroundSoundType))) + 0xe2, (int) ((char *)&mCamSpacePosX), *((int *) ((char *)&mHorzSpeed)), 0);
     if ((*((unsigned short *) (&data_0209f49e[data_020a0e40 * 0x18]))) & 2)
     {
       char *p = ((char *)this) + 0x600;

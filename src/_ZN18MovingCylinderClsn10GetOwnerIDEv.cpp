@@ -4,8 +4,10 @@
 #include "MovingCylinderClsn.h"
 
 
-int MovingCylinderClsn::GetOwnerID()
+/* Slot 3. owner->uniqueID, at Actor + 4 -- the same offset MeshColliderBase
+   reads for its own ownerUniqueID. */
+u32 MovingCylinderClsn::GetOwnerID()
 {
-    char *q = *(char **)((char *)&unk_030);
-    return *(int *)(q + 4);
+    char *q = *(char **)&owner;
+    return *(u32 *)(q + 4);
 }

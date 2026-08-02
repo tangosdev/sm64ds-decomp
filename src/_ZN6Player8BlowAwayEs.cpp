@@ -12,7 +12,7 @@ void Player::BlowAway(short v)
 {
   if(mIsMetal) return;
   if(mIsBalloon) return;
-  mTargetAngleY=v;
+  mPrevAngleY=v;
   mAngleY=(short)(v+0x8000);
   _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_0211037c);
 }

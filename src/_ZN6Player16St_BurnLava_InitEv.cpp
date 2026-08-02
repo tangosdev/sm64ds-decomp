@@ -26,6 +26,6 @@ int Player::St_BurnLava_Init()
     mStateArg=0;
   }
   func_ov002_020d91e0(((char*)this),0x300,1);
-  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x23,(struct Vector3*)((char*)&mCamSpacePos));
+  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x23,(struct Vector3*)((char*)&mCamSpacePosX));
   return 1;
 }
