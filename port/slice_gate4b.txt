@@ -1,0 +1,46 @@
+# Gate-4b slice: the Model pipeline -- load, rebase, VRAM upload, bone walk,
+# material bind, display-list submit -- on top of slices 2/3a/3b and the
+# gate-4a pump. MMIO-touching files build via hostgen (see CMakeLists);
+# everything here compiles as-is.
+
+# Model
+src/_ZN5ModelC1Ev.c
+src/_ZN5ModelC2Ev.c
+src/_ZN5Model8LoadFileER13SharedFilePtr.cpp
+src/_ZN5Model9DoSetFileEPcii.cpp
+src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp
+src/_ZN5Model23AddToCommonModelDataArrER8BMD_File.cpp
+src/_ZN5Model13LoadTexAndPalER8BMD_File.cpp
+src/_ZN5Model17LoadTextureToVramEPcj.cpp
+src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp
+src/_ZN5Model13GetVramOffsetEj.cpp
+src/_ZN5Model12SetPolygonIDEi.cpp
+src/_ZN5Model6RenderEPK7Vector3.cpp
+# ModelComponents::Render: HOST copy in port/unmatched -- the matched TU
+# passes the material index by leaving it in r1 (see the file header there).
+port/unmatched/ModelComponents_Render.cpp
+src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.c
+
+# GX upload path (no textual MMIO; VRAM windows come from HAL globals)
+src/_ZN2GX7LoadTexEPKvjj.cpp
+src/_ZN2GX11LoadTexPlttEPKvjj.c
+
+# render walk + math
+src/func_02044534.c
+src/func_0204488c.c
+src/func_020462d0.c
+src/func_02046564.c
+src/MulMat4x3Mat4x3.c
+src/NormalizeVec3.c
+src/func_020458a8.c
+src/func_02016b24.c
+src/func_02045074.c
+src/func_02045178.c
+src/func_02048234.c
+src/func_02046008.c
+src/MulMat3x3Mat3x3.c
+src/_ZN9ModelBaseC1Ev.c
+src/DMASyncWordTransfer.c
+src/func_02059fd0.c
+src/func_0203cc0c.c
+src/func_0204605c.c

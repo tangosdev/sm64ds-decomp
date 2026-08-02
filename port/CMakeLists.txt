@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
+add_compile_options(/Oy-)
 
 # Gate 1: compile the manifest slice out of ../src plus the HAL, link the
 # smoke runner. 32-bit host only -- platform.h enforces it at compile time.
@@ -133,6 +135,58 @@ target_compile_definitions(smoke_gx PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
 if(MSVC)
     target_compile_options(smoke_gx PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+# Gate 4b: the whole Model pipeline. Adds the material-bind and matrix
+# feeders to the hostgen set and the Model/render slice on top of everything.
+set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998)
+set(GATE4B_GEN "")
+foreach(sym IN LISTS GATE4B_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE4B_GEN "${sym_out}")
+endforeach()
+
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
+set(SLICE4B_SOURCES "")
+foreach(line IN LISTS SLICE4B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE4B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ROM constants (sine table, default matrices): generated locally from the
+# extracted arm9 image so Nintendo bytes never enter the repo.
+set(ROMDATA_C "${CMAKE_BINARY_DIR}/host-src/romdata.c")
+add_custom_command(OUTPUT "${ROMDATA_C}"
+    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/romdata.py" "${ROMDATA_C}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/romdata.py"
+    COMMENT "romdata from extracted/arm9_dec.bin")
+
+add_executable(smoke_model tests/smoke_model.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_model PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_model PRIVATE ntr)
+target_compile_definitions(smoke_model PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_model PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
 add_executable(smoke_fs tests/smoke_fs.cpp

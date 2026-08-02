@@ -51,6 +51,11 @@ void gx_reset();
 // Bind a decoded texture for subsequent geometry. Pass null for untextured.
 void gx_bind_texture(const uint32_t *rgba, int width, int height);
 
+// The game path: TEXIMAGE_PARAM / PLTT_BASE writes (ports 0x2A/0x2B) bind by
+// decoding lazily out of the mapped VRAM texture/palette slot windows.
+void gx_teximage_param(uint32_t value);
+void gx_pltt_base(uint32_t value);
+
 // Preload a position-matrix stack slot. Display lists open with MTX_RESTORE
 // against slots the *scene* filled in beforehand, so a model drawn on its own
 // has to have them set up first. Row-major, row-vector convention.

@@ -17,6 +17,8 @@
 // hybrid's gates existed to catch, and the port has no gate to catch it.
 #include <stdio.h>
 #include <stdlib.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 typedef unsigned int u32;
 
@@ -83,11 +85,26 @@ void *Allocate(u32 size, int align, Heap *heap)
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
 
-// Crash(): the game's fatal stop. Loud on host.
-void Crash(void)
+// Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
+// the C++-linkage references alias onto the same definition.
+extern "C" void Crash(void)
 {
     fprintf(stderr, "FATAL: game Crash() reached\n");
+    void *frames[12];
+    unsigned n = CaptureStackBackTrace(0, 12, frames, 0);
+    char *base = (char *)GetModuleHandleA(0);
+    for (unsigned i = 0; i < n; ++i)
+        fprintf(stderr, "  frame %u: +0x%08x\n", i,
+                (unsigned)((char *)frames[i] - base));
     abort();
+}
+#pragma comment(linker, "/alternatename:?Crash@@YAXXZ=_Crash")
+
+// Heap::Allocate(u32): the one-argument overload the allocator veneer path
+// uses (func_0203cc0c). Align 4, same as Memory::Allocate(u32)'s default.
+extern "C" void *_ZN4Heap8AllocateEj(void *self, u32 size)
+{
+    return (void *)(size_t)((Heap *)self)->Allocate(size, 4);
 }
 
 // ---- the synthetic vtable ------------------------------------------------

@@ -6,8 +6,11 @@
 
 #include "ntr/gx.h"
 
+#include "ntr/texture.h"
+
 #include <cmath>
 #include <cstring>
+#include <map>
 #include <vector>
 
 namespace ntr {
@@ -306,7 +309,9 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
                    static_cast<int16_t>(g.vz + d10((p[0] >> 20) & 0x3FF)));
             break;
         }
-        case 0x29: case 0x2A: case 0x2B: break;                  // POLYGON_ATTR / TEX params
+        case 0x29: break;                                        // POLYGON_ATTR
+        case 0x2A: gx_teximage_param(p[0]); break;               // TEXIMAGE_PARAM
+        case 0x2B: gx_pltt_base(p[0]); break;                    // PLTT_BASE
         case 0x30: {                                             // DIF_AMB
             auto unpack = [](uint32_t v, float *o) {
                 o[0] = (v & 0x1F) / 31.0f;
@@ -451,6 +456,57 @@ void gx_bind_texture(const uint32_t *rgba, int width, int height) {
     g.tw = width;
     g.th = height;
 }
+
+// --- VRAM-sourced texturing: the game path ----------------------------------
+// The game binds textures by writing TEXIMAGE_PARAM / PLTT_BASE around each
+// display list; the texel data was already uploaded through GX::LoadTex into
+// the mapped texture-slot window and palettes through GX::LoadTexPltt. On
+// hardware the slot addresses come from bank assignment; the port's HAL
+// points the game's upload-base globals at these same windows, so a slot
+// offset here is a plain host address.
+namespace {
+
+constexpr uintptr_t TEX_SLOT_BASE  = 0x06800000u;   // texture slots, mapped
+constexpr uintptr_t PLTT_SLOT_BASE = 0x06880000u;   // palette slots, mapped
+
+uint32_t g_teximage, g_plttbase;
+std::map<uint64_t, std::vector<uint32_t>> g_vram_tex_cache;
+
+void bind_from_vram() {
+    const uint32_t fmt = (g_teximage >> 26) & 7;
+    if (fmt == 0) { gx_bind_texture(nullptr, 0, 0); return; }
+    const uint64_t key = (static_cast<uint64_t>(g_plttbase) << 32) | g_teximage;
+    auto it = g_vram_tex_cache.find(key);
+    if (it == g_vram_tex_cache.end()) {
+        TextureDesc d;
+        const uint32_t off = (g_teximage & 0xFFFF) << 3;
+        d.width = 8 << ((g_teximage >> 20) & 7);
+        d.height = 8 << ((g_teximage >> 23) & 7);
+        d.format = static_cast<int>(fmt);
+        d.color0_transparent = (g_teximage >> 29) & 1;
+        d.data = reinterpret_cast<const uint8_t *>(TEX_SLOT_BASE + off);
+        d.data_len = 0x80000 - static_cast<int32_t>(off);
+        // Format 5 keeps its 4x4 palette-index words in slot 1, at half the
+        // block offset (GBATEK); the game uploads them right after the blocks.
+        if (fmt == 5) {
+            d.index = reinterpret_cast<const uint8_t *>(TEX_SLOT_BASE + 0x20000 + off / 2);
+            d.index_len = 0x20000 - static_cast<int32_t>(off / 2);
+        }
+        const uint32_t pal_off = g_plttbase * (fmt == 2 ? 8u : 16u);
+        d.pal = reinterpret_cast<const uint8_t *>(PLTT_SLOT_BASE + pal_off);
+        d.pal_len = 0x18000 - static_cast<int32_t>(pal_off);
+        std::vector<uint32_t> rgba;
+        if (!texture_decode(d, rgba)) { gx_bind_texture(nullptr, 0, 0); return; }
+        it = g_vram_tex_cache.emplace(key, std::move(rgba)).first;
+    }
+    const int w = 8 << ((g_teximage >> 20) & 7), h = 8 << ((g_teximage >> 23) & 7);
+    gx_bind_texture(it->second.data(), w, h);
+}
+
+}  // namespace
+
+void gx_teximage_param(uint32_t v) { g_teximage = v; bind_from_vram(); }
+void gx_pltt_base(uint32_t v) { g_plttbase = v; bind_from_vram(); }
 
 void gx_write_port(uint32_t addr, uint32_t value) {
     const uint8_t cmd = static_cast<uint8_t>((addr - 0x04000400u) >> 2);
