@@ -6,9 +6,9 @@
 
 void CylinderClsn::Clear()
 {
-    unk_00c = 0;
-    unk_010 = 0;
-    unk_014 = 0;
-    unk_024 = 0;
-    unk_020 = 0;
+    pushback.x = 0;
+    pushback.y = 0;
+    pushback.z = 0;
+    otherOwner = 0;
+    hitFlags = 0;
 }

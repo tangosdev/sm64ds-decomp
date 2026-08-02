@@ -3579,6 +3579,7 @@ data_0208e698 kind:data(any) addr:0x0208e698
 data_0208e6a4 kind:data(any) addr:0x0208e6a4
 _ZTV19CylinderClsnWithPos kind:data(any) addr:0x0208e6bc
 _ZTV18MovingCylinderClsn kind:data(any) addr:0x0208e6d4
+_ZTV12CylinderClsn kind:data(any) addr:0x0208e6ec
 data_0208e6ec kind:data(any) addr:0x0208e6ec
 _ZTV25MovingCylinderClsnWithPos kind:data(any) addr:0x0208e704
 data_0208e714 kind:data(any) addr:0x0208e714
