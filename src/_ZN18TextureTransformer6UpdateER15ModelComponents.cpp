@@ -1,9 +1,9 @@
 //cpp
-extern "C" {
-void func_020469e8(void* model, void* file, int frame);
-}
+// @symbol _ZN18TextureTransformer6UpdateER15ModelComponents
+#include "TextureTransformer.h"
+extern "C" void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 
-extern "C" void _ZN18TextureTransformer6UpdateER15ModelComponents(char* self, void* model)
+void TextureTransformer::Update(ModelComponents &model)
 {
-    func_020469e8(model, *(void**)(self + 0x10), (unsigned short)(*(unsigned int*)(self + 8) >> 12));
+    func_020469e8(&model, file, (u16)((u32)currFrame >> 12));
 }

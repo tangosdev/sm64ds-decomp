@@ -2507,7 +2507,7 @@ src/func_020178cc.c:
     complete
     .text start:0x020178cc end:0x020178e4
 
-src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.c:
+src/_ZN15TextureSequence8LoadFileER13SharedFilePtr.cpp:
     complete
     .text start:0x020178e4 end:0x0201791c
 

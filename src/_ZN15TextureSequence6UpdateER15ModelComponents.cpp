@@ -1,9 +1,9 @@
 //cpp
-extern "C" {
-void func_02046bbc(void* model, void* file, int frame);
-}
+// @symbol _ZN15TextureSequence6UpdateER15ModelComponents
+#include "TextureSequence.h"
+extern "C" void func_02046bbc(ModelComponents *model, BTP_File *file, int frame);
 
-extern "C" void _ZN15TextureSequence6UpdateER15ModelComponents(char* self, void* model)
+void TextureSequence::Update(ModelComponents &model)
 {
-    func_02046bbc(model, *(void**)(self + 0x10), (unsigned short)(*(unsigned int*)(self + 8) >> 12));
+    func_02046bbc(&model, file, (u16)((u32)currFrame >> 12));
 }

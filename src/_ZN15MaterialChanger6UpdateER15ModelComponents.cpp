@@ -1,9 +1,9 @@
 //cpp
-extern "C" {
-void func_02046e28(void* model, void* file, int frame);
-}
+// @symbol _ZN15MaterialChanger6UpdateER15ModelComponents
+#include "MaterialChanger.h"
+extern "C" void func_02046e28(ModelComponents *model, BMA_File *file, int frame);
 
-extern "C" void _ZN15MaterialChanger6UpdateER15ModelComponents(char* self, void* model)
+void MaterialChanger::Update(ModelComponents &model)
 {
-    func_02046e28(model, *(void**)(self + 0x10), (unsigned short)(*(unsigned int*)(self + 8) >> 12));
+    func_02046e28(&model, file, (u16)((u32)currFrame >> 12));
 }

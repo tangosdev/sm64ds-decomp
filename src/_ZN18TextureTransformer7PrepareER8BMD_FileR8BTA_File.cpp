@@ -1,10 +1,11 @@
 //cpp
-/* _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File @ 0x201587c (arm9) -- tail-call veneer to func_02046b64 (0x2046b64).
- * ldr ip, [pc]; bx ip; .word 0x2046b64
- */
-extern "C" {
-extern void func_02046b64(void);
-void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void) {
-    func_02046b64();
-}
+// @symbol _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File
+#include "TextureTransformer.h"
+extern "C" void func_02046b64(TextureTransformer *self, BMD_File *model, BTA_File *file);
+
+/* The ROM body is a 0xc tail-call veneer; func_02046b64 is the real,
+   still unnamed implementation. */
+void TextureTransformer::Prepare(BMD_File &model, BTA_File &animFile)
+{
+    func_02046b64(this, &model, &animFile);
 }
