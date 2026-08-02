@@ -28,6 +28,12 @@ struct Framebuffer {
 // now; affine, bitmap, sprites and the blend/window units are not implemented.
 void ppu_scanout(Engine eng, Framebuffer &fb);
 
+// Rasterise one engine's OBJ layer (sprites) from its OAM + OBJ VRAM over
+// whatever fb already holds. Plain and affine sprites, 16- and 256-color
+// tiles, 1D mapping; bitmap OBJs, mosaic, windows and blending are not
+// implemented. Transparent color-0 texels leave fb untouched.
+void ppu_scanout_obj(Engine eng, Framebuffer &fb);
+
 // Debug output, so a frame can be inspected without a window yet.
 bool ppu_write_bmp(const char *path, const Framebuffer &fb);
 

@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "ntr/mmio.h"
+#include "ntr/ppu.h"
 
 #include "fault_probe.h"
 
@@ -83,6 +84,8 @@ int main(void)
     /* upload: the words must land in mapped OAM at 0x07000000 */
     _ZN3OAM4LoadEv();
     const u32 *oam = (const u32 *)0x07000000;
+    printf("  oam[3..7]: %08x %08x %08x %08x %08x\n",
+           oam[3], oam[4], oam[5], oam[6], oam[7]);
     printf("  oam[0..2]: %08x %08x %08x\n", oam[0], oam[1], oam[2]);
     /* the upload must mirror the LIVE shadow -- affine parameters live in
        the filler words of neighboring entries (slot 0 spans entries 0..3),
@@ -93,11 +96,42 @@ int main(void)
     CHECK(oam[2] == r0);
     CHECK((short)(oam[1] >> 16) == (short)pa);   /* affine pa in the filler */
 
+    /* scan-out: the OAM the game just uploaded becomes pixels. The tile and
+       palette are harness-side (the HUD graphic loaders are ov-coupled);
+       the PLACEMENT is entirely the game's. Tile 5, 16x16 = four 32-byte
+       tiles of solid color-index 1; palette 2 entry 1 = pure red. */
+    {
+        volatile unsigned char *tiles =
+            (volatile unsigned char *)(0x06400000u + 5u * 32u);
+        for (int i = 0; i < 4 * 32; ++i) tiles[i] = 0x11;
+        *(volatile u16 *)(0x05000200u + (2u * 16u + 1u) * 2u) = 0x001F; /* red */
+        NTR_MMIO(u32, 0x04000000) = (1u << 4);   /* DISPCNT: OBJ 1D mapping */
+
+        ntr::Framebuffer fb;
+        for (int y = 0; y < ntr::SCREEN_H; ++y)
+            for (int x = 0; x < ntr::SCREEN_W; ++x) fb.px[y][x] = 0xFF101820u;
+        ntr::ppu_scanout_obj(ntr::ENGINE_A, fb);
+
+        CHECK(fb.px[60][40] == 0xFFFF0000u);         /* plain sprite top-left */
+        CHECK(fb.px[75][55] == 0xFFFF0000u);         /* ...bottom-right */
+        CHECK(fb.px[60][39] == 0xFF101820u);         /* left edge untouched */
+        CHECK(fb.px[59][40] == 0xFF101820u);         /* top edge untouched */
+        /* the rotated sprite renders with palette 0 (unfilled -> black);
+           any non-background pixel in its double-size box counts */
+        int rotated_px = 0;
+        for (int y = 60; y < 110; ++y)
+            for (int x = 80; x < 130; ++x)
+                if (fb.px[y][x] != 0xFF101820u) ++rotated_px;
+        printf("  rotated sprite pixels: %d\n", rotated_px);
+        CHECK(rotated_px > 100);      /* the affine sprite drew a real footprint */
+        ntr::ppu_write_bmp("smoke_oam.bmp", fb);
+    }
+
     if (g_failures) {
         fprintf(stderr, "smoke_oam: %d FAILURE(S)\n", g_failures);
         return 1;
     }
-    printf("smoke_oam: all checks passed (the game's sprite engine emits and "
-           "uploads OAM on host)\n");
+    printf("smoke_oam: all checks passed (the game's sprite engine emits, "
+           "uploads and scans out on host)\n");
     return 0;
 }

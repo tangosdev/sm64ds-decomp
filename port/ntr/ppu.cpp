@@ -155,6 +155,97 @@ void ppu_scanout(Engine eng, Framebuffer &fb) {
     }
 }
 
+// --- OBJ layer --------------------------------------------------------------
+// GBATEK "LCD OBJ": 128 OAM entries per engine; tiles in the engine's OBJ
+// VRAM region, palette at pltt+0x200. Sizes come from the shape/size table.
+// Affine params sit in the filler word of entries group*4+0..3 (pa,pb,pc,pd).
+void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},    // square
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},    // wide
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},    // tall
+    };
+    const uint32_t oam_base = eng == ENGINE_A ? 0x07000000u : 0x07000400u;
+    const uint32_t obj_vram = eng == ENGINE_A ? 0x06400000u : 0x06600000u;
+    const uint32_t obj_pltt = kEngines[eng].pltt_base + 0x200u;
+    // DISPCNT bit 4: OBJ 1D mapping; bits 20-21: tile-index boundary shift.
+    const uint32_t dispcnt = rd32(kEngines[eng].reg_base);
+    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
+
+    for (int i = 127; i >= 0; --i) {           // low index on top: draw high first
+        const uint16_t a0 = rd16(oam_base + i * 8u);
+        const uint16_t a1 = rd16(oam_base + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_base + i * 8u + 4);
+        const bool affine = a0 & 0x100;
+        if (!affine && (a0 & 0x200)) continue;             // disabled
+        if (((a0 >> 10) & 3) == 3) continue;               // OBJ window: skip
+        const int shape = (a0 >> 14) & 3;
+        if (shape == 3) continue;
+        const int size = (a1 >> 14) & 3;
+        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
+        const bool dbl = affine && (a0 & 0x200);
+        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
+        int x = a1 & 0x1FF, y = a0 & 0xFF;
+        if (x >= 256) x -= 512;
+        if (y >= 192 && y >= 256 - bh) y -= 256;
+        const bool c256 = a0 & 0x2000;
+        const bool hflip = !affine && (a1 & 0x1000);
+        const bool vflip = !affine && (a1 & 0x2000);
+        const uint32_t tile = a2 & 0x3FF;
+        const uint32_t pal = (a2 >> 12) & 0xF;
+
+        int pa = 256, pb = 0, pc = 0, pd = 256;
+        if (affine) {
+            const int grp = (a1 >> 9) & 0x1F;
+            pa = (int16_t)rd16(oam_base + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_base + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_base + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_base + (grp * 4 + 3) * 8u + 6);
+        }
+
+        for (int sy = 0; sy < bh; ++sy) {
+            const int py = y + sy;
+            if (py < 0 || py >= SCREEN_H) continue;
+            for (int sx = 0; sx < bw; ++sx) {
+                const int px = x + sx;
+                if (px < 0 || px >= SCREEN_W) continue;
+                // texel coordinate: affine maps through the matrix around the
+                // box center; plain is direct with optional flips.
+                int tx, ty;
+                if (affine) {
+                    const int cx = sx - bw / 2, cy = sy - bh / 2;
+                    tx = ((pa * cx + pb * cy) >> 8) + w / 2;
+                    ty = ((pc * cx + pd * cy) >> 8) + h / 2;
+                    if (tx < 0 || tx >= w || ty < 0 || ty >= h) continue;
+                } else {
+                    tx = hflip ? w - 1 - sx : sx;
+                    ty = vflip ? h - 1 - sy : sy;
+                }
+                const int tcol = tx >> 3, trow = ty >> 3;
+                const int fx = tx & 7, fy = ty & 7;
+                // 1D mapping: tiles of one sprite are consecutive.
+                const int tiles_per_row = w / 8;
+                const uint32_t tno = trow * tiles_per_row + tcol;
+                uint32_t index;
+                if (c256) {
+                    const uint32_t addr = obj_vram + tile * boundary
+                                          + tno * 64u + fy * 8u + fx;
+                    index = *reinterpret_cast<volatile uint8_t *>(addr);
+                    if (!index) continue;
+                    fb.px[py][px] = bgr555(rd16(obj_pltt + index * 2u));
+                } else {
+                    const uint32_t addr = obj_vram + tile * boundary
+                                          + tno * 32u + fy * 4u + fx / 2;
+                    const uint8_t b = *reinterpret_cast<volatile uint8_t *>(addr);
+                    index = (fx & 1) ? (b >> 4) : (b & 0xF);
+                    if (!index) continue;
+                    fb.px[py][px] = bgr555(rd16(obj_pltt + (pal * 16u + index) * 2u));
+                }
+            }
+        }
+    }
+}
+
 bool ppu_write_bmp(const char *path, const Framebuffer &fb) {
     std::FILE *f = std::fopen(path, "wb");
     if (!f) return false;
