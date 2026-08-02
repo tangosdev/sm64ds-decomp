@@ -1,0 +1,18 @@
+# Gate-7 slice: ModelAnim -- the game's own animated-model class, where
+# Animation::Advance owns frame progression (speed, loop/clamp mode bits)
+# instead of a harness counter. Sits on the gate-4/5 stack.
+
+src/_ZN9ModelAnimC1Ev.c
+src/_ZN9ModelAnimC2Ev.c
+src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
+src/_ZN9ModelAnim11UpdateVertsEv.cpp
+src/_ZN9ModelAnim6RenderEPK7Vector3.cpp
+src/_ZN9ModelAnim9Virtual10ER9Matrix4x3.cpp
+src/_ZN9AnimationC1Ev.cpp
+src/_ZN9AnimationC2Ev.cpp
+src/_ZN9Animation12SetAnimationEti5Fix12IiEt.cpp
+src/_ZN9Animation8SetFlagsEi.cpp
+src/_ZN9Animation7AdvanceEv.cpp
+src/_ZN9Animation8FinishedEv.cpp
+src/_ZN9Animation8GetFlagsEv.cpp
+src/_ZN5Model9Virtual10ER9Matrix4x3.cpp

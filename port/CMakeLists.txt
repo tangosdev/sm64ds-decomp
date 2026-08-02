@@ -222,6 +222,32 @@ if(MSVC)
     target_compile_options(smoke_soak PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# Gate 7: ModelAnim -- the game owns frame progression.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
+set(SLICE7_SOURCES "")
+foreach(line IN LISTS SLICE7_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+add_executable(smoke_modelanim tests/smoke_modelanim.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/anim_bridge.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${SLICE7_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_modelanim PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_modelanim PRIVATE ntr)
+target_compile_definitions(smoke_modelanim PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_modelanim PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
 # Gate 6: the 2D sprite engine's software side. OAM::Load reads POWCNT
 # textually -> hostgen; the rest of the slice is plain.
 set(GATE6_SYMS _ZN3OAM4LoadEv)

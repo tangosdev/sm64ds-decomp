@@ -142,6 +142,11 @@ int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 // every method non-virtually (qualified), so plain zero slots are fine; if
 // anything ever dispatches through them it faults immediately and loudly.
 void *_ZTV5Model[8];
+// Same story for the animated-model hierarchy: primary vtables plus the
+// multiple-inheritance thunk table the ModelAnim ctor installs at +0x50.
+void *_ZTV9Animation[8];
+void *_ZTV9ModelAnim[10];
+void *VTable_Animation_ModelAnimThunk[8];
 
 // BSS globals of the render/animation walk (0x02099xxx is past bss_start;
 // their DS values come from init code not yet in any slice):
