@@ -5262,3 +5262,5 @@ data_020aa3d4 kind:bss addr:0x020aa3d4
 data_020aa3f0 kind:bss addr:0x020aa3f0
 data_020aa3f4 kind:bss addr:0x020aa3f4
 data_020aa3f8 kind:bss addr:0x020aa3f8
+data_020ad524 kind:data(any) addr:0x020ad524
+data_020ad560 kind:data(any) addr:0x020ad560
