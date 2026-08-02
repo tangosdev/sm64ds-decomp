@@ -91,6 +91,33 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(state["tally"], {"VERIFIED": 1, "BLIND": 1})
         self.assertEqual(state["blocking"], [])
 
+    def test_declared_draft_no_repro_does_not_block(self):
+        # pr_linkcheck marks a self-declared NONMATCHING draft worst=DRAFT while
+        # its per-slot results still read NO-REPRO (#968). Flattening must keep
+        # the downgrade, or every PR that so much as renames a declared draft
+        # fails on a non-reproduction the gate already excused.
+        state = VM._link_state([{
+            "file": "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
+            "worst": "DRAFT",
+            "results": [{"sym": "_ZN5Model27LoadCompressedTextureToVramEPcjS0_",
+                         "verdict": "NO-REPRO"}],
+        }])
+        self.assertEqual(state["checked"], 1)
+        self.assertEqual(state["tally"], {"DRAFT": 1})
+        self.assertEqual(state["blocking"], [])
+
+    def test_draft_downgrade_does_not_shield_wrong_dest(self):
+        # The draft excuse covers non-reproduction only. A WRONG verdict on a
+        # declared draft still blocks: its call graph must be honest even if
+        # its bytes differ.
+        state = VM._link_state([{
+            "file": "src/Draft.c",
+            "worst": "DRAFT",
+            "results": [{"sym": "Draft", "verdict": "WRONG"}],
+        }])
+        self.assertEqual(state["tally"], {"WRONG": 1})
+        self.assertEqual(len(state["blocking"]), 1)
+
     def test_committed_test_merge_is_accepted_and_keeps_feature_author_credit(self):
         git(self.repo, "switch", "-q", "-c", "feature")
         (self.repo / "src" / "nested").mkdir()

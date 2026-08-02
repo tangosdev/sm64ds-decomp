@@ -59,7 +59,7 @@ jobs:
         run: |
           set -euo pipefail
           status=""
-          for i in $(seq 1 120); do   # up to ~20 min (120 * 10s)
+          for i in $(seq 1 240); do   # up to ~40 min (240 * 10s)
             r=$(curl -sS "$RELAY/api/pr-validate/$JOB" -H "X-Api-Key: $TOKEN")
             status=$(echo "$r" | jq -r '.status // empty')
             case "$status" in
