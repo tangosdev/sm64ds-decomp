@@ -10,10 +10,14 @@
  *   slot 1  0x02015cc4  ~Animation (D0)
  *
  * TWO slots, nothing else. The zero word after them is adjacent data,
- * not a pure-virtual slot: _ZTV15MaterialChanger is followed directly by
- * a typeinfo string with no third word at all, and a derived class
- * cannot lose an inherited virtual. The family's Update(ModelComponents&)
- * is a plain method, not an override.
+ * not a pure-virtual slot -- it is the offset-to-top word of the vtable
+ * that follows, and all three _ZThn80_ secondary-base tables are likewise
+ * two slots wide, which a derived table could not be if a third virtual
+ * existed. The family's Update(ModelComponents&) is a plain method, not
+ * an override. notes/model-rtti-names.md walks the pointers.
+ *
+ * The ROM's RTTI names this class dExtFrameCtrl_c -- a frame controller,
+ * i.e. the playback cursor, not the animation data.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
  * key-function arrangement from include/ModelBase.h. C1/C2/D0/D1/D2 stay
