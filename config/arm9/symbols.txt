@@ -3599,6 +3599,7 @@ data_0208e7ac kind:data(any) addr:0x0208e7ac
 _ZTV18TextureTransformer kind:data(any) addr:0x0208e7c4
 _ZTV15TextureSequence kind:data(any) addr:0x0208e7d4
 _ZTV9Animation kind:data(any) addr:0x0208e7e4
+data_0208e7e4 kind:data(any) addr:0x0208e7e4
 _ZTV15MaterialChanger kind:data(any) addr:0x0208e7f4
 data_0208e7fc kind:data(any) addr:0x0208e7fc
 data_0208e810 kind:data(any) addr:0x0208e810
