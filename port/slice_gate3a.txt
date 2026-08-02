@@ -1,0 +1,22 @@
+# Gate-3a slice: the ROOT HEAP bring-up and the Memory:: layer, on top of
+# gate 2's allocator family (the smoke links slice_gate2.txt as well).
+# The OS arena underneath is port/hal/os_arena.cpp.
+
+src/_ZN4Heap13SetupRootHeapEv.c
+src/_ZN4Heap14CreateRootHeapEPvj.c
+src/_ZN4Heap19CreateExpandingHeapEjPS_i.c
+src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.c
+src/_ZN4HeapC1EPvjP4Heap.c
+src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c
+src/_ZN13ExpandingHeap9VAllocateEji.cpp
+src/_ZN13ExpandingHeap11VDeallocateEPv.c
+src/_ZN13ExpandingHeap7VSizeofEPv.cpp
+src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp
+src/_ZN6Memory8AllocateEj.cpp
+src/_ZN6Memory8AllocateEji.cpp
+src/_ZN6Memory8AllocateEjiP4Heap.c
+src/_ZN6Memory10DeallocateEPv.cpp
+src/_ZN6Memory10DeallocateEPvP4Heap.cpp
+src/_ZN4Heap8AllocateEji.cpp
+src/_ZN4Heap10DeallocateEPv.cpp
+src/_ZN22ExpandingHeapAllocator10MemoryLeftEv.cpp

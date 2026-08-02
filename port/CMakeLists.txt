@@ -55,3 +55,25 @@ target_compile_definitions(smoke_heap PRIVATE SM64DS_PLATFORM_PC)
 if(MSVC)
     target_compile_options(smoke_heap PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
+
+# Gate 3a: root heap + Memory:: layer over the gate-2 allocator.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3a.txt" SLICE3A_LINES)
+set(SLICE3A_SOURCES "")
+foreach(line IN LISTS SLICE3A_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE3A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+add_executable(smoke_roots tests/smoke_roots.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES})
+target_include_directories(smoke_roots PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_compile_definitions(smoke_roots PRIVATE SM64DS_PLATFORM_PC)
+if(MSVC)
+    target_compile_options(smoke_roots PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
