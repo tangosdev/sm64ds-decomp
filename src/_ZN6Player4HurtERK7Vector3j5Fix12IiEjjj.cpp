@@ -35,7 +35,7 @@ extern "C" int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct Player *self, void
 
     hasCap = _ZN6Player8HasNoCapEv(((char*)self));
     if (hasCap != 0) goto L88;
-    if (self->mCharacter == self->mParam) goto L88;
+    if (self->mCharacter == self->param1) goto L88;
     if (self->mIsMetal != 0) goto L88;
     if (b == 0) goto L88;
 
@@ -80,7 +80,7 @@ L9c:
 
     if (b != 0) {
         int neq = 0;
-        if (self->mCharacter != self->mParam) neq = 1;
+        if (self->mCharacter != self->param1) neq = 1;
         if (neq) self->mStateStep = 2;
     }
     if ((int)b > 1) {
@@ -102,7 +102,7 @@ L9c:
     }
 
     if (arg4 == 1) {
-        u16 tv = data_ov002_020ff128[self->mParam];
+        u16 tv = data_ov002_020ff128[self->param1];
         dmg = (dmg * tv) / 100;
     }
     self->mHorzSpeed = dmg;

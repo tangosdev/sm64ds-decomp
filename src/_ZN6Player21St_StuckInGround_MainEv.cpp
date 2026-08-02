@@ -42,7 +42,7 @@ int Player::St_StuckInGround_Main()
         break;
     case 2:
         {
-            void* anim = *(void**)(((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0) << 2) + 0xdc);
+            void* anim = *(void**)(((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0) << 2) + 0xdc);
             if (_ZNK9Animation12WillHitFrameEi((char*)anim + 0x50, data_ov002_020ff0ec[mStateStep])) {
                 func_ov002_020c5444(((char*)this));
                 _ZN5Sound9PlayBank0EjRK7Vector3(0xb4, ((char*)this) + 0x74);

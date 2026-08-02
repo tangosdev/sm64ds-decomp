@@ -22,7 +22,7 @@ int Player::St_SlopeJump_Main()
   if(*(unsigned short*)((char*)data_0209f49e + data_020a0e40[0]*0x18) & 1){
     mPrevAngleY=mAngleY;
     if(mIsMega==0){
-      if(mParam==3){
+      if(param1==3){
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_02110034);
       }else{
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this),data_ov002_021105bc);

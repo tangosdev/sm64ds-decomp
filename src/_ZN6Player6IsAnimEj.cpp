@@ -7,7 +7,7 @@ extern int data_ov002_020ff480[];
 
 int Player::IsAnim(unsigned int a)
 {
-  int ip = mParam;
+  int ip = param1;
   int* p = (int*)data_ov002_020ff480[ip + a*4];
   int v = p[1];
   unsigned int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), ip&0xff, 0);

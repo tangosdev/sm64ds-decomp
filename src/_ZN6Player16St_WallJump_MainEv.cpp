@@ -31,7 +31,7 @@ int Player::St_WallJump_Main()
     }
     if (func_ov002_020e2664(((void*)this))) return 1;
     {
-      int idx = *(int*)((char*)&mParam);
+      int idx = *(int*)((char*)&param1);
       int* row = &data_ov002_0211073c[idx*2];
       int v = row[1];
       void* p = (char*)((void*)this) + (v>>1);

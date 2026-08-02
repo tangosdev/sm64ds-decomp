@@ -96,7 +96,7 @@ merge:
         }
     }
 
-    if (mParam == 1) {
+    if (param1 == 1) {
         if (mIsInShallowWater == 0) {
             unk_6ec = 1;
         }

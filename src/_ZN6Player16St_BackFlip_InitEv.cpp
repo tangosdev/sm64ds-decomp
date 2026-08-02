@@ -23,7 +23,7 @@ int Player::St_BackFlip_Init()
   *(char*)((char*)&mLandSoundPlayed)=0;
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), 0x2a, 0x40000000, 0x1000, 0);
   *(int*)((char*)&mVertSpeed)=0x3e000;
-  if (*(int*)((char*)&mParam)==1) *(int*)((char*)&mVertSpeed)=0x4c000;
+  if (*(int*)((char*)&param1)==1) *(int*)((char*)&mVertSpeed)=0x4c000;
   func_ov002_020e2ad0(((void*)this));
   *(int*)((char*)&mHorzSpeed)=0x10000;
   *(short*)((char*)&mPrevAngleY) = *(short*)((char*)&mAngleY) + 0x8000;

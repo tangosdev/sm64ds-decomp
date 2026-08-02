@@ -44,7 +44,7 @@ int Player::St_HoldHeavy_Main()
             if (_ZN6Player12FinishedAnimEv(((char*)this))) {
                 mStateStep = 1;
             } else {
-                u32 arg = (u8)mParam;
+                u32 arg = (u8)param1;
                 int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
                 char* animPtr = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
                 if (_ZNK9Animation12WillHitFrameEi(animPtr, 6)) {
@@ -78,7 +78,7 @@ int Player::St_HoldHeavy_Main()
             s16 t = *(s16*)((char*)data_0209f4a0 + off);
             if (t != 0) {
                 ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x400);
-                var_r1 = data_ov002_020ff1d0[mParam];
+                var_r1 = data_ov002_020ff1d0[param1];
             }
         }
     }
@@ -97,7 +97,7 @@ int Player::St_HoldHeavy_Main()
 
     if (mHorzSpeed == 0) {
         mAngleY = mPrevAngleY;
-    } else if (mParam == 1) {
+    } else if (param1 == 1) {
         ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 0x10, 0x1000, 0x100);
     } else {
         ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x400);
@@ -106,7 +106,7 @@ int Player::St_HoldHeavy_Main()
     if (mHorzSpeed == 0) {
         if (_ZN6Player12FinishedAnimEv(((char*)this)) ||
             !_ZN9Animation8GetFlagsEv(
-                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)mParam, 0) * 4 + 0xdc) + 0x50)) {
+                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4 + 0xdc) + 0x50)) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_020ff254[mStateWork + 2], 0, 0x1000, 0);
         }
     } else {

@@ -22,23 +22,23 @@ void Player::SetRealCharacter(unsigned int chr_)
 {
     u32 chr = (u32)chr_;
 
-    u32 cur = mParam;
+    u32 cur = param1;
     u32 base = mCharFileBase;
     u32 m1, m2;
 
     _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[base + (cur & 3)]);
     _ZN6Player18SetNewHatCharacterEjjb(((char *)this), chr, 0, 1);
-    mParam = chr;
+    param1 = chr;
     mCharacter = (u8)chr;
-    data_02092128[mPlayerNo] = (u8)mParam;
-    data_0209caa0[0x41] = (u8)mParam;
-    _ZN9Animation8LoadFileER13SharedFilePtr(*data_ov002_020ff480[mCharFileBase + (mParam & 3)]);
+    data_02092128[mPlayerNo] = (u8)param1;
+    data_0209caa0[0x41] = (u8)param1;
+    _ZN9Animation8LoadFileER13SharedFilePtr(*data_ov002_020ff480[mCharFileBase + (param1 & 3)]);
     func_ov002_020e6330(((char *)this));
     _ZN6Player4HealEi(((char *)this), 0x880);
     unk_73c = 0;
 
     m1 = _ZNK6Player14GetBodyModelIDEjb(((char *)this), chr, 0);
-    m2 = _ZNK6Player14GetBodyModelIDEjb(((char *)this), mParam & 0xff, 0);
+    m2 = _ZNK6Player14GetBodyModelIDEjb(((char *)this), param1 & 0xff, 0);
     _ZN10ModelAnim24CopyERKS_Pcj(
         *(void **)(((char *)this) + m1 * 4 + 0xdc),
         *(void **)(((char *)this) + m2 * 4 + 0xdc),

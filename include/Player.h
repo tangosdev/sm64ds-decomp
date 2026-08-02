@@ -16,6 +16,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "types.h"
+#include "Actor.h"
 
 /* fwd */
 struct Actor;
@@ -47,55 +48,12 @@ struct pos_;
 struct v;
 struct v_;
 struct x;
-struct Player {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    /* 0x00c..0x05b. unk_00c, unk_030 and mModelAnim1 used to be named in here.
-       Their only evidence was src/_ZN6Player6ST_OWLE.c, which is ov006 code
-       carrying a Player name -- it reads 0x08/0x0c as a fix12 2D coordinate
-       pair, which cannot be ActorBase's param1 and actorID. That file now uses
-       its own local struct, and nothing else referenced these three. */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0xc];
-    /* 0x074..0x07f is a Vector3, not a byte plus padding: 13 files take
-       &mCamSpacePosX and cast it to Vector3* for Sound::PlayCharVoice and
-       friends. Named to match Actor.h, which decomposes the same bytes into
-       mCamSpacePosX / Y / Z. */
-    s32 mCamSpacePosX;      /* 0x074 */
-    s32 mCamSpacePosY;      /* 0x078 */
-    s32 mCamSpacePosZ;      /* 0x07c */
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    /* 0x092..0x097 is a prev-angle triple. 0x094 was called mTargetAngleY here
-       and mPrevAngleY in Actor.h; the two had to agree before Player can
-       inherit these bytes. Renamed to mPrevAngleY on the structural argument:
-       its siblings at 0x092 and 0x096 are unambiguously mPrevAngleX/Z, and
-       Player uses 0x094 exactly as it uses them -- `mPrevAngleY = mAngleY` to
-       save and `mAngleY = mPrevAngleY` to restore, mirroring
-       `mAngleX = mPrevAngleX`. It is also assigned from mDesiredAngleY, which
-       reads as a target, but a previous-angle slot being reused to stage a
-       desired angle is ordinary; a prev-triple with a target in the middle is
-       not. Names cannot change codegen, so this is reversible. */
-    s16 mPrevAngleX;        /* 0x092 */
-    s16 mPrevAngleY;        /* 0x094 */
-    s16 mPrevAngleZ;        /* 0x096 */
-    s32 mHorzSpeed;            /* 0x098 */
-    s32 mVertAccel;            /* 0x09c */
-    s32 mTerminalVelocity;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    u32 mFlags;             /* 0x0b0 -- bitwise: `&= ~0x80`, `& 0x10` */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x3];
+struct Player : Actor {
+    /* 0x000..0x0cf is Actor's, inherited rather than duplicated. It used to be
+       written out inline here -- mParam at 0x008 was ActorBase's param1, mPosX
+       at 0x05c was Actor's, and so on. The names were reconciled first so that
+       deleting the block is all that happens here. sizeof(Actor) is 0xd0, so
+       Player's own fields start exactly where the base ends. */
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x8];
     u8  mBodyModels;            /* 0x0dc */
@@ -339,14 +297,36 @@ struct Player {
     u8  unk_764;            /* 0x764 */
     u8  pad_765[0x1];
     s16 unk_766;            /* 0x766 */
-#ifdef __cplusplus
     /* methods */
+    /* --- vtable. _ZTV6Player (0x0210a83c, ov002) is Actor's 31 slots with
+           eight overridden and NO new virtuals; see notes/actor-vtables.md.
+
+           The destructor is declared FIRST on purpose. CW 1.2 emits the vtable
+           into the translation unit that DEFINES the first non-inline virtual
+           declared -- the key function -- and that copy collides with the one
+           the module's gap object supplies from ROM data. Because Player only
+           overrides, an override takes its base's slot wherever it is declared,
+           so putting ~Player first costs nothing and pins the key function to
+           the destructor, which is only ever defined as an extern "C" free
+           function in D0Ev/D2Ev, never as Player::~Player.
+
+           So: ~Player must never be defined ANYWHERE, including inline. An
+           inline definition would shift key-function status to Behavior, which
+           IS a real method, and emit a duplicate vtable. --- */
+    virtual ~Player();                  /* slots 16, 17 */
+    virtual s32  InitResources();       /* slot  0 */
+    virtual s32  CleanupResources();    /* slot  3 */
+    virtual s32  Behavior();            /* slot  6 */
+    virtual s32  Render();              /* slot  9 */
+    virtual void OnPendingDestroy();    /* slot 12 */
+    virtual int  OnYoshiTryEat();       /* slot 18 -- int, not u32: it overrides
+                                           Actor::OnYoshiTryEat and CW rejects a
+                                           mismatched return type on an override */
+
     int * TryExitCharacterDoorWithIntro();
-    int Behavior();
     int Burn();
     int CanPause();
     int CanWarp();
-    int CleanupResources();
     int DropActor();
     int FinishedAnim();
     int GetHealth();
@@ -368,7 +348,6 @@ struct Player {
     int IsStateEnteringLevel();
     int JumpIntoBooCage(Vector3 & v_);
     int LostGrabbedObject();
-    int Render();
     int SetNoControlState(unsigned char a_, int b, unsigned char c_);
     int Shock(unsigned int j);
     int ShowMessage(ActorBase & a_, unsigned int b, const Vector3 * v, unsigned int d_, unsigned int e_);
@@ -532,7 +511,6 @@ struct Player {
     s32 St_LevelEnter_Cleanup();
     s32 St_Null_Cleanup();
     s32 St_Null_Main();
-    u32 OnYoshiTryEat();
     unsigned int GetBodyModelID(unsigned int a, bool b_) const;
     void BlowAway(short v);
     void EnterWhirlpool();
@@ -542,7 +520,6 @@ struct Player {
     void InitMetalWario();
     void InitVanishLuigi();
     void InitWingFeathers(bool b_);
-    void OnPendingDestroy();
     void OpenBigDoor();
     void PlayMammaMiaSound();
     void RegisterEggCoinCount(unsigned int count, bool b2, bool b3);
@@ -554,7 +531,6 @@ struct Player {
     void St_WallJump_Init();
     void TurnOffToonShading(unsigned int j);
     void Unk_020ca488();
-#endif
 };
 
 /* Offsets seen through this-pointer but far outside the object - almost

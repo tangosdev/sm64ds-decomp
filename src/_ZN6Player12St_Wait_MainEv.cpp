@@ -55,7 +55,7 @@ int Player::St_Wait_Main()
 
     case 8: {
         if (!(*(unsigned short*)(data_0209f49c+data_020a0e40*0x18) & 0x800) &&
-            _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0)) {
+            _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0)) {
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2c, ((char*)this)+0x74);
         }
     }
@@ -124,7 +124,7 @@ int Player::St_Wait_Main()
             mStateStep = 2;
         }
         {
-        unsigned int x1 = mParam;
+        unsigned int x1 = param1;
         switch (x1) {
         default:
             break;
@@ -133,8 +133,8 @@ int Player::St_Wait_Main()
             void* animA = *(void**)(((char*)this)+(idA<<2)+0xdc);
             if (_ZNK9Animation12WillHitFrameEi((char*)animA+0x50, 0x5a)) {
                 _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2d, ((char*)this)+0x74);
-            } else if (_ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0x3a)
-                    || _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0x44)) {
+            } else if (_ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x3a)
+                    || _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x44)) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(4, ((char*)this)+0x74);
             }
             break;
@@ -145,7 +145,7 @@ int Player::St_Wait_Main()
             if (_ZNK9Animation12WillHitFrameEi((char*)animD+0x50, 0x6e)) {
                 _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2d, ((char*)this)+0x74);
             } else {
-                int idE = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam&0xff, 0);
+                int idE = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1&0xff, 0);
                 void* animE = *(void**)(((char*)this)+(idE<<2)+0xdc);
                 if (_ZNK9Animation12WillHitFrameEi((char*)animE+0x50, 0x32)) {
                     _ZN5Sound9PlayBank0EjRK7Vector3(0xb1, ((char*)this)+0x74);
@@ -158,8 +158,8 @@ int Player::St_Wait_Main()
             void* animF = *(void**)(((char*)this)+(idF<<2)+0xdc);
             if (_ZNK9Animation12WillHitFrameEi((char*)animF+0x50, 0x20)) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(2, ((char*)this)+0x74);
-            } else if (_ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0x47)
-                    || _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0x60)) {
+            } else if (_ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x47)
+                    || _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0x60)) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(3, ((char*)this)+0x74);
             }
             break;
@@ -183,7 +183,7 @@ int Player::St_Wait_Main()
 
     case 2: {
         if (unk_723==0 &&
-            _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 1)) {
+            _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 1)) {
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2a, ((char*)this)+0x74);
         }
         {
@@ -244,7 +244,7 @@ int Player::St_Wait_Main()
         if (unk_6e6 == 0) {
             func_ov002_020d2f24(((char*)this));
             if (unk_723==0 &&
-                _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),mParam&0xff,0)<<2)+0xdc))+0x50, 0xd)) {
+                _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0xd)) {
                 _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2b, ((char*)this)+0x74);
             }
         }

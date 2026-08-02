@@ -55,7 +55,7 @@ int Player::St_HoldLight_Main()
                 mHorzSpeed = 0;
                 mStateStep = 1;
             } else {
-                u32 arg = (u8)mParam;
+                u32 arg = (u8)param1;
                 int modelIdx = _ZNK6Player14GetBodyModelIDEjb(((char*)this), arg, 0);
                 char* anim = *(char**)(((char*)this) + modelIdx * 4 + 0xdc) + 0x50;
                 if (_ZNK9Animation12WillHitFrameEi(anim, 6)) {
@@ -88,7 +88,7 @@ int Player::St_HoldLight_Main()
             mStateArg = 0;
         }
         ApproachAngle((short*)((char*)&mPrevAngleY), t, 4, 0x2000, 0x800);
-        var_r4 = data_ov002_020ff1c0[mParam];
+        var_r4 = data_ov002_020ff1c0[param1];
     }
 
     if (*((u8*)data_0209f4ac + data_020a0e40 * 0x18) == 0) {
@@ -139,14 +139,14 @@ int Player::St_HoldLight_Main()
     if (mHorzSpeed == 0) {
         if (_ZN6Player12FinishedAnimEv(((char*)this)) ||
             !_ZN9Animation8GetFlagsEv(
-                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)mParam, 0) * 4 + 0xdc) + 0x50)) {
+                *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4 + 0xdc) + 0x50)) {
             int* light = *(int**)((char*)&mHeldObj);
             u32 animId = 0x33;
             if (light != 0) {
                 int b = (*(int*)((char*)light + 0xb0) & 0x8000) != 0;
                 if (b) {
                     animId = 0x87;
-                    if (mParam == 2) {
+                    if (param1 == 2) {
                         int b2 = (*(u16*)((char*)light + 0xc) == 0xce);
                         if (b2) {
                             animId = 0x33;

@@ -38,13 +38,13 @@ int Player::St_Grabbed_Main()
     }
 
     if (mStateTimer != 0) {
-        id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+        id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
         model = *(char**)(((char*)this) + (id << 2) + 0xdc);
         pRate = (int*)(model + 0x50);
         pRate = (int*)((char*)pRate + 0xc);
         *pRate = 0x4000;
     } else {
-        id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+        id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
         model = *(char**)(((char*)this) + (id << 2) + 0xdc);
         pRate = (int*)(model + 0x50);
         pRate = (int*)((char*)pRate + 0xc);
