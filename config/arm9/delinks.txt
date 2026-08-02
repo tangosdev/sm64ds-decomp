@@ -2120,7 +2120,7 @@ src/_ZN11CommonModelC1Ev.c:
     complete
     .text start:0x02016204 end:0x02016254
 
-src/_ZN10ModelAnim24CopyERKS_Pcj.c:
+src/_ZN10ModelAnim24CopyERKS_Pcj.cpp:
     complete
     .text start:0x02016254 end:0x0201628c
 
@@ -2152,21 +2152,21 @@ src/_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt.cpp:
     complete
     .text start:0x020163e0 end:0x0201647c
 
-src/_ZN14BlendModelAnim7AdvanceEv.c:
+src/_ZN14BlendModelAnim7AdvanceEv.cpp:
     complete
     .text start:0x0201647c end:0x020164b0
 
-src/_ZN14BlendModelAnim9Virtual18EjPK7Vector3.c:
+src/_ZN14BlendModelAnim9Virtual18EjPK7Vector3.cpp:
     .text start:0x020164b0 end:0x020164e4
 
-src/_ZN14BlendModelAnim6RenderEPK7Vector3.c:
+src/_ZN14BlendModelAnim6RenderEPK7Vector3.cpp:
     .text start:0x020164e4 end:0x02016518
 
-src/_ZN14BlendModelAnim9Virtual10ER9Matrix4x3.c:
+src/_ZN14BlendModelAnim9Virtual10ER9Matrix4x3.cpp:
     complete
     .text start:0x02016518 end:0x02016578
 
-src/_ZN14BlendModelAnim11UpdateVertsEv.c:
+src/_ZN14BlendModelAnim11UpdateVertsEv.cpp:
     complete
     .text start:0x02016578 end:0x020165c4
 
@@ -2174,7 +2174,7 @@ src/func_020165c4.c:
     complete
     .text start:0x020165c4 end:0x02016604
 
-src/_ZN14BlendModelAnim9DoSetFileEPcii.c:
+src/_ZN14BlendModelAnim9DoSetFileEPcii.cpp:
     complete
     .text start:0x02016604 end:0x02016644
 
@@ -2189,7 +2189,7 @@ src/_ZN14BlendModelAnimC1Ev.c:
     complete
     .text start:0x020166d4 end:0x02016714
 
-src/_ZN9ModelAnim4CopyERKS_Pc.c:
+src/_ZN9ModelAnim4CopyERKS_Pc.cpp:
     complete
     .text start:0x02016714 end:0x02016748
 
@@ -2201,17 +2201,17 @@ src/func_020167a4.c:
     complete
     .text start:0x020167a4 end:0x020167c4
 
-src/_ZN9ModelAnim9Virtual18EjPK7Vector3.c:
+src/_ZN9ModelAnim9Virtual18EjPK7Vector3.cpp:
     .text start:0x020167c4 end:0x020167f8
 
-src/_ZN9ModelAnim6RenderEPK7Vector3.c:
+src/_ZN9ModelAnim6RenderEPK7Vector3.cpp:
     .text start:0x020167f8 end:0x0201682c
 
-src/_ZN9ModelAnim9Virtual10ER9Matrix4x3.c:
+src/_ZN9ModelAnim9Virtual10ER9Matrix4x3.cpp:
     complete
     .text start:0x0201682c end:0x0201686c
 
-src/_ZN9ModelAnim11UpdateVertsEv.c:
+src/_ZN9ModelAnim11UpdateVertsEv.cpp:
     complete
     .text start:0x0201686c end:0x0201689c
 

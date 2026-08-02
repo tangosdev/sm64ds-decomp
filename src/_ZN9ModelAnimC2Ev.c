@@ -1,25 +1,25 @@
 // @symbol _ZN9ModelAnimC2Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_Animation.h"
-#include "decl_Model.h"
-#include "decl_common.h"
-/* recovered: named members + shared header */
-#include "ModelAnim.h"
-
-
-typedef struct {
-    unsigned int* vtable;
+/* Stays a mangled free function: the destructor is ModelAnim's key
+ * function, and with MI both vtables AND the _ZThn80_ thunks are emitted
+ * with it, so the structors staying C files keeps all four ROM-supplied.
+ * See include/ModelAnim.h. */
+struct ModelAnim {
+    unsigned int *vtable;          /* 0x00 */
     char pad_model[0x4c];
-    unsigned int* anim_vtable;
+    unsigned int *anim_vtable;     /* 0x50 */
     char pad_anim[0xc];
-    unsigned int unk60;
-} ModelAnim;
+    unsigned int file;             /* 0x60 */
+};
+extern struct ModelAnim *_ZN5ModelC2Ev(struct ModelAnim *self);
+extern void _ZN9AnimationC2Ev(void *anim);
+extern unsigned int _ZTV9ModelAnim[];
+extern unsigned int VTable_Animation_ModelAnimThunk[];
 
-ModelAnim* _ZN9ModelAnimC2Ev(struct ModelAnim *self) {
-    _ZN5ModelC2Ev(((ModelAnim*)self));
-    _ZN9AnimationC2Ev((char*)&self->mAnimation);
-    ((ModelAnim*)self)->vtable = _ZTV9ModelAnim;
-    ((ModelAnim*)self)->anim_vtable = VTable_Animation_ModelAnimThunk;
-    ((ModelAnim*)self)->unk60 = 0;
-    return ((ModelAnim*)self);
+struct ModelAnim *_ZN9ModelAnimC2Ev(struct ModelAnim *self) {
+    _ZN5ModelC2Ev(self);
+    _ZN9AnimationC2Ev((char *)self + 0x50);
+    self->vtable = _ZTV9ModelAnim;
+    self->anim_vtable = VTable_Animation_ModelAnimThunk;
+    self->file = 0;
+    return self;
 }

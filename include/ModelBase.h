@@ -44,6 +44,8 @@
 
 #ifdef __cplusplus
 
+struct BCA_File;
+
 /* 0x14 bytes, at +0x8 of a Model (embedded) or behind +0x8 of a CommonModel
    or ShadowModel (pointer to a pool entry from func_02016e70). The runtime
    view of a loaded model: built from the BMD file by func_020462d0,
@@ -56,6 +58,7 @@ struct ModelComponents {
     void *unk_10;               /* 0x10 */
 
     void UpdateVertsUsingBones();               /* 0x02044dcc */
+    void UpdateBones(BCA_File *file, int frame);
     void Render(Matrix4x3 *mat, Vector3 *scale); /* 0x020443c8 */
 };
 

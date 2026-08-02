@@ -10,10 +10,11 @@
  *   slot 1  0x02015cc4  ~Animation (D0)
  *   slot 2  0x00000000  pure virtual
  *
- * Abstract: slot 2 is null here and every derived family fills it (the
- * MaterialChanger/TextureSequence group overrides it with their
- * Update(ModelComponents &)). It keeps a neutral name until that family
- * converts and pins the signature.
+ * Slot 2 is null here and the MaterialChanger/TextureSequence family
+ * overrides it with their Update(ModelComponents &); it keeps a neutral
+ * name until that family converts and pins the signature. It is NOT
+ * declared pure even though the slot is null, because ModelAnim2 embeds
+ * a bare Animation as a data member.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
  * key-function arrangement from include/ModelBase.h. C1/C2/D0/D1/D2 stay
@@ -47,7 +48,12 @@ struct Animation {
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~Animation();                /* slots 0 (D1), 1 (D0) */
-    virtual void Virtual08() = 0;        /* slot 2 - null in the ROM table */
+    virtual void Virtual08();            /* slot 2 - null in the ROM table.
+                                            Never defined anywhere; it reads
+                                            as pure, but ModelAnim2 embeds a
+                                            bare Animation member (built with
+                                            C1), so it cannot be declared
+                                            pure here. */
 
     /* --- non-virtual --- */
     void SetAnimation(u16 numFrames, int flags, Fix12<int> speed,
