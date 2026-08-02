@@ -31,6 +31,7 @@ start converting a class; the same staleness rule applies.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| itcm MeshCollider methods (0x01ffb0d0-0x01ffd97c) | andrewboudreau | 2026-08-01 | **active** — first matches in `arm9/itcm`, which was 0/41. Five accessors done and byte-verified. `DetectClsn(RaycastLine&)` attempted and NOT matched: structure fully recovered, tip banked at div=476, blocked on a 0xc4 frame where the ROM has 0xfc. See `notes/itcm.md`. **Overlaps the collision-chain class claim above**: this pass adds `include/MeshCollider.h` as a real polymorphic class because the `GetSurfaceInfo` match needs a genuine virtual call, but deliberately does NOT split `MeshColliderBase` out — that derivation is read out of the ROM and written up in the header comment for whoever does the chain |
 | ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 |---|---|---|---|
 | ov002 func_ov002_020d6dac (0x020d6dac, size 0x284) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56** and 1.2/sp2p3); lever: m2i=load+0x90 before GetBodyModelID + Mul temps a0/a1/a2 for r0-scale/arg order; from near-miss div=7→4→0; API clm_d3cd782ed8b6 kept |
