@@ -10,12 +10,10 @@
  *
  * VTABLE, 13 slots, read out of the ROM:
  *
- *   slot  0/1  ~MeshColliderBase (the single body serves as D1 and D2:
- *              for a most-base class they are byte-identical and only one
- *              was ever emitted; the symbol is named D2Ev, and the vtable
- *              word is that same address)
+ *   slot  0/1  ~MeshColliderBase (see THE TWO DESTRUCTOR BODIES below)
  *   slot  2    Virtual08()                      - no-op here
- *   slot  3    null - pure; derived tables hold an ITCM routine (0x01ffd920)
+ *   slot  3    null - pure; derived tables hold GetSurfaceInfo in ITCM
+ *              (0x01ffd920, named in config/arm9/itcm/symbols.txt)
  *   slot  4    null - pure; GetNormal(s16, Vector3 &) in derived tables
  *   slot  5    null - pure; GetTriangleOrigin(s16, Vector3 &) in derived
  *   slot  6    DetectClsn(RaycastGround &)      - returns false here
@@ -29,6 +27,22 @@
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
  * key-function arrangement from include/ModelBase.h.
  *
+ * THE TWO DESTRUCTOR BODIES. Both are `ldr r1,[pc,#4]; str r1,[r0]; bx lr'
+ * storing the vtable word, and they are byte-identical -- but the compiler
+ * emitted BOTH, so this is not a one-body alias:
+ *
+ *   0x0203968c  sits in vtable slot 0, and nothing bl's it   -> D1
+ *   0x02039658  bl'd by MeshCollider's D0/D1/D2, never in a
+ *               vtable (currently named func_02039658)       -> D2
+ *
+ * By the #774 rule (a class vtable carries [D1, D0] and never D2; D2 is
+ * reached by direct call alone) the symbol names are on the wrong bodies:
+ * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD2Ev'. Correcting that
+ * pair is a symbols.txt rename, deliberately left to its own change so this
+ * one stays byte-neutral. MeshCollider next door emits a byte-identical
+ * D1/D2 pair too (0x02039864 in the vtable, 0x020397fc direct-called), so
+ * "only one body is ever emitted" does not hold for this family.
+ *
  * LAYOUT is pinned by the shared init func_02039624 (called from C2) and
  * Enable/Disable/IsEnabled: 0x18 in the slot byte means "not enabled",
  * and enabled colliders live in the 0x18-entry table at data_020a0c80.
@@ -41,6 +55,7 @@ struct ClsnResult;
 struct RaycastGround;
 struct RaycastLine;
 struct SphereClsn;
+struct SurfaceInfo;
 
 #ifndef VECTOR3_16_DEFINED
 #define VECTOR3_16_DEFINED
@@ -64,7 +79,7 @@ struct MeshColliderBase {
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~MeshColliderBase();                          /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
-    virtual void Virtual0C() = 0;                         /* slot 3 - ITCM in derived */
+    virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res) = 0; /* slot 3 - ITCM in derived */
     virtual void GetNormal(s16 triID, Vector3 &res) = 0;  /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res) = 0; /* slot 5 */
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 */

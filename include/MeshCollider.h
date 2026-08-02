@@ -9,7 +9,9 @@
  * workers (the three pures at slots 3..5 and the DetectClsn triple at
  * 6..8) from ITCM - 0x01ffd920, 0x01ffd8d8, 0x01ffd890, 0x01ffd3f8,
  * 0x01ffb0fc, 0x01ffb830 - which is why those overrides are declared
- * here but defined nowhere in src/ yet. Slots 9..12 stay on the base
+ * here but defined nowhere in src/ yet. config/arm9/itcm/symbols.txt
+ * already names slot 3's: _ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo,
+ * i.e. GetSurfaceInfo(s16, SurfaceInfo &). Slots 9..12 stay on the base
  * implementations.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
@@ -64,7 +66,7 @@ struct MeshCollider : MeshColliderBase {
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~MeshCollider();                              /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
-    virtual void Virtual0C();                             /* slot 3 - ITCM */
+    virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res); /* slot 3 - ITCM */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 - ITCM */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 - ITCM */
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - ITCM */

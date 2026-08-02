@@ -8,7 +8,8 @@
 /* The moving-mesh collider, vtable _ZTV18MovingMeshCollider at 0x02099434.
  * Derives from MeshCollider (SetFile chains to MeshCollider::SetFile and
  * the fields start at exactly 0x50); ExtendingMeshCollider derives from
- * this in turn. Overrides every slot except BeforeClsn.
+ * this in turn. Overrides every slot except BeforeClsn (slot 9) and
+ * GetSurfaceInfo (slot 3), both of which it inherits unchanged.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
  * include/ModelBase.h. The structors stay C files.
@@ -45,7 +46,8 @@ struct MovingMeshCollider : MeshCollider {
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~MovingMeshCollider();                        /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
-    virtual void Virtual0C();                             /* slot 3 - ITCM 0x01ffd920 */
+    /* slot 3 GetSurfaceInfo is NOT overridden: this table's word is
+       0x01ffd920, the same one MeshCollider holds, so it is inherited. */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 */
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - free def */
