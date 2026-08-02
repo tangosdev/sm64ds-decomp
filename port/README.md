@@ -34,6 +34,7 @@ game data. `build-port.cmd` builds all of them into `build\port\`.
 | 5 | `smoke_frames` | the fiber frame loop: game-shaped frames, the piano attack in motion |
 | 5b | `smoke_soak_anim` | every compatible model+BCA pair: 472/473 animate, zero faults |
 | 6 | `smoke_oam` | the 2D sprite engine: OAM emit, affine params, upload to mapped OAM |
+| 6b | `smoke_oam` | OBJ scan-out: the game's sprite placements become pixels |
 
 Supporting machinery: `tools/hostgen.py` (MMIO transform into the build
 tree; src/ is never edited), `tools/romdata.py` (ROM constants from the
