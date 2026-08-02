@@ -3144,7 +3144,7 @@ src/_ZN7Message12UpdateWindowEv.cpp:
 src/_ZN7Message6UpdateEv.cpp:
     .text start:0x0201c0b8 end:0x0201cb2c
 
-src/func_0201cb2c.c:
+src/engine/message/func_0201cb2c.c:
     complete
     .text start:0x0201cb2c end:0x0201cb7c
 
@@ -3270,7 +3270,7 @@ src/LoadFont.cpp:
     complete
     .text start:0x0201fcd4 end:0x0201fe08
 
-src/func_0201fe08.c:
+src/engine/message/func_0201fe08.c:
     complete
     .text start:0x0201fe08 end:0x0201fec8
 
