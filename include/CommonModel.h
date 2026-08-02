@@ -25,11 +25,11 @@
  * mat4x3 landing at +0xc is what pins the components as a pointer here and
  * rules the embedded struct out of ModelBase.
  *
- * Func_0201609C and Func_020160AC keep their placeholder names for now, but
- * the bodies are Model::SetPolygonID and the material-flag OR pass: both
- * are called from DoSetFile at exactly the positions Model::DoSetFile calls
- * its counterparts. Renaming them is a symbols.txt change and wants its own
- * PR with the S0_ lesson applied.
+ * Func_020160AC keeps its placeholder name for now, but
+ * its body is the material-flag OR pass, called from DoSetFile exactly
+ * where Model::DoSetFile calls its counterpart; it waits for a
+ * human-approved name. SetPolygonID's rename had airtight evidence:
+ * identical callee, identical call position.
  */
 
 #ifdef __cplusplus
@@ -44,7 +44,7 @@ struct CommonModel : ModelBase {
 
     /* --- non-virtual --- */
     void Render(const Vector3 *scale);
-    void Func_0201609C(u32 id);      /* SetPolygonID by body */
+    void SetPolygonID(u32 id);
     void Func_020160AC(u32 flags);   /* ORs flags into every material */
 };
 

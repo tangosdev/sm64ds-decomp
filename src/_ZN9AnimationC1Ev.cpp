@@ -5,9 +5,9 @@
  * class vtable over the gap object's ROM copy. See include/ModelBase.h. */
 #include "Animation.h"
 extern "C" {
-extern int data_0208e7e4[];   /* vtable for Animation */
+extern int _ZTV9Animation[];   /* vtable for Animation */
 void _ZN9AnimationC1Ev(Animation *self) {
-  *(int*)((char*)self) = (int)data_0208e7e4;
+  *(int*)((char*)self) = (int)_ZTV9Animation;
   *(int*)((char*)&self->currFrame) = 0;
   *(int*)((char*)&self->speed) = 0x1000;
 }

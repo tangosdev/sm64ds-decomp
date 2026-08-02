@@ -550,7 +550,7 @@ _ZN11ShadowModel9DoSetFileEPcii kind:function(arm,size=0x8c) addr:0x02015ef4
 _ZN11ShadowModelD0Ev kind:function(arm,size=0x78) addr:0x02015f80
 _ZN11ShadowModelD1Ev kind:function(arm,size=0x70) addr:0x02015ff8
 _ZN11ShadowModelC1Ev kind:function(arm,size=0x34) addr:0x02016068
-_ZN11CommonModel13Func_0201609CEj kind:function(arm,size=0x10) addr:0x0201609c
+_ZN11CommonModel12SetPolygonIDEj kind:function(arm,size=0x10) addr:0x0201609c
 _ZN11CommonModel13Func_020160ACEj kind:function(arm,size=0x58) addr:0x020160ac
 _ZN11CommonModel6RenderEPK7Vector3 kind:function(arm,size=0x40) addr:0x02016104
 _ZN11CommonModel9DoSetFileEPcii kind:function(arm,size=0x70) addr:0x02016144
@@ -3598,7 +3598,7 @@ data_0208e7a0 kind:data(any) addr:0x0208e7a0
 data_0208e7ac kind:data(any) addr:0x0208e7ac
 _ZTV18TextureTransformer kind:data(any) addr:0x0208e7c4
 _ZTV15TextureSequence kind:data(any) addr:0x0208e7d4
-data_0208e7e4 kind:data(any) addr:0x0208e7e4
+_ZTV9Animation kind:data(any) addr:0x0208e7e4
 _ZTV15MaterialChanger kind:data(any) addr:0x0208e7f4
 data_0208e7fc kind:data(any) addr:0x0208e7fc
 data_0208e810 kind:data(any) addr:0x0208e810

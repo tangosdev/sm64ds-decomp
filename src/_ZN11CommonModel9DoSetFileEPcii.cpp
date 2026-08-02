@@ -13,6 +13,6 @@ int CommonModel::DoSetFile(char *file, int a, int b)
         Func_020160AC(0x8000);
     if (b < 0)
         return 1;
-    Func_0201609C((u32)b & 0xff);
+    SetPolygonID((u32)b & 0xff);
     return 1;
 }

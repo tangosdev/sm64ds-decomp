@@ -841,7 +841,7 @@ extern int data_0208e380;
 extern int data_0208e430;
 extern int data_0208e434;
 extern int data_0208e6ec[];
-extern int data_0208e7e4[];
+extern int _ZTV9Animation[];
 extern int data_0209212c;
 extern int data_02099338;
 extern int data_02099348;

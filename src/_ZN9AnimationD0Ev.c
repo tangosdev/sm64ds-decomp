@@ -8,11 +8,11 @@
  * Call target: 0x0203cbcc
  */
 struct Obj { void *vtable; };
-extern int data_0208e7e4[];                            /* vtable for Animation */
+extern int _ZTV9Animation[];                            /* vtable for Animation */
 extern void _ZN6Memory16operator_delete2EPv(void *p);  /* 0x0203cbcc */
 struct Obj *_ZN9AnimationD0Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)data_0208e7e4;
+    thiz->vtable = (void *)_ZTV9Animation;
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

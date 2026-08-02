@@ -2092,7 +2092,7 @@ src/_ZN11ShadowModelC1Ev.c:
     complete
     .text start:0x02016068 end:0x0201609c
 
-src/_ZN11CommonModel13Func_0201609CEj.cpp:
+src/_ZN11CommonModel12SetPolygonIDEj.cpp:
     complete
     .text start:0x0201609c end:0x020160ac
 

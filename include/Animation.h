@@ -4,7 +4,7 @@
 #include "types.h"
 #include "math/Fix12.h"
 
-/* The animation-playback root, vtable data_0208e7e4:
+/* The animation-playback root, vtable _ZTV9Animation:
  *
  *   slot 0  0x02015ce8  ~Animation (D1)
  *   slot 1  0x02015cc4  ~Animation (D0)
