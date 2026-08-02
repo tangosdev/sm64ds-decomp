@@ -1,0 +1,14 @@
+# Gate-6 slice: the 2D sprite engine's software side -- OAM shadow
+# management, sprite emission, affine params, upload to mapped OAM.
+# OAM::Load reads POWCNT textually, so it builds via hostgen (CMake list);
+# the ov-coupled entry points (RenderOamBothScreens, OAM::SECOND) wait for
+# the overlay story.
+
+src/_ZN3OAM5ResetEv.cpp
+src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
+src/_ZN3OAM11GetObjWidthEii.c
+src/_ZN3OAM12GetObjHeightEii.c
+src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.c
+src/_ZN3OAM5FlushEv.c
+src/func_020566dc.c
+src/func_02056674.c

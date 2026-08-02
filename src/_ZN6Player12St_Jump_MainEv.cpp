@@ -51,7 +51,7 @@ int Player::St_Jump_Main()
       }
 
       {
-        u32 id = _ZNK6Player14GetBodyModelIDEjb(((void*)this), *(u32*)((char*)&mParam) & 0xff, 0);
+        u32 id = _ZNK6Player14GetBodyModelIDEjb(((void*)this), *(u32*)((char*)&param1) & 0xff, 0);
         void* anim = *(void**)((char*)((void*)this) + (id << 2) + 0xdc);
         u32 w = *(u32*)((char*)(((long long)(int)((char*)anim + 0x50))) + 8);
         u16 t = (u16)(w >> 12);
@@ -60,7 +60,7 @@ int Player::St_Jump_Main()
         }
       }
     } else {
-      int idx = *(int*)((char*)&mParam);
+      int idx = *(int*)((char*)&param1);
       if (*(u8*)((char*)&mIsMega) != 0) {
         idx = 0;
       }

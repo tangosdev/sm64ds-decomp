@@ -7,7 +7,7 @@ extern "C" int _ZN9Animation8FinishedEv(char*);
 
 int Player::FinishedAnim()
 {
-  unsigned int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam&0xff, 0);
+  unsigned int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1&0xff, 0);
   char* m = *(char**)(((char*)this) + id*4 + 0xdc);
   return _ZN9Animation8FinishedEv(m+0x50) != 0;
 }

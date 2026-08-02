@@ -90,7 +90,7 @@ L14c:
 
 L18c:
     {
-        int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), mParam & 0xff, 0);
+        int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
         void* anim = *(void**)(((char*)this) + (id << 2) + 0xdc);
         u32 w = *(u32*)((char*)(((long long)(int)((char*)anim + 0x50))) + 8);
         if ((u16)(w >> 12) < 4)

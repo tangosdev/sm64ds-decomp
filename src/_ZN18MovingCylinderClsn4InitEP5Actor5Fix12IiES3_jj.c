@@ -8,6 +8,6 @@ struct Actor { void* vtable; };
 
 
 void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(struct MovingCylinderClsn *self, struct Actor* actor, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags) {
-    *((struct Actor**)((char*)&self->unk_030)) = actor;
+    self->owner = actor;
     _ZN12CylinderClsn4InitE5Fix12IiES1_jj(((void*)self), radius, height, flags, vulnFlags);
 }

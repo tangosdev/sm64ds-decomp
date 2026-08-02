@@ -16,7 +16,7 @@ void Player::InitWingFeathers(bool b_)
 
     int t0 = (data_0209f2d8[0] == 1);
     if (!t0) {
-        if (mParam != 0) return;
+        if (param1 != 0) return;
     }
     func_ov002_020bdd2c(((char*)this));
     mHasWings = 1;

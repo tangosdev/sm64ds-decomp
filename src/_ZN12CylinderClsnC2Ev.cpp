@@ -5,9 +5,10 @@
 /* recovered: named members + shared header */
 #include "CylinderClsn.h"
 extern "C" {
+/* Sets the vptr, then zeroes both intrusive-list links: an unlinked node. */
 void _ZN12CylinderClsnC2Ev(struct CylinderClsn *self) {
-  *(int*)((char*)&self->unk_000)=(int)data_0208e6ec;
-  *(int*)((char*)&self->unk_028)=0;
-  *(int*)((char*)&self->unk_02c)=0;
+  *(int*)self=(int)data_0208e6ec;
+  *(int*)&self->prev=0;
+  *(int*)&self->next=0;
 }
 }

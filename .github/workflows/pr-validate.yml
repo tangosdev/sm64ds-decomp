@@ -1,5 +1,12 @@
 name: PR validation
 
+# Submits the PR to the validation relay and exits. The verdict does NOT come back
+# through this workflow — the relay posts it directly to the pull request as the
+# Tangos Validator app: a "PR validation" check run, plus the usual comment. Watch
+# for those, not for this job.
+#
+# This job going green means "submitted", nothing more.
+#
 # Uses pull_request_target so repo secrets (the relay token) are available even
 # for fork PRs. SAFE because this workflow never checks out or runs PR code — it
 # only sends the PR number + immutable head/base SHAs to the relay. The actual validation
@@ -8,8 +15,9 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
-permissions:
-  pull-requests: write
+# No permissions needed. This workflow no longer comments — the app does, under its
+# own identity — so the default read-only token is enough to submit and exit.
+permissions: {}
 
 concurrency:
   # Key on the head SHA, not the PR number. Grouping by PR number meant every new event for
@@ -17,19 +25,20 @@ concurrency:
   # (the console auto-pushes matched batches) could never finish a validation: each check went
   # queued -> cancelled and the PR never reached a verdict, leaving it unmergeable and, worse,
   # looking "clean" at a glance because an unconcluded check reads as UNSTABLE rather than red.
-  # Per-SHA grouping still collapses duplicate events for the SAME commit (reopen, re-request)
-  # into one run, which is the actual waste worth avoiding; a genuinely new commit deserves its
-  # own check. Cost is that a superseded commit may finish a run nobody reads - ~30s on the
-  # build box, cheap next to a PR that can never be merged.
+  # Per-SHA grouping still collapses duplicate events for the SAME commit (reopen, re-request).
+  #
+  # Cancelling matters much less than it used to: this job is a single POST and exits in
+  # seconds, and cancelling it never un-submitted the job it had already sent anyway. The
+  # relay is what actually prevents duplicate work now — submitting a commit it is already
+  # validating returns the in-flight job instead of queueing a second build.
   group: pr-validate-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  submit:
     runs-on: ubuntu-latest
     steps:
       - name: Submit validation job
-        id: submit
         env:
           RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
           TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
@@ -48,77 +57,5 @@ jobs:
           echo "$resp"
           jobId=$(echo "$resp" | jq -r '.jobId // empty')
           if [ -z "$jobId" ]; then echo "relay did not return a jobId"; exit 1; fi
-          echo "jobId=$jobId" >> "$GITHUB_OUTPUT"
-
-      - name: Wait for result
-        id: poll
-        env:
-          RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
-          TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
-          JOB: ${{ steps.submit.outputs.jobId }}
-        run: |
-          set -euo pipefail
-          status=""
-          for i in $(seq 1 240); do   # up to ~40 min (240 * 10s)
-            r=$(curl -sS "$RELAY/api/pr-validate/$JOB" -H "X-Api-Key: $TOKEN")
-            status=$(echo "$r" | jq -r '.status // empty')
-            case "$status" in
-              Passed|Failed|Error)
-                echo "$r" > result.json
-                break ;;
-            esac
-            sleep 10
-          done
-          if [ ! -f result.json ]; then
-            echo "status=Timeout" >> "$GITHUB_OUTPUT"
-            echo 'summary=Validation timed out — is the build-box worker running?' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          {
-            echo "summary<<EOF"; jq -r '.summary // ""' result.json; echo "EOF"
-            echo "details<<EOF"; jq -r '.details // ""' result.json; echo "EOF"
-            echo "reportMarkdown<<EOF"; jq -r '.reportMarkdown // ""' result.json; echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Comment result
-        uses: actions/github-script@v7
-        env:
-          STATUS: ${{ steps.poll.outputs.status }}
-          SUMMARY: ${{ steps.poll.outputs.summary }}
-          DETAILS: ${{ steps.poll.outputs.details }}
-          REPORT_MARKDOWN: ${{ steps.poll.outputs.reportMarkdown }}
-        with:
-          script: |
-            const { STATUS, SUMMARY, DETAILS, REPORT_MARKDOWN } = process.env;
-            const icon = STATUS === 'Passed' ? '✅'
-                       : STATUS === 'Failed' ? '❌'
-                       : '⚠️';
-            const marker = '<!-- pr-link-validation -->';
-            let body = `${marker}\n### ${icon} PR validation — ${STATUS}\n\n${SUMMARY || ''}`;
-            if (REPORT_MARKDOWN && REPORT_MARKDOWN.trim()) {
-              body += `\n\n${REPORT_MARKDOWN.trim()}`;
-            }
-            if (DETAILS && DETAILS.trim()) {
-              // DETAILS is a markdown table from pr_linkcheck --md. Wrap it in a
-              // <details> fold; the blank lines let GitHub render the markdown
-              // inside (a code fence would show it as raw ASCII instead).
-              body += `\n\n<details><summary>Per-file link-check detail</summary>\n\n${DETAILS.trim()}\n\n</details>`;
-            }
-            body += REPORT_MARKDOWN && REPORT_MARKDOWN.trim()
-              ? `\n\n<sub>The private worker commits a test merge, builds the stock ROM profile, compares every executable module, measures matched and source-built code, checks contributor lineage, and verifies affected relocations. The mod profile is opt-in and is not part of this merge gate.</sub>`
-              : `\n\n<sub>Each changed \`src/*.c|*.cpp\` is compiled and its relocated bytes compared to the binary data on a private build box. Passing requires every changed file to reproduce the ROM byte-for-byte with correct relocation targets — this catches WRONG-DEST relocations and non-reproducing near-misses that ledger-scoped linkcheck skips.</sub>`;
-            const { owner, repo } = context.repo;
-            const issue_number = context.payload.pull_request.number;
-            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) {
-              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
-            } else {
-              await github.rest.issues.createComment({ owner, repo, issue_number, body });
-            }
-
-      - name: Fail the check unless validation passed
-        if: steps.poll.outputs.status != 'Passed'
-        run: |
-          echo "PR validation did not pass"; exit 1
+          echo "Submitted $jobId. The verdict will arrive on this PR as the"
+          echo "'PR validation' check run, posted by the relay — not by this workflow."

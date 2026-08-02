@@ -1,28 +1,7 @@
 //cpp
-typedef int Fix12i;
-typedef unsigned int u32;
-
-struct Vector3 { Fix12i x, y, z; };
-
-struct CylinderClsn
-{
-    virtual int v0();
-    virtual int v1();
-    virtual Vector3& GetPos();      // vt+0x08
-    virtual u32 GetOwnerID();       // vt+0x0C
-
-    Fix12i radius;       // 0x04
-    Fix12i height;       // 0x08
-    Vector3 pushback;    // 0x0C
-    u32 flags;           // 0x18
-    u32 vulnFlags;       // 0x1C
-    u32 hitFlags;        // 0x20
-    u32 otherOwner;      // 0x24
-    u32 unk28;           // 0x28
-    CylinderClsn* next;  // 0x2C
-
-    static void Process();
-};
+// @symbol _ZN12CylinderClsn7ProcessEv
+/* recovered: named members + shared header, real C++ method */
+#include "CylinderClsn.h"
 
 extern "C" {
 extern CylinderClsn* data_0209cee8;
@@ -199,7 +178,7 @@ void CylinderClsn::Process()
 
         {
             CylinderClsn* nxt = data_0209cee8->next;
-            data_0209cee8->unk28 = 0;
+            data_0209cee8->prev = 0;
             data_0209cee8->next = 0;
             data_0209cee8 = nxt;
         }

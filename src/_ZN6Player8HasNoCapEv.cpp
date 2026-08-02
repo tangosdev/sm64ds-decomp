@@ -23,7 +23,7 @@ int Player::HasNoCap()
             }
         }
     }
-    if(mParam == 3) return 0;
+    if(param1 == 3) return 0;
     r = unk_71a != 0;
     return r;
 }

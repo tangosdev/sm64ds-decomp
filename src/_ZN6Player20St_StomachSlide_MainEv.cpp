@@ -152,7 +152,7 @@ int Player::St_StomachSlide_Main()
                 int b1 = (*(int*)((char*)light + 0xb0) & 0x8000) != 0;
                 if (b1) {
                     animId = 0x8b;
-                    if (mParam == 2) {
+                    if (param1 == 2) {
                         int b2 = (*(u16*)((char*)light + 0xc) == 0xce);
                         if (b2) {
                             animId = 0x18;

@@ -46,10 +46,10 @@ int Player::St_LevelEnter_Init()
     u8 st = mStateStep;
     if (st != 3 && st != 0xa && st != 0) {
         _ZN9Animation8SetFlagsEi(
-            *(char**)((((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)mParam, 0) * 4)) + 0xdc) + 0x50,
+            *(char**)((((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4)) + 0xdc) + 0x50,
             0x40000000);
         if (mStateStep == 2) {
-            char* p = *(char**)((((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)mParam, 0) * 4)) + 0xdc) + 0x50;
+            char* p = *(char**)((((char*)this) + (_ZNK6Player14GetBodyModelIDEjb(((char*)this), (u8)param1, 0) * 4)) + 0xdc) + 0x50;
             *(int*)(p + 8) = 0x14000;
         }
     }
@@ -133,7 +133,7 @@ int Player::St_LevelEnter_Init()
         break;
     }
     case 2:
-        if (mParam != 0) {
+        if (param1 != 0) {
             mStateStep = 0xa;
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a7e8[mStateStep], 0, 0x1000, 0);
         } else {

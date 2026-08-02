@@ -51,8 +51,9 @@ as it is matched.
 
 Function count climbs faster than code size because the small, regular functions are
 matched first, while most of the remaining bytes live in the large, call-heavy
-functions. The original compiler has been pinned to **mwccarm 1.2/sp2p3** with these
-flags:
+functions. The matching compiler is pinned to **mwccarm 2004/b56** with these
+flags (the 1.2 `base`/`sp2`/`sp2p3` trio remains available for version sweeps;
+the linker is still 1.2/sp2p3 `mwldarm` — b56 ships no linker):
 
 ```
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc

@@ -80,10 +80,10 @@ int Player::St_MetalWaterGround_Main()
         _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x48, 0, 0x1000, 0);
         int r5 = (int)((((long long)mHorzSpeed << 9) + 0x800) >> 12);
         if(r5 < 0x400) r5 = 0x400;
-        char* anim = *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)mParam, 0) * 4 + 0xdc) + 0x50;
+        char* anim = *(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)param1, 0) * 4 + 0xdc) + 0x50;
         *(int*)(anim + 0xc) = r5;
-        if(_ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)mParam, 0) * 4 + 0xdc) + 0x50), 4) != 0
-           || _ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)mParam, 0) * 4 + 0xdc) + 0x50), 0x13) != 0){
+        if(_ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)param1, 0) * 4 + 0xdc) + 0x50), 4) != 0
+           || _ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)param1, 0) * 4 + 0xdc) + 0x50), 0x13) != 0){
             func_0201251c(0, 0xaa, (void*)((char*)&mCamSpacePosX), mHorzSpeed);
         }
     }

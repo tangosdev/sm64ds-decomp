@@ -18,7 +18,7 @@ int Player::St_HoldLight_Init()
       int b = (int)((*(int*)(o+0xb0) & 0x8000) != 0);
       if(b != 0){
         anim = 0x86;
-        if(mParam == 2){
+        if(param1 == 2){
           if((int)(*(unsigned short*)(o+0xc) == 0xce) != 0) anim = 0x2f;
         }
       }

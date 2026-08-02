@@ -32,7 +32,7 @@ SRC = REPO / "src"
 TOTAL_FUNCS = 11390
 
 HEADER = ("// NONMATCHING: {reason} (div={div}). Logic verified correct vs ROM; not\n"
-          "// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).\n"
+          "// byte-matchable from C at mwccarm 2004/b56 (see notes/matching-style.md).\n"
           "// Counts as decompiled, not matched.\n")
 
 

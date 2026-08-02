@@ -304,7 +304,7 @@ after_player_slot:
     }
 
     data_0209f254 = 0;
-    if (mParam == 3) {
+    if (param1 == 3) {
         void *p = *(void **)(*(void **)((char *)&mHeldObjQueue));
         if (p != 0)
             data_0209f254 = *(u8 *)((char *)p + 0x428);

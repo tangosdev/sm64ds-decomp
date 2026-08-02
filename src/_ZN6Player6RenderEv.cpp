@@ -64,7 +64,7 @@ int Player::Render()
             {
                 int t2 = (data_0209f2d8 == 1);
                 if (t2 != false) {
-                    if (mParam == 3) {
+                    if (param1 == 3) {
                         int* p = (int*)AT(bodyMdl, 8);
                         char* hdr = (char*)p[0];
                         char* rec = (char*)p[1];
@@ -77,7 +77,7 @@ int Player::Render()
                 }
             }
             _ZN5Model6RenderEPK7Vector3(bodyMdl, ((char*)this) + 0x80);
-            if (mParam == 1) {
+            if (param1 == 1) {
                 _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x254, *(char**)((char*)&unk_0e0) + 8);
                 unk_25c = unk_6fc << 12;
             }
@@ -105,7 +105,7 @@ int Player::Render()
                 {
                     int t3 = (data_0209f2d8 == 1);
                     if (t3 != false) {
-                        if (mParam == 3) {
+                        if (param1 == 3) {
                             int* p = (int*)AT(*(char**)(((char*)this) + 0x154 + i * 4), 8);
                             char* hdr = (char*)p[0];
                             char* rec = (char*)p[1];
@@ -126,7 +126,7 @@ int Player::Render()
                     *(M34*)dst = *(M34*)src;
                     ((VObj*)*(char**)(((char*)this) + 0x154 + i * 4))->m14((char*)&mScaleX);
                 }
-                if (mParam == 1) {
+                if (param1 == 1) {
                     _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x268, *(char**)((char*)&unk_158) + 8);
                     unk_270 = unk_6fc << 12;
                 }

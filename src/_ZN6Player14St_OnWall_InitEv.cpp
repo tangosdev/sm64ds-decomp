@@ -11,7 +11,7 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned i
 int Player::St_OnWall_Init()
 {
   int r3=0x1000;
-  if(mParam==2){
+  if(param1==2){
     if(mStateStep==2) r3=0x2000;
   }
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_020ff164[mStateStep], 0, r3, 0);

@@ -19,7 +19,7 @@ void func_ov002_020e6350(char* c);
 
 void Player::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3)
 {
-  unsigned int old = mParam;
+  unsigned int old = param1;
   if (p1 == old) return;
   unk_6dc = (unsigned char)old;
   mHatCharacter = (unsigned char)p1;
@@ -38,7 +38,7 @@ void Player::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3)
     if (p1 != mCharacter) func_02012790(0xb);
     else func_02012790(0xc);
   }
-  mParam = mHatCharacter;
+  param1 = mHatCharacter;
   func_ov002_020e6350(((char*)this));
-  mParam = unk_6dc;
+  param1 = unk_6dc;
 }
