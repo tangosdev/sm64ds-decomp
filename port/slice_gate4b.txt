@@ -25,13 +25,13 @@ src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.c
 src/_ZN2GX7LoadTexEPKvjj.cpp
 src/_ZN2GX11LoadTexPlttEPKvjj.c
 
-# render walk + math
-src/func_02044534.c
-src/func_0204488c.c
+# render walk + math. func_02044534/func_0204488c/NormalizeVec3 are in the
+# HOSTGEN list instead: they touch MMIO textually (geometry ports, the
+# hardware divider) and an untransformed build latches those writes
+# silently -- the exact failure hostgen exists to prevent.
 src/func_020462d0.c
 src/func_02046564.c
 src/MulMat4x3Mat4x3.c
-src/NormalizeVec3.c
 src/func_020458a8.c
 src/func_02016b24.c
 src/func_02045074.c

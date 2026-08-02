@@ -85,6 +85,7 @@ struct State {
 };
 
 State g;
+int g_store_count;
 
 uint32_t bgr555_to_argb(uint16_t c) {
     const uint32_t r = c & 0x1F, gg = (c >> 5) & 0x1F, b = (c >> 10) & 0x1F;
@@ -196,6 +197,7 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         case 0x13: {                                             // MTX_STORE
+            ++g_store_count;
             const int i = p[0] & 31;
             if (g.mode == MTX_PROJ) g.proj_stack[0] = g.proj;
             else { g.pos_stack[i] = g.pos; g.vec_stack[i] = g.vec; }
@@ -425,7 +427,8 @@ int g_port_have = 0;
 
 }  // namespace
 
-void gx_write_fifo(uint32_t word) { feed(word); }
+void gx_stream_note(uint32_t w);
+void gx_write_fifo(uint32_t word) { gx_stream_note(word); feed(word); }
 
 void gx_set_matrix_slot(int slot, const float m[16]) {
     if (slot < 0 || slot >= 32) return;
@@ -508,7 +511,32 @@ void bind_from_vram() {
 void gx_teximage_param(uint32_t v) { g_teximage = v; bind_from_vram(); }
 void gx_pltt_base(uint32_t v) { g_plttbase = v; bind_from_vram(); }
 
+// Diagnostic: a running hash of every word entering the engine, so a smoke
+// can tell "the game emitted a different stream" from "the decode ignored
+// it". Reset returns the previous value.
+static uint32_t g_stream_hash = 2166136261u;
+void gx_stream_note(uint32_t w) { g_stream_hash = (g_stream_hash ^ w) * 16777619u; }
+uint32_t gx_stream_hash_reset()
+{
+    const uint32_t h = g_stream_hash;
+    g_stream_hash = 2166136261u;
+    return h;
+}
+
+int gx_store_count_reset() { int n = g_store_count; g_store_count = 0; return n; }
+
+uint32_t gx_state_hash()
+{
+    uint32_t h = 2166136261u;
+    const unsigned char *b = reinterpret_cast<const unsigned char *>(&g.pos);
+    for (size_t i = 0; i < sizeof(Mat); ++i) h = (h ^ b[i]) * 16777619u;
+    b = reinterpret_cast<const unsigned char *>(g.pos_stack);
+    for (size_t i = 0; i < sizeof(Mat) * 4; ++i) h = (h ^ b[i]) * 16777619u;
+    return h;
+}
+
 void gx_write_port(uint32_t addr, uint32_t value) {
+    gx_stream_note(addr ^ value);
     const uint8_t cmd = static_cast<uint8_t>((addr - 0x04000400u) >> 2);
     const int need = param_count(cmd);
     if (need <= 1) {

@@ -80,14 +80,64 @@ int main(void)
     CHECK(bca != NULL);
 
     /* the game's per-frame order: pose bones, re-skin, render */
-    _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&model->data, bca, 0);
+    const int frame = getenv("SM64DS_ANIM_FRAME") ? atoi(getenv("SM64DS_ANIM_FRAME")) : 0;
+    _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&model->data, bca, frame);
+    if (getenv("SM64DS_DUMP_BONES")) {
+        unsigned char *bones = *((unsigned char **)&model->data + 2);
+        for (int b = 0; b < 3; ++b) {
+            printf("bone %d:", b);
+            for (int k = 0; k < 0x34; ++k) printf("%02x", bones[b * 0x34 + k]);
+            printf("\n");
+        }
+    }
     _ZN15ModelComponents21UpdateVertsUsingBonesEv(&model->data);
+    if (getenv("SM64DS_DUMP_BONES")) {
+        unsigned char *tf = *((unsigned char **)&model->data + 3);
+        for (int b = 0; b < 4; ++b) {
+            printf("xform %d:", b);
+            for (int k = 0; k < 48; ++k) printf("%02x", tf[b * 48 + k]);
+            printf("\n");
+        }
+    }
 
     reset_scene();
     model->Model::Render(NULL);
     size_t tris = 0;
     const ntr::GxTriangle *tarr = ntr::gx_polygons(tris);
     printf("  piano triangles, frame 0 of piano_attack: %zu\n", tris);
+    if (getenv("SM64DS_DUMP_BONES")) {
+        unsigned h = 2166136261u;
+        const unsigned char *bytes = (const unsigned char *)tarr;
+        for (size_t i = 0; i < tris * sizeof(ntr::GxTriangle); ++i)
+            h = (h ^ bytes[i]) * 16777619u;
+        printf("trihash %08x over %zu\n", h, tris);
+        /* second pose in the SAME process: does the render still track it? */
+        for (int f2 = 0; f2 < 3; ++f2) {
+            int fr = f2 * 7;
+            _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(&model->data, bca, fr);
+            _ZN15ModelComponents21UpdateVertsUsingBonesEv(&model->data);
+            {
+                unsigned hr = 2166136261u, ht = 2166136261u;
+                unsigned char *rec = *((unsigned char **)&model->data + 2);
+                unsigned char *tf = *((unsigned char **)&model->data + 3);
+                for (int i = 0; i < 3 * 0x34; ++i) hr = (hr ^ rec[i]) * 16777619u;
+                for (int i = 0; i < 4 * 48; ++i) ht = (ht ^ tf[i]) * 16777619u;
+                printf("repose frame %2d: rec %08x xf %08x  ", fr, hr, ht);
+            }
+            reset_scene();
+            ntr::gx_stream_hash_reset();
+            model->Model::Render(NULL);
+            printf("stream %08x state %08x stores %d  ", ntr::gx_stream_hash_reset(),
+                   ntr::gx_state_hash(), ntr::gx_store_count_reset());
+            size_t n2 = 0;
+            const ntr::GxTriangle *t2 = ntr::gx_polygons(n2);
+            unsigned h2 = 2166136261u;
+            const unsigned char *b2 = (const unsigned char *)t2;
+            for (size_t i = 0; i < n2 * sizeof(ntr::GxTriangle); ++i)
+                h2 = (h2 ^ b2[i]) * 16777619u;
+            printf("repose frame %2d: trihash %08x over %zu\n", fr, h2, n2);
+        }
+    }
     CHECK(tris > 0);
 
     /* fit and raster, artifact kept for eyeballing the pose */

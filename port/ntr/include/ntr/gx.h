@@ -56,6 +56,12 @@ void gx_bind_texture(const uint32_t *rgba, int width, int height);
 void gx_teximage_param(uint32_t value);
 void gx_pltt_base(uint32_t value);
 
+// Diagnostic stream hash: every word entering the engine since the last
+// reset, so smokes can separate "different stream" from "ignored stream".
+uint32_t gx_stream_hash_reset();
+uint32_t gx_state_hash();  // pos matrix + first slots
+int gx_store_count_reset();
+
 // Preload a position-matrix stack slot. Display lists open with MTX_RESTORE
 // against slots the *scene* filled in beforehand, so a model drawn on its own
 // has to have them set up first. Row-major, row-vector convention.

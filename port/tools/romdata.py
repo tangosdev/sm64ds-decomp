@@ -11,9 +11,11 @@ import pathlib
 import struct
 import sys
 
-# The dsd-extracted main module: base 0x02004000, contiguous .text+.data
-# through bss_start (0x02094640). NOT extracted/arm9_dec.bin -- that image
-# disagrees with the section map and served instruction bytes as "data".
+# extracted/arm9_dec.bin: the DECOMPRESSED arm9, flat at base 0x02004000
+# (verified by two code anchors: Copy36Bytes @0x0205a548, DecompressLZ16
+# @0x0205a754). extracted/dsd/arm9/arm9.bin is the COMPRESSED payload
+# (arm9.yaml: compressed true) and must not be read directly. Addresses at
+# or past bss_start are runtime-initialized and belong in the HAL.
 BASE = 0x02004000
 BSS_START = 0x02094640
 
@@ -28,9 +30,13 @@ TABLES = [
 
 def main():
     root = pathlib.Path(__file__).resolve().parents[2]
-    img = root / "extracted/dsd/arm9/arm9.bin"
+    img = root / "extracted/arm9_dec.bin"
     if not img.exists():
         sys.exit(f"missing {img} -- extract the ROM first")
+    anchor = img.read_bytes()
+    a = 0x0205A548 - BASE
+    if anchor[a:a + 4] != b"\x0c\x10\xb0\xe8":
+        sys.exit("arm9_dec.bin failed the Copy36Bytes anchor -- wrong image/base")
     for addr, length, _ in TABLES:
         if addr + length > BSS_START:
             sys.exit(f"{addr:#x}+{length:#x} crosses into BSS -- not file-backed")

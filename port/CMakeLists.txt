@@ -139,7 +139,8 @@ endif()
 
 # Gate 4b: the whole Model pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the Model/render slice on top of everything.
-set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998)
+set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998
+    func_02044534 func_0204488c NormalizeVec3)
 set(GATE4B_GEN "")
 foreach(sym IN LISTS GATE4B_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -187,6 +188,22 @@ target_compile_definitions(smoke_model PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
 if(MSVC)
     target_compile_options(smoke_model PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+# Gate 5: the fiber frame loop -- game-shaped frames, host-rastered.
+add_executable(smoke_frames tests/smoke_frames.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_frames PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_frames PRIVATE ntr)
+target_compile_definitions(smoke_frames PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_frames PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
 # Gate 4d: the catalog soak -- every model through the game pipeline.
