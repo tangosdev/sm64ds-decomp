@@ -30,13 +30,23 @@
  * function), and that copy collides with the one the module's gap object
  * supplies from ROM data. An override takes its base's slot wherever it is
  * declared, so putting ~Actor first costs nothing and makes it the key
- * function -- and nothing defines ~Actor as a C++ method, because the
- * destructor translation units are C files that never see this class. The
- * thirteen NEW virtuals still take 18..30 from their declaration order below,
- * because new slots append after the inherited table.
+ * function. The thirteen NEW virtuals still take 18..30 from their declaration
+ * order below, because new slots append after the inherited table.
  *
- * Only the root of a hierarchy is forced to pay that tax; include/ActorBase.h
- * has to keep InitResources out of its class for exactly this reason.
+ * What makes that safe is NOT that the destructor lives in a C translation
+ * unit -- src/_ZN5ActorD1Ev.cpp and _ZN5ActorD2Ev.cpp are C++ and do include
+ * this header; only _ZN5ActorD0Ev.c is C. The invariant is that all three
+ * define extern "C" free functions under the mangled names and none defines
+ * `Actor::~Actor`, so no TU is ever the key function's definition.
+ *
+ * The rule, stated precisely: the key function -- the first non-inline virtual
+ * declared -- must never be defined as a real method in any translation unit.
+ * Declaring the destructor first pins that role to TUs which by construction
+ * never will. include/ActorBase.h reaches the same end differently: it does
+ * declare InitResources (slot 0) in-class, but src/_ZN9ActorBase13InitResourcesEv.cpp
+ * deliberately defines it as an extern "C" free function rather than a method.
+ * Do not "fix" that file into a real method, and do not remove the declaration
+ * from ActorBase.h -- removing it would delete slot 0 and shift all 18 slots.
  *
  * Field NAMES are inferred from behaviour and cannot change codegen, so they are
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
@@ -158,12 +168,12 @@ struct Actor {
     s32 mCamSpacePosY;
     s32 mCamSpacePosZ;
     u8  pad_080[0xc];
-    s16 unk_08c;
-    s16 unk_08e;
-    s16 unk_090;
-    s16 unk_092;
-    s16 unk_094;
-    s16 unk_096;
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
+    s16 mPrevAngleX;        /* 0x092 */
+    s16 mPrevAngleY;        /* 0x094 */
+    s16 mPrevAngleZ;        /* 0x096 */
     u8  unk_098;
     u8  pad_099[0x3];
     u8  unk_09c;

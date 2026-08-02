@@ -5,15 +5,15 @@
 /* recovered: named members + shared header */
 #include "Actor.h"
 extern "C" {
-extern int data_0208e3a4[];
+extern int _ZTV5Actor[];
 extern int data_0209b468[];
-extern int data_0208e4b8[];
+extern int _ZTV12ActorDerived[];
 extern void _ZN9ActorBaseD2Ev(int c);
 int _ZN5ActorD2Ev(struct Actor *self) {
-  *(int*)((int)self) = (int)data_0208e3a4;
+  *(int*)((int)self) = (int)_ZTV5Actor;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
-  *(int*)((int)self) = (int)data_0208e4b8;
+  *(int*)((int)self) = (int)_ZTV12ActorDerived;
   _ZN9ActorBaseD2Ev(((int)self));
   return ((int)self);
 }

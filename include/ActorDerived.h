@@ -11,21 +11,28 @@
  * slots 16/17. Every other slot still points at the ActorBase implementation.
  * The class therefore adds NO new virtuals, which has a useful consequence.
  *
- * KEY FUNCTION. CW 1.2 emits the vtable into the TU that defines the first
+ * KEY FUNCTION. CW 1.2 emits the vtable into the TU that DEFINES the first
  * non-inline virtual declared in the class, and that copy collides with the one
- * the module's gap object supplies from ROM data. include/ActorBase.h has to
- * work around this by keeping InitResources out of the class entirely, because
- * ActorBase is the root: all of its virtuals are new, so declaration order sets
- * the slot indices and the destructor is pinned to 16/17.
+ * the module's gap object supplies from ROM data.
  *
- * ActorDerived is not constrained that way. An override takes its base's slot
+ * The rule, stated precisely: the key function must never be defined as a real
+ * method in any translation unit. Its declaration in the class is required and
+ * harmless -- include/ActorBase.h does declare InitResources (slot 0) in-class,
+ * and removing it would delete a slot and shift the other seventeen. What
+ * ActorBase.h relies on is that src/_ZN9ActorBase13InitResourcesEv.cpp defines
+ * it as an extern "C" free function rather than a method.
+ *
+ * ActorDerived gets there more cheaply. An override takes its base's slot
  * whatever order it is declared in, so the destructor can be declared FIRST and
- * become the key function. Nothing defines ~ActorDerived as a C++ method -- the
- * destructor translation units are C files that never see this class -- so no
- * TU is the key function's definition and no vtable is emitted. That is what
- * lets AfterInitResources be a real method here.
+ * become the key function -- and ~ActorDerived is only ever defined as an
+ * extern "C" free function, in D0Ev.c and D1Ev.c, so no TU is the key
+ * function's definition. That is what lets AfterInitResources be a real method
+ * here.
  *
- * The rule generalises: only the root class pays the key-function tax.
+ * The generalisation: a class whose first-declared virtual is the destructor
+ * gets this for free, because destructors in this tree are never written as
+ * C++ methods. A root class cannot rely on that if its slot order forces some
+ * other virtual first.
  */
 struct ActorDerived : ActorBase {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots

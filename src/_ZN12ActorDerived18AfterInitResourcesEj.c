@@ -12,11 +12,9 @@
  */
 #include "ActorDerived.h"
 
-extern "C" void _ZN9ActorBase18AfterInitResourcesEj(ActorBase *self, u32 result);
-
 void ActorDerived::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess == 1)
         MarkForDestruction();
-    _ZN9ActorBase18AfterInitResourcesEj(this, vfSuccess);
+    ActorBase::AfterInitResources(vfSuccess);
 }
