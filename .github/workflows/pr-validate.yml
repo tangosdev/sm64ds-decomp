@@ -78,58 +78,9 @@ jobs:
             exit 0
           fi
           echo "status=$status" >> "$GITHUB_OUTPUT"
-          {
-            echo "summary<<EOF"; jq -r '.summary // ""' result.json; echo "EOF"
-            echo "details<<EOF"; jq -r '.details // ""' result.json; echo "EOF"
-            echo "reportMarkdown<<EOF"; jq -r '.reportMarkdown // ""' result.json; echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Comment result
-        # A retired head says nothing worth saying on the pull request: the commit that
-        # replaced it carries the real check, and the PR comment is a single edited-in-place
-        # note. Commenting here would let a slow superseded run overwrite the newer run's
-        # verdict with "Superseded" and make a green pull request look unresolved.
-        # success() is restated because naming an `if` at all discards the implicit one, and
-        # without it a failed poll would fall through to commenting an empty verdict.
-        if: >-
-          success()
-          && steps.poll.outputs.status != 'Superseded'
-          && steps.poll.outputs.status != 'Cancelled'
-        uses: actions/github-script@v7
-        env:
-          STATUS: ${{ steps.poll.outputs.status }}
-          SUMMARY: ${{ steps.poll.outputs.summary }}
-          DETAILS: ${{ steps.poll.outputs.details }}
-          REPORT_MARKDOWN: ${{ steps.poll.outputs.reportMarkdown }}
-        with:
-          script: |
-            const { STATUS, SUMMARY, DETAILS, REPORT_MARKDOWN } = process.env;
-            const icon = STATUS === 'Passed' ? '✅'
-                       : STATUS === 'Failed' ? '❌'
-                       : '⚠️';
-            const marker = '<!-- pr-link-validation -->';
-            let body = `${marker}\n### ${icon} PR validation — ${STATUS}\n\n${SUMMARY || ''}`;
-            if (REPORT_MARKDOWN && REPORT_MARKDOWN.trim()) {
-              body += `\n\n${REPORT_MARKDOWN.trim()}`;
-            }
-            if (DETAILS && DETAILS.trim()) {
-              // DETAILS is a markdown table from pr_linkcheck --md. Wrap it in a
-              // <details> fold; the blank lines let GitHub render the markdown
-              // inside (a code fence would show it as raw ASCII instead).
-              body += `\n\n<details><summary>Per-file link-check detail</summary>\n\n${DETAILS.trim()}\n\n</details>`;
-            }
-            body += REPORT_MARKDOWN && REPORT_MARKDOWN.trim()
-              ? `\n\n<sub>The private worker commits a test merge, builds the stock ROM profile, compares every executable module, measures matched and source-built code, checks contributor lineage, and verifies affected relocations. The mod profile is opt-in and is not part of this merge gate.</sub>`
-              : `\n\n<sub>Each changed \`src/*.c|*.cpp\` is compiled and its relocated bytes compared to the binary data on a private build box. Passing requires every changed file to reproduce the ROM byte-for-byte with correct relocation targets — this catches WRONG-DEST relocations and non-reproducing near-misses that ledger-scoped linkcheck skips.</sub>`;
-            const { owner, repo } = context.repo;
-            const issue_number = context.payload.pull_request.number;
-            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
-            const existing = comments.find(c => c.body && c.body.includes(marker));
-            if (existing) {
-              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
-            } else {
-              await github.rest.issues.createComment({ owner, repo, issue_number, body });
-            }
+          # Logged, not exported: the relay writes the pull request comment itself, so
+          # nothing downstream reads these and the report can be 100KB.
+          jq -r '"summary: \(.summary // "")"' result.json
 
       - name: Fail the check unless validation passed
         # Superseded and Cancelled are not verdicts, so they must not fail this run. A newer
