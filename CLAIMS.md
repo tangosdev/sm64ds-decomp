@@ -31,8 +31,9 @@ start converting a class; the same staleness rule applies.
 ## Claims
 
 | Range | Who | Claimed | Status |
-| ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 |---|---|---|---|
+| ov002 func_ov002_020d3b9c (0x020d3b9c, size 0x5a0) | lunavyqo (Grok) | 2026-08-02 | **released** — near-miss improve **199→52** (2004/b56); late-self this=r6 + midrom/d30/umull + permuter rsb-mode; residual spd/acc r4↔r5 + size 0x59c; tip in nearmiss/db.jsonl |
+| ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 | ov002 func_ov002_020d6dac (0x020d6dac, size 0x284) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56** and 1.2/sp2p3); lever: m2i=load+0x90 before GetBodyModelID + Mul temps a0/a1/a2 for r0-scale/arg order; from near-miss div=7→4→0; API clm_d3cd782ed8b6 kept |
 | ov002 _ZN6Player19St_SwingPlayer_MainEv (0x020d9fec, size 0x3c4) | lunavyqo (Grok) | 2026-08-01 | **released** — floor(register allocation two-web rank tie) **match-words=8** on 1.2/sp2p3 **and 2004/b56** / nearmiss **div=11**; residual av→ip vs r3 at +0x128; 100+ variants + permuter 750it score40; tip+floor banked |
 | ov002 _ZN6Player19St_GroundPound_MainEv (0x020dd9f8, size 0x3f8) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + strict-relocs (mwccarm 1.2/sp2p3); non-vol Vector3 + `*(volatile int*)&v.y=y2` on NewSimple(0x59) schedule; near-miss div=2→0; API clm_28eb0cfc28a6 kept |
