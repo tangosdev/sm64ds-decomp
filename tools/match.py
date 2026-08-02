@@ -42,12 +42,43 @@ INCLUDE = REPO / "include"
 # on a successful compile. See notes/mwccarm-codegen.md 6as.
 DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
                  "-gccext,on -msgstyle gcc -w illpragmas")
-SWEEP = [
-         # Canonical matching compiler first (see notes/rom-build.md, notes 6ai):
-         "2004/b56",
-         "1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
-         "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3"]
-# The CodeWarrior 1.2 trio (codegen-identical to each other). Used by --trio only.
+# The builds --all sweeps. This was a hand-written list of 12 while 25 mwccarm.exe were
+# installed, so `--all` ("sweep every known version") silently skipped 13 -- including
+# 2.0/sp1p5, sp1p6, sp1p7 and sp2p4, service packs of a family it already swept. Every
+# "a full version sweep found nothing" negative recorded against that list was really a
+# 12-of-25 sweep, so those negatives are weaker than they read.
+#
+# Derived from disk instead, so adding a compiler to tools/mwccarm/ puts it in the sweep.
+# _PREFERRED goes first because a sweep reports its matches in order; the rest follow
+# sorted. Anything installed but absent from _PREFERRED is still swept -- that is the
+# whole point.
+#
+# 2004/b56 leads _PREFERRED, not trails it. It is the canonical matching compiler (see
+# notes/rom-build.md, notes 6ai), and because a sweep reports in order, putting it later
+# makes an earlier version win ties and get recorded as "the" match. That misreporting is
+# real: a 711-file reconciliation first read as "672 under 1.2/base" purely from iteration
+# order, and became 699 under 2004/b56 once the canonical build was tried first.
+_PREFERRED = [# Canonical matching compiler first:
+              "2004/b56",
+              "1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
+              "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3"]
+
+
+def installed_versions():
+    """Every mwccarm build present under tools/mwccarm, as version strings."""
+    if not MW.is_dir():
+        return []
+    return sorted(p.parent.relative_to(MW).as_posix() for p in MW.rglob("mwccarm.exe"))
+
+
+def _sweep_list():
+    found = installed_versions()
+    return [v for v in _PREFERRED if v in found] + [v for v in found if v not in _PREFERRED]
+
+
+SWEEP = _sweep_list()
+# The CodeWarrior 1.2 trio that survived version-pinning (codegen-identical to each
+# other). Used by --trio only.
 PINNED = ["1.2/base", "1.2/sp2", "1.2/sp2p3"]
 # Canonical single-compile default for matching. 2004 build 0056 reproduces more of
 # this corpus than the 1.2 service packs (notes/rom-build.md). Ships mwccarm only —

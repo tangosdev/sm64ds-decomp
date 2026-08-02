@@ -14,6 +14,45 @@ functions this file had recorded as merely having a stale draft. Read the gotcha
 bottom before trusting a negative anywhere else in this file: two of the three have now
 been shown to be measurement artifacts rather than properties of the functions.
 
+## STATUS 2026-08-02: most of this file is out of date -- re-measured
+
+Everything below was written on 2026-07-28 and has not been re-measured since. It has, so
+here is what every function in the three groups does today, compiled against **all 25
+installed mwccarm builds** (the sweep used to cover only 12 -- see `tools/match.py`).
+
+**Four functions of the twenty still do not reproduce.** Not twenty, and not the group
+split below.
+
+| group | note said | reproduces today |
+|---|---|---|
+| A -- "believed impossible, do not spend" | 6 impossible | **3 of 6 match** |
+| B -- "mid-divergence" | 7 open | **7 of 7 match** |
+| C -- "structurally wrong, needs real decompilation" | 7 open | **6 of 7 match** |
+
+Still unmatched across all 25 builds, and these are the real arm9 endgame:
+
+```
+_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii     _ZN5Stage13InitResourcesEv
+func_0202ffec                                   func_02009e70
+```
+
+Four of the matches are **2004/b56 only**: `_ZN12WithMeshClsn20UpdateExtraContinousEv`,
+`func_020412f0`, `func_0206f46c`, `func_0206e4a4`. The rest match on the 1.2 trio and b56.
+
+Two consequences worth acting on:
+
+* **Group C's advice is wrong now.** "Permuting these is wasted budget; they need someone
+  reading the ROM disassembly and writing correct C" -- six of the seven were matched
+  between 2026-07-28 and 2026-08-01, mostly by the readable-conversion passes. Do not
+  route work by this file without re-measuring first.
+* **Group A's "do not spend" is now better evidenced for the three that remain**, since a
+  25-build sweep failing is a stronger negative than the 12-build sweep the original
+  measurement had. `_ZN5Stage13InitResourcesEv` in particular keeps its worked example
+  below, which is still the best description of that wall in the tree.
+
+The rest of the file is left as written -- its mechanisms, worked examples and gotchas are
+still the most useful part, and only the status is stale.
+
 ## Route first, grind second
 
 The 22 split into three groups that want completely different treatment. Sending the
