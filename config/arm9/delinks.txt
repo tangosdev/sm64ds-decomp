@@ -2058,7 +2058,7 @@ src/_ZN9AnimationC2Ev.cpp:
     complete
     .text start:0x02015d18 end:0x02015d38
 
-src/_ZN11ShadowModel9RenderAllEv.c:
+src/_ZN11ShadowModel9RenderAllEv.cpp:
     complete
     .text start:0x02015d38 end:0x02015e14
 
@@ -2076,7 +2076,7 @@ src/_ZN11ShadowModel12InitCylinderEv.cpp:
 src/_ZN11ShadowModel10InitCuboidEv.cpp:
     .text start:0x02015ed8 end:0x02015ef4
 
-src/_ZN11ShadowModel9DoSetFileEPcii.c:
+src/_ZN11ShadowModel9DoSetFileEPcii.cpp:
     complete
     .text start:0x02015ef4 end:0x02015f80
 
@@ -2100,11 +2100,11 @@ src/_ZN11CommonModel13Func_020160ACEj.cpp:
     complete
     .text start:0x020160ac end:0x02016104
 
-src/_ZN11CommonModel6RenderEPK7Vector3.c:
+src/_ZN11CommonModel6RenderEPK7Vector3.cpp:
     complete
     .text start:0x02016104 end:0x02016144
 
-src/_ZN11CommonModel9DoSetFileEPcii.c:
+src/_ZN11CommonModel9DoSetFileEPcii.cpp:
     complete
     .text start:0x02016144 end:0x020161b4
 

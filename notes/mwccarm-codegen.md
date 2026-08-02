@@ -15,6 +15,23 @@ one, add it here AND, if it recurs, as a rule in `swarm.py` so the free tier can
 
 ---
 
+## 6az. Class-typed by-value parameters are homed to the stack (the Fix12 wall)
+
+Declaring a parameter as a by-value class - including the real `Fix12<int>`
+template reconstructed in include/math/Fix12.h - makes mwccarm home the incoming
+register arguments to the stack (`push {r0-r3}`) and reload each use, +0x14 bytes
+on ShadowModel::InitModel. Scalar parameters of identical width stay in registers.
+Identical on 1.2/sp2p3 and 2004/b56; `register`, `const`, and an inline conversion
+operator instead of direct member access change nothing.
+
+The retail ROM's own `5Fix12IiE` functions read their arguments straight from
+registers, so the original build had a lever we have not found. Until someone
+finds it, a function whose mangled name carries `5Fix12IiE` cannot be DEFINED as
+a real C++ method; keep the definition an extern-C mangled free function with
+scalar args, and declare the true template signature in the class header for
+callers (a call emits the same substituted symbol either way, which the byte
+gate confirms - the S3_ repeats only fall out of a real template-id).
+
 ## 1. Ground rules of the build
 
 - **Reloc slots are wildcards.** Every `bl`/`blx` target and every pc-relative `ldr` of an

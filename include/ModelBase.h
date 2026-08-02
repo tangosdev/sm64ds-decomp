@@ -33,14 +33,21 @@
  *
  * LAYOUT evidence: ModelBase::C1 stores the vptr at +0x0 and zeroes +0x4;
  * the destructors Deallocate +0x4 when set; Model::LoadAndSetFile stores the
- * loaded file at +0x4; ModelBase::ApplyOpacity and Model::SetPolygonID both
- * hand +0x8 to ModelComponents functions.
+ * loaded file at +0x4. The base ENDS at 0x8. Each derived class puts its
+ * view of the components at +0x8 -- Model EMBEDS a ModelComponents there,
+ * while CommonModel and ShadowModel store a ModelComponents POINTER (their
+ * constructors then place their own fields from +0xc, inside what an
+ * embedded struct would occupy, which is what rules the embed out of the
+ * base). ApplyOpacity still addresses +0x8 blindly; see the note in its
+ * source file.
  */
 
 #ifdef __cplusplus
 
-/* 0x14 bytes at +0x8 of every ModelBase. The runtime view of a loaded model:
-   built from the BMD file by func_020462d0, rendered by 0x020443c8. */
+/* 0x14 bytes, at +0x8 of a Model (embedded) or behind +0x8 of a CommonModel
+   or ShadowModel (pointer to a pool entry from func_02016e70). The runtime
+   view of a loaded model: built from the BMD file by func_020462d0,
+   rendered by 0x020443c8. */
 struct ModelComponents {
     BMD_File *modelFile;        /* 0x00 */
     BMD_Material *materials;    /* 0x04 - 0x30-byte records, flags at +0x24 */
@@ -55,7 +62,6 @@ struct ModelComponents {
 struct ModelBase {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     BMD_File *modelFile;    /* 0x04 - owned; the destructors Deallocate it */
-    ModelComponents data;   /* 0x08 */
 
     /* --- vtable, in ROM order at 0x0208e87c. Do not reorder. --- */
     virtual ~ModelBase();                            /* slots 0 (D1), 1 (D0) */
@@ -67,7 +73,7 @@ struct ModelBase {
 };
 
 typedef char ModelComponents_size_must_be_0x14[sizeof(ModelComponents) == 0x14 ? 1 : -1];
-typedef char ModelBase_size_must_be_0x1c[sizeof(ModelBase) == 0x1c ? 1 : -1];
+typedef char ModelBase_size_must_be_0x8[sizeof(ModelBase) == 0x8 ? 1 : -1];
 
 #else
 
@@ -83,7 +89,6 @@ struct ModelComponents {
 struct ModelBase {
     void **vtable;                     /* 0x00 */
     struct BMD_File *modelFile;        /* 0x04 */
-    struct ModelComponents data;       /* 0x08 */
 };
 
 #endif /* __cplusplus */

@@ -41,6 +41,7 @@
 struct SharedFilePtr;
 
 struct Model : ModelBase {
+    ModelComponents data;      /* 0x08 - embedded, unlike its pointer-holding siblings */
     Matrix4x3 mat4x3;          /* 0x1c */
     void *transformsBuf;       /* 0x4c - owned; sized by func_02046564(file) */
 
