@@ -189,6 +189,22 @@ if(MSVC)
     target_compile_options(smoke_model PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# Gate 4d: the catalog soak -- every model through the game pipeline.
+add_executable(smoke_soak tests/smoke_soak.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_soak PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_soak PRIVATE ntr)
+target_compile_definitions(smoke_soak PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_soak PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
 # Gate 4c: animation -- same slice (the 4c files live in slice_gate4b.txt),
 # different driver: the piano posed by its BCA through the game's walk.
 add_executable(smoke_anim tests/smoke_anim.cpp

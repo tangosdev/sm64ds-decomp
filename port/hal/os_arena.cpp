@@ -14,8 +14,12 @@ static char *g_lo, *g_hi;
 static void arena_init(void)
 {
     if (!g_lo) {
-        g_lo = (char *)malloc(HOST_ARENA);
-        g_hi = g_lo + HOST_ARENA;
+        /* soaks and tools can ask for more than the DS ever had */
+        const char *env = getenv("SM64DS_HOST_ARENA_MB");
+        size_t mb = env ? (size_t)atoi(env) : 0;
+        size_t size = mb ? mb << 20 : (size_t)HOST_ARENA;
+        g_lo = (char *)malloc(size);
+        g_hi = g_lo + size;
     }
 }
 

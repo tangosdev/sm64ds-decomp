@@ -164,8 +164,11 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
              asset_root(), g_paths[self->fileID]);
     f = fopen(path, "rb");
     if (!f) {
-        fprintf(stderr, "FATAL: fs cannot open %s\n", path);
-        abort();
+        /* a cataloged file missing on disk is a data hole (regional variants
+           the extraction skipped), not a config error: fail like the real
+           Load fails a short read, so callers see a null file */
+        fprintf(stderr, "fs: missing on disk: %s\n", path);
+        return 0;
     }
     fseek(f, 0, SEEK_END);
     fsize = ftell(f);

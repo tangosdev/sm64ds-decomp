@@ -527,6 +527,10 @@ void gx_write_port(uint32_t addr, uint32_t value) {
 
 void gx_reset() {
     g = State{};
+    // VRAM-decoded texture cache: uploads can be replaced between scenes
+    // (the soak reuses slot offsets per model), so stale entries must go.
+    g_vram_tex_cache.clear();
+    g_teximage = g_plttbase = 0;
     // The stack slots must start as identity, not zero. Model display lists open
     // with MTX_RESTORE against a slot the *scene* filled in earlier; rendering a
     // model on its own would otherwise load an all-zero matrix and collapse every

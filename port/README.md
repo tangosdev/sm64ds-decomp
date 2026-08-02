@@ -16,17 +16,30 @@ build that never touches the byte-matching pipeline.
 - **32-bit host first.** The recovered ABI assumes 4-byte pointers. x64 comes
   after struct recovery makes layout host-independent.
 
-## Gate 1 (this directory today)
+## Gate ledger
 
-A Win32 headless executable that compiles a curated slice - types,
-fixed-point math, matrices, Timer, the Fader class hierarchy - and runs ABI
-assertions plus known-value smoke tests. No renderer, no audio, no input.
-Build it with `build-port.cmd`; run `build\port\smoke.exe`.
+Each gate is a slice manifest + a smoke binary that proves one seam with
+game data. `build-port.cmd` builds all of them into `build\port\`.
 
-`slice_gate1.txt` is the manifest. Grow the slice by adding files there and
-assertions to `tests/smoke.cpp`; `tools/host_frontier.py` reports how much of
-`src/` syntax-compiles for the host and why the rest does not, so the next
-subsystem to pull in is a measurement, not a guess.
+| Gate | Smoke | What runs on host |
+|---|---|---|
+| 1 | `smoke` | types, fx math, matrices, Timer, Fader hierarchy |
+| 2 | `smoke_heap` | ExpandingHeapAllocator, 5,000-op torture |
+| 3a | `smoke_roots` | SetupRootHeap + the Memory:: layer (game global heap) |
+| 3b | `smoke_fs` | SharedFilePtr over the catalog card seam, LZ77 cross-checked |
+| 4a | `smoke_gx` | the interrupt-driven display-list pump, byte-equal vs harness |
+| 4b | `smoke_model` | the whole Model pipeline: load, rebase, VRAM upload, materials, render (Mario, textured) |
+| 4c | `smoke_anim` | Animation/UpdateBones recursion (the Mad Piano, posed) |
+
+Supporting machinery: `tools/hostgen.py` (MMIO transform into the build
+tree; src/ is never edited), `tools/romdata.py` (ROM constants from the
+dsd-extracted image; Nintendo bytes stay out of git), `tools/ntr_manifest.py`
+(fs manifest for the ntr backend), the `ntr/` platform layer (see its
+README), and `hal/` (seams, bridges, and the storage for DS BSS globals).
+
+Grow a gate by adding files to its `slice_gate*.txt` and assertions to its
+smoke; `tools/host_frontier.py` reports how much of `src/` syntax-compiles
+for the host so the next subsystem is a measurement, not a guess.
 
 ## Why the emulator is not here
 
