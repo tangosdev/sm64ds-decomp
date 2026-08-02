@@ -32,6 +32,10 @@ start converting a class; the same staleness rule applies.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov006 func_ov006_020cfc74 (0x020cfc74, size 0x56c) | lunavyqo (Grok) | 2026-08-02 | **released** — near-miss improve **54→40**; levers: w_first mag/smull + base300 interleave mid dst-copy (copy block byte-id); residual: prologue r7/r5/r6 schedule, cnt324 sl+0x24 vs add#0x324, cnt326 indexed vs add-form (size 0x568 vs 0x56c); tip in nearmiss/db.jsonl; API clm_ed654e336bf8 released |
+| ov006 func_ov006_020c94e0 (0x020c94e0, size 0x2dc) | lunavyqo (Grok) | 2026-08-02 | **released** — near-miss improve **53→5** (1.2/sp2p3); early-abs+launder V3 + pair-cmp; residual floor(sched) vec16 z/y strh + add r3 interleave at +0x154; tip in nearmiss/db.jsonl; API clm_1303e950403e released |
+| ov006 func_ov006_020cf2fc (0x020cf2fc, size 0x45c) | lunavyqo (Grok) | 2026-08-02 | **active** — match from near-miss div=190; API clm_f9e894bdb049 |
+| ov006 func_ov006_020c7c68 (0x020c7c68, size 0x3c4) | lunavyqo (Grok) | 2026-08-02 | **active** — match from near-miss div=12; API clm_5d659eb9879b |
 | ov002 func_ov002_020d3b9c (0x020d3b9c, size 0x5a0) | lunavyqo (Grok) | 2026-08-02 | **released** — near-miss improve **199→52** (2004/b56); late-self this=r6 + midrom/d30/umull + permuter rsb-mode; residual spd/acc r4↔r5 + size 0x59c; tip in nearmiss/db.jsonl |
 | ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 | ov002 func_ov002_020d6dac (0x020d6dac, size 0x284) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56** and 1.2/sp2p3); lever: m2i=load+0x90 before GetBodyModelID + Mul temps a0/a1/a2 for r0-scale/arg order; from near-miss div=7→4→0; API clm_d3cd782ed8b6 kept |
