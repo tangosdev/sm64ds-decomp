@@ -2009,7 +2009,7 @@ src/_ZN15TextureSequenceC1Ev.c:
     complete
     .text start:0x02015a50 end:0x02015a7c
 
-src/_ZN9Animation4CopyERKS_.c:
+src/_ZN9Animation4CopyERKS_.cpp:
     complete
     .text start:0x02015a7c end:0x02015a98
 
@@ -2020,7 +2020,7 @@ src/_ZN9Animation8FinishedEv.cpp:
     complete
     .text start:0x02015bcc end:0x02015bec
 
-src/_ZN9Animation8GetFlagsEv.c:
+src/_ZN9Animation8GetFlagsEv.cpp:
     complete
     .text start:0x02015bec end:0x02015bf8
 
@@ -2519,7 +2519,7 @@ src/SharedFilePtr_Construct_TexSeq.c:
     complete
     .text start:0x02017934 end:0x0201794c
 
-src/_ZN9Animation8LoadFileER13SharedFilePtr.c:
+src/_ZN9Animation8LoadFileER13SharedFilePtr.cpp:
     complete
     .text start:0x0201794c end:0x02017984
 
@@ -7350,7 +7350,7 @@ src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp:
 src/_ZN15TextureSequence17UpdateFileOffsetsER8BTP_File.cpp:
     .text start:0x020468a0 end:0x020469ac
 
-src/_ZN9Animation17UpdateFileOffsets_ZN9AnimationER8BCA_File.c:
+src/_ZN9Animation17UpdateFileOffsetsER8BCA_File.cpp:
     complete
     .text start:0x020469ac end:0x020469e0
 

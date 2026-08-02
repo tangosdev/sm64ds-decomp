@@ -7,7 +7,7 @@ extern int func_ov007_020c3df4(int a, void *b);
 extern void DecompressLZ16(void *src, void *dst);
 extern void _ZN4CP1514FlushDataCacheEjj(u32 a, u32 b);
 extern void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *f);
-extern void _ZN9Animation17UpdateFileOffsets_ZN9AnimationER8BCA_File(void *f);
+extern void _ZN9Animation17UpdateFileOffsetsER8BCA_File(void *f);
 extern void _ZN15TextureSequence17UpdateFileOffsetsER8BTP_File(void *f);
 void *func_ov007_020b3f20(int idx)
 {
@@ -87,7 +87,7 @@ void *func_ov007_020b3f20(int idx)
       case 0xe:
 
       case 0xf:
-        _ZN9Animation17UpdateFileOffsets_ZN9AnimationER8BCA_File(obj);
+        _ZN9Animation17UpdateFileOffsetsER8BCA_File(obj);
         break;
 
       case 0x10:

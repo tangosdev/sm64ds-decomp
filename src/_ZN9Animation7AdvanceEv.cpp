@@ -1,19 +1,25 @@
 //cpp
+// @symbol _ZN9Animation7AdvanceEv
+#include "Animation.h"
 extern "C" int __aeabi_idivmod(int n, int d);
-struct Animation { char pad4[4]; unsigned int f; int frame; int speed; };
-extern "C" void _ZN9Animation7AdvanceEv(struct Animation* a);
-void _ZN9Animation7AdvanceEv(struct Animation* a) {
-    unsigned int f = a->f;
-    unsigned int len = f & ~0xc0000000;
+
+void Animation::Advance()
+{
+    u32 f = numFramesAndFlags;
+    u32 len = f & ~0xc0000000;
     if ((f & 0xc0000000) == 0) {
-        a->frame = (a->frame + a->speed + (int)len) % (int)len;
+        currFrame = (currFrame + speed + (int)len) % (int)len;
     } else {
-        int *pFrame = (int *)(((int)a + 8));
-        *pFrame = *pFrame + a->speed;
-        if (a->frame < 0) {
-            a->frame = 0;
-        } else if (a->frame >= (int)len) {
-            a->frame = (int)len - 1;
+        /* the ROM materializes the field address for this
+           read-modify-write, and reloads currFrame through the member
+           afterwards; the launder keeps this store aliasing the member so
+           the compiler re-reads it the way the ROM does */
+        int *pFrame = (int *)((long long)((int)this + 8));
+        *pFrame = *pFrame + speed;
+        if (currFrame < 0) {
+            currFrame = 0;
+        } else if (currFrame >= (int)len) {
+            currFrame = (int)len - 1;
         }
     }
 }
