@@ -34,3 +34,24 @@ if(MSVC)
     # enough that a NEW warning is visible. /W3 stays on.
     target_compile_options(smoke PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
+
+# Gate 2: the allocator family + torture smoke, its own binary so gate 1
+# stays a stable baseline.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2.txt" SLICE2_LINES)
+set(SLICE2_SOURCES "")
+foreach(line IN LISTS SLICE2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+add_executable(smoke_heap tests/smoke_heap.cpp hal/heap_globals.cpp ${SLICE2_SOURCES})
+target_include_directories(smoke_heap PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_compile_definitions(smoke_heap PRIVATE SM64DS_PLATFORM_PC)
+if(MSVC)
+    target_compile_options(smoke_heap PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
