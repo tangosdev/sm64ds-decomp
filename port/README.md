@@ -37,6 +37,7 @@ game data. `build-port.cmd` builds all of them into `build\port\`.
 | 6b | `smoke_oam` | OBJ scan-out: the game's sprite placements become pixels |
 | 7 | `smoke_modelanim` | ModelAnim: the game owns frame progression (speed, loop wrap) |
 | 8 | `smoke_clsn` | collision: the octree walk answers ground queries over level KCL |
+| 9 | `smoke_actor` | the actor framework: spawn, init, behave, render through vtable dispatch |
 
 Supporting machinery: `tools/hostgen.py` (MMIO transform into the build
 tree; src/ is never edited), `tools/romdata.py` (ROM constants from the

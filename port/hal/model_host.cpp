@@ -131,6 +131,12 @@ unsigned char data_020a4bbc;    /* texture-matrix mode of the bound material */
 short data_020a4bc0;
 short data_020a4bc4;
 
+/* processing-list heads the actor lifecycle links into */
+int data_020a4b78[4];
+int data_020a4b88[4];
+int data_020a4b98[4];
+int data_02099f24[4];
+
 // ---- common model data array (BSS on the DS) ------------------------------
 int data_0209cefc[3 * 64];  /* 64 records x 0xc */
 int data_0209cef8[1];       /* record count */

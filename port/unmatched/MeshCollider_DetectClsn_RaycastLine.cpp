@@ -40,7 +40,7 @@ s32  _ZN4cstd4fdivEii(s32 a, s32 b);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 }
 
-extern "C" int g_walk_dbg[16];
+extern "C" int g_walk_dbg[16] = {0};
 /* Stage telemetry, read by the smoke: [1] leaves [2] prisms [3] planeS
    [4] planeE [5..7] edge rejections [8] e3-high [9] denom [10] parallel
    [11] dist [12] pass-through. Cheap enough to keep permanently. */

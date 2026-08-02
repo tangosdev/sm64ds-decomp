@@ -51,3 +51,15 @@ extern "C" void *_ZTV12MeshCollider[13] = {
     (void *)slot_trap9, (void *)slot_trap10,
     (void *)slot_trap11, (void *)slot_trap12,
 };
+
+// MovingMeshCollider inherits the surface queries; its table gets the same
+// shims at runtime (its own DetectClsn overloads stay trapped until a
+// consumer needs them).
+extern "C" {
+void *_ZTV18MovingMeshCollider[16];
+void hal_fill_mmc_vtable(void)
+{
+    for (int i = 0; i < 13; ++i)
+        _ZTV18MovingMeshCollider[i] = _ZTV12MeshCollider[i];
+}
+}

@@ -224,7 +224,8 @@ endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
 # drives the hardware sqrt unit through literal MMIO -> hostgen.
-set(GATE8_SYMS _ZN4cstd4sqrtEy)
+set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncE5Fix12IiE
+    Matrix4x3_ApplyInPlaceToScale)
 set(GATE8_GEN "")
 foreach(sym IN LISTS GATE8_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -383,4 +384,52 @@ target_compile_definitions(smoke_fs PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
 if(MSVC)
     target_compile_options(smoke_fs PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+# Gate 9: the actor framework -- ArrowSignRight's full lifecycle.
+# One .c file carries C++ syntax (mwccarm accepted it); hostgen's
+# emit-as-cpp with extern "C" wrap makes it legal.
+set(GATE9_SYMS _ZN9ActorBase21AfterCleanupResourcesEj)
+set(GATE9_GEN "")
+foreach(sym IN LISTS GATE9_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE9_GEN "${sym_out}")
+endforeach()
+
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate9.txt" SLICE9_LINES)
+set(SLICE9_SOURCES "")
+foreach(line IN LISTS SLICE9_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE9_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+add_executable(smoke_actor tests/smoke_actor.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
+    hal/cxxname_bridge.cpp hal/megachar_stub.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_SOURCES}
+    ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE9_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_actor PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_actor PRIVATE ntr)
+target_compile_definitions(smoke_actor PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
 endif()

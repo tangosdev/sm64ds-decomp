@@ -35,7 +35,7 @@ struct RayS {
 };
 
 extern "C" {
-int g_walk_dbg[16];
+extern int g_walk_dbg[16];
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN4Heap13SetupRootHeapEv(void);
