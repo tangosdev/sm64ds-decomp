@@ -57,6 +57,8 @@ struct Animation {
     int Finished();
     int GetFlags();
     void SetFlags(int flags);
+    u32 GetFrameCount() const;
+    bool WillHitFrame(int frame) const;
 
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);

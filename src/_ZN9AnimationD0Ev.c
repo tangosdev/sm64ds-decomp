@@ -1,6 +1,5 @@
 // @symbol _ZN9AnimationD0Ev
 /* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Animation.h"
 /* _ZN9AnimationD0Ev at 0x02015cc4
@@ -9,10 +8,11 @@
  * Call target: 0x0203cbcc
  */
 struct Obj { void *vtable; };
-extern void base_dtor_Animation(struct Obj *thiz); /* 0x0203cbcc */
+extern int data_0208e7e4[];                            /* vtable for Animation */
+extern void _ZN6Memory16operator_delete2EPv(void *p);  /* 0x0203cbcc */
 struct Obj *_ZN9AnimationD0Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)vtbl_Animation;
-    base_dtor_Animation(thiz);
+    thiz->vtable = (void *)data_0208e7e4;
+    _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

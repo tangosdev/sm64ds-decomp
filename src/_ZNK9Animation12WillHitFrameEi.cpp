@@ -1,23 +1,14 @@
 //cpp
-#include "types.h"
-class Animation
-{
-public:
-    void* vtable;
-    u32 flagsAndCount; // bits 30-31: flags, bits 0-29: frame count (fx32)
-    s32 currFrame;     // fx32
-    s32 speed;         // fx32
-
-    bool WillHitFrame(int frame) const;
-};
+// @symbol _ZNK9Animation12WillHitFrameEi
+#include "Animation.h"
 
 bool Animation::WillHitFrame(int frame) const
 {
     s32 f = frame << 12;
     s32 next = currFrame + speed;
-    s32 num = flagsAndCount & ~0xc0000000;
+    s32 num = numFramesAndFlags & ~0xc0000000;
 
-    if ((flagsAndCount & 0xc0000000) == 0)
+    if ((numFramesAndFlags & 0xc0000000) == 0)
     {
         if (next < 0)
         {
