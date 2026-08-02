@@ -5666,7 +5666,7 @@ src/func_0203a4b8.c:
     complete
     .text start:0x0203a4b8 end:0x0203a4dc
 
-src/_ZN21ExtendingMeshCollider9GetNormalEsR7Vector3.c:
+src/_ZN21ExtendingMeshCollider9GetNormalEsR7Vector3.cpp:
     complete
     .text start:0x0203a4dc end:0x0203a594
 
