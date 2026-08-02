@@ -25,6 +25,8 @@ TABLES = [
     (0x02082128, 48, "int"),        # Model ctor default Matrix4x3
     (0x02082190, 48, "int"),        # matrix Render uses for a NULL argument
     (0x02082214, 0x4000, "short"),  # s16 trig table the material bind indexes
+    (0x020755A0, 12, "char"),       # OBJ width table (shape x size)
+    (0x020755AC, 12, "char"),       # OBJ height table
 ]
 
 

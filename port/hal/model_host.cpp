@@ -32,6 +32,25 @@ void MultiCopy_Int(int *src, int *dst, int len)
     memcpy(dst, src, len);
 }
 
+/* 32-byte-block copy primitive (asm on the DS) */
+void MultiCopy32Bytes(int *src, int *dst, int len)
+{
+    memcpy(dst, src, len);
+}
+
+// ---- OAM shadow state (BSS on the DS) -------------------------------------
+// On the DS, data_0209e67c/data_0209e694 are addresses INSIDE the main
+// shadow buffer (Reset's fill-pattern copies rely on that adjacency). Host
+// symbols cannot alias at an offset, so the HAL runs the engine in the mode
+// where Reset loops every entry directly (data_0209e660 = 1) and adjacency
+// is never exercised; the split fill buffers below are then inert.
+unsigned char data_0209e660 = 1;
+int data_0209e664, data_0209e668, data_0209e66c, data_0209e670;
+unsigned int data_0209e674[0x100];   /* main OAM shadow, 0x400 bytes */
+unsigned int data_0209ea74[0x100];   /* sub OAM shadow */
+int data_0209e67c[0x20];
+int data_0209e694[0x100];
+
 /* asm primitive: 4x3 fx32 identity */
 void Matrix4x3_LoadIdentity(int *m)
 {
@@ -171,3 +190,15 @@ extern "C" void *_ZN6Memory13operator_new2Ej(unsigned size)
 {
     return func_0203cc0c(size);
 }
+
+// OAM::Reset declares its globals at C++ linkage; alias them onto the
+// C-named storage above (same mechanism as the LoadTex globals).
+#pragma comment(linker, "/alternatename:?data_0209e660@@3EA=_data_0209e660")
+#pragma comment(linker, "/alternatename:?data_0209e664@@3HC=_data_0209e664")
+#pragma comment(linker, "/alternatename:?data_0209e668@@3HC=_data_0209e668")
+#pragma comment(linker, "/alternatename:?data_0209e66c@@3HC=_data_0209e66c")
+#pragma comment(linker, "/alternatename:?data_0209e670@@3HC=_data_0209e670")
+#pragma comment(linker, "/alternatename:?data_0209e674@@3PAUOAMEntry@@A=_data_0209e674")
+#pragma comment(linker, "/alternatename:?data_0209ea74@@3PAHA=_data_0209ea74")
+#pragma comment(linker, "/alternatename:?data_0209e67c@@3PAHA=_data_0209e67c")
+#pragma comment(linker, "/alternatename:?data_0209e694@@3PAHA=_data_0209e694")
