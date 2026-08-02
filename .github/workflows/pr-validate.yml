@@ -63,7 +63,10 @@ jobs:
             r=$(curl -sS "$RELAY/api/pr-validate/$JOB" -H "X-Api-Key: $TOKEN")
             status=$(echo "$r" | jq -r '.status // empty')
             case "$status" in
-              Passed|Failed|Error)
+              # Superseded and Cancelled are terminal too. The relay retires an older head
+              # as soon as a newer push arrives, and without them this run would keep a
+              # runner polling for forty minutes waiting on a verdict nobody will produce.
+              Passed|Failed|Error|Superseded|Cancelled)
                 echo "$r" > result.json
                 break ;;
             esac
@@ -82,6 +85,16 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Comment result
+        # A retired head says nothing worth saying on the pull request: the commit that
+        # replaced it carries the real check, and the PR comment is a single edited-in-place
+        # note. Commenting here would let a slow superseded run overwrite the newer run's
+        # verdict with "Superseded" and make a green pull request look unresolved.
+        # success() is restated because naming an `if` at all discards the implicit one, and
+        # without it a failed poll would fall through to commenting an empty verdict.
+        if: >-
+          success()
+          && steps.poll.outputs.status != 'Superseded'
+          && steps.poll.outputs.status != 'Cancelled'
         uses: actions/github-script@v7
         env:
           STATUS: ${{ steps.poll.outputs.status }}
@@ -119,6 +132,26 @@ jobs:
             }
 
       - name: Fail the check unless validation passed
-        if: steps.poll.outputs.status != 'Passed'
+        # Superseded and Cancelled are not verdicts, so they must not fail this run. A newer
+        # commit already owns the gate, and failing here would leave a red mark on a commit
+        # nobody is merging while saying nothing about whether the code is good.
+        if: >-
+          steps.poll.outputs.status != 'Passed'
+          && steps.poll.outputs.status != 'Superseded'
+          && steps.poll.outputs.status != 'Cancelled'
         run: |
           echo "PR validation did not pass"; exit 1
+
+      - name: Release the relay job if this run was cancelled
+        # Cancelling a run never used to un-submit the job it had already sent, so the
+        # worker kept building for a run that had gone away -- on a box with one build slot,
+        # that is the next PR's queue time. Best-effort by design: if the relay cannot be
+        # reached, the job simply runs as it always did.
+        if: cancelled() && steps.submit.outputs.jobId != ''
+        env:
+          RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
+          TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
+          JOB: ${{ steps.submit.outputs.jobId }}
+        run: |
+          curl -sS -X POST "$RELAY/api/pr-validate/$JOB/cancel" \
+            -H "X-Api-Key: $TOKEN" --max-time 20 || true

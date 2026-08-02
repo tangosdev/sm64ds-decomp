@@ -70,3 +70,36 @@ container has a two-CPU quota, so concurrent jobs would divide the same cores an
 no sooner. Give the box more CPU before adding a second worker slot, and if a slot is
 ever added, give it its own clone — jobs share `build/` and would otherwise overwrite
 each other's objects.
+
+## Giving up on work nobody is waiting for
+
+With one build slot, the queue's worst enemy is spending it on a verdict that will never
+be read. Two cases produce those, and both now end the job instead of running it out:
+
+- **A newer push.** GitHub gates merging on the latest commit, so once a pull request is
+  pushed again, its older head's verdict is unreadable. Submitting a job retires that
+  pull request's other in-flight heads as `Superseded`.
+- **A cancelled Action.** The run that asked for the verdict has gone away, so the
+  workflow posts to `/api/pr-validate/{id}/cancel` from an `if: cancelled()` step and the
+  job becomes `Cancelled`.
+
+Both are terminal, both report the check as GitHub's `cancelled` conclusion rather than a
+pass or a failure, and neither can be overwritten afterwards — a worker only notices
+between polls, so it can genuinely finish and post a result late, and letting that land
+would walk a retired head back to a verdict.
+
+**Superseding a build that is already running is deliberately restrained**, because the
+obvious version of this is what the per-SHA concurrency group exists to avoid. A running
+job is interrupted only while it is still young (`PrValidationStore.YoungBuild`), and only
+until a pull request has had `MaxRunningSupersedeStreak` builds killed in a row; one
+completed verdict refills that budget. Without both guards, a branch the matching console
+pushes to repeatedly would never reach a verdict at all — every build cancelled by the
+next push, exactly the starvation that made per-PR concurrency grouping unusable.
+
+The worker polls `/api/pr-validate/{id}/state` between phases while it builds. Only an
+explicit `Superseded` or `Cancelled` stops it: a failed poll or an unreadable answer means
+keep going, so a brief relay outage can never throw away a build. Cancellation signals the
+`timeout` process rather than the phase directly, because GNU `timeout` runs what it
+manages in its own process group — signalling anything else would leave wine and mwccarm
+running on the two CPUs the next job needs. `tests/test-worker-cancel.sh` in the validator
+repo asserts exactly that: the phase's own process is gone afterwards.
