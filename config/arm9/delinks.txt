@@ -5377,7 +5377,7 @@ src/_ZN13RaycastGround10DetectClsnEv.cpp:
     complete
     .text start:0x02038f44 end:0x02039140
 
-src/_ZN16MeshColliderBase7DisableEv.c:
+src/_ZN16MeshColliderBase7DisableEv.cpp:
     complete
     .text start:0x02039140 end:0x02039184
 
@@ -5400,7 +5400,7 @@ src/_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector
     complete
     .text start:0x0203923c end:0x0203929c
 
-src/_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_.c:
+src/_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_.cpp:
     complete
     .text start:0x0203929c end:0x020392f8
 
@@ -5468,15 +5468,15 @@ src/func_02039404.c:
     complete
     .text start:0x02039404 end:0x0203940c
 
-src/_ZN16MeshColliderBase11GetVelocityER7Vector3.c:
+src/_ZN16MeshColliderBase11GetVelocityER7Vector3.cpp:
     complete
     .text start:0x0203940c end:0x02039428
 
-src/_ZN16MeshColliderBase14GetAngularVelYEv.c:
+src/_ZN16MeshColliderBase14GetAngularVelYEv.cpp:
     complete
     .text start:0x02039428 end:0x02039430
 
-src/_ZN16MeshColliderBase12TransformPosERK7Vector3RS0_.c:
+src/_ZN16MeshColliderBase12TransformPosERK7Vector3RS0_.cpp:
     complete
     .text start:0x02039430 end:0x02039438
 
@@ -5484,15 +5484,15 @@ src/_ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16
     complete
     .text start:0x02039438 end:0x02039470
 
-src/_ZN16MeshColliderBase10DetectClsnER10SphereClsn.c:
+src/_ZN16MeshColliderBase10DetectClsnER10SphereClsn.cpp:
     complete
     .text start:0x02039470 end:0x02039478
 
-src/_ZN16MeshColliderBase10DetectClsnER11RaycastLine.c:
+src/_ZN16MeshColliderBase10DetectClsnER11RaycastLine.cpp:
     complete
     .text start:0x02039478 end:0x02039480
 
-src/_ZN16MeshColliderBase10DetectClsnER13RaycastGround.c:
+src/_ZN16MeshColliderBase10DetectClsnER13RaycastGround.cpp:
     complete
     .text start:0x02039480 end:0x02039488
 
@@ -5504,7 +5504,7 @@ src/func_020395fc.c:
     complete
     .text start:0x020395fc end:0x02039620
 
-src/_ZN16MeshColliderBase9Virtual08Ev.c:
+src/_ZN16MeshColliderBase9Virtual08Ev.cpp:
     complete
     .text start:0x02039620 end:0x02039624
 

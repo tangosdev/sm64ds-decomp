@@ -7,8 +7,11 @@
 #include "types.h"
 
 struct ClsnResult {
-    u8  pad_000[0x4];
-    s64 unk_004;            /* 0x004 */
+    /* 0x00: the resolved position. The old auto-generated header showed a
+       misaligned s64 at +0x4; that was a paired load of y and z. The
+       MeshColliderBase::UpdatePos* family adds a velocity to these three
+       words directly. */
+    Vector3 pos;            /* 0x000 */
     s32 unk_00c;            /* 0x00c */
     s32 unk_010;            /* 0x010 */
     s32 unk_014;            /* 0x014 */
