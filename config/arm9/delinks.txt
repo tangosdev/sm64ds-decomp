@@ -4914,11 +4914,11 @@ src/func_02035800.c:
     complete
     .text start:0x02035800 end:0x02035820
 
-src/_ZN12WithMeshClsn18StopDetectingWaterEv.c:
+src/_ZN12WithMeshClsn18StopDetectingWaterEv.cpp:
     complete
     .text start:0x02035820 end:0x02035840
 
-src/_ZN12WithMeshClsn19StartDetectingWaterEv.c:
+src/_ZN12WithMeshClsn19StartDetectingWaterEv.cpp:
     complete
     .text start:0x02035840 end:0x02035860
 
