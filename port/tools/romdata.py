@@ -11,23 +11,29 @@ import pathlib
 import struct
 import sys
 
-BASE = 0x02000000
+# The dsd-extracted main module: base 0x02004000, contiguous .text+.data
+# through bss_start (0x02094640). NOT extracted/arm9_dec.bin -- that image
+# disagrees with the section map and served instruction bytes as "data".
+BASE = 0x02004000
+BSS_START = 0x02094640
 
-# (symbol address, byte length, C element type)
+# (symbol address, byte length, C element type). BSS addresses do not belong
+# here -- they are runtime-initialized and live in the HAL as storage.
 TABLES = [
     (0x02082128, 48, "int"),        # Model ctor default Matrix4x3
-    (0x02082190, 48, "int"),        # identity Matrix4x3 (Render's NULL case)
-    (0x02082214, 0x4000, "short"),  # fx16 sin/cos table, 12-bit angle, pairs
-    (0x02099F88, 12, "int"),        # Vec3 constant in the bone walk
-    (0x02099F94, 16, "short"),      # u16[8] texture-matrix constants
+    (0x02082190, 48, "int"),        # matrix Render uses for a NULL argument
+    (0x02082214, 0x4000, "short"),  # s16 trig table the material bind indexes
 ]
 
 
 def main():
     root = pathlib.Path(__file__).resolve().parents[2]
-    img = root / "extracted/arm9_dec.bin"
+    img = root / "extracted/dsd/arm9/arm9.bin"
     if not img.exists():
         sys.exit(f"missing {img} -- extract the ROM first")
+    for addr, length, _ in TABLES:
+        if addr + length > BSS_START:
+            sys.exit(f"{addr:#x}+{length:#x} crosses into BSS -- not file-backed")
     data = img.read_bytes()
     out_path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else (
         root / "build/port/host-src/romdata.c")

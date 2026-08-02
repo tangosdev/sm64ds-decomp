@@ -124,6 +124,19 @@ int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 // anything ever dispatches through them it faults immediately and loudly.
 void *_ZTV5Model[8];
 
+// BSS globals of the render/animation walk (0x02099xxx is past bss_start;
+// their DS values come from init code not yet in any slice):
+// - data_02099f80/f84: 3-byte weight tables for the BCA keyframe samplers.
+//   The interpolation is (lo*frac + hi*rem) over 2^shift steps and frac
+//   starts at b[shift] minus the step remainder, so b[shift] = 1 << shift.
+//   b[0] is unreachable (shift==0 early-returns).
+// - data_02099f88/f94: constants of the texture-matrix material path,
+//   zero until the GX-init that writes them joins a slice.
+unsigned char data_02099f80[4] = { 1, 2, 4, 0 };
+unsigned char data_02099f84[4] = { 1, 2, 4, 0 };
+int data_02099f88[3];
+unsigned short data_02099f94[8];
+
 } /* extern "C" */
 
 // The LoadTex TU declares its globals at C++ linkage; alias them to the
