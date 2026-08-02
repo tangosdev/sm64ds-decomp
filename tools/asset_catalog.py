@@ -27,6 +27,8 @@ DEFAULT_HANDLES = REPO / "build" / "assets" / "handles.tsv"
 DEFAULT_FILE_HEADER = REPO / "build" / "generated" / "NitroFileId.h"
 DEFAULT_HANDLE_HEADER = REPO / "build" / "generated" / "AssetHandle.h"
 DEFAULT_REFERENCES = REPO / "build" / "assets" / "references.tsv"
+DEFAULT_CANDIDATES = REPO / "build" / "assets" / "rename-candidates.tsv"
+DEFAULT_LAYOUT_CANDIDATES = REPO / "build" / "assets" / "layout-candidates.tsv"
 
 # These two facts are independently visible in the target image and its matched
 # initializer, func_ov000_020aa420.  The path/pointer validation below turns a
@@ -44,6 +46,22 @@ KIND_BY_SUFFIX = {
     ".sdat": "sound-archive",
     ".bin": "data",
 }
+
+PAYLOAD_TYPE_BY_SUFFIX = {
+    ".bca": "BCA_File",
+    ".bmd": "BMD_File",
+    ".btp": "BTP_File",
+    ".kcl": "KCL_File",
+    ".narc": "NARC_File",
+    ".sdat": "SDAT_File",
+    ".bin": "binary data",
+}
+
+ANONYMOUS_DATA_RE = re.compile(r"data(?:_ov[0-9]+)?_[0-9a-fA-F]{8}")
+FIELD_OWNER_RE = re.compile(
+    r"(?P<base>[A-Za-z_][A-Za-z0-9_]*)\s*\+\s*"
+    r"(?P<offset>0[xX][0-9a-fA-F]+|[0-9]+)"
+)
 
 REFERENCE_CALLS = {
     "LoadFile": 0,
@@ -311,6 +329,36 @@ def suggested_owner_name(owner: str, asset) -> str:
     return "g" + camel + suffix
 
 
+def suggested_field_name(asset) -> str:
+    global_name = suggested_owner_name("data_00000000", asset)
+    return "m" + global_name[1:] if global_name else ""
+
+
+def anonymous_owner_symbol(owner: str) -> str:
+    """Extract a bare anonymous data symbol from a simple owner expression."""
+    matches = ANONYMOUS_DATA_RE.findall(owner)
+    if len(matches) != 1:
+        return ""
+    remainder = owner.replace(matches[0], "")
+    # Permit address-of and C-style casts, but no indexing or pointer arithmetic.
+    remainder = re.sub(r"\([^()]+\)", "", remainder)
+    return matches[0] if not remainder.strip(" \t&*") else ""
+
+
+def field_owner(owner: str) -> tuple[str, int] | None:
+    """Recognize a simple recovered object-plus-offset SharedFilePtr field."""
+    value = owner.strip()
+    while True:
+        stripped = re.sub(r"^\([^()]+\)\s*", "", value)
+        if stripped == value:
+            break
+        value = stripped
+    match = FIELD_OWNER_RE.fullmatch(value)
+    if not match:
+        return None
+    return match.group("base"), int(match.group("offset"), 0)
+
+
 def scan_references(src_root: pathlib.Path,
                     handles: list[AssetHandle]) -> list[dict[str, str]]:
     by_id = {asset.handle: asset for asset in handles}
@@ -352,6 +400,221 @@ def write_references(path: pathlib.Path, rows: list[dict[str, str]]) -> None:
         writer.writerows(rows)
 
 
+def _source_files(src_root: pathlib.Path) -> list[pathlib.Path]:
+    return sorted((*src_root.rglob("*.c"), *src_root.rglob("*.cpp")))
+
+
+def symbol_consumers(src_root: pathlib.Path, symbols: set[str]) -> dict[str, set[str]]:
+    """Find source consumers for candidate symbols in one linear source scan."""
+    consumers = {symbol: set() for symbol in symbols}
+    if not symbols:
+        return consumers
+    for path in _source_files(src_root):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        found = set(ANONYMOUS_DATA_RE.findall(text)) & symbols
+        if not found:
+            continue
+        source = path.relative_to(REPO).as_posix()
+        for symbol in found:
+            consumers[symbol].add(source)
+    return consumers
+
+
+def build_rename_candidates(rows: list[dict[str, str]], src_root: pathlib.Path) -> list[dict[str, str]]:
+    """Aggregate references into review-only global and struct-field candidates."""
+    resolved = [row for row in rows if row["status"] == "runtime-handle" and row["path"]]
+    global_groups: dict[str, list[dict[str, str]]] = collections.defaultdict(list)
+    field_rows = []
+    for row in resolved:
+        symbol = anonymous_owner_symbol(row["owner"])
+        if symbol:
+            global_groups[symbol].append(row)
+        elif field_owner(row["owner"]):
+            field_rows.append(row)
+
+    consumers = symbol_consumers(src_root, set(global_groups))
+    provisional = []
+    for symbol, group in sorted(global_groups.items()):
+        paths = sorted({row["path"] for row in group})
+        handles = sorted({row["raw_id"] for row in group})
+        sources = sorted({row["source"] for row in group})
+        assets = [AssetHandle(int(row["raw_id"], 0), 0, row["path"], 0) for row in group]
+        asset = assets[0]
+        suggested = suggested_owner_name(symbol, asset) if len(paths) == 1 else ""
+        blocker = "" if len(paths) == 1 else "owner maps to multiple asset paths"
+        provisional.append({
+            "candidate_kind": "global",
+            "current_name": symbol,
+            "suggested_name": suggested,
+            "confidence": "high" if suggested else "blocked",
+            "container_type": "SharedFilePtr",
+            "payload_type": PAYLOAD_TYPE_BY_SUFFIX.get(asset.suffix, "unknown"),
+            "asset_kind": asset.kind if len(paths) == 1 else "mixed",
+            "asset_paths": "; ".join(paths),
+            "runtime_handles": "; ".join(handles),
+            "references": str(len(group)),
+            "initializer_sources": "; ".join(sources),
+            "consumer_sources": "; ".join(sorted(consumers[symbol])),
+            "evidence": (
+                "literal runtime handle resolves to one asset and initializes this owner"
+                if len(paths) == 1 else
+                "the same owner is initialized with different resolved assets"
+            ),
+            "blocker": blocker,
+        })
+
+    name_counts = collections.Counter(
+        row["suggested_name"] for row in provisional if row["suggested_name"]
+    )
+    for row in provisional:
+        if row["suggested_name"] and name_counts[row["suggested_name"]] > 1:
+            row["confidence"] = "medium"
+            row["blocker"] = (
+                f"suggested name is shared by {name_counts[row['suggested_name']]} owners"
+            )
+
+    fields = []
+    for row in sorted(field_rows, key=lambda item: (item["source"], int(item["line"]))):
+        base, offset = field_owner(row["owner"])
+        asset = AssetHandle(int(row["raw_id"], 0), 0, row["path"], 0)
+        fields.append({
+            "candidate_kind": "field",
+            "current_name": f"{base}+0x{offset:x}",
+            "suggested_name": suggested_field_name(asset),
+            "confidence": "medium",
+            "container_type": "SharedFilePtr",
+            "payload_type": PAYLOAD_TYPE_BY_SUFFIX.get(asset.suffix, "unknown"),
+            "asset_kind": asset.kind,
+            "asset_paths": asset.path,
+            "runtime_handles": row["raw_id"],
+            "references": "1",
+            "initializer_sources": f"{row['source']}:{row['line']}",
+            "consumer_sources": "",
+            "evidence": "object-plus-offset field is initialized from a resolved runtime handle",
+            "blocker": "confirm the recovered base object's class and field layout",
+        })
+    return provisional + fields
+
+
+def write_rename_candidates(path: pathlib.Path, rows: list[dict[str, str]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fields = (
+        "candidate_kind", "current_name", "suggested_name", "confidence",
+        "container_type", "payload_type", "asset_kind", "asset_paths",
+        "runtime_handles", "references", "initializer_sources",
+        "consumer_sources", "evidence", "blocker",
+    )
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, delimiter="\t", fieldnames=fields,
+                                lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def resource_owner_from_source(source: str) -> tuple[str, str] | None:
+    """Return (owner, evidence kind) for a named resource consumer source."""
+    actor_match = re.match(r"src/actors/([^/]+)/", source)
+    if actor_match:
+        return actor_match.group(1), "actor-directory"
+
+    stem = pathlib.PurePosixPath(source).stem
+    mangled = re.match(r"_ZN([0-9]+)", stem)
+    if not mangled:
+        return None
+    length = int(mangled.group(1))
+    start = mangled.end()
+    owner = stem[start:start + length]
+    remainder = stem[start + length:]
+    if len(owner) != length:
+        return None
+    if not (remainder.startswith("13InitResourcesE") or
+            remainder.startswith("16CleanupResourcesE")):
+        return None
+    return owner, "mangled-resource-method"
+
+
+def build_layout_candidates(rows: list[dict[str, str]],
+                            rename_rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Use resource-global consumers to suggest homes for static initializers."""
+    consumers = {
+        row["current_name"]: row["consumer_sources"].split("; ")
+        for row in rename_rows if row["candidate_kind"] == "global"
+    }
+    by_source: dict[str, list[dict[str, str]]] = collections.defaultdict(list)
+    for row in rows:
+        if (row["status"] == "runtime-handle" and row["path"] and
+                pathlib.PurePosixPath(row["source"]).name.startswith("__sinit_")):
+            by_source[row["source"]].append(row)
+
+    output = []
+    for source, group in sorted(by_source.items()):
+        if source.startswith("src/actors/"):
+            continue
+        owner_symbols = sorted(filter(None, {
+            anonymous_owner_symbol(row["owner"]) for row in group
+        }))
+        consumer_sources = sorted({
+            consumer
+            for symbol in owner_symbols
+            for consumer in consumers.get(symbol, [])
+            if consumer != source
+        })
+        owner_evidence = [
+            evidence for consumer in consumer_sources
+            if (evidence := resource_owner_from_source(consumer))
+        ]
+        actors = sorted({owner for owner, _kind in owner_evidence})
+        evidence_kinds = {kind for _owner, kind in owner_evidence}
+        asset_dirs = sorted({
+            str(pathlib.PurePosixPath(row["path"]).parent) for row in group
+        })
+        filename = pathlib.PurePosixPath(source).name
+        suggested = f"src/actors/{actors[0]}/{filename}" if len(actors) == 1 else ""
+        if len(actors) == 1:
+            confidence = (
+                "high" if "actor-directory" in evidence_kinds else "medium"
+            )
+            blocker = ""
+            evidence = (
+                "resource globals are consumed from one existing actor directory"
+                if confidence == "high" else
+                "resource globals are consumed by one mangled InitResources/CleanupResources class"
+            )
+        elif actors:
+            confidence = "blocked"
+            blocker = "resource globals are shared by multiple actor directories"
+            evidence = "consumer locations disagree on one actor owner"
+        else:
+            confidence = "review"
+            blocker = "no named actor consumer found"
+            evidence = "asset directories identify a subsystem but not a C++ owner"
+        output.append({
+            "current_path": source,
+            "suggested_path": suggested,
+            "confidence": confidence,
+            "actor": "; ".join(actors),
+            "asset_directories": "; ".join(asset_dirs),
+            "owners": "; ".join(owner_symbols),
+            "consumer_sources": "; ".join(consumer_sources),
+            "evidence": evidence,
+            "blocker": blocker,
+        })
+    return output
+
+
+def write_layout_candidates(path: pathlib.Path, rows: list[dict[str, str]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fields = (
+        "current_path", "suggested_path", "confidence", "actor",
+        "asset_directories", "owners", "consumer_sources", "evidence", "blocker",
+    )
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, delimiter="\t", fieldnames=fields,
+                                lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def cmd_generate(args) -> None:
     rom = pathlib.Path(args.rom)
     if not rom.is_file():
@@ -384,9 +647,20 @@ def cmd_references(args) -> None:
     handles = read_handles(args.handles)
     rows = scan_references(args.src, handles)
     write_references(args.output, rows)
+    candidates = build_rename_candidates(rows, args.src)
+    write_rename_candidates(args.candidates, candidates)
+    layouts = build_layout_candidates(rows, candidates)
+    write_layout_candidates(args.layouts, layouts)
     direct = sum(row["status"] == "runtime-handle" for row in rows)
+    high = sum(row["confidence"] == "high" for row in candidates)
+    medium = sum(row["confidence"] == "medium" for row in candidates)
+    blocked = sum(row["confidence"] == "blocked" for row in candidates)
+    layout_high = sum(row["confidence"] == "high" for row in layouts)
+    layout_medium = sum(row["confidence"] == "medium" for row in layouts)
     print(f"Found {len(rows):,} literal loader references ({direct:,} runtime handles)")
     print(f"  report: {args.output}")
+    print(f"  names : {args.candidates} ({high:,} high, {medium:,} medium, {blocked:,} blocked)")
+    print(f"  layout: {args.layouts} ({layout_high:,} high, {layout_medium:,} medium)")
 
 
 def main(argv=None) -> None:
@@ -405,6 +679,9 @@ def main(argv=None) -> None:
     references.add_argument("--handles", type=pathlib.Path, default=DEFAULT_HANDLES)
     references.add_argument("--src", type=pathlib.Path, default=REPO / "src")
     references.add_argument("--output", type=pathlib.Path, default=DEFAULT_REFERENCES)
+    references.add_argument("--candidates", type=pathlib.Path, default=DEFAULT_CANDIDATES)
+    references.add_argument("--layouts", type=pathlib.Path,
+                            default=DEFAULT_LAYOUT_CANDIDATES)
     references.set_defaults(func=cmd_references)
 
     args = parser.parse_args(argv)

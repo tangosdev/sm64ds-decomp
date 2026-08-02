@@ -31,12 +31,37 @@ number spaces gives convincing but incorrect asset names. The source-reference
 report therefore resolves against `AssetHandle.h`, while `NitroFileId.h` is for
 low-level filesystem work.
 
-The second command writes `build/assets/references.tsv`. It finds literal IDs in
-known file-loading calls, resolves runtime handles, and proposes names for
-anonymous `SharedFilePtr` owners. Proposals are evidence for review, not automatic
-renames. Large values such as `0x9807` bypass that table and are reported as
+The second command writes three review surfaces:
+
+- `build/assets/references.tsv` contains every literal loader call and its resolved
+  runtime asset, when known;
+- `build/assets/rename-candidates.tsv` groups anonymous globals and recovered
+  object-plus-offset fields, infers the `SharedFilePtr` payload type from the file
+  format, and records confidence, consumers, and blockers;
+- `build/assets/layout-candidates.tsv` correlates static initializers with named
+  actor directories that consume their resource globals.
+
+These are evidence for review, not automatic renames. A candidate is marked
+`high` only when one anonymous owner maps to one asset and the proposed name does
+not collide with another owner. Reused owners, duplicate names, and initializer
+files consumed by multiple actors are downgraded or blocked explicitly. Large
+values such as `0x9807` bypass the runtime table and remain
 `encoded-or-unresolved` until their archive/flag semantics are proved; masking them
 into a plausible path would create false names.
+
+The candidate data is especially useful for three cleanup passes that should
+remain independently reviewable:
+
+1. rename one-to-one resource globals and give them real `SharedFilePtr`
+   declarations;
+2. use object-plus-offset rows as field-name evidence after confirming the owning
+   class and layout;
+3. move `__sinit_*` sources next to the one named actor that consumes their
+   globals, without changing the symbol name.
+
+Do not bulk-apply the report. Asset paths are strong behavioral evidence, but they
+do not prove Nintendo's original C++ spelling. Promote a small batch, inspect all
+consumers, and run the normal affected-source, link, and ROM validation gates.
 
 The generated headers are intentionally not added to the compiler path yet. Moving a
 matched source from a numeric literal to one of these names should be done only when

@@ -63,6 +63,101 @@ class AssetCatalogTests(unittest.TestCase):
         self.assertEqual(rows[0]["path"], "data/enemy/piano/piano.bmd")
         self.assertEqual(rows[1]["status"], "encoded-or-unresolved")
 
+    def test_candidates_include_global_field_and_actor_layout_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            src = root / "src"
+            init = src / "unnamed" / "ov063" / "__sinit_ov063_test.c"
+            actor = src / "actors" / "MadPiano" / "InitResources.cpp"
+            init.parent.mkdir(parents=True)
+            actor.parent.mkdir(parents=True)
+            init.write_text(
+                "void init(void) {\n"
+                "  func_02017acc(data_ov063_0211ef80, 0x40a);\n"
+                "  func_02017acc(t + 0x20, 0x40c);\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            actor.write_text(
+                "extern int data_ov063_0211ef80[];\n"
+                "void use(void) { Model_Load(data_ov063_0211ef80); }\n",
+                encoding="utf-8",
+            )
+            handles = [
+                AC.AssetHandle(0x40A, 0x25C, "data/enemy/piano/piano.bmd", 100),
+                AC.AssetHandle(0x40C, 0x25E,
+                               "data/enemy/piano/piano_attack.bca", 80),
+            ]
+            old_repo = AC.REPO
+            try:
+                AC.REPO = root
+                rows = AC.scan_references(src, handles)
+                candidates = AC.build_rename_candidates(rows, src)
+                layouts = AC.build_layout_candidates(rows, candidates)
+            finally:
+                AC.REPO = old_repo
+
+        global_row = next(row for row in candidates
+                          if row["candidate_kind"] == "global")
+        self.assertEqual(global_row["current_name"], "data_ov063_0211ef80")
+        self.assertEqual(global_row["suggested_name"], "gPianoModelFile")
+        self.assertEqual(global_row["confidence"], "high")
+        self.assertEqual(global_row["payload_type"], "BMD_File")
+        self.assertIn("src/actors/MadPiano/InitResources.cpp",
+                      global_row["consumer_sources"])
+
+        field_row = next(row for row in candidates
+                         if row["candidate_kind"] == "field")
+        self.assertEqual(field_row["current_name"], "t+0x20")
+        self.assertEqual(field_row["suggested_name"], "mPianoAttackAnimationFile")
+        self.assertEqual(field_row["confidence"], "medium")
+
+        self.assertEqual(len(layouts), 1)
+        self.assertEqual(layouts[0]["confidence"], "high")
+        self.assertEqual(
+            layouts[0]["suggested_path"],
+            "src/actors/MadPiano/__sinit_ov063_test.c",
+        )
+
+    def test_candidate_blocks_one_owner_with_multiple_assets(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            src = root / "src"
+            src.mkdir()
+            (src / "sample.c").write_text(
+                "void f(void) {\n"
+                "  func_02017acc(data_ov047_02112658, 1);\n"
+                "  func_02017b4c(data_ov047_02112658, 2);\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            old_repo = AC.REPO
+            try:
+                AC.REPO = root
+                rows = AC.scan_references(src, [
+                    AC.AssetHandle(1, 10, "data/stage/a.bmd", 10),
+                    AC.AssetHandle(2, 11, "data/stage/b.kcl", 20),
+                ])
+                candidates = AC.build_rename_candidates(rows, src)
+            finally:
+                AC.REPO = old_repo
+
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(candidates[0]["confidence"], "blocked")
+        self.assertEqual(candidates[0]["suggested_name"], "")
+        self.assertIn("multiple asset paths", candidates[0]["blocker"])
+
+    def test_mangled_resource_method_supplies_medium_confidence_layout_owner(self):
+        self.assertEqual(
+            AC.resource_owner_from_source(
+                "src/_ZN14QuestionSwitch13InitResourcesEv.cpp"
+            ),
+            ("QuestionSwitch", "mangled-resource-method"),
+        )
+        self.assertIsNone(
+            AC.resource_owner_from_source("src/_ZN7Message11DisplayTextEt.cpp")
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
