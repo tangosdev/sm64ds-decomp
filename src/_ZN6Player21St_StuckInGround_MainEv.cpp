@@ -49,7 +49,7 @@ int Player::St_StuckInGround_Main()
             }
         }
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
-            mAngleY = mTargetAngleY;
+            mAngleY = mPrevAngleY;
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         }
         break;

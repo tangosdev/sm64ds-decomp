@@ -26,7 +26,7 @@ int Player::St_BackFlip_Init()
   if (*(int*)((char*)&mParam)==1) *(int*)((char*)&mVertSpeed)=0x4c000;
   func_ov002_020e2ad0(((void*)this));
   *(int*)((char*)&mHorzSpeed)=0x10000;
-  *(short*)((char*)&mTargetAngleY) = *(short*)((char*)&mAngleY) + 0x8000;
+  *(short*)((char*)&mPrevAngleY) = *(short*)((char*)&mAngleY) + 0x8000;
   func_ov002_020e25f0(((void*)this), 0);
   return 1;
 }

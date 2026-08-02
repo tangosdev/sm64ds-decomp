@@ -8,6 +8,6 @@
 
 int Player::St_Hurt_Cleanup()
 {
-    *(unsigned int *)(((long long)(int)((char *)&unk_0b0))) &= ~0x80;
+    *(unsigned int *)(((long long)(int)((char *)&mFlags))) &= ~0x80;
     return 1;
 }

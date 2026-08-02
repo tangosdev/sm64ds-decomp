@@ -1,7 +1,18 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Player: 234 matched functions, 195 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Originally generated from matched-function evidence by tools/gen_header.py,
+ * now hand-maintained. Offsets and widths are observed, not guessed; gaps are
+ * explicit padding. Field NAMES cannot change codegen, so they are safe to
+ * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
+ *
+ * Player derives from Actor: ActorBase -> ActorDerived -> Actor -> Player.
+ * See notes/actor-vtables.md. That is not yet expressed here -- 0x000..0x0cf
+ * still duplicates Actor's layout inline rather than inheriting it, and the
+ * 31-slot vtable (_ZTV6Player, 0x0210a83c in ov002) is unrepresented. Fields
+ * below 0x0d0 are being reconciled with Actor.h/ActorBase.h so that the switch
+ * to real inheritance becomes a header change rather than a rewrite of 197
+ * files.
+ *
+ * sizeof(Player) is 0x768 -- _ZN6PlayerC3Ev asks operator new for exactly that.
+ */
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "types.h"
@@ -49,29 +60,39 @@ struct Player {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    u8  mCamSpacePos;            /* 0x074 */
-    u8  pad_075[0x3];
-    /* 0x078..0x07f. mModelAnim2 used to be here; its only evidence was
-       src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp, ov006 constructor-
-       shaped code carrying a Player name. Player's own ModelAnims are at 0xf0
-       and 0x174. On a real Player 0x078 is Actor's mCamSpacePosY. */
-    u8  pad_078[0x8];
+    /* 0x074..0x07f is a Vector3, not a byte plus padding: 13 files take
+       &mCamSpacePosX and cast it to Vector3* for Sound::PlayCharVoice and
+       friends. Named to match Actor.h, which decomposes the same bytes into
+       mCamSpacePosX / Y / Z. */
+    s32 mCamSpacePosX;      /* 0x074 */
+    s32 mCamSpacePosY;      /* 0x078 */
+    s32 mCamSpacePosZ;      /* 0x07c */
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
-    s16 mAngX;            /* 0x08c */
+    s16 mAngleX;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
-    s16 mAngZ;            /* 0x090 */
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mTargetAngleY;            /* 0x094 */
-    s16 mPrevAngleZ;            /* 0x096 */
+    s16 mAngleZ;            /* 0x090 */
+    /* 0x092..0x097 is a prev-angle triple. 0x094 was called mTargetAngleY here
+       and mPrevAngleY in Actor.h; the two had to agree before Player can
+       inherit these bytes. Renamed to mPrevAngleY on the structural argument:
+       its siblings at 0x092 and 0x096 are unambiguously mPrevAngleX/Z, and
+       Player uses 0x094 exactly as it uses them -- `mPrevAngleY = mAngleY` to
+       save and `mAngleY = mPrevAngleY` to restore, mirroring
+       `mAngleX = mPrevAngleX`. It is also assigned from mDesiredAngleY, which
+       reads as a target, but a previous-angle slot being reused to stage a
+       desired angle is ordinary; a prev-triple with a target in the middle is
+       not. Names cannot change codegen, so this is reversible. */
+    s16 mPrevAngleX;        /* 0x092 */
+    s16 mPrevAngleY;        /* 0x094 */
+    s16 mPrevAngleZ;        /* 0x096 */
     s32 mHorzSpeed;            /* 0x098 */
     s32 mVertAccel;            /* 0x09c */
     s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
     s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
+    u32 mFlags;             /* 0x0b0 -- bitwise: `&= ~0x80`, `& 0x10` */
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x3];

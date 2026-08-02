@@ -10,6 +10,6 @@ int Player::St_SwingPlayer_Cleanup()
   if (p) {
     *(unsigned int*)(((long long)(int)(p + 0xb0))) &= ~0x800;
   }
-  mTargetAngleY = mAngleY;
+  mPrevAngleY = mAngleY;
   return 1;
 }

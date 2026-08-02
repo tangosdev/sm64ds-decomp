@@ -142,8 +142,8 @@ int Player::St_StomachSlide_Main()
         return 1;
 
     case 2:
-        mAngZ = 0;
-        mAngX = mAngZ;
+        mAngleZ = 0;
+        mAngleX = mAngleZ;
         if (mStateStep == 0) {
             void* light = *(void**)((char*)&mHeldObj);
             int haveLight = (light != 0);
@@ -163,7 +163,7 @@ int Player::St_StomachSlide_Main()
             } else {
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x3e, 0x40000000, 0x1000, 0);
             }
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
             {
                 u8* p = (u8*)(((long long)(int)((char*)&mStateStep)));
                 *p = (u8)(*p + 1);
@@ -184,7 +184,7 @@ end:
         s16 v = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
         if (v < 0) v = 0;
         if (v >= 0x2aaa) v = 0x2aaa;
-        _Z15ApproachLinear2Rsss((short*)((char*)&mAngX), v, 0x200);
+        _Z15ApproachLinear2Rsss((short*)((char*)&mAngleX), v, 0x200);
     }
     Player_AdvanceAnims(((char*)this));
     mStateArg = mSlideType;

@@ -25,7 +25,7 @@ int Player::St_NoControl_Main()
     if (mode == 0 || mode == 1 || (mode == 0x11 && mStateStep != 0x18)) {
         if (func_0200ee68() == 0) {
             mAngleY = GetAngleToCamera(mPlayerNo);
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
         }
     }
 

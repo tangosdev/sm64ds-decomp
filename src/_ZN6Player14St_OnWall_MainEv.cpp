@@ -40,7 +40,7 @@ int Player::St_OnWall_Main()
     if (func_ov002_020c5244() != 0)
         return 1;
     if (func_ov002_020d36d8(((char*)this), 0) != 0) {
-        mTargetAngleY = mAngleY;
+        mPrevAngleY = mAngleY;
         return 1;
     }
     if ((mClsnFlags & 2) == 0) {
@@ -66,7 +66,7 @@ int Player::St_OnWall_Main()
             return 1;
         }
         _Z14ApproachLinearRsss((s16*)((char*)&mAngleY), (s16)a, 0x800);
-        mTargetAngleY = a;
+        mPrevAngleY = a;
         mHorzSpeed = func_ov002_020bf224(((char*)this), 0xa000, 0x2000);
         func_ov002_020eee3c(((char*)this) + 0x380, ((char*)this));
     } else {
@@ -86,10 +86,10 @@ int Player::St_OnWall_Main()
             _Z14ApproachLinearRsss((s16*)((char*)&mAngleY), (s16)a2, 0x800);
             u32 anim;
             if ((s16)a2 == (s16)(mDesiredAngleY + d)) {
-                mTargetAngleY = ang + 0x4000;
+                mPrevAngleY = ang + 0x4000;
                 anim = 0x5d;
             } else {
-                mTargetAngleY = ang - 0x4000;
+                mPrevAngleY = ang - 0x4000;
                 anim = 0x5c;
             }
             Fix12i spd = (Fix12i)(((s64)mHorzSpeed * 0x600 + 0x800) >> 12);

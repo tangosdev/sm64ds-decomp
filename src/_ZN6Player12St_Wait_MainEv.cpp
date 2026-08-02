@@ -81,8 +81,8 @@ int Player::St_Wait_Main()
                 if (lvl0 != 0) {
                     int thr0 = (*(unsigned char*)(data_0209f4ae+idx0)!=2) ? 0x471 : 0x555;
                     if (lvl0 < thr0) {
-                        mTargetAngleY = mDesiredAngleY;
-                        mAngleY = mTargetAngleY;
+                        mPrevAngleY = mDesiredAngleY;
+                        mAngleY = mPrevAngleY;
                     }
                 }
                 {
@@ -106,8 +106,8 @@ int Player::St_Wait_Main()
             if (lvl10 != 0) {
                 int thr10 = (*(unsigned char*)(data_0209f4ae+idx10)!=2) ? 0x471 : 0x555;
                 if (lvl10 < thr10) {
-                    mTargetAngleY = mDesiredAngleY;
-                    mAngleY = mTargetAngleY;
+                    mPrevAngleY = mDesiredAngleY;
+                    mAngleY = mPrevAngleY;
                 }
             }
             {

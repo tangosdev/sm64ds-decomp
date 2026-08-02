@@ -93,7 +93,7 @@ int Player::St_Talk_Main()
             else
                 mStateStep = 7;
             mStateWork = 0;
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
             char* cam = data_0209f318;
             func_0200d81c(cam, mPlayerNo);
             *(u32*)(((int)cam + 0x154)) &= ~8;

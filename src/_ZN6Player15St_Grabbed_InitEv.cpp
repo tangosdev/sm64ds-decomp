@@ -14,7 +14,7 @@ int Player::St_Grabbed_Init()
   *(int*)(int)(((unsigned long long)(int)((char*)&mBodyClsnFlags)) & 0xFFFFFFFFFFFFFFFFull) |= 2;
   mIsBodyClsnEnabled = 0;
   unk_716 = 1;
-  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, (void*)((char*)&mCamSpacePos));
+  _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, (void*)((char*)&mCamSpacePosX));
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x71, 0, 0x1000, 0);
   unk_717 = 1;
   mStateStep = 0;

@@ -51,7 +51,7 @@ int Player::St_HoldLight_Main()
                 if (func_ov002_020e0ccc(((char*)this), *(short**)((char*)&mHeldObj))) {
                     return 1;
                 }
-                mTargetAngleY = mAngleY;
+                mPrevAngleY = mAngleY;
                 mHorzSpeed = 0;
                 mStateStep = 1;
             } else {
@@ -84,10 +84,10 @@ int Player::St_HoldLight_Main()
     if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
         s16 t = mDesiredAngleY;
         if (mStateArg != 0) {
-            mTargetAngleY = t;
+            mPrevAngleY = t;
             mStateArg = 0;
         }
-        ApproachAngle((short*)((char*)&mTargetAngleY), t, 4, 0x2000, 0x800);
+        ApproachAngle((short*)((char*)&mPrevAngleY), t, 4, 0x2000, 0x800);
         var_r4 = data_ov002_020ff1c0[mParam];
     }
 
@@ -102,9 +102,9 @@ int Player::St_HoldLight_Main()
     mStateArg = 0;
     if (mHorzSpeed == 0) {
         mStateArg = 1;
-        mAngleY = mTargetAngleY;
+        mAngleY = mPrevAngleY;
     } else {
-        ApproachAngle((short*)((char*)&mAngleY), mTargetAngleY, 8, 0x2000, 0x800);
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x800);
     }
 
     func_ov002_020d4d88(((char*)this), var_r4, 0x1000);

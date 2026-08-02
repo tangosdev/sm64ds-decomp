@@ -86,9 +86,9 @@ int Player::St_GrabBowserTail_Main()
                 func_02012694(0xb4, ((char*)this) + 0x74);
             s16 sp = mAngleYSpeed;
             if (sp >= 0)
-                mAngX = -sp;
+                mAngleX = -sp;
             else
-                mAngX = sp;
+                mAngleX = sp;
         }
         break;
     case 2:

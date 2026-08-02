@@ -59,8 +59,8 @@ int Player::St_Crawl_Main()
             int r2v = Player_ScaleByCharFactor(((char*)this), 0x1000);
             a = func_ov002_020bf224(((char*)this), r4v, r2v);
             b = 0x1000;
-            ApproachAngle((s16*)((char*)&mTargetAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);
-            mAngleY = mTargetAngleY;
+            ApproachAngle((s16*)((char*)&mPrevAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);
+            mAngleY = mPrevAngleY;
             func_ov002_020c18b0(((char*)this), 0);
         } else {
             mHorzSpeed = 0;

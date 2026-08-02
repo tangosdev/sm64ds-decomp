@@ -44,7 +44,7 @@ int Player::St_SideFlip_Main()
             u16 r0v = *(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18);
             if (r0v & 0x400) {
                 if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211052c)) {
-                    mTargetAngleY = mAngleY;
+                    mPrevAngleY = mAngleY;
                 }
             }
             if (func_ov002_020e2664(((char*)this))) {

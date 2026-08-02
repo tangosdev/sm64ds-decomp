@@ -51,11 +51,11 @@ int Player::St_MetalWaterGround_Main()
     func_ov002_020cd190(((char*)this));
     int approach = 0;
     if(*(short*)((char*)&data_0209f4a0 + data_020a0e40 * 0x18) != 0){
-        ApproachAngle((short*)((char*)&mTargetAngleY), mDesiredAngleY, 8, 0x1000, 0x80);
+        ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x80);
         approach = func_ov002_020bf224(((char*)this), 0x14000, 0x1000);
     }
     _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), approach, 0x1000);
-    mAngleY = mTargetAngleY;
+    mAngleY = mPrevAngleY;
     if(mIsMega != 0){
         if(mHorzSpeed == 0){
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xa0, 0, 0x1000, 0);
@@ -84,7 +84,7 @@ int Player::St_MetalWaterGround_Main()
         *(int*)(anim + 0xc) = r5;
         if(_ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)mParam, 0) * 4 + 0xdc) + 0x50), 4) != 0
            || _ZNK9Animation12WillHitFrameEi((void*)(*(char**)(((char*)this) + _ZNK6Player14GetBodyModelIDEjb(((char*)this), (unsigned char)mParam, 0) * 4 + 0xdc) + 0x50), 0x13) != 0){
-            func_0201251c(0, 0xaa, (void*)((char*)&mCamSpacePos), mHorzSpeed);
+            func_0201251c(0, 0xaa, (void*)((char*)&mCamSpacePosX), mHorzSpeed);
         }
     }
     Player_AdvanceAnims(((char*)this));

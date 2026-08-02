@@ -37,14 +37,14 @@ int Player::St_Cannon_Main()
             break;
 
         char* p = data_0209f318;
-        mTargetAngleY = GetAngleToCamera(mPlayerNo) + 0x8000;
-        mAngleY = mTargetAngleY;
+        mPrevAngleY = GetAngleToCamera(mPlayerNo) + 0x8000;
+        mAngleY = mPrevAngleY;
 
         int ang = *(u16*)(p + 0x17e);
         int j = ang >> 4;
         mHorzSpeed = (int)(((long long)data_02082214[j * 2 + 1] * 0x64000 + 0x800) >> 12);
         mVertSpeed = (int)(((long long)data_02082214[j * 2] * 0x64000 + 0x800) >> 12);
-        mAngX = 0;
+        mAngleX = 0;
         mStateStep = 2;
         mOpacity = 0x1f;
         mIsBodyClsnEnabled = 1;
@@ -84,7 +84,7 @@ int Player::St_Cannon_Main()
         if (mVertSpeed >= 0)
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(mPosX, mPosY, mPosZ);
         if (mStateWork == 0)
-            mAngX = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
+            mAngleX = _ZN4cstd5atan2E5Fix12IiES1_(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
         Player_AdvanceAnims(((char*)this));
         // fall through
     case 3:

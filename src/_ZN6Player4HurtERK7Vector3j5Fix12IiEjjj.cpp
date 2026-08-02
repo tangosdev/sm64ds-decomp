@@ -94,9 +94,9 @@ L9c:
     if (AngleDiff(self->mAngleY, ang) > 0x4000) {
         *(u8*)(((long long)(int)((char*)&self->mStateStep))) += 1;
     }
-    self->mTargetAngleY = ang + 0x8000;
+    self->mPrevAngleY = ang + 0x8000;
     if (self->mStateStep & 1) {
-        self->mAngleY = self->mTargetAngleY;
+        self->mAngleY = self->mPrevAngleY;
     } else {
         self->mAngleY = ang;
     }

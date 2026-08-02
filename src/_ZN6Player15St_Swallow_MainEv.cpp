@@ -36,9 +36,9 @@ int Player::St_Swallow_Main()
         int b = (*(unsigned short*)((char*)p360 + 0xc) == 0xbf);
         if (b == 0) goto L653c;
     }
-    *(short*)((char*)p360 + 0x8c) = mAngX;
+    *(short*)((char*)p360 + 0x8c) = mAngleX;
     *(short*)((char*)p360 + 0x8e) = mAngleY;
-    *(short*)((char*)p360 + 0x90) = mAngZ;
+    *(short*)((char*)p360 + 0x90) = mAngleZ;
     func_ov002_020d5ab4(*(void**)((char*)&mObjInMouth));
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0x100, ((char*)this) + 0x74);
     goto L65e4;

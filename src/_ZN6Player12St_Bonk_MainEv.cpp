@@ -75,8 +75,8 @@ willhit:
 finishedanim:
     mStateWork = 0;
     if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
-        mTargetAngleY = mTargetAngleY + 0x8000;
-        mAngleY = mTargetAngleY;
+        mPrevAngleY = mPrevAngleY + 0x8000;
+        mAngleY = mPrevAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         return 1;
     }

@@ -26,7 +26,7 @@ int Player::St_WallJump_Main()
   } else {
     if (*(unsigned short*)((char*)data_0209f49e + data_020a0e40[0]*0x18) & 0x400) {
       if (_ZN6Player7IsStateERNS_5StateE(((void*)this), data_ov002_0211052c)) {
-        *(short*)((char*)&mTargetAngleY) = *(short*)((char*)&mAngleY);
+        *(short*)((char*)&mPrevAngleY) = *(short*)((char*)&mAngleY);
       }
     }
     if (func_ov002_020e2664(((void*)this))) return 1;

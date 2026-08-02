@@ -55,7 +55,7 @@ int Player::Render()
     }
     if (mOpacity == 0)
         return 1;
-    if (!(unk_0b0 & 0x10)) {
+    if (!(mFlags & 0x10)) {
         char* bodyMdl;
         int i;
         bodyMdl = *(char**)(((char*)this) + 0xdc + _ZNK6Player14GetBodyModelIDEjb(((char*)this), unk_6db, 1) * 4);

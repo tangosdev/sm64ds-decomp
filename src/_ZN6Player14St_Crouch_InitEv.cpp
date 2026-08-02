@@ -14,7 +14,7 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned i
 int Player::St_Crouch_Init()
 {
   if(unk_6ed){
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x2e,(struct Vector3*)((char*)&mCamSpacePos));
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter,0x2e,(struct Vector3*)((char*)&mCamSpacePosX));
   }
   mStateTimer=0x1e;
   if(*(unsigned short*)(data_0209f49c + data_020a0e40*0x18) & 2){
@@ -22,7 +22,7 @@ int Player::St_Crouch_Init()
   }
   if(mStateStep==0){
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x2d,0x40000000,0x1000,0);
-    mTargetAngleY=mAngleY;
+    mPrevAngleY=mAngleY;
   } else if(mStateStep==1){
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x2c,0,0x1000,0);
   }

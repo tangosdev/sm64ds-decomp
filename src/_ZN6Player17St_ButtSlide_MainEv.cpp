@@ -74,8 +74,8 @@ int Player::St_ButtSlide_Main()
         func_ov002_020dcafc(((char*)this));
         break;
     case 1:
-        mAngZ = 0;
-        mAngX = mAngZ;
+        mAngleZ = 0;
+        mAngleX = mAngleZ;
         if (mIsAirborne == 0) {
             if (mLandSoundPlayed == 0) {
                 mLandSoundPlayed = 1;
@@ -100,11 +100,11 @@ int Player::St_ButtSlide_Main()
         }
         break;
     case 2:
-        mAngZ = 0;
-        mAngX = mAngZ;
+        mAngleZ = 0;
+        mAngleX = mAngleZ;
         if (mStateWork == 0) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x42, 0x40000000, 0x1000, 0);
-            mTargetAngleY = mAngleY;
+            mPrevAngleY = mAngleY;
             mStateWork = 1;
         } else if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);

@@ -59,7 +59,7 @@ int Player::St_LevelEnter_Init()
     mJumpComboStage = 0;
     mHorzSpeed = 0;
     mStateArg = 0;
-    mTargetAngleY = mAngleY;
+    mPrevAngleY = mAngleY;
     mStateWork = 0;
     _ZN13RaycastGroundC1Ev(&rg);
 

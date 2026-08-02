@@ -47,7 +47,7 @@ int Player::St_SlideKick_Main()
     goto L1d8;
 
 L88:
-    mTargetAngleY = mAngleY;
+    mPrevAngleY = mAngleY;
     mStateStep = 1;
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021104e4);
     goto L1d8;

@@ -79,8 +79,8 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
     self->mIsInAirState = 0;
     self->unk_654 = 0;
 
-    self->mAngZ = 0;
-    self->mAngX = self->mAngZ;
+    self->mAngleZ = 0;
+    self->mAngleX = self->mAngleZ;
 
     self->mIsControlDisabled = 0;
     self->unk_6ec = 0;

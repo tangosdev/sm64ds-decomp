@@ -50,7 +50,7 @@ int Player::St_Land_Main()
                 return 1;
             }
             if (_ZN6Player6IsAnimEj(((char*)this), 0x4e) != 0) {
-                mAngleY = mTargetAngleY;
+                mAngleY = mPrevAngleY;
             }
             int v = (mHeldObj != 0);
             if (v != 0) {
@@ -91,14 +91,14 @@ int Player::St_Land_Main()
             mAngleY = (s16)(mAngleY + 0x8000);
         }
         if ((*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0)
-            && AngleDiff(mAngleY, mTargetAngleY) >= 0x4000) {
+            && AngleDiff(mAngleY, mPrevAngleY) >= 0x4000) {
             if (AngleDiff(mDesiredAngleY, mAngleY) >= 0x4000) {
-                mAngleY = mTargetAngleY;
+                mAngleY = mPrevAngleY;
             } else {
                 mHorzSpeed = 0 - mHorzSpeed;
             }
         }
-        mTargetAngleY = mAngleY;
+        mPrevAngleY = mAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211013c) != 0
             && mStateStep != 0

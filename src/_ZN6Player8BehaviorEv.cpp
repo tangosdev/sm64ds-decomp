@@ -206,14 +206,14 @@ after_player_slot:
         mPeakY = mPosY;
 
     if (mIsAirborne == 0 && mIsFallScreaming != 0) {
-        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, (const Vector3 *)((char *)&mCamSpacePos));
+        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x2e, (const Vector3 *)((char *)&mCamSpacePosX));
         mIsFallScreaming = 0;
     }
     if (mIsAirborne != 0 && mIsFallScreaming == 0
         && _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110454) == 0
         && (mPeakY - mPosY) > 0x47e000) {
         mIsFallScreaming = 1;
-        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x1d, (const Vector3 *)((char *)&mCamSpacePos));
+        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x1d, (const Vector3 *)((char *)&mCamSpacePosX));
     }
 
     if (mIsInShallowWater != 0 && mIsUnderwater == 0 && mIsAirborne == 0)

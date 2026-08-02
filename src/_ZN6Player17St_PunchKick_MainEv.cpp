@@ -70,9 +70,9 @@ int Player::St_PunchKick_Main()
             if (mPunchKickStep != 2)
                 mHorzSpeed = 0;
 
-            if (mTargetAngleY != mAngleY) {
+            if (mPrevAngleY != mAngleY) {
                 mHorzSpeed = 0;
-                mTargetAngleY = mAngleY;
+                mPrevAngleY = mAngleY;
             }
 
             {
@@ -80,7 +80,7 @@ int Player::St_PunchKick_Main()
                 s16 val = *(s16*)((char*)data_0209f4a0 + idx2 * 0x18);
                 if (val == 0 && mPunchKickStep == 2) {
                     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x52, 0x40000000, 0x1000, 0);
-                    mTargetAngleY = mAngleY;
+                    mPrevAngleY = mAngleY;
                     mHorzSpeed = 0;
                 }
             }

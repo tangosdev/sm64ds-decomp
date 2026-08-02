@@ -53,7 +53,7 @@ int Player::St_Shell_Main()
 
     if (_ZNK12WithMeshClsn8IsOnWallEv((void*)((char*)&mMeshClsn))) {
         int ang = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568);
-        if (AngleDiff(ang, mTargetAngleY) > 0x6000) {
+        if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
             if (func_02037e58((u32*)((char*)_ZNK12WithMeshClsn13GetWallResultEv((void*)((char*)&mMeshClsn)) + 4)) != 1) {
                 flag = 1;
             }
@@ -75,9 +75,9 @@ int Player::St_Shell_Main()
             target = mAngleY;
             accel = 0x18000;
         }
-        s16 angleSave = mTargetAngleY;
-        ApproachAngle((short*)((char*)&mTargetAngleY), target, 8, 0x800, 0x100);
-        mAngleY = mTargetAngleY;
+        s16 angleSave = mPrevAngleY;
+        ApproachAngle((short*)((char*)&mPrevAngleY), target, 8, 0x800, 0x100);
+        mAngleY = mPrevAngleY;
         func_ov002_020cc660(((char*)this), angleSave);
         {
             int spd = mHorzSpeed;

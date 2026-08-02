@@ -36,20 +36,20 @@ int Player::St_Walk_Main()
     if (func_ov002_020d36d8(((char*)this), 0)) return 1;
 
     func_ov002_020d45c0(((char*)this));
-    short r5 = mTargetAngleY;
+    short r5 = mPrevAngleY;
     if (func_ov002_020d3b9c(((char*)this))) return 1;
 
     func_ov002_020d413c(((char*)this), r5);
 
     if (mHorzSpeed == 0) {
-        mAngleY = mTargetAngleY;
+        mAngleY = mPrevAngleY;
     } else {
-        ApproachAngle((short*)((char*)&mAngleY), mTargetAngleY, 4, 0x2000, 0x800);
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 4, 0x2000, 0x800);
     }
 
     if (unk_6e0 != 0) {
         if (!_ZN6Player6IsAnimEj(((char*)this), 0x37)) {
-            int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePos), mHorzSpeed, 0);
+            int result = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, (int)((char*)&mCamSpacePosX), mHorzSpeed, 0);
             mLoopingSoundHandle = result;
         }
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {

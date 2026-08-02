@@ -85,8 +85,8 @@ merge:
     if (func_ov002_020e3078(((char *)this), data_ov002_02110154) != 0) {
         unk_6b8 = 0x10;
         if (*(short *)((char *)&data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
-            mTargetAngleY = mDesiredAngleY;
-            mAngleY = mTargetAngleY;
+            mPrevAngleY = mDesiredAngleY;
+            mAngleY = mPrevAngleY;
         }
         if (unk_6ed != 0) {
             unsigned int rnd = (unsigned int)RandomIntInternal(data_ov002_0210e160);

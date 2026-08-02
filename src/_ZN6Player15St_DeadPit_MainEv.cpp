@@ -48,7 +48,7 @@ int Player::St_DeadPit_Main()
         break;
     case 3: {
         func_ov002_020c0108(((char*)this), 0);
-        u32 snd = _ZN5Sound8PlayLongEjjjRK7Vector3j(mLoopingSoundHandle, 0, 0x10a, (int*)((char*)&mCamSpacePos), 0);
+        u32 snd = _ZN5Sound8PlayLongEjjjRK7Vector3j(mLoopingSoundHandle, 0, 0x10a, (int*)((char*)&mCamSpacePosX), 0);
         int* p = (int*)(((long long)(int)((char*)&mSinkDepth)));
         mLoopingSoundHandle = snd;
         *p += 0x5000;
@@ -60,7 +60,7 @@ int Player::St_DeadPit_Main()
                 *p += 0x2000;
                 if (mStateArg == 0) {
                     if (mSinkDepth >= 0x64) {
-                        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x25, (int*)((char*)&mCamSpacePos));
+                        _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x25, (int*)((char*)&mCamSpacePosX));
                         mStateArg = 1;
                     }
                 }

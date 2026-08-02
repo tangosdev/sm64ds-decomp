@@ -77,7 +77,7 @@ int Player::St_HoldHeavy_Main()
         {
             s16 t = *(s16*)((char*)data_0209f4a0 + off);
             if (t != 0) {
-                ApproachAngle((short*)((char*)&mTargetAngleY), mDesiredAngleY, 8, 0x1000, 0x400);
+                ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x400);
                 var_r1 = data_ov002_020ff1d0[mParam];
             }
         }
@@ -96,11 +96,11 @@ int Player::St_HoldHeavy_Main()
     }
 
     if (mHorzSpeed == 0) {
-        mAngleY = mTargetAngleY;
+        mAngleY = mPrevAngleY;
     } else if (mParam == 1) {
-        ApproachAngle((short*)((char*)&mAngleY), mTargetAngleY, 0x10, 0x1000, 0x100);
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 0x10, 0x1000, 0x100);
     } else {
-        ApproachAngle((short*)((char*)&mAngleY), mTargetAngleY, 8, 0x2000, 0x400);
+        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x400);
     }
 
     if (mHorzSpeed == 0) {
