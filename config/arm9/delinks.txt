@@ -2567,7 +2567,7 @@ src/func_02017ae4.c:
     complete
     .text start:0x02017ae4 end:0x02017afc
 
-src/_ZN12MeshCollider8LoadFileER13SharedFilePtr.c:
+src/_ZN12MeshCollider8LoadFileER13SharedFilePtr.cpp:
     complete
     .text start:0x02017afc end:0x02017b34
 
@@ -5544,11 +5544,11 @@ src/func_020396dc.c:
     complete
     .text start:0x020396dc end:0x020396f0
 
-src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block.c:
+src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block.cpp:
     complete
     .text start:0x020396f0 end:0x02039760
 
-src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File.c:
+src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File.cpp:
     complete
     .text start:0x02039760 end:0x02039794
 
