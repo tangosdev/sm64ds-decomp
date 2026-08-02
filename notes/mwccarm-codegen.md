@@ -2957,3 +2957,42 @@ same coloring-priority class as 0202ffec.
 
 Permuter operational note (Windows): --quiet or --stop-on-zero stall permuter.py with
 stdout-flush OSErrors; run plain with output redirected (~14 cand/sec at -j8).
+
+## 6ba. The 4a8-pack rank-pin: a partial decouple, and a canonicalization split from its ov075 twin (2026-08-02, Fable on func_ov080_02125460, ~330 compiles, still div 5)
+
+func_ov080_02125460 (TEXIMAGE_PARAM pack, div 5) is the same two-attractor rank-pin
+as func_ov075_0211a948 (6ab/2114): ROM wants A's selection (b>>3 materialized, lsl#26
+folded into the first orr) with B's coloring (b=r2 coalescing the dying pointer,
+t26=r3). Three findings extend the class record:
+
+- **The 120-perm result does NOT transfer between twins.** On ov075 every or-chain
+  permutation returned exactly 5; here the baseline order is the UNIQUE minimum at 5
+  and all 119 others are 7-10. Same residue class, different canonicalization
+  landscape - re-run the perm sweep per function before importing a twin's negative.
+  B-order here = 7: coloring flips to the ROM's (b=r2, t26=r3) but fold-side follows
+  term order strictly - across ~20 spellings (b/8, u64-shift launder, static-inline
+  sh3, mask-first) the orr folder ONLY takes the second operand's shift; no commute
+  was ever observed. Late-lowering spellings either lower before selection (b/8,
+  inline) or materialize extra code (u64 launder +8, mask-first +4).
+- **First known partial decouple of the class: a named extract + ANY equal-arm
+  var-cond ternary in the load's index.** `t = (a>>0x1a)&7; b = q[t ? 0 : 0];` (cond
+  identity irrelevant - `q ? 0 : 0` behaves identically; the folded diamond acts as a
+  forward-substitution barrier) reaches b=r2-coalesced (`ldr r2,[r2]`) WITH A's
+  selection - the two load-bearing words the plain A-tree can never produce. Cost: the
+  a/t-web coloring rotates (a=lr instead of r4, t26=r4, t20=r3, t23=ip) and t29's lsr
+  sinks below the first orr = stable div 14. The rotation is immune to all 6 decl
+  orders, a-laundering (+8), cast-arith a-loads, and all 120 dep-side term
+  arrangements (phase-2 sweep min 7). Adding a second cond-use of `a` worsens (16).
+  Constant-arm ternaries (`c ? 3 : 3`) parse-fold and do nothing anywhere.
+- **Context does not leak into the pack block.** Inlining the head's single-use
+  pointer, equal-arm ternaries in other blocks, struct-typing, volatile HW stores,
+  extern-C C++ mode, BB barriers (label / do-while(0) / switch(0)), two-def webs
+  (t&=7, b>>=3), and a 5-statement `v |=` accumulator chain (survives as structure
+  but rotates q/a/v) all leave the b/t26 pair untouched. One head trap worth banking:
+  the 0x1b6 halfword must stay ANONYMOUS inside the short-circuit `||` - naming it
+  hoists the ldrh above the branch and breaks the matching head.
+
+Verdict unchanged (still parked at 5, `// NONMATCHING`): the b/t26 rank rides the
+canonical A-tree, and the only rerank construct drags the a-family with it. The open
+angle narrows to: a substitution barrier that does NOT perturb sibling-web coloring,
+or any construct that makes the orr folder commute.
