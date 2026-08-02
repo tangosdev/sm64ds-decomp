@@ -42,9 +42,16 @@ First full sweep of `tools/host_frontier.py` (cl /Zs, 32-bit, all of src/):
 
     compiles for host: 11,005 / 11,222  (98.1%)
 
-217 failures, largest buckets: C2054 x98 (one idiom, worth one targeted
-fix), generic syntax errors x44, C2732 linkage contradictions x19, the rest
-single digits. The takeaway: the decomp's C is already overwhelmingly
-host-clean, so the port's work is platform seams and link closure, not mass
-source repair. Re-run the sweep after each seam lands; the number should
-only go up.
+Refined the same day: the C2054 x98 bucket decoded as the asm-hatch TUs
+(`asm void`, mwccarm syntax) -- DS hardware operations that SHOULD not
+compile on a host. CP15 cache management is a host no-op, block copy/fill is
+memcpy, context switch is the threads seam. The tool now classifies them as
+HAL-owned rather than as syntax defects, which makes the honest frontier:
+
+    compiles for host: 11,005 / 11,125  (98.9%)   + 97 asm TUs -> HAL backlog
+
+120 real failures remain: generic syntax x44, C2732 extern-C linkage
+contradictions x19, undeclared identifiers x13, unknown types x11, the rest
+single digits. The takeaway stands, stronger: the port's work is platform
+seams and link closure, not mass source repair. Re-run after each seam
+lands; the number should only go up.

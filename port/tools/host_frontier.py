@@ -122,6 +122,23 @@ def main():
 
     files = sorted(p for p in SRC.rglob("*") if p.suffix in (".c", ".cpp"))
     print(f"host frontier: {len(files)} source files, cl /Zs, 32-bit")
+
+    # asm-hatch TUs (`asm void f(...) { ... }`, mwccarm syntax) can never
+    # compile on a host and SHOULD not: they are DS hardware operations --
+    # CP15 cache management (host no-op), block copy/fill (memcpy), context
+    # switch (threads seam). Classify them as HAL-owned up front instead of
+    # letting them read as 98 syntax defects; they are the HAL backlog.
+    hal_owned = []
+    rest = []
+    asm_re = re.compile(r"^\s*asm\s+\w", re.M)
+    for f in files:
+        try:
+            head = f.read_text(errors="replace")
+        except OSError:
+            rest.append(f)
+            continue
+        (hal_owned if asm_re.search(head) else rest).append(f)
+    files = rest
     env = vc_env()
 
     batches = [files[i:i + args.batch] for i in range(0, len(files), args.batch)]
@@ -143,8 +160,11 @@ def main():
         buckets[b] += 1
         members[b].append(f)
 
+    total = len(files) + len(hal_owned)
     pct = 100.0 * len(ok) / len(files) if files else 0
-    print(f"\ncompiles for host: {len(ok)} / {len(files)}  ({pct:.1f}%)\n")
+    print(f"\ncompiles for host: {len(ok)} / {len(files)}  ({pct:.1f}%)"
+          f"   [+ {len(hal_owned)} asm-hatch TUs, HAL-owned on host, "
+          f"excluded from the denominator]\n")
     for b, n in buckets.most_common():
         print(f"  {n:6}  {b}")
 
