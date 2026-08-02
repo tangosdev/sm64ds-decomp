@@ -2,7 +2,6 @@
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "MovingMeshCollider.h"
 
 struct KCL_File;
 struct CLPS_Block;

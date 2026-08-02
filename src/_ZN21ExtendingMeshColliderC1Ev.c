@@ -2,7 +2,6 @@
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "ExtendingMeshCollider.h"
 /* _ZN21ExtendingMeshColliderC1Ev at 0x02014878
  * ExtendingMeshCollider C1 (complete object) constructor:
  *   call base CylinderClsn::CylinderClsn() (C2), then set own vtable.

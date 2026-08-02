@@ -1,6 +1,5 @@
 // @symbol _ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
 /* recovered: named members + shared header */
-#include "ExtendingMeshCollider.h"
 struct Matrix4x3;
 struct KCL_File;
 struct CLPS_Block;
