@@ -186,7 +186,7 @@ def main() -> None:
     ap.add_argument("--addr", help="Address (hex); default from symbols.txt")
     ap.add_argument("--size", help="Size (hex); default from symbols.txt")
     ap.add_argument("--module", default=None, help="Module (default arm9 / from symbols)")
-    ap.add_argument("--version", default="1.2/sp2p3")
+    ap.add_argument("--version", default="2004/b56")
     ap.add_argument("--kind", required=True, choices=("human", "ai"))
     ap.add_argument(
         "--model",

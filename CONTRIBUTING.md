@@ -59,12 +59,15 @@ python tools/unpack.py "path/to/your-own-sm64ds.nds"   # -> populates extracted/
 
 ## The matching loop
 
-The pinned compiler is **mwccarm `1.2/sp2p3`** (the 1.2 `base`/`sp2`/`sp2p3` trio is
-codegen-identical) with flags:
+The pinned matching compiler is **mwccarm `2004/b56`** (reproduces more of this
+corpus than the 1.2 service packs; see `notes/rom-build.md`). Flags:
 
 ```
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 ```
+
+The 1.2 `base`/`sp2`/`sp2p3` trio remains available via `match.py --trio` / version
+sweeps. The ROM **linker** is still 1.2/sp2p3 `mwldarm` (b56 ships no linker).
 
 1. **Pick an unmatched function.** Ask in Discord or claim it on an issue.
 2. **Disassemble it** to see what you're matching:
@@ -75,7 +78,7 @@ codegen-identical) with flags:
 4. **Compile + byte-diff**, relocation-aware:
    ```
    python tools/match.py --c yourfile.c --func name --addr 0x020xxxxx --size 0x.. \
-       --version 1.2/sp2p3
+       --version 2004/b56
    ```
    A match means every instruction word and every relocation slot lines up. Iterate
    until the bytes are identical.

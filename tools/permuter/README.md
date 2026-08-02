@@ -21,7 +21,7 @@ Stop paying LLM tokens to nail register allocation; let the permuter brute-force
 
 End-to-end pipeline runs on our mwccarm toolchain, native Windows, no external objdump:
 - [x] **Compiler wrapper** (`mwccarm_compile.sh`): compiles a candidate `.c` to `.o` with
-  our canonical compiler+flags (1.2/sp2p3). Verified.
+  our canonical compiler+flags (2004/b56). Verified.
 - [x] **Capstone scorer** (`cap_objdump.py`): a drop-in for the permuter's external objdump
   using capstone (which we already use). Handles mwccarm ELF candidates (extract `.text` +
   `.rel.text` relocs) and a raw-bytes target. Wired via `objdump_command` in settings.toml,

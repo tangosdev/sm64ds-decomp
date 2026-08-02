@@ -27,7 +27,7 @@ the ROM. Green = byte-verified = mergeable. Red means at least one file either:
 Do not open a PR expecting a maintainer to "fix it up." Verify locally first:
 
 ```
-python tools/match.py --c yourfile.c --func <name> --addr 0x<addr> --size 0x<size> --version 1.2/sp2p3
+python tools/match.py --c yourfile.c --func <name> --addr 0x<addr> --size 0x<size> --version 2004/b56
 ```
 
 **A byte-match from `match`/`fdiff` is NOT proof your relocations are right** — those
@@ -121,7 +121,7 @@ key` line from `worklist`/`coddog`, surface it: minting one is a 30-second brows
 
 ## PR format
 
-- **Title:** `Match N functions byte-identical (mwccarm 1.2/sp2p3)` — or the single
+- **Title:** `Match N functions byte-identical (mwccarm 2004/b56)` — or the single
   function's name for a one-function PR.
 - **Body:** short — what you matched. The `validate` bot posts a per-file table; that
   table *is* the review.

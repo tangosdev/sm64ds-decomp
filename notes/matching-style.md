@@ -8,7 +8,7 @@ apply these. The final section lists what is NOT source-controllable -- do not f
 hand them to the decomp permuter (tools/permuter/).
 
 
-mwccarm 1.2/sp2p3 at -O4,p. Rules ordered by impact. Get LOGIC right, then steer SHAPE with these.
+mwccarm 2004/b56 at -O4,p (canonical matching pin; 1.2/* still useful for sweeps). Rules ordered by impact. Get LOGIC right, then steer SHAPE with these.
 
 ### 1. Control flow â€” branch direction & layout (highest impact)
 

@@ -45,10 +45,9 @@ sys.path.insert(0, str(REPO / "tools"))
 import rombuild_check as RBC  # noqa: E402
 import rombuild_profile as RP  # noqa: E402
 
-# Default compiler for the ROM build. The repo pins 1.2/sp2p3 as the canonical
-# matching compiler, but the recovered 2004 build 0056 (notes/mwccarm-codegen.md 6ai)
-# reproduces strictly more of this corpus, so the build defaults to it and
-# config/rombuild-versions.txt carries the per-file exceptions.
+# Default compiler for the ROM build — same as the matching pin (tools/match.py
+# CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
+# exceptions that still need a 1.2/* service pack.
 VERSION = "2004/b56"
 # 2004/b56 ships only mwccarm.exe - there is no mwldarm in it - so the link always
 # uses the 1.2/sp2p3 linker regardless of which compiler produced the objects.

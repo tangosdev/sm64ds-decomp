@@ -9,12 +9,13 @@ slot lined up -- not a raw byte-for-byte compare.
 
 Usage:
     python tools/match.py --c match/f.c --func f --addr 0x02065a84 --size 0x10 \
-        --version 1.2/sp2p3 --flags "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e"
+        --version 2004/b56 --flags "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e"
 
 The repository's ``include/`` directory is always on the compiler search path.
 Use ``--include-dir`` for an additional candidate-specific header tree.
 
-Without --version, sweeps a default list of mwccarm versions and reports the best.
+Without --version, compiles once with the canonical version (2004/b56). Use
+``--all`` to sweep every known mwccarm version, or ``--trio`` for the 1.2 trio.
 """
 import argparse
 import pathlib
@@ -41,15 +42,17 @@ INCLUDE = REPO / "include"
 # on a successful compile. See notes/mwccarm-codegen.md 6as.
 DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
                  "-gccext,on -msgstyle gcc -w illpragmas")
-SWEEP = ["1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
-         "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3",
-         # The recovered 2004 build 0056 (see #776 / notes 6ai):
-         "2004/b56"]
-# The CodeWarrior 1.2 trio that survived version-pinning.
+SWEEP = [
+         # Canonical matching compiler first (see notes/rom-build.md, notes 6ai):
+         "2004/b56",
+         "1.2/base", "1.2/sp2", "1.2/sp2p3", "1.2/sp3", "1.2/sp4",
+         "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3"]
+# The CodeWarrior 1.2 trio (codegen-identical to each other). Used by --trio only.
 PINNED = ["1.2/base", "1.2/sp2", "1.2/sp2p3"]
-# Proven (45 probe constructs + 60 ROM functions) byte-identical across the trio,
-# so one is the canonical compiler and a single compile is a sufficient check.
-CANONICAL = "1.2/sp2p3"
+# Canonical single-compile default for matching. 2004 build 0056 reproduces more of
+# this corpus than the 1.2 service packs (notes/rom-build.md). Ships mwccarm only —
+# the ROM link still uses 1.2/sp2p3 mwldarm (LD_VERSION in tools/rombuild.py).
+CANONICAL = "2004/b56"
 
 md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
 

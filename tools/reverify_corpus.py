@@ -2,7 +2,7 @@
 
 For each entry in progress/matched.jsonl: recompile its committed source and
 reloc-aware byte-compare against the module's ROM bytes. An entry PASSES if it
-reproduces under the canonical compiler (1.2/sp2p3) OR any other available
+reproduces under the canonical compiler (2004/b56) OR any other available
 mwccarm version (some legit matches were banked under a different version).
 Entries failing every version are FALSE MATCHES (banked but non-reproducing).
 
@@ -26,16 +26,11 @@ import swarm as S
 
 SRC = REPO / "src"
 AUTO = REPO / "match" / "auto"
-ALL_VERSIONS = ["1.2/sp2p3", "1.2/base", "1.2/sp2", "1.2/sp3", "1.2/sp4",
-                "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3",
-                # Last on purpose. The sweep returns the FIRST version that reproduces,
-                # so 1.2/sp2p3 stays authoritative and nothing that passes today changes
-                # verdict. b56 is only reached for the pre-2005 codegen no later build can
-                # emit: the materialized member RMW and the PTMF wrapper frames (notes
-                # 6ai). It is not a strict superset of 1.2 -- func_ov004_020adc1c matches
-                # under sp2p3 and not under b56 -- which is exactly why it goes last
-                # rather than replacing anything.
-                "2004/b56"]
+ALL_VERSIONS = [
+                # Canonical matching pin first (tools/match.py CANONICAL).
+                "2004/b56",
+                "1.2/sp2p3", "1.2/base", "1.2/sp2", "1.2/sp3", "1.2/sp4",
+                "2.0/base", "2.0/sp1", "2.0/sp1p2", "2.0/sp2", "2.0/sp2p2", "2.0/sp2p3"]
 
 _modcache = {}        # module name -> dict
 _bincache = {}        # module name -> full bytes
@@ -108,9 +103,9 @@ def compiles_to(src, name, target):
                         continue
                     ok, _ = M.compare(target, code, relocs, verbose=False)
                     if ok:
-                        # 1.2/sp2p3 is canonical for BOTH C and C++ (the .cpp flag is not a
-                        # different compiler version); only flag genuinely different versions.
-                        return "1.2/sp2p3" if v == "1.2/sp2p3" else f"{v}/{suf[1:]}"
+                        # CANONICAL is authoritative for both C and C++ (//cpp is flags, not
+                        # a different mwccarm version); only flag genuinely different versions.
+                        return M.CANONICAL if v == M.CANONICAL else f"{v}/{suf[1:]}"
         finally:
             pathlib.Path(tmp).unlink(missing_ok=True)
     return None
@@ -135,7 +130,7 @@ def check(entry):
     for src in srcs:
         v = compiles_to(src, name, target)
         if v is not None:
-            return (name, mod, "OK" if v == "1.2/sp2p3" else f"OK:{v}")
+            return (name, mod, "OK" if v == M.CANONICAL else f"OK:{v}")
     return (name, mod, "FALSE")
 
 

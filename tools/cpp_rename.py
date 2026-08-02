@@ -155,10 +155,10 @@ def verify_match(rel_path, symbol, addr_str):
         "--c", rel_path,
         "--func", symbol,
         "--addr", addr_str,
-        "--version", "1.2/sp2p3"
+        "--version", "2004/b56"
     ]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO))
-    return "MATCHING VERSIONS: 1.2/sp2p3" in r.stdout
+    return "MATCHING VERSIONS: 2004/b56" in r.stdout
 
 def apply_rename(item):
     old_p = item["old_path"]

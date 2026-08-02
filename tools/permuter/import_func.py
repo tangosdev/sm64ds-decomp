@@ -105,7 +105,7 @@ def permutable_base(src, name):
         with tempfile.TemporaryDirectory() as td:
             cf = pathlib.Path(td) / ("c.cpp" if cpp else "c.c")
             cf.write_text(s, encoding="utf-8")
-            o = M.compile_c(cf, "1.2/sp2p3", flags)
+            o = M.compile_c(cf, M.CANONICAL, flags)
         if o is None:
             return None
         code, _ = M.extract_func(o, name)

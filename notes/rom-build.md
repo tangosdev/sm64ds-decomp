@@ -217,7 +217,7 @@ and zero relocations originate inside it.
 
 1. Add its file entry (with `complete`) to `config/arm9/delinks.txt`.
 2. `dsd delink` — the main gap object splits, regenerated without that range.
-3. Compile with the canonical toolchain and flags (`1.2/sp2p3`, `-O4,p -enum int
+3. Compile with the canonical toolchain and flags (`2004/b56`, `-O4,p -enum int
    -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc`,
    `-i include/`) to `build/src/AngleDiff.o`.
 4. `dsd lcf`, link, `dsd rom config`, `dsd rom build`.
@@ -367,9 +367,10 @@ module and shifts every later address. Retail carries just 636 bytes of `.except
 main, so the original build had them off too. The flag cleared the extra sections on
 **60 of 60** sampled files with **zero `.text` change**.
 
-**2. The default compiler is `2004/b56`, not `1.2/sp2p3`.** The repo pins 1.2/sp2p3 as
-canonical, but a function counts as matched if *any* swept version reproduces it, and a
-link has to pick one. Defaulting to the recovered 2004 build 0056
+**2. The default / matching-pin compiler is `2004/b56`.** Matching docs and
+`tools/match.py` CANONICAL use the same pin. A function still counts as matched if
+*any* swept version reproduces it (use `match.py --all` / `--trio`), and a link has
+to pick one. Defaulting to the recovered 2004 build 0056
 (`notes/mwccarm-codegen.md` 6ai) reproduces strictly more of this corpus: eligibility
 7,466 → 7,923, and post-link mismatches **70 → 14**. Note b56 ships *only* `mwccarm.exe`,
 so `LD_VERSION` keeps the link on 1.2/sp2p3's `mwldarm` regardless.
