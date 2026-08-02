@@ -2170,6 +2170,7 @@ data_ov002_0210a740 kind:data(any) addr:0x0210a740
 data_ov002_0210a760 kind:data(any) addr:0x0210a760
 data_ov002_0210a7a0 kind:data(any) addr:0x0210a7a0
 data_ov002_0210a7e8 kind:data(any) addr:0x0210a7e8
+_ZTV6Player kind:data(any) addr:0x0210a83c
 data_ov002_0210a83c kind:data(any) addr:0x0210a83c
 data_ov002_0210a8b8 kind:data(any) addr:0x0210a8b8
 data_ov002_0210a990 kind:data(any) addr:0x0210a990

@@ -1,13 +1,14 @@
 # The Actor hierarchy vtables
 
-Recovered from the ROM, not inferred. Every slot in all three tables resolves to a named
-function in `config/arm9/symbols.txt`; none is a thunk, none is a secondary vtable, and
-there is no address-point offset — CodeWarrior 1.2 emits no RTTI header, so the address
-stored into `[this+0x0]` *is* slot 0.
+Recovered from the ROM, not inferred. Every slot in all four tables resolves to a named
+function — through `config/arm9/symbols.txt` for the first three, and additionally through
+`config/arm9/overlays/ov002/symbols.txt` for Player, which lives in an overlay. None is a
+thunk, none is a secondary vtable, and there is no address-point offset — CodeWarrior 1.2
+emits no RTTI header, so the address stored into `[this+0x0]` *is* slot 0.
 
 ## The hierarchy
 
-    ActorBase  →  ActorDerived  →  Actor
+    ActorBase  →  ActorDerived  →  Actor  →  Player
 
 `Actor` does **not** derive from `ActorBase` directly. `src/_ZN5ActorC2Ev.cpp` calls
 `ActorBase::ActorBase`, stores `&data_0208e4b8`, then immediately overwrites it with
@@ -22,15 +23,17 @@ Actor's C2/D2 bytes.
 
 ## Where they live
 
-| class | vtable | slots | also named |
-|---|---|---:|---|
-| `ActorBase` | `_ZTV9ActorBase` | 18 | `data_02099edc` |
-| `ActorDerived` | `_ZTV12ActorDerived` | 18 | `data_0208e4b8` |
-| `Actor` | `_ZTV5Actor` | 31 | `data_0208e3a4` |
+| class | vtable | slots | also named | module |
+|---|---|---:|---|---|
+| `ActorBase` | `_ZTV9ActorBase` | 18 | `data_02099edc` | arm9 |
+| `ActorDerived` | `_ZTV12ActorDerived` | 18 | `data_0208e4b8` | arm9 |
+| `Actor` | `_ZTV5Actor` | 31 | `data_0208e3a4` | arm9 |
+| `Player` | `_ZTV6Player` | 31 | `data_ov002_0210a83c` | **ov002** |
 
-The `data_` names are kept as aliases because 45 `src/` files reference them. `eligible.py`
-drops any file with an unresolvable reference, and gap objects import carved-out symbols
-weakly — so a stale name links silently to zero rather than erroring.
+The `data_` names are kept as aliases, not replaced: 45 `src/` files reference the three
+arm9 ones and 3 reference Player's. `eligible.py` drops any file with an unresolvable
+reference, and gap objects import carved-out symbols weakly — so a stale name links silently
+to zero rather than erroring.
 
 ## ActorBase — 0x02099edc, 18 slots
 
@@ -116,3 +119,47 @@ gap-object data supplied from the ROM, never compiled, so neither gate sees it:
 
 Until each slot is exercised by a virtual call inside a byte-checked file, this table is
 the only record of the order.
+
+## Player — 0x0210a83c (ov002), 31 slots
+
+Player derives **directly from Actor**: `_ZN6PlayerC1Ev` calls `_ZN5ActorC2Ev` and then
+stores one vptr, and `_ZN6PlayerD2Ev` stores one vptr and calls `_ZN5ActorD2Ev`. One store,
+not two — unlike `Actor`, which has an inlined intermediate base.
+
+The table is Actor's 31 slots with **eight overridden** and **no new virtuals**:
+
+| # | override |
+|---:|---|
+| 0 | `Player::InitResources` |
+| 3 | `Player::CleanupResources` |
+| 6 | `Player::Behavior` |
+| 9 | `Player::Render` |
+| 12 | `Player::OnPendingDestroy` |
+| 16 | `~Player` (D2 by config naming; the complete-object destructor) |
+| 17 | `~Player` (D0) |
+| 18 | `Player::OnYoshiTryEat` |
+
+Everything else still points at `Actor` or `ActorBase`.
+
+The 31-slot extent is not symbol-boundary luck: the word after slot 30 is `0x00000014`,
+which is not a code address, and fix12 state-table data follows.
+
+**No key-function tax.** Because Player only overrides, `~Player()` can be declared first
+and become the key function — and its destructor TUs define `extern "C"` free functions
+under the mangled names, never `Player::~Player`. One caveat to preserve: `~Player` must
+never be defined *anywhere, including inline*, or key-function status shifts to `Behavior`,
+which **is** a real method, and a duplicate vtable gets emitted.
+
+`_ZN6PlayerC3Ev` is the allocating constructor — `ActorBase::operator new(0x768)` then C1 —
+so **`sizeof(Player)` is 0x768**. There is no C2 because nothing derives from Player, and
+the absent D1 is a labelling artifact: D1 and D2 are the same function for a most-derived
+class.
+
+### Names that are not Player
+
+Eight symbols matched `_ZN6Player*` but belong to other overlays — seven in ov006, one in
+ov007 — community labels applied to another class's bytes at a shared RAM address. They are
+listed in the commit that detached them from `Player.h`. Measured against `sizeof(Player)`
+= 0x768, they read offsets like 0x4eb0 and 0x62ad, thousands of bytes past the end of the
+object. Do not treat a `_ZN6Player*` name as proof of module membership; check which
+`symbols.txt` owns the address.
