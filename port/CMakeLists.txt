@@ -77,3 +77,28 @@ target_compile_definitions(smoke_roots PRIVATE SM64DS_PLATFORM_PC)
 if(MSVC)
     target_compile_options(smoke_roots PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
+
+# Gate 3b: SharedFilePtr over the host card seam; assets come from the
+# repo's extracted/ tree + asset catalog, root baked in (env-overridable).
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3b.txt" SLICE3B_LINES)
+set(SLICE3B_SOURCES "")
+foreach(line IN LISTS SLICE3B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE3B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+add_executable(smoke_fs tests/smoke_fs.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES})
+target_include_directories(smoke_fs PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_compile_definitions(smoke_fs PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_fs PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
