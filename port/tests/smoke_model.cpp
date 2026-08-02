@@ -80,10 +80,15 @@ int main(void)
     ((int *)&data_0209b3ec)[4] = 0x1000;
     ((int *)&data_0209b3ec)[8] = 0x1000;
 
-    /* the game's own load chain, handle 1214 = data/player/b_mario_all.bmd */
+    /* the game's own load chain, handle 1214 = data/player/b_mario_all.bmd.
+       SM64DS_MODEL_HANDLE renders any other catalog model instead (viewer
+       mode): the Mario-specific expectations only apply to Mario. */
+    const char *hs = getenv("SM64DS_MODEL_HANDLE");
+    const u32 handle = hs ? (u32)atoi(hs) : 1214;
+    const int is_mario = handle == 1214;
     SharedFilePtrC ptr;
-    _ZN13SharedFilePtr9ConstructEj(&ptr, 1214);
-    CHECK(ptr.fileID == 784);
+    _ZN13SharedFilePtr9ConstructEj(&ptr, handle);
+    CHECK(!is_mario || ptr.fileID == 784);
 
     static char storage[0x50];
     Model *model = (Model *)storage;
@@ -106,7 +111,8 @@ int main(void)
     size_t tris = 0;
     const ntr::GxTriangle *tarr = ntr::gx_polygons(tris);
     printf("  triangles from the game's render walk: %zu\n", tris);
-    CHECK(tris == 492);     /* the count both gate-4a paths verified */
+    CHECK(!is_mario || tris == 492);   /* the gate-4a reference count */
+    CHECK(tris > 0);
 
     /* fit pass: same viewer-side projection trick as gate 4a, so the
        artifact is a whole mario instead of one screen-filling triangle */
@@ -136,7 +142,7 @@ int main(void)
         NTR_MMIO(uint32_t, 0x04000454) = 0;
         model->Model::Render(NULL);
         ntr::gx_polygons(tris);
-        CHECK(tris == 492);
+        CHECK(!is_mario || tris == 492);
     }
 
     ntr::Framebuffer fb;
