@@ -39,20 +39,23 @@ struct x;
 struct Player {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
-    s32 unk_00c;            /* 0x00c */
-    u8  pad_010[0x20];
-    u8  unk_030;            /* 0x030 */
-    u8  pad_031[0x7];
-    s32 mModelAnim1;            /* 0x038 */
-    u8  pad_03c[0x20];
+    /* 0x00c..0x05b. unk_00c, unk_030 and mModelAnim1 used to be named in here.
+       Their only evidence was src/_ZN6Player6ST_OWLE.c, which is ov006 code
+       carrying a Player name -- it reads 0x08/0x0c as a fix12 2D coordinate
+       pair, which cannot be ActorBase's param1 and actorID. That file now uses
+       its own local struct, and nothing else referenced these three. */
+    u8  pad_00c[0x50];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
     u8  mCamSpacePos;            /* 0x074 */
     u8  pad_075[0x3];
-    u8  mModelAnim2;            /* 0x078 */
-    u8  pad_079[0x7];
+    /* 0x078..0x07f. mModelAnim2 used to be here; its only evidence was
+       src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp, ov006 constructor-
+       shaped code carrying a Player name. Player's own ModelAnims are at 0xf0
+       and 0x174. On a real Player 0x078 is Actor's mCamSpacePosY. */
+    u8  pad_078[0x8];
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
