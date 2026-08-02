@@ -78,6 +78,16 @@ if(MSVC)
     target_compile_options(smoke_roots PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# The ntr platform layer: imported host DS hardware (see ntr/README.md).
+# Compiled as its own lib so every gate binary can link the pieces it needs.
+add_library(ntr STATIC
+    ntr/io.cpp ntr/gx.cpp ntr/texture.cpp ntr/ppu.cpp ntr/lz77.cpp
+    ntr/rt.cpp ntr/runtime.cpp ntr/fs.cpp ntr/bmd.cpp)
+target_include_directories(ntr PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
+if(MSVC)
+    target_compile_options(ntr PRIVATE /wd4311 /wd4312)
+endif()
+
 # Gate 3b: SharedFilePtr over the host card seam; assets come from the
 # repo's extracted/ tree + asset catalog, root baked in (env-overridable).
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3b.txt" SLICE3B_LINES)
@@ -91,6 +101,40 @@ foreach(line IN LISTS SLICE3B_LINES)
 endforeach()
 
 get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+
+# Gate 4a: the game's display-list submission machinery over the ntr GX.
+# These src/ files touch MMIO textually, so they build from hostgen-emitted
+# copies under the build tree -- src/ itself is never edited.
+set(GATE4A_SYMS
+    func_0205532c func_02055388 func_020553a4 func_02055780
+    func_0205a358 func_0205a290 func_0205a21c func_02056e98 func_02059fa8)
+set(GATE4A_GEN "")
+foreach(sym IN LISTS GATE4A_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE4A_GEN "${sym_out}")
+endforeach()
+
+add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
+target_include_directories(smoke_gx PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_gx PRIVATE ntr)
+target_compile_definitions(smoke_gx PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_gx PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
 add_executable(smoke_fs tests/smoke_fs.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES})
