@@ -5588,7 +5588,7 @@ src/func_020398fc.c:
     complete
     .text start:0x020398fc end:0x02039908
 
-src/_ZN18MovingMeshCollider11GetVelocityER7Vector3.c:
+src/_ZN18MovingMeshCollider11GetVelocityER7Vector3.cpp:
     complete
     .text start:0x02039908 end:0x02039924
 
@@ -5596,7 +5596,7 @@ src/_ZN18MovingMeshCollider14GetAngularVelYEv.cpp:
     complete
     .text start:0x02039924 end:0x02039930
 
-src/_ZN18MovingMeshCollider12TransformPosERK7Vector3RS0_.c:
+src/_ZN18MovingMeshCollider12TransformPosERK7Vector3RS0_.cpp:
     complete
     .text start:0x02039930 end:0x02039970
 
@@ -5626,11 +5626,11 @@ src/func_02039e48.c:
     complete
     .text start:0x02039e48 end:0x02039e60
 
-src/_ZN18MovingMeshCollider17GetTriangleOriginEsR7Vector3.c:
+src/_ZN18MovingMeshCollider17GetTriangleOriginEsR7Vector3.cpp:
     complete
     .text start:0x02039e60 end:0x02039ec0
 
-src/_ZN18MovingMeshCollider9GetNormalEsR7Vector3.c:
+src/_ZN18MovingMeshCollider9GetNormalEsR7Vector3.cpp:
     complete
     .text start:0x02039ec0 end:0x02039f20
 

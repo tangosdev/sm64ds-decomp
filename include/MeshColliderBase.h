@@ -73,7 +73,7 @@ struct MeshColliderBase {
     virtual void BeforeClsn(ClsnResult &res, Actor *actor, Vector3 &pos,
                             Vector3_16 *motionAng, Vector3_16 *ang); /* slot 9 */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res);      /* slot 10 */
-    virtual u16 GetAngularVelY();                         /* slot 11 */
+    virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */
 
     /* --- non-virtual --- */

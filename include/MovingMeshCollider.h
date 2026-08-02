@@ -1,64 +1,68 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MovingMeshCollider: 14 matched functions, 19 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MOVINGMESHCOLLIDER_H
 #define MOVINGMESHCOLLIDER_H
-#include "types.h"
 
-/* fwd */
-struct Matrix4x3;
-struct RaycastGround;
-struct RaycastLine;
-struct SphereClsn;
-struct Vector3;
-struct a_;
-struct ground_;
-struct idx_;
-struct mtx_;
-struct ray_;
-struct res_;
-struct sphere_;
-struct MovingMeshCollider {
-    u8  pad_000[0x20];
-    u8  unk_020;            /* 0x020 */
-    u8  pad_021[0x2f];
-    s32 mScale;            /* 0x050 */
-    u8  unk_054;            /* 0x054 */
-    u8  pad_055[0x2f];
-    u8  unk_084;            /* 0x084 */
-    u8  pad_085[0x2f];
-    u8  unk_0b4;            /* 0x0b4 */
-    u8  pad_0b5[0x2f];
-    u8  unk_0e4;            /* 0x0e4 */
-    u8  pad_0e5[0x2f];
-    s16 unk_114;            /* 0x114 */
-    s16 unk_116;            /* 0x116 */
-    s32 unk_118;            /* 0x118 */
-    s32 unk_11c;            /* 0x11c */
-    s32 unk_120;            /* 0x120 */
-    s32 unk_124;            /* 0x124 */
-    s32 unk_128;            /* 0x128 */
-    s32 unk_12c;            /* 0x12c */
-    u8  unk_130;            /* 0x130 */
-    u8  pad_131[0x3];
-    u8  unk_134;            /* 0x134 */
-    u8  pad_135[0x2f];
-    s32 unk_164;            /* 0x164 */
-    u8  unk_168;            /* 0x168 */
-    u8  pad_169[0x2f];
-    u8  unk_198;            /* 0x198 */
+#include "types.h"
+#include "MeshCollider.h"
+#include "math/Matrix.h"
+
+/* The moving-mesh collider, vtable _ZTV18MovingMeshCollider at 0x02099434.
+ * Derives from MeshCollider (SetFile chains to MeshCollider::SetFile and
+ * the fields start at exactly 0x50); ExtendingMeshCollider derives from
+ * this in turn. Overrides every slot except BeforeClsn.
+ *
+ * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
+ * include/ModelBase.h. The structors stay C files.
+ *
+ * SetFile and Transform keep extern-C free definitions for now: their
+ * bodies are dominated by flat 12-word Matrix4x3 copies (the
+ * Model::Virtual10 lesson) and belong to a later pass with a shared
+ * flat-copy helper. Their declarations here are the real signatures
+ * (SetFile's carries Fix12<int>, wall 6az, so its definition could not
+ * be a method yet anyway).
+ */
+
 #ifdef __cplusplus
-    /* methods */
-    int DetectClsn(RaycastGround & ground_);
-    int DetectClsn(RaycastLine & ray_);
-    int DetectClsn(SphereClsn & sphere_);
-    short GetAngularVelY();
-    void GetNormal(short idx_, Vector3 & res_);
-    void GetTriangleOrigin(short idx_, Vector3 & res_);
-    void Transform(const Matrix4x3 & mtx_, short a_);
-    void Virtual08();
-#endif
+
+#include "math/Fix12.h"
+
+struct MovingMeshCollider : MeshCollider {
+    Fix12i scale;              /* 0x50 */
+    Matrix4x3 mat;             /* 0x54 */
+    Matrix4x3 invRotMat;       /* 0x84 - rotation-only inverse */
+    Matrix4x3 scaledMat;       /* 0xb4 */
+    Matrix4x3 invMat;          /* 0xe4 - previous frame's inverse in Transform */
+    s16 angY;                  /* 0x114 */
+    s16 angVelY;               /* 0x116 */
+    Vector3 pos;               /* 0x118 */
+    Vector3 velocity;          /* 0x124 */
+    u8 unk_130;                /* 0x130 */
+    u8 pad_131[3];
+    Matrix4x3 newScaledMat;    /* 0x134 */
+    s32 unk_164;               /* 0x164 - func_02053200(scale) */
+    Matrix4x3 invScaledMat;    /* 0x168 */
+    Matrix4x3 prevInvScaledMat;/* 0x198 */
+
+    /* --- vtable, in ROM order. Do not reorder. --- */
+    virtual ~MovingMeshCollider();                        /* slots 0/1 */
+    virtual void Virtual08();                             /* slot 2 */
+    virtual void Virtual0C();                             /* slot 3 - ITCM 0x01ffd920 */
+    virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
+    virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 */
+    virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - free def */
+    virtual int DetectClsn(RaycastLine &ray);             /* slot 7 - free def */
+    virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 - free def */
+    virtual int TransformPos(const Vector3 &pos, Vector3 &res); /* slot 10 */
+    virtual s16 GetAngularVelY();                         /* slot 11 */
+    virtual void GetVelocity(Vector3 &res);               /* slot 12 */
+
+    /* --- non-virtual --- */
+    void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,
+                 s16 angY, CLPS_Block &clps);             /* free def, wall 6az */
+    void Transform(const Matrix4x3 &mat, s16 angY);       /* free def for now */
 };
 
-#endif
+typedef char MovingMeshCollider_size_must_be_0x1c8[sizeof(MovingMeshCollider) == 0x1c8 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* MOVINGMESHCOLLIDER_H */

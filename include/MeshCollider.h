@@ -22,9 +22,26 @@
 
 #ifdef __cplusplus
 
-struct KCL_File;
 struct CLPS_Block;
 struct SharedFilePtr;
+
+/* Only what the matched code reads is typed. Triangle records are 0x10
+   wide; positions are 12-byte s32 vectors read <<6, normals 6-byte s16
+   vectors read <<2 (MovingMeshCollider::GetTriangleOrigin / GetNormal). */
+struct KCL_Tri {
+    u16 unk_00;
+    u16 unk_02;
+    u16 posIdx;            /* 0x04 */
+    u16 normalIdx;         /* 0x06 */
+    u8 pad_08[8];
+};
+
+struct KCL_File {
+    s32 (*positions)[3];   /* 0x00 - file-relative, fixed up on load */
+    s16 (*normals)[3];     /* 0x04 */
+    KCL_Tri *tris;         /* 0x08 */
+    char *unk_0c;          /* 0x0c */
+};
 
 struct MeshCollider : MeshColliderBase {
     KCL_File *kclFile;        /* 0x20 */
