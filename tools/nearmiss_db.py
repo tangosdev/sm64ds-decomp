@@ -451,8 +451,17 @@ def bank_matches(args):
             # point somewhere other than the config/**/relocs.txt records
             import reloc_audit as RA
             _, obj = S.oracle_check(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
-            bad = (RA.gate_wrong_dests(obj, r["name"], L.norm_addr(r["addr"]),
-                                       r["size"], r["module"]) if obj else None)
+            # No object, or gate_wrong_dests returning None (unknown module ID / symbol
+            # absent), both mean the relocation check did not run. None is falsy, so
+            # this used to fall through `if bad:` and bank the draft as strict-verified
+            # having verified nothing. Refuse instead.
+            bad = RA.gate_wrong_dests(obj, r["name"], L.norm_addr(r["addr"]),
+                                      r["size"], r["module"]) if obj else None
+            if bad is None:
+                print(f"  SKIP {r['name']}: bytes match but the reloc-destination check "
+                      f"could not run (no object, module {r['module']!r} unknown, "
+                      f"or symbol absent)")
+                continue
             if bad:
                 print(f"  SKIP {r['name']}: bytes match but {len(bad)} reloc "
                       f"destination(s) WRONG (e.g. {bad[0]['cand']} != {bad[0]['cfg']})")

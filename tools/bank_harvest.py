@@ -66,6 +66,14 @@ def main():
             # the byte oracle wildcards reloc slots; refuse a candidate whose
             # relocations point somewhere other than config/**/relocs.txt records
             bad = RA.gate_wrong_dests(obj, name, L.norm_addr(addr), size, module)
+            if bad is None:
+                # gate_wrong_dests returns None when it could not check at all -- an
+                # unknown module ID, or the symbol missing from the object. None is
+                # falsy, so this used to fall through `if bad:` and bank the candidate
+                # as strict-verified having verified nothing.
+                rejected.append((name, "reloc-destination check could not run "
+                                       f"(module {module!r} unknown, or symbol absent)"))
+                continue
             if bad:
                 rejected.append((name, f"WRONG-DEST reloc: {bad[0]['cand']} "
                                        f"({bad[0]['cand_addr']}) != config {bad[0]['cfg']}"))

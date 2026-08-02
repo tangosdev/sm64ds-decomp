@@ -1,14 +1,30 @@
-"""Module registry: main ARM9 + every overlay.
+"""Module registry: main ARM9, both TCM autoloads, and every overlay.
 
 Each module has its own binary, RAM base address, symbols, and relocs. Overlays
 can share a base address (they occupy the same memory slot at different times),
 so anything that records matches must key by (module, addr), never addr alone.
+
+The autoloads (itcm, dtcm) were missing here until 2026-08-01, and their absence
+was invisible rather than noisy: linkcheck's `_ranges()` never contained them, so
+a slot at 0x01ff.... resolved to no module and pr_linkcheck reported NONE -- zero
+slots checked, which reads exactly like "clean". The whole of arm9/itcm sat at
+0 of 41 matched partly because nothing in the verification stack could see it.
+See notes/itcm.md.
+
+Their images come from build/build/, not extracted/, because that is where
+config/arm9/config.yaml points dsd at them (`object: ../../build/build/itcm.bin`);
+there is no extracted/itcm.bin. Both directories are dsd extract output and both
+are gitignored, so neither is more canonical than the other -- but config.yaml is
+the source of truth for which file is which module, so follow it. Missing files
+are skipped rather than raising, so a checkout with no build/ still gets a usable
+registry, just without the autoloads.
 """
 import pathlib
 import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 EXTRACTED = REPO / "extracted"
+BUILD = REPO / "build" / "build"
 CFG = REPO / "config" / "arm9"
 ARM9_BASE = 0x02004000
 
@@ -36,6 +52,17 @@ def modules():
     """All modules as dicts: {name, syms, relocs, bin, base}."""
     mods = [{"name": "main", "syms": CFG / "symbols.txt", "relocs": CFG / "relocs.txt",
              "bin": EXTRACTED / "arm9_dec.bin", "base": ARM9_BASE}]
+    for name in ("itcm", "dtcm"):
+        d = CFG / name
+        syms = d / "symbols.txt"
+        b = BUILD / f"{name}.bin"
+        if not (b.is_file() and syms.is_file()):
+            continue
+        base = _overlay_base(syms)      # same derivation: the module's lowest symbol
+        if base is None:
+            continue
+        mods.append({"name": name, "syms": syms, "relocs": d / "relocs.txt",
+                     "bin": b, "base": base})
     for d in sorted((CFG / "overlays").glob("ov*")):
         syms = d / "symbols.txt"
         b = EXTRACTED / "overlays" / f"overlay_{int(d.name[2:]):04d}.bin"

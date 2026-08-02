@@ -273,10 +273,22 @@ def main():
             try:
                 rows, missing = RA.check_destinations(obj, args.func, args.addr, args.size,
                                                       args.module, name_index, config_relocs, sym_index)
-                bad = [r for r in (rows or []) if r["verdict"] == "WRONG-DEST"]
             except Exception as e:
+                # Also not a pass. This used to print "skipped" and leave ok True, so
+                # any exception in the check silently produced a verified match -- the
+                # same defect as the unknown-module path below, by a different route.
+                rows, missing = None, f"reloc-destination check raised: {e}"
+            # rows is None means the check could not run at all -- an unknown --module
+            # spelling, or the symbol missing from the object. Both used to fall through
+            # `rows or []` to an empty `bad` and report a clean strict-reloc pass having
+            # verified nothing, which is worse than not offering the flag. Fail instead.
+            if rows is None:
+                ok = False
+                print(f"  {v}: bytes match but the reloc-destination check could not run "
+                      f"-- NOT a verified match: {missing}")
                 bad = []
-                print(f"  {v}: (reloc-destination check skipped: {e})")
+            else:
+                bad = [r for r in rows if r["verdict"] == "WRONG-DEST"]
             if bad:
                 ok = False
                 print(f"  {v}: bytes match but {len(bad)} reloc destination(s) WRONG -- "
