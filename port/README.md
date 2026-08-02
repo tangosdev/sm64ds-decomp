@@ -35,3 +35,16 @@ functions byte-for-byte against real hardware behaviour. The port is the
 destination. Benchmarks on 2026-08-02 showed natives inside the hybrid are
 performance-neutral (~2% of the emulated clock), which is the measured
 argument for building the port rather than growing the hybrid further.
+
+## Frontier baseline (2026-08-02)
+
+First full sweep of `tools/host_frontier.py` (cl /Zs, 32-bit, all of src/):
+
+    compiles for host: 11,005 / 11,222  (98.1%)
+
+217 failures, largest buckets: C2054 x98 (one idiom, worth one targeted
+fix), generic syntax errors x44, C2732 linkage contradictions x19, the rest
+single digits. The takeaway: the decomp's C is already overwhelmingly
+host-clean, so the port's work is platform seams and link closure, not mass
+source repair. Re-run the sweep after each seam lands; the number should
+only go up.
