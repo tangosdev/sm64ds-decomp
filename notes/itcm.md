@@ -274,8 +274,21 @@ These make their functions unmatchable *by construction*, which is why nothing h
 | `func_01ffa344` + `func_01ffa3e0` | two symbols | `a3e0` has **zero** incoming branches or calls anywhere; its only entry is fallthrough from `a344` | one symbol, `size=0xfc` |
 | `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** (ov002 x2, ov074, arm9, all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
 
-So ITCM has **42** functions, not 41. Fixing these is a prerequisite for anyone working the
-soft-float block, not an optional tidy-up.
+**Count, corrected.** An earlier draft of this section said "42 functions, not 41". That was
+wrong -- I summed two agents' findings without redoing the arithmetic. Merging a344+a3e0 is -1
+and adding a symbol at 0x01ffa4bc is +1, so the corrected total is **41 again**, with different
+membership, not 42. If a fifth undeclared entry exists the number moves, and there is a
+candidate worth checking -- 0x01ffa1bc has its own `push {ip,lr}` prologue, though it is
+branch-entered from func_01ff97d8's error paths, so it may be a tail rather than a function.
+Establish that before quoting any total.
+
+Fixing these is a prerequisite for anyone working the soft-float block, not an optional
+tidy-up. **And it is not sufficient on its own:** `worklist.py --module itcm` already serves
+`func_01ff859c`, `func_01ffa344`, `func_01ffa3e0` and `func_01ffa440` as cold-match candidates
+— the soft-float block this file says not to route cold C at. Correcting the symbol sizes turns
+`func_01ff8708` into a fresh, well-formed 0x6f0 candidate too. A config fix must ship with a
+worklist/eligibility exclusion for 0x01ff8000..0x01ffa9dc or the next fan-out spends a batch on
+vendor code.
 
 ### Routing for whoever goes next
 
@@ -376,6 +389,13 @@ aggregates minus the 13 temp slots scalarization was using = +14 = 0x38.
 
 **The lever: a local vector type with a user-declared destructor** (`struct DVec { s32 x,y,z;
 ~DVec(){} };`) blocks SROA. Dead `&x` statements, references and launders do not.
+
+This is a *variant*, not a discovery: `notes/matching-style.md` (from PR #815, 2026-07-29)
+already documents the `~PVec(){}` dead-store-elimination defeat and the enclosing
+address-taken struct that blocks SROA, with a ranked table of four mechanisms. Read that
+first. What is new here is only the application — putting the destructor on the vector type
+itself so that N aggregate locals stay un-SROA'd together, which is what moves a whole frame
+rather than a single store.
 
 `sub sp,#0xfc` now matches the ROM under both 1.2/sp2p3 and 2004/b56, and the divergence halved
 476 -> 238. What remains is one register rank 3-cycle -- see the banked floor in
