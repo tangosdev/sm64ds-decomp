@@ -5,7 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BowserTail.h"
 struct Actor { static Actor* FindWithID(unsigned int); };
+extern "C" {
 extern short data_02082214[];
+}
 
 int BowserTail::Behavior()
 {

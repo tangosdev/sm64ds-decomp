@@ -6,8 +6,10 @@
 #include "FortressWall.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov079_02128058[];
 extern char data_ov079_0212805c[];
+}
 
 int FortressWall::CleanupResources()
 {

@@ -6,7 +6,9 @@
 #include "KnockDownPlank.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov015_02114534[];
+}
 
 int KnockDownPlank::CleanupResources()
 {

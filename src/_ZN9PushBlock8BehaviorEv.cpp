@@ -5,10 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PushBlock.h"
+extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(char* t);
 extern void _ZN12CylinderClsn6UpdateEv(char* t);
 extern void _ZN5Actor13SmallPoofDustEv(char* c);
 extern void _ZN9ActorBase18MarkForDestructionEv(char* c);
+}
 
 int PushBlock::Behavior()
 {

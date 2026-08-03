@@ -18,6 +18,7 @@ src/_ZN9ShipWater6RenderEv.cpp:
     .text start:0x02111290 end:0x021112c4
 
 src/_ZN9ShipWater8BehaviorEv.cpp:
+    complete
     .text start:0x021112c4 end:0x021113c0
 
 src/_ZN9ShipWater13InitResourcesEv.c:

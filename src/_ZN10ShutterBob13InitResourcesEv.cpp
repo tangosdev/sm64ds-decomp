@@ -8,8 +8,10 @@ public:
     void Enable(Actor *a);
 };
 
+extern "C" {
 extern int func_ov002_020bad10(void *c, void **f);
 extern int data_ov014_021145c4;
+}
 
 int ShutterBob::InitResources()
 {

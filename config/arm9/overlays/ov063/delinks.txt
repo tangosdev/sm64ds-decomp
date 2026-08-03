@@ -416,6 +416,7 @@ src/unnamed/ov063/func_ov063_0211cc18.c:
     .text start:0x0211cc18 end:0x0211cdec
 
 src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211cdec end:0x0211ce30
 
 src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c:

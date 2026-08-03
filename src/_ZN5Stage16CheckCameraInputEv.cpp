@@ -18,6 +18,7 @@ struct CamInput {
     u8 f17;
 };
 
+extern "C" {
 extern u8 data_0209f2c4;
 extern u8 data_0209f20c;
 extern u8 data_0209f294;
@@ -29,6 +30,7 @@ extern TouchInfo data_020a0de8[];
 extern CamInput data_0209f498[];
 extern u8* data_0209f318;
 extern u8 data_ov002_02111180;
+}
 
 struct Stage {
     static void CheckCameraInput();

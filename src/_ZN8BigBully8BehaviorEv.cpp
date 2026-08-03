@@ -5,10 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
+extern "C" {
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, u16* p);
 extern int func_ov064_02116d1c(void* c);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+}
 
 int BigBully::Behavior()
 {

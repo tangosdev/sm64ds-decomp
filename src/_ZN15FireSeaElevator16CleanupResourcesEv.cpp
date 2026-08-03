@@ -6,7 +6,9 @@
 #include "FireSeaElevator.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov045_021131b0[];
+}
 
 int FireSeaElevator::CleanupResources()
 {

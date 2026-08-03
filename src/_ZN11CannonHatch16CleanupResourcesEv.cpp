@@ -6,7 +6,9 @@
 #include "CannonHatch.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int G0[];
+}
 
 int CannonHatch::CleanupResources()
 {

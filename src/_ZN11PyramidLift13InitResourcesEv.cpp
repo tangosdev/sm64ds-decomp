@@ -11,6 +11,7 @@ typedef struct BMD_File BMD_File;
 typedef struct KCL_File KCL_File;
 typedef struct Matrix4x3 Matrix4x3;
 typedef struct CLPS_Block CLPS_Block;
+extern "C" {
 extern SharedFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
 extern SharedFilePtr data_ov025_02113ad8;
@@ -23,6 +24,7 @@ extern KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, KCL_File* k, Matrix4x3* m, Fix12 f, short s, CLPS_Block* b);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
+}
 
 int PyramidLift::InitResources()
 {

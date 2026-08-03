@@ -90,6 +90,7 @@ src/func_ov016_021126a8.c:
     .text start:0x021126a8 end:0x021126f0
 
 src/_ZN6ShipUp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021126f0 end:0x02112744
 
 src/_ZN6ShipUp6RenderEv.cpp:
@@ -162,6 +163,7 @@ src/func_ov016_021130a4.c:
     .text start:0x021130a4 end:0x021130ec
 
 src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021130ec end:0x02113130
 
 src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp:

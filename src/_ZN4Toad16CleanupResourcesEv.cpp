@@ -5,10 +5,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Toad.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern int data_ov002_0210da40[];
 extern int data_ov002_0210d9a0[];
 extern int data_ov002_0210d9c0[];
 extern int data_ov085_02130480[];
+}
 
 int Toad::CleanupResources()
 {

@@ -3,17 +3,21 @@
 // @symbol _ZN15TtcRotatingGear8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "TtcRotatingGear.h"
+extern "C" {
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
 extern u16 DecIfAbove0_Short(void *p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *cc);
 extern int RandomIntInternal(int *seed);
+}
 
+extern "C" {
 extern u8 data_0209f2c0;
 extern int data_0209e650;
 extern u8 data_ov065_0211c0d4[];
 extern u8 data_ov065_0211c0d0[];
+}
 
 int TtcRotatingGear::Behavior()
 {

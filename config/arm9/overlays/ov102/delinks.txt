@@ -11,6 +11,7 @@ src/_ZN13FortressTowerD0Ev.c:
     .text start:0x02148ac4 end:0x02148b1c
 
 src/_ZN13FortressTower16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02148b1c end:0x02148b80
 
 src/_ZN13FortressTower6RenderEv.cpp:
@@ -165,6 +166,7 @@ src/func_ov102_02149ff0.c:
     .text start:0x02149ff0 end:0x0214a08c
 
 src/_ZN13QuestionBlock16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0214a08c end:0x0214a2ac
 
 src/_ZN13QuestionBlock6RenderEv.cpp:

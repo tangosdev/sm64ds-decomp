@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Koopa.h"
+extern "C" {
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *self, void *wm, void *ma, unsigned int j);
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *self, void *c);
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *c);
@@ -20,6 +21,7 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
 extern int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *self, void *wm, int a, s16 b, int c, int d, int e);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned int j);
 extern void _ZN5Enemy11UpdateDeathER12WithMeshClsn(void *self, void *wm);
+}
 
 int Koopa::Behavior()
 {

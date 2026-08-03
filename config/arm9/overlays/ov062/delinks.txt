@@ -256,6 +256,7 @@ src/func_ov062_02118de8.cpp:
     .text start:0x02118de8 end:0x02118f04
 
 src/_ZN5Koopa16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02118f04 end:0x02118f80
 
 src/_ZN5Koopa16OnPendingDestroyEv.c:

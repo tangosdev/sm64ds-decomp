@@ -7,8 +7,10 @@
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 struct SFP { void *a, *b, *c; };
+extern "C" {
 extern struct SFP data_ov091_02134c30[];
 extern struct SFP data_ov091_02134c34[];
+}
 
 int RotatingUpDownPlatformUtm::CleanupResources()
 {

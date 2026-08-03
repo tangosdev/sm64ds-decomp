@@ -9,7 +9,9 @@ struct Camera {
     void ChangeState(State *st);
 };
 
+extern "C" {
 extern Camera::State data_0209b0f8;
+}
 
 void Camera::LookAtExit(struct Actor &actor)
 {

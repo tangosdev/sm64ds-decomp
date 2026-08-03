@@ -5,8 +5,10 @@
 /* recovered: named members + shared header, real C++ method */
 #include "StarMarker.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern char data_ov002_0211092c;
 extern char data_ov002_0210d9a8;
+}
 
 int StarMarker::CleanupResources()
 {

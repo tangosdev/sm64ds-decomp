@@ -6,6 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov066_0211ae6c[];
 extern int data_ov066_0211ae4c[];
 extern int data_ov066_0211aeb4[];
@@ -32,7 +33,9 @@ extern s8 data_ov066_0211abe0;
 extern s8 data_ov066_0211ae04;
 extern s8 data_ov066_0211ae0c;
 extern char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+}
 
+extern "C" {
 extern u8 _ZN5Actor9TrackStarEjj(void* actor, u32 a, u32 b);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
@@ -46,6 +49,7 @@ extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 b, Vector3
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
+}
 
 int Eyerok::InitResources()
 {

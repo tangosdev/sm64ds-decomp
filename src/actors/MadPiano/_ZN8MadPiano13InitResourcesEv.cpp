@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MadPiano.h"
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
 extern void _ZN11ShadowModel10InitCuboidEv(void *);
@@ -15,6 +16,7 @@ extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, void *, void *, int, short, void *);
 extern void func_ov063_0211d5f4(char *);
+}
 
 
 int MadPiano::InitResources()

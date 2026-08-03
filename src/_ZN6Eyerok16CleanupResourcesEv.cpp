@@ -6,6 +6,7 @@
 #include "Eyerok.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov066_0211ae6c[];
 extern char data_ov066_0211ae4c[];
 extern char data_ov066_0211aeb4[];
@@ -28,6 +29,7 @@ extern char data_ov066_0211aeac[];
 extern char data_ov066_0211ae14[];
 extern char data_ov066_0211ae1c[];
 extern char data_ov066_0211ae34[];
+}
 
 int Eyerok::CleanupResources()
 {

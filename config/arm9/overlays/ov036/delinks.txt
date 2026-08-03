@@ -71,6 +71,7 @@ src/_ZN18RotatingPlatformRr8BehaviorEv.cpp:
     .text start:0x021116c0 end:0x02111854
 
 src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp:
+    complete
     .text start:0x02111854 end:0x02111904
 
 src/ShipWing_Spawn.c:
@@ -84,6 +85,7 @@ src/_ZN8ShipWingD0Ev.c:
     .text start:0x02111988 end:0x021119e8
 
 src/_ZN8ShipWing16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021119e8 end:0x02111a2c
 
 src/_ZN8ShipWing16OnPendingDestroyEv.c:
@@ -130,6 +132,7 @@ src/_ZN10DonutBlock8BehaviorEv.cpp:
     .text start:0x02111e20 end:0x02111eb0
 
 src/_ZN10DonutBlock13InitResourcesEv.cpp:
+    complete
     .text start:0x02111eb0 end:0x02111f5c
 
 src/ArmedRotatingPlatform_Spawn.c:
@@ -145,9 +148,11 @@ src/_ZN21ArmedRotatingPlatformD0Ev.c:
     .text start:0x0211200c end:0x021120a0
 
 src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021120a0 end:0x021120b4
 
 src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp:
+    complete
     .text start:0x021120b4 end:0x021120c8
 
 src/TrickyTriangles_Spawn.cpp:

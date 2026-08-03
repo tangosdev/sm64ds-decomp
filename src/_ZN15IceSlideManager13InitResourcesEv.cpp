@@ -3,7 +3,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "IceSlideManager.h"
 struct S3 { int w0; int w1; int w2; };
+extern "C" {
 extern struct S3 data_ov019_021135d8;
+}
 
 int IceSlideManager::InitResources()
 {

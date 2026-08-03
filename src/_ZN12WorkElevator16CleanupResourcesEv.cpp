@@ -6,7 +6,9 @@
 #include "WorkElevator.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov021_021149b8[];
+}
 
 int WorkElevator::CleanupResources()
 {

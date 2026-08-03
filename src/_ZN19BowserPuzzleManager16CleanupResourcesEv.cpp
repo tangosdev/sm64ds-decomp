@@ -6,7 +6,9 @@
 #include "BowserPuzzleManager.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern void *data_ov064_0211adc8[];
+}
 
 int BowserPuzzleManager::CleanupResources()
 {

@@ -180,6 +180,7 @@ src/_ZN11ChiefChilly8BehaviorEv.cpp:
     .text start:0x021218a0 end:0x02121ccc
 
 src/_ZN11ChiefChilly13InitResourcesEv.cpp:
+    complete
     .text start:0x02121ccc end:0x02121ec0
 
 src/func_ov073_02121ec0.c:
@@ -236,6 +237,7 @@ src/func_ov073_021223f4.cpp:
     .text start:0x021223f4 end:0x02122464
 
 src/_ZN8CccArena16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122464 end:0x021224c8
 
 src/_ZN8CccArena6RenderEv.cpp:

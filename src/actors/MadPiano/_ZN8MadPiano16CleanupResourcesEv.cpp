@@ -6,7 +6,9 @@
 #include "MadPiano.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int G0[];
+}
 
 int MadPiano::CleanupResources()
 {

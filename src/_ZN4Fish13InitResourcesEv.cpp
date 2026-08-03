@@ -3,6 +3,7 @@
 // @symbol _ZN4Fish13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Fish.h"
+extern "C" {
 extern int _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
@@ -10,6 +11,7 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigne
 extern int data_ov100_021489cc[];
 extern int* data_ov100_021473a4[];
 extern int* data_ov100_021473b0[];
+}
 
 int Fish::InitResources()
 {

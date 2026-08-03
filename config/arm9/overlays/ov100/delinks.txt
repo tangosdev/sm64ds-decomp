@@ -376,6 +376,7 @@ src/_ZN4Door6RenderEv.c:
     .text start:0x02145fe4 end:0x021460dc
 
 src/_ZN4Door8BehaviorEv.cpp:
+    complete
     .text start:0x021460dc end:0x0214612c
 
 src/_ZN4Door13InitResourcesEv.cpp:
@@ -447,6 +448,7 @@ src/_ZN4Fish8BehaviorEv.cpp:
     .text start:0x02146b38 end:0x02146c68
 
 src/_ZN4Fish13InitResourcesEv.cpp:
+    complete
     .text start:0x02146c68 end:0x02146d38
 
 src/Fish_Spawn.cpp:

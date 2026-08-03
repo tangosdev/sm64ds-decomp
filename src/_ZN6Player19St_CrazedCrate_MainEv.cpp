@@ -6,6 +6,7 @@ typedef long long s64;
 
 struct Vector3 { int x, y, z; };
 
+extern "C" {
 extern short data_02082214[];
 extern void func_ov002_020e28d4(void*, int, int);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
@@ -18,6 +19,7 @@ extern void Player_ReleaseHeldActor(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*, void*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
 extern char data_ov002_0211031c;
+}
 
 class Player {
 public:

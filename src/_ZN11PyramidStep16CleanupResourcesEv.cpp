@@ -6,7 +6,9 @@
 #include "PyramidStep.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int G0[];
+}
 
 int PyramidStep::CleanupResources()
 {

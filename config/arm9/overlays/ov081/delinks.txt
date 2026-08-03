@@ -397,6 +397,7 @@ src/func_ov081_02127cf4.c:
     .text start:0x02127cf4 end:0x02127d98
 
 src/_ZN8IceBlock16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02127d98 end:0x02127ddc
 
 src/_ZN8IceBlock6RenderEv.cpp:

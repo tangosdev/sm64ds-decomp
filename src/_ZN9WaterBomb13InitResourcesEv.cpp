@@ -24,8 +24,10 @@ struct WithMeshClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
 };
 
+extern "C" {
 extern SharedFilePtr data_ov002_0210da38;
 extern SharedFilePtr data_ov098_0213c91c;
+}
 
 struct Obj {
     char p0[8];

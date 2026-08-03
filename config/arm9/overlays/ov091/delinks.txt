@@ -29,6 +29,7 @@ src/func_ov091_02131340.c:
     .text start:0x02131340 end:0x02131388
 
 src/_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02131388 end:0x02131408
 
 src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp:
@@ -39,6 +40,7 @@ src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp:
     .text start:0x02131468 end:0x021318f0
 
 src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp:
+    complete
     .text start:0x021318f0 end:0x02131ba4
 
 src/RotatingUpDownPlatformUtm_Spawn.c:
@@ -112,6 +114,7 @@ src/_ZN17SlidingPlatformWfD0Ev.c:
     .text start:0x02132448 end:0x021324a0
 
 src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021324a0 end:0x02132504
 
 src/_ZN17SlidingPlatformWf6RenderEv.cpp:
@@ -119,6 +122,7 @@ src/_ZN17SlidingPlatformWf6RenderEv.cpp:
     .text start:0x02132504 end:0x0213252c
 
 src/_ZN17SlidingPlatformWf8BehaviorEv.cpp:
+    complete
     .text start:0x0213252c end:0x021325d4
 
 src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp:
@@ -171,6 +175,7 @@ src/_ZN6Thwomp8BehaviorEv.cpp:
     .text start:0x02132ab0 end:0x02132c84
 
 src/_ZN6Thwomp13InitResourcesEv.cpp:
+    complete
     .text start:0x02132c84 end:0x02132cb8
 
 src/Thwomp_Spawn.c:
@@ -211,6 +216,7 @@ src/func_ov091_02133098.cpp:
     .text start:0x02133098 end:0x021331b8
 
 src/_ZN6Thwomp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021331b8 end:0x02133210
 
 src/_ZN6Thwomp6RenderEv.cpp:
@@ -305,6 +311,7 @@ src/func_ov091_02134094.c:
     .text start:0x02134094 end:0x02134108
 
 src/_ZN5Stump16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02134108 end:0x02134180
 
 src/_ZN5Stump16OnPendingDestroyEv.c:

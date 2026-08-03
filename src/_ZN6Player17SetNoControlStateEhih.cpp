@@ -4,12 +4,16 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 struct State;
+extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, struct State* s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* thiz, struct State* s);
+}
 
+extern "C" {
 extern struct State data_ov002_0211010c;
 extern struct State data_ov002_02110124;
 extern struct State data_ov002_0211022c;
+}
 
 int Player::SetNoControlState(unsigned char a_, int b, unsigned char c_)
 {

@@ -41,6 +41,7 @@ src/_ZN9TinyCoverD0Ev.c:
     .text start:0x02111420 end:0x02111480
 
 src/_ZN9TinyCover16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111480 end:0x021114c4
 
 src/_ZN9TinyCover6RenderEv.cpp:

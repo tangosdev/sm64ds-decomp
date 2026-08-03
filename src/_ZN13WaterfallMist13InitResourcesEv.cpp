@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WaterfallMist.h"
+extern "C" {
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
@@ -15,7 +16,9 @@ extern int _ZN5Actor13ClosestPlayerEv(void *thiz);
 extern void func_ov002_020b7f2c(void *c, void *p);
 extern void func_ov002_020b7f7c(void *thiz);
 extern void func_ov001_020ab228(void *c, void *a1, int idx, int a3, int a5);
+}
 
+extern "C" {
 extern char data_ov002_0210de50;
 extern char data_ov002_0210de60;
 extern char data_ov002_0210de48;
@@ -30,6 +33,7 @@ extern char data_ov002_0210de18;
 extern char data_ov002_0210de30;
 extern char data_ov002_0210de38;
 extern char data_ov002_0210df54;
+}
 
 int WaterfallMist::InitResources()
 {

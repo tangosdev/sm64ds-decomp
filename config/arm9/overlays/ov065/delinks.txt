@@ -75,6 +75,7 @@ src/_ZN6Snufit8BehaviorEv.cpp:
     .text start:0x02116b84 end:0x02116e10
 
 src/_ZN6Snufit13InitResourcesEv.cpp:
+    complete
     .text start:0x02116e10 end:0x02116f0c
 
 src/func_ov065_02116f0c.c:
@@ -159,6 +160,7 @@ src/_ZN5Swoop8BehaviorEv.cpp:
     .text start:0x02117b64 end:0x02117d80
 
 src/_ZN5Swoop13InitResourcesEv.cpp:
+    complete
     .text start:0x02117d80 end:0x02117eac
 
 src/func_ov065_02117eac.c:
@@ -225,6 +227,7 @@ src/func_ov065_02118cc4.c:
     .text start:0x02118cc4 end:0x02118d04
 
 src/_ZN6Dorrie16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02118d04 end:0x02118d80
 
 src/_ZN6Dorrie6RenderEv.cpp:
@@ -250,6 +253,7 @@ src/_ZN6Dorrie13InitResourcesEv.cpp:
     .text start:0x02119228 end:0x021194e8
 
 src/_ZN9DorrieCap13InitResourcesEv.cpp:
+    complete
     .text start:0x021194e8 end:0x0211956c
 
 src/func_ov065_0211956c.c:
@@ -303,6 +307,7 @@ src/func_ov065_0211990c.c:
     .text start:0x0211990c end:0x02119984
 
 src/_ZN15TtcRotatingCube16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02119984 end:0x021199fc
 
 src/_ZN15TtcRotatingCube6RenderEv.cpp:
@@ -364,6 +369,7 @@ src/func_ov065_0211a550.c:
     .text start:0x0211a550 end:0x0211a638
 
 src/_ZN20TtcConveyorBeltLarge16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211a638 end:0x0211a69c
 
 src/_ZN20TtcConveyorBeltLarge6RenderEv.cpp:
@@ -434,6 +440,7 @@ src/func_ov065_0211b40c.c:
     .text start:0x0211b40c end:0x0211b47c
 
 src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211b47c end:0x0211b4e0
 
 src/_ZN13TTC_MovingBar6RenderEv.cpp:

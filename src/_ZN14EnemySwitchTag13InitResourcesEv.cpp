@@ -5,12 +5,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "EnemySwitchTag.h"
+extern "C" {
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
 extern u8 data_0209f2d8;
 extern int data_0209caa0[];
 extern int data_0209fc48;
+}
 
 int EnemySwitchTag::InitResources()
 {

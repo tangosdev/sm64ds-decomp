@@ -34,6 +34,7 @@ src/func_ov024_021114c4.c:
     .text start:0x021114c4 end:0x02111504
 
 src/_ZN10PyramidTop16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111504 end:0x0211153c
 
 src/_ZN10PyramidTop6RenderEv.cpp:

@@ -8,6 +8,7 @@ typedef struct { short x,y,z; } Vector3_16;
 typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 typedef struct PMF PMF;
+extern "C" {
 extern SharedFilePtr data_ov065_0211d698;
 extern SharedFilePtr data_ov065_0211d6a8;
 extern SharedFilePtr data_ov065_0211d690;
@@ -20,6 +21,7 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_02117944(void* c, PMF* p);
+}
 
 int Swoop::InitResources()
 {

@@ -6,8 +6,10 @@
 #include "BigBrickBlock.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov002_02108ab0[];
 extern char data_ov002_02108ab4[];
+}
 
 int BigBrickBlock::CleanupResources()
 {

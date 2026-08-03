@@ -6,7 +6,9 @@
 #include "RotatingPlatformLll.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov022_02114558[];
+}
 
 int RotatingPlatformLll::CleanupResources()
 {

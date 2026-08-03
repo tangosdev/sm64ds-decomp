@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanBreath.h"
+extern "C" {
 extern unsigned char data_0209f2d8[];
+}
 
 int SnowmanBreath::Render()
 {

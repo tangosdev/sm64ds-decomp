@@ -2,7 +2,9 @@
 // @symbol _ZN6Player25St_GrabBowserTail_CleanupEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+extern "C" {
 extern void func_ov002_020daa74(void *);
+}
 
 int Player::St_GrabBowserTail_Cleanup()
 {

@@ -3,10 +3,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 struct State { int a; int b; };
+extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void *c, struct State *s);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void *c, struct State *s);
 extern struct State data_ov002_0211022c;
 extern struct State data_ov002_0211013c;
+}
 
 int Player::Unk_020ca150(unsigned char a)
 {

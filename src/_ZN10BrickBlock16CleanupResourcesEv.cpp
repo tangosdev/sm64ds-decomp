@@ -5,9 +5,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BrickBlock.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern char data_ov002_0210d9d8[];
 extern char data_ov002_0210da30[];
 extern char data_ov002_0210da18[];
+}
 
 int BrickBlock::CleanupResources()
 {

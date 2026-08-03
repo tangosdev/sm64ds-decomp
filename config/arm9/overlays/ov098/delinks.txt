@@ -27,6 +27,7 @@ src/func_ov098_02137d80.c:
     .text start:0x02137d80 end:0x02137dbc
 
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02137dbc end:0x02137e20
 
 src/_ZN14ArrowSignRight6RenderEv.cpp:
@@ -164,6 +165,7 @@ src/func_ov098_02139850.c:
     .text start:0x02139850 end:0x02139a50
 
 src/_ZN5Crate16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02139a50 end:0x02139aa8
 
 src/_ZN5Crate6RenderEv.cpp:

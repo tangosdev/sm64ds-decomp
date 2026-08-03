@@ -6,8 +6,10 @@
 #include "TtcConveyorBeltLarge.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov065_0211d194[];
 extern char data_ov065_0211d198[];
+}
 
 int TtcConveyorBeltLarge::CleanupResources()
 {

@@ -6,7 +6,9 @@
 #include "PyramidTop.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov024_02113968[];
+}
 
 int PyramidTop::CleanupResources()
 {

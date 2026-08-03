@@ -19,11 +19,15 @@ struct Obj {
     void *unkE0;
 };
 
+extern "C" {
 extern void *_Znwj(int sz);
+}
 
+extern "C" {
 extern unsigned char data_0209f2d8;
 extern char data_ov002_0211094c;
 extern char data_ov085_0213074c;
+}
 
 int MugenBgm::InitResources()
 {

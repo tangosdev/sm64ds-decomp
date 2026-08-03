@@ -6,7 +6,9 @@
 #include "ArrowSignRight.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char data_ov098_0213c380[];
+}
 
 int ArrowSignRight::CleanupResources()
 {
