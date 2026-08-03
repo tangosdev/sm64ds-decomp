@@ -157,9 +157,45 @@ evidence about origin, not a codegen wall to grind at. The MeshCollider block at
 where all 11 C matches landed, has none of either shape.
 
 Consequence for routing: `__aeabi_uldiv` and `__aeabi_ulmod` open `push {r4,r5,r6,r7,fp,ip,lr}`
-— the second shape — so they are likely hand-written too. `__aeabi_idiv` (0x20c) and
-`__aeabi_uidiv` (0x1e4) carry **neither** shape and are the only clean targets left in that
-neighbourhood.
+— the second shape — so they are likely hand-written too.
+
+**RETRACTED 2026-08-03.** I originally wrote that `__aeabi_idiv` (0x20c) and `__aeabi_uidiv`
+(0x1e4) "carry neither shape and are the only clean targets left in that neighbourhood". That
+inference is invalid, and two independent attempts falsified it. They carry neither shape
+because they contain **no `stmdb`/`push` at all** — they are frameless, relocation-free leaf
+routines. Absence of a stack-shape tell in a function with no stack is not evidence of compiler
+origin. Do not treat "lacks the tell" as "is C"; the tell only discriminates among functions
+that have a frame.
+
+Both are in fact **CodeWarrior's own runtime library**, not Nintendo game source, which was
+measured rather than assumed: compiling `a/b`, `a%b` and `ua/ub` at 1.2/sp2p3 with the repo
+flags leaves undefined references to `_s32_div_f` and `_u32_div_f`, and `%` lowers to
+`bl _s32_div_f; mov r0,r1` — confirming the dual `r0`=quotient / `r1`=remainder return. So
+0x01ffabe4 is `_s32_div_f` and 0x01ffadf0 is `_u32_div_f`. There is no original C to recover.
+
+Four structural facts, each verified on the image:
+
+* **Unguarded computed dispatch.** `add r2,r2,r2,lsl #1` then `add pc,pc,r2,lsl #2` — a 12-byte
+  stride landing directly on the *n*th of 32 unrolled 3-instruction bodies, with no bounds
+  check. mwccarm's only computed dispatch is a C `switch`, which emits a bounds-checked
+  `cmp`/`addls pc,pc,rX,lsl #2` **plus a table of `b` words** at 4-byte stride; computed `goto`
+  is a syntax error even with `-gccext,on`.
+* **A statically dead instruction**: `mov r0,r0` at 0x01ffac54, unreachable (the computed
+  jump's minimum landing site is pc+8 = 0x01ffac58) — pipeline padding.
+* **The carry flag is a bidirectional data path.** Inside each 3-instruction step the bit
+  shifted out of the numerator becomes the carry-in of the remainder update, and that update's
+  borrow becomes the quotient bit. C has no carry object; measured floor for a C step is 5
+  instructions against the ROM's 3.
+* **456 bytes are byte-identical between the two routines** (0x01ffac14..0x01ffaddc vs
+  0x01ffae08..0x01ffafd0) — one macro expanded twice with different pre/postambles.
+
+And `__aeabi_uidiv` has a **second entry point**: `config/arm9/itcm/relocs.txt` records
+`from:0x01ffaa0c kind:arm_call to:0x01ffadf8`, entering +8 to skip the divisor guard. The caller
+is the shared `__aeabi_uldiv`/`__aeabi_ulmod` body, *not* `func_01ffaa34` (whose only interior
+call is `bl 0x01ffabe4`). Census: 141 calls to 0x01ffabe4, 16 to 0x01ffadf0, 1 to 0x01ffadf8. A
+C function cannot have two entry points, so even a byte-exact C body would be a false recovery.
+
+Net: there are **no** clean C targets left in the maths block. It is vendor runtime end to end.
 Their body is a masked read-modify-write of the word at `func_0207322c()` — a function that
 just returns the constant 0x020aa3f4 (the FP status word) — returning the old value. `func_01ffb030` additionally
 packs two 5-bit fields from bits [4:0] and [20:16] into [4:0] and [12:8] on the way in,
