@@ -5,12 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BowserFireSeaArena.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int G0[];
 
 int BowserFireSeaArena::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider2)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider2);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider2))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider2))->Disable();
     }
     ((SharedFilePtr *)(G0))->Release();
     ((SharedFilePtr *)(G1))->Release();

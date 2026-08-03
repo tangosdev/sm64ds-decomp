@@ -5,13 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern "C" {
 }
 
 int ShipUp::CleanupResources()
 {
-  if(_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider))
-    _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+  if(((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled())
+    ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
   ((SharedFilePtr *)(data_ov016_021136e4[mModelIndex]))->Release();
   ((SharedFilePtr *)(data_ov016_021136dc[mModelIndex]))->Release();
   return 1;

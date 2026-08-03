@@ -3,6 +3,7 @@
 // @symbol func_ov002_020bbb14
 /* recovered: shared common types */
 #include "common.h"
+#include "MeshColliderBase.h"
 extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -12,8 +13,6 @@ extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
 extern void* _ZN5Actor10FindWithIDEj(unsigned id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void* p);
-extern void _ZN16MeshColliderBase7DisableEv(void* p);
 extern int _ZN5Actor13DistToCPlayerEv(void* self);
 extern void func_ov002_020bae9c(char* c);
 }
@@ -71,8 +70,8 @@ void func_ov002_020bbb14(char* self)
 
     _Z14ApproachLinearRiii((int*)(self + 0x98), 0, 0x555);
 
-    if (_ZN16MeshColliderBase9IsEnabledEv(self + 0x124) != 0) {
-        _ZN16MeshColliderBase7DisableEv(self + 0x124);
+    if (((MeshColliderBase *)(self + 0x124))->IsEnabled() != 0) {
+        ((MeshColliderBase *)(self + 0x124))->Disable();
     }
 
     b = *(int*)(self + 0xb0) & 8;

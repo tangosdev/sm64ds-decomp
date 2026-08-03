@@ -5,8 +5,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformWdw.h"
+#include "MeshColliderBase.h"
 extern int IsAreaShowing(int idx);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void *m, void *actor);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
 extern void _ZN9Animation7AdvanceEv(void *a);
 extern s16 data_02082214[];
@@ -23,12 +23,12 @@ int RotatingPlatformWdw::Behavior()
     /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40] */
     if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
         mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
-        if (_ZN16MeshColliderBase9IsEnabledEv((u8 *)&mMeshCollider) != 0) {
-            _ZN16MeshColliderBase7DisableEv((u8 *)&mMeshCollider);
+        if (((MeshColliderBase *)((u8 *)&mMeshCollider))->IsEnabled() != 0) {
+            ((MeshColliderBase *)((u8 *)&mMeshCollider))->Disable();
         }
     } else {
-        if (_ZN16MeshColliderBase9IsEnabledEv((u8 *)&mMeshCollider) == 0) {
-            _ZN16MeshColliderBase6EnableEP5Actor(((u8 *)this) + 0x124, ((u8 *)this));
+        if (((MeshColliderBase *)((u8 *)&mMeshCollider))->IsEnabled() == 0) {
+            ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((Actor *)(((u8 *)this)));
         }
     }
 

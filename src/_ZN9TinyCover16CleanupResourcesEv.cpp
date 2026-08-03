@@ -5,12 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "TinyCover.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int data_ov033_021124f0[];
 
 int TinyCover::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov033_021124f0))->Release();
     ((SharedFilePtr *)(data_ov033_021124e8))->Release();

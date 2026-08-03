@@ -1,4 +1,5 @@
 //cpp
+#include "MeshColliderBase.h"
 extern "C" void _Z14ApproachLinearRsss(short* cur, short to, short step);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -6,8 +7,6 @@ extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern "C" int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
 extern "C" void func_ov002_020bafc0(void* self);
-extern "C" int _ZN16MeshColliderBase9IsEnabledEv(void* p);
-extern "C" void _ZN16MeshColliderBase7DisableEv(void* p);
 
 struct Obj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -31,7 +30,7 @@ extern "C" void func_ov002_020bba28(char* self){
         ((struct Obj*)self)->m();
     } else {
         func_ov002_020bafc0(self);
-        if (_ZN16MeshColliderBase9IsEnabledEv(self + 0x124))
-            _ZN16MeshColliderBase7DisableEv(self + 0x124);
+        if (((MeshColliderBase *)(self + 0x124))->IsEnabled())
+            ((MeshColliderBase *)(self + 0x124))->Disable();
     }
 }

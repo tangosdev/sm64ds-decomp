@@ -5,12 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingClockHand.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int G0[];
 
 int RotatingClockHand::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(G0))->Release();
     ((SharedFilePtr *)(G1))->Release();

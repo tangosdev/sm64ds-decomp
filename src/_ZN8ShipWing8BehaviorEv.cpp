@@ -2,13 +2,12 @@
 // @symbol _ZN8ShipWing8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWing.h"
+#include "MeshColliderBase.h"
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 int _ZN5Actor13DistToCPlayerEv(void* p);
 void _ZN5Actor14TriplePoofDustEv(void* p);
-int _ZN16MeshColliderBase9IsEnabledEv(void* p);
-void _ZN16MeshColliderBase7DisableEv(void* p);
 void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
@@ -33,7 +32,7 @@ int ShipWing::Behavior()
             if (_ZN5Actor13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
         _ZN5Actor14TriplePoofDustEv(((char*)this));
-        if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) != 0) _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
         mPosX = unk_4dc;
         mPosY = unk_4e0;
         mPosZ = unk_4e4;

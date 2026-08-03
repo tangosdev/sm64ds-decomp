@@ -5,16 +5,17 @@
 /* recovered: named members + shared header, real C++ method */
 #include "WorkElevator.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int data_ov021_021149b8[];
 
 int WorkElevator::CleanupResources()
 {
     int i;
     char *p = ((char *)this);
-    _ZN16MeshColliderBase7DisableEv(p + 0x124);
+    ((MeshColliderBase *)(p + 0x124))->Disable();
     p += 0x520;
     for (i = 0; i < 4; i++) {
-        _ZN16MeshColliderBase7DisableEv(p);
+        ((MeshColliderBase *)(p))->Disable();
         p += 0x1c8;
     }
     ((SharedFilePtr *)(data_ov021_021149b0))->Release();

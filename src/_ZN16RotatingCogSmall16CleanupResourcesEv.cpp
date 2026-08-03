@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingCogSmall.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern "C" {
 extern char data_ov035_02112c78[];
 extern char data_ov035_02112c70[];
@@ -14,8 +15,8 @@ extern char data_ov035_02112c60[];
 int RotatingCogSmall::CleanupResources()
 {
   if(mRotationState==0){
-    if(_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider))
-      _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
+    if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
+      ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     ((SharedFilePtr *)(data_ov035_02112c78))->Release();
     ((SharedFilePtr *)(data_ov056_02112c68))->Release();
   } else {

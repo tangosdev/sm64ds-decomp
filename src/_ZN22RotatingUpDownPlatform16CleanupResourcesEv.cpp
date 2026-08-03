@@ -3,8 +3,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingUpDownPlatform.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern "C" {
-extern int _ZN16MeshColliderBase7DisableEv(void*);
 extern void* data_ov091_021344fc[];
 extern void* data_ov091_021344f4[];
 }
@@ -13,6 +13,6 @@ int RotatingUpDownPlatform::CleanupResources()
 {
   ((SharedFilePtr *)(data_ov091_021344fc[mVariant]))->Release();
   ((SharedFilePtr *)(data_ov091_021344f4[mVariant]))->Release();
-  _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+  ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
   return 1;
 }

@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Whomp.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern void data_ov079_02128168(void);
 extern void data_ov079_02128178(void);
 extern void data_ov079_02128170(void);
@@ -13,8 +14,8 @@ extern void *data_ov079_021275ec[];
 int Whomp::CleanupResources()
 {
   int i;
-  if(_ZN16MeshColliderBase9IsEnabledEv((unsigned char *)&mMovingMeshCollider))
-    _ZN16MeshColliderBase7DisableEv((unsigned char *)&mMovingMeshCollider);
+  if(((MeshColliderBase *)((unsigned char *)&mMovingMeshCollider))->IsEnabled())
+    ((MeshColliderBase *)((unsigned char *)&mMovingMeshCollider))->Disable();
   ((SharedFilePtr *)(data_ov079_02127bf0[((unsigned char *)this)[0x414]]))->Release();
   if(((unsigned char *)this)[0x414]){
     ((SharedFilePtr *)((void*)&data_ov079_02128168))->Release();

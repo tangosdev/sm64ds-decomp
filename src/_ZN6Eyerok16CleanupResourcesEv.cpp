@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern char data_ov066_0211ae6c[];
 extern char data_ov066_0211ae4c[];
 extern char data_ov066_0211aeb4[];
@@ -30,8 +31,8 @@ extern char data_ov066_0211ae34[];
 
 int Eyerok::CleanupResources()
 {
-  if(_ZN16MeshColliderBase9IsEnabledEv((char *)&unk_674))
-    _ZN16MeshColliderBase7DisableEv((char *)&unk_674);
+  if(((MeshColliderBase *)((char *)&unk_674))->IsEnabled())
+    ((MeshColliderBase *)((char *)&unk_674))->Disable();
   if(unk_49c==0){
     ((SharedFilePtr *)(data_ov066_0211ae6c))->Release();
     ((SharedFilePtr *)(data_ov066_0211ae4c))->Release();

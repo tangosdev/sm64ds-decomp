@@ -3,6 +3,7 @@
 // recovered name: Whomp_OnHitByMegaChar
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
+#include "MeshColliderBase.h"
 /* recovered: shared common types, renamed to Class_Method */
 /* daBtn_c::OnHitByMegaChar - recovered from vtable slot identity */
 extern "C" {
@@ -29,7 +30,7 @@ void func_ov079_02123e60(char* c, void* player)
     _ZN5Actor10PoofDustAtERK7Vector3(c, dust);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(5, pos.x, pos.y, pos.z);
     _ZN9ActorBase18MarkForDestructionEv(c);
-    if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x418) != 0)
-        _ZN16MeshColliderBase7DisableEv(c + 0x418);
+    if (((MeshColliderBase *)(c + 0x418))->IsEnabled() != 0)
+        ((MeshColliderBase *)(c + 0x418))->Disable();
 }
 }

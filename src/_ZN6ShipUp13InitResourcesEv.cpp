@@ -4,13 +4,13 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
+#include "MeshColliderBase.h"
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern void func_020393d4(int* p, int v);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
 extern int IsStarCollected(int a, int b);
 extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
@@ -37,7 +37,7 @@ int ShipUp::InitResources()
     if (mModelIndex == 0) {
         func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     }
-    _ZN16MeshColliderBase6EnableEP5Actor(((char*)this)+0x124, ((char*)this));
+    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
     unk_324 = 0;
     unk_328 = 0;
     if (data_0209f220 > 1) {

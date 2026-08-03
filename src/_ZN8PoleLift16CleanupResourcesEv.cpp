@@ -5,11 +5,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PoleLift.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int G0[];
 
 int PoleLift::CleanupResources()
 {
-    _ZN16MeshColliderBase7DisableEv((char *)&mCollider);
+    ((MeshColliderBase *)((char *)&mCollider))->Disable();
     ((SharedFilePtr *)(G0))->Release();
     ((SharedFilePtr *)(G1))->Release();
     return 1;

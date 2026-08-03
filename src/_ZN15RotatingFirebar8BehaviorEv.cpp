@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingFirebar.h"
+#include "MeshColliderBase.h"
 #pragma opt_propagation off
 #pragma opt_dead_assignments off
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
@@ -42,8 +43,8 @@ int RotatingFirebar::Behavior()
 
     b = ((unk_0b0 & 8) != 0) ? 1 : 0;
     if (b) {
-        if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) != 0) {
-            _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
+            ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
         }
         return 1;
     }

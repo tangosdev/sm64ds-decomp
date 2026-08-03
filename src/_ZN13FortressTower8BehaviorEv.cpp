@@ -2,9 +2,8 @@
 // @symbol _ZN13FortressTower8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "FortressTower.h"
+#include "MeshColliderBase.h"
 extern "C" {
-int _ZN16MeshColliderBase9IsEnabledEv(void* c);
-void _ZN16MeshColliderBase6EnableEP5Actor(void* c, void* a);
 int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 extern unsigned char data_0209f2d8[];
 }
@@ -23,8 +22,8 @@ int FortressTower::Behavior()
     }
     int on = (data_0209f2d8[0] == 1);
     if (on) {
-        if (!_ZN16MeshColliderBase9IsEnabledEv((char*)&mMovingMeshCollider))
-            _ZN16MeshColliderBase6EnableEP5Actor((char*)((char*)this)+0x124, ((char*)this));
+        if (!((MeshColliderBase *)((char*)&mMovingMeshCollider))->IsEnabled())
+            ((MeshColliderBase *)((char*)((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
     } else {
         _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), r1, 0);
     }

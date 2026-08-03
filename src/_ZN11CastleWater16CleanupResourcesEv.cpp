@@ -5,12 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "CastleWater.h"
 #include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int G0[];
 
 int CastleWater::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(G0))->Release();
     ((SharedFilePtr *)(G1))->Release();

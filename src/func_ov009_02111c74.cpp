@@ -1,4 +1,5 @@
 //cpp
+#include "MeshColliderBase.h"
 // @symbol func_ov009_02111c74
 // recovered name: daObjMcWater_c_InitResources
 /* recovered: renamed to Class_Method */
@@ -16,7 +17,6 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
-void _ZN16MeshColliderBase6EnableEP5Actor(void* self, void* actor);
 int func_ov009_02111b1c(char* thiz);
 extern unsigned char data_0209f2d8;
 extern int data_0209caa0;
@@ -47,7 +47,7 @@ int func_ov009_02111c74(char *self){
             self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x2ec), 0x1000,
             *(s16 *)(self + 0x8e), data_ov009_02112c38);
     }
-    _ZN16MeshColliderBase6EnableEP5Actor(self + 0x124, self);
+    ((MeshColliderBase *)(self + 0x124))->Enable((Actor *)(self));
     {
         int v = *(int*)(self + 0x60) - 0x64000;
         if (data_0209f32c > v) data_0209f32c = v;

@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
+#include "MeshColliderBase.h"
 struct KCL_File;
 struct CLPS_Block;
 struct MeshCollider;
@@ -37,7 +38,6 @@ extern void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(struct KCL_File* f);
 extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(struct MeshCollider* thiz, struct KCL_File* f, struct CLPS_Block* clps);
 extern int _ZNK12MeshCollider16GetOctreeOriginYEv(struct MeshCollider* thiz);
 extern int _ZNK12MeshCollider13GetUnkOctreeYEv(struct MeshCollider* thiz);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(struct MeshCollider* thiz, struct Actor* a);
 extern void _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(struct ObjTable* t, int i, unsigned int p);
 extern void _ZN12ActorDerived5SpawnEjP9ActorBaseii(unsigned int id, struct ActorBase* parent, int a, int b);
 
@@ -60,7 +60,7 @@ void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(struct LVL_Ove
         _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
         _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
         func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        _ZN16MeshColliderBase6EnableEP5Actor(mc, 0);
+        ((MeshColliderBase *)(mc))->Enable((Actor *)(0));
     }
 
     data_ov002_0211118c = 0;

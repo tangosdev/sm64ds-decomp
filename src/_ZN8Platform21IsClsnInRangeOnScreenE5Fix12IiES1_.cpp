@@ -4,20 +4,20 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Platform.h"
+#include "MeshColliderBase.h"
 extern "C" {
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
 extern void* _ZN5Actor13ClosestPlayerEv(void*);
 extern int Vec3_Dist(void*, void*);
 int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(struct Platform *self, int a, int b) {
   int on = (self->unk_0b0 & 8) != 0;
   if (on) {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
-      _ZN16MeshColliderBase7DisableEv((char*)&self->mMeshCollider);
+    if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((MeshColliderBase *)((char*)&self->mMeshCollider))->Disable();
     return 0;
   }
   if (a == 0) {
-    if (!_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
-      _ZN16MeshColliderBase6EnableEP5Actor(((char*)self)+0x124, ((char*)self));
+    if (!((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((MeshColliderBase *)(((char*)self)+0x124))->Enable((Actor *)(((char*)self)));
     goto done;
   }
   {
@@ -30,12 +30,12 @@ int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(struct Platform *self, int 
   void* p = _ZN5Actor13ClosestPlayerEv(((char*)self));
   int d = Vec3_Dist(&v, (char*)p+0x5c);
   if (d > a) {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
-      _ZN16MeshColliderBase7DisableEv((char*)&self->mMeshCollider);
+    if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((MeshColliderBase *)((char*)&self->mMeshCollider))->Disable();
     return 0;
   }
-  if (!_ZN16MeshColliderBase9IsEnabledEv((char*)&self->mMeshCollider))
-    _ZN16MeshColliderBase6EnableEP5Actor(((char*)self)+0x124, ((char*)self));
+  if (!((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
+    ((MeshColliderBase *)(((char*)self)+0x124))->Enable((Actor *)(((char*)self)));
   }
 done:
   return 1;
