@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
+#include "SharedFilePtr.h"
 #define LAUNDER16(p) ((u16 *)(int)(((long long)(int)(p))))
 extern "C" {
 extern u8 data_0209f2d8;
 extern void *data_ov002_020ff480[];
 extern void *data_ov002_020ff2f0[];
-void _ZN13SharedFilePtr7ReleaseEv(void *thiz);
 void _ZN9Animation8LoadFileER13SharedFilePtr(void *arg);
 int _ZNK6Player14GetBodyModelIDEjb(void *thiz, u32 a, int b);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bcaFile, int b, Fix12i c, u32 d);
@@ -34,7 +34,7 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
 
     newVal = a << 2;
     if (newVal != *(u32 *)(self + 0x63c)) {
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[*(u32 *)(self + 0x63c) + (*(int *)(self + 8) & 3)]);
+        ((SharedFilePtr *)(data_ov002_020ff480[*(u32 *)(self + 0x63c) + (*(int *)(self + 8) & 3)]))->Release();
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_020ff480[newVal + (*(int *)(self + 8) & 3)]);
 
         id = _ZNK6Player14GetBodyModelIDEjb(self, *(int *)(self + 8) & 0xff, 0);
@@ -46,7 +46,7 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(char *self, u32 a, int b, Fix12i c, u16 d)
             if (charId == *(u32 *)(self + 8))
                 charId = *(u8 *)(self + 0x6dc);
 
-            _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[*(u32 *)(self + 0x63c) + charId]);
+            ((SharedFilePtr *)(data_ov002_020ff480[*(u32 *)(self + 0x63c) + charId]))->Release();
             sfp = data_ov002_020ff480[newVal + charId];
             _ZN9Animation8LoadFileER13SharedFilePtr(sfp);
 

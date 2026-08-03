@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Dorrie.h"
+#include "MeshColliderBase.h"
 struct SharedFilePtr { unsigned int data[4]; };
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);
 extern struct SharedFilePtr data_ov002_0210d9c0;
@@ -18,7 +19,7 @@ int Dorrie::CleanupResources()
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210d9c0);
     p = ((char *)this) + 0x180;
     for (i = 0; i < 7; i++) {
-        _ZN16MeshColliderBase7DisableEv(p);
+        ((MeshColliderBase *)(p))->Disable();
         _ZN13SharedFilePtr7ReleaseEv(data_ov065_0211c08c[i]);
         p += 0x200;
     }

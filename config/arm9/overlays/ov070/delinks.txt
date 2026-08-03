@@ -264,6 +264,7 @@ src/_ZN10FlameChomp13InitResourcesEv.cpp:
     .text start:0x02121914 end:0x02121a64
 
 src/func_ov070_02121a64.c:
+    complete
     .text start:0x02121a64 end:0x02121ae0
 
 src/func_ov070_02121ae0.c:

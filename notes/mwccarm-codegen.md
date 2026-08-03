@@ -22,7 +22,11 @@ template reconstructed in include/math/Fix12.h - makes mwccarm home the incoming
 register arguments to the stack (`push {r0-r3}`) and reload each use, +0x14 bytes
 on ShadowModel::InitModel. Scalar parameters of identical width stay in registers.
 Identical on 1.2/sp2p3 and 2004/b56; `register`, `const`, and an inline conversion
-operator instead of direct member access change nothing.
+operator instead of direct member access change nothing. Nor does declaring the
+aggregate a `union` rather than a `struct`, or copying each parameter to a local
+before use -- re-measured on Actor::SetRanges (0x02010e08, target 0x24), where every
+aggregate form costs the same +0x14 and only a scalar parameter reproduces. The cost
+is in the parameter passing, not in how the member is reached.
 
 The retail ROM's own `5Fix12IiE` functions read their arguments straight from
 registers, so the original build had a lever we have not found. Until someone

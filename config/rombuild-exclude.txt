@@ -27,3 +27,24 @@ func_0206d8c4
 func_0206d940
 func_0206d9cc
 func_0206da18
+
+# --- rejected by mwldarm despite passing eligibility ---
+# Rule 5 accepts a reference whose name is in config/**/symbols.txt. These name
+# kind:data symbols no object in the link defines: resolvable in config, and
+# still an undefined symbol at link time.
+_ZN11ShadowModel10InitCuboidEv
+_ZN11ShadowModel12InitCylinderEv
+
+# --- linked cleanly but produced the wrong bytes (dsd check modules) ---
+# Eligibility proves an object is the right shape to drop in, never that it is
+# the right content. Mostly C++ destructors differing by a single byte, where a
+# deleting/complete variant resolves differently in a real relink than it does
+# when linkcheck verifies the match in isolation.
+_ZN11MirrorLuigiD1Ev
+_ZN15RecRoomCupboardD1Ev
+_ZN15RecRoomCupboardD0Ev
+_ZN14BlendModelAnimD1Ev
+_ZN5ModelD2Ev
+_ZN5ModelD1Ev
+CleanCommonModelDataArr
+func_020313d8

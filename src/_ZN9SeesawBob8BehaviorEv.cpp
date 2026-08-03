@@ -2,11 +2,10 @@
 // @symbol _ZN9SeesawBob8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "SeesawBob.h"
+#include "MeshColliderBase.h"
 typedef short s16;
 struct V3 { int x, y, z; };
 extern "C" {
-int _ZN16MeshColliderBase9IsEnabledEv(void* self);
-void _ZN16MeshColliderBase7DisableEv(void* self);
 int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 void func_ov095_021358cc(void* c, void* a, void* b, int d, int e, int f, int g);
 void func_ov095_0213597c(char *t);
@@ -18,8 +17,8 @@ int SeesawBob::Behavior()
 {
     int b = (int)((unk_0b0 & 8) != 0);
     if (b != 0) {
-        if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider)) {
-            _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled()) {
+            ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
         }
         return 1;
     }

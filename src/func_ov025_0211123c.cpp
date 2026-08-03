@@ -2,6 +2,7 @@
 // @symbol func_ov025_0211123c
 /* recovered: shared common types */
 #include "common.h"
+#include "MeshColliderBase.h"
 
 struct Actor {
     virtual void f00(); virtual void f01(); virtual void f02(); virtual void f03();
@@ -16,8 +17,6 @@ struct Actor {
 extern "C" {
 extern void* _ZN5Actor18ClosestWithActorIDEj(void*, unsigned int);
 extern int Vec3_Dist(void*, void*);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void*, void*);
 
 int func_ov025_0211123c(char* c) {
     void* p = _ZN5Actor18ClosestWithActorIDEj(c, 9);
@@ -28,8 +27,8 @@ int func_ov025_0211123c(char* c) {
         v.z = *(int*)(c + 0x64);
         v.y = v.y + ((Actor*)c)->f29();
         if (Vec3_Dist((char*)c + 0x5c, (char*)p + 0x5c) < (*(int*)(c + 0xb8) << 3)) {
-            if (!_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
-                _ZN16MeshColliderBase6EnableEP5Actor(c + 0x124, c);
+            if (!((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
+                ((MeshColliderBase *)(c + 0x124))->Enable((Actor *)(c));
                 return 1;
             }
         }

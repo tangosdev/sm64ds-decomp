@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "MeshColliderBase.h"
 // func_ov098_0213a36c at 0x0213a36c
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 struct CylinderClsn;
@@ -22,8 +23,6 @@ struct Actor {
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
-int _ZN16MeshColliderBase9IsEnabledEv(void *self);
-void _ZN16MeshColliderBase7DisableEv(void *self);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, void *pos);
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int Vec3_HorzDist(void *a, void *b);
@@ -70,8 +69,8 @@ extern "C" int func_ov098_0213a36c(char *c)
     func_ov098_0213a00c(c);
     if (*(u8 *)(c + 0x33f) != 0) {
         if (DecIfAbove0_Byte((u8 *)BASE(c, 0x33f)) == 0) {
-            if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124) != 0)
-                _ZN16MeshColliderBase7DisableEv(c + 0x124);
+            if (((MeshColliderBase *)(c + 0x124))->IsEnabled() != 0)
+                ((MeshColliderBase *)(c + 0x124))->Disable();
         }
         return 1;
     }
@@ -138,8 +137,8 @@ extern "C" int func_ov098_0213a36c(char *c)
             s16 *p334 = (s16 *)BASE(c, 0x334);
             *p334 = (s16)(*p334 + 0x80);
         } else {
-            if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124) != 0)
-                _ZN16MeshColliderBase7DisableEv(c + 0x124);
+            if (((MeshColliderBase *)(c + 0x124))->IsEnabled() != 0)
+                ((MeshColliderBase *)(c + 0x124))->Disable();
         }
         yaw = *(s16 *)(c + 0x90);
         if (yaw > -0x400) {

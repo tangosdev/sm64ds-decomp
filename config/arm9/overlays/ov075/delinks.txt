@@ -114,6 +114,7 @@ src/func_ov075_02114cd8.cpp:
     .text start:0x02114cd8 end:0x02114ddc
 
 src/func_ov075_02114ddc.cpp:
+    complete
     .text start:0x02114ddc end:0x02114fa8
 
 src/func_ov075_02114fa8.c:

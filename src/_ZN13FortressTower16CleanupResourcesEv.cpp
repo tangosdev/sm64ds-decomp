@@ -4,15 +4,16 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FortressTower.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern char data_ov102_0214e188[];
 extern char data_ov102_0214e18c[];
 
 int FortressTower::CleanupResources()
 {
-  if(_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider))
-    _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
-  _ZN13SharedFilePtr7ReleaseEv(*(void**)(data_ov102_0214e188 + (unsigned char)((char *)this)[0x31e]*0xc));
-  _ZN13SharedFilePtr7ReleaseEv(*(void**)(data_ov102_0214e18c + (unsigned char)((char *)this)[0x31e]*0xc));
+  if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
+    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+  ((SharedFilePtr *)(*(void**)(data_ov102_0214e188 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov102_0214e18c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
   return 1;
 }

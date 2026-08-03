@@ -1,0 +1,42 @@
+# Gate-8 slice: collision -- MeshCollider over a real KCL file, queried
+# through the octree walk. The walk itself is the port's first substantial
+# port/unmatched adoption (see the file header); everything else is matched.
+
+port/unmatched/MeshCollider_DetectClsn_RaycastLine.cpp
+src/_ZN12MeshColliderC1Ev.c
+src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block.cpp
+src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File.cpp
+src/_ZN12MeshCollider8LoadFileER13SharedFilePtr.cpp
+src/_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo.cpp
+src/_ZN12MeshCollider9GetNormalEsR7Vector3.cpp
+src/_ZN12MeshCollider17GetTriangleOriginEsR7Vector3.cpp
+src/_ZN12MeshCollider9Virtual08Ev.cpp
+src/func_020397dc.c
+src/func_020397b8.c
+src/func_02037eec.c
+src/func_02037ee8.c
+src/func_02037fd4.c
+src/func_020375ec.c
+src/func_020396dc.c
+src/func_02039624.c
+src/func_0203821c.c
+src/func_020381cc.c
+src/func_02037eb0.c
+src/Vec3_Dist.c
+src/_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c
+src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.c
+src/_ZN16MeshColliderBaseC2Ev.c
+src/func_02038228.c
+src/SurfaceInfo_TestFlag0x20.c
+src/func_020353d4.c
+src/func_02035408.c
+src/func_0203543c.c
+src/func_0203545c.c
+src/func_0203547c.c
+src/func_020354b0.c
+src/func_02037e14.c
+src/func_02037e20.c
+src/func_02037e2c.c
+src/func_02037e38.c
+src/func_02037de8.c
+src/func_02037e9c.c

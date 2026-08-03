@@ -1,9 +1,14 @@
-typedef struct Actor { char pad[0]; } Actor;
+//cpp
+// @symbol _ZN5Actor24KillAndTrackInDeathTableEv
+/* Actor::KillAndTrackInDeathTable() at 0x0200f9b8.
+ *
+ * Records the actor in the death table, then marks it for destruction through
+ * the ActorBase helper it inherits.
+ */
+#include "Actor.h"
 
-extern void _ZN5Actor17TrackInDeathTableEv(Actor* self);
-extern void _ZN9ActorBase18MarkForDestructionEv(Actor* self);
-
-void _ZN5Actor24KillAndTrackInDeathTableEv(Actor* self) {
-    _ZN5Actor17TrackInDeathTableEv(self);
-    _ZN9ActorBase18MarkForDestructionEv(self);
+void Actor::KillAndTrackInDeathTable()
+{
+    TrackInDeathTable();
+    MarkForDestruction();
 }

@@ -61,6 +61,7 @@ src/func_ov074_0211fd48.c:
     .text start:0x0211fd48 end:0x0211fd74
 
 src/func_ov074_0211fd74.cpp:
+    complete
     .text start:0x0211fd74 end:0x0211ffac
 
 src/func_ov074_0211ffac.c:
@@ -120,6 +121,7 @@ src/func_ov074_02120808.cpp:
     .text start:0x02120808 end:0x0212087c
 
 src/func_ov074_0212087c.c:
+    complete
     .text start:0x0212087c end:0x02120b24
 
 src/func_ov074_02120b24.c:

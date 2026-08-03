@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "MeshColliderBase.h"
 
 
 struct Actor {
@@ -19,7 +20,6 @@ struct Actor {
 };
 
 extern "C" int Vec3_Dist(void* a, void* b);
-extern "C" void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* actor);
 
 extern "C" int func_ov079_02123a8c(Actor *self)
 {
@@ -36,8 +36,8 @@ extern "C" int func_ov079_02123a8c(Actor *self)
         v.y = v.y + self->vf29();
         int dist = Vec3_Dist(&v, (char*)closest + 0x5c);
         if (dist < (*(int*)((char*)self + 0xb8) << 3)) {
-            if (!_ZN16MeshColliderBase9IsEnabledEv((char*)self + 0x418))
-                _ZN16MeshColliderBase6EnableEP5Actor((char*)self + 0x418, self);
+            if (!((MeshColliderBase *)((char*)self + 0x418))->IsEnabled())
+                ((MeshColliderBase *)((char*)self + 0x418))->Enable((Actor *)(self));
             return 1;
         }
     }

@@ -131,6 +131,12 @@ unsigned char data_020a4bbc;    /* texture-matrix mode of the bound material */
 short data_020a4bc0;
 short data_020a4bc4;
 
+/* processing-list heads the actor lifecycle links into */
+int data_020a4b78[4];
+int data_020a4b88[4];
+int data_020a4b98[4];
+int data_02099f24[4];
+
 // ---- common model data array (BSS on the DS) ------------------------------
 int data_0209cefc[3 * 64];  /* 64 records x 0xc */
 int data_0209cef8[1];       /* record count */
@@ -142,6 +148,14 @@ int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 // every method non-virtually (qualified), so plain zero slots are fine; if
 // anything ever dispatches through them it faults immediately and loudly.
 void *_ZTV5Model[8];
+// Same story for the animated-model hierarchy: primary vtables plus the
+// multiple-inheritance thunk table the ModelAnim ctor installs at +0x50.
+void *_ZTV9Animation[8];
+void *_ZTV9ModelAnim[10];
+void *VTable_Animation_ModelAnimThunk[8];
+void *_ZTV16MeshColliderBase[13];   /* base: never dispatched in the gates */
+unsigned char data_020a0c78[8]; /* the default CLPS ENTRY (8-byte storage,
+                                   func_02037e9c fills it on first lookup) */
 
 // BSS globals of the render/animation walk (0x02099xxx is past bss_start;
 // their DS values come from init code not yet in any slice):

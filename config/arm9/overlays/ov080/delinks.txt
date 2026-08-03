@@ -53,6 +53,7 @@ src/func_ov080_02124208.c:
     .text start:0x02124208 end:0x02124360
 
 src/func_ov080_02124360.c:
+    complete
     .text start:0x02124360 end:0x021243d8
 
 src/func_ov080_021243d8.c:
@@ -249,6 +250,7 @@ src/func_ov080_021264ec.c:
     .text start:0x021264ec end:0x021265ec
 
 src/func_ov080_021265ec.c:
+    complete
     .text start:0x021265ec end:0x0212677c
 
 src/func_ov080_0212677c.c:

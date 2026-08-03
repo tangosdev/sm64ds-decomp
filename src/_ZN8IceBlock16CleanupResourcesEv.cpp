@@ -4,15 +4,16 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "IceBlock.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int data_ov081_02128fd8[];
 
 int IceBlock::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov081_02128fd8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov081_02128fd0);
+    ((SharedFilePtr *)(data_ov081_02128fd8))->Release();
+    ((SharedFilePtr *)(data_ov081_02128fd0))->Release();
     return 1;
 }

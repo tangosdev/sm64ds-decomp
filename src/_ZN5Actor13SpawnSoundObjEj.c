@@ -1,28 +1,25 @@
-typedef unsigned int u32;
-typedef signed char s8;
-typedef int s32;
+//cpp
+// @symbol _ZN5Actor13SpawnSoundObjEj
+/* Actor::SpawnSoundObj(u32) at 0x02010bf0.
+ *
+ * Spawns actor 0x167 -- the positional sound emitter -- at this actor's own
+ * position and area, with no rotation and no death-table slot.
+ *
+ * Actor::Spawn is called through its mangled name rather than a declared method
+ * because its signature carries by-value class parameters; see
+ * notes/mwccarm-codegen.md 6az.
+ */
+#include "Actor.h"
 
-typedef struct { s32 x, y, z; } Vector3;
-typedef struct { short x, y, z; } Vector3_16;
+struct Vector3_16 { short x, y, z; };
 
-struct Actor {
-    char pad1[0x5c];
-    Vector3 pos;
-    char pad2[0x64];
-    s8 areaID;
-};
+extern "C" Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    u32 actorID, u32 param, const void *pos, const Vector3_16 *rot,
+    s32 areaID, s32 deathTableID);
 
-typedef struct Actor Actor;
-
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
-
-void _ZN5Actor13SpawnSoundObjEj(Actor* self, u32 soundObjParam) {
+void Actor::SpawnSoundObj(u32 soundObjParam)
+{
     _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-        0x167,
-        soundObjParam,
-        &self->pos,
-        (const Vector3_16*)0,
-        (s32)self->areaID,
-        -1
-    );
+        0x167, soundObjParam, (const void *)&mPosX, (const Vector3_16 *)0,
+        (s32)mAreaId, -1);
 }

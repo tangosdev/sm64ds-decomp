@@ -2,6 +2,7 @@
 // @symbol func_ov091_02133254
 /* recovered: shared common types */
 #include "common.h"
+#include "MeshColliderBase.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -15,7 +16,6 @@ extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *k, void *m, int fix, short s, void *clps);
 extern "C" void func_020393d4(int *p, int v);
-extern "C" void _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor);
 extern "C" BTP_File *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File &b, BTP_File &t);
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, BTP_File *f, int a, int fix, unsigned int u);
@@ -52,7 +52,7 @@ extern "C" int func_ov091_02133254(char *self)
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, self + 0x2ec, 0x199, *(short *)(self + 0x8e), p8);
     func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-    _ZN16MeshColliderBase6EnableEP5Actor(self + 0x124, self);
+    ((MeshColliderBase *)(self + 0x124))->Enable((Actor *)(self));
 
     tp = *(void **)(*(char **)(self + 0x320) + 0xc);
     if (tp != 0)

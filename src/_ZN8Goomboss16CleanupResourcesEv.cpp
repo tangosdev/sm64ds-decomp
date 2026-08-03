@@ -4,9 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Goomboss.h"
+#include "SharedFilePtr.h"
 extern "C" {
 int func_ov074_0212229c(int* c);
-void _ZN13SharedFilePtr7ReleaseEv(void* thiz);
 void UnloadKeyModels(int i);
 extern char data_ov002_0210da30;
 extern char data_ov084_02130cf8;
@@ -21,14 +21,14 @@ int Goomboss::CleanupResources()
     if (v == 0x1111) {
         return func_ov074_0212229c(((int*)this));
     }
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da30);
+    ((SharedFilePtr *)(&data_ov002_0210da30))->Release();
     UnloadKeyModels(2);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov084_02130cf8);
+    ((SharedFilePtr *)(&data_ov084_02130cf8))->Release();
     for (i = 0; i < 7; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov074_0212292c[i]);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov074_02123000);
+        ((SharedFilePtr *)(data_ov074_0212292c[i]))->Release();
+    ((SharedFilePtr *)(&data_ov074_02123000))->Release();
     for (i = 0; i < 0xc; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov074_02122948[i]);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov074_02123040);
+        ((SharedFilePtr *)(data_ov074_02122948[i]))->Release();
+    ((SharedFilePtr *)(&data_ov074_02123040))->Release();
     return 1;
 }

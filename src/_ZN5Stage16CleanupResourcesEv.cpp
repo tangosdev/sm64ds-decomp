@@ -3,6 +3,8 @@
 // @symbol _ZN5Stage16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 /* _ZN5Stage16CleanupResourcesEv @ 0x0202c9a8 (arm9, size 0x264)
  * Releases the level file handles, tears down fader/mesh-collider/message
  * state and unloads the level overlays/archive. Returns 1.
@@ -26,7 +28,6 @@ extern u8 data_0209f244;
 extern u8 data_0209f2b0;
 extern u8 data_0209f20c;
 
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern void _ZN5Sound21ResetPlayerVoiceGroupEv(void);
 extern void EndKuppaScript(void);
 extern void _ZN6Memory16operator_delete2EPv(void *);
@@ -34,7 +35,6 @@ extern void _ZN5Scene20SetAndStopColorFaderEv(void);
 extern void func_02073244(void *, int, int, void (*)(void *));
 extern void _ZN9FaderWipeD1Ev(void *);
 extern void CleanCommonModelDataArr(void);
-extern void _ZN16MeshColliderBase7DisableEv(void *);
 extern void _ZN5Stage18ResetMeshCollidersEv(void);
 extern void func_01ffb0c8(void *);
 extern void Deallocate(void);
@@ -55,7 +55,7 @@ int Stage::CleanupResources()
     u32 i;
 
     for (i = 0; i < 12; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_020756f0[i]);
+        ((SharedFilePtr *)(data_020756f0[i]))->Release();
 
     {
         int atEnd = (data_0209f2d8 == 2);
@@ -96,7 +96,7 @@ int Stage::CleanupResources()
     func_02073244(data_0209f324, 0x60, 8, _ZN9FaderWipeD1Ev);
     data_0209f324 = 0;
     CleanCommonModelDataArr();
-    _ZN16MeshColliderBase7DisableEv((char *)&unk_91c);
+    ((MeshColliderBase *)((char *)&unk_91c))->Disable();
     _ZN5Stage18ResetMeshCollidersEv();
     func_01ffb0c8((char *)&unk_91c);
     Deallocate();

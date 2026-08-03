@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
+#include "MeshColliderBase.h"
 extern int data_ov066_0211ae6c[];
 extern int data_ov066_0211ae4c[];
 extern int data_ov066_0211aeb4[];
@@ -45,7 +46,6 @@ extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 b, Vector3
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void* thiz, void* actor);
 
 int Eyerok::InitResources()
 {
@@ -151,7 +151,7 @@ int Eyerok::InitResources()
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
         func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
-        _ZN16MeshColliderBase6EnableEP5Actor(c + 0x674, c);
+        ((MeshColliderBase *)(c + 0x674))->Enable((Actor *)(c));
         *(s16*)(c + 0x4D2) = 0x64;
         func_ov066_02119454(c, data_ov066_0211b09c);
     } else {

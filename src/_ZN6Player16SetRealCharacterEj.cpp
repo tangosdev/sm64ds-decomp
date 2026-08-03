@@ -6,9 +6,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+#include "SharedFilePtr.h"
 struct SharedFilePtr;
 
-extern "C" void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self);
 extern "C" void _ZN6Player18SetNewHatCharacterEjjb(void *self, u32 a, u32 b, bool c);
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN6Player4HealEi(void *self, int hp);
@@ -26,7 +26,7 @@ void Player::SetRealCharacter(unsigned int chr_)
     u32 base = mCharFileBase;
     u32 m1, m2;
 
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff480[base + (cur & 3)]);
+    ((SharedFilePtr *)(data_ov002_020ff480[base + (cur & 3)]))->Release();
     _ZN6Player18SetNewHatCharacterEjjb(((char *)this), chr, 0, 1);
     param1 = chr;
     mCharacter = (u8)chr;

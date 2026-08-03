@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WaterfallMist.h"
+#include "SharedFilePtr.h"
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void* fp);
 }
 extern void* data_ov002_0210de50;
 extern void* data_ov002_0210de60;
@@ -25,28 +25,28 @@ int WaterfallMist::CleanupResources()
 {
   int i = mModelIndex;
   if (i >= 3) return 1;
-  _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff0ac[i]);
+  ((SharedFilePtr *)(data_ov002_020ff0ac[i]))->Release();
   switch (mType) {
   case 0xf:
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de50);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de60);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de48);
+    ((SharedFilePtr *)(&data_ov002_0210de50))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de60))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de48))->Release();
     break;
   case 0x14:
   case 0x15:
   case 0x16:
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de28);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de08);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de20);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de40);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de10);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de00);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de58);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de18);
+    ((SharedFilePtr *)(&data_ov002_0210de28))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de08))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de20))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de40))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de10))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de00))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de58))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de18))->Release();
     break;
   default:
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de30);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210de38);
+    ((SharedFilePtr *)(&data_ov002_0210de30))->Release();
+    ((SharedFilePtr *)(&data_ov002_0210de38))->Release();
     break;
   }
   return 1;

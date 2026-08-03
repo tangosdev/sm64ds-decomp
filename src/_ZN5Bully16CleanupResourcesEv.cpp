@@ -2,16 +2,16 @@
 // @symbol _ZN5Bully16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Bully.h"
+#include "SharedFilePtr.h"
 extern "C" {
-int _ZN13SharedFilePtr7ReleaseEv(void *);
 }
 
 int Bully::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(*(char**)((char *)&mFileTable)+0));
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(*(char**)((char *)&mFileTable)+4));
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(*(char**)((char *)&mFileTable)+8));
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(*(char**)((char *)&mFileTable)+0xc));
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(*(char**)((char *)&mFileTable)+0x10));
+    ((SharedFilePtr *)(*(void**)(*(char**)((char *)&mFileTable)+0)))->Release();
+    ((SharedFilePtr *)(*(void**)(*(char**)((char *)&mFileTable)+4)))->Release();
+    ((SharedFilePtr *)(*(void**)(*(char**)((char *)&mFileTable)+8)))->Release();
+    ((SharedFilePtr *)(*(void**)(*(char**)((char *)&mFileTable)+0xc)))->Release();
+    ((SharedFilePtr *)(*(void**)(*(char**)((char *)&mFileTable)+0x10)))->Release();
     return 1;
 }

@@ -143,6 +143,20 @@ struct Actor : ActorDerived {
     int  GetSubtraction(short a, short b);
     void HugeLandingDustAt(Vector3 &pos, bool b);
     void LandingDustAt(Vector3 &pos, bool b);
+    void KillAndTrackInDeathTable();
+    void TrackInDeathTable();
+    void SpawnSoundObj(u32 soundObjParam);
+    s32  GetWaterHeightWDW();
+
+    /* Static: searches the live-actor list rather than acting on an instance. */
+    static Actor *FindWithID(u32 id);
+
+    /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE,
+       and the Vector3 forms) are deliberately NOT declared here as definable
+       methods -- see notes/mwccarm-codegen.md 6az. CW homes class-typed by-value
+       parameters to the stack, costing +0x14, so those keep extern "C"
+       definitions with scalar args. A true-signature declaration for callers is
+       fine and is tracked separately. */
 };
 
 #else

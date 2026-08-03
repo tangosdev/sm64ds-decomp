@@ -1588,6 +1588,7 @@ src/func_ov002_020bcd18.c:
     .text start:0x020bcd18 end:0x020bcd38
 
 src/func_ov002_020bcd38.c:
+    complete
     .text start:0x020bcd38 end:0x020bcdf0
 
 src/func_ov002_020bcdf0.c:
@@ -1723,6 +1724,7 @@ src/_ZN6Player18TurnOffToonShadingEj.cpp:
     .text start:0x020be324 end:0x020be3b0
 
 src/func_ov002_020be3b0.c:
+    complete
     .text start:0x020be3b0 end:0x020bea7c
 
 src/func_ov002_020bea7c.c:
@@ -2982,6 +2984,7 @@ src/func_ov002_020d5338.cpp:
     .text start:0x020d5338 end:0x020d53ac
 
 src/_ZN6Player16St_BurnFire_MainEv.cpp:
+    complete
     .text start:0x020d53ac end:0x020d5750
 
 src/_ZN6Player16St_BurnFire_InitEv.cpp:
@@ -3079,6 +3082,7 @@ src/func_ov002_020d6c60.cpp:
     .text start:0x020d6c60 end:0x020d6dac
 
 src/func_ov002_020d6dac.c:
+    complete
     .text start:0x020d6dac end:0x020d7030
 
 src/func_ov002_020d7030.cpp:
@@ -3468,6 +3472,7 @@ src/_ZN6Player22St_GroundPound_CleanupEv.cpp:
     .text start:0x020dd9e0 end:0x020dd9f8
 
 src/_ZN6Player19St_GroundPound_MainEv.cpp:
+    complete
     .text start:0x020dd9f8 end:0x020dddf0
 
 src/_ZN6Player19St_GroundPound_InitEv.cpp:
@@ -3583,6 +3588,7 @@ src/func_ov002_020df840.c:
     .text start:0x020df840 end:0x020df8f0
 
 src/func_ov002_020df8f0.c:
+    complete
     .text start:0x020df8f0 end:0x020dfdf0
 
 src/_ZN6Player11St_Fly_MainEv.cpp:
@@ -3974,6 +3980,7 @@ src/func_ov002_020e7454.c:
     .text start:0x020e7454 end:0x020e7554
 
 src/func_ov002_020e7554.c:
+    complete
     .text start:0x020e7554 end:0x020e763c
 
 src/func_ov002_020e763c.c:
@@ -4099,6 +4106,7 @@ src/func_ov002_020e9464.c:
     .text start:0x020e9464 end:0x020e947c
 
 src/func_ov002_020e947c.c:
+    complete
     .text start:0x020e947c end:0x020e9590
 
 src/func_ov002_020e9590.cpp:
@@ -4502,6 +4510,7 @@ src/func_ov002_020ef57c.c:
     .text start:0x020ef57c end:0x020ef670
 
 src/func_ov002_020ef670.c:
+    complete
     .text start:0x020ef670 end:0x020efa44
 
 src/func_ov002_020efa44.c:
@@ -5469,6 +5478,7 @@ src/_ZN7Minimap8BehaviorEv.cpp:
     .text start:0x020fa690 end:0x020fb38c
 
 src/_ZN7Minimap13InitResourcesEv.cpp:
+    complete
     .text start:0x020fb38c end:0x020fb804
 
 src/_ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_.cpp:
@@ -5492,6 +5502,7 @@ src/_ZN3HUD15RenderTimeTimerEv.cpp:
     .text start:0x020fb96c end:0x020fbdac
 
 src/_ZN3HUD15CalculateDigitsEt.c:
+    complete
     .text start:0x020fbdac end:0x020fbe38
 
 src/_ZN3HUD15RenderLifeCountEv.cpp:

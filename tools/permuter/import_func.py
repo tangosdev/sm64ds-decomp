@@ -41,7 +41,7 @@ WRAPPER = REPO / "tools" / "permuter" / "mwccarm_compile.sh"
 CAP = REPO / "tools" / "permuter" / "cap_objdump.py"
 # Direct compile (no bash): git-bash startup is ~400ms/candidate on Windows; calling
 # mwccarm.exe directly is ~140ms (~4x). The permuter's compiler.py reads cc.txt.
-MWCC = REPO / "tools" / "mwccarm" / "1.2" / "sp2p3" / "mwccarm.exe"
+MWCC = REPO / "tools" / "mwccarm" / "2004" / "b56" / "mwccarm.exe"
 LICENSE = REPO / "tools" / "mwccarm" / "license.dat"
 CFLAGS = "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc".split()
 
