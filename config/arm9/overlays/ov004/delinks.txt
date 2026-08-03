@@ -670,6 +670,7 @@ src/func_ov004_020b4cc4.c:
     .text start:0x020b4cc4 end:0x020b4d50
 
 src/func_ov004_020b4d50.c:
+    complete
     .text start:0x020b4d50 end:0x020b4dfc
 
 src/func_ov004_020b4dfc.c:

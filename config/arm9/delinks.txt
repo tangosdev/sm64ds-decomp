@@ -1770,6 +1770,7 @@ src/ShowCrashScreen.c:
     .text start:0x02014244 end:0x02014620
 
 src/nds_printt.c:
+    complete
     .text start:0x02014620 end:0x0201470c
 
 src/nds_printf.c:
@@ -2016,6 +2017,7 @@ src/_ZN9Animation4CopyERKS_.cpp:
     .text start:0x02015a7c end:0x02015a98
 
 src/_ZNK9Animation12WillHitFrameEi.cpp:
+    complete
     .text start:0x02015a98 end:0x02015bcc
 
 src/_ZN9Animation8FinishedEv.cpp:
@@ -2039,6 +2041,7 @@ src/_ZN9Animation12SetAnimationEti5Fix12IiEt.cpp:
     .text start:0x02015c20 end:0x02015c3c
 
 src/_ZN9Animation7AdvanceEv.cpp:
+    complete
     .text start:0x02015c3c end:0x02015cb4
 
 src/_ZN9AnimationD2Ev.c:
@@ -3096,6 +3099,7 @@ src/func_0201ab6c.c:
     .text start:0x0201ab6c end:0x0201aca4
 
 src/func_0201aca4.c:
+    complete
     .text start:0x0201aca4 end:0x0201adac
 
 src/func_0201adac.c:
@@ -3220,6 +3224,7 @@ src/func_0201eaac.c:
     .text start:0x0201eaac end:0x0201eb94
 
 src/_ZN7Message13DisplaySavingEt.cpp:
+    complete
     .text start:0x0201eb94 end:0x0201ef38
 
 src/func_0201ef38.c:
@@ -3238,6 +3243,7 @@ src/func_0201f138.cpp:
     .text start:0x0201f138 end:0x0201f32c
 
 src/func_0201f32c.c:
+    complete
     .text start:0x0201f32c end:0x0201fb4c
 
 src/func_0201fb4c.c:
@@ -4130,6 +4136,7 @@ src/_ZN5Stage8BehaviorEv.cpp:
     .text start:0x0202bbbc end:0x0202c2ac
 
 src/_ZN5Stage10CheckInputEv.cpp:
+    complete
     .text start:0x0202c2ac end:0x0202c830
 
 src/_ZN3Fog4InitEt5Fix12IiES1_.cpp:
@@ -4333,9 +4340,11 @@ src/func_0202f58c.c:
     .text start:0x0202f58c end:0x0202f708
 
 src/func_0202f708.c:
+    complete
     .text start:0x0202f708 end:0x0202f928
 
 src/func_0202f928.c:
+    complete
     .text start:0x0202f928 end:0x0202fb30
 
 src/func_0202fb30.c:
@@ -4475,6 +4484,7 @@ src/func_02031154.c:
     .text start:0x02031154 end:0x0203128c
 
 src/func_0203128c.c:
+    complete
     .text start:0x0203128c end:0x020313d8
 
 src/func_02031428.c:
@@ -4510,6 +4520,7 @@ src/func_020321fc.c:
     .text start:0x020321fc end:0x020326ac
 
 src/func_020326ac.c:
+    complete
     .text start:0x020326ac end:0x02032f04
 
 src/_ZN7Message16SetTextGlobalsVSEv.c:
@@ -4583,6 +4594,7 @@ src/func_02034504.c:
     .text start:0x02034504 end:0x020345b0
 
 src/func_020345b0.c:
+    complete
     .text start:0x020345b0 end:0x02034954
 
 src/LoadFont3D.c:
@@ -6628,6 +6640,7 @@ src/func_0203f6e8.c:
     .text start:0x0203f6e8 end:0x0203f714
 
 src/func_0203f714.c:
+    complete
     .text start:0x0203f714 end:0x0203f818
 
 src/func_0203f818.c:
@@ -7418,12 +7431,15 @@ src/func_02048a1c.c:
     .text start:0x02048a1c end:0x02048af4
 
 src/func_02048af4.c:
+    complete
     .text start:0x02048af4 end:0x02048c30
 
 src/func_02048c30.c:
+    complete
     .text start:0x02048c30 end:0x02048d80
 
 src/func_02048d80.c:
+    complete
     .text start:0x02048d80 end:0x02048e54
 
 src/func_02048e54.c:
@@ -7562,6 +7578,7 @@ src/func_0204a5c8.c:
     .text start:0x0204a5c8 end:0x0204a730
 
 src/func_0204a730.c:
+    complete
     .text start:0x0204a730 end:0x0204ae2c
 
 src/func_0204ae2c.c:
@@ -7617,9 +7634,11 @@ src/func_0204c24c.c:
     .text start:0x0204c24c end:0x0204c304
 
 src/func_0204c304.c:
+    complete
     .text start:0x0204c304 end:0x0204c584
 
 src/func_0204c584.c:
+    complete
     .text start:0x0204c584 end:0x0204cd5c
 
 src/func_0204cd5c.c:
@@ -7647,6 +7666,7 @@ src/func_0204d1b4.c:
     .text start:0x0204d1b4 end:0x0204d294
 
 src/func_0204d294.c:
+    complete
     .text start:0x0204d294 end:0x0204d440
 
 src/func_0204d440.c:
@@ -7670,6 +7690,7 @@ src/_ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3.cpp:
     .text start:0x0204d758 end:0x0204d7ec
 
 src/_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3.cpp:
+    complete
     .text start:0x0204d7ec end:0x0204d8b0
 
 src/_ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3.cpp:
@@ -8135,6 +8156,7 @@ src/func_02050038.c:
     .text start:0x02050038 end:0x020500a4
 
 src/func_020500a4.c:
+    complete
     .text start:0x020500a4 end:0x020501b8
 
 src/func_020501b8.c:
@@ -8150,6 +8172,7 @@ src/func_020502b8.c:
     .text start:0x020502b8 end:0x020503a4
 
 src/func_020503a4.c:
+    complete
     .text start:0x020503a4 end:0x020506fc
 
 src/func_020506fc.c:
@@ -8424,6 +8447,7 @@ src/func_02052438.c:
     .text start:0x02052438 end:0x02052458
 
 src/func_02052458.c:
+    complete
     .text start:0x02052458 end:0x02052494
 
 src/func_02052494.c:
@@ -9315,9 +9339,11 @@ src/func_020587dc.c:
     .text start:0x020587dc end:0x020587e4
 
 src/func_020587e4.c:
+    complete
     .text start:0x020587e4 end:0x02058894
 
 src/func_02058894.c:
+    complete
     .text start:0x02058894 end:0x02058940
 
 src/func_02058940.c:
@@ -10746,6 +10772,7 @@ src/func_02064554.c:
     .text start:0x02064554 end:0x02064674
 
 src/func_02064674.c:
+    complete
     .text start:0x02064674 end:0x0206470c
 
 src/func_020647a4.c:
@@ -10757,6 +10784,7 @@ src/func_020647d8.c:
     .text start:0x020647d8 end:0x020647fc
 
 src/func_020647fc.c:
+    complete
     .text start:0x020647fc end:0x02064888
 
 src/func_02064888.c:
@@ -10764,6 +10792,7 @@ src/func_02064888.c:
     .text start:0x02064888 end:0x0206491c
 
 src/func_0206491c.c:
+    complete
     .text start:0x0206491c end:0x02064a28
 
 src/func_02064a28.c:
@@ -10887,6 +10916,7 @@ src/func_020659a0.c:
     .text start:0x020659a0 end:0x020659f8
 
 src/func_020659f8.c:
+    complete
     .text start:0x020659f8 end:0x02065a4c
 
 src/func_02065a4c.c:
@@ -11004,6 +11034,7 @@ src/func_0206655c.c:
     .text start:0x0206655c end:0x02066a94
 
 src/func_02066a94.c:
+    complete
     .text start:0x02066a94 end:0x02066fb0
 
 src/func_02066fb0.c:
@@ -11054,6 +11085,7 @@ src/func_02067530.c:
     .text start:0x02067530 end:0x02067604
 
 src/func_02067604.c:
+    complete
     .text start:0x02067604 end:0x020676e0
 
 src/func_020676e0.c:
@@ -11185,6 +11217,7 @@ src/func_02068a74.c:
     .text start:0x02068a74 end:0x02068ae8
 
 src/func_02068ae8.c:
+    complete
     .text start:0x02068ae8 end:0x02068d08
 
 src/func_02068d08.c:
@@ -11483,6 +11516,7 @@ src/func_0206f820.c:
     .text start:0x0206f820 end:0x0206fb08
 
 src/func_0206fb08.c:
+    complete
     .text start:0x0206fb08 end:0x0206fd6c
 
 src/func_0206fd6c.c:

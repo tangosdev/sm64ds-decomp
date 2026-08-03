@@ -58,6 +58,7 @@ src/_ZN9Butterfly8BehaviorEv.cpp:
     .text start:0x02141a40 end:0x02141c6c
 
 src/_ZN9Butterfly13InitResourcesEv.cpp:
+    complete
     .text start:0x02141c6c end:0x02141ea4
 
 src/Butterfly_Spawn.c:
@@ -397,6 +398,7 @@ src/func_ov100_02146280.c:
     .text start:0x02146280 end:0x0214629c
 
 src/func_ov100_0214629c.cpp:
+    complete
     .text start:0x0214629c end:0x0214639c
 
 src/func_ov100_0214639c.c:

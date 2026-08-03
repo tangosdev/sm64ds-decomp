@@ -173,6 +173,26 @@ flags leaves undefined references to `_s32_div_f` and `_u32_div_f`, and `%` lowe
 `bl _s32_div_f; mov r0,r1` — confirming the dual `r0`=quotient / `r1`=remainder return. So
 0x01ffabe4 is `_s32_div_f` and 0x01ffadf0 is `_u32_div_f`. There is no original C to recover.
 
+**Both names are now in config, alongside the AAPCS ones (2026-08-03).** Naming these
+`__aeabi_idiv` / `__aeabi_uidiv` was correct about the ABI role and wrong about the toolchain:
+the ROM was built by CodeWarrior, so *nothing* ever references the `__aeabi_` spelling, while
+every source file that writes `/` or `%` on an `int` emits `bl _s32_div_f`. `eligible.py` rule 5
+rejects a file whose undefined references are not named in `config/**/symbols.txt`, so those
+files could byte-match forever and never enrol — the `bl` is a relocation, so the `.text`
+compares equal whether or not the target has a name. Adding the CodeWarrior spelling as a second
+symbol at the same address (the shape `_ZTV5Actor` / `data_0208e3a4` already uses) unblocked 64
+files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
+each other and wants both.
+
+Do not confuse these with `cstd::div` / `cstd::mod` (0x02052f4c / 0x02052ef4). Those are
+Nintendo's own wrappers over the **hardware divider** — `DIVCNT = 0`, numerator to `DIV_NUMER`,
+denominator to `DIV_DENOM`, spin on bit 15, read `DIV_RESULT` (`cstd::mod` reads `DIVREM_RESULT`
+instead, which is the only thing that distinguishes the two bodies). Game code that wants a
+divide calls those explicitly; `_s32_div_f` is what the *compiler* reaches for on its own. Both
+are in the ROM and they are unrelated code paths. The wider `cstd` divider/sqrt API around
+0x02052ef4–0x02053258 (`fdiv`, `ldiv`, `fdiv_async`, `reciprocal_async`, `fdiv_result`,
+`ldiv_result`) is all hardware-backed and already named.
+
 Four structural facts, each verified on the image:
 
 * **Unguarded computed dispatch.** `add r2,r2,r2,lsl #1` then `add pc,pc,r2,lsl #2` — a 12-byte
