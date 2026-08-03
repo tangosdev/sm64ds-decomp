@@ -1,14 +1,22 @@
 //cpp
 // @symbol _ZN5Actor10FindWithIDEj
-/* recovered: named members + shared header */
+/* Actor::FindWithID(u32) at 0x02010c40.
+ *
+ * Static: searches the live-actor list rather than acting on an instance, which
+ * is why it takes no `this`. The list helper returns a node, and the actor
+ * itself hangs off the node at +8.
+ */
 #include "Actor.h"
+
 extern "C" {
-struct Actor;
-extern struct Actor* data_0209b468;
-extern struct Actor* func_02043f98(struct Actor**, unsigned int);
-struct Actor* _ZN5Actor10FindWithIDEj(unsigned int id){
-  struct Actor* p = func_02043f98(&data_0209b468, id);
-  if(p) return *(struct Actor**)((char*)p+8);
-  return 0;
+extern Actor *data_0209b468;
+extern Actor *func_02043f98(Actor **head, unsigned int id);
 }
+
+Actor *Actor::FindWithID(u32 id)
+{
+    Actor *node = func_02043f98(&data_0209b468, id);
+    if (node)
+        return *(Actor **)((char *)node + 8);
+    return 0;
 }
