@@ -322,7 +322,51 @@ Declaration order, hoisting the prism pointer, caching the attribute in a local,
 temporaries and the whole version sweep were all inert against that word. Recorded in
 `notes/pret-idioms.md` as idiom 11.
 
-## DetectClsn(RaycastLine&) -- structure recovered, NOT matched
+## The octree walks (updated 2026-08-03)
+
+**`DetectClsn(RaycastGround&)` (0x01ffd3f8, 0x498) MATCHED** on 2004/b56 -- the first overload to
+fall, and the largest ITCM match so far. It is RaycastLine's algorithm simplified: a vertical
+probe down one (x,z) column, so X and Z early-out both ways but Y only clamps at the top (a probe
+starting above the octree falls into it). That is why its frame is 0x4c and not 0xfc -- no AABB,
+just a column. The march snaps to the bottom of the leaf just tested and drops one cell, so a tall
+empty node costs one iteration.
+
+Its four load-bearing levers, all found by bisection:
+
+1. **Declaration order IS the frame.** mwccarm hands out spill slots in declaration order; the
+   ROM's is `x, z, y, found, bestY, leaf, normal, rawX, rawZ, rawY`, with `leaf` and `normal`
+   between `bestY` and `rawX`, so those must be function-scope C89 declarations. This alone moved
+   the aligner 0.794 -> 0.944.
+2. The root index needs **two statements** (`idx = zpart | ypart; idx |= (u32)x >> shift;`) --
+   folded into one, mwccarm hoists the octree base load and burns a register on it.
+3. Both index expressions must run **z, y, x**; written x-first the shifts fold into two ORRs
+   where the ROM materialises `zbit << 2` on its own.
+4. `rawY - vtx[1]` must be a **named local** or two temp slots swap.
+
+Notably there was **no frame wall at all** here -- the 0x4c frame, including the two slots holding
+only the constants 0 and 1, came out right on the first draft.
+
+### And the RaycastLine frame wall is broken
+
+The sibling's floor said its 0xc4-vs-0xfc frame gap was fourteen spilled scalars. **That was
+wrong.** Slots 0x04-0x48 are the same scalars the draft already had; the missing fourteen words
+are the **nine non-address-taken Vector3 locals held as un-SROA'd stack aggregates** (`delta` and
+`scaled` are write-only -- kept dead stores, the SROA-block signature). Accounting: +27 words of
+aggregates minus the 13 temp slots scalarization was using = +14 = 0x38.
+
+**The lever: a local vector type with a user-declared destructor** (`struct DVec { s32 x,y,z;
+~DVec(){} };`) blocks SROA. Dead `&x` statements, references and launders do not.
+
+`sub sp,#0xfc` now matches the ROM under both 1.2/sp2p3 and 2004/b56, and the divergence halved
+476 -> 238. What remains is one register rank 3-cycle -- see the banked floor in
+`nearmiss/db.jsonl` for the full inert-lever list and the three suggested routes. Cracking it
+should transfer to the 7,112-byte `SphereClsn` overload, which shares this traversal.
+
+**Tooling gotcha found here:** `tools/fdiff.py` compiles with `M.CANONICAL`, now `2004/b56`. This
+cluster verifies at 1.2/sp2p3 and the two builds emit different sizes for this function (0x738 vs
+0x740), so fdiff alone can measure the wrong build, and it has no `--version` flag.
+
+## DetectClsn(RaycastLine&) -- original structural recovery
 
 0x01ffb0fc, 0x734, 461 instructions. Attacked next because it is the smallest of the three
 octree walks and shares its traversal with the other two. **It did not match.** Best tip is
