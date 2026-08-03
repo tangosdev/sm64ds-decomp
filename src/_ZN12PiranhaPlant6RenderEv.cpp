@@ -11,7 +11,9 @@ struct Obj {
     virtual void m5(void* p);
 };
 struct G2 { int w[2]; };
+extern "C" {
 extern G2 data_ov084_02130df4;
+}
 
 int PiranhaPlant::Render()
 {

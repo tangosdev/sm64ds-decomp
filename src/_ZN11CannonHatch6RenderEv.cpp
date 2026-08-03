@@ -2,8 +2,10 @@
 // @symbol _ZN11CannonHatch6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "CannonHatch.h"
+extern "C" {
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
+}
 struct Sub {
   virtual void v00(); virtual void v04(); virtual void v08(); virtual void v0c();
   virtual void v10(); virtual void m14(int arg);

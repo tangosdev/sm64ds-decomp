@@ -7,7 +7,9 @@ struct VtEntry {
     int field0;
     int field1;
 };
+extern "C" {
 extern struct VtEntry data_ov100_0214867c[];
+}
 
 int RollingIronBall::Behavior()
 {

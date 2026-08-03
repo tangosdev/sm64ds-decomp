@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HootTheOwl.h"
+extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN11ShadowModel12InitCylinderEv(void*);
@@ -16,6 +17,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void* data_ov094_02136b40;
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
+}
 #define LA(p) ((int*)(unsigned)(((long long)(unsigned)(unsigned)(p))))
 
 int HootTheOwl::InitResources()

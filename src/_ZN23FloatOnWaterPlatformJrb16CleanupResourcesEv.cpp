@@ -6,7 +6,9 @@
 #include "FloatOnWaterPlatformJrb.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov016_02114e74[];
+}
 
 int FloatOnWaterPlatformJrb::CleanupResources()
 {

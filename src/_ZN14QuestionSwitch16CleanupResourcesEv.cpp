@@ -6,10 +6,12 @@
 #include "QuestionSwitch.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov002_0210dd60[];
 extern int data_ov002_0210dd68[];
 extern int data_ov002_0210dd58[];
 extern int data_ov002_0210dd50[];
+}
 
 int QuestionSwitch::CleanupResources()
 {

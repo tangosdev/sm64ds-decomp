@@ -15,8 +15,10 @@ struct NestedHeapIteratorT {
     unsigned short linkOffset;
 };
 
+extern "C" {
 extern NestedHeapIteratorT* _ZN18NestedHeapIterator10FindNestedEPv(HeapAllocator* node);
 extern void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(NestedHeapIteratorT* iter, HeapAllocator* node);
+}
 
 void HeapAllocator::Remove()
 {

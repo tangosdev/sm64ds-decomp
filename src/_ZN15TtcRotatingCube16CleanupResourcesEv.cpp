@@ -7,8 +7,10 @@
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 struct E { void* p; char pad[8]; };
+extern "C" {
 extern struct E data_ov065_0211cfd0[];
 extern struct E data_ov065_0211cfd4[];
+}
 
 int TtcRotatingCube::CleanupResources()
 {

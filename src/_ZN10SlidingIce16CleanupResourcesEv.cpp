@@ -4,8 +4,10 @@
 #include "SlidingIce.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern char func_ov030_02113be8[];
 extern char data_ov027_02113be0[];
+}
 
 int SlidingIce::CleanupResources()
 {

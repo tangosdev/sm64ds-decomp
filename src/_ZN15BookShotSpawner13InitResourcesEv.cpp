@@ -4,9 +4,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BookShotSpawner.h"
+extern "C" {
 extern void _ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern void LoadBlueCoinModel(void *);
 extern int G0[];
+}
 
 int BookShotSpawner::InitResources()
 {

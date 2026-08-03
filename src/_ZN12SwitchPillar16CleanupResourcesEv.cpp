@@ -6,7 +6,9 @@
 #include "SwitchPillar.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov012_021124d0[];
+}
 
 int SwitchPillar::CleanupResources()
 {

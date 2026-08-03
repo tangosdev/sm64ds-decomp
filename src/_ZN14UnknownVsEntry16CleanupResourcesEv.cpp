@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "UnknownVsEntry.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern char data_ov075_0211d404[];
 extern char data_ov075_0211d3c4[];
 extern char data_ov075_0211d414[];
@@ -27,6 +28,7 @@ extern char data_ov075_0211d40c[];
 extern char data_ov075_0211d3fc[];
 extern char data_ov075_0211d3bc[];
 extern char data_ov075_0211d3e4[];
+}
 
 int UnknownVsEntry::CleanupResources()
 {

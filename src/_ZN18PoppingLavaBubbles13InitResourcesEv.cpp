@@ -2,7 +2,9 @@
 // @symbol _ZN18PoppingLavaBubbles13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "PoppingLavaBubbles.h"
+extern "C" {
 extern signed char data_0209f2f8;
+}
 
 int PoppingLavaBubbles::InitResources()
 {

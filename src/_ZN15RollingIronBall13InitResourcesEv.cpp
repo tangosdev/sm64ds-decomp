@@ -6,6 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RollingIronBall.h"
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -15,10 +16,13 @@ extern int Vec3_Equal(void *a, void *b);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, int v1);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
+}
 
+extern "C" {
 extern char data_ov100_02148668;
 extern int data_02092138;
 extern signed char data_0209f2f8;
+}
 
 int RollingIronBall::InitResources()
 {

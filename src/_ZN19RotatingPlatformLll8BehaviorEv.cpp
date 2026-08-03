@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformLll.h"
+extern "C" {
 extern void func_020393a4(int* p, int v);
+}
 
 int RotatingPlatformLll::Behavior()
 {

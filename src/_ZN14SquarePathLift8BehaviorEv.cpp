@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "SquarePathLift.h"
 typedef int Fix12;
+extern "C" {
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, void *out, unsigned idx);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
@@ -14,6 +15,7 @@ extern void SubVec3(void *a, void *b, void *c);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *p);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *p);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *p, Fix12 a, int b);
+}
 struct V3 { int x, y, z; };
 
 int SquarePathLift::Behavior()

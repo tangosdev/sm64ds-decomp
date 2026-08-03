@@ -7,9 +7,11 @@ public:
     void Release();
 };
 
+extern "C" {
 extern void UnloadBlueCoinModel(char *c);
 extern int data_ov020_02114aa0;
 extern int data_ov020_02114ab8;
+}
 
 int BookShotSpawner::CleanupResources()
 {

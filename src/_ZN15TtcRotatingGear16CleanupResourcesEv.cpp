@@ -6,7 +6,9 @@
 #include "TtcRotatingGear.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int G0[];
+}
 
 int TtcRotatingGear::CleanupResources()
 {

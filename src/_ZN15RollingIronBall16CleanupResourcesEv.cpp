@@ -3,7 +3,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RollingIronBall.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern char data_ov100_02148668;
+}
 
 int RollingIronBall::CleanupResources()
 {
