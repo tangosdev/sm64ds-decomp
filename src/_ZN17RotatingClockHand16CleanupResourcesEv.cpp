@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingClockHand.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern int G0[];
 
 int RotatingClockHand::CleanupResources()
@@ -12,7 +12,7 @@ int RotatingClockHand::CleanupResources()
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
         _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(G0))->Release();
+    ((SharedFilePtr *)(G1))->Release();
     return 1;
 }

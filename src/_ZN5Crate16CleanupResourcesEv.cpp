@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Crate.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern int data_ov098_0213c4c8[];
 
 int Crate::CleanupResources()
@@ -15,8 +15,8 @@ int Crate::CleanupResources()
   f = 0;
   if(mActorID == 0xc2) f = data_ov098_0213c4c8;
   if(f){
-    _ZN13SharedFilePtr7ReleaseEv((void*)f[0]);
-    _ZN13SharedFilePtr7ReleaseEv((void*)f[1]);
+    ((SharedFilePtr *)((void*)f[0]))->Release();
+    ((SharedFilePtr *)((void*)f[1]))->Release();
   }
   return 1;
 }

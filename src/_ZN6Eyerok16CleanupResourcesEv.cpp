@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern char data_ov066_0211ae6c[];
 extern char data_ov066_0211ae4c[];
 extern char data_ov066_0211aeb4[];
@@ -33,28 +33,28 @@ int Eyerok::CleanupResources()
   if(_ZN16MeshColliderBase9IsEnabledEv((char *)&unk_674))
     _ZN16MeshColliderBase7DisableEv((char *)&unk_674);
   if(unk_49c==0){
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae6c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae4c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211aeb4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211aebc);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae9c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae3c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae2c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae5c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae84);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211aea4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae8c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae54);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae94);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae64);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae44);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae74);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae7c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae24);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211aeac);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae14);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae1c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov066_0211ae34);
+    ((SharedFilePtr *)(data_ov066_0211ae6c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae4c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211aeb4))->Release();
+    ((SharedFilePtr *)(data_ov066_0211aebc))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae9c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae3c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae2c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae5c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae84))->Release();
+    ((SharedFilePtr *)(data_ov066_0211aea4))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae8c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae54))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae94))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae64))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae44))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae74))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae7c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae24))->Release();
+    ((SharedFilePtr *)(data_ov066_0211aeac))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae14))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae1c))->Release();
+    ((SharedFilePtr *)(data_ov066_0211ae34))->Release();
   }
   return 1;
 }

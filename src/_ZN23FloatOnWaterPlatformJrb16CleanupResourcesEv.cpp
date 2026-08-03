@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FloatOnWaterPlatformJrb.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern int data_ov016_02114e74[];
 
 int FloatOnWaterPlatformJrb::CleanupResources()
@@ -12,7 +12,7 @@ int FloatOnWaterPlatformJrb::CleanupResources()
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
         _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov016_02114e74);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov016_02114e6c);
+    ((SharedFilePtr *)(data_ov016_02114e74))->Release();
+    ((SharedFilePtr *)(data_ov016_02114e6c))->Release();
     return 1;
 }

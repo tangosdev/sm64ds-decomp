@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Thwomp.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 
 int Thwomp::CleanupResources()
 {
@@ -13,12 +13,12 @@ int Thwomp::CleanupResources()
         _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
     }
     fp = *(void***)((char *)&mFileTable);
-    _ZN13SharedFilePtr7ReleaseEv(fp[0]);
+    ((SharedFilePtr *)(fp[0]))->Release();
     fp = *(void***)((char *)&mFileTable);
-    _ZN13SharedFilePtr7ReleaseEv(fp[1]);
+    ((SharedFilePtr *)(fp[1]))->Release();
     fp = *(void***)((char *)&mFileTable);
     if (fp[3] != 0) {
-        _ZN13SharedFilePtr7ReleaseEv(fp[3]);
+        ((SharedFilePtr *)(fp[3]))->Release();
     }
     return 1;
 }

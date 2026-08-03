@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WorkElevator.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern int data_ov021_021149b8[];
 
 int WorkElevator::CleanupResources()
@@ -17,9 +17,9 @@ int WorkElevator::CleanupResources()
         _ZN16MeshColliderBase7DisableEv(p);
         p += 0x1c8;
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov021_021149b0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov021_021149b8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov021_021149a0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov021_021149a8);
+    ((SharedFilePtr *)(data_ov021_021149b0))->Release();
+    ((SharedFilePtr *)(data_ov021_021149b8))->Release();
+    ((SharedFilePtr *)(data_ov021_021149a0))->Release();
+    ((SharedFilePtr *)(data_ov021_021149a8))->Release();
     return 1;
 }

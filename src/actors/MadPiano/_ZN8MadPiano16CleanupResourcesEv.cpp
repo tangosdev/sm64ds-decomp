@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MadPiano.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
 extern int G0[];
 
 int MadPiano::CleanupResources()
@@ -12,8 +12,8 @@ int MadPiano::CleanupResources()
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
         _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
-    _ZN13SharedFilePtr7ReleaseEv(G2);
+    ((SharedFilePtr *)(G0))->Release();
+    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(G2))->Release();
     return 1;
 }

@@ -1,6 +1,6 @@
 //cpp
+#include "SharedFilePtr.h"
 extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
 void UnloadBlueCoinModel(void);
 extern int data_ov002_0210da38;
 extern int data_ov071_02123050;
@@ -9,12 +9,12 @@ extern void* data_ov071_021226a0;
 int _ZN3MrI16CleanupResourcesEv(void){
   int i;
   UnloadBlueCoinModel();
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da38);
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov071_02123050);
+  ((SharedFilePtr *)(&data_ov002_0210da38))->Release();
+  ((SharedFilePtr *)(&data_ov071_02123050))->Release();
   for(i=0;i<2;i++){
-    _ZN13SharedFilePtr7ReleaseEv((&data_ov071_021226a4)[i]);
+    ((SharedFilePtr *)((&data_ov071_021226a4)[i]))->Release();
   }
-  _ZN13SharedFilePtr7ReleaseEv(data_ov071_021226a0);
+  ((SharedFilePtr *)(data_ov071_021226a0))->Release();
   return 1;
 }
 }
