@@ -89,7 +89,13 @@ def classify(job):
     if r.returncode != 0 or not obj.is_file():
         return rel, name, "compile failed"
 
-    if sec != ".text":
+    # `.init` is buildable now. mwccarm always emits compiled code into `.text`,
+    # whatever the ROM's layout calls it, and dsd's linker script selects these by
+    # name -- `File.o(.init)` -- so the names never matched and ~300 functions were
+    # unreachable. rombuild.retarget_text_section renames the section header in the
+    # object after compiling, in place and without moving a byte. Any OTHER section
+    # is still a rejection: nothing renames those, so the lcf would not find them.
+    if sec not in (".text", ".init"):
         return rel, name, f"lives in {sec}, not .text"
 
     try:

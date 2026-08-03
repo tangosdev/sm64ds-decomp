@@ -44,4 +44,5 @@ src/SlideDecorationSilverStar_Spawn.c:
     .text start:0x021113ec end:0x02111424
 
 src/__sinit_ov031_02111434.c:
+    complete
     .init start:0x02111434 end:0x021114ec

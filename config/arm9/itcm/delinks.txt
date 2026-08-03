@@ -1,55 +1,73 @@
     .text       start:0x01ff8000 end:0x01ffdf3c kind:code align:32
     .bss        start:0x01ffdf40 end:0x01ffdf40 kind:bss align:32
 src/func_01ffb07c.cpp:
+    complete
     .text start:0x01ffb07c end:0x01ffb098
 
 src/func_01ffb098.cpp:
+    complete
     .text start:0x01ffb098 end:0x01ffb0a4
 
 src/func_01ffb0a4.cpp:
+    complete
     .text start:0x01ffb0a4 end:0x01ffb0b0
 
 src/func_01ffb0b0.cpp:
+    complete
     .text start:0x01ffb0b0 end:0x01ffb0bc
 
 src/func_01ffb0bc.cpp:
+    complete
     .text start:0x01ffb0bc end:0x01ffb0c8
 
 src/func_01ffb0c8.cpp:
+    complete
     .text start:0x01ffb0c8 end:0x01ffb0d0
 
 src/_ZNK12MeshCollider13GetUnkOctreeYEv.cpp:
+    complete
     .text start:0x01ffb0d0 end:0x01ffb0ec
 
 src/_ZNK12MeshCollider16GetOctreeOriginYEv.cpp:
+    complete
     .text start:0x01ffb0ec end:0x01ffb0fc
 
 src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp:
+    complete
     .text start:0x01ffd3f8 end:0x01ffd890
 
 src/_ZN12MeshCollider17GetTriangleOriginEsR7Vector3.cpp:
+    complete
     .text start:0x01ffd890 end:0x01ffd8d8
 
 src/_ZN12MeshCollider9GetNormalEsR7Vector3.cpp:
+    complete
     .text start:0x01ffd8d8 end:0x01ffd920
 
 src/_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo.cpp:
+    complete
     .text start:0x01ffd920 end:0x01ffd97c
 
 src/OSReadROMArea.c:
+    complete
     .text start:0x01ffdbd8 end:0x01ffdd08
 
 src/func_01ffdd08.c:
+    complete
     .text start:0x01ffdd08 end:0x01ffdd98
 
 src/func_01ffdd98.c:
+    complete
     .text start:0x01ffdd98 end:0x01ffde00
 
 src/DMAStartTransferFB.c:
+    complete
     .text start:0x01ffde00 end:0x01ffde50
 
 src/DMAStartTransfer.c:
+    complete
     .text start:0x01ffde50 end:0x01ffde98
 
 src/func_01ffde98.c:
+    complete
     .text start:0x01ffde98 end:0x01ffdf3c
