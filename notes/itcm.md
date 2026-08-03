@@ -274,13 +274,30 @@ These make their functions unmatchable *by construction*, which is why nothing h
 | `func_01ffa344` + `func_01ffa3e0` | two symbols | `a3e0` has **zero** incoming branches or calls anywhere; its only entry is fallthrough from `a344` | one symbol, `size=0xfc` |
 | `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** (ov002 x2, ov074, arm9, all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
 
-**Count, corrected.** An earlier draft of this section said "42 functions, not 41". That was
-wrong -- I summed two agents' findings without redoing the arithmetic. Merging a344+a3e0 is -1
-and adding a symbol at 0x01ffa4bc is +1, so the corrected total is **41 again**, with different
-membership, not 42. If a fifth undeclared entry exists the number moves, and there is a
-candidate worth checking -- 0x01ffa1bc has its own `push {ip,lr}` prologue, though it is
-branch-entered from func_01ff97d8's error paths, so it may be a tail rather than a function.
-Establish that before quoting any total.
+**Count, settled by coverage rather than arithmetic (2026-08-03).** I got this wrong twice --
+first "42" by summing two agents' findings without redoing the sum, then "41" by correcting the
+arithmetic while still missing entries. The answer is **43**, and the proof is not a sum: after
+the fixes below the ITCM symbol table covers 0x01ff8000..0x01ffdf3c **contiguously, with zero
+gaps and zero overlaps**, ending exactly on the `.text` end in `config/arm9/itcm/delinks.txt`.
+That is checkable in one pass and cannot be fudged.
+
+41 declared, minus 1 (func_01ffa3e0 merged into func_01ffa344), plus 3 previously undeclared
+entries:
+
+* **0x01ff8df8** (0x18) -- xor-swaps both double argument pairs, then falls through into
+  func_01ff8e10 (soft-double subtract). The library's reverse-subtract entry.
+* **0x01ffa4bc** (0xcc) -- the signed half of the int-to-float pair. It has **4 external
+  callers** (ov002 x2, ov074, arm9) all recorded `module:none`, which is the resolution
+  breakage this symbol fixes.
+* **0x01ffa588** (0xc) -- xor-swaps the single-precision pair, falls through into func_01ffa594.
+
+The two fallthrough entries have zero callers anywhere -- no relocs, no intra-ITCM branches --
+and are correct only while adjacent to the routine they fall into, so both are listed in
+`config/rombuild-exclude.txt`: declared for coverage, never carved into their own object.
+
+A candidate I checked and rejected: 0x01ffa1bc has its own `push {ip,lr}` prologue but zero
+external callers and **20** incoming branches from inside func_01ff97d8's declared body. It is
+a shared error tail, not a function.
 
 Fixing these is a prerequisite for anyone working the soft-float block, not an optional
 tidy-up. **And it is not sufficient on its own:** `worklist.py --module itcm` already serves

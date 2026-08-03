@@ -48,3 +48,15 @@ _ZN5ModelD2Ev
 _ZN5ModelD1Ev
 CleanCommonModelDataArr
 func_020313d8
+
+# --- itcm: two unreferenced argument-swap entries that fall THROUGH into their successor ---
+# func_01ff8df8 (0x18) xor-swaps both double argument pairs and falls into func_01ff8e10
+# (soft-double subtract); func_01ffa588 (0xc) xor-swaps the single pair and falls into
+# func_01ffa594. Neither has a caller anywhere: zero relocs, zero intra-ITCM branches. They
+# are the library's "reverse operand" entries, correct only while they sit immediately before
+# the routine they fall into. Carving them into their own delink objects would let the linker
+# separate them from that successor and silently change behaviour, so they stay inside the
+# module's gap object. They are declared in symbols.txt purely so the address space is fully
+# covered -- before this, both sat in unattributed gaps.
+func_01ff8df8
+func_01ffa588
