@@ -69,7 +69,16 @@ the module string is right.
 **Do not assume the SDK-looking ones are policy-exempt.** Applying the objective test in
 `notes/asm-policy.md` — does the body contain instructions C cannot express (`mcr`/`mrc`,
 `swi`, `msr`/`mrs`, `ldm`/`stm ^`, `swp`) — to all 41 gives exactly **one** qualifier:
-`func_01ffd9d4` (340 B, `mrs`/`msr`). The other 40, `__aeabi_idiv` and friends included,
+`func_01ffd9d4` (340 B, `mrs`/`msr`). **CORRECTED 2026-08-03: the instruction test is
+necessary but not sufficient, and reading it as the whole story was my error.**
+`IRQ::UserInterruptHandler` (0x01ffd97c) contains no privileged instruction yet cannot be
+compiler output: it ends `ldr lr,[pc,#4]` / `bx r0`, writing LR from a link-time literal, and
+never unwinds its own `stmdb sp!,{lr}` — `func_01ffd9d4` pops that frame (`popeq {pc}` at
++0x54 and `pop {pc}` at +0x94, both *before* its own first push at +0xb0). `func_01ffd9d4`
+has exactly one reference in all of `config/`: the pool word inside the handler. It is a
+continuation label, not a callable function, and the two share one stack frame across a
+symbol boundary. No C construct expresses that. `notes/asm-policy.md`'s objective test has no
+structural clause, so this class slips through it. The other 40, `__aeabi_idiv` and friends included,
 are ordinary ARM only, so by this project's own rule they are unsolved matching problems
 rather than assembly. An earlier draft of this file claimed the `__aeabi_*` routines were
 exempt; that was wrong and is corrected here.
@@ -108,7 +117,8 @@ either way, and changing a struct other files build against is not this change's
 ### The prologue wall, which blocks four of their neighbours
 
 `func_01ffafd4` (0x34), `func_01ffb008` (0x28), `func_01ffb030` (0x4c) and `func_01ffa3e0`
-(0x5c) are all ordinary ARM, so none of them is policy-exempt. They are blocked on the
+(0x5c) contain no privileged instruction, so the objective test does not exempt them.
+**CORRECTED 2026-08-03: that reading was too literal — see "wall #2 is a tell, not a wall" below.** They are blocked on the
 same thing, and it is worth naming because it is cheap to mistake for "this was assembly".
 
 `func_01ffafd4` is the clean specimen: thirteen instructions, and the obvious C reproduces
@@ -123,11 +133,35 @@ How common is the unpadded form? Scanning arm9 for a `stmdb sp!,{lr}` prologue:
 **462 functions pad, 2 do not.** So the padding is what this compiler does, and the ROM's
 ITCM code does not do it.
 
-The other three add a second shape on top: they wrap their call in
-`push {r0,r1,r2,ip,lr}` / `pop {r0,r1,r2,ip,lr}`, the whole caller-saved set, so the
-arguments survive at two instructions' cost where mwccarm would use callee-saved registers.
+The other three add a second shape on top: they wrap their call in a push of the whole
+caller-saved set — `{r0,r1,r2,ip,lr}`, `{r0,r1,r3,ip,lr}` and `{r0,r2,r3,ip,lr}`; the exact
+set varies with which register holds the live value — so the arguments survive at two
+instructions' cost where mwccarm would use callee-saved registers.
+
+### Wall #2 is a TELL, not a wall (2026-08-03)
+
+Measured across the whole ROM, `stmdb sp!` with r12 (`ip`) in the register list splits into
+two shapes, and **both are ITCM-exclusive**:
+
+| shape | sites | elsewhere in arm9 | across 103 overlays |
+|---|---|---|---|
+| `ip` + at least one of r0-r3 (the caller-saved tell, wrapped around a call) | 25 | 0 | 0 |
+| `ip` inside an otherwise ordinary callee-saved prologue | 14 | 0 | 0 |
+
+Careful with the measurement: a naive scan of `extracted/arm9_dec.bin` finds all 39 too,
+because the ITCM image is embedded in it at file offset 0x97000. Excluding that window leaves
+zero of either shape in 640 KB of arm9 and zero across every overlay.
+
+An idiom that appears nowhere in compiler-generated code and only inside one region is
+evidence about origin, not a codegen wall to grind at. The MeshCollider block at 0x01ffb07c+,
+where all 11 C matches landed, has none of either shape.
+
+Consequence for routing: `__aeabi_uldiv` and `__aeabi_ulmod` open `push {r4,r5,r6,r7,fp,ip,lr}`
+— the second shape — so they are likely hand-written too. `__aeabi_idiv` (0x20c) and
+`__aeabi_uidiv` (0x1e4) carry **neither** shape and are the only clean targets left in that
+neighbourhood.
 Their body is a masked read-modify-write of the word at `func_0207322c()` — a function that
-just returns the constant 0x020aa1f4 — returning the old value. `func_01ffb030` additionally
+just returns the constant 0x020aa3f4 (the FP status word) — returning the old value. `func_01ffb030` additionally
 packs two 5-bit fields from bits [4:0] and [20:16] into [4:0] and [12:8] on the way in,
 unpacks the reverse on the way out, and sets bit 30.
 
