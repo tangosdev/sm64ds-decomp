@@ -174,6 +174,61 @@ be `// NONMATCHING` drafts. They appear to have survived the 2026-07-24 reclassi
 that caught 116 others. Flagged rather than changed: reclassifying them lowers the matched
 count, which is a maintainer's call.
 
+## Batch 2 (2026-08-03): 13 attempted, 6 matched, and the symbol table is wrong in four places
+
+Six landed and are in `src/`, all re-verified from the shipping path with `--strict-relocs`:
+`DMAStartTransfer` (0x48), `DMAStartTransferFB` (0x50, **2004/b56 only**), `func_01ffdd98`
+(0x68), `func_01ffdd08` (0x90), `func_01ffde98` (0xa4), `OSReadROMArea` (0x130). Together they
+are the card/DMA/reboot cluster at the top of ITCM. `DMAStartTransferFB` needs no
+`rombuild-versions.txt` entry: `tools/rombuild.py` already defaults to `2004/b56`.
+
+`FB` means **barrier**, decided from callers, not guessed: it is instruction-identical to
+`DMAStartTransfer` plus two dummy reads of DMA0SAD (the DS DMA start delay), and its only three
+callers (0x0205a144/98/fc) are the *Sync* helpers that busy-poll the enable bit on the next
+instruction, while the plain twin serves the async/callback paths.
+
+### Three more that are byte-exact but are NOT C -- maintainer call
+
+Each reproduces the ROM exactly as an `asm` block, and each fails asm-policy's *instruction*
+test while failing to be compiler output for structural reasons. Filed as NONMATCHING, not
+landed as matched:
+
+* `_ZN3IRQ20UserInterruptHandlerEv` (0x58) -- see the corrected policy section above.
+* `func_01ffaa34` (0x1b0), the signed 64-bit divide (`__aeabi_ldiv` by its neighbours' naming):
+  four entry points into one body, statically unreachable code at +0x170, a provably dead
+  conditional tested twice, and it saves `ip`. Decisive: `long long a / long long b` at
+  1.2/sp2p3 compiles to a 12-byte veneer *to this routine*.
+* `func_01ffdb28` (0xb0), the last stage of the card reboot -- CRT0 glue written by the same
+  hand as `Entry` (identical `mov ip,#0x4000000; str ip,[ip,#0x208]` opening, identical
+  DTCM+0x3ffc addressing, identical hand-set-lr `bx` handoff). Measured tell: of the 8,063
+  functions in the ROM containing a reloc-confirmed `bl`, exactly **5** never preserve lr --
+  this one plus `Entry`, `func_020732e8`, `func_0207335c`, `func_02073584`, and all four of
+  those are already committed as `asm void` or `NONMATCHING (NOT-C-EXPRESSIBLE)`.
+
+If "makes calls and never preserves lr" joins the objective test, the last one flips cleanly.
+
+### Four symbol-table defects, each verified independently
+
+These make their functions unmatchable *by construction*, which is why nothing here ever moved:
+
+| symbol | declared | evidence | should be |
+|---|---|---|---|
+| `func_01ff8708` | `size=0x2dc` | 18 non-`bl` branches leave the declared body (up to +0x3ec); the 0x42c "gap" after it holds 15 `add sp,#0x10` + 16 `pop {r4-r7,lr}` -- its own teardown | ~`0x6f0` |
+| `func_01ff97d8` | `size=0x9e4` | 56 non-`bl` branches leave the declared body | extends into the 0x188 gap |
+| `func_01ffa344` + `func_01ffa3e0` | two symbols | `a3e0` has **zero** incoming branches or calls anywhere; its only entry is fallthrough from `a344` | one symbol, `size=0xfc` |
+| `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** (ov002 x2, ov074, arm9, all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
+
+So ITCM has **42** functions, not 41. Fixing these is a prerequisite for anyone working the
+soft-float block, not an optional tidy-up.
+
+### Routing for whoever goes next
+
+`func_01ff859c` is `double -> unsigned long long`; `func_01ff8708` is the soft-double multiply;
+`func_01ff8000` is the add; `func_01ff8e10` the subtract; `func_01ffa344` is `__aeabi_f2iz`;
+`func_01ffa440` is the int-to-float pair. All of them carry the caller-saved tell and several
+have no prologue at all, so the whole 0x01ff8000..0x01ffa9dc block -- about 9.2 KB -- is one
+hand-written soft-float library. Do not route cold C matching at it.
+
 ## The structure they established
 
 None of this was guessed; each line names what pins it.
