@@ -24,6 +24,9 @@ src/_ZNK12MeshCollider13GetUnkOctreeYEv.cpp:
 src/_ZNK12MeshCollider16GetOctreeOriginYEv.cpp:
     .text start:0x01ffb0ec end:0x01ffb0fc
 
+src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp:
+    .text start:0x01ffd3f8 end:0x01ffd890
+
 src/_ZN12MeshCollider17GetTriangleOriginEsR7Vector3.cpp:
     .text start:0x01ffd890 end:0x01ffd8d8
 
