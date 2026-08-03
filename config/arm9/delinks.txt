@@ -3798,14 +3798,16 @@ src/UpdateMinimap.c:
     complete
     .text start:0x02029854 end:0x020298a0
 
-src/engine/fader/StartEntranceFaderWipe.c:
+src/engine/fader/StartEntranceFaderWipe.cpp:
+    complete
     .text start:0x020298a0 end:0x020298d8
 
 src/StartExitCharacterWipe.c:
     complete
     .text start:0x020298d8 end:0x020298fc
 
-src/engine/fader/StartExitFaderWipe.c:
+src/engine/fader/StartExitFaderWipe.cpp:
+    complete
     .text start:0x020298fc end:0x02029934
 
 src/FUN_02029934.cpp:

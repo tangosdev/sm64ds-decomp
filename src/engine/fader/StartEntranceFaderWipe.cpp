@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 struct Fader {
     Fix12i currInterp;
@@ -29,11 +30,11 @@ struct FaderWipe : Fader {
     virtual void SetToStart();
 };
 
-extern FaderWipe* WIPES;
+extern FaderWipe* data_0209f324;
 extern "C" void _ZN5Scene9SetFadersEP15FaderBrightness(FaderWipe* f);
 
 extern "C" void StartEntranceFaderWipe(int index) {
-    FaderWipe* f = &WIPES[index];
+    FaderWipe* f = &data_0209f324[index];
     _ZN5Scene9SetFadersEP15FaderBrightness(f);
     f->SetToEnd();
 }
