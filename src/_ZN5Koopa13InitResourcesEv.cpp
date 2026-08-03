@@ -9,10 +9,13 @@ typedef struct { int w[2]; } SharedFilePtr;
 typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 
+extern "C" {
 extern SharedFilePtr* data_ov062_0211cee8[9];
 extern SharedFilePtr* data_ov062_0211ced8[2];
 extern SharedFilePtr* data_ov062_0211cee0[2];
+}
 
+extern "C" {
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
@@ -21,6 +24,7 @@ extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Fix12 q);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
 extern void LoadBlueCoinModel(void* c);
+}
 
 int Koopa::InitResources()
 {

@@ -4,8 +4,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Pokey.h"
+extern "C" {
 extern int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *c, void *cyl);
+}
 
 int Pokey::Behavior()
 {

@@ -10,11 +10,13 @@ struct Player {
     int CanEnterDoor(unsigned char);
 };
 
+extern "C" {
 extern State data_ov002_0211022c;
 extern State data_ov002_0211013c;
 extern State data_ov002_02110154;
 extern State data_ov002_0211043c;
 extern State data_ov002_0211004c;
+}
 
 struct DoorObj { int (**vtbl)(DoorObj *); };
 

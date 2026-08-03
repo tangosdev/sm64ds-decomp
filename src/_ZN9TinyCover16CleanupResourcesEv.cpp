@@ -6,7 +6,9 @@
 #include "TinyCover.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov033_021124f0[];
+}
 
 int TinyCover::CleanupResources()
 {

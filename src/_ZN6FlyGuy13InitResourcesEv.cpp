@@ -8,6 +8,7 @@ typedef struct { short x,y,z; } Vector3_16;
 typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 typedef struct PMF PMF;
+extern "C" {
 extern SharedFilePtr data_ov070_02123530;
 extern SharedFilePtr data_ov070_02123520;
 extern SharedFilePtr data_ov070_02123518;
@@ -23,6 +24,7 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern int FlyGuy_ChangeState(void* c, PMF* p);
+}
 
 int FlyGuy::InitResources()
 {

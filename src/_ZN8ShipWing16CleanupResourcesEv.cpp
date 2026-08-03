@@ -6,7 +6,9 @@
 #include "ShipWing.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov036_0211408c[];
+}
 
 int ShipWing::CleanupResources()
 {

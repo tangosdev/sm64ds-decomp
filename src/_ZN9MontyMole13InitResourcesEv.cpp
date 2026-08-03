@@ -9,6 +9,7 @@ typedef struct { int w[2]; } SharedFilePtr;
 typedef struct BMD_File BMD_File;
 typedef struct BCA_File BCA_File;
 typedef struct Actor Actor;
+extern "C" {
 extern SharedFilePtr* data_ov080_0212766c[];
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr data_ov080_021283c8;
@@ -18,6 +19,7 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, Fix12 b, unsigned int e);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
+}
 
 int MontyMole::InitResources()
 {

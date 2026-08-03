@@ -9,6 +9,7 @@
 /* _ZN5Crate8BehaviorEv at 0x02139b0c */
 enum Bool { FALSE, TRUE };
 
+extern "C" {
 extern u32 data_0209b454;
 extern void _ZN6Player9DropActorEv(void* self);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
@@ -17,6 +18,7 @@ extern void Crate_SetState(char* c, int i);
 extern u8 DecIfAbove0_Byte(u8* p);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
 extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void* v);
+}
 
 int Crate::Behavior()
 {

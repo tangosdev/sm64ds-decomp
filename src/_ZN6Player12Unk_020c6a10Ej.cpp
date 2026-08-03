@@ -5,10 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* thiz, void* st);
 extern int func_ov002_020d91e0(void* thiz, u32 a, int b);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, void* v);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* thiz, void* st);
+}
 
 int Player::Unk_020c6a10(unsigned int arg_)
 {

@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Key.h"
+extern "C" {
 extern void LoadKeyModels(int idx);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
@@ -14,7 +15,9 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thi
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN5Event8ClearBitEj(unsigned int n);
+}
 
+extern "C" {
 extern char data_ov002_02110964;
 extern char data_ov002_0211094c;
 extern char data_ov089_02132b40;
@@ -25,6 +28,7 @@ extern char data_ov089_02132c48;
 extern int data_ov089_021328b4[];
 extern char data_ov089_02132ca4;
 extern int data_0209cef0;
+}
 
 int Key::InitResources()
 {

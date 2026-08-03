@@ -24,8 +24,10 @@ struct MovingCylinderClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
 };
 
+extern "C" {
 extern SharedFilePtr data_ov062_0211e0d4;
 extern SharedFilePtr data_ov062_0211e0dc;
+}
 
 int KoopaFlag::InitResources()
 {

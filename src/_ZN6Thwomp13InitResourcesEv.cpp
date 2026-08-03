@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Thwomp.h"
+extern "C" {
 extern int func_ov091_02133254(char*);
+}
 
 int Thwomp::InitResources()
 {

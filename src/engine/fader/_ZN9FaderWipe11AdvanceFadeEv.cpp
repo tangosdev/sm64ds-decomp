@@ -9,7 +9,9 @@ void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToScale(void* m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
 void _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(void* thiz, void* mtx, void* vec);
+extern "C" {
 extern int data_020a0e68[];
+}
 
 void FaderWipe::AdvanceFade()
 {

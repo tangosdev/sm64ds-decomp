@@ -2,12 +2,14 @@
 #include "types.h"
 namespace G2S { u16 *GetBG1ScrPtr(); }
 
+extern "C" {
 extern u8 data_0209f2e4;
 extern u16 data_020755c0[];
 extern u8 data_0209f2e0;
 extern u8 data_0209f2cc;
 extern u16 data_020755c4[];
 extern u8 data_0209f2ec;
+}
 
 struct Stage {
     static void PS_UpdateOptionsMenu();

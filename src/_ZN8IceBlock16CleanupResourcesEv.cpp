@@ -6,7 +6,9 @@
 #include "IceBlock.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov081_02128fd8[];
+}
 
 int IceBlock::CleanupResources()
 {

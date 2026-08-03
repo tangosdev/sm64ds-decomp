@@ -2,7 +2,9 @@
 // @symbol _ZN7HeaveHo6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "HeaveHo.h"
+extern "C" {
 extern int data_0209f32c;
+}
 
 struct Cls {
     virtual void method0();

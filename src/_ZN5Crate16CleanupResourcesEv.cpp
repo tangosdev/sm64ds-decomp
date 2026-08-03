@@ -6,7 +6,9 @@
 #include "Crate.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int data_ov098_0213c4c8[];
+}
 
 int Crate::CleanupResources()
 {

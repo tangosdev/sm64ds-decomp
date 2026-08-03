@@ -2,9 +2,11 @@
 // @symbol _ZN6Player17St_HoldLight_InitEv
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+extern "C" {
 extern int Player_ScaleByCharFactor(char* c, int a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int anim, int a, int fix, unsigned int z);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
+}
 
 int Player::St_HoldLight_Init()
 {
