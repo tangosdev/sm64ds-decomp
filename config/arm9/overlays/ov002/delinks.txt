@@ -4713,10 +4713,10 @@ src/BlueCoinSwitch_Spawn.c:
     complete
     .text start:0x020f15cc end:0x020f15fc
 
-src/_ZN14BlueCoinSwitchD1Ev.cpp:
+src/_ZN14EnemySwitchTagD1Ev.cpp:
     .text start:0x020f15fc end:0x020f162c
 
-src/_ZN14BlueCoinSwitchD0Ev.c:
+src/_ZN14EnemySwitchTagD0Ev.c:
     complete
     .text start:0x020f162c end:0x020f1670
 
@@ -4726,14 +4726,14 @@ src/_ZN12EnemySpawnerD1Ev.cpp:
 src/_ZN12EnemySpawnerD0Ev.c:
     .text start:0x020f1694 end:0x020f16cc
 
-src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp:
+src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp:
     .text start:0x020f16cc end:0x020f16ec
 
 src/_ZN12EnemySpawner8BehaviorEv.cpp:
     complete
     .text start:0x020f16ec end:0x020f1760
 
-src/_ZN14BlueCoinSwitch8BehaviorEv.cpp:
+src/_ZN14EnemySwitchTag8BehaviorEv.cpp:
     .text start:0x020f1760 end:0x020f1814
 
 src/_ZN12EnemySpawner16CleanupResourcesEv.c:
@@ -4743,7 +4743,7 @@ src/_ZN12EnemySpawner16CleanupResourcesEv.c:
 src/_ZN12EnemySpawner13InitResourcesEv.cpp:
     .text start:0x020f1838 end:0x020f1878
 
-src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp:
+src/_ZN14EnemySwitchTag13InitResourcesEv.cpp:
     complete
     .text start:0x020f1878 end:0x020f1924
 
