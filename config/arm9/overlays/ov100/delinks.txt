@@ -441,6 +441,7 @@ src/func_ov100_02146828.c:
     .text start:0x02146828 end:0x02146a98
 
 src/_ZN4Fish16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02146a98 end:0x02146b00
 
 src/_ZN4Fish16OnPendingDestroyEv.c:
@@ -456,6 +457,7 @@ src/_ZN4Fish8BehaviorEv.cpp:
     .text start:0x02146b38 end:0x02146c68
 
 src/_ZN4Fish13InitResourcesEv.cpp:
+    complete
     .text start:0x02146c68 end:0x02146d38
 
 src/Fish_Spawn.cpp:

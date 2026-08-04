@@ -38,9 +38,11 @@ src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp:
     .text start:0x02131408 end:0x02131468
 
 src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp:
+    complete
     .text start:0x02131468 end:0x021318f0
 
 src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp:
+    complete
     .text start:0x021318f0 end:0x02131ba4
 
 src/RotatingUpDownPlatformUtm_Spawn.c:
@@ -122,9 +124,11 @@ src/_ZN17SlidingPlatformWf6RenderEv.cpp:
     .text start:0x02132504 end:0x0213252c
 
 src/_ZN17SlidingPlatformWf8BehaviorEv.cpp:
+    complete
     .text start:0x0213252c end:0x021325d4
 
 src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp:
+    complete
     .text start:0x021325d4 end:0x021327e8
 
 src/SlidingPlatformWf_Spawn.c:
@@ -310,6 +314,7 @@ src/func_ov091_02134094.c:
     .text start:0x02134094 end:0x02134108
 
 src/_ZN5Stump16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02134108 end:0x02134180
 
 src/_ZN5Stump16OnPendingDestroyEv.c:
@@ -325,6 +330,7 @@ src/_ZN5Stump8BehaviorEv.cpp:
     .text start:0x021341ec end:0x02134324
 
 src/_ZN5Stump13InitResourcesEv.cpp:
+    complete
     .text start:0x02134324 end:0x02134484
 
 src/func_ov091_02134484.c:

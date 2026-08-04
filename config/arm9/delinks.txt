@@ -735,6 +735,7 @@ src/ReadUnalignedUshort.c:
     .text start:0x0200e780 end:0x0200e798
 
 src/EndKuppaScript.cpp:
+    complete
     .text start:0x0200e798 end:0x0200e8d4
 
 src/ProcessKuppaScript.cpp:
@@ -4125,6 +4126,7 @@ src/CopyTexPalFromLevelModel.c:
     .text start:0x0202b3d8 end:0x0202b534
 
 src/_ZN5Stage23LoadTextureTransformersEv.cpp:
+    complete
     .text start:0x0202b534 end:0x0202b5ec
 
 src/_ZN5Stage9LoadModelEv.cpp:
@@ -4136,6 +4138,7 @@ src/_ZN5Stage9RenderFogEv.cpp:
     .text start:0x0202b67c end:0x0202b710
 
 src/_ZN5Stage7LoadFogEv.cpp:
+    complete
     .text start:0x0202b710 end:0x0202b818
 
 src/_ZN5Stage8CanPauseEv.c:
@@ -7795,6 +7798,7 @@ src/_ZN18NestedHeapIteratorC1Ej.c:
     .text start:0x0204df20 end:0x0204df38
 
 src/_ZN13HeapAllocator6RemoveEv.cpp:
+    complete
     .text start:0x0204df38 end:0x0204df54
 
 src/_ZN13HeapAllocatorC1EjPvPvj.cpp:

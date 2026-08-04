@@ -97,6 +97,7 @@ src/_ZN11PyramidStep6RenderEv.cpp:
     .text start:0x02111ea8 end:0x02111ed4
 
 src/_ZN11PyramidStep8BehaviorEv.cpp:
+    complete
     .text start:0x02111ed4 end:0x02111fa0
 
 src/_ZN11PyramidStep13InitResourcesEv.cpp:
@@ -128,6 +129,7 @@ src/_ZN11PyramidLift8BehaviorEv.cpp:
     .text start:0x02112288 end:0x02112498
 
 src/_ZN11PyramidLift13InitResourcesEv.cpp:
+    complete
     .text start:0x02112498 end:0x021125bc
 
 src/func_ov025_021125bc.cpp:

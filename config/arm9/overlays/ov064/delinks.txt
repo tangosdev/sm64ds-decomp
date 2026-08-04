@@ -131,6 +131,7 @@ src/_ZN5Bully8BehaviorEv.c:
     .text start:0x02117310 end:0x02117424
 
 src/_ZN5Bully13InitResourcesEv.cpp:
+    complete
     .text start:0x02117424 end:0x02117444
 
 src/Bully_Spawn.c:
@@ -249,9 +250,11 @@ src/_ZN15RotatingFirebar6RenderEv.cpp:
     .text start:0x0211824c end:0x02118274
 
 src/_ZN15RotatingFirebar8BehaviorEv.cpp:
+    complete
     .text start:0x02118274 end:0x02118480
 
 src/_ZN15RotatingFirebar13InitResourcesEv.cpp:
+    complete
     .text start:0x02118480 end:0x02118564
 
 src/RotatingFirebar_Spawn.cpp:
@@ -303,6 +306,7 @@ src/_ZN10LavaBubble8BehaviorEv.cpp:
     .text start:0x02118850 end:0x021189d8
 
 src/_ZN10LavaBubble13InitResourcesEv.cpp:
+    complete
     .text start:0x021189d8 end:0x02118b08
 
 src/func_ov064_02118b08.c:
@@ -563,6 +567,7 @@ src/_ZN13TreasureChest6RenderEv.cpp:
     .text start:0x0211a7c4 end:0x0211a7ec
 
 src/_ZN13TreasureChest8BehaviorEv.cpp:
+    complete
     .text start:0x0211a7ec end:0x0211a814
 
 src/_ZN13TreasureChest13InitResourcesEv.cpp:

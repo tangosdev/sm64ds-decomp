@@ -19,7 +19,9 @@ extern char data_ov091_02135028[];   // collider sfp table, stride 0xc
 extern char data_ov091_0213502c[];   // clps table, stride 0xc
 extern u16 data_ov091_02134514[];
 extern u16 data_ov091_02134504[];
+extern "C" {
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+}
 
 int SlidingPlatformWf::InitResources()
 {

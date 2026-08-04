@@ -42,6 +42,7 @@ src/_ZN10PyramidTop6RenderEv.cpp:
     .text start:0x0211153c end:0x02111568
 
 src/_ZN10PyramidTop8BehaviorEv.cpp:
+    complete
     .text start:0x02111568 end:0x02111668
 
 src/_ZN10PyramidTag8BehaviorEv.cpp:

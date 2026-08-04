@@ -172,6 +172,7 @@ src/_ZN10MrBlizzard16OnPendingDestroyEv.c:
     .text start:0x0212581c end:0x02125820
 
 src/_ZN10MrBlizzard6RenderEv.cpp:
+    complete
     .text start:0x02125820 end:0x0212588c
 
 src/_ZN10MrBlizzard8BehaviorEv.cpp:

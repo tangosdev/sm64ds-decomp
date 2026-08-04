@@ -53,6 +53,7 @@ src/_ZN15FireSeaElevator6RenderEv.cpp:
     .text start:0x021115f0 end:0x02111618
 
 src/_ZN15FireSeaElevator8BehaviorEv.cpp:
+    complete
     .text start:0x02111618 end:0x02111738
 
 src/_ZN15FireSeaElevator13InitResourcesEv.cpp:

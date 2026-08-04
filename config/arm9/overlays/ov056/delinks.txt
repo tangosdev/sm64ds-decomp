@@ -19,6 +19,7 @@ src/_ZN17BigMovingIceBlock6RenderEv.cpp:
     .text start:0x02111284 end:0x021112ac
 
 src/_ZN17BigMovingIceBlock8BehaviorEv.cpp:
+    complete
     .text start:0x021112ac end:0x021114e0
 
 src/_ZN17BigMovingIceBlock13InitResourcesEv.cpp:

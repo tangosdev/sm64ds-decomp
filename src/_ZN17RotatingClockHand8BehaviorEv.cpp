@@ -4,12 +4,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingClockHand.h"
+extern "C" {
 extern int DecIfAbove0_Short(char *p);
 extern int RandomIntInternal(char *p);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+}
 extern unsigned char data_0209f2c0[];
 extern int data_0209e650[];
 

@@ -174,9 +174,11 @@ src/_ZN5Crate6RenderEv.cpp:
     .text start:0x02139aa8 end:0x02139b0c
 
 src/_ZN5Crate8BehaviorEv.cpp:
+    complete
     .text start:0x02139b0c end:0x02139d14
 
 src/_ZN5Crate13InitResourcesEv.cpp:
+    complete
     .text start:0x02139d14 end:0x02139e44
 
 src/func_ov098_02139e44.cpp:

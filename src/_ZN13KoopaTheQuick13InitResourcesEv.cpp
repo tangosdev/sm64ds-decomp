@@ -6,6 +6,7 @@
 #include "KoopaTheQuick.h"
 typedef short s16;
 
+extern "C" {
 extern void _ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
@@ -16,6 +17,7 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *sel
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
 extern unsigned char _ZN5Actor9TrackStarEjj(void *self, unsigned int a, unsigned int b);
+}
 
 extern char data_ov062_0211e00c[];
 extern char data_ov062_0211e014[];

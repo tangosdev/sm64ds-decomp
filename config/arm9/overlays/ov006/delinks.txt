@@ -2636,6 +2636,7 @@ src/func_ov006_020e6e78.cpp:
     .text start:0x020e6e78 end:0x020e6f60
 
 src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp:
+    complete
     .text start:0x020e6f60 end:0x020e700c
 
 src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp:

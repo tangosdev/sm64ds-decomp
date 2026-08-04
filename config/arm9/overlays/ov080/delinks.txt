@@ -171,6 +171,7 @@ src/_ZN11CrazedCrate6RenderEv.cpp:
     .text start:0x02125180 end:0x021251cc
 
 src/_ZN11CrazedCrate8BehaviorEv.cpp:
+    complete
     .text start:0x021251cc end:0x021251ec
 
 src/_ZN11CrazedCrate13InitResourcesEv.cpp:

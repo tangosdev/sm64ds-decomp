@@ -5,11 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "QuestionBlock.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern void func_020393a4(int* p, int v);
 extern void func_02039394(int* p, int v);
 extern void _ZN9Animation7AdvanceEv(void* a);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+}
 extern int data_0209caa0[];
 extern unsigned char data_0209f2d8;
 extern signed char data_0209f2f8;

@@ -278,6 +278,7 @@ src/_ZN14MrI_Projectile8BehaviorEv.cpp:
     .text start:0x02121d80 end:0x02121eb4
 
 src/_ZN14MrI_Projectile13InitResourcesEv.cpp:
+    complete
     .text start:0x02121eb4 end:0x02121f9c
 
 src/MrI_Projectile_Spawn.c:

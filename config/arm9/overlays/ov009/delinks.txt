@@ -129,6 +129,7 @@ src/_ZN4Flag8BehaviorEv.cpp:
     .text start:0x02112144 end:0x02112190
 
 src/_ZN4Flag13InitResourcesEv.cpp:
+    complete
     .text start:0x02112190 end:0x021121f0
 
 src/Flag_Spawn.c:

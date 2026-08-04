@@ -72,6 +72,7 @@ src/_ZN19RotatingPlatformLll8BehaviorEv.cpp:
     .text start:0x021117cc end:0x02111870
 
 src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp:
+    complete
     .text start:0x02111870 end:0x0211191c
 
 src/func_ov022_0211191c.cpp:
@@ -180,6 +181,7 @@ src/_ZN19FloatingFloorLllBig8BehaviorEv.cpp:
     .text start:0x02112238 end:0x021122ac
 
 src/_ZN19FloatingFloorLllBig13InitResourcesEv.cpp:
+    complete
     .text start:0x021122ac end:0x02112350
 
 src/LavaPlank_Spawn.c:

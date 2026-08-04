@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ClockPaintingHandShort.h"
+extern "C" {
 extern int IsAreaShowing(int);
+}
 extern signed char data_02092110[];
 extern unsigned char data_0209f2c0[];
 

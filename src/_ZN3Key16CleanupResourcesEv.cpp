@@ -5,7 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Key.h"
 #include "SharedFilePtr.h"
+extern "C" {
 extern void _ZN5Event8ClearBitEj(unsigned int b);
+}
 extern int data_ov002_02110964[];
 extern int data_ov089_02132c60[];
 extern int data_ov089_02132c40[];

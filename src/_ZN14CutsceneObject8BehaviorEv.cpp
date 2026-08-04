@@ -19,6 +19,7 @@ typedef struct
 {
   char pad[0x50];
 } RaycastGround;
+extern "C" {
 extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *c, void *cyl);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *cyl);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *rc);
@@ -29,6 +30,7 @@ extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
+}
 extern Mtx43 data_020a0e68;
 
 int CutsceneObject::Behavior()

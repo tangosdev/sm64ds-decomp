@@ -211,6 +211,7 @@ src/_ZN13RollingLogTtm8BehaviorEv.cpp:
     .text start:0x02114278 end:0x02114378
 
 src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
+    complete
     .text start:0x02114378 end:0x021145d4
 
 src/func_ov030_021145d4.c:

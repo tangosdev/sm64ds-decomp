@@ -5,8 +5,10 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Fish.h"
 struct SharedFilePtr { unsigned int data[4]; };
+extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+}
 
 extern struct SharedFilePtr data_ov100_021489cc;
 extern struct SharedFilePtr *data_ov100_021473a4[];

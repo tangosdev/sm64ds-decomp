@@ -26,6 +26,7 @@ extern SharedFilePtr data_ov078_02126ef8;
 extern int data_0209e650;
 extern PMF data_ov078_0212710c;
 
+extern "C" {
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
@@ -35,6 +36,7 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* sel
 extern unsigned char _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern int RandomIntInternal(int* seed);
 extern void KingBobOmb_SetState(void* c, PMF* p);
+}
 
 int KingBobOmb::InitResources()
 {

@@ -13,6 +13,7 @@
 #define LI(v) ((int)(((long long)(v))))
 
 
+extern "C" {
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* c);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
@@ -23,6 +24,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
+}
 
 extern int data_020a0e68[];
 

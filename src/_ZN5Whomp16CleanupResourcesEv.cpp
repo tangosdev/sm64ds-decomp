@@ -6,9 +6,11 @@
 #include "Whomp.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern void data_ov079_02128168(void);
 extern void data_ov079_02128178(void);
 extern void data_ov079_02128170(void);
+}
 extern void *data_ov079_021275ec[];
 
 int Whomp::CleanupResources()

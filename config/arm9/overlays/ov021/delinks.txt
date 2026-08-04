@@ -137,6 +137,7 @@ src/_ZN10ShutterHmc8BehaviorEv.cpp:
     .text start:0x02112e7c end:0x02112ec0
 
 src/_ZN10ShutterHmc13InitResourcesEv.cpp:
+    complete
     .text start:0x02112ec0 end:0x02112ed4
 
 src/ShutterHmc_Spawn.c:

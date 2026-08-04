@@ -2,10 +2,12 @@
 // @symbol _ZN15IceSlideManager8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "IceSlideManager.h"
+extern "C" {
 extern int _ZN5Actor13DistToCPlayerEv(void*);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned,unsigned,unsigned,int,int);
 extern int DecIfAbove0_Short(void*);
 extern int _ZN5Actor24KillAndTrackInDeathTableEv(void*);
+}
 
 int IceSlideManager::Behavior()
 {

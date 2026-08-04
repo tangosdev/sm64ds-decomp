@@ -4,10 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HauntedChair.h"
+extern "C" {
 extern void func_0200f760(char* a, char* b);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char* c, char* v);
 extern void _ZN12CylinderClsn6UpdateEv(char* c);
+}
 
 int HauntedChair::Behavior()
 {

@@ -2,12 +2,14 @@
 // @symbol _ZN12SwitchPillar8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "SwitchPillar.h"
+extern "C" {
 extern void _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* p);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
 extern void _ZN7Minimap19UpdateLevelSpecificEv(void);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
 extern void _ZN9Animation7AdvanceEv(void* thiz);
+}
 extern int data_0209caa0[];
 extern int data_0209f32c;
 

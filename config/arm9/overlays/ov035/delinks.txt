@@ -59,6 +59,7 @@ src/_ZN17RotatingClockHand6RenderEv.cpp:
     .text start:0x02111934 end:0x0211195c
 
 src/_ZN17RotatingClockHand8BehaviorEv.cpp:
+    complete
     .text start:0x0211195c end:0x02111a98
 
 src/_ZN17RotatingClockHand13InitResourcesEv.cpp:

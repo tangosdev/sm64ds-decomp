@@ -63,9 +63,11 @@ src/_ZN18RickshawPlatformBsD0Ev.c:
     .text start:0x02111590 end:0x02111624
 
 src/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111624 end:0x02111638
 
 src/_ZN18RickshawPlatformBs13InitResourcesEv.cpp:
+    complete
     .text start:0x02111638 end:0x0211164c
 
 src/StairsBs_Spawn.cpp:

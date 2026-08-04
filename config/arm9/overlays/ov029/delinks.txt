@@ -31,6 +31,7 @@ src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp:
     .text start:0x0211145c end:0x02111484
 
 src/_ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv.cpp:
+    complete
     .text start:0x02111484 end:0x021115f8
 
 src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp:
@@ -173,6 +174,7 @@ src/_ZN19RotatingPlatformWdw6RenderEv.cpp:
     .text start:0x02112320 end:0x02112354
 
 src/_ZN19RotatingPlatformWdw8BehaviorEv.cpp:
+    complete
     .text start:0x02112354 end:0x021124d0
 
 src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp:

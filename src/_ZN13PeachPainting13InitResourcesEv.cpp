@@ -4,8 +4,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PeachPainting.h"
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
+}
 
 int PeachPainting::InitResources()
 {

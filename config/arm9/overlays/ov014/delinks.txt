@@ -18,6 +18,7 @@ src/_ZN10ShutterBob8BehaviorEv.cpp:
     .text start:0x02111268 end:0x02111294
 
 src/_ZN10ShutterBob13InitResourcesEv.cpp:
+    complete
     .text start:0x02111294 end:0x021112cc
 
 src/ShutterBob_Spawn.c:
@@ -157,6 +158,7 @@ src/_ZN15ChainChompFence8BehaviorEv.cpp:
     .text start:0x02112fc0 end:0x02112ffc
 
 src/_ZN15ChainChompFence13InitResourcesEv.cpp:
+    complete
     .text start:0x02112ffc end:0x0211307c
 
 src/ChainChompFence_Spawn.c:

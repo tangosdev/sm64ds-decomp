@@ -116,6 +116,7 @@ src/_ZN13UpDownLiftBbh8BehaviorEv.cpp:
     .text start:0x021364d8 end:0x021365d8
 
 src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp:
+    complete
     .text start:0x021365d8 end:0x02136764
 
 src/func_ov095_02136764.cpp:

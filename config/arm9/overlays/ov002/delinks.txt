@@ -809,6 +809,7 @@ src/_ZN14QuestionSwitch8BehaviorEv.cpp:
     .text start:0x020b51dc end:0x020b5500
 
 src/_ZN14QuestionSwitch13InitResourcesEv.cpp:
+    complete
     .text start:0x020b5500 end:0x020b567c
 
 src/func_ov002_020b567c.c:
@@ -1355,6 +1356,7 @@ src/_ZN10StarSwitch6RenderEv.cpp:
     .text start:0x020ba5f4 end:0x020ba624
 
 src/_ZN10StarSwitch8BehaviorEv.cpp:
+    complete
     .text start:0x020ba624 end:0x020ba83c
 
 src/_ZN10StarSwitch13InitResourcesEv.cpp:
@@ -4265,6 +4267,7 @@ src/func_ov002_020ea9d0.c:
     .text start:0x020ea9d0 end:0x020eab8c
 
 src/_ZN10StarMarker16OnPendingDestroyEv.cpp:
+    complete
     .text start:0x020eab8c end:0x020eabcc
 
 src/_ZN10StarMarker16CleanupResourcesEv.cpp:
@@ -4292,6 +4295,7 @@ src/_ZN9PowerStar8BehaviorEv.cpp:
     .text start:0x020eb05c end:0x020eb204
 
 src/_ZN10StarMarker13InitResourcesEv.cpp:
+    complete
     .text start:0x020eb204 end:0x020eb63c
 
 src/_ZN9PowerStar13InitResourcesEv.cpp:
@@ -4736,6 +4740,7 @@ src/_ZN15InvisibleSecret6RenderEv.cpp:
     .text start:0x020f0994 end:0x020f0a60
 
 src/_ZN15InvisibleSecret8BehaviorEv.cpp:
+    complete
     .text start:0x020f0a60 end:0x020f0bd4
 
 src/_ZN15InvisibleSecret13InitResourcesEv.cpp:
@@ -4824,6 +4829,7 @@ src/_ZN12EnemySpawnerD0Ev.c:
     .text start:0x020f1694 end:0x020f16cc
 
 src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020f16cc end:0x020f16ec
 
 src/_ZN12EnemySpawner8BehaviorEv.cpp:
@@ -4831,6 +4837,7 @@ src/_ZN12EnemySpawner8BehaviorEv.cpp:
     .text start:0x020f16ec end:0x020f1760
 
 src/_ZN14EnemySwitchTag8BehaviorEv.cpp:
+    complete
     .text start:0x020f1760 end:0x020f1814
 
 src/_ZN12EnemySpawner16CleanupResourcesEv.c:
@@ -4838,6 +4845,7 @@ src/_ZN12EnemySpawner16CleanupResourcesEv.c:
     .text start:0x020f1814 end:0x020f1838
 
 src/_ZN12EnemySpawner13InitResourcesEv.cpp:
+    complete
     .text start:0x020f1838 end:0x020f1878
 
 src/_ZN14EnemySwitchTag13InitResourcesEv.cpp:
@@ -4871,6 +4879,7 @@ src/_ZN19AmbientSoundEffects6RenderEv.c:
     .text start:0x020f19f4 end:0x020f19fc
 
 src/_ZN19AmbientSoundEffects8BehaviorEv.cpp:
+    complete
     .text start:0x020f19fc end:0x020f1ac4
 
 src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp:
@@ -5471,6 +5480,7 @@ src/_ZN14CutsceneObject6RenderEv.cpp:
     .text start:0x020f80ac end:0x020f81c4
 
 src/_ZN14CutsceneObject8BehaviorEv.cpp:
+    complete
     .text start:0x020f81c4 end:0x020f83a4
 
 src/_ZN14CutsceneObject13InitResourcesEv.cpp:

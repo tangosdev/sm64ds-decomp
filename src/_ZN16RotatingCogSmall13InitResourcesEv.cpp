@@ -5,14 +5,18 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingCogSmall.h"
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
+}
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int fix, short s, void *clps);
+extern "C" {
 extern void func_020393d4(void *p, void *v);
+}
 extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int data_ov035_02112c78[];
 extern int data_ov035_02112c70[];

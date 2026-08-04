@@ -5,7 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "KoopaTheQuick.h"
 struct SharedFilePtr { unsigned int data[4]; };
+extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);
+}
 extern struct SharedFilePtr data_ov062_0211e00c;
 extern struct SharedFilePtr data_ov062_0211e014;
 extern struct SharedFilePtr data_ov062_0211e024;

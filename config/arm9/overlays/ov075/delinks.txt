@@ -158,9 +158,11 @@ src/_ZN14UnknownVsEntry6RenderEv.cpp:
     .text start:0x021154cc end:0x0211555c
 
 src/_ZN14UnknownVsEntry8BehaviorEv.cpp:
+    complete
     .text start:0x0211555c end:0x021156e0
 
 src/_ZN14UnknownVsEntry13InitResourcesEv.cpp:
+    complete
     .text start:0x021156e0 end:0x021159f4
 
 src/UnknownVsEntry_Spawn.cpp:

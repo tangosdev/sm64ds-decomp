@@ -49,6 +49,7 @@ src/_ZN12SwitchPillar6RenderEv.cpp:
     .text start:0x02111540 end:0x02111574
 
 src/_ZN12SwitchPillar8BehaviorEv.cpp:
+    complete
     .text start:0x02111574 end:0x0211164c
 
 src/_ZN12SwitchPillar13InitResourcesEv.cpp:

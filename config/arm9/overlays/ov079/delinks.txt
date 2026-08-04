@@ -125,6 +125,7 @@ src/func_ov079_02125b44.c:
     .text start:0x02125b44 end:0x02125eb0
 
 src/_ZN5Whomp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02125eb0 end:0x02125f78
 
 src/_ZN5Whomp6RenderEv.cpp:
@@ -249,6 +250,7 @@ src/_ZN12FortressWall8BehaviorEv.cpp:
     .text start:0x021273a4 end:0x02127494
 
 src/_ZN12FortressWall13InitResourcesEv.cpp:
+    complete
     .text start:0x02127494 end:0x0212757c
 
 src/FortressWall_Spawn.c:

@@ -6,9 +6,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformWdw.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern int IsAreaShowing(int idx);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
 extern void _ZN9Animation7AdvanceEv(void *a);
+}
 extern s16 data_02082214[];
 extern int data_0209f32c;
 

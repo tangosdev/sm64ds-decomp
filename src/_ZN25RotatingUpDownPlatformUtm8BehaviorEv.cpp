@@ -9,6 +9,7 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct RaycastGround { char pad[0x54]; } RaycastGround;
 
+extern "C" {
 extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
 extern int Vec3_HorzDist(const Vec3 *a, const Vec3 *b);
 extern int _ZN5Actor13DistToCPlayerEv(void *thiz);
@@ -30,6 +31,7 @@ extern void func_02039394(int *p, int v);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *thiz, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thiz);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *rc);
+}
 
 extern char data_020a0e68[];
 

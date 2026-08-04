@@ -127,6 +127,7 @@ src/_ZN5Pokey6RenderEv.cpp:
     .text start:0x021369fc end:0x02136a50
 
 src/_ZN5Pokey8BehaviorEv.cpp:
+    complete
     .text start:0x02136a50 end:0x02136ab0
 
 src/_ZN5Pokey13InitResourcesEv.cpp:

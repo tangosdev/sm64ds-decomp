@@ -5,7 +5,9 @@
 #include "RickshawPlatformBdw.h"
 struct Arg { void *m[3]; };
 
+extern "C" {
 extern int func_ov002_020b4d58(u8 *self, struct Arg *arg);
+}
 extern struct Arg data_ov043_02112518;
 
 int RickshawPlatformBdw::InitResources()

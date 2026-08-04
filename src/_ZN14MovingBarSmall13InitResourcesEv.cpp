@@ -21,8 +21,10 @@ int IsStarCollectedInCurLevel(int a);
 extern void* data_ov015_02114a64;
 extern void* data_ov015_02114a5c;
 extern void* data_ov015_02113594;
+extern "C" {
 extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern void func_ov015_021128f8();
+}
 extern s16 data_02082214[];
 extern signed char data_0209f2f8;
 extern u8 data_0209f220;

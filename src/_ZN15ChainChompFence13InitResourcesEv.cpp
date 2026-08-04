@@ -4,12 +4,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ChainChompFence.h"
+extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(void*);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
+}
 extern int data_ov021_021149b8[];
 extern int data_ov022_02114558[];
 

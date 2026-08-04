@@ -78,6 +78,7 @@ src/_ZN8BookShot16CleanupResourcesEv.cpp:
     .text start:0x02112244 end:0x02112290
 
 src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112290 end:0x021122c4
 
 src/_ZN8BookShot6RenderEv.cpp:
@@ -166,9 +167,11 @@ src/_ZN12HauntedChair6RenderEv.cpp:
     .text start:0x021132fc end:0x02113324
 
 src/_ZN12HauntedChair8BehaviorEv.cpp:
+    complete
     .text start:0x02113324 end:0x021133b0
 
 src/_ZN12HauntedChair13InitResourcesEv.cpp:
+    complete
     .text start:0x021133b0 end:0x02113494
 
 src/HauntedChair_Spawn.c:

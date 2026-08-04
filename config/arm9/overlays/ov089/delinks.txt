@@ -60,6 +60,7 @@ src/func_ov089_02131f54.cpp:
     .text start:0x02131f54 end:0x02132084
 
 src/_ZN3Key16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02132084 end:0x021320f0
 
 src/_ZN3Key6RenderEv.cpp:
@@ -71,6 +72,7 @@ src/_ZN3Key8BehaviorEv.cpp:
     .text start:0x02132194 end:0x021324a4
 
 src/_ZN3Key13InitResourcesEv.cpp:
+    complete
     .text start:0x021324a4 end:0x021327d0
 
 src/LastStar_Spawn.c:
