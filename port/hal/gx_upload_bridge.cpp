@@ -19,6 +19,7 @@ void _ZN2GX14EndLoadTexPlttEv(void);
 void _ZN2GX7LoadTexEPKvjj(const void *, u32, u32);
 void _ZN2GX11LoadTexPlttEPKvjj(const void *, u32, u32);
 void _ZN13SharedFilePtr8LoadFileEv(void *);
+void _ZN13SharedFilePtr7ReleaseEv(void *);
 void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *);
 }
 
@@ -48,8 +49,14 @@ void GX::LoadTexPltt(const void *s, u32 a, u32 z)
 struct SharedFilePtr {
     void LoadFile();
     void ReallocateModelFile();
+    void Release();
 };
 void SharedFilePtr::LoadFile() { _ZN13SharedFilePtr8LoadFileEv(this); }
+/* Release is a C-form definition in src (a .c file), but the cleanup paths
+   main rewrote as real methods -- ArrowSignRight's, the water's, the net's --
+   reach it through include/SharedFilePtr.h as a method. Same direction as
+   LoadFile above. */
+void SharedFilePtr::Release() { _ZN13SharedFilePtr7ReleaseEv(this); }
 // Shrinks the file image to its post-parse size on the DS (a heap-space
 // optimization). Skipped on host: the image simply stays at load size.
 void SharedFilePtr::ReallocateModelFile() {}

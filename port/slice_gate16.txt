@@ -81,17 +81,17 @@ src/func_02044104.c
 # block in src/__destroy_arr.c.
 
 # ---- AMBIENT_SOUND_EFFECTS (actor 350, ov002), x5 -------------------------
-# The config names this class EnemySwitchTag from its factory onward -- the
-# ROM's spawn table, the factory's own literal pool and the Behavior's ambient
-# loop table all say otherwise (see hal/actor_classes.cpp). The files below are
-# the ones the vtable at 0x0210b4c8 points at, which is the vtable
-# AmbientSoundEffects_Spawn installs.
+# The files below are the ones the vtable at 0x0210b4c8 points at, which is
+# the vtable AmbientSoundEffects_Spawn installs. Config used to name this
+# class EnemySwitchTag from its factory onward, against what the ROM's spawn
+# table, the factory's own literal pool and the Behavior's ambient loop table
+# all said (see hal/actor_classes.cpp); #1048 corrected it.
 src/AmbientSoundEffects_Spawn.c
-src/_ZN14EnemySwitchTag13InitResourcesEv.cpp
-src/_ZN14EnemySwitchTag8BehaviorEv.cpp
-src/_ZN14EnemySwitchTag6RenderEv.c
-src/_ZN14EnemySwitchTag16CleanupResourcesEv.c
-src/_ZN14EnemySwitchTag16OnPendingDestroyEv.c
+src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp
+src/_ZN19AmbientSoundEffects8BehaviorEv.cpp
+src/_ZN19AmbientSoundEffects6RenderEv.c
+src/_ZN19AmbientSoundEffects16CleanupResourcesEv.c
+src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.c
 # The two destructors stay OUT and slots 16/17 trap by name. D1 is a real
 # method over a locally-declared `Actor` whose destructor that TU never
 # defines, and D0 spells its vtable and heap as the VT/HEAP placeholders;
@@ -206,7 +206,7 @@ src/func_ov002_020aff10.c
 # Enemy::Enemy is func_ov002_020aed98: Actor::Actor, then the Enemy vtable.
 # OneUpMushroom_Spawn's call is relocated to 0x020aed98 module:overlay(2),
 # which is what settles it. The name is bridged in hal/cxx_aliases.cpp.
-src/func_ov002_020aed98.cpp
+src/_ZN5EnemyC2Ev.cpp
 src/func_ov002_020af4ec.cpp
 
 # ---- the ov002 tier's shared closure ---------------------------------------

@@ -370,6 +370,11 @@ void hal_sub_screen_probe(void);
 void hal_sub_camera_input(void);
 }
 
+/* The frame's cylinder-overlap pass. The host copy in port/unmatched/ rather
+   than the matched TU: MSVC's one-slot destructor shifts GetPos onto D0 and
+   the first pass frees a cylinder. See that file's header. */
+extern "C" void port_cylinder_clsn_process(void);
+
 #ifdef NTR_HIRES
 static const int ZOOM = 1;
 #elif defined(NTR_HIRES2)
@@ -2930,6 +2935,13 @@ int main(void)
                 hal_render_model(level_model, level_shift);
             }
         }
+        /* Stage::Render's collision beat, kept in its place in the order:
+           after the transparent pass, CylinderClsn::Process consumes the list
+           the behaviour phase threaded onto data_0209cee8 -- the overlap
+           pushbacks, and the notify chain that hands a grabbable cylinder to
+           the Player (slice_gate10, the tree-grab block). */
+        if (boot_spawns)
+            port_cylinder_clsn_process();
         /* phase 1, which is where func_02044120 ends: the scene tree's own
            housekeeping -- priority re-sorts, parent flag propagation, and the
            deferred list insertions for anything that spawned mid-phase. */

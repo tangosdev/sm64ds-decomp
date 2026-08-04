@@ -14,7 +14,7 @@
 // taking both seats.
 //
 // Nothing here is behaviour. Stage::Stage is the matched src file
-// (src/_ZN5StageC1Ev.c, arm9 0x0202e088) and this is the seam it needs: the
+// (src/_ZN5StageC3Ev.c, arm9 0x0202e088) and this is the seam it needs: the
 // vtable array its last vptr store names, the spawn context the ActorBase
 // constructor reads, and one honest stub for the particle constructor.
 #include <cstdio>
@@ -23,7 +23,7 @@
 
 extern "C" {
 
-void *_ZN5StageC1Ev(void);
+void *_ZN5StageC3Ev(void);
 
 /* The ROM's own SpawnInfo for the Stage: arm9 0x0209213c, emitted from the
    extracted image by port/tools/romdata.py (Nintendo's bytes never enter the
@@ -47,10 +47,10 @@ extern void *data_0209f314;           /* the level AREA table (Stage+0x8bc) */
    thunks, everything the port cannot serve trapped BY NAME rather than left
    pointing at an arm9 address the host cannot execute.
 
-   The array the fill targets is data_020921c0 and not _ZTV5Stage, because
-   that is what Stage::Stage installs: its transcription stores three vptrs in
-   a row (data_0208e4b8, _ZTV5Stage, data_020921c0) and the last one wins.
-   Both other names are storage only, same rule as the base tables.
+   The array the fill targets is _ZTV5Stage, because that is what Stage::Stage
+   installs: its transcription stores three vptrs in a row (data_0208e4b8,
+   _ZTV5Scene, _ZTV5Stage) and the last one wins. Both other names are storage
+   only, same rule as the base tables.
 
    Read out of the ROM at 0x020921c0 with its relocations applied:
        0  0x0202cc0c Stage::InitResources        10 0x0202e3a4 Scene::BeforeRender
@@ -73,14 +73,14 @@ extern void *data_0209f314;           /* the level AREA table (Stage+0x8bc) */
    the slot number instead of a jump into an unmapped arm9 address, which is
    how the next step finds out which faces it owes.
 
-   CONFIG BUG, NOTED NOT FIXED: config/arm9/symbols.txt records _ZTV5Stage at
-   0x02092680, but the bytes there are SCENE's table -- slots 16/17 are
-   0x0202e140/0x0202e170, the Scene destructors, and slot 0 is the ActorBase
-   default rather than Stage::InitResources. The Stage's own table is
-   0x020921c0, which is also the address its constructor installs. Nothing in
-   the port depends on the name, so this file goes by the address. */
-void *data_020921c0[20];
-void *_ZTV5Stage[20];      /* transient ctor install, storage only */
+   The names follow config/arm9/symbols.txt, which puts _ZTV5Stage at
+   0x020921c0 and _ZTV5Scene at 0x02092680. That is the ROM's layout: the
+   0x02092680 table carries the Scene destructors in slots 16/17 and the
+   ActorBase default in slot 0, while 0x020921c0 is the one the constructor
+   installs last. Config had the two swapped until 87a55cfab, so a checkout
+   older than that calls 0x02092680 _ZTV5Stage and will not link this file. */
+void *_ZTV5Stage[20];      /* the table the ctor installs last; trap-filled */
+void *_ZTV5Scene[20];      /* transient ctor install, storage only */
 
 }  /* extern "C" */
 
@@ -105,7 +105,7 @@ static int __fastcall st_trap(void *, void *)
 extern "C" void hal_fill_stage_vtable(void)
 {
     for (int i = 0; i < 20; ++i)
-        data_020921c0[i] = (void *)st_trap;
+        _ZTV5Stage[i] = (void *)st_trap;
 }
 
 // ---- Particle::SysTracker::SysTracker -------------------------------------
@@ -170,7 +170,7 @@ extern "C" void *port_stage_create(void)
     data_020a4bb8[stage_id] = _ZN5Stage9spawnDataE;
     data_020a4b54 = (unsigned short)stage_id;
 
-    g_stage = _ZN5StageC1Ev();
+    g_stage = _ZN5StageC3Ev();
 
     data_020a4bb8[stage_id] = saved_info;
     data_020a4b54 = saved_pending;

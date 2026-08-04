@@ -269,51 +269,47 @@ extern "C" void hal_fill_tree_vtable(void)
 
 // ---- AMBIENT_SOUND_EFFECTS (actor 350, ov002) x5 ---------------------------
 //
-// THE CONFIG'S NAMES ARE SHIFTED BY ONE CLASS HERE, and the ROM settles it.
 // The spawn table's entry for 350 is AmbientSoundEffects_SpawnInfo, whose
-// factory word is 0x020f1b94 -- the function config/arm9/overlays/ov002 calls
-// AmbientSoundEffects_Spawn -- and that function's literal pool installs the
-// vtable at 0x0210b4c8, which the same config calls _ZTV14EnemySwitchTag.
-// Every method in that table (0x020f198c..0x020f1ac4) is likewise named
-// _ZN14EnemySwitchTag*. mwcc emits a class as [methods..., Spawn], so the
-// block BEFORE a factory belongs to it; the names were attached one block
-// late from the factory onward.
+// factory word is 0x020f1b94 -- AmbientSoundEffects_Spawn -- and that
+// function's literal pool installs the vtable at 0x0210b4c8. Its methods are
+// the block at 0x020f198c..0x020f1ac4.
 //
 // The reading is confirmed from the other side: the Behavior in that block
 // calls Sound::PlayLong with data_ov002_0210b498[param] -- an ambient loop
 // table -- and skips it in the three underwater camera modes. That is
-// AMBIENT SOUND EFFECTS, whatever the symbol says.
+// AMBIENT SOUND EFFECTS.
 //
-// So the port takes the ROM's word and uses the _ZN14EnemySwitchTag* files,
-// which is also what makes it link: AmbientSoundEffects_Spawn.c already
-// references _ZTV14EnemySwitchTag by that name. Nothing is renamed.
+// Config used to carry these names one class late (mwcc emits a class as
+// [methods..., Spawn], so the block BEFORE a factory belongs to it), which is
+// why this row was first written against _ZN14EnemySwitchTag*. #1048 shifted
+// the ov002 sound cluster onto its real blocks and the names now agree.
 //
 // It renders nothing (Render is `return 1`) and its five instances are silent
 // while the Sound:: layer is stubbed, so what this row proves is the registry
 // generalising to a second class: five actors spawn, initialise, land on both
 // processing lists and tick every frame.
-#include "EnemySwitchTag.h"
+#include "AmbientSoundEffects.h"
 extern "C" {
-int _ZN14EnemySwitchTag6RenderEv(void);
-int _ZN14EnemySwitchTag16CleanupResourcesEv(void);
-void _ZN14EnemySwitchTag16OnPendingDestroyEv(void);
-void *_ZTV14EnemySwitchTag[20];
+int _ZN19AmbientSoundEffects6RenderEv(void);
+int _ZN19AmbientSoundEffects16CleanupResourcesEv(void);
+void _ZN19AmbientSoundEffects16OnPendingDestroyEv(void);
+void *_ZTV19AmbientSoundEffects[20];
 }
 
 static int __fastcall amb_init(void *s, void *)
-{ return ((EnemySwitchTag *)s)->EnemySwitchTag::InitResources(); }
+{ return ((AmbientSoundEffects *)s)->AmbientSoundEffects::InitResources(); }
 static int __fastcall amb_clean(void *, void *)
-{ return _ZN14EnemySwitchTag16CleanupResourcesEv(); }
+{ return _ZN19AmbientSoundEffects16CleanupResourcesEv(); }
 static int __fastcall amb_behavior(void *s, void *)
-{ return ((EnemySwitchTag *)s)->EnemySwitchTag::Behavior(); }
+{ return ((AmbientSoundEffects *)s)->AmbientSoundEffects::Behavior(); }
 static int __fastcall amb_render(void *, void *)
-{ return _ZN14EnemySwitchTag6RenderEv(); }
+{ return _ZN19AmbientSoundEffects6RenderEv(); }
 static int __fastcall amb_pdes(void *, void *)
-{ _ZN14EnemySwitchTag16OnPendingDestroyEv(); return 0; }
+{ _ZN19AmbientSoundEffects16OnPendingDestroyEv(); return 0; }
 
 extern "C" void hal_fill_ambient_sound_vtable(void)
 {
-    void **vt = _ZTV14EnemySwitchTag;
+    void **vt = _ZTV19AmbientSoundEffects;
     ac_fill_shared(vt);
     vt[0] = (void *)amb_init;
     vt[3] = (void *)amb_clean;
@@ -337,9 +333,9 @@ extern "C" void *hal_actor_shared_pdes(void) { return (void *)ac_pdes_base; }
 // own vtable, run the members that belong to the derived part, install the
 // BASE vtable, run the rest. The base one is ov002 0x0210ae38, which the
 // destructors spell _ZTV10dBgActor_c (Platform is dBgActor_c in the ROM's own
-// RTTI) and which config/arm9/overlays/ov002/symbols.txt calls
-// _ZTV17ExclamationSwitch -- a name attached one class late, the same skew
-// AMBIENT_SOUND_EFFECTS ran into. The ROM settles it: slots 16/17 of that
+// RTTI) and which config now calls _ZTV8Platform -- it read
+// _ZTV17ExclamationSwitch until #1042, a name attached one class late, the
+// same skew AMBIENT_SOUND_EFFECTS ran into. The ROM settles it: slots 16/17 of that
 // table are _ZN8PlatformD2Ev and _ZN8PlatformD0Ev, and slots 0/3/6/9 are
 // ActorBase's own do-nothing bodies, which is exactly a base-class table.
 //
@@ -607,28 +603,25 @@ extern "C" void hal_fill_cylinder_withpos_vtable(void)
 // GATE 17: the LEVEL OVERLAY'S OWN CLASSES
 // ============================================================================
 //
-// Four classes that exist only on the castle grounds, and the config's names
-// for them are SHIFTED BY ONE from Bird onward. mwcc emits a class as
+// Four classes that exist only on the castle grounds. mwcc emits a class as
 // [methods..., Spawn], so the block BEFORE a factory belongs to it, and each
-// factory's own literal pool names the vtable it installs -- which is what
-// settles it, exactly as it settled AMBIENT_SOUND_EFFECTS:
+// factory's own literal pool names the vtable it installs:
 //
-//   Bird_Spawn        -> _ZTV4Bird             (correct)
-//   CastleWater_Spawn -> _ZTV14daObjMcWater_c  = ov009 0x02113a18, a table
-//                        the config does not name at all; its methods are the
-//                        func_ov009_02111a70..02111c74 block
-//   DockPole_Spawn    -> _ZTV11CastleWater     so the config's CastleWater
-//                        methods are METAL_NET's
-//   Flag_Spawn        -> _ZTV8DockPole         and its DockPole methods are
-//                        FLAG's
+//   Bird_Spawn        -> _ZTV4Bird             = ov009 0x02113958
+//   CastleWater_Spawn -> _ZTV14daObjMcWater_c  = ov009 0x02113a18
+//   MetalNet_Spawn    -> _ZTV8MetalNet         = ov009 0x02113ae0
+//   Flag_Spawn        -> _ZTV4Flag             = ov009 0x02113ba0
 //
 // The ROM's own RTTI agrees from the other side: 0x02113ae0 is
-// daObjMc_Metalnet_c and 0x02113ba0 is daMcFlag_c. Nothing is renamed; the
-// port uses the files each vtable points at.
+// daObjMc_Metalnet_c and 0x02113ba0 is daMcFlag_c, and config now carries both
+// spellings for each table. It used to attach these names one class late from
+// Bird onward, which is why this gate was first written against func_ov009_*
+// for the water and _ZN11CastleWater*/_ZN8DockPole* for the net and the flag;
+// #1041 shifted them onto the blocks they belong to.
 //
 // SLOTS 16/17 TRAP FOR ALL FOUR. Nothing on the castle grounds destroys one
 // -- every InitResources here returns 1 on this level -- and the water's own
-// D0 (func_ov009_02111abc.c) is why it matters: it spells its two vtables VT0
+// D0 (src/_ZN11CastleWaterD0Ev.c) is why it matters: it spells its two vtables VT0
 // and VT1, the same placeholder names src/_ZN10SphereClsnD1Ev.c uses for
 // three completely different tables, so one host definition would satisfy
 // both with the wrong bytes and nothing would say so.
@@ -694,22 +687,24 @@ extern "C" void hal_fill_bird_vtable(void)
 // data_0209f32c = min(data_0209f32c, self.y - 100.0) -- which is the word the
 // Player's own state machine reads to decide it is swimming.
 extern "C" {
-int func_ov009_02111c74(void *self);   /* InitResources */
-int func_ov009_02111bd4(void *self);   /* CleanupResources */
-int func_ov009_02111c4c(void *self);   /* Behavior */
-int func_ov009_02111c18(void *self);   /* Render */
-void *_ZTV14daObjMcWater_c[20];        /* ov009 0x02113a18, unnamed in config */
+int _ZN11CastleWater13InitResourcesEv(void *self);
+int _ZN11CastleWater16CleanupResourcesEv(void *self);
+int _ZN11CastleWater8BehaviorEv(void *self);
+int _ZN11CastleWater6RenderEv(void *self);
+void *_ZTV14daObjMcWater_c[20];        /* ov009 0x02113a18 */
 }
+/* The water's own D0 spells this table by the class name. */
+#pragma comment(linker, "/alternatename:__ZTV11CastleWater=__ZTV14daObjMcWater_c")
 
 static int __fastcall cw_init(void *s, void *)
-{ return func_ov009_02111c74(s); }
+{ return _ZN11CastleWater13InitResourcesEv(s); }
 static int __fastcall cw_clean(void *s, void *)
-{ return func_ov009_02111bd4(s); }
+{ return _ZN11CastleWater16CleanupResourcesEv(s); }
 static int __fastcall cw_behavior(void *s, void *)
-{ return func_ov009_02111c4c(s); }
+{ return _ZN11CastleWater8BehaviorEv(s); }
 static int __fastcall cw_render(void *s, void *)
 { port_actor_render_probe("CASTLE_WATER", (char *)s + 0xd4);
-  return func_ov009_02111c18(s); }
+  return _ZN11CastleWater6RenderEv(s); }
 
 extern "C" void hal_fill_castle_water_vtable(void)
 {
@@ -728,33 +723,33 @@ extern "C" void hal_fill_castle_water_vtable(void)
 // ---- METAL_NET (actor 339, ov009) x3 ---------------------------------------
 //
 // The three climbable nets under the bridge. Same shape as the water -- a
-// Platform with a MovingMeshCollider -- which the config's naming makes look
-// like the same class twice.
+// Platform with a MovingMeshCollider -- which is why the two were easy to
+// mistake for one class twice over while the names sat one block off.
 extern "C" {
-int _ZN11CastleWater13InitResourcesEv(void *self);
-int _ZN11CastleWater8BehaviorEv(void *self);
-int _ZN11CastleWater6RenderEv(void *self);
-int _ZN11CastleWater16CleanupResourcesEv(void *self);
-void _ZN11CastleWater16OnPendingDestroyEv(void);
-void *_ZTV11CastleWater[20];
+int _ZN8MetalNet13InitResourcesEv(void *self);
+int _ZN8MetalNet8BehaviorEv(void *self);
+int _ZN8MetalNet6RenderEv(void *self);
+int _ZN8MetalNet16CleanupResourcesEv(void *self);
+void _ZN8MetalNet16OnPendingDestroyEv(void);
+void *_ZTV8MetalNet[20];
 }
-#pragma comment(linker, "/alternatename:__ZTV18daObjMc_Metalnet_c=__ZTV11CastleWater")
+#pragma comment(linker, "/alternatename:__ZTV18daObjMc_Metalnet_c=__ZTV8MetalNet")
 
 static int __fastcall mn_init(void *s, void *)
-{ return _ZN11CastleWater13InitResourcesEv(s); }
+{ return _ZN8MetalNet13InitResourcesEv(s); }
 static int __fastcall mn_clean(void *s, void *)
-{ return _ZN11CastleWater16CleanupResourcesEv(s); }
+{ return _ZN8MetalNet16CleanupResourcesEv(s); }
 static int __fastcall mn_behavior(void *s, void *)
-{ return _ZN11CastleWater8BehaviorEv(s); }
+{ return _ZN8MetalNet8BehaviorEv(s); }
 static int __fastcall mn_render(void *s, void *)
 { port_actor_render_probe("METAL_NET", (char *)s + 0xd4);
-  return _ZN11CastleWater6RenderEv(s); }
+  return _ZN8MetalNet6RenderEv(s); }
 static int __fastcall mn_pdes(void *, void *)
-{ _ZN11CastleWater16OnPendingDestroyEv(); return 0; }
+{ _ZN8MetalNet16OnPendingDestroyEv(); return 0; }
 
 extern "C" void hal_fill_metal_net_vtable(void)
 {
-    void **vt = _ZTV11CastleWater;
+    void **vt = _ZTV8MetalNet;
     hal_fill_platform_vtable();
     ac_fill_shared(vt);
     vt[0] = (void *)mn_init;
@@ -773,27 +768,27 @@ extern "C" void hal_fill_metal_net_vtable(void)
 // first actor on the grounds whose model is ANIMATED by the game's own
 // ModelAnim rather than posed once.
 extern "C" {
-int _ZN8DockPole13InitResourcesEv(void *self);
-int _ZN8DockPole8BehaviorEv(void *self);
-int _ZN8DockPole6RenderEv(void *self);
-int _ZN8DockPole16CleanupResourcesEv(void);
-void *_ZTV8DockPole[20];
+int _ZN4Flag13InitResourcesEv(void *self);
+int _ZN4Flag8BehaviorEv(void *self);
+int _ZN4Flag6RenderEv(void *self);
+int _ZN4Flag16CleanupResourcesEv(void);
+void *_ZTV4Flag[20];
 }
-#pragma comment(linker, "/alternatename:__ZTV10daMcFlag_c=__ZTV8DockPole")
+#pragma comment(linker, "/alternatename:__ZTV10daMcFlag_c=__ZTV4Flag")
 
 static int __fastcall flag_init(void *s, void *)
-{ return _ZN8DockPole13InitResourcesEv(s); }
+{ return _ZN4Flag13InitResourcesEv(s); }
 static int __fastcall flag_clean(void *, void *)
-{ return _ZN8DockPole16CleanupResourcesEv(); }
+{ return _ZN4Flag16CleanupResourcesEv(); }
 static int __fastcall flag_behavior(void *s, void *)
-{ return _ZN8DockPole8BehaviorEv(s); }
+{ return _ZN4Flag8BehaviorEv(s); }
 static int __fastcall flag_render(void *s, void *)
 { port_actor_render_probe("FLAG", (char *)s + 0xd4);
-  return _ZN8DockPole6RenderEv(s); }
+  return _ZN4Flag6RenderEv(s); }
 
 extern "C" void hal_fill_flag_vtable(void)
 {
-    void **vt = _ZTV8DockPole;
+    void **vt = _ZTV4Flag;
     ac_fill_shared(vt);
     vt[0] = (void *)flag_init;
     vt[3] = (void *)flag_clean;

@@ -26,7 +26,7 @@
     case 0x020cb2f0: return ((Player *)self)->Player::St_Headstand_Init();
     /* ST_CLIMB (record 0x021106dc) -- the tree/pole grab, and the freeze
        Tango hit on a bush. Init reaches its matched source through a
-       shadow class and Main has no source at all; both are in
+       shadow class and Main through a forwarding bridge; both are in
        port/unmatched/Player_St_Climb.cpp. */
     case 0x020cbd34: return port_player_st_climb_init((void *)self);
     case 0x020cb5bc: return port_player_st_climb_main((void *)self);

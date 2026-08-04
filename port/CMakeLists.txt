@@ -492,6 +492,17 @@ foreach(line IN LISTS SLICE10_LINES)
     list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# Two Actor entry points are C++ inside a .c, but a different shape from the
+# hostgen cases below: each is a real METHOD against Actor.h, so hostgen's
+# wrap is wrong for them -- it would put the whole file, Actor.h include and
+# all, inside extern "C". They compile as C++ instead, and
+# hal/method_faces.cpp carries the C-linkage faces their callers spell. Both
+# were plain C free functions until main rewrote them as methods.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Actor13SpawnSoundObjEj.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Actor24KillAndTrackInDeathTableEv.c"
+    PROPERTIES LANGUAGE CXX)
+
 # func_ov002_020d708c is C++ inside a .c (a `virtual` vtable shadow), which
 # MSVC will not compile as C. hostgen.py already emits .cpp with the symbols
 # wrapped back to C linkage, so route it through hostgen rather than editing

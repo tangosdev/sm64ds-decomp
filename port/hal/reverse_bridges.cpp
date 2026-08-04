@@ -107,14 +107,15 @@ struct WithMeshClsn {
 int WithMeshClsn::IsOnGround() const
 { return _ZNK12WithMeshClsn10IsOnGroundEv(this); }
 
-struct Actor_statics_shadow;   /* Actor is only a return type here */
-struct Actor2 { static Actor *FindWithID(unsigned id); };
-/* FindWithID's owner must literally be "Actor" for the mangling: */
 struct CylinderClsn;
 struct ShadowModel;
 struct Matrix4x3;
+/* FindWithID is NOT here any more. src/_ZN5Actor10FindWithIDEj.cpp used to be
+   a C free function that this file wrapped into a method; main rewrote it as
+   the real static method against include/Actor.h, so defining it here is a
+   second definition. The traffic now runs the other way and the C face its
+   callers spell lives in hal/method_faces.cpp. */
 struct Actor {
-    static Actor *FindWithID(unsigned id);
     void UpdatePosWithOnlySpeed(CylinderClsn *c);
     /* gate 18: ov085's TUs declare a local Actor shadow and call these as
        methods; all three are C-form definitions in src. */
@@ -124,8 +125,6 @@ struct Actor {
     void DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &m, int rad, int h,
                              unsigned f);
 };
-Actor *Actor::FindWithID(unsigned id)
-{ return (Actor *)_ZN5Actor10FindWithIDEj(id); }
 /* THE OTHER DIRECTION, in the same place for the same reason.
    src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp defines UpdateCarry as a
    method of its OWN local `class Actor` -- include/Actor.h does not declare

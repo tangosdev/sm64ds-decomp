@@ -13,7 +13,7 @@
 # +0x91c. The seam it needs -- the vtable array, the ROM SpawnInfo the
 # ActorBase constructor reads, and the one honest stub for the particle
 # tracker -- is port/hal/stage_bridges.cpp.
-src/_ZN5StageC1Ev.c
+src/_ZN5StageC3Ev.c
 
 # The level MODEL. The harness loaded it by hand -- SharedFilePtr::Construct on
 # a hard-coded 1943, Model::LoadFile, ModelBase::SetFile, into its own 0x50-byte

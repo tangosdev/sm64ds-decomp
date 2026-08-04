@@ -4,24 +4,21 @@
 # block, the paths, the entrances. This is the first time any of its CODE is
 # compiled: four classes that exist only on the castle grounds.
 #
-# THE CONFIG'S CLASS NAMES ARE SHIFTED BY ONE FROM Bird ONWARD, and the ROM
-# settles it the same way it settled AMBIENT_SOUND_EFFECTS in gate 16. mwcc
-# emits a class as [methods..., Spawn], so the block BEFORE a factory belongs
-# to it, and each factory's own literal pool names the vtable it installs:
+# mwcc emits a class as [methods..., Spawn], so the block BEFORE a factory
+# belongs to it, and each factory's own literal pool names the vtable it
+# installs:
 #
-#   Bird_Spawn        0x02111a30  ->  _ZTV4Bird              (correct)
-#   CastleWater_Spawn 0x02111d8c  ->  _ZTV14daObjMcWater_c   = 0x02113a18,
-#                                     a table config/arm9/overlays/ov009
-#                                     does not name at all; its methods are
-#                                     the func_ov009_02111a70..02111c74 block
-#   DockPole_Spawn    0x02112048  ->  _ZTV11CastleWater      so the config's
-#                                     _ZN11CastleWater* methods are METAL_NET's
-#   Flag_Spawn        0x021121f0  ->  _ZTV8DockPole          and _ZN8DockPole*
-#                                     are FLAG's
+#   Bird_Spawn        0x02111a30  ->  _ZTV4Bird             = 0x02113958
+#   CastleWater_Spawn 0x02111d8c  ->  _ZTV14daObjMcWater_c  = 0x02113a18
+#   MetalNet_Spawn    0x02112048  ->  _ZTV8MetalNet         = 0x02113ae0
+#   Flag_Spawn        0x021121f0  ->  _ZTV4Flag             = 0x02113ba0
 #
 # The ROM's own RTTI agrees from the other side: 0x02113ae0's class name is
-# daObjMc_Metalnet_c and 0x02113ba0's is daMcFlag_c. The port uses the files
-# the vtables point at and renames nothing.
+# daObjMc_Metalnet_c and 0x02113ba0's is daMcFlag_c, and config carries both
+# spellings for each table. Config used to attach these names one class late
+# from Bird onward, so this gate was first written against func_ov009_* for
+# the water and _ZN11CastleWater*/_ZN8DockPole* for the net and the flag;
+# #1041 moved them onto the blocks they belong to.
 
 # ---- BIRD (actor 343, ov009), x2 ------------------------------------------
 # (-3941,254,4257) and (5401,377,584). A four-state bird: its Behavior
@@ -47,31 +44,30 @@ src/func_ov009_021116ec.cpp
 # (data_0209f32c) to its own Y minus 100 -- which is what the Player's own
 # state machine reads to decide it is swimming.
 src/CastleWater_Spawn.c
-src/func_ov009_02111c74.cpp
-src/func_ov009_02111c4c.cpp
-src/func_ov009_02111c18.cpp
-src/func_ov009_02111bd4.cpp
-src/func_ov009_02111b1c.cpp
-
-# ---- METAL_NET (actor 339, ov009), x3 -------------------------------------
-# (2330,140,3920), (-3300,-520,20), (-3760,-1260,-3378) -- the climbable nets
-# under the bridge. The config calls this class CastleWater; the ROM's RTTI
-# calls it daObjMc_Metalnet_c.
-src/DockPole_Spawn.c
 src/_ZN11CastleWater13InitResourcesEv.cpp
 src/_ZN11CastleWater8BehaviorEv.cpp
 src/_ZN11CastleWater6RenderEv.cpp
 src/_ZN11CastleWater16CleanupResourcesEv.cpp
-src/_ZN11CastleWater16OnPendingDestroyEv.c
+src/func_ov009_02111b1c.cpp
+
+# ---- METAL_NET (actor 339, ov009), x3 -------------------------------------
+# (2330,140,3920), (-3300,-520,20), (-3760,-1260,-3378) -- the climbable nets
+# under the bridge. The ROM's RTTI calls this class daObjMc_Metalnet_c.
+src/MetalNet_Spawn.c
+src/_ZN8MetalNet13InitResourcesEv.cpp
+src/_ZN8MetalNet8BehaviorEv.cpp
+src/_ZN8MetalNet6RenderEv.cpp
+src/_ZN8MetalNet16CleanupResourcesEv.cpp
+src/_ZN8MetalNet16OnPendingDestroyEv.c
 
 # ---- FLAG (actor 342, ov009), x4 ------------------------------------------
-# The four castle-tower flags, at y 3095 and 3662. The config calls this
-# class DockPole; the ROM's RTTI calls it daMcFlag_c. Its Behavior is one
-# Animation::Advance and a rotation matrix -- the flag waves.
+# The four castle-tower flags, at y 3095 and 3662. The ROM's RTTI calls this
+# class daMcFlag_c. Its Behavior is one Animation::Advance and a rotation
+# matrix -- the flag waves.
 src/Flag_Spawn.c
-src/_ZN8DockPole13InitResourcesEv.cpp
-src/_ZN8DockPole8BehaviorEv.cpp
-src/_ZN8DockPole16CleanupResourcesEv.c
+src/_ZN4Flag13InitResourcesEv.cpp
+src/_ZN4Flag8BehaviorEv.cpp
+src/_ZN4Flag16CleanupResourcesEv.c
 
 # ---- the overlay's own static initialisers --------------------------------
 # Four sinits, and they are what makes any of the above load anything: every

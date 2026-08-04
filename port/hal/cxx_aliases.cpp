@@ -1104,3 +1104,20 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    real face -- see hal/method_faces.cpp). */
 #pragma comment(linker, "/alternatename:?data_020755d4@@3DA=_data_020755d4")
 #pragma comment(linker, "/alternatename:?data_0209f340@@3PAUInfo@@A=_data_0209f340")
+
+/* ---- the tree-grab chain (slice_gate10 tail) -------------------------------
+   func_02014f5c calls the grab test by its arm9-side name; the definition is
+   the ov002 TU. Plain C name to C name, cdecl both sides. */
+#pragma comment(linker, "/alternatename:_func_020caf98=_func_ov002_020caf98")
+/* func_ov002_020caf98.cpp declares its Player externs without extern "C" and
+   its State nested in Player, so every reference lands on the nested-State
+   spelling. The four records are the same C-named storage the rest of the
+   state family already aliases (the line-460 precedent). */
+#pragma comment(linker, "/alternatename:?data_ov002_0211013c@@3UState@Player@@A=_data_ov002_0211013c")
+#pragma comment(linker, "/alternatename:?data_ov002_0211031c@@3UState@Player@@A=_data_ov002_0211031c")
+#pragma comment(linker, "/alternatename:?data_ov002_021101b4@@3UState@Player@@A=_data_ov002_021101b4")
+#pragma comment(linker, "/alternatename:?data_ov002_021106dc@@3UState@Player@@A=_data_ov002_021106dc")
+/* Return-type-only variant of the nested-State ChangeState face in
+   hal/reverse_bridges.cpp -- __thiscall, same argument, result in EAX, and
+   the one call site discards it (the line-616 precedent). */
+#pragma comment(linker, "/alternatename:?ChangeState@Player@@QAEHAAUState@1@@Z=?ChangeState@Player@@QAEXAAUState@1@@Z")

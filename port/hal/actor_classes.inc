@@ -47,8 +47,8 @@ void hal_fill_bird_vtable(void);
 extern unsigned char CastleWater_SpawnInfo[];           /* ov009 0x021139f4 */
 void *CastleWater_Spawn(void);                          /* ov009 0x02111d8c */
 void hal_fill_castle_water_vtable(void);
-extern unsigned char DockPole_SpawnInfo[];              /* ov009 0x02113abc */
-void *DockPole_Spawn(void);                             /* ov009 0x02112048 */
+extern unsigned char MetalNet_SpawnInfo[];              /* ov009 0x02113abc */
+void *MetalNet_Spawn(void);                             /* ov009 0x02112048 */
 void hal_fill_metal_net_vtable(void);
 extern unsigned char Flag_SpawnInfo[];                  /* ov009 0x02113b7c */
 void *Flag_Spawn(void);                                 /* ov009 0x021121f0 */
@@ -116,7 +116,7 @@ void hal_fill_question_block_vtable(void);
      hal_fill_one_up_mushroom_vtable},                                        \
     {338, "CASTLE_WATER", CastleWater_SpawnInfo, CastleWater_Spawn,           \
      hal_fill_castle_water_vtable},                                           \
-    {339, "METAL_NET", DockPole_SpawnInfo, DockPole_Spawn,                    \
+    {339, "METAL_NET", MetalNet_SpawnInfo, MetalNet_Spawn,                    \
      hal_fill_metal_net_vtable},                                              \
     {342, "FLAG", Flag_SpawnInfo, Flag_Spawn, hal_fill_flag_vtable},          \
     {343, "BIRD", Bird_SpawnInfo, Bird_Spawn, hal_fill_bird_vtable},          \

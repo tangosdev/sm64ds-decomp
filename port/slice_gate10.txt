@@ -36,10 +36,20 @@ src/func_ov002_020caf68.c
 # the climb anim never started and the horizontal speed Init zeroes stayed on
 # the clock while a no-op Main held the state. Init is matched but is not
 # declared in include/Player.h, so it goes through the shadow class in
-# port/unmatched/Player_St_Climb.cpp; Main (0x020cb5bc) has NO SOURCE AT ALL
-# and gets a named trap there instead of the mapper's anonymous no-op.
+# port/unmatched/Player_St_Climb.cpp. Main (0x020cb5bc) is now matched source
+# (the div-9 near-miss closed by passing the pad halfword through to
+# func_ov002_020cc05c); the climb-motion helpers ride along with it.
 src/_ZN6Player13St_Climb_InitEv.cpp
+src/_ZN6Player13St_Climb_MainEv.cpp
 src/_ZN6Player16St_Climb_CleanupEv.cpp
+src/func_ov002_020cb354.cpp
+src/func_ov002_020cb400.cpp
+src/func_ov002_020cb474.cpp
+src/func_ov002_020cbea8.c
+src/func_ov002_020cc01c.cpp
+src/func_ov002_020bf340.c
+src/func_0200d5c0.c
+src/func_0200d5fc.c
 port/unmatched/Player_St_Climb.cpp
 src/func_ov002_020d22ec.c
 src/func_ov002_020d36d8.c
@@ -425,7 +435,7 @@ src/func_0201973c.c
 src/func_0203b9b4.c
 src/func_ov002_020e6ad4.c
 src/_ZN6Player18St_LevelEnter_InitEv.cpp
-src/_ZN6Player18St_LevelEnter_MainEv.c
+src/_ZN6Player18St_LevelEnter_MainEv.cpp
 src/Player_DisableInteraction.c
 src/_ZN13RaycastGround10DetectClsnEv.cpp
 src/_ZN6Player16InitWingFeathersEb.cpp
@@ -1254,3 +1264,22 @@ src/func_ov002_020e9464.c
 src/CollectStarInLevel.c
 src/func_ov002_020ea3a4.cpp
 src/CollectStar.c
+# The tree-grab chain. CylinderClsn::Process is the frame's overlap pass over
+# the list Update threads onto data_0209cee8 (Stage::Render calls it after the
+# transparent pass; the port calls it from the same spot in walk_window's
+# frame). Its notify bit (flags & 8) reaches func_02014f44 -> func_02014f5c,
+# which finds the PLAYER (0xbf) by unique id and hands the cylinder to
+# func_ov002_020caf98 -- the grab test that parks it at Player+0x37c and
+# enters ST_CLIMB (data_ov002_021106dc).
+#
+# Process is a HOST COPY in port/unmatched/ and the matched TU is deliberately
+# NOT here: it reaches GetPos/GetOwnerID through include/CylinderClsn.h, where
+# MSVC folds the Itanium D1/D0 pair into one slot and shifts every later
+# virtual down one -- so GetPos dispatches onto D0 and the first overlap pass
+# frees a tree cylinder mid-heap. The ROM slot order is pinned from the other
+# end by func_ov002_020caf98, which reads GetPos at slot 2. See the file
+# header.
+port/unmatched/CylinderClsn_Process.cpp
+src/func_02014f44.c
+src/func_02014f5c.c
+src/func_ov002_020caf98.cpp

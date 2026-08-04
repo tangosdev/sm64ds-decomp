@@ -75,7 +75,7 @@ extern "C" void *_ZTV14ArrowSignRight[20] = {
 
 // Base vtables the ctor chain installs transiently: storage only.
 extern "C" {
-void *_ZTV17ExclamationSwitch[20];
+void *_ZTV8Platform[20];   /* ov002 0x0210ae38, dBgActor_c in the ROM's RTTI */
 int data_0208e4b8[20];   /* ActorBase-era vtable-ish install in Actor ctor */
 int data_0208e3a4[20];
 }

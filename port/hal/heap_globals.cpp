@@ -53,9 +53,10 @@ void _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator(void *self, HeapAllocator
 int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
 { return ((NestedHeapIterator *)self)->Next(a); }
 }
-// And the reverse direction: AddLast/AddFirst reference Init as a C++
-// __cdecl FREE function (?_ZN..4Init..@@YAXPAD0@Z, char* args) while
-// Init.cpp defines the method. C++ linkage on purpose -- extern "C" would
-// decorate this wrong.
-void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
+// And the reverse direction: AddLast/AddFirst reference Init as a __cdecl
+// FREE function with char* args while Init.cpp defines the method. This face
+// carried C++ linkage until include/decl_NestedHeapIterator.h was wrapped in
+// extern "C" (#1049) -- the callers now emit the plain C symbol, so this must
+// too, or both callers go unresolved.
+extern "C" void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
 { ((NestedHeapIterator *)self)->Init((HeapAllocator *)a); }
