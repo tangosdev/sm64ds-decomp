@@ -295,9 +295,11 @@ src/Painting_Spawn.c:
     .text start:0x02126f8c end:0x02126fbc
 
 src/func_ov080_02126fbc.c:
+    complete
     .text start:0x02126fbc end:0x02127014
 
 src/func_ov080_02127014.c:
+    complete
     .text start:0x02127014 end:0x02127058
 
 src/func_ov080_02127058.c:

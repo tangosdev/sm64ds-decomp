@@ -4,6 +4,7 @@
     .data       start:0x02112a00 end:0x02114020 kind:data align:32
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
 src/func_ov036_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov036_021111e4.c:
@@ -34,6 +35,7 @@ src/SwingingPlatform_Spawn.c:
     .text start:0x02111414 end:0x02111444
 
 src/func_ov036_02111444.c:
+    complete
     .text start:0x02111444 end:0x02111494
 
 src/func_ov036_02111494.c:
@@ -83,9 +85,11 @@ src/ShipWing_Spawn.c:
     .text start:0x02111904 end:0x0211193c
 
 src/_ZN8ShipWingD1Ev.c:
+    complete
     .text start:0x0211193c end:0x02111988
 
 src/_ZN8ShipWingD0Ev.c:
+    complete
     .text start:0x02111988 end:0x021119e8
 
 src/_ZN8ShipWing16CleanupResourcesEv.cpp:

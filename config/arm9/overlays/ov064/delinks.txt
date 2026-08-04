@@ -97,9 +97,11 @@ src/func_ov064_02116ec0.cpp:
     .text start:0x02116ec0 end:0x02117070
 
 src/_ZN5BullyD1Ev.c:
+    complete
     .text start:0x02117070 end:0x021170c4
 
 src/_ZN5BullyD0Ev.c:
+    complete
     .text start:0x021170c4 end:0x0211712c
 
 src/func_ov064_0211712c.c:
@@ -138,9 +140,11 @@ src/Bully_Spawn.c:
     .text start:0x02117444 end:0x021174a0
 
 src/_ZN8BigBullyD1Ev.c:
+    complete
     .text start:0x021174a0 end:0x021174f4
 
 src/_ZN8BigBullyD0Ev.c:
+    complete
     .text start:0x021174f4 end:0x0211755c
 
 src/func_ov064_0211755c.c:
@@ -167,6 +171,7 @@ src/BigBully_Spawn.c:
     .text start:0x0211791c end:0x02117978
 
 src/func_ov064_02117978.c:
+    complete
     .text start:0x02117978 end:0x021179bc
 
 src/func_ov064_021179bc.c:

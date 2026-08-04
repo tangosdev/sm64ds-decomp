@@ -335,6 +335,7 @@ src/TtcRotatingCube_Spawn.c:
     .text start:0x02119efc end:0x02119f3c
 
 src/func_ov065_02119f3c.c:
+    complete
     .text start:0x02119f3c end:0x02119f88
 
 src/func_ov065_02119f88.c:
@@ -364,9 +365,11 @@ src/func_ov065_0211a358.cpp:
     .text start:0x0211a358 end:0x0211a45c
 
 src/func_ov065_0211a45c.c:
+    complete
     .text start:0x0211a45c end:0x0211a494
 
 src/_ZN20TtcConveyorBeltLargeD1Ev.c:
+    complete
     .text start:0x0211a494 end:0x0211a4e8
 
 src/_ZN20TtcConveyorBeltLargeD0Ev.c:
@@ -408,6 +411,7 @@ src/TtcConveyorBeltSmall_Spawn.c:
     .text start:0x0211ab20 end:0x0211ab60
 
 src/func_ov065_0211ab60.c:
+    complete
     .text start:0x0211ab60 end:0x0211abac
 
 src/func_ov065_0211abac.c:

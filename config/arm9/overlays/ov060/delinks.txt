@@ -463,6 +463,7 @@ src/BowserFireSeaArena_Spawn.c:
     .text start:0x02117cdc end:0x02117d1c
 
 src/func_ov060_02117d1c.c:
+    complete
     .text start:0x02117d1c end:0x02117d60
 
 src/func_ov060_02117d60.c:

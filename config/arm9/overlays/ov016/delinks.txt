@@ -85,9 +85,11 @@ src/Unagi_Spawn.c:
     .text start:0x02112588 end:0x0211260c
 
 src/_ZN6ShipUpD1Ev.c:
+    complete
     .text start:0x0211260c end:0x02112650
 
 src/_ZN6ShipUpD0Ev.c:
+    complete
     .text start:0x02112650 end:0x021126a8
 
 src/func_ov016_021126a8.c:
@@ -119,6 +121,7 @@ src/ShipDown_Spawn.c:
     .text start:0x021129d0 end:0x02112a00
 
 src/func_ov016_02112a00.c:
+    complete
     .text start:0x02112a00 end:0x02112a44
 
 src/func_ov016_02112a44.c:
@@ -149,6 +152,7 @@ src/RockPillar_Spawn.c:
     .text start:0x02112ec4 end:0x02112ef4
 
 src/func_ov016_02112ef4.c:
+    complete
     .text start:0x02112ef4 end:0x02112f44
 
 src/func_ov016_02112f44.c:
@@ -162,9 +166,11 @@ src/FloatOnWaterPlatformJrb_Spawn.c:
     .text start:0x02112fbc end:0x02112ff8
 
 src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:
+    complete
     .text start:0x02112ff8 end:0x02113044
 
 src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
+    complete
     .text start:0x02113044 end:0x021130a4
 
 src/func_ov016_021130a4.c:

@@ -468,9 +468,11 @@ src/LakituBro_Spawn.c:
     .text start:0x0212ed54 end:0x0212edac
 
 src/_ZN8WallSignD1Ev.c:
+    complete
     .text start:0x0212edac end:0x0212edf8
 
 src/_ZN8WallSignD0Ev.c:
+    complete
     .text start:0x0212edf8 end:0x0212ee58
 
 src/_ZN8WallSign16CleanupResourcesEv.c:

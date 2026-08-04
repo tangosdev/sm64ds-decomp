@@ -5,12 +5,13 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_TextureTransformer.h"
 #include "decl_common.h"
+extern int _ZTV9TinyCover[];
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = _ZTV9TinyCover */
 int *_ZN9TinyCoverD1Ev(int *t)
 {
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV9TinyCover;
     _ZN18TextureTransformerD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

@@ -5,9 +5,11 @@
     .data       start:0x02111a00 end:0x02111c80 kind:data align:32
     .bss        start:0x02111c80 end:0x02111cc0 kind:bss align:32
 src/_ZN9ShipWaterD1Ev.c:
+    complete
     .text start:0x021111a0 end:0x021111ec
 
 src/_ZN9ShipWaterD0Ev.c:
+    complete
     .text start:0x021111ec end:0x0211124c
 
 src/_ZN9ShipWater16CleanupResourcesEv.cpp:

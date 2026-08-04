@@ -4,13 +4,15 @@
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
+extern int data_ov043_0211238c[];
+extern int data_ov002_02109320[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = _ZTV21daObjKm1_Kurumajiku_c; VT1 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = data_ov043_0211238c; VT1 = data_ov002_02109320 */
 int *func_ov043_021113fc(int *t)
 {
-    t[0] = (int)_ZTV21daObjKm1_Kurumajiku_c;
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)data_ov043_0211238c;
+    t[0] = (int)data_ov002_02109320;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

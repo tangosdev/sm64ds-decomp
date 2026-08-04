@@ -4,6 +4,7 @@
     .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 src/func_ov047_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111f0
 
 src/func_ov047_021111f0.c:
@@ -36,9 +37,11 @@ src/_ZN10RickshawBs13InitResourcesEv.c:
     .text start:0x02111384 end:0x021113bc
 
 src/func_ov047_021113bc.c:
+    complete
     .text start:0x021113bc end:0x021113f8
 
 src/func_ov047_021113f8.c:
+    complete
     .text start:0x021113f8 end:0x02111448
 
 src/func_ov047_02111448.c:

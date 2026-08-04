@@ -198,9 +198,11 @@ src/Crate_Spawn.cpp:
     .text start:0x02139f04 end:0x02139f70
 
 src/func_ov098_02139f70.c:
+    complete
     .text start:0x02139f70 end:0x02139fc8
 
 src/func_ov098_02139fc8.c:
+    complete
     .text start:0x02139fc8 end:0x0213a00c
 
 src/func_ov098_0213a00c.cpp:

@@ -199,6 +199,7 @@ src/SnowmanHead_Spawn.c:
     .text start:0x021207d4 end:0x02120824
 
 src/func_ov072_02120824.c:
+    complete
     .text start:0x02120824 end:0x02120874
 
 src/func_ov072_02120874.c:
@@ -230,6 +231,7 @@ src/func_ov072_02120a44.c:
     .text start:0x02120a44 end:0x02120c00
 
 src/func_ov072_02120c00.c:
+    complete
     .text start:0x02120c00 end:0x02120c58
 
 src/_ZN11BabyPenguinD1Ev.cpp:

@@ -389,9 +389,11 @@ src/Moneybag_Spawn.c:
     .text start:0x02127adc end:0x02127b34
 
 src/_ZN8IceBlockD1Ev.c:
+    complete
     .text start:0x02127b34 end:0x02127b80
 
 src/_ZN8IceBlockD0Ev.c:
+    complete
     .text start:0x02127b80 end:0x02127be0
 
 src/func_ov081_02127be0.cpp:

@@ -5,6 +5,7 @@
     .data       start:0x02112dc0 end:0x02113ea0 kind:data align:32
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
 src/func_ov026_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e0
 
 src/func_ov026_021111e0.c:
@@ -35,9 +36,11 @@ src/func_ov026_02111598.cpp:
     .text start:0x02111598 end:0x02111678
 
 src/func_ov026_02111678.c:
+    complete
     .text start:0x02111678 end:0x021116c8
 
 src/func_ov026_021116c8.c:
+    complete
     .text start:0x021116c8 end:0x0211170c
 
 src/func_ov026_0211170c.c:
@@ -64,6 +67,7 @@ src/BowserShutter_Spawn.c:
     .text start:0x02111888 end:0x021118b8
 
 src/func_ov026_021118b8.c:
+    complete
     .text start:0x021118b8 end:0x021118fc
 
 src/func_ov026_021118fc.c:

@@ -191,9 +191,11 @@ src/ChiefChilly_Spawn.cpp:
     .text start:0x02121ec8 end:0x02121f90
 
 src/_ZN8CccArenaD1Ev.c:
+    complete
     .text start:0x02121f90 end:0x02121fd4
 
 src/_ZN8CccArenaD0Ev.c:
+    complete
     .text start:0x02121fd4 end:0x0212202c
 
 src/func_ov073_0212202c.c:

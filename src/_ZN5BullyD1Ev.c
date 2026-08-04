@@ -5,13 +5,14 @@
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
+extern int _ZTV5Bully[];
 extern int data_ov064_0211b768[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV11daDonketu_c */
+/* vtable identified: VT0 = _ZTV5Bully */
 extern void func_ov002_020aed18(void *);
 int *_ZN5BullyD1Ev(int *t)
 {
-    t[0] = (int)_ZTV11daDonketu_c;
+    t[0] = (int)_ZTV5Bully;
     t[0] = (int)data_ov064_0211b768;
     _ZN11ShadowModelD1Ev((char *)t + 0x370);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);

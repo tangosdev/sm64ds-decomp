@@ -5,12 +5,13 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
+extern int _ZTV8Squasher[];
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = _ZTV8Squasher */
 int *_ZN8SquasherD1Ev(int *t)
 {
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV8Squasher;
     _ZN11ShadowModelD1Ev((char *)t + 0x324);
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

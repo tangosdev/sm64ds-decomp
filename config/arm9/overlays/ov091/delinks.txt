@@ -5,9 +5,11 @@
     .data       start:0x02134ba0 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
 src/_ZN25RotatingUpDownPlatformUtmD1Ev.c:
+    complete
     .text start:0x02130f00 end:0x02130f4c
 
 src/_ZN25RotatingUpDownPlatformUtmD0Ev.c:
+    complete
     .text start:0x02130f4c end:0x02130fac
 
 src/func_ov091_02130fac.cpp:
@@ -54,9 +56,11 @@ src/RotatingUpDownPlatform_Spawn.c:
     .text start:0x02131bdc end:0x02131c14
 
 src/_ZN22RotatingUpDownPlatformD1Ev.c:
+    complete
     .text start:0x02131c14 end:0x02131c58
 
 src/_ZN22RotatingUpDownPlatformD0Ev.c:
+    complete
     .text start:0x02131c58 end:0x02131cb0
 
 src/func_ov091_02131cb0.c:
@@ -160,9 +164,11 @@ src/SlidingPlatformBdw_Spawn.c:
     .text start:0x02132908 end:0x02132938
 
 src/_ZN6ThwompD1Ev.c:
+    complete
     .text start:0x02132938 end:0x02132998
 
 src/_ZN6ThwompD0Ev.c:
+    complete
     .text start:0x02132998 end:0x02132a0c
 
 src/func_ov091_02132a0c.c:
@@ -185,9 +191,11 @@ src/Thwomp_Spawn.c:
     .text start:0x02132cb8 end:0x02132d04
 
 src/func_ov091_02132d04.c:
+    complete
     .text start:0x02132d04 end:0x02132d6c
 
 src/func_ov091_02132d6c.c:
+    complete
     .text start:0x02132d6c end:0x02132dc0
 
 src/func_ov091_02132dc0.cpp:
@@ -231,6 +239,7 @@ src/func_ov091_02133254.cpp:
     .text start:0x02133254 end:0x021333fc
 
 src/func_ov091_021333fc.c:
+    complete
     .text start:0x021333fc end:0x02133440
 
 src/func_ov091_02133440.c:

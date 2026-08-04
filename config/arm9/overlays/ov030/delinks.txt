@@ -5,6 +5,7 @@
     .data       start:0x02114de0 end:0x02115c80 kind:data align:32
     .bss        start:0x02115c80 end:0x02115ec0 kind:bss align:32
 src/func_ov030_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111ec
 
 src/func_ov030_021111ec.c:

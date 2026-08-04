@@ -3625,6 +3625,7 @@ src/func_02022b04.c:
     .text start:0x02022b04 end:0x02022b58
 
 src/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c:
+    complete
     .text start:0x02022b58 end:0x02022bb4
 
 src/_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f.c:

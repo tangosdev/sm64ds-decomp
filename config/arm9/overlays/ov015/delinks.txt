@@ -5,6 +5,7 @@
     .data       start:0x02113440 end:0x02114960 kind:data align:32
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
 src/func_ov015_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111d0
 
 src/func_ov015_021111d0.c:
@@ -205,9 +206,11 @@ src/TowerStep_Spawn.c:
     .text start:0x0211290c end:0x02112944
 
 src/_ZN9TowerStepD1Ev.c:
+    complete
     .text start:0x02112944 end:0x02112988
 
 src/_ZN9TowerStepD0Ev.c:
+    complete
     .text start:0x02112988 end:0x021129e0
 
 src/_ZN9TowerStep16CleanupResourcesEv.cpp:
@@ -230,6 +233,7 @@ src/RotatingBridge_Spawn.c:
     .text start:0x02112ba0 end:0x02112bd0
 
 src/func_ov015_02112bd0.c:
+    complete
     .text start:0x02112bd0 end:0x02112c20
 
 src/func_ov015_02112c20.c:

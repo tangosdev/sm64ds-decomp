@@ -5,6 +5,7 @@
     .data       start:0x02111ae0 end:0x021124c0 kind:data align:32
     .bss        start:0x021124c0 end:0x02112520 kind:bss align:32
 src/func_ov033_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov033_021111e4.c:
@@ -36,9 +37,11 @@ src/TinyCover_Spawn.c:
     .text start:0x021113a4 end:0x021113d4
 
 src/_ZN9TinyCoverD1Ev.c:
+    complete
     .text start:0x021113d4 end:0x02111420
 
 src/_ZN9TinyCoverD0Ev.c:
+    complete
     .text start:0x02111420 end:0x02111480
 
 src/_ZN9TinyCover16CleanupResourcesEv.cpp:

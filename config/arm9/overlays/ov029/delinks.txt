@@ -5,6 +5,7 @@
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
 src/func_ov029_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111f0
 
 src/func_ov029_021111f0.c:
@@ -19,9 +20,11 @@ src/FloatOnWaterPlatformWdwSquare_Spawn.c:
     .text start:0x02111340 end:0x0211137c
 
 src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c:
+    complete
     .text start:0x0211137c end:0x021113c0
 
 src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
+    complete
     .text start:0x021113c0 end:0x02111418
 
 src/_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv.cpp:
@@ -92,6 +95,7 @@ src/WaterDiamond_Spawn.c:
     .text start:0x02111a84 end:0x02111ac4
 
 src/func_ov029_02111ac4.c:
+    complete
     .text start:0x02111ac4 end:0x02111b08
 
 src/func_ov029_02111b08.c:
@@ -127,6 +131,7 @@ src/CageLift_Spawn.c:
     .text start:0x02111e74 end:0x02111ea4
 
 src/func_ov029_02111ea4.c:
+    complete
     .text start:0x02111ea4 end:0x02111ef4
 
 src/func_ov029_02111ef4.c:
@@ -141,9 +146,11 @@ src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
     .text start:0x02112044 end:0x02112080
 
 src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
+    complete
     .text start:0x02112080 end:0x021120d0
 
 src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
+    complete
     .text start:0x021120d0 end:0x02112134
 
 src/_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv.c:

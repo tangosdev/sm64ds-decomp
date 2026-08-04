@@ -1055,6 +1055,7 @@ src/func_ov006_020ccfc8.cpp:
     .text start:0x020ccfc8 end:0x020cd12c
 
 src/func_ov006_020cd12c.c:
+    complete
     .text start:0x020cd12c end:0x020cd158
 
 src/func_ov006_020cd158.c:
@@ -2590,6 +2591,7 @@ src/func_ov006_020e6894.c:
     .text start:0x020e6894 end:0x020e6bf4
 
 src/func_ov006_020e6bf4.c:
+    complete
     .text start:0x020e6bf4 end:0x020e6c28
 
 src/_ZN17MgBounceAndPounceD1Ev.cpp:
