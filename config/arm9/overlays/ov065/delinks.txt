@@ -76,6 +76,7 @@ src/_ZN6Snufit8BehaviorEv.cpp:
     .text start:0x02116b84 end:0x02116e10
 
 src/_ZN6Snufit13InitResourcesEv.cpp:
+    complete
     .text start:0x02116e10 end:0x02116f0c
 
 src/func_ov065_02116f0c.c:
@@ -228,6 +229,7 @@ src/func_ov065_02118cc4.c:
     .text start:0x02118cc4 end:0x02118d04
 
 src/_ZN6Dorrie16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02118d04 end:0x02118d80
 
 src/_ZN6Dorrie6RenderEv.cpp:
@@ -251,9 +253,11 @@ src/func_ov065_02119210.c:
     .text start:0x02119210 end:0x02119228
 
 src/_ZN6Dorrie13InitResourcesEv.cpp:
+    complete
     .text start:0x02119228 end:0x021194e8
 
 src/_ZN9DorrieCap13InitResourcesEv.cpp:
+    complete
     .text start:0x021194e8 end:0x0211956c
 
 src/func_ov065_0211956c.c:

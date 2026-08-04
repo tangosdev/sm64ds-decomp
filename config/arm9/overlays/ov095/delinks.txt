@@ -39,6 +39,7 @@ src/_ZN9SeesawBob8BehaviorEv.cpp:
     .text start:0x02135a50 end:0x02135b74
 
 src/_ZN9SeesawBob13InitResourcesEv.cpp:
+    complete
     .text start:0x02135b74 end:0x02135cdc
 
 src/func_ov095_02135cdc.c:

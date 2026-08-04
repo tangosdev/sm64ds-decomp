@@ -3,12 +3,14 @@
 // @symbol _ZN9FaderWipe11AdvanceFadeEv
 /* recovered: named members + shared header, real C++ method */
 #include "FaderWipe.h"
+extern "C" {
 void _ZN5Fader13AdvanceInterpEv(void* thiz);
 void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16* p, u16 a, int b);
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToScale(void* m, Fix12i x, Fix12i y, Fix12i z);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
 void _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(void* thiz, void* mtx, void* vec);
+}
 extern int data_020a0e68[];
 
 void FaderWipe::AdvanceFade()

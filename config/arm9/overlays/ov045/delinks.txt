@@ -94,6 +94,7 @@ src/_ZN8PoleLift8BehaviorEv.cpp:
     .text start:0x021119c0 end:0x02111a30
 
 src/_ZN8PoleLift13InitResourcesEv.cpp:
+    complete
     .text start:0x02111a30 end:0x02111ad4
 
 src/ExtendingPlatform_Spawn.c:

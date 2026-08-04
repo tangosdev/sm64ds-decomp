@@ -5,10 +5,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern void func_020393a4(int* p, int v);
 extern int _ZN5Actor13DistToCPlayerEv(void* a);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void* a);
+}
 extern short data_02082214[];
 
 int ShipUp::Behavior()

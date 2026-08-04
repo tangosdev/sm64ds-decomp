@@ -155,6 +155,7 @@ src/_ZN8BigBully6RenderEv.cpp:
     .text start:0x0211764c end:0x02117684
 
 src/_ZN8BigBully8BehaviorEv.cpp:
+    complete
     .text start:0x02117684 end:0x02117784
 
 src/_ZN8BigBully13InitResourcesEv.cpp:
@@ -202,6 +203,7 @@ src/func_ov064_02117d24.c:
     .text start:0x02117d24 end:0x02117e44
 
 src/func_ov064_02117e44.cpp:
+    complete
     .text start:0x02117e44 end:0x02117fb4
 
 src/func_ov064_02117fb4.cpp:
@@ -509,6 +511,7 @@ src/_ZN9WaterRing8BehaviorEv.cpp:
     .text start:0x02119ffc end:0x0211a090
 
 src/_ZN9WaterRing13InitResourcesEv.cpp:
+    complete
     .text start:0x0211a090 end:0x0211a1b0
 
 src/WaterRing_Spawn.c:

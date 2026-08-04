@@ -13,8 +13,10 @@ void func_ov002_020e7218(char *a, char *b, int gate);
 extern u8 data_0209f2d8;
 extern s8 data_0209f310;
 
+extern "C" {
 extern char *_ZN5Actor13SpawnSoundObjEj(char *self, u32 a);
 extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
+}
 
 extern "C" int func_ov002_020d94cc(char *self)
 {

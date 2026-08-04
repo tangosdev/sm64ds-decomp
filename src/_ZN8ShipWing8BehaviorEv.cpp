@@ -3,6 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWing.h"
 #include "MeshColliderBase.h"
+extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
@@ -11,6 +12,7 @@ void _ZN5Actor14TriplePoofDustEv(void* p);
 void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
+}
 
 int ShipWing::Behavior()
 {

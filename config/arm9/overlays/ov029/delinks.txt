@@ -77,6 +77,7 @@ src/_ZN9ArrowLift6RenderEv.cpp:
     .text start:0x0211192c end:0x02111954
 
 src/_ZN9ArrowLift8BehaviorEv.cpp:
+    complete
     .text start:0x02111954 end:0x02111a04
 
 src/_ZN9ArrowLift13InitResourcesEv.cpp:

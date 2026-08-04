@@ -31,7 +31,9 @@ void MultiStore16(int a, int b, int n);
 void SetBg3Offset(int a, int b);
 }
 
+extern "C" {
 void _ZN7Message6UpdateEv(void);
+}
 
 extern "C" void func_0201f138(void)
 {

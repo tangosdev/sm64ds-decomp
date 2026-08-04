@@ -266,6 +266,7 @@ src/_ZN6Rabbit8BehaviorEv.c:
     .text start:0x0212c230 end:0x0212c7fc
 
 src/_ZN6Rabbit13InitResourcesEv.cpp:
+    complete
     .text start:0x0212c7fc end:0x0212cc18
 
 src/func_ov085_0212cc18.c:
@@ -321,6 +322,7 @@ src/_ZN9RabbitKey16OnPendingDestroyEv.c:
     .text start:0x0212d398 end:0x0212d39c
 
 src/_ZN9RabbitKey6RenderEv.cpp:
+    complete
     .text start:0x0212d39c end:0x0212d3ec
 
 src/_ZN9RabbitKey8BehaviorEv.cpp:
@@ -480,6 +482,7 @@ src/_ZN8WallSign6RenderEv.cpp:
     .text start:0x0212ee7c end:0x0212eea4
 
 src/_ZN8WallSign13InitResourcesEv.cpp:
+    complete
     .text start:0x0212f1b0 end:0x0212f244
 
 src/WallSign_Spawn.c:

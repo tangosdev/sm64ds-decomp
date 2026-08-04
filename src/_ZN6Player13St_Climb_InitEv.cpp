@@ -5,10 +5,12 @@ struct Vector3 {
     int x, y, z;
 };
 
+extern "C" {
 extern int Player_ReleaseHeldActor(char*);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, const Vector3&);
 extern int func_ov002_020e3078(void*, void*);
+}
 extern char data_ov002_021106f4[];
 
 class Player {

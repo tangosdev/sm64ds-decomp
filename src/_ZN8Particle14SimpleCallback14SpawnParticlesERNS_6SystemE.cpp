@@ -3,7 +3,9 @@
 struct SomeGlobal { char pad[4]; void* p; };
 extern SomeGlobal* data_0209ee74;
 
+extern "C" {
 extern void func_02049d60(void* x);
+}
 
 namespace Particle {
     struct System {

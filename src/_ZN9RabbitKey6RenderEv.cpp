@@ -27,7 +27,9 @@ struct Obj {
     void* unk188;         /* 0x188 */
 };
 
+extern "C" {
 extern void func_ov085_0212d2b8(struct Obj* self);
+}
 
 int RabbitKey::Render()
 {

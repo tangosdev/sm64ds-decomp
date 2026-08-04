@@ -103,9 +103,11 @@ src/_ZN6ShipUp6RenderEv.cpp:
     .text start:0x02112744 end:0x0211276c
 
 src/_ZN6ShipUp8BehaviorEv.cpp:
+    complete
     .text start:0x0211276c end:0x0211283c
 
 src/_ZN6ShipUp13InitResourcesEv.cpp:
+    complete
     .text start:0x0211283c end:0x021129a0
 
 src/ShipUp_Spawn.c:

@@ -1,8 +1,12 @@
 //cpp
 typedef long long s64;
+extern "C" {
 extern void func_ov006_020c8c78(int a, int b);
+}
 extern int ApproachLinear(int &r, int b, int c);
+extern "C" {
 extern void func_ov006_020c9e7c(void* p);
+}
 namespace Sound { void PlayBank2_2D(unsigned int); }
 extern int data_ov006_02140598;
 extern int data_ov006_0213b0f0;

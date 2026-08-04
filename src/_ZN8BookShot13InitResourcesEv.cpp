@@ -6,6 +6,7 @@
 struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
 typedef struct { int w[2]; } SharedFilePtr;
 
+extern "C" {
 extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void LoadBlueCoinModel(void* c);
@@ -13,6 +14,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(char* self, struct Actor* a, int r, int h, struct Vector3_16* rot, int f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+}
 
 extern SharedFilePtr data_ov020_02114aa0;
 extern SharedFilePtr data_ov020_02114ab8;

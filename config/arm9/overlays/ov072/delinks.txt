@@ -295,6 +295,7 @@ src/func_ov072_02121758.c:
     .text start:0x02121758 end:0x021217ac
 
 src/func_ov072_021217ac.cpp:
+    complete
     .text start:0x021217ac end:0x02121890
 
 src/func_ov072_02121890.c:

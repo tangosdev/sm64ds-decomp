@@ -8,6 +8,7 @@
 typedef int Fix12;
 typedef struct { int h; } SharedFilePtr;
 
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -21,6 +22,7 @@ extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsign
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, Fix12 a, Fix12 b, Fix12 c, Fix12 d);
 extern void func_ov062_0211c658(void *c, void *p);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+}
 
 extern SharedFilePtr data_ov062_0211e0fc;
 extern SharedFilePtr data_ov062_0211e114;

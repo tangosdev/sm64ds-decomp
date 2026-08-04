@@ -31,7 +31,9 @@ extern void func_0200d0ac(Camera *thiz, u8 id);
 }
 
 extern struct Camera_State data_0209b008[];
+extern "C" {
 extern int _ZN6Camera11ChangeStateEPNS_5StateE(Camera *thiz, Camera_State *s);
+}
 
 int Camera::InitResources()
 {

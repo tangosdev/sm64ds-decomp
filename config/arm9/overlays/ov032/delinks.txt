@@ -140,6 +140,7 @@ src/_ZN9HugeCover6RenderEv.cpp:
     .text start:0x02112788 end:0x021127bc
 
 src/_ZN9HugeCover8BehaviorEv.cpp:
+    complete
     .text start:0x021127bc end:0x021127f0
 
 src/_ZN9HugeCover13InitResourcesEv.cpp:

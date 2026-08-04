@@ -137,6 +137,7 @@ src/func_ov078_02125734.c:
     .text start:0x02125734 end:0x02125790
 
 src/func_ov078_02125790.cpp:
+    complete
     .text start:0x02125790 end:0x021258e4
 
 src/func_ov078_021258e4.c:
@@ -156,6 +157,7 @@ src/func_ov078_021259ec.c:
     .text start:0x021259ec end:0x02125bc8
 
 src/func_ov078_02125bc8.cpp:
+    complete
     .text start:0x02125bc8 end:0x02125c24
 
 src/func_ov078_02125c24.c:

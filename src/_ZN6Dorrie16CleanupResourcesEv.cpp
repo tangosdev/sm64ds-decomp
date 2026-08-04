@@ -6,7 +6,9 @@
 #include "Dorrie.h"
 #include "MeshColliderBase.h"
 struct SharedFilePtr { unsigned int data[4]; };
+extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *);
+}
 extern struct SharedFilePtr data_ov002_0210d9c0;
 extern struct SharedFilePtr *data_ov065_0211c08c[];
 extern struct SharedFilePtr *data_ov065_0211c080[];

@@ -7,8 +7,10 @@
 #include "CameraTag.h"
 struct Vec3 { Fix12i x, y, z; };
 
+extern "C" {
 extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
 extern void Vec3_RotateYAndTranslate(struct Vec3* out, void* m, s16 ang, struct Vec3* in);
+}
 extern u8 data_0209f250;
 extern char* data_0209f394[];
 extern char data_020a0ebc;

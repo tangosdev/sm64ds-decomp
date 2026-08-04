@@ -11,9 +11,11 @@ short GetAngleToCamera(int i);
 extern u8 data_0209f2d8;
 
 struct Actor;
+extern "C" {
 extern bool _ZN6Player8HasNoCapEv(char *self);
 extern void _ZN6Player18SetNewHatCharacterEjjb(char *self, u32 a, u32 b, bool c);
 extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
+}
 
 extern "C" int func_ov002_020d93ac(char *self)
 {

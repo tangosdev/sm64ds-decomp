@@ -10,11 +10,13 @@ struct BMD_File;
 struct BTA_File;
 
 
+extern "C" {
 extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(struct BMD_File* f, struct BTA_File* b);
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(char* self, struct BTA_File* b, int a, int fix, u32 f);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, struct Vector3* v, int r, int h, u32 f1, u32 f2);
+}
 
 extern char data_ov002_0210da10[];
 extern int data_ov064_0211c3d0[3];

@@ -1,5 +1,7 @@
 //cpp
+extern "C" {
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
+}
 struct G2 { int w[2]; };
 extern int data_ov006_021405c8;
 extern struct G2 data_ov006_02140564;

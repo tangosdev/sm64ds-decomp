@@ -96,6 +96,7 @@ src/_ZN8ShipWing6RenderEv.cpp:
     .text start:0x02111a30 end:0x02111a64
 
 src/_ZN8ShipWing8BehaviorEv.cpp:
+    complete
     .text start:0x02111a64 end:0x02111bb8
 
 src/_ZN8ShipWing13InitResourcesEv.cpp:

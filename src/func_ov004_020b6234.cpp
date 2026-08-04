@@ -11,7 +11,9 @@ extern int data_ov004_020bfa18;
 extern int data_ov004_020bfa10;
 extern int data_ov004_020bfa00;
 extern void *data_ov004_020bfa20;
+extern "C" {
 extern void func_ov004_020b5f6c();
+}
 
 extern "C" void func_ov004_020b6234(void) {
     int x;

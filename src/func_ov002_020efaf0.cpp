@@ -3,7 +3,9 @@ struct BMD_File;
 struct PathStuff { void* a; void* file; };  // data_0210d9f0: load [4]
 
 extern PathStuff data_ov002_0210d9f0;
+extern "C" {
 extern void func_ov002_020eff90(void);
+}
 
 extern "C" {
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* thiz, void* file, int b, int d);

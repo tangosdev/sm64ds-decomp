@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
+extern "C" {
 extern int func_ov002_020caf68(void *c);
+}
 extern int data_ov002_021106f4[];
 
 int Player::St_Climb_Cleanup()

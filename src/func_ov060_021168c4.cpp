@@ -16,7 +16,9 @@ struct Actor {
 };
 struct ActorBase { void MarkForDestruction(); };
 extern "C" int func_ov060_02116518(char* c, int a, int b, int d);
+extern "C" {
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
+}
 
 extern "C" void func_ov060_021168c4(char* c)
 {

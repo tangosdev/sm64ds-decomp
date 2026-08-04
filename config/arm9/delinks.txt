@@ -68,6 +68,7 @@ src/func_02005ed8.c:
     .text start:0x02005ed8 end:0x02005f0c
 
 src/_ZN8CapEnemy21DestroyIfCapNotNeededEv.cpp:
+    complete
     .text start:0x02005f0c end:0x02005fa0
 
 src/_ZN8CapEnemy11GetCapStateEv.cpp:
@@ -688,6 +689,7 @@ src/_ZN6Camera8BehaviorEv.cpp:
     .text start:0x0200debc end:0x0200e338
 
 src/_ZN6Camera13InitResourcesEv.cpp:
+    complete
     .text start:0x0200e338 end:0x0200e444
 
 src/_ZN6CameraC1Ev.c:
@@ -2408,6 +2410,7 @@ src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp:
     .text start:0x020172c0 end:0x020172d8
 
 src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp:
+    complete
     .text start:0x020172d8 end:0x02017418
 
 src/engine/fader/_ZN9FaderWipeD0Ev.c:
@@ -3147,6 +3150,7 @@ src/_ZN7Message12UpdateWindowEv.cpp:
     .text start:0x0201bbc8 end:0x0201c0b8
 
 src/_ZN7Message6UpdateEv.cpp:
+    complete
     .text start:0x0201c0b8 end:0x0201cb2c
 
 src/engine/message/func_0201cb2c.c:
@@ -3257,6 +3261,7 @@ src/func_0201f108.c:
     .text start:0x0201f108 end:0x0201f138
 
 src/func_0201f138.cpp:
+    complete
     .text start:0x0201f138 end:0x0201f32c
 
 src/func_0201f32c.c:
@@ -3551,6 +3556,7 @@ src/_ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb.cpp:
     .text start:0x02022630 end:0x02022640
 
 src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp:
+    complete
     .text start:0x02022640 end:0x02022680
 
 src/_ZN8Particle14SimpleCallbackC2Ev.cpp:
@@ -9331,6 +9337,7 @@ src/func_0205816c.c:
     .text start:0x0205816c end:0x020581a8
 
 src/func_020581a8.cpp:
+    complete
     .text start:0x020581a8 end:0x02058200
 
 src/func_02058200.c:
@@ -10470,6 +10477,7 @@ src/func_02060228.c:
     .text start:0x02060228 end:0x020602bc
 
 src/func_020602bc.cpp:
+    complete
     .text start:0x020602bc end:0x02060310
 
 src/func_02060310.c:

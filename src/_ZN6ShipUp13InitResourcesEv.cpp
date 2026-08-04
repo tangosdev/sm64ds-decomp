@@ -5,6 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
 #include "MeshColliderBase.h"
+extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
@@ -12,6 +13,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern void func_020393d4(int* p, int v);
 extern int IsStarCollected(int a, int b);
+}
 extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
 

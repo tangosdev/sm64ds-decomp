@@ -99,6 +99,7 @@ src/_ZN8MetalNet6RenderEv.cpp:
     .text start:0x02111ea8 end:0x02111ed0
 
 src/_ZN8MetalNet8BehaviorEv.cpp:
+    complete
     .text start:0x02111ed0 end:0x02111f40
 
 src/_ZN8MetalNet13InitResourcesEv.cpp:

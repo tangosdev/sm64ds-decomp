@@ -828,6 +828,7 @@ src/func_ov006_020c9e7c.c:
     .text start:0x020c9e7c end:0x020c9efc
 
 src/func_ov006_020c9efc.cpp:
+    complete
     .text start:0x020c9efc end:0x020c9fe4
 
 src/func_ov006_020c9fe4.cpp:
@@ -1021,6 +1022,7 @@ src/func_ov006_020cc9b8.c:
     .text start:0x020cc9b8 end:0x020cc9fc
 
 src/func_ov006_020cc9fc.cpp:
+    complete
     .text start:0x020cc9fc end:0x020ccae0
 
 src/func_ov006_020ccae0.c:
@@ -2305,6 +2307,7 @@ src/func_ov006_020e1680.c:
     .text start:0x020e1680 end:0x020e17f8
 
 src/_ZN6Player16St_WallJump_InitEv.cpp:
+    complete
     .text start:0x020e17f8 end:0x020e1854
 
 src/func_ov006_020e1b54.c:
@@ -6740,6 +6743,7 @@ src/func_ov006_021245a8.c:
     .text start:0x021245a8 end:0x0212471c
 
 src/func_ov006_021248a8.cpp:
+    complete
     .text start:0x021248a8 end:0x02124908
 
 src/func_ov006_02124908.c:

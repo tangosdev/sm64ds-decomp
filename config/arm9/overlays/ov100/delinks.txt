@@ -260,6 +260,7 @@ src/func_ov100_02144f84.c:
     .text start:0x02144f84 end:0x02144fcc
 
 src/func_ov100_02144fcc.cpp:
+    complete
     .text start:0x02144fcc end:0x02145014
 
 src/func_ov100_02145014.c:
@@ -306,6 +307,7 @@ src/func_ov100_021454c8.cpp:
     .text start:0x021454c8 end:0x02145550
 
 src/func_ov100_02145550.cpp:
+    complete
     .text start:0x02145550 end:0x021455a0
 
 src/func_ov100_021455a0.c:

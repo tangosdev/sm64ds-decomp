@@ -7,8 +7,10 @@
 
 
 extern "C" void func_ov002_020ba01c(void* c, int a, int b, int d, int e);
+extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, struct Vector3* v);
 extern void _ZN5Event8ClearBitEj(unsigned int n);
+}
 extern "C" void func_ov002_020ba4d8(void* c, int i);
 
 extern "C" void func_ov002_020ba0f8(char* c) {

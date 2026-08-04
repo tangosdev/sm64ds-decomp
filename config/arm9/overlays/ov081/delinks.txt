@@ -372,6 +372,7 @@ src/_ZN8Moneybag6RenderEv.cpp:
     .text start:0x021277e0 end:0x02127854
 
 src/_ZN8Moneybag8BehaviorEv.cpp:
+    complete
     .text start:0x02127854 end:0x021278a8
 
 src/_ZN8Moneybag13InitResourcesEv.cpp:

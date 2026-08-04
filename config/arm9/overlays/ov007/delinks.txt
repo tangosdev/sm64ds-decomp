@@ -774,6 +774,7 @@ src/func_ov007_020bbc08.c:
     .text start:0x020bbc08 end:0x020bbd24
 
 src/func_ov007_020bbd24.cpp:
+    complete
     .text start:0x020bbd24 end:0x020bbe60
 
 src/func_ov007_020bbe60.c:
@@ -865,6 +866,7 @@ src/func_ov007_020bcdb8.cpp:
     .text start:0x020bcdb8 end:0x020bce70
 
 src/func_ov007_020bce70.cpp:
+    complete
     .text start:0x020bce70 end:0x020bcf90
 
 src/func_ov007_020bcf90.c:
@@ -1064,6 +1066,7 @@ src/func_ov007_020c0078.c:
     .text start:0x020c0078 end:0x020c0128
 
 src/func_ov007_020c0128.cpp:
+    complete
     .text start:0x020c0128 end:0x020c020c
 
 src/func_ov007_020c020c.c:

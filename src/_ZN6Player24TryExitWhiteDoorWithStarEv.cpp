@@ -3,8 +3,10 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 struct State { int a; int b; };
+extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void *c, struct State *s);
 extern int _ZN6Player17SetNoControlStateEhih(void *c, unsigned char a, int b, unsigned char d);
+}
 extern struct State data_ov002_0211022c;
 
 int Player::TryExitWhiteDoorWithStar()

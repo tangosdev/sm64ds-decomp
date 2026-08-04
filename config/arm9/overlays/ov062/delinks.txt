@@ -381,6 +381,7 @@ src/_ZN9KoopaFlag6RenderEv.cpp:
     .text start:0x0211b030 end:0x0211b05c
 
 src/_ZN9KoopaFlag8BehaviorEv.cpp:
+    complete
     .text start:0x0211b05c end:0x0211b168
 
 src/_ZN9KoopaFlag13InitResourcesEv.cpp:
@@ -467,6 +468,7 @@ src/_ZN6Klepto8BehaviorEv.cpp:
     .text start:0x0211c94c end:0x0211cb4c
 
 src/_ZN6Klepto13InitResourcesEv.cpp:
+    complete
     .text start:0x0211cb4c end:0x0211ce78
 
 src/func_ov062_0211ce78.c:

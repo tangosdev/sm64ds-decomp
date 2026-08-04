@@ -6,9 +6,11 @@
 class Actor;
 extern "C" int func_ov072_02121d50(Actor *a);
 extern "C" int func_0201267c(int id, void *p);
+extern "C" {
 extern bool _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(Actor *thiz, Vector3 &a, Vector3 &b, bool c);
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern void _ZN12CylinderClsn5ClearEv(void *clsn);
+}
 extern "C" int func_ov072_021217ac(Actor *thiz)
 {
     char *c = (char *)thiz;

@@ -177,6 +177,7 @@ src/_ZN8Goomboss6RenderEv.cpp:
     .text start:0x02121b70 end:0x02121bf0
 
 src/_ZN8Goomboss8BehaviorEv.cpp:
+    complete
     .text start:0x02121bf0 end:0x02121e98
 
 src/_ZN8Goomboss13InitResourcesEv.c:

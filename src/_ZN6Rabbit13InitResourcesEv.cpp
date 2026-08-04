@@ -19,6 +19,7 @@ extern int data_0209caa0[];
 extern s8 data_0209f2f8;
 extern int data_0209e650;
 
+extern "C" {
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
@@ -33,6 +34,7 @@ extern void* _ZN5Actor13ClosestPlayerEv(void* c);
 extern u32 RandomIntInternal(int* seed);
 extern u8 NumStars(void);
 extern void func_ov085_0212bc78(void* c, void* p);
+}
 
 int Rabbit::InitResources()
 {

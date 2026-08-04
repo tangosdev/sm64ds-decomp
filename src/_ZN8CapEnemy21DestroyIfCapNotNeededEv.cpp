@@ -5,7 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "CapEnemy.h"
 extern unsigned char data_0209f2d8;
+extern "C" {
 extern unsigned char *_ZN5Actor13ClosestPlayerEv(unsigned char *t);
+}
 
 int CapEnemy::DestroyIfCapNotNeeded()
 {

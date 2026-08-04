@@ -5,9 +5,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ArrowLift.h"
 typedef short s16;
+extern "C" {
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 extern void _ZN12CylinderClsn6UpdateEv(void* self);
+}
 
 int ArrowLift::Behavior()
 {

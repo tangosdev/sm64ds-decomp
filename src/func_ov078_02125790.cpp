@@ -7,6 +7,7 @@
 #include "common.h"
 
 
+extern "C" {
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* a);
 extern void ApproachAngle(short* p, int target, int step, int band, int max);
 extern void func_02012694(int a, void* b);
@@ -15,6 +16,7 @@ extern void Vec3_Lsl(Vector3* d, Vector3* s, int sh);
 extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b);
 extern int _ZN9Animation8FinishedEv(void* a);
 extern void KingBobOmb_SetState(char* c, void* p);
+}
 extern Matrix4x3 data_020a0e68;
 extern int data_ov078_0212703c;
 

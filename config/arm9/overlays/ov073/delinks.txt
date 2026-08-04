@@ -248,6 +248,7 @@ src/_ZN8CccArena8BehaviorEv.cpp:
     .text start:0x021224f0 end:0x02122578
 
 src/_ZN8CccArena13InitResourcesEv.cpp:
+    complete
     .text start:0x02122578 end:0x02122730
 
 src/func_ov073_02122730.c:

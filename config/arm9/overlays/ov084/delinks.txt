@@ -102,6 +102,7 @@ src/func_ov084_0212b344.cpp:
     .text start:0x0212b344 end:0x0212b510
 
 src/_ZN6Goomba16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0212b510 end:0x0212b5b8
 
 src/_ZN6Goomba16OnPendingDestroyEv.c:
@@ -113,6 +114,7 @@ src/_ZN6Goomba6RenderEv.cpp:
     .text start:0x0212b5bc end:0x0212b6ec
 
 src/_ZN6Goomba8BehaviorEv.cpp:
+    complete
     .text start:0x0212b6ec end:0x0212bc30
 
 src/_ZN6Goomba13InitResourcesEv.cpp:
