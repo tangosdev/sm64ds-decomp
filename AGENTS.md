@@ -109,6 +109,23 @@ So:
 - Don't add a type to a shared header speculatively. A name in `include/` is a claim that
   every consumer agrees on it; a wrong shared type is far more expensive than a local one.
 
+## `port/` references (renames, `.c`→`.cpp`, file moves)
+
+`port/` builds its own MSVC host executable that points into `src/` by literal path and
+symbol name: `slice_gate*.txt` manifests list `src/` files to compile, `CMakeLists.txt`
+hardcodes hostgen symbol lists resolved against `src/<sym>.c`/`.cpp`, and `port/hal/*.cpp`
+bridges MSVC linkage onto `func_XXXXXXXX`/`data_XXXXXXXX` names via `#pragma alternatename`
+and `extern "C"`. None of that is compiled by the normal decomp toolchain or `tools/cpp_rename.py`,
+so a rename, a `.c`-to-`.cpp` migration, or a file move can silently strand a `port/`
+reference. Before pushing anything that renames or moves a `src/`/`include/` file, run:
+
+```
+python tools/port_refcheck.py
+```
+
+It checks references only (no compiler, no ROM — runs in about a second) and is also
+wired into `tools/hooks/pre-push`.
+
 ## Match logging (WHO / HOW / tries)
 
 | Extra | Store | Rule |
