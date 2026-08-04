@@ -12,8 +12,17 @@
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
  * include/ModelBase.h. The structors stay self-contained C files.
  *
- * Prepare's ROM body is a 0xc tail-call veneer into func_02046b64, which is the
- * real (still unnamed) implementation taking (this, &model, &file).
+ * Prepare's ROM body is a 0xc long-call veneer (ldr ip, [pc]; bx ip;
+ * .word func_02046b64) -- no argument shuffling, so the real body's
+ * signature IS the call surface. The matched func_02046b64.c takes TWO
+ * arguments and no this: the BMD's texture-name table and the BTA
+ * object whose name entries it resolves against it. Every matched
+ * caller (Tornado, Submarine, the ov006 users, CastleWater) passes
+ * exactly those two, and the sibling veneers at 0x0201577c
+ * (MaterialChanger) and 0x0201597c (TextureSequence) are called the
+ * same way. Declared static below: a static member mangles identically,
+ * and the earlier "(this, &model, &file)" reading of this comment cost
+ * the PC port a wrong-register hunt.
  * SetFile's definition stays a mangled free function (wall 6az,
  * Fix12<int> in the signature); the declaration below is the real one.
  */
@@ -30,7 +39,7 @@ struct TextureTransformer : Animation {
     virtual ~TextureTransformer();                       /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
-    void Prepare(BMD_File &model, BTA_File &animFile);
+    static void Prepare(BMD_File &model, BTA_File &animFile);
     void Update(ModelComponents &model);
     void SetFile(BTA_File &animFile, int flags, Fix12<int> speed,
                  u32 startFrame);        /* free function, wall 6az */
