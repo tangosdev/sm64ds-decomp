@@ -45,7 +45,13 @@ scope here -- see AGENTS.md/MERGE.md for the human-facing rule.
 
 Usage:
   python tools/port_refcheck.py
-  python tools/port_refcheck.py --json
+  python tools/port_refcheck.py --json                 # report on stdout
+  python tools/port_refcheck.py --json build/port.json # report to a file
+
+The JSON report is the stable contract behind tools/validate_merge.py's
+--port-refcheck-report: schemaVersion, ok, checked, failed, a flat
+`failures` list of {check, file, line, message}, and the same failures
+grouped under `checks` for a human reading the file directly.
 """
 import argparse
 import json
@@ -339,35 +345,56 @@ CHECKS = [
 ]
 
 
-def main():
-    ap = argparse.ArgumentParser(
-        description="Check port/'s literal src/ path and symbol references "
-                     "for staleness left behind by renames.",
-        formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
-    ap.add_argument("--json", action="store_true", help="emit a JSON report")
-    args = ap.parse_args()
+def build_report():
+    """Run every check and return the report JSON consumers see.
 
+    `failures` is a flat, check-tagged copy of everything under `checks`, so a
+    consumer that only wants "did it pass, and what broke" -- tools/validate_merge.py
+    -- never has to walk the per-check grouping.
+    """
     results = {}
-    all_failures = []
+    tagged = []
     total_checked = 0
     for name, fn in CHECKS:
         checked, failures = fn()
         results[name] = {"checked": checked, "failures": [f.to_dict() for f in failures]}
         total_checked += checked
-        all_failures.extend(failures)
+        tagged.extend((name, f) for f in failures)
+    return {
+        "schemaVersion": 1,
+        "ok": not tagged,
+        "checked": total_checked,
+        "failed": len(tagged),
+        "failures": [dict(f.to_dict(), check=name) for name, f in tagged],
+        "checks": results,
+    }
 
-    if args.json:
-        report = {
-            "ok": not all_failures,
-            "checked": total_checked,
-            "failed": len(all_failures),
-            "checks": results,
-        }
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="Check port/'s literal src/ path and symbol references "
+                     "for staleness left behind by renames.",
+        formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
+    ap.add_argument("--json", nargs="?", const="-", metavar="PATH",
+                    help="write the JSON report to PATH (stdout if PATH is "
+                         "omitted or '-')")
+    args = ap.parse_args()
+
+    report = build_report()
+    all_failures = report["failures"]
+    total_checked = report["checked"]
+
+    if args.json == "-":
         print(json.dumps(report, indent=2))
         return 1 if all_failures else 0
+    if args.json:
+        # A report file leaves stdout free for the human summary below, which is
+        # all a CI log of this phase would otherwise show.
+        pathlib.Path(args.json).write_text(json.dumps(report, indent=2) + "\n",
+                                           encoding="utf-8", newline="\n")
 
     for name, fn in CHECKS:
-        r = results[name]
+        r = report["checks"][name]
         icon = "OK  " if not r["failures"] else "FAIL"
         print(f"  [{icon}] {name:<14} {r['checked']} reference(s) checked, "
               f"{len(r['failures'])} stale")
@@ -375,7 +402,7 @@ def main():
     if all_failures:
         print("\nport-refcheck: STALE port/ references found:", file=sys.stderr)
         for f in all_failures:
-            print(f"  {f}", file=sys.stderr)
+            print(f"  {f['file']}:{f['line']}: {f['message']}", file=sys.stderr)
         print(f"\nport-refcheck: {total_checked} checked - {len(all_failures)} stale",
               file=sys.stderr)
         print("A src/ rename, .c-to-.cpp migration, or file move left port/ "
