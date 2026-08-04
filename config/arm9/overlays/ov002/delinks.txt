@@ -4783,32 +4783,32 @@ src/AmbientSoundEffects_Spawn.c:
     complete
     .text start:0x020f1b94 end:0x020f1bc4
 
-src/_ZN19AmbientSoundEffectsD1Ev.cpp:
+src/_ZN8MugenBgmD1Ev.cpp:
     .text start:0x020f1bc4 end:0x020f1be8
 
-src/_ZN19AmbientSoundEffectsD0Ev.c:
+src/_ZN8MugenBgmD0Ev.c:
     .text start:0x020f1be8 end:0x020f1c20
 
 src/func_ov002_020f1c20.c:
     complete
     .text start:0x020f1c20 end:0x020f1c50
 
-src/_ZN19AmbientSoundEffects16CleanupResourcesEv.c:
+src/_ZN8MugenBgm16CleanupResourcesEv.c:
     complete
     .text start:0x020f1c50 end:0x020f1c58
 
-src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.c:
+src/_ZN8MugenBgm16OnPendingDestroyEv.c:
     complete
     .text start:0x020f1c58 end:0x020f1c5c
 
-src/_ZN19AmbientSoundEffects6RenderEv.c:
+src/_ZN8MugenBgm6RenderEv.c:
     complete
     .text start:0x020f1c5c end:0x020f1c64
 
-src/_ZN19AmbientSoundEffects8BehaviorEv.cpp:
+src/_ZN8MugenBgm8BehaviorEv.cpp:
     .text start:0x020f1c64 end:0x020f1eb4
 
-src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp:
+src/_ZN8MugenBgm13InitResourcesEv.cpp:
     .text start:0x020f1eb4 end:0x020f1f40
 
 src/MugenBgm_Spawn.c:
