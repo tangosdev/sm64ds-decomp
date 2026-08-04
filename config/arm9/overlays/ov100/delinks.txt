@@ -197,6 +197,7 @@ src/func_ov100_021443f4.c:
     .text start:0x021443f4 end:0x02144424
 
 src/func_ov100_02144424.c:
+    complete
     .text start:0x02144424 end:0x02144468
 
 src/func_ov100_02144468.c:

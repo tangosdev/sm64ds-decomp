@@ -122,6 +122,7 @@ src/func_ov016_02112a00.c:
     .text start:0x02112a00 end:0x02112a44
 
 src/func_ov016_02112a44.c:
+    complete
     .text start:0x02112a44 end:0x02112a9c
 
 src/func_ov016_02112a9c.c:
@@ -151,6 +152,7 @@ src/func_ov016_02112ef4.c:
     .text start:0x02112ef4 end:0x02112f44
 
 src/func_ov016_02112f44.c:
+    complete
     .text start:0x02112f44 end:0x02112fa8
 
 src/func_ov016_02112fa8.c:

@@ -7,6 +7,7 @@ src/func_ov047_021111a0.c:
     .text start:0x021111a0 end:0x021111f0
 
 src/func_ov047_021111f0.c:
+    complete
     .text start:0x021111f0 end:0x02111254
 
 src/func_ov047_02111254.c:
@@ -41,6 +42,7 @@ src/func_ov047_021113f8.c:
     .text start:0x021113f8 end:0x02111448
 
 src/func_ov047_02111448.c:
+    complete
     .text start:0x02111448 end:0x021114ac
 
 src/func_ov047_021114ac.c:

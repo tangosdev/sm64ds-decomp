@@ -195,6 +195,7 @@ src/func_ov079_02126dbc.c:
     .text start:0x02126dbc end:0x02126e00
 
 src/func_ov079_02126e00.c:
+    complete
     .text start:0x02126e00 end:0x02126e58
 
 src/func_ov079_02126e58.cpp:

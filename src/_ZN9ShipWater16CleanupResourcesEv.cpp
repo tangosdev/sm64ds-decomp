@@ -6,14 +6,15 @@
 #include "ShipWater.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov017_02111c80[];
+extern int data_ov017_02111c88[];
 
 int ShipWater::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov017_02111c88))->Release();
+    ((SharedFilePtr *)(data_ov017_02111c80))->Release();
     return 1;
 }

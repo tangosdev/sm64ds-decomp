@@ -466,6 +466,7 @@ src/func_ov060_02117d1c.c:
     .text start:0x02117d1c end:0x02117d60
 
 src/func_ov060_02117d60.c:
+    complete
     .text start:0x02117d60 end:0x02117db8
 
 src/func_ov060_02117db8.c:

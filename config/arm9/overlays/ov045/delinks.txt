@@ -8,6 +8,7 @@ src/func_ov045_021111a0.c:
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov045_021111e4.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov045_0211123c.c:
@@ -106,6 +107,7 @@ src/func_ov045_02111b14.c:
     .text start:0x02111b14 end:0x02111b64
 
 src/func_ov045_02111b64.c:
+    complete
     .text start:0x02111b64 end:0x02111bc8
 
 src/func_ov045_02111bc8.c:

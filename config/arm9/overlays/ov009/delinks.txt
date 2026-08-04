@@ -88,6 +88,7 @@ src/_ZN8MetalNetD0Ev.c:
     .text start:0x02111e08 end:0x02111e60
 
 src/_ZN8MetalNet16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111e60 end:0x02111ea4
 
 src/_ZN8MetalNet16OnPendingDestroyEv.c:

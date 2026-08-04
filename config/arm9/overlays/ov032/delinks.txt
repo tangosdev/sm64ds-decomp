@@ -104,6 +104,7 @@ src/func_ov032_021124a8.c:
     .text start:0x021124a8 end:0x021124ec
 
 src/func_ov032_021124ec.c:
+    complete
     .text start:0x021124ec end:0x02112544
 
 src/func_ov032_02112544.c:
@@ -133,6 +134,7 @@ src/_ZN9HugeCoverD0Ev.c:
     .text start:0x021126e4 end:0x02112744
 
 src/_ZN9HugeCover16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112744 end:0x02112788
 
 src/_ZN9HugeCover6RenderEv.cpp:

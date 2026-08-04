@@ -9,6 +9,7 @@ src/func_ov013_021111a0.c:
     .text start:0x021111a0 end:0x021111d0
 
 src/func_ov013_021111d0.c:
+    complete
     .text start:0x021111d0 end:0x02111214
 
 src/func_ov013_02111214.c:

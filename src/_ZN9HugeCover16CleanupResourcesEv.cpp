@@ -6,14 +6,15 @@
 #include "HugeCover.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov032_02113af4[];
+extern int data_ov032_02113afc[];
 
 int HugeCover::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov032_02113afc))->Release();
+    ((SharedFilePtr *)(data_ov032_02113af4))->Release();
     return 1;
 }

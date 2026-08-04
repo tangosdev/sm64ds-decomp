@@ -3,6 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
+extern int _ZTV10RickshawBs[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV20daObjKm3_Kaitendai_c */
 int *func_ov047_021113bc(void)
@@ -11,7 +12,7 @@ int *func_ov047_021113bc(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)_ZTV20daObjKm3_Kaitendai_c;
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV10RickshawBs;
     }
     return p;
 }

@@ -6,14 +6,15 @@
 #include "MetalNet.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov009_02113e88[];
+extern int data_ov009_02113e90[];
 
 int MetalNet::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov009_02113e90))->Release();
+    ((SharedFilePtr *)(data_ov009_02113e88))->Release();
     return 1;
 }

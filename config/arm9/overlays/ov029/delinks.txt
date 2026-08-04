@@ -8,6 +8,7 @@ src/func_ov029_021111a0.c:
     .text start:0x021111a0 end:0x021111f0
 
 src/func_ov029_021111f0.c:
+    complete
     .text start:0x021111f0 end:0x02111254
 
 src/func_ov029_02111254.c:
@@ -93,6 +94,7 @@ src/func_ov029_02111ac4.c:
     .text start:0x02111ac4 end:0x02111b08
 
 src/func_ov029_02111b08.c:
+    complete
     .text start:0x02111b08 end:0x02111b60
 
 src/func_ov029_02111b60.c:
@@ -127,6 +129,7 @@ src/func_ov029_02111ea4.c:
     .text start:0x02111ea4 end:0x02111ef4
 
 src/func_ov029_02111ef4.c:
+    complete
     .text start:0x02111ef4 end:0x02111f58
 
 src/func_ov029_02111f58.c:

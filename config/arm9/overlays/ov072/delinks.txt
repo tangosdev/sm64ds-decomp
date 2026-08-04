@@ -202,6 +202,7 @@ src/func_ov072_02120824.c:
     .text start:0x02120824 end:0x02120874
 
 src/func_ov072_02120874.c:
+    complete
     .text start:0x02120874 end:0x021208d8
 
 src/func_ov072_021208d8.cpp:

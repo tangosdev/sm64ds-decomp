@@ -287,6 +287,7 @@ src/func_ov002_020b05d0.c:
     .text start:0x020b05d0 end:0x020b0600
 
 src/func_ov002_020b0600.c:
+    complete
     .text start:0x020b0600 end:0x020b0644
 
 src/func_ov002_020b0644.c:
@@ -347,6 +348,7 @@ src/_ZN9CameraTagD1Ev.cpp:
     .text start:0x020b07f8 end:0x020b081c
 
 src/_ZN9CameraTagD0Ev.c:
+    complete
     .text start:0x020b081c end:0x020b0854
 
 src/_ZN9CameraTag16CleanupResourcesEv.c:
@@ -565,6 +567,7 @@ src/func_ov002_020b3298.c:
     .text start:0x020b3298 end:0x020b32c8
 
 src/func_ov002_020b32c8.c:
+    complete
     .text start:0x020b32c8 end:0x020b330c
 
 src/func_ov002_020b330c.cpp:
@@ -1024,6 +1027,7 @@ src/func_ov002_020b6d28.c:
     .text start:0x020b6d28 end:0x020b6d4c
 
 src/func_ov002_020b6d4c.c:
+    complete
     .text start:0x020b6d4c end:0x020b6d84
 
 src/func_ov002_020b6d84.c:
@@ -1182,6 +1186,7 @@ src/func_ov002_020b8bf0.c:
     .text start:0x020b8bf0 end:0x020b8c3c
 
 src/func_ov002_020b8c3c.c:
+    complete
     .text start:0x020b8c3c end:0x020b8c9c
 
 src/func_ov002_020b8c9c.cpp:
@@ -1197,6 +1202,7 @@ src/func_ov002_020b8d3c.c:
     .text start:0x020b8d3c end:0x020b8d68
 
 src/func_ov002_020b8d68.c:
+    complete
     .text start:0x020b8d68 end:0x020b8dac
 
 src/func_ov002_020b8dac.cpp:
@@ -1517,6 +1523,7 @@ src/func_ov002_020bc414.c:
     .text start:0x020bc414 end:0x020bc444
 
 src/func_ov002_020bc444.c:
+    complete
     .text start:0x020bc444 end:0x020bc488
 
 src/func_ov002_020bc488.c:
@@ -4396,6 +4403,7 @@ src/func_ov002_020ec388.c:
     .text start:0x020ec388 end:0x020ec3b8
 
 src/func_ov002_020ec3b8.c:
+    complete
     .text start:0x020ec3b8 end:0x020ec3fc
 
 src/func_ov002_020ec3fc.c:
@@ -4739,6 +4747,7 @@ src/func_ov002_020f03c4.c:
     .text start:0x020f03c4 end:0x020f03f4
 
 src/func_ov002_020f03f4.c:
+    complete
     .text start:0x020f03f4 end:0x020f0438
 
 src/func_ov002_020f0438.cpp:
@@ -4940,6 +4949,7 @@ src/_ZN8MugenBgmD1Ev.cpp:
     .text start:0x020f1bc4 end:0x020f1be8
 
 src/_ZN8MugenBgmD0Ev.c:
+    complete
     .text start:0x020f1be8 end:0x020f1c20
 
 src/func_ov002_020f1c20.c:

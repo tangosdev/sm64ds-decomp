@@ -8,6 +8,7 @@ src/func_ov018_021111a0.c:
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov018_021111e4.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov018_0211123c.cpp:
@@ -140,6 +141,7 @@ src/func_ov018_021126d4.c:
     .text start:0x021126d4 end:0x021126f8
 
 src/func_ov018_021126f8.c:
+    complete
     .text start:0x021126f8 end:0x02112730
 
 src/func_ov018_02112730.cpp:

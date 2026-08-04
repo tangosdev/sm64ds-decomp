@@ -234,6 +234,7 @@ src/func_ov091_021333fc.c:
     .text start:0x021333fc end:0x02133440
 
 src/func_ov091_02133440.c:
+    complete
     .text start:0x02133440 end:0x02133498
 
 src/func_ov091_02133498.c:
