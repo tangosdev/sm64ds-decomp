@@ -163,6 +163,37 @@ def placement_for(symbol):
     return None
 
 
+def _fits(directory, symbol):
+    """Is ``directory`` a legal home for ``symbol``?
+
+    Only the unnamed buckets have a rule strict enough to answer. Every other directory
+    is a human's deliberate choice, so the honest answer there is yes -- leave it be."""
+    try:
+        rest = directory.relative_to(SRC / UNNAMED_DIR)
+    except ValueError:
+        return True
+    return bool(rest.parts) and module_of(symbol) == rest.parts[0]
+
+
+def rename_target(path, new_symbol):
+    """Where a file must live once its symbol is renamed to ``new_symbol``.
+
+    Renaming in place is the norm and stays the norm; this differs only when the old
+    directory would become a lie. A `func_ov006_*` that becomes `_ZN3Boo6RenderEv` cannot
+    stay in `src/unnamed/ov006/`: that directory means "address-named symbols of ov006".
+    Leaving it there misfiles the file and, worse, puts class `Boo` in two directories at
+    once -- which is exactly the state `placement_for` reads as disagreement, so every
+    future `Boo` method silently goes back to landing in the root.
+
+    Renaming is the single most common way a file's correct home changes: 1,282 files
+    went from `func_*` to a real name in the 60 days to 2026-08-04."""
+    suffix = "".join(pathlib.Path(path).suffixes)
+    home = placement_for(new_symbol)
+    if home is None:
+        home = path.parent if _fits(path.parent, new_symbol) else SRC
+    return home / (new_symbol + suffix)
+
+
 def set_root(repo):
     """Resolve against a different checkout. Returns the previous ``(REPO, SRC)``.
 

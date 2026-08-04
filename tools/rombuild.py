@@ -51,6 +51,7 @@ BUILD = REPO / "build"
 sys.path.insert(0, str(REPO / "tools"))
 import rombuild_cache as RBK  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
+import layout_check as LAY  # noqa: E402
 import rombuild_profile as RP  # noqa: E402
 
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
@@ -280,6 +281,8 @@ def main():
     ap.add_argument("--report-json",
                     help="structured report (default follows the selected profile)")
     ap.add_argument("--no-rom", action="store_true", help="stop after linking")
+    ap.add_argument("--no-layout-check", action="store_true",
+                    help="skip the src/ layout invariant gate (see tools/layout_check.py)")
     ap.add_argument("--no-check", action="store_true",
                     help="skip module/source fidelity analysis; report status is unchecked")
     ap.add_argument("--arm7-bios", help="passed to dsd rom build if your dump needs it")
@@ -312,6 +315,24 @@ def main():
         if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
             raise BuildError("preflight", 1,
                              "no extracted ROM - run tools/unpack.py on your own dump first")
+
+        # Layout gate, before the compile rather than after: a delinks.txt naming a path
+        # with no file there does NOT fail this build. dsd fills that range with retail
+        # ROM bytes, so the result is still byte-identical and every check below stays
+        # green -- the only trace is the source-built function count quietly dropping.
+        # That is the one class of breakage this pipeline cannot self-detect, so it is
+        # checked up front where it costs a second instead of a full link.
+        if not args.no_layout_check:
+            layout = LAY.check()
+            report["layout"] = {k: len(v) for k, v in layout.items()}
+            if any(layout[c] for c in LAY.ERRORS):
+                LAY.print_report(layout, quiet=True)
+                raise BuildError("layout", 1,
+                                 "src/ layout invariants violated - see tools/layout_check.py. "
+                                 "Re-run tools/enroll.py if files moved; add a documented "
+                                 "waiver to config/layout-known-issues.txt only if the "
+                                 "violation is genuinely pre-existing.")
+
         profile = RP.prepare_profile(args.profile)
         config_root = profile["configRoot"]
         config_yaml = profile["configYaml"]

@@ -160,6 +160,47 @@ class SrcPath(unittest.TestCase):
                          SP.SRC / "_Z14ApproachLinearRiii.c")
         self.assertEqual(SP.new_path_for("AngleDiff", "c"), SP.SRC / "AngleDiff.c")
 
+    # --- renaming: the commonest way a file's correct home changes -----------
+    def test_rename_in_place_is_still_the_norm(self):
+        p = self.write("func_0205c410.c")
+        self.assertEqual(SP.rename_target(p, "_ZN6Player4InitEv"),
+                         SP.SRC / "_ZN6Player4InitEv.c")
+
+    def test_rename_out_of_an_unnamed_bucket_when_the_name_gains_a_class(self):
+        """The defect this exists for: a named file left in src/unnamed/ov006/ misfiles
+        itself AND splits its class across two directories, which disables placement for
+        every other method of that class."""
+        p = self.write("unnamed/ov006/func_ov006_02100000.c")
+        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv"),
+                         SP.SRC / "_ZN3Boo6RenderEv.c")
+
+    def test_rename_into_the_classs_existing_home(self):
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        p = self.write("unnamed/ov006/func_ov006_02100000.c")
+        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv"),
+                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.c")
+
+    def test_rename_stays_in_its_bucket_when_still_address_named(self):
+        p = self.write("unnamed/ov006/func_ov006_02100000.c")
+        self.assertEqual(SP.rename_target(p, "func_ov006_02100004"),
+                         SP.SRC / "unnamed/ov006/func_ov006_02100004.c")
+
+    def test_rename_leaves_a_bucket_that_belongs_to_another_module(self):
+        p = self.write("unnamed/ov006/func_ov006_02100000.c")
+        self.assertEqual(SP.rename_target(p, "func_ov002_02100000"),
+                         SP.SRC / "func_ov002_02100000.c")
+
+    def test_rename_does_not_disturb_a_hand_placed_subsystem_directory(self):
+        """engine/message/ is a human's choice; srcpath has no standing to second-guess
+        it, so a rename there stays put."""
+        p = self.write("engine/message/func_0201cb2c.c")
+        self.assertEqual(SP.rename_target(p, "func_0201cb30"),
+                         SP.SRC / "engine/message/func_0201cb30.c")
+
+    def test_rename_keeps_a_multi_suffix_extension(self):
+        p = self.write("unnamed/ov006/func_ov006_02100000.cpp")
+        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv").suffix, ".cpp")
+
     def test_placement_never_overrides_where_a_file_already_is(self):
         """Migration decides; placement only follows. A file that exists is not relocated
         even when its cohort has since moved elsewhere."""

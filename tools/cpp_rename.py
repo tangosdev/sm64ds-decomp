@@ -107,9 +107,11 @@ def find_renamable_files(target_addr=None):
             new_sym = verified_map[m]
             is_cpp = new_sym.startswith("_Z")
             new_ext = ".cpp" if is_cpp else path.suffix
-            new_filename = f"{new_sym}{new_ext}"
-            # A symbol rename must not flatten an already-organized subsystem.
-            new_path = path.with_name(new_filename)
+            # A symbol rename must not flatten an already-organized subsystem, and must
+            # not strand the file in a bucket its new name no longer belongs to -- a
+            # src/unnamed/<mod>/ file that gains a class name has to leave. srcpath owns
+            # both halves of that decision.
+            new_path = SP.rename_target(path.with_suffix(new_ext), new_sym)
 
             if new_path != path:
                 renames.append({
