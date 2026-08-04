@@ -10,6 +10,7 @@
 extern "C" {
 extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
+extern void func_ov006_020c6f3c();
 extern void *_ZTV17MgBounceAndPounce[];
 extern void *data_020a0eac;
 void *func_ov006_020eec9c(char *c);
