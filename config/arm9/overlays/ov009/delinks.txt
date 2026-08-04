@@ -78,6 +78,7 @@ src/_ZN11CastleWater13InitResourcesEv.cpp:
     .text start:0x02111c74 end:0x02111d8c
 
 src/CastleWater_Spawn.c:
+    complete
     .text start:0x02111d8c end:0x02111dc4
 
 src/_ZN8MetalNetD1Ev.c:

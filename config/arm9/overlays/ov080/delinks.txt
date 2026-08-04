@@ -32,6 +32,7 @@ src/func_ov080_02123924.cpp:
     .text start:0x02123924 end:0x02123a34
 
 src/func_ov080_02123a34.cpp:
+    complete
     .text start:0x02123a34 end:0x02123c24
 
 src/func_ov080_02123c24.c:
@@ -173,6 +174,7 @@ src/_ZN11CrazedCrate8BehaviorEv.cpp:
     .text start:0x021251cc end:0x021251ec
 
 src/_ZN11CrazedCrate13InitResourcesEv.cpp:
+    complete
     .text start:0x021251ec end:0x02125318
 
 src/func_ov080_02125318.cpp:
@@ -282,6 +284,7 @@ src/func_ov080_02126c60.cpp:
     .text start:0x02126c60 end:0x02126ca0
 
 src/func_ov080_02126ca0.cpp:
+    complete
     .text start:0x02126ca0 end:0x02126f8c
 
 src/Painting_Spawn.c:

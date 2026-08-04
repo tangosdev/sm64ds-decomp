@@ -44,6 +44,7 @@ src/func_ov077_02123a74.cpp:
     .text start:0x02123a74 end:0x02123c6c
 
 src/func_ov077_02123c6c.cpp:
+    complete
     .text start:0x02123c6c end:0x02123d40
 
 src/func_ov077_02123d40.cpp:
@@ -114,9 +115,11 @@ src/_ZN6Lakitu6RenderEv.cpp:
     .text start:0x02124828 end:0x021248b8
 
 src/_ZN6Lakitu8BehaviorEv.cpp:
+    complete
     .text start:0x021248b8 end:0x02124908
 
 src/_ZN6Lakitu13InitResourcesEv.cpp:
+    complete
     .text start:0x02124908 end:0x02124aa4
 
 src/func_ov077_02124aa4.cpp:
@@ -151,6 +154,7 @@ src/func_ov077_02124ce4.c:
     .text start:0x02124ce4 end:0x02124d08
 
 src/func_ov077_02124d08.cpp:
+    complete
     .text start:0x02124d08 end:0x02124eb0
 
 src/func_ov077_02124eb0.cpp:
@@ -182,6 +186,7 @@ src/func_ov077_02125480.cpp:
     .text start:0x02125480 end:0x02125550
 
 src/func_ov077_02125550.cpp:
+    complete
     .text start:0x02125550 end:0x021256b4
 
 src/func_ov077_021256b4.c:
@@ -249,6 +254,7 @@ src/_ZN5Spiny8BehaviorEv.cpp:
     .text start:0x02125f68 end:0x02126058
 
 src/_ZN5Spiny13InitResourcesEv.cpp:
+    complete
     .text start:0x02126058 end:0x02126194
 
 src/func_ov077_02126194.cpp:

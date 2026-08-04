@@ -32,6 +32,7 @@ src/_ZN11MirrorLuigi16OnPendingDestroyEv.c:
     .text start:0x02111354 end:0x02111358
 
 src/_ZN11MirrorLuigi6RenderEv.cpp:
+    complete
     .text start:0x02111358 end:0x02111508
 
 src/_ZN11MirrorLuigi8BehaviorEv.cpp:

@@ -24,6 +24,7 @@ src/func_ov071_0211f0b4.c:
     .text start:0x0211f0b4 end:0x0211f148
 
 src/func_ov071_0211f148.cpp:
+    complete
     .text start:0x0211f148 end:0x0211f29c
 
 src/func_ov071_0211f29c.cpp:
@@ -62,6 +63,7 @@ src/func_ov071_0211fb0c.c:
     .text start:0x0211fb0c end:0x0211fb24
 
 src/func_ov071_0211fb24.cpp:
+    complete
     .text start:0x0211fb24 end:0x0211fbf4
 
 src/func_ov071_0211fbf4.c:
@@ -133,6 +135,7 @@ src/_ZN10Scuttlebug6RenderEv.cpp:
     .text start:0x0212033c end:0x02120398
 
 src/_ZN10Scuttlebug8BehaviorEv.cpp:
+    complete
     .text start:0x02120398 end:0x021203f8
 
 src/_ZN10Scuttlebug13InitResourcesEv.cpp:
@@ -170,6 +173,7 @@ src/func_ov071_02120a20.c:
     .text start:0x02120a20 end:0x02120a48
 
 src/func_ov071_02120a48.cpp:
+    complete
     .text start:0x02120a48 end:0x02120b14
 
 src/func_ov071_02120b14.cpp:
@@ -270,6 +274,7 @@ src/_ZN14MrI_Projectile6RenderEv.cpp:
     .text start:0x02121d14 end:0x02121d80
 
 src/_ZN14MrI_Projectile8BehaviorEv.cpp:
+    complete
     .text start:0x02121d80 end:0x02121eb4
 
 src/_ZN14MrI_Projectile13InitResourcesEv.cpp:
@@ -290,6 +295,7 @@ src/func_ov071_02122080.c:
     .text start:0x02122080 end:0x021220c8
 
 src/func_ov071_021220c8.cpp:
+    complete
     .text start:0x021220c8 end:0x02122194
 
 src/func_ov071_02122194.c:
@@ -320,6 +326,7 @@ src/_ZN6Coffin6RenderEv.cpp:
     .text start:0x021224a4 end:0x021224cc
 
 src/_ZN6Coffin8BehaviorEv.cpp:
+    complete
     .text start:0x021224cc end:0x0212255c
 
 src/_ZN6Coffin13InitResourcesEv.cpp:

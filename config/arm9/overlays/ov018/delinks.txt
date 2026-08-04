@@ -124,9 +124,11 @@ src/_ZN7SkiLift6RenderEv.cpp:
     .text start:0x02112454 end:0x02112480
 
 src/_ZN7SkiLift8BehaviorEv.cpp:
+    complete
     .text start:0x02112480 end:0x021124d0
 
 src/_ZN7SkiLift13InitResourcesEv.cpp:
+    complete
     .text start:0x021124d0 end:0x0211267c
 
 src/MotherPenguin_Spawn.c:

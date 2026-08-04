@@ -23,6 +23,7 @@ src/func_ov015_02111278.cpp:
     .text start:0x02111278 end:0x021112a0
 
 src/func_ov015_021112a0.cpp:
+    complete
     .text start:0x021112a0 end:0x021112dc
 
 src/PoleBillboard_Spawn.c:
@@ -138,6 +139,7 @@ src/func_ov015_02111fb8.c:
     .text start:0x02111fb8 end:0x02112004
 
 src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112004 end:0x02112068
 
 src/_ZN14KnockDownPlank6RenderEv.cpp:
@@ -149,6 +151,7 @@ src/_ZN14KnockDownPlank8BehaviorEv.cpp:
     .text start:0x02112090 end:0x021120fc
 
 src/_ZN14KnockDownPlank13InitResourcesEv.cpp:
+    complete
     .text start:0x021120fc end:0x02112230
 
 src/MovingBarBig_Spawn.c:

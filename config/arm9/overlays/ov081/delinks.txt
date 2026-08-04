@@ -36,6 +36,7 @@ src/_ZN9Spindrift6RenderEv.cpp:
     .text start:0x02123c1c end:0x02123c6c
 
 src/_ZN9Spindrift8BehaviorEv.cpp:
+    complete
     .text start:0x02123c6c end:0x02123ed0
 
 src/_ZN9Spindrift13InitResourcesEv.cpp:
@@ -101,6 +102,7 @@ src/func_ov081_02124b08.c:
     .text start:0x02124b08 end:0x02124b98
 
 src/func_ov081_02124b98.cpp:
+    complete
     .text start:0x02124b98 end:0x02124d14
 
 src/func_ov081_02124d14.cpp:
@@ -173,6 +175,7 @@ src/_ZN10MrBlizzard6RenderEv.cpp:
     .text start:0x02125820 end:0x0212588c
 
 src/_ZN10MrBlizzard8BehaviorEv.cpp:
+    complete
     .text start:0x0212588c end:0x02125ba0
 
 src/_ZN10MrBlizzard13InitResourcesEv.cpp:
@@ -227,9 +230,11 @@ src/_ZN8Snowball6RenderEv.cpp:
     .text start:0x021262c0 end:0x021262ec
 
 src/_ZN8Snowball8BehaviorEv.cpp:
+    complete
     .text start:0x021262ec end:0x021263b8
 
 src/_ZN8Snowball13InitResourcesEv.cpp:
+    complete
     .text start:0x021263b8 end:0x021264b4
 
 src/Snowball_Spawn.c:
@@ -295,6 +300,7 @@ src/func_ov081_02127044.c:
     .text start:0x02127044 end:0x02127070
 
 src/func_ov081_02127070.cpp:
+    complete
     .text start:0x02127070 end:0x02127134
 
 src/func_ov081_02127134.c:
@@ -369,6 +375,7 @@ src/_ZN8Moneybag8BehaviorEv.cpp:
     .text start:0x02127854 end:0x021278a8
 
 src/_ZN8Moneybag13InitResourcesEv.cpp:
+    complete
     .text start:0x021278a8 end:0x02127a7c
 
 src/func_ov081_02127a7c.cpp:
@@ -397,6 +404,7 @@ src/func_ov081_02127cf4.c:
     .text start:0x02127cf4 end:0x02127d98
 
 src/_ZN8IceBlock16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02127d98 end:0x02127ddc
 
 src/_ZN8IceBlock6RenderEv.cpp:
@@ -404,6 +412,7 @@ src/_ZN8IceBlock6RenderEv.cpp:
     .text start:0x02127ddc end:0x02127e1c
 
 src/_ZN8IceBlock8BehaviorEv.cpp:
+    complete
     .text start:0x02127e1c end:0x02127ff0
 
 src/_ZN8IceBlock13InitResourcesEv.cpp:

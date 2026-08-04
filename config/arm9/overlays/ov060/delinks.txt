@@ -131,6 +131,7 @@ src/func_ov060_02113b5c.cpp:
     .text start:0x02113b5c end:0x02113d20
 
 src/func_ov060_02113d20.cpp:
+    complete
     .text start:0x02113d20 end:0x02113d8c
 
 src/func_ov060_02113d8c.cpp:
@@ -298,9 +299,11 @@ src/_ZN10BowserTail6RenderEv.c:
     .text start:0x02115f5c end:0x02115f64
 
 src/_ZN6Bowser8BehaviorEv.cpp:
+    complete
     .text start:0x02115f64 end:0x02116078
 
 src/_ZN10BowserTail8BehaviorEv.cpp:
+    complete
     .text start:0x02116078 end:0x02116130
 
 src/_ZN6Bowser13InitResourcesEv.c:
@@ -411,6 +414,7 @@ src/_ZN10BowserFire6RenderEv.c:
     .text start:0x021176cc end:0x021176d4
 
 src/_ZN10BowserFire8BehaviorEv.cpp:
+    complete
     .text start:0x021176d4 end:0x02117790
 
 src/_ZN10BowserFire13InitResourcesEv.cpp:
@@ -447,6 +451,7 @@ src/_ZN18BowserFireSeaArena6RenderEv.cpp:
     .text start:0x02117b9c end:0x02117bc8
 
 src/_ZN18BowserFireSeaArena8BehaviorEv.cpp:
+    complete
     .text start:0x02117bc8 end:0x02117c30
 
 src/_ZN18BowserFireSeaArena13InitResourcesEv.cpp:
@@ -553,9 +558,11 @@ src/_ZN17BowserSkyPlatform6RenderEv.cpp:
     .text start:0x02118ad4 end:0x02118b2c
 
 src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
+    complete
     .text start:0x02118b2c end:0x02118bb4
 
 src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp:
+    complete
     .text start:0x02118bb4 end:0x02118cbc
 
 src/SpikeBomb_Spawn.c:

@@ -22,6 +22,7 @@ src/func_ov030_02111350.cpp:
     .text start:0x02111350 end:0x02111384
 
 src/func_ov030_02111384.cpp:
+    complete
     .text start:0x02111384 end:0x02111410
 
 src/func_ov030_02111410.cpp:
@@ -206,6 +207,7 @@ src/_ZN13RollingLogTtm6RenderEv.cpp:
     .text start:0x02114230 end:0x02114278
 
 src/_ZN13RollingLogTtm8BehaviorEv.cpp:
+    complete
     .text start:0x02114278 end:0x02114378
 
 src/_ZN13RollingLogTtm13InitResourcesEv.cpp:

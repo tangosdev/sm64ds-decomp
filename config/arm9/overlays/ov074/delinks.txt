@@ -169,9 +169,11 @@ src/func_ov074_02121a4c.cpp:
     .text start:0x02121a4c end:0x02121abc
 
 src/_ZN8Goomboss16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02121abc end:0x02121b70
 
 src/_ZN8Goomboss6RenderEv.cpp:
+    complete
     .text start:0x02121b70 end:0x02121bf0
 
 src/_ZN8Goomboss8BehaviorEv.cpp:

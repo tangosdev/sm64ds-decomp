@@ -49,6 +49,7 @@ src/func_ov027_02111680.c:
     .text start:0x02111680 end:0x021116f0
 
 src/func_ov027_021116f0.cpp:
+    complete
     .text start:0x021116f0 end:0x02111770
 
 src/func_ov027_02111770.c:
@@ -113,18 +114,22 @@ src/func_ov027_02111e00.cpp:
     .text start:0x02111e00 end:0x02111e34
 
 src/func_ov027_02111e34.cpp:
+    complete
     .text start:0x02111e34 end:0x02111eb4
 
 src/func_ov027_02111eb4.cpp:
+    complete
     .text start:0x02111eb4 end:0x0211207c
 
 src/func_ov027_0211207c.c:
     .text start:0x0211207c end:0x021120c4
 
 src/_ZN13SnowmanBreathD1Ev.cpp:
+    complete
     .text start:0x021120c4 end:0x02112104
 
 src/_ZN13SnowmanBreathD0Ev.cpp:
+    complete
     .text start:0x02112104 end:0x02112158
 
 src/func_ov027_02112158.c:
@@ -172,6 +177,7 @@ src/_ZN13SnowmanBreath16OnPendingDestroyEv.c:
     .text start:0x0211273c end:0x02112740
 
 src/_ZN13SnowmanBreath6RenderEv.cpp:
+    complete
     .text start:0x02112740 end:0x021127a4
 
 src/_ZN13SnowmanBreath8BehaviorEv.cpp:

@@ -19,6 +19,7 @@ src/func_ov070_0211f100.cpp:
     .text start:0x0211f100 end:0x0211f368
 
 src/func_ov070_0211f368.cpp:
+    complete
     .text start:0x0211f368 end:0x0211f450
 
 src/func_ov070_0211f450.c:
@@ -84,6 +85,7 @@ src/_ZN6FlyGuy6RenderEv.cpp:
     .text start:0x021201c0 end:0x02120210
 
 src/_ZN6FlyGuy8BehaviorEv.cpp:
+    complete
     .text start:0x02120210 end:0x021203b4
 
 src/_ZN6FlyGuy13InitResourcesEv.cpp:
@@ -169,6 +171,7 @@ src/_ZN3Amp6RenderEv.cpp:
     .text start:0x02120e24 end:0x02120e8c
 
 src/_ZN3Amp8BehaviorEv.cpp:
+    complete
     .text start:0x02120e8c end:0x02120eec
 
 src/_ZN3Amp13InitResourcesEv.cpp:
@@ -191,6 +194,7 @@ src/func_ov070_021211bc.c:
     .text start:0x021211bc end:0x021211c4
 
 src/func_ov070_021211c4.cpp:
+    complete
     .text start:0x021211c4 end:0x02121298
 
 src/func_ov070_02121298.cpp:
@@ -299,6 +303,7 @@ src/func_ov070_02121cbc.c:
     .text start:0x02121cbc end:0x02121d50
 
 src/func_ov070_02121d50.cpp:
+    complete
     .text start:0x02121d50 end:0x02121e14
 
 src/func_ov070_02121e14.cpp:
@@ -346,9 +351,11 @@ src/_ZN14FlameChompFire6RenderEv.cpp:
     .text start:0x0212206c end:0x02122104
 
 src/_ZN14FlameChompFire8BehaviorEv.cpp:
+    complete
     .text start:0x02122104 end:0x02122124
 
 src/_ZN14FlameChompFire13InitResourcesEv.cpp:
+    complete
     .text start:0x02122124 end:0x021221fc
 
 src/FlameChompFire_Spawn.c:

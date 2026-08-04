@@ -131,6 +131,7 @@ src/func_ov006_020c1764.cpp:
     .text start:0x020c1764 end:0x020c1804
 
 src/func_ov006_020c1804.cpp:
+    complete
     .text start:0x020c1804 end:0x020c19d0
 
 src/func_ov006_020c19d0.cpp:
@@ -968,6 +969,7 @@ src/func_ov006_020cb838.cpp:
     .text start:0x020cb838 end:0x020cbaec
 
 src/func_ov006_020cbaec.cpp:
+    complete
     .text start:0x020cbaec end:0x020cbd7c
 
 src/func_ov006_020cbd7c.cpp:
@@ -1324,6 +1326,7 @@ src/func_ov006_020d1018.c:
     .text start:0x020d1018 end:0x020d10b8
 
 src/func_ov006_020d10b8.cpp:
+    complete
     .text start:0x020d10b8 end:0x020d116c
 
 src/func_ov006_020d116c.c:
@@ -1721,6 +1724,7 @@ src/func_ov006_020d95a4.cpp:
     .text start:0x020d95a4 end:0x020d9638
 
 src/func_ov006_020d9638.cpp:
+    complete
     .text start:0x020d9638 end:0x020d96e0
 
 src/func_ov006_020d96e0.c:
@@ -1820,6 +1824,7 @@ src/func_ov006_020da994.c:
     .text start:0x020da994 end:0x020da9c4
 
 src/func_ov006_020da9c4.cpp:
+    complete
     .text start:0x020da9c4 end:0x020dabec
 
 src/func_ov006_020dabec.c:
@@ -2090,6 +2095,7 @@ src/func_ov006_020de988.cpp:
     .text start:0x020de988 end:0x020dea1c
 
 src/func_ov006_020dea1c.cpp:
+    complete
     .text start:0x020dea1c end:0x020deac4
 
 src/func_ov006_020deac4.c:
@@ -2196,9 +2202,11 @@ src/func_ov006_020e0068.c:
     .text start:0x020e0068 end:0x020e0204
 
 src/func_ov006_020e0204.cpp:
+    complete
     .text start:0x020e0204 end:0x020e0308
 
 src/func_ov006_020e0308.cpp:
+    complete
     .text start:0x020e0308 end:0x020e0574
 
 src/func_ov006_020e0574.cpp:
@@ -2567,6 +2575,7 @@ src/func_ov006_020e67f0.c:
     .text start:0x020e67f0 end:0x020e683c
 
 src/func_ov006_020e683c.cpp:
+    complete
     .text start:0x020e683c end:0x020e6894
 
 src/func_ov006_020e6894.c:
@@ -2637,12 +2646,15 @@ src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp:
     .text start:0x020e7040 end:0x020e7074
 
 src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp:
+    complete
     .text start:0x020e7074 end:0x020e70c0
 
 src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp:
+    complete
     .text start:0x020e70c0 end:0x020e70e4
 
 src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp:
+    complete
     .text start:0x020e70e4 end:0x020e7110
 
 src/func_ov006_020e7110.c:
@@ -2925,9 +2937,11 @@ src/func_ov006_020e9cec.c:
     .text start:0x020e9cec end:0x020e9d1c
 
 src/func_ov006_020e9d1c.cpp:
+    complete
     .text start:0x020e9d1c end:0x020e9e00
 
 src/func_ov006_020e9e00.cpp:
+    complete
     .text start:0x020e9e00 end:0x020e9e70
 
 src/func_ov006_020e9e70.cpp:
@@ -2943,6 +2957,7 @@ src/func_ov006_020ea280.c:
     .text start:0x020ea280 end:0x020ea2c8
 
 src/func_ov006_020ea2c8.cpp:
+    complete
     .text start:0x020ea2c8 end:0x020ea324
 
 src/func_ov006_020ea324.c:
@@ -3112,6 +3127,7 @@ src/func_ov006_020ecee4.c:
     .text start:0x020ecee4 end:0x020ed18c
 
 src/func_ov006_020ed18c.cpp:
+    complete
     .text start:0x020ed18c end:0x020ed270
 
 src/func_ov006_020ed270.c:
@@ -3162,6 +3178,7 @@ src/func_ov006_020eda48.c:
     .text start:0x020eda48 end:0x020edb04
 
 src/func_ov006_020edb04.cpp:
+    complete
     .text start:0x020edb04 end:0x020edcb0
 
 src/func_ov006_020edcb0.c:
@@ -3181,6 +3198,7 @@ src/func_ov006_020edec0.cpp:
     .text start:0x020edec0 end:0x020edf54
 
 src/func_ov006_020edf54.cpp:
+    complete
     .text start:0x020edf54 end:0x020edffc
 
 src/func_ov006_020edffc.c:
@@ -3235,9 +3253,11 @@ src/func_ov006_020ee658.c:
     .text start:0x020ee658 end:0x020ee690
 
 src/func_ov006_020ee690.cpp:
+    complete
     .text start:0x020ee690 end:0x020ee8dc
 
 src/func_ov006_020ee8dc.cpp:
+    complete
     .text start:0x020ee8dc end:0x020ee994
 
 src/MgBounceAndPounce_Spawn.cpp:
@@ -3249,6 +3269,7 @@ src/func_ov006_020eebe8.cpp:
     .text start:0x020eebe8 end:0x020eec9c
 
 src/func_ov006_020eec9c.cpp:
+    complete
     .text start:0x020eec9c end:0x020eed64
 
 src/func_ov006_020eed64.c:
@@ -3344,6 +3365,7 @@ src/func_ov006_020ef7f8.c:
     .text start:0x020ef7f8 end:0x020ef834
 
 src/func_ov006_020ef834.cpp:
+    complete
     .text start:0x020ef834 end:0x020efa84
 
 src/func_ov006_020efa84.c:
@@ -3573,6 +3595,7 @@ src/func_ov006_020f3834.cpp:
     .text start:0x020f3834 end:0x020f3888
 
 src/func_ov006_020f3888.cpp:
+    complete
     .text start:0x020f3888 end:0x020f38f0
 
 src/func_ov006_020f38f0.c:
@@ -3751,6 +3774,7 @@ src/func_ov006_020f5564.cpp:
     .text start:0x020f5564 end:0x020f55b8
 
 src/func_ov006_020f55b8.cpp:
+    complete
     .text start:0x020f55b8 end:0x020f5620
 
 src/func_ov006_020f5620.c:
@@ -3945,6 +3969,7 @@ src/func_ov006_020f7634.cpp:
     .text start:0x020f7634 end:0x020f76a8
 
 src/func_ov006_020f76a8.cpp:
+    complete
     .text start:0x020f76a8 end:0x020f7730
 
 src/func_ov006_020f7730.c:
@@ -4038,6 +4063,7 @@ src/func_ov006_020f8ef4.cpp:
     .text start:0x020f8ef4 end:0x020f8f68
 
 src/func_ov006_020f8f68.cpp:
+    complete
     .text start:0x020f8f68 end:0x020f8ff0
 
 src/func_ov006_020f8ff0.c:
@@ -4105,6 +4131,7 @@ src/func_ov006_020f9fe0.c:
     .text start:0x020f9fe0 end:0x020f9ffc
 
 src/func_ov006_020f9ffc.cpp:
+    complete
     .text start:0x020f9ffc end:0x020fa13c
 
 src/func_ov006_020fa13c.c:
@@ -4112,9 +4139,11 @@ src/func_ov006_020fa13c.c:
     .text start:0x020fa13c end:0x020fa3d0
 
 src/func_ov006_020fa4d4.cpp:
+    complete
     .text start:0x020fa4d4 end:0x020fa56c
 
 src/func_ov006_020fa56c.cpp:
+    complete
     .text start:0x020fa56c end:0x020fa6ac
 
 src/MgPairAGoneAndOn_Spawn.cpp:
@@ -4902,6 +4931,7 @@ src/func_ov006_0210730c.c:
     .text start:0x0210730c end:0x02107358
 
 src/func_ov006_02107358.cpp:
+    complete
     .text start:0x02107358 end:0x021073b0
 
 src/func_ov006_021073b0.c:
@@ -4916,6 +4946,7 @@ src/func_ov006_0210788c.c:
     .text start:0x0210788c end:0x02107920
 
 src/func_ov006_02107920.cpp:
+    complete
     .text start:0x02107920 end:0x021079c8
 
 src/func_ov006_021079c8.c:
@@ -5056,6 +5087,7 @@ src/func_ov006_02109aac.c:
     .text start:0x02109aac end:0x0210a194
 
 src/func_ov006_0210a194.cpp:
+    complete
     .text start:0x0210a194 end:0x0210a400
 
 src/MgMushroomRoulette_Spawn.cpp:
@@ -5091,9 +5123,11 @@ src/func_ov006_0210a664.c:
     .text start:0x0210a664 end:0x0210a698
 
 src/func_ov006_0210a698.cpp:
+    complete
     .text start:0x0210a698 end:0x0210a6e4
 
 src/func_ov006_0210a6e4.cpp:
+    complete
     .text start:0x0210a6e4 end:0x0210a708
 
 src/func_ov006_0210a708.c:
@@ -5109,6 +5143,7 @@ src/func_ov006_0210a954.cpp:
     .text start:0x0210a954 end:0x0210a9a8
 
 src/func_ov006_0210a9a8.cpp:
+    complete
     .text start:0x0210a9a8 end:0x0210aa10
 
 src/func_ov006_0210aa10.c:
@@ -5120,6 +5155,7 @@ src/func_ov006_0210aa3c.c:
     .text start:0x0210aa3c end:0x0210aa60
 
 src/func_ov006_0210aa60.cpp:
+    complete
     .text start:0x0210aa60 end:0x0210ab08
 
 src/func_ov006_0210ab08.c:
@@ -5159,6 +5195,7 @@ src/func_ov006_0210b648.c:
     .text start:0x0210b648 end:0x0210bcb0
 
 src/func_ov006_0210bcb0.cpp:
+    complete
     .text start:0x0210bcb0 end:0x0210bdb0
 
 src/func_ov006_0210bdb0.cpp:
@@ -5254,6 +5291,7 @@ src/func_ov006_0210d740.c:
     .text start:0x0210d740 end:0x0210d7e0
 
 src/func_ov006_0210d7e0.cpp:
+    complete
     .text start:0x0210d7e0 end:0x0210d894
 
 src/func_ov006_0210d894.c:
@@ -5757,6 +5795,7 @@ src/func_ov006_02119904.cpp:
     .text start:0x02119904 end:0x02119958
 
 src/func_ov006_02119958.cpp:
+    complete
     .text start:0x02119958 end:0x021199c0
 
 src/func_ov006_021199c0.c:
@@ -6381,6 +6420,7 @@ src/func_ov006_021207dc.c:
     .text start:0x021207dc end:0x02120880
 
 src/func_ov006_02120880.cpp:
+    complete
     .text start:0x02120880 end:0x02120938
 
 src/func_ov006_02120938.c:
@@ -6475,6 +6515,7 @@ src/func_ov006_021212fc.c:
     .text start:0x021212fc end:0x021214f8
 
 src/func_ov006_021214f8.cpp:
+    complete
     .text start:0x021214f8 end:0x0212157c
 
 src/func_ov006_0212157c.c:
@@ -6533,6 +6574,7 @@ src/func_ov006_02121fa4.c:
     .text start:0x02121fa4 end:0x02122198
 
 src/func_ov006_02122198.cpp:
+    complete
     .text start:0x02122198 end:0x0212231c
 
 src/func_ov006_0212231c.c:
@@ -6552,6 +6594,7 @@ src/func_ov006_021225ac.c:
     .text start:0x021225ac end:0x021226b0
 
 src/func_ov006_021226b0.cpp:
+    complete
     .text start:0x021226b0 end:0x021227c8
 
 src/func_ov006_021227c8.cpp:
@@ -6685,9 +6728,11 @@ src/func_ov006_02124298.c:
     .text start:0x02124298 end:0x021242cc
 
 src/func_ov006_021242cc.cpp:
+    complete
     .text start:0x021242cc end:0x021243ec
 
 src/func_ov006_021243ec.cpp:
+    complete
     .text start:0x021243ec end:0x021245a8
 
 src/func_ov006_021245a8.c:
@@ -6702,6 +6747,7 @@ src/func_ov006_02124908.c:
     .text start:0x02124908 end:0x0212497c
 
 src/func_ov006_0212497c.cpp:
+    complete
     .text start:0x0212497c end:0x02124a04
 
 src/func_ov006_02124a04.c:
@@ -6753,6 +6799,7 @@ src/func_ov006_02125248.c:
     .text start:0x02125248 end:0x0212527c
 
 src/func_ov006_0212527c.cpp:
+    complete
     .text start:0x0212527c end:0x02125364
 
 src/func_ov006_02125364.c:
@@ -6767,6 +6814,7 @@ src/func_ov006_021254c0.cpp:
     .text start:0x021254c0 end:0x0212551c
 
 src/func_ov006_0212551c.cpp:
+    complete
     .text start:0x0212551c end:0x021255f8
 
 src/MgLuckyStars_Spawn.cpp:
@@ -6778,6 +6826,7 @@ src/func_ov006_0212568c.cpp:
     .text start:0x0212568c end:0x0212573c
 
 src/func_ov006_0212573c.cpp:
+    complete
     .text start:0x0212573c end:0x02125800
 
 src/func_ov006_02125800.c:
@@ -6935,6 +6984,7 @@ src/func_ov006_0212a554.c:
     .text start:0x0212a554 end:0x0212a5c8
 
 src/func_ov006_0212a5c8.cpp:
+    complete
     .text start:0x0212a5c8 end:0x0212a650
 
 src/func_ov006_0212a650.c:

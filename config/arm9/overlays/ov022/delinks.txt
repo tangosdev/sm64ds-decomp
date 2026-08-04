@@ -61,6 +61,7 @@ src/_ZN19RotatingPlatformLllD0Ev.c:
     .text start:0x02111708 end:0x02111760
 
 src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111760 end:0x021117a4
 
 src/_ZN19RotatingPlatformLll6RenderEv.cpp:
@@ -214,6 +215,7 @@ src/_ZN12FallBlockLll8BehaviorEv.cpp:
     .text start:0x02112560 end:0x02112590
 
 src/_ZN12FallBlockLll13InitResourcesEv.cpp:
+    complete
     .text start:0x02112590 end:0x021125a4
 
 src/RollingLogLll_Spawn.c:

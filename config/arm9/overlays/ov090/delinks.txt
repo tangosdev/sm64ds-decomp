@@ -202,6 +202,7 @@ src/_ZN10CheepCheep6RenderEv.cpp:
     .text start:0x021333e0 end:0x02133430
 
 src/_ZN10CheepCheep8BehaviorEv.cpp:
+    complete
     .text start:0x02133430 end:0x02133530
 
 src/_ZN10CheepCheep13InitResourcesEv.cpp:
@@ -256,6 +257,7 @@ src/_ZN5Shark8BehaviorEv.cpp:
     .text start:0x021339d8 end:0x02133b98
 
 src/_ZN5Shark13InitResourcesEv.cpp:
+    complete
     .text start:0x02133b98 end:0x02133ca0
 
 src/Shark_Spawn.c:

@@ -9,7 +9,6 @@ extern "C" {
 typedef struct Heap Heap;
 void* func_ov004_020b929c(void* self);
 void _ZN9ActorBaseD2Ev(void* t);
-void _ZN6Memory10DeallocateEPvP4Heap(void* p, Heap* h);
 extern void* data_ov004_020beb68;
 extern void* _ZTV5Scene[];
 extern void* data_0208e4b8;

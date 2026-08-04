@@ -11,6 +11,7 @@ src/_ZN13FortressTowerD0Ev.c:
     .text start:0x02148ac4 end:0x02148b1c
 
 src/_ZN13FortressTower16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02148b1c end:0x02148b80
 
 src/_ZN13FortressTower6RenderEv.cpp:
@@ -63,6 +64,7 @@ src/func_ov102_02149100.c:
     .text start:0x02149100 end:0x02149220
 
 src/func_ov102_02149220.cpp:
+    complete
     .text start:0x02149220 end:0x02149288
 
 src/func_ov102_02149288.cpp:
@@ -165,6 +167,7 @@ src/func_ov102_02149ff0.c:
     .text start:0x02149ff0 end:0x0214a08c
 
 src/_ZN13QuestionBlock16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0214a08c end:0x0214a2ac
 
 src/_ZN13QuestionBlock6RenderEv.cpp:
@@ -265,6 +268,7 @@ src/func_ov102_0214b444.cpp:
     .text start:0x0214b444 end:0x0214b53c
 
 src/func_ov102_0214b988.cpp:
+    complete
     .text start:0x0214b988 end:0x0214ba30
 
 src/func_ov102_0214ba30.cpp:

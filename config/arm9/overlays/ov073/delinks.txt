@@ -236,6 +236,7 @@ src/func_ov073_021223f4.cpp:
     .text start:0x021223f4 end:0x02122464
 
 src/_ZN8CccArena16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122464 end:0x021224c8
 
 src/_ZN8CccArena6RenderEv.cpp:
@@ -243,6 +244,7 @@ src/_ZN8CccArena6RenderEv.cpp:
     .text start:0x021224c8 end:0x021224f0
 
 src/_ZN8CccArena8BehaviorEv.cpp:
+    complete
     .text start:0x021224f0 end:0x02122578
 
 src/_ZN8CccArena13InitResourcesEv.cpp:

@@ -19,6 +19,7 @@ src/func_ov100_0214109c.cpp:
     .text start:0x0214109c end:0x0214117c
 
 src/func_ov100_0214117c.cpp:
+    complete
     .text start:0x0214117c end:0x021412d8
 
 src/func_ov100_021412d8.c:
@@ -107,6 +108,7 @@ src/func_ov100_02142b90.c:
     .text start:0x02142b90 end:0x02142d1c
 
 src/_ZN15RollingIronBall16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02142d1c end:0x02142d5c
 
 src/_ZN15RollingIronBall6RenderEv.cpp:
@@ -125,6 +127,7 @@ src/RollingIronBall_Spawn.c:
     .text start:0x0214316c end:0x021431c4
 
 src/_ZN14UnchainedChompD1Ev.cpp:
+    complete
     .text start:0x021431c4 end:0x02143290
 
 src/_ZN14UnchainedChompD0Ev.cpp:
@@ -176,6 +179,7 @@ src/_ZN14UnchainedChomp6RenderEv.cpp:
     .text start:0x02143d0c end:0x02143d64
 
 src/_ZN14UnchainedChomp8BehaviorEv.cpp:
+    complete
     .text start:0x02143d64 end:0x02144088
 
 src/_ZN14UnchainedChomp13InitResourcesEv.cpp:
@@ -290,6 +294,7 @@ src/func_ov100_021453d8.cpp:
     .text start:0x021453d8 end:0x0214542c
 
 src/func_ov100_0214542c.cpp:
+    complete
     .text start:0x0214542c end:0x021454c4
 
 src/func_ov100_021454c4.c:
@@ -321,6 +326,7 @@ src/func_ov100_02145948.c:
     .text start:0x02145948 end:0x02145988
 
 src/func_ov100_02145988.cpp:
+    complete
     .text start:0x02145988 end:0x02145ab4
 
 src/func_ov100_02145ab4.cpp:
@@ -445,6 +451,7 @@ src/_ZN4Fish6RenderEv.cpp:
     .text start:0x02146b04 end:0x02146b38
 
 src/_ZN4Fish8BehaviorEv.cpp:
+    complete
     .text start:0x02146b38 end:0x02146c68
 
 src/_ZN4Fish13InitResourcesEv.cpp:
@@ -459,6 +466,7 @@ src/func_ov100_02146d7c.cpp:
     .text start:0x02146d7c end:0x02146dec
 
 src/func_ov100_02146dec.cpp:
+    complete
     .text start:0x02146dec end:0x02146e70
 
 src/func_ov100_02146e70.c:
@@ -473,6 +481,7 @@ src/func_ov100_02147054.c:
     .text start:0x02147054 end:0x021470a4
 
 src/func_ov100_021470a4.cpp:
+    complete
     .text start:0x021470a4 end:0x021470f4
 
 src/func_ov100_021470f4.cpp:

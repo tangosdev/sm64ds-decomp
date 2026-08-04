@@ -325,6 +325,7 @@ src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.c:
     .text start:0x0211ae1c end:0x0211ae40
 
 src/actors/Boo/_ZN3Boo16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211ae40 end:0x0211af6c
 
 src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c:
@@ -416,6 +417,7 @@ src/unnamed/ov063/func_ov063_0211cc18.c:
     .text start:0x0211cc18 end:0x0211cdec
 
 src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211cdec end:0x0211ce30
 
 src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c:
@@ -427,6 +429,7 @@ src/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp:
     .text start:0x0211ce34 end:0x0211ce74
 
 src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp:
+    complete
     .text start:0x0211ce74 end:0x0211cf00
 
 src/unnamed/ov063/func_ov063_0211d270.cpp:
@@ -460,9 +463,11 @@ src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:
     .text start:0x0211d3f0 end:0x0211d454
 
 src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211d454 end:0x0211d468
 
 src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
+    complete
     .text start:0x0211d468 end:0x0211d47c
 
 src/actors/FallBlockBbh/FallBlockBbh_Spawn.c:

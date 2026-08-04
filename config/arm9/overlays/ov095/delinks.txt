@@ -27,6 +27,7 @@ src/func_ov095_0213597c.c:
     .text start:0x0213597c end:0x021359c4
 
 src/_ZN9SeesawBob16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021359c4 end:0x02135a28
 
 src/_ZN9SeesawBob6RenderEv.cpp:
@@ -103,6 +104,7 @@ src/func_ov095_02136368.c:
     .text start:0x02136368 end:0x0213645c
 
 src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0213645c end:0x021364b0
 
 src/_ZN13UpDownLiftBbh6RenderEv.cpp:
@@ -137,12 +139,15 @@ src/UpDownLiftBbh_Spawn.c:
     .text start:0x021367fc end:0x0213682c
 
 src/_ZN12FlamethrowerD1Ev.cpp:
+    complete
     .text start:0x0213682c end:0x02136884
 
 src/_ZN12FlamethrowerD0Ev.cpp:
+    complete
     .text start:0x02136884 end:0x021368f0
 
 src/_ZN12Flamethrower13InitResourcesEv.cpp:
+    complete
     .text start:0x02136d60 end:0x02136ed4
 
 src/Flamethrower_Spawn.cpp:

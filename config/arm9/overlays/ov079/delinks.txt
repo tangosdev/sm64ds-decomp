@@ -17,6 +17,7 @@ src/func_ov079_02123804.c:
     .text start:0x02123804 end:0x02123a8c
 
 src/func_ov079_02123a8c.cpp:
+    complete
     .text start:0x02123a8c end:0x02123b54
 
 src/func_ov079_02123b54.c:
@@ -36,6 +37,7 @@ src/func_ov079_02123d4c.cpp:
     .text start:0x02123d4c end:0x02123e60
 
 src/func_ov079_02123e60.cpp:
+    complete
     .text start:0x02123e60 end:0x02123f34
 
 src/func_ov079_02123f34.c:
@@ -95,6 +97,7 @@ src/func_ov079_0212522c.c:
     .text start:0x0212522c end:0x02125240
 
 src/func_ov079_02125240.cpp:
+    complete
     .text start:0x02125240 end:0x0212538c
 
 src/func_ov079_0212538c.c:
@@ -198,6 +201,7 @@ src/func_ov079_02126e58.cpp:
     .text start:0x02126e58 end:0x02126ecc
 
 src/func_ov079_02126ecc.cpp:
+    complete
     .text start:0x02126ecc end:0x02126f04
 
 src/func_ov079_02126f04.c:
@@ -234,6 +238,7 @@ src/func_ov079_021272e0.cpp:
     .text start:0x021272e0 end:0x02127300
 
 src/_ZN12FortressWall16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02127300 end:0x02127364
 
 src/_ZN12FortressWall6RenderEv.cpp:

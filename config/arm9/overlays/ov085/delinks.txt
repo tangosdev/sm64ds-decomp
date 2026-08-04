@@ -43,6 +43,7 @@ src/func_ov085_021295bc.c:
     .text start:0x021295bc end:0x021297e8
 
 src/_ZN4Toad16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021297e8 end:0x02129854
 
 src/_ZN4Toad6RenderEv.cpp:
@@ -143,6 +144,7 @@ src/_ZN13PrincessPeach6RenderEv.cpp:
     .text start:0x0212a508 end:0x0212a52c
 
 src/_ZN13PrincessPeach8BehaviorEv.cpp:
+    complete
     .text start:0x0212a52c end:0x0212a588
 
 src/_ZN13PrincessPeach13InitResourcesEv.cpp:
@@ -252,6 +254,7 @@ src/_ZN6Rabbit16OnPendingDestroyEv.c:
     .text start:0x0212c070 end:0x0212c074
 
 src/_ZN6Rabbit6RenderEv.cpp:
+    complete
     .text start:0x0212c074 end:0x0212c150
 
 src/func_ov085_0212c150.cpp:
@@ -384,6 +387,7 @@ src/func_ov085_0212de5c.cpp:
     .text start:0x0212de5c end:0x0212df84
 
 src/func_ov085_0212df84.cpp:
+    complete
     .text start:0x0212df84 end:0x0212e078
 
 src/func_ov085_0212e078.cpp:
@@ -403,6 +407,7 @@ src/func_ov085_0212e2ec.c:
     .text start:0x0212e2ec end:0x0212e310
 
 src/func_ov085_0212e310.cpp:
+    complete
     .text start:0x0212e310 end:0x0212e480
 
 src/func_ov085_0212e480.c:
@@ -449,9 +454,11 @@ src/_ZN9LakituBro6RenderEv.cpp:
     .text start:0x0212ead0 end:0x0212eb18
 
 src/_ZN9LakituBro8BehaviorEv.cpp:
+    complete
     .text start:0x0212eb18 end:0x0212ebec
 
 src/_ZN9LakituBro13InitResourcesEv.cpp:
+    complete
     .text start:0x0212ebec end:0x0212ed54
 
 src/LakituBro_Spawn.c:

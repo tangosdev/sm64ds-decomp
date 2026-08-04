@@ -13,7 +13,8 @@ extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_
 extern int data_020a0e68[];
 
 
-void func_ov085_0212bdbc(char* c){
+void func_ov085_0212bdbc(void* c_){
+    char* c = (char*)c_;
     int idx;
     void* res;
     if (!*(void**)(c + 0x45c)) return;

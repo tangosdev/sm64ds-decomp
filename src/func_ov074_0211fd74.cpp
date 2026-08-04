@@ -8,7 +8,6 @@
 extern "C" {
     int func_ov074_02121a20(void* c, int idx);
     int func_ov074_021207b8(void* c);
-    void func_ov074_02121a4c(void* c, int i);
     int func_ov074_021206c8(void* c);
     void* _ZN5Actor13ClosestPlayerEv(void* self);
     int _ZN9Animation8FinishedEv(void* anim);
@@ -17,7 +16,6 @@ extern "C" {
     void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, void* v);
     void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, void* pos, void* rot, int e, int f);
     void func_ov084_021296b0(void* a, void* b);
-    void func_ov074_021203e4(void* c, int i);
     int __aeabi_idiv(int a, int b);
 }
 
@@ -28,12 +26,12 @@ extern "C" void func_ov074_0211fd74(void* self)
 
     if (func_ov074_02121a20(self, 6) != 0) {
         if (func_ov074_021207b8(self) == 0) return;
-        func_ov074_02121a4c(self, 0xb);
+        func_ov074_02121a4c((char*)self, 0xb);
         return;
     } else {
         if (func_ov074_02121a20(self, 0xb) != 0) goto L90;
         if (func_ov074_021206c8(self) == 0) return;
-        func_ov074_02121a4c(self, 0xb);
+        func_ov074_02121a4c((char*)self, 0xb);
         return;
     }
 
@@ -80,5 +78,5 @@ L90:;
     if (*(u8*)(c+0x602) % dv == 0) *(s32*)(c+0x268) = 0;
 
     if (*(u8*)(c+0x602) < r5) return;
-    func_ov074_021203e4(self, 3);
+    func_ov074_021203e4((char*)self, 3);
 }

@@ -9,6 +9,7 @@ src/_ZN5UnagiD1Ev.c:
     .text start:0x021111a0 end:0x02111208
 
 src/_ZN5UnagiD0Ev.cpp:
+    complete
     .text start:0x02111208 end:0x02111284
 
 src/func_ov016_02111284.c:
@@ -32,6 +33,7 @@ src/func_ov016_02111718.cpp:
     .text start:0x02111718 end:0x02111758
 
 src/func_ov016_02111758.cpp:
+    complete
     .text start:0x02111758 end:0x02111860
 
 src/func_ov016_02111860.cpp:
@@ -39,6 +41,7 @@ src/func_ov016_02111860.cpp:
     .text start:0x02111860 end:0x021118b4
 
 src/func_ov016_021118b4.cpp:
+    complete
     .text start:0x021118b4 end:0x02111994
 
 src/func_ov016_02111994.cpp:
@@ -70,9 +73,11 @@ src/_ZN5Unagi6RenderEv.c:
     .text start:0x02111f84 end:0x02112010
 
 src/_ZN5Unagi8BehaviorEv.cpp:
+    complete
     .text start:0x02112010 end:0x021121c0
 
 src/_ZN5Unagi13InitResourcesEv.cpp:
+    complete
     .text start:0x021121c0 end:0x02112588
 
 src/Unagi_Spawn.c:
@@ -90,6 +95,7 @@ src/func_ov016_021126a8.c:
     .text start:0x021126a8 end:0x021126f0
 
 src/_ZN6ShipUp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021126f0 end:0x02112744
 
 src/_ZN6ShipUp6RenderEv.cpp:
@@ -162,6 +168,7 @@ src/func_ov016_021130a4.c:
     .text start:0x021130a4 end:0x021130ec
 
 src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021130ec end:0x02113130
 
 src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp:
@@ -173,6 +180,7 @@ src/_ZN23FloatOnWaterPlatformJrb8BehaviorEv.c:
     .text start:0x02113158 end:0x02113434
 
 src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp:
+    complete
     .text start:0x02113434 end:0x02113510
 
 src/SlidingBox_Spawn.c:

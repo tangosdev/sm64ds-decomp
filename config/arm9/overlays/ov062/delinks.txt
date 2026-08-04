@@ -263,6 +263,7 @@ src/_ZN5Koopa16OnPendingDestroyEv.c:
     .text start:0x02118f80 end:0x02118f84
 
 src/_ZN5Koopa6RenderEv.cpp:
+    complete
     .text start:0x02118f84 end:0x021190ec
 
 src/_ZN5Koopa8BehaviorEv.cpp:
@@ -347,6 +348,7 @@ src/_ZN13KoopaTheQuick6RenderEv.cpp:
     .text start:0x0211ab50 end:0x0211ab88
 
 src/_ZN13KoopaTheQuick8BehaviorEv.cpp:
+    complete
     .text start:0x0211ab88 end:0x0211ac10
 
 src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp:
@@ -434,6 +436,7 @@ src/func_ov062_0211c218.c:
     .text start:0x0211c218 end:0x0211c2f4
 
 src/func_ov062_0211c2f4.cpp:
+    complete
     .text start:0x0211c2f4 end:0x0211c594
 
 src/func_ov062_0211c594.c:

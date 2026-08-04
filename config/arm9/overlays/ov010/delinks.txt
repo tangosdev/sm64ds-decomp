@@ -42,6 +42,7 @@ src/func_ov010_0211146c.c:
     .text start:0x0211146c end:0x02111554
 
 src/func_ov010_02111554.cpp:
+    complete
     .text start:0x02111554 end:0x021115a8
 
 src/func_ov010_021115a8.cpp:
@@ -87,6 +88,7 @@ src/_ZN4Trap6RenderEv.cpp:
     .text start:0x02111ab8 end:0x02111ae0
 
 src/_ZN4Trap8BehaviorEv.cpp:
+    complete
     .text start:0x02111ae0 end:0x02111d20
 
 src/_ZN4Trap13InitResourcesEv.cpp:

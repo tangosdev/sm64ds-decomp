@@ -56,6 +56,7 @@ src/func_02005a58.c:
     .text start:0x02005a58 end:0x02005d94
 
 src/_ZN8CapEnemy12Unk_02005d94Ev.cpp:
+    complete
     .text start:0x02005d94 end:0x02005e28
 
 src/func_02005e28.c:
@@ -74,6 +75,7 @@ src/_ZN8CapEnemy11GetCapStateEv.cpp:
     .text start:0x02005fa0 end:0x02006054
 
 src/_ZN8CapEnemy15RespawnIfHasCapEv.cpp:
+    complete
     .text start:0x02006054 end:0x020060f4
 
 src/_ZN8CapEnemy16GetCapEatenOffItERK7Vector3.c:
@@ -515,6 +517,7 @@ src/func_0200cb58.c:
     .text start:0x0200cb58 end:0x0200cb70
 
 src/_ZN6Camera11ChangeStateEPNS_5StateE.cpp:
+    complete
     .text start:0x0200cb70 end:0x0200cbe0
 
 src/func_0200cbe0.c:
@@ -570,6 +573,7 @@ src/func_0200d1e4.c:
     .text start:0x0200d1e4 end:0x0200d304
 
 src/_ZN6Camera14GoBehindPlayerEj.cpp:
+    complete
     .text start:0x0200d304 end:0x0200d3f8
 
 src/func_0200d3f8.c:
@@ -680,6 +684,7 @@ src/_ZN6Camera6RenderEv.cpp:
     .text start:0x0200da04 end:0x0200debc
 
 src/_ZN6Camera8BehaviorEv.cpp:
+    complete
     .text start:0x0200debc end:0x0200e338
 
 src/_ZN6Camera13InitResourcesEv.cpp:
@@ -1170,6 +1175,7 @@ src/_ZN5Actor19BeforeInitResourcesEv.c:
     .text start:0x02011268 end:0x020112c8
 
 src/_ZN5ActorD2Ev.cpp:
+    complete
     .text start:0x020112c8 end:0x02011314
 
 src/_ZN5ActorD0Ev.c:
@@ -1177,6 +1183,7 @@ src/_ZN5ActorD0Ev.c:
     .text start:0x02011314 end:0x02011374
 
 src/_ZN5ActorD1Ev.cpp:
+    complete
     .text start:0x02011374 end:0x020113c0
 
 src/_ZN5ActorC1Ev.cpp:
@@ -1700,6 +1707,7 @@ src/_ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c:
     .text start:0x02013c0c end:0x02013c5c
 
 src/_ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData.cpp:
+    complete
     .text start:0x02013c5c end:0x02013c84
 
 src/func_02013c84.c:
@@ -1719,6 +1727,7 @@ src/_ZN8SaveData12ReadFileDataEjP12FileSaveData.cpp:
     .text start:0x02013d54 end:0x02013dc4
 
 src/_ZN8SaveData16SetDefaultValuesEP12FileSaveData.cpp:
+    complete
     .text start:0x02013dc4 end:0x02013e0c
 
 src/_ZN8SaveData16EraseAllSaveDataEv.c:
@@ -2879,12 +2888,15 @@ src/GetSoundMode.c:
     .text start:0x02019574 end:0x02019584
 
 src/_ZN5Timer7GetTimeEv.cpp:
+    complete
     .text start:0x02019584 end:0x020195c0
 
 src/_ZN5Timer9StopTimerEv.cpp:
+    complete
     .text start:0x020195c0 end:0x02019604
 
 src/_ZN5Timer10StartTimerEv.cpp:
+    complete
     .text start:0x02019604 end:0x02019638
 
 src/_ZN5Timer10ResetTimerEv.cpp:
@@ -3149,6 +3161,7 @@ src/func_0201cd08.cpp:
     .text start:0x0201cd08 end:0x0201ce10
 
 src/_ZN7Message21DisplaySaveStatusTextEt.cpp:
+    complete
     .text start:0x0201ce10 end:0x0201cebc
 
 src/func_0201cebc.c:
@@ -3164,6 +3177,7 @@ src/func_0201cfb8.c:
     .text start:0x0201cfb8 end:0x0201d018
 
 src/_ZN7Message22DisplayOptionsMenuTextEt.cpp:
+    complete
     .text start:0x0201d018 end:0x0201d0f8
 
 src/LoadControllerModeText.c:
@@ -3171,6 +3185,7 @@ src/LoadControllerModeText.c:
     .text start:0x0201d0f8 end:0x0201d304
 
 src/_ZN7Message25DisplayControllerModeTextEt.cpp:
+    complete
     .text start:0x0201d304 end:0x0201d418
 
 src/func_0201d418.c:
@@ -3190,9 +3205,11 @@ src/func_0201d850.c:
     .text start:0x0201d850 end:0x0201e044
 
 src/_ZN7Message16DisplayPauseTextEth.cpp:
+    complete
     .text start:0x0201e044 end:0x0201e12c
 
 src/_ZN7Message19DisplayDontSaveTextEt.cpp:
+    complete
     .text start:0x0201e12c end:0x0201e220
 
 src/func_0201e220.cpp:
@@ -3667,6 +3684,7 @@ src/func_02023178.c:
     .text start:0x02023178 end:0x02023194
 
 src/_ZN8Particle10SysTrackerD1Ev.cpp:
+    complete
     .text start:0x02023194 end:0x02023204
 
 src/_ZN8Particle10SysTrackerC1Ev.c:
@@ -4556,6 +4574,7 @@ src/func_020338b0.cpp:
     .text start:0x020338b0 end:0x020339c0
 
 src/_ZN7Message17DisplayVsExitTextEt.cpp:
+    complete
     .text start:0x020339c0 end:0x02033a80
 
 src/func_02033a80.c:
@@ -4583,6 +4602,7 @@ src/func_020341a8.cpp:
     .text start:0x020341a8 end:0x02034358
 
 src/_ZN7Message18DisplayPauseTextVSEt.cpp:
+    complete
     .text start:0x02034358 end:0x02034414
 
 src/func_02034414.cpp:
@@ -4945,9 +4965,11 @@ src/func_02036acc.c:
     .text start:0x02036acc end:0x02036ee4
 
 src/_ZN12WithMeshClsn22UpdateDiscreteNoLava_2Ev.cpp:
+    complete
     .text start:0x02036ee4 end:0x02037024
 
 src/_ZN12WithMeshClsn20UpdateDiscreteNoLavaEv.cpp:
+    complete
     .text start:0x02037024 end:0x020371b0
 
 src/func_020371b0.c:
@@ -6100,6 +6122,7 @@ src/_ZN4Heap9SetNodeIDEj.cpp:
     .text start:0x0203c408 end:0x0203c428
 
 src/_ZN9SolidHeap7VSizeofEPv.cpp:
+    complete
     .text start:0x0203c428 end:0x0203c444
 
 src/_ZN13ExpandingHeap7VSizeofEPv.cpp:
@@ -6107,9 +6130,11 @@ src/_ZN13ExpandingHeap7VSizeofEPv.cpp:
     .text start:0x0203c444 end:0x0203c454
 
 src/_ZN4Heap6SizeofEPv.cpp:
+    complete
     .text start:0x0203c454 end:0x0203c49c
 
 src/_ZN9SolidHeap14VDeallocateAllEv.cpp:
+    complete
     .text start:0x0203c49c end:0x0203c4b0
 
 src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp:
@@ -6121,6 +6146,7 @@ src/_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j.cpp:
     .text start:0x0203c4cc end:0x0203c4e4
 
 src/_ZN9SolidHeap11VDeallocateEPv.cpp:
+    complete
     .text start:0x0203c4e4 end:0x0203c50c
 
 src/_ZN13ExpandingHeap11VDeallocateEPv.c:
@@ -6144,6 +6170,7 @@ src/_ZN4Heap10ReallocateEPvj.cpp:
     .text start:0x0203c578 end:0x0203c598
 
 src/_ZN9SolidHeap11VMemoryLeftEv.cpp:
+    complete
     .text start:0x0203c598 end:0x0203c5ac
 
 src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp:
@@ -6151,15 +6178,19 @@ src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp:
     .text start:0x0203c5ac end:0x0203c5bc
 
 src/_ZN9SolidHeap19VMaxAllocatableSizeEv.cpp:
+    complete
     .text start:0x0203c5bc end:0x0203c5d0
 
 src/_ZN13ExpandingHeap19VMaxAllocatableSizeEv.cpp:
+    complete
     .text start:0x0203c5d0 end:0x0203c5e4
 
 src/_ZN9SolidHeap22VMaxAllocationUnitSizeEv.cpp:
+    complete
     .text start:0x0203c5e4 end:0x0203c5f8
 
 src/_ZN13ExpandingHeap22VMaxAllocationUnitSizeEv.cpp:
+    complete
     .text start:0x0203c5f8 end:0x0203c60c
 
 src/_ZN4Heap21MaxAllocationUnitSizeEv.cpp:
@@ -6199,6 +6230,7 @@ src/_ZN13ExpandingHeap9VAllocateEji.cpp:
     .text start:0x0203c6bc end:0x0203c6cc
 
 src/_ZN4Heap8AllocateEji.cpp:
+    complete
     .text start:0x0203c6cc end:0x0203c70c
 
 src/_ZN9SolidHeap8VDestroyEv.c:
@@ -6950,6 +6982,7 @@ src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp:
     .text start:0x02042804 end:0x02042c3c
 
 src/_ZN8SaveData14SaveDataToCartEPcjj.cpp:
+    complete
     .text start:0x02042c3c end:0x02042f68
 
 src/func_02042f68.c:
@@ -7005,6 +7038,7 @@ src/func_020433b8.c:
     .text start:0x020433b8 end:0x02043444
 
 src/_ZN9ActorBasenwEj.cpp:
+    complete
     .text start:0x02043444 end:0x02043494
 
 src/_ZN9ActorBase13OnHeapCreatedEv.cpp:
@@ -7063,6 +7097,7 @@ src/_ZN9ActorBase21AfterCleanupResourcesEj.c:
     .text start:0x02043b2c end:0x02043bac
 
 src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp:
+    complete
     .text start:0x02043bac end:0x02043bf0
 
 src/_ZN9ActorBase16CleanupResourcesEv.cpp:
@@ -7744,9 +7779,11 @@ src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.c:
     .text start:0x0204dd98 end:0x0204de0c
 
 src/_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator.cpp:
+    complete
     .text start:0x0204de0c end:0x0204de74
 
 src/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp:
+    complete
     .text start:0x0204de74 end:0x0204dee0
 
 src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp:

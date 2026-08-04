@@ -5,6 +5,7 @@
     .data       start:0x0211c5c0 end:0x0211d380 kind:data align:32
     .bss        start:0x0211d380 end:0x0211d9c0 kind:bss align:32
 src/_ZN14UnknownVsEntryD1Ev.cpp:
+    complete
     .text start:0x02113ee0 end:0x02113f54
 
 src/_ZN14UnknownVsEntryD0Ev.c:
@@ -149,6 +150,7 @@ src/func_ov075_021152d4.cpp:
     .text start:0x021152d4 end:0x02115388
 
 src/_ZN14UnknownVsEntry16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02115388 end:0x021154cc
 
 src/_ZN14UnknownVsEntry6RenderEv.cpp:
@@ -424,6 +426,7 @@ src/func_ov075_0211a268.c:
     .text start:0x0211a268 end:0x0211a26c
 
 src/func_ov075_0211a26c.cpp:
+    complete
     .text start:0x0211a26c end:0x0211a2b8
 
 src/func_ov075_0211a2b8.cpp:
@@ -431,6 +434,7 @@ src/func_ov075_0211a2b8.cpp:
     .text start:0x0211a2b8 end:0x0211a410
 
 src/func_ov075_0211a410.cpp:
+    complete
     .text start:0x0211a410 end:0x0211a734
 
 src/func_ov075_0211a734.c:

@@ -60,6 +60,7 @@ src/func_ov072_0211f804.c:
     .text start:0x0211f804 end:0x0211f81c
 
 src/func_ov072_0211f81c.cpp:
+    complete
     .text start:0x0211f81c end:0x0211f9c4
 
 src/func_ov072_0211f9c4.c:
@@ -107,9 +108,11 @@ src/_ZN11SnowmanBody6RenderEv.cpp:
     .text start:0x0211fcf4 end:0x0211fd24
 
 src/_ZN11SnowmanBody8BehaviorEv.cpp:
+    complete
     .text start:0x0211fd24 end:0x0211fd54
 
 src/_ZN11SnowmanBody13InitResourcesEv.cpp:
+    complete
     .text start:0x0211fd54 end:0x0211fedc
 
 src/SnowmanBody_Spawn.c:
@@ -152,6 +155,7 @@ src/func_ov072_02120430.c:
     .text start:0x02120430 end:0x02120450
 
 src/func_ov072_02120450.cpp:
+    complete
     .text start:0x02120450 end:0x02120514
 
 src/func_ov072_02120514.c:
@@ -183,9 +187,11 @@ src/_ZN11SnowmanHead6RenderEv.cpp:
     .text start:0x02120638 end:0x0212066c
 
 src/_ZN11SnowmanHead8BehaviorEv.cpp:
+    complete
     .text start:0x0212066c end:0x0212069c
 
 src/_ZN11SnowmanHead13InitResourcesEv.cpp:
+    complete
     .text start:0x0212069c end:0x021207d4
 
 src/SnowmanHead_Spawn.c:
@@ -340,6 +346,7 @@ src/_ZN11BabyPenguin8BehaviorEv.cpp:
     .text start:0x02121e08 end:0x02121e84
 
 src/_ZN11BabyPenguin13InitResourcesEv.cpp:
+    complete
     .text start:0x02121e84 end:0x02121fa0
 
 src/func_ov072_02121fa0.c:

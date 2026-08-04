@@ -20,6 +20,7 @@ src/func_ov021_02111434.c:
     .text start:0x02111434 end:0x021115dc
 
 src/_ZN12WorkElevator16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021115dc end:0x02111650
 
 src/_ZN12WorkElevator6RenderEv.cpp:
@@ -128,6 +129,7 @@ src/_ZN10ShutterHmcD0Ev.c:
     .text start:0x02112e04 end:0x02112e68
 
 src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112e68 end:0x02112e7c
 
 src/_ZN10ShutterHmc8BehaviorEv.cpp:

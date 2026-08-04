@@ -84,6 +84,7 @@ src/_ZN8ShipWingD0Ev.c:
     .text start:0x02111988 end:0x021119e8
 
 src/_ZN8ShipWing16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021119e8 end:0x02111a2c
 
 src/_ZN8ShipWing16OnPendingDestroyEv.c:
@@ -98,6 +99,7 @@ src/_ZN8ShipWing8BehaviorEv.cpp:
     .text start:0x02111a64 end:0x02111bb8
 
 src/_ZN8ShipWing13InitResourcesEv.cpp:
+    complete
     .text start:0x02111bb8 end:0x02111ca4
 
 src/func_ov036_02111ca4.cpp:

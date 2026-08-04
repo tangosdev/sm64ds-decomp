@@ -147,6 +147,7 @@ src/func_ov064_0211755c.c:
     .text start:0x0211755c end:0x021175cc
 
 src/func_ov064_021175cc.cpp:
+    complete
     .text start:0x021175cc end:0x0211764c
 
 src/_ZN8BigBully6RenderEv.cpp:
@@ -370,6 +371,7 @@ src/func_ov064_02119010.c:
     .text start:0x02119010 end:0x0211904c
 
 src/_ZN19BowserPuzzleManager16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211904c end:0x02119088
 
 src/_ZN19BowserPuzzleManager6RenderEv.cpp:
@@ -385,6 +387,7 @@ src/func_ov064_0211915c.c:
     .text start:0x0211915c end:0x021191a8
 
 src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
+    complete
     .text start:0x021191a8 end:0x02119284
 
 src/func_ov064_02119284.c:
@@ -502,6 +505,7 @@ src/_ZN9WaterRing6RenderEv.cpp:
     .text start:0x02119fc8 end:0x02119ffc
 
 src/_ZN9WaterRing8BehaviorEv.cpp:
+    complete
     .text start:0x02119ffc end:0x0211a090
 
 src/_ZN9WaterRing13InitResourcesEv.cpp:
@@ -531,6 +535,7 @@ src/func_ov064_0211a380.c:
     .text start:0x0211a380 end:0x0211a39c
 
 src/func_ov064_0211a39c.cpp:
+    complete
     .text start:0x0211a39c end:0x0211a49c
 
 src/func_ov064_0211a49c.c:
@@ -592,6 +597,7 @@ src/_ZN4Clam8BehaviorEv.c:
     .text start:0x0211aa58 end:0x0211acc4
 
 src/_ZN4Clam13InitResourcesEv.cpp:
+    complete
     .text start:0x0211acc4 end:0x0211ad70
 
 src/Clam_Spawn.c:

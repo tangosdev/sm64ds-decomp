@@ -99,6 +99,7 @@ src/func_ov026_02111cb4.c:
     .text start:0x02111cb4 end:0x02111d4c
 
 src/func_ov026_02111d4c.cpp:
+    complete
     .text start:0x02111d4c end:0x02111ed8
 
 src/func_ov026_02111ed8.c:
@@ -126,6 +127,7 @@ src/_ZN9Submarine6RenderEv.cpp:
     .text start:0x02111fd8 end:0x0211200c
 
 src/_ZN9Submarine8BehaviorEv.cpp:
+    complete
     .text start:0x0211200c end:0x021120ec
 
 src/_ZN9Submarine13InitResourcesEv.cpp:
@@ -176,9 +178,11 @@ src/_ZN12WaterSuction6RenderEv.c:
     .text start:0x02112334 end:0x0211233c
 
 src/_ZN12WaterSuction8BehaviorEv.cpp:
+    complete
     .text start:0x0211233c end:0x021123c8
 
 src/_ZN12WaterSuction13InitResourcesEv.cpp:
+    complete
     .text start:0x021123c8 end:0x02112450
 
 src/WaterSuction_Spawn.c:

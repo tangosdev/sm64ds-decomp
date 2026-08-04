@@ -17,7 +17,8 @@ extern int data_0209f32c;
 extern signed char data_0209f2f8;
 }
 
-extern "C" int func_ov002_020cede0(char* thiz) {
+extern "C" int func_ov002_020cede0(void* thiz_) {
+    char* thiz = (char*)thiz_;
   Vector3 v;
   char rg[0x54];
   int y = *(int*)(thiz + 0x60);

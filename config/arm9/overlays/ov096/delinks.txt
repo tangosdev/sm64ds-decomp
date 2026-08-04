@@ -43,6 +43,7 @@ src/func_ov096_021358c8.cpp:
     .text start:0x021358c8 end:0x02135948
 
 src/func_ov096_02135948.cpp:
+    complete
     .text start:0x02135948 end:0x02135e2c
 
 src/func_ov096_02135e2c.cpp:
@@ -78,6 +79,7 @@ src/func_ov096_0213640c.c:
     .text start:0x0213640c end:0x02136434
 
 src/func_ov096_02136434.cpp:
+    complete
     .text start:0x02136434 end:0x02136534
 
 src/func_ov096_02136534.cpp:
@@ -117,6 +119,7 @@ src/_ZN5Pokey16CleanupResourcesEv.cpp:
     .text start:0x02136944 end:0x021369b0
 
 src/_ZN5Pokey16OnPendingDestroyEv.cpp:
+    complete
     .text start:0x021369b0 end:0x021369fc
 
 src/_ZN5Pokey6RenderEv.cpp:
@@ -173,6 +176,7 @@ src/_ZN7Tornado6RenderEv.cpp:
     .text start:0x02137414 end:0x02137448
 
 src/_ZN7Tornado8BehaviorEv.cpp:
+    complete
     .text start:0x02137448 end:0x02137564
 
 src/_ZN7Tornado13InitResourcesEv.cpp:

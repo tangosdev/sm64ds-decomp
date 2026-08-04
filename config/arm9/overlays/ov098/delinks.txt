@@ -27,6 +27,7 @@ src/func_ov098_02137d80.c:
     .text start:0x02137d80 end:0x02137dbc
 
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02137dbc end:0x02137e20
 
 src/_ZN14ArrowSignRight6RenderEv.cpp:
@@ -149,6 +150,7 @@ src/func_ov098_021390ec.cpp:
     .text start:0x021390ec end:0x02139228
 
 src/func_ov098_02139228.cpp:
+    complete
     .text start:0x02139228 end:0x021396a4
 
 src/func_ov098_021396a4.cpp:
@@ -164,6 +166,7 @@ src/func_ov098_02139850.c:
     .text start:0x02139850 end:0x02139a50
 
 src/_ZN5Crate16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02139a50 end:0x02139aa8
 
 src/_ZN5Crate6RenderEv.cpp:
@@ -289,6 +292,7 @@ src/_ZN6Cannon8BehaviorEv.cpp:
     .text start:0x0213b26c end:0x0213b2d4
 
 src/_ZN6Cannon13InitResourcesEv.cpp:
+    complete
     .text start:0x0213b2d4 end:0x0213b43c
 
 src/Cannon_Spawn.c:
@@ -340,6 +344,7 @@ src/_ZN9WaterBomb6RenderEv.cpp:
     .text start:0x0213bbe4 end:0x0213bc20
 
 src/_ZN9WaterBomb8BehaviorEv.cpp:
+    complete
     .text start:0x0213bc20 end:0x0213bd14
 
 src/_ZN9WaterBomb13InitResourcesEv.cpp:

@@ -17,6 +17,7 @@ src/func_ov084_021290d4.c:
     .text start:0x021290d4 end:0x02129168
 
 src/func_ov084_02129168.cpp:
+    complete
     .text start:0x02129168 end:0x02129238
 
 src/func_ov084_02129238.cpp:
@@ -108,6 +109,7 @@ src/_ZN6Goomba16OnPendingDestroyEv.c:
     .text start:0x0212b5b8 end:0x0212b5bc
 
 src/_ZN6Goomba6RenderEv.cpp:
+    complete
     .text start:0x0212b5bc end:0x0212b6ec
 
 src/_ZN6Goomba8BehaviorEv.cpp:
@@ -148,6 +150,7 @@ src/func_ov084_0212c4a0.c:
     .text start:0x0212c4a0 end:0x0212c508
 
 src/func_ov084_0212c508.cpp:
+    complete
     .text start:0x0212c508 end:0x0212c89c
 
 src/func_ov084_0212c89c.c:
@@ -210,9 +213,11 @@ src/_ZN11BobOmbBuddy6RenderEv.cpp:
     .text start:0x0212cf40 end:0x0212cf6c
 
 src/_ZN11BobOmbBuddy8BehaviorEv.cpp:
+    complete
     .text start:0x0212cf6c end:0x0212d028
 
 src/_ZN11BobOmbBuddy13InitResourcesEv.cpp:
+    complete
     .text start:0x0212d028 end:0x0212d200
 
 src/BobOmbBuddy_Spawn.c:
@@ -272,6 +277,7 @@ src/_ZN19FirePiranhaPlantBig6RenderEv.cpp:
     .text start:0x0212e5a8 end:0x0212e614
 
 src/_ZN19FirePiranhaPlantBig8BehaviorEv.cpp:
+    complete
     .text start:0x0212e614 end:0x0212e774
 
 src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp:
@@ -386,6 +392,7 @@ src/_ZN12PiranhaPlant6RenderEv.cpp:
     .text start:0x0212fcdc end:0x0212fd4c
 
 src/_ZN12PiranhaPlant8BehaviorEv.cpp:
+    complete
     .text start:0x0212fd4c end:0x0212feb4
 
 src/_ZN12PiranhaPlant13InitResourcesEv.cpp:

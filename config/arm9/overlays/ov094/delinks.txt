@@ -80,6 +80,7 @@ src/_ZN10HootTheOwl6RenderEv.cpp:
     .text start:0x0213642c end:0x02136478
 
 src/_ZN10HootTheOwl8BehaviorEv.cpp:
+    complete
     .text start:0x02136478 end:0x02136634
 
 src/_ZN10HootTheOwl13InitResourcesEv.cpp:
