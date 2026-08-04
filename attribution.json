@@ -20,6 +20,8 @@
     "src/func_0204322c.c": "lunavyqo",
     "src/func_02043288.c": "lunavyqo",
     "src/func_020432e4.c": "lunavyqo",
-    "src/func_0204335c.c": "lunavyqo"
+    "src/func_0204335c.c": "lunavyqo",
+    "src/_ZN14BlueCoinSwitch13InitResourcesEv.c": "lunavyqo",
+    "src/_ZN8MugenBgm6RenderEv.c": "tangosdev"
   }
 }
