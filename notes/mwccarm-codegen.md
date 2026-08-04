@@ -2888,11 +2888,17 @@ commutative op, try the sub-identity before calling it a floor.
 
 Landing note (split-symbol carriers, extends 9a(3)): func_02072168 is banked and
 re-verified at the COMBINED 0x88c extent (0x02072168..0x020729f4) because its compiled
+<<<<<<< Updated upstream
 object also emits func_020729e8, the severed 12-byte epilogue. RESOLVED 2026-08-01: the
 symbol map now merges the pair (config/arm9/symbols.txt lists func_02072168 at size
 0x88c, the func_020729e8 row and its stub src file are gone) -- the first symbol-map
 merge of a severed fragment into its parent. Precedent for the func_02071644/
 func_02071694 pair (9a(3)'s other proven case) when someone lands that one.
+=======
+object also emits func_020729e8, the severed 12-byte epilogue. matched.jsonl carries size
+2188; the symbol map still lists both symbols. src/func_020729e8.c stays as a documented
+stub.
+>>>>>>> Stashed changes
 
 ## 6ax. Inverse RMW-launder: demote the PLAIN read to let the RMW chain lead an interleave (2026-08-01, CapEnemy::GetCapState MATCHED)
 
@@ -2913,6 +2919,7 @@ Rule amendment: "launder ONLY the RMW sites" holds for the ADDRESS-MATERIALIZATI
 (that is what the ROM's RMW/single-use anatomy dictates). But for ORDERING residue between
 two chains, the launder is a scheduling-class demotion you can apply to EITHER side: launder
 the chain that must YIELD, not the one that must lead.
+<<<<<<< Updated upstream
 
 ## 6ay. Four new axes tested on the arm9 floors, all closed (2026-08-01, post-#960 theory sweep)
 
@@ -3000,3 +3007,5 @@ Verdict unchanged (still parked at 5, `// NONMATCHING`): the b/t26 rank rides th
 canonical A-tree, and the only rerank construct drags the a-family with it. The open
 angle narrows to: a substitution barrier that does NOT perturb sibling-web coloring,
 or any construct that makes the orr folder commute.
+=======
+>>>>>>> Stashed changes

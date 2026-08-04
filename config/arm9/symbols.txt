@@ -1092,7 +1092,7 @@ _Z19UnloadLevelOverlaysi kind:function(arm,size=0x48) addr:0x0202de64
 func_0202deac kind:function(arm,size=0x28) addr:0x0202deac
 _Z17LoadLevelOverlaysi kind:function(arm,size=0x9c) addr:0x0202ded4
 _Z26LoadOrUnloadObjectOverlaysPFviEi kind:function(arm,size=0x118) addr:0x0202df70
-_ZN5StageC1Ev kind:function(arm,size=0x90) addr:0x0202e088
+_ZN5StageC3Ev kind:function(arm,size=0x90) addr:0x0202e088
 func_0202e118 kind:function(arm,size=0x28) addr:0x0202e118
 _ZN5SceneD1Ev kind:function(arm,size=0x30) addr:0x0202e140
 _ZN5SceneD0Ev kind:function(arm,size=0x44) addr:0x0202e170
@@ -4168,7 +4168,7 @@ data_02092164 kind:data(any) addr:0x02092164
 data_02092170 kind:data(any) addr:0x02092170
 data_02092188 kind:data(any) addr:0x02092188
 data_02092198 kind:data(any) addr:0x02092198
-data_020921c0 kind:data(any) addr:0x020921c0
+_ZTV5Stage kind:data(any) addr:0x020921c0
 data_02092208 kind:data(any) addr:0x02092208
 data_020922d8 kind:data(any) addr:0x020922d8
 data_020922e0 kind:data(any) addr:0x020922e0
@@ -4227,7 +4227,7 @@ data_02092654 kind:data(any) addr:0x02092654
 data_02092660 kind:data(any) addr:0x02092660
 data_02092664 kind:data(any) addr:0x02092664
 data_02092668 kind:data(any) addr:0x02092668
-_ZTV5Stage kind:data(any) addr:0x02092680
+_ZTV5Scene kind:data(any) addr:0x02092680
 data_020926c8 kind:data(any) addr:0x020926c8
 data_020926cc kind:data(any) addr:0x020926cc
 data_020926d0 kind:data(any) addr:0x020926d0
