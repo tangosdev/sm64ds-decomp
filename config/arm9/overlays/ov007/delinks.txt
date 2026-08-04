@@ -83,7 +83,7 @@ src/func_ov007_020aec94.c:
     complete
     .text start:0x020aec94 end:0x020aed98
 
-src/_ZN5EnemyC2Ev.cpp:
+src/func_ov007_020aed98.cpp:
     complete
     .text start:0x020aed98 end:0x020aef78
 

@@ -24,7 +24,7 @@ extern void func_ov007_020ad660(int a);
 extern char *data_ov007_0210342c;
 
 #pragma opt_strength_reduction off
-void _ZN5EnemyC2Ev(void)
+void func_ov007_020aed98(void)
 {
     char *g = data_ov007_0210342c;
     int r6 = *(int*)(g + 4);

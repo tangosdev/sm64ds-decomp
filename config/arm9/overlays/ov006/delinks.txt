@@ -557,7 +557,7 @@ src/func_ov006_020c6ca4.c:
 src/func_ov006_020c6e4c.cpp:
     .text start:0x020c6e4c end:0x020c6f3c
 
-src/_ZN6Player18St_LevelEnter_MainEv.c:
+src/func_ov006_020c6f3c.c:
     complete
     .text start:0x020c6f3c end:0x020c6f70
 
