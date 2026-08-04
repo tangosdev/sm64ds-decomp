@@ -11,13 +11,13 @@
 extern "C" {
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern int _ZTV6ToxBox[];
-extern int _ZTV17ExclamationSwitch[];
+extern int _ZTV8Platform[];
 extern void* data_020a0eac;
 void* _ZN6ToxBoxD0Ev(struct ToxBox *self) {
   *(int**)(((char*)self))=_ZTV6ToxBox;
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  *(int**)(((char*)self))=_ZTV17ExclamationSwitch;
+  *(int**)(((char*)self))=_ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
   _ZN5ActorD2Ev(((char*)self));

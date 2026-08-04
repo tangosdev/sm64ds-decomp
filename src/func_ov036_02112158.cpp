@@ -2,7 +2,7 @@
 extern "C" {
 extern int data_ov036_02113f9c[];
 extern int data_ov002_0210af70[];
-extern int _ZTV17ExclamationSwitch[];
+extern int _ZTV8Platform[];
 void _ZN9ModelAnimD1Ev(void*);
 void __destroy_arr(void*,int,int,void*);
 void _ZN18MovingMeshColliderD1Ev(void*);
@@ -14,7 +14,7 @@ extern "C" int func_ov036_02112158(char* c){
   _ZN9ModelAnimD1Ev(c+0x450);
   *(int**)c=(int*)data_ov002_0210af70;
   __destroy_arr(c+0x320,3,0x50,(void*)_ZN5ModelD1Ev);
-  *(int**)c=(int*)_ZTV17ExclamationSwitch;
+  *(int**)c=(int*)_ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev(c+0x124);
   _ZN5ModelD1Ev(c+0xd4);
   _ZN5ActorD2Ev(c);

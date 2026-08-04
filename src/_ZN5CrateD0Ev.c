@@ -10,7 +10,7 @@
 #include "Crate.h"
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern void* _ZTV5Crate;
-extern void* _ZTV17ExclamationSwitch;
+extern void* _ZTV8Platform;
 extern void* data_020a0eac[];
 
 void* _ZN5CrateD0Ev(struct Crate *self) {
@@ -19,7 +19,7 @@ void* _ZN5CrateD0Ev(struct Crate *self) {
     _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos1);
     _ZN11ShadowModelD1Ev((char*)&self->mShadowModel);
     _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-    *(void**)((char*)self) = &_ZTV17ExclamationSwitch;
+    *(void**)((char*)self) = &_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
     _ZN5ModelD1Ev((char*)&self->mModel);
     _ZN5ActorD2Ev(((char*)self));

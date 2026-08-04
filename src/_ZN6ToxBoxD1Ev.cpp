@@ -9,12 +9,12 @@ extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN5ActorD2Ev(void*);
 extern void* _ZTV6ToxBox;
-extern void* _ZTV17ExclamationSwitch;
+extern void* _ZTV8Platform;
 void* _ZN6ToxBoxD1Ev(struct ToxBox *self) {
   *(void**)((char*)self) = &_ZTV6ToxBox;
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  *(void**)((char*)self) = &_ZTV17ExclamationSwitch;
+  *(void**)((char*)self) = &_ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
   _ZN5ActorD2Ev(((char*)self));

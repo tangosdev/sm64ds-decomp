@@ -2222,7 +2222,7 @@ data_ov002_0210ad84 kind:data(any) addr:0x0210ad84
 YoshiEgg_SpawnInfo kind:data(any) addr:0x0210ad90
 _ZTV8YoshiEgg kind:data(any) addr:0x0210adb4
 _ZTV8daYegg_c kind:data(any) addr:0x0210adb4
-_ZTV17ExclamationSwitch kind:data(any) addr:0x0210ae38
+_ZTV8Platform kind:data(any) addr:0x0210ae38
 data_ov002_0210aeb8 kind:data(any) addr:0x0210aeb8
 data_ov002_0210aec0 kind:data(any) addr:0x0210aec0
 data_ov002_0210aec8 kind:data(any) addr:0x0210aec8

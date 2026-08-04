@@ -11,7 +11,7 @@
 extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern void* _ZTV8MadPiano;
-extern void* _ZTV17ExclamationSwitch;
+extern void* _ZTV8Platform;
 void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   *(void**)((void*)self) = &_ZTV8MadPiano;
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
@@ -20,7 +20,7 @@ void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel2);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel1);
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
-  *(void**)((void*)self) = &_ZTV17ExclamationSwitch;
+  *(void**)((void*)self) = &_ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
   _ZN5ActorD2Ev(((void*)self));
