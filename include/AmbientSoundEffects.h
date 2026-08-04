@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class AmbientSoundEffects: 4 matched functions, 5 evidenced fields.
+ * class MugenBgm: 4 matched functions, 5 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef AMBIENTSOUNDEFFECTS_H
-#define AMBIENTSOUNDEFFECTS_H
+#ifndef MUGENBGM_H
+#define MUGENBGM_H
 #include "types.h"
 
-struct AmbientSoundEffects {
+struct MugenBgm {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];

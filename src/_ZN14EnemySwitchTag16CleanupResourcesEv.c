@@ -1,4 +1,4 @@
-int _ZN14EnemySwitchTag16CleanupResourcesEv(void)
+int _ZN19AmbientSoundEffects16CleanupResourcesEv(void)
 {
     return 1;
 }

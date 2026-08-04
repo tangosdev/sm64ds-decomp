@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8MugenBgm6RenderEv
+// @symbol _ZN14CutsceneObject6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MugenBgm.h"
+#include "CutsceneObject.h"
 extern "C" {
 void _ZN9ModelBase12ApplyOpacityEj(void* m, unsigned int op, int z);
 void func_ov002_020f65b8(void* o);
@@ -15,7 +15,7 @@ struct ModelBase {
   virtual void v3(); virtual void v4(); virtual void m(int arg);
 };
 
-int MugenBgm::Render()
+int CutsceneObject::Render()
 {
   if (unk_008 == 0x19){
     struct { char* p; char* cur; M48* src; } s;

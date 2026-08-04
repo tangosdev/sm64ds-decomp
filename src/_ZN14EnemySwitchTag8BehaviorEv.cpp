@@ -1,15 +1,15 @@
 //cpp
 #include "types.h"
-// @symbol _ZN14EnemySwitchTag8BehaviorEv
+// @symbol _ZN19AmbientSoundEffects8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Camera.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "EnemySwitchTag.h"
+#include "AmbientSoundEffects.h"
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 e);
 extern void *data_0209f318;
 
-int EnemySwitchTag::Behavior()
+int AmbientSoundEffects::Behavior()
 {
     u32 param;
     int a;

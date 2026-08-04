@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN14BlueCoinSwitchD1Ev
+// @symbol _ZN14EnemySwitchTagD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -8,11 +8,11 @@ struct Actor {
 
 struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
 
-struct BlueCoinSwitch : Actor {
+struct EnemySwitchTag : Actor {
     MovingCylinderClsn m0;   /* 0xd4 */
-    virtual ~BlueCoinSwitch();
+    virtual ~EnemySwitchTag();
 };
 
-BlueCoinSwitch::~BlueCoinSwitch()
+EnemySwitchTag::~EnemySwitchTag()
 {
 }

@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov002_020f1290
+// @symbol _ZN14BlueCoinSwitch6RenderEv
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjBC_Switch_c.h"
 // recovered name: daObjBC_Switch_c_Render
@@ -14,7 +14,7 @@ struct Base {
     virtual void m(int);
 };
 
-extern "C" int func_ov002_020f1290(char *o) {
+extern "C" int _ZN14BlueCoinSwitch6RenderEv(char *o) {
     struct daObjBC_Switch_c *self = (struct daObjBC_Switch_c *)(void *)o;
     if (self->unk_060 > self->unk_320) {
         Base *bp = (Base *)(o + 0xd4);

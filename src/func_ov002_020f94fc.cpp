@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov002_020f94fc
+// @symbol _ZN11SoundObject8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -15,7 +15,7 @@ extern "C" {
 void _ZN9ActorBase18MarkForDestructionEv(C* c);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int d, int f, bool g);
 
-int func_ov002_020f94fc(char* cc)
+int _ZN11SoundObject8BehaviorEv(char* cc)
 {
     struct daSoundObj_c *self = (struct daSoundObj_c *)(void *)cc;
     C* c = (C*)cc;

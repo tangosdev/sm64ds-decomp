@@ -20,7 +20,7 @@ struct Actor {
 extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *clsn, struct Actor *a, Fix12 x, Fix12 z, unsigned int b, unsigned int c);
 extern "C" void _ZN5Event8ClearBitEj(unsigned int bit);
 
-extern "C" int _ZN14BlueCoinSwitch13InitResourcesEv(struct Actor *a)
+extern "C" int _ZN14EnemySwitchTag13InitResourcesEv(struct Actor *a)
 {
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
         (void *)((char *)a + 0xd4), a,

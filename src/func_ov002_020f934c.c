@@ -1,2 +1,2 @@
-extern int data_ov002_0210c0dc[]; extern int _ZN5ActorD2Ev();
-int func_ov002_020f934c(int *x) { x[0] = (int)data_ov002_0210c0dc; _ZN5ActorD2Ev(x); return (int)x; }
+extern int _ZTV11SoundObject[]; extern int _ZN5ActorD2Ev();
+int _ZN11SoundObjectD1Ev(int *x) { x[0] = (int)_ZTV11SoundObject; _ZN5ActorD2Ev(x); return (int)x; }

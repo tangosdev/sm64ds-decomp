@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN14BlueCoinSwitch16CleanupResourcesEv
+// @symbol _ZN14EnemySwitchTag16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "BlueCoinSwitch.h"
+#include "EnemySwitchTag.h"
 extern int _ZN5Event8ClearBitEj(unsigned int bit);
 
-int BlueCoinSwitch::CleanupResources()
+int EnemySwitchTag::CleanupResources()
 {
     _ZN5Event8ClearBitEj(mEventID);
     return 1;

@@ -1,4 +1,4 @@
-int _ZN14EnemySwitchTag6RenderEv(void)
+int _ZN19AmbientSoundEffects6RenderEv(void)
 {
     return 1;
 }

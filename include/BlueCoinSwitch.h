@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BlueCoinSwitch: 5 matched functions, 7 evidenced fields.
+ * class EnemySwitchTag: 5 matched functions, 7 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef BLUECOINSWITCH_H
-#define BLUECOINSWITCH_H
+#ifndef ENEMYSWITCHTAG_H
+#define ENEMYSWITCHTAG_H
 #include "types.h"
 
-struct BlueCoinSwitch {
+struct EnemySwitchTag {
     u8  pad_000[0xd4];
     u8  mMovingCylinderClsn;            /* 0x0d4 */
     u8  pad_0d5[0x17];

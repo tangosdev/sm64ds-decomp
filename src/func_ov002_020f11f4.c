@@ -1,4 +1,4 @@
-// @symbol func_ov002_020f11f4
+// @symbol _ZN14BlueCoinSwitchD0Ev
 // recovered name: daObjBC_Switch_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
@@ -8,7 +8,7 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* daObjBC_Switch_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void *G0;
-int *func_ov002_020f11f4(int *t)
+int *_ZN14BlueCoinSwitchD0Ev(int *t)
 {
     t[0] = (int)VT0;
     t[0] = (int)VT1;

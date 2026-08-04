@@ -1,3 +1,3 @@
-void _ZN8MugenBgm16OnPendingDestroyEv(void)
+void _ZN14CutsceneObject16OnPendingDestroyEv(void)
 {
 }

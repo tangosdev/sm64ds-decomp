@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN8MugenBgm16CleanupResourcesEv
+// @symbol _ZN14CutsceneObject16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "MugenBgm.h"
+#include "CutsceneObject.h"
 extern "C" {
 int func_ov002_020f63a0(void* thiz);
 int func_ov002_020f23d0(void* c);
 }
 struct Obj { virtual void v00(); virtual void m04(); };
 
-int MugenBgm::CleanupResources()
+int CutsceneObject::CleanupResources()
 {
   int r1 = unk_008;
   if (r1 == 0x2e) return func_ov002_020f63a0(((char*)this));

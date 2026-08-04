@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN14EnemySwitchTagD1Ev
+// @symbol _ZN19AmbientSoundEffectsD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct EnemySwitchTag : Actor {
-    virtual ~EnemySwitchTag();
+struct AmbientSoundEffects : Actor {
+    virtual ~AmbientSoundEffects();
 };
 
-EnemySwitchTag::~EnemySwitchTag()
+AmbientSoundEffects::~AmbientSoundEffects()
 {
 }

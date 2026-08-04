@@ -1,3 +1,3 @@
-void _ZN14EnemySwitchTag16OnPendingDestroyEv(void)
+void _ZN19AmbientSoundEffects16OnPendingDestroyEv(void)
 {
 }

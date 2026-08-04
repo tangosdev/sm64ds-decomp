@@ -1,4 +1,4 @@
-int _ZN19AmbientSoundEffects16CleanupResourcesEv(void)
+int _ZN8MugenBgm16CleanupResourcesEv(void)
 {
     return 1;
 }

@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN8MugenBgm13InitResourcesEv
+// @symbol _ZN14CutsceneObject13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MugenBgm.h"
+#include "CutsceneObject.h"
 typedef struct Obj Obj;
 struct Obj {
     char pad0[8];
@@ -25,7 +25,7 @@ extern unsigned char data_0209f2d8;
 extern char data_ov002_0211094c;
 extern char data_ov085_0213074c;
 
-int MugenBgm::InitResources()
+int CutsceneObject::InitResources()
 {
     void *p;
     int t;

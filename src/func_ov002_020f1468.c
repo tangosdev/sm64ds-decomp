@@ -1,4 +1,4 @@
-// @symbol func_ov002_020f1468
+// @symbol _ZN14BlueCoinSwitch13InitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -21,7 +21,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393c4(void* p, void* v);
 
 
-int func_ov002_020f1468(char* c)
+int _ZN14BlueCoinSwitch13InitResourcesEv(char* c)
 {
     struct daObjBC_Switch_c *self = (struct daObjBC_Switch_c *)(void *)c;
     void* bmd;

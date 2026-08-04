@@ -1,4 +1,4 @@
-// @symbol func_ov002_020f95e0
+// @symbol _ZN11SoundObject13InitResourcesEv
 // recovered name: daSoundObj_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
@@ -11,7 +11,7 @@ extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 
-int func_ov002_020f95e0(void *self)
+int _ZN11SoundObject13InitResourcesEv(void *self)
 {
     char *c = (char *)self;
     void *a;

@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MugenBgm: 6 matched functions, 5 evidenced fields.
+ * class CutsceneObject: 6 matched functions, 5 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef MUGENBGM_H
-#define MUGENBGM_H
+#ifndef CUTSCENEOBJECT_H
+#define CUTSCENEOBJECT_H
 #include "types.h"
 
-struct MugenBgm {
+struct CutsceneObject {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x74];

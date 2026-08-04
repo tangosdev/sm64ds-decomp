@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN19AmbientSoundEffects13InitResourcesEv
+// @symbol _ZN8MugenBgm13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "AmbientSoundEffects.h"
+#include "MugenBgm.h"
 extern void* _Znwj(unsigned int);
 extern void _ZN3Fog4InitEt5Fix12IiES1_(void* thiz, unsigned short a, int b, int d);
 
-int AmbientSoundEffects::InitResources()
+int MugenBgm::InitResources()
 {
     void* p;
     mParam &= 0xf;

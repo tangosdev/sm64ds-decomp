@@ -1,4 +1,4 @@
-// @symbol _ZN14BlueCoinSwitchD0Ev
+// @symbol _ZN14EnemySwitchTagD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_MovingCylinderClsn.h"
@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV11daESwitch_c */
 extern void *data_020a0eac;
-int *_ZN14BlueCoinSwitchD0Ev(int *t)
+int *_ZN14EnemySwitchTagD0Ev(int *t)
 {
     t[0] = (int)_ZTV11daESwitch_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);

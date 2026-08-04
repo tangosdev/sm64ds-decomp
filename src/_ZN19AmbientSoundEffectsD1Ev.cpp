@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN19AmbientSoundEffectsD1Ev
+// @symbol _ZN8MugenBgmD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct AmbientSoundEffects : Actor {
-    virtual ~AmbientSoundEffects();
+struct MugenBgm : Actor {
+    virtual ~MugenBgm();
 };
 
-AmbientSoundEffects::~AmbientSoundEffects()
+MugenBgm::~MugenBgm()
 {
 }

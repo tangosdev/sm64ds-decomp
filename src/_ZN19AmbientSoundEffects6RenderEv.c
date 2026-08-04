@@ -1,4 +1,4 @@
-int _ZN19AmbientSoundEffects6RenderEv(void)
+int _ZN8MugenBgm6RenderEv(void)
 {
     return 1;
 }

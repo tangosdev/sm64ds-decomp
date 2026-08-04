@@ -1,10 +1,10 @@
-// @symbol _ZN19AmbientSoundEffectsD0Ev
+// @symbol _ZN8MugenBgmD0Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "AmbientSoundEffects.h"
-int *_ZN19AmbientSoundEffectsD0Ev(int *t)
+#include "MugenBgm.h"
+int *_ZN8MugenBgmD0Ev(int *t)
 {
     t[0] = (int)VT;
     _ZN5ActorD2Ev(t);

@@ -1,15 +1,15 @@
 //cpp
 #include "types.h"
-// @symbol _ZN14BlueCoinSwitch8BehaviorEv
+// @symbol _ZN14EnemySwitchTag8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "BlueCoinSwitch.h"
+#include "EnemySwitchTag.h"
 extern void _ZN5Event8ClearBitEj(u32 bit);
 extern void _ZN5Event6SetBitEj(u32 bit);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 
-int BlueCoinSwitch::Behavior()
+int EnemySwitchTag::Behavior()
 {
     if (unk_10a != 0) {
         *(u16*)(((int)((char*)this) + 0x10a)) -= 1;

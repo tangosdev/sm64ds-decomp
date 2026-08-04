@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN8MugenBgmD1Ev
+// @symbol _ZN14CutsceneObjectD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct MugenBgm : Actor {
-    virtual ~MugenBgm();
+struct CutsceneObject : Actor {
+    virtual ~CutsceneObject();
 };
 
-MugenBgm::~MugenBgm()
+CutsceneObject::~CutsceneObject()
 {
 }

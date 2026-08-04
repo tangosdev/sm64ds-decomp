@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN8MugenBgm8BehaviorEv
+// @symbol _ZN14CutsceneObject8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MugenBgm.h"
+#include "CutsceneObject.h"
 typedef struct 
 {
   s32 x;
@@ -31,7 +31,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Mtx43 data_020a0e68;
 
-int MugenBgm::Behavior()
+int CutsceneObject::Behavior()
 {
   char *c = (char *) ((void *)this);
   s32 *new_var;
