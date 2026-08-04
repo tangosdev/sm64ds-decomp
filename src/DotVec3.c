@@ -12,3 +12,4 @@ Fix12i DotVec3(const Vector3 *a, const Vector3 *b)
                   + (long long)a->z * b->z;
     return (Fix12i)((sum + 0x800) >> 12);
 }
+// refcheck smoke test: byte-neutral comment, PR will be closed unmerged
