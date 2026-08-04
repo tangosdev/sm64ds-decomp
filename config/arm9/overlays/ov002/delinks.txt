@@ -4815,10 +4815,10 @@ src/MugenBgm_Spawn.c:
     complete
     .text start:0x020f1f40 end:0x020f1f70
 
-src/_ZN8MugenBgmD1Ev.cpp:
+src/_ZN14CutsceneObjectD1Ev.cpp:
     .text start:0x020f1f70 end:0x020f1f94
 
-src/_ZN8MugenBgmD0Ev.c:
+src/_ZN14CutsceneObjectD0Ev.c:
     .text start:0x020f1f94 end:0x020f1fcc
 
 src/func_ov002_020f1fcc.c:
@@ -5360,22 +5360,22 @@ src/func_ov002_020f7bb8.c:
 src/func_ov002_020f7d74.cpp:
     .text start:0x020f7d74 end:0x020f8028
 
-src/_ZN8MugenBgm16CleanupResourcesEv.cpp:
+src/_ZN14CutsceneObject16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f8028 end:0x020f80a8
 
-src/_ZN8MugenBgm16OnPendingDestroyEv.c:
+src/_ZN14CutsceneObject16OnPendingDestroyEv.c:
     complete
     .text start:0x020f80a8 end:0x020f80ac
 
-src/_ZN8MugenBgm6RenderEv.cpp:
+src/_ZN14CutsceneObject6RenderEv.cpp:
     complete
     .text start:0x020f80ac end:0x020f81c4
 
-src/_ZN8MugenBgm8BehaviorEv.cpp:
+src/_ZN14CutsceneObject8BehaviorEv.cpp:
     .text start:0x020f81c4 end:0x020f83a4
 
-src/_ZN8MugenBgm13InitResourcesEv.cpp:
+src/_ZN14CutsceneObject13InitResourcesEv.cpp:
     .text start:0x020f83a4 end:0x020f8808
 
 src/CutsceneObject_Spawn.c:
