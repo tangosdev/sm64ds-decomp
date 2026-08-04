@@ -3,6 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
+extern int data_ov015_021147e8[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV17daObjBk_Ukisima_c */
 int *RotatingPlatformWf_Spawn(void)
@@ -11,7 +12,7 @@ int *RotatingPlatformWf_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)_ZTV17daObjBk_Ukisima_c;
-        p[0] = (int)VT1;
+        p[0] = (int)data_ov015_021147e8;
     }
     return p;
 }

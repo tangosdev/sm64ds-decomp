@@ -6,14 +6,15 @@
 #include "CannonHatch.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov002_0210e124[];
+extern int data_ov002_0210e12c[];
 
 int CannonHatch::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov002_0210e12c))->Release();
+    ((SharedFilePtr *)(data_ov002_0210e124))->Release();
     return 1;
 }

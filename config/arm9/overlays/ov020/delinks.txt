@@ -16,6 +16,7 @@ src/_ZN15BookShotSpawnerD1Ev.cpp:
     .text start:0x02111254 end:0x02111278
 
 src/_ZN15BookShotSpawnerD0Ev.c:
+    complete
     .text start:0x02111278 end:0x021112b0
 
 src/func_ov020_021112b0.c:

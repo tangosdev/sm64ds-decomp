@@ -3,6 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
+extern int _ZTV32FloatOnWaterPlatformWdwRectangle[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV15daObjWc_Obj07_c */
 int *RotatingPlatformWdw_Spawn(void)
@@ -11,7 +12,7 @@ int *RotatingPlatformWdw_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)_ZTV15daObjWc_Obj07_c;
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV32FloatOnWaterPlatformWdwRectangle;
     }
     return p;
 }

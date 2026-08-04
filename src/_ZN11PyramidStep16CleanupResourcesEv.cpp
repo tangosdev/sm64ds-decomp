@@ -6,12 +6,13 @@
 #include "PyramidStep.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov025_02113ab0[];
+extern int data_ov025_02113ab8[];
 
 int PyramidStep::CleanupResources()
 {
     ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov025_02113ab8))->Release();
+    ((SharedFilePtr *)(data_ov025_02113ab0))->Release();
     return 1;
 }

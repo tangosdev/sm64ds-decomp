@@ -6,14 +6,15 @@
 #include "SwitchActivatedPlank.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov029_02114324[];
+extern int data_ov029_0211432c[];
 
 int SwitchActivatedPlank::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov029_0211432c))->Release();
+    ((SharedFilePtr *)(data_ov029_02114324))->Release();
     return 1;
 }

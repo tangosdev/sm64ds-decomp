@@ -6,14 +6,15 @@
 #include "ChainChompFence.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov014_021149b8[];
+extern int data_ov014_021149c0[];
 
 int ChainChompFence::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov014_021149c0))->Release();
+    ((SharedFilePtr *)(data_ov014_021149b8))->Release();
     return 1;
 }

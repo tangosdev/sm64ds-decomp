@@ -7,6 +7,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
+extern int _ZTV5Bully[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV11daDonketu_c */
 int *Bully_Spawn(void)
@@ -19,7 +20,7 @@ int *Bully_Spawn(void)
         _ZN12WithMeshClsnC1Ev((char *)p + 0x174);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x33c);
         _ZN11ShadowModelC1Ev((char *)p + 0x370);
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV5Bully;
     }
     return p;
 }

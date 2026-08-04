@@ -116,6 +116,7 @@ src/func_ov002_020aed18.c:
     .text start:0x020aed18 end:0x020aed3c
 
 src/_ZN5EnemyD0Ev.c:
+    complete
     .text start:0x020aed3c end:0x020aed74
 
 src/_ZN5EnemyD2Ev.c:
@@ -377,6 +378,7 @@ src/_ZN11VirtualDoorD1Ev.cpp:
     .text start:0x020b09b0 end:0x020b09d4
 
 src/_ZN11VirtualDoorD0Ev.c:
+    complete
     .text start:0x020b09d4 end:0x020b0a0c
 
 src/func_ov002_020b0a0c.c:
@@ -664,6 +666,7 @@ src/_ZN10BrickBlockD1Ev.cpp:
     .text start:0x020b415c end:0x020b4180
 
 src/_ZN10BrickBlockD0Ev.c:
+    complete
     .text start:0x020b4180 end:0x020b41b8
 
 src/func_ov002_020b41b8.c:
@@ -1042,6 +1045,7 @@ src/_ZN18PoppingLavaBubblesD1Ev.cpp:
     .text start:0x020b6e08 end:0x020b6e2c
 
 src/_ZN18PoppingLavaBubblesD0Ev.c:
+    complete
     .text start:0x020b6e2c end:0x020b6e64
 
 src/_ZN18PoppingLavaBubbles8BehaviorEv.cpp:
@@ -1584,6 +1588,7 @@ src/func_ov002_020bc990.c:
     .text start:0x020bc990 end:0x020bc9b0
 
 src/_ZN11CannonHatch16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020bc9b0 end:0x020bc9f4
 
 src/_ZN11CannonHatch6RenderEv.cpp:
@@ -4833,6 +4838,7 @@ src/_ZN14BlueCoinSwitchD1Ev.c:
     .text start:0x020f11b0 end:0x020f11f4
 
 src/_ZN14BlueCoinSwitchD0Ev.c:
+    complete
     .text start:0x020f11f4 end:0x020f124c
 
 src/_ZN14BlueCoinSwitch16CleanupResourcesEv.c:
@@ -4873,6 +4879,7 @@ src/_ZN12EnemySpawnerD1Ev.cpp:
     .text start:0x020f1670 end:0x020f1694
 
 src/_ZN12EnemySpawnerD0Ev.c:
+    complete
     .text start:0x020f1694 end:0x020f16cc
 
 src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp:
@@ -4911,6 +4918,7 @@ src/_ZN19AmbientSoundEffectsD1Ev.cpp:
     .text start:0x020f198c end:0x020f19b0
 
 src/_ZN19AmbientSoundEffectsD0Ev.c:
+    complete
     .text start:0x020f19b0 end:0x020f19e8
 
 src/_ZN19AmbientSoundEffects16CleanupResourcesEv.c:
@@ -4973,6 +4981,7 @@ src/_ZN14CutsceneObjectD1Ev.cpp:
     .text start:0x020f1f70 end:0x020f1f94
 
 src/_ZN14CutsceneObjectD0Ev.c:
+    complete
     .text start:0x020f1f94 end:0x020f1fcc
 
 src/func_ov002_020f1fcc.c:
@@ -5582,6 +5591,7 @@ src/_ZN11SoundObjectD1Ev.c:
     .text start:0x020f934c end:0x020f9370
 
 src/_ZN11SoundObjectD0Ev.c:
+    complete
     .text start:0x020f9370 end:0x020f93a8
 
 src/func_ov002_020f93a8.cpp:

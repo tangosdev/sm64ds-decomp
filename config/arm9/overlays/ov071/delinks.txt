@@ -320,6 +320,7 @@ src/func_ov071_02122414.cpp:
     .text start:0x02122414 end:0x02122460
 
 src/_ZN6Coffin16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122460 end:0x021224a4
 
 src/_ZN6Coffin6RenderEv.cpp:

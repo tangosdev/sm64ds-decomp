@@ -8,7 +8,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV16daObjCtMecha04_c; VT1 = _ZTV10dBgActor_c */
-extern void *G0;
+extern void *data_020a0eac;
 int *_ZN20TtcConveyorBeltLargeD0Ev(int *t)
 {
     t[0] = (int)_ZTV16daObjCtMecha04_c;
@@ -18,6 +18,6 @@ int *_ZN20TtcConveyorBeltLargeD0Ev(int *t)
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -5,6 +5,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
+extern int _ZTV6Thwomp[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV7daDsn_c */
 int *Thwomp_Spawn(void)
@@ -15,7 +16,7 @@ int *Thwomp_Spawn(void)
         p[0] = (int)_ZTV7daDsn_c;
         _ZN15TextureSequenceC1Ev((char *)p + 0x324);
         _ZN11ShadowModelC1Ev((char *)p + 0x338);
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV6Thwomp;
     }
     return p;
 }

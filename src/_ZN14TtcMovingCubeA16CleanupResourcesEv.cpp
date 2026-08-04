@@ -6,14 +6,15 @@
 #include "TtcMovingCubeA.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov065_0211d9cc[];
+extern int data_ov065_0211d9d4[];
 
 int TtcMovingCubeA::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov065_0211d9d4))->Release();
+    ((SharedFilePtr *)(data_ov065_0211d9cc))->Release();
     return 1;
 }

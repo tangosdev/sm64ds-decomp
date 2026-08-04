@@ -125,6 +125,7 @@ src/_ZN15IceSlideManagerD1Ev.cpp:
     .text start:0x0211261c end:0x02112640
 
 src/_ZN15IceSlideManagerD0Ev.c:
+    complete
     .text start:0x02112640 end:0x02112678
 
 src/_ZN15IceSlideManager8BehaviorEv.cpp:

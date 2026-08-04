@@ -6,14 +6,15 @@
 #include "Coffin.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int data_ov071_021230d8[];
+extern int data_ov071_021230d0[];
 
 int Coffin::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov071_021230d0))->Release();
+    ((SharedFilePtr *)(data_ov071_021230d8))->Release();
     return 1;
 }

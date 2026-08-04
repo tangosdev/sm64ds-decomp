@@ -5008,6 +5008,7 @@ src/_ZN12WithMeshClsnD1Ev.c:
     .text start:0x020373f8 end:0x02037430
 
 src/_ZN12WithMeshClsnC1Ev.c:
+    complete
     .text start:0x02037430 end:0x02037464
 
 src/func_02037464.c:
@@ -6099,6 +6100,7 @@ src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c:
     .text start:0x0203c2e4 end:0x0203c324
 
 src/_ZN4Heap10SetDefaultEv.cpp:
+    complete
     .text start:0x0203c324 end:0x0203c33c
 
 src/_ZN9SolidHeap12VResizeToFitEv.c:

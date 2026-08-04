@@ -147,6 +147,7 @@ src/func_ov014_02112ea8.cpp:
     .text start:0x02112ea8 end:0x02112f3c
 
 src/_ZN15ChainChompFence16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112f3c end:0x02112f80
 
 src/_ZN15ChainChompFence6RenderEv.cpp:

@@ -24,6 +24,7 @@ src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
     .text start:0x021113c0 end:0x02111418
 
 src/_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111418 end:0x0211145c
 
 src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp:
@@ -200,6 +201,7 @@ src/func_ov029_02112710.c:
     .text start:0x02112710 end:0x02112750
 
 src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112750 end:0x02112794
 
 src/_ZN20SwitchActivatedPlank6RenderEv.cpp:

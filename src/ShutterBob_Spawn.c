@@ -3,6 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
+extern int _ZTV10ShutterBob[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV14daObjBSwdoor_c */
 int *ShutterBob_Spawn(void)
@@ -11,7 +12,7 @@ int *ShutterBob_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)_ZTV14daObjBSwdoor_c;
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV10ShutterBob;
     }
     return p;
 }

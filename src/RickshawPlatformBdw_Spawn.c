@@ -3,6 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
+extern int _ZTV11RickshawBdw[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV17daObjKm1_Kuruma_c */
 int *RickshawPlatformBdw_Spawn(void)
@@ -11,7 +12,7 @@ int *RickshawPlatformBdw_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)_ZTV17daObjKm1_Kuruma_c;
-        p[0] = (int)VT1;
+        p[0] = (int)_ZTV11RickshawBdw;
     }
     return p;
 }

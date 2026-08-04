@@ -90,6 +90,7 @@ src/func_ov025_02111e30.c:
     .text start:0x02111e30 end:0x02111e70
 
 src/_ZN11PyramidStep16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111e70 end:0x02111ea8
 
 src/_ZN11PyramidStep6RenderEv.cpp:
