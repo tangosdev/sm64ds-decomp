@@ -184,6 +184,30 @@ symbol at the same address (the shape `_ZTV5Actor` / `data_0208e3a4` already use
 files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
 each other and wants both.
 
+**An alias must carry `size=0x0` (2026-08-04).** The aliases originally repeated the real size,
+and that is a latent link-breaker. `mwldarm` checks, per gap object, that the sum of every
+symbol's size fits inside the section — it does not notice that two symbols share an address, so
+an alias with a size is counted a second time. The two aliases over-declared ITCM by
+0x20c + 0x1e4 = **1,008 bytes**. Nothing failed at the time only because the ITCM symbol table
+still had 1,476 bytes of unattributed gaps, and the shortfall stayed larger than the excess. The
+moment the gap-closing in this file's "Count, settled by coverage" section landed, the slack fell
+to 36 bytes and the link died:
+
+```
+mwldarm.exe: In section .text in file _dsd_gap@itcm_0.o ,
+mwldarm.exe: the sum of all symbol sizes exceed section size.
+```
+
+0x3448 declared against a 0x307c section — an overflow of exactly 972, which is 1,008 minus the
+36 bytes of gap left. Sizing both aliases `0x0` drops the sum to 0x3058 and it fits. The link
+still resolves every `bl _s32_div_f`, because a relocation needs the symbol's *address*, never
+its size — the whole 106/106 module-exact build is the proof.
+
+The general rule, for any future second name on an existing address: **the symbol that owns the
+bytes carries the size; every alias carries `size=0x0`.** Two sized symbols at one address is a
+defect that will not surface until something unrelated tightens the same section, and then it
+surfaces as a linker error naming neither symbol.
+
 Do not confuse these with `cstd::div` / `cstd::mod` (0x02052f4c / 0x02052ef4). Those are
 Nintendo's own wrappers over the **hardware divider** — `DIVCNT = 0`, numerator to `DIV_NUMER`,
 denominator to `DIV_DENOM`, spin on bit 15, read `DIV_RESULT` (`cstd::mod` reads `DIVREM_RESULT`
@@ -277,9 +301,14 @@ These make their functions unmatchable *by construction*, which is why nothing h
 **Count, settled by coverage rather than arithmetic (2026-08-03).** I got this wrong twice --
 first "42" by summing two agents' findings without redoing the sum, then "41" by correcting the
 arithmetic while still missing entries. The answer is **43**, and the proof is not a sum: after
-the fixes below the ITCM symbol table covers 0x01ff8000..0x01ffdf3c **contiguously, with zero
-gaps and zero overlaps**, ending exactly on the `.text` end in `config/arm9/itcm/delinks.txt`.
-That is checkable in one pass and cannot be fudged.
+the fixes below the ITCM symbol table runs 0x01ff8000..0x01ffdf3c with **zero overlaps between
+functions**, ending exactly on the `.text` end in `config/arm9/itcm/delinks.txt`. That is
+checkable in one pass and cannot be fudged.
+
+Coverage is contiguous *in bytes accounted for*, but two of the entries below are `kind:label`,
+not `kind:function`, so 0x24 bytes sit in no function's declared range. That is deliberate, and
+the reason is in the next paragraph -- an earlier revision of this work declared them as
+functions to make the range literally gap-free, and it broke the build.
 
 41 declared, minus 1 (func_01ffa3e0 merged into func_01ffa344), plus 3 previously undeclared
 entries:
@@ -292,8 +321,24 @@ entries:
 * **0x01ffa588** (0xc) -- xor-swaps the single-precision pair, falls through into func_01ffa594.
 
 The two fallthrough entries have zero callers anywhere -- no relocs, no intra-ITCM branches --
-and are correct only while adjacent to the routine they fall into, so both are listed in
-`config/rombuild-exclude.txt`: declared for coverage, never carved into their own object.
+and are correct only while adjacent to the routine they fall into, so neither may ever be
+carved into its own delink object.
+
+**They must be declared `kind:label`, not `kind:function`.** This cost a red validation run to
+learn. `dsd delink` analyses every function symbol and refuses one whose entry is not a
+prologue, so declaring 0x01ff8df8 a function fails the whole build at step 1 of 6:
+
+```
+Error: function func_01ff8df8 could not be analyzed:
+  InvalidStart { address: 1ff8df8, ins: Arm(Ins { code: e0211003, op: Eor }) }
+```
+
+The first instruction is `eor r1, r1, r3` -- an argument swap, not a frame setup. A label makes
+no claim dsd has to verify, and it also gets the placement right for free: unanalysed bytes stay
+in the module's gap object, which is precisely where a fallthrough entry has to live. Note that
+`config/rombuild-exclude.txt` does **not** solve this; it gates enrollment, not dsd's analysis,
+so a function symbol listed there still breaks delink. `.L_01ffadf8`, an alternate entry inside
+`__aeabi_uidiv` further down the same file, is the existing precedent for the label form.
 
 A candidate I checked and rejected: 0x01ffa1bc has its own `push {ip,lr}` prologue but zero
 external callers and **20** incoming branches from inside func_01ff97d8's declared body. It is
