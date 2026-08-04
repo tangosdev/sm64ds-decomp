@@ -275,7 +275,9 @@ src/CccArena_Spawn.c:
     .text start:0x02122844 end:0x02122874
 
 src/__sinit_ov073_02122874.c:
+    complete
     .init start:0x02122874 end:0x02122d48
 
 src/__sinit_ov073_02122d48.c:
+    complete
     .init start:0x02122d48 end:0x02122f34

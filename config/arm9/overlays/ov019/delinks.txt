@@ -141,7 +141,9 @@ src/IceSlideManager_Spawn.c:
     .text start:0x0211274c end:0x0211277c
 
 src/__sinit_ov019_021127a4.c:
+    complete
     .init start:0x021127a4 end:0x02112b14
 
 src/__sinit_ov019_02112b14.c:
+    complete
     .init start:0x02112b14 end:0x02112b64

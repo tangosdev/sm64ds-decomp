@@ -266,13 +266,17 @@ src/FortressWallBreakable_Spawn.c:
     .text start:0x021275ac end:0x021275dc
 
 src/__sinit_ov079_02127618.c:
+    complete
     .init start:0x02127618 end:0x021279d4
 
 src/__sinit_ov079_021279d4.c:
+    complete
     .init start:0x021279d4 end:0x02127a10
 
 src/__sinit_ov079_02127a10.c:
+    complete
     .init start:0x02127a10 end:0x02127acc
 
 src/__sinit_ov079_02127acc.c:
+    complete
     .init start:0x02127acc end:0x02127b88

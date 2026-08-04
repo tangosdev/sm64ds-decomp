@@ -7041,91 +7041,121 @@ src/func_ov006_0212b88c.c:
     .text start:0x0212b88c end:0x0212b890
 
 src/__sinit_ov006_0212f4c4.c:
+    complete
     .init start:0x0212f4c4 end:0x0212f52c
 
 src/__sinit_ov006_0212f52c.c:
+    complete
     .init start:0x0212f52c end:0x0212f660
 
 src/__sinit_ov006_0212f660.c:
+    complete
     .init start:0x0212f660 end:0x0212f6b4
 
 src/__sinit_ov006_0212f6b4.c:
+    complete
     .init start:0x0212f6b4 end:0x0212fc7c
 
 src/__sinit_ov006_0212fc7c.c:
+    complete
     .init start:0x0212fc7c end:0x0212fd48
 
 src/__sinit_ov006_0212fd48.c:
+    complete
     .init start:0x0212fd48 end:0x021300b0
 
 src/__sinit_ov006_021300b0.c:
+    complete
     .init start:0x021300b0 end:0x0213014c
 
 src/__sinit_ov006_021303d0.c:
+    complete
     .init start:0x021303d0 end:0x021304ac
 
 src/__sinit_ov006_021304ac.c:
+    complete
     .init start:0x021304ac end:0x02130758
 
 src/__sinit_ov006_02130758.c:
+    complete
     .init start:0x02130758 end:0x02130a04
 
 src/__sinit_ov006_02130a04.c:
+    complete
     .init start:0x02130a04 end:0x02130a08
 
 src/__sinit_ov006_02130a08.c:
+    complete
     .init start:0x02130a08 end:0x02130df8
 
 src/__sinit_ov006_02130df8.c:
+    complete
     .init start:0x02130df8 end:0x02130e9c
 
 src/__sinit_ov006_02130e9c.c:
+    complete
     .init start:0x02130e9c end:0x02130f00
 
 src/__sinit_ov006_02130f00.c:
+    complete
     .init start:0x02130f00 end:0x02130f64
 
 src/__sinit_ov006_02130f64.c:
+    complete
     .init start:0x02130f64 end:0x021311c8
 
 src/__sinit_ov006_021311c8.c:
+    complete
     .init start:0x021311c8 end:0x021314e4
 
 src/__sinit_ov006_021314e4.c:
+    complete
     .init start:0x021314e4 end:0x021318a0
 
 src/__sinit_ov006_021318a0.c:
+    complete
     .init start:0x021318a0 end:0x0213195c
 
 src/__sinit_ov006_0213195c.c:
+    complete
     .init start:0x0213195c end:0x02131a38
 
 src/__sinit_ov006_02131a38.c:
+    complete
     .init start:0x02131a38 end:0x02131cd0
 
 src/__sinit_ov006_02131cd0.c:
+    complete
     .init start:0x02131cd0 end:0x02131fa4
 
 src/__sinit_ov006_02131fa4.c:
+    complete
     .init start:0x02131fa4 end:0x021322bc
 
 src/__sinit_ov006_021322bc.c:
+    complete
     .init start:0x021322bc end:0x02132894
 
 src/__sinit_ov006_02132894.c:
+    complete
     .init start:0x02132894 end:0x02132970
 
 src/__sinit_ov006_02132970.c:
+    complete
     .init start:0x02132970 end:0x02132f68
 
 src/__sinit_ov006_02132f68.c:
+    complete
     .init start:0x02132f68 end:0x0213322c
 
 src/__sinit_ov006_0213322c.c:
+    complete
     .init start:0x0213322c end:0x0213326c
 
 src/__sinit_ov006_0213326c.c:
+    complete
     .init start:0x0213326c end:0x021333e0
 
 src/__sinit_ov006_021333e0.c:
+    complete
     .init start:0x021333e0 end:0x0213356c

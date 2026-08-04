@@ -97,4 +97,5 @@ src/ToxBox_Spawn.c:
     .text start:0x02132018 end:0x02132074
 
 src/__sinit_ov092_021320cc.c:
+    complete
     .init start:0x021320cc end:0x02132210

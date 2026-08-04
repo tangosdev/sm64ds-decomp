@@ -92,13 +92,17 @@ src/StairsBdw_Spawn.cpp:
     .text start:0x0211176c end:0x021117fc
 
 src/__sinit_ov043_021117fc.c:
+    complete
     .init start:0x021117fc end:0x02111868
 
 src/__sinit_ov043_02111868.c:
+    complete
     .init start:0x02111868 end:0x021118d4
 
 src/__sinit_ov043_021118d4.c:
+    complete
     .init start:0x021118d4 end:0x02111940
 
 src/__sinit_ov043_02111940.c:
+    complete
     .init start:0x02111940 end:0x02111ae8

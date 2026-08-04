@@ -147,10 +147,13 @@ src/ShutterHmc_Spawn.c:
     .text start:0x02112ed4 end:0x02112f10
 
 src/__sinit_ov021_02113500.c:
+    complete
     .init start:0x02113500 end:0x02113688
 
 src/__sinit_ov021_02113688.c:
+    complete
     .init start:0x02113688 end:0x021136c8
 
 src/__sinit_ov021_021136c8.c:
+    complete
     .init start:0x021136c8 end:0x02113734

@@ -157,10 +157,13 @@ src/HugeWater_Spawn.c:
     .text start:0x021128b8 end:0x021128f0
 
 src/__sinit_ov032_02112c10.c:
+    complete
     .init start:0x02112c10 end:0x02112dbc
 
 src/__sinit_ov032_02112dbc.c:
+    complete
     .init start:0x02112dbc end:0x02112e28
 
 src/__sinit_ov032_02112e28.c:
+    complete
     .init start:0x02112e28 end:0x02112e94

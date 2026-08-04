@@ -206,4 +206,5 @@ src/Goomboss_Spawn.cpp:
     .text start:0x02122838 end:0x0212290c
 
 src/__sinit_ov074_02122978.c:
+    complete
     .init start:0x02122978 end:0x02122d70

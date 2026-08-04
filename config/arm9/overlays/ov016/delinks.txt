@@ -199,16 +199,21 @@ src/SlidingBox_Spawn.c:
     .text start:0x02113510 end:0x0211354c
 
 src/__sinit_ov016_021136ec.c:
+    complete
     .init start:0x021136ec end:0x021138bc
 
 src/__sinit_ov016_021138bc.c:
+    complete
     .init start:0x021138bc end:0x02113978
 
 src/__sinit_ov016_02113978.c:
+    complete
     .init start:0x02113978 end:0x021139e4
 
 src/__sinit_ov016_021139e4.c:
+    complete
     .init start:0x021139e4 end:0x02113a50
 
 src/__sinit_ov016_02113a50.c:
+    complete
     .init start:0x02113a50 end:0x02113abc

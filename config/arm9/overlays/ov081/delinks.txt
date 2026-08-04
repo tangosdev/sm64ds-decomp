@@ -428,16 +428,21 @@ src/IceBlock_Spawn.c:
     .text start:0x021280a0 end:0x021280d8
 
 src/__sinit_ov081_021280e8.c:
+    complete
     .init start:0x021280e8 end:0x02128154
 
 src/__sinit_ov081_02128154.c:
+    complete
     .init start:0x02128154 end:0x021284b4
 
 src/__sinit_ov081_021284b4.c:
+    complete
     .init start:0x021284b4 end:0x021284f0
 
 src/__sinit_ov081_021284f0.c:
+    complete
     .init start:0x021284f0 end:0x021287b8
 
 src/__sinit_ov081_021287b8.c:
+    complete
     .init start:0x021287b8 end:0x02128824

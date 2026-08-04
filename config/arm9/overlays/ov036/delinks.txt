@@ -208,22 +208,29 @@ src/FlyingCarpet_Spawn.cpp:
     .text start:0x02112538 end:0x021125b0
 
 src/__sinit_ov036_021125b0.c:
+    complete
     .init start:0x021125b0 end:0x0211261c
 
 src/__sinit_ov036_0211261c.c:
+    complete
     .init start:0x0211261c end:0x02112688
 
 src/__sinit_ov036_02112688.c:
+    complete
     .init start:0x02112688 end:0x021126c8
 
 src/__sinit_ov036_021126c8.c:
+    complete
     .init start:0x021126c8 end:0x02112730
 
 src/__sinit_ov036_02112730.c:
+    complete
     .init start:0x02112730 end:0x0211279c
 
 src/__sinit_ov036_0211279c.c:
+    complete
     .init start:0x0211279c end:0x02112944
 
 src/__sinit_ov036_02112944.c:
+    complete
     .init start:0x02112944 end:0x021129dc

@@ -68,4 +68,5 @@ src/PyramidTop_Spawn.c:
     .text start:0x02111874 end:0x021118ac
 
 src/__sinit_ov024_02112808.c:
+    complete
     .init start:0x02112808 end:0x02112874

@@ -503,22 +503,29 @@ src/PathLift_Spawn.cpp:
     .text start:0x02147328 end:0x021473a4
 
 src/__sinit_ov100_021473bc.c:
+    complete
     .init start:0x021473bc end:0x021474e8
 
 src/__sinit_ov100_021474e8.c:
+    complete
     .init start:0x021474e8 end:0x021475a4
 
 src/__sinit_ov100_021475a4.c:
+    complete
     .init start:0x021475a4 end:0x02147698
 
 src/__sinit_ov100_02147698.c:
+    complete
     .init start:0x02147698 end:0x02147a70
 
 src/__sinit_ov100_02147a70.c:
+    complete
     .init start:0x02147a70 end:0x02147bc0
 
 src/__sinit_ov100_02147bc0.c:
+    complete
     .init start:0x02147bc0 end:0x02147d7c
 
 src/__sinit_ov100_02147d7c.c:
+    complete
     .init start:0x02147d7c end:0x02147de8

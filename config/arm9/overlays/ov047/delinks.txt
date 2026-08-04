@@ -84,13 +84,17 @@ src/StairsBs_Spawn.cpp:
     .text start:0x0211164c end:0x021116dc
 
 src/__sinit_ov047_021116dc.c:
+    complete
     .init start:0x021116dc end:0x02111748
 
 src/__sinit_ov047_02111748.c:
+    complete
     .init start:0x02111748 end:0x021117b4
 
 src/__sinit_ov047_021117b4.c:
+    complete
     .init start:0x021117b4 end:0x0211181c
 
 src/__sinit_ov047_0211181c.c:
+    complete
     .init start:0x0211181c end:0x021119c4

@@ -542,13 +542,17 @@ src/actors/MadPiano/MadPiano_Spawn.cpp:
     .text start:0x0211e128 end:0x0211e1c0
 
 src/unnamed/ov063/__sinit_ov063_0211e29c.c:
+    complete
     .init start:0x0211e29c end:0x0211e3cc
 
 src/unnamed/ov063/__sinit_ov063_0211e3cc.c:
+    complete
     .init start:0x0211e3cc end:0x0211e590
 
 src/unnamed/ov063/__sinit_ov063_0211e590.c:
+    complete
     .init start:0x0211e590 end:0x0211e5fc
 
 src/actors/MadPiano/__sinit_ov063_0211e5fc.c:
+    complete
     .init start:0x0211e5fc end:0x0211e6fc

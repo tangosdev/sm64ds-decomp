@@ -364,19 +364,25 @@ src/Fwoosh_Spawn.c:
     .text start:0x021344a0 end:0x021344e8
 
 src/__sinit_ov091_02134524.c:
+    complete
     .init start:0x02134524 end:0x021345dc
 
 src/__sinit_ov091_021345dc.c:
+    complete
     .init start:0x021345dc end:0x021346e8
 
 src/__sinit_ov091_021346e8.c:
+    complete
     .init start:0x021346e8 end:0x02134930
 
 src/__sinit_ov091_02134930.c:
+    complete
     .init start:0x02134930 end:0x021349c4
 
 src/__sinit_ov091_021349c4.c:
+    complete
     .init start:0x021349c4 end:0x02134a30
 
 src/__sinit_ov091_02134a30.c:
+    complete
     .init start:0x02134a30 end:0x02134b68

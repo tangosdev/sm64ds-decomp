@@ -12,7 +12,12 @@ the module. So this is a whitelist, not a blacklist:
   2. exactly one defined global FUNC symbol, and its `st_size` equals the declared size;
   3. no `.rodata` / `.data` / `.bss` / `.init` / `.ctor` content - the ROM's copy of that
      data stays in the gap object, so ours would be a duplicate that grows the module;
-  4. the function lives in a `.text` range, not `.init`;
+  4. the function lives in a `.text` or `.init` range. `.init` is buildable because
+     `rombuild.retarget_text_section` renames the compiled object's `.text` header to
+     `.init`, so dsd's `File.o(.init)` selector finds it; nothing renames any other
+     section, so every other section is still a rejection. This is the *ROM's* section
+     for the function's address, and is unrelated to rule 3, which is about what the
+     compiled object itself contains;
   5. every undefined reference names a symbol that config/**/symbols.txt actually
      defines - an invented name has no address, and because gap objects import
      carved-out symbols *weakly* it would link silently to 0 rather than error.
@@ -89,7 +94,13 @@ def classify(job):
     if r.returncode != 0 or not obj.is_file():
         return rel, name, "compile failed", []
 
-    if sec != ".text":
+    # `.init` is buildable now. mwccarm always emits compiled code into `.text`,
+    # whatever the ROM's layout calls it, and dsd's linker script selects these by
+    # name -- `File.o(.init)` -- so the names never matched and ~300 functions were
+    # unreachable. rombuild.retarget_text_section renames the section header in the
+    # object after compiling, in place and without moving a byte. Any OTHER section
+    # is still a rejection: nothing renames those, so the lcf would not find them.
+    if sec not in (".text", ".init"):
         return rel, name, f"lives in {sec}, not .text", []
 
     try:

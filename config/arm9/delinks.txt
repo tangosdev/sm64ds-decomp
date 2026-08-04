@@ -11835,70 +11835,93 @@ src/func_020736e4.c:
     .text start:0x020736e4 end:0x020736f4
 
 src/__sinit_02073a24.c:
+    complete
     .init start:0x02073a24 end:0x02073e6c
 
 src/__sinit_02073e6c.c:
+    complete
     .init start:0x02073e6c end:0x02074d90
 
 src/__sinit_02074d90.c:
+    complete
     .init start:0x02074d90 end:0x02074da8
 
 src/__sinit_02074da8.c:
+    complete
     .init start:0x02074da8 end:0x02074dbc
 
 src/__sinit_02074dbc.c:
+    complete
     .init start:0x02074dbc end:0x02074dc0
 
 src/__sinit_02074dc0.c:
+    complete
     .init start:0x02074dc0 end:0x02074dc4
 
 src/__sinit_02074dc4.c:
+    complete
     .init start:0x02074dc4 end:0x02074e0c
 
 src/__sinit_02074e0c.c:
+    complete
     .init start:0x02074e0c end:0x02074e44
 
 src/__sinit_02074e44.c:
+    complete
     .init start:0x02074e44 end:0x02074e80
 
 src/__sinit_02074e80.c:
+    complete
     .init start:0x02074e80 end:0x02074e84
 
 src/__sinit_02074e84.cpp:
+    complete
     .init start:0x02074e84 end:0x02074edc
 
 src/__sinit_02074edc.c:
+    complete
     .init start:0x02074edc end:0x02074f80
 
 src/__sinit_02074f80.c:
+    complete
     .init start:0x02074f80 end:0x02074fb8
 
 src/__sinit_02074fb8.c:
+    complete
     .init start:0x02074fb8 end:0x02074fe4
 
 src/__sinit_02074fe4.c:
+    complete
     .init start:0x02074fe4 end:0x0207501c
 
 src/__sinit_0207501c.c:
+    complete
     .init start:0x0207501c end:0x02075054
 
 src/__sinit_02075054.c:
+    complete
     .init start:0x02075054 end:0x020750b4
 
 src/__sinit_020750b4.c:
+    complete
     .init start:0x020750b4 end:0x020750b8
 
 src/__sinit_020750b8.c:
+    complete
     .init start:0x020750b8 end:0x020750ec
 
 src/__sinit_020750ec.c:
+    complete
     .init start:0x020750ec end:0x0207511c
 
 src/__sinit_0207511c.c:
+    complete
     .init start:0x0207511c end:0x02075150
 
 src/__sinit_02075150.c:
+    complete
     .init start:0x02075150 end:0x02075154
 
 src/__sinit_02075154.c:
+    complete
     .init start:0x02075154 end:0x02075230

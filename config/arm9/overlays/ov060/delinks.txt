@@ -602,19 +602,25 @@ src/BowserShockwaves_Spawn.c:
     .text start:0x021191f4 end:0x02119264
 
 src/__sinit_ov060_021195dc.c:
+    complete
     .init start:0x021195dc end:0x02119df0
 
 src/__sinit_ov060_02119df0.c:
+    complete
     .init start:0x02119df0 end:0x02119f94
 
 src/__sinit_ov060_02119f94.c:
+    complete
     .init start:0x02119f94 end:0x0211a000
 
 src/__sinit_ov060_0211a000.c:
+    complete
     .init start:0x0211a000 end:0x0211a388
 
 src/__sinit_ov060_0211a388.c:
+    complete
     .init start:0x0211a388 end:0x0211a428
 
 src/__sinit_ov060_0211a428.c:
+    complete
     .init start:0x0211a428 end:0x0211a4bc

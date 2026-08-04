@@ -150,13 +150,17 @@ src/PyramidLift_Spawn.cpp:
     .text start:0x021125f0 end:0x02112654
 
 src/__sinit_ov025_02112970.c:
+    complete
     .init start:0x02112970 end:0x021129dc
 
 src/__sinit_ov025_021129dc.c:
+    complete
     .init start:0x021129dc end:0x02112a44
 
 src/__sinit_ov025_02112a44.c:
+    complete
     .init start:0x02112a44 end:0x02112aac
 
 src/__sinit_ov025_02112aac.c:
+    complete
     .init start:0x02112aac end:0x02112b18

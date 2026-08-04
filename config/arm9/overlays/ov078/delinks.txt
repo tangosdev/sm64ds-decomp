@@ -209,4 +209,5 @@ src/KingBobOmb_Spawn.c:
     .text start:0x021265fc end:0x02126660
 
 src/__sinit_ov078_02126660.c:
+    complete
     .init start:0x02126660 end:0x02126cd4

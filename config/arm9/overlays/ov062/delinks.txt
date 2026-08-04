@@ -485,16 +485,21 @@ src/Klepto_Spawn.c:
     .text start:0x0211ce80 end:0x0211ced8
 
 src/__sinit_ov062_0211cf30.c:
+    complete
     .init start:0x0211cf30 end:0x0211d2d8
 
 src/__sinit_ov062_0211d2d8.c:
+    complete
     .init start:0x0211d2d8 end:0x0211d4a0
 
 src/__sinit_ov062_0211d4a0.c:
+    complete
     .init start:0x0211d4a0 end:0x0211d690
 
 src/__sinit_ov062_0211d690.c:
+    complete
     .init start:0x0211d690 end:0x0211d6fc
 
 src/__sinit_ov062_0211d6fc.c:
+    complete
     .init start:0x0211d6fc end:0x0211d8cc

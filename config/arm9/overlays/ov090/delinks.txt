@@ -265,13 +265,17 @@ src/Shark_Spawn.c:
     .text start:0x02133ca0 end:0x02133ce8
 
 src/__sinit_ov090_02133ce8.c:
+    complete
     .init start:0x02133ce8 end:0x02133ea8
 
 src/__sinit_ov090_02133ea8.c:
+    complete
     .init start:0x02133ea8 end:0x02133f4c
 
 src/__sinit_ov090_02133f4c.c:
+    complete
     .init start:0x02133f4c end:0x02134020
 
 src/__sinit_ov090_02134020.c:
+    complete
     .init start:0x02134020 end:0x021340c4

@@ -341,12 +341,15 @@ src/Coffin_Spawn.c:
     .text start:0x02122670 end:0x021226a0
 
 src/__sinit_ov071_021226ac.c:
+    complete
     .init start:0x021226ac end:0x021228c8
 
 src/__sinit_ov071_021228c8.c:
+    complete
     .init start:0x021228c8 end:0x02122a1c
 
 src/__sinit_ov071_02122a1c.c:
+    complete
     .init start:0x02122a1c end:0x02122a64
 
 src/__sinit_ov071_02122a64.c:

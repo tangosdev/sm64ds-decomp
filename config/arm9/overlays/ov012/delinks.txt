@@ -65,7 +65,9 @@ src/BasementWater_Spawn.c:
     .text start:0x02111730 end:0x02111768
 
 src/__sinit_ov012_02111a88.c:
+    complete
     .init start:0x02111a88 end:0x02111af4
 
 src/__sinit_ov012_02111af4.c:
+    complete
     .init start:0x02111af4 end:0x02111b60

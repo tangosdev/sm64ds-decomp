@@ -275,22 +275,29 @@ src/FallBlockWf_Spawn.c:
     .text start:0x02112dd0 end:0x02112e0c
 
 src/__sinit_ov015_02112f9c.c:
+    complete
     .init start:0x02112f9c end:0x02112fdc
 
 src/__sinit_ov015_02112fdc.c:
+    complete
     .init start:0x02112fdc end:0x02113048
 
 src/__sinit_ov015_02113048.c:
+    complete
     .init start:0x02113048 end:0x02113264
 
 src/__sinit_ov015_02113264.c:
+    complete
     .init start:0x02113264 end:0x021132d0
 
 src/__sinit_ov015_021132d0.c:
+    complete
     .init start:0x021132d0 end:0x0211333c
 
 src/__sinit_ov015_0211333c.c:
+    complete
     .init start:0x0211333c end:0x021133a8
 
 src/__sinit_ov015_021133a8.c:
+    complete
     .init start:0x021133a8 end:0x02113410

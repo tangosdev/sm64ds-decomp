@@ -361,13 +361,17 @@ src/WaterBomb_Spawn.c:
     .text start:0x0213bf10 end:0x0213bf60
 
 src/__sinit_ov098_0213bf9c.c:
+    complete
     .init start:0x0213bf9c end:0x0213c058
 
 src/__sinit_ov098_0213c058.c:
+    complete
     .init start:0x0213c058 end:0x0213c214
 
 src/__sinit_ov098_0213c214.c:
+    complete
     .init start:0x0213c214 end:0x0213c2b4
 
 src/__sinit_ov098_0213c2b4.c:
+    complete
     .init start:0x0213c2b4 end:0x0213c33c

@@ -161,7 +161,9 @@ src/Flamethrower_Spawn.cpp:
     .text start:0x02136ed4 end:0x02136f58
 
 src/__sinit_ov095_02136fe0.c:
+    complete
     .init start:0x02136fe0 end:0x0213722c
 
 src/__sinit_ov095_0213722c.c:
+    complete
     .init start:0x0213722c end:0x021373b4

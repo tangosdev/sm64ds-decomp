@@ -207,7 +207,59 @@ def enrolled(config_root=CONFIG_ROOT):
     return checked
 
 
-def compile_one(rel, vers=None, cache=None):
+def init_section_sources():
+    """{rel} for enrolled sources whose function lives in .init rather than .text.
+
+    dsd's linker script selects each object's code by section name -- `File.o(.init)`
+    for these -- but mwccarm always emits compiled code into `.text`, whatever the
+    ROM's own layout calls it. The names never match, so ~300 otherwise-eligible
+    functions, almost all __sinit_* static initialisers, could not be built from
+    source at all.
+    """
+    import enroll as E
+    cands, _ = E.candidates()
+    return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
+
+
+def retarget_text_section(obj, section=".init"):
+    """Rename an object's `.text` section header to `section`, in place.
+
+    Only the section-header string is touched. `.text` and `.init` are both five
+    bytes, so the entry is overwritten where it sits and nothing in the file moves.
+    That matters: rewriting the ELF would risk perturbing the very bytes this build
+    exists to compare against the ROM.
+
+    Safe because mwccarm's .shstrtab stores `.text` as its own entry rather than as a
+    suffix of `.rela.text` -- they sit at distinct offsets -- so the overwrite cannot
+    corrupt the relocation section's name. `.rela.text` keeps its own name and finds
+    its target through sh_info, a section index, which is unaffected.
+
+    Idempotent: an object already carrying `section` is left alone, so a cache entry
+    written before this existed gets corrected rather than served stale.
+    """
+    import io
+    from elftools.elf.elffile import ELFFile
+
+    raw = bytearray(obj.read_bytes())
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    names = [s.name for s in elf.iter_sections()]
+    if section in names:
+        return False                          # already retargeted
+    base = elf.get_section(elf["e_shstrndx"]).header["sh_offset"]
+    want = b".text\x00"
+    for s in elf.iter_sections():
+        if s.name != ".text":
+            continue
+        off = base + s.header["sh_name"]
+        if bytes(raw[off:off + len(want)]) != want:
+            raise RuntimeError(f"{obj}: .shstrtab entry at {off} is not '.text'")
+        raw[off:off + len(section)] = section.encode()
+        obj.write_bytes(bytes(raw))
+        return True
+    return False
+
+
+def compile_one(rel, vers=None, cache=None, init_srcs=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
@@ -233,6 +285,8 @@ def compile_one(rel, vers=None, cache=None):
     if key is not None:
         deps = cache.manifest(key)
         if deps is not None and cache.fetch(cache.object_key(key, deps), obj):
+            if init_srcs and rel in init_srcs:
+                retarget_text_section(obj)
             return rel, None, "hit"
 
     # -MD makes mwccarm write out the headers it actually read, which is what lets the
@@ -258,6 +312,10 @@ def compile_one(rel, vers=None, cache=None):
         if r.returncode != 0 or not obj.is_file():
             detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
             return rel, detail[:400], "error"
+        # Before caching, so the stored object already carries the right section name
+        # and a later hit needs no fixup.
+        if init_srcs and rel in init_srcs:
+            retarget_text_section(obj)
         if key is None:
             return rel, None, "miss"
         deps = cache.deps_from(scratch)
@@ -359,13 +417,15 @@ def main():
         report["alternateToolchainFiles"] = n_alt
         cache = RBK.ObjectCache(args.cache_dir or (BUILD / "objcache"), REPO,
                                 enabled=not args.no_cache)
+        init_srcs = init_section_sources()
         print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
               + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
         failures = []
         outcomes = {}
         if srcs:
             with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-                for rel, err, outcome in ex.map(lambda s: compile_one(s, vers, cache), srcs):
+                for rel, err, outcome in ex.map(
+                        lambda s: compile_one(s, vers, cache, init_srcs), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
                     if err:
                         failures.append((rel, err))

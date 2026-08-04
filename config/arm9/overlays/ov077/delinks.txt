@@ -354,10 +354,13 @@ src/HeaveHo_Spawn.c:
     .text start:0x021271d4 end:0x02127230
 
 src/__sinit_ov077_02127240.c:
+    complete
     .init start:0x02127240 end:0x0212749c
 
 src/__sinit_ov077_0212749c.c:
+    complete
     .init start:0x0212749c end:0x021275fc
 
 src/__sinit_ov077_021275fc.c:
+    complete
     .init start:0x021275fc end:0x021277cc

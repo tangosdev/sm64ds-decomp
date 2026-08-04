@@ -72,7 +72,9 @@ src/ClockPaintingHandLong_Spawn.c:
     .text start:0x02111674 end:0x021116ac
 
 src/__sinit_ov013_021116b8.c:
+    complete
     .init start:0x021116b8 end:0x021116f8
 
 src/__sinit_ov013_021116f8.c:
+    complete
     .init start:0x021116f8 end:0x02111760

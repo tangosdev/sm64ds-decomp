@@ -192,10 +192,13 @@ src/IceSheet_Spawn.c:
     .text start:0x02112a44 end:0x02112a74
 
 src/__sinit_ov018_02112c14.c:
+    complete
     .init start:0x02112c14 end:0x02112c80
 
 src/__sinit_ov018_02112c80.cpp:
+    complete
     .init start:0x02112c80 end:0x02112e00
 
 src/__sinit_ov018_02112e00.c:
+    complete
     .init start:0x02112e00 end:0x02112e6c

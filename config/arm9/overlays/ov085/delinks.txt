@@ -492,19 +492,25 @@ src/WallSign_Spawn.c:
     .text start:0x0212f244 end:0x0212f27c
 
 src/__sinit_ov085_0212f2a8.c:
+    complete
     .init start:0x0212f2a8 end:0x0212f3a0
 
 src/__sinit_ov085_0212f3a0.c:
+    complete
     .init start:0x0212f3a0 end:0x0212f5ec
 
 src/__sinit_ov085_0212f5ec.c:
+    complete
     .init start:0x0212f5ec end:0x0212f9bc
 
 src/__sinit_ov085_0212f9bc.c:
+    complete
     .init start:0x0212f9bc end:0x0212fa40
 
 src/__sinit_ov085_0212fa40.c:
+    complete
     .init start:0x0212fa40 end:0x0212fdb0
 
 src/__sinit_ov085_0212fdb0.c:
+    complete
     .init start:0x0212fdb0 end:0x0212fdf0

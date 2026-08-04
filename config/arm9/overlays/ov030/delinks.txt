@@ -231,10 +231,13 @@ src/UkikiThief_Spawn.c:
     .text start:0x02114638 end:0x02114690
 
 src/__sinit_ov030_0211484c.c:
+    complete
     .init start:0x0211484c end:0x021148b8
 
 src/__sinit_ov030_021148b8.c:
+    complete
     .init start:0x021148b8 end:0x02114924
 
 src/__sinit_ov030_02114924.c:
+    complete
     .init start:0x02114924 end:0x02114dd0

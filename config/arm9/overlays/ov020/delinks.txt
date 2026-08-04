@@ -181,7 +181,9 @@ src/HauntedChair_Spawn.c:
     .text start:0x02113494 end:0x021134e4
 
 src/__sinit_ov020_02113674.c:
+    complete
     .init start:0x02113674 end:0x0211372c
 
 src/__sinit_ov020_0211372c.c:
+    complete
     .init start:0x0211372c end:0x02113768

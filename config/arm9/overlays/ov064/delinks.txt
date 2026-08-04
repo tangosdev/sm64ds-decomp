@@ -629,34 +629,45 @@ src/Clam_Spawn.c:
     .text start:0x0211ad70 end:0x0211adb0
 
 src/__sinit_ov064_0211ae00.c:
+    complete
     .init start:0x0211ae00 end:0x0211aee0
 
 src/__sinit_ov064_0211aee0.c:
+    complete
     .init start:0x0211aee0 end:0x0211afc0
 
 src/__sinit_ov064_0211afc0.c:
+    complete
     .init start:0x0211afc0 end:0x0211b078
 
 src/__sinit_ov064_0211b078.c:
+    complete
     .init start:0x0211b078 end:0x0211b0e4
 
 src/__sinit_ov064_0211b0e4.c:
+    complete
     .init start:0x0211b0e4 end:0x0211b150
 
 src/__sinit_ov064_0211b150.c:
+    complete
     .init start:0x0211b150 end:0x0211b1d4
 
 src/__sinit_ov064_0211b1d4.c:
+    complete
     .init start:0x0211b1d4 end:0x0211b4dc
 
 src/__sinit_ov064_0211b4dc.c:
+    complete
     .init start:0x0211b4dc end:0x0211b518
 
 src/__sinit_ov064_0211b518.c:
+    complete
     .init start:0x0211b518 end:0x0211b59c
 
 src/__sinit_ov064_0211b59c.c:
+    complete
     .init start:0x0211b59c end:0x0211b698
 
 src/__sinit_ov064_0211b698.c:
+    complete
     .init start:0x0211b698 end:0x0211b72c

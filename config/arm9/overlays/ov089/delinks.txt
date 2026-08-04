@@ -84,4 +84,5 @@ src/Key_Spawn.c:
     .text start:0x02132828 end:0x02132880
 
 src/__sinit_ov089_021328d4.c:
+    complete
     .init start:0x021328d4 end:0x02132af4

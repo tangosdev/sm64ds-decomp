@@ -74,7 +74,9 @@ src/SpinningPlatform_Spawn.c:
     .text start:0x02111b98 end:0x02111bd0
 
 src/__sinit_ov035_02111f04.c:
+    complete
     .init start:0x02111f04 end:0x02111fc0
 
 src/__sinit_ov035_02111fc0.c:
+    complete
     .init start:0x02111fc0 end:0x02112028

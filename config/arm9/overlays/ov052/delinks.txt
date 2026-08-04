@@ -61,7 +61,9 @@ src/SquarePathLift_Spawn.c:
     .text start:0x02111830 end:0x02111868
 
 src/__sinit_ov052_02111b64.c:
+    complete
     .init start:0x02111b64 end:0x02111bd0
 
 src/__sinit_ov052_02111bd0.c:
+    complete
     .init start:0x02111bd0 end:0x02111c3c

@@ -436,13 +436,17 @@ src/KoopaShell_Spawn.c:
     .text start:0x0214d6b4 end:0x0214d70c
 
 src/__sinit_ov102_0214d714.c:
+    complete
     .init start:0x0214d714 end:0x0214d908
 
 src/__sinit_ov102_0214d908.c:
+    complete
     .init start:0x0214d908 end:0x0214de70
 
 src/__sinit_ov102_0214de70.c:
+    complete
     .init start:0x0214de70 end:0x0214dfac
 
 src/__sinit_ov102_0214dfac.c:
+    complete
     .init start:0x0214dfac end:0x0214e0a0

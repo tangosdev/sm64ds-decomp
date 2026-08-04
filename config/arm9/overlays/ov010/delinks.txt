@@ -133,10 +133,13 @@ src/PeachPainting_Spawn.c:
     .text start:0x02112004 end:0x0211203c
 
 src/__sinit_ov010_0211203c.c:
+    complete
     .init start:0x0211203c end:0x0211211c
 
 src/__sinit_ov010_0211211c.c:
+    complete
     .init start:0x0211211c end:0x0211215c
 
 src/__sinit_ov010_0211215c.c:
+    complete
     .init start:0x0211215c end:0x0211219c

@@ -540,31 +540,41 @@ src/TTC_MovingBeam_Spawn.c:
     .text start:0x0211c040 end:0x0211c078
 
 src/__sinit_ov065_0211c110.c:
+    complete
     .init start:0x0211c110 end:0x0211c2a8
 
 src/__sinit_ov065_0211c2a8.c:
+    complete
     .init start:0x0211c2a8 end:0x0211c440
 
 src/__sinit_ov065_0211c440.c:
+    complete
     .init start:0x0211c440 end:0x0211c660
 
 src/__sinit_ov065_0211c660.c:
+    complete
     .init start:0x0211c660 end:0x0211c76c
 
 src/__sinit_ov065_0211c76c.c:
+    complete
     .init start:0x0211c76c end:0x0211c7d8
 
 src/__sinit_ov065_0211c7d8.c:
+    complete
     .init start:0x0211c7d8 end:0x0211c890
 
 src/__sinit_ov065_0211c890.c:
+    complete
     .init start:0x0211c890 end:0x0211c8fc
 
 src/__sinit_ov065_0211c8fc.c:
+    complete
     .init start:0x0211c8fc end:0x0211c9b8
 
 src/__sinit_ov065_0211c9b8.c:
+    complete
     .init start:0x0211c9b8 end:0x0211ca74
 
 src/__sinit_ov065_0211ca74.c:
+    complete
     .init start:0x0211ca74 end:0x0211cae0

@@ -5921,79 +5921,105 @@ src/Bullet_Spawn.c:
     .text start:0x020fefcc end:0x020ff014
 
 src/__sinit_ov002_02100560.c:
+    complete
     .init start:0x02100560 end:0x02100938
 
 src/__sinit_ov002_02100938.c:
+    complete
     .init start:0x02100938 end:0x02100adc
 
 src/__sinit_ov002_02100adc.c:
+    complete
     .init start:0x02100adc end:0x02100c50
 
 src/__sinit_ov002_02100c50.c:
+    complete
     .init start:0x02100c50 end:0x02100d44
 
 src/__sinit_ov002_02100d44.c:
+    complete
     .init start:0x02100d44 end:0x02100e50
 
 src/__sinit_ov002_02100e50.c:
+    complete
     .init start:0x02100e50 end:0x02100ec4
 
 src/__sinit_ov002_02100ec4.c:
+    complete
     .init start:0x02100ec4 end:0x02100f84
 
 src/__sinit_ov002_02100f84.c:
+    complete
     .init start:0x02100f84 end:0x02101064
 
 src/__sinit_ov002_02101064.c:
+    complete
     .init start:0x02101064 end:0x02101478
 
 src/__sinit_ov002_02101478.c:
+    complete
     .init start:0x02101478 end:0x021014e4
 
 src/__sinit_ov002_021014e4.c:
+    complete
     .init start:0x021014e4 end:0x02101588
 
 src/__sinit_ov002_02101588.c:
+    complete
     .init start:0x02101588 end:0x02101738
 
 src/__sinit_ov002_02101738.c:
+    complete
     .init start:0x02101738 end:0x02101894
 
 src/__sinit_ov002_02101894.c:
+    complete
     .init start:0x02101894 end:0x02101900
 
 src/__sinit_ov002_02101900.c:
+    complete
     .init start:0x02101900 end:0x02101968
 
 src/__sinit_ov002_02101968.c:
+    complete
     .init start:0x02101968 end:0x021019d0
 
 src/__sinit_ov002_021019d0.c:
+    complete
     .init start:0x021019d0 end:0x02106e40
 
 src/__sinit_ov002_02106e40.c:
+    complete
     .init start:0x02106e40 end:0x02107118
 
 src/__sinit_ov002_02107118.c:
+    complete
     .init start:0x02107118 end:0x021071f4
 
 src/__sinit_ov002_021071f4.c:
+    complete
     .init start:0x021071f4 end:0x02107298
 
 src/__sinit_ov002_02107298.c:
+    complete
     .init start:0x02107298 end:0x02107304
 
 src/__sinit_ov002_02107304.c:
+    complete
     .init start:0x02107304 end:0x02107370
 
 src/__sinit_ov002_02107370.c:
+    complete
     .init start:0x02107370 end:0x02107f88
 
 src/__sinit_ov002_02107f88.c:
+    complete
     .init start:0x02107f88 end:0x0210804c
 
 src/__sinit_ov002_0210804c.c:
+    complete
     .init start:0x0210804c end:0x02108094
 
 src/__sinit_ov002_02108094.c:
+    complete
     .init start:0x02108094 end:0x021080d0

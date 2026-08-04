@@ -281,31 +281,41 @@ src/VolcanoFire_Spawn.c:
     .text start:0x02112918 end:0x02112950
 
 src/__sinit_ov022_02112ca8.c:
+    complete
     .init start:0x02112ca8 end:0x02112d14
 
 src/__sinit_ov022_02112d14.c:
+    complete
     .init start:0x02112d14 end:0x02112d80
 
 src/__sinit_ov022_02112d80.c:
+    complete
     .init start:0x02112d80 end:0x02112dec
 
 src/__sinit_ov022_02112dec.c:
+    complete
     .init start:0x02112dec end:0x02112e58
 
 src/__sinit_ov022_02112e58.c:
+    complete
     .init start:0x02112e58 end:0x02112ec0
 
 src/__sinit_ov022_02112ec0.c:
+    complete
     .init start:0x02112ec0 end:0x02112f78
 
 src/__sinit_ov022_02112f78.c:
+    complete
     .init start:0x02112f78 end:0x02112fe4
 
 src/__sinit_ov022_02112fe4.c:
+    complete
     .init start:0x02112fe4 end:0x02113050
 
 src/__sinit_ov022_02113050.c:
+    complete
     .init start:0x02113050 end:0x021130bc
 
 src/__sinit_ov022_021130bc.c:
+    complete
     .init start:0x021130bc end:0x021130f8

@@ -335,10 +335,13 @@ src/func_ov080_02127658.c:
     .text start:0x02127658 end:0x0212766c
 
 src/__sinit_ov080_021278c0.c:
+    complete
     .init start:0x021278c0 end:0x02127a60
 
 src/__sinit_ov080_02127a60.c:
+    complete
     .init start:0x02127a60 end:0x02127b2c
 
 src/__sinit_ov080_02127b2c.c:
+    complete
     .init start:0x02127b2c end:0x02127f60

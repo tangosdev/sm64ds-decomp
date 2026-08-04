@@ -158,19 +158,25 @@ src/FallBlockBfs_Spawn.c:
     .text start:0x02111e24 end:0x02111e60
 
 src/__sinit_ov045_021121a8.c:
+    complete
     .init start:0x021121a8 end:0x02112214
 
 src/__sinit_ov045_02112214.c:
+    complete
     .init start:0x02112214 end:0x02112280
 
 src/__sinit_ov045_02112280.c:
+    complete
     .init start:0x02112280 end:0x021122ec
 
 src/__sinit_ov045_021122ec.c:
+    complete
     .init start:0x021122ec end:0x02112358
 
 src/__sinit_ov045_02112358.c:
+    complete
     .init start:0x02112358 end:0x021123c0
 
 src/__sinit_ov045_021123c0.c:
+    complete
     .init start:0x021123c0 end:0x0211242c
