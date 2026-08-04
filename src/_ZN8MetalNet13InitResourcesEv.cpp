@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11CastleWater13InitResourcesEv
+// @symbol _ZN8MetalNet13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "CastleWater.h"
+#include "MetalNet.h"
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern "C" {
@@ -20,7 +20,7 @@ extern unsigned char data_0209f2d8;
 extern int data_0209caa0;
 }
 
-int CastleWater::InitResources()
+int MetalNet::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov009_02113e90);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((unsigned char *)this) + 0xd4, bmd, 1, -1);

@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class CastleWater: 6 matched functions, 5 evidenced fields.
+ * class MetalNet: 6 matched functions, 5 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef CASTLEWATER_H
-#define CASTLEWATER_H
+#ifndef METALNET_H
+#define METALNET_H
 #include "types.h"
 
-struct CastleWater {
+struct MetalNet {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x82];

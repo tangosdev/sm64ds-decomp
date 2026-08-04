@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8DockPoleD1Ev
+// @symbol _ZN4FlagD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -8,11 +8,11 @@ struct Actor {
 
 struct ModelAnim { char pad[0x4]; ~ModelAnim(); };
 
-struct DockPole : Actor {
+struct Flag : Actor {
     ModelAnim m0;   /* 0xd4 */
-    virtual ~DockPole();
+    virtual ~Flag();
 };
 
-DockPole::~DockPole()
+Flag::~Flag()
 {
 }

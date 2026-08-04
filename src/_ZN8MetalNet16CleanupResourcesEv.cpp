@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN11CastleWater16CleanupResourcesEv
+// @symbol _ZN8MetalNet16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CastleWater.h"
+#include "MetalNet.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern int G0[];
 
-int CastleWater::CleanupResources()
+int MetalNet::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();

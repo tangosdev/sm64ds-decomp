@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN8DockPole8BehaviorEv
+// @symbol _ZN4Flag8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "DockPole.h"
+#include "Flag.h"
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void* c);
 extern void Matrix4x3_FromRotationY(void* m, short angle);
 }
 
-int DockPole::Behavior()
+int Flag::Behavior()
 {
   _ZN9Animation7AdvanceEv((char*)&mAnimation);
   Matrix4x3_FromRotationY(((char*)this)+0xf0, mAngleY);

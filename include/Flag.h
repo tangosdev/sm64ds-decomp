@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class DockPole: 5 matched functions, 9 evidenced fields.
+ * class Flag: 5 matched functions, 9 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef DOCKPOLE_H
-#define DOCKPOLE_H
+#ifndef FLAG_H
+#define FLAG_H
 #include "types.h"
 
-struct DockPole {
+struct Flag {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
