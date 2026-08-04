@@ -61,17 +61,47 @@ sys.path.insert(0, str(REPO / "tools"))
 import chaos_db_ci as CDB  # noqa: E402
 
 
+def overrides_at(rev):
+    """The manual attribution.json overrides as of `rev`, read from git rather than disk."""
+    try:
+        raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
+                             capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True).stdout
+        data = json.loads(raw)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return {}
+    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
+    return {k: v for k, v in ov.items()
+            if isinstance(k, str) and k.startswith("src/") and isinstance(v, str) and v}
+
+
 def lineage(rev):
-    """{stem-without-extension: handle} at `rev`.
+    """{stem-without-extension: handle} at `rev`, resolved the way the merge gate resolves it.
+
+    This must be the COMPOSITE -- overrides, then finishers, then first_matchers -- because
+    that is exactly what `validate_merge.attribution_snapshot` compares, and a gate that
+    models only part of it reports clean on pushes the gate rejects.
+
+    Checking `first_matchers` alone left a gap wide enough to lose real credit through. A
+    1,798-file relocation passed this check with "0 changed, 0 lost" while quietly moving 75
+    functions' composite author to whoever ran the move: `match_finishers` carried a file's
+    draft history across the rename but not its finisher, so every moved file read as a fresh
+    finish by the mover. The finisher layer is fixed in chaos_db_ci now; this makes the gate
+    able to see that layer at all, so the next such bug fails here instead of at merge.
 
     Keyed on the path minus its extension rather than the full path, because a legitimate
     move or a .c -> .cpp promotion changes the path while the function -- and therefore who
     deserves credit for it -- stays the same. Comparing full paths would report every
     intentional move as a loss.
     """
+    first = CDB.first_matchers(rev)
+    finishers = CDB.match_finishers(rev)
+    overrides = overrides_at(rev)
     out = {}
-    for path, who in CDB.first_matchers(rev).items():
-        out[path.rsplit(".", 1)[0]] = who
+    for path in set(first) | set(finishers) | set(overrides):
+        who = overrides.get(path) or finishers.get(path) or first.get(path)
+        if who:
+            out[path.rsplit(".", 1)[0]] = who
     return out
 
 

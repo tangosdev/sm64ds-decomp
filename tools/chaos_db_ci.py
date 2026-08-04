@@ -188,8 +188,12 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
     Cost is one full-history log plus a single batched `git cat-file` for the blobs, so the
     whole scan takes a couple of seconds rather than one subprocess per blob."""
     REC, FLD, SUB = "\x01", "\x02", "\x03"
+    # diff.renameLimit=0 for the same reason first_matchers sets it, and it matters more
+    # here: the stem pairing below compares the whole path minus its extension, so it
+    # rescues src/F.c -> src/F.cpp but NOT a directory move, whose stem differs. Without
+    # the lifted cap a bulk relocation degrades to delete+add and nothing carries credit.
     out = subprocess.run(
-        ["git", "log", "--full-history", "--reverse",
+        ["git", "-c", "diff.renameLimit=0", "log", "--full-history", "--reverse",
          f"--format={REC}%H{FLD}%an{SUB}%ae", "--name-status", "-M", rev, "--", "src/"],
         cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
 
@@ -238,7 +242,14 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
             size = int(header.rsplit(" ", 1)[1])
         except (IndexError, ValueError):
             break
-        state[want[idx]] = "draft" if b"// NONMATCHING" in data[pos:pos + 200] else "clean"
+        # Clamp the banner window to THIS blob. `data` is one concatenated cat-file batch
+        # response, so a fixed 200-byte read runs past any blob shorter than that and into
+        # the next one's header and content. A clean blob followed by a drafted one was
+        # therefore misread as drafted and never recorded a finisher -- and since `want` is
+        # sorted by commit SHA, which side of that boundary a blob landed on varied between
+        # runs. Same history, different credit.
+        state[want[idx]] = ("draft" if b"// NONMATCHING" in data[pos:pos + min(200, size)]
+                            else "clean")
         pos += size + 1
         idx += 1
 
@@ -246,8 +257,15 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
     finishers: dict[str, str] = {}
     for sha, handle, ents in commits:
         for code, paths in ents:                       # an extension change keeps its history
-            if code.startswith("R") and len(paths) >= 2 and paths[0] in drafted:
-                drafted.add(paths[1])
+            if code.startswith("R") and len(paths) >= 2:
+                if paths[0] in drafted:
+                    drafted.add(paths[1])
+                # ...and so does the finish. Carrying `drafted` alone was a credit leak: the
+                # renamed path arrived still marked drafted, with a clean blob and no finisher
+                # entry, so the clause below read it as a fresh finish and handed the match to
+                # whoever moved the file. Mirrors first_matchers' origin.pop(old, handle).
+                if paths[0] in finishers:
+                    finishers[paths[1]] = finishers.pop(paths[0])
         dels = [p[0] for c, p in ents if c.startswith("D")]
         adds = [p[0] for c, p in ents if c.startswith("A")]
         for d in dels:                                 # ...whether git called it a rename or not
@@ -257,6 +275,8 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
             for a in adds:
                 if a != d and a.rsplit(".", 1)[0] == base:
                     drafted.add(a)
+                    if d in finishers:
+                        finishers[a] = finishers.pop(d)
         for code, paths in ents:
             if code.startswith("D"):
                 continue                               # a delete never clears the draft history
