@@ -78,6 +78,96 @@ class SrcPath(unittest.TestCase):
         with self.assertRaises(ValueError):
             SP.new_path_for("x", "h")
 
+    # --- symbol parsing -----------------------------------------------------
+    def test_module_of_reads_the_symbol_not_the_config(self):
+        self.assertEqual(SP.module_of("func_ov063_021160c4"), "ov063")
+        self.assertEqual(SP.module_of("__sinit_ov002_02100560"), "ov002")
+        self.assertEqual(SP.module_of("func_0205c410"), "arm9")
+        self.assertEqual(SP.module_of("__sinit_02073a24"), "arm9")
+        self.assertIsNone(SP.module_of("_ZN3Boo6RenderEv"))
+        self.assertIsNone(SP.module_of("AngleDiff"))
+
+    def test_class_of_takes_the_outer_component(self):
+        self.assertEqual(SP.class_of("_ZN3Boo6RenderEv"), "Boo")
+        self.assertEqual(SP.class_of("_ZN15FaderBrightness8SetToEndEv"), "FaderBrightness")
+        self.assertEqual(SP.class_of("Boo_Spawn"), "Boo")
+        # const method
+        self.assertEqual(SP.class_of("_ZNK5Actor7GetPosEv"), "Actor")
+
+    def test_class_of_rejects_a_nested_namespaces_inner_name(self):
+        """Sound::Player must not be filed under the unrelated actor Player."""
+        self.assertEqual(SP.class_of("_ZN5Sound6Player19SetPlayableSeqCountEii"), "Sound")
+
+    def test_class_of_rejects_free_functions_and_special_symbols(self):
+        """_Z<len><name> is a free function -- treating its name as a class invents a
+        directory per function (29 of them in the tree)."""
+        self.assertIsNone(SP.class_of("_Z14ApproachLinearRiii"))
+        self.assertIsNone(SP.class_of("_ZTV5Model"))
+        self.assertIsNone(SP.class_of("_ZTI5Model"))
+        self.assertIsNone(SP.class_of("_ZThn80_N9Animation7AdvanceEv"))
+        self.assertIsNone(SP.class_of("func_0205c410"))
+
+    # --- placement: follows migration, never leads it -----------------------
+    def test_unnamed_goes_to_its_module_bucket_once_that_exists(self):
+        self.write("unnamed/ov063/func_ov063_021160c4.c")
+        self.assertEqual(SP.new_path_for("func_ov063_02116190", "c"),
+                         SP.SRC / "unnamed/ov063/func_ov063_02116190.c")
+
+    def test_unnamed_stays_flat_until_its_module_is_migrated(self):
+        self.write("unnamed/ov063/func_ov063_021160c4.c")
+        self.assertEqual(SP.new_path_for("func_0205c410", "c"), SP.SRC / "func_0205c410.c")
+
+    def test_unnamed_ignores_a_hand_placed_subsystem_directory(self):
+        """src/engine/message/ holds two arm9 func_* by deliberate choice. That must not
+        drag every future arm9 function in after them."""
+        self.write("engine/message/func_0201cb2c.c")
+        self.assertEqual(SP.new_path_for("func_02012345", "c"), SP.SRC / "func_02012345.c")
+
+    def test_a_class_follows_its_siblings(self):
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("actors/Boo/_ZN3BooD1Ev.c")
+        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
+                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.cpp")
+
+    def test_a_spawn_follows_its_class(self):
+        self.write("actors/MadPiano/_ZN8MadPianoD1Ev.c")
+        self.assertEqual(SP.new_path_for("MadPiano_Spawn", "c"),
+                         SP.SRC / "actors/MadPiano/MadPiano_Spawn.c")
+
+    def test_flat_siblings_do_not_outvote_a_subdirectory(self):
+        """A partly-migrated class keeps going to the subdirectory it has; the root is the
+        unmigrated default, not a rival choice."""
+        self.write("_ZN3BooD0Ev.c")
+        self.write("_ZN3BooD1Ev.c")
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
+                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.cpp")
+
+    def test_two_subdirectories_are_left_alone(self):
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("engine/ghosts/_ZN3BooD1Ev.c")
+        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
+                         SP.SRC / "_ZN3Boo6RenderEv.cpp")
+
+    def test_an_unknown_class_stays_flat(self):
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.assertEqual(SP.new_path_for("_ZN6Player4InitEv", "cpp"),
+                         SP.SRC / "_ZN6Player4InitEv.cpp")
+
+    def test_free_functions_and_plain_names_stay_flat(self):
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.assertEqual(SP.new_path_for("_Z14ApproachLinearRiii", "c"),
+                         SP.SRC / "_Z14ApproachLinearRiii.c")
+        self.assertEqual(SP.new_path_for("AngleDiff", "c"), SP.SRC / "AngleDiff.c")
+
+    def test_placement_never_overrides_where_a_file_already_is(self):
+        """Migration decides; placement only follows. A file that exists is not relocated
+        even when its cohort has since moved elsewhere."""
+        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("_ZN3Boo6RenderEv.c")
+        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
+                         SP.SRC / "_ZN3Boo6RenderEv.cpp")
+
     # --- bulk ---------------------------------------------------------------
     def test_index_and_iter_cover_nested_files(self):
         self.write("flat.c")

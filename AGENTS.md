@@ -42,7 +42,7 @@ six straight PRs on the `_ZThn80_` thunks).
 
 | You have… | It goes in… |
 |---|---|
-| A **byte-exact match** | one function per file: `src/<symbol>.c` (or `.cpp` for C++ — **first line exactly** `//cpp`). The filename **is** the symbol, e.g. `func_0205c410.c`, `_ZN6Player19St_...Ev.cpp`. |
+| A **byte-exact match** | one function per file, and the filename **is** the symbol: `func_0205c410.c`, `_ZN6Player19St_...Ev.cpp` (`.cpp` for C++ — **first line exactly** `//cpp`). Ask `tools/srcpath.py` for the *directory* rather than assuming `src/` — see below. |
 | **How** it was matched (final) | `config/match_provenance.jsonl` via `tools/stamp_provenance.py` — **commit with the match**. |
 | **Every try** (including dead ends) | `config/match_attempts.jsonl` via `tools/log_attempt.py` — **commit with the PR**. |
 | A **close-but-not-matching** attempt (near-miss) | the near-miss DB: `nearmiss/db.jsonl` via `tools/nearmiss_db.py`. **Not `src/`.** |
@@ -51,6 +51,29 @@ six straight PRs on the `_ZThn80_` thunks).
 **Never commit a non-reproducing file to `src/`.** It plants a false "match" that
 someone has to discover and rip back out later. A near-miss is valuable — it is the
 highest-yield input to the refine tier — but its home is the DB, not `src/`.
+
+### Which directory under `src/`
+
+Most files are in `src/` itself, but that is a fact about the tree, not a rule. Parts of
+it are grouped (`src/engine/fader/`, `src/actors/Boo/`, `src/unnamed/ov063/`), and more
+will be. **Do not compose the path yourself** — ask:
+
+```
+python tools/srcpath.py <symbol>              # where it lives now, if it exists
+```
+
+and in code, `srcpath.new_path_for(symbol, ext)` for a new file, `srcpath.path_for(symbol)`
+for an existing one. Every tool that reads or writes `src/` already goes through it. A
+hand-built `src/<symbol>.c` is not wrong today, but it stops being right the moment that
+symbol's neighbours move, and the failure is silent: `enroll` writes each source's path
+into `config/**/delinks.txt`, so a file the tooling cannot find drops quietly back to ROM
+bytes instead of erroring.
+
+Placement follows migration rather than leading it. A new file goes into a subdirectory
+only when the files it belongs with are already there and agree on which one — a new
+`Boo` method joins the other seven, a new `func_ov063_*` joins `src/unnamed/ov063/`.
+Everything else stays in the root. Nothing relocates on its own; moving a group is a
+deliberate, separate, **rename-only** PR (see #970 and #975).
 
 **Banking a near-miss** (do this instead of committing it to `src/`): write your draft
 to a one-line-per-entry seeds file `{"name": "<symbol>", "c_source": "<the C>"}` and run

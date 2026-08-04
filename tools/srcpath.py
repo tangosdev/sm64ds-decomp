@@ -30,14 +30,46 @@ the common path rather than the fallback. That is a Phase-3 decision, not this o
 
 Note `symbol_for` is deliberately `Path.stem`, matching what pr_linkcheck already does
 to derive the symbol it link-checks. Keep the two in step.
+
+PLACEMENT FOLLOWS MIGRATION, IT DOES NOT LEAD IT
+------------------------------------------------
+`new_path_for` used to answer `src/<symbol>.ext` unconditionally, which is why #970 and
+#975 did not stick: they moved 164 files into subdirectories, and every match landed
+afterwards went back to the root regardless. Measured over the 30 days to 2026-08-04,
+`src/` grew from 9,102 files to 11,242 and every one of the new ones was flat.
+
+So placement is a rule now, but a deliberately timid one. A new file goes nested only
+when the files it belongs with are ALREADY nested, and only when they agree on where:
+
+  * an address-named symbol (`func_ov063_021160c4`) goes to `src/unnamed/<module>/`
+    **if that directory exists**. Creating it is the migration's explicit opt-in; until
+    then its module's files stay in the root, which is where the rest of them are.
+  * a class-named symbol goes wherever its class already lives, if its existing files
+    occupy exactly one subdirectory. `_ZN3Boo6RenderEv` follows the other seven `Boo`
+    files into `src/actors/Boo/`; a `Player` method stays flat because all 248 of them
+    are still flat.
+  * anything else -- free functions, thunks, plain names -- stays in the root.
+
+Two directories can never be inferred, so a half-migrated class is left alone rather
+than guessed at. The effect is that migrating a module makes it *stay* migrated, and
+nothing moves that a human did not already move.
 """
 import pathlib
+import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SRC = REPO / "src"
 SOURCE_SUFFIXES = (".c", ".cpp")
 
+# src/unnamed/<module>/ -- the bucket #975 established for symbols whose name carries no
+# class, only an address. Spelled once, here, so the convention is one edit to revisit.
+UNNAMED_DIR = "unnamed"
+
+_UNNAMED_RE = re.compile(r"^(?:func|FUN|__sinit)_(?:(ov\d+)_)?[0-9a-fA-F]{8}$")
+_SPAWN_RE = re.compile(r"^(\w+)_Spawn$")
+
 _scan_cache = None
+_cohort_cache = None
 
 
 def symbol_for(path):
@@ -61,8 +93,74 @@ def _scan():
 
 def invalidate():
     """Drop the scan cache. Call after writing or moving files in a long-lived process."""
-    global _scan_cache
+    global _scan_cache, _cohort_cache
     _scan_cache = None
+    _cohort_cache = None
+
+
+def module_of(symbol):
+    """`arm9` or `ovNNN` for an address-named symbol, else None.
+
+    Read off the SYMBOL, never delinks.txt: at the moment a writer asks where a new file
+    goes, the function it holds is not enrolled anywhere yet."""
+    m = _UNNAMED_RE.match(symbol)
+    return (m.group(1) or "arm9") if m else None
+
+
+def class_of(symbol):
+    """The class an Itanium-mangled or `<Class>_Spawn` symbol belongs to, else None.
+
+    The OUTER component, deliberately. `_ZN5Sound6Player19SetPlayableSeqCountEii` is
+    `Sound::Player`, and taking the second component would file it under the unrelated
+    actor `Player`. A bare `_Z<len><name>` is a FREE function with no class at all --
+    29 of those are in the tree, and reading the name as a class invents a directory
+    apiece. `_ZTV`/`_ZTI`/`_ZThn` have no leading length either and fall out here."""
+    m = _SPAWN_RE.match(symbol)
+    if m:
+        return m.group(1)
+    if not symbol.startswith("_ZN"):
+        return None
+    rest = symbol[3:]
+    if rest.startswith("K"):                      # const method: _ZNK...
+        rest = rest[1:]
+    m = re.match(r"(\d+)", rest)
+    if not m:
+        return None
+    n, tail = int(m.group(1)), rest[len(m.group(1)):]
+    return tail[:n] if len(tail) >= n else None
+
+
+def _cohort_index():
+    """class -> {directories holding its files}, off the same single scan."""
+    global _cohort_cache
+    if _cohort_cache is None:
+        idx = {}
+        for stem, paths in _scan().items():
+            cls = class_of(stem)
+            if cls:
+                idx.setdefault(cls, set()).update(p.parent for p in paths)
+        _cohort_cache = idx
+    return _cohort_cache
+
+
+def placement_for(symbol):
+    """The subdirectory a NEW file for ``symbol`` belongs in, or None for the root.
+
+    None is the honest answer for most of the tree today and is not a failure: it means
+    nobody has moved this symbol's neighbours yet, so the root is still where they are."""
+    mod = module_of(symbol)
+    if mod is not None:
+        d = SRC / UNNAMED_DIR / mod
+        return d if d.is_dir() else None
+    cls = class_of(symbol)
+    if cls:
+        # Flat siblings do not vote. The root is the unmigrated default, not a rival
+        # choice, so a partly-moved class still follows the subdirectory it has. Two
+        # subdirectories are real disagreement and are left alone.
+        nested = {d for d in _cohort_index().get(cls, ()) if d != SRC}
+        if len(nested) == 1:
+            return nested.pop()
+    return None
 
 
 def set_root(repo):
@@ -112,7 +210,7 @@ def new_path_for(symbol, ext):
         # Keep a symbol where it already lives; changing the extension is the caller's
         # business, relocating it is not.
         return existing.with_suffix(ext)
-    return SRC / f"{symbol}{ext}"
+    return (placement_for(symbol) or SRC) / f"{symbol}{ext}"
 
 
 def iter_sources():
