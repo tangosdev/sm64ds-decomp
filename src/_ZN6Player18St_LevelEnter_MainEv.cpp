@@ -8,7 +8,7 @@ extern "C" void Player_AdvanceAnims(C *c);
 
 struct C { char pad[0x10000]; };
 
-extern "C" int func_ov002_020c6f3c(C *c)
+extern "C" int _ZN6Player18St_LevelEnter_MainEv(C *c)
 {
     u8 *f = (u8 *)c;
     switch (f[0x6e3]) {

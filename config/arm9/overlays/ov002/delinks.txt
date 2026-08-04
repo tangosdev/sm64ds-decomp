@@ -121,7 +121,7 @@ src/_ZN5EnemyD2Ev.c:
     complete
     .text start:0x020aed74 end:0x020aed98
 
-src/func_ov002_020aed98.cpp:
+src/_ZN5EnemyC2Ev.cpp:
     complete
     .text start:0x020aed98 end:0x020aedbc
 
@@ -2216,7 +2216,7 @@ src/_ZN6Player21St_LevelEnter_CleanupEv.cpp:
     complete
     .text start:0x020c6f34 end:0x020c6f3c
 
-src/func_ov002_020c6f3c.cpp:
+src/_ZN6Player18St_LevelEnter_MainEv.cpp:
     complete
     .text start:0x020c6f3c end:0x020c6fe4
 
