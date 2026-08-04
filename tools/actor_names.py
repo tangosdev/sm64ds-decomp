@@ -49,11 +49,23 @@ SLOT_SIGS = [
 
 
 def load_modules():
-    mods = [("arm9", ARM9_BASE, (REPO / "extracted/dsd/arm9/arm9.bin").read_bytes())]
+    # extracted/arm9_dec.bin is the decompressed arm9 at base 0x02004000.
+    # extracted/dsd/arm9/arm9.bin is the COMPRESSED payload (yaml says so);
+    # reading the spawn table through it returns garbage past the
+    # uncompressed prefix.
+    arm9 = (REPO / "extracted/arm9_dec.bin").read_bytes()
+    assert arm9[0x0205A548 - ARM9_BASE:0x0205A54C - ARM9_BASE] != b"\x00\x00\x00\x00", \
+        "arm9_dec.bin failed the known-code anchor (Copy36Bytes)"
+    mods = [("arm9", ARM9_BASE, arm9)]
+    # Overlay images come from the raw ndspy extraction (the ROM's linked
+    # bytes). The dsd delink export zeroes every relocated word -- a
+    # SpawnInfo's spawnFunc pointer reads back 0 there -- and its data goes
+    # stale against config re-addressings. Only the base addresses come
+    # from the dsd yaml.
     txt = (REPO / "extracted/dsd/arm9_overlays/overlays.yaml").read_text()
     for m in re.finditer(r"- id: (\d+)\n\s+base_address: (\d+)", txt):
         oid, base = int(m.group(1)), int(m.group(2))
-        p = REPO / f"extracted/dsd/arm9_overlays/ov{oid:03d}.bin"
+        p = REPO / f"extracted/overlays/overlay_{oid:04d}.bin"
         if p.exists():
             mods.append((f"ov{oid:03d}", base, p.read_bytes()))
     return mods
@@ -83,10 +95,12 @@ def pascal_case(enum_name, header_classes):
 
 
 def load_config():
-    """(module -> addr -> (name, kind, file, line_idx)), all-names set, file cache"""
+    """(module -> addr -> (name, kind, file, line_idx)), all-names set, file cache,
+    (module, addr) -> function size"""
     syms = collections.defaultdict(dict)
     all_names = set()
     files = {}
+    fn_sizes = {}
 
     def load(path, module):
         if not path.exists():
@@ -98,11 +112,14 @@ def load_config():
             if m:
                 syms[module][int(m.group(3), 16)] = (m.group(1), m.group(2), i)
                 all_names.add(m.group(1))
+                s = re.search(r"size=(0x[0-9a-fA-F]+)", line)
+                if s:
+                    fn_sizes[(module, int(m.group(3), 16))] = int(s.group(1), 16)
 
     load(REPO / "config/arm9/symbols.txt", "arm9")
     for d in sorted((REPO / "config/arm9/overlays").iterdir()):
         load(d / "symbols.txt", d.name)
-    return syms, all_names, files
+    return syms, all_names, files, fn_sizes
 
 
 def main():
@@ -113,7 +130,7 @@ def main():
     mods = load_modules()
     actor_names = load_actor_names()
     header_classes = load_header_classes()
-    syms, all_names, files = load_config()
+    syms, all_names, files, fn_sizes = load_config()
     arm9 = mods[0][2]
 
     def containing(addr):
@@ -149,12 +166,20 @@ def main():
         fmod = mod if base <= fn < base + len(blob) else "arm9"
         return fn, fmod, bp, rp
 
-    def parse_spawnfunc(fn, mod, base, blob):
-        """-> (alloc_size|None, vtable_addr|None); scan first 0x50 bytes"""
+    def parse_spawnfunc(fn, mod, base, blob, fn_size):
+        """-> (alloc_size|None, vtable_addr|None); scan the factory's own bytes ONLY.
+
+        The scan window must stop at the factory's config size. The next
+        function is almost always the following class's D1, which stores ITS
+        vtable to [r4] in its first few instructions -- an unbounded window
+        attributed that table to this factory and shifted every vtable and
+        method name one class late (the ov009 and ov002 shifts fixed on main).
+        A factory that installs its vtable through a BL'd ctor instead of an
+        inline store now reports NOVTABLE rather than guessing."""
         size = None
         vt = None
         off = fn - base
-        code = blob[off:off + 0x50]
+        code = blob[off:off + min(fn_size, 0x200)]
         last_pool_to_r4 = None
         for i in range(0, len(code) - 3, 4):
             w = struct.unpack_from("<I", code, i)[0]
@@ -235,7 +260,7 @@ def main():
         propose(fmod, fn, f"{cls}_Spawn", cls, "spawnfunc")
 
         fblob, fbase = (blob, base) if fmod == mod else (arm9, ARM9_BASE)
-        size, vt = parse_spawnfunc(fn, fmod, fbase, fblob)
+        size, vt = parse_spawnfunc(fn, fmod, fbase, fblob, fn_sizes.get((fmod, fn), 0x50))
         if vt is None:
             report.append(f"NOVTABLE actor {i} {cls} (alloc={hex(size) if size else '?'})")
             continue
