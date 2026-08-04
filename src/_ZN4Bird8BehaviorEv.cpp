@@ -11,14 +11,14 @@ extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j
 extern int _ZN9Animation7AdvanceEv(void* a);
 struct PMF { int fn; int ptr; };
 struct Mtx { int w[12]; };
-extern struct PMF data_ov036_02113c48[];
+extern struct PMF data_ov009_02113c48[];
 extern struct Mtx data_020a0e68;
 }
 
 int Bird::Behavior()
 {
   int idx = unk_17c;
-  struct PMF* m = &data_ov036_02113c48[idx];
+  struct PMF* m = &data_ov009_02113c48[idx];
   char* obj = ((char*)this) + (m->ptr >> 1);
   int p = m->ptr;
   void (*f)(void*);

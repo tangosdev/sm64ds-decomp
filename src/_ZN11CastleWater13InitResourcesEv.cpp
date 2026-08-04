@@ -1,6 +1,6 @@
 //cpp
 #include "MeshColliderBase.h"
-// @symbol func_ov009_02111c74
+// @symbol _ZN11CastleWater13InitResourcesEv
 // recovered name: daObjMcWater_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjMcWater_c::InitResources - recovered from vtable slot identity */
@@ -26,7 +26,7 @@ extern struct SharedFilePtr data_ov009_02113c70;
 extern struct CLPS_Block data_ov009_02112c38;
 extern int data_0209f32c;
 
-int func_ov009_02111c74(char *self){
+int _ZN11CastleWater13InitResourcesEv(char *self){
     int b = (int)(data_0209f2d8 == 1);
     if (b == 0) {
         if (*(int*)((char*)&data_0209caa0 + 8) & 0x80000) {

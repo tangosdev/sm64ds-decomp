@@ -51,29 +51,29 @@ src/Bird_Spawn.c:
     complete
     .text start:0x02111a30 end:0x02111a70
 
-src/func_ov009_02111a70.c:
+src/_ZN11CastleWaterD1Ev.c:
     .text start:0x02111a70 end:0x02111abc
 
-src/func_ov009_02111abc.c:
+src/_ZN11CastleWaterD0Ev.c:
     .text start:0x02111abc end:0x02111b1c
 
 src/func_ov009_02111b1c.cpp:
     complete
     .text start:0x02111b1c end:0x02111bd4
 
-src/func_ov009_02111bd4.cpp:
+src/_ZN11CastleWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111bd4 end:0x02111c18
 
-src/func_ov009_02111c18.cpp:
+src/_ZN11CastleWater6RenderEv.cpp:
     complete
     .text start:0x02111c18 end:0x02111c4c
 
-src/func_ov009_02111c4c.cpp:
+src/_ZN11CastleWater8BehaviorEv.cpp:
     complete
     .text start:0x02111c4c end:0x02111c74
 
-src/func_ov009_02111c74.cpp:
+src/_ZN11CastleWater13InitResourcesEv.cpp:
     complete
     .text start:0x02111c74 end:0x02111d8c
 

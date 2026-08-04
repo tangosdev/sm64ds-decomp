@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov009_02111c4c
+// @symbol _ZN11CastleWater8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjMcWater_c.h"
 // recovered name: daObjMcWater_c_Behavior
@@ -10,7 +10,7 @@ public:
 void Advance();
 };
 
-extern "C" int func_ov009_02111c4c(char *r0) {
+extern "C" int _ZN11CastleWater8BehaviorEv(char *r0) {
     struct daObjMcWater_c *self = (struct daObjMcWater_c *)(void *)r0;
 self->unk_32c = 0x1000;
 ((Animation *)(r0 + 0x320))->Advance();
