@@ -79,7 +79,7 @@ def classify(job):
         if src.read_text(encoding="utf-8", errors="ignore").startswith("//cpp"):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
-        return rel, name, "unreadable source"
+        return rel, name, "unreadable source", []
 
     cmd = [*os.environ.get("MWCCARM_LAUNCHER", "").split(),
            str(MW / version / "mwccarm.exe"), *flags.split(),
@@ -87,10 +87,10 @@ def classify(job):
     r = subprocess.run(cmd, capture_output=True, text=True,
                        env=dict(os.environ, LM_LICENSE_FILE=str(LICENSE)), cwd=REPO)
     if r.returncode != 0 or not obj.is_file():
-        return rel, name, "compile failed"
+        return rel, name, "compile failed", []
 
     if sec != ".text":
-        return rel, name, f"lives in {sec}, not .text"
+        return rel, name, f"lives in {sec}, not .text", []
 
     try:
         elf = ELFFile(io.BytesIO(obj.read_bytes()))
@@ -109,8 +109,8 @@ def classify(job):
         if len(content) != 1 or content[0] != ".text":
             extra = sorted(set(content) - {".text"})
             if len(content) > 1 and not extra:
-                return rel, name, f"{len(content)} .text sections (multi-function TU)"
-            return rel, name, "extra sections: " + ",".join(extra or content)
+                return rel, name, f"{len(content)} .text sections (multi-function TU)", []
+            return rel, name, "extra sections: " + ",".join(extra or content), []
 
         symtab = elf.get_section_by_name(".symtab")
         defined, undefined, other_defined = [], [], []
@@ -129,22 +129,25 @@ def classify(job):
                 other_defined.append(s.name)
 
         if text_sh_size is not None and text_sh_size != size:
-            return rel, name, f".text section 0x{text_sh_size:x} != declared 0x{size:x}"
+            return rel, name, f".text section 0x{text_sh_size:x} != declared 0x{size:x}", []
         if len(defined) != 1:
-            return rel, name, f"{len(defined)} defined global functions"
+            return rel, name, f"{len(defined)} defined global functions", []
         dname, dsize = defined[0]
         if dname != name:
-            return rel, name, f"defines {dname}, expected {name}"
+            return rel, name, f"defines {dname}, expected {name}", []
         if dsize != size:
-            return rel, name, f"size 0x{dsize:x} != declared 0x{size:x}"
+            return rel, name, f"size 0x{dsize:x} != declared 0x{size:x}", []
         if other_defined:
-            return rel, name, "defines non-function globals: " + ",".join(other_defined[:3])
+            return rel, name, "defines non-function globals: " + ",".join(other_defined[:3]), []
         missing = sorted(set(undefined) - known)
         if missing:
-            return rel, name, "unresolvable: " + ",".join(missing[:3])
+            # `reason` is truncated for the histogram a human reads; `missing` is the
+            # complete list, because a consumer that acts on it needs all of them. A
+            # tool fed only the first three silently leaves the rest behind.
+            return rel, name, "unresolvable: " + ",".join(missing[:3]), missing
     except Exception as e:  # a malformed object is a fail, not a crash
-        return rel, name, f"elf error: {type(e).__name__}"
-    return rel, name, None
+        return rel, name, f"elf error: {type(e).__name__}", []
+    return rel, name, None, []
 
 
 def main():
@@ -163,8 +166,9 @@ def main():
     results, reasons = [], collections.Counter()
     done = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        for rel, name, reason in ex.map(classify, jobs):
-            results.append({"file": rel, "name": name, "reason": reason})
+        for rel, name, reason, missing in ex.map(classify, jobs):
+            results.append({"file": rel, "name": name, "reason": reason,
+                            "missing": missing})
             reasons["ELIGIBLE" if reason is None else reason.split(":")[0]] += 1
             done += 1
             if done % 2000 == 0:
