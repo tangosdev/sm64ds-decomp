@@ -4680,24 +4680,24 @@ src/OneUpLogo_Spawn.c:
     complete
     .text start:0x020f1170 end:0x020f11b0
 
-src/func_ov002_020f11b0.c:
+src/_ZN14BlueCoinSwitchD1Ev.c:
     .text start:0x020f11b0 end:0x020f11f4
 
-src/func_ov002_020f11f4.c:
+src/_ZN14BlueCoinSwitchD0Ev.c:
     .text start:0x020f11f4 end:0x020f124c
 
-src/func_ov002_020f124c.c:
+src/_ZN14BlueCoinSwitch16CleanupResourcesEv.c:
     .text start:0x020f124c end:0x020f1290
 
-src/func_ov002_020f1290.cpp:
+src/_ZN14BlueCoinSwitch6RenderEv.cpp:
     complete
     .text start:0x020f1290 end:0x020f12c8
 
-src/func_ov002_020f12c8.c:
+src/_ZN14BlueCoinSwitch8BehaviorEv.c:
     complete
     .text start:0x020f12c8 end:0x020f1468
 
-src/func_ov002_020f1468.c:
+src/_ZN14BlueCoinSwitch13InitResourcesEv.c:
     complete
     .text start:0x020f1468 end:0x020f1578
 
@@ -5421,11 +5421,11 @@ src/Fireball_Spawn.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
-src/func_ov002_020f934c.c:
+src/_ZN11SoundObjectD1Ev.c:
     complete
     .text start:0x020f934c end:0x020f9370
 
-src/func_ov002_020f9370.c:
+src/_ZN11SoundObjectD0Ev.c:
     .text start:0x020f9370 end:0x020f93a8
 
 src/func_ov002_020f93a8.cpp:
@@ -5436,11 +5436,11 @@ src/func_ov002_020f9468.c:
     complete
     .text start:0x020f9468 end:0x020f94fc
 
-src/func_ov002_020f94fc.cpp:
+src/_ZN11SoundObject8BehaviorEv.cpp:
     complete
     .text start:0x020f94fc end:0x020f95e0
 
-src/func_ov002_020f95e0.c:
+src/_ZN11SoundObject13InitResourcesEv.c:
     complete
     .text start:0x020f95e0 end:0x020f972c
 
