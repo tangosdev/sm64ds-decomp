@@ -294,9 +294,11 @@ src/func_ov065_021196bc.c:
     .text start:0x021196bc end:0x021196d8
 
 src/_ZN15TtcRotatingCubeD1Ev.c:
+    complete
     .text start:0x021196d8 end:0x0211972c
 
 src/_ZN15TtcRotatingCubeD0Ev.c:
+    complete
     .text start:0x0211972c end:0x02119794
 
 src/func_ov065_02119794.c:
@@ -370,6 +372,7 @@ src/_ZN20TtcConveyorBeltLargeD1Ev.c:
     .text start:0x0211a494 end:0x0211a4e8
 
 src/_ZN20TtcConveyorBeltLargeD0Ev.c:
+    complete
     .text start:0x0211a4e8 end:0x0211a550
 
 src/func_ov065_0211a550.c:
@@ -437,12 +440,15 @@ src/func_ov065_0211b1d4.cpp:
     .text start:0x0211b1d4 end:0x0211b328
 
 src/TTC_MovingBar_Spawn.c:
+    complete
     .text start:0x0211b328 end:0x0211b360
 
 src/_ZN13TTC_MovingBarD1Ev.c:
+    complete
     .text start:0x0211b360 end:0x0211b3ac
 
 src/_ZN13TTC_MovingBarD0Ev.c:
+    complete
     .text start:0x0211b3ac end:0x0211b40c
 
 src/func_ov065_0211b40c.c:
@@ -473,9 +479,11 @@ src/TtcRotatingGear_Spawn.c:
     .text start:0x0211b7b8 end:0x0211b7f0
 
 src/_ZN15TtcRotatingGearD1Ev.c:
+    complete
     .text start:0x0211b7f0 end:0x0211b834
 
 src/_ZN15TtcRotatingGearD0Ev.c:
+    complete
     .text start:0x0211b834 end:0x0211b88c
 
 src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp:
@@ -501,9 +509,11 @@ src/TtcMovingCubeA_Spawn.c:
     .text start:0x0211bbac end:0x0211bbdc
 
 src/_ZN14TtcMovingCubeAD1Ev.c:
+    complete
     .text start:0x0211bbdc end:0x0211bc28
 
 src/_ZN14TtcMovingCubeAD0Ev.c:
+    complete
     .text start:0x0211bc28 end:0x0211bc88
 
 src/func_ov065_0211bc88.cpp:

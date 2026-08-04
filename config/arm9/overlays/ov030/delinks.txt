@@ -32,6 +32,7 @@ src/func_ov030_02111410.cpp:
     .text start:0x02111410 end:0x02111524
 
 src/UkikiCage_Spawn.c:
+    complete
     .text start:0x02111524 end:0x0211155c
 
 src/_ZN9UkikiCageD1Ev.c:

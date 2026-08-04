@@ -123,9 +123,11 @@ src/RollingRock_Spawn.c:
     .text start:0x02112d64 end:0x02112db4
 
 src/_ZN10ShutterHmcD1Ev.c:
+    complete
     .text start:0x02112db4 end:0x02112e04
 
 src/_ZN10ShutterHmcD0Ev.c:
+    complete
     .text start:0x02112e04 end:0x02112e68
 
 src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
@@ -141,6 +143,7 @@ src/_ZN10ShutterHmc13InitResourcesEv.cpp:
     .text start:0x02112ec0 end:0x02112ed4
 
 src/ShutterHmc_Spawn.c:
+    complete
     .text start:0x02112ed4 end:0x02112f10
 
 src/__sinit_ov021_02113500.c:

@@ -77,9 +77,11 @@ src/Grindel_Spawn.c:
     .text start:0x02111cf4 end:0x02111d40
 
 src/_ZN11PyramidStepD1Ev.c:
+    complete
     .text start:0x02111d40 end:0x02111d8c
 
 src/_ZN11PyramidStepD0Ev.c:
+    complete
     .text start:0x02111d8c end:0x02111dec
 
 src/func_ov025_02111dec.cpp:

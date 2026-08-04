@@ -4,9 +4,11 @@
     .data       start:0x02113380 end:0x02114940 kind:data align:32
     .bss        start:0x02114940 end:0x021149e0 kind:bss align:32
 src/_ZN10ShutterBobD1Ev.c:
+    complete
     .text start:0x021111a0 end:0x021111f0
 
 src/_ZN10ShutterBobD0Ev.c:
+    complete
     .text start:0x021111f0 end:0x02111254
 
 src/_ZN10ShutterBob16CleanupResourcesEv.cpp:
@@ -22,6 +24,7 @@ src/_ZN10ShutterBob13InitResourcesEv.cpp:
     .text start:0x02111294 end:0x021112cc
 
 src/ShutterBob_Spawn.c:
+    complete
     .text start:0x021112cc end:0x02111308
 
 src/_ZN10ChainChompD1Ev.c:
@@ -138,9 +141,11 @@ src/ChainChomp_Spawn.cpp:
     .text start:0x02112d1c end:0x02112e0c
 
 src/_ZN15ChainChompFenceD1Ev.c:
+    complete
     .text start:0x02112e0c end:0x02112e50
 
 src/_ZN15ChainChompFenceD0Ev.c:
+    complete
     .text start:0x02112e50 end:0x02112ea8
 
 src/func_ov014_02112ea8.cpp:

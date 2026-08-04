@@ -5,9 +5,11 @@
     .data       start:0x02112fe0 end:0x02113be0 kind:data align:32
     .bss        start:0x02113be0 end:0x02113d20 kind:bss align:32
 src/_ZN10SlidingIceD1Ev.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/_ZN10SlidingIceD0Ev.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov027_0211123c.cpp:
@@ -62,6 +64,7 @@ src/func_ov027_0211181c.cpp:
     .text start:0x0211181c end:0x0211186c
 
 src/ChillBully_Spawn.c:
+    complete
     .text start:0x0211186c end:0x021118c8
 
 src/func_ov027_021118c8.c:

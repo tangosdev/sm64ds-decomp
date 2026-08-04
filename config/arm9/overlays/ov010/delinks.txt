@@ -67,6 +67,7 @@ src/func_ov010_02111984.c:
     .text start:0x02111984 end:0x02111998
 
 src/Trap_Spawn.c:
+    complete
     .text start:0x02111998 end:0x021119d0
 
 src/_ZN4TrapD1Ev.cpp:

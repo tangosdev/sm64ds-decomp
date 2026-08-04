@@ -2393,6 +2393,7 @@ src/func_ov006_020e3578.c:
     .text start:0x020e3578 end:0x020e3820
 
 src/MgShuffleShell_Spawn.c:
+    complete
     .text start:0x020e3820 end:0x020e3854
 
 src/func_ov006_020e3854.c:
@@ -3599,6 +3600,7 @@ src/func_ov006_020f3460.c:
     .text start:0x020f3460 end:0x020f3800
 
 src/MgWanted_Spawn.c:
+    complete
     .text start:0x020f3800 end:0x020f3834
 
 src/func_ov006_020f3834.cpp:
@@ -4417,6 +4419,7 @@ src/func_ov006_020fee24.c:
     .text start:0x020fee24 end:0x020fefc0
 
 src/MgBobOmbSquad_Spawn.c:
+    complete
     .text start:0x020ff3ec end:0x020ff420
 
 src/func_ov006_020ff420.c:
@@ -4686,6 +4689,7 @@ src/func_ov006_02103ed0.c:
     .text start:0x02103ed0 end:0x02104258
 
 src/MgLakituLaunch_Spawn.c:
+    complete
     .text start:0x02104258 end:0x0210428c
 
 src/func_ov006_0210428c.c:
@@ -4952,6 +4956,7 @@ src/func_ov006_021073b0.c:
     .text start:0x021073b0 end:0x02107858
 
 src/MgPuzzlePanelPuzzlePanic_Spawn.c:
+    complete
     .text start:0x02107858 end:0x0210788c
 
 src/func_ov006_0210788c.c:
@@ -6427,6 +6432,7 @@ src/func_ov006_021203fc.c:
     .text start:0x021203fc end:0x021207a8
 
 src/MgHideAndBooSeek_Spawn.c:
+    complete
     .text start:0x021207a8 end:0x021207dc
 
 src/func_ov006_021207dc.c:

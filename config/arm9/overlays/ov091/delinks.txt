@@ -110,9 +110,11 @@ src/ArrowPathLift_Spawn.c:
     .text start:0x021323cc end:0x02132404
 
 src/_ZN17SlidingPlatformWfD1Ev.c:
+    complete
     .text start:0x02132404 end:0x02132448
 
 src/_ZN17SlidingPlatformWfD0Ev.c:
+    complete
     .text start:0x02132448 end:0x021324a0
 
 src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp:
@@ -182,6 +184,7 @@ src/_ZN6Thwomp13InitResourcesEv.cpp:
     .text start:0x02132c84 end:0x02132cb8
 
 src/Thwomp_Spawn.c:
+    complete
     .text start:0x02132cb8 end:0x02132d04
 
 src/func_ov091_02132d04.c:

@@ -7812,6 +7812,7 @@ src/_ZN13HeapAllocator6RemoveEv.cpp:
     .text start:0x0204df38 end:0x0204df54
 
 src/_ZN13HeapAllocatorC1EjPvPvj.cpp:
+    complete
     .text start:0x0204df54 end:0x0204dfe8
 
 src/_ZN18NestedHeapIterator10FindNestedEPv.c:

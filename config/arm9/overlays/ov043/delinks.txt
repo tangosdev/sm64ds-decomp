@@ -46,12 +46,15 @@ src/func_ov043_021114c4.c:
     .text start:0x021114c4 end:0x021114dc
 
 src/RickshawBdw_Spawn.c:
+    complete
     .text start:0x021114dc end:0x02111518
 
 src/_ZN11RickshawBdwD1Ev.c:
+    complete
     .text start:0x02111518 end:0x02111568
 
 src/_ZN11RickshawBdwD0Ev.c:
+    complete
     .text start:0x02111568 end:0x021115cc
 
 src/_ZN11RickshawBdw16CleanupResourcesEv.c:
@@ -63,6 +66,7 @@ src/_ZN11RickshawBdw13InitResourcesEv.c:
     .text start:0x021115e0 end:0x021115f4
 
 src/RickshawPlatformBdw_Spawn.c:
+    complete
     .text start:0x021115f4 end:0x02111630
 
 src/_ZN19RickshawPlatformBdwD1Ev.cpp:

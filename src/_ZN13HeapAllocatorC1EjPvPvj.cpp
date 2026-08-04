@@ -6,6 +6,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "HeapAllocator.h"
+extern int data_020a4d34;
+extern char data_020a4d38;
 extern "C" {
 extern void* _ZN18NestedHeapIterator10FindNestedEPv(void* ptr);
 extern void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void* iter, void* node);
@@ -22,9 +24,9 @@ void _ZN13HeapAllocatorC1EjPvPvj(struct HeapAllocator *self, u32 magic, void* a,
         *p |= (size & 0xffu);
     }
     _ZN18NestedHeapIteratorC1Ej(((char*)self) + 0xc, 4);
-    if (_ZN6Memory25isRootHeapIterInitializedE == 0) {
-        _ZN18NestedHeapIteratorC1Ej(&_ZN6Memory16rootHeapIteratorE, 4);
-        _ZN6Memory25isRootHeapIterInitializedE = 1;
+    if (data_020a4d34 == 0) {
+        _ZN18NestedHeapIteratorC1Ej(&data_020a4d38, 4);
+        data_020a4d34 = 1;
     }
     {
         void* it = _ZN18NestedHeapIterator10FindNestedEPv(((char*)self));

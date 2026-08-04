@@ -49,6 +49,7 @@ src/func_ov036_0211150c.c:
     .text start:0x0211150c end:0x02111544
 
 src/RotatingPlatformRr_Spawn.c:
+    complete
     .text start:0x02111544 end:0x02111580
 
 src/_ZN18RotatingPlatformRrD1Ev.cpp:
@@ -121,9 +122,11 @@ src/DonutBlock_Spawn.c:
     .text start:0x02111cd8 end:0x02111d14
 
 src/_ZN10DonutBlockD1Ev.c:
+    complete
     .text start:0x02111d14 end:0x02111d58
 
 src/_ZN10DonutBlockD0Ev.c:
+    complete
     .text start:0x02111d58 end:0x02111db0
 
 src/_ZN10DonutBlock16CleanupResourcesEv.cpp:

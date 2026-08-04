@@ -28,12 +28,15 @@ src/func_ov015_021112a0.cpp:
     .text start:0x021112a0 end:0x021112dc
 
 src/PoleBillboard_Spawn.c:
+    complete
     .text start:0x021112dc end:0x02111314
 
 src/_ZN13PoleBillboardD1Ev.c:
+    complete
     .text start:0x02111314 end:0x02111360
 
 src/_ZN13PoleBillboardD0Ev.c:
+    complete
     .text start:0x02111360 end:0x021113c0
 
 src/func_ov015_021113c0.cpp:
@@ -68,9 +71,11 @@ src/KnockDownPlank_Spawn.c:
     .text start:0x02111b68 end:0x02111ba0
 
 src/_ZN14KnockDownPlankD1Ev.c:
+    complete
     .text start:0x02111ba0 end:0x02111be4
 
 src/_ZN14KnockDownPlankD0Ev.c:
+    complete
     .text start:0x02111be4 end:0x02111c3c
 
 src/func_ov015_02111c3c.cpp:
@@ -164,9 +169,11 @@ src/MovingBarSmall_Spawn.c:
     .text start:0x02112260 end:0x02112290
 
 src/_ZN14MovingBarSmallD1Ev.c:
+    complete
     .text start:0x02112290 end:0x021122dc
 
 src/_ZN14MovingBarSmallD0Ev.c:
+    complete
     .text start:0x021122dc end:0x0211233c
 
 src/func_ov015_0211233c.cpp:
@@ -244,6 +251,7 @@ src/func_ov015_02112c98.c:
     .text start:0x02112c98 end:0x02112cb8
 
 src/RotatingPlatformWf_Spawn.c:
+    complete
     .text start:0x02112cb8 end:0x02112cf4
 
 src/_ZN11FallBlockWfD1Ev.c:

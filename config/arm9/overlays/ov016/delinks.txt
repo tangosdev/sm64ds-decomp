@@ -159,6 +159,7 @@ src/func_ov016_02112fa8.c:
     .text start:0x02112fa8 end:0x02112fbc
 
 src/FloatOnWaterPlatformJrb_Spawn.c:
+    complete
     .text start:0x02112fbc end:0x02112ff8
 
 src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:

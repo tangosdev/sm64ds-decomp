@@ -312,6 +312,7 @@ src/func_ov002_020b067c.c:
     .text start:0x020b067c end:0x020b0710
 
 src/InvisiblePole_Spawn.c:
+    complete
     .text start:0x020b0710 end:0x020b0748
 
 src/_ZN13InvisiblePoleD1Ev.cpp:
@@ -589,12 +590,15 @@ src/func_ov002_020b3518.cpp:
     .text start:0x020b3518 end:0x020b3568
 
 src/Bubble_Spawn.c:
+    complete
     .text start:0x020b3568 end:0x020b35a0
 
 src/_ZN13BigBrickBlockD1Ev.c:
+    complete
     .text start:0x020b35a0 end:0x020b35e4
 
 src/_ZN13BigBrickBlockD0Ev.c:
+    complete
     .text start:0x020b35e4 end:0x020b363c
 
 src/func_ov002_020b363c.c:
@@ -1222,6 +1226,7 @@ src/func_ov002_020b8fe0.cpp:
     .text start:0x020b8fe0 end:0x020b910c
 
 src/PushBlock_Spawn.c:
+    complete
     .text start:0x020b910c end:0x020b9148
 
 src/_ZN9PushBlockD1Ev.cpp:
@@ -1300,9 +1305,11 @@ src/PowerFlower_Spawn.c:
     .text start:0x020b9e0c end:0x020b9e64
 
 src/_ZN10StarSwitchD1Ev.c:
+    complete
     .text start:0x020b9e64 end:0x020b9ea8
 
 src/_ZN10StarSwitchD0Ev.c:
+    complete
     .text start:0x020b9ea8 end:0x020b9f00
 
 src/func_ov002_020b9f00.c:
@@ -1551,6 +1558,7 @@ src/func_ov002_020bc540.cpp:
     .text start:0x020bc540 end:0x020bc5a8
 
 src/Seaweed_Spawn.c:
+    complete
     .text start:0x020bc5a8 end:0x020bc5e0
 
 src/_ZN7SeaweedD1Ev.cpp:
@@ -1585,9 +1593,11 @@ src/HealingHeart_Spawn.c:
     .text start:0x020bc8b4 end:0x020bc8f4
 
 src/_ZN11CannonHatchD1Ev.c:
+    complete
     .text start:0x020bc8f4 end:0x020bc938
 
 src/_ZN11CannonHatchD0Ev.c:
+    complete
     .text start:0x020bc938 end:0x020bc990
 
 src/func_ov002_020bc990.c:
@@ -4432,6 +4442,7 @@ src/func_ov002_020ec4c4.c:
     .text start:0x020ec4c4 end:0x020ec534
 
 src/Warp_Spawn.c:
+    complete
     .text start:0x020ec534 end:0x020ec56c
 
 src/_ZN8YoshiEggD1Ev.c:
@@ -4779,6 +4790,7 @@ src/func_ov002_020f07dc.c:
     .text start:0x020f07dc end:0x020f085c
 
 src/InvisibleSecret_Spawn.c:
+    complete
     .text start:0x020f085c end:0x020f0894
 
 src/_ZN15InvisibleSecretD1Ev.cpp:
@@ -4844,6 +4856,7 @@ src/OneUpLogo_Spawn.c:
     .text start:0x020f1170 end:0x020f11b0
 
 src/_ZN14BlueCoinSwitchD1Ev.c:
+    complete
     .text start:0x020f11b0 end:0x020f11f4
 
 src/_ZN14BlueCoinSwitchD0Ev.c:

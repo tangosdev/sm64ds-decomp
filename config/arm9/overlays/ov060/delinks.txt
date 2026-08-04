@@ -427,9 +427,11 @@ src/BowserFire_Spawn.c:
     .text start:0x02117938 end:0x02117980
 
 src/_ZN18BowserFireSeaArenaD1Ev.c:
+    complete
     .text start:0x02117980 end:0x021179d4
 
 src/_ZN18BowserFireSeaArenaD0Ev.c:
+    complete
     .text start:0x021179d4 end:0x02117a3c
 
 src/func_ov060_02117a3c.c:

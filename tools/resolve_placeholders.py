@@ -58,12 +58,33 @@ from enroll import candidates  # noqa: E402
 
 ELIGIBILITY = REPO / "build" / "rombuild-eligibility.json"
 
-# The exact spellings the recovery pass emitted. Deliberately narrow: a looser
-# pattern would start matching real short symbol names.
-PLACEHOLDER = re.compile(r"^(G|VT|HEAP)\d*$")
+# The spellings the recovery pass invented for symbols it never resolved.
+INVENTED = re.compile(r"^(G|VT|HEAP)\d*$")
+
+
+def is_stand_in(name, header_declared):
+    """Is `name` a stand-in rather than a real symbol?
+
+    Two shapes, and the second is the larger one:
+
+      G0, VT1, HEAP   the pass's own placeholder spellings, declared per-file or
+                      in decl_common.h
+
+      _ZTV10dBgActor_c  a name that *looks* real -- it is declared in a shared
+                      header, so it reads as a proper symbol -- but no module
+                      defines it. 196 files reference that one name, and the
+                      relocations show they mean 196 different symbols. One
+                      declaration standing in for many, exactly like VT, but
+                      spelled plausibly enough that nobody noticed.
+
+    Both are reached the same way: the name resolves to nothing, and the ROM's
+    own relocation says what was meant. A name absent from the headers *and*
+    from the config is left alone -- there is no declaration to carry, and it is
+    likelier to be a genuine gap than a stand-in."""
+    return bool(INVENTED.match(name)) or name in header_declared
 
 def decl_types():
-    """{placeholder: declaration template} read from the headers that declare them.
+    """{name: declaration template} for every name the headers declare.
 
     Read rather than hardcoded: the recovery pass emitted G0, G1, G2, ... as it
     needed them, and a fixed table silently misses whichever it invented last."""
@@ -72,8 +93,10 @@ def decl_types():
         for m in re.finditer(r"^\s*extern\s+([^;=]*?)\b(\w+)\s*(\[\s*\])?\s*;",
                              h.read_text(encoding="utf-8", errors="ignore"), re.M):
             ty, nm, arr = m.group(1).strip(), m.group(2), m.group(3) or ""
-            if PLACEHOLDER.match(nm):
-                out.setdefault(nm, f"extern {ty} @{arr};")
+            # Every declared name, not only the invented spellings: a stand-in
+            # that lives in a shared header needs its template carried across to
+            # the real name just as much as a VT does.
+            out.setdefault(nm, f"extern {ty} @{arr};")
     return out
 
 
@@ -188,9 +211,10 @@ def main():
             continue
         rel = r["file"].replace("\\", "/")
         miss = r.get("missing") or []
-        ph = [s for s in miss if PLACEHOLDER.match(s)]
+        ph = [s for s in miss if is_stand_in(s, declared)]
         if ph and rel in info:
-            jobs.append((rel, ph, [s for s in miss if not PLACEHOLDER.match(s)]))
+            jobs.append((rel, ph,
+                         [s for s in miss if not is_stand_in(s, declared)]))
 
     print(f"files with placeholder references: {len(jobs)}")
     print(f"  of those, blocked ONLY by placeholders: "

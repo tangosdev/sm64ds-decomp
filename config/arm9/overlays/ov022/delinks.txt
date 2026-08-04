@@ -53,12 +53,15 @@ src/func_ov022_02111670.c:
     .text start:0x02111670 end:0x02111688
 
 src/RotatingPlatformLll_Spawn.c:
+    complete
     .text start:0x02111688 end:0x021116c4
 
 src/_ZN19RotatingPlatformLllD1Ev.c:
+    complete
     .text start:0x021116c4 end:0x02111708
 
 src/_ZN19RotatingPlatformLllD0Ev.c:
+    complete
     .text start:0x02111708 end:0x02111760
 
 src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp:
@@ -163,15 +166,19 @@ src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c:
     .text start:0x02112040 end:0x021120b8
 
 src/FloatingFloorLllSmall_Spawn.c:
+    complete
     .text start:0x021120b8 end:0x021120f4
 
 src/FloatingFloorLllBig_Spawn.c:
+    complete
     .text start:0x021120f4 end:0x02112130
 
 src/_ZN19FloatingFloorLllBigD1Ev.c:
+    complete
     .text start:0x02112130 end:0x02112174
 
 src/_ZN19FloatingFloorLllBigD0Ev.c:
+    complete
     .text start:0x02112174 end:0x021121cc
 
 src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp:

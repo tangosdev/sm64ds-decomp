@@ -4,12 +4,13 @@
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
+extern int _ZTV15ChainChompFence[];
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = _ZTV15ChainChompFence */
 int *_ZN15ChainChompFenceD1Ev(int *t)
 {
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV15ChainChompFence;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

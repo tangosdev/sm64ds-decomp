@@ -5,9 +5,11 @@
     .data       start:0x0213c360 end:0x0213c800 kind:data align:32
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
 src/_ZN14ArrowSignRightD1Ev.c:
+    complete
     .text start:0x02137be0 end:0x02137c2c
 
 src/_ZN14ArrowSignRightD0Ev.c:
+    complete
     .text start:0x02137c2c end:0x02137c8c
 
 src/func_ov098_02137c8c.c:

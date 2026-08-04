@@ -315,6 +315,7 @@ src/func_ov100_021455a0.c:
     .text start:0x021455a0 end:0x0214589c
 
 src/Door_Spawn.c:
+    complete
     .text start:0x0214589c end:0x021458d4
 
 src/_ZN4DoorD1Ev.cpp:

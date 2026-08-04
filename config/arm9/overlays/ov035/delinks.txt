@@ -5,9 +5,11 @@
     .data       start:0x02112040 end:0x02112c60 kind:data align:32
     .bss        start:0x02112c60 end:0x02112ce0 kind:bss align:32
 src/_ZN16RotatingCogSmallD1Ev.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/_ZN16RotatingCogSmallD0Ev.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp:
@@ -38,9 +40,11 @@ src/RotatingClockHand_Spawn.c:
     .text start:0x021116bc end:0x021116ec
 
 src/_ZN17RotatingClockHandD1Ev.c:
+    complete
     .text start:0x021116ec end:0x02111738
 
 src/_ZN17RotatingClockHandD0Ev.c:
+    complete
     .text start:0x02111738 end:0x02111798
 
 src/func_ov035_02111798.c:

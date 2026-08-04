@@ -3,6 +3,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "MovingCylinderClsn.h"
+extern void* _ZTV18MovingCylinderClsn[];
 /* _ZN18MovingCylinderClsnD1Ev at 0x020149a4
  * Single-vtable D1/D2 destructor (CodeWarrior 1.2):
  *   write own vtable to [this], call immediate-base destructor, return this.
@@ -12,7 +13,7 @@ struct Obj { void *vtable; };
 extern void base_dtor_MovingCylinderClsn(struct Obj *thiz); /* 0x02015058 */
 struct Obj *_ZN18MovingCylinderClsnD1Ev(struct Obj *thiz)
 {
-    thiz->vtable = (void *)vtbl_MovingCylinderClsn;
+    thiz->vtable = (void *)_ZTV18MovingCylinderClsn;
     base_dtor_MovingCylinderClsn(thiz);
     return thiz;
 }

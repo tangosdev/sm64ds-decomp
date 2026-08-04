@@ -16,6 +16,7 @@ src/func_ov029_02111254.c:
     .text start:0x02111254 end:0x02111340
 
 src/FloatOnWaterPlatformWdwSquare_Spawn.c:
+    complete
     .text start:0x02111340 end:0x0211137c
 
 src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c:
@@ -138,6 +139,7 @@ src/func_ov029_02111f58.c:
     .text start:0x02111f58 end:0x02112044
 
 src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
+    complete
     .text start:0x02112044 end:0x02112080
 
 src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
@@ -155,12 +157,15 @@ src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.c:
     .text start:0x02112148 end:0x02112168
 
 src/RotatingPlatformWdw_Spawn.c:
+    complete
     .text start:0x02112168 end:0x021121a4
 
 src/_ZN19RotatingPlatformWdwD1Ev.c:
+    complete
     .text start:0x021121a4 end:0x021121f0
 
 src/_ZN19RotatingPlatformWdwD0Ev.c:
+    complete
     .text start:0x021121f0 end:0x02112250
 
 src/func_ov029_02112250.cpp:
@@ -190,9 +195,11 @@ src/WDW_Water_Spawn.c:
     .text start:0x021125f8 end:0x02112630
 
 src/_ZN20SwitchActivatedPlankD1Ev.c:
+    complete
     .text start:0x02112630 end:0x0211267c
 
 src/_ZN20SwitchActivatedPlankD0Ev.c:
+    complete
     .text start:0x0211267c end:0x021126dc
 
 src/func_ov029_021126dc.c:

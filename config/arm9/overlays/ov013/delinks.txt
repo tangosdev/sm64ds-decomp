@@ -33,6 +33,7 @@ src/func_ov013_0211133c.cpp:
     .text start:0x0211133c end:0x02111384
 
 src/ClockPaintingPendulum_Spawn.c:
+    complete
     .text start:0x02111384 end:0x021113bc
 
 src/_ZN22ClockPaintingHandShortD1Ev.cpp:
