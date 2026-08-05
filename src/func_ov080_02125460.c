@@ -4,6 +4,8 @@
 // named-extract + equal-arm-ternary barrier reaches b=r2 + A-selection at div 14
 // (a/t-web rotation). ~330 compiles, 2026-08-02 - full map in notes/mwccarm-codegen.md
 // 6ba and config/match_attempts.jsonl. Counts as decompiled, not matched.
+// 2026-08-05: +55-compile second sweep (boosters/6aq, dead-use, fold-commute, exotic
+// shapes) - all renormalize; phase-order boundaries mapped in notes 6bb. Wall stands.
 typedef unsigned int u32;
 void func_ov080_02125460(char* c){
   u32* p = *(u32**)(c+0x1a8);
