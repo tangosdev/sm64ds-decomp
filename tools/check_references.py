@@ -86,14 +86,15 @@ def current(path, require_fresh=True):
         if dirty:
             sys.exit("report was produced from a dirty tree -- commit or stash, then "
                      "re-run tools/eligible.py")
-    unresolved, eligible = {}, 0
+    unresolved, eligible, reasons = {}, 0, {}
     for r in entries:
         reason = r.get("reason")
+        reasons[r["name"]] = reason
         if reason is None:
             eligible += 1
         elif reason.startswith("unresolvable"):
             unresolved[r["name"]] = sorted(set(r.get("missing") or []))
-    return unresolved, eligible
+    return unresolved, eligible, reasons
 
 
 def load_baseline(ref=None):
@@ -136,12 +137,19 @@ def main():
                     help="skip the commit-stamp check (for local iteration only)")
     args = ap.parse_args()
 
-    cur, eligible = current(args.report, require_fresh=not args.allow_stale)
+    cur, eligible, reasons = current(args.report, require_fresh=not args.allow_stale)
     base = load_baseline(args.against)
 
     if args.update:
         if base is not None:
             bad = worse(cur, base["unresolved"])
+            regressed = [s for s in set(base["unresolved"]) - set(cur)
+                         if reasons.get(s, "gone") is not None]
+            if regressed:
+                print("refusing to update: symbols left the backlog by failing differently")
+                for s in regressed[:10]:
+                    print(f"  {s} -> {reasons.get(s, 'no longer a candidate')}")
+                return 1
             if bad or eligible < base.get("eligible", 0):
                 print("refusing to update: this would raise the baseline, not lower it")
                 for sym, names, why in bad[:10]:
@@ -158,14 +166,24 @@ def main():
 
     bad = worse(cur, base["unresolved"])
     lost = base.get("eligible", 0) - eligible
-    fixed = sorted(set(base["unresolved"]) - set(cur))
+    left = set(base["unresolved"]) - set(cur)
+    # Leaving the unresolved set is only progress if the symbol became eligible. A
+    # file that degrades from `unresolvable` to `compile failed` also leaves it, and
+    # would otherwise read as a fix -- trading one failure for a worse one.
+    disguised = sorted(s for s in left if reasons.get(s, "gone") is not None)
+    fixed = sorted(s for s in left if reasons.get(s, "gone") is None)
 
     print(f"unresolved symbols: {len(cur)}  (baseline {len(base['unresolved'])})")
     print(f"eligible:           {eligible}  (baseline {base.get('eligible', 0)})")
     if fixed:
         print(f"  {len(fixed)} fixed since the baseline -- run --update to bank it")
 
-    if not bad and lost <= 0:
+    if disguised:
+        print(f"\n  {len(disguised)} symbols left the unresolved set without becoming")
+        print("  eligible -- they now fail for another reason, which is not a fix:")
+        for s in disguised[:10]:
+            print(f"      {s}  ->  {reasons.get(s, 'no longer a candidate')}")
+    if not bad and lost <= 0 and not disguised:
         print("OK: no new unresolvable references")
         return 0
 
