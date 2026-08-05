@@ -23,10 +23,22 @@ struct ShadowModel {
 struct MovingCylinderClsn {
     void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+
 struct WithMeshClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
     void StartDetectingWater();
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+
 extern "C" void func_ov102_0214c0b8(void* c);
 
 extern SharedFilePtr data_ov102_0214e9c0;
@@ -86,7 +98,7 @@ int BobOmb::InitResources()
     ((Obj*)this)->f3f5 = (unsigned char)(((Obj*)this)->f8 & 7);
     ((Obj*)this)->f3ec = 0x2000;
     func_ov102_0214c0b8(((Obj*)this));
-    ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x3c000, 0x50000, 0x200004, 0xa6d380);
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&((Obj*)this)->f110, (Actor*)((Obj*)this), 0x3c000, 0x50000, 0x200004, 0xa6d380);
     ((Obj*)this)->fa0 = -0x37000;
 
     if (((Obj*)this)->f3f5 == 2) {
@@ -110,7 +122,7 @@ int BobOmb::InitResources()
     ((Obj*)this)->f88 = 0x1000;
     ((Obj*)this)->f390 = 0;
     ((Obj*)this)->f3f2 = 0;
-    ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&((Obj*)this)->f144, (Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
     ((WithMeshClsn*)&((Obj*)this)->f144)->StartDetectingWater();
     ((Obj*)this)->f3f3 = 1;
     ((Obj*)this)->fc8 = 0;

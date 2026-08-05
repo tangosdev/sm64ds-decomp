@@ -6,6 +6,12 @@ public:
     int IsAnim(unsigned int anim);
     void SetAnim(unsigned int animID, int a, int b, unsigned int c);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int animID, int a, int b, unsigned int c);
+
 
 extern "C" {
     void func_ov002_020c2f64(void* c);
@@ -66,7 +72,7 @@ int Player::St_Land_Init()
         r1 = 0x52;
     }
 
-    SetAnim(r1, 0x40000000, 0x1000, 0);
+    _ZN6Player7SetAnimEji5Fix12IiEj(this, r1, 0x40000000, 0x1000, 0);
 
     int idx = ((unsigned char*)&data_020a0e40)[0];
     short sval = *(short*)((char*)&data_0209f4a0 + idx * 0x18);

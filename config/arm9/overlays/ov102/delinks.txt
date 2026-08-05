@@ -334,6 +334,7 @@ src/_ZN6BobOmb8BehaviorEv.c:
     .text start:0x0214c1bc end:0x0214c510
 
 src/_ZN6BobOmb13InitResourcesEv.cpp:
+    complete
     .text start:0x0214c510 end:0x0214c6e4
 
 src/func_ov102_0214c6e4.c:
@@ -428,6 +429,7 @@ src/_ZN10KoopaShell8BehaviorEv.cpp:
     .text start:0x0214d2e8 end:0x0214d54c
 
 src/_ZN10KoopaShell13InitResourcesEv.cpp:
+    complete
     .text start:0x0214d54c end:0x0214d6a0
 
 src/func_ov102_0214d6a0.c:

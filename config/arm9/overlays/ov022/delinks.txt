@@ -119,6 +119,7 @@ src/func_ov022_02111ad0.c:
     .text start:0x02111ad0 end:0x02111bdc
 
 src/func_ov022_02111bdc.cpp:
+    complete
     .text start:0x02111bdc end:0x02111c7c
 
 src/LavaBridge_Spawn.c:
@@ -150,6 +151,7 @@ src/func_ov022_02111dfc.c:
     .text start:0x02111dfc end:0x02111ea0
 
 src/func_ov022_02111ea0.cpp:
+    complete
     .text start:0x02111ea0 end:0x02111f3c
 
 src/LavaSeesaw_Spawn.c:

@@ -25,6 +25,12 @@ struct MeshCollider {
 struct MovingMeshCollider {
     int SetFile(KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
+
 struct Platform {
     void UpdateClsnPosAndRot();
 };
@@ -71,9 +77,7 @@ int Coffin::InitResources()
     mPosZ = res.z;
     func_ov071_02122080(((char*)this));
     ((Platform*)((char*)this))->UpdateClsnPosAndRot();
-    ((MovingMeshCollider*)((char*)&mMeshCollider))->SetFile(
-        MeshCollider::LoadFile(data_ov071_021230d8),
-        *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
+    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider*)((char*)&mMeshCollider), MeshCollider::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
     func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

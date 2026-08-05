@@ -1,3 +1,7 @@
+// HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly
+// in the original (CP15/MPU system setup: 20+ mrc/mcr p15 coprocessor ops that
+// C cannot express), so there is no C to decompile it to -- the asm block is the
+// faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 extern unsigned int data_023c0000;
 
 void _ZN4CP1511SystemSetupEv(void) {

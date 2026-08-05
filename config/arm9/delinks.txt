@@ -684,6 +684,7 @@ src/_ZN6Camera16OnPendingDestroyEv.cpp:
     .text start:0x0200da00 end:0x0200da04
 
 src/_ZN6Camera6RenderEv.cpp:
+    complete
     .text start:0x0200da04 end:0x0200debc
 
 src/_ZN6Camera8BehaviorEv.cpp:

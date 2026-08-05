@@ -335,6 +335,7 @@ src/_ZN6Coffin8BehaviorEv.cpp:
     .text start:0x021224cc end:0x0212255c
 
 src/_ZN6Coffin13InitResourcesEv.cpp:
+    complete
     .text start:0x0212255c end:0x02122670
 
 src/Coffin_Spawn.c:

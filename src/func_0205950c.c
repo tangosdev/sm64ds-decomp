@@ -1,3 +1,7 @@
+// HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly
+// in the original (msr cpsr_fsxc: notes/asm-policy.md restored-ten table, 2026-07-25
+// correction), so there is no C to decompile it to -- the asm block is the
+// faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 #include "types.h"
 extern void _ZN4CP159EnableMPUEv(void);
 extern void _ZN4CP1510DisableMPUEv(void);
