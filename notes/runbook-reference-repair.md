@@ -28,7 +28,7 @@ under suspicion. The authority is dsd's analysis of the real ROM:
 
 ```
 config/**/relocs.txt     from:0x021111e8 kind:load to:0x021099e4 module:overlay(2)
-config/**/symbols.txt    _ZN5Actor5SpawnEjj... kind:function(arm,size=0x54) addr:0x...
+config/**/symbols.txt    _ZN5Actor5SpawnEjj... kind:function(arm,size=0x4c) addr:0x02010e2c
 ```
 
 The join is: **compile the file -> read the relocation offsets out of the object ->
@@ -48,8 +48,12 @@ closed** -- an unknown pin or a check that could not run is a failure, not a pas
 Both halves are load-bearing, and each was a real false green:
 
 - **Pinned, not swept.** A match under any of the 25 versions in `match.SWEEP` is
-  not a match the build will reproduce. An audit found 79 files that verified only
-  under `1.2/base`.
+  not a match the build will reproduce. `config/rombuild-versions.txt` names the
+  files the build has to compile with something other than the default `2004/b56` --
+  8 entries at the time of writing; run `python tools/build_pin.py` for the current
+  set. (An earlier revision here claimed "an audit found 79 files"; that number
+  appears nowhere else in the tree and nothing supports it. If such an audit
+  happened, cite it.)
 - **Destinations, not just bytes.** `match.compare` wildcards every relocated
   word, so a byte-only check is blind by construction to the one thing these tools
   change. A transform once passed the byte check and then failed the ROM build by
@@ -194,7 +198,10 @@ PY
 - `config/**/delinks.txt` is generated. If it conflicts, regenerate -- take `main`'s
   copy, then re-run `python tools/eligible.py && python tools/enroll.py
   --complete-list build/eligible-names.txt`. Never hand-merge.
-- The pre-push hook runs `port_refcheck.py`. A rename in `src/` can strand a
+- The pre-push hook (installed via `core.hooksPath` -> `tools/hooks/`, not copied
+  into `.git/hooks/`) runs `port_refcheck.py` and the reference ratchet on every
+  push, plus link-verification and attribution when the target is `main`.
+  A rename in `src/` can strand a
   hand-written bridge in `port/`, which nothing else catches.
 
 ## 8. Definition of done
