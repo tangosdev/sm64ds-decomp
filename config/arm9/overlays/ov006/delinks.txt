@@ -3128,6 +3128,10 @@ src/func_ov006_020ec458.c:
     complete
     .text start:0x020ec458 end:0x020ec4dc
 
+src/func_ov006_020ec4dc.c:
+    complete
+    .text start:0x020ec4dc end:0x020ec6e8
+
 src/func_ov006_020ec6e8.c:
     complete
     .text start:0x020ec6e8 end:0x020ec84c
