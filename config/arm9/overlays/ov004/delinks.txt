@@ -350,6 +350,10 @@ src/func_ov004_020b14f0.c:
     complete
     .text start:0x020b14f0 end:0x020b1710
 
+src/func_ov004_020b1710.c:
+    complete
+    .text start:0x020b1710 end:0x020b19f0
+
 src/func_ov004_020b19f0.c:
     complete
     .text start:0x020b19f0 end:0x020b1a5c
