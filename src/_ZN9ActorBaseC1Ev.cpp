@@ -1,4 +1,9 @@
 //cpp
+// NONMATCHING: hand-written asm, not a C decompilation. Whole-function mnemonic
+// transcription of compiled-C-shaped code (stmdb prolog, plain ldr/str/bl body, ldmia
+// epilog - no C-inexpressible instruction), so the asm-primitive policy does not apply;
+// does NOT count as matched. Reverts to a draft until someone reproduces the bytes from
+// real C++ (ActorBase::ActorBase() - the inheritance chain and callees are already known).
 // @symbol _ZN9ActorBaseC1Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
