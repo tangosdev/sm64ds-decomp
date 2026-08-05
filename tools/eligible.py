@@ -63,6 +63,18 @@ ANYSYM = re.compile(r"^(\S+)\s+kind:")
 IGNORE_SECTIONS = (".comment", ".debug", ".line", ".note")
 
 
+def load_report(path=None):
+    """The eligibility report, as (entries, commit, dirty).
+
+    Reads both the stamped shape and the bare list the report used to be, so a
+    consumer does not care which vintage it is handed."""
+    path = path or (BUILD / "rombuild-eligibility.json")
+    d = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    if isinstance(d, list):
+        return d, None, None
+    return d["files"], d.get("commit"), d.get("dirty")
+
+
 def defined_symbols():
     """Every symbol name config/**/symbols.txt declares, in any module."""
     names = set()
@@ -186,7 +198,19 @@ def main():
                 print(f"  {done}/{len(jobs)}")
 
     BUILD.mkdir(exist_ok=True)
-    (BUILD / "rombuild-eligibility.json").write_text(json.dumps(results, indent=1))
+    # Stamp the tree this describes. A consumer that gates CI on this report must be
+    # able to tell it apart from one left over from an earlier commit; without a stamp
+    # a stale report fails open, which is the worst way for a gate to fail.
+    try:
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO,
+                              capture_output=True, text=True).stdout.strip() or None
+        dirty = bool(subprocess.run(["git", "status", "--porcelain", "--untracked-files=no",
+                                     "--", "src", "include", "config"], cwd=REPO,
+                                    capture_output=True, text=True).stdout.strip())
+    except Exception:
+        head, dirty = None, True
+    (BUILD / "rombuild-eligibility.json").write_text(json.dumps(
+        {"commit": head, "dirty": dirty, "files": results}, indent=1))
     passed = [r["name"] for r in results if r["reason"] is None]
     (BUILD / "eligible-names.txt").write_text("\n".join(sorted(passed)) + "\n")
 

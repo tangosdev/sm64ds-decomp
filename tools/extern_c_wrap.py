@@ -93,7 +93,7 @@ def mangled_targets(known):
     if not ELIGIBILITY.exists():
         sys.exit(f"missing {ELIGIBILITY} -- run tools/eligible.py first")
     out = {}
-    for r in json.loads(ELIGIBILITY.read_text()):
+    for r in E.load_report(ELIGIBILITY)[0]:
         if not (r.get("reason") or "").startswith("unresolvable"):
             continue
         # `missing`, not `reason` -- the reason string is truncated to three symbols

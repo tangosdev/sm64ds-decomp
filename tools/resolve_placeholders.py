@@ -53,6 +53,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
 import match as M          # noqa: E402
+import eligible as E       # noqa: E402
 import modules as MOD      # noqa: E402
 from enroll import candidates  # noqa: E402
 
@@ -222,6 +223,10 @@ def main():
     ap.add_argument("--apply", action="store_true")
     ap.add_argument("-j", "--jobs", type=int, default=10)
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--allow-generic", action="store_true",
+                    help="apply renames whose target is only an address-shaped name "
+                         "(func_0208xxxx / data_ov004_0208xxxx); off by default because those "
+                         "record a gap in symbols.txt rather than a fix to the source")
     args = ap.parse_args()
 
     if not ELIGIBILITY.exists():
@@ -243,8 +248,16 @@ def main():
         info[rel.replace("\\", "/")] = (name, addr, size, d)
     mods = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
 
+    strict = None
+    try:
+        import reloc_audit as RA
+        import relocs as RL
+        strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
+    except Exception as e:
+        print(f"  (reloc-destination check unavailable: {e}; verification is byte-only)")
+
     jobs = []
-    for r in json.loads(ELIGIBILITY.read_text()):
+    for r in E.load_report(ELIGIBILITY)[0]:
         if not (r.get("reason") or "").startswith("unresolvable"):
             continue
         rel = r["file"].replace("\\", "/")
@@ -259,6 +272,13 @@ def main():
           f"{sum(1 for _, _, o in jobs if not o)}")
 
     def verify(f, name, addr, size, label, flags):
+        """Bytes AND relocation destinations.
+
+        A byte compare cannot check this change: `match.py` treats every relocated
+        word as a wildcard, so the one thing a rename alters is the one thing it
+        cannot see. Byte-only agreement here means "still compiles to the same
+        shape", never "now calls the right function". `reloc_audit` is what actually
+        looks at the destination, so a rename is only verified if it passes too."""
         tgt = (M.target_bytes(addr, size) if label == "arm9"
                else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
         for v in M.SWEEP:
@@ -266,7 +286,19 @@ def main():
             if o is None:
                 continue
             code, rr = M.extract_func(o, name)
-            if code is not None and M.compare(tgt, code, rr, verbose=False)[0]:
+            if code is None or not M.compare(tgt, code, rr, verbose=False)[0]:
+                continue
+            if strict is None:
+                return True          # no config data here; byte-only, and said so
+            RA, name_index, config_relocs, sym_index = strict
+            try:
+                rows, _ = RA.check_destinations(o, name, addr, size, label,
+                                                name_index, config_relocs, sym_index)
+            except Exception:
+                rows = None
+            # A check that could not run is not a pass. Treat it like a failure so a
+            # broken lookup can never launder itself into a verified rename.
+            if rows is not None and not [r for r in rows if r["verdict"] == "WRONG-DEST"]:
                 return True
         return False
 
@@ -276,7 +308,8 @@ def main():
         name, addr, size, d = info[rel]
         label = d.relative_to(REPO / "config").as_posix()
         label = "arm9" if label == "arm9" else label.split("/")[-1]
-        original = f.read_text(encoding="utf-8", errors="ignore")
+        original_bytes = f.read_bytes()
+        original = original_bytes.decode("utf-8", "surrogateescape")
         flags = M.DEFAULT_FLAGS
         if f.suffix == ".cpp" or original.startswith("//cpp"):
             flags = flags.replace("-lang c99", "-lang c++")
@@ -312,6 +345,13 @@ def main():
                 continue
             mapping[sym] = real
 
+        # A target that is only an address-shaped name means symbols.txt never named
+        # that function. Renaming to it is not wrong -- it is the right address -- but
+        # it trades a wrong name for an anonymous one and buries the fact that the
+        # config has a gap. Surface it instead of quietly applying it.
+        generic = {o: r for o, r in mapping.items() if GENERIC.match(r)}
+        if generic and not args.allow_generic:
+            return rel, f"target unnamed in config: {sorted(generic.values())[:3]}", mapping
         left = set(ph) - set(mapping)
         if bad or left:
             return rel, f"unresolved: {bad or sorted(left)}", mapping
@@ -333,6 +373,15 @@ def main():
             if not local and old in decl_type:
                 needed.append(decl_type[old].replace("@", real))
 
+        untouched = [o for o in mapping
+                     if not re.search(r"(?<![\w])" + re.escape(o) + r"(?![\w])", original)]
+        if untouched and len(untouched) < len(mapping):
+            # Some names are textual and some are not. Rewriting only the textual ones
+            # leaves the file unresolvable, and calling that "rewritten" is the exact
+            # false success the not-textual outcome was added to stop -- it just
+            # survived in the mixed case.
+            f.write_bytes(original_bytes)
+            return rel, f"partial (not textual: {','.join(sorted(untouched)[:3])})", mapping
         if renamed == original:
             # The name never appears literally. It was produced by the compiler from
             # a member call (`anim->SetAnim(...)`) or by mangling a declaration a
@@ -358,19 +407,6 @@ def main():
                 return rel, "rewritten", mapping
         f.write_text(original, encoding="utf-8", newline="\n")
         return rel, "reverted (stopped matching)", mapping
-        tgt = (M.target_bytes(addr, size) if label == "arm9"
-               else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
-        for v in M.SWEEP:
-            o2 = M.compile_c(f, v, flags)
-            if o2 is None:
-                continue
-            code, rr = M.extract_func(o2, name)
-            if code is None:
-                continue
-            if M.compare(tgt, code, rr, verbose=False)[0]:
-                return rel, "rewritten", mapping
-        f.write_text(original, encoding="utf-8", newline="\n")
-        return rel, "reverted (stopped matching)", mapping
 
     if args.limit:
         jobs = jobs[:args.limit]
@@ -382,7 +418,7 @@ def main():
             if key in ("resolvable", "rewritten") and len(samples) < 10:
                 samples.append((rel, mapping))
             elif key == "unresolved":
-                bad[re.sub(r"0x[0-9a-f]+", "0x…", verdict)[:110]] += 1
+                bad[re.sub(r"0x[0-9a-f]+", "0x'", verdict)[:110]] += 1
             elif key.startswith("reverted"):
                 print(f"  {verdict}: {rel}")
     print()
