@@ -31,6 +31,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
 SRC = REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 
@@ -82,6 +83,16 @@ def no_match_needed(head: str) -> dict[str, str] | None:
         return None
     bucket, reason = NOMATCH_REASONS[m.group(1)]
     return {"bucket": bucket, "reason": reason}
+
+
+# An asm-bodied file is countable only under an explicit banner: HAND-ASM PRIMITIVE
+# (policy-matched -- the original really was assembly) or NONMATCHING (draft / hatch).
+# A dcd blob with neither is a transcription: it byte-matches vacuously because it IS
+# the ROM words re-spelled, so counting it as matched puts a lie in the progress bar
+# (PR #1072 landed 8 of these as +8 matches / +8,208 bytes / credit). "transcribed"
+# is demoted from matched; mnemonic asm without a banner is a policy gray zone
+# (embedded hatches inside real C, e.g. CP15 intrinsics) and is only WARNED about.
+# The detector is asm_policy.classify, shared with validate_merge and pr_linkcheck.
 
 
 def _handle_from(name: str, email: str) -> str:
@@ -339,6 +350,8 @@ def main():
     ap.add_argument("--out", default="chaos-db.json")
     ap.add_argument("--contrib-out", default=None,
                     help="path for contributions.json (default: next to --out)")
+    ap.add_argument("--fail-on-transcribed", action="store_true",
+                    help="exit 1 if any unbannered dcd transcription is in the tree")
     args = ap.parse_args()
 
     nm = {}
@@ -362,6 +375,7 @@ def main():
 
     functions = []
     total_b = matched_b = matched_n = 0
+    transcribed_files, unbannered_files = set(), set()
     # Every module, itcm included. relocs.module_universe is the one definition of
     # what "every module" means, and it fails loudly rather than skipping a new one.
     for sym, label in RL.module_universe():
@@ -372,13 +386,20 @@ def main():
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             f = SP.path_for(name)
             src_path = f.relative_to(REPO).as_posix() if f else None
-            head = f.read_text(errors="ignore")[:200] if f else ""
-            matched = bool(src_path) and "NONMATCHING" not in head
+            text = f.read_text(errors="ignore") if f else ""
+            head = text[:200]
+            cls = asm_policy.classify(text) if src_path else None
+            matched = bool(src_path) and "NONMATCHING" not in head and cls != "transcribed"
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,
                    "addr": addr, "size": size, "matched": matched}
             if src_path:
                 rec["srcPath"] = src_path
+                if cls == "transcribed":
+                    rec["transcribed"] = True
+                    transcribed_files.add(src_path)
+                elif cls == "unbannered-asm":
+                    unbannered_files.add(src_path)
                 nomatch = no_match_needed(head)
                 if nomatch:
                     rec["noMatch"] = nomatch
@@ -397,6 +418,18 @@ def main():
                 if r and r.get("divergences") is not None:
                     rec["div"] = r["divergences"]
             functions.append(rec)
+
+    if transcribed_files:
+        print(f"TRANSCRIBED: {len(transcribed_files)} unbannered dcd transcription(s) "
+              f"-- NOT counted as matched:")
+        for p in sorted(transcribed_files):
+            print(f"  {p}")
+    if unbannered_files:
+        print(f"unbannered-asm: {len(unbannered_files)} asm-bodied file(s) with no "
+              f"HAND-ASM PRIMITIVE or NONMATCHING banner -- policy review needed "
+              f"(banner or reclassify):")
+        for p in sorted(unbannered_files):
+            print(f"  {p}")
 
     project = None
     pc = REPO / "tools" / "chaosviewer.config.json"
@@ -457,6 +490,11 @@ def main():
     cpath.write_text(json.dumps(contrib, indent=1), encoding="utf-8")
     print(f"wrote {cpath}: {len(tally)} contributors "
           f"(top: {', '.join(f'{w}={n}' for w, n in tally.most_common(4))})")
+
+    if args.fail_on_transcribed and transcribed_files:
+        print(f"FAILED: {len(transcribed_files)} unbannered dcd transcription(s) in the "
+              f"tree (see the TRANSCRIBED list above)")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
