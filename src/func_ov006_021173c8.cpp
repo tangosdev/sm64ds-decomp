@@ -6,7 +6,15 @@
 //  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
 //    forces spill order pmode@0x18 before pcnt2@0x1c (div 5→0)
 // Loop2 digit-count still uses inner u64 launder for pooled ldr form.
+//
+// TODO: shared ov006 HUD/score object layout — this file and siblings
+// (func_ov006_020fd2d8, 02103ac0, 020fb7e0) re-spell the same base offsets:
+//   0x4660–0x4770  display-object pointer arrays (DispObj* at k*4 stride)
+//   0x5958–0x5998  score/coin block
+// Name the base struct once so later matches do not invent a fifth spelling.
 
+/* Both pragmas are load-bearing, not tidying: without them mwccarm 2004/b56
+ * emits 0x1170 bytes with 999 words differing (target is 0x10c0). Do not remove. */
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 
@@ -52,7 +60,7 @@ extern "C" int func_ov006_021173c8(void *this_)
     char *g = (char *)this_;
     int col;
     int xpos;
-    int r7;
+    int row;
     int limit;
     int i;
     int j;
@@ -82,14 +90,14 @@ extern "C" int func_ov006_021173c8(void *this_)
 
         /* Loop C: rows 1..4 */
         limit = col * 0x14;
-        for (r7 = 0; r7 < 4; r7++) {
-            if (I(0x5960) >= limit && *(int *)(g + r7 * 4 + 0x5968) > 0) {
-                func_ov004_020afdd0(data_ov006_02138ae0[r7 + 1], 0x30, xpos, -1, -1);
-                val = data_ov006_0212edfc[r7];
+        for (row = 0; row < 4; row++) {
+            if (I(0x5960) >= limit && *(int *)(g + row * 4 + 0x5968) > 0) {
+                func_ov004_020afdd0(data_ov006_02138ae0[row + 1], 0x30, xpos, -1, -1);
+                val = data_ov006_0212edfc[row];
                 func_ov004_020b1ea4(0x80, xpos, val, 0, 0, 1, 0);
                 i = func_ov004_020ad674();
                 func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
-                pcnt = (int *)(g + r7 * 4 + 0x5968);
+                pcnt = (int *)(g + row * 4 + 0x5968);
                 func_ov004_020b1ea4(0xa0, xpos, *pcnt, 0, 0, 0, 0);
                 func_ov004_020b1ea4(0xe0, xpos, val * *pcnt, 0, 0, 1, 0);
                 xpos += 0x18;
@@ -272,16 +280,16 @@ extern "C" int func_ov006_021173c8(void *this_)
 
     /* Loop 3: 16 slots */
     {
-        int r4;
+        int slot;
         int two = 2, neg = -1, zero = 0;
-        for (r4 = 0; r4 < 0x10; r4++) {
-            if (*(unsigned char *)(g + r4 + 0x4804) == 1) {
-                int idx = *(int *)(g + r4 * 4 + 0x4814) / 5;
+        for (slot = 0; slot < 0x10; slot++) {
+            if (*(unsigned char *)(g + slot + 0x4804) == 1) {
+                int idx = *(int *)(g + slot * 4 + 0x4814) / 5;
                 if (idx > 3)
                     idx = two;
                 func_ov004_020afdd0(data_ov006_02137a60[idx],
-                                    *(int *)(g + r4 * 8 + 0x4854) >> 12,
-                                    *(int *)(g + r4 * 8 + 0x4858) >> 12, neg, zero);
+                                    *(int *)(g + slot * 8 + 0x4854) >> 12,
+                                    *(int *)(g + slot * 8 + 0x4858) >> 12, neg, zero);
             }
         }
     }
@@ -322,41 +330,41 @@ extern "C" int func_ov006_021173c8(void *this_)
 
     /* Dispatch loops */
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x4674); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x4740))->f1();
+        int k;
+        for (k = 0; k < I(0x4674); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x4740))->f1();
     }
     if (*(void **)(g + 0x4778) != 0)
         ((DispObj *)*(void **)(g + 0x4778))->f1();
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x4668); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x4688))->f1();
+        int k;
+        for (k = 0; k < I(0x4668); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x4688))->f1();
     }
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x466c); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x4720))->f1();
+        int k;
+        for (k = 0; k < I(0x466c); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x4720))->f1();
     }
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x4670); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x46bc))->f1();
+        int k;
+        for (k = 0; k < I(0x4670); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x46bc))->f1();
     }
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x4678); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x474c))->f1();
+        int k;
+        for (k = 0; k < I(0x4678); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x474c))->f1();
     }
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x467c); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x4764))->f1();
+        int k;
+        for (k = 0; k < I(0x467c); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x4764))->f1();
     }
     {
-        int r4;
-        for (r4 = 0; r4 < I(0x4680); r4++)
-            ((DispObj *)*(void **)(g + r4 * 4 + 0x4770))->f1();
+        int k;
+        for (k = 0; k < I(0x4680); k++)
+            ((DispObj *)*(void **)(g + k * 4 + 0x4770))->f1();
     }
     ((DispObj *)*(void **)(g + 0x4684))->f1();
     if (*(void **)(g + 0x477c) != 0)
@@ -364,9 +372,9 @@ extern "C" int func_ov006_021173c8(void *this_)
     if (*(void **)(g + 0x4780) != 0)
         ((DispObj *)*(void **)(g + 0x4780))->f1();
     {
-        int r5;
-        for (r5 = 0; r5 < I(0x4668); r5++)
-            func_ov006_02113c14(*(void **)(g + r5 * 4 + 0x4688));
+        int k;
+        for (k = 0; k < I(0x4668); k++)
+            func_ov006_02113c14(*(void **)(g + k * 4 + 0x4688));
     }
 
     if ((I(8) & 0xff) == 0 && UC(0x595c) != 0)

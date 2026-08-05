@@ -5120,6 +5120,10 @@ src/func_ov006_02108cc0.c:
     complete
     .text start:0x02108cc0 end:0x02108d28
 
+src/func_ov006_02108d28.c:
+    complete
+    .text start:0x02108d28 end:0x02108e24
+
 src/func_ov006_02108e24.c:
     complete
     .text start:0x02108e24 end:0x02108f2c

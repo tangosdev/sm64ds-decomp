@@ -24,11 +24,11 @@ int func_ov006_020fefc0(void *arg0)
     char *c = (char *)arg0;
     char *b;
     char *dst;
-    volatile u16 spC;
-    volatile u16 spE;
-    volatile u16 sp10;
-    int sp4;
-    int sp8;
+    volatile u16 fillScr;
+    volatile u16 fillZero;
+    volatile u16 fillIdx;
+    int objChar;
+    int objPltt;
     int f;
     int n;
     int y;
@@ -61,17 +61,17 @@ int func_ov006_020fefc0(void *arg0)
     Deallocate((void *)f);
 
     b = _ZN2G212GetBG2ScrPtrEv();
-    spC = 0x3073;
-    MultiStore16(spC, b, 0x1000);
+    fillScr = 0x3073;
+    MultiStore16(fillScr, b, 0x1000);
 
     f = LoadFile(6);
     func_020563d4((const void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    sp4 = LoadFile(0xe0);
-    sp8 = LoadFile(0xe1);
-    DecompressLZ16(sp4, (void *)0x6400000);
-    _ZN2GX11LoadOBJPlttEPKvjj((const void *)sp8, 0, 0x100);
+    objChar = LoadFile(0xe0);
+    objPltt = LoadFile(0xe1);
+    DecompressLZ16(objChar, (void *)0x6400000);
+    _ZN2GX11LoadOBJPlttEPKvjj((const void *)objPltt, 0, 0x100);
 
     data_0209d454 |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
@@ -82,15 +82,15 @@ int func_ov006_020fefc0(void *arg0)
     func_ov004_020af2f8(c, 0, 2, 0);
 
     b = (char *)func_02054de8();
-    spE = 0;
-    MultiStore16(spE, b, 0x6000);
+    fillZero = 0;
+    MultiStore16(fillZero, b, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)_ZN3G2S12GetBG2ScrPtrEv() + x + y * 0x20);
-            sp10 = n;
-            MultiStore16(sp10, dst, 2);
+            fillIdx = n;
+            MultiStore16(fillIdx, dst, 2);
             n++;
         }
     }
@@ -121,10 +121,10 @@ int func_ov006_020fefc0(void *arg0)
     func_020564f4((const void *)f, 0, 0x800);
     Deallocate((void *)f);
 
-    DecompressLZ16(sp4, (void *)0x6600000);
-    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)sp8, 0, 0x100);
-    Deallocate((void *)sp4);
-    Deallocate((void *)sp8);
+    DecompressLZ16(objChar, (void *)0x6600000);
+    _ZN3GXS11LoadOBJPlttEPKvjj((const void *)objPltt, 0, 0x100);
+    Deallocate((void *)objChar);
+    Deallocate((void *)objPltt);
 
     func_ov006_020feba8(c);
     func_ov006_020fc844(c);
