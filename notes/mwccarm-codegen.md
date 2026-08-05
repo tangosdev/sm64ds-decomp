@@ -3007,5 +3007,49 @@ Verdict unchanged (still parked at 5, `// NONMATCHING`): the b/t26 rank rides th
 canonical A-tree, and the only rerank construct drags the a-family with it. The open
 angle narrows to: a substitution barrier that does NOT perturb sibling-web coloring,
 or any construct that makes the orr folder commute.
-=======
->>>>>>> Stashed changes
+
+## 6bb. 4a8-pack rank-pin, second full-angle sweep: the phase-order boundaries (2026-08-05, Fable on func_ov080_02125460, +55 compiles, still div 5)
+
+A fresh session re-attacked 6ba's wall with the post-6ba lever families (6y boosters,
+6aq caller-saved inversion, dead-use priority, fold-commute probes). Nothing beat 5;
+what the sweep bought is a precise map of WHICH PHASE eats each construct:
+
+- **Dead-expression elimination runs BEFORE web construction.** Every `(void)`-use
+  spelling of the extract or of `b >> 3`, at every placement, with and without
+  `#pragma opt_dead_code off`, compiles to the exact baseline bytes. A booster
+  statement (`x = x ? x : x;`) whose variable has NO later real read is likewise
+  dead-eliminated whole (tried on the head's dying `r3` web to shape the free list,
+  and on `a` after the pack store). 6y-1 boosters exist only for values with a
+  downstream real use - dead-use priority boosting is impossible in b56.
+- **The div-14 rotation rides the named web's EXISTENCE, not multi-def promotion.**
+  `#pragma opt_propagation off` + a SINGLE-def named `t` rotates identically to the
+  self-select and index-ternary forms; so does every booster placement/cond
+  permutation (cond self/c/q, doubled, before/after b's decl, anonymous-b variant,
+  and an a+t double-boost attempting r4-class occupancy). The 6aq recipe does not
+  transplant: here the boosted scratch web always promotes INTO the r4 class and
+  drags the a-family, regardless of arrangement.
+- **The orr folder DOES commute - but only under multi-use, which always
+  materializes the rejected shift.** A-order + duplicated t26-term: coloring flips
+  to ROM's (b=r2 coalescing dying q, t26=r3) and the folder folds b's lsr instead -
+  but the t26 lsl materializes (7). B-order + `b >>= 3` statement: same commute
+  geometry from the other side, propagation folds the shift back (7). Fold slot and
+  use count are coupled at selection time; there is no free commute.
+- **Adjacent `x|x` parse-folds and RE-CANONICALIZES the whole or-chain.** B-order
+  with the b-term duplicated adjacently compiles to the A-CANONICAL baseline bytes -
+  the idempotence fold normalizes term order before selection. Separated duplicates
+  survive as a real extra orr (+4). Expression-arm equal ternaries (`V ? X : X`)
+  materialize a diamond (+8) in both value and index positions; only const-arm forms
+  on an already-named var fold free (the 6ba finding).
+- **Renormalizing-neutral on this pair** (exact baseline bytes): `register`,
+  int-retype of b + `(u32)` cast at use, volatile b-load, volatile q (extends 6y-4:
+  b IS memory-sourced and still does not flip), `qb = *(u32*)qb` identity reuse (the
+  web splits at the reassignment - 6q does not apply to straight-line reassignment),
+  and all recognized opt pragmas incl. `optimization_level 2/3`. Size-breaking:
+  `optimization_level 1`, bitfield-struct reads of q[4] (extract shape changes),
+  static-helper-call inlining, u64 value-launder of the extract.
+
+Verdict: parked at 5, unchanged. The open angle is now a construct that gives t26's
+web a use which (a) exists at allocation, (b) vanishes before selection, and (c) is
+not a named web - no known b56 construct occupies that phase window. Treat the
+b/t26 pair as a true allocator rank pin absent a genuinely new construct class.
+Full per-family nodes: config/match_attempts.jsonl, parents under 6339f0f5....
