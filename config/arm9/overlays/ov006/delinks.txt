@@ -4419,6 +4419,10 @@ src/func_ov006_020fea54.c:
     complete
     .text start:0x020fea54 end:0x020fea70
 
+src/func_ov006_020fea70.c:
+    complete
+    .text start:0x020fea70 end:0x020feba8
+
 src/func_ov006_020feba8.c:
     complete
     .text start:0x020feba8 end:0x020fed58
@@ -4433,6 +4437,10 @@ src/func_ov006_020fedc4.c:
 src/func_ov006_020fee24.c:
     complete
     .text start:0x020fee24 end:0x020fefc0
+
+src/func_ov006_020fefc0.c:
+    complete
+    .text start:0x020fefc0 end:0x020ff3ec
 
 src/MgBobOmbSquad_Spawn.c:
     complete
