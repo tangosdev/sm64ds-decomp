@@ -4,6 +4,7 @@
     .data       start:0x020b1360 end:0x020b18a0 kind:data align:32
     .bss        start:0x020b18a0 end:0x020b18a0 kind:bss align:32
 src/func_ov003_020ad660.c:
+    complete
     .text start:0x020ad660 end:0x020ad69c
 
 src/func_ov003_020ad69c.c:
@@ -88,9 +89,11 @@ src/StarSelect_Spawn.cpp:
     .text start:0x020b04f0 end:0x020b0580
 
 src/func_ov003_020b0580.c:
+    complete
     .text start:0x020b0580 end:0x020b05bc
 
 src/func_ov003_020b05bc.c:
+    complete
     .text start:0x020b05bc end:0x020b060c
 
 src/func_ov003_020b060c.c:

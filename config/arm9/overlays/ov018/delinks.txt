@@ -176,6 +176,7 @@ src/func_ov018_021128e0.cpp:
     .text start:0x021128e0 end:0x02112924
 
 src/_ZN8IceSheet16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112924 end:0x02112968
 
 src/_ZN8IceSheet6RenderEv.cpp:

@@ -6,14 +6,15 @@
 #include "TtcRotatingGear.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int TtcRotatingGear_ClsnFile[];
+extern int TtcRotatingGear_ModelFile[];
 
 int TtcRotatingGear::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(TtcRotatingGear_ModelFile))->Release();
+    ((SharedFilePtr *)(TtcRotatingGear_ClsnFile))->Release();
     return 1;
 }

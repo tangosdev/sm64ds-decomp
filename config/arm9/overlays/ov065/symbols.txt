@@ -335,7 +335,9 @@ data_ov065_0211d8e0 kind:bss addr:0x0211d8e0
 data_ov065_0211d8ec kind:bss addr:0x0211d8ec
 data_ov065_0211d8f8 kind:bss addr:0x0211d8f8
 data_ov065_0211d904 kind:bss addr:0x0211d904
+TTC_MovingBar_ModelFile kind:bss addr:0x0211d904
 data_ov065_0211d90c kind:bss addr:0x0211d90c
+TTC_MovingBar_ClsnFile kind:bss addr:0x0211d90c
 data_ov065_0211d914 kind:bss addr:0x0211d914
 data_ov065_0211d920 kind:bss addr:0x0211d920
 data_ov065_0211d92c kind:bss addr:0x0211d92c
@@ -347,8 +349,10 @@ data_ov065_0211d958 kind:bss addr:0x0211d958
 data_ov065_0211d964 kind:bss addr:0x0211d964
 data_ov065_0211d970 kind:bss addr:0x0211d970
 data_ov065_0211d97c kind:bss addr:0x0211d97c
+TtcRotatingGear_ClsnFile kind:bss addr:0x0211d97c
 data_ov065_0211d984 kind:bss addr:0x0211d984
 data_ov065_0211d98c kind:bss addr:0x0211d98c
+TtcRotatingGear_ModelFile kind:bss addr:0x0211d98c
 data_ov065_0211d994 kind:bss addr:0x0211d994
 data_ov065_0211d99c kind:bss addr:0x0211d99c
 data_ov065_0211d9a8 kind:bss addr:0x0211d9a8

@@ -6,14 +6,15 @@
 #include "BowserFireSeaArena.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int BowserFireSeaArena_ClsnFile[];
+extern int BowserFireSeaArena_ModelFile[];
 
 int BowserFireSeaArena::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider2))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider2))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(BowserFireSeaArena_ModelFile))->Release();
+    ((SharedFilePtr *)(BowserFireSeaArena_ClsnFile))->Release();
     return 1;
 }

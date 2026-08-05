@@ -6,14 +6,15 @@
 #include "FloatingFloorLllBig.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int FloatingFloorLllBig_ClsnFile[];
+extern int FloatingFloorLllBig_ModelFile[];
 
 int FloatingFloorLllBig::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(FloatingFloorLllBig_ModelFile))->Release();
+    ((SharedFilePtr *)(FloatingFloorLllBig_ClsnFile))->Release();
     return 1;
 }

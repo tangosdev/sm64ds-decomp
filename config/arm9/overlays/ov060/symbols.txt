@@ -341,7 +341,9 @@ data_ov060_0211aed4 kind:bss addr:0x0211aed4
 data_ov060_0211af74 kind:bss addr:0x0211af74
 data_ov060_0211afb4 kind:bss addr:0x0211afb4
 data_ov060_0211aff4 kind:bss addr:0x0211aff4
+BowserFireSeaArena_ClsnFile kind:bss addr:0x0211aff4
 data_ov060_0211affc kind:bss addr:0x0211affc
+BowserFireSeaArena_ModelFile kind:bss addr:0x0211affc
 data_ov060_0211b004 kind:bss addr:0x0211b004
 data_ov060_0211b010 kind:bss addr:0x0211b010
 data_ov060_0211b01c kind:bss addr:0x0211b01c

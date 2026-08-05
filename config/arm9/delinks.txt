@@ -4356,6 +4356,7 @@ src/func_0202ee94.c:
     .text start:0x0202ee94 end:0x0202efa0
 
 src/func_0202efa0.c:
+    complete
     .text start:0x0202efa0 end:0x0202f290
 
 src/func_0202f290.c:
@@ -5076,6 +5077,7 @@ src/func_02037710.c:
     .text start:0x02037710 end:0x02037764
 
 src/_ZN11RaycastLineD1Ev.c:
+    complete
     .text start:0x02037764 end:0x020377b0
 
 src/_ZN11RaycastLineC1Ev.cpp:
@@ -5173,6 +5175,7 @@ src/func_02037c40.c:
     .text start:0x02037c40 end:0x02037cb0
 
 src/_ZN10SphereClsnD1Ev.c:
+    complete
     .text start:0x02037cb0 end:0x02037d18
 
 src/_ZN10SphereClsnC1Ev.c:
@@ -6074,6 +6077,7 @@ src/_ZN6Memory8AllocateEji.cpp:
     .text start:0x0203c1d8 end:0x0203c1e8
 
 src/_ZN6Memory10DeallocateEPvP4Heap.cpp:
+    complete
     .text start:0x0203c1e8 end:0x0203c210
 
 src/_ZN6Memory8AllocateEjiP4Heap.c:
@@ -6328,6 +6332,7 @@ src/_ZN4HeapC1EPvjP4Heap.c:
     .text start:0x0203caac end:0x0203cae8
 
 src/_ZN4Heap18InitializeRootHeapEv.cpp:
+    complete
     .text start:0x0203cae8 end:0x0203cb04
 
 src/_ZN4Heap13SetupRootHeapEv.c:
@@ -6351,6 +6356,7 @@ src/_Znwj.cpp:
     .text start:0x0203cbe4 end:0x0203cbf0
 
 src/_ZdlPv.cpp:
+    complete
     .text start:0x0203cbf0 end:0x0203cc0c
 
 src/func_0203cc0c.c:
@@ -7775,6 +7781,7 @@ src/func_0204d9f0.c:
     .text start:0x0204d9f0 end:0x0204da4c
 
 src/func_0204da4c.c:
+    complete
     .text start:0x0204da4c end:0x0204dab4
 
 src/func_0204dab4.c:
@@ -9008,6 +9015,7 @@ src/_ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3.cpp:
     .text start:0x02055a64 end:0x02055bfc
 
 src/_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3.c:
+    complete
     .text start:0x02055bfc end:0x02055dec
 
 src/_ZN3GXS17EndLoadOBJExtPlttEv.c:

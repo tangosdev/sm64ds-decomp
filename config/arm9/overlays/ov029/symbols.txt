@@ -251,7 +251,9 @@ data_ov029_021142dc kind:bss addr:0x021142dc
 data_ov029_021142e4 kind:bss addr:0x021142e4
 data_ov029_021142f0 kind:bss addr:0x021142f0
 data_ov029_021142fc kind:bss addr:0x021142fc
+RotatingPlatformWdw_ModelFile kind:bss addr:0x021142fc
 data_ov029_02114304 kind:bss addr:0x02114304
+RotatingPlatformWdw_ClsnFile kind:bss addr:0x02114304
 data_ov029_0211430c kind:bss addr:0x0211430c
 data_ov029_02114318 kind:bss addr:0x02114318
 data_ov029_02114324 kind:bss addr:0x02114324

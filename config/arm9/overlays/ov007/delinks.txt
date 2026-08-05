@@ -2025,9 +2025,11 @@ src/func_ov007_020cbf8c.c:
     .text start:0x020cbf8c end:0x020cc028
 
 src/func_ov007_020cc028.c:
+    complete
     .text start:0x020cc028 end:0x020cc070
 
 src/func_ov007_020cc070.c:
+    complete
     .text start:0x020cc070 end:0x020cc0cc
 
 src/func_ov007_020cc0cc.c:

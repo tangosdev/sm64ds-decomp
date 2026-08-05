@@ -1,5 +1,5 @@
 {
- "eligible": 10532,
+ "eligible": 10566,
  "unresolved": {
   "ChainChomp_Spawn": [
    "func_020aed98"
@@ -78,11 +78,6 @@
    "_ZN12WithMeshClsn4InitEP5ActoriiPvi",
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
   ],
-  "_ZN10SphereClsnD1Ev": [
-   "VT0",
-   "VT1",
-   "VT2"
-  ],
   "_ZN11FallBlockWf13InitResourcesEv": [
    "func_0213a794"
   ],
@@ -108,10 +103,6 @@
    "ShadowModel_InitCylinder",
    "TextureSequence_Prepare",
    "TextureSequence_SetFile"
-  ],
-  "_ZN11RaycastLineD1Ev": [
-   "VT0",
-   "VT1"
   ],
   "_ZN12FallBlockBbhD0Ev": [
    "_ZTV10dBgActor_c",
@@ -171,10 +162,6 @@
   "_ZN13PeachPainting8BehaviorEv": [
    "_ZN9ModelBase12ApplyOpacityEji"
   ],
-  "_ZN13PoleBillboard16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
   "_ZN13PrincessPeach13InitResourcesEv": [
    "AnimLoadFile",
    "ModelLoadFile",
@@ -210,17 +197,9 @@
   "_ZN13TTC_MovingBar13InitResourcesEv": [
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
   ],
-  "_ZN14BlueCoinSwitch16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
   "_ZN14CutsceneObject13InitResourcesEv": [
    "_Z5_Znwji",
    "func_02113c20"
-  ],
-  "_ZN14MovingBarSmall16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN14TtcMovingCubeA13InitResourcesEv": [
    "func_02112118"
@@ -237,10 +216,6 @@
    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
    "func_021121b8"
-  ],
-  "_ZN15TtcRotatingGear16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN16BowserShockwaves13InitResourcesEv": [
    "func_021115e4",
@@ -267,10 +242,6 @@
    "UpdatePosWithTransformSym",
    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
   ],
-  "_ZN17RotatingClockHand16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
   "_ZN18BowserFireSeaArena13InitResourcesEv": [
    "_Z13func_020393d4PvS_",
    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
@@ -280,14 +251,6 @@
    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
    "func_021115bc"
   ],
-  "_ZN18BowserFireSeaArena16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
-  "_ZN19FloatingFloorLllBig16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
   "_ZN19RotatingPlatformLll8BehaviorEv": [
    "Platform_IsClsnInRange",
    "Platform_UpdateClsnPosAndRot",
@@ -296,10 +259,6 @@
   ],
   "_ZN19RotatingPlatformWdw13InitResourcesEv": [
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
-  ],
-  "_ZN19RotatingPlatformWdw16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN20TtcConveyorBeltLarge13InitResourcesEv": [
    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
@@ -322,9 +281,6 @@
    "UpdatePosWithVelocitySym",
    "_ZN8Platform13IsClsnInRangeEii"
   ],
-  "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3": [
-   "_ll_sdiv"
-  ],
   "_ZN3HUD15RenderCoinCountEv": [
    "func_020ab9c8",
    "func_020aba70",
@@ -343,9 +299,6 @@
   "_ZN3HUD15RenderTimeTimerEv": [
    "_ll_udiv",
    "_ull_mod"
-  ],
-  "_ZN4Heap18InitializeRootHeapEv": [
-   "_ZN6Memory15rootParamOffsetE"
   ],
   "_ZN4Tree13InitResourcesEv": [
    "_ZN19CylinderClsnWithPos4InitERK7Vector3iijj"
@@ -431,9 +384,6 @@
    "func_02112ca8",
    "func_02112d48"
   ],
-  "_ZN6Memory10DeallocateEPvP4Heap": [
-   "_ZN6Memory14defaultHeapPtrE"
-  ],
   "_ZN6Player11St_Fly_MainEv": [
    "_ZN6Player11ChangeStateER5State",
    "_ZN6Player7SetAnimEjiij"
@@ -467,21 +417,8 @@
    "func_021123f4",
    "func_021124ac"
   ],
-  "_ZN8IceSheet16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
-  "_ZN8MadPiano16CleanupResourcesEv": [
-   "G0",
-   "G1",
-   "G2"
-  ],
   "_ZN8MadPiano8BehaviorEv": [
    "_ZN8Platform13IsClsnInRangeEii"
-  ],
-  "_ZN8PoleLift16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN8SignPost13InitResourcesEv": [
    "MeshColliderLoadFile",
@@ -489,14 +426,6 @@
    "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
-  ],
-  "_ZN8SignPost16CleanupResourcesEv": [
-   "G0",
-   "G1"
-  ],
-  "_ZN8Squasher16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN9KoopaFlag13InitResourcesEv": [
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
@@ -508,10 +437,6 @@
    "_ZN12WithMeshClsn4InitEP5ActoriiPvi",
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
    "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "_ZN9TowerStep16CleanupResourcesEv": [
-   "G0",
-   "G1"
   ],
   "_ZN9UkikiCageD0Ev": [
    "_ZTV10dBgActor_c",
@@ -525,9 +450,6 @@
    "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
   ],
-  "_ZdlPv": [
-   "_ZN6Memory14defaultHeapPtrE"
-  ],
   "__sinit_ov071_02122a64": [
    "data_ov071_02122ecc_d"
   ],
@@ -535,7 +457,6 @@
    "func_020effb8"
   ],
   "func_02009374": [
-   "STAR_MARKERS",
    "Vec3_DistSq"
   ],
   "func_02014f5c": [
@@ -573,9 +494,6 @@
   "func_02029408": [
    "func_020bd828"
   ],
-  "func_0202efa0": [
-   "_ll_sdiv"
-  ],
   "func_02034fbc": [
    "overlay_64",
    "overlay_66"
@@ -588,9 +506,6 @@
   ],
   "func_020427c4": [
    "_ll_udiv"
-  ],
-  "func_0204da4c": [
-   "LCG_STATE_0204da4c"
   ],
   "func_02053130": [
    "SQRTCNT",
@@ -612,8 +527,7 @@
    "G"
   ],
   "func_02057410": [
-   "_ll_mod",
-   "_ll_sdiv"
+   "_ll_mod"
   ],
   "func_02058308": [
    "func_00000000",
@@ -646,9 +560,7 @@
    "_ull_mod"
   ],
   "func_020708b4": [
-   "_dadd",
-   "_deq",
-   "_dmul"
+   "_deq"
   ],
   "func_02070c68": [
    "func_01ff9d40"
@@ -714,11 +626,6 @@
   "func_ov002_020ec670": [
    "func_02123804"
   ],
-  "func_ov003_020ad660": [
-   "_ZTV10dScTitle_c",
-   "_ZTV7dBase_c",
-   "_ZTV8dScene_c"
-  ],
   "func_ov003_020ad7a4": [
    "_ZN3OAM12EnableSubOAMEP6OamTmp"
   ],
@@ -736,22 +643,6 @@
    "func_020ab948",
    "func_020ab9c8",
    "func_020aba70"
-  ],
-  "func_ov003_020b0580": [
-   "_ZTV13dScGameOver_c",
-   "_ZTV7dBase_c",
-   "_ZTV8dScene_c"
-  ],
-  "func_ov003_020b05bc": [
-   "G0",
-   "VT0",
-   "VT1",
-   "VT2"
-  ],
-  "func_ov005_020bfec0": [
-   "_ZTV11dScMiniGm_c",
-   "_ZTV7dBase_c",
-   "_ZTV8dScene_c"
   ],
   "func_ov006_020c0264": [
    "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
@@ -1040,17 +931,6 @@
   "func_ov007_020c8970": [
    "func_020c897c"
   ],
-  "func_ov007_020cc028": [
-   "_ZTV7dBase_c",
-   "_ZTV8dScene_c",
-   "_ZTV9dScDSMT_c"
-  ],
-  "func_ov007_020cc070": [
-   "G0",
-   "VT0",
-   "VT1",
-   "VT2"
-  ],
   "func_ov007_020cc2cc": [
    "overlay_64",
    "overlay_66"
@@ -1074,10 +954,6 @@
   ],
   "func_ov015_02112c84": [
    "func_020b66a8"
-  ],
-  "func_ov016_02112ae4": [
-   "G0",
-   "G1"
   ],
   "func_ov016_02112fa8": [
    "func_020b5e58"
@@ -1127,14 +1003,6 @@
   ],
   "func_ov026_02111598": [
    "func_ov053_021112a4"
-  ],
-  "func_ov026_02111764": [
-   "G0",
-   "G1"
-  ],
-  "func_ov026_02111954": [
-   "G0",
-   "G1"
   ],
   "func_ov030_02113a80": [
    "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
@@ -1218,10 +1086,6 @@
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
    "_Z94_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
    "func_02112198"
-  ],
-  "func_ov065_0211ad04": [
-   "G0",
-   "G1"
   ],
   "func_ov065_0211b1d4": [
    "MeshColliderLoadFile",

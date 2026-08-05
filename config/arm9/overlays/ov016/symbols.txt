@@ -213,7 +213,9 @@ data_ov016_02114df8 kind:bss addr:0x02114df8
 data_ov016_02114e04 kind:bss addr:0x02114e04
 data_ov016_02114e10 kind:bss addr:0x02114e10
 data_ov016_02114e1c kind:bss addr:0x02114e1c
+RockPillar_ClsnFile kind:bss addr:0x02114e1c
 data_ov016_02114e24 kind:bss addr:0x02114e24
+RockPillar_ModelFile kind:bss addr:0x02114e24
 data_ov016_02114e2c kind:bss addr:0x02114e2c
 data_ov016_02114e38 kind:bss addr:0x02114e38
 data_ov016_02114e44 kind:bss addr:0x02114e44

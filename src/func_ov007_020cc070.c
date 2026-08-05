@@ -5,14 +5,14 @@
 /* recovered: vtable identified, renamed to Class_Method */
 /* dScDSMT_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN9ActorBaseD2Ev(void *);
-extern void *G0;
+extern void *GAME_HEAP_PTR;
 int *func_ov007_020cc070(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)_ZTV9dScDSMT_c;
     func_02017254((char *)t + 0x54);
-    t[0] = (int)VT1;
-    t[0] = (int)VT2;
+    t[0] = (int)_ZTV5Scene;
+    t[0] = (int)_ZTV12ActorDerived;
     _ZN9ActorBaseD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, GAME_HEAP_PTR);
     return t;
 }

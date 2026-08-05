@@ -6,14 +6,15 @@
 #include "PoleBillboard.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int PoleBillboard_ClsnFile[];
+extern int PoleBillboard_ModelFile[];
 
 int PoleBillboard::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(PoleBillboard_ModelFile))->Release();
+    ((SharedFilePtr *)(PoleBillboard_ClsnFile))->Release();
     return 1;
 }

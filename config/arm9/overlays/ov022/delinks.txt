@@ -189,6 +189,7 @@ src/_ZN19FloatingFloorLllBigD0Ev.c:
     .text start:0x02112174 end:0x021121cc
 
 src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021121cc end:0x02112210
 
 src/_ZN19FloatingFloorLllBig6RenderEv.cpp:

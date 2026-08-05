@@ -1537,6 +1537,7 @@ src/func_ov002_020bbda4.cpp:
     .text start:0x020bbda4 end:0x020bbdec
 
 src/_ZN8SignPost16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020bbdec end:0x020bbe30
 
 src/_ZN8SignPost6RenderEv.cpp:
@@ -4908,6 +4909,7 @@ src/_ZN14BlueCoinSwitchD0Ev.c:
     .text start:0x020f11f4 end:0x020f124c
 
 src/_ZN14BlueCoinSwitch16CleanupResourcesEv.c:
+    complete
     .text start:0x020f124c end:0x020f1290
 
 src/_ZN14BlueCoinSwitch6RenderEv.cpp:

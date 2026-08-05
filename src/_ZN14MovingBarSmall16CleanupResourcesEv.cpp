@@ -6,14 +6,15 @@
 #include "MovingBarSmall.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int MovingBarSmall_ClsnFile[];
+extern int MovingBarSmall_ModelFile[];
 
 int MovingBarSmall::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(MovingBarSmall_ModelFile))->Release();
+    ((SharedFilePtr *)(MovingBarSmall_ClsnFile))->Release();
     return 1;
 }

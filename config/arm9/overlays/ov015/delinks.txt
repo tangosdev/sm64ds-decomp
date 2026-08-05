@@ -61,6 +61,7 @@ src/func_ov015_0211166c.c:
     .text start:0x0211166c end:0x021116b4
 
 src/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021116b4 end:0x021116f8
 
 src/_ZN13PoleBillboard6RenderEv.cpp:
@@ -192,6 +193,7 @@ src/func_ov015_021123c8.cpp:
     .text start:0x021123c8 end:0x02112464
 
 src/_ZN14MovingBarSmall16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112464 end:0x021124a8
 
 src/_ZN14MovingBarSmall6RenderEv.cpp:
@@ -223,6 +225,7 @@ src/_ZN9TowerStepD0Ev.c:
     .text start:0x02112988 end:0x021129e0
 
 src/_ZN9TowerStep16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021129e0 end:0x02112a24
 
 src/_ZN9TowerStep6RenderEv.cpp:

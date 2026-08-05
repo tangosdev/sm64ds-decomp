@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1092" width="100%" font-family="Segoe UI, system-ui, sans-serif" shape-rendering="crispEdges">
   <rect x="0" y="0" width="1600" height="1092" fill="#141517" />
   <text x="6" y="30" font-size="24" font-weight="600" fill="#e6e7e9">SM64DS decompilation progress</text>
-  <text x="6" y="58" font-size="15" fill="#e6e7e9">Functions matched: 11,165 / 11,390 (98.02%)   |   Code bytes matched: 2,056,100 / 2,235,468 (91.98%)   |   Modules: 74</text>
+  <text x="6" y="58" font-size="15" fill="#e6e7e9">Functions matched: 11,165 / 11,393 (98.00%)   |   Code bytes matched: 2,056,100 / 2,235,468 (91.98%)   |   Modules: 74</text>
   <text x="6" y="80" font-size="13" fill="#a8abb0">Each rectangle is one function, sized by byte count. Green = matched, gray = unmatched.</text>
   <g transform="translate(0,92)">
     <rect x="2.00" y="2.00" width="322.81" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="7.00" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">arm9  96.3%</text><rect x="328.81" y="2.00" width="16.81" height="833.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.81" y="839.14" width="16.81" height="1.78" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.81" y="844.92" width="16.81" height="153.08" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="349.62" y="2.00" width="257.86" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="354.62" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov002  97.2%</text><rect x="611.48" y="2.00" width="195.19" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="616.48" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov003  43.5%</text><rect x="810.67" y="2.00" width="667.49" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="815.67" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov004  90.7%</text><rect x="1482.16" y="2.00" width="115.84" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1487.16" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov005  69.7%</text><rect x="611.48" y="56.37" width="439.22" height="734.53" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="616.48" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov006  85.6%</text><rect x="611.48" y="794.90" width="439.22" height="203.10" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="616.48" y="809.90" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov007  90.4%</text><rect x="1054.70" y="56.37" width="77.10" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov009  93.7%</text><rect x="1135.80" y="56.37" width="51.42" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1140.80" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov010  100.0%</text><rect x="1191.23" y="56.37" width="18.97" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1214.20" y="56.37" width="15.77" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1233.97" y="56.37" width="113.13" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1238.97" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov014  100.0%</text><rect x="1351.10" y="56.37" width="109.99" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1356.10" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov015  77.0%</text><rect x="1465.09" y="56.37" width="132.91" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1470.09" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov016  92.5%</text><rect x="1054.70" y="109.22" width="11.50" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1070.20" y="109.22" width="115.78" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1075.20" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov018  100.0%</text><rect x="1189.98" y="109.22" width="108.89" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1194.98" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov019  100.0%</text><rect x="1302.87" y="109.22" width="155.66" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1307.87" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov020  100.0%</text><rect x="1462.52" y="109.22" width="135.48" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1467.52" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov021  74.8%</text><rect x="1054.70" y="150.78" width="104.84" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov022  100.0%</text><rect x="1163.54" y="150.78" width="19.99" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1187.53" y="150.78" width="25.03" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1216.56" y="150.78" width="82.91" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1221.56" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov025  100.0%</text><rect x="1303.48" y="150.78" width="77.99" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1308.48" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov026  100.0%</text><rect x="1385.47" y="150.78" width="106.91" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1390.47" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov027  100.0%</text><rect x="1496.38" y="150.78" width="101.62" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1501.38" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov029  100.0%</text><rect x="1054.70" y="197.92" width="208.02" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov030  88.5%</text><rect x="1266.72" y="197.92" width="7.73" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1278.45" y="197.92" width="89.68" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1283.45" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov032  100.0%</text><rect x="1372.13" y="197.92" width="17.76" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1393.89" y="197.92" width="163.02" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1398.89" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov034  85.1%</text><rect x="1560.91" y="197.92" width="37.09" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1565.91" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov035  100.0%</text><rect x="1054.70" y="248.44" width="150.45" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1209.15" y="248.44" width="10.84" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1223.99" y="248.44" width="55.15" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1283.14" y="248.44" width="6.85" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1293.99" y="248.44" width="93.29" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1391.29" y="248.44" width="47.88" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1443.17" y="248.44" width="44.60" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1491.76" y="248.44" width="43.40" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1539.16" y="248.44" width="25.28" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1568.44" y="248.44" width="29.56" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1054.70" y="277.18" width="185.72" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov060  97.1%</text><rect x="1244.42" y="277.18" width="165.27" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1249.42" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov062  93.9%</text><rect x="1413.69" y="277.18" width="184.31" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1418.69" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov063  83.8%</text><rect x="1054.70" y="408.79" width="142.73" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov064  100.0%</text><rect x="1201.43" y="408.79" width="175.12" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1206.43" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov065  94.8%</text><rect x="1380.54" y="408.79" width="124.20" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1385.54" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov066  100.0%</text><rect x="1508.74" y="408.79" width="89.26" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1513.74" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov070  100.0%</text><rect x="1054.70" y="518.66" width="86.33" height="115.96" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov071  83.9%</text><rect x="1054.70" y="638.62" width="86.33" height="107.41" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="653.62" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov072  100.0%</text><rect x="1054.70" y="750.03" width="86.33" height="124.20" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="765.03" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov073  100.0%</text><rect x="1054.70" y="878.23" width="86.33" height="119.77" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1059.70" y="893.23" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov074  85.6%</text><rect x="1145.03" y="518.66" width="187.32" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.03" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov075  80.9%</text><rect x="1336.35" y="518.66" width="88.05" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1341.35" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov077  100.0%</text><rect x="1428.39" y="518.66" width="72.48" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1433.39" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov078  100.0%</text><rect x="1504.87" y="518.66" width="93.13" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1509.87" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov079  100.0%</text><rect x="1145.03" y="647.02" width="134.83" height="88.12" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.03" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov080  94.3%</text><rect x="1145.03" y="739.14" width="134.83" height="102.67" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.03" y="754.14" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov081  100.0%</text><rect x="1145.03" y="845.81" width="134.83" height="152.19" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.03" y="860.81" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov084  100.0%</text><rect x="1283.86" y="647.02" width="182.50" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1288.86" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov085  94.3%</text><rect x="1470.36" y="647.02" width="42.99" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1475.36" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov089  100.0%</text><rect x="1517.35" y="647.02" width="80.65" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1522.35" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov090  100.0%</text><rect x="1283.86" y="754.74" width="68.33" height="148.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1288.86" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov091  100.0%</text><rect x="1283.86" y="907.17" width="68.33" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1288.86" y="922.17" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov092  100.0%</text><rect x="1283.86" y="954.58" width="68.33" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1288.86" y="969.58" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov094  100.0%</text><rect x="1356.19" y="754.74" width="47.95" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.19" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov095  84.2%</text><rect x="1408.15" y="754.74" width="58.70" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1413.15" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov096  100.0%</text><rect x="1470.84" y="754.74" width="127.16" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1475.84" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov098  96.2%</text><rect x="1356.19" y="854.10" width="135.14" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.19" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov100  100.0%</text><rect x="1495.34" y="854.10" width="102.66" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1500.34" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov102  90.8%</text>
@@ -12273,135 +12273,135 @@ matched: yes</title></rect><rect x="309.85" y="982.65" width="11.96" height="12.
 module: arm9
 addr: 0x02075154
 size: 220 bytes
-matched: yes</title></rect><rect x="331.81" y="5.00" width="10.81" height="48.79" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8000
+matched: yes</title></rect><rect x="331.81" y="5.00" width="10.81" height="48.78" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8000
 module: itcm
 addr: 0x01ff8000
 size: 1436 bytes
-matched: no</title></rect><rect x="331.81" y="53.79" width="10.81" height="12.37" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff859c
+matched: no</title></rect><rect x="331.81" y="53.82" width="10.81" height="12.37" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff859c
 module: itcm
 addr: 0x01ff859c
 size: 364 bytes
-matched: no</title></rect><rect x="331.81" y="66.15" width="10.81" height="60.34" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8708
+matched: no</title></rect><rect x="331.81" y="66.18" width="10.81" height="60.33" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8708
 module: itcm
 addr: 0x01ff8708
 size: 1776 bytes
-matched: no</title></rect><rect x="331.81" y="126.49" width="10.81" height="47.02" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8e10
+matched: no</title></rect><rect x="331.81" y="126.55" width="10.81" height="47.01" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8e10
 module: itcm
 addr: 0x01ff8e10
 size: 1384 bytes
-matched: no</title></rect><rect x="331.81" y="173.51" width="10.81" height="38.05" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff9378
+matched: no</title></rect><rect x="331.81" y="173.56" width="10.81" height="38.05" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff9378
 module: itcm
 addr: 0x01ff9378
 size: 1120 bytes
-matched: no</title></rect><rect x="331.81" y="211.56" width="10.81" height="99.34" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff97d8
+matched: no</title></rect><rect x="331.81" y="211.61" width="10.81" height="99.33" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff97d8
 module: itcm
 addr: 0x01ff97d8
 size: 2924 bytes
-matched: no</title></rect><rect x="331.81" y="310.90" width="10.81" height="8.56" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa344
+matched: no</title></rect><rect x="331.81" y="310.94" width="10.81" height="8.56" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa344
 module: itcm
 addr: 0x01ffa344
 size: 252 bytes
-matched: no</title></rect><rect x="331.81" y="319.47" width="10.81" height="4.21" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa440
+matched: no</title></rect><rect x="331.81" y="319.50" width="10.81" height="4.21" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa440
 module: itcm
 addr: 0x01ffa440
 size: 124 bytes
-matched: no</title></rect><rect x="331.81" y="323.68" width="10.81" height="6.93" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa4bc
+matched: no</title></rect><rect x="331.81" y="323.71" width="10.81" height="6.93" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa4bc
 module: itcm
 addr: 0x01ffa4bc
 size: 204 bytes
-matched: no</title></rect><rect x="331.81" y="330.61" width="10.81" height="37.24" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa594
+matched: no</title></rect><rect x="331.81" y="330.64" width="10.81" height="37.23" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffa594
 module: itcm
 addr: 0x01ffa594
 size: 1096 bytes
-matched: no</title></rect><rect x="331.81" y="367.85" width="1.47" height="2.99" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_uldiv
+matched: no</title></rect><rect x="331.81" y="367.87" width="1.47" height="2.99" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_uldiv
 module: itcm
 addr: 0x01ffa9dc
 size: 12 bytes
-matched: no</title></rect><rect x="333.28" y="367.85" width="9.34" height="2.99" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_ulmod
+matched: no</title></rect><rect x="333.28" y="367.87" width="9.34" height="2.99" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_ulmod
 module: itcm
 addr: 0x01ffa9e8
 size: 76 bytes
-matched: no</title></rect><rect x="331.81" y="370.84" width="10.81" height="14.68" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffaa34
+matched: no</title></rect><rect x="331.81" y="370.86" width="10.81" height="14.68" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffaa34
 module: itcm
 addr: 0x01ffaa34
 size: 432 bytes
-matched: no</title></rect><rect x="331.81" y="385.51" width="10.81" height="17.80" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_idiv
+matched: no</title></rect><rect x="331.81" y="385.57" width="10.81" height="17.80" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_idiv
 module: itcm
 addr: 0x01ffabe4
 size: 524 bytes
-matched: no</title></rect><rect x="331.81" y="403.35" width="10.81" height="16.44" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_uidiv
+matched: no</title></rect><rect x="331.81" y="403.40" width="10.81" height="16.44" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_uidiv
 module: itcm
 addr: 0x01ffadf0
 size: 484 bytes
-matched: no</title></rect><rect x="332.01" y="419.79" width="10.61" height="1.80" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffafd4
+matched: no</title></rect><rect x="332.01" y="419.84" width="10.61" height="1.80" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffafd4
 module: itcm
 addr: 0x01ffafd4
 size: 52 bytes
-matched: no</title></rect><rect x="331.81" y="421.59" width="3.73" height="3.94" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffb008
+matched: no</title></rect><rect x="331.81" y="421.64" width="3.73" height="3.94" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffb008
 module: itcm
 addr: 0x01ffb008
 size: 40 bytes
-matched: no</title></rect><rect x="335.54" y="421.59" width="7.08" height="3.94" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffb030
+matched: no</title></rect><rect x="335.54" y="421.64" width="7.08" height="3.94" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffb030
 module: itcm
 addr: 0x01ffb030
 size: 76 bytes
-matched: no</title></rect><rect x="331.81" y="425.53" width="3.98" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb07c
+matched: no</title></rect><rect x="331.81" y="425.58" width="3.98" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb07c
 module: itcm
 addr: 0x01ffb07c
 size: 28 bytes
-matched: yes</title></rect><rect x="335.79" y="425.53" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb098
+matched: yes</title></rect><rect x="335.79" y="425.58" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb098
 module: itcm
 addr: 0x01ffb098
 size: 12 bytes
-matched: yes</title></rect><rect x="337.50" y="425.53" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0a4
+matched: yes</title></rect><rect x="337.50" y="425.58" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0a4
 module: itcm
 addr: 0x01ffb0a4
 size: 12 bytes
-matched: yes</title></rect><rect x="339.21" y="425.53" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0b0
+matched: yes</title></rect><rect x="339.21" y="425.58" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0b0
 module: itcm
 addr: 0x01ffb0b0
 size: 12 bytes
-matched: yes</title></rect><rect x="340.92" y="425.53" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0bc
+matched: yes</title></rect><rect x="340.92" y="425.58" width="1.71" height="2.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0bc
 module: itcm
 addr: 0x01ffb0bc
 size: 12 bytes
-matched: yes</title></rect><rect x="331.81" y="428.12" width="1.66" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0c8
+matched: yes</title></rect><rect x="331.81" y="428.17" width="1.66" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffb0c8
 module: itcm
 addr: 0x01ffb0c8
 size: 8 bytes
-matched: yes</title></rect><rect x="333.47" y="428.12" width="5.82" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNK12MeshCollider13GetUnkOctreeYEv
+matched: yes</title></rect><rect x="333.47" y="428.17" width="5.82" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNK12MeshCollider13GetUnkOctreeYEv
 module: itcm
 addr: 0x01ffb0d0
 size: 28 bytes
-matched: yes</title></rect><rect x="339.30" y="428.12" width="3.33" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNK12MeshCollider16GetOctreeOriginYEv
+matched: yes</title></rect><rect x="339.30" y="428.17" width="3.33" height="1.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNK12MeshCollider16GetOctreeOriginYEv
 module: itcm
 addr: 0x01ffb0ec
 size: 16 bytes
-matched: yes</title></rect><rect x="331.81" y="429.88" width="10.81" height="62.65" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER11RaycastLine
+matched: yes</title></rect><rect x="331.81" y="429.93" width="10.81" height="62.64" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER11RaycastLine
 module: itcm
 addr: 0x01ffb0fc
 size: 1844 bytes
-matched: no</title></rect><rect x="331.81" y="492.53" width="10.81" height="241.63" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER10SphereClsn
+matched: no</title></rect><rect x="331.81" y="492.57" width="10.81" height="241.60" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER10SphereClsn
 module: itcm
 addr: 0x01ffb830
 size: 7112 bytes
-matched: no</title></rect><rect x="331.81" y="734.16" width="10.81" height="39.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER13RaycastGround
+matched: no</title></rect><rect x="331.81" y="734.17" width="10.81" height="39.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider10DetectClsnER13RaycastGround
 module: itcm
 addr: 0x01ffd3f8
 size: 1176 bytes
-matched: yes</title></rect><rect x="331.81" y="774.11" width="5.41" height="4.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider17GetTriangleOriginEsR7Vector3
+matched: yes</title></rect><rect x="331.81" y="774.12" width="5.41" height="4.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider17GetTriangleOriginEsR7Vector3
 module: itcm
 addr: 0x01ffd890
 size: 72 bytes
-matched: yes</title></rect><rect x="337.22" y="774.11" width="5.41" height="4.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider9GetNormalEsR7Vector3
+matched: yes</title></rect><rect x="337.22" y="774.12" width="5.41" height="4.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider9GetNormalEsR7Vector3
 module: itcm
 addr: 0x01ffd8d8
 size: 72 bytes
-matched: yes</title></rect><rect x="331.81" y="779.00" width="5.53" height="6.12" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo
+matched: yes</title></rect><rect x="331.81" y="779.01" width="5.53" height="6.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo
 module: itcm
 addr: 0x01ffd920
 size: 92 bytes
-matched: yes</title></rect><rect x="337.34" y="779.00" width="5.29" height="6.12" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN3IRQ20UserInterruptHandlerEv
+matched: yes</title></rect><rect x="337.34" y="779.01" width="5.29" height="6.11" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>_ZN3IRQ20UserInterruptHandlerEv
 module: itcm
 addr: 0x01ffd97c
 size: 88 bytes
@@ -12417,11 +12417,11 @@ matched: no</title></rect><rect x="331.81" y="802.65" width="10.81" height="10.3
 module: itcm
 addr: 0x01ffdbd8
 size: 304 bytes
-matched: yes</title></rect><rect x="331.81" y="812.98" width="6.28" height="8.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffdd08
+matched: yes</title></rect><rect x="331.81" y="812.98" width="6.28" height="8.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffdd08
 module: itcm
 addr: 0x01ffdd08
 size: 144 bytes
-matched: yes</title></rect><rect x="338.09" y="812.98" width="4.53" height="8.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffdd98
+matched: yes</title></rect><rect x="338.09" y="812.98" width="4.53" height="8.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffdd98
 module: itcm
 addr: 0x01ffdd98
 size: 104 bytes
@@ -12429,11 +12429,11 @@ matched: yes</title></rect><rect x="331.81" y="821.40" width="5.20" height="5.65
 module: itcm
 addr: 0x01ffde00
 size: 80 bytes
-matched: yes</title></rect><rect x="331.81" y="827.05" width="5.20" height="5.09" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>DMAStartTransfer
+matched: yes</title></rect><rect x="331.81" y="827.05" width="5.20" height="5.08" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>DMAStartTransfer
 module: itcm
 addr: 0x01ffde50
 size: 72 bytes
-matched: yes</title></rect><rect x="337.01" y="821.40" width="5.61" height="10.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffde98
+matched: yes</title></rect><rect x="337.01" y="821.40" width="5.61" height="10.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffde98
 module: itcm
 addr: 0x01ffde98
 size: 164 bytes

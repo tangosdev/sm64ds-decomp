@@ -35,6 +35,7 @@ data_ov005_020c2448 kind:data(any) addr:0x020c2448
 data_ov005_020c2454 kind:data(any) addr:0x020c2454
 data_ov005_020c2464 kind:data(any) addr:0x020c2464
 data_ov005_020c2490 kind:data(any) addr:0x020c2490
+_ZTV11dScMiniGm_c kind:data(any) addr:0x020c2490
 data_ov005_020c24d8 kind:data(any) addr:0x020c24d8
 data_ov005_020c24dc kind:data(any) addr:0x020c24dc
 data_ov005_020c2c28 kind:data(any) addr:0x020c2c28

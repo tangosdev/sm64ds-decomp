@@ -2792,7 +2792,9 @@ data_ov002_0210dff4 kind:bss addr:0x0210dff4
 data_ov002_0210e000 kind:bss addr:0x0210e000
 data_ov002_0210e00c kind:bss addr:0x0210e00c
 data_ov002_0210e05c kind:bss addr:0x0210e05c
+SignPost_ClsnFile kind:bss addr:0x0210e05c
 data_ov002_0210e064 kind:bss addr:0x0210e064
+SignPost_ModelFile kind:bss addr:0x0210e064
 data_ov002_0210e06c kind:bss addr:0x0210e06c
 data_ov002_0210e078 kind:bss addr:0x0210e078
 data_ov002_0210e084 kind:bss addr:0x0210e084
@@ -3706,7 +3708,9 @@ data_ov002_02110aa4 kind:bss addr:0x02110aa4
 data_ov002_02110aac kind:bss addr:0x02110aac
 data_ov002_02110ab8 kind:bss addr:0x02110ab8
 data_ov002_02110ac4 kind:bss addr:0x02110ac4
+BlueCoinSwitch_ClsnFile kind:bss addr:0x02110ac4
 data_ov002_02110acc kind:bss addr:0x02110acc
+BlueCoinSwitch_ModelFile kind:bss addr:0x02110acc
 data_ov002_02110ad4 kind:bss addr:0x02110ad4
 data_ov002_02110ae0 kind:bss addr:0x02110ae0
 data_ov002_02110aec kind:bss addr:0x02110aec
