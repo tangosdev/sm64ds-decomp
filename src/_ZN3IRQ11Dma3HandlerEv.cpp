@@ -1,6 +1,6 @@
 //cpp
-extern "C" void func_02056cc0(int irq);
+extern "C" void _ZN3IRQ13DmaTimHandlerEv(int irq);
 extern "C" void _ZN3IRQ11Dma3HandlerEv(void)
 {
-    func_02056cc0(3);
+    _ZN3IRQ13DmaTimHandlerEv(3);
 }

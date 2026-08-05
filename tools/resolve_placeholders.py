@@ -62,26 +62,34 @@ ELIGIBILITY = REPO / "build" / "rombuild-eligibility.json"
 INVENTED = re.compile(r"^(G|VT|HEAP)\d*$")
 
 
-def is_stand_in(name, header_declared):
-    """Is `name` a stand-in rather than a real symbol?
+def is_misnamed(name, header_declared):
+    """Is `name` a reference we can hope to correct?
 
-    Two shapes, and the second is the larger one:
+    Every name reaching here is already unresolvable -- `eligible.py` found no
+    module defining it. The question is only whether correcting it is our business,
+    and the answer is yes for all of them, because the authority is never the name:
 
-      G0, VT1, HEAP   the pass's own placeholder spellings, declared per-file or
-                      in decl_common.h
+        the call site's own relocation  ->  target address + owning module
+        that module's symbols.txt       ->  the one name the ROM uses
 
-      _ZTV10dBgActor_c  a name that *looks* real -- it is declared in a shared
-                      header, so it reads as a proper symbol -- but no module
-                      defines it. 196 files reference that one name, and the
-                      relocations show they mean 196 different symbols. One
-                      declaration standing in for many, exactly like VT, but
-                      spelled plausibly enough that nobody noticed.
+    The name we start from contributes nothing to that lookup. It is a label the
+    recovery pass wrote down, and it can be wrong in several ways at once:
 
-    Both are reached the same way: the name resolves to nothing, and the ROM's
-    own relocation says what was meant. A name absent from the headers *and*
-    from the config is left alone -- there is no declaration to carry, and it is
-    likelier to be a genuine gap than a stand-in."""
-    return bool(INVENTED.match(name)) or name in header_declared
+      G0, VT1, HEAP            a placeholder it never resolved
+      _ZTV10dBgActor_c         a plausible-looking name no module defines; 196 files
+                               used it, meaning 196 different symbols
+      func_020c3d1c            an address-shaped guess where the ROM has a real
+                               method name
+      ...SetAnimEP8BCA_Fileiij a mangled name built from a mis-recovered signature
+                               (`int` where the ROM has Fix12<int>)
+
+    All four are the same defect -- a reference that resolves to nothing -- and all
+    four are answered by the same join. Narrowing the predicate to a shape we
+    recognise only means the next shape needs another sweep, which is how this cost
+    five of them. `header_declared` is retained for the caller's declaration
+    bookkeeping, not to gate eligibility."""
+    return True
+
 
 def decl_types():
     """{name: declaration template} for every name the headers declare.
@@ -106,15 +114,45 @@ SYMLINE = re.compile(r"^(\S+)\s+kind:\S*.*?\baddr:(0x[0-9a-fA-F]+)")
 GENERIC = re.compile(r"^(data|func)_(ov\d+_)?[0-9a-f]{8}$")
 
 
-def module_key(spec):
-    """dsd's `module:` field -> the config directory name, or None if it is not a
-    single definite module."""
+def module_keys(spec):
+    """dsd's `module:` field -> the config directory names it could mean.
+
+    Usually one. But overlays share address space, and where dsd could not tell
+    which of several was loaded it says so: `module:overlays(0,4)`. That is not a
+    dead end -- it is a shortlist, and the symbol tables often settle it, because
+    only one of the candidates actually defines anything at the target address."""
     if spec == "main":
-        return "arm9"
+        return ["arm9"]
     if spec in ("itcm", "dtcm"):
-        return spec
+        return [spec]
     m = re.match(r"^overlay\((\d+)\)$", spec)
-    return f"ov{int(m.group(1)):03d}" if m else None
+    if m:
+        return [f"ov{int(m.group(1)):03d}"]
+    m = re.match(r"^overlays\(([\d,]+)\)$", spec)
+    if m:
+        return [f"ov{int(n):03d}" for n in m.group(1).split(",") if n]
+    return []
+
+
+def resolve_in(syms, mods, addr, prefer):
+    """The name at `addr`, given a shortlist of modules that might own it.
+
+    A candidate only counts if it defines a symbol exactly at `addr`. If several do
+    and they disagree, prefer the referring module -- an overlay reaching into
+    itself is likelier than into a sibling that may not even be resident -- and
+    otherwise refuse, because a guess here silently retargets a call."""
+    hits = {}
+    for m in mods:
+        nm, _ = name_at(syms, m, addr)
+        if nm:
+            hits[m] = nm
+    if not hits:
+        return None, f"no candidate of {mods} defines {addr:#010x}"
+    if len(set(hits.values())) == 1:
+        return next(iter(hits.values())), None
+    if prefer in hits:
+        return hits[prefer], None
+    return None, f"{addr:#010x} names {hits}"
 
 
 def load_relocs():
@@ -211,10 +249,10 @@ def main():
             continue
         rel = r["file"].replace("\\", "/")
         miss = r.get("missing") or []
-        ph = [s for s in miss if is_stand_in(s, declared)]
+        ph = [s for s in miss if is_misnamed(s, declared)]
         if ph and rel in info:
             jobs.append((rel, ph,
-                         [s for s in miss if not is_stand_in(s, declared)]))
+                         [s for s in miss if not is_misnamed(s, declared)]))
 
     print(f"files with placeholder references: {len(jobs)}")
     print(f"  of those, blocked ONLY by placeholders: "
@@ -261,11 +299,11 @@ def main():
                 bad.append((sym, f"no reloc recorded at {addr + off:#010x}"))
                 continue
             to, spec = entry
-            mod = module_key(spec)
-            if mod is None:
-                bad.append((sym, f"dsd could not place it: module:{spec}"))
+            cands = module_keys(spec)
+            if not cands:
+                bad.append((sym, f"unparsed module spec: module:{spec}"))
                 continue
-            real, why = name_at(syms, mod, to)
+            real, why = resolve_in(syms, cands, to, label)
             if real is None:
                 bad.append((sym, why))
                 continue
@@ -294,6 +332,14 @@ def main():
             # undeclared variant below is then the only candidate, which is right.
             if not local and old in decl_type:
                 needed.append(decl_type[old].replace("@", real))
+
+        if renamed == original:
+            # The name never appears literally. It was produced by the compiler from
+            # a member call (`anim->SetAnim(...)`) or by mangling a declaration a
+            # second time, so there is no token to rewrite and renaming cannot fix
+            # it. Reporting these as rewritten would claim a repair that did not
+            # happen -- they need a different transform, not this one.
+            return rel, "not textual (needs a source transform, not a rename)", mapping
 
         def with_decls(text, decls):
             if not decls:

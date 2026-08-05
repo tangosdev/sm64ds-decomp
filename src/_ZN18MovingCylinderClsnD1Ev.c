@@ -10,10 +10,10 @@ extern void* _ZTV18MovingCylinderClsn[];
  * Base dtor call target: 0x02015058
  */
 struct Obj { void *vtable; };
-extern void base_dtor_MovingCylinderClsn(struct Obj *thiz); /* 0x02015058 */
+extern void _ZN12CylinderClsnD2Ev(struct Obj *thiz); /* 0x02015058 */
 struct Obj *_ZN18MovingCylinderClsnD1Ev(struct Obj *thiz)
 {
     thiz->vtable = (void *)_ZTV18MovingCylinderClsn;
-    base_dtor_MovingCylinderClsn(thiz);
+    _ZN12CylinderClsnD2Ev(thiz);
     return thiz;
 }

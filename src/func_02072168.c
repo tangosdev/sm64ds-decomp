@@ -31,7 +31,7 @@ extern void func_020731fc(void);
 extern void func_02071864(char *c, char *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
-extern int func_01ffadf0(int a, int b);
+extern int __aeabi_uidiv(int a, int b);
 
 void func_02072168(char *c, char *s, char *end) {
     int saved = 0;
@@ -408,7 +408,7 @@ void func_02072168(char *c, char *s, char *end) {
                 else
                     b = *(int *)(*(char **)(c + 0x18) + v1);
                 a += b;
-                n = func_01ffadf0(b, v2);
+                n = __aeabi_uidiv(b, v2);
                 if (n != 0) {
                     do {
                         a -= v2;

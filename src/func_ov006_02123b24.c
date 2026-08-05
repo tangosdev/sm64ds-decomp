@@ -2,7 +2,7 @@ extern unsigned char data_020a0e40[];
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
 extern int func_02054d88(void);
-extern void func_0205a448(unsigned short a, int b, int c);
+extern void MultiStore16(unsigned short a, int b, int c);
 extern int data_ov006_0213fbd0[];
 
 void func_ov006_02123b24(char *c)
@@ -23,7 +23,7 @@ void func_ov006_02123b24(char *c)
         volatile unsigned short h;
         r = func_02054d88();
         h = 0;
-        func_0205a448(h, r, 0x6000);
+        MultiStore16(h, r, 0x6000);
     }
     *(short *)(c + 0x7ba8) = 1;
     {

@@ -76,9 +76,11 @@ src/func_ov004_020adc4c.c:
     .text start:0x020adc4c end:0x020adc5c
 
 src/Ov004_Deallocate.c:
+    complete
     .text start:0x020adc5c end:0x020adc68
 
 src/func_ov004_020adc68.c:
+    complete
     .text start:0x020adc68 end:0x020adc74
 
 src/func_ov004_020adc74.c:
@@ -433,6 +435,7 @@ src/func_ov004_020b290c.c:
     .text start:0x020b290c end:0x020b2980
 
 src/func_ov004_020b2980.c:
+    complete
     .text start:0x020b2980 end:0x020b298c
 
 src/func_ov004_020b298c.c:

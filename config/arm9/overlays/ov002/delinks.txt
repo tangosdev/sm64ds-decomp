@@ -1953,6 +1953,7 @@ src/func_ov002_020c0688.cpp:
     .text start:0x020c0688 end:0x020c06fc
 
 src/func_ov002_020c06fc.c:
+    complete
     .text start:0x020c06fc end:0x020c0cbc
 
 src/func_ov002_020c0cbc.c:
@@ -3326,6 +3327,7 @@ src/_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj.cpp:
     .text start:0x020d8e70 end:0x020d91b8
 
 src/func_ov002_020d91b8.c:
+    complete
     .text start:0x020d91b8 end:0x020d91e0
 
 src/func_ov002_020d91e0.c:

@@ -379,6 +379,7 @@ src/func_ov084_0212fa7c.c:
     .text start:0x0212fa7c end:0x0212fc10
 
 src/func_ov084_0212fc10.c:
+    complete
     .text start:0x0212fc10 end:0x0212fc84
 
 src/_ZN12PiranhaPlant16CleanupResourcesEv.cpp:

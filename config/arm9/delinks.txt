@@ -7,6 +7,7 @@
     .data       start:0x02086bc0 end:0x0209b000 kind:data align:32
     .bss        start:0x0209b000 end:0x020aa420 kind:bss align:32
 src/Entry.c:
+    complete
     .text start:0x02004800 end:0x020048d8
 
 src/func_020048d8.c:
@@ -415,6 +416,7 @@ src/func_020098e0.c:
     .text start:0x020098e0 end:0x02009a8c
 
 src/func_02009a8c.c:
+    complete
     .text start:0x02009a8c end:0x02009aa8
 
 src/func_02009aa8.c:
@@ -1846,6 +1848,7 @@ src/_ZN18MovingCylinderClsn6GetPosEv.cpp:
     .text start:0x02014948 end:0x02014954
 
 src/_ZN18MovingCylinderClsnD2Ev.c:
+    complete
     .text start:0x02014954 end:0x02014978
 
 src/_ZN18MovingCylinderClsnD0Ev.c:
@@ -1853,6 +1856,7 @@ src/_ZN18MovingCylinderClsnD0Ev.c:
     .text start:0x02014978 end:0x020149a4
 
 src/_ZN18MovingCylinderClsnD1Ev.c:
+    complete
     .text start:0x020149a4 end:0x020149c8
 
 src/_ZN18MovingCylinderClsnC1Ev.c:
@@ -1876,6 +1880,7 @@ src/_ZN25MovingCylinderClsnWithPosD0Ev.c:
     .text start:0x02014a34 end:0x02014a60
 
 src/_ZN25MovingCylinderClsnWithPosD1Ev.c:
+    complete
     .text start:0x02014a60 end:0x02014a84
 
 src/_ZN25MovingCylinderClsnWithPosC1Ev.c:
@@ -1891,6 +1896,7 @@ src/func_02014f44.c:
     .text start:0x02014f44 end:0x02014f5c
 
 src/func_02014f5c.c:
+    complete
     .text start:0x02014f5c end:0x02014fa4
 
 src/func_02014fa4.c:
@@ -2443,6 +2449,7 @@ src/engine/fader/_ZN10FaderColorD1Ev.c:
     .text start:0x020175c4 end:0x020175e8
 
 src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp:
+    complete
     .text start:0x020175e8 end:0x02017610
 
 src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp:
@@ -4316,6 +4323,7 @@ src/func_0202ec9c.cpp:
     .text start:0x0202ec9c end:0x0202ecfc
 
 src/func_0202ecfc.c:
+    complete
     .text start:0x0202ecfc end:0x0202ed08
 
 src/func_0202ed08.c:
@@ -5635,6 +5643,7 @@ src/_ZN18MovingMeshCollider12TransformPosERK7Vector3RS0_.cpp:
     .text start:0x02039930 end:0x02039970
 
 src/_ZN18MovingMeshCollider10DetectClsnER11RaycastLine.c:
+    complete
     .text start:0x02039970 end:0x02039a3c
 
 src/_ZN18MovingMeshCollider10DetectClsnER10SphereClsn.c:
@@ -5642,6 +5651,7 @@ src/_ZN18MovingMeshCollider10DetectClsnER10SphereClsn.c:
     .text start:0x02039a3c end:0x02039cb8
 
 src/_ZN18MovingMeshCollider10DetectClsnER13RaycastGround.c:
+    complete
     .text start:0x02039cb8 end:0x02039db8
 
 src/func_02039db8.c:
@@ -5705,6 +5715,7 @@ src/_ZN21ExtendingMeshCollider9GetNormalEsR7Vector3.cpp:
     .text start:0x0203a4dc end:0x0203a594
 
 src/_ZN21ExtendingMeshCollider10DetectClsnER11RaycastLine.c:
+    complete
     .text start:0x0203a594 end:0x0203a660
 
 src/_ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn.cpp:
@@ -7766,6 +7777,7 @@ src/func_0204da4c.c:
     .text start:0x0204da4c end:0x0204dab4
 
 src/func_0204dab4.c:
+    complete
     .text start:0x0204dab4 end:0x0204dc84
 
 src/func_0204dc84.c:
@@ -8333,6 +8345,7 @@ src/func_02051024.c:
     .text start:0x02051024 end:0x02051064
 
 src/func_02051064.c:
+    complete
     .text start:0x02051064 end:0x02051074
 
 src/func_02051074.c:
@@ -8811,6 +8824,7 @@ src/_ZN2GX15SetBankForSubBGEt.c:
     .text start:0x02054384 end:0x02054430
 
 src/func_02054430.c:
+    complete
     .text start:0x02054430 end:0x02054450
 
 src/_ZN2GX17SetBankForTexPlttEt.c:
@@ -9144,27 +9158,35 @@ src/Copy48BytesFixed.c:
     .text start:0x02056c1c end:0x02056c40
 
 src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp:
+    complete
     .text start:0x02056c40 end:0x02056c50
 
 src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp:
+    complete
     .text start:0x02056c50 end:0x02056c60
 
 src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp:
+    complete
     .text start:0x02056c60 end:0x02056c70
 
 src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp:
+    complete
     .text start:0x02056c70 end:0x02056c80
 
 src/_ZN3IRQ11Dma3HandlerEv.cpp:
+    complete
     .text start:0x02056c80 end:0x02056c90
 
 src/_ZN3IRQ11Dma2HandlerEv.cpp:
+    complete
     .text start:0x02056c90 end:0x02056ca0
 
 src/_ZN3IRQ11Dma1HandlerEv.cpp:
+    complete
     .text start:0x02056ca0 end:0x02056cb0
 
 src/_ZN3IRQ11Dma0HandlerEv.cpp:
+    complete
     .text start:0x02056cb0 end:0x02056cc0
 
 src/_ZN3IRQ13DmaTimHandlerEv.c:
@@ -10097,6 +10119,7 @@ src/func_0205cd34.c:
     .text start:0x0205cd34 end:0x0205cd5c
 
 src/func_0205cd5c.c:
+    complete
     .text start:0x0205cd5c end:0x0205cdf4
 
 src/func_0205cdf4.cpp:
@@ -11343,6 +11366,7 @@ src/func_0206a5c0.c:
     .text start:0x0206a5c0 end:0x0206a600
 
 src/func_0206a600.c:
+    complete
     .text start:0x0206a600 end:0x0206a634
 
 src/func_0206a634.c:
@@ -11740,6 +11764,7 @@ src/func_02072014.c:
     .text start:0x02072014 end:0x02072168
 
 src/func_02072168.c:
+    complete
     .text start:0x02072168 end:0x020729f4
 
 src/func_020729f4.c:

@@ -1,7 +1,7 @@
 extern int func_02039e48(void* a, void* b, void* c);
 extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* o, void* a, void* b, void* c);
 extern int func_02035394(void* o, void* r);
-extern int func_01ffb0fc(void* o, void* p);
+extern int _ZN12MeshCollider10DetectClsnER11RaycastLine(void* o, void* p);
 extern int func_02039e30(void* o, void* a, void* b);
 extern void func_020375ec(int* d, int* s);
 extern int _ZN10ClsnResultaSERKS_(void* d, void* s);
@@ -20,7 +20,7 @@ int _ZN18MovingMeshCollider10DetectClsnER11RaycastLine(char* self, char* ray)
   _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(data_020a0d0c, sp0, sp0xc, 0);
   if (f50) *(unsigned char*)(data_020a0d0c + 0x50) = 1;
   func_02035394(data_020a0d0c, ray);
-  int r = func_01ffb0fc(self, data_020a0d0c);
+  int r = _ZN12MeshCollider10DetectClsnER11RaycastLine(self, data_020a0d0c);
   if (r) {
     int saved = *(int*)(data_020a0d0c + 0x60);
     func_02039e30(self, data_020a0d60, sp0x18);

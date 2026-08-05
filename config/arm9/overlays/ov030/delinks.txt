@@ -145,6 +145,7 @@ src/func_ov030_02112da0.c:
     .text start:0x02112da0 end:0x02112ff8
 
 src/func_ov030_02112ff8.c:
+    complete
     .text start:0x02112ff8 end:0x02113094
 
 src/func_ov030_02113094.c:
