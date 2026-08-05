@@ -48,7 +48,7 @@ start converting a class; the same staleness rule applies.
 | ov006 func_ov006_0210adac (0x0210adac, size 0x1b8) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: SlotGrid tip + self launder anti-LICM; API clm_8377fdada047 kept |
 | ov030 func_ov030_021136b0 (0x021136b0, size 0x3d0) | lunavyqo (Grok) | 2026-08-05 | **active** — match from near-miss div=239; API clm_8fd9c0178792 |
 | ov060 func_ov060_02116d78 (0x02116d78, size 0x1fc) | lunavyqo (Grok) | 2026-08-05 | **active** — match from near-miss div=95 (mwccarm 2004/b56); API clm_b84f8d6b5726 |
-| ov062 func_ov062_0211bd10 (0x0211bd10, size 0x508) | lunavyqo (Grok) | 2026-08-05 | **active** — matching Chuckya state (ApproachLinear/Angle/PathPtr); API clm_0e93afa62308 |
+| ov062 func_ov062_0211bd10 (0x0211bd10, size 0x508) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: u64 p94 RMW, shared b2fc fallthrough, `((u8*)p)[0x709]?1:0` bool; API clm_0e93afa62308 kept |
 | ov062 func_ov062_02117724 (0x02117724, size 0x270) | lunavyqo (Grok) | 2026-08-05 | **active** — batch2 match from near-miss div=5; API clm_37631b43f15d |
 | ov085 func_ov085_0212b8dc (0x0212b8dc, size 0x338) | lunavyqo (Grok) | 2026-08-05 | **active** — batch2 match from near-miss div=130; API clm_ee30ab306b58 |
 | ov030 func_ov030_02113324 (0x02113324, size 0x2e8) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: named `int vy=oy+0x32000` before `v.x` load flips r5/ip on raycast Vector3 (from NONMATCHING div=4); API clm_cadd434e65ea kept |
