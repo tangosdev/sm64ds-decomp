@@ -5,7 +5,8 @@
     "noreply": "tangosdev",
     "leonard.van.der.plaat": "lplaat",
     "andrew": "andrewboudreau",
-    "mitch.cairns": "mitchellcairns"
+    "mitch.cairns": "mitchellcairns",
+    "mitch030504": "mitchellcairns"
   },
   "overrides": {
     "src/func_02035860.c": "ruspecial",
