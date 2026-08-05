@@ -1,4 +1,4 @@
-/* __sinit_ov002_021071f4 at 0x021014e4
+/* __sinit_ov002_021071f4 at 0x021071f4
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */

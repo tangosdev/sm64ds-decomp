@@ -1007,6 +1007,9 @@ src/func_ov007_020bee14.c:
     complete
     .text start:0x020bee14 end:0x020beeb0
 
+src/func_ov007_020beeb0.c:
+    .text start:0x020beeb0 end:0x020bf304
+
 src/func_ov007_020bf304.c:
     complete
     .text start:0x020bf304 end:0x020bf428
