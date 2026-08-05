@@ -6,14 +6,15 @@
 #include "SignPost.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int SignPost_ClsnFile[];
+extern int SignPost_ModelFile[];
 
 int SignPost::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(SignPost_ModelFile))->Release();
+    ((SharedFilePtr *)(SignPost_ClsnFile))->Release();
     return 1;
 }

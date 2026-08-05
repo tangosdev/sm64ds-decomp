@@ -98,6 +98,7 @@ data_ov003_020b1610 kind:data(any) addr:0x020b1610
 data_ov003_020b1620 kind:data(any) addr:0x020b1620
 data_ov003_020b1634 kind:data(any) addr:0x020b1634
 data_ov003_020b1650 kind:data(any) addr:0x020b1650
+_ZTV10dScTitle_c kind:data(any) addr:0x020b1650
 data_ov003_020b1698 kind:data(any) addr:0x020b1698
 data_ov003_020b169c kind:data(any) addr:0x020b169c
 data_ov003_020b16a0 kind:data(any) addr:0x020b16a0
@@ -117,6 +118,7 @@ data_ov003_020b1764 kind:data(any) addr:0x020b1764
 data_ov003_020b1774 kind:data(any) addr:0x020b1774
 data_ov003_020b1784 kind:data(any) addr:0x020b1784
 data_ov003_020b179c kind:data(any) addr:0x020b179c
+_ZTV13dScGameOver_c kind:data(any) addr:0x020b179c
 data_ov003_020b17e4 kind:data(any) addr:0x020b17e4
 data_ov003_020b17ec kind:data(any) addr:0x020b17ec
 data_ov003_020b17f4 kind:data(any) addr:0x020b17f4

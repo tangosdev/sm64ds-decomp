@@ -58,7 +58,9 @@ data_ov023_02111fac kind:data(any) addr:0x02111fac
 Squasher_SpawnInfo kind:data(any) addr:0x02111fc0 ambiguous
 _ZTV8Squasher kind:data(any) addr:0x02111fe4
 data_ov023_02112080 kind:bss addr:0x02112080
+Squasher_ClsnFile kind:bss addr:0x02112080
 data_ov023_02112088 kind:bss addr:0x02112088
+Squasher_ModelFile kind:bss addr:0x02112088
 data_ov023_0211208c kind:bss addr:0x0211208c ambiguous
 data_ov023_02112090 kind:bss addr:0x02112090
 data_ov023_0211209c kind:bss addr:0x0211209c

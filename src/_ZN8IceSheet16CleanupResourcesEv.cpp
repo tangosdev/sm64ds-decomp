@@ -6,14 +6,15 @@
 #include "IceSheet.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int IceSheet_ClsnFile[];
+extern int IceSheet_ModelFile[];
 
 int IceSheet::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(IceSheet_ModelFile))->Release();
+    ((SharedFilePtr *)(IceSheet_ClsnFile))->Release();
     return 1;
 }

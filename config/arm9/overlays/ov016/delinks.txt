@@ -133,6 +133,7 @@ src/func_ov016_02112a9c.c:
     .text start:0x02112a9c end:0x02112ae4
 
 src/func_ov016_02112ae4.c:
+    complete
     .text start:0x02112ae4 end:0x02112b28
 
 src/func_ov016_02112b28.cpp:

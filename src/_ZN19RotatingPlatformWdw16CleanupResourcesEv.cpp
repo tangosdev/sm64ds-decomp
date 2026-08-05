@@ -6,14 +6,15 @@
 #include "RotatingPlatformWdw.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int RotatingPlatformWdw_ClsnFile[];
+extern int RotatingPlatformWdw_ModelFile[];
 
 int RotatingPlatformWdw::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(RotatingPlatformWdw_ModelFile))->Release();
+    ((SharedFilePtr *)(RotatingPlatformWdw_ClsnFile))->Release();
     return 1;
 }

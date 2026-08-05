@@ -184,6 +184,7 @@ src/func_ov029_021122b4.c:
     .text start:0x021122b4 end:0x021122dc
 
 src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021122dc end:0x02112320
 
 src/_ZN19RotatingPlatformWdw6RenderEv.cpp:

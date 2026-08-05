@@ -447,6 +447,7 @@ src/func_ov060_02117ae0.c:
     .text start:0x02117ae0 end:0x02117b58
 
 src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02117b58 end:0x02117b9c
 
 src/_ZN18BowserFireSeaArena6RenderEv.cpp:

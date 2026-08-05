@@ -1203,6 +1203,7 @@ data_ov007_02103290 kind:data(any) addr:0x02103290
 data_ov007_021032b0 kind:data(any) addr:0x021032b0
 data_ov007_021032c0 kind:data(any) addr:0x021032c0
 data_ov007_021032e8 kind:data(any) addr:0x021032e8
+_ZTV9dScDSMT_c kind:data(any) addr:0x021032e8
 data_ov007_02103340 kind:bss addr:0x02103340
 data_ov007_02103344 kind:bss addr:0x02103344
 data_ov007_02103348 kind:bss addr:0x02103348

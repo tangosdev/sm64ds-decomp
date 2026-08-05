@@ -2965,6 +2965,7 @@ extern void*_ZN2G212GetBG1ScrPtrEv(void);
 extern void*_ZN3IRQ13GetIRQHandlerEj(unsigned int);
 extern void*_ZN6Memory13operator_new2Ej(unsigned int);
 extern void*_ZN6Memory8AllocateEj(unsigned int);
+extern int _ZTV12ActorDerived[];
 extern void*_ZTV14MultiBootScene[];
 extern void*_ZTV18MovingMeshCollider[];
 extern void*_ZTV19CylinderClsnWithPos[];

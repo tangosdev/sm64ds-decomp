@@ -165,7 +165,9 @@ data_ov045_021131b0 kind:bss addr:0x021131b0
 data_ov045_021131b8 kind:bss addr:0x021131b8
 data_ov045_021131c4 kind:bss addr:0x021131c4
 data_ov045_021131d0 kind:bss addr:0x021131d0
+PoleLift_ClsnFile kind:bss addr:0x021131d0
 data_ov045_021131d8 kind:bss addr:0x021131d8
+PoleLift_ModelFile kind:bss addr:0x021131d8
 data_ov045_021131e0 kind:bss addr:0x021131e0
 data_ov045_021131ec kind:bss addr:0x021131ec
 data_ov045_021131f8 kind:bss addr:0x021131f8

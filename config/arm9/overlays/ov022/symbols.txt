@@ -287,7 +287,9 @@ data_ov022_021145f4 kind:bss addr:0x021145f4
 data_ov022_02114600 kind:bss addr:0x02114600
 data_ov022_0211460c kind:bss addr:0x0211460c
 data_ov022_02114618 kind:bss addr:0x02114618
+FloatingFloorLllBig_ClsnFile kind:bss addr:0x02114618
 data_ov022_02114620 kind:bss addr:0x02114620
+FloatingFloorLllBig_ModelFile kind:bss addr:0x02114620
 data_ov022_02114628 kind:bss addr:0x02114628
 data_ov022_0211462c kind:bss addr:0x0211462c ambiguous
 data_ov022_02114634 kind:bss addr:0x02114634

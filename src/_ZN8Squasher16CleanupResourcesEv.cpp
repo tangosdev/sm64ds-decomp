@@ -6,12 +6,13 @@
 #include "Squasher.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int Squasher_ClsnFile[];
+extern int Squasher_ModelFile[];
 
 int Squasher::CleanupResources()
 {
     ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(Squasher_ModelFile))->Release();
+    ((SharedFilePtr *)(Squasher_ClsnFile))->Release();
     return 1;
 }

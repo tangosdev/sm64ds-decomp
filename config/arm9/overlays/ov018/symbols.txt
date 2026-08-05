@@ -182,6 +182,8 @@ data_ov018_02113c40 kind:bss addr:0x02113c40
 data_ov018_02113c48 kind:bss addr:0x02113c48 ambiguous
 data_ov018_02113c4c kind:bss addr:0x02113c4c
 data_ov018_02113c7c kind:bss addr:0x02113c7c
+IceSheet_ClsnFile kind:bss addr:0x02113c7c
 data_ov018_02113c84 kind:bss addr:0x02113c84
+IceSheet_ModelFile kind:bss addr:0x02113c84
 data_ov018_02113c8c kind:bss addr:0x02113c8c
 data_ov018_02113c98 kind:bss addr:0x02113c98

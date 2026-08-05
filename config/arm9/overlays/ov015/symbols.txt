@@ -266,7 +266,9 @@ data_ov015_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov015_02114960 kind:bss addr:0x02114960
 data_ov015_02114968 kind:bss addr:0x02114968
 data_ov015_02114974 kind:bss addr:0x02114974
+PoleBillboard_ClsnFile kind:bss addr:0x02114974
 data_ov015_0211497c kind:bss addr:0x0211497c
+PoleBillboard_ModelFile kind:bss addr:0x0211497c
 data_ov015_02114984 kind:bss addr:0x02114984
 data_ov015_02114990 kind:bss addr:0x02114990
 data_ov015_0211499c kind:bss addr:0x0211499c
@@ -283,11 +285,15 @@ data_ov015_021149fc kind:bss addr:0x021149fc ambiguous
 data_ov015_02114a18 kind:bss addr:0x02114a18 ambiguous
 data_ov015_02114a24 kind:bss addr:0x02114a24
 data_ov015_02114a5c kind:bss addr:0x02114a5c
+MovingBarSmall_ClsnFile kind:bss addr:0x02114a5c
 data_ov015_02114a64 kind:bss addr:0x02114a64
+MovingBarSmall_ModelFile kind:bss addr:0x02114a64
 data_ov015_02114a6c kind:bss addr:0x02114a6c
 data_ov015_02114a78 kind:bss addr:0x02114a78
 data_ov015_02114a84 kind:bss addr:0x02114a84
+TowerStep_ClsnFile kind:bss addr:0x02114a84
 data_ov015_02114a8c kind:bss addr:0x02114a8c
+TowerStep_ModelFile kind:bss addr:0x02114a8c
 data_ov015_02114a94 kind:bss addr:0x02114a94
 data_ov015_02114aa0 kind:bss addr:0x02114aa0
 data_ov015_02114aac kind:bss addr:0x02114aac

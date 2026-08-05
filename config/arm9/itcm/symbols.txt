@@ -1,6 +1,8 @@
 func_01ff8000 kind:function(arm,size=0x59c) addr:0x01ff8000
+_dadd kind:function(arm,size=0x0) addr:0x01ff8000
 func_01ff859c kind:function(arm,size=0x16c) addr:0x01ff859c
 func_01ff8708 kind:function(arm,size=0x6f0) addr:0x01ff8708
+_dmul kind:function(arm,size=0x0) addr:0x01ff8708
 .L_01ff8df8 kind:label(arm) addr:0x01ff8df8
 func_01ff8e10 kind:function(arm,size=0x568) addr:0x01ff8e10
 func_01ff9378 kind:function(arm,size=0x460) addr:0x01ff9378
@@ -13,6 +15,7 @@ func_01ffa594 kind:function(arm,size=0x448) addr:0x01ffa594
 __aeabi_uldiv kind:function(arm,size=0xc) addr:0x01ffa9dc
 __aeabi_ulmod kind:function(arm,size=0x4c) addr:0x01ffa9e8
 func_01ffaa34 kind:function(arm,size=0x1b0) addr:0x01ffaa34
+_ll_sdiv kind:function(arm,size=0x0) addr:0x01ffaa34
 __aeabi_idiv kind:function(arm,size=0x20c) addr:0x01ffabe4
 _s32_div_f kind:function(arm,size=0x0) addr:0x01ffabe4
 __aeabi_uidiv kind:function(arm,size=0x1e4) addr:0x01ffadf0
