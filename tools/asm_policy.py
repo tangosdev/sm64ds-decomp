@@ -51,15 +51,39 @@ _DCD_RE = re.compile(r"\bdcd\s+0x[0-9a-fA-F]")
 # A passthrough carries dozens; real C carries ~0. Used as a keyword-independent backstop so
 # an asm transcription is caught even if it isn't wrapped in a form the `asm` keyword regex
 # sees. (Lifted from tools/dataset/eval_match.py.)
+#
+# The register-list tell must accept real STM/PUSH lists -- ``{r4,r5,lr}``, ``{ r0 - r3 }``,
+# ``{r4-r11,lr}`` -- while rejecting C blocks whose first statement assigns to a local that
+# happens to be named like a register: ``{ r5 = 0x10000;``, ``{ r0->a = 0; }``, ``{ r2c = 0;``.
+# So after the register name we require a word boundary (kills ``r2c``) and then a list
+# continuation: ``,``, the closing ``}``, or a ``-`` range whose right side is another
+# register (kills ``r0->``).
 _ARM_TELLS = re.compile(r"""
       \bstm(?:db|ia|fd|ea)\b | \bldm(?:db|ia|fd|ea|ib)\b     # block load/store multiple
     | \bbx\s+lr\b | \bblx\b | \bbl\s+\w                        # branch-exchange / branch-link
     | \bsp!                    | \[pc,        | \[sp,          # ARM addressing idioms
     | \bdcd\b | \bdcw\b                                        # inline data words
-    | \{\s*(?:r\d|lr|sp|pc)                                    # register list  {r4, lr}
+    | \{\s*(?:r\d+|lr|sp|pc)\b\s*(?:[,}]|-\s*(?:r\d+|ip|lr|sp|pc)\b)  # register list {r4, lr} / { r0 - r3 }
     | \b(?:ldr|str|ldrh|strh|ldrb|strb|mov|cmp|orr|eor|lsl|lsr|asr|msr|mrs)\s+r\d  # op + reg
     | \bldmia\b | \bstmia\b
 """, re.X)
+
+# Comments are stripped before asm DETECTION (never before the banner search: banners live
+# in comments and are only ever exculpatory). Disassembly traces and call-map notes kept as
+# documentation -- ``// mov r0,r2; bl 0x0205a61c`` -- are commentary about asm, not an asm
+# body, and were firing the tells above. String literals are preserved so a ``//`` inside
+# one cannot eat real code (and GCC-style ``__asm__("mrc ...")`` keeps its content).
+_COMMENT_OR_STRING_RE = re.compile(
+    r'"(?:\\.|[^"\\\n])*"'        # string literal (kept)
+    r"|'(?:\\.|[^'\\\n])*'"       # char literal (kept)
+    r"|/\*.*?\*/"                 # block comment (stripped)
+    r"|//[^\n]*",                 # line comment (stripped)
+    re.S)
+
+
+def _strip_comments(code):
+    return _COMMENT_OR_STRING_RE.sub(
+        lambda m: m.group(0) if m.group(0)[0] in "\"'" else " ", code)
 
 
 def is_asm_passthrough(code):
@@ -69,7 +93,12 @@ def is_asm_passthrough(code):
       1. the `asm` KEYWORD -- mwccarm naked function ``asm <type> name(...) {``,
          GCC ``asm {`` / ``asm volatile``, or ``__asm``;
       2. CONTENT -- >=3 ARM-mnemonic tells, which real C never has, catching asm
-         even if it isn't wrapped in a keyword form the regex above recognizes."""
+         even if it isn't wrapped in a keyword form the regex above recognizes.
+
+    Both run on comment-stripped text: a commented-out disassembly trace is
+    documentation, not an asm body (the exculpatory banners are searched on the
+    RAW text by ``classify``, never here)."""
+    code = _strip_comments(code)
     if "__asm" in code:
         return True
     for m in re.finditer(r"(?<![\w])asm(?![\w])", code):          # `asm` as a standalone token
