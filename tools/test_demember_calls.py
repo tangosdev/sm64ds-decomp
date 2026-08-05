@@ -166,6 +166,67 @@ def test_a_call_that_never_matched_still_stops_the_file():
     assert new == src
 
 
+# ------------------------------------------------------- the implicit-`this` shape
+
+# src/_ZN6Player12St_Land_InitEv.cpp in miniature: the file IS a Player member, and
+# calls its sibling with no receiver at all.
+IMPLICIT = """\
+struct Player {
+    int St_Land_Init();
+    int IsAnim(unsigned int anim);
+    void SetAnim(unsigned int a, int b, int c, unsigned int d);
+};
+void SetAnim(int wrong);
+int Player::St_Land_Init()
+{
+    SetAnim(0x52, 0x40000000, 0x1000, 0);
+    return IsAnim(0x2b);
+}
+"""
+
+
+def test_an_unqualified_sibling_call_is_found():
+    new, n, why = D.rewrite_calls(IMPLICIT, [("SetAnim", "_ZN6PlayerE_", False,
+                                              "Player", True)])
+    assert why is None and n == 1, (n, why)
+    assert "_ZN6PlayerE_(this, 0x52, 0x40000000, 0x1000, 0);" in new
+    # The free `void SetAnim(int wrong);` is a DECLARATION outside any member body.
+    assert "void SetAnim(int wrong);" in new
+
+
+def test_nothing_outside_a_member_body_is_touched():
+    """The struct's own declaration of the method sits in no member body, and a
+    call in an unrelated function is not this class's."""
+    src = """\
+struct Player { void SetAnim(unsigned int a); };
+void elsewhere(void *p) { SetAnim(1); }
+"""
+    new, n, why = D.rewrite_calls(src, [("SetAnim", "_ZN6PlayerE_", False,
+                                         "Player", False)])
+    assert n == 0 and why == "call site not in a recognised shape"
+    assert new == src
+
+
+def test_member_bodies_skips_declarations_and_const_members():
+    """A `const` member's `this` is a `const Player*` and does not convert to the
+    void* receiver, so those bodies are not offered up in the first place."""
+    assert D.member_bodies("int Player::f();\n", "Player") == []
+    assert D.member_bodies("int Player::f() const { g(); }\n", "Player") == []
+    assert len(D.member_bodies("int Player::f() { g(); }\n", "Player")) == 1
+
+
+def test_an_implicit_and_an_explicit_call_of_the_same_method_both_go():
+    src = """\
+struct Player { void SetAnim(unsigned int a); };
+int Player::f() { SetAnim(1); ((Player*)other)->SetAnim(2); return 0; }
+"""
+    new, n, why = D.rewrite_calls(src, [("SetAnim", "_ZN6PlayerE_", False,
+                                         "Player", False)])
+    assert why is None and n == 2, (n, why)
+    assert "_ZN6PlayerE_(this, 1)" in new and "_ZN6PlayerE_((Player*)other, 2)" in new
+    assert "SetAnim(" not in new.split("struct Player")[1].split("};")[1]
+
+
 def test_a_dot_call_still_passes_the_address():
     src = "struct A { int run(int); };\nvoid f(A a) { a.run(1); }\n"
     new, n, why = D.rewrite_calls(src, [("run", "_ZN1A3runE_", False, "A", False)])

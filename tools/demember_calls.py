@@ -301,6 +301,95 @@ def find_static_call(text, method, start=0):
     return None
 
 
+def member_bodies(text, cls):
+    """Spans of the body of every `cls::name(..) { .. }` definition in `text`.
+
+    Only a definition whose `)` is followed directly by `{`. That excludes a
+    declaration (`;`), a const member function (`this` would be `const cls*`,
+    which does not convert to the `void*` receiver), and a constructor with an
+    initialiser list -- none of which this tool has any business rewriting."""
+    out = []
+    for m in re.finditer(r"\b" + re.escape(cls) + r"\s*::\s*~?[A-Za-z_]\w*\s*\(", text):
+        depth, i = 0, m.end() - 1
+        while i < len(text):
+            if text[i] == "(":
+                depth += 1
+            elif text[i] == ")":
+                depth -= 1
+                if depth == 0:
+                    break
+            i += 1
+        if i >= len(text):
+            continue
+        j = i + 1
+        while j < len(text) and text[j] in " \t\r\n":
+            j += 1
+        if j >= len(text) or text[j] != "{":
+            continue
+        depth, k = 0, j
+        while k < len(text):
+            if text[k] == "{":
+                depth += 1
+            elif text[k] == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            k += 1
+        out.append((j, min(k + 1, len(text))))
+    return out
+
+
+def find_implicit_call(text, method, cls, start=0):
+    """Locate an unqualified `method(...)` inside a member function of `cls`.
+
+    (args, span) or None. This is the shape the corpus spells when the file IS a
+    member of the class -- `Player::St_Land_Init` calling its sibling `SetAnim(..)`
+    with no receiver at all, which no amount of looking for `->` will find.
+
+    Attribution here is the strongest of the three, and comes from the language
+    rather than from a cast: inside `cls::f() { .. }` an unqualified `method` is
+    found in class scope, which is searched before namespace scope, so it IS
+    `this->method(..)` and a free function of the same name is hidden. That is
+    also why nothing outside such a body is ever considered -- and why the
+    declaration inside `struct cls { .. }` cannot be mistaken for a call."""
+    bodies = member_bodies(text, cls)
+    if not bodies:
+        return None
+    for m in re.finditer(r"(?<![\w.])" + re.escape(method) + r"\s*\(", text[start:]):
+        s = start + m.start()
+        if not any(a <= s < b for a, b in bodies):
+            continue
+        k = s
+        while k > 0 and text[k - 1] in " \t\r\n":
+            k -= 1
+        # `->m(`, `.m(` and `Q::m(` belong to the other two finders; a preceding
+        # `*`, `&` or identifier is a declaration, not a call.
+        if k >= 2 and text[k - 2:k] in ("->", "::"):
+            continue
+        if k >= 1 and text[k - 1] in ".*&":
+            continue
+        if k >= 1 and (text[k - 1].isalnum() or text[k - 1] == "_"):
+            w = k
+            while w > 0 and (text[w - 1].isalnum() or text[w - 1] == "_"):
+                w -= 1
+            if text[w:k] not in KEYWORD_BEFORE_CALL:
+                continue
+        open_at = start + m.end() - 1
+        depth, i = 0, open_at
+        while i < len(text):
+            if text[i] == "(":
+                depth += 1
+            elif text[i] == ")":
+                depth -= 1
+                if depth == 0:
+                    break
+            i += 1
+        if i >= len(text):
+            continue
+        return split_args(text[open_at + 1:i]), (s, i + 1)
+    return None
+
+
 def _unwrap(expr):
     """`expr` less ONE balanced outer paren layer, if it is wrapped in one.
 
@@ -374,7 +463,8 @@ def rewrite_calls(text, todo):
 
     So a call is rewritten only where the source says which class it belongs to:
     a qualified call names it outright, an instance call names it in the
-    receiver's cast. Where the name is declared only once in the file the
+    receiver's cast, and an unqualified call inside `cls::f() { .. }` is named by
+    the function it sits in. Where the name is declared only once in the file the
     receiver need not repeat it, there being nothing else it could mean; where it
     is declared more than once, a receiver that names nothing is not evidence and
     the whole file is left alone."""
@@ -411,6 +501,21 @@ def rewrite_calls(text, todo):
         if unattributed:
             return orig, 0, (f"ambiguous: {method} is declared more than once and "
                              f"{unattributed} call site(s) do not name a class")
+        # ... and the same method called with no receiver at all, from inside a
+        # member function of its own class. A separate sweep rather than a third
+        # branch above: the two shapes are independent, and an explicit rewrite
+        # leaves nothing an unqualified search could pick up by mistake.
+        if not is_static:
+            pos = 0
+            while True:
+                hit = find_implicit_call(text, method, cls, pos)
+                if hit is None:
+                    break
+                cargs, (s, e) = hit
+                call = f"{target}({', '.join(['this'] + cargs)})"
+                text = text[:s] + call + text[e:]
+                pos = s + len(call)
+                replaced += 1
         if replaced == 0:
             return orig, 0, "call site not in a recognised shape"
         n += replaced
