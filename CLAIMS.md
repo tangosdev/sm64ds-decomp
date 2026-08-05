@@ -32,6 +32,7 @@ start converting a class; the same staleness rule applies.
 
 | Range | Who | Claimed | Status |
 | ov006 func_ov006_020ff8c8 (0x020ff8c8, size 0x28c) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3 and 2004/b56); levers: sibling dual-addr CTA/ACC/VEL, FB>=3 branch order, VEL if(v>=table[i+2]) sub-else-add; from near-miss div=253→1→0; API clm_4fc4c38a1ff8 kept |
+| ov006 func_ov006_020ffb54 (0x020ffb54, size 0x290) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3 and 2004/b56); levers: adapted twin 020ff8c8 dual-addr form, OUTFLAG2=3, tables ebb0/ebc0/ecd4, physics t<=lim / vel<=-0x800 / VEL=+0x1000; from near-miss div=184→0; API clm_372dd7ea6e00 kept |
 | ov006 func_ov006_02103ac0 (0x02103ac0, size 0x13c) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); lever: early-return after PlayBank (forces ROM `beq` + pool order 0x566c/0x19d/0x5670; near-miss if/else predicated); from near-miss div=31→0; API clm_390c35cd32cf kept |
 | ov006 func_ov006_020fdaf0 (0x020fdaf0, size 0x250) | lunavyqo (Grok) | 2026-08-05 | **active** — match from near-miss div=119; API clm_4014d5ddd06c |
 | ov006 func_ov006_020fe394 (0x020fe394, size 0x3bc) | lunavyqo (Grok) | 2026-08-05 | **active** — batch5 match from near-miss div=255; API clm_8b289f87854d |
