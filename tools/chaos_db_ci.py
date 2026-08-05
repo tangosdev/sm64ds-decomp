@@ -65,39 +65,6 @@ def no_match_needed(head: str) -> dict[str, str] | None:
     return {"bucket": bucket, "reason": reason}
 
 
-def module_universe() -> list[tuple[str, pathlib.Path]]:
-    """Every module the viewer should show, as (label, symbols.txt), from the ONE
-    shared enumerator in relocs.py.
-
-    This used to be a local regex that returned arm9 and ovNNN and silently
-    dropped everything else, which is why the whole itcm module -- 43 functions,
-    including the largest unmatched function in the game -- was invisible in the
-    viewer for as long as the viewer has existed. Nobody could see those
-    functions to claim them, and the percentages read as complete because the
-    denominator was missing too.
-
-    modules.py had the identical bug and was fixed on 2026-08-01 (see
-    notes/itcm.md: the autoloads' absence "reads exactly like clean"). Rather
-    than fix the same bug a third time somewhere else, this defers to relocs.py
-    and then CHECKS ITSELF against the filesystem: any config/**/symbols.txt the
-    enumerator does not yield is a hard failure, not a silent skip. A new module
-    can now be forgotten in exactly one place, and that place fails loudly."""
-    known: dict[pathlib.Path, str] = {}
-    for label, path in RL.iter_symbol_files():
-        if path.is_file():
-            known[path.resolve()] = label
-    missed = sorted(p for p in CONFIG.rglob("symbols.txt")
-                    if p.resolve() not in known)
-    if missed:
-        rels = ", ".join(p.relative_to(REPO).as_posix() for p in missed)
-        raise SystemExit(
-            f"chaos_db_ci: {len(missed)} symbols.txt not covered by "
-            f"relocs.iter_symbol_files(): {rels}\n"
-            "Teach relocs.py about the module rather than filtering it out here. "
-            "A module missing from the viewer looks like completed work.")
-    return sorted(known.items(), key=lambda kv: kv[1])
-
-
 def _handle_from(name: str, email: str) -> str:
     """git identity -> canonical-ish handle: noreply login, else the email local-part
     (stable across author-name typos, usually equals the GitHub handle), else the name."""
@@ -376,7 +343,9 @@ def main():
 
     functions = []
     total_b = matched_b = matched_n = 0
-    for sym, label in module_universe():
+    # Every module, itcm included. relocs.module_universe is the one definition of
+    # what "every module" means, and it fails loudly rather than skipping a new one.
+    for sym, label in RL.module_universe():
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_RE.match(line)
             if not m:

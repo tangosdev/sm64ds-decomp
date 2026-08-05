@@ -26,27 +26,19 @@ CONFIG = REPO / "config"
 SRC = REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
+import relocs as RL  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
 
 
-def module_label(sym_path):
-    """config/arm9/symbols.txt -> arm9; config/arm9/overlays/ovNNN -> ovNNN."""
-    rel = sym_path.parent.relative_to(CONFIG).as_posix()
-    if rel == "arm9":
-        return "arm9"
-    m = re.fullmatch(r"arm9/overlays/(ov\d+)", rel)
-    return m.group(1) if m else None
-
-
 def main():
     recs, seen = [], set()
-    for sym in sorted(CONFIG.rglob("symbols.txt")):
-        label = module_label(sym)
-        if label is None:
-            continue
+    # Every module, itcm included. The local module_label here was the fourth copy
+    # of the arm9-plus-overlays filter, and it kept itcm's matches out of the
+    # ledger that the treemap and the local viewer both read.
+    for sym, label in RL.module_universe():
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_RE.match(line)
             if not m:
