@@ -405,3 +405,5 @@ start converting a class; the same staleness rule applies.
 | ov073 _ZN11ChiefChilly8BehaviorEv (0x021218a0, size 0x42c) | lunavyqo (Grok) | 2026-07-30 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); opt_propagation off + top-decl angx; 87→72→0 |
 | ov073 _ZN11ChiefChilly8BehaviorEv (0x021218a0, size 0x42c) | lunavyqo (Grok) | 2026-07-30 | **active** — match from near-miss div=87; CLAIMS.md only (API key expired) |
 | ov006 func_ov006_02102274 (0x02102274, size 0x1f8) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); lever: tail store `*(c+(idx<<6)+0x5264)=-0xf8000` then `ip=c+(idx<<6); ip+=0x5000` (forces t=r1 + non-coalesced `rsb r2`; try8 `ip+=` form floored at pure r1/r2 regperm); from near-miss div=4→0; API clm_0e45e6b69553 kept |
+
+| ov006 func_ov006_020fdd40 (0x020fdd40, size 0x468) | lunavyqo (Grok) | 2026-08-05 | **released** — near-miss **210→151** banked (f26 shape, stride bases, u16 idx/ang); residual double-mul off + self r4 vs r5, size 0x43c vs 0x468; tip in nearmiss/db.jsonl |
