@@ -31,6 +31,7 @@ start converting a class; the same staleness rule applies.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_020ff8c8 (0x020ff8c8, size 0x28c) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3 and 2004/b56); levers: sibling dual-addr CTA/ACC/VEL, FB>=3 branch order, VEL if(v>=table[i+2]) sub-else-add; from near-miss div=253→1→0; API clm_4fc4c38a1ff8 kept |
 | ov006 func_ov006_020fdaf0 (0x020fdaf0, size 0x250) | lunavyqo (Grok) | 2026-08-05 | **active** — match from near-miss div=119; API clm_4014d5ddd06c |
 | ov006 func_ov006_020fe394 (0x020fe394, size 0x3bc) | lunavyqo (Grok) | 2026-08-05 | **active** — batch5 match from near-miss div=255; API clm_8b289f87854d |
 | ov006 func_ov006_020fea70 (0x020fea70, size 0x138) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); lever: pointer-walk + two-step `p=o+i*0x38; p=p+0x4000` (base→r3, zero→ip); from near-miss div=41→16→0; API clm_36d3d68c72df kept |
