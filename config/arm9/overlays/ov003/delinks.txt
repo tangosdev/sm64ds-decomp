@@ -19,6 +19,7 @@ src/func_ov003_020ad7a0.c:
     .text start:0x020ad7a0 end:0x020ad7a4
 
 src/func_ov003_020ad7a4.cpp:
+    complete
     .text start:0x020ad7a4 end:0x020ad814
 
 src/func_ov003_020ad814.cpp:

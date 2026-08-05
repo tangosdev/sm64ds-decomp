@@ -76,6 +76,7 @@ src/func_ov018_02111bf0.c:
     .text start:0x02111bf0 end:0x02111d28
 
 src/func_ov018_02111d28.cpp:
+    complete
     .text start:0x02111d28 end:0x02111e28
 
 src/func_ov018_02111e28.cpp:
@@ -83,6 +84,7 @@ src/func_ov018_02111e28.cpp:
     .text start:0x02111e28 end:0x02111f1c
 
 src/func_ov018_02111f1c.cpp:
+    complete
     .text start:0x02111f1c end:0x02111fac
 
 src/func_ov018_02111fac.c:
@@ -146,6 +148,7 @@ src/func_ov018_021126f8.c:
     .text start:0x021126f8 end:0x02112730
 
 src/func_ov018_02112730.cpp:
+    complete
     .text start:0x02112730 end:0x0211278c
 
 src/PowerStarCreate_Spawn.c:

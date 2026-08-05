@@ -106,6 +106,7 @@ src/func_ov081_02124b98.cpp:
     .text start:0x02124b98 end:0x02124d14
 
 src/func_ov081_02124d14.cpp:
+    complete
     .text start:0x02124d14 end:0x02124d50
 
 src/func_ov081_02124d50.cpp:
@@ -137,6 +138,7 @@ src/func_ov081_02125038.cpp:
     .text start:0x02125038 end:0x02125068
 
 src/func_ov081_02125068.cpp:
+    complete
     .text start:0x02125068 end:0x021250c8
 
 src/func_ov081_021250c8.c:
@@ -397,6 +399,7 @@ src/_ZN8IceBlockD0Ev.c:
     .text start:0x02127b80 end:0x02127be0
 
 src/func_ov081_02127be0.cpp:
+    complete
     .text start:0x02127be0 end:0x02127ccc
 
 src/func_ov081_02127ccc.cpp:

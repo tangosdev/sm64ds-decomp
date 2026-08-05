@@ -6,7 +6,13 @@ struct Actor {
     Player *ClosestPlayer();
     short HorzAngleToCPlayer();
 };
-namespace Sound { void PlaySub(u32, u32, u32, Fix12i, bool); }
+namespace Sound { void PlaySub(u32, u32, u32, Fix12i, bool);
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, Fix12i, bool);
+ }
 extern "C" void func_0201f32c(int);
 extern "C" int func_ov085_0212e728(void *c, void *p);
 extern unsigned char data_0209d66c;
@@ -48,7 +54,7 @@ extern "C" int func_ov085_0212de5c(PlayerObj *c)
         int n = *pp + 1;
         *pp = n;
     }
-    Sound::PlaySub(0x4b, 0x14, 0x7f, 0x15666, false);
+    Sound::_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x14, 0x7f, 0x15666, false);
     switch (c->v2c8) {
     case 1:
         p->v723 = 1;

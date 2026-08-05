@@ -122,6 +122,7 @@ src/_ZN13PeachPainting6RenderEv.cpp:
     .text start:0x02111ee8 end:0x02111f28
 
 src/_ZN13PeachPainting8BehaviorEv.cpp:
+    complete
     .text start:0x02111f28 end:0x02111fc0
 
 src/_ZN13PeachPainting13InitResourcesEv.cpp:

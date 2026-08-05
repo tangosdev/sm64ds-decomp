@@ -53,9 +53,11 @@ src/func_ov064_021163bc.c:
     .text start:0x021163bc end:0x021163c0
 
 src/func_ov064_021163c0.cpp:
+    complete
     .text start:0x021163c0 end:0x02116460
 
 src/func_ov064_02116460.cpp:
+    complete
     .text start:0x02116460 end:0x02116560
 
 src/func_ov064_02116560.cpp:
@@ -473,6 +475,7 @@ src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
     .text start:0x021198bc end:0x0211992c
 
 src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
+    complete
     .text start:0x0211992c end:0x02119a18
 
 src/JetStream_Spawn.c:
@@ -564,6 +567,10 @@ src/func_ov064_0211a39c.cpp:
 src/func_ov064_0211a49c.c:
     complete
     .text start:0x0211a49c end:0x0211a4c4
+
+src/func_ov064_0211a4c4.c:
+    complete
+    .text start:0x0211a4c4 end:0x0211a6e0
 
 src/func_ov064_0211a6e0.c:
     complete

@@ -3,6 +3,12 @@ struct Vector3 { int x, y, z; };
 struct CylinderClsnWithPos {
     void Init(const Vector3&, int, int, unsigned int, unsigned int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(void *, const Vector3&, int, int, unsigned int, unsigned int);
+
 struct Model { void LoadAndSetFile(unsigned short, int, int); };
 extern "C" void* _Znwj(unsigned int);
 extern "C" void _ZN19CylinderClsnWithPosC1Ev(void*);
@@ -30,7 +36,7 @@ int _ZN4Tree13InitResourcesEv(char* self) {
         int* q = (int*)(((int)p + 4));
         *q = *q + 0x1e000;
     }
-    ((CylinderClsnWithPos*)(p + 0xc))->Init(*(Vector3*)(self + 0x5c), 0x35555, 0x1f4000, 0x380000c, 0);
+    _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj((CylinderClsnWithPos*)(p + 0xc), *(Vector3*)(self + 0x5c), 0x35555, 0x1f4000, 0x380000c, 0);
     *(int*)(p + 0x48) = *slot;
     *slot = (int)p;
     if (*(int*)(p + 0x48) != 0) {

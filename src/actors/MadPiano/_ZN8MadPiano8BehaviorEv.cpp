@@ -22,6 +22,12 @@ struct MeshColliderBase {
 struct Platform {
   int IsClsnInRange(int, int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
+
 
 int MadPiano::Behavior()
 {
@@ -43,7 +49,7 @@ int MadPiano::Behavior()
     if (((struct MeshColliderBase*)((char*)&mMeshCollider))->IsEnabled() != 0)
       ((struct MeshColliderBase*)((char*)&mMeshCollider))->Disable();
   } else {
-    ((struct Platform*)((char*)this))->IsClsnInRange(0x1f4000, 0);
+    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_((struct Platform*)((char*)this), 0x1f4000, 0);
   }
   func_ov063_0211d88c(((char*)this));
   func_ov063_0211d828(((char*)this));

@@ -17,6 +17,7 @@ src/func_ov091_02130fac.cpp:
     .text start:0x02130fac end:0x02131070
 
 src/func_ov091_02131070.cpp:
+    complete
     .text start:0x02131070 end:0x021310fc
 
 src/func_ov091_021310fc.cpp:

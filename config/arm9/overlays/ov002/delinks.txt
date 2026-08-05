@@ -152,6 +152,7 @@ src/func_ov002_020aefa4.c:
     .text start:0x020aefa4 end:0x020aefb8
 
 src/func_ov002_020aefb8.c:
+    complete
     .text start:0x020aefb8 end:0x020af0c0
 
 src/func_ov002_020af0c0.c:
@@ -879,6 +880,7 @@ src/func_ov002_020b5a70.c:
     .text start:0x020b5a70 end:0x020b5ab4
 
 src/func_ov002_020b5ab4.cpp:
+    complete
     .text start:0x020b5ab4 end:0x020b5b98
 
 src/func_ov002_020b5b98.c:
@@ -1161,6 +1163,7 @@ src/func_ov002_020b7e08.c:
     .text start:0x020b7e08 end:0x020b7e1c
 
 src/func_ov002_020b7e1c.cpp:
+    complete
     .text start:0x020b7e1c end:0x020b7f24
 
 src/func_ov002_020b7f24.c:
@@ -1671,6 +1674,7 @@ src/func_ov002_020bd20c.c:
     .text start:0x020bd20c end:0x020bd250
 
 src/func_ov002_020bd250.cpp:
+    complete
     .text start:0x020bd250 end:0x020bd354
 
 src/func_ov002_020bd354.c:
@@ -1968,6 +1972,7 @@ src/func_ov002_020c0fb4.c:
     .text start:0x020c0fb4 end:0x020c1234
 
 src/func_ov002_020c1234.cpp:
+    complete
     .text start:0x020c1234 end:0x020c133c
 
 src/func_ov002_020c133c.c:
@@ -2007,6 +2012,7 @@ src/func_ov002_020c1e44.c:
     .text start:0x020c1e44 end:0x020c1eb4
 
 src/func_ov002_020c1eb4.cpp:
+    complete
     .text start:0x020c1eb4 end:0x020c200c
 
 src/func_ov002_020c200c.c:
@@ -2030,6 +2036,7 @@ src/func_ov002_020c25a8.c:
     .text start:0x020c25a8 end:0x020c29d4
 
 src/func_ov002_020c29d4.cpp:
+    complete
     .text start:0x020c29d4 end:0x020c2b08
 
 src/func_ov002_020c2b08.c:
@@ -2129,6 +2136,7 @@ src/_ZN6Player15St_Respawn_MainEv.cpp:
     .text start:0x020c3f40 end:0x020c4088
 
 src/_ZN6Player15St_Respawn_InitEv.cpp:
+    complete
     .text start:0x020c4088 end:0x020c4188
 
 src/func_ov002_020c4188.c:
@@ -2414,6 +2422,7 @@ src/func_ov002_020c8f0c.cpp:
     .text start:0x020c8f0c end:0x020c8f80
 
 src/func_ov002_020c8f80.cpp:
+    complete
     .text start:0x020c8f80 end:0x020c904c
 
 src/func_ov002_020c904c.c:
@@ -2637,6 +2646,7 @@ src/func_ov002_020cac60.c:
     .text start:0x020cac60 end:0x020cad10
 
 src/_ZN6Player18St_CameraZoom_MainEv.cpp:
+    complete
     .text start:0x020cad10 end:0x020cae10
 
 src/func_ov002_020cae10.c:
@@ -2899,9 +2909,11 @@ src/func_ov002_020d0178.c:
     .text start:0x020d0178 end:0x020d0580
 
 src/func_ov002_020d0580.cpp:
+    complete
     .text start:0x020d0580 end:0x020d06c0
 
 src/func_ov002_020d06c0.cpp:
+    complete
     .text start:0x020d06c0 end:0x020d0824
 
 src/_ZN6Player17St_LedgeGrab_MainEv.cpp:
@@ -3084,6 +3096,7 @@ src/func_ov002_020d4748.cpp:
     .text start:0x020d4748 end:0x020d4c30
 
 src/func_ov002_020d4c30.cpp:
+    complete
     .text start:0x020d4c30 end:0x020d4d88
 
 src/func_ov002_020d4d88.c:
@@ -3724,6 +3737,7 @@ src/func_ov002_020df300.c:
     .text start:0x020df300 end:0x020df34c
 
 src/func_ov002_020df34c.cpp:
+    complete
     .text start:0x020df34c end:0x020df3c8
 
 src/_ZN6Player14St_Owl_CleanupEv.cpp:
@@ -3755,6 +3769,7 @@ src/func_ov002_020df8f0.c:
     .text start:0x020df8f0 end:0x020dfdf0
 
 src/_ZN6Player11St_Fly_MainEv.cpp:
+    complete
     .text start:0x020dfdf0 end:0x020e027c
 
 src/_ZN6Player11St_Fly_InitEv.cpp:
@@ -4214,6 +4229,7 @@ src/func_ov002_020e8098.cpp:
     .text start:0x020e8098 end:0x020e81e0
 
 src/func_ov002_020e81e0.cpp:
+    complete
     .text start:0x020e81e0 end:0x020e8244
 
 src/func_ov002_020e8244.c:
@@ -4432,6 +4448,7 @@ src/_ZN4Tree8BehaviorEv.cpp:
     .text start:0x020ec1d8 end:0x020ec22c
 
 src/_ZN4Tree13InitResourcesEv.cpp:
+    complete
     .text start:0x020ec22c end:0x020ec32c
 
 src/Tree_Spawn.cpp:

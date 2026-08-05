@@ -13,6 +13,13 @@ extern "C" void func_ov071_0211f498(char *c);
 extern "C" void Scuttlebug_SetState(char *c, int x);
 extern "C" void func_ov071_0211f29c(char *c);
 struct CylinderClsn2 { void Clear(); void Update(); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN12CylinderClsn5ClearEv(void *);
+extern "C" void _ZN12CylinderClsn6UpdateEv(void *);
+
 
 extern "C" int func_ov071_0211f7d4(Actor *self)
 {
@@ -39,7 +46,7 @@ extern "C" int func_ov071_0211f7d4(Actor *self)
     }
     self->UpdatePos((CylinderClsn*)(s + 0x160));
     func_ov071_0211f29c(s);
-    ((CylinderClsn2*)(s + 0x160))->Clear();
-    ((CylinderClsn2*)(s + 0x160))->Update();
+    _ZN12CylinderClsn5ClearEv((CylinderClsn2*)(s + 0x160));
+    _ZN12CylinderClsn6UpdateEv((CylinderClsn2*)(s + 0x160));
     return 1;
 }

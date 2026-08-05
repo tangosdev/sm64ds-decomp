@@ -274,6 +274,7 @@ src/_ZN13RollingLogLll8BehaviorEv.cpp:
     .text start:0x02112800 end:0x021128b8
 
 src/_ZN13RollingLogLll13InitResourcesEv.cpp:
+    complete
     .text start:0x021128b8 end:0x02112918
 
 src/VolcanoFire_Spawn.c:

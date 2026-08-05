@@ -875,6 +875,7 @@ src/func_0200fa8c.c:
     .text start:0x0200fa8c end:0x0200fac4
 
 src/_ZN5Actor13LandingDustAtER7Vector3b.cpp:
+    complete
     .text start:0x0200fac4 end:0x0200fb4c
 
 src/_ZN5Actor15HugeLandingDustEb.c:
@@ -882,6 +883,7 @@ src/_ZN5Actor15HugeLandingDustEb.c:
     .text start:0x0200fb4c end:0x0200fb84
 
 src/_ZN5Actor17HugeLandingDustAtER7Vector3b.cpp:
+    complete
     .text start:0x0200fb84 end:0x0200fc0c
 
 src/_ZN5Actor11LandingDustEb.c:

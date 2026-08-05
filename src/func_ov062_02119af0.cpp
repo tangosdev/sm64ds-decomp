@@ -4,7 +4,13 @@
 #include "common.h"
 #pragma opt_propagation off
 
-namespace cstd { int atan2(int y, int x); }
+namespace cstd { int atan2(int y, int x);
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+ }
 extern "C" int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, Vector3 *v, unsigned int i);
 extern "C" int func_ov062_02119af0(char *p) {
@@ -29,7 +35,7 @@ extern "C" int func_ov062_02119af0(char *p) {
     dz = nd4 - n64;
     dxc = ncc - nc0;
     dzc = nd4 - nc8;
-    *(short *)(p + 0x3a8) = (short)cstd::atan2(dx, dz);
+    *(short *)(p + 0x3a8) = (short)cstd::_ZN4cstd5atan2E5Fix12IiES1_(dx, dz);
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist((Vector3 *)(p + 0x5c), (Vector3 *)(p + 0x3cc)) < (*(int *)(p + 0x98) >> 1)) {
         int v = *(int *)(p + 0x3cc);

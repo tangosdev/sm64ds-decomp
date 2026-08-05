@@ -2,6 +2,12 @@
 struct BCA_File;
 struct Animation { int Finished(); int WillHitFrame(int) const; };
 struct ModelAnim { void SetAnim(BCA_File *f, int a, int b, unsigned int c); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, int b, unsigned int c);
+
 extern "C" void *data_ov006_02141e8c;
 extern "C" void *data_ov006_02141e84;
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
@@ -10,8 +16,7 @@ extern "C" void func_ov006_020e7cc0(char *thiz)
 {
     if (((Animation*)(thiz + 0x5c))->Finished() != 0 &&
         *(void**)(thiz + 0x6c) == ((void**)&data_ov006_02141e8c)[1]) {
-        ((ModelAnim*)(thiz + 0xc))->SetAnim(
-            (BCA_File*)((void**)&data_ov006_02141e84)[1], 0, 0x800, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(thiz + 0xc), (BCA_File*)((void**)&data_ov006_02141e84)[1], 0, 0x800, 0);
         return;
     }
     if (((Animation*)(thiz + 0x5c))->WillHitFrame(0x10) == 0 &&

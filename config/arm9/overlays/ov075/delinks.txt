@@ -113,6 +113,7 @@ src/func_ov075_02114be4.cpp:
     .text start:0x02114be4 end:0x02114cd8
 
 src/func_ov075_02114cd8.cpp:
+    complete
     .text start:0x02114cd8 end:0x02114ddc
 
 src/func_ov075_02114ddc.cpp:
@@ -148,6 +149,7 @@ src/func_ov075_02115290.c:
     .text start:0x02115290 end:0x021152d4
 
 src/func_ov075_021152d4.cpp:
+    complete
     .text start:0x021152d4 end:0x02115388
 
 src/_ZN14UnknownVsEntry16CleanupResourcesEv.cpp:
@@ -266,6 +268,7 @@ src/func_ov075_021173a8.c:
     .text start:0x021173a8 end:0x02117590
 
 src/func_ov075_02117590.cpp:
+    complete
     .text start:0x02117590 end:0x0211763c
 
 src/func_ov075_0211763c.c:
@@ -360,6 +363,7 @@ src/func_ov075_0211944c.c:
     .text start:0x0211944c end:0x021194e4
 
 src/func_ov075_021194e4.cpp:
+    complete
     .text start:0x021194e4 end:0x02119640
 
 src/func_ov075_02119640.c:
@@ -387,6 +391,7 @@ src/func_ov075_02119918.c:
     .text start:0x02119918 end:0x021199d8
 
 src/func_ov075_021199d8.cpp:
+    complete
     .text start:0x021199d8 end:0x02119b34
 
 src/func_ov075_02119b34.c:

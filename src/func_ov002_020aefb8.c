@@ -10,6 +10,12 @@ struct Actor {
     void UpdatePosWithOnlySpeed(CylinderClsn*);
     short ReflectAngle(int, int, short);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *, int, int, short);
+
 struct Enemy : Actor {
     void UpdateWMClsn(WithMeshClsn&, unsigned int);
 };
@@ -38,5 +44,5 @@ void func_ov002_020aefb8(char* self) {
     ((Actor*)self)->UpdatePosWithOnlySpeed((CylinderClsn*)(self + 0x110));
     ((Enemy*)self)->UpdateWMClsn(*(WithMeshClsn*)(self + 0x144), 0);
     if (!((WithMeshClsn*)(self + 0x144))->IsOnWall()) return;
-    *(short*)(self + 0x94) = ((Actor*)self)->ReflectAngle(*(int*)(self + 0xe0), *(int*)(self + 0xe8), *(short*)(self + 0x94));
+    *(short*)(self + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s((Actor*)self, *(int*)(self + 0xe0), *(int*)(self + 0xe8), *(short*)(self + 0x94));
 }

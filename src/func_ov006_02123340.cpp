@@ -15,6 +15,13 @@ struct PSys {
     static void* NewUnkCallback818(unsigned int a, unsigned int b, int c, int d, int e, void* f);
     static void* FromUniqueID(unsigned int id);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned int a, unsigned int b, int c, int d, int e, void* f);
+extern "C" void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
+
 
 extern void ApproachLinear(int& x, int a, int b);
 
@@ -35,9 +42,8 @@ extern "C" int func_ov006_02123340(Obj* self)
     func_ov006_020eef90();
     func_ov006_02122ab8();
     char* c = (char*)self;
-    *(void**)(c + 0x7ac4) = PSys::NewUnkCallback818(
-        *(unsigned int*)(c + 0x7ac4), 0xf0, 0x280000, 0x700000, -0x580000, 0);
-    void* p = PSys::FromUniqueID(*(unsigned int*)(c + 0x7ac4));
+    *(void**)(c + 0x7ac4) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(*(unsigned int*)(c + 0x7ac4), 0xf0, 0x280000, 0x700000, -0x580000, 0);
+    void* p = _ZN8Particle6System12FromUniqueIDEj(*(unsigned int*)(c + 0x7ac4));
     if (p != 0) {
         *(char*)((char*)p + 0x58) = (char)(*(int*)(c + 0x7ac8) >> 12);
         ApproachLinear(*(int*)(c + 0x7ac8), 0x14000, 0x200);

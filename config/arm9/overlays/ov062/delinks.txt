@@ -52,6 +52,7 @@ src/func_ov062_02116498.c:
     .text start:0x02116498 end:0x021164e8
 
 src/func_ov062_021164e8.cpp:
+    complete
     .text start:0x021164e8 end:0x021165e0
 
 src/func_ov062_021165e0.c:
@@ -103,6 +104,7 @@ src/Chuckya_ChangeState.cpp:
     .text start:0x02116cd8 end:0x02116d28
 
 src/func_ov062_02116d28.cpp:
+    complete
     .text start:0x02116d28 end:0x02116dbc
 
 src/func_ov062_02116dbc.cpp:
@@ -197,6 +199,7 @@ src/func_ov062_02117c98.c:
     .text start:0x02117c98 end:0x02118004
 
 src/func_ov062_02118004.cpp:
+    complete
     .text start:0x02118004 end:0x02118058
 
 src/func_ov062_02118058.c:
@@ -316,6 +319,7 @@ src/func_ov062_021199ac.c:
     .text start:0x021199ac end:0x02119af0
 
 src/func_ov062_02119af0.cpp:
+    complete
     .text start:0x02119af0 end:0x02119be0
 
 src/func_ov062_02119be0.c:
@@ -390,6 +394,7 @@ src/_ZN9KoopaFlag8BehaviorEv.cpp:
     .text start:0x0211b05c end:0x0211b168
 
 src/_ZN9KoopaFlag13InitResourcesEv.cpp:
+    complete
     .text start:0x0211b168 end:0x0211b208
 
 src/KoopaFlag_Spawn.c:
@@ -421,6 +426,7 @@ src/func_ov062_0211b800.c:
     .text start:0x0211b800 end:0x0211b880
 
 src/func_ov062_0211b880.cpp:
+    complete
     .text start:0x0211b880 end:0x0211b8d8
 
 src/func_ov062_0211b8d8.cpp:
@@ -428,6 +434,7 @@ src/func_ov062_0211b8d8.cpp:
     .text start:0x0211b8d8 end:0x0211b930
 
 src/func_ov062_0211b930.cpp:
+    complete
     .text start:0x0211b930 end:0x0211ba84
 
 src/func_ov062_0211ba84.c:
@@ -435,6 +442,7 @@ src/func_ov062_0211ba84.c:
     .text start:0x0211ba84 end:0x0211bc54
 
 src/func_ov062_0211bc54.cpp:
+    complete
     .text start:0x0211bc54 end:0x0211bd10
 
 src/func_ov062_0211c218.c:

@@ -7,6 +7,12 @@ struct WithMeshClsn {
 struct Player {
     int IsState(State &s);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN6Player7IsStateERNS_5StateE(void *, State &s);
+
 
 extern "C" int Player_ScaleByCharFactor(void *c, int a);
 extern "C" int func_02037e38(unsigned int *p);
@@ -22,9 +28,9 @@ extern "C" void func_ov002_020c29d4(Player *self)
     unsigned char flags = *(unsigned char *)(base + 0x6eb);
     if ((flags & 1) && !(flags & 0x80)) {
         if (*(int *)(base + 0x98) >= Player_ScaleByCharFactor(self, 0x28000)) {
-            if (self->IsState(data_ov002_0211013c)) {
+            if (_ZN6Player7IsStateERNS_5StateE(self, data_ov002_0211013c)) {
                 *(short *)(base + 0x6bc) = 0x1e;
-            } else if (self->IsState(data_ov002_021101b4)
+            } else if (_ZN6Player7IsStateERNS_5StateE(self, data_ov002_021101b4)
                        && *(int *)(base + 0xa8) < 0
                        && (*(int *)(base + 0x684) - *(int *)(base + 0x60)) < 0x64000) {
                 *(short *)(base + 0x6bc) = 0x1e;

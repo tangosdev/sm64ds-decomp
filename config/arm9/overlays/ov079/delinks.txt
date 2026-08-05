@@ -216,6 +216,7 @@ src/func_ov079_02126f64.cpp:
     .text start:0x02126f64 end:0x02126f8c
 
 src/func_ov079_02126f8c.cpp:
+    complete
     .text start:0x02126f8c end:0x02127090
 
 src/func_ov079_02127090.cpp:
@@ -251,6 +252,7 @@ src/_ZN12FortressWall6RenderEv.cpp:
     .text start:0x02127364 end:0x021273a4
 
 src/_ZN12FortressWall8BehaviorEv.cpp:
+    complete
     .text start:0x021273a4 end:0x02127494
 
 src/_ZN12FortressWall13InitResourcesEv.cpp:

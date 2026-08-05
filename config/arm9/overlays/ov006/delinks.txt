@@ -17,6 +17,7 @@ src/Camera_UpdateMatrices.c:
     .text start:0x020c0134 end:0x020c0264
 
 src/func_ov006_020c0264.cpp:
+    complete
     .text start:0x020c0264 end:0x020c0304
 
 src/func_ov006_020c0304.c:
@@ -75,6 +76,7 @@ src/func_ov006_020c0ce8.c:
     .text start:0x020c0ce8 end:0x020c0d68
 
 src/func_ov006_020c0d68.cpp:
+    complete
     .text start:0x020c0d68 end:0x020c0df0
 
 src/func_ov006_020c0df0.cpp:
@@ -106,6 +108,7 @@ src/func_ov006_020c11c0.cpp:
     .text start:0x020c11c0 end:0x020c1420
 
 src/func_ov006_020c1420.cpp:
+    complete
     .text start:0x020c1420 end:0x020c14bc
 
 src/func_ov006_020c14bc.cpp:
@@ -128,6 +131,7 @@ src/func_ov006_020c1760.c:
     .text start:0x020c1760 end:0x020c1764
 
 src/func_ov006_020c1764.cpp:
+    complete
     .text start:0x020c1764 end:0x020c1804
 
 src/func_ov006_020c1804.cpp:
@@ -556,6 +560,7 @@ src/func_ov006_020c6ca4.c:
     .text start:0x020c6ca4 end:0x020c6e4c
 
 src/func_ov006_020c6e4c.cpp:
+    complete
     .text start:0x020c6e4c end:0x020c6f3c
 
 src/func_ov006_020c6f3c.c:
@@ -643,6 +648,7 @@ src/func_ov006_020c78ec.cpp:
     .text start:0x020c78ec end:0x020c79a8
 
 src/func_ov006_020c79a8.cpp:
+    complete
     .text start:0x020c79a8 end:0x020c7a30
 
 src/func_ov006_020c7a30.c:
@@ -666,6 +672,7 @@ src/func_ov006_020c8048.c:
     .text start:0x020c8048 end:0x020c8084
 
 src/func_ov006_020c8084.cpp:
+    complete
     .text start:0x020c8084 end:0x020c814c
 
 src/func_ov006_020c814c.cpp:
@@ -789,6 +796,7 @@ src/func_ov006_020c8ecc.cpp:
     .text start:0x020c8ecc end:0x020c8f20
 
 src/func_ov006_020c8f20.cpp:
+    complete
     .text start:0x020c8f20 end:0x020c9024
 
 src/func_ov006_020c9024.cpp:
@@ -800,6 +808,7 @@ src/func_ov006_020c905c.c:
     .text start:0x020c905c end:0x020c9098
 
 src/func_ov006_020c9098.c:
+    complete
     .text start:0x020c9098 end:0x020c91ac
 
 src/func_ov006_020c91ac.cpp:
@@ -819,6 +828,7 @@ src/func_ov006_020c9aa0.cpp:
     .text start:0x020c9aa0 end:0x020c9c8c
 
 src/func_ov006_020c9c8c.c:
+    complete
     .text start:0x020c9c8c end:0x020c9d7c
 
 src/func_ov006_020c9d7c.c:
@@ -858,6 +868,7 @@ src/func_ov006_020ca39c.c:
     .text start:0x020ca39c end:0x020ca3a8
 
 src/func_ov006_020ca3a8.cpp:
+    complete
     .text start:0x020ca3a8 end:0x020ca430
 
 src/func_ov006_020ca430.c:
@@ -944,6 +955,7 @@ src/func_ov006_020cb16c.c:
     .text start:0x020cb16c end:0x020cb1a8
 
 src/func_ov006_020cb1a8.c:
+    complete
     .text start:0x020cb1a8 end:0x020cb2b4
 
 src/func_ov006_020cb2b4.c:
@@ -951,6 +963,7 @@ src/func_ov006_020cb2b4.c:
     .text start:0x020cb2b4 end:0x020cb528
 
 src/func_ov006_020cb528.c:
+    complete
     .text start:0x020cb528 end:0x020cb5c4
 
 src/func_ov006_020cb5c4.c:
@@ -958,6 +971,7 @@ src/func_ov006_020cb5c4.c:
     .text start:0x020cb5c4 end:0x020cb690
 
 src/func_ov006_020cb690.cpp:
+    complete
     .text start:0x020cb690 end:0x020cb72c
 
 src/func_ov006_020cb72c.c:
@@ -2761,6 +2775,7 @@ src/func_ov006_020e7be8.cpp:
     .text start:0x020e7be8 end:0x020e7cc0
 
 src/func_ov006_020e7cc0.cpp:
+    complete
     .text start:0x020e7cc0 end:0x020e7d7c
 
 src/func_ov006_020e7d7c.c:
@@ -6711,6 +6726,7 @@ src/func_ov006_021231ac.c:
     .text start:0x021231ac end:0x02123340
 
 src/func_ov006_02123340.cpp:
+    complete
     .text start:0x02123340 end:0x02123428
 
 src/func_ov006_0212373c.c:
