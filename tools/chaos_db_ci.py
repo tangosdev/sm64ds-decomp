@@ -32,6 +32,7 @@ CONFIG = REPO / "config"
 SRC = REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
+import relocs as RL  # noqa: E402
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
@@ -64,14 +65,37 @@ def no_match_needed(head: str) -> dict[str, str] | None:
     return {"bucket": bucket, "reason": reason}
 
 
-def module_label(sym_path: pathlib.Path) -> str | None:
-    """config/arm9/symbols.txt -> arm9; config/arm9/overlays/ovNNN -> ovNNN.
-    itcm/dtcm are skipped to match the viewer's module universe."""
-    rel = sym_path.parent.relative_to(CONFIG).as_posix()
-    if rel == "arm9":
-        return "arm9"
-    m = re.fullmatch(r"arm9/overlays/(ov\d+)", rel)
-    return m.group(1) if m else None
+def module_universe() -> list[tuple[str, pathlib.Path]]:
+    """Every module the viewer should show, as (label, symbols.txt), from the ONE
+    shared enumerator in relocs.py.
+
+    This used to be a local regex that returned arm9 and ovNNN and silently
+    dropped everything else, which is why the whole itcm module -- 43 functions,
+    including the largest unmatched function in the game -- was invisible in the
+    viewer for as long as the viewer has existed. Nobody could see those
+    functions to claim them, and the percentages read as complete because the
+    denominator was missing too.
+
+    modules.py had the identical bug and was fixed on 2026-08-01 (see
+    notes/itcm.md: the autoloads' absence "reads exactly like clean"). Rather
+    than fix the same bug a third time somewhere else, this defers to relocs.py
+    and then CHECKS ITSELF against the filesystem: any config/**/symbols.txt the
+    enumerator does not yield is a hard failure, not a silent skip. A new module
+    can now be forgotten in exactly one place, and that place fails loudly."""
+    known: dict[pathlib.Path, str] = {}
+    for label, path in RL.iter_symbol_files():
+        if path.is_file():
+            known[path.resolve()] = label
+    missed = sorted(p for p in CONFIG.rglob("symbols.txt")
+                    if p.resolve() not in known)
+    if missed:
+        rels = ", ".join(p.relative_to(REPO).as_posix() for p in missed)
+        raise SystemExit(
+            f"chaos_db_ci: {len(missed)} symbols.txt not covered by "
+            f"relocs.iter_symbol_files(): {rels}\n"
+            "Teach relocs.py about the module rather than filtering it out here. "
+            "A module missing from the viewer looks like completed work.")
+    return sorted(known.items(), key=lambda kv: kv[1])
 
 
 def _handle_from(name: str, email: str) -> str:
@@ -352,10 +376,7 @@ def main():
 
     functions = []
     total_b = matched_b = matched_n = 0
-    for sym in sorted(CONFIG.rglob("symbols.txt")):
-        label = module_label(sym)
-        if label is None:
-            continue
+    for sym, label in module_universe():
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_RE.match(line)
             if not m:
@@ -412,6 +433,11 @@ def main():
           f"{matched_n}/{len(functions)} funcs, {matched_b}/{total_b} bytes, "
           f"{db['stats']['moduleCount']} modules, "
           f"{sum(1 for f in functions if 'author' in f)} authored")
+    # Per-module counts in the log, so a module that stops being emitted shows up in
+    # the CI diff as a line that vanished. The silent version of this cost itcm its
+    # entire visibility; a number that goes to zero is at least readable.
+    per_mod = collections.Counter(f["module"] for f in functions)
+    print("  modules: " + ", ".join(f"{m}={n}" for m, n in sorted(per_mod.items())))
 
     # The single source of truth for the contributor chart: matched-function count per canonical
     # login. Regenerated on every merge (the workflow re-runs this), so "someone's number" is a

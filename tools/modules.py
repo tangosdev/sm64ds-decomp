@@ -55,8 +55,18 @@ def modules():
     for name in ("itcm", "dtcm"):
         d = CFG / name
         syms = d / "symbols.txt"
-        b = BUILD / f"{name}.bin"
-        if not (b.is_file() and syms.is_file()):
+        # config.yaml points dsd at build/build/, but that is a BUILD output: a
+        # contributor who has only run tools/unpack.py does not have it, and the
+        # autoload then dropped out of the registry silently, so `match.py
+        # --module itcm` answered "module itcm not found". dsd also writes the
+        # same image to extracted/dsd/arm9/, which unpack.py does produce, so
+        # fall back to it. Same bytes, same base (itcm.yaml base_address
+        # 33521664 = 0x01ff8000, code_size 24384), just the copy that exists
+        # without a build.
+        b = next((p for p in (BUILD / f"{name}.bin",
+                              EXTRACTED / "dsd" / "arm9" / f"{name}.bin")
+                  if p.is_file()), None)
+        if not (b and syms.is_file()):
             continue
         base = _overlay_base(syms)      # same derivation: the module's lowest symbol
         if base is None:
