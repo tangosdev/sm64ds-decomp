@@ -20,9 +20,21 @@ struct ShadowModel {
 struct MovingCylinderClsn {
     void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+
 struct WithMeshClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+
 
 extern SharedFilePtr data_ov002_0210da38;
 extern SharedFilePtr data_ov098_0213c91c;
@@ -88,16 +100,16 @@ int WaterBomb::InitResources()
             ((Obj*)this)->f80 = 0x800;
             ((Obj*)this)->f84 = 0x800;
             ((Obj*)this)->f88 = 0x800;
-            ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x14000, 0x28000, 0x200004, 0);
-            ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x1e000, 0x1e000, 0, 0);
+            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&((Obj*)this)->f110, (Actor*)((Obj*)this), 0x14000, 0x28000, 0x200004, 0);
+            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&((Obj*)this)->f144, (Actor*)((Obj*)this), 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
             ((Obj*)this)->f80 = 0x1000;
             ((Obj*)this)->f84 = 0x1000;
             ((Obj*)this)->f88 = 0x1000;
-            ((MovingCylinderClsn*)&((Obj*)this)->f110)->Init((Actor*)((Obj*)this), 0x28000, 0x50000, 0x204004, 0);
-            ((WithMeshClsn*)&((Obj*)this)->f144)->Init((Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
+            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&((Obj*)this)->f110, (Actor*)((Obj*)this), 0x28000, 0x50000, 0x204004, 0);
+            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&((Obj*)this)->f144, (Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
         }
     }
 

@@ -354,6 +354,7 @@ src/_ZN9WaterBomb8BehaviorEv.cpp:
     .text start:0x0213bc20 end:0x0213bd14
 
 src/_ZN9WaterBomb13InitResourcesEv.cpp:
+    complete
     .text start:0x0213bd14 end:0x0213bf10
 
 src/WaterBomb_Spawn.c:

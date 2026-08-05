@@ -17,10 +17,22 @@ struct ShadowModel {
 struct MovingCylinderClsn {
     void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+
 struct WithMeshClsn {
     void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
     void StartDetectingWater();
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+
 extern "C" void func_ov102_0214d1f8(void* c, void* p);
 
 extern SharedFilePtr* data_ov102_0214d70c[];
@@ -58,7 +70,7 @@ extern "C" int _ZN10KoopaShell13InitResourcesEv(Obj* o)
         return 0;
     if (((ShadowModel*)&o->f350)->InitCylinder() == 0)
         return 0;
-    ((MovingCylinderClsn*)&o->f110)->Init((Actor*)o, 0x3c000, 0x46000, 0x100004, 0xa083c0);
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&o->f110, (Actor*)o, 0x3c000, 0x46000, 0x100004, 0xa083c0);
     o->f3b0 = o->f5c;
     o->f3b4 = o->f60;
     o->f3b8 = o->f64;
@@ -66,7 +78,7 @@ extern "C" int _ZN10KoopaShell13InitResourcesEv(Obj* o)
     o->fa0 = -0x32000;
     o->f100 = 0x14;
     o->f3c0 = 0;
-    ((WithMeshClsn*)&o->f144)->Init((Actor*)o, 0x28000, 0x28000, 0, 0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&o->f144, (Actor*)o, 0x28000, 0x28000, 0, 0);
     ((WithMeshClsn*)&o->f144)->StartDetectingWater();
     func_ov102_0214d1f8(o, &data_ov102_0214ea68);
     o->f3d4 = 0;

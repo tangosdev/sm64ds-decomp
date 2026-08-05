@@ -395,6 +395,7 @@ src/_ZN20TtcConveyorBeltLarge8BehaviorEv.cpp:
     .text start:0x0211a6d0 end:0x0211a870
 
 src/_ZN20TtcConveyorBeltLarge13InitResourcesEv.cpp:
+    complete
     .text start:0x0211a870 end:0x0211aa38
 
 src/func_ov065_0211aa38.c:

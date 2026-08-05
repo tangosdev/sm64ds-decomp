@@ -29,6 +29,12 @@ extern "C" void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(
 struct TextureTransformer {
     void SetFile(BTA_File &f, int a, int fix, unsigned int u);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *, BTA_File &f, int a, int fix, unsigned int u);
+
 
 struct Platform {
     void UpdateModelPosAndRotY();
@@ -41,6 +47,12 @@ struct MovingMeshCollider {
     void SetFile(KCL_File *f, const Matrix4x3 &m, int fix, short sh,
                  CLPS_Block &b);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
+
 
 extern "C" void func_020393c4(void *p, void *v);
 
@@ -105,9 +117,7 @@ int TtcConveyorBeltLarge::InitResources()
         *(BMD_File *)*(void **)((char *)data_ov065_0211d194[e].a + 4),
         *(BTA_File *)locbuf[e]);
 
-    ((TextureTransformer *)((char *)&mTextureTransformer))->SetFile(
-        *(BTA_File *)locbuf[mVariant],
-        0, 0x1000, 0);
+    _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj((TextureTransformer *)((char *)&mTextureTransformer), *(BTA_File *)locbuf[mVariant], 0, 0x1000, 0);
 
     ((Platform *)((char *)this))->UpdateModelPosAndRotY();
     ((Platform *)((char *)this))->UpdateClsnPosAndRot();
@@ -115,12 +125,7 @@ int TtcConveyorBeltLarge::InitResources()
     e = mVariant;
     kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
         data_ov065_0211d198[e].a);
-    ((MovingMeshCollider *)((char *)&mMeshCollider))->SetFile(
-        (KCL_File *)kf,
-        *(Matrix4x3 *)((char *)&unk_2ec),
-        0x199,
-        mAngleY,
-        *(CLPS_Block *)data_ov065_0211d19c[e].a);
+    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider *)((char *)&mMeshCollider), (KCL_File *)kf, *(Matrix4x3 *)((char *)&unk_2ec), 0x199, mAngleY, *(CLPS_Block *)data_ov065_0211d19c[e].a);
 
     func_020393c4(
         ((char *)this) + 0x124,

@@ -204,7 +204,12 @@ def split_args(s):
 
 
 def find_call(text, method, start=0):
-    """Locate `->method(...)` or `.method(...)`; (recv, args, span, op) or None."""
+    """Locate `->method(...)` or `.method(...)`; (recv, args, span, op) or None.
+
+    Deliberately NOT class-aware: it finds the next call spelled with this NAME,
+    whichever object it is called on. Attributing that call to a declaring class
+    is `receiver_class`'s job and the caller's decision -- see the replacement
+    pass, which will not rewrite a call it cannot attribute."""
     for m in re.finditer(r"(->|\.)" + re.escape(method) + r"\s*\(", text[start:]):
         op_at = start + m.start()
         open_at = start + m.end() - 1
@@ -254,16 +259,21 @@ KEYWORD_BEFORE_CALL = {"return", "else", "case", "do"}
 
 
 def find_static_call(text, method, start=0):
-    """Locate `Qual::...::method(...)`; (args, span) or None.
+    """Locate `Qual::...::method(...)`; (owner, args, span) or None.
+
+    `owner` is the LAST qualifier component -- the class or namespace the call
+    names -- so the caller can check the call belongs to the declaration it is
+    about to rewrite. `A::run()` and `B::run()` are different symbols.
 
     A qualified name preceded by a type token (`System* System::New(..)`, or the
     struct-local `static System* New(..)`) is a DECLARATION, not a call; touching
     it would redeclare the free symbol with the method's parameter list. Skip
     any occurrence whose preceding token is `*`, `&`, or an identifier other
     than a statement keyword."""
-    for m in re.finditer(r"(?:[A-Za-z_]\w*\s*::\s*)+" + re.escape(method) + r"\s*\(",
+    for m in re.finditer(r"((?:[A-Za-z_]\w*\s*::\s*)+)" + re.escape(method) + r"\s*\(",
                          text[start:]):
         s = start + m.start()
+        owner = re.findall(r"[A-Za-z_]\w*", m.group(1))[-1]
         open_at = start + m.end() - 1
         k = s
         while k > 0 and text[k - 1] in " \t\r\n":
@@ -287,8 +297,45 @@ def find_static_call(text, method, start=0):
             i += 1
         if i >= len(text):
             continue
-        return split_args(text[open_at + 1:i]), (s, i + 1)
+        return owner, split_args(text[open_at + 1:i]), (s, i + 1)
     return None
+
+
+def _unwrap(expr):
+    """`expr` less ONE balanced outer paren layer, if it is wrapped in one.
+
+    `(a) + (b)` starts and ends with a paren without being wrapped in one, so
+    the depth has to come back to zero at the last character and nowhere
+    earlier."""
+    expr = expr.strip()
+    if not (expr.startswith("(") and expr.endswith(")")):
+        return expr
+    depth = 0
+    for i, ch in enumerate(expr):
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0:
+                break
+    return expr[1:-1].strip() if i == len(expr) - 1 else expr
+
+
+# The cast that says what a receiver IS: `((Actor*)self)->` names Actor. Only a
+# pointer cast counts -- `->` on a non-pointer would not compile.
+_RECV_CAST = re.compile(r"^\(\s*(?:const\s+|volatile\s+|struct\s+|class\s+)*"
+                        r"([A-Za-z_]\w*(?:\s*::\s*[A-Za-z_]\w*)*)\s*\*+\s*\)")
+
+
+def receiver_class(recv):
+    """The class named by the receiver's outermost cast, or None if it says nothing.
+
+    `((Actor*)self)` -> "Actor"; `((Actor*)((char*)c + 0x108))` -> "Actor" (the
+    OUTERMOST cast is the receiver's type, the inner one is address arithmetic);
+    a bare `self` or `obj->field` -> None, because the file does not say there
+    what type it is."""
+    m = _RECV_CAST.match(_unwrap(recv))
+    return re.findall(r"[A-Za-z_]\w*", m.group(1))[-1] if m else None
 
 
 def receiver_expr(recv, op):
@@ -299,19 +346,75 @@ def receiver_expr(recv, op):
     stripping casts is how `(ModelAnim*)((char*)c + 0x108)` once became
     `c + 0x108`, which is a different address. A `.` call's receiver is an
     object, so its address is taken instead."""
-    expr = recv.strip()
-    if expr.startswith("(") and expr.endswith(")"):
-        depth = 0
-        for i, ch in enumerate(expr):
-            if ch == "(":
-                depth += 1
-            elif ch == ")":
-                depth -= 1
-                if depth == 0:
-                    break
-        if i == len(expr) - 1:
-            expr = expr[1:-1].strip()
+    expr = _unwrap(recv)
     return f"&({expr})" if op == "." else expr
+
+
+def rewrite_calls(text, todo):
+    """Point every call site of each `todo` method at its ROM symbol.
+
+    `todo` is a list of `(method, target, is_static, cls, ambiguous)`. Returns
+    `(new_text, n_rewritten, None)`, or `(text, 0, reason)` if the file must not
+    be touched at all.
+
+    Two obligations, and the second is the one with teeth:
+
+    EVERY call site of `cls::method` must go. One left behind still references
+    the mangled name the ROM does not define, so the file stays unresolvable and
+    the edit is pure churn.
+
+    NO call site of anyone else's method may go with it. A call is a relocation,
+    and `match.compare` wildcards every relocated word, so redirecting the wrong
+    call still byte-matches -- the gate downstream is blind, by construction, to
+    this pass being wrong, and so this pass has to be right by construction.
+    Concretely, in `func_ov022_02111bdc.cpp` both `ModelBase::SetFile` and
+    `MovingMeshCollider::SetFile` are declared and called; only the latter is
+    missing from the ROM, and the former is four lines earlier. Rewriting "the
+    next call spelled SetFile" sends a working call to a different function.
+
+    So a call is rewritten only where the source says which class it belongs to:
+    a qualified call names it outright, an instance call names it in the
+    receiver's cast. Where the name is declared only once in the file the
+    receiver need not repeat it, there being nothing else it could mean; where it
+    is declared more than once, a receiver that names nothing is not evidence and
+    the whole file is left alone."""
+    orig, n = text, 0
+    for method, target, is_static, cls, ambiguous in todo:
+        pos, replaced, unattributed = 0, 0, 0
+        while True:
+            if is_static:
+                hit = find_static_call(text, method, pos)
+                if hit is None:
+                    break
+                owner, cargs, (s, e) = hit
+                if owner != cls:
+                    pos = e              # `Other::method(..)` is a different symbol
+                    continue
+                call = f"{target}({', '.join(cargs)})"
+            else:
+                hit = find_call(text, method, pos)
+                if hit is None:
+                    break
+                recv, cargs, (s, e), op = hit
+                rc = receiver_class(recv)
+                if rc is not None and rc != cls:
+                    pos = e              # cast to something else: not this method
+                    continue
+                if rc is None and ambiguous:
+                    unattributed += 1
+                    pos = e
+                    continue
+                call = f"{target}({', '.join([receiver_expr(recv, op)] + cargs)})"
+            text = text[:s] + call + text[e:]
+            pos = s + len(call)
+            replaced += 1
+        if unattributed:
+            return orig, 0, (f"ambiguous: {method} is declared more than once and "
+                             f"{unattributed} call site(s) do not name a class")
+        if replaced == 0:
+            return orig, 0, "call site not in a recognised shape"
+        n += replaced
+    return text, n, None
 
 
 COMMENT = ('/* Signature deliberately copied from the local declaration above: the\n'
@@ -414,13 +517,19 @@ def main():
         todo, inserts = [], collections.defaultdict(list)
         for sym, target in real.items():
             cls, method = decode(sym)
-            if len(re.findall(_decl_re(method), text)) > 1:
-                return rel, "method name declared in more than one local class", 0
             sig = method_decl(text, cls, method)
             if sig is None:
                 return rel, "local declaration not found/parsed", 0
             ret, params, at, is_static, qual = sig
-            todo.append((method, f"{qual}::{target}" if qual else target, is_static))
+            # Is this NAME declared more than once in the file? If it is, a call
+            # spelled `p->method(..)` does not say which declaration it means, and
+            # the replacement pass below demands the receiver name a class. The
+            # count is textual and so over-cautious by design: it can only ask for
+            # more evidence, never less. (`method_decl` above is class-scoped, so
+            # the DECLARATION lookup was never the ambiguous half.)
+            ambiguous = len(re.findall(_decl_re(method), text)) > 1
+            todo.append((method, f"{qual}::{target}" if qual else target,
+                         is_static, cls, ambiguous))
             if target not in text:
                 # A static method has no receiver; an instance method's becomes
                 # a leading void*.
@@ -436,30 +545,10 @@ def main():
                 blob = blob.replace("\n", "\r\n")
             new = new[:at] + blob + new[at:]
 
-        # Pass 2: EVERY call site must go -- one left behind still references the
-        # nonexistent mangled name and the file stays unresolvable.
-        n = 0
-        for method, target, is_static in todo:
-            pos, replaced = 0, 0
-            while True:
-                if is_static:
-                    hit = find_static_call(new, method, pos)
-                    if hit is None:
-                        break
-                    cargs, (s, e) = hit
-                    call = f"{target}({', '.join(cargs)})"
-                else:
-                    hit = find_call(new, method, pos)
-                    if hit is None:
-                        break
-                    recv, cargs, (s, e), op = hit
-                    call = f"{target}({', '.join([receiver_expr(recv, op)] + cargs)})"
-                new = new[:s] + call + new[e:]
-                pos = s + len(call)
-                replaced += 1
-            if replaced == 0:
-                return rel, "call site not in a recognised shape", 0
-            n += replaced
+        # Pass 2 -- see rewrite_calls.
+        new, n, why = rewrite_calls(new, todo)
+        if why is not None:
+            return rel, why, 0
 
         if n == 0 or new == text:
             return rel, "call site not in a recognised shape", 0

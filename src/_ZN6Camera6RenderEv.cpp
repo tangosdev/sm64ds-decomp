@@ -38,6 +38,12 @@ struct OamAttr;
 struct OAM {
     static void Render(bool, OamAttr *, int, int, int, int, int, int, int, int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(bool, OamAttr *, int, int, int, int, int, int, int, int);
+
 struct G2x {
     static void SetBlendAlpha(volatile unsigned short *, u16, u16, u16, u16);
 };
@@ -45,6 +51,12 @@ struct G3i {
     static void PerspectiveW_(int, int, int, int, int, int, bool, Matrix4x3 *);
     static void LookAt_(const Vector3 *, const Vector3 *, const Vector3 *, bool, Matrix4x3 *);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int, int, int, int, int, int, bool, Matrix4x3 *);
+
 
 struct View {
     int render();
@@ -84,14 +96,14 @@ int Camera::Render()
         s32 f = *(s32 *)((char *)self + 0x154);
         if (!(f & 8)) {
             if (*(u8 **)((char *)self + 0x13c) == &data_0208738c) {
-                OAM::Render(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
                 G2x::SetBlendAlpha((volatile unsigned short *)0x04000050, 0x10, 0x2f, 0xc, 6);
             } else {
                 if (f & 0x20) {
-                    OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+                    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
                 }
                 if (*(s32 *)((char *)self + 0x154) & 0x40) {
-                    OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+                    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, (OamAttr *)data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
                 }
             }
             s32 t = *(s32 *)((char *)self + 0x168);
@@ -138,13 +150,7 @@ int Camera::Render()
     }
 
     s32 idx = ((s32)(u16)sp18 >> 4) * 2;
-    G3i::PerspectiveW_(
-        data_02082214[idx],
-        data_02082214[idx + 1],
-        *(s32 *)((char *)self + 0xf8),
-        *(s32 *)((char *)self + 0xfc),
-        *(s32 *)((char *)self + 0x100),
-        var_r6, 1, (Matrix4x3 *)0);
+    _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(data_02082214[idx], data_02082214[idx + 1], *(s32 *)((char *)self + 0xf8), *(s32 *)((char *)self + 0xfc), *(s32 *)((char *)self + 0x100), var_r6, 1, (Matrix4x3 *)0);
 
     {
         s32 s2 = (s32)(sp[2] + 4) >> 3;

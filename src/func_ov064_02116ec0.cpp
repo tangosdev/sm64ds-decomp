@@ -11,9 +11,27 @@ struct Animation { static void* LoadFile(SharedFilePtr& f); };
 struct Model { static BMD_File* LoadFile(SharedFilePtr& f); };
 struct ModelBase { int SetFile(BMD_File* f, int a, int b); };
 struct ModelAnim { void SetAnim(BCA_File* f, int a, Fix12 t, unsigned int u); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File* f, int a, Fix12 t, unsigned int u);
+
 struct ShadowModel { int InitCylinder(); };
 struct MovingCylinderClsn { void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+
 struct WithMeshClsn { void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+
 
 struct Desc {
     SharedFilePtr* f0;
@@ -65,8 +83,8 @@ extern "C" int func_ov064_02116ec0(Obj* obj)
         return 0;
     if (((ShadowModel*)&obj->f370)->InitCylinder() == 0)
         return 0;
-    ((ModelAnim*)&obj->f110)->SetAnim((BCA_File*)obj->f330->f10->file, 0, 0x1000, 0);
-    ((MovingCylinderClsn*)&obj->f33c)->Init((Actor*)obj, obj->f330->f14, obj->f330->f18, 0x200000, 0x27c0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)&obj->f110, (BCA_File*)obj->f330->f10->file, 0, 0x1000, 0);
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&obj->f33c, (Actor*)obj, obj->f330->f14, obj->f330->f18, 0x200000, 0x27c0);
     {
         int b = (obj->fc == 0xd9);
         if (b) {
@@ -84,7 +102,7 @@ extern "C" int func_ov064_02116ec0(Obj* obj)
     obj->f3e8 = obj->f330->f1c;
     obj->f3ec = obj->f330->f20;
     obj->f100 = 0;
-    ((WithMeshClsn*)&obj->f174)->Init((Actor*)obj, obj->f330->f24, obj->f330->f24, 0, 0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&obj->f174, (Actor*)obj, obj->f330->f24, obj->f330->f24, 0, 0);
     obj->f3f0 = obj->f330->f28;
     obj->f338 = 0;
     obj->f334 = obj->f338;

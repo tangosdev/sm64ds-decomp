@@ -944,6 +944,7 @@ src/func_ov006_020cafdc.cpp:
     .text start:0x020cafdc end:0x020cb030
 
 src/func_ov006_020cb030.cpp:
+    complete
     .text start:0x020cb030 end:0x020cb134
 
 src/func_ov006_020cb134.cpp:
@@ -1243,6 +1244,7 @@ src/func_ov006_020cecb4.c:
     .text start:0x020cecb4 end:0x020cecc0
 
 src/func_ov006_020cecc0.cpp:
+    complete
     .text start:0x020cecc0 end:0x020ced84
 
 src/func_ov006_020ced84.c:
