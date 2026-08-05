@@ -57,6 +57,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import build_pin as BP     # noqa: E402
 import match as M          # noqa: E402
 import eligible as E       # noqa: E402
+import overlay_residency as OR  # noqa: E402
 from enroll import candidates  # noqa: E402
 
 ELIGIBILITY = REPO / "build" / "rombuild-eligibility.json"
@@ -137,13 +138,18 @@ def module_keys(spec):
     return []
 
 
-def resolve_in(syms, mods, addr, prefer):
+def resolve_in(syms, mods, addr, prefer, func=None):
     """The name at `addr`, given a shortlist of modules that might own it.
 
     A candidate only counts if it defines a symbol exactly at `addr`. If several do
     and they disagree, prefer the referring module -- an overlay reaching into
-    itself is likelier than into a sibling that may not even be resident -- and
-    otherwise refuse, because a guess here silently retargets a call."""
+    itself is likelier than into a sibling that may not even be resident.
+
+    Failing that, ask which candidates could have been *in memory* while the
+    referring code ran. `overlay_residency` answers that from the game's own loader
+    and level tables, and the shortlist usually collapses to one. Where it does not,
+    refuse: a guess here silently retargets a call and still byte-matches, and both
+    candidates share the address so even the ROM link would not object."""
     hits = {}
     for m in mods:
         nm, _ = name_at(syms, m, addr)
@@ -155,7 +161,11 @@ def resolve_in(syms, mods, addr, prefer):
         return next(iter(hits.values())), None
     if prefer in hits:
         return hits[prefer], None
-    return None, f"{addr:#010x} names {hits}"
+    one = OR.settle(hits, prefer, func)
+    if one:
+        return hits[one], None
+    left = sorted(c for c in hits if OR.possible(c, prefer, func))
+    return None, f"{addr:#010x} names {hits} (residency leaves {left})"
 
 
 def load_relocs():
@@ -326,7 +336,7 @@ def main():
             if not cands:
                 bad.append((sym, f"unparsed module spec: module:{spec}"))
                 continue
-            real, why = resolve_in(syms, cands, to, label)
+            real, why = resolve_in(syms, cands, to, label, name)
             if real is None:
                 bad.append((sym, why))
                 continue

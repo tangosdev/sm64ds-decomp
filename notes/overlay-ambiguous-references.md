@@ -1,6 +1,11 @@
 # 169 references that are ambiguous between overlays
 
-**Status:** open, needs a person. Drafted as a GitHub issue; not yet filed.
+**Status:** mostly closed. **See `notes/overlay-residency.md`.** The game's own
+loader answers "which overlay was resident", `tools/overlay_residency.py` encodes
+it, and `resolve_placeholders.py` uses it: of the 137 references that were really
+overlay-ambiguous, **10 remain**. The rest of this note is the original statement of
+the problem, kept because the reasoning about *why a guess is expensive* is still
+the reason the tool refuses the last 10.
 
 169 functions cannot be enrolled because a reference in them targets an address that
 **two or more overlays both define**, and nothing in the data says which one was
@@ -43,6 +48,10 @@ Any of these, per case:
   runs? If ov002 and ov004 are never resident simultaneously, the referring module's
   own copy is the answer. An overlay load-order or scene-to-overlay map would resolve
   most of the table above mechanically, and would keep paying off afterwards.
+  *This is what happened -- `notes/overlay-residency.md`. Every row of the table
+  above is settled: `func_020beb68` -> ov004, `func_020aea30` and `func_020ada40` ->
+  ov002, `func_020aed98` -> ov002 `_ZN5EnemyC2Ev`, `func_020bc7d4` -> ov004,
+  `_ZTV10dBgActor_c` at `0x0213c5bc` -> ov098.*
 - **Emulator trace.** Break on the call site and read the resolved target. See
   `notes/emu-trace-plan.md`.
 - **Reading the code.** Several pairs are plainly the same function under two names --

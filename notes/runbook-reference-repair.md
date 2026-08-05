@@ -95,8 +95,11 @@ different and only one of them is a fix:
 `unresolved` covers several distinct reasons; the tool prints which, and they are not
 interchangeable:
 
-- `0x... names {ov000: ..., ov004: ...}` -- two overlays both define it. **Stop**; see
-  `overlay-ambiguous-references.md`.
+- `0x... names {ov000: ..., ov004: ...} (residency leaves [...])` -- two overlays both
+  define it *and* both could have been in memory. The tool has already applied the
+  residency map (`tools/overlay_residency.py`); `residency leaves` is what survived
+  it. **Stop**; see `notes/overlay-residency.md` §9 -- there are ten of these left and
+  each needs its own argument.
 - `no reloc recorded at 0x...` -- the value is not a relocation at all (an immediate).
 - `no candidate of [...] defines 0x...` -- a gap in `symbols.txt`, not in the source.
 - `resolves to both X and Y` -- one name used for two different targets in one file;
@@ -211,8 +214,11 @@ PY
   failed the ROM build and the tool was innocent: enrolling the file was simply the
   first time anything looked at its callees. Read the named function before assuming
   your change caused it.
-- **169 references remain genuinely ambiguous.** Two overlays define the same address.
-  Tooling is finished; these need overlay-residency data or an emulator trace.
+- **~~169 references remain genuinely ambiguous.~~** Was true; the overlay-residency
+  data existed after all, in the game's own loader. 127 of the 137 real cases are
+  settled -- `notes/overlay-residency.md`. Ten are left and they are listed there.
+  The lesson worth keeping: "tooling is finished" meant "we asked the symbol table
+  and it had no more to say", which is not the same thing.
 - **`is_misnamed()` returns `True` unconditionally.** That is deliberate: the name is
   never evidence, so there is nothing to gate on. Narrowing it is how this cost five
   separate sweeps.
