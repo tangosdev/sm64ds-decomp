@@ -48,6 +48,28 @@ MNEMONICS = sorted(set(LOADS) | set(STORES), key=len, reverse=True)
 
 NAMED_REG = {"sb": 9, "sl": 10, "fp": 11, "ip": 12, "sp": 13, "lr": 14, "pc": 15}
 
+ARM9_BASE = 0x02004000       # where arm9_dec.bin loads; NOT the 0x02000000 RAM base
+
+# A wrong load address does not fail -- it silently decodes the wrong bytes into a
+# confident report. Real ARM functions overwhelmingly open by saving registers, so the
+# share of symbols whose first instruction is a push/stmdb separates a correct base
+# (~65%) from a wrong one (~2%, i.e. chance) by more than an order of magnitude.
+MIN_PROLOGUE_RATE = 0.30
+
+
+def prologue_rate(md, data, base, addrs):
+    """Fraction of the given symbols whose first instruction saves registers."""
+    hit = seen = 0
+    for a in addrs:
+        o = a - base
+        if o < 0 or o + 4 > len(data):
+            continue
+        seen += 1
+        ins = next(md.disasm(data[o:o + 4], a), None)
+        if ins and (ins.mnemonic.startswith("stmdb") or ins.mnemonic.startswith("push")):
+            hit += 1
+    return (hit / seen if seen else 0.0), seen
+
 
 def reg_num(name):
     if not name:
@@ -159,7 +181,11 @@ def main():
                if BANNER in h.read_text(errors="replace")}
 
     # ---- module -> (blob path, load address)
-    bases = {"arm9": (ext / "arm9_dec.bin", 0x02000000)}
+    # arm9_dec.bin loads at 0x02004000, not at the ARM9 RAM base. Every other tool in
+    # the tree already knew this (match.py, modules.py, overlay_residency.py); this one
+    # did not, and decoded every arm9 record from bytes 0x4000 away. It reported those
+    # with full confidence, because garbage still disassembles.
+    bases = {"arm9": (ext / "arm9_dec.bin", ARM9_BASE)}
     ovl = yaml.safe_load((ext / "dsd/arm9_overlays/overlays.yaml").read_text())
     for o in ovl["overlays"]:
         bases[f"ov{o['id']:03d}"] = (ext / "overlays" / f"overlay_{o['id']:04d}.bin",
@@ -185,6 +211,27 @@ def main():
 
     blobs = {}
 
+    # --- fail closed on a wrong load address, per module, before decoding anything
+    rates = {}
+    by_mod = collections.defaultdict(list)
+    for _c, _s, mod, addr, _sz in funcs:
+        by_mod[mod].append(addr)
+    bad = []
+    for mod, addrs in sorted(by_mod.items()):
+        path, base = bases[mod]
+        if not path.exists():
+            continue
+        rate, seen = prologue_rate(md, path.read_bytes(), base, addrs)
+        rates[f"prologue_rate_{mod}"] = round(rate, 3)
+        if seen >= 20 and rate < MIN_PROLOGUE_RATE:
+            bad.append(f"{mod}: {rate:.1%} of {seen} symbols open with push/stmdb "
+                       f"at base 0x{base:08x}")
+    if bad:
+        sys.exit("refusing to report: load address looks wrong for\n  "
+                 + "\n  ".join(bad)
+                 + f"\n(expected >{MIN_PROLOGUE_RATE:.0%}; a wrong base decodes the "
+                   "wrong bytes and still produces a confident report)")
+
     def blob(mod):
         if mod not in blobs:
             p, b = bases[mod]
@@ -195,6 +242,7 @@ def main():
         lambda: {"widths": collections.Counter(), "signed": collections.Counter(),
                  "address_only": 0, "provenance": [], "funcs": set()}))
     r = collections.Counter()
+    r.update(rates)
     r["classes_targeted"] = len(classes)
     r["functions_attributed"] = len(funcs)
 
