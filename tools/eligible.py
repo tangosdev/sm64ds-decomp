@@ -47,8 +47,8 @@ import sys
 from elftools.elf.elffile import ELFFile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import build_pin as BP  # noqa: E402
 from enroll import candidates, CONFIG, REPO  # noqa: E402
-from rombuild import versions  # noqa: E402
 
 MW = REPO / "tools" / "mwccarm"
 LICENSE = MW / "license.dat"
@@ -181,8 +181,12 @@ def main():
 
     known = defined_symbols()
     cands, _ = candidates()
-    vers = versions()
-    jobs = [(rel, name, addr, size, sec, known, vers.get(name, VERSION))
+    # build_pin, not `versions().get(name, VERSION)`: rombuild.compile_one looks the
+    # override up by FILE STEM, so keying this by symbol classifies a file under a
+    # compiler the build would not use for it whenever the two spellings differ. They
+    # coincide today, which is exactly why the divergence would go unnoticed until the
+    # day they did not.
+    jobs = [(rel, name, addr, size, sec, known, BP.version_for(rel, name) or VERSION)
             for (_d, name, rel, addr, size, sec) in cands]
     print(f"classifying {len(jobs)} enrolled functions with -j{args.jobs} ...")
 

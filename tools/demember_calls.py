@@ -44,7 +44,20 @@ because an unmarked lie gets read as recovered truth and propagated.
 
 A file is only touched when EVERY missing symbol in it has reloc evidence naming a
 real target -- a partial repair cannot enroll the file and would be diff churn.
-Every rewritten file is byte-verified against the ROM and reverted on failure.
+
+Every rewritten file is verified against the ROM and reverted on failure, and that
+check has to be more than a byte compare, because this tool changes WHICH SYMBOL a
+call resolves to and `match.py` compares every relocated word as a wildcard. It is
+therefore blind, by construction, to the only thing being edited. The verification
+below reads the relocation's destination out of `config/**/relocs.txt`, and compiles
+with the one mwccarm `tools/rombuild.py` will build the file with rather than a sweep
+of all 25 installed ones. Both of those are load-bearing:
+
+    src/func_ov006_020cb030.cpp passed the byte-only sweep check this tool shipped
+    with, was enrolled, and the ROM build reported ov006 MISMATCHING --
+    `module fidelity: 105/106`, `ROM-build analysis: FAIL`. The differing word was a
+    `bl` at 0x020cb088 going to func_ov006_020c9024 where the ROM's own relocation
+    records 0x020cb134. A wildcard cannot see that. See tools/build_pin.py.
 
 Usage:
     python tools/demember_calls.py                 # report only
@@ -60,8 +73,8 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
+import build_pin as BP         # noqa: E402
 import match as M              # noqa: E402
-import modules as MOD          # noqa: E402
 import eligible as E           # noqa: E402
 import resolve_placeholders as RP   # noqa: E402
 from enroll import candidates  # noqa: E402
@@ -319,7 +332,16 @@ def main():
     info = {}
     for (d, name, rel, addr, size, sec) in candidates()[0]:
         info[rel.replace("\\", "/")] = (name, addr, size, d)
-    mods = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
+
+    strict = None
+    try:
+        import reloc_audit as RA
+        import relocs as RL
+        strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
+    except Exception as e:                                          # noqa: BLE001
+        print(f"  (reloc-destination check unavailable: {e}; verification is byte-only "
+              f"-- which is exactly the blind spot this tool has to cover, so treat "
+              f"anything it reports as transformed as UNVERIFIED)")
 
     entries, _, _ = E.load_report()
     jobs = []
@@ -341,13 +363,17 @@ def main():
         label = "arm9" if label == "arm9" else label.split("/")[-1]
         orig_bytes = f.read_bytes()
         text = orig_bytes.decode("utf-8", "surrogateescape")
-        flags = M.DEFAULT_FLAGS
-        if f.suffix == ".cpp" or text.startswith("//cpp"):
-            flags = flags.replace("-lang c99", "-lang c++")
 
-        obj = next((o for o in (M.compile_c(f, v, flags) for v in M.SWEEP) if o), None)
+        # The build's compiler, not the first sweep member that happens to compile:
+        # this object's relocation OFFSETS are added to the function's address to look
+        # the destination up in relocs.txt, so taking them from a compiler that laid
+        # the function out differently resolves the call against the wrong ROM word.
+        version, why = BP.compiler_for(f, name)
+        if version is None:
+            return rel, f"unverifiable: {why}", 0
+        obj = M.compile_c(f, version, BP.flags_for(f, text))
         if obj is None:
-            return rel, "compile failed", 0
+            return rel, f"compile failed under the build's compiler ({version})", 0
         rl = RP.relocs_for(obj, name)
         if rl is None:
             return rel, "function not in object", 0
@@ -442,29 +468,19 @@ def main():
             return rel, "transformable (not compile-checked; run --apply)", n
 
         f.write_text(new, encoding="utf-8", newline="\n")
-        tgt = (M.target_bytes(addr, size) if label == "arm9"
-               else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
-        compiled = False
-        for v in M.SWEEP:
-            o = M.compile_c(f, v, flags)
-            if o is None:
-                continue
-            code, rr = M.extract_func(o, name)
-            if code is None:
-                continue
-            compiled = True
-            if M.compare(tgt, code, rr, verbose=False)[0]:
-                return rel, "transformed", n
+        ok, why = BP.verify(f, name, addr, size, label, strict=strict, version=version)
+        if ok:
+            return rel, "transformed", n
         f.write_bytes(orig_bytes)
-        return rel, ("reverted (compiled but bytes differ)" if compiled
-                     else "reverted (transformed source does not compile)"), 0
+        return rel, f"reverted: {why}", 0
 
     if args.limit:
         jobs = jobs[:args.limit]
     counts = collections.Counter()
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
         for rel, verdict, n in ex.map(one, jobs):
-            counts[verdict] += 1
+            # Bucket before the colon: the reasons carry per-file detail now.
+            counts[verdict.split(":")[0]] += 1
             print(f"  {verdict:50s} {rel}" + (f"  ({n} call(s))" if n else ""))
     print()
     for k, v in counts.most_common():
