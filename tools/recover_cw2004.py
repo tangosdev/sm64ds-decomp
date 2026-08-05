@@ -112,7 +112,8 @@ def pull_installer(work):
         f.write(packed)
         f.seek(end_abs)
         f.write(end)
-    subprocess.run(["fsutil", "sparse", "setflag", sparse], capture_output=True)
+    if os.name == "nt":
+        subprocess.run(["fsutil", "sparse", "setflag", sparse], capture_output=True)
 
     with py7zr.SevenZipFile(sparse, "r") as z:
         names = z.getnames()
@@ -166,7 +167,8 @@ def split_payload(exe):
         if not fields[3].isdigit():
             return parts
         n = int(fields[3])
-        parts[os.path.basename(fields[1] or fields[0])] = d[pos:pos + n]
+        name = (fields[1] or fields[0]).replace("\\", "/")
+        parts[os.path.basename(name)] = d[pos:pos + n]
         pos += n
     return parts
 
