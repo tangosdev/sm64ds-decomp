@@ -8,10 +8,8 @@
 
 struct RaycastLine__Line {
     u8  pad_000[0xc];
-    u8  unk_00c;            /* 0x00c */
-    u8  pad_00d[0x3];
-    u8  unk_010;            /* 0x010 */
-    u8  pad_011[0x3];
+    s32 unk_00c;            /* 0x00c */
+    s32 unk_010;            /* 0x010 */
     u8  unk_014;            /* 0x014 */
 };
 

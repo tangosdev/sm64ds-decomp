@@ -22,12 +22,9 @@ struct KnockDownPlank {
     u8  pad_0d5[0x4f];
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  unk_320;            /* 0x320 */
-    u8  pad_321[0x3];
-    u8  unk_324;            /* 0x324 */
-    u8  pad_325[0x3];
-    u8  unk_328;            /* 0x328 */
-    u8  pad_329[0x3];
+    s32 unk_320;            /* 0x320 */
+    s32 unk_324;            /* 0x324 */
+    s32 unk_328;            /* 0x328 */
     s32 mVariant;            /* 0x32c */
 #ifdef __cplusplus
     /* methods */

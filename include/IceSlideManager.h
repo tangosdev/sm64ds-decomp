@@ -14,8 +14,7 @@ struct IceSlideManager {
     u8  pad_061[0x3];
     u8  unk_064;            /* 0x064 */
     u8  pad_065[0x6f];
-    u8  unk_0d4;            /* 0x0d4 */
-    u8  pad_0d5[0x1];
+    s16 unk_0d4;            /* 0x0d4 */
     u8  unk_0d6;            /* 0x0d6 */
 #ifdef __cplusplus
     /* methods */

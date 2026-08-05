@@ -35,8 +35,7 @@ struct Key {
     s32 unk_110;            /* 0x110 */
     u8  mModelAnim;            /* 0x114 */
     u8  pad_115[0xf];
-    u8  unk_124;            /* 0x124 */
-    u8  pad_125[0x3];
+    s32 unk_124;            /* 0x124 */
     u8  unk_128;            /* 0x128 */
     u8  pad_129[0x3b];
     u8  mAnimation;            /* 0x164 */

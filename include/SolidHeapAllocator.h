@@ -15,12 +15,9 @@ struct ptr;
 struct size_;
 struct SolidHeapAllocator {
     u8  pad_000[0x18];
-    u8  unk_018;            /* 0x018 */
-    u8  pad_019[0x3];
-    u8  mEnd;            /* 0x01c */
-    u8  pad_01d[0x3];
-    u8  unk_020;            /* 0x020 */
-    u8  pad_021[0x3];
+    s32 unk_018;            /* 0x018 */
+    s32 mEnd;            /* 0x01c */
+    s32 unk_020;            /* 0x020 */
     u8  mFreeRegion;            /* 0x024 */
 #ifdef __cplusplus
     /* methods */

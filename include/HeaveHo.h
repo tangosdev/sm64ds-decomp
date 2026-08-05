@@ -35,8 +35,7 @@ struct HeaveHo {
     u8  pad_3a0[0x4];
     u8  mShadowModel;            /* 0x3a4 */
     u8  pad_3a5[0x57];
-    u8  unk_3fc;            /* 0x3fc */
-    u8  pad_3fd[0x3];
+    s32 unk_3fc;            /* 0x3fc */
     s32 unk_400;            /* 0x400 */
     s32 unk_404;            /* 0x404 */
     s32 unk_408;            /* 0x408 */

@@ -12,8 +12,7 @@ struct CutsceneObject {
     u8  pad_00c[0x74];
     u8  unk_080;            /* 0x080 */
     u8  pad_081[0x5b];
-    u8  mModel;            /* 0x0dc */
-    u8  pad_0dd[0x3];
+    s32 mModel;            /* 0x0dc */
     u8  unk_0e0;            /* 0x0e0 */
     u8  pad_0e1[0x21];
     u8  unk_102;            /* 0x102 */

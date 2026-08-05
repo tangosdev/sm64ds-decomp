@@ -1088,6 +1088,9 @@ src/__sinit_ov004_020b948c.c:
     complete
     .init start:0x020b948c end:0x020b955c
 
+src/__sinit_ov004_020b955c.c:
+    .init start:0x020b955c end:0x020b9ad0
+
 src/__sinit_ov004_020b9ad0.c:
     complete
     .init start:0x020b9ad0 end:0x020b9b24

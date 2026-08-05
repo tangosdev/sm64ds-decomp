@@ -45,10 +45,8 @@ struct RotatingUpDownPlatformUtm {
     u8  mWaypointIndex;            /* 0x394 */
     u8  mVariant;            /* 0x395 */
     u8  pad_396[0x2];
-    u8  mPlatform0;            /* 0x398 */
-    u8  pad_399[0x3];
-    u8  mPlatform1;            /* 0x39c */
-    u8  pad_39d[0x3];
+    s32 mPlatform0;            /* 0x398 */
+    s32 mPlatform1;            /* 0x39c */
     u8  unk_3a0;            /* 0x3a0 */
     u8  pad_3a1[0x1];
     u8  unk_3a2;            /* 0x3a2 */

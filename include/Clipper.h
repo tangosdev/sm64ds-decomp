@@ -9,10 +9,8 @@
 struct Clipper {
     u8  pad_000[0x4c];
     u32 unk_04c;            /* 0x04c */
-    u8  unk_050;            /* 0x050 */
-    u8  pad_051[0x3];
-    u8  unk_054;            /* 0x054 */
-    u8  pad_055[0x3];
+    s32 unk_050;            /* 0x050 */
+    s32 unk_054;            /* 0x054 */
     u16 unk_058;            /* 0x058 */
 };
 

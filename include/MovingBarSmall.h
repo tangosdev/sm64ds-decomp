@@ -35,8 +35,7 @@ struct MovingBarSmall {
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */
     s32 unk_388;            /* 0x388 */
-    u8  unk_38c;            /* 0x38c */
-    u8  pad_38d[0x3];
+    s32 unk_38c;            /* 0x38c */
     u8  unk_390;            /* 0x390 */
     u8  unk_391;            /* 0x391 */
     u8  unk_392;            /* 0x392 */

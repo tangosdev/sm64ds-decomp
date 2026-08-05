@@ -16,8 +16,7 @@ struct SwitchActivatedPlank {
     u8  pad_125[0x1fb];
     u8  mModel2;            /* 0x320 */
     u8  pad_321[0x7f];
-    u8  unk_3a0;            /* 0x3a0 */
-    u8  pad_3a1[0x1];
+    s16 unk_3a0;            /* 0x3a0 */
     u8  unk_3a2;            /* 0x3a2 */
     u8  unk_3a3;            /* 0x3a3 */
     u8  unk_3a4;            /* 0x3a4 */

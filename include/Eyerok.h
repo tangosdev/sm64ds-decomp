@@ -41,8 +41,7 @@ struct Eyerok {
     u8  pad_4b8[0x18];
     u8  unk_4d0;            /* 0x4d0 */
     u8  pad_4d1[0x1];
-    u8  unk_4d2;            /* 0x4d2 */
-    u8  pad_4d3[0x1];
+    s16 unk_4d2;            /* 0x4d2 */
     u16 unk_4d4;            /* 0x4d4 */
     u8  pad_4d6[0x19e];
     u8  unk_674;            /* 0x674 */
