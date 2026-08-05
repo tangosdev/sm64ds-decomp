@@ -4301,6 +4301,10 @@ src/func_ov006_020fb74c.c:
     complete
     .text start:0x020fb74c end:0x020fb7e0
 
+src/func_ov006_020fb7e0.c:
+    complete
+    .text start:0x020fb7e0 end:0x020fb8fc
+
 src/func_ov006_020fb8fc.c:
     complete
     .text start:0x020fb8fc end:0x020fb97c

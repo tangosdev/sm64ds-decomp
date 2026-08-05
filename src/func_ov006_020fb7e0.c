@@ -1,10 +1,13 @@
-// NONMATCHING: different op / idiom (div=18). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
+typedef unsigned int u32;
 
-extern void func_ov006_020fbb2c(char *c, int idx);
+extern void func_ov006_020fbb2c(char *c, int idx, unsigned short val);
+
+/* Distinct 64-bit masks force independent RMW base materialization (add+pool).
+ * Plain *(b+0x5960) for the compare/zero reloads folds to add #0x5900 + #0x60. */
+#define M1(a) (((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL)
+#define M2(a) (((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL)
 
 void func_ov006_020fb7e0(char *thiz)
 {
@@ -12,13 +15,13 @@ void func_ov006_020fb7e0(char *thiz)
     char *b = thiz;
     for (i = 0; i < 0x1e; i++) {
         if (*(u8 *)(b + 0x5964) != 0) {
-            u16 *cnt = (u16 *)(b + 0x5960);
+            u16 *cnt = (u16 *)(int)M1((u32)b + 0x5960);
             int lim;
             u8 sub;
             (*cnt)++;
-            if (*cnt >= 6) {
+            if (*(u16 *)(b + 0x5960) >= 6) {
                 *(u16 *)(b + 0x5960) = 0;
-                (*(u8 *)(b + 0x5965))++;
+                (*(u8 *)(int)M2((u32)b + 0x5965))++;
                 lim = 3;
                 if (*(u8 *)(b + 0x5967) == 2) lim = 5;
                 sub = *(u8 *)(b + 0x5968);
@@ -33,7 +36,7 @@ void func_ov006_020fb7e0(char *thiz)
                     *(u8 *)(b + 0x5966) = 0;
                     *(u8 *)(b + 0x5964) = 0;
                     if (*(u16 *)(b + 0x5962) != 0) {
-                        func_ov006_020fbb2c(thiz, i);
+                        func_ov006_020fbb2c(thiz, i, *(u16 *)(b + 0x5962));
                     }
                 }
             }
