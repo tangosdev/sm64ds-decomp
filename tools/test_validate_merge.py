@@ -195,6 +195,75 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(report["status"], "Failed")
         self.assertIn("function/byte coverage denominator changed", report["reasons"])
 
+    def _declare_symbol(self, name):
+        """Add ``name`` to the base symbol universe (no source yet) and commit,
+        so a later src/ addition changes neither denominator nor matched set."""
+        symbols = self.repo / "config" / "arm9" / "symbols.txt"
+        symbols.write_text(
+            symbols.read_text(encoding="utf-8")
+            + f"{name} kind:function(arm,size=0x4) addr:0x02000004\n",
+            encoding="utf-8")
+        return commit(self.repo, f"declare {name}", "alice")
+
+    def test_unbannered_dcd_transcription_is_demoted_and_fails_the_pr(self):
+        # A dcd dump byte-matches vacuously (it IS the ROM words re-spelled), so
+        # without a banner it must not count as matched at any revision, and a PR
+        # that adds one must fail with a reason that names the file.
+        base = self._declare_symbol("Raw")
+        (self.repo / "src" / "Raw.c").write_text(
+            "asm void Raw(void) {\n    dcd 0xe12fff1e\n}\n", encoding="utf-8")
+        head = commit(self.repo, "transcribe Raw", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 1)  # Example only
+        self.assertFalse(snap["functions"]["arm9:0x02000004"]["matched"])
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Failed")
+        self.assertIn("src/Raw.c", "; ".join(report["reasons"]))
+        self.assertTrue(any("asm-transcription" in r for r in report["reasons"]))
+        self.assertEqual(report["asmPolicy"]["transcribed"], ["src/Raw.c"])
+
+    def test_nonmatching_bannered_dcd_stays_on_the_draft_path(self):
+        # The same dcd body under a NONMATCHING banner is an honest draft: not
+        # matched (the established draft rule), and NOT a transcription failure.
+        base = self._declare_symbol("Raw")
+        (self.repo / "src" / "Raw.c").write_text(
+            "// NONMATCHING\nasm void Raw(void) {\n    dcd 0xe12fff1e\n}\n",
+            encoding="utf-8")
+        head = commit(self.repo, "draft Raw", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 1)
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Passed")
+        self.assertEqual(report["asmPolicy"]["transcribed"], [])
+
+    def test_hand_asm_primitive_banner_keeps_an_asm_body_matched(self):
+        # The other legitimate tier: the original really was assembly, the banner
+        # says so, and the function counts as matched with no gate reason.
+        base = self._declare_symbol("Prim")
+        (self.repo / "src" / "Prim.c").write_text(
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match (CPSR read).\n"
+            "asm void Prim(void) {\n    mrs r0, cpsr\n    bx lr\n}\n",
+            encoding="utf-8")
+        head = commit(self.repo, "match Prim", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 2)
+        self.assertTrue(snap["functions"]["arm9:0x02000004"]["matched"])
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Passed")
+        self.assertEqual(report["asmPolicy"], {"transcribed": [], "unbanneredAsm": []})
+
+    def test_raw_asm_group_verdict_blocks_and_overrides_vacuous_slots(self):
+        # pr_linkcheck stamps RAW-ASM on the group row while the transcription's
+        # per-slot results read VERIFIED (vacuously -- the dcd words ARE the ROM
+        # bytes). Flattening must carry the override or those slots launder it.
+        state = VM._link_state([{
+            "file": "src/Raw.c",
+            "worst": "RAW-ASM",
+            "results": [{"sym": "Raw", "verdict": "VERIFIED"}],
+        }])
+        self.assertEqual(state["tally"], {"RAW-ASM": 1})
+        self.assertEqual(len(state["blocking"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

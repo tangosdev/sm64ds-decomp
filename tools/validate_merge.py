@@ -26,6 +26,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy as AP  # noqa: E402
 import chaos_db_ci as CHAOS  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
 
@@ -89,6 +90,15 @@ def function_snapshot(rev):
     # marker is a source header and is recognized in the first 200 characters.
     nonmatching = {path for path in candidates
                    if "NONMATCHING" in git_text(rev, path)[:200]}
+    # An unbannered dcd transcription byte-matches vacuously (it IS the ROM words
+    # re-spelled), so it never counts as matched -- see tools/asm_policy.py. Built
+    # the same revision-based way as ``nonmatching``: a cheap fixed-string grep
+    # prefilter, then the shared classifier confirms on the committed blob.
+    grep = _git("grep", "-l", "-F", "dcd 0x", rev, "--", "src/", allow=(0, 1))
+    dcd_candidates = {line.split(":", 1)[1] if ":" in line else line
+                      for line in grep.splitlines()}
+    transcribed = {path for path in dcd_candidates
+                   if AP.classify(git_text(rev, path)) == "transcribed"}
 
     records = {}
     total_bytes = matched_bytes = 0
@@ -103,7 +113,7 @@ def function_snapshot(rev):
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             key = f"{module}:0x{addr:08x}"
             src = sources.get(name)
-            matched = bool(src and src not in nonmatching)
+            matched = bool(src and src not in nonmatching and src not in transcribed)
             records[key] = {"id": key, "module": module, "addr": addr, "name": name,
                             "size": size, "matched": matched, "srcPath": src}
             total_bytes += size
@@ -249,10 +259,18 @@ def _link_state(rows):
                 # per-slot results still say NO-REPRO, so carry it down or the
                 # flattened tally re-blocks what pr_linkcheck already excused.
                 draft = row.get("worst") == "DRAFT"
+                # RAW-ASM is the opposite carry-down: pr_linkcheck stamps an
+                # unbannered dcd transcription on the GROUP row, while the
+                # per-slot results can read VERIFIED -- vacuously, since the
+                # dcd words ARE the ROM bytes. Without the override those
+                # VERIFIED slots would launder the gate at the flattened level.
+                raw_asm = row.get("worst") == "RAW-ASM"
                 for result in row["results"]:
                     flat = {"file": row.get("file"), **result}
                     if draft and str(flat.get("verdict")) == "NO-REPRO":
                         flat["verdict"] = "DRAFT"
+                    if raw_asm:
+                        flat["verdict"] = "RAW-ASM"
                     flattened.append(flat)
             else:
                 flattened.append({"file": row.get("file"),
@@ -266,7 +284,7 @@ def _link_state(rows):
         verdict = str(row.get("verdict", "ERROR"))
         bucket = "BLIND" if verdict.startswith("BLIND") else verdict
         tally[bucket] += 1
-        if bucket in ("WRONG", "NO-REPRO", "ERROR"):
+        if bucket in ("WRONG", "NO-REPRO", "ERROR", "RAW-ASM"):
             blocking.append(row)
     return {"checked": len(flattened), "tally": dict(tally), "blocking": blocking,
             "rows": flattened}
@@ -329,6 +347,17 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     ba, ha = attribution_snapshot(base_sha, bf), attribution_snapshot(head_sha, hf)
     diff = diff_snapshot(base_sha, head_sha, set(tree_paths(head_sha, "src/")))
 
+    # The transcription gate for the PR itself, scoped STRICTLY to the sources this
+    # merge adds or modifies (never renames-only or pre-existing files, so an old
+    # transcription in the tree cannot fail an unrelated PR). Classified from the
+    # committed head blob, same discipline as everything else in this report.
+    changed_src = [row["path"] for row in diff["files"]
+                   if row["status"][:1] in ("A", "M") and row.get("path", "")
+                   .endswith(SOURCE_SUFFIXES)]
+    changed_cls = {p: AP.classify(git_text(head_sha, p)) for p in sorted(changed_src)}
+    new_transcribed = [p for p, c in changed_cls.items() if c == "transcribed"]
+    new_unbannered = [p for p, c in changed_cls.items() if c == "unbannered-asm"]
+
     base_keys, head_keys = set(bf["matched"]), set(hf["matched"])
     common_credit = set(ba["byFunction"]) & set(ha["byFunction"])
     credit_changes = [{"id": k, "before": ba["byFunction"][k], "after": ha["byFunction"][k]}
@@ -363,6 +392,10 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("the merge introduced an unattributed matched function")
     if diff["leftoverOldPaths"]:
         reasons.append("old source paths remain after rename")
+    if new_transcribed:
+        reasons.append(f"{len(new_transcribed)} asm-transcription file(s) with no "
+                       f"HAND-ASM PRIMITIVE or NONMATCHING banner: "
+                       + ", ".join(new_transcribed))
     if link["blocking"]:
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
     if port.get("available") and not port["passed"]:
@@ -376,6 +409,10 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     warnings = []
     if same_baseline_failure:
         warnings.append("base and merge share the same pre-existing ROM-build failure")
+    if new_unbannered:
+        warnings.append(f"{len(new_unbannered)} new/changed file(s) carry an asm body "
+                        f"with no HAND-ASM PRIMITIVE or NONMATCHING banner: "
+                        + ", ".join(new_unbannered))
     if link["tally"].get("BLIND"):
         warnings.append(f"{link['tally']['BLIND']} linkcheck result(s) have unresolved relocations")
     unresolved = sum(link["tally"].get(k, 0) for k in ("UNRESOLVED", "NO-SYM", "NONE"))
@@ -417,6 +454,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "added": added_credit, "changed": credit_changes,
                         "lost": lost_credit},
         "diff": diff,
+        "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered},
         "linkcheck": link,
         "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,

@@ -37,6 +37,25 @@ module's `symbols.txt` for the name.**
 
 `tools/resolve_placeholders.py` implements exactly this. Do not reimplement it.
 
+## 2a. What "verified" means, and what it does not
+
+`tools/build_pin.py` is the single answer to *what will the build do with this
+file*: the compiler version `rombuild` pins for it (`config/rombuild-versions.txt`,
+keyed by file **stem**), the build's flags, a byte compare, and a
+reloc-destination check. Every rewrite tool verifies through it, and it **fails
+closed** -- an unknown pin or a check that could not run is a failure, not a pass.
+
+Both halves are load-bearing, and each was a real false green:
+
+- **Pinned, not swept.** A match under any of the 25 versions in `match.SWEEP` is
+  not a match the build will reproduce. An audit found 79 files that verified only
+  under `1.2/base`.
+- **Destinations, not just bytes.** `match.compare` wildcards every relocated
+  word, so a byte-only check is blind by construction to the one thing these tools
+  change. A transform once passed the byte check and then failed the ROM build by
+  a single word -- and that word turned out to be a pre-existing wrong callee the
+  transform had merely exposed.
+
 ## 3. Preconditions
 
 **Cold start:** `tools/mwccarm/**` and `extracted/**` are git-ignored, so a fresh clone
@@ -68,7 +87,7 @@ different and only one of them is a fix:
 |---|---|---|
 | `rewritten` | renamed, and it still reproduces the ROM with correct reloc destinations | keep |
 | `partial` | some names in the file are not textual; fixing only the rest leaves it broken | needs a source transform, not a rename |
-| `not textual` | the name is compiler-generated (a member call, or double-mangled) so there is no token to rewrite | needs a source transform |
+| `not textual` | the name is compiler-generated (a member call, or double-mangled) so there is no token to rewrite | run `tools/demember_calls.py` -- see 4a |
 | `target unnamed in config` | the address resolves, but only to `func_0208xxxx` | that is a `symbols.txt` gap; name it there first |
 | `unresolved` | the join did not produce one answer | read the printed reason -- see below |
 | `reverted` | the rename stopped it matching | investigate; usually a type clash with a shared header |
@@ -89,6 +108,34 @@ Report-only mode additionally prints `resolvable` for anything it *would* rewrit
 
 **Never pass `--allow-generic` to make a number go up.** It trades a wrong name for an
 anonymous one and hides the config gap that caused it.
+
+## 4a. The `not textual` bucket has its own tool
+
+A file often declares an ad-hoc local class purely so it can spell a call:
+
+    struct Actor { short ReflectAngle(int, int, short); };
+    ((Actor*)self)->ReflectAngle(a, b, c);
+
+The compiler builds the mangled name from that declaration, so the name never
+appears in the source and no rename can reach it. Correcting the declaration is
+*not* the fix either: the ROM's parameter is `Fix12<int>`, a class, and mwccarm
+passes a by-value class differently **at the call site** --
+
+    take_i(h, 0x800)   ->  mov r1,#0x800
+    take_f(h, v)       ->  ldr r1,[pc,#..] ; ldm r1,{r1}
+
+-- so the true signature breaks the caller's bytes.
+
+`tools/demember_calls.py` rewrites the call to name the ROM symbol directly as an
+`extern "C"` free function, keeping the *original* declaration's types verbatim.
+Those types are wrong about the ROM and right about the codegen, and sub-word
+types are not interchangeable with `int`: a `short` parameter truncates where an
+`int` sign-extends.
+
+```sh
+python tools/demember_calls.py                # report only
+python tools/demember_calls.py --apply -j 16
+```
 
 ## 5. Verification, in order
 
@@ -158,11 +205,12 @@ PY
 
 ## 9. Known dead ends
 
-- **Renaming a member call.** `anim->SetAnim(...)` generates its mangled name from the
-  declaration; there is no token to rewrite. It needs the call rewritten to an
-  `extern "C"` mangled free call with scalar args -- the dominant pattern in the corpus,
-  though I have no exact count and any figure you see quoted for it is unverified. This
-  is the `not textual` bucket.
+- **Renaming a member call.** Still true that a rename cannot reach it -- but this is
+  no longer a dead end; see 4a and `tools/demember_calls.py`.
+- **Expect the gate to find bugs that are not yours.** Twice now a tool's output
+  failed the ROM build and the tool was innocent: enrolling the file was simply the
+  first time anything looked at its callees. Read the named function before assuming
+  your change caused it.
 - **169 references remain genuinely ambiguous.** Two overlays define the same address.
   Tooling is finished; these need overlay-residency data or an emulator trace.
 - **`is_misnamed()` returns `True` unconditionally.** That is deliberate: the name is

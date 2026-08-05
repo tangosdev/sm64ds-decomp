@@ -46,6 +46,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import affected_src as A  # noqa: E402
+import asm_policy as AP  # noqa: E402
 import linkcheck as LC  # noqa: E402
 
 SRC_SUFFIXES = (".c", ".cpp")
@@ -305,8 +306,11 @@ def main():
     # A PR "passes" only when every changed file reproduces the ROM with correct
     # relocation targets (VERIFIED/BENIGN, or BLIND where a slot is unverifiable).
     # WRONG-DEST *and* a non-reproducing NO-REPRO near-miss are both failures — a
-    # near-miss is not a match and must not land.
-    FAIL = {"WRONG", "NO-REPRO"}
+    # near-miss is not a match and must not land. RAW-ASM is the third failure: an
+    # unbannered dcd transcription byte-matches vacuously (the dcd words ARE the
+    # ROM bytes re-spelled), so its VERIFIED slots prove nothing and the file is
+    # rejected on policy — see notes/asm-policy.md and tools/asm_policy.py.
+    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM"}
     reports, bad = [], []
     for path, rep in zip(files, checked):
         reports.append(rep)
@@ -322,19 +326,22 @@ def main():
         # stop files that CLAIM to be matches from landing red; a declared draft cannot
         # inflate any count. WRONG (a resolvable reloc pointing at the wrong symbol)
         # still fails -- a draft's call graph must be honest even if its bytes differ.
-        declared_draft = False
+        text = ""
         try:
-            head = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")[:200]
-            declared_draft = "NONMATCHING" in head
+            text = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             pass
-        if w == "NO-REPRO" and declared_draft:
+        if w == "NO-REPRO" and "NONMATCHING" in text[:200]:
             rep["worst"] = w = "DRAFT"
+        # The draft downgrade cannot collide with this: a transcription has no banner
+        # by definition (a NONMATCHING banner reclassifies it as an honest draft).
+        if AP.classify(text) == "transcribed":
+            rep["worst"] = w = "RAW-ASM"
         if w in FAIL:
             bad.append((path, w))
         mark = {"WRONG": "WRONG  ", "NO-REPRO": "NOREPRO", "BENIGN": "ok(ben)",
-                "VERIFIED": "ok     ", "BLIND": "ok(bln)",
-                "DRAFT": "ok(drf)"}.get(w, w)
+                "VERIFIED": "ok     ", "BLIND": "ok(bln)", "DRAFT": "ok(drf)",
+                "RAW-ASM": "RAWASM "}.get(w, w)
         npass = sum(1 for r in rep["results"] if r.get("passenger"))
         extra = f", +{npass} passenger" if npass else ""
         print(f"  {mark} {path}  ({len(rep['results'])} slot(s){extra})")
@@ -354,13 +361,15 @@ def main():
 
 
 # Verdict -> a human label for the PR comment. VERIFIED/BENIGN/BLIND are passes;
-# NO-REPRO (near-miss) and WRONG-DEST are the two failures.
+# NO-REPRO (near-miss), WRONG-DEST and RAW-ASM (unbannered transcription) fail.
 _LABEL = {
     "VERIFIED":   "✅ verified",
     "BENIGN":     "✅ benign (equivalent veneer/twin)",
     "BLIND":      "🔶 blind (a reloc slot could not be resolved)",
     "NO-REPRO":   "❌ near-miss (does NOT reproduce the ROM)",
     "WRONG":      "❌ wrong-dest (reloc links to the wrong symbol)",
+    "RAW-ASM":    "🚫 raw-asm (transcription, no banner): dcd words match the ROM "
+                  "vacuously; banner it HAND-ASM PRIMITIVE or NONMATCHING",
     "NO-SYM":     "🔶 no-sym",
     "UNRESOLVED": "🔶 unresolved (symbol not in config/ledger)",
     "DRAFT":      "ok - declared draft (header says NONMATCHING; non-reproduction expected)",
