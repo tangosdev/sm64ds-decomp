@@ -10,7 +10,9 @@
  * Detached from Player.h; see _ZN6Player23St_InYoshiMouth_CleanupEv.cpp.
  */
 #include "decl_common.h"
+extern "C" {
 extern int func_ov004_020afdd0(int a, int b, int c, int d, int e);
+}
 
 extern "C" void _ZN6Player16St_WallJump_InitEv(char *self)
 {

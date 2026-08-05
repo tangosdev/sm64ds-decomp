@@ -1,34 +1,35 @@
 //cpp
 #include "types.h"
 // @symbol _ZN14EnemySwitchTag8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_Camera.h"
-#include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "EnemySwitchTag.h"
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 e);
-extern void *data_0209f318;
+extern "C" {
+extern void _ZN5Event8ClearBitEj(u32 bit);
+extern void _ZN5Event6SetBitEj(u32 bit);
+extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
+extern void _ZN12CylinderClsn5ClearEv(void* p);
+extern void _ZN12CylinderClsn6UpdateEv(void* p);
+}
 
 int EnemySwitchTag::Behavior()
 {
-    u32 param;
-    int a;
-    void *cam;
-
-    if (data_ov002_02110aec != 0)
-        return 1;
-
-    param = unk_008;
-    if (param >= 1 && param <= 4) {
-        cam = data_0209f318;
-        a = data_0209b4ac;
-        if (a == 0x32 || a == 0x33 || a == 0x34 ||
-            _ZNK6Camera12IsUnderwaterEv(cam))
-            return 1;
+    if (unk_10a != 0) {
+        *(u16*)(((int)((char*)this) + 0x10a)) -= 1;
+        if (unk_10a == 0) {
+            *(u32*)(((int)((char*)this) + 0xec)) &= ~1;
+            _ZN5Event8ClearBitEj(mEventID);
+        }
     }
-
-    unk_0d4 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
-        unk_0d4, 3, (u32)data_ov002_0210b498[unk_008],
-        ((char *)this) + 0x74, 0);
+    if (unk_0f8 != 0) {
+        *(u32*)(((long long)(int)((char*)&unk_0ec))) |= 1;
+        _ZN5Event6SetBitEj(mEventID);
+        if (unk_10c != 0) {
+            unk_10a = unk_108;
+        } else {
+            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+        }
+    }
+    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
     return 1;
 }

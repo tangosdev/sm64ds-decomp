@@ -7,6 +7,7 @@
 #include "PushBlock.h"
 typedef int Fix12;
 
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -18,6 +19,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, const
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
+}
 
 extern void *data_ov002_0210d9d0[];
 extern void *data_ov002_0210d9b0[];

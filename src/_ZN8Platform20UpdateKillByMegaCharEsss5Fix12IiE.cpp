@@ -8,11 +8,13 @@ struct Actor {
     void UpdatePos(CylinderClsn* c);
 };
 
+extern "C" {
 extern void Matrix4x3_FromRotationY(Matrix4x3* m, int angle);
 extern void MulVec3Mat4x3(Vector3* v, Matrix4x3* m, Vector3* dst);
 extern void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_ov002_020ee5d0(unsigned char* self, int arg);
+}
 
 struct RaycastLine {
     RaycastLine();

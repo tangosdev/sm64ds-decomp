@@ -1,6 +1,8 @@
 //cpp
+extern "C" {
 extern void func_ov075_02114fa8(void*);
 extern void func_0203d918(void);
+}
 extern int *data_0209fc68;
 extern char data_0208a0e0[];
 extern "C" void func_ov075_02118c80(char *c) {

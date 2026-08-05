@@ -4,10 +4,10 @@
 #include "decl_ActorBase.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV8MugenBgm */
+/* resolved: VT = _ZTV14CutsceneObject */
 int *CutsceneObject_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(260);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV8MugenBgm; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV14CutsceneObject; }
     return p;
 }

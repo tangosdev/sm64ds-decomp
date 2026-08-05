@@ -5,9 +5,11 @@
     .data       start:0x02111ae0 end:0x021124c0 kind:data align:32
     .bss        start:0x021124c0 end:0x02112520 kind:bss align:32
 src/func_ov033_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov033_021111e4.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov033_0211123c.c:
@@ -35,12 +37,15 @@ src/TinyCover_Spawn.c:
     .text start:0x021113a4 end:0x021113d4
 
 src/_ZN9TinyCoverD1Ev.c:
+    complete
     .text start:0x021113d4 end:0x02111420
 
 src/_ZN9TinyCoverD0Ev.c:
+    complete
     .text start:0x02111420 end:0x02111480
 
 src/_ZN9TinyCover16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111480 end:0x021114c4
 
 src/_ZN9TinyCover6RenderEv.cpp:
@@ -60,7 +65,9 @@ src/TinyWater_Spawn.c:
     .text start:0x02111690 end:0x021116c8
 
 src/__sinit_ov033_021119e8.c:
+    complete
     .init start:0x021119e8 end:0x02111a54
 
 src/__sinit_ov033_02111a54.c:
+    complete
     .init start:0x02111a54 end:0x02111ac0

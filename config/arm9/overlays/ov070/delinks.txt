@@ -19,6 +19,7 @@ src/func_ov070_0211f100.cpp:
     .text start:0x0211f100 end:0x0211f368
 
 src/func_ov070_0211f368.cpp:
+    complete
     .text start:0x0211f368 end:0x0211f450
 
 src/func_ov070_0211f450.c:
@@ -33,6 +34,7 @@ src/func_ov070_0211f5f0.cpp:
     .text start:0x0211f5f0 end:0x0211f62c
 
 src/func_ov070_0211f62c.c:
+    complete
     .text start:0x0211f62c end:0x0211f694
 
 src/func_ov070_0211f694.cpp:
@@ -84,9 +86,11 @@ src/_ZN6FlyGuy6RenderEv.cpp:
     .text start:0x021201c0 end:0x02120210
 
 src/_ZN6FlyGuy8BehaviorEv.cpp:
+    complete
     .text start:0x02120210 end:0x021203b4
 
 src/_ZN6FlyGuy13InitResourcesEv.cpp:
+    complete
     .text start:0x021203b4 end:0x021204e4
 
 src/func_ov070_021204e4.c:
@@ -169,6 +173,7 @@ src/_ZN3Amp6RenderEv.cpp:
     .text start:0x02120e24 end:0x02120e8c
 
 src/_ZN3Amp8BehaviorEv.cpp:
+    complete
     .text start:0x02120e8c end:0x02120eec
 
 src/_ZN3Amp13InitResourcesEv.cpp:
@@ -191,6 +196,7 @@ src/func_ov070_021211bc.c:
     .text start:0x021211bc end:0x021211c4
 
 src/func_ov070_021211c4.cpp:
+    complete
     .text start:0x021211c4 end:0x02121298
 
 src/func_ov070_02121298.cpp:
@@ -258,12 +264,14 @@ src/_ZN10FlameChomp6RenderEv.cpp:
     .text start:0x021218c4 end:0x021218f4
 
 src/_ZN10FlameChomp8BehaviorEv.cpp:
+    complete
     .text start:0x021218f4 end:0x02121914
 
 src/_ZN10FlameChomp13InitResourcesEv.cpp:
     .text start:0x02121914 end:0x02121a64
 
 src/func_ov070_02121a64.c:
+    complete
     .text start:0x02121a64 end:0x02121ae0
 
 src/func_ov070_02121ae0.c:
@@ -298,6 +306,7 @@ src/func_ov070_02121cbc.c:
     .text start:0x02121cbc end:0x02121d50
 
 src/func_ov070_02121d50.cpp:
+    complete
     .text start:0x02121d50 end:0x02121e14
 
 src/func_ov070_02121e14.cpp:
@@ -345,9 +354,11 @@ src/_ZN14FlameChompFire6RenderEv.cpp:
     .text start:0x0212206c end:0x02122104
 
 src/_ZN14FlameChompFire8BehaviorEv.cpp:
+    complete
     .text start:0x02122104 end:0x02122124
 
 src/_ZN14FlameChompFire13InitResourcesEv.cpp:
+    complete
     .text start:0x02122124 end:0x021221fc
 
 src/FlameChompFire_Spawn.c:
@@ -355,13 +366,17 @@ src/FlameChompFire_Spawn.c:
     .text start:0x021221fc end:0x02122244
 
 src/__sinit_ov070_02122afc.c:
+    complete
     .init start:0x02122afc end:0x02122d80
 
 src/__sinit_ov070_02122d80.cpp:
+    complete
     .init start:0x02122d80 end:0x02122f30
 
 src/__sinit_ov070_02122f30.c:
+    complete
     .init start:0x02122f30 end:0x02123030
 
 src/__sinit_ov070_02123030.c:
+    complete
     .init start:0x02123030 end:0x021230a4

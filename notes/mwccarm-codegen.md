@@ -22,7 +22,11 @@ template reconstructed in include/math/Fix12.h - makes mwccarm home the incoming
 register arguments to the stack (`push {r0-r3}`) and reload each use, +0x14 bytes
 on ShadowModel::InitModel. Scalar parameters of identical width stay in registers.
 Identical on 1.2/sp2p3 and 2004/b56; `register`, `const`, and an inline conversion
-operator instead of direct member access change nothing.
+operator instead of direct member access change nothing. Nor does declaring the
+aggregate a `union` rather than a `struct`, or copying each parameter to a local
+before use -- re-measured on Actor::SetRanges (0x02010e08, target 0x24), where every
+aggregate form costs the same +0x14 and only a scalar parameter reproduces. The cost
+is in the parameter passing, not in how the member is reached.
 
 The retail ROM's own `5Fix12IiE` functions read their arguments straight from
 registers, so the original build had a lever we have not found. Until someone
@@ -2884,11 +2888,17 @@ commutative op, try the sub-identity before calling it a floor.
 
 Landing note (split-symbol carriers, extends 9a(3)): func_02072168 is banked and
 re-verified at the COMBINED 0x88c extent (0x02072168..0x020729f4) because its compiled
+<<<<<<< Updated upstream
 object also emits func_020729e8, the severed 12-byte epilogue. RESOLVED 2026-08-01: the
 symbol map now merges the pair (config/arm9/symbols.txt lists func_02072168 at size
 0x88c, the func_020729e8 row and its stub src file are gone) -- the first symbol-map
 merge of a severed fragment into its parent. Precedent for the func_02071644/
 func_02071694 pair (9a(3)'s other proven case) when someone lands that one.
+=======
+object also emits func_020729e8, the severed 12-byte epilogue. matched.jsonl carries size
+2188; the symbol map still lists both symbols. src/func_020729e8.c stays as a documented
+stub.
+>>>>>>> Stashed changes
 
 ## 6ax. Inverse RMW-launder: demote the PLAIN read to let the RMW chain lead an interleave (2026-08-01, CapEnemy::GetCapState MATCHED)
 
@@ -2909,6 +2919,7 @@ Rule amendment: "launder ONLY the RMW sites" holds for the ADDRESS-MATERIALIZATI
 (that is what the ROM's RMW/single-use anatomy dictates). But for ORDERING residue between
 two chains, the launder is a scheduling-class demotion you can apply to EITHER side: launder
 the chain that must YIELD, not the one that must lead.
+<<<<<<< Updated upstream
 
 ## 6ay. Four new axes tested on the arm9 floors, all closed (2026-08-01, post-#960 theory sweep)
 
@@ -2957,3 +2968,44 @@ same coloring-priority class as 0202ffec.
 
 Permuter operational note (Windows): --quiet or --stop-on-zero stall permuter.py with
 stdout-flush OSErrors; run plain with output redirected (~14 cand/sec at -j8).
+
+## 6ba. The 4a8-pack rank-pin: a partial decouple, and a canonicalization split from its ov075 twin (2026-08-02, Fable on func_ov080_02125460, ~330 compiles, still div 5)
+
+func_ov080_02125460 (TEXIMAGE_PARAM pack, div 5) is the same two-attractor rank-pin
+as func_ov075_0211a948 (6ab/2114): ROM wants A's selection (b>>3 materialized, lsl#26
+folded into the first orr) with B's coloring (b=r2 coalescing the dying pointer,
+t26=r3). Three findings extend the class record:
+
+- **The 120-perm result does NOT transfer between twins.** On ov075 every or-chain
+  permutation returned exactly 5; here the baseline order is the UNIQUE minimum at 5
+  and all 119 others are 7-10. Same residue class, different canonicalization
+  landscape - re-run the perm sweep per function before importing a twin's negative.
+  B-order here = 7: coloring flips to the ROM's (b=r2, t26=r3) but fold-side follows
+  term order strictly - across ~20 spellings (b/8, u64-shift launder, static-inline
+  sh3, mask-first) the orr folder ONLY takes the second operand's shift; no commute
+  was ever observed. Late-lowering spellings either lower before selection (b/8,
+  inline) or materialize extra code (u64 launder +8, mask-first +4).
+- **First known partial decouple of the class: a named extract + ANY equal-arm
+  var-cond ternary in the load's index.** `t = (a>>0x1a)&7; b = q[t ? 0 : 0];` (cond
+  identity irrelevant - `q ? 0 : 0` behaves identically; the folded diamond acts as a
+  forward-substitution barrier) reaches b=r2-coalesced (`ldr r2,[r2]`) WITH A's
+  selection - the two load-bearing words the plain A-tree can never produce. Cost: the
+  a/t-web coloring rotates (a=lr instead of r4, t26=r4, t20=r3, t23=ip) and t29's lsr
+  sinks below the first orr = stable div 14. The rotation is immune to all 6 decl
+  orders, a-laundering (+8), cast-arith a-loads, and all 120 dep-side term
+  arrangements (phase-2 sweep min 7). Adding a second cond-use of `a` worsens (16).
+  Constant-arm ternaries (`c ? 3 : 3`) parse-fold and do nothing anywhere.
+- **Context does not leak into the pack block.** Inlining the head's single-use
+  pointer, equal-arm ternaries in other blocks, struct-typing, volatile HW stores,
+  extern-C C++ mode, BB barriers (label / do-while(0) / switch(0)), two-def webs
+  (t&=7, b>>=3), and a 5-statement `v |=` accumulator chain (survives as structure
+  but rotates q/a/v) all leave the b/t26 pair untouched. One head trap worth banking:
+  the 0x1b6 halfword must stay ANONYMOUS inside the short-circuit `||` - naming it
+  hoists the ldrh above the branch and breaks the matching head.
+
+Verdict unchanged (still parked at 5, `// NONMATCHING`): the b/t26 rank rides the
+canonical A-tree, and the only rerank construct drags the a-family with it. The open
+angle narrows to: a substitution barrier that does NOT perturb sibling-web coloring,
+or any construct that makes the orr folder commute.
+=======
+>>>>>>> Stashed changes

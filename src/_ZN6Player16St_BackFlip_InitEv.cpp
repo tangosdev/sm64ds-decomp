@@ -3,12 +3,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 typedef int Fix12i;
+extern "C" {
 extern int func_ov002_020e2be4(void*);
 extern int func_ov002_020e2ba8(void*);
 extern int func_ov002_020e2b6c(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
 extern int func_ov002_020e2ad0(void*);
 extern int func_ov002_020e25f0(void*, int);
+}
 
 int Player::St_BackFlip_Init()
 {

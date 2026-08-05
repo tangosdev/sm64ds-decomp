@@ -4,12 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Boo.h"
+#include "SharedFilePtr.h"
 struct Actor;
 extern "C" Actor *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern "C" void UnloadBlueCoinModel(void *o);
 struct SharedFilePtr;
-extern "C" void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self);
 extern "C" void _ZN8CapEnemy14UnloadCapModelEv(void *self);
 
 extern SharedFilePtr data_ov063_0211edec;
@@ -56,19 +56,19 @@ int Boo::CleanupResources()
     if (((O *)this)->f4a0 == 0x122)
         UnloadBlueCoinModel(((O *)this));
     else if (((O *)this)->f4a0 == 0xd4)
-        _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211edec);
+        ((SharedFilePtr *)(&data_ov063_0211edec))->Release();
 
     b = (((O *)this)->f0c == 0xd1);
     if (b != 0) {
-        _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211edc4);
-        _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211eddc);
+        ((SharedFilePtr *)(&data_ov063_0211edc4))->Release();
+        ((SharedFilePtr *)(&data_ov063_0211eddc))->Release();
     } else {
-        _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211edf4);
-        _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211ede4);
+        ((SharedFilePtr *)(&data_ov063_0211edf4))->Release();
+        ((SharedFilePtr *)(&data_ov063_0211ede4))->Release();
         if (((O *)this)->f5cf == 0xf) {
             UnloadKeyModels(3);
-            _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211edd4);
-            _ZN13SharedFilePtr7ReleaseEv(&data_ov063_0211edcc);
+            ((SharedFilePtr *)(&data_ov063_0211edd4))->Release();
+            ((SharedFilePtr *)(&data_ov063_0211edcc))->Release();
         }
     }
     _ZN8CapEnemy14UnloadCapModelEv(((O *)this));

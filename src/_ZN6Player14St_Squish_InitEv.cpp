@@ -3,8 +3,10 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 typedef int Fix12i;
+extern "C" {
 extern void Player_ReleaseHeldActor(void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, Fix12i, unsigned int);
+}
 
 int Player::St_Squish_Init()
 {

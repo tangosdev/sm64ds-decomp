@@ -7,13 +7,13 @@ extern int func_ov002_020c031c(void *c);
 extern int func_ov002_020f030c(unsigned int sel);
 extern int func_ov002_020f02c8(unsigned int sel);
 extern int func_ov002_020f035c(unsigned int sel, int r1);
-extern int func_0203cf78(void *v);
-extern int func_0203b4dc(int x, int z);
-extern int func_0203b0e8(int a, int b);
-extern void func_020377b0(void *ray);
-extern void func_02037670(void *ray, void *a, void *b, void *actor);
-extern int func_02038638(void *ray);
-extern void func_02037764(void *ray);
+extern int Vec3_HorzLen(void *v);
+extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
+extern int AngleDiff(int a, int b);
+extern void _ZN11RaycastLineC1Ev(void *ray);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *ray, void *a, void *b, void *actor);
+extern int _ZN11RaycastLine10DetectClsnEv(void *ray);
+extern void _ZN11RaycastLineD1Ev(void *ray);
 extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
 
 extern unsigned char data_020a0e40;
@@ -89,15 +89,15 @@ int func_ov002_020c06fc(char *c, int arg)
     f.v0.x = FX(v, (int)data_02082214[(*(u16 *)(c + 0x69a) >> 4) * 2]);
     f.v0.z = FX(v, (int)data_02082214[(*(u16 *)(c + 0x69a) >> 4) * 2 + 1]);
     {
-        int len = func_0203cf78(c + 0x554);
+        int len = Vec3_HorzLen(c + 0x554);
         f.v0.x = FX(f.v0.x, len);
         f.v0.z = FX(f.v0.z, len);
     }
 
     if ((*(u8 *)(c + 0x6e9) & 2) != 0 && (u16)(*(u16 *)(c + 0x6ce) & 1) == 0
         && *(int *)(c + 0x98) <= 0x10000) {
-        int r6b = func_0203b4dc(f.v0.x, f.v0.z);
-        func_020377b0(f.ray);
+        int r6b = _ZN4cstd5atan2E5Fix12IiES1_(f.v0.x, f.v0.z);
+        _ZN11RaycastLineC1Ev(f.ray);
         {
             int tz, ty, tx;
             int p5c = *(int *)(c + 0x5c);
@@ -112,12 +112,12 @@ int func_ov002_020c06fc(char *c, int arg)
             ty = *(int *)(c + 0x60) + 0x32000;
             f.v2.x = tx; f.v2.y = ty; f.v2.z = tz;
         }
-        func_02037670(f.ray, &f.v1, &f.v2, c);
-        if (func_02038638(f.ray) != 0) {
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(f.ray, &f.v1, &f.v2, c);
+        if (_ZN11RaycastLine10DetectClsnEv(f.ray) != 0) {
             f.v0.x = 0;
             f.v0.z = 0;
         }
-        func_02037764(f.ray);
+        _ZN11RaycastLineD1Ev(f.ray);
     }
 
     {
@@ -127,15 +127,15 @@ int func_ov002_020c06fc(char *c, int arg)
         int fz = FX(s2, t);
         f.v3.x = fx;
         f.v3.z = fz;
-        ang = func_0203b4dc(fx, fz);
+        ang = _ZN4cstd5atan2E5Fix12IiES1_(fx, fz);
     }
-    *(int *)(c + 0x98) = func_0203cf78(&f.v3);
+    *(int *)(c + 0x98) = Vec3_HorzLen(&f.v3);
     if (*(int *)(c + 0x98) > 0x64000)
         *(int *)(c + 0x98) = 0x64000;
     *(s16 *)(c + 0x94) = (s16)(ang + *(s16 *)(c + 0x69c));
     {
         s16 cur = *(s16 *)(c + 0x94);
-        if (func_0203b0e8(cur, *(s16 *)(c + 0x8e)) >= 0x4000)
+        if (AngleDiff(cur, *(s16 *)(c + 0x8e)) >= 0x4000)
             cur = (s16)(*(s16 *)(c + 0x94) + 0x8000);
         ApproachAngle((s16 *)(c + 0x8e), cur, 8, 0x4000, 0x10);
     }

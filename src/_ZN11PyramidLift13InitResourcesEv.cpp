@@ -16,6 +16,7 @@ extern SharedFilePtr data_ov002_0210d9f0;
 extern SharedFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" {
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
@@ -23,6 +24,7 @@ extern KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, KCL_File* k, Matrix4x3* m, Fix12 f, short s, CLPS_Block* b);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
+}
 
 int PyramidLift::InitResources()
 {

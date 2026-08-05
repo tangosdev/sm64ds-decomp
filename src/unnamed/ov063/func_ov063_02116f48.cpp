@@ -1,5 +1,7 @@
 //cpp
+extern "C" {
 extern int data_ov066_0211ad00(char *c);
+}
 extern "C" int func_ov063_02116f48(char *c) {
     *(int*)(c+0x490) = 0;
     *(unsigned char*)(c+0x5c9) = 0xff;

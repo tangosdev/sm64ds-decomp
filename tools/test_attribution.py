@@ -1,0 +1,207 @@
+"""Credit attribution, tested against real git history.
+
+There was no coverage here before, which is a large part of why the bug this file was
+written for survived: `match_finishers` carried a file's draft history across a rename but
+not its finisher, so every moved file read as a fresh finish by whoever moved it. On the
+real repository that had already re-pointed 94 files' credit away from the people who
+matched them.
+
+These build throwaway git repositories rather than mocking, because every one of the
+failure modes is about what `git log -M` decides a commit did -- rename vs delete+add,
+above or below the similarity threshold -- and a mock would just encode the assumption
+under test.
+"""
+import json
+import pathlib
+import subprocess
+import sys
+import tempfile
+import unittest
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import chaos_db_ci as CDB  # noqa: E402
+
+DRAFT = "// NONMATCHING: not yet matched\nint f(void){return 0;}\n"
+CLEAN = "int f(void){return 0;}\n"
+
+
+class GitFixture(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.repo = pathlib.Path(self.tmp.name)
+        self.git("init", "-q", "-b", "main")
+        self.git("config", "user.email", "setup@example.com")
+        self.git("config", "user.name", "Setup")
+        (self.repo / "src").mkdir()
+        self._saved = CDB.REPO
+        CDB.REPO = self.repo
+
+    def tearDown(self):
+        CDB.REPO = self._saved
+        self.tmp.cleanup()
+
+    def git(self, *args):
+        return subprocess.run(["git", *args], cwd=self.repo, check=True,
+                              capture_output=True, text=True).stdout
+
+    def commit(self, who, msg):
+        self.git("add", "-A")
+        self.git("-c", f"user.email={who}@example.com", "-c", f"user.name={who}",
+                 "commit", "-q", "--author", f"{who} <{who}@example.com>", "-m", msg)
+
+    def write(self, rel, text):
+        p = self.repo / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+
+    def move(self, old, new):
+        (self.repo / new).parent.mkdir(parents=True, exist_ok=True)
+        self.git("mv", old, new)
+
+
+class Finishers(GitFixture):
+    def test_finisher_is_the_person_who_removed_the_banner(self):
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.assertEqual(CDB.match_finishers("HEAD"), {"src/f.c": "matcher"})
+
+    def test_a_pure_move_does_not_steal_the_finish(self):
+        """The bug. A relocation must not make the mover the finisher."""
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.move("src/f.c", "src/unnamed/ov006/f.c")
+        self.commit("mover", "layout: relocate")
+        self.assertEqual(CDB.match_finishers("HEAD"),
+                         {"src/unnamed/ov006/f.c": "matcher"})
+
+    def test_the_old_path_does_not_linger_after_a_move(self):
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.move("src/f.c", "src/unnamed/ov006/f.c")
+        self.commit("mover", "layout: relocate")
+        self.assertNotIn("src/f.c", CDB.match_finishers("HEAD"))
+
+    def test_a_move_of_a_still_drafted_file_keeps_it_drafted(self):
+        """Moving an unfinished draft must not finish it, and whoever removes the banner
+        later still gets the credit."""
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.move("src/f.c", "src/unnamed/ov006/f.c")
+        self.commit("mover", "layout: relocate")
+        self.assertEqual(CDB.match_finishers("HEAD"), {})
+        self.write("src/unnamed/ov006/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.assertEqual(CDB.match_finishers("HEAD"),
+                         {"src/unnamed/ov006/f.c": "matcher"})
+
+    def test_extension_change_recorded_as_delete_plus_add_keeps_the_finish(self):
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        (self.repo / "src" / "f.c").unlink()
+        self.write("src/f.cpp", "//cpp\n" + CLEAN + "// rewritten enough to defeat -M\n" * 40)
+        self.commit("promoter", "promote to cpp")
+        self.assertEqual(CDB.match_finishers("HEAD").get("src/f.cpp"), "matcher")
+
+    def test_a_later_touch_never_transfers_the_finish(self):
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.write("src/f.c", CLEAN + "// tidy\n")
+        self.commit("tidier", "tidy up")
+        self.assertEqual(CDB.match_finishers("HEAD"), {"src/f.c": "matcher"})
+
+    def test_a_file_that_was_never_drafted_has_no_finisher(self):
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.assertEqual(CDB.match_finishers("HEAD"), {})
+
+    def test_a_short_clean_blob_is_not_contaminated_by_its_neighbour(self):
+        """Blobs are classified from one concatenated `git cat-file --batch` response, so a
+        fixed-size read past the end of a short blob lands in the NEXT blob's bytes. A clean
+        file next to a drafted one was read as drafted and lost its finisher.
+
+        The arrangement is deliberate, not incidental. Blobs are queried in sorted
+        (commit-sha, path) order, and commit shas vary run to run -- so a draft-commit /
+        clean-commit pair only puts a clean blob before a draft one about half the time,
+        which is exactly the coin-flip that made this bug look like flaky tests. Putting
+        BOTH in one commit pins the order to the paths: `a_clean` sorts before `b_draft`,
+        the two are adjacent in the batch, and the read runs off the short clean blob into
+        the banner every single time."""
+        self.write("src/a_clean.c", DRAFT)
+        self.write("src/b_draft.c", DRAFT)
+        self.commit("drafter", "draft both")
+        self.write("src/a_clean.c", CLEAN)              # finished, and only 23 bytes
+        self.write("src/b_draft.c", DRAFT + "// still working\n")   # stays drafted
+        self.commit("matcher", "match the first one")
+        got = CDB.match_finishers("HEAD")
+        self.assertEqual(got, {"src/a_clean.c": "matcher"},
+                         "the short clean blob was read as drafted -- window bled into "
+                         "the next blob")
+
+    def test_classification_is_deterministic_across_repeated_calls(self):
+        self.write("src/a_clean.c", DRAFT)
+        self.write("src/b_draft.c", DRAFT)
+        self.commit("drafter", "draft both")
+        self.write("src/a_clean.c", CLEAN)
+        self.write("src/b_draft.c", DRAFT + "// still working\n")
+        self.commit("matcher", "match the first one")
+        runs = [CDB.match_finishers("HEAD") for _ in range(3)]
+        self.assertEqual(runs[0], runs[1])
+        self.assertEqual(runs[1], runs[2])
+
+
+class FirstMatchers(GitFixture):
+    def test_a_move_carries_the_first_matcher(self):
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        self.move("src/f.c", "src/unnamed/ov006/f.c")
+        self.commit("mover", "layout: relocate")
+        self.assertEqual(CDB.first_matchers("HEAD"),
+                         {"src/unnamed/ov006/f.c": "matcher"})
+
+    def test_a_bulk_move_carries_credit_for_every_file(self):
+        """Large relocations are exactly where git's rename cap used to bite."""
+        for i in range(60):
+            self.write(f"src/func_ov006_{i:08x}.c", f"int f{i}(void){{return {i};}}\n")
+        self.commit("matcher", "match a batch")
+        for i in range(60):
+            self.move(f"src/func_ov006_{i:08x}.c",
+                      f"src/unnamed/ov006/func_ov006_{i:08x}.c")
+        self.commit("mover", "layout: relocate")
+        got = CDB.first_matchers("HEAD")
+        self.assertEqual(len(got), 60)
+        self.assertEqual(set(got.values()), {"matcher"})
+
+
+class Composite(GitFixture):
+    """What the merge gate actually compares: overrides -> finishers -> first."""
+
+    def resolve(self, rev="HEAD"):
+        first = CDB.first_matchers(rev)
+        fin = CDB.match_finishers(rev)
+        return {p: (fin.get(p) or first.get(p)) for p in set(first) | set(fin)}
+
+    def test_composite_survives_a_move_of_a_finished_draft(self):
+        self.write("src/f.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/f.c", CLEAN)
+        self.commit("matcher", "match it")
+        before = self.resolve()
+        self.move("src/f.c", "src/unnamed/ov006/f.c")
+        self.commit("mover", "layout: relocate")
+        after = self.resolve()
+        self.assertEqual(list(before.values()), ["matcher"])
+        self.assertEqual(list(after.values()), ["matcher"])
+
+
+if __name__ == "__main__":
+    unittest.main()

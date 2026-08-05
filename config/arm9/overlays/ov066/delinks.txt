@@ -217,6 +217,7 @@ src/func_ov066_021194fc.cpp:
     .text start:0x021194fc end:0x02119654
 
 src/_ZN6Eyerok16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02119654 end:0x021197a0
 
 src/_ZN6Eyerok16OnPendingDestroyEv.c:
@@ -251,4 +252,5 @@ src/Eyerok_Spawn.cpp:
     .text start:0x0211a370 end:0x0211a418
 
 src/__sinit_ov066_0211a418.c:
+    complete
     .init start:0x0211a418 end:0x0211abc0

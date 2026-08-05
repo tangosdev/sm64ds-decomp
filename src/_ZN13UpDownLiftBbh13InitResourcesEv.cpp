@@ -10,6 +10,7 @@
  * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  * natural signed /2 spelling; mwcc synthesizes add/lsr#31/asr#1 itself and
  * self-schedules the byte store into the ROM slot */
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(int sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
@@ -17,6 +18,7 @@ extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(int sfp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *mc, void *kcl, void *mtx, int fix, short s, int clps);
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
+}
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int data_ov095_02136f68[];
 extern int data_ov095_02136f74[];

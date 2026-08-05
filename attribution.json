@@ -5,7 +5,8 @@
     "noreply": "tangosdev",
     "leonard.van.der.plaat": "lplaat",
     "andrew": "andrewboudreau",
-    "mitch.cairns": "mitchellcairns"
+    "mitch.cairns": "mitchellcairns",
+    "mitch030504": "mitchellcairns"
   },
   "overrides": {
     "src/func_02035860.c": "ruspecial",
@@ -20,6 +21,9 @@
     "src/func_0204322c.c": "lunavyqo",
     "src/func_02043288.c": "lunavyqo",
     "src/func_020432e4.c": "lunavyqo",
-    "src/func_0204335c.c": "lunavyqo"
+    "src/func_0204335c.c": "lunavyqo",
+    "src/_ZN14BlueCoinSwitch13InitResourcesEv.c": "lunavyqo",
+    "src/_ZN8MugenBgm6RenderEv.c": "tangosdev",
+    "src/_ZN5StageC3Ev.c": "ruspecial"
   }
 }

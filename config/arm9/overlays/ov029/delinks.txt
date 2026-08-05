@@ -5,9 +5,11 @@
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
 src/func_ov029_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111f0
 
 src/func_ov029_021111f0.c:
+    complete
     .text start:0x021111f0 end:0x02111254
 
 src/func_ov029_02111254.c:
@@ -15,15 +17,19 @@ src/func_ov029_02111254.c:
     .text start:0x02111254 end:0x02111340
 
 src/FloatOnWaterPlatformWdwSquare_Spawn.c:
+    complete
     .text start:0x02111340 end:0x0211137c
 
 src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c:
+    complete
     .text start:0x0211137c end:0x021113c0
 
 src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
+    complete
     .text start:0x021113c0 end:0x02111418
 
 src/_ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111418 end:0x0211145c
 
 src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp:
@@ -31,6 +37,7 @@ src/_ZN29FloatOnWaterPlatformWdwSquare6RenderEv.cpp:
     .text start:0x0211145c end:0x02111484
 
 src/_ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv.cpp:
+    complete
     .text start:0x02111484 end:0x021115f8
 
 src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp:
@@ -77,6 +84,7 @@ src/_ZN9ArrowLift6RenderEv.cpp:
     .text start:0x0211192c end:0x02111954
 
 src/_ZN9ArrowLift8BehaviorEv.cpp:
+    complete
     .text start:0x02111954 end:0x02111a04
 
 src/_ZN9ArrowLift13InitResourcesEv.cpp:
@@ -88,9 +96,11 @@ src/WaterDiamond_Spawn.c:
     .text start:0x02111a84 end:0x02111ac4
 
 src/func_ov029_02111ac4.c:
+    complete
     .text start:0x02111ac4 end:0x02111b08
 
 src/func_ov029_02111b08.c:
+    complete
     .text start:0x02111b08 end:0x02111b60
 
 src/func_ov029_02111b60.c:
@@ -106,6 +116,7 @@ src/func_ov029_02111bcc.c:
     .text start:0x02111bcc end:0x02111d6c
 
 src/func_ov029_02111d6c.cpp:
+    complete
     .text start:0x02111d6c end:0x02111e40
 
 src/func_ov029_02111e40.cpp:
@@ -121,9 +132,11 @@ src/CageLift_Spawn.c:
     .text start:0x02111e74 end:0x02111ea4
 
 src/func_ov029_02111ea4.c:
+    complete
     .text start:0x02111ea4 end:0x02111ef4
 
 src/func_ov029_02111ef4.c:
+    complete
     .text start:0x02111ef4 end:0x02111f58
 
 src/func_ov029_02111f58.c:
@@ -131,12 +144,15 @@ src/func_ov029_02111f58.c:
     .text start:0x02111f58 end:0x02112044
 
 src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
+    complete
     .text start:0x02112044 end:0x02112080
 
 src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
+    complete
     .text start:0x02112080 end:0x021120d0
 
 src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
+    complete
     .text start:0x021120d0 end:0x02112134
 
 src/_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv.c:
@@ -148,12 +164,15 @@ src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.c:
     .text start:0x02112148 end:0x02112168
 
 src/RotatingPlatformWdw_Spawn.c:
+    complete
     .text start:0x02112168 end:0x021121a4
 
 src/_ZN19RotatingPlatformWdwD1Ev.c:
+    complete
     .text start:0x021121a4 end:0x021121f0
 
 src/_ZN19RotatingPlatformWdwD0Ev.c:
+    complete
     .text start:0x021121f0 end:0x02112250
 
 src/func_ov029_02112250.cpp:
@@ -172,6 +191,7 @@ src/_ZN19RotatingPlatformWdw6RenderEv.cpp:
     .text start:0x02112320 end:0x02112354
 
 src/_ZN19RotatingPlatformWdw8BehaviorEv.cpp:
+    complete
     .text start:0x02112354 end:0x021124d0
 
 src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp:
@@ -182,9 +202,11 @@ src/WDW_Water_Spawn.c:
     .text start:0x021125f8 end:0x02112630
 
 src/_ZN20SwitchActivatedPlankD1Ev.c:
+    complete
     .text start:0x02112630 end:0x0211267c
 
 src/_ZN20SwitchActivatedPlankD0Ev.c:
+    complete
     .text start:0x0211267c end:0x021126dc
 
 src/func_ov029_021126dc.c:
@@ -196,6 +218,7 @@ src/func_ov029_02112710.c:
     .text start:0x02112710 end:0x02112750
 
 src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112750 end:0x02112794
 
 src/_ZN20SwitchActivatedPlank6RenderEv.cpp:
@@ -207,6 +230,7 @@ src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp:
     .text start:0x021127cc end:0x021128b0
 
 src/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp:
+    complete
     .text start:0x021128b0 end:0x02112964
 
 src/SwitchActivatedPlank_Spawn.c:
@@ -214,25 +238,33 @@ src/SwitchActivatedPlank_Spawn.c:
     .text start:0x02112964 end:0x0211299c
 
 src/__sinit_ov029_02112b38.c:
+    complete
     .init start:0x02112b38 end:0x02112ba4
 
 src/__sinit_ov029_02112ba4.c:
+    complete
     .init start:0x02112ba4 end:0x02112c10
 
 src/__sinit_ov029_02112c10.c:
+    complete
     .init start:0x02112c10 end:0x02112c4c
 
 src/__sinit_ov029_02112c4c.c:
+    complete
     .init start:0x02112c4c end:0x02112cb8
 
 src/__sinit_ov029_02112cb8.c:
+    complete
     .init start:0x02112cb8 end:0x02112d24
 
 src/__sinit_ov029_02112d24.c:
+    complete
     .init start:0x02112d24 end:0x02112d90
 
 src/__sinit_ov029_02112d90.c:
+    complete
     .init start:0x02112d90 end:0x02112dfc
 
 src/__sinit_ov029_02112dfc.c:
+    complete
     .init start:0x02112dfc end:0x02112e68

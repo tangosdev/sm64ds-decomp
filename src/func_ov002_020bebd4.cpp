@@ -1,14 +1,14 @@
 //cpp
+#include "SharedFilePtr.h"
 extern "C" {
 extern int data_ov002_020ff480[];
-extern int _ZN13SharedFilePtr7ReleaseEv(void*);
 void func_ov002_020bebd4(void){
   int i;
   for(i=0x44;i<0x1c8;i+=4){
-    _ZN13SharedFilePtr7ReleaseEv((void*)data_ov002_020ff480[i]);
-    _ZN13SharedFilePtr7ReleaseEv((void*)data_ov002_020ff480[i+1]);
-    _ZN13SharedFilePtr7ReleaseEv((void*)data_ov002_020ff480[i+2]);
-    _ZN13SharedFilePtr7ReleaseEv((void*)data_ov002_020ff480[i+3]);
+    ((SharedFilePtr *)((void*)data_ov002_020ff480[i]))->Release();
+    ((SharedFilePtr *)((void*)data_ov002_020ff480[i+1]))->Release();
+    ((SharedFilePtr *)((void*)data_ov002_020ff480[i+2]))->Release();
+    ((SharedFilePtr *)((void*)data_ov002_020ff480[i+3]))->Release();
   }
 }
 }

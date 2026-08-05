@@ -4,15 +4,17 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FloatOnWaterPlatformWdwSquare.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov029_02114248[];
+extern int data_ov029_02114250[];
 
 int FloatOnWaterPlatformWdwSquare::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(data_ov029_02114250))->Release();
+    ((SharedFilePtr *)(data_ov029_02114248))->Release();
     return 1;
 }

@@ -3,29 +3,29 @@
 // recovered name: daDoor_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
+#include "SharedFilePtr.h"
 /* recovered: renamed to Class_Method */
 /* daDoor_c::CleanupResources - recovered from vtable slot identity */
 struct V { virtual void v0(); virtual void v1(); };
 struct Elem { void* a; void* b; char pad[8]; };
 extern Elem data_ov100_02148204[];
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void* p);
 extern void* data_ov100_02148744;
 int func_ov100_0214542c(char* c) {
   int idx = *(int*)(c + 8);
   Elem* e = &data_ov100_02148204[idx];
   V* obj;
-  _ZN13SharedFilePtr7ReleaseEv(e->a);
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov100_02148744);
+  ((SharedFilePtr *)(e->a))->Release();
+  ((SharedFilePtr *)(&data_ov100_02148744))->Release();
   obj = (V*)*(void**)(c + 0x138);
   if (obj != 0) {
     if (obj != 0) obj->v1();
-    _ZN13SharedFilePtr7ReleaseEv(e->b);
+    ((SharedFilePtr *)(e->b))->Release();
   }
   if (*(void**)(c + 0x13c) != 0) {
     unsigned int v = *(unsigned int*)(c + 8);
     if (v >= 9 && v <= 0xd) UnloadKeyModels(v - 7);
-    _ZN13SharedFilePtr7ReleaseEv(*(void**)(c + 0x13c));
+    ((SharedFilePtr *)(*(void**)(c + 0x13c)))->Release();
   }
   return 1;
 }

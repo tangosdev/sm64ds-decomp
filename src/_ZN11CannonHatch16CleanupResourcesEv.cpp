@@ -4,15 +4,17 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "CannonHatch.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov002_0210e124[];
+extern int data_ov002_0210e12c[];
 
 int CannonHatch::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(data_ov002_0210e12c))->Release();
+    ((SharedFilePtr *)(data_ov002_0210e124))->Release();
     return 1;
 }

@@ -69,7 +69,16 @@ the module string is right.
 **Do not assume the SDK-looking ones are policy-exempt.** Applying the objective test in
 `notes/asm-policy.md` — does the body contain instructions C cannot express (`mcr`/`mrc`,
 `swi`, `msr`/`mrs`, `ldm`/`stm ^`, `swp`) — to all 41 gives exactly **one** qualifier:
-`func_01ffd9d4` (340 B, `mrs`/`msr`). The other 40, `__aeabi_idiv` and friends included,
+`func_01ffd9d4` (340 B, `mrs`/`msr`). **CORRECTED 2026-08-03: the instruction test is
+necessary but not sufficient, and reading it as the whole story was my error.**
+`IRQ::UserInterruptHandler` (0x01ffd97c) contains no privileged instruction yet cannot be
+compiler output: it ends `ldr lr,[pc,#4]` / `bx r0`, writing LR from a link-time literal, and
+never unwinds its own `stmdb sp!,{lr}` — `func_01ffd9d4` pops that frame (`popeq {pc}` at
++0x54 and `pop {pc}` at +0x94, both *before* its own first push at +0xb0). `func_01ffd9d4`
+has exactly one reference in all of `config/`: the pool word inside the handler. It is a
+continuation label, not a callable function, and the two share one stack frame across a
+symbol boundary. No C construct expresses that. `notes/asm-policy.md`'s objective test has no
+structural clause, so this class slips through it. The other 40, `__aeabi_idiv` and friends included,
 are ordinary ARM only, so by this project's own rule they are unsolved matching problems
 rather than assembly. An earlier draft of this file claimed the `__aeabi_*` routines were
 exempt; that was wrong and is corrected here.
@@ -108,7 +117,8 @@ either way, and changing a struct other files build against is not this change's
 ### The prologue wall, which blocks four of their neighbours
 
 `func_01ffafd4` (0x34), `func_01ffb008` (0x28), `func_01ffb030` (0x4c) and `func_01ffa3e0`
-(0x5c) are all ordinary ARM, so none of them is policy-exempt. They are blocked on the
+(0x5c) contain no privileged instruction, so the objective test does not exempt them.
+**CORRECTED 2026-08-03: that reading was too literal — see "wall #2 is a tell, not a wall" below.** They are blocked on the
 same thing, and it is worth naming because it is cheap to mistake for "this was assembly".
 
 `func_01ffafd4` is the clean specimen: thirteen instructions, and the obvious C reproduces
@@ -123,11 +133,115 @@ How common is the unpadded form? Scanning arm9 for a `stmdb sp!,{lr}` prologue:
 **462 functions pad, 2 do not.** So the padding is what this compiler does, and the ROM's
 ITCM code does not do it.
 
-The other three add a second shape on top: they wrap their call in
-`push {r0,r1,r2,ip,lr}` / `pop {r0,r1,r2,ip,lr}`, the whole caller-saved set, so the
-arguments survive at two instructions' cost where mwccarm would use callee-saved registers.
+The other three add a second shape on top: they wrap their call in a push of the whole
+caller-saved set — `{r0,r1,r2,ip,lr}`, `{r0,r1,r3,ip,lr}` and `{r0,r2,r3,ip,lr}`; the exact
+set varies with which register holds the live value — so the arguments survive at two
+instructions' cost where mwccarm would use callee-saved registers.
+
+### Wall #2 is a TELL, not a wall (2026-08-03)
+
+Measured across the whole ROM, `stmdb sp!` with r12 (`ip`) in the register list splits into
+two shapes, and **both are ITCM-exclusive**:
+
+| shape | sites | elsewhere in arm9 | across 103 overlays |
+|---|---|---|---|
+| `ip` + at least one of r0-r3 (the caller-saved tell, wrapped around a call) | 25 | 0 | 0 |
+| `ip` inside an otherwise ordinary callee-saved prologue | 14 | 0 | 0 |
+
+Careful with the measurement: a naive scan of `extracted/arm9_dec.bin` finds all 39 too,
+because the ITCM image is embedded in it at file offset 0x97000. Excluding that window leaves
+zero of either shape in 640 KB of arm9 and zero across every overlay.
+
+An idiom that appears nowhere in compiler-generated code and only inside one region is
+evidence about origin, not a codegen wall to grind at. The MeshCollider block at 0x01ffb07c+,
+where all 11 C matches landed, has none of either shape.
+
+Consequence for routing: `__aeabi_uldiv` and `__aeabi_ulmod` open `push {r4,r5,r6,r7,fp,ip,lr}`
+— the second shape — so they are likely hand-written too.
+
+**RETRACTED 2026-08-03.** I originally wrote that `__aeabi_idiv` (0x20c) and `__aeabi_uidiv`
+(0x1e4) "carry neither shape and are the only clean targets left in that neighbourhood". That
+inference is invalid, and two independent attempts falsified it. They carry neither shape
+because they contain **no `stmdb`/`push` at all** — they are frameless, relocation-free leaf
+routines. Absence of a stack-shape tell in a function with no stack is not evidence of compiler
+origin. Do not treat "lacks the tell" as "is C"; the tell only discriminates among functions
+that have a frame.
+
+Both are in fact **CodeWarrior's own runtime library**, not Nintendo game source, which was
+measured rather than assumed: compiling `a/b`, `a%b` and `ua/ub` at 1.2/sp2p3 with the repo
+flags leaves undefined references to `_s32_div_f` and `_u32_div_f`, and `%` lowers to
+`bl _s32_div_f; mov r0,r1` — confirming the dual `r0`=quotient / `r1`=remainder return. So
+0x01ffabe4 is `_s32_div_f` and 0x01ffadf0 is `_u32_div_f`. There is no original C to recover.
+
+**Both names are now in config, alongside the AAPCS ones (2026-08-03).** Naming these
+`__aeabi_idiv` / `__aeabi_uidiv` was correct about the ABI role and wrong about the toolchain:
+the ROM was built by CodeWarrior, so *nothing* ever references the `__aeabi_` spelling, while
+every source file that writes `/` or `%` on an `int` emits `bl _s32_div_f`. `eligible.py` rule 5
+rejects a file whose undefined references are not named in `config/**/symbols.txt`, so those
+files could byte-match forever and never enrol — the `bl` is a relocation, so the `.text`
+compares equal whether or not the target has a name. Adding the CodeWarrior spelling as a second
+symbol at the same address (the shape `_ZTV5Actor` / `data_0208e3a4` already uses) unblocked 64
+files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
+each other and wants both.
+
+**An alias must carry `size=0x0` (2026-08-04).** The aliases originally repeated the real size,
+and that is a latent link-breaker. `mwldarm` checks, per gap object, that the sum of every
+symbol's size fits inside the section — it does not notice that two symbols share an address, so
+an alias with a size is counted a second time. The two aliases over-declared ITCM by
+0x20c + 0x1e4 = **1,008 bytes**. Nothing failed at the time only because the ITCM symbol table
+still had 1,476 bytes of unattributed gaps, and the shortfall stayed larger than the excess. The
+moment the gap-closing in this file's "Count, settled by coverage" section landed, the slack fell
+to 36 bytes and the link died:
+
+```
+mwldarm.exe: In section .text in file _dsd_gap@itcm_0.o ,
+mwldarm.exe: the sum of all symbol sizes exceed section size.
+```
+
+0x3448 declared against a 0x307c section — an overflow of exactly 972, which is 1,008 minus the
+36 bytes of gap left. Sizing both aliases `0x0` drops the sum to 0x3058 and it fits. The link
+still resolves every `bl _s32_div_f`, because a relocation needs the symbol's *address*, never
+its size — the whole 106/106 module-exact build is the proof.
+
+The general rule, for any future second name on an existing address: **the symbol that owns the
+bytes carries the size; every alias carries `size=0x0`.** Two sized symbols at one address is a
+defect that will not surface until something unrelated tightens the same section, and then it
+surfaces as a linker error naming neither symbol.
+
+Do not confuse these with `cstd::div` / `cstd::mod` (0x02052f4c / 0x02052ef4). Those are
+Nintendo's own wrappers over the **hardware divider** — `DIVCNT = 0`, numerator to `DIV_NUMER`,
+denominator to `DIV_DENOM`, spin on bit 15, read `DIV_RESULT` (`cstd::mod` reads `DIVREM_RESULT`
+instead, which is the only thing that distinguishes the two bodies). Game code that wants a
+divide calls those explicitly; `_s32_div_f` is what the *compiler* reaches for on its own. Both
+are in the ROM and they are unrelated code paths. The wider `cstd` divider/sqrt API around
+0x02052ef4–0x02053258 (`fdiv`, `ldiv`, `fdiv_async`, `reciprocal_async`, `fdiv_result`,
+`ldiv_result`) is all hardware-backed and already named.
+
+Four structural facts, each verified on the image:
+
+* **Unguarded computed dispatch.** `add r2,r2,r2,lsl #1` then `add pc,pc,r2,lsl #2` — a 12-byte
+  stride landing directly on the *n*th of 32 unrolled 3-instruction bodies, with no bounds
+  check. mwccarm's only computed dispatch is a C `switch`, which emits a bounds-checked
+  `cmp`/`addls pc,pc,rX,lsl #2` **plus a table of `b` words** at 4-byte stride; computed `goto`
+  is a syntax error even with `-gccext,on`.
+* **A statically dead instruction**: `mov r0,r0` at 0x01ffac54, unreachable (the computed
+  jump's minimum landing site is pc+8 = 0x01ffac58) — pipeline padding.
+* **The carry flag is a bidirectional data path.** Inside each 3-instruction step the bit
+  shifted out of the numerator becomes the carry-in of the remainder update, and that update's
+  borrow becomes the quotient bit. C has no carry object; measured floor for a C step is 5
+  instructions against the ROM's 3.
+* **456 bytes are byte-identical between the two routines** (0x01ffac14..0x01ffaddc vs
+  0x01ffae08..0x01ffafd0) — one macro expanded twice with different pre/postambles.
+
+And `__aeabi_uidiv` has a **second entry point**: `config/arm9/itcm/relocs.txt` records
+`from:0x01ffaa0c kind:arm_call to:0x01ffadf8`, entering +8 to skip the divisor guard. The caller
+is the shared `__aeabi_uldiv`/`__aeabi_ulmod` body, *not* `func_01ffaa34` (whose only interior
+call is `bl 0x01ffabe4`). Census: 141 calls to 0x01ffabe4, 16 to 0x01ffadf0, 1 to 0x01ffadf8. A
+C function cannot have two entry points, so even a byte-exact C body would be a false recovery.
+
+Net: there are **no** clean C targets left in the maths block. It is vendor runtime end to end.
 Their body is a masked read-modify-write of the word at `func_0207322c()` — a function that
-just returns the constant 0x020aa1f4 — returning the old value. `func_01ffb030` additionally
+just returns the constant 0x020aa3f4 (the FP status word) — returning the old value. `func_01ffb030` additionally
 packs two 5-bit fields from bits [4:0] and [20:16] into [4:0] and [12:8] on the way in,
 unpacks the reverse on the way out, and sets bit 30.
 
@@ -139,6 +253,112 @@ whole-function `asm` blocks carrying the `HAND-ASM PRIMITIVE` banner. Their bodi
 be `// NONMATCHING` drafts. They appear to have survived the 2026-07-24 reclassification
 that caught 116 others. Flagged rather than changed: reclassifying them lowers the matched
 count, which is a maintainer's call.
+
+## Batch 2 (2026-08-03): 13 attempted, 6 matched, and the symbol table is wrong in four places
+
+Six landed and are in `src/`, all re-verified from the shipping path with `--strict-relocs`:
+`DMAStartTransfer` (0x48), `DMAStartTransferFB` (0x50, **2004/b56 only**), `func_01ffdd98`
+(0x68), `func_01ffdd08` (0x90), `func_01ffde98` (0xa4), `OSReadROMArea` (0x130). Together they
+are the card/DMA/reboot cluster at the top of ITCM. `DMAStartTransferFB` needs no
+`rombuild-versions.txt` entry: `tools/rombuild.py` already defaults to `2004/b56`.
+
+`FB` means **barrier**, decided from callers, not guessed: it is instruction-identical to
+`DMAStartTransfer` plus two dummy reads of DMA0SAD (the DS DMA start delay), and its only three
+callers (0x0205a144/98/fc) are the *Sync* helpers that busy-poll the enable bit on the next
+instruction, while the plain twin serves the async/callback paths.
+
+### Three more that are byte-exact but are NOT C -- maintainer call
+
+Each reproduces the ROM exactly as an `asm` block, and each fails asm-policy's *instruction*
+test while failing to be compiler output for structural reasons. Filed as NONMATCHING, not
+landed as matched:
+
+* `_ZN3IRQ20UserInterruptHandlerEv` (0x58) -- see the corrected policy section above.
+* `func_01ffaa34` (0x1b0), the signed 64-bit divide (`__aeabi_ldiv` by its neighbours' naming):
+  four entry points into one body, statically unreachable code at +0x170, a provably dead
+  conditional tested twice, and it saves `ip`. Decisive: `long long a / long long b` at
+  1.2/sp2p3 compiles to a 12-byte veneer *to this routine*.
+* `func_01ffdb28` (0xb0), the last stage of the card reboot -- CRT0 glue written by the same
+  hand as `Entry` (identical `mov ip,#0x4000000; str ip,[ip,#0x208]` opening, identical
+  DTCM+0x3ffc addressing, identical hand-set-lr `bx` handoff). Measured tell: of the 8,063
+  functions in the ROM containing a reloc-confirmed `bl`, exactly **5** never preserve lr --
+  this one plus `Entry`, `func_020732e8`, `func_0207335c`, `func_02073584`, and all four of
+  those are already committed as `asm void` or `NONMATCHING (NOT-C-EXPRESSIBLE)`.
+
+If "makes calls and never preserves lr" joins the objective test, the last one flips cleanly.
+
+### Four symbol-table defects, each verified independently
+
+These make their functions unmatchable *by construction*, which is why nothing here ever moved:
+
+| symbol | declared | evidence | should be |
+|---|---|---|---|
+| `func_01ff8708` | `size=0x2dc` | 18 non-`bl` branches leave the declared body (up to +0x3ec); the 0x42c "gap" after it holds 15 `add sp,#0x10` + 16 `pop {r4-r7,lr}` -- its own teardown | ~`0x6f0` |
+| `func_01ff97d8` | `size=0x9e4` | 56 non-`bl` branches leave the declared body | extends into the 0x188 gap |
+| `func_01ffa344` + `func_01ffa3e0` | two symbols | `a3e0` has **zero** incoming branches or calls anywhere; its only entry is fallthrough from `a344` | one symbol, `size=0xfc` |
+| `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** (ov002 x2, ov074, arm9, all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
+
+**Count, settled by coverage rather than arithmetic (2026-08-03).** I got this wrong twice --
+first "42" by summing two agents' findings without redoing the sum, then "41" by correcting the
+arithmetic while still missing entries. The answer is **43**, and the proof is not a sum: after
+the fixes below the ITCM symbol table runs 0x01ff8000..0x01ffdf3c with **zero overlaps between
+functions**, ending exactly on the `.text` end in `config/arm9/itcm/delinks.txt`. That is
+checkable in one pass and cannot be fudged.
+
+Coverage is contiguous *in bytes accounted for*, but two of the entries below are `kind:label`,
+not `kind:function`, so 0x24 bytes sit in no function's declared range. That is deliberate, and
+the reason is in the next paragraph -- an earlier revision of this work declared them as
+functions to make the range literally gap-free, and it broke the build.
+
+41 declared, minus 1 (func_01ffa3e0 merged into func_01ffa344), plus 3 previously undeclared
+entries:
+
+* **0x01ff8df8** (0x18) -- xor-swaps both double argument pairs, then falls through into
+  func_01ff8e10 (soft-double subtract). The library's reverse-subtract entry.
+* **0x01ffa4bc** (0xcc) -- the signed half of the int-to-float pair. It has **4 external
+  callers** (ov002 x2, ov074, arm9) all recorded `module:none`, which is the resolution
+  breakage this symbol fixes.
+* **0x01ffa588** (0xc) -- xor-swaps the single-precision pair, falls through into func_01ffa594.
+
+The two fallthrough entries have zero callers anywhere -- no relocs, no intra-ITCM branches --
+and are correct only while adjacent to the routine they fall into, so neither may ever be
+carved into its own delink object.
+
+**They must be declared `kind:label`, not `kind:function`.** This cost a red validation run to
+learn. `dsd delink` analyses every function symbol and refuses one whose entry is not a
+prologue, so declaring 0x01ff8df8 a function fails the whole build at step 1 of 6:
+
+```
+Error: function func_01ff8df8 could not be analyzed:
+  InvalidStart { address: 1ff8df8, ins: Arm(Ins { code: e0211003, op: Eor }) }
+```
+
+The first instruction is `eor r1, r1, r3` -- an argument swap, not a frame setup. A label makes
+no claim dsd has to verify, and it also gets the placement right for free: unanalysed bytes stay
+in the module's gap object, which is precisely where a fallthrough entry has to live. Note that
+`config/rombuild-exclude.txt` does **not** solve this; it gates enrollment, not dsd's analysis,
+so a function symbol listed there still breaks delink. `.L_01ffadf8`, an alternate entry inside
+`__aeabi_uidiv` further down the same file, is the existing precedent for the label form.
+
+A candidate I checked and rejected: 0x01ffa1bc has its own `push {ip,lr}` prologue but zero
+external callers and **20** incoming branches from inside func_01ff97d8's declared body. It is
+a shared error tail, not a function.
+
+Fixing these is a prerequisite for anyone working the soft-float block, not an optional
+tidy-up. **And it is not sufficient on its own:** `worklist.py --module itcm` already serves
+`func_01ff859c`, `func_01ffa344`, `func_01ffa3e0` and `func_01ffa440` as cold-match candidates
+— the soft-float block this file says not to route cold C at. Correcting the symbol sizes turns
+`func_01ff8708` into a fresh, well-formed 0x6f0 candidate too. A config fix must ship with a
+worklist/eligibility exclusion for 0x01ff8000..0x01ffa9dc or the next fan-out spends a batch on
+vendor code.
+
+### Routing for whoever goes next
+
+`func_01ff859c` is `double -> unsigned long long`; `func_01ff8708` is the soft-double multiply;
+`func_01ff8000` is the add; `func_01ff8e10` the subtract; `func_01ffa344` is `__aeabi_f2iz`;
+`func_01ffa440` is the int-to-float pair. All of them carry the caller-saved tell and several
+have no prologue at all, so the whole 0x01ff8000..0x01ffa9dc block -- about 9.2 KB -- is one
+hand-written soft-float library. Do not route cold C matching at it.
 
 ## The structure they established
 
@@ -197,7 +417,58 @@ Declaration order, hoisting the prism pointer, caching the attribute in a local,
 temporaries and the whole version sweep were all inert against that word. Recorded in
 `notes/pret-idioms.md` as idiom 11.
 
-## DetectClsn(RaycastLine&) -- structure recovered, NOT matched
+## The octree walks (updated 2026-08-03)
+
+**`DetectClsn(RaycastGround&)` (0x01ffd3f8, 0x498) MATCHED** on 2004/b56 -- the first overload to
+fall, and the largest ITCM match so far. It is RaycastLine's algorithm simplified: a vertical
+probe down one (x,z) column, so X and Z early-out both ways but Y only clamps at the top (a probe
+starting above the octree falls into it). That is why its frame is 0x4c and not 0xfc -- no AABB,
+just a column. The march snaps to the bottom of the leaf just tested and drops one cell, so a tall
+empty node costs one iteration.
+
+Its four load-bearing levers, all found by bisection:
+
+1. **Declaration order IS the frame.** mwccarm hands out spill slots in declaration order; the
+   ROM's is `x, z, y, found, bestY, leaf, normal, rawX, rawZ, rawY`, with `leaf` and `normal`
+   between `bestY` and `rawX`, so those must be function-scope C89 declarations. This alone moved
+   the aligner 0.794 -> 0.944.
+2. The root index needs **two statements** (`idx = zpart | ypart; idx |= (u32)x >> shift;`) --
+   folded into one, mwccarm hoists the octree base load and burns a register on it.
+3. Both index expressions must run **z, y, x**; written x-first the shifts fold into two ORRs
+   where the ROM materialises `zbit << 2` on its own.
+4. `rawY - vtx[1]` must be a **named local** or two temp slots swap.
+
+Notably there was **no frame wall at all** here -- the 0x4c frame, including the two slots holding
+only the constants 0 and 1, came out right on the first draft.
+
+### And the RaycastLine frame wall is broken
+
+The sibling's floor said its 0xc4-vs-0xfc frame gap was fourteen spilled scalars. **That was
+wrong.** Slots 0x04-0x48 are the same scalars the draft already had; the missing fourteen words
+are the **nine non-address-taken Vector3 locals held as un-SROA'd stack aggregates** (`delta` and
+`scaled` are write-only -- kept dead stores, the SROA-block signature). Accounting: +27 words of
+aggregates minus the 13 temp slots scalarization was using = +14 = 0x38.
+
+**The lever: a local vector type with a user-declared destructor** (`struct DVec { s32 x,y,z;
+~DVec(){} };`) blocks SROA. Dead `&x` statements, references and launders do not.
+
+This is a *variant*, not a discovery: `notes/matching-style.md` (from PR #815, 2026-07-29)
+already documents the `~PVec(){}` dead-store-elimination defeat and the enclosing
+address-taken struct that blocks SROA, with a ranked table of four mechanisms. Read that
+first. What is new here is only the application — putting the destructor on the vector type
+itself so that N aggregate locals stay un-SROA'd together, which is what moves a whole frame
+rather than a single store.
+
+`sub sp,#0xfc` now matches the ROM under both 1.2/sp2p3 and 2004/b56, and the divergence halved
+476 -> 238. What remains is one register rank 3-cycle -- see the banked floor in
+`nearmiss/db.jsonl` for the full inert-lever list and the three suggested routes. Cracking it
+should transfer to the 7,112-byte `SphereClsn` overload, which shares this traversal.
+
+**Tooling gotcha found here:** `tools/fdiff.py` compiles with `M.CANONICAL`, now `2004/b56`. This
+cluster verifies at 1.2/sp2p3 and the two builds emit different sizes for this function (0x738 vs
+0x740), so fdiff alone can measure the wrong build, and it has no `--version` flag.
+
+## DetectClsn(RaycastLine&) -- original structural recovery
 
 0x01ffb0fc, 0x734, 461 instructions. Attacked next because it is the smallest of the three
 octree walks and shares its traversal with the other two. **It did not match.** Best tip is

@@ -8,7 +8,14 @@ Usage:
     python tools/fdiff.py --c cand.c --name FUNC --target-hex <hex>
     python tools/fdiff.py --c cand.c --name FUNC --module ov002 --addr 0x.. --size 0x..
 Prints each word: offset | target insn | candidate insn | OK/MISMATCH/reloc, then
-a summary line "RESULT match=<bool> mismatches=<n>/<words>".
+a summary line "RESULT match=<bool> mismatches=<n>/<words> version=<build>".
+
+The build matters: fdiff used to compile with match.CANONICAL unconditionally and
+never said so, and different mwccarm builds emit different code for the same source.
+A function whose cluster reproduces on 1.2/sp2p3 measured under a canonical of
+2004/b56 is scored against the wrong compiler, silently -- that cost real time on
+MeshCollider::DetectClsn(RaycastLine&), where the two builds differ by 8 bytes. Pass
+--version to pin it; every RESULT line now names the build it used.
 """
 import argparse
 import difflib
@@ -88,7 +95,23 @@ def main():
     ap.add_argument("--track", default=None,
                     help="checkpoint prefix: keep <prefix>.best.c at the lowest "
                          "mismatch count ever seen, so a near-miss is never lost")
+    ap.add_argument("--version", default=M.CANONICAL,
+                    help=f"mwccarm build to compile with (default {M.CANONICAL}). A function "
+                         f"whose cluster reproduces on another build must be measured on that "
+                         f"build -- different builds emit different code, so the default can "
+                         f"silently score the wrong thing.")
+    ap.add_argument("--include-dir", action="append", default=[],
+                    help="additional header search dir, checked before repo include/ "
+                         "(repeatable) -- lets a candidate be scored against a proposed "
+                         "header change without editing the tree")
     a = ap.parse_args()
+
+    # An unknown or uninstalled build must not fall through to compile_c's generic
+    # failure, where it is indistinguishable from a candidate that does not compile.
+    installed = M.installed_versions() if hasattr(M, "installed_versions") else []
+    if installed and a.version not in installed:
+        raise SystemExit(f"fdiff: no compiler '{a.version}' under {M.MW}\n"
+                         f"       installed: {', '.join(installed)}")
 
     target = target_from_args(a)
     src = pathlib.Path(a.c).read_text(encoding="utf-8")
@@ -97,13 +120,14 @@ def main():
     with tempfile.TemporaryDirectory() as td:
         cf = pathlib.Path(td) / ("cand.cpp" if cpp else "cand.c")
         cf.write_text(src, encoding="utf-8")
-        obj = M.compile_c(cf, M.CANONICAL, S.CPP_FLAGS if cpp else M.DEFAULT_FLAGS)
+        obj = M.compile_c(cf, a.version, S.CPP_FLAGS if cpp else M.DEFAULT_FLAGS,
+                          include_dirs=a.include_dir)
     if obj is None:
-        print("RESULT match=False mismatches=compile-error")
+        print(f"RESULT match=False mismatches=compile-error version={a.version}")
         return
     code, relocs = M.extract_func(obj, a.name)
     if code is None:
-        print(f"RESULT match=False mismatches=no-symbol:{a.name}")
+        print(f"RESULT match=False mismatches=no-symbol:{a.name} version={a.version}")
         return
     if a.find_candidate:
         pattern = re.compile(a.find_candidate)
@@ -155,7 +179,7 @@ def main():
     ok, ndiff = M.compare(compare_target, compare_code, relocs,
                           verbose=not a.quiet)
     words = max(len(target), len(code)) // 4
-    print(f"RESULT match={ok} mismatches={ndiff}/{words}")
+    print(f"RESULT match={ok} mismatches={ndiff}/{words} version={a.version}")
 
     if a.track:
         score_p = pathlib.Path(a.track + ".best.score")

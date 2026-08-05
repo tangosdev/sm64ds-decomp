@@ -2,6 +2,7 @@
 // @symbol _ZN9HugeCover13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "HugeCover.h"
+#include "MeshColliderBase.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
 struct Model { int d; };
@@ -9,7 +10,6 @@ struct ModelBase { int d; };
 struct TextureTransformer { int d; };
 struct MeshCollider { int d; };
 struct MovingMeshCollider { int d; };
-struct MeshColliderBase { int d; };
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
@@ -20,7 +20,6 @@ extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     MovingMeshCollider*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
-extern "C" void _ZN16MeshColliderBase6EnableEP5Actor(MeshColliderBase*, Actor*);
 extern "C" int _ZN5Event6GetBitEj(unsigned int);
 
 struct D113afc { SharedFilePtr* a; BMD_File* b; };
@@ -47,6 +46,6 @@ int HugeCover::InitResources()
             (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
             0x1000, *(short*)(c + 0x8e), data_ov032_02112fb8);
     }
-    _ZN16MeshColliderBase6EnableEP5Actor((MeshColliderBase*)(c + 0x124), (Actor*)c);
+    ((MeshColliderBase *)((MeshColliderBase*)(c + 0x124)))->Enable((Actor *)((Actor*)c));
     return (int)(_ZN5Event6GetBitEj(0xe) == 0);
 }

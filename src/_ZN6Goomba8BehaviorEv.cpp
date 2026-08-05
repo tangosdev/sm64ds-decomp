@@ -16,6 +16,7 @@ typedef s32 Fix12;
 
 extern s8 data_0209f2f8;
 
+extern "C" {
 extern void _ZN5Actor8PoofDustEv(char* c);
 extern int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, Fix12 f);
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(char* c, void* w, void* m, u32 j);
@@ -33,6 +34,7 @@ extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void _ZN5Enemy9SpawnCoinEv(char* c);
+}
 
 int Goomba::Behavior()
 {

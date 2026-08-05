@@ -5,9 +5,11 @@
     .data       start:0x02113140 end:0x02114500 kind:data align:32
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
 src/func_ov022_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov022_021111e4.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov022_0211123c.cpp:
@@ -39,9 +41,11 @@ src/VolcanoRing_Spawn.c:
     .text start:0x02111578 end:0x021115a8
 
 src/func_ov022_021115a8.c:
+    complete
     .text start:0x021115a8 end:0x021115f8
 
 src/func_ov022_021115f8.c:
+    complete
     .text start:0x021115f8 end:0x0211165c
 
 src/func_ov022_0211165c.c:
@@ -52,15 +56,19 @@ src/func_ov022_02111670.c:
     .text start:0x02111670 end:0x02111688
 
 src/RotatingPlatformLll_Spawn.c:
+    complete
     .text start:0x02111688 end:0x021116c4
 
 src/_ZN19RotatingPlatformLllD1Ev.c:
+    complete
     .text start:0x021116c4 end:0x02111708
 
 src/_ZN19RotatingPlatformLllD0Ev.c:
+    complete
     .text start:0x02111708 end:0x02111760
 
 src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111760 end:0x021117a4
 
 src/_ZN19RotatingPlatformLll6RenderEv.cpp:
@@ -71,6 +79,7 @@ src/_ZN19RotatingPlatformLll8BehaviorEv.cpp:
     .text start:0x021117cc end:0x02111870
 
 src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp:
+    complete
     .text start:0x02111870 end:0x0211191c
 
 src/func_ov022_0211191c.cpp:
@@ -86,9 +95,11 @@ src/FloatOnLavaPlatform_Spawn.c:
     .text start:0x02111950 end:0x02111980
 
 src/func_ov022_02111980.c:
+    complete
     .text start:0x02111980 end:0x021119c4
 
 src/func_ov022_021119c4.c:
+    complete
     .text start:0x021119c4 end:0x02111a1c
 
 src/func_ov022_02111a1c.c:
@@ -96,6 +107,7 @@ src/func_ov022_02111a1c.c:
     .text start:0x02111a1c end:0x02111a64
 
 src/func_ov022_02111a64.c:
+    complete
     .text start:0x02111a64 end:0x02111aa8
 
 src/func_ov022_02111aa8.cpp:
@@ -114,9 +126,11 @@ src/LavaBridge_Spawn.c:
     .text start:0x02111c7c end:0x02111cac
 
 src/func_ov022_02111cac.c:
+    complete
     .text start:0x02111cac end:0x02111cf0
 
 src/func_ov022_02111cf0.c:
+    complete
     .text start:0x02111cf0 end:0x02111d48
 
 src/func_ov022_02111d48.c:
@@ -124,6 +138,7 @@ src/func_ov022_02111d48.c:
     .text start:0x02111d48 end:0x02111d90
 
 src/func_ov022_02111d90.c:
+    complete
     .text start:0x02111d90 end:0x02111dd4
 
 src/func_ov022_02111dd4.cpp:
@@ -142,9 +157,11 @@ src/LavaSeesaw_Spawn.c:
     .text start:0x02111f3c end:0x02111f6c
 
 src/_ZN21FloatingFloorLllSmallD1Ev.c:
+    complete
     .text start:0x02111f6c end:0x02111fbc
 
 src/_ZN21FloatingFloorLllSmallD0Ev.c:
+    complete
     .text start:0x02111fbc end:0x02112020
 
 src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c:
@@ -156,15 +173,19 @@ src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c:
     .text start:0x02112040 end:0x021120b8
 
 src/FloatingFloorLllSmall_Spawn.c:
+    complete
     .text start:0x021120b8 end:0x021120f4
 
 src/FloatingFloorLllBig_Spawn.c:
+    complete
     .text start:0x021120f4 end:0x02112130
 
 src/_ZN19FloatingFloorLllBigD1Ev.c:
+    complete
     .text start:0x02112130 end:0x02112174
 
 src/_ZN19FloatingFloorLllBigD0Ev.c:
+    complete
     .text start:0x02112174 end:0x021121cc
 
 src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp:
@@ -179,6 +200,7 @@ src/_ZN19FloatingFloorLllBig8BehaviorEv.cpp:
     .text start:0x02112238 end:0x021122ac
 
 src/_ZN19FloatingFloorLllBig13InitResourcesEv.cpp:
+    complete
     .text start:0x021122ac end:0x02112350
 
 src/LavaPlank_Spawn.c:
@@ -214,6 +236,7 @@ src/_ZN12FallBlockLll8BehaviorEv.cpp:
     .text start:0x02112560 end:0x02112590
 
 src/_ZN12FallBlockLll13InitResourcesEv.cpp:
+    complete
     .text start:0x02112590 end:0x021125a4
 
 src/RollingLogLll_Spawn.c:
@@ -258,31 +281,41 @@ src/VolcanoFire_Spawn.c:
     .text start:0x02112918 end:0x02112950
 
 src/__sinit_ov022_02112ca8.c:
+    complete
     .init start:0x02112ca8 end:0x02112d14
 
 src/__sinit_ov022_02112d14.c:
+    complete
     .init start:0x02112d14 end:0x02112d80
 
 src/__sinit_ov022_02112d80.c:
+    complete
     .init start:0x02112d80 end:0x02112dec
 
 src/__sinit_ov022_02112dec.c:
+    complete
     .init start:0x02112dec end:0x02112e58
 
 src/__sinit_ov022_02112e58.c:
+    complete
     .init start:0x02112e58 end:0x02112ec0
 
 src/__sinit_ov022_02112ec0.c:
+    complete
     .init start:0x02112ec0 end:0x02112f78
 
 src/__sinit_ov022_02112f78.c:
+    complete
     .init start:0x02112f78 end:0x02112fe4
 
 src/__sinit_ov022_02112fe4.c:
+    complete
     .init start:0x02112fe4 end:0x02113050
 
 src/__sinit_ov022_02113050.c:
+    complete
     .init start:0x02113050 end:0x021130bc
 
 src/__sinit_ov022_021130bc.c:
+    complete
     .init start:0x021130bc end:0x021130f8

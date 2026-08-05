@@ -5,9 +5,11 @@
     .data       start:0x02112460 end:0x02113180 kind:data align:32
     .bss        start:0x02113180 end:0x02113280 kind:bss align:32
 src/func_ov045_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e4
 
 src/func_ov045_021111e4.c:
+    complete
     .text start:0x021111e4 end:0x0211123c
 
 src/func_ov045_0211123c.c:
@@ -39,12 +41,15 @@ src/FireSeaElevator_Spawn.c:
     .text start:0x021114dc end:0x0211150c
 
 src/_ZN15FireSeaElevatorD1Ev.c:
+    complete
     .text start:0x0211150c end:0x02111558
 
 src/_ZN15FireSeaElevatorD0Ev.c:
+    complete
     .text start:0x02111558 end:0x021115b8
 
 src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021115b8 end:0x021115f0
 
 src/_ZN15FireSeaElevator6RenderEv.cpp:
@@ -52,6 +57,7 @@ src/_ZN15FireSeaElevator6RenderEv.cpp:
     .text start:0x021115f0 end:0x02111618
 
 src/_ZN15FireSeaElevator8BehaviorEv.cpp:
+    complete
     .text start:0x02111618 end:0x02111738
 
 src/_ZN15FireSeaElevator13InitResourcesEv.cpp:
@@ -93,6 +99,7 @@ src/_ZN8PoleLift8BehaviorEv.cpp:
     .text start:0x021119c0 end:0x02111a30
 
 src/_ZN8PoleLift13InitResourcesEv.cpp:
+    complete
     .text start:0x02111a30 end:0x02111ad4
 
 src/ExtendingPlatform_Spawn.c:
@@ -100,9 +107,11 @@ src/ExtendingPlatform_Spawn.c:
     .text start:0x02111ad4 end:0x02111b14
 
 src/func_ov045_02111b14.c:
+    complete
     .text start:0x02111b14 end:0x02111b64
 
 src/func_ov045_02111b64.c:
+    complete
     .text start:0x02111b64 end:0x02111bc8
 
 src/func_ov045_02111bc8.c:
@@ -112,12 +121,15 @@ src/func_ov045_02111bdc.c:
     .text start:0x02111bdc end:0x02111bf4
 
 src/FloatingFloorBfs_Spawn.c:
+    complete
     .text start:0x02111bf4 end:0x02111c30
 
 src/_ZN16FloatingFloorBfsD1Ev.c:
+    complete
     .text start:0x02111c30 end:0x02111c80
 
 src/_ZN16FloatingFloorBfsD0Ev.c:
+    complete
     .text start:0x02111c80 end:0x02111ce4
 
 src/_ZN16FloatingFloorBfs16CleanupResourcesEv.c:
@@ -127,6 +139,7 @@ src/_ZN16FloatingFloorBfs13InitResourcesEv.c:
     .text start:0x02111cf8 end:0x02111d0c
 
 src/TiltingPlatformBfs_Spawn.c:
+    complete
     .text start:0x02111d0c end:0x02111d48
 
 src/_ZN12FallBlockBfsD1Ev.c:
@@ -145,19 +158,25 @@ src/FallBlockBfs_Spawn.c:
     .text start:0x02111e24 end:0x02111e60
 
 src/__sinit_ov045_021121a8.c:
+    complete
     .init start:0x021121a8 end:0x02112214
 
 src/__sinit_ov045_02112214.c:
+    complete
     .init start:0x02112214 end:0x02112280
 
 src/__sinit_ov045_02112280.c:
+    complete
     .init start:0x02112280 end:0x021122ec
 
 src/__sinit_ov045_021122ec.c:
+    complete
     .init start:0x021122ec end:0x02112358
 
 src/__sinit_ov045_02112358.c:
+    complete
     .init start:0x02112358 end:0x021123c0
 
 src/__sinit_ov045_021123c0.c:
+    complete
     .init start:0x021123c0 end:0x0211242c

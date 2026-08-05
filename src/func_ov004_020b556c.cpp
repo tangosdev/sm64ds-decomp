@@ -1,12 +1,16 @@
 //cpp
 extern int ApproachLinear(int&, int, int);
+extern "C" {
 extern int func_ov004_020b04c0(void);
 extern void func_ov004_020b4b84(char* c, int* in);
+}
 extern char data_ov004_020bfa34;
 extern int data_ov004_020bf9f8;
 extern int data_ov004_020bfa04;
 extern void* data_ov004_020bfa20;
+extern "C" {
 extern void func_ov004_020b53f0(void);
+}
 inline short load_s(short* p) { return *p; }
 struct EI { char* e; int i; };
 

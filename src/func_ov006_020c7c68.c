@@ -7,7 +7,7 @@ extern void func_ov006_020c8270(char *c);
 extern void func_ov006_020c7ba4(char *c);
 extern void func_ov006_020c79a8(char *c);
 extern void func_ov006_020c85a0(char *c);
-extern void func_ov006_020e6df0(int a0, int a1, int a2);
+extern void Sound_PlayBank1Panned(int a0, int a1, int a2);
 extern void func_02012718(int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thisPtr, void *file, int i, int fx, unsigned int flags);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
@@ -79,7 +79,7 @@ void func_ov006_020c7c68(char *c)
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xed, *(int *)(c + 0x14) << 3, *(int *)(c + 0x18) << 3, *(int *)(c + 0x1c) << 3);
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xee, v[0] << 3, v[1] << 3, v[2] << 3);
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xef, v[0] << 3, v[1] << 3, v[2] << 3);
-                    func_ov006_020e6df0(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
+                    Sound_PlayBank1Panned(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
                     func_02012718(0x1c6, *(s16 *)(c + 0x36) << 12);
                     func_ov006_020c85a0(c);
                 }
@@ -100,7 +100,7 @@ void func_ov006_020c7c68(char *c)
                 *(int *)(c + 0x44) = 2;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x4c, *(void **)data_ov006_0213b098[*(int *)(c + 0x44)], 0x40000000, 0x800, 0);
                 *(int *)(c + 0xa4) = 0;
-                func_ov006_020e6df0(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
+                Sound_PlayBank1Panned(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
             }
         } else if (pos > 0x6c000 && *(int *)(c + 0x20) > 0) {
             *(int *)(c + 0x20) = -(int)(((s64)*(int *)(c + 0x20) * 0xd00 + 0x800) >> 12);
@@ -108,7 +108,7 @@ void func_ov006_020c7c68(char *c)
                 *(int *)(c + 0x44) = 2;
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x4c, *(void **)data_ov006_0213b098[*(int *)(c + 0x44)], 0x40000000, 0x800, 0);
                 *(int *)(c + 0xa4) = 0;
-                func_ov006_020e6df0(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
+                Sound_PlayBank1Panned(0, *(int *)(c + 0x44), *(int *)(c + 0x14));
             }
         }
     }

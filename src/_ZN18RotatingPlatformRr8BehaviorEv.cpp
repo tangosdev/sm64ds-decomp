@@ -6,7 +6,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingPlatformRr.h"
 extern s16 data_02082214[];
+extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
+}
 
 int RotatingPlatformRr::Behavior()
 {

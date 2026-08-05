@@ -31,8 +31,9 @@ struct SharedFilePtr;
    wide; positions are 12-byte s32 vectors read <<6, normals 6-byte s16
    vectors read <<2 (MovingMeshCollider::GetTriangleOrigin / GetNormal). */
 struct KCL_Tri {
-    u16 unk_00;
-    u16 unk_02;
+    /* The prism's extent along its third edge normal, read as one 32-bit word by
+       MeshCollider::DetectClsn(RaycastGround&) at 0x01ffd3f8 (`ldr r0,[r7]`). */
+    s32 length;            /* 0x00 */
     u16 posIdx;            /* 0x04 */
     u16 normalIdx;         /* 0x06 */
     /* The three edge normals and the surface attribute, read by the ITCM octree

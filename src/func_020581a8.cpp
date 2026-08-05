@@ -8,10 +8,12 @@ struct Obj581 {
     char sub90[4];
 };
 extern "C" void _ZN3IRQ7DisableEv(void);
+extern "C" {
 extern void func_02058a44(struct Obj581 *o);
 extern void func_02058488(int target);
 extern void OS_WakeupThread(void *p);
 extern void func_02057f54(void);
+}
 extern struct Obj581 *data_020a612c;
 extern int data_020a6148[];
 

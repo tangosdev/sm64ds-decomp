@@ -1,8 +1,10 @@
 //cpp
 namespace cstd { int div(int, int); }
 
+extern "C" {
 extern int func_ov007_020c5014(void *, int);
 extern void func_ov007_020bdbcc(int, int);
+}
 
 struct BA0 { int f0; char pad4[0x18 - 4]; int f18; char pad1c[0x34 - 0x18 - 4]; int f34; int f38; };
 struct B9C_inner { char pad[0x50]; int f50; };

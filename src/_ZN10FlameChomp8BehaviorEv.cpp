@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FlameChomp.h"
+extern "C" {
 extern void func_ov070_02121310(char* c);
+}
 
 int FlameChomp::Behavior()
 {

@@ -9,12 +9,14 @@ struct BMD_File;
 struct BTA_File;
 struct BCA_File;
 
+extern "C" {
 extern struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, int, int);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(struct BMD_File &, struct BTA_File &);
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *thisp, struct BTA_File &, int, int, unsigned int);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thisp, struct BCA_File *, int, int, unsigned int);
+}
 
 struct FilePtr4 { int a; void *file; };
 extern struct FilePtr4 data_ov026_02113f0c;

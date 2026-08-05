@@ -118,6 +118,38 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(state["tally"], {"WRONG": 1})
         self.assertEqual(len(state["blocking"]), 1)
 
+    def test_port_refcheck_absent_is_neutral_and_stale_refs_are_named(self):
+        # The phase is optional: a worker that never ran it, or a PR that
+        # touches no source, must read exactly like a clean run -- no row, no
+        # reason. When it does fail, the reason has to name the stale
+        # reference, because the PR author never sees the worker's log.
+        neutral = VM.build_report(self.base, "HEAD")
+        self.assertEqual(neutral["portRefcheck"], {"available": False})
+        self.assertNotIn("Port reference check", neutral["reportMarkdown"])
+
+        stale = {"schemaVersion": 1, "ok": False, "checked": 395, "failed": 1,
+                 "failures": [{"check": "manifests", "file": "port/slice_gate8.txt",
+                               "line": 6, "message": "src/Example.c not found (renamed?)"}]}
+        report = VM.build_report(self.base, "HEAD", port_report=stale)
+        self.assertEqual(report["status"], "Failed")
+        self.assertIn("port/slice_gate8.txt:6: src/Example.c not found (renamed?)",
+                      "; ".join(report["reasons"]))
+        self.assertIn("| Port reference check | 395 checked; 1 stale |",
+                      report["reportMarkdown"])
+
+    def test_port_refcheck_report_without_the_flat_failure_list_still_reads(self):
+        # Tolerate a report written by an older port_refcheck that only groups
+        # failures per check, so a base/worker version skew cannot make a real
+        # failure look like a pass.
+        grouped = {"ok": False, "checked": 2, "checks": {
+            "cmake-symbols": {"checked": 2, "failures": [
+                {"file": "port/CMakeLists.txt", "line": 9,
+                 "message": "symbol 'Example' has no src/Example.c"}]}}}
+        state = VM._port_state(grouped)
+        self.assertFalse(state["passed"])
+        self.assertEqual(state["failures"][0]["check"], "cmake-symbols")
+        self.assertTrue(VM._port_state({"ok": True, "checked": 2, "failures": []})["passed"])
+
     def test_committed_test_merge_is_accepted_and_keeps_feature_author_credit(self):
         git(self.repo, "switch", "-q", "-c", "feature")
         (self.repo / "src" / "nested").mkdir()

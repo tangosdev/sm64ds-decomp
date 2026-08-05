@@ -4,7 +4,9 @@
 #include "decl_Model.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MrBlizzard.h"
+extern "C" {
 extern void _ZN5Model6RenderEPK7Vector3(void*,void*);
+}
 
 int MrBlizzard::Render()
 {

@@ -7,5 +7,5 @@
 
 void func_ov015_02111d28(char *self) {
     *(int *)(self + 0xa4) = -0x14000;
-    func_02012664(0xc3, self + 0x74);
+    _ZN5Sound9PlayBank3EjRK7Vector3(0xc3, self + 0x74);
 }

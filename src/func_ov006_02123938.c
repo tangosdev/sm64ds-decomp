@@ -48,5 +48,8 @@ void func_ov006_02123938(char *c)
     } else {
         b = (int)(data_020a0de8[i].v == 0 && data_020a0de9[i].v != 0);
         if (b != 0) { *(unsigned char *)(c + 0x7bab) = 1; }
+        if (b != 0) {
+            *(unsigned char *)(c + 0x7bab) = 1;
+        }
     }
 }

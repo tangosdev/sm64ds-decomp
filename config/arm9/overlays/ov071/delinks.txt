@@ -24,6 +24,7 @@ src/func_ov071_0211f0b4.c:
     .text start:0x0211f0b4 end:0x0211f148
 
 src/func_ov071_0211f148.cpp:
+    complete
     .text start:0x0211f148 end:0x0211f29c
 
 src/func_ov071_0211f29c.cpp:
@@ -62,6 +63,7 @@ src/func_ov071_0211fb0c.c:
     .text start:0x0211fb0c end:0x0211fb24
 
 src/func_ov071_0211fb24.cpp:
+    complete
     .text start:0x0211fb24 end:0x0211fbf4
 
 src/func_ov071_0211fbf4.c:
@@ -133,6 +135,7 @@ src/_ZN10Scuttlebug6RenderEv.cpp:
     .text start:0x0212033c end:0x02120398
 
 src/_ZN10Scuttlebug8BehaviorEv.cpp:
+    complete
     .text start:0x02120398 end:0x021203f8
 
 src/_ZN10Scuttlebug13InitResourcesEv.cpp:
@@ -170,6 +173,7 @@ src/func_ov071_02120a20.c:
     .text start:0x02120a20 end:0x02120a48
 
 src/func_ov071_02120a48.cpp:
+    complete
     .text start:0x02120a48 end:0x02120b14
 
 src/func_ov071_02120b14.cpp:
@@ -270,9 +274,11 @@ src/_ZN14MrI_Projectile6RenderEv.cpp:
     .text start:0x02121d14 end:0x02121d80
 
 src/_ZN14MrI_Projectile8BehaviorEv.cpp:
+    complete
     .text start:0x02121d80 end:0x02121eb4
 
 src/_ZN14MrI_Projectile13InitResourcesEv.cpp:
+    complete
     .text start:0x02121eb4 end:0x02121f9c
 
 src/MrI_Projectile_Spawn.c:
@@ -280,9 +286,11 @@ src/MrI_Projectile_Spawn.c:
     .text start:0x02121f9c end:0x02121fe4
 
 src/_ZN6CoffinD1Ev.c:
+    complete
     .text start:0x02121fe4 end:0x02122028
 
 src/_ZN6CoffinD0Ev.c:
+    complete
     .text start:0x02122028 end:0x02122080
 
 src/func_ov071_02122080.c:
@@ -290,6 +298,7 @@ src/func_ov071_02122080.c:
     .text start:0x02122080 end:0x021220c8
 
 src/func_ov071_021220c8.cpp:
+    complete
     .text start:0x021220c8 end:0x02122194
 
 src/func_ov071_02122194.c:
@@ -313,6 +322,7 @@ src/func_ov071_02122414.cpp:
     .text start:0x02122414 end:0x02122460
 
 src/_ZN6Coffin16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122460 end:0x021224a4
 
 src/_ZN6Coffin6RenderEv.cpp:
@@ -320,6 +330,7 @@ src/_ZN6Coffin6RenderEv.cpp:
     .text start:0x021224a4 end:0x021224cc
 
 src/_ZN6Coffin8BehaviorEv.cpp:
+    complete
     .text start:0x021224cc end:0x0212255c
 
 src/_ZN6Coffin13InitResourcesEv.cpp:
@@ -330,12 +341,15 @@ src/Coffin_Spawn.c:
     .text start:0x02122670 end:0x021226a0
 
 src/__sinit_ov071_021226ac.c:
+    complete
     .init start:0x021226ac end:0x021228c8
 
 src/__sinit_ov071_021228c8.c:
+    complete
     .init start:0x021228c8 end:0x02122a1c
 
 src/__sinit_ov071_02122a1c.c:
+    complete
     .init start:0x02122a1c end:0x02122a64
 
 src/__sinit_ov071_02122a64.c:

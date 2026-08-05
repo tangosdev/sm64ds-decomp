@@ -100,3 +100,9 @@ _glmwork/
 # emu-trace runtime capture output (tools/trace) - regenerable, may contain ROM-derived memory dumps
 /traces/
 /behavior/
+
+# port runtime output: rendered frames, smoke-test screenshots, playtest logs.
+# These are pixels the game drew from Nintendo's assets - same rule as the ROM.
+/frames/
+/playlog/
+*.bmp

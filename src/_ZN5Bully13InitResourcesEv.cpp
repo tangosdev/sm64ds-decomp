@@ -4,7 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Bully.h"
+extern "C" {
 extern void func_ov064_02116ec0(char* c);
+}
 
 void Bully::InitResources()
 {

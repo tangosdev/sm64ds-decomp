@@ -1,4 +1,5 @@
 //cpp
+#include "MeshColliderBase.h"
 // func_ov098_021388bc at 0x021388bc
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 struct Obj {
@@ -22,8 +23,6 @@ void Crate_SetState(void *c, int i);
 void _ZN12CylinderClsn5ClearEv(void *p);
 void func_ov098_02139850(void *c);
 void func_ov098_021396a4(void *c);
-int _ZN16MeshColliderBase9IsEnabledEv(void *p);
-void _ZN16MeshColliderBase7DisableEv(void *p);
 }
 
 extern "C" void func_ov098_021388bc(char *c)
@@ -62,7 +61,7 @@ extern "C" void func_ov098_021388bc(char *c)
     _ZN12CylinderClsn5ClearEv(c + 0x564);
     func_ov098_02139850(c);
     func_ov098_021396a4(c);
-    if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv(c + 0x124);
+    if (((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
+        ((MeshColliderBase *)(c + 0x124))->Disable();
     }
 }

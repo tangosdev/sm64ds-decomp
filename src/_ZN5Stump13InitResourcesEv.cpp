@@ -4,11 +4,13 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Stump.h"
+extern "C" {
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, int fix, int t, unsigned int a, unsigned int b);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int fix, int t, void *v, int t2);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *f, int a, int b);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
+}
 
 extern char data_ov002_0210da40[];
 extern char data_ov002_0210d9a0[];

@@ -5,12 +5,15 @@
     .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
 src/_ZN13FortressTowerD1Ev.c:
+    complete
     .text start:0x02148a80 end:0x02148ac4
 
 src/_ZN13FortressTowerD0Ev.c:
+    complete
     .text start:0x02148ac4 end:0x02148b1c
 
 src/_ZN13FortressTower16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02148b1c end:0x02148b80
 
 src/_ZN13FortressTower6RenderEv.cpp:
@@ -49,9 +52,11 @@ src/StaticRock_Spawn.c:
     .text start:0x02148f8c end:0x02148fbc
 
 src/_ZN13QuestionBlockD1Ev.c:
+    complete
     .text start:0x02148fbc end:0x02149010
 
 src/_ZN13QuestionBlockD0Ev.c:
+    complete
     .text start:0x02149010 end:0x02149078
 
 src/func_ov102_02149078.c:
@@ -63,6 +68,7 @@ src/func_ov102_02149100.c:
     .text start:0x02149100 end:0x02149220
 
 src/func_ov102_02149220.cpp:
+    complete
     .text start:0x02149220 end:0x02149288
 
 src/func_ov102_02149288.cpp:
@@ -165,6 +171,7 @@ src/func_ov102_02149ff0.c:
     .text start:0x02149ff0 end:0x0214a08c
 
 src/_ZN13QuestionBlock16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0214a08c end:0x0214a2ac
 
 src/_ZN13QuestionBlock6RenderEv.cpp:
@@ -172,6 +179,7 @@ src/_ZN13QuestionBlock6RenderEv.cpp:
     .text start:0x0214a2ac end:0x0214a32c
 
 src/_ZN13QuestionBlock8BehaviorEv.cpp:
+    complete
     .text start:0x0214a32c end:0x0214a4a4
 
 src/_ZN13QuestionBlock13InitResourcesEv.c:
@@ -265,6 +273,7 @@ src/func_ov102_0214b444.cpp:
     .text start:0x0214b444 end:0x0214b53c
 
 src/func_ov102_0214b988.cpp:
+    complete
     .text start:0x0214b988 end:0x0214ba30
 
 src/func_ov102_0214ba30.cpp:
@@ -427,13 +436,17 @@ src/KoopaShell_Spawn.c:
     .text start:0x0214d6b4 end:0x0214d70c
 
 src/__sinit_ov102_0214d714.c:
+    complete
     .init start:0x0214d714 end:0x0214d908
 
 src/__sinit_ov102_0214d908.c:
+    complete
     .init start:0x0214d908 end:0x0214de70
 
 src/__sinit_ov102_0214de70.c:
+    complete
     .init start:0x0214de70 end:0x0214dfac
 
 src/__sinit_ov102_0214dfac.c:
+    complete
     .init start:0x0214dfac end:0x0214e0a0

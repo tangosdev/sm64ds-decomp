@@ -4,14 +4,15 @@
 #include "decl_Actor.h"
 #include "decl_MovingCylinderClsn.h"
 #include "decl_common.h"
+extern int data_ov002_02108480[];
 /* recovered: vtable identified, renamed to Class_Method */
 /* daBar_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern void *G0;
+extern void *data_020a0eac;
 int *func_ov002_020b0600(int *t)
 {
-    t[0] = (int)VT0;
+    t[0] = (int)data_ov002_02108480;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -41,6 +41,7 @@ src/func_ov032_02111b50.c:
     .text start:0x02111b50 end:0x02111b9c
 
 src/func_ov032_02111b9c.cpp:
+    complete
     .text start:0x02111b9c end:0x02111d58
 
 src/func_ov032_02111d58.c:
@@ -100,9 +101,11 @@ src/func_ov032_0211244c.c:
     .text start:0x0211244c end:0x021124a8
 
 src/func_ov032_021124a8.c:
+    complete
     .text start:0x021124a8 end:0x021124ec
 
 src/func_ov032_021124ec.c:
+    complete
     .text start:0x021124ec end:0x02112544
 
 src/func_ov032_02112544.c:
@@ -126,12 +129,15 @@ src/HugeCover_Spawn.c:
     .text start:0x02112668 end:0x02112698
 
 src/_ZN9HugeCoverD1Ev.c:
+    complete
     .text start:0x02112698 end:0x021126e4
 
 src/_ZN9HugeCoverD0Ev.c:
+    complete
     .text start:0x021126e4 end:0x02112744
 
 src/_ZN9HugeCover16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112744 end:0x02112788
 
 src/_ZN9HugeCover6RenderEv.cpp:
@@ -139,6 +145,7 @@ src/_ZN9HugeCover6RenderEv.cpp:
     .text start:0x02112788 end:0x021127bc
 
 src/_ZN9HugeCover8BehaviorEv.cpp:
+    complete
     .text start:0x021127bc end:0x021127f0
 
 src/_ZN9HugeCover13InitResourcesEv.cpp:
@@ -150,10 +157,13 @@ src/HugeWater_Spawn.c:
     .text start:0x021128b8 end:0x021128f0
 
 src/__sinit_ov032_02112c10.c:
+    complete
     .init start:0x02112c10 end:0x02112dbc
 
 src/__sinit_ov032_02112dbc.c:
+    complete
     .init start:0x02112dbc end:0x02112e28
 
 src/__sinit_ov032_02112e28.c:
+    complete
     .init start:0x02112e28 end:0x02112e94

@@ -4,10 +4,10 @@
 #include "decl_ActorBase.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV19AmbientSoundEffects */
+/* resolved: VT = _ZTV8MugenBgm */
 int *MugenBgm_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(212);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV19AmbientSoundEffects; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV8MugenBgm; }
     return p;
 }

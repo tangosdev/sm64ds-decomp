@@ -6,10 +6,12 @@ typedef signed short s16;
 struct Vector3 { s32 x, y, z; };
 struct Actor { char pad[0x100]; };
 
+extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern s32 Vec3_HorzLen(const Vector3 *v);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
+}
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     s32 x, s32 y, s32 z,

@@ -4,9 +4,11 @@
     .data       start:0x021121c0 end:0x02112d00 kind:data align:32
     .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
 src/func_ov010_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111ec
 
 src/func_ov010_021111ec.c:
+    complete
     .text start:0x021111ec end:0x0211124c
 
 src/func_ov010_0211124c.c:
@@ -42,6 +44,7 @@ src/func_ov010_0211146c.c:
     .text start:0x0211146c end:0x02111554
 
 src/func_ov010_02111554.cpp:
+    complete
     .text start:0x02111554 end:0x021115a8
 
 src/func_ov010_021115a8.cpp:
@@ -65,6 +68,7 @@ src/func_ov010_02111984.c:
     .text start:0x02111984 end:0x02111998
 
 src/Trap_Spawn.c:
+    complete
     .text start:0x02111998 end:0x021119d0
 
 src/_ZN4TrapD1Ev.cpp:
@@ -87,9 +91,11 @@ src/_ZN4Trap6RenderEv.cpp:
     .text start:0x02111ab8 end:0x02111ae0
 
 src/_ZN4Trap8BehaviorEv.cpp:
+    complete
     .text start:0x02111ae0 end:0x02111d20
 
 src/_ZN4Trap13InitResourcesEv.cpp:
+    complete
     .text start:0x02111d20 end:0x02111dd0
 
 src/LightBeam_Spawn.c:
@@ -119,6 +125,7 @@ src/_ZN13PeachPainting8BehaviorEv.cpp:
     .text start:0x02111f28 end:0x02111fc0
 
 src/_ZN13PeachPainting13InitResourcesEv.cpp:
+    complete
     .text start:0x02111fc0 end:0x02112004
 
 src/PeachPainting_Spawn.c:
@@ -126,10 +133,13 @@ src/PeachPainting_Spawn.c:
     .text start:0x02112004 end:0x0211203c
 
 src/__sinit_ov010_0211203c.c:
+    complete
     .init start:0x0211203c end:0x0211211c
 
 src/__sinit_ov010_0211211c.c:
+    complete
     .init start:0x0211211c end:0x0211215c
 
 src/__sinit_ov010_0211215c.c:
+    complete
     .init start:0x0211215c end:0x0211219c

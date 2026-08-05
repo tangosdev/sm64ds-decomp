@@ -11,7 +11,7 @@ void func_ov006_020c8a04();
 void func_ov006_020c6f70();
 void func_ov006_020eed64();
 void func_ov006_020efc08();
-void _ZN6Player18St_LevelEnter_MainEv();
+void func_ov006_020c6f3c();
 
 void *_ZN8PathLift17BaseInitResourcesEv()
 {
@@ -31,7 +31,7 @@ void *_ZN8PathLift17BaseInitResourcesEv()
         _ZN8Particle10SysTrackerC1Ev(p + 0x47e4);
         *(char **)p = data_ov006_0213ccfc;
         func_020733a8(p + 0x500c, 3, 0xb8, (void *)func_ov006_020c8a04, (void *)func_ov006_020c893c);
-        func_020733a8(p + 0x5234, 6, 0xf0, (void *)func_ov006_020c6f70, (void *)_ZN6Player18St_LevelEnter_MainEv);
+        func_020733a8(p + 0x5234, 6, 0xf0, (void *)func_ov006_020c6f70, (void *)func_ov006_020c6f3c);
         func_020733a8(p + 0x57d4, 0x10, 0x24, (void *)func_ov006_020efc08, (void *)func_ov006_020eed64);
         _ZN5ModelC1Ev(p + 0x5a14);
     }

@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PowerStar.h"
+#include "SharedFilePtr.h"
 extern "C" void _ZN5Actor11UntrackStarERa(void* self, signed char* star);
-extern "C" void _ZN13SharedFilePtr7ReleaseEv(void* p);
 
 extern char data_ov002_02110944;
 extern char data_ov002_02110924;
@@ -26,9 +26,9 @@ int PowerStar::CleanupResources()
         _ZN5Actor11UntrackStarERa(((char*)this), (signed char*)((char*)&unk_498));
         UnloadSilverStarAndNumber();
     }
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_02110944);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_02110924);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_02110964);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_02110934);
+    ((SharedFilePtr *)(&data_ov002_02110944))->Release();
+    ((SharedFilePtr *)(&data_ov002_02110924))->Release();
+    ((SharedFilePtr *)(&data_ov002_02110964))->Release();
+    ((SharedFilePtr *)(&data_ov002_02110934))->Release();
     return 1;
 }

@@ -1,6 +1,8 @@
 //cpp
 extern int ApproachLinear(int&, int, int);
+extern "C" {
 extern void func_ov004_020b4e78(char* c);
+}
 namespace Sound { void PlayBank2_2D(unsigned int); }
 
 extern int data_ov004_020bf9fc;
@@ -13,7 +15,9 @@ extern Obj* data_ov004_020beb68;
 extern int data_ov004_020bfa0c;
 extern unsigned char data_ov004_020bfa56[];
 extern void (*data_ov004_020bfa20)();
+extern "C" {
 extern void func_ov004_020b586c();
+}
 
 extern "C" void func_ov004_020b58c4(void)
 {

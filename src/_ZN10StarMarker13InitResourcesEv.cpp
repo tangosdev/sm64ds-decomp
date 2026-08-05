@@ -8,6 +8,7 @@
 struct Vec3 { s32 x, y, z; };
 struct RaycastGround { char pad[0x50]; };
 
+extern "C" {
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
@@ -21,6 +22,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern int IsStarCollectedInCurLevel(u8 x);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern int _ZN5Actor18GetBitInDeathTableEv(void *self);
+}
 
 extern char data_ov002_0210d9a8;
 extern char data_ov002_0211092c;

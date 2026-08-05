@@ -5,12 +5,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SlidingPlatformWf.h"
+extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* c, void* cc);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(char* c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12i a, Fix12i b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
+}
 
 int SlidingPlatformWf::Behavior()
 {

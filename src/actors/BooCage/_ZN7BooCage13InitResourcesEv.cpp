@@ -5,11 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BooCage.h"
 typedef int Fix12;
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, Fix12 a, int b, unsigned int c, unsigned int d);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, Fix12 a, int b, void *v, int c);
+}
 extern void *data_ov063_0211edec;
 
 int BooCage::InitResources()

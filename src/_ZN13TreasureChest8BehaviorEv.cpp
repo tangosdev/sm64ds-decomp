@@ -5,8 +5,10 @@
 /* recovered: named members + shared header, real C++ method */
 #include "TreasureChest.h"
 struct CylinderClsn { int dummy; };
+extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(struct CylinderClsn *t);
 extern void _ZN12CylinderClsn6UpdateEv(struct CylinderClsn *t);
+}
 
 int TreasureChest::Behavior()
 {

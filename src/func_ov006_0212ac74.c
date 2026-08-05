@@ -77,7 +77,7 @@ int func_ov006_0212ac74(char *c)
                     *(u8 *)(c + i * 0x20 + 0x4f3b) = 1;
                 }
                 self->unk_5fd8 = 0;
-                func_02012754(0x10d);
+                _ZN5Sound12PlayBank2_2DEj(0x10d);
                 FreeGfxSlotsById(0x1d);
             }
         } else if (self->unk_5fc8 < 0) {
@@ -97,7 +97,7 @@ int func_ov006_0212ac74(char *c)
                         Vec2_Sub(&d1, q, (V2 *)(c + 0x5fb8));
                         v = Vec2_Len(&d1) < 0x18000 ? 1 : 0;
                         if (v != 0) {
-                            func_02012754(0x109);
+                            _ZN5Sound12PlayBank2_2DEj(0x109);
                             *(u8 *)(c + ii * 0x20 + 0x4f3a) = 1;
                             *(int *)(c + ii * 0x20 + 0x4f44) = 0;
                             *(int *)(c + ii * 0x20 + 0x4f48) = 0;
@@ -164,7 +164,7 @@ int func_ov006_0212ac74(char *c)
                         FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x13, 0x80, 0x18, 0, -1, 0xd);
                         self->unk_5fec = 3;
-                        func_02012754(0x104);
+                        _ZN5Sound12PlayBank2_2DEj(0x104);
                     }
                 } else {
                     self->unk_5fcc = 1;
@@ -172,7 +172,7 @@ int func_ov006_0212ac74(char *c)
                         FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
                         self->unk_5fec = 1;
-                        func_02012754(0x103);
+                        _ZN5Sound12PlayBank2_2DEj(0x103);
                     }
                 }
                 self->unk_5fd0 = 0x3c;
@@ -195,7 +195,7 @@ int func_ov006_0212ac74(char *c)
                 FreeGfxSlotsById(0x1d);
                 if (self->unk_5fe4 > 0x14) {
                     if (self->unk_5fcd == 1) {
-                        func_02012754(0x106);
+                        _ZN5Sound12PlayBank2_2DEj(0x106);
                         self->unk_5fec = 4;
                         self->unk_5fd4 = 0x3c;
                     }
@@ -206,13 +206,13 @@ int func_ov006_0212ac74(char *c)
                     self->unk_5fe0 = 0;
                     if (self->unk_5fdc >= 3) {
                         func_ov004_020b0cac(0x12, 0x80, 0x18, 0, -1, 0xd);
-                        func_02012754(0x107);
+                        _ZN5Sound12PlayBank2_2DEj(0x107);
                         *(int *)LA(c + 0x5ff0) += 3;
                         if (self->unk_5ff0 > 0x270f)
                             self->unk_5ff0 = 0x270f;
                     } else {
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
-                        func_02012754(0x108);
+                        _ZN5Sound12PlayBank2_2DEj(0x108);
                         *(int *)LA(c + 0x5ff0) += 1;
                         if (self->unk_5ff0 > 0x270f)
                             self->unk_5ff0 = 0x270f;
@@ -223,10 +223,10 @@ int func_ov006_0212ac74(char *c)
                     self->unk_5fdc = 0;
                     if (self->unk_5fe0 >= 3) {
                         func_ov004_020b0cac(0x11, 0x80, 0x18, 0, -1, 0xd);
-                        func_02012754(0x105);
+                        _ZN5Sound12PlayBank2_2DEj(0x105);
                     } else {
                         func_ov004_020b0cac(0x13, 0x80, 0x18, 0, -1, 0xd);
-                        func_02012754(0x106);
+                        _ZN5Sound12PlayBank2_2DEj(0x106);
                     }
                 }
                 self->unk_5fd4 = 0x3c;

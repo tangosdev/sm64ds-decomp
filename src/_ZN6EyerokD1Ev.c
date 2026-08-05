@@ -11,7 +11,7 @@
 extern void _ZN15TextureSequenceD1Ev(void* p);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
 extern int __destroy_arr(void* p, int a, int b, void* fn);
-extern int _ZTV17ExclamationSwitch[];
+extern int _ZTV8Platform[];
 extern int func_020072c0[];
 void* _ZN6EyerokD1Ev(struct Eyerok *self) {
     *(void**)((char*)self) = _ZTV6Eyerok;
@@ -22,7 +22,7 @@ void* _ZN6EyerokD1Ev(struct Eyerok *self) {
     _ZN5ModelD1Ev((char*)&self->mModel2);
     _ZN14BlendModelAnimD1Ev((char*)&self->mBlendModelAnim);
     _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
-    *(void**)((char*)self) = _ZTV17ExclamationSwitch;
+    *(void**)((char*)self) = _ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char*)&self->unk_124);
     _ZN5ModelD1Ev((char*)&self->mModel1);
     _ZN5ActorD2Ev(((char*)self));

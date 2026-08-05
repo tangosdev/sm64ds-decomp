@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Toad.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *self);
+#include "SharedFilePtr.h"
 extern int data_ov002_0210da40[];
 extern int data_ov002_0210d9a0[];
 extern int data_ov002_0210d9c0[];
@@ -13,12 +13,12 @@ extern int data_ov085_02130480[];
 int Toad::CleanupResources()
 {
     if (*(unsigned char *)((char *)&unk_20b) == 1) {
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da40);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9a0);
-        _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210d9c0);
+        ((SharedFilePtr *)(data_ov002_0210da40))->Release();
+        ((SharedFilePtr *)(data_ov002_0210d9a0))->Release();
+        ((SharedFilePtr *)(data_ov002_0210d9c0))->Release();
     }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov085_02130480);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov085_02130488);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov085_02130490);
+    ((SharedFilePtr *)(data_ov085_02130480))->Release();
+    ((SharedFilePtr *)(data_ov085_02130488))->Release();
+    ((SharedFilePtr *)(data_ov085_02130490))->Release();
     return 1;
 }

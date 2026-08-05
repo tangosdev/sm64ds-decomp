@@ -1,19 +1,24 @@
 // @symbol _ZN11CastleWaterD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+// recovered name: daObjMcWater_c_OnYoshiTryEat
+/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
+#include "decl_TextureTransformer.h"
 #include "decl_common.h"
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV18daObjMc_Metalnet_c; VT1 = _ZTV10dBgActor_c */
-extern void *G0;
+extern int _ZTV11CastleWater[];
+extern int _ZTV8Platform[];
+/* recovered: vtable identified, renamed to Class_Method */
+/* daObjMcWater_c::OnYoshiTryEat - recovered from vtable slot identity */
+extern void *data_020a0eac;
 int *_ZN11CastleWaterD0Ev(int *t)
 {
-    t[0] = (int)_ZTV18daObjMc_Metalnet_c;
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV11CastleWater;
+    _ZN18TextureTransformerD1Ev((char *)t + 0x320);
+    t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, G0);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -4,15 +4,17 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HugeCover.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov032_02113af4[];
+extern int data_ov032_02113afc[];
 
 int HugeCover::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(data_ov032_02113afc))->Release();
+    ((SharedFilePtr *)(data_ov032_02113af4))->Release();
     return 1;
 }

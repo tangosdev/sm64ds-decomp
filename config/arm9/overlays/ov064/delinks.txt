@@ -97,9 +97,11 @@ src/func_ov064_02116ec0.cpp:
     .text start:0x02116ec0 end:0x02117070
 
 src/_ZN5BullyD1Ev.c:
+    complete
     .text start:0x02117070 end:0x021170c4
 
 src/_ZN5BullyD0Ev.c:
+    complete
     .text start:0x021170c4 end:0x0211712c
 
 src/func_ov064_0211712c.c:
@@ -131,15 +133,19 @@ src/_ZN5Bully8BehaviorEv.c:
     .text start:0x02117310 end:0x02117424
 
 src/_ZN5Bully13InitResourcesEv.cpp:
+    complete
     .text start:0x02117424 end:0x02117444
 
 src/Bully_Spawn.c:
+    complete
     .text start:0x02117444 end:0x021174a0
 
 src/_ZN8BigBullyD1Ev.c:
+    complete
     .text start:0x021174a0 end:0x021174f4
 
 src/_ZN8BigBullyD0Ev.c:
+    complete
     .text start:0x021174f4 end:0x0211755c
 
 src/func_ov064_0211755c.c:
@@ -147,6 +153,7 @@ src/func_ov064_0211755c.c:
     .text start:0x0211755c end:0x021175cc
 
 src/func_ov064_021175cc.cpp:
+    complete
     .text start:0x021175cc end:0x0211764c
 
 src/_ZN8BigBully6RenderEv.cpp:
@@ -154,6 +161,7 @@ src/_ZN8BigBully6RenderEv.cpp:
     .text start:0x0211764c end:0x02117684
 
 src/_ZN8BigBully8BehaviorEv.cpp:
+    complete
     .text start:0x02117684 end:0x02117784
 
 src/_ZN8BigBully13InitResourcesEv.cpp:
@@ -161,12 +169,15 @@ src/_ZN8BigBully13InitResourcesEv.cpp:
     .text start:0x02117784 end:0x0211791c
 
 src/BigBully_Spawn.c:
+    complete
     .text start:0x0211791c end:0x02117978
 
 src/func_ov064_02117978.c:
+    complete
     .text start:0x02117978 end:0x021179bc
 
 src/func_ov064_021179bc.c:
+    complete
     .text start:0x021179bc end:0x02117a14
 
 src/func_ov064_02117a14.cpp:
@@ -190,6 +201,7 @@ src/func_ov064_02117c24.c:
     .text start:0x02117c24 end:0x02117cc4
 
 src/func_ov064_02117cc4.c:
+    complete
     .text start:0x02117cc4 end:0x02117cfc
 
 src/func_ov064_02117cfc.cpp:
@@ -201,6 +213,7 @@ src/func_ov064_02117d24.c:
     .text start:0x02117d24 end:0x02117e44
 
 src/func_ov064_02117e44.cpp:
+    complete
     .text start:0x02117e44 end:0x02117fb4
 
 src/func_ov064_02117fb4.cpp:
@@ -212,12 +225,15 @@ src/func_ov064_02117fd4.c:
     .text start:0x02117fd4 end:0x02117fe8
 
 src/MetalNetLift_Spawn.c:
+    complete
     .text start:0x02117fe8 end:0x02118020
 
 src/_ZN12MetalNetLiftD1Ev.c:
+    complete
     .text start:0x02118020 end:0x02118070
 
 src/_ZN12MetalNetLiftD0Ev.c:
+    complete
     .text start:0x02118070 end:0x021180d4
 
 src/_ZN12MetalNetLift16CleanupResourcesEv.c:
@@ -229,6 +245,7 @@ src/_ZN12MetalNetLift13InitResourcesEv.c:
     .text start:0x021180e8 end:0x021180fc
 
 src/TiltingPlatformLll_Spawn.c:
+    complete
     .text start:0x021180fc end:0x02118138
 
 src/_ZN15RotatingFirebarD1Ev.c:
@@ -248,9 +265,11 @@ src/_ZN15RotatingFirebar6RenderEv.cpp:
     .text start:0x0211824c end:0x02118274
 
 src/_ZN15RotatingFirebar8BehaviorEv.cpp:
+    complete
     .text start:0x02118274 end:0x02118480
 
 src/_ZN15RotatingFirebar13InitResourcesEv.cpp:
+    complete
     .text start:0x02118480 end:0x02118564
 
 src/RotatingFirebar_Spawn.cpp:
@@ -302,6 +321,7 @@ src/_ZN10LavaBubble8BehaviorEv.cpp:
     .text start:0x02118850 end:0x021189d8
 
 src/_ZN10LavaBubble13InitResourcesEv.cpp:
+    complete
     .text start:0x021189d8 end:0x02118b08
 
 src/func_ov064_02118b08.c:
@@ -313,9 +333,11 @@ src/LavaBubble_Spawn.c:
     .text start:0x02118b10 end:0x02118b50
 
 src/_ZN19BowserPuzzleManagerD1Ev.c:
+    complete
     .text start:0x02118b50 end:0x02118b94
 
 src/_ZN19BowserPuzzleManagerD0Ev.c:
+    complete
     .text start:0x02118b94 end:0x02118bec
 
 src/func_ov064_02118bec.c:
@@ -323,6 +345,7 @@ src/func_ov064_02118bec.c:
     .text start:0x02118bec end:0x02118c10
 
 src/func_ov064_02118c10.c:
+    complete
     .text start:0x02118c10 end:0x02118c48
 
 src/func_ov064_02118c48.c:
@@ -370,6 +393,7 @@ src/func_ov064_02119010.c:
     .text start:0x02119010 end:0x0211904c
 
 src/_ZN19BowserPuzzleManager16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211904c end:0x02119088
 
 src/_ZN19BowserPuzzleManager6RenderEv.cpp:
@@ -385,6 +409,7 @@ src/func_ov064_0211915c.c:
     .text start:0x0211915c end:0x021191a8
 
 src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
+    complete
     .text start:0x021191a8 end:0x02119284
 
 src/func_ov064_02119284.c:
@@ -502,9 +527,11 @@ src/_ZN9WaterRing6RenderEv.cpp:
     .text start:0x02119fc8 end:0x02119ffc
 
 src/_ZN9WaterRing8BehaviorEv.cpp:
+    complete
     .text start:0x02119ffc end:0x0211a090
 
 src/_ZN9WaterRing13InitResourcesEv.cpp:
+    complete
     .text start:0x0211a090 end:0x0211a1b0
 
 src/WaterRing_Spawn.c:
@@ -531,6 +558,7 @@ src/func_ov064_0211a380.c:
     .text start:0x0211a380 end:0x0211a39c
 
 src/func_ov064_0211a39c.cpp:
+    complete
     .text start:0x0211a39c end:0x0211a49c
 
 src/func_ov064_0211a49c.c:
@@ -558,6 +586,7 @@ src/_ZN13TreasureChest6RenderEv.cpp:
     .text start:0x0211a7c4 end:0x0211a7ec
 
 src/_ZN13TreasureChest8BehaviorEv.cpp:
+    complete
     .text start:0x0211a7ec end:0x0211a814
 
 src/_ZN13TreasureChest13InitResourcesEv.cpp:
@@ -592,6 +621,7 @@ src/_ZN4Clam8BehaviorEv.c:
     .text start:0x0211aa58 end:0x0211acc4
 
 src/_ZN4Clam13InitResourcesEv.cpp:
+    complete
     .text start:0x0211acc4 end:0x0211ad70
 
 src/Clam_Spawn.c:
@@ -599,34 +629,45 @@ src/Clam_Spawn.c:
     .text start:0x0211ad70 end:0x0211adb0
 
 src/__sinit_ov064_0211ae00.c:
+    complete
     .init start:0x0211ae00 end:0x0211aee0
 
 src/__sinit_ov064_0211aee0.c:
+    complete
     .init start:0x0211aee0 end:0x0211afc0
 
 src/__sinit_ov064_0211afc0.c:
+    complete
     .init start:0x0211afc0 end:0x0211b078
 
 src/__sinit_ov064_0211b078.c:
+    complete
     .init start:0x0211b078 end:0x0211b0e4
 
 src/__sinit_ov064_0211b0e4.c:
+    complete
     .init start:0x0211b0e4 end:0x0211b150
 
 src/__sinit_ov064_0211b150.c:
+    complete
     .init start:0x0211b150 end:0x0211b1d4
 
 src/__sinit_ov064_0211b1d4.c:
+    complete
     .init start:0x0211b1d4 end:0x0211b4dc
 
 src/__sinit_ov064_0211b4dc.c:
+    complete
     .init start:0x0211b4dc end:0x0211b518
 
 src/__sinit_ov064_0211b518.c:
+    complete
     .init start:0x0211b518 end:0x0211b59c
 
 src/__sinit_ov064_0211b59c.c:
+    complete
     .init start:0x0211b59c end:0x0211b698
 
 src/__sinit_ov064_0211b698.c:
+    complete
     .init start:0x0211b698 end:0x0211b72c

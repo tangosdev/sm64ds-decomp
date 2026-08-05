@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "HootTheOwl.h"
+extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN11ShadowModel12InitCylinderEv(void*);
@@ -13,6 +14,7 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void*, vo
 extern int func_ov094_02136188(void*, void*);
 extern int IsStarCollectedInCurLevel(int);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+}
 extern void* data_ov094_02136b40;
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;

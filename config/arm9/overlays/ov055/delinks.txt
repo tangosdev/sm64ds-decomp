@@ -3,9 +3,6 @@
     .ctor       start:0x02111910 end:0x02111914 kind:rodata align:4
     .data       start:0x02111920 end:0x02111b60 kind:data align:32
     .bss        start:0x02111b60 end:0x02111b80 kind:bss align:32
-src/_ZN11MirrorLuigiD1Ev.cpp:
-    .text start:0x021111a0 end:0x021111f8
-
 src/_ZN11MirrorLuigiD0Ev.c:
     complete
     .text start:0x021111f8 end:0x02111264
@@ -35,6 +32,7 @@ src/_ZN11MirrorLuigi16OnPendingDestroyEv.c:
     .text start:0x02111354 end:0x02111358
 
 src/_ZN11MirrorLuigi6RenderEv.cpp:
+    complete
     .text start:0x02111358 end:0x02111508
 
 src/_ZN11MirrorLuigi8BehaviorEv.cpp:
@@ -49,4 +47,5 @@ src/MirrorLuigi_Spawn.cpp:
     .text start:0x02111860 end:0x021118d4
 
 src/__sinit_ov055_021118d4.c:
+    complete
     .init start:0x021118d4 end:0x02111910

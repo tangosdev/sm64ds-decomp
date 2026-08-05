@@ -2,11 +2,13 @@
 // @symbol _ZN9ShipWater8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWater.h"
+extern "C" {
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN9Animation7AdvanceEv(char* t);
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
+}
 
 int ShipWater::Behavior()
 {

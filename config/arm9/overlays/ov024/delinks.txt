@@ -5,9 +5,11 @@
     .data       start:0x02112880 end:0x02113960 kind:data align:32
     .bss        start:0x02113960 end:0x021139a0 kind:bss align:32
 src/_ZN10PyramidTopD1Ev.c:
+    complete
     .text start:0x021111a0 end:0x021111ec
 
 src/_ZN10PyramidTopD0Ev.c:
+    complete
     .text start:0x021111ec end:0x0211124c
 
 src/_ZN10PyramidTagD1Ev.cpp:
@@ -34,6 +36,7 @@ src/func_ov024_021114c4.c:
     .text start:0x021114c4 end:0x02111504
 
 src/_ZN10PyramidTop16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111504 end:0x0211153c
 
 src/_ZN10PyramidTop6RenderEv.cpp:
@@ -41,6 +44,7 @@ src/_ZN10PyramidTop6RenderEv.cpp:
     .text start:0x0211153c end:0x02111568
 
 src/_ZN10PyramidTop8BehaviorEv.cpp:
+    complete
     .text start:0x02111568 end:0x02111668
 
 src/_ZN10PyramidTag8BehaviorEv.cpp:
@@ -48,6 +52,7 @@ src/_ZN10PyramidTag8BehaviorEv.cpp:
     .text start:0x02111668 end:0x021116ec
 
 src/_ZN10PyramidTop13InitResourcesEv.cpp:
+    complete
     .text start:0x021116ec end:0x021117c8
 
 src/_ZN10PyramidTag13InitResourcesEv.cpp:
@@ -63,4 +68,5 @@ src/PyramidTop_Spawn.c:
     .text start:0x02111874 end:0x021118ac
 
 src/__sinit_ov024_02112808.c:
+    complete
     .init start:0x02112808 end:0x02112874

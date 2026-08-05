@@ -11,14 +11,20 @@ struct Player : ActorBase {
 };
 
 extern "C" void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int, int);
+extern "C" {
 extern int _ZNK6Player14GetBodyModelIDEjb(Player const *, unsigned int, bool);
 extern int _ZNK9Animation12WillHitFrameEi(Animation const *, int);
+}
 extern "C" void func_02012790(int);
+extern "C" {
 extern int _ZN6Player12FinishedAnimEv(Player *);
+}
 extern "C" void func_020731dc(void *a, void *b, void *node);
 extern "C" void func_020072c0(void);
+extern "C" {
 extern void Vec3_RotateYAndTranslate(Vector3 *, void *, int, void *);
 extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(Player *, ActorBase &, unsigned int, Vector3 const *, unsigned int, unsigned int);
+}
 
 extern "C" int data_ov002_0210e154;
 extern "C" int data_ov002_0210f824[];

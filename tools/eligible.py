@@ -12,7 +12,12 @@ the module. So this is a whitelist, not a blacklist:
   2. exactly one defined global FUNC symbol, and its `st_size` equals the declared size;
   3. no `.rodata` / `.data` / `.bss` / `.init` / `.ctor` content - the ROM's copy of that
      data stays in the gap object, so ours would be a duplicate that grows the module;
-  4. the function lives in a `.text` range, not `.init`;
+  4. the function lives in a `.text` or `.init` range. `.init` is buildable because
+     `rombuild.retarget_text_section` renames the compiled object's `.text` header to
+     `.init`, so dsd's `File.o(.init)` selector finds it; nothing renames any other
+     section, so every other section is still a rejection. This is the *ROM's* section
+     for the function's address, and is unrelated to rule 3, which is about what the
+     compiled object itself contains;
   5. every undefined reference names a symbol that config/**/symbols.txt actually
      defines - an invented name has no address, and because gap objects import
      carved-out symbols *weakly* it would link silently to 0 rather than error.
@@ -58,6 +63,18 @@ ANYSYM = re.compile(r"^(\S+)\s+kind:")
 IGNORE_SECTIONS = (".comment", ".debug", ".line", ".note")
 
 
+def load_report(path=None):
+    """The eligibility report, as (entries, commit, dirty).
+
+    Reads both the stamped shape and the bare list the report used to be, so a
+    consumer does not care which vintage it is handed."""
+    path = path or (BUILD / "rombuild-eligibility.json")
+    d = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    if isinstance(d, list):
+        return d, None, None
+    return d["files"], d.get("commit"), d.get("dirty")
+
+
 def defined_symbols():
     """Every symbol name config/**/symbols.txt declares, in any module."""
     names = set()
@@ -79,7 +96,7 @@ def classify(job):
         if src.read_text(encoding="utf-8", errors="ignore").startswith("//cpp"):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
-        return rel, name, "unreadable source"
+        return rel, name, "unreadable source", []
 
     cmd = [*os.environ.get("MWCCARM_LAUNCHER", "").split(),
            str(MW / version / "mwccarm.exe"), *flags.split(),
@@ -87,10 +104,16 @@ def classify(job):
     r = subprocess.run(cmd, capture_output=True, text=True,
                        env=dict(os.environ, LM_LICENSE_FILE=str(LICENSE)), cwd=REPO)
     if r.returncode != 0 or not obj.is_file():
-        return rel, name, "compile failed"
+        return rel, name, "compile failed", []
 
-    if sec != ".text":
-        return rel, name, f"lives in {sec}, not .text"
+    # `.init` is buildable now. mwccarm always emits compiled code into `.text`,
+    # whatever the ROM's layout calls it, and dsd's linker script selects these by
+    # name -- `File.o(.init)` -- so the names never matched and ~300 functions were
+    # unreachable. rombuild.retarget_text_section renames the section header in the
+    # object after compiling, in place and without moving a byte. Any OTHER section
+    # is still a rejection: nothing renames those, so the lcf would not find them.
+    if sec not in (".text", ".init"):
+        return rel, name, f"lives in {sec}, not .text", []
 
     try:
         elf = ELFFile(io.BytesIO(obj.read_bytes()))
@@ -109,8 +132,8 @@ def classify(job):
         if len(content) != 1 or content[0] != ".text":
             extra = sorted(set(content) - {".text"})
             if len(content) > 1 and not extra:
-                return rel, name, f"{len(content)} .text sections (multi-function TU)"
-            return rel, name, "extra sections: " + ",".join(extra or content)
+                return rel, name, f"{len(content)} .text sections (multi-function TU)", []
+            return rel, name, "extra sections: " + ",".join(extra or content), []
 
         symtab = elf.get_section_by_name(".symtab")
         defined, undefined, other_defined = [], [], []
@@ -129,22 +152,25 @@ def classify(job):
                 other_defined.append(s.name)
 
         if text_sh_size is not None and text_sh_size != size:
-            return rel, name, f".text section 0x{text_sh_size:x} != declared 0x{size:x}"
+            return rel, name, f".text section 0x{text_sh_size:x} != declared 0x{size:x}", []
         if len(defined) != 1:
-            return rel, name, f"{len(defined)} defined global functions"
+            return rel, name, f"{len(defined)} defined global functions", []
         dname, dsize = defined[0]
         if dname != name:
-            return rel, name, f"defines {dname}, expected {name}"
+            return rel, name, f"defines {dname}, expected {name}", []
         if dsize != size:
-            return rel, name, f"size 0x{dsize:x} != declared 0x{size:x}"
+            return rel, name, f"size 0x{dsize:x} != declared 0x{size:x}", []
         if other_defined:
-            return rel, name, "defines non-function globals: " + ",".join(other_defined[:3])
+            return rel, name, "defines non-function globals: " + ",".join(other_defined[:3]), []
         missing = sorted(set(undefined) - known)
         if missing:
-            return rel, name, "unresolvable: " + ",".join(missing[:3])
+            # `reason` is truncated for the histogram a human reads; `missing` is the
+            # complete list, because a consumer that acts on it needs all of them. A
+            # tool fed only the first three silently leaves the rest behind.
+            return rel, name, "unresolvable: " + ",".join(missing[:3]), missing
     except Exception as e:  # a malformed object is a fail, not a crash
-        return rel, name, f"elf error: {type(e).__name__}"
-    return rel, name, None
+        return rel, name, f"elf error: {type(e).__name__}", []
+    return rel, name, None, []
 
 
 def main():
@@ -163,15 +189,28 @@ def main():
     results, reasons = [], collections.Counter()
     done = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        for rel, name, reason in ex.map(classify, jobs):
-            results.append({"file": rel, "name": name, "reason": reason})
+        for rel, name, reason, missing in ex.map(classify, jobs):
+            results.append({"file": rel, "name": name, "reason": reason,
+                            "missing": missing})
             reasons["ELIGIBLE" if reason is None else reason.split(":")[0]] += 1
             done += 1
             if done % 2000 == 0:
                 print(f"  {done}/{len(jobs)}")
 
     BUILD.mkdir(exist_ok=True)
-    (BUILD / "rombuild-eligibility.json").write_text(json.dumps(results, indent=1))
+    # Stamp the tree this describes. A consumer that gates CI on this report must be
+    # able to tell it apart from one left over from an earlier commit; without a stamp
+    # a stale report fails open, which is the worst way for a gate to fail.
+    try:
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO,
+                              capture_output=True, text=True).stdout.strip() or None
+        dirty = bool(subprocess.run(["git", "status", "--porcelain", "--untracked-files=no",
+                                     "--", "src", "include", "config"], cwd=REPO,
+                                    capture_output=True, text=True).stdout.strip())
+    except Exception:
+        head, dirty = None, True
+    (BUILD / "rombuild-eligibility.json").write_text(json.dumps(
+        {"commit": head, "dirty": dirty, "files": results}, indent=1))
     passed = [r["name"] for r in results if r["reason"] is None]
     (BUILD / "eligible-names.txt").write_text("\n".join(sorted(passed)) + "\n")
 

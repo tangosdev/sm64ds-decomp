@@ -10,7 +10,7 @@ extern int data_ov006_0213cbe4[];
 extern void func_ov006_020c893c();
 extern void func_ov006_020c8a04();
 extern void func_ov006_020c6f70();
-extern void _ZN6Player18St_LevelEnter_MainEv();
+extern void func_ov006_020c6f3c();
 }
 
 extern "C" void *MgBounceAndPounce_Spawn(void)
@@ -37,7 +37,7 @@ extern "C" void *MgBounceAndPounce_Spawn(void)
                       (void *)func_ov006_020c893c);
         func_020733a8(p + 0x5294, 6, 0xf0,
                       (void *)func_ov006_020c6f70,
-                      (void *)_ZN6Player18St_LevelEnter_MainEv);
+                      (void *)func_ov006_020c6f3c);
     }
     return p;
 }

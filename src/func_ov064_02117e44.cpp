@@ -29,7 +29,9 @@ extern "C" void func_ov064_02117a14(char *self, Vector3 *a, Vector3 *b);
 extern SharedFilePtr data_ov064_0211c730;
 extern SharedFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
+extern "C" {
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+}
 
 struct V3 { int x, y, z; };
 

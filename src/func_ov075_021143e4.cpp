@@ -5,7 +5,7 @@ extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*,void*,int,i
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void*,void*);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
 extern int _ZNK9Animation13GetFrameCountEv(void*);
-extern long long func_01ffadf0(unsigned int,int);
+extern long long __aeabi_uidiv(unsigned int,int);
 extern int data_ov075_0211d380[];
 extern int data_0209e650[];
 extern unsigned char data_ov075_0211b524[];
@@ -35,7 +35,7 @@ void func_ov075_021143e4(char*c){
   {
     unsigned int rv=(unsigned int)RandomIntInternal(data_0209e650);
     int fc=_ZNK9Animation13GetFrameCountEv(c+0x50);
-    long long v=func_01ffadf0(rv>>0x10,fc);
+    long long v=__aeabi_uidiv(rv>>0x10,fc);
     *(int*)(c+0xdc)=((unsigned)((int)(v>>32)<<0x10))>>4;
   }
 }

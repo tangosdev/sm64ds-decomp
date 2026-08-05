@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "StarSwitch.h"
+extern "C" {
 extern unsigned char IsAreaShowing(int idx);
 extern void func_ov002_020ba01c(char *c, int mask, int b, int base, int target);
 extern void func_ov002_020ba4d8(char *c, int i);
@@ -11,6 +12,7 @@ extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(char *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int vol);
+}
 
 extern int data_0209b454;
 

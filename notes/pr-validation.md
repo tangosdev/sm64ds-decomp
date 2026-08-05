@@ -11,6 +11,7 @@ one misleading percentage:
 | Module fidelity | Linked executable-module bytes equal retail | Stock head must pass, unless base and head have the same recorded pre-existing build failure |
 | Contributor lineage | The first matcher still owns a surviving match after moves/renames | Must not change or disappear |
 | Relocations | Affected source reproduces bytes and names the correct destinations | No WRONG or NO-REPRO |
+| Port references | `port/`'s manifests and symbol bridges still name files and symbols that exist | No stale reference (optional phase) |
 
 `tools/rombuild.py` emits the build/fidelity artifact. `tools/validate_merge.py` compares
 two committed revisions, combines the build artifacts with `pr_linkcheck` JSON, and emits
@@ -28,17 +29,22 @@ The compiler and ROM remain on the private worker. For each relay job:
    uncommitted move has no lineage.
 3. Run `python tools/rombuild.py --profile stock --report-json build/head-rom.json`.
 4. Run `python tools/pr_linkcheck.py --base <baseSha> --json build/link.json --md build/link.md`.
-5. Run:
+5. If the PR touched `src/` or `include/`, run
+   `python tools/port_refcheck.py --json build/port.json`. No compiler and no ROM, so
+   it costs about a second. It is optional on both sides: a worker that does not run it,
+   or a base that predates the tool, simply reports no port row.
+6. Run:
 
    ```
    python tools/validate_merge.py --base <baseSha> --head HEAD \
      --require-merge-commit --expected-pr-head <headSha> \
      --base-rom-report build/base-rom.json \
      --head-rom-report build/head-rom.json --link-report build/link.json \
+     --port-refcheck-report build/port.json \
      --out build/validate-report.json --markdown build/validate-report.md
    ```
 
-6. Return `status`, `summary`, `details` (the existing per-file table), and the new
+7. Return `status`, `summary`, `details` (the existing per-file table), and the new
    `reportMarkdown` field to the relay. The public GitHub workflow remains unable to run
    PR code or access ROM material; it only renders the worker's result.
 

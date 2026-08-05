@@ -137,6 +137,7 @@ src/func_ov078_02125734.c:
     .text start:0x02125734 end:0x02125790
 
 src/func_ov078_02125790.cpp:
+    complete
     .text start:0x02125790 end:0x021258e4
 
 src/func_ov078_021258e4.c:
@@ -144,6 +145,7 @@ src/func_ov078_021258e4.c:
     .text start:0x021258e4 end:0x02125950
 
 src/func_ov078_02125950.cpp:
+    complete
     .text start:0x02125950 end:0x021259e4
 
 src/func_ov078_021259e4.c:
@@ -155,6 +157,7 @@ src/func_ov078_021259ec.c:
     .text start:0x021259ec end:0x02125bc8
 
 src/func_ov078_02125bc8.cpp:
+    complete
     .text start:0x02125bc8 end:0x02125c24
 
 src/func_ov078_02125c24.c:
@@ -186,12 +189,15 @@ src/_ZN10KingBobOmb16OnPendingDestroyEv.c:
     .text start:0x021260a8 end:0x021260ac
 
 src/_ZN10KingBobOmb6RenderEv.cpp:
+    complete
     .text start:0x021260ac end:0x02126104
 
 src/_ZN10KingBobOmb8BehaviorEv.cpp:
+    complete
     .text start:0x02126104 end:0x02126368
 
 src/_ZN10KingBobOmb13InitResourcesEv.cpp:
+    complete
     .text start:0x02126368 end:0x021265f4
 
 src/func_ov078_021265f4.c:
@@ -203,4 +209,5 @@ src/KingBobOmb_Spawn.c:
     .text start:0x021265fc end:0x02126660
 
 src/__sinit_ov078_02126660.c:
+    complete
     .init start:0x02126660 end:0x02126cd4

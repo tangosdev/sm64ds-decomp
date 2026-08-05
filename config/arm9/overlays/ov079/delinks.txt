@@ -17,6 +17,7 @@ src/func_ov079_02123804.c:
     .text start:0x02123804 end:0x02123a8c
 
 src/func_ov079_02123a8c.cpp:
+    complete
     .text start:0x02123a8c end:0x02123b54
 
 src/func_ov079_02123b54.c:
@@ -36,6 +37,7 @@ src/func_ov079_02123d4c.cpp:
     .text start:0x02123d4c end:0x02123e60
 
 src/func_ov079_02123e60.cpp:
+    complete
     .text start:0x02123e60 end:0x02123f34
 
 src/func_ov079_02123f34.c:
@@ -95,6 +97,7 @@ src/func_ov079_0212522c.c:
     .text start:0x0212522c end:0x02125240
 
 src/func_ov079_02125240.cpp:
+    complete
     .text start:0x02125240 end:0x0212538c
 
 src/func_ov079_0212538c.c:
@@ -122,6 +125,7 @@ src/func_ov079_02125b44.c:
     .text start:0x02125b44 end:0x02125eb0
 
 src/_ZN5Whomp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02125eb0 end:0x02125f78
 
 src/_ZN5Whomp6RenderEv.cpp:
@@ -188,9 +192,11 @@ src/BulletBill_Spawn.c:
     .text start:0x02126d64 end:0x02126dbc
 
 src/func_ov079_02126dbc.c:
+    complete
     .text start:0x02126dbc end:0x02126e00
 
 src/func_ov079_02126e00.c:
+    complete
     .text start:0x02126e00 end:0x02126e58
 
 src/func_ov079_02126e58.cpp:
@@ -198,6 +204,7 @@ src/func_ov079_02126e58.cpp:
     .text start:0x02126e58 end:0x02126ecc
 
 src/func_ov079_02126ecc.cpp:
+    complete
     .text start:0x02126ecc end:0x02126f04
 
 src/func_ov079_02126f04.c:
@@ -220,9 +227,11 @@ src/BillBlaster_Spawn.c:
     .text start:0x021271b4 end:0x021271e4
 
 src/_ZN12FortressWallD1Ev.c:
+    complete
     .text start:0x021271e4 end:0x02127228
 
 src/_ZN12FortressWallD0Ev.c:
+    complete
     .text start:0x02127228 end:0x02127280
 
 src/func_ov079_02127280.cpp:
@@ -234,6 +243,7 @@ src/func_ov079_021272e0.cpp:
     .text start:0x021272e0 end:0x02127300
 
 src/_ZN12FortressWall16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02127300 end:0x02127364
 
 src/_ZN12FortressWall6RenderEv.cpp:
@@ -244,6 +254,7 @@ src/_ZN12FortressWall8BehaviorEv.cpp:
     .text start:0x021273a4 end:0x02127494
 
 src/_ZN12FortressWall13InitResourcesEv.cpp:
+    complete
     .text start:0x02127494 end:0x0212757c
 
 src/FortressWall_Spawn.c:
@@ -255,13 +266,17 @@ src/FortressWallBreakable_Spawn.c:
     .text start:0x021275ac end:0x021275dc
 
 src/__sinit_ov079_02127618.c:
+    complete
     .init start:0x02127618 end:0x021279d4
 
 src/__sinit_ov079_021279d4.c:
+    complete
     .init start:0x021279d4 end:0x02127a10
 
 src/__sinit_ov079_02127a10.c:
+    complete
     .init start:0x02127a10 end:0x02127acc
 
 src/__sinit_ov079_02127acc.c:
+    complete
     .init start:0x02127acc end:0x02127b88

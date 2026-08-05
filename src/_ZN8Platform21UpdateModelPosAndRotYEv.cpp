@@ -2,7 +2,9 @@
 // @symbol _ZN8Platform21UpdateModelPosAndRotYEv
 /* recovered: named members + shared header, real C++ method */
 #include "Platform.h"
+extern "C" {
 extern void Matrix4x3_FromRotationY(void *, int);
+}
 
 void Platform::UpdateModelPosAndRotY()
 {

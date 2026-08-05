@@ -5,11 +5,13 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "TtcRotatingCube.h"
+extern "C" {
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *v);
 extern int _Z14ApproachLinearRsss(s16 *val, int target, int step);
 extern int RandomIntInternal(int *seed);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+}
 
 extern u8 data_0209f2c0;
 extern int data_0209e650;

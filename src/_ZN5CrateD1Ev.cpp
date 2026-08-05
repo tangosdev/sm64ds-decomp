@@ -10,14 +10,14 @@ void _ZN18MovingMeshColliderD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
 void _ZN5ActorD2Ev(void*);
 extern int _ZTV5Crate[];
-extern int _ZTV17ExclamationSwitch[];
+extern int _ZTV8Platform[];
 void* _ZN5CrateD1Ev(struct Crate *self) {
     *(int*)((char*)self) = (int)_ZTV5Crate;
     _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos2);
     _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos1);
     _ZN11ShadowModelD1Ev((char*)&self->mShadowModel);
     _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-    *(int*)((char*)self) = (int)_ZTV17ExclamationSwitch;
+    *(int*)((char*)self) = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
     _ZN5ModelD1Ev((char*)&self->mModel);
     _ZN5ActorD2Ev(((char*)self));

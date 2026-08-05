@@ -4,8 +4,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MgBounceAndPounce.h"
+extern "C" {
 extern void Ov004_Deallocate(void* x);
 extern void func_ov004_020b0840(void* a, int b);
+}
 extern void* data_ov006_02141a48;
 extern unsigned char data_0209f5f8;
 

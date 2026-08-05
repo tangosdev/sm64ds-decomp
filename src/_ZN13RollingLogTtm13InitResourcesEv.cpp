@@ -7,6 +7,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RollingLogTtm.h"
 #define false 0
+extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
@@ -18,6 +19,7 @@ extern char *_ZN5Actor13ClosestPlayerEv(void *self);
 extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *rot, int a, int b);
 extern void func_ov030_021141a8(void *self, int a);
 extern void func_ov030_02112094(void *self);
+}
 
 extern char data_ov002_0210da40;
 extern char data_ov002_0210d9a0;

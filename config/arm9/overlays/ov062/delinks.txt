@@ -256,6 +256,7 @@ src/func_ov062_02118de8.cpp:
     .text start:0x02118de8 end:0x02118f04
 
 src/_ZN5Koopa16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02118f04 end:0x02118f80
 
 src/_ZN5Koopa16OnPendingDestroyEv.c:
@@ -263,12 +264,15 @@ src/_ZN5Koopa16OnPendingDestroyEv.c:
     .text start:0x02118f80 end:0x02118f84
 
 src/_ZN5Koopa6RenderEv.cpp:
+    complete
     .text start:0x02118f84 end:0x021190ec
 
 src/_ZN5Koopa8BehaviorEv.cpp:
+    complete
     .text start:0x021190ec end:0x02119420
 
 src/_ZN5Koopa13InitResourcesEv.cpp:
+    complete
     .text start:0x02119420 end:0x02119608
 
 src/func_ov062_02119608.cpp:
@@ -347,12 +351,15 @@ src/_ZN13KoopaTheQuick6RenderEv.cpp:
     .text start:0x0211ab50 end:0x0211ab88
 
 src/_ZN13KoopaTheQuick8BehaviorEv.cpp:
+    complete
     .text start:0x0211ab88 end:0x0211ac10
 
 src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211ac10 end:0x0211ac94
 
 src/_ZN13KoopaTheQuick13InitResourcesEv.cpp:
+    complete
     .text start:0x0211ac94 end:0x0211aee0
 
 src/KoopaTheQuick_Spawn.c:
@@ -379,6 +386,7 @@ src/_ZN9KoopaFlag6RenderEv.cpp:
     .text start:0x0211b030 end:0x0211b05c
 
 src/_ZN9KoopaFlag8BehaviorEv.cpp:
+    complete
     .text start:0x0211b05c end:0x0211b168
 
 src/_ZN9KoopaFlag13InitResourcesEv.cpp:
@@ -434,6 +442,7 @@ src/func_ov062_0211c218.c:
     .text start:0x0211c218 end:0x0211c2f4
 
 src/func_ov062_0211c2f4.cpp:
+    complete
     .text start:0x0211c2f4 end:0x0211c594
 
 src/func_ov062_0211c594.c:
@@ -464,6 +473,7 @@ src/_ZN6Klepto8BehaviorEv.cpp:
     .text start:0x0211c94c end:0x0211cb4c
 
 src/_ZN6Klepto13InitResourcesEv.cpp:
+    complete
     .text start:0x0211cb4c end:0x0211ce78
 
 src/func_ov062_0211ce78.c:
@@ -475,16 +485,21 @@ src/Klepto_Spawn.c:
     .text start:0x0211ce80 end:0x0211ced8
 
 src/__sinit_ov062_0211cf30.c:
+    complete
     .init start:0x0211cf30 end:0x0211d2d8
 
 src/__sinit_ov062_0211d2d8.c:
+    complete
     .init start:0x0211d2d8 end:0x0211d4a0
 
 src/__sinit_ov062_0211d4a0.c:
+    complete
     .init start:0x0211d4a0 end:0x0211d690
 
 src/__sinit_ov062_0211d690.c:
+    complete
     .init start:0x0211d690 end:0x0211d6fc
 
 src/__sinit_ov062_0211d6fc.c:
+    complete
     .init start:0x0211d6fc end:0x0211d8cc

@@ -29,14 +29,11 @@ int Fader::IsAtEnd() { return 0; }
 // hardware upload.
 void FaderBrightness::AdvanceFade() { AdvanceInterp(); }
 
-// Fader::AdvanceInterp calls the 20.12 approach helper by its historical
-// name func_0203ae58 (extern "C", by-pointer). The function has since been
-// identified and renamed to ApproachLinear(int&, int, int) -- the NDS build
-// resolves the old name by address, the host cannot. Bridge, do not edit
-// src/: the fader TU keeps matching bytes, and when its extern is one day
-// modernised this shim dies loudly as a duplicate.
-int ApproachLinear(int &ref, int target, int step);
-extern "C" void func_0203ae58(int *value, int target, int step)
-{
-    ApproachLinear(*value, target, step);
-}
+// The func_0203ae58 bridge that used to live here is gone, on the terms its own
+// comment set out: it existed because Fader::AdvanceInterp called the 20.12
+// approach helper by its historical address-shaped name, which the NDS build
+// resolves by address and the host cannot. That extern has now been modernised
+// to _Z14ApproachLinearRiii -- the real ROM symbol at 0x0203ae58, defined by
+// src/_Z14ApproachLinearRiii.cpp -- which is exactly what a host C++ build emits
+// for ApproachLinear(int&, int, int). The name now resolves on both sides
+// without help, so bridging it would be a duplicate definition.

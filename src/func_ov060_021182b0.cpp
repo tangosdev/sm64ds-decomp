@@ -47,7 +47,7 @@ int func_ov060_021182b0(char* self)
     }
     func_020393d4(self + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(self + 0x124, (void*)&func_ov060_021183f4);
-    ((MeshColliderBase*)(self + 0x124))->Enable((Actor*)self);
+    ((MeshColliderBase*)(self + 0x124))->Enable((Actor *)((Actor*)self));
     *(int*)(self + 0x320) = 0;
     *(unsigned char*)(self + 0x32b) = 0;
     *(unsigned char*)(self + 0x328) = 0;

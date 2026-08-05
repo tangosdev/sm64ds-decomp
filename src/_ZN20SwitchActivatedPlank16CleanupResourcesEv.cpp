@@ -4,15 +4,17 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SwitchActivatedPlank.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov029_02114324[];
+extern int data_ov029_0211432c[];
 
 int SwitchActivatedPlank::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(data_ov029_0211432c))->Release();
+    ((SharedFilePtr *)(data_ov029_02114324))->Release();
     return 1;
 }

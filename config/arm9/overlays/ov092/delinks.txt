@@ -9,6 +9,7 @@ src/_ZN6ToxBoxD1Ev.cpp:
     .text start:0x02130f00 end:0x02130f5c
 
 src/_ZN6ToxBoxD0Ev.cpp:
+    complete
     .text start:0x02130f5c end:0x02130fcc
 
 src/func_ov092_02130fcc.c:
@@ -96,4 +97,5 @@ src/ToxBox_Spawn.c:
     .text start:0x02132018 end:0x02132074
 
 src/__sinit_ov092_021320cc.c:
+    complete
     .init start:0x021320cc end:0x02132210

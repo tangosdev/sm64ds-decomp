@@ -4,6 +4,22 @@
 #define DECL_COMMON_H
 #include "common.h"
 
+
+/* C linkage. These declare ROM symbols by their exact final names, so a C++
+   translation unit including this header must not mangle them -- a bare
+   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
+   still byte-matches, because match.py compares relocated words as wildcards, so
+   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
+   file with unresolvable references, so the link never sees it either.
+
+   Verified safe: of the 1,644 function names declared across the decl_*.h
+   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
+   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
+   to neither spelling and are unresolvable with or without this guard. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
 extern Vector3 data_ov002_0210af00;
 extern Vector3 data_ov006_0212b890;
@@ -439,7 +455,7 @@ extern int _ZTV10daUdlift_c[];
 extern int _ZTV11BabyPenguin[];
 extern int _ZTV11BobOmbBuddy[];
 extern int _ZTV11CannonHatch[];
-extern int _ZTV11CastleWater[];
+extern int _ZTV8MetalNet[];
 extern int _ZTV11CrazedCrate[];
 extern int _ZTV11PyramidStep[];
 extern int _ZTV11RollingRock[];
@@ -527,8 +543,8 @@ extern int _ZTV13daObjTtFuta_c[];
 extern int _ZTV13daObjWakame_c[];
 extern int _ZTV13daSlide_Box_c[];
 extern int _ZTV14ArrowSignRight[];
-extern int _ZTV14BlueCoinSwitch[];
 extern int _ZTV14EnemySwitchTag[];
+extern int _ZTV19AmbientSoundEffects[];
 extern int _ZTV14FlameChompFire[];
 extern int _ZTV14KnockDownPlank[];
 extern int _ZTV14MovingBarSmall[];
@@ -652,7 +668,7 @@ extern int _ZTV18daObjRc_Guruguru_c[];
 extern int _ZTV18daObjWlSubmarine_c[];
 extern int _ZTV18daWater_Hakidasi_c[];
 extern int _ZTV18daWater_Tatumaki_c[];
-extern int _ZTV19AmbientSoundEffects[];
+extern int _ZTV8MugenBgm[];
 extern int _ZTV19BowserPuzzleManager[];
 extern int _ZTV19FirePiranhaPlantBig[];
 extern int _ZTV19FloatingFloorLllBig[];
@@ -756,13 +772,13 @@ extern int _ZTV7daTor_c[];
 extern int _ZTV7daWbm_c[];
 extern int _ZTV8BookShot[];
 extern int _ZTV8CccArena[];
-extern int _ZTV8DockPole[];
+extern int _ZTV4Flag[];
 extern int _ZTV8Fireball[];
 extern int _ZTV8IceBlock[];
 extern int _ZTV8IceSheet[];
 extern int _ZTV8MantaRay[];
 extern int _ZTV8Moneybag[];
-extern int _ZTV8MugenBgm[];
+extern int _ZTV14CutsceneObject[];
 extern int _ZTV8PoleLift[];
 extern int _ZTV8ShipWing[];
 extern int _ZTV8SignPost[];
@@ -3157,5 +3173,10 @@ extern volatile struct Matrix4x3 data_ov006_0213ad28;
 extern volatile unsigned short data_ov002_0210c208[];
 extern vu16 reg_G2S_DB_BG3PA;
 extern vu32*data_ov006_02137560[];
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

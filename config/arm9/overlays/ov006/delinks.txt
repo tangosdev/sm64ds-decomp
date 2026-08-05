@@ -131,6 +131,7 @@ src/func_ov006_020c1764.cpp:
     .text start:0x020c1764 end:0x020c1804
 
 src/func_ov006_020c1804.cpp:
+    complete
     .text start:0x020c1804 end:0x020c19d0
 
 src/func_ov006_020c19d0.cpp:
@@ -557,7 +558,7 @@ src/func_ov006_020c6ca4.c:
 src/func_ov006_020c6e4c.cpp:
     .text start:0x020c6e4c end:0x020c6f3c
 
-src/_ZN6Player18St_LevelEnter_MainEv.c:
+src/func_ov006_020c6f3c.c:
     complete
     .text start:0x020c6f3c end:0x020c6f70
 
@@ -651,6 +652,10 @@ src/func_ov006_020c7a30.c:
 src/func_ov006_020c7ba4.c:
     complete
     .text start:0x020c7ba4 end:0x020c7c68
+
+src/func_ov006_020c7c68.c:
+    complete
+    .text start:0x020c7c68 end:0x020c802c
 
 src/func_ov006_020c802c.c:
     complete
@@ -801,6 +806,10 @@ src/func_ov006_020c91ac.cpp:
     complete
     .text start:0x020c91ac end:0x020c94e0
 
+src/func_ov006_020c94e0.cpp:
+    complete
+    .text start:0x020c94e0 end:0x020c97bc
+
 src/func_ov006_020c97bc.cpp:
     complete
     .text start:0x020c97bc end:0x020c9aa0
@@ -821,6 +830,7 @@ src/func_ov006_020c9e7c.c:
     .text start:0x020c9e7c end:0x020c9efc
 
 src/func_ov006_020c9efc.cpp:
+    complete
     .text start:0x020c9efc end:0x020c9fe4
 
 src/func_ov006_020c9fe4.cpp:
@@ -859,6 +869,7 @@ src/func_ov006_020ca604.cpp:
     .text start:0x020ca604 end:0x020ca78c
 
 src/_ZN6Player29TryExitCharacterDoorWithIntroEv.cpp:
+    complete
     .text start:0x020ca78c end:0x020ca7b8
 
 src/func_ov006_020ca7b8.c:
@@ -962,6 +973,7 @@ src/func_ov006_020cb838.cpp:
     .text start:0x020cb838 end:0x020cbaec
 
 src/func_ov006_020cbaec.cpp:
+    complete
     .text start:0x020cbaec end:0x020cbd7c
 
 src/func_ov006_020cbd7c.cpp:
@@ -1013,6 +1025,7 @@ src/func_ov006_020cc9b8.c:
     .text start:0x020cc9b8 end:0x020cc9fc
 
 src/func_ov006_020cc9fc.cpp:
+    complete
     .text start:0x020cc9fc end:0x020ccae0
 
 src/func_ov006_020ccae0.c:
@@ -1044,6 +1057,7 @@ src/func_ov006_020ccfc8.cpp:
     .text start:0x020ccfc8 end:0x020cd12c
 
 src/func_ov006_020cd12c.c:
+    complete
     .text start:0x020cd12c end:0x020cd158
 
 src/func_ov006_020cd158.c:
@@ -1318,6 +1332,7 @@ src/func_ov006_020d1018.c:
     .text start:0x020d1018 end:0x020d10b8
 
 src/func_ov006_020d10b8.cpp:
+    complete
     .text start:0x020d10b8 end:0x020d116c
 
 src/func_ov006_020d116c.c:
@@ -1337,6 +1352,7 @@ src/func_ov006_020d11a0.cpp:
     .text start:0x020d11a0 end:0x020d122c
 
 src/func_ov006_020d122c.c:
+    complete
     .text start:0x020d122c end:0x020d1450
 
 src/func_ov006_020d1450.c:
@@ -1360,6 +1376,7 @@ src/func_ov006_020d2580.c:
     .text start:0x020d2580 end:0x020d25fc
 
 src/func_ov006_020d25fc.c:
+    complete
     .text start:0x020d25fc end:0x020d27dc
 
 src/func_ov006_020d3624.cpp:
@@ -1379,6 +1396,7 @@ src/func_ov006_020d48dc.cpp:
     .text start:0x020d48dc end:0x020d4b7c
 
 src/func_ov006_020d4b7c.c:
+    complete
     .text start:0x020d4b7c end:0x020d52f0
 
 src/func_ov006_020d52f0.c:
@@ -1406,6 +1424,7 @@ src/func_ov006_020d5a54.c:
     .text start:0x020d5a54 end:0x020d5a78
 
 src/func_ov006_020d5a78.c:
+    complete
     .text start:0x020d5a78 end:0x020d5ab0
 
 src/func_ov006_020d5ab0.cpp:
@@ -1445,9 +1464,11 @@ src/func_ov006_020d5dfc.cpp:
     .text start:0x020d5dfc end:0x020d5e1c
 
 src/func_ov006_020d5e1c.c:
+    complete
     .text start:0x020d5e1c end:0x020d5e3c
 
 src/func_ov006_020d5e3c.c:
+    complete
     .text start:0x020d5e3c end:0x020d5e5c
 
 src/func_ov006_020d5e5c.c:
@@ -1593,6 +1614,7 @@ src/func_ov006_020d7778.c:
     .text start:0x020d7778 end:0x020d777c
 
 src/func_ov006_020d777c.c:
+    complete
     .text start:0x020d777c end:0x020d7958
 
 src/func_ov006_020d7958.c:
@@ -1711,6 +1733,7 @@ src/func_ov006_020d95a4.cpp:
     .text start:0x020d95a4 end:0x020d9638
 
 src/func_ov006_020d9638.cpp:
+    complete
     .text start:0x020d9638 end:0x020d96e0
 
 src/func_ov006_020d96e0.c:
@@ -1810,6 +1833,7 @@ src/func_ov006_020da994.c:
     .text start:0x020da994 end:0x020da9c4
 
 src/func_ov006_020da9c4.cpp:
+    complete
     .text start:0x020da9c4 end:0x020dabec
 
 src/func_ov006_020dabec.c:
@@ -1846,6 +1870,7 @@ src/func_ov006_020dbe40.c:
     .text start:0x020dbe40 end:0x020dbe64
 
 src/func_ov006_020dbe64.c:
+    complete
     .text start:0x020dbe64 end:0x020dbe9c
 
 src/func_ov006_020dbf7c.c:
@@ -2080,6 +2105,7 @@ src/func_ov006_020de988.cpp:
     .text start:0x020de988 end:0x020dea1c
 
 src/func_ov006_020dea1c.cpp:
+    complete
     .text start:0x020dea1c end:0x020deac4
 
 src/func_ov006_020deac4.c:
@@ -2186,9 +2212,11 @@ src/func_ov006_020e0068.c:
     .text start:0x020e0068 end:0x020e0204
 
 src/func_ov006_020e0204.cpp:
+    complete
     .text start:0x020e0204 end:0x020e0308
 
 src/func_ov006_020e0308.cpp:
+    complete
     .text start:0x020e0308 end:0x020e0574
 
 src/func_ov006_020e0574.cpp:
@@ -2204,6 +2232,7 @@ src/func_ov006_020e0638.c:
     .text start:0x020e0638 end:0x020e065c
 
 src/func_ov006_020e065c.c:
+    complete
     .text start:0x020e065c end:0x020e0694
 
 src/func_ov006_020e0694.c:
@@ -2287,6 +2316,7 @@ src/func_ov006_020e1680.c:
     .text start:0x020e1680 end:0x020e17f8
 
 src/_ZN6Player16St_WallJump_InitEv.cpp:
+    complete
     .text start:0x020e17f8 end:0x020e1854
 
 src/func_ov006_020e1b54.c:
@@ -2368,6 +2398,7 @@ src/func_ov006_020e3578.c:
     .text start:0x020e3578 end:0x020e3820
 
 src/MgShuffleShell_Spawn.c:
+    complete
     .text start:0x020e3820 end:0x020e3854
 
 src/func_ov006_020e3854.c:
@@ -2375,6 +2406,7 @@ src/func_ov006_020e3854.c:
     .text start:0x020e3854 end:0x020e3878
 
 src/func_ov006_020e3878.c:
+    complete
     .text start:0x020e3878 end:0x020e38b0
 
 src/func_ov006_020e38b0.c:
@@ -2557,12 +2589,14 @@ src/func_ov006_020e67f0.c:
     .text start:0x020e67f0 end:0x020e683c
 
 src/func_ov006_020e683c.cpp:
+    complete
     .text start:0x020e683c end:0x020e6894
 
 src/func_ov006_020e6894.c:
     .text start:0x020e6894 end:0x020e6bf4
 
 src/func_ov006_020e6bf4.c:
+    complete
     .text start:0x020e6bf4 end:0x020e6c28
 
 src/_ZN17MgBounceAndPounceD1Ev.cpp:
@@ -2617,6 +2651,7 @@ src/func_ov006_020e6e78.cpp:
     .text start:0x020e6e78 end:0x020e6f60
 
 src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp:
+    complete
     .text start:0x020e6f60 end:0x020e700c
 
 src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp:
@@ -2627,12 +2662,15 @@ src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp:
     .text start:0x020e7040 end:0x020e7074
 
 src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp:
+    complete
     .text start:0x020e7074 end:0x020e70c0
 
 src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp:
+    complete
     .text start:0x020e70c0 end:0x020e70e4
 
 src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp:
+    complete
     .text start:0x020e70e4 end:0x020e7110
 
 src/func_ov006_020e7110.c:
@@ -2805,6 +2843,10 @@ src/func_ov006_020e8728.c:
     complete
     .text start:0x020e8728 end:0x020e8830
 
+src/func_ov006_020e8830.c:
+    complete
+    .text start:0x020e8830 end:0x020e8928
+
 src/func_ov006_020e8928.c:
     complete
     .text start:0x020e8928 end:0x020e8a44
@@ -2915,9 +2957,11 @@ src/func_ov006_020e9cec.c:
     .text start:0x020e9cec end:0x020e9d1c
 
 src/func_ov006_020e9d1c.cpp:
+    complete
     .text start:0x020e9d1c end:0x020e9e00
 
 src/func_ov006_020e9e00.cpp:
+    complete
     .text start:0x020e9e00 end:0x020e9e70
 
 src/func_ov006_020e9e70.cpp:
@@ -2933,6 +2977,7 @@ src/func_ov006_020ea280.c:
     .text start:0x020ea280 end:0x020ea2c8
 
 src/func_ov006_020ea2c8.cpp:
+    complete
     .text start:0x020ea2c8 end:0x020ea324
 
 src/func_ov006_020ea324.c:
@@ -3083,6 +3128,7 @@ src/func_ov006_020ec9c0.c:
     .text start:0x020ec9c0 end:0x020ecb80
 
 src/func_ov006_020ecb80.c:
+    complete
     .text start:0x020ecb80 end:0x020ecba4
 
 src/func_ov006_020ecba4.c:
@@ -3102,6 +3148,7 @@ src/func_ov006_020ecee4.c:
     .text start:0x020ecee4 end:0x020ed18c
 
 src/func_ov006_020ed18c.cpp:
+    complete
     .text start:0x020ed18c end:0x020ed270
 
 src/func_ov006_020ed270.c:
@@ -3152,6 +3199,7 @@ src/func_ov006_020eda48.c:
     .text start:0x020eda48 end:0x020edb04
 
 src/func_ov006_020edb04.cpp:
+    complete
     .text start:0x020edb04 end:0x020edcb0
 
 src/func_ov006_020edcb0.c:
@@ -3171,6 +3219,7 @@ src/func_ov006_020edec0.cpp:
     .text start:0x020edec0 end:0x020edf54
 
 src/func_ov006_020edf54.cpp:
+    complete
     .text start:0x020edf54 end:0x020edffc
 
 src/func_ov006_020edffc.c:
@@ -3225,9 +3274,11 @@ src/func_ov006_020ee658.c:
     .text start:0x020ee658 end:0x020ee690
 
 src/func_ov006_020ee690.cpp:
+    complete
     .text start:0x020ee690 end:0x020ee8dc
 
 src/func_ov006_020ee8dc.cpp:
+    complete
     .text start:0x020ee8dc end:0x020ee994
 
 src/MgBounceAndPounce_Spawn.cpp:
@@ -3239,6 +3290,7 @@ src/func_ov006_020eebe8.cpp:
     .text start:0x020eebe8 end:0x020eec9c
 
 src/func_ov006_020eec9c.cpp:
+    complete
     .text start:0x020eec9c end:0x020eed64
 
 src/func_ov006_020eed64.c:
@@ -3318,6 +3370,7 @@ src/func_ov006_020ef580.c:
     .text start:0x020ef580 end:0x020ef5ac
 
 src/func_ov006_020ef5ac.c:
+    complete
     .text start:0x020ef5ac end:0x020ef768
 
 src/func_ov006_020ef768.c:
@@ -3333,6 +3386,7 @@ src/func_ov006_020ef7f8.c:
     .text start:0x020ef7f8 end:0x020ef834
 
 src/func_ov006_020ef834.cpp:
+    complete
     .text start:0x020ef834 end:0x020efa84
 
 src/func_ov006_020efa84.c:
@@ -3356,6 +3410,7 @@ src/func_ov006_020efc0c.c:
     .text start:0x020efc0c end:0x020efc30
 
 src/func_ov006_020efc30.c:
+    complete
     .text start:0x020efc30 end:0x020efc68
 
 src/func_ov006_020efc68.c:
@@ -3556,12 +3611,14 @@ src/func_ov006_020f3460.c:
     .text start:0x020f3460 end:0x020f3800
 
 src/MgWanted_Spawn.c:
+    complete
     .text start:0x020f3800 end:0x020f3834
 
 src/func_ov006_020f3834.cpp:
     .text start:0x020f3834 end:0x020f3888
 
 src/func_ov006_020f3888.cpp:
+    complete
     .text start:0x020f3888 end:0x020f38f0
 
 src/func_ov006_020f38f0.c:
@@ -3740,6 +3797,7 @@ src/func_ov006_020f5564.cpp:
     .text start:0x020f5564 end:0x020f55b8
 
 src/func_ov006_020f55b8.cpp:
+    complete
     .text start:0x020f55b8 end:0x020f5620
 
 src/func_ov006_020f5620.c:
@@ -3934,6 +3992,7 @@ src/func_ov006_020f7634.cpp:
     .text start:0x020f7634 end:0x020f76a8
 
 src/func_ov006_020f76a8.cpp:
+    complete
     .text start:0x020f76a8 end:0x020f7730
 
 src/func_ov006_020f7730.c:
@@ -4027,6 +4086,7 @@ src/func_ov006_020f8ef4.cpp:
     .text start:0x020f8ef4 end:0x020f8f68
 
 src/func_ov006_020f8f68.cpp:
+    complete
     .text start:0x020f8f68 end:0x020f8ff0
 
 src/func_ov006_020f8ff0.c:
@@ -4094,16 +4154,23 @@ src/func_ov006_020f9fe0.c:
     .text start:0x020f9fe0 end:0x020f9ffc
 
 src/func_ov006_020f9ffc.cpp:
+    complete
     .text start:0x020f9ffc end:0x020fa13c
 
 src/func_ov006_020fa13c.c:
     complete
     .text start:0x020fa13c end:0x020fa3d0
 
+src/func_ov006_020fa3d0.c:
+    complete
+    .text start:0x020fa3d0 end:0x020fa4d4
+
 src/func_ov006_020fa4d4.cpp:
+    complete
     .text start:0x020fa4d4 end:0x020fa56c
 
 src/func_ov006_020fa56c.cpp:
+    complete
     .text start:0x020fa56c end:0x020fa6ac
 
 src/MgPairAGoneAndOn_Spawn.cpp:
@@ -4119,6 +4186,7 @@ src/func_ov006_020fa75c.c:
     .text start:0x020fa75c end:0x020fa780
 
 src/func_ov006_020fa780.c:
+    complete
     .text start:0x020fa780 end:0x020fa7b8
 
 src/func_ov006_020fa7b8.cpp:
@@ -4217,6 +4285,7 @@ src/func_ov006_020fb8fc.c:
     .text start:0x020fb8fc end:0x020fb97c
 
 src/func_ov006_020fb97c.c:
+    complete
     .text start:0x020fb97c end:0x020fba28
 
 src/func_ov006_020fba28.cpp:
@@ -4366,6 +4435,7 @@ src/func_ov006_020fee24.c:
     .text start:0x020fee24 end:0x020fefc0
 
 src/MgBobOmbSquad_Spawn.c:
+    complete
     .text start:0x020ff3ec end:0x020ff420
 
 src/func_ov006_020ff420.c:
@@ -4373,6 +4443,7 @@ src/func_ov006_020ff420.c:
     .text start:0x020ff420 end:0x020ff444
 
 src/func_ov006_020ff444.c:
+    complete
     .text start:0x020ff444 end:0x020ff47c
 
 src/func_ov006_020ff47c.c:
@@ -4634,6 +4705,7 @@ src/func_ov006_02103ed0.c:
     .text start:0x02103ed0 end:0x02104258
 
 src/MgLakituLaunch_Spawn.c:
+    complete
     .text start:0x02104258 end:0x0210428c
 
 src/func_ov006_0210428c.c:
@@ -4641,6 +4713,7 @@ src/func_ov006_0210428c.c:
     .text start:0x0210428c end:0x021042b0
 
 src/func_ov006_021042b0.c:
+    complete
     .text start:0x021042b0 end:0x021042e8
 
 src/func_ov006_021042e8.c:
@@ -4780,6 +4853,7 @@ src/func_ov006_02105134.c:
     .text start:0x02105134 end:0x021051dc
 
 src/func_ov006_021051dc.c:
+    complete
     .text start:0x021051dc end:0x021053a8
 
 src/func_ov006_02105670.c:
@@ -4795,6 +4869,7 @@ src/func_ov006_021057f0.cpp:
     .text start:0x021057f0 end:0x02105854
 
 src/func_ov006_02105854.c:
+    complete
     .text start:0x02105854 end:0x02105ab4
 
 src/func_ov006_02105ab4.c:
@@ -4814,6 +4889,7 @@ src/func_ov006_02105d20.c:
     .text start:0x02105d20 end:0x02105de4
 
 src/func_ov006_02105de4.c:
+    complete
     .text start:0x02105de4 end:0x02106048
 
 src/func_ov006_02106048.c:
@@ -4821,6 +4897,7 @@ src/func_ov006_02106048.c:
     .text start:0x02106048 end:0x02106080
 
 src/func_ov006_02106080.c:
+    complete
     .text start:0x02106080 end:0x02106168
 
 src/func_ov006_021063a0.cpp:
@@ -4887,6 +4964,7 @@ src/func_ov006_0210730c.c:
     .text start:0x0210730c end:0x02107358
 
 src/func_ov006_02107358.cpp:
+    complete
     .text start:0x02107358 end:0x021073b0
 
 src/func_ov006_021073b0.c:
@@ -4894,6 +4972,7 @@ src/func_ov006_021073b0.c:
     .text start:0x021073b0 end:0x02107858
 
 src/MgPuzzlePanelPuzzlePanic_Spawn.c:
+    complete
     .text start:0x02107858 end:0x0210788c
 
 src/func_ov006_0210788c.c:
@@ -4901,6 +4980,7 @@ src/func_ov006_0210788c.c:
     .text start:0x0210788c end:0x02107920
 
 src/func_ov006_02107920.cpp:
+    complete
     .text start:0x02107920 end:0x021079c8
 
 src/func_ov006_021079c8.c:
@@ -5041,6 +5121,7 @@ src/func_ov006_02109aac.c:
     .text start:0x02109aac end:0x0210a194
 
 src/func_ov006_0210a194.cpp:
+    complete
     .text start:0x0210a194 end:0x0210a400
 
 src/MgMushroomRoulette_Spawn.cpp:
@@ -5076,9 +5157,11 @@ src/func_ov006_0210a664.c:
     .text start:0x0210a664 end:0x0210a698
 
 src/func_ov006_0210a698.cpp:
+    complete
     .text start:0x0210a698 end:0x0210a6e4
 
 src/func_ov006_0210a6e4.cpp:
+    complete
     .text start:0x0210a6e4 end:0x0210a708
 
 src/func_ov006_0210a708.c:
@@ -5094,6 +5177,7 @@ src/func_ov006_0210a954.cpp:
     .text start:0x0210a954 end:0x0210a9a8
 
 src/func_ov006_0210a9a8.cpp:
+    complete
     .text start:0x0210a9a8 end:0x0210aa10
 
 src/func_ov006_0210aa10.c:
@@ -5105,9 +5189,11 @@ src/func_ov006_0210aa3c.c:
     .text start:0x0210aa3c end:0x0210aa60
 
 src/func_ov006_0210aa60.cpp:
+    complete
     .text start:0x0210aa60 end:0x0210ab08
 
 src/func_ov006_0210ab08.c:
+    complete
     .text start:0x0210ab08 end:0x0210ab90
 
 src/func_ov006_0210ab90.c:
@@ -5135,12 +5221,15 @@ src/func_ov006_0210b1fc.c:
     .text start:0x0210b1fc end:0x0210b314
 
 src/func_ov006_0210b314.c:
+    complete
     .text start:0x0210b314 end:0x0210b648
 
 src/func_ov006_0210b648.c:
+    complete
     .text start:0x0210b648 end:0x0210bcb0
 
 src/func_ov006_0210bcb0.cpp:
+    complete
     .text start:0x0210bcb0 end:0x0210bdb0
 
 src/func_ov006_0210bdb0.cpp:
@@ -5236,6 +5325,7 @@ src/func_ov006_0210d740.c:
     .text start:0x0210d740 end:0x0210d7e0
 
 src/func_ov006_0210d7e0.cpp:
+    complete
     .text start:0x0210d7e0 end:0x0210d894
 
 src/func_ov006_0210d894.c:
@@ -5551,6 +5641,7 @@ src/func_ov006_021126b4.c:
     .text start:0x021126b4 end:0x021128fc
 
 src/func_ov006_021128fc.c:
+    complete
     .text start:0x021128fc end:0x02112ad8
 
 src/func_ov006_02112ad8.c:
@@ -5738,6 +5829,7 @@ src/func_ov006_02119904.cpp:
     .text start:0x02119904 end:0x02119958
 
 src/func_ov006_02119958.cpp:
+    complete
     .text start:0x02119958 end:0x021199c0
 
 src/func_ov006_021199c0.c:
@@ -6056,6 +6148,7 @@ src/func_ov006_0211cbd0.c:
     .text start:0x0211cbd0 end:0x0211cbf4
 
 src/func_ov006_0211cbf4.c:
+    complete
     .text start:0x0211cbf4 end:0x0211cc2c
 
 src/func_ov006_0211cc2c.c:
@@ -6303,6 +6396,7 @@ src/func_ov006_0211f6fc.cpp:
     .text start:0x0211f6fc end:0x0211f77c
 
 src/func_ov006_0211f77c.c:
+    complete
     .text start:0x0211f77c end:0x0211f9fc
 
 src/func_ov006_0211fb1c.c:
@@ -6354,6 +6448,7 @@ src/func_ov006_021203fc.c:
     .text start:0x021203fc end:0x021207a8
 
 src/MgHideAndBooSeek_Spawn.c:
+    complete
     .text start:0x021207a8 end:0x021207dc
 
 src/func_ov006_021207dc.c:
@@ -6361,6 +6456,7 @@ src/func_ov006_021207dc.c:
     .text start:0x021207dc end:0x02120880
 
 src/func_ov006_02120880.cpp:
+    complete
     .text start:0x02120880 end:0x02120938
 
 src/func_ov006_02120938.c:
@@ -6455,6 +6551,7 @@ src/func_ov006_021212fc.c:
     .text start:0x021212fc end:0x021214f8
 
 src/func_ov006_021214f8.cpp:
+    complete
     .text start:0x021214f8 end:0x0212157c
 
 src/func_ov006_0212157c.c:
@@ -6474,6 +6571,7 @@ src/func_ov006_02121774.c:
     .text start:0x02121774 end:0x02121778
 
 src/func_ov006_02121778.c:
+    complete
     .text start:0x02121778 end:0x02121848
 
 src/func_ov006_02121848.c:
@@ -6513,6 +6611,7 @@ src/func_ov006_02121fa4.c:
     .text start:0x02121fa4 end:0x02122198
 
 src/func_ov006_02122198.cpp:
+    complete
     .text start:0x02122198 end:0x0212231c
 
 src/func_ov006_0212231c.c:
@@ -6532,6 +6631,7 @@ src/func_ov006_021225ac.c:
     .text start:0x021225ac end:0x021226b0
 
 src/func_ov006_021226b0.cpp:
+    complete
     .text start:0x021226b0 end:0x021227c8
 
 src/func_ov006_021227c8.cpp:
@@ -6629,11 +6729,16 @@ src/func_ov006_021238d0.c:
     complete
     .text start:0x021238d0 end:0x02123938
 
+src/func_ov006_02123938.c:
+    complete
+    .text start:0x02123938 end:0x02123b20
+
 src/func_ov006_02123b20.c:
     complete
     .text start:0x02123b20 end:0x02123b24
 
 src/func_ov006_02123b24.c:
+    complete
     .text start:0x02123b24 end:0x02123bf4
 
 src/func_ov006_02123bf4.cpp:
@@ -6645,6 +6750,7 @@ src/func_ov006_02123c78.c:
     .text start:0x02123c78 end:0x02123cb4
 
 src/func_ov006_02123cb4.c:
+    complete
     .text start:0x02123cb4 end:0x02124040
 
 src/func_ov006_02124040.c:
@@ -6664,9 +6770,11 @@ src/func_ov006_02124298.c:
     .text start:0x02124298 end:0x021242cc
 
 src/func_ov006_021242cc.cpp:
+    complete
     .text start:0x021242cc end:0x021243ec
 
 src/func_ov006_021243ec.cpp:
+    complete
     .text start:0x021243ec end:0x021245a8
 
 src/func_ov006_021245a8.c:
@@ -6674,6 +6782,7 @@ src/func_ov006_021245a8.c:
     .text start:0x021245a8 end:0x0212471c
 
 src/func_ov006_021248a8.cpp:
+    complete
     .text start:0x021248a8 end:0x02124908
 
 src/func_ov006_02124908.c:
@@ -6681,6 +6790,7 @@ src/func_ov006_02124908.c:
     .text start:0x02124908 end:0x0212497c
 
 src/func_ov006_0212497c.cpp:
+    complete
     .text start:0x0212497c end:0x02124a04
 
 src/func_ov006_02124a04.c:
@@ -6732,6 +6842,7 @@ src/func_ov006_02125248.c:
     .text start:0x02125248 end:0x0212527c
 
 src/func_ov006_0212527c.cpp:
+    complete
     .text start:0x0212527c end:0x02125364
 
 src/func_ov006_02125364.c:
@@ -6746,6 +6857,7 @@ src/func_ov006_021254c0.cpp:
     .text start:0x021254c0 end:0x0212551c
 
 src/func_ov006_0212551c.cpp:
+    complete
     .text start:0x0212551c end:0x021255f8
 
 src/MgLuckyStars_Spawn.cpp:
@@ -6757,6 +6869,7 @@ src/func_ov006_0212568c.cpp:
     .text start:0x0212568c end:0x0212573c
 
 src/func_ov006_0212573c.cpp:
+    complete
     .text start:0x0212573c end:0x02125800
 
 src/func_ov006_02125800.c:
@@ -6799,6 +6912,7 @@ src/func_ov006_021279b0.cpp:
     .text start:0x021279b0 end:0x02127d10
 
 src/func_ov006_02127d10.c:
+    complete
     .text start:0x02127d10 end:0x021283a4
 
 src/func_ov006_021283a4.c:
@@ -6913,6 +7027,7 @@ src/func_ov006_0212a554.c:
     .text start:0x0212a554 end:0x0212a5c8
 
 src/func_ov006_0212a5c8.cpp:
+    complete
     .text start:0x0212a5c8 end:0x0212a650
 
 src/func_ov006_0212a650.c:
@@ -6932,6 +7047,7 @@ src/func_ov006_0212aacc.c:
     .text start:0x0212aacc end:0x0212ac74
 
 src/func_ov006_0212ac74.c:
+    complete
     .text start:0x0212ac74 end:0x0212b480
 
 src/func_ov006_0212b480.c:
@@ -6946,91 +7062,121 @@ src/func_ov006_0212b88c.c:
     .text start:0x0212b88c end:0x0212b890
 
 src/__sinit_ov006_0212f4c4.c:
+    complete
     .init start:0x0212f4c4 end:0x0212f52c
 
 src/__sinit_ov006_0212f52c.c:
+    complete
     .init start:0x0212f52c end:0x0212f660
 
 src/__sinit_ov006_0212f660.c:
+    complete
     .init start:0x0212f660 end:0x0212f6b4
 
 src/__sinit_ov006_0212f6b4.c:
+    complete
     .init start:0x0212f6b4 end:0x0212fc7c
 
 src/__sinit_ov006_0212fc7c.c:
+    complete
     .init start:0x0212fc7c end:0x0212fd48
 
 src/__sinit_ov006_0212fd48.c:
+    complete
     .init start:0x0212fd48 end:0x021300b0
 
 src/__sinit_ov006_021300b0.c:
+    complete
     .init start:0x021300b0 end:0x0213014c
 
 src/__sinit_ov006_021303d0.c:
+    complete
     .init start:0x021303d0 end:0x021304ac
 
 src/__sinit_ov006_021304ac.c:
+    complete
     .init start:0x021304ac end:0x02130758
 
 src/__sinit_ov006_02130758.c:
+    complete
     .init start:0x02130758 end:0x02130a04
 
 src/__sinit_ov006_02130a04.c:
+    complete
     .init start:0x02130a04 end:0x02130a08
 
 src/__sinit_ov006_02130a08.c:
+    complete
     .init start:0x02130a08 end:0x02130df8
 
 src/__sinit_ov006_02130df8.c:
+    complete
     .init start:0x02130df8 end:0x02130e9c
 
 src/__sinit_ov006_02130e9c.c:
+    complete
     .init start:0x02130e9c end:0x02130f00
 
 src/__sinit_ov006_02130f00.c:
+    complete
     .init start:0x02130f00 end:0x02130f64
 
 src/__sinit_ov006_02130f64.c:
+    complete
     .init start:0x02130f64 end:0x021311c8
 
 src/__sinit_ov006_021311c8.c:
+    complete
     .init start:0x021311c8 end:0x021314e4
 
 src/__sinit_ov006_021314e4.c:
+    complete
     .init start:0x021314e4 end:0x021318a0
 
 src/__sinit_ov006_021318a0.c:
+    complete
     .init start:0x021318a0 end:0x0213195c
 
 src/__sinit_ov006_0213195c.c:
+    complete
     .init start:0x0213195c end:0x02131a38
 
 src/__sinit_ov006_02131a38.c:
+    complete
     .init start:0x02131a38 end:0x02131cd0
 
 src/__sinit_ov006_02131cd0.c:
+    complete
     .init start:0x02131cd0 end:0x02131fa4
 
 src/__sinit_ov006_02131fa4.c:
+    complete
     .init start:0x02131fa4 end:0x021322bc
 
 src/__sinit_ov006_021322bc.c:
+    complete
     .init start:0x021322bc end:0x02132894
 
 src/__sinit_ov006_02132894.c:
+    complete
     .init start:0x02132894 end:0x02132970
 
 src/__sinit_ov006_02132970.c:
+    complete
     .init start:0x02132970 end:0x02132f68
 
 src/__sinit_ov006_02132f68.c:
+    complete
     .init start:0x02132f68 end:0x0213322c
 
 src/__sinit_ov006_0213322c.c:
+    complete
     .init start:0x0213322c end:0x0213326c
 
 src/__sinit_ov006_0213326c.c:
+    complete
     .init start:0x0213326c end:0x021333e0
 
 src/__sinit_ov006_021333e0.c:
+    complete
     .init start:0x021333e0 end:0x0213356c

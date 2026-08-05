@@ -36,6 +36,12 @@ function, follow this.
   not a PR problem** — pull on the box and re-run, never override it.
 - **Near-miss DB / notes / tooling PRs** have no `src` match to byte-check; review for sanity
   and merge.
+- **`port/` reference breaks.** A rename, `.c`-to-`.cpp` migration, or file move in `src/`/
+  `include/` can strand a `port/` reference (`slice_gate*.txt`, `CMakeLists.txt` hostgen
+  symbol lists, `port/hal/*.cpp` linkage bridges) — nothing in `validate` catches this since
+  `port/`'s MSVC build isn't part of the decomp toolchain. `python tools/port_refcheck.py`
+  is the check (also runs in `tools/hooks/pre-push`); treat a report from it like any other
+  bug and fix the `port/` side before merging.
 - **Drafts:** never merge someone else's draft. That is the author saying "not ready."
 
 ## 3. How to merge (preserve attribution)

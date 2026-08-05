@@ -43,6 +43,7 @@ extern u8 data_0209d6d0;
 extern u8 data_0209d6c8;
 extern u8 data_0209d6c4;
 
+extern "C" {
 extern void func_0201b6f8(int a);
 extern void* func_0201b7cc(void);
 extern void func_0201b388(int a);
@@ -50,6 +51,7 @@ extern void func_0201adfc(void);
 extern int IsButtonInputValid(void);
 extern void func_02012790(int a);
 extern void* _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int a, void* b, int c, int d, int e, int f, int g, int h, int i, int j);
+}
 
 class Message {
 public:

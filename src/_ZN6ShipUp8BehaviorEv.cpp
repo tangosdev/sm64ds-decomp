@@ -4,17 +4,19 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
-extern int _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* a);
+#include "MeshColliderBase.h"
+extern "C" {
 extern void func_020393a4(int* p, int v);
 extern int _ZN5Actor13DistToCPlayerEv(void* a);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void* a);
+}
 extern short data_02082214[];
 
 int ShipUp::Behavior()
 {
-  if(_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) == 0){
-    _ZN16MeshColliderBase6EnableEP5Actor(((char*)this)+0x124, ((char*)this));
+  if(((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0){
+    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
   }
   func_020393a4((int*)((char*)&mMeshCollider), 0x2000000);
   if(mModelIndex == 0){

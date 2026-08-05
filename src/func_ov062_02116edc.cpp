@@ -8,7 +8,8 @@ extern "C" {
 int Math_Function_0203b14c(void*, int, int, int, int);
 void* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void*, int, void*);
 
-void func_ov062_02116edc(char* c){
+void func_ov062_02116edc(void* c_){
+    char* c = (char*)c_;
   int idx = 0;
   if(*(int*)(*(int*)(c+0x3f8) + 8) == 2) idx = 1;
   int k = idx * 0xc;

@@ -4,10 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "PoppingLavaBubbles.h"
+extern void* data_020a0eac;
+extern int _ZTV18PoppingLavaBubbles[];
 int *_ZN18PoppingLavaBubblesD0Ev(int *t)
 {
-    t[0] = (int)VT;
+    t[0] = (int)_ZTV18PoppingLavaBubbles;
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, HEAP);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

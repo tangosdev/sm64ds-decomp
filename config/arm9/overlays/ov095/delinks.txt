@@ -5,9 +5,11 @@
     .data       start:0x021373c0 end:0x02137780 kind:data align:32
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
 src/_ZN9SeesawBobD1Ev.c:
+    complete
     .text start:0x02135700 end:0x02135744
 
 src/_ZN9SeesawBobD0Ev.c:
+    complete
     .text start:0x02135744 end:0x0213579c
 
 src/func_ov095_0213579c.c:
@@ -27,6 +29,7 @@ src/func_ov095_0213597c.c:
     .text start:0x0213597c end:0x021359c4
 
 src/_ZN9SeesawBob16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021359c4 end:0x02135a28
 
 src/_ZN9SeesawBob6RenderEv.cpp:
@@ -38,6 +41,7 @@ src/_ZN9SeesawBob8BehaviorEv.cpp:
     .text start:0x02135a50 end:0x02135b74
 
 src/_ZN9SeesawBob13InitResourcesEv.cpp:
+    complete
     .text start:0x02135b74 end:0x02135cdc
 
 src/func_ov095_02135cdc.c:
@@ -77,9 +81,11 @@ src/SeesawUtm_Spawn.c:
     .text start:0x02135fc4 end:0x02135ff4
 
 src/_ZN13UpDownLiftBbhD1Ev.c:
+    complete
     .text start:0x02135ff4 end:0x02136038
 
 src/_ZN13UpDownLiftBbhD0Ev.c:
+    complete
     .text start:0x02136038 end:0x02136090
 
 src/func_ov095_02136090.cpp:
@@ -103,6 +109,7 @@ src/func_ov095_02136368.c:
     .text start:0x02136368 end:0x0213645c
 
 src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0213645c end:0x021364b0
 
 src/_ZN13UpDownLiftBbh6RenderEv.cpp:
@@ -114,6 +121,7 @@ src/_ZN13UpDownLiftBbh8BehaviorEv.cpp:
     .text start:0x021364d8 end:0x021365d8
 
 src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp:
+    complete
     .text start:0x021365d8 end:0x02136764
 
 src/func_ov095_02136764.cpp:
@@ -137,12 +145,15 @@ src/UpDownLiftBbh_Spawn.c:
     .text start:0x021367fc end:0x0213682c
 
 src/_ZN12FlamethrowerD1Ev.cpp:
+    complete
     .text start:0x0213682c end:0x02136884
 
 src/_ZN12FlamethrowerD0Ev.cpp:
+    complete
     .text start:0x02136884 end:0x021368f0
 
 src/_ZN12Flamethrower13InitResourcesEv.cpp:
+    complete
     .text start:0x02136d60 end:0x02136ed4
 
 src/Flamethrower_Spawn.cpp:
@@ -150,7 +161,9 @@ src/Flamethrower_Spawn.cpp:
     .text start:0x02136ed4 end:0x02136f58
 
 src/__sinit_ov095_02136fe0.c:
+    complete
     .init start:0x02136fe0 end:0x0213722c
 
 src/__sinit_ov095_0213722c.c:
+    complete
     .init start:0x0213722c end:0x021373b4

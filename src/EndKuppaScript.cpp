@@ -3,9 +3,11 @@ struct ActorBase { void MarkForDestruction(); };
 struct Actor : ActorBase { static Actor *FindWithID(unsigned int); };
 namespace Sound { void UnsetPlayerVoiceGroup(); }
 
+extern "C" {
 extern void func_02011c8c(void);
 extern int GetSoundMode(void);
 extern void SetSoundMode(int);
+}
 
 extern int data_0209fc48;
 extern int data_020890a0;

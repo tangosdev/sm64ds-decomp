@@ -4,6 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "CccArena.h"
+#include "MeshColliderBase.h"
+extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(int);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
@@ -11,7 +13,7 @@ extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(int);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,short,int);
 extern void func_020393d4(void*,void*);
 extern void func_020393c4(void*,void*);
-extern int _ZN16MeshColliderBase6EnableEP5Actor(void*,void*);
+}
 
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
 
@@ -57,7 +59,7 @@ int CccArena::InitResources()
 
     func_020393d4(((char *)this) + 0x124, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(((char *)this) + 0x124, func_ov073_021227d0);
-    _ZN16MeshColliderBase6EnableEP5Actor(((char *)this) + 0x124, ((char *)this));
+    ((MeshColliderBase *)(((char *)this) + 0x124))->Enable((Actor *)(((char *)this)));
 
     unk_338 = 0;
     unk_334 = 0;

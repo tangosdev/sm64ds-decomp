@@ -60,6 +60,39 @@ def iter_symbol_files(include_itcm_dtcm: bool = True):
             yield normalize_module(path.parent.name), path
 
 
+def module_universe() -> list[tuple[pathlib.Path, str]]:
+    """Every module that exists, as ``(symbols.txt, label)``. THE definition.
+
+    Four tools each grew their own copy of this as a regex over config/, and all
+    four returned arm9 plus ovNNN and silently dropped anything else. The cost
+    was the whole itcm module -- 43 functions, 25 unmatched, including the
+    largest unmatched function in the game -- being invisible in the Chaos
+    Viewer, absent from the ledger, and missing from the denominator, which made
+    the project read as further along than it is. modules.py had the same bug
+    and was fixed alone on 2026-08-01; see notes/itcm.md, where the symptom is
+    described as reading "exactly like clean".
+
+    So this does not filter. It enumerates, and then checks itself against the
+    filesystem: any config/**/symbols.txt this function does not yield is a hard
+    failure at the call site, not a silent skip. Adding a module means teaching
+    iter_symbol_files() about it once, and forgetting to is loud."""
+    known: dict[pathlib.Path, str] = {}
+    for label, path in iter_symbol_files():
+        if path.is_file():
+            known[path.resolve()] = label
+    missed = sorted(p for p in (REPO / "config").rglob("symbols.txt")
+                    if p.resolve() not in known)
+    if missed:
+        rels = ", ".join(p.relative_to(REPO).as_posix() for p in missed)
+        raise SystemExit(
+            f"relocs.module_universe: {len(missed)} symbols.txt not covered by "
+            f"iter_symbol_files(): {rels}\n"
+            "Teach iter_symbol_files about the module rather than filtering it "
+            "out at the call site. A module missing from a count or a viewer "
+            "looks exactly like completed work.")
+    return sorted(known.items(), key=lambda kv: kv[1])
+
+
 def iter_reloc_files(include_itcm_dtcm: bool = True):
     """Yield ``(module, relocs_path)`` for main, overlays, and optionally RAM."""
     yield "arm9", RELOCS

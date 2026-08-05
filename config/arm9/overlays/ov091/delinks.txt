@@ -5,9 +5,11 @@
     .data       start:0x02134ba0 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
 src/_ZN25RotatingUpDownPlatformUtmD1Ev.c:
+    complete
     .text start:0x02130f00 end:0x02130f4c
 
 src/_ZN25RotatingUpDownPlatformUtmD0Ev.c:
+    complete
     .text start:0x02130f4c end:0x02130fac
 
 src/func_ov091_02130fac.cpp:
@@ -18,6 +20,7 @@ src/func_ov091_02131070.cpp:
     .text start:0x02131070 end:0x021310fc
 
 src/func_ov091_021310fc.cpp:
+    complete
     .text start:0x021310fc end:0x02131160
 
 src/func_ov091_02131160.c:
@@ -29,6 +32,7 @@ src/func_ov091_02131340.c:
     .text start:0x02131340 end:0x02131388
 
 src/_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02131388 end:0x02131408
 
 src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp:
@@ -36,9 +40,11 @@ src/_ZN25RotatingUpDownPlatformUtm6RenderEv.cpp:
     .text start:0x02131408 end:0x02131468
 
 src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv.cpp:
+    complete
     .text start:0x02131468 end:0x021318f0
 
 src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv.cpp:
+    complete
     .text start:0x021318f0 end:0x02131ba4
 
 src/RotatingUpDownPlatformUtm_Spawn.c:
@@ -50,9 +56,11 @@ src/RotatingUpDownPlatform_Spawn.c:
     .text start:0x02131bdc end:0x02131c14
 
 src/_ZN22RotatingUpDownPlatformD1Ev.c:
+    complete
     .text start:0x02131c14 end:0x02131c58
 
 src/_ZN22RotatingUpDownPlatformD0Ev.c:
+    complete
     .text start:0x02131c58 end:0x02131cb0
 
 src/func_ov091_02131cb0.c:
@@ -106,12 +114,15 @@ src/ArrowPathLift_Spawn.c:
     .text start:0x021323cc end:0x02132404
 
 src/_ZN17SlidingPlatformWfD1Ev.c:
+    complete
     .text start:0x02132404 end:0x02132448
 
 src/_ZN17SlidingPlatformWfD0Ev.c:
+    complete
     .text start:0x02132448 end:0x021324a0
 
 src/_ZN17SlidingPlatformWf16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021324a0 end:0x02132504
 
 src/_ZN17SlidingPlatformWf6RenderEv.cpp:
@@ -119,9 +130,11 @@ src/_ZN17SlidingPlatformWf6RenderEv.cpp:
     .text start:0x02132504 end:0x0213252c
 
 src/_ZN17SlidingPlatformWf8BehaviorEv.cpp:
+    complete
     .text start:0x0213252c end:0x021325d4
 
 src/_ZN17SlidingPlatformWf13InitResourcesEv.cpp:
+    complete
     .text start:0x021325d4 end:0x021327e8
 
 src/SlidingPlatformWf_Spawn.c:
@@ -153,9 +166,11 @@ src/SlidingPlatformBdw_Spawn.c:
     .text start:0x02132908 end:0x02132938
 
 src/_ZN6ThwompD1Ev.c:
+    complete
     .text start:0x02132938 end:0x02132998
 
 src/_ZN6ThwompD0Ev.c:
+    complete
     .text start:0x02132998 end:0x02132a0c
 
 src/func_ov091_02132a0c.c:
@@ -171,15 +186,19 @@ src/_ZN6Thwomp8BehaviorEv.cpp:
     .text start:0x02132ab0 end:0x02132c84
 
 src/_ZN6Thwomp13InitResourcesEv.cpp:
+    complete
     .text start:0x02132c84 end:0x02132cb8
 
 src/Thwomp_Spawn.c:
+    complete
     .text start:0x02132cb8 end:0x02132d04
 
 src/func_ov091_02132d04.c:
+    complete
     .text start:0x02132d04 end:0x02132d6c
 
 src/func_ov091_02132d6c.c:
+    complete
     .text start:0x02132d6c end:0x02132dc0
 
 src/func_ov091_02132dc0.cpp:
@@ -211,6 +230,7 @@ src/func_ov091_02133098.cpp:
     .text start:0x02133098 end:0x021331b8
 
 src/_ZN6Thwomp16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021331b8 end:0x02133210
 
 src/_ZN6Thwomp6RenderEv.cpp:
@@ -222,9 +242,11 @@ src/func_ov091_02133254.cpp:
     .text start:0x02133254 end:0x021333fc
 
 src/func_ov091_021333fc.c:
+    complete
     .text start:0x021333fc end:0x02133440
 
 src/func_ov091_02133440.c:
+    complete
     .text start:0x02133440 end:0x02133498
 
 src/func_ov091_02133498.c:
@@ -232,6 +254,7 @@ src/func_ov091_02133498.c:
     .text start:0x02133498 end:0x021334b8
 
 src/func_ov091_021334b8.cpp:
+    complete
     .text start:0x021334b8 end:0x021335d4
 
 src/func_ov091_021335d4.c:
@@ -305,6 +328,7 @@ src/func_ov091_02134094.c:
     .text start:0x02134094 end:0x02134108
 
 src/_ZN5Stump16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02134108 end:0x02134180
 
 src/_ZN5Stump16OnPendingDestroyEv.c:
@@ -316,9 +340,11 @@ src/_ZN5Stump6RenderEv.cpp:
     .text start:0x02134184 end:0x021341ec
 
 src/_ZN5Stump8BehaviorEv.cpp:
+    complete
     .text start:0x021341ec end:0x02134324
 
 src/_ZN5Stump13InitResourcesEv.cpp:
+    complete
     .text start:0x02134324 end:0x02134484
 
 src/func_ov091_02134484.c:
@@ -338,19 +364,25 @@ src/Fwoosh_Spawn.c:
     .text start:0x021344a0 end:0x021344e8
 
 src/__sinit_ov091_02134524.c:
+    complete
     .init start:0x02134524 end:0x021345dc
 
 src/__sinit_ov091_021345dc.c:
+    complete
     .init start:0x021345dc end:0x021346e8
 
 src/__sinit_ov091_021346e8.c:
+    complete
     .init start:0x021346e8 end:0x02134930
 
 src/__sinit_ov091_02134930.c:
+    complete
     .init start:0x02134930 end:0x021349c4
 
 src/__sinit_ov091_021349c4.c:
+    complete
     .init start:0x021349c4 end:0x02134a30
 
 src/__sinit_ov091_02134a30.c:
+    complete
     .init start:0x02134a30 end:0x02134b68

@@ -61,6 +61,7 @@ src/func_ov074_0211fd48.c:
     .text start:0x0211fd48 end:0x0211fd74
 
 src/func_ov074_0211fd74.cpp:
+    complete
     .text start:0x0211fd74 end:0x0211ffac
 
 src/func_ov074_0211ffac.c:
@@ -120,6 +121,7 @@ src/func_ov074_02120808.cpp:
     .text start:0x02120808 end:0x0212087c
 
 src/func_ov074_0212087c.c:
+    complete
     .text start:0x0212087c end:0x02120b24
 
 src/func_ov074_02120b24.c:
@@ -167,12 +169,15 @@ src/func_ov074_02121a4c.cpp:
     .text start:0x02121a4c end:0x02121abc
 
 src/_ZN8Goomboss16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02121abc end:0x02121b70
 
 src/_ZN8Goomboss6RenderEv.cpp:
+    complete
     .text start:0x02121b70 end:0x02121bf0
 
 src/_ZN8Goomboss8BehaviorEv.cpp:
+    complete
     .text start:0x02121bf0 end:0x02121e98
 
 src/_ZN8Goomboss13InitResourcesEv.c:
@@ -201,4 +206,5 @@ src/Goomboss_Spawn.cpp:
     .text start:0x02122838 end:0x0212290c
 
 src/__sinit_ov074_02122978.c:
+    complete
     .init start:0x02122978 end:0x02122d70

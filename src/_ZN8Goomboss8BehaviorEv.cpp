@@ -6,6 +6,7 @@
 #include "Goomboss.h"
 typedef long long s64;
 
+extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *clsn, unsigned int a);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
@@ -14,6 +15,7 @@ extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int 
 extern void _ZN5Actor13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
 extern void func_02012694(int a, void *p);
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
+}
 
 extern char *data_0209f318;
 

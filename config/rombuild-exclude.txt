@@ -27,3 +27,46 @@ func_0206d8c4
 func_0206d940
 func_0206d9cc
 func_0206da18
+
+# --- rejected by mwldarm despite passing eligibility ---
+# Rule 5 accepts a reference whose name is in config/**/symbols.txt. These name
+# kind:data symbols no object in the link defines: resolvable in config, and
+# still an undefined symbol at link time.
+_ZN11ShadowModel10InitCuboidEv
+_ZN11ShadowModel12InitCylinderEv
+
+# --- linked cleanly but produced the wrong bytes (dsd check modules) ---
+# Eligibility proves an object is the right shape to drop in, never that it is
+# the right content. Mostly C++ destructors differing by a single byte, where a
+# deleting/complete variant resolves differently in a real relink than it does
+# when linkcheck verifies the match in isolation.
+_ZN11MirrorLuigiD1Ev
+_ZN15RecRoomCupboardD1Ev
+_ZN15RecRoomCupboardD0Ev
+_ZN14BlendModelAnimD1Ev
+_ZN5ModelD2Ev
+_ZN5ModelD1Ev
+CleanCommonModelDataArr
+func_020313d8
+
+# --- itcm: two unreferenced argument-swap entries that fall THROUGH into their successor ---
+# 0x01ff8df8 (0x18) xor-swaps both double argument pairs and falls into func_01ff8e10
+# (soft-double subtract); 0x01ffa588 (0xc) xor-swaps the single pair and falls into
+# func_01ffa594. Neither has a caller anywhere: zero relocs, zero intra-ITCM branches. They
+# are the library's "reverse operand" entries, correct only while they sit immediately before
+# the routine they fall into. Carving them into their own delink objects would let the linker
+# separate them from that successor and silently change behaviour, so they must stay inside
+# the module's gap object.
+#
+# They carry `kind:label`, not `kind:function`, in config/arm9/itcm/symbols.txt. Declaring
+# them as functions -- which an earlier revision of this branch did, purely to leave no
+# unattributed gap -- fails the build outright: `dsd delink` analyses every function symbol
+# and refuses an entry point that is not a prologue, exiting with
+#     function func_01ff8df8 could not be analyzed: InvalidStart { ins: Eor }
+# because the first instruction is `eor r1, r1, r3`. A label makes no such claim, so dsd
+# leaves the bytes in the gap object -- which is exactly where this file wants them. Full
+# address coverage is not worth a broken delink, and `.L_01ffadf8` (an alternate entry inside
+# __aeabi_uidiv, further down the same file) already sets the precedent.
+#
+# No symbol names are listed below: a label can never be enrolled, so there is nothing for
+# enroll.py to exclude. This block is here so the reasoning is not lost.

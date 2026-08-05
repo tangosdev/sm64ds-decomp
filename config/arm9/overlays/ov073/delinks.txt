@@ -180,6 +180,7 @@ src/_ZN11ChiefChilly8BehaviorEv.cpp:
     .text start:0x021218a0 end:0x02121ccc
 
 src/_ZN11ChiefChilly13InitResourcesEv.cpp:
+    complete
     .text start:0x02121ccc end:0x02121ec0
 
 src/func_ov073_02121ec0.c:
@@ -190,9 +191,11 @@ src/ChiefChilly_Spawn.cpp:
     .text start:0x02121ec8 end:0x02121f90
 
 src/_ZN8CccArenaD1Ev.c:
+    complete
     .text start:0x02121f90 end:0x02121fd4
 
 src/_ZN8CccArenaD0Ev.c:
+    complete
     .text start:0x02121fd4 end:0x0212202c
 
 src/func_ov073_0212202c.c:
@@ -236,6 +239,7 @@ src/func_ov073_021223f4.cpp:
     .text start:0x021223f4 end:0x02122464
 
 src/_ZN8CccArena16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122464 end:0x021224c8
 
 src/_ZN8CccArena6RenderEv.cpp:
@@ -243,9 +247,11 @@ src/_ZN8CccArena6RenderEv.cpp:
     .text start:0x021224c8 end:0x021224f0
 
 src/_ZN8CccArena8BehaviorEv.cpp:
+    complete
     .text start:0x021224f0 end:0x02122578
 
 src/_ZN8CccArena13InitResourcesEv.cpp:
+    complete
     .text start:0x02122578 end:0x02122730
 
 src/func_ov073_02122730.c:
@@ -269,7 +275,9 @@ src/CccArena_Spawn.c:
     .text start:0x02122844 end:0x02122874
 
 src/__sinit_ov073_02122874.c:
+    complete
     .init start:0x02122874 end:0x02122d48
 
 src/__sinit_ov073_02122d48.c:
+    complete
     .init start:0x02122d48 end:0x02122f34

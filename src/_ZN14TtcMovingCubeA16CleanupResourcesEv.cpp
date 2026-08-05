@@ -4,15 +4,17 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "TtcMovingCubeA.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov065_0211d9cc[];
+extern int data_ov065_0211d9d4[];
 
 int TtcMovingCubeA::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMeshCollider)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMeshCollider);
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(data_ov065_0211d9d4))->Release();
+    ((SharedFilePtr *)(data_ov065_0211d9cc))->Release();
     return 1;
 }

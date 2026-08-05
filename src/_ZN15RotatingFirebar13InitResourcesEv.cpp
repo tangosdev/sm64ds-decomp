@@ -3,8 +3,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingFirebar.h"
 extern void* data_ov064_0211adbc[];
+extern "C" {
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+}
 
+extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern void _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(void* thiz, void* v, int f1, int f2, unsigned int a, unsigned int b);
@@ -13,6 +16,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(int* p, int v);
+}
 
 int RotatingFirebar::InitResources()
 {

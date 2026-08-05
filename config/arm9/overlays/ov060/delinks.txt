@@ -131,6 +131,7 @@ src/func_ov060_02113b5c.cpp:
     .text start:0x02113b5c end:0x02113d20
 
 src/func_ov060_02113d20.cpp:
+    complete
     .text start:0x02113d20 end:0x02113d8c
 
 src/func_ov060_02113d8c.cpp:
@@ -298,9 +299,11 @@ src/_ZN10BowserTail6RenderEv.c:
     .text start:0x02115f5c end:0x02115f64
 
 src/_ZN6Bowser8BehaviorEv.cpp:
+    complete
     .text start:0x02115f64 end:0x02116078
 
 src/_ZN10BowserTail8BehaviorEv.cpp:
+    complete
     .text start:0x02116078 end:0x02116130
 
 src/_ZN6Bowser13InitResourcesEv.c:
@@ -344,6 +347,7 @@ src/func_ov060_021167ec.c:
     .text start:0x021167ec end:0x021168c4
 
 src/func_ov060_021168c4.cpp:
+    complete
     .text start:0x021168c4 end:0x021169b0
 
 src/func_ov060_021169b0.c:
@@ -411,6 +415,7 @@ src/_ZN10BowserFire6RenderEv.c:
     .text start:0x021176cc end:0x021176d4
 
 src/_ZN10BowserFire8BehaviorEv.cpp:
+    complete
     .text start:0x021176d4 end:0x02117790
 
 src/_ZN10BowserFire13InitResourcesEv.cpp:
@@ -422,9 +427,11 @@ src/BowserFire_Spawn.c:
     .text start:0x02117938 end:0x02117980
 
 src/_ZN18BowserFireSeaArenaD1Ev.c:
+    complete
     .text start:0x02117980 end:0x021179d4
 
 src/_ZN18BowserFireSeaArenaD0Ev.c:
+    complete
     .text start:0x021179d4 end:0x02117a3c
 
 src/func_ov060_02117a3c.c:
@@ -447,6 +454,7 @@ src/_ZN18BowserFireSeaArena6RenderEv.cpp:
     .text start:0x02117b9c end:0x02117bc8
 
 src/_ZN18BowserFireSeaArena8BehaviorEv.cpp:
+    complete
     .text start:0x02117bc8 end:0x02117c30
 
 src/_ZN18BowserFireSeaArena13InitResourcesEv.cpp:
@@ -457,9 +465,11 @@ src/BowserFireSeaArena_Spawn.c:
     .text start:0x02117cdc end:0x02117d1c
 
 src/func_ov060_02117d1c.c:
+    complete
     .text start:0x02117d1c end:0x02117d60
 
 src/func_ov060_02117d60.c:
+    complete
     .text start:0x02117d60 end:0x02117db8
 
 src/func_ov060_02117db8.c:
@@ -553,9 +563,11 @@ src/_ZN17BowserSkyPlatform6RenderEv.cpp:
     .text start:0x02118ad4 end:0x02118b2c
 
 src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
+    complete
     .text start:0x02118b2c end:0x02118bb4
 
 src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp:
+    complete
     .text start:0x02118bb4 end:0x02118cbc
 
 src/SpikeBomb_Spawn.c:
@@ -590,19 +602,25 @@ src/BowserShockwaves_Spawn.c:
     .text start:0x021191f4 end:0x02119264
 
 src/__sinit_ov060_021195dc.c:
+    complete
     .init start:0x021195dc end:0x02119df0
 
 src/__sinit_ov060_02119df0.c:
+    complete
     .init start:0x02119df0 end:0x02119f94
 
 src/__sinit_ov060_02119f94.c:
+    complete
     .init start:0x02119f94 end:0x0211a000
 
 src/__sinit_ov060_0211a000.c:
+    complete
     .init start:0x0211a000 end:0x0211a388
 
 src/__sinit_ov060_0211a388.c:
+    complete
     .init start:0x0211a388 end:0x0211a428
 
 src/__sinit_ov060_0211a428.c:
+    complete
     .init start:0x0211a428 end:0x0211a4bc

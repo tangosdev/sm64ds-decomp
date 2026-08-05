@@ -4,10 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Goomba.h"
+#include "SharedFilePtr.h"
+extern "C" {
 extern void UnloadBlueCoinModel(void* p);
-extern void _ZN13SharedFilePtr7ReleaseEv(void* p);
 extern void _ZN8CapEnemy14UnloadCapModelEv(char* c);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+}
 extern char data_ov084_02130cf8[];
 extern void* data_ov084_02130278[];
 
@@ -16,9 +18,9 @@ int Goomba::CleanupResources()
   int i;
   if (mGoombaType == 2)
     UnloadBlueCoinModel(((char*)this));
-  _ZN13SharedFilePtr7ReleaseEv(data_ov084_02130cf8);
+  ((SharedFilePtr *)(data_ov084_02130cf8))->Release();
   for (i = 0; i < 7; ++i)
-    _ZN13SharedFilePtr7ReleaseEv(data_ov084_02130278[i]);
+    ((SharedFilePtr *)(data_ov084_02130278[i]))->Release();
   if ((unsigned char)(unk_464 + 0xff) <= 1)
     UnloadSilverStarAndNumber();
   _ZN8CapEnemy14UnloadCapModelEv(((char*)this));

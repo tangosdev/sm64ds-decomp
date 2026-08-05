@@ -4,6 +4,22 @@
 #define DECL_WITHMESHCLSN_H
 #include "common.h"
 
+
+/* C linkage. These declare ROM symbols by their exact final names, so a C++
+   translation unit including this header must not mangle them -- a bare
+   `void Foo(int);` seen from C++ emits _Z3Fooi, which exists nowhere. The file
+   still byte-matches, because match.py compares relocated words as wildcards, so
+   nothing catches it until the ROM link -- and eligible.py refuses to enroll a
+   file with unresolvable references, so the link never sees it either.
+
+   Verified safe: of the 1,644 function names declared across the decl_*.h
+   headers, 1,572 are themselves the ROM symbol and 0 exist ONLY in a mangled
+   form, so no declaration here relies on C++ mangling. The remaining 72 resolve
+   to neither spelling and are unresolvable with or without this guard. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int _ZNK12WithMeshClsn15ShouldUpdatePosEv(void*);
 extern int _ZNK12WithMeshClsn16ShouldUpdatePosYEv(void*);
 extern void _ZN12WithMeshClsn12Unk_0203589cEv(void*);
@@ -16,5 +32,10 @@ extern void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void*);
 extern void _ZN12WithMeshClsnC1Ev(void*);
 extern void _ZN12WithMeshClsnD1Ev(void*);
 extern void*_ZNK12WithMeshClsn13GetWallResultEv(void*);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

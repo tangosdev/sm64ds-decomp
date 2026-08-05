@@ -4,15 +4,16 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BowserFireSeaArena.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
 extern int G0[];
 
 int BowserFireSeaArena::CleanupResources()
 {
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)&mMovingMeshCollider2)) {
-        _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider2);
+    if (((MeshColliderBase *)((char *)&mMovingMeshCollider2))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMovingMeshCollider2))->Disable();
     }
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((SharedFilePtr *)(G0))->Release();
+    ((SharedFilePtr *)(G1))->Release();
     return 1;
 }

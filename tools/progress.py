@@ -27,6 +27,7 @@ CONFIG = REPO / "config"
 SRC = REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
+import relocs as RL  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
 README = REPO / "README.md"
 README_START = "<!-- progress:start -->"
@@ -62,14 +63,12 @@ def synced_from_src():
     matched if config declares it and src/<name>.c or src/<name>.cpp exists.
     Returns (done_n, done_b, n, total_bytes)."""
     n = total_bytes = done_n = done_b = 0
-    for sym in CONFIG.rglob("symbols.txt"):
-        # Canonical module universe: arm9 main + overlays only. itcm/dtcm are
-        # skipped so this fallback agrees with chaos-db.json / the treemap / the
-        # hosted viewer (see chaos_db_ci.module_label), which all report the same
-        # number. Without this filter itcm/dtcm inflate the denominator.
-        rel = sym.parent.relative_to(CONFIG).as_posix()
-        if rel != "arm9" and not re.fullmatch(r"arm9/overlays/ov\d+", rel):
-            continue
+    # Every module, itcm included, via the one definition in relocs.py. This used
+    # to skip itcm/dtcm to agree with chaos-db and the treemap, which skipped them
+    # too, so all the surfaces agreed on a number that left out 43 real functions
+    # and 24344 bytes of real game code. They agree again, on the honest figure:
+    # counting itcm moves the published rate from 92.480% to 91.580%.
+    for sym, _label in RL.module_universe():
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_NAME_RE.match(line)
             if not m:

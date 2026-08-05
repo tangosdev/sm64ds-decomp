@@ -7,14 +7,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "QuestionSwitch.h"
-extern int _ZTV17ExclamationSwitch[];
+extern int _ZTV8Platform[];
 extern void *data_020a0eac;
 int *_ZN14QuestionSwitchD0Ev(struct QuestionSwitch *self) {
     ((int *)self)[0] = (int)_ZTV14QuestionSwitch;
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
     _ZN18MovingMeshColliderD1Ev((char *)&self->mMovingMeshCollider);
     _ZN18MovingMeshColliderD1Ev((char *)&self->unk_324);
-    ((int *)self)[0] = (int)_ZTV17ExclamationSwitch;
+    ((int *)self)[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)&self->unk_124);
     _ZN5ModelD1Ev((char *)&self->mModel);
     _ZN5ActorD2Ev(((int *)self));

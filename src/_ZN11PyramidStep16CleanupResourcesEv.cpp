@@ -4,13 +4,15 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PyramidStep.h"
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int G0[];
+#include "SharedFilePtr.h"
+#include "MeshColliderBase.h"
+extern int data_ov025_02113ab0[];
+extern int data_ov025_02113ab8[];
 
 int PyramidStep::CleanupResources()
 {
-    _ZN16MeshColliderBase7DisableEv((char *)&mMovingMeshCollider);
-    _ZN13SharedFilePtr7ReleaseEv(G0);
-    _ZN13SharedFilePtr7ReleaseEv(G1);
+    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    ((SharedFilePtr *)(data_ov025_02113ab8))->Release();
+    ((SharedFilePtr *)(data_ov025_02113ab0))->Release();
     return 1;
 }

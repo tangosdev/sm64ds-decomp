@@ -8,6 +8,7 @@ enum Bool { FALSE, TRUE };
 
 struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
 
+extern "C" {
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
 extern int _ZN11ShadowModel10InitCuboidEv(void *self);
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
@@ -25,6 +26,7 @@ extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const Vector3 *v, void *a);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
+}
 
 extern signed char data_0209f2f8;
 extern struct Matrix4x3 data_020a0e68;

@@ -8,7 +8,8 @@
 
 extern "C" {
 extern struct Matrix4x3* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void* self, void* player, struct Vector3* pos);
-void func_ov078_02125f8c(char* c){
+void func_ov078_02125f8c(void* c_){
+    char* c = (char*)c_;
     void* player = *(void**)(c+0x494);
     int idx = 0;
     if(player == 0) return;

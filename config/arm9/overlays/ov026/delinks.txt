@@ -5,9 +5,11 @@
     .data       start:0x02112dc0 end:0x02113ea0 kind:data align:32
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
 src/func_ov026_021111a0.c:
+    complete
     .text start:0x021111a0 end:0x021111e0
 
 src/func_ov026_021111e0.c:
+    complete
     .text start:0x021111e0 end:0x02111234
 
 src/func_ov026_02111234.cpp:
@@ -34,12 +36,15 @@ src/func_ov026_02111598.cpp:
     .text start:0x02111598 end:0x02111678
 
 src/func_ov026_02111678.c:
+    complete
     .text start:0x02111678 end:0x021116c8
 
 src/func_ov026_021116c8.c:
+    complete
     .text start:0x021116c8 end:0x0211170c
 
 src/func_ov026_0211170c.c:
+    complete
     .text start:0x0211170c end:0x02111764
 
 src/func_ov026_02111764.c:
@@ -62,9 +67,11 @@ src/BowserShutter_Spawn.c:
     .text start:0x02111888 end:0x021118b8
 
 src/func_ov026_021118b8.c:
+    complete
     .text start:0x021118b8 end:0x021118fc
 
 src/func_ov026_021118fc.c:
+    complete
     .text start:0x021118fc end:0x02111954
 
 src/func_ov026_02111954.c:
@@ -99,6 +106,7 @@ src/func_ov026_02111cb4.c:
     .text start:0x02111cb4 end:0x02111d4c
 
 src/func_ov026_02111d4c.cpp:
+    complete
     .text start:0x02111d4c end:0x02111ed8
 
 src/func_ov026_02111ed8.c:
@@ -126,9 +134,11 @@ src/_ZN9Submarine6RenderEv.cpp:
     .text start:0x02111fd8 end:0x0211200c
 
 src/_ZN9Submarine8BehaviorEv.cpp:
+    complete
     .text start:0x0211200c end:0x021120ec
 
 src/_ZN9Submarine13InitResourcesEv.cpp:
+    complete
     .text start:0x021120ec end:0x021121bc
 
 src/Whirlpool_Spawn.c:
@@ -176,9 +186,11 @@ src/_ZN12WaterSuction6RenderEv.c:
     .text start:0x02112334 end:0x0211233c
 
 src/_ZN12WaterSuction8BehaviorEv.cpp:
+    complete
     .text start:0x0211233c end:0x021123c8
 
 src/_ZN12WaterSuction13InitResourcesEv.cpp:
+    complete
     .text start:0x021123c8 end:0x02112450
 
 src/WaterSuction_Spawn.c:
@@ -186,16 +198,21 @@ src/WaterSuction_Spawn.c:
     .text start:0x02112450 end:0x02112490
 
 src/__sinit_ov026_02112b7c.c:
+    complete
     .init start:0x02112b7c end:0x02112bbc
 
 src/__sinit_ov026_02112bbc.c:
+    complete
     .init start:0x02112bbc end:0x02112c28
 
 src/__sinit_ov026_02112c28.c:
+    complete
     .init start:0x02112c28 end:0x02112c94
 
 src/__sinit_ov026_02112c94.c:
+    complete
     .init start:0x02112c94 end:0x02112d68
 
 src/__sinit_ov026_02112d68.c:
+    complete
     .init start:0x02112d68 end:0x02112da4

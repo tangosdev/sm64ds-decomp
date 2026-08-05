@@ -4,12 +4,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "QuestionBlock.h"
+#include "MeshColliderBase.h"
+extern "C" {
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern void func_020393a4(int* p, int v);
 extern void func_02039394(int* p, int v);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+}
 extern int data_0209caa0[];
 extern unsigned char data_0209f2d8;
 extern signed char data_0209f2f8;
@@ -26,8 +28,8 @@ int QuestionBlock::Behavior()
     func_020393a4((int*)((char*)&mMeshCollider), 0x8c000);
     func_02039394((int*)((char*)&mMeshCollider), 0x46000);
     if (unk_3e8 != 0) {
-        if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) != 0) {
-            _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
+            ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
         }
         goto end;
     }
@@ -35,8 +37,8 @@ int QuestionBlock::Behavior()
         int b = (int)(mActorId == 0x14);
         if (b != 0) {
             _ZN9Animation7AdvanceEv((char*)&mAnimation);
-            if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) != 0) {
-                _ZN16MeshColliderBase7DisableEv((char*)&mMeshCollider);
+            if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
+                ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
             }
             goto end;
         }
@@ -44,8 +46,8 @@ int QuestionBlock::Behavior()
     {
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) {
-            if (_ZN16MeshColliderBase9IsEnabledEv((char*)&mMeshCollider) == 0) {
-                _ZN16MeshColliderBase6EnableEP5Actor(((char*)this)+0x124, ((char*)this));
+            if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0) {
+                ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
             }
             goto end;
         }

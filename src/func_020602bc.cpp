@@ -5,8 +5,10 @@ extern char data_020a8180[];
 void OS_SleepThread(void *p);
 }
 
+extern "C" {
 u32 _ZN3IRQ7DisableEv(void);
 void _ZN3IRQ7RestoreEj(u32 state);
+}
 
 extern "C" void func_020602bc(void) {
     char *base = data_020a8180;

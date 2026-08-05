@@ -200,10 +200,15 @@ def diff_snapshot(base, head, head_paths):
     return {"files": rows, "perfectRenames": renames, "leftoverOldPaths": leftovers}
 
 
-def _load_json(path):
+def _load_json(path, optional=False):
     if not path:
         return None
-    return json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    p = pathlib.Path(path)
+    if optional and not p.exists():
+        # An optional phase that did not run leaves no artifact.  That is "not
+        # checked", not "failed" -- see _port_state.
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 def _rom_state(report):
@@ -267,8 +272,42 @@ def _link_state(rows):
             "rows": flattened}
 
 
+def _port_state(report):
+    """tools/port_refcheck.py's JSON: port/'s literal src/ path and symbol
+    references, checked against the merged tree.
+
+    The phase is optional -- an older worker, a PR that touches no source, or a
+    base that predates the tool all leave no report -- so an absent report is
+    "not run" and never a failure.  `failures` is port_refcheck's flat
+    {check,file,line,message} list; the per-check grouping is accepted as a
+    fallback so a report written by an older copy of the tool still reads.
+    """
+    if report is None:
+        return {"available": False}
+    failures = report.get("failures")
+    if failures is None:
+        failures = [dict(f, check=name)
+                    for name, check in (report.get("checks") or {}).items()
+                    for f in check.get("failures") or []]
+    passed = bool(report.get("ok", not failures)) and not failures
+    return {"available": True, "passed": passed,
+            "checked": report.get("checked", 0), "failures": failures}
+
+
+def _port_reason(port):
+    """Name what broke, not just that something did: a PR author reading the
+    check has to be able to find the stale reference without the worker log."""
+    failures = port["failures"]
+    shown = "; ".join(f"{f.get('file')}:{f.get('line')}: {f.get('message')}"
+                      for f in failures[:3])
+    if len(failures) > 3:
+        shown += f"; +{len(failures) - 3} more"
+    return f"port refcheck: {len(failures)} stale reference(s) ({shown})"
+
+
 def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
-                 require_merge_commit=False, expected_pr_head=None):
+                 require_merge_commit=False, expected_pr_head=None,
+                 port_report=None):
     base_sha, head_sha = resolve_commit(base), resolve_commit(head)
     parents = _git("rev-list", "--parents", "-n", "1", head_sha).split()
     is_merge = len(parents) >= 3
@@ -309,6 +348,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                              and base_rom_state.get("signature")
                              == head_rom_state.get("signature"))
     link = _link_state(link_rows)
+    port = _port_state(port_report)
     reasons = []
     if base_keys - head_keys:
         reasons.append(f"lost {len(base_keys - head_keys)} matched function(s)")
@@ -325,6 +365,8 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("old source paths remain after rename")
     if link["blocking"]:
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
+    if port.get("available") and not port["passed"]:
+        reasons.append(_port_reason(port))
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \
@@ -376,6 +418,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "lost": lost_credit},
         "diff": diff,
         "linkcheck": link,
+        "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,
                 "regression": rom_regression, "sameBaselineFailure": same_baseline_failure},
     }
@@ -407,6 +450,12 @@ def render_markdown(r):
              f"{len(r['attribution']['changed'])} changed, "
              f"{len(r['attribution']['lost'])} lost |",
              f"| Relocation check | {l['checked']} checked; {relocation_summary} |"]
+    # Optional phase: no row at all when it did not run, so an older worker's
+    # report reads exactly as it did before.
+    port = r.get("portRefcheck") or {}
+    if port.get("available"):
+        lines.append(f"| Port reference check | {port['checked']} checked; "
+                     f"{len(port['failures'])} stale |")
     head_rom = r["rom"]["head"]
     if head_rom.get("analysis"):
         mf = head_rom["analysis"]["moduleFidelity"]
@@ -434,12 +483,16 @@ def main():
     ap.add_argument("--base-rom-report")
     ap.add_argument("--head-rom-report")
     ap.add_argument("--link-report")
+    ap.add_argument("--port-refcheck-report",
+                    help="tools/port_refcheck.py --json output; the check is "
+                         "reported only when this is supplied and exists")
     ap.add_argument("--out", required=True)
     ap.add_argument("--markdown")
     args = ap.parse_args()
     report = build_report(args.base, args.head, _load_json(args.base_rom_report),
                           _load_json(args.head_rom_report), _load_json(args.link_report),
-                          args.require_merge_commit, args.expected_pr_head)
+                          args.require_merge_commit, args.expected_pr_head,
+                          _load_json(args.port_refcheck_report, optional=True))
     pathlib.Path(args.out).write_text(json.dumps(report, indent=2) + "\n",
                                       encoding="utf-8", newline="\n")
     if args.markdown:

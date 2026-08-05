@@ -80,9 +80,11 @@ src/_ZN10HootTheOwl6RenderEv.cpp:
     .text start:0x0213642c end:0x02136478
 
 src/_ZN10HootTheOwl8BehaviorEv.cpp:
+    complete
     .text start:0x02136478 end:0x02136634
 
 src/_ZN10HootTheOwl13InitResourcesEv.cpp:
+    complete
     .text start:0x02136634 end:0x02136798
 
 src/HootTheOwl_Spawn.c:
@@ -90,4 +92,5 @@ src/HootTheOwl_Spawn.c:
     .text start:0x02136798 end:0x021367e8
 
 src/__sinit_ov094_021367e8.c:
+    complete
     .init start:0x021367e8 end:0x021369b8

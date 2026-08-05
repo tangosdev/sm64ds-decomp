@@ -13,6 +13,7 @@ extern SharedFilePtr data_ov065_0211d6a8;
 extern SharedFilePtr data_ov065_0211d690;
 extern SharedFilePtr data_ov065_0211d6a0;
 extern PMF data_ov065_0211d700;
+extern "C" {
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
@@ -20,6 +21,7 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_02117944(void* c, PMF* p);
+}
 
 int Swoop::InitResources()
 {

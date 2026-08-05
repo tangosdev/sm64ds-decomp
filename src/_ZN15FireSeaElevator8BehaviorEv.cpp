@@ -3,11 +3,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "FireSeaElevator.h"
 typedef int Fix12;
+extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, Fix12 a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+}
 extern short data_02082214[];
 
 int FireSeaElevator::Behavior()

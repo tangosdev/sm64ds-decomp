@@ -21,6 +21,7 @@ extern SharedFilePtr data_ov002_0210da30;
 extern SharedFilePtr data_ov073_02123298;
 extern PMF data_ov073_02123330;
 
+extern "C" {
 extern void LoadKeyModels(int idx);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
@@ -30,6 +31,7 @@ extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
 extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern int ChiefChilly_ChangeState(void* c, PMF* p);
+}
 
 int ChiefChilly::InitResources()
 {

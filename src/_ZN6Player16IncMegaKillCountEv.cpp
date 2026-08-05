@@ -10,8 +10,10 @@ struct Vec3
   int y;
   int z;
 };
+extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void *v);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, struct Vec3 *pos, void *rot, int a, int b);
+}
 
 void Player::IncMegaKillCount()
 {

@@ -1,6 +1,9 @@
-// NONMATCHING: different op / idiom (div=5). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// NONMATCHING: 4a8-pack b/t26 r2-r3 rank-pin (div=5). Logic verified correct vs ROM.
+// Two-attractor class shared with func_ov075_0211a948, but the twins canonicalize
+// differently: here the baseline term order is the UNIQUE 5 (others 7-10), and a
+// named-extract + equal-arm-ternary barrier reaches b=r2 + A-selection at div 14
+// (a/t-web rotation). ~330 compiles, 2026-08-02 - full map in notes/mwccarm-codegen.md
+// 6ba and config/match_attempts.jsonl. Counts as decompiled, not matched.
 typedef unsigned int u32;
 void func_ov080_02125460(char* c){
   u32* p = *(u32**)(c+0x1a8);

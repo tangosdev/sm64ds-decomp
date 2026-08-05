@@ -4,10 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "CameraTag.h"
+extern void* data_020a0eac;
+extern int _ZTV9CameraTag[];
 int *_ZN9CameraTagD0Ev(int *t)
 {
-    t[0] = (int)VT;
+    t[0] = (int)_ZTV9CameraTag;
     _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, HEAP);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

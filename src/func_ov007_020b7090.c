@@ -15,7 +15,7 @@ extern void func_ov007_020c20b8(int a, void *b);
 extern void func_ov007_020b2e64(u16 *buf);
 extern void func_ov007_020c1db0(void *c, u16 *in);
 extern void *func_ov007_020bdebc(void);
-extern void _ZN5EnemyC2Ev(void *thiz);
+extern void func_ov007_020aed98(void *thiz);
 
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4)
 {
@@ -30,7 +30,7 @@ int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4)
     buf[3] = a3;
     func_ov007_020b2e64(buf);
     func_ov007_020c1db0((void *)data_ov007_0210342c->f50, buf);
-    _ZN5EnemyC2Ev(func_ov007_020bdebc());
+    func_ov007_020aed98(func_ov007_020bdebc());
     {
         S *ip = data_ov007_0210342c;
         if (ip->f14 != 0 || ip->f10 == 1)

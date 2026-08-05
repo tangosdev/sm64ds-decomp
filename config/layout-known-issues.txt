@@ -1,0 +1,28 @@
+# Pre-existing layout violations that tools/layout_check.py tolerates, by check and key.
+# Modelled on config/rombuild-exclude.txt: the gate is real for anything NEW, and the
+# debt already in the tree is written down instead of silently allowed.
+#
+# Format:  <check-code> <key>
+# Lines starting with '#' are comments. This list should only ever shrink.
+
+# --- L2: one symbol, two source files --------------------------------------------
+# Fallout from the .c -> .cpp promotion passes: the old file was never removed. It is
+# not cosmetic. srcpath resolves a symbol .c-before-.cpp, so the .c SHADOWS the .cpp
+# for every tool that asks where a symbol lives, including enroll.
+#
+# _ZN13PoleBillboard8BehaviorEv is the case that shows why this matters. Its .c is a
+# `// NONMATCHING` draft and its .cpp is not marked as one, but neither is enrolled --
+# because enroll resolves the symbol to the .c, sees the NONMATCHING hatch, and skips
+# the symbol without ever considering the .cpp. A real match sitting in that .cpp would
+# be invisible. (Whether it matches is untested here: match.py could not resolve the
+# ov015 overlay base address, so this is an open question, not a known loss.)
+#
+# The other five have the .c enrolled and building, with an unenrolled .cpp duplicate
+# alongside. Clearing these means deciding per symbol which file is real and deleting
+# the other, which is a separate PR with its own verification -- not a layout change.
+L2 _ZN13PoleBillboard8BehaviorEv
+L2 _ZN15TtcRotatingGear8BehaviorEv
+L2 _ZN5Stage7PS_InitEv
+L2 func_ov065_02116364
+L2 func_ov084_021298d0
+L2 func_ov084_0212d564

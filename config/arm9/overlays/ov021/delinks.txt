@@ -20,6 +20,7 @@ src/func_ov021_02111434.c:
     .text start:0x02111434 end:0x021115dc
 
 src/_ZN12WorkElevator16CleanupResourcesEv.cpp:
+    complete
     .text start:0x021115dc end:0x02111650
 
 src/_ZN12WorkElevator6RenderEv.cpp:
@@ -122,12 +123,15 @@ src/RollingRock_Spawn.c:
     .text start:0x02112d64 end:0x02112db4
 
 src/_ZN10ShutterHmcD1Ev.c:
+    complete
     .text start:0x02112db4 end:0x02112e04
 
 src/_ZN10ShutterHmcD0Ev.c:
+    complete
     .text start:0x02112e04 end:0x02112e68
 
 src/_ZN10ShutterHmc16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02112e68 end:0x02112e7c
 
 src/_ZN10ShutterHmc8BehaviorEv.cpp:
@@ -135,16 +139,21 @@ src/_ZN10ShutterHmc8BehaviorEv.cpp:
     .text start:0x02112e7c end:0x02112ec0
 
 src/_ZN10ShutterHmc13InitResourcesEv.cpp:
+    complete
     .text start:0x02112ec0 end:0x02112ed4
 
 src/ShutterHmc_Spawn.c:
+    complete
     .text start:0x02112ed4 end:0x02112f10
 
 src/__sinit_ov021_02113500.c:
+    complete
     .init start:0x02113500 end:0x02113688
 
 src/__sinit_ov021_02113688.c:
+    complete
     .init start:0x02113688 end:0x021136c8
 
 src/__sinit_ov021_021136c8.c:
+    complete
     .init start:0x021136c8 end:0x02113734
