@@ -1,5 +1,5 @@
 {
- "eligible": 10566,
+ "eligible": 10666,
  "unresolved": {
   "ChainChomp_Spawn": [
    "func_020aed98"
@@ -57,16 +57,9 @@
    "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PvP5ActoriiP10Vector3_16i",
    "_Z67_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jjPvP5ActorRK7Vector3iijj"
   ],
-  "_ZN10DonutBlock8BehaviorEv": [
-   "_ZN8Platform13IsClsnInRangeEii"
-  ],
   "_ZN10FlameChomp13InitResourcesEv": [
    "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PvS_iiS_i",
    "_Z67_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jjPvS_PK7Vector3iijj"
-  ],
-  "_ZN10KoopaShell13InitResourcesEv": [
-   "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
   ],
   "_ZN10MrBlizzard13InitResourcesEv": [
    "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PvS_iiS_i",
@@ -137,9 +130,6 @@
    "_ZTV10dBgActor_c",
    "_ZTV15daObjFlMaruta_c"
   ],
-  "_ZN12FortressWall8BehaviorEv": [
-   "_ZN8Platform13IsClsnInRangeEii"
-  ],
   "_ZN13FortressTower13InitResourcesEv": [
    "MeshCollider_LoadFile",
    "ModelBase_SetFile",
@@ -158,9 +148,6 @@
    "Enemy_UpdateWMClsn",
    "Player_Hurt",
    "WithMeshClsn_IsOnGround"
-  ],
-  "_ZN13PeachPainting8BehaviorEv": [
-   "_ZN9ModelBase12ApplyOpacityEji"
   ],
   "_ZN13PrincessPeach13InitResourcesEv": [
    "AnimLoadFile",
@@ -186,9 +173,6 @@
    "_Z25_ZN12CylinderClsn5ClearEvPc",
    "_Z26_ZN12CylinderClsn6UpdateEvPc",
    "p__sinit_ov031_02111434"
-  ],
-  "_ZN13RollingLogLll13InitResourcesEv": [
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
   ],
   "_ZN13SnowmanBreath8BehaviorEv": [
    "_Z33_ZN5Sound8PlayLongEjjjRK7Vector3jijjPvj",
@@ -230,9 +214,6 @@
   "_ZN16RotatingCogSmall13InitResourcesEv": [
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
   ],
-  "_ZN17BowserPuzzlePiece13InitResourcesEv": [
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
-  ],
   "_ZN17MgBounceAndPounce11AfterRenderEj": [
    "Scene_AfterRender"
   ],
@@ -259,10 +240,6 @@
   ],
   "_ZN19RotatingPlatformWdw13InitResourcesEv": [
    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
-  ],
-  "_ZN20TtcConveyorBeltLarge13InitResourcesEv": [
-   "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
-   "_ZN18TextureTransformer7SetFileER8BTA_Fileiij"
   ],
   "_ZN22RotatingUpDownPlatform13InitResourcesEv": [
    "Vec3_equal",
@@ -300,17 +277,8 @@
    "_ll_udiv",
    "_ull_mod"
   ],
-  "_ZN4Tree13InitResourcesEv": [
-   "_ZN19CylinderClsnWithPos4InitERK7Vector3iijj"
-  ],
   "_ZN4cstd5atan2E5Fix12IiES1_": [
    "func_01ff98f4"
-  ],
-  "_ZN5Actor13LandingDustAtER7Vector3b": [
-   "_ZN8Particle6System9NewSimpleEjiii"
-  ],
-  "_ZN5Actor17HugeLandingDustAtER7Vector3b": [
-   "_ZN8Particle6System9NewSimpleEjiii"
   ],
   "_ZN5Cloud8BehaviorEv": [
    "FindWithActorID",
@@ -345,10 +313,6 @@
    "func_020acb68",
    "func_020ad04c"
   ],
-  "_ZN6BobOmb13InitResourcesEv": [
-   "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
-  ],
   "_ZN6BobOmb8BehaviorEv": [
    "func_020ada40"
   ],
@@ -358,13 +322,6 @@
    "_Z50_ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jjPcP5Actoriijj",
    "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PcP5ActoriiP10Vector3_16i",
    "func_0211d610"
-  ],
-  "_ZN6Camera6RenderEv": [
-   "_ZN3G3i13PerspectiveW_EiiiiiibP9Matrix4x3",
-   "_ZN3OAM6RenderEbP7OamAttriiiiiiii"
-  ],
-  "_ZN6Coffin13InitResourcesEv": [
-   "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
   ],
   "_ZN6Eyerok13InitResourcesEv": [
    "_Z13func_020393c4PvS_",
@@ -384,23 +341,6 @@
    "func_02112ca8",
    "func_02112d48"
   ],
-  "_ZN6Player11St_Fly_MainEv": [
-   "_ZN6Player11ChangeStateER5State",
-   "_ZN6Player7SetAnimEjiij"
-  ],
-  "_ZN6Player12St_Land_InitEv": [
-   "_ZN6Player7SetAnimEjiij"
-  ],
-  "_ZN6Player15St_Respawn_InitEv": [
-   "_ZN6Player7SetAnimEjiij"
-  ],
-  "_ZN6Player17St_WindCarry_MainEv": [
-   "_ZN6Player11ChangeStateER5State",
-   "_ZN6Player7SetAnimEjiij"
-  ],
-  "_ZN6Player18St_CameraZoom_MainEv": [
-   "_ZN6Player11ChangeStateER5State"
-  ],
   "_ZN7ClipperD0Ev": [
    "base_dtor_Clipper"
   ],
@@ -417,19 +357,12 @@
    "func_021123f4",
    "func_021124ac"
   ],
-  "_ZN8MadPiano8BehaviorEv": [
-   "_ZN8Platform13IsClsnInRangeEii"
-  ],
   "_ZN8SignPost13InitResourcesEv": [
    "MeshColliderLoadFile",
    "ModelLoadFile",
    "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
-  ],
-  "_ZN9KoopaFlag13InitResourcesEv": [
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
   ],
   "_ZN9Spindrift13InitResourcesEv": [
    "AnimLoadFile",
@@ -445,10 +378,6 @@
   "_ZN9UkikiCageD1Ev": [
    "_ZTV10dBgActor_c",
    "_ZTV15daObjHmMaruta_c"
-  ],
-  "_ZN9WaterBomb13InitResourcesEv": [
-   "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
   ],
   "__sinit_ov071_02122a64": [
    "data_ov071_02122ecc_d"
@@ -569,65 +498,19 @@
    "_ll_udiv",
    "_ull_mod"
   ],
-  "func_ov002_020aefb8": [
-   "_ZN5Actor12ReflectAngleEiis"
-  ],
-  "func_ov002_020b5ab4": [
-   "_ZN13RaycastGround19StartDetectingWaterEv"
-  ],
-  "func_ov002_020b7e1c": [
-   "_ZN5Actor9SetRangesEiiii"
-  ],
-  "func_ov002_020bd250": [
-   "_ZN6Player4HurtERK7Vector3jijjj",
-   "_ZN8Particle6System9NewSimpleEjiii"
-  ],
   "func_ov002_020c0fb4": [
    "_ll_udiv"
-  ],
-  "func_ov002_020c1234": [
-   "_ZN5Sound7PlaySubEjjjib"
-  ],
-  "func_ov002_020c1eb4": [
-   "_ZN8Particle6System3NewEjjiiiPK10Vector3_16PNS_8CallbackE"
-  ],
-  "func_ov002_020c29d4": [
-   "_ZN6Player7IsStateER5State"
   ],
   "func_ov002_020c8a4c": [
    "_Z13func_020072c0v",
    "_ZN6Player7SetAnimEjiij"
   ],
-  "func_ov002_020c8f80": [
-   "_ZN6Player7SetAnimEjiij"
-  ],
-  "func_ov002_020d0580": [
-   "_ZN6Player11ChangeStateER5State",
-   "_ZN6Player7IsStateER5State"
-  ],
-  "func_ov002_020d06c0": [
-   "_ZN6Player11ChangeStateER5State",
-   "_ZN6Player7IsStateER5State"
-  ],
-  "func_ov002_020d4c30": [
-   "_ZN8Particle6System9NewSimpleEjiii"
-  ],
   "func_ov002_020dc560": [
    "func_01ff98f4",
    "func_01ff99a4"
   ],
-  "func_ov002_020df34c": [
-   "_ZN6Player11ChangeStateER5State",
-   "_ZN6Player7IsStateER5State"
-  ],
-  "func_ov002_020e81e0": [
-   "_ZN8Particle6System3NewEjjiiiPK7Vector3PNS_8CallbackE"
-  ],
   "func_ov002_020ec670": [
    "func_02123804"
-  ],
-  "func_ov003_020ad7a4": [
-   "_ZN3OAM12EnableSubOAMEP6OamTmp"
   ],
   "func_ov003_020adfc8": [
    "func_020ab9c8",
@@ -644,25 +527,13 @@
    "func_020ab9c8",
    "func_020aba70"
   ],
-  "func_ov006_020c0264": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
   "func_ov006_020c0a48": [
    "g0",
    "g1",
    "g2"
   ],
-  "func_ov006_020c0d68": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
-  "func_ov006_020c1420": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
   "func_ov006_020c14bc": [
    "func_020beb68"
-  ],
-  "func_ov006_020c1764": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
   ],
   "func_ov006_020c221c": [
    "g0",
@@ -670,42 +541,6 @@
   ],
   "func_ov006_020c3bc8": [
    "func_020c3adc"
-  ],
-  "func_ov006_020c6e4c": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020c79a8": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020c8084": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020c8f20": [
-   "_ZN6System3NewEjjiiiPK11Vector3_16fP8Callback"
-  ],
-  "func_ov006_020c9098": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020c9c8c": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020ca3a8": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020cb030": [
-   "_ZN6System3NewEjjiiiPK11Vector3_16fP8Callback"
-  ],
-  "func_ov006_020cb1a8": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov006_020cb528": [
-   "_ZN9ModelAnim7SetAnimEPviij"
-  ],
-  "func_ov006_020cb690": [
-   "_ZN9ModelAnim7SetAnimEPviij"
-  ],
-  "func_ov006_020cecc0": [
-   "_ZN18TextureTransformer7SetFileER8BTA_Fileiij"
   ],
   "func_ov006_020db720": [
    "func_020beb68"
@@ -736,9 +571,6 @@
   ],
   "func_ov006_020e7124": [
    "func_020beb74"
-  ],
-  "func_ov006_020e7cc0": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
   ],
   "func_ov006_020e989c": [
    "func_020beb68"
@@ -886,10 +718,6 @@
    "func_020bc880",
    "func_020bc884"
   ],
-  "func_ov006_02123340": [
-   "_ZN4PSys12FromUniqueIDEj",
-   "_ZN4PSys17NewUnkCallback818EjjiiiPv"
-  ],
   "func_ov006_02125364": [
    "func_020bc7d4"
   ],
@@ -939,34 +767,11 @@
    "overlay_100",
    "overlay_102"
   ],
-  "func_ov014_02111a6c": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov014_02111e74": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov014_02112ea8": [
-   "_ZN6ActorS10PoofDustAtERK7Vector3",
-   "_ZN8Particle6System9NewSimpleEjiii"
-  ],
-  "func_ov015_02111d98": [
-   "_ZN5Actor22UpdatePosWithOnlySpeedEPv"
-  ],
   "func_ov015_02112c84": [
    "func_020b66a8"
   ],
   "func_ov016_02112fa8": [
    "func_020b5e58"
-  ],
-  "func_ov018_02111d28": [
-   "_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x3iij"
-  ],
-  "func_ov018_02111f1c": [
-   "_ZN15TextureSequence7SetFileER8BTP_Fileiij",
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov018_02112730": [
-   "_ZN5Actor18MarkForDestructionEv"
   ],
   "func_ov020_021112b0": [
    "Actor_ClosestPlayer",
@@ -974,12 +779,6 @@
   ],
   "func_ov022_0211165c": [
    "func_020b66a8"
-  ],
-  "func_ov022_02111bdc": [
-   "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
-  ],
-  "func_ov022_02111ea0": [
-   "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
   ],
   "func_ov022_02112380": [
    "_ZTV10dBgActor_c",
@@ -1004,12 +803,6 @@
   "func_ov026_02111598": [
    "func_ov053_021112a4"
   ],
-  "func_ov030_02113a80": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov036_0211137c": [
-   "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
-  ],
   "func_ov036_0211244c": [
    "func_020efaf0"
   ],
@@ -1026,48 +819,15 @@
   "func_ov062_02116010": [
    "func_020ada40"
   ],
-  "func_ov062_021164e8": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov062_02116d28": [
-   "_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x3iij"
-  ],
   "func_ov062_02117c98": [
    "func_020ada40",
    "func_020aea30"
   ],
-  "func_ov062_02118004": [
-   "_ZN8Particle20RunningSlidingDustAtEiii"
-  ],
-  "func_ov062_02119af0": [
-   "_ZN4cstd5atan2Eii"
-  ],
-  "func_ov062_0211b880": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
-  "func_ov062_0211b930": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit",
-   "_ZN8Particle6System9NewSimpleEjiii"
-  ],
-  "func_ov062_0211bc54": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
   "func_ov063_0211a0dc": [
    "func_020ada40"
   ],
-  "func_ov064_021163c0": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov064_02116460": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
   "func_ov064_02116754": [
    "func_020ada40"
-  ],
-  "func_ov064_02116ec0": [
-   "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
-   "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
   ],
   "func_ov065_02115ff0": [
    "func_020ada40",
@@ -1100,9 +860,6 @@
    "_Z19func_ov066_0211a35cv",
    "_Z23func_02112cd8_updateposv"
   ],
-  "func_ov066_02116d14": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
   "func_ov066_02116db0": [
    "func_02112c08",
    "func_02112d48"
@@ -1119,77 +876,20 @@
    "func_02112c08",
    "func_02112d48"
   ],
-  "func_ov070_0211f0a4": [
-   "_ZN5Actor10SpawnCoinsERK7Vector3jis"
-  ],
   "func_ov070_0211f100": [
    "func_020aea30"
-  ],
-  "func_ov070_0211f5f0": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov071_0211f7d4": [
-   "_ZN13CylinderClsn25ClearEv",
-   "_ZN13CylinderClsn26UpdateEv"
-  ],
-  "func_ov075_02114cd8": [
-   "_ZN11ShadowModel9InitModelEP9Matrix4x3iiij"
-  ],
-  "func_ov075_021152d4": [
-   "_ZN3G3i13PerspectiveW_EiiiiiibP9Matrix4x3",
-   "_ZN7Clipper13Func_020156DCEPviiii"
   ],
   "func_ov075_02116f40": [
    "_ZN3OAM6RenderEbP7OamAttriiiiiS1_ii",
    "func_020abd88"
   ],
-  "func_ov075_02117590": [
-   "_ZN3OAM6RenderEbP7OamAttriiiiiS1_ii"
-  ],
   "func_ov075_02117bc4": [
    "overlay_64",
    "overlay_66"
   ],
-  "func_ov075_021194e4": [
-   "_ZN3OAM6RenderEbP7OamAttriiiiii"
-  ],
-  "func_ov075_021199d8": [
-   "_ZN3OAM6RenderEbP7OamAttriiiiii"
-  ],
-  "func_ov077_021244d4": [
-   "_ZN15TextureSequence7SetFileER8BTP_Fileiij",
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov078_02123bc4": [
-   "_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit"
-  ],
-  "func_ov079_02126f8c": [
-   "_ZN7Actor_s10FindWithIDEj",
-   "_ZN7Actor_s13ClosestPlayerEv",
-   "_ZN7Actor_s5SpawnEjjRK7Vector3PK10Vector3_16ii",
-   "_ZN8Platform13IsClsnInRangeEii",
-   "_ZN8Platform20UpdateKillByMegaCharEsssi"
-  ],
-  "func_ov080_02123ecc": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
   "func_ov081_021243cc": [
    "func_020ada40",
    "func_020aea30"
-  ],
-  "func_ov081_02124d14": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov081_02125068": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov081_02127be0": [
-   "_ZN5Actor5SpawnEjjRK7Vector3PK16Vector3_16_localii"
-  ],
-  "func_ov084_02129238": [
-   "_ZN13RaycastGround19StartDetectingToxicEv",
-   "_ZN13RaycastGround19StartDetectingWaterEv",
-   "_ZN13RaycastGround21StopDetectingOrdinaryEv"
   ],
   "func_ov084_02129a00": [
    "func_020aea30"
@@ -1198,23 +898,8 @@
    "func_020ada40",
    "func_020aea30"
   ],
-  "func_ov084_0212a580": [
-   "_ZN8CapEnemy12UpdateCapPosERK7Vector3RK16Vector3_16_local"
-  ],
   "func_ov084_0212a774": [
    "func_020aea30"
-  ],
-  "func_ov084_0212c92c": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov085_0212943c": [
-   "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
-  ],
-  "func_ov085_0212bedc": [
-   "_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x3iij"
-  ],
-  "func_ov085_0212de5c": [
-   "_ZN5Sound7PlaySubEjjjib"
   ],
   "func_ov089_0213162c": [
    "data_02111b68"
@@ -1222,9 +907,6 @@
   "func_ov090_021310b4": [
    "func_020ada40",
    "func_020aea30"
-  ],
-  "func_ov091_02131070": [
-   "_ZN8Particle6System9NewSimpleEjiii"
   ],
   "func_ov091_021339fc": [
    "func_020aea30"
@@ -1264,18 +946,8 @@
    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
    "func_020efaf0"
   ],
-  "func_ov102_02149610": [
-   "_ZN13RaycastGround12SetObjAndPosERK7Vector3Pv"
-  ],
-  "func_ov102_0214aa18": [
-   "_ZNK13WithMeshClsn210IsOnGroundEv",
-   "_ZNK13WithMeshClsn213JustHitGroundEv"
-  ],
   "func_ov102_0214cbec": [
    "func_020ada40"
-  ],
-  "func_ov102_0214ce60": [
-   "_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x3iij"
   ],
   "main": [
    "__main",
