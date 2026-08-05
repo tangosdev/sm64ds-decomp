@@ -13,7 +13,9 @@
 # It also checks port/'s references into src/ (manifests, hostgen symbol lists, HAL linkage
 # bridges). port/ has its own MSVC build that nothing in the decomp toolchain compiles or
 # links, so a src/ rename can strand a port/ reference with no other gate to catch it. See
-# tools/port_refcheck.py.
+# tools/port_refcheck.py. That check, and the unresolved-reference ratchet, run on EVERY
+# push rather than only main-targeted ones: neither needs the ROM, and both catch mistakes
+# that are invisible in review because every byte still matches.
 #
 # Install:
 #   cp tools/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
@@ -43,12 +45,6 @@ remote_ref_check() {
       return 1
     fi
 
-    echo "pre-push: checking port/ references into src/"
-    if ! python tools/port_refcheck.py; then
-      echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
-      return 1
-    fi
-
     # Attribution is a comparison, so it needs a real base. A brand-new remote branch has
     # nothing to compare against and nothing can have moved yet.
     if [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
@@ -61,6 +57,36 @@ remote_ref_check() {
   done
   return 0
 }
+
+# --- checks that run on EVERY push, not only main ---------------------------
+#
+# The gate above only fires for refs/heads/main, because link verification needs
+# the ROM and toolchain and costs minutes. These two need neither, and the
+# mistakes they catch land on feature branches -- which is exactly where they
+# were missed: a src/ rename stranded a port/ bridge, every byte still matched,
+# and only the PR validator noticed.
+
+echo "pre-push: checking port/ references into src/"
+if ! python tools/port_refcheck.py; then
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
+
+# Reference resolvability needs tools/eligible.py, which compiles ~11,100 files and
+# takes minutes -- far too slow for a hook. So this checks only when a report for
+# THIS commit already exists, and otherwise says nothing was checked rather than
+# implying it passed.
+if python tools/check_references.py >/dev/null 2>&1; then
+  echo "pre-push: unresolved references OK"
+elif python tools/check_references.py 2>&1 | grep -q "report describes\|no commit stamp\|missing "; then
+  echo "pre-push: (skipping reference check -- no current eligibility report;"
+  echo "          run 'python tools/eligible.py' to include it)"
+else
+  echo "pre-push: reference check FAILED"
+  python tools/check_references.py
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
 
 remote_ref_check || exit 1
 exit 0
