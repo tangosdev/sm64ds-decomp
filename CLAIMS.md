@@ -30,6 +30,7 @@ start converting a class; the same staleness rule applies.
 
 ## Claims
 
+
 | Range | Who | Claimed | Status |
 | ov006 func_ov006_020fdaf0 (0x020fdaf0, size 0x250) | lunavyqo (Grok) | 2026-08-05 | **released** — no match; tip remains **div=119** in nearmiss/db.jsonl. Session: walk+AT launder got size 0x244 (shape eq=133) but common-prefix worse (128). Residual: dz/dx load order (edc vs ed8 first), base r6 vs r7, pool 4f0f/data order. Attempts logged; API clm_4014d5ddd06c released |
 | ov006 func_ov006_020fcb4c (0x020fcb4c, size 0x240) | lunavyqo (Grok) | 2026-08-05 | **released** — near-miss **79→4** (match.py words) / nearmiss **div=2** banked. Levers: `#pragma opt_common_subs off`, two-step `p=base+t; p+=0x5000` player loop, named `s16 cosv/sinv` for smull lo=fp, u16 angle store+reload. Residual: pool order `0x4668/0x466c` vs ROM `0x466c/0x4668` dual with pVx/pVy `add r2,r4/r5,r8` twin (functionally equivalent). tip in nearmiss/db.jsonl; API clm_32cbb464f9a3 released |
@@ -37,6 +38,7 @@ start converting a class; the same staleness rule applies.
 | ov006 func_ov006_020fe394 (0x020fe394, size 0x3bc) | lunavyqo (Grok) | 2026-08-05 | **released** — near-miss **255→233→173** size-matched tip banked (dual-ang + vol dist order); residual ~170w regperm/sched (idx r2 vs r7); tip in nearmiss/db.jsonl; API clm_e8ee8fd2f917 released |
 | ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
 |---|---|---|---|
+| arm9 func_02068398 (0x02068398, size 0x78) | lunavyqo (Grok) | 2026-08-05 | **released** — pure-C floor reconfirmed **div=1** (notes 6u single-condition beq+mov). 30+ variants + 2004/b56 same residual moveq vs beq; tip banked+floor-marked in nearmiss/db.jsonl; CLAIMS.md only (API write key rejected) |
 | ov006 func_ov006_020cfc74 (0x020cfc74, size 0x56c) | lunavyqo (Grok) | 2026-08-03 | **active** — near-miss **54→37** on **mwccarm 2004/b56 only** (w_first mag, base300 interleave, dep_a s+(a-a) cnt324/326); residual prologue pool order + missing mov r0,sl mid-RMW (size 0x568 vs 0x56c); tip in nearmiss/db.jsonl; API clm_a55c6a5ccc6d |
 | ov006 func_ov006_020cf2fc (0x020cf2fc, size 0x45c) | lunavyqo (Grok) | 2026-08-02 | **released** — near-miss **190→164** on **mwccarm 2004/b56** (z-shared mode/i, vol-pl mid, tex-before-nrm+ll-mask, x?sx:sx pack); residual loop-preheader regperm; tip in nearmiss/db.jsonl |
 | ov002 _ZN6Player13InitResourcesEv (0x020e558c, size 0x3bc) | lunavyqo (Grok) | 2026-08-01 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); levers: asm CLEAR 4x strb post-inc heap zero, pin d=data_0209f2d8 for r1 bool, decl td,tx,tz + pos load order; API clm_c5f3303280fa kept |
