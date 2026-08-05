@@ -1,3 +1,7 @@
+// HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly
+// in the original (SDK LZ decompressor), so there is no C to decompile it to --
+// the asm block is the faithful source. Counts as matched (asm-primitive
+// policy), not a C transcription.
 asm void DecompressLZ16(void *src, void *dst)
 {
 	stmfd	sp!, {r4,r5,r6,r7,r8,r9,r10,lr}
