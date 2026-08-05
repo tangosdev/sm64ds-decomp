@@ -15,9 +15,16 @@ struct CapEnemy {
     u32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
-    u8  unk_05c;            /* 0x05c */
+    /* 0x05c: NOT a scalar, and deliberately left as a marker. Both evidence passes
+       see only its address taken, never a sized load, and Actor.h:65 puts
+       mPosX/mPosY/mPosZ here -- so this stands over the position triple. One derived
+       header declares s32 at this offset, which describes the X component alone;
+       adopting that would trade an unknown for a narrower wrong answer. */
+    u8  unk_05c;            /* 0x05c -- position triple, 0x05c..0x068 */
     u8  pad_05d[0x2f];
-    u8  unk_08c;            /* 0x08c */
+    /* 0x08c: same shape -- address-only evidence, and Actor.h:89 puts
+       mAngleX/mAngleY/mAngleZ here. Stands over the rotation triple. */
+    u8  unk_08c;            /* 0x08c -- rotation triple, 0x08c..0x092 */
     u8  pad_08d[0x23];
     u32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x18];
