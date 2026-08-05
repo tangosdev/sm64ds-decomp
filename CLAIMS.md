@@ -31,6 +31,7 @@ start converting a class; the same staleness rule applies.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_020fb230 (0x020fb230, size 0x22c) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); lever: explicit `return` after each respawn terminal (forces both blocks ROM ldr-first schedule); from near-miss div=3→7→0; API clm_7a570a743008 kept |
 | arm9 func_02071644 (0x02071644, size 0x54; merged severed epilogue 0x02071694) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); near-miss tip (int ret+goto+LNDR) MATCH at true 0x54 extent after symbol-map merge (notes 9a(3)); API clm_fc8c725b899b kept |
 | ov006 func_ov006_020ff8c8 (0x020ff8c8, size 0x28c) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3 and 2004/b56); levers: sibling dual-addr CTA/ACC/VEL, FB>=3 branch order, VEL if(v>=table[i+2]) sub-else-add; from near-miss div=253→1→0; API clm_4fc4c38a1ff8 kept |
 | ov006 func_ov006_020ffb54 (0x020ffb54, size 0x290) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3 and 2004/b56); levers: adapted twin 020ff8c8 dual-addr form, OUTFLAG2=3, tables ebb0/ebc0/ecd4, physics t<=lim / vel<=-0x800 / VEL=+0x1000; from near-miss div=184→0; API clm_372dd7ea6e00 kept |
