@@ -25,10 +25,8 @@ struct UpDownLiftBbh {
     u16 unk_300;            /* 0x300 */
     u8  pad_302[0x1e];
     s32 unk_320;            /* 0x320 */
-    u8  unk_324;            /* 0x324 */
-    u8  pad_325[0x3];
-    u8  mVariant;            /* 0x328 */
-    u8  pad_329[0x3];
+    s32 unk_324;            /* 0x324 */
+    s32 mVariant;            /* 0x328 */
     s32 mState;            /* 0x32c */
     s32 unk_330;            /* 0x330 */
     u8  unk_334;            /* 0x334 */

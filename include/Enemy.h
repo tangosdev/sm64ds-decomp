@@ -30,8 +30,7 @@ struct Enemy {
        headers already declare it s16. Was a bare u8 marker. */
     s16 unk_094;            /* 0x094 */
     u8  pad_096[0xe];
-    u8  unk_0a4;            /* 0x0a4 */
-    u8  pad_0a5[0x3];
+    s32 unk_0a4;            /* 0x0a4 */
     /* 0x0a8 is Actor.h:99 mVertSpeed; 10 derived headers agree, both evidence
        passes see 4-byte accesses. */
     s32 unk_0a8;            /* 0x0a8 */
@@ -40,18 +39,15 @@ struct Enemy {
        evidenced, so the rest stays padding. */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x24];
-    u8  unk_0d4;            /* 0x0d4 */
-    u8  pad_0d5[0x3];
-    u8  unk_0d8;            /* 0x0d8 */
-    u8  pad_0d9[0x3];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0x3];
+    s32 unk_0d4;            /* 0x0d4 */
+    s32 unk_0d8;            /* 0x0d8 */
+    s32 unk_0dc;            /* 0x0dc */
     u8  unk_0e0;            /* 0x0e0 */
     u8  pad_0e1[0x7];
     u8  unk_0e8;            /* 0x0e8 */
     u8  pad_0e9[0x19];
-    u8  unk_102;            /* 0x102 */
-    u8  pad_103[0x3];
+    s16 unk_102;            /* 0x102 */
+    u8  pad_104[0x2];
     u8  unk_106;            /* 0x106 */
     u8  unk_107;            /* 0x107 */
     u8  pad_108[0x4];

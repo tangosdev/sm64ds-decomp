@@ -32,8 +32,7 @@ struct Snowball {
     u8  pad_301[0x4f];
     u8  mShadowModel;            /* 0x350 */
     u8  pad_351[0x27];
-    u8  unk_378;            /* 0x378 */
-    u8  pad_379[0x3];
+    s32 unk_378;            /* 0x378 */
     s32 unk_37c;            /* 0x37c */
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */

@@ -38,8 +38,7 @@ struct HootTheOwl {
     u8  pad_36c[0x4];
     u8  mShadowModel;            /* 0x370 */
     u8  pad_371[0x57];
-    u8  mCurrentState;            /* 0x3c8 */
-    u8  pad_3c9[0x3];
+    s32 mCurrentState;            /* 0x3c8 */
     s32 unk_3cc;            /* 0x3cc */
     u8  pad_3d0[0x4];
     u8  unk_3d4;            /* 0x3d4 */

@@ -36,8 +36,7 @@ struct TtcConveyorBeltLarge {
     s32 mTargetBeltSpeed;            /* 0x390 */
     s32 unk_394;            /* 0x394 */
     s32 unk_398;            /* 0x398 */
-    u8  unk_39c;            /* 0x39c */
-    u8  pad_39d[0x1];
+    s16 unk_39c;            /* 0x39c */
     u8  mVariant;            /* 0x39e */
 #ifdef __cplusplus
     /* methods */

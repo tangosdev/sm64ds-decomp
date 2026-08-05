@@ -44,18 +44,13 @@ struct KoopaTheQuick {
     u8  pad_365[0x27];
     s32 unk_38c;            /* 0x38c */
     u8  pad_390[0x4];
-    u8  unk_394;            /* 0x394 */
-    u8  pad_395[0x3];
-    u8  unk_398;            /* 0x398 */
-    u8  pad_399[0x3];
-    u8  unk_39c;            /* 0x39c */
-    u8  pad_39d[0x3];
-    u8  unk_3a0;            /* 0x3a0 */
-    u8  pad_3a1[0x3];
+    s32 unk_394;            /* 0x394 */
+    s32 unk_398;            /* 0x398 */
+    s32 unk_39c;            /* 0x39c */
+    s32 unk_3a0;            /* 0x3a0 */
     u8  unk_3a4;            /* 0x3a4 */
     u8  pad_3a5[0x5];
-    u8  unk_3aa;            /* 0x3aa */
-    u8  pad_3ab[0x1];
+    s16 unk_3aa;            /* 0x3aa */
     u8  unk_3ac;            /* 0x3ac */
     u8  unk_3ad;            /* 0x3ad */
     u8  unk_3ae;            /* 0x3ae */
@@ -67,14 +62,10 @@ struct KoopaTheQuick {
     u8  unk_3b5;            /* 0x3b5 */
     u8  unk_3b6;            /* 0x3b6 */
     u8  pad_3b7[0x1];
-    u8  unk_3b8;            /* 0x3b8 */
-    u8  pad_3b9[0x3];
-    u8  unk_3bc;            /* 0x3bc */
-    u8  pad_3bd[0x3];
-    u8  unk_3c0;            /* 0x3c0 */
-    u8  pad_3c1[0x3];
-    u8  unk_3c4;            /* 0x3c4 */
-    u8  pad_3c5[0x3];
+    s32 unk_3b8;            /* 0x3b8 */
+    s32 unk_3bc;            /* 0x3bc */
+    s32 unk_3c0;            /* 0x3c0 */
+    s32 unk_3c4;            /* 0x3c4 */
     u8  unk_3c8;            /* 0x3c8 */
     u8  pad_3c9[0xf];
     u8  mPathPtr;            /* 0x3d8 */

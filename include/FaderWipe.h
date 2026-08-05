@@ -10,10 +10,8 @@
 struct id;
 struct FaderWipe {
     u8  pad_000[0x4];
-    u8  mFadeAmount;            /* 0x004 */
-    u8  pad_005[0x3];
-    u8  unk_008;            /* 0x008 */
-    u8  pad_009[0x3];
+    s32 mFadeAmount;            /* 0x004 */
+    s32 unk_008;            /* 0x008 */
     u16 unk_00c;            /* 0x00c */
     u8  pad_00e[0x2];
     u8  unk_010;            /* 0x010 */

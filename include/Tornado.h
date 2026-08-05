@@ -32,8 +32,7 @@ struct Tornado {
     u8  pad_315[0x13];
     u8  mTextureTransformer;            /* 0x328 */
     u8  pad_329[0x13];
-    u8  unk_33c;            /* 0x33c */
-    u8  pad_33d[0x3];
+    s32 unk_33c;            /* 0x33c */
     s32 unk_340;            /* 0x340 */
     s32 unk_344;            /* 0x344 */
     s32 unk_348;            /* 0x348 */

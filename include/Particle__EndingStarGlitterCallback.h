@@ -8,8 +8,7 @@
 
 struct Particle__EndingStarGlitterCallback {
     u8  pad_000[0x308];
-    u8  unk_308;            /* 0x308 */
-    u8  pad_309[0x3];
+    s32 unk_308;            /* 0x308 */
     u8  unk_30c;            /* 0x30c */
 };
 
