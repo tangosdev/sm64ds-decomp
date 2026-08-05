@@ -6,12 +6,13 @@
 #include "PoleLift.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int PoleLift_ClsnFile[];
+extern int PoleLift_ModelFile[];
 
 int PoleLift::CleanupResources()
 {
     ((MeshColliderBase *)((char *)&mCollider))->Disable();
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(PoleLift_ModelFile))->Release();
+    ((SharedFilePtr *)(PoleLift_ClsnFile))->Release();
     return 1;
 }

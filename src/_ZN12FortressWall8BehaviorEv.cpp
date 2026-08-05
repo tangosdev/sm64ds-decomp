@@ -22,6 +22,12 @@ extern "C" void func_020393a4(int *p, int v);
 struct Platform : ActorBase {
     int IsClsnInRange(int a, int b);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int a, int b);
+
 
 extern "C" int _ZN12FortressWall8BehaviorEv(Platform *self) {
     int ok = (*(unsigned short *)((char *)self + 0xc) == 0x30);
@@ -42,6 +48,6 @@ extern "C" int _ZN12FortressWall8BehaviorEv(Platform *self) {
         return 1;
     }
     func_020393a4((int *)((char *)self + 0x124), 0x240000);
-    self->IsClsnInRange(0x240000, 0);
+    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0x240000, 0);
     return 1;
 }

@@ -63,6 +63,7 @@ src/func_ov066_02116c6c.c:
     .text start:0x02116c6c end:0x02116d14
 
 src/func_ov066_02116d14.cpp:
+    complete
     .text start:0x02116d14 end:0x02116db0
 
 src/func_ov066_02116db0.c:

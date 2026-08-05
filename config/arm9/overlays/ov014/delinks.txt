@@ -56,6 +56,7 @@ src/func_ov014_021115ec.cpp:
     .text start:0x021115ec end:0x02111a6c
 
 src/func_ov014_02111a6c.cpp:
+    complete
     .text start:0x02111a6c end:0x02111af0
 
 src/func_ov014_02111af0.c:
@@ -79,6 +80,7 @@ src/func_ov014_02111e14.c:
     .text start:0x02111e14 end:0x02111e74
 
 src/func_ov014_02111e74.cpp:
+    complete
     .text start:0x02111e74 end:0x02111ebc
 
 src/func_ov014_02111ebc.cpp:
@@ -149,6 +151,7 @@ src/_ZN15ChainChompFenceD0Ev.c:
     .text start:0x02112e50 end:0x02112ea8
 
 src/func_ov014_02112ea8.cpp:
+    complete
     .text start:0x02112ea8 end:0x02112f3c
 
 src/_ZN15ChainChompFence16CleanupResourcesEv.cpp:

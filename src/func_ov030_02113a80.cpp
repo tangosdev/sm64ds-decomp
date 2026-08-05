@@ -4,12 +4,18 @@ struct BCA_File;
 struct ModelAnim {
     void SetAnim(BCA_File*, int, int, unsigned int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File*, int, int, unsigned int);
+
 int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern char data_ov030_02115ce0[];
 
 int func_ov030_02113a80(char* c)
 {
-    ((ModelAnim*)(c + 0xd4))->SetAnim(*(BCA_File**)(data_ov030_02115ce0 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0xd4), *(BCA_File**)(data_ov030_02115ce0 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x130) = 0x1000;
     if (*(unsigned char*)(c + 0x3c8) == 0 && _ZN8SaveData16HasPlayerLostCapEv()) {
         *(unsigned char*)(c + 0x3c7) = 5;

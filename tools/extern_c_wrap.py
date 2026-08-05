@@ -44,8 +44,12 @@ wrong:
   depth already prevents wrapping *inside* one. Skipping such files wholesale, as the
   first version did, hid most of the remaining work.
 
-Every file is byte-verified after the edit and reverted if it stops reproducing, so a
-declaration that genuinely wanted C++ linkage cannot be broken silently.
+Every file is verified after the edit and reverted if it stops reproducing, so a
+declaration that genuinely wanted C++ linkage cannot be broken silently. That check is
+pinned to the compiler `tools/rombuild.py` will build the file with -- not a sweep of
+every installed mwccarm, which blesses versions the link never runs (see
+tools/build_pin.py) -- and it reads the relocation DESTINATION, because a byte compare
+cannot see the very thing this tool changes.
 
 Usage:
     python tools/extern_c_wrap.py                 # report only
@@ -64,8 +68,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
-import match as M          # noqa: E402
-import modules as MOD      # noqa: E402
+import build_pin as BP     # noqa: E402
 import eligible as E       # noqa: E402
 from enroll import candidates  # noqa: E402
 
@@ -162,7 +165,18 @@ def main():
     info = {}
     for (d, name, rel, addr, size, sec) in candidates()[0]:
         info[rel.replace("\\", "/")] = (name, addr, size, d)
-    mods = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
+
+    # This tool exists because a reference resolves to the wrong name, and a byte
+    # compare cannot see a name -- the relocated word is a wildcard. So the check that
+    # decides whether a wrap worked has to be the one that reads the relocation's
+    # DESTINATION. Without it the verification is blind to the only thing being changed.
+    strict = None
+    try:
+        import reloc_audit as RA
+        import relocs as RL
+        strict = (RA, RA.build_name_index(), RA.build_config_relocs(), RL.load_all_syms())
+    except Exception as e:                                          # noqa: BLE001
+        print(f"  (reloc-destination check unavailable: {e}; verification is byte-only)")
 
     targets, skipped = [], collections.Counter()
     for rel, names in sorted(targets_by_file.items()):
@@ -200,30 +214,27 @@ def main():
         name, addr, size, d = info[rel]
         label = d.relative_to(REPO / "config").as_posix()
         label = "arm9" if label == "arm9" else label.split("/")[-1]
-        flags = M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++")
-        tgt = (M.target_bytes(addr, size) if label == "arm9"
-               else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
-        for v in M.SWEEP:
-            obj = M.compile_c(f, v, flags)
-            if obj is None:
-                continue
-            code, rl = M.extract_func(obj, name)
-            if code is None:
-                continue
-            ok, _ = M.compare(tgt, code, rl, verbose=False)
-            if ok:
-                return rel, "wrapped"
+        # Pinned to the compiler tools/rombuild.py will build this file with. This
+        # used to accept a match under any member of match.SWEEP, so a wrap could be
+        # kept on the strength of a compiler the link never runs -- see
+        # tools/build_pin.py. Anything the pinned build cannot answer is a revert.
+        ok, why = BP.verify(f, name, addr, size, label, strict=strict)
+        if ok:
+            return rel, "wrapped"
         f.write_text(original, encoding="utf-8", newline="\n")
-        return rel, "reverted (stopped matching)"
+        return rel, f"reverted: {why}"
 
     if args.limit:
         targets = targets[:args.limit]
     counts = collections.Counter()
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
         for rel, verdict in ex.map(one, targets):
-            counts[verdict] += 1
+            # Bucket on the verdict, not on its explanation: every revert now carries
+            # the reason it was rejected, and counting those separately would turn the
+            # summary into one line per file.
+            counts[verdict.split(":")[0]] += 1
             if verdict.startswith("reverted"):
-                print(f"  {verdict}: {rel}")
+                print(f"  {rel}: {verdict}")
     print()
     for k, v in counts.most_common():
         print(f"  {v:5d}  {k}")

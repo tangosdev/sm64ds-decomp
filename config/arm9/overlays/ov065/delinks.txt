@@ -426,6 +426,7 @@ src/func_ov065_0211ac0c.c:
     .text start:0x0211ac0c end:0x0211ad04
 
 src/func_ov065_0211ad04.c:
+    complete
     .text start:0x0211ad04 end:0x0211ad48
 
 src/func_ov065_0211ad48.cpp:
@@ -491,6 +492,7 @@ src/_ZN15TtcRotatingGearD0Ev.c:
     .text start:0x0211b834 end:0x0211b88c
 
 src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211b88c end:0x0211b8d0
 
 src/_ZN15TtcRotatingGear6RenderEv.cpp:

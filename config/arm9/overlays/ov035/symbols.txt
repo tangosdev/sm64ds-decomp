@@ -131,7 +131,9 @@ data_ov035_02112c98 kind:bss addr:0x02112c98
 data_ov035_02112ca4 kind:bss addr:0x02112ca4
 data_ov035_02112ca8 kind:bss addr:0x02112ca8 ambiguous
 data_ov035_02112cb0 kind:bss addr:0x02112cb0
+RotatingClockHand_ModelFile kind:bss addr:0x02112cb0
 data_ov035_02112cb8 kind:bss addr:0x02112cb8
+RotatingClockHand_ClsnFile kind:bss addr:0x02112cb8
 data_ov035_02112cc0 kind:bss addr:0x02112cc0
 data_ov035_02112cc8 kind:bss addr:0x02112cc8 ambiguous
 data_ov035_02112ccc kind:bss addr:0x02112ccc

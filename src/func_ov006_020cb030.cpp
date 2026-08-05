@@ -7,7 +7,10 @@ struct System {
     static System* New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f*, Callback*);
 };
 extern "C" {
-extern void func_ov006_020c9024(char *o);
+/* The ROM's relocation at 0x020cb088 targets 0x020cb134, not 0x020c9024.
+   The byte gate could not object: a bl is a relocation, which match.py
+   compares as a wildcard, so either callee passes. */
+extern void func_ov006_020cb134(char *o);
 extern void func_ov006_020cafdc(char *o);
 extern int data_ov006_0214059c;
 }
@@ -31,7 +34,7 @@ extern "C" void func_ov006_020cb030(char *o) {
             fn = (void(*)())cl->off;
         ((void(*)(void*))fn)(tobj);
     }
-    func_ov006_020c9024(o);
+    func_ov006_020cb134(o);
     Fix12 v = (Fix12)(((long long)*(int*)(o + 0x44) * 0xb4b + 0x800) >> 12);
     if (*(int*)(o + 0x38) > v) {
         if (*(int*)(o + 0xcc) == data_ov006_0214059c) {

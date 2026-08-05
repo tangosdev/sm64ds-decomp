@@ -10,6 +10,12 @@ struct Actor : ActorBase {
     static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
     void SetRanges(int, int, int, int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *, int, int, int, int);
+
 struct SaveData {
     static int HasPlayerLostCap();
     static void PlayerLoseCap();
@@ -32,7 +38,7 @@ int func_ov002_020b7e1c(char* self) {
         return 1;
     }
     if (*(int*)(self + 0xc8) == 0) {
-        ((Actor*)self)->SetRanges(0x32000, 0x32000, 0x1000000, 0x1000000);
+        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_((Actor*)self, 0x32000, 0x32000, 0x1000000, 0x1000000);
     }
     func_ov002_020b6fcc(self);
     if (data_02092138 > *(int*)(self + 0x60)) {

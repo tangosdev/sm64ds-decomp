@@ -10,6 +10,12 @@ struct Player {
     int dummy;
     unsigned int SetAnim(unsigned int, int, int, unsigned int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" unsigned int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
+
 
 extern "C" int _ZN6Player15St_Respawn_InitEv(Player* thiz);
 int _ZN6Player15St_Respawn_InitEv(Player* thiz) {
@@ -33,7 +39,7 @@ int _ZN6Player15St_Respawn_InitEv(Player* thiz) {
     if (*(unsigned char*)(self + 0x6d8) == data_0209f250) {
         func_0200cf40(*(char**)((int)&data_0209f318));
     }
-    thiz->SetAnim(0x54, 0x40000000, 0x1000, 0);
+    _ZN6Player7SetAnimEji5Fix12IiEj(thiz, 0x54, 0x40000000, 0x1000, 0);
     *(unsigned char*)(self + 0x6e3) = 0;
     *(int*)(self + 0x684) = *(int*)(self + 0x60);
     *(int*)(self + 0x98) = 0;

@@ -3,9 +3,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "RaycastLine.h"
+extern int _ZTV11RaycastLine[];
+extern int VTable_ClsnResult_RaycastLineThunk[];
 int *_ZN11RaycastLineD1Ev(struct RaycastLine *self) {
-    ((int *)self)[0] = (int)VT0;
-    *(int *)((char *)&self->unk_010) = (int)VT1;
+    ((int *)self)[0] = (int)_ZTV11RaycastLine;
+    *(int *)((char *)&self->unk_010) = (int)VTable_ClsnResult_RaycastLineThunk;
     func_0203ac50((char *)&self->unk_064);
     func_ov002_020feab8((char *)&self->unk_038);
     func_020380ec((char *)&self->unk_010);

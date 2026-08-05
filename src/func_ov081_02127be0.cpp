@@ -8,6 +8,12 @@ struct ActorBase { void MarkForDestruction(); };
 struct Actor {
     static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16_local* v16, int e, int f);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16_local* v16, int e, int f);
+
 
 extern "C" void func_ov081_02127be0(char* c)
 {
@@ -35,7 +41,7 @@ extern "C" void func_ov081_02127be0(char* c)
     ((ActorBase*)*(char**)(c + 0x364))->MarkForDestruction();
 
     unsigned int newflags = (unsigned char)(flags & 0xf) | 0x20;
-    Actor::Spawn(0xb4, newflags, pos, &rot, *(signed char*)(c + 0xcc), -1);
-    *(char**)(c + 0x364) = (char*)Actor::Spawn(0xb2, newflags, pos, &rot, *(signed char*)(c + 0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb4, newflags, pos, &rot, *(signed char*)(c + 0xcc), -1);
+    *(char**)(c + 0x364) = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, newflags, pos, &rot, *(signed char*)(c + 0xcc), -1);
     *(int*)(((int)c + 0xb0)) |= 0x4000000;
 }

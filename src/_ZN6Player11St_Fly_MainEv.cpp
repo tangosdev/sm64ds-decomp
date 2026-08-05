@@ -10,6 +10,13 @@ struct Player {
     int FinishedAnim();
     unsigned char GetBodyModelID(unsigned int, bool) const;
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN6Player11ChangeStateERNS_5StateE(void *, State &);
+extern "C" void _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
+
 
 extern "C" int func_ov002_020d674c(char *c);
 extern "C" void func_ov002_020c2f64(void *c);
@@ -44,21 +51,21 @@ int Player::St_Fly_Main()
         goto skip;
     }
     if (func_ov002_020d674c(c) != 0) {
-        this->ChangeState(data_ov002_0211004c);
+        _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_0211004c);
     } else {
-        this->ChangeState(data_ov002_021105a4);
+        _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021105a4);
     }
     return 1;
 
 skip:
     if (*(u8 *)(c + 0x6ff) == 0) {
-        this->ChangeState(data_ov002_021101b4);
+        _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021101b4);
         return 1;
     }
     if (*(u8 *)(c + 0x6de) == 0) {
         func_ov002_020c2f64(c);
-        this->ChangeState(data_ov002_021105bc);
-        this->SetAnim(0x43, 0x40000000, 0x1000, 0);
+        _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021105bc);
+        _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x43, 0x40000000, 0x1000, 0);
         *(s32 *)(c + 0xa8) = 0;
         return 1;
     }
@@ -77,7 +84,7 @@ skip:
             if (this->FinishedAnim() != 0) {
                 *(s32 *)(c + 0x9c) = 0;
                 *(s32 *)(c + 0xa0) = -0x4b000;
-                this->SetAnim(0x49, 0, 0x1000, 0);
+                _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x49, 0, 0x1000, 0);
             }
         } else {
             *(s32 *)(c + 0x9c) = 0;

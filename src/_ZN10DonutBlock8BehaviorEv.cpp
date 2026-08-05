@@ -9,6 +9,12 @@ struct Platform {
     bool IsClsnInRange(Fix12 a, Fix12 b);
     void UpdateClsnPosAndRot();
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" bool _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, Fix12 a, Fix12 b);
+
 
 int DonutBlock::Behavior()
 {
@@ -23,7 +29,7 @@ int DonutBlock::Behavior()
     }
     Platform *p = (Platform *)((char *)this);
     p->UpdateModelPosAndRotY();
-    if (p->IsClsnInRange(0, 0))
+    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(p, 0, 0))
         p->UpdateClsnPosAndRot();
     return 1;
 }

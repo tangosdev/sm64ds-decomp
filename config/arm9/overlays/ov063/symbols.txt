@@ -251,8 +251,11 @@ data_ov063_0211ef60 kind:bss addr:0x0211ef60
 data_ov063_0211ef68 kind:bss addr:0x0211ef68
 data_ov063_0211ef74 kind:bss addr:0x0211ef74
 data_ov063_0211ef80 kind:bss addr:0x0211ef80
+MadPiano_ModelFile kind:bss addr:0x0211ef80
 data_ov063_0211ef88 kind:bss addr:0x0211ef88
+MadPiano_ClsnFile kind:bss addr:0x0211ef88
 data_ov063_0211ef90 kind:bss addr:0x0211ef90
+MadPiano_AnimFile kind:bss addr:0x0211ef90
 data_ov063_0211ef98 kind:bss addr:0x0211ef98
 data_ov063_0211efa4 kind:bss addr:0x0211efa4
 data_ov063_0211efb0 kind:bss addr:0x0211efb0

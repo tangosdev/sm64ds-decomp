@@ -31,7 +31,9 @@ and where dsd itself could not decide it says so -- `module:overlays(2,9,14)` --
 and those are reported rather than guessed at.
 
 Nothing is rewritten unless every placeholder in the file resolves to exactly one
-symbol, and every rewritten file is byte-verified and reverted on failure.
+symbol, and every rewritten file is verified and reverted on failure -- against the
+one compiler `tools/rombuild.py` will build it with, never against a sweep of every
+installed version. See tools/build_pin.py for why the difference is the whole game.
 
 Usage:
     python tools/resolve_placeholders.py                 # report only
@@ -52,9 +54,9 @@ from elftools.elf.elffile import ELFFile
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
+import build_pin as BP     # noqa: E402
 import match as M          # noqa: E402
 import eligible as E       # noqa: E402
-import modules as MOD      # noqa: E402
 from enroll import candidates  # noqa: E402
 
 ELIGIBILITY = REPO / "build" / "rombuild-eligibility.json"
@@ -246,7 +248,6 @@ def main():
     info = {}
     for (d, name, rel, addr, size, sec) in candidates()[0]:
         info[rel.replace("\\", "/")] = (name, addr, size, d)
-    mods = {("arm9" if m["name"] == "main" else m["name"]): m for m in MOD.modules()}
 
     strict = None
     try:
@@ -271,36 +272,21 @@ def main():
     print(f"  of those, blocked ONLY by placeholders: "
           f"{sum(1 for _, _, o in jobs if not o)}")
 
-    def verify(f, name, addr, size, label, flags):
-        """Bytes AND relocation destinations.
+    def verify(f, name, addr, size, label):
+        """Bytes AND relocation destinations, under the compiler the BUILD will use.
 
-        A byte compare cannot check this change: `match.py` treats every relocated
-        word as a wildcard, so the one thing a rename alters is the one thing it
-        cannot see. Byte-only agreement here means "still compiles to the same
-        shape", never "now calls the right function". `reloc_audit` is what actually
-        looks at the destination, so a rename is only verified if it passes too."""
-        tgt = (M.target_bytes(addr, size) if label == "arm9"
-               else M.target_bytes(addr, size, mods[label]["bin"], mods[label]["base"]))
-        for v in M.SWEEP:
-            o = M.compile_c(f, v, flags)
-            if o is None:
-                continue
-            code, rr = M.extract_func(o, name)
-            if code is None or not M.compare(tgt, code, rr, verbose=False)[0]:
-                continue
-            if strict is None:
-                return True          # no config data here; byte-only, and said so
-            RA, name_index, config_relocs, sym_index = strict
-            try:
-                rows, _ = RA.check_destinations(o, name, addr, size, label,
-                                                name_index, config_relocs, sym_index)
-            except Exception:
-                rows = None
-            # A check that could not run is not a pass. Treat it like a failure so a
-            # broken lookup can never launder itself into a verified rename.
-            if rows is not None and not [r for r in rows if r["verdict"] == "WRONG-DEST"]:
-                return True
-        return False
+        A byte compare cannot check this change on its own: `match.py` treats every
+        relocated word as a wildcard, so the one thing a rename alters is the one
+        thing it cannot see. Byte-only agreement here means "still compiles to the
+        same shape", never "now calls the right function". `reloc_audit` is what
+        actually looks at the destination, so a rename is only verified if it passes
+        too -- `build_pin.verify` requires both.
+
+        Pinned, not swept. This used to accept a match under ANY member of
+        `match.SWEEP`, while `rombuild.py` compiles the file with exactly one
+        version, so a rewrite could be blessed under a compiler the build will never
+        run and then link the wrong bytes. See tools/build_pin.py."""
+        return BP.verify(f, name, addr, size, label, strict=strict)
 
     def one(job):
         rel, ph, others = job
@@ -310,14 +296,18 @@ def main():
         label = "arm9" if label == "arm9" else label.split("/")[-1]
         original_bytes = f.read_bytes()
         original = original_bytes.decode("utf-8", "surrogateescape")
-        flags = M.DEFAULT_FLAGS
-        if f.suffix == ".cpp" or original.startswith("//cpp"):
-            flags = flags.replace("-lang c99", "-lang c++")
 
-        obj = next((o for o in (M.compile_c(f, v, flags) for v in M.SWEEP)
-                    if o is not None), None)
+        # The build's compiler, not the first sweep member that happens to compile.
+        # This object is not just a compile check: its relocation OFFSETS are added to
+        # the function's address to look the destination up in relocs.txt, so reading
+        # them out of a different compiler's codegen resolves the placeholder against
+        # whatever the ROM has at some other offset.
+        version, why = BP.compiler_for(f, name)
+        if version is None:
+            return rel, f"unverifiable: {why}", {}
+        obj = M.compile_c(f, version, BP.flags_for(f, original))
         if obj is None:
-            return rel, "compile failed", {}
+            return rel, f"compile failed under the build's compiler ({version})", {}
         rl = relocs_for(obj, name)
         if rl is None:
             return rel, "function not in object", {}
@@ -401,12 +391,14 @@ def main():
         # Whether a resolved name needs declaring depends on which headers *this*
         # file includes, which is not worth modelling -- the compiler already knows.
         # Try it declared and undeclared, and keep whichever byte-matches.
+        why = "no candidate produced"
         for cand in (with_decls(renamed, needed), renamed):
             f.write_text(cand, encoding="utf-8", newline="\n")
-            if verify(f, name, addr, size, label, flags):
+            ok, why = verify(f, name, addr, size, label)
+            if ok:
                 return rel, "rewritten", mapping
         f.write_text(original, encoding="utf-8", newline="\n")
-        return rel, "reverted (stopped matching)", mapping
+        return rel, f"reverted: {why}", mapping
 
     if args.limit:
         jobs = jobs[:args.limit]

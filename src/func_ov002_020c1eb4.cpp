@@ -26,6 +26,12 @@ namespace Particle {
         static void New(unsigned int id, unsigned int a, Fix12i x, Fix12i y, Fix12i z,
                         const Vector3_16 *v, Callback *cb);
     };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int id, unsigned int a, Fix12i x, Fix12i y, Fix12i z, const Vector3_16 *v, Callback *cb);
+
 }
 
 extern "C" int func_ov002_020d91e0(char *thiz, int damage, int doPre);
@@ -88,7 +94,7 @@ extern "C" void func_ov002_020c1eb4(Obj *self, int dmg)
         vec.x = data_02082214[idx * 2];
         vec.z = data_02082214[idx * 2 + 1];
         vec.y = 0;
-        Particle::System::New(0, 0xc8, out.x, out.y, out.z, &vec, 0);
+        Particle::_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(0, 0xc8, out.x, out.y, out.z, &vec, 0);
     }
     func_ov002_020d91e0((char *)self, 0, 1);
 }

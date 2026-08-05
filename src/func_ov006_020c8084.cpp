@@ -5,6 +5,12 @@ typedef struct { int v[2]; } V2;
 extern "C" void func_ov006_020c8658(void *c);
 namespace Sound { void PlayBank2_2D(unsigned int); }
 struct ModelAnim { void SetAnim(BCA_File*, int, Fix12, unsigned int); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File*, int, Fix12, unsigned int);
+
 
 extern int data_ov006_0213b088[2];
 extern void *data_ov006_0214042c;
@@ -21,7 +27,7 @@ extern "C" void func_ov006_020c8084(char *c)
         *(int*)(c + 0x20) = 0;
         *(int*)(c + 0x24) = 0x2000;
         Sound::PlayBank2_2D(0x1c9);
-        ((ModelAnim*)(c + 0x4c))->SetAnim((BCA_File*)data_ov006_0214042c, 0, 0x800, 0);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(c + 0x4c), (BCA_File*)data_ov006_0214042c, 0, 0x800, 0);
         *(int*)(c + 0xa4) = 0;
         *(V2*)(c + 0x3c) = *(V2*)data_ov006_0213b090;
     }

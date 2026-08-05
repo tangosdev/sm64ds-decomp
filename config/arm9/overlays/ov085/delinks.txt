@@ -20,6 +20,7 @@ src/func_ov085_021291ac.c:
     .text start:0x021291ac end:0x0212943c
 
 src/func_ov085_0212943c.cpp:
+    complete
     .text start:0x0212943c end:0x02129470
 
 src/func_ov085_02129470.cpp:
@@ -49,6 +50,10 @@ src/_ZN4Toad16CleanupResourcesEv.cpp:
 src/_ZN4Toad6RenderEv.cpp:
     complete
     .text start:0x02129854 end:0x02129878
+
+src/_ZN4Toad8BehaviorEv.cpp:
+    complete
+    .text start:0x02129878 end:0x02129a7c
 
 src/_ZN4Toad13InitResourcesEv.c:
     complete
@@ -243,6 +248,7 @@ src/func_ov085_0212bdbc.cpp:
     .text start:0x0212bdbc end:0x0212bedc
 
 src/func_ov085_0212bedc.cpp:
+    complete
     .text start:0x0212bedc end:0x0212c004
 
 src/_ZN6Rabbit16CleanupResourcesEv.c:
@@ -386,6 +392,7 @@ src/func_ov085_0212ddc4.cpp:
     .text start:0x0212ddc4 end:0x0212de5c
 
 src/func_ov085_0212de5c.cpp:
+    complete
     .text start:0x0212de5c end:0x0212df84
 
 src/func_ov085_0212df84.cpp:

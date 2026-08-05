@@ -6,14 +6,15 @@
 #include "TowerStep.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int TowerStep_ClsnFile[];
+extern int TowerStep_ModelFile[];
 
 int TowerStep::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(TowerStep_ModelFile))->Release();
+    ((SharedFilePtr *)(TowerStep_ClsnFile))->Release();
     return 1;
 }

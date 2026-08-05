@@ -10,6 +10,12 @@ struct BCA_File;
 struct BlendModelAnim {
     int SetAnim(BCA_File& f, int a, int b, Fix12 spd, unsigned short t);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File& f, int a, int b, Fix12 spd, unsigned short t);
+
 struct Actor {
     static Actor* FindWithID(unsigned int id);
     static unsigned int Spawn(unsigned int a, unsigned int b, const Vector3& pos,
@@ -18,7 +24,13 @@ struct Actor {
 struct ActorBase { void MarkForDestruction(); };
 namespace Particle { struct System {
     static void NewSimple(unsigned int id, Fix12 x, Fix12 y, Fix12 z);
-}; }
+};
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12 x, Fix12 y, Fix12 z);
+ }
 
 extern "C" void func_02012790(int);
 extern "C" void func_02012694(unsigned int, void*);
@@ -60,7 +72,7 @@ struct Obj {
 extern "C" int func_ov062_0211b930(Obj* o)
 {
     Actor* found;
-    o->anim.SetAnim(*data_ov062_0211e10c.f, 4, 0x40000000, 0x1000, 0);
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&(o->anim), *data_ov062_0211e10c.f, 4, 0x40000000, 0x1000, 0);
     o->f43c = 1;
     if (o->f44c != 0 && (found = Actor::FindWithID(o->f44c)) != 0) {
         Found* f = (Found*)found;
@@ -83,7 +95,7 @@ extern "C" int func_ov062_0211b930(Obj* o)
         o->f444 = 0x1e;
     }
     func_02012694(0xef, (char*)o + 0x74);
-    Particle::System::NewSimple(0x7e, o->f5c.x, o->f5c.y, o->f5c.z);
+    Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x7e, o->f5c.x, o->f5c.y, o->f5c.z);
     o->fa4 = 0;
     o->fa8 = 0;
     o->fac = 0;

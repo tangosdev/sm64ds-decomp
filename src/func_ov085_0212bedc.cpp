@@ -18,6 +18,12 @@ struct Matrix4x3;
 struct Actor {
     void DropShadowRadHeight(ShadowModel &, Matrix4x3 &, Fix12, Fix12, unsigned int);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *, ShadowModel &, Matrix4x3 &, Fix12, Fix12, unsigned int);
+
 
 extern Matrix4x3 data_020a0e68;
 
@@ -57,5 +63,5 @@ extern "C" void func_ov085_0212bedc(Obj *c)
         Matrix4x3_FromTranslation(&data_020a0e68, vd.x >> 3, (t - 0xc000) >> 3, vd.z >> 3);
     }
     c->mtx = data_020a0e68;
-    ((Actor *)c)->DropShadowRadHeight(*(ShadowModel *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000, 0x258000, 0xf);
+    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j((Actor *)c, *(ShadowModel *)&c->shadowmodel, *(Matrix4x3 *)&c->mtx, 0x46000, 0x258000, 0xf);
 }

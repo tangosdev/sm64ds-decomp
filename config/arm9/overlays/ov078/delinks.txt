@@ -32,6 +32,7 @@ src/func_ov078_02123aa0.c:
     .text start:0x02123aa0 end:0x02123bc4
 
 src/func_ov078_02123bc4.cpp:
+    complete
     .text start:0x02123bc4 end:0x02123c20
 
 src/func_ov078_02123c20.cpp:

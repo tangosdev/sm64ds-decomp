@@ -40,6 +40,7 @@ src/func_ov080_02123c24.c:
     .text start:0x02123c24 end:0x02123ecc
 
 src/func_ov080_02123ecc.cpp:
+    complete
     .text start:0x02123ecc end:0x02123fcc
 
 src/func_ov080_02123fcc.cpp:

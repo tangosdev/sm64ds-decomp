@@ -6,14 +6,15 @@
 #include "RotatingClockHand.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
+extern int RotatingClockHand_ClsnFile[];
+extern int RotatingClockHand_ModelFile[];
 
 int RotatingClockHand::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(RotatingClockHand_ModelFile))->Release();
+    ((SharedFilePtr *)(RotatingClockHand_ClsnFile))->Release();
     return 1;
 }

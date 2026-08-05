@@ -20,6 +20,14 @@ struct RaycastGround {
     void SetObjAndPos(const Vector3& pos, Actor* a);
     int DetectClsn();
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN4BgCh19StartDetectingWaterEv(void *);
+extern "C" void _ZN4BgCh19StartDetectingToxicEv(void *);
+extern "C" void _ZN4BgCh21StopDetectingOrdinaryEv(void *);
+
 
 extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
@@ -46,9 +54,9 @@ void func_ov084_02129238(char* c)
             pos.z = vz;
         }
         RaycastGround rg;
-        rg.StartDetectingWater();
-        rg.StartDetectingToxic();
-        rg.StopDetectingOrdinary();
+        _ZN4BgCh19StartDetectingWaterEv(&(rg));
+        _ZN4BgCh19StartDetectingToxicEv(&(rg));
+        _ZN4BgCh21StopDetectingOrdinaryEv(&(rg));
         rg.SetObjAndPos(pos, (Actor*)c);
         if (rg.DetectClsn() != 0) {
             if (func_02037e20(&rg.field14) != 0) {

@@ -142,6 +142,7 @@ src/_ZN10DonutBlock6RenderEv.cpp:
     .text start:0x02111df8 end:0x02111e20
 
 src/_ZN10DonutBlock8BehaviorEv.cpp:
+    complete
     .text start:0x02111e20 end:0x02111eb0
 
 src/_ZN10DonutBlock13InitResourcesEv.cpp:

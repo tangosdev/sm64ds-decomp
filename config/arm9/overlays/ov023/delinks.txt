@@ -21,6 +21,7 @@ src/func_ov023_02111308.c:
     .text start:0x02111308 end:0x02111350
 
 src/_ZN8Squasher16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111350 end:0x02111388
 
 src/_ZN8Squasher6RenderEv.cpp:

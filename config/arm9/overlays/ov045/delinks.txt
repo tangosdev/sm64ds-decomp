@@ -84,6 +84,7 @@ src/func_ov045_021118f8.c:
     .text start:0x021118f8 end:0x02111938
 
 src/_ZN8PoleLift16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02111938 end:0x02111970
 
 src/_ZN8PoleLift16OnPendingDestroyEv.c:

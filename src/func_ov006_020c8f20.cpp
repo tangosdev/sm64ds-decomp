@@ -6,6 +6,12 @@ struct Animation { void Advance(); };
 struct System {
     static System* New(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f*, Callback*);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" System* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned, unsigned, Fix12, Fix12, Fix12, const Vector3_16f*, Callback*);
+
 extern "C" {
 extern void func_ov006_020c9024(char *o);
 extern void func_ov006_020c8ecc(char *o);
@@ -35,10 +41,7 @@ extern "C" void func_ov006_020c8f20(char *o) {
     Fix12 v = (Fix12)(((long long)*(int*)(o + 0x4c) * 0xb4b + 0x800) >> 12);
     if (*(int*)(o + 0x40) > v) {
         if (*(int*)(o + 0xd8) == data_ov006_0214059c) {
-            *(int*)(o + 0x5c) = (int)System::New(
-                *(int*)(o + 0x5c), 0xf5,
-                *(int*)(o + 0x24) << 3, *(int*)(o + 0x28) << 3,
-                *(int*)(o + 0x2c) << 3, 0, 0);
+            *(int*)(o + 0x5c) = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(int*)(o + 0x5c), 0xf5, *(int*)(o + 0x24) << 3, *(int*)(o + 0x28) << 3, *(int*)(o + 0x2c) << 3, 0, 0);
         }
     }
     func_ov006_020c8ecc(o);

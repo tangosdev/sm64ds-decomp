@@ -2,6 +2,12 @@
 struct BCA_File;
 struct WithMeshClsn { int IsOnGround() const; };
 struct ModelAnim { void SetAnim(BCA_File *f, int b, int c, unsigned int d); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int b, int c, unsigned int d);
+
 
 extern "C" int _Z14ApproachLinearRiii(int *dst, int target, int rate);
 
@@ -25,7 +31,7 @@ extern "C" void func_ov064_02116460(char *self)
         *(short *)(self + 0x94) = *(short *)(self + 0x8e);
         {
             BCA_File *anim = (BCA_File *)*(int *)(*(int *)(*(int *)(self + 0x330) + 0x10) + 4);
-            ((ModelAnim *)(self + 0x110))->SetAnim(anim, 0, 0x2000, 0);
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim *)(self + 0x110), anim, 0, 0x2000, 0);
         }
         return;
     }

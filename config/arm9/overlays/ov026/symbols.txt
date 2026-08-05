@@ -216,11 +216,15 @@ data_ov026_02113e88 kind:data(any) addr:0x02113e88 ambiguous
 data_ov026_02113ea0 kind:bss addr:0x02113ea0
 data_ov026_02113ea8 kind:bss addr:0x02113ea8
 data_ov026_02113eb4 kind:bss addr:0x02113eb4
+BowserShutter_ClsnFile kind:bss addr:0x02113eb4
 data_ov026_02113ebc kind:bss addr:0x02113ebc
+BowserShutter_ModelFile kind:bss addr:0x02113ebc
 data_ov026_02113ec4 kind:bss addr:0x02113ec4
 data_ov026_02113ed0 kind:bss addr:0x02113ed0
 data_ov026_02113edc kind:bss addr:0x02113edc
+Submarine_ClsnFile kind:bss addr:0x02113edc
 data_ov026_02113ee4 kind:bss addr:0x02113ee4
+Submarine_ModelFile kind:bss addr:0x02113ee4
 data_ov026_02113eec kind:bss addr:0x02113eec
 data_ov026_02113ef8 kind:bss addr:0x02113ef8
 data_ov026_02113f04 kind:bss addr:0x02113f04
