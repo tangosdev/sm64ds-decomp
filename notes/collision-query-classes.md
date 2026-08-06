@@ -341,3 +341,44 @@ returned, one drives the post-processing — which is exactly the two-flag shape
 **Route the geometry through the wrappers, not the raw disassembly.** They are matched code
 that already names the constants, and `MovingMeshCollider`'s version is a second, independent
 reading of the same interface.
+
+### The SphereClsn interface, named from both wrappers (2026-08-06)
+
+`MovingMeshCollider`'s version confirms `ExtendingMeshCollider`'s field map independently --
+same `LocSphere` layout, same post-processing -- and between them the accessors fall out.
+Moving passes the result buffers directly where Extending goes through getters, so the pairs
+identify each other:
+
+| symbol | is | evidence |
+|---|---|---|
+| `func_02037938` | `GetFloorResult()` -> `&0x74` | Extending passes it where Moving passes `loc.floorRes` |
+| `func_020378dc` | `GetWallResult()` -> `&0x9c` | same, against `loc.wallRes` |
+| `func_02037880` | `GetUndResult()` -> `&0xc4` | same, against `loc.undRes` |
+| `func_02037888` | `SetWallResult(const ClsnResult&)` | called under `flags & 8` |
+| `func_0203782c` | `SetUndResult(const ClsnResult&)` | called under `flags & 0x10` |
+| `func_02037a04` | `GetBounds(Vector3 &min, Vector3 &max)` | reads back what `func_02037a6c` accumulates |
+| `func_02037a6c` | `ExpandBounds(...)` | already matched, see above |
+| `func_02037940` | `SetFlags(u8)` | seeds `loc` from `sphere->0x70` before the call |
+| `func_0203794c` | sets the `0xfc`/`0x100` pair | guarded by `if (sphere->0x100 < loc.f_100)` |
+
+`Moving` also pins 0x3c directly: `func_02039e48(self, sphere + 0x3c, pos)` transforms it as a
+Vector3, which is the same field our entry reaches with `add r0,fp,#0x3c`.
+
+### Input vs output, settled
+
+Our target **never writes through `fp`** — there is not one `str [fp, ...]` in all 1778 words.
+It only *reads* `fp+0x70` (the flags byte, eight times) and `fp+0xec` (the second radius,
+twice). So:
+
+* `0x70` is an **input**: the wrapper seeds it with `func_02037940(&loc, sphere->0x70)` and our
+  function reads it to decide what to do — the eight reads are almost certainly
+  "has this category already been recorded?" guards.
+* results reach the object through **helper calls**, not stores. At 0x01ffd240 the pattern is
+  `mov r0, fp ; bl 0x203798c`, and immediately after, `ldr r0,[sp,#0x40] ; orr r0,r0,#4 ;
+  str r0,[sp,#0x40]`.
+
+So each hit does: classify, call the setter on the sphere, OR the category bit into the
+returned mask. Bits are the wrapper's: 1 general, 4 floor, 8 wall, 0x10 third.
+
+`func_0203798c` — the callee in that floor-hit pattern — is the next thing to name; it is the
+floor recorder, and its two siblings for wall and third will sit beside it.
