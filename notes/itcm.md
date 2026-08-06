@@ -612,3 +612,62 @@ site — which is the same eviction the banked floor named. Route the next attem
 to **0x73c** under 1.2/sp2p3 here, where the previous floor recorded 0x738 against the ROM's
 0x734. Four bytes are unaccounted for between the banked source and the banked measurement, so
 re-measure before trusting a delta against that number.
+
+### RETRACTED: the entry-block sweep measured the wrong compiler (2026-08-06)
+
+**The section above is wrong, and its conclusion must not be used.** It pinned every
+measurement to 1.2/sp2p3 because the earlier floor said this cluster verifies there. It does
+not. `DetectClsn(RaycastLine&)` is a **2004/b56** function:
+
+| build | size | whole-function |
+|---|---|---|
+| 1.2/sp2p3 | **0x73c** — 8 bytes over the ROM's 0x734 | bails on size |
+| **2004/b56** | **0x734 — EXACT** | **203 / 461 words** |
+
+The corroboration was in the tree the whole time: the twin that already *matched*,
+`DetectClsn(RaycastGround&)`, matched on **2004/b56**. Only the eleven small ITCM accessors
+are 1.2/sp2p3. The size band the previous floor quoted — "0x740 / 0x738 against the ROM's
+0x734" — reads as two near-misses, but one of those builds produces the exact size and the
+other cannot.
+
+**What this retracts.** The "first-access fold" — the ROM materialising `add r6,r1,#0x38`
+before `ldr r2,[r6]` while we folded the offset and let `s.x` steal r1 — **is a 1.2/sp2p3
+artifact and does not exist at 2004/b56.** At the right build the head is byte-correct with no
+source change at all:
+
+```
++0x08  add r6,r1,#0x38   OK        +0x1c  add r5,r1,#0x54   OK
++0x0c  ldr r2,[r6]       OK        +0x20  ldr r1,[r6,#4]    OK
++0x14  asr r4,r2,#6      OK   <- s.x colours r4, the thing 21 variants could not reach
+```
+
+So the 21 inert variants were chasing a phantom, and "entry-block web ordering is upstream of
+everything" was never the problem. Retained as a genuine negative only in the narrow sense:
+those axes are inert *at 1.2/sp2p3*, which no longer matters here.
+
+**Corrected baseline** (banked tip, ternary kept, 2004/b56): **203/461, size exact.** The
+ternary is still load-bearing — removing it goes to 0x754. The `u16 *leaf` writeback walker is
+still inert here (203/461, byte-identical), so that one prior finding survives the build change.
+
+**Where the residual actually is**, all at 2004/b56:
+
+1. `+0x24` `mov r7,r0` vs our `mov r8,r0` — `this`. It propagates: `+0xb0`
+   `ldr r6,[r7,#0x20]` vs `[r8,#0x20]`.
+2. Because r8 is not free, the ROM's `add r8,sp,#0xd0` (`&info`, hoisted once at `+0x1fc`) has
+   no home in ours, so five call sites read `add r0,sp,#0xd0` where the ROM reads `mov r0,r8`.
+   This is one defect with two faces, not two defects.
+3. The walker: ROM `ldrh r1,[fp,#2]!` (pre-indexed writeback) against our `ldrh r1,[r7,#2]`
+   plus a separate `add r7,r7,#2`, and `leaf` lives in fp for the ROM.
+4. A register permutation through the triangle-intersection block (`sb`/`sl`/`fp`/`ip`
+   shuffled), downstream of 1-3.
+
+**Route next at getting `this` into r7 so r8 frees up for the `&info` hoist.** That is one
+allocation decision, and items 2 and 4 are its consequences. Re-run the whole inert-lever list
+from the previous floor before trusting any of it — every entry was measured on the wrong build.
+
+**Method note, the second time this has bitten this exact function.** The `fdiff --version`
+flag exists because the canonical default silently scored this function against 2004/b56 when
+the belief was 1.2/sp2p3. The fix pinned the flag but banked the belief, and the pin then
+carried the error forward. Pin the build to whatever produced the *twin's* match, and re-derive
+it from the size when a function is unmatched — an exact size is evidence about the build, not
+just about the source.
