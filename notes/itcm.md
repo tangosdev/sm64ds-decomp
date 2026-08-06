@@ -700,3 +700,47 @@ declaration positions (203/461, byte-identical) — mwccarm folds the pointer st
 The gap is 8 bytes of frame in one state and one register in the other, and the booster is the
 only known dial between them. A weaker boost than the identical-arms ternary, or a way to
 raise `this` above `leaf` rather than lowering `leaf`, is what this needs.
+
+#### Classified: 95% shape-correct, regperm-blocked (2026-08-06)
+
+Build settled by sweep, not assumption: of **16 installed mwccarm builds, exactly one
+produces the ROM's size**.
+
+| builds | size |
+|---|---|
+| 1.2/base, 1.2/sp2, 1.2/sp2p3 | 0x73c |
+| 1.2/sp3, 1.2/sp4 | 0x728 |
+| all ten 2.0/* | 0x724 |
+| **2004/b56** | **0x734 — exact** |
+
+Three aligners on the banked tip at 2004/b56 place the residual precisely:
+
+| aligner | ratio | equal |
+|---|---|---|
+| strict | 0.638 | 294 / 461 |
+| shape (ignore register names + stack offsets) | **0.952** | 439 / 461 |
+| mnemonic (ignore operands) | 0.965 | 445 / 461 |
+
+The strict→shape jump is the **regperm** signature from `notes/mwccarm-codegen.md` §2. The
+source is structurally right; what is left is ~35 shape-level ops and a register permutation
+whose root is one decision — `leaf` ranks 4th and takes r7, displacing `this` to r8, which
+leaves no home for the ROM's once-hoisted `add r8,sp,#0xd0` (`&info`).
+
+**The documented lever was tried and is inert here.** §2 says the access *expression* changes
+allocation and "trying 2-3 access forms is cheap and often flips a regperm miss into a strict
+match". Five forms, all byte-identical at 203/461: prism by pointer arithmetic instead of
+`&f->tris[lv]`; the normal and position tables by byte offset instead of indexing; the three
+edge-normal lookups likewise; `*(node + idx)` instead of `node[idx]`; and all of them at once.
+mwccarm canonicalises the lot.
+
+**Cumulative inert-lever list at the correct build** — do not re-walk any of these: pointer
+spelling and declaration position (21 variants, though those were the 1.2/sp2p3 phantom),
+`&info` hoisted to a named pointer in three declaration positions, `u16 *` writeback walker,
+booster relocation to the x- and y-loop bodies (all DCE'd), and the five access forms above.
+
+**Recommendation.** By §2's own policy this is "template-correct, regalloc-blocked — flag it
+and move on". The productive redirect is the one the earlier floor already named: **the
+7,112-byte `DetectClsn(SphereClsn&)` shares this traversal, and landing it will pin the true
+walker idiom** from a function with different pressure, which is the kind of evidence that
+resolves a coloring question that source-level rewriting cannot. Attacking RaycastLine further
+in isolation is re-expressing logic that is already correct.
