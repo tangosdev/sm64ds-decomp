@@ -5,6 +5,7 @@
 #ifndef DONUTBLOCK_H
 #define DONUTBLOCK_H
 #include "types.h"
+#include "Model.h"
 
 struct DonutBlock {
     u8  pad_000[0x8e];
@@ -13,8 +14,9 @@ struct DonutBlock {
     u8  pad_092[0x1e];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x20];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1f9];
     s16 unk_31e;            /* 0x31e */
