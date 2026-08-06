@@ -305,6 +305,7 @@ start converting a class; the same staleness rule applies.
 | ov073: 0211f2c0 (0x0211f2c0), 02120ed0 (0x02120ed0) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #260 open |
 | ov072 10 funcs (0x0211f1dc-0x021218dc) | lunavyqo | 2026-07-10 | done - verified byte-identical, PR #235 open |
 | ov015: _ZN13PoleBillboard8BehaviorEv (0x02111720), _ZN14MovingBarSmall8BehaviorEv (0x021124d0), 021114f0 (0x021114f0) | lunavyqo | 2026-07-10 | near-miss (PR #229 open) |
+| ov015 func_ov015_021114f0 (0x021114f0, size 0x17c) | lunavyqo (Grok) | 2026-08-07 | **active** — near-miss improved 18→12→10→9 banked; residual SMULL Rm/Rs+sample dest (notes 6l floor); API clm_9f86bbbe6156 |
 | ov070 func_ov070_0211f48c (0x0211f48c, size 0x164) | lunavyqo | 2026-07-10 | near-miss (PR #234 open) |
 | ov005: 020c0378 (0x020c0378), 020c1130 (0x020c1130), 020c16e4 (0x020c16e4) | lunavyqo | 2026-07-10 | **partial done** — 020c1130 MATCH (PR #385); 020c0378 + 020c16e4 still near-miss (banked in nearmiss/db.jsonl; old PR #239 stale) |
 | ov020: 02111340 (0x02111340), 021115ac (0x021115ac) | lunavyqo | 2026-07-10 | near-miss (PR #244 closed; 02113148 matched by ai-tdd-labs in #471) |
