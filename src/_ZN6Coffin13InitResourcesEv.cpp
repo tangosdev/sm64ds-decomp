@@ -5,7 +5,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Coffin.h"
 typedef int Fix12;
-typedef short s16;
 
 struct Matrix4x3;
 struct SharedFilePtr;

@@ -7,7 +7,6 @@
 typedef int Fix12i;
 struct SharedFilePtr;
 struct Actor;
-struct PMF;
 namespace Model { void LoadFile(SharedFilePtr& f); }
 extern "C" int IsStarCollected(int r0, int r1);
 struct MovingCylinderClsn { void Init(Actor* a, Fix12i b, int c, unsigned int d, unsigned int e); };

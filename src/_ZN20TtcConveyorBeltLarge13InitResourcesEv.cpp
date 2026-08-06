@@ -11,7 +11,6 @@ struct Actor;
 struct Vector3;
 struct Matrix4x3;
 struct CLPS_Block;
-struct SharedFilePtr;
 
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 

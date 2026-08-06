@@ -6,11 +6,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Goomba.h"
 typedef int s32;
-typedef short s16;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef signed char s8;
-typedef unsigned char u8;
 
 typedef s32 Fix12;
 
