@@ -44,14 +44,13 @@ struct Klepto {
     u8  pad_394[0x10];
     u8  mShadowModel;            /* 0x3a4 */
     u8  pad_3a5[0x87];
-    u8  unk_42c;            /* 0x42c */
-    u8  pad_42d[0x3];
+    s32 unk_42c;            /* 0x42c */
     s32 unk_430;            /* 0x430 */
     s32 unk_434;            /* 0x434 */
     s32 unk_438;            /* 0x438 */
     u8  pad_43c[0x8];
-    u8  unk_444;            /* 0x444 */
-    u8  pad_445[0x3];
+    s16 unk_444;            /* 0x444 */
+    u8  pad_446[0x2];
     u8  unk_448;            /* 0x448 */
     u8  pad_449[0x1];
     s16 unk_44a;            /* 0x44a */

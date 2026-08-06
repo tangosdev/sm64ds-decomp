@@ -21,8 +21,7 @@ struct Submarine {
     u8  pad_098[0x68];
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
-    u8  unk_110;            /* 0x110 */
-    u8  pad_111[0x3];
+    s32 unk_110;            /* 0x110 */
     u8  mModelAnim;            /* 0x114 */
     u8  pad_115[0x7];
     u8  unk_11c;            /* 0x11c */

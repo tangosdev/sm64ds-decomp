@@ -33,8 +33,7 @@ struct KingBobOmb {
     u8  pad_3bd[0x3b];
     u8  mShadowModel;            /* 0x3f8 */
     u8  pad_3f9[0x9b];
-    u8  unk_494;            /* 0x494 */
-    u8  pad_495[0x3];
+    s32 unk_494;            /* 0x494 */
     u8  unk_498;            /* 0x498 */
     u8  pad_499[0x7];
     s32 unk_4a0;            /* 0x4a0 */

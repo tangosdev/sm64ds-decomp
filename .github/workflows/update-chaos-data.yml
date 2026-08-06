@@ -30,11 +30,21 @@ jobs:
     # This job's own refresh commit now touches config/ (the provenance ledger), which
     # is a watched path, so without this guard it would retrigger itself once per run.
     # Skipping the bot's own pushes is safe: a refresh commit never contains new matches.
+    # Secondary defense now: the refresh commit below carries [skip ci], because a
+    # deploy-key push is not attributed to github-actions[bot] and slips past this.
     if: github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # full history: per-function authors come from git log
+          # main is gated by the "main: validation + review gate" ruleset, which requires
+          # a PR for every change. GitHub Actions cannot hold a ruleset bypass on this
+          # repo because tangosdev is a user account and not an org, and GitHub only
+          # accepts an Integration bypass actor from the ruleset source or owner org.
+          # So the refresh push at the end of this job authenticates with a write deploy
+          # key, which the ruleset bypasses by actor type. A deploy key can push; it
+          # cannot approve or merge a pull request, which is the hole this closes.
+          ssh-key: ${{ secrets.CHAOS_PUSH_KEY }}
       - uses: actions/checkout@v4
         with:
           ref: chaos-data
@@ -86,6 +96,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
-          git commit -m "Refresh progress (README, treemap, contributions, provenance)"
+          # [skip ci] is load-bearing since the push moved to a deploy key. A GITHUB_TOKEN
+          # push never triggers workflows, so this commit used to be inert; a deploy-key
+          # push is an ordinary push and does trigger them. Without the marker this commit
+          # would retrigger this job (it touches config/) and newly fire report.yml.
+          git commit -m "Refresh progress (README, treemap, contributions, provenance) [skip ci]"
           git pull --rebase origin main
           git push origin main

@@ -3053,3 +3053,31 @@ web a use which (a) exists at allocation, (b) vanishes before selection, and (c)
 not a named web - no known b56 construct occupies that phase window. Treat the
 b/t26 pair as a true allocator rank pin absent a genuinely new construct class.
 Full per-family nodes: config/match_attempts.jsonl, parents under 6339f0f5....
+
+### 6bb addendum: gccext statement-exprs open a FOURTH attractor - and close it (same session, +17 compiles)
+
+`-gccext,on` means `({ ... })` statement expressions compile, and they were absent
+from all 385 prior compiles on this function. They are NOT neutral:
+
+- **An inline SE whose body is anchored by a LOAD survives as a web** and does two
+  things at once: it SEALS its shift from copy-propagation (the `b >> 3` def stays
+  materialized - the orr folder then COMMUTES and folds t26's lsl with Rn=b, giving
+  the first-ever exact `and r3,r3,#7` + A-selection fold since 6ba opened), and it
+  DEMOTES the web to the BOTTOM of the scratch hand-out (b lands in ip, below every
+  anonymous temp; position in the chain is irrelevant). Stable new residue at 11.
+- **Register-pure SE bodies always collapse** back to anonymous temps: plain
+  extracts, `s &= 7` two-statement bodies, and internal self-select boosters
+  (the booster additionally leaks the div-14/15 rotation out of the SE scope).
+- **Decl-init SEs dissolve wholly**: `u32 bb = ({ q[0] >> 3; });` propagates SE and
+  all into the single use - it behaves exactly like the plain B-order spelling
+  (right coloring, wrong fold side, 7), not like the inline SE.
+- Scope-depth nesting of the store statement, `%`/division respellings of the
+  extracts, and every splice of {SE-seal, B-order rank, opt_propagation off,
+  nesting} land in the now-five known attractors {5, 7, 11, 14, 15}.
+
+Net: the fold-seal (inline load-anchored SE) and the r2 rank (named local, bare in
+a B-order chain) each work alone and live in PROVABLY disjoint construct classes;
+every bridging construct either dissolves (decl-SE), demotes (inline SE), or
+rotates (pragma / booster / multi-def). The 6bb open-angle spec tightens once
+more: the missing construct must seal a shift-def from propagation while keeping
+named-block-scope rank - nothing in c99+gccext reaches that intersection.

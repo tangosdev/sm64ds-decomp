@@ -12,12 +12,9 @@ struct a_;
 struct b;
 struct Heap {
     u8  pad_000[0x4];
-    u8  unk_004;            /* 0x004 */
-    u8  pad_005[0x3];
-    u8  unk_008;            /* 0x008 */
-    u8  pad_009[0x3];
-    u8  unk_00c;            /* 0x00c */
-    u8  pad_00d[0x3];
+    s32 unk_004;            /* 0x004 */
+    s32 unk_008;            /* 0x008 */
+    s32 unk_00c;            /* 0x00c */
     u8  unk_010;            /* 0x010 */
 #ifdef __cplusplus
     /* methods */

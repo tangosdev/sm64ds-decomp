@@ -33,8 +33,7 @@ struct Unagi {
     u8  pad_151[0x3f];
     u8  mWithMeshClsn;            /* 0x190 */
     u8  pad_191[0x1bb];
-    u8  unk_34c;            /* 0x34c */
-    u8  pad_34d[0x3];
+    s32 unk_34c;            /* 0x34c */
     u8  mBlendModelAnim;            /* 0x350 */
     u8  pad_351[0xf];
     s32 unk_360;            /* 0x360 */

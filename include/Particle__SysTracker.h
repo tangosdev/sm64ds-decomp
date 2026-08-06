@@ -8,8 +8,7 @@
 
 struct Particle__SysTracker {
     u8  pad_000[0x4];
-    u8  unk_004;            /* 0x004 */
-    u8  pad_005[0x3];
+    s32 unk_004;            /* 0x004 */
     u8  unk_008;            /* 0x008 */
 };
 

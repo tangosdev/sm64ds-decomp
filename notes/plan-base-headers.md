@@ -95,7 +95,10 @@ silently stopped matching.
 ```sh
 python tools/eligible.py                     # BEFORE, on a clean tree
 # ... make the edits ...
-python tools/build_pin.py --verify <each of the 7 includers>
+# build_pin.py's positional args only REPORT the pin; --verify is not a flag.
+# The verify path is the library call:
+#   import build_pin as BP; BP.verify(src, symbol, addr, size, module)
+python tools/check_header_offsets.py include/Enemy.h include/CapEnemy.h
 python tools/rombuild.py                     # 106/106 exact, PASS
 python tools/eligible.py                     # AFTER -- diff against BEFORE
 python tools/prepush_attribution.py          # credit must not move

@@ -34,8 +34,7 @@ struct Shark {
     u8  pad_151[0x1bb];
     u8  mModelAnim;            /* 0x30c */
     u8  pad_30d[0x63];
-    u8  unk_370;            /* 0x370 */
-    u8  pad_371[0x3];
+    s32 unk_370;            /* 0x370 */
     s32 unk_374;            /* 0x374 */
     s32 unk_378;            /* 0x378 */
     s32 unk_37c;            /* 0x37c */

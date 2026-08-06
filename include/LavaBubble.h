@@ -30,8 +30,7 @@ struct LavaBubble {
     u8  pad_138[0xc];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];
-    u8  unk_300;            /* 0x300 */
-    u8  pad_301[0x3];
+    s32 unk_300;            /* 0x300 */
     s32 unk_304;            /* 0x304 */
     s32 unk_308;            /* 0x308 */
     s32 unk_30c;            /* 0x30c */
