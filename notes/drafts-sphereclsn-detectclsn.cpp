@@ -22,6 +22,11 @@ extern "C" s16 func_020396dc(MeshCollider *self, KCL_Tri *tri);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
+extern "C" void func_02037fd4(ClsnResult *res, s16 triID, SurfaceInfo *info);
+extern "C" void func_020379f4(SphereClsn *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_020379c0(SphereClsn *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
 
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
@@ -34,6 +39,10 @@ struct SphereClsn {
     u8         pad_038[0x4]; /* 0x38 - the shape sub-object's vptr */
     Vector3    centre;       /* 0x3c */
     Fix12i     radius;       /* 0x48 */
+    u8         pad_04c[0x24];
+    u8         flags;        /* 0x70 - 1 hit, 4 floor, 8 wall, 0x10 und */
+    u8         pad_071[0x8b];
+    s32        unk_100;      /* 0x100 - the best floor normal.y so far */
 };
 
 s32 MeshCollider::DetectClsn(SphereClsn &sphere)
@@ -182,6 +191,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         s32 depth;
                         s16 triID;
                         s32 cls;
+                        s32 v;
                         Vector3 sn;
 
                         dx = rawX - vtx[0];
@@ -239,7 +249,46 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
 
-                        /* TODO: per-class record + the min/max accumulate. */
+                        func_02037fd4(&sphere.result, triID, &data_020a0cec);
+                        sphere.flags |= 1;
+
+                        if (cls == 0) {
+                            /* Floor: only the vertical component is accumulated. */
+                            if (!(sphere.flags & 4)) {
+                                func_020379f4(&sphere, triID, &data_020a0cec);
+                                hitFlags |= 1;
+                            }
+                            hitFlags2 = one;
+                            sphere.flags |= 4;
+                            v = (s32)(((s64)depth * sn.y) >> 16);
+                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                            /* Keep the most upward-facing floor seen. */
+                            if (sn.y > sphere.unk_100) func_0203794c(&sphere, &sn);
+                        } else if (cls == 1) {
+                            if (!(sphere.flags & 8)) {
+                                func_020379c0(&sphere, triID, &data_020a0cec);
+                                hitFlags |= 2;
+                            }
+                            sphere.flags |= 8;
+                            v = (s32)(((s64)depth * sn.x) >> 16);
+                            if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
+                            v = (s32)(((s64)depth * sn.y) >> 16);
+                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                            v = (s32)(((s64)depth * sn.z) >> 16);
+                            if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                        } else {
+                            if (!(sphere.flags & 0x10)) {
+                                func_0203798c(&sphere, triID, &data_020a0cec);
+                                hitFlags |= 4;
+                            }
+                            sphere.flags |= 0x10;
+                            v = (s32)(((s64)depth * sn.x) >> 16);
+                            if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
+                            v = (s32)(((s64)depth * sn.y) >> 16);
+                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                            v = (s32)(((s64)depth * sn.z) >> 16);
+                            if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                        }
                     }
                 }
 

@@ -528,3 +528,50 @@ to be a genuine C++ virtual call or `this` comes from the callee-saved copy inst
 
 Draft is **0x58c** against 0x1bc8. Remaining is the per-class record and the min/max
 accumulate — both now fully specified rather than guessed.
+
+### Record and accumulate: the model confirmed from three directions (2026-08-06)
+
+The three recorders are matched source and form an exact triple:
+
+```c
+func_020379f4(c, h, src) { func_02037fd4(c + 0x74, h, src); }   /* floor */
+func_020379c0(c, h, src) { func_02037fd4(c + 0x9c, h, src); }   /* wall  */
+func_0203798c(c, h, src) { func_02037fd4(c + 0xc4, h, src); }   /* und   */
+```
+
+So the whole classification is now derived **three independent ways that agree**: the
+wrappers (which slot each flag bit guards), `func_02039794`'s normal-Y thresholds (which
+return 0/1/2), and these three one-line recorders (which offset each writes). Class *n*
+-> slot `0x74 + 0x28n` -> flag bit `4 << n`.
+
+Per hit, in ROM order:
+
+```
+func_02037fd4(&sphere->result /*0x10*/, triID, info)    always, the shared result
+sphere->flags |= 1
+  cls 0 floor: if !(flags & 4) { func_020379f4(...); ret |= 1 }
+               hitFlags2 = 1 ; flags |= 4
+               accumulate (depth * normal.Y) >> 16 into loPY/hiPY  -- Y ONLY
+               if (normal.Y > sphere->0x100) func_0203794c(sphere, &normal)
+  cls 1 wall : if !(flags & 8)    { func_020379c0(...); ret |= 2 }  flags |= 8
+  cls 2 und  : if !(flags & 0x10) { func_0203798c(...); ret |= 4 }  flags |= 0x10
+               both accumulate all three axes
+```
+
+**A floor accumulates only its vertical component** and separately keeps the most
+upward-facing normal seen (`func_0203794c`, which is matched and is just
+`d[63..65] = s[0..2]`, i.e. the 0xfc/0x100/0x104 triple). Walls and undersides accumulate the
+full XYZ pushback. That asymmetry is the design: standing on a slope should push you up, not
+sideways.
+
+Note the `!(flags & bit)` guard on each record -- only the **first** hit of each category is
+recorded, but **every** hit contributes to the accumulated extent. That is why the object's
+flags are an input as well as an output, and why the wrapper clears bits 4/8/0x10 with
+`v & ~0x1c` before calling.
+
+Draft is **0x8a8** against 0x1bc8, about half.
+
+**One error corrected in passing:** an earlier version of this draft called the wall recorder
+`func_02037a24`, which I had inferred rather than read. The actual call at 0x01ffd0d4 is
+`bl #0x20379c0`. Symbols must come off the call site, never from the shape of a neighbour's
+address.
