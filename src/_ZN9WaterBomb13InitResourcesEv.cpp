@@ -8,12 +8,11 @@ struct SharedFilePtr { int h; };
 struct Actor;
 struct Vector3_16;
 
-struct Model {
-    static BMD_File* LoadFile(SharedFilePtr& f);
-};
-struct ModelBase {
-    int SetFile(BMD_File* f, int a, int b);
-};
+/* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what its
+   own matched definition compiles as -- but the ROM leaves DoSetFile's int in r0
+   and this call site reads it, so the value-returning entry keeps the mangled
+   spelling until that signature is settled. */
+extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
 struct ShadowModel {
     int InitCylinder();
 };
@@ -73,15 +72,15 @@ int WaterBomb::InitResources()
 
     if (((Obj*)this)->f3c8 == 2)
     {
-        bmd = Model::LoadFile(data_ov002_0210da38);
-        if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, 0x16) == 0)
+        bmd = (BMD_File*)Model::LoadFile(data_ov002_0210da38);
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&((Obj*)this)->f300, bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
         Model::LoadFile(data_ov002_0210da38);
-        bmd = Model::LoadFile(data_ov098_0213c91c);
-        if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, 0x16) == 0)
+        bmd = (BMD_File*)Model::LoadFile(data_ov098_0213c91c);
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&((Obj*)this)->f300, bmd, 1, 0x16) == 0)
             return 0;
     }
 
