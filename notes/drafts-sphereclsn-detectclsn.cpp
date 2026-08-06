@@ -34,6 +34,8 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s32 loZ, hiZ;
     s32 rawX, rawY, rawZ;
     s32 r;
+    s32 rsc;
+    s64 rsq;
 
     KCL_File *f = kclFile;
     const Vector3 *c = &sphere.centre;
@@ -62,5 +64,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
     if (loZ >= hiZ) return 0;
 
-    return 0;
+    /* The sphere test is a squared-distance compare, so the radius is scaled up
+       (<< 4) and squared into 64 bits once, before the walk. */
+    rsc = sphere.radius << 4;
+    rsq = (s64)rsc * rsc;
+
+    return (s32)rsq;
 }

@@ -119,3 +119,42 @@ emitting the ROM's own sequence (`sub` origin, `sub`/`add` the slack, `asrs` + `
 clamp, `mvn` for `~mask`, `movgt` high clamp, `cmp` and early-out) per axis. Build it at
 **2004/b56** — the twin `DetectClsn(RaycastGround&)` matched there and so does the Line
 overload's size, and `notes/itcm.md` records what mis-pinning that costs.
+
+### The frame map, decoded from the entry (2026-08-06)
+
+`DetectClsn(RaycastGround&)`'s first matching lever was *"declaration order IS the stack
+frame"* — mwccarm hands out spill slots in declaration order. So for a 0x1b4 frame the slot
+map is the single most useful thing to have before writing the body, and this much is read
+straight off the ROM:
+
+| slot | holds |
+|---|---|
+| `sp+0x0c` | `file` (`this->kclFile`) |
+| `sp+0x10` / `sp+0x14` | `loX` / `hiX` |
+| `sp+0x18` / `sp+0x1c` | `loY` / `hiY` — mask from `file+0x24` |
+| `sp+0x20` / `sp+0x24` | `loZ` / `hiZ` — mask from `file+0x28` |
+| `sp+0x28` … `sp+0x5c` | **fourteen words, all zeroed** before the walk |
+| `sp+0x64` | high word of the squared radius |
+| `sp+0xc4` | `&sphere.centre` (`sphere + 0x3c`) |
+| `sp+0xc8` / `sp+0xcc` / `sp+0xd0` | `rawX` / `rawY` / `rawZ` |
+| `sp+0x104` | `radius << 4` |
+| `sp+0x10c` | seeded to `1` |
+| `sp+0x114` | seeded to `0` |
+
+Two structural reads from that:
+
+**The test is squared-distance.** After the three AABB early-outs the radius is scaled
+`<< 4` and squared into 64 bits with a single `smull r2,r1,r0,r0`, high word parked at
+`sp+0x64`. Neither sibling does this — the Line overload solves a plane and compares along
+the segment, the Ground overload compares heights. A sphere query has to compare against
+face, edge and vertex distances, which is most of why this function is 0x1bc8 against the
+Line's 0x734.
+
+**Fourteen zeroed words is an accumulator block**, not scalars spilled one at a time — the
+Line overload's equivalent is its nine un-SROA'd `Vector3` locals, and the `DVec` lever
+(a user-declared destructor blocking SROA) is what kept those as aggregates. Expect the same
+shape to be needed here.
+
+Order confirmed: X, then Y, then Z, each `lo = (raw - origin - slack) >> 6` clamped at 0 and
+`hi = (raw - origin + slack) >> 6` clamped at `~mask`, with `if (lo >= hi) return 0` between
+them. The banked draft reproduces that arithmetic; what it does not yet have is the walk.
