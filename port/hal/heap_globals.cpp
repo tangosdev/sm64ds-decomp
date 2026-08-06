@@ -35,6 +35,15 @@ void MultiStore_Int(int val, int *dst, int len)
 #pragma comment(linker, "/alternatename:_data_020a4d38=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory16rootHeapIteratorE@@3DA=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+// HeapAllocator's ctor reaches the same two globals by their data_-address
+// names at C++ LINKAGE (?data_020a4d38@@3DA / ?data_020a4d34@@3HA), which the
+// C-spelling alias above does not cover. This surfaced when those declarations
+// moved into a decl_*.h. data_020a4d34 is the four bytes below the iterator --
+// isRootHeapIterInitialized (symbols.txt: both bss, 0x020a4d34 / 0x020a4d38).
+// Missing either spelling forks the storage exactly as this file's header warns.
+#pragma comment(linker, "/alternatename:?data_020a4d38@@3DA=__ZN6Memory16rootHeapIteratorE")
+#pragma comment(linker, "/alternatename:?data_020a4d34@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+#pragma comment(linker, "/alternatename:_data_020a4d34=__ZN6Memory25isRootHeapIterInitializedE")
 // FUNCTION alias only where the conventions MATCH: this reference and the C
 // definition are both __cdecl free functions.
 #pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
@@ -53,9 +62,15 @@ void _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator(void *self, HeapAllocator
 int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
 { return ((NestedHeapIterator *)self)->Next(a); }
 }
-// And the reverse direction: AddLast/AddFirst reference Init as a C++
-// __cdecl FREE function (?_ZN..4Init..@@YAXPAD0@Z, char* args) while
-// Init.cpp defines the method. C++ linkage on purpose -- extern "C" would
-// decorate this wrong.
-void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
+// And the reverse direction: AddLast/AddFirst reference Init as a __cdecl
+// FREE function with char* args while Init.cpp defines the method.
+//
+// This forwarder was C++-linkage "on purpose" until include/decl_*.h grew its
+// extern "C" guard. That guard is now the authority (see the rationale in
+// decl_NestedHeapIterator.h: an unguarded C++ declaration emits _Z3Fooi,
+// which exists nowhere), so every TU including the decl header emits a
+// C-linkage reference and the C++-mangled definition resolves nothing. The
+// convention still has to be converted by hand -- the caller passes char*,
+// the method is __thiscall -- so this stays a real forwarder, not an alias.
+extern "C" void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
 { ((NestedHeapIterator *)self)->Init((HeapAllocator *)a); }

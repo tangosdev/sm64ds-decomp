@@ -2,9 +2,13 @@
 //
 // On the DS this reads the OS tick counter (timer hardware + IRQ-maintained
 // high bits). Timer::Start/Stop/GetTime take differences of it, so any
-// monotonic s64 with a stable rate is semantically faithful. The Timer TUs
-// declare it with C++ linkage, which is why this is a .cpp -- a C definition
-// does not mangle to what they reference.
+// monotonic s64 with a stable rate is semantically faithful.
+//
+// LINKAGE: this used to be a C++-linkage definition because the Timer TUs
+// referenced the mangled spelling. They no longer do -- they include
+// decl_common.h, which declares `extern s64 func_02059650(void)` inside its
+// extern "C" guard, so the reference is the plain C name. The file stays .cpp
+// for the host-side statics; only the linkage of the entry point changed.
 //
 // GATE 1: the tick is a manually-advanced counter so the smoke tests are
 // deterministic -- sm64ds_hal_advance_ticks() stands in for time passing.
@@ -14,7 +18,7 @@ typedef long long s64;
 
 static s64 g_ticks;
 
-s64 func_02059650()
+extern "C" s64 func_02059650()
 {
     return g_ticks;
 }

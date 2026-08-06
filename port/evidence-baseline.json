@@ -1,0 +1,24 @@
+{
+  "comment": "Files compiled into the port with no proof they are the game's code. This is a DEBT LEDGER, not a target -- --ratchet fails when it grows. Shrink it by matching the function, not by editing this file.",
+  "unproven": [
+    "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
+    "src/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp",
+    "src/_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator.cpp",
+    "src/_ZN4Heap8AllocateEji.cpp",
+    "src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp",
+    "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
+    "src/_ZN5Timer10StartTimerEv.cpp",
+    "src/_ZN5Timer7GetTimeEv.cpp",
+    "src/_ZN5Timer9StopTimerEv.cpp",
+    "src/_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+    "src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp",
+    "src/_ZN9ActorBasenwEj.cpp",
+    "src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp",
+    "src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp",
+    "src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp",
+    "src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp",
+    "src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp",
+    "src/engine/fader/_ZN15FaderBrightness8SetToEndEv.cpp",
+    "src/engine/fader/_ZN15FaderBrightness9IsAtStartEv.cpp"
+  ]
+}

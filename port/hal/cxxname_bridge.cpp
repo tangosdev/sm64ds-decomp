@@ -81,11 +81,30 @@ void *data_020a0eac_c;
 }
 #pragma comment(linker, "/alternatename:?data_020a0eac@@3PAUHeap@@A=_data_020a0eac_c")
 #pragma comment(linker, "/alternatename:_data_020a0eac=_data_020a0eac_c")
-void func_0206e2f8(void *p, int v, unsigned n)
+// ActorBase::operator new references the plain C name (decl_*.h extern "C"
+// guard); nothing currently wants the mangled spelling, but the alias costs
+// nothing and both forms are __cdecl free functions, so aliasing is safe
+// here in a way it is NOT for the __thiscall method bridges above.
+extern "C" void func_0206e2f8(void *p, int v, unsigned n)
 {
     unsigned char *b = (unsigned char *)p;
     for (unsigned i = 0; i < n; ++i) b[i] = (unsigned char)v;
 }
+#pragma comment(linker, "/alternatename:?func_0206e2f8@@YAXPAXHI@Z=_func_0206e2f8")
+
+// Platform's ROM ctor (src/_ZN8PlatformC2Ev.c) installs its vtable pointer.
+// Platform.h carries no virtuals, so MSVC emits no vtable object -- storage
+// only, exactly like the transient base vtables in actor_vtables.cpp. The
+// gate never dispatches through it; if that changes it needs real slots.
+extern "C" {
+void *_ZTV8Platform[20];
+}
+
+// ArrowSignRight::CleanupResources calls Release as a real __thiscall METHOD
+// (SharedFilePtr.h declares the class), while the implementation is the
+// C-named free function in src/. Convert the convention rather than alias it.
+#include "SharedFilePtr.h"
+void SharedFilePtr::Release() { hal_fileptr_release(this); }
 extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 

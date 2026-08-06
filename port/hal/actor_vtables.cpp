@@ -171,7 +171,11 @@ short *data_0209b460;      /* spawn default position ptr */
 signed char data_0209b44c_c;
 int data_0209b468[4];      /* actor list head the ctor links into */
 }
+// Both spellings, same storage -- Actor's ctor reaches it by the plain C name
+// and other TUs by the MSVC-mangled one. Aliasing only one direction forks the
+// storage silently, which is the exact failure this file exists to prevent.
 #pragma comment(linker, "/alternatename:?data_0209b44c@@3CA=_data_0209b44c_c")
+#pragma comment(linker, "/alternatename:_data_0209b44c=_data_0209b44c_c")
 
 extern "C" {
 unsigned char data_0209f2d8_c;   /* mega-char state byte: none */
