@@ -425,3 +425,57 @@ it is what the function returns. Two flag words, not one.
 rather than the *semantics* -- this one, and the earlier `--module` footgun that was already
 fixed on main. Grep narrows where to look; it does not establish absence. Confirm a negative
 by reading the sites, or by counting the complement (here: every store whose base is not `sp`).
+
+### The geometry, first half: the reject chain (2026-08-06)
+
+The per-prism opening is the matched `DetectClsn(RaycastGround&)` twin's, with one
+substitution — where the twin uses a fixed `0x20000` tolerance the sphere uses **its own
+radius**:
+
+```
+ldrh r2,[r0,#2]!         *++leaf, the writeback walker
+add  r0, r1, r2, lsl #4  tri = &file->tris[lv]
+mul  r1, tri->posIdx, #0xc
+sub  ip/sb/r3            d = raw - vtx      (raw 1/64 units)
+```
+
+| test | field | twin | sphere |
+|---|---|---|---|
+| edge 1 | `tri+0x8` | `> 0x20000` | `>= rsc` |
+| edge 2 | `tri+0xa` | `> 0x20000` | `>= rsc` |
+| edge 3 | `tri+0xc` | `< -0x20000`, `> length+0x20000` | `dot - tri->length >= rsc` |
+| face | `tri+0x6` | normal[1] <= 0 rejects | `> rsc` rejects — **GT, not GE** |
+
+The units work out: `d` is raw, normals are `1.0 == 0x400`, and `rsc = radius << 4` is
+`raw_radius * 0x400`. Same scale on both sides of every compare, which is the check that the
+`<< 4` is a units conversion and not a magic number.
+
+### What `unk_34`, `unk_35` and `unk_38` are FOR
+
+Straight after the face test:
+
+```
+ldrb r0,[sl,#0x34]        this->unk_34
+  set   -> reject unless faceDot >= -0x50000
+ldrb r0,[sl,#0x35]        this->unk_35
+  set   -> scale fn << 2 into sp+0x174..0x17c, then bl 0x205380c with &this->unk_38
+```
+
+Those are the `MeshCollider` bytes at 0x34/0x35 and the `Vector3` at 0x38 — and their
+set/clear accessors were among **the original eleven ITCM matches**: `func_01ffb098` /
+`func_01ffb0a4` clear and set 0x35, `func_01ffb0b0` / `func_01ffb0bc` clear and set 0x34, and
+`func_01ffb07c` writes the 0x38 vector, which `SetFile` seeds to the unit X vector.
+
+Those five were matched a batch ago as bare one-line accessors with no known purpose.
+**This is the purpose.** They are a normal filter on the face test — a face-angle cutoff
+(`unk_34`) and a preferred-direction test against a stored axis (`unk_35` + `unk_38`) — which
+is what a one-way or slope-limited collider needs. `include/MeshCollider.h` can now say so
+instead of calling them `unk_`.
+
+Draft is **0x4f8** against 0x1bc8. It only started growing once a call gave the prism loop a
+side effect; before that mwccarm stripped the whole loop as dead, which is worth knowing
+before reading a flat size as no progress.
+
+**Still to decode:** the result of `func_0205380c`, then the squared-distance classify (the
+`smull`/`>>16` chain feeding the min/max accumulators) and the three-way floor/wall/und
+branch that drives `func_02037fd4`, `func_0203798c` and the `0x70` flag bits.

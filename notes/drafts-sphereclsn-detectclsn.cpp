@@ -16,6 +16,7 @@ struct ClsnResult { u8 raw[0x28]; };
 
 extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
+extern "C" s32 func_0205380c(const s32 *a, const void *b);
 
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
@@ -115,6 +116,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                 u32 idx;
                 s32 v;
                 s32 size, mask, cy, cz;
+                u32 lv;
 
                 idx = (z >> shift) << f->zShift
                     | (y >> shift) << f->yShift;
@@ -160,7 +162,54 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         }
                     }
 
-                    /* TODO: the per-prism squared-distance tests go here. */
+                    /* Same three side-plane rejects as the matched
+                       DetectClsn(RaycastGround&) twin, but the sphere's tolerance
+                       is its own radius (raw units x 0x400, matching the normals'
+                       1.0 == 0x400 scale) where the twin uses a fixed 0x20000. */
+                    while ((lv = *++leaf) != 0) {
+                        KCL_Tri *tri = &f->tris[lv];
+                        s32 *vtx = f->positions[tri->posIdx];
+                        s16 *en;
+                        s16 *fn;
+                        s32 dx, dy, dz;
+                        s32 faceDot;
+                        s32 nrm[3];
+
+                        dx = rawX - vtx[0];
+                        dy = rawY - vtx[1];
+                        dz = rawZ - vtx[2];
+
+                        en = f->normals[tri->edgeNormal1Idx];
+                        if (dx * en[0] + dy * en[1] + dz * en[2] >= rsc) continue;
+                        en = f->normals[tri->edgeNormal2Idx];
+                        if (dx * en[0] + dy * en[1] + dz * en[2] >= rsc) continue;
+                        en = f->normals[tri->edgeNormal3Idx];
+                        if (dx * en[0] + dy * en[1] + dz * en[2] - tri->length >= rsc)
+                            continue;
+
+                        /* Face normal. Note GT, not the GE the three edges use. */
+                        fn = f->normals[tri->normalIdx];
+                        faceDot = dx * fn[0] + dy * fn[1] + dz * fn[2];
+                        if (faceDot > rsc) continue;
+
+                        /* this->unk_34 / unk_35 gate the face test. These are the
+                           MeshCollider bytes whose set/clear accessors were among
+                           the original eleven ITCM matches (func_01ffb098/0a4 for
+                           0x35, func_01ffb0b0/0bc for 0x34); this is what they are
+                           for. unk_38 is the Vector3 func_01ffb07c writes, seeded
+                           by SetFile to the unit X vector. */
+                        if (unk_34) {
+                            if (faceDot < -0x50000) continue;
+                        } else if (unk_35) {
+                            nrm[0] = fn[0] << 2;
+                            nrm[1] = fn[1] << 2;
+                            nrm[2] = fn[2] << 2;
+                            func_0205380c(nrm, &unk_38);
+                            /* TODO: the test on its result. */
+                        }
+
+                        /* TODO: the squared-distance classify and the hit path. */
+                    }
                 }
 
                 x += stepX;
