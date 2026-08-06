@@ -283,3 +283,61 @@ march, descent, step, leaf caches, sorted insert, accumulators, epilogue — is 
 draft compiles to 0x310 because with no geometry the accumulators are never written, so
 mwccarm folds them and dead-strips the epilogue call. Both reappear the moment a hit path
 exists; do not read the shrink as a regression.
+
+## SphereClsn is largely recoverable from its already-matched callers (2026-08-06)
+
+`func_02037a6c` needed no analysis — `src/func_02037a6c.c` is **already matched and enrolled**,
+and it is an AABB expand:
+
+```c
+void func_02037a6c(AABB *b, s32 x1,s32 y1,s32 z1, s32 x2,s32 y2,s32 z2)
+{   /* min at 0x58/0x5c/0x60, max at 0x64/0x68/0x6c */
+    if (b->minX > x1) b->minX = x1;   if (b->maxX < x1) b->maxX = x1;
+    ... both corners, all three axes ...
+}
+```
+
+An independent decode from the ROM bytes agreed with it exactly, which is a useful check on
+the method. What it *does* tell us is that the accumulated extent lands in the SphereClsn
+itself: **min Vector3 at 0x58, max Vector3 at 0x64.**
+
+### The far better source: two matched siblings call our target
+
+`ExtendingMeshCollider::DetectClsn(SphereClsn&)` and
+`MovingMeshCollider::DetectClsn(SphereClsn&)` are both matched, and both are *wrappers around
+the function we are trying to write*: transform the sphere into local space, call
+`MeshCollider::DetectClsn(SphereClsn&)`, post-process. They name most of the object:
+
+| offset | meaning | evidence |
+|---|---|---|
+| 0x10 | the shared `ClsnResult` | `ClsnResult::operator=(sphere+0x10, loc.result)` |
+| 0x38 | shape sub-object | `func_0203abb0(sphere+0x38, v1)` extracts a Vector3 |
+| 0x3c | centre | our entry's `add r0,fp,#0x3c` |
+| 0x48 | radius | `FMUL(*(int*)(sphere+0x48), scale)` |
+| 0x58 / 0x64 | accumulated AABB min / max | `func_02037a6c` above |
+| **0x70** | **flags byte** | `\|= 1`, `\|= 4`, `\|= 8`, `\|= 0x10` |
+| 0x74 | **floor** result | `SetFloorResult(sphere, ...)` under `loc.flags & 4` |
+| 0x9c | **wall** result | under `loc.flags & 8` |
+| 0xc4 | third result | under `loc.flags & 0x10` |
+| 0xec | a SECOND radius | `FMUL(*(int*)(sphere+0xec), scale)` |
+| 0xfc / 0x100 | a pair, compared then copied | `if (sphere->0x100 < loc.f_100) func_0203794c(...)` |
+
+The generated header already had 0x74 / 0x9c / 0xc4 as `mClsnResult1..3` and 0xec as
+`unk_0ec`; the wrapper says which is which — **floor, wall, and a third** — and adds 0x70,
+0x58, 0x64 and the second radius, all of which currently sit inside `pad_039[0x3b]` or later
+padding.
+
+### What that fixes in our target
+
+`sp+0x40`, the bitmask we return, **is the 0x70 flags word**: the `orr r0,r0,#4` seen at
+0x01ffd260 is the *floor-hit* bit, the same bit the wrapper tests with `loc.flags & 4` before
+calling `SetFloorResult`. So the three result slots and the flag bits are one mechanism, and
+the geometry's job is to classify each hit as floor / wall / third and write the matching
+`ClsnResult`, accumulating the extent box as it goes.
+
+That also explains `sp+0x44`: the wrapper's `r` and `loc.flags` are distinct values — one is
+returned, one drives the post-processing — which is exactly the two-flag shape at 0x40/0x44.
+
+**Route the geometry through the wrappers, not the raw disassembly.** They are matched code
+that already names the constants, and `MovingMeshCollider`'s version is a second, independent
+reading of the same interface.
