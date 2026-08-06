@@ -985,3 +985,35 @@ blocks (`sp+0xb8`, `0xbc`, `0xc0`) where this draft shares one variable across a
 similarly distinct nn spill slots. Each vertex block having its own locals — rather than the
 draft's shared `den`/`t`/`u`/`vx`/`vy`/`vz` — is the most likely source of both the offset
 mismatch and some of the surplus.
+
+### The surplus-frame hypothesis is dead: splitting the vertex locals makes it worse (2026-08-06)
+
+The previous section's lead — that the draft's shared `den` accounts for the surplus frame
+words, because the ROM has three slots (`sp+0xb8`, `0xbc`, `0xc0`) — is **wrong**, and the
+same goes for the `nn` spills (`0xf0`, `0xf4`/`0xf8`, `0xfc`/`0x100`).
+
+| draft | frame | `--align` ratio | equal | size |
+|---|---|---|---|---|
+| shared `nn`/`den` | `0x1dc` | 0.2084 | 367 | 1744 |
+| split, one pair per vertex block | `0x1e4` | 0.2095 | 367 | 1725 |
+
+Splitting adds two slots and moves the frame **further** from the ROM's `0x1b4`, not closer.
+Exactly-matching instructions do not move at all. The ratio ticks up only because the
+`replace` bucket shrinks with the smaller candidate.
+
+The inference that actually follows: the ROM fits *three* `den` variables into `0x1b4` while
+this draft fits *one* into `0x1dc`, so there are roughly twelve surplus words that have
+nothing to do with the vertex blocks. Look elsewhere — the `nrm[3]`, `tp[3]`, `vb[3]`,
+`vc[3]`, `cr[3]` arrays and the `Vector3 sn` are the obvious suspects, since aggregates get
+whole slots and the ROM may be holding those in registers or reusing one scratch.
+
+**`t`/`u` were split too and it is byte-neutral** — they never leave registers in any of the
+three blocks, so there is no evidence either way and the draft keeps them shared.
+
+**`vx`/`vy`/`vz` must NOT be split.** All three vertex blocks branch to one shared tail at
+`0x1ffc9cc` which consumes the vector out of r0/r2/r6, so they are genuinely one variable;
+splitting them would force copies the ROM does not make.
+
+The split is kept anyway, because three distinct stack offsets holding three distinct
+quantities is direct evidence about the source even when the metric is flat — but it is not
+progress on the frame and should not be reported as such.

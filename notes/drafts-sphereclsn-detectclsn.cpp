@@ -97,7 +97,7 @@ static inline s32 SqrtRaw(u64 x)
    `func_020397dc(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
    the quotient is cstd::fdiv's Fix12 result brought back to the 0x400 scale. */
-#define VERTEX_BLOCK(nn, ea, eb, dotI, dotJ)                                  \
+#define VERTEX_BLOCK(nn, den, ea, eb, dotI, dotJ)                                  \
     den = MUL10(nn, nn) - 0x400;                                              \
     if (func_020397dc(den)) continue;                                         \
     t = _ZN4cstd4fdivEii(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
@@ -203,7 +203,9 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s16 triID;                  /* 0xa0 */
     s32 cls;                    /* 0xa4 */
     s32 contactKind;            /* 0xa8 */
+    s32 den12, den23, den31;    /* 0xb8 0xbc 0xc0 - one per vertex pair */
     s32 rawX, rawY, rawZ;       /* 0xc8 0xcc 0xd0 */
+    s32 nn12, nn23, nn31;       /* 0xf0 / 0xf4 0xf8 / 0xfc 0x100 */
     s32 rsc;                    /* 0x104 */
     /* No observed slot -- these follow the attested run. */
     u32 z;
@@ -216,9 +218,8 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u32 idx;
     s32 word;
     s32 size, mask, cy, cz;
-    s32 nn;
     s64 dsq;
-    s32 den, t, u;
+    s32 t, u;
     s32 vx, vy, vz;
     s64 lensq;
     s32 dx, dy, dz;
@@ -441,11 +442,11 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
-                                nn = EDGENORMAL_DOT(en1, en2);
-                                if (MUL10(nn, dot1) <= dot2) goto v12;
+                                nn12 = EDGENORMAL_DOT(en1, en2);
+                                if (MUL10(nn12, dot1) <= dot2) goto v12;
                             } else {
-                                nn = EDGENORMAL_DOT(en1, en3);
-                                if (MUL10(nn, dot1) <= dot3) goto v31;
+                                nn31 = EDGENORMAL_DOT(en1, en3);
+                                if (MUL10(nn31, dot1) <= dot3) goto v31;
                             }
                             /* --- E1: closest point is on edge 1 --- */
                             EDGE_FILTER(dot1)
@@ -456,11 +457,11 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
-                            nn = EDGENORMAL_DOT(en2, en3);
-                            if (MUL10(nn, dot2) <= dot3) goto v23;
+                            nn23 = EDGENORMAL_DOT(en2, en3);
+                            if (MUL10(nn23, dot2) <= dot3) goto v23;
                         } else {
-                            nn = EDGENORMAL_DOT(en2, en1);
-                            if (MUL10(nn, dot2) <= dot1) goto v12;
+                            nn12 = EDGENORMAL_DOT(en2, en1);
+                            if (MUL10(nn12, dot2) <= dot1) goto v12;
                         }
                         /* --- E2 --- */
                         EDGE_FILTER(dot2)
@@ -471,20 +472,20 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (dot3 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
-                            nn = EDGENORMAL_DOT(en3, en1);
-                            if (MUL10(nn, dot3) <= dot1) goto v31;
+                            nn31 = EDGENORMAL_DOT(en3, en1);
+                            if (MUL10(nn31, dot3) <= dot1) goto v31;
                         } else {
-                            nn = EDGENORMAL_DOT(en3, en2);
-                            if (MUL10(nn, dot3) <= dot2) goto v23;
+                            nn23 = EDGENORMAL_DOT(en3, en2);
+                            if (MUL10(nn23, dot3) <= dot2) goto v23;
                         }
                         /* --- E3 --- */
                         EDGE_FILTER(dot3)
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
 
-                    v12:  VERTEX_BLOCK(nn, en1, en2, dot1, dot2)   /* 0x01ffc63c */
-                    v23:  VERTEX_BLOCK(nn, en2, en3, dot2, dot3)   /* 0x01ffc750 */
-                    v31:  VERTEX_BLOCK(nn, en3, en1, dot3, dot1)   /* 0x01ffc89c */
+                    v12:  VERTEX_BLOCK(nn12, den12, en1, en2, dot1, dot2)   /* 0x01ffc63c */
+                    v23:  VERTEX_BLOCK(nn23, den23, en2, en3, dot2, dot3)   /* 0x01ffc750 */
+                    v31:  VERTEX_BLOCK(nn31, den31, en3, en1, dot3, dot1)   /* 0x01ffc89c */
 
                     vtail:
                         /* Shared by all three vertex regions (0x01ffc9cc). The

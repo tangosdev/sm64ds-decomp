@@ -3,7 +3,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "YoshiEgg.h"
-typedef int Fix12;
 
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern int  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
