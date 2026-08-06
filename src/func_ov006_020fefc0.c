@@ -8,7 +8,7 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern char *_ZN2G213GetBG2CharPtrEv(void);
 extern char *_ZN2G212GetBG2ScrPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern int func_02054de8(void);
+extern char *_ZN3G2S13GetBG2CharPtrEv(void);
 extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -81,7 +81,7 @@ int func_ov006_020fefc0(void *arg0)
 
     func_ov004_020af2f8(c, 0, 2, 0);
 
-    b = (char *)func_02054de8();
+    b = (char *)_ZN3G2S13GetBG2CharPtrEv();
     fillZero = 0;
     MultiStore16(fillZero, b, 0x6000);
 

@@ -34,8 +34,8 @@ struct Obj {
 };
 
 extern "C" void func_02012790(int);
-extern "C" int func_ov004_020ad674(void);
-extern "C" void func_ov004_020afa20(int a0, int a1, int a2, int a3, int a4);
+extern "C" int GetGameLanguage(void);
+extern "C" void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
 extern "C" void func_ov004_020b1ea4(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 extern "C" void *data_ov004_020bbfa8[];
 
@@ -72,7 +72,7 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
         }
     }
 
-    r8 = data_ov004_020bbfa8[func_ov004_020ad674()];
+    r8 = data_ov004_020bbfa8[GetGameLanguage()];
     r7 = 0xa8;
 
     if (sb < 5) {
@@ -83,7 +83,7 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
                 if (i == sb - 1 && sl->unk54 > 0 && sl->unk54 % 0x3c >= 0x1e) {
                     break;
                 }
-                func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                 i += 1;
                 r7 -= 0x10;
             } while (i < sb);
@@ -98,24 +98,24 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
         int u = sl->unk54;
         if (u == 0) {
             func_ov004_020b1ea4(0xf0, r7, 5, 1, 0, 0, 0x14);
-            func_ov004_020afa20(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
+            RenderOamMainScreen(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
         } else if (u < sl->unk58) {
             r7 -= 8;
             i = 0;
             do {
-                func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                 i += 1;
                 r7 -= 0x10;
             } while (i < 4);
             if (sl->unk54 % 0x3c < 0x1e) {
-                func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
             }
         } else {
             int d = (sl->unk58 + 0x20) - sl->unk54;
             r7 -= sdiv4(d);
             i = 0;
             do {
-                func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                 {
                     unsigned e = (sl->unk58 + 0x20) - sl->unk54;
                     r7 -= sdiv2((int)e);
@@ -144,31 +144,31 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
             int u = sl->unk54;
             if (u == 0) {
                 func_ov004_020b1ea4(0xf0, r7, sb, 1, 0, 0, 0x14);
-                func_ov004_020afa20(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
             } else if (u < sl->unk58) {
                 func_ov004_020b1ea4(0xf0, r7, sb - 5, 1, 0, 0, 0x14);
-                func_ov004_020afa20(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
                 r7 -= 0x18;
                 i = 0;
                 do {
                     if (i == 4 && sl->unk54 > 0 && sl->unk54 % 0x3c >= 0x1e) {
                         break;
                     }
-                    func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                    RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                     i += 1;
                     r7 -= 0x10;
                 } while (i < 5);
             } else {
                 int d;
                 func_ov004_020b1ea4(0xf0, r7, sb - 5, 1, 0, 0, 0x14);
-                func_ov004_020afa20(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
                 d = (sl->unk58 + 0x20) - sl->unk54;
                 r7 -= sdiv4(d);
                 i = 0;
                 do {
                     unsigned e = (sl->unk58 + 0x20) - sl->unk54;
                     r7 -= sdiv2((int)e);
-                    func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                    RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                     i += 1;
                 } while (i < 5);
             }
@@ -191,7 +191,7 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
             int base5 = (sb / 5) * 5;
             func_ov004_020b1ea4(0xf0, r7, base5, 1, 0, 0, 0x14);
         }
-        func_ov004_020afa20(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
+        RenderOamMainScreen(((int *)r8)[0x2c / 4], 0xf0, r7, -1, -1);
         r7 -= 0x18;
         sb = 0;
         if (rem > 0) {
@@ -200,7 +200,7 @@ extern "C" void func_ov004_020b0e84(Obj *sl, int sb) {
                 if (sb == pin && sl->unk54 > 0 && sl->unk54 % 0x3c >= 0x1e) {
                     break;
                 }
-                func_ov004_020afa20(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
+                RenderOamMainScreen(((int *)r8)[0x24 / 4], 0xf0, r7, -1, -1);
                 sb += 1;
                 r7 -= 0x10;
             } while (sb < rem);

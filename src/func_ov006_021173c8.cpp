@@ -24,10 +24,10 @@ struct DispObj {
 };
 
 extern "C" {
-void func_02018f8c(void *p, int a);
+void SetSubBg0Offset(void *p, int a);
 void func_ov004_020afdd0(int a0, int a1, int a2, int a3, int a4);
 void func_ov004_020b1ea4(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
-int func_ov004_020ad674(void);
+int GetGameLanguage(void);
 int func_ov004_020adbc0(void);
 int func_ov004_020adc1c(void);
 void func_ov004_020b1a5c(int a0, int a1);
@@ -69,7 +69,7 @@ extern "C" int func_ov006_021173c8(void *this_)
     int val;
     int *slot[2];
 
-    func_02018f8c(*(void **)(g + 0x5998), 0);
+    SetSubBg0Offset(*(void **)(g + 0x5998), 0);
     col = 0;
 
     if (I(0x4660) == 1 && I(0x5998) <= 0) {
@@ -80,7 +80,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x5964) > 0) {
             func_ov004_020afdd0(data_ov006_02138ae0[0], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0x64, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x5964), 0, 0, 1, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x5964) * 0x64, 0, 0, 1, 0);
@@ -95,7 +95,7 @@ extern "C" int func_ov006_021173c8(void *this_)
                 func_ov004_020afdd0(data_ov006_02138ae0[row + 1], 0x30, xpos, -1, -1);
                 val = data_ov006_0212edfc[row];
                 func_ov004_020b1ea4(0x80, xpos, val, 0, 0, 1, 0);
-                i = func_ov004_020ad674();
+                i = GetGameLanguage();
                 func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
                 pcnt = (int *)(g + row * 4 + 0x5968);
                 func_ov004_020b1ea4(0xa0, xpos, *pcnt, 0, 0, 0, 0);
@@ -110,7 +110,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x597c) > 0 && I(0x5960) >= col * 0x14) {
             func_ov004_020afdd0(data_ov006_0213765c[0], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0x12c, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x597c), 0, 0, 0, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x597c) * 0x12c, 0, 0, 1, 0);
@@ -122,7 +122,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x5984) > 0 && I(0x5960) >= col * 0x14) {
             func_ov004_020afdd0(data_ov006_02137a78[0], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0xbb8, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x5984), 0, 0, 0, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x5984) * 0xbb8, 0, 0, 1, 0);
@@ -134,7 +134,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x5980) > 0 && I(0x5960) >= col * 0x14) {
             func_ov004_020afdd0(data_ov006_02137a6c[0], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0x7d0, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x5980), 0, 0, 0, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x5980) * 0x7d0, 0, 0, 1, 0);
@@ -169,7 +169,7 @@ extern "C" int func_ov006_021173c8(void *this_)
                     break;
                 }
                 func_ov004_020b1ea4(0x80, xpos, mult, 0, 0, 1, 0);
-                i = func_ov004_020ad674();
+                i = GetGameLanguage();
                 func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
                 func_ov004_020b1ea4(0xa0, xpos, *slot[1], 0, 0, 0, 0);
                 func_ov004_020b1ea4(0xe0, xpos, mult * *slot[1], 0, 0, 1, 0);
@@ -183,7 +183,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x5978) > 0 && I(0x5960) >= col * 0x14) {
             func_ov004_020afdd0(data_ov006_02138ae0[5], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0x2710, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x5978), 0, 0, 0, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x5978) * 0x2710, 0, 0, 1, 0);
@@ -195,7 +195,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         if (I(0x5994) > 0 && I(0x5960) >= col * 0x14) {
             func_ov004_020afdd0(data_ov006_021382e0[0], 0x30, xpos, -1, -1);
             func_ov004_020b1ea4(0x80, xpos, 0x7d0, 0, 0, 1, 0);
-            i = func_ov004_020ad674();
+            i = GetGameLanguage();
             func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54), 0x90, xpos, -1, -1);
             func_ov004_020b1ea4(0xa0, xpos, I(0x5994), 0, 0, 0, 0);
             func_ov004_020b1ea4(0xe0, xpos, I(0x5994) * 0x7d0, 0, 0, 1, 0);
@@ -257,7 +257,7 @@ extern "C" int func_ov006_021173c8(void *this_)
                             nd++;
                         } while (u != 0);
                     }
-                    i = func_ov004_020ad674();
+                    i = GetGameLanguage();
                     func_ov004_020afdd0(*(int *)(data_ov006_0213ecb8[i] + 0x54),
                                         (*px >> 12) + nd * 8 - 8, *py >> 12, -1, -1);
                     nd = 0;
