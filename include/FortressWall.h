@@ -11,12 +11,23 @@ struct FortressWall {
     s32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x3];
-    u8  unk_060;            /* 0x060 */
-    u8  pad_061[0x3];
-    u8  unk_064;            /* 0x064 */
-    u8  pad_065[0x29];
+    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_05c;            /* 0x05c */
+    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_060;            /* 0x060 */
+    /* 0x064..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_064;                 /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    s32 mCamSpacePosX;           /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
+    s32 mScaleX;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
+    s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
     u8  mAreaId;            /* 0x0cc */

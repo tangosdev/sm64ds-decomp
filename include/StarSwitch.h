@@ -11,12 +11,31 @@ struct StarSwitch {
     u32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x52];
-    u8  unk_060;            /* 0x060 */
-    u8  pad_061[0x2d];
+    /* 0x060..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_060;                 /* 0x060 */
+    s32 mPosZ;                   /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    s32 mCamSpacePosX;           /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
+    s32 mScaleX;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
+    s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    u8  unk_0b0;            /* 0x0b0 */
-    u8  pad_0b1[0x1b];
+    /* 0x0b0..0x0cc is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    u32 unk_0b0;                 /* 0x0b0 */
+    s32 unk_0b4;                 /* 0x0b4 */
+    s32 unk_0b8;                 /* 0x0b8 */
+    s32 unk_0bc;                 /* 0x0bc */
+    s32 unk_0c0;                 /* 0x0c0 */
+    u8  unk_0c4;                 /* 0x0c4 */
+    u8  pad_0c5[0x7];
     u8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
     u8  mModel;            /* 0x0d4 */

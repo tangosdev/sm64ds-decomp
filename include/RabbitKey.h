@@ -10,8 +10,14 @@ struct RabbitKey {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x82];
-    u8  unk_08e;            /* 0x08e */
-    u8  pad_08f[0xd];
+    /* 0x08e..0x09c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s16 unk_08e;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
+    s32 mHorzSpeed;              /* 0x098 */
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x4];

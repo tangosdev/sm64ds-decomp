@@ -14,12 +14,12 @@ struct Bullet {
     u8  pad_090[0x4];
     s16 unk_094;            /* 0x094 */
     u8  pad_096[0x6];
-    u8  unk_09c;            /* 0x09c */
-    u8  pad_09d[0x3];
+    /* Actor::mVertAccel -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    u8  unk_0a8;            /* 0x0a8 */
-    u8  pad_0a9[0x3];
+    /* Actor::mVertSpeed -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_0a8;            /* 0x0a8 */
     u8  unk_0ac;            /* 0x0ac */
     u8  pad_0ad[0x53];
     u8  unk_100;            /* 0x100 */

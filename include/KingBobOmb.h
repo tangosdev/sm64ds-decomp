@@ -19,8 +19,19 @@ struct KingBobOmb {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    u8  unk_0b0;            /* 0x0b0 */
-    u8  pad_0b1[0x5f];
+    /* 0x0b0..0x110 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    u32 unk_0b0;                 /* 0x0b0 */
+    s32 unk_0b4;                 /* 0x0b4 */
+    s32 unk_0b8;                 /* 0x0b8 */
+    s32 unk_0bc;                 /* 0x0bc */
+    s32 unk_0c0;                 /* 0x0c0 */
+    u8  unk_0c4;                 /* 0x0c4 */
+    u8  pad_0c5[0x7];
+    s8  mAreaId;                 /* 0x0cc */
+    u8  pad_0cd[0x1];
+    s16 unk_0ce;                 /* 0x0ce */
+    u8  pad_0d0[0x40];
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];
     u8  mBlendModelAnim;            /* 0x2cc */

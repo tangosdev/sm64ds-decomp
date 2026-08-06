@@ -10,20 +10,31 @@ struct Lakitu {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x3];
-    u8  unk_060;            /* 0x060 */
-    u8  pad_061[0x3];
-    u8  unk_064;            /* 0x064 */
-    u8  pad_065[0x1b];
+    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_05c;            /* 0x05c */
+    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_060;            /* 0x060 */
+    /* 0x064..0x080 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_064;                 /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    s32 mCamSpacePosX;           /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x10];
-    u8  unk_09c;            /* 0x09c */
-    u8  pad_09d[0x3];
-    u8  unk_0a0;            /* 0x0a0 */
-    u8  pad_0a1[0xf];
+    /* Actor::mVertAccel -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_09c;            /* 0x09c */
+    /* 0x0a0..0x0b0 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_0a0;                 /* 0x0a0 */
+    u8  pad_0a4[0x4];
+    s32 mVertSpeed;              /* 0x0a8 */
+    u8  pad_0ac[0x4];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x20];
     u8  mModelAnim;            /* 0x0d4 */

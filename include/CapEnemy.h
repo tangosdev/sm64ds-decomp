@@ -20,12 +20,36 @@ struct CapEnemy {
        mPosX/mPosY/mPosZ here -- so this stands over the position triple. One derived
        header declares s32 at this offset, which describes the X component alone;
        adopting that would trade an unknown for a narrower wrong answer. */
-    u8  unk_05c;            /* 0x05c -- position triple, 0x05c..0x068 */
-    u8  pad_05d[0x2f];
+    /* 0x05c..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_05c;                 /* 0x05c */
+    s32 mPosY;                   /* 0x060 */
+    s32 mPosZ;                   /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    s32 mCamSpacePosX;           /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
+    s32 mScaleX;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
     /* 0x08c: same shape -- address-only evidence, and Actor.h:89 puts
        mAngleX/mAngleY/mAngleZ here. Stands over the rotation triple. */
-    u8  unk_08c;            /* 0x08c -- rotation triple, 0x08c..0x092 */
-    u8  pad_08d[0x23];
+    /* 0x08c..0x0b0 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s16 unk_08c;                 /* 0x08c */
+    s16 mAngleY;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
+    s32 mHorzSpeed;              /* 0x098 */
+    s32 mVertAccel;              /* 0x09c */
+    s32 mTerminalVelocity;       /* 0x0a0 */
+    u8  pad_0a4[0x4];
+    s32 mVertSpeed;              /* 0x0a8 */
+    u8  pad_0ac[0x4];
     u32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */

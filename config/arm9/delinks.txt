@@ -4312,7 +4312,7 @@ src/_ZN5Stage12SetVramBanksEv.c:
     complete
     .text start:0x0202e73c end:0x0202e78c
 
-src/_ZN2GX15DisableAllBanksEv.c:
+src/_ZN2GX15DisableAllBanksEv.cpp:
     complete
     .text start:0x0202e78c end:0x0202e7d4
 
@@ -8668,11 +8668,11 @@ src/_ZN3GXS15SetGraphicsModeEi.cpp:
     complete
     .text start:0x02053abc end:0x02053ad8
 
-src/_ZN2GX15SetGraphicsModeEiii.c:
+src/_ZN2GX15SetGraphicsModeEiii.cpp:
     complete
     .text start:0x02053ad8 end:0x02053b4c
 
-src/_ZN2GX6DispOnEv.c:
+src/_ZN2GX6DispOnEv.cpp:
     complete
     .text start:0x02053b4c end:0x02053b98
 
@@ -8816,19 +8816,19 @@ src/func_020541b8.c:
     complete
     .text start:0x020541b8 end:0x020541f0
 
-src/_ZN2GX23SetBankForSubOBJExtPlttEt.c:
+src/_ZN2GX23SetBankForSubOBJExtPlttEt.cpp:
     complete
     .text start:0x020541f0 end:0x0205427c
 
-src/_ZN2GX22SetBankForSubBGExtPlttEt.c:
+src/_ZN2GX22SetBankForSubBGExtPlttEt.cpp:
     complete
     .text start:0x0205427c end:0x02054308
 
-src/_ZN2GX16SetBankForSubOBJEt.c:
+src/_ZN2GX16SetBankForSubOBJEt.cpp:
     complete
     .text start:0x02054308 end:0x02054384
 
-src/_ZN2GX15SetBankForSubBGEt.c:
+src/_ZN2GX15SetBankForSubBGEt.cpp:
     complete
     .text start:0x02054384 end:0x02054430
 
@@ -8836,7 +8836,7 @@ src/func_02054430.c:
     complete
     .text start:0x02054430 end:0x02054450
 
-src/_ZN2GX17SetBankForTexPlttEt.c:
+src/_ZN2GX17SetBankForTexPlttEt.cpp:
     complete
     .text start:0x02054450 end:0x02054544
 
@@ -8860,7 +8860,7 @@ src/Vram__Map.c:
     complete
     .text start:0x02054c80 end:0x02054d38
 
-src/_ZN3G2S13GetBG3CharPtrEv.c:
+src/_ZN3G2S13GetBG3CharPtrEv.cpp:
     complete
     .text start:0x02054d38 end:0x02054d88
 
@@ -8868,7 +8868,7 @@ src/func_02054d88.c:
     complete
     .text start:0x02054d88 end:0x02054de8
 
-src/_ZN3G2S13GetBG2CharPtrEv.c:
+src/_ZN3G2S13GetBG2CharPtrEv.cpp:
     complete
     .text start:0x02054de8 end:0x02054e30
 
@@ -8876,7 +8876,7 @@ src/_ZN2G213GetBG2CharPtrEv.c:
     complete
     .text start:0x02054e30 end:0x02054e88
 
-src/_ZN3G2S13GetBG1CharPtrEv.c:
+src/_ZN3G2S13GetBG1CharPtrEv.cpp:
     complete
     .text start:0x02054e88 end:0x02054ea8
 
@@ -8884,7 +8884,7 @@ src/func_02054ea8.c:
     complete
     .text start:0x02054ea8 end:0x02054edc
 
-src/_ZN3G2S13GetBG0CharPtrEv.c:
+src/_ZN3G2S13GetBG0CharPtrEv.cpp:
     complete
     .text start:0x02054edc end:0x02054efc
 
@@ -8892,7 +8892,7 @@ src/func_02054efc.c:
     complete
     .text start:0x02054efc end:0x02054f30
 
-src/_ZN3G2S12GetBG3ScrPtrEv.c:
+src/_ZN3G2S12GetBG3ScrPtrEv.cpp:
     complete
     .text start:0x02054f30 end:0x02054fb0
 
@@ -8900,7 +8900,7 @@ src/_ZN2G212GetBG3ScrPtrEv.cpp:
     complete
     .text start:0x02054fb0 end:0x0205503c
 
-src/_ZN3G2S12GetBG2ScrPtrEv.c:
+src/_ZN3G2S12GetBG2ScrPtrEv.cpp:
     complete
     .text start:0x0205503c end:0x020550bc
 
@@ -8908,7 +8908,7 @@ src/_ZN2G212GetBG2ScrPtrEv.c:
     complete
     .text start:0x020550bc end:0x02055148
 
-src/_ZN3G2S12GetBG1ScrPtrEv.c:
+src/_ZN3G2S12GetBG1ScrPtrEv.cpp:
     complete
     .text start:0x02055148 end:0x02055168
 
@@ -8916,7 +8916,7 @@ src/_ZN2G212GetBG1ScrPtrEv.c:
     complete
     .text start:0x02055168 end:0x0205519c
 
-src/_ZN3G2S12GetBG0ScrPtrEv.c:
+src/_ZN3G2S12GetBG0ScrPtrEv.cpp:
     complete
     .text start:0x0205519c end:0x020551bc
 
@@ -9019,11 +9019,11 @@ src/_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3.c:
     complete
     .text start:0x02055bfc end:0x02055dec
 
-src/_ZN3GXS17EndLoadOBJExtPlttEv.c:
+src/_ZN3GXS17EndLoadOBJExtPlttEv.cpp:
     complete
     .text start:0x02055dec end:0x02055e38
 
-src/_ZN3GXS14LoadOBJExtPlttEPKvjj.c:
+src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp:
     complete
     .text start:0x02055e38 end:0x02055eac
 
@@ -9031,11 +9031,11 @@ src/_ZN3GXS19BeginLoadOBJExtPlttEv.cpp:
     complete
     .text start:0x02055eac end:0x02055ed0
 
-src/_ZN3GXS16EndLoadBGExtPlttEv.c:
+src/_ZN3GXS16EndLoadBGExtPlttEv.cpp:
     complete
     .text start:0x02055ed0 end:0x02055f1c
 
-src/_ZN3GXS13LoadBGExtPlttEPKvjj.c:
+src/_ZN3GXS13LoadBGExtPlttEPKvjj.cpp:
     complete
     .text start:0x02055f1c end:0x02055f90
 
@@ -9059,19 +9059,19 @@ src/func_020560d4.c:
     complete
     .text start:0x020560d4 end:0x02056134
 
-src/_ZN3GXS11LoadBG1CharEPKvjj.c:
+src/_ZN3GXS11LoadBG1CharEPKvjj.cpp:
     complete
     .text start:0x02056134 end:0x02056194
 
-src/_ZN2GX11LoadBG1CharEPKvjj.c:
+src/_ZN2GX11LoadBG1CharEPKvjj.cpp:
     complete
     .text start:0x02056194 end:0x020561f4
 
-src/_ZN3GXS11LoadBG0CharEPKvjj.c:
+src/_ZN3GXS11LoadBG0CharEPKvjj.cpp:
     complete
     .text start:0x020561f4 end:0x02056254
 
-src/_ZN2GX11LoadBG0CharEPKvjj.c:
+src/_ZN2GX11LoadBG0CharEPKvjj.cpp:
     complete
     .text start:0x02056254 end:0x020562b4
 
@@ -9111,7 +9111,7 @@ src/func_020565b4.c:
     complete
     .text start:0x020565b4 end:0x02056614
 
-src/_ZN2GX7LoadOBJEPKvjj.c:
+src/_ZN2GX7LoadOBJEPKvjj.cpp:
     complete
     .text start:0x02056614 end:0x02056674
 
@@ -9123,35 +9123,35 @@ src/func_020566dc.c:
     complete
     .text start:0x020566dc end:0x02056738
 
-src/_ZN3GXS11LoadOBJPlttEPKvjj.c:
+src/_ZN3GXS11LoadOBJPlttEPKvjj.cpp:
     complete
     .text start:0x02056738 end:0x020567a0
 
-src/_ZN2GX11LoadOBJPlttEPKvjj.c:
+src/_ZN2GX11LoadOBJPlttEPKvjj.cpp:
     complete
     .text start:0x020567a0 end:0x02056808
 
-src/_ZN3GXS10LoadBGPlttEPKvjj.c:
+src/_ZN3GXS10LoadBGPlttEPKvjj.cpp:
     complete
     .text start:0x02056808 end:0x02056870
 
-src/_ZN2GX10LoadBGPlttEPKvjj.c:
+src/_ZN2GX10LoadBGPlttEPKvjj.cpp:
     complete
     .text start:0x02056870 end:0x020568cc
 
-src/_ZN2GX14EndLoadTexPlttEv.c:
+src/_ZN2GX14EndLoadTexPlttEv.cpp:
     complete
     .text start:0x020568cc end:0x02056924
 
-src/_ZN2GX11LoadTexPlttEPKvjj.c:
+src/_ZN2GX11LoadTexPlttEPKvjj.cpp:
     complete
     .text start:0x02056924 end:0x02056998
 
-src/_ZN2GX16BeginLoadTexPlttEv.c:
+src/_ZN2GX16BeginLoadTexPlttEv.cpp:
     complete
     .text start:0x02056998 end:0x020569e0
 
-src/_ZN2GX10EndLoadTexEv.c:
+src/_ZN2GX10EndLoadTexEv.cpp:
     complete
     .text start:0x020569e0 end:0x02056a50
 
@@ -9159,7 +9159,7 @@ src/_ZN2GX7LoadTexEPKvjj.cpp:
     complete
     .text start:0x02056a50 end:0x02056b9c
 
-src/_ZN2GX12BeginLoadTexEv.c:
+src/_ZN2GX12BeginLoadTexEv.cpp:
     complete
     .text start:0x02056b9c end:0x02056c1c
 

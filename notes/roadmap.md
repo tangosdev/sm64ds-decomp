@@ -39,12 +39,17 @@ Replace the DS hardware layer with PC equivalents and compile for x86_64-windows
 
 - **Graphics:** reimplement the DS GX pipeline over OpenGL / a custom renderer. The
   DS 3D pipeline is unusual, so this is the bulk of the porting work.
-- **Audio:** SDAT / SSEQ playback over SDL or a custom mixer.
+- **Audio:** SDAT / SSEQ playback over SDL3 or a custom mixer.
 - **Input:** keyboard and controller into the game's input layer.
 - **Assets:** loaded at runtime from files the user extracts from their own ROM.
 
 **Done when:** `sm64ds.exe` boots and plays start-to-finish on PC, no emulator,
-linking SDL2 + a GL renderer.
+linking **SDL3** + a GL renderer.
+
+SDL3, not SDL2: it carries a long list of fixes SDL2 never got, and starting a port on
+SDL2 in 2026 means adopting a migration debt on day one. Note that libntr's `sim7`, the
+candidate audio backend in `port/docs/opie-assessment.md`, is built on an SDL2-semaphore
+PXI layer -- so reusing it means porting that seam, not inheriting it.
 
 ## Phase 4 - POLISH  [0%]
 Everything the N64 PC port added once the base port worked: widescreen, high-res,

@@ -11,13 +11,27 @@ struct Coin {
     u32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x3];
+    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    s32 unk_05c;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
-    u8  unk_064;            /* 0x064 */
-    u8  pad_065[0xf];
-    u8  unk_074;            /* 0x074 */
-    u8  pad_075[0x1f];
+    /* 0x064..0x074 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_064;                 /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    /* 0x074..0x094 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
+    s32 mScaleX;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
+    s16 mAngleX;                 /* 0x08c */
+    s16 mAngleY;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
     s32 unk_09c;            /* 0x09c */

@@ -1,0 +1,50 @@
+# Guards the C/C++ language-mode gap against regression (see #821).
+#
+# `tools/langmode_audit.py` counts C++ symbols whose source still spells the mangled
+# name by hand, plus the shadow-declaration and codegen-hack debt around them. Every
+# metric is a DEFECT count, so this gate is a ratchet: the numbers may fall freely and
+# may never rise. `notes/plan-cpp-language-mode.md` is the plan it defends.
+#
+# The headline metric counts a hand-spelled symbol however the file is named, so
+# renaming a `.c` to `.cpp` without migrating it does not buy a green check.
+#
+# This costs nothing to run: pure static analysis over git-tracked files, stdlib only,
+# no compiler and no ROM. That is why it can live in this repo rather than on the
+# private build box that `pr-validate.yml` relays to.
+#
+# When a PR legitimately LOWERS a count, --check still passes, but the baseline is then
+# stale. Re-bank it in the same PR:
+#     python tools/langmode_audit.py --json langmode-baseline.json
+name: langmode ratchet
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "include/**"
+      - "tools/langmode_audit.py"
+      - "tools/demangle.py"
+      - "langmode-baseline.json"
+      - ".github/workflows/langmode-ratchet.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: langmode-ratchet-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ratchet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the audit reads `git ls-files` and the working tree.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Current language-mode state
+        run: python tools/langmode_audit.py
+      - name: "Ratchet: defect counts may fall, never rise"
+        run: python tools/langmode_audit.py --check langmode-baseline.json

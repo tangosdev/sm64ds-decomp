@@ -14,8 +14,11 @@ struct SnowmanBody {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x18];
-    u8  mScaleX;            /* 0x080 */
-    u8  pad_081[0xb];
+    /* 0x080..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 mScaleX;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */

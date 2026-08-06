@@ -1,0 +1,67 @@
+{
+  "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
+  "codegen_hacks": {
+    "inline_asm": 14,
+    "launder_or_forced": 67
+  },
+  "exclusions": {
+    "by_value_class_param": 57
+  },
+  "language_mode": {
+    "by_kind": {
+      "C1": {
+        "draft": 1,
+        "migrated": 0,
+        "unmigrated": 41
+      },
+      "C2": {
+        "draft": 0,
+        "migrated": 0,
+        "unmigrated": 11
+      },
+      "C3": {
+        "draft": 0,
+        "migrated": 0,
+        "unmigrated": 2
+      },
+      "D0": {
+        "draft": 0,
+        "migrated": 3,
+        "unmigrated": 258
+      },
+      "D1": {
+        "draft": 0,
+        "migrated": 72,
+        "unmigrated": 188
+      },
+      "D2": {
+        "draft": 0,
+        "migrated": 0,
+        "unmigrated": 17
+      },
+      "method": {
+        "draft": 10,
+        "migrated": 1116,
+        "unmigrated": 805
+      }
+    },
+    "cpp_still_handspelled": 312,
+    "mangled_c": 1010,
+    "mangled_cpp": 1505,
+    "mangled_total": 2515,
+    "nonmatching_drafts": 11,
+    "unmigrated_total": 1322
+  },
+  "shadow_decls": {
+    "local_body_no_include": 1641,
+    "local_body_no_include_cpp": 776,
+    "local_struct_body": 2664,
+    "local_struct_body_cpp": 1451,
+    "pad_layout": 690
+  },
+  "totals": {
+    "c_extension": 8091,
+    "cpp_extension": 3161,
+    "src_files": 11252
+  }
+}

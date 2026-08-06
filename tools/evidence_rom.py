@@ -27,7 +27,10 @@ try:
     from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
     from capstone.arm import (ARM_OP_REG, ARM_OP_MEM, ARM_INS_BL, ARM_INS_BLX,
                               ARM_INS_BX, ARM_INS_POP, ARM_INS_MOV, ARM_INS_LDM,
-                              ARM_CC_AL, ARM_CC_INVALID)
+                              ARM_CC_AL, ARM_CC_INVALID,
+                              ARM_INS_LDR, ARM_INS_LDRB, ARM_INS_LDRH, ARM_INS_LDRSB,
+                              ARM_INS_LDRSH, ARM_INS_LDRD, ARM_INS_STR, ARM_INS_STRB,
+                              ARM_INS_STRH, ARM_INS_STRD)
 except ImportError:
     sys.exit("capstone not installed. Run: pip install capstone")
 try:
@@ -39,12 +42,22 @@ BANNER = "AUTO-GENERATED from matched-function evidence"
 MANGLE = re.compile(r"_ZN(\d+)([A-Za-z_][A-Za-z_0-9]*)")
 SYM = re.compile(r"^(\S+)\s+kind:function\(arm,size=(0x[0-9a-fA-F]+)\)\s+addr:(0x[0-9a-fA-F]+)")
 
-# width in bytes, and whether the mnemonic itself proves signedness
-LOADS = {"ldrsb": (1, "s"), "ldrsh": (2, "s"), "ldrb": (1, "u"), "ldrh": (2, "u"),
-         "ldr": (4, None), "ldrd": (8, None)}
-STORES = {"strb": (1, None), "strh": (2, None), "str": (4, None), "strd": (8, None)}
-# longest first: 'ldrsb' must beat 'ldr'
-MNEMONICS = sorted(set(LOADS) | set(STORES), key=len, reverse=True)
+# Width in bytes, whether the instruction proves signedness, and whether it loads.
+#
+# Keyed on capstone's instruction ID, NEVER on mnemonic text. Capstone appends the
+# condition code, so `strhs` (str + HS) and `strhi` (str + HI) both prefix-match "strh"
+# and a string test files a 4-byte conditional store as a 2-byte one. That is not
+# hypothetical: four such stores were the entire cross-pass-disagreement bucket. The
+# same collision exists for `ldrhs`/`ldrhi`, which would additionally poison signedness
+# with false unsigned evidence. This file already documents the identical trap for
+# branches (`startswith("bl")` catches `ble`) -- it was fixed there and left here.
+MEMOPS = {
+    ARM_INS_LDRSB: (1, "s", True), ARM_INS_LDRSH: (2, "s", True),
+    ARM_INS_LDRB: (1, "u", True), ARM_INS_LDRH: (2, "u", True),
+    ARM_INS_LDR: (4, None, True), ARM_INS_LDRD: (8, None, True),
+    ARM_INS_STRB: (1, None, False), ARM_INS_STRH: (2, None, False),
+    ARM_INS_STR: (4, None, False), ARM_INS_STRD: (8, None, False),
+}
 
 NAMED_REG = {"sb": 9, "sl": 10, "fp": 11, "ip": 12, "sp": 13, "lr": 14, "pc": 15}
 
@@ -191,7 +204,21 @@ def main():
         bases[f"ov{o['id']:03d}"] = (ext / "overlays" / f"overlay_{o['id']:04d}.bin",
                                      coerce_addr(o["base_address"]))
 
+    # ---- statics quarantine: in a static or namespace-scoped function r0 is the
+    # first argument, not `this`, so every access it makes would be filed against a
+    # class it may never touch. tools/static_symbols.py decides this from the source,
+    # because the mangling cannot: a method's `this` is implicit and unencoded.
+    statics = set()
+    sp = root / "build" / "static_symbols.json"
+    if sp.exists():
+        statics = set(json.loads(sp.read_text(encoding="utf-8")).get("static", []))
+    else:
+        print("!! build/static_symbols.json absent -- static member functions will be "
+              "read as though r0 were `this`. Run tools/static_symbols.py.",
+              file=sys.stderr)
+
     # ---- functions attributable to one of those classes
+    r_static_skipped = []
     funcs = []
     for st in (root / "config" / "arm9").rglob("symbols.txt"):
         mod = st.parent.name
@@ -202,12 +229,15 @@ def main():
             if not m:
                 continue
             cls = class_of(m.group(1))
-            if cls in classes:
+            if cls in classes and m.group(1) in statics:
+                r_static_skipped.append(m.group(1))
+            elif cls in classes:
                 funcs.append((cls, m.group(1), mod,
                               int(m.group(3), 16), int(m.group(2), 16)))
 
     md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
     md.detail = True
+
 
     blobs = {}
 
@@ -244,6 +274,7 @@ def main():
     r = collections.Counter()
     r.update(rates)
     r["classes_targeted"] = len(classes)
+    r["static_functions_skipped"] = len(r_static_skipped)
     r["functions_attributed"] = len(funcs)
 
     for cls, sym, mod, addr, size in funcs:
@@ -261,15 +292,14 @@ def main():
 
         for insn in md.disasm(data[off:off + size], addr):
             mnem = insn.mnemonic.lower()
-            op = next((m for m in MNEMONICS if mnem.startswith(m)), None)
+            op = MEMOPS.get(insn.id)
 
             if op and insn.operands:
                 memop = next((o for o in insn.operands if o.type == ARM_OP_MEM), None)
                 if memop is not None:
                     r["mem_total"] += 1
                     bnum = reg_num(insn.reg_name(memop.mem.base))
-                    is_load = op in LOADS
-                    width, sign = (LOADS if is_load else STORES)[op]
+                    width, sign, is_load = op
                     if bnum == 13:
                         r["mem_stack"] += 1
                     elif bnum == 15:
@@ -377,6 +407,8 @@ def main():
     mt = max(1, r["mem_total"])
     print(f"classes with a bannered header : {r['classes_targeted']}")
     print(f"functions attributed           : {r['functions_attributed']}")
+    print(f"  static/namespace SKIPPED     : {r['static_functions_skipped']}"
+          f"   (r0 is arg 1, not `this`)")
     print(f"  disassembled                 : {r['functions_disassembled']}")
     print(f"memory accesses seen           : {r['mem_total']}")
     print(f"  provably this-based    KEPT  : {r['mem_this']}  ({100*r['mem_this']/mt:.1f}%)")

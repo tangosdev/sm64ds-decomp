@@ -8,5 +8,4 @@ void Timer::ResetTimer()
 {
     mIsRunning = 0;
     unk_000 = 0;
-    unk_004 = 0;
 }

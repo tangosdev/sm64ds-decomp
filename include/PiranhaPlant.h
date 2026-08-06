@@ -20,8 +20,19 @@ struct PiranhaPlant {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x1a];
-    u8  unk_0b0;            /* 0x0b0 */
-    u8  pad_0b1[0x4f];
+    /* 0x0b0..0x100 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    u32 unk_0b0;                 /* 0x0b0 */
+    s32 unk_0b4;                 /* 0x0b4 */
+    s32 unk_0b8;                 /* 0x0b8 */
+    s32 unk_0bc;                 /* 0x0bc */
+    s32 unk_0c0;                 /* 0x0c0 */
+    u8  unk_0c4;                 /* 0x0c4 */
+    u8  pad_0c5[0x7];
+    s8  mAreaId;                 /* 0x0cc */
+    u8  pad_0cd[0x1];
+    s16 unk_0ce;                 /* 0x0ce */
+    u8  pad_0d0[0x30];
     s16 unk_100;            /* 0x100 */
     u8  pad_102[0x6];
     u8  unk_108;            /* 0x108 */

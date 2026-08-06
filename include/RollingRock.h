@@ -14,12 +14,12 @@ struct RollingRock {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x24];
-    u8  unk_08c;            /* 0x08c */
-    u8  pad_08d[0x1];
+    /* Actor::mAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    s16 unk_08c;            /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x2];
-    u8  unk_092;            /* 0x092 */
-    u8  pad_093[0x1];
+    /* Actor::mPrevAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    s16 unk_092;            /* 0x092 */
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
     s32 unk_098;            /* 0x098 */

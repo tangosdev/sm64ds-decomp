@@ -18,8 +18,13 @@ struct BookShot {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x2];
-    u8  unk_08e;            /* 0x08e */
-    u8  pad_08f[0x9];
+    /* 0x08e..0x098 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s16 unk_08e;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
     s32 unk_098;            /* 0x098 */
     u8  pad_09c[0xc];
     s32 unk_0a8;            /* 0x0a8 */

@@ -8,8 +8,17 @@
 
 struct BobOmb {
     u8  pad_000[0x80];
-    u8  unk_080;            /* 0x080 */
-    u8  pad_081[0x17];
+    /* 0x080..0x098 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_080;                 /* 0x080 */
+    s32 mScaleY;                 /* 0x084 */
+    s32 mScaleZ;                 /* 0x088 */
+    s16 mAngleX;                 /* 0x08c */
+    s16 mAngleY;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
     s32 unk_098;            /* 0x098 */
     s32 unk_09c;            /* 0x09c */
     u8  pad_0a0[0x10];

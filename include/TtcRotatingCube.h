@@ -8,8 +8,16 @@
 
 struct TtcRotatingCube {
     u8  pad_000[0x90];
-    u8  unk_090;            /* 0x090 */
-    u8  pad_091[0x17];
+    /* 0x090..0x0a8 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s16 unk_090;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
+    s32 mHorzSpeed;              /* 0x098 */
+    s32 mVertAccel;              /* 0x09c */
+    s32 mTerminalVelocity;       /* 0x0a0 */
+    u8  pad_0a4[0x4];
     s32 unk_0a8;            /* 0x0a8 */
     u8  pad_0ac[0x4];
     s32 unk_0b0;            /* 0x0b0 */

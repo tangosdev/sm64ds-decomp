@@ -1,6 +1,7 @@
 # The scalar-sized u8 markers
 
-**Status:** done for the 71 mechanical cases. One left for a person (§5).
+**Status:** done for the 71 mechanical cases. A handful remain for a person --
+`gen_header.py --report` is the live count; it was 1 when this was written.
 **Depends on:** #1118 (the evidence passes), #1121 (the base headers).
 
 ---
@@ -100,7 +101,7 @@ access is cast anyway.
 ## 4. Preserving offsets
 
 Every retype shrinks the following pad by the width gained and renames it to its new
-offset. `build/check_offsets.py` walks each struct, applies natural alignment, and
+offset. `tools/check_header_offsets.py` walks each struct, applies natural alignment, and
 compares every field's computed position against its comment: **562 commented fields
 across 33 headers, 0 mismatched**.
 

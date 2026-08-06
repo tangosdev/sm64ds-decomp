@@ -35,15 +35,22 @@ You bring your own copy of the game. Nothing copyrighted lives in this repo.
 1. **Your own SM64DS cartridge dump (`.nds`).** The symbols and addresses here are
    verified against the **EU (Europe) retail build**, so use that build. The ROM and
    anything extracted from it are git-ignored and must never be committed.
-2. **mwccarm** (Metrowerks CodeWarrior ARM). Proprietary but free; it's pinned in
-   the DS-decompilation Discord, not downloadable directly. Full instructions are
-   in [`notes/setup-mwccarm.md`](notes/setup-mwccarm.md). Extract to
-   `tools/mwccarm/` (git-ignored).
+2. **mwccarm** (Metrowerks CodeWarrior ARM). Two parts, and you need both — full
+   instructions in [`notes/setup-mwccarm.md`](notes/setup-mwccarm.md):
+   - the **sweep** (`mwccarm.zip`, 24 versions): proprietary but free, pinned in the
+     DS-decompilation Discord, not downloadable directly. Extract to `tools/mwccarm/`
+     (git-ignored).
+   - the **pinned build `2004/b56`**, which the zip does *not* contain and which is what
+     the build actually honours: `python tools/recover_cw2004.py` recovers and verifies it
+     from public archives. Run it *after* the zip — it borrows that trio's runtime DLLs.
 3. **dsd** (the ds-decomp toolkit): https://github.com/AetiasHax/ds-decomp, it drives
-   the analysis config in `config/` and rebuilds the ROM from objects.
+   the analysis config in `config/` and rebuilds the ROM from objects. Grab the `0.11.0`
+   binary for your platform from the releases page and put it at `tools/bin/dsd.exe`
+   (`tools/bin/` is git-ignored).
 4. **Python 3** plus a few packages:
    ```
-   pip install ndspy capstone pyelftools
+   pip install ndspy capstone pyelftools    # core
+   pip install py7zr pefile                # only for tools/recover_cw2004.py
    ```
 
 ## First-time setup
@@ -51,11 +58,18 @@ You bring your own copy of the game. Nothing copyrighted lives in this repo.
 ```
 git clone https://github.com/tangosdev/sm64ds-decomp
 cd sm64ds-decomp
-pip install ndspy capstone pyelftools
+pip install ndspy capstone pyelftools py7zr pefile
 
-# get mwccarm per notes/setup-mwccarm.md, then:
+# 1. get mwccarm.zip per notes/setup-mwccarm.md and extract to tools/mwccarm/
+# 2. recover the pinned compiler the zip does not carry (verifies by SHA-256):
+python tools/recover_cw2004.py                         # -> tools/mwccarm/2004/b56/
+# 3. put the dsd 0.11.0 binary at tools/bin/dsd.exe
+# 4. extract your own ROM:
 python tools/unpack.py "path/to/your-own-sm64ds.nds"   # -> populates extracted/ (git-ignored)
 ```
+
+Without step 2 nothing can be byte-verified: `rombuild.py` and `build_pin.verify` only
+accept `2004/b56`, so a sweep hit under another version is iteration, never a verdict.
 
 ## The matching loop
 

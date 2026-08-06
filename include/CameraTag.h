@@ -10,8 +10,17 @@ struct CameraTag {
     u8  pad_000[0x8];
     u32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x23];
+    /* 0x05c..0x080 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+       marker over the whole range. */
+    s32 unk_05c;                 /* 0x05c */
+    s32 mPosY;                   /* 0x060 */
+    s32 mPosZ;                   /* 0x064 */
+    s32 unk_068;                 /* 0x068 */
+    s32 unk_06c;                 /* 0x06c */
+    s32 unk_070;                 /* 0x070 */
+    s32 mCamSpacePosX;           /* 0x074 */
+    s32 mCamSpacePosY;           /* 0x078 */
+    s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
     u8  pad_088[0x4];
