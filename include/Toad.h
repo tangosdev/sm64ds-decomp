@@ -5,6 +5,7 @@
 #ifndef TOAD_H
 #define TOAD_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Toad {
     u8  pad_000[0x8];
@@ -20,8 +21,9 @@ struct Toad {
     u8  pad_0cd[0x7];
     u8  mMovingCylinderClsn;            /* 0x0d4 */
     u8  pad_0d5[0x33];
-    u8  mModelAnim;            /* 0x108 */
-    u8  pad_109[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x108 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x108 */
     u8  mShadowModel;            /* 0x16c */
     u8  pad_16d[0x87];
     s32 unk_1f4;            /* 0x1f4 */

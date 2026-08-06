@@ -5,6 +5,7 @@
 #ifndef HAUNTEDCHAIR_H
 #define HAUNTEDCHAIR_H
 #include "types.h"
+#include "Model.h"
 
 struct HauntedChair {
     u8  pad_000[0x5c];
@@ -12,8 +13,9 @@ struct HauntedChair {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x6c];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mShadowModel;            /* 0x124 */
     u8  pad_125[0x27];
     u8  unk_14c;            /* 0x14c */

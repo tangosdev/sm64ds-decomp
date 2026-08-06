@@ -5,6 +5,7 @@
 #ifndef POWERSTAR_H
 #define POWERSTAR_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct PowerStar {
     u8  pad_000[0xc];
@@ -18,10 +19,12 @@ struct PowerStar {
     u8  pad_111[0x3f];
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1bb];
-    u8  mModelAnim1;            /* 0x30c */
-    u8  pad_30d[0x63];
-    u8  mModelAnim2;            /* 0x370 */
-    u8  pad_371[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x30c -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim1;            /* 0x30c */
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x370 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim2;            /* 0x370 */
     u8  mShadowModel;            /* 0x3d4 */
     u8  pad_3d5[0x67];
     s32 unk_43c;            /* 0x43c */
