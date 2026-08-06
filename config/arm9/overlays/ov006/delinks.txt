@@ -7163,6 +7163,10 @@ src/__sinit_ov006_021300b0.c:
     complete
     .init start:0x021300b0 end:0x0213014c
 
+src/__sinit_ov006_0213014c.c:
+    complete
+    .init start:0x0213014c end:0x021303d0
+
 src/__sinit_ov006_021303d0.c:
     complete
     .init start:0x021303d0 end:0x021304ac
