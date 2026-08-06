@@ -575,3 +575,52 @@ Draft is **0x8a8** against 0x1bc8, about half.
 `func_02037a24`, which I had inferred rather than read. The actual call at 0x01ffd0d4 is
 `bl #0x20379c0`. Symbols must come off the call site, never from the shape of a neighbour's
 address.
+
+### The bulk is a Voronoi-region test (2026-08-06)
+
+The unexamined 0x1ffbe80..0x1ffcff0 -- about 1100 of the function's 1778 words -- has a
+simple shape once you see the dispatch:
+
+```
+bl 0x2039488 ; cmp r0,#0 ; bne reject     ShouldPassThroughImpl(this, info, sphere, flag)
+cmp r8,r7 / cmp r8,r6 / cmp r7,r6         which of the three EDGE dots is largest
+cmp r8,#0  ; ble 0x1ffcaa4                largest <= 0 -> centre is INSIDE -> face case
+ldrb r0,[sl,#0x4c]                        this->unk_4c gates the edge/vertex path
+smull pairs, >>10                         the real distance against that edge
+```
+
+So the per-prism test is the standard sphere-triangle **Voronoi region** decision:
+
+* All three edge dots `<= 0` -> the centre projects inside the triangle, and the face
+  distance already in `depth` is the answer. That is the `0x1ffcaa4` case.
+* Otherwise the centre is outside the edge with the largest dot, and the true distance is to
+  that **edge or one of its endpoints** -- which is why the radius is squared once up front
+  (`radius << 4` then `smull r0,r0,r0`, high word at `sp+0x64`): a point-to-segment test
+  compares squared lengths, so nothing needs a square root.
+
+Three symmetric branches, one per edge, each doing the edge/vertex distance and its squared
+compare. Three copies of the same ~300-word block is most of the 1100.
+
+`this->unk_4c` (init 1) enables the edge/vertex handling; with it clear, only the face case
+can register a hit. That is the fifth `MeshCollider` field this function gives a purpose to,
+after `unk_34`, `unk_35`, `unk_38` and `unk_44`.
+
+The pass-through filter is the twin's again: `BgCh::ShouldPassThroughImpl(collider, surface,
+query, flag)`, sitting between the classify and the record so that a surface the query is
+allowed to pass through never reaches the accumulators.
+
+**Order of the per-prism body, settled:**
+
+```
+1  three edge-normal rejects, then the face-normal reject
+2  depth = rsc - faceDot
+3  triID, GetSurfaceInfo (real virtual call), CopyNormalTo, classify on normal.Y
+4  ShouldPassThroughImpl -> reject
+5  Voronoi dispatch: face, or edge/vertex distance vs the squared radius   <-- the bulk
+6  record into the class slot, set the class bit, accumulate depth x normal
+```
+
+Steps 1-4 and 6 are written. Step 5 is the remaining work, and it is now three instances of
+one known shape rather than an unexplored region.
+
+Draft is **0x8cc** against 0x1bc8.

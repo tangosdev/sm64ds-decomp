@@ -27,6 +27,8 @@ extern "C" void func_020379f4(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_020379c0(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
+extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
+                                                              SphereClsn *q, int flag);
 
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
@@ -57,6 +59,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u32 x, y, z;
     s32 stepX, stepY, stepZ;
     u32 one = 1;
+    s32 passArg = 0;
     /* Slot order is declaration order on this compiler, and these fourteen words
        are the ROM's zeroed block, in order.
 
@@ -192,6 +195,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         s16 triID;
                         s32 cls;
                         s32 v;
+                        s32 dot1, dot2, dot3;
                         Vector3 sn;
 
                         dx = rawX - vtx[0];
@@ -199,12 +203,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         dz = rawZ - vtx[2];
 
                         en = f->normals[tri->edgeNormal1Idx];
-                        if (dx * en[0] + dy * en[1] + dz * en[2] >= rsc) continue;
+                        dot1 = dx * en[0] + dy * en[1] + dz * en[2];
+                        if (dot1 >= rsc) continue;
                         en = f->normals[tri->edgeNormal2Idx];
-                        if (dx * en[0] + dy * en[1] + dz * en[2] >= rsc) continue;
+                        dot2 = dx * en[0] + dy * en[1] + dz * en[2];
+                        if (dot2 >= rsc) continue;
                         en = f->normals[tri->edgeNormal3Idx];
-                        if (dx * en[0] + dy * en[1] + dz * en[2] - tri->length >= rsc)
-                            continue;
+                        dot3 = dx * en[0] + dy * en[1] + dz * en[2] - tri->length;
+                        if (dot3 >= rsc) continue;
 
                         /* Face normal. Note GT, not the GE the three edges use. */
                         fn = f->normals[tri->normalIdx];
@@ -248,6 +254,33 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
+
+                        /* Same one-way/pass-through filter the RaycastGround twin
+                           applies, and it takes the collider, the surface and the
+                           query object. */
+                        if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                                this, &data_020a0cec, &sphere, passArg))
+                            continue;
+
+                        /* Voronoi region select: whichever edge the centre is
+                           furthest outside decides whether this is a face, edge or
+                           vertex contact. All three dots <= 0 means the centre
+                           projects inside the triangle and the face distance --
+                           already in `depth` -- is the answer. Otherwise the true
+                           distance has to be computed against that edge or its
+                           endpoints, which is what the squared radius at sp+0x60/64
+                           is compared against.
+
+                           TODO: the three symmetric edge/vertex branches. They are
+                           gated by this->unk_4c and are ~1100 of the function's
+                           1778 words. */
+                        if (dot1 > dot2) {
+                            if (dot1 > dot3) { /* edge 1 */ }
+                            else             { /* edge 3 */ }
+                        } else {
+                            if (dot2 > dot3) { /* edge 2 */ }
+                            else             { /* edge 3 */ }
+                        }
 
                         func_02037fd4(&sphere.result, triID, &data_020a0cec);
                         sphere.flags |= 1;
