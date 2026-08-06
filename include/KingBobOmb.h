@@ -5,6 +5,7 @@
 #ifndef KINGBOBOMB_H
 #define KINGBOBOMB_H
 #include "types.h"
+#include "BlendModelAnim.h"
 
 struct KingBobOmb {
     u8  pad_000[0x8];
@@ -34,8 +35,9 @@ struct KingBobOmb {
     u8  pad_0d0[0x40];
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];
-    u8  mBlendModelAnim;            /* 0x2cc */
-    u8  pad_2cd[0x6f];
+    /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x2cc -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    BlendModelAnim mBlendModelAnim;            /* 0x2cc */
     u8  mMovingCylinderClsnWithPos1;            /* 0x33c */
     u8  pad_33d[0x3f];
     u8  mMovingCylinderClsnWithPos2;            /* 0x37c */

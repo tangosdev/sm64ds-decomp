@@ -98,6 +98,10 @@ struct ModelAnim {
     struct BCA_File *file;             /* 0x60 */
 };
 
+/* So an object header declaring a ModelAnim member reads the same in both modes: C++
+ * gets the class, C gets the flat stand-in above, and neither needs `struct`. */
+typedef struct ModelAnim ModelAnim;
+
 #endif /* __cplusplus */
 
 #endif /* MODELANIM_H */

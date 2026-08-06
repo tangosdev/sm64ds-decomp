@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MontyMole.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
 typedef struct BCA_File BCA_File;
 typedef struct Actor Actor;
@@ -17,8 +17,8 @@ extern "C" {
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, Fix12 b, unsigned int e);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, Fix12i b, unsigned int e);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 }
 
 int MontyMole::InitResources()

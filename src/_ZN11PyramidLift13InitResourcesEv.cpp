@@ -6,7 +6,8 @@
 #include "PyramidLift.h"
 #pragma opt_strength_reduction off
 typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
 typedef struct KCL_File KCL_File;
 typedef struct Matrix4x3 Matrix4x3;
