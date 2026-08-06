@@ -32,6 +32,8 @@ start converting a class; the same staleness rule applies.
 
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_020d3ba0 (0x020d3ba0, size 0x98c) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: end-loop `int xw[2]` (xw[0]=x,xw[1]=w) flips r3/r4 regperm; from near-miss div=9→0; API clm_e7f4edf70069 kept |
+| ov015 func_ov015_021114f0 (0x021114f0, size 0x17c) | lunavyqo (Grok) | 2026-08-06 | **active** — match from near-miss div=12; API clm_92d31f7de5a0 |
 | ov006 func_ov006_020d47f4 (0x020d47f4, size 0xe8) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_strength_reduction off` + `#pragma opt_common_subs off`, `fix=-1`, loop2 `j=0` then `x=0x20` accum `+0x40`; from near-miss div=18→0; API clm_28332389df47 kept |
 | ov004 __sinit_ov004_020b955c (0x020b955c, size 0x574) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); levers: field-load `tmp.a/b` from `data_02086b58` then `w[0]/w[1]` copy; mid-stream `p0.a=w[0]` / fills / `p0.b=w[1]` + bf4f8 p1-p4+p11=tmp; from near-miss 299→142→22→0; API clm_05b55ea60b6a kept |
 | ov007 func_ov007_020c49bc (0x020c49bc, size 0x440) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical (mwccarm 2004/b56); strength_reduction off + 6k decl sl/sb + sp4C-before-sp30 + else-path name-swap r6/r7; API clm_671dd186507f kept |
