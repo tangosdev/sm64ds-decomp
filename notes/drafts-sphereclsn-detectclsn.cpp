@@ -14,6 +14,9 @@
 
 struct ClsnResult { u8 raw[0x28]; };
 
+extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
+                              s32 hiX, s32 hiY, s32 hiZ);
+
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
    member, not loose fields -- see notes/collision-query-classes.md. The entry
@@ -39,9 +42,21 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u32 x, y, z;
     s32 stepX, stepY, stepZ;
     u32 one = 1;
-    /* Slot order is declaration order on this compiler. The ROM's fourteen zeroed
-       words end with these two triples: prev1..3 at sp+0x48/0x4c/0x50 and
-       p1..3 at sp+0x54/0x58/0x5c; the scores s1..3 are sp+0x74/0x78/0x7c. */
+    /* Slot order is declaration order on this compiler, and these fourteen words
+       are the ROM's zeroed block, in order.
+
+       The first six are three running min/max pairs -- the accumulated
+       penetration extent, written by `if (v > hi) hi = v; else if (v < lo) lo = v`
+       at every hit and handed to func_02037a6c at the end as
+       (lo.x, lo.y, lo.z, hi.x, hi.y, hi.z). Six scalars, not two Vector3s by
+       value: a by-value class parameter would have homed r0-r3 to the stack (the
+       runbook section 7 dead end) and no homing happens here. */
+    s32 loPX, hiPX;             /* sp+0x28 / sp+0x2c */
+    s32 loPY, hiPY;             /* sp+0x30 / sp+0x34 */
+    s32 loPZ, hiPZ;             /* sp+0x38 / sp+0x3c */
+    s32 hitFlags;               /* sp+0x40 - a bitmask (|= 4 seen); RETURNED */
+    s32 hitFlags2;              /* sp+0x44 - second flag, ORed into the hit test */
+    /* ...and the last six of the fourteen are the two leaf triples: */
     u16 *prev1, *prev2, *prev3;
     u16 *p1, *p2, *p3;
     s32 s1, s2, s3;
@@ -79,6 +94,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     rsc = sphere.radius << 4;
     rsq = (s64)rsc * rsc;
 
+    loPX = hiPX = 0;
+    loPY = hiPY = 0;
+    loPZ = hiPZ = 0;
+    hitFlags = hitFlags2 = 0;
     prev1 = prev2 = prev3 = 0;
     p1 = p2 = p3 = 0;
     s1 = s2 = s3 = 0;
@@ -152,5 +171,9 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
         z += stepZ;
     } while (z <= hiZ);
 
-    return (s32)rsq;
+    /* The accumulated extent goes back as two corners; the flags word is the
+       return value. func_02037a6c (0x02037a6c, 0xb0) is still unnamed. */
+    if (!hitFlags && !hitFlags2) return 0;
+    func_02037a6c(&sphere, loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
+    return hitFlags;
 }

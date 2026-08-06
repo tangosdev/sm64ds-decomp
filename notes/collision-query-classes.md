@@ -236,3 +236,50 @@ single plane solve. The first eight of the fourteen zeroed words (`sp+0x28`..`sp
 still unidentified and are the natural next thing to decode: they are almost certainly the
 accumulator set the geometry writes into, and knowing them fixes the declaration order for
 the rest of the function.
+
+### The fourteen zeroed words, fully decoded (2026-08-06)
+
+All fourteen now have meanings, which fixes declaration order for the whole function.
+
+| slot | meaning |
+|---|---|
+| `0x28` / `0x2c` | `lo.x` / `hi.x` |
+| `0x30` / `0x34` | `lo.y` / `hi.y` |
+| `0x38` / `0x3c` | `lo.z` / `hi.z` |
+| `0x40` | result bitmask — **the return value** |
+| `0x44` | second flag, ORed into the hit test |
+| `0x48` / `0x4c` / `0x50` | `prev1..3`, the visited-leaf triple |
+| `0x54` / `0x58` / `0x5c` | `p1..3`, the top-3 leaf pointers |
+
+**The first six are three running min/max pairs.** Every write site is the same shape:
+
+```
+cmp v,[sp,#0x2c] ; strgt v,[sp,#0x2c] ; bgt skip      if (v > hi) hi = v
+cmp v,[sp,#0x28] ; strlt v,[sp,#0x28]                 else if (v < lo) lo = v
+```
+
+and the epilogue hands them to `func_02037a6c` as `r1=[0x28] r2=[0x30] r3=[0x38]` plus
+stack `[0x2c] [0x34] [0x3c]` — i.e. `(lo.x, lo.y, lo.z, hi.x, hi.y, hi.z)`. So the function
+does not stop at the first hit like its siblings: it accumulates a **penetration extent**
+across every intersecting prism and reports the box once at the end. That is the real reason
+it is 0x1bc8 against the Line overload's 0x734, more than the geometry being harder.
+
+Six scalars, **not** two `Vector3` by value: a by-value class parameter makes mwccarm home
+`r0-r3` to the stack (+0x14, the runbook section 7 dead end) and no homing happens here.
+The slots are also interleaved per axis, which two contiguous `Vector3` locals could not
+produce.
+
+The accumulated value is a fixed-point product: `umull`, two `mla` sign-corrections, then
+`>>14` / `<<18` / `>>2` — net `v = ((s64)a * b) >> 16`.
+
+`func_02037a6c` (0x02037a6c, 0xb0) is still unnamed. Naming it would say what the extent
+*means* and is cheap next work.
+
+The epilogue also confirms the two loop tails already in the draft: `prev1..3 = p1..3` at row
+end, then `z += stepZ while (z <= hiZ)`.
+
+**Remaining:** the per-prism geometry only. Everything else — entry, AABB, radius square,
+march, descent, step, leaf caches, sorted insert, accumulators, epilogue — is written. The
+draft compiles to 0x310 because with no geometry the accumulators are never written, so
+mwccarm folds them and dead-strips the epilogue call. Both reappear the moment a hit path
+exists; do not read the shrink as a regression.
