@@ -17,8 +17,14 @@
 # push rather than only main-targeted ones: neither needs the ROM, and both catch mistakes
 # that are invisible in review because every byte still matches.
 #
-# Install:
+# Install, either way:
+#   git config core.hooksPath tools/hooks        # tracked copy runs directly;
+#                                                # updates land with a pull
 #   cp tools/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# The second needs re-copying whenever this file changes, and a stale copy is
+# invisible -- it still runs, just without whatever check was added. Prefer the
+# first. (If core.hooksPath is set, git ignores .git/hooks entirely, so an old
+# copy left there is dead weight rather than a conflict.)
 # Bypass once (you had better be sure):
 #   git push --no-verify
 
