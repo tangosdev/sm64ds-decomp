@@ -802,3 +802,37 @@ python tools/fdiff.py --c <draft> --name _ZN12MeshCollider10DetectClsnER10Sphere
 Draft progress on that metric: **0x8cc / ratio 0.3494 / 409 shape-equal -> 0x10d0 / ratio
 0.5011 / 715 shape-equal**, with the dispatch, the three edge blocks, the filter, the raw
 sqrt and the shared tail written and the three vertex blocks still open.
+
+### There is a ~336-word wall block after the face test, and it was never in the map (2026-08-06)
+
+With step 5 written, the alignment still reports `delete: 815` — target instructions with no
+counterpart at all. Most of them are one region the handoff's inventory does not mention:
+**`0x1ffcaa4`..`0x1ffcfe4`, about 336 words**, entered right after the face test and rejoining
+at `0x1ffcfe4`. Section 1 of the handoff lists "the classify, the pass-through filter, the
+record, the accumulate, the epilogue" as written; this sits between them and is not any of
+them.
+
+It is gated four ways, all of which must pass:
+
+```
+sphere.unk_108 >= surfaceNormal.y      0x1ffcaa4   (already in the draft)
+sphere.unk_ec  >  0                    0x1ffcab4
+cls == 1                               0x1ffcac0   walls only
+(tri->length & 0xf0000000) == 0        0x1ffcacc   no flags in the high nibble
+```
+
+and what it then does is **reconstruct the triangle's real geometry from the KCL prism**:
+
+* `[sp+0x90]` (the vertex position) is re-read and each component taken `<< 6` into
+  `sp+0x18c`/`0x190`/`0x194` — the position at full Fix12i scale rather than the 1/64 units
+  the walk uses;
+* then a **cross product**, `faceNormal x en2`, componentwise as `MUL10` pairs subtracted and
+  stored as three `s16` into a 6-byte vector at `sp+0x16c` (`0x1ffcb0c`..`0x1ffcbb0`), and
+  further cross/dot work against `en3` (`sp+0x94`) after it.
+
+That is the standard way to recover a KCL triangle's edges and vertices from
+(position, face normal, three edge normals, length), so this is a precise wall contact test
+that only runs once the cheap tests have already accepted the prism.
+
+**Do not treat this as part of step 5.** It is a separate mechanism with its own gate, and it
+is now the single largest unwritten region in the function.
