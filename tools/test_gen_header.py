@@ -206,6 +206,25 @@ def test_passes_that_agree_still_confirm():
     assert not b.get("cross-pass width disagreement"), b
 
 
+def test_statics_are_classified_by_arity_not_by_mangling():
+    """Nothing in the Itanium encoding distinguishes a static member from an instance
+    one -- a method's `this` is implicit and never appears. So r0 in a static is just
+    argument 1, and every access it makes would be filed against a class it may never
+    touch. G2x is the extreme: its methods take a volatile u16* hardware register."""
+    import static_symbols as SS
+    assert SS.n_params("f()") == 0
+    assert SS.n_params("f(int)") == 1
+    assert SS.n_params("f(A<x,y>, int)") == 2, "commas inside <> are not separators"
+    # rung-2 form: mangled name spelled directly, explicit this => instance
+    inst = "int *_ZN10BrickBlockD0Ev(int *t)\n{\n"
+    assert SS.classify("_ZN10BrickBlockD0Ev", inst)[0] == "instance"
+    # same arity as the mangling => r0 is a real argument => static
+    stat = "void _ZN5Stage14GraphCallback2EP12SceneRelated(void *a)\n{\n"
+    assert SS.classify("_ZN5Stage14GraphCallback2EP12SceneRelated", stat)[0] == "static"
+    # unparsable must be its own outcome, never a silent default to instance
+    assert SS.classify("_ZN5Stage14GraphCallback2EP12SceneRelated", "")[0].startswith("undecided")
+
+
 # ------------------------------------------------------- check_header_offsets
 
 def _check(tmp, text):

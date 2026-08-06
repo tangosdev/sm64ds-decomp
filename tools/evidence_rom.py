@@ -204,7 +204,21 @@ def main():
         bases[f"ov{o['id']:03d}"] = (ext / "overlays" / f"overlay_{o['id']:04d}.bin",
                                      coerce_addr(o["base_address"]))
 
+    # ---- statics quarantine: in a static or namespace-scoped function r0 is the
+    # first argument, not `this`, so every access it makes would be filed against a
+    # class it may never touch. tools/static_symbols.py decides this from the source,
+    # because the mangling cannot: a method's `this` is implicit and unencoded.
+    statics = set()
+    sp = root / "build" / "static_symbols.json"
+    if sp.exists():
+        statics = set(json.loads(sp.read_text(encoding="utf-8")).get("static", []))
+    else:
+        print("!! build/static_symbols.json absent -- static member functions will be "
+              "read as though r0 were `this`. Run tools/static_symbols.py.",
+              file=sys.stderr)
+
     # ---- functions attributable to one of those classes
+    r_static_skipped = []
     funcs = []
     for st in (root / "config" / "arm9").rglob("symbols.txt"):
         mod = st.parent.name
@@ -215,12 +229,15 @@ def main():
             if not m:
                 continue
             cls = class_of(m.group(1))
-            if cls in classes:
+            if cls in classes and m.group(1) in statics:
+                r_static_skipped.append(m.group(1))
+            elif cls in classes:
                 funcs.append((cls, m.group(1), mod,
                               int(m.group(3), 16), int(m.group(2), 16)))
 
     md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
     md.detail = True
+
 
     blobs = {}
 
@@ -257,6 +274,7 @@ def main():
     r = collections.Counter()
     r.update(rates)
     r["classes_targeted"] = len(classes)
+    r["static_functions_skipped"] = len(r_static_skipped)
     r["functions_attributed"] = len(funcs)
 
     for cls, sym, mod, addr, size in funcs:
@@ -389,6 +407,8 @@ def main():
     mt = max(1, r["mem_total"])
     print(f"classes with a bannered header : {r['classes_targeted']}")
     print(f"functions attributed           : {r['functions_attributed']}")
+    print(f"  static/namespace SKIPPED     : {r['static_functions_skipped']}"
+          f"   (r0 is arg 1, not `this`)")
     print(f"  disassembled                 : {r['functions_disassembled']}")
     print(f"memory accesses seen           : {r['mem_total']}")
     print(f"  provably this-based    KEPT  : {r['mem_this']}  ({100*r['mem_this']/mt:.1f}%)")
