@@ -36,6 +36,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s32 r;
     s32 rsc;
     s64 rsq;
+    u32 x, y, z;
+    s32 stepX, stepY, stepZ;
+    u32 lp;
+    u32 one = 1;
 
     KCL_File *f = kclFile;
     const Vector3 *c = &sphere.centre;
@@ -68,6 +72,53 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
        (<< 4) and squared into 64 bits once, before the walk. */
     rsc = sphere.radius << 4;
     rsq = (s64)rsc * rsc;
+
+    z = loZ;
+    do {
+        stepZ = 1000000;
+        y = loY;
+        do {
+            stepY = 1000000;
+            x = loX;
+            do {
+                u32 shift = f->coordShift;
+                u32 *node;
+                u32 idx;
+                s32 v;
+                s32 size, mask, cy, cz;
+
+                idx = (z >> shift) << f->zShift
+                    | (y >> shift) << f->yShift;
+                idx |= x >> shift;
+                node = (u32 *)f->unk_0c;
+                v = node[idx];
+
+                while (v >= 0) {
+                    node = (u32 *)((u8 *)node + v);
+                    shift--;
+                    v = node[((z >> shift) & 1) << 2
+                           | ((y >> shift) & 1) << 1
+                           | ((x >> shift) & 1)];
+                }
+
+                lp = (u32)((u8 *)node + (v & ~0x80000000));
+
+                size = one << shift;
+                mask = size - 1;
+                stepX = size - (x & mask);
+                cz = size - (z & mask);
+                cy = size - (y & mask);
+                if (cz < stepZ) stepZ = cz;
+                if (cy < stepY) stepY = cy;
+
+                /* TODO: the per-prism sphere tests go here. */
+
+                x += stepX;
+            } while (x <= hiX);
+            y += stepY;
+        } while (y <= hiY);
+        z += stepZ;
+    } while (z <= hiZ);
 
     return (s32)rsq;
 }

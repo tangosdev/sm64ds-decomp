@@ -158,3 +158,47 @@ shape to be needed here.
 Order confirmed: X, then Y, then Z, each `lo = (raw - origin - slack) >> 6` clamped at 0 and
 `hi = (raw - origin + slack) >> 6` clamped at `~mask`, with `if (lo >= hi) return 0` between
 them. The banked draft reproduces that arithmetic; what it does not yet have is the walk.
+
+### The march and descent are the twins' verbatim; the leaf handling is not (2026-08-06)
+
+**Ported and verified.** The three-axis march and the octree descent are the same code as
+`DetectClsn(RaycastLine&)` and the matched `DetectClsn(RaycastGround&)`, including all three
+of the twin's documented levers, and the draft now reproduces their shape:
+
+| ROM | draft |
+|---|---|
+| `orr r3, r4, r3, lsl r2` | `orr r1, sl, r2, lsl r1` — `zterm \| yterm`, its own statement |
+| `orr r2, r3, r2, lsr r1` | `orr r1, r1, r8, lsr ip` — `\|= x >> shift`, split out |
+| `ldr r0, [r0, #0xc]` late | same — octree base loaded after the index |
+| child index emitted x-bit, z<<2, y<<1 | same |
+
+The child index is written **z-first in source** and mwccarm emits it **x-first**, which is
+exactly the twin's lever 3. Loop vars live at `sp+0x84` (x), `sp+0x80` (y), `sp+0x20` (z,
+reusing the `loZ` slot); `sp+0x6c`/`sp+0x70` are `stepY`/`stepZ`, both seeded from a
+`1000000` literal, and the per-cell step is the twins' `size - (coord & (size-1))`.
+
+The draft keeps x/y/z in registers where the ROM spills them. That is pressure the prism
+loop supplies, not a source defect -- do not chase it before the body exists.
+
+**Where the sphere diverges, and it is the thing to design around.** After the descent:
+
+```
+ldr r2,[sp,#0x88]                     the leaf just found
+cmp r2,[sp,#0x48] -> beq skip         THREE previously-visited leaves
+cmp r2,[sp,#0x4c] -> beq skip
+cmp r2,[sp,#0x50] -> beq skip
+ldrh r1,[r1,#2] ; beq skip            empty-leaf check
+cmp r0,[sp,#0x7c] / [sp,#0x78] / [sp,#0x74]
+   ... shuffles 0x74/0x78/0x7c against 0x54/0x58/0x5c ...
+```
+
+That is a **3-entry visited-leaf cache** (`0x48/0x4c/0x50`) and a **sorted top-3 list** of
+(score, leaf) pairs (`0x74/0x78/0x7c` keyed, `0x54/0x58/0x5c` the pointers), with the
+shuffle being an insertion into the sorted three. `RaycastLine` keeps exactly one of each --
+`prevLeaf` and `rowLeaf`/`rowStep`. The sphere keeps three, which accounts for six of the
+fourteen zeroed words and is why its dedup cannot be lifted from the Line tip.
+
+Next increment: model those two triples as function-scope locals in slot order (declaration
+order IS the frame) and write the insertion, before any per-prism geometry. The geometry is
+squared-distance -- see the `radius << 4` then `smull r0,r0,r0` above -- and is the genuinely
+novel part.
