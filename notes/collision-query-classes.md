@@ -202,3 +202,37 @@ Next increment: model those two triples as function-scope locals in slot order (
 order IS the frame) and write the insertion, before any per-prism geometry. The geometry is
 squared-distance -- see the `radius << 4` then `smull r0,r0,r0` above -- and is the genuinely
 novel part.
+
+### The triples and the insertion are in, and verified (2026-08-06)
+
+The score is `cy`, the cell's remaining Y extent — the same key the Line overload uses for
+its single `rowStep`/`rowLeaf`, kept three deep and sorted descending:
+
+```
+cmp cy,[0x7c]  ble skip     s3 -- below all three, no insert
+cmp cy,[0x78]  ble ins3
+cmp cy,[0x74]  ble ins2
+               fall -> ins1  shifts s2->s3, s1->s2 and p2->p3, p1->p2
+```
+
+The three visited-checks `beq` **past** the prism loop while the insert branches land just
+before it, so the prism loop sits inside the not-visited guard — the same single-tail shape
+as the Line overload's `if (lp != prevLeaf) { ... }`, which is what stops the `continue`
+bug that cost the Line tip a pass. At row end the row's top three become the next row's
+visited set (`prev1..3 = p1..3`).
+
+Ported and checked instruction-for-instruction against the ROM: leaf pointer (`bic
+0x80000000` then `add`), `size`/`mask`, then `stepX`, `cz`, `cy`, then the `stepZ` and
+`stepY` minimum updates, then the three visited compares, then the empty-leaf check — same
+operations in the same order. The ROM spends one extra `mov` before its `ldrh`, which is
+allocation noise at the draft's current size.
+
+Draft is now **0x320** against 0x1bc8. Everything above the per-prism geometry is in place.
+
+**What is left is the geometry, and it is all of the remaining ~0x18a0.** It is a
+squared-distance test — `radius << 4`, then `smull r0,r0,r0` into 64 bits with the high word
+at `sp+0x64` — which means face, edge and vertex distances rather than the Line overload's
+single plane solve. The first eight of the fourteen zeroed words (`sp+0x28`..`sp+0x44`) are
+still unidentified and are the natural next thing to decode: they are almost certainly the
+accumulator set the geometry writes into, and knowing them fixes the declaration order for
+the rest of the function.

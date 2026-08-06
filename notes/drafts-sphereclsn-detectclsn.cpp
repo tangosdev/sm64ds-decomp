@@ -38,8 +38,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s64 rsq;
     u32 x, y, z;
     s32 stepX, stepY, stepZ;
-    u32 lp;
     u32 one = 1;
+    /* Slot order is declaration order on this compiler. The ROM's fourteen zeroed
+       words end with these two triples: prev1..3 at sp+0x48/0x4c/0x50 and
+       p1..3 at sp+0x54/0x58/0x5c; the scores s1..3 are sp+0x74/0x78/0x7c. */
+    u16 *prev1, *prev2, *prev3;
+    u16 *p1, *p2, *p3;
+    s32 s1, s2, s3;
+    u16 *leaf;
 
     KCL_File *f = kclFile;
     const Vector3 *c = &sphere.centre;
@@ -73,6 +79,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     rsc = sphere.radius << 4;
     rsq = (s64)rsc * rsc;
 
+    prev1 = prev2 = prev3 = 0;
+    p1 = p2 = p3 = 0;
+    s1 = s2 = s3 = 0;
+
     z = loZ;
     do {
         stepZ = 1000000;
@@ -101,7 +111,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            | ((x >> shift) & 1)];
                 }
 
-                lp = (u32)((u8 *)node + (v & ~0x80000000));
+                leaf = (u16 *)((u8 *)node + (v & ~0x80000000));
 
                 size = one << shift;
                 mask = size - 1;
@@ -111,10 +121,32 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                 if (cz < stepZ) stepZ = cz;
                 if (cy < stepY) stepY = cy;
 
-                /* TODO: the per-prism sphere tests go here. */
+                /* Three leaves already covered by the previous row, not one:
+                   the whole cell is skipped when it repeats any of them. */
+                if (leaf != prev1 && leaf != prev2 && leaf != prev3) {
+                    /* Keep the three widest non-empty leaves of this row, sorted
+                       descending on cy -- the generalisation of the Line
+                       overload's single rowLeaf/rowStep pair. */
+                    if (leaf[1] != 0 && cy > s3) {
+                        if (cy > s2) {
+                            if (cy > s1) {
+                                s3 = s2; s2 = s1; s1 = cy;
+                                p3 = p2; p2 = p1; p1 = leaf;
+                            } else {
+                                s3 = s2; s2 = cy;
+                                p3 = p2; p2 = leaf;
+                            }
+                        } else {
+                            s3 = cy; p3 = leaf;
+                        }
+                    }
+
+                    /* TODO: the per-prism squared-distance tests go here. */
+                }
 
                 x += stepX;
             } while (x <= hiX);
+            prev1 = p1; prev2 = p2; prev3 = p3;
             y += stepY;
         } while (y <= hiY);
         z += stepZ;
