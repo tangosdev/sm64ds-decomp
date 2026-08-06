@@ -36,6 +36,12 @@ Usage:
   python port/tools/port_evidence.py --gate 9      # one gate, with files
   python port/tools/port_evidence.py --list        # every non-proven file
   python port/tools/port_evidence.py --strict      # exit 1 if UNPROVEN/BANNER
+  python port/tools/port_evidence.py --ratchet     # exit 1 only if debt GREW
+  python port/tools/port_evidence.py --require     # missing evidence = failure
+
+Exit codes: 0 passed, 1 FAILED, 2 could not check (no ROM build artifacts, the
+build on record is not byte-exact, or no baseline). 2 is NOT a pass -- see the
+CannotCheck docstring below.
 """
 import argparse
 import json
@@ -52,6 +58,22 @@ BASELINE = PORT / "evidence-baseline.json"
 PROVEN, EXPLAINED, UNPROVEN, BANNER, REPLACED, UNKNOWN = (
     "proven", "explained", "UNPROVEN", "BANNER", "replaced", "unknown")
 ORDER = [PROVEN, EXPLAINED, UNPROVEN, BANNER, REPLACED, UNKNOWN]
+
+# Same three-state exit contract as port_linkcheck.py:
+#   0  checked, passed        1  checked, FAILED        2  could not check
+OK, FAILED, CANNOT_CHECK = 0, 1, 2
+
+
+class CannotCheck(Exception):
+    """The ROM-build evidence this tool reads is absent or not byte-exact.
+
+    Deliberately NOT the same outcome as a regression. --ratchet exiting 1
+    because build/rombuild-report.json is missing is indistinguishable, to a
+    hook or a CI job, from exiting 1 because someone compiled an unproven file
+    into the port -- and the two demand opposite responses. One means "re-run
+    the ROM build"; the other means "stop the merge". Conflating them trains
+    people to ignore the gate, which costs more than the gate ever saved.
+    """
 
 # The gate ledger from port/README.md, so `--gate 4b` works the way the docs
 # and commit messages talk about the port.
@@ -71,14 +93,18 @@ EXPLAINED_RE = re.compile(
 
 
 def load_rom_evidence():
-    """(enrolled stems, {relpath: reason}, report) -- or exit with why not."""
+    """(enrolled keys, {relpath: reason}, report).
+
+    Raises CannotCheck when the evidence is unavailable -- never sys.exit, so
+    the caller can distinguish "could not check" from "found a regression".
+    """
     objs = BUILD / "objects.txt"
     elig = BUILD / "rombuild-eligibility.json"
     rep = BUILD / "rombuild-report.json"
     for p in (objs, elig, rep):
         if not p.exists():
-            sys.exit(f"missing {p.relative_to(REPO)} -- run the ROM build first "
-                     "(the port's evidence comes from it)")
+            raise CannotCheck(f"missing {p.relative_to(REPO)} -- run the ROM "
+                              "build first (the port's evidence comes from it)")
 
     report = json.loads(rep.read_text(encoding="utf-8", errors="replace"))
     # Enrollment only means something if the build actually came out exact.
@@ -86,10 +112,10 @@ def load_rom_evidence():
     fid = an.get("moduleFidelity", {})
     if not (report.get("status") == "passed" and an.get("passed")
             and fid.get("differingBytes") == 0):
-        sys.exit("the ROM build on record is NOT byte-exact "
-                 f"(status={report.get('status')}, "
-                 f"differingBytes={fid.get('differingBytes')}) -- "
-                 "enrollment proves nothing until it is")
+        raise CannotCheck("the ROM build on record is NOT byte-exact "
+                          f"(status={report.get('status')}, "
+                          f"differingBytes={fid.get('differingBytes')}) -- "
+                          "enrollment proves nothing until it is")
 
     enrolled = set()
     for line in objs.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -199,6 +225,9 @@ def main():
                     help="exit 1 only if the unproven set GREW vs the baseline")
     ap.add_argument("--update-baseline", action="store_true",
                     help="rewrite the baseline to the current set")
+    ap.add_argument("--require", action="store_true",
+                    help="treat missing/non-exact ROM evidence as a FAILURE "
+                         "(exit 1) instead of 'could not check' (exit 2)")
     args = ap.parse_args()
 
     # --gate narrows the file set BEFORE the unproven set is computed, so
@@ -210,7 +239,15 @@ def main():
                  "--update-baseline: both operate on the whole ledger, and a "
                  "narrowed run would compare against (or write) a partial one.")
 
-    enrolled, reasons, report = load_rom_evidence()
+    try:
+        enrolled, reasons, report = load_rom_evidence()
+    except CannotCheck as e:
+        print(f"port-evidence: NOT CHECKED -- {e}")
+        print("               This did NOT pass; it did not run.")
+        if args.require:
+            print("               --require was given, so a skip is a failure.")
+            return FAILED
+        return CANNOT_CHECK
     sha = report.get("romArtifact", {}).get("sha256", "?")
     print(f"evidence: byte-exact ROM build, {report['enrolledFiles']:,} files "
           f"enrolled, sha256 {sha[:16]}...")
@@ -284,17 +321,20 @@ def main():
         }, indent=2) + "\n", encoding="utf-8")
         print(f"\nbaseline updated: {len(current)} file(s) -> "
               f"{BASELINE.relative_to(REPO)}")
-        return 0
+        return OK
 
     if args.ratchet:
         # A boolean gate is the wrong shape here: there are already unproven
         # files, so --strict would be red from day one and get ignored or
         # bypassed. The repo's own merge gate is a set of "must not regress"
         # ratchets (notes/pr-validation.md); this matches that.
+        # No baseline is "could not check" too: there is nothing to compare
+        # against, which is not the same claim as "the debt grew".
         if not BASELINE.exists():
-            print(f"\nno baseline at {BASELINE.relative_to(REPO)} -- "
-                  "run --update-baseline to record the current debt")
-            return 1
+            print(f"\nport-evidence: NOT CHECKED -- no baseline at "
+                  f"{BASELINE.relative_to(REPO)}; run --update-baseline to "
+                  "record the current debt")
+            return FAILED if args.require else CANNOT_CHECK
         known = set(json.loads(BASELINE.read_text(encoding="utf-8"))["unproven"])
         added = [f for f in current if f not in known]
         removed = sorted(known - set(current))
@@ -308,14 +348,14 @@ def main():
                   f"port without proof they are the game's code:")
             for f in added:
                 print(f"  + {f}")
-            return 1
+            return FAILED
         print(f"\nratchet OK: no new unproven files "
               f"({len(current)} known, baseline {len(known)})")
-        return 0
+        return OK
 
     if args.strict and worst:
-        return 1
-    return 0
+        return FAILED
+    return OK
 
 
 if __name__ == "__main__":

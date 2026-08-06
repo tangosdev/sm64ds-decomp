@@ -26,6 +26,10 @@ Usage:
   python port/tools/port_linkcheck.py            # smoke + smoke_heap
   python port/tools/port_linkcheck.py --all      # every gate binary
   python port/tools/port_linkcheck.py --targets smoke_actor
+  python port/tools/port_linkcheck.py --require  # a skip is a failure (CI)
+
+Exit codes: 0 passed, 1 FAILED, 2 could not check (no toolchain / not
+configured). 2 is not a pass -- see the OK/FAILED/CANNOT_CHECK note below.
 """
 import argparse
 import os
@@ -40,6 +44,23 @@ from host_frontier import find_vcvars   # noqa: E402  (same vswhere lookup)
 REPO = Path(__file__).resolve().parents[2]
 PORT = REPO / "port"
 BUILD = REPO / "build" / "port"
+
+# Exit contract, shared with port_evidence.py, so a hook or a CI job can tell
+# the three outcomes apart WITHOUT grepping message text:
+#   0  checked, passed
+#   1  checked, FAILED
+#   2  could not check -- no toolchain. "This did not run."
+# A skip used to return 0. That is exactly how an unwired gate reads green
+# forever on an image without MSVC -- the same silent pass this tool exists to
+# end, one level up. The message always said "this did NOT pass"; now the exit
+# code says it too. --require collapses 2 into 1 for callers that must have the
+# check actually run.
+#
+# tools/check_references.py has these same three states and separates them by
+# having its CALLER grep stderr for phrases ("report describes", "no commit
+# stamp", "missing "). That works, but it couples the hook to wording that no
+# test pins. An exit code cannot drift out of sync with a reworded message.
+OK, FAILED, CANNOT_CHECK = 0, 1, 2
 
 # The cheapest pair that still spans the HAL seams #1049 broke: gate 1 pulls
 # os_time/shims, gate 2 pulls the heap bridges. Both failed in that outage.
@@ -163,25 +184,48 @@ def tool(env, name):
     return str(p) if p.exists() else None
 
 
+def skipped(why, require):
+    """Report a check that did not run, and return the right exit code."""
+    print(f"port-linkcheck: SKIPPED -- {why}")
+    print("                This did NOT pass; it did not run.")
+    if require:
+        print("                --require was given, so a skip is a failure.")
+        return FAILED
+    return CANNOT_CHECK
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--all", action="store_true", help="build every gate binary")
     ap.add_argument("--targets", nargs="*", help="explicit ninja targets")
+    ap.add_argument("--require", action="store_true",
+                    help="treat a missing toolchain as a FAILURE (exit 1) "
+                         "instead of 'could not check' (exit 2) -- for CI and "
+                         "any caller that must not go green without running")
+    ap.add_argument("--configure", action="store_true",
+                    help="configure build/port if it is not set up yet; "
+                         "without this an unconfigured tree is 'could not "
+                         "check' rather than a minutes-long cold build")
     args = ap.parse_args()
 
     env = msvc_env()
     if env is None:
-        print("port-linkcheck: SKIPPED -- no 32-bit MSVC toolchain found.")
-        print("                This did NOT pass; it did not run.")
-        return 0
+        return skipped("no 32-bit MSVC toolchain found.", args.require)
 
     cmake, ninja = tool(env, "cmake"), tool(env, "ninja")
     if not cmake or not ninja:
-        print("port-linkcheck: SKIPPED -- cmake/ninja not found "
-              "(VS component 'C++ CMake tools for Windows', or "
-              "pip install cmake ninja).")
-        print("                This did NOT pass; it did not run.")
-        return 0
+        return skipped("cmake/ninja not found (VS component 'C++ CMake tools "
+                       "for Windows', or pip install cmake ninja).", args.require)
+
+    # Configuring builds all 14 binaries from cold, which is minutes -- fine
+    # when asked for, wrong to spring on someone mid-`git push`. Unconfigured
+    # is therefore "could not check", the same shape the pre-push hook already
+    # uses for check_references.py: run only when the inputs are already there,
+    # and say nothing was checked otherwise rather than implying a pass.
+    if not (BUILD / "build.ninja").exists() and not args.configure:
+        return skipped(f"{BUILD.relative_to(REPO)} is not configured. "
+                       "Run port/build-port.cmd once, or pass --configure.",
+                       args.require)
 
     if not (BUILD / "build.ninja").exists():
         print(f"port-linkcheck: configuring {BUILD.relative_to(REPO)}")
@@ -192,7 +236,7 @@ def main():
         if r.returncode:
             print(r.stdout[-3000:] + r.stderr[-3000:])
             print("port-linkcheck: FAILED to configure")
-            return 1
+            return FAILED
 
     targets = args.targets or ([] if args.all else DEFAULT_TARGETS)
     # -k 0 = keep going after failures. Ninja's default (-k 1) stops at the
@@ -207,11 +251,11 @@ def main():
         print(summarize(r.stdout + r.stderr))
         print(f"\nport-linkcheck: FAILED -- the port does not build against "
               f"the current src/ and include/.")
-        return 1
+        return FAILED
 
     built = ", ".join(targets) if targets else "all gate binaries"
     print(f"port-linkcheck: OK ({built})")
-    return 0
+    return OK
 
 
 if __name__ == "__main__":

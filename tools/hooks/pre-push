@@ -88,5 +88,39 @@ else
   exit 1
 fi
 
+# port/ has to COMPILE AND LINK against src/ and include/, and port_refcheck.py
+# above cannot see that: it catches a rename stranding a reference, but #1049
+# renamed nothing -- it changed LINKAGE, every reference stayed valid, and 13 of
+# the 14 gate binaries stopped linking for two days with nothing to notice.
+# Only linking catches a linkage break.
+#
+# Unlike the reference check above, these two report "could not check" with a
+# distinct EXIT CODE (2) rather than a message this hook has to pattern-match,
+# so a missing toolchain can never be mistaken for a pass. Both are cheap when
+# their inputs already exist and skip when they do not -- port_linkcheck is
+# incremental (~2s) and refuses to cold-configure without --configure, so a
+# first push never turns into a minutes-long build.
+echo "pre-push: link-checking the port build"
+python port/tools/port_linkcheck.py
+case $? in
+  0) ;;
+  2) echo "pre-push: (skipping port link check -- not configured or no MSVC;"
+     echo "          run 'port/build-port.cmd' once to include it)" ;;
+  *) echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+     exit 1 ;;
+esac
+
+echo "pre-push: checking port evidence ratchet"
+python port/tools/port_evidence.py --ratchet >/dev/null 2>&1
+case $? in
+  0) echo "pre-push: port evidence ratchet OK" ;;
+  2) echo "pre-push: (skipping evidence ratchet -- no current ROM build report;"
+     echo "          run 'python tools/rombuild.py' to include it)" ;;
+  *) echo "pre-push: port evidence ratchet FAILED"
+     python port/tools/port_evidence.py --ratchet
+     echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+     exit 1 ;;
+esac
+
 remote_ref_check || exit 1
 exit 0
