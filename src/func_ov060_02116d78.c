@@ -1,4 +1,4 @@
-typedef struct Vector3 { int x, y, z; } Vector3;
+#include "types.h"
 extern void func_ov060_02116518(char *self, unsigned int kind, int a2, int a3);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);

@@ -18,15 +18,10 @@ extern int *data_ov004_020bbfd0[];
 extern s16 data_02082214[];
 extern int data_ov006_021346bc;
 
-struct Pos {
-    s16 x;
-    s16 y;
-};
-
 extern "C" void func_ov004_020ae858(char *self)
 {
     int extra[3];
-    Pos *tbl[3];
+    s16 *tbl[3];
     int buf[4];
     int zero1;
     int zero2;
@@ -40,9 +35,9 @@ extern "C" void func_ov004_020ae858(char *self)
     extra[1] = *data_ov004_020bbfbc[GetGameLanguage()];
     extra[2] = *data_ov004_020bbfd0[GetGameLanguage()];
 
-    tbl[0] = (Pos *)(self + 0x4634);
-    tbl[1] = (Pos *)(self + 0x4638);
-    tbl[2] = (Pos *)(self + 0x463c);
+    tbl[0] = (s16 *)(self + 0x4634);
+    tbl[1] = (s16 *)(self + 0x4638);
+    tbl[2] = (s16 *)(self + 0x463c);
 
     i = 0;
     zero1 = 0;
@@ -58,7 +53,7 @@ extern "C" void func_ov004_020ae858(char *self)
             char *cursor = (char *)extra[i];
             int arg0;
             int result;
-            Pos *pos;
+            s16 *pos;
             u16 v;
             int *pbuf = buf;
 
@@ -77,18 +72,18 @@ extern "C" void func_ov004_020ae858(char *self)
 
             pos = tbl[i];
             do {
-                func_ov004_020aea78((void *)cursor, (void *)(int)pos->x, (void *)(int)pos->y, (void *)pbuf);
+                func_ov004_020aea78((void *)cursor, (void *)(int)pos[0], (void *)(int)pos[1], (void *)pbuf);
                 v = *(u16 *)(cursor + 6);
                 cursor += 8;
             } while (v != 0xffff);
 
             pos = tbl[i];
-            _ZN5Enemy12KillByAttackER5Actor((void *)data_ov006_021346bc, pos->x, pos->y, zero0);
+            _ZN5Enemy12KillByAttackER5Actor((void *)data_ov006_021346bc, pos[0], pos[1], zero0);
         } else {
-            Pos *pos = tbl[i];
+            s16 *pos = tbl[i];
             char *ep = (char *)extra[i];
-            _ZN5Enemy12KillByAttackER5Actor((void *)ep, pos->x, pos->y, zero1);
-            _ZN5Enemy12KillByAttackER5Actor((void *)data_ov006_021346bc, pos->x, pos->y, zero2);
+            _ZN5Enemy12KillByAttackER5Actor((void *)ep, pos[0], pos[1], zero1);
+            _ZN5Enemy12KillByAttackER5Actor((void *)data_ov006_021346bc, pos[0], pos[1], zero2);
         }
     }
 }

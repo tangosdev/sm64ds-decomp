@@ -1,6 +1,6 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Mtx43 { int a[12]; };
+#include "types.h"
+#include "private/mtx43.h"
 
 extern "C" int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);

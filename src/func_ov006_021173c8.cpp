@@ -5,7 +5,7 @@
 //  - block-scope pcnt2 for loop G → val@sp+0x14 (div 8→5)
 //  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
 //    forces spill order pmode@0x18 before pcnt2@0x1c (div 5→0)
-// Loop2 digit-count still uses inner u64 launder for pooled ldr form.
+// Loop2 digit-count still uses inner u64 mask form for pooled ldr form.
 //
 // TODO: shared ov006 HUD/score object layout — this file and siblings
 // (func_ov006_020fd2d8, 02103ac0, 020fb7e0) re-spell the same base offsets:
@@ -18,10 +18,7 @@
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 
-struct DispObj {
-    virtual void f0();
-    virtual void f1();
-};
+#include "private/disp_obj_vtbl.h"
 
 extern "C" {
 void SetSubBg0Offset(void *p, int a);

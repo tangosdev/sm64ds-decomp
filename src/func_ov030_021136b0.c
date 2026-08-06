@@ -1,37 +1,35 @@
+#include "types.h"
+#include "private/mtx43.h"
 typedef short s16;
 typedef signed char s8;
 typedef unsigned char u8;
 typedef unsigned int u32;
 typedef int s32;
 
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
-struct Mtx43 { int m[12]; };
-struct Actor { char pad[4]; u32 uniqueID; };
 
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-    u32 actorID, u32 param1, const struct Vector3 *pos,
-    const struct Vector3_16 *rot, int areaID, int deathTableID);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3sii(
+    u32 actorID, u32 param1, const Vector3 *pos,
+    const Vector3s *rot, int areaID, int deathTableID);
 extern void func_02012790(int arg);
-extern s16 Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
-extern void Matrix4x3_FromTranslation(struct Mtx43 *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationY(struct Mtx43 *m, s16 angY);
-extern void Matrix4x3_ApplyInPlaceToTranslation(struct Mtx43 *m, int x, int y, int z);
+extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
+extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
+extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);
+extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
-    void *self, void *actor, unsigned int msgId, const struct Vector3 *pos,
+    void *self, void *actor, unsigned int msgId, const Vector3 *pos,
     unsigned int d, unsigned int e);
 extern void func_0201267c(int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *self);
 extern void _ZN6Player9DropActorEv(void *self);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
-extern struct Actor *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char *c, int v);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 
 extern void *data_0209f318;
-extern struct Mtx43 data_020a0e68;
+extern Mtx43 data_020a0e68;
 
 int func_ov030_021136b0(char *c)
 {
@@ -57,17 +55,17 @@ int func_ov030_021136b0(char *c)
             }
             {
                 char *p = *(char **)(c + 0x3a8);
-                struct Actor *spawned;
+                void *spawned;
                 *(u32 *)(c + 0x3b0) = *(u32 *)(p + 8);
                 msg = *(s8 *)(c + 0xcc);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3sii(
                     0x10d,
                     (*(u32 *)(c + 0x3b0) << 8) | 2,
-                    (struct Vector3 *)(c + 0x5c),
+                    (Vector3 *)(c + 0x5c),
                     0,
                     msg,
                     -1);
-                *(u32 *)(c + 0x3ac) = spawned->uniqueID;
+                *(u32 *)(c + 0x3ac) = ((u32 *)spawned)[1];
             }
         } else {
             if (*(u8 *)(c + 0x3c9) != 0)
@@ -80,17 +78,17 @@ int func_ov030_021136b0(char *c)
         /* fall through */
     case 1: {
         s16 ang;
-        struct Vector3 camPos;
-        struct Vector3 msgPos;
+        Vector3 camPos;
+        Vector3 msgPos;
         {
             u8 fl = *(u8 *)(c + 0x3c8);
             msg = fl ? 0xbe : 0xbf;
             void *camBase = data_0209f318;
-            struct Vector3 *src = (struct Vector3 *)((char *)camBase + 0x8c);
+            Vector3 *src = (Vector3 *)((char *)camBase + 0x8c);
             camPos.x = src->x;
             camPos.y = src->y;
             camPos.z = src->z;
-            ang = Vec3_HorzAngle(&camPos, (struct Vector3 *)(*(char **)(c + 0x3a8) + 0x5c));
+            ang = Vec3_HorzAngle(&camPos, (Vector3 *)(*(char **)(c + 0x3a8) + 0x5c));
         }
         {
             int *op = (int *)(*(char **)(c + 0x3a8) + 0x5c);
@@ -100,9 +98,9 @@ int func_ov030_021136b0(char *c)
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, -0x64000);
         {
             int msgArg = ((int)msg << 16) >> 16;
-            int my = data_020a0e68.m[10];
-            int mx = data_020a0e68.m[9];
-            int mz = data_020a0e68.m[11];
+            int my = data_020a0e68.a[10];
+            int mx = data_020a0e68.a[9];
+            int mz = data_020a0e68.a[11];
             msgPos.x = mx;
             msgPos.y = my;
             msgPos.z = mz;
@@ -150,7 +148,7 @@ int func_ov030_021136b0(char *c)
                 *(int *)(c + 0x3b8) = 1;
                 func_ov030_021141a8(c, 2);
             } else {
-                struct Actor *act = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x3ac));
+                void *act = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x3ac));
                 int z = 0;
                 *(int *)((char *)act + 0xc8) = z;
                 {

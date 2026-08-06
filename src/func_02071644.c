@@ -2,7 +2,7 @@
  * obj+5..obj+4+len; carry bumps the s16 at obj+2). Symbol map previously carved
  * the dead trailing bx lr (mwcc always appends after for(;;)/goto whose exits
  * are early returns) into "func_02071694"; real extent is 0x54 (notes 9a(3)).
- * Lever: near-miss tip (int return + goto-loop + 6h u64 launder on halfword RMW). */
+ * Lever: near-miss tip (int return + goto-loop + 6h halfword RMW materialization). */
 typedef unsigned char u8;
 typedef short s16;
 

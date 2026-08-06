@@ -1,25 +1,4 @@
-typedef int s32;
-typedef short s16;
-
-typedef struct { s32 x; s32 y; } Vec2i;
-
-typedef struct Obj {
-    Vec2i v0;      /* 0x00 */
-    Vec2i v1;      /* 0x08 */
-    s32 pad10[2];  /* 0x10, 0x14 */
-    Vec2i arr[5];  /* 0x18 .. 0x3f */
-    s32 f40;       /* 0x40 */
-    s32 f44;       /* 0x44 */
-    s32 pad48[8];  /* 0x48 .. 0x67 */
-    s32 f68;       /* 0x68 */
-    s32 f6c;       /* 0x6c */
-    s32 pad70;     /* 0x70 */
-    s16 pad74;     /* 0x74 */
-    s16 s76;       /* 0x76 */
-    s16 pad78;     /* 0x78 */
-    s16 s7a[5];    /* 0x7a .. 0x83 */
-    s16 s84;       /* 0x84 */
-} Obj;
+#include "private/ov006_ec4dc_obj.h"
 
 extern s32 _ZN4cstd4fdivEii(s32 numerator, s32 denominator);
 extern void func_ov006_020ec2bc(Obj *self);

@@ -2,10 +2,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void func_02012790(int arg);
 extern void func_ov004_020adb1c(int self);
 
-typedef struct SlotGrid {
-    unsigned char pad[0x501c];
-    unsigned char sym[3][5];
-} SlotGrid;
+#include "private/ov006_slotgrid.h"
 
 void func_ov006_0210adac(char *c)
 {
