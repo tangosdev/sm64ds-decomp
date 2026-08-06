@@ -41,10 +41,17 @@ python tools/fdiff.py --c <draft>.cpp \
 `notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x1b40** against `0x1bc8` — 34
 instructions short (shape-alignment 0.5968, 1051 shape-equal; was 0x8cc / 0.3494 / 409).
 
-Score intermediate drafts with `--align --align-shape`, not the summary count:
-`fdiff.py` prints `mismatches=999/1778` for every draft of this function regardless of
-change, because the count is meaningless until the sizes match. `--align-shape` is a
-modifier — without `--align` it silently prints nothing.
+Score intermediate drafts with `--align`, not the summary count: `fdiff.py` prints
+`mismatches=999/1778` for every draft of this function regardless of change, because the
+count is meaningless until the sizes match. `--align-shape` is a modifier — without `--align`
+it silently prints nothing.
+
+**Pick the right one.** `--align-shape` normalises away register names *and stack offsets*,
+so it cannot see a frame or register change at all — it reported an unchanged 1051/0.5968
+across a declaration reorder that plain `--align` scores as the biggest gain of the session
+(0.1658 → 0.2084). Use `--align-shape` while blocks are still missing; use plain `--align`
+the moment the work is codegen. Current: **ratio 0.2084, 367 exactly-equal** on `--align`;
+1051 shape-equal on `--align-shape`.
 
 Written and shape-verified against the ROM: entry, three-axis AABB, radius square, the
 three-axis march, octree descent, per-cell step, the leaf caches, the sorted top-3 insert,
