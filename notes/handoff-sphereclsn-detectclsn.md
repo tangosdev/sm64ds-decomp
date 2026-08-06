@@ -37,8 +37,8 @@ python tools/fdiff.py --c <draft>.cpp \
 
 ## 1. Where the draft is
 
-`notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x10d0** against `0x1bc8`
-(shape-alignment ratio 0.5011, 715 shape-equal instructions — was 0x8cc / 0.3494 / 409).
+`notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x1b40** against `0x1bc8` — 34
+instructions short (shape-alignment 0.5968, 1051 shape-equal; was 0x8cc / 0.3494 / 409).
 
 Score intermediate drafts with `--align --align-shape`, not the summary count:
 `fdiff.py` prints `mismatches=999/1778` for every draft of this function regardless of
@@ -50,8 +50,17 @@ three-axis march, octree descent, per-cell step, the leaf caches, the sorted top
 the reject chain, `depth`, the classify, the pass-through filter, the record, the accumulate,
 the epilogue.
 
-**Missing: the three vertex blocks only.** Step 5's dispatch, its three edge blocks, the
-per-edge filter, the raw sqrt and the shared tail are now written.
+**Every mechanism is now written.** Step 5's dispatch, the three edge blocks, the three
+vertex blocks, the per-edge filter, the raw sqrt, the shared tail and the wall block are all
+in. Nothing structural is known to be missing.
+
+**The work left is codegen, not transcription.** The divergences are scattered 1–8
+instruction ranges throughout — register allocation, scheduling and expression form — with no
+missing block anywhere. Per `notes/matching-style.md` and the batch playbook, that is the
+point to stop sweeping and go read the matched siblings: `DetectClsn(RaycastGround&)` is the
+twin that already matches on this build, and `DetectClsn(RaycastLine&)` shares the octree
+walk verbatim. The largest single gap is `target[129:137]`, eight words in the entry's
+constant-hoisting block — the frame slots the four inlined sqrt expansions share.
 
 ## 2. Per-prism body, in ROM order
 
