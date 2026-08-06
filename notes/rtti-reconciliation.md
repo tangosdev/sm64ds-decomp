@@ -251,7 +251,91 @@ finds work by looking for `data_` placeholders -- so after `--apply` there were 
 the undo silently did nothing and exited 0. Round-trip is now tested: revert restores the
 tree exactly, re-apply reproduces all 848.
 
-## 6. What is not covered
+## 6. Re-parenting the headers: what the evidence will and will not support
+
+The intended next step was to materialize the 10 recovered intermediate classes and
+re-parent their 18 descendants onto them. **That is not doable from the evidence in the
+tree, and attempting it would be fabrication.** The check that settles it:
+
+None of the 10 intermediates has a header, a `_ZTV` symbol, or a name anywhere in the
+tree — all 10 are `unknown_class`. Only 9 of the 18 descendants have headers at all. And
+of the 50 fields those 9 headers declare, **20 are re-declarations of a field the named
+ancestor already owns, and none is attributable to the intermediate.**
+
+The `daObjDorifu_c` family is the clean case. Its three descendants' headers are
+**byte-identical**:
+
+    ArmedRotatingPlatform  |  RickshawPlatformBdw  |  RickshawPlatformBs
+        u8 pad_000[0xd4];
+        u8 mModel;              /* 0x0d4 */
+        u8 pad_0d5[0x4f];
+        u8 mMovingMeshCollider; /* 0x124 */
+
+which looks like strong corroboration of a shared base until you check `Platform.h:41`
+and `:49` — which already declare `mModel` at `0x0d4` and `mMeshCollider` at `0x124`.
+Both fields belong to an **ancestor**, not to `daObjDorifu_c`. There is nothing in these
+headers that distinguishes `daObjDorifu_c` from `Platform`, so a generated
+`daObjDorifu_c` would be a class whose entire content is inherited.
+
+The tell that identity is weak evidence: `FallBlockLll` (family `daObjMaruta_c`) has the
+**same** header body as `ShutterBob`/`ShutterHmc` (family `daObjSwdoor_c`). Identical
+bodies across *different* ROM bases means the identity reflects how little the generator
+found, not a shared layout.
+
+So the RTTI proves these classes exist and proves the edges. It says nothing about their
+fields, and neither does anything else the tree currently holds. Populating them needs
+new matched functions that touch them — not a header pass.
+
+## 7. What did land: the ROM's edges as rank-0 evidence
+
+`evidence_hierarchy.py` now consumes `build/rtti.json` and ranks `rtti` **above**
+`reference_header`. This reverses that pass's stated contract — it described itself as
+"source+config only" with "the ROM is pass 3's authority, not pass 2's" — and the
+reversal is deliberate: that held while the typeinfo was undelinked, and it no longer is.
+An edge the ROM stores as a pointer is not evidence to be weighed against other evidence;
+it is the answer.
+
+The join is **vtable-only**. `rtti_reconcile.json`'s vote-inferred aliases are good
+enough to report with but not to feed back in: an alias derived from an edge, used to
+admit that same edge as top-rank evidence, is circular.
+
+| | before | after |
+|---|---:|---:|
+| high-confidence placements (bannered) | **4** | **143** |
+| medium | 199 | 64 |
+| low | 0 | 0 |
+| edges backed by the ROM | 0 | **168** of 413 |
+
+The 245 unusable edges have an end whose vtable still carries no `_ZTV` symbol. RTTI
+overruled two prior conclusions, both cases of shim flattening that `include/Actor.h`
+already had right: `Actor : ActorBase` → `Actor : ActorDerived`, and
+`Platform : ActorBase` → `Platform : Actor`.
+
+Three defects were caught while wiring this, each of which produced a plausible wrong
+answer:
+
+**Multiple inheritance fed two rank-0 edges to one class.** `hierarchy` holds one base
+per class, so emitting all of a vmi class's bases made the picker take the sorted-first:
+`ModelAnim` flipped from `Model` (offset 0) to `Animation` (offset 0x50) and its
+confidence dropped to low, reporting a manufactured conflict. Only the offset-0 base is
+emitted now; the 8 secondary bases are counted, not represented.
+
+**A module-key mismatch dropped every overlay.** `load_symbols` keys modules by path
+relative to `config/` (`arm9/overlays/ov002`); `rtti.json` names them as dsd does
+(`ov002`). Keying on the raw string matched arm9 only — 31 classes named instead of 255,
+and 18 usable edges instead of 168. The failure was silent and the smaller number looked
+entirely reasonable.
+
+**The confidence rule downgraded classes for gaining the best evidence.** It read
+`if "reference_header" in srcs or len(groups) >= 2: high`, so a class whose *only*
+evidence was the ROM matched neither branch and fell to `low`. Ten classes, four of them
+bannered, were downgraded by being proven.
+
+No `include/` or `config/` file is touched by this phase, so `validate` cannot go red on
+it — contrary to what the plan predicted for Phase 3. The header work it anticipated is
+blocked on evidence, not on risk.
+
+## 8. What is not covered
 
 RTTI gives class names, the inheritance graph, and multiple-inheritance base offsets. It does
 not give field names, field types, field offsets, or method names.
