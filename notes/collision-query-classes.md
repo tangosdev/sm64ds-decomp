@@ -624,3 +624,42 @@ Steps 1-4 and 6 are written. Step 5 is the remaining work, and it is now three i
 one known shape rather than an unexplored region.
 
 Draft is **0x8cc** against 0x1bc8.
+
+### The edge/vertex discriminator (2026-08-06)
+
+Inside each of the three symmetric branches, before any distance is computed, there is a
+test that decides **edge contact vs vertex contact**. For the branch where edge 1's dot is
+largest:
+
+```
+smull en1.z, en2.z ; >>10        three component products of the two EDGE NORMALS,
+smull en1.x, en2.x ; >>10        summed:
+smull en1.y, en2.y ; >>10          nn = dot(en1, en2) >> 10
+smull r1,r0, r6,r8 ; >>10          (nn * dot1) >> 10
+cmp  r1, r7                        vs dot2
+ble 0x1ffc63c  /  b 0x1ffc1ec      -> two different regions
+```
+
+and immediately below it the same computation against `en3` (`sp+0x94`) instead of `en2`, so
+each branch tests its edge against **both** its neighbours.
+
+`nn` is the cosine between two edge normals: the `>>10` is scale-preserving at the normals'
+`1.0 == 0x400` scale (`0x400 * 0x400 >> 10 == 0x400`), which is the check that it is a
+normalised dot and not an arbitrary shift. Comparing `dot1 * cos` against `dot2` is the
+standard way to decide whether the closest point lies along the shared edge or has passed the
+vertex where the two edges meet.
+
+So each branch is: pick the region against neighbour A, pick again against neighbour B, then
+compute the squared distance for whichever of edge/vertex won and compare it to the squared
+radius parked at `sp+0x60`/`sp+0x64`. Three copies of that -- one per edge -- is the ~1100
+words.
+
+The 64-bit intermediates are kept deliberately: `asr r2, r8, #0x1f` sign-extends `dot1` into
+`sp+0xd8` and `sp+0xf0` holds another high word, so the products stay 64-bit through the
+compare. Any draft that lets these collapse to 32-bit will diverge here.
+
+**This is the last unmapped mechanism.** Everything in the function now has a description:
+entry, AABB, radius square, march, descent, step, leaf caches, sorted insert, reject chain,
+depth, classify, pass-through filter, Voronoi dispatch, edge/vertex discriminator, record,
+accumulate, epilogue. What remains is transcribing three symmetric blocks of fixed-point
+arithmetic whose inputs, comparison and output are all known.
