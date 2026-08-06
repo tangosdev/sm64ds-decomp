@@ -27,8 +27,8 @@ int BobOmbBuddy::Behavior()
             _Z14ApproachLinearRsss((short*)((char *)&unk_08e), ang, 0x100);
         }
     }
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
-    if ((unsigned short)(unk_160 >> 12) == 0)
+    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
+    if ((unsigned short)(mModelAnim.currFrame >> 12) == 0)
         func_02012694(0xd7, ((char *)this) + 0x74);
     func_ov084_0212ce50(((char *)this));
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);

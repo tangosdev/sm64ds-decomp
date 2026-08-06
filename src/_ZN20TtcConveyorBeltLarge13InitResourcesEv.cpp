@@ -15,9 +15,7 @@ struct SharedFilePtr;
 
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 
-struct ModelBase {
-    void SetFile(BMD_File *f, int b, int c);
-};
+/* ModelBase is the real class now, through TtcConveyorBeltLarge.h. */
 
 struct ShadowModel {
     void InitCuboid();

@@ -45,6 +45,30 @@ struct BlendModelAnim : ModelAnim {
 
 typedef char BlendModelAnim_size_must_be_0x70[sizeof(BlendModelAnim) == 0x70 ? 1 : -1];
 
+#else
+
+/* The same object for C translation units, both vptrs written out -- the same shape
+ * ModelAnim.h gives its own C fallback, with the blend state appended. */
+struct BlendModelAnim {
+    void **vtable;                     /* 0x00 */
+    struct BMD_File *modelFile;        /* 0x04 */
+    struct ModelComponents data;       /* 0x08 */
+    struct Matrix4x3 mat4x3;           /* 0x1c */
+    void *transformsBuf;               /* 0x4c */
+    void **animVtable;                 /* 0x50 */
+    u32 numFramesAndFlags;             /* 0x54 */
+    s32 currFrame;                     /* 0x58 */
+    s32 speed;                         /* 0x5c */
+    struct BCA_File *file;             /* 0x60 */
+    s32 blendWeight;                   /* 0x64 */
+    s32 blendStep;                     /* 0x68 */
+    void *unk_6c;                      /* 0x6c */
+};
+
+/* So an object header declaring a BlendModelAnim member reads the same in both modes:
+ * C++ gets the class, C gets the flat stand-in above, and neither needs `struct`. */
+typedef struct BlendModelAnim BlendModelAnim;
+
 #endif /* __cplusplus */
 
 #endif /* BLENDMODELANIM_H */

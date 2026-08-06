@@ -5,8 +5,7 @@
 #include "MeshColliderBase.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
-struct Model { int d; };
-struct ModelBase { int d; };
+/* Model and ModelBase are the real classes now, through HugeCover.h. */
 struct TextureTransformer { int d; };
 struct MeshCollider { int d; };
 struct MovingMeshCollider { int d; };

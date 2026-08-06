@@ -5,6 +5,7 @@
 #ifndef BOWSERSHOCKWAVES_H
 #define BOWSERSHOCKWAVES_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct BowserShockwaves {
     u8  pad_000[0x5c];
@@ -12,24 +13,24 @@ struct BowserShockwaves {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x6c];
-    u8  mModelAnim1;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0x47];
-    u8  mAnimation1;            /* 0x124 */
-    u8  pad_125[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_0dc (+0x8 = data),
+       mAnimation1 (+0x50 = the Animation base), which the header declared separately
+       inside it. */
+    ModelAnim mModelAnim1;            /* 0x0d4 */
     u8  mTextureSequence1;            /* 0x138 */
     u8  pad_139[0x13];
     u8  mMaterialChanger1;            /* 0x14c */
     u8  pad_14d[0x13];
     u8  mTextureTransformer1;            /* 0x160 */
     u8  pad_161[0x13];
-    u8  mModelAnim2;            /* 0x174 */
-    u8  pad_175[0x7];
-    u8  unk_17c;            /* 0x17c */
-    u8  pad_17d[0x47];
-    u8  mAnimation2;            /* 0x1c4 */
-    u8  pad_1c5[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x174 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_17c (+0x8 = data),
+       mAnimation2 (+0x50 = the Animation base), which the header declared separately
+       inside it. */
+    ModelAnim mModelAnim2;            /* 0x174 */
     u8  mTextureSequence2;            /* 0x1d8 */
     u8  pad_1d9[0x13];
     u8  mMaterialChanger2;            /* 0x1ec */

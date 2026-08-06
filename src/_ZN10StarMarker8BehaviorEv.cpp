@@ -1,9 +1,13 @@
 //cpp
 // @symbol _ZN10StarMarker8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
+/* The class header comes FIRST on purpose: it reaches math/Matrix.h, whose
+   Matrix4x3 is the structured one, and include/common.h's flat spelling stands
+   down behind the guard. mat4x3.t is only nameable this way round, and the two
+   spellings are the same 0x30 bytes. */
 #include "StarMarker.h"
+/* recovered: declarations from a shared header */
+#include "decl_common.h"
 typedef struct Mtx { int m[12]; } Mtx;
 extern "C" {
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -52,9 +56,9 @@ int StarMarker::Behavior()
     } else {
         *(short *)((((int)((char *)this)) + 0x8e)) += 0x400;
         Matrix4x3_FromRotationY(((char *)this) + 0x130, mAngleY);
-        unk_154 = mPosX >> 3;
-        unk_158 = mPosY >> 3;
-        unk_15c = mPosZ >> 3;
+        mModel.mat4x3.t.x = mPosX >> 3;
+        mModel.mat4x3.t.y = mPosY >> 3;
+        mModel.mat4x3.t.z = mPosZ >> 3;
     }
     if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
         *(Mtx *)((char *)&unk_18c) = data_02082128;

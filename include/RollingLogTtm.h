@@ -5,6 +5,7 @@
 #ifndef ROLLINGLOGTTM_H
 #define ROLLINGLOGTTM_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct RollingLogTtm {
     u8  pad_000[0xc];
@@ -25,10 +26,11 @@ struct RollingLogTtm {
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x5b];
-    s32 unk_130;            /* 0x130 */
-    u8  pad_134[0x4];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
+       which the header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mShadowModel;            /* 0x138 */
     u8  pad_139[0x27];
     u8  mMovingCylinderClsn;            /* 0x160 */

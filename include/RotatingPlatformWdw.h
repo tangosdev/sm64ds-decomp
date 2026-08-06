@@ -5,6 +5,7 @@
 #ifndef ROTATINGPLATFORMWDW_H
 #define ROTATINGPLATFORMWDW_H
 #include "types.h"
+#include "Model.h"
 
 struct RotatingPlatformWdw {
     u8  pad_000[0x8];
@@ -18,10 +19,11 @@ struct RotatingPlatformWdw {
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0x47];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
+       short of the object, so the member also takes over unk_0dc (+0x8 = data), which the
+       header declared separately inside it. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     u8  mTextureTransformer;            /* 0x320 */

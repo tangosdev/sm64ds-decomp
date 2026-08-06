@@ -2,38 +2,27 @@
 // @symbol _ZN9KoopaFlag13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "KoopaFlag.h"
-typedef int Fix12;
 struct SharedFilePtr;
 struct BMD_File;
 struct BCA_File;
 struct Actor;
 
-struct Model {
-    static void* LoadFile(SharedFilePtr& f);
-};
-struct ModelBase {
-    void SetFile(BMD_File* f, int a, int b);
-};
-struct Animation {
-    static void* LoadFile(SharedFilePtr& f);
-};
-struct ModelAnim {
-    void SetAnim(BCA_File* f, int a, Fix12 b, unsigned int c);
-};
+/* Model / ModelBase / Animation / ModelAnim are the real classes now, through
+   this actor's header. */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File* f, int a, Fix12 b, unsigned int c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File* f, int a, Fix12i b, unsigned int c);
 
 struct MovingCylinderClsn {
-    void Init(Actor* a, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
+    void Init(Actor* a, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 
 
 extern SharedFilePtr data_ov062_0211e0d4;

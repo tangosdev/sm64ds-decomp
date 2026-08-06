@@ -43,7 +43,7 @@ int Tornado::Behavior()
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
     Matrix4x3_FromTranslation(((char *)this) + 0x2e0, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     _ZN9Animation7AdvanceEv((char *)&mTextureTransformer);
     return 1;
 }
