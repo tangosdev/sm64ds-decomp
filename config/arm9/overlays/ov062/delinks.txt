@@ -445,6 +445,10 @@ src/func_ov062_0211bc54.cpp:
     complete
     .text start:0x0211bc54 end:0x0211bd10
 
+src/func_ov062_0211bd10.c:
+    complete
+    .text start:0x0211bd10 end:0x0211c218
+
 src/func_ov062_0211c218.c:
     complete
     .text start:0x0211c218 end:0x0211c2f4
