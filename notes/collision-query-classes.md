@@ -663,3 +663,142 @@ entry, AABB, radius square, march, descent, step, leaf caches, sorted insert, re
 depth, classify, pass-through filter, Voronoi dispatch, edge/vertex discriminator, record,
 accumulate, epilogue. What remains is transcribing three symmetric blocks of fixed-point
 arithmetic whose inputs, comparison and output are all known.
+
+### Step 5 is six shared blocks, not three symmetric ones (2026-08-06)
+
+The previous section's model -- "three symmetric branches, each doing the edge/vertex
+distance, three copies of the same ~300-word block" -- is **wrong in a way that matters for
+how the source is spelled**. Transcribing it as three self-contained branches cannot
+reproduce the ROM's control flow.
+
+What is actually there:
+
+```
+0x1ffbea8   dispatch: which of dot1/dot2/dot3 is largest      -> 3 blocks
+0x1ffc1ec   E1   closest point is on edge 1                   \
+0x1ffc35c   E2   closest point is on edge 2                    > 3 EDGE blocks
+0x1ffc4cc   E3   closest point is on edge 3                   /
+0x1ffc63c   V12  closest point is the vertex of edges 1 and 2 \
+0x1ffc750   V23  closest point is the vertex of edges 2 and 3  > 3 VERTEX blocks
+0x1ffc89c   V31  closest point is the vertex of edges 3 and 1 /
+0x1ffca30   the shared tail: sqrt, depth, sign check
+0x1ffcaa4   the face case joins here
+0x1ffd314   the reject (`continue`)
+```
+
+**The distance blocks are shared, and that is why the ROM branches to labels instead of
+falling through.** Each edge's dispatch tests its edge against *both* neighbours; failing
+either test means the closest point has passed the vertex the two edges share, so edge 1's
+en2 test and edge 2's en1 test both land on V12. Likewise the edge-3 dispatch at 0x1ffc0d0
+is entered from both halves of the top-level comparison. Six labels, nine predecessors.
+
+Confirmed exhaustively -- every dispatch target, both arms:
+
+| largest | neighbour test | ble (vertex) | else (edge) |
+|---|---|---|---|
+| dot1 | vs en2 | V12 `0x1ffc63c` | E1 `0x1ffc1ec` |
+| dot1 | vs en3 | V31 `0x1ffc89c` | E1 `0x1ffc1ec` |
+| dot2 | vs en3 | V23 `0x1ffc750` | E2 `0x1ffc35c` |
+| dot2 | vs en1 | V12 `0x1ffc63c` | E2 `0x1ffc35c` |
+| dot3 | vs en1 | V31 `0x1ffc89c` | E3 `0x1ffc4cc` |
+| dot3 | vs en2 | V23 `0x1ffc750` | E3 `0x1ffc4cc` |
+
+### The depth formula is not `rsc - faceDot` outside the face case (2026-08-06)
+
+`rsc - faceDot`, stored to `sp+0x9c` at `0x1ffbe3c` before the dispatch, is **only the face
+case's answer**. Every edge and vertex region overwrites it in the shared tail at
+`0x1ffca80`:
+
+```
+depth = SqrtRaw(rsq - d*d) - faceDot;      /* d = the winning edge dot */
+if (depth < 0) continue;                    /* `bmi 0x1ffd314` */
+```
+
+so `sp+0x9c` is one variable assigned twice, and the 64-bit `rsq - d*d` computed by each
+block (`umull`/`mla`/`mla` -- the full signed 64x64 square, using the sign-extension word
+each dispatch parked at `sp+0xd8`/`0xe0`/`0xe8`) exists to be square-rooted, not compared.
+The earlier note's "compares it against the squared radius" is the wrong operation.
+
+### The inlined square root is NOT cstd::sqrt(u64) (2026-08-06)
+
+Four sites (`0x1ffc2d8`, `0x1ffc448`, `0x1ffc5b8`, `0x1ffca78`) inline the DS hardware sqrt:
+save IME, `SQRTCNT = 1`, 64-bit `SQRT_PARAM`, restore IME, spin on `SQRTCNT & 0x8000`, read
+`SQRT_RESULT`. But `cstd::sqrt(u64)` at `0x0203d744` (matched, `src/_ZN4cstd4sqrtEy.cpp`)
+pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`. **Neither appears here.** So this
+is a separate raw inline helper, not that function -- and the `0` and `1` it writes come from
+frame slots `sp+0x118` and `sp+0x10c` rather than immediates, which is what four expansions
+of one `inline` function look like on this compiler.
+
+### What the edge blocks actually do, and five more named fields (2026-08-06)
+
+Each edge block runs a filter before its distance is taken:
+
+```c
+if (sphere.flags & 2)          { cls==1 ? (d > faceDot) : (d > faceDot >> unk_48) -> reject }
+else if (cls == 1)             { func_02037e58(&surface)==1 || unk_4d
+                                   ? (d > faceDot >> unk_48) : (d > faceDot) -> reject }
+else if (d > (faceDot >> unk_48)) {
+    if (cls != 0) reject;                       /* only a floor gets the slow path */
+    if (sphere.flags & 0x20) reject;
+    hyp = SqrtRaw((d>>4)^2 + (faceDot>>4)^2);   /* a real hypotenuse */
+    if (func_020397dc(hyp)) reject;             /* |hyp| <= 8: divisor about to vanish */
+    if (DotVec3(&surfaceNormal, &this->unk_28) > cstd::fdiv(faceDot >> 4, hyp)) reject;
+}
+```
+
+* **`MeshCollider::unk_48` is a SHIFT COUNT, not a value** (init 2). The test is "is the
+  lateral distance outside this edge more than `faceDot >> unk_48`" -- a slope tolerance
+  expressed as a fraction of the penetration.
+* **`unk_4d`** (init 0) selects the tolerant form of that test for walls.
+* **`unk_28`/`unk_2c`/`unk_30` are one `Vector3`**, not three scalars: `DotVec3` is handed
+  `sl+0x28` as a vector. `include/MeshCollider.h` types them as separate `Fix12i`/`s32`.
+* **`SphereClsn` flags bit 2 and bit 0x20** gate the filter and the slow path.
+* **`SphereClsn+0x108`** is a `normal.y` floor the hit must clear, checked at the face label.
+
+Call census for the whole function: `cstd::fdiv` x8, `func_020397dc` x8, `DotVec3` x4,
+`func_02037e58` x3. `func_020397dc(x)` is `|x| <= 8` -- a near-zero divisor guard, and it
+precedes every `fdiv`.
+
+### Register model, for reading any of these blocks (2026-08-06)
+
+| | | | |
+|---|---|---|---|
+| `r8` `r7` `r6` | dot1 dot2 dot3 | `r5` `r4` `[sp+0x94]` | en1 en2 en3 |
+| `sb` | **faceDot**, from `0x1ffbd74` on | `[sp+0x98]` | face normal |
+| `ip` `sb` `r3` | dx dy dz, but only until `0x1ffbd74` | `[sp+0xa4]` | cls |
+| `[sp+0x104]` | rsc | `[sp+0x9c]` | depth |
+| `[sp+0x60/0x64]` | rsq, 64-bit | `[sp+0x180]` | surface normal |
+
+`sb` holding dy and then faceDot is the trap: the dispatch's `cmp r8, sb, asr r0` is
+*dot1 vs faceDot >> unk_48*, not anything to do with dy.
+
+### V12's prologue, decoded (2026-08-06)
+
+The vertex blocks are the remaining work. V12 (`0x1ffc63c`) begins:
+
+```c
+if (func_020397dc(MUL10(nn, nn) - 0x400)) continue;   /* edges within 8 of parallel */
+t = cstd::fdiv(MUL10(nn, dot2) - dot1, MUL10(nn, nn) - 0x400) >> 2;
+```
+
+then builds the offset to the vertex from `t`, `en1` and `en2` (`smull`/`>>10` pairs against
+each component of both normals, and `dot2 - MUL10(t, nn)` as the second coefficient) before
+joining the shared tail at `0x1ffc9cc`. The vector half is not transcribed yet.
+
+### Tooling: `mismatches=N/M` is frozen while the sizes differ (2026-08-06)
+
+`fdiff.py` reports `mismatches=999/1778` for *every* draft of this function, before and after
+a change that added 513 instructions -- `match.compare` does not produce a meaningful count
+until the candidate is the target's size. Score the intermediate drafts with the alignment
+ratio instead, and note that `--align-shape` is a *modifier*: without `--align` it prints
+nothing at all and you get a silent no-op.
+
+```
+python tools/fdiff.py --c <draft> --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
+  --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 \
+  --align --align-shape --align-changes 0 --quiet
+```
+
+Draft progress on that metric: **0x8cc / ratio 0.3494 / 409 shape-equal -> 0x10d0 / ratio
+0.5011 / 715 shape-equal**, with the dispatch, the three edge blocks, the filter, the raw
+sqrt and the shared tail written and the three vertex blocks still open.

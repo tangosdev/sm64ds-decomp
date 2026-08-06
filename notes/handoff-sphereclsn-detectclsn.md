@@ -37,14 +37,21 @@ python tools/fdiff.py --c <draft>.cpp \
 
 ## 1. Where the draft is
 
-`notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x8cc** against `0x1bc8`.
+`notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x10d0** against `0x1bc8`
+(shape-alignment ratio 0.5011, 715 shape-equal instructions — was 0x8cc / 0.3494 / 409).
+
+Score intermediate drafts with `--align --align-shape`, not the summary count:
+`fdiff.py` prints `mismatches=999/1778` for every draft of this function regardless of
+change, because the count is meaningless until the sizes match. `--align-shape` is a
+modifier — without `--align` it silently prints nothing.
 
 Written and shape-verified against the ROM: entry, three-axis AABB, radius square, the
 three-axis march, octree descent, per-cell step, the leaf caches, the sorted top-3 insert,
 the reject chain, `depth`, the classify, the pass-through filter, the record, the accumulate,
 the epilogue.
 
-**Missing: step 5 only** — the Voronoi edge/vertex distance blocks.
+**Missing: the three vertex blocks only.** Step 5's dispatch, its three edge blocks, the
+per-edge filter, the raw sqrt and the shared tail are now written.
 
 ## 2. Per-prism body, in ROM order
 
@@ -82,15 +89,29 @@ but *every* hit contributes to the extent.
 
 ## 4. What is left, precisely
 
-Three symmetric blocks, ~300 words each, one per edge. Each one:
+**Superseded 2026-08-06 — this section was wrong in two ways. See
+`notes/collision-query-classes.md`, the four sections dated 2026-08-06 after "The edge/vertex
+discriminator", for the corrected map. Summary of the corrections:**
 
-1. forms `nn = dot(en_i, en_j) >> 10` — the cosine between two edge normals — and compares
-   `(nn * dot_i) >> 10` against `dot_j`, against **both** neighbours, to pick edge vs vertex;
-2. computes the squared distance for whichever region won;
-3. compares it against the squared radius parked at `sp+0x60` / `sp+0x64`.
+* It is **not** three symmetric self-contained blocks. It is 3 dispatch + 3 edge + 3 vertex
+  blocks, and **the distance blocks are shared** — each vertex block is entered from the two
+  edges that meet at it, so nine predecessors reach six labels. Spelled as three independent
+  branches it cannot reproduce the ROM's control flow.
+* The squared distance is **not compared** against the squared radius. `rsq - d*d` is
+  square-rooted: `depth = SqrtRaw(rsq - d*d) - faceDot`, and `rsc - faceDot` is only the
+  *face* case's depth. One variable at `sp+0x9c`, assigned twice.
 
-Inputs (`dot1/dot2/dot3` and the three edge normals), the comparison, and the output
-(`depth`, feeding the accumulate that is already written) are all known.
+Also newly mapped, none of it anticipated here: an inlined **raw** hardware sqrt at four
+sites that is *not* `cstd::sqrt(u64)`; a per-edge filter using `unk_48` (a **shift count**),
+`unk_4d`, `SphereClsn` flag bits 2 and 0x20, `DotVec3` against the `Vector3` at
+`MeshCollider+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
+
+What remains open is **the three vertex blocks only**. V12's prologue is decoded in the
+notes; the vector half of all three is not.
+
+Still true and still load-bearing: the discriminator forms `nn = dot(en_i, en_j) >> 10` and
+compares `(nn * dot_i) >> 10` against `dot_j` for **both** neighbours, and the inputs
+(`dot1/dot2/dot3`, the three edge normals) are all known.
 
 **Do not let the 64-bit intermediates collapse to 32-bit.** `asr r2,r8,#0x1f` sign-extends
 `dot1` into `sp+0xd8`, `sp+0xf0` holds another high word; the products stay 64-bit through the

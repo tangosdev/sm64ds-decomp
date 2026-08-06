@@ -29,6 +29,69 @@ extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
 extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
                                                               SphereClsn *q, int flag);
+extern "C" int func_020397dc(int x);         /* |x| <= 8 -- a near-zero divisor guard */
+extern "C" int func_02037e58(unsigned int *p);
+extern "C" s32 _ZN4cstd4fdivEii(s32 num, s32 den);
+
+/* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
+   (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
+   Neither the shift nor the rounding is present here, so this is a separate
+   inline helper, and the `0` and `1` it writes are loaded from frame slots
+   (sp+0x118, sp+0x10c) rather than immediates -- which is what four expansions
+   of one inline function look like on this compiler. */
+static inline s32 SqrtRaw(u64 x)
+{
+    volatile u16 *ime = (volatile u16 *)0x4000208;
+    u16 saved = *ime;
+    *ime = 0;
+    *(volatile u16 *)0x40002b0 = 1;
+    *(volatile u64 *)0x40002b8 = x;
+    *ime;
+    *ime = saved;
+    while (*(volatile u16 *)0x40002b0 & 0x8000)
+        ;
+    return *(volatile s32 *)0x40002b4;
+}
+
+/* The scale-preserving product for the normals' 1.0 == 0x400 scale. Both
+   operands stay 64-bit into the shift; letting this collapse to 32 bits is the
+   documented way this function diverges. */
+#define MUL10(a, b) ((s32)(((s64)(a) * (b)) >> 10))
+
+/* nn = cos between two edge normals, at the same 0x400 scale. */
+#define EDGENORMAL_DOT(a, b) \
+    (MUL10((a)[0], (b)[0]) + MUL10((a)[1], (b)[1]) + MUL10((a)[2], (b)[2]))
+
+/* The filter each edge block runs before its distance is taken, and the reason
+   MeshCollider::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
+   COUNT, not a value: the test is "is the lateral distance outside this edge
+   more than faceDot >> unk_48", i.e. a slope tolerance expressed as a fraction
+   of the penetration. Only a floor (cls 0) that fails it gets the expensive
+   path -- a real hypotenuse through the hardware sqrt, then the contact angle
+   through cstd::fdiv, compared against the collider's stored axis at +0x28.
+   func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
+#define EDGE_FILTER(d)                                                        \
+    if (sphere.flags & 2) {                                                   \
+        if (cls == 1) { if ((d) > faceDot) continue; }                        \
+        else if ((d) > (faceDot >> unk_48)) continue;                         \
+    } else if (cls == 1) {                                                    \
+        if (func_02037e58((unsigned int *)&data_020a0cec) == 1) {             \
+            if ((d) > (faceDot >> unk_48)) continue;                          \
+        } else if (unk_4d) {                                                  \
+            if ((d) > (faceDot >> unk_48)) continue;                          \
+        } else {                                                              \
+            if ((d) > faceDot) continue;                                      \
+        }                                                                     \
+    } else if ((d) > (faceDot >> unk_48)) {                                   \
+        s32 hyp;                                                              \
+        if (cls != 0) continue;                                               \
+        if (sphere.flags & 0x20) continue;                                    \
+        hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                       \
+                          + (s64)(faceDot >> 4) * (faceDot >> 4)));           \
+        if (func_020397dc(hyp)) continue;                                     \
+        if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
+                > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
+    }
 
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
@@ -45,6 +108,8 @@ struct SphereClsn {
     u8         flags;        /* 0x70 - 1 hit, 4 floor, 8 wall, 0x10 und */
     u8         pad_071[0x8b];
     s32        unk_100;      /* 0x100 - the best floor normal.y so far */
+    u8         pad_104[0x4];
+    s32        unk_108;      /* 0x108 - a normal.y floor the hit must clear */
 };
 
 s32 MeshCollider::DetectClsn(SphereClsn &sphere)
@@ -186,8 +251,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                     while ((lv = *++leaf) != 0) {
                         KCL_Tri *tri = &f->tris[lv];
                         s32 *vtx = f->positions[tri->posIdx];
-                        s16 *en;
+                        /* Three separately live edge-normal pointers, not one
+                           reused cursor: the ROM keeps en1 in r5, en2 in r4 and
+                           en3 spilled at sp+0x94, and step 5 reads all three
+                           again after the reject chain has finished with them. */
+                        s16 *en1, *en2, *en3;
                         s16 *fn;
+                        s32 nn;
+                        s64 dsq;
                         s32 dx, dy, dz;
                         s32 faceDot;
                         s32 nrm[3];
@@ -202,14 +273,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         dy = rawY - vtx[1];
                         dz = rawZ - vtx[2];
 
-                        en = f->normals[tri->edgeNormal1Idx];
-                        dot1 = dx * en[0] + dy * en[1] + dz * en[2];
+                        en1 = f->normals[tri->edgeNormal1Idx];
+                        dot1 = dx * en1[0] + dy * en1[1] + dz * en1[2];
                         if (dot1 >= rsc) continue;
-                        en = f->normals[tri->edgeNormal2Idx];
-                        dot2 = dx * en[0] + dy * en[1] + dz * en[2];
+                        en2 = f->normals[tri->edgeNormal2Idx];
+                        dot2 = dx * en2[0] + dy * en2[1] + dz * en2[2];
                         if (dot2 >= rsc) continue;
-                        en = f->normals[tri->edgeNormal3Idx];
-                        dot3 = dx * en[0] + dy * en[1] + dz * en[2] - tri->length;
+                        en3 = f->normals[tri->edgeNormal3Idx];
+                        dot3 = dx * en3[0] + dy * en3[1] + dz * en3[2] - tri->length;
                         if (dot3 >= rsc) continue;
 
                         /* Face normal. Note GT, not the GE the three edges use. */
@@ -274,13 +345,90 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            TODO: the three symmetric edge/vertex branches. They are
                            gated by this->unk_4c and are ~1100 of the function's
                            1778 words. */
+                        /* The dispatch picks the edge the centre is furthest
+                           outside, then asks -- against BOTH of that edge's
+                           neighbours -- whether the closest point is still on the
+                           edge or has passed a vertex.
+
+                           The six distance blocks are SHARED, which is the part
+                           the earlier note got wrong: each vertex block is entered
+                           from the two edges that meet at it (V12 from edge 1's
+                           en2 test and edge 2's en1 test, and so on), and the
+                           edge-3 dispatch is entered from both halves of the top
+                           test. That sharing is why the ROM branches to labels
+                           instead of falling through, and why gotos are the
+                           faithful spelling here. */
                         if (dot1 > dot2) {
-                            if (dot1 > dot3) { /* edge 1 */ }
-                            else             { /* edge 3 */ }
-                        } else {
-                            if (dot2 > dot3) { /* edge 2 */ }
-                            else             { /* edge 3 */ }
+                            if (dot1 <= dot3) goto edge3;
+                            if (dot1 <= 0) goto face;
+                            if (!unk_4c) continue;
+                            if (dot2 > dot3) {
+                                nn = EDGENORMAL_DOT(en1, en2);
+                                if (MUL10(nn, dot1) <= dot2) goto vertex;
+                            } else {
+                                nn = EDGENORMAL_DOT(en1, en3);
+                                if (MUL10(nn, dot1) <= dot3) goto vertex;
+                            }
+                            /* --- E1: closest point is on edge 1 --- */
+                            EDGE_FILTER(dot1)
+                            dsq = rsq - (s64)dot1 * dot1;
+                            goto tail;
                         }
+                        if (dot2 <= dot3) goto edge3;
+                        if (dot2 <= 0) goto face;
+                        if (!unk_4c) continue;
+                        if (dot3 > dot1) {
+                            nn = EDGENORMAL_DOT(en2, en3);
+                            if (MUL10(nn, dot2) <= dot3) goto vertex;
+                        } else {
+                            nn = EDGENORMAL_DOT(en2, en1);
+                            if (MUL10(nn, dot2) <= dot1) goto vertex;
+                        }
+                        /* --- E2 --- */
+                        EDGE_FILTER(dot2)
+                        dsq = rsq - (s64)dot2 * dot2;
+                        goto tail;
+
+                    edge3:
+                        if (dot3 <= 0) goto face;
+                        if (!unk_4c) continue;
+                        if (dot1 > dot2) {
+                            nn = EDGENORMAL_DOT(en3, en1);
+                            if (MUL10(nn, dot3) <= dot1) goto vertex;
+                        } else {
+                            nn = EDGENORMAL_DOT(en3, en2);
+                            if (MUL10(nn, dot3) <= dot2) goto vertex;
+                        }
+                        /* --- E3 --- */
+                        EDGE_FILTER(dot3)
+                        dsq = rsq - (s64)dot3 * dot3;
+                        goto tail;
+
+                    vertex:
+                        /* TODO -- the three vertex blocks (V12 0x01ffc63c,
+                           V23 0x01ffc750, V31 0x01ffc89c). Decoded so far, from
+                           V12: the shared prologue rejects a degenerate pair via
+                           `func_020397dc((nn*nn >> 10) - 0x400)` -- i.e. two edge
+                           normals within 8 of exactly parallel, which would make
+                           the divisor vanish -- then forms
+                           `t = cstd::fdiv(MUL10(nn, dot2) - dot1,
+                                           MUL10(nn, nn) - 0x400) >> 2`
+                           and builds the offset to the vertex from `t`, en1 and
+                           en2 before joining the same tail. The vector half is not
+                           transcribed yet, so for now the vertex regions register
+                           no hit. */
+                        continue;
+
+                    tail:
+                        /* Every edge/vertex region lands here: the distance is a
+                           real square root of the 64-bit remainder, and THAT is
+                           the depth -- the `rsc - faceDot` computed above is only
+                           the face case's answer. */
+                        depth = SqrtRaw((u64)dsq) - faceDot;
+                        if (depth < 0) continue;
+
+                    face:
+                        if (sphere.unk_108 < sn.y) continue;
 
                         func_02037fd4(&sphere.result, triID, &data_020a0cec);
                         sphere.flags |= 1;

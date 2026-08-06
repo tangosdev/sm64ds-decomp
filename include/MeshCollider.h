@@ -73,6 +73,12 @@ struct KCL_File {
 struct MeshCollider : MeshColliderBase {
     KCL_File *kclFile;        /* 0x20 */
     u32 clps;                 /* 0x24 - set via func_0203821c, released via func_02038224 */
+    /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(SphereClsn&)
+       hands `this + 0x28` straight to DotVec3 as a vector (0x01ffc278,
+       `add r1, sl, #0x28`) and compares the result against a contact angle. It
+       is the collider's preferred-contact axis. Left as three fields only
+       because retyping it would touch already-matched callers; if you retype it,
+       re-verify SetFile and func_ov075_0211a410. */
     Fix12i unk_28;            /* 0x28 - init 0 */
     Fix12i unk_2c;            /* 0x2c - init 0x1000 */
     s32 unk_30;               /* 0x30 - init 0 */
@@ -83,6 +89,15 @@ struct MeshCollider : MeshColliderBase {
     s32 unk_3c;               /* 0x3c - init 0 */
     s32 unk_40;               /* 0x40 - init 0 */
     Fix12i unk_44;            /* 0x44 - init -0x1000 */
+    /* All four are consumed by DetectClsn(SphereClsn&) as one edge-contact
+       policy -- see notes/collision-query-classes.md.
+         unk_44  the threshold DotVec3(faceNormal, unk_38) is tested against
+         unk_48  a SHIFT COUNT, not a value: an edge hit is rejected when the
+                 lateral distance outside the edge exceeds faceDot >> unk_48,
+                 i.e. a slope tolerance as a fraction of the penetration
+         unk_4c  master gate for the edge/vertex regions; clear means only a
+                 face contact can register
+         unk_4d  selects the tolerant form of the unk_48 test for walls */
     s32 unk_48;               /* 0x48 - init 2 */
     u8 unk_4c;                /* 0x4c - init 1 */
     u8 unk_4d;                /* 0x4d - init 0 */
