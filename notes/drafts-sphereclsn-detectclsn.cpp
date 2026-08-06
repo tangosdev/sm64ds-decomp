@@ -141,7 +141,6 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u32 x, y, z;
     s32 stepX, stepY, stepZ;
     u32 one = 1;
-    s32 passArg = 0;
     /* Slot order is declaration order on this compiler, and these fourteen words
        are the ROM's zeroed block, in order.
 
@@ -279,10 +278,11 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         s32 den, t, u;      /* the vertex 2x2 */
                         s32 vx, vy, vz;     /* the offset to the vertex */
                         s64 lensq;
-                        /* sp+0xa8: seeded per prism from sp+0x114 at 0x01ffbe8c,
-                           set to 3 by the vertex tail, defaulted to 2 by the
-                           shared tail. The seed's origin (sp+0x114, stored once
-                           at 0x01ffba10) is still unidentified -- TODO. */
+                        /* sp+0xa8, seeded per prism at 0x01ffbe8c, set to 3 by the
+                           vertex tail and defaulted to 2 by the shared tail. The
+                           seed is sp+0x114, which 0x01ffba10 loads from sp+0x28
+                           one instruction after 0x01ffb9c8 zeroed it -- so it is
+                           the hoisted constant 0, not a value from anywhere. */
                         s32 contactKind = 0;
                         s32 dx, dy, dz;
                         s32 faceDot;
@@ -353,9 +353,16 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 
                         /* Same one-way/pass-through filter the RaycastGround twin
                            applies, and it takes the collider, the surface and the
-                           query object. */
+                           query object.
+
+                           The last argument is NOT a constant: 0x01ffbe78 sets it
+                           from the classify with `cmp r0,#1 / ldreq r3,[sp+0x10c]
+                           / movne r3,r0`, i.e. `cls == 1` -- a wall tells the
+                           filter it is a wall. The draft passed a zero here, which
+                           only looked right because the surrounding block was
+                           never exercised. */
                         if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
-                                this, &data_020a0cec, &sphere, passArg))
+                                this, &data_020a0cec, &sphere, cls == 1))
                             continue;
 
                         /* Voronoi region select: whichever edge the centre is

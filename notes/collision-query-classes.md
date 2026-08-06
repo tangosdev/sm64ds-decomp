@@ -836,3 +836,73 @@ that only runs once the cheap tests have already accepted the prism.
 
 **Do not treat this as part of step 5.** It is a separate mechanism with its own gate, and it
 is now the single largest unwritten region in the function.
+
+### The wall block, mapped end to end (2026-08-06)
+
+`0x1ffcaa4`..`0x1ffcfe4`. Gate, in ROM order — the first is a reject, the other three skip the
+block and rejoin at `0x1ffcfe4`:
+
+```c
+if (sphere.unk_108 < surfaceNormal.y) continue;      /* 0x1ffcaa4, already drafted */
+if (sphere.unk_ec > 0 && cls == 1 && !(tri->length & 0xf0000000)) {
+    ... the block ...
+}
+```
+
+`[sp+0x8c]` is the `tri` pointer and `[r0]` off it is `tri->length`, so the last gate is a
+high-nibble flag test on the length word.
+
+**Step 1 — reconstruct the triangle's vertices from the KCL prism.** A KCL prism stores a
+position, a face normal, three edge normals and a length; the actual vertices come back as
+`pos + cross(fn, en_i) * (length / dot(cross(fn, en_i), en3))`. The ROM does this three
+times, reusing one 6-byte `s16` scratch vector at `sp+0x16c` for the cross each round:
+
+```c
+cr[0] = MUL10(fn[1], ea[2]) - MUL10(fn[2], ea[1]);      /* 0x1ffcb0c, 0x1ffcc8c, ... */
+cr[1] = MUL10(fn[2], ea[0]) - MUL10(fn[0], ea[2]);      /* stored as s16 to sp+0x16c */
+cr[2] = MUL10(fn[0], ea[1]) - MUL10(fn[1], ea[0]);
+cd = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);
+if (func_020397dc(cd)) continue;                         /* degenerate prism */
+ck = cstd::fdiv(tri->length, cd) >> 2;
+v[i] = triPos[i] + (s32)(((s64)cr[i] * ck) >> 14);       /* lsr #0xe + orr lsl #18 */
+```
+
+`triPos` is `[sp+0x90]` re-read with each component `<< 6` into `sp+0x18c`/`0x190`/`0x194` —
+the position at full Fix12i scale, not the 1/64 units the octree walk uses. The three
+reconstructed vertices land at `sp+0x198`/`0x19c`/`0x1a0`, `sp+0x1a4`/`0x1a8`/`0x1ac` and
+back into `sp+0x18c`/`0x190`/`0x194`. `ea` is `en2` for the first, `en1` for the second.
+
+**Step 2 — a slab test along the collider's axis.** Each vertex has the sphere centre
+(`[sp+0xc4]`) subtracted from it, and the result is dotted with the `Vector3` at
+`MeshCollider+0x28` using the *rounded* Fix12 multiply, `(a*b + 0x800) >> 12`
+(`smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`) — note this is a different
+multiply from the `>> 10` used everywhere else in the function, because the axis is Fix12i
+and the edge normals are not.
+
+The three dots are then compared against `+/- (sphere.unk_ec + sphere.radius)`
+(`0x1ffcf9c`: `ldr r6,[fp,#0xec]`, `ldr r3,[fp,#0x48]`, `add r1,r6,r3`, `rsb r2,r1,#0`) —
+i.e. a symmetric slab of half-width `unk_ec + radius` about the sphere centre, along the
+collider's preferred axis. A wall whose reconstructed triangle lies wholly outside that slab
+is not a real contact.
+
+This closes the last unmapped mechanism in the function. Everything from entry to epilogue now
+has a description; what remains is transcription, and the two multiplies (`>> 10` unrounded
+for normals, `+0x800 >> 12` rounded for the axis) must not be conflated.
+
+### `SphereClsn` fields this block names (2026-08-06)
+
+| offset | meaning |
+|---|---|
+| `0x48` | radius (already known) |
+| `0xec` | slab half-width tolerance, and the block's own enable — `<= 0` skips it |
+| `0x108` | a `normal.y` floor the hit must clear |
+| flags `0x40` | disables the vertex regions |
+| flags `2`, `0x20` | gate the edge filter and its slow path |
+
+### The pass-through filter's last argument is `cls == 1` (2026-08-06)
+
+Not a constant. `0x1ffbe78` builds it straight off the classify with
+`cmp r0,#1 / ldreq r3,[sp+0x10c] / movne r3,r0` — 1 for a wall, 0 otherwise — so
+`BgCh::ShouldPassThroughImpl(collider, surface, query, isWall)`. The draft passed a literal
+zero, which read as correct only because the block around it had never been exercised. Worth
+a look at the RaycastGround and RaycastLine twins, which pass the same argument.
