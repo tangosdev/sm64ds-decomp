@@ -220,7 +220,8 @@ def main():
     ap.add_argument("--gate", help="show one target (e.g. 9, smoke_actor)")
     ap.add_argument("--list", action="store_true", help="list every non-proven file")
     ap.add_argument("--strict", action="store_true",
-                    help="exit 1 if any UNPROVEN or BANNER file is compiled")
+                    help="exit 1 if any UNPROVEN or BANNER file is compiled. "
+                         "Composes with --ratchet: both must pass")
     ap.add_argument("--ratchet", action="store_true",
                     help="exit 1 only if the unproven set GREW vs the baseline")
     ap.add_argument("--update-baseline", action="store_true",
@@ -351,9 +352,25 @@ def main():
             return FAILED
         print(f"\nratchet OK: no new unproven files "
               f"({len(current)} known, baseline {len(known)})")
-        return OK
+        # --strict used to be dead whenever --ratchet was passed: every path in
+        # this block returned, and the strict check sits below it. The flag was
+        # not rejected and not warned about, it just did nothing -- the worst of
+        # the three options, since the caller reads the exit code as though both
+        # gates ran. They are not in conflict: --strict is the absolute floor,
+        # --ratchet the derivative, and "did not regress AND never above zero"
+        # is coherent -- it becomes the natural gate once the ledger empties.
+        # So fall through and let the stricter one also have its say.
+        if not args.strict:
+            return OK
 
+    # Note: --update-baseline returns above without consulting --strict. That
+    # one is deliberate -- it writes the ledger rather than gating on it.
     if args.strict and worst:
+        # Say so explicitly. With --ratchet --strict the last thing printed is
+        # "ratchet OK", and exiting 1 straight after that reads as a bug in the
+        # tool rather than a verdict from the other gate.
+        print(f"\nport-evidence: FAILED --strict: {worst} file(s) compiled into "
+              f"the port are UNPROVEN or NONMATCHING-bannered.")
         return FAILED
     return OK
 
