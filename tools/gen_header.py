@@ -308,9 +308,16 @@ def main():
                 bucket = "unknown-type"
                 findings[bucket].append({"cls": cls, "offset": hex(off),
                                          "field": name, "declared": typ, "where": where})
-            elif len(obs) > 1 and len({w for v in obs.values() for w in v}) > 1:
-                # The passes disagree with each other. `dw in allw` unions them, so the
-                # pass that happens to agree wins and the disagreement disappears --
+            elif (dw and any(w > dw for v in obs.values() for w in v)
+                  and len({w for v in obs.values() for w in v}) > 1):
+                # A pass observed something WIDER than the declaration, which reads
+                # past the field -- that is a real contradiction. A NARROWER
+                # observation is not: it is a partial access, and for a declared s64 it
+                # is the only thing ARM can emit, having no 64-bit register. Timer and
+                # SphereClsn are exactly that and are corroborated, not contradicted.
+                #
+                # `dw in allw` unions the passes, so the one that happens to agree wins
+                # and the disagreement disappears --
                 # Timer 0x0 was "confirmed" as s32 because the ROM sees the 4-byte
                 # halves of an s64 (ARM has no 64-bit register, so it cannot see
                 # otherwise) while history reads the real s64 from source. Plan 4 sends
