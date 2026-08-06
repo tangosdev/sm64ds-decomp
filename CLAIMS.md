@@ -32,7 +32,6 @@ start converting a class; the same staleness rule applies.
 
 
 | Range | Who | Claimed | Status |
-| ov006 func_ov006_020ddf9c (0x020ddf9c, size 0x144) | lunavyqo (Grok) | 2026-08-06 | **released** — pure regperm floor **div=20** (loop2 zero r2 vs ROM r3). 80+ spellings + 2x permuter + 6aq booster/struct/z-as-ctr/pragma; tip in nearmiss/db.jsonl; API released |
 | ov006 func_ov006_020d3ba0 (0x020d3ba0, size 0x98c) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: end-loop `int xw[2]` (xw[0]=x,xw[1]=w) flips r3/r4 regperm; from near-miss div=9→0; API clm_e7f4edf70069 kept |
 | ov015 func_ov015_021114f0 (0x021114f0, size 0x17c) | lunavyqo (Grok) | 2026-08-06 | **released** — near-miss improved **18→10** (match.py words, size-exact). Lever: base load before sin/cos. Residual: pure ldrsh/smull dest regperm; permuter 575it floor. tip in nearmiss/db.jsonl; API clm_92d31f7de5a0 released |
 | ov006 func_ov006_020d47f4 (0x020d47f4, size 0xe8) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_strength_reduction off` + `#pragma opt_common_subs off`, `fix=-1`, loop2 `j=0` then `x=0x20` accum `+0x40`; from near-miss div=18→0; API clm_28332389df47 kept |
