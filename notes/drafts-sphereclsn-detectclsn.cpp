@@ -62,6 +62,23 @@ static inline s32 SqrtRaw(u64 x)
 #define EDGENORMAL_DOT(a, b) \
     (MUL10((a)[0], (b)[0]) + MUL10((a)[1], (b)[1]) + MUL10((a)[2], (b)[2]))
 
+/* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
+   `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
+   point's coefficients in that basis, then hand the offset to the vertex tail.
+
+   `func_020397dc(den)` is the divisor guard: |den| <= 8 means the two edge
+   normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
+   the quotient is cstd::fdiv's Fix12 result brought back to the 0x400 scale. */
+#define VERTEX_BLOCK(nn, ea, eb, dotI, dotJ)                                  \
+    den = MUL10(nn, nn) - 0x400;                                              \
+    if (func_020397dc(den)) continue;                                         \
+    t = _ZN4cstd4fdivEii(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
+    u = (dotJ) - MUL10(t, nn);                                                \
+    vx = MUL10(t, (ea)[0]) + MUL10(u, (eb)[0]);                               \
+    vy = MUL10(t, (ea)[1]) + MUL10(u, (eb)[1]);                               \
+    vz = MUL10(t, (ea)[2]) + MUL10(u, (eb)[2]);                               \
+    goto vtail;
+
 /* The filter each edge block runs before its distance is taken, and the reason
    MeshCollider::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
    COUNT, not a value: the test is "is the lateral distance outside this edge
@@ -259,6 +276,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         s16 *fn;
                         s32 nn;
                         s64 dsq;
+                        s32 den, t, u;      /* the vertex 2x2 */
+                        s32 vx, vy, vz;     /* the offset to the vertex */
+                        s64 lensq;
+                        /* sp+0xa8: seeded per prism from sp+0x114 at 0x01ffbe8c,
+                           set to 3 by the vertex tail, defaulted to 2 by the
+                           shared tail. The seed's origin (sp+0x114, stored once
+                           at 0x01ffba10) is still unidentified -- TODO. */
+                        s32 contactKind = 0;
                         s32 dx, dy, dz;
                         s32 faceDot;
                         s32 nrm[3];
@@ -364,10 +389,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
                                 nn = EDGENORMAL_DOT(en1, en2);
-                                if (MUL10(nn, dot1) <= dot2) goto vertex;
+                                if (MUL10(nn, dot1) <= dot2) goto v12;
                             } else {
                                 nn = EDGENORMAL_DOT(en1, en3);
-                                if (MUL10(nn, dot1) <= dot3) goto vertex;
+                                if (MUL10(nn, dot1) <= dot3) goto v31;
                             }
                             /* --- E1: closest point is on edge 1 --- */
                             EDGE_FILTER(dot1)
@@ -379,10 +404,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
                             nn = EDGENORMAL_DOT(en2, en3);
-                            if (MUL10(nn, dot2) <= dot3) goto vertex;
+                            if (MUL10(nn, dot2) <= dot3) goto v23;
                         } else {
                             nn = EDGENORMAL_DOT(en2, en1);
-                            if (MUL10(nn, dot2) <= dot1) goto vertex;
+                            if (MUL10(nn, dot2) <= dot1) goto v12;
                         }
                         /* --- E2 --- */
                         EDGE_FILTER(dot2)
@@ -394,30 +419,35 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
                             nn = EDGENORMAL_DOT(en3, en1);
-                            if (MUL10(nn, dot3) <= dot1) goto vertex;
+                            if (MUL10(nn, dot3) <= dot1) goto v31;
                         } else {
                             nn = EDGENORMAL_DOT(en3, en2);
-                            if (MUL10(nn, dot3) <= dot2) goto vertex;
+                            if (MUL10(nn, dot3) <= dot2) goto v23;
                         }
                         /* --- E3 --- */
                         EDGE_FILTER(dot3)
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
 
-                    vertex:
-                        /* TODO -- the three vertex blocks (V12 0x01ffc63c,
-                           V23 0x01ffc750, V31 0x01ffc89c). Decoded so far, from
-                           V12: the shared prologue rejects a degenerate pair via
-                           `func_020397dc((nn*nn >> 10) - 0x400)` -- i.e. two edge
-                           normals within 8 of exactly parallel, which would make
-                           the divisor vanish -- then forms
-                           `t = cstd::fdiv(MUL10(nn, dot2) - dot1,
-                                           MUL10(nn, nn) - 0x400) >> 2`
-                           and builds the offset to the vertex from `t`, en1 and
-                           en2 before joining the same tail. The vector half is not
-                           transcribed yet, so for now the vertex regions register
-                           no hit. */
-                        continue;
+                    v12:  VERTEX_BLOCK(nn, en1, en2, dot1, dot2)   /* 0x01ffc63c */
+                    v23:  VERTEX_BLOCK(nn, en2, en3, dot2, dot3)   /* 0x01ffc750 */
+                    v31:  VERTEX_BLOCK(nn, en3, en1, dot3, dot1)   /* 0x01ffc89c */
+
+                    vtail:
+                        /* Shared by all three vertex regions (0x01ffc9cc). The
+                           `ldreq [sp+0x10c] / ldrne [sp+0x154]` pair here is not a
+                           second variable -- both slots are hoisted CONSTANTS, 1
+                           and 0, materialised at 0x01ffba18 / 0x01ffba30 (the same
+                           trick the inlined sqrt uses for its 0 and 1). So the
+                           gate is a plain bit test. */
+                        if (sphere.flags & 0x40) continue;
+                        lensq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
+                        if (faceDot < 0) continue;
+                        if ((s64)faceDot * faceDot < lensq) continue;
+                        dsq = rsq - lensq;
+                        if (dsq <= 0) continue;
+                        contactKind = 3;
+                        goto tail;
 
                     tail:
                         /* Every edge/vertex region lands here: the distance is a
@@ -426,6 +456,11 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            the face case's answer. */
                         depth = SqrtRaw((u64)dsq) - faceDot;
                         if (depth < 0) continue;
+                        /* 0x01ffca94: the contact kind defaults to 2 here and is
+                           set to 3 by the vertex tail, so the face case (which
+                           jumps straight past this) keeps whatever it came in
+                           with. sp+0x158 and sp+0x160 are the hoisted 3 and 2. */
+                        if (!contactKind) contactKind = 2;
 
                     face:
                         if (sphere.unk_108 < sn.y) continue;
