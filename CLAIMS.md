@@ -433,3 +433,5 @@ start converting a class; the same staleness rule applies.
 | ov006 func_ov006_02102274 (0x02102274, size 0x1f8) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); lever: tail store `*(c+(idx<<6)+0x5264)=-0xf8000` then `ip=c+(idx<<6); ip+=0x5000` (forces t=r1 + non-coalesced `rsb r2`; try8 `ip+=` form floored at pure r1/r2 regperm); from near-miss div=4→0; API clm_0e45e6b69553 kept |
 
 | ov006 func_ov006_020fdd40 (0x020fdd40, size 0x468) | lunavyqo (Grok) | 2026-08-05 | **released** — near-miss **210→151** banked (f26 shape, stride bases, u16 idx/ang); residual double-mul off + self r4 vs r5, size 0x43c vs 0x468; tip in nearmiss/db.jsonl |
+
+| ov006 MgTrampolineTerror_Spawn (0x0212471c, size 0x18c) | lunavyqo (Grok) | 2026-08-07 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); BounceAndPounce loop idiom + 733a8 ctor/dtor pool order; from near-miss div=5→0 |
