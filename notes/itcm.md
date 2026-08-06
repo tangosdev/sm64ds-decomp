@@ -671,3 +671,32 @@ the belief was 1.2/sp2p3. The fix pinned the flag but banked the belief, and the
 carried the error forward. Pin the build to whatever produced the *twin's* match, and re-derive
 it from the size when a function is unmatched — an exact size is evidence about the build, not
 just about the source.
+
+#### Booster placement re-tested at 2004/b56 (2026-08-06)
+
+The two-state bracket is the same at the correct build, which is the useful part — it means
+the old floor's *characterisation* was right even though its measurements were not:
+
+| state @ 2004/b56 | frame | `this` | head | whole function |
+|---|---|---|---|---|
+| no-ternary | `0x104` (+8) | **r7** correct | correct | 469 words, size wrong |
+| with-ternary | `0xfc` correct | r8 wrong | correct | **461, size EXACT**, 203 diverge |
+
+So the ternary buys the frame and costs the register, exactly as banked. The ROM wants `leaf`
+ranked **last** — it lives in `fp` (`ldrh r1,[fp,#2]!`) — where the booster puts it 4th, taking
+r7 and displacing `this` to r8.
+
+Allocation priority is loop-depth weighted, so a booster one or two levels out should be
+weaker. It is not: placed at the top of the x-loop body, at the top of the y-loop body, or
+before the `prevLeaf` guard, **all three are byte-identical to no-ternary** (0x754, 469 words)
+— i.e. DCE'd. That reproduces the banked quantisation result ("survives DCE only at the top of
+a syntactic loop body whose target has multiple reaching defs") at the correct build, so that
+one is not a 1.2/sp2p3 artifact.
+
+Also re-tested at 2004/b56 and still inert: the `SurfaceInfo *ip = &info;` hoist in all three
+declaration positions (203/461, byte-identical) — mwccarm folds the pointer straight back to
+`sp+0xd0`.
+
+The gap is 8 bytes of frame in one state and one register in the other, and the booster is the
+only known dial between them. A weaker boost than the identical-arms ternary, or a way to
+raise `this` above `leaf` rather than lowering `leaf`, is what this needs.
