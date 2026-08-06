@@ -155,9 +155,9 @@ data_ov014_02114558 kind:data(any) addr:0x02114558
 data_ov014_02114568 kind:data(any) addr:0x02114568 ambiguous
 data_ov014_02114578 kind:data(any) addr:0x02114578
 data_ov014_02114598 kind:data(any) addr:0x02114598 ambiguous
-data_ov014_021145b8 kind:data(any) addr:0x021145b8
+_ZTI14daObjBSwdoor_c kind:data(any) addr:0x021145b8
 data_ov014_021145c4 kind:data(any) addr:0x021145c4
-data_ov014_021145d0 kind:data(any) addr:0x021145d0
+_ZTS14daObjBSwdoor_c kind:data(any) addr:0x021145d0
 ShutterBob_SpawnInfo kind:data(any) addr:0x021145e4 ambiguous
 _ZTV10ShutterBob kind:data(any) addr:0x02114608
 data_ov014_0211462c kind:data(any) addr:0x0211462c ambiguous
@@ -178,10 +178,10 @@ data_ov014_021146f0 kind:data(any) addr:0x021146f0
 data_ov014_021146f8 kind:data(any) addr:0x021146f8
 data_ov014_02114700 kind:data(any) addr:0x02114700
 data_ov014_0211470c kind:data(any) addr:0x0211470c
-data_ov014_02114718 kind:data(any) addr:0x02114718
+_ZTI10daWanwan_c kind:data(any) addr:0x02114718
 data_ov014_02114724 kind:data(any) addr:0x02114724
 data_ov014_02114730 kind:data(any) addr:0x02114730
-data_ov014_02114740 kind:data(any) addr:0x02114740
+_ZTS10daWanwan_c kind:data(any) addr:0x02114740
 ChainChomp_SpawnInfo kind:data(any) addr:0x02114750 ambiguous
 data_ov014_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov014_0211476c kind:data(any) addr:0x0211476c
@@ -189,8 +189,8 @@ data_ov014_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 _ZTV10ChainChomp kind:data(any) addr:0x021147ec
 data_ov014_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov014_02114860 kind:data(any) addr:0x02114860 ambiguous
-data_ov014_02114868 kind:data(any) addr:0x02114868
-data_ov014_02114874 kind:data(any) addr:0x02114874
+_ZTI20daObjWanwanShutter_c kind:data(any) addr:0x02114868
+_ZTS20daObjWanwanShutter_c kind:data(any) addr:0x02114874
 data_ov014_0211487c kind:data(any) addr:0x0211487c ambiguous
 ChainChompFence_SpawnInfo kind:data(any) addr:0x0211488c ambiguous
 data_ov014_02114898 kind:data(any) addr:0x02114898 ambiguous

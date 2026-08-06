@@ -123,8 +123,8 @@ data_ov018_02113800 kind:data(any) addr:0x02113800 ambiguous
 data_ov018_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov018_02113820 kind:data(any) addr:0x02113820 ambiguous
 data_ov018_0211382c kind:data(any) addr:0x0211382c ambiguous
-data_ov018_02113888 kind:data(any) addr:0x02113888
-data_ov018_02113894 kind:data(any) addr:0x02113894
+_ZTI14daObjSm_Lift_c kind:data(any) addr:0x02113888
+_ZTS14daObjSm_Lift_c kind:data(any) addr:0x02113894
 SkiLift_SpawnInfo kind:data(any) addr:0x021138a8 ambiguous
 data_ov018_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov018_021138c4 kind:data(any) addr:0x021138c4 ambiguous
@@ -139,23 +139,23 @@ data_ov018_0211395c kind:data(any) addr:0x0211395c
 data_ov018_02113964 kind:data(any) addr:0x02113964
 data_ov018_0211396c kind:data(any) addr:0x0211396c
 data_ov018_02113974 kind:data(any) addr:0x02113974
-data_ov018_0211397c kind:data(any) addr:0x0211397c
+_ZTI10daPgMthr_c kind:data(any) addr:0x0211397c
 data_ov018_02113980 kind:data(any) addr:0x02113980 ambiguous
-data_ov018_02113988 kind:data(any) addr:0x02113988
+_ZTS10daPgMthr_c kind:data(any) addr:0x02113988
 MotherPenguin_SpawnInfo kind:data(any) addr:0x02113998 ambiguous
 data_ov018_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 _ZTV7SkiLift kind:data(any) addr:0x021139bc
 _ZTV10daPgMthr_c kind:data(any) addr:0x021139bc
 data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 BridgePenguin_SpawnInfo kind:data(any) addr:0x02113a00 ambiguous
-data_ov018_02113a38 kind:data(any) addr:0x02113a38
-data_ov018_02113a44 kind:data(any) addr:0x02113a44
+_ZTS8daSCre_c kind:data(any) addr:0x02113a38
+_ZTI8daSCre_c kind:data(any) addr:0x02113a44
 PowerStarCreate_SpawnInfo kind:data(any) addr:0x02113a50 ambiguous
 data_ov018_02113a74 kind:data(any) addr:0x02113a74
 data_ov018_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov018_02113abc kind:data(any) addr:0x02113abc ambiguous
-data_ov018_02113af0 kind:data(any) addr:0x02113af0
-data_ov018_02113afc kind:data(any) addr:0x02113afc
+_ZTI15daObjIceBoard_c kind:data(any) addr:0x02113af0
+_ZTS15daObjIceBoard_c kind:data(any) addr:0x02113afc
 IceSheet_SpawnInfo kind:data(any) addr:0x02113b10 ambiguous
 data_ov018_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 _ZTV8IceSheet kind:data(any) addr:0x02113b34

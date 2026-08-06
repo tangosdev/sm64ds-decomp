@@ -174,8 +174,8 @@ data_ov065_0211cb40 kind:data(any) addr:0x0211cb40
 data_ov065_0211cb48 kind:data(any) addr:0x0211cb48
 data_ov065_0211cb50 kind:data(any) addr:0x0211cb50
 data_ov065_0211cb58 kind:data(any) addr:0x0211cb58
-data_ov065_0211cb60 kind:data(any) addr:0x0211cb60
-data_ov065_0211cb6c kind:data(any) addr:0x0211cb6c
+_ZTI15daYurei_Mucho_c kind:data(any) addr:0x0211cb60
+_ZTS15daYurei_Mucho_c kind:data(any) addr:0x0211cb6c
 Snufit_SpawnInfo kind:data(any) addr:0x0211cb80 ambiguous
 _ZTV6Snufit kind:data(any) addr:0x0211cba4
 _ZTV15daYurei_Mucho_c kind:data(any) addr:0x0211cba4
@@ -187,18 +187,18 @@ data_ov065_0211cc40 kind:data(any) addr:0x0211cc40
 data_ov065_0211cc48 kind:data(any) addr:0x0211cc48
 data_ov065_0211cc50 kind:data(any) addr:0x0211cc50
 data_ov065_0211cc58 kind:data(any) addr:0x0211cc58
-data_ov065_0211cc60 kind:data(any) addr:0x0211cc60
-data_ov065_0211cc6c kind:data(any) addr:0x0211cc6c
+_ZTI12daBasabasa_c kind:data(any) addr:0x0211cc60
+_ZTS12daBasabasa_c kind:data(any) addr:0x0211cc6c
 Swoop_SpawnInfo kind:data(any) addr:0x0211cc7c ambiguous
 _ZTV5Swoop kind:data(any) addr:0x0211cca0
 _ZTV12daBasabasa_c kind:data(any) addr:0x0211cca0
 data_ov065_0211cd1c kind:data(any) addr:0x0211cd1c
 data_ov065_0211cd24 kind:data(any) addr:0x0211cd24
 data_ov065_0211cd2c kind:data(any) addr:0x0211cd2c
-data_ov065_0211cd34 kind:data(any) addr:0x0211cd34
-data_ov065_0211cd40 kind:data(any) addr:0x0211cd40
-data_ov065_0211cd4c kind:data(any) addr:0x0211cd4c
-data_ov065_0211cd58 kind:data(any) addr:0x0211cd58
+_ZTS9daDossy_c kind:data(any) addr:0x0211cd34
+_ZTI9daDossy_c kind:data(any) addr:0x0211cd40
+_ZTI12daDossyCap_c kind:data(any) addr:0x0211cd4c
+_ZTS12daDossyCap_c kind:data(any) addr:0x0211cd58
 data_ov065_0211cd68 kind:data(any) addr:0x0211cd68
 Dorrie_SpawnInfo kind:data(any) addr:0x0211cd84 ambiguous
 DorrieCap_SpawnInfo kind:data(any) addr:0x0211cda0 ambiguous
@@ -214,8 +214,8 @@ data_ov065_0211cf64 kind:data(any) addr:0x0211cf64
 data_ov065_0211cf84 kind:data(any) addr:0x0211cf84
 data_ov065_0211cfa4 kind:data(any) addr:0x0211cfa4
 data_ov065_0211cfa8 kind:data(any) addr:0x0211cfa8
-data_ov065_0211cfac kind:data(any) addr:0x0211cfac
-data_ov065_0211cfb8 kind:data(any) addr:0x0211cfb8
+_ZTI20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfac
+_ZTS20daObjCtRotateBlock_c kind:data(any) addr:0x0211cfb8
 data_ov065_0211cfd0 kind:data(any) addr:0x0211cfd0
 data_ov065_0211cfd4 kind:data(any) addr:0x0211cfd4
 data_ov065_0211cfd8 kind:data(any) addr:0x0211cfd8
@@ -223,13 +223,13 @@ TtcRotatingCube_SpawnInfo kind:data(any) addr:0x0211cfe8 ambiguous
 TtcRotatingPrism_SpawnInfo kind:data(any) addr:0x0211d004 ambiguous
 _ZTV15TtcRotatingCube kind:data(any) addr:0x0211d028
 _ZTV20daObjCtRotateBlock_c kind:data(any) addr:0x0211d028
-data_ov065_0211d0a8 kind:data(any) addr:0x0211d0a8
-data_ov065_0211d0b4 kind:data(any) addr:0x0211d0b4
+_ZTI16daObjCtMecha03_c kind:data(any) addr:0x0211d0a8
+_ZTS16daObjCtMecha03_c kind:data(any) addr:0x0211d0b4
 data_ov065_0211d0c8 kind:data(any) addr:0x0211d0c8 ambiguous
 data_ov065_0211d0ec kind:data(any) addr:0x0211d0ec
 data_ov065_0211d16c kind:data(any) addr:0x0211d16c
-data_ov065_0211d174 kind:data(any) addr:0x0211d174
-data_ov065_0211d180 kind:data(any) addr:0x0211d180
+_ZTI16daObjCtMecha04_c kind:data(any) addr:0x0211d174
+_ZTS16daObjCtMecha04_c kind:data(any) addr:0x0211d180
 data_ov065_0211d194 kind:data(any) addr:0x0211d194
 data_ov065_0211d198 kind:data(any) addr:0x0211d198
 data_ov065_0211d19c kind:data(any) addr:0x0211d19c
@@ -238,13 +238,13 @@ TtcConveyorBeltLarge_SpawnInfo kind:data(any) addr:0x0211d1c8 ambiguous
 _ZTV20TtcConveyorBeltLarge kind:data(any) addr:0x0211d1ec
 _ZTV16daObjCtMecha04_c kind:data(any) addr:0x0211d1ec
 data_ov065_0211d26c kind:data(any) addr:0x0211d26c
-data_ov065_0211d270 kind:data(any) addr:0x0211d270
-data_ov065_0211d27c kind:data(any) addr:0x0211d27c
+_ZTI16daObjCtMecha05_c kind:data(any) addr:0x0211d270
+_ZTS16daObjCtMecha05_c kind:data(any) addr:0x0211d27c
 TTC_MovingBar_SpawnInfo kind:data(any) addr:0x0211d290 ambiguous
 data_ov065_0211d2b4 kind:data(any) addr:0x0211d2b4
 data_ov065_0211d334 kind:data(any) addr:0x0211d334
-data_ov065_0211d338 kind:data(any) addr:0x0211d338
-data_ov065_0211d344 kind:data(any) addr:0x0211d344
+_ZTI18daObjCtKaitendai_c kind:data(any) addr:0x0211d338
+_ZTS18daObjCtKaitendai_c kind:data(any) addr:0x0211d344
 data_ov065_0211d35c kind:data(any) addr:0x0211d35c
 data_ov065_0211d360 kind:data(any) addr:0x0211d360
 data_ov065_0211d364 kind:data(any) addr:0x0211d364
@@ -252,14 +252,14 @@ TtcRotatingGear_SpawnInfo kind:data(any) addr:0x0211d374 ambiguous
 TtcRotatingTriangle_SpawnInfo kind:data(any) addr:0x0211d390 ambiguous
 _ZTV13TTC_MovingBar kind:data(any) addr:0x0211d3b4
 _ZTV18daObjCtKaitendai_c kind:data(any) addr:0x0211d3b4
-data_ov065_0211d434 kind:data(any) addr:0x0211d434
-data_ov065_0211d440 kind:data(any) addr:0x0211d440
+_ZTI16daObjCtMecha08_c kind:data(any) addr:0x0211d434
+_ZTS16daObjCtMecha08_c kind:data(any) addr:0x0211d440
 TtcMovingCubeA_SpawnInfo kind:data(any) addr:0x0211d454 ambiguous
 TtcMovingCubeB_SpawnInfo kind:data(any) addr:0x0211d470 ambiguous
 _ZTV15TtcRotatingGear kind:data(any) addr:0x0211d494
-data_ov065_0211d514 kind:data(any) addr:0x0211d514
+_ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
 data_ov065_0211d520 kind:data(any) addr:0x0211d520
-data_ov065_0211d530 kind:data(any) addr:0x0211d530
+_ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530
 TTC_MovingBeam_SpawnInfo kind:data(any) addr:0x0211d544 ambiguous
 _ZTV14TtcMovingCubeA kind:data(any) addr:0x0211d568
 _ZTV16daObjCtMecha09_c kind:data(any) addr:0x0211d568

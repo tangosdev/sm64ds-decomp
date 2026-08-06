@@ -576,9 +576,9 @@ data_ov004_020bbf4c kind:data(any) addr:0x020bbf4c
 data_ov004_020bbf54 kind:data(any) addr:0x020bbf54
 data_ov004_020bbf5c kind:data(any) addr:0x020bbf5c
 data_ov004_020bbf64 kind:data(any) addr:0x020bbf64
-data_ov004_020bbf6c kind:data(any) addr:0x020bbf6c
-data_ov004_020bbf78 kind:data(any) addr:0x020bbf78
-data_ov004_020bbf84 kind:data(any) addr:0x020bbf84
+_ZTI11dScMgBase_c kind:data(any) addr:0x020bbf6c
+_ZTIN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bbf78
+_ZTS11dScMgBase_c kind:data(any) addr:0x020bbf84
 data_ov004_020bbf94 kind:data(any) addr:0x020bbf94
 data_ov004_020bbfa8 kind:data(any) addr:0x020bbfa8
 data_ov004_020bbfbc kind:data(any) addr:0x020bbfbc
@@ -588,7 +588,7 @@ data_ov004_020bbff8 kind:data(any) addr:0x020bbff8
 data_ov004_020bc00c kind:data(any) addr:0x020bc00c
 data_ov004_020bc020 kind:data(any) addr:0x020bc020
 data_ov004_020bc03c kind:data(any) addr:0x020bc03c
-data_ov004_020bc04c kind:data(any) addr:0x020bc04c
+_ZTSN11dScMgBase_c15graphCallback_cE kind:data(any) addr:0x020bc04c
 data_ov004_020bc070 kind:data(any) addr:0x020bc070
 data_ov004_020bc0c0 kind:data(any) addr:0x020bc0c0
 data_ov004_020bc150 kind:data(any) addr:0x020bc150
@@ -780,9 +780,9 @@ data_ov004_020bca3c kind:data(any) addr:0x020bca3c
 data_ov004_020bca44 kind:data(any) addr:0x020bca44
 data_ov004_020bca58 kind:data(any) addr:0x020bca58
 data_ov004_020bca60 kind:data(any) addr:0x020bca60
-data_ov004_020bca68 kind:data(any) addr:0x020bca68
+_ZTIN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca68
 data_ov004_020bca7c kind:data(any) addr:0x020bca7c
-data_ov004_020bca84 kind:data(any) addr:0x020bca84
+_ZTSN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca84
 data_ov004_020bcaa0 kind:data(any) addr:0x020bcaa0
 data_ov004_020bd074 kind:data(any) addr:0x020bd074
 data_ov004_020bd698 kind:data(any) addr:0x020bd698

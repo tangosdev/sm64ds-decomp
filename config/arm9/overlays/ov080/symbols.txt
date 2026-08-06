@@ -106,10 +106,10 @@ data_ov080_02127f94 kind:data(any) addr:0x02127f94 ambiguous
 data_ov080_02127f98 kind:data(any) addr:0x02127f98
 data_ov080_02127fa0 kind:data(any) addr:0x02127fa0
 data_ov080_02127fa8 kind:data(any) addr:0x02127fa8
-data_ov080_02127fb0 kind:data(any) addr:0x02127fb0
-data_ov080_02127fbc kind:data(any) addr:0x02127fbc
-data_ov080_02127fc8 kind:data(any) addr:0x02127fc8
-data_ov080_02127fd8 kind:data(any) addr:0x02127fd8
+_ZTI14daChoro_Rock_c kind:data(any) addr:0x02127fb0
+_ZTI11daChoropu_c kind:data(any) addr:0x02127fbc
+_ZTS11daChoropu_c kind:data(any) addr:0x02127fc8
+_ZTS14daChoro_Rock_c kind:data(any) addr:0x02127fd8
 MontyMole_SpawnInfo kind:data(any) addr:0x02127fec ambiguous
 MontyMoleRock_SpawnInfo kind:data(any) addr:0x02128008 ambiguous
 _ZTV13MontyMoleRock kind:data(any) addr:0x0212802c
@@ -124,8 +124,8 @@ data_ov080_0212813c kind:data(any) addr:0x0212813c
 data_ov080_02128144 kind:data(any) addr:0x02128144
 data_ov080_0212814c kind:data(any) addr:0x0212814c
 data_ov080_02128154 kind:data(any) addr:0x02128154
-data_ov080_0212815c kind:data(any) addr:0x0212815c
-data_ov080_02128168 kind:data(any) addr:0x02128168
+_ZTS9daBttBk_c kind:data(any) addr:0x0212815c
+_ZTI9daBttBk_c kind:data(any) addr:0x02128168
 CrazedCrate_SpawnInfo kind:data(any) addr:0x02128174 ambiguous
 _ZTV11CrazedCrate kind:data(any) addr:0x02128198
 _ZTV9daBttBk_c kind:data(any) addr:0x02128198
@@ -141,8 +141,8 @@ data_ov080_02128254 kind:data(any) addr:0x02128254
 data_ov080_0212825c kind:data(any) addr:0x0212825c
 data_ov080_02128264 kind:data(any) addr:0x02128264
 data_ov080_0212826c kind:data(any) addr:0x0212826c
-data_ov080_02128274 kind:data(any) addr:0x02128274
-data_ov080_02128280 kind:data(any) addr:0x02128280
+_ZTI11daPicGate_c kind:data(any) addr:0x02128274
+_ZTS11daPicGate_c kind:data(any) addr:0x02128280
 Painting_SpawnInfo kind:data(any) addr:0x02128290 ambiguous
 data_ov080_021282b4 kind:data(any) addr:0x021282b4
 data_ov080_02128338 kind:data(any) addr:0x02128338

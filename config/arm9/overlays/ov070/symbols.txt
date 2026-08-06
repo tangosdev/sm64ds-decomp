@@ -129,8 +129,8 @@ data_ov070_02123100 kind:data(any) addr:0x02123100
 data_ov070_02123108 kind:data(any) addr:0x02123108
 data_ov070_02123110 kind:data(any) addr:0x02123110
 data_ov070_02123118 kind:data(any) addr:0x02123118
-data_ov070_02123120 kind:data(any) addr:0x02123120
-data_ov070_0212312c kind:data(any) addr:0x0212312c
+_ZTI19daPropeller_Heyho_c kind:data(any) addr:0x02123120
+_ZTS19daPropeller_Heyho_c kind:data(any) addr:0x0212312c
 FlyGuy_SpawnInfo kind:data(any) addr:0x02123144 ambiguous
 _ZTV6FlyGuy kind:data(any) addr:0x02123168
 _ZTV19daPropeller_Heyho_c kind:data(any) addr:0x02123168
@@ -144,8 +144,8 @@ data_ov070_0212321c kind:data(any) addr:0x0212321c
 data_ov070_02123224 kind:data(any) addr:0x02123224
 data_ov070_0212322c kind:data(any) addr:0x0212322c
 data_ov070_02123234 kind:data(any) addr:0x02123234
-data_ov070_0212323c kind:data(any) addr:0x0212323c
-data_ov070_02123248 kind:data(any) addr:0x02123248
+_ZTS7daBrq_c kind:data(any) addr:0x0212323c
+_ZTI7daBrq_c kind:data(any) addr:0x02123248
 Amp_SpawnInfo kind:data(any) addr:0x02123254 ambiguous
 _ZTV3Amp kind:data(any) addr:0x02123278
 _ZTV7daBrq_c kind:data(any) addr:0x02123278
@@ -157,8 +157,8 @@ data_ov070_02123314 kind:data(any) addr:0x02123314
 data_ov070_0212331c kind:data(any) addr:0x0212331c
 data_ov070_02123324 kind:data(any) addr:0x02123324
 data_ov070_0212332c kind:data(any) addr:0x0212332c
-data_ov070_02123334 kind:data(any) addr:0x02123334
-data_ov070_02123340 kind:data(any) addr:0x02123340
+_ZTS8daKrpa_c kind:data(any) addr:0x02123334
+_ZTI8daKrpa_c kind:data(any) addr:0x02123340
 FlameChomp_SpawnInfo kind:data(any) addr:0x0212334c ambiguous
 _ZTV10FlameChomp kind:data(any) addr:0x02123370
 _ZTV8daKrpa_c kind:data(any) addr:0x02123370
@@ -166,8 +166,8 @@ data_ov070_021233ec kind:data(any) addr:0x021233ec
 data_ov070_021233f4 kind:data(any) addr:0x021233f4
 data_ov070_021233fc kind:data(any) addr:0x021233fc
 data_ov070_02123404 kind:data(any) addr:0x02123404
-data_ov070_0212340c kind:data(any) addr:0x0212340c
-data_ov070_02123418 kind:data(any) addr:0x02123418
+_ZTS8daKpFr_c kind:data(any) addr:0x0212340c
+_ZTI8daKpFr_c kind:data(any) addr:0x02123418
 FlameChompFire_SpawnInfo kind:data(any) addr:0x02123424 ambiguous
 _ZTV14FlameChompFire kind:data(any) addr:0x02123448
 _ZTV8daKpFr_c kind:data(any) addr:0x02123448

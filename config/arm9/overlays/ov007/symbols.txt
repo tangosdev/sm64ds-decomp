@@ -1196,12 +1196,12 @@ data_ov007_02103258 kind:data(any) addr:0x02103258
 data_ov007_0210325c kind:data(any) addr:0x0210325c
 data_ov007_02103260 kind:data(any) addr:0x02103260
 data_ov007_02103264 kind:data(any) addr:0x02103264
-data_ov007_0210326c kind:data(any) addr:0x0210326c
-data_ov007_02103278 kind:data(any) addr:0x02103278
-data_ov007_02103284 kind:data(any) addr:0x02103284
+_ZTS9dScDSMT_c kind:data(any) addr:0x0210326c
+_ZTI9dScDSMT_c kind:data(any) addr:0x02103278
+_ZTIN9dScDSMT_c15graphCallback_cE kind:data(any) addr:0x02103284
 data_ov007_02103290 kind:data(any) addr:0x02103290
 data_ov007_021032b0 kind:data(any) addr:0x021032b0
-data_ov007_021032c0 kind:data(any) addr:0x021032c0
+_ZTSN9dScDSMT_c15graphCallback_cE kind:data(any) addr:0x021032c0
 data_ov007_021032e8 kind:data(any) addr:0x021032e8
 _ZTV9dScDSMT_c kind:data(any) addr:0x021032e8
 data_ov007_02103340 kind:bss addr:0x02103340

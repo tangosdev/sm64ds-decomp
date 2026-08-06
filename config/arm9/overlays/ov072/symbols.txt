@@ -110,8 +110,8 @@ data_ov072_02122760 kind:data(any) addr:0x02122760
 data_ov072_02122768 kind:data(any) addr:0x02122768
 data_ov072_02122770 kind:data(any) addr:0x02122770
 data_ov072_02122778 kind:data(any) addr:0x02122778
-data_ov072_02122780 kind:data(any) addr:0x02122780
-data_ov072_0212278c kind:data(any) addr:0x0212278c
+_ZTI12daBgSnmBdy_c kind:data(any) addr:0x02122780
+_ZTS12daBgSnmBdy_c kind:data(any) addr:0x0212278c
 SnowmanBody_SpawnInfo kind:data(any) addr:0x0212279c ambiguous
 _ZTV11SnowmanBody kind:data(any) addr:0x021227c0
 _ZTV12daBgSnmBdy_c kind:data(any) addr:0x021227c0
@@ -123,13 +123,13 @@ data_ov072_0212285c kind:data(any) addr:0x0212285c
 data_ov072_02122864 kind:data(any) addr:0x02122864
 data_ov072_0212286c kind:data(any) addr:0x0212286c
 data_ov072_02122874 kind:data(any) addr:0x02122874
-data_ov072_0212287c kind:data(any) addr:0x0212287c
-data_ov072_02122888 kind:data(any) addr:0x02122888
+_ZTI12daBgSnmHed_c kind:data(any) addr:0x0212287c
+_ZTS12daBgSnmHed_c kind:data(any) addr:0x02122888
 SnowmanHead_SpawnInfo kind:data(any) addr:0x02122898 ambiguous
 _ZTV11SnowmanHead kind:data(any) addr:0x021228bc
 _ZTV12daBgSnmHed_c kind:data(any) addr:0x021228bc
-data_ov072_02122938 kind:data(any) addr:0x02122938
-data_ov072_02122944 kind:data(any) addr:0x02122944
+_ZTI11daBgSnwmn_c kind:data(any) addr:0x02122938
+_ZTS11daBgSnwmn_c kind:data(any) addr:0x02122944
 data_ov072_02122954 kind:data(any) addr:0x02122954 ambiguous
 data_ov072_02122978 kind:data(any) addr:0x02122978
 data_ov072_021229f4 kind:data(any) addr:0x021229f4
@@ -144,8 +144,8 @@ data_ov072_02122a34 kind:data(any) addr:0x02122a34
 data_ov072_02122a3c kind:data(any) addr:0x02122a3c
 data_ov072_02122a44 kind:data(any) addr:0x02122a44
 data_ov072_02122a4c kind:data(any) addr:0x02122a4c
-data_ov072_02122a54 kind:data(any) addr:0x02122a54
-data_ov072_02122a60 kind:data(any) addr:0x02122a60
+_ZTS9daPgBby_c kind:data(any) addr:0x02122a54
+_ZTI9daPgBby_c kind:data(any) addr:0x02122a60
 BabyPenguin_SpawnInfo kind:data(any) addr:0x02122a6c ambiguous
 _ZTV11BabyPenguin kind:data(any) addr:0x02122a90
 _ZTV9daPgBby_c kind:data(any) addr:0x02122a90

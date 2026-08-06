@@ -172,10 +172,10 @@ data_ov075_0211c628 kind:data(any) addr:0x0211c628
 data_ov075_0211c630 kind:data(any) addr:0x0211c630
 data_ov075_0211c638 kind:data(any) addr:0x0211c638
 data_ov075_0211c640 kind:data(any) addr:0x0211c640
-data_ov075_0211c648 kind:data(any) addr:0x0211c648
+_ZTS9dEntObj_c kind:data(any) addr:0x0211c648
 data_ov075_0211c654 kind:data(any) addr:0x0211c654
 data_ov075_0211c660 kind:data(any) addr:0x0211c660
-data_ov075_0211c66c kind:data(any) addr:0x0211c66c
+_ZTI9dEntObj_c kind:data(any) addr:0x0211c66c
 data_ov075_0211c678 kind:data(any) addr:0x0211c678
 data_ov075_0211c688 kind:data(any) addr:0x0211c688
 _ZTV14UnknownVsEntry kind:data(any) addr:0x0211c6a0
@@ -243,10 +243,10 @@ data_ov075_0211c8c0 kind:data(any) addr:0x0211c8c0
 data_ov075_0211c8c8 kind:data(any) addr:0x0211c8c8
 data_ov075_0211c8d0 kind:data(any) addr:0x0211c8d0
 data_ov075_0211c8d8 kind:data(any) addr:0x0211c8d8
-data_ov075_0211c8e0 kind:data(any) addr:0x0211c8e0
-data_ov075_0211c8ec kind:data(any) addr:0x0211c8ec
-data_ov075_0211c8f8 kind:data(any) addr:0x0211c8f8
-data_ov075_0211c904 kind:data(any) addr:0x0211c904
+_ZTIN10dScEntry_c6icon_cE kind:data(any) addr:0x0211c8e0
+_ZTIN10dScEntry_c15graphCallback_cE kind:data(any) addr:0x0211c8ec
+_ZTI10dScEntry_c kind:data(any) addr:0x0211c8f8
+_ZTS10dScEntry_c kind:data(any) addr:0x0211c904
 data_ov075_0211c914 kind:data(any) addr:0x0211c914
 data_ov075_0211c924 kind:data(any) addr:0x0211c924
 data_ov075_0211c934 kind:data(any) addr:0x0211c934
@@ -261,7 +261,7 @@ data_ov075_0211c9cc kind:data(any) addr:0x0211c9cc
 data_ov075_0211c9e0 kind:data(any) addr:0x0211c9e0
 data_ov075_0211c9f4 kind:data(any) addr:0x0211c9f4
 data_ov075_0211ca08 kind:data(any) addr:0x0211ca08
-data_ov075_0211ca1c kind:data(any) addr:0x0211ca1c
+_ZTSN10dScEntry_c6icon_cE kind:data(any) addr:0x0211ca1c
 data_ov075_0211ca3c kind:data(any) addr:0x0211ca3c
 data_ov075_0211ca4c kind:data(any) addr:0x0211ca4c
 data_ov075_0211ca64 kind:data(any) addr:0x0211ca64
@@ -274,7 +274,7 @@ data_ov075_0211cac4 kind:data(any) addr:0x0211cac4
 data_ov075_0211cae4 kind:data(any) addr:0x0211cae4
 data_ov075_0211cb04 kind:data(any) addr:0x0211cb04
 data_ov075_0211cb24 kind:data(any) addr:0x0211cb24
-data_ov075_0211cb44 kind:data(any) addr:0x0211cb44
+_ZTSN10dScEntry_c15graphCallback_cE kind:data(any) addr:0x0211cb44
 data_ov075_0211cb64 kind:data(any) addr:0x0211cb64
 data_ov075_0211cb80 kind:data(any) addr:0x0211cb80 ambiguous
 data_ov075_0211cb84 kind:data(any) addr:0x0211cb84

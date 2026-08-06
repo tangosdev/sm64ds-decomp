@@ -119,8 +119,8 @@ __sinit_ov102_0214dfac kind:function(arm,size=0xf4) addr:0x0214dfac
 .p__sinit_ov102_0214d908 kind:data(word) addr:0x0214e0a4
 .p__sinit_ov102_0214de70 kind:data(word) addr:0x0214e0a8
 .p__sinit_ov102_0214dfac kind:data(word) addr:0x0214e0ac
-data_ov102_0214e0c0 kind:data(any) addr:0x0214e0c0
-data_ov102_0214e0cc kind:data(any) addr:0x0214e0cc
+_ZTI15daObjSimpleBg_c kind:data(any) addr:0x0214e0c0
+_ZTS15daObjSimpleBg_c kind:data(any) addr:0x0214e0cc
 StaticRock_SpawnInfo kind:data(any) addr:0x0214e0e0
 RockTriangle_SpawnInfo kind:data(any) addr:0x0214e0fc
 FortressTower_SpawnInfo kind:data(any) addr:0x0214e118
@@ -173,8 +173,8 @@ data_ov102_0214e388 kind:data(any) addr:0x0214e388
 data_ov102_0214e390 kind:data(any) addr:0x0214e390
 data_ov102_0214e398 kind:data(any) addr:0x0214e398
 data_ov102_0214e3a0 kind:data(any) addr:0x0214e3a0
-data_ov102_0214e3a8 kind:data(any) addr:0x0214e3a8
-data_ov102_0214e3b4 kind:data(any) addr:0x0214e3b4
+_ZTI18daObjHatenaBlock_c kind:data(any) addr:0x0214e3a8
+_ZTS18daObjHatenaBlock_c kind:data(any) addr:0x0214e3b4
 ExclamationBlockVs_SpawnInfo kind:data(any) addr:0x0214e3cc
 QuestionBlock_SpawnInfo kind:data(any) addr:0x0214e3e8
 ExclamationBlock_SpawnInfo kind:data(any) addr:0x0214e404
@@ -183,8 +183,8 @@ CapBlockLuigi_SpawnInfo kind:data(any) addr:0x0214e43c
 CapBlockWario_SpawnInfo kind:data(any) addr:0x0214e458
 _ZTV13QuestionBlock kind:data(any) addr:0x0214e47c
 _ZTV18daObjHatenaBlock_c kind:data(any) addr:0x0214e47c
-data_ov102_0214e4fc kind:data(any) addr:0x0214e4fc
-data_ov102_0214e508 kind:data(any) addr:0x0214e508
+_ZTS7daBmb_c kind:data(any) addr:0x0214e4fc
+_ZTI7daBmb_c kind:data(any) addr:0x0214e508
 data_ov102_0214e514 kind:data(any) addr:0x0214e514
 data_ov102_0214e524 kind:data(any) addr:0x0214e524
 BobOmb_SpawnInfo kind:data(any) addr:0x0214e534
@@ -198,8 +198,8 @@ data_ov102_0214e5f4 kind:data(any) addr:0x0214e5f4
 data_ov102_0214e5fc kind:data(any) addr:0x0214e5fc
 data_ov102_0214e604 kind:data(any) addr:0x0214e604
 data_ov102_0214e60c kind:data(any) addr:0x0214e60c
-data_ov102_0214e614 kind:data(any) addr:0x0214e614
-data_ov102_0214e620 kind:data(any) addr:0x0214e620
+_ZTS7daShl_c kind:data(any) addr:0x0214e614
+_ZTI7daShl_c kind:data(any) addr:0x0214e620
 KoopaShell_SpawnInfo kind:data(any) addr:0x0214e62c
 _ZTV10KoopaShell kind:data(any) addr:0x0214e650
 _ZTV7daShl_c kind:data(any) addr:0x0214e650

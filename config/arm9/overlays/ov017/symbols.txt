@@ -69,8 +69,8 @@ data_ov017_02111b68 kind:data(any) addr:0x02111b68 ambiguous
 data_ov017_02111b6c kind:data(any) addr:0x02111b6c
 data_ov017_02111b74 kind:data(any) addr:0x02111b74 ambiguous
 data_ov017_02111b88 kind:data(any) addr:0x02111b88 ambiguous
-data_ov017_02111bb4 kind:data(any) addr:0x02111bb4
-data_ov017_02111bc0 kind:data(any) addr:0x02111bc0
+_ZTI14daObjKsWater_c kind:data(any) addr:0x02111bb4
+_ZTS14daObjKsWater_c kind:data(any) addr:0x02111bc0
 ShipWater_SpawnInfo kind:data(any) addr:0x02111bd4 ambiguous
 data_ov017_02111be0 kind:data(any) addr:0x02111be0 ambiguous
 _ZTV9ShipWater kind:data(any) addr:0x02111bf8

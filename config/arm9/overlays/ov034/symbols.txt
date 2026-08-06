@@ -107,9 +107,9 @@ data_ov034_02114438 kind:data(any) addr:0x02114438
 data_ov034_02114444 kind:data(any) addr:0x02114444
 data_ov034_02114450 kind:data(any) addr:0x02114450
 data_ov034_02114458 kind:data(any) addr:0x02114458 ambiguous
-data_ov034_0211445c kind:data(any) addr:0x0211445c
+_ZTI12daHanachan_c kind:data(any) addr:0x0211445c
 data_ov034_02114468 kind:data(any) addr:0x02114468
-data_ov034_02114478 kind:data(any) addr:0x02114478
+_ZTS12daHanachan_c kind:data(any) addr:0x02114478
 data_ov034_02114488 kind:data(any) addr:0x02114488
 Wiggler_SpawnInfo kind:data(any) addr:0x02114498 ambiguous
 _ZTV7Wiggler kind:data(any) addr:0x021144bc

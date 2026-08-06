@@ -61,14 +61,14 @@ data_ov096_02137960 kind:data(any) addr:0x02137960
 data_ov096_02137968 kind:data(any) addr:0x02137968
 data_ov096_02137970 kind:data(any) addr:0x02137970
 data_ov096_02137978 kind:data(any) addr:0x02137978
-data_ov096_02137980 kind:data(any) addr:0x02137980
-data_ov096_0213798c kind:data(any) addr:0x0213798c
+_ZTS9daSanbo_c kind:data(any) addr:0x02137980
+_ZTI9daSanbo_c kind:data(any) addr:0x0213798c
 Pokey_SpawnInfo kind:data(any) addr:0x02137998 ambiguous
 PokeySegment_SpawnInfo kind:data(any) addr:0x021379b4 ambiguous
 _ZTV5Pokey kind:data(any) addr:0x021379d8
 _ZTV9daSanbo_c kind:data(any) addr:0x021379d8
-data_ov096_02137a54 kind:data(any) addr:0x02137a54
-data_ov096_02137a60 kind:data(any) addr:0x02137a60
+_ZTS7daTor_c kind:data(any) addr:0x02137a54
+_ZTI7daTor_c kind:data(any) addr:0x02137a60
 Tornado_SpawnInfo kind:data(any) addr:0x02137a6c ambiguous
 _ZTV7Tornado kind:data(any) addr:0x02137a90
 _ZTV7daTor_c kind:data(any) addr:0x02137a90

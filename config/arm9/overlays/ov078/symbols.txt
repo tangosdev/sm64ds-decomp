@@ -89,8 +89,8 @@ data_ov078_02126de8 kind:data(any) addr:0x02126de8
 data_ov078_02126df0 kind:data(any) addr:0x02126df0
 data_ov078_02126df8 kind:data(any) addr:0x02126df8
 data_ov078_02126e00 kind:data(any) addr:0x02126e00
-data_ov078_02126e0c kind:data(any) addr:0x02126e0c
-data_ov078_02126e18 kind:data(any) addr:0x02126e18
+_ZTI12daBombking_c kind:data(any) addr:0x02126e0c
+_ZTS12daBombking_c kind:data(any) addr:0x02126e18
 KingBobOmb_SpawnInfo kind:data(any) addr:0x02126e28 ambiguous
 _ZTV10KingBobOmb kind:data(any) addr:0x02126e4c
 _ZTV12daBombking_c kind:data(any) addr:0x02126e4c

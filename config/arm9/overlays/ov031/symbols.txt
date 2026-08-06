@@ -48,8 +48,8 @@ data_ov031_02111760 kind:data(any) addr:0x02111760 ambiguous
 data_ov031_02111768 kind:data(any) addr:0x02111768 ambiguous
 data_ov031_02111834 kind:data(any) addr:0x02111834 ambiguous
 data_ov031_02111844 kind:data(any) addr:0x02111844 ambiguous
-data_ov031_021118e8 kind:data(any) addr:0x021118e8
-data_ov031_021118f4 kind:data(any) addr:0x021118f4
+_ZTI18daObjHsBillboard_c kind:data(any) addr:0x021118e8
+_ZTS18daObjHsBillboard_c kind:data(any) addr:0x021118f4
 SlideDecorationSilverStar_SpawnInfo kind:data(any) addr:0x0211190c ambiguous
 SlideDecorationYellowStar_SpawnInfo kind:data(any) addr:0x02111928 ambiguous
 data_ov031_0211192c kind:data(any) addr:0x0211192c ambiguous

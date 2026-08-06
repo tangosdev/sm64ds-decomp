@@ -105,8 +105,8 @@ data_ov066_0211ad00 kind:data(any) addr:0x0211ad00
 data_ov066_0211ad08 kind:data(any) addr:0x0211ad08
 data_ov066_0211ad10 kind:data(any) addr:0x0211ad10
 data_ov066_0211ad18 kind:data(any) addr:0x0211ad18
-data_ov066_0211ad24 kind:data(any) addr:0x0211ad24
-data_ov066_0211ad30 kind:data(any) addr:0x0211ad30
+_ZTI10daIwante_c kind:data(any) addr:0x0211ad24
+_ZTS10daIwante_c kind:data(any) addr:0x0211ad30
 Eyerok_SpawnInfo kind:data(any) addr:0x0211ad40 ambiguous
 _ZTV6Eyerok kind:data(any) addr:0x0211ad64
 data_ov066_0211ae00 kind:bss addr:0x0211ae00

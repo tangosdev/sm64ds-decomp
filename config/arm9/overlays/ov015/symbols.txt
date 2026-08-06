@@ -195,14 +195,14 @@ data_ov015_02114108 kind:data(any) addr:0x02114108 ambiguous
 data_ov015_0211417c kind:data(any) addr:0x0211417c ambiguous
 data_ov015_021141cc kind:data(any) addr:0x021141cc ambiguous
 data_ov015_021142a0 kind:data(any) addr:0x021142a0 ambiguous
-data_ov015_02114318 kind:data(any) addr:0x02114318
-data_ov015_02114324 kind:data(any) addr:0x02114324
+_ZTI18daObjBkBillboard_c kind:data(any) addr:0x02114318
+_ZTS18daObjBkBillboard_c kind:data(any) addr:0x02114324
 PoleBillboard_SpawnInfo kind:data(any) addr:0x0211433c ambiguous
 data_ov015_02114350 kind:data(any) addr:0x02114350 ambiguous
 data_ov015_02114360 kind:data(any) addr:0x02114360
 data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
-data_ov015_021143dc kind:data(any) addr:0x021143dc
-data_ov015_021143e8 kind:data(any) addr:0x021143e8
+_ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
+_ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
 KnockDownPlank_SpawnInfo kind:data(any) addr:0x021143fc ambiguous
 _ZTV13PoleBillboard kind:data(any) addr:0x02114420
 _ZTV17daObjBk_Botaosi_c kind:data(any) addr:0x02114420
@@ -222,8 +222,8 @@ data_ov015_021144f0 kind:data(any) addr:0x021144f0
 data_ov015_021144f8 kind:data(any) addr:0x021144f8
 data_ov015_02114500 kind:data(any) addr:0x02114500
 data_ov015_02114508 kind:data(any) addr:0x02114508
-data_ov015_02114510 kind:data(any) addr:0x02114510
-data_ov015_0211451c kind:data(any) addr:0x0211451c
+_ZTI19daObjBk_Dossunbar_c kind:data(any) addr:0x02114510
+_ZTS19daObjBk_Dossunbar_c kind:data(any) addr:0x0211451c
 data_ov015_02114534 kind:data(any) addr:0x02114534
 data_ov015_02114538 kind:data(any) addr:0x02114538
 data_ov015_0211453c kind:data(any) addr:0x0211453c
@@ -232,32 +232,32 @@ MovingBarBig_SpawnInfo kind:data(any) addr:0x02114568 ambiguous
 _ZTV14KnockDownPlank kind:data(any) addr:0x0211458c
 data_ov015_02114598 kind:data(any) addr:0x02114598 ambiguous
 data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous
-data_ov015_0211460c kind:data(any) addr:0x0211460c
-data_ov015_02114618 kind:data(any) addr:0x02114618
+_ZTI14daObjBk_Lift_c kind:data(any) addr:0x0211460c
+_ZTS14daObjBk_Lift_c kind:data(any) addr:0x02114618
 TowerStep_SpawnInfo kind:data(any) addr:0x0211462c ambiguous
 _ZTV14MovingBarSmall kind:data(any) addr:0x02114650
 _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
-data_ov015_021146d0 kind:data(any) addr:0x021146d0
-data_ov015_021146dc kind:data(any) addr:0x021146dc
+_ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
+_ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
 RotatingBridge_SpawnInfo kind:data(any) addr:0x021146f0 ambiguous
 _ZTV9TowerStep kind:data(any) addr:0x02114714
 data_ov015_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov015_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov015_02114794 kind:data(any) addr:0x02114794
-data_ov015_02114798 kind:data(any) addr:0x02114798
+_ZTI17daObjBk_Ukisima_c kind:data(any) addr:0x02114798
 data_ov015_021147a4 kind:data(any) addr:0x021147a4
-data_ov015_021147b0 kind:data(any) addr:0x021147b0
+_ZTS17daObjBk_Ukisima_c kind:data(any) addr:0x021147b0
 RotatingPlatformWf_SpawnInfo kind:data(any) addr:0x021147c4 ambiguous
 data_ov015_021147e8 kind:data(any) addr:0x021147e8
 data_ov015_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov015_02114860 kind:data(any) addr:0x02114860 ambiguous
-data_ov015_02114868 kind:data(any) addr:0x02114868
-data_ov015_02114874 kind:data(any) addr:0x02114874
+_ZTI20daObjBk_Fall_Block_c kind:data(any) addr:0x02114868
+_ZTI16daObjFallBlock_c kind:data(any) addr:0x02114874
 data_ov015_0211487c kind:data(any) addr:0x0211487c ambiguous
 data_ov015_02114880 kind:data(any) addr:0x02114880
-data_ov015_0211488c kind:data(any) addr:0x0211488c
+_ZTS16daObjFallBlock_c kind:data(any) addr:0x0211488c
 data_ov015_02114898 kind:data(any) addr:0x02114898 ambiguous
-data_ov015_021148a0 kind:data(any) addr:0x021148a0
+_ZTS20daObjBk_Fall_Block_c kind:data(any) addr:0x021148a0
 data_ov015_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 FallBlockWf_SpawnInfo kind:data(any) addr:0x021148b8 ambiguous
 _ZTV11FallBlockWf kind:data(any) addr:0x021148dc

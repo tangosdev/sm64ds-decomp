@@ -166,17 +166,17 @@ data_ov026_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov026_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov026_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 data_ov026_02113a74 kind:data(any) addr:0x02113a74 ambiguous
-data_ov026_02113a90 kind:data(any) addr:0x02113a90
+_ZTI17daObjWlPolelift_c kind:data(any) addr:0x02113a90
 data_ov026_02113a9c kind:data(any) addr:0x02113a9c
 data_ov026_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
-data_ov026_02113aa8 kind:data(any) addr:0x02113aa8
+_ZTS17daObjWlPolelift_c kind:data(any) addr:0x02113aa8
 data_ov026_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov026_02113ae0 kind:data(any) addr:0x02113ae0
 data_ov026_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov026_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 data_ov026_02113b50 kind:data(any) addr:0x02113b50 ambiguous
-data_ov026_02113b5c kind:data(any) addr:0x02113b5c
-data_ov026_02113b68 kind:data(any) addr:0x02113b68
+_ZTI21daObjWlKoopaShutter_c kind:data(any) addr:0x02113b5c
+_ZTS21daObjWlKoopaShutter_c kind:data(any) addr:0x02113b68
 data_ov026_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 BowserShutter_SpawnInfo kind:data(any) addr:0x02113b80 ambiguous
 data_ov026_02113b90 kind:data(any) addr:0x02113b90 ambiguous
@@ -184,9 +184,9 @@ data_ov026_02113ba4 kind:data(any) addr:0x02113ba4
 data_ov026_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 data_ov026_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov026_02113c20 kind:data(any) addr:0x02113c20 ambiguous
-data_ov026_02113c24 kind:data(any) addr:0x02113c24
+_ZTI18daObjWlSubmarine_c kind:data(any) addr:0x02113c24
 data_ov026_02113c28 kind:data(any) addr:0x02113c28 ambiguous
-data_ov026_02113c30 kind:data(any) addr:0x02113c30
+_ZTS18daObjWlSubmarine_c kind:data(any) addr:0x02113c30
 Submarine_SpawnInfo kind:data(any) addr:0x02113c48 ambiguous
 data_ov026_02113c6c kind:data(any) addr:0x02113c6c
 data_ov026_02113ccc kind:data(any) addr:0x02113ccc ambiguous
@@ -195,8 +195,8 @@ data_ov026_02113cec kind:data(any) addr:0x02113cec
 data_ov026_02113cf4 kind:data(any) addr:0x02113cf4
 data_ov026_02113cfc kind:data(any) addr:0x02113cfc
 data_ov026_02113d04 kind:data(any) addr:0x02113d04
-data_ov026_02113d0c kind:data(any) addr:0x02113d0c
-data_ov026_02113d18 kind:data(any) addr:0x02113d18
+_ZTI18daWater_Tatumaki_c kind:data(any) addr:0x02113d0c
+_ZTS18daWater_Tatumaki_c kind:data(any) addr:0x02113d18
 Whirlpool_SpawnInfo kind:data(any) addr:0x02113d30 ambiguous
 _ZTV9Submarine kind:data(any) addr:0x02113d54
 _ZTV18daWater_Tatumaki_c kind:data(any) addr:0x02113d54
@@ -205,8 +205,8 @@ data_ov026_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 data_ov026_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 data_ov026_02113dd0 kind:data(any) addr:0x02113dd0
 data_ov026_02113dd8 kind:data(any) addr:0x02113dd8
-data_ov026_02113de0 kind:data(any) addr:0x02113de0
-data_ov026_02113dec kind:data(any) addr:0x02113dec
+_ZTI17daWater_Suikomi_c kind:data(any) addr:0x02113de0
+_ZTS17daWater_Suikomi_c kind:data(any) addr:0x02113dec
 WaterSuction_SpawnInfo kind:data(any) addr:0x02113e00 ambiguous
 _ZTV12WaterSuction kind:data(any) addr:0x02113e24
 _ZTV17daWater_Suikomi_c kind:data(any) addr:0x02113e24

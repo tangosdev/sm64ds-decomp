@@ -82,8 +82,8 @@ data_ov074_02122e0c kind:data(any) addr:0x02122e0c
 data_ov074_02122e14 kind:data(any) addr:0x02122e14
 data_ov074_02122e1c kind:data(any) addr:0x02122e1c
 data_ov074_02122e24 kind:data(any) addr:0x02122e24
-data_ov074_02122e30 kind:data(any) addr:0x02122e30
-data_ov074_02122e3c kind:data(any) addr:0x02122e3c
+_ZTI12daKuriKing_c kind:data(any) addr:0x02122e30
+_ZTS12daKuriKing_c kind:data(any) addr:0x02122e3c
 data_ov074_02122e4c kind:data(any) addr:0x02122e4c
 data_ov074_02122e5c kind:data(any) addr:0x02122e5c
 Goomboss_SpawnInfo kind:data(any) addr:0x02122e78 ambiguous

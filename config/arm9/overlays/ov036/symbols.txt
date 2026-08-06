@@ -152,7 +152,7 @@ data_ov036_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov036_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov036_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov036_02113a50 kind:data(any) addr:0x02113a50 ambiguous
-data_ov036_02113a54 kind:data(any) addr:0x02113a54
+_ZTI16daObjRcBuranko_c kind:data(any) addr:0x02113a54
 data_ov036_02113a60 kind:data(any) addr:0x02113a60
 SwingingPlatform_SpawnInfo kind:data(any) addr:0x02113a74 ambiguous
 data_ov036_02113a98 kind:data(any) addr:0x02113a98
@@ -161,15 +161,15 @@ data_ov036_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov036_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov036_02113b18 kind:data(any) addr:0x02113b18
 data_ov036_02113b1c kind:data(any) addr:0x02113b1c
-data_ov036_02113b20 kind:data(any) addr:0x02113b20
+_ZTI19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b20
 data_ov036_02113b2c kind:data(any) addr:0x02113b2c
-data_ov036_02113b38 kind:data(any) addr:0x02113b38
+_ZTS19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b38
 RotatingPlatformRr_SpawnInfo kind:data(any) addr:0x02113b50 ambiguous
 data_ov036_02113b74 kind:data(any) addr:0x02113b74
 data_ov036_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov036_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov036_02113b90 kind:data(any) addr:0x02113b90 ambiguous
-data_ov036_02113bf4 kind:data(any) addr:0x02113bf4
+_ZTI14daObjRc_Hane_c kind:data(any) addr:0x02113bf4
 data_ov036_02113c00 kind:data(any) addr:0x02113c00
 data_ov036_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 ShipWing_SpawnInfo kind:data(any) addr:0x02113c14 ambiguous
@@ -188,22 +188,22 @@ _ZTV8ShipWing kind:data(any) addr:0x02113cf8
 _ZTV16daObjRc_Tikuwa_c kind:data(any) addr:0x02113cf8
 data_ov036_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov036_02113d78 kind:data(any) addr:0x02113d78
-data_ov036_02113d84 kind:data(any) addr:0x02113d84
-data_ov036_02113d90 kind:data(any) addr:0x02113d90
+_ZTI18daObjRc_Guruguru_c kind:data(any) addr:0x02113d84
+_ZTS18daObjRc_Guruguru_c kind:data(any) addr:0x02113d90
 ArmedRotatingPlatform_SpawnInfo kind:data(any) addr:0x02113da8 ambiguous
 data_ov036_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 _ZTV10DonutBlock kind:data(any) addr:0x02113dcc
 data_ov036_02113e00 kind:data(any) addr:0x02113e00 ambiguous
-data_ov036_02113e4c kind:data(any) addr:0x02113e4c
+_ZTI16daObjRc_Dorifu_c kind:data(any) addr:0x02113e4c
 data_ov036_02113e50 kind:data(any) addr:0x02113e50 ambiguous
-data_ov036_02113e58 kind:data(any) addr:0x02113e58
+_ZTS16daObjRc_Dorifu_c kind:data(any) addr:0x02113e58
 TrickyTriangles_SpawnInfo kind:data(any) addr:0x02113e6c ambiguous
 data_ov036_02113e88 kind:data(any) addr:0x02113e88
 _ZTV21ArmedRotatingPlatform kind:data(any) addr:0x02113ecc
 data_ov036_02113f20 kind:data(any) addr:0x02113f20 ambiguous
-data_ov036_02113f4c kind:data(any) addr:0x02113f4c
+_ZTI15daObjRcCarpet_c kind:data(any) addr:0x02113f4c
 data_ov036_02113f58 kind:data(any) addr:0x02113f58
-data_ov036_02113f64 kind:data(any) addr:0x02113f64
+_ZTS15daObjRcCarpet_c kind:data(any) addr:0x02113f64
 FlyingCarpet_SpawnInfo kind:data(any) addr:0x02113f78 ambiguous
 data_ov036_02113f9c kind:data(any) addr:0x02113f9c
 data_ov036_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous

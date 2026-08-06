@@ -120,17 +120,17 @@ data_ov032_021137bc kind:data(any) addr:0x021137bc
 data_ov032_021137c4 kind:data(any) addr:0x021137c4
 data_ov032_021137cc kind:data(any) addr:0x021137cc
 data_ov032_021137d8 kind:data(any) addr:0x021137d8
-data_ov032_021137e4 kind:data(any) addr:0x021137e4
-data_ov032_021137f0 kind:data(any) addr:0x021137f0
+_ZTI12daBakubaku_c kind:data(any) addr:0x021137e4
+_ZTS12daBakubaku_c kind:data(any) addr:0x021137f0
 data_ov032_021137f8 kind:data(any) addr:0x021137f8 ambiguous
 data_ov032_02113800 kind:data(any) addr:0x02113800 ambiguous
 data_ov032_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov032_02113820 kind:data(any) addr:0x02113820 ambiguous
 data_ov032_02113824 kind:data(any) addr:0x02113824
 data_ov032_0211382c kind:data(any) addr:0x0211382c ambiguous
-data_ov032_021138a0 kind:data(any) addr:0x021138a0
+_ZTI13daObjTdFuta_c kind:data(any) addr:0x021138a0
 data_ov032_021138a8 kind:data(any) addr:0x021138a8 ambiguous
-data_ov032_021138ac kind:data(any) addr:0x021138ac
+_ZTS13daObjTdFuta_c kind:data(any) addr:0x021138ac
 HugeCover_SpawnInfo kind:data(any) addr:0x021138bc ambiguous
 data_ov032_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov032_021138d8 kind:data(any) addr:0x021138d8 ambiguous
@@ -138,7 +138,7 @@ data_ov032_021138e0 kind:data(any) addr:0x021138e0
 data_ov032_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov032_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov032_02113934 kind:data(any) addr:0x02113934 ambiguous
-data_ov032_02113960 kind:data(any) addr:0x02113960
+_ZTI14daObjTdWater_c kind:data(any) addr:0x02113960
 data_ov032_0211396c kind:data(any) addr:0x0211396c
 HugeWater_SpawnInfo kind:data(any) addr:0x02113980 ambiguous
 data_ov032_02113998 kind:data(any) addr:0x02113998 ambiguous

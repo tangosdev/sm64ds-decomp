@@ -68,7 +68,7 @@ data_ov003_020b1468 kind:data(any) addr:0x020b1468
 data_ov003_020b1474 kind:data(any) addr:0x020b1474
 data_ov003_020b1480 kind:data(any) addr:0x020b1480
 data_ov003_020b148c kind:data(any) addr:0x020b148c
-data_ov003_020b1498 kind:data(any) addr:0x020b1498
+_ZTI10dScTitle_c kind:data(any) addr:0x020b1498
 data_ov003_020b14a4 kind:data(any) addr:0x020b14a4
 data_ov003_020b14b0 kind:data(any) addr:0x020b14b0
 data_ov003_020b14bc kind:data(any) addr:0x020b14bc
@@ -86,7 +86,7 @@ data_ov003_020b1550 kind:data(any) addr:0x020b1550
 data_ov003_020b1560 kind:data(any) addr:0x020b1560
 data_ov003_020b1570 kind:data(any) addr:0x020b1570
 data_ov003_020b1580 kind:data(any) addr:0x020b1580
-data_ov003_020b1590 kind:data(any) addr:0x020b1590
+_ZTS10dScTitle_c kind:data(any) addr:0x020b1590
 data_ov003_020b15a0 kind:data(any) addr:0x020b15a0
 data_ov003_020b15b0 kind:data(any) addr:0x020b15b0
 data_ov003_020b15c0 kind:data(any) addr:0x020b15c0
@@ -106,17 +106,17 @@ data_ov003_020b16a4 kind:data(any) addr:0x020b16a4
 data_ov003_020b16a8 kind:data(any) addr:0x020b16a8
 data_ov003_020b16ac kind:data(any) addr:0x020b16ac
 StarSelect_SpawnInfo kind:data(any) addr:0x020b16b4 ambiguous
-data_ov003_020b16bc kind:data(any) addr:0x020b16bc
+_ZTI12dScStarSel_c kind:data(any) addr:0x020b16bc
 data_ov003_020b16c8 kind:data(any) addr:0x020b16c8
-data_ov003_020b16d4 kind:data(any) addr:0x020b16d4
+_ZTS12dScStarSel_c kind:data(any) addr:0x020b16d4
 data_ov003_020b16e4 kind:data(any) addr:0x020b16e4
 data_ov003_020b1704 kind:data(any) addr:0x020b1704
 data_ov003_020b174c kind:data(any) addr:0x020b174c
 data_ov003_020b1750 kind:data(any) addr:0x020b1750 ambiguous
-data_ov003_020b1758 kind:data(any) addr:0x020b1758
+_ZTI13dScGameOver_c kind:data(any) addr:0x020b1758
 data_ov003_020b1764 kind:data(any) addr:0x020b1764
 data_ov003_020b1774 kind:data(any) addr:0x020b1774
-data_ov003_020b1784 kind:data(any) addr:0x020b1784
+_ZTS13dScGameOver_c kind:data(any) addr:0x020b1784
 data_ov003_020b179c kind:data(any) addr:0x020b179c
 _ZTV13dScGameOver_c kind:data(any) addr:0x020b179c
 data_ov003_020b17e4 kind:data(any) addr:0x020b17e4

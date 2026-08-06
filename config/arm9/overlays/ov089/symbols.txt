@@ -32,8 +32,8 @@ data_ov089_02132b28 kind:data(any) addr:0x02132b28
 data_ov089_02132b30 kind:data(any) addr:0x02132b30
 data_ov089_02132b38 kind:data(any) addr:0x02132b38
 data_ov089_02132b40 kind:data(any) addr:0x02132b40
-data_ov089_02132b4c kind:data(any) addr:0x02132b4c
-data_ov089_02132b58 kind:data(any) addr:0x02132b58
+_ZTI10daObjKey_c kind:data(any) addr:0x02132b4c
+_ZTS10daObjKey_c kind:data(any) addr:0x02132b58
 Key_SpawnInfo kind:data(any) addr:0x02132b68
 LastStar_SpawnInfo kind:data(any) addr:0x02132b84
 _ZTV3Key kind:data(any) addr:0x02132ba8

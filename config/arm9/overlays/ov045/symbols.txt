@@ -123,36 +123,36 @@ data_ov045_02112c68 kind:data(any) addr:0x02112c68 ambiguous
 data_ov045_02112c88 kind:data(any) addr:0x02112c88 ambiguous
 data_ov045_02112ca8 kind:data(any) addr:0x02112ca8 ambiguous
 data_ov045_02112cb0 kind:data(any) addr:0x02112cb0
-data_ov045_02112cbc kind:data(any) addr:0x02112cbc
+_ZTS16daObjKm2_Agaru_c kind:data(any) addr:0x02112cbc
 data_ov045_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
 FireSeaElevator_SpawnInfo kind:data(any) addr:0x02112cd0 ambiguous
 data_ov045_02112cf4 kind:data(any) addr:0x02112cf4
 data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
-data_ov045_02112d74 kind:data(any) addr:0x02112d74
-data_ov045_02112d80 kind:data(any) addr:0x02112d80
+_ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74
+_ZTS18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d80
 PoleLift_SpawnInfo kind:data(any) addr:0x02112d98 ambiguous
 _ZTV15FireSeaElevator kind:data(any) addr:0x02112dbc
 _ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
-data_ov045_02112e3c kind:data(any) addr:0x02112e3c
-data_ov045_02112e48 kind:data(any) addr:0x02112e48
+_ZTI17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e3c
+_ZTS17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e48
 ExtendingPlatform_SpawnInfo kind:data(any) addr:0x02112e5c ambiguous
 _ZTV8PoleLift kind:data(any) addr:0x02112e80
 _ZTV17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e80
-data_ov045_02112efc kind:data(any) addr:0x02112efc
+_ZTI19daObjKm2_Ukishima_c kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
-data_ov045_02112f14 kind:data(any) addr:0x02112f14
+_ZTS19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f14
 FloatingFloorBfs_SpawnInfo kind:data(any) addr:0x02112f2c ambiguous
 data_ov045_02112f50 kind:data(any) addr:0x02112f50
 data_ov045_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov045_02112f7c kind:data(any) addr:0x02112f7c ambiguous
-data_ov045_02112fd0 kind:data(any) addr:0x02112fd0
+_ZTI15daObjKm2_Gura_c kind:data(any) addr:0x02112fd0
 data_ov045_02112fdc kind:data(any) addr:0x02112fdc
-data_ov045_02112fe8 kind:data(any) addr:0x02112fe8
+_ZTS15daObjKm2_Gura_c kind:data(any) addr:0x02112fe8
 TiltingPlatformBfs_SpawnInfo kind:data(any) addr:0x02112ffc ambiguous
 _ZTV16FloatingFloorBfs kind:data(any) addr:0x02113020
-data_ov045_021130a0 kind:data(any) addr:0x021130a0
+_ZTI21daObjKm2_Fall_Block_c kind:data(any) addr:0x021130a0
 data_ov045_021130ac kind:data(any) addr:0x021130ac
-data_ov045_021130b8 kind:data(any) addr:0x021130b8
+_ZTS21daObjKm2_Fall_Block_c kind:data(any) addr:0x021130b8
 data_ov045_021130cc kind:data(any) addr:0x021130cc ambiguous
 FallBlockBfs_SpawnInfo kind:data(any) addr:0x021130d0 ambiguous
 _ZTV12FallBlockBfs kind:data(any) addr:0x021130f4

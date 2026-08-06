@@ -90,8 +90,8 @@ data_ov079_02127c08 kind:data(any) addr:0x02127c08
 data_ov079_02127c10 kind:data(any) addr:0x02127c10
 data_ov079_02127c18 kind:data(any) addr:0x02127c18
 data_ov079_02127c20 kind:data(any) addr:0x02127c20
-data_ov079_02127c28 kind:data(any) addr:0x02127c28
-data_ov079_02127c34 kind:data(any) addr:0x02127c34
+_ZTS7daBtn_c kind:data(any) addr:0x02127c28
+_ZTI7daBtn_c kind:data(any) addr:0x02127c34
 WhompKing_SpawnInfo kind:data(any) addr:0x02127c40 ambiguous
 Whomp_SpawnInfo kind:data(any) addr:0x02127c5c ambiguous
 _ZTV5Whomp kind:data(any) addr:0x02127c80
@@ -99,20 +99,20 @@ data_ov079_02127cfc kind:data(any) addr:0x02127cfc
 data_ov079_02127e7c kind:data(any) addr:0x02127e7c
 data_ov079_02127e9c kind:data(any) addr:0x02127e9c
 data_ov079_02127ea4 kind:data(any) addr:0x02127ea4
-data_ov079_02127eac kind:data(any) addr:0x02127eac
-data_ov079_02127eb8 kind:data(any) addr:0x02127eb8
+_ZTS7daKlr_c kind:data(any) addr:0x02127eac
+_ZTI7daKlr_c kind:data(any) addr:0x02127eb8
 BulletBill_SpawnInfo kind:data(any) addr:0x02127ec4
 _ZTV10BulletBill kind:data(any) addr:0x02127ee8
 _ZTV7daKlr_c kind:data(any) addr:0x02127ee8
 data_ov079_02127f64 kind:data(any) addr:0x02127f64
-data_ov079_02127f70 kind:data(any) addr:0x02127f70
-data_ov079_02127f7c kind:data(any) addr:0x02127f7c
+_ZTI18daObjBkKillerdai_c kind:data(any) addr:0x02127f70
+_ZTS18daObjBkKillerdai_c kind:data(any) addr:0x02127f7c
 BillBlaster_SpawnInfo kind:data(any) addr:0x02127f94 ambiguous
 data_ov079_02127fb8 kind:data(any) addr:0x02127fb8
 data_ov079_02127fec kind:data(any) addr:0x02127fec ambiguous
 data_ov079_02128008 kind:data(any) addr:0x02128008 ambiguous
-data_ov079_02128038 kind:data(any) addr:0x02128038
-data_ov079_02128044 kind:data(any) addr:0x02128044
+_ZTI14daObjBk_Kabe_c kind:data(any) addr:0x02128038
+_ZTS14daObjBk_Kabe_c kind:data(any) addr:0x02128044
 data_ov079_02128058 kind:data(any) addr:0x02128058
 data_ov079_0212805c kind:data(any) addr:0x0212805c
 data_ov079_02128060 kind:data(any) addr:0x02128060

@@ -103,15 +103,15 @@ data_ov033_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov033_0211229c kind:data(any) addr:0x0211229c ambiguous
 data_ov033_02112320 kind:data(any) addr:0x02112320 ambiguous
 data_ov033_0211233c kind:data(any) addr:0x0211233c
-data_ov033_02112348 kind:data(any) addr:0x02112348
+_ZTS13daObjTtFuta_c kind:data(any) addr:0x02112348
 TinyCover_SpawnInfo kind:data(any) addr:0x02112358 ambiguous
 data_ov033_02112368 kind:data(any) addr:0x02112368 ambiguous
 data_ov033_0211237c kind:data(any) addr:0x0211237c
 data_ov033_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov033_021123f4 kind:data(any) addr:0x021123f4 ambiguous
-data_ov033_021123fc kind:data(any) addr:0x021123fc
+_ZTI14daObjTtWater_c kind:data(any) addr:0x021123fc
 data_ov033_02112404 kind:data(any) addr:0x02112404 ambiguous
-data_ov033_02112408 kind:data(any) addr:0x02112408
+_ZTS14daObjTtWater_c kind:data(any) addr:0x02112408
 TinyWater_SpawnInfo kind:data(any) addr:0x0211241c ambiguous
 data_ov033_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov033_02112434 kind:data(any) addr:0x02112434 ambiguous

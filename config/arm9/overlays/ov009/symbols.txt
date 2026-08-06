@@ -143,33 +143,33 @@ data_ov009_021138fc kind:data(any) addr:0x021138fc
 data_ov009_02113904 kind:data(any) addr:0x02113904
 data_ov009_0211390c kind:data(any) addr:0x0211390c
 data_ov009_02113914 kind:data(any) addr:0x02113914
-data_ov009_0211391c kind:data(any) addr:0x0211391c
-data_ov009_02113928 kind:data(any) addr:0x02113928
+_ZTS9daSBird_c kind:data(any) addr:0x0211391c
+_ZTI9daSBird_c kind:data(any) addr:0x02113928
 Bird_SpawnInfo kind:data(any) addr:0x02113934 ambiguous
 _ZTV4Bird kind:data(any) addr:0x02113958
 _ZTV9daSBird_c kind:data(any) addr:0x02113958
 data_ov009_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov009_02113998 kind:data(any) addr:0x02113998 ambiguous
 data_ov009_021139b0 kind:data(any) addr:0x021139b0 ambiguous
-data_ov009_021139d4 kind:data(any) addr:0x021139d4
-data_ov009_021139e0 kind:data(any) addr:0x021139e0
+_ZTI14daObjMcWater_c kind:data(any) addr:0x021139d4
+_ZTS14daObjMcWater_c kind:data(any) addr:0x021139e0
 CastleWater_SpawnInfo kind:data(any) addr:0x021139f4 ambiguous
 data_ov009_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 _ZTV11CastleWater kind:data(any) addr:0x02113a18
 _ZTV14daObjMcWater_c kind:data(any) addr:0x02113a18
 data_ov009_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 data_ov009_02113a74 kind:data(any) addr:0x02113a74 ambiguous
-data_ov009_02113a98 kind:data(any) addr:0x02113a98
+_ZTI18daObjMc_Metalnet_c kind:data(any) addr:0x02113a98
 data_ov009_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
-data_ov009_02113aa4 kind:data(any) addr:0x02113aa4
+_ZTS18daObjMc_Metalnet_c kind:data(any) addr:0x02113aa4
 MetalNet_SpawnInfo kind:data(any) addr:0x02113abc ambiguous
 _ZTV8MetalNet kind:data(any) addr:0x02113ae0
 _ZTV18daObjMc_Metalnet_c kind:data(any) addr:0x02113ae0
 data_ov009_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov009_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 data_ov009_02113b50 kind:data(any) addr:0x02113b50 ambiguous
-data_ov009_02113b60 kind:data(any) addr:0x02113b60
-data_ov009_02113b6c kind:data(any) addr:0x02113b6c
+_ZTI10daMcFlag_c kind:data(any) addr:0x02113b60
+_ZTS10daMcFlag_c kind:data(any) addr:0x02113b6c
 Flag_SpawnInfo kind:data(any) addr:0x02113b7c ambiguous
 data_ov009_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov009_02113b90 kind:data(any) addr:0x02113b90 ambiguous

@@ -197,10 +197,10 @@ data_ov020_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov020_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 data_ov020_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov020_02114828 kind:data(any) addr:0x02114828
-data_ov020_0211482c kind:data(any) addr:0x0211482c
-data_ov020_02114838 kind:data(any) addr:0x02114838
-data_ov020_02114844 kind:data(any) addr:0x02114844
-data_ov020_02114850 kind:data(any) addr:0x02114850
+_ZTS8daBook_c kind:data(any) addr:0x0211482c
+_ZTI11daBookGen_c kind:data(any) addr:0x02114838
+_ZTI8daBook_c kind:data(any) addr:0x02114844
+_ZTS11daBookGen_c kind:data(any) addr:0x02114850
 Bookend_SpawnInfo kind:data(any) addr:0x02114860 ambiguous
 data_ov020_02114874 kind:data(any) addr:0x02114874 ambiguous
 BookShotSpawner_SpawnInfo kind:data(any) addr:0x0211487c ambiguous
@@ -213,8 +213,8 @@ data_ov020_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov020_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 _ZTV8BookShot kind:data(any) addr:0x0211495c
 _ZTV8daBook_c kind:data(any) addr:0x0211495c
-data_ov020_021149d8 kind:data(any) addr:0x021149d8
-data_ov020_021149e4 kind:data(any) addr:0x021149e4
+_ZTS9daChair_c kind:data(any) addr:0x021149d8
+_ZTI9daChair_c kind:data(any) addr:0x021149e4
 HauntedChair_SpawnInfo kind:data(any) addr:0x021149f0 ambiguous
 data_ov020_021149fc kind:data(any) addr:0x021149fc ambiguous
 _ZTV12HauntedChair kind:data(any) addr:0x02114a14

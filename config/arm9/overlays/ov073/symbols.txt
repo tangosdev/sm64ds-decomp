@@ -103,8 +103,8 @@ data_ov073_02123028 kind:data(any) addr:0x02123028
 data_ov073_02123030 kind:data(any) addr:0x02123030
 data_ov073_02123038 kind:data(any) addr:0x02123038
 data_ov073_02123040 kind:data(any) addr:0x02123040
-data_ov073_0212304c kind:data(any) addr:0x0212304c
-data_ov073_02123058 kind:data(any) addr:0x02123058
+_ZTI16daKing_Donketu_c kind:data(any) addr:0x0212304c
+_ZTS16daKing_Donketu_c kind:data(any) addr:0x02123058
 ChiefChilly_SpawnInfo kind:data(any) addr:0x0212306c ambiguous
 _ZTV11ChiefChilly kind:data(any) addr:0x02123090
 data_ov073_0212310c kind:data(any) addr:0x0212310c
@@ -115,8 +115,8 @@ data_ov073_0212312c kind:data(any) addr:0x0212312c
 data_ov073_02123134 kind:data(any) addr:0x02123134
 data_ov073_0212313c kind:data(any) addr:0x0212313c
 data_ov073_02123144 kind:data(any) addr:0x02123144
-data_ov073_0212314c kind:data(any) addr:0x0212314c
-data_ov073_02123158 kind:data(any) addr:0x02123158
+_ZTI13daObjEwbIce_c kind:data(any) addr:0x0212314c
+_ZTS13daObjEwbIce_c kind:data(any) addr:0x02123158
 CccArena_SpawnInfo kind:data(any) addr:0x02123168 ambiguous
 CccBigIce_SpawnInfo kind:data(any) addr:0x02123184 ambiguous
 CccSmallIce_SpawnInfo kind:data(any) addr:0x021231a0 ambiguous

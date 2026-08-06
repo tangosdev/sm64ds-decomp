@@ -163,30 +163,30 @@ data_ov016_021148b0 kind:data(any) addr:0x021148b0
 data_ov016_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 data_ov016_021148b8 kind:data(any) addr:0x021148b8
 data_ov016_021148c0 kind:data(any) addr:0x021148c0
-data_ov016_021148c8 kind:data(any) addr:0x021148c8
-data_ov016_021148d4 kind:data(any) addr:0x021148d4
+_ZTS9daMoray_c kind:data(any) addr:0x021148c8
+_ZTI9daMoray_c kind:data(any) addr:0x021148d4
 Unagi_SpawnInfo kind:data(any) addr:0x021148e0 ambiguous
 data_ov016_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov016_02114908 kind:data(any) addr:0x02114908
 _ZTV5Unagi kind:data(any) addr:0x02114958
 data_ov016_021149d4 kind:data(any) addr:0x021149d4
-data_ov016_021149dc kind:data(any) addr:0x021149dc
-data_ov016_021149e8 kind:data(any) addr:0x021149e8
+_ZTI14daObjKi_Fune_c kind:data(any) addr:0x021149dc
+_ZTS14daObjKi_Fune_c kind:data(any) addr:0x021149e8
 data_ov016_021149f0 kind:data(any) addr:0x021149f0 ambiguous
 ShipDown_SpawnInfo kind:data(any) addr:0x021149fc ambiguous
 ShipUp_SpawnInfo kind:data(any) addr:0x02114a18 ambiguous
 _ZTV6ShipUp kind:data(any) addr:0x02114a3c
-data_ov016_02114abc kind:data(any) addr:0x02114abc
-data_ov016_02114ac8 kind:data(any) addr:0x02114ac8
+_ZTI16daObjKi_Hasira_c kind:data(any) addr:0x02114abc
+_ZTS16daObjKi_Hasira_c kind:data(any) addr:0x02114ac8
 RockPillar_SpawnInfo kind:data(any) addr:0x02114adc ambiguous
 data_ov016_02114b00 kind:data(any) addr:0x02114b00
-data_ov016_02114b80 kind:data(any) addr:0x02114b80
+_ZTI13daObjKi_Ita_c kind:data(any) addr:0x02114b80
 data_ov016_02114b8c kind:data(any) addr:0x02114b8c
-data_ov016_02114b98 kind:data(any) addr:0x02114b98
+_ZTS13daObjKi_Ita_c kind:data(any) addr:0x02114b98
 FloatOnWaterPlatformJrb_SpawnInfo kind:data(any) addr:0x02114ba8
 data_ov016_02114bcc kind:data(any) addr:0x02114bcc
-data_ov016_02114c4c kind:data(any) addr:0x02114c4c
-data_ov016_02114c58 kind:data(any) addr:0x02114c58
+_ZTI13daSlide_Box_c kind:data(any) addr:0x02114c4c
+_ZTS13daSlide_Box_c kind:data(any) addr:0x02114c58
 SlidingBox_SpawnInfo kind:data(any) addr:0x02114c68
 _ZTV23FloatOnWaterPlatformJrb kind:data(any) addr:0x02114c8c
 _ZTV13daSlide_Box_c kind:data(any) addr:0x02114c8c

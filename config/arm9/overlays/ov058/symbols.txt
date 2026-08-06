@@ -36,8 +36,8 @@ data_ov058_02111944 kind:data(any) addr:0x02111944 ambiguous
 data_ov058_02111960 kind:data(any) addr:0x02111960 ambiguous
 data_ov058_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov058_021119a0 kind:data(any) addr:0x021119a0
-data_ov058_02111a30 kind:data(any) addr:0x02111a30
-data_ov058_02111a3c kind:data(any) addr:0x02111a3c
+_ZTI13daObjCloset_c kind:data(any) addr:0x02111a30
+_ZTS13daObjCloset_c kind:data(any) addr:0x02111a3c
 RecRoomCupboard_SpawnInfo kind:data(any) addr:0x02111a4c ambiguous
 data_ov058_02111a58 kind:data(any) addr:0x02111a58 ambiguous
 _ZTV15RecRoomCupboard kind:data(any) addr:0x02111a70

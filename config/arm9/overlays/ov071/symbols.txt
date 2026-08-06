@@ -115,8 +115,8 @@ data_ov071_02122bd0 kind:data(any) addr:0x02122bd0
 data_ov071_02122bd8 kind:data(any) addr:0x02122bd8
 data_ov071_02122be0 kind:data(any) addr:0x02122be0
 data_ov071_02122be8 kind:data(any) addr:0x02122be8
-data_ov071_02122bf0 kind:data(any) addr:0x02122bf0
-data_ov071_02122bfc kind:data(any) addr:0x02122bfc
+_ZTS7daSpd_c kind:data(any) addr:0x02122bf0
+_ZTI7daSpd_c kind:data(any) addr:0x02122bfc
 Scuttlebug_SpawnInfo kind:data(any) addr:0x02122c08 ambiguous
 _ZTV10Scuttlebug kind:data(any) addr:0x02122c2c
 _ZTV7daSpd_c kind:data(any) addr:0x02122c2c
@@ -126,14 +126,14 @@ data_ov071_02122cb8 kind:data(any) addr:0x02122cb8
 data_ov071_02122cc0 kind:data(any) addr:0x02122cc0
 data_ov071_02122cc8 kind:data(any) addr:0x02122cc8
 data_ov071_02122cd0 kind:data(any) addr:0x02122cd0
-data_ov071_02122cd8 kind:data(any) addr:0x02122cd8
-data_ov071_02122ce4 kind:data(any) addr:0x02122ce4
+_ZTS8daEykn_c kind:data(any) addr:0x02122cd8
+_ZTI8daEykn_c kind:data(any) addr:0x02122ce4
 MrI_SpawnInfo kind:data(any) addr:0x02122cf0 ambiguous
 BigMrI_SpawnInfo kind:data(any) addr:0x02122d0c ambiguous
 _ZTV3MrI kind:data(any) addr:0x02122d30
 _ZTV8daEykn_c kind:data(any) addr:0x02122d30
-data_ov071_02122dac kind:data(any) addr:0x02122dac
-data_ov071_02122db8 kind:data(any) addr:0x02122db8
+_ZTS8daEyBm_c kind:data(any) addr:0x02122dac
+_ZTI8daEyBm_c kind:data(any) addr:0x02122db8
 MrI_Projectile_SpawnInfo kind:data(any) addr:0x02122dc4 ambiguous
 _ZTV14MrI_Projectile kind:data(any) addr:0x02122de8
 _ZTV8daEyBm_c kind:data(any) addr:0x02122de8
@@ -144,8 +144,8 @@ data_ov071_02122e78 kind:data(any) addr:0x02122e78 ambiguous
 data_ov071_02122e7c kind:data(any) addr:0x02122e7c
 data_ov071_02122e84 kind:data(any) addr:0x02122e84
 data_ov071_02122e8c kind:data(any) addr:0x02122e8c
-data_ov071_02122e94 kind:data(any) addr:0x02122e94
-data_ov071_02122ea0 kind:data(any) addr:0x02122ea0
+_ZTI13daObjCasket_c kind:data(any) addr:0x02122e94
+_ZTS13daObjCasket_c kind:data(any) addr:0x02122ea0
 Coffin_SpawnInfo kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
 _ZTV6Coffin kind:data(any) addr:0x02122efc

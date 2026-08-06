@@ -53,8 +53,8 @@ data_ov023_02111c98 kind:data(any) addr:0x02111c98
 data_ov023_02111cc8 kind:data(any) addr:0x02111cc8 ambiguous
 data_ov023_02111d30 kind:data(any) addr:0x02111d30
 data_ov023_02111e10 kind:data(any) addr:0x02111e10
-data_ov023_02111fa0 kind:data(any) addr:0x02111fa0
-data_ov023_02111fac kind:data(any) addr:0x02111fac
+_ZTI16daObjFm_Battan_c kind:data(any) addr:0x02111fa0
+_ZTS16daObjFm_Battan_c kind:data(any) addr:0x02111fac
 Squasher_SpawnInfo kind:data(any) addr:0x02111fc0 ambiguous
 _ZTV8Squasher kind:data(any) addr:0x02111fe4
 data_ov023_02112080 kind:bss addr:0x02112080

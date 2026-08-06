@@ -112,16 +112,16 @@ data_ov010_02112a80 kind:data(any) addr:0x02112a80
 data_ov010_02112a88 kind:data(any) addr:0x02112a88
 data_ov010_02112a90 kind:data(any) addr:0x02112a90
 data_ov010_02112a98 kind:data(any) addr:0x02112a98
-data_ov010_02112aa0 kind:data(any) addr:0x02112aa0
+_ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
 data_ov010_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
-data_ov010_02112aac kind:data(any) addr:0x02112aac
+_ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
 Trap_SpawnInfo kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
 data_ov010_02112ae4 kind:data(any) addr:0x02112ae4
 data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
-data_ov010_02112b64 kind:data(any) addr:0x02112b64
-data_ov010_02112b70 kind:data(any) addr:0x02112b70
+_ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
+_ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70
 LightBeam_SpawnInfo kind:data(any) addr:0x02112b84 ambiguous
 _ZTV4Trap kind:data(any) addr:0x02112ba8
 _ZTV15daObjC1Hikari_c kind:data(any) addr:0x02112ba8
@@ -129,8 +129,8 @@ data_ov010_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov010_02112bec kind:data(any) addr:0x02112bec ambiguous
 data_ov010_02112c08 kind:data(any) addr:0x02112c08 ambiguous
 data_ov010_02112c18 kind:data(any) addr:0x02112c18 ambiguous
-data_ov010_02112c24 kind:data(any) addr:0x02112c24
-data_ov010_02112c30 kind:data(any) addr:0x02112c30
+_ZTI14daObjC1Peach_c kind:data(any) addr:0x02112c24
+_ZTS14daObjC1Peach_c kind:data(any) addr:0x02112c30
 PeachPainting_SpawnInfo kind:data(any) addr:0x02112c44 ambiguous
 data_ov010_02112c4c kind:data(any) addr:0x02112c4c ambiguous
 data_ov010_02112c58 kind:data(any) addr:0x02112c58 ambiguous

@@ -93,14 +93,14 @@ data_ov012_02112258 kind:data(any) addr:0x02112258 ambiguous
 data_ov012_0211227c kind:data(any) addr:0x0211227c ambiguous
 data_ov012_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov012_0211229c kind:data(any) addr:0x0211229c ambiguous
-data_ov012_02112300 kind:data(any) addr:0x02112300
-data_ov012_0211230c kind:data(any) addr:0x0211230c
+_ZTI16daObjC0_Switch_c kind:data(any) addr:0x02112300
+_ZTS16daObjC0_Switch_c kind:data(any) addr:0x0211230c
 SwitchPillar_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
 data_ov012_02112344 kind:data(any) addr:0x02112344
 data_ov012_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous
-data_ov012_021123c4 kind:data(any) addr:0x021123c4
-data_ov012_021123d0 kind:data(any) addr:0x021123d0
+_ZTI14daObjC0Water_c kind:data(any) addr:0x021123c4
+_ZTS14daObjC0Water_c kind:data(any) addr:0x021123d0
 BasementWater_SpawnInfo kind:data(any) addr:0x021123e4 ambiguous
 data_ov012_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov012_02112404 kind:data(any) addr:0x02112404 ambiguous

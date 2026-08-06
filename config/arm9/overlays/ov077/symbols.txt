@@ -104,8 +104,8 @@ data_ov077_02127810 kind:data(any) addr:0x02127810
 data_ov077_02127818 kind:data(any) addr:0x02127818
 data_ov077_02127820 kind:data(any) addr:0x02127820
 data_ov077_02127828 kind:data(any) addr:0x02127828
-data_ov077_02127830 kind:data(any) addr:0x02127830
-data_ov077_0212783c kind:data(any) addr:0x0212783c
+_ZTS7daJgm_c kind:data(any) addr:0x02127830
+_ZTI7daJgm_c kind:data(any) addr:0x0212783c
 Lakitu_SpawnInfo kind:data(any) addr:0x02127848 ambiguous
 _ZTV6Lakitu kind:data(any) addr:0x0212786c
 _ZTV7daJgm_c kind:data(any) addr:0x0212786c
@@ -121,8 +121,8 @@ data_ov077_02127928 kind:data(any) addr:0x02127928
 data_ov077_02127930 kind:data(any) addr:0x02127930
 data_ov077_02127938 kind:data(any) addr:0x02127938
 data_ov077_02127940 kind:data(any) addr:0x02127940
-data_ov077_02127948 kind:data(any) addr:0x02127948
-data_ov077_02127954 kind:data(any) addr:0x02127954
+_ZTS7daTgz_c kind:data(any) addr:0x02127948
+_ZTI7daTgz_c kind:data(any) addr:0x02127954
 Spiny_SpawnInfo kind:data(any) addr:0x02127960
 _ZTV5Spiny kind:data(any) addr:0x02127984
 _ZTV7daTgz_c kind:data(any) addr:0x02127984
@@ -136,9 +136,9 @@ data_ov077_02127a30 kind:data(any) addr:0x02127a30
 data_ov077_02127a38 kind:data(any) addr:0x02127a38
 data_ov077_02127a40 kind:data(any) addr:0x02127a40
 data_ov077_02127a48 kind:data(any) addr:0x02127a48
-data_ov077_02127a50 kind:data(any) addr:0x02127a50
+_ZTS9daPopoi_c kind:data(any) addr:0x02127a50
 data_ov077_02127a5c kind:data(any) addr:0x02127a5c
-data_ov077_02127a68 kind:data(any) addr:0x02127a68
+_ZTI9daPopoi_c kind:data(any) addr:0x02127a68
 HeaveHo_SpawnInfo kind:data(any) addr:0x02127a74
 _ZTV7HeaveHo kind:data(any) addr:0x02127a98
 _ZTV9daPopoi_c kind:data(any) addr:0x02127a98

@@ -170,11 +170,11 @@ data_ov024_021135f4 kind:data(any) addr:0x021135f4 ambiguous
 data_ov024_021136d4 kind:data(any) addr:0x021136d4 ambiguous
 data_ov024_021136f4 kind:data(any) addr:0x021136f4 ambiguous
 data_ov024_0211373c kind:data(any) addr:0x0211373c ambiguous
-data_ov024_021137c0 kind:data(any) addr:0x021137c0
-data_ov024_021137cc kind:data(any) addr:0x021137cc
-data_ov024_021137d8 kind:data(any) addr:0x021137d8
+_ZTI21daObjDlPyramidDummy_c kind:data(any) addr:0x021137c0
+_ZTI16daObjDlPyramid_c kind:data(any) addr:0x021137cc
+_ZTS16daObjDlPyramid_c kind:data(any) addr:0x021137d8
 data_ov024_021137e4 kind:data(any) addr:0x021137e4 ambiguous
-data_ov024_021137ec kind:data(any) addr:0x021137ec
+_ZTS21daObjDlPyramidDummy_c kind:data(any) addr:0x021137ec
 data_ov024_021137f8 kind:data(any) addr:0x021137f8 ambiguous
 data_ov024_02113800 kind:data(any) addr:0x02113800 ambiguous
 PyramidTop_SpawnInfo kind:data(any) addr:0x02113804 ambiguous

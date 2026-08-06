@@ -190,14 +190,14 @@ data_ov021_021145e4 kind:data(any) addr:0x021145e4 ambiguous
 data_ov021_0211462c kind:data(any) addr:0x0211462c ambiguous
 data_ov021_021146f0 kind:data(any) addr:0x021146f0 ambiguous
 data_ov021_02114740 kind:data(any) addr:0x02114740
-data_ov021_02114748 kind:data(any) addr:0x02114748
+_ZTI17daObjCvNewsLift_c kind:data(any) addr:0x02114748
 data_ov021_02114750 kind:data(any) addr:0x02114750 ambiguous
-data_ov021_02114754 kind:data(any) addr:0x02114754
+_ZTS17daObjCvNewsLift_c kind:data(any) addr:0x02114754
 WorkElevator_SpawnInfo kind:data(any) addr:0x02114768 ambiguous
 _ZTV12WorkElevator kind:data(any) addr:0x0211478c
 data_ov021_021147c4 kind:data(any) addr:0x021147c4 ambiguous
-data_ov021_0211480c kind:data(any) addr:0x0211480c
-data_ov021_02114818 kind:data(any) addr:0x02114818
+_ZTS9daGrock_c kind:data(any) addr:0x0211480c
+_ZTI9daGrock_c kind:data(any) addr:0x02114818
 RollingRock_SpawnInfo kind:data(any) addr:0x02114824 ambiguous
 _ZTV11RollingRock kind:data(any) addr:0x02114848
 _ZTV9daGrock_c kind:data(any) addr:0x02114848
@@ -208,9 +208,9 @@ data_ov021_0211488c kind:data(any) addr:0x0211488c ambiguous
 data_ov021_02114898 kind:data(any) addr:0x02114898 ambiguous
 data_ov021_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 data_ov021_021148b8 kind:data(any) addr:0x021148b8 ambiguous
-data_ov021_021148c4 kind:data(any) addr:0x021148c4
+_ZTI16daObjCvShutter_c kind:data(any) addr:0x021148c4
 data_ov021_021148d0 kind:data(any) addr:0x021148d0
-data_ov021_021148dc kind:data(any) addr:0x021148dc
+_ZTS16daObjCvShutter_c kind:data(any) addr:0x021148dc
 data_ov021_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 ShutterHmc_SpawnInfo kind:data(any) addr:0x021148f0 ambiguous
 _ZTV10ShutterHmc kind:data(any) addr:0x02114914

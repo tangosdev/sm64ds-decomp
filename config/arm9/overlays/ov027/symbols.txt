@@ -114,8 +114,8 @@ data_ov027_021135f4 kind:data(any) addr:0x021135f4 ambiguous
 data_ov027_021136d4 kind:data(any) addr:0x021136d4 ambiguous
 data_ov027_021136f4 kind:data(any) addr:0x021136f4 ambiguous
 data_ov027_0211373c kind:data(any) addr:0x0211373c ambiguous
-data_ov027_021137c4 kind:data(any) addr:0x021137c4
-data_ov027_021137d0 kind:data(any) addr:0x021137d0
+_ZTI17daObjSlIceBlock_c kind:data(any) addr:0x021137c4
+_ZTS17daObjSlIceBlock_c kind:data(any) addr:0x021137d0
 SlidingIceSpawner_SpawnInfo kind:data(any) addr:0x021137e4 ambiguous
 data_ov027_021137f8 kind:data(any) addr:0x021137f8 ambiguous
 SlidingIce_SpawnInfo kind:data(any) addr:0x02113800 ambiguous
@@ -123,12 +123,12 @@ data_ov027_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov027_02113820 kind:data(any) addr:0x02113820 ambiguous
 _ZTV10SlidingIce kind:data(any) addr:0x02113824
 data_ov027_0211382c kind:data(any) addr:0x0211382c ambiguous
-data_ov027_021138a4 kind:data(any) addr:0x021138a4
+_ZTS7daOts_c kind:data(any) addr:0x021138a4
 data_ov027_021138a8 kind:data(any) addr:0x021138a8 ambiguous
-data_ov027_021138b0 kind:data(any) addr:0x021138b0
-data_ov027_021138bc kind:data(any) addr:0x021138bc
+_ZTI12daIDonketu_c kind:data(any) addr:0x021138b0
+_ZTI7daOts_c kind:data(any) addr:0x021138bc
 data_ov027_021138c4 kind:data(any) addr:0x021138c4 ambiguous
-data_ov027_021138c8 kind:data(any) addr:0x021138c8
+_ZTS12daIDonketu_c kind:data(any) addr:0x021138c8
 ChillBully_SpawnInfo kind:data(any) addr:0x021138d8 ambiguous
 data_ov027_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov027_021138f4 kind:data(any) addr:0x021138f4
@@ -142,8 +142,8 @@ data_ov027_021139c4 kind:data(any) addr:0x021139c4
 data_ov027_021139cc kind:data(any) addr:0x021139cc
 data_ov027_021139d4 kind:data(any) addr:0x021139d4
 data_ov027_021139dc kind:data(any) addr:0x021139dc
-data_ov027_021139e4 kind:data(any) addr:0x021139e4
-data_ov027_021139f0 kind:data(any) addr:0x021139f0
+_ZTI10daPgDfdr_c kind:data(any) addr:0x021139e4
+_ZTS10daPgDfdr_c kind:data(any) addr:0x021139f0
 data_ov027_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 data_ov027_02113a00 kind:data(any) addr:0x02113a00 ambiguous
 data_ov027_02113a1c kind:data(any) addr:0x02113a1c
@@ -155,8 +155,8 @@ data_ov027_02113a74 kind:data(any) addr:0x02113a74 ambiguous
 data_ov027_02113a90 kind:data(any) addr:0x02113a90
 data_ov027_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov027_02113abc kind:data(any) addr:0x02113abc ambiguous
-data_ov027_02113b10 kind:data(any) addr:0x02113b10
-data_ov027_02113b1c kind:data(any) addr:0x02113b1c
+_ZTI10daSnmBth_c kind:data(any) addr:0x02113b10
+_ZTS10daSnmBth_c kind:data(any) addr:0x02113b1c
 SnowmanBreath_SpawnInfo kind:data(any) addr:0x02113b2c ambiguous
 _ZTV13SnowmanBreath kind:data(any) addr:0x02113b50
 data_ov027_02113b7c kind:data(any) addr:0x02113b7c ambiguous

@@ -130,11 +130,11 @@ _ZN3OAM21CONTROLLER_MODE_TEXTSE kind:data(any) addr:0x020ad04c ambiguous
 _ZN3OAM15TOUCH_MODE_TEXTE kind:data(any) addr:0x020ad058
 _ZN3OAM18STANDARD_MODE_TEXTE kind:data(any) addr:0x020ad188
 _ZN3OAM19DUAL_HAND_MODE_TEXTE kind:data(any) addr:0x020ad2d0
-data_ov001_020ad450 kind:data(any) addr:0x020ad450
-data_ov001_020ad458 kind:data(any) addr:0x020ad458
+_ZTI10dCapIcon_c kind:data(any) addr:0x020ad450
+_ZTS10dCapIcon_c kind:data(any) addr:0x020ad458
 data_ov001_020ad470 kind:data(any) addr:0x020ad470
-data_ov001_020ad478 kind:data(any) addr:0x020ad478
-data_ov001_020ad480 kind:data(any) addr:0x020ad480
+_ZTI9dThIcon_c kind:data(any) addr:0x020ad478
+_ZTS9dThIcon_c kind:data(any) addr:0x020ad480
 data_ov001_020ad494 kind:data(any) addr:0x020ad494 ambiguous
 data_ov001_020ad49c kind:data(any) addr:0x020ad49c
 data_ov001_020ad4a8 kind:data(any) addr:0x020ad4a8

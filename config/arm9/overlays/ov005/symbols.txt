@@ -31,8 +31,8 @@ data_ov005_020c22c8 kind:data(any) addr:0x020c22c8
 data_ov005_020c2310 kind:data(any) addr:0x020c2310
 data_ov005_020c23a0 kind:data(any) addr:0x020c23a0
 data_ov005_020c2440 kind:data(any) addr:0x020c2440 ambiguous
-data_ov005_020c2448 kind:data(any) addr:0x020c2448
-data_ov005_020c2454 kind:data(any) addr:0x020c2454
+_ZTI11dScMiniGm_c kind:data(any) addr:0x020c2448
+_ZTS11dScMiniGm_c kind:data(any) addr:0x020c2454
 data_ov005_020c2464 kind:data(any) addr:0x020c2464
 data_ov005_020c2490 kind:data(any) addr:0x020c2490
 _ZTV11dScMiniGm_c kind:data(any) addr:0x020c2490

@@ -80,17 +80,17 @@ data_ov090_02134100 kind:data(any) addr:0x02134100
 data_ov090_02134108 kind:data(any) addr:0x02134108
 data_ov090_02134110 kind:data(any) addr:0x02134110
 data_ov090_02134118 kind:data(any) addr:0x02134118
-data_ov090_02134120 kind:data(any) addr:0x02134120
+_ZTS9daMenbo_c kind:data(any) addr:0x02134120
 data_ov090_0213412c kind:data(any) addr:0x0213412c
-data_ov090_02134138 kind:data(any) addr:0x02134138
+_ZTI9daMenbo_c kind:data(any) addr:0x02134138
 Skeeter_SpawnInfo kind:data(any) addr:0x02134144 ambiguous
 _ZTV7Skeeter kind:data(any) addr:0x02134168
 _ZTV9daMenbo_c kind:data(any) addr:0x02134168
 data_ov090_021341e4 kind:data(any) addr:0x021341e4
 data_ov090_021341ec kind:data(any) addr:0x021341ec
-data_ov090_021341f4 kind:data(any) addr:0x021341f4
+_ZTS9daManta_c kind:data(any) addr:0x021341f4
 data_ov090_02134200 kind:data(any) addr:0x02134200
-data_ov090_0213420c kind:data(any) addr:0x0213420c
+_ZTI9daManta_c kind:data(any) addr:0x0213420c
 MantaRay_SpawnInfo kind:data(any) addr:0x02134218 ambiguous
 _ZTV8MantaRay kind:data(any) addr:0x0213423c
 data_ov090_021342b8 kind:data(any) addr:0x021342b8
@@ -98,15 +98,15 @@ data_ov090_021342c0 kind:data(any) addr:0x021342c0
 data_ov090_021342c8 kind:data(any) addr:0x021342c8
 data_ov090_021342d0 kind:data(any) addr:0x021342d0
 data_ov090_021342d8 kind:data(any) addr:0x021342d8
-data_ov090_021342e4 kind:data(any) addr:0x021342e4
-data_ov090_021342f0 kind:data(any) addr:0x021342f0
+_ZTI12daPukupuku_c kind:data(any) addr:0x021342e4
+_ZTS12daPukupuku_c kind:data(any) addr:0x021342f0
 CheepCheep_SpawnInfo kind:data(any) addr:0x02134300 ambiguous
 _ZTV10CheepCheep kind:data(any) addr:0x02134324
 _ZTV12daPukupuku_c kind:data(any) addr:0x02134324
 data_ov090_021343a0 kind:data(any) addr:0x021343a0
 data_ov090_021343a8 kind:data(any) addr:0x021343a8
 data_ov090_021343b0 kind:data(any) addr:0x021343b0
-data_ov090_021343bc kind:data(any) addr:0x021343bc
+_ZTI9daShark_c kind:data(any) addr:0x021343bc
 Shark_SpawnInfo kind:data(any) addr:0x021343c8 ambiguous
 _ZTV5Shark kind:data(any) addr:0x021343ec
 _ZTV9daShark_c kind:data(any) addr:0x021343ec

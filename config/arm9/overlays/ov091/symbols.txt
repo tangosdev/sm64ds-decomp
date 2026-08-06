@@ -109,9 +109,9 @@ __sinit_ov091_02134a30 kind:function(arm,size=0x138) addr:0x02134a30
 data_ov091_02134ba0 kind:data(any) addr:0x02134ba0
 data_ov091_02134bac kind:data(any) addr:0x02134bac
 data_ov091_02134bb8 kind:data(any) addr:0x02134bb8
-data_ov091_02134bc4 kind:data(any) addr:0x02134bc4
+_ZTI23daObjRotateUpdownLift_c kind:data(any) addr:0x02134bc4
 data_ov091_02134bd0 kind:data(any) addr:0x02134bd0
-data_ov091_02134bdc kind:data(any) addr:0x02134bdc
+_ZTS23daObjRotateUpdownLift_c kind:data(any) addr:0x02134bdc
 RotatingUpDownPlatform_SpawnInfo kind:data(any) addr:0x02134bf8 ambiguous
 RotatingUpDownPlatformUtm_SpawnInfo kind:data(any) addr:0x02134c14 ambiguous
 data_ov091_02134c30 kind:data(any) addr:0x02134c30
@@ -125,14 +125,14 @@ data_ov091_02134e44 kind:data(any) addr:0x02134e44
 data_ov091_02134e4c kind:data(any) addr:0x02134e4c
 data_ov091_02134e54 kind:data(any) addr:0x02134e54
 data_ov091_02134e5c kind:data(any) addr:0x02134e5c
-data_ov091_02134e64 kind:data(any) addr:0x02134e64
-data_ov091_02134e70 kind:data(any) addr:0x02134e70
+_ZTI13daLinelift2_c kind:data(any) addr:0x02134e64
+_ZTS13daLinelift2_c kind:data(any) addr:0x02134e70
 ArrowPathLift_SpawnInfo kind:data(any) addr:0x02134e80 ambiguous
 SquareMetalNetLift_SpawnInfo kind:data(any) addr:0x02134e9c ambiguous
 _ZTV22RotatingUpDownPlatform kind:data(any) addr:0x02134ec0
 _ZTV13daLinelift2_c kind:data(any) addr:0x02134ec0
-data_ov091_02134f40 kind:data(any) addr:0x02134f40
-data_ov091_02134f4c kind:data(any) addr:0x02134f4c
+_ZTI17daObjSimpleLift_c kind:data(any) addr:0x02134f40
+_ZTS17daObjSimpleLift_c kind:data(any) addr:0x02134f4c
 SlidingPlatformBdw_SpawnInfo kind:data(any) addr:0x02134f60 ambiguous
 SlidingPlatformBsWide_SpawnInfo kind:data(any) addr:0x02134f7c ambiguous
 SlidingPlatformBsLong_SpawnInfo kind:data(any) addr:0x02134f98 ambiguous
@@ -145,14 +145,14 @@ data_ov091_02135028 kind:data(any) addr:0x02135028
 data_ov091_0213502c kind:data(any) addr:0x0213502c
 _ZTV17SlidingPlatformWf kind:data(any) addr:0x02135080
 data_ov091_02135100 kind:data(any) addr:0x02135100
-data_ov091_02135120 kind:data(any) addr:0x02135120
-data_ov091_0213512c kind:data(any) addr:0x0213512c
+_ZTS7daDsn_c kind:data(any) addr:0x02135120
+_ZTI7daDsn_c kind:data(any) addr:0x0213512c
 data_ov091_02135138 kind:data(any) addr:0x02135138
 Thwomp_SpawnInfo kind:data(any) addr:0x02135150 ambiguous
 _ZTV6Thwomp kind:data(any) addr:0x02135174
 data_ov091_021351fc kind:data(any) addr:0x021351fc
-data_ov091_0213527c kind:data(any) addr:0x0213527c
-data_ov091_02135288 kind:data(any) addr:0x02135288
+_ZTI11daObjPile_c kind:data(any) addr:0x0213527c
+_ZTS11daObjPile_c kind:data(any) addr:0x02135288
 Stump_SpawnInfo kind:data(any) addr:0x02135298 ambiguous
 data_ov091_021352bc kind:data(any) addr:0x021352bc
 data_ov091_0213533c kind:data(any) addr:0x0213533c
@@ -161,8 +161,8 @@ data_ov091_0213534c kind:data(any) addr:0x0213534c
 data_ov091_02135354 kind:data(any) addr:0x02135354
 data_ov091_0213535c kind:data(any) addr:0x0213535c
 data_ov091_02135364 kind:data(any) addr:0x02135364
-data_ov091_0213536c kind:data(any) addr:0x0213536c
-data_ov091_02135378 kind:data(any) addr:0x02135378
+_ZTI10daHyuhyu_c kind:data(any) addr:0x0213536c
+_ZTS10daHyuhyu_c kind:data(any) addr:0x02135378
 Fwoosh_SpawnInfo kind:data(any) addr:0x02135388 ambiguous
 _ZTV5Stump kind:data(any) addr:0x021353ac
 _ZTV10daHyuhyu_c kind:data(any) addr:0x021353ac

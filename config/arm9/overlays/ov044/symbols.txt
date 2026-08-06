@@ -28,8 +28,8 @@ data_ov044_02111548 kind:data(any) addr:0x02111548 ambiguous
 data_ov044_0211155c kind:data(any) addr:0x0211155c ambiguous
 data_ov044_02111560 kind:data(any) addr:0x02111560 ambiguous
 data_ov044_0211159c kind:data(any) addr:0x0211159c ambiguous
-data_ov044_021115bc kind:data(any) addr:0x021115bc
-data_ov044_021115c8 kind:data(any) addr:0x021115c8
+_ZTI19daObjKb1Billboard_c kind:data(any) addr:0x021115bc
+_ZTS19daObjKb1Billboard_c kind:data(any) addr:0x021115c8
 OrangeBallBillboard_SpawnInfo kind:data(any) addr:0x021115e0 ambiguous
 data_ov044_021115e4 kind:data(any) addr:0x021115e4 ambiguous
 data_ov044_021115f4 kind:data(any) addr:0x021115f4 ambiguous

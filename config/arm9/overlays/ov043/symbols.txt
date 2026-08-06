@@ -77,22 +77,22 @@ data_ov043_021121c0 kind:data(any) addr:0x021121c0 ambiguous
 data_ov043_021121dc kind:data(any) addr:0x021121dc ambiguous
 data_ov043_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 data_ov043_02112258 kind:data(any) addr:0x02112258 ambiguous
-data_ov043_02112270 kind:data(any) addr:0x02112270
-data_ov043_0211227c kind:data(any) addr:0x0211227c
+_ZTI19daObjKm1_Ukishima_c kind:data(any) addr:0x02112270
+_ZTS19daObjKm1_Ukishima_c kind:data(any) addr:0x0211227c
 DiamondLift_SpawnInfo kind:data(any) addr:0x02112294 ambiguous
 data_ov043_0211229c kind:data(any) addr:0x0211229c ambiguous
 data_ov043_021122b8 kind:data(any) addr:0x021122b8
 data_ov043_02112320 kind:data(any) addr:0x02112320 ambiguous
-data_ov043_02112338 kind:data(any) addr:0x02112338
+_ZTI21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112338
 data_ov043_02112344 kind:data(any) addr:0x02112344
-data_ov043_02112350 kind:data(any) addr:0x02112350
+_ZTS21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112350
 data_ov043_02112358 kind:data(any) addr:0x02112358 ambiguous
 RickshawBdw_SpawnInfo kind:data(any) addr:0x02112368 ambiguous
 data_ov043_0211238c kind:data(any) addr:0x0211238c
 data_ov043_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov043_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov043_02112404 kind:data(any) addr:0x02112404 ambiguous
-data_ov043_0211240c kind:data(any) addr:0x0211240c
+_ZTI17daObjKm1_Kuruma_c kind:data(any) addr:0x0211240c
 data_ov043_02112418 kind:data(any) addr:0x02112418
 data_ov043_0211241c kind:data(any) addr:0x0211241c ambiguous
 data_ov043_02112424 kind:data(any) addr:0x02112424
@@ -106,8 +106,8 @@ data_ov043_02112494 kind:data(any) addr:0x02112494 ambiguous
 data_ov043_021124ac kind:data(any) addr:0x021124ac ambiguous
 data_ov043_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 data_ov043_021124d4 kind:data(any) addr:0x021124d4 ambiguous
-data_ov043_021124dc kind:data(any) addr:0x021124dc
-data_ov043_021124e8 kind:data(any) addr:0x021124e8
+_ZTI17daObjKm1_Dorifu_c kind:data(any) addr:0x021124dc
+_ZTS17daObjKm1_Dorifu_c kind:data(any) addr:0x021124e8
 data_ov043_021124ec kind:data(any) addr:0x021124ec ambiguous
 data_ov043_021124f8 kind:data(any) addr:0x021124f8 ambiguous
 StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc ambiguous

@@ -36,8 +36,8 @@ data_ov055_02111a78 kind:data(any) addr:0x02111a78 ambiguous
 data_ov055_02111a90 kind:data(any) addr:0x02111a90
 data_ov055_02111a94 kind:data(any) addr:0x02111a94
 data_ov055_02111a9c kind:data(any) addr:0x02111a9c
-data_ov055_02111aa4 kind:data(any) addr:0x02111aa4
-data_ov055_02111ab0 kind:data(any) addr:0x02111ab0
+_ZTS9daLuigi_c kind:data(any) addr:0x02111aa4
+_ZTI9daLuigi_c kind:data(any) addr:0x02111ab0
 MirrorLuigi_SpawnInfo kind:data(any) addr:0x02111abc ambiguous
 data_ov055_02111ad4 kind:data(any) addr:0x02111ad4 ambiguous
 _ZTV11MirrorLuigi kind:data(any) addr:0x02111ae0

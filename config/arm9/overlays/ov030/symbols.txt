@@ -103,14 +103,14 @@ data_ov030_02115094 kind:data(any) addr:0x02115094
 data_ov030_0211510c kind:data(any) addr:0x0211510c
 data_ov030_021151ec kind:data(any) addr:0x021151ec
 data_ov030_02115514 kind:data(any) addr:0x02115514
-data_ov030_02115934 kind:data(any) addr:0x02115934
-data_ov030_02115940 kind:data(any) addr:0x02115940
+_ZTI13daObjHmBskt_c kind:data(any) addr:0x02115934
+_ZTS13daObjHmBskt_c kind:data(any) addr:0x02115940
 UkikiCage_SpawnInfo kind:data(any) addr:0x02115950
 data_ov030_02115974 kind:data(any) addr:0x02115974
 data_ov030_021159f4 kind:data(any) addr:0x021159f4
-data_ov030_021159f8 kind:data(any) addr:0x021159f8
+_ZTI15daObjHmMaruta_c kind:data(any) addr:0x021159f8
 data_ov030_02115a04 kind:data(any) addr:0x02115a04
-data_ov030_02115a10 kind:data(any) addr:0x02115a10
+_ZTS15daObjHmMaruta_c kind:data(any) addr:0x02115a10
 RollingLogTtm_SpawnInfo kind:data(any) addr:0x02115a24
 _ZTV9UkikiCage kind:data(any) addr:0x02115a48
 data_ov030_02115ac8 kind:data(any) addr:0x02115ac8
@@ -135,8 +135,8 @@ data_ov030_02115b58 kind:data(any) addr:0x02115b58
 data_ov030_02115b60 kind:data(any) addr:0x02115b60
 data_ov030_02115b68 kind:data(any) addr:0x02115b68
 data_ov030_02115b70 kind:data(any) addr:0x02115b70
-data_ov030_02115b78 kind:data(any) addr:0x02115b78
-data_ov030_02115b84 kind:data(any) addr:0x02115b84
+_ZTS7daMky_c kind:data(any) addr:0x02115b78
+_ZTI7daMky_c kind:data(any) addr:0x02115b84
 UkikiThief_SpawnInfo kind:data(any) addr:0x02115b90
 UkikiStar_SpawnInfo kind:data(any) addr:0x02115bac ambiguous
 data_ov030_02115bc8 kind:data(any) addr:0x02115bc8

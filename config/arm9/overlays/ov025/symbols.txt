@@ -111,16 +111,16 @@ data_ov025_021135d4 kind:data(any) addr:0x021135d4 ambiguous
 data_ov025_021135f4 kind:data(any) addr:0x021135f4 ambiguous
 data_ov025_021136d4 kind:data(any) addr:0x021136d4 ambiguous
 data_ov025_021136f4 kind:data(any) addr:0x021136f4 ambiguous
-data_ov025_02113724 kind:data(any) addr:0x02113724
-data_ov025_02113730 kind:data(any) addr:0x02113730
+_ZTS7daDgr_c kind:data(any) addr:0x02113724
+_ZTI7daDgr_c kind:data(any) addr:0x02113730
 data_ov025_0211373c kind:data(any) addr:0x0211373c ambiguous
 data_ov025_02113760 kind:data(any) addr:0x02113760
-data_ov025_021137e0 kind:data(any) addr:0x021137e0
+_ZTS7daDkk_c kind:data(any) addr:0x021137e0
 data_ov025_021137e4 kind:data(any) addr:0x021137e4 ambiguous
-data_ov025_021137ec kind:data(any) addr:0x021137ec
-data_ov025_021137f8 kind:data(any) addr:0x021137f8
+_ZTI7daDkk_c kind:data(any) addr:0x021137ec
+_ZTI11daDsnBase_c kind:data(any) addr:0x021137f8
 data_ov025_02113800 kind:data(any) addr:0x02113800 ambiguous
-data_ov025_02113804 kind:data(any) addr:0x02113804
+_ZTS11daDsnBase_c kind:data(any) addr:0x02113804
 data_ov025_02113814 kind:data(any) addr:0x02113814
 data_ov025_02113820 kind:data(any) addr:0x02113820 ambiguous
 Grindel_SpawnInfo kind:data(any) addr:0x0211382c ambiguous
@@ -128,18 +128,18 @@ data_ov025_02113850 kind:data(any) addr:0x02113850
 data_ov025_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov025_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov025_021138c4 kind:data(any) addr:0x021138c4 ambiguous
-data_ov025_021138d0 kind:data(any) addr:0x021138d0
+_ZTI14daObjDpBrock_c kind:data(any) addr:0x021138d0
 data_ov025_021138d8 kind:data(any) addr:0x021138d8 ambiguous
-data_ov025_021138dc kind:data(any) addr:0x021138dc
+_ZTS14daObjDpBrock_c kind:data(any) addr:0x021138dc
 PyramidStep_SpawnInfo kind:data(any) addr:0x021138f0 ambiguous
 data_ov025_021138fc kind:data(any) addr:0x021138fc ambiguous
 _ZTV11PyramidStep kind:data(any) addr:0x02113914
 _ZTV14daObjDpBrock_c kind:data(any) addr:0x02113914
 data_ov025_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov025_02113980 kind:data(any) addr:0x02113980 ambiguous
-data_ov025_02113994 kind:data(any) addr:0x02113994
+_ZTI10daDpLift_c kind:data(any) addr:0x02113994
 data_ov025_02113998 kind:data(any) addr:0x02113998 ambiguous
-data_ov025_021139a0 kind:data(any) addr:0x021139a0
+_ZTS10daDpLift_c kind:data(any) addr:0x021139a0
 PyramidLift_SpawnInfo kind:data(any) addr:0x021139b0 ambiguous
 _ZTV11PyramidLift kind:data(any) addr:0x021139d4
 data_ov025_021139f4 kind:data(any) addr:0x021139f4 ambiguous

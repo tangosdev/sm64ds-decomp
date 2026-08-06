@@ -84,8 +84,8 @@ data_ov013_0211208c kind:data(any) addr:0x0211208c ambiguous
 data_ov013_021120a4 kind:data(any) addr:0x021120a4 ambiguous
 data_ov013_021120bc kind:data(any) addr:0x021120bc ambiguous
 data_ov013_021120d8 kind:data(any) addr:0x021120d8 ambiguous
-data_ov013_021120e0 kind:data(any) addr:0x021120e0
-data_ov013_021120ec kind:data(any) addr:0x021120ec
+_ZTI18daObjClockHuriko_c kind:data(any) addr:0x021120e0
+_ZTS18daObjClockHuriko_c kind:data(any) addr:0x021120ec
 data_ov013_021120f8 kind:data(any) addr:0x021120f8 ambiguous
 ClockPaintingPendulum_SpawnInfo kind:data(any) addr:0x02112104 ambiguous
 data_ov013_02112118 kind:data(any) addr:0x02112118 ambiguous
@@ -94,8 +94,8 @@ data_ov013_02112138 kind:data(any) addr:0x02112138 ambiguous
 data_ov013_02112158 kind:data(any) addr:0x02112158 ambiguous
 data_ov013_02112178 kind:data(any) addr:0x02112178 ambiguous
 data_ov013_02112198 kind:data(any) addr:0x02112198 ambiguous
-data_ov013_021121a4 kind:data(any) addr:0x021121a4
-data_ov013_021121b0 kind:data(any) addr:0x021121b0
+_ZTI12daObjClock_c kind:data(any) addr:0x021121a4
+_ZTS12daObjClock_c kind:data(any) addr:0x021121b0
 data_ov013_021121b8 kind:data(any) addr:0x021121b8 ambiguous
 ClockPaintingHandLong_SpawnInfo kind:data(any) addr:0x021121c0 ambiguous
 ClockPaintingHandShort_SpawnInfo kind:data(any) addr:0x021121dc ambiguous

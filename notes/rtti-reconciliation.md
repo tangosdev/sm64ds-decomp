@@ -163,7 +163,76 @@ positive dressed as a finding. Naming that one vtable settles both rows either w
 Worth noting for anyone working `SphereClsn`: the ROM says it has **three** bases, and the
 tree models one.
 
-## 5. What is not covered
+## 5. The symbols are now in config
+
+`tools/rtti_symbols.py` renamed the anonymous `data_<addr>` placeholders sitting on
+those records and their name strings to the Itanium symbols they actually are:
+
+    record at 0x02086d70  ->  _ZTI7fBase_c
+    string at 0x02086e60  ->  _ZTS7fBase_c
+
+The mangled suffix is the raw string the ROM stores, verbatim -- that string *is* the
+Itanium type name, so `_ZTS` + it is correct with no re-mangling, and nested names and
+the `St` substitution fall out for free.
+
+**848 of 858 renamed; 10 deferred.** Result:
+
+| gate | outcome |
+|---|---|
+| ROM rebuild | **byte-identical**, `d1506e90…c478e8` before and after |
+| module fidelity | 106/106 exact, 100.000000% (unchanged) |
+| `port_refcheck` | 394 references, 0 stale |
+| `evidence_hierarchy` `symbols_zti` | **0 -> 426** |
+
+426 rather than 429 because 3 of the deferred ten are `_ZTI` records; the other 7 are
+`_ZTS` strings. Note `evidence_hierarchy`'s `rtti` *edge* counter is still 0 and that is
+correct: `symbols.txt` carries names, not base pointers. Rank-0 edge evidence needs
+`build/rtti.json`, which is pass 4's job, not this one's.
+
+### The ten deferred, and why
+
+`tools/import_symbols.py` established the rule: a data symbol referenced by name from a
+matched source is deferred, because renaming it means rewriting those sources, which
+drags every referencing file into the PR and turns `validate` red even though the rename
+is byte-safe.
+
+For some of these ten, deferral is more than procedural -- renaming would assert
+something false. `0x0211396c` exists in **both** ov018 and ov032. The file
+`src/__sinit_ov018_02112c80.cpp` -- an ov018 file -- refers to it by ov032's spelling,
+`data_ov032_0211396c`. Renaming that to `_ZTS14daObjTdWater_c` would state that an ov018
+reference points at ov032's typeinfo string. It may; nothing here proves it. This is
+`notes/overlay-ambiguous-references.md` territory and wants
+`tools/overlay_residency.py`, one address at a time.
+
+    data_ov032_0211396c  ov032  _ZTS14daObjTdWater_c    <- ambiguous with ov018
+    data_ov033_0211233c  ov033  _ZTI13daObjTtFuta_c
+    data_ov036_02113a60  ov036  _ZTS16daObjRcBuranko_c  <- include/decl_common.h
+    data_ov036_02113c00  ov036  _ZTS14daObjRc_Hane_c    <- include/decl_common.h
+    data_ov036_02113cb4  ov036  _ZTI16daObjRc_Tikuwa_c
+    data_ov036_02113cc0  ov036  _ZTS16daObjRc_Tikuwa_c
+    data_ov043_02112424  ov043  _ZTS17daObjKm1_Kuruma_c <- include/decl_common.h
+    data_ov045_02112cb0  ov045  _ZTI16daObjKm2_Agaru_c
+    data_ov052_021125b8  ov052  _ZTS14daObjEmmYuka_c
+    data_ov090_021343b0  ov090  _ZTS9daShark_c
+
+Three touch `include/decl_common.h`, which has ~1780 consumers -- over the ~200-consumer
+threshold at which AGENTS.md refuses auto-validation. Those need human review regardless
+of the ambiguity question.
+
+References from `notes/` and `progress/` were checked and deliberately ignored: the
+training corpora and worklists mention these names, but they are not build inputs.
+
+    python tools/rtti_symbols.py --report      # what would change, and the deferrals
+    python tools/rtti_symbols.py --apply
+    python tools/rtti_symbols.py --revert --apply
+
+The undo reconstructs its map from `build/rtti.json` plus dsd's placeholder naming
+convention rather than from the tree. The first version derived it from `plan()`, which
+finds work by looking for `data_` placeholders -- so after `--apply` there were none, and
+the undo silently did nothing and exited 0. Round-trip is now tested: revert restores the
+tree exactly, re-apply reproduces all 848.
+
+## 6. What is not covered
 
 RTTI gives class names, the inheritance graph, and multiple-inheritance base offsets. It does
 not give field names, field types, field offsets, or method names.
