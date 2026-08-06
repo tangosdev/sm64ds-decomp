@@ -479,3 +479,52 @@ before reading a flat size as no progress.
 **Still to decode:** the result of `func_0205380c`, then the squared-distance classify (the
 `smull`/`>>16` chain feeding the min/max accumulators) and the three-way floor/wall/und
 branch that drives `func_02037fd4`, `func_0203798c` and the `0x70` flag bits.
+
+### The classify, and the whole hit model closes (2026-08-06)
+
+Two of the three remaining unknowns were already named in the tree, not new work:
+
+* `func_0205380c` is **`DotVec3`** (`config/arm9/symbols.txt`), so the `unk_35` branch is
+  `DotVec3(faceNormal << 2, &this->unk_38)` — a dot against the collider's stored axis, which
+  is exactly the preferred-direction reading.
+* `func_02039794` is **matched source** and is three lines:
+
+```c
+int func_02039794(int normalY) {
+    if (normalY >  0x600) return 0;   /* FLOOR   -- normal.y > 0.375 */
+    if (normalY > -0xccc) return 1;   /* WALL    -- steep            */
+    return 2;                          /* UND     -- ceiling/underside */
+}
+```
+
+With 1.0 == 0x1000 those thresholds are +0.375 and -0.8. **That return value is the whole
+classification**, and it lines up one-for-one with what the wrappers told us:
+
+| class | result slot | flag bit | wrapper call |
+|---|---|---|---|
+| 0 floor | 0x74 | 4 | `SetFloorResult` |
+| 1 wall | 0x9c | 8 | `func_02037888` |
+| 2 und | 0xc4 | 0x10 | `func_0203782c` / `func_0203798c` |
+
+The accept path, in order:
+
+```
+sub  r0, rsc, faceDot ; str [sp,#0x9c]     penetration depth along the face normal
+bl   func_020396dc    ; str [sp,#0xa0]     triID
+ldr  r3,[r3,#0xc] ; blx r3                 GetSurfaceInfo -- REAL virtual call, slot 3
+bl   0x2037dcc                             SurfaceInfo::CopyNormalTo -> sp+0x180
+ldr  r0,[sp,#0x184] ; bl 0x2039794         classify on normal.Y
+```
+
+`sp+0x9c` and `sp+0x184`/`0x188` are precisely the operands feeding the `smull` / `>>16`
+chains that write the min/max accumulators, so the accumulated quantity is
+**depth x faceNormal — the pushback vector**, min/maxed per axis and handed to
+`func_02037a6c` at the end. That closes the model end to end: reject chain -> depth ->
+classify -> record into the matching slot, set the matching flag bit, accumulate the pushback
+extent.
+
+The virtual call is the twin's documented lever again: slot 3 via `[vtable+0xc]`, and it has
+to be a genuine C++ virtual call or `this` comes from the callee-saved copy instead of r0.
+
+Draft is **0x58c** against 0x1bc8. Remaining is the per-class record and the min/max
+accumulate — both now fully specified rather than guessed.

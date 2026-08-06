@@ -13,10 +13,15 @@
 #include "MeshCollider.h"
 
 struct ClsnResult { u8 raw[0x28]; };
+struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
 extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
-extern "C" s32 func_0205380c(const s32 *a, const void *b);
+extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
+extern "C" s16 func_020396dc(MeshCollider *self, KCL_Tri *tri);
+extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
+extern "C" s32 func_02039794(s32 normalY);
+extern SurfaceInfo data_020a0cec;
 
 /* The sphere shape sub-object at 0x38. The destructor stores a third vtable
    here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
@@ -174,6 +179,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         s32 dx, dy, dz;
                         s32 faceDot;
                         s32 nrm[3];
+                        s32 depth;
+                        s16 triID;
+                        s32 cls;
+                        Vector3 sn;
 
                         dx = rawX - vtx[0];
                         dy = rawY - vtx[1];
@@ -204,11 +213,33 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            func_0205380c(nrm, &unk_38);
-                            /* TODO: the test on its result. */
+                            if (DotVec3(nrm, (const Vector3 *)&unk_38) > unk_44) {
+                                if (faceDot < -f->unk_10) continue;
+                            } else {
+                                if (faceDot < -0xa0000) continue;
+                            }
+                        } else {
+                            if (faceDot < -f->unk_10) continue;
                         }
 
-                        /* TODO: the squared-distance classify and the hit path. */
+                        /* Accepted. The overlap along the face normal is what gets
+                           accumulated; depth * normal is the pushback vector. */
+                        depth = rsc - faceDot;
+                        triID = func_020396dc(this, tri);
+
+                        /* A REAL virtual call -- slot 3. Same lever as
+                           MeshCollider::GetSurfaceInfo and the RaycastGround twin:
+                           mwccarm's dispatch reads `this` from r0, a hand-rolled
+                           one reads it from the callee-saved copy. */
+                        GetSurfaceInfo(triID, data_020a0cec);
+                        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&data_020a0cec, &sn);
+
+                        /* 0 = floor, 1 = wall, 2 = underside -- and those select
+                           the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
+                           flag bits respectively. */
+                        cls = func_02039794(sn.y);
+
+                        /* TODO: per-class record + the min/max accumulate. */
                     }
                 }
 
