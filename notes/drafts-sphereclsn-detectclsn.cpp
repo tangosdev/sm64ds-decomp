@@ -62,6 +62,34 @@ static inline s32 SqrtRaw(u64 x)
 #define EDGENORMAL_DOT(a, b) \
     (MUL10((a)[0], (b)[0]) + MUL10((a)[1], (b)[1]) + MUL10((a)[2], (b)[2]))
 
+/* The ROUNDED Fix12 multiply -- `smull` / `adds #0x800` / `adc` / `lsr #0xc` /
+   `orr lsl #20`. The wall block uses this and nothing else does: the collider's
+   axis is Fix12i where the edge normals are 0x400-scale, so MUL10 is wrong there
+   and this is wrong everywhere else. */
+#define FX12(a, b) ((s32)((((s64)(a) * (b)) + 0x800) >> 12))
+
+/* One vertex of the triangle, recovered from the KCL prism: the prism stores a
+   position, a face normal, three edge normals and a length, and the vertex is
+   `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
+   through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
+   does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
+   fdiv's Fix12 result reconciled with the 0x400 normal scale. */
+#define KCL_VERTEX(out, ea)                                                   \
+    cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
+    cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
+    cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
+    cd = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);  \
+    if (func_020397dc(cd)) continue;                                          \
+    ck = _ZN4cstd4fdivEii(tri->length, cd) >> 2;                              \
+    (out)[0] = tp[0] + (s32)(((s64)cr[0] * ck) >> 14);                        \
+    (out)[1] = tp[1] + (s32)(((s64)cr[1] * ck) >> 14);                        \
+    (out)[2] = tp[2] + (s32)(((s64)cr[2] * ck) >> 14);
+
+/* That vertex's offset from the sphere centre, projected on the collider axis. */
+#define AXIS_DOT(v) (FX12((v)[0] - c->x, unk_28)                              \
+                   + FX12((v)[1] - c->y, unk_2c)                              \
+                   + FX12((v)[2] - c->z, unk_30))
+
 /* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
    point's coefficients in that basis, then hand the offset to the vertex tail.
@@ -123,7 +151,13 @@ struct SphereClsn {
     Fix12i     radius;       /* 0x48 */
     u8         pad_04c[0x24];
     u8         flags;        /* 0x70 - 1 hit, 4 floor, 8 wall, 0x10 und */
-    u8         pad_071[0x8b];
+    /* 0x71 + 0x8b lands unk_100 at 0xfc, not 0x100 -- an off-by-4 that was
+       harmless only while nothing below 0x100 was referenced. The wall block
+       reads 0xec, so the padding is now spelled out per field. */
+    u8         pad_071[0x7b];
+    s32        unk_ec;       /* 0xec  - slab half-width, and the wall block's
+                                        own enable: <= 0 skips it entirely */
+    u8         pad_0f0[0x10];
     s32        unk_100;      /* 0x100 - the best floor normal.y so far */
     u8         pad_104[0x4];
     s32        unk_108;      /* 0x108 - a normal.y floor the hit must clear */
@@ -471,6 +505,46 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 
                     face:
                         if (sphere.unk_108 < sn.y) continue;
+
+                        /* Walls only, and only once the cheap tests have accepted
+                           the prism. Rebuild the triangle's three real vertices --
+                           the stored position IS the first one, the other two come
+                           off the two crosses -- and reject the contact when all
+                           three sit inside a slab about the sphere centre measured
+                           along the collider's axis.
+
+                           The slab is NOT symmetric: the bounds are
+                           -(unk_ec + radius) and (unk_ec - radius), built at
+                           0x01ffcfa8 by `add r1,r6,r3` then `rsb r2,r1,#0` and
+                           then re-formed by `sub r1,r6,r3`. And the sense is
+                           wholly-INSIDE rejects -- the last compare is
+                           `ble 0x1ffd314`, the reject -- so a triangle that
+                           escapes the slab in any component keeps its hit. */
+                        if (sphere.unk_ec > 0 && cls == 1
+                                && !(tri->length & 0xf0000000)) {
+                            s16 cr[3];
+                            s32 tp[3], vb[3], vc[3];
+                            s32 cd, ck, lo, hi;
+
+                            tp[0] = vtx[0] << 6;   /* full Fix12i, not 1/64 */
+                            tp[1] = vtx[1] << 6;
+                            tp[2] = vtx[2] << 6;
+
+                            KCL_VERTEX(vb, en2)
+                            KCL_VERTEX(vc, en1)
+
+                            lo = -(sphere.unk_ec + sphere.radius);
+                            hi =   sphere.unk_ec - sphere.radius;
+
+                            if (AXIS_DOT(tp) >= lo && AXIS_DOT(tp) <= hi
+                             && AXIS_DOT(vb) >= lo && AXIS_DOT(vb) <= hi
+                             && AXIS_DOT(vc) >= lo && AXIS_DOT(vc) <= hi)
+                                continue;
+                        }
+                        /* 0x01ffcfe4: a face contact is kind 1, where the sqrt
+                           tail defaulted the edge case to 2 and the vertex tail
+                           set 3. */
+                        if (!contactKind) contactKind = 1;
 
                         func_02037fd4(&sphere.result, triID, &data_020a0cec);
                         sphere.flags |= 1;
