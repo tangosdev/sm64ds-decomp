@@ -32,20 +32,33 @@ conflict.  Reporting that number would have been worse than reporting nothing.
 
 So the name map is **extended structurally, then corroborated**.  If the vtable join
 already proves Goomba == `daKrb_c`, and the tree believes `Goomba : CapEnemy` while the
-ROM says `daKrb_c : dCapEnemy_c`, that is one vote for CapEnemy == `dCapEnemy_c`.  An
-alias is accepted only when every vote agrees; contradicted ones are reported, never
-silently picked.  Aliases carry their vote count so a 1-vote alias can be told from a
-55-vote one.
+ROM says `daKrb_c : dCapEnemy_c`, that is one vote for CapEnemy == `dCapEnemy_c`.
+Aliases are taken by plurality with a margin (see the vote block below), not unanimity.
+
+An alias that rests on a *single* vote is circular: the one edge that created it is the
+same edge it then validates, so the row is guaranteed to come out "agree" no matter what
+the header says.  Such a row is reported `unproven_name`, not `agree`.  An alias counts
+as corroborated when either the vtable join independently proves the same pairing, or at
+least two distinct children voted for it.  Every row carries `proven_by` so a
+vtable-proven match can be told from one resting on an alias, and downstream work does
+not read a tautology as evidence.
 
 Verdicts
 --------
 agree              tree's base == ROM's base (after name translation)
-agree_primary_only ROM has several bases, tree has the first right and omits the rest
-disagree           tree names a different base -- the actionable bucket
+agree_primary_only ROM has several bases; tree has the offset-0 one and omits the rest
+flattened          tree named a true *ancestor*, not the immediate base
+disagree           tree names a class that is not on the ROM ancestor chain at all
+unproven_name      tree's base name has no corroborated ROM counterpart
 no_belief          tree knows the class but evidence_hierarchy placed no base for it
 unknown_class      no _ZTV symbol: the tree has never named this class
 root_both          ROM says root, tree says root
 root_rom_only      ROM says root, tree claims a base -- the tree invented an edge
+
+Note `agree_primary_only` keys on the base at **offset 0**, not the first in the record's
+list.  vmi base order is not offset order: `dExtAnmModel_c` lists dExtFrameCtrl_c (offset
+80) before dExtSimpleModel_c (offset 0).  Testing list position put that row in plain
+`agree` while the tree was in fact missing an entire base.
 """
 
 from __future__ import annotations
@@ -164,6 +177,15 @@ def build(rtti_path, eh_path):
     stats_alias["aliases_inferred_from_edges"] = len(alias)
     stats_alias["aliases_contested_and_rejected"] = len(contested)
 
+    # An alias is corroborated when it does not rest solely on the single edge it
+    # will then be used to judge.  Two independent sources qualify: the vtable join
+    # proving the same pairing outright, or >=2 distinct children voting for it.
+    vtable_proven_pairs = {(tn, rom_name[k]) for k, tn in tree_name.items()}
+    corroborated = {tn for tn, (rn, n) in alias.items()
+                    if n >= 2 or (tn, rn) in vtable_proven_pairs}
+    stats_alias["aliases_corroborated"] = len(corroborated)
+    stats_alias["aliases_single_vote_uncorroborated"] = len(alias) - len(corroborated)
+
     # ---- ROM ancestor sets, for telling "flattened" from "wrong" -----------
     rom_parents = {k: [e["base_key"] for e in v] for k, v in parents.items()}
 
@@ -189,10 +211,21 @@ def build(rtti_path, eh_path):
     translatable = set(tree_name.values()) | set(alias) | rom_names_all
 
     def matches(believed, base_key):
+        """(matched?, how) -- 'vtable' when the join proves it, else 'alias(N)'."""
         if believed in names_for(base_key):
-            return True
+            return True, "vtable"
         a = alias.get(believed)
-        return bool(a and a[0] == rom_name[base_key])
+        if a and a[0] == rom_name[base_key]:
+            return True, "alias(%d)" % a[1]
+        return False, None
+
+    def corroborated_match(believed, base_key):
+        ok, how = matches(believed, base_key)
+        if not ok:
+            return False, None
+        if how == "vtable" or believed in corroborated:
+            return True, how
+        return False, "uncorroborated"      # single-vote alias: circular
 
     stats = collections.Counter()
     rows = []
@@ -203,6 +236,7 @@ def build(rtti_path, eh_path):
         rom_bases = [e["base_key"] for e in edges]
         rom_base_names = [rom_name[b] for b in rom_bases]
 
+        proven_by = None
         if tn is None:
             verdict = "unknown_class"
             believed = None
@@ -213,27 +247,41 @@ def build(rtti_path, eh_path):
                 verdict = "root_both" if believed is None else "root_rom_only"
             elif believed is None:
                 verdict = "no_belief"
-            elif matches(believed, rom_bases[0]) and len(rom_bases) > 1:
-                verdict = "agree_primary_only"
-            elif any(matches(believed, b) for b in rom_bases):
-                verdict = "agree"
-            elif believed not in translatable:
-                # The tree's base name has no proven ROM counterpart, so nothing
-                # can be concluded either way.  `SphereClsn : BgCh` lands here:
-                # include/BgCh.h exists, but dBgCh's vtable (0x020991d8) is still
-                # an unnamed data_ placeholder, so no evidence chain reaches from
-                # "BgCh" to `dBgCh`.  Calling that a disagreement would be a
-                # false positive dressed as a finding; Phase 1 naming the vtable
-                # resolves it either way.
-                verdict = "unproven_name"
             else:
-                # Is the tree's base a true ancestor, just not the immediate one?
-                anc = rom_ancestors(key)
-                spelled = {believed}
-                a = alias.get(believed)
-                if a:
-                    spelled.add(a[0])
-                verdict = "flattened" if (spelled & anc) else "disagree"
+                hit = [(b,) + corroborated_match(believed, b) for b in rom_bases]
+                good = [h for h in hit if h[1]]
+                if good:
+                    proven_by = good[0][2]
+                    # The primary base is the one at OFFSET 0, not edges[0]: vmi
+                    # base order is not offset order.  dExtAnmModel_c lists
+                    # dExtFrameCtrl_c (offset 80) before dExtSimpleModel_c
+                    # (offset 0), so keying on list position hid a row where the
+                    # tree is missing an entire base.
+                    zero = [e["base_key"] for e in edges if e.get("offset", 0) == 0]
+                    primary = zero[0] if zero else rom_bases[0]
+                    pm, _how = corroborated_match(believed, primary)
+                    verdict = ("agree_primary_only"
+                               if (pm and len(rom_bases) > 1) else "agree")
+                elif any(h[2] == "uncorroborated" for h in hit):
+                    # The only thing that would make this match is a single-vote
+                    # alias derived from this very edge: a tautology, not evidence.
+                    verdict = "unproven_name"
+                    proven_by = "uncorroborated_alias"
+                elif believed not in translatable:
+                    # No evidence chain reaches from the tree's name to any ROM
+                    # class.  `SphereClsn : BgCh` lands here -- include/BgCh.h
+                    # exists, but dBgCh's vtable (0x020991d8) was an unnamed
+                    # placeholder when this rule was written.  Calling that a
+                    # disagreement would be a false positive dressed as a finding.
+                    verdict = "unproven_name"
+                else:
+                    # Is the tree's base a true ancestor, just not the immediate one?
+                    anc = rom_ancestors(key)
+                    spelled = {believed}
+                    a = alias.get(believed)
+                    if a:
+                        spelled.add(a[0])
+                    verdict = "flattened" if (spelled & anc) else "disagree"
         stats[verdict] += 1
         rows.append({
             "key": key,
@@ -245,6 +293,7 @@ def build(rtti_path, eh_path):
             "tree_confidence": (hier.get(tn) or {}).get("confidence") if tn else None,
             "tree_sources": (hier.get(tn) or {}).get("sources") if tn else None,
             "verdict": verdict,
+            "proven_by": proven_by,
             "vtable": rtti["records"][key]["vtable"],
         })
 

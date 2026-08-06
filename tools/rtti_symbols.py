@@ -62,8 +62,15 @@ DATA_REF = re.compile(r"\bdata_(?:ov\d+_)?[0-9a-fA-F]{8}\b")
 # Roots whose contents feed the compiler or the link.  A reference from notes/ or
 # progress/ (training corpora, worklists) does not affect the build and is not a
 # reason to defer.
-BUILD_ROOTS = ("src", "include", "port", "tools", "config")
-BUILD_EXTS = {".c", ".cpp", ".h", ".hpp", ".py", ".txt", ".cmake"}
+#
+# `mods/` is here because rombuild.py --profile mods compiles it.  There is no
+# extension whitelist: an earlier one covered .c/.cpp/.h/.hpp/.py/.txt/.cmake and so
+# would have missed a reference from a .s, a .lcf, a Makefile, or a .yaml.  Nothing
+# fell through it in practice, but "the scan happened to cover it" is not a property
+# worth relying on when the cost of scanning everything is one pass over a tree we
+# already walk.  Binary files are skipped by decode failure, not by extension.
+BUILD_ROOTS = ("src", "include", "port", "tools", "config", "mods")
+SKIP_DIRS = {".git", "__pycache__", ".vs"}
 
 
 def symbol_files():
@@ -136,16 +143,16 @@ def plan(stats):
         if not base.is_dir():
             continue
         for f in base.rglob("*"):
-            if not f.is_file() or f.suffix not in BUILD_EXTS:
+            if not f.is_file() or SKIP_DIRS & set(f.parts):
                 continue
             if f.name == "symbols.txt":
                 continue          # the file we are rewriting; not a reference
             if f.resolve() == pathlib.Path(__file__).resolve():
                 continue          # this file names one in its own docstring
             try:
-                text = f.read_text(encoding="utf-8", errors="replace")
-            except OSError:
-                continue
+                text = f.read_bytes().decode("utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue          # binary, or unreadable: cannot hold a name
             for n in set(DATA_REF.findall(text)):
                 if n in proposals:
                     refs[n].append(f.relative_to(REPO).as_posix())

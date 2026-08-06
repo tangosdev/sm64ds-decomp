@@ -89,18 +89,34 @@ and leaves the minority to be classified on its own merits.
 
 | verdict | count | meaning |
 |---|---:|---|
-| `agree` | 159 | tree's base is the ROM's base |
+| `agree` | 157 | tree's base is the ROM's base |
+| `agree_primary_only` | 1 | tree has the offset-0 base and omits the rest |
 | `flattened` | **18** | tree named a **true ancestor**, not the immediate base |
 | `disagree` | **0** | tree's base is not on the ROM's ancestor chain at all |
-| `unproven_name` | 2 | tree's base name has no proven ROM counterpart |
+| `unproven_name` | 3 | tree's base name has no corroborated ROM counterpart |
 | `no_belief` | 71 | tree knows the class, placed no base |
 | `unknown_class` | 174 | no `_ZTV` symbol — tree has never named this class |
 | `root_both` | 5 | both agree it is a root |
 | `root_rom_only` | 0 | tree never invented an edge under a ROM root |
 
-**The tree's hierarchy is nowhere outright wrong.** Every belief it holds is a true statement
-about the ROM. Where it falls short it is *imprecise*, not incorrect — which is a much
-cheaper problem than the one this exercise set out to find.
+**Nothing the tree believes contradicts the ROM.** Every base it names is either the right
+one or a true ancestor of the right one. Where it falls short it is *imprecise*, not
+incorrect — a much cheaper problem than the one this exercise set out to find.
+
+Two caveats on reading that table, both found in review and both now encoded in the tool:
+
+**A single-vote alias is circular.** If a tree name is used by exactly one class, the edge
+that creates the alias is the same edge it then validates, so the row comes out `agree` no
+matter what the header says. One row has that shape — `daKrb_c` / Goomba / `CapEnemy` — and
+it is now reported `unproven_name` rather than counted as agreement. Every row carries
+`proven_by` (`vtable`, `alias(N)`, or `uncorroborated_alias`) so downstream work can tell
+proof from tautology. An alias counts as corroborated when the vtable join independently
+proves the pairing or at least two distinct children voted for it; 16 of 17 qualify.
+
+**vmi base order is not offset order.** `dExtAnmModel_c` lists `dExtFrameCtrl_c` (offset 80)
+before `dExtSimpleModel_c` (offset 0). Keying "primary base" on list position put that row
+in plain `agree` while the tree in fact names only `Model` and omits an entire base. The
+test now keys on offset 0, and the row shows up where it belongs.
 
 ## 3. The 18 flattened classes, and the 10 layers they hide
 
@@ -156,9 +172,12 @@ are three flat headers that each re-derived the same fields.
     dBgCh_Lin     tree:RaycastLine  ROM bases: dBgCh, dBgPi, dM3dGLin   tree said BgCh
 
 Both are `__vmi_class_type_info` with three bases. `include/BgCh.h` exists, but `dBgCh`'s
-vtable (`0x020991d8`) is still an unnamed `data_` placeholder, so no evidence chain reaches
-from the string "BgCh" to the record `dBgCh`. Calling that a disagreement would be a false
+vtable (`0x020991d8`) is an unnamed `data_` placeholder, so no evidence chain reaches from
+the string "BgCh" to the record `dBgCh`. Calling that a disagreement would be a false
 positive dressed as a finding. Naming that one vtable settles both rows either way.
+
+A third row joins them after review: `daKrb_c` (Goomba), whose `CapEnemy` alias rests on a
+single self-validating vote. See section 2.
 
 Worth noting for anyone working `SphereClsn`: the ROM says it has **three** bases, and the
 tree models one.
