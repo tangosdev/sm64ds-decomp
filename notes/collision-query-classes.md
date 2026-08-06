@@ -906,3 +906,35 @@ Not a constant. `0x1ffbe78` builds it straight off the classify with
 `BgCh::ShouldPassThroughImpl(collider, surface, query, isWall)`. The draft passed a literal
 zero, which read as correct only because the block around it had never been exercised. Worth
 a look at the RaycastGround and RaycastLine twins, which pass the same argument.
+
+### The twin read: four levers tried, all four inert (2026-08-06)
+
+`src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp` re-verified `match=True 0/294` on
+`2004/b56`, and its header documents four load-bearing levers found by bisection. Applied to
+the SphereClsn draft, **all four are byte-neutral** — 1744 instructions, ratio 0.5968, 1051
+shape-equal, before and after each:
+
+| lever from the twin | result here |
+|---|---|
+| every local in one C89 block at function top, none nested in loops | inert |
+| `cstd::fdiv` declared `Fix12i` rather than `s32` | inert — `typedef s32 Fix12i` |
+| leaf terminator spelled `word & 0x7fffffff` not `& ~0x80000000` | inert — same constant |
+| `while (*++leaf)` re-reading rather than caching the index | inert — CSE'd |
+
+**The harness was proven live before any of that was believed.** Positive control
+`#pragma optimization_level 1` moved the draft 1744 -> 1648 and the ratio 0.5968 -> 0.5382,
+so the compile is real and these nulls are real. Per the standing rule — treat a lever as
+dead until a byte delta proves it live *for this function* — none of these four is worth
+re-running.
+
+**The hoist is kept anyway**, for two reasons that are not codegen: it matches the matched
+twin's shape, and *declaration ORDER cannot be experimented with until the declarations are
+in one block*. That is the distinction the twin's note actually draws — the lever is the
+order, and the hoist preserved relative order, which is exactly why it changed nothing.
+
+**So the next lever to try is a reorder, not another idiom.** Handoff section 5 has the frame
+map (`0x28`-`0x3c` the penetration pairs, `0x40`/`0x44` the flags, `0x48`-`0x5c` the two leaf
+triples, `0x60`/`0x64` rsq, `0x74`-`0x7c` the top-3 scores, `0x9c` depth, `0xa0` triID,
+`0xa4` cls, `0xa8` contact kind, `0xc4` `&centre`, `0xc8`-`0xd0` rawX/Y/Z, `0x104` rsc) and
+the block should be permuted to match it. That is a targeted permutation against a known
+answer, not a blind sweep.

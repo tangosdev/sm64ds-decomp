@@ -31,7 +31,7 @@ extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, Surfac
                                                               SphereClsn *q, int flag);
 extern "C" int func_020397dc(int x);         /* |x| <= 8 -- a near-zero divisor guard */
 extern "C" int func_02037e58(unsigned int *p);
-extern "C" s32 _ZN4cstd4fdivEii(s32 num, s32 den);
+extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 
 /* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
    (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
@@ -194,6 +194,38 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u16 *p1, *p2, *p3;
     s32 s1, s2, s3;
     u16 *leaf;
+    /* Everything below is hoisted per the matched RaycastGround twin's first
+       matching note: declaration order IS the stack frame on this compiler, and
+       mwccarm hands out spill slots in declaration order -- so every local lives
+       in one C89 block and none are nested inside the loops. */
+    u32 shift;
+    u32 *node;
+    u32 idx;
+    s32 word;
+    s32 size, mask, cy, cz;
+    u32 lv;
+    KCL_Tri *tri;
+    s32 *vtx;
+    s16 *en1, *en2, *en3;
+    s16 *fn;
+    s32 nn;
+    s64 dsq;
+    s32 den, t, u;
+    s32 vx, vy, vz;
+    s64 lensq;
+    s32 contactKind;
+    s32 dx, dy, dz;
+    s32 faceDot;
+    s32 nrm[3];
+    s32 depth;
+    s16 triID;
+    s32 cls;
+    s32 v;
+    s32 dot1, dot2, dot3;
+    Vector3 sn;
+    s16 cr[3];
+    s32 tp[3], vb[3], vc[3];
+    s32 cd, ck, lo, hi;
 
     KCL_File *f = kclFile;
     const Vector3 *c = &sphere.centre;
@@ -243,28 +275,23 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
             stepY = 1000000;
             x = loX;
             do {
-                u32 shift = f->coordShift;
-                u32 *node;
-                u32 idx;
-                s32 v;
-                s32 size, mask, cy, cz;
-                u32 lv;
+                shift = f->coordShift;
 
                 idx = (z >> shift) << f->zShift
                     | (y >> shift) << f->yShift;
                 idx |= x >> shift;
                 node = (u32 *)f->unk_0c;
-                v = node[idx];
+                word = node[idx];
 
-                while (v >= 0) {
-                    node = (u32 *)((u8 *)node + v);
+                while (word >= 0) {
+                    node = (u32 *)((u8 *)node + word);
                     shift--;
-                    v = node[((z >> shift) & 1) << 2
-                           | ((y >> shift) & 1) << 1
-                           | ((x >> shift) & 1)];
+                    word = node[((z >> shift) & 1) << 2
+                              | ((y >> shift) & 1) << 1
+                              | ((x >> shift) & 1)];
                 }
 
-                leaf = (u16 *)((u8 *)node + (v & ~0x80000000));
+                leaf = (u16 *)((u8 *)node + (word & 0x7fffffff));
 
                 size = one << shift;
                 mask = size - 1;
@@ -298,35 +325,19 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                        DetectClsn(RaycastGround&) twin, but the sphere's tolerance
                        is its own radius (raw units x 0x400, matching the normals'
                        1.0 == 0x400 scale) where the twin uses a fixed 0x20000. */
-                    while ((lv = *++leaf) != 0) {
-                        KCL_Tri *tri = &f->tris[lv];
-                        s32 *vtx = f->positions[tri->posIdx];
+                    while (*++leaf) {
+                        tri = &f->tris[*leaf];
+                        vtx = f->positions[tri->posIdx];
                         /* Three separately live edge-normal pointers, not one
                            reused cursor: the ROM keeps en1 in r5, en2 in r4 and
                            en3 spilled at sp+0x94, and step 5 reads all three
                            again after the reject chain has finished with them. */
-                        s16 *en1, *en2, *en3;
-                        s16 *fn;
-                        s32 nn;
-                        s64 dsq;
-                        s32 den, t, u;      /* the vertex 2x2 */
-                        s32 vx, vy, vz;     /* the offset to the vertex */
-                        s64 lensq;
                         /* sp+0xa8, seeded per prism at 0x01ffbe8c, set to 3 by the
                            vertex tail and defaulted to 2 by the shared tail. The
                            seed is sp+0x114, which 0x01ffba10 loads from sp+0x28
                            one instruction after 0x01ffb9c8 zeroed it -- so it is
                            the hoisted constant 0, not a value from anywhere. */
-                        s32 contactKind = 0;
-                        s32 dx, dy, dz;
-                        s32 faceDot;
-                        s32 nrm[3];
-                        s32 depth;
-                        s16 triID;
-                        s32 cls;
-                        s32 v;
-                        s32 dot1, dot2, dot3;
-                        Vector3 sn;
+                        contactKind = 0;
 
                         dx = rawX - vtx[0];
                         dy = rawY - vtx[1];
@@ -522,9 +533,6 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            escapes the slab in any component keeps its hit. */
                         if (sphere.unk_ec > 0 && cls == 1
                                 && !(tri->length & 0xf0000000)) {
-                            s16 cr[3];
-                            s32 tp[3], vb[3], vc[3];
-                            s32 cd, ck, lo, hi;
 
                             tp[0] = vtx[0] << 6;   /* full Fix12i, not 1/64 */
                             tp[1] = vtx[1] << 6;
