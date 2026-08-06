@@ -148,6 +148,28 @@ def gates():
     return out
 
 
+def enrolled_key(rel):
+    """The key load_rom_evidence() stores, for a repo-relative source path.
+
+    Enrollment keys come from build/src/<...>.o and KEEP their subdirectory --
+    'engine/fader/_ZN15FaderBrightness7IsAtEndEv'. This used to be compared
+    against Path(rel).stem, which can never contain a slash, so no file under a
+    src/ SUBDIRECTORY could ever be classified proven. 138 of the 9,149
+    enrolled objects live in subdirectories, and it put 7 byte-exact
+    FaderBrightness files into the unproven debt ledger.
+
+    Returns None for anything not under src/ (port/unmatched/, generated
+    sources), which is then simply not eligible for PROVEN. Deliberately NOT
+    falling back to the bare stem: a bare name can collide with an unrelated
+    top-level object and report a file as proven on another file's evidence.
+    No such collision exists today -- the point is that it cannot appear later.
+    """
+    rel = rel.replace("\\", "/")
+    if not rel.startswith("src/"):
+        return None
+    return rel[len("src/"):].rsplit(".", 1)[0]
+
+
 def classify(rel, enrolled, reasons):
     if rel.startswith("port/unmatched/"):
         return REPLACED
@@ -156,7 +178,8 @@ def classify(rel, enrolled, reasons):
         return UNKNOWN
     if "NONMATCHING" in p.read_text(encoding="utf-8", errors="replace"):
         return BANNER
-    if p.stem in enrolled:
+    key = enrolled_key(rel)
+    if key is not None and key in enrolled:
         return PROVEN
     if rel not in reasons:
         return UNKNOWN
@@ -177,6 +200,15 @@ def main():
     ap.add_argument("--update-baseline", action="store_true",
                     help="rewrite the baseline to the current set")
     args = ap.parse_args()
+
+    # --gate narrows the file set BEFORE the unproven set is computed, so
+    # `--update-baseline --gate 9` would rewrite the ledger to one gate's files
+    # and silently drop the rest. It fails loudly but much later -- as a
+    # REGRESSION on the next full --ratchet, blamed on whoever runs it.
+    if args.gate and (args.ratchet or args.update_baseline):
+        sys.exit("--gate cannot be combined with --ratchet or "
+                 "--update-baseline: both operate on the whole ledger, and a "
+                 "narrowed run would compare against (or write) a partial one.")
 
     enrolled, reasons, report = load_rom_evidence()
     sha = report.get("romArtifact", {}).get("sha256", "?")

@@ -12,13 +12,6 @@
     "src/_ZN5Timer9StopTimerEv.cpp",
     "src/_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
     "src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp",
-    "src/_ZN9ActorBasenwEj.cpp",
-    "src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp",
-    "src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp",
-    "src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp",
-    "src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp",
-    "src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp",
-    "src/engine/fader/_ZN15FaderBrightness8SetToEndEv.cpp",
-    "src/engine/fader/_ZN15FaderBrightness9IsAtStartEv.cpp"
+    "src/_ZN9ActorBasenwEj.cpp"
   ]
 }

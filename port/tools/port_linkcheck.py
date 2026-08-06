@@ -29,6 +29,7 @@ Usage:
 """
 import argparse
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -74,6 +75,81 @@ def msvc_env():
             "Hostx86" in p or "HostX86" in p for p in env.get("PATH", "").split(";")):
         return None
     return env
+
+
+# MSVC spells the two linkages differently, and the difference is a trap:
+#   C:    unresolved external symbol _func_02059650 referenced in function ...
+#   C++:  unresolved external symbol "char data_020a4d38" (?data_020a4d38@@3DA)
+#         referenced in function ...
+# A \S+ capture stops at the first space, so every C++ symbol collapses to the
+# token "char / "int / "public: and distinct symbols dedupe into one. That is
+# the same undercount this report exists to prevent -- and #1049, the outage
+# this tool was written for, was a C-vs-C++ linkage flip, so both shapes are
+# guaranteed to appear here. Anchor on ' referenced in' instead.
+SYM_RE = re.compile(r"unresolved external symbol (.+?)(?= referenced in function|\s*$)")
+
+# Only the trailing bucket is capped, and never silently -- see summarize().
+OTHER_CAP = 40
+
+
+def summarize(out):
+    """Group ninja/MSVC failure output into an untruncated diagnosis.
+
+    The previous version printed the first 40 matching lines and stopped. On a
+    real linkage break that is about a third of the output, with no marker that
+    anything was dropped -- a reviewer reads 40 lines, counts 6 broken binaries
+    and moves on, when 13 are broken. (That happened, during review of the very
+    PR that added this file.)
+
+    The output is redundant rather than large: each unresolved symbol repeats
+    once per binary needing it, and each binary compiles its own objects under
+    CMakeFiles/<target>.dir/, so raw line-dedupe does NOT collapse them -- the
+    path prefixes differ. Grouping does. The two buckets that carry the
+    diagnosis are small once deduplicated (~11 symbols, ~14 binaries) and are
+    never capped; only the open-ended tail is, and it says so.
+    """
+    keep = [ln.rstrip() for ln in out.splitlines()
+            # Surface the diagnosis, not the 4KB link command line carrying it.
+            if ("error" in ln.lower() or "FAILED" in ln)
+            and "cmd.exe /C" not in ln and "link.exe /nologo" not in ln]
+    if not keep:
+        return out[-3000:]
+
+    # Buckets are assigned by CONSUMPTION, not by parallel membership tests: a
+    # line the symbol regex fails to parse must fall through to `other` rather
+    # than vanish from both. Anything that stops matching still gets printed.
+    syms, bins, other = {}, {}, {}
+    for ln in keep:
+        m = SYM_RE.search(ln)
+        if m:
+            syms.setdefault(m.group(1).strip(), None)
+        elif "LNK1120" in ln:
+            bins.setdefault(ln.strip(), None)
+        else:
+            # Compile-stage breaks (C1083, C2065), LNK1104, ninja's FAILED
+            # edges. Deduped too: one bad shared header emits the identical
+            # error once per target that includes it.
+            other.setdefault(ln.strip(), None)
+
+    parts = []
+    if syms:
+        parts.append(f"unresolved symbols ({len(syms)}):")
+        parts += [f"  {s}" for s in syms]
+    if bins:
+        parts.append(f"\nbinaries that failed to link ({len(bins)}):")
+        parts += [f"  {b}" for b in bins]
+    if other:
+        parts.append(f"\nother diagnostics ({len(other)}):")
+        parts += [f"  {o}" for o in list(other)[:OTHER_CAP]]
+        if len(other) > OTHER_CAP:
+            parts.append(f"  ... {len(other) - OTHER_CAP} more suppressed -- "
+                         f"for the full set: ninja -C {BUILD} -k 0")
+    # Totals last and always honest, so a capped tail still cannot be read as
+    # the whole story.
+    parts.append(f"\nsummary: {len(bins)} binaries failed to link, "
+                 f"{len(syms)} distinct unresolved symbols, "
+                 f"{len(other)} other diagnostic line(s)")
+    return "\n".join(parts)
 
 
 def tool(env, name):
@@ -128,12 +204,7 @@ def main():
     r = subprocess.run([ninja, "-C", str(BUILD), "-k", "0"] + targets,
                        env=env, capture_output=True, text=True, errors="replace")
     if r.returncode:
-        out = r.stdout + r.stderr
-        # Surface the diagnosis, not the 4KB link command line that carries it.
-        keep = [ln for ln in out.splitlines()
-                if ("error" in ln.lower() or "FAILED" in ln)
-                and "cmd.exe /C" not in ln and "link.exe /nologo" not in ln]
-        print("\n".join(keep[:40]) or out[-3000:])
+        print(summarize(r.stdout + r.stderr))
         print(f"\nport-linkcheck: FAILED -- the port does not build against "
               f"the current src/ and include/.")
         return 1
