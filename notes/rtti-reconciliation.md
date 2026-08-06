@@ -400,14 +400,35 @@ After stripping one level of indirection, widths distribute 1/2/4 as 11/112/328,
 contradictions** — the 125 rows that could not be decided were an artifact of the
 constant 4, and with the right width the declared bases are confirmed in every case.
 
-### Why no header was written
+### The headers
 
-The evidence is good enough to generate `include/` structs for the four classes, and that
-is the obvious next step — but AGENTS.md is explicit that "a name in `include/` is a claim
-that every consumer agrees on it", and these classes have **zero** consumers today. The
-recovered layout is committed as data (`build/rtti_intermediate_fields.json`, regenerated
-by `--fields`) so the claim can be made deliberately rather than as a side effect of this
-pass.
+`--emit-headers` writes one per intermediate that has fields:
+`include/daObjDorifu_c.h`, `daObjGuragura_c.h`, `daObjSwdoor_c.h`, `daObjUkiyuka_c.h`.
+They carry the ROM name, because the tree has no name for these classes — this names
+something that had none, it does not rename anything, so it is orthogonal to section 4's
+"annotate, don't rename".
+
+Each header states its typeinfo and vtable address, its slot count against its base's, the
+exact pure-virtual (null) slots, the slots it overrides, its known descendants, and the
+byte-matched function every field was read from.
+
+They are **flat**, in the style of the 241 bannered headers, not inheriting C++ structs.
+A derived struct cannot place a field at an absolute offset: you would need `sizeof(base)`
+to compute the leading padding, and this pass does not know it. Padding from zero states
+only what was observed.
+
+    struct daObjDorifu_c {
+        u8  pad_000[0xdc8];
+        u8  unk_dc8;            /* 0xdc8 */
+        u8  unk_dc9;            /* 0xdc9 */
+        u8  unk_dca;            /* 0xdca */
+        u8  unk_dcb;            /* 0xdcb */
+    };
+
+Verified: ROM rebuild is byte-identical to the Phase-1 baseline
+(`d1506e90…c478e8`), 106/106 modules exact, `port_refcheck` clean. These four files have
+no consumers yet, so they cannot move codegen — they are the scaffold that stops the next
+person re-deriving what is already known.
 
 ## 9. What is not covered
 

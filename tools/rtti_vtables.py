@@ -200,6 +200,8 @@ def main():
     ap.add_argument("--intermediates", action="store_true")
     ap.add_argument("--fields", action="store_true",
                     help="recover each intermediate's own fields from its own methods")
+    ap.add_argument("--emit-headers", action="store_true",
+                    help="write include/<Class>.h for every intermediate with fields")
     ap.add_argument("--out", default=str(REPO / "build" / "rtti_vtables.json"))
     a = ap.parse_args()
 
@@ -269,7 +271,104 @@ def main():
 
     if a.fields:
         print(recover_fields(tables))
+
+    if a.emit_headers:
+        print(recover_fields(tables))       # refresh the evidence file first
+        print()
+        print(emit_headers(tables))
     return 0
+
+
+WIDTH_TYPE = {1: "u8", 2: "s16", 4: "s32"}
+
+
+def emit_headers(tables):
+    """One header per intermediate that has recovered fields.
+
+    Deliberately FLAT, in the style of the 241 bannered headers, not an inheriting
+    C++ struct.  A derived struct cannot place a field at an absolute offset --
+    you would have to know sizeof(base) to compute the leading padding, and this
+    pass does not know it.  Padding from zero states only what was observed and
+    leaves the base relationship to the comment, which is where the evidence for
+    it lives anyway.
+
+    Every field cites the matched function it was read from.  Nothing here is
+    inferred from a name or a neighbour.
+    """
+    data = json.loads((REPO / "build" / "rtti_intermediate_fields.json")
+                      .read_text(encoding="utf-8"))
+    rtti = json.loads(RTTI.read_text(encoding="utf-8"))
+    by_name = {v["name"]: v for v in rtti["records"].values()}
+    parent = {}
+    for e in rtti["edges"]:
+        if e.get("offset", 0) == 0 or e["derived"] not in parent:
+            parent[e["derived"]] = e["base"]
+    kids = collections.defaultdict(list)
+    for e in rtti["edges"]:
+        kids[e["base"]].append(e["derived"])
+
+    written = []
+    for cls, info in sorted(data.items()):
+        fields = info.get("fields") or {}
+        if not fields:
+            continue
+        rec = by_name[cls]
+        t = tables[cls]
+        offs = sorted(int(k, 16) for k in fields)
+        guard = re.sub(r"\W", "_", cls).upper() + "_H"
+
+        lines = []
+        lines.append("#ifndef %s" % guard)
+        lines.append("#define %s" % guard)
+        lines.append("")
+        lines.append('#include "types.h"')
+        lines.append("")
+        lines.append("/* %s -- an intermediate class the ROM's RTTI names and the tree" % cls)
+        lines.append(" * did not.  Base: %s (the tree calls it Platform)." % parent.get(cls, "?"))
+        lines.append(" *")
+        lines.append(" * typeinfo %s, vtable %s, %s, %d slots (base has %s)."
+                     % (rec["addr"], rec["vtable"], rec["module"],
+                        len(t["slots"]), t["parent_slots"]))
+        nulls = [i for i, s in enumerate(t["slots"]) if s is None]
+        lines.append(" * Abstract -- pure-virtual (null) slots: %s"
+                     % (", ".join(str(i) for i in nulls) if nulls else "none"))
+        lines.append(" * Own overrides at slots: %s"
+                     % ", ".join(str(o["slot"]) for o in t["own"]))
+        lines.append(" * %d known descendant(s): %s"
+                     % (len(kids.get(cls, [])), ", ".join(sorted(kids.get(cls, []))[:6])))
+        lines.append(" *")
+        lines.append(" * The fields below are the offsets this class's OWN vtable overrides")
+        lines.append(" * touch that no named ancestor declares.  A method of a class can")
+        lines.append(" * reach its own members and its ancestors', never a descendant's, so")
+        lines.append(" * an offset seen here and owned by no ancestor belongs to this class.")
+        lines.append(" * Read from these byte-matched functions:")
+        for m in info["methods"]:
+            lines.append(" *   %s" % m)
+        lines.append(" *")
+        lines.append(" * Everything below 0x%x is the base's and is left as padding: this pass"
+                     % offs[0])
+        lines.append(" * knows the offsets, not sizeof(base), so the struct is flat like the")
+        lines.append(" * rest of the generated corpus rather than inheriting.")
+        lines.append(" * Regenerate: python tools/rtti_vtables.py --emit-headers */")
+        lines.append("")
+        lines.append("struct %s {" % cls)
+        cur = 0
+        for o in offs:
+            w = sorted(fields["0x%x" % o]["widths"], key=lambda x: -int(x))
+            width = int(w[0])
+            if o > cur:
+                lines.append("    u8  pad_%03x[0x%x];" % (cur, o - cur))
+            lines.append("    %-3s unk_%03x;%s/* 0x%03x */"
+                         % (WIDTH_TYPE.get(width, "u8"), o, " " * 12, o))
+            cur = o + width
+        lines.append("};")
+        lines.append("")
+        lines.append("#endif")
+        text = "\n".join(lines) + "\n"
+        p = REPO / "include" / ("%s.h" % cls)
+        p.write_text(text, encoding="utf-8", newline="\n")
+        written.append("%s  (%d field(s), first at 0x%x)" % (p.name, len(offs), offs[0]))
+    return "wrote:\n  " + "\n  ".join(written)
 
 
 def recover_fields(tables):
