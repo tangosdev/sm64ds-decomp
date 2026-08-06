@@ -1,7 +1,8 @@
 # Handoff: `MeshCollider::DetectClsn(SphereClsn&)`
 
-Everything needed to land ITCM `0x01ffb830`, size `0x1bc8`. The discovery work is done; what
-is left is transcribing three symmetric arithmetic blocks against a fully specified interface.
+Everything needed to land ITCM `0x01ffb830`, size `0x1bc8`. Discovery is done and so is
+transcription: every mechanism is written and the draft is 34 instructions short of the
+target size. What is left is closing codegen differences. See section 1.
 
 Read `notes/collision-query-classes.md` for the derivations. This file is the operating
 summary.
@@ -69,7 +70,7 @@ constant-hoisting block — the frame slots the four inlined sqrt expansions sha
 2  depth = rsc - faceDot
 3  triID via func_020396dc; GetSurfaceInfo (REAL virtual call); CopyNormalTo; classify
 4  BgCh::ShouldPassThroughImpl -> reject
-5  Voronoi dispatch: face case, or edge/vertex distance vs the squared radius   <-- TODO
+5  Voronoi dispatch: face, or the edge/vertex distance -- sqrt'd, not compared
 6  record into the class slot, set the class bit, accumulate depth x normal
 ```
 
@@ -115,8 +116,8 @@ sites that is *not* `cstd::sqrt(u64)`; a per-edge filter using `unk_48` (a **shi
 `unk_4d`, `SphereClsn` flag bits 2 and 0x20, `DotVec3` against the `Vector3` at
 `MeshCollider+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
 
-What remains open is **the three vertex blocks only**. V12's prologue is decoded in the
-notes; the vector half of all three is not.
+Nothing here remains open: all three vertex blocks are written, and so is the wall block that
+this section never mentioned. See section 1 for where the draft actually stands.
 
 Still true and still load-bearing: the discriminator forms `nn = dot(en_i, en_j) >> 10` and
 compares `(nn * dot_i) >> 10` against `dot_j` for **both** neighbours, and the inputs
