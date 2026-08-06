@@ -322,3 +322,4 @@
 {"id":"ov006:0x020d47f4","module":"ov006","addr":34424820,"name":"func_ov006_020d47f4","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020d47f4.c"}
 {"id":"ov006:0x020d3ba0","module":"ov006","addr":34421664,"name":"func_ov006_020d3ba0","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020d3ba0.c"}
 {"id":"ov006:0x0213014c","module":"ov006","addr":34799948,"name":"__sinit_ov006_0213014c","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/__sinit_ov006_0213014c.c"}
+{"id":"ov006:0x0212471c","module":"ov006","addr":34752284,"name":"MgTrampolineTerror_Spawn","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/MgTrampolineTerror_Spawn.c"}
