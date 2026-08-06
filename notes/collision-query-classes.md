@@ -382,3 +382,46 @@ returned mask. Bits are the wrapper's: 1 general, 4 floor, 8 wall, 0x10 third.
 
 `func_0203798c` — the callee in that floor-hit pattern — is the next thing to name; it is the
 floor recorder, and its two siblings for wall and third will sit beside it.
+
+### CORRECTION: it does write the sphere, through a derived pointer (2026-08-06)
+
+The claim above that our target "never writes through `fp` -- there is not one
+`str [fp, ...]` in all 1778 words" is **wrong, and the method that produced it was wrong.**
+Grepping for the `[fp, #imm]` addressing form cannot see a write that goes through a register
+derived from `fp`, and that is exactly what this function does:
+
+```
+01FFCFFC  add  r0, fp, #0x10      &sphere->result
+01FFD000  bl   0x2037fd4          func_02037fd4(&sphere->result, triID, info)
+01FFD008  add  r4, fp, #0x70      r4 = &sphere->flags
+01FFD010  ldrb r0, [r4]
+01FFD014  orr  r0, r0, #1         flags |= 1   (general hit)
+01FFD018  strb r0, [r4]           <-- a write to the object
+```
+
+Counted properly — every `str`/`strb` whose base is not `sp` — there are **eight**: four
+`strb` through `r4`/`r1`, and four `str r2,[r3]` / `str r1,[r2,#4]` pairs writing eight bytes
+at a time. Only the `[fp, #imm]` *form* is absent.
+
+So the corrected model. The function **records directly into the sphere** as it goes:
+
+* `func_02037fd4(&sphere->result /* 0x10 */, triID, info)` — the same recorder the Ground and
+  Line overloads use.
+* `func_0203798c(sphere, triID, info)`, which is matched source and is simply
+  `func_02037fd4(c + 0xc4, h, src)` — the **third/und** result.
+* the flags byte at `0x70` is read *and* written: `|= 1` for a general hit at 0x01ffd018, and
+  `|= 0x10` alongside the `0xc4` record at 0x01ffd23c. Bit and slot agree, which is a check on
+  the wrapper's bit map.
+
+`func_02037940` corroborates the direction of travel: it is `p[0x70] = v & ~0x1c`, i.e. the
+caller seeds the flags but **clears bits 4/8/0x10** so the callee sets the three category bits
+fresh. That is only coherent if the callee writes them, which it does.
+
+What survives from the earlier reading: `sp+0x40` is still a separate word from the object's
+flags -- it takes `orr #4` at 0x01ffd260, four instructions after the `0x10` byte write, and
+it is what the function returns. Two flag words, not one.
+
+**Method note.** Two structural claims this session have now come from grepping a *form*
+rather than the *semantics* -- this one, and the earlier `--module` footgun that was already
+fixed on main. Grep narrows where to look; it does not establish absence. Confirm a negative
+by reading the sites, or by counting the complement (here: every store whose base is not `sp`).
