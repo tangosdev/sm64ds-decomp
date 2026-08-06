@@ -78,3 +78,44 @@ those are safe to fix independently of 0x38:
 
 0x50 is also unnamed in the header but is written `strb r0,[r1,#0x50]` with `r0 = 1` on the
 hit path, i.e. a `hasClsn` byte, the same role `RaycastGround.h` already names at its 0x48.
+
+## SphereClsn: the shape sub-object at 0x38 has contents (2026-08-06)
+
+`MeshCollider::DetectClsn(SphereClsn&)` (ITCM 0x01ffb830, 0x1bc8) reads two fields that
+`include/SphereClsn.h` does not have — both fall inside its `pad_039[0x3b]`, and both land
+inside the polymorphic sub-object at 0x38 identified above. Straight off the entry code:
+
+```
+add r0, fp, #0x3c     then [r0], [r0,#4], [r0,#8]   -> a Vector3 CENTRE at 0x3c
+ldr r0, [fp, #0x48]                                 -> the RADIUS at 0x48
+```
+
+So the 0x38 member is a sphere shape: vptr at 0x38 (the `VT2` store the destructor makes),
+centre at 0x3c..0x47, radius at 0x48. That is a coherent object and it explains why
+`SphereClsn` alone carries a third vtable where `RaycastGround` has plain data at 0x38.
+
+Not promoted into the header yet, for the same reason `RaycastLine`'s 0x38 was not: the
+sub-object's *type* is still unrecovered (its destructor is `func_0203ac1c`), so naming the
+fields on `SphereClsn` directly would flatten a real member into loose fields. Recover the
+type first, then the centre/radius belong to it, not to `SphereClsn`.
+
+### Entry facts, for whoever picks the function up
+
+| fact | value | vs the RaycastLine overload |
+|---|---|---|
+| frame | `sub sp,sp,#0x1b4` | 0xfc |
+| `this` | **sl** (r10) | r7 |
+| the query object | **fp** (r11) | kept in `[sp]` |
+| AABB slack | centre ± `((radius >> 6) + 0x40)` | segment bounds ± 0x40 |
+
+`0x40` raw is one whole world unit, i.e. one octree cell of slack — the same padding the
+Line overload applies to its segment bounds, so the sphere is bounded by an AABB inflated by
+its radius plus one cell.
+
+A first draft carrying the head and the three-axis AABB is banked at
+`notes/drafts-sphereclsn-detectclsn.cpp`. It is a **stub** — the walk and the prism tests are
+not written — so it cannot match; what it establishes is that the AABB arithmetic is right,
+emitting the ROM's own sequence (`sub` origin, `sub`/`add` the slack, `asrs` + `movmi #0` low
+clamp, `mvn` for `~mask`, `movgt` high clamp, `cmp` and early-out) per axis. Build it at
+**2004/b56** — the twin `DetectClsn(RaycastGround&)` matched there and so does the Line
+overload's size, and `notes/itcm.md` records what mis-pinning that costs.
