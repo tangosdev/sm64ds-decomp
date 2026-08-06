@@ -557,3 +557,58 @@ Two options, and the first is cheaper than it looks.
 The 25 unnamed `func_01ff…` in the 0x01ff8000..0x01ffa9dc block have never been looked at
 by anyone, and at 8-24 functions of ordinary size they are likely cheaper per match than
 anything left in arm9.
+
+### The entry block IS swept now, and it is inert (2026-08-06)
+
+The previous floor closed with *"entry-block web ordering is upstream of everything and is
+unswept in the no-ternary state — fix the head first."* It is swept. **21 variants across six
+axes, every one byte-identical to base or worse.** This route is closed; do not re-walk it.
+
+**The defect, stated exactly.** The ROM materialises the `lineStart` base *before* its first
+load; we fold the offset into that load and pay for it three instructions later:
+
+```
+ROM                        ours
+add r6,r1,#0x38            ldr r2,[r1,#0x38]     <- folded, r1 dies here
+ldr r2,[r6]                str r1,[sp]
+str r1,[sp]                add r6,r1,#0x38       <- base materialised too late
+asr r4,r2,#6               asr r1,r2,#6          <- s.x steals the freed r1
+add r5,r1,#0x54            ...
+                           ldr r2,[sp]           <- ray must be RELOADED for lineEnd
+```
+
+Everything downstream in the head follows from that one fold: `r1` dies early, so `s.x`
+colours `r1` instead of the ROM's `r4`, and `&ray.lineEnd` needs a reload instead of coming
+off the still-live incoming `r1`.
+
+**It is independent of the ternary.** The fold is present identically in both reachable
+states, so it is NOT a symptom of the leaf colouring:
+
+| state | frame | `this` | words | aligner |
+|---|---|---|---|---|
+| with-ternary (`lp = prism ? lp : lp;`) | `0xfc` ✓ | **r8** ✗ | 463 | 0.5909 |
+| no-ternary | `0x104` ✗ | **r7** ✓ | 471 | 0.5408 |
+
+That reproduces the banked two-priority characterisation exactly, from a clean tree.
+
+**Swept and inert** (all measured at 1.2/sp2p3 with `fdiff --version`, both states):
+pointer spelling (reference, non-const, `const s32*` walker, assign-in-body, declaration-order
+swap); read interleaving (six orderings of the s/e reads, including per-axis and
+`min=max=s.x=` seeding); aggregate class (`s` as an SROA-blocked `DVec` rather than
+`Vector3`); **declaration position** (pointers first / before the aggregates / before `lp` /
+last — bytes identical in all four, so unlike the RaycastGround twin, position is not a dial
+here); and dereference form (whole-struct copy `s = *lineStart`, and `(*p).x`).
+
+**What is left, and it is not the head.** The tail is already byte-perfect — the last ~0x60
+bytes compare OK word for word. The residual is dominated by a systematic **register-name
+permutation**: `this` r7↔r8, and from +0x254 the octree-shift pair swaps r1↔r2
+(`ldr r2,[r6,#0x2c]` / `ldr r1,[r6,#0x34]` against ours reversed), which then propagates
+through every `lsr`/`orr` that consumes them. The one genuine *structural* difference left is
+at +0x1fc, where the ROM hoists `add r8,sp,#0xd0` (`&info`) once and we rematerialise it per
+site — which is the same eviction the banked floor named. Route the next attempt at the
+`&info` hoist and the r1/r2 shift pair, not at the entry block.
+
+**Reproduction drift worth knowing.** The banked tip rebuilt from `nearmiss/db.jsonl` compiles
+to **0x73c** under 1.2/sp2p3 here, where the previous floor recorded 0x738 against the ROM's
+0x734. Four bytes are unaccounted for between the banked source and the banked measurement, so
+re-measure before trusting a delta against that number.
