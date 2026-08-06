@@ -728,10 +728,19 @@ def scan_raw_offsets(text):
             for m in RAW_CAST.finditer(stmt):
                 if m.group("base") not in this_names:
                     continue
+                # The form is `*(T *)(this + off)`: the cast is to T*, but the
+                # access is to T, so the width is sizeof(T), not sizeof(T*).
+                # Sizing the cast type directly made type_width see the `*` and
+                # return 4 for every access -- all 455 rows that carried a
+                # source-evidence width reported 4, including `*(u8 *)(c+0xdc8)`,
+                # and 330 of them were used to confirm a base field's width.
+                # Strip exactly one level of indirection; `*(T **)(...)` still
+                # sizes as a pointer, which is correct.
                 ty = normalize_type(m.group("ty"))
-                w = type_width(ty)
+                pointee = ty[:-1].strip() if ty.endswith("*") else ty
+                w = type_width(pointee)
                 if w is not None:
-                    out.append((int(m.group("off"), 0), w, ty,
+                    out.append((int(m.group("off"), 0), w, pointee,
                                 start + nocom.count("\n", 0, stmt_start + m.start())))
             for m in RAW_INDEX.finditer(stmt):
                 ew = this_names.get(m.group("base"))

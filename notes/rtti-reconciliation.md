@@ -335,7 +335,81 @@ No `include/` or `config/` file is touched by this phase, so `validate` cannot g
 it — contrary to what the plan predicted for Phase 3. The header work it anticipated is
 blocked on evidence, not on risk.
 
-## 8. What is not covered
+## 8. The intermediates do have recoverable fields — just not in `include/`
+
+Section 6 concluded that the 10 intermediates could not be populated. That was correct
+about `include/`, and wrong about the ROM. `tools/rtti_vtables.py` gets at them a
+different way.
+
+**A class's vtable is the one place the ROM lists its methods**, and a slot where a class
+differs from its base is that class's own override. Diffing each intermediate's vtable
+against its base's yields exactly the functions that belong to it and to no ancestor —
+and **32 of those 33 functions are already byte-matched in `src/`**, sitting under
+`func_ov002_*` names with nobody knowing which class they belonged to.
+
+Reading a vtable is where the traps are. Two plausible end-of-table rules are both wrong:
+
+* *stop at the next typeinfo record* — vtables are not adjacent to records. `fBase_c`
+  came out at 521 slots against a documented 18.
+* *stop at the first word that is not a code pointer* — a pure-virtual slot is a zero.
+  All six intermediates that have vtables are abstract, so this reported that **none of
+  them had any methods**, which is the exact opposite of the truth.
+
+The rule that holds is the one `notes/model-rtti-names.md` already states: a zero followed
+by a pointer to a typeinfo record is not an empty slot, it is the offset-to-top word of
+the *next* vtable. The tool self-checks against both documented counts — `fBase_c` reads
+18 slots (`notes/cpp-naming-guide.md`) and `Animation` reads 2
+(`notes/model-rtti-names.md`) — and refuses to run if either drifts.
+
+### The recovered layout
+
+A method of class C can touch C's members and its ancestors', never a descendant's. So a
+`this`-relative offset in one of C's own overrides that no named ancestor declares belongs
+to C. Checked that no own-slot function is listed by a non-descendant class, so
+identical-code folding is not silently reattributing anything.
+
+    daObjDorifu_c    4 methods    0xdc8 u8   0xdc9 u8   0xdca u8   0xdcb u8
+    daObjGuragura_c  4 methods    0x330 s32  0x334 s32  0x338 s32  0x33c s32  0x34c u8
+    daObjSwdoor_c   12 methods    0x344 s32  0x58d u8   0x59c s32  0x5a0 s32
+    daObjUkiyuka_c   4 methods    0x320 s32  0x324 s32  0x328 s16  0x32a s16
+    daObjKaitendai_c 4 methods    (none -- its overrides touch only ancestor fields)
+    daObjKuruma_c    4 methods    (none)
+
+**17 fields across 4 classes**, every one backed by a byte-matched function. The four
+without vtables (`daDsnBase_c`, `daObjFallBlock_c`, `daObjMaruta_c`, `daOts_c`) stay out
+of reach by this route.
+
+`daObjDorifu_c`'s four bytes read as a small state machine —
+`src/func_ov002_020b4bfc.c` switches on `0xdca`, uses `0xdcb` as an `Event::GetBit` index,
+counts down `0xdc9`, and steps `0xdc8` between 0 and 4 to pick which of five
+`MeshColliderBase` subobjects (stride `0x1c8`, starting at `0x4b0`) is enabled.
+
+### A width bug this uncovered in `evidence_hierarchy.py`
+
+`scan_raw_offsets` matched `*(T *)(this + off)` and sized the **cast** rather than the
+**access**: it passed `T*` to `type_width`, which returns 4 for anything containing a
+star. So every raw-offset access was recorded as 4 bytes. The fingerprint was total —
+**all 455** conflict rows carrying a source-evidence width reported 4, not one reported
+1 or 2, including `*(u8 *)(c + 0xdc8)`.
+
+This matters because that width is what `notes/plan-base-headers.md` uses to adjudicate
+whether a base or its descendant is right about a field. 330 rows were "confirmed" by it.
+
+After stripping one level of indirection, widths distribute 1/2/4 as 11/112/328, and
+`agrees_with_source` goes from 330 true + 125 unadjudicable to **451 true, 0
+contradictions** — the 125 rows that could not be decided were an artifact of the
+constant 4, and with the right width the declared bases are confirmed in every case.
+
+### Why no header was written
+
+The evidence is good enough to generate `include/` structs for the four classes, and that
+is the obvious next step — but AGENTS.md is explicit that "a name in `include/` is a claim
+that every consumer agrees on it", and these classes have **zero** consumers today. The
+recovered layout is committed as data (`build/rtti_intermediate_fields.json`, regenerated
+by `--fields`) so the claim can be made deliberately rather than as a side effect of this
+pass.
+
+## 9. What is not covered
 
 RTTI gives class names, the inheritance graph, and multiple-inheritance base offsets. It does
 not give field names, field types, field offsets, or method names.
