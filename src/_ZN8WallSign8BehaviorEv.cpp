@@ -1,28 +1,30 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef long long s64;
-typedef struct { int x, y, z; } Vec3;
-enum Bool { FALSE, TRUE };
+//cpp
+// @symbol _ZN8WallSign8BehaviorEv
+/* recovered: real C++ method; field access via char* this for layout until header grows */
+#include "WallSign.h"
+#include "types.h"
+
+extern "C" {
 extern int _ZN6Player12GetTalkStateEv(void *thisp);
-extern int Vec3_HorzDist(Vec3 *a, Vec3 *b);
-extern s16 Vec3_HorzAngle(Vec3 *a, Vec3 *b);
+extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
+extern s16 Vec3_HorzAngle(Vector3 *a, Vector3 *b);
 extern int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
-extern int Vec3_ApproachHorz(Vec3 *out, Vec3 *a, int maxStep);
-extern void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(void *actor, void *self, unsigned int a, Vec3 *pos, unsigned int b, unsigned int c);
+extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
+extern void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(void *actor, void *self, unsigned int a, Vector3 *pos, unsigned int b, unsigned int c);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int AngleDiff(int a, int b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *actor, void *self, int b);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern s16 data_02082214[];
+}
 
-int _ZN8WallSign8BehaviorEv(char *self)
+int WallSign::Behavior()
 {
+    char *self = (char *)this;
     char *tgt;
-    Vec3 mine, pos, tpos;
+    Vector3 mine, pos, tpos;
 
     tgt = *(char **)(self + 0x360);
     if (tgt != 0) {
@@ -56,7 +58,7 @@ int _ZN8WallSign8BehaviorEv(char *self)
                 }
                 break;
             case 1:
-                if (Vec3_ApproachHorz((Vec3 *)(tgt + 0x5c), &pos, 0xa000)) {
+                if (Vec3_ApproachHorz((Vector3 *)(tgt + 0x5c), &pos, 0xa000)) {
                     func_ov002_020bec9c(tgt, 0, 0, 0x1000, 0);
                     *(u8 *)(self + 0x364) += 1;
                 }
@@ -83,20 +85,20 @@ int _ZN8WallSign8BehaviorEv(char *self)
         }
     } else {
         void *other;
-        Vec3 opos;
-        enum Bool isPlayer;
+        Vector3 opos;
+        int isPlayer;
         int *pO;
 
         if ((*(u32 *)(self + 0x340) & 0x8000000) != 0) {
             other = _ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x344));
             if (other != 0) {
-                isPlayer = (enum Bool)(*(u16 *)((char *)other + 0xc) == 0xbf);
-                if (isPlayer != FALSE) {
+                isPlayer = (*(u16 *)((char *)other + 0xc) == 0xbf);
+                if (isPlayer != 0) {
                     pO = (int *)((char *)other + 0x5c);
                     opos.x = pO[0];
                     opos.y = pO[1];
                     opos.z = pO[2];
-                    if (AngleDiff(Vec3_HorzAngle((Vec3 *)(self + 0x5c), &opos), *(s16 *)(self + 0x8e)) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle((Vector3 *)(self + 0x5c), &opos), *(s16 *)(self + 0x8e)) < 0x4000) {
                         if (_ZN6Player9StartTalkER9ActorBaseb(other, self, 0))
                             *(void **)(self + 0x360) = other;
                     }

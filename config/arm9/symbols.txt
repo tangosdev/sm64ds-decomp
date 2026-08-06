@@ -3008,6 +3008,7 @@ func_02071364 kind:function(arm,size=0x1ac) addr:0x02071364
 func_02071510 kind:function(arm,size=0xd0) addr:0x02071510
 func_020715e0 kind:function(arm,size=0x64) addr:0x020715e0
 func_02071644 kind:function(arm,size=0x54) addr:0x02071644
+func_02071694 kind:function(arm,size=0x4) addr:0x02071694
 func_02071698 kind:function(arm,size=0x70) addr:0x02071698
 func_02071708 kind:function(arm,size=0x7c) addr:0x02071708
 func_02071784 kind:function(arm,size=0xc) addr:0x02071784

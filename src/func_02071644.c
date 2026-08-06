@@ -3,7 +3,6 @@
  * the dead trailing bx lr (mwcc always appends after for(;;)/goto whose exits
  * are early returns) into "func_02071694"; real extent is 0x54 (notes 9a(3)).
  * Lever: near-miss tip (int return + goto-loop + 6h u64 launder on halfword RMW). */
-#define LNDR(p) ((long long)(int)(p) & 0xffffffffffffffffLL)
 typedef unsigned char u8;
 typedef short s16;
 
@@ -18,7 +17,7 @@ loop:
         return v;
     }
     if (p == first) {
-        s16 *h = (s16 *)(int)LNDR(obj + 2);
+        s16 *h = (s16 *)(obj + 2);
         int v;
         *p = 1;
         v = *h + 1;
