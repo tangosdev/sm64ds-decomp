@@ -1407,6 +1407,10 @@ src/func_ov006_020d452c.c:
     complete
     .text start:0x020d452c end:0x020d47f4
 
+src/func_ov006_020d47f4.c:
+    complete
+    .text start:0x020d47f4 end:0x020d48dc
+
 src/func_ov006_020d48dc.cpp:
     complete
     .text start:0x020d48dc end:0x020d4b7c
