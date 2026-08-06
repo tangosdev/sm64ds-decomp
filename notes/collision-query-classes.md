@@ -938,3 +938,50 @@ triples, `0x60`/`0x64` rsq, `0x74`-`0x7c` the top-3 scores, `0x9c` depth, `0xa0`
 `0xa4` cls, `0xa8` contact kind, `0xc4` `&centre`, `0xc8`-`0xd0` rawX/Y/Z, `0x104` rsc) and
 the block should be permuted to match it. That is a targeted permutation against a known
 answer, not a blind sweep.
+
+
+### CORRECTION: `--align-shape` cannot see the frame, and I scored four levers with it (2026-08-06)
+
+The previous section concluded "four levers tried, all four inert". **The measurement was
+wrong for the one that mattered.** `--align-shape` normalises away register names *and stack
+offsets* — that is its documented purpose — so it is structurally incapable of detecting a
+change to the frame layout, which is exactly what a declaration reorder is. Scoring decl-order
+work with it reports 1051/0.5968 no matter what the frame does.
+
+Measured again with plain `--align` (operand-sensitive), on the same three files:
+
+| draft | `--align` ratio | exactly-equal |
+|---|---|---|
+| before the hoist | 0.1658 | 292 |
+| after the hoist | 0.1658 | 292 |
+| after the frame-order permutation | **0.2084** | **367** |
+
+So the hoist really is inert on both metrics — that conclusion survives. But **the reorder is
+not inert; it is the largest single gain of the session**, +75 exactly-matching instructions,
+and the earlier note called it dead.
+
+**Use `--align` for frame and register work; `--align-shape` only for structure.** Shape was
+the right metric while blocks were still missing and the wrong one the moment the work turned
+into codegen. Section 1 of the handoff has been corrected.
+
+### What the frame comparison actually shows (2026-08-06)
+
+```
+ROM        sub sp, sp, #0x1b4     f -> sp+0x0c      &centre -> sp+0xc4
+candidate  sub sp, sp, #0x1dc     f -> sp+0x0c      &centre -> sp+0x10
+```
+
+`f` at `0x0c` is the ROM's *first* slot, and it only lands there when `KCL_File *f = kclFile;`
+is declared ahead of the whole C89 block — the same shape the matched RaycastGround twin uses
+for its `file` and `pos`. Leaving it at the bottom of the block parked it at `0xb8` and was
+why the first permutation attempt looked inert.
+
+The frame is still **0x28 bytes too big** (`0x1dc` vs `0x1b4`), so there are about ten surplus
+words. Declaring `c` late to chase `0xc4` was tried and is slightly *worse* (0.2084 -> 0.2039),
+so the remaining gap is not simply that one slot.
+
+**A concrete lead on the surplus:** the ROM has *three* separate `den` slots for the vertex
+blocks (`sp+0xb8`, `0xbc`, `0xc0`) where this draft shares one variable across all three, and
+similarly distinct nn spill slots. Each vertex block having its own locals — rather than the
+draft's shared `den`/`t`/`u`/`vx`/`vy`/`vz` — is the most likely source of both the offset
+mismatch and some of the surplus.

@@ -165,61 +165,65 @@ struct SphereClsn {
 
 s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 {
-    s32 loX, hiX;
-    s32 loY, hiY;
-    s32 loZ, hiZ;
-    s32 rawX, rawY, rawZ;
+    /* The ROM's first slot: `f` is at sp+0x0c, so it is declared FIRST -- ahead of
+       the whole C89 block, exactly as the matched RaycastGround twin declares
+       `file` and `pos` before its own block. `&centre` at 0xc4 comes with it. */
+    KCL_File *f = kclFile;
+    const Vector3 *c = &sphere.centre;
+    const Vector3 *origin = &f->origin;
+    /* DECLARATION ORDER IS THE FRAME. This block is permuted to the ROM's slot
+       map (handoff section 5 plus what the step-5 work pinned down), one slot per
+       declaration from sp+0x10 upward, rather than to anything the source would
+       naturally read as. The run 0x10..0xa8 is contiguous and fully attested;
+       everything after it is unplaced and simply follows. */
+    s32 loX, hiX;               /* 0x10 0x14 */
+    s32 loY, hiY;               /* 0x18 0x1c */
+    s32 loZ, hiZ;               /* 0x20 0x24 */
+    /* The three running min/max pairs -- the accumulated penetration extent,
+       handed to func_02037a6c at the end as (lo.x, lo.y, lo.z, hi.x, hi.y, hi.z).
+       Six scalars, not two Vector3s by value: a by-value class parameter would
+       have homed r0-r3 to the stack and no homing happens here. */
+    s32 loPX, hiPX;             /* 0x28 0x2c */
+    s32 loPY, hiPY;             /* 0x30 0x34 */
+    s32 loPZ, hiPZ;             /* 0x38 0x3c */
+    s32 hitFlags;               /* 0x40 - a bitmask (|= 4 seen); RETURNED */
+    s32 hitFlags2;              /* 0x44 - second flag, ORed into the hit test */
+    u16 *prev1, *prev2, *prev3; /* 0x48 0x4c 0x50 */
+    u16 *p1, *p2, *p3;          /* 0x54 0x58 0x5c */
+    s64 rsq;                    /* 0x60 0x64 - squared radius, 64-bit */
+    s32 stepY, stepZ;           /* 0x6c 0x70 */
+    s32 s1, s2, s3;             /* 0x74 0x78 0x7c - the top-3 scores */
+    u32 y, x;                   /* 0x80 0x84 - y before x */
+    u16 *leaf;                  /* 0x88 */
+    KCL_Tri *tri;               /* 0x8c */
+    s32 *vtx;                   /* 0x90 */
+    s16 *en3;                   /* 0x94 - only en3 spills; en1/en2 stay in r5/r4 */
+    s16 *fn;                    /* 0x98 */
+    s32 depth;                  /* 0x9c */
+    s16 triID;                  /* 0xa0 */
+    s32 cls;                    /* 0xa4 */
+    s32 contactKind;            /* 0xa8 */
+    s32 rawX, rawY, rawZ;       /* 0xc8 0xcc 0xd0 */
+    s32 rsc;                    /* 0x104 */
+    /* No observed slot -- these follow the attested run. */
+    u32 z;
+    s32 stepX;
     s32 r;
-    s32 rsc;
-    s64 rsq;
-    u32 x, y, z;
-    s32 stepX, stepY, stepZ;
     u32 one = 1;
-    /* Slot order is declaration order on this compiler, and these fourteen words
-       are the ROM's zeroed block, in order.
-
-       The first six are three running min/max pairs -- the accumulated
-       penetration extent, written by `if (v > hi) hi = v; else if (v < lo) lo = v`
-       at every hit and handed to func_02037a6c at the end as
-       (lo.x, lo.y, lo.z, hi.x, hi.y, hi.z). Six scalars, not two Vector3s by
-       value: a by-value class parameter would have homed r0-r3 to the stack (the
-       runbook section 7 dead end) and no homing happens here. */
-    s32 loPX, hiPX;             /* sp+0x28 / sp+0x2c */
-    s32 loPY, hiPY;             /* sp+0x30 / sp+0x34 */
-    s32 loPZ, hiPZ;             /* sp+0x38 / sp+0x3c */
-    s32 hitFlags;               /* sp+0x40 - a bitmask (|= 4 seen); RETURNED */
-    s32 hitFlags2;              /* sp+0x44 - second flag, ORed into the hit test */
-    /* ...and the last six of the fourteen are the two leaf triples: */
-    u16 *prev1, *prev2, *prev3;
-    u16 *p1, *p2, *p3;
-    s32 s1, s2, s3;
-    u16 *leaf;
-    /* Everything below is hoisted per the matched RaycastGround twin's first
-       matching note: declaration order IS the stack frame on this compiler, and
-       mwccarm hands out spill slots in declaration order -- so every local lives
-       in one C89 block and none are nested inside the loops. */
+    s16 *en1, *en2;
     u32 shift;
     u32 *node;
     u32 idx;
     s32 word;
     s32 size, mask, cy, cz;
-    u32 lv;
-    KCL_Tri *tri;
-    s32 *vtx;
-    s16 *en1, *en2, *en3;
-    s16 *fn;
     s32 nn;
     s64 dsq;
     s32 den, t, u;
     s32 vx, vy, vz;
     s64 lensq;
-    s32 contactKind;
     s32 dx, dy, dz;
     s32 faceDot;
     s32 nrm[3];
-    s32 depth;
-    s16 triID;
-    s32 cls;
     s32 v;
     s32 dot1, dot2, dot3;
     Vector3 sn;
@@ -227,9 +231,6 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s32 tp[3], vb[3], vc[3];
     s32 cd, ck, lo, hi;
 
-    KCL_File *f = kclFile;
-    const Vector3 *c = &sphere.centre;
-    const Vector3 *origin = &f->origin;
 
     rawX = c->x >> 6;
     rawY = c->y >> 6;
