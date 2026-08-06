@@ -32,6 +32,7 @@ start converting a class; the same staleness rule applies.
 
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_0211f9fc (0x0211f9fc, size 0x120) | lunavyqo (Grok) | 2026-08-06 | **released** — near-miss improved **31→9** (match.py words, mwccarm 2004/b56). Levers: nest path-update inside `c1d!=0` (ROM `beq` to +0xfc); `unsigned int self`; named early `char *bp` (base r1 OK). Residual pure **regperm**: early `ldrb r0` vs ROM `r2` (4w) + dist `bf0`/`bec` r3↔r2 swap (5w). Permuter 1600it score40 floor. tip in nearmiss/db.jsonl; API clm_9dcc31056cad released |
 | ov004 __sinit_ov004_020b955c (0x020b955c, size 0x574) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); levers: field-load `tmp.a/b` from `data_02086b58` then `w[0]/w[1]` copy; mid-stream `p0.a=w[0]` / fills / `p0.b=w[1]` + bf4f8 p1-p4+p11=tmp; from near-miss 299→142→22→0; API clm_05b55ea60b6a kept |
 | ov007 func_ov007_020c49bc (0x020c49bc, size 0x440) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical (mwccarm 2004/b56); strength_reduction off + 6k decl sl/sb + sp4C-before-sp30 + else-path name-swap r6/r7; API clm_671dd186507f kept |
 | ov007 func_ov007_020c9688 (0x020c9688, size 0x300) | lunavyqo (Grok) | 2026-08-06 | **active** — continue grind from near-miss div=33; API clm_601e7964eeb4 |
