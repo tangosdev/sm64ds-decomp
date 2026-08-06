@@ -11681,9 +11681,9 @@ src/func_020715e0.c:
     complete
     .text start:0x020715e0 end:0x02071644
 
-src/func_02071694.c:
+src/func_02071644.c:
     complete
-    .text start:0x02071694 end:0x02071698
+    .text start:0x02071644 end:0x02071698
 
 src/func_02071698.c:
     complete

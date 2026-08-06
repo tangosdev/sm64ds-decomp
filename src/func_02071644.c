@@ -1,30 +1,30 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM: backward digit-carry increment; ROM uses ip/r12 for base and a
-// backward branch epilogue that mwccarm does not reproduce from C (floor_skip
-// regperm). Byte-faithful asm block per func_02059468 policy.
-asm void func_02071644(void *obj, int len) {
-    add ip, r0, #5
-    add r1, ip, r1
-    sub r3, r1, #1
-    mov r1, #0
-lbl_top:
-    ldrb r2, [r3]
-    cmp r2, #9
-    addlo r0, r2, #1
-    strlob r0, [r3]
-    bxlo lr
-    cmp r3, ip
-    bne lbl_carry
-    mov r1, #1
-    strb r1, [r3]
-    add r1, r0, #2
-    ldrsh r0, [r1]
-    add r0, r0, #1
-    strh r0, [r1]
-    bx lr
-lbl_carry:
-    strb r1, [r3], #-1
-    b lbl_top
+/* Decimal digit-string increment with carry (BCD odometer over u8 digits at
+ * obj+5..obj+4+len; carry bumps the s16 at obj+2). Symbol map previously carved
+ * the dead trailing bx lr (mwcc always appends after for(;;)/goto whose exits
+ * are early returns) into "func_02071694"; real extent is 0x54 (notes 9a(3)).
+ * Lever: near-miss tip (int return + goto-loop). */
+typedef unsigned char u8;
+typedef short s16;
+
+int func_02071644(u8 *obj, int len)
+{
+    u8 *first = obj + 5;
+    u8 *p = first + len - 1;
+loop:
+    if (*p < 9) {
+        int v = *p + 1;
+        *p = v;
+        return v;
+    }
+    if (p == first) {
+        s16 *h = (s16 *)(obj + 2);
+        int v;
+        *p = 1;
+        v = *h + 1;
+        *h = v;
+        return v;
+    }
+    *p = 0;
+    p--;
+    goto loop;
 }
