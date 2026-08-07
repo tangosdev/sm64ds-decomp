@@ -1598,7 +1598,7 @@ src/_ZN8SaveData21SetCoinRecordIfHigherEah.c:
     complete
     .text start:0x02013650 end:0x0201366c
 
-src/_ZN8SaveData13GetCoinRecordEj.c:
+src/_ZN8SaveData13GetCoinRecordEj.cpp:
     complete
     .text start:0x0201366c end:0x0201367c
 
@@ -1662,7 +1662,7 @@ src/_ZN8SaveData17SetCharacterIntroEi.c:
     complete
     .text start:0x02013910 end:0x0201392c
 
-src/_ZN8SaveData19IsCharacterUnlockedEj.c:
+src/_ZN8SaveData19IsCharacterUnlockedEj.cpp:
     complete
     .text start:0x0201392c end:0x02013944
 
@@ -1690,11 +1690,11 @@ src/func_02013a88.c:
     complete
     .text start:0x02013a88 end:0x02013ad4
 
-src/_ZN8SaveData13PlayerLoseCapEv.c:
+src/_ZN8SaveData13PlayerLoseCapEv.cpp:
     complete
     .text start:0x02013ad4 end:0x02013b18
 
-src/_ZN8SaveData16HasPlayerLostCapEv.c:
+src/_ZN8SaveData16HasPlayerLostCapEv.cpp:
     complete
     .text start:0x02013b18 end:0x02013b5c
 
