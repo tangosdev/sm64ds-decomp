@@ -63,6 +63,14 @@ By symbol kind, with what is actually *proven* — a genuinely migrated file tha
 end (mwccarm homes `r0-r3` to the stack, +0x14, on all 25 sweep versions at every
 optimization level). `--list excluded` names them.
 
+> **The `D2` row does not mean what it says.** `tools/dtor_variant_audit.py` shows **7 of
+> the 17** named D2 symbols occupy a vtable slot, which a base-object destructor never
+> does — they are D1s, and one of them (`_ZN5SceneD2Ev`) belongs to a different class
+> (`BootScene`). Two symbols named `D1` are conversely D2s, and the Fader family holds
+> three genuine D2s carrying no D2 name at all. Read `notes/dtor-variant-audit.md` before
+> scheduling any D2 work, and before trusting the per-class `D2:1` entries below — five of
+> the six pilot classes carry an impostor.
+
 "Unproven" is literal and it survived scrutiny. Every `.cpp` file for every constructor
 variant still hand-spells its symbol; `src/_ZN9ActorBaseC1Ev.cpp` is hand-written `asm`
 and marked `// NONMATCHING`, so it is a draft, not a match. **No constructor has ever
@@ -176,10 +184,17 @@ Pilot targets — highest unmigrated count *and* an existing reconstructed heade
 | `Scene` | 23 | `D0:1 D1:1 D2:1 method:20` |
 | `Heap` | 19 | `C1:1 D0:1 D1:1 D2:1 method:15` |
 
-Start with **`Scene`**. Its header is already mostly named, so the slice tests the
+~~Start with **`Scene`**. Its header is already mostly named, so the slice tests the
 *migration* rather than migration plus field reconstruction at once, and it carries one of
 each dtor variant — exactly the `D0`/`D2` evidence Phase 2 is missing — without dragging in
-a constructor. `Actor` is the prize (65 files, base of the actor hierarchy) and also the
+a constructor.~~
+
+**Retracted; both claims were false.** `include/Scene.h` declares **one** field
+(`u8 unk_013` behind `0x13` of padding) under the fabricated `gen_header.py` banner — it is
+a rung-0 skeleton, not a named header — and all three Scene destructors are shadow-struct
+files that do not include it. Nor does Scene carry one of each variant: `_ZN5SceneD2Ev` is
+`BootScene`'s D1 (`notes/dtor-variant-audit.md`). Pick the pilot from `--by-class` output
+that has been through that audit. `Actor` is the prize (65 files, base of the actor hierarchy) and also the
 widest blast radius in the tree: take it third or fourth, once the procedure is boring.
 Note that `Actor`, `Player`, `Stage` and `Heap` each carry a ctor variant, which is Phase 5
 research — split those files out of the slice rather than letting them block it.
