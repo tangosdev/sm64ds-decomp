@@ -173,20 +173,64 @@ class is polymorphic; not storing one is only evidence, since a size-0 symbol or
 module `rtti.json` cannot see would look the same. The tool reports that case as
 undecidable rather than folding it into either answer.
 
-**The biggest gap: it only inspects symbols already named `D0`/`D1`/`D2`.** A
-genuine D2 sitting under a `func_*` name is invisible to it, and those exist in
-numbers — `include/MeshColliderBase.h` names two (`func_02039658` is
-`MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s), and the Fader family
-holds two more (`func_02017838`, `func_020177c4`). Each shows the same signature:
-referenced only by `kind:arm_call`, never by `kind:load`, called by destructors,
-and the same size as the class's D1.
+The audit direction only inspects symbols already named `D0`/`D1`/`D2`, so a
+genuine D2 under a `func_*` name is invisible to it. That is now covered by
+`--discover`, below.
 
-Finding them is a *discovery* pass rather than an audit — sweep every `func_*`
-that writes a known vtable VA and has no `load` reloc pointing at it. That is the
-obvious next tool, and it would name D2s the tree has never had names for, rather
-than only correcting the ones it named wrongly.
+It also says nothing about whether a correctly-named destructor is attributed to
+the right *class* — `_ZN5SceneD2Ev` was caught on the variant, and its wrong class
+fell out of the correction rather than being tested for.
 
-It also says nothing about non-destructor symbols, and nothing about whether a
-correctly-named destructor is attributed to the right *class* — `_ZN5SceneD2Ev`
-was caught on the variant, and its wrong class fell out of the correction rather
-than being tested for.
+## 7. The other direction: D2s the tree never named at all
+
+    python tools/dtor_variant_audit.py --discover
+
+A base-object destructor has a signature nothing else shares: no `load` reloc
+points at it, it stores a vtable address, and every caller reaches it by `bl`. And
+**the vtable it stores names the owning class**, because a D2 writes its own
+class's vptr.
+
+    11 D2 candidates    9 C2 candidates    33 undecided
+
+It reproduces both of `include/MeshColliderBase.h`'s hand-derived claims exactly —
+`func_02039658` is `MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s —
+and the tree-name join gets `dBgW_Kc` → `MeshCollider` on its own. Nine more D2s
+follow that nothing in the tree had named: `dBgCh`, `dBgPi`, `dM3dGSph`,
+`dBgW_KcMbg`, `dEnemyBase_c`, `dCapEnemy_c`, `dScMgBase_c`, and the Fader family's
+`func_02017838` / `func_020177c4`.
+
+### A C2 has the same signature as a D2
+
+The first version of this pass returned 53 candidates and called them all D2s.
+About a fifth were **constructors**: a C2 is also never in a vtable, also writes a
+vptr, and is also only ever called directly. `func_02035514` came back as "dBgCh's
+D2" on the strength of callers that were `SphereClsn::SphereClsn` and
+`RaycastLine::RaycastLine`.
+
+Two independent signals separate them, and the tool now requires both to agree:
+
+| | D2 | C2 |
+|---|---|---|
+| callers | derived **destructors** | derived **constructors** |
+| vptr write order | own class **first**, then bases | bases first, own class **last** |
+
+The order falls out of what the two routines do: a destructor unwinds from the
+derived class down, a constructor builds from the base up. `func_ov004_020b29c0`
+writes `dScMgBase_c -> dScene_c -> dBase_c` and is a destructor;
+`func_02017278` writes `dFader_c -> dFdBrightness_c -> dFdColor_c -> dFdDummy_c`
+and is `dFdDummy_c`'s constructor.
+
+That C2 population is worth its own look: `notes/plan-cpp-language-mode.md` Phase 5
+records **0 constructors migrated, ever**, and treats them as research.
+
+### Caveats, unresolved
+
+- **33 are undecided** — callers split evenly, or none of them is a named
+  ctor/dtor. They are reported as undecided rather than assigned.
+- **`func_0203ac60` and `func_0203ac70` both propose `dM3dGSph`'s C2.** They cannot
+  both be right; one is likely a different class or a C1. Unresolved.
+- Nested names (`dPa_c::level_c::callback_c`) get **no proposed symbol**. Guessing
+  an Itanium nested mangling wrong writes a symbol that resolves to nothing, so
+  those print the class and stop.
+- Nothing here is renamed. Each candidate still wants its size compared against the
+  class's D1/C1 and its callers read.

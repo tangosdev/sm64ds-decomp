@@ -243,11 +243,170 @@ def audit():
     }
 
 
+def discover():
+    """Find D2s the tree has never named -- `func_*` symbols that are base-object dtors.
+
+    The audit above can only judge symbols that already claim to be a destructor.
+    A genuine D2 sitting under a `func_*` name is invisible to it, and those exist:
+    `include/MeshColliderBase.h` names two by hand, and the Fader family holds two
+    more. This is the discovery direction.
+
+    A base-object destructor has a signature no other function shares:
+
+      * nothing takes its address -- no `kind:load` reloc points at it
+      * it stores a vtable address, so its class is polymorphic
+      * every caller reaches it by `bl`
+
+    and the vtable it stores **names the owning class**, because a D2 writes its own
+    class's vptr. Where base destructors were inlined into it, more than one vtable
+    is written; the one at the lowest address inside the function is its own, and
+    the rest belong to ancestors, so they are reported rather than collapsed.
+
+    This proposes; it does not rename. Each candidate still wants its size checked
+    against the class's D1 (a D2 and D1 of the same class are usually identical) and
+    its callers eyeballed.
+    """
+    funcs = load_functions()
+    refs = load_data_refs()
+    vtables = load_vtables()
+    outgoing = load_outgoing()
+    if not vtables:
+        return []
+
+    vt_owner = {}
+    for mod, spans in vtables.items():
+        for va, _end, cls in spans:
+            vt_owner[(mod, va)] = cls
+
+    # Reverse index of call targets, so each candidate can show who reaches it.
+    callers = collections.defaultdict(list)
+    for p in glob.glob(os.path.join(ROOT, "config", "**", "relocs.txt"), recursive=True):
+        mod = module_of(p)
+        with open(p, encoding="utf-8") as fh:
+            for ln in fh:
+                m = RELOC_RE.search(ln)
+                if m and m.group(2).startswith("arm_call"):
+                    callers[int(m.group(3), 16)].append((mod, int(m.group(1), 16)))
+
+    out = []
+    for mod, table in sorted(funcs.items()):
+        for addr, (name, size) in sorted(table.items()):
+            if not name.startswith("func_") or not size:
+                continue
+            if refs.get(mod, {}).get(addr) or refs.get("arm9", {}).get(addr):
+                continue                       # address taken -> in a table, not a D2
+            written = []
+            for frm, tgt in outgoing.get(mod, ()):
+                if addr <= frm < addr + size:
+                    owner = vt_owner.get((mod, tgt)) or vt_owner.get(("arm9", tgt))
+                    if owner:
+                        written.append((frm, owner))
+            if not written:
+                continue
+            written.sort()
+            who = callers.get(addr, [])
+            if not who:
+                continue                       # never called: not a base-object routine
+            names = sorted({funcs.get(m, {}).get(_nearest(funcs.get(m, {}), a), ("?", 0))[0]
+                            for m, a in who})
+
+            # A C2 has the SAME signature as a D2 -- never in a vtable, writes a vptr,
+            # only ever called directly. Two independent things separate them:
+            #
+            #   callers     a D2 is called by derived DESTRUCTORS, a C2 by derived
+            #               CONSTRUCTORS
+            #   write order a destructor writes own vptr then its bases', so its own
+            #               class is written FIRST; a constructor builds base-up, so
+            #               its own class is written LAST
+            #
+            # Without this every constructor in the tree came back as a D2 proposal.
+            dtor_callers = sum(1 for n in names if n.endswith(("D0Ev", "D1Ev", "D2Ev")))
+            ctor_callers = sum(1 for n in names if n.endswith(("C1Ev", "C2Ev", "C3Ev")))
+            if ctor_callers > dtor_callers:
+                kind, owner = "C2", written[-1][1]
+            elif dtor_callers > ctor_callers:
+                kind, owner = "D2", written[0][1]
+            else:
+                kind, owner = "unknown", written[0][1]
+
+            out.append({
+                "module": mod, "addr": "0x%08x" % addr, "symbol": name,
+                "size": "0x%x" % size, "kind": kind, "owner": owner,
+                "rom_chain": [o for _f, o in written],
+                "callers": ["%s:0x%08x" % (m, a) for m, a in who],
+                "caller_names": names,
+            })
+    return out
+
+
+def tree_names():
+    """ROM class name -> the tree's name for it, where rtti_reconcile proved one."""
+    p = os.path.join(ROOT, "build", "rtti_reconcile.json")
+    if not os.path.exists(p):
+        return {}
+    data = json.loads(open(p, encoding="utf-8").read())
+    return {r["rom_name"]: r["tree_name"] for r in data.get("rows", []) if r.get("tree_name")}
+
+
+def propose(cls, kind, tree):
+    """The Itanium symbol for `cls`'s D2/C2, or None when it cannot be spelt safely.
+
+    Only simple (non-nested) names are proposed. A nested class mangles as
+    `_ZN...E`-with-components and guessing it wrong writes a symbol that resolves to
+    nothing, so those are reported as a class and left for a human.
+    """
+    name = tree.get(cls) or cls
+    if kind not in ("D2", "C2") or "::" in name or not name.isidentifier():
+        return None
+    return "_ZN%d%s%sEv" % (len(name), name, kind)
+
+
+def _nearest(table, addr):
+    """The start address of the function containing `addr`."""
+    best = None
+    for a in table:
+        if a <= addr and (best is None or a > best):
+            best = a
+    return best
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--discover", action="store_true",
+                    help="propose names for D2s that were never named at all")
     args = ap.parse_args()
+
+    if args.discover:
+        cands = discover()
+        if args.json:
+            print(json.dumps(cands, indent=2))
+            return 0
+        tree = tree_names()
+        by_kind = collections.Counter(c["kind"] for c in cands)
+        print("unnamed base-object routine candidates: %d D2, %d C2, %d undecided\n"
+              % (by_kind["D2"], by_kind["C2"], by_kind["unknown"]))
+        for want in ("D2", "C2", "unknown"):
+            rows = [c for c in cands if c["kind"] == want]
+            if not rows:
+                continue
+            print("== %s (%d)" % (want, len(rows)))
+            for c in rows:
+                sym = propose(c["owner"], c["kind"], tree)
+                treename = tree.get(c["owner"])
+                print("  %-18s %s  %-6s %s" % (c["symbol"], c["addr"], c["size"], c["module"]))
+                print("      class %s%s  ->  %s"
+                      % (c["owner"],
+                         " (tree: %s)" % treename if treename else "",
+                         sym or "no safe spelling -- nested or unnamed in the tree"))
+                if len(c["rom_chain"]) > 1:
+                    print("      vptr writes in order: %s" % " -> ".join(c["rom_chain"]))
+                print("      called by: %s" % ", ".join(c["caller_names"][:5]))
+            print()
+        print("Proposals, not conclusions. Each still wants its size compared against the")
+        print("class's D1/C1 and its callers read. Nothing is renamed by this tool.")
+        return 0
 
     res = audit()
     if args.json:
