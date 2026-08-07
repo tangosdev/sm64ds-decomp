@@ -109,6 +109,60 @@ def basename_key(stem):
     return stem.rsplit("/", 1)[-1]
 
 
+def renames_between(base, head):
+    """{old basename: new basename} for renames git itself detected under src/.
+
+    Why this exists: `lineage` keys on the basename so that a directory move or a
+    `.c -> .cpp` promotion is not read as a loss. A **symbol correction** changes
+    the basename itself -- `_ZN5SceneD2Ev` is really `BootScene`'s D1, so the file
+    has to be called something else -- and without this the old name simply
+    vanishes and reads as lost, no matter how the commits are arranged.
+
+    That was not hypothetical. Splitting rewrite from move exactly as THE RULE
+    above prescribes still reported 8 lost, because that remedy addresses
+    *similarity*-based lineage loss and this is *identity* loss. #1160 hit the same
+    wall (`_ZN3IRQ13DmaTimHandlerEv` -> `...Ej`) and landed with the loss recorded.
+
+    The gate keeps its teeth: this consults git's own rename detection -- the same
+    authority `first_matchers` relies on via `git log -M` -- so a delete+add git
+    does NOT pair stays unpaired here, and a pairing whose credit actually moved is
+    reported as changed rather than waved through. Verified by rewriting and moving
+    a file in one commit: still 1 lost, still exit 1.
+
+    Renames are collected **per commit and then composed**, not from one base..head
+    diff. That matters for exactly the sequence THE RULE prescribes: rewrite in one
+    commit, move in the next. Across the whole range those two show up as a single
+    change whose similarity can fall under git's 50% threshold -- which it did for 3
+    of 8 real cases, the small files whose comments were rewritten most. Per commit,
+    the move is the R100 git already recorded.
+    """
+    log = subprocess.run(
+        ["git", "log", "-M", "--reverse", "--name-status", "--format=@@%H",
+         f"{base}..{head}", "--", "src/"],
+        cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace")
+
+    steps = []
+    for ln in log.stdout.splitlines():
+        parts = ln.split("\t")
+        if len(parts) == 3 and parts[0].startswith("R"):
+            old = basename_key(parts[1].rsplit(".", 1)[0])
+            new = basename_key(parts[2].rsplit(".", 1)[0])
+            if old != new:
+                steps.append((old, new))
+
+    # Compose chains so A->B->C reports A->C, and stop on cycles defensively.
+    out = {}
+    for old, new in steps:
+        out[old] = new
+    for start in list(out):
+        seen, cur = {start}, out[start]
+        while cur in out and cur not in seen:
+            seen.add(cur)
+            cur = out[cur]
+        out[start] = cur
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -130,7 +184,9 @@ def main():
     before_by_name = {basename_key(s): (s, w) for s, w in before.items()}
     after_by_name = {basename_key(s): (s, w) for s, w in after.items()}
 
-    changed, lost, moved_ok = [], [], []
+    renamed = renames_between(args.base, args.head)
+
+    changed, lost, moved_ok, renamed_ok = [], [], [], []
     for name, (new_stem, new_who) in after_by_name.items():
         if name not in before_by_name:
             continue                                   # genuinely new work
@@ -140,8 +196,20 @@ def main():
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
     for name, (old_stem, old_who) in before_by_name.items():
-        if name not in after_by_name:
-            lost.append((name, old_stem, old_who))
+        if name in after_by_name:
+            continue
+        # A deliberate symbol correction renames the file. Follow git's own rename
+        # detection rather than calling it a loss -- but only when the credit is
+        # genuinely unchanged; a rename that moved credit is still a failure.
+        target = renamed.get(name)
+        if target and target in after_by_name:
+            new_stem, new_who = after_by_name[target]
+            if new_who == old_who:
+                renamed_ok.append((name, target, old_stem, new_stem, old_who))
+            else:
+                changed.append((name, old_stem, new_stem, old_who, new_who))
+            continue
+        lost.append((name, old_stem, old_who))
 
     for name, old_stem, new_stem, old_who, new_who in changed:
         print(f"  CREDIT CHANGED  {name}")
@@ -151,13 +219,17 @@ def main():
         print(f"  CREDIT LOST     {name}  was {old_stem} [{old_who}]")
     for name, old_stem, new_stem, who in moved_ok:
         print(f"  moved, credit intact: {name}  [{who}]")
+    for name, target, old_stem, new_stem, who in renamed_ok:
+        print(f"  renamed, credit intact: {name} -> {target}  [{who}]")
 
     print(f"\n{len(after_by_name)} tracked, {len(moved_ok)} moved with credit intact, "
+          f"{len(renamed_ok)} renamed with credit intact, "
           f"{len(changed)} changed, {len(lost)} lost")
 
     if args.json:
         pathlib.Path(args.json).write_text(json.dumps(
-            {"changed": changed, "lost": lost, "moved_ok": moved_ok}, indent=2),
+            {"changed": changed, "lost": lost, "moved_ok": moved_ok,
+             "renamed_ok": renamed_ok}, indent=2),
             encoding="utf-8")
 
     if changed or lost:
