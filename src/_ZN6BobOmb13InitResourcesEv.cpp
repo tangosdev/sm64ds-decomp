@@ -2,42 +2,37 @@
 // @symbol _ZN6BobOmb13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "BobOmb.h"
-typedef int Fix12;
 struct BMD_File;
 struct SharedFilePtr { int h; };
 struct Actor;
 struct Vector3_16;
 
-struct Animation {
-    static void LoadFile(SharedFilePtr& f);
-};
-struct Model {
-    static BMD_File* LoadFile(SharedFilePtr& f);
-};
-struct ModelBase {
-    int SetFile(BMD_File* f, int a, int b);
-};
+/* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what its
+   own matched definition compiles as -- but the ROM leaves DoSetFile's int in r0
+   and this call site reads it, so the value-returning entry keeps the mangled
+   spelling until that signature is settled. */
+extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
 struct ShadowModel {
     int InitCylinder();
 };
 struct MovingCylinderClsn {
-    void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+    void Init(Actor* a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
 
 struct WithMeshClsn {
-    void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+    void Init(Actor* a, Fix12i b, Fix12i c, Vector3_16* d, Fix12i e);
     void StartDetectingWater();
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12i b, Fix12i c, Vector3_16* d, Fix12i e);
 
 extern "C" void func_ov102_0214c0b8(void* c);
 
@@ -89,8 +84,8 @@ int BobOmb::InitResources()
 
     Animation::LoadFile(data_ov102_0214e9c0);
     Animation::LoadFile(data_ov102_0214e9c8);
-    bmd = Model::LoadFile(data_ov002_0210d9e0);
-    if (((ModelBase*)&((Obj*)this)->f300)->SetFile(bmd, 1, -1) == 0)
+    bmd = (BMD_File*)Model::LoadFile(data_ov002_0210d9e0);
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&((Obj*)this)->f300, bmd, 1, -1) == 0)
         return 0;
     if (((ShadowModel*)&((Obj*)this)->f364)->InitCylinder() == 0)
         return 0;

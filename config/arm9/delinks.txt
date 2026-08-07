@@ -1342,7 +1342,7 @@ src/func_02011ee4.c:
     complete
     .text start:0x02011ee4 end:0x02011f30
 
-src/_ZN5Sound21ResetPlayerVoiceGroupEv.c:
+src/_ZN5Sound21ResetPlayerVoiceGroupEv.cpp:
     complete
     .text start:0x02011f30 end:0x02011f7c
 
@@ -1350,7 +1350,7 @@ src/func_02011f7c.c:
     complete
     .text start:0x02011f7c end:0x02011fe8
 
-src/_ZN5Sound21UnsetPlayerVoiceGroupEv.c:
+src/_ZN5Sound21UnsetPlayerVoiceGroupEv.cpp:
     complete
     .text start:0x02011fe8 end:0x02011ffc
 
@@ -1358,7 +1358,7 @@ src/_ZN5Sound16LoadInitialGroupEi.cpp:
     complete
     .text start:0x02011ffc end:0x0201200c
 
-src/_ZN5Sound19LoadGroupAndSetBankEii.c:
+src/_ZN5Sound19LoadGroupAndSetBankEii.cpp:
     complete
     .text start:0x0201200c end:0x02012120
 
@@ -1470,23 +1470,23 @@ src/func_02012860.c:
     complete
     .text start:0x02012860 end:0x020128c4
 
-src/_ZN5Sound22StopLoadedMusic_Layer2Ev.c:
+src/_ZN5Sound22StopLoadedMusic_Layer2Ev.cpp:
     complete
     .text start:0x020128c4 end:0x02012940
 
-src/_ZN5Sound22LoadAndSetMusic_Layer2Ej.c:
+src/_ZN5Sound22LoadAndSetMusic_Layer2Ej.cpp:
     complete
     .text start:0x02012940 end:0x02012998
 
-src/_ZN5Sound8EndMusicEjj.c:
+src/_ZN5Sound8EndMusicEjj.cpp:
     complete
     .text start:0x02012998 end:0x02012a68
 
-src/_ZN5Sound8SetMusicEjj.c:
+src/_ZN5Sound8SetMusicEjj.cpp:
     complete
     .text start:0x02012a68 end:0x02012af8
 
-src/_ZN5Sound22StopLoadedMusic_Layer3Ev.c:
+src/_ZN5Sound22StopLoadedMusic_Layer3Ev.cpp:
     complete
     .text start:0x02012af8 end:0x02012bbc
 
@@ -1522,11 +1522,11 @@ src/func_02012e78.c:
     complete
     .text start:0x02012e78 end:0x02012ee4
 
-src/_ZN5Sound12UnpauseMusicEv.c:
+src/_ZN5Sound12UnpauseMusicEv.cpp:
     complete
     .text start:0x02012ee4 end:0x02012f90
 
-src/_ZN5Sound10PauseMusicEv.c:
+src/_ZN5Sound10PauseMusicEv.cpp:
     complete
     .text start:0x02012f90 end:0x02013050
 
@@ -1538,7 +1538,7 @@ src/func_02013078.c:
     complete
     .text start:0x02013078 end:0x0201320c
 
-src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.c:
+src/_ZN5Sound22LoadAndSetMusic_Layer1Ei.cpp:
     complete
     .text start:0x0201320c end:0x020132d8
 
@@ -3037,7 +3037,7 @@ src/func_0201a4e4.c:
     complete
     .text start:0x0201a4e4 end:0x0201a534
 
-src/_ZN3IRQ13VBlankHandlerEv.c:
+src/_ZN3IRQ13VBlankHandlerEv.cpp:
     complete
     .text start:0x0201a534 end:0x0201a5cc
 
@@ -3907,15 +3907,15 @@ src/DeathTable_GetBit.c:
     complete
     .text start:0x02029e58 end:0x02029ea4
 
-src/_ZN5Event8ClearBitEj.c:
+src/_ZN5Event8ClearBitEj.cpp:
     complete
     .text start:0x02029ea4 end:0x02029ec4
 
-src/_ZN5Event6SetBitEj.c:
+src/_ZN5Event6SetBitEj.cpp:
     complete
     .text start:0x02029ec4 end:0x02029ee0
 
-src/_ZN5Event6GetBitEj.c:
+src/_ZN5Event6GetBitEj.cpp:
     complete
     .text start:0x02029ee0 end:0x02029ef8
 
@@ -6524,7 +6524,7 @@ src/func_0203d740.c:
     complete
     .text start:0x0203d740 end:0x0203d744
 
-src/_ZN4cstd4sqrtEy.c:
+src/_ZN4cstd4sqrtEy.cpp:
     complete
     .text start:0x0203d744 end:0x0203d7b8
 
@@ -8561,11 +8561,11 @@ src/InvMat4x3.c:
     complete
     .text start:0x02052b34 end:0x02052ec8
 
-src/_ZN4cstd3modEii.c:
+src/_ZN4cstd3modEii.cpp:
     complete
     .text start:0x02052ef4 end:0x02052f4c
 
-src/_ZN4cstd3divEii.c:
+src/_ZN4cstd3divEii.cpp:
     complete
     .text start:0x02052f4c end:0x02052fa4
 
@@ -8585,11 +8585,11 @@ src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c:
     complete
     .text start:0x02053090 end:0x020530cc
 
-src/_ZN4cstd11fdiv_resultEv.c:
+src/_ZN4cstd11fdiv_resultEv.cpp:
     complete
     .text start:0x020530cc end:0x02053108
 
-src/_ZN4cstd11ldiv_resultEv.c:
+src/_ZN4cstd11ldiv_resultEv.cpp:
     complete
     .text start:0x02053108 end:0x02053130
 
@@ -8604,11 +8604,11 @@ src/func_02053200.c:
     complete
     .text start:0x02053200 end:0x0205321c
 
-src/_ZN4cstd4ldivEii.c:
+src/_ZN4cstd4ldivEii.cpp:
     complete
     .text start:0x0205321c end:0x02053258
 
-src/_ZN4cstd4fdivEii.c:
+src/_ZN4cstd4fdivEii.cpp:
     complete
     .text start:0x02053258 end:0x02053274
 
@@ -8872,7 +8872,7 @@ src/_ZN3G2S13GetBG2CharPtrEv.cpp:
     complete
     .text start:0x02054de8 end:0x02054e30
 
-src/_ZN2G213GetBG2CharPtrEv.c:
+src/_ZN2G213GetBG2CharPtrEv.cpp:
     complete
     .text start:0x02054e30 end:0x02054e88
 
@@ -8904,7 +8904,7 @@ src/_ZN3G2S12GetBG2ScrPtrEv.cpp:
     complete
     .text start:0x0205503c end:0x020550bc
 
-src/_ZN2G212GetBG2ScrPtrEv.c:
+src/_ZN2G212GetBG2ScrPtrEv.cpp:
     complete
     .text start:0x020550bc end:0x02055148
 
@@ -8912,7 +8912,7 @@ src/_ZN3G2S12GetBG1ScrPtrEv.cpp:
     complete
     .text start:0x02055148 end:0x02055168
 
-src/_ZN2G212GetBG1ScrPtrEv.c:
+src/_ZN2G212GetBG1ScrPtrEv.cpp:
     complete
     .text start:0x02055168 end:0x0205519c
 
@@ -8920,7 +8920,7 @@ src/_ZN3G2S12GetBG0ScrPtrEv.cpp:
     complete
     .text start:0x0205519c end:0x020551bc
 
-src/_ZN2G212GetBG0ScrPtrEv.c:
+src/_ZN2G212GetBG0ScrPtrEv.cpp:
     complete
     .text start:0x020551bc end:0x020551f0
 
@@ -9199,27 +9199,27 @@ src/_ZN3IRQ11Dma0HandlerEv.cpp:
     complete
     .text start:0x02056cb0 end:0x02056cc0
 
-src/_ZN3IRQ13DmaTimHandlerEv.c:
+src/_ZN3IRQ13DmaTimHandlerEj.cpp:
     complete
     .text start:0x02056cc0 end:0x02056d60
 
-src/_ZN3IRQ12EmptyHandlerEv.c:
+src/_ZN3IRQ12EmptyHandlerEv.cpp:
     complete
     .text start:0x02056d60 end:0x02056d64
 
-src/_ZN3IRQ15ClearInterruptsEj.c:
+src/_ZN3IRQ15ClearInterruptsEj.cpp:
     complete
     .text start:0x02056d64 end:0x02056d98
 
-src/_ZN3IRQ11DisableIRQsEj.c:
+src/_ZN3IRQ11DisableIRQsEj.cpp:
     complete
     .text start:0x02056d98 end:0x02056de0
 
-src/_ZN3IRQ10EnableIRQsEj.c:
+src/_ZN3IRQ10EnableIRQsEj.cpp:
     complete
     .text start:0x02056de0 end:0x02056e18
 
-src/_ZN3IRQ7SetIRQsEj.c:
+src/_ZN3IRQ7SetIRQsEj.cpp:
     complete
     .text start:0x02056e18 end:0x02056e4c
 
@@ -9231,7 +9231,7 @@ src/func_02056e98.c:
     complete
     .text start:0x02056e98 end:0x02056ee4
 
-src/_ZN3IRQ13GetIRQHandlerEj.c:
+src/_ZN3IRQ13GetIRQHandlerEj.cpp:
     complete
     .text start:0x02056ee4 end:0x02056f70
 
@@ -10012,7 +10012,7 @@ src/func_0205b858.c:
     complete
     .text start:0x0205b858 end:0x0205b864
 
-src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.c:
+src/_ZN3IRQ24IPCRxFifoNotEmptyHandlerEv.cpp:
     complete
     .text start:0x0205b864 end:0x0205b988
 
@@ -11527,7 +11527,7 @@ src/func_0206df14.c:
     complete
     .text start:0x0206df14 end:0x0206df84
 
-src/_ZN4cstd3absEi.c:
+src/_ZN4cstd3absEi.cpp:
     complete
     .text start:0x0206df84 end:0x0206df90
 

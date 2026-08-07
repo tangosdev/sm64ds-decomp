@@ -5,6 +5,7 @@
 #ifndef BOBOMB_H
 #define BOBOMB_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct BobOmb {
     u8  pad_000[0x80];
@@ -34,8 +35,9 @@ struct BobOmb {
     u8  pad_138[0xc];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];
-    u8  mModelAnim;            /* 0x300 */
-    u8  pad_301[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x300 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x300 */
     u8  mShadowModel;            /* 0x364 */
     u8  pad_365[0x77];
     s32 unk_3dc;            /* 0x3dc */

@@ -308,9 +308,16 @@ def main():
                 bucket = "unknown-type"
                 findings[bucket].append({"cls": cls, "offset": hex(off),
                                          "field": name, "declared": typ, "where": where})
-            elif len(obs) > 1 and len({w for v in obs.values() for w in v}) > 1:
-                # The passes disagree with each other. `dw in allw` unions them, so the
-                # pass that happens to agree wins and the disagreement disappears --
+            elif (dw and any(w > dw for v in obs.values() for w in v)
+                  and len({w for v in obs.values() for w in v}) > 1):
+                # A pass observed something WIDER than the declaration, which reads
+                # past the field -- that is a real contradiction. A NARROWER
+                # observation is not: it is a partial access, and for a declared s64 it
+                # is the only thing ARM can emit, having no 64-bit register. Timer and
+                # SphereClsn are exactly that and are corroborated, not contradicted.
+                #
+                # `dw in allw` unions the passes, so the one that happens to agree wins
+                # and the disagreement disappears --
                 # Timer 0x0 was "confirmed" as s32 because the ROM sees the 4-byte
                 # halves of an s64 (ARM has no 64-bit register, so it cannot see
                 # otherwise) while history reads the real s64 from source. Plan 4 sends
@@ -318,6 +325,19 @@ def main():
                 bucket = "cross-pass width disagreement"
                 findings[bucket].append({
                     "cls": cls, "offset": hex(off), "field": name, "declared": typ,
+                    "observed": {k: sorted(v) for k, v in obs.items()}, "where": where})
+            elif placeholder and (span is None or span > 4):
+                # An object marker is NOT confirmed by a 1-byte observation. The `u8` is
+                # a stand-in for a type nobody knew, so a byte access at its offset
+                # satisfies the declaration without saying anything about what lives
+                # there -- and testing `dw in allw` first filed exactly those as
+                # `confirmed`, dropping them off the worklist. The markers with the BEST
+                # evidence went missing precisely because the evidence was good:
+                # Goomba.mModelAnim @0x370 sat here while its own destructor D1-called
+                # _ZN9ModelAnimD1Ev at that offset. See tools/marker_census.py.
+                bucket = "marker: object, extent unknown"
+                findings[bucket].append({
+                    "cls": cls, "offset": hex(off), "field": name, "span": span,
                     "observed": {k: sorted(v) for k, v in obs.items()}, "where": where})
             elif dw in allw:
                 bucket = "confirmed"

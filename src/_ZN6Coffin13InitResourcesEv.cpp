@@ -13,12 +13,6 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-struct Model {
-    static BMD_File* LoadFile(SharedFilePtr& f);
-};
-struct ModelBase {
-    int SetFile(BMD_File* f, int a, int b);
-};
 struct MeshCollider {
     static KCL_File* LoadFile(SharedFilePtr& f);
 };
@@ -35,8 +29,6 @@ struct Platform {
     void UpdateClsnPosAndRot();
 };
 
-BMD_File* Model::LoadFile(SharedFilePtr&);
-int ModelBase::SetFile(BMD_File*, int, int);
 KCL_File* MeshCollider::LoadFile(SharedFilePtr&);
 int MovingMeshCollider::SetFile(KCL_File*, const Matrix4x3&, Fix12, short, CLPS_Block&);
 void Platform::UpdateClsnPosAndRot();
@@ -57,7 +49,7 @@ extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResult
 
 int Coffin::InitResources()
 {
-    ((ModelBase*)((char*)&mModel))->SetFile(Model::LoadFile(data_ov071_021230d0), 1, -1);
+    ((ModelBase*)((char*)&mModel))->SetFile((BMD_File*)Model::LoadFile(data_ov071_021230d0), 1, -1);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
     Vector3 in;

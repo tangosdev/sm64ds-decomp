@@ -5,6 +5,7 @@
 #ifndef TTCMOVINGCUBEA_H
 #define TTCMOVINGCUBEA_H
 #include "types.h"
+#include "Model.h"
 
 struct TtcMovingCubeA {
     u8  pad_000[0x8];
@@ -20,8 +21,9 @@ struct TtcMovingCubeA {
     u8  pad_0a4[0x4];
     s32 unk_0a8;            /* 0x0a8 */
     u8  pad_0ac[0x28];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */

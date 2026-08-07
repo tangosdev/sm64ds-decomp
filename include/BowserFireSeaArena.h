@@ -5,6 +5,7 @@
 #ifndef BOWSERFIRESEAARENA_H
 #define BOWSERFIRESEAARENA_H
 #include "types.h"
+#include "Model.h"
 
 struct BowserFireSeaArena {
     u8  pad_000[0x8e];
@@ -17,8 +18,9 @@ struct BowserFireSeaArena {
     s16 unk_31e;            /* 0x31e */
     s16 unk_320;            /* 0x320 */
     s16 unk_322;            /* 0x322 */
-    u8  mModel2;            /* 0x324 */
-    u8  pad_325[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x324 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel2;            /* 0x324 */
     u8  mMovingMeshCollider2;            /* 0x374 */
     u8  pad_375[0x1f7];
     s32 unk_56c;            /* 0x56c */

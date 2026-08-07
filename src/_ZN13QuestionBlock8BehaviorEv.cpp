@@ -36,7 +36,7 @@ int QuestionBlock::Behavior()
     if ((data_0209caa0[1] & 0x80000000) == 0) {
         int b = (int)(mActorId == 0x14);
         if (b != 0) {
-            _ZN9Animation7AdvanceEv((char*)&mAnimation);
+            _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
             if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
                 ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
             }

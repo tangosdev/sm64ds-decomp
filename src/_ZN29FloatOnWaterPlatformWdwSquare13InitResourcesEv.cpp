@@ -6,8 +6,6 @@
 #include "FloatOnWaterPlatformWdwSquare.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-struct Model { int d; };
-struct ModelBase { int d; };
 struct MeshCollider { int d; };
 struct MovingMeshCollider { int d; };
 

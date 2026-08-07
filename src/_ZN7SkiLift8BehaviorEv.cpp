@@ -15,7 +15,7 @@ struct Sub { virtual void m0(); virtual void m1(); virtual void m2(); virtual vo
 int SkiLift::Behavior()
 {
   _ZN13RacingPenguin16OnPendingDestroyEv();
-  _ZN9Animation7AdvanceEv((char*)&mAnimation);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   _ZN9Animation7AdvanceEv((char*)&mTextureSequence);
   _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
   _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);

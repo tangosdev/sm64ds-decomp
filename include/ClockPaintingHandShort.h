@@ -5,6 +5,7 @@
 #ifndef CLOCKPAINTINGHANDSHORT_H
 #define CLOCKPAINTINGHANDSHORT_H
 #include "types.h"
+#include "Model.h"
 
 struct ClockPaintingHandShort {
     u8  pad_000[0xc];
@@ -25,8 +26,9 @@ struct ClockPaintingHandShort {
     u8  pad_092[0x3a];
     s8  unk_0cc;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mHandIndex;            /* 0x124 */
 #ifdef __cplusplus
     /* methods */

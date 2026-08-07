@@ -149,6 +149,16 @@
       "description": "Attempt tree + provenance how-records (Console stack)."
     }
   ],
+  "console": {
+    "scheduler": "coddog",
+    "refineScheduler": "refine_wl",
+    "randomScheduler": "worklist",
+    "enrich": "worklist",
+    "driver": "glm_refine",
+    "land": "crackloop_land",
+    "logAttempt": "log_attempt",
+    "verify": "match"
+  },
   "tools": [
     {
       "id": "progress",
@@ -1344,6 +1354,34 @@
         }
       ],
       "command": "{python} tools/stamp_provenance.py {flags}"
+    },
+    {
+      "id": "crackloop_land",
+      "label": "Land a drive's results",
+      "category": "matching",
+      "readOnly": false,
+      "command": "{python} tools/crackloop.py land {flags}",
+      "description": "Bank a finished drive: matched sources into src/, near-misses ingested into the DB, free-tier clone/paramclone post-pass, linkcheck gate over everything banked. Stops before git commit/push - that stays a reviewable step.",
+      "args": [
+        {
+          "name": "out",
+          "type": "string",
+          "description": "The driver's results file.",
+          "flag": "--output"
+        },
+        {
+          "name": "wl",
+          "type": "string",
+          "description": "The worklist the drive ran.",
+          "flag": "--wl"
+        },
+        {
+          "name": "no_claims",
+          "type": "boolean",
+          "flag": "--no-claims",
+          "description": "Skip claiming the landed address ranges. Console sets this when no claims key is available."
+        }
+      ]
     }
   ]
 }

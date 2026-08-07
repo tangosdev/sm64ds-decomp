@@ -5,6 +5,7 @@
 #ifndef ROLLINGROCK_H
 #define ROLLINGROCK_H
 #include "types.h"
+#include "Model.h"
 
 struct RollingRock {
     u8  pad_000[0x4];
@@ -29,8 +30,9 @@ struct RollingRock {
     u16 unk_100;            /* 0x100 */
     u8  pad_102[0xa];
     s32 unk_10c;            /* 0x10c */
-    u8  mModel;            /* 0x110 */
-    u8  pad_111[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x110 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x110 */
     u8  mShadowModel;            /* 0x160 */
     u8  pad_161[0x57];
     u8  mMovingCylinderClsnWithPos;            /* 0x1b8 */

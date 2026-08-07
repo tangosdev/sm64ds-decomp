@@ -891,6 +891,36 @@ def line_of(nl_positions, pos):
     return bisect.bisect_right(nl_positions, pos) + 1
 
 
+def mangled_param_count(sym):
+    """How many parameters the mangled name encodes, or None if it cannot be read.
+
+    `this` is never encoded for a non-static member function, so this is the number
+    the C definition must exceed by exactly one for the first parameter to BE `this`.
+    Shared with tools/static_symbols.py, which classifies the whole corpus.
+    """
+    try:
+        import demangle
+        sig = demangle.signature(sym)
+    except Exception:
+        return None
+    if not sig or "(" not in sig:
+        # Unreadable must be None, never 0: a 0 would make every zero-argument C
+        # definition look static and delete real evidence.
+        return None
+    a = sig[sig.rfind("(") + 1: sig.rfind(")")].strip()
+    if not a or a == "void":
+        return 0
+    depth, n = 0, 1
+    for ch in a:
+        if ch in "(<":
+            depth += 1
+        elif ch in ")>":
+            depth -= 1
+        elif ch == "," and depth == 0:
+            n += 1
+    return n
+
+
 def extract_file(path, text, stem, cls, method, recall, headers=None):
     """Return {offset:int -> record} of evidence for the class this file defines."""
     code = strip_noncode(text)
@@ -936,6 +966,17 @@ def extract_file(path, text, stem, cls, method, recall, headers=None):
             # almost always a static member function (_ZN5Actor5SpawnEjj... takes
             # `unsigned int` first).  Attributing its offsets would invent fields.
             recall.reasons["file_first_param_not_pointer"] += 1
+            return None
+        # ...but that test cannot see a static whose first argument IS a pointer.
+        # `Stage::GraphCallback2(SceneRelated *)` sails through it, and then every
+        # access it makes is filed against Stage -- which is where the report's only
+        # width-contradiction came from. Ask arity instead, which is decidable: a
+        # non-static method's `this` is implicit and absent from the mangling, so the
+        # C definition carries exactly one parameter MORE than the symbol encodes.
+        # Equal counts mean the first parameter is a real argument, not `this`.
+        n_mangled = mangled_param_count(stem)
+        if n_mangled is not None and len(params) == n_mangled:
+            recall.reasons["file_static_by_arity"] += 1
             return None
         ty, stars, this_id = first
         bases = find_aliases(body, {this_id: (ty, stars)})

@@ -6,6 +6,15 @@
 #define SIGNPOST_H
 #include "types.h"
 
+/* Player is only ever pointed at from here, so a declaration is enough --
+ * no definition is pulled in. The typedef keeps the member spelled the
+ * same in C and in C++; the guard is common.h's idiom for the same job. */
+#ifndef PLAYER_FWD_DECLARED
+#define PLAYER_FWD_DECLARED
+struct Player;
+typedef struct Player Player;
+#endif
+
 struct SignPost {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
@@ -44,7 +53,11 @@ struct SignPost {
     u8  pad_58f[0x1];
     u8  unk_590;            /* 0x590 */
     u8  pad_591[0xb];
-    u8  unk_59c;            /* 0x59c */
+    /* Player * -- the ROM loads this WORD and passes it to _ZN6Player9DropActorEv as that
+       function's `this`, which is an object address, so the word is a Player *. It says
+       nothing about the rest of the marker's span, which stays explicit padding. Was a u8
+       marker. */
+    Player *unk_59c;            /* 0x59c */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

@@ -1,7 +1,4 @@
 //cpp
-// NONMATCHING: register allocation (div=9). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -312,16 +309,17 @@ extern "C" void func_ov006_020d3ba0(char *sb)
         *(u8 *)(sb + 0x53de) = 0;
         {
             int z = 0;
-            int x = 0x20;
-            int w = 0;
+            int xw[2];
+            xw[0] = 0x20;
+            xw[1] = 0;
             for (; z < 4; z++) {
-                ((P8 *)(sb + 0x4724))[z].lo = x << 12;
+                ((P8 *)(sb + 0x4724))[z].lo = xw[0] << 12;
                 ((P8 *)(sb + 0x4724))[z].hi = 0xb0000;
-                ((P8 *)(sb + 0x4744))[z].lo = w;
-                ((P8 *)(sb + 0x4744))[z].hi = w;
-                x += 0x40;
+                ((P8 *)(sb + 0x4744))[z].lo = xw[1];
+                ((P8 *)(sb + 0x4744))[z].hi = xw[1];
+                xw[0] += 0x40;
             }
-            *(s32 *)(sb + 0x4764) = w;
+            *(s32 *)(sb + 0x4764) = xw[1];
             {
                 int v = 0;
                 for (; v < 0x80; v++) {

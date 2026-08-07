@@ -17,8 +17,15 @@ SZ = {"u8":1,"s8":1,"char":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
       "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8}
 # Alignment is NOT the same as width once aggregates are in play: a Vector3 is 12
 # bytes wide but 4-aligned, and using the width for the padding test would invent
-# padding before every one. Scalars are self-aligned, so this starts as a copy.
-ALIGN = dict(SZ)
+# padding before every one.
+#
+# Scalars are self-aligned only up to 4. mwccarm 2004/b56 -proc arm946e aligns
+# `long long` and `double` to 4, not 8 -- measured, not assumed:
+#     struct { char c; long long v; };   /* sizeof == 12, not 16 */
+#     struct { char c; double d; };      /* sizeof == 12, not 16 */
+# (Asserting 16 instead is rejected by the compiler, so the probe discriminates.)
+# This is what lets `s64 unk_004;` sit at 0x004 in include/ClsnResult.h.
+ALIGN = {t: min(w, 4) for t, w in SZ.items()}
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 # A simple aggregate body: no nested braces, no methods.
@@ -77,6 +84,17 @@ DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*(\**)\s*(\w+)\s*"
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 
+# Class sizes come from the tree's own compile-time assertions:
+#   typedef char ModelAnim_size_must_be_0x64[...]
+# Without these an embedded member is an unknown type, which this checker skips --
+# and skipping without advancing the offset makes every later field mismatch.
+CLASS_SIZES = {}
+for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").glob("*.h"):
+    for _m in re.finditer(r"(\w+)_size_must_be_(0x[0-9a-fA-F]+)",
+                          _h.read_text(errors="replace")):
+        CLASS_SIZES[_m.group(1)] = int(_m.group(2), 16)
+SZ.update(CLASS_SIZES)
+
 rc = 0
 for path in sys.argv[1:]:
     txt = pathlib.Path(path).read_text(errors="replace")
@@ -128,7 +146,15 @@ for path in sys.argv[1:]:
             trusted = False
             continue
         _, _, name, arr, decl = m.groups()
-        a = 4 if (m and m.group(2)) else ALIGN.get(typ, w)
+        # Alignment is the strictest MEMBER alignment, never the type's size: a
+        # 100-byte ModelAnim aligns to 4, not to 100. Aligning to size padded 0xd4
+        # out to 0x12c and made every later field in the header mismatch.
+        #
+        # Prefer a computed alignment when we have one: learn_aggregates knows a
+        # Vector3 is 4-aligned because its members are. Fall back to min(w, 4) for
+        # a type known only by its `_size_must_be_` assertion -- the size alone
+        # cannot give the alignment, and no member of any struct here exceeds 4.
+        a = 4 if (m and m.group(2)) else ALIGN.get(typ, min(w, 4))
         if off % a:                       # compiler would insert padding here
             off += a - (off % a)
         if decl is not None and trusted:

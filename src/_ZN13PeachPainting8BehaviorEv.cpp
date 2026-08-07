@@ -4,8 +4,9 @@
 #include "PeachPainting.h"
 struct Actor { int DistToCPlayer(); };
 namespace cstd { int fdiv(int a, int b); }
-struct ModelBase { void ApplyOpacity(unsigned int o, int x); };
-/* Signature deliberately copied from the local declaration above: the
+/* ModelBase is the real class (include/ModelBase.h), reached through
+   PeachPainting.h -> Model.h. Its ApplyOpacity is declared there with one
+   argument; the ROM's takes two, so the call keeps the mangled spelling:
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */

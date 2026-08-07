@@ -121,9 +121,16 @@ struct Player : Actor {
     s32 unk_548;            /* 0x548 */
     s32 unk_54c;            /* 0x54c */
     s32 unk_550;            /* 0x550 */
-    u8  pad_554[0x4];
-    s32 unk_558;            /* 0x558 */
-    u8  pad_55c[0x4];
+    /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
+     * Stored as three consecutive words by Player::SetFloorSurfaceInfo
+     * (func_ov002_020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
+     * from SurfaceInfo::CopyNormalTo (func_02037dcc). 0x554 and 0x55c were
+     * marked padding until those stores were disassembled.
+     * mFloorNormalY is the slope-test input: func_ov002_020f035c compares it
+     * against a per-floor-class cosine threshold. */
+    s32 mFloorNormalX;            /* 0x554 */
+    s32 mFloorNormalY;            /* 0x558 */
+    s32 mFloorNormalZ;            /* 0x55c */
     s32 unk_560;            /* 0x560 */
     u8  pad_564[0x4];
     s32 unk_568;            /* 0x568 */
@@ -151,12 +158,28 @@ struct Player : Actor {
     s32 unk_64c;            /* 0x64c */
     s32 unk_650;            /* 0x650 */
     s32 unk_654;            /* 0x654 */
-    s32 unk_658;            /* 0x658 */
-    u8  pad_65c[0x8];
-    s32 unk_664;            /* 0x664 */
+    /* --- Unpacked CLPS (collision property) fields ---------------------
+     * Player::SetFloorSurfaceInfo (func_ov002_020c16ec) calls one bitfield
+     * getter per field on the floor's CLPS and stores each result here. The
+     * getters are 3-instruction accessors at 0x02037e14..0x02037e90; the
+     * bit extents below are read off those instructions, so the mapping is
+     * exact even where the meaning is not yet known.
+     *
+     * mFloorClass is the slipperiness class, 0..5. It drives five separate
+     * tables: the slope threshold (func_ov002_020f035c), slope accel
+     * (func_ov002_020c04e0), slide accel (func_ov002_020f02c8), slide loss
+     * factor (func_ov002_020f030c) and slope decel (func_ov002_020bf56c).
+     * It is the DS equivalent of N64's SURFACE_CLASS_*, but authored per
+     * triangle in the collision data rather than derived from a surface ID.
+     * NOTE the latch at 0x020c1738: if mFloorClass is already 1 the function
+     * returns early, refreshing neither the class nor the floor normal. */
+    s32 mFloorClass;            /* 0x658  CLPS bits 12-14, getter func_02037e58 */
+    s32 mClpsBits15_18;            /* 0x65c  getter func_02037e48 */
+    s32 mClpsBits6_11;            /* 0x660  getter func_02037e68 */
+    s32 mSurfaceType;            /* 0x664  CLPS bits 19-23, getter func_02037e38; values 6..9 are the quicksand tiers */
     u8  pad_668[0x4];
-    s32 mGroundSoundType;            /* 0x66c */
-    u8  pad_670[0x4];
+    s32 mGroundSoundType;            /* 0x66c  CLPS bits 0-4, getter func_02037e84 */
+    s32 mClpsWord1Lo;            /* 0x670  CLPS word1 bits 0-7, getter func_02037e90 */
     s32 mHurtDamage;            /* 0x674 */
     u8  pad_678[0xc];
     s32 mPeakY;            /* 0x684 */
@@ -164,7 +187,14 @@ struct Player : Actor {
     s32 mSinkDepth;            /* 0x68c */
     s32 unk_690;            /* 0x690 */
     s32 unk_694;            /* 0x694 */
-    u8  pad_698[0x4];
+    u8  pad_698[0x2];
+    /* Downhill direction of the current floor, binary angle (0x10000 per turn).
+     * Player::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
+     * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
+     * as [r5 + 0x600] + 0x9a). Consumed by Player::ApplySlopeAccel
+     * (func_ov002_020c04e0) via AngleDiff(mFloorAngle, moveYaw) to decide
+     * whether a slope speeds you up or slows you down. */
+    s16 mFloorAngle;            /* 0x69a */
     s16 mAngleYSpeed;            /* 0x69c */
     s16 unk_69e;            /* 0x69e */
     u16 mInvincibleTimer;            /* 0x6a0 */
@@ -533,10 +563,31 @@ struct Player : Actor {
     void Unk_020ca488();
 };
 
-/* Offsets seen through this-pointer but far outside the object - almost
- * certainly a different base (containing object or global). Needs semantic
- * review before they can be typed:
- *   0x4eb0, 0x4eb4, 0x4ee5, 0x62ad, 0x62af
+/* Offsets seen through this-pointer but far outside the object (sizeof(Player)
+ * is 0x768). These are NOT Player fields and must not be typed as such.
+ *
+ *   0x4eb0, 0x4eb4, 0x4ee5  -- DIAGNOSED: overlay misattribution, not a
+ *     different base object. These come from src/_ZN6Player16St_WallJump_InitEv.cpp.
+ *     ov002 and ov006 overlap in address space (ov002 0x020AD660..0x0210D9A0,
+ *     ov006 0x020BFEC0..0x02140260), and 0x020e17f8 falls inside both. The
+ *     symbol _ZN6Player16St_WallJump_InitEv is currently attached to the ov006
+ *     copy (size 0x5c, neighbours are all func_ov006_* placeholders), so that
+ *     file decompiles unrelated ov006 code while claiming to be a Player method
+ *     -- hence the nonsense offsets.
+ *
+ *     The real Player::St_WallJump_Init is almost certainly
+ *     func_ov002_020e17f8 (size 0xb0), which sits in ov002 in a dense run of
+ *     Player state methods, immediately after _ZN6Player16St_WallJump_MainEv
+ *     (0x020e1714 +0xe4, ending exactly at 0x020e17f8) and immediately before
+ *     _ZN6Player16St_BackFlip_InitEv (0x020e18a8). Init/Main pairs are adjacent
+ *     throughout this overlay.
+ *
+ *     This is the failure mode described in notes/overlay-ambiguous-references.md.
+ *     Fixing it means moving the symbol, not typing these offsets. Until then,
+ *     treat the St_WallJump_Init() declaration below as unverified.
+ *
+ *   0x62ad, 0x62af  -- still unexplained; source not yet traced. Needs semantic
+ *     review before they can be typed.
  */
 
 #endif

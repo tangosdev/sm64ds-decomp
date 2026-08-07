@@ -5,6 +5,7 @@
 #ifndef MRI_H
 #define MRI_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct MrI {
     u8  pad_000[0x8];
@@ -24,10 +25,11 @@ struct MrI {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x5b];
-    s32 unk_130;            /* 0x130 */
-    u8  pad_134[0x4];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
+       which the header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mTextureSequence;            /* 0x138 */
     u8  pad_139[0xb];
     s32 unk_144;            /* 0x144 */

@@ -46,7 +46,7 @@ int KoopaFlag::Behavior()
         }
     }
 
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     func_ov062_0211afbc(((char *)this));
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);

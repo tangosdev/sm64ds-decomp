@@ -6,12 +6,25 @@
 #define SOLIDHEAP_H
 #include "types.h"
 
+/* SolidHeapAllocator is only ever pointed at from here, so a declaration is enough --
+ * no definition is pulled in. The typedef keeps the member spelled the
+ * same in C and in C++; the guard is common.h's idiom for the same job. */
+#ifndef SOLIDHEAPALLOCATOR_FWD_DECLARED
+#define SOLIDHEAPALLOCATOR_FWD_DECLARED
+struct SolidHeapAllocator;
+typedef struct SolidHeapAllocator SolidHeapAllocator;
+#endif
+
 /* fwd */
 struct a;
 struct id_;
 struct SolidHeap {
     u8  pad_000[0x14];
-    u8  unk_014;            /* 0x014 */
+    /* SolidHeapAllocator * -- the ROM loads this WORD and passes it to
+       _ZN18SolidHeapAllocator10MemoryLeftEi as that function's `this`, which is an object
+       address, so the word is a SolidHeapAllocator *. It says nothing about the rest of
+       the marker's span, which stays explicit padding. Was a u8 marker. */
+    SolidHeapAllocator *unk_014;            /* 0x014 */
 #ifdef __cplusplus
     /* methods */
     bool VIntact();

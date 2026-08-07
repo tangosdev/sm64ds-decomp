@@ -5,6 +5,7 @@
 #ifndef DORRIE_H
 #define DORRIE_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Dorrie {
     u8  pad_000[0x8];
@@ -25,8 +26,15 @@ struct Dorrie {
     u8  pad_0e4[0x4];
     u8  unk_0e8;            /* 0x0e8 */
     u8  pad_0e9[0x3];
-    u8  mModelAnim;            /* 0x0ec */
-    u8  pad_0ed[0xe63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xec -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       ran 0xe00 bytes PAST the end of the object; that space is not evidenced and stays
+       explicit padding rather than being folded into the member. The destructor's
+       __destroy_arr((char *)c + 0x150, 7, 0x200, ...) runs over exactly this range -- 7
+       objects of 0x200 bytes, starting where the ModelAnim ends -- so the extent is
+       accounted for even though nothing names the element type. */
+    ModelAnim mModelAnim;            /* 0x0ec */
+    u8  pad_150[0xe00];
     u8  mWithMeshClsn;            /* 0xf50 */
     u8  pad_f51[0x1bb];
     u8  unk_110c;           /* 0x110c */

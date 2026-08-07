@@ -5,6 +5,7 @@
 #ifndef QUESTIONBLOCK_H
 #define QUESTIONBLOCK_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct QuestionBlock {
     u8  pad_000[0x8];
@@ -27,10 +28,11 @@ struct QuestionBlock {
     u8  pad_0f1[0x33];
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mModelAnim;            /* 0x320 */
-    u8  pad_321[0x4f];
-    u8  mAnimation;            /* 0x370 */
-    u8  pad_371[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x320 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over mAnimation (+0x50 = the
+       Animation base), which the header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x320 */
     u8  mShadowModel;            /* 0x384 */
     u8  pad_385[0x27];
     u8  unk_3ac;            /* 0x3ac */

@@ -5,7 +5,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BobOmbBuddy.h"
-typedef int Fix12;
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
 
 extern "C" {
@@ -13,7 +12,7 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 extern void func_ov084_0212c960(void* c, int i);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
