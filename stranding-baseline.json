@@ -1,0 +1,30 @@
+{
+  "_note": "Acknowledged stranding, keyed by PR. --check stays green for these until the branch tip MOVES AGAIN. Delete an entry once the branch is re-landed or deleted; regenerate with --bank.",
+  "acknowledged": {
+    "1111": {
+      "branch": "ov080-02125460-6bb-wall-map",
+      "tip": "a4984c3787b19a40765f05ada3713ecfcb3ca4a2",
+      "verdict": "ADDS"
+    },
+    "1138": {
+      "branch": "readable/base-conflicts",
+      "tip": "3a9874dd9a1608acd5a7431ad14100d3592c1285",
+      "verdict": "CONFLICT"
+    },
+    "1156": {
+      "branch": "tools/gen-header-bucketing",
+      "tip": "a850bcd1d4c0d0e4cfb3db5b9a7145718555b587",
+      "verdict": "CONFLICT"
+    },
+    "958": {
+      "branch": "match/ov002-St_BurnFire_Main",
+      "tip": "efaaa82f7ffbf7931ebc33782771021353ce12bd",
+      "verdict": "CONFLICT"
+    },
+    "999": {
+      "branch": "bank/ov002-020d3b9c-div52",
+      "tip": "53899bc61aabe19842498d80b9be8742a19745a1",
+      "verdict": "CONFLICT"
+    }
+  }
+}
