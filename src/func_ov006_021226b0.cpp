@@ -21,7 +21,7 @@ extern "C" void *func_ov006_021226b0(char *thiz)
     __destroy_arr(thiz + 0x500c, 5, 0xdc, &func_ov006_020ca604);
     *(int**)thiz = &_ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(thiz + 0x47e4);
-    func_ov004_020b29c0(thiz);
+    _ZN11dScMgBase_cD2Ev(thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, *(void**)&data_020a0eac);
     return thiz;
 }

@@ -17,7 +17,7 @@ void* func_ov006_020e76e4(char* p){
   _ZN5ModelD1Ev(p + 0x4f38);
   *(int*)p = (int)&data_ov006_0213e448;
   _ZN8Particle10SysTrackerD1Ev(p + 0x471c);
-  func_ov004_020b29c0(p);
+  _ZN11dScMgBase_cD2Ev(p);
   _ZN6Memory10DeallocateEPvP4Heap(p, data_020a0eac);
   return p;
 }

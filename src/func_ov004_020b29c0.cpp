@@ -12,7 +12,7 @@ extern void func_ov004_020b929c(void *);
 extern void _ZN9ActorBaseD2Ev(void *);
 }
 
-extern "C" void *func_ov004_020b29c0(void *c) {
+extern "C" void *_ZN11dScMgBase_cD2Ev(void *c) {
     *(int *)c = (int)data_ov004_020bc0c0;
     *(int *)data_ov004_020beb68 = 0;
     func_ov004_020b929c((char *)c + 0xf4);
