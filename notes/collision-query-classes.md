@@ -1150,3 +1150,34 @@ declaration position.
 
 The remaining levers are therefore genuine source-shape changes that reduce how many values
 are live at once across the prism body — not anything in the declaration block.
+
+### Loop control is already converged — it is not the pressure source (2026-08-06)
+
+The theory was that the draft holds loop state in registers where the ROM spills it, starving
+the prism body. **It does not.** The ROM's loop tails are pure memory traffic:
+
+```
+0x1ffd314  ldr r0,[sp,#0x88] ; ldrh r2,[r0,#2]! ; str r0,[sp,#0x88] ; cmp r2,#0 -> body
+0x1ffd328  x += [sp+0x68] ; cmp against [sp+0x14]      (x at 0x84, stepX 0x68, hiX 0x14)
+0x1ffd344  y += [sp+0x6c] ; cmp against [sp+0x1c]      (y at 0x80, stepY 0x6c, hiY 0x1c)
+0x1ffd378  z += [sp+0x70] ; cmp against [sp+0x24]      (z at 0x20, stepZ 0x70, hiZ 0x24)
+```
+
+and the draft emits `ldr r0,[sp,#0x88] ; ldrh r2,[r0,#2]! ; str r0,[sp,#0x88] ; cmp r2,#0`
+**instruction-identical and in the same slot**. `f` at `0x0c`, `tri` at `0x8c` and `vtx` at
+`0x90` match the ROM exactly too. Nothing about loop control needs changing.
+
+Two frame-map entries fall out of this and complete section 5 of the handoff:
+
+* **`stepX` is `sp+0x68`** — the gap previously marked `?` between `rsq` (`0x60`/`0x64`) and
+  `stepY`/`stepZ` (`0x6c`/`0x70`).
+* **`z` reuses the `loZ` slot at `sp+0x20`** (`ldr r1,[sp,#0x20] ; add ; str r1,[sp,#0x20]`,
+  compared against `hiZ` at `0x24`), where `x` and `y` get their own slots at `0x84`/`0x80`.
+  So the AABB block really is `loX 0x10, hiX 0x14, loY 0x18, hiY 0x1c, loZ 0x20, hiZ 0x24`.
+
+One real layout difference does remain, and it is not liveness: the ROM's leaf loop is
+**rotated** — body first from `0x1ffbc30`, test last at `0x1ffd314` branching backwards, with
+every `continue` in the prism body targeting that bottom test. The draft emits the test at the
+top with a forward exit branch and the body after it. That offsets the whole body against the
+target and is a plausible contributor to the large INSERT/DELETE ranges, but it is a loop-
+rotation question, not a register-pressure one.
