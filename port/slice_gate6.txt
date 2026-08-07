@@ -6,9 +6,9 @@
 
 src/_ZN3OAM5ResetEv.cpp
 src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
-src/_ZN3OAM11GetObjWidthEii.c
-src/_ZN3OAM12GetObjHeightEii.c
+src/_ZN3OAM11GetObjWidthEii.cpp
+src/_ZN3OAM12GetObjHeightEii.cpp
 src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.c
-src/_ZN3OAM5FlushEv.c
+src/_ZN3OAM5FlushEv.cpp
 src/func_020566dc.c
 src/func_02056674.c
