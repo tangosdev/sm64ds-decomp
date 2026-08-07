@@ -8,7 +8,7 @@ extern int _ZN11ShadowModelD1Ev(void* c);
 extern int _ZN14BlendModelAnimD1Ev(void* c);
 extern int _ZN12WithMeshClsnD1Ev(void* c);
 extern int _ZN25MovingCylinderClsnWithPosD1Ev(void* c);
-extern int func_ov002_020aed18(int* x);
+extern int _ZN5EnemyD2Ev(int* x);
 extern int data_020a0eac;
 extern int _ZN6Memory10DeallocateEPvP4Heap(void* p, void* h);
 int _ZN11ChiefChillyD0Ev(struct ChiefChilly *self) {
@@ -20,7 +20,7 @@ int _ZN11ChiefChillyD0Ev(struct ChiefChilly *self) {
     _ZN14BlendModelAnimD1Ev((char*)&self->mBlendModelAnim);
     _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
     _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
-    func_ov002_020aed18((int*)((void*)self));
+    _ZN5EnemyD2Ev((int*)((void*)self));
     _ZN6Memory10DeallocateEPvP4Heap(((void*)self), (void*)data_020a0eac);
     return (int)((void*)self);
 }

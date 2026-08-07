@@ -8,7 +8,7 @@
 /* recovered: named members + shared header, vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12PiranhaPlant */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 int *_ZN12PiranhaPlantD1Ev(int *t)
 {
     t[0] = (int)_ZTV12PiranhaPlant;
@@ -18,6 +18,6 @@ int *_ZN12PiranhaPlantD1Ev(int *t)
     _ZN12WithMeshClsnD1Ev((char *)t + 0x1c4);
     _ZN5ModelD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     return t;
 }

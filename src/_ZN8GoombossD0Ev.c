@@ -11,7 +11,7 @@ extern int _ZN15MaterialChangerD1Ev(void* c);
 extern int _ZN11ShadowModelD1Ev(void* c);
 extern int _ZN25MovingCylinderClsnWithPosD1Ev(void* c);
 extern int _ZN9ModelAnimD1Ev(void* c);
-extern int func_ov002_020aed18(int* x);
+extern int _ZN5EnemyD2Ev(int* x);
 extern int data_020a0eac;
 extern int _ZN6Memory10DeallocateEPvP4Heap(void* p, void* h);
 int _ZN8GoombossD0Ev(struct Goomboss *self) {
@@ -24,7 +24,7 @@ int _ZN8GoombossD0Ev(struct Goomboss *self) {
     __destroy_arr((char*)((void*)self)+0x274, 3, 0x28, (void*)_ZN11ShadowModelD1Ev);
     _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
     __destroy_arr((char*)((void*)self)+0x110, 4, 0x40, (void*)_ZN25MovingCylinderClsnWithPosD1Ev);
-    func_ov002_020aed18((int*)((void*)self));
+    _ZN5EnemyD2Ev((int*)((void*)self));
     _ZN6Memory10DeallocateEPvP4Heap(((void*)self), (void*)data_020a0eac);
     return (int)((void*)self);
 }

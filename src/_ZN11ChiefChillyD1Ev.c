@@ -7,7 +7,7 @@
 #include "ChiefChilly.h"
 extern int __destroy_arr(void* p, int a, int b, void* d);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
-extern int func_ov002_020aed18(int* x);
+extern int _ZN5EnemyD2Ev(int* x);
 extern int func_020072c0;
 extern int _ZTV11ChiefChilly[];
 int _ZN11ChiefChillyD1Ev(struct ChiefChilly *self) {
@@ -19,6 +19,6 @@ int _ZN11ChiefChillyD1Ev(struct ChiefChilly *self) {
   _ZN14BlendModelAnimD1Ev((char*)&self->mBlendModelAnim);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
-  func_ov002_020aed18(((int*)self));
+  _ZN5EnemyD2Ev(((int*)self));
   return (int)((int*)self);
 }

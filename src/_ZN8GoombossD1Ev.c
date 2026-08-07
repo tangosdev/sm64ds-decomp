@@ -7,7 +7,7 @@ extern void _ZN18TextureTransformerD1Ev(void* p);
 extern void _ZN15TextureSequenceD1Ev(void* p);
 extern void _ZN15MaterialChangerD1Ev(void* p);
 extern void _ZN9ModelAnimD1Ev(void* p);
-extern int func_ov002_020aed18(int* x);
+extern int _ZN5EnemyD2Ev(int* x);
 extern int func_020072c0;
 extern int _ZN11ShadowModelD1Ev;
 extern int _ZN25MovingCylinderClsnWithPosD1Ev;
@@ -22,6 +22,6 @@ int _ZN8GoombossD1Ev(struct Goomboss *self) {
   __destroy_arr((char*)((int*)self)+0x274, 3, 0x28, &_ZN11ShadowModelD1Ev);
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
   __destroy_arr((char*)((int*)self)+0x110, 4, 0x40, &_ZN25MovingCylinderClsnWithPosD1Ev);
-  func_ov002_020aed18(((int*)self));
+  _ZN5EnemyD2Ev(((int*)self));
   return (int)((int*)self);
 }

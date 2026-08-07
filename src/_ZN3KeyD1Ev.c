@@ -8,7 +8,7 @@
 /* recovered: named members + shared header, vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV3Key */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 int *_ZN3KeyD1Ev(int *t)
 {
     t[0] = (int)_ZTV3Key;
@@ -17,6 +17,6 @@ int *_ZN3KeyD1Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x1c8);
     _ZN5ModelD1Ev((char *)t + 0x178);
     _ZN9ModelAnimD1Ev((char *)t + 0x114);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     return t;
 }

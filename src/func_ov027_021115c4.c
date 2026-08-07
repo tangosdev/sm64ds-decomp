@@ -9,7 +9,7 @@ extern int data_ov027_02113930[];
 extern int data_ov064_0211b768[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov027_02113930 */
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 int *func_ov027_021115c4(int *t)
 {
     t[0] = (int)data_ov027_02113930;
@@ -18,6 +18,6 @@ int *func_ov027_021115c4(int *t)
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     return t;
 }

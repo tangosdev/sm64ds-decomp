@@ -7,7 +7,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6BobOmb */
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 int *_ZN6BobOmbD1Ev(int *t)
 {
     t[0] = (int)_ZTV6BobOmb;
@@ -15,6 +15,6 @@ int *_ZN6BobOmbD1Ev(int *t)
     _ZN9ModelAnimD1Ev((char *)t + 0x300);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x144);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x110);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     return t;
 }

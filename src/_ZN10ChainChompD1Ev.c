@@ -8,7 +8,7 @@
 extern int __destroy_arr(void *arr, int n, int sz, void *dtor);
 extern void func_020072c0(void);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *p);
-extern int func_ov002_020aed18(int *x);
+extern int _ZN5EnemyD2Ev(int *x);
 extern void *data_ov034_021147ec[];
 
 void *_ZN10ChainChompD1Ev(struct ChainChomp *self) {
@@ -20,6 +20,6 @@ void *_ZN10ChainChompD1Ev(struct ChainChomp *self) {
     _ZN11ShadowModelD1Ev((char *)&self->mShadowModel);
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)&self->mMovingCylinderClsnWithPos);
-    func_ov002_020aed18((int*)((char *)self));
+    _ZN5EnemyD2Ev((int*)((char *)self));
     return ((char *)self);
 }

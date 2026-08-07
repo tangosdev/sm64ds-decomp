@@ -6,7 +6,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV11daKpaFire_c */
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 extern void *data_020a0eac;
 int *_ZN10BowserFireD0Ev(int *t)
 {
@@ -14,7 +14,7 @@ int *_ZN10BowserFireD0Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x304);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x2d0);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x110);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }
