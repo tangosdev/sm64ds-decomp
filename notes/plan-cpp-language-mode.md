@@ -146,6 +146,32 @@ progress unrewarding, and it turns the reply to #821 into a number instead of an
 `--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. Re-bank the
 baseline in any commit that legitimately lowers a count.
 
+**Two corrections to the paragraph above, both measured.**
+
+*The headline WAS gameable, by basename.* "Cannot be gamed by renaming a `.c` to a
+`.cpp`" was true of the extension and false of the filename: `git mv
+_ZN5FaderD1Ev.c func_0201786c.c` with the content untouched **lowered**
+`unmigrated_total`, and renaming every mangled-stem file to `func_fake_N` drove the
+headline to *"0 of 1258 (0.0%)"* without editing a byte. The metric rewarded making
+the symbol table less true. `classify()` now reads the body when the filename does
+not carry a mangled symbol, which closes it; the counts on a clean tree are
+unchanged, because there was no hidden debt — only an open door.
+
+*A count may also rise, once, under a stated rule.* Naming a function the tree had
+never identified — `func_02017838` to `_ZN5FaderD2Ev` — makes the symbol table more
+true and `unmigrated_total` larger, because it genuinely mints a new hand-spelled
+mangled symbol. That is real debt and should be counted. So the rule is **not** an
+exemption:
+
+> A count may rise only together with a re-banked baseline in the same PR, and only
+> when the increase is exactly a set of renames giving previously-unnamed (`func_*`)
+> functions their evidenced C++ symbols. The PR must name the evidence. Any other
+> increase is a regression.
+
+CI checks a PR against the PR's own baseline, so this needs no tool change — the
+ratchet was never a wall, it is a tripwire that forces the increase to appear as a
+reviewable diff. What was missing was only the written rule.
+
 ### Phase 1 — SDK namespaces *(169 files, 37 namespaces) — zero layout risk*
 
 37 of the mangled-name prefixes have no `include/<Name>.h` **and no ctor/dtor**, which

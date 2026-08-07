@@ -127,22 +127,133 @@ def tracked_sources():
     return [p for p in out if p.endswith((".c", ".cpp"))]
 
 
-def classify(path):
-    """Return (kind, info) for a mangled-symbol file, or (None, None) if not one.
+# Any mangled symbol DEFINED in the body -- same shape as hand_spells_own_symbol,
+# but not anchored to the file's own stem, which costs two guards that function
+# does not need.
+#
+# The lookbehind is not decoration: without it `_Z` matches inside a longer
+# identifier, and `void START_INTRO_MINIMAP_ZOOM(char* c){` was read as defining a
+# symbol called `_ZOOM`.
+ANY_MANGLED_DEF = re.compile(r"(?<![A-Za-z0-9_])(_Z[A-Za-z0-9_]+)\s*\([^;{]*\)\s*\{", re.S)
 
-    `kind` is the ctor/dtor variant (C1/C2/D0/D1/D2) or 'method'.
+# What may precede a definition on its own line: a return type, storage class,
+# pointer/reference tokens, `extern "C"`. Anything else -- an open paren above all
+# -- means this is a CALL, not a definition. `if (_ZN4Heap6IntactEv(x)) {` matches
+# the shape exactly and is not a definition; 537 files were mis-swept before this
+# guard, nearly all of them calls inside an `if`.
+DEF_LINE_PREFIX = re.compile(r'^[\w\s\*&:"]*$')
+
+
+def _brace_depth(text, pos):
+    """Nesting depth at `pos`, ignoring braces inside strings, chars and comments.
+
+    This is the guard that actually decides definition vs call. A definition sits at
+    depth 0; a call sits inside some function body. The line-prefix check alone is
+    not enough, because a call continued onto its own line --
+
+        if (a &&
+            _ZN9Animation8FinishedEv(c + 0x3b0)) {
+
+    -- presents a prefix of pure whitespace and passes it. 15 files got through on
+    exactly that shape.
+
+    `extern "C" { ... }` and `namespace X { ... }` do NOT count as nesting. Most of
+    this tree's hand-spelled definitions sit inside an `extern "C"` block --
+    `src/_ZN5ActorD2Ev.cpp` is the type -- and treating that brace as depth would
+    leave exactly those files reachable by the rename game this guard exists to stop.
+    """
+    depth = 0
+    i = 0
+    n = min(pos, len(text))
+    linkage_depths = set()
+    while i < n:
+        ch = text[i]
+        if ch == "/" and i + 1 < n:
+            nxt = text[i + 1]
+            if nxt == "/":
+                j = text.find("\n", i)
+                if j < 0:
+                    break
+                i = j
+                continue
+            if nxt == "*":
+                end = text.find("*/", i + 2)
+                i = n if end < 0 else end + 2
+                continue
+        elif ch in "\"'":
+            quote, i = ch, i + 1
+            while i < n:
+                if text[i] == "\\":
+                    i += 2
+                    continue
+                if text[i] == quote:
+                    break
+                i += 1
+        elif ch == "{":
+            head = text[max(0, i - 80):i]
+            depth += 1
+            if re.search(r'(?:extern\s*"C(?:\+\+)?"|namespace(?:\s+\w+)?)\s*$', head):
+                linkage_depths.add(depth)
+        elif ch == "}":
+            linkage_depths.discard(depth)
+            depth -= 1
+        i += 1
+    return depth - len(linkage_depths)
+
+
+def defined_mangled_symbol(path):
+    """The mangled symbol this file DEFINES, if any, regardless of its filename.
+
+    The counters used to key entirely on the basename, which made the headline
+    metric trivially gameable by `git mv` -- and not only in theory:
+
+      * renaming `_ZN5FaderD1Ev.c` to `func_0201786c.c`, content untouched, LOWERED
+        `unmigrated_total`. The hand-spelled symbol was still there; the metric
+        improved because the tool stopped looking at the file.
+      * renaming every mangled-stem file to `func_fake_N` drove the headline to
+        "0 of 1258 (0.0%)" without editing one byte of source.
+
+    That inverts the incentive the ratchet exists to create: it rewarded making the
+    symbol table LESS true. Reading the body closes it -- a file that defines a
+    mangled symbol is a mangled-symbol file wherever it lives.
+    """
+    try:
+        t = (REPO / path).read_text(errors="ignore")
+    except OSError:
+        return None
+    for m in ANY_MANGLED_DEF.finditer(t):
+        line_start = t.rfind("\n", 0, m.start()) + 1
+        line = t[line_start:m.start()]
+        if line.lstrip().startswith(("//", "*", "/*")):
+            continue
+        if not DEF_LINE_PREFIX.match(line):
+            continue
+        if _brace_depth(t, m.start()) != 0:
+            continue
+        return m.group(1)
+    return None
+
+
+def classify(path):
+    """Return (kind, info, symbol) for a mangled-symbol file, or (None, None, None).
+
+    `kind` is the ctor/dtor variant (C1/C2/D0/D1/D2) or 'method'. `symbol` is the
+    name the classification is based on: normally the file's stem, but for a file
+    whose stem is not mangled it is the symbol found in the body -- see
+    `defined_mangled_symbol` for why that second path has to exist.
     """
     stem = path.rsplit("/", 1)[-1].rsplit(".", 1)[0]
-    if not MANGLED.match(stem):
-        return None, None
+    sym = stem if MANGLED.match(stem) else defined_mangled_symbol(path)
+    if not sym:
+        return None, None, None
     try:
-        info = D.demangle(stem)
+        info = D.demangle(sym)
     except Exception:
-        return None, None
+        return None, None, None
     if not info or not info.get("qualified"):
-        return None, None
+        return None, None, None
     kind = info.get("variant") or "method"
-    return kind, info
+    return kind, info, sym
 
 
 def by_value_class_args(info):
@@ -181,7 +292,7 @@ def audit():
     nonmatching = []
 
     for p in srcs:
-        kind, info = classify(p)
+        kind, info, sym = classify(p)
         if kind is None:
             continue
         stem = p.rsplit("/", 1)[-1].rsplit(".", 1)[0]
@@ -191,7 +302,11 @@ def audit():
         # Unmigrated means "the source spells the mangled symbol", not "the file is .c".
         # A NONMATCHING draft is not evidence a pattern works, so it counts as neither
         # migrated nor proven -- it is tracked on its own.
-        unmigrated = is_c or hand_spells_own_symbol(p, stem)
+        #
+        # `sym != stem` means the file was reached by reading its body rather than its
+        # name -- i.e. it hand-spells a mangled symbol under a `func_*` filename. That
+        # is unmigrated by construction, whatever the extension says.
+        unmigrated = is_c or sym != stem or hand_spells_own_symbol(p, stem)
         draft = is_nonmatching(p)
         if not is_c and unmigrated:
             cpp_handspelled.append(p)
@@ -281,8 +396,24 @@ def audit():
 
 
 # Every metric here is a defect count: lower is better, so CI fails on any increase.
-# `unmigrated_total` is the headline: it cannot be gamed by renaming a .c to .cpp,
-# because a hand-spelled symbol still counts however the file is named.
+# `unmigrated_total` is the headline. It cannot be gamed by renaming a file --
+# neither the extension nor the basename decides anything, because `classify` reads
+# the body when the name does not carry a mangled symbol.
+#
+# That second half was NOT true until it was tested. Keying on the basename alone
+# meant `git mv _ZN5FaderD1Ev.c func_0201786c.c`, content untouched, LOWERED the
+# count, and renaming every mangled-stem file to `func_fake_N` drove the headline to
+# "0 of 1258 (0.0%)" without editing a byte. The metric rewarded making the symbol
+# table less true, which is the opposite of its purpose.
+#
+# WHEN A COUNT MAY RISE. It may not, silently -- that is the whole gate. It may rise
+# in a PR that re-banks the baseline in the same commit, and only when the increase
+# is exactly a set of renames giving previously-unnamed (`func_*`) functions their
+# evidenced C++ symbols. The PR must name the evidence -- a vtable slot, or
+# `tools/dtor_variant_audit.py --discover`. Naming a function the tree had never
+# identified genuinely mints new language-mode debt, and the honest way to book that
+# is a loud, reviewable +N diff to a committed file, not an exemption. Any other
+# increase is a regression.
 RATCHET = [
     ("language_mode", "unmigrated_total"),
     ("language_mode", "cpp_still_handspelled"),
