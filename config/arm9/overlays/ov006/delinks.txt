@@ -6420,6 +6420,10 @@ src/func_ov006_0211eb90.c:
     complete
     .text start:0x0211eb90 end:0x0211ebdc
 
+src/func_ov006_0211ebdc.c:
+    complete
+    .text start:0x0211ebdc end:0x0211ee34
+
 src/func_ov006_0211ee34.c:
     complete
     .text start:0x0211ee34 end:0x0211f040
