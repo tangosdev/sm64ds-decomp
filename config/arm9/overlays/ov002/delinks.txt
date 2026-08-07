@@ -119,7 +119,7 @@ src/_ZN5EnemyD0Ev.c:
     complete
     .text start:0x020aed3c end:0x020aed74
 
-src/_ZN5EnemyD2Ev.c:
+src/_ZN5EnemyD1Ev.c:
     complete
     .text start:0x020aed74 end:0x020aed98
 
@@ -4061,7 +4061,7 @@ src/_ZN6PlayerD0Ev.cpp:
     complete
     .text start:0x020e67a8 end:0x020e6858
 
-src/_ZN6PlayerD2Ev.cpp:
+src/_ZN6PlayerD1Ev.cpp:
     complete
     .text start:0x020e6858 end:0x020e68f4
 
@@ -4621,7 +4621,7 @@ src/YoshiEgg_Spawn.c:
     complete
     .text start:0x020ee3d8 end:0x020ee42c
 
-src/_ZN8PlatformD2Ev.c:
+src/_ZN8PlatformD1Ev.c:
     complete
     .text start:0x020ee42c end:0x020ee464
 
@@ -4705,7 +4705,7 @@ src/_ZN8PathLiftD0Ev.c:
     complete
     .text start:0x020ef320 end:0x020ef390
 
-src/_ZN8PathLiftD2Ev.c:
+src/_ZN8PathLiftD1Ev.c:
     complete
     .text start:0x020ef390 end:0x020ef3ec
 

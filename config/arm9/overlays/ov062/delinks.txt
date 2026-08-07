@@ -482,6 +482,7 @@ src/_ZN6Klepto6RenderEv.cpp:
     .text start:0x0211c920 end:0x0211c94c
 
 src/_ZN6Klepto8BehaviorEv.cpp:
+    complete
     .text start:0x0211c94c end:0x0211cb4c
 
 src/_ZN6Klepto13InitResourcesEv.cpp:

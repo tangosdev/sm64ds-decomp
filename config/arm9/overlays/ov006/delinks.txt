@@ -1403,6 +1403,9 @@ src/func_ov006_020d3668.cpp:
     complete
     .text start:0x020d3668 end:0x020d36a4
 
+src/func_ov006_020d3ba0.c:
+    .text start:0x020d3ba0 end:0x020d452c
+
 src/func_ov006_020d452c.c:
     complete
     .text start:0x020d452c end:0x020d47f4
@@ -2079,6 +2082,10 @@ src/func_ov006_020dde28.c:
 src/func_ov006_020ddeb0.cpp:
     complete
     .text start:0x020ddeb0 end:0x020ddf9c
+
+src/func_ov006_020ddf9c.c:
+    complete
+    .text start:0x020ddf9c end:0x020de0e0
 
 src/func_ov006_020de0e0.cpp:
     complete

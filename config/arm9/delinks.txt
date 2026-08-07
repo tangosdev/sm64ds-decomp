@@ -2438,7 +2438,7 @@ src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp:
     complete
     .text start:0x020174e0 end:0x02017574
 
-src/_ZN5ColorD1Ev.c:
+src/_ZN10FaderColorD2Ev.c:
     complete
     .text start:0x02017574 end:0x02017598
 
@@ -3740,7 +3740,7 @@ src/func_02023544.c:
     complete
     .text start:0x02023544 end:0x02023598
 
-src/_ZN5SceneD2Ev.c:
+src/_ZN9BootSceneD1Ev.c:
     complete
     .text start:0x02023598 end:0x020235d4
 
@@ -3752,7 +3752,7 @@ src/func_02023624.c:
     complete
     .text start:0x02023624 end:0x02023688
 
-src/_ZN5StageD2Ev.c:
+src/_ZN5StageD1Ev.c:
     complete
     .text start:0x02023688 end:0x020236f0
 
@@ -5567,7 +5567,7 @@ src/_ZN16MeshColliderBaseD0Ev.c:
     complete
     .text start:0x02039668 end:0x0203968c
 
-src/_ZN16MeshColliderBaseD2Ev.c:
+src/_ZN16MeshColliderBaseD1Ev.c:
     complete
     .text start:0x0203968c end:0x0203969c
 
@@ -7164,10 +7164,6 @@ src/_ZN9ActorBaseD0Ev.c:
 src/_ZN9ActorBaseD1Ev.c:
     complete
     .text start:0x02043dbc end:0x02043dec
-
-src/_ZN9ActorBaseC1Ev.cpp:
-    complete
-    .text start:0x02043dec end:0x02043f4c
 
 src/func_02043f4c.c:
     complete
@@ -10862,6 +10858,10 @@ src/func_02064554.c:
 src/func_02064674.c:
     complete
     .text start:0x02064674 end:0x0206470c
+
+src/func_0206470c.c:
+    complete
+    .text start:0x0206470c end:0x020647a4
 
 src/func_020647a4.c:
     complete
