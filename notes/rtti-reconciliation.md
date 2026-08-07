@@ -459,7 +459,72 @@ Verified: ROM rebuild is byte-identical to the Phase-1 baseline
 no consumers yet, so they cannot move codegen — they are the scaffold that stops the next
 person re-deriving what is already known.
 
-## 9. What is not covered
+## 9. The two misattributed symbols: proven, not renameable yet
+
+`daOts_c` slots 3 and 9 are named `_ZN5Bully16CleanupResourcesEv` and
+`_ZN5Bully6RenderEv`; `daDsnBase_c` slots 3 and 9 are named after `Thwomp`.
+
+The `daOts_c` case is provable, and identical-code folding does not weaken it.
+**BigBully does not derive from Bully** — both derive from `daOts_c` — so a method
+BigBully inherits at that address cannot be Bully's. It belongs to `daOts_c` or above,
+and `daOts_c` differs from `dEnemyBase_c` at that slot. Even if Bully declared an
+identical override that folded to the same address, `daOts_c::` is the name that must be
+right. The `daDsnBase_c` case has the same vtable evidence but only one child, so no
+sibling corroborates it.
+
+The fields corroborate too: both `CleanupResources` bodies reach `mFileTable`, so that
+field belongs to the base rather than to `Bully`/`Thwomp` where the headers put it.
+
+**The rename was attempted and reverted.** It is not a mechanical change. Renaming the
+four symbols in `config/**/symbols.txt` and `delinks.txt`, renaming the four `src/` files
+and repointing them at new `daOts_c.h` / `daDsnBase_c.h` headers left every source
+function still reproducing (10,670 / 0 mismatching) but dropped module fidelity to
+**104/106**: six vtable words built as zero where the ROM has a pointer.
+
+    ov025  0x0211385c  built 00000000  rom 021331b8
+    ov025  0x02113874  built 00000000  rom 02133210
+    ov091  0x02135180  built 00000000  rom 021331b8   <- _ZTV6Thwomp   slot 3
+    ov091  0x02135198  built 00000000  rom 02133210   <- _ZTV6Thwomp   slot 9
+    ov091  0x02135208  built 00000000  rom 021331b8   <- daDsnBase_c   slot 3
+    ov091  0x02135220  built 00000000  rom 02133210   <- daDsnBase_c   slot 9
+
+The renamed functions compile and reproduce; what breaks is the *data* side — the vtable
+slots that reference them stop binding and emit zero. Note a third vtable in **ov025**
+also references them, which the ownership analysis had not predicted.
+
+So the finding stands and the rename does not: how dsd binds a cross-module vtable slot to
+a renamed function symbol is its own investigation, and it belongs in its own change.
+Reverted; the tree is back to 106/106 and the baseline ROM hash.
+
+## 10. Did the width bug corrupt any landed decision?
+
+No. Re-adjudicating all 451 conflict rows under the old constant-4 rule and the fixed one:
+
+| | |
+|---|---:|
+| rows carrying a source-evidence width | 451 |
+| rows whose adjudication changed | **123** |
+| of those, `unadjudicable` -> `confirms the base` | **123** |
+| of those, flipped against a base | **0** |
+
+The bug **suppressed** evidence rather than inverting it. A constant 4 matched neither a
+2-byte base nor a 2-byte derived, so the row fell to "cannot decide" instead of "confirms".
+Nothing was decided wrongly on it.
+
+It also retroactively confirms the change `notes/plan-base-headers.md` describes. Those six
+declarations are now landed — `Enemy` reads `s16` at `0x94` and `s32` at `0xa8`/`0xac`/`0x10c`,
+not the `u8` markers the plan found — and with correct widths the source evidence backs every
+one of them: 9 rows at `0x94` all reading w2, and 8 more at the other five offsets, all
+agreeing, all previously silent.
+
+Corpus-wide only **three** width conflicts survive, all the same benign shape — the derived
+header carries a `u8` marker where the base declares a real type:
+
+    Bullet   @0xac vs Enemy: base s32, derived u8
+    MantaRay @0xa4 vs Enemy: base s32, derived u8
+    Shark    @0xa4 vs Enemy: base s32, derived u8
+
+## 11. What is not covered
 
 RTTI gives class names, the inheritance graph, and multiple-inheritance base offsets. It does
 not give field names, field types, field offsets, or method names.
