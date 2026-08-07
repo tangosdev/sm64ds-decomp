@@ -8,7 +8,7 @@ int _ZN11ShadowModelD1Ev(void*);
 int _ZN9ModelAnimD1Ev(void*);
 int _ZN12WithMeshClsnD1Ev(void*);
 int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-int func_ov002_020aed18(void*);
+int _ZN5EnemyD2Ev(void*);
 int _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern int _ZTV14UnchainedChomp[];
 extern void func_02011508();
@@ -26,7 +26,7 @@ void* _ZN14UnchainedChompD0Ev(struct UnchainedChomp *self) {
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
-  func_ov002_020aed18(((char*)self));
+  _ZN5EnemyD2Ev(((char*)self));
   _ZN6Memory10DeallocateEPvP4Heap(((char*)self), (void*)data_020a0eac[0]);
   return ((char*)self);
 }

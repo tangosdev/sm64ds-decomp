@@ -3417,11 +3417,11 @@ src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.c:
     complete
     .text start:0x02020884 end:0x0202096c
 
-src/_ZN3OAM12GetObjHeightEii.c:
+src/_ZN3OAM12GetObjHeightEii.cpp:
     complete
     .text start:0x0202096c end:0x02020980
 
-src/_ZN3OAM11GetObjWidthEii.c:
+src/_ZN3OAM11GetObjWidthEii.cpp:
     complete
     .text start:0x02020980 end:0x02020994
 
@@ -3437,7 +3437,7 @@ src/_ZN3OAM5ResetEv.cpp:
     complete
     .text start:0x02021788 end:0x02021864
 
-src/_ZN3OAM5FlushEv.c:
+src/_ZN3OAM5FlushEv.cpp:
     complete
     .text start:0x02021864 end:0x02021898
 
@@ -3445,15 +3445,15 @@ src/_ZN3OAM4LoadEv.c:
     complete
     .text start:0x02021898 end:0x0202194c
 
-src/_ZN3OAM9RenderSubEP7OamAttrii.c:
+src/_ZN3OAM9RenderSubEP7OamAttrii.cpp:
     complete
     .text start:0x0202194c end:0x0202199c
 
-src/_ZN3OAM9RenderSubEP7OamAttriiii.c:
+src/_ZN3OAM9RenderSubEP7OamAttriiii.cpp:
     complete
     .text start:0x0202199c end:0x020219f0
 
-src/_ZN3OAM12EnableSubOAMEv.c:
+src/_ZN3OAM12EnableSubOAMEv.cpp:
     complete
     .text start:0x020219f0 end:0x02021a04
 

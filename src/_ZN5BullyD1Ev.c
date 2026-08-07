@@ -9,7 +9,7 @@ extern int _ZTV5Bully[];
 extern int data_ov064_0211b768[];
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV5Bully */
-extern void func_ov002_020aed18(void *);
+extern void _ZN5EnemyD2Ev(void *);
 int *_ZN5BullyD1Ev(int *t)
 {
     t[0] = (int)_ZTV5Bully;
@@ -18,6 +18,6 @@ int *_ZN5BullyD1Ev(int *t)
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
-    func_ov002_020aed18(t);
+    _ZN5EnemyD2Ev(t);
     return t;
 }

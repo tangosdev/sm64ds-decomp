@@ -3,7 +3,7 @@
 #include "Wiggler.h"
 extern void _ZN12WithMeshClsnD1Ev(void *);
 extern void __destroy_arr(void *p, int count, int size, void *dtor);
-extern int func_ov002_020aed18(int *x);
+extern int _ZN5EnemyD2Ev(int *x);
 extern void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *h);
 extern char _ZTV7Wiggler[];
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void);
@@ -24,7 +24,7 @@ int _ZN7WigglerD0Ev(struct Wiggler *self) {
   __destroy_arr(((char *)self)+0x368, 5, 0x14, (void*)_ZN15TextureSequenceD1Ev);
   __destroy_arr(((char *)self)+0x304, 5, 0x14, (void*)_ZN15MaterialChangerD1Ev);
   __destroy_arr(((char *)self)+0x110, 5, 0x64, (void*)_ZN9ModelAnimD1Ev);
-  func_ov002_020aed18((int*)((char *)self));
+  _ZN5EnemyD2Ev((int*)((char *)self));
   _ZN6Memory10DeallocateEPvP4Heap(((char *)self), data_020a0eac);
   return (int)((char *)self);
 }

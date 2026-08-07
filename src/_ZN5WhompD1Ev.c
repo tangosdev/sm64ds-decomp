@@ -8,7 +8,7 @@
 /* recovered: named members + shared header */
 #include "Whomp.h"
 extern void _ZN15TextureSequenceD1Ev(void*);
-extern int func_ov002_020aed18(int* x);
+extern int _ZN5EnemyD2Ev(int* x);
 void* _ZN5WhompD1Ev(struct Whomp *self) {
   *(int*)((char*)self) = (int)_ZTV5Whomp;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMovingMeshCollider);
@@ -16,6 +16,6 @@ void* _ZN5WhompD1Ev(struct Whomp *self) {
   _ZN15TextureSequenceD1Ev((char*)&self->mTextureSequence);
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  func_ov002_020aed18((int*)((char*)self));
+  _ZN5EnemyD2Ev((int*)((char*)self));
   return ((char*)self);
 }

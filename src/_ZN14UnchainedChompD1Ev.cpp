@@ -9,7 +9,7 @@
 #include "UnchainedChomp.h"
 extern "C" void __destroy_arr(void* p, int n, int sz, void* dtor);
 extern "C" void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-extern "C" int func_ov002_020aed18(int* x);
+extern "C" int _ZN5EnemyD2Ev(int* x);
 
 extern int _ZTV14UnchainedChomp;
 extern "C" void func_02011508(void);
@@ -28,6 +28,6 @@ extern "C" void* _ZN14UnchainedChompD1Ev(char* thiz)
     _ZN9ModelAnimD1Ev(c + 0x30c);
     _ZN12WithMeshClsnD1Ev(c + 0x150);
     _ZN25MovingCylinderClsnWithPosD1Ev(c + 0x110);
-    func_ov002_020aed18((int*)c);
+    _ZN5EnemyD2Ev((int*)c);
     return c;
 }

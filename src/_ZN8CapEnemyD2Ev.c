@@ -19,13 +19,13 @@ extern void *data_ov002_02108284[];
 
 extern void func_ov001_020ab3a0(void *icon);             /* 0x020ab3a0 */
 extern void *_ZN5ModelD1Ev(void *model);             /* 0x02016d20 */
-extern void *func_ov002_020aed18(struct CapEnemy *thiz);   /* 0x020aed18 */
+extern void *_ZN5EnemyD2Ev(struct CapEnemy *thiz);   /* 0x020aed18 */
 
 struct CapEnemy *_ZN8CapEnemyD2Ev(struct CapEnemy *thiz)
 {
     thiz->vtable = (void **)data_ov002_02108284;
     func_ov001_020ab3a0(thiz->capIcon);
     _ZN5ModelD1Ev(thiz->capModel);
-    func_ov002_020aed18(thiz);
+    _ZN5EnemyD2Ev(thiz);
     return thiz;
 }
