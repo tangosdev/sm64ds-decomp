@@ -1060,3 +1060,46 @@ carries scalars the ROM never materialises: `size`, `mask`, `cy`, `cz`, `one`, `
 each. Thirteen of those are spilling. The next move is to fold them into their uses one at a
 time and watch `sub sp, sp, #N`, which is a direct readout and far cheaper than scoring each
 attempt on the alignment ratio.
+
+### Chasing the frame directly is a dead end — it is register pressure (2026-08-06)
+
+Every declaration-level lever was swept against `sub sp, sp, #N` directly. Baseline `0x1e4`,
+ROM `0x1b4`:
+
+| attempt | frame | verdict |
+|---|---|---|
+| fold `one` into its two uses | `0x1e4` | inert |
+| fold `mask` into its three uses | `0x1e4` | inert |
+| fold `size` into its four uses | `0x1e4` | inert |
+| fold `lensq` into `dsq` | `0x1e4` | inert |
+| fold `stepX` into its use | `0x1ec` | **worse** |
+| re-scope the wall-block locals into the wall block | `0x1e4` | inert |
+| order the aggregates as the ROM does | `0x1e4` | inert |
+
+Folding a declared local does not free a slot, so mwccarm is not allocating one per
+declaration here — it allocates by need, and the conveniences were already register-resident.
+Re-scoping does not free one either, so C scope is not driving slot reuse.
+
+And the decisive measurement:
+
+```
+below 0x180 : ROM 87   cand 87
+below 0x1a0 : ROM 95   cand 95
+below 0x1b0 : ROM 99   cand 99      <- ROM's highest slot is 0x1ac
+cand also holds 0x1b0 0x1b4 0x1b8 0x1bc 0x1c0 0x1c4 0x1c8 0x1cc 0x1d0 0x1d4 0x1d8 0x1dc 0x1e0
+```
+
+**The two frames are identically dense everywhere the ROM has slots at all.** The draft simply
+needs thirteen more live values spilled, stacked on top. That is register pressure from the
+code being structurally different, not a frame or declaration problem — the surviving thirteen
+are the three `den`s, `nrm[3]`, `sn`, a three-word wall-block group and one more, all of which
+the ROM also has and fits underneath `0x1ac` by keeping fewer things live at once.
+
+**So stop optimising the frame.** It is a symptom, not a cause; it will close when the code
+converges, and no rearrangement of declarations will close it first. The sqrt is not implicated
+either — four expansions on both sides, same shape, both loading their `0` and `1` from hoisted
+frame slots.
+
+Reusable harness for this kind of question: `scratchpad/sweep.py` applies a list of textual
+folds independently and prints frame / ratio / equal per variant, which is far cheaper than
+editing and scoring by hand.
