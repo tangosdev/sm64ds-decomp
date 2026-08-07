@@ -6,8 +6,8 @@
  *   ClsnResult::~ClsnResult(this+0xc4)   (0x02038144)
  *   ClsnResult::~ClsnResult(this+0x9c)
  *   ClsnResult::~ClsnResult(this+0x74)
- *   func_0203ac1c(this+0x38)
- *   func_020380ec(this+0x10)
+ *   _ZN8dM3dGSphD2Ev(this+0x38)
+ *   _ZN10ClsnResultD2Ev(this+0x10)
  *   func_020354d0(this)                  (base dtor)
  *   Memory::operator_delete2(this)       (0x0203cbcc)
  * returns this.
@@ -26,8 +26,8 @@ extern void *data_02099348[];
 extern void *data_02099358[];
 
 extern void _ZN10ClsnResultD1Ev(void *thiz);   /* 0x02038144 */
-extern void func_0203ac1c(void *thiz);          /* 0x0203ac1c */
-extern void func_020380ec(void *thiz);          /* 0x020380ec */
+extern void _ZN8dM3dGSphD2Ev(void *thiz);          /* 0x0203ac1c */
+extern void _ZN10ClsnResultD2Ev(void *thiz);          /* 0x020380ec */
 extern void func_020354d0(struct Obj *thiz);    /* 0x020354d0 */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr); /* 0x0203cbcc */
 
@@ -39,8 +39,8 @@ struct Obj *func_02037c40(struct Obj *thiz)
     _ZN10ClsnResultD1Ev((char *)thiz + 0xc4);
     _ZN10ClsnResultD1Ev((char *)thiz + 0x9c);
     _ZN10ClsnResultD1Ev((char *)thiz + 0x74);
-    func_0203ac1c((char *)thiz + 0x38);
-    func_020380ec((char *)thiz + 0x10);
+    _ZN8dM3dGSphD2Ev((char *)thiz + 0x38);
+    _ZN10ClsnResultD2Ev((char *)thiz + 0x10);
     func_020354d0(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;

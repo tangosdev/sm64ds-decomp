@@ -14,8 +14,8 @@ int *_ZN10SphereClsnD1Ev(struct SphereClsn *self) {
     _ZN10ClsnResultD1Ev((char *)&self->mClsnResult3);
     _ZN10ClsnResultD1Ev((char *)&self->mClsnResult2);
     _ZN10ClsnResultD1Ev((char *)&self->mClsnResult1);
-    func_0203ac1c((char *)&self->unk_038);
-    func_020380ec((char *)&self->unk_010);
+    _ZN8dM3dGSphD2Ev((char *)&self->unk_038);
+    _ZN10ClsnResultD2Ev((char *)&self->unk_010);
     func_020354d0(((int *)self));
     return ((int *)self);
 }

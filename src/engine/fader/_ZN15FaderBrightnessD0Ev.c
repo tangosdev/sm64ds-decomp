@@ -11,13 +11,13 @@ struct FaderBrightness {
 
 extern void *data_0208eacc[];
 
-extern void *func_02017838(struct FaderBrightness *thiz);  /* 0x02017838 */
+extern void *_ZN5FaderD2Ev(struct FaderBrightness *thiz);  /* 0x02017838 */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr);        /* 0x0203cbcc */
 
 struct FaderBrightness *_ZN15FaderBrightnessD0Ev(struct FaderBrightness *thiz)
 {
     thiz->vtable = (void **)data_0208eacc;
-    func_02017838(thiz);
+    _ZN5FaderD2Ev(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

@@ -7,6 +7,6 @@ int *_ZN12MeshColliderD1Ev(int *t)
 {
     t[0] = (int)_ZTV12MeshCollider;
     func_02038224((char *)t + 0x24);
-    func_02039658(t);
+    _ZN16MeshColliderBaseD2Ev(t);
     return t;
 }

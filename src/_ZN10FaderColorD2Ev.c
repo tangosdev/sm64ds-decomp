@@ -10,11 +10,11 @@
  */
 
 extern int data_0208eb2c[];          /* _ZTV10FaderColor, still an unnamed placeholder */
-extern int func_020177c4(int *self); /* FaderBrightness's base-subobject dtor */
+extern int _ZN15FaderBrightnessD2Ev(int *self); /* FaderBrightness's base-subobject dtor */
 
 int _ZN10FaderColorD2Ev(int *self)
 {
     self[0] = (int)data_0208eb2c;  /* +0x00 vptr */
-    func_020177c4(self);
+    _ZN15FaderBrightnessD2Ev(self);
     return (int)self;
 }

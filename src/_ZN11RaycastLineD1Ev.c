@@ -10,7 +10,7 @@ int *_ZN11RaycastLineD1Ev(struct RaycastLine *self) {
     *(int *)((char *)&self->unk_010) = (int)VTable_ClsnResult_RaycastLineThunk;
     func_0203ac50((char *)&self->unk_064);
     func_ov002_020feab8((char *)&self->unk_038);
-    func_020380ec((char *)&self->unk_010);
+    _ZN10ClsnResultD2Ev((char *)&self->unk_010);
     func_020354d0(((int *)self));
     return ((int *)self);
 }

@@ -33,7 +33,7 @@
  *
  *   0x0203968c  sits in vtable slot 0, and nothing bl's it   -> D1
  *   0x02039658  bl'd by MeshCollider's D0/D1/D2, never in a
- *               vtable (currently named func_02039658)       -> D2
+ *               vtable (currently named _ZN16MeshColliderBaseD2Ev)       -> D2
  *
  * By the #774 rule (a class vtable carries [D1, D0] and never D2; D2 is
  * reached by direct call alone) the symbol names are on the wrong bodies:
