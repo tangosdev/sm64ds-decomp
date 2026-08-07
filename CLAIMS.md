@@ -32,6 +32,7 @@ start converting a class; the same staleness rule applies.
 
 
 | Range | Who | Claimed | Status |
+| ov075 func_ov075_02115bcc (0x02115bcc, size 0x250) | lunavyqo (Grok) | 2026-08-07 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: sibling fill shape (x-=w;x>>=3;p+=x then y load); from near-miss div=7→0; API clm_e3d45d6f25b3 kept |
 | ov004 __sinit_ov004_020b955c (0x020b955c, size 0x574) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); levers: field-load `tmp.a/b` from `data_02086b58` then `w[0]/w[1]` copy; mid-stream `p0.a=w[0]` / fills / `p0.b=w[1]` + bf4f8 p1-p4+p11=tmp; from near-miss 299→142→22→0; API clm_05b55ea60b6a kept |
 | ov007 func_ov007_020c49bc (0x020c49bc, size 0x440) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical (mwccarm 2004/b56); strength_reduction off + 6k decl sl/sb + sp4C-before-sp30 + else-path name-swap r6/r7; API clm_671dd186507f kept |
 | ov007 func_ov007_020c9688 (0x020c9688, size 0x300) | lunavyqo (Grok) | 2026-08-06 | **active** — continue grind from near-miss div=33; API clm_601e7964eeb4 |
