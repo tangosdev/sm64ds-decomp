@@ -233,35 +233,102 @@ out, because **both** ways of spelling a named D2 fail a gate:
 | `_ZN5FaderD2Ev` hand-spelt in a `.c` | the langmode ratchet: `unmigrated_total` 1274 → 1280. It is *right* — a hand-spelled mangled symbol is exactly the backlog `plan-cpp-language-mode.md` exists to shrink. Re-banking a **risen** count is the fake progress Phase 0 was built to make unrewarding. |
 | a real `Fader::~Fader() {}` | `eligible.py`: **"extra sections: .data"**, and enrolled falls 10699 → 10695. |
 
-The second is the interesting one. Defining a destructor makes it the class's **key
-function**, so mwccarm emits the whole vtable group into that translation unit.
-Dumping the object confirms it — alongside `_ZN5FaderD2Ev` it contains:
+The second is the interesting one, and it has **two independent causes**. An earlier
+revision of this section named only the first and drew the wrong conclusion from it.
 
-    _ZTV5Fader      _ZTI5Fader      _ZTS5Fader      _ZN5FaderD0Ev
+**Cause 1 — the key function.** Defining a class's key function (the first non-inline
+virtual declared) makes mwccarm emit the vtable group into that TU:
 
-Those already exist, delinked from the ROM. A source file cannot own them too.
+    Fader::~Fader() {}   ->  .data x3 + .text x3,  defines _ZTV5Fader _ZTI5Fader _ZTS5Fader
 
-`include/MeshColliderBase.h` and `include/ModelBase.h` had already named this
-arrangement without spelling out the consequence: *"THE DESTRUCTOR IS DECLARED FIRST
-AND NEVER DEFINED AS A METHOD -- the key-function arrangement"*, and
-`include/MeshCollider.h`'s *"The structors stay C files."*
+**Cause 2 — one definition, three functions.** A `~Class()` definition always emits
+**D2, D0 and D1**, vtable or not, so the object has three `.text` sections.
+`eligible.py:132-136` rejects that on its own:
+
+    ActorBase::~ActorBase() {}  ->  .text x3, defines NO vtable
+                                    (ActorBase declares its dtor LAST, so it is not
+                                     the key function -- cause 1 does not apply)
+                                    still rejected: "3 .text sections (multi-function TU)"
+
+So the two causes are separable, and **neither alone is the whole story**:
+
+| | cause 1 (vtable) | cause 2 (3 functions) |
+|---|---|---|
+| dtor declared first (`Fader`) | yes | yes |
+| dtor declared last (`ActorBase`) | **no** | yes |
+
+Tree-wide today: **85** files are rejected with `extra sections: .data` and **13** with
+`N .text sections (multi-function TU)`.
+
+**None of this is new to the tree, and `include/Actor.h:42-49` states it exactly:**
+
+> The rule, stated precisely: the key function -- the first non-inline virtual
+> declared -- must never be defined as a real method in any translation unit.
+> Declaring the destructor first pins that role to TUs which by construction never
+> will.
+
+It also records *why* the choice is free: *"An override takes its base's slot wherever
+it is declared, so putting `~Actor` first costs nothing and makes it the key
+function."* `include/MeshColliderBase.h` and `include/ModelBase.h` name the same
+arrangement (*"THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD"*),
+`include/MeshCollider.h` states it as *"The structors stay C files"*, and
+`include/ActorBase.h` reaches it a third way — declaring `InitResources` (slot 0)
+in-class but defining it as an `extern "C"` free function on purpose.
+
+So the convention is deliberate and well documented. What is **not** written down
+anywhere is its consequence for `notes/plan-cpp-language-mode.md`, whose Phase 2
+schedules **463 destructor files** that this convention makes unmigratable — and
+which nominates pilots on the assumption that destructors are the tractable part.
+
+Confirmed empirically on `2004/b56` (Actor.h cites CW 1.2), by compiling three probes
+against the real `Fader.h`:
+
+    Fader::~Fader() {}          (declared first)  -> emits _ZTV5Fader _ZTI5Fader _ZTS5Fader
+    void Fader::AdvanceFade(){} (not first)       -> emits nothing
+    int Fader::IsAtEnd(){...}   (not first)       -> emits nothing
+
+**Phase 3 is therefore unaffected** — every non-key virtual can be migrated to a real
+method today. It is Phase 2 specifically that is blocked, which inverts the plan's
+stated ordering.
 
 **This is why `D2` reads 0 migrated, and it is not a codegen problem.** The bytes are
 perfect: `Fader::~Fader() {}` reproduces D2 at `0x02017838` *and* D1 at `0x0201786c`,
-both exact. What blocks it is symbol ownership.
+both exact. What blocks it is how the object is *shaped*, not what it computes.
 
-The 72 D1s the audit counts as migrated dodge it with a **shadow struct** —
-`struct Actor { char pad[0xd0]; virtual ~Actor(); };` declared locally, destructor
-never defined, so no vtable is emitted. That route is closed here: `plan-cpp-language-mode.md`
-§6 forbids a slice from declaring a struct body locally, and Phase 4 exists to delete
-the 1,638 that already do. Trading a correct symbol name for new shadow debt is the
-§3.1 failure this plan is built around.
+### The 72 "proven" D1s are not landed, and never were
 
-So the real prerequisite is **vtable ownership**: until `_ZTV5Fader` and friends come
-from a source file rather than from delinked ROM data, no destructor of a polymorphic
-class can be written as a real method against its real header. That is a
-`runbook-type-reconstruction.md` §7 dead end, and it gates Phase 2 far more than the
-per-class header work does.
+`plan-cpp-language-mode.md` §2 reports `D1 | 188 unmigrated | 72 proven | **proven**`.
+An earlier revision of this note said those 72 dodge the vtable with a **shadow struct**
+whose destructor is declared and never defined. **Both claims are false**, and a compile
+settles it:
+
+    src/_ZN6CannonD1Ev.cpp     -> .data x5 + .text x3
+                                  DEFINES _ZTV6Cannon, _ZTI6Cannon, _ZTS6Cannon,
+                                          _ZTI5Actor, _ZTS5Actor
+                                  DEFINES _ZN6CannonD0Ev, D1Ev, D2Ev
+
+Its shadow `struct Cannon : Actor { virtual ~Cannon(); }` declares the destructor
+first, so it *is* the key function. `eligible.py` gives every one of them
+`extra sections: .data`, and none appears in `build/eligible-names.txt`. Their
+`delinks.txt` entries carry a bare `.text start:… end:…` with **no `complete`**.
+
+**They are matched, not enrolled. Enrolled destructor migrations in this tree: zero.**
+The plan's "proven" column is measuring compilation, not landing — and the shadow
+struct was never the mechanism that made them work, because they do not work.
+
+### So vtable ownership is *not* the prerequisite
+
+That was this note's previous conclusion and it is wrong in both directions:
+
+- **not necessary** — `ActorBase`'s destructor emits no vtable at all;
+- **not sufficient** — the three-`.text` object survives it.
+
+The actual prerequisite is **a delink/eligibility model that can bind one source file to
+a multi-function address range**. That is plausible rather than fanciful: mwccarm emits
+the group in **D2, D0, D1** order, which is exactly the ROM's per-class layout —
+`ActorBase` `0x02043d48`/`0x02043d78`/`0x02043dbc`, `Actor` `0x020112c8`/`0x02011314`/
+`0x02011374`, and both fader classes the same. One TU already reproduces the whole
+contiguous range in the right order; nothing can currently *bind* it.
 
 ### Caveats, unresolved
 

@@ -49,11 +49,19 @@ honestly:
 By symbol kind, with what is actually *proven* — a genuinely migrated file that is not a
 `// NONMATCHING` draft:
 
-| kind | unmigrated | proven | status |
+> **"proven" in this table means *compiles as real C++*, not *lands*.** For the
+> destructor rows it does not mean landed and never did: all 72 `D1`s and 3 `D0`s
+> are rejected by `eligible.py` (`extra sections: .data`, or a multi-function TU) and
+> none appears in `build/eligible-names.txt`. **Enrolled destructor migrations in this
+> tree: zero.** Two blockers cause it, and neither is codegen —
+> `notes/dtor-variant-audit.md` §7 and `runbook-type-reconstruction.md` §7. The
+> `plain methods` row is unaffected and genuinely does land.
+
+| kind | unmigrated | compiles | status |
 |---|---|---|---|
-| plain methods | 842 | 1,079 | **proven at scale** |
-| `D1` complete dtor | 188 | 72 | **proven** |
-| `D0` deleting dtor | 258 | 3 | **barely proven** — treat as near-research |
+| plain methods | 842 | 1,079 | **proven at scale, and enrollable** |
+| `D1` complete dtor | 188 | 72 | compiles; **0 enrolled** — blocked, see above |
+| `D0` deleting dtor | 258 | 3 | compiles; **0 enrolled** — blocked, see above |
 | `D2` base dtor | 17 | 0 | **UNPROVEN** |
 | `C1` complete ctor | 41 | 0 | **UNPROVEN** |
 | `C2` base ctor | 11 | 0 | **UNPROVEN** |
@@ -202,7 +210,17 @@ research — split those files out of the slice rather than letting them block i
 Heed the runbook's warning on the C side: a polymorphic class needs an explicit
 `void* vtable; /* 0x00 */` under `#else`, or every C includer's offsets shift by 4.
 
-### Phase 3 — Plain methods *(842, less the 57 excluded)*
+### Phase 3 — Plain methods *(842, less the 57 excluded)* — **do this BEFORE Phase 2**
+
+**Reordered.** Phase 2 is blocked on tooling that does not exist (a delink model that
+can bind one file to a multi-function range); Phase 3 is not blocked at all. Defining a
+non-key virtual against a real header emits a single clean `.text` — verified on
+`2004/b56` — so these files land today while destructors cannot. Scheduling 463
+unlandable files ahead of 757 landable ones was an artifact of not knowing the blocker.
+
+Good first slices are classes with **no destructor rows at all**, so the blocker cannot
+bite: `SaveData` (16 files, 11 TUs) then `Message` (18 files, 14 TUs). Both have
+headers, neither has an RTTI record, so neither is polymorphic.
 
 Same slices, same classes, after that class's dtors are done. Includes converting raw
 mangled sibling calls into real calls where the callee now has a proper declaration —

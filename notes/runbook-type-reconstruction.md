@@ -364,14 +364,34 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   destructor. Those already exist as delinked ROM data, so `eligible.py` rejects the
   file with **"extra sections: .data"** and the enrolled count falls.
 
-  This is not a codegen problem — the bytes are exact, D1 and D2 both. It is symbol
-  ownership, and it is why `D2` reads 0 migrated. The 72 migrated `D1`s dodge it with
-  a local shadow struct whose destructor is declared and never defined, which
-  `notes/plan-cpp-language-mode.md` §6 forbids for new work and Phase 4 exists to
-  delete. `include/MeshCollider.h` states the same conclusion as a rule: *"The
-  structors stay C files."*
+  **`include/Actor.h` already states this rule, and the arrangement is deliberate:**
+  *"The key function -- the first non-inline virtual declared -- must never be defined
+  as a real method in any translation unit. Declaring the destructor first pins that
+  role to TUs which by construction never will."* `include/MeshCollider.h` reaches the
+  same end as a rule of thumb (*"The structors stay C files"*), and
+  `include/ActorBase.h` differently again — it declares `InitResources` (slot 0)
+  in-class but defines it as an `extern "C"` free function on purpose.
 
-  The prerequisite is vtable ownership by source. Measured and recorded in
+  **There is a second, independent blocker**, and it is the one that actually binds:
+  a `~Class()` definition always emits **three** functions — D2, D0 and D1 — so the
+  object has three `.text` sections and `eligible.py:132-136` rejects it as a
+  multi-function TU *even when no vtable is emitted*. `ActorBase` declares its
+  destructor last, so it is not the key function and emits no vtable; it is still
+  ineligible. Tree-wide: **85** files rejected for `extra sections: .data`, **13** for
+  multi-function TU.
+
+  So this is not a codegen problem — the bytes are exact, D1 and D2 both — and vtable
+  ownership is *not* the fix (not necessary for `ActorBase`, not sufficient for
+  anyone). The prerequisite is a delink model that can bind one file to a
+  **multi-function address range**. mwccarm emits the group in D2, D0, D1 order, which
+  is exactly the ROM's per-class layout, so one TU already reproduces the contiguous
+  range — nothing can bind it.
+
+  **Corollary, and check this before quoting the plan:** the 72 `D1`s
+  `notes/plan-cpp-language-mode.md` §2 calls *proven* are matched but **not enrolled** —
+  every one is `extra sections: .data`, none is in `build/eligible-names.txt`. Enrolled
+  destructor migrations in this tree: **zero**. Phase 3 is unaffected; defining a
+  non-key virtual emits a single clean `.text`. Measured in
   `notes/dtor-variant-audit.md` §7.
 
 - **Never derive a signature from what callers say.** They disagree 27% of the time.
