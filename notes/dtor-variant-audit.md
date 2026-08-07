@@ -335,7 +335,15 @@ contiguous range in the right order; nothing can currently *bind* it.
 - **33 are undecided** — callers split evenly, or none of them is a named
   ctor/dtor. They are reported as undecided rather than assigned.
 - **`func_0203ac60` and `func_0203ac70` both propose `dM3dGSph`'s C2.** They cannot
-  both be right; one is likely a different class or a C1. Unresolved.
+  both be right. The adjacent `0x10`-size pair is most likely one class's C2/C1 —
+  the constructor mirror of the D2/D0/D1 grouping — which would also validate the
+  C2 half of the discovery method. Cheap to settle, unresolved here.
+- **The ratchet blocks truth-increasing renames.** Naming `func_02017838` to its
+  correct D2 symbol raises `unmigrated_total`, so a rename that makes the symbol
+  table *more* true fails a gate designed to stop the symbol table getting less
+  true. Neither escape above touches this; it wants either a metric carve-out for
+  renames of previously-unnamed functions, or a stated re-bank convention. Until
+  then the 11 discovered D2s cannot land even where the compiler poses no obstacle.
 - Nested names (`dPa_c::level_c::callback_c`) get **no proposed symbol**. Guessing
   an Itanium nested mangling wrong writes a symbol that resolves to nothing, so
   those print the class and stop.

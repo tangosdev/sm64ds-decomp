@@ -394,6 +394,27 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   non-key virtual emits a single clean `.text`. Measured in
   `notes/dtor-variant-audit.md` §7.
 
+  **Two escapes were measured and both fail. Do not re-derive them.**
+
+  *Move the key-function role to another virtual.* `include/Actor.h` notes that an
+  **override** takes its base's slot wherever it is declared, so for a *derived*
+  class the declaration order is free and the role can be moved. For a **root**
+  class it cannot: with no base to inherit slots from, vtable slot order **is**
+  declaration order. Probed — a root declaring `~R()` first emits `[D1, D0, a]` at
+  slots 0/1/2, so declaring it later moves the destructor to slots 2/3 and stops
+  matching the ROM. Every root in the ROM puts D1/D0 at slots 0/1 (`dFader_c`,
+  `dBgW`, `ModelBase`), so the flip is impossible for exactly the classes that
+  motivate it. And for a derived class it buys nothing on its own — the freed
+  destructor TU is still a three-`.text` object.
+
+  *Own the vtable in a source file.* dsd selects sections **by name**, and a
+  key-function TU emits `_ZTV`/`_ZTI`/`_ZTS` as three sections all called `.data`,
+  so `File.o(.data)` would place them contiguously. The ROM does not lay them out
+  that way: it groups by **kind**, not by class. The four fader vtables sit
+  back-to-back at `0x0208ea9c`/`eacc`/`eafc`/`eb2c` while their typeinfo records
+  cluster separately at `0x0208e9e0..0x0208ea24`, interleaved across classes.
+  File-granular, name-based placement cannot reproduce that interleaving.
+
 - **Never derive a signature from what callers say.** They disagree 27% of the time.
   The definition is the only non-guess.
 - **Do not migrate before the types are right.** A real `struct` built on guessed member
