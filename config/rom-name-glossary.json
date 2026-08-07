@@ -1,0 +1,538 @@
+{
+  "_about": [
+    "Hand-authored glosses for the Nintendo EAD names the ROM's RTTI carries.",
+    "",
+    "This is the one part of the class reference that is NOT derivable from the ROM.",
+    "tools/rtti_extract.py reads names and edges out of the binary and gates the result;",
+    "nothing in the binary says what 'Ukiyuka' means. That knowledge is here, hand-written,",
+    "and every entry carries a confidence so a reader can tell a settled Mario term from a",
+    "reading of a romaji fragment.",
+    "",
+    "confidence:",
+    "  high   - an established Mario-series Japanese name, or a common Japanese noun whose",
+    "           reading is unambiguous AND corroborated by what the class demonstrably does",
+    "           (its overlay's actor list in symbols/overlay_actors.md, or its own code).",
+    "  medium - the reading is sound but the corroboration is indirect.",
+    "  low    - a plausible reading offered so the next person has a starting point.",
+    "           Treat as a question, not an answer.",
+    "",
+    "Course codes are deliberately thin here. The code -> overlay -> level MAPPING is",
+    "derivable (tools/rtti_reference.py joins it from symbols/overlay_actors.md), so only",
+    "the etymology is recorded, and only where it is more than a guess."
+  ],
+  "domain": {
+    "f": {
+      "gloss": "framework layer",
+      "confidence": "high",
+      "note": "fBase_c is the root of everything, including scenes and cameras, not just actors."
+    },
+    "d": {
+      "gloss": "game layer",
+      "confidence": "high",
+      "note": "The bulk of the engine. dBase_c sits directly under fBase_c."
+    },
+    "m": {
+      "gloss": "library / middleware",
+      "confidence": "high",
+      "note": "Only mHeap::Heap_t and its two children appear in this ROM's RTTI."
+    },
+    "c": {
+      "gloss": "shared, non-game-specific",
+      "confidence": "medium",
+      "note": "Seen only on the cMgSmartball_* family in ov006."
+    }
+  },
+  "suffix": {
+    "_c": {
+      "gloss": "class",
+      "confidence": "high"
+    },
+    "_t": {
+      "gloss": "plain type / struct",
+      "confidence": "high",
+      "note": "mHeap::Heap_t, ExpHeap_t, SolidHeap_t."
+    }
+  },
+  "subsystem": {
+    "da": {
+      "gloss": "actor",
+      "confidence": "high"
+    },
+    "daObj": {
+      "gloss": "object actor (scenery, platforms, machinery)",
+      "confidence": "high"
+    },
+    "dSc": {
+      "gloss": "scene",
+      "confidence": "high"
+    },
+    "dScMg": {
+      "gloss": "minigame scene",
+      "confidence": "high"
+    },
+    "dMg": {
+      "gloss": "minigame support object",
+      "confidence": "high"
+    },
+    "dBg": {
+      "gloss": "background / collision world",
+      "confidence": "high"
+    },
+    "dBgCh": {
+      "gloss": "background collision check",
+      "confidence": "high"
+    },
+    "dBgW": {
+      "gloss": "background collision world",
+      "confidence": "medium"
+    },
+    "dCc": {
+      "gloss": "collision check (actor-vs-actor)",
+      "confidence": "high"
+    },
+    "dExt": {
+      "gloss": "model / animation extension",
+      "confidence": "high",
+      "note": "notes/model-rtti-names.md documents this family in full."
+    },
+    "dPa": {
+      "gloss": "particle",
+      "confidence": "high"
+    },
+    "dFd": {
+      "gloss": "fader",
+      "confidence": "high"
+    },
+    "dM3dG": {
+      "gloss": "3D geometry primitive",
+      "confidence": "high",
+      "note": "dM3dGLin is a line, dM3dGSph a sphere; both are bases of dBgCh_* queries."
+    }
+  },
+  "course": {
+    "Bk": {
+      "gloss": "Battan King -- Whomp's Fortress",
+      "confidence": "high",
+      "note": "ov015, whose actor list is entirely WF."
+    },
+    "Cv": {
+      "gloss": "Cave -- Hazy Maze Cave",
+      "confidence": "high",
+      "note": "ov021: SHUTTER_HMC, WORK_ELEVATOR, ROLLING_ROCK."
+    },
+    "Wl": {
+      "gloss": "Water Land -- Dire, Dire Docks",
+      "confidence": "high",
+      "note": "DDD's Japanese name is Water Land; ov026 carries SUBMARINE, WHIRLPOOL, WATER_SUCTION."
+    },
+    "Sl": {
+      "gloss": "Snowman's Land",
+      "confidence": "high",
+      "note": "ov027: SLIDING_ICE, CHILL_BULLY, SNOWMAN_BREATH."
+    },
+    "Ki": {
+      "gloss": "Jolly Roger Bay",
+      "confidence": "medium",
+      "note": "Mapping is certain (ov016: SHIP_UP/DOWN, ROCK_PILLAR, UNAGI); the two letters are not read."
+    },
+    "Fl": {
+      "gloss": "Lethal Lava Land",
+      "confidence": "medium",
+      "note": "Mapping certain (ov022 is entirely LLL); etymology unread."
+    },
+    "Wc": {
+      "gloss": "Wet-Dry World",
+      "confidence": "medium",
+      "note": "Mapping from ov029."
+    },
+    "Dl": {
+      "gloss": "Shifting Sand Land (pyramid)",
+      "confidence": "medium",
+      "note": "ov024: PYRAMID_TOP, PYRAMID_TAG."
+    },
+    "Dp": {
+      "gloss": "Shifting Sand Land (pyramid interior)",
+      "confidence": "medium",
+      "note": "ov025: PYRAMID_STEP, PYRAMID_LIFT, GRINDEL."
+    },
+    "Hm": {
+      "gloss": "Tall, Tall Mountain",
+      "confidence": "low",
+      "note": "Mapping from ov030 (UkikiCage, monkey); letters unread."
+    },
+    "Rc": {
+      "gloss": "Rainbow Ride",
+      "confidence": "low",
+      "note": "Mapping only."
+    },
+    "Ct": {
+      "gloss": "Tick Tock Clock",
+      "confidence": "low",
+      "note": "Mapping only."
+    },
+    "Km": {
+      "gloss": "Bowser stage (Km1/Km2/Km3 are the three)",
+      "confidence": "medium",
+      "note": "ov043/ov045/ov047 carry the rickshaw/lift furniture of the three Bowser courses."
+    }
+  },
+  "terms": {
+    "Wanwan": {
+      "ja": "ワンワン",
+      "gloss": "Chain Chomp",
+      "confidence": "high"
+    },
+    "Trs": {
+      "ja": "テレサ",
+      "gloss": "Teresa -- Boo",
+      "confidence": "high"
+    },
+    "Krb": {
+      "ja": "クリボー",
+      "gloss": "Kuribo -- Goomba",
+      "confidence": "high"
+    },
+    "Pkn": {
+      "ja": "パックン",
+      "gloss": "Pakkun -- Piranha Plant",
+      "confidence": "high"
+    },
+    "Kpa": {
+      "ja": "クッパ",
+      "gloss": "Koopa -- Bowser",
+      "confidence": "high"
+    },
+    "Hanachan": {
+      "ja": "ハナチャン",
+      "gloss": "Wiggler",
+      "confidence": "high"
+    },
+    "Dsn": {
+      "ja": "ドッスン",
+      "gloss": "Dossun -- Thwomp",
+      "confidence": "high",
+      "note": "daDsn_c is the tree's Thwomp; daDsnBase_c is its base."
+    },
+    "Donketu": {
+      "ja": "ドンケツ",
+      "gloss": "Bully",
+      "confidence": "high",
+      "note": "daIDonketu_c is the Ice Bully (Chill Bully) in ov027."
+    },
+    "Klr": {
+      "ja": "キラー",
+      "gloss": "Killer -- Bullet Bill",
+      "confidence": "high"
+    },
+    "Heyho": {
+      "ja": "ヘイホー",
+      "gloss": "Shy Guy",
+      "confidence": "high"
+    },
+    "Basabasa": {
+      "ja": "バサバサ",
+      "gloss": "Swooper",
+      "confidence": "high"
+    },
+    "Dossy": {
+      "ja": "ドッシー",
+      "gloss": "Dorrie",
+      "confidence": "high"
+    },
+    "Pukupuku": {
+      "ja": "プクプク",
+      "gloss": "Cheep Cheep",
+      "confidence": "high"
+    },
+    "Choropu": {
+      "ja": "チョロプー",
+      "gloss": "Monty Mole",
+      "confidence": "high"
+    },
+    "Kinopio": {
+      "ja": "キノピオ",
+      "gloss": "Toad",
+      "confidence": "high"
+    },
+    "Jugem": {
+      "ja": "ジュゲム",
+      "gloss": "Lakitu",
+      "confidence": "high"
+    },
+    "Sanbo": {
+      "ja": "サンボ",
+      "gloss": "Pokey",
+      "confidence": "high"
+    },
+    "Kirai": {
+      "ja": "機雷",
+      "gloss": "naval mine",
+      "confidence": "high",
+      "note": "daKirai_c sits in ov060 with the Bowser fight."
+    },
+    "Ukiyuka": {
+      "ja": "浮き床",
+      "gloss": "floating floor",
+      "confidence": "high"
+    },
+    "Ukishima": {
+      "ja": "浮島",
+      "gloss": "floating island",
+      "confidence": "high"
+    },
+    "Ukisima": {
+      "ja": "浮島",
+      "gloss": "floating island",
+      "confidence": "high"
+    },
+    "Maruta": {
+      "ja": "丸太",
+      "gloss": "log",
+      "confidence": "high",
+      "note": "daObjMaruta_c is the base of FallBlockLll (rolling log) and UkikiCage."
+    },
+    "Wakame": {
+      "ja": "わかめ",
+      "gloss": "seaweed",
+      "confidence": "high",
+      "note": "ov002 carries SEAWEED(296)."
+    },
+    "Tatefuda": {
+      "ja": "立札",
+      "gloss": "signpost",
+      "confidence": "high",
+      "note": "ov002 carries SIGN_POST(184)."
+    },
+    "Kuruma": {
+      "ja": "車",
+      "gloss": "wheel / cart",
+      "confidence": "high"
+    },
+    "Kurumajiku": {
+      "ja": "車軸",
+      "gloss": "axle",
+      "confidence": "high"
+    },
+    "Abuku": {
+      "ja": "泡",
+      "gloss": "bubble",
+      "confidence": "high",
+      "note": "ov002 carries BUBBLE(291)."
+    },
+    "Kaitendai": {
+      "ja": "回転台",
+      "gloss": "turntable / rotating platform",
+      "confidence": "high"
+    },
+    "Guragura": {
+      "ja": "ぐらぐら",
+      "gloss": "wobbling, unsteady",
+      "confidence": "high"
+    },
+    "Hikari": {
+      "ja": "光",
+      "gloss": "light",
+      "confidence": "high",
+      "note": "daObjC1Hikari_c; ov010 carries LIGHT_BEAM(37)."
+    },
+    "Mizu": {
+      "ja": "水",
+      "gloss": "water",
+      "confidence": "high"
+    },
+    "Kabe": {
+      "ja": "壁",
+      "gloss": "wall",
+      "confidence": "high"
+    },
+    "Fune": {
+      "ja": "船",
+      "gloss": "ship",
+      "confidence": "high",
+      "note": "daObjKi_Fune_c; ov016 carries SHIP_UP/SHIP_DOWN."
+    },
+    "Hasira": {
+      "ja": "柱",
+      "gloss": "pillar",
+      "confidence": "high",
+      "note": "daObjKi_Hasira_c; ov016 carries ROCK_PILLAR(58)."
+    },
+    "Ita": {
+      "ja": "板",
+      "gloss": "plank / board",
+      "confidence": "high"
+    },
+    "Yuka": {
+      "ja": "床",
+      "gloss": "floor",
+      "confidence": "high"
+    },
+    "Huriko": {
+      "ja": "振り子",
+      "gloss": "pendulum",
+      "confidence": "high",
+      "note": "daObjClockHuriko_c; ov013 carries CLOCK_PAINTING_PENDULUM(294)."
+    },
+    "Futa": {
+      "ja": "蓋",
+      "gloss": "lid",
+      "confidence": "high"
+    },
+    "Kumo": {
+      "ja": "雲",
+      "gloss": "cloud",
+      "confidence": "medium",
+      "note": "Could also be spider; cloud fits daObjKumo_c's platform role."
+    },
+    "Ana": {
+      "ja": "穴",
+      "gloss": "hole",
+      "confidence": "high"
+    },
+    "Bou": {
+      "ja": "棒",
+      "gloss": "pole / rod",
+      "confidence": "high"
+    },
+    "Ami": {
+      "ja": "網",
+      "gloss": "net",
+      "confidence": "high",
+      "note": "daObjFl_Amilift_c is the tree's MetalNetLift."
+    },
+    "Hane": {
+      "ja": "羽",
+      "gloss": "wing / feather",
+      "confidence": "high"
+    },
+    "Buranko": {
+      "ja": "ブランコ",
+      "gloss": "swing",
+      "confidence": "high"
+    },
+    "Yajirusi": {
+      "ja": "矢印",
+      "gloss": "arrow",
+      "confidence": "high"
+    },
+    "Kanban": {
+      "ja": "看板",
+      "gloss": "signboard",
+      "confidence": "high"
+    },
+    "Tikuwa": {
+      "ja": "ちくわ",
+      "gloss": "chikuwa -- a tube-shaped food; a ring/tube platform",
+      "confidence": "high"
+    },
+    "Botaosi": {
+      "ja": "棒倒し",
+      "gloss": "pole-toppling",
+      "confidence": "high",
+      "note": "ov015 carries KNOCK_DOWN_PLANK(44)."
+    },
+    "Nobiru": {
+      "ja": "伸びる",
+      "gloss": "to extend / stretch",
+      "confidence": "high"
+    },
+    "Agaru": {
+      "ja": "上がる",
+      "gloss": "to rise",
+      "confidence": "high"
+    },
+    "Tatumaki": {
+      "ja": "竜巻",
+      "gloss": "tornado / whirlpool",
+      "confidence": "high",
+      "note": "ov026 carries WHIRLPOOL(246)."
+    },
+    "Suikomi": {
+      "ja": "吸い込み",
+      "gloss": "suction",
+      "confidence": "high",
+      "note": "ov026 carries WATER_SUCTION(247)."
+    },
+    "Hakidasi": {
+      "ja": "吐き出し",
+      "gloss": "expulsion / spitting out",
+      "confidence": "high"
+    },
+    "Seesaw": {
+      "gloss": "seesaw",
+      "confidence": "high"
+    },
+    "Dorifu": {
+      "gloss": "drifting platform",
+      "confidence": "low",
+      "note": "Reading unconfirmed. daObjDorifu_c's own code steps a 0..4 index over five MeshCollider subobjects, enabling one at a time -- a platform that moves between five stations. See include/daObjDorifu_c.h."
+    },
+    "Ots": {
+      "gloss": "unknown",
+      "confidence": "low",
+      "note": "daOts_c is the proven base of Bully and BigBully. No reading offered."
+    },
+    "Demo": {
+      "ja": "デモ",
+      "gloss": "cutscene",
+      "confidence": "high",
+      "note": "Standard Nintendo dev usage; daDemo_c carries anmModel_c and simpleModel_c inner classes."
+    },
+    "Mugen": {
+      "ja": "無限",
+      "gloss": "infinite",
+      "confidence": "high",
+      "note": "daMugenBGM_c -- looping background music."
+    },
+    "Smartball": {
+      "gloss": "pachinko-style minigame",
+      "confidence": "medium",
+      "note": "cMgSmartball_* is a 12-class family in ov006 (pakkun, dokan, kinoko, spring, slot, ...)."
+    },
+    "Pakkun": {
+      "ja": "パックン",
+      "gloss": "Pakkun -- Piranha Plant",
+      "confidence": "high"
+    },
+    "Sph": {
+      "gloss": "sphere",
+      "confidence": "high",
+      "note": "dM3dGSph is the sphere primitive; dBgCh_SphCrr is the tree's SphereClsn."
+    },
+    "Lin": {
+      "gloss": "line",
+      "confidence": "high",
+      "note": "dM3dGLin is the line primitive; dBgCh_Lin is the tree's RaycastLine."
+    },
+    "Base": {
+      "gloss": "base class of a family",
+      "confidence": "high",
+      "note": "fBase_c, dEnemyBase_c, daDsnBase_c, dScMgBase_c, daStarBase_c."
+    },
+    "Water": {
+      "gloss": "water",
+      "confidence": "high"
+    },
+    "Bg": {
+      "gloss": "background / terrain",
+      "confidence": "high"
+    },
+    "Ch": {
+      "gloss": "check (a collision query)",
+      "confidence": "medium",
+      "note": "dBgCh_* are the terrain-query classes."
+    },
+    "Obj": {
+      "gloss": "object",
+      "confidence": "high"
+    },
+    "Mg": {
+      "gloss": "minigame",
+      "confidence": "high"
+    },
+    "Sc": {
+      "gloss": "scene",
+      "confidence": "high"
+    }
+  }
+}
