@@ -166,11 +166,17 @@ def build():
     for v in recs.values():
         if not v["vtable"]:
             continue
+        # The vtable is not always in the record's module: four classes keep
+        # theirs in a different, non-overlapping overlay (see attach_vtables in
+        # rtti_extract.py).  Reading from the record's module returned zero slots
+        # for all four, which read as "this class has no methods".
+        vmod = v.get("vtable_module") or v["module"]
         tables[v["name"]] = {
             "module": v["module"],
+            "vtable_module": vmod,
             "vtable": v["vtable"],
-            "slots": read_slots(mods, v["module"], int(v["vtable"], 16),
-                                rec_addrs[v["module"]]),
+            "slots": read_slots(mods, vmod, int(v["vtable"], 16),
+                                rec_addrs[vmod]),
         }
 
     def name_of(mod, addr):
@@ -186,7 +192,7 @@ def build():
             inherited = pt and i < len(pt["slots"]) and pt["slots"][i] == s
             if not inherited:
                 own.append({"slot": i, "addr": "0x%08x" % s,
-                            "symbol": name_of(t["module"], s)})
+                            "symbol": name_of(t["vtable_module"], s)})
         t["parent"] = p
         t["parent_slots"] = len(pt["slots"]) if pt else None
         t["own"] = own

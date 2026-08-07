@@ -369,15 +369,44 @@ to C. Checked that no own-slot function is listed by a non-descendant class, so
 identical-code folding is not silently reattributing anything.
 
     daObjDorifu_c    4 methods    0xdc8 u8   0xdc9 u8   0xdca u8   0xdcb u8
+    daObjFallBlock_c 6 methods    14 fields, 0x320..0x344 (see the header)
     daObjGuragura_c  4 methods    0x330 s32  0x334 s32  0x338 s32  0x33c s32  0x34c u8
     daObjSwdoor_c   12 methods    0x344 s32  0x58d u8   0x59c s32  0x5a0 s32
     daObjUkiyuka_c   4 methods    0x320 s32  0x324 s32  0x328 s16  0x32a s16
     daObjKaitendai_c 4 methods    (none -- its overrides touch only ancestor fields)
     daObjKuruma_c    4 methods    (none)
+    daDsnBase_c      4 methods    (none)
+    daObjMaruta_c    4 methods    (none)
+    daOts_c         11 methods    (none)
 
-**17 fields across 4 classes**, every one backed by a byte-matched function. The four
-without vtables (`daDsnBase_c`, `daObjFallBlock_c`, `daObjMaruta_c`, `daOts_c`) stay out
-of reach by this route.
+### Two symbols in config are misattributed
+
+Reaching those vtables exposed a naming error the flattening had hidden. `daOts_c`'s own
+vtable slots 3 and 9 are named `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv` --
+but both are inherited unchanged by **both** of daOts_c's children, `daDonketu_c` (Bully)
+and `daBDonketu_c` (BigBully). A method both siblings inherit belongs to the base. The
+same shape appears at `daDsnBase_c` slots 3 and 9, named after `Thwomp`, its only child.
+
+These are `daOts_c`'s and `daDsnBase_c`'s methods wearing a descendant's name. Renaming
+them is a symbols.txt change and does not belong in this pass, but nothing else in the
+tree can currently see that they are wrong.
+
+**31 fields across 5 classes**, every one backed by a byte-matched function.
+
+Four classes were initially unreachable because they appeared to have no vtable at all.
+They have one -- **in a different overlay from their typeinfo**. `daDsnBase_c`'s record is
+in ov025 and its vtable is in ov091; `daObjFallBlock_c` ov015/ov098; `daObjMaruta_c`
+ov022/ov080; `daOts_c` ov027/ov064. Those overlay pairs occupy non-overlapping address
+ranges, so both can be resident at once, and in each case exactly one module hosts a
+record at the address and `tools/overlay_residency.py` permits the pairing. Looking only
+in the record's own module and arm9 left all four with no vtable, which read downstream as
+"this class has no methods" -- the opposite of the truth. `records_without_a_vtable` drops
+7 -> 3, and the 8 genuinely ambiguous cross-module cases are refused rather than guessed.
+
+Carrying the vtable's module was a second, separate fix: with the vtable found but its
+slots still read from the *record's* module, all four returned zero slots.
+
+`daObjFallBlock_c` alone gained 14 fields once reachable.
 
 `daObjDorifu_c`'s four bytes read as a small state machine —
 `src/func_ov002_020b4bfc.c` switches on `0xdca`, uses `0xdcb` as an `Event::GetBit` index,

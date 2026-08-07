@@ -220,7 +220,8 @@ def load_modules(stats):
 # --------------------------------------------------------------------------
 
 class Record:
-    __slots__ = ("module", "va", "kind", "raw", "name", "name_va", "bases", "vtable")
+    __slots__ = ("module", "va", "kind", "raw", "name", "name_va", "bases", "vtable",
+                 "vtable_module")
 
     def __init__(self, module, va, kind, raw, name, name_va):
         self.module = module
@@ -231,6 +232,7 @@ class Record:
         self.name_va = name_va
         self.bases = []            # [(base_va, offset, flags)]
         self.vtable = None
+        self.vtable_module = None   # NOT always self.module -- see attach_vtables
 
     @property
     def key(self):
@@ -366,26 +368,59 @@ def attach_vtables(recs, mods, stats):
 
     Primary vtables have offset-to-top 0 at V-8.  Secondary (multiple-inheritance)
     tables have a negative one and are counted, not attached.
+
+    A vtable does NOT always sit in the same module as the typeinfo it points at.
+    Four classes -- daDsnBase_c (ov025), daObjFallBlock_c (ov015), daObjMaruta_c
+    (ov022) and daOts_c (ov027) -- have their vtable in a *different*, non-
+    overlapping overlay (ov091, ov098, ov080, ov064).  Looking only in the record's
+    own module and arm9 left all four with no vtable at all, which then read as
+    "this class has no methods" downstream -- the opposite of the truth.
+
+    Cross-module candidates are settled the same way every other cross-overlay
+    question in this tree is: only one module hosts a record at the address, and
+    tools/overlay_residency.py must allow it to be resident alongside the module
+    holding the vtable.  Same-module and arm9 keep priority so no attribution that
+    was already right can move.
     """
-    bym = {m.name: m for m in mods}
+    try:
+        import overlay_residency as RES
+    except Exception:                                           # noqa: BLE001
+        RES = None
+
     byk = {(r.module, r.va): r for r in recs.values()}
+    by_addr = defaultdict(list)
+    for r in recs.values():
+        by_addr[r.va].append(r)
+
     for m in mods:
         for off in range(8, len(m.data) - 4, 4):
             va = m.base + off
             if not m.in_data_section(va):
                 continue
             p = struct.unpack_from("<I", m.data, off)[0]
-            cands = [k for k in ((m.name, p), ("arm9", p)) if k in byk]
-            if not cands:
+            if p not in by_addr:
                 continue
             top = struct.unpack_from("<i", m.data, off - 4)[0]
-            if top == 0:
-                r = byk[cands[0]]
-                if r.vtable is None:
-                    r.vtable = va + 4
-                    stats["vtables_primary"] += 1
-            elif -0x10000 < top < 0:
-                stats["vtables_secondary"] += 1
+            if top != 0:
+                if -0x10000 < top < 0:
+                    stats["vtables_secondary"] += 1
+                continue
+            if (m.name, p) in byk:
+                r, how = byk[(m.name, p)], "own_module"
+            elif ("arm9", p) in byk:
+                r, how = byk[("arm9", p)], "arm9"
+            else:
+                left = [x for x in by_addr[p]
+                        if RES is None or RES.possible(x.module, m.name)]
+                if len(left) != 1:
+                    stats["vtables_cross_module_ambiguous"] += 1
+                    continue
+                r, how = left[0], "cross_module"
+            if r.vtable is None:
+                r.vtable = va + 4
+                r.vtable_module = m.name
+                stats["vtables_primary"] += 1
+                stats["vtables_by_" + how] += 1
     stats["records_without_a_vtable"] = sum(1 for r in recs.values() if r.vtable is None)
 
 
@@ -440,6 +475,7 @@ def build():
                 "mangled": r.raw, "name": r.name,
                 "name_addr": "0x%08x" % r.name_va,
                 "vtable": ("0x%08x" % r.vtable) if r.vtable else None,
+                "vtable_module": r.vtable_module,
             } for r in sorted(recs.values(), key=lambda x: (x.module, x.va))
         },
         "edges": sorted(edges, key=lambda e: (e["derived_key"], e["base_key"])),
