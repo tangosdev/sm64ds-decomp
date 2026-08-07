@@ -1,13 +1,16 @@
-#include "types.h"
+//cpp
 // @symbol _ZN8SaveData26CountStarsCollectedInLevelEj
-/* recovered: named members + shared header */
 #include "SaveData.h"
-/* _ZN8SaveData26CountStarsCollectedInLevelEj at 0x02013768
- * Counts how many stars have been collected in a given course (0-7 stars).
- */
-extern int IsStarCollected(s32 courseID, s32 starID);
 
-u8 _ZN8SaveData26CountStarsCollectedInLevelEj(u32 courseID)
+/* SaveData::CountStarsCollectedInLevel(u32 courseID) at 0x02013768 -- static.
+ *
+ * Counts this course's collected stars by asking IsStarCollected for each of the
+ * eight star slots. The loop bound is 8 and not NUM_STARS-per-course because the
+ * save layout reserves eight bits per course whether the level uses them or not.
+ */
+extern "C" int IsStarCollected(s32 courseID, s32 starID);
+
+u8 SaveData::CountStarsCollectedInLevel(u32 courseID)
 {
     u8 count = 0;
     s32 star;

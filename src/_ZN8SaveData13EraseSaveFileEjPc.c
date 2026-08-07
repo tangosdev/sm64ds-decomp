@@ -1,17 +1,21 @@
-#include "types.h"
-/* _ZN8SaveData13EraseSaveFileEjPc at 0x02013cd4
- * Erases a save file slot by writing defaults then saving to cart.
- * Returns 1 on success, 0 on failure.
+//cpp
+// @symbol _ZN8SaveData13EraseSaveFileEjPc
+#include "SaveData.h"
+
+/* SaveData::EraseSaveFile(u32 fileID, char* saveArea) at 0x02013cd4 -- static.
+ *
+ * Resets one file slot to defaults in `saveArea`, then writes it to cart.
+ * Returns 1 on success, inverting SaveDataToCart's 0-is-success convention.
+ *
+ * HONEST LEFTOVER: SetDefaultValues is called by its raw mangled name -- see
+ * _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c for why.
  */
-struct FileSaveData { char data[0x44]; };
+extern "C" void _ZN8SaveData16SetDefaultValuesEP12FileSaveData(FileSaveData* data);
 
-extern void _ZN8SaveData16SetDefaultValuesEP12FileSaveData(struct FileSaveData* data);
-extern int _ZN8SaveData14SaveDataToCartEPcjj(char* data, u32 size, u32 fileID);
-
-int _ZN8SaveData13EraseSaveFileEjPc(u32 fileID, char* saveArea)
+int SaveData::EraseSaveFile(u32 fileID, char* saveArea)
 {
-    _ZN8SaveData16SetDefaultValuesEP12FileSaveData((struct FileSaveData*)saveArea);
-    if (_ZN8SaveData14SaveDataToCartEPcjj(saveArea, 0x44, fileID) == 0)
+    _ZN8SaveData16SetDefaultValuesEP12FileSaveData((FileSaveData*)saveArea);
+    if (SaveData::SaveDataToCart(saveArea, 0x44, fileID) == 0)
         return 1;
     return 0;
 }

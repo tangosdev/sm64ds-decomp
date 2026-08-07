@@ -4,17 +4,17 @@
 
 /* SaveData::IsCharacterUnlocked(u32 character) at 0x0201392c -- static, no `this`.
  *
- * Tests bit `character` in the flags word at +0x08 of the save block, the same
- * word SetCharacterIntro writes. The [2] index and the `1 << n` shift are both
- * load-bearing: this is a 32-bit load, so widening or narrowing the view
- * changes the instruction.
+ * Tests bit `character` in flags2 (+0x08), the same word SetCharacterIntro writes.
+ * The 32-bit width and the `1 << n` shift are load-bearing -- this used to be
+ * spelled `data_0209caa0[2]` over an s32[], which is what proved flags2 is 32 bits
+ * wide and not the u8 the header used to declare.
  *
- * 0x0209caa0 has no friendly symbol yet and the reloc is a wildcard pooled
- * global, so the extern name is not byte-verified -- the index and shift are.
+ * 0x0209caa0 has no friendly symbol yet and the reloc is a wildcard pooled global,
+ * so the extern NAME is not byte-verified; the width and shift are.
  */
-extern "C" s32 data_0209caa0[]; /* base of the save block; [2] is flags2 (+0x08) */
+extern "C" struct SaveData data_0209caa0;
 
 s32 SaveData::IsCharacterUnlocked(u32 character)
 {
-    return data_0209caa0[2] & (1 << character);
+    return data_0209caa0.flags2 & (1 << character);
 }

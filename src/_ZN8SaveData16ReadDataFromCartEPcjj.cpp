@@ -1,5 +1,6 @@
 //cpp
-#include "types.h"
+// @symbol _ZN8SaveData16ReadDataFromCartEPcjj
+#include "SaveData.h"
 extern "C" {
 int func_0203da3c(void);
 u32 func_0206045c(void);
@@ -11,10 +12,16 @@ int func_02060558(u32 addr, void* buf, u32 len, int d, int e, int f);
 extern u8 data_020a4b40[];
 }
 
-struct SaveData {
-    static int ReadDataFromCart(char* buf, u32 len, u32 slot);
-};
-
+/* SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot) at 0x02042804 -- static.
+ *
+ * Reads a block from the cart's backup memory, checking an 8-byte magic and a
+ * 16-bit rolling checksum, and falling back to the mirror copy at +half if the
+ * primary fails either check. Three-valued: 0 read good, 2 no valid data on the
+ * cart at all, 1 read failed.
+ *
+ * The local `struct SaveData { static int ReadDataFromCart(...); };` this file used
+ * to declare is retired in favour of the real header.
+ */
 int SaveData::ReadDataFromCart(char* buf, u32 len, u32 slot)
 {
     u16 sum;
