@@ -1103,3 +1103,50 @@ frame slots.
 Reusable harness for this kind of question: `scratchpad/sweep.py` applies a list of textual
 folds independently and prints frame / ratio / equal per variant, which is far cheaper than
 editing and scoring by hand.
+
+### "Declaration order IS the frame" does not hold for this function (2026-08-06)
+
+Four independent classes of declaration-level lever have now been swept against this draft,
+each with a positive control proving the harness live, and **every one is byte-neutral**:
+
+| lever | variants | result |
+|---|---|---|
+| hoist all locals into one C89 block | 1 | inert on both metrics |
+| permute the block to the ROM's frame map | 2 | inert (the `f`-first move is the exception, below) |
+| re-scope wall-block locals into their block | 1 | inert |
+| fold conveniences into their uses | 5 | 4 inert, 1 worse |
+| move `en1`/`en2` to steer callee-saved allocation | 6 | all six byte-identical |
+
+The one declaration change that ever mattered was moving `KCL_File *f = kclFile;` ahead of the
+block, which is not really an ordering effect — it is the difference between a pre-block
+initialised pointer and a block member, and it moved `f` from `sp+0xb8` to `sp+0x0c`.
+
+**So the matched RaycastGround twin's first matching note — "Declaration order IS the stack
+layout... mwccarm hands out spill slots in declaration order" — is true for that function and
+NOT true for this one.** The twin is `0x498`; this is `0x1bc8`. Whatever the allocator does
+above some size or pressure threshold, it stops being steerable from the declaration block.
+Do not spend another session permuting declarations here; five sweeps and nineteen variants
+say it does nothing.
+
+### Where the structural churn actually is (2026-08-06)
+
+179 shape-alignment change ranges. The largest, by size:
+
+| words | kind | ROM address | region |
+|---|---|---|---|
+| 96 | draft has extra | `0x01ffbeb8` | the dispatch |
+| 89 | draft has extra | `0x01ffbfc8` | the dispatch |
+| 77 | ROM has extra | `0x01ffc720` | V23 |
+| 58 | draft has extra | `0x01ffbec8` | the dispatch |
+| 47 | replace | `0x01ffc57c` | E3 |
+| 45 | ROM has extra | `0x01ffcb1c` | the wall block |
+
+The dispatch accounts for ~240 surplus words on its own, and the visible cause is that the
+draft reloads the edge-normal pointers from the frame — `ldr r0,[sp,#0xc4]` three times inside
+ten instructions — where the ROM holds `en1` in `r5` and `en2` in `r4` across the whole prism
+body and only ever spills `en3`. That is the same register pressure the frame hunt landed on,
+seen from the other side, and the `en1`/`en2` sweep above shows it cannot be steered by
+declaration position.
+
+The remaining levers are therefore genuine source-shape changes that reduce how many values
+are live at once across the prism body — not anything in the declaration block.
