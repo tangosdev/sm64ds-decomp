@@ -94,7 +94,22 @@ def run_tool(args_list, timeout=180):
 # The instruction block mirrors tools/refine_run.js prompt() minus the parts an
 # API model cannot do (no shell); the driver supplies the abrow context and runs
 # abverify for it. Keep the lever catalogue in sync with refine_run.js.
-INSTRUCTIONS = """You are finishing one NEARLY-MATCHED Super Mario 64 DS function: a compiling \
+def _levers_for_prompt():
+    """The structural-lever block, rendered from the shared catalogue (notes/levers.jsonl)
+    instead of hand-maintained here, so a lever proven in a sibling decomp reaches this driver
+    too. Selects the `arm` set: this game is ~all ARM. That set is a superset of the 14 that
+    used to be inlined, because the catalogue also carries pictochat's two confirmed levers.
+    If the catalogue is unreadable the block is simply omitted - the rest of the prompt still
+    stands on its own, and a missing lever list must not take the driver down."""
+    try:
+        sys.path.insert(0, str(REPO / "tools"))
+        import levers as _lv
+        return _lv.render_prompt(_lv.select(_lv.load(), "arm"), "arm")
+    except (Exception, SystemExit):  # load() exits on a missing/!parseable catalogue
+        return ""
+
+
+_INSTRUCTIONS_TMPL = """You are finishing one NEARLY-MATCHED Super Mario 64 DS function: a compiling \
 draft exists that is only a few instructions from byte-matching the retail ROM with mwccarm. \
 Fix the remaining codegen SHAPE, not the semantics (unless the diff proves the draft's \
 semantics wrong).
@@ -116,21 +131,7 @@ COMPILER: mwccarm 2004/b56. Flags (C): -O4,p -enum int -lang c99 -char signed -i
 -proc arm946e -gccext,on -msgstyle gcc
 If the draft starts with //cpp keep that exact first line (C++).
 
-STRUCTURAL LEVERS (pick by what the diff shows):
-- branch/store ORDER inside an if/else: move a store or call into/out of an arm; swap then/else bodies by inverting the condition
-- loop form: while() vs do/while (top vs bottom test); for(;;) with break for find-first loops
-- early-outs: merge separate "if(x) return K" into one && chain to a shared exit, or split a && chain into guard clauses; new-ctor null checks as if(p){body} return p
-- arithmetic idiom: x/K vs (x*magic)>>s, x%K vs x-(x/K)*K, negative const via mov+rsb, -1 via mvn
-- load width/signedness: u8/s8/u16/s16 local or cast flips ldrb/ldrsb/ldrh/ldrsh
-- push-set / frame off by a register: reuse a var, re-emit a global/field inline instead of hoisting, or reorder top-of-block C89 declarations (mwccarm allocates in DECLARATION ORDER)
-- register coloring: *(T*)&G vs G[0] access form; materialize a bool (int b=(x==k); if(b)) for movne/moveq
-- two-word copy batching (ld,ld,st,st): int temps + fake dependency 'dst_a = b ? a : a;'
-- MATERIALIZED BASE (add rX,base,#imm then [rX] where your C folds to [base,#imm]): the u64-mask laundering idiom - *(int *)(((int)base + 0xOFF) & 0xFFFFFFFFFFFFFFFF) - the identity AND blocks offset folding and forces the add. Cast to (int) BEFORE adding the offset, then mask.
-- pointer-induction loop reduced away: '#pragma opt_strength_reduction off' above the function
-- DUPLICATED early-exit epilogue (popeq/bxeq repeated instead of beq to shared tail): '#pragma optimize_for_size on'
-- const-fold breaking when u64-laundering is inert (pure constants): '#pragma opt_propagation off'
-- stack slots optimized away: a volatile local (or volatile struct field access) keeps them live
-- halfword/byte access at offset >= 0x100 with a materialized base: plain '*(short*)(p+0x100) = k' reproduces it
+{LEVERS}
 
 STOP EARLY and report your best if the residual is a documented compiler floor: pure \
 instruction-ordering (two-word store emission order), register-coloring swaps that survive \
@@ -141,6 +142,10 @@ OUTPUT FORMAT - reply with EXACTLY one fenced code block containing the COMPLETE
 the line after the closing fence a single JSON line:
 {"note": "<one line: what you changed and why>", "floor": <true if you believe the residual is a documented floor>}
 No other prose."""
+
+# Composed once at import. An empty lever block collapses cleanly rather than leaving a hole.
+_LEVERS = (_levers_for_prompt() or "").strip()
+INSTRUCTIONS = _INSTRUCTIONS_TMPL.replace("{LEVERS}\n\n", f"{_LEVERS}\n\n" if _LEVERS else "")
 
 
 CODE_RE = re.compile(r"```(?:c|cpp|C|c\+\+)?\s*\n(.*?)```", re.DOTALL)
