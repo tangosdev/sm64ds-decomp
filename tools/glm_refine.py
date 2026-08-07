@@ -51,6 +51,11 @@ _CLAUDE_BUDGET = {"low": 2048, "medium": 4096, "high": 8192, "xhigh": 16384, "ma
 _DIALECT = os.environ.get("GLM_DIALECT", "").strip().lower() or (
     "openai" if "deepseek" in BASE_URL.lower() else "anthropic")
 _IS_OPENAI = _DIALECT == "openai"
+# Hard ceiling for the truncation escalation below. A reply that gets cut off mid-reasoning is
+# retried with double the budget, and this is where that stops - high enough for a reasoner that
+# genuinely needs to think (deepseek-reasoner tops out at 64k output), low enough that a model
+# stuck in a loop cannot bill indefinitely.
+MAX_OUTPUT_TOKENS = int(os.environ.get("GLM_MAX_OUTPUT_TOKENS", "64000"))
 
 
 def _thinking_for(max_tokens):
@@ -160,9 +165,13 @@ def _read_openai_stream(r, on_delta):
     """Parse an OpenAI /chat/completions SSE stream. Echo each delta to on_delta as it arrives - both
     reasoning_content (the model thinking) and content (the answer) - so the console live viewer shows
     the model working in real time. Only `content` is accumulated and returned; reasoning is shown but
-    not fed to the code extractor. Returns (text, prompt_tokens, completion_tokens) like the non-stream
-    path (usage rides the final chunk when the server honors stream_options.include_usage)."""
-    parts, in_tok, out_tok = [], 0, 0
+    not fed to the code extractor. Returns (text, prompt_tokens, completion_tokens, finish_reason) like
+    the non-stream path (usage rides the final chunk when the server honors stream_options.include_usage).
+
+    finish_reason matters as much as the text: a reasoner that spent the whole budget thinking returns
+    EMPTY content with finish_reason="length", which is indistinguishable from a refusal unless we
+    carry the reason out of here."""
+    parts, in_tok, out_tok, finish = [], 0, 0, None
     for raw in r.iter_lines(decode_unicode=True):
         if not raw or not raw.startswith("data:"):
             continue
@@ -183,11 +192,12 @@ def _read_openai_stream(r, on_delta):
             if piece:
                 parts.append(piece)
                 on_delta(piece)
+            finish = choices[0].get("finish_reason") or finish
         usage = chunk.get("usage")
         if usage:
             in_tok = usage.get("prompt_tokens") or in_tok
             out_tok = usage.get("completion_tokens") or out_tok
-    return "".join(parts), in_tok, out_tok
+    return "".join(parts), in_tok, out_tok, finish
 
 
 def chat(messages, max_tokens=8000, retries=RETRIES, on_delta=None):
@@ -255,21 +265,25 @@ def chat(messages, max_tokens=8000, retries=RETRIES, on_delta=None):
             if stream:
                 # A mid-stream drop is retried like any network hiccup (partial deltas already echoed).
                 try:
-                    return _read_openai_stream(r, on_delta)
+                    txt, i_t, o_t, fin = _read_openai_stream(r, on_delta)
+                    return txt, i_t, o_t, {"finish": fin, "max_tokens": mt}
                 except requests.RequestException:
                     if i == retries - 1:
                         raise RuntimeError("GLM API: stream error, retries exhausted")
                     time.sleep(delay + random.uniform(0, 3)); delay = min(delay * 2, 120); continue
             data = r.json()
             if _IS_OPENAI:
-                msg = (data.get("choices") or [{}])[0].get("message", {}) or {}
+                ch = (data.get("choices") or [{}])[0]
+                msg = ch.get("message", {}) or {}
                 text = msg.get("content", "") or ""  # reasoner's thinking is in reasoning_content; ignore it
                 u = data.get("usage", {})
-                return text, u.get("prompt_tokens", 0), u.get("completion_tokens", 0)
+                return (text, u.get("prompt_tokens", 0), u.get("completion_tokens", 0),
+                        {"finish": ch.get("finish_reason"), "max_tokens": mt})
             text = "".join(b.get("text", "") for b in data.get("content", [])
                            if b.get("type") == "text")  # thinking blocks are ignored
             u = data.get("usage", {})
-            return text, u.get("input_tokens", 0), u.get("output_tokens", 0)
+            return (text, u.get("input_tokens", 0), u.get("output_tokens", 0),
+                    {"finish": data.get("stop_reason"), "max_tokens": mt})
         if r.status_code in (429, 500, 502, 503, 529):
             ra = r.headers.get("retry-after", "")
             wait = float(ra) if ra.replace(".", "", 1).isdigit() else delay
@@ -374,12 +388,17 @@ def crack_one(name, wl, attempts, row, live=False):
                      f"{INSTRUCTIONS}\n\nFUNCTION: {name}\n\n=== CONTEXT (annotated target "
                      f"disasm, callee sigs, pool slots, stored draft) ===\n{ctx}\n\n{draft_block}"}]
         note, stale, apierr = "", 0, 0
+        # Explicit ceiling once a reply comes back truncated. None = let chat() pick (its default plus
+        # the reasoner headroom); after a cut-off we double whatever was actually used.
+        budget = None
         for att in range(1, attempts + 1):
             # Per-attempt error handling: a rate-limit/network error on one attempt must NOT sink
             # the whole function (the old behavior: div=999 with zero logged attempts). Log it and
             # keep going, up to a few consecutive failures. BALANCE_EXHAUSTED still hard-stops.
             try:
-                reply, i_tok, o_tok = chat(messages, on_delta=on_delta)
+                reply, i_tok, o_tok, meta = (
+                    chat(messages, on_delta=on_delta) if budget is None
+                    else chat(messages, max_tokens=budget, on_delta=on_delta))
             except RuntimeError as e:
                 if "BALANCE_EXHAUSTED" in str(e):
                     raise
@@ -396,6 +415,22 @@ def crack_one(name, wl, attempts, row, live=False):
             t_in += i_tok; t_out += o_tok
             src, note, floor = extract(reply)
             if not src:
+                # "no code block" has two very different causes and they need opposite responses.
+                # A reasoner that burns its whole budget thinking returns EMPTY content with
+                # finish_reason=length: it was cut off, not silent, and nagging it for a code block
+                # at the same ceiling just buys the same truncation on the next attempt (a
+                # deepseek-reasoner run spent 130k output tokens across 6 attempts to land nothing
+                # this way). Say which one happened, and on a cut-off raise the ceiling instead.
+                truncated = (meta or {}).get("finish") in ("length", "max_tokens")
+                if truncated:
+                    used = (meta or {}).get("max_tokens") or 24000
+                    budget = min(used * 2, MAX_OUTPUT_TOKENS)
+                    note_attempt(f"attempt {att}: cut off at the {used}-token ceiling before writing "
+                                 f"any code" + (f" - retrying at {budget}" if budget > used else
+                                                f" - already at the {MAX_OUTPUT_TOKENS} cap"))
+                    if budget <= used:
+                        break  # no headroom left; more attempts just re-truncate
+                    continue   # resend the SAME prompt with room, not a "you forgot the code" nag
                 note_attempt(f"attempt {att}: no code block returned")
                 messages.append({"role": "assistant", "content": reply})
                 messages.append({"role": "user", "content":
