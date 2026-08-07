@@ -67,9 +67,28 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          base=$(git rev-parse HEAD)
           git add chaos-db.json
           git commit -m "Refresh Chaos Viewer data from $(git -C .. rev-parse --short HEAD)"
-          git push origin chaos-data
+          # Two PRs merging seconds apart start this job twice, and cancel-in-progress only
+          # kills the older run if it has not reached this step yet. Past that point both runs
+          # push and the loser is rejected, because chaos-data moved under it. That failure is
+          # not cosmetic: the run goes red having published nothing, so the matches that just
+          # merged stay off the viewer until the NEXT merge happens to republish them.
+          #
+          # So retry onto the moved branch. If it moved because another run already republished
+          # chaos-db.json, that run read a newer main than this one did and its file is the
+          # better one - stand down rather than overwrite it with older data.
+          for attempt in 1 2 3; do
+            if git push origin chaos-data; then exit 0; fi
+            git fetch -q origin chaos-data
+            if ! git diff --quiet "$base" FETCH_HEAD -- chaos-db.json; then
+              echo "another run already published newer data - standing down"; exit 0
+            fi
+            echo "chaos-data moved under the push - rebasing (attempt $attempt)"
+            git rebase FETCH_HEAD || { echo "rebase onto the moved branch failed"; exit 1; }
+          done
+          echo "chaos-data kept moving - could not land chaos-db.json"; exit 1
       - name: Stamp provenance for functions that landed in this push
         # HOW a match was made is only knowable as it lands: a later backfill can
         # recover the method for ~13% of matches and no more. Declines to guess, so an
@@ -95,11 +114,27 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          base=$(git rev-parse HEAD)
           git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
           # [skip ci] is load-bearing since the push moved to a deploy key. A GITHUB_TOKEN
           # push never triggers workflows, so this commit used to be inert; a deploy-key
           # push is an ordinary push and does trigger them. Without the marker this commit
           # would retrigger this job (it touches config/) and newly fire report.yml.
           git commit -m "Refresh progress (README, treemap, contributions, provenance) [skip ci]"
-          git pull --rebase origin main
-          git push origin main
+          # The rebase is not enough on its own: main can move again between it and the push.
+          # A rejected push here leaves contributions.json unmoved, and per the coin ledger's
+          # contract - it pays the DELTA between that file and what it last paid - a match whose
+          # refresh never lands never earns its author anything. Retry the pair; if another
+          # refresh has already landed these same files it read a newer main than this run did,
+          # so stand down instead of fighting it or going red.
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            git fetch -q origin main
+            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
+              echo "another refresh already landed these files - standing down"; exit 0
+            fi
+            echo "main moved under the refresh push - retrying (attempt $attempt)"
+            sleep 5
+          done
+          echo "main kept moving - could not land the progress refresh"; exit 1
