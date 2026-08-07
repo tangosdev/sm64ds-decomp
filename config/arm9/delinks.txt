@@ -2486,7 +2486,7 @@ src/engine/fader/_ZN15FaderBrightness11AdvanceFadeEv.cpp:
     complete
     .text start:0x02017720 end:0x020177c4
 
-src/func_020177c4.c:
+src/_ZN15FaderBrightnessD2Ev.c:
     complete
     .text start:0x020177c4 end:0x020177e8
 
@@ -2498,7 +2498,7 @@ src/engine/fader/_ZN15FaderBrightnessD1Ev.c:
     complete
     .text start:0x02017814 end:0x02017838
 
-src/func_02017838.c:
+src/_ZN5FaderD2Ev.c:
     complete
     .text start:0x02017838 end:0x02017848
 
@@ -5319,7 +5319,7 @@ src/func_020380c0.c:
     complete
     .text start:0x020380c0 end:0x020380ec
 
-src/func_020380ec.c:
+src/_ZN10ClsnResultD2Ev.c:
     complete
     .text start:0x020380ec end:0x02038114
 
@@ -5559,7 +5559,7 @@ src/func_02039624.c:
     complete
     .text start:0x02039624 end:0x02039658
 
-src/func_02039658.c:
+src/_ZN16MeshColliderBaseD2Ev.c:
     complete
     .text start:0x02039658 end:0x02039668
 
@@ -5611,7 +5611,7 @@ src/func_020397dc.c:
     complete
     .text start:0x020397dc end:0x020397fc
 
-src/func_020397fc.c:
+src/_ZN12MeshColliderD2Ev.c:
     complete
     .text start:0x020397fc end:0x0203982c
 
@@ -5695,7 +5695,7 @@ src/_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
     complete
     .text start:0x0203a1e0 end:0x0203a420
 
-src/func_0203a420.c:
+src/_ZN18MovingMeshColliderD2Ev.c:
     complete
     .text start:0x0203a420 end:0x0203a444
 
@@ -5783,7 +5783,7 @@ src/func_0203ac00.c:
     complete
     .text start:0x0203ac00 end:0x0203ac1c
 
-src/func_0203ac1c.c:
+src/_ZN8dM3dGSphD2Ev.c:
     complete
     .text start:0x0203ac1c end:0x0203ac2c
 
