@@ -100,13 +100,19 @@ def main():
     nms = list(res.get("nearMisses") or [])
     nms += [{"name": n, "c_source": s} for n, s in res.get("sources", {}).items()]
     if nms:
-        tmp2 = pathlib.Path(tempfile.gettempdir()) / "coddog_nearmiss.jsonl"
-        with open(tmp2, "w", encoding="utf-8") as f:
-            for x in nms:
-                f.write(json.dumps({"name": x["name"], "c_source": x["c_source"]}) + "\n")
-        subprocess.run([sys.executable, str(REPO / "tools" / "nearmiss_db.py"), "ingest",
-                        "--seeds", str(tmp2), "--worklist", args.wl,
-                        "--label", f"fanout-{res.get('model', '?')}"], check=True)
+        # Same shared-path hazard as the bank file above, and worse here: a collision loses near
+        # misses, which the repo's standing rule says are never to be discarded.
+        nmdir = pathlib.Path(tempfile.mkdtemp(prefix="coddog_nearmiss_"))
+        tmp2 = nmdir / "seeds.jsonl"
+        try:
+            with open(tmp2, "w", encoding="utf-8") as f:
+                for x in nms:
+                    f.write(json.dumps({"name": x["name"], "c_source": x["c_source"]}) + "\n")
+            subprocess.run([sys.executable, str(REPO / "tools" / "nearmiss_db.py"), "ingest",
+                            "--seeds", str(tmp2), "--worklist", args.wl,
+                            "--label", f"fanout-{res.get('model', '?')}"], check=True)
+        finally:
+            shutil.rmtree(nmdir, ignore_errors=True)
 
 
 if __name__ == "__main__":
