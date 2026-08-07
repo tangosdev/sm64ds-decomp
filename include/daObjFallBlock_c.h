@@ -6,7 +6,8 @@
 /* daObjFallBlock_c -- an intermediate class the ROM's RTTI names and the tree
  * did not.  Base: dBgActor_c (the tree calls it Platform).
  *
- * typeinfo 0x02114874, vtable 0x0213c5bc, ov015, 32 slots (base has 32).
+ * typeinfo 0x02114874 (ov015), vtable 0x0213c5bc (ov098), 32 slots (base has 32).
+ * Note the vtable is in a DIFFERENT overlay from the typeinfo.
  * Abstract -- pure-virtual (null) slots: 0, 3
  * Own overrides at slots: 6, 9, 16, 17, 27, 31
  * 4 known descendant(s): daObjBk_Fall_Block_c, daObjFl_Fall_Block_c, daObjKm2_Fall_Block_c, daObjTh_Fall_Block_c
@@ -23,9 +24,12 @@
  *   func_ov098_0213a284
  *   func_ov098_0213a17c
  *
- * Everything below 0x320 is the base's and is left as padding: this pass
- * knows the offsets, not sizeof(base), so the struct is flat like the
- * rest of the generated corpus rather than inheriting.
+ * The space below 0x320 is left as padding.  It is NOT all the base's:
+ * this class's own subobjects live in there too -- daObjDorifu_c's
+ * destructor destroys a Model[5] at 0x320 and a MeshCollider[5] at
+ * 0x4b0, both its own.  Padding means unobserved, not inherited.
+ * The struct is flat like the rest of the generated corpus rather than
+ * inheriting because this pass knows offsets, not sizeof(base).
  * Regenerate: python tools/rtti_vtables.py --emit-headers */
 
 struct daObjFallBlock_c {

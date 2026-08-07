@@ -113,6 +113,15 @@ it is now reported `unproven_name` rather than counted as agreement. Every row c
 proof from tautology. An alias counts as corroborated when the vtable join independently
 proves the pairing or at least two distinct children voted for it; 16 of 17 qualify.
 
+**A belief the ROM supplied is not a belief.** Section 7 makes `evidence_hierarchy`
+ingest rtti edges at rank 0, and this pass reads that hierarchy as "what the tree
+believes" -- so an entry whose only source is `rtti` had this pass comparing the ROM to
+itself. Nine rows scored `agree` that way. The count was the smaller problem: for every
+rtti-fed class the rank-0 edge overrides the tree's actual belief before this pass sees
+it, so a real header/ROM disagreement could not be detected at all. Such entries are now
+treated as `no_belief`, which restores the table above and keeps the two passes
+independent.
+
 **vmi base order is not offset order.** `dExtAnmModel_c` lists `dExtFrameCtrl_c` (offset 80)
 before `dExtSimpleModel_c` (offset 0). Keying "primary base" on list position put that row
 in plain `agree` while the tree in fact names only `Model` and omits an entire base. The
@@ -432,7 +441,8 @@ constant 4, and with the right width the declared bases are confirmed in every c
 ### The headers
 
 `--emit-headers` writes one per intermediate that has fields:
-`include/daObjDorifu_c.h`, `daObjGuragura_c.h`, `daObjSwdoor_c.h`, `daObjUkiyuka_c.h`.
+`include/daObjDorifu_c.h`, `daObjFallBlock_c.h`, `daObjGuragura_c.h`, `daObjSwdoor_c.h`
+and `daObjUkiyuka_c.h`.
 They carry the ROM name, because the tree has no name for these classes — this names
 something that had none, it does not rename anything, so it is orthogonal to section 4's
 "annotate, don't rename".
@@ -454,8 +464,13 @@ only what was observed.
         u8  unk_dcb;            /* 0xdcb */
     };
 
+Each also states the padding below its first field is **unobserved, not inherited** --
+`daObjDorifu_c`'s own destructor destroys a `Model[5]` at `0x320` and a `MeshCollider[5]`
+at `0x4b0`, both its own, well below its first named field at `0xdc8`. An earlier draft
+said that space "is the base's", which its own provenance list disproves.
+
 Verified: ROM rebuild is byte-identical to the Phase-1 baseline
-(`d1506e90…c478e8`), 106/106 modules exact, `port_refcheck` clean. These four files have
+(`d1506e90…c478e8`), 106/106 modules exact, `port_refcheck` clean. These five files have
 no consumers yet, so they cannot move codegen — they are the scaffold that stops the next
 person re-deriving what is already known.
 

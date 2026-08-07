@@ -332,9 +332,12 @@ def emit_headers(tables):
         lines.append("/* %s -- an intermediate class the ROM's RTTI names and the tree" % cls)
         lines.append(" * did not.  Base: %s (the tree calls it Platform)." % parent.get(cls, "?"))
         lines.append(" *")
-        lines.append(" * typeinfo %s, vtable %s, %s, %d slots (base has %s)."
-                     % (rec["addr"], rec["vtable"], rec["module"],
+        vmod = t.get("vtable_module") or rec["module"]
+        lines.append(" * typeinfo %s (%s), vtable %s (%s), %d slots (base has %s)."
+                     % (rec["addr"], rec["module"], rec["vtable"], vmod,
                         len(t["slots"]), t["parent_slots"]))
+        if vmod != rec["module"]:
+            lines.append(" * Note the vtable is in a DIFFERENT overlay from the typeinfo.")
         nulls = [i for i, s in enumerate(t["slots"]) if s is None]
         lines.append(" * Abstract -- pure-virtual (null) slots: %s"
                      % (", ".join(str(i) for i in nulls) if nulls else "none"))
@@ -351,10 +354,13 @@ def emit_headers(tables):
         for m in info["methods"]:
             lines.append(" *   %s" % m)
         lines.append(" *")
-        lines.append(" * Everything below 0x%x is the base's and is left as padding: this pass"
+        lines.append(" * The space below 0x%x is left as padding.  It is NOT all the base's:"
                      % offs[0])
-        lines.append(" * knows the offsets, not sizeof(base), so the struct is flat like the")
-        lines.append(" * rest of the generated corpus rather than inheriting.")
+        lines.append(" * this class's own subobjects live in there too -- daObjDorifu_c's")
+        lines.append(" * destructor destroys a Model[5] at 0x320 and a MeshCollider[5] at")
+        lines.append(" * 0x4b0, both its own.  Padding means unobserved, not inherited.")
+        lines.append(" * The struct is flat like the rest of the generated corpus rather than")
+        lines.append(" * inheriting because this pass knows offsets, not sizeof(base).")
         lines.append(" * Regenerate: python tools/rtti_vtables.py --emit-headers */")
         lines.append("")
         lines.append("struct %s {" % cls)

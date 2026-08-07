@@ -6,7 +6,7 @@
 /* daObjGuragura_c -- an intermediate class the ROM's RTTI names and the tree
  * did not.  Base: dBgActor_c (the tree calls it Platform).
  *
- * typeinfo 0x0210905c, vtable 0x02109084, ov002, 32 slots (base has 32).
+ * typeinfo 0x0210905c (ov002), vtable 0x02109084 (ov002), 32 slots (base has 32).
  * Abstract -- pure-virtual (null) slots: 0, 3
  * Own overrides at slots: 6, 9, 16, 17
  * 2 known descendant(s): daObjFl_Gura_c, daObjKm2_Gura_c
@@ -21,9 +21,12 @@
  *   func_ov002_020b6030
  *   func_ov002_020b5fd8
  *
- * Everything below 0x330 is the base's and is left as padding: this pass
- * knows the offsets, not sizeof(base), so the struct is flat like the
- * rest of the generated corpus rather than inheriting.
+ * The space below 0x330 is left as padding.  It is NOT all the base's:
+ * this class's own subobjects live in there too -- daObjDorifu_c's
+ * destructor destroys a Model[5] at 0x320 and a MeshCollider[5] at
+ * 0x4b0, both its own.  Padding means unobserved, not inherited.
+ * The struct is flat like the rest of the generated corpus rather than
+ * inheriting because this pass knows offsets, not sizeof(base).
  * Regenerate: python tools/rtti_vtables.py --emit-headers */
 
 struct daObjGuragura_c {

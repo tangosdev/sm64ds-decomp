@@ -243,6 +243,18 @@ def build(rtti_path, eh_path):
         else:
             ent = hier.get(tn)
             believed = ent["base"] if ent else None
+            # A belief the ROM itself supplied is not a belief to reconcile
+            # against.  evidence_hierarchy now ingests rtti edges at rank 0, so an
+            # entry whose ONLY source is `rtti` is this pass comparing the ROM to
+            # itself -- the same tautology the single-vote alias rule exists to
+            # stop, arriving by a different route.  Nine rows scored `agree` that
+            # way.  Worse than the inflated count: for every rtti-fed class the
+            # rank-0 edge overrides whatever the tree actually believes before
+            # this pass can see it, so a real header/ROM disagreement could not be
+            # detected at all.  Treat those as no_belief, which is what they are.
+            if ent and ent.get("sources") == ["rtti"]:
+                believed = None
+                stats["beliefs_ignored_as_rom_sourced"] += 1
             if not rom_bases:
                 verdict = "root_both" if believed is None else "root_rom_only"
             elif believed is None:
