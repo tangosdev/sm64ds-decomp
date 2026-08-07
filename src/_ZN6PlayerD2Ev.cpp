@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6PlayerD2Ev
+// @symbol _ZN6PlayerD1Ev
 /* recovered: named members + shared header */
 #include "Player.h"
 extern "C" {
@@ -12,7 +12,7 @@ extern int _ZN5ActorD2Ev(void*);
 extern void _ZN15TextureSequenceD1Ev(void);
 extern void _ZN15MaterialChangerD1Ev(void);
 extern void* data_ov002_0210a83c[];
-void* _ZN6PlayerD2Ev(struct Player *self) {
+void* _ZN6PlayerD1Ev(struct Player *self) {
   *(void***)((void*)self) = data_ov002_0210a83c;
   _ZN12WithMeshClsnD1Ev((char*)&self->mMeshClsn);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mAttackClsn);

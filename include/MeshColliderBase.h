@@ -37,7 +37,7 @@
  *
  * By the #774 rule (a class vtable carries [D1, D0] and never D2; D2 is
  * reached by direct call alone) the symbol names are on the wrong bodies:
- * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD2Ev'. Correcting that
+ * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD1Ev'. Correcting that
  * pair is a symbols.txt rename, deliberately left to its own change so this
  * one stays byte-neutral. MeshCollider next door emits a byte-identical
  * D1/D2 pair too (0x02039864 in the vtable, 0x020397fc direct-called), so

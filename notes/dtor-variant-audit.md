@@ -7,6 +7,20 @@ and finding its `D2` is not a D2 and not Scene's.
 
 ---
 
+## 0. The rule is not new; mechanising it is
+
+`include/MeshColliderBase.h` already states it, calls it **the #774 rule** — *"a
+class vtable carries [D1, D0] and never D2; D2 is reached by direct call alone"* —
+applies it correctly to that one class, concludes *"the symbol names are on the
+wrong bodies"*, and deliberately defers the fix: *"Correcting that pair is a
+symbols.txt rename, deliberately left to its own change so this one stays
+byte-neutral."*
+
+So the reasoning below was already right, in the tree, for one class. What is new
+is running it over all 538 destructor symbols instead of the one somebody happened
+to be reading, which is what turned 1 known case into 8. The header's deferred
+rename is the change this note accompanies.
+
 ## 1. The rule, and why it decides
 
 The Itanium ABI gives a polymorphic class up to three destructors:
@@ -158,6 +172,19 @@ The polymorphism test is a **one-way** guarantee. Storing a vtable VA proves the
 class is polymorphic; not storing one is only evidence, since a size-0 symbol or a
 module `rtti.json` cannot see would look the same. The tool reports that case as
 undecidable rather than folding it into either answer.
+
+**The biggest gap: it only inspects symbols already named `D0`/`D1`/`D2`.** A
+genuine D2 sitting under a `func_*` name is invisible to it, and those exist in
+numbers — `include/MeshColliderBase.h` names two (`func_02039658` is
+`MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s), and the Fader family
+holds two more (`func_02017838`, `func_020177c4`). Each shows the same signature:
+referenced only by `kind:arm_call`, never by `kind:load`, called by destructors,
+and the same size as the class's D1.
+
+Finding them is a *discovery* pass rather than an audit — sweep every `func_*`
+that writes a known vtable VA and has no `load` reloc pointing at it. That is the
+obvious next tool, and it would name D2s the tree has never had names for, rather
+than only correcting the ones it named wrongly.
 
 It also says nothing about non-destructor symbols, and nothing about whether a
 correctly-named destructor is attributed to the right *class* — `_ZN5SceneD2Ev`

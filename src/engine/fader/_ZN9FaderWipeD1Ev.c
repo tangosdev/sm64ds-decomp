@@ -14,12 +14,12 @@ struct FaderWipe {
 
 extern void *_ZTV9FaderWipe[];
 extern void _ZN5ModelD1Ev(void *model);          /* 0x02016d20 */
-extern void _ZN5ColorD1Ev(struct FaderWipe *t);  /* 0x02017574 */
+extern void _ZN10FaderColorD2Ev(struct FaderWipe *t);  /* 0x02017574 */
 
 struct FaderWipe *_ZN9FaderWipeD1Ev(struct FaderWipe *thiz)
 {
     thiz->vtable = (void **)_ZTV9FaderWipe;
     _ZN5ModelD1Ev((char *)thiz + 0x10);
-    _ZN5ColorD1Ev(thiz);
+    _ZN10FaderColorD2Ev(thiz);
     return thiz;
 }

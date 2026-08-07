@@ -7,7 +7,7 @@ extern void _ZN5ModelD1Ev(void *thiz);
 extern void _ZN8Particle10SysTrackerD1Ev(void *thiz);
 extern void _ZN9ActorBaseD2Ev(struct Stage *thiz);
 
-struct Stage *_ZN5StageD2Ev(struct Stage *thiz)
+struct Stage *_ZN5StageD1Ev(struct Stage *thiz)
 {
     thiz->vtable = (void **)_ZTV5Stage;
     _ZN12MeshColliderD1Ev((char *)thiz + 0x91c);

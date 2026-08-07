@@ -14,13 +14,13 @@ struct Obj {
 extern void *data_020926f0[];
 
 extern void func_0202fb30(struct Obj *thiz);    /* 0x0202fb30 */
-extern void *_ZN5ColorD1Ev(struct Obj *thiz);   /* 0x02017574 */
+extern void *_ZN10FaderColorD2Ev(struct Obj *thiz);   /* 0x02017574 */
 
 struct Obj *func_0202fc08(struct Obj *thiz)
 {
     thiz->vtable = (void **)data_020926f0;
     if (thiz->unkF == 1)
         func_0202fb30(thiz);
-    _ZN5ColorD1Ev(thiz);
+    _ZN10FaderColorD2Ev(thiz);
     return thiz;
 }

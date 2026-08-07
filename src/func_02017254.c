@@ -3,10 +3,10 @@
  */
 struct Obj { void *vtable; };
 extern void *data_0208ea6c[];
-extern void _ZN5ColorD1Ev(struct Obj *thiz); /* 0x02017574 */
+extern void _ZN10FaderColorD2Ev(struct Obj *thiz); /* 0x02017574 */
 struct Obj *func_02017254(struct Obj *thiz)
 {
     thiz->vtable = (void *)data_0208ea6c;
-    _ZN5ColorD1Ev(thiz);
+    _ZN10FaderColorD2Ev(thiz);
     return thiz;
 }
