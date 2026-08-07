@@ -1,6 +1,7 @@
-// NONMATCHING: missing logic (ROM does more) (div=30). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// NONMATCHING: schedule residual (div=26 fdiff words). Logic OK vs ROM on mwccarm 2004/b56.
+// Residual pure instr-sched: init (r0 vs r1 #0x18 + sb/store order + mvn/fp/zero interleave),
+// RenderSub arg setup order, inner-loop incr (r6/r5 before r7++), outer fp/store/cmp order.
+// Improved tip 30/32->26 (y9 early load + init/tail interleave). 40+ pure-C variants + permuter ~250it no beat.
 struct Obj {
     char pad0[0x54];
     unsigned char unk54;
@@ -46,16 +47,19 @@ int func_ov005_020c0b04(struct Obj *arg0)
     }
 
     v[1] = 0x18;
+    sb = 0;
     v[6] = 0x18;
     v[9] = 0x18;
-    sb = 0;
     v[2] = 1;
-    fp = 0x28;
-    v[3] = 0;
-    v[4] = 0;
-    v[5] = 0;
-    v[8] = 0;
-    v[7] = -1;
+    {
+        int n = -1;
+        fp = 0x28;
+        v[3] = 0;
+        v[4] = 0;
+        v[5] = 0;
+        v[8] = 0;
+        v[7] = n;
+    }
     do {
         r7 = v[4];
         r8 = sb;
@@ -75,12 +79,18 @@ int func_ov005_020c0b04(struct Obj *arg0)
             r5 += 4;
             r7 += 1;
         } while (r7 < 9);
-        if (arg0->unk58 != r4)
-            r8 += 4;
-        _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2c28[r8], v[9], v[1], v[7], v[8]);
+        {
+            int y9 = v[9];
+            if (arg0->unk58 != r4)
+                r8 += 4;
+            _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2c28[r8], y9, v[1], v[7], v[8]);
+        }
         sb += 1;
-        fp += 0x30;
-        v[1] += 0x30;
+        {
+            int t1 = v[1] + 0x30;
+            fp += 0x30;
+            v[1] = t1;
+        }
     } while (sb < 4);
 
     if (arg0->unk54 == 0) {

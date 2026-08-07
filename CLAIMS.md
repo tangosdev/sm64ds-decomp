@@ -32,6 +32,7 @@ start converting a class; the same staleness rule applies.
 
 
 | Range | Who | Claimed | Status |
+| ov005 func_ov005_020c0b04 (0x020c0b04, size 0x434) | lunavyqo (Grok) | 2026-08-07 | **released** — near-miss improved **30→26** (fdiff words). Levers: y9 early load; init/tail interleave. Residual pure instr-sched (init r0vsr1, RenderSub args, loop incr, fp/store). 40+ variants + permuter ~250it no beat. tip in nearmiss/db.jsonl; API clm_8881e5e2443e released |
 | ov004 __sinit_ov004_020b955c (0x020b955c, size 0x574) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); levers: field-load `tmp.a/b` from `data_02086b58` then `w[0]/w[1]` copy; mid-stream `p0.a=w[0]` / fills / `p0.b=w[1]` + bf4f8 p1-p4+p11=tmp; from near-miss 299→142→22→0; API clm_05b55ea60b6a kept |
 | ov007 func_ov007_020c49bc (0x020c49bc, size 0x440) | lunavyqo (Grok) | 2026-08-05 | **done** — verified byte-identical (mwccarm 2004/b56); strength_reduction off + 6k decl sl/sb + sp4C-before-sp30 + else-path name-swap r6/r7; API clm_671dd186507f kept |
 | ov007 func_ov007_020c9688 (0x020c9688, size 0x300) | lunavyqo (Grok) | 2026-08-06 | **active** — continue grind from near-miss div=33; API clm_601e7964eeb4 |
