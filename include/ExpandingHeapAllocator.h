@@ -1,7 +1,17 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
+/* Hand-edited, against evidence. This file used to carry the
+ * "AUTO-GENERATED ... by tools/gen_header.py" banner, which was never true --
+ * see notes/runbook-type-reconstruction.md section 2.
+ *
  * class ExpandingHeapAllocator: 18 matched functions, 7 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+ * Field NAMES are placeholders - renaming cannot change codegen.
+ *
+ * THE __cplusplus BLOCK BELOW HAD NEVER BEEN COMPILED. It declared
+ * `forwards void* Allocate(...)` -- `forwards` is not a keyword, and the generator
+ * evidently spilled a fragment of a parameter name into the return type. Only two
+ * files include this header and both were .c, so the block was always skipped and
+ * the syntax error sat there unnoticed. Migrating the first method to C++ is what
+ * compiled it for the first time. */
 #ifndef EXPANDINGHEAPALLOCATOR_H
 #define EXPANDINGHEAPALLOCATOR_H
 #include "types.h"
@@ -22,10 +32,16 @@ struct ExpandingHeapAllocator {
     u8  pad_025[0x7];
     u8  unk_02c;            /* 0x02c */
 #ifdef __cplusplus
-    /* methods */
-    forwards void* Allocate(unsigned int size_, int align_);
-    int Deallocate(void * ptr);
+    /* methods. Parameter types are read off the mangled name: `Eji` is
+       (unsigned int, int), `EPv` is (void*), `Ev` is (). */
+    void* Allocate(u32 size, int align);
+    int Deallocate(void* ptr);
     u32 GetNodeID();
+
+    /* Static: the ROM body takes no `this`. SizeofInternal reads the block's
+       MemoryNode header, which sits immediately before the user pointer, so it
+       needs no allocator instance. */
+    static u32 SizeofInternal(void* userPtr);
 #endif
 };
 
