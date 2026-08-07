@@ -4644,7 +4644,7 @@ src/LoadFont3D.c:
     complete
     .text start:0x02034954 end:0x020349e0
 
-src/_ZN7Message10LoadTextVSEv.c:
+src/_ZN7Message10LoadTextVSEv.cpp:
     complete
     .text start:0x020349e0 end:0x02034a78
 
