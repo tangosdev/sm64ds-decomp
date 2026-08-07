@@ -5,6 +5,7 @@
 #ifndef SUBMARINE_H
 #define SUBMARINE_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Submarine {
     u8  pad_000[0x5c];
@@ -22,14 +23,12 @@ struct Submarine {
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
     s32 unk_110;            /* 0x110 */
-    u8  mModelAnim;            /* 0x114 */
-    u8  pad_115[0x7];
-    u8  unk_11c;            /* 0x11c */
-    u8  pad_11d[0x47];
-    u8  mAnimation;            /* 0x164 */
-    u8  pad_165[0xb];
-    s32 unk_170;            /* 0x170 */
-    u8  pad_174[0x4];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x114 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_11c (+0x8 = data),
+       mAnimation (+0x50 = the Animation base), unk_170 (+0x5c = speed), which the header
+       declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x114 */
     u8  mTextureTransformer;            /* 0x178 */
     u8  pad_179[0xb];
     s32 unk_184;            /* 0x184 */

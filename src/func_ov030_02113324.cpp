@@ -1,9 +1,6 @@
 //cpp
-// NONMATCHING: different op / idiom (div=46). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-struct Vector3 { int x, y, z; };
-struct Mtx43 { int a[12]; };
+#include "types.h"
+#include "private/mtx43.h"
 
 extern "C" int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
@@ -50,8 +47,9 @@ do_raycast:
         Vector3 v;
         int oy = *(int*)(other + 0x60);
         int oz = *(int*)(other + 0x64);
+        int vy = oy + 0x32000;
         v.x = *(int*)(other + 0x5c);
-        v.y = oy + 0x32000;
+        v.y = vy;
         v.z = oz;
         _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
 

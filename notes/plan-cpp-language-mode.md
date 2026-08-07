@@ -127,8 +127,8 @@ gamed by renaming a `.c` to `.cpp` — a hand-spelled symbol counts however the 
 named. That property is the whole reason this phase came first: it makes the *easy* fake
 progress unrewarding, and it turns the reply to #821 into a number instead of an argument.
 
-Remaining, and the natural next commit: wire `--check` into CI, and re-bank the baseline
-in any commit that legitimately lowers a count.
+`--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. Re-bank the
+baseline in any commit that legitimately lowers a count.
 
 ### Phase 1 — SDK namespaces *(169 files, 37 namespaces) — zero layout risk*
 

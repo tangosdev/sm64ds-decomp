@@ -82,6 +82,10 @@ struct Model {
     void *transformsBuf;               /* 0x4c */
 };
 
+/* So an object header declaring a Model member reads the same in both modes: C++
+ * gets the class, C gets the flat stand-in above, and neither needs `struct`. */
+typedef struct Model Model;
+
 #endif /* __cplusplus */
 
 #endif /* MODEL_H */

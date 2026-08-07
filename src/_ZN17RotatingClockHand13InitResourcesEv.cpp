@@ -6,7 +6,7 @@
 #include "RotatingClockHand.h"
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
-struct ModelBase { void SetFile(BMD_File *f, int b, int c); };
+/* ModelBase is the real class now, through this actor's header. */
 struct ShadowModel { void InitCuboid(); };
 struct Platform { void UpdateClsnPosAndRot(); };
 struct MovingMeshCollider {

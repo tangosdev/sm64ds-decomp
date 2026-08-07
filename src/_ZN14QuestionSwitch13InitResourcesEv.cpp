@@ -32,7 +32,7 @@ int QuestionSwitch::InitResources()
     f = _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov002_0210dd68);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x6b4, f, 0, 0x1000, 0);
     _ZN9Animation8SetFlagsEi(((char *)this) + 0x704, 0x40000000);
-    unk_710 = 0x1000;
+    mModelAnim.speed = 0x1000;
     func_ov002_020b50a0(((char *)this));
 
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_0210dd58);
@@ -47,11 +47,11 @@ int QuestionSwitch::InitResources()
 
     if (data_0209caa0[1] & 0x80000000) {
         mActiveMeshCollider = (int)((char *)&mMovingMeshCollider);
-        unk_70c = _ZNK9Animation13GetFrameCountEv((char *)&mAnim) << 12;
-        _ZN9Animation7AdvanceEv((char *)&mAnim);
+        mModelAnim.currFrame = _ZNK9Animation13GetFrameCountEv((char *)(Animation *)&mModelAnim) << 12;
+        _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     } else {
         mActiveMeshCollider = (int)((char *)&unk_324);
-        unk_70c = 0;
+        mModelAnim.currFrame = 0;
     }
 
     func_ov002_020b503c(((char *)this));

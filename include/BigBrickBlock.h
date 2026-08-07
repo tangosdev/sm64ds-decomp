@@ -6,6 +6,15 @@
 #define BIGBRICKBLOCK_H
 #include "types.h"
 
+/* Actor is only ever pointed at from here, so a declaration is enough --
+ * no definition is pulled in. The typedef keeps the member spelled the
+ * same in C and in C++; the guard is common.h's idiom for the same job. */
+#ifndef ACTOR_FWD_DECLARED
+#define ACTOR_FWD_DECLARED
+struct Actor;
+typedef struct Actor Actor;
+#endif
+
 struct BigBrickBlock {
     u8  pad_000[0xc];
     u16 mActorId;            /* 0x00c */
@@ -18,7 +27,11 @@ struct BigBrickBlock {
     u8  unk_31f;            /* 0x31f */
     u8  mEventID;            /* 0x320 */
     u8  pad_321[0x3];
-    u8  mSwitch;            /* 0x324 */
+    /* Actor * -- the ROM loads this WORD and passes it to _ZN5Actor15FindWithActorIDEjPS_
+       as that function's `this`, which is an object address, so the word is a Actor *. It
+       says nothing about the rest of the marker's span, which stays explicit padding. Was
+       a u8 marker. */
+    Actor *mSwitch;            /* 0x324 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

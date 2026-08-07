@@ -1407,6 +1407,10 @@ src/func_ov006_020d452c.c:
     complete
     .text start:0x020d452c end:0x020d47f4
 
+src/func_ov006_020d47f4.c:
+    complete
+    .text start:0x020d47f4 end:0x020d48dc
+
 src/func_ov006_020d48dc.cpp:
     complete
     .text start:0x020d48dc end:0x020d4b7c
@@ -3128,6 +3132,10 @@ src/func_ov006_020ec458.c:
     complete
     .text start:0x020ec458 end:0x020ec4dc
 
+src/func_ov006_020ec4dc.c:
+    complete
+    .text start:0x020ec4dc end:0x020ec6e8
+
 src/func_ov006_020ec6e8.c:
     complete
     .text start:0x020ec6e8 end:0x020ec84c
@@ -4277,6 +4285,10 @@ src/func_ov006_020fb1c4.c:
     complete
     .text start:0x020fb1c4 end:0x020fb230
 
+src/func_ov006_020fb230.c:
+    complete
+    .text start:0x020fb230 end:0x020fb45c
+
 src/func_ov006_020fb45c.c:
     complete
     .text start:0x020fb45c end:0x020fb4e0
@@ -4296,6 +4308,10 @@ src/func_ov006_020fb670.c:
 src/func_ov006_020fb74c.c:
     complete
     .text start:0x020fb74c end:0x020fb7e0
+
+src/func_ov006_020fb7e0.c:
+    complete
+    .text start:0x020fb7e0 end:0x020fb8fc
 
 src/func_ov006_020fb8fc.c:
     complete
@@ -4392,6 +4408,10 @@ src/func_ov006_020fd17c.c:
     complete
     .text start:0x020fd17c end:0x020fd2d8
 
+src/func_ov006_020fd2d8.c:
+    complete
+    .text start:0x020fd2d8 end:0x020fd894
+
 src/func_ov006_020fd894.c:
     complete
     .text start:0x020fd894 end:0x020fd9cc
@@ -4436,6 +4456,10 @@ src/func_ov006_020fea54.c:
     complete
     .text start:0x020fea54 end:0x020fea70
 
+src/func_ov006_020fea70.c:
+    complete
+    .text start:0x020fea70 end:0x020feba8
+
 src/func_ov006_020feba8.c:
     complete
     .text start:0x020feba8 end:0x020fed58
@@ -4450,6 +4474,10 @@ src/func_ov006_020fedc4.c:
 src/func_ov006_020fee24.c:
     complete
     .text start:0x020fee24 end:0x020fefc0
+
+src/func_ov006_020fefc0.c:
+    complete
+    .text start:0x020fefc0 end:0x020ff3ec
 
 src/MgBobOmbSquad_Spawn.c:
     complete
@@ -4478,6 +4506,14 @@ src/func_ov006_020ff534.c:
 src/func_ov006_020ff690.c:
     complete
     .text start:0x020ff690 end:0x020ff8c8
+
+src/func_ov006_020ff8c8.c:
+    complete
+    .text start:0x020ff8c8 end:0x020ffb54
+
+src/func_ov006_020ffb54.c:
+    complete
+    .text start:0x020ffb54 end:0x020ffde4
 
 src/func_ov006_020ffde4.c:
     complete
@@ -4705,6 +4741,10 @@ src/func_ov006_0210397c.c:
 src/func_ov006_02103994.c:
     complete
     .text start:0x02103994 end:0x02103ac0
+
+src/func_ov006_02103ac0.c:
+    complete
+    .text start:0x02103ac0 end:0x02103bfc
 
 src/func_ov006_02103bfc.c:
     complete
@@ -5084,6 +5124,10 @@ src/func_ov006_02108cc0.c:
     complete
     .text start:0x02108cc0 end:0x02108d28
 
+src/func_ov006_02108d28.c:
+    complete
+    .text start:0x02108d28 end:0x02108e24
+
 src/func_ov006_02108e24.c:
     complete
     .text start:0x02108e24 end:0x02108f2c
@@ -5232,6 +5276,10 @@ src/func_ov006_0210ac38.c:
 src/func_ov006_0210ac3c.cpp:
     complete
     .text start:0x0210ac3c end:0x0210adac
+
+src/func_ov006_0210adac.c:
+    complete
+    .text start:0x0210adac end:0x0210af64
 
 src/func_ov006_0210af64.c:
     complete
@@ -5822,6 +5870,10 @@ src/func_ov006_02115a5c.c:
 
 src/func_ov006_02115b0c.c:
     .text start:0x02115b0c end:0x021173c8
+
+src/func_ov006_021173c8.cpp:
+    complete
+    .text start:0x021173c8 end:0x02118488
 
 src/func_ov006_02118488.c:
     .text start:0x02118488 end:0x02118a8c
@@ -6803,6 +6855,10 @@ src/func_ov006_021245a8.c:
     complete
     .text start:0x021245a8 end:0x0212471c
 
+src/MgTrampolineTerror_Spawn.c:
+    complete
+    .text start:0x0212471c end:0x021248a8
+
 src/func_ov006_021248a8.cpp:
     complete
     .text start:0x021248a8 end:0x02124908
@@ -7110,6 +7166,10 @@ src/__sinit_ov006_0212fd48.c:
 src/__sinit_ov006_021300b0.c:
     complete
     .init start:0x021300b0 end:0x0213014c
+
+src/__sinit_ov006_0213014c.c:
+    complete
+    .init start:0x0213014c end:0x021303d0
 
 src/__sinit_ov006_021303d0.c:
     complete

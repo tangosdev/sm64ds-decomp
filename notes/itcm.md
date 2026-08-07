@@ -557,3 +557,190 @@ Two options, and the first is cheaper than it looks.
 The 25 unnamed `func_01ff…` in the 0x01ff8000..0x01ffa9dc block have never been looked at
 by anyone, and at 8-24 functions of ordinary size they are likely cheaper per match than
 anything left in arm9.
+
+### The entry block IS swept now, and it is inert (2026-08-06)
+
+The previous floor closed with *"entry-block web ordering is upstream of everything and is
+unswept in the no-ternary state — fix the head first."* It is swept. **21 variants across six
+axes, every one byte-identical to base or worse.** This route is closed; do not re-walk it.
+
+**The defect, stated exactly.** The ROM materialises the `lineStart` base *before* its first
+load; we fold the offset into that load and pay for it three instructions later:
+
+```
+ROM                        ours
+add r6,r1,#0x38            ldr r2,[r1,#0x38]     <- folded, r1 dies here
+ldr r2,[r6]                str r1,[sp]
+str r1,[sp]                add r6,r1,#0x38       <- base materialised too late
+asr r4,r2,#6               asr r1,r2,#6          <- s.x steals the freed r1
+add r5,r1,#0x54            ...
+                           ldr r2,[sp]           <- ray must be RELOADED for lineEnd
+```
+
+Everything downstream in the head follows from that one fold: `r1` dies early, so `s.x`
+colours `r1` instead of the ROM's `r4`, and `&ray.lineEnd` needs a reload instead of coming
+off the still-live incoming `r1`.
+
+**It is independent of the ternary.** The fold is present identically in both reachable
+states, so it is NOT a symptom of the leaf colouring:
+
+| state | frame | `this` | words | aligner |
+|---|---|---|---|---|
+| with-ternary (`lp = prism ? lp : lp;`) | `0xfc` ✓ | **r8** ✗ | 463 | 0.5909 |
+| no-ternary | `0x104` ✗ | **r7** ✓ | 471 | 0.5408 |
+
+That reproduces the banked two-priority characterisation exactly, from a clean tree.
+
+**Swept and inert** (all measured at 1.2/sp2p3 with `fdiff --version`, both states):
+pointer spelling (reference, non-const, `const s32*` walker, assign-in-body, declaration-order
+swap); read interleaving (six orderings of the s/e reads, including per-axis and
+`min=max=s.x=` seeding); aggregate class (`s` as an SROA-blocked `DVec` rather than
+`Vector3`); **declaration position** (pointers first / before the aggregates / before `lp` /
+last — bytes identical in all four, so unlike the RaycastGround twin, position is not a dial
+here); and dereference form (whole-struct copy `s = *lineStart`, and `(*p).x`).
+
+**What is left, and it is not the head.** The tail is already byte-perfect — the last ~0x60
+bytes compare OK word for word. The residual is dominated by a systematic **register-name
+permutation**: `this` r7↔r8, and from +0x254 the octree-shift pair swaps r1↔r2
+(`ldr r2,[r6,#0x2c]` / `ldr r1,[r6,#0x34]` against ours reversed), which then propagates
+through every `lsr`/`orr` that consumes them. The one genuine *structural* difference left is
+at +0x1fc, where the ROM hoists `add r8,sp,#0xd0` (`&info`) once and we rematerialise it per
+site — which is the same eviction the banked floor named. Route the next attempt at the
+`&info` hoist and the r1/r2 shift pair, not at the entry block.
+
+**Reproduction drift worth knowing.** The banked tip rebuilt from `nearmiss/db.jsonl` compiles
+to **0x73c** under 1.2/sp2p3 here, where the previous floor recorded 0x738 against the ROM's
+0x734. Four bytes are unaccounted for between the banked source and the banked measurement, so
+re-measure before trusting a delta against that number.
+
+### RETRACTED: the entry-block sweep measured the wrong compiler (2026-08-06)
+
+**The section above is wrong, and its conclusion must not be used.** It pinned every
+measurement to 1.2/sp2p3 because the earlier floor said this cluster verifies there. It does
+not. `DetectClsn(RaycastLine&)` is a **2004/b56** function:
+
+| build | size | whole-function |
+|---|---|---|
+| 1.2/sp2p3 | **0x73c** — 8 bytes over the ROM's 0x734 | bails on size |
+| **2004/b56** | **0x734 — EXACT** | **203 / 461 words** |
+
+The corroboration was in the tree the whole time: the twin that already *matched*,
+`DetectClsn(RaycastGround&)`, matched on **2004/b56**. Only the eleven small ITCM accessors
+are 1.2/sp2p3. The size band the previous floor quoted — "0x740 / 0x738 against the ROM's
+0x734" — reads as two near-misses, but one of those builds produces the exact size and the
+other cannot.
+
+**What this retracts.** The "first-access fold" — the ROM materialising `add r6,r1,#0x38`
+before `ldr r2,[r6]` while we folded the offset and let `s.x` steal r1 — **is a 1.2/sp2p3
+artifact and does not exist at 2004/b56.** At the right build the head is byte-correct with no
+source change at all:
+
+```
++0x08  add r6,r1,#0x38   OK        +0x1c  add r5,r1,#0x54   OK
++0x0c  ldr r2,[r6]       OK        +0x20  ldr r1,[r6,#4]    OK
++0x14  asr r4,r2,#6      OK   <- s.x colours r4, the thing 21 variants could not reach
+```
+
+So the 21 inert variants were chasing a phantom, and "entry-block web ordering is upstream of
+everything" was never the problem. Retained as a genuine negative only in the narrow sense:
+those axes are inert *at 1.2/sp2p3*, which no longer matters here.
+
+**Corrected baseline** (banked tip, ternary kept, 2004/b56): **203/461, size exact.** The
+ternary is still load-bearing — removing it goes to 0x754. The `u16 *leaf` writeback walker is
+still inert here (203/461, byte-identical), so that one prior finding survives the build change.
+
+**Where the residual actually is**, all at 2004/b56:
+
+1. `+0x24` `mov r7,r0` vs our `mov r8,r0` — `this`. It propagates: `+0xb0`
+   `ldr r6,[r7,#0x20]` vs `[r8,#0x20]`.
+2. Because r8 is not free, the ROM's `add r8,sp,#0xd0` (`&info`, hoisted once at `+0x1fc`) has
+   no home in ours, so five call sites read `add r0,sp,#0xd0` where the ROM reads `mov r0,r8`.
+   This is one defect with two faces, not two defects.
+3. The walker: ROM `ldrh r1,[fp,#2]!` (pre-indexed writeback) against our `ldrh r1,[r7,#2]`
+   plus a separate `add r7,r7,#2`, and `leaf` lives in fp for the ROM.
+4. A register permutation through the triangle-intersection block (`sb`/`sl`/`fp`/`ip`
+   shuffled), downstream of 1-3.
+
+**Route next at getting `this` into r7 so r8 frees up for the `&info` hoist.** That is one
+allocation decision, and items 2 and 4 are its consequences. Re-run the whole inert-lever list
+from the previous floor before trusting any of it — every entry was measured on the wrong build.
+
+**Method note, the second time this has bitten this exact function.** The `fdiff --version`
+flag exists because the canonical default silently scored this function against 2004/b56 when
+the belief was 1.2/sp2p3. The fix pinned the flag but banked the belief, and the pin then
+carried the error forward. Pin the build to whatever produced the *twin's* match, and re-derive
+it from the size when a function is unmatched — an exact size is evidence about the build, not
+just about the source.
+
+#### Booster placement re-tested at 2004/b56 (2026-08-06)
+
+The two-state bracket is the same at the correct build, which is the useful part — it means
+the old floor's *characterisation* was right even though its measurements were not:
+
+| state @ 2004/b56 | frame | `this` | head | whole function |
+|---|---|---|---|---|
+| no-ternary | `0x104` (+8) | **r7** correct | correct | 469 words, size wrong |
+| with-ternary | `0xfc` correct | r8 wrong | correct | **461, size EXACT**, 203 diverge |
+
+So the ternary buys the frame and costs the register, exactly as banked. The ROM wants `leaf`
+ranked **last** — it lives in `fp` (`ldrh r1,[fp,#2]!`) — where the booster puts it 4th, taking
+r7 and displacing `this` to r8.
+
+Allocation priority is loop-depth weighted, so a booster one or two levels out should be
+weaker. It is not: placed at the top of the x-loop body, at the top of the y-loop body, or
+before the `prevLeaf` guard, **all three are byte-identical to no-ternary** (0x754, 469 words)
+— i.e. DCE'd. That reproduces the banked quantisation result ("survives DCE only at the top of
+a syntactic loop body whose target has multiple reaching defs") at the correct build, so that
+one is not a 1.2/sp2p3 artifact.
+
+Also re-tested at 2004/b56 and still inert: the `SurfaceInfo *ip = &info;` hoist in all three
+declaration positions (203/461, byte-identical) — mwccarm folds the pointer straight back to
+`sp+0xd0`.
+
+The gap is 8 bytes of frame in one state and one register in the other, and the booster is the
+only known dial between them. A weaker boost than the identical-arms ternary, or a way to
+raise `this` above `leaf` rather than lowering `leaf`, is what this needs.
+
+#### Classified: 95% shape-correct, regperm-blocked (2026-08-06)
+
+Build settled by sweep, not assumption: of **16 installed mwccarm builds, exactly one
+produces the ROM's size**.
+
+| builds | size |
+|---|---|
+| 1.2/base, 1.2/sp2, 1.2/sp2p3 | 0x73c |
+| 1.2/sp3, 1.2/sp4 | 0x728 |
+| all ten 2.0/* | 0x724 |
+| **2004/b56** | **0x734 — exact** |
+
+Three aligners on the banked tip at 2004/b56 place the residual precisely:
+
+| aligner | ratio | equal |
+|---|---|---|
+| strict | 0.638 | 294 / 461 |
+| shape (ignore register names + stack offsets) | **0.952** | 439 / 461 |
+| mnemonic (ignore operands) | 0.965 | 445 / 461 |
+
+The strict→shape jump is the **regperm** signature from `notes/mwccarm-codegen.md` §2. The
+source is structurally right; what is left is ~35 shape-level ops and a register permutation
+whose root is one decision — `leaf` ranks 4th and takes r7, displacing `this` to r8, which
+leaves no home for the ROM's once-hoisted `add r8,sp,#0xd0` (`&info`).
+
+**The documented lever was tried and is inert here.** §2 says the access *expression* changes
+allocation and "trying 2-3 access forms is cheap and often flips a regperm miss into a strict
+match". Five forms, all byte-identical at 203/461: prism by pointer arithmetic instead of
+`&f->tris[lv]`; the normal and position tables by byte offset instead of indexing; the three
+edge-normal lookups likewise; `*(node + idx)` instead of `node[idx]`; and all of them at once.
+mwccarm canonicalises the lot.
+
+**Cumulative inert-lever list at the correct build** — do not re-walk any of these: pointer
+spelling and declaration position (21 variants, though those were the 1.2/sp2p3 phantom),
+`&info` hoisted to a named pointer in three declaration positions, `u16 *` writeback walker,
+booster relocation to the x- and y-loop bodies (all DCE'd), and the five access forms above.
+
+**Recommendation.** By §2's own policy this is "template-correct, regalloc-blocked — flag it
+and move on". The productive redirect is the one the earlier floor already named: **the
+7,112-byte `DetectClsn(SphereClsn&)` shares this traversal, and landing it will pin the true
+walker idiom** from a function with different pressure, which is the kind of evidence that
+resolves a coloring question that source-level rewriting cannot. Attacking RaycastLine further
+in isolation is re-expressing logic that is already correct.

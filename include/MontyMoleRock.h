@@ -5,6 +5,7 @@
 #ifndef MONTYMOLEROCK_H
 #define MONTYMOLEROCK_H
 #include "types.h"
+#include "Model.h"
 
 struct MontyMoleRock {
     u8  pad_000[0x8];
@@ -17,8 +18,9 @@ struct MontyMoleRock {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x6c];
-    u8  mModel;            /* 0x110 */
-    u8  pad_111[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x110 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x110 */
     u8  mMovingCylinderClsn;            /* 0x160 */
     u8  pad_161[0x33];
     u8  mWithMeshClsn;            /* 0x194 */

@@ -5,6 +5,7 @@
 #ifndef SNOWMANHEAD_H
 #define SNOWMANHEAD_H
 #include "types.h"
+#include "Model.h"
 
 struct SnowmanHead {
     u8  pad_000[0x5c];
@@ -16,8 +17,9 @@ struct SnowmanHead {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x48];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mTextureSequence;            /* 0x124 */
     u8  pad_125[0x13];
     u8  mMovingCylinderClsn;            /* 0x138 */

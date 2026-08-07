@@ -5,6 +5,7 @@
 #ifndef MADPIANO_H
 #define MADPIANO_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct MadPiano {
     u8  pad_000[0x5c];
@@ -24,8 +25,9 @@ struct MadPiano {
     u8  pad_0d5[0x4f];
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mModelAnim;            /* 0x320 */
-    u8  pad_321[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x320 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x320 */
     u8  mShadowModel1;            /* 0x384 */
     u8  pad_385[0x27];
     u8  mShadowModel2;            /* 0x3ac */

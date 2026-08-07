@@ -5,6 +5,7 @@
 #ifndef BULLETBILL_H
 #define BULLETBILL_H
 #include "types.h"
+#include "Model.h"
 
 struct BulletBill {
     u8  pad_000[0x5c];
@@ -36,10 +37,12 @@ struct BulletBill {
     u8  pad_138[0x18];
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1bb];
-    u8  mModel1;            /* 0x30c */
-    u8  pad_30d[0x4f];
-    u8  mModel2;            /* 0x35c */
-    u8  pad_35d[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x30c -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel1;            /* 0x30c */
+    /* Model member, named by _ZN5ModelD1Ev at +0x35c -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel2;            /* 0x35c */
     u8  mShadowModel;            /* 0x3ac */
     u8  pad_3ad[0x27];
     s32 mState;            /* 0x3d4 */

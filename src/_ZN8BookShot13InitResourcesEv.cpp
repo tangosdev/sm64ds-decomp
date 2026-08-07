@@ -4,7 +4,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BookShot.h"
 struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
-typedef struct { int w[2]; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 
 extern "C" {
 extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
@@ -53,7 +54,7 @@ int BookShot::InitResources()
     unk_430 = mPosY;
     unk_434 = mPosZ;
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)data_ov020_02114ab8.w[1], 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
     *(struct M48*)((char*)&unk_1ec) = data_02082128;

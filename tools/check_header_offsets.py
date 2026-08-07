@@ -22,6 +22,17 @@ DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*(\**)\s*(\w+)\s*"
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 
+# Class sizes come from the tree's own compile-time assertions:
+#   typedef char ModelAnim_size_must_be_0x64[...]
+# Without these an embedded member is an unknown type, which this checker skips --
+# and skipping without advancing the offset makes every later field mismatch.
+CLASS_SIZES = {}
+for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").glob("*.h"):
+    for _m in re.finditer(r"(\w+)_size_must_be_(0x[0-9a-fA-F]+)",
+                          _h.read_text(errors="replace")):
+        CLASS_SIZES[_m.group(1)] = int(_m.group(2), 16)
+SZ.update(CLASS_SIZES)
+
 rc = 0
 for path in sys.argv[1:]:
     txt = pathlib.Path(path).read_text(errors="replace")
@@ -58,8 +69,12 @@ for path in sys.argv[1:]:
             skipped.append(f"{lineno}: {line.strip()}")
             continue
         _, _, name, arr, decl = m.groups()
-        if off % w:                       # compiler would insert padding here
-            off += w - (off % w)
+        # Alignment is the strictest MEMBER alignment, never the type's size: a
+        # 100-byte ModelAnim aligns to 4, not to 100. Aligning to size padded 0xd4
+        # out to 0x12c and made every later field in the header mismatch.
+        align = min(w, 4)
+        if off % align:                   # compiler would insert padding here
+            off += align - (off % align)
         if decl is not None:
             n += 1
             if int(decl, 16) != off:

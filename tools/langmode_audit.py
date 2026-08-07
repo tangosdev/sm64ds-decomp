@@ -212,8 +212,9 @@ def audit():
                 excluded.append({"file": p, "by_value": sorted(set(byval))})
             else:
                 cls = info.get("class") or "<free>"
-                pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}})
+                pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}, "files": []})
                 pc["c_left"] += 1
+                pc["files"].append(p)
                 pc["kinds"][kind] = pc["kinds"].get(kind, 0) + 1
 
     # No include/<Class>.h AND no ctor/dtor => almost certainly an SDK *namespace*
@@ -349,7 +350,8 @@ def main():
                     help="with --json: include per-class detail and file lists")
     ap.add_argument("--by-class", action="store_true",
                     help="per-class backlog, worst first")
-    ap.add_argument("--list", metavar="WHICH", choices=["c-mangled", "cpp-handspelled", "excluded"],
+    ap.add_argument("--list", metavar="WHICH",
+                    choices=["c-mangled", "cpp-handspelled", "excluded", "layout-free"],
                     help="print a file list and nothing else")
     args = ap.parse_args()
 
@@ -363,6 +365,13 @@ def main():
         return 0
     if args.list == "excluded":
         print("\n".join(r["exclusions"]["files"]))
+        return 0
+    if args.list == "layout-free":
+        # The Phase 1 work list: namespaces with no header and no ctor/dtor, so a
+        # migration cannot shift anyone's offsets. Same predicate and the same files
+        # the headline "layout-free candidates" count is summed from.
+        print("\n".join(sorted(f for c in r["per_class"].values()
+                               if c["layout_free"] for f in c["files"])))
         return 0
 
     if args.json:

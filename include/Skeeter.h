@@ -5,6 +5,7 @@
 #ifndef SKEETER_H
 #define SKEETER_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Skeeter {
     u8  pad_000[0x5c];
@@ -31,8 +32,12 @@ struct Skeeter {
     u8  pad_111[0x3f];
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1bb];
-    u8  mModelAnim;            /* 0x30c */
-    u8  pad_30d[0x67];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x30c -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       ran 0x4 bytes PAST the end of the object; that space is not evidenced and stays
+       explicit padding rather than being folded into the member. */
+    ModelAnim mModelAnim;            /* 0x30c */
+    u8  pad_370[0x4];
     s32 unk_374;            /* 0x374 */
     s32 unk_378;            /* 0x378 */
     s32 unk_37c;            /* 0x37c */

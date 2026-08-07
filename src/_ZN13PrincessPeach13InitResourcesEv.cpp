@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PrincessPeach.h"
 struct BMD_File; struct Actor; struct Vector3_16;
-struct ModelBase { void SetFile(BMD_File *f, int b, int c); };
+/* ModelBase is the real class now, through PrincessPeach.h. */
 struct ShadowModel { int InitCylinder(); };
 struct MovingCylinderClsn { void Init(Actor *a, int b, int c, unsigned int d, unsigned int e); };
 struct WithMeshClsn { void Init(Actor *a, int b, int c, void *d, int e); };

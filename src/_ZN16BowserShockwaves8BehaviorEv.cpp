@@ -39,11 +39,11 @@ int BowserShockwaves::Behavior()
   _ZN9Animation7AdvanceEv((char*)&mMaterialChanger2);
   _ZN9Animation7AdvanceEv((char*)&mTextureTransformer1);
   _ZN9Animation7AdvanceEv((char*)&mTextureTransformer2);
-  _ZN9Animation7AdvanceEv((char*)&mAnimation1);
-  _ZN9Animation7AdvanceEv((char*)&mAnimation2);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim1);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim2);
   Matrix4x3_FromTranslation(((char*)this)+0xf0, mPosX>>3, mPosY>>3, mPosZ>>3);
   Matrix4x3_FromTranslation(((char*)this)+0x190, mPosX>>3, mPosY>>3, mPosZ>>3);
-  if(_ZN9Animation8FinishedEv((char*)&mAnimation1)){
+  if(_ZN9Animation8FinishedEv((char*)(Animation *)&mModelAnim1)){
     _ZN9ActorBase18MarkForDestructionEv(((char*)this));
   }
   return 1;

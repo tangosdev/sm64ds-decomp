@@ -17,7 +17,7 @@ int PrincessPeach::Behavior()
     func_ov085_0212a430(((char *)this));
     func_ov085_02129dbc(((char *)this));
     if (unk_354 != 1)
-        _ZN9Animation7AdvanceEv((char *)&mAnimation);
+        _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     ((Sub*)((char *)&mModelAnim))->g3();
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);

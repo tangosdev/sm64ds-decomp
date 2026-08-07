@@ -5,6 +5,7 @@
 #ifndef TOXBOX_H
 #define TOXBOX_H
 #include "types.h"
+#include "Model.h"
 
 struct ToxBox {
     u8  pad_000[0x8];
@@ -18,10 +19,11 @@ struct ToxBox {
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x42];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;            /* 0x0f0 */
-    u8  pad_0f1[0x33];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
+       short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3), which
+       the header declared separately inside it. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     s32 unk_320;            /* 0x320 */

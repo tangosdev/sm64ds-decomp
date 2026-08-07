@@ -1,9 +1,13 @@
 //cpp
 // @symbol _ZN8CccArena13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
+/* The class header comes FIRST on purpose: it reaches math/Matrix.h, whose
+   Matrix4x3 is the structured one, and include/common.h's flat spelling stands
+   down behind the guard. mat4x3.t is only nameable this way round, and the two
+   spellings are the same 0x30 bytes. */
 #include "CccArena.h"
+/* recovered: declarations from a shared header */
+#include "decl_common.h"
 #include "MeshColliderBase.h"
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(int);
@@ -45,9 +49,9 @@ int CccArena::InitResources()
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov073_021231bc + idx * 0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, f, 1, -1);
     Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
-    unk_114 = mPosX >> 3;
-    unk_118 = mPosY >> 3;
-    unk_11c = mPosZ >> 3;
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
     _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
 
     {

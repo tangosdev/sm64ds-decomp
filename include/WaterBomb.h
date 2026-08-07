@@ -5,6 +5,7 @@
 #ifndef WATERBOMB_H
 #define WATERBOMB_H
 #include "types.h"
+#include "Model.h"
 
 struct WaterBomb {
     u8  pad_000[0x80];
@@ -42,8 +43,9 @@ struct WaterBomb {
     u8  pad_111[0x33];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];
-    u8  mModel;            /* 0x300 */
-    u8  pad_301[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x300 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x300 */
     u8  mShadowModel;            /* 0x350 */
     u8  pad_351[0x73];
     s32 unk_3c4;            /* 0x3c4 */

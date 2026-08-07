@@ -5,6 +5,7 @@
 #ifndef BOWSERPUZZLEMANAGER_H
 #define BOWSERPUZZLEMANAGER_H
 #include "types.h"
+#include "Model.h"
 
 struct BowserPuzzleManager {
     u8  pad_000[0x8];
@@ -12,8 +13,9 @@ struct BowserPuzzleManager {
     u8  pad_00c[0x82];
     s16 unk_08e;            /* 0x08e */
     u8  pad_090[0x44];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */

@@ -5,6 +5,7 @@
 #ifndef KLEPTO_H
 #define KLEPTO_H
 #include "types.h"
+#include "BlendModelAnim.h"
 
 struct Klepto {
     u8  pad_000[0x8];
@@ -38,10 +39,11 @@ struct Klepto {
     u8  pad_145[0x33];
     u8  mWithMeshClsn;            /* 0x178 */
     u8  pad_179[0x1bb];
-    u8  mBlendModelAnim;            /* 0x334 */
-    u8  pad_335[0x5b];
-    s32 unk_390;            /* 0x390 */
-    u8  pad_394[0x10];
+    /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x334 -- a relocation
+       the ROM build checks. D1 and not D2, so it is this type and not an inlined base. The
+       marker's pad stopped short of the object, so the member also takes over unk_390
+       (+0x5c = speed), which the header declared separately inside it. */
+    BlendModelAnim mBlendModelAnim;            /* 0x334 */
     u8  mShadowModel;            /* 0x3a4 */
     u8  pad_3a5[0x87];
     s32 unk_42c;            /* 0x42c */

@@ -1,50 +1,49 @@
-// NONMATCHING: different op / idiom (div=24). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-struct Quad { unsigned char b0, b1, b2, b3; };
-extern struct Quad data_020a0de8[];
-extern unsigned char data_020a0e40[];
-extern void *data_ov006_021428c8;
-extern int func_ov006_02108650(void);
+#include "types.h"
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
-
-struct Obj {
-    int x0;
-    int x4;
-    int x8;
-    int xc;
-    char pad10[0x1c];
-    short x2c;
-    char pad2e[4];
-    unsigned char x32;
-};
-
-void func_ov006_02108d28(struct Obj *o)
+extern int data_ov006_021428c8;
+extern u8 data_020a0e40;
+extern u8 data_020a0de8[];
+extern u8 data_020a0de9[];
+extern u8 data_020a0dea[];
+extern u8 data_020a0deb[];
+extern int func_ov006_02108650(int, int);
+void func_ov006_02108d28(int *p)
 {
-    int flag;
-    int dx, dy;
-    int idx;
-
-    if (data_ov006_021428c8 != 0) return;
-
-    idx = data_020a0e40[0];
-    flag = 0;
-    if (data_020a0de8[idx].b0 != 0) {
-        if (data_020a0de8[idx].b1 != 0) flag = 1;
+  int idx;
+  int flag;
+  int new_var;
+  int dx;
+  int dy;
+  int px, py, bx, by;
+  s16 ang;
+  new_var = 4;
+  if (data_ov006_021428c8 != 0) return;
+  idx = data_020a0e40;
+  flag = 0;
+  if (data_020a0de8[idx * 4])
+  {
+    if (data_020a0de9[idx * 4] != 0)
+    {
+      flag = 1;
     }
-    if (flag == 0) return;
-
-    if (o->x32 != 1) return;
-
-    dx = (o->x0 >> 12) - data_020a0de8[idx].b2;
-    dy = (o->x4 >> 12) - data_020a0de8[idx].b3;
-    if (o->x2c != 0x25) return;
-
-    if (func_ov006_02108650() == 0x25) return;
-
-    _ZN5Sound12PlayBank2_2DEj(0x15d);
-    data_ov006_021428c8 = o;
-    o->x32 = 2;
-    o->x8 = dx << 12;
-    o->xc = dy << 12;
+  }
+  if (flag == 0) return;
+  if (*((u8 *)(((char *)p) + 0x32)) != 1) return;
+  idx = data_020a0e40;
+  px = p[0];
+  py = p[1];
+  bx = data_020a0dea[idx * new_var];
+  ang = *((s16 *)(((char *)p) + 0x2c));
+  px >>= 12;
+  by = data_020a0deb[idx * 4];
+  py >>= 12;
+  dx = px - bx;
+  dy = py - by;
+  if (ang != 0x25) return;
+  if (func_ov006_02108650(bx, by) == 0x25) return;
+  _ZN5Sound12PlayBank2_2DEj(0x15d);
+  data_ov006_021428c8 = (int)p;
+  *((u8 *)(((char *)p) + 0x32)) = 2;
+  p[2] = dx << 12;
+  p[3] = dy << 12;
 }

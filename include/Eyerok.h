@@ -5,6 +5,7 @@
 #ifndef EYEROK_H
 #define EYEROK_H
 #include "types.h"
+#include "Model.h"
 
 struct Eyerok {
     u8  pad_000[0x5c];
@@ -25,8 +26,9 @@ struct Eyerok {
     s32 unk_35c;            /* 0x35c */
     u8  mBlendModelAnim;            /* 0x360 */
     u8  pad_361[0x6f];
-    u8  mModel2;            /* 0x3d0 */
-    u8  pad_3d1[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x3d0 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel2;            /* 0x3d0 */
     u8  mShadowModel;            /* 0x420 */
     u8  pad_421[0x27];
     u8  mTextureSequence;            /* 0x448 */

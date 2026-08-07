@@ -5,6 +5,7 @@
 #ifndef KNOCKDOWNPLANK_H
 #define KNOCKDOWNPLANK_H
 #include "types.h"
+#include "Model.h"
 
 struct KnockDownPlank {
     u8  pad_000[0xc];
@@ -40,8 +41,9 @@ struct KnockDownPlank {
     s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     s32 unk_320;            /* 0x320 */

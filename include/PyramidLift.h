@@ -5,6 +5,7 @@
 #ifndef PYRAMIDLIFT_H
 #define PYRAMIDLIFT_H
 #include "types.h"
+#include "Model.h"
 
 struct PyramidLift {
     u8  pad_000[0x5c];
@@ -16,16 +17,18 @@ struct PyramidLift {
     u8  pad_090[0x18];
     s32 unk_0a8;            /* 0x0a8 */
     u8  pad_0ac[0x28];
-    u8  mModel1;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel1;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    u8  mModel2;            /* 0x320 */
-    u8  pad_321[0x1b];
-    u8  unk_33c;            /* 0x33c */
-    u8  pad_33d[0x33];
+    /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
+       short of the object, so the member also takes over unk_33c (+0x1c = mat4x3), which
+       the header declared separately inside it. */
+    Model mModel2;            /* 0x320 */
     s32 unk_370;            /* 0x370 */
     s32 unk_374;            /* 0x374 */
     s32 unk_378;            /* 0x378 */

@@ -41,7 +41,7 @@ int RollingLogTtm::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
         return 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0xd4, data_ov030_02115cf0[1], 0, 0x1000, 0);
-    unk_130 = 0x1000;
+    mModelAnim.speed = 0x1000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x64000, 0x800004, 0x49000);
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
     unk_09c = -0x2000;

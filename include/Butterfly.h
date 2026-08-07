@@ -5,6 +5,8 @@
 #ifndef BUTTERFLY_H
 #define BUTTERFLY_H
 #include "types.h"
+#include "ModelAnim.h"
+#include "Model.h"
 
 struct Butterfly {
     u8  pad_000[0x80];
@@ -23,16 +25,17 @@ struct Butterfly {
     s32 unk_0a8;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x24];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;            /* 0x0f0 */
-    u8  pad_0f1[0x33];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0x13];
-    u8  mModel;            /* 0x138 */
-    u8  pad_139[0x1b];
-    u8  unk_154;            /* 0x154 */
-    u8  pad_155[0x33];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3),
+       mAnimation (+0x50 = the Animation base), which the header declared separately inside
+       it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
+    /* Model member, named by _ZN5ModelD1Ev at +0x138 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
+       short of the object, so the member also takes over unk_154 (+0x1c = mat4x3), which
+       the header declared separately inside it. */
+    Model mModel;            /* 0x138 */
     u8  mShadowModel1;            /* 0x188 */
     u8  pad_189[0x27];
     u8  mShadowModel2;            /* 0x1b0 */

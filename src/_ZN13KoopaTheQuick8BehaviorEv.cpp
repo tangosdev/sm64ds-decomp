@@ -22,7 +22,7 @@ int KoopaTheQuick::Behavior()
   if(adj&1){ void* vt=*(void**)self; fn=*(void**)((char*)vt + *(int*)ent); }
   else fn=*(void**)ent;
   ((void(*)(char*))fn)(self);
-  _ZN9Animation7AdvanceEv((char*)&unk_350);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   mAngleY = mPrevAngleY;
   _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this)+0x110);
   _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this)+0x144, 0);

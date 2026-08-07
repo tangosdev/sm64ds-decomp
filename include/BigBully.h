@@ -5,6 +5,7 @@
 #ifndef BIGBULLY_H
 #define BIGBULLY_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct BigBully {
     u8  pad_000[0x4];
@@ -22,8 +23,9 @@ struct BigBully {
     u8  pad_0ac[0x20];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x43];
-    u8  mModelAnim;            /* 0x110 */
-    u8  pad_111[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x110 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x110 */
     u8  mWithMeshClsn;            /* 0x174 */
     u8  pad_175[0x1bb];
     u8  unk_330;            /* 0x330 */

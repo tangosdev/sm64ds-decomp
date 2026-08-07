@@ -370,6 +370,10 @@ src/func_ov060_02116c68.c:
     complete
     .text start:0x02116c68 end:0x02116d78
 
+src/func_ov060_02116d78.c:
+    complete
+    .text start:0x02116d78 end:0x02116f74
+
 src/func_ov060_02116f74.c:
     complete
     .text start:0x02116f74 end:0x02116f90
