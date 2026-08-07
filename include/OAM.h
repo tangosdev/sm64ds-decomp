@@ -14,11 +14,27 @@
  * The three Render overloads taking a by-value Fix12<int> are NOT declared here and
  * must not be: mwccarm homes r0-r3 to the stack for a by-value class parameter
  * (+0x14) on all 25 sweep versions at every optimisation level. Those stay
- * extern "C" free functions -- runbook section 7. */
+ * extern "C" free functions -- runbook section 7.
+ *
+ * OamAttr is FORWARD-DECLARED ONLY, deliberately. The tree holds three mutually
+ * incompatible spellings of that 8-byte type, and an attempt to centralise it in
+ * include/OamAttr.h broke the ROM build:
+ *
+ *   _ZN3OAM9RenderSub*                4 x u16, unnamed roles
+ *   _ZN3OAM16LoadAffineParams*        `unsigned short a, b, c, param` -- names the
+ *                                     4th word, which is the affine parameter
+ *   _ZN3OAM6Render*P9Matrix2x2        two u32 words decomposed into bitfields
+ *                                     (yb, objMode, mode, mosaic, shape, tile...)
+ *
+ * All three agree on the size and disagree on everything else, and each is the view
+ * its own function needs. Reconciling them is real work -- one type, one set of
+ * field names, every user re-verified -- and it is not a language-mode migration.
+ * A pointer parameter needs only the forward declaration, so the methods below can
+ * be declared without picking a winner. */
 #ifndef OAM_H
 #define OAM_H
 #include "types.h"
-#include "OamAttr.h"
+struct OamAttr;   /* fwd only -- see the note above */
 
 struct OAM {
     u8  pad_000[0xa8];
