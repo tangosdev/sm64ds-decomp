@@ -18,11 +18,25 @@ from `config/**/relocs.txt` alone:
 So:
 
     a symbol named ...D2Ev that a load-reloc points at   -> cannot be a D2
-    a symbol named ...D1Ev that no load-reloc points at  -> cannot be a D1
 
-Both directions are reported, because the two populations are each other's
-control: if the rule were noise, the second list would be full of ordinary D1s.
-It is not -- it is exactly the D2s that were misfiled in the other direction.
+The inverse direction needs one more condition, and getting it wrong produces a
+false positive. "A D1 always sits in a vtable" holds only for a **polymorphic**
+class; a class with no virtual functions has a D1 that is simply called, and no
+vtable for it to sit in. So:
+
+    a symbol named ...D1Ev that no load-reloc points at
+      AND that itself stores a known vtable address       -> cannot be a D1
+
+The second clause is the polymorphism test, and it is read from the ROM rather
+than from a name: a destructor of a polymorphic class always writes its class's
+vptr, which appears as a load-reloc *from* inside the function *to* a vtable VA
+that `build/rtti.json` knows. Without it this tool flagged
+`_ZN8Particle10SysTrackerD1Ev` -- a correctly-named D1 of a non-polymorphic class
+that writes no vptr at all.
+
+Both directions are reported, because they are each other's control: if the
+forward rule were noise, the inverse list would fill up with ordinary
+destructors.
 
 For every offender the tool resolves the referencing address back through
 `build/rtti.json` to the owning class and slot index, which names what the
@@ -65,16 +79,41 @@ def module_of(path):
     return os.path.basename(os.path.dirname(path))
 
 
+FUNC_SIZE_RE = re.compile(
+    r"(\S+)\s+kind:function\([^,]*,size=(0x[0-9a-fA-F]+)\)\s+addr:(0x[0-9a-fA-F]+)")
+
+
 def load_functions():
-    """module -> {addr: symbol} for every function symbol."""
+    """module -> {addr: (symbol, size)} for every function symbol."""
     out = {}
     for p in glob.glob(os.path.join(ROOT, "config", "**", "symbols.txt"), recursive=True):
         mod = module_of(p)
         with open(p, encoding="utf-8") as fh:
             for ln in fh:
-                m = FUNC_RE.match(ln.strip())
+                s = ln.strip()
+                m = FUNC_SIZE_RE.match(s)
                 if m:
-                    out.setdefault(mod, {})[int(m.group(2), 16)] = m.group(1)
+                    out.setdefault(mod, {})[int(m.group(3), 16)] = (m.group(1),
+                                                                    int(m.group(2), 16))
+                    continue
+                m = FUNC_RE.match(s)
+                if m:
+                    out.setdefault(mod, {})[int(m.group(2), 16)] = (m.group(1), 0)
+    return out
+
+
+def load_outgoing():
+    """module -> sorted [(from_addr, target_addr)] for every kind:load reloc."""
+    out = collections.defaultdict(list)
+    for p in glob.glob(os.path.join(ROOT, "config", "**", "relocs.txt"), recursive=True):
+        mod = module_of(p)
+        with open(p, encoding="utf-8") as fh:
+            for ln in fh:
+                m = RELOC_RE.search(ln)
+                if m and m.group(2) == "load":
+                    out[mod].append((int(m.group(1), 16), int(m.group(3), 16)))
+    for v in out.values():
+        v.sort()
     return out
 
 
@@ -133,6 +172,14 @@ def audit():
     funcs = load_functions()
     refs = load_data_refs()
     vtables = load_vtables()
+    outgoing = load_outgoing()
+
+    # Every vtable VA the ROM knows about, for the polymorphism test.
+    vtable_vas = set()
+    if vtables:
+        for spans in vtables.values():
+            for va, _end, _cls in spans:
+                vtable_vas.add(va)
 
     def referenced(mod, addr):
         """Every load-reloc pointing at addr, from this module or from arm9."""
@@ -141,11 +188,24 @@ def audit():
             hits += refs.get("arm9", {}).get(addr, [])
         return hits
 
+    def writes_vptr(mod, addr, size):
+        """Does this function store a known vtable address? -> its class is polymorphic.
+
+        Read from the ROM, not from the symbol's name: a destructor of a
+        polymorphic class always writes its class's vptr.
+        """
+        if not vtable_vas or not size:
+            return None  # undecidable; reported as such rather than guessed
+        for frm, tgt in outgoing.get(mod, ()):
+            if addr <= frm < addr + size and tgt in vtable_vas:
+                return True
+        return False
+
     counts = collections.Counter()
     d2_in_vtable, d1_orphaned = [], []
 
     for mod, table in sorted(funcs.items()):
-        for addr, name in sorted(table.items()):
+        for addr, (name, size) in sorted(table.items()):
             if name.endswith("D2Ev"):
                 kind = "D2"
             elif name.endswith("D1Ev"):
@@ -168,8 +228,12 @@ def audit():
                 d2_in_vtable.append({"module": mod, "addr": "0x%08x" % addr,
                                      "symbol": name, "sites": sites})
             elif kind == "D1" and not hits:
+                poly = writes_vptr(mod, addr, size)
+                if poly is False:
+                    counts["D1_orphan_nonpolymorphic"] += 1
+                    continue  # a non-polymorphic class's D1 has no vtable to sit in
                 d1_orphaned.append({"module": mod, "addr": "0x%08x" % addr,
-                                    "symbol": name})
+                                    "symbol": name, "polymorphic": poly})
 
     return {
         "counts": dict(counts),
@@ -210,15 +274,19 @@ def main():
     print()
 
     orph = res["d1_not_in_any_vtable"]
-    print("D1 symbols no load-reloc points at -- a D1 always occupies slot 0/16 (%d):"
+    print("D1 symbols in no vtable, whose class IS polymorphic -- so not D1s (%d):"
           % len(orph))
     for r in orph:
-        print("  %-30s %s  %s" % (r["symbol"], r["addr"], r["module"]))
+        note = "" if r.get("polymorphic") else "   (polymorphism undecidable)"
+        print("  %-30s %s  %s%s" % (r["symbol"], r["addr"], r["module"], note))
+    skipped = res["counts"].get("D1_orphan_nonpolymorphic", 0)
+    print("  (%d further D1s sit in no vtable because their class is not polymorphic;"
+          % skipped)
+    print("   they write no vptr, so they are correctly named and are not listed)")
 
     print()
     print("These two lists are each other's control. A rule that fired on noise would")
-    print("put ordinary destructors in the second list; instead it holds precisely the")
-    print("D2s that were misfiled the other way.")
+    print("put ordinary destructors in the second list.")
     return 0
 
 

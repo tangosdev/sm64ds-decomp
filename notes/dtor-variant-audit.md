@@ -29,6 +29,17 @@ And "is this function's address taken" is already in the tree, in the authority
 So for any symbol named `...D2Ev`, a single `kind:load` reloc pointing at it is a
 disproof. No disassembly, no compiler, no heuristic.
 
+**The inverse direction needs one more condition**, and omitting it produced a
+false positive on the first run. "A D1 always sits in a vtable" holds only for a
+**polymorphic** class; a class with no virtual functions has a D1 that is simply
+called, and no vtable for it to sit in. The polymorphism test is also read from
+the ROM rather than from a name — a destructor of a polymorphic class always
+writes its class's vptr, which shows up as a load-reloc *from* inside the
+function *to* a vtable VA that `build/rtti.json` knows:
+
+    named D2, a load-reloc points at it                        -> not a D2
+    named D1, nothing points at it, AND it stores a vtable VA   -> not a D1
+
 ## 2. The result
 
     destructor-variant symbols: D0 261   D1 260   D2 17
@@ -58,25 +69,22 @@ there is no collision to resolve — the rename is one-for-one.
 
 ## 3. The control, which is the reason to believe any of it
 
-Invert the rule and it must find the other error: a `D1` that **no** load-reloc
-points at cannot be a D1, because a D1 always occupies a vtable slot. Run over
-the same 260 D1 symbols, that returns exactly two:
+Invert the rule and it must find the other error: a `D1` of a polymorphic class
+that **no** load-reloc points at cannot be a D1. Run over the same 260 D1
+symbols, that returns exactly **one**:
 
-    _ZN5ColorD1Ev                  0x02017574  arm9
-    _ZN8Particle10SysTrackerD1Ev   0x02023194  arm9
+    _ZN5ColorD1Ev   0x02017574   arm9   ->  _ZN10FaderColorD2Ev
 
-`_ZN5ColorD1Ev` was **independently** proven to be `_ZN10FaderColorD2Ev` in the
-same session by a completely unrelated argument — it writes `data_0208eb2c`,
-which is `dFdColor_c`'s vtable, and six derived-class destructors across three
-classes call it as their base-subobject dtor (`notes/rtti-reconciliation.md` §4
-for the chain). Two orthogonal signals, one answer.
+which was **independently** proven in the same session by a completely unrelated
+argument — it writes `data_0208eb2c`, which is `dFdColor_c`'s vtable, and six
+derived-class destructors across three classes call it as their base-subobject
+dtor (`notes/rtti-reconciliation.md` §4 for the chain). Two orthogonal signals,
+one answer, zero false positives.
 
-That is what makes the 7 credible. A rule firing on noise would put ordinary
-destructors in this second list. Instead it holds precisely the D2s that were
-misfiled the other way — the two lists are each other's control.
+That is what makes the 7 credible. A rule firing on noise would fill this second
+list with ordinary destructors.
 
-`_ZN8Particle10SysTrackerD1Ev` is a **new** D2 candidate on the same evidence and
-has not been separately corroborated. Treat it as the weakest row here.
+**It did, before the polymorphism condition was added** — see §5.
 
 ## 4. What this does to Phase 2
 
@@ -84,10 +92,9 @@ has not been separately corroborated. Treat it as the weakest row here.
 picks pilots from the per-class backlog. Both are affected:
 
 - **The count is wrong in both directions.** 17 named D2s minus 7 impostors is
-  10; plus `_ZN5ColorD1Ev`, plus `Particle::SysTracker`, plus the Fader family's
-  three genuine D2s that carry no D2 name at all (`func_02017838`,
-  `func_020177c4`, and `_ZN5ColorD1Ev` itself). The category was never measuring
-  what it claimed.
+  10; plus the Fader family's three genuine D2s that carry no D2 name at all
+  (`func_02017838`, `func_020177c4`, and `_ZN5ColorD1Ev`). The category was never
+  measuring what it claimed.
 - **Five of the plan's six pilot classes are affected** — Scene, Stage, Player,
   Enemy and Platform all show `D2:1` in `--by-class`, and all five of those are
   impostors. The one category Phase 2 most wanted to settle is the one whose
@@ -98,7 +105,25 @@ C++**, where it is far more expensive to find than in a symbol table. That is
 `notes/runbook-type-reconstruction.md` §7's "do not migrate before the types are
 right", one level up: not the field types, the *symbol's identity*.
 
-## 5. Two wrong first answers, recorded
+## 5. Three wrong first answers, recorded
+
+**The inverse rule had a false positive, and it was the row with the most churn.**
+The first version flagged `_ZN8Particle10SysTrackerD1Ev` (`0x02023194`) as a D2 on
+the strength of "no load-reloc points at it". `Particle::SysTracker` has **no RTTI
+record and no `_ZTV` symbol** — it is not polymorphic, its destructor writes no
+vptr at all (it frees memory and clears two globals), and a non-polymorphic
+class's D1 has no vtable to sit in. It was correctly named all along.
+
+The rule now requires the function to store a known vtable VA before it will call
+a D1 an impostor, and the inverse list drops 2 → 1. Two things worth keeping:
+
+- It would have been the **most expensive** row to act on — 36 referencing files,
+  against 1–5 for every other candidate. Cost and confidence were inversely
+  correlated, which is the shape that gets a batch shipped on the strength of its
+  cheap rows.
+- The forward rule never depended on polymorphism. "A D2 is never dispatched" is
+  true of every class, so the 7 were unaffected. Only the control was wrong, and
+  the control is the argument, not the finding.
 
 **A fixed-size window mis-attributed 2 of the 7.** The first version of `locate()`
 searched `va <= addr < va + 0x400` for the containing vtable. Vtables are packed
@@ -128,6 +153,11 @@ The rule decides `D2` versus `{D0, D1}`. It does **not** separate D0 from D1 —
 sit in vtables — so a D0/D1 swap would pass silently. Slot position distinguishes
 them (D1 then D0, adjacent), which the table in §2 uses but the tool does not yet
 check. That is the obvious next assertion to add.
+
+The polymorphism test is a **one-way** guarantee. Storing a vtable VA proves the
+class is polymorphic; not storing one is only evidence, since a size-0 symbol or a
+module `rtti.json` cannot see would look the same. The tool reports that case as
+undecidable rather than folding it into either answer.
 
 It also says nothing about non-destructor symbols, and nothing about whether a
 correctly-named destructor is attributed to the right *class* — `_ZN5SceneD2Ev`
