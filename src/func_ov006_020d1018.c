@@ -1,5 +1,5 @@
 extern void __destroy_arr(void* a, int b, int c, void* d);
-extern void func_ov004_020b29c0(void* c);
+extern void _ZN11dScMgBase_cD2Ev(void* c);
 extern void func_ov006_020d116c(void);
 extern void NullDestructor_0203d47c(void);
 extern int data_ov006_0213b918[];
@@ -10,6 +10,6 @@ void* func_ov006_020d1018(char* c){
   __destroy_arr(c + 0x4744, 4, 8, (void*)NullDestructor_0203d47c);
   __destroy_arr(c + 0x4724, 4, 8, (void*)NullDestructor_0203d47c);
   __destroy_arr(c + 0x4660, 4, 8, (void*)NullDestructor_0203d47c);
-  func_ov004_020b29c0(c);
+  _ZN11dScMgBase_cD2Ev(c);
   return c;
 }

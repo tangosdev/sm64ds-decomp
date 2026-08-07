@@ -16,7 +16,7 @@ extern "C" void* func_ov006_020d10b8(void* c) {
     __destroy_arr((char*)c + 0x4744, 4, 8, (void*)&NullDestructor_0203d47c);
     __destroy_arr((char*)c + 0x4724, 4, 8, (void*)&NullDestructor_0203d47c);
     __destroy_arr((char*)c + 0x4660, 4, 8, (void*)&NullDestructor_0203d47c);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     Memory::Deallocate(c, (Heap*)data_020a0eac);
     return c;
 }

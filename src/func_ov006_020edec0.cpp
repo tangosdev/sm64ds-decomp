@@ -7,7 +7,7 @@ void func_ov006_020c6f3c(void);
 void func_ov006_020c893c(void);
 void _ZN5ModelD1Ev(void *);
 void _ZN8Particle10SysTrackerD1Ev(void *);
-void func_ov004_020b29c0(void *c);
+void _ZN11dScMgBase_cD2Ev(void *c);
 void *func_ov006_020edec0(char *c)
 {
     *(void **)c = &data_ov006_0213cbe4;
@@ -16,7 +16,7 @@ void *func_ov006_020edec0(char *c)
     _ZN5ModelD1Ev(c + 0x501c);
     *(void **)c = &_ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     return c;
 }
 }

@@ -12,7 +12,7 @@ namespace Memory { void Deallocate(void*, Heap*); }
 extern "C" void* func_ov006_020ea2c8(void* c) {
     *(int**)c = &data_ov006_0213cab8;
     __destroy_arr((char*)c + 0x4678, 0xf, 0x98, (void*)&func_ov006_020ea324);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     Memory::Deallocate(c, (Heap*)data_020a0eac);
     return c;
 }

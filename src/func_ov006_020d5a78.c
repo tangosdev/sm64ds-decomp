@@ -9,7 +9,7 @@ extern int data_ov006_0213bbb4[];
 int *func_ov006_020d5a78(int *t)
 {
     t[0] = (int)data_ov006_0213bbb4;
-    func_ov004_020b29c0(t);
+    _ZN11dScMgBase_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }
