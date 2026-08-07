@@ -3111,11 +3111,11 @@ src/func_0201aaec.c:
     complete
     .text start:0x0201aaec end:0x0201ab04
 
-src/_ZN7Message7EndTalkEv.c:
+src/_ZN7Message7EndTalkEv.cpp:
     complete
     .text start:0x0201ab04 end:0x0201ab38
 
-src/_ZN7Message11PrepareTalkEv.c:
+src/_ZN7Message11PrepareTalkEv.cpp:
     complete
     .text start:0x0201ab38 end:0x0201ab6c
 
@@ -3182,7 +3182,7 @@ src/func_0201cebc.c:
     complete
     .text start:0x0201cebc end:0x0201cf80
 
-src/_ZN7Message21DisplayLevelClearTextEta.c:
+src/_ZN7Message21DisplayLevelClearTextEta.cpp:
     complete
     .text start:0x0201cf80 end:0x0201cfb8
 
@@ -3230,7 +3230,7 @@ src/func_0201e220.cpp:
     complete
     .text start:0x0201e220 end:0x0201e314
 
-src/_ZN7Message19DisplaySaveMenuTextEt.c:
+src/_ZN7Message19DisplaySaveMenuTextEt.cpp:
     complete
     .text start:0x0201e314 end:0x0201e36c
 
@@ -3289,7 +3289,7 @@ src/func_0201fc88.c:
     complete
     .text start:0x0201fc88 end:0x0201fcac
 
-src/_ZN7Message15ResetAllGlobalsEv.c:
+src/_ZN7Message15ResetAllGlobalsEv.cpp:
     complete
     .text start:0x0201fcac end:0x0201fcd4
 
@@ -4564,7 +4564,7 @@ src/func_020326ac.c:
     complete
     .text start:0x020326ac end:0x02032f04
 
-src/_ZN7Message16SetTextGlobalsVSEv.c:
+src/_ZN7Message16SetTextGlobalsVSEv.cpp:
     complete
     .text start:0x02032f04 end:0x02032f54
 
