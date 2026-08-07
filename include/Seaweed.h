@@ -5,6 +5,7 @@
 #ifndef SEAWEED_H
 #define SEAWEED_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Seaweed {
     u8  pad_000[0x74];
@@ -39,12 +40,12 @@ struct Seaweed {
     u8  pad_0cd[0x1];
     s16 unk_0ce;                 /* 0x0ce */
     u8  pad_0d0[0x4];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0xb];
-    s32 unk_130;            /* 0x130 */
-    u8  pad_134[0x4];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over mAnimation (+0x50 = the
+       Animation base), unk_130 (+0x5c = speed), which the header declared separately
+       inside it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mMovingCylinderClsn;            /* 0x138 */
     u8  pad_139[0x23];
     s32 unk_15c;            /* 0x15c */

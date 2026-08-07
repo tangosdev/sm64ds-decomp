@@ -5,6 +5,7 @@
 #ifndef BOOKSHOT_H
 #define BOOKSHOT_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct BookShot {
     u8  pad_000[0xc];
@@ -36,8 +37,9 @@ struct BookShot {
     u8  unk_107;            /* 0x107 */
     u8  unk_108;            /* 0x108 */
     u8  pad_109[0x7];
-    u8  mModelAnim;            /* 0x110 */
-    u8  pad_111[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x110 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x110 */
     u8  mModel;            /* 0x174 */
     u8  pad_175[0x4f];
     u8  mShadowModel;            /* 0x1c4 */

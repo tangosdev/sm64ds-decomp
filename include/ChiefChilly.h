@@ -5,6 +5,7 @@
 #ifndef CHIEFCHILLY_H
 #define CHIEFCHILLY_H
 #include "types.h"
+#include "BlendModelAnim.h"
 
 struct ChiefChilly {
     u8  pad_000[0x5c];
@@ -27,10 +28,12 @@ struct ChiefChilly {
     u8  pad_111[0x3f];
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1bb];
-    u8  mBlendModelAnim;            /* 0x30c */
-    u8  pad_30d[0x5b];
-    s32 unk_368;            /* 0x368 */
-    u8  pad_36c[0x14];
+    /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x30c -- a relocation
+       the ROM build checks. D1 and not D2, so it is this type and not an inlined base. The
+       marker's pad stopped short of the object, so the member also takes over unk_368
+       (+0x5c = speed), which the header declared separately inside it. */
+    BlendModelAnim mBlendModelAnim;            /* 0x30c */
+    u8  pad_37c[0x4];
     u8  mShadowModel;            /* 0x380 */
     u8  pad_381[0x57];
     s32 unk_3d8;            /* 0x3d8 */

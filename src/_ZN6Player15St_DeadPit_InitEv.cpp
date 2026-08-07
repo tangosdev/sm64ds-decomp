@@ -44,7 +44,7 @@ int Player::St_DeadPit_Init()
             if (data_0209f2d8 == 1) t = 1;
             if (t == 0) {
                 int a = 2;
-                if (unk_664 == 5) a = 0;
+                if (mSurfaceType == 5) a = 0;
                 HitDeathPlane(a);
             } else {
                 if (mPlayerNo == data_0209f250) FUN_020299f4();

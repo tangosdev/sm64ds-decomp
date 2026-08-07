@@ -81,7 +81,7 @@ int Player::St_ButtSlide_Main()
                 mLandSoundPlayed = 1;
                 _ZN5Sound9PlayBank0EjRK7Vector3(mGroundSoundType + 0x50, ((char*)this) + 0x74);
             }
-            if (mStateWork == 0 && unk_558 >= 0xfc1) {
+            if (mStateWork == 0 && mFloorNormalY >= 0xfc1) {
                 mVertSpeed = -mPrevVertSpeed / 2;
                 (*(u8*)(((int)((char*)this) + 0x6e5)))++;
             } else {

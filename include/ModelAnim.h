@@ -27,9 +27,26 @@
  *
  * Secondary (Animation-in-ModelAnim) vtable at +0x24 of the primary,
  * VTable_Animation_ModelAnimThunk: [_ZThn80_ D1, _ZThn80_ D0, null] -- the
- * inherited pure virtual stays null, so ModelAnim is abstract, which is
- * why only its C2 is ever called from derived constructors and no code
- * instantiates one directly.
+ * inherited slot stays null.
+ *
+ * CORRECTION. That null slot used to be read here as "ModelAnim is abstract,
+ * which is why only its C2 is ever called from derived constructors and no
+ * code instantiates one directly." The ROM refutes it, and not subtly: the
+ * COMPLETE-OBJECT structors exist as symbols --
+ *
+ *   _ZN9ModelAnimC1Ev  0x02016958      _ZN9ModelAnimD1Ev  0x0201691c
+ *
+ * -- and are called from 103 and 131 source files respectively. A compiler
+ * emits C1/D1 only for a type something actually creates; a class that can
+ * only ever be a base gets C2/D2 alone. Those calls land at member offsets
+ * inside other classes (Amp+0xd4, Flag+0xd4, QuestionSwitch+0x6b4, ...),
+ * which is what an embedded member looks like, and they are relocations the
+ * ROM build checks -- not prose.
+ *
+ * So a ModelAnim IS instantiated, overwhelmingly as a member subobject. The
+ * null slot means one inherited virtual is never called, not that the class
+ * cannot be built: it cannot mean abstract while C1 exists and 103 files
+ * call it.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD. Both
  * vtables AND the two thunks are emitted with the key function, so the
@@ -80,6 +97,10 @@ struct ModelAnim {
     s32 speed;                         /* 0x5c */
     struct BCA_File *file;             /* 0x60 */
 };
+
+/* So an object header declaring a ModelAnim member reads the same in both modes: C++
+ * gets the class, C gets the flat stand-in above, and neither needs `struct`. */
+typedef struct ModelAnim ModelAnim;
 
 #endif /* __cplusplus */
 

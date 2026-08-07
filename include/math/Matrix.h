@@ -19,10 +19,15 @@ typedef struct Matrix3x3 {
     Fix12i m[9];
 } Matrix3x3;
 
+/* See include/common.h: this type has a second, flat spelling there. Same 0x30
+ * bytes; whichever a translation unit sees first stands. */
+#ifndef MATRIX4X3_DEFINED
+#define MATRIX4X3_DEFINED
 typedef struct Matrix4x3 {
     Matrix3x3 r;   /* 0x00 */
     Vector3   t;   /* 0x24 */
 } Matrix4x3;
+#endif
 
 typedef char Matrix3x3_size_must_be_0x24[
     sizeof(Matrix3x3) == 0x24 ? 1 : -1

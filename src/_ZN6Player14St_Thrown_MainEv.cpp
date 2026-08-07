@@ -47,7 +47,7 @@ int Player::St_Thrown_Main()
             if (r5 != 0) {
                 return 1;
             }
-            if (unk_558 == 0x1000) {
+            if (mFloorNormalY == 0x1000) {
                 if (mHorzSpeed == 0) {
                     mStateStep = 1;
                     goto L1f8;

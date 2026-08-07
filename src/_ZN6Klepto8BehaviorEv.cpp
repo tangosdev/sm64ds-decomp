@@ -17,8 +17,6 @@ void *_ZN5Actor10FindWithIDEj(unsigned int id);
 void func_02012790(int a, int b);
 void func_ov062_0211c658(void *c, PMF *p);
 void _ZN9ActorBase18MarkForDestructionEv(void *self);
-void _ZN14BlendModelAnim7AdvanceEv(void *self);
-void func_ov062_0211b51c(void *self);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 extern char data_ov062_0211e17c[];
@@ -92,7 +90,7 @@ int Klepto::Behavior()
         }
     }
 skip_destroy:
-    _ZN14BlendModelAnim7AdvanceEv((void *)((char *)&mBlendModelAnim));
+    mBlendModelAnim.Advance();
     if (*(void **)((char *)&unk_42c) != (void *)data_ov062_0211e14c) {
         func_ov062_0211b51c(((char *)this));
     }

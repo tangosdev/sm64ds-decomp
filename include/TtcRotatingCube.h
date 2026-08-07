@@ -5,6 +5,7 @@
 #ifndef TTCROTATINGCUBE_H
 #define TTCROTATINGCUBE_H
 #include "types.h"
+#include "Model.h"
 
 struct TtcRotatingCube {
     u8  pad_000[0x90];
@@ -22,12 +23,14 @@ struct TtcRotatingCube {
     u8  pad_0ac[0x4];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x20];
-    u8  mModel1;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel1;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mModel2;            /* 0x320 */
-    u8  pad_321[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel2;            /* 0x320 */
     s32 unk_370;            /* 0x370 */
     s16 mWaitTimer;            /* 0x374 */
     u8  unk_376;            /* 0x376 */

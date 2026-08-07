@@ -5,6 +5,7 @@
 #ifndef SKILIFT_H
 #define SKILIFT_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct SkiLift {
     u8  pad_000[0x5c];
@@ -19,12 +20,12 @@ struct SkiLift {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0x47];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_0dc (+0x8 = data),
+       mAnimation (+0x50 = the Animation base), which the header declared separately inside
+       it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mTextureSequence;            /* 0x138 */
     u8  pad_139[0x13];
     u8  mShadowModel;            /* 0x14c */

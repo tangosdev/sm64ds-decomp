@@ -5,8 +5,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Klepto.h"
-typedef int Fix12;
-typedef struct { int h; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *f);
@@ -16,10 +16,10 @@ extern void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *f);
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12 b, Fix12 c, void *d, void *e);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
-extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, Fix12 a, Fix12 b, Fix12 c, Fix12 d);
+extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, Fix12i a, Fix12i b, Fix12i c, Fix12i d);
 extern void func_ov062_0211c658(void *c, void *p);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
@@ -83,7 +83,7 @@ int Klepto::InitResources()
     _ZN7PathPtrC1Ev(path2);
     _ZN7PathPtr6FromIDEj(path2, mPathId);
     _ZNK7PathPtr7GetNodeER7Vector3j(path2, ((char *)this) + 0x430, unk_474);
-    unk_390 = 0x1000;
+    mBlendModelAnim.speed = 0x1000;
     mHeldActorID = 0;
 
     if (mCarriedItem == 1) {

@@ -34,7 +34,7 @@ int Submarine::InitResources()
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char *)this) + 0x178, data_ov026_02112f40, 0, 0x1000, 0);
 
     unk_184 = 0x1000;
-    unk_170 = 0x1000;
+    mModelAnim.speed = 0x1000;
 
     unk_1a8 = mPosX;
     unk_1ac = mPosY;

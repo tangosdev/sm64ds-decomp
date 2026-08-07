@@ -5,6 +5,7 @@
 #ifndef KOOPATHEQUICK_H
 #define KOOPATHEQUICK_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct KoopaTheQuick {
     u8  pad_000[0x8];
@@ -70,10 +71,11 @@ struct KoopaTheQuick {
     u8  pad_111[0x33];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];
-    u8  mModelAnim;            /* 0x300 */
-    u8  pad_301[0x4f];
-    u8  unk_350;            /* 0x350 */
-    u8  pad_351[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x300 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_350 (+0x50 = the
+       Animation base), which the header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x300 */
     u8  mShadowModel;            /* 0x364 */
     u8  pad_365[0x27];
     s32 unk_38c;            /* 0x38c */

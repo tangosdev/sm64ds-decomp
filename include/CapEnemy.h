@@ -5,6 +5,7 @@
 #ifndef CAPENEMY_H
 #define CAPENEMY_H
 #include "types.h"
+#include "Model.h"
 
 /* fwd */
 struct Vector3;
@@ -57,8 +58,9 @@ struct CapEnemy {
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x3f];
     u8  unk_113;            /* 0x113 */
-    u8  mModel;            /* 0x114 */
-    u8  pad_115[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x114 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x114 */
     u8  unk_164;            /* 0x164 */
 #ifdef __cplusplus
     /* methods */

@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ChiefChilly.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 typedef struct PMF PMF;
@@ -27,8 +27,8 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, Vector3* v, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
 extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern int ChiefChilly_ChangeState(void* c, PMF* p);
 }
@@ -56,7 +56,7 @@ int ChiefChilly::InitResources()
     v.y = data_ov073_02123040.y;
     v.z = data_ov073_02123040.z;
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this)+0x110, (Actor*)((char*)this), &v, 0xa4000, 0x1e4000, 0x200000, 0x567f0);
-    unk_368 = 0x2000;
+    mBlendModelAnim.speed = 0x2000;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x150, (Actor*)((char*)this), 0x96000, 0x94000, 0, 0);
     unk_3d8 = mPosX;
     unk_3dc = mPosY;

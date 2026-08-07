@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "KingBobOmb.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
+/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
+   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 typedef struct PMF PMF;
@@ -31,8 +31,8 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, Vector3* v, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
 extern unsigned char _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern int RandomIntInternal(int* seed);
 extern void KingBobOmb_SetState(void* c, PMF* p);

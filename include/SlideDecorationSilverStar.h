@@ -5,13 +5,15 @@
 #ifndef SLIDEDECORATIONSILVERSTAR_H
 #define SLIDEDECORATIONSILVERSTAR_H
 #include "types.h"
+#include "Model.h"
 
 struct SlideDecorationSilverStar {
     u8  pad_000[0xc];
     u16 unk_00c;            /* 0x00c */
     u8  pad_00e[0xc6];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x0d4 */
     s8  mVariant;            /* 0x124 */
 #ifdef __cplusplus
     /* methods */

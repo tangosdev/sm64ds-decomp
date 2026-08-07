@@ -326,6 +326,19 @@ def main():
                 findings[bucket].append({
                     "cls": cls, "offset": hex(off), "field": name, "declared": typ,
                     "observed": {k: sorted(v) for k, v in obs.items()}, "where": where})
+            elif placeholder and (span is None or span > 4):
+                # An object marker is NOT confirmed by a 1-byte observation. The `u8` is
+                # a stand-in for a type nobody knew, so a byte access at its offset
+                # satisfies the declaration without saying anything about what lives
+                # there -- and testing `dw in allw` first filed exactly those as
+                # `confirmed`, dropping them off the worklist. The markers with the BEST
+                # evidence went missing precisely because the evidence was good:
+                # Goomba.mModelAnim @0x370 sat here while its own destructor D1-called
+                # _ZN9ModelAnimD1Ev at that offset. See tools/marker_census.py.
+                bucket = "marker: object, extent unknown"
+                findings[bucket].append({
+                    "cls": cls, "offset": hex(off), "field": name, "span": span,
+                    "observed": {k: sorted(v) for k, v in obs.items()}, "where": where})
             elif dw in allw:
                 bucket = "confirmed"
                 # signedness: only a sub-word LOAD proves it, and only ldrs* proves signed

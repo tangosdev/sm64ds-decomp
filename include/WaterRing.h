@@ -5,6 +5,7 @@
 #ifndef WATERRING_H
 #define WATERRING_H
 #include "types.h"
+#include "Model.h"
 
 struct WaterRing {
     u8  pad_000[0x8];
@@ -26,8 +27,9 @@ struct WaterRing {
     u8  pad_111[0x3f];
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1bb];
-    u8  mModel;            /* 0x30c */
-    u8  pad_30d[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x30c -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x30c */
     u8  mTextureTransformer;            /* 0x35c */
     u8  pad_35d[0xb];
     s32 unk_368;            /* 0x368 */

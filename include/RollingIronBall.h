@@ -5,6 +5,7 @@
 #ifndef ROLLINGIRONBALL_H
 #define ROLLINGIRONBALL_H
 #include "types.h"
+#include "Model.h"
 
 struct RollingIronBall {
     u8  pad_000[0x8];
@@ -26,8 +27,9 @@ struct RollingIronBall {
     u8  pad_109[0x7];
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];
-    u8  mModel;            /* 0x2cc */
-    u8  pad_2cd[0x4f];
+    /* Model member, named by _ZN5ModelD1Ev at +0x2cc -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    Model mModel;            /* 0x2cc */
     u8  mShadowModel;            /* 0x31c */
     u8  pad_31d[0x57];
     u8  mMovingCylinderClsn;            /* 0x374 */

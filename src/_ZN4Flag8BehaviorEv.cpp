@@ -9,10 +9,10 @@ extern void Matrix4x3_FromRotationY(void* m, short angle);
 
 int Flag::Behavior()
 {
-  _ZN9Animation7AdvanceEv((char*)&mAnimation);
+  _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   Matrix4x3_FromRotationY(((char*)this)+0xf0, mAngleY);
-  unk_114=mPosX>>3;
-  unk_118=mPosY>>3;
-  unk_11c=mPosZ>>3;
+  mModelAnim.mat4x3.t.x=mPosX>>3;
+  mModelAnim.mat4x3.t.y=mPosY>>3;
+  mModelAnim.mat4x3.t.z=mPosZ>>3;
   return 1;
 }

@@ -5,6 +5,7 @@
 #ifndef CHAINCHOMP_H
 #define CHAINCHOMP_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct ChainChomp {
     u8  pad_000[0x60];
@@ -40,8 +41,9 @@ struct ChainChomp {
     u8  pad_0d0[0x40];
     u8  mMovingCylinderClsnWithPos;            /* 0x110 */
     u8  pad_111[0x3f];
-    u8  mModelAnim;            /* 0x150 */
-    u8  pad_151[0x63];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x150 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    ModelAnim mModelAnim;            /* 0x150 */
     u8  mShadowModel;            /* 0x1b4 */
     u8  pad_1b5[0x43b];
     s32 unk_5f0;            /* 0x5f0 */

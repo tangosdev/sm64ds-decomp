@@ -5,6 +5,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 #include "types.h"
+#include "Model.h"
 
 struct Bullet {
     u8  pad_000[0x8];
@@ -28,8 +29,12 @@ struct Bullet {
     u8  pad_111[0x33];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];
-    u8  mModel;            /* 0x300 */
-    u8  pad_301[0x57];
+    /* Model member, named by _ZN5ModelD1Ev at +0x300 -- a relocation the ROM build checks.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad ran 0x8
+       bytes PAST the end of the object; that space is not evidenced and stays explicit
+       padding rather than being folded into the member. */
+    Model mModel;            /* 0x300 */
+    u8  pad_350[0x8];
     s32 unk_358;            /* 0x358 */
 #ifdef __cplusplus
     /* methods */

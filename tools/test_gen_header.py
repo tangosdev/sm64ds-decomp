@@ -225,6 +225,25 @@ def test_statics_are_classified_by_arity_not_by_mangling():
     assert SS.classify("_ZN5Stage14GraphCallback2EP12SceneRelated", "")[0].startswith("undecided")
 
 
+def test_history_and_statics_agree_on_arity():
+    """Both passes must decide staticness the same way, or one filters a function
+    the other keeps and the report contradicts itself. The pointer heuristic
+    evidence_history had cannot do it: Stage::GraphCallback2(SceneRelated *) has a
+    pointer first parameter and is still static."""
+    import demangle
+    import evidence_history as EH, static_symbols as SS
+    for sym in ("_ZN5Stage14GraphCallback2EP12SceneRelated",
+                "_ZN10BrickBlockD0Ev", "_ZN5Timer7GetTimeEv"):
+        sig = demangle.signature(sym)
+        assert sig, f"demangler regressed on {sym}"
+        assert EH.mangled_param_count(sym) == SS.n_params(sig), sym
+    assert EH.mangled_param_count("_ZN5Timer7GetTimeEv") == 0
+    assert EH.mangled_param_count("_ZN5Stage14GraphCallback2EP12SceneRelated") == 1
+    # an unreadable symbol must yield None, never 0 -- 0 would make every
+    # zero-argument C definition look static and delete real evidence
+    assert EH.mangled_param_count("not a mangled name") is None
+
+
 # ------------------------------------------------------- check_header_offsets
 
 def _check(tmp, text):

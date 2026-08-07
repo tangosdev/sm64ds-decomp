@@ -5,6 +5,7 @@
 #ifndef QUESTIONSWITCH_H
 #define QUESTIONSWITCH_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct QuestionSwitch {
     u8  pad_000[0x5c];
@@ -23,13 +24,12 @@ struct QuestionSwitch {
     u8  pad_325[0x1c7];
     u8  mMovingMeshCollider;            /* 0x4ec */
     u8  pad_4ed[0x1c7];
-    u8  mModelAnim;            /* 0x6b4 */
-    u8  pad_6b5[0x4f];
-    u8  mAnim;            /* 0x704 */
-    u8  pad_705[0x7];
-    s32 unk_70c;            /* 0x70c */
-    s32 unk_710;            /* 0x710 */
-    u8  pad_714[0x4];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x6b4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over mAnim (+0x50 = the
+       Animation base), unk_70c (+0x58 = currFrame), unk_710 (+0x5c = speed), which the
+       header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x6b4 */
     s8  unk_718;            /* 0x718 */
     u8  pad_719[0x1];
     u8  unk_71a;            /* 0x71a */

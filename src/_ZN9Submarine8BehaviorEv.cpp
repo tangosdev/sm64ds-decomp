@@ -51,6 +51,6 @@ int Submarine::Behavior()
 
     func_ov026_02111f30(((char*)this));
     _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
-    _ZN9Animation7AdvanceEv((char*)&mAnimation);
+    _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
     return 1;
 }

@@ -5,6 +5,7 @@
 #ifndef CLAM_H
 #define CLAM_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Clam {
     u8  pad_000[0x5c];
@@ -12,10 +13,11 @@ struct Clam {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x6c];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0x13];
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
+       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over mAnimation (+0x50 = the
+       Animation base), which the header declared separately inside it. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mMovingCylinderClsn;            /* 0x138 */
     u8  pad_139[0x17];
     u8  unk_150;            /* 0x150 */
