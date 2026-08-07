@@ -1017,3 +1017,46 @@ splitting them would force copies the ROM does not make.
 The split is kept anyway, because three distinct stack offsets holding three distinct
 quantities is direct evidence about the source even when the metric is flat — but it is not
 progress on the frame and should not be reported as such.
+
+### The 12 surplus frame words are SCALARS, and the aggregates are already exact (2026-08-06)
+
+Hunted by enumerating every `[sp, #N]` in both disassemblies. The ROM touches **99** distinct
+slots, this draft **112** — and the whole difference sits above `0x1ac`, which is the ROM's
+highest slot.
+
+Both frames decompose the same way, and that is what settles it:
+
+| | scalars | aggregates | frame |
+|---|---|---|---|
+| ROM | `0x000`..`0x16c` = **91 words** | `0x16c`..`0x1b0` = 17 words | `0x1b4` = 109 |
+| draft | `0x000`..`0x1a0` = **104 words** | 17 words | `0x1e4` = 121 |
+
+**The aggregate region is exactly 17 words on both sides.** So the previous section's
+suspicion — that `nrm[3]`, `tp[3]`, `vb[3]`, `vc[3]`, `cr[3]` and `Vector3 sn` were the
+surplus — is wrong. They are the right size and the right count; they merely sit 0x58 higher
+because 13 *scalar* words are wedged underneath them.
+
+The ROM's aggregate block, read straight off the frame and now mirrored in the draft's
+declaration order (byte-neutral, but it is the known-correct answer so there is no reason to
+hold a different one):
+
+```
+0x16c  cr[3]   s16, 2 words   the cross scratch, reused by both KCL_VERTEX rounds
+0x174  nrm[3]                 the DotVec3 argument in the unk_35 branch
+0x180  sn                     the surface normal
+0x18c  triPos[3]              the KCL position at << 6
+0x198  vb[3]                  reconstructed vertex 2
+0x1a4  vc[3]                  reconstructed vertex 3
+```
+
+`nrm` is proof the two frames really are the same shape here: the ROM's `0x1ffbdb0`..`0x1ffbddc`
+and the draft's `+0x53c`..`+0x568` are instruction-for-instruction identical, differing only in
+that one is `sp+0x174` and the other `sp+0x1cc`.
+
+**So the target is 13 scalar locals that spill here and do not in the ROM.** Not a
+declaration-order problem — reordering was already shown byte-neutral twice. The draft
+carries scalars the ROM never materialises: `size`, `mask`, `cy`, `cz`, `one`, `r`, `stepX`,
+`z`, `t`, `u`, `vx`, `vy`, `vz`, `cd`, `ck`, `lo`, `hi`, plus `dsq` and `lensq` at two words
+each. Thirteen of those are spilling. The next move is to fold them into their uses one at a
+time and watch `sub sp, sp, #N`, which is a direct readout and far cheaper than scoring each
+attempt on the alignment ratio.

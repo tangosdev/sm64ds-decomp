@@ -224,13 +224,16 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s64 lensq;
     s32 dx, dy, dz;
     s32 faceDot;
-    s32 nrm[3];
     s32 v;
     s32 dot1, dot2, dot3;
-    Vector3 sn;
-    s16 cr[3];
-    s32 tp[3], vb[3], vc[3];
     s32 cd, ck, lo, hi;
+    /* The aggregates, in the ROM's own order and contiguous at the top of the
+       frame: cr 0x16c, nrm 0x174, sn 0x180, tp 0x18c, vb 0x198, vc 0x1a4 -- 17
+       words, and this draft's aggregate region is already exactly 17 words too. */
+    s16 cr[3];
+    s32 nrm[3];
+    Vector3 sn;
+    s32 tp[3], vb[3], vc[3];
 
 
     rawX = c->x >> 6;
