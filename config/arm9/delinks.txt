@@ -7841,7 +7841,7 @@ src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.c:
     complete
     .text start:0x0204e014 end:0x0204e084
 
-src/_ZN22ExpandingHeapAllocator14SizeofInternalEPv.c:
+src/_ZN22ExpandingHeapAllocator14SizeofInternalEPv.cpp:
     complete
     .text start:0x0204e084 end:0x0204e08c
 
@@ -7849,7 +7849,7 @@ src/_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj.cpp:
     complete
     .text start:0x0204e08c end:0x0204e0e0
 
-src/_ZN22ExpandingHeapAllocator9GetNodeIDEv.c:
+src/_ZN22ExpandingHeapAllocator9GetNodeIDEv.cpp:
     complete
     .text start:0x0204e0e0 end:0x0204e0e8
 
@@ -7865,7 +7865,7 @@ src/_ZN22ExpandingHeapAllocator10MemoryLeftEv.cpp:
     complete
     .text start:0x0204e180 end:0x0204e1a8
 
-src/_ZN22ExpandingHeapAllocator10DeallocateEPv.c:
+src/_ZN22ExpandingHeapAllocator10DeallocateEPv.cpp:
     complete
     .text start:0x0204e1a8 end:0x0204e1e8
 
@@ -7873,7 +7873,7 @@ src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp:
     complete
     .text start:0x0204e1e8 end:0x0204e370
 
-src/_ZN22ExpandingHeapAllocator8AllocateEji.c:
+src/_ZN22ExpandingHeapAllocator8AllocateEji.cpp:
     complete
     .text start:0x0204e370 end:0x0204e3b4
 
