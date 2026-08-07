@@ -111,7 +111,7 @@ src/_ZN5Enemy12UpdateWMClsnER12WithMeshClsnj.cpp:
     complete
     .text start:0x020aebf8 end:0x020aed18
 
-src/func_ov002_020aed18.c:
+src/_ZN5EnemyD2Ev.c:
     complete
     .text start:0x020aed18 end:0x020aed3c
 
