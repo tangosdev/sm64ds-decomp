@@ -7,7 +7,7 @@ void func_ov006_02125800(void);
 void NullDestructor_0203d47c(void);
 void _ZN5ModelD1Ev(void *);
 void _ZN8Particle10SysTrackerD1Ev(void *);
-void func_ov004_020b29c0(void *c);
+void _ZN11dScMgBase_cD2Ev(void *c);
 void *func_ov006_0212568c(char *c)
 {
     *(void **)c = &data_ov006_0214000c;
@@ -17,7 +17,7 @@ void *func_ov006_0212568c(char *c)
     _ZN5ModelD1Ev(c + 0xaba4);
     *(void **)c = &data_ov006_0213e448;
     _ZN8Particle10SysTrackerD1Ev(c + 0x471c);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     return c;
 }
 }

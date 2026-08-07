@@ -1,6 +1,6 @@
 extern void __destroy_arr(void *p, int a, int b, void *fn);
 extern void _ZN8Particle10SysTrackerD1Ev(void *p);
-extern void func_ov004_020b29c0(void *p);
+extern void _ZN11dScMgBase_cD2Ev(void *p);
 extern void func_ov006_02120938(void);
 extern void func_ov006_02122c68(void);
 extern void func_ov006_020eed64(void);
@@ -22,6 +22,6 @@ void *func_ov006_021225ac(void *thiz)
     __destroy_arr(c + 0x500c, 5, 0xdc, (void *)func_ov006_020ca604);
     *(void **)c = _ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     return c;
 }

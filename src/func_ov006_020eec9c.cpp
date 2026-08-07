@@ -22,7 +22,7 @@ void *func_ov006_020eec9c(char *c) {
     __destroy_arr(c + 0x500c, 3, 0xb8, (void*)&func_ov006_020c893c);
     *(void ***)c = _ZTV17MgBounceAndPounce;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
-    func_ov004_020b29c0(c);
+    _ZN11dScMgBase_cD2Ev(c);
     _ZN6Memory10DeallocateEPvP4Heap(c, *(void **)&data_020a0eac);
     return c;
 }

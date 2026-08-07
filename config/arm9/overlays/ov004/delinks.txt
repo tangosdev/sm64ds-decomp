@@ -470,7 +470,7 @@ src/func_ov004_020b29a0.cpp:
     complete
     .text start:0x020b29a0 end:0x020b29c0
 
-src/func_ov004_020b29c0.cpp:
+src/_ZN11dScMgBase_cD2Ev.cpp:
     complete
     .text start:0x020b29c0 end:0x020b2a18
 
