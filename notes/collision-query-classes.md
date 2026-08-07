@@ -1181,3 +1181,29 @@ every `continue` in the prism body targeting that bottom test. The draft emits t
 top with a forward exit branch and the body after it. That offsets the whole body against the
 target and is a plausible contributor to the large INSERT/DELETE ranges, but it is a loop-
 rotation question, not a register-pressure one.
+
+### CORRECTION: the leaf loop was never unrotated — I misread my own grep (2026-08-06)
+
+The previous section claimed the draft emits the leaf-loop test at the top where the ROM
+rotates it to the bottom, and offered that as a contributor to the large INSERT/DELETE ranges.
+**That is wrong.** Rewriting the source as the explicitly rotated
+
+```c
+if (*++leaf) do { ... } while (*++leaf);
+```
+
+produces output **byte-identical** to `while (*++leaf) { ... }`. Both already contain *two*
+copies of `ldrh r2,[r0,#2]!` — an entry test at `+0x3b8` branching to the x-step and a second
+at `+0x1a18` branching back into the body — which is exactly the ROM's `0x1ffbc1c` /
+`0x1ffbc30` / `0x1ffd314` shape. mwccarm rotates this loop on its own and always did.
+
+The error was mine and it was a tooling slip, not a reasoning one: the grep that produced the
+diagnosis ended in `| head -1`, so it showed the entry test and hid the bottom copy, and I
+read "one test, at the top" off a command that could only ever print one. **When a structural
+claim rests on a count, print the count.**
+
+So loop rotation joins loop control, declaration order, frame layout and the inlined sqrt on
+the list of things already converged. The draft and the ROM agree on every structural
+question anyone has thought to ask so far; what is left is 179 small shape ranges that are
+register allocation and scheduling, and the only lever proven to move those on this function
+remains a matched sibling with the same shape.
