@@ -223,6 +223,46 @@ and is `dFdDummy_c`'s constructor.
 That C2 population is worth its own look: `notes/plan-cpp-language-mode.md` Phase 5
 records **0 constructors migrated, ever**, and treats them as research.
 
+### Naming them is blocked, and the reason is worth knowing
+
+Six of the eleven were named, byte-verified 6/6, built at 106/106 — and then backed
+out, because **both** ways of spelling a named D2 fail a gate:
+
+| spelling | what fails |
+|---|---|
+| `_ZN5FaderD2Ev` hand-spelt in a `.c` | the langmode ratchet: `unmigrated_total` 1274 → 1280. It is *right* — a hand-spelled mangled symbol is exactly the backlog `plan-cpp-language-mode.md` exists to shrink. Re-banking a **risen** count is the fake progress Phase 0 was built to make unrewarding. |
+| a real `Fader::~Fader() {}` | `eligible.py`: **"extra sections: .data"**, and enrolled falls 10699 → 10695. |
+
+The second is the interesting one. Defining a destructor makes it the class's **key
+function**, so mwccarm emits the whole vtable group into that translation unit.
+Dumping the object confirms it — alongside `_ZN5FaderD2Ev` it contains:
+
+    _ZTV5Fader      _ZTI5Fader      _ZTS5Fader      _ZN5FaderD0Ev
+
+Those already exist, delinked from the ROM. A source file cannot own them too.
+
+`include/MeshColliderBase.h` and `include/ModelBase.h` had already named this
+arrangement without spelling out the consequence: *"THE DESTRUCTOR IS DECLARED FIRST
+AND NEVER DEFINED AS A METHOD -- the key-function arrangement"*, and
+`include/MeshCollider.h`'s *"The structors stay C files."*
+
+**This is why `D2` reads 0 migrated, and it is not a codegen problem.** The bytes are
+perfect: `Fader::~Fader() {}` reproduces D2 at `0x02017838` *and* D1 at `0x0201786c`,
+both exact. What blocks it is symbol ownership.
+
+The 72 D1s the audit counts as migrated dodge it with a **shadow struct** —
+`struct Actor { char pad[0xd0]; virtual ~Actor(); };` declared locally, destructor
+never defined, so no vtable is emitted. That route is closed here: `plan-cpp-language-mode.md`
+§6 forbids a slice from declaring a struct body locally, and Phase 4 exists to delete
+the 1,638 that already do. Trading a correct symbol name for new shadow debt is the
+§3.1 failure this plan is built around.
+
+So the real prerequisite is **vtable ownership**: until `_ZTV5Fader` and friends come
+from a source file rather than from delinked ROM data, no destructor of a polymorphic
+class can be written as a real method against its real header. That is a
+`runbook-type-reconstruction.md` §7 dead end, and it gates Phase 2 far more than the
+per-class header work does.
+
 ### Caveats, unresolved
 
 - **33 are undecided** — callers split evenly, or none of them is a named

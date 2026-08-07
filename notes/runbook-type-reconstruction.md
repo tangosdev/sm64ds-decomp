@@ -357,6 +357,23 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   Callers are affected too: `take_i(h, 0x800)` emits `mov r1,#0x800` while the
   `Fix12<int>` form emits `ldr` + `ldm`. Keep those as `extern "C"` free functions with
   scalar args. See `notes/mwccarm-codegen.md` 6az.
+- **Do not define a destructor of a polymorphic class as a real method against its
+  real header.** Defining it makes it the class's **key function**, so mwccarm emits
+  the whole vtable group into that translation unit — `Fader::~Fader() {}` yields
+  `_ZTV5Fader`, `_ZTI5Fader`, `_ZTS5Fader` and `_ZN5FaderD0Ev` alongside the
+  destructor. Those already exist as delinked ROM data, so `eligible.py` rejects the
+  file with **"extra sections: .data"** and the enrolled count falls.
+
+  This is not a codegen problem — the bytes are exact, D1 and D2 both. It is symbol
+  ownership, and it is why `D2` reads 0 migrated. The 72 migrated `D1`s dodge it with
+  a local shadow struct whose destructor is declared and never defined, which
+  `notes/plan-cpp-language-mode.md` §6 forbids for new work and Phase 4 exists to
+  delete. `include/MeshCollider.h` states the same conclusion as a rule: *"The
+  structors stay C files."*
+
+  The prerequisite is vtable ownership by source. Measured and recorded in
+  `notes/dtor-variant-audit.md` §7.
+
 - **Never derive a signature from what callers say.** They disagree 27% of the time.
   The definition is the only non-guess.
 - **Do not migrate before the types are right.** A real `struct` built on guessed member
