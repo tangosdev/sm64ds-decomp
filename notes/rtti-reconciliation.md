@@ -380,13 +380,34 @@ identical-code folding is not silently reattributing anything.
     daObjDorifu_c    4 methods    0xdc8 u8   0xdc9 u8   0xdca u8   0xdcb u8
     daObjFallBlock_c 6 methods    14 fields, 0x320..0x344 (see the header)
     daObjGuragura_c  4 methods    0x330 s32  0x334 s32  0x338 s32  0x33c s32  0x34c u8
-    daObjSwdoor_c   12 methods    0x344 s32  0x58d u8   0x59c s32  0x5a0 s32
+    daObjSwdoor_c    3 methods    (none)  <- was "12 methods, 4 fields"; see below
     daObjUkiyuka_c   4 methods    0x320 s32  0x324 s32  0x328 s16  0x32a s16
     daObjKaitendai_c 4 methods    (none -- its overrides touch only ancestor fields)
     daObjKuruma_c    4 methods    (none)
     daDsnBase_c      4 methods    (none)
     daObjMaruta_c    4 methods    (none)
     daOts_c         11 methods    (none)
+
+> **Correction.** `daObjSwdoor_c` read **12** own methods and four fields when this was
+> written, and both numbers came from a defect in the walk that produced them, not from
+> the ROM. `rtti_vtables.py` ended a table at "a null whose successor is a typeinfo
+> record"; where a `{0, handler}` table follows instead, the successor is a code pointer,
+> nothing fires, and the walk reads that table as slots. `daObjSwdoor_c` was read at 51
+> slots against a real 32, and **nine of its twelve "own" methods belonged to the
+> following structure.**
+>
+> The attribution argument in this section is only sound for methods the class actually
+> owns, so all four fields fell with them: on corrected slots it has **3 own methods and
+> 0 own fields**. `include/daObjSwdoor_c.h` has been retracted rather than corrected --
+> there is nothing left in it to declare, and the other five zero-field intermediates
+> never had a header either.
+>
+> The other four headers survive the correction **byte-identically** -- same method
+> counts (4, 6, 4, 4), same fields -- which is the reason to believe the fix rather than
+> merely the finding. Both boundary bugs (this one and a symmetric under-read that left
+> 124 classes shorter than their own base) are fixed in `tools/rtti_vtables.py`, and the
+> derived-slots >= base-slots invariant that exposed them is now a gate that fails the
+> run.
 
 ### Two symbols in config are misattributed
 
@@ -441,8 +462,13 @@ constant 4, and with the right width the declared bases are confirmed in every c
 ### The headers
 
 `--emit-headers` writes one per intermediate that has fields:
-`include/daObjDorifu_c.h`, `daObjFallBlock_c.h`, `daObjGuragura_c.h`, `daObjSwdoor_c.h`
-and `daObjUkiyuka_c.h`.
+`include/daObjDorifu_c.h`, `daObjFallBlock_c.h`, `daObjGuragura_c.h`
+and `daObjUkiyuka_c.h`. (`daObjSwdoor_c.h` was the fifth and is retracted -- see the
+correction above.) It also **deletes** a header it previously wrote for a class that no
+longer has evidence, because emitting only on the has-fields branch leaves a stale file
+behind, and a stale generated header is worse than none: it keeps asserting fields whose
+provenance has been withdrawn. Only files carrying this pass's own regenerate line are
+removed, so a hand-written header is never touched.
 They carry the ROM name, because the tree has no name for these classes — this names
 something that had none, it does not rename anything, so it is orthogonal to section 4's
 "annotate, don't rename".

@@ -14,7 +14,10 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message16DisplayPauseTextEth(unsigned short n, unsigned char b) {
+}
+
+void Message::DisplayPauseText(unsigned short n, unsigned char b)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -35,5 +38,4 @@ void _ZN7Message16DisplayPauseTextEth(unsigned short n, unsigned char b) {
     Message_DrawCenteredLine(0x120, 0x20);
     data_0209d6d4 = 0x28b;
     Message_DrawCenteredLine(0x1c0, 0x20);
-}
 }

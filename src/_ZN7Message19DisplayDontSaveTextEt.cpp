@@ -14,7 +14,10 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message19DisplayDontSaveTextEt(unsigned short n) {
+}
+
+void Message::DisplayDontSaveText(unsigned short n)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -35,5 +38,4 @@ void _ZN7Message19DisplayDontSaveTextEt(unsigned short n) {
     Message_DrawCenteredLine(0x285, 0xa);
     data_0209d6d4 = data_0209d6d4 + 1;
     Message_DrawCenteredLine(0x291, 0xa);
-}
 }
