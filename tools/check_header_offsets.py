@@ -77,8 +77,14 @@ def learn_aggregates(*paths):
 
 learn_aggregates(REPO / "include" / "types.h")
 
-# `void *p;` / `Model* m;` -- any pointer is 4 bytes on this target
-DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*(\**)\s*(\w+)\s*"
+# `void *p;` / `Model* m;` -- any pointer is 4 bytes on this target.
+# The leading `struct`/`union`/`class`/`enum` is an elaborated type specifier and
+# names the same type as the bare tag: `struct Matrix4x3 mat4x3;` is a Matrix4x3.
+# Without it these were the ONLY unparsed declarations left in include/, and an
+# unparsed one stops the gate reporting mismatches for the rest of the header --
+# so a handful of `struct X y;` lines were suppressing the check on 8 files.
+# An unknown tag still fails: the keyword makes the shape parseable, not the size.
+DECL = re.compile(r"^\s*(?:(?:struct|union|class|enum)\s+)?([A-Za-z_]\w*)\s*(\**)\s*(\w+)\s*"
                   r"(?:\[\s*(0x[0-9a-fA-F]+|\d+)\s*\])?\s*;"
                   r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
 # lines inside a struct body that are legitimately not declarations
@@ -88,8 +94,10 @@ IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 #   typedef char ModelAnim_size_must_be_0x64[...]
 # Without these an embedded member is an unknown type, which this checker skips --
 # and skipping without advancing the offset makes every later field mismatch.
+# rglob, not glob: Matrix4x3 and Matrix3x3 assert their sizes in include/math/,
+# so a non-recursive scan missed exactly the two that Model.h and friends embed.
 CLASS_SIZES = {}
-for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").glob("*.h"):
+for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob("*.h"):
     for _m in re.finditer(r"(\w+)_size_must_be_(0x[0-9a-fA-F]+)",
                           _h.read_text(errors="replace")):
         CLASS_SIZES[_m.group(1)] = int(_m.group(2), 16)

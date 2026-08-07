@@ -286,6 +286,54 @@ def test_a_real_offset_error_is_caught():
     assert "MISMATCH" in out, out
 
 
+def test_an_elaborated_type_specifier_is_a_declaration():
+    """`struct Vector3 v;` names the same type as `Vector3 v;`. These were the last
+    unparsed declarations in include/, and one of them silences mismatch reporting
+    for every field after it -- so a few of these hid the gate on 8 headers."""
+    with tempfile.TemporaryDirectory() as td:
+        out = _check(td, "struct H {\n"
+                         "    u32 a;                  /* 0x000 */\n"
+                         "    struct Vector3 v;       /* 0x004 */\n"
+                         "    u32 b;                  /* 0x010 */\n"
+                         "};\n")
+    assert "0 unparsed" in out and "0 mismatched" in out, out
+
+
+def test_class_sizes_are_found_in_include_subdirectories():
+    """Matrix4x3 asserts its size in include/math/, so the non-recursive scan missed
+    exactly the type Model.h and three others embed."""
+    with tempfile.TemporaryDirectory() as td:
+        out = _check(td, "struct H {\n"
+                         "    struct Matrix4x3 m;     /* 0x000 */\n"
+                         "    u32 after;              /* 0x030 */\n"
+                         "};\n")
+    assert "0 unparsed" in out and "0 mismatched" in out, out
+
+
+def test_an_elaborated_unknown_tag_is_still_unparsed():
+    """The keyword makes the shape parseable, not the size. Guessing a width here
+    would put every later field at a wrong offset and still report 0 mismatched."""
+    with tempfile.TemporaryDirectory() as td:
+        out = _check(td, "struct H {\n"
+                         "    u32 a;                  /* 0x000 */\n"
+                         "    struct NoSuchType t;    /* 0x004 */\n"
+                         "};\n")
+    assert "UNPARSED" in out, out
+
+
+def test_long_long_is_four_aligned_on_this_target():
+    """mwccarm 2004/b56 -proc arm946e: `struct { char c; long long v; }` is 12 bytes,
+    not 16. Self-aligning s64 to 8 invented padding and reported include/ClsnResult.h
+    as broken when it is correct."""
+    with tempfile.TemporaryDirectory() as td:
+        out = _check(td, "struct H {\n"
+                         "    u32 a;                  /* 0x000 */\n"
+                         "    s64 v;                  /* 0x004 */\n"
+                         "    u32 b;                  /* 0x00c */\n"
+                         "};\n")
+    assert "0 mismatched" in out and "0 unparsed" in out, out
+
+
 if __name__ == "__main__":
     fails = 0
     for nm, fn in sorted(globals().items()):
