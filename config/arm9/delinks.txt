@@ -1594,7 +1594,7 @@ src/func_02013638.c:
     complete
     .text start:0x02013638 end:0x02013650
 
-src/_ZN8SaveData21SetCoinRecordIfHigherEah.c:
+src/_ZN8SaveData21SetCoinRecordIfHigherEah.cpp:
     complete
     .text start:0x02013650 end:0x0201366c
 
@@ -1618,7 +1618,7 @@ src/CountStarsCollectedInLevelToDisplay.c:
     complete
     .text start:0x02013714 end:0x02013768
 
-src/_ZN8SaveData26CountStarsCollectedInLevelEj.c:
+src/_ZN8SaveData26CountStarsCollectedInLevelEj.cpp:
     complete
     .text start:0x02013768 end:0x020137a8
 
@@ -1658,7 +1658,7 @@ src/func_020138dc.c:
     complete
     .text start:0x020138dc end:0x02013910
 
-src/_ZN8SaveData17SetCharacterIntroEi.c:
+src/_ZN8SaveData17SetCharacterIntroEi.cpp:
     complete
     .text start:0x02013910 end:0x0201392c
 
@@ -1702,15 +1702,15 @@ src/_ZN8SaveData16CanPlayerHaveCapEv.cpp:
     complete
     .text start:0x02013b5c end:0x02013b9c
 
-src/_ZN8SaveData15SaveCurrentFileEv.c:
+src/_ZN8SaveData15SaveCurrentFileEv.cpp:
     complete
     .text start:0x02013b9c end:0x02013be0
 
-src/_ZN8SaveData13SaveMinigamesEP16MinigameSaveData.c:
+src/_ZN8SaveData13SaveMinigamesEP16MinigameSaveData.cpp:
     complete
     .text start:0x02013be0 end:0x02013c0c
 
-src/_ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.c:
+src/_ZN8SaveData16ReadMinigameDataEP16MinigameSaveData.cpp:
     complete
     .text start:0x02013c0c end:0x02013c5c
 
@@ -1722,7 +1722,7 @@ src/func_02013c84.c:
     complete
     .text start:0x02013c84 end:0x02013cd4
 
-src/_ZN8SaveData13EraseSaveFileEjPc.c:
+src/_ZN8SaveData13EraseSaveFileEjPc.cpp:
     complete
     .text start:0x02013cd4 end:0x02013d14
 
@@ -1738,7 +1738,7 @@ src/_ZN8SaveData16SetDefaultValuesEP12FileSaveData.cpp:
     complete
     .text start:0x02013dc4 end:0x02013e0c
 
-src/_ZN8SaveData16EraseAllSaveDataEv.c:
+src/_ZN8SaveData16EraseAllSaveDataEv.cpp:
     complete
     .text start:0x02013e0c end:0x02013e64
 
