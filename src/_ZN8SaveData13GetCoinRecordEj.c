@@ -1,19 +1,18 @@
-#include "types.h"
+//cpp
 // @symbol _ZN8SaveData13GetCoinRecordEj
-/* recovered: named members + shared header */
 #include "SaveData.h"
-/* SaveData::GetCoinRecord(u32 courseID) at 0x0201366c
- * Static method (no `this`); returns the saved coin count for a main level.
- * Reads SAVE_DATA.coinRecords[courseID] -- a u8 array. See Save.h:
- *   u8 coinRecords[NUM_MAIN_LEVELS];  // FileSaveData
- *
- * The reloc resolves to 0x0209cad2 (= &SAVE_DATA.coinRecords[0]); the friendly
- * symbol is not yet in symbols.txt (wildcard pooled-global reloc, so this
- * extern name is not byte-verified). Kept as a named u8[] over data_0209cad2.
- */
-extern u8 data_0209cad2[]; /* &SAVE_DATA.coinRecords[0], 0x0209cad2 */
 
-u8 _ZN8SaveData13GetCoinRecordEj(u32 courseID)
+/* SaveData::GetCoinRecord(u32 courseID) at 0x0201366c -- static, no `this`.
+ *
+ * Returns the saved coin count for a main level. The records are a u8 array
+ * inside FileSaveData; the reloc resolves to 0x0209cad2, which is
+ * &SAVE_DATA.coinRecords[0]. That address has no friendly symbol in
+ * symbols.txt yet and the reloc is a wildcard pooled global, so this extern
+ * name is not itself byte-verified -- only the indexing is.
+ */
+extern "C" u8 data_0209cad2[]; /* &SAVE_DATA.coinRecords[0] */
+
+u8 SaveData::GetCoinRecord(u32 courseID)
 {
     return data_0209cad2[courseID];
 }

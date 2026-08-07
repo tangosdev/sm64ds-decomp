@@ -1,20 +1,31 @@
-#include "types.h"
-/* _ZN8SaveData13PlayerLoseCapEv at 0x02013ad4
- * SaveData::PlayerLoseCap - sets 0x1000000 << currentCharacter bit in flags1.
+//cpp
+// @symbol _ZN8SaveData13PlayerLoseCapEv
+#include "SaveData.h"
+
+/* SaveData::PlayerLoseCap() at 0x02013ad4 -- static, no `this`.
+ *
+ * Records that the current character has lost their cap, by setting bit
+ * 24 + currentCharacter in the flags word at +0x04 of the save block. Does
+ * nothing for a character who cannot wear one.
+ *
+ * The save block is reached as a raw global: the reloc is a wildcard pooled
+ * reference to 0x0209caa0 and no friendly symbol exists for it yet, so this
+ * local view of the two fields it touches is deliberate rather than a shadow
+ * of the whole class -- SaveData.h describes the object, this names the two
+ * words the ROM instruction stream actually reads.
  */
-struct SaveData {
-    u32 magic8000;
-    u32 flags1;
+struct SaveDataGlobal {
+    u32 magic8000;         /* 0x00 */
+    u32 flags1;            /* 0x04 -- bit 24+n: character n has lost their cap */
     char pad[0x39];
-    u8 currentCharacter;
+    u8  currentCharacter;  /* 0x41 */
 };
 
-extern int _ZN8SaveData16CanPlayerHaveCapEv(void);
-extern struct SaveData data_0209caa0;
+extern "C" struct SaveDataGlobal data_0209caa0;
 
-void _ZN8SaveData13PlayerLoseCapEv(void)
+void SaveData::PlayerLoseCap()
 {
-    if (!_ZN8SaveData16CanPlayerHaveCapEv())
+    if (!SaveData::CanPlayerHaveCap())
         return;
     data_0209caa0.flags1 = data_0209caa0.flags1 | (0x1000000u << data_0209caa0.currentCharacter);
 }
