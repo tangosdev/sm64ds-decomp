@@ -3108,3 +3108,47 @@ lever is a C-vs-C++ dispatch respelling, outside its mutation space.
 Rule: when a pure-permutation residue sits in a function that dispatches through
 a C-cast fn-ptr table, respell the dispatch as a dummy-virtuals C++ call BEFORE
 grinding coloring levers - check it against 6aa's natural-homing probe first.
+## 6bd. Two store-side levers from the div 6/7 pair (cannon lid + question-block bounce, 2026-08-08)
+
+Both landed in PR #1227, cracking a div=6 and a div=7 that had sat as
+"pure residue" near-misses.
+
+**The store-RMW respell.** `*p = (s16)(*p + 0x1000)` and `*p += 0x1000` are
+the same operation on an `s16 *`, but they are NOT the same to the address
+allocator: the explicit-cast form materializes the pointer into the slot the
+ROM did not use, and the compound-assignment form flips it back. On
+func_ov102_021498e0 (question-block bounce, 0x398) this single respell closed
+the address-materialization half of a div=7 (the other half was a real seed
+bug: case 0 loaded data_ov102_0214e870 where the relocs prove the ROM loads
+data_ov102_0214e8c0 -- re-read the relocs before trusting an inherited seed).
+
+**First-consumed-web order.** On func_ov098_0213ade8 (cannon lid, 0x2bc,
+div 6->0): compute x before y AND store x before y, so the x web is the first
+CONSUMED scratch web and takes r0. The 6q first-consumed rule, applied at the
+web level rather than the expression level: the consumer order of whole webs
+decides the scratch coloring, and source statement order is the lever that
+sets it.
+
+## 6be. FLOOR: the conditional-cast shift-pair split vs load-hoist collision (func_ov002_020bb614, div 7, 2026-08-08)
+
+A new ordering-floor SHAPE, distinct from the 6o/6av families. The ROM
+schedules two independent loads (`ldr r1,[r6,#0x60]`, `ldr r5,[r6,#0x598]`)
+BETWEEN the `lslne`/`lsrne` halves of a conditional `(u16)` zero-extend.
+Keeping r0 busy through the gap is what colors the downstream my/mx pair
+r1/r0 and orders the msgPos stores y,z,x. From C, mwccarm will not split the
+shift pair that way: any form that lifts the first load into the gap also
+co-hoists the SECOND load too early AND sinks the flag-init `mov r4,#0` --
+three constraints that are pairwise satisfiable and mutually exclusive as a
+triple.
+
+Axes swept to establish it: msgPos store-order permutations (36), local
+declaration order (7 forms), the msgId cast form (ternary, mask,
+manual-shift split), volatile-on-object (4 forms), load/if reordering (11
+forms), plus the prior permuter run (floor score 80 at 650 iterations). The
+body from +0x44 to +0x3dc is byte-identical throughout; all seven divergences
+are the one prologue permutation. Evidence banked on the near-miss row.
+
+Rule: when the residual is a shift-pair with foreign loads interleaved, check
+whether entering the gap forces a second hoist before spending on ordering
+levers -- this shape reads as crackable (no floor note, "just scheduling")
+and is not.
