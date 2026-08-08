@@ -1,9 +1,7 @@
 //cpp
 typedef int Fix12;
 
-struct OamAttr {
-    unsigned short attr0, attr1, attr2, attr3;
-};
+#include "OamAttr.h"
 
 struct OAM {
     static int Render(bool, OamAttr*, int, int, int, int, Fix12, int);

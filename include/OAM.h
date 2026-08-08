@@ -16,21 +16,22 @@
  * (+0x14) on all 25 sweep versions at every optimisation level. Those stay
  * extern "C" free functions -- runbook section 7.
  *
- * OamAttr is FORWARD-DECLARED ONLY, deliberately. The tree holds three mutually
- * incompatible spellings of that 8-byte type, and an attempt to centralise it in
- * include/OamAttr.h broke the ROM build:
+ * OamAttr now lives in include/OamAttr.h -- eleven files that each carried their own
+ * copy of the 4 x u16 layout share it, and the `OamAttri` misspelling is retired. See
+ * that header for the field evidence and for why it is deliberately dependency-free.
  *
- *   _ZN3OAM9RenderSub*                4 x u16, unnamed roles
- *   _ZN3OAM16LoadAffineParams*        `unsigned short a, b, c, param` -- names the
- *                                     4th word, which is the affine parameter
- *   _ZN3OAM6Render*P9Matrix2x2        two u32 words decomposed into bitfields
- *                                     (yb, objMode, mode, mosaic, shape, tile...)
+ * THIS HEADER STILL FORWARD-DECLARES IT RATHER THAN INCLUDING IT, and that is load
+ * bearing, not leftover. Two files need bit-level access to the same eight bytes and
+ * keep their own local decompositions:
  *
- * All three agree on the size and disagree on everything else, and each is the view
- * its own function needs. Reconciling them is real work -- one type, one set of
- * field names, every user re-verified -- and it is not a language-mode migration.
- * A pointer parameter needs only the forward declaration, so the methods below can
- * be declared without picking a winner. */
+ *   _ZN3OAM6Render*P9Matrix2x2                bitfields (yb, objMode, mode, mosaic,
+ *                                             shape, xc, aff, size / tile, prio, pal)
+ *   _ZN3OAM6Render*5Fix12IiES3_ii             `u32 a01; u16 a2; u16 a3;`
+ *
+ * The first of those includes THIS header, so if OAM.h pulled in OamAttr.h it would
+ * collide with that file's own definition. A pointer parameter needs only the forward
+ * declaration, so every method below can be declared without forcing a view on anyone;
+ * the 68 files that merely pass an OamAttr* around never need the definition at all. */
 #ifndef OAM_H
 #define OAM_H
 #include "types.h"

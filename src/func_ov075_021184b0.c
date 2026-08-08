@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-struct OamAttr { unsigned short attr0, attr1, attr2, attr3; };
+#include "OamAttr.h"
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, OamAttr*, int, int, int, int, int, int, int, int);
 extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int, OamAttr*, int, int, int, int, int, int);
 extern "C" int func_0203da9c(void);

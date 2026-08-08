@@ -1,15 +1,15 @@
 typedef int s32;
 typedef int Fix12i;
 
-struct OamAttri { unsigned short attr0, attr1, attr2, attr3; };
+#include "OamAttr.h"
 
 extern void *data_ov006_02137994[];
-extern struct OamAttri *data_ov006_02137684[];
+extern struct OamAttr *data_ov006_02137684[];
 
 extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-    int sub, struct OamAttri *data,
+    int sub, struct OamAttr *data,
     s32 x, s32 y,
     s32 palette, s32 priority,
     Fix12i scaleX, Fix12i scaleY,

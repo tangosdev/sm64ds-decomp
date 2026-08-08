@@ -2,16 +2,16 @@ typedef int s32;
 typedef int Fix12i;
 typedef int bool32;
 
-struct OamAttri { unsigned short attr0, attr1, attr2, attr3; };
+#include "OamAttr.h"
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-    bool32 sub, struct OamAttri *data,
+    bool32 sub, struct OamAttr *data,
     s32 x, s32 y,
     s32 palette, s32 priority,
     Fix12i scaleX, Fix12i scaleY,
     s32 rotation, s32 mode);
 
-extern struct OamAttri data_ov075_0211cba4[];
+extern struct OamAttr data_ov075_0211cba4[];
 
 void func_ov075_02118cd0(void)
 {

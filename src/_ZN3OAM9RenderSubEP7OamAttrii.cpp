@@ -2,14 +2,7 @@
 // @symbol _ZN3OAM9RenderSubEP7OamAttrii
 #include "OAM.h"
 
-/* NOTE ON THE LOCAL DEFINITION BELOW.
- * It stays, against plan section 6's "no local struct body" rule, and OAM.h
- * forward-declares OamAttr rather than defining it. Centralising the type was tried
- * and reverted: the tree holds three incompatible spellings of this 8-byte type --
- * this one, LoadAffineParams' `a, b, c, param`, and Render's bitfield decomposition
- * -- and a shared include/OamAttr.h broke the ROM build on the other two.
- * Reconciling them is its own change. See include/OAM.h. */
-struct OamAttr { u16 attr0, attr1, attr2, attr3; };
+#include "OamAttr.h"
 
 /* OAM::RenderSub(OamAttr* data, s32 x, s32 y) at 0x0202194c -- static, no `this`.
  *
