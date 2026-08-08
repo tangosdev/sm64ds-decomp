@@ -136,7 +136,22 @@ struct Actor : ActorDerived {
     virtual int  OnHitByMegaChar(Player &player);      /* slot 27 */
     virtual int  OnHitFromUnderneath(Actor &other);    /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
-    virtual int  OnAimedAtWithEggReturnVec();          /* slot 30 */
+
+    /* slot 30. Returns a Vector3 BY VALUE, and the ROM says so plainly: the
+       definition at 0x020100dc writes x/y/z through r0 and reads every field
+       off r1, which is the AAPCS indirect-return shape -- r0 is the caller's
+       return slot, and `this` has been pushed along to r1. A method returning
+       `int` would have had `this` in r0 and nothing in r1.
+
+       It was declared `virtual int` until the definition was migrated, which is
+       when it became falsifiable: nothing in the tree calls this slot, so no
+       caller could ever have contradicted the wrong type.
+
+       Returning a class by value is NOT the by-value-parameter trap of
+       notes/mwccarm-codegen.md 6az. That one is about mwccarm homing r0-r3 for
+       a by-value class ARGUMENT, costing +0x14. An indirect return costs
+       nothing here and byte-matches -- measured, not assumed. */
+    virtual Vector3 OnAimedAtWithEggReturnVec();       /* slot 30 */
 
     /* --- non-virtual --- */
     /* The player-proximity group. ClosestPlayer does the work: it walks the
