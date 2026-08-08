@@ -16,7 +16,7 @@
 extern "C" {
 extern ActorBase *data_0209f5c0;
 /* Really a FaderColor: __sinit_02074edc constructs it up the chain and leaves
-   _ZTV10FaderColor (0x0208eb2c) in its vptr. Spelled as the base here because
+   the FaderColor vtable (data_0208eb2c) in its vptr. Spelled as the base because
    include/FaderColor.h is still a flat generated struct that does not name a base,
    so the upcast this line needs cannot be written yet. */
 extern FaderBrightness data_0209f5e8;

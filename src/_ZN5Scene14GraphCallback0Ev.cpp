@@ -3,8 +3,8 @@
  *
  * One of four scene-graph traversal hooks (GraphCallback0..3, 0x02018ea0..0x02018ec0)
  * that are byte-for-byte identical and do nothing but report success. Scene's own
- * code is at 0x0202exxx; these four sit two hundred kilobytes away, with the rest of
- * the traversal machinery they are called from.
+ * code starts at 0x0202e140; these four sit 0x15288 bytes -- 85 KiB -- below it,
+ * with the rest of the traversal machinery they are called from.
  *
  * Static, and this is the one thing about them the bytes alone cannot say -- a
  * member that ignores `this` compiles identically either way. The call sites decide
