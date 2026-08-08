@@ -47,7 +47,7 @@ src/func_ov071_0211f6f8.cpp:
     complete
     .text start:0x0211f6f8 end:0x0211f7d4
 
-src/func_ov071_0211f7d4.c:
+src/func_ov071_0211f7d4.cpp:
     complete
     .text start:0x0211f7d4 end:0x0211f8d0
 

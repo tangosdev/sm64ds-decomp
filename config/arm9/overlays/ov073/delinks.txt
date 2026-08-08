@@ -23,7 +23,7 @@ src/func_ov073_0211f494.c:
     complete
     .text start:0x0211f494 end:0x0211f61c
 
-src/func_ov073_0211f61c.c:
+src/func_ov073_0211f61c.cpp:
     complete
     .text start:0x0211f61c end:0x0211fa74
 

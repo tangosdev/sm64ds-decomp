@@ -12,7 +12,7 @@ src/func_ov029_021111f0.c:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/func_ov029_02111254.c:
+src/func_ov029_02111254.cpp:
     complete
     .text start:0x02111254 end:0x02111340
 
@@ -139,7 +139,7 @@ src/func_ov029_02111ef4.c:
     complete
     .text start:0x02111ef4 end:0x02111f58
 
-src/func_ov029_02111f58.c:
+src/func_ov029_02111f58.cpp:
     complete
     .text start:0x02111f58 end:0x02112044
 

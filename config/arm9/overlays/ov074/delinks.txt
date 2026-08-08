@@ -28,7 +28,7 @@ src/func_ov074_0211f38c.c:
     complete
     .text start:0x0211f38c end:0x0211f5b8
 
-src/func_ov074_0211f5b8.c:
+src/func_ov074_0211f5b8.cpp:
     complete
     .text start:0x0211f5b8 end:0x0211fa08
 
@@ -184,7 +184,7 @@ src/_ZN8Goomboss8BehaviorEv.cpp:
     complete
     .text start:0x02121bf0 end:0x02121e98
 
-src/_ZN8Goomboss13InitResourcesEv.c:
+src/_ZN8Goomboss13InitResourcesEv.cpp:
     .text start:0x02121e98 end:0x0212229c
 
 src/func_ov074_0212229c.c:

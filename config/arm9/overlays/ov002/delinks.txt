@@ -99,7 +99,7 @@ src/func_ov002_020aea2c.c:
     complete
     .text start:0x020aea2c end:0x020aea30
 
-src/func_ov002_020aea30.c:
+src/func_ov002_020aea30.cpp:
     complete
     .text start:0x020aea30 end:0x020aeabc
 
@@ -151,7 +151,7 @@ src/func_ov002_020aefa4.c:
     complete
     .text start:0x020aefa4 end:0x020aefb8
 
-src/func_ov002_020aefb8.c:
+src/func_ov002_020aefb8.cpp:
     complete
     .text start:0x020aefb8 end:0x020af0c0
 
@@ -2594,7 +2594,7 @@ src/_ZN6Player16TryEnterStarDoorER7Vector3s.cpp:
     complete
     .text start:0x020ca498 end:0x020ca5cc
 
-src/_ZN6Player12CanEnterDoorEh.c:
+src/_ZN6Player12CanEnterDoorEh.cpp:
     complete
     .text start:0x020ca5cc end:0x020ca708
 
@@ -3243,7 +3243,7 @@ src/func_ov002_020d7030.cpp:
     complete
     .text start:0x020d7030 end:0x020d708c
 
-src/func_ov002_020d708c.c:
+src/func_ov002_020d708c.cpp:
     complete
     .text start:0x020d708c end:0x020d718c
 
@@ -3706,7 +3706,7 @@ src/_ZN6Player17St_WindCarry_InitEv.cpp:
     complete
     .text start:0x020dec0c end:0x020dec70
 
-src/func_ov002_020dec70.c:
+src/func_ov002_020dec70.cpp:
     complete
     .text start:0x020dec70 end:0x020dedf0
 
@@ -4482,7 +4482,7 @@ src/func_ov002_020ec408.c:
     complete
     .text start:0x020ec408 end:0x020ec410
 
-src/func_ov002_020ec410.c:
+src/func_ov002_020ec410.cpp:
     complete
     .text start:0x020ec410 end:0x020ec4c4
 

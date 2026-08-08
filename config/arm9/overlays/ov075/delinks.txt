@@ -318,7 +318,7 @@ src/func_ov075_02118378.c:
     complete
     .text start:0x02118378 end:0x021184b0
 
-src/func_ov075_021184b0.c:
+src/func_ov075_021184b0.cpp:
     complete
     .text start:0x021184b0 end:0x0211867c
 

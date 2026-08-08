@@ -43,7 +43,7 @@ src/func_ov005_020c00e4.c:
     complete
     .text start:0x020c00e4 end:0x020c0140
 
-src/func_ov005_020c0140.c:
+src/func_ov005_020c0140.cpp:
     complete
     .text start:0x020c0140 end:0x020c0250
 
@@ -55,7 +55,7 @@ src/func_ov005_020c06cc.c:
     complete
     .text start:0x020c06cc end:0x020c0878
 
-src/func_ov005_020c0878.c:
+src/func_ov005_020c0878.cpp:
     complete
     .text start:0x020c0878 end:0x020c0b00
 

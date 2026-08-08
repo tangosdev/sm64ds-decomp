@@ -28,7 +28,7 @@ src/func_ov064_0211616c.c:
     complete
     .text start:0x0211616c end:0x02116220
 
-src/func_ov064_02116220.c:
+src/func_ov064_02116220.cpp:
     complete
     .text start:0x02116220 end:0x02116348
 
@@ -131,7 +131,7 @@ src/func_ov064_02117220.cpp:
     complete
     .text start:0x02117220 end:0x02117310
 
-src/_ZN5Bully8BehaviorEv.c:
+src/_ZN5Bully8BehaviorEv.cpp:
     complete
     .text start:0x02117310 end:0x02117424
 
@@ -211,7 +211,7 @@ src/func_ov064_02117cfc.cpp:
     complete
     .text start:0x02117cfc end:0x02117d24
 
-src/func_ov064_02117d24.c:
+src/func_ov064_02117d24.cpp:
     complete
     .text start:0x02117d24 end:0x02117e44
 

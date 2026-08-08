@@ -47,7 +47,7 @@ src/func_ov094_02135fe0.c:
     complete
     .text start:0x02135fe0 end:0x02136024
 
-src/func_ov094_02136024.c:
+src/func_ov094_02136024.cpp:
     complete
     .text start:0x02136024 end:0x02136150
 

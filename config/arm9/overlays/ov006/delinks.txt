@@ -807,7 +807,7 @@ src/func_ov006_020c905c.c:
     complete
     .text start:0x020c905c end:0x020c9098
 
-src/func_ov006_020c9098.c:
+src/func_ov006_020c9098.cpp:
     complete
     .text start:0x020c9098 end:0x020c91ac
 
@@ -827,7 +827,7 @@ src/func_ov006_020c9aa0.cpp:
     complete
     .text start:0x020c9aa0 end:0x020c9c8c
 
-src/func_ov006_020c9c8c.c:
+src/func_ov006_020c9c8c.cpp:
     complete
     .text start:0x020c9c8c end:0x020c9d7c
 
@@ -955,7 +955,7 @@ src/func_ov006_020cb16c.c:
     complete
     .text start:0x020cb16c end:0x020cb1a8
 
-src/func_ov006_020cb1a8.c:
+src/func_ov006_020cb1a8.cpp:
     complete
     .text start:0x020cb1a8 end:0x020cb2b4
 
@@ -963,7 +963,7 @@ src/func_ov006_020cb2b4.c:
     complete
     .text start:0x020cb2b4 end:0x020cb528
 
-src/func_ov006_020cb528.c:
+src/func_ov006_020cb528.cpp:
     complete
     .text start:0x020cb528 end:0x020cb5c4
 
@@ -999,7 +999,7 @@ src/func_ov006_020cbfd8.cpp:
     complete
     .text start:0x020cbfd8 end:0x020cc198
 
-src/func_ov006_020cc198.c:
+src/func_ov006_020cc198.cpp:
     complete
     .text start:0x020cc198 end:0x020cc2ac
 
@@ -1367,7 +1367,7 @@ src/func_ov006_020d11a0.cpp:
     complete
     .text start:0x020d11a0 end:0x020d122c
 
-src/func_ov006_020d122c.c:
+src/func_ov006_020d122c.cpp:
     complete
     .text start:0x020d122c end:0x020d1450
 
@@ -1403,7 +1403,7 @@ src/func_ov006_020d3668.cpp:
     complete
     .text start:0x020d3668 end:0x020d36a4
 
-src/func_ov006_020d3ba0.c:
+src/func_ov006_020d3ba0.cpp:
     .text start:0x020d3ba0 end:0x020d452c
 
 src/func_ov006_020d452c.c:
@@ -1418,7 +1418,7 @@ src/func_ov006_020d48dc.cpp:
     complete
     .text start:0x020d48dc end:0x020d4b7c
 
-src/func_ov006_020d4b7c.c:
+src/func_ov006_020d4b7c.cpp:
     complete
     .text start:0x020d4b7c end:0x020d52f0
 
@@ -2055,7 +2055,7 @@ src/func_ov006_020dd7c0.c:
     complete
     .text start:0x020dd7c0 end:0x020dd880
 
-src/func_ov006_020dd880.c:
+src/func_ov006_020dd880.cpp:
     complete
     .text start:0x020dd880 end:0x020dda94
 
@@ -2891,7 +2891,7 @@ src/func_ov006_020e8b18.c:
     complete
     .text start:0x020e8b18 end:0x020e8bd0
 
-src/func_ov006_020e8bd0.c:
+src/func_ov006_020e8bd0.cpp:
     complete
     .text start:0x020e8bd0 end:0x020e8c74
 
@@ -5552,7 +5552,7 @@ src/func_ov006_02110928.c:
     complete
     .text start:0x02110928 end:0x02110a20
 
-src/func_ov006_02110a20.c:
+src/func_ov006_02110a20.cpp:
     complete
     .text start:0x02110a20 end:0x02110bb4
 
@@ -6702,7 +6702,7 @@ src/func_ov006_0212231c.c:
     complete
     .text start:0x0212231c end:0x02122490
 
-src/MgTrampolineTime_Spawn.c:
+src/MgTrampolineTime_Spawn.cpp:
     complete
     .text start:0x02122490 end:0x021225a8
 
@@ -6866,7 +6866,7 @@ src/func_ov006_021245a8.c:
     complete
     .text start:0x021245a8 end:0x0212471c
 
-src/MgTrampolineTerror_Spawn.c:
+src/MgTrampolineTerror_Spawn.cpp:
     complete
     .text start:0x0212471c end:0x021248a8
 

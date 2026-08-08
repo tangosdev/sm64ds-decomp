@@ -848,11 +848,11 @@ src/_ZN5Sound15PlaySecretSoundEP5ActorPt.c:
     complete
     .text start:0x0200f8f8 end:0x0200f97c
 
-src/_ZN5Actor13SpawnSoundObjEj.c:
+src/_ZN5Actor13SpawnSoundObjEj.cpp:
     complete
     .text start:0x0200f97c end:0x0200f9b8
 
-src/_ZN5Actor24KillAndTrackInDeathTableEv.c:
+src/_ZN5Actor24KillAndTrackInDeathTableEv.cpp:
     complete
     .text start:0x0200f9b8 end:0x0200f9d4
 
@@ -932,7 +932,7 @@ src/LoadBlueCoinModel.c:
     complete
     .text start:0x0200fe9c end:0x0200fec8
 
-src/_ZN5Actor17GetWaterHeightWDWEv.c:
+src/_ZN5Actor17GetWaterHeightWDWEv.cpp:
     complete
     .text start:0x0200fec8 end:0x0200ff14
 
@@ -1171,11 +1171,11 @@ src/_ZN5Actor21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x02011214 end:0x02011220
 
-src/_ZN5Actor22BeforeCleanupResourcesEv.c:
+src/_ZN5Actor22BeforeCleanupResourcesEv.cpp:
     complete
     .text start:0x02011220 end:0x02011244
 
-src/_ZN5Actor18AfterInitResourcesEj.c:
+src/_ZN5Actor18AfterInitResourcesEj.cpp:
     complete
     .text start:0x02011244 end:0x02011268
 
@@ -1763,7 +1763,7 @@ src/_ZN12ActorDerived5SpawnEjP9ActorBaseii.cpp:
     complete
     .text start:0x02013ee8 end:0x02013ef4
 
-src/_ZN12ActorDerived18AfterInitResourcesEj.c:
+src/_ZN12ActorDerived18AfterInitResourcesEj.cpp:
     complete
     .text start:0x02013ef4 end:0x02013f28
 
@@ -7129,7 +7129,7 @@ src/_ZN9ActorBase8BehaviorEv.cpp:
     complete
     .text start:0x02043b24 end:0x02043b2c
 
-src/_ZN9ActorBase21AfterCleanupResourcesEj.c:
+src/_ZN9ActorBase21AfterCleanupResourcesEj.cpp:
     .text start:0x02043b2c end:0x02043bac
 
 src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp:
