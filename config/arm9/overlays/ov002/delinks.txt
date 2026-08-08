@@ -2595,6 +2595,7 @@ src/_ZN6Player16TryEnterStarDoorER7Vector3s.cpp:
     .text start:0x020ca498 end:0x020ca5cc
 
 src/_ZN6Player12CanEnterDoorEh.c:
+    complete
     .text start:0x020ca5cc end:0x020ca708
 
 src/_ZN6Player17PlayMammaMiaSoundEv.cpp:

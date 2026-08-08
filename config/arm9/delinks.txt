@@ -19,6 +19,7 @@ src/AutoloadCallback.c:
     .text start:0x020049ec end:0x020049f0
 
 src/_ZN4CP1511SystemSetupEv.cpp:
+    complete
     .text start:0x020049f0 end:0x02004ad8
 
 src/func_02005000.c:
@@ -6130,6 +6131,7 @@ src/_ZN13ExpandingHeap12VResizeToFitEv.cpp:
     .text start:0x0203c388 end:0x0203c390
 
 src/_ZN4Heap11ResizeToFitEv.cpp:
+    complete
     .text start:0x0203c390 end:0x0203c3d8
 
 src/_ZN9SolidHeap10VGetNodeIDEv.cpp:
