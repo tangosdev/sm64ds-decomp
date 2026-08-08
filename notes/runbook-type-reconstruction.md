@@ -338,6 +338,14 @@ python tools/check_references.py --update    # bank the starting point
 3. **Name and type the fields.** Same width unless you intend a codegen change. Write
    the *why* in a comment -- range, encoding, what selects each branch.
 4. **Migrate one function.** Rung 2 -> rung 3. Keep the `// @symbol` line.
+
+   If the member signature will not reproduce, suspect the *name* before you contort the
+   body. Roughly 1,349 mangled names are verbatim imports whose parameter types were never
+   checked by anything -- a caller cannot observe them, so nothing upstream could have
+   caught them, and migrating the function is the first moment they become falsifiable.
+   `notes/symbol-name-provenance.md` says which parts of a name to trust and what the
+   divergent instruction is telling you (`ldrh` vs `ldr` = declared width; a `blx` with no
+   preceding load = function pointer, not pointer-to-one).
 5. **Byte-verify that function**, then the whole build, because the header is shared:
 
 ```sh
