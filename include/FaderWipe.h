@@ -16,8 +16,8 @@
  * FaderColor and its bases.
  *
  * DERIVATION. _ZN9FaderWipeC1Ev (0x02017480) writes four vtables into
- * [this+0x0] in chain order -- _ZTV5Fader, _ZTV15FaderBrightness,
- * _ZTV10FaderColor, _ZTV9FaderWipe -- one per sub-object constructor. The ROM's
+ * [this+0x0] in chain order -- data_0208eafc, data_0208eacc,
+ * data_0208eb2c, _ZTV9FaderWipe -- one per sub-object constructor. The ROM's
  * __si_class_type_info records say the same: dFdWipe_c's single base is
  * dFdColor_c.
  *

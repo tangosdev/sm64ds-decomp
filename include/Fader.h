@@ -7,8 +7,16 @@
  *
  * Every claim here is read out of the ROM, not guessed:
  *
- * LAYOUT. Fader is polymorphic -- the ROM carries _ZTV5Fader, and
- * Fader::~Fader stores it into [this+0x0]. So the vptr is at 0x0 and the first
+ * A NOTE ON THE VTABLE NAMES BELOW, because an earlier revision of this comment
+ * got them wrong. Three of this family's four vtables have NO _ZTV symbol in
+ * config/arm9/symbols.txt -- they are data_0208eafc (Fader), data_0208eacc
+ * (FaderBrightness) and data_0208eb2c (FaderColor). Only _ZTV9FaderWipe is a
+ * real name. Writing "_ZTV5Fader" reads like a symbol you could grep for and is
+ * really an inference from what the table's entries resolve to. The inference is
+ * sound; the spelling was not, so the addresses are used instead.
+ *
+ * LAYOUT. Fader is polymorphic -- the ROM carries its vtable at data_0208eafc,
+ * and Fader::~Fader stores it into [this+0x0]. So the vptr is at 0x0 and the first
  * data member starts at 0x4. Fader::AdvanceInterp reads a Fix12i at 0x8 and
  * passes &[this+0x4] to the 20.12 approach helper at 0x0203ae58, which pins
  * currInterp=0x4 and speed=0x8, both 4 bytes. FaderWipe::FaderWipe writes
@@ -22,7 +30,7 @@
  * members -- three functions the ROM dispatches through the vtable that no
  * header said were virtual.
  *
- * Read _ZTV5Fader at 0x0208eafc and the table is unambiguous, because eight of
+ * Read the vtable at data_0208eafc and the table is unambiguous, because eight of
  * its ten words are zero:
  *
  *     0208eafc  0201786c  _ZN5FaderD1Ev          slot 0
@@ -31,9 +39,9 @@
  *
  * A null slot is a pure virtual, so Fader is ABSTRACT and declares eight of
  * them -- which is why nothing in the ROM ever instantiates one. The names and
- * order come from the concrete tables, where every slot resolves:
- * _ZTV15FaderBrightness (0x0208eacc), _ZTV10FaderColor (0x0208eb2c) and
- * _ZTV9FaderWipe (0x0208ea9c) are each ten entries long and agree slot for slot.
+ * order come from the concrete tables, where every slot resolves: data_0208eacc,
+ * data_0208eb2c and _ZTV9FaderWipe (0x0208ea9c) are each ten entries long and
+ * agree slot for slot.
  *
  * THE CHAIN is Fader -> FaderBrightness -> FaderColor -> FaderWipe, and
  * _ZN9FaderWipeC1Ev (0x02017480) is the single clearest statement of it: it
@@ -64,7 +72,7 @@ struct Fader {
        vtable group to collide with the ROM's. */
     virtual ~Fader();                                /* slots 0 (D1), 1 (D0) */
 
-    /* Pure, all eight: the corresponding words in _ZTV5Fader are null. */
+    /* Pure, all eight: the corresponding words in data_0208eafc are null. */
     virtual void AdvanceFade() = 0;                  /* slot 2 */
     virtual int  SetBackwardTime(u32 frames) = 0;    /* slot 3 */
     virtual int  SetForwardTime(u32 frames) = 0;     /* slot 4 */

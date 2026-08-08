@@ -11,8 +11,8 @@
  * `unk_004` is currInterp and `pad_008` covered speed. Only the u16 at 0xc is
  * FaderColor's own.
  *
- * DERIVATION. _ZN9FaderWipeC1Ev (0x02017480) writes _ZTV5Fader, then
- * _ZTV15FaderBrightness, then _ZTV10FaderColor, then _ZTV9FaderWipe, in that
+ * DERIVATION. _ZN9FaderWipeC1Ev (0x02017480) writes data_0208eafc, then
+ * data_0208eacc, then data_0208eb2c, then _ZTV9FaderWipe, in that
  * order -- so FaderColor sits between FaderBrightness and FaderWipe. The ROM's
  * own __si_class_type_info records agree: dFdColor_c's single base is
  * dFdBrightness_c.
@@ -21,7 +21,7 @@
  * initialised (`strh r2,[r4,#0xc]`), FaderWipe's own sub-object constructor is
  * handed `add r0, r4, #0x10`. The first byte past FaderColor is 0x10.
  *
- * VTABLE. _ZTV10FaderColor (0x0208eb2c) is ten slots and overrides exactly one,
+ * VTABLE. data_0208eb2c is ten slots and overrides exactly one,
  * slot 2 -- AdvanceFade. Slots 3..9 still point at FaderBrightness's functions.
  * AdvanceFade is NOT declared first here: the destructor is, so that ~FaderColor
  * is the key function and no TU defines it. An override takes its base's slot

@@ -8,10 +8,11 @@
  * writes the vptr and immediately tail-calls the Fader subobject destructor, so
  * the object is exactly a Fader with a different vtable.
  *
- * It is the only concrete implementation in the family: _ZTV15FaderBrightness
- * (0x0208eacc) fills all eight of the slots Fader leaves null, and both
- * _ZTV10FaderColor and _ZTV9FaderWipe still point at these functions for
- * everything except AdvanceFade.
+ * It is the only concrete implementation in the family: its vtable at
+ * data_0208eacc fills all eight of the slots Fader leaves null, and both
+ * data_0208eb2c (FaderColor's) and _ZTV9FaderWipe still point at these functions
+ * for everything except AdvanceFade. On why three of the four are spelled as
+ * addresses rather than _ZTV names, see include/Fader.h.
  *
  * THREE OF THESE USED TO BE DECLARED NON-VIRTUAL -- IsBetweenStartAndEnd,
  * SetToEnd and SetToStart. They occupy slots 7, 8 and 9 of every concrete table
