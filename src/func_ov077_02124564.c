@@ -13,7 +13,7 @@ void func_ov077_02123a74(void* thiz);
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, const struct Vector3* v);
 void _ZN12CylinderClsn5ClearEv(void* p);
 void _ZN12CylinderClsn6UpdateEv(void* p);
-unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const struct Vector3* pos, unsigned int e);
+unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const struct Vector3* pos, unsigned int e);
 
 extern int data_ov077_02127b88[3];
 
@@ -48,6 +48,6 @@ tail:
     }
     _ZN12CylinderClsn5ClearEv(c + 0x1c4);
     _ZN12CylinderClsn6UpdateEv(c + 0x1c4);
-    *(int*)(c + 0x410) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(int*)(c + 0x410), 3, 0x182, (struct Vector3*)(c + 0x74), 0);
+    *(int*)(c + 0x410) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(int*)(c + 0x410), 3, 0x182, (struct Vector3*)(c + 0x74), 0);
     return 1;
 }

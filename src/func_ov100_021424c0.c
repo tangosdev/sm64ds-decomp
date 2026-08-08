@@ -16,7 +16,7 @@ extern void func_ov100_02142130(char *);
 extern int _ZN5Actor12ReflectAngleE5Fix12IiES1_s(char *, int, int, int);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *);
 extern void _ZN5Actor11LandingDustEb(char *, int);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(int, unsigned int, unsigned int, char *, unsigned int);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int, unsigned int, unsigned int, char *, unsigned int);
 extern void _Z14ApproachLinearRiii(char *, int, int);
 extern int Vec3_HorzLen(char *);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char *, int);
@@ -74,7 +74,7 @@ int func_ov100_021424c0(char *c)
                     *(int *)(c + 0xa8) = (int)(-vy + ((u32)-vy >> 31)) >> 1;
                 *(int *)(c + 0x3cc) = 0;
             } else {
-                *(int *)(c + 0x3cc) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(int *)(c + 0x3cc),
+                *(int *)(c + 0x3cc) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(int *)(c + 0x3cc),
                                                                        3, 0x8a, c + 0x74, 0);
             }
             if (*(int *)(c + 0x98) >= 0x23000) {

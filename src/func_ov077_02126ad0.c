@@ -5,7 +5,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern int Vec3_Dist(void* a, void* b);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov077_02126300(char* c);
 extern void func_ov077_02126d5c(char* c, void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
@@ -22,7 +22,7 @@ int func_ov077_02126ad0(char* c)
     struct Vector3 pp;
 
     dist = Vec3_Dist(c + 0x5c, c + 0x404);
-    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x428), 3, 0x186, c + 0x74, 0);
+    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x428), 3, 0x186, c + 0x74, 0);
 
     if (func_ov077_02126300(c) != 0) {
         func_ov077_02126d5c(c, data_ov077_02127d18);

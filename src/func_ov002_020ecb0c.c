@@ -10,7 +10,7 @@ extern void func_ov002_020ec728(void *self);
 extern void func_ov002_020ed63c(void *self, s32 a);
 extern s32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, s32 x, s32 y, s32 z, struct Vec3_16f *rot, void *cb);
-extern s32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 d);
+extern s32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *v, u32 d);
 extern void func_ov002_020ed738(void *self);
 extern s32 func_ov002_020eddc4(void *self);
 extern s32 _ZNK12WithMeshClsn8IsOnWallEv(void *self);
@@ -78,7 +78,7 @@ void func_ov002_020ecb0c(void *arg0)
                 sp.rot.z = rz;
                 *(s32 *)(c + 0x414) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                     *(u32 *)(c + 0x414), 0x2c, sp.pos.x, sp.pos.y, pz, pr, 0);
-                *(s32 *)(c + 0x418) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                *(s32 *)(c + 0x418) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     *(u32 *)(c + 0x418), 3, 0x93, c + 0x74, 0);
                 flag = 1;
                 func_ov002_020ed738(c);

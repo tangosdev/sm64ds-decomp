@@ -12,7 +12,7 @@ extern int func_02037e38(unsigned int *p);
 extern u32 func_02022d00(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, void *dir, void *cb);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *pos, u32 e);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 e);
 
 void func_ov102_0214c84c(char *c)
 {
@@ -51,7 +51,7 @@ void func_ov102_0214c84c(char *c)
                 if (*(int *)(c + 0x3dc) != func_02037e84((int *)(rg + 0x14)) + 0xf2)
                     *(int *)(c + 0x3d8) = 0;
                 *(int *)(c + 0x3dc) = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-                *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
                 _ZN13RaycastGroundD1Ev(rg);
                 return;
@@ -69,7 +69,7 @@ void func_ov102_0214c84c(char *c)
                     if (*(int *)(c + 0x3dc) != func_02037e84((int *)(rg + 0x14)) + 0xf2)
                         *(int *)(c + 0x3d8) = 0;
                     *(int *)(c + 0x3dc) = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-                    *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                    *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                         *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
                 }
                 else
@@ -83,7 +83,7 @@ void func_ov102_0214c84c(char *c)
                     if (*(int *)(c + 0x3dc) != 0x102)
                         *(int *)(c + 0x3d8) = 0;
                     *(int *)(c + 0x3dc) = 0x102;
-                    *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                    *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                         *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
                 }
                 _ZN13RaycastGroundD1Ev(rg);
@@ -92,7 +92,7 @@ void func_ov102_0214c84c(char *c)
             if (*(int *)(c + 0x3dc) != func_02037e84((int *)(rg + 0x14)) + 0xf2)
                 *(int *)(c + 0x3d8) = 0;
             *(int *)(c + 0x3dc) = func_02037e84((int *)(rg + 0x14)) + 0xf2;
-            *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
         }
         else

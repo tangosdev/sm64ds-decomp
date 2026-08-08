@@ -17,7 +17,7 @@ Fix12i Vec3_HorzDist(const void* a, const void* b);
 s16 Vec3_HorzAngle(const void* a, const void* b);
 int AngleDiff(int a, int b);
 void _Z14ApproachLinearRsss(s16* dst, s16 target, s16 step);
-u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void* pos, u32 d);
+u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void* pos, u32 d);
 void _ZN7PathPtrC1Ev(void* self);
 void _ZN7PathPtr6FromIDEj(void* self, u32 id);
 void _ZNK7PathPtr7GetNodeER7Vector3j(const void* self, void* out, u32 idx);
@@ -71,7 +71,7 @@ extern "C" int func_ov018_02111368(char* self)
         int idx2;
         int reached;
 
-        *(u32*)(self + 0x350) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32*)(self + 0x350), 3, 0x8c, self + 0x74, 0);
+        *(u32*)(self + 0x350) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32*)(self + 0x350), 3, 0x8c, self + 0x74, 0);
 
         _ZN7PathPtrC1Ev(&path);
         _ZN7PathPtr6FromIDEj(&path, *(u32*)(self + 0x334));

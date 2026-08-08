@@ -10,7 +10,7 @@ int Vec3_HorzDist(const void* a, const void* b);
 short Vec3_HorzAngle(const void* a, const void* b);
 int _Z11UpdateAngleRssis(short* a, short b, int c, short d);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
-unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const Vector3& v, unsigned int e);
+unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vector3& v, unsigned int e);
 void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* a);
 void func_0201267c(int a, void* t);
 int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
@@ -28,7 +28,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
             _Z11UpdateAngleRssis((short*)(thiz + 0x8e), Vec3_HorzAngle(thiz + 0x5c, &data_ov072_02122b58), 2, 0x600);
             *(short*)(thiz + 0x94) = *(short*)(thiz + 0x8e);
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(thiz + 0x5c), *(int*)(thiz + 0x60), *(int*)(thiz + 0x64));
-            *(unsigned int*)(thiz + 0x39c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            *(unsigned int*)(thiz + 0x39c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(unsigned int*)(thiz + 0x39c), 3, 0x8a, *(const Vector3*)(thiz + 0x74), 0);
             if (d < 0x17c000) {
                 void* a = _ZN5Actor15FindWithActorIDEjPS_(0x111, 0);

@@ -4,7 +4,7 @@
 #include "SwitchPillar.h"
 extern "C" {
 extern void _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* p);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
 extern void _ZN7Minimap19UpdateLevelSpecificEv(void);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
@@ -20,7 +20,7 @@ int SwitchPillar::Behavior()
     if (mPosY <= mLoweredY) {
         mPosY = mLoweredY;
     } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {
-        unk_338 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        unk_338 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             unk_338, 3, 0x96, (void*)((char*)&unk_074), 0);
         *(int*)(((long long)(int)((char*)&mPosY))) -= 0x5000;
         unk_33e = 1;

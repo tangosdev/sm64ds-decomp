@@ -10,7 +10,7 @@ extern int DecIfAbove0_Byte(void*);
 extern int _Z14ApproachLinearRiii(int*, int, int);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int, unsigned int, unsigned int, void*, unsigned int);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, void*, void*, int, int);
 }
 
@@ -25,7 +25,7 @@ int SlidingIce::Behavior()
       }
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
-    unk_328 = _ZN5Sound8PlayLongEjjjRK7Vector3j(unk_328, 3, 0x98, ((char *)this)+0x74, 0);
+    unk_328 = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_328, 3, 0x98, ((char *)this)+0x74, 0);
   } else {
     if(DecIfAbove0_Short((char *)&unk_31e) == 0){
       V3 pos;

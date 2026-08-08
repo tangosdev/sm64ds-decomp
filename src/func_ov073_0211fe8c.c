@@ -5,7 +5,7 @@
 #include "common.h"
 struct ActorBase;
 
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
 extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
 extern void _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* actor);
@@ -24,7 +24,7 @@ int func_ov073_0211fe8c(char* c) {
     void* player;
     void* cam;
 
-    *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
+    *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
 
     player = _ZN5Actor13ClosestPlayerEv(c);
     if (player != 0 && *(unsigned char*)((char*)player + 0x6de) == 0) {

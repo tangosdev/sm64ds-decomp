@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vector3;
 
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int fix, int t1, int t2, void *v, void *cb);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 
 #define M(p) ((long long)(int)(p))
 
@@ -57,7 +57,7 @@ int func_ov060_021132a4(char *c)
         if (*(int *)(c + 0x450) != 0xba)
             *(int *)(c + 0x44c) = 0;
         *(int *)(c + 0x450) = 0xba;
-        *(int *)(c + 0x44c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        *(int *)(c + 0x44c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(int *)(c + 0x44c), 3, *(int *)(c + 0x450), c + 0x74, 0);
     }
     return r4;

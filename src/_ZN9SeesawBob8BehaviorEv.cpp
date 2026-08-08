@@ -6,7 +6,7 @@
 typedef short s16;
 struct V3 { int x, y, z; };
 extern "C" {
-int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
+int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 void func_ov095_021358cc(void* c, void* a, void* b, int d, int e, int f, int g);
 void func_ov095_0213597c(char *t);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
@@ -29,7 +29,7 @@ int SeesawBob::Behavior()
         int s = unk_324;
         if (s < 0) s = (short)-s;
         if (s > 0xa) {
-            unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 unk_320, 3, 0x8b, ((char*)this) + 0x74, 0);
         }
     }

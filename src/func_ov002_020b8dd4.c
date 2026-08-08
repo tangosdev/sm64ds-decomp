@@ -26,7 +26,7 @@ extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
 extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *thiz, int a, int b);
 extern int Vec3_Dist(Vector3 *a, Vector3 *b);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
 
 int func_ov002_020b8dd4(char *c)
@@ -73,7 +73,7 @@ int func_ov002_020b8dd4(char *c)
     _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x3e8000, 0x96000);
 
     if (self->unk_098 != 0 && Vec3_Dist((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x68)) != 0) {
-        self->unk_4ec = _ZN5Sound8PlayLongEjjjRK7Vector3j(self->unk_4ec, 3, 0x97, (Vector3 *)(c + 0x74), 0);
+        self->unk_4ec = _ZN5Sound8PlayLongEjjjRK7Vector3s(self->unk_4ec, 3, 0x97, (Vector3 *)(c + 0x74), 0);
     }
 
     if (Vec3_HorzDist((Vector3 *)(c + 0x4dc), (Vector3 *)(c + 0x5c)) >= 0x12c000) {

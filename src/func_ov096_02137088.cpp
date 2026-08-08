@@ -10,7 +10,7 @@ extern "C" {
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern int Vec3_Dist(const void *a, const void *b);
-extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, const void *v, unsigned e);
+extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, const void *v, unsigned e);
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern void _Z14ApproachLinearRsss(short *v, short target, short step);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
@@ -35,7 +35,7 @@ void func_ov096_02137088(char *c)
     ang = Vec3_HorzAngle(c + 0x5c, c + 0x340);
     *(short *)(c + 0x356) = ang;
 
-    *(unsigned *)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(unsigned *)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned *)(c + 0x36c), 3, 0x85, c + 0x74, 0);
 
     *(int *)(c + 0x98) = 0x14000;

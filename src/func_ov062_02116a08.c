@@ -3,7 +3,7 @@
     extern int Chuckya_ChangeState(void* c, void* p);
     extern void ApproachAngle(void* p, int target, int a, int b, int limit);
     extern char* _ZN5Actor13ClosestPlayerEv(char* self);
-    extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(
         unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int e);
 
     extern char data_ov062_0211df00[];
@@ -46,7 +46,7 @@
         pl = _ZN5Actor13ClosestPlayerEv(c);
 
         *(int *)(c + 0x3ec) =
-            _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(unsigned int *)(c + 0x3ec), 3, 0x18a, c + 0x74, 0);
 
         if (pl != 0 && *(unsigned short *)(c + 0x3e8) == 0) {

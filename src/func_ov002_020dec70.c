@@ -9,7 +9,7 @@ struct Vector3 { int x, y, z; };
 
 extern "C" {
 void func_ov002_020bf800(char *c, Vector3_16f v);
-u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, Vector3 *v, u32 d);
+u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, Vector3 *v, u32 d);
 int _ZN6Player7IsStateERNS_5StateE(char *c, void *st);
 int func_ov002_020e0478(void *c);
 void _ZN6Player11ChangeStateERNS_5StateE(char *c, void *st);
@@ -29,7 +29,7 @@ extern "C" int func_ov002_020dec70(char *c)
         v.x = v.z;
         func_ov002_020bf800(c, v);
     }
-    *(u32 *)(c + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32 *)(c + 0x624), 3, 0x90, (Vector3 *)(c + 0x74), 0);
+    *(u32 *)(c + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32 *)(c + 0x624), 3, 0x90, (Vector3 *)(c + 0x74), 0);
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110274)
         || _ZN6Player7IsStateERNS_5StateE(c, &data_ov002_021102d4)
         || _ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110244)

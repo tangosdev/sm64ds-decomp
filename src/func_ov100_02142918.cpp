@@ -18,7 +18,7 @@ s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void* self);
 int _ZNK12WithMeshClsn13JustHitGroundEv(void* c);
 void _ZN5Actor11LandingDustEb(void* self, int b);
-void* _ZN5Sound8PlayLongEjjjRK7Vector3j(void* a, unsigned int b, unsigned int c, void* v, unsigned int d);
+void* _ZN5Sound8PlayLongEjjjRK7Vector3s(void* a, unsigned int b, unsigned int c, void* v, unsigned int d);
 void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* c);
 void func_ov100_02142264(char* c);
 void _ZN12CylinderClsn5ClearEv(void* c);
@@ -84,7 +84,7 @@ extern "C" void func_ov100_02142918(char* c)
         goto Lend;
     }
 
-    *(void**)(c + 0x3cc) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(void**)(c + 0x3cc), 3, 0x8a, c + 0x74, 0);
+    *(void**)(c + 0x3cc) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(void**)(c + 0x3cc), 3, 0x8a, c + 0x74, 0);
 
 Lend:
     {

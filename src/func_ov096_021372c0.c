@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const void *v, unsigned int e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const void *v, unsigned int e);
 extern void func_ov096_02136e54(void *self, int n);
 
 void func_ov096_021372c0(void *self);
@@ -33,7 +33,7 @@ void func_ov096_021372c0(void *self)
         *(int*)(int)M(c + 0xec) &= ~1;
         *(unsigned short*)(c + 0x354) = 0;
     } else {
-        *(int*)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        *(int*)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned int*)(c + 0x36c), 3, 0x85, c + 0x74, 0);
         {
             int idx = *(unsigned short*)(c + 0x350);

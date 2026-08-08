@@ -15,7 +15,7 @@ extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, struct Vector3 *out);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int, unsigned int, unsigned int, void *, unsigned int);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void *, unsigned int);
 extern void func_ov016_021130a4(char *t);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
@@ -77,7 +77,7 @@ int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(char *a)
             if (vel < 0)
                 vel = -vel;
             if (vel > 0x3000) {
-                *(int *)(a + 0x4f0) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int *)(a + 0x4f0), 3, 0x9f, a + 0x74, 0);
+                *(int *)(a + 0x4f0) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(a + 0x4f0), 3, 0x9f, a + 0x74, 0);
             }
         }
         break;

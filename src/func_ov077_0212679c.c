@@ -10,7 +10,7 @@ extern int _ZNK12WithMeshClsn8IsOnWallEv(void *thiz);
 extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRsss(short *r, short a, short b);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 extern char data_ov077_02127cf8[];
 
 int func_ov077_0212679c(char *c)
@@ -47,7 +47,7 @@ int func_ov077_0212679c(char *c)
     _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x420), *(short *)(c + 0x422));
     _Z14ApproachLinearRsss((short *)(c + 0x422), 0x600, 0x100);
 
-    *(unsigned int *)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(unsigned int *)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int *)(c + 0x428), 3, 0x186, c + 0x74, 0);
 
     spd = *(unsigned short *)(c + 0x100);

@@ -1,7 +1,7 @@
 extern void* _ZN5Actor13ClosestPlayerEv(void);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int func_ov002_020c3ea0(void* c);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern void func_ov085_0212e728(void* c, void* p);
 extern short data_02082214[];
 extern short data_ov085_02130820;
@@ -34,7 +34,7 @@ int func_ov085_0212d9b8(char* c)
         _Z14ApproachLinearRiii((int*)(c + 0x98), a1, 0x1000);
     }
 
-    *(int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int*)(c + 0x2e4), 3, 0x182, (void*)(c + 0x74), 0);
 
     if (*(int*)(c + 0x2c8) > 0x78) {

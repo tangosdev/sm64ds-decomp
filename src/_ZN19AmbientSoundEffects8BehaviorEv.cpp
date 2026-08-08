@@ -7,7 +7,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "AmbientSoundEffects.h"
 extern "C" {
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 e);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *v, u32 e);
 }
 extern void *data_0209f318;
 
@@ -29,7 +29,7 @@ int AmbientSoundEffects::Behavior()
             return 1;
     }
 
-    unk_0d4 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    unk_0d4 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         unk_0d4, 3, (u32)data_ov002_0210b498[unk_008],
         ((char *)this) + 0x74, 0);
     return 1;

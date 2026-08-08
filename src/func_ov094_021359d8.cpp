@@ -1,6 +1,6 @@
 //cpp
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
-extern "C" int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void *pos, unsigned int d);
+extern "C" int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void *pos, unsigned int d);
 extern "C" int func_ov002_020df7f4(void *c);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 extern "C" int func_02035638(void *p);
@@ -25,7 +25,7 @@ extern "C" int func_ov094_021359d8(void *thiz)
     }
 
     if (*(unsigned short *)(c + 0x100) == 0) {
-        *(int *)(c + 0x3f4) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int *)(c + 0x3f4), 3, 0x18c, c + 0x74, 0);
+        *(int *)(c + 0x3f4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(c + 0x3f4), 3, 0x18c, c + 0x74, 0);
     }
 
     if (*(unsigned short *)(c + 0x100) != 0) {

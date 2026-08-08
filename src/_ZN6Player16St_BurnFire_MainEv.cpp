@@ -25,7 +25,7 @@ extern int func_ov002_020d91e0(char *thiz, int damage, int doPre);
 extern void func_ov002_020c5dec(char *c, int r1);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int sys, unsigned int id, int x, int y, int z, const s16 *vec, void *cb);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int handle, unsigned int id, unsigned int vol, const void *vec, unsigned int flags);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int handle, unsigned int id, unsigned int vol, const void *vec, unsigned int flags);
 extern int _ZN6Player6IsAnimEj(char *c, unsigned int a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *c, unsigned int anim, int a, int b, unsigned int d);
 extern int _ZNK6Player14GetBodyModelIDEjb(char *c, unsigned int a, int b);
@@ -81,7 +81,7 @@ extern "C" int _ZN6Player16St_BurnFire_MainEv(char *c)
             *(int *)(c + 0x628), 0xbd, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
         *(int *)(c + 0x62c) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             *(int *)(c + 0x62c), 0xbe, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
-        *(int *)(c + 0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        *(int *)(c + 0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(int *)(c + 0x620), 0, 0x106, c + 0x74, 0);
     }
 

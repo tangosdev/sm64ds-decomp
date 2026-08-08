@@ -13,7 +13,7 @@ extern "C" {
 extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
 extern int Vec3_HorzDist(const Vec3 *a, const Vec3 *b);
 extern int _ZN5Actor13DistToCPlayerEv(void *thiz);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, const Vec3 *pos, u32 e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vec3 *pos, u32 e);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *rc);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *rc, const Vec3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *rc);
@@ -108,7 +108,7 @@ int RotatingUpDownPlatformUtm::Behavior()
             }
         }
         if (r4 != 0) {
-            unk_378 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            unk_378 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 unk_378, 3, 0x8d, (Vec3 *)((char *)&unk_074), 0);
         }
         return 1;

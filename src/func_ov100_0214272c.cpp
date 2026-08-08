@@ -13,7 +13,7 @@ extern int Vec3_HorzLen(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
 extern void _ZN5Actor11LandingDustEb(void*, int);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int, unsigned int, unsigned int, void*, unsigned int);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
 extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void*, int);
 extern void func_ov100_02142264(void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
@@ -78,7 +78,7 @@ ground:
                 *(int *)(c + 0xa8) = *(int *)(c + 0xa8) * -3 / 2;
         } else {
             *(int *)(c + 0x3cc) =
-                _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     *(int *)(c + 0x3cc), 3, 0x8a, c + 0x74, 0);
         }
     }

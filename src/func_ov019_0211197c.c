@@ -16,7 +16,7 @@ extern int _ZNK7PathPtr8NumNodesEv(void *self);
 extern int func_ov019_02111254(void *self, int d);
 extern void _Z14ApproachLinearRiii(int *p, int a, int b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 cc, void *v, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 cc, void *v, u32 d);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int cc, int d, int e, void *f, void *g);
 extern void func_ov019_021122dc(void *self, int a);
 extern void func_ov019_021112b8(void *self);
@@ -115,7 +115,7 @@ int func_ov019_0211197c(void *self)
             }
             *(u8 *)(c + 0x392) = 1;
         }
-        *(u32 *)(c + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32 *)(c + 0x384), 3, 0x185, c + 0x74, 0);
+        *(u32 *)(c + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32 *)(c + 0x384), 3, 0x185, c + 0x74, 0);
         *(void **)(c + 0x388) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             *(u32 *)(c + 0x388), 0x101, *(int *)(c + 0x5c), *(int *)(c + 0x60) + 0x32000, *(int *)(c + 0x64), 0, 0);
         break;

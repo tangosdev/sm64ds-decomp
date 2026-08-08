@@ -1,10 +1,10 @@
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int e);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 
 void func_ov095_02136178(char* c)
 {
-    *(int*)(c + 0x340) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(int*)(c + 0x340) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int*)(c + 0x340), 3, 0x82, c + 0x74, 0);
     if (*(unsigned short*)(c + 0x344) == 0) {
         int b = (int)(*(unsigned short*)(c + 0xc) == 0x21);

@@ -24,7 +24,7 @@ struct Obj {
 };
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a0, unsigned int a1, unsigned int a2, const Vector3 *a3, unsigned int a4);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a0, unsigned int a1, unsigned int a2, const Vector3 *a3, unsigned int a4);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a0, const Vector3 *a1);
 extern int func_ov063_0211c770(void *actor, int idx);
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, unsigned short *snd);
@@ -62,7 +62,7 @@ void func_ov063_0211cc18(struct Obj *a)
         p144 = (int *)(int)LAUNDER((char *)a + 0x144);
         *p60 = *p60 + 0x8000;
         *p144 = *p144 + 8;
-        a->f148 = _ZN5Sound8PlayLongEjjjRK7Vector3j(a->f148, 3, 0x82, &a->pos, 0);
+        a->f148 = _ZN5Sound8PlayLongEjjjRK7Vector3s(a->f148, 3, 0x82, &a->pos, 0);
         if (a->f144 <= limit)
             return;
         a->f144 = limit;

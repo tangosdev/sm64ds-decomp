@@ -8,7 +8,7 @@
 #include "MeshColliderBase.h"
 extern "C" {
 extern int IsAreaShowing(int idx);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
 extern void _ZN9Animation7AdvanceEv(void *a);
 }
 extern s16 data_02082214[];
@@ -50,7 +50,7 @@ int RotatingPlatformWdw::Behavior()
     }
 
     if (mPosY != unk_06c) {
-        unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned *)((u8 *)&unk_33c), 3, 0x96, ((u8 *)this) + 0x74, 0);
     }
 

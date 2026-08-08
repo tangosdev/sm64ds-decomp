@@ -9,6 +9,7 @@
   },
   "overrides": {
     "src/_ZN14BlueCoinSwitch13InitResourcesEv.c": "lunavyqo",
+    "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": "Tango",
     "src/_ZN5StageC3Ev.c": "ruspecial",
     "src/_ZN8MugenBgm6RenderEv.c": "tangosdev",
     "src/_ZN9SolidHeap9VAllocateEji.cpp": "ruspecial",

@@ -8,7 +8,7 @@
 extern "C" {
 extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* c, void* s);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, int* pos, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, int* pos, u32 d);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, int* pos);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
 extern void func_ov002_020c9718(u8* c);
@@ -48,7 +48,7 @@ int Player::St_DeadPit_Main()
         break;
     case 3: {
         func_ov002_020c0108(((char*)this), 0);
-        u32 snd = _ZN5Sound8PlayLongEjjjRK7Vector3j(mLoopingSoundHandle, 0, 0x10a, (int*)((char*)&mCamSpacePosX), 0);
+        u32 snd = _ZN5Sound8PlayLongEjjjRK7Vector3s(mLoopingSoundHandle, 0, 0x10a, (int*)((char*)&mCamSpacePosX), 0);
         int* p = (int*)(((long long)(int)((char*)&mSinkDepth)));
         mLoopingSoundHandle = snd;
         *p += 0x5000;

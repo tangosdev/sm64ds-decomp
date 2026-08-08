@@ -5,7 +5,7 @@ extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern int Vec3_Dist(void *a, void *b);
-extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
+extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
 extern void func_ov015_021123c8(void *self);
@@ -79,7 +79,7 @@ int _ZN14MovingBarSmall8BehaviorEv(char *self)
             _ZN8Platform19UpdateClsnPosAndRotEv(self);
         if (Vec3_Dist(self + 0x5c, self + 0x68) != 0) {
             unsigned z = 0;
-            unsigned r = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            unsigned r = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(unsigned *)(self + 0x38c), 3, 0x82, self + 0x74, z);
             *(unsigned *)(self + 0x38c) = r;
         }

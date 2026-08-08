@@ -4,7 +4,7 @@
 #include "ShipWater.h"
 extern "C" {
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN9Animation7AdvanceEv(char* t);
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
@@ -30,7 +30,7 @@ int ShipWater::Behavior()
         if (d < 0) d = -d;
         if (d < 0x92e000) {
             int* q;
-            unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3j(unk_33c, 3, 0x96, ((char*)this)+0x74, 0);
+            unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_33c, 3, 0x96, ((char*)this)+0x74, 0);
             q = (int*)(((long long)(int)((char*)&mPosY)));
             *q -= 0x5000;
         }

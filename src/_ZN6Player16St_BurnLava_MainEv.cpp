@@ -14,7 +14,7 @@ extern char data_ov002_0211013c;
 extern "C" {
 extern void KillPlayer(void);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(int, unsigned int, int, int, int, s16 *, void *);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(int, unsigned int, unsigned int, char *, unsigned int);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int, unsigned int, unsigned int, char *, unsigned int);
 extern void func_ov002_020e28d4(char *, int, int);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *, unsigned int, int, int, unsigned int);
 extern int _ZN6Player12FinishedAnimEv(char *);
@@ -51,7 +51,7 @@ int _ZN6Player16St_BurnLava_MainEv(char *c)
                 *(int *)(c + 0x628), 0xbd, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
             *(int *)(c + 0x62c) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                 *(int *)(c + 0x62c), 0xbe, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
-            *(int *)(c + 0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            *(int *)(c + 0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(int *)(c + 0x620), 0, 0x106, c + 0x74, 0);
         }
     }

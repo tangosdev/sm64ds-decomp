@@ -10,7 +10,7 @@ struct Animation { void Advance(); };
 
 void _Z14ApproachLinearRiii(int *val, int target, int step);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 *v, unsigned int d);
+unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 *v, unsigned int d);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 int func_ov070_02120644(char *c);
 extern short data_02082214[];
@@ -67,7 +67,7 @@ int func_ov070_021209e4(char *c) {
     ((Animation*)(c + 0x188))->Advance();
     ((Animation*)(c + 0x19c))->Advance();
 
-    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x428), 3, 0x183, (Vector3*)(c + 0x74), 0);
+    *(unsigned int*)(c + 0x428) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x428), 3, 0x183, (Vector3*)(c + 0x74), 0);
 
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x430)) == 0) {
         func_ov070_02120644(c);

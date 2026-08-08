@@ -19,7 +19,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *ac
 extern "C" {
 extern int _ZN6Player12GetTalkStateEv(void *self);
 }
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(int handle, unsigned int a,
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
                                              unsigned int b, void *pos,
                                              unsigned int c);
 
@@ -92,7 +92,7 @@ int SnowmanBreath::Behavior()
                 } while (b == 0);
             }
             unk_13cc =
-                _ZN5Sound8PlayLongEjjjRK7Vector3j(unk_13cc, 3, 0x184,
+                _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_13cc, 3, 0x184,
                                                   ((char *)this) + 0x74, 0);
         }
     }

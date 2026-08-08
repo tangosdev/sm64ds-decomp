@@ -5,7 +5,7 @@ typedef int s32;
 
 typedef struct { int x, y, z; } Vector3;
 
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, Vector3* v, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, Vector3* v, u32 d);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 sysHandle, u32 kind, s32 scale, s32 p1, s32 p2, void* pos16, void* cb);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* self, void* state);
 extern int func_ov002_020c5dec(char* c, int r1);
@@ -23,7 +23,7 @@ int _ZN6Player19St_Electrocute_MainEv(char *c)
     s32 z;
     s32 yraw;
 
-    *(u32*)(c+0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32*)(c+0x620), 0, 0x10b, pos, 0);
+    *(u32*)(c+0x620) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32*)(c+0x620), 0, 0x10b, pos, 0);
 
     x = *(s32*)(c+0x5c);
     yraw = *(s32*)(c+0x60);

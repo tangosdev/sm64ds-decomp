@@ -16,7 +16,7 @@ extern int _Z14ApproachLinearRiii(int* r, int t, int step);
 extern u16 DecIfAbove0_Short(u16* p);
 extern int RandomIntInternal(int* seed);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern void* _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
+extern void* _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 }
 
 extern u8 data_0209f2c0;
@@ -53,7 +53,7 @@ int TtcConveyorBeltLarge::Behavior()
             unk_32c = mBeltSpeed;
             _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
             if (mBeltSpeed != 0) {
-                unk_398 = (int)_ZN5Sound8PlayLongEjjjRK7Vector3j(unk_398, 3, 0x88, ((char*)this) + 0x74, 0);
+                unk_398 = (int)_ZN5Sound8PlayLongEjjjRK7Vector3s(unk_398, 3, 0x88, ((char*)this) + 0x74, 0);
             }
         }
 

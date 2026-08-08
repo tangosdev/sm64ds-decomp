@@ -6,7 +6,7 @@ extern char *_ZN5Actor13ClosestPlayerEv(void *self);
 extern int Vec3_Dist(const Vec3 *a, const Vec3 *b);
 extern short Vec3_HorzAngle(const Vec3 *a, const Vec3 *b);
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *p);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const Vec3 *pos, unsigned int d);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vec3 *pos, unsigned int d);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 
 void func_ov063_0211c89c(char *c) {
@@ -63,7 +63,7 @@ void func_ov063_0211c89c(char *c) {
         return;
     case 2:
         *(int*)(((long long)(int)(c + 0x5c))) += 0x5000;
-        *(int*)(c + 0x148) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x148), 3, 0x8d, (Vec3*)(c + 0x74), 0);
+        *(int*)(c + 0x148) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x148), 3, 0x8d, (Vec3*)(c + 0x74), 0);
         _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e));
         if (*(u16*)(c + 0x100 + 0x4c) > 0x65)
             *(u8*)(c + 0x150) = 3;

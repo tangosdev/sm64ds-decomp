@@ -5,7 +5,7 @@ extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern int func_ov060_02111c68(char *c);
 extern int _ZNK9Animation13GetFrameCountEv(void *anim);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *pos, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 d);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *rot, int a, int b);
 
 extern short data_02082214[];
@@ -56,7 +56,7 @@ void func_ov060_0211747c(char *self)
     if (*(u32 *)(self + 0x388) != 0x180)
         *(u32 *)(self + 0x384) = 0;
     *(u32 *)(self + 0x388) = 0x180;
-    *(u32 *)(self + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(u32 *)(self + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(u32 *)(self + 0x384), 3, *(u32 *)(self + 0x388), self + 0x74, 0);
 
     a = t[0];

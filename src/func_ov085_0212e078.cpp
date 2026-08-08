@@ -2,7 +2,7 @@
 extern "C" {
 extern short Vec3_HorzAngle(void* v0, void* v1);
 extern void _Z14ApproachLinearRsss(short* r, short a, short b);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 extern int AngleDiff(int a, int b);
 extern int Vec3_ApproachHorz(void* out, void* a, int maxStep);
 extern void _Z14ApproachLinearRiii(int* r, int a, int b);
@@ -15,7 +15,7 @@ int func_ov085_0212e078(char* c)
 {
     _Z14ApproachLinearRsss((short*)(c + 0x94), Vec3_HorzAngle(c + 0x5c, c + 0x2a4), 0x800);
     _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x94), 0x800);
-    *(unsigned int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+    *(unsigned int*)(c + 0x2e4) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int*)(c + 0x2e4), 3, 0x182, c + 0x74, 0);
     if (AngleDiff(*(short*)(c + 0x94), Vec3_HorzAngle(c + 0x5c, c + 0x2a4)) < 0x2000) {
         Vec3_ApproachHorz(c + 0x5c, c + 0x2a4, 0x1e000);

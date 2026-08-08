@@ -16,7 +16,7 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void* p);
 extern void* _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int a, int b, int c);
 extern void func_0201267c(int a, void* p);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int c, int d, int e, void* v, void* cb);
-extern void* _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
+extern void* _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 extern int Vec3_HorzLen(void* v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
@@ -54,7 +54,7 @@ extern "C" void func_ov021_02112544(char* self)
         } else {
             *(int*)(self + 0x3c4) = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                 *(int*)(self + 0x3c4), 0x69, pos.x, pos.y, pos.z, 0, 0);
-            *(int*)(self + 0x3b8) = (int)_ZN5Sound8PlayLongEjjjRK7Vector3j(
+            *(int*)(self + 0x3b8) = (int)_ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(int*)(self + 0x3b8), 3, 0x8a, self + 0x74, 0);
         }
         {

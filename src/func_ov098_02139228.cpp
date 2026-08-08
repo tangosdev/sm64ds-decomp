@@ -32,7 +32,7 @@ extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, const Vector3 *pos);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32 z);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *pos, u32 e);
 extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern void _Z11UpdateAngleRssis(s16 *a, s16 b, int c, s16 d);
 extern s16 data_02082214[];
@@ -154,7 +154,7 @@ extern "C" int func_ov098_02139228(char *c)
         && *(s32 *)(c + 0x5f0) != 0xa0
         && *(s32 *)(c + 0x98) > 0xa000) {
         _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(s32 *)(c + 0x5c), *(s32 *)(c + 0x60), *(s32 *)(c + 0x64));
-        *(u32 *)(c + 0x5f8) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32 *)(c + 0x5f8), 3, 0x93, (Vector3 *)(c + 0x74), 0);
+        *(u32 *)(c + 0x5f8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32 *)(c + 0x5f8), 3, 0x93, (Vector3 *)(c + 0x74), 0);
     }
 
     {

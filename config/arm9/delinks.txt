@@ -1386,7 +1386,7 @@ src/func_02012310.c:
     complete
     .text start:0x02012310 end:0x02012328
 
-src/_ZN5Sound8PlayLongEjjjRK7Vector3j.c:
+src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp:
     complete
     .text start:0x02012328 end:0x020123c8
 

@@ -4,7 +4,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 
 extern int func_ov002_020d82f0(void *c);
 extern int _ZN6Player9GetHealthEv(void *self);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, Vector3 const *v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 const *v, unsigned int d);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, Vector3 const *v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 const *v);
 extern int func_ov002_020d91e0(char *thiz, int damage, int doPre);
@@ -21,7 +21,7 @@ void func_ov002_020c133c(char *a)
     if (!func_ov002_020d82f0(a)) return;
     if (*(u8 *)(a + 0x6de) != 0) return;
     if (_ZN6Player9GetHealthEv(a) <= 2)
-        *(unsigned int *)(a + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int *)(a + 0x624), 2, 0x27, (Vector3 *)(a + 0x74), 0);
+        *(unsigned int *)(a + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(a + 0x624), 2, 0x27, (Vector3 *)(a + 0x74), 0);
     if (*(u8 *)(a + 0x71d) != 0) {
         u8 *p = (u8 *)(((long long)(int)(a + 0x71d)));
         *p = *p - 1;

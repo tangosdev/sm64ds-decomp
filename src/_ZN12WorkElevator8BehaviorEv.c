@@ -15,7 +15,7 @@ extern s32 data_02092768[];
 
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *v, u32 d);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 a, void *v);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *dst, void *mtx, void *src);
@@ -100,7 +100,7 @@ s32 _ZN12WorkElevator8BehaviorEv(void *arg0)
         }
     } else {
         if (*(s8 *)(c + 0xC7A) != -1) {
-            *(u32 *)(c + 0xC70) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32 *)(c + 0xC70), 3, 0x88, c + 0x74, 0);
+            *(u32 *)(c + 0xC70) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32 *)(c + 0xC70), 3, 0x88, c + 0x74, 0);
             *(u16 *)(c + 0x94) = data_ov021_02114740[*(s8 *)(c + 0xC7A)];
             *(s32 *)(c + 0x98) = 0x5000;
             va[0].x = 0;

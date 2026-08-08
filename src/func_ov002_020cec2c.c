@@ -10,7 +10,7 @@
  */
 extern void _ZN6Player4HealEi(char *self, int a);
 extern int _ZN6Player9GetHealthEv(char *self);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const struct Vector3 *v, unsigned int d);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const struct Vector3 *v, unsigned int d);
 extern int func_ov002_020d91e0(char *thiz, int damage, int doPre);
 extern void func_ov002_020da9d4(char *c);
 extern int func_ov002_020c5dec(char *c, int r1);
@@ -45,7 +45,7 @@ int func_ov002_020cec2c(char *self)
     if (flag != 0) thresh = 0x50;
 
     if (_ZN6Player9GetHealthEv(self) <= 2) {
-        *(unsigned int *)(self + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        *(unsigned int *)(self + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned int *)(self + 0x624), 2, 0x27, (struct Vector3 *)(self + 0x74), 0);
     }
 

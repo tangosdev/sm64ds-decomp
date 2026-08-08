@@ -6,7 +6,7 @@
 /* recovered: renamed to Class_Method */
 /* daObjWc_Obj05_c::Behavior - recovered from vtable slot identity */
 extern void func_020393a4(int* p, int v);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned a, unsigned b, unsigned c, void* pos, unsigned e);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void* pos, unsigned e);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
@@ -30,7 +30,7 @@ int func_ov029_02111bcc(u8* thiz)
     case 1: {
         int* p60 = (int*)(((int)thiz + 0x60));
         *p60 = *p60 - 0x14000;
-        self->unk_324 = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+        self->unk_324 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned*)(thiz + 0x324), 3, 0x8d, thiz + 0x74, 0);
         {
             int v = self->unk_320 + (int)0xff5d8000;
@@ -51,7 +51,7 @@ int func_ov029_02111bcc(u8* thiz)
     case 2: {
         /* Rematerialize timer base - do not keep live across calls */
         if (*(u16*)((u8*)(((unsigned)thiz + 0x300)) + 0x28) >= 0x6e) {
-            int snd = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+            int snd = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 *(unsigned*)(thiz + 0x324), 3, 0x8d, thiz + 0x74, 0);
             self->unk_324 = snd;
             {

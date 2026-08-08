@@ -1,7 +1,7 @@
 extern int _ZN5Event6GetBitEj();
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt();
 extern void _ZN9ActorBase18MarkForDestructionEv();
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j();
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s();
 extern void _ZN7Minimap19UpdateLevelSpecificEv();
 extern void _ZN9Animation7AdvanceEv();
 extern void _ZN8Platform21UpdateModelPosAndRotYEv();
@@ -17,7 +17,7 @@ int _ZN9TinyCover8BehaviorEv(int *t)
         } else {
             int *p = (int*)(((int)t + 0x60));
             *p -= 0x1000;
-            t[0xce] = _ZN5Sound8PlayLongEjjjRK7Vector3j(t[0xce], 3, 0x96, (char*)t + 0x74, 0);
+            t[0xce] = _ZN5Sound8PlayLongEjjjRK7Vector3s(t[0xce], 3, 0x96, (char*)t + 0x74, 0);
             if (t[0x18] <= t[0xcd]) {
                 t[0x18] = t[0xcd];
                 _ZN7Minimap19UpdateLevelSpecificEv();

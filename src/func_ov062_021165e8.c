@@ -7,7 +7,7 @@ extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void Chuckya_ChangeState(void* c, void* p);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
 extern int ApproachAngle(short* angle, int target, int a, int b, int c);
-extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
+extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
 extern int Vec3_Dist(const void* a, const void* b);
 
 extern char data_ov062_0211df00;
@@ -53,7 +53,7 @@ int func_ov062_021165e8(char* c)
         }
     }
 
-    *(unsigned int*)(c + 0x3ec) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(unsigned int*)(c + 0x3ec), 3, 0x18a, (const void*)(c + 0x74), 0);
+    *(unsigned int*)(c + 0x3ec) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x3ec), 3, 0x18a, (const void*)(c + 0x74), 0);
 
     {
         int s = *(int*)(c + 0x3f0);
