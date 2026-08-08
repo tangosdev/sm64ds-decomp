@@ -11,8 +11,8 @@ Written after #1226, where two imported names turned out to be asserting paramet
 the ROM refutes. Neither was a sloppy guess; both were unfalsifiable from where they were
 written. That is the pattern worth internalising.
 
-> **Counts below are measured at `7029cba6` (main, with #1226 merged).** They drift as
-> migrations land — #1226 alone moved two methods out of the unmigrated column. Re-derive
+> **Counts below are measured at `af680244` (main), before #1226 lands.** They drift as
+> migrations land — #1226 alone moves two methods out of the unmigrated column. Re-derive
 > with `tools/langmode_audit.py` before quoting any of them; the *ratios* are the durable
 > part, not the digits.
 
@@ -165,9 +165,9 @@ typed, and the linker resolves it by address regardless.
 `tools/langmode_audit.py` measures exactly this gap:
 
 ```
-NOT MIGRATED   1217  of 2525 mangled-symbol files (48.2%)
+NOT MIGRATED   1219  of 2525 mangled-symbol files (48.3%)
     .c extension              943
-    .cpp, symbol hand-spelt   274   renamed, never migrated
+    .cpp, symbol hand-spelt   276   renamed, never migrated
 ```
 
 **Roughly half of all mangled symbols in this tree have never been checked by a compiler.**
@@ -175,7 +175,7 @@ Per kind (unmigrated / migrated):
 
 | kind | unmigrated | migrated | status |
 |---|---|---|---|
-| method | 691 | 1,231 | mixed |
+| method | 693 | 1,229 | mixed |
 | D0 | 258 | 3 | effectively unproven |
 | D1 | 194 | 72 | mixed |
 | D2 | 20 | 0 | **UNPROVEN** |
@@ -253,7 +253,7 @@ The procedure that worked, in order:
 | `config/**/symbols.txt` | **what we assert.** The only file that states our claim |
 | `symbols/verified.tsv` | what was **imported**. A record, not an assertion — left stale on purpose |
 | `config/match_attempts.jsonl` | append-only attempt history, keyed on address, never on name |
-| `reference/DynamicAllocationDecomp/symbols.x` | upstream. 2,125 live entries; 3 commented out. Its trailing column is an annotation column — usually the SDK equivalent (`G3_MultMtx33`), but on `Geometry_WriteFogTable` it reads *"this is NOT the start of a function!!!"* against a still-live entry. It is honest about being a working artifact |
+| `reference/DynamicAllocationDecomp/symbols.x` | upstream. 25 of its 2,125 entries are commented out, with margin notes like *"this is NOT the start of a function!!!"* — it is honest about being a working artifact |
 | `config/rom-name-glossary.json` | the hand-authored EAD glosses, with per-entry confidence |
 | `notes/cpp-naming-guide.md` | Itanium mangling reference — the type codes (`j` = u32, `t` = u16, …) |
 

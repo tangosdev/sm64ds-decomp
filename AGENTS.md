@@ -205,3 +205,8 @@ Do not open the PR with near-misses in `src/` expecting the maintainer to split 
 - [`notes/matching-style.md`](notes/matching-style.md) "Known walls" — patterns proven
   unreachable from source. If your **only** divergence is one of those, it's a wall:
   store the near-miss and hand it to the permuter instead of grinding.
+- [`notes/symbol-name-provenance.md`](notes/symbol-name-provenance.md) — which parts of a
+  mangled name are ROM-proven and which are somebody's assertion. The address and the
+  class name are well attested; **parameter types are not**, and roughly half of all
+  mangled symbols have never been checked by a compiler. Read it before you contort a
+  body to satisfy a signature — the name is sometimes the thing that's wrong.
