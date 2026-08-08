@@ -8,7 +8,10 @@ extern "C" {
 extern short data_0209d6d4;
 extern unsigned char data_0209d6a8;
 extern unsigned char data_0209d668;
-extern int func_0201d850(unsigned char a);
+/* func_0201d850 comes from decl_common.h. It used to be declared here as
+   `int func_0201d850(unsigned char a)` and, in DisplayLevelClearText, as
+   `int func_0201d850(signed char course)` -- one function, two signatures, neither
+   matching the definition's `void func_0201d850(u32)`. */
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);

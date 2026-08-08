@@ -35,11 +35,16 @@ struct Message {
     /* The rest of the display entry points. `Et` is u16, `Eth` is (u16, u8),
        `Ej` is u32 -- all read off the mangled name.
 
-       NOTE the disagreement this exposes: DisplayLevelClearText passes its course
-       to func_0201d850 declared `signed char`, while DisplayPauseText declares the
-       same function `unsigned char`. One function, two signatures, which is the
-       declaration debt notes/declaration-centralization.md measures at 27%. Both
-       reproduce, because the byte gate cannot see it. Not settled here. */
+       The func_0201d850 disagreement this used to record is SETTLED. Both callers
+       declared that one function locally and differently -- `signed char` here,
+       `unsigned char` in DisplayPauseText, both returning `int` -- and neither matched
+       its definition, `void func_0201d850(u32)`. Each local declaration had been shaped
+       to its own call site's argument, so no conversion was ever emitted: all five
+       spellings tested byte-match at both sites, and the byte gate could not decide it.
+       Settled on the definition instead, and moved to decl_common.h so there is one.
+
+       Note the two Message methods' OWN char signedness is not part of that: `Eth` and
+       `Eta` are ROM-mangled truth about these functions and stay exactly as they are. */
     static void DisplayText(u16 msgID);
     static void DisplaySaving(u16 msgID);
     static void DisplayPauseText(u16 msgID, u8 course);
