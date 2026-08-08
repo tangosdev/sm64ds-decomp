@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol _ZN5Stage17UpdateMenuButtonsEb
 /* recovered: named members + shared header, declarations from a shared header */
@@ -5,8 +6,8 @@
 /* recovered: named members + shared header */
 #include "Stage.h"
     extern u8 data_0209f2c4;
-    extern unsigned short *_ZN3G2S12GetBG1ScrPtrEv(void);
-    void _ZN5Stage17UpdateMenuButtonsEb(int b)
+    extern "C" unsigned short *_ZN3G2S12GetBG1ScrPtrEv(void);
+    void Stage::UpdateMenuButtons(bool b)
     {
       int i;
       for (i = 0; i < data_0209f2b4; i++)

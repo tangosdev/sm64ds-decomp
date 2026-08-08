@@ -3794,7 +3794,7 @@ src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp:
     complete
     .text start:0x02025d20 end:0x02025e74
 
-src/_ZN5Stage17PS_UpdateSaveMenuEb.c:
+src/_ZN5Stage17PS_UpdateSaveMenuEb.cpp:
     complete
     .text start:0x02025e74 end:0x02025f60
 
@@ -3802,11 +3802,11 @@ src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp:
     complete
     .text start:0x02025f60 end:0x02026148
 
-src/_ZN5Stage17UpdateMenuButtonsEb.c:
+src/_ZN5Stage17UpdateMenuButtonsEb.cpp:
     complete
     .text start:0x02026148 end:0x02026290
 
-src/_ZN5Stage10PS_CleanupEv.c:
+src/_ZN5Stage10PS_CleanupEv.cpp:
     complete
     .text start:0x02026290 end:0x0202635c
 
@@ -3829,10 +3829,10 @@ src/IsButtonInputValid.c:
     complete
     .text start:0x02029654 end:0x020297f4
 
-src/_ZN5Stage14GraphCallback2EP12SceneRelated.c:
+src/_ZN5Stage14GraphCallback2EP12SceneRelated.cpp:
     .text start:0x020297f4 end:0x02029838
 
-src/_ZN5Stage14GraphCallback1Ev.c:
+src/_ZN5Stage14GraphCallback1Ev.cpp:
     complete
     .text start:0x02029838 end:0x02029854
 
@@ -3940,7 +3940,7 @@ src/GiveVsStars.c:
     complete
     .text start:0x0202a5ac end:0x0202a5c4
 
-src/_ZN5Stage15IsPauseDisabledEv.c:
+src/_ZN5Stage15IsPauseDisabledEv.cpp:
     complete
     .text start:0x0202a5c4 end:0x0202a608
 
@@ -4008,7 +4008,7 @@ src/func_0202a8e0.c:
     complete
     .text start:0x0202a8e0 end:0x0202a93c
 
-src/_ZN5Stage11GetSkyboxIDEv.c:
+src/_ZN5Stage11GetSkyboxIDEv.cpp:
     complete
     .text start:0x0202a93c end:0x0202a958
 
@@ -4128,7 +4128,7 @@ src/func_0202b0e0.c:
     complete
     .text start:0x0202b0e0 end:0x0202b0fc
 
-src/_ZN5Stage10LoadSkyboxEv.c:
+src/_ZN5Stage10LoadSkyboxEv.cpp:
     complete
     .text start:0x0202b0fc end:0x0202b164
 
@@ -4160,7 +4160,7 @@ src/_ZN5Stage7LoadFogEv.cpp:
     complete
     .text start:0x0202b710 end:0x0202b818
 
-src/_ZN5Stage8CanPauseEv.c:
+src/_ZN5Stage8CanPauseEv.cpp:
     complete
     .text start:0x0202b818 end:0x0202b8a0
 
@@ -4310,7 +4310,7 @@ src/_ZN5Scene20Initialise3dGraphicsEv.cpp:
     complete
     .text start:0x0202e6c8 end:0x0202e73c
 
-src/_ZN5Stage12SetVramBanksEv.c:
+src/_ZN5Stage12SetVramBanksEv.cpp:
     complete
     .text start:0x0202e73c end:0x0202e78c
 
@@ -5437,7 +5437,7 @@ src/func_020391f0.c:
     complete
     .text start:0x020391f0 end:0x020391f4
 
-src/_ZN5Stage18ResetMeshCollidersEv.c:
+src/_ZN5Stage18ResetMeshCollidersEv.cpp:
     complete
     .text start:0x020391f4 end:0x02039218
 

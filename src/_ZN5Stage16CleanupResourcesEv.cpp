@@ -66,7 +66,10 @@ int Stage::CleanupResources()
     data_0209d4a8 = 0;
 
     {
-        void **o = *(void ***)((char *)&unk_9bc);
+        /* Was `*(void ***)((char *)&unk_9bc)` -- reading a pointer back out of
+           a field the header declared as one byte. include/Stage.h types it now;
+           this read and LoadSkybox's store are the two ends of the evidence. */
+        void **o = (void **)skyboxModel;
         if (o)
             DestroyVirt(o);
     }

@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol _ZN5Stage14GraphCallback2EP12SceneRelated
 /* recovered: named members + shared header, declarations from a shared header */
@@ -25,13 +26,17 @@ struct SceneRelated {
 
 extern void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matrix2x2* mat, s32 a, s32 b, s32 c, s32 d);
 
-s32 _ZN5Stage14GraphCallback2EP12SceneRelated(struct Stage *self) {
+/* Static, and the parameter is what the mangled name has always said it is.
+   This file used to take `struct Stage *self` and then cast it to SceneRelated*
+   on every use -- four casts in one call -- which is the shape of a declaration
+   that lost an argument against a name that kept it. */
+s32 Stage::GraphCallback2(SceneRelated *scene) {
     _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(
         &reg_G2S_DB_BG3PA,
-        (struct Matrix2x2*)((unsigned char*)&self->unk_004),
-        ((struct SceneRelated*)self)->unk14,
-        ((struct SceneRelated*)self)->unk18,
-        ((struct SceneRelated*)self)->unk1c,
-        ((struct SceneRelated*)self)->unk20);
+        (struct Matrix2x2*)&scene->unk4,
+        scene->unk14,
+        scene->unk18,
+        scene->unk1c,
+        scene->unk20);
     return 1;
 }

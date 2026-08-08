@@ -1,9 +1,10 @@
+//cpp
 // Stage::GraphCallback1 - renders all particles then returns success
-typedef int s32;
+#include "Stage.h"
 
-extern void _ZN8Particle9RenderAllEv(void);
+extern "C" void _ZN8Particle9RenderAllEv(void);
 
-s32 _ZN5Stage14GraphCallback1Ev(void) {
+int Stage::GraphCallback1() {
     _ZN8Particle9RenderAllEv();
     return 1;
 }

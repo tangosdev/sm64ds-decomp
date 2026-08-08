@@ -1,12 +1,15 @@
+//cpp
 #include "types.h"
 // @symbol _ZN5Stage17PS_UpdateSaveMenuEb
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
-extern u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
+/* extern "C": this spells a ROM symbol, and a bare C++ declaration would
+   mangle it again into _Z22_ZN3G2S12GetBG1ScrPtrEvv, which exists nowhere. */
+extern "C" u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
 
-void _ZN5Stage17PS_UpdateSaveMenuEb(int b)
+void Stage::PS_UpdateSaveMenu(bool b)
 {
   u16 v;
   int i;
