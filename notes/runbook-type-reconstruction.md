@@ -126,6 +126,39 @@ broken one**, which is the opposite of the intuition that narrowing is conservat
 Rule: **rename freely, treat every retype as codegen-affecting until measured, and
 byte-verify.**
 
+### The `#ifdef __cplusplus` block is dead text until something includes it from C++
+
+A generated header's method block is only parsed when a `.cpp` file includes it. Most
+headers are included exclusively by `.c` files, so for those the block is text nothing
+has ever compiled -- and `gen_header.py` put things in it that are not C++ at all.
+Three existed; all three are the same root cause -- *a token copied out of a source file
+without checking it names anything visible from the header* -- in three disguises:
+
+| header | declared | where the token came from |
+|---|---|---|
+| `ExpandingHeapAllocator.h` | `forwards void* Allocate(u32, int);` | a fragment of the parameter name spilled into the return type (#1211) |
+| `SolidHeapAllocator.h` | `call ResetEnd void Reset(u32);` | scraped out of the comment on `Reset`'s body, *"bit 0: call ResetStart; bit 1: call ResetEnd"* (#1215) |
+| `Scene.h` | `Bool BeforeInitResources();` | a `typedef int Bool;` that is file-local to `src/_ZN5Scene19BeforeInitResourcesEv.c` (#1215) |
+
+**No gate found any of them.** Each surfaced by migrating a method, which compiles the
+block for the first time -- one slice per defect. `tools/header_cpp_sweep.py` finds them
+all in about a minute: it compiles every header standalone **as C and as C++**, because
+that pair is what separates a broken block from a header that merely needs other headers
+first (`fails C++, passes C` is the defect; `fails both` is not). Run it after any
+`gen_header.py` change, and before starting a slice on a class whose header no `.cpp`
+has ever included.
+
+Swept clean at 382 headers, 292 of which carry a block. **Expect the count to stay 0 --
+if it rises, a generator regressed.**
+
+What the sweep does *not* catch: a declaration that compiles both ways but **means**
+different things. `types.h` defines `typedef int bool;` under `#ifndef __cplusplus`, so
+`bool` is 4 bytes in C and the 1-byte keyword in C++. Four headers declare `bool`
+returns inside their block (`Animation.h`, `ExpandingHeap.h`, `Heap.h`, `SolidHeap.h`);
+all four are already included by `.cpp` files without incident, so it is latent, and
+`build_pin.verify` would reject the byte mismatch if a migration ever leaned on it.
+Prefer `int` when correcting a block -- that is what the C spelling already resolved to.
+
 ### "Until measured": the A/B, and what it does not prove
 
 "Until measured" is not a softening. Some retypes are *byte-unobservable*: if every
