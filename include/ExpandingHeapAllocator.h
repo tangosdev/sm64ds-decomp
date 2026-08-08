@@ -58,6 +58,12 @@ struct ExpandingHeapAllocator {
     static u32  SizeofInternal(void* userPtr);
     static void InvokeDeallocate(void* ptr, ExpandingHeapAllocator* alloc, u32 size);
 
+    /* What DeallocateAll hands each block to, and exactly InvokeDeallocate's shape --
+       that trampoline is the one the game passes. The ROM's symbol declared this
+       parameter as a pointer TO this pointer (`PPFvPvPS_jE`); it is not, see below. */
+    typedef void (*DeallocationFunction)(void*, ExpandingHeapAllocator*, u32);
+    void* DeallocateAll(DeallocationFunction fn, u32 arg);
+
     /* The node-list layer. These were the last five unmigratable methods of this class:
        their parameters mangle `P10MemoryNode` and `PNS0_6TargetE`, so they could not be
        declared as members until MemoryNode existed as a class with a nested Target --
@@ -75,27 +81,39 @@ struct ExpandingHeapAllocator {
     static void*       LinkNode(MemoryNode* list, MemoryNode* node, MemoryNode* prev);
     static void*       UnlinkNode(MemoryNode* list, MemoryNode* node);
 
-    /* AllocateNode and FreeNode are NOT declared here yet, deliberately. The type no
-       longer blocks them -- both would mangle correctly now -- but AllocateNode does not
-       yet reproduce, and a declared-but-undefined member is a landmine. AllocateNode is
-       ONE WORD off, at +0x10c:
+    /* THE LAST PARAMETER IS u16, NOT u32, AND THE IMPORTED SYMBOL WAS WRONG. It ended
+       `Pvjj`. Declared that way this member is ONE WORD off, at +0x10c:
 
            ROM   e1dd33b8   ldrh r3, [sp, #0x38]
-           ours  e59d3038   ldr  r3, [sp, #0x38]
+           u32   e59d3038   ldr  r3, [sp, #0x38]
 
-       Its fifth argument is stack-passed (AAPCS puts args 5+ on the stack), and the ROM
-       reads only its low halfword -- the load width mwccarm picks when the declared type
-       is 16 bit. But the mangled name ends `jj`, fixing both trailing parameters as u32,
-       and a u32 parameter gets a word load. The recovered body squared that circle by
-       declaring the parameter `unsigned short`, which reproduces but cannot be a member
-       signature. Tried and rejected: a truncating local (999 words -- it changes how the
-       argument is homed), `*(unsigned short *)&param` (5 words -- taking the address
-       re-homes it), and casts at the use site (no effect; the load width is chosen from
-       the parameter's declared type, not from what is done with the value).
+       The fifth argument is stack-passed (AAPCS puts args 5+ on the stack) and the ROM
+       reads only its low halfword -- the load width mwccarm picks from the parameter's
+       DECLARED type. Three attempts to reproduce that from a u32 declaration were
+       measured and all failed: a truncating local (999 words -- it re-homes the
+       argument), `*(u16 *)&param` (5 words -- taking the address re-homes it), and casts
+       at the use site (no effect; the width follows the declaration, not the use).
 
-       So this is the same shape as DeallocateAll's `PPFvPvPS_jE`: the mangled name and
-       the reproducing body disagree about a parameter type, and the ROM's own codegen is
-       the tiebreaker evidence. Worth its own investigation rather than a guess. */
+       Declared `u16` it mangles `Pvjt` and matches exactly. Nothing about the body
+       changed -- the recovered body had always spelled this parameter `unsigned short`,
+       which is why it reproduced while the member signature could not.
+
+       WHY THE NAME WAS THE THING THAT WAS WRONG, and the general lesson: `Pvjj` came
+       verbatim from the imported symbols.x, whose only backing is a hand-written
+       declaration for CALLING this function from mod code. A caller cannot detect an
+       over-wide integer parameter -- AAPCS widens it to a word on the way in either way,
+       so the callee silently ignores the high half and the link resolves regardless.
+       The width is observable only from inside the callee. Treat imported parameter
+       types as unverified wherever a member signature cannot reproduce the bytes; the
+       identifier and the address are far better attested than the types are.
+       DeallocateAll's `PPFvPvPS_jE` was the same error, corrected the same way. */
+    static void* AllocateNode(MemoryNode* list, MemoryNode* node, void* address,
+                              u32 size, u16 fromHighEnd);
+
+    /* FreeNode is still not declared. The type no longer blocks it -- it would mangle
+       correctly now -- but it has not been attempted, and a declared-but-undefined
+       member is a landmine. It declares two parameters and takes three, so when it does
+       land it is an instance method. */
 #endif
 };
 

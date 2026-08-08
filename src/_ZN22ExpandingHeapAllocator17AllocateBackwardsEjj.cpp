@@ -15,9 +15,10 @@
  * Same first-fit/best-fit flag as the forward search, and the same trailing 1 vs 0 to
  * AllocateNode telling it which end was taken.
  *
- * AllocateNode still carries its raw mangled name: it takes MemoryNode parameters this
- * header cannot spell without reconstructing MemoryNode as a class with its nested
- * Target -- see the commit message.
+ * AllocateNode is now a declared member and is called as one, so the call target is
+ * mangled from the declaration rather than hand-spelled here. Its fifth parameter is a
+ * u16 (`Pvjt`, not the imported `Pvjj`); the flag is stack-passed and AAPCS widens it to
+ * a word regardless, so these bytes are unchanged by that correction.
  */
 extern "C" {
 
@@ -30,8 +31,6 @@ struct NodeList {
   unsigned char pad[0xa];
   unsigned short flag;
 };
-
-void* _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(NodeList* c, MemoryNode* node, void* target, unsigned int size, unsigned int z);
 
 }
 
@@ -62,5 +61,5 @@ void* ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
     } while (node != 0);
   }
   if (best == 0) return 0;
-  return _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(c, best, bestTarget, size, 1);
+  return AllocateNode((MemoryNode*)c, best, bestTarget, size, 1);
 }

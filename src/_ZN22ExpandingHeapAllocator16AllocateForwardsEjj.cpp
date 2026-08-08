@@ -14,9 +14,12 @@
  * first node that fits), set means BEST fit (keep scanning for the smallest). The
  * `nsize == size` break is an exact-fit shortcut that applies to both.
  *
- * AllocateNode still carries its raw mangled name: it takes MemoryNode parameters this
- * header cannot spell without reconstructing MemoryNode as a class with its nested
- * Target -- see the commit message. Migration is per-reference.
+ * AllocateNode is now a declared member and is called as one, so the call target is
+ * mangled from the declaration rather than hand-spelled here. That matters for this
+ * call in particular: the symbol it used to name ended `Pvjj`, and the fifth parameter
+ * is really a u16 (`Pvjt`). The direction flag below is passed on the stack and AAPCS
+ * widens it to a word either way, which is exactly why the caller could never have
+ * revealed the error -- and why these bytes are unchanged by the correction.
  */
 extern "C" {
 
@@ -29,8 +32,6 @@ struct NodeList {
   unsigned char pad[0xa];
   unsigned short flag;
 };
-
-void* _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(NodeList* c, MemoryNode* node, void* target, unsigned int size, unsigned int z);
 
 }
 
@@ -61,5 +62,5 @@ void* ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
     } while (node != 0);
   }
   if (best == 0) return 0;
-  return _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(c, best, bestTarget, size, 0);
+  return AllocateNode((MemoryNode*)c, best, bestTarget, size, 0);
 }

@@ -7845,7 +7845,7 @@ src/_ZN22ExpandingHeapAllocator14SizeofInternalEPv.cpp:
     complete
     .text start:0x0204e084 end:0x0204e08c
 
-src/_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj.cpp:
+src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp:
     complete
     .text start:0x0204e08c end:0x0204e0e0
 
@@ -7897,7 +7897,7 @@ src/_ZN22ExpandingHeapAllocator16AllocateForwardsEjj.cpp:
     complete
     .text start:0x0204e5c8 end:0x0204e690
 
-src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj.cpp:
+src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp:
     complete
     .text start:0x0204e690 end:0x0204e828
 
