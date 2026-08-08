@@ -5832,7 +5832,7 @@ src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe40c end:0x020fe420
 
-src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.c:
+src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe420 end:0x020fe4f0
 
@@ -5848,7 +5848,7 @@ src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe5e0 end:0x020fe5f4
 
-src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.c:
+src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe5f4 end:0x020fe690
 

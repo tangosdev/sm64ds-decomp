@@ -64,6 +64,35 @@ struct LVL_Overlay {
         u8    pad_002[2];
         void* entries;          /* 0x04 */
     };
+
+    /* ==== PER-CATEGORY RECORD TYPES ====
+       `entries' is void* because these differ, and each is added here as its
+       loader is migrated rather than guessed in advance. Positions are stored as
+       s16 world units and shifted left by 12 into Fix12 on the way out, which is
+       why every one of them is a short and every loader does `<< 12'. */
+
+    /* 0xe bytes. LoadExitObjects (ov002:0x020fe420). */
+    struct ExitEntry {
+        s16 x;                  /* 0x00 */
+        s16 y;                  /* 0x02 */
+        s16 z;                  /* 0x04 */
+        s16 rotX;               /* 0x06 -- NEGATED on use, both of them */
+        s16 rotY;               /* 0x08 */
+        u8  param[4];           /* 0x0a -- assembled BIG-ENDIAN: byte 0x0a is the
+                                   most significant. The rest of this file is
+                                   little-endian, so this is a stored big-endian
+                                   word and not an accident of the recovery --
+                                   the ROM really does shift 0x0a by 24. */
+    };
+
+    /* 8 bytes. LoadTeleportSourceObjects (ov002:0x020fe5f4). No rotation: the
+       spawn call passes NULL for it. */
+    struct TeleportSourceEntry {
+        s16 x;                  /* 0x00 */
+        s16 y;                  /* 0x02 */
+        s16 z;                  /* 0x04 */
+        u16 param;              /* 0x06 */
+    };
 #endif
 };
 
@@ -85,6 +114,10 @@ typedef char LVL_Overlay_ObjTable_size_must_be_0x8[
     sizeof(LVL_Overlay::ObjTable) == 0x8 ? 1 : -1];
 typedef char LVL_Overlay_ObjSubTable_size_must_be_0x8[
     sizeof(LVL_Overlay::ObjSubTable) == 0x8 ? 1 : -1];
+typedef char LVL_Overlay_ExitEntry_size_must_be_0xe[
+    sizeof(LVL_Overlay::ExitEntry) == 0xe ? 1 : -1];
+typedef char LVL_Overlay_TeleportSourceEntry_size_must_be_0x8[
+    sizeof(LVL_Overlay::TeleportSourceEntry) == 0x8 ? 1 : -1];
 #endif
 
 #endif
