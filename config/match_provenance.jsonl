@@ -357,3 +357,4 @@
 {"id":"arm9:0x01ffb030","module":"arm9","addr":33534000,"name":"func_01ffb030","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/func_01ffb030.c"}
 {"id":"arm9:0x01ffd9d4","module":"arm9","addr":33544660,"name":"func_01ffd9d4","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/func_01ffd9d4.c"}
 {"id":"arm9:0x01ffdb28","module":"arm9","addr":33545000,"name":"func_01ffdb28","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/func_01ffdb28.c"}
+{"id":"ov006:0x020da174","module":"ov006","addr":34447732,"name":"func_ov006_020da174","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020da174.c"}
