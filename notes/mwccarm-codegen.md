@@ -3081,3 +3081,30 @@ every bridging construct either dissolves (decl-SE), demotes (inline SE), or
 rotates (pragma / booster / multi-def). The 6bb open-angle spec tightens once
 more: the missing construct must seal a shift-def from propagation while keeping
 named-block-scope rank - nothing in c99+gccext reaches that intersection.
+
+## 6bc. The vcall SPELLING is a callee-saved homing-rank lever (Player::CanEnterDoor, div 13->0, 2026-08-07)
+
+The pret-idiom note (6e area) already records that C++ virtual dispatch loads the
+vptr before homing `this` where a C function-pointer cast homes first - a PROLOGUE
+ORDER effect. It is also an ALLOCATOR RANK effect: on _ZN6Player12CanEnterDoorEh
+(0x020ca5cc, the door-crash NONMATCHING), every source form spelling the +0x48
+vcall as a C fn-ptr cast (`(*(T**)(c+0x360))->vtbl[0x48/4](...)`) homed the args
+this=r4/door=r5, a global 13-word rename against the ROM; respelling ONLY the
+vcall as real C++ virtual dispatch (18 dummy virtuals + `o->GetType()`, no other
+change) restored the natural reverse-arg homing (door=r4, this=r5) and landed
+div=0 with a plain `return 0;`. The old draft's `{int r = door; r -= door;
+return r;}` RMW was a byte-costing pressure hack compensating for the C-cast
+perturbation; with the virtual spelling it is unnecessary.
+
+Ruled out on the way (all div=13 inert on the swap): param type widening,
+local copies of either arg, decl order, DeMorgan/merged/split guard respellings,
+if/else fallthrough restructure (that one goes 12 bytes short - the occupied
+path's mov #0 epilogue is a distinct source-level `return 0`, not tail
+duplication), 12 single pragmas, 4 pragma pairs, bool-return method form, and
+every algebraic-zero return (they fold in IRO and erase the liveness they were
+meant to add). The permuter cannot reach it either (14k iters, best 200): the
+lever is a C-vs-C++ dispatch respelling, outside its mutation space.
+
+Rule: when a pure-permutation residue sits in a function that dispatches through
+a C-cast fn-ptr table, respell the dispatch as a dummy-virtuals C++ call BEFORE
+grinding coloring levers - check it against 6aa's natural-homing probe first.
