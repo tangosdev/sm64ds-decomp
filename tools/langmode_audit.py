@@ -44,7 +44,12 @@ Usage:
     # CI ratchet: counts may fall, never rise. The baseline lives at the repo root
     # because progress/ is gitignored and CI needs a committed reference point. It holds
     # only the metrics --check reads, so re-banking it stays a small diff.
-    python tools/langmode_audit.py --json langmode-baseline.json    # re-bank after work
+    #
+    # Do NOT re-bank a slice that LOWERS counts: update-chaos-data.yml banks it on merge
+    # to main. Hand-banking made every migration PR conflict with every other one. Only a
+    # PR that RAISES a count banks it itself -- --check fails otherwise -- under the rule
+    # in notes/plan-cpp-language-mode.md (Phase 0).
+    python tools/langmode_audit.py --json langmode-baseline.json    # CI does this for you
     python tools/langmode_audit.py --check langmode-baseline.json   # exit 1 if worse
     python tools/langmode_audit.py --json out.json --full           # + per-class, lists
 """

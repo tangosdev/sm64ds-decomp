@@ -143,8 +143,14 @@ gamed by renaming a `.c` to `.cpp` — a hand-spelled symbol counts however the 
 named. That property is the whole reason this phase came first: it makes the *easy* fake
 progress unrewarding, and it turns the reply to #821 into a number instead of an argument.
 
-`--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. Re-bank the
-baseline in any commit that legitimately lowers a count.
+`--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. **Do not re-bank a
+commit that lowers a count** — `update-chaos-data.yml` re-banks on merge to main. Hand-banking
+was the single largest source of PR conflicts on this workstream (four in one session): the
+baseline is a generated counter with no meaningful hand-merge, so every merge to main moved it
+under every other PR in flight. Leaving it alone is safe in the only direction that matters —
+`--check` fails on a *rise* only, so a stale-**high** baseline is permissive and no intermediate
+state can go falsely red. It is the same rule `.gitattributes` already states for
+`nearmiss/db.jsonl`: a merge never regresses a tip.
 
 **Two corrections to the paragraph above, both measured.**
 
@@ -171,6 +177,14 @@ exemption:
 CI checks a PR against the PR's own baseline, so this needs no tool change — the
 ratchet was never a wall, it is a tripwire that forces the increase to appear as a
 reviewable diff. What was missing was only the written rule.
+
+A rise is now the **only** case in which a PR touches `langmode-baseline.json` at all; a
+lowering slice leaves it to CI (above). The tripwire survives that change intact, because
+`update-chaos-data.yml` re-banks only *after* a merge, and `--check` has already run against
+the PR's own baseline by then — post-merge banking can record a rise, never launder one past
+the gate. The consequence for reviewers is a sharper signal, not a weaker one: a diff that
+touches the baseline is now, by itself, a claim that counts went **up**, and it must carry
+the naming evidence the rule demands.
 
 ### Phase 1 — SDK namespaces *(169 files, 37 namespaces) — zero layout risk*
 

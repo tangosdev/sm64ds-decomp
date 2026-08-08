@@ -12,8 +12,19 @@
 # no compiler and no ROM. That is why it can live in this repo rather than on the
 # private build box that `pr-validate.yml` relays to.
 #
-# When a PR legitimately LOWERS a count, --check still passes, but the baseline is then
-# stale. Re-bank it in the same PR:
+# When a PR legitimately LOWERS a count, --check still passes against the PR's own
+# baseline, which is then stale-HIGH. Do NOT re-bank it in your PR: `update-chaos-data.yml`
+# re-banks on merge to main. Hand-banking is what made every migration PR conflict with
+# every other one -- four in one session -- because each merge to main re-banked the file
+# under the others. A stale-high baseline is permissive by construction (--check fails only
+# on a RISE), so no intermediate state can go falsely red: an in-flight PR measures against
+# its own older, higher numbers and passes, and the ratchet tightens once CI refreshes main.
+# Same rule as nearmiss/db.jsonl in .gitattributes -- a merge never regresses a tip.
+#
+# A count that RISES is the opposite case and still belongs in the PR: --check fails against
+# the PR's own baseline, so the increase must be banked there, under the naming rule in
+# `notes/plan-cpp-language-mode.md` (Phase 0). That tripwire is the point of the gate and is
+# unchanged -- CI's re-bank runs only after a merge, so it can never launder a rise:
 #     python tools/langmode_audit.py --json langmode-baseline.json
 name: langmode ratchet
 
