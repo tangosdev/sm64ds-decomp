@@ -39,6 +39,7 @@ take over, ping the claimant first.
 
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_020da174 (0x020da174, size 0x2ac) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **253→24** (match.py words, size-exact 0x2ac). Levers: ROM max/second-max + rank remap -2/-1/0; int return; u64-mask hist base for add r3,sp,#8; flag store1/store0 fallthrough. Residual pure regperm: prologue i/p r8↔r7 order, bubble #0x30 r8 vs r3, flag counter r7 vs r2 (+ cmp cascade). permuter base score 160 floor. tip in nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
 | ov006 func_ov006_020d3ba0 (0x020d3ba0, size 0x98c) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: end-loop `int xw[2]` (xw[0]=x,xw[1]=w) flips r3/r4 regperm; from near-miss div=9→0; API clm_e7f4edf70069 kept |
 | ov015 func_ov015_021114f0 (0x021114f0, size 0x17c) | lunavyqo (Grok) | 2026-08-06 | **released** — near-miss improved **18→10** (match.py words, size-exact). Lever: base load before sin/cos. Residual: pure ldrsh/smull dest regperm; permuter 575it floor. tip in nearmiss/db.jsonl; API clm_92d31f7de5a0 released |
 | ov006 func_ov006_020d47f4 (0x020d47f4, size 0xe8) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_strength_reduction off` + `#pragma opt_common_subs off`, `fix=-1`, loop2 `j=0` then `x=0x20` accum `+0x40`; from near-miss div=18→0; API clm_28332389df47 kept |
@@ -502,3 +503,5 @@ take over, ping the claimant first.
 
 | ov006 MgTrampolineTerror_Spawn (0x0212471c, size 0x18c) | lunavyqo (Grok) | 2026-08-07 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm **2004/b56**); BounceAndPounce loop idiom + 733a8 ctor/dtor pool order; from near-miss div=5→0 |
 | arm9 OAM::Render (0x02020994, size 0x690) | lunavyqo (Grok) | 2026-08-07 | **released** — no_progress FLOOR reconfirm **div=2** (match.py 2 words at +0x38/+0x3c). Residual pure prologue overflow-filler zip (ROM `ldr fp,[sp,#0x8c]` before `str r0,[sp,#0x94]`; tip reverse); ~15 probes inert/regress; notes 6ay/6ai needs mwccarm 0057-0062; tip already in src/ + nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
+
+| ov006 func_ov006_020e1dc8 (0x020e1dc8, size 0x2f4) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **999→90** (match.py words, size-exact 0x2f4). Levers: `#pragma opt_common_subs off` + `cn=c+n` prologue + `struct{x,z} self` regperm + decomp-permuter. Residual: load-order 0x660-before-0x664, pool 0x4664/0x4660 swap, s64-mul interleave, w@sb vs r7. tip in nearmiss/db.jsonl; CLAIMS.md only (API key rejected) |
