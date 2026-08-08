@@ -337,21 +337,54 @@ def audit():
                 excluded.append({"file": p, "by_value": sorted(set(byval))})
             else:
                 cls = info.get("class") or "<free>"
-                pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}, "files": []})
+                pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}, "files": [],
+                                                "nested": False, "const_member": False})
                 pc["c_left"] += 1
                 pc["files"].append(p)
                 pc["kinds"][kind] = pc["kinds"].get(kind, 0) + 1
+                # Two things that disqualify a class from layout_free and that the
+                # has_header/ctor-dtor test cannot see. Both are read off the symbol,
+                # so they cost nothing and keep this tool ROM-free.
+                if (info.get("qualified") or "").count("::") > 1:
+                    pc["nested"] = True
+                if sym.startswith("_ZNK"):
+                    pc["const_member"] = True
 
     # No include/<Class>.h AND no ctor/dtor => almost certainly an SDK *namespace*
     # (GX, CP15, IRQ...): no `this`, no vtable, no layout, no includers, so a migration
     # cannot shift anyone's offsets. A missing header alone does NOT mean that -- a
     # class like Chuckya has a D0/D1 and therefore a vtable whether a header exists or
     # not, so it carries full layout risk. Keep the two apart.
+    #
+    # THOSE TWO TESTS ARE NOT SUFFICIENT, and the way they fail is worth stating,
+    # because this set is handed to contributors as "safe to migrate, zero blast
+    # radius" and it was over-reported by a third.
+    #
+    # `class` from the demangler is the INNERMOST enclosing name.
+    # _ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb keys on `ClipCallback', so
+    # has_header looks for include/ClipCallback.h -- which does not exist and never
+    # would, because the type is nested inside Particle -- and ClipCallback declares
+    # no ctor or dtor of its own. Both tests pass and the answer is still wrong:
+    # Particle::Callback is a polymorphic base, its SpawnParticles/OnUpdate pair sits
+    # at arm9:0x0208f3b4/0x0208f3b8, and the pair repeats per derived class across
+    # 0x0208f3a8..0x0208f464 for nine subclasses. So a qualified name with more than
+    # one `::' is nested, and nesting means the enclosing scope has to be declared
+    # whatever the layout turns out to be.
+    #
+    # A `_ZNK...' symbol is a CONST MEMBER function. It has a `this' by definition,
+    # so it can never be layout-free no matter what its class looks like.
+    #
+    # What is deliberately NOT checked here: whether the function's address is stored
+    # in a vtable. That needs the ROM, and this tool is scoped to run on a bare clone
+    # with no compiler and no extracted ROM (plan phase 0). tools/check_layout_free.py
+    # does that pass separately.
     CTOR_DTOR = {"C1", "C2", "C3", "D0", "D1", "D2"}
     for cls, pc in per_class.items():
         pc["has_header"] = (REPO / "include" / f"{cls}.h").is_file()
         pc["layout_free"] = (not pc["has_header"]
-                             and not (set(pc["kinds"]) & CTOR_DTOR))
+                             and not (set(pc["kinds"]) & CTOR_DTOR)
+                             and not pc.get("nested")
+                             and not pc.get("const_member"))
 
     r["language_mode"] = {
         "mangled_total": len(c_mangled) + len(cpp_mangled),
