@@ -34,9 +34,18 @@ headers included first. The pair does:
     fails both            -> needs other headers first; not this
     passes both           -> clean
 
-Flags mirror `rombuild.compile_one` exactly -- same CFLAGS, the same `-lang c++` swap
-keyed off the source suffix, the same `-i include` and LM_LICENSE_FILE. A sweep compiled
-differently from the build would prove nothing about the build.
+Flags mirror `rombuild.compile_one` -- same CFLAGS, same `-i include`, same
+LM_LICENSE_FILE. A sweep compiled differently from the build would prove nothing about
+the build.
+
+One deliberate difference, and an earlier version of this docstring described it wrongly.
+The BUILD does not pick the language from the file extension: `rombuild.py:275` and
+`build_pin.py:127-138` both key on a leading `//cpp` marker, and build_pin says outright
+that suffix-keying is the historical mistake ("53 committed .c files carry the marker
+too"). This sweep authors its own one-line TUs, so it selects the language directly
+rather than by either rule. That is correct for the question being asked -- "does this
+header parse as C++?" -- but it is not the build's rule, and nothing here should be cited
+as evidence about how the build chooses.
 
 ## What this does NOT catch
 
@@ -133,13 +142,23 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as ex:
         rows = list(ex.map(probe, hdrs))
 
-    defect = [r for r in rows if not r["ok_cpp"] and r["ok_c"]]
+    # A header that fails C++ but passes C has a broken __cplusplus block -- but only if
+    # it HAS one. Without that conjunct the bucket is mislabelled: a blockless header
+    # that trips some other C++-only rule would be filed under "__cplusplus block
+    # defect". Currently no such header exists, which is why the omission never showed.
+    defect = [r for r in rows if not r["ok_cpp"] and r["ok_c"] and r["has_cpp_block"]]
+    other_cpp_only = [r for r in rows
+                      if not r["ok_cpp"] and r["ok_c"] and not r["has_cpp_block"]]
     both = [r for r in rows if not r["ok_cpp"] and not r["ok_c"]]
 
+    clean = len(rows) - len(defect) - len(other_cpp_only) - len(both)
     print("headers swept: %d  (compiler %s)" % (len(rows), VERSION))
-    print("  clean as C++                 : %d" % (len(rows) - len(defect) - len(both)))
+    print("  clean as C++                 : %d" % clean)
     print("  FAIL C++ but PASS C          : %d   <-- __cplusplus block defect" % len(defect))
-    print("  fail both (needs other hdrs) : %d   -- not this defect" % len(both))
+    print("  FAIL C++ but PASS C, no block: %d   <-- C++-only defect, not in a block"
+          % len(other_cpp_only))
+    print("  fail both                    : %d   <-- NOT a free pass, see below"
+          % len(both))
 
     withblk = [r for r in rows if r["has_cpp_block"]]
     print("\nheaders carrying a __cplusplus block: %d" % len(withblk))
@@ -153,19 +172,31 @@ def main():
         tot, bad = pop[b]
         print("  %-16s %3d with block, %3d defective" % (b, tot, bad))
 
-    if defect:
-        print("\nDEFECTIVE -- the __cplusplus block does not compile:")
-        for r in sorted(defect, key=lambda r: r["name"]):
-            print("  %-34s %-15s %s" % (r["name"], r["banner"], r["err_cpp"][:90]))
+    for label, rowset in (("DEFECTIVE -- the __cplusplus block does not compile:", defect),
+                          ("C++-ONLY FAILURE outside any __cplusplus block:", other_cpp_only),
+                          ("FAILS AS C TOO -- coverage hole, see below:", both)):
+        if rowset:
+            print("\n" + label)
+            for r in sorted(rowset, key=lambda r: r["name"]):
+                print("  %-34s %-15s %s" % (r["name"], r["banner"], r["err_cpp"][:90]))
 
     if args.json:
         pathlib.Path(args.json).write_text(json.dumps(rows, indent=1))
         print("\nwrote %s" % args.json)
 
-    if args.check and defect:
-        print("\nheader-cpp-sweep: FAIL (%d defective)" % len(defect), file=sys.stderr)
+    # THE FAILS-BOTH BUCKET IS NOT A FREE PASS, and the first version of this tool
+    # treated it as one. A header that needs other headers included first AND has a
+    # broken __cplusplus block fails both ways, so it lands in that bucket and this
+    # sweep can say nothing about its block -- forever, and silently. The count is
+    # currently 0, which is what makes the "three defects, ever" claim sound; so it is
+    # ratcheted at 0 rather than baselined. If one appears, either fix the header's
+    # includes so it compiles standalone, or the sweep has stopped covering it.
+    bad = len(defect) + len(other_cpp_only) + len(both)
+    if args.check and bad:
+        print("\nheader-cpp-sweep: FAIL (%d defective, %d C++-only, %d uncoverable)"
+              % (len(defect), len(other_cpp_only), len(both)), file=sys.stderr)
         return 1
-    print("\nheader-cpp-sweep: %s" % ("PASS" if not defect else "reported"))
+    print("\nheader-cpp-sweep: %s" % ("PASS" if not bad else "reported"))
     return 0
 
 

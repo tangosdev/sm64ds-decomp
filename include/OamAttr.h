@@ -13,11 +13,29 @@
  * WHY THE NAME MATTERS. Five files used to spell this type `OamAttri`, which does not
  * exist. It is a mis-parse of the mangled parameter list: `P7OamAttrii` is pointer to a
  * SEVEN-character class `OamAttr` followed by two ints, and the first `i` was read as
- * part of the type name. That was harmless only because those files hand-spell their
- * symbol and the struct tag never reaches the mangler -- the moment one is migrated to
- * a real C++ method, `OamAttri` mangles to `P8OamAttri...` and the function vanishes
- * from the object. build_pin.verify would not catch it: a call is a relocation and
- * match.compare wildcards every relocated word.
+ * part of the type name.
+ *
+ * BE PRECISE ABOUT THE CONSEQUENCE -- an earlier draft of this comment overstated it.
+ * Those five are CALLERS of OAM::Render, not definers, so the wrong tag could never
+ * make a definition vanish; the tag only reaches the mangler in a file that DEFINES a
+ * function taking the type, and every such file already spelled it `OamAttr`. What the
+ * misspelling actually buys is an unresolvable REFERENCE the day one of the five is
+ * migrated -- caught by eligible.py, which refuses to enroll a file with unresolvable
+ * references, and by match.py's `--strict-relocs` (default-on) before that. So this was
+ * a failed gate run and ten minutes of diagnosis, not a silent defect. Retired anyway,
+ * because a type name that names nothing is worth nothing.
+ *
+ * And do not repeat the flat claim that the byte gate is blind here. `build_pin.verify`
+ * takes a `strict` tuple and, when given one, fails closed on a relocation that does not
+ * land where the per-module relocs.txt says -- including one that resolves nowhere. It
+ * is blind only when a caller omits `strict`, which the ad-hoc checks in the session
+ * that wrote this header did. See notes/runbook-reference-repair.md section 1: the two
+ * gates cover for each other.
+ *
+ * (The line above used to spell that path with a glob. Inside a C comment the `*` and
+ * `/` of `config/**` close the comment early, and the rest of this paragraph became
+ * code -- which is precisely the defect tools/header_cpp_sweep.py exists to catch, and
+ * it caught this one on the first run after the fails-both bucket was ratcheted.)
  *
  * Renaming the type is inert for codegen -- a struct tag cannot change layout -- but
  * every file was byte-verified under the pinned compiler anyway.
