@@ -6180,7 +6180,7 @@ src/_ZN9SolidHeap11VDeallocateEPv.cpp:
     complete
     .text start:0x0203c4e4 end:0x0203c50c
 
-src/_ZN13ExpandingHeap11VDeallocateEPv.c:
+src/_ZN13ExpandingHeap11VDeallocateEPv.cpp:
     complete
     .text start:0x0203c50c end:0x0203c538
 
@@ -6268,7 +6268,7 @@ src/_ZN9SolidHeap8VDestroyEv.cpp:
     complete
     .text start:0x0203c70c end:0x0203c72c
 
-src/_ZN13ExpandingHeap8VDestroyEv.c:
+src/_ZN13ExpandingHeap8VDestroyEv.cpp:
     complete
     .text start:0x0203c72c end:0x0203c74c
 
@@ -6280,15 +6280,15 @@ src/_ZN4Heap7DestroyEv.cpp:
     complete
     .text start:0x0203c758 end:0x0203c7a0
 
-src/_ZN4Heap15CreateSolidHeapEjPS_i.c:
+src/_ZN4Heap15CreateSolidHeapEjPS_i.cpp:
     complete
     .text start:0x0203c7a0 end:0x0203c844
 
-src/_ZN4Heap19CreateExpandingHeapEjPS_i.c:
+src/_ZN4Heap19CreateExpandingHeapEjPS_i.cpp:
     complete
     .text start:0x0203c844 end:0x0203c8e8
 
-src/_ZN4Heap14CreateRootHeapEPvj.c:
+src/_ZN4Heap14CreateRootHeapEPvj.cpp:
     complete
     .text start:0x0203c8e8 end:0x0203c970
 

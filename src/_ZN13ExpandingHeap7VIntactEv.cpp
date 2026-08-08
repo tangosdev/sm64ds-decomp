@@ -1,12 +1,13 @@
 //cpp
 // @symbol _ZN13ExpandingHeap7VIntactEv
-/* recovered: named members + shared header, real C++ method */
+/* ExpandingHeap::VIntact() at 0x0203c65c -- Heap vtable slot 6. Eight bytes:
+ * `mov r0,#1 / bx lr'.
+ *
+ * It answers "yes" unconditionally, exactly as SolidHeap's does, so despite the
+ * node list there is no consistency check here either. Heap::Intact latches a
+ * global the first time any heap reports damage; nothing in this family can
+ * ever trip it. */
 #include "ExpandingHeap.h"
-/* ExpandingHeap::VIntact() at 0x0203c65c -- Heap vtable slot (VIntact).
- * Returns true to report the heap as a valid object. (VIntact is not a reliable
- * way to detect a broken heap; this override unconditionally returns 1.) */
-
-struct ExpandingHeap;
 
 bool ExpandingHeap::VIntact()
 {

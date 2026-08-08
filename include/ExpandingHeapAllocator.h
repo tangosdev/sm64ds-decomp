@@ -40,6 +40,13 @@ struct ExpandingHeapAllocator {
     int   SetNodeID(u32 id);              /* returns the previous ID */
     u32   MemoryLeft();                   /* sum of every free node's size */
     int   MaxAllocatableSize(int align);  /* largest single block, at that alignment */
+    u32   Reallocate(void* ptr, u32 size);/* the new SIZE, or 0 -- its own body
+                                             returns `size', 0 or `node->size',
+                                             never a pointer. ExpandingHeap's
+                                             VReallocate had been declaring it
+                                             pointer-returning in a local copy,
+                                             which is where the tree's `void*'
+                                             for Heap vtable slot 8 came from. */
 
     /* The two fit searches behind Allocate. `Ejj` is (u32, u32) -- two declared
        parameters against three body arguments, so the leading one is `this` and
