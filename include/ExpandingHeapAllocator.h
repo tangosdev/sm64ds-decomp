@@ -16,10 +16,9 @@
 #define EXPANDINGHEAPALLOCATOR_H
 #include "types.h"
 
-/* fwd */
-struct align_;
-struct ptr;
-struct size_;
+/* The generator also emitted `struct align_; struct ptr; struct size_;` as forward
+ * declarations -- parameter names mistaken for type names. No source ever referenced
+ * them; dropped, as in SolidHeapAllocator.h. */
 struct ExpandingHeapAllocator {
     u8  pad_000[0xc];
     s32 unk_00c;            /* 0x00c */
@@ -35,13 +34,28 @@ struct ExpandingHeapAllocator {
     /* methods. Parameter types are read off the mangled name: `Eji` is
        (unsigned int, int), `EPv` is (void*), `Ev` is (). */
     void* Allocate(u32 size, int align);
-    int Deallocate(void* ptr);
-    u32 GetNodeID();
+    int   Deallocate(void* ptr);
+    u32   GetNodeID();
+    int   SetNodeID(u32 id);              /* returns the previous ID */
+    u32   MemoryLeft();                   /* sum of every free node's size */
+    int   MaxAllocatableSize(int align);  /* largest single block, at that alignment */
+
+    /* The two fit searches behind Allocate. `Ejj` is (u32, u32) -- two declared
+       parameters against three body arguments, so the leading one is `this` and
+       these are instance methods. Note SolidHeapAllocator's same-named pair mangles
+       `EPvjj` and IS static: the arity test decides it per class, and the name is
+       no guide at all. */
+    void* AllocateForwards(u32 size, u32 align);
+    void* AllocateBackwards(u32 size, u32 align);
 
     /* Static: the ROM body takes no `this`. SizeofInternal reads the block's
        MemoryNode header, which sits immediately before the user pointer, so it
-       needs no allocator instance. */
-    static u32 SizeofInternal(void* userPtr);
+       needs no allocator instance. InvokeDeallocate declares three parameters
+       (`EPvPS_j`) and its body takes exactly three -- it is the trampoline
+       DeallocateAll hands each block to, so the allocator arrives as an explicit
+       argument rather than as `this`. */
+    static u32  SizeofInternal(void* userPtr);
+    static void InvokeDeallocate(void* ptr, ExpandingHeapAllocator* alloc, u32 size);
 #endif
 };
 
