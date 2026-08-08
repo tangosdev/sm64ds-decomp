@@ -1156,7 +1156,7 @@ src/_ZN5Actor11AfterRenderEj.cpp:
     complete
     .text start:0x02010f6c end:0x02010f78
 
-src/_ZN5Actor12BeforeRenderEv.c:
+src/_ZN5Actor12BeforeRenderEv.cpp:
     complete
     .text start:0x02010f78 end:0x02010fc8
 
@@ -1179,7 +1179,7 @@ src/_ZN5Actor18AfterInitResourcesEj.cpp:
     complete
     .text start:0x02011244 end:0x02011268
 
-src/_ZN5Actor19BeforeInitResourcesEv.c:
+src/_ZN5Actor19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x02011268 end:0x020112c8
 

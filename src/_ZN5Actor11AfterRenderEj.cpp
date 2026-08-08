@@ -1,10 +1,23 @@
 //cpp
-/* _ZN5Actor11AfterRenderEj @ 0x2010f6c (arm9) -- tail-call veneer to _ZN9ActorBase11AfterRenderEj (0x2043ac4).
- * ldr ip, [pc]; bx ip; .word 0x2043ac4
+/* Actor::AfterRender(u32) at 0x02010f6c, 0xc bytes -- vtable slot 11.
+ *
+ * A tail-call veneer to ActorBase::AfterRender at 0x02043ac4:
+ *
+ *     ldr ip, [pc]
+ *     bx  ip
+ *     .word 0x02043ac4
+ *
+ * Actor overrides the slot only to hand it straight back to its base. Runbook
+ * section 8: a veneer is emitted for the CALL, not for the argument list, so
+ * restoring the real signature costs nothing and the bytes are indifferent to
+ * it. The parameter therefore cannot be evidenced from these three words -- it
+ * is `u32 vfSuccess` because include/ActorBase.h and include/Actor.h both
+ * declare the slot that way, and the qualified call below is what emits the
+ * direct branch.
  */
-extern "C" {
-extern void _ZN9ActorBase11AfterRenderEj(void);
-void _ZN5Actor11AfterRenderEj(void) {
-    _ZN9ActorBase11AfterRenderEj();
-}
+#include "Actor.h"
+
+void Actor::AfterRender(u32 vfSuccess)
+{
+    ActorBase::AfterRender(vfSuccess);
 }

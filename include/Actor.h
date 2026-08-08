@@ -161,7 +161,6 @@ struct Actor : ActorDerived {
     void UpdatePosWithHorzSpeedAndAng();
     int  BumpedUnderneathByPlayer(Player &player);
     int  GetSubtraction(short a, short b);
-
     /* The dust group, 0x0200fac4..0x0200fe70. Two shapes, paired:
        an `...At` worker taking a position, and a no-argument wrapper that
        copies the actor's own 0x5c..0x64 into a stack Vector3 and calls it.
@@ -195,6 +194,12 @@ struct Actor : ActorDerived {
     void HugeLandingDustAt(Vector3 &pos, bool doRaycast);  /* particle 0xb2 */
     void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
 
+    /* The death table, which records actors already killed so they do not
+       respawn. GetBitInDeathTable is a member and takes nothing: its caller
+       BeforeInitResources loads `this` into r0 explicitly (`mov r0,r4`)
+       immediately before `bl 0x0200f9f4`, which a static taking no arguments
+       would have had no reason to do. */
+    int  GetBitInDeathTable();
     void KillAndTrackInDeathTable();
     void TrackInDeathTable();
     void SpawnSoundObj(u32 soundObjParam);
