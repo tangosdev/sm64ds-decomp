@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 // _ZN5Stage20RenderBouncingArrowsEv at 0x02023be0
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
 extern "C" {
@@ -11,7 +12,7 @@ extern unsigned char data_0209f248;
 extern void func_020abd88(void);
 int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void*, int, int, int, int, int, int, int, int);
 
-void _ZN5Stage20RenderBouncingArrowsEv(void) {
+void Stage::RenderBouncingArrows() {
     int r4;
     unsigned char A;
     if (data_0208ee44 == 1) {

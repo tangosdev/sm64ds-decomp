@@ -5,6 +5,8 @@
 
 struct Model;
 struct SceneRelated;
+struct LVL_Overlay;
+struct MeshCollider;
 
 /* The playable level: ActorBase -> ActorDerived -> Scene -> Stage.
  *
@@ -105,6 +107,14 @@ struct Stage : Scene {
 
     /* --- static: reached with no object. The pause-screen and menu group all
            take their first declared argument in r0. --- */
+    static void CheckInput();
+    static void LoadClsnAndObjects(LVL_Overlay &ovl, u32 param, MeshCollider &mc);
+    static void RenderVsModeNewStar();
+    static void RenderVsModeCountdown();
+    static void RenderBouncingArrows();
+    static void VE_Init();
+    static void VE_Update();
+    static void LC_Render();
     /* PS_Init is deliberately NOT declared here. src/_ZN5Stage7PS_InitEv.c
        still hand-spells it, because the tree contains a SECOND file for the same
        symbol -- src/_ZN5Stage7PS_InitEv.cpp -- which delinks.txt does not name

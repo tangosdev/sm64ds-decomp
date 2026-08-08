@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 #include "types.h"
 extern "C" {
 extern u8 data_0209f244;
@@ -19,7 +20,9 @@ int IsButtonInputValid(void);
 void func_02012790(unsigned int id);
 void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 
-void _ZN5Stage9VE_UpdateEv(void)
+}
+
+void Stage::VE_Update()
 {
     u8 t = data_0209f244;
     u8 t2;
@@ -98,5 +101,4 @@ void _ZN5Stage9VE_UpdateEv(void)
         break;
     }
     }
-}
 }

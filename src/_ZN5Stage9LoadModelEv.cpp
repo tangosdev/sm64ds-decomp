@@ -1,11 +1,12 @@
 //cpp
+#include "Stage.h"
 extern "C" {
 extern char data_0209f340[];
 extern int data_0209f320;
 void _ZN5Model14LoadAndSetFileEtii(char* model, unsigned short id, int b, int c);
-void _ZN5Stage9LoadModelEv(char* self);
 }
-void _ZN5Stage9LoadModelEv(char* self) {
+void Stage::LoadModel() {
+    char *self = (char *)this;
     _ZN5Model14LoadAndSetFileEtii(self + 0x86c, *(unsigned short*)(*(char**)data_0209f340 + 8), 1, -1);
     char* list;
     unsigned int count;

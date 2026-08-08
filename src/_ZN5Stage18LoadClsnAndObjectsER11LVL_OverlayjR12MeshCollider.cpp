@@ -41,8 +41,10 @@ extern int _ZNK12MeshCollider13GetUnkOctreeYEv(struct MeshCollider* thiz);
 extern void _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(struct ObjTable* t, int i, unsigned int p);
 extern void _ZN12ActorDerived5SpawnEjP9ActorBaseii(unsigned int id, struct ActorBase* parent, int a, int b);
 
-void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(struct LVL_Overlay_s* ovl, unsigned int p, struct MeshCollider* mc)
+void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 {
+    struct LVL_Overlay_s *ovl = (struct LVL_Overlay_s *)&ovlRef;
+    struct MeshCollider *mc = (struct MeshCollider *)&mcRef;
     struct KCL_File* f;
     struct LVL_SubTbl* e;
     signed char i;
