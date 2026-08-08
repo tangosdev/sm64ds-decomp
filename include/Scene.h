@@ -14,13 +14,29 @@
  *
  * EVERY CLAIM BELOW IS READ OUT OF THE ROM.
  *
- * THE CHAIN. _ZTV5Scene (0x02092680) is 18 slots, and ten of them still point at
- * ActorBase implementations. Slot 2 points at Scene's own AfterInitResources,
- * which is a tail call to _ZN12ActorDerived18AfterInitResourcesEj -- a function
- * Scene could not name unless ActorDerived were a base. Scene::~Scene confirms it
- * from the other side: it writes _ZTV5Scene, then _ZTV12ActorDerived (0x0208e4b8),
- * and only then calls ActorBase::~ActorBase, which is the vptr sequence of a
- * three-deep chain with the middle destructor inlined.
+ * THE CHAIN. Four independent readings, and the last one is decisive.
+ *
+ *   1. _ZTV5Scene (0x02092680) is 18 slots, and ten of them still point at
+ *      ActorBase implementations.
+ *   2. Slot 2 points at Scene's own AfterInitResources, which is a tail call to
+ *      _ZN12ActorDerived18AfterInitResourcesEj -- and slot 2 is the one and only
+ *      slot ActorDerived overrides, so Scene could not be naming that function
+ *      unless ActorDerived were a base.
+ *   3. Scene::~Scene says it from the other side: it writes _ZTV5Scene, then
+ *      _ZTV12ActorDerived (0x0208e4b8), and only then calls ActorBase::~ActorBase.
+ *      That is the vptr sequence of a three-deep chain with the middle destructor
+ *      inlined.
+ *   4. The ROM carries its own type graph, and tools/rtti_extract.py reads it.
+ *      Scene's __si_class_type_info record is at 0x020914d4 under the ROM's real
+ *      name for the class, `dScene_c`; its vtable field is 0x02092680, which is
+ *      _ZTV5Scene, and its single base pointer walks to `dBase_c` (vtable
+ *      0x0208e4b8 = _ZTV12ActorDerived), whose own base is `fBase_c` (vtable
+ *      0x02099edc = _ZTV9ActorBase). `si` means single inheritance: exactly one
+ *      base, no ambiguity to resolve.
+ *
+ * Nintendo EAD's own names for the three, then, are fBase_c -> dBase_c ->
+ * dScene_c. The tree's ActorBase/ActorDerived/Scene are its own coinages, and
+ * renaming them is a separate question from getting the shape right.
  *
  * SLOT ORDER is ActorBase's, unchanged -- Scene adds no virtual of its own, it
  * only overrides eight. The destructor is therefore declared FIRST here, which is
