@@ -13,8 +13,13 @@
  *   ObjTable     LoadObjects (ov002:0x020fe33c) reads its count as
  *                `*(unsigned short *)t' -- a 16-bit load at offset 0x00.
  *
- *   ObjSubTable  every sub-table loader reads its count as `*(u8 *)(t + 1)' --
- *                an 8-bit load at offset 0x01.
+ *   ObjSubTable  twelve of the fifteen sub-table loaders read their count as
+ *                `*(u8 *)(t + 1)' -- an 8-bit load at offset 0x01. The other
+ *                three read no count at all: LoadStarCameraObjects and
+ *                LoadUnusedType13Objects each take a single value out of the
+ *                entry array, and LoadPathNodeObjects forwards the array
+ *                pointer without a length. None of the fifteen reads a u16 at
+ *                offset 0x00.
  *
  * Those cannot be the same field. On little-endian, byte 1 of a u16 at 0x00 is
  * the HIGH byte, so a u8 read at 0x01 of a 16-bit count would report zero for
@@ -27,10 +32,16 @@
  *
  * The element type of `entries' is deliberately void*. It differs per category
  * -- LoadDoorObjects walks 12-byte door records, LoadObjects walks 8-byte
- * entries with a packed type in the top three bits of byte 0 -- so the pointer
- * is untyped here and each loader says what it is pointing at. Naming those
- * record types is per-category work, not something to guess once for all of
- * them.
+ * entries whose byte 0 is packed two ways -- so the pointer is untyped here and
+ * each loader says what it is pointing at. Naming those record types is
+ * per-category work, not something to guess once for all of them.
+ *
+ * On that packing, because an earlier revision of this comment had it backwards:
+ * the object TYPE is the LOW FIVE bits (`b & 0x1f'), used to index the handler
+ * table at ov002:0x0210cbb8. The TOP THREE bits (`(b >> 5) & 7') are a filter --
+ * LoadObjects skips the entry unless they are zero or equal to the global byte
+ * at 0x0209f220. Type in the low bits, filter in the high bits, not the other
+ * way round.
  */
 #ifndef LVL_OVERLAY_H
 #define LVL_OVERLAY_H
