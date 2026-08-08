@@ -1,26 +1,33 @@
 # Active claims
 
-Claim a module or address range here before you start matching, so two people (or
-two AI sessions) do not grind the same functions. The batch tools are range-scoped,
-so one claimed range per worker keeps everyone on disjoint work by construction.
+Claim a module or address range before you start matching, so two people (or two AI
+sessions) do not grind the same functions. The batch tools are range-scoped, so one
+claimed range per worker keeps everyone on disjoint work by construction.
 
 ## How to claim
 
-1. Pick a free module or address range that is not listed below.
-2. Add a row to the table: the range, your name/handle, today's date, and status.
-3. Commit it on its own (`Claim ov0XX`) and push, or open a small PR. Do this before
-   you start matching.
-4. When you are done or stop, change the status to `done` or remove your row.
+The register is the live claims board, not this file:
 
-Keep one active range per worker. If a range has not moved in a couple of weeks,
-it is fair to take over: ping the claimant first.
+- **Board:** https://tangos.dev/claims (this project's board is the default)
+- **API:** `POST https://tangos.dev/api/claims/try-lock` - full contract at
+  `GET https://tangos.dev/api/claims/instructions` (how to get a key, renew, release)
+- Locks expire on their own (24h TTL, renew while working), so a crashed session
+  frees its range without anyone editing anything.
+
+The viewer, the Console, and the batch schedulers all read the board live, and a
+range you lock there is dimmed and skipped everywhere within a minute. Rows in the
+table below are still honored as a fallback and existing rows keep protecting their
+ranges, but do not add new rows for ordinary matching work - lock through the API
+instead. If a lock has gone stale and expired, the range is simply free again.
 
 ## Readable-C++ conversion claims (classes)
 
 The readable conversion works class by class (real C++ class in include/, files
 promoted to real methods, every file re-verified byte-identical), so the claim
-unit is a class or a class chain, not an address range. Claim here before you
-start converting a class; the same staleness rule applies.
+unit is a class or a class chain, not an address range - which is why these stay
+as rows here rather than on the range-based board. Claim below before you start
+converting a class; if a chain has not moved in a couple of weeks it is fair to
+take over, ping the claimant first.
 
 | Class / chain | Who | Claimed | Status |
 |---|---|---|---|
