@@ -956,39 +956,39 @@ src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp:
     complete
     .text start:0x020100dc end:0x02010124
 
-src/_ZN5Actor16OnAimedAtWithEggEv.c:
+src/_ZN5Actor16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02010124 end:0x0201012c
 
-src/_ZN5Actor19OnHitFromUnderneathERS_.c:
+src/_ZN5Actor19OnHitFromUnderneathERS_.cpp:
     complete
     .text start:0x0201012c end:0x02010130
 
-src/_ZN5Actor15OnHitByMegaCharER6Player.c:
+src/_ZN5Actor15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02010130 end:0x02010134
 
-src/_ZN5Actor24OnHitByCannonBlastedCharERS_.c:
+src/_ZN5Actor24OnHitByCannonBlastedCharERS_.cpp:
     complete
     .text start:0x02010134 end:0x02010138
 
-src/_ZN5Actor8OnPushedERS_.c:
+src/_ZN5Actor8OnPushedERS_.cpp:
     complete
     .text start:0x02010138 end:0x0201013c
 
-src/_ZN5Actor8OnKickedERS_.c:
+src/_ZN5Actor8OnKickedERS_.cpp:
     complete
     .text start:0x0201013c end:0x02010140
 
-src/_ZN5Actor11OnAttacked2ERS_.c:
+src/_ZN5Actor11OnAttacked2ERS_.cpp:
     complete
     .text start:0x02010140 end:0x02010144
 
-src/_ZN5Actor11OnAttacked1ERS_.c:
+src/_ZN5Actor11OnAttacked1ERS_.cpp:
     complete
     .text start:0x02010144 end:0x02010148
 
-src/_ZN5Actor15OnGroundPoundedERS_.c:
+src/_ZN5Actor15OnGroundPoundedERS_.cpp:
     complete
     .text start:0x02010148 end:0x0201014c
 
@@ -1000,7 +1000,7 @@ src/_ZN5Actor13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02010154 end:0x02010160
 
-src/_ZN5Actor13OnYoshiTryEatEv.c:
+src/_ZN5Actor13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02010160 end:0x02010168
 
