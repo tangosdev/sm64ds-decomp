@@ -11,9 +11,19 @@ name: PR validation
 # for fork PRs. SAFE because this workflow never checks out or runs PR code — it
 # only sends the PR number + immutable head/base SHAs to the relay. The actual validation
 # happens on the self-hosted worker behind the maintainer's NAT, sandboxed there.
+#
+# The attribution-override label is a maintainer's "I know, and I meant it" for a PR
+# that moves contributor credit on purpose — attribution.json pins are exactly that.
+# It is read here, sent with the submission, and turns every attribution finding into
+# a warning on the check instead of a reason the merge cannot land. Only somebody with
+# write access can label a pull request, which is what makes it a safe signal to trust
+# from a pull_request_target workflow.
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    # labeled/unlabeled are here for that one label only — see the job's `if`. Adding it
+    # has to re-submit, because the override travels with the job and the worker reads it
+    # once, when it claims the build.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 # No permissions needed. This workflow no longer comments — the app does, under its
 # own identity — so the default read-only token is enough to submit and exit.
@@ -37,6 +47,11 @@ concurrency:
 jobs:
   submit:
     runs-on: ubuntu-latest
+    # Every other label is somebody organising the queue, not asking for an hour of the
+    # worker. Only the override label re-runs validation.
+    if: >-
+      (github.event.action != 'labeled' && github.event.action != 'unlabeled')
+      || github.event.label.name == 'attribution-override'
     steps:
       - name: Submit validation job
         env:
@@ -46,11 +61,13 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
           SHA: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          ALLOW_ATTRIBUTION_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'attribution-override') }}
         run: |
           set -euo pipefail
           payload=$(jq -n --arg repo "$REPO" --argjson pr "$PR" \
             --arg sha "$SHA" --arg baseSha "$BASE_SHA" \
-            '{repo:$repo,pr:$pr,sha:$sha,baseSha:$baseSha}')
+            --argjson allowAttributionChange "$ALLOW_ATTRIBUTION_CHANGE" \
+            '{repo:$repo,pr:$pr,sha:$sha,baseSha:$baseSha,allowAttributionChange:$allowAttributionChange}')
           resp=$(curl -sS -X POST "$RELAY/api/pr-validate" \
             -H "X-Api-Key: $TOKEN" -H "Content-Type: application/json" \
             --data "$payload")

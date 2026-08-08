@@ -33,6 +33,12 @@ import rombuild_check as RBC  # noqa: E402
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
 SOURCE_SUFFIXES = (".c", ".cpp")
+# Credit moves named in the one-line reason, and rows in the check body's table.
+CREDIT_NAMED = 3
+CREDIT_ROWS = 25
+# tangos-backend's /result cap. Kept here so the report clips itself rather than being
+# rejected whole -- see the clamp in build_report.
+SUMMARY_LIMIT = 500
 
 
 def _git(*args, allow=(0,), repo=None):
@@ -183,7 +189,9 @@ def attribution_snapshot(rev, functions):
         if not author:
             continue
         author = canon(author)
-        by_function[key] = author
+        # The source path travels with the author because credit is decided per file:
+        # a report that says only "2 changed" cannot tell a PR author which two.
+        by_function[key] = {"author": author, "path": path}
         counts[author] += 1
         sizes[author] += rec["size"]
     return {"byFunction": by_function,
@@ -323,9 +331,27 @@ def _port_reason(port):
     return f"port refcheck: {len(failures)} stale reference(s) ({shown})"
 
 
+def _credit_detail(changed, lost):
+    """Name whose credit moved, not just how many did: "2 changed" sends a PR author
+    to the worker log to find out which two files and which two contributors.
+
+    Only CREDIT_NAMED of them go inline, because this text reaches the check run's
+    summary and tangos-backend refuses a summary over 500 characters outright -- a
+    long list would cost the whole verdict.  The readable list is the table
+    ``render_markdown`` writes into the check body, and the full one is the JSON
+    report's ``attribution`` section.
+    """
+    moves = ([f"{c['path']}: {c['before']} -> {c['after']}" for c in changed]
+             + [f"{c['path']}: {c['author']} -> nobody" for c in lost])
+    shown = "; ".join(moves[:CREDIT_NAMED])
+    if len(moves) > CREDIT_NAMED:
+        shown += f"; +{len(moves) - CREDIT_NAMED} more"
+    return f"{len(changed)} changed, {len(lost)} lost -- {shown}"
+
+
 def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                  require_merge_commit=False, expected_pr_head=None,
-                 port_report=None):
+                 port_report=None, allow_attribution_change=False):
     base_sha, head_sha = resolve_commit(base), resolve_commit(head)
     parents = _git("rev-list", "--parents", "-n", "1", head_sha).split()
     is_merge = len(parents) >= 3
@@ -359,14 +385,16 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     new_unbannered = [p for p, c in changed_cls.items() if c == "unbannered-asm"]
 
     base_keys, head_keys = set(bf["matched"]), set(hf["matched"])
-    common_credit = set(ba["byFunction"]) & set(ha["byFunction"])
-    credit_changes = [{"id": k, "before": ba["byFunction"][k], "after": ha["byFunction"][k]}
+    bc, hc = ba["byFunction"], ha["byFunction"]
+    common_credit = set(bc) & set(hc)
+    credit_changes = [{"id": k, "path": hc[k]["path"], "basePath": bc[k]["path"],
+                       "before": bc[k]["author"], "after": hc[k]["author"]}
                       for k in sorted(common_credit)
-                      if ba["byFunction"][k] != ha["byFunction"][k]]
-    lost_credit = [{"id": k, "author": ba["byFunction"][k]}
-                   for k in sorted(set(ba["byFunction"]) - set(ha["byFunction"]))]
-    added_credit = [{"id": k, "author": ha["byFunction"][k]}
-                    for k in sorted(set(ha["byFunction"]) - set(ba["byFunction"]))]
+                      if bc[k]["author"] != hc[k]["author"]]
+    lost_credit = [{"id": k, "path": bc[k]["path"], "author": bc[k]["author"]}
+                   for k in sorted(set(bc) - set(hc))]
+    added_credit = [{"id": k, "path": hc[k]["path"], "author": hc[k]["author"]}
+                    for k in sorted(set(hc) - set(bc))]
 
     base_rom_state, head_rom_state = _rom_state(base_rom), _rom_state(head_rom)
     rom_regression = (base_rom_state.get("passed") is True
@@ -386,9 +414,18 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("function/byte coverage denominator changed")
     if he["stats"]["sourceBytes"] < be["stats"]["sourceBytes"]:
         reasons.append("source-built byte coverage decreased")
-    if credit_changes or lost_credit:
-        reasons.append("contributor attribution changed or was lost")
-    if ha["stats"]["unattributedFunctions"] > ba["stats"]["unattributedFunctions"]:
+    # The attribution-override label (carried on the job by tangos-backend) makes every
+    # attribution finding advisory for this one pull request.  The finding is still
+    # computed and still named -- an override says "I know, and I meant it", not "do not
+    # look" -- it just stops being a reason the merge cannot land.
+    credit_moved = bool(credit_changes or lost_credit)
+    new_unattributed = (ha["stats"]["unattributedFunctions"]
+                        > ba["stats"]["unattributedFunctions"])
+    if credit_moved and not allow_attribution_change:
+        reasons.append("contributor attribution changed or was lost "
+                       f"({_credit_detail(credit_changes, lost_credit)}); label the pull "
+                       "request attribution-override to accept it")
+    if new_unattributed and not allow_attribution_change:
         reasons.append("the merge introduced an unattributed matched function")
     if diff["leftoverOldPaths"]:
         reasons.append("old source paths remain after rename")
@@ -407,6 +444,14 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("full-ROM validation failed")
 
     warnings = []
+    if allow_attribution_change and credit_moved:
+        warnings.append("attribution-override label: contributor attribution changed or "
+                        f"was lost ({_credit_detail(credit_changes, lost_credit)}), "
+                        "accepted without failing the pull request")
+    if allow_attribution_change and new_unattributed:
+        warnings.append("attribution-override label: the merge introduced an "
+                        "unattributed matched function, accepted without failing "
+                        "the pull request")
     if same_baseline_failure:
         warnings.append("base and merge share the same pre-existing ROM-build failure")
     if new_unbannered:
@@ -437,14 +482,28 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     head_source_stats["sourceBytesPercent"] = (
         100.0 * head_source_stats["sourceBytes"] / hf["stats"]["totalBytes"]
         if hf["stats"]["totalBytes"] else 0.0)
+    if reasons:
+        summary = "Validation failed: " + "; ".join(reasons)
+    elif allow_attribution_change and (credit_moved or new_unattributed):
+        # Passing *because* of the label is not the same verdict as nothing having
+        # moved, and the one-liner is what most people read.
+        summary = ("Committed merge passes; the attribution-override label accepted "
+                   f"{len(credit_changes)} credit change(s), {len(lost_credit)} lost.")
+    else:
+        summary = "Committed merge introduces no reconstruction or attribution regression."
+    # tangos-backend refuses a result whose summary runs past 500 characters, and a refused
+    # result is a job that never reports at all -- the check sits pending until the sweeper
+    # writes it off. Naming what broke is worth the length; losing the verdict is not, and
+    # `reasons` below still carries every reason in full.
+    if len(summary) > SUMMARY_LIMIT:
+        summary = summary[:SUMMARY_LIMIT - 1] + "…"
     report = {
         "schemaVersion": 1,
         "status": "Failed" if reasons else "Passed",
         "baseSha": base_sha,
         "headSha": head_sha,
         "committedMerge": is_merge,
-        "summary": "Validation failed: " + "; ".join(reasons) if reasons
-                   else "Committed merge introduces no reconstruction or attribution regression.",
+        "summary": summary,
         "reasons": reasons,
         "warnings": warnings,
         "coverage": {"base": bf["stats"], "head": hf["stats"], "delta": coverage_delta},
@@ -452,7 +511,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "attribution": {"base": ba["contributors"], "head": ha["contributors"],
                         "baseStats": ba["stats"], "headStats": ha["stats"],
                         "added": added_credit, "changed": credit_changes,
-                        "lost": lost_credit},
+                        "lost": lost_credit, "overridden": allow_attribution_change},
         "diff": diff,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered},
         "linkcheck": link,
@@ -486,7 +545,8 @@ def render_markdown(r):
              f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |",
              f"| Contributor credit | {len(r['attribution']['added'])} added, "
              f"{len(r['attribution']['changed'])} changed, "
-             f"{len(r['attribution']['lost'])} lost |",
+             f"{len(r['attribution']['lost'])} lost"
+             f"{' (override label)' if r['attribution'].get('overridden') else ''} |",
              f"| Relocation check | {l['checked']} checked; {relocation_summary} |"]
     # Optional phase: no row at all when it did not run, so an older worker's
     # report reads exactly as it did before.
@@ -506,9 +566,36 @@ def render_markdown(r):
         lines.append(f"| Full ROM build | {head_rom['failure'].get('phase')} failed |")
     else:
         lines.append("| Full ROM build | not supplied |")
+    lines += _credit_table(r["attribution"])
     if r["warnings"]:
         lines += ["", "Warnings: " + "; ".join(r["warnings"]) + "."]
     return "\n".join(lines)
+
+
+def _credit_table(a):
+    """Spell out every credit the merge moved or dropped.
+
+    The summary line has room for CREDIT_NAMED of them; this is the check body, where
+    a PR author can actually read the list and see whether the moves are the ones the
+    pull request meant to make.  Added credit is not listed -- new work earning new
+    credit is what a merge is for, and it is never what fails the check.
+    """
+    rows = ([(c["id"], c["path"], c.get("basePath", c["path"]), c["before"], c["after"])
+             for c in a["changed"]]
+            + [(c["id"], c["path"], c["path"], c["author"], "nobody") for c in a["lost"]])
+    if not rows:
+        return []
+    lines = ["", f"#### Contributor credit moved ({len(rows)})", "",
+             "| Function | Source | Before | After |", "|---|---|---|---|"]
+    for fid, path, base_path, before, after in rows[:CREDIT_ROWS]:
+        # A rename that also moves credit is the case worth seeing whole, so the old
+        # path stays visible rather than being silently replaced by the new one.
+        where = path if base_path == path else f"{base_path} -> {path}"
+        lines.append(f"| `{fid}` | `{where}` | {before} | {after} |")
+    if len(rows) > CREDIT_ROWS:
+        lines += ["", f"+{len(rows) - CREDIT_ROWS} more; the full list is in the "
+                      "JSON report's `attribution` section."]
+    return lines
 
 
 def main():
@@ -524,13 +611,18 @@ def main():
     ap.add_argument("--port-refcheck-report",
                     help="tools/port_refcheck.py --json output; the check is "
                          "reported only when this is supplied and exists")
+    ap.add_argument("--allow-attribution-change", action="store_true",
+                    help="report attribution changes as warnings instead of failing "
+                         "the merge; the worker passes this for a pull request "
+                         "carrying the attribution-override label")
     ap.add_argument("--out", required=True)
     ap.add_argument("--markdown")
     args = ap.parse_args()
     report = build_report(args.base, args.head, _load_json(args.base_rom_report),
                           _load_json(args.head_rom_report), _load_json(args.link_report),
                           args.require_merge_commit, args.expected_pr_head,
-                          _load_json(args.port_refcheck_report, optional=True))
+                          _load_json(args.port_refcheck_report, optional=True),
+                          args.allow_attribution_change)
     pathlib.Path(args.out).write_text(json.dumps(report, indent=2) + "\n",
                                       encoding="utf-8", newline="\n")
     if args.markdown:
