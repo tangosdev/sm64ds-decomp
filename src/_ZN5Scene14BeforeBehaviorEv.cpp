@@ -1,92 +1,104 @@
 //cpp
-#include "types.h"
-/* Scene::BeforeBehavior() at 0x0202e3d4, size 0x1fc
- * Matched byte-for-byte with mwccarm 1.2/sp2p3
- * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
- */
-struct A {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3(int, int);
-    virtual void v4(int, int);
-    virtual int v5();
-    virtual int v6();
-};
+/* Scene::BeforeBehavior() at 0x0202e3d4, 0x1fc bytes -- vtable slot 7.
+ *
+ * Chains to ActorBase's, then runs the scene-transition state machine: hold the
+ * screen while a fade is in flight, and once the brightness fader reaches the end,
+ * queue the next scene and mark this one for destruction.
+ *
+ * ONE DELIBERATE SHADOW REMAINS, AND IT IS EVIDENCE, NOT LAZINESS. The current
+ * fader at 0x0209f5bc is reached through the file-local `FaderVTable` below rather
+ * than through include/FaderBrightness.h, because the ROM disagrees with the fader's
+ * own mangled names about how many arguments slots 3 and 4 take:
+ *
+ *     0202e4d8  ldr r0,[pc,#0xec]      ; &current fader
+ *     0202e4dc  mov r1,#0x1e
+ *     0202e4e4  mov r2,#0              <-- a SECOND argument
+ *     0202e4ec  ldr r3,[r3,#0x10]      ; slot 4
+ *     0202e4f0  blx r3
+ *
+ * and the same shape at 0x0202e58c for slot 3. But the functions those slots hold
+ * are _ZN15FaderBrightness14SetForwardTimeEj and ...15SetBackwardTimeEj, and `Ej`
+ * is one parameter. Calling them through the real class would drop the `mov r2,#0`
+ * and stop matching, so the ROM's own Scene translation unit must have been built
+ * against a two-argument prototype. The names below are the ROM's -- read out of
+ * _ZTV10FaderColor (0x0208eb2c) -- and only the arity is this file's.
+ *
+ * Recording it here rather than papering over it: the fader family's headers are
+ * known to be wrong in the other direction too (they declare seven vtable slots
+ * where the ROM has ten), and that is a separate, larger correction. */
+#include "Scene.h"
+#include "FaderBrightness.h"
 
-struct BTable {
-    void (*w0)(void);
-    void (*w1)(void);
-    void (*w2)(void);
-    void (*w3)(void);
-    void (*w4)(void*, int, int);
+/* The ROM's fader vtable, named from _ZTV10FaderColor, with the two-argument arity
+   the call sites above prove this TU was compiled against. Slots 0/1 are D1/D0. */
+struct FaderVTable {
+    void (*D1)(void *);
+    void (*D0)(void *);
+    void (*AdvanceFade)(void *);
+    void (*SetBackwardTime)(void *, u32, u32);
+    void (*SetForwardTime)(void *, u32, u32);
+    int  (*IsAtStart)(void *);
+    int  (*IsAtEnd)(void *);
 };
-
-struct FaderBrightness {
-    int vtable_dummy;
-    int field4;
-};
+struct FaderObject { FaderVTable *vt; };
 
 extern "C" {
-extern int _ZN9ActorBase14BeforeBehaviorEv(void* self);
-extern void func_02023544(void);
-extern void _ZN15FaderBrightness14SetForwardTimeEj(FaderBrightness* self, unsigned int t);
-extern int _ZN15FaderBrightness7IsAtEndEv(FaderBrightness* self);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
-extern int func_020431c4(void* thiz);
-
-extern u8 data_0209f1e0;
-extern void* data_0209f5c0;
-extern void* data_0209f1e4;
+extern u8   data_0209f1e0;
+extern void *data_0209f1e4;
+extern ActorBase   *data_0209f5c0;
+extern FaderObject *data_0209f5bc;   /* the currently installed fader */
 extern FaderBrightness data_0209f5d0;
-extern BTable* data_0209f5e8;
-extern u16 data_02092664;
-extern A* data_0209f5bc;
+extern FaderObject  data_0209f5e8;   /* really a FaderColor */
+extern u16  data_02092664;           /* pending scene ID; 0x187 means none */
 
-int _ZN5Scene14BeforeBehaviorEv(char* self)
+extern void func_02023544(void);
+extern void _ZN15FaderBrightness14SetForwardTimeEj(FaderBrightness *self, u32 frames);
+extern int  _ZN15FaderBrightness7IsAtEndEv(FaderBrightness *self);
+extern int  func_020431c4(ActorBase *self);
+}
+
+int Scene::BeforeBehavior()
 {
-    if (!_ZN9ActorBase14BeforeBehaviorEv(self)) return 0;
+    if (!ActorBase::BeforeBehavior())
+        return 0;
 
     if (data_0209f1e0 != 0) {
-        int t = (*(u16*)((char*)data_0209f5c0 + 0xc) == 0);
-        if (t != 0) {
+        int noActor = (data_0209f5c0->actorID == 0);
+        if (noActor != 0) {
             func_02023544();
         } else {
             if (data_0209f1e4 == 0) {
-                data_0209f5d0.field4 = 0;
+                data_0209f5d0.currInterp = 0;   /* 0x4, not speed at 0x8 */
                 _ZN15FaderBrightness14SetForwardTimeEj(&data_0209f5d0, 0x10);
                 data_0209f1e4 = &data_0209f5d0;
             } else if (_ZN15FaderBrightness7IsAtEndEv(&data_0209f5d0)) {
-                _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
-                data_0209f5e8->w4(&data_0209f5e8, 0, 0);
-                _ZN9ActorBase18MarkForDestructionEv(self);
+                StartSceneFade(1, 0, 0);
+                data_0209f5e8.vt->SetForwardTime(&data_0209f5e8, 0, 0);
+                MarkForDestruction();
             }
             return 0;
         }
     }
 
     if (data_02092664 != 0x187) {
-        if (data_0209f5bc->v5() != 0) {
-            data_0209f5bc->v4(0x1e, 0);
-        } else if (data_0209f5bc->v6() != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(self);
+        if (data_0209f5bc->vt->IsAtStart(data_0209f5bc) != 0) {
+            data_0209f5bc->vt->SetForwardTime(data_0209f5bc, 0x1e, 0);
+        } else if (data_0209f5bc->vt->IsAtEnd(data_0209f5bc) != 0) {
+            MarkForDestruction();
         }
         return 1;
     }
 
-    if ((*(u8*)(self + 0x13) & 1) != 0) {
-        if (func_020431c4(self) == 0) {
-            u8* p13 = (u8*)(((long long)(int)(self + 0x13)));
-            *p13 &= ~1;
-            *p13 &= ~4;
+    if ((unk_013 & 1) != 0) {
+        if (func_020431c4(this) == 0) {
+            unk_013 &= ~1;
+            unk_013 &= ~4;
         }
         return 0;
     } else {
-        if (data_0209f5bc->v6() != 0) {
-            data_0209f5bc->v3(0x1e, 0);
+        if (data_0209f5bc->vt->IsAtEnd(data_0209f5bc) != 0) {
+            data_0209f5bc->vt->SetBackwardTime(data_0209f5bc, 0x1e, 0);
         }
         return 1;
     }
-}
 }

@@ -1,5 +1,16 @@
 //cpp
-#include "types.h"
+/* Scene::ResetHardwareRegisters() at 0x0202e7d4, 0x4c8 bytes.
+ *
+ * Static: Initialise3dGraphics calls it with a bare `bl` and no argument setup.
+ *
+ * This file already spelled the definition as a real method -- but against a
+ * private one-line `struct Scene { void ResetHardwareRegisters(); };` declared in
+ * this file. That reproduces the mangled name without describing the class, which
+ * is the shape #821 objected to: it claims Scene has exactly one member and no
+ * base, and nothing could contradict it, because no other translation unit ever
+ * saw it. It includes the real header now. */
+#include "Scene.h"
+
 struct Matrix2x2 { int m[4]; };
 
 extern "C" {
@@ -12,8 +23,6 @@ extern void func_02053a90(u16* out, int v);
 extern void _ZN3GXS15SetGraphicsModeEi(int a);
 extern Matrix2x2 data_02092668;
 }
-
-struct Scene { void ResetHardwareRegisters(); };
 
 void Scene::ResetHardwareRegisters()
 {

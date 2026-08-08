@@ -1,10 +1,12 @@
 //cpp
-/* _ZN5Scene13AfterBehaviorEj @ 0x202e3c8 (arm9) -- tail-call veneer to _ZN9ActorBase13AfterBehaviorEj (0x2043af8).
- * ldr ip, [pc]; bx ip; .word 0x2043af8
- */
-extern "C" {
-extern void _ZN9ActorBase13AfterBehaviorEj(void);
-void _ZN5Scene13AfterBehaviorEj(void) {
-    _ZN9ActorBase13AfterBehaviorEj();
-}
+/* Scene::AfterBehavior(u32) at 0x0202e3c8, 0xc bytes -- vtable slot 8.
+ *
+ * A tail call to ActorBase::AfterBehavior (0x02043af8); see
+ * src/_ZN5Scene11AfterRenderEj.cpp for why that is three words and why the
+ * parameter type comes from the target's declaration rather than from these bytes. */
+#include "Scene.h"
+
+void Scene::AfterBehavior(u32 vfSuccess)
+{
+    ActorBase::AfterBehavior(vfSuccess);
 }

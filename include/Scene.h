@@ -1,47 +1,101 @@
-/* Hand-edited, against evidence. This file used to carry the
- * "AUTO-GENERATED ... by tools/gen_header.py" banner, which stopped being true the
- * moment the __cplusplus block was corrected -- see
- * notes/runbook-type-reconstruction.md section 2.
- *
- * class Scene: 12 matched functions, 1 evidenced field.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen.
- *
- * THE __cplusplus BLOCK BELOW HAD NEVER BEEN COMPILED. It declared
- *     Bool BeforeInitResources();
- * and `Bool` is defined nowhere in the tree. The generator lifted the return type
- * verbatim out of src/_ZN5Scene19BeforeInitResourcesEv.c, which opens with its own
- * file-local `typedef int Bool;` -- a spelling that exists only inside that one file.
- * Scene.h is included by two .c files and no .cpp, so the block was always skipped and
- * the undefined type sat there unnoticed.
- *
- * Corrected to `int`, which is exactly what that typedef resolves to, so the meaning
- * is unchanged. NOT to `bool`: types.h defines `typedef int bool;` only `#ifndef
- * __cplusplus`, so `bool` is 4 bytes in C and the 1-byte keyword in C++, and using it
- * here would make the declaration mean two different things depending on the includer.
- *
- * Found by sweeping every header through the pinned compiler as C and as C++ (a header
- * that fails as C++ but passes as C has a broken __cplusplus block). This was the last
- * of three; the other two were ExpandingHeapAllocator.h's `forwards void* Allocate(...)`
- * (#1211) and SolidHeapAllocator.h's `call ResetEnd void Reset(...)`. All three are the
- * same root cause -- the generator copied a token out of a source file without checking
- * it names anything visible from the header -- in three different disguises: a spilled
- * parameter-name fragment, scraped comment text, and a file-local typedef.
- *
- * The generator also emitted `struct x;` -- a parameter name mistaken for a type name.
- * No source ever referenced it; dropped. */
 #ifndef SCENE_H
 #define SCENE_H
-#include "types.h"
 
-struct Scene {
-    u8  pad_000[0x13];
-    u8  unk_013;            /* 0x013 */
-#ifdef __cplusplus
-    /* methods */
-    int BeforeInitResources();   /* 0 on failure, 1 on success */
-    int BeforeRender();
-#endif
+#include "ActorDerived.h"
+
+/* The scene root: ActorBase -> ActorDerived -> Scene, and Scene is itself the base
+ * of Stage and BootScene. Its own code lives at 0x0202e140..0x0202ec9c, plus the
+ * four GraphCallbacks stranded at 0x02018ea0..0x02018ec0.
+ *
+ * The header this replaces described Scene as a flat 0x14-byte struct with one
+ * field. That was a shadow of ActorBase's first twenty bytes, not a class: it
+ * named no base, so `Scene` and `ActorBase` were unrelated types, and the two
+ * translation units that included it could only reach `this` as an int*.
+ *
+ * EVERY CLAIM BELOW IS READ OUT OF THE ROM.
+ *
+ * THE CHAIN. _ZTV5Scene (0x02092680) is 18 slots, and ten of them still point at
+ * ActorBase implementations. Slot 2 points at Scene's own AfterInitResources,
+ * which is a tail call to _ZN12ActorDerived18AfterInitResourcesEj -- a function
+ * Scene could not name unless ActorDerived were a base. Scene::~Scene confirms it
+ * from the other side: it writes _ZTV5Scene, then _ZTV12ActorDerived (0x0208e4b8),
+ * and only then calls ActorBase::~ActorBase, which is the vptr sequence of a
+ * three-deep chain with the middle destructor inlined.
+ *
+ * SLOT ORDER is ActorBase's, unchanged -- Scene adds no virtual of its own, it
+ * only overrides eight. The destructor is therefore declared FIRST here, which is
+ * safe for a derived class (an override takes its base's slot wherever it is
+ * declared) and is deliberate: it makes ~Scene the key function, and ~Scene is
+ * only ever defined as an extern "C" free function in _ZN5SceneD0Ev.c and
+ * _ZN5SceneD1Ev.c. No translation unit defines the key function, so CW 1.2 emits
+ * no vtable group, and the copy the module's gap object supplies from ROM data
+ * stands alone. This is the same arrangement include/ActorDerived.h documents.
+ *
+ * LAYOUT. Scene declares no fields, and that is a claim, so here is its basis: no
+ * Scene method reads or writes anything past ActorBase's own members -- the only
+ * field access in the whole class is `this->unk_013` in BeforeBehavior, at 0x13 --
+ * and Stage, which derives from Scene, puts its first own field at 0x050, exactly
+ * sizeof(ActorBase). The size assertion at the bottom is what holds the three
+ * headers to it: it fails to compile if anyone adds a member anywhere in the
+ * chain.
+ *
+ * STATIC vs NON-STATIC cannot be decided from a definition -- both spellings
+ * mangle identically, and a method that ignores `this` compiles the same either
+ * way. It is decided at the CALL SITE, and every one of them is in the ROM:
+ * Scene::SetAndStopColorFader loads a FaderColor into r0 and branches straight to
+ * SetFaders, so r0 is SetFaders' first declared parameter and not a `this`.
+ * BeforeInitResources, by contrast, branches to ResetFadersAndSound with r0
+ * untouched, which is a `this` passthrough. The two groups below are split on that
+ * evidence, function by function.
+ *
+ * This header has no C spelling and cannot be included from a C file, because
+ * ActorDerived.h has none either. Nothing includes it from C: the two .c files
+ * that used to are part of this slice and are now .cpp.
+ */
+struct FaderBrightness;
+
+struct Scene : ActorDerived {
+    /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
+       16 (D1) and 17 (D0); the position in this list does not affect that. */
+    virtual ~Scene();
+
+    /* --- overrides, in _ZTV5Scene order. Signatures must match ActorBase's
+           declarations exactly or these become new slots instead of overrides. --- */
+    virtual bool BeforeInitResources();                /* slot  1 */
+    virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
+    virtual int  BeforeCleanupResources();             /* slot  4 */
+    virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
+    virtual int  BeforeBehavior();                     /* slot  7 */
+    virtual void AfterBehavior(u32 vfSuccess);         /* slot  8 */
+    virtual int  BeforeRender();                       /* slot 10 */
+    virtual void AfterRender(u32 vfSuccess);           /* slot 11 */
+
+    /* --- non-virtual, and takes `this`: BeforeInitResources tail-branches here
+           with r0 untouched. --- */
+    int ResetFadersAndSound();
+
+    /* --- static: every call site in the ROM puts the first declared argument in
+           r0, so none of these receives a `this`. --- */
+    static void SetFaders(FaderBrightness *fader);
+    static void SetAndStopColorFader();
+    static void StartSceneFade(u32 sceneID, u32 param, u16 fadeColor);
+    static int  SetSceneToSpawn(u32 sceneID, u32 param);
+    static int  SpawnIfNecessary();
+    static void PrepareToSpawnBoot();
+    static void Initialise3dGraphics();
+    static void ResetHardwareRegisters();
+
+    /* Scene-graph traversal hooks, called through a table of plain function
+       addresses -- which is itself why they cannot be non-static members. All four
+       are the same two instructions, `mov r0,#1; bx lr`. */
+    static int GraphCallback0();
+    static int GraphCallback1();
+    static int GraphCallback2();
+    static int GraphCallback3();
 };
+
+/* Holds ActorBase, ActorDerived and Scene to the layout the paragraph above
+   claims. A silently-added member anywhere in the chain fails this. */
+typedef char Scene_size_must_be_0x50[sizeof(Scene) == 0x50 ? 1 : -1];
 
 #endif

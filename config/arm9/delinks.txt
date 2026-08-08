@@ -2801,19 +2801,19 @@ src/func_02018e68.c:
     complete
     .text start:0x02018e68 end:0x02018ea0
 
-src/_ZN5Scene14GraphCallback3Ev.c:
+src/_ZN5Scene14GraphCallback3Ev.cpp:
     complete
     .text start:0x02018ea0 end:0x02018ea8
 
-src/_ZN5Scene14GraphCallback2Ev.c:
+src/_ZN5Scene14GraphCallback2Ev.cpp:
     complete
     .text start:0x02018ea8 end:0x02018eb0
 
-src/_ZN5Scene14GraphCallback1Ev.c:
+src/_ZN5Scene14GraphCallback1Ev.cpp:
     complete
     .text start:0x02018eb0 end:0x02018eb8
 
-src/_ZN5Scene14GraphCallback0Ev.c:
+src/_ZN5Scene14GraphCallback0Ev.cpp:
     complete
     .text start:0x02018eb8 end:0x02018ec0
 
@@ -4246,7 +4246,7 @@ src/_ZN5SceneD0Ev.c:
     complete
     .text start:0x0202e170 end:0x0202e1b4
 
-src/_ZN5Scene20SetAndStopColorFaderEv.c:
+src/_ZN5Scene20SetAndStopColorFaderEv.cpp:
     complete
     .text start:0x0202e1b4 end:0x0202e1e0
 
@@ -4254,19 +4254,19 @@ src/_ZN5Scene9SetFadersEP15FaderBrightness.cpp:
     complete
     .text start:0x0202e1e0 end:0x0202e26c
 
-src/_ZN5Scene16SpawnIfNecessaryEv.c:
+src/_ZN5Scene16SpawnIfNecessaryEv.cpp:
     complete
     .text start:0x0202e26c end:0x0202e300
 
-src/_ZN5Scene18PrepareToSpawnBootEv.c:
+src/_ZN5Scene18PrepareToSpawnBootEv.cpp:
     complete
     .text start:0x0202e300 end:0x0202e348
 
-src/_ZN5Scene14StartSceneFadeEjjt.c:
+src/_ZN5Scene14StartSceneFadeEjjt.cpp:
     complete
     .text start:0x0202e348 end:0x0202e36c
 
-src/_ZN5Scene15SetSceneToSpawnEjj.c:
+src/_ZN5Scene15SetSceneToSpawnEjj.cpp:
     complete
     .text start:0x0202e36c end:0x0202e398
 
@@ -4274,7 +4274,7 @@ src/_ZN5Scene11AfterRenderEj.cpp:
     complete
     .text start:0x0202e398 end:0x0202e3a4
 
-src/_ZN5Scene12BeforeRenderEv.c:
+src/_ZN5Scene12BeforeRenderEv.cpp:
     complete
     .text start:0x0202e3a4 end:0x0202e3c8
 
@@ -4287,9 +4287,10 @@ src/_ZN5Scene14BeforeBehaviorEv.cpp:
     .text start:0x0202e3d4 end:0x0202e5d0
 
 src/_ZN5Scene21AfterCleanupResourcesEj.cpp:
+    complete
     .text start:0x0202e5d0 end:0x0202e5f0
 
-src/_ZN5Scene22BeforeCleanupResourcesEv.c:
+src/_ZN5Scene22BeforeCleanupResourcesEv.cpp:
     complete
     .text start:0x0202e5f0 end:0x0202e62c
 
@@ -4297,15 +4298,15 @@ src/_ZN5Scene18AfterInitResourcesEj.cpp:
     complete
     .text start:0x0202e62c end:0x0202e638
 
-src/_ZN5Scene19BeforeInitResourcesEv.c:
+src/_ZN5Scene19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0202e638 end:0x0202e66c
 
-src/_ZN5Scene19ResetFadersAndSoundEv.c:
+src/_ZN5Scene19ResetFadersAndSoundEv.cpp:
     complete
     .text start:0x0202e66c end:0x0202e6c8
 
-src/_ZN5Scene20Initialise3dGraphicsEv.c:
+src/_ZN5Scene20Initialise3dGraphicsEv.cpp:
     complete
     .text start:0x0202e6c8 end:0x0202e73c
 
