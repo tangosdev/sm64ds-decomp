@@ -69,8 +69,30 @@
  * _ZN9SolidHeap9VAllocateEjj claims (u32, u32) for the SAME SLOT, so one of the
  * two imported names is wrong and it is not this one -- every sibling in the
  * family (Heap::Allocate, SolidHeapAllocator::Allocate,
- * ExpandingHeapAllocator::Allocate) spells `Eji'. Tracked separately; correcting
- * a symbol is its own PR with its own evidence.
+ * ExpandingHeapAllocator::Allocate) spells `Eji'. The ROM settles it directly:
+ * SolidHeapAllocator::Allocate (0x0204eb70) does `cmp r2,#0' then `blt', a
+ * SIGNED branch, and negates with `rsb' to allocate backwards -- a u32 would
+ * compile to bcc/blo and make that path unreachable. Both VAllocates are
+ * four-instruction thunks that forward r1/r2 untouched into it. Tracked
+ * separately; correcting a symbol is its own PR with its own evidence.
+ *
+ * ==== WHERE THE TWO OVERRIDE FAMILIES DISAGREE ====
+ *
+ * Taking return types from the definitions is only unambiguous where the
+ * definitions agree. On two slots they do not, and this header picks
+ * ExpandingHeap's side. Both are unfalsifiable today -- return types are not
+ * mangled, and SolidHeap.h does not yet derive from Heap, so nothing compiles
+ * the two against each other. Both become override-mismatch errors the day that
+ * inheritance is made real, which is why they are written down here rather than
+ * discovered then:
+ *
+ *   slot  9  VSizeof     this header u32   |  SolidHeap.h + its .cpp say int
+ *                                          |  (SolidHeap::VSizeof returns -1)
+ *   slot 13  VSetNodeID  this header void  |  SolidHeap.h + its .cpp say u32
+ *                                          |  (SolidHeap::VSetNodeID returns 0)
+ *
+ * ExpandingHeap's side was taken for consistency with the rest of the slots,
+ * NOT because it is known correct. Settle both when SolidHeap gets its slice.
  */
 #ifndef HEAP_H
 #define HEAP_H
@@ -168,10 +190,32 @@ struct Heap {
     void  Rescue();                          /* slot  7 */
     u32   MaxAllocationUnitSize();           /* slot 10 */
     void  SetNodeID(u32 id);                 /* slot 13 */
-    int   SetDefault();                      /* swaps the global default heap */
+    u32   ResizeToFit();                     /* slot 15, Rescue+Crash on 0 */
+    Heap* SetDefault();                      /* installs this as the default
+                                                heap, returns the previous one */
 
-    static void InitializeRootHeap();
-    static void SetupRootHeap();
+    /* STATIC -- and that is read off the argument count, not off the mangled
+       name. The Itanium ABI does not encode `this' in the parameter list, so a
+       static and a non-static member with the same declared parameters mangle
+       identically; include/SolidHeapAllocator.h states the same rule. Each of
+       these declares exactly as many parameters as its ROM body takes
+       arguments, leaving no room for a leading `this'. The one instance method
+       among them, ResizeToFit, is declared above and does use `this'. */
+    static Heap* SetupRootHeap();
+    static void  InitializeRootHeap();
+    static Heap* CreateRootHeap(void* mem, u32 size);
+    static Heap* CreateSolidHeap(u32 size, Heap* root, int align);
+    static Heap* CreateExpandingHeap(u32 size, Heap* root, int align);
+    static void  InitializeGameHeap(u32 size, Heap* root);
+    static void* SetupSolidHeapAsDefault(u32 size, Heap* root, int align);
+    static void  RestoreFromTemporary();
+
+    /* The two allocator factories. `flags' is the node id the allocator stamps
+       on the blocks it hands out; every caller passes 3. Returns NULL when the
+       aligned span is too small to hold the allocator's own bookkeeping --
+       0x30 bytes for the solid one, 0x4c for the expanding one. */
+    static struct SolidHeapAllocator*     CreateSolidHeapAllocator(void* address, u32 size, u32 flags);
+    static struct ExpandingHeapAllocator* CreateExpandingHeapAllocator(void* address, u32 size, u32 flags);
 };
 #endif
 

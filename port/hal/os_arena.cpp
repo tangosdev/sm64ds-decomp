@@ -24,24 +24,36 @@ static void arena_init(void)
 }
 
 extern "C" {
-// the OS globals object; the accessors ignore it, but the address must exist
-char data_020a0ea4[4];
+// The arena id Heap::SetupRootHeap selects from. The accessors below ignore it,
+// but the storage has to exist to link.
+//
+// Was spelled `char data_020a0ea4[4]'. Same word at 0x020a0ea4, which
+// config/arm9/symbols.txt has always also named ROOT_HEAP_ARENA_ID; src/ now
+// uses that name throughout and the address spelling appears nowhere, so this
+// reference was left dangling and port_refcheck caught it.
+//
+// It is a u32 id, not a pointer: Heap::InitializeRootHeap stores 0 to select
+// OS_ARENA_MAIN, and it is passed BY VALUE. The accessors took `void *' when
+// the caller was a .c file spelling its own mangled name; the migrated caller
+// declares them `u32', so they say u32 here too rather than relying on a
+// 32-bit value and a 64-bit parameter agreeing on a host they do not.
+u32 ROOT_HEAP_ARENA_ID;
 
-int func_02058ea0(void *) { arena_init(); return (int)(size_t)g_lo; }   /* arena lo */
-int func_02058eb4(void *) { arena_init(); return (int)(size_t)g_hi; }   /* arena hi */
+int func_02058ea0(u32) { arena_init(); return (int)(size_t)g_lo; }   /* arena lo */
+int func_02058eb4(u32) { arena_init(); return (int)(size_t)g_hi; }   /* arena hi */
 
 /* align `lo` up by `align`, bounded by hi -- mirrors OS_AllocFromArenaLo's
  * pre-alignment step as SetupRootHeap uses it */
-int func_02059040(void *, int lo, int hi, int align)
+int func_02059040(u32, int lo, int hi, int align)
 {
     (void)hi;
     return (lo + align - 1) & ~(align - 1);
 }
 
-void func_02058d58(void *, int newLo) { g_lo = (char *)(size_t)newLo; }  /* set lo */
+void func_02058d58(u32, int newLo) { g_lo = (char *)(size_t)newLo; }  /* set lo */
 
 /* carve `size` bytes aligned `align` from the low side */
-void *func_02058cd0(void *, int size, int align)
+void *func_02058cd0(u32, int size, int align)
 {
     arena_init();
     char *p = (char *)(((size_t)g_lo + align - 1) & ~(size_t)(align - 1));

@@ -6085,7 +6085,7 @@ src/_ZN6Memory8AllocateEjiP4Heap.c:
     complete
     .text start:0x0203c210 end:0x0203c24c
 
-src/_ZN4Heap18InitializeGameHeapEjPS_.c:
+src/_ZN4Heap18InitializeGameHeapEjPS_.cpp:
     complete
     .text start:0x0203c24c end:0x0203c274
 
@@ -6105,7 +6105,7 @@ src/_ZN4Heap9_AllocateEji.cpp:
     complete
     .text start:0x0203c29c end:0x0203c2a8
 
-src/_ZN4Heap20RestoreFromTemporaryEv.c:
+src/_ZN4Heap20RestoreFromTemporaryEv.cpp:
     complete
     .text start:0x0203c2a8 end:0x0203c2d8
 
@@ -6113,7 +6113,7 @@ src/_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i.cpp:
     complete
     .text start:0x0203c2d8 end:0x0203c2e4
 
-src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c:
+src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.cpp:
     complete
     .text start:0x0203c2e4 end:0x0203c324
 
@@ -6129,7 +6129,7 @@ src/_ZN13ExpandingHeap12VResizeToFitEv.cpp:
     complete
     .text start:0x0203c388 end:0x0203c390
 
-src/_ZN4Heap11ResizeToFitEv.c:
+src/_ZN4Heap11ResizeToFitEv.cpp:
     .text start:0x0203c390 end:0x0203c3d8
 
 src/_ZN9SolidHeap10VGetNodeIDEv.cpp:
@@ -6336,7 +6336,7 @@ src/_ZN4Heap18InitializeRootHeapEv.cpp:
     complete
     .text start:0x0203cae8 end:0x0203cb04
 
-src/_ZN4Heap13SetupRootHeapEv.c:
+src/_ZN4Heap13SetupRootHeapEv.cpp:
     complete
     .text start:0x0203cb04 end:0x0203cbc0
 
@@ -7881,7 +7881,7 @@ src/_ZN13HeapAllocator7DestroyEv.cpp:
     complete
     .text start:0x0204e3b4 end:0x0204e3c0
 
-src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.c:
+src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.cpp:
     complete
     .text start:0x0204e3c0 end:0x0204e40c
 
@@ -7953,7 +7953,7 @@ src/func_0204ebb8.c:
     complete
     .text start:0x0204ebb8 end:0x0204ebc4
 
-src/_ZN4Heap24CreateSolidHeapAllocatorEPvjj.c:
+src/_ZN4Heap24CreateSolidHeapAllocatorEPvjj.cpp:
     complete
     .text start:0x0204ebc4 end:0x0204ec10
 

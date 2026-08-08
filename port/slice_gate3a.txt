@@ -2,10 +2,10 @@
 # gate 2's allocator family (the smoke links slice_gate2.txt as well).
 # The OS arena underneath is port/hal/os_arena.cpp.
 
-src/_ZN4Heap13SetupRootHeapEv.c
+src/_ZN4Heap13SetupRootHeapEv.cpp
 src/_ZN4Heap14CreateRootHeapEPvj.c
 src/_ZN4Heap19CreateExpandingHeapEjPS_i.c
-src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.c
+src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.cpp
 src/_ZN4HeapC1EPvjP4Heap.c
 src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c
 src/_ZN13ExpandingHeap9VAllocateEji.cpp
