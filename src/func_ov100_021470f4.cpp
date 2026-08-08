@@ -12,7 +12,13 @@ typedef int Fix12i;
 struct PathLift { void BaseBehavior(); };
 extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, const Vector3&, unsigned int); }
+/* The fifth parameter is a SIGNED SHORT, not an unsigned int. Declared `unsigned
+   int' this mangles _ZN5Sound8PlayLongEjjjRK7Vector3j, which is the symbol that
+   correction removed -- and because this file declares the function in C++ and
+   lets the compiler mangle it, rather than spelling the mangled name, a textual
+   search for the old symbol could never find it. The pre-push reference check
+   did: "new unresolved reference: func_ov100_021470f4". */
+namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, const Vector3&, short); }
 struct Platform2 { void UpdateClsnPosAndRot(); };
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
