@@ -189,6 +189,28 @@ extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
     GX::LoadTex(s, o, z);
 }
 
+// Same migration, one function later. src/_ZN2GX11LoadTexPlttEPKvjj.cpp moved
+// to namespace-style C++ ("language-mode migration only ... nothing outside
+// this file can shift"). That holds for the ROM link, where the symbol is the
+// filename either way. It does not hold here: the name stopped being spelled
+// by hand and started being mangled by MSVC, so gx_upload_bridge.cpp's
+// extern "C" _ZN2GX11LoadTexPlttEPKvjj lost its definition and nine gate
+// binaries failed to link. Bridge it exactly as LoadTex above.
+namespace GX {
+void LoadTexPltt(const void *src, unsigned addr, unsigned size);
+}
+extern "C" void _ZN2GX11LoadTexPlttEPKvjj(const void *s, unsigned a, unsigned z)
+{
+    GX::LoadTexPltt(s, a, z);
+}
+
+// The migrated TU also reaches its destination-base global as C++-linkage
+// ?data_020a60b0@@3IA, while the storage above is inside this file's
+// extern "C" block. ALIAS, never a second definition -- two definitions would
+// link cleanly and then leave LoadTexPltt writing to a different base than
+// the one the Model budget code reads.
+#pragma comment(linker, "/alternatename:?data_020a60b0@@3IA=_data_020a60b0")
+
 // DMA fallback DMASyncWordTransfer uses; same synchronous copy semantics.
 extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl);
 extern "C" void DMAStartTransferFB(unsigned char ch, u32 src, u32 dst, u32 ctrl)

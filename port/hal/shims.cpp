@@ -29,11 +29,24 @@ int Fader::IsAtEnd() { return 0; }
 // hardware upload.
 void FaderBrightness::AdvanceFade() { AdvanceInterp(); }
 
-// The func_0203ae58 bridge that used to live here is gone, on the terms its own
-// comment set out: it existed because Fader::AdvanceInterp called the 20.12
-// approach helper by its historical address-shaped name, which the NDS build
-// resolves by address and the host cannot. That extern has now been modernised
-// to _Z14ApproachLinearRiii -- the real ROM symbol at 0x0203ae58, defined by
-// src/_Z14ApproachLinearRiii.cpp -- which is exactly what a host C++ build emits
-// for ApproachLinear(int&, int, int). The name now resolves on both sides
-// without help, so bridging it would be a duplicate definition.
+// The func_0203ae58 bridge was deleted here on the reasoning that
+// _Z14ApproachLinearRiii is "exactly what a host C++ build emits for
+// ApproachLinear(int&, int, int)", making a bridge a duplicate definition.
+// That is true of an ITANIUM-ABI host compiler. It is not true of MSVC, which
+// emits ?ApproachLinear@@YAHAAHHH@Z -- _Z... is the GCC/Clang spelling, not a
+// universal one. On top of that, decl_common.h now declares the symbol inside
+// its extern "C" guard, so Fader::AdvanceInterp emits a reference to the
+// C-decorated __Z14ApproachLinearRiii, which nothing on this host defines.
+// smoke.exe failed to link on exactly that.
+//
+// So the bridge returns, one layer lower than before: define the Itanium-shaped
+// name at C linkage and forward to the real C++ definition in
+// src/_Z14ApproachLinearRiii.cpp. Under MSVC those are two distinct symbols,
+// so this is not a duplicate definition. On a GCC/Clang host it WOULD be --
+// guard it by toolchain if the port ever grows a second host compiler.
+int ApproachLinear(int &ref, int target, int step);
+
+extern "C" int _Z14ApproachLinearRiii(int &ref, int target, int step)
+{
+    return ApproachLinear(ref, target, step);
+}
