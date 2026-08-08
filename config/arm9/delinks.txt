@@ -880,7 +880,7 @@ src/_ZN5Actor13LandingDustAtER7Vector3b.cpp:
     complete
     .text start:0x0200fac4 end:0x0200fb4c
 
-src/_ZN5Actor15HugeLandingDustEb.c:
+src/_ZN5Actor15HugeLandingDustEb.cpp:
     complete
     .text start:0x0200fb4c end:0x0200fb84
 
@@ -888,7 +888,7 @@ src/_ZN5Actor17HugeLandingDustAtER7Vector3b.cpp:
     complete
     .text start:0x0200fb84 end:0x0200fc0c
 
-src/_ZN5Actor11LandingDustEb.c:
+src/_ZN5Actor11LandingDustEb.cpp:
     complete
     .text start:0x0200fc0c end:0x0200fc44
 
@@ -900,27 +900,27 @@ src/func_0200fccc.c:
     complete
     .text start:0x0200fccc end:0x0200fd04
 
-src/_ZN5Actor19DisappearPoofDustAtERK7Vector3.c:
+src/_ZN5Actor19DisappearPoofDustAtERK7Vector3.cpp:
     complete
     .text start:0x0200fd04 end:0x0200fd40
 
-src/_ZN5Actor13SmallPoofDustEv.c:
+src/_ZN5Actor13SmallPoofDustEv.cpp:
     complete
     .text start:0x0200fd40 end:0x0200fd74
 
-src/_ZN5Actor16TriplePoofDustAtERK7Vector3.c:
+src/_ZN5Actor16TriplePoofDustAtERK7Vector3.cpp:
     complete
     .text start:0x0200fd74 end:0x0200fdc8
 
-src/_ZN5Actor14TriplePoofDustEv.c:
+src/_ZN5Actor14TriplePoofDustEv.cpp:
     complete
     .text start:0x0200fdc8 end:0x0200fdfc
 
-src/_ZN5Actor10PoofDustAtERK7Vector3.c:
+src/_ZN5Actor10PoofDustAtERK7Vector3.cpp:
     complete
     .text start:0x0200fdfc end:0x0200fe3c
 
-src/_ZN5Actor8PoofDustEv.c:
+src/_ZN5Actor8PoofDustEv.cpp:
     complete
     .text start:0x0200fe3c end:0x0200fe70
 

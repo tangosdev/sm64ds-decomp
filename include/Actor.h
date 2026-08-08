@@ -161,8 +161,40 @@ struct Actor : ActorDerived {
     void UpdatePosWithHorzSpeedAndAng();
     int  BumpedUnderneathByPlayer(Player &player);
     int  GetSubtraction(short a, short b);
-    void HugeLandingDustAt(Vector3 &pos, bool b);
-    void LandingDustAt(Vector3 &pos, bool b);
+
+    /* The dust group, 0x0200fac4..0x0200fe70. Two shapes, paired:
+       an `...At` worker taking a position, and a no-argument wrapper that
+       copies the actor's own 0x5c..0x64 into a stack Vector3 and calls it.
+
+       Five workers + five wrappers = ten, and all ten are members. The workers
+       need that said out loud, because not one of them reads a field: each
+       opens `mov r4, r1` and every later load is off r4, so the position
+       arrives in r1 and r0 is written by every caller and read by none of
+       them. Only `this` can be in r0. A static `...At(const Vector3&)` would
+       have taken the position in r0 instead. Disassembled at 0x0200fac4,
+       0x0200fb84, 0x0200fd04, 0x0200fd74 and 0x0200fdfc -- all five.
+
+       NAMING, and it is not a typo below: the two landing-dust wrappers call
+       the OTHER name's worker. HugeLandingDust (0x0200fb4c) calls 0x0200fac4 =
+       LandingDustAt, and LandingDust (0x0200fc0c) calls 0x0200fb84 =
+       HugeLandingDustAt -- verified by disassembling both `bl` targets, so it
+       is a property of the ROM and not of a stale comment. One side of each
+       pair carries the wrong adjective. Which side is unknowable from here:
+       these are imported names, nothing in the bytes ranks 0xb1/+0x5a000
+       against 0xb2/+0x28000 as the "huge" one, and a symbol rename would have
+       to find callers that never spell the name. Recorded, deliberately not
+       renamed. */
+    void PoofDust();
+    void PoofDustAt(const Vector3 &pos);            /* particles 0x122, 0x123 */
+    void SmallPoofDust();
+    void DisappearPoofDustAt(const Vector3 &pos);   /* particles 0x127, 0x128 */
+    void TriplePoofDust();
+    void TriplePoofDustAt(const Vector3 &pos);      /* particles 0x124..0x126 */
+    void LandingDust(bool doRaycast);
+    void HugeLandingDust(bool doRaycast);
+    void HugeLandingDustAt(Vector3 &pos, bool doRaycast);  /* particle 0xb2 */
+    void LandingDustAt(Vector3 &pos, bool doRaycast);      /* particle 0xb1 */
+
     void KillAndTrackInDeathTable();
     void TrackInDeathTable();
     void SpawnSoundObj(u32 soundObjParam);
