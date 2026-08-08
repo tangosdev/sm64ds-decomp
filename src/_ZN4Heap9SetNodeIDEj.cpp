@@ -1,16 +1,17 @@
 //cpp
 // @symbol _ZN4Heap9SetNodeIDEj
-/* recovered: named members + shared header, real C++ method */
+/* Heap::SetNodeID(u32) at 0x0203c408 -- plain forward to slot 13. The node id
+ * is the tag the allocator stamps on blocks it hands out, so a later sweep can
+ * free everything belonging to one id (see
+ * ExpandingHeapAllocator::DeallocateAll).
+ *
+ * The old shadow declared its slot-13 entry as `v13(void*)' and converted the
+ * incoming id to a pointer to call it -- an invented cast that existed only to
+ * satisfy the invented declaration. Slot 13 takes a u32
+ * (ExpandingHeap::VSetNodeID(u32 id)), so the conversion is gone. */
 #include "Heap.h"
-struct Base {
-    virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
-    virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
-    virtual void v8(); virtual void v9(); virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(void*);
-};
 
-void Heap::SetNodeID(unsigned int a_)
+void Heap::SetNodeID(u32 id)
 {
-    void * a = (void *)a_;
- ((Base *)this)->v13(a);
+    VSetNodeID(id);
 }
