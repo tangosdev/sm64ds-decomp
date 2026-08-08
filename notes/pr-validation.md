@@ -9,7 +9,7 @@ one misleading percentage:
 | Coverage denominator | Configured function count and code-byte universe | Must not change silently |
 | Source-built functions and bytes | Code actually linked from our translation units instead of a ROM gap object | Must not regress |
 | Module fidelity | Linked executable-module bytes equal retail | Stock head must pass, unless base and head have the same recorded pre-existing build failure |
-| Contributor lineage | The first matcher still owns a surviving match after moves/renames | Must not change or disappear |
+| Contributor lineage | The first matcher still owns a surviving match after moves/renames | Must not change or disappear, unless the PR carries `attribution-override` |
 | Relocations | Affected source reproduces bytes and names the correct destinations | No WRONG or NO-REPRO |
 | Port references | `port/`'s manifests and symbol bridges still name files and symbols that exist | No stale reference (optional phase) |
 
@@ -51,6 +51,23 @@ The compiler and ROM remain on the private worker. For each relay job:
 A base failure is not hidden. If base and merge fail in the same phase with the same
 failure signature, the report shows a warning and permits a non-regressing PR. If a green
 base becomes red, or the failure changes, validation fails.
+
+## Moving credit on purpose
+
+Some PRs move contributor credit as their whole point — pinning a stem in
+`attribution.json` is exactly that — and the lineage gate is right to notice and wrong to
+block them. Label such a pull request **`attribution-override`**. The workflow re-submits
+on the label, the relay carries it to the worker, and the worker adds
+`--allow-attribution-change` to step 6.
+
+The finding does not go away: the check still names every file whose credit moved, with
+the contributor before and after, and says the label accepted it. Everything else is
+unaffected — a lost match, a changed coverage denominator, or a failed ROM build fails a
+labelled PR exactly as it fails an unlabelled one.
+
+Either way, the check now names the moves rather than counting them. `0 added, 2 changed,
+0 lost` was unactionable for a PR author who cannot read the worker's log: the summary
+names the first few and the check body carries a table of up to 25.
 
 The merge gate always uses the stock profile. `--profile mods` is a developer tool for
 building intentional experiments and is never accepted as reconstruction proof.

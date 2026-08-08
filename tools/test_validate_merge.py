@@ -1,4 +1,5 @@
 """PR reporting is revision-scoped so committed R100 moves preserve credit."""
+import json
 import os
 import pathlib
 import subprocess
@@ -171,6 +172,70 @@ class ValidateMerge(unittest.TestCase):
             VM.build_report(
                 self.base, "HEAD", require_merge_commit=True,
                 expected_pr_head=self.base)
+
+    def test_a_credit_change_names_the_file_and_both_contributors(self):
+        # "2 changed" is unactionable: the PR author cannot see which files moved,
+        # and the worker log they would need is on the maintainer's box.
+        (self.repo / "attribution.json").write_text(
+            '{"overrides": {"src/Example.c": "bob"}}\n', encoding="utf-8")
+        commit(self.repo, "pin credit", "maintainer")
+        report = VM.build_report(self.base, "HEAD")
+        self.assertEqual(report["status"], "Failed")
+        self.assertIn("src/Example.c: alice -> bob", "; ".join(report["reasons"]))
+        self.assertEqual(report["attribution"]["changed"][0]["path"], "src/Example.c")
+        self.assertIn("| `arm9:0x02000000` | `src/Example.c` | alice | bob |",
+                      report["reportMarkdown"])
+
+    def test_attribution_override_reports_the_change_without_failing(self):
+        # The label says "I know, and I meant it" -- so the finding is still computed
+        # and still named, it just stops being a reason the merge cannot land.
+        (self.repo / "attribution.json").write_text(
+            '{"overrides": {"src/Example.c": "bob"}}\n', encoding="utf-8")
+        commit(self.repo, "pin credit", "maintainer")
+        report = VM.build_report(self.base, "HEAD", allow_attribution_change=True)
+        self.assertEqual(report["status"], "Passed")
+        self.assertEqual(report["reasons"], [])
+        self.assertIn("src/Example.c: alice -> bob", "; ".join(report["warnings"]))
+        self.assertIn("(override label)", report["reportMarkdown"])
+        self.assertEqual(len(report["attribution"]["changed"]), 1)
+
+    def test_a_wholesale_credit_move_stays_within_the_relay_summary_limit(self):
+        # The relay rejects a result whose summary runs past 500 characters, and a
+        # rejected result is a job that never reports at all. Naming files is worth
+        # length; a repin sweep must still fit in the reply that carries the verdict.
+        symbols = self.repo / "config" / "arm9" / "symbols.txt"
+        text = symbols.read_text(encoding="utf-8")
+        overrides = {}
+        for i in range(40):
+            name = f"ExtremelyLongMangledFunctionName{i:02d}"
+            text += f"{name} kind:function(arm,size=0x4) addr:0x{0x02000004 + i * 4:08x}\n"
+            (self.repo / "src" / f"{name}.c").write_text(
+                f"int {name}(void) {{ return 0; }}\n")
+            overrides[f"src/{name}.c"] = "bob"
+        symbols.write_text(text, encoding="utf-8")
+        base = commit(self.repo, "more functions", "alice")
+        (self.repo / "attribution.json").write_text(
+            json.dumps({"overrides": overrides}), encoding="utf-8")
+        commit(self.repo, "repin them all", "maintainer")
+
+        report = VM.build_report(base, "HEAD")
+        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(len(report["attribution"]["changed"]), 40)
+        self.assertLessEqual(len(report["summary"]), VM.SUMMARY_LIMIT)
+        self.assertIn("+37 more", "; ".join(report["reasons"]))
+        self.assertIn("+15 more", report["reportMarkdown"])
+
+    def test_override_does_not_excuse_a_non_attribution_failure(self):
+        # Scoped to attribution only: a label about credit must not wave through a
+        # PR that actually lost matched code.
+        (self.repo / "src" / "Example.c").write_text(
+            "// NONMATCHING\nint Example(void) { return 0; }\n")
+        (self.repo / "attribution.json").write_text(
+            '{"overrides": {"src/Example.c": "bob"}}\n', encoding="utf-8")
+        commit(self.repo, "unmatch and repin", "maintainer")
+        report = VM.build_report(self.base, "HEAD", allow_attribution_change=True)
+        self.assertEqual(report["status"], "Failed")
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
 
     def test_identical_base_failure_is_warning_but_changed_failure_blocks(self):
         base_failure = {"status": "error", "failure": {
