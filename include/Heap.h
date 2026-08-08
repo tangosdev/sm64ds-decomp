@@ -212,9 +212,15 @@ struct Heap {
                                                 heap, returns the previous one */
 
     /* Tail-call veneers. Each is a three-word thunk in the ROM --
-       `ldr ip,[pc] / bx ip / .word target' -- reaching a sibling too far away
-       for a b/bl displacement. They are real members with real names, not
-       compiler-generated stubs, so they are declared here like anything else. */
+       `ldr ip,[pc] / bx ip / .word target'. They are real members with real
+       names, not compiler-generated stubs, so they are declared here like
+       anything else.
+
+       NOT distance-driven, despite the shape. An earlier revision of this
+       comment said they reach "a sibling too far away for a b/bl displacement",
+       which is false: b/bl reaches +-32MB and these five span 0xc to 0x430
+       bytes -- InitializeSolidHeapAsDefault sits TWELVE BYTES before the
+       function it jumps to. Whatever produced them, it was not range. */
     void  _Destroy();                        /* -> Destroy */
     void* _Allocate(u32 size, int align);    /* -> Allocate */
     void  _Deallocate(void* ptr);            /* -> Deallocate */

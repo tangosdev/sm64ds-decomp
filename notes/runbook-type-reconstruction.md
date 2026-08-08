@@ -463,7 +463,45 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
 
 ## 8. Not a dead end: tail-call veneers migrate like anything else
 
-**107 files in `src/` are tail-call veneers** -- three-word thunks of the shape
+**58 functions are tail-call veneers, and COUNT THEM THE WAY THIS PARAGRAPH SAYS
+OR YOU WILL GET A DIFFERENT NUMBER.** The definition used here is a ROM property:
+a symbol declared `kind:function(arm,size=0xc)` whose first two words are
+
+```
+ldr ip, [pc, #N]
+bx  ip
+```
+
+That yields **58**, all 58 with a source file -- 37 `.c` and 21 `.cpp` -- of which
+**21 have a mangled stem and all 21 still hand-spell it**. Five of those 21 are
+`Heap`'s and are done.
+
+An earlier revision of this section said 107, which was a fact about the prose
+and not about the ROM: it came from `grep -rl "tail-call veneer" src/`, and that
+comment is applied to more files than carry the strict shape. A reviewer
+scanning the whole image for the byte pattern without the size constraint counted
+163. All three numbers are defensible and none of them is interchangeable, which
+is the point -- section 1 of this runbook says to reproduce a figure before
+quoting it, and this section had to learn it. To reproduce:
+
+```sh
+python - <<'EOF'
+import pathlib, re, struct
+BASE = 0x02004000
+b = pathlib.Path("extracted/arm9_dec.bin").read_bytes()
+n = 0
+for line in pathlib.Path("config/arm9/symbols.txt").read_text().splitlines():
+    m = re.match(r"\s*(\S+)\s+kind:function\(arm,size=0xc\)\s+addr:(0x[0-9a-f]+)", line)
+    if not m: continue
+    off = int(m.group(2), 16) - BASE
+    if not (0 <= off <= len(b) - 12): continue
+    w0, w1 = struct.unpack_from("<II", b, off)
+    if (w0 & 0xfffff000) == 0xe59fc000 and w1 == 0xe12fff1c: n += 1
+print(n)   # arm9 only; overlays add the rest
+EOF
+```
+
+Each is a three-word thunk of the shape
 
 ```
 ldr ip, [pc]
@@ -471,8 +509,7 @@ bx  ip
 .word <target>
 ```
 
-reaching a sibling function. 82 are `.c`, 25 are `.cpp`, and 38 spell a mangled
-symbol by hand. Every one of them was written the same way:
+reaching a sibling function. Every one of them was written the same way:
 
 ```cpp
 extern "C" {
