@@ -99,6 +99,18 @@ def load_modules():
     cfg9 = REPO / "config" / "arm9"
     mods = {"arm9": Mod("arm9", 0x02004000, ARM9.read_bytes(),
                         load_sections(cfg9 / "delinks.txt"))}
+    # ITCM is a separate module with its own code section, and leaving it out was not
+    # cosmetic: a vtable slot pointing at an ITCM function is code in NO loaded module,
+    # so is_code() said False and the walk stopped dead at that slot. dBgW_Kc read 3
+    # slots against dBgW's 13 because slots 3-7 are 0x01ffd920 and friends. 124 classes
+    # ended up reporting fewer slots than their own base, which is impossible.
+    for name, base in (("itcm", 0x01FF8000), ("dtcm", 0x027E0000)):
+        b = next((p for p in (REPO / "build" / ("%s.bin" % name),
+                              REPO / "extracted" / "dsd" / "arm9" / ("%s.bin" % name))
+                  if p.is_file()), None)
+        d = cfg9 / name / "delinks.txt"
+        if b and d.is_file():
+            mods[name] = Mod(name, base, b.read_bytes(), load_sections(d))
     cfg = yaml.safe_load((OVDIR / "overlays.yaml").read_text(encoding="utf-8"))
     for ov in cfg["overlays"]:
         p = OVDIR / ov["file_name"]
@@ -121,10 +133,96 @@ def load_symbol_names():
     return out
 
 
+_codemod_cache: dict = {}
+
+
+def code_modules(mods, mod_name):
+    """The modules whose code a vtable in `mod_name` may legitimately point at.
+
+    "Is this word code" was originally asked of the vtable's own module plus arm9, and
+    that is too narrow in two ways, each of which stopped a walk dead at the offending
+    slot:
+
+      * ITCM is its own module -- dBgW_Kc slots 3-7 are 0x01ffd920 and friends, code in
+        no module that was being consulted.
+      * a slot may point into a DIFFERENT overlay -- dScMgAmida_c's table lives in ov006
+        while slot 1 (0x020b0930) is code in ov002/ov003/ov004/ov007. 183 of 413 base
+        edges already cross a module boundary, so this is ordinary.
+
+    Asking every module instead is too WIDE, and fails in the other direction: it reads
+    a word as a slot because some unrelated overlay happens to host code at that address,
+    and dScStage_c then ran to 70 slots against a base of 18 with the tail resolving to
+    no symbol at all.
+
+    The bound is residency. Overlays share address space and the game's own LoadOverlay
+    panics if two overlapping ones are resident together, so an overlay whose range
+    intersects this one's could not have been in memory while this vtable was live and
+    is not a candidate. That is `overlay_residency.conflict` -- rule E2, read out of the
+    ROM rather than assumed -- and arm9/itcm/dtcm conflict with nothing.
+
+    The allowance is one-directional, and that matters. `conflict` reports that arm9
+    conflicts with nothing -- true, arm9 is always resident -- so applying it to an
+    arm9-hosted vtable admits EVERY overlay and bounds nothing. dScStage_c is the case:
+    an 18-slot dScene_c-family table (its slot 16 is _ZN5StageD1Ev) that ran to 70, the
+    tail landing in overlay code at 0x0211*. An arm9 class's methods are arm9 or ITCM
+    code, so an arm9-hosted table gets no cross-overlay allowance at all.
+    """
+    always = ("arm9", "itcm", "dtcm")
+    if mod_name not in _codemod_cache:
+        if mod_name in always:
+            keep = [k for k in mods if k in always]
+        else:
+            try:
+                import overlay_residency as OR
+                keep = [k for k in mods
+                        if k in always or k == mod_name or not OR.conflict(k, mod_name)]
+            except Exception:
+                # Fail toward the narrow, previously-shipped behaviour rather than the
+                # wide one: a missing extracted/ tree must not silently widen the walk.
+                keep = [k for k in mods if k in always or k == mod_name]
+        _codemod_cache[mod_name] = [mods[k] for k in keep]
+    return _codemod_cache[mod_name]
+
+
+def trim_alternating_tail(slots, base_slots=None):
+    """Drop a trailing run that alternates null / pointer.  Returns (slots, n_dropped).
+
+    The end-of-table rule only fires on a zero whose successor is a KNOWN typeinfo
+    record.  When what follows the vtable is a `{0, handler}` table instead -- the
+    successor is a code pointer -- nothing stops the walk and it reads the whole table
+    as slots.  41 classes did this, 703 slots' worth.
+
+    A genuine vtable does not alternate.  Pure virtuals cluster (dBgW is pure at 3, 4,
+    5); they do not appear at every other index for thirty entries.  So the longest
+    strictly alternating SUFFIX of four or more is the following table, and the cut is
+    at its first element whichever way round the pair is stored -- daPeach_c's reads
+    {fn, 0} and daObjSwdoor_c's reads {0, fn}, and both land on the right boundary
+    because the run, not its parity, is the signal.
+
+    Both then satisfy the invariant that made this findable: daPeach_c cuts to 31,
+    exactly dActor_c's count, and daObjSwdoor_c to 32, exactly dBgActor_c's.  Neither
+    number was put in by hand.
+
+    The cut never goes below the base's slot count -- a derived table cannot be shorter
+    than the table it extends, so a run reaching back that far is evidence the pattern
+    matched something real, and the trim declines rather than corrupting the class.
+    """
+    n = len(slots)
+    if n < 4:
+        return slots, 0
+    i = n - 1
+    while i - 1 >= 0 and bool(slots[i - 1]) != bool(slots[i]):
+        i -= 1
+    if n - i < 4:
+        return slots, 0
+    if base_slots is not None and i < base_slots:
+        return slots, 0
+    return slots[:i], n - i
+
+
 def read_slots(mods, mod_name, vt, record_addrs):
     """Slots of the vtable at `vt`.  None entries are pure-virtual."""
     m = mods[mod_name]
-    a9 = mods["arm9"]
     out = []
     for i in range(MAX_SLOTS):
         a = vt + 4 * i
@@ -139,7 +237,7 @@ def read_slots(mods, mod_name, vt, record_addrs):
                 break
             out.append(None)
             continue
-        if m.is_code(w) or a9.is_code(w):
+        if any(x.is_code(w) for x in code_modules(mods, mod_name)):
             out.append(w)
             continue
         break
@@ -179,6 +277,26 @@ def build():
                                 rec_addrs[vmod]),
         }
 
+    # Trim the following-table tails, bases before derived so each class's floor is its
+    # base's already-trimmed count. Done as a second pass because the trim needs the
+    # parent's length and read_slots has no view of the hierarchy.
+    def depth(c):
+        d, seen = 0, set()
+        while c in parent and c not in seen:
+            seen.add(c)
+            c = parent[c]
+            d += 1
+        return d
+
+    trimmed = {}
+    for cls in sorted(tables, key=depth):
+        p = parent.get(cls)
+        floor = len(tables[p]["slots"]) if p and p in tables else None
+        tables[cls]["slots"], dropped = trim_alternating_tail(
+            tables[cls]["slots"], floor)
+        if dropped:
+            trimmed[cls] = dropped
+
     def name_of(mod, addr):
         return syms.get(mod, {}).get(addr) or syms.get("arm9", {}).get(addr)
 
@@ -196,7 +314,14 @@ def build():
         t["parent"] = p
         t["parent_slots"] = len(pt["slots"]) if pt else None
         t["own"] = own
-    return tables, parent, by_name
+
+    # The invariant that made both bugs findable, now a gate rather than a comment:
+    # every base slot is either inherited or overridden and neither removes one, so a
+    # derived table is never shorter than its base's. A violation means the walk
+    # stopped early again and the output is not to be trusted.
+    short = [(c, len(t["slots"]), t["parent_slots"]) for c, t in tables.items()
+             if t["parent_slots"] and len(t["slots"]) < t["parent_slots"]]
+    return tables, parent, by_name, {"trimmed": trimmed, "short": short}
 
 
 def main():
@@ -211,7 +336,7 @@ def main():
     ap.add_argument("--out", default=str(REPO / "build" / "rtti_vtables.json"))
     a = ap.parse_args()
 
-    tables, parent, by_name = build()
+    tables, parent, by_name, diag = build()
     pathlib.Path(a.out).write_text(json.dumps(tables, indent=1) + "\n",
                                    encoding="utf-8", newline="\n")
 
@@ -224,6 +349,20 @@ def main():
         if got != want:
             print("SELF-CHECK FAIL %s: %d slots, expected %d (%s)" % (cls, got, want, why))
             bad += 1
+
+    if diag["trimmed"]:
+        print("trimmed a following-table tail from %d class(es), %d slots"
+              % (len(diag["trimmed"]), sum(diag["trimmed"].values())))
+    # A derived table shorter than its base is impossible; if any survive, the walk is
+    # still stopping early somewhere and the output should not be consumed as fact.
+    if diag["short"]:
+        print("SELF-CHECK FAIL: %d class(es) have fewer slots than their base:"
+              % len(diag["short"]))
+        for c, got, want in sorted(diag["short"])[:10]:
+            print("   %-26s %d < %d" % (c, got, want))
+        bad += 1
+    else:
+        print("invariant OK: no class has fewer slots than its base")
     if bad:
         return 1
 
@@ -380,7 +519,30 @@ def emit_headers(tables):
         p = REPO / "include" / ("%s.h" % cls)
         p.write_text(text, encoding="utf-8", newline="\n")
         written.append("%s  (%d field(s), first at 0x%x)" % (p.name, len(offs), offs[0]))
-    return "wrote:\n  " + "\n  ".join(written)
+
+    # Retract a header this pass previously wrote for a class that no longer has any
+    # evidence. Emitting only on the has-fields branch leaves a stale file behind, and a
+    # stale one is worse than none: include/daObjSwdoor_c.h declared four fields read
+    # from twelve "own" methods, of which nine were the over-read tail this walk used to
+    # produce. On corrected slots that class has 3 own methods and 0 own fields, so every
+    # field in it was attributed from functions belonging to another structure entirely.
+    # Only files carrying this pass's own regenerate line are touched; a hand-written
+    # header is never removed.
+    MARK = "Regenerate: python tools/rtti_vtables.py --emit-headers"
+    retracted = []
+    for cls, info in sorted(data.items()):
+        if info.get("fields"):
+            continue
+        p = REPO / "include" / ("%s.h" % cls)
+        if p.is_file() and MARK in p.read_text(encoding="utf-8", errors="replace"):
+            p.unlink()
+            retracted.append("%s  (%d own method(s), 0 own field(s))"
+                             % (p.name, len(info.get("methods") or [])))
+    out = "wrote:\n  " + "\n  ".join(written)
+    if retracted:
+        out += ("\nretracted (no longer any evidence):\n  "
+                + "\n  ".join(retracted))
+    return out
 
 
 def recover_fields(tables):

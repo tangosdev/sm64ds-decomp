@@ -11,7 +11,10 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message18DisplayPauseTextVSEt(unsigned short n) {
+}
+
+void Message::DisplayPauseTextVS(unsigned short n)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -29,5 +32,4 @@ void _ZN7Message18DisplayPauseTextVSEt(unsigned short n) {
     func_020341a8(0x160, 0x20);
     data_0209fce8 = 0x22;
     func_020341a8(0x200, 0x20);
-}
 }

@@ -14,7 +14,10 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message21DisplaySaveStatusTextEt(unsigned short n) {
+}
+
+void Message::DisplaySaveStatusText(unsigned short n)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -31,5 +34,4 @@ void _ZN7Message21DisplaySaveStatusTextEt(unsigned short n) {
     ls = 0x2ff;
     MultiStore16(ls, s, 0x800);
     func_0201d418(0x109, 0x70);
-}
 }

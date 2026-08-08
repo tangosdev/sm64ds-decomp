@@ -31,6 +31,27 @@ struct Message {
     static void DisplaySaveMenuText(u16 msgID);
     static void DisplayLevelClearText(u16 msgID, s8 course);
     static void SetTextGlobalsVS();
+
+    /* The rest of the display entry points. `Et` is u16, `Eth` is (u16, u8),
+       `Ej` is u32 -- all read off the mangled name.
+
+       NOTE the disagreement this exposes: DisplayLevelClearText passes its course
+       to func_0201d850 declared `signed char`, while DisplayPauseText declares the
+       same function `unsigned char`. One function, two signatures, which is the
+       declaration debt notes/declaration-centralization.md measures at 27%. Both
+       reproduce, because the byte gate cannot see it. Not settled here. */
+    static void DisplayText(u16 msgID);
+    static void DisplaySaving(u16 msgID);
+    static void DisplayPauseText(u16 msgID, u8 course);
+    static void DisplayVsExitText(u16 msgID);
+    static void DisplayPauseTextVS(u16 msgID);
+    static void DisplayDontSaveText(u16 msgID);
+    static void DisplaySaveStatusText(u16 msgID);
+    static void DisplayOptionsMenuText(u16 msgID);
+    static void DisplayControllerModeText(u16 msgID);
+    static void DisplayStarNameForStarSelect(u32 star);
+    static void DisplayCourseNameForStarSelect(u32 course);
+    static void LoadTextVS();
 #endif
 };
 

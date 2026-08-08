@@ -250,6 +250,32 @@ def build_join(rtti, vt, funcs, data, enrolled):
     except ImportError:                                   # pragma: no cover
         srcpath = None
 
+    # A slot can point at a function in a THIRD module -- dScMgBomroom_c's table is in
+    # ov006 while slot 1 (0x020b0930) is ov004's code, and loading ov006 always loads
+    # ov004 (overlay_residency rule E3). Trying only the vtable's module and arm9 left
+    # 739 slots looking unnamed when they are simply named somewhere else. Candidates
+    # are bounded by residency, and an address hosted by two co-resident modules is
+    # reported as unresolved rather than guessed -- overlays share address space and
+    # notes/rtti-reconciliation.md 1 records two addresses that host two classes each.
+    by_addr = collections.defaultdict(list)
+    for (mod, addr), (nm, size) in funcs.items():
+        by_addr[addr].append((mod, nm))
+
+    def resolve(vmod, addr):
+        hit = funcs.get((vmod, addr)) or funcs.get(("arm9", addr))
+        if hit:
+            return hit[0]
+        cands = by_addr.get(addr) or []
+        if not cands:
+            return None
+        try:
+            import overlay_residency as OR
+            cands = [c for c in cands if not OR.conflict(c[0], vmod)]
+        except Exception:
+            return None
+        names = {nm for _, nm in cands}
+        return names.pop() if len(names) == 1 else None
+
     out = {}
     for name, v in vt.items():
         slots = v.get("slots") or []
@@ -262,9 +288,7 @@ def build_join(rtti, vt, funcs, data, enrolled):
                 rows.append({"slot": i, "addr": None, "symbol": None, "src": None,
                              "enrolled": False, "own": i in own_by_slot, "pure": True})
                 continue
-            hit = funcs.get((vmod, s)) or funcs.get(("arm9", s))
-            sym = hit[0] if hit else None
-            size = hit[1] if hit else None
+            sym = resolve(vmod, s)
             path = None
             if sym and srcpath:
                 p = srcpath.path_for(sym)
@@ -278,7 +302,7 @@ def build_join(rtti, vt, funcs, data, enrolled):
             is_enr = bool(sym and sym in enrolled)
             if is_enr:
                 enr += 1
-            rows.append({"slot": i, "addr": "0x%08x" % s, "symbol": sym, "size": size,
+            rows.append({"slot": i, "addr": "0x%08x" % s, "symbol": sym,
                          "src": path, "enrolled": is_enr,
                          "own": i in own_by_slot, "pure": False})
         live = len(slots) - pure
