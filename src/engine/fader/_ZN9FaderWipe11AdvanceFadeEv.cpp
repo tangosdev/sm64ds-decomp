@@ -15,30 +15,30 @@ extern int data_020a0e68[];
 
 void FaderWipe::AdvanceFade()
 {
-    Fix12i old = *(Fix12i*)((char*)&mFadeAmount);
+    Fix12i old = *(Fix12i*)((char*)&currInterp);
     Fix12i cur;
     _ZN5Fader13AdvanceInterpEv(((char*)this));
-    cur = *(Fix12i*)((char*)&mFadeAmount);
+    cur = *(Fix12i*)((char*)&currInterp);
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
         _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16*)0x4000050, 0x3f, -0x10);
     } else {
-        if (*(Fix12i*)((char*)&unk_008) != 0) {
+        if (*(Fix12i*)((char*)&speed) != 0) {
             if (old != 0x1000) *(u16*)0x4000050 = 0;
         }
-        if (*(Fix12i*)((char*)&mFadeAmount) != 0) {
-            Fix12i scale = (Fix12i)(((long long)(0x1000 - *(Fix12i*)((char*)&mFadeAmount)) * 0x20000 + 0x800) >> 12);
+        if (*(Fix12i*)((char*)&currInterp) != 0) {
+            Fix12i scale = (Fix12i)(((long long)(0x1000 - *(Fix12i*)((char*)&currInterp)) * 0x20000 + 0x800) >> 12);
             Matrix4x3_FromTranslation(data_020a0e68, 0, 0, -0x1000);
             Matrix4x3_ApplyInPlaceToScale(data_020a0e68, scale, scale, scale);
             Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, 0x4000);
             _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3(((char*)this) + 0x18, data_020a0e68, 0);
         }
     }
-    if (*(Fix12i*)((char*)&mFadeAmount) == old) return;
+    if (*(Fix12i*)((char*)&currInterp) == old) return;
     {
         u16 color = unk_00c;
         int m = color ? 0x10 : -0x10;
-        int prod = *(Fix12i*)((char*)&mFadeAmount) * m;
+        int prod = *(Fix12i*)((char*)&currInterp) * m;
         int r = prod >> 12;
         if (r != 0) {
             _ZN3G2x18SetBlendBrightnessEPVtts((volatile u16*)0x4001050, 0x3f, r);

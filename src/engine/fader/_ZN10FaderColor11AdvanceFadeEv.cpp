@@ -10,13 +10,13 @@ void _ZN3G2x18SetBlendBrightnessEPVtts(volatile unsigned short* p, unsigned shor
 
 void FaderColor::AdvanceFade()
 {
-    int old = unk_004;
+    int old = currInterp;
     _ZN5Fader13AdvanceInterpEv(((char*)this));
-    if (unk_004 == old) return;
+    if (currInterp == old) return;
     {
         unsigned short color = unk_00c;
         int m = color ? 0x10 : -0x10;
-        int r = (unk_004 * m) >> 12;
+        int r = (currInterp * m) >> 12;
         if (r != 0) {
             _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short*)0x4000050, 0x3f, r);
             _ZN3G2x18SetBlendBrightnessEPVtts((volatile unsigned short*)0x4001050, 0x3f, r);

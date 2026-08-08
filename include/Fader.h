@@ -11,15 +11,39 @@
  * Fader::~Fader stores it into [this+0x0]. So the vptr is at 0x0 and the first
  * data member starts at 0x4. Fader::AdvanceInterp reads a Fix12i at 0x8 and
  * passes &[this+0x4] to the 20.12 approach helper at 0x0203ae58, which pins
- * currInterp=0x4 and speed=0x8, both 4 bytes.
+ * currInterp=0x4 and speed=0x8, both 4 bytes. FaderWipe::FaderWipe writes
+ * 0x1000 to [this+0x4] and 0 to [this+0x8] on the way up the chain, which is
+ * the same two fields seen from the constructor side.
  *
- * VTABLE ORDER. FaderBrightness::IsBetweenStartAndEnd calls two virtuals
- * through slots 5 and 6 and returns true only when both are 0 -- "not at the
- * start and not at the end". With the Itanium ABI's two destructor slots (D1,
- * D0) at 0 and 1, that puts IsAtStart at 5 and IsAtEnd at 6 and leaves 2..4 for
- * AdvanceFade, SetBackwardTime and SetForwardTime. That exact signature list is
- * what src/_ZN15FaderBrightness14SetForwardTimeEj used to reproduce the ROM
- * before this header existed, so the ordering is verified, not merely plausible.
+ * VTABLE: TEN SLOTS, AND THIS HEADER USED TO CLAIM SEVEN. The old text derived
+ * 0..6 from FaderBrightness::IsBetweenStartAndEnd calling slots 5 and 6, and
+ * stopped there because nothing it had looked at reached higher. Slots 7, 8 and
+ * 9 exist, and FaderBrightness declared their functions as ordinary non-virtual
+ * members -- three functions the ROM dispatches through the vtable that no
+ * header said were virtual.
+ *
+ * Read _ZTV5Fader at 0x0208eafc and the table is unambiguous, because eight of
+ * its ten words are zero:
+ *
+ *     0208eafc  0201786c  _ZN5FaderD1Ev          slot 0
+ *     0208eb00  02017848  _ZN5FaderD0Ev          slot 1
+ *     0208eb04..0208eb20  00000000               slots 2..9, all null
+ *
+ * A null slot is a pure virtual, so Fader is ABSTRACT and declares eight of
+ * them -- which is why nothing in the ROM ever instantiates one. The names and
+ * order come from the concrete tables, where every slot resolves:
+ * _ZTV15FaderBrightness (0x0208eacc), _ZTV10FaderColor (0x0208eb2c) and
+ * _ZTV9FaderWipe (0x0208ea9c) are each ten entries long and agree slot for slot.
+ *
+ * THE CHAIN is Fader -> FaderBrightness -> FaderColor -> FaderWipe, and
+ * _ZN9FaderWipeC1Ev (0x02017480) is the single clearest statement of it: it
+ * writes all four vtables into [this+0x0] in that exact order, 0x0208eafc then
+ * 0x0208eacc then 0x0208eb2c then 0x0208ea9c, one per sub-object constructor.
+ * The ROM's own type graph says the same -- tools/rtti_extract.py reads
+ * __si_class_type_info records naming these classes dFader_c, dFdBrightness_c,
+ * dFdColor_c and dFdWipe_c, each pointing at exactly one base, in that chain.
+ * (dFdColor_c has two further children the tree has no name for at all,
+ * dFdDummy_c and dWipe_c. dWipe_c is NOT dFdWipe_c; do not coin "Wipe".)
  *
  * FIXED POINT. currInterp runs 0..0x1000 -- 0.0..1.0 in 20.12. SetToEnd writes
  * 0x1000 and SetToStart writes 0; SetForwardTime derives speed as 1.0/frames
@@ -34,16 +58,27 @@ struct Fader {
     Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
     Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
 
-    virtual ~Fader();                          /* vtable slots 0 (D1), 1 (D0) */
-    virtual void AdvanceFade();                /* slot 2 */
-    virtual int SetBackwardTime(u32 frames);   /* slot 3 */
-    virtual int SetForwardTime(u32 frames);    /* slot 4 */
-    virtual int IsAtStart();                   /* slot 5 */
-    virtual int IsAtEnd();                     /* slot 6 */
+    /* Declared first so the destructor is the key function. It is only ever
+       defined as an extern "C" free function, in _ZN5FaderD0Ev.c and
+       _ZN5FaderD1Ev.c, so no translation unit defines it and CW 1.2 emits no
+       vtable group to collide with the ROM's. */
+    virtual ~Fader();                                /* slots 0 (D1), 1 (D0) */
+
+    /* Pure, all eight: the corresponding words in _ZTV5Fader are null. */
+    virtual void AdvanceFade() = 0;                  /* slot 2 */
+    virtual int  SetBackwardTime(u32 frames) = 0;    /* slot 3 */
+    virtual int  SetForwardTime(u32 frames) = 0;     /* slot 4 */
+    virtual int  IsAtStart() = 0;                    /* slot 5 */
+    virtual int  IsAtEnd() = 0;                      /* slot 6 */
+    virtual int  IsBetweenStartAndEnd() = 0;         /* slot 7 */
+    virtual void SetToEnd() = 0;                     /* slot 8 */
+    virtual void SetToStart() = 0;                   /* slot 9 */
 
     /* Steps currInterp toward 1.0 or 0.0 depending on the sign of speed. */
     void AdvanceInterp();
 };
+
+typedef char Fader_size_must_be_0xc[sizeof(Fader) == 0xc ? 1 : -1];
 #else
 /* Same object, spelled for the C destructor translation units: C cannot express
    the virtual functions, so the vptr the compiler would place is explicit. */
