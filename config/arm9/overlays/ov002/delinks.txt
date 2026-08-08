@@ -5820,7 +5820,7 @@ src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe3cc end:0x020fe3e4
 
-src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.c:
+src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
     complete
     .text start:0x020fe3e4 end:0x020fe3f8
 
