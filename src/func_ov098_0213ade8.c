@@ -1,12 +1,7 @@
-typedef short s16;
-typedef unsigned short u16;
-typedef int Fix12i;
-
-struct V3 { int x, y, z; };
-struct V16 { u16 x, y, z; };
+#include "common.h"
 
 extern s16 data_02082214[];
-extern struct V16 data_ov098_0213c63c;
+extern Vector3_16 data_ov098_0213c63c;
 
 extern int _ZN5Actor13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
@@ -19,8 +14,8 @@ extern void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callbac
 
 void func_ov098_0213ade8(char* self)
 {
-    struct V16 rot;
-    struct V3 pos;
+    Vector3_16 rot;
+    Vector3 pos;
     volatile int vel[3];
     int state;
     int closest;
