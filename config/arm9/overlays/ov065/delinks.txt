@@ -27,7 +27,7 @@ src/func_ov065_02116328.c:
     complete
     .text start:0x02116328 end:0x02116364
 
-src/func_ov065_02116364.c:
+src/func_ov065_02116364.cpp:
     complete
     .text start:0x02116364 end:0x02116588
 

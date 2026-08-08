@@ -72,6 +72,14 @@ if ! python tools/port_refcheck.py; then
   exit 1
 fi
 
+# Two source files for one symbol. delinks.txt names one path per address range,
+# and every gate in this tree is driven from delinks.txt -- so the other half is
+# compiled by nothing and checked by nothing. Pure filesystem scan, milliseconds.
+if ! python tools/check_duplicate_sources.py; then
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
+
 # Reference resolvability needs tools/eligible.py, which compiles ~11,100 files and
 # takes minutes -- far too slow for a hook. So this checks only when a report for
 # THIS commit already exists, and otherwise says nothing was checked rather than

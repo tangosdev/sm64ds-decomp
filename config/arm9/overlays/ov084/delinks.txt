@@ -47,7 +47,7 @@ src/func_ov084_02129864.c:
     complete
     .text start:0x02129864 end:0x021298d0
 
-src/func_ov084_021298d0.c:
+src/func_ov084_021298d0.cpp:
     complete
     .text start:0x021298d0 end:0x02129a00
 
@@ -249,7 +249,7 @@ src/func_ov084_0212d560.c:
     complete
     .text start:0x0212d560 end:0x0212d564
 
-src/func_ov084_0212d564.c:
+src/func_ov084_0212d564.cpp:
     complete
     .text start:0x0212d564 end:0x0212d86c
 

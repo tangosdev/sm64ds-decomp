@@ -68,6 +68,10 @@ src/_ZN13PoleBillboard6RenderEv.cpp:
     complete
     .text start:0x021116f8 end:0x02111720
 
+src/_ZN13PoleBillboard8BehaviorEv.cpp:
+    complete
+    .text start:0x02111720 end:0x02111960
+
 src/KnockDownPlank_Spawn.c:
     complete
     .text start:0x02111b68 end:0x02111ba0
