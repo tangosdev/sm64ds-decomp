@@ -8,8 +8,14 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN13PoleBillboard8BehaviorEv.c": "lunavyqo",
+    "src/_ZN13PoleBillboard8BehaviorEv.cpp": "lunavyqo",
     "src/_ZN14BlueCoinSwitch13InitResourcesEv.c": "lunavyqo",
+    "src/_ZN15TtcRotatingGear8BehaviorEv.c": "lunavyqo",
+    "src/_ZN15TtcRotatingGear8BehaviorEv.cpp": "lunavyqo",
     "src/_ZN5Sound8PlayLongEjjjRK7Vector3s.cpp": "tangosdev",
+    "src/_ZN5Stage7PS_InitEv.c": "tangosdev",
+    "src/_ZN5Stage7PS_InitEv.cpp": "tangosdev",
     "src/_ZN5StageC3Ev.c": "ruspecial",
     "src/_ZN8MugenBgm6RenderEv.c": "tangosdev",
     "src/_ZN9SolidHeap9VAllocateEji.cpp": "ruspecial",
@@ -20,6 +26,10 @@
     "src/func_0204335c.c": "lunavyqo",
     "src/func_02071694.c": "tangosdev",
     "src/func_ov002_020aefa4.c": "ruspecial",
+    "src/func_ov002_020cd3e0.c": "ruspecial",
+    "src/func_ov002_020cd3e0.cpp": "ruspecial",
+    "src/func_ov003_020adc10.c": "ruspecial",
+    "src/func_ov003_020adc10.cpp": "ruspecial",
     "src/func_ov006_02114fd0.c": "ruspecial",
     "src/func_ov006_02114fec.c": "ruspecial",
     "src/func_ov006_02115008.c": "ruspecial",
@@ -27,6 +37,12 @@
     "src/func_ov006_02115060.c": "ruspecial",
     "src/func_ov007_020c49bc.c": "lunavyqo",
     "src/func_ov027_021127a4.c": "lunavyqo",
-    "src/func_ov071_0211f6f8.cpp": "ruspecial"
+    "src/func_ov065_02116364.c": "lunavyqo",
+    "src/func_ov065_02116364.cpp": "lunavyqo",
+    "src/func_ov071_0211f6f8.cpp": "ruspecial",
+    "src/func_ov084_021298d0.c": "tangosdev",
+    "src/func_ov084_021298d0.cpp": "tangosdev",
+    "src/func_ov084_0212d564.c": "ruspecial",
+    "src/func_ov084_0212d564.cpp": "ruspecial"
   }
 }
