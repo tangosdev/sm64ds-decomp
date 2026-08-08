@@ -84,13 +84,17 @@
  * reason. Making SolidHeap actually derive from Heap forced the question, and
  * on one of the two the ROM says the other side was right:
  *
- *   slot 13  VSetNodeID  -> u32. NOT void, and this one is BYTE-OBSERVABLE.
- *            _ZN9SolidHeap10VSetNodeIDEj (0x0203c3f0) is eight bytes --
- *            `mov r0,#0 / bx lr'. It materializes a return value, and a void
- *            declaration cannot emit that `mov'. ExpandingHeap's override is a
- *            pure forward, so declaring it u32 costs it nothing: a tail call
- *            leaves the callee's r0 in place either way. Both overrides agree
- *            under u32; only one can be right under void.
+ *   slot 13  VSetNodeID  -> u32, NOT void. What the bytes observe is
+ *            NON-VOIDNESS, and only that: _ZN9SolidHeap10VSetNodeIDEj
+ *            (0x0203c3f0) is eight bytes -- `mov r0,#0 / bx lr' -- so it
+ *            materializes a return value that no void body can emit (measured:
+ *            `void f(u32 id){id=0;}' loses the store to dead-code elimination
+ *            at -O4,p and emits `bx lr' alone). `bool' and `int' produce the
+ *            same eight bytes, so the bytes do not pick u32 over them; the
+ *            width comes from ExpandingHeapAllocator::SetNodeID (0x0204e0e8),
+ *            which loads and returns the old id with `ldrh' -- zero-extended,
+ *            hence unsigned. ExpandingHeap's override is a pure forward and
+ *            matches under any of them.
  *
  *   slot  9  VSizeof     -> u32, and this one really is unobservable.
  *            SolidHeap's override returns -1 and ExpandingHeap's forwards;
@@ -102,7 +106,8 @@
  * DEFINITION and observable AT ITS CALLERS. Heap::Reallocate was declared void
  * on the strength of its definition alone; SolidHeap::VResizeToFit then turned
  * out to branch on its result (`if (!Reallocate(...))'), which void cannot even
- * compile. It returns void*, the moved block, like the slot it forwards to.
+ * compile. It returns u32 -- the new SIZE, or 0 -- which is what slot 8 returns;
+ * see the note on VReallocate above.
  */
 #ifndef HEAP_H
 #define HEAP_H
