@@ -24,7 +24,16 @@ struct SceneRelated {
     struct Matrix2x2* mat;
 };
 
-extern void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matrix2x2* mat, s32 a, s32 b, s32 c, s32 d);
+/* extern "C", and the quotes are the whole point. This is a .cpp file, so a
+   bare `extern` makes the mangled name an ordinary C++ identifier and the
+   compiler mangles it a SECOND time -- the call went out to
+   `_Z40_ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiiiPVtP9Matrix2x2iiii`, where the
+   `_Z40` counts the 40 characters of the name being wrapped. Nothing defines
+   that, while the real target sits at 0x02055278 with a source file of its own.
+   The byte gate cannot see this: match.py compares relocated words as
+   wildcards and never looks at what a call targets. tools/check_references.py
+   is what catches it. */
+extern "C" void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matrix2x2* mat, s32 a, s32 b, s32 c, s32 d);
 
 /* Static, and the parameter is what the mangled name has always said it is.
    This file used to take `struct Stage *self` and then cast it to SceneRelated*
