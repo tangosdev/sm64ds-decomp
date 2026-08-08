@@ -1,9 +1,13 @@
 # On every push to main, regenerate all the derived progress views from committed
-# data and land them in ONE commit (README bar + treemap + contributions.json +
-# langmode-baseline.json on main; chaos-db.json on the chaos-data branch), so the
+# data and land them in ONE commit (README bar + treemap + contributions.json on
+# main; chaos-db.json + langmode-baseline.json on the chaos-data branch), so the
 # hosted viewer and charts self-update without spamming the #github channel with a
 # commit per file. details/ chunks on the chaos-data branch are preserved (they need
 # the ROM; refreshed locally).
+#
+# NOTE: the push to main at the end of this job has been REJECTED since 2026-08-06 --
+# see the ssh-key comment below. Only the chaos-data half currently lands. That is why
+# langmode-baseline.json is banked there and not here.
 name: update-chaos-data
 
 on:
@@ -19,9 +23,9 @@ on:
       - "tools/langmode_audit.py"
       - "attribution.json"
       # include/** and tools/langmode_audit.py are here for the langmode re-bank below,
-      # which reads both; neither feeds chaos-db. langmode-baseline.json itself is
-      # deliberately NOT watched -- this job writes it, and watching it would let the
-      # refresh commit retrigger the job on any run where [skip ci] is not honoured.
+      # which reads both; neither feeds chaos-db. The baseline itself is not listed
+      # because it no longer lives in this tree -- it is banked on chaos-data, and a
+      # push to that branch does not trigger this job (it watches main only).
   workflow_dispatch:
 
 permissions:
@@ -49,8 +53,21 @@ jobs:
           # repo because tangosdev is a user account and not an org, and GitHub only
           # accepts an Integration bypass actor from the ruleset source or owner org.
           # So the refresh push at the end of this job authenticates with a write deploy
-          # key, which the ruleset bypasses by actor type. A deploy key can push; it
-          # cannot approve or merge a pull request, which is the hole this closes.
+          # key. A deploy key can push; it cannot approve or merge a pull request, which
+          # is the hole that closes.
+          #
+          # BROKEN SINCE 2026-08-06. The paragraph above describes the intent, not the
+          # state. Ruleset "main: review gate" (id 20487553) has bypass_actors: null --
+          # the deploy key is NOT exempt -- so the push to main is rejected:
+          #     GH013 ... - Changes must be made through a pull request.
+          # Every run since has failed on the last step, freezing README/treemap/
+          # contributions.json/provenance on main. contributions.json pays the DELTA
+          # between refreshes, so matches landed since then are uncredited until it lands.
+          #
+          # The fix is to add a DeployKey bypass actor to that ruleset, which needs repo
+          # ADMIN; andrewboudreau has push but not admin, so it is blocked on the owner
+          # (tangosdev). Everything above the "Push if changed" step still works, which
+          # is why the viewer stayed current and this went unnoticed for two days.
           ssh-key: ${{ secrets.CHAOS_PUSH_KEY }}
       - uses: actions/checkout@v4
         with:
@@ -66,17 +83,32 @@ jobs:
         run: pip install pyelftools capstone
       - name: Regenerate chaos-db.json + contributions.json
         run: python tools/chaos_db_ci.py --out _chaos_data/chaos-db.json --contrib-out contributions.json
+      - name: Re-bank the langmode ratchet
+        # Banked on chaos-data, not main. The baseline is a generated counter file with no
+        # meaningful hand-merge, and re-banking it by hand in every migration PR meant each
+        # merge to main moved it under every other PR in flight -- four conflicted on it in
+        # one session. main would be the natural home, but the refresh push to main below has
+        # been rejected by the "main: review gate" ruleset since 2026-08-06 and the deploy-key
+        # bypass that would fix it needs repo admin; pushes to chaos-data are unaffected. So
+        # it rides along with chaos-db.json, in the push that actually works.
+        #
+        # Safe in the only direction that matters: --check fails on a RISE only, so a stale-
+        # high baseline (between a merge and this refresh) is permissive, never falsely red.
+        # A PR that legitimately RAISES a count overrides this with a root langmode-baseline.json
+        # of its own -- see langmode-ratchet.yml. This step runs post-merge and so cannot be
+        # used to launder a rise past the gate.
+        run: python tools/langmode_audit.py --json _chaos_data/langmode-baseline.json
       - name: Push if changed
         run: |
           cd _chaos_data
-          if git diff --quiet -- chaos-db.json; then
+          if git diff --quiet -- chaos-db.json langmode-baseline.json; then
             echo "no data change"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           base=$(git rev-parse HEAD)
-          git add chaos-db.json
-          git commit -m "Refresh Chaos Viewer data from $(git -C .. rev-parse --short HEAD)"
+          git add chaos-db.json langmode-baseline.json
+          git commit -m "Refresh Chaos Viewer data + langmode baseline from $(git -C .. rev-parse --short HEAD)"
           # Two PRs merging seconds apart start this job twice, and cancel-in-progress only
           # kills the older run if it has not reached this step yet. Past that point both runs
           # push and the loser is rejected, because chaos-data moved under it. That failure is
@@ -89,7 +121,7 @@ jobs:
           for attempt in 1 2 3; do
             if git push origin chaos-data; then exit 0; fi
             git fetch -q origin chaos-data
-            if ! git diff --quiet "$base" FETCH_HEAD -- chaos-db.json; then
+            if ! git diff --quiet "$base" FETCH_HEAD -- chaos-db.json langmode-baseline.json; then
               echo "another run already published newer data - standing down"; exit 0
             fi
             echo "chaos-data moved under the push - rebasing (attempt $attempt)"
@@ -107,18 +139,6 @@ jobs:
         # per (module, addr); the duplicate is transient, cleaned here on the way to the
         # refresh commit below (which already includes nearmiss/db.jsonl).
         run: python tools/nearmiss_db.py dedupe
-      - name: Re-bank the langmode ratchet
-        # The baseline is a generated counter file with no meaningful hand-merge, and
-        # every migration PR that lowered a count used to re-bank it by hand -- so each
-        # merge to main moved it under every other PR in flight, and they all conflicted.
-        # Banking it here instead takes it out of the PR diff entirely for the common
-        # (lowering) case. Safe in the only direction that matters: langmode_audit.py
-        # --check fails on a RISE only, so main carrying a stale-high baseline between a
-        # merge and this refresh is permissive, never falsely red. A PR that legitimately
-        # RAISES a count still banks it itself -- this step runs post-merge and so cannot
-        # be used to launder a rise past the gate.
-        run: python tools/langmode_audit.py --json langmode-baseline.json
-
       - name: Refresh README progress bar
         run: python tools/progress.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Regenerate treemap (README SVG + Pages HTML)
@@ -127,16 +147,15 @@ jobs:
         # README bar + treemap + contributions in ONE commit, to keep the #github channel
         # from filling with a separate refresh commit per generated file.
         # safe from retrigger loops: no workflow watches README.md, docs/**, or contributions.json
-        # on push, and langmode-baseline.json is watched only by langmode-ratchet.yml, which is
-        # pull_request-only. config/** is the one watched path here, which is what [skip ci] covers.
+        # on push. config/** is the one watched path here, which is what [skip ci] covers.
         run: |
-          if git diff --quiet -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl langmode-baseline.json; then
+          if git diff --quiet -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
             echo "progress unchanged"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           base=$(git rev-parse HEAD)
-          git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl langmode-baseline.json
+          git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
           # [skip ci] is load-bearing since the push moved to a deploy key. A GITHUB_TOKEN
           # push never triggers workflows, so this commit used to be inert; a deploy-key
           # push is an ordinary push and does trigger them. Without the marker this commit
@@ -152,7 +171,7 @@ jobs:
             if git pull --rebase origin main && git push origin main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
             git fetch -q origin main
-            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl langmode-baseline.json; then
+            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
               echo "another refresh already landed these files - standing down"; exit 0
             fi
             echo "main moved under the refresh push - retrying (attempt $attempt)"

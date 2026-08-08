@@ -12,20 +12,29 @@
 # no compiler and no ROM. That is why it can live in this repo rather than on the
 # private build box that `pr-validate.yml` relays to.
 #
-# When a PR legitimately LOWERS a count, --check still passes against the PR's own
-# baseline, which is then stale-HIGH. Do NOT re-bank it in your PR: `update-chaos-data.yml`
-# re-banks on merge to main. Hand-banking is what made every migration PR conflict with
-# every other one -- four in one session -- because each merge to main re-banked the file
-# under the others. A stale-high baseline is permissive by construction (--check fails only
-# on a RISE), so no intermediate state can go falsely red: an in-flight PR measures against
-# its own older, higher numbers and passes, and the ratchet tightens once CI refreshes main.
-# Same rule as nearmiss/db.jsonl in .gitattributes -- a merge never regresses a tip.
+# WHERE THE BASELINE LIVES. On the `chaos-data` branch, not in this tree. It is a generated
+# counter file with no meaningful hand-merge, and the old rule -- re-bank it in any PR that
+# lowers a count -- meant every merge to main moved it under every other PR in flight. Four
+# conflicted on it in one session. Off the main tree, it is in nobody's diff.
 #
-# A count that RISES is the opposite case and still belongs in the PR: --check fails against
-# the PR's own baseline, so the increase must be banked there, under the naming rule in
-# `notes/plan-cpp-language-mode.md` (Phase 0). That tripwire is the point of the gate and is
-# unchanged -- CI's re-bank runs only after a merge, so it can never launder a rise:
+# It is banked by `update-chaos-data.yml` on merge to main, in the same push that refreshes
+# chaos-db.json. It could not be banked on main instead: that job's push to main has been
+# rejected by the "main: review gate" ruleset since 2026-08-06, and the deploy-key bypass
+# that would fix it needs repo admin. Pushes to chaos-data are unaffected.
+#
+# So: do NOT re-bank in your PR. A slice that LOWERS counts passes against the banked
+# baseline and needs no action -- and if CI has not caught up, the baseline is stale-HIGH,
+# which is permissive by construction (--check fails only on a RISE). No intermediate state
+# can go falsely red. Same rule as nearmiss/db.jsonl in .gitattributes: a merge never
+# regresses a tip.
+#
+# WHEN A COUNT MUST RISE (`tools/langmode_audit.py`, the RATCHET block): the increase still
+# has to be a loud, reviewable diff in your PR, which is the whole point of the gate. Commit
+# a `langmode-baseline.json` at the REPO ROOT and this job prefers it over the chaos-data
+# copy, so the +N appears in your diff exactly as before:
 #     python tools/langmode_audit.py --json langmode-baseline.json
+# Delete that root file in a follow-up once the rise has landed -- while it exists it is the
+# baseline, and it will start conflicting between PRs again. This job warns when it sees one.
 name: langmode ratchet
 
 on:
@@ -52,10 +61,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         # No history needed: the audit reads `git ls-files` and the working tree.
+      - uses: actions/checkout@v4
+        # The banked baseline. Shallow: only the tip of chaos-data is ever read.
+        with:
+          ref: chaos-data
+          path: _chaos_data
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Current language-mode state
         run: python tools/langmode_audit.py
       - name: "Ratchet: defect counts may fall, never rise"
-        run: python tools/langmode_audit.py --check langmode-baseline.json
+        # A root langmode-baseline.json wins if present. That is the escape hatch for a PR
+        # that must RAISE a count under the naming rule -- it puts the +N back in the PR's
+        # own diff, where a reviewer sees it. Absent one (the normal case), the banked
+        # chaos-data copy is authoritative and no migration PR touches it at all.
+        run: |
+          if [ -f langmode-baseline.json ]; then
+            echo "::warning file=langmode-baseline.json::Using the ROOT baseline override, not the banked chaos-data copy. This is only for a PR that raises a count under the naming rule in notes/plan-cpp-language-mode.md. Delete this file in a follow-up once the rise has landed, or migration PRs will start conflicting on it again."
+            python tools/langmode_audit.py --check langmode-baseline.json
+          else
+            echo "baseline: chaos-data @ $(git -C _chaos_data rev-parse --short HEAD)"
+            python tools/langmode_audit.py --check _chaos_data/langmode-baseline.json
+          fi

@@ -143,14 +143,27 @@ gamed by renaming a `.c` to `.cpp` — a hand-spelled symbol counts however the 
 named. That property is the whole reason this phase came first: it makes the *easy* fake
 progress unrewarding, and it turns the reply to #821 into a number instead of an argument.
 
-`--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. **Do not re-bank a
-commit that lowers a count** — `update-chaos-data.yml` re-banks on merge to main. Hand-banking
-was the single largest source of PR conflicts on this workstream (four in one session): the
-baseline is a generated counter with no meaningful hand-merge, so every merge to main moved it
-under every other PR in flight. Leaving it alone is safe in the only direction that matters —
-`--check` fails on a *rise* only, so a stale-**high** baseline is permissive and no intermediate
-state can go falsely red. It is the same rule `.gitattributes` already states for
-`nearmiss/db.jsonl`: a merge never regresses a tip.
+`--check` is wired into CI as `.github/workflows/langmode-ratchet.yml`. **The baseline lives on
+the `chaos-data` branch, not in this tree, and you do not re-bank a commit that lowers a count** —
+`update-chaos-data.yml` banks it on merge. Hand-banking was the single largest source of PR
+conflicts on this workstream (four in one session): the baseline is a generated counter with no
+meaningful hand-merge, so every merge to main moved it under every other PR in flight. Off the
+main tree, it is in nobody's diff.
+
+Leaving it alone is safe in the only direction that matters — `--check` fails on a *rise* only,
+so a stale-**high** baseline is permissive and no intermediate state can go falsely red. Same
+rule `.gitattributes` already states for `nearmiss/db.jsonl`: a merge never regresses a tip.
+
+It sits on `chaos-data` rather than on `main` for a blunt reason: `update-chaos-data.yml`'s push
+to `main` has been rejected by the `main: review gate` ruleset since 2026-08-06, because that
+ruleset carries `bypass_actors: null` and the deploy key it authenticates with is therefore not
+exempt. Fixing that needs repo **admin**. Pushes to `chaos-data` are unaffected, so the baseline
+is banked where CI can actually keep it current. To read it:
+
+```
+git show origin/chaos-data:langmode-baseline.json > /tmp/base.json
+python tools/langmode_audit.py --check /tmp/base.json
+```
 
 **Two corrections to the paragraph above, both measured.**
 
@@ -178,13 +191,21 @@ CI checks a PR against the PR's own baseline, so this needs no tool change — t
 ratchet was never a wall, it is a tripwire that forces the increase to appear as a
 reviewable diff. What was missing was only the written rule.
 
-A rise is now the **only** case in which a PR touches `langmode-baseline.json` at all; a
-lowering slice leaves it to CI (above). The tripwire survives that change intact, because
-`update-chaos-data.yml` re-banks only *after* a merge, and `--check` has already run against
-the PR's own baseline by then — post-merge banking can record a rise, never launder one past
-the gate. The consequence for reviewers is a sharper signal, not a weaker one: a diff that
-touches the baseline is now, by itself, a claim that counts went **up**, and it must carry
-the naming evidence the rule demands.
+A rise is now the **only** case in which a PR carries a `langmode-baseline.json` at all; a
+lowering slice leaves it to CI (above). The mechanism: commit the file at the **repo root**, and
+`langmode-ratchet.yml` prefers it over the banked `chaos-data` copy. So the `+N` still lands as a
+loud, reviewable diff in the PR — exactly what the rule demands — even though the everyday
+baseline is off-tree.
+
+The tripwire survives the move intact, because `update-chaos-data.yml` banks only *after* a
+merge, and `--check` has already run against the PR by then; post-merge banking can record a
+rise, never launder one past the gate. The consequence for reviewers is a sharper signal, not a
+weaker one: a PR containing a root `langmode-baseline.json` is now, by itself, a claim that
+counts went **up**, and it must carry the naming evidence.
+
+**Delete the root file in a follow-up once the rise has landed.** While it exists it *is* the
+baseline, which re-creates the every-PR conflict this move was meant to end. The ratchet emits a
+GitHub warning annotation whenever it sees one, so it will not sit there silently.
 
 ### Phase 1 — SDK namespaces *(169 files, 37 namespaces) — zero layout risk*
 

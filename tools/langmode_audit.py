@@ -41,16 +41,21 @@ Usage:
     python tools/langmode_audit.py --list cpp-handspelled
     python tools/langmode_audit.py --list excluded    # the un-migratable ones
 
-    # CI ratchet: counts may fall, never rise. The baseline lives at the repo root
-    # because progress/ is gitignored and CI needs a committed reference point. It holds
-    # only the metrics --check reads, so re-banking it stays a small diff.
+    # CI ratchet: counts may fall, never rise. It holds only the metrics --check reads,
+    # so the banked file stays small and readable.
     #
-    # Do NOT re-bank a slice that LOWERS counts: update-chaos-data.yml banks it on merge
-    # to main. Hand-banking made every migration PR conflict with every other one. Only a
-    # PR that RAISES a count banks it itself -- --check fails otherwise -- under the rule
-    # in notes/plan-cpp-language-mode.md (Phase 0).
-    python tools/langmode_audit.py --json langmode-baseline.json    # CI does this for you
-    python tools/langmode_audit.py --check langmode-baseline.json   # exit 1 if worse
+    # The baseline lives on the `chaos-data` BRANCH, not in this tree -- it is a generated
+    # counter with no meaningful hand-merge, and re-banking it by hand in every migration
+    # PR made each merge to main move it under every other PR in flight. To read it:
+    #     git show origin/chaos-data:langmode-baseline.json > /tmp/base.json
+    #     python tools/langmode_audit.py --check /tmp/base.json
+    #
+    # Do NOT re-bank a slice that LOWERS counts: update-chaos-data.yml banks it on merge.
+    # Only a PR that RAISES a count banks its own, as a root langmode-baseline.json that
+    # langmode-ratchet.yml prefers over the branch copy -- see the RATCHET block below and
+    # notes/plan-cpp-language-mode.md (Phase 0). Delete that root file once the rise lands.
+    python tools/langmode_audit.py --json langmode-baseline.json    # only to book a RISE
+    python tools/langmode_audit.py --check <banked>.json            # exit 1 if worse
     python tools/langmode_audit.py --json out.json --full           # + per-class, lists
 """
 import argparse
@@ -412,7 +417,9 @@ def audit():
 # table less true, which is the opposite of its purpose.
 #
 # WHEN A COUNT MAY RISE. It may not, silently -- that is the whole gate. It may rise
-# in a PR that re-banks the baseline in the same commit, and only when the increase
+# in a PR that commits a root `langmode-baseline.json` booking the increase (the banked
+# copy lives on the chaos-data branch; a root file overrides it, so the +N still lands
+# as a reviewable diff in the PR), and only when the increase
 # is exactly a set of renames giving previously-unnamed (`func_*`) functions their
 # evidenced C++ symbols. The PR must name the evidence -- a vtable slot, or
 # `tools/dtor_variant_audit.py --discover`. Naming a function the tree had never
