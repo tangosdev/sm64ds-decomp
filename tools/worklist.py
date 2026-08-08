@@ -263,9 +263,10 @@ def main():
             print(f"  {n:4}  {cls}")
         return
 
-    # Someone else's active CLAIMS.md row means that function is taken. Scheduling it anyway
-    # is how a batch ends up duplicating work another contributor already finished.
-    held = CLM.held_targets() if not args.ignore_claims else {"names": set(), "addrs": set(), "rows": 0}
+    # Someone else's active claim (API lock or CLAIMS.md row) means that function is taken.
+    # Scheduling it anyway is how a batch ends up duplicating work another contributor
+    # already finished.
+    held = CLM.held_targets() if not args.ignore_claims else {"names": set(), "addrs": set(), "ranges": [], "rows": 0}
     try:
         import claims as _CL
         _msg = _CL.key_reminder()
@@ -276,7 +277,7 @@ def main():
     skipped_claimed = [0]
 
     def emit(rec):
-        if CLM.is_held(held, rec.get("name"), rec.get("addr")):
+        if CLM.is_held(held, rec.get("name"), rec.get("addr"), module=rec.get("module")):
             skipped_claimed[0] += 1
             return
         if args.pretty:

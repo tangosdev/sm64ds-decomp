@@ -97,7 +97,8 @@
     "generate": "{python} tools/chaos_db_ci.py --out {out}",
     "dbPath": "chaos-db.json",
     "committedDbUrl": "https://raw.githubusercontent.com/tangosdev/sm64ds-decomp/chaos-data/chaos-db.json",
-    "claimsApi": "https://tangos.dev/api/claims"
+    "claimsApi": "https://tangos.dev/api/claims",
+    "projectId": "sm64ds"
   },
   "categories": [
     {

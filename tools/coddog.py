@@ -182,16 +182,16 @@ def main():
     pool = [u for u in unmatched
             if args.min <= u["size"] <= args.max and (not args.module or u["module"] == args.module)]
 
-    # Drop anything another contributor holds in CLAIMS.md. Filtering at pool construction
-    # (rather than at write time) also keeps claimed targets out of the similarity scoring,
-    # so they cannot displace schedulable work from the top of the batch.
+    # Drop anything another contributor holds (API lock or CLAIMS.md row). Filtering at
+    # pool construction (rather than at write time) also keeps claimed targets out of the
+    # similarity scoring, so they cannot displace schedulable work from the top of the batch.
     if not args.ignore_claims:
         held = CLM.held_targets()
         before = len(pool)
-        pool = [u for u in pool if not CLM.is_held(held, u["name"], u["addr"])]
+        pool = [u for u in pool if not CLM.is_held(held, u["name"], u["addr"], module=u.get("module"))]
         if before != len(pool):
-            sys.stderr.write(f"claims: skipped {before - len(pool)} target(s) held in CLAIMS.md "
-                             f"({held['rows']} active rows)\n")
+            sys.stderr.write(f"claims: skipped {before - len(pool)} held target(s) "
+                             f"({held['rows']} active holds)\n")
         try:
             import claims as _CL
             _msg = _CL.key_reminder()
