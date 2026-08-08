@@ -1,13 +1,11 @@
 //cpp
 // @symbol _ZN9SolidHeap19VMaxAllocatableSizeEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_SolidHeapAllocator.h"
-/* recovered: named members + shared header, real C++ method */
+/* SolidHeap::VMaxAllocatableSize() at 0x0203c5bc -- Heap vtable slot 11.
+ * Identical to slots 10 and 12 on a linear allocator; see VMemoryLeft. */
 #include "SolidHeap.h"
-extern "C" {
-}
+#include "SolidHeapAllocator.h"
 
-unsigned int SolidHeap::VMaxAllocatableSize()
+u32 SolidHeap::VMaxAllocatableSize()
 {
-    return _ZN18SolidHeapAllocator10MemoryLeftEi(*(void**)((char*)&unk_014), 4);
+    return allocator->MemoryLeft(4);
 }

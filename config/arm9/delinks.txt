@@ -6121,7 +6121,7 @@ src/_ZN4Heap10SetDefaultEv.cpp:
     complete
     .text start:0x0203c324 end:0x0203c33c
 
-src/_ZN9SolidHeap12VResizeToFitEv.c:
+src/_ZN9SolidHeap12VResizeToFitEv.cpp:
     complete
     .text start:0x0203c33c end:0x0203c388
 
@@ -6252,7 +6252,7 @@ src/_ZN4Heap6IntactEv.cpp:
     complete
     .text start:0x0203c664 end:0x0203c6ac
 
-src/_ZN9SolidHeap9VAllocateEjj.cpp:
+src/_ZN9SolidHeap9VAllocateEji.cpp:
     complete
     .text start:0x0203c6ac end:0x0203c6bc
 
@@ -6264,7 +6264,7 @@ src/_ZN4Heap8AllocateEji.cpp:
     complete
     .text start:0x0203c6cc end:0x0203c70c
 
-src/_ZN9SolidHeap8VDestroyEv.c:
+src/_ZN9SolidHeap8VDestroyEv.cpp:
     complete
     .text start:0x0203c70c end:0x0203c72c
 

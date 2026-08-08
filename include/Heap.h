@@ -66,33 +66,43 @@
  * overrides, which are migrated and byte-gated), never from a caller -- callers
  * disagree 27% of the time and most of these discard the result. Note that
  * slot 3 is spelled `VAllocate(u32, int)': _ZN13ExpandingHeap9VAllocateEji.
- * _ZN9SolidHeap9VAllocateEjj claims (u32, u32) for the SAME SLOT, so one of the
- * two imported names is wrong and it is not this one -- every sibling in the
- * family (Heap::Allocate, SolidHeapAllocator::Allocate,
+ * _ZN9SolidHeap9VAllocateEjj used to claim (u32, u32) for the SAME SLOT, so one
+ * of the two imported names was wrong -- and every sibling in the family
+ * (Heap::Allocate, SolidHeapAllocator::Allocate,
  * ExpandingHeapAllocator::Allocate) spells `Eji'. The ROM settles it directly:
  * SolidHeapAllocator::Allocate (0x0204eb70) does `cmp r2,#0' then `blt', a
  * SIGNED branch, and negates with `rsb' to allocate backwards -- a u32 would
  * compile to bcc/blo and make that path unreachable. Both VAllocates are
- * four-instruction thunks that forward r1/r2 untouched into it. Tracked
- * separately; correcting a symbol is its own PR with its own evidence.
+ * four-instruction thunks that forward r1/r2 untouched into it. The SolidHeap
+ * symbol has since been corrected to ...Eji; see include/SolidHeap.h.
  *
- * ==== WHERE THE TWO OVERRIDE FAMILIES DISAGREE ====
+ * ==== WHERE THE TWO OVERRIDE FAMILIES DISAGREED, AND HOW THE ROM SETTLED IT ====
  *
  * Taking return types from the definitions is only unambiguous where the
- * definitions agree. On two slots they do not, and this header picks
- * ExpandingHeap's side. Both are unfalsifiable today -- return types are not
- * mangled, and SolidHeap.h does not yet derive from Heap, so nothing compiles
- * the two against each other. Both become override-mismatch errors the day that
- * inheritance is made real, which is why they are written down here rather than
- * discovered then:
+ * definitions agree. On two slots they did not, and an earlier revision of this
+ * header took ExpandingHeap's side on both for consistency rather than for a
+ * reason. Making SolidHeap actually derive from Heap forced the question, and
+ * on one of the two the ROM says the other side was right:
  *
- *   slot  9  VSizeof     this header u32   |  SolidHeap.h + its .cpp say int
- *                                          |  (SolidHeap::VSizeof returns -1)
- *   slot 13  VSetNodeID  this header void  |  SolidHeap.h + its .cpp say u32
- *                                          |  (SolidHeap::VSetNodeID returns 0)
+ *   slot 13  VSetNodeID  -> u32. NOT void, and this one is BYTE-OBSERVABLE.
+ *            _ZN9SolidHeap10VSetNodeIDEj (0x0203c3f0) is eight bytes --
+ *            `mov r0,#0 / bx lr'. It materializes a return value, and a void
+ *            declaration cannot emit that `mov'. ExpandingHeap's override is a
+ *            pure forward, so declaring it u32 costs it nothing: a tail call
+ *            leaves the callee's r0 in place either way. Both overrides agree
+ *            under u32; only one can be right under void.
  *
- * ExpandingHeap's side was taken for consistency with the rest of the slots,
- * NOT because it is known correct. Settle both when SolidHeap gets its slice.
+ *   slot  9  VSizeof     -> u32, and this one really is unobservable.
+ *            SolidHeap's override returns -1 and ExpandingHeap's forwards;
+ *            `int' and `u32' both lower the -1 to `mvn r0,#0'. u32 is kept for
+ *            consistency with the rest of the slots, and that is the whole
+ *            reason -- it is not evidence of a width.
+ *
+ * The lesson generalizes: a forwarder's return type is unobservable AT ITS OWN
+ * DEFINITION and observable AT ITS CALLERS. Heap::Reallocate was declared void
+ * on the strength of its definition alone; SolidHeap::VResizeToFit then turned
+ * out to branch on its result (`if (!Reallocate(...))'), which void cannot even
+ * compile. It returns void*, the moved block, like the slot it forwards to.
  */
 #ifndef HEAP_H
 #define HEAP_H
@@ -166,12 +176,14 @@ struct Heap {
     virtual void  VDeallocateAll() = 0;                 /*  5 */
     virtual bool  VIntact() = 0;                        /*  6 */
     virtual void  VRescue() = 0;                        /*  7 */
-    virtual void* VReallocate(void* ptr, u32 size) = 0; /*  8 */
+    virtual u32   VReallocate(void* ptr, u32 size) = 0; /*  8 -- the new SIZE,
+                                                           or 0 on failure; not
+                                                           a moved pointer */
     virtual u32   VSizeof(void* ptr) = 0;               /*  9 */
     virtual u32   VMaxAllocationUnitSize() = 0;         /* 10 */
     virtual u32   VMaxAllocatableSize() = 0;            /* 11 */
     virtual u32   VMemoryLeft() = 0;                    /* 12 */
-    virtual void  VSetNodeID(u32 id) = 0;               /* 13 */
+    virtual u32   VSetNodeID(u32 id) = 0;               /* 13 */
     virtual u32   VGetNodeID() = 0;                     /* 14 */
     virtual u32   VResizeToFit() = 0;                   /* 15 */
 
@@ -183,7 +195,7 @@ struct Heap {
     void* Allocate(u32 size);                /* forwards with align = 4 */
     void* Allocate(u32 size, int align);     /* slot  3, Crash() on NULL */
     void  Deallocate(void* ptr);             /* slot  4 */
-    void  Reallocate(void* ptr, u32 size);   /* slot  8 */
+    u32   Reallocate(void* ptr, u32 size);   /* slot  8, the new size or 0 */
     int   Sizeof(void* ptr);                 /* slot  9, Crash() on -1 */
     void  Destroy();                         /* slot  2, then releases 0x0c */
     bool  Intact();                          /* slot  6 */

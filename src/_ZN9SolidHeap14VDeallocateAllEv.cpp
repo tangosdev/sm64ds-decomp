@@ -1,13 +1,14 @@
 //cpp
 // @symbol _ZN9SolidHeap14VDeallocateAllEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_SolidHeapAllocator.h"
-/* recovered: named members + shared header, real C++ method */
+/* SolidHeap::VDeallocateAll() at 0x0203c49c -- Heap vtable slot 5. Throws the
+ * whole arena away at once, which for a linear allocator is the only kind of
+ * free that works: individual blocks cannot be returned (VDeallocate calls
+ * Crash), so everything goes together or nothing does. */
 #include "SolidHeap.h"
-extern "C" {
-}
+#include "SolidHeapAllocator.h"
 
 void SolidHeap::VDeallocateAll()
 {
-    _ZN18SolidHeapAllocator5ResetEj(*(void**)((char*)&unk_014), 3);
+    /* 3 = both bits -- ResetStart and ResetEnd. */
+    allocator->Reset(3);
 }

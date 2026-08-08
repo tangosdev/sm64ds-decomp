@@ -1,12 +1,17 @@
 //cpp
 // @symbol _ZN9SolidHeap11VDeallocateEPv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* SolidHeap::VDeallocate(void*) at 0x0203c4e4 -- Heap vtable slot 4.
+ *
+ * Freeing a single block from a linear allocator is not supported, so a
+ * non-null pointer is a programming error and crashes. Freeing NULL is
+ * tolerated silently, which is what lets callers deallocate unconditionally.
+ * VDeallocateAll is the only real free a solid heap has. */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "SolidHeap.h"
 
-void SolidHeap::VDeallocate(void * a)
+void SolidHeap::VDeallocate(void* ptr)
 {
-  if (a == 0) return;
-  Crash();
+    if (ptr == 0)
+        return;
+    Crash();
 }
