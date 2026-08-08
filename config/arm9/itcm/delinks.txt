@@ -1,5 +1,26 @@
     .text       start:0x01ff8000 end:0x01ffdf3c kind:code align:32
     .bss        start:0x01ffdf40 end:0x01ffdf40 kind:bss align:32
+src/func_01ff859c.c:
+    .text start:0x01ff859c end:0x01ff8708
+
+src/func_01ff97d8.c:
+    .text start:0x01ff97d8 end:0x01ffa344
+
+src/func_01ffa344.c:
+    .text start:0x01ffa344 end:0x01ffa440
+
+src/func_01ffa4bc.c:
+    .text start:0x01ffa4bc end:0x01ffa588
+
+src/func_01ffafd4.c:
+    .text start:0x01ffafd4 end:0x01ffb008
+
+src/func_01ffb008.c:
+    .text start:0x01ffb008 end:0x01ffb030
+
+src/func_01ffb030.c:
+    .text start:0x01ffb030 end:0x01ffb07c
+
 src/func_01ffb07c.cpp:
     complete
     .text start:0x01ffb07c end:0x01ffb098
@@ -47,6 +68,12 @@ src/_ZN12MeshCollider9GetNormalEsR7Vector3.cpp:
 src/_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo.cpp:
     complete
     .text start:0x01ffd920 end:0x01ffd97c
+
+src/func_01ffd9d4.c:
+    .text start:0x01ffd9d4 end:0x01ffdb28
+
+src/func_01ffdb28.c:
+    .text start:0x01ffdb28 end:0x01ffdbd8
 
 src/OSReadROMArea.c:
     complete

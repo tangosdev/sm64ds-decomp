@@ -277,6 +277,9 @@ src/func_ov098_0213ad08.c:
     complete
     .text start:0x0213ad08 end:0x0213ade8
 
+src/func_ov098_0213ade8.c:
+    .text start:0x0213ade8 end:0x0213b0a4
+
 src/func_ov098_0213b0a4.cpp:
     complete
     .text start:0x0213b0a4 end:0x0213b15c

@@ -139,6 +139,9 @@ src/func_ov102_021498c4.c:
     complete
     .text start:0x021498c4 end:0x021498e0
 
+src/func_ov102_021498e0.cpp:
+    .text start:0x021498e0 end:0x02149c78
+
 src/func_ov102_02149c78.c:
     complete
     .text start:0x02149c78 end:0x02149ccc
