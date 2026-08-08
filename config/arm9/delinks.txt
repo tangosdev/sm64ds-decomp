@@ -18,7 +18,7 @@ src/AutoloadCallback.c:
     complete
     .text start:0x020049ec end:0x020049f0
 
-src/_ZN4CP1511SystemSetupEv.c:
+src/_ZN4CP1511SystemSetupEv.cpp:
     .text start:0x020049f0 end:0x02004ad8
 
 src/func_02005000.c:
@@ -9464,31 +9464,31 @@ src/func_02058b9c.c:
     complete
     .text start:0x02058b9c end:0x02058bb0
 
-src/_ZN4CP1514FlushDataCacheEv.c:
+src/_ZN4CP1514FlushDataCacheEv.cpp:
     complete
     .text start:0x02058bb0 end:0x02058bdc
 
-src/_ZN4CP1527FlushAndInvalidateDataCacheEv.c:
+src/_ZN4CP1527FlushAndInvalidateDataCacheEv.cpp:
     complete
     .text start:0x02058bdc end:0x02058c08
 
-src/_ZN4CP1519InvalidateDataCacheEjj.c:
+src/_ZN4CP1519InvalidateDataCacheEjj.cpp:
     complete
     .text start:0x02058c08 end:0x02058c24
 
-src/_ZN4CP1514FlushDataCacheEjj.c:
+src/_ZN4CP1514FlushDataCacheEjj.cpp:
     complete
     .text start:0x02058c24 end:0x02058c40
 
-src/_ZN4CP1527FlushAndInvalidateDataCacheEjj.c:
+src/_ZN4CP1527FlushAndInvalidateDataCacheEjj.cpp:
     complete
     .text start:0x02058c40 end:0x02058c5c
 
-src/_ZN4CP1516DrainWriteBufferEv.c:
+src/_ZN4CP1516DrainWriteBufferEv.cpp:
     complete
     .text start:0x02058c5c end:0x02058c68
 
-src/_ZN4CP1526InvalidateInstructionCacheEjj.c:
+src/_ZN4CP1526InvalidateInstructionCacheEjj.cpp:
     complete
     .text start:0x02058c68 end:0x02058c84
 
@@ -9555,23 +9555,23 @@ src/func_0205938c.c:
     complete
     .text start:0x0205938c end:0x020593a8
 
-src/_ZN4CP1510EnableDTCMEv.c:
+src/_ZN4CP1510EnableDTCMEv.cpp:
     complete
     .text start:0x020593a8 end:0x020593b8
 
-src/_ZN4CP1518GetDTCMBaseAddressEv.c:
+src/_ZN4CP1518GetDTCMBaseAddressEv.cpp:
     complete
     .text start:0x020593b8 end:0x020593cc
 
-src/_ZN4CP159EnableMPUEv.c:
+src/_ZN4CP159EnableMPUEv.cpp:
     complete
     .text start:0x020593cc end:0x020593dc
 
-src/_ZN4CP1510DisableMPUEv.c:
+src/_ZN4CP1510DisableMPUEv.cpp:
     complete
     .text start:0x020593dc end:0x020593ec
 
-src/_ZN4CP1514MPUDataRegion1Ej.c:
+src/_ZN4CP1514MPUDataRegion1Ej.cpp:
     complete
     .text start:0x020593ec end:0x020593f4
 
@@ -9673,7 +9673,7 @@ src/ARMProcessorMode.c:
     complete
     .text start:0x02059d74 end:0x02059d80
 
-src/_ZN4CP1516WaitForInterruptEv.c:
+src/_ZN4CP1516WaitForInterruptEv.cpp:
     complete
     .text start:0x02059d80 end:0x02059d8c
 
@@ -11471,11 +11471,11 @@ src/func_0206da9c.c:
     complete
     .text start:0x0206da9c end:0x0206daa4
 
-src/_ZN4CP1517MPUGetDataRegion7Ev.c:
+src/_ZN4CP1517MPUGetDataRegion7Ev.cpp:
     complete
     .text start:0x0206daa4 end:0x0206daac
 
-src/_ZN4CP1514MPUDataRegion7Ej.c:
+src/_ZN4CP1514MPUDataRegion7Ej.cpp:
     complete
     .text start:0x0206daac end:0x0206dab4
 
