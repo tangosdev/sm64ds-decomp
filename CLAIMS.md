@@ -39,6 +39,7 @@ take over, ping the claimant first.
 
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_020d7c4c (0x020d7c4c, size 0x230) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **76→48** (match.py words, size-exact). Lever: `#pragma opt_propagation off` + `opt_common_subs off`. Residual pure regperm: fb `add r3,r3,#0x4000` vs ROM `add r4,r3,#0x4000` cascade; y-bounce byte-OK. 40+ pure-C + permuter ~700it. tip in nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
 | ov006 func_ov006_020d3ba0 (0x020d3ba0, size 0x98c) | lunavyqo (Grok) | 2026-08-06 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: end-loop `int xw[2]` (xw[0]=x,xw[1]=w) flips r3/r4 regperm; from near-miss div=9→0; API clm_e7f4edf70069 kept |
 | ov015 func_ov015_021114f0 (0x021114f0, size 0x17c) | lunavyqo (Grok) | 2026-08-06 | **released** — near-miss improved **18→10** (match.py words, size-exact). Lever: base load before sin/cos. Residual: pure ldrsh/smull dest regperm; permuter 575it floor. tip in nearmiss/db.jsonl; API clm_92d31f7de5a0 released |
 | ov002 func_ov002_020cfea4 (0x020cfea4, size 0x2d4) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **76→36** (match.py words, size-exact). Levers: self=r6, pts[2] before 2nd angle, nested scopes ang-in-r0, t=idx<<1 then yl2. Residual pure regperm: px/pz r8/r7 vs ROM ip/r3 (+ y2/tbl/result cascade). First half thru DetectClsn byte-OK. 20+ pure-C variants; C++ permuter blocked by pycparser. tip in nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
