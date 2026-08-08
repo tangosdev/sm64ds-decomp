@@ -1,3 +1,6 @@
+//cpp
+#include "Actor.h"
+extern "C" {
 extern int Vec3_Dist(const void* a, const void* b);
 extern void* data_0209b458;
 extern void* data_0209b450;
@@ -5,7 +8,8 @@ extern int data_0208e380;
 extern int data_0208e37c;
 extern unsigned char data_0209f21c;
 extern void* data_0209f394[];
-void* _ZN5Actor22ClosestNonVanishPlayerEv(void* c)
+}
+Player *Actor::ClosestNonVanishPlayer()
 {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
@@ -15,10 +19,10 @@ void* _ZN5Actor22ClosestNonVanishPlayerEv(void* c)
             void* p = data_0209f394[i];
             if (!p) continue;
             if (*(unsigned char*)((char*)p + 0x6fb)) continue;
-            int d = Vec3_Dist((char*)c + 0x5c, (char*)p + 0x5c);
+            int d = Vec3_Dist((char*)this + 0x5c, (char*)p + 0x5c);
             if (d < data_0208e380) { data_0208e380 = d; data_0209b458 = p; }
             if (d > data_0208e37c) { data_0208e37c = d; data_0209b450 = p; }
         }
     }
-    return data_0209b458;
+    return (Player *)data_0209b458;
 }

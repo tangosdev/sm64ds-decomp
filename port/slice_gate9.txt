@@ -38,7 +38,7 @@ src/func_0203b244.c
 src/LenVec3.c
 src/func_020396d0.c
 src/_ZN16MeshColliderBase6EnableEP5Actor.cpp
-src/_ZN5Actor13ClosestPlayerEv.c
+src/_ZN5Actor13ClosestPlayerEv.cpp
 src/_ZN9ActorBase9SceneNode5ResetEv.c
 src/Matrix4x3_FromRotationY.c
 src/func_01ffb07c.cpp

@@ -992,7 +992,7 @@ src/_ZN5Actor15OnGroundPoundedERS_.c:
     complete
     .text start:0x02010148 end:0x0201014c
 
-src/_ZN5Actor9Virtual50Ev.c:
+src/_ZN5Actor9Virtual50Ev.cpp:
     complete
     .text start:0x0201014c end:0x02010154
 
@@ -1080,7 +1080,7 @@ src/_ZN5Actor18HorzAngleToFPlayerEv.c:
     complete
     .text start:0x0201092c end:0x02010958
 
-src/_ZN5Actor14FarthestPlayerEv.c:
+src/_ZN5Actor14FarthestPlayerEv.cpp:
     complete
     .text start:0x02010958 end:0x0201097c
 
@@ -1092,15 +1092,15 @@ src/_ZN5Actor18HorzAngleToCPlayerEv.c:
     complete
     .text start:0x020109b8 end:0x020109e4
 
-src/_ZN5Actor13DistToCPlayerEv.c:
+src/_ZN5Actor13DistToCPlayerEv.cpp:
     complete
     .text start:0x020109e4 end:0x02010a08
 
-src/_ZN5Actor22ClosestNonVanishPlayerEv.c:
+src/_ZN5Actor22ClosestNonVanishPlayerEv.cpp:
     complete
     .text start:0x02010a08 end:0x02010ad8
 
-src/_ZN5Actor13ClosestPlayerEv.c:
+src/_ZN5Actor13ClosestPlayerEv.cpp:
     complete
     .text start:0x02010ad8 end:0x02010b9c
 
@@ -1116,7 +1116,7 @@ src/_ZN5Actor9UpdatePosEP12CylinderClsn.c:
     complete
     .text start:0x02010c30 end:0x02010c5c
 
-src/_ZN5Actor28UpdatePosWithHorzSpeedAndAngEv.c:
+src/_ZN5Actor28UpdatePosWithHorzSpeedAndAngEv.cpp:
     complete
     .text start:0x02010c5c end:0x02010d40
 
@@ -1144,7 +1144,7 @@ src/_ZN5Actor4NextEPKS_.cpp:
     complete
     .text start:0x02010ecc end:0x02010ef0
 
-src/_ZN5Actor15FindWithActorIDEjPS_.c:
+src/_ZN5Actor15FindWithActorIDEjPS_.cpp:
     complete
     .text start:0x02010ef0 end:0x02010f3c
 

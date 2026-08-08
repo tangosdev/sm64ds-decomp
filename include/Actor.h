@@ -139,6 +139,26 @@ struct Actor : ActorDerived {
     virtual int  OnAimedAtWithEggReturnVec();          /* slot 30 */
 
     /* --- non-virtual --- */
+    /* The player-proximity group. ClosestPlayer does the work: it walks the
+       player table at 0x0209f394 measuring against THIS actor's position
+       (`Vec3_Dist(&mPosX, ...)`), and caches both ends in globals -- nearest in
+       0x0209b458, farthest in 0x0209b450, their distances in 0x0208e380 and
+       0x0208e37c. The other three are readers of that cache, which is why each
+       calls ClosestPlayer first and then returns a global. Members, all four:
+       the distance is measured from `this`. */
+    Player *ClosestPlayer();
+    Player *ClosestNonVanishPlayer();
+    Player *FarthestPlayer();
+    s32     DistToCPlayer();
+
+    /* Static: the mangled name carries both parameters and the ROM reads them
+       from r0 and r1, leaving no register for a `this`. */
+    static Actor *FindWithActorID(u32 actorID, Actor *after);
+
+    /* Integrates horizontal speed along the facing angle and applies gravity,
+       all through `this` -- mHorzSpeed at 0x98, mVertAccel 0x9c,
+       mTerminalVelocity 0xa0, mVertSpeed 0xa8. */
+    void UpdatePosWithHorzSpeedAndAng();
     int  BumpedUnderneathByPlayer(Player &player);
     int  GetSubtraction(short a, short b);
     void HugeLandingDustAt(Vector3 &pos, bool b);

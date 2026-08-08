@@ -1,3 +1,5 @@
+//cpp
+#include "Actor.h"
 /* Actor::FarthestPlayer()
  * Recomputes the closest player (which, as a side effect, also stores the
  * farthest player into a file-scope global), then returns that cached
@@ -12,10 +14,10 @@
 struct Actor;
 
 extern struct Actor *_ZN5Actor13ClosestPlayerEv(void);
-extern struct Actor *data_0209b450; /* @ 0x0209b450 */
+extern "C" struct Actor *data_0209b450; /* @ 0x0209b450 */
 
-struct Actor *_ZN5Actor14FarthestPlayerEv(struct Actor *self)
+Player *Actor::FarthestPlayer()
 {
-    _ZN5Actor13ClosestPlayerEv();
-    return data_0209b450;
+    ClosestPlayer();
+    return (Player *)data_0209b450;
 }

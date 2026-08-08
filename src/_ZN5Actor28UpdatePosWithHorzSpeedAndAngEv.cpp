@@ -1,8 +1,11 @@
+//cpp
+#include "Actor.h"
 typedef short s16;
 typedef int s32;
 typedef long long s64;
-extern s16 data_02082214[];
-void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void *c){
+extern "C" s16 data_02082214[];
+void Actor::UpdatePosWithHorzSpeedAndAng(){
+    void *c = this;
     s32 v98 = *(s32*)((char*)c+0x98);
     if (v98 == 0) {
         s32 a8 = *(s32*)((char*)c+0xa8);
