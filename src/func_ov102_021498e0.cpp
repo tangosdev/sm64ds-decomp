@@ -1,25 +1,19 @@
 //cpp
-typedef long long s64;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "decl_common.h"
+
 struct C; typedef void (C::*PMF)();
-struct Entry { PMF pmf[4]; };
-struct Vector3 { int x, y, z; };
-extern short data_02082214[];
+extern s16 data_02082214[];
 extern signed char data_0209f2f8;
-extern Entry data_ov102_0214e870[];
-extern Entry data_ov102_0214e8c0[];
+extern PMF data_ov102_0214e870[][4];
+extern PMF data_ov102_0214e8c0[][4];
 extern "C" {
 void func_ov102_02149684(int *dst, void *src);
 int DecIfAbove0_Short(s16 *p);
-void func_ov002_020f0438(void *a);
 void _ZN5Sound9PlayBank3EjRK7Vector3(int bank, void *pos);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
 int _ZN8SaveData16HasPlayerLostCapEv(void);
 void *func_ov102_02149220(void *c);
 void func_ov102_0214953c(void *c, int p1, int p2);
-void func_ov102_02149da8(void *c, int i);
 }
 extern "C" void func_ov102_021498e0(C *self)
 {
@@ -73,24 +67,24 @@ extern "C" void func_ov102_021498e0(C *self)
     typ = *(u16 *)(c + 0xc);
     switch (typ - 0x14) {
     case 1: {
-        Entry *tbl = data_ov102_0214e8c0;
+        PMF (*tbl)[4] = data_ov102_0214e8c0;
         u8 content = *(u8 *)(c + 0x3f3);
-        (self->*tbl[content].pmf[0])();
+        (self->*tbl[content][0])();
         break;
     }
     case 2: {
-        Entry *tbl = data_ov102_0214e870;
+        PMF (*tbl)[4] = data_ov102_0214e870;
         u8 content = *(u8 *)(c + 0x3f3);
         if (ch >= 4) ch = 0;
-        (self->*tbl[content].pmf[ch])();
+        (self->*tbl[content][ch])();
         break;
     }
     case 0:
         if (_ZN8SaveData16HasPlayerLostCapEv() == 0 || data_0209f2f8 == 0x1f) {
-            Entry *tbl = data_ov102_0214e8c0;
+            PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = *(u8 *)(c + 0x3f3);
             if (ch >= 4) ch = 0;
-            (self->*tbl[content].pmf[ch])();
+            (self->*tbl[content][ch])();
         } else {
             func_ov102_02149220(c);
         }
