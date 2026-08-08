@@ -21,13 +21,8 @@
  */
 extern "C" {
 
-struct MemoryNode {
-  unsigned short tag;
-  unsigned short flags;
-  unsigned int size;
-  MemoryNode* prev;
-  MemoryNode* next;
-};
+/* MemoryNode now comes from include/MemoryNode.h via ExpandingHeapAllocator.h.
+   The local copy this file used to carry was identical to it. */
 
 struct NodeList {
   MemoryNode* head;

@@ -25,13 +25,9 @@ struct MemoryNodeTarget {
     void *end;
 };
 
-struct MemoryNode {
-    char magic[2];
-    u16 flags;
-    u32 size;
-    struct MemoryNode *prev;
-    struct MemoryNode *next;
-};
+/* MemoryNode now comes from include/MemoryNode.h. The local copy this file carried
+   spelled offset 0 as `char magic[2]`; the shared type calls it a u16 tag, which is
+   what CreateNode stores. Nothing here read the field. */
 
 extern "C" {
 void _ZN10MemoryNode6TargetC1EP10MemoryNode(struct MemoryNodeTarget *t, struct MemoryNode *node);

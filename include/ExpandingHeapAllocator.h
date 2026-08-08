@@ -15,6 +15,7 @@
 #ifndef EXPANDINGHEAPALLOCATOR_H
 #define EXPANDINGHEAPALLOCATOR_H
 #include "types.h"
+#include "MemoryNode.h"   /* the five node methods below take it by pointer */
 
 /* The generator also emitted `struct align_; struct ptr; struct size_;` as forward
  * declarations -- parameter names mistaken for type names. No source ever referenced
@@ -56,6 +57,45 @@ struct ExpandingHeapAllocator {
        argument rather than as `this`. */
     static u32  SizeofInternal(void* userPtr);
     static void InvokeDeallocate(void* ptr, ExpandingHeapAllocator* alloc, u32 size);
+
+    /* The node-list layer. These were the last five unmigratable methods of this class:
+       their parameters mangle `P10MemoryNode` and `PNS0_6TargetE`, so they could not be
+       declared as members until MemoryNode existed as a class with a nested Target --
+       see include/MemoryNode.h.
+
+       Four are static by the arity test (declared parameters == body arguments, no room
+       for `this`); FreeNode declares two and takes three, so it is an instance method.
+
+       NOTE the first parameter of the static four is typed MemoryNode* because that is
+       what the ROM's mangled name says, but every caller passes the allocator's embedded
+       node-list at `this + 0x24`, not a real node. The original evidently treated that
+       list head as a sentinel node. The bodies cast it back to the shape they use; the
+       declaration follows the ROM, not the usage. */
+    static void*       CreateNode(MemoryNode::Target* extent, u16 tag);
+    static void*       LinkNode(MemoryNode* list, MemoryNode* node, MemoryNode* prev);
+    static void*       UnlinkNode(MemoryNode* list, MemoryNode* node);
+
+    /* AllocateNode and FreeNode are NOT declared here yet, deliberately. The type no
+       longer blocks them -- both would mangle correctly now -- but AllocateNode does not
+       yet reproduce, and a declared-but-undefined member is a landmine. AllocateNode is
+       ONE WORD off, at +0x10c:
+
+           ROM   e1dd33b8   ldrh r3, [sp, #0x38]
+           ours  e59d3038   ldr  r3, [sp, #0x38]
+
+       Its fifth argument is stack-passed (AAPCS puts args 5+ on the stack), and the ROM
+       reads only its low halfword -- the load width mwccarm picks when the declared type
+       is 16 bit. But the mangled name ends `jj`, fixing both trailing parameters as u32,
+       and a u32 parameter gets a word load. The recovered body squared that circle by
+       declaring the parameter `unsigned short`, which reproduces but cannot be a member
+       signature. Tried and rejected: a truncating local (999 words -- it changes how the
+       argument is homed), `*(unsigned short *)&param` (5 words -- taking the address
+       re-homes it), and casts at the use site (no effect; the load width is chosen from
+       the parameter's declared type, not from what is done with the value).
+
+       So this is the same shape as DeallocateAll's `PPFvPvPS_jE`: the mangled name and
+       the reproducing body disagree about a parameter type, and the ROM's own codegen is
+       the tiebreaker evidence. Worth its own investigation rather than a guess. */
 #endif
 };
 
