@@ -1036,7 +1036,7 @@ src/_ZN5Actor12ReflectAngleE5Fix12IiES1_s.c:
     complete
     .text start:0x02010428 end:0x0201045c
 
-src/_ZN5Actor15IsPlayerInRangeERK7Vector3i.c:
+src/_ZN5Actor15IsPlayerInRangeERK7Vector3i.cpp:
     complete
     .text start:0x0201045c end:0x02010498
 
@@ -1044,7 +1044,7 @@ src/_ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i.c:
     complete
     .text start:0x02010498 end:0x020104dc
 
-src/_ZN5Actor15IsPlayerInRangeEi.c:
+src/_ZN5Actor15IsPlayerInRangeEi.cpp:
     complete
     .text start:0x020104dc end:0x02010518
 
@@ -1076,7 +1076,7 @@ src/_ZN5Actor18ClosestWithActorIDEj.c:
     complete
     .text start:0x020108c4 end:0x0201092c
 
-src/_ZN5Actor18HorzAngleToFPlayerEv.c:
+src/_ZN5Actor18HorzAngleToFPlayerEv.cpp:
     complete
     .text start:0x0201092c end:0x02010958
 
@@ -1084,11 +1084,11 @@ src/_ZN5Actor14FarthestPlayerEv.cpp:
     complete
     .text start:0x02010958 end:0x0201097c
 
-src/_ZN5Actor23HorzAngleToCPlayerOrAngEv.c:
+src/_ZN5Actor23HorzAngleToCPlayerOrAngEv.cpp:
     complete
     .text start:0x0201097c end:0x020109b8
 
-src/_ZN5Actor18HorzAngleToCPlayerEv.c:
+src/_ZN5Actor18HorzAngleToCPlayerEv.cpp:
     complete
     .text start:0x020109b8 end:0x020109e4
 

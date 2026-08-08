@@ -151,6 +151,30 @@ struct Actor : ActorDerived {
     Player *FarthestPlayer();
     s32     DistToCPlayer();
 
+    /* The readers of that same cache, 0x0201045c..0x020109e4. Every one opens
+       by calling ClosestPlayer() -- which is what refills 0x0209b458 and
+       0x0209b450 -- and only then reads the global. That is why each looks
+       like it throws a return value away: the call is made for its side
+       effect, not its result.
+
+       All five are members. Four take `this`'s position from 0x5c and one
+       reads mAngleY, so the dereference is visible in the bytes. The
+       Vector3-taking overload is the exception worth naming: its body never
+       touches a field, and it is a member because the ROM puts `pos` in r1 and
+       maxDist in r2, leaving r0 written-but-unread -- the same argument as the
+       dust workers above, with the same premise about the mangled name.
+
+       The angles return s16: HorzAngleToCPlayerOrAng's null path is an
+       `ldrsh [r4,#0x8e]`, a SIGNED halfword load of mAngleY, and the other two
+       tail straight into Vec3_HorzAngle. maxDist arrives as a plain integer and
+       is shifted into 20.12 at the comparison (`cmp r0, r4, lsl #12`), so it is
+       a whole-unit distance, not a fix12 one. */
+    s16  HorzAngleToCPlayer();
+    s16  HorzAngleToFPlayer();
+    s16  HorzAngleToCPlayerOrAng();
+    bool IsPlayerInRange(s32 maxDist);
+    bool IsPlayerInRange(const Vector3 &pos, s32 maxDist);
+
     /* Static: the mangled name carries both parameters and the ROM reads them
        from r0 and r1, leaving no register for a `this`. */
     static Actor *FindWithActorID(u32 actorID, Actor *after);
@@ -169,9 +193,17 @@ struct Actor : ActorDerived {
        need that said out loud, because not one of them reads a field: each
        opens `mov r4, r1` and every later load is off r4, so the position
        arrives in r1 and r0 is written by every caller and read by none of
-       them. Only `this` can be in r0. A static `...At(const Vector3&)` would
-       have taken the position in r0 instead. Disassembled at 0x0200fac4,
-       0x0200fb84, 0x0200fd04, 0x0200fd74 and 0x0200fdfc -- all five.
+       them. A static `...At(const Vector3&)` would have taken the position in
+       r0 instead. Disassembled at 0x0200fac4, 0x0200fb84, 0x0200fd04,
+       0x0200fd74 and 0x0200fdfc -- all five.
+
+       State that premise precisely, because the bytes alone do not carry it:
+       what the register evidence settles is static-vs-non-static GIVEN the
+       mangled name's parameter list, which is the one distinction mangling
+       cannot express. A free function with an unused leading `Actor*` would be
+       byte-identical; it is excluded by the attested symbol name, not by the
+       disassembly. The names are the premise the whole tree rests on, so the
+       conclusion holds -- but it is name plus ABI, not ABI alone.
 
        NAMING, and it is not a typo below: the two landing-dust wrappers call
        the OTHER name's worker. HugeLandingDust (0x0200fb4c) calls 0x0200fac4 =
