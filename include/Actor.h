@@ -218,4 +218,15 @@ struct Actor {
 
 #endif /* __cplusplus */
 
+/* Outside the split, so the C and C++ spellings cannot drift apart.
+ *
+ * Read what this does and does not claim. 0xd0 is the size this header's own
+ * field list computes -- it is NOT independent ROM evidence that an Actor is
+ * 0xd0 bytes. What it buys is real all the same: the two spellings are held to
+ * each other, a field retyped without shrinking the pad after it stops
+ * compiling, and include/Player.h becomes checkable -- a derived struct's fields
+ * start at its base's size, and tools/check_header_offsets.py will not guess
+ * that number. */
+typedef char Actor_size_must_be_0xd0[sizeof(struct Actor) == 0xd0 ? 1 : -1];
+
 #endif

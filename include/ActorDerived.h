@@ -47,4 +47,9 @@ struct ActorDerived : ActorBase {
     static void Spawn(u32 actorID, ActorBase *parent, int a, int b);
 };
 
+/* ActorDerived adds no members -- it exists to carry one overridden slot -- so it
+   is exactly ActorBase's 0x50. Asserting it holds that claim, and lets
+   tools/check_header_offsets.py check everything below it. */
+typedef char ActorDerived_size_must_be_0x50[sizeof(ActorDerived) == 0x50 ? 1 : -1];
+
 #endif

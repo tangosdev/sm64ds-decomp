@@ -119,4 +119,11 @@ struct ActorBase {
 
 #endif /* __cplusplus */
 
+/* Outside the __cplusplus split on purpose, so it holds BOTH spellings to the
+   same 0x50 -- the C one writes the vptr out by hand and would otherwise be free
+   to drift from the C++ one. It is also what lets tools/check_header_offsets.py
+   check the classes derived from this: a derived struct's own fields start at the
+   base's size, and the tool refuses to guess it. */
+typedef char ActorBase_size_must_be_0x50[sizeof(struct ActorBase) == 0x50 ? 1 : -1];
+
 #endif

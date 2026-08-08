@@ -109,10 +109,27 @@ for path in sys.argv[1:]:
     off, bad, n, skipped, pending = 0, 0, 0, [], []
     trusted = True
     started = in_comment = unmodelled = False
+    unknown_base = derived_from = None
     for lineno, line in enumerate(txt.splitlines(), 1):
         if not started:
-            if re.match(r"^\s*struct \w+ \{", line):
+            # `struct X {` or `struct X : Base {`. Without the second form this
+            # tool never started on a derived struct at all, and reported
+            # "0 commented fields ... struct spans 0x0" -- which reads exactly
+            # like a pass. Every class this repo reconstructs from here on is a
+            # derived struct, so that silence covered the growing majority.
+            m0 = re.match(r"^\s*struct (\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{", line)
+            if m0:
                 started = True
+                base = m0.group(2)
+                if base is not None:
+                    # A derived struct's own fields do NOT start at 0 -- the base
+                    # sub-object is there. Guessing 0 would mismatch every field,
+                    # so refuse unless the base states its own size.
+                    if base not in SZ:
+                        unknown_base = base
+                        break
+                    off = SZ[base]
+                    derived_from = base
             continue
         if in_comment:
             if "*/" in line:
@@ -128,7 +145,12 @@ for path in sys.argv[1:]:
         # declaration mentions, so the running offset cannot be derived from the text.
         # Say the struct is unmodelled rather than emit a mismatch per field.
         if re.match(r"^\s*(virtual\b|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
-            unmodelled = True
+            # ...unless we started from a base whose size is asserted. A derived
+            # class places no vptr of its own -- it inherits the base's, and the
+            # base's asserted size already counts it. The running offset is sound,
+            # so the member functions merely end the field list.
+            if derived_from is None:
+                unmodelled = True
             break
         # A declaration can carry a trailing comment that runs onto later lines:
         #     u8 unk_010;   /* 0x010 - first byte of the 0x28-byte ClsnResult
@@ -177,6 +199,14 @@ for path in sys.argv[1:]:
                                f"computed 0x{off:03x}")
                 bad += 1
         off += w * (int(arr, 0) if arr else 1)
+    if unknown_base:
+        # Not a pass and not a failure: a statement of what is missing. Adding
+        # `typedef char X_size_must_be_0xN[sizeof(X) == 0xN ? 1 : -1];` to the
+        # base's header makes this header checkable AND makes the base's own size
+        # a claim the compiler enforces.
+        print(f"{path}: skipped -- derives from {unknown_base}, whose size is asserted "
+              f"nowhere (add {unknown_base}_size_must_be_0x.. to its header)")
+        continue
     if unmodelled:
         # not a failure: this gate is for the generated flat headers, and a
         # hand-written polymorphic one has layout the text does not determine
