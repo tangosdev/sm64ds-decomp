@@ -7921,31 +7921,31 @@ src/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp:
     complete
     .text start:0x0204e938 end:0x0204e964
 
-src/_ZN18SolidHeapAllocator10ReallocateEPvj.c:
+src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp:
     complete
     .text start:0x0204e964 end:0x0204ea08
 
-src/_ZN18SolidHeapAllocator14TryResizeToFitEv.c:
+src/_ZN18SolidHeapAllocator14TryResizeToFitEv.cpp:
     complete
     .text start:0x0204ea08 end:0x0204ea3c
 
-src/_ZN18SolidHeapAllocator9LoadStateEj.c:
+src/_ZN18SolidHeapAllocator9LoadStateEj.cpp:
     complete
     .text start:0x0204ea3c end:0x0204ea98
 
-src/_ZN18SolidHeapAllocator9SaveStateEj.c:
+src/_ZN18SolidHeapAllocator9SaveStateEj.cpp:
     complete
     .text start:0x0204ea98 end:0x0204eaf0
 
-src/_ZN18SolidHeapAllocator10MemoryLeftEi.c:
+src/_ZN18SolidHeapAllocator10MemoryLeftEi.cpp:
     complete
     .text start:0x0204eaf0 end:0x0204eb30
 
-src/_ZN18SolidHeapAllocator5ResetEj.c:
+src/_ZN18SolidHeapAllocator5ResetEj.cpp:
     complete
     .text start:0x0204eb30 end:0x0204eb70
 
-src/_ZN18SolidHeapAllocator8AllocateEji.c:
+src/_ZN18SolidHeapAllocator8AllocateEji.cpp:
     complete
     .text start:0x0204eb70 end:0x0204ebb8
 
@@ -7957,19 +7957,19 @@ src/_ZN4Heap24CreateSolidHeapAllocatorEPvjj.c:
     complete
     .text start:0x0204ebc4 end:0x0204ec10
 
-src/_ZN18SolidHeapAllocator8ResetEndEv.c:
+src/_ZN18SolidHeapAllocator8ResetEndEv.cpp:
     complete
     .text start:0x0204ec10 end:0x0204ec40
 
-src/_ZN18SolidHeapAllocator10ResetStartEv.c:
+src/_ZN18SolidHeapAllocator10ResetStartEv.cpp:
     complete
     .text start:0x0204ec40 end:0x0204ec58
 
-src/_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj.c:
+src/_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj.cpp:
     complete
     .text start:0x0204ec58 end:0x0204ecd4
 
-src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.c:
+src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.cpp:
     complete
     .text start:0x0204ecd4 end:0x0204ed54
 
