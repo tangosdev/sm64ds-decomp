@@ -206,6 +206,15 @@ struct Heap {
     Heap* SetDefault();                      /* installs this as the default
                                                 heap, returns the previous one */
 
+    /* Tail-call veneers. Each is a three-word thunk in the ROM --
+       `ldr ip,[pc] / bx ip / .word target' -- reaching a sibling too far away
+       for a b/bl displacement. They are real members with real names, not
+       compiler-generated stubs, so they are declared here like anything else. */
+    void  _Destroy();                        /* -> Destroy */
+    void* _Allocate(u32 size, int align);    /* -> Allocate */
+    void  _Deallocate(void* ptr);            /* -> Deallocate */
+    int   _Sizeof(void* ptr);                /* -> Sizeof */
+
     /* STATIC -- and that is read off the argument count, not off the mangled
        name. The Itanium ABI does not encode `this' in the parameter list, so a
        static and a non-static member with the same declared parameters mangle
@@ -220,6 +229,8 @@ struct Heap {
     static Heap* CreateExpandingHeap(u32 size, Heap* root, int align);
     static void  InitializeGameHeap(u32 size, Heap* root);
     static void* SetupSolidHeapAsDefault(u32 size, Heap* root, int align);
+    static void* InitializeSolidHeapAsDefault(u32 size, Heap* root, int align);
+                                             /* veneer -> SetupSolidHeapAsDefault */
     static void  RestoreFromTemporary();
 
     /* The two allocator factories. `flags' is the node id the allocator stamps

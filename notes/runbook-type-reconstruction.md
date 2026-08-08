@@ -460,3 +460,52 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   The definition is the only non-guess.
 - **Do not migrate before the types are right.** A real `struct` built on guessed member
   types is a lie that every later file inherits.
+
+## 8. Not a dead end: tail-call veneers migrate like anything else
+
+**107 files in `src/` are tail-call veneers** -- three-word thunks of the shape
+
+```
+ldr ip, [pc]
+bx  ip
+.word <target>
+```
+
+reaching a sibling function. 82 are `.c`, 25 are `.cpp`, and 38 spell a mangled
+symbol by hand. Every one of them was written the same way:
+
+```cpp
+extern "C" {
+extern void _ZN4Heap10DeallocateEPv(void);
+void _ZN4Heap11_DeallocateEPv(void) { _ZN4Heap10DeallocateEPv(); }
+}
+```
+
+Both functions declared as taking **nothing** -- which reproduces the bytes exactly,
+because a tail call never touches `r0-r3`. That property is the veneer's whole nature,
+and it is also what let a wrong prototype sit in every one of these files unchallenged:
+there is no argument for the declaration to get wrong *in a way the bytes can see*.
+
+**They can be real methods.** Measured on all five of `Heap`'s under `2004/b56`:
+
+```cpp
+void Heap::_Deallocate(void* ptr) { Deallocate(ptr); }
+```
+
+is byte-identical to the `extern "C"` form. So is the static case
+(`Heap::InitializeSolidHeapAsDefault` -> `Heap::SetupSolidHeapAsDefault`). The veneer
+is emitted for the *call*, not for the argument list, so restoring the real signature
+costs nothing.
+
+Two things this does **not** mean:
+
+- It does not tell you what the signature *is*. The bytes are indifferent, so the
+  parameter types must come from the target's own definition -- exactly as
+  section 2 requires. A veneer is the one place where a wrong signature is
+  guaranteed to still match.
+- It is not a licence to declare the veneer's *target* from the veneer. Migrate the
+  target first, then point the veneer at it.
+
+Worth doing because the veneer and its target are the same function to a reader, and
+half of the pair claiming `(void)` is the plainest possible instance of the source
+saying something the ROM does not.
