@@ -40,7 +40,7 @@
         "unmigrated": 20
       },
       "method": {
-        "draft": 10,
+        "draft": 9,
         "migrated": 1226,
         "unmigrated": 696
       }
@@ -49,7 +49,7 @@
     "mangled_c": 943,
     "mangled_cpp": 1582,
     "mangled_total": 2525,
-    "nonmatching_drafts": 11,
+    "nonmatching_drafts": 10,
     "unmigrated_total": 1222
   },
   "shadow_decls": {
