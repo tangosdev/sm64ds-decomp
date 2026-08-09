@@ -81,11 +81,11 @@ src/_ZN8CapEnemy15RespawnIfHasCapEv.cpp:
     complete
     .text start:0x02006054 end:0x020060f4
 
-src/_ZN8CapEnemy16GetCapEatenOffItERK7Vector3.c:
+src/_ZN8CapEnemy16GetCapEatenOffItERK7Vector3.cpp:
     complete
     .text start:0x020060f4 end:0x020061b0
 
-src/_ZN8CapEnemy10ReleaseCapERK7Vector3.c:
+src/_ZN8CapEnemy10ReleaseCapERK7Vector3.cpp:
     complete
     .text start:0x020061b0 end:0x02006280
 
@@ -96,10 +96,10 @@ src/_ZN8CapEnemy14RenderCapModelEPK7Vector3.cpp:
 src/_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
     .text start:0x020062b8 end:0x020063b0
 
-src/_ZN8CapEnemy6AddCapEj.c:
+src/_ZN8CapEnemy6AddCapEj.cpp:
     .text start:0x020063b0 end:0x020064e0
 
-src/_ZN8CapEnemy14UnloadCapModelEv.c:
+src/_ZN8CapEnemy14UnloadCapModelEv.cpp:
     complete
     .text start:0x020064e0 end:0x0200651c
 

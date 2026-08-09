@@ -19,5 +19,5 @@ void CapEnemy::Unk_02005d94()
     }
     *(unsigned char *)(((int)((unsigned char *)this) + 0x113) & 0xFFFFFFFFFFFFFFFFULL) &= 7;
     if (func_02005e28(((unsigned char *)this)))
-        *(unsigned char *)(((int)((unsigned char *)&unk_113)) & 0xFFFFFFFFFFFFFFFFULL) |= 0x80;
+        *(unsigned char *)(((int)((unsigned char *)&mCapId)) & 0xFFFFFFFFFFFFFFFFULL) |= 0x80;
 }

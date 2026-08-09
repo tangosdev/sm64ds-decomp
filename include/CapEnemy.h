@@ -56,19 +56,34 @@ struct CapEnemy {
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x3];
     s32 mEatingPlayer;            /* 0x0d0 */
-    u8  pad_0d4[0x3f];
-    u8  unk_113;            /* 0x113 */
+    u8  pad_0d4[0x3c];
+    /* Which BANK of caps this enemy draws from. AddCap sets it when the spawn
+       param is >= 3, and both ReleaseCap and GetCapEatenOffIt branch on it --
+       a set flag releases the cap differently and skips the model re-bind. */
+    u8  unk_110;            /* 0x110 */
+    u8  unk_111;            /* 0x111 */
+    /* Latched to 1 the first time a bank-1 cap is added, and never cleared;
+       passed straight through to func_ov001_020ab228. */
+    u8  unk_112;            /* 0x112 */
+    /* The cap, packed. Low 3 bits index the six-entry model table and 6 means
+       "no cap" -- AddCap writes param % 3 and falls back to 6 on any failure,
+       and UnloadCapModel/ReleaseCap both mask with & 7 before indexing.
+       Bit 3 and bit 7 are set by ReleaseCap as release markers, which is why
+       the reads mask and the writes OR. */
+    u8  mCapId;            /* 0x113 */
     /* Model member, named by _ZN5ModelD1Ev at +0x114 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x114 */
     u8  unk_164;            /* 0x164 */
 #ifdef __cplusplus
     /* methods */
+    int AddCap(unsigned int param);
     int DestroyIfCapNotNeeded();
     int GetCapEatenOffIt(const Vector3 & v_);
     struct Actor * ReleaseCap(const Vector3 & v_);
     struct Actor * RespawnIfHasCap();
     void RenderCapModel(const Vector3 * v);
+    void UnloadCapModel();
     void Unk_02005d94();
 #endif
 };
