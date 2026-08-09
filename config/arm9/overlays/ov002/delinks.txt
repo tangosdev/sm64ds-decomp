@@ -4914,7 +4914,7 @@ src/_ZN14BlueCoinSwitchD0Ev.c:
     complete
     .text start:0x020f11f4 end:0x020f124c
 
-src/_ZN14BlueCoinSwitch16CleanupResourcesEv.c:
+src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f124c end:0x020f1290
 
@@ -4922,11 +4922,11 @@ src/_ZN14BlueCoinSwitch6RenderEv.cpp:
     complete
     .text start:0x020f1290 end:0x020f12c8
 
-src/_ZN14BlueCoinSwitch8BehaviorEv.c:
+src/_ZN14BlueCoinSwitch8BehaviorEv.cpp:
     complete
     .text start:0x020f12c8 end:0x020f1468
 
-src/_ZN14BlueCoinSwitch13InitResourcesEv.c:
+src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp:
     complete
     .text start:0x020f1468 end:0x020f1578
 

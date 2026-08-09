@@ -1,10 +1,13 @@
 //cpp
 // @symbol _ZN14BlueCoinSwitch6RenderEv
-/* recovered: renamed to Class_Method, RTTI class fields named */
-#include "daObjBC_Switch_c.h"
-// recovered name: daObjBC_Switch_c_Render
-/* recovered: renamed to Class_Method */
-/* daObjBC_Switch_c::Render - recovered from vtable slot identity */
+/* recovered: named members + shared header, real C++ method
+ *
+ * Draws the switch only while it is still above its stop. Behavior sinks mPosY
+ * toward unk_320 once pressed, so this comparison IS the visibility rule --
+ * the switch vanishes exactly when it bottoms out, with no separate flag.
+ */
+#include "BlueCoinSwitch.h"
+
 struct Base {
     virtual void v0();
     virtual void v1();
@@ -14,10 +17,10 @@ struct Base {
     virtual void m(int);
 };
 
-extern "C" int _ZN14BlueCoinSwitch6RenderEv(char *o) {
-    struct daObjBC_Switch_c *self = (struct daObjBC_Switch_c *)(void *)o;
-    if (self->unk_060 > self->unk_320) {
-        Base *bp = (Base *)(o + 0xd4);
+int BlueCoinSwitch::Render()
+{
+    if (mPosY > unk_320) {
+        Base *bp = (Base *)&mModel;
         bp->m(0);
     }
     return 1;
