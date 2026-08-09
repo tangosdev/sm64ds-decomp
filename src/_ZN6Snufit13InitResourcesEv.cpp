@@ -9,9 +9,9 @@ typedef struct BMD_File BMD_File;
 typedef struct Actor Actor;
 typedef struct PMF PMF;
 extern SharedFilePtr data_ov065_0211d618;
-extern SharedFilePtr data_ov075_0211d610;
+extern SharedFilePtr data_ov065_0211d610;
 extern SharedFilePtr data_ov065_0211d600;
-extern SharedFilePtr data_ov075_0211d608;
+extern SharedFilePtr data_ov065_0211d608;
 extern PMF data_ov065_0211d670;
 extern "C" {
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
@@ -26,10 +26,10 @@ extern int func_ov065_0211691c(void* c, PMF* p);
 int Snufit::InitResources()
 {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d618), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d610);
+    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d610);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d600);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d608);
+    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d608);
     unk_0a0 = -0x1e000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x110, (Actor*)((char*)this), 0x38000, 0x7e000, 0x200000, 0x7eff0);
     mAngleY = mPrevAngleY;
