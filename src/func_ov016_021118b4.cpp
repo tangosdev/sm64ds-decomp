@@ -14,6 +14,7 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern int func_02012694(unsigned int id, void *pos);
 extern struct Matrix4x3 data_020a0e68;
 extern void *data_ov016_02114dbc;
+extern void func_ov016_02111bf0(void *c, void *p);
 
 int func_ov016_021118b4(char *c) {
     Vector3 in;
@@ -30,7 +31,7 @@ int func_ov016_021118b4(char *c) {
     _Z14ApproachLinearR7Vector3RKS_5Fix12IiE((Vector3*)(c + 0x5c), &out, 0x14000);
     if (Vec3_Dist((Vector3*)(c + 0x5c), &out) < 0x14000) {
         func_02012694(0xfa, c + 0x74);
-        func_ov018_02111bf0(c, &data_ov016_02114dbc);
+        func_ov016_02111bf0(c, &data_ov016_02114dbc);
     }
     return 1;
 }
