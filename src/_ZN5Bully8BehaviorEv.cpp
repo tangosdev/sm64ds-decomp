@@ -6,7 +6,7 @@ struct Vector3 { int x, y, z; };
 struct Vector3_16 { s16 x, y, z; };
 extern "C" {
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* a, void* b, unsigned c);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned a, unsigned b, const Vector3* pos, const Vector3_16* rot, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const Vector3* pos, const Vector3_16* rot, int e, int f);
 extern void* _ZN5Actor10FindWithIDEj(unsigned id);
 extern int RandomIntInternal(void* seed);
 extern int data_0209e650;
@@ -32,7 +32,7 @@ int _ZN5Bully8BehaviorEv(char* self) {
             rot.z = 0;
             rot.y = (s16)yrot;
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x120, 2, &pos, &rot, *(s8*)(self + 0xcc), -1);
             if (a) {
                 *(int*)((char*)a + 0x98) = 0xa000;

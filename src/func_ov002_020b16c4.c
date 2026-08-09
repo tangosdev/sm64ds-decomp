@@ -14,7 +14,7 @@ extern unsigned int func_02012790(unsigned int a);
 extern void GiveCoins(int idx, int amount);
 extern void _ZN6Player4HealEi(void *p, int amt);
 extern void *func_ov002_020b1328(void *r5);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int b,
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int b,
                                                           const Vector3 *pos, const void *r,
                                                           int e, int f);
 extern void _ZN9PowerStar13AddStarMarkerEv(void *o);
@@ -73,7 +73,7 @@ void func_ov002_020b16c4(void *cc, void *pp)
     *(volatile int *)&w.z = z;
     y += 0x78000;
     *(volatile int *)&w.y = y;
-    st = (char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    st = (char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xb2, *(u8 *)(c + 0x3ab) | 0x40, &w, 0, *(s8 *)(ps + 0xcc), -1);
     if (st == 0) return;
     if (*(s8 *)(c + 0xcc) != *(s8 *)(st + 0xcc))

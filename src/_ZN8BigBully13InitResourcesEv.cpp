@@ -15,7 +15,7 @@ extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, Actor* a);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
+extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
 extern s16 data_02082214[];
 }
 
@@ -62,7 +62,7 @@ int BigBully::InitResources()
             pos.x = mPosX + data_02082214[idx * 2] * 500 - 0x64000;
             pos.z = mPosZ - data_02082214[idx * 2 + 1] * 500;
 
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xd7, -1, &pos, (Vector3_16*)0, mAreaId, -1);
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd7, -1, &pos, (Vector3_16*)0, mAreaId, -1);
             if (spawned != 0) {
                 *(int*)((char*)spawned + 0x3fc) = unk_004;
             } else {

@@ -6,10 +6,10 @@
 typedef unsigned char u8; typedef signed char s8; typedef short s16;
 struct Vector3 { int x, y, z; }; struct Vector3_16 { s16 x, y, z; };
 struct Actor {
-  static Actor* Spawn(unsigned a, unsigned b, const Vector3& pos, const Vector3_16* rot, int e, int f);
+  static Actor* Spawn(unsigned a, unsigned b, const Vector3& pos, const Vector3_16* rot, signed char e, short f);
   static Actor* FindWithID(unsigned id);
 };
-Actor* Actor::Spawn(unsigned, unsigned, const Vector3&, const Vector3_16*, int, int);
+Actor* Actor::Spawn(unsigned, unsigned, const Vector3&, const Vector3_16*, signed char, short);
 Actor* Actor::FindWithID(unsigned);
 extern "C" { extern int RandomIntInternal(void* seed); extern int data_0209e650; extern int func_ov064_0211616c(void* thiz); }
 extern "C" void func_ov064_02117220(char* self) {

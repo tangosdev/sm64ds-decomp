@@ -19,7 +19,7 @@ typedef struct
 } Vector3_16;
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 cc, const Vector3 *v, u32 e);
 extern int RandomIntInternal(int *seed);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 f, const Vector3 *v, const Vector3_16 *r, int a, int b);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 f, const Vector3 *v, const Vector3_16 *r, int a, int b);
 extern int Bowser_IsAnimAtLastFrame(void *o);
 extern void func_ov060_02111cc0(char *c, int idx, int a);
 extern void func_02012694(int a, void *p);
@@ -73,14 +73,14 @@ void func_ov060_02114858(void *self)
         s32 rnd = RandomIntInternal(&data_0209e650);
         u32 hi = ((u32) rnd) >> 16;
         u32 m = hi % 10u;
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, (m << new_var) | 0x11, (Vector3 *) pos, (const Vector3_16 *) (c + 0x92), *((s8 *) (c + 0xcc)), -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x118, (m << new_var) | 0x11, (Vector3 *) pos, (const Vector3_16 *) (c + 0x92), *((s8 *) (c + 0xcc)), -1);
       }
       else
       {
         s32 rnd = RandomIntInternal(&data_0209e650);
         u32 hi = ((u32) rnd) >> 16;
         u32 m = hi % 10u;
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, (m << 10) | 1, (Vector3 *) pos, (const Vector3_16 *) (c + 0x92), *((s8 *) (c + 0xcc)), -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x118, (m << 10) | 1, (Vector3 *) pos, (const Vector3_16 *) (c + 0x92), *((s8 *) (c + 0xcc)), -1);
       }
     }
     {

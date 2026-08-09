@@ -18,7 +18,7 @@ extern void func_020393c4(void* p, void* v);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i r, Fix12i h, void* p, void* q);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, void* a, void* pos, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 }
 
 extern "C" {
@@ -104,7 +104,7 @@ int Dorrie::InitResources()
         unk_0e0 = 0;
         func_ov065_02118838(((char*)this));
         {
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xa9, 0, ((char*)this) + 0x5c, ((char*)this) + 0x8c, mAreaId, -1);
             if (a != 0) {
                 unk_0d4 = (int)a;

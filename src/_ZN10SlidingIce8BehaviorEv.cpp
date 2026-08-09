@@ -11,7 +11,7 @@ extern int _Z14ApproachLinearRiii(int*, int, int);
 extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, void*, void*, int, int);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, void*, void*, int, int);
 }
 
 int SlidingIce::Behavior()
@@ -41,7 +41,7 @@ int SlidingIce::Behavior()
       }
       unsigned char cnt = unk_320;
       unk_31e = (cnt + 1) * 0x14;
-      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x5d, spawnType, &pos, ((char *)this)+0x8c, mAreaId, -1);
+      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x5d, spawnType, &pos, ((char *)this)+0x8c, mAreaId, -1);
     }
   }
   return 1;

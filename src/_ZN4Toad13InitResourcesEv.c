@@ -18,7 +18,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* actor, Fix12 a, Fix12 b, u32 c, u32 d);
 extern int func_02013a44(void);
 extern void* _ZN5Actor13ClosestPlayerEv(void* thiz);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3* pos, const void* rot, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3* pos, const void* rot, int e, int f);
 extern u8 NumStars(void);
 extern int IsStarCollectedInCurLevel(int s);
 extern void func_ov085_02129524(void* c, int i);
@@ -58,7 +58,7 @@ int _ZN4Toad13InitResourcesEv(char* r4)
                 u8 pl = *(u8*)((char*)p + 0x6d9);
                 s8 cc = *(s8*)(r4 + 0xcc);
                 int m1 = -1;
-                void* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                void* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, k | ((u32)pl << 8), (Vector3*)(r4 + 0x5c), 0, cc, m1);
                 if (spawned != 0)
                     *(s32*)(r4 + 0x1f4) = *(s32*)((char*)spawned + 4);

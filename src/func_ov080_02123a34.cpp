@@ -8,7 +8,7 @@
 
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void*);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, Vector3*, Vector3_16*, int, int);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, Vector3*, Vector3_16*, int, int);
 extern int _ZN5Actor13DistToCPlayerEv(void*);
 extern void func_0201267c(unsigned int, void*);
 extern int _ZN9Animation8FinishedEv(void*);
@@ -59,7 +59,7 @@ extern "C" void func_ov080_02123a34(char* c)
         s = data_02082214[(idx << 1) + 1];
         pos.z = s * (short)0x50 + pz;
 
-        a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             py ? 0x137u : 0x137u, 0, &pos, pAng, *(signed char*)(c + 0xcc), -1);
         d = _ZN5Actor13DistToCPlayerEv(c);
         if (d >= 0x258000)

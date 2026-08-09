@@ -22,7 +22,7 @@ extern short data_ov002_0211118c;
 extern unsigned short data_ov002_0210cbf4[];
 
 extern "C" {
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec* v, Vector3_16* rot, int e, int f);
+void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec* v, Vector3_16* rot, int e, int f);
 
 void _Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij(ObjSubTable& tbl, int p2, unsigned int p3)
 {
@@ -39,7 +39,7 @@ void _Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij(ObjSubTable& tbl, in
     v.z = zz;
     short old = data_ov002_0211118c;
     data_ov002_0211118c = (short)(old + 1);
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
       a, e->param, &v, (Vector3_16*)((char*)e + 8), p2, old);
   }
 }

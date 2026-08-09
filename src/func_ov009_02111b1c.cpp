@@ -8,7 +8,7 @@ typedef int Fix12i;
 
 struct Vector3_16;
 
-extern "C" void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern "C" void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a, unsigned int b, const Vector3&, const Vector3_16*, int, int);
 
 extern unsigned char data_0209f2d8[];
@@ -28,7 +28,7 @@ extern "C" void func_ov009_02111b1c(char* thiz)
         vec = (data_0209caa0.c & 0x80000) ? data_ov009_02113e34 : data_ov009_02113d8c;
     }
     for (i = 0; i < 7; i++) {
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0xc5, 0, vec[i], 0, *(signed char*)(c + 0xcc), -1);
     }
 }

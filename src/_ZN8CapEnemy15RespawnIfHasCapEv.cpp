@@ -7,7 +7,7 @@
 struct Actor;
 
 extern "C" {
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a1, unsigned int a2, const struct Vector3 *a3,
     const struct Vector3_16 *a4, int a5, int a6);
 }
@@ -17,7 +17,7 @@ struct Actor * CapEnemy::RespawnIfHasCap()
     struct Actor *r;
     func_02005ed8(((unsigned char *)this));
     if ((((unsigned char *)this)[0x113] & 0xf) >= 6) return 0;
-    r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         mActorID, mParam,
         (const struct Vector3 *)((unsigned char *)&unk_05c),
         (const struct Vector3_16 *)((unsigned char *)&unk_08c),

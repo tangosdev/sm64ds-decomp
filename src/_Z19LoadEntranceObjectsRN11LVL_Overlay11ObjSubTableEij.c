@@ -38,7 +38,7 @@ extern void* data_0209f318;
 extern signed char data_ov002_0210cb5c[];
 
 void func_0202b0e0(struct Entry* e, int count);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 flags, const Vector3* pos, const Vector3_16* rot, s32 area, s32 death);
+void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, const Vector3* pos, const Vector3_16* rot, s32 area, s32 death);
 void* _ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 id, void* base, int a, int b);
 void StartEntranceFaderWipe(void);
 
@@ -75,7 +75,7 @@ void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* 
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[e->raw], flags, &pos, &e->rot,
                 (signed char)(param & 7), -1);
 

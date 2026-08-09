@@ -14,7 +14,7 @@ typedef long long s64;
 extern "C" {
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* pos);
 extern void func_ov096_02135800(void* c);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, const void* rot, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, const void* rot, int e, int f);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern int Vec3_HorzAngle(const void* a, const void* b);
@@ -54,7 +54,7 @@ void func_ov096_02135948(char* c)
         {
             int b = (*(unsigned short*)(c + 0xc) == 0xf0);
             if (b) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x122, 2, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
             }
         }

@@ -36,7 +36,7 @@ struct Obj {
   virtual int GetY();
 };
 extern "C" {
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct Vector3*, void*, int, int);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern int func_ov096_02135800(char* c);
 extern short Vec3_HorzAngle(void*, void*);
@@ -47,7 +47,7 @@ extern int data_0209e650[];
 extern "C" int func_ov096_02136134(char* c){
   int cond = (*(unsigned short*)(c+0xc) == 0xf0);
   if(cond){
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x122, 2, (struct Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x122, 2, (struct Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
   }
   {
     _ZN5Sound9PlayBank0EjRK7Vector3(9, c+0x74);

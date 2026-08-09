@@ -4,7 +4,7 @@
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int RandomIntInternal(int* seed);
 extern void func_02012790(int);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct Vector3*, void*, int, int);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 extern int data_0209e650;
 
 void func_ov081_02124134(char* c){
@@ -39,6 +39,6 @@ void func_ov081_02124134(char* c){
     *(int*)(c+0x400) = 0;
   }
   if (*(int*)(c+0x41c) == 2) {
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xdf, 0x300, (struct Vector3*)(c+0x44c), 0, *(signed char*)(c+0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (struct Vector3*)(c+0x44c), 0, *(signed char*)(c+0xcc), -1);
   }
 }

@@ -42,7 +42,12 @@ extern void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(int bmd, int btp);
 extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
+/* extern "C" is load-bearing here: without it the name mangles a SECOND time,
+   to _Z44_ZN5Actor5Spawn...jjP7Vector3Pvii, which exists nowhere -- and the
+   file byte-matches either way, so only check_references sees it. The other
+   declarations in this block carry the same defect and are left to a cleanup
+   that owns them; this one is fixed because the rename had to touch it. */
+extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
@@ -134,12 +139,12 @@ int Eyerok::InitResources()
         v.y = *(s32*)(c + 0x60);
         v.z = *(s32*)(c + 0x64);
         v.x += 0x193000;
-        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xB0, 1, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 1, &v, 0, *(s8*)(c + 0xCC), -1);
         if (r != 0)
             *(s32*)(c + 0x86C) = *(s32*)((char*)r + 4);
         v.x = *(s32*)(c + 0x5C);
         v.x -= 0x18C000;
-        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xB0, 2, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 2, &v, 0, *(s8*)(c + 0xCC), -1);
         if (r != 0)
             *(s32*)(c + 0x870) = *(s32*)((char*)r + 4);
         data_ov066_0211ae10 = 0;

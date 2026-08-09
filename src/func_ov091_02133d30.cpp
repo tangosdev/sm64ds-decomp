@@ -10,7 +10,7 @@ void func_02012694(u32 id, void *pos);
 struct Callback;
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, Fix12i x, Fix12i y, Fix12i z, const void *rot, Callback *cb);
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 unk, const void *pos, const void *rot, int a, int b);
+void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 unk, const void *pos, const void *rot, int a, int b);
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int RandomIntInternal(int *seed);
 s16 Vec3_VertAngle(const void *v1, const void *v0);
@@ -74,7 +74,7 @@ extern "C" int func_ov091_02133d30(Self *self)
             self->f36c, 0x73, info.pos.x, info.pos.y, info.pos.z, &info.vec, 0);
 
         if (!(self->type & 1)) {
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xe7, 1, &self->x, 0, self->f_cc, -1);
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xe7, 1, &self->x, 0, self->f_cc, -1);
             if (spawned != 0) {
                 player = _ZN5Actor13ClosestPlayerEv(self);
                 if (player != 0) {

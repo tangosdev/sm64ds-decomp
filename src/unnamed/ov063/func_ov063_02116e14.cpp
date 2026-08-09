@@ -9,7 +9,7 @@ void func_ov063_02119e38(char* c, int a, int b, int d);
 int func_ov063_0211a0dc(char* c);
 int func_ov063_0211adb4(char* c);
 void func_0201267c(int a, void* p);
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct Vector3*, void*, int, int);
+int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 
 void func_ov063_02116e14(char* c){
     *(unsigned short*)(((int)c + 0x5d4)) &= ~0x40;
@@ -34,7 +34,7 @@ void func_ov063_02116e14(char* c){
     }
     *(unsigned char*)(c + 0x5cc) = 3;
     {
-        char* r = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        char* r = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             *(unsigned short*)(c + 0x4a0), 0, (struct Vector3*)(c + 0x504), 0,
             *(signed char*)(c + 0x5d0), -1);
         if (r != 0) {

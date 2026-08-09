@@ -2,7 +2,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern short data_02082214[];
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3 *pos, void *v16, int d, int e);
+void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, struct Vector3 *pos, void *v16, int d, int e);
 void func_0201267c(int a, void *p);
 void func_ov070_02121880(void *c, int i);
 void _ZN9Animation7AdvanceEv(void *thiz);
@@ -26,7 +26,7 @@ int func_ov070_0212156c(char *c){
     ((int*)&pos)[0] = x;
     ((int*)&pos)[2] = z;
     ((int*)&pos)[1] = y;
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10f, 0, &pos, c+0x8c, *(signed char*)(c+0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10f, 0, &pos, c+0x8c, *(signed char*)(c+0xcc), -1);
     func_0201267c(0x105, c+0x74);
   }
   if(*(int*)(c+0x398) == *(int*)(c+0x394)){

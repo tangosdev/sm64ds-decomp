@@ -12,7 +12,7 @@ struct Vec3
 };
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void *v);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, struct Vec3 *pos, void *rot, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, struct Vec3 *pos, void *rot, int a, int b);
 }
 
 void Player::IncMegaKillCount()
@@ -44,7 +44,7 @@ void Player::IncMegaKillCount()
   new_var = ((char *)this);
   v.z = *((int *) (new_var + 0x64));
   v.y = y + 0x190000;
-  new_var2 = (char *) _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x14b, *((unsigned short *) (((char *)&unk_600) + 0xd0)), &v, 0, *((signed char *) ((char *)&mAreaId)), new_var3);
+  new_var2 = (char *) _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x14b, *((unsigned short *) (((char *)&unk_600) + 0xd0)), &v, 0, *((signed char *) ((char *)&mAreaId)), new_var3);
   a = new_var2;
   if (a == 0)
   {

@@ -13,7 +13,7 @@ struct Actor;
 extern "C" {
 extern int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *thiz, int d);
 extern Actor *_ZN5Actor13ClosestPlayerEv(Actor *thiz);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 *c, const Vector3_16 *d, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *c, const Vector3_16 *d, int e, int f);
 extern void func_ov030_021141a8(Actor *c);
 extern void func_ov030_02114134(Actor *c);
 extern void func_ov030_02112094(Actor *c);
@@ -40,7 +40,7 @@ int RollingLogTtm::Behavior()
             if (cp < 3) {
                 void *spawned;
                 *(int *)(c + 0x3b0) = cp;
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d,
                     ((unsigned)*(int *)(c + 0x3b0) << 8) | 2,
                     (const Vector3 *)(c + 0x5c),

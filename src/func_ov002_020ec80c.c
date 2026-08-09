@@ -1,5 +1,5 @@
     extern int RandomIntInternal(int* seed);
-    extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* v, void* w, int e, int f);
+    extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* v, void* w, int e, int f);
     extern int data_0209e650;
     
     void func_ov002_020ec80c(char* a, void* b, int count, int sl, short arg5)
@@ -18,7 +18,7 @@
         if (count <= 0) return;
         zero = i;
         do {
-            n = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x122, 2, b, 0, *(signed char*)(a + 0xcc), -1);
+            n = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x122, 2, b, 0, *(signed char*)(a + 0xcc), -1);
             if (n != 0) {
                 do {
                     rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650) >> 16) << 27) >> 16;

@@ -23,7 +23,7 @@
 #include "types.h"
 #include "LVL_Overlay.h"
 
-extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
     s32 areaID, s32 deathTableID);
 
@@ -46,7 +46,7 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 pa
         pos.y = vy;
         pos.z = vz;
 
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x15b, e->param, &pos, (const Vector3s*)0, 0, -1);
 
         i++;

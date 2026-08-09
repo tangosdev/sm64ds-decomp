@@ -12,7 +12,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, 
 extern void func_0201267c(unsigned int id, const Vector3* v);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& v);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int a, const Vector3& pos, const void* vec16, int b, int c2);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const Vector3& pos, const void* vec16, int b, int c2);
 
 }
 
@@ -74,7 +74,7 @@ extern "C" void func_ov080_02124088(char* c)
         v3.z = *(int*)(c + 0x64);
         v3.y = y3 + 0x64000;
     }
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x114, 0, v3, 0, (int)*(signed char*)(c + 0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x114, 0, v3, 0, (int)*(signed char*)(c + 0xcc), -1);
 
     *(u8*)(c + 0x184) = 8;
     return;

@@ -2,7 +2,7 @@ typedef long long s64;
 typedef struct { int x, y, z; } Vec3;
 
 extern int _ZN6Player7IsStateERNS_5StateE(char *self, void *state);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec3 *pos, void *rot, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec3 *pos, void *rot, int e, int f);
 extern char data_ov002_02110064;
 extern short data_02082214[];
 
@@ -41,7 +41,7 @@ int func_ov002_020d5ab4(char *self)
     *(int *)(self + 0x60) = pos.y;
     *(int *)(self + 0x64) = pos.z;
 
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(9, 2, &pos, 0, *(signed char *)(self + 0xcc), -1);
+    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(9, 2, &pos, 0, *(signed char *)(self + 0xcc), -1);
     *(char **)((char *)spawned + 0x38c) = self;
     *(unsigned char *)(self + 0x6f5) = 0;
     *(short *)(self + 0x6a4) = 0xd2;

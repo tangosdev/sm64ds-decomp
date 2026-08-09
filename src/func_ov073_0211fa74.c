@@ -8,7 +8,7 @@ extern void _Z14ApproachLinearRiii(int* p, int t, int s);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
 extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b);
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* prev);
 extern void func_02012694(int a, void* p);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, void* pos);
@@ -47,7 +47,7 @@ int func_ov073_0211fa74(char* c) {
         rot.y = (unsigned short)_ZN5Actor18HorzAngleToCPlayerEv(c);
     }
 
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x11a, 4, &pos, 0, *(signed char*)(c + 0xcc), -1);
+    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 4, &pos, 0, *(signed char*)(c + 0xcc), -1);
     found = _ZN5Actor15FindWithActorIDEjPS_(0x13d, 0);
     func_02012694(0xbb, c + 0x74);
     if (found != 0) {

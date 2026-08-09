@@ -5,7 +5,7 @@
 typedef unsigned int u32;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 p, const struct Vector3 *pos, const struct Vector3_16 *rot, int a, int b);
+void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 p, const struct Vector3 *pos, const struct Vector3_16 *rot, int a, int b);
 int func_ov064_02118760(char *c)
 {
   int yadj;
@@ -22,7 +22,7 @@ int func_ov064_02118760(char *c)
     pos[1] = yadj;
     pos[2] = zcopy;
     pos[0] = x;
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xd6, 0, (struct Vector3 *)(int *)pos, (struct Vector3_16 *)(c + 0x92), *(signed char *)(c + 0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd6, 0, (struct Vector3 *)(int *)pos, (struct Vector3_16 *)(c + 0x92), *(signed char *)(c + 0xcc), -1);
   }
   return 1;
 }

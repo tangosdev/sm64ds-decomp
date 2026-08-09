@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern "C" int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
+extern "C" int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 extern "C" void func_ov002_020d7030(void* c, void* d);
 extern "C" void _ZN6Player18SetNewHatCharacterEjjb(void* self, unsigned int j1, unsigned int j2, int b);
 extern "C" void Player_DisableInteraction(void* c);
@@ -31,7 +31,7 @@ l48:
   v.y = y;
   v.z = *(int*)(p0+0x64);
   v.y = y + 0x64000;
-  sp = (void*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, (*(int*)(p1+8)<<8)|5, &v, p0+0x8c, *(signed char*)(p0+0xcc), -1);
+  sp = (void*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (*(int*)(p1+8)<<8)|5, &v, p0+0x8c, *(signed char*)(p0+0xcc), -1);
   if(sp == 0) goto ret0b;
   func_ov002_020d7030(p0, sp);
   _ZN6Player18SetNewHatCharacterEjjb(p1, *(unsigned char*)(p0+0x6d9), 0, 0);

@@ -12,7 +12,7 @@ extern void _ZN5Timer10ResetTimerEv(unsigned char *self);
 extern void _ZN5Timer10StartTimerEv(unsigned char *self);
 extern void _ZN5Timer9StopTimerEv(unsigned char *self);
 extern unsigned long long _ZN5Timer7GetTimeEv(unsigned char *self);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, const Vector3 *, const void *, int, int);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3 *, const void *, int, int);
 extern int func_ov002_020d5338(char *c);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *self);
 extern int func_ov002_020bfec0(char *self);
@@ -89,7 +89,7 @@ int func_ov002_020c0fb4(char *c)
       pos.x = px;
       pos.y = py;
       pos.z = pz;
-      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, 0x42, &pos, 0, *((signed char *) (c + 0xcc)), -1);
+      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, 0x42, &pos, 0, *((signed char *) (c + 0xcc)), -1);
     }
       break;
 

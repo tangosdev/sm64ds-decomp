@@ -18,7 +18,7 @@ extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern void func_02012694(int, void *);
 extern void _ZN5Actor15HugeLandingDustEb(Actor *thiz, bool b);
 extern Actor *_ZN5Actor13ClosestPlayerEv(Actor *thiz);
-extern Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
+extern Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
 extern void _ZN7PathPtrC1Ev(void *thiz);
 extern void _ZN7PathPtr6FromIDEj(void *thiz, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *thiz, Vector3 &out, unsigned int idx);
@@ -84,7 +84,7 @@ int UnchainedChomp::Behavior()
         v.y = 4;
         v.z = 0;
 
-        Actor *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        Actor *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x120, 2, *(Vector3 *)(c + 0x5c), (const Vector3_16 *)0,
             *(signed char *)(c + 0xcc), -1);
         if (*(unsigned short *)(c + 0x6a8) == 0) {

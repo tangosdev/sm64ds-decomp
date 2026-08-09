@@ -13,7 +13,7 @@ struct Vec { Fix12i x, y, z; };
 struct Vector3_16;
 
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 id, struct Vec* v);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, struct Vec* v, struct Vector3_16* rot, int e, int f);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, struct Vec* v, struct Vector3_16* rot, int e, int f);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* thiz);
 
 void func_ov002_020af2b0(char* c, int arg1)
@@ -36,7 +36,7 @@ void func_ov002_020af2b0(char* c, int arg1)
         vec.y = *(Fix12i*)(c + 0x60);
         vec.z = *(Fix12i*)(c + 0x64);
         vec.y += 0xb4000;
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x14b, 8, &vec, 0, *(signed char*)(c + 0xcc), -1);
         _ZN5Actor24KillAndTrackInDeathTableEv(c);
     } else {

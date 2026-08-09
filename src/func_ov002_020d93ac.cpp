@@ -14,7 +14,7 @@ struct Actor;
 extern "C" {
 extern bool _ZN6Player8HasNoCapEv(char *self);
 extern void _ZN6Player18SetNewHatCharacterEjjb(char *self, u32 a, u32 b, bool c);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
 }
 
 extern "C" int func_ov002_020d93ac(char *self)
@@ -42,7 +42,7 @@ extern "C" int func_ov002_020d93ac(char *self)
     pos.x = xv;
     pos.y = sum;
     pos.z = zv;
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, (chr << 8) | 5,
+    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (chr << 8) | 5,
         pos, 0, *(signed char *)(self + 0xcc), -1);
     if (spawned == 0) goto fail;
 

@@ -7,7 +7,7 @@ struct Vector3 { int x,y,z; };
 struct Vector3_16 { short x,y,z; };
 struct Actor {
   int DistToCPlayer();
-  static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+  static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
   void MarkForDestruction();
 };
 /* Signature deliberately copied from the local declaration above: the

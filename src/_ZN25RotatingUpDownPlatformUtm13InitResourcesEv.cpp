@@ -12,7 +12,7 @@ extern "C" {
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
 extern int _ZN11ShadowModel10InitCuboidEv(void *self);
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY);
 extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
@@ -77,7 +77,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         Vec3_Add(&v, (Vector3*)((char *)&mBasePos), (Vector3*)(tbl + i * s));
         i = (unsigned char)((char *)this)[0x395];
         v.y += *(int*)(data_ov091_02134d1c + i * s);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x1d, 0xffff, &v, 0, mAreaId, -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x1d, 0xffff, &v, 0, mAreaId, -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);

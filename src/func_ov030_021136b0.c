@@ -9,7 +9,7 @@ typedef int s32;
 
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
 /* ROM symbol is Vector3_16 (not Vector3s) — wrong mangling left this BLIND and broke mwldarm. */
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3 *pos,
     const void *rot, int areaID, int deathTableID);
 extern void func_02012790(int arg);
@@ -59,7 +59,7 @@ int func_ov030_021136b0(char *c)
                 void *spawned;
                 *(u32 *)(c + 0x3b0) = *(u32 *)(p + 8);
                 msg = *(s8 *)(c + 0xcc);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d,
                     (*(u32 *)(c + 0x3b0) << 8) | 2,
                     (Vector3 *)(c + 0x5c),

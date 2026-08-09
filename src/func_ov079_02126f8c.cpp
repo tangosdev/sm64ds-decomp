@@ -21,7 +21,7 @@ extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, Fix12, Fix12);
 struct Actor_s {
     static Actor* FindWithID(unsigned int);
     Actor* ClosestPlayer();
-    static Actor* Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+    static Actor* Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -29,7 +29,7 @@ struct Actor_s {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" Actor* _ZN5Actor10FindWithIDEj(unsigned int);
 extern "C" Actor* _ZN5Actor13ClosestPlayerEv(void *);
-extern "C" Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+extern "C" Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
 
 extern "C" {
 Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -39,7 +39,7 @@ int AngleDiff(int a, int b);
 int Platform::UpdateKillByMegaChar(short, short, short, Fix12);
 Actor* Actor_s::FindWithID(unsigned int);
 Actor* Actor_s::ClosestPlayer();
-Actor* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+Actor* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
 int Platform::IsClsnInRange(Fix12, Fix12);
 
 extern "C" int func_ov079_02126f8c(char* c) {
@@ -59,7 +59,7 @@ extern "C" int func_ov079_02126f8c(char* c) {
             *(volatile int*)&pos.x = x;
             *(volatile int*)&pos.z = z;
             *(volatile int*)&pos.y = y;
-            Actor* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xde, 0, pos, (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
+            Actor* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xde, 0, pos, (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
             *(int*)(c + 0x320) = *(int*)((char*)spawned + 4);
             *(int*)((char*)spawned + 0x3dc) = (int)c;
         }

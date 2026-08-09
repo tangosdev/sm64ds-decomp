@@ -16,7 +16,7 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct V3*, void*, int, int);
+int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct V3*, void*, int, int);
 extern struct SharedFilePtr data_ov030_02115c88;
 extern struct SharedFilePtr data_ov030_02115c80;
 extern struct CLPS_Block data_ov030_02114ee4;
@@ -47,7 +47,7 @@ int func_ov030_02111410(char *self){
         v.y = y;
         v.z = *(int*)(self + 0x64);
         v.y = y + 0x3c000;
-        *(int*)(self + 0x4dc) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        *(int*)(self + 0x4dc) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0xb2, (unsigned char)(*(int*)(self + 8) & 0xf) | 0x50, &v, 0,
             *(signed char*)(self + 0xcc), -1);
     }

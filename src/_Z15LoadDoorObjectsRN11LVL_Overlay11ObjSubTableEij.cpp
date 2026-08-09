@@ -25,7 +25,7 @@ public:
 extern unsigned short data_ov002_0210cb88[];
 extern unsigned char data_ov002_0210cb70[];
 
-extern "C" int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern "C" int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int id, unsigned int param, const Vector3& pos,
     const Vector3_16* rot, int a, int b);
 
@@ -49,7 +49,7 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable& sub, int a, unsigned int b) {
         int idx = e->fielda & 0x1f;
         unsigned int id = data_ov002_0210cb88[idx];
         unsigned int param = e->field8 | (data_ov002_0210cb70[idx] << 16);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(id, param, pos, &rot, -1, -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(id, param, pos, &rot, -1, -1);
         e++;
     }
 }

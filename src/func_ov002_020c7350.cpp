@@ -14,7 +14,7 @@ extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 *v);
 extern int _ZN6Player12FinishedAnimEv(void *self);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void *self, unsigned int anim, int a, int b, unsigned int d);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vector3 *v, Vector3_16 *v2, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vector3 *v, Vector3_16 *v2, int e, int f);
 extern void func_ov089_0213115c(void *actor, int i);
 
 extern u8 data_0209f20c;
@@ -69,7 +69,7 @@ void func_ov002_020c7350(char *c)
         if (st == 0x10 || st == 0x12) {
             void *actor;
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x94, 0x40000000, 0x1000, 0);
-            actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x11a, *(s8 *)(c + 0x719), (Vector3 *)(c + 0x5c), (Vector3_16 *)(c + 0x8c), *(s8 *)(c + 0xcc), -1);
+            actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, *(s8 *)(c + 0x719), (Vector3 *)(c + 0x5c), (Vector3_16 *)(c + 0x8c), *(s8 *)(c + 0xcc), -1);
             if (*(int *)(c + 8) == 2) {
                 func_ov089_0213115c(actor, 4);
             } else {

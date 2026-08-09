@@ -13,7 +13,7 @@ extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int fix, int loo
 extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(char *p, char *actor, u32 msg, const Vector3 *pos, u32 d, u32 e);
 extern int IsStarCollectedInCurLevel(void);
 extern u8 NumStars(void);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, const void *pos, const void *rot, int a, int b);
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const void *pos, const void *rot, int a, int b);
 extern int func_02013a44(void);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN9ActorBase18MarkForDestructionEv(char *self);
@@ -82,7 +82,7 @@ void func_ov085_021291ac(char *c)
                     pos2.y = *(int *)(c + 0x60);
                     pos2.z = *(int *)(c + 0x64);
                     pos2.y = pos2.y + 0xc8000;
-                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                         0xb2, *(u8 *)(c + 0x20c) | 0x20, &pos2, 0, *(s8 *)(c + 0xcc), -1);
                     {
                         u16 *p208 = (u16 *)(int)M(c + 0x208);
@@ -105,7 +105,7 @@ void func_ov085_021291ac(char *c)
                     {
                         u32 k = 0x13;
                         u8 plb = *(u8 *)(p + 0x6d9);
-                        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                             0x10d, k | ((u32)plb << 8), &pv, 0, *(s8 *)(c + 0xcc), -1);
                     }
                 }

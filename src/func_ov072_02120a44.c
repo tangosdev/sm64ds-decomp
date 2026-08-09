@@ -8,7 +8,7 @@
 /* recovered: renamed to Class_Method */
 /* daBgSnwmn_c::InitResources - recovered from vtable slot identity */
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *ang, int a, int b);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *ang, int a, int b);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
@@ -33,7 +33,7 @@ int func_ov072_02120a44(char *c)
 
     if (IsStarCollectedInLevel(0xa, 5) == 0)
     {
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x111, 0, c + 0x5c, c + 0x8c, self->unk_0cc, -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x111, 0, c + 0x5c, c + 0x8c, self->unk_0cc, -1);
         _ZN9ActorBase18MarkForDestructionEv(c);
     }
 

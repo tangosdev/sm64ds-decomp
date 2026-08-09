@@ -17,7 +17,7 @@ struct Actor {
 
 typedef struct Actor Actor;
 
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
+extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
 
 void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
     Actor* self,
@@ -27,7 +27,7 @@ void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
     Fix12i unk35c,
     u32 param1
 ) {
-    Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xfe, param1, pos, rot, (s32)self->areaID, -1);
+    Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xfe, param1, pos, rot, (s32)self->areaID, -1);
     if (a != (Actor*)0) {
         a->horzSpeed = horzSpeed;
         a->unk35c = unk35c;

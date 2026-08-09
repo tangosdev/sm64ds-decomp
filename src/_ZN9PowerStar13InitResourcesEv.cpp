@@ -34,7 +34,7 @@ extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, struct Vec3 *pos, void *rot, s32 a, s32 b);
 extern s32 NumVsStarsObtained(void);
 extern void func_ov002_020e9448(void *self);
@@ -168,7 +168,7 @@ s32 PowerStar::InitResources()
             v.y = S32(0x60);
             v.z = S32(0x64);
             v.y = v.y + 0xa000;
-            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb4, 0x40, &v, 0, S8(0x499), -1);
+            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x40, &v, 0, S8(0x499), -1);
             if (sp != 0) {
                 S32(0x434) = *(s32 *)(sp + 4);
             } else {
@@ -233,7 +233,7 @@ s32 PowerStar::InitResources()
         _ZN5Event8ClearBitEj(0x1d);
         if (S32(0x43c) != 3) {
             if ((s32)(data_0209f2d8 == 1) != 0 || (s32)(*(u16 *)(t + 0xc) == 0xb3) != 0) {
-                sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0xb4, 0x50, (struct Vec3 *)(t + 0x5c), 0, S8(0x499), -1);
                 if (sp != 0) {
                     S32(0x434) = *(s32 *)(sp + 4);

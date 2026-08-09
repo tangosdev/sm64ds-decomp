@@ -2,7 +2,7 @@
 extern void func_ov060_02116518(char *self, unsigned int kind, int a2, int a3);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int kind, unsigned int b, Vector3 *pos, void *vtab, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int kind, unsigned int b, Vector3 *pos, void *vtab, int e, int f);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern short data_02082214[];
 extern int data_0209e650;
@@ -44,7 +44,7 @@ void func_ov060_02116d78(char *c)
         int r = RandomIntInternal(&data_0209e650);
         unsigned int r3 = (unsigned int)r >> 16;
         if (r3 % 17 != 0)
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, 6, (Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x118, 6, (Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
         _ZN9ActorBase18MarkForDestructionEv(c);
     }
     if (*(unsigned short*)(c+0x374) < 0x3c) return;

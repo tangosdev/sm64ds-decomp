@@ -11,7 +11,7 @@ extern int _ZN6Player15IsCollectingCapEv(void *pl);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *pl, unsigned int a, unsigned int b, int c);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *a, int b, int c, int d, int e);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *pl, Vector3 *v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 extern char data_ov062_0211e14c[];
@@ -94,7 +94,7 @@ int func_ov062_0211b51c(char *c)
             unsigned int ch = *(unsigned int *)((char *)pl + 8);
             unsigned int param = 0;
             param = param | (ch << 8);
-            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, param, c + 0x5c, 0, area, -1);
         }
         if (sp != 0) {

@@ -1132,7 +1132,7 @@ src/_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_.cpp:
     complete
     .text start:0x02010e08 end:0x02010e2c
 
-src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as.c:
+src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as.cpp:
     complete
     .text start:0x02010e2c end:0x02010e78
 

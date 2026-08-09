@@ -20,7 +20,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *ab
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *p);
 extern void _ZN6Player9DropActorEv(void *p);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern void func_02012790(int a);
 extern int func_02013944(void);
 extern void _ZN7Message7EndTalkEv(void);
@@ -200,7 +200,7 @@ int func_ov085_0212ae08(char *c)
         {
             s8 cc = *(s8 *)(c + 0xcc);
             int m1 = -1;
-            void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe5, *(s32 *)(c + 0x43c), &pos7, (void *)(c + 0x8c), cc, m1);
             if (spawned != 0)
                 *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);
@@ -232,7 +232,7 @@ int func_ov085_0212ae08(char *c)
             {
                 s8 cc = *(s8 *)(c + 0xcc);
                 int m1 = -1;
-                void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0xe5, param, &posR, 0, cc, m1);
                 if (spawned != 0)
                     *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);

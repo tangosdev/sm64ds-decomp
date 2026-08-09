@@ -9,7 +9,7 @@ struct Vector3 { int x, y, z; };
 struct Vector3_16;
 
 struct Actor {
-    static Actor *Spawn(u32 id, u32 b, const Vector3 &pos, const Vector3_16 *r, int e, int f);
+    static Actor *Spawn(u32 id, u32 b, const Vector3 &pos, const Vector3_16 *r, signed char e, short f);
     void PoofDust();
 };
 struct Enemy : Actor {

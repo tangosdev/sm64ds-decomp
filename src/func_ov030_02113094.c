@@ -12,7 +12,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(char* p, char* self,
 extern void func_0201267c(u32 id, char* p);
 extern int _ZN6Player12GetTalkStateEv(char* p);
 extern void _ZN6Player9DropActorEv(char* p);
-extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
+extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
 extern void _ZN9ActorBase18MarkForDestructionEv(char* self);
 
 int func_ov030_02113094(char* self)
@@ -70,7 +70,7 @@ int func_ov030_02113094(char* self)
         int b5 = (int)((*(u32*)(self + 0xb0) & 0x80000) != 0);
         if (b5 != 0) {
             if (*(u8*)(self + 0x3c8) != 0) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, (*(u32*)(self + 0x3b0) << 8) | 5, (struct Vector3*)(*(char**)(self + 0x3a8) + 0x5c), 0, *(s8*)(self + 0xcc), -1);
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (*(u32*)(self + 0x3b0) << 8) | 5, (struct Vector3*)(*(char**)(self + 0x3a8) + 0x5c), 0, *(s8*)(self + 0xcc), -1);
                 _ZN9ActorBase18MarkForDestructionEv((char*)_ZN5Actor10FindWithIDEj(*(u32*)(self + 0x3ac)));
                 {
                     u32 z = 0;

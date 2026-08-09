@@ -11,7 +11,7 @@ struct Actor {
 };
 
 extern void _ZN5Actor11UntrackStarERa(char *thiz, signed char *star);
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a, unsigned int b, const struct Vector3 *pos,
     const struct Vector3_16 *rot, int e, int f);
 extern void LinkSilverStarAndStarMarker(char *a, char *b);
@@ -24,9 +24,9 @@ void func_ov002_020b42e4(char *self)
 
     _ZN5Actor11UntrackStarERa(self, (signed char *)(self + 0xd5));
     func_ov002_020b41b8((int *)&v, self);
-    a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xb4, 0x50, &v, 0, *(signed char *)(self + 0xcc), -1);
-    b = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    b = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xb3, (*(signed char *)(self + 0xd4)) | 0x10, &v, 0,
         *(signed char *)(self + 0xcc), -1);
     if (a == 0)

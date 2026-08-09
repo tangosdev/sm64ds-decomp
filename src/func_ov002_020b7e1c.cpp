@@ -7,7 +7,7 @@
 struct WithMeshClsn { int IsOnGround() const; };
 struct ActorBase { void MarkForDestruction(); };
 struct Actor : ActorBase {
-    static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+    static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
     void SetRanges(int, int, int, int);
 };
 /* Signature deliberately copied from the local declaration above: the

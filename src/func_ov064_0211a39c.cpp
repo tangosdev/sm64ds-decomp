@@ -10,7 +10,7 @@ extern "C" {
 extern void _ZN9Animation7AdvanceEv(char*);
 extern char* _ZN5Actor13ClosestPlayerEv(char*);
 extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char*, Vector3*, unsigned int, int, unsigned short, char*);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
+extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
 extern int _ZN9Animation8FinishedEv(char*);
 
 void func_ov064_0211a39c(char* c)
@@ -36,7 +36,7 @@ void func_ov064_0211a39c(char* c)
         }
         if (*(unsigned char*)(p + 0x706) != 0)
         {
-            char* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x123, 0, &v1, 0, *(signed char*)(c + 0xcc), -1);
+            char* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x123, 0, &v1, 0, *(signed char*)(c + 0xcc), -1);
             *(int*)(a + 0xa4) = 0;
             *(int*)(a + 0xa8) = 0x800;
             *(int*)(a + 0xac) = 0;

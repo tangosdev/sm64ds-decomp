@@ -5,7 +5,7 @@
 typedef int Fix12i;
 
 extern "C" {
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int, unsigned int, struct Vector3*, void*, int, int);
+int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct Vector3*, void*, int, int);
 void func_0201267c(int a, void* p);
 int _ZN9Animation8FinishedEv(void* self);
 void func_ov077_0212478c(char* c, int a);
@@ -21,7 +21,7 @@ extern int data_ov077_02127b88[];
 
 int func_ov077_021243c0(char* c){
     if ((((unsigned int)*(int*)(c + 0x12c) << 4) >> 16) == 0x3a) {
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x104, 0, (struct Vector3*)(c + 0x404), (void*)(c + 0x8c),
             *(signed char*)(c + 0xcc), -1);
         func_0201267c(0xd2, c + 0x74);

@@ -20,11 +20,11 @@ struct Actor {
 };
 typedef struct Actor Actor;
 
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
+extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
 
 int func_ov081_02124dfc(Actor* self)
 {
-    Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xe0, 0, &self->pos, (const Vector3_16*)0, (s32)self->areaID, -1);
     if (a)
         self->uniqueID = *(u32*)((char*)a + 4);

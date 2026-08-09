@@ -11,7 +11,7 @@ void func_02012694(unsigned int a, char* p);
 void func_ov084_0212d2dc(char* c);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);
 void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, Vec3* pos, unsigned int a, int b, short c);
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec3* pos, void* p, int c, int d);
+void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec3* pos, void* p, int c, int d);
 void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
 void func_ov084_0212d560(void* self);
 void _ZN5Actor17TrackInDeathTableEv(void* self);
@@ -81,7 +81,7 @@ extern "C" void func_ov084_0212e010(char* self)
                 _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf1, 2, 0xa000, 0);
             }
             if (*(u8*)(other + 0x21b) == 5) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, *(u8*)(self + 0x21f) | 0x40, (Vec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8*)(self + 0x21f) | 0x40, (Vec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
                 _ZN5Actor24KillAndTrackInDeathTableEv(other);
                 _ZN5Actor24KillAndTrackInDeathTableEv(self);
                 return;

@@ -7,7 +7,7 @@ extern "C" {
 extern void func_02012694(unsigned int a, void *b);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, const void *f, void *g);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a, unsigned int b, const struct Vector3 *c, const void *d, int e, int f);
 void func_ov084_0212f33c(void *self);
 }
@@ -40,7 +40,7 @@ void func_ov084_0212f33c(void *self)
             int y = *(int*)(c + 0x60);
             int z = *(int*)(c + 0x64);
             v = (struct Vector3){*(int*)(c + 0x5c), y + 0x78000, z};
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x122, r4, &v, (void*)r4, *(signed char*)(c + 0xcc), -1);
             *(unsigned char*)(c + 0x108) = r4;
         }

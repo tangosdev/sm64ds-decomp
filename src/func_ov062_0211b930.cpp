@@ -19,7 +19,7 @@ extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_Fi
 struct Actor {
     static Actor* FindWithID(unsigned int id);
     static unsigned int Spawn(unsigned int a, unsigned int b, const Vector3& pos,
-                       const Vector3_16* rot, int e, int f);
+                       const Vector3_16* rot, signed char e, short f);
 };
 struct ActorBase { void MarkForDestruction(); };
 namespace Particle { struct System {

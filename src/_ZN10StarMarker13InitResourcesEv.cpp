@@ -14,7 +14,7 @@ extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, const void *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const void *v, const void *v16, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern void _ZN13RaycastGroundD1Ev(void *self);
@@ -69,7 +69,7 @@ int StarMarker::InitResources()
 
     if (kind == 6) {
         void *sp;
-        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, mStarID | 0x60, ((char *)this) + 0x5c, (void *)0, (s8)mAreaId, -1);
+        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, mStarID | 0x60, ((char *)this) + 0x5c, (void *)0, (s8)mAreaId, -1);
         if (sp != 0) {
             u16 *p = (u16 *)(((int)sp + 0x4a2));
             *p = (u16)(*p | 0x80);

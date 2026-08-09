@@ -9,7 +9,7 @@ extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(int, int);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char *, unsigned int, int, int, unsigned int);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(int, unsigned int, int, int, int, int, int);
 extern int _ZN6Player12FinishedAnimEv(char *);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(int, int, char *, int, int, int);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(int, int, char *, int, int, int);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(int, char *);
 extern void func_ov002_020c7ff8(char *);
 extern void func_ov002_020e7090(int, char *);
@@ -47,7 +47,7 @@ int func_ov002_020c8714(char *c)
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x99, 0x40000000, 0x1000, 0);
             *(int *)(c + 0x368) = 0;
             if (*(unsigned int *)(c + 8) <= 1) {
-                *(int *)(c + 0x368) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                *(int *)(c + 0x368) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, (*(unsigned int *)(c + 8) << 8) | 0xf, c + 0x5c, 0,
                     *(s8 *)(c + 0xcc), -1);
             }
@@ -67,7 +67,7 @@ int func_ov002_020c8714(char *c)
             *(int *)(c + 0xa8) = 0;
             *(int *)(c + 0x688) = 0x187;
             func_ov002_020c7ff8(c);
-            st = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, 0x6f, c + 0x5c,
+            st = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, 0x6f, c + 0x5c,
                                                               (int)(c + 0x8c),
                                                               *(s8 *)(c + 0xcc), -1);
             if (st != 0)

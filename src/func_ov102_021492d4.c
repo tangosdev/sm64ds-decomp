@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void func_ov102_02149684(int* dst, int* src);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int id, unsigned int p, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
 extern char data_020a0edc[];
 extern char data_0209f2d8[];
 extern char data_0209f318[];
@@ -20,5 +20,5 @@ void func_ov102_021492d4(char* c) {
   } else {
     rot.y = *(s16*)(*(char**)data_0209f318 + 0x17c) + 0x4000;
   }
-  _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x159, 0, &pos, &rot, *(signed char*)(c+0xcc), -1);
+  _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x159, 0, &pos, &rot, *(signed char*)(c+0xcc), -1);
 }

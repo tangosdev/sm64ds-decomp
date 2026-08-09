@@ -1,6 +1,6 @@
 extern int LoadKeyModels();
 extern int _ZN9Animation8LoadFileER13SharedFilePtr();
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii();
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as();
 extern int _ZN5Model8LoadFileER13SharedFilePtr();
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii();
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj();
@@ -65,7 +65,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
             _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov063_0211edd4);
             _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov063_0211edcc);
         } else if (U8(0x5cf) == 0xc) {
-            PTR(0x48c) = (char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xd3, U32(8), c + 0x5c, 0, S8(0x5d0), -1);
+            PTR(0x48c) = (char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd3, U32(8), c + 0x5c, 0, S8(0x5d0), -1);
             if (PTR(0x48c) != 0) {
                 S32(0x49c) = *(int *)(PTR(0x48c) + 4);
             }
@@ -216,7 +216,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
             return 1;
         }
         if (data_0209f264 == 0) {
-            spawned = (void *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
+            spawned = (void *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
             if (spawned != 0) {
                 *(unsigned char *)((char *)spawned + 0x37e) = 1;
                 _ZN9ActorBase18MarkForDestructionEv(c);

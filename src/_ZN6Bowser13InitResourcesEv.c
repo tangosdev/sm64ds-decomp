@@ -11,7 +11,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int c3, int d, unsigned int e, unsigned int f);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *d1, void *d2);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *dir, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *dir, int e, int f);
 extern void func_ov060_02111cc0(void *c, int a, int b);
 extern void func_ov060_021123dc(void *c);
 extern void func_02011d50(void *a);
@@ -88,11 +88,11 @@ int _ZN6Bowser13InitResourcesEv(char *c)
     *(char *)(c + 0x424) = 0;
     *(char *)(c + 0x444) = 0;
 
-    a1 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    a1 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x118, 0, (void *)(c + 0x5c), 0, (signed char)c[0xcc], -1);
     *(int *)((char *)a1 + 0x2cc) = *(int *)(c + 4);
 
-    a2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    a2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x116, 0, (void *)(c + 0x5c), 0, (signed char)c[0xcc], -1);
     *(int *)(c + 0x3a8) = *(int *)((char *)a2 + 4);
     *(int *)((char *)a2 + 0x108) = *(int *)(c + 4);

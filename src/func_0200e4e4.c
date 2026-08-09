@@ -11,7 +11,7 @@ struct Actor {
 
 typedef struct Actor Actor;
 
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
+extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s32 areaID, s32 deathTableID);
 
 extern u32 data_0209b2a4[0x10]; /* 0x0209b2a4 */
 
@@ -21,7 +21,7 @@ Actor* func_0200e4e4(u32 param1)
     s32 i = 0;
     for (;;) {
         if (*slot == 0) {
-            Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x160, param1, 0, 0, -1, -1);
+            Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x160, param1, 0, 0, -1, -1);
             if (a)
                 *slot = a->uniqueID;
             return a;

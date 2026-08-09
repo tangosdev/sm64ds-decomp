@@ -372,22 +372,19 @@ struct Actor : ActorDerived {
        Declared here so callers mangle it; still defined as an extern "C" free
        function under its mangled name.
 
-       THE LAST TWO PARAMETERS ARE WRONG HERE, DELIBERATELY, AND THE SYMBOL IS
-       WHY. The definition at 0x02010e2c reads them `ldrsb r2, [sp, #0x10]` and
-       `ldrsh r3, [sp, #0x14]` -- s8 and s16 -- but the imported symbol spells
-       them `ii`. Declared (s8, s16) the body reproduces all 0x4c bytes and the
-       compiler emits `..._16as`; declared (s32, s32) it compiles to 0x5c and
-       misses. Both were built; this is measured, not inferred.
+       THE LAST TWO PARAMETERS ARE s8 AND s16, AND THE SYMBOL NOW SAYS SO --
+       renamed `..._16ii` -> `..._16as`. The definition at 0x02010e2c reads
+       them `ldrsb r2, [sp, #0x10]` and `ldrsh r3, [sp, #0x14]`. Declared this
+       way the body reproduces all 0x4c bytes; declared (s32, s32) mwcc emits
+       `ldr` for both, the function comes out 0x5c, and it misses. Both were
+       built.
 
-       So the symbol needs the same correction UntrackAndSpawnStar got, and it
-       is not done here because 162 files spell this name -- that is its own
-       change, with its own byte gate. Until then this declaration matches the
-       attested symbol rather than the ROM's parameter widths, which is safe
-       for callers: every argument is passed as a full word either way, so no
-       caller's bytes depend on the difference. That is also exactly why no
-       caller could ever have caught it. */
+       162 files spelled the old name and not one of them could have caught it:
+       arguments five and six occupy full stack words however they are
+       declared, so no call site's bytes depend on the difference. The
+       narrowing belongs to the callee and is visible only there. */
     static Actor *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
-                        const Vector3_16 *rot, s32 areaID, s32 deathTableID);
+                        const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
     /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE,
        and the Vector3 forms) are deliberately NOT declared here as definable

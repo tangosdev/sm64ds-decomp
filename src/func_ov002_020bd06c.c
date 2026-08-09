@@ -8,7 +8,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
 extern int _ZN6Player7IsStateERNS_5StateE(char *self, void *s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char *self, void *s);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 soundID, const struct Vector3 *pos);
-extern ActorBase *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern ActorBase *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1,
     const struct Vector3 *pos, const struct Vector3_16 *rot,
     s8 areaID, s16 deathTableID);
@@ -81,7 +81,7 @@ void func_ov002_020bd06c(char *self, u32 state2)
         var_self8 = *(volatile u32 *)(self + 8);
         var_deathTableID = -1;
 
-        *(ActorBase **)(self + 0x72c) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        *(ActorBase **)(self + 0x72c) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x10d, flag | (var_self8 << 8),
             (struct Vector3 *)(self + 0x5c), 0,
             var_areaID, var_deathTableID);

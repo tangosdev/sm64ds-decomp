@@ -11,7 +11,7 @@ struct Actor;
 namespace Sound { int PlaySecretSound(Actor *a, unsigned short *p); }
 
 struct Actor {
-    static Actor *Spawn(unsigned int id, unsigned int param, const Vector3 &pos, const Vector3_16 *rot, int a, int b);
+    static Actor *Spawn(unsigned int id, unsigned int param, const Vector3 &pos, const Vector3_16 *rot, signed char a, short b);
 };
 struct ActorBase {
     void MarkForDestruction();

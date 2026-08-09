@@ -11,7 +11,7 @@ struct C { char pad[0x3f8]; PMF* pp; };
 extern "C" {
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned n);
 extern int _ZN5Enemy11UpdateDeathER12WithMeshClsn(void* self, void* wm);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned a, unsigned b, const Vector3* v, const void* p, int e, int f);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const Vector3* v, const void* p, int e, int f);
 extern void func_02012694(int a, void* p);
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
@@ -49,7 +49,7 @@ int MrBlizzard::Behavior()
     if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x150, c + 0x30c, 3)) return 1;
     if (*(int*)(c + 0x10c) != 0) {
         if (_ZN5Enemy11UpdateDeathER12WithMeshClsn(c, c + 0x150) && *(int*)(c + 0x41c) == 2) {
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xdf, 0x300, (Vector3*)(c + 0x44c), 0, *(signed char*)(c + 0xcc), -1);
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (Vector3*)(c + 0x44c), 0, *(signed char*)(c + 0xcc), -1);
             *(int*)(c + 0x41c) = 0;
         }
         if (*(int*)(c + 0x10c) == 0 && *(unsigned char*)(c + 0x468) != 0) {
@@ -69,7 +69,7 @@ int MrBlizzard::Behavior()
         if (p != 0) {
             int param = 0xc;
             param = param | (*(unsigned char*)(p + 0x6d9) << 8);
-            r5 = (void*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            r5 = (void*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, param, (Vector3*)(c + 0x5c), 0, *(signed char*)(c + 0xcc), -1);
             if (r5 != 0) {
                 _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(r5, 0x64000, 0xc8000, 0x1000000, 0x1000000);

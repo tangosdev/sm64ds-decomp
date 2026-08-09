@@ -21,7 +21,7 @@ extern unsigned short data_ov002_0210cbf4[];
 
 extern "C" {
 void _Z23LoadMinimapChangeObjecti5Fix12IiEh(int a, Fix12i b, signed char h);
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec* v, Vector3_16* rot, int e, int f);
+void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec* v, Vector3_16* rot, int e, int f);
 
 void _Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij(ObjSubTable& tbl, int p2, int p3)
 {
@@ -46,7 +46,7 @@ void _Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij(ObjSubTable& tbl, int 
     } else {
       short old = data_ov002_0211118c;
       data_ov002_0211118c = (short)(old + 1);
-      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+      _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         data_ov002_0210cbf4[masked], param, &v, 0, p2, old);
     }
   }

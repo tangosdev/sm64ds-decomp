@@ -16,7 +16,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, 
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int a, int b, u32 c, u32 d);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, void *v1);
 extern char *_ZN5Actor13ClosestPlayerEv(void *self);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *rot, int a, int b);
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *rot, int a, int b);
 extern void func_ov030_021141a8(void *self, int a);
 extern void func_ov030_02112094(void *self);
 }
@@ -72,7 +72,7 @@ int RollingLogTtm::InitResources()
             {
                 char *spawned;
                 unk_3b0 = *(u32 *)(player + 8);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, (unk_3b0 << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (unk_3b0 << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
                 unk_3ac = *(int *)(spawned + 4);
                 unk_3c8 = 1;
                 func_ov030_021141a8(((char *)this), 1);

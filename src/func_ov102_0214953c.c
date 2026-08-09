@@ -1,6 +1,6 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
 extern void func_ov102_02149684(int* dst, void* src);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vector3* pos, void* r, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vector3* pos, void* r, int e, int f);
 extern int RandomIntInternal(int* seed);
 extern int data_0209f318;
 extern int data_0209e650;
@@ -12,7 +12,7 @@ void func_ov102_0214953c(char* c, int p1, int p2)
     char* o;
     char* g;
     func_ov102_02149684((int*)&f.pos, c);
-    o = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    o = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x10d, (unsigned int)(p2 | (p1 << 8)), &f.pos, 0, *(signed char*)(c + 0xcc), -1);
     if (o == 0) return;
     g = *(char**)&data_0209f318;

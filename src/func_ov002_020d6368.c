@@ -7,7 +7,7 @@ typedef long long s64;
 typedef struct { int x, y, z; } Vec3;
 
 
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vec3 *pos, void *rot, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec3 *pos, void *rot, int e, int f);
 extern short data_02082214[];
 
 #pragma opt_strength_reduction off
@@ -35,7 +35,7 @@ void func_ov002_020d6368(char *self)
     rot.z = zero;
     rot.y = rotY;
 
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         9, *(unsigned char *)(self + 0x704) << 4,
         &pos, (void *)&rot, *(signed char *)(self + 0xcc), -1);
     *(char **)((char *)spawned + 0x38c) = self;

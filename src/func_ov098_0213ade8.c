@@ -6,7 +6,7 @@ extern Vector3_16 data_ov098_0213c63c;
 extern int _ZN5Actor13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
 extern void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int slot, unsigned int unk, Fix12i x, Fix12i y, Fix12i z, void* rot, void* cb);
@@ -50,7 +50,7 @@ void func_ov098_0213ade8(char* self)
         pos.y = pos.y + 0x80000;
 
         {
-            void *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xd0, 3, &pos, 0, *(signed char*)(self + 0xcc), -1);
             s16 *t = data_02082214;
             int kk = 0x64;

@@ -18,7 +18,7 @@ extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, Fix12i a, Fix12i b, Fix12i c, Fix12i d);
 extern void func_ov062_0211c658(void *c, void *p);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -88,10 +88,10 @@ int Klepto::InitResources()
 
     if (mCarriedItem == 1) {
         if (unk_448 != 2) {
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xb2, unk_46c | 0x50, ((char *)this) + 0x5c, 0, mAreaId, -1);
         } else {
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xb3, 0x50, ((char *)this) + 0x5c, 0, mAreaId, -1);
         }
         if (spawned != 0) {
@@ -110,7 +110,7 @@ int Klepto::InitResources()
                 int area = mAreaId;
                 unsigned int param = 0;
                 param = param | (hat << 8);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, param, ((char *)this) + 0x5c, 0, area, -1);
             }
             if (spawned != 0) {

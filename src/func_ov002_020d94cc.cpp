@@ -15,7 +15,7 @@ extern s8 data_0209f310;
 
 extern "C" {
 extern char *_ZN5Actor13SpawnSoundObjEj(char *self, u32 a);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 &pos, const void *v, int e, int f);
 }
 
 extern "C" int func_ov002_020d94cc(char *self)
@@ -47,9 +47,9 @@ extern "C" int func_ov002_020d94cc(char *self)
 
     b = (data_0209f2d8 == 1);
     if (b)
-        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, 0x10, pos, 0, *(s8 *)(self + 0xcc), -1);
+        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, 0x10, pos, 0, *(s8 *)(self + 0xcc), -1);
     else
-        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb3, 0x10, pos, 0, *(s8 *)(self + 0xcc), -1);
+        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb3, 0x10, pos, 0, *(s8 *)(self + 0xcc), -1);
 
     if (spawned == 0) goto fail;
 

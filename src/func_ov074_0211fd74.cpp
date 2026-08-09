@@ -14,7 +14,7 @@ extern "C" {
     u16 DecIfAbove0_Short(u16* p);
     void func_ov074_0212087c(void* out, void* self, int idx);
     void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, void* v);
-    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, void* pos, void* rot, int e, int f);
+    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
     void func_ov084_021296b0(void* a, void* b);
     int __aeabi_idiv(int a, int b);
 }
@@ -56,7 +56,7 @@ L90:;
         if (*(u8*)(c+0x602) % 2 == 0) sid = 0xeeef;
     }
 
-    u8* sp2 = (u8*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    u8* sp2 = (u8*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xc8, sid, &pos, (void*)(c+0x8c), *(signed char*)(c+0xcc), -1);
     *(s32*)(sp2+0x43c) = *(s32*)(c+4);
     Vector3 v2;

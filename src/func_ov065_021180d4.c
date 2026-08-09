@@ -10,7 +10,7 @@ extern s16 data_02082214[];
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 extern int _ZN6Player12Unk_020c9e5cEh(struct Actor* self, u8 a);
-extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, const struct Vector3* pos,
     const struct Vector3_16* rot, int a, int b);
 extern void func_ov001_020ab110(char* p);
@@ -55,7 +55,7 @@ int func_ov065_021180d4(char* self)
         vec.z += (int)(((s64)speed *
                            data_02082214[idx * 2 + 1] + 0x800) >> 0xc);
 
-        if (_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        if (_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, 0x1210, &vec,
                 (struct Vector3_16*)(self + 0x8c),
                 *(s8*)(self + 0xcc), -1) != 0)

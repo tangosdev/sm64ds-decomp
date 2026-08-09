@@ -24,7 +24,7 @@
 #include "types.h"
 #include "LVL_Overlay.h"
 
-extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
     s32 areaID, s32 deathTableID);
 
@@ -46,7 +46,7 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         rot.x = -e->rotX;
         rot.y = -e->rotY;
 
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x15d,
             ((u32)e->param[0] << 24) | ((u32)e->param[1] << 16)
                 | ((u32)e->param[2] << 8) | (u32)e->param[3],

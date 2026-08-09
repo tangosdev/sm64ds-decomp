@@ -2,7 +2,7 @@
 struct Vector3;
 struct Vector3_16;
 struct Actor {
-    static void Spawn(unsigned int a, unsigned int b, const Vector3 &v, const Vector3_16 *p, int e, int f);
+    static void Spawn(unsigned int a, unsigned int b, const Vector3 &v, const Vector3_16 *p, signed char e, short f);
 };
 
 extern "C" void func_ov096_02135800(char *c);

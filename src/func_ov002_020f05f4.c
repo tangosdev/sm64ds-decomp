@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vector3;
 
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* prev);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* v, void* w, int e, int f);
+extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* v, void* w, int e, int f);
 extern void _ZN9PowerStar13AddStarMarkerEv(void* thiz);
 
 void func_ov002_020f05f4(char* c)
@@ -18,7 +18,7 @@ void func_ov002_020f05f4(char* c)
             pos.z = base[2];
             pos.y += 0x12c000;
             {
-                char* p = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, (*(unsigned char*)(c + 0x10d)) | 0x40, &pos, 0, *(signed char*)(c + 0xcc), -1);
+                char* p = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, (*(unsigned char*)(c + 0x10d)) | 0x40, &pos, 0, *(signed char*)(c + 0xcc), -1);
                 if (p != 0) {
                     _ZN9PowerStar13AddStarMarkerEv(p);
                 }

@@ -43,8 +43,16 @@ struct ActorDerived : ActorBase {
     virtual void AfterInitResources(u32 vfSuccess);
 
     /* Static: no `this`. In the ROM this is a 0xc-byte veneer that tail-calls
-       0x02042ffc (ldr ip,[pc]; bx ip; .word), so it has no body of its own. */
-    static void Spawn(u32 actorID, ActorBase *parent, int a, int b);
+       0x02042ffc (ldr ip,[pc]; bx ip; .word), so it has no body of its own.
+
+       It RETURNS the actor it built, and a veneer is exactly the shape that
+       cannot say so: three words of `ldr ip,[pc]; bx ip; .word` evidence no
+       return value at all. The evidence is at its caller -- Actor::Spawn's
+       `bl` is followed straight by the epilogue, so r0 flows out untouched.
+       This read `void` until that function was migrated, which is the general
+       rule for a forwarder: its return type is unobservable at its definition
+       and observable only where it is called. */
+    static ActorBase *Spawn(u32 actorID, ActorBase *parent, int a, int b);
 };
 
 /* ActorDerived adds no members -- it exists to carry one overridden slot -- so it

@@ -15,7 +15,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b
 extern void _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN5Actor18GetBitInDeathTableEv(void *self);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const void *v, const void *v16, int e, int f);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, u32 id);
 }
@@ -64,10 +64,10 @@ int MrBlizzard::InitResources()
     if (_ZN5Actor18GetBitInDeathTableEv(((char *)this)) != 0) {
         if (mType == 2) {
             if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xdf, 0x200,
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x200,
                     ((char *)this) + 0x44c, 0, mAreaId, -1);
             } else {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xdf, 0x300,
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300,
                     ((char *)this) + 0x44c, 0, mAreaId, -1);
             }
         }

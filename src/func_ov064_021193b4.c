@@ -12,7 +12,7 @@ extern void _ZN12CylinderClsn5ClearEv(void *c);
 extern void _ZN12CylinderClsn6UpdateEv(void *c);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     int a, int b, int x, int y, int z, int f, int cb);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a, unsigned int b, struct Vec3 *pos, struct Vec3_16 *rot, int e, int f);
 extern void func_02012790(int a);
 extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(
@@ -104,7 +104,7 @@ int func_ov064_021193b4(char *c)
                     tx = (s16)(tx + 0x4000);
                     vr->x = (u16)tx;
                 }
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0xf4, 2, (struct Vec3 *)(c + 0x5c), &rot,
                     *(signed char *)(c + 0xcc), -1);
                 if (spawned != 0) {
@@ -192,7 +192,7 @@ int func_ov064_021193b4(char *c)
         spos.y = spos.y - 0x64000;
         *p310 = *p310 + 1;
         if (*(int *)(c + 0x310) > 0x1e) {
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xb2, *(int *)(c + 0x314) | 0x40, &spos,
                 (struct Vec3_16 *)(c + 0x8c),
                 *(signed char *)(c + 0xcc), -1);

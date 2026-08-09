@@ -4,7 +4,7 @@
 #include "common.h"
 extern int _ZN5Actor13DistToCPlayerEv(void* self);
 extern unsigned int RandomIntInternal(void* g);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, const struct Vector3* pos, const struct Vector3_16* rot, int e, int f);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const struct Vector3* pos, const struct Vector3_16* rot, int e, int f);
 
 extern int data_0209e650;
 
@@ -35,7 +35,7 @@ void func_ov100_021412d8(char* sl)
                     sel = three;
                 }
                 rot.y = (s16)(rot.y + (s16)(RandomIntInternal(&data_0209e650) >> 0x10));
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x150, mask | (sel << 6),
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x150, mask | (sel << 6),
                     (struct Vector3*)(sl + 0x5c), &rot, (int)*(s8*)(sl + 0xcc), -1);
             }
             if (sb == 0) {

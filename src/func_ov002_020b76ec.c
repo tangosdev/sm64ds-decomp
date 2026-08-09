@@ -7,7 +7,7 @@
 extern u8 data_0209f2d8[];
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 a, const struct Vector3 *p);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const struct Vector3* pos, const struct Vector3_16* rot,
     int areaID, int deathTableID);
 
@@ -42,7 +42,7 @@ int func_ov002_020b76ec(char *self)
                     v.y = *(int *)(self + 0x60);
                     v.z = *(int *)(self + 0x64);
                     v.y += 0x64000;
-                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x14b, 8, &v, (struct Vector3_16 *)0, *(signed char *)(self + 0xcc), -1);
+                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x14b, 8, &v, (struct Vector3_16 *)0, *(signed char *)(self + 0xcc), -1);
                 }
             }
         }

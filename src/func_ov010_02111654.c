@@ -7,7 +7,7 @@
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjC1_Trap_c::InitResources - recovered from vtable slot identity */
 
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, struct Vector3* v, void* rot, int e, int f);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, struct Vector3* v, void* rot, int e, int f);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* p);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* p, void* f, int a, int b);
 extern void func_ov010_0211146c(char* c);
@@ -44,7 +44,7 @@ int func_ov010_02111654(char* c)
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 0, &v, c + 0x8c, self->unk_0cc, -1);
+        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 0, &v, c + 0x8c, self->unk_0cc, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
         idx = ((int)(self->unk_08e) >> 4) * 2;
@@ -56,7 +56,7 @@ int func_ov010_02111654(char* c)
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x24, 1, &v, c + 0x8c, self->unk_0cc, -1);
+        sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 1, &v, c + 0x8c, self->unk_0cc, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
         return 1;

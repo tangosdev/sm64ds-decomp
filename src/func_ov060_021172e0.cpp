@@ -10,7 +10,7 @@ extern "C" {
     void* _ZN5Actor13ClosestPlayerEv(void* self);
     void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
     int _ZN8SaveData19IsCharacterUnlockedEj(u32 c);
-    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 param1, const struct Vector3* pos,
         const struct Vector3_16* rot, s32 areaID, s32 deathTableID);
 }
@@ -47,7 +47,7 @@ extern "C" void func_ov060_021172e0(void* self)
                 idx = ((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 3;
             } while ((mask & (1 << idx)) == 0);
             {
-                void* r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                void* r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, (idx << 8) | 0xb, (struct Vector3*)(sl + 0x5c),
                     (struct Vector3_16*)(sl + 0x8c), *(s8*)(sl + 0xcc), -1);
                 if (r != 0) {
@@ -59,7 +59,7 @@ extern "C" void func_ov060_021172e0(void* self)
     }
 
     {
-        void* r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        void* r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x120, 0, (struct Vector3*)(sl + 0x5c), 0, *(s8*)(sl + 0xcc), -1);
         if (r != 0) {
             *(int*)((char*)r + 0xa4) = 0;

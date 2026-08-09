@@ -3,9 +3,9 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int ApproachAngle(short *p, int target, int a, int b, int c);
 /* Keep the readable source names while binding them to the verified ROM symbols. */
 #define Sound_PlayBank3 _ZN5Sound9PlayBank3EjRK7Vector3
-#define Actor_Spawn _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii
+#define Actor_Spawn _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *pos);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
 #define Platform_UpdateModelPosAndRotY _ZN8Platform21UpdateModelPosAndRotYEv

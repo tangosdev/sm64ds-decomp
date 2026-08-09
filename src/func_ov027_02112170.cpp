@@ -8,7 +8,7 @@ extern int Vec3_HorzAngle(void *a, void *b);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *o, unsigned a, unsigned b, int c);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned id, unsigned fl, void *v, void *v16, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned fl, void *v, void *v16, int a, int b);
 extern char data_ov027_02113d10;
 
 void func_ov027_02112170(void *cc)
@@ -72,7 +72,7 @@ void func_ov027_02112170(void *cc)
         v[1] = t44;
         v[2] = t48;
     }
-    s = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    s = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x10d, (*(int*)(e + 8) << 8) | 3, v, vec16, 0, -1);
     if (s == 0)
         return;

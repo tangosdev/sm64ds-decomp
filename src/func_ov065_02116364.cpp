@@ -11,7 +11,7 @@ extern "C" {
     void* _ZN5Actor22ClosestNonVanishPlayerEv(void* self);
     s16 Vec3_HorzAngle(void* a, void* b);
     void ApproachAngle(void* p, s16 target, int a, int b, int e);
-    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, void* pos, void* rot, int e, int f);
+    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
     void func_02012694(int a, void* p);
     void Matrix4x3_FromRotationY(void* m, int angle);
     void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 ax);
@@ -41,7 +41,7 @@ extern "C" int func_ov065_02116364(void* self)
         if (((*(u32*)(c+0x358) << 4) >> 16) >= 0xf
             && *(u16*)(c+0x100) == 0
             && *(s32*)(c+0x3dc) < 3) {
-            void* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe9, 1, (void*)(c+0x3c0), 0, *(signed char*)(c+0xcc), -1);
             if (spawned != 0) {
                 u8* sp2 = (u8*)spawned;

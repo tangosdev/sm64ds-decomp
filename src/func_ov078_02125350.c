@@ -1,6 +1,6 @@
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
     void* self, int bca, int a, int b, int fix, unsigned short t);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a, unsigned int b, void* pos, int rot, int e, int f);
 
 extern int data_ov078_02126ef0[];
@@ -42,7 +42,7 @@ int func_ov078_02125350(int sl)
 
     for (i = 0; i < t->f4a0; i++) {
         if (t->arr[i] == 0) {
-            r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xce, 2, t->f4ec, 0, t->fcc, -1);
             if (r != 0) {
                 t->arr[i] = *(int*)(r + 4);

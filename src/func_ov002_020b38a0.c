@@ -6,7 +6,7 @@
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjBlockL_c::Kill - recovered from vtable slot identity */
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(char *thiz, s8 *ref, u32 b, const struct Vector3 *v, u32 j);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3 *v, const void *v16, s32 e, s32 f);
+extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3 *v, const void *v16, s32 e, s32 f);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char *thiz, const struct Vector3 *v, u32 n, s32 f, short s);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 kind, s32 x, s32 y, s32 z);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(char *thiz, const struct Vector3 *v);
@@ -34,7 +34,7 @@ void func_ov002_020b38a0(char *c)
         if (((*(u32 *)(c + 8) >> 8) & 0xff) == 0xff) {
             _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(c, (s8 *)(c + 0x323), *(u8 *)(c + 0x322), &tmp[0], 4);
         } else {
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0xb2, *(u8 *)(c + 0x322) | 0x40, &tmp[0], 0, *(s8 *)(c + 0xcc), -1);
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8 *)(c + 0x322) | 0x40, &tmp[0], 0, *(s8 *)(c + 0xcc), -1);
         }
     } else {
         isF = (*(u16 *)(c + 0xc) == 0xf);

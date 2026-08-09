@@ -10,7 +10,7 @@ extern char data_ov100_02148204[];
 extern void _ZN6Player11OpenBigDoorEv(void* p);
 extern void func_020731dc(int a, int b, void** node);
 extern void Vec3_RotateYAndTranslate(void* dst, void* src, short angle, void* unk);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const struct Vector3* pos, const struct Vector3_16* rot,
     s32 areaID, s32 deathTableID);
 
@@ -52,7 +52,7 @@ int func_ov100_02144a38(char* c, char* p)
     Vec3_RotateYAndTranslate(&pos, p + 0x5c, *(s16*)(p + 0x8e), &data_ov100_021487f0);
 
     {
-        void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x11a, (u32)*(s8*)(e + 9), &pos,
             (struct Vector3_16*)(p + 0x8c), *(s8*)(p + 0xcc), -1);
         if (actor != 0) {

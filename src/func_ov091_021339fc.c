@@ -22,7 +22,7 @@ extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void func_02012694(int a, void *p);
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *p, u32 a, u32 b, u32 c2);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 flags, struct Vector3 *pos, short *rot, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, struct Vector3 *pos, short *rot, int a, int b);
 
 void func_ov091_021339fc(char *c)
 {
@@ -94,7 +94,7 @@ void func_ov091_021339fc(char *c)
             rot[1] = 0;
             rot[2] = 0;
             rot[1] = *(short*)(c + 0x94);
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, newHat | (curHat1 << 8), (struct Vector3*)(c + 0x5c), rot, *(signed char*)(c + 0xcc), -1);
             if (spawned == 0) return;
             *(u32*)((char*)spawned + 0x98) = 0x32000;

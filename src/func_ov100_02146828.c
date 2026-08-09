@@ -12,7 +12,7 @@ extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void Vec3_Sub(struct Vector3* out, void* a, void* b);
 extern int Vec3_HorzLen(struct Vector3* v);
 extern int RandomIntInternal(int* seed);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
 
 #pragma opt_loop_invariants off
 void func_ov100_02146828(char* self)
@@ -72,7 +72,7 @@ void func_ov100_02146828(char* self)
         rot.y = rot.y + (s16)((unsigned)r >> 16);
 
         {
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x158, kind, &pos, &rot, *(signed char*)(self + 0xcc), -1);
             if (a != 0) {
                 func_ov100_0214629c(a, *(int*)(self + 4));

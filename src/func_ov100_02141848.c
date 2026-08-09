@@ -2,7 +2,7 @@ typedef struct { int x, y, z; } Vector3;
 typedef struct { short x, y, z; } Vector3_16;
 typedef struct { short x, y; } SVec2;
 extern int RandomIntInternal(int* seed);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, Vector3* v, Vector3_16* w, int e, int f);
+extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vector3* v, Vector3_16* w, int e, int f);
 extern int data_0209e650;
 
 void func_ov100_02141848(char* c){
@@ -25,7 +25,7 @@ void func_ov100_02141848(char* c){
     pos.z = ((int)((unsigned int)r % 20) - 0xa) * 0xa000 + *(int*)(c+0x64);
     r = RandomIntInternal(&data_0209e650);
     rot.y = rot.y + ((r << 1) >> 16);
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x150, 0, &pos, &rot, *(signed char*)(c+0xcc), -1);
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x150, 0, &pos, &rot, *(signed char*)(c+0xcc), -1);
       i++;
     } while (i < n);
   }

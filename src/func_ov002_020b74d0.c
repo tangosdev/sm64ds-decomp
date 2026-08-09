@@ -8,7 +8,7 @@ extern void func_02013a88(void);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int a, int fix, unsigned int j);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern int _ZN6Player12Unk_020c9e5cEh(void *self, int a);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned int a, unsigned int b, void *v, void *rot, int e, int f);
+extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *v, void *rot, int e, int f);
 
 extern int data_ov002_0210de38[];
 extern int data_ov002_0210de30[];
@@ -75,7 +75,7 @@ int func_ov002_020b74d0(char *c) {
     if (*(u8 *)(c + 0x3fe) == 1) {
         if (_ZN9Animation8FinishedEv(c + 0x350) != 0) {
             if (*(int *)(c + 0x3f0) == 4) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x10d, *(u32 *)(c + 8), c + 0x3c4, 0, *(signed char *)(c + 0xcc), -1);
+                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, *(u32 *)(c + 8), c + 0x3c4, 0, *(signed char *)(c + 0xcc), -1);
             }
             _ZN9ActorBase18MarkForDestructionEv(c);
         }

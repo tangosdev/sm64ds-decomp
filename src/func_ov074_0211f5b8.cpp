@@ -33,7 +33,7 @@ extern void _ZN7Message7EndTalkEv();
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev();
 extern void func_02011cfc();
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, Fix12 f);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 kind, const Vector3* v, void* v16, s32 a, s32 b);
+extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 kind, const Vector3* v, void* v16, s32 a, s32 b);
 }
 
 extern "C" void func_ov074_0211f5b8(char* c)
@@ -163,7 +163,7 @@ extern "C" void func_ov074_0211f5b8(char* c)
         vzero.y = *(s32*)(c + 0x60);
         vzero.z = *(s32*)(c + 0x64);
         vzero.y = vzero.y + 0x12c000;
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x11a, 2, &vzero, 0, *(signed char*)(c + 0xcc), -1);
+        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 2, &vzero, 0, *(signed char*)(c + 0xcc), -1);
         func_02012694(0xbb, c + 0x74);
         _ZN9ActorBase18MarkForDestructionEv(c);
         return;

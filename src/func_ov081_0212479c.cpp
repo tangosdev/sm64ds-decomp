@@ -3,7 +3,7 @@ struct Vector3; struct Vector3_16;
 struct Actor {
     static Actor *FindWithID(unsigned int id);
     static int Spawn(unsigned int a, unsigned int b, const Vector3 &v,
-                     const Vector3_16 *p, int e, int f);
+                     const Vector3_16 *p, signed char e, short f);
 };
 extern "C" int RandomIntInternal(int *seed);
 extern "C" void func_02012790(int x);

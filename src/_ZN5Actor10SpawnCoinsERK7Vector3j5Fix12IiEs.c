@@ -6,7 +6,7 @@ typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
 
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, const struct Vector3 *pos,
     const struct Vector3_16 *r, int a, int b);
 extern int RandomIntInternal(int *seed);
@@ -40,7 +40,7 @@ void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
     }
 
     for (i = 0; i < count; i++) {
-        actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
             id, param, pos, rot,
             *(signed char *)((char *)self + 0xcc), deathId);
 

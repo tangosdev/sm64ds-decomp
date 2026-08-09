@@ -4,7 +4,7 @@ struct Vector3_16;
 
 struct Actor {
     static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& pos,
-                        const Vector3_16* rot, int e, int f);
+                        const Vector3_16* rot, signed char e, short f);
 };
 struct ActorBase {
     void MarkForDestruction();

@@ -6,7 +6,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern int func_ov060_02111c68(char *c);
 extern int _ZNK9Animation13GetFrameCountEv(void *anim);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 d);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 id, u32 param, void *pos, void *rot, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *rot, int a, int b);
 
 extern short data_02082214[];
 extern u16 data_ov060_02119364[];
@@ -70,6 +70,6 @@ void func_ov060_0211747c(char *self)
     if (n & 1)
         return;
 
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(0x118, 5, self + 0x5c, self + 0x92,
+    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x118, 5, self + 0x5c, self + 0x92,
                                                  *(signed char *)(self + 0xcc), -1);
 }

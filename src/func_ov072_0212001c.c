@@ -8,7 +8,7 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *player, void *actor, unsigned msg, const void *pos, unsigned a, unsigned b);
 extern int _ZN6Player12GetTalkStateEv(void *player);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern int _Z14ApproachLinearRsss(short *p, short to, short step);
 
@@ -42,7 +42,7 @@ int func_ov072_0212001c(char *c)
             param = *(int *)(c + 8) & 0xf;
             param = param & 0xff;
             param = param | 0x40;
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xb2,
                 param,
                 c + 0x5c,
