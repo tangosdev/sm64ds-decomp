@@ -1,9 +1,14 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol _ZN6Player17PlayMammaMiaSoundEv
+/* recovered: named members + shared header, real C++ method */
+#include "Player.h"
+extern "C" {
+extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, const Vector3 *v);
+}
 
-extern "C" void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, const Vector3 *v);
-
-extern "C" void _ZN6Player17PlayMammaMiaSoundEv(char *thiz)
+void Player::PlayMammaMiaSound()
 {
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char *)(thiz + 0x6d9), 0x27, (const Vector3 *)(thiz + 0x74));
+    /* mCamSpacePosX/Y/Z are three consecutive words; Actor.h declares them
+       individually rather than as one Vector3. */
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x27, (const Vector3 *)&mCamSpacePosX);
 }
