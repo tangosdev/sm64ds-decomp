@@ -420,7 +420,7 @@ src/_ZN10KoopaShell16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214d248 end:0x0214d274
 
-src/_ZN10KoopaShell16OnPendingDestroyEv.c:
+src/_ZN10KoopaShell16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0214d274 end:0x0214d278
 
