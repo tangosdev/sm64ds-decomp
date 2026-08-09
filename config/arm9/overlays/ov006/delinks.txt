@@ -2120,7 +2120,7 @@ src/_ZN11dScMgCoin_c6RenderEv.cpp:
     complete
     .text start:0x020de63c end:0x020de69c
 
-src/func_ov006_020de69c.cpp:
+src/_ZN11dScMgCoin_c8BehaviorEv.cpp:
     complete
     .text start:0x020de69c end:0x020de704
 
