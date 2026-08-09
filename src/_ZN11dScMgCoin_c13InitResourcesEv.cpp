@@ -1,11 +1,11 @@
+//cpp
+// @symbol _ZN11dScMgCoin_c13InitResourcesEv
+/* dScMgCoin_c::InitResources - recovered from ROM RTTI and vtable slot identity. */
 #include "types.h"
 #include "dScMgCoin_c.h"
-// @symbol func_ov006_020de704
-// recovered name: dScMgCoin_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgCoin_c::InitResources - recovered from vtable slot identity */
+
+extern "C" {
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -16,8 +16,10 @@ extern int func_ov004_020adc1c(void);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
+}
 
-int func_ov006_020de704(struct dScMgCoin_c *self) {
+int dScMgCoin_c::InitResources() {
+    dScMgCoin_c *self = this;
     char *c = (char*)self;
     int a, b, d;
 

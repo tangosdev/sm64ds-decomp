@@ -19,6 +19,7 @@ struct dScMgCoin_c {
     u8  unk_51db;           /* 0x51db */
     u8  unk_51dc;           /* 0x51dc */
 #ifdef __cplusplus
+    int InitResources();
     int Behavior();
     int OnYoshiTryEat();
     int Render();

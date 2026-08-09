@@ -2124,7 +2124,7 @@ src/_ZN11dScMgCoin_c8BehaviorEv.cpp:
     complete
     .text start:0x020de69c end:0x020de704
 
-src/func_ov006_020de704.c:
+src/_ZN11dScMgCoin_c13InitResourcesEv.cpp:
     complete
     .text start:0x020de704 end:0x020de940
 
