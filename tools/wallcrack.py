@@ -53,7 +53,7 @@ md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
 _REG = re.compile(r"\b(r\d+|sb|sl|fp|ip|lr)\b")
 
 
-def compile_c(src_text, lang_cpp=False, version="1.2/sp2p3"):
+def compile_c(src_text, lang_cpp=False, version="2004/b56"):
     """Compile source text. Returns (object_bytes, None) or (None, error)."""
     flags = FLAGS.replace("-lang c99", "-lang c++") if lang_cpp else FLAGS
     exe = MW / version / "mwccarm.exe"
