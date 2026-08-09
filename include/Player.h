@@ -463,6 +463,7 @@ struct Player : Actor {
     int St_ButtSlide_Main();
     int St_CameraZoom_Cleanup();
     int St_CameraZoom_Init();
+    int St_CameraZoom_Main();
     int St_Cannon_Cleanup();
     int St_Cannon_Init();
     int St_Cannon_Main();
@@ -483,6 +484,7 @@ struct Player : Actor {
     int St_DebugFly_Main();
     int St_Dive_Init();
     int St_DizzyStars_Init();
+    int St_DizzyStars_Main();
     int St_Electrocute_Init();
     int St_Electrocute_Main();
     int St_EndingFly_Init();
