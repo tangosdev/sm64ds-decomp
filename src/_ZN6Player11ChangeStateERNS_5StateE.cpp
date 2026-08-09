@@ -4,43 +4,39 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Player.h"
-struct C3;
-typedef int (C3::*PMF)();
-
-struct State {
-    PMF onEnter;
-    char pad[8];
-    PMF onExit;
-};
-
 extern "C" {
 extern void func_ov002_020d4540(char *p);
 extern void func_ov002_020c9e18(char *c);
 extern void func_0200d81c(void *thiz, int playerID);
 
 extern void *data_0209f318;
-extern State data_ov002_0211022c;
-extern State data_ov002_0211013c;
-extern State data_ov002_0211067c;
-extern State data_ov002_021106ac;
-extern State data_ov002_02110364;
+extern Player::State data_ov002_0211022c;
+extern Player::State data_ov002_0211013c;
+extern Player::State data_ov002_0211067c;
+extern Player::State data_ov002_021106ac;
+extern Player::State data_ov002_02110364;
 }
 
-extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *newState) {
-    *(State**)((char *)&self->mRequestedState) = newState;
+extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, Player::State *newState) {
+    self->mRequestedState = newState;
 
     {
-        State *cur;
+        Player::State *cur;
         int ok;
-        cur = *(State**)((char *)&self->mState);
+        /* The null-checks below stay as raw offset arithmetic on purpose.
+           Spelling either as `*(void**)&cur->mCleanup == 0` costs 4 words:
+           taking the ADDRESS of a pointer-to-member makes mwcc materialise
+           the whole 8-byte pmf first. Reading one to CALL it is free -- the
+           calls below use the named members. Measured both ways. */
+        cur = self->mState;
         if (cur == 0) { ok = 1; goto check_ok; }
         if (*(int*)((char*)cur+0x10) == 0) { ok = 1; goto check_ok; }
-        ok = (((C3*)((char *)self))->*(cur->onExit))();
+        ok = (self->*(cur->mCleanup))();
     check_ok:
         if (!ok) return 0;
     }
 
-    if (*(State**)((char *)&self->mState) == &data_ov002_0211022c
+    if (*(Player::State**)((char *)&self->mState) == &data_ov002_0211022c
         && (unsigned short)(self->mStateFlags & 0x400) == 0
         && self->mIsNoControl != 0
         && newState != &data_ov002_0211013c
@@ -66,8 +62,8 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
     self->mParticle2 = self->unk_630;
     self->unk_628 = self->mParticle2;
 
-    *(State**)((char *)&self->mPrevState) = *(State**)((char *)&self->mState);
-    *(State**)((char *)&self->mState) = newState;
+    *(Player::State**)((char *)&self->mPrevState) = *(Player::State**)((char *)&self->mState);
+    *(Player::State**)((char *)&self->mState) = newState;
 
     self->unk_717 = 0;
     self->mIsBodyClsnEnabled = 1;
@@ -111,8 +107,8 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
     }
 
     {
-        State *s = *(State**)((char *)&self->mState);
+        Player::State *s = *(Player::State**)((char *)&self->mState);
         if (*(int*)s == 0) return 1;
-        return (((C3*)((char *)self))->*(s->onEnter))();
+        return (self->*(s->mInit))();
     }
 }

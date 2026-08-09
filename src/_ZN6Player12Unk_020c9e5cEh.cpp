@@ -2,15 +2,11 @@
 // @symbol _ZN6Player12Unk_020c9e5cEh
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-struct State { int a; int b; };
-extern "C" {
-extern int _ZN6Player7IsStateERNS_5StateE(void *c, struct State *s);
-}
-extern struct State data_ov002_0211022c;
+extern Player::State data_ov002_0211022c;
 
 int Player::Unk_020c9e5c(unsigned char h)
 {
-  if(!_ZN6Player7IsStateERNS_5StateE(((void *)this), &data_ov002_0211022c)) return 0;
+  if(!IsState(data_ov002_0211022c)) return 0;
   if(*(unsigned char*)((char*)&mNoCtrlKind) != h) return 0;
   switch(h){
   case 0:
