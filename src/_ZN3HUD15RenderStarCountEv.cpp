@@ -1,14 +1,32 @@
 //cpp
-// _ZN3HUD15RenderStarCountEv at 0x020fc458 (ov002)
+// @symbol _ZN3HUD15RenderStarCountEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Draws the star counter: the star icon, an "x", and up to three digits laid
+ * out RIGHT to LEFT from mStarCountX, skipping the -1 slots CalculateDigits
+ * blanked.
+ *
+ * Three paths, and what differs between them is only WHICH count is shown and
+ * on WHICH screen:
+ *
+ *   data_0209f2d8 == 1   a per-slot count out of data_0209f310, main screen
+ *   the middle path      NumStars(), main screen, but only during a specific
+ *                        cutscene window (data_ov002_02111178) and suppressed
+ *                        entirely by the data_0209f2ac / data_0209f2d4 test
+ *   otherwise            NumStars(), SUB screen -- the leading argument to
+ *                        OAM::Render flips 0 -> 1
+ *
+ * The three render blocks are deliberately left duplicated rather than folded
+ * into a helper: they are three separate tails in the ROM, and hoisting them
+ * would be a rewrite, not a substitution.
+ *
+ * The digit loop runs i = 2 down to 0 -- least significant first -- which is
+ * why the cursor moves left.
+ */
+#include "HUD.h"
+
 struct OamAttr;
 struct Matrix2x2;
-
-typedef struct HUD_s {
-    char pad[0x70];
-    short unk70;
-    short unk72;
-    signed char digits[3];
-} HUD_s;
 
 extern "C" {
 
@@ -26,20 +44,20 @@ extern struct OamAttr func_020ab9c8;
 extern struct OamAttr func_020abad0;
 
 extern unsigned char NumStars(void);
-extern void _ZN3HUD15CalculateDigitsEt(HUD_s* thisptr, unsigned short n);
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, struct OamAttr* attr, int x, int y, int a, int c, struct Matrix2x2* m);
+}
 
-void _ZN3HUD15RenderStarCountEv(HUD_s* thisptr)
+void HUD::RenderStarCount()
 {
-    int x = thisptr->unk70;
+    int x = mStarCountX;
     int b = (data_0209f2d8 == 1);
     int i;
 
     if (b) {
-        _ZN3HUD15CalculateDigitsEt(thisptr, (unsigned short)data_0209f310[data_0209f250]);
+        CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
         for (i = 2; i >= 0; i--) {
-            if (thisptr->digits[i] >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[thisptr->digits[i]], x, 2, -1, 1, 0);
+            if (mDigits[i] >= 0) {
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
                 x -= 9;
             }
         }
@@ -48,7 +66,7 @@ void _ZN3HUD15RenderStarCountEv(HUD_s* thisptr)
         return;
     }
 
-    _ZN3HUD15CalculateDigitsEt(thisptr, NumStars());
+    CalculateDigits(NumStars());
 
     {
         unsigned char m = data_0209f2fc;
@@ -68,8 +86,8 @@ void _ZN3HUD15RenderStarCountEv(HUD_s* thisptr)
                 return;
             }
             for (i = 2; i >= 0; i--) {
-                if (thisptr->digits[i] >= 0) {
-                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[thisptr->digits[i]], x, 2, -1, 1, 0);
+                if (mDigits[i] >= 0) {
+                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
                     x -= 9;
                 }
             }
@@ -80,13 +98,11 @@ void _ZN3HUD15RenderStarCountEv(HUD_s* thisptr)
     }
 
     for (i = 2; i >= 0; i--) {
-        if (thisptr->digits[i] >= 0) {
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, func_020aba70[thisptr->digits[i]], x, 2, -1, 1, 0);
+        if (mDigits[i] >= 0) {
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
             x -= 9;
         }
     }
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &func_020ab9c8, x, 10, -1, 1, 0);
     _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &func_020abad0, x - 16, 10, -1, 1, 0);
-}
-
 }
