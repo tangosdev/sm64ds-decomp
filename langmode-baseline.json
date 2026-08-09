@@ -41,16 +41,16 @@
       },
       "method": {
         "draft": 8,
-        "migrated": 1515,
-        "unmigrated": 406
+        "migrated": 1516,
+        "unmigrated": 405
       }
     },
     "cpp_still_handspelled": 165,
-    "mangled_c": 767,
-    "mangled_cpp": 1757,
+    "mangled_c": 766,
+    "mangled_cpp": 1758,
     "mangled_total": 2524,
     "nonmatching_drafts": 9,
-    "unmigrated_total": 932
+    "unmigrated_total": 931
   },
   "shadow_decls": {
     "local_body_no_include": 1548,
@@ -60,8 +60,8 @@
     "pad_layout": 668
   },
   "totals": {
-    "c_extension": 7825,
-    "cpp_extension": 3456,
+    "c_extension": 7824,
+    "cpp_extension": 3457,
     "src_files": 11281
   }
 }
