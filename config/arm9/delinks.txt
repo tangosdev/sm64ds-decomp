@@ -936,7 +936,7 @@ src/_ZN5Actor17GetWaterHeightWDWEv.cpp:
     complete
     .text start:0x0200fec8 end:0x0200ff14
 
-src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j.c:
+src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h.c:
     complete
     .text start:0x0200ff14 end:0x0200ff60
 
