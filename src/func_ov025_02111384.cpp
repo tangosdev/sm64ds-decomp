@@ -9,9 +9,10 @@
 /* daDgr_c::CleanupResources - recovered from vtable slot identity */
 extern "C" {
 extern int data_ov025_02113a68[];
+extern int data_ov025_02113a60[];
 int func_ov025_02111384(char* c) {
   ((SharedFilePtr *)(data_ov025_02113a68))->Release();
-  ((SharedFilePtr *)(data_ov036_02113a60))->Release();
+  ((SharedFilePtr *)(data_ov025_02113a60))->Release();
   if (((MeshColliderBase *)(c+0x124))->IsEnabled())
     ((MeshColliderBase *)(c+0x124))->Disable();
   return 1;
