@@ -19,7 +19,7 @@ int ClockPaintingHandShort::InitResources()
         *(unsigned char*)((char*)&mHandIndex) = 1;
     {
         unsigned char i = *(unsigned char*)((char*)&mHandIndex);
-        int file = _ZN5Model8LoadFileER13SharedFilePtr(data_ov051_021116b0[i]);
+        int file = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov013_021116b0[i]);
         _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)((void*)this) + 0xd4, file, 1, -1);
     }
     func_ov013_02111430((char*)((void*)this));
