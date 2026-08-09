@@ -34,6 +34,11 @@ struct Bully {
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x33c */
     u8  mShadowModel;            /* 0x370 */
     u8  pad_371[0x8b];
+    /* An actor unique ID, not a count: Behavior passes it to
+       Actor::FindWithID and increments the byte at +0x3fe of whatever comes
+       back; InitResources zeroes it. Left unnamed because that is as far as
+       the bytes go -- BigBully's u8 at the same offset is a different field
+       with a different use, so the offset is no guide. */
     s32 unk_3fc;            /* 0x3fc */
 #ifdef __cplusplus
     /* methods */

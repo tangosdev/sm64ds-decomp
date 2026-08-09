@@ -51,7 +51,10 @@ struct BowserPuzzlePiece {
 #ifdef __cplusplus
     /* methods */
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
+    int Render();
 #endif
 };
 

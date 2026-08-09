@@ -22,6 +22,6 @@ int Clam::InitResources()
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, (void*)data_ov064_0211c9bc[1], 0x40000000, 0x1000, 0);
   _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x138, ((char*)this), 0x64000, 0x64000, 0x200004, 0);
   func_ov064_0211a9b4(((char*)this));
-  unk_16c = 0;
+  mState = 0;
   return 1;
 }

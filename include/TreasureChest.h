@@ -23,6 +23,7 @@ struct TreasureChest {
 #ifdef __cplusplus
     /* methods */
     int Behavior();
+    int CleanupResources();
     int InitResources();
     int Render();
 #endif

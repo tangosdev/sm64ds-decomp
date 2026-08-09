@@ -239,11 +239,11 @@ src/_ZN12MetalNetLiftD0Ev.c:
     complete
     .text start:0x02118070 end:0x021180d4
 
-src/_ZN12MetalNetLift16CleanupResourcesEv.c:
+src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021180d4 end:0x021180e8
 
-src/_ZN12MetalNetLift13InitResourcesEv.c:
+src/_ZN12MetalNetLift13InitResourcesEv.cpp:
     complete
     .text start:0x021180e8 end:0x021180fc
 
@@ -307,15 +307,15 @@ src/func_ov064_021187ec.cpp:
     complete
     .text start:0x021187ec end:0x0211883c
 
-src/_ZN10LavaBubble16CleanupResourcesEv.c:
+src/_ZN10LavaBubble16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211883c end:0x02118844
 
-src/_ZN10LavaBubble16OnPendingDestroyEv.c:
+src/_ZN10LavaBubble16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02118844 end:0x02118848
 
-src/_ZN10LavaBubble6RenderEv.c:
+src/_ZN10LavaBubble6RenderEv.cpp:
     complete
     .text start:0x02118848 end:0x02118850
 
@@ -459,15 +459,15 @@ src/func_ov064_0211987c.c:
     complete
     .text start:0x0211987c end:0x02119880
 
-src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.c:
+src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119880 end:0x021198b0
 
-src/_ZN17BowserPuzzlePiece16OnPendingDestroyEv.c:
+src/_ZN17BowserPuzzlePiece16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021198b0 end:0x021198b4
 
-src/_ZN17BowserPuzzlePiece6RenderEv.c:
+src/_ZN17BowserPuzzlePiece6RenderEv.cpp:
     complete
     .text start:0x021198b4 end:0x021198bc
 
@@ -518,11 +518,11 @@ src/func_ov064_02119f1c.cpp:
     complete
     .text start:0x02119f1c end:0x02119fa0
 
-src/_ZN9WaterRing16CleanupResourcesEv.c:
+src/_ZN9WaterRing16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119fa0 end:0x02119fc4
 
-src/_ZN9WaterRing16OnPendingDestroyEv.c:
+src/_ZN9WaterRing16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02119fc4 end:0x02119fc8
 
@@ -586,7 +586,7 @@ src/func_ov064_0211a734.cpp:
     complete
     .text start:0x0211a734 end:0x0211a77c
 
-src/_ZN13TreasureChest16CleanupResourcesEv.c:
+src/_ZN13TreasureChest16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a77c end:0x0211a7c4
 
@@ -618,7 +618,7 @@ src/func_ov064_0211a9b4.c:
     complete
     .text start:0x0211a9b4 end:0x0211a9f4
 
-src/_ZN4Clam16CleanupResourcesEv.c:
+src/_ZN4Clam16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a9f4 end:0x0211aa30
 
@@ -626,7 +626,7 @@ src/_ZN4Clam6RenderEv.cpp:
     complete
     .text start:0x0211aa30 end:0x0211aa58
 
-src/_ZN4Clam8BehaviorEv.c:
+src/_ZN4Clam8BehaviorEv.cpp:
     complete
     .text start:0x0211aa58 end:0x0211acc4
 

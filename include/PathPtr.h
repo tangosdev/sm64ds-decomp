@@ -21,4 +21,10 @@ struct PathPtr {
 #endif
 };
 
+/* Two words and nothing else, corroborated from outside the class:
+ * MetalNetLift_Spawn allocates 0x368 bytes and constructs a PathPtr at
+ * +0x360, so 8 is exactly what closes that object. Asserting it also lets
+ * check_header_offsets size a PathPtr member instead of skipping the line. */
+typedef char PathPtr_size_must_be_0x8[sizeof(struct PathPtr) == 0x8 ? 1 : -1];
+
 #endif
