@@ -1,5 +1,6 @@
 //cpp
 // @symbol _ZN6Player12CanEnterDoorEh
+/* recovered: named members + shared header, real C++ method */
 // Player::CanEnterDoor(unsigned char door)
 // The +0x48 vcall must be spelled as a real C++ virtual call (dummy-virtual
 // struct, slot 18): the C function-pointer cast perturbs callee-saved homing
@@ -14,8 +15,8 @@ struct Door {
     virtual int v16(); virtual int v17();
     virtual int GetType();
 };
+#include "Player.h"
 extern "C" {
-extern int _ZN6Player7IsStateERNS_5StateE(void *c, void *s);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *c, void *s);
 extern int _ZN6Player17SetNoControlStateEhih(void *c, unsigned char, int, unsigned char);
 extern int data_ov002_0211022c[];
@@ -24,26 +25,26 @@ extern int data_ov002_02110154[];
 extern int data_ov002_0211043c[];
 extern int data_ov002_0211004c[];
 }
-extern "C" int _ZN6Player12CanEnterDoorEh(void *c, unsigned char door)
+int Player::CanEnterDoor(unsigned char door)
 {
-  if (_ZN6Player7IsStateERNS_5StateE(c, data_ov002_0211022c)) {
-    if (!(*(unsigned char *)((char *)c + 0x6e3) == 0x13 &&
-          *(unsigned char *)((char *)c + 0x70b) != 0))
+  if (IsState(*(State *)data_ov002_0211022c)) {
+    if (!(mStateStep == 0x13 &&
+          mIsOpeningBigDoor != 0))
       return 0;
   }
-  if (_ZN6Player7IsStateERNS_5StateE(c, data_ov002_0211013c) ||
-      _ZN6Player7IsStateERNS_5StateE(c, data_ov002_02110154) ||
-      _ZN6Player7IsStateERNS_5StateE(c, data_ov002_0211022c) ||
-      _ZN6Player7IsStateERNS_5StateE(c, data_ov002_0211043c)) {
-    if (*(struct Door **)((char *)c + 0x360) != 0) {
-      if ((*(struct Door **)((char *)c + 0x360))->GetType() == 6 ||
-          (*(struct Door **)((char *)c + 0x360))->GetType() == 1) {
-        _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211004c);
+  if (IsState(*(State *)data_ov002_0211013c) ||
+      IsState(*(State *)data_ov002_02110154) ||
+      IsState(*(State *)data_ov002_0211022c) ||
+      IsState(*(State *)data_ov002_0211043c)) {
+    if (*(struct Door **)&mObjInMouth != 0) {
+      if ((*(struct Door **)&mObjInMouth)->GetType() == 6 ||
+          (*(struct Door **)&mObjInMouth)->GetType() == 1) {
+        _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_0211004c);
       }
       return 0;
     }
-    *(unsigned char *)((char *)c + 0x6e3) = door;
-    if (_ZN6Player17SetNoControlStateEhih(c, 7, -1, 1) != 0)
+    mStateStep = door;
+    if (_ZN6Player17SetNoControlStateEhih(this, 7, -1, 1) != 0)
       return 1;
   }
   return 0;

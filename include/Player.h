@@ -369,12 +369,16 @@ struct Player : Actor {
     u8  pad_73e[0x4];
     u8  unk_742;            /* 0x742 */
     u8  unk_743;            /* 0x743 */
-    u8  unk_744;            /* 0x744 */
-    u8  pad_745[0x3];
-    u8  unk_748;            /* 0x748 */
-    u8  pad_749[0x3];
-    u8  unk_74c;            /* 0x74c */
-    u8  pad_74d[0x3];
+    /* 0x744..0x74c is a Vector3, not three bytes: five files cast it as one
+       -- ShowMessage2, TryEnterStarDoor, func_ov002_020c47f4 and
+       func_ov002_020c8a4c all spell (Vector3*)(this + 0x744), and
+       JumpIntoBooCage writes all three as int. Declared u8, any natural
+       access is an ldrb. Widths only; the names stay unk_ because what the
+       vector MEANS is not settled -- 0x750 is the anchor and 0x744 the point
+       Vec3_RotateYAndTranslate derives from it. */
+    s32 unk_744;            /* 0x744 */
+    s32 unk_748;            /* 0x748 */
+    s32 unk_74c;            /* 0x74c */
     s32 unk_750;            /* 0x750 */
     s32 unk_754;            /* 0x754 */
     s32 unk_758;            /* 0x758 */
@@ -413,6 +417,7 @@ struct Player : Actor {
 
     int * TryExitCharacterDoorWithIntro();
     int Burn();
+    int CanEnterDoor(unsigned char door);
     int CanPause();
     int CanWarp();
     int DropActor();
