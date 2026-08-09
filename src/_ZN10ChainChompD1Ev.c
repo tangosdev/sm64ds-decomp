@@ -9,10 +9,10 @@ extern int __destroy_arr(void *arr, int n, int sz, void *dtor);
 extern void func_020072c0(void);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *p);
 extern int _ZN5EnemyD2Ev(int *x);
-extern void *_ZTV10ChainChomp[];
+extern void *data_ov034_021147ec[];
 
 void *_ZN10ChainChompD1Ev(struct ChainChomp *self) {
-    *(void**)((char *)self) = _ZTV10ChainChomp;
+    *(void**)((char *)self) = data_ov034_021147ec;
     __destroy_arr(((char *)self) + 0x578, 7, 0xc, (void*)func_020072c0);
     __destroy_arr(((char *)self) + 0x524, 7, 0xc, (void*)func_020072c0);
     __destroy_arr(((char *)self) + 0x40c, 7, 0x28, (void*)_ZN11ShadowModelD1Ev);
