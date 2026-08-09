@@ -575,6 +575,7 @@ struct Player : Actor {
     int St_SweepKick_Main();
     int St_Swim_Cleanup();
     int St_Swim_Init();
+    int St_Swim_Main();
     int St_SwingPlayer_Cleanup();
     int St_SwingPlayer_Init();
     int St_Talk_Cleanup();
@@ -605,6 +606,7 @@ struct Player : Actor {
     int St_WindCarry_Init();
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
+    int St_YoshiPower_Main();
     int StartTalk(ActorBase & actor_, bool b_);
     int TryEnterStarDoor(Vector3 & pos_, short kind);
     int TryExitWhiteDoorWithStar();
