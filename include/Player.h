@@ -458,6 +458,7 @@ struct Player : Actor {
     int St_BurnFire_Init();
     int St_BurnFire_Main();
     int St_BurnLava_Init();
+    int St_BurnLava_Main();
     int St_ButtSlide_Init();
     int St_ButtSlide_Main();
     int St_CameraZoom_Cleanup();

@@ -3144,7 +3144,7 @@ src/_ZN6Player4BurnEv.cpp:
     complete
     .text start:0x020d57d8 end:0x020d5834
 
-src/_ZN6Player19St_Electrocute_MainEv.c:
+src/_ZN6Player19St_Electrocute_MainEv.cpp:
     complete
     .text start:0x020d5834 end:0x020d59b0
 
