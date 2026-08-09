@@ -2112,7 +2112,7 @@ src/func_ov006_020de5ac.c:
     complete
     .text start:0x020de5ac end:0x020de5b0
 
-src/func_ov006_020de5b0.c:
+src/_ZN11dScMgCoin_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020de5b0 end:0x020de63c
 

@@ -1,14 +1,18 @@
-// @symbol func_ov006_020de5b0
+//cpp
+// @symbol _ZN11dScMgCoin_c13OnYoshiTryEatEv
 #include "decl_common.h"
 #include "dScMgCoin_c.h"
 
 /* dScMgCoin_c::OnYoshiTryEat - recovered from ROM RTTI and vtable slot identity. */
+extern "C" {
 extern void FreeGfxSlotsById(int n);
 extern int func_ov004_020adc1c(void);
-int func_ov006_020de5b0(struct dScMgCoin_c *self);
+}
 
-int func_ov006_020de5b0(struct dScMgCoin_c *self)
+int dScMgCoin_c::OnYoshiTryEat()
 {
+    dScMgCoin_c *self = this;
+
     if (self->unk_51db != 0) {
         *(unsigned char *)((int)self + 0x51da) += 1;
     } else {
