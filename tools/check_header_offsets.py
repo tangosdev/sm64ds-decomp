@@ -150,6 +150,19 @@ for path in sys.argv[1:]:
             if re.match(r"^\s*\};", line):
                 nested = False
             continue
+        # A nested FORWARD declaration -- `struct State;` inside Camera -- is a type
+        # too, and occupies no space either. It shows up when a class handles its
+        # nested type ONLY by pointer: `Camera::ChangeState` is mangled `PNS_5StateE`,
+        # which is what forces State to be nested, while nothing in the tree
+        # dereferences one, so there is no layout to write down.
+        #
+        # DECL wants two identifiers (`struct X y;`), so a bare tag matched nothing
+        # and fell through to UNPARSED -- and per the note above, ONE unparsed line
+        # suppresses the mismatch check for the whole header. That is the same
+        # silent-no-op shape this gate has already been bitten by twice, arriving a
+        # third way; here it at least exits non-zero rather than reporting a pass.
+        if re.match(r"^\s*(?:struct|union|class)\s+\w+\s*;\s*$", line):
+            continue
         if re.match(r"^\s*struct \w+\s*(?::\s*(?:public\s+)?\w+\s*)?\{", line):
             nested = True
             continue
