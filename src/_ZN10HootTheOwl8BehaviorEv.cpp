@@ -18,6 +18,7 @@ extern void _ZN12CylinderClsn6UpdateEv(void*);
 
 extern char data_ov094_02136b40[];
 extern char data_ov094_02136b60[];
+extern void func_ov094_021357a4(void*);
 }
 
 int HootTheOwl::Behavior()
@@ -66,7 +67,7 @@ int HootTheOwl::Behavior()
     unk_090 = unk_096;
     func_ov094_021361d8(((char *)this));
     if (*(char**)((char *)&mCurrentState) == data_ov094_02136b60 && unk_3d4 == 2) {
-        func_ov096_021357a4(((char *)this));
+        func_ov094_021357a4(((char *)this));
     }
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsnWithPos);
