@@ -371,6 +371,7 @@ src/KoopaTheQuick_Spawn.c:
     .text start:0x0211aee0 end:0x0211af38
 
 src/_ZN9KoopaFlagD1Ev.cpp:
+    complete
     .text start:0x0211af38 end:0x0211af70
 
 src/_ZN9KoopaFlagD0Ev.c:

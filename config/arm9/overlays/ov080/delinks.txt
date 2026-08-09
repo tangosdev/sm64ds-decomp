@@ -5,6 +5,7 @@
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
     .bss        start:0x021283c0 end:0x02128860 kind:bss align:32
 src/_ZN9MontyMoleD1Ev.cpp:
+    complete
     .text start:0x02123740 end:0x02123778
 
 src/_ZN9MontyMoleD0Ev.c:
@@ -106,6 +107,7 @@ src/MontyMole_Spawn.c:
     .text start:0x021249e0 end:0x02124a20
 
 src/_ZN11CrazedCrateD1Ev.cpp:
+    complete
     .text start:0x02124a20 end:0x02124a68
 
 src/_ZN11CrazedCrateD0Ev.c:

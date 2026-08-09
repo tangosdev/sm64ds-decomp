@@ -58,6 +58,7 @@ src/RollingLogTtm_Spawn.c:
     .text start:0x0211164c end:0x02111688
 
 src/_ZN13RollingLogTtmD1Ev.cpp:
+    complete
     .text start:0x02111688 end:0x021116d0
 
 src/_ZN13RollingLogTtmD0Ev.c:

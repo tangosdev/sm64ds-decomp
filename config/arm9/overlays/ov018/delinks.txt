@@ -49,6 +49,7 @@ src/SkiLift_Spawn.c:
     .text start:0x02111818 end:0x02111848
 
 src/_ZN7SkiLiftD1Ev.cpp:
+    complete
     .text start:0x02111848 end:0x02111898
 
 src/_ZN7SkiLiftD0Ev.c:

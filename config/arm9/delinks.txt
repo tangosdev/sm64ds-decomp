@@ -112,6 +112,7 @@ src/_ZN8CapEnemyC2Ev.c:
     .text start:0x02006554 end:0x02006588
 
 src/main.c:
+    complete
     .text start:0x02007000 end:0x0200705c
 
 src/_ZN6CameraD1Ev.c:
@@ -1165,6 +1166,7 @@ src/_ZN5Actor13AfterBehaviorEj.cpp:
     .text start:0x02010fc8 end:0x02010fd4
 
 src/_ZN5Actor14BeforeBehaviorEv.cpp:
+    complete
     .text start:0x02010fd4 end:0x02011214
 
 src/_ZN5Actor21AfterCleanupResourcesEj.cpp:
@@ -3169,6 +3171,7 @@ src/engine/message/func_0201cb2c.c:
     .text start:0x0201cb2c end:0x0201cb7c
 
 src/_ZN5Stage13UpdateMessageEv.cpp:
+    complete
     .text start:0x0201cb7c end:0x0201cd08
 
 src/func_0201cd08.cpp:

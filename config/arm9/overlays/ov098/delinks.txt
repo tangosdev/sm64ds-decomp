@@ -259,6 +259,7 @@ src/func_ov098_0213a8ec.c:
     .text start:0x0213a8ec end:0x0213a900
 
 src/_ZN6CannonD1Ev.cpp:
+    complete
     .text start:0x0213a900 end:0x0213a938
 
 src/_ZN6CannonD0Ev.c:

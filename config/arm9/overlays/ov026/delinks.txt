@@ -33,6 +33,7 @@ src/func_ov026_02111330.cpp:
     .text start:0x02111330 end:0x02111598
 
 src/func_ov026_02111598.cpp:
+    complete
     .text start:0x02111598 end:0x02111678
 
 src/func_ov026_02111678.c:

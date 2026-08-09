@@ -57,6 +57,7 @@ src/ArrowLift_Spawn.c:
     .text start:0x021116f8 end:0x02111728
 
 src/_ZN9ArrowLiftD1Ev.cpp:
+    complete
     .text start:0x02111728 end:0x02111760
 
 src/_ZN9ArrowLiftD0Ev.c:

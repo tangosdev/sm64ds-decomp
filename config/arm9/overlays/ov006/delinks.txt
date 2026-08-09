@@ -1404,6 +1404,7 @@ src/func_ov006_020d3668.cpp:
     .text start:0x020d3668 end:0x020d36a4
 
 src/func_ov006_020d3ba0.cpp:
+    complete
     .text start:0x020d3ba0 end:0x020d452c
 
 src/func_ov006_020d452c.c:
@@ -2686,6 +2687,7 @@ src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp:
     .text start:0x020e6f60 end:0x020e700c
 
 src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp:
+    complete
     .text start:0x020e700c end:0x020e7040
 
 src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp:
@@ -4226,6 +4228,7 @@ src/func_ov006_020fa780.c:
     .text start:0x020fa780 end:0x020fa7b8
 
 src/func_ov006_020fa7b8.cpp:
+    complete
     .text start:0x020fa7b8 end:0x020fa844
 
 src/func_ov006_020fa844.c:
@@ -5725,6 +5728,7 @@ src/func_ov006_021128fc.c:
     .text start:0x021128fc end:0x02112ad8
 
 src/func_ov006_02112ad8.c:
+    complete
     .text start:0x02112ad8 end:0x02113c14
 
 src/func_ov006_02113c14.c:

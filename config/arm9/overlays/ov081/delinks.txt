@@ -245,6 +245,7 @@ src/Snowball_Spawn.c:
     .text start:0x021264b4 end:0x02126504
 
 src/_ZN8MoneybagD1Ev.cpp:
+    complete
     .text start:0x02126504 end:0x02126554
 
 src/_ZN8MoneybagD0Ev.c:

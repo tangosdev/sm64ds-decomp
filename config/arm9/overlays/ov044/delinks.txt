@@ -4,6 +4,7 @@
     .data       start:0x02111360 end:0x02111680 kind:data align:32
     .bss        start:0x02111680 end:0x021116a0 kind:bss align:32
 src/_ZN19OrangeBallBillboardD1Ev.cpp:
+    complete
     .text start:0x021111a0 end:0x021111d0
 
 src/_ZN19OrangeBallBillboardD0Ev.c:

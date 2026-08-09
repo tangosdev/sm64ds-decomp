@@ -69,6 +69,7 @@ src/PoleLift_Spawn.c:
     .text start:0x02111808 end:0x02111840
 
 src/_ZN8PoleLiftD1Ev.cpp:
+    complete
     .text start:0x02111840 end:0x02111878
 
 src/_ZN8PoleLiftD0Ev.c:

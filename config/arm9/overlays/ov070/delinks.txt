@@ -112,6 +112,7 @@ src/FlyGuy_Spawn.c:
     .text start:0x02120520 end:0x02120570
 
 src/_ZN3AmpD1Ev.cpp:
+    complete
     .text start:0x02120570 end:0x021205d0
 
 src/_ZN3AmpD0Ev.c:
@@ -187,6 +188,7 @@ src/Amp_Spawn.c:
     .text start:0x021210ac end:0x02121118
 
 src/_ZN10FlameChompD1Ev.cpp:
+    complete
     .text start:0x02121118 end:0x02121160
 
 src/_ZN10FlameChompD0Ev.c:
@@ -285,6 +287,7 @@ src/FlameChomp_Spawn.c:
     .text start:0x02121af8 end:0x02121b48
 
 src/_ZN14FlameChompFireD1Ev.cpp:
+    complete
     .text start:0x02121b48 end:0x02121b88
 
 src/_ZN14FlameChompFireD0Ev.c:

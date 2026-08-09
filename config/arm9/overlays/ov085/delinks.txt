@@ -5,6 +5,7 @@
     .data       start:0x0212fe20 end:0x02130480 kind:data align:32
     .bss        start:0x02130480 end:0x02130880 kind:bss align:32
 src/_ZN4ToadD1Ev.cpp:
+    complete
     .text start:0x02129020 end:0x02129060
 
 src/_ZN4ToadD0Ev.c:
@@ -64,6 +65,7 @@ src/Toad_Spawn.c:
     .text start:0x02129cd0 end:0x02129d18
 
 src/_ZN13PrincessPeachD1Ev.cpp:
+    complete
     .text start:0x02129d18 end:0x02129d60
 
 src/_ZN13PrincessPeachD0Ev.c:

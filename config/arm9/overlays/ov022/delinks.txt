@@ -246,6 +246,7 @@ src/RollingLogLll_Spawn.c:
     .text start:0x021125a4 end:0x021125e0
 
 src/_ZN13RollingLogLllD1Ev.cpp:
+    complete
     .text start:0x021125e0 end:0x02112610
 
 src/_ZN13RollingLogLllD0Ev.c:

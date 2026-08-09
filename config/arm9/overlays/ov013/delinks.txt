@@ -37,6 +37,7 @@ src/ClockPaintingPendulum_Spawn.c:
     .text start:0x02111384 end:0x021113bc
 
 src/_ZN22ClockPaintingHandShortD1Ev.cpp:
+    complete
     .text start:0x021113bc end:0x021113ec
 
 src/_ZN22ClockPaintingHandShortD0Ev.c:

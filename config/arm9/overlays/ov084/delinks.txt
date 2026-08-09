@@ -139,6 +139,7 @@ src/Goomba_Spawn.c:
     .text start:0x0212c0b0 end:0x0212c10c
 
 src/_ZN11BobOmbBuddyD1Ev.cpp:
+    complete
     .text start:0x0212c10c end:0x0212c14c
 
 src/_ZN11BobOmbBuddyD0Ev.c:

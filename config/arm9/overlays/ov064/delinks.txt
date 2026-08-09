@@ -543,6 +543,7 @@ src/WaterRing_Spawn.c:
     .text start:0x0211a1b0 end:0x0211a200
 
 src/_ZN13TreasureChestD1Ev.cpp:
+    complete
     .text start:0x0211a200 end:0x0211a238
 
 src/_ZN13TreasureChestD0Ev.c:
@@ -606,6 +607,7 @@ src/TreasureChest_Spawn.c:
     .text start:0x0211a8f0 end:0x0211a930
 
 src/_ZN4ClamD1Ev.cpp:
+    complete
     .text start:0x0211a930 end:0x0211a968
 
 src/_ZN4ClamD0Ev.c:

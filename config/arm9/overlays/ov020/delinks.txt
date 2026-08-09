@@ -13,6 +13,7 @@ src/_ZN8BookShotD0Ev.c:
     .text start:0x021111f0 end:0x02111254
 
 src/_ZN15BookShotSpawnerD1Ev.cpp:
+    complete
     .text start:0x02111254 end:0x02111278
 
 src/_ZN15BookShotSpawnerD0Ev.c:
@@ -126,6 +127,7 @@ src/BookShot_Spawn.c:
     .text start:0x021128dc end:0x02112938
 
 src/_ZN12HauntedChairD1Ev.cpp:
+    complete
     .text start:0x02112938 end:0x02112980
 
 src/_ZN12HauntedChairD0Ev.c:

@@ -320,6 +320,7 @@ src/InvisiblePole_Spawn.c:
     .text start:0x020b0710 end:0x020b0748
 
 src/_ZN13InvisiblePoleD1Ev.cpp:
+    complete
     .text start:0x020b0748 end:0x020b076c
 
 src/_ZN13InvisiblePoleD0Ev.c:
@@ -351,6 +352,7 @@ src/CameraTag_Spawn.c:
     .text start:0x020b07c8 end:0x020b07f8
 
 src/_ZN9CameraTagD1Ev.cpp:
+    complete
     .text start:0x020b07f8 end:0x020b081c
 
 src/_ZN9CameraTagD0Ev.c:
@@ -382,6 +384,7 @@ src/VirtualDoor_Spawn.c:
     .text start:0x020b0980 end:0x020b09b0
 
 src/_ZN11VirtualDoorD1Ev.cpp:
+    complete
     .text start:0x020b09b0 end:0x020b09d4
 
 src/_ZN11VirtualDoorD0Ev.c:
@@ -417,6 +420,7 @@ src/Exit_Spawn.c:
     .text start:0x020b0f24 end:0x020b0f54
 
 src/_ZN4CoinD1Ev.cpp:
+    complete
     .text start:0x020b0f54 end:0x020b0fa4
 
 src/_ZN4CoinD0Ev.c:
@@ -540,6 +544,7 @@ src/Coin_Spawn.c:
     .text start:0x020b2b48 end:0x020b2ba0
 
 src/_ZN11WingFeatherD1Ev.cpp:
+    complete
     .text start:0x020b2ba0 end:0x020b2be8
 
 src/_ZN11WingFeatherD0Ev.c:
@@ -675,6 +680,7 @@ src/BrickBlock_Spawn.c:
     .text start:0x020b412c end:0x020b415c
 
 src/_ZN10BrickBlockD1Ev.cpp:
+    complete
     .text start:0x020b415c end:0x020b4180
 
 src/_ZN10BrickBlockD0Ev.c:
@@ -730,6 +736,7 @@ src/OneUpMushroomBlockTag_Spawn.c:
     .text start:0x020b4670 end:0x020b46a0
 
 src/_ZN21MegaMushroomCreateTagD1Ev.cpp:
+    complete
     .text start:0x020b46a0 end:0x020b46d0
 
 src/_ZN21MegaMushroomCreateTagD0Ev.c:
@@ -841,6 +848,7 @@ src/QuestionSwitch_Spawn.c:
     .text start:0x020b56d8 end:0x020b5734
 
 src/_ZN9BlueFlameD1Ev.cpp:
+    complete
     .text start:0x020b5734 end:0x020b5764
 
 src/_ZN9BlueFlameD0Ev.c:
@@ -1068,6 +1076,7 @@ src/PoppingLavaBubbles_Spawn.c:
     .text start:0x020b6dd8 end:0x020b6e08
 
 src/_ZN18PoppingLavaBubblesD1Ev.cpp:
+    complete
     .text start:0x020b6e08 end:0x020b6e2c
 
 src/_ZN18PoppingLavaBubblesD0Ev.c:
@@ -1250,6 +1259,7 @@ src/PushBlock_Spawn.c:
     .text start:0x020b910c end:0x020b9148
 
 src/_ZN9PushBlockD1Ev.cpp:
+    complete
     .text start:0x020b9148 end:0x020b9198
 
 src/_ZN9PushBlockD0Ev.c:
@@ -1588,6 +1598,7 @@ src/Seaweed_Spawn.c:
     .text start:0x020bc5a8 end:0x020bc5e0
 
 src/_ZN7SeaweedD1Ev.cpp:
+    complete
     .text start:0x020bc5e0 end:0x020bc618
 
 src/_ZN7SeaweedD0Ev.c:
@@ -2694,6 +2705,10 @@ src/_ZN6Player16St_Climb_CleanupEv.cpp:
     complete
     .text start:0x020cb568 end:0x020cb5bc
 
+src/_ZN6Player13St_Climb_MainEv.cpp:
+    complete
+    .text start:0x020cb5bc end:0x020cbd34
+
 src/_ZN6Player13St_Climb_InitEv.cpp:
     complete
     .text start:0x020cbd34 end:0x020cbea8
@@ -3268,6 +3283,7 @@ src/func_ov002_020d7430.cpp:
     .text start:0x020d7430 end:0x020d7504
 
 src/_ZN6Player18St_YoshiPower_MainEv.cpp:
+    complete
     .text start:0x020d7504 end:0x020d7ed0
 
 src/_ZN6Player18St_YoshiPower_InitEv.cpp:
@@ -3319,6 +3335,7 @@ src/func_ov002_020d85fc.cpp:
     .text start:0x020d85fc end:0x020d869c
 
 src/func_ov002_020d869c.cpp:
+    complete
     .text start:0x020d869c end:0x020d8838
 
 src/func_ov002_020d8838.c:
@@ -3330,6 +3347,7 @@ src/func_ov002_020d8854.cpp:
     .text start:0x020d8854 end:0x020d8944
 
 src/func_ov002_020d8944.cpp:
+    complete
     .text start:0x020d8944 end:0x020d8a50
 
 src/func_ov002_020d8a50.c:
@@ -3692,6 +3710,7 @@ src/_ZN6Player15St_Balloon_InitEv.cpp:
     .text start:0x020de8ac end:0x020de968
 
 src/func_ov002_020de968.cpp:
+    complete
     .text start:0x020de968 end:0x020dea00
 
 src/_ZN6Player16InitBalloonMarioEv.cpp:
@@ -4035,6 +4054,7 @@ src/_ZN6Player8BehaviorEv.cpp:
     .text start:0x020e4d24 end:0x020e558c
 
 src/_ZN6Player13InitResourcesEv.cpp:
+    complete
     .text start:0x020e558c end:0x020e5948
 
 src/func_ov002_020e5948.c:
@@ -4118,6 +4138,7 @@ src/_ZN9PowerStarD0Ev.c:
     .text start:0x020e6c90 end:0x020e6cf4
 
 src/_ZN10StarMarkerD1Ev.cpp:
+    complete
     .text start:0x020e6cf4 end:0x020e6d34
 
 src/_ZN10StarMarkerD0Ev.c:
@@ -4845,6 +4866,7 @@ src/InvisibleSecret_Spawn.c:
     .text start:0x020f085c end:0x020f0894
 
 src/_ZN15InvisibleSecretD1Ev.cpp:
+    complete
     .text start:0x020f0894 end:0x020f08cc
 
 src/_ZN15InvisibleSecretD0Ev.c:
@@ -4876,6 +4898,7 @@ src/Number_Spawn.c:
     .text start:0x020f0d90 end:0x020f0dd0
 
 src/_ZN9OneUpLogoD1Ev.cpp:
+    complete
     .text start:0x020f0dd0 end:0x020f0e08
 
 src/_ZN9OneUpLogoD0Ev.c:
@@ -4943,6 +4966,7 @@ src/BlueCoinSwitch_Spawn.c:
     .text start:0x020f15cc end:0x020f15fc
 
 src/_ZN14EnemySwitchTagD1Ev.cpp:
+    complete
     .text start:0x020f15fc end:0x020f162c
 
 src/_ZN14EnemySwitchTagD0Ev.c:
@@ -4950,6 +4974,7 @@ src/_ZN14EnemySwitchTagD0Ev.c:
     .text start:0x020f162c end:0x020f1670
 
 src/_ZN12EnemySpawnerD1Ev.cpp:
+    complete
     .text start:0x020f1670 end:0x020f1694
 
 src/_ZN12EnemySpawnerD0Ev.c:
@@ -4989,6 +5014,7 @@ src/EnemySwitchTag_Spawn.c:
     .text start:0x020f1954 end:0x020f198c
 
 src/_ZN19AmbientSoundEffectsD1Ev.cpp:
+    complete
     .text start:0x020f198c end:0x020f19b0
 
 src/_ZN19AmbientSoundEffectsD0Ev.c:
@@ -5019,6 +5045,7 @@ src/AmbientSoundEffects_Spawn.c:
     .text start:0x020f1b94 end:0x020f1bc4
 
 src/_ZN8MugenBgmD1Ev.cpp:
+    complete
     .text start:0x020f1bc4 end:0x020f1be8
 
 src/_ZN8MugenBgmD0Ev.c:
@@ -5053,6 +5080,7 @@ src/MugenBgm_Spawn.c:
     .text start:0x020f1f40 end:0x020f1f70
 
 src/_ZN14CutsceneObjectD1Ev.cpp:
+    complete
     .text start:0x020f1f70 end:0x020f1f94
 
 src/_ZN14CutsceneObjectD0Ev.c:
@@ -5806,6 +5834,7 @@ src/_ZN3HUD8BehaviorEv.cpp:
     .text start:0x020fd7a4 end:0x020fda04
 
 src/_ZN3HUD13InitResourcesEv.cpp:
+    complete
     .text start:0x020fda04 end:0x020fe154
 
 src/_ZN3HUDC1Ev.c:

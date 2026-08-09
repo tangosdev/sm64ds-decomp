@@ -199,6 +199,7 @@ src/func_ov066_02119348.c:
     .text start:0x02119348 end:0x02119398
 
 src/func_ov066_02119398.cpp:
+    complete
     .text start:0x02119398 end:0x0211944c
 
 src/func_ov066_0211944c.c:
