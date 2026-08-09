@@ -832,7 +832,7 @@ src/func_0200f760.c:
     complete
     .text start:0x0200f760 end:0x0200f7a8
 
-src/_ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn.c:
+src/_ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn.cpp:
     complete
     .text start:0x0200f7a8 end:0x0200f7f0
 
@@ -1020,11 +1020,11 @@ src/func_02010304.cpp:
     complete
     .text start:0x02010304 end:0x02010374
 
-src/_ZN5Actor18FindExplosionActorER12CylinderClsn.c:
+src/_ZN5Actor18FindExplosionActorER12CylinderClsn.cpp:
     complete
     .text start:0x02010374 end:0x020103b4
 
-src/_ZN5Actor7FindEggER12CylinderClsn.c:
+src/_ZN5Actor7FindEggER12CylinderClsn.cpp:
     complete
     .text start:0x020103b4 end:0x020103f4
 
@@ -1052,7 +1052,7 @@ src/_ZN5Actor24BumpedUnderneathByPlayerER6Player.cpp:
     complete
     .text start:0x02010518 end:0x0201054c
 
-src/_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player.c:
+src/_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player.cpp:
     complete
     .text start:0x0201054c end:0x020105cc
 
@@ -1112,7 +1112,7 @@ src/_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c:
     complete
     .text start:0x02010be8 end:0x02010c30
 
-src/_ZN5Actor9UpdatePosEP12CylinderClsn.c:
+src/_ZN5Actor9UpdatePosEP12CylinderClsn.cpp:
     complete
     .text start:0x02010c30 end:0x02010c5c
 
