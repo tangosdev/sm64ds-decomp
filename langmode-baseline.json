@@ -41,14 +41,14 @@
       },
       "method": {
         "draft": 8,
-        "migrated": 1393,
+        "migrated": 1394,
         "unmigrated": 526
       }
     },
     "cpp_still_handspelled": 234,
     "mangled_c": 818,
-    "mangled_cpp": 1704,
-    "mangled_total": 2522,
+    "mangled_cpp": 1705,
+    "mangled_total": 2523,
     "nonmatching_drafts": 9,
     "unmigrated_total": 1052
   },
@@ -61,7 +61,7 @@
   },
   "totals": {
     "c_extension": 7877,
-    "cpp_extension": 3403,
-    "src_files": 11280
+    "cpp_extension": 3404,
+    "src_files": 11281
   }
 }
