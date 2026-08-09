@@ -18,7 +18,7 @@ int RotatingCogSmall::CleanupResources()
     if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
       ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     ((SharedFilePtr *)(data_ov035_02112c78))->Release();
-    ((SharedFilePtr *)(data_ov056_02112c68))->Release();
+    ((SharedFilePtr *)(data_ov035_02112c68))->Release();
   } else {
     int on = (unk_00c==0x79);
     if(on)
