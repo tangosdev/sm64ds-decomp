@@ -6,7 +6,8 @@
 #include "types.h"
 
 struct dScMgCoin_c {
-    u8  pad_000[0xa8];
+    u8  pad_000[0xa4];
+    s32 unk_0a4;            /* 0x0a4 */
     s32 unk_0a8;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x5118];
@@ -16,6 +17,7 @@ struct dScMgCoin_c {
     u8  pad_51d8[0x2];
     u8  unk_51da;           /* 0x51da */
     u8  unk_51db;           /* 0x51db */
+    u8  unk_51dc;           /* 0x51dc */
 #ifdef __cplusplus
     int Behavior();
     int OnYoshiTryEat();
