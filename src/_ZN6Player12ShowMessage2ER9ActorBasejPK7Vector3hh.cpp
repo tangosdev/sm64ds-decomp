@@ -1,21 +1,25 @@
 //cpp
+// @symbol _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh
+/* recovered: named members + shared header, real C++ method
+ *
+ * Starts a message. Already talking is success only at sub-step 0 or 3;
+ * otherwise a short list of states may be interrupted, plus the no-control
+ * state for all but a handful of mNoCtrlKind values. The last two parameters
+ * are unsigned char -- the ROM reads all three of their uses with ldrb, and
+ * the symbol was corrected from jj to hh two commits ago.
+ */
+#include "Player.h"
 extern "C" {
-typedef unsigned char u8;
-typedef short s16;
 
-struct State;
-struct ActorBase;
-struct Vector3 { int x, y, z; };
-
-extern State data_ov002_0211046c;
-extern State data_ov002_0211013c;
-extern State data_ov002_02110364;
-extern State data_ov002_0211043c;
-extern State data_ov002_02110154;
-extern State data_ov002_02110424;
-extern State data_ov002_021104e4;
-extern State data_ov002_02110514;
-extern State data_ov002_0211022c;
+extern Player::State data_ov002_0211046c;
+extern Player::State data_ov002_0211013c;
+extern Player::State data_ov002_02110364;
+extern Player::State data_ov002_0211043c;
+extern Player::State data_ov002_02110154;
+extern Player::State data_ov002_02110424;
+extern Player::State data_ov002_021104e4;
+extern Player::State data_ov002_02110514;
+extern Player::State data_ov002_0211022c;
 
 extern int data_ov002_0210e15c;
 extern int data_ov002_0210f224[3];
@@ -23,36 +27,36 @@ extern int data_ov002_0210f1ac;
 extern void func_020072c0(void);
 extern void *data_0209f318;
 
-int _ZN6Player7IsStateERNS_5StateE(void *thiz, State *st);
-void _ZN6Player11ChangeStateERNS_5StateE(void *thiz, State *st);
+void _ZN6Player11ChangeStateERNS_5StateE(void *thiz, Player::State *st);
 void func_020731dc(void *a, void *b, void *node);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, int angle, const Vector3 *src);
 void _ZN6Camera9SetFlag_3Ev(void *self);
 
-int _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(char *thiz, ActorBase *actor, unsigned int msg, const Vector3 *pos, u8 d, u8 e)
+int Player::ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned char d, unsigned char e)
 {
+    ActorBase *actor = &actor_;
     int r7;
 
-    if (_ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_0211046c)) {
-        u8 sub = *(u8 *)(thiz + 0x6e3);
+    if (IsState(data_ov002_0211046c)) {
+        u8 sub = mStateStep;
         if (sub == 0 || sub == 3)
             goto finish;
         return 0;
     }
 
     r7 = 0;
-    if (_ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_0211013c) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_02110364) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_0211043c) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_02110154) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_02110424) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_021104e4) ||
-        _ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_02110514)) {
+    if (IsState(data_ov002_0211013c) ||
+        IsState(data_ov002_02110364) ||
+        IsState(data_ov002_0211043c) ||
+        IsState(data_ov002_02110154) ||
+        IsState(data_ov002_02110424) ||
+        IsState(data_ov002_021104e4) ||
+        IsState(data_ov002_02110514)) {
         r7 = 1;
     }
 
-    if (_ZN6Player7IsStateERNS_5StateE(thiz, &data_ov002_0211022c)) {
-        u8 v = *(u8 *)(thiz + 0x70a);
+    if (IsState(data_ov002_0211022c)) {
+        u8 v = mNoCtrlKind;
         if (!(v == 0 || v == 1 || v == 3 || v == 2 || v == 0xd)) {
             if (v != 8)
                 r7 = 1;
@@ -62,13 +66,13 @@ int _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(char *thiz, ActorBase *act
     if (!r7)
         return 0;
 
-    _ZN6Player11ChangeStateERNS_5StateE(thiz, &data_ov002_0211046c);
-    *(ActorBase **)(thiz + 0x368) = actor;
+    _ZN6Player11ChangeStateERNS_5StateE(this, &data_ov002_0211046c);
+    *(ActorBase **)(&mTalkActor) = actor;
 
 finish:
-    *(u8 *)(thiz + 0x6e5) = 0;
-    *(u8 *)(thiz + 0x70c) = d & 3;
-    *(u8 *)(((long long)(thiz + 0x70c))) |= (e & 3) << 2;
+    mStateWork = 0;
+    mStateArg = d & 3;
+    *(u8 *)(((long long)(&mStateArg))) |= (e & 3) << 2;
 
     if (!(data_ov002_0210e15c & 1)) {
         data_ov002_0210f224[0] = 0;
@@ -78,15 +82,15 @@ finish:
         data_ov002_0210e15c |= 1;
     }
 
-    Vec3_RotateYAndTranslate((Vector3 *)(thiz + 0x744), (Vector3 *)(thiz + 0x5c), *(s16 *)(thiz + 0x8e), (Vector3 *)data_ov002_0210f224);
+    Vec3_RotateYAndTranslate((Vector3 *)(&unk_744), (Vector3 *)(&mPosX), mAngleY, (Vector3 *)data_ov002_0210f224);
 
     if (pos) {
-        *(Vector3 *)(thiz + 0x744) = *pos;
+        *(Vector3 *)(&unk_744) = *pos;
     }
 
-    *(int *)(thiz + 0x98) = 0;
-    *(u8 *)(thiz + 0x6e3) = 1;
-    *(unsigned int *)(thiz + 0x688) = msg;
+    mHorzSpeed = 0;
+    mStateStep = 1;
+    *(unsigned int*)&mAttachOffsetY = msg;
 
     if (e == 2) {
         _ZN6Camera9SetFlag_3Ev(data_0209f318);
