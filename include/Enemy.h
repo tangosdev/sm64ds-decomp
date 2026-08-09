@@ -39,13 +39,20 @@ struct Enemy {
        evidenced, so the rest stays padding. */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x24];
-    s32 unk_0d4;            /* 0x0d4 */
-    s32 unk_0d8;            /* 0x0d8 */
-    s32 unk_0dc;            /* 0x0dc */
-    u8  unk_0e0;            /* 0x0e0 */
-    u8  pad_0e1[0x7];
-    u8  unk_0e8;            /* 0x0e8 */
-    u8  pad_0e9[0x19];
+    /* Two surface normals, written a Vector3 at a time by
+       SurfaceInfo::CopyNormalTo in Enemy::UpdateWMClsn -- the floor result's
+       normal into 0x0d4, the wall result's into 0x0e0. The wall triple was
+       declared u8 + pad + u8, which made any natural access an ldrb;
+       Enemy::AngleAwayFromWallOrCliff reads X and Z of it as four-byte values
+       and hands them to Actor::ReflectAngle, which is what a wall normal is
+       for. Same shape and same names as Player.h's mFloorNormalX/Y/Z. */
+    s32 mFloorNormalX;            /* 0x0d4 */
+    s32 mFloorNormalY;            /* 0x0d8 */
+    s32 mFloorNormalZ;            /* 0x0dc */
+    s32 mWallNormalX;            /* 0x0e0 */
+    s32 mWallNormalY;            /* 0x0e4 */
+    s32 mWallNormalZ;            /* 0x0e8 */
+    u8  pad_0ec[0x16];
     s16 unk_102;            /* 0x102 */
     u8  pad_104[0x2];
     u8  unk_106;            /* 0x106 */
@@ -59,6 +66,7 @@ struct Enemy {
     /* methods */
     int AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_);
     int UpdateDeath(WithMeshClsn & clsn_);
+    void UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel);
     int SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_);
     int UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags);
     void KillByInvincibleChar(const Vector3_16 & a1_, Player & a2_);
