@@ -245,7 +245,13 @@ struct Player : Actor {
     u16 unk_6a2;            /* 0x6a2 */
     u16 mStateTimer;            /* 0x6a4 */
     u16 mStateWaitTimer;            /* 0x6a6 */
-    s16 mJumpComboTimer;            /* 0x6a8 */
+    /* u16, not s16: every load of this slot in the ROM is an ldrh. Declared
+       signed, St_Hurt_Main's `!= 0` test compiles to ldrsh and the function
+       misses by exactly one word. Nothing anywhere reads it signed -- the
+       other five users either store, or cast to u16* first (including
+       Behavior's DecIfAbove0_Short(u16*)). Same defect class as the imported
+       parameter widths in Actor.h: a declared type nothing had checked. */
+    u16 mJumpComboTimer;            /* 0x6a8 */
     u16 unk_6aa;            /* 0x6aa */
     u8  unk_6ac;            /* 0x6ac */
     u8  pad_6ad[0x1];
@@ -493,10 +499,12 @@ struct Player : Actor {
     int St_HurtWater_Main();
     int St_Hurt_Cleanup();
     int St_Hurt_Init();
+    int St_Hurt_Main();
     int St_InYoshiMouth_Init();
     int St_InYoshiMouth_Main();
     int St_JumpQuicksand_Init();
     int St_JumpQuicksand_Main();
+    int St_Jump_Init();
     int St_Jump_Main();
     int St_Land_Main();
     int St_LedgeGrab_Init();
