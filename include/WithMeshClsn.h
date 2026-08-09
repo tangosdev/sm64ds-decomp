@@ -111,6 +111,30 @@ struct WithMeshClsn : BgCh {
     void StopDetectingWater();
     void UpdateDiscreteNoLava();
     void UpdateDiscreteNoLava_2();
+
+    /* --- const accessors, 0x02035564..0x02035727. `const` is not a style
+           choice here: these mangle _ZNK, and without it the compiler emits
+           _ZN and names symbols the ROM does not contain.
+
+       NONE OF THE FIRST FIVE MAY BE DECLARED bool, and the bytes say so
+       outright. Each is `and r0, r0, #mask` straight into `bx lr` with no
+       normalisation, so IsOnGround returns 0 or 0x10 and IsOnWall returns 0
+       or 8 -- the mask itself, not a truth value. A bool return would have
+       forced the `movne r0,#1` pair, which is exactly what the other two DO
+       carry: ShouldUpdatePos and ShouldUpdatePosY are `ands` followed by
+       `moveq r0,#1` / `movne r0,#0`, because they invert the flag. That is
+       the whole difference between the two shapes, and it is visible.
+
+       The first five read mFlags (word, 0x10) except GetResultFlag1 and
+       IsOnWall, which read mClsnFlags with `ldrb` at 0x90 -- the byte inside
+       the SphereClsn sub-object, not a field of our own. --- */
+    s32 GetResultFlag1() const;    /* mClsnFlags & 0x01 -- collision exists */
+    s32 IsOnWall() const;          /* mClsnFlags & 0x08 */
+    s32 GetLimMovFlag() const;     /* mFlags & 0x80 -- limited movement */
+    s32 IsOnGround() const;        /* mFlags & 0x10 */
+    s32 JustHitGround() const;     /* mFlags & 0x20 */
+    s32 ShouldUpdatePos() const;   /* !(mFlags & 0x2000) */
+    s32 ShouldUpdatePosY() const;  /* !(mFlags & 0x1000) */
 };
 
 typedef char WithMeshClsn_size_must_be_0x1bc[
