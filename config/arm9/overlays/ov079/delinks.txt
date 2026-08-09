@@ -171,7 +171,7 @@ src/func_ov079_0212682c.c:
     complete
     .text start:0x0212682c end:0x02126a18
 
-src/_ZN10BulletBill16CleanupResourcesEv.c:
+src/_ZN10BulletBill16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126a18 end:0x02126a48
 
@@ -183,7 +183,7 @@ src/_ZN10BulletBill8BehaviorEv.cpp:
     complete
     .text start:0x02126a84 end:0x02126c44
 
-src/_ZN10BulletBill13InitResourcesEv.c:
+src/_ZN10BulletBill13InitResourcesEv.cpp:
     complete
     .text start:0x02126c44 end:0x02126d64
 

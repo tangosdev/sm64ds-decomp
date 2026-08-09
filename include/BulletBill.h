@@ -17,7 +17,11 @@ struct BulletBill {
     u8  pad_068[0xc];
     /* 0x074..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_074;                 /* 0x074 */
+    /* The X of the camera-space triple, not a scalar: Behavior takes
+       `(Vector3*)(c + 0x74)` twice -- once as the sound's position and once as
+       the argument to func_02012694 -- so all twelve bytes are read at once,
+       and 0x078/0x07c were already named as its y and z. */
+    s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
@@ -56,6 +60,7 @@ struct BulletBill {
 #ifdef __cplusplus
     /* methods */
     int Behavior();
+    int CleanupResources();
     int InitResources();
     int Render();
 #endif
