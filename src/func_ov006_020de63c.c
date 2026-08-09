@@ -1,29 +1,29 @@
 // @symbol func_ov006_020de63c
-// recovered name: dScMgCoin_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgCoin_c::Render - recovered from vtable slot identity */
-void func_ov006_020dccb8(void *c);
-void func_ov006_020dcd74(void *c);
-void func_ov006_020dc814(void *c);
-void func_ov006_020dd594(void *c);
-void func_ov006_020dc3bc(void *c);
-void func_ov006_020dbe9c(void *c);
-void func_ov006_020dc99c(void *c);
-void func_ov006_020dc870(void *c);
-void func_ov006_020dcea8(void *c);
-void func_ov006_020dcc48(void *c);
+/* dScMgCoin_c::Render - recovered from ROM RTTI and vtable slot identity. */
+#include "dScMgCoin_c.h"
 
-int func_ov006_020de63c(void *c)
+void func_ov006_020dccb8(struct dScMgCoin_c *self);
+void func_ov006_020dcd74(struct dScMgCoin_c *self);
+void func_ov006_020dc814(struct dScMgCoin_c *self);
+void func_ov006_020dd594(struct dScMgCoin_c *self);
+void func_ov006_020dc3bc(struct dScMgCoin_c *self);
+void func_ov006_020dbe9c(struct dScMgCoin_c *self);
+void func_ov006_020dc99c(struct dScMgCoin_c *self);
+void func_ov006_020dc870(struct dScMgCoin_c *self);
+void func_ov006_020dcea8(struct dScMgCoin_c *self);
+void func_ov006_020dcc48(struct dScMgCoin_c *self);
+
+int func_ov006_020de63c(struct dScMgCoin_c *self)
 {
-    func_ov006_020dccb8(c);
-    func_ov006_020dcd74(c);
-    func_ov006_020dc814(c);
-    func_ov006_020dd594(c);
-    func_ov006_020dc3bc(c);
-    func_ov006_020dbe9c(c);
-    func_ov006_020dc99c(c);
-    func_ov006_020dc870(c);
-    func_ov006_020dcea8(c);
-    func_ov006_020dcc48(c);
+    func_ov006_020dccb8(self);
+    func_ov006_020dcd74(self);
+    func_ov006_020dc814(self);
+    func_ov006_020dd594(self);
+    func_ov006_020dc3bc(self);
+    func_ov006_020dbe9c(self);
+    func_ov006_020dc99c(self);
+    func_ov006_020dc870(self);
+    func_ov006_020dcea8(self);
+    func_ov006_020dcc48(self);
     return 1;
 }
