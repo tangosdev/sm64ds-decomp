@@ -499,6 +499,7 @@ struct Player : Actor {
     int St_Grabbed_Main();
     int St_GroundPound_Cleanup();
     int St_GroundPound_Init();
+    int St_GroundPound_Main();
     int St_HeadstandJump_Init();
     int St_Headstand_Init();
     int St_Headstand_Main();
