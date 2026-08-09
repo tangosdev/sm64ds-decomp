@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void data_ov034_02114738(void);
+void func_ov006_02114738(void);
 struct P {
   char p0[0x34];
   struct { int a,b; } A[3];
@@ -13,7 +13,7 @@ struct P {
 };
 void _ZN6Player7ST_WAITE(void* c){
   struct P* r4=(struct P*)c;
-  data_ov034_02114738();
+  func_ov006_02114738();
   for(int i=0;i<3;i++){
     r4->A[i].a=0;
     r4->A[i].b=0;
