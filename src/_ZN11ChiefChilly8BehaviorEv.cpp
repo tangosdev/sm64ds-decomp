@@ -1,6 +1,35 @@
 //cpp
+// @symbol _ZN11ChiefChilly8BehaviorEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * One frame of the boss. Almost everything here is gated on WHICH state is
+ * current, compared by ADDRESS against twelve file-scope state objects, and it
+ * gates five separate things rather than one:
+ *
+ *   three states       use UpdatePosWithOnlySpeed instead of UpdatePos, and
+ *                      apply gravity by hand first: unk_0a8 becomes
+ *                      max(unk_0a0, unk_0a8 + unk_09c)
+ *   two states         at animation frame 7, build a world matrix from the
+ *                      model's own bone and spawn the landing dust there --
+ *                      the impact is tied to the ANIMATION, not to contact
+ *   seven states       skip the ground ray entirely
+ *   one more           is exempt from the rewind below
+ *   two states         get an extra per-frame call
+ *
+ * THE GROUND RAY IS A FALL-THROUGH GUARD. It casts from 0x78000 above the boss
+ * along its heading (reach doubles once unk_4cb > 1) and, when it finds
+ * NOTHING, saves the current position into unk_4ec and rewinds mPos to the
+ * triple at 0x068 -- so the boss cannot leave the arena by falling off it. A
+ * hit clears unk_4c9; a miss while descending faster than 0xa000 sets it.
+ *
+ * The first thing it does is publish itself into the camera at +0x114, so the
+ * camera follows the boss without the boss being asked.
+ *
+ * `#pragma opt_propagation off` is at FILE scope in the pre-image and is kept
+ * there -- it is what stops the many position temporaries being folded.
+ */
 #pragma opt_propagation off
-struct Vector3 { int x, y, z; };
+#include "ChiefChilly.h"
 struct Mat4x3 { int m[12]; };
 
 struct C;
@@ -50,9 +79,10 @@ extern void func_ov073_021215cc(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 }
 
-extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
+int ChiefChilly::Behavior()
 {
-    char *self = (char *)c;
+    char *self = (char *)this;
+    C *c = (C *)this;
     int angx;
     Vector3 v0;
     RayParams rp;
@@ -62,7 +92,7 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
     int line[0x1f];
 
     *(C **)((char *)data_0209f318 + 0x114) = c;
-    DecIfAbove0_Short((unsigned short *)(self + 0x100));
+    DecIfAbove0_Short(&unk_100);
 
     if (*(void **)((char *)c->pp + 8) != 0) {
         PMF *p = c->pp + 1;
@@ -72,15 +102,15 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
     if ((char *)c->pp != data_ov073_02123400
         && (char *)c->pp != data_ov073_02123320
         && (char *)c->pp != data_ov073_02123340) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(self, self + 0x110);
+        _ZN5Actor9UpdatePosEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     } else {
-        int sum = *(int *)(self + 0xa8) + *(int *)(self + 0x9c);
-        int m = *(int *)(self + 0xa0);
-        int ac = *(int *)(self + 0xac);
+        int sum = unk_0a8 + unk_09c;
+        int m = unk_0a0;
+        int ac = unk_0ac;
         if (sum >= m) m = sum;
-        *(int *)(self + 0xa8) = m;
-        *(int *)(self + 0xac) = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, self + 0x110);
+        unk_0a8 = m;
+        unk_0ac = ac;
+        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     }
 
     if (((char *)c->pp == data_ov073_02123330 || (char *)c->pp == data_ov073_02123350)
@@ -92,7 +122,7 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
         v0.z = data_020a0e68.m[11];
         Vec3_Lsl(&v3C, &v0, 3);
         v0 = v3C;
-        func_02012694(0x167, self + 0x74);
+        func_02012694(0x167, &mCamSpacePosX);
         v48 = v0;
         _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v48, 1);
     }
@@ -111,17 +141,17 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
         rp.out.x = 0; rp.out.y = 0; rp.out.z = 0;
         {
             int y;
-            rp.start.x = *(int *)(self + 0x5c);
+            rp.start.x = mPosX;
             angx = 0x2000;
-            y = *(int *)(self + 0x60);
+            y = mPosY;
             rp.start.y = y;
-            rp.start.z = *(int *)(self + 0x64);
+            rp.start.z = mPosZ;
             rp.start.y = y + 0x78000;
-            if (*(unsigned char *)(self + 0x4cb) > 1)
+            if (unk_4cb > 1)
                 rp.in.z = 0x258000;
             else
                 rp.in.z = 0x12c000;
-            Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(self + 0x94));
+            Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
         }
         MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
@@ -142,36 +172,36 @@ extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
         }
         _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(line, &rp.start, &rp.end, self);
         if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
-            if (*(int *)(self + 0x98) > 0xa000) {
-                *(unsigned char *)(self + 0x4c9) = 1;
+            if (unk_098 > 0xa000) {
+                unk_4c9 = 1;
             }
-            *(int *)(self + 0x4ec) = *(int *)(self + 0x5c);
-            *(int *)(self + 0x4f0) = *(int *)(self + 0x60);
-            *(int *)(self + 0x4f4) = *(int *)(self + 0x64);
+            unk_4ec = mPosX;
+            unk_4f0 = mPosY;
+            unk_4f4 = mPosZ;
             if ((char *)c->pp != data_ov073_021233a0) {
-                *(int *)(self + 0x5c) = *(int *)(self + 0x68);
-                *(int *)(self + 0x60) = *(int *)(self + 0x6c);
-                *(int *)(self + 0x64) = *(int *)(self + 0x70);
-                *(int *)(self + 0x98) = 0;
+                mPosX = unk_068;
+                mPosY = unk_06c;
+                mPosZ = unk_070;
+                unk_098 = 0;
             }
         } else {
-            *(unsigned char *)(self + 0x4c9) = 0;
+            unk_4c9 = 0;
         }
         _ZN11RaycastLineD1Ev(line);
     }
 
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(self, self + 0x150, 0);
+    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(self, &mWithMeshClsn, 0);
 
     v54 = data_ov073_02123040;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x110, &v54);
+    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(&mMovingCylinderClsnWithPos, &v54);
 
     if ((char *)c->pp == data_ov073_02123360
         || (char *)c->pp == data_ov073_02123390) {
         func_ov073_0211f61c(self);
     }
-    _ZN12CylinderClsn5ClearEv(self + 0x110);
-    _ZN12CylinderClsn6UpdateEv(self + 0x110);
+    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
+    _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
     func_ov073_021215cc(self);
-    _ZN14BlendModelAnim7AdvanceEv(self + 0x30c);
+    _ZN14BlendModelAnim7AdvanceEv(&mBlendModelAnim);
     return 1;
 }
