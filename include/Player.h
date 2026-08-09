@@ -401,6 +401,7 @@ struct Player : Actor {
     int St_CeilingGrate_Init();
     int St_CeilingGrate_Main();
     int St_Climb_Cleanup();
+    int St_Climb_Main();
     int St_Crawl_Init();
     int St_Crawl_Main();
     int St_CrazedCrate_Init();
