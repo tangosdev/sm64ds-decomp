@@ -5649,15 +5649,15 @@ src/_ZN18MovingMeshCollider12TransformPosERK7Vector3RS0_.cpp:
     complete
     .text start:0x02039930 end:0x02039970
 
-src/_ZN18MovingMeshCollider10DetectClsnER11RaycastLine.c:
+src/_ZN18MovingMeshCollider10DetectClsnER11RaycastLine.cpp:
     complete
     .text start:0x02039970 end:0x02039a3c
 
-src/_ZN18MovingMeshCollider10DetectClsnER10SphereClsn.c:
+src/_ZN18MovingMeshCollider10DetectClsnER10SphereClsn.cpp:
     complete
     .text start:0x02039a3c end:0x02039cb8
 
-src/_ZN18MovingMeshCollider10DetectClsnER13RaycastGround.c:
+src/_ZN18MovingMeshCollider10DetectClsnER13RaycastGround.cpp:
     complete
     .text start:0x02039cb8 end:0x02039db8
 
