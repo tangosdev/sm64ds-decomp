@@ -11,7 +11,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, 
 extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
 extern void func_0201277c(unsigned int id);
 extern int _Z14ApproachLinearRsss(short* val, short target, short step);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
 
 extern void* data_ov062_0211e03c[];
 extern void* data_ov062_0211e034[];
@@ -106,7 +106,7 @@ void func_ov062_02119be0(char* self)
             starPos.y = *(int*)(self + 0x60);
             starPos.z = *(int*)(self + 0x64);
             starPos.y += 0x64000;
-            _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
+            _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
             return;
         }
         if (*(unsigned char*)(self + 0x3b3) == 1) {

@@ -56,6 +56,7 @@
 
 struct Player;
 struct Vector3;
+struct Vector3_16;
 struct CylinderClsn;
 
 struct Actor : ActorDerived {
@@ -281,6 +282,70 @@ struct Actor : ActorDerived {
 
     /* Static: searches the live-actor list rather than acting on an instance. */
     static Actor *FindWithID(u32 id);
+
+    /* Star tracking, 0x0200ff14..0x02010043 -- three functions in one
+       uninterrupted run, which is why they migrate as a set.
+
+       A "star marker" is the on-screen glint that shows where an uncollected
+       star will appear. STAR_MARKERS (0x0209f40c) is a twelve-entry table of
+       the actors currently holding one; SetStarMarker(slot, actor, type)
+       writes it. All three functions here are members.
+
+       TrackStar claims the first free slot and returns its index, or -1.
+       `this` is visible in the bytes: r0 is stashed in r5 at entry and handed
+       to SetStarMarker as its second argument (`mov r1, r5`), so the actor
+       being registered IS the receiver. The loop counter is s8 -- the
+       increment is `add`/`lsl #0x18`/`asr #0x18`, a sign-extending byte
+       round-trip -- and it is bounded at 0xc, which is what fixes the table's
+       length at twelve.
+
+       The markerType == 2 path is the "only the star you are playing for"
+       rule: when the requested star is not the selected one (0x0209f220, an
+       unsigned byte -- `ldrb`) and the current sublevel (0x0209f2f8, a SIGNED
+       byte -- `ldrsb`) maps to level <= 0xe, no marker is placed at all.
+       Above 0xe every star is marked. If the star is already collected the
+       type is bumped 2 -> 3, which is how a collected star's marker differs.
+
+       The return type is NOT observable at the definition, and the eleven
+       callers that spell the mangled name disagree -- four say `int`, seven
+       say `unsigned char`. s32 is kept because that is what reproduces and
+       what the widest caller declares; every caller in fact stores only the
+       low byte, into an s8 field of its own, which is the same width
+       UntrackStar then takes by reference.
+
+       UntrackStar is the counterpart: it clears the slot and writes -1 back
+       through the reference. Its body never touches a field -- r0 is written
+       by both of its callers and read by neither, while the s8& arrives in r1
+       -- so it is a member on the same argument as the dust workers, and with
+       the same premise: name plus ABI, not ABI alone. The `ldrsb` on the
+       reference is what makes the referent signed rather than u8.
+
+       UntrackAndSpawnStar untracks, then spawns actor 0xb2 (the star itself)
+       at the given position, inheriting mAreaId -- read with `ldrsb`, which
+       agrees with the s8 declared at 0x0cc. It is a member outright: r0 is
+       kept in r6 across the call precisely so that field can be loaded.
+
+       THE SYMBOL WAS RENAMED HERE, `...RK7Vector3j` -> `...RK7Vector3h`.
+       howToSpawnStar is read `ldrb` -- 8-bit -- but the imported name spelled
+       it `j`. Nothing upstream could have caught that: AAPCS widens an
+       integer argument either way, so no caller can observe an over-wide
+       parameter, and the file byte-matched throughout as a `.c` because it
+       spelled the wrong name by hand. Migrating the definition is the first
+       point at which the compiler mangles the name for us and the claim
+       becomes falsifiable -- and it was false. Declared u8 the bytes
+       reproduce exactly; written as a cast on a u32 parameter they do not
+       (`ldr` + `and #0xff`, one instruction long). See the definition. */
+    s32    TrackStar(u32 starIdx, u32 markerType);
+    void   UntrackStar(s8 &starID);
+    Actor *UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
+                               const Vector3 &spawnPos, u8 howToSpawnStar);
+
+    /* Static: builds an actor from an ID rather than acting on an instance --
+       r0 carries actorID, not `this`, at 0x02010e2c's only in-tree call site.
+       Declared here so callers mangle it; still defined as an extern "C" free
+       function under its mangled name. */
+    static Actor *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
+                        const Vector3_16 *rot, s32 areaID, s32 deathTableID);
 
     /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE,
        and the Vector3 forms) are deliberately NOT declared here as definable

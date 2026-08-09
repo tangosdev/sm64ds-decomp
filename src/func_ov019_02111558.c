@@ -7,7 +7,7 @@ extern int _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
 extern int _ZN6Player12GetTalkStateEv(void *actor);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
 extern int _ZN6Player18HasFinishedTalkingEv(void *actor);
 extern int func_0201267c(int a, void *pos);
 
@@ -62,7 +62,7 @@ int func_ov019_02111558(void *thiz)
     case 2:
         if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == 2) {
             if (*(unsigned char *)(c + 0x395) == 0) {
-                _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(
+                _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
                     c, (signed char *)(((int)c + 0x396)),
                     (unsigned int)(unsigned char)((*(unsigned int *)(c + 8) >> 8) & 0xf),
                     c + 0x5c, 4);

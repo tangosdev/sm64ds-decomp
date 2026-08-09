@@ -7,7 +7,7 @@ extern void _ZN6Camera9SetFlag_3Ev(void *cam);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(struct Vec3 *out, struct Vec3 *in, int sh);
 extern void func_02012694(int a, void *p);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void *c, signed char *s, unsigned int n, struct Vec3 *pos, unsigned int u);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *c, signed char *s, unsigned int n, struct Vec3 *pos, unsigned int u);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void *c, struct Vec3 *pos);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
@@ -48,7 +48,7 @@ int func_ov078_021238ac(char *c)
     v.z = t.z;
     func_02012694(0x130, c + 0x74);
 
-    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(
+    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
         c, (signed char *)(c + 0x507), *(u8 *)(c + 0x509), &v, 4);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1a, v.x, v.y, v.z);
     u.x = v.x;

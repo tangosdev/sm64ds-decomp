@@ -936,15 +936,15 @@ src/_ZN5Actor17GetWaterHeightWDWEv.cpp:
     complete
     .text start:0x0200fec8 end:0x0200ff14
 
-src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h.c:
+src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h.cpp:
     complete
     .text start:0x0200ff14 end:0x0200ff60
 
-src/_ZN5Actor11UntrackStarERa.c:
+src/_ZN5Actor11UntrackStarERa.cpp:
     complete
     .text start:0x0200ff60 end:0x0200ff94
 
-src/_ZN5Actor9TrackStarEjj.c:
+src/_ZN5Actor9TrackStarEjj.cpp:
     complete
     .text start:0x0200ff94 end:0x02010044
 

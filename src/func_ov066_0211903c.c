@@ -13,7 +13,7 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ac
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void _ZN7Message7EndTalkEv(void);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void* self, signed char* a, unsigned int b, struct Vector3* v, unsigned int d);
+extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void* self, signed char* a, unsigned int b, struct Vector3* v, unsigned int d);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
@@ -99,7 +99,7 @@ int func_ov066_0211903c(char* self) {
                     star.x = 0;
                     star.y = (int)0xffa24000;
                     star.z = (int)0xff1b4000;
-                    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(self, (signed char*)(self + 0x673), *(unsigned char*)(self + 0x672), &star, 4);
+                    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x673), *(unsigned char*)(self + 0x672), &star, 4);
                     _ZN9ActorBase18MarkForDestructionEv(self);
                 }
             }
