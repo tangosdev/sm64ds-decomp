@@ -7,14 +7,13 @@
 #include "MeshColliderBase.h"
 /* recovered: renamed to Class_Method */
 /* daObjC1_Trap_c::CleanupResources - recovered from vtable slot identity */
-extern "C" char data_ov025_02112d08[];
 extern "C" int func_ov010_02111554(char *self){
   if(((MeshColliderBase *)(self+0x124))->IsEnabled()){
     ((MeshColliderBase *)(self+0x124))->Disable();
   }
   if((*(unsigned int*)(self+8) & 0xff) != 0xff){
-    ((SharedFilePtr *)(data_ov025_02112d08))->Release();
-    ((SharedFilePtr *)(data_ov024_02112d00))->Release();
+    ((SharedFilePtr *)(&data_ov010_02112d08))->Release();
+    ((SharedFilePtr *)(&data_ov010_02112d00))->Release();
   }
   return 1;
 }
