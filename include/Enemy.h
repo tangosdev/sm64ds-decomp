@@ -58,6 +58,7 @@ struct Enemy {
 #ifdef __cplusplus
     /* methods */
     int AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_);
+    int UpdateDeath(WithMeshClsn & clsn_);
     int SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_);
     int UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags);
     void KillByInvincibleChar(const Vector3_16 & a1_, Player & a2_);
