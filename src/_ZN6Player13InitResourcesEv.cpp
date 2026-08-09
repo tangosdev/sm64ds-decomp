@@ -1,4 +1,6 @@
 //cpp
+// @symbol _ZN6Player13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
 // Match: Player::InitResources (ov002:0x020e558c).
 // Heap zero of operator_new(0x14) at +0x588 uses mwccarm CLEAR shape
 // (4x strb post-inc). Pure C never emits that for a heap pointer under
@@ -9,6 +11,8 @@ typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
+
+#include "Player.h"
 
 struct CAA0 { char pad[8]; int unk8; };
 
@@ -52,8 +56,12 @@ extern "C" {
 
 struct V3 { int x, y, z; };
 
-extern "C" int _ZN6Player13InitResourcesEv(void* self)
+s32 Player::InitResources()
 {
+    /* The helpers below take void or char pointers, and this file's match
+       depends on declaration and load order documented in the header comment
+       above. One alias keeps every one of those decisions untouched. */
+    void* self = (void*)this;
     char* c = (char*)self;
     V3 pos;
     char rc[0x50];
@@ -69,26 +77,26 @@ extern "C" int _ZN6Player13InitResourcesEv(void* self)
     int td, tx, tz;
 
     a = *(unsigned int*)(c + 8);
-    *(u8*)(c + 0x6d8) = (a >> 6) & 3;
+    mPlayerNo = (a >> 6) & 3;
     n8 = a >> 8;
     b = *(unsigned int*)(c + 8);
     sub = (b >> 3) & 7;
-    *(u8*)(c + 0x6d9) = b & 7;
+    mCharacter = b & 7;
     *(u8*)(c + 0x6da) = sub;
     changed = 0;
     t = (unsigned int)(data_0209f2d8 == 1);
     if (t == 0) {
         if (SublevelToLevel(data_0209f2f8) == 0x1d) {
             data_0209f254 = 0;
-            cur = *(u8*)(c + 0x6d9);
+            cur = mCharacter;
             if (sub != cur) {
                 data_02092114 = -1;
                 sub = cur;
-                data_02092128[*(u8*)(c + 0x6d8)] = *(volatile u8*)(c + 0x6d9);
+                data_02092128[mPlayerNo] = *(volatile u8*)(&mCharacter);
                 changed = 1;
             }
         }
-        if (data_02092114 >= 0) sub = *(u8*)(c + 0x6d9);
+        if (data_02092114 >= 0) sub = mCharacter;
     }
     *(int*)(c + 8) = sub;
     {
@@ -102,17 +110,17 @@ extern "C" int _ZN6Player13InitResourcesEv(void* self)
     t = (unsigned int)(data_0209fc48 != 0);
     if (t == 0) goto Ld0;
 Lac:
-    if (*(u8*)(c + 0x6d8) == data_0209f250) {
+    if (mPlayerNo == data_0209f250) {
         func_ov002_020e6330(c);
         func_ov002_020e6350(c);
     }
 Ld0:
     func_ov002_020e5948(c);
     if (changed != 0) func_ov002_020beabc(c);
-    *(void**)(c + 0x578) = func_02073470(0x32, 0xc, 8, (void*)func_0203d384, (void*)func_020072c0);
-    *(void**)(c + 0x57c) = _ZN6Memory13operator_new2Ej(0x32);
-    *(void**)(c + 0x588) = _ZN6Memory13operator_new2Ej(0x14);
-    q = *(u8**)(c + 0x588);
+    *(void**)(&unk_578) = func_02073470(0x32, 0xc, 8, (void*)func_0203d384, (void*)func_020072c0);
+    *(void**)(&unk_57c) = _ZN6Memory13operator_new2Ej(0x32);
+    *(void**)(&mHeldObjQueue) = _ZN6Memory13operator_new2Ej(0x14);
+    q = *(u8**)(&mHeldObjQueue);
     asm {
       mov r1, #5
       mov r0, #0
@@ -124,32 +132,32 @@ Ld0:
       subs r1, r1, #1
       bne Lzero
     }
-    *(int*)(c + 0x80) = 0x1000;
-    *(int*)(c + 0x84) = 0x1000;
-    *(int*)(c + 0x88) = 0x1000;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
     func_ov002_020e63a4(c);
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x380, c, 0x32000, 0x32000, c + 0x92, c + 0x8c);
     func_02035644(c + 0x380, 0x28000);
-    *(int*)(c + 0xa0) = -0x4b000;
-    *(int*)(c + 0x53c) = *(int*)(c + 0x5c);
-    *(int*)(c + 0x540) = *(int*)(c + 0x60);
-    *(int*)(c + 0x544) = *(int*)(c + 0x64);
-    *(s16*)(c + 0x698) = *(s16*)(c + 0x8e);
-    *(int*)(c + 0x644) = 0x80000000;
-    *(int*)(c + 0x64c) = 0x80000000;
-    *(int*)(c + 0x650) = 0x80000000;
-    *(u8*)(c + 0x6f5) = 0x1f;
-    *(int*)(c + 0x670) = 0xff;
-    *(s16*)(c + 0x6a2) = *(s8*)(c + 0xcc);
+    mTerminalVelocity = -0x4b000;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
+    mSpawnAngleY = mAngleY;
+    mGroundY = 0x80000000;
+    unk_64c = 0x80000000;
+    unk_650 = 0x80000000;
+    mOpacity = 0x1f;
+    mClpsWord1Lo = 0xff;
+    *(s16*)&unk_6a2 = mAreaId;
     f254 = data_0209f254;
     if (f254 != 0) {
         if (*(int*)(c + 8) == 3) {
-            *(u8*)(c + 0x704) = f254;
+            mEggParams = f254;
             func_ov002_020d6368(c);
             if ((f254 & 0x80) != 0) {
-                if ((*(u8*)(c + 0x718) & 1) == 0) {
+                if ((mLoadedResourceFlags & 1) == 0) {
                     LoadSilverStarAndNumber();
-                    *(u8*)((int)(((long long)(int)(c + 0x718)) & 0xFFFFFFFFFFFFFFFFLL)) |= 1;
+                    *(u8*)((int)(((long long)(int)(&mLoadedResourceFlags)) & 0xFFFFFFFFFFFFFFFFLL)) |= 1;
                 }
             }
         }
@@ -160,8 +168,8 @@ Ld0:
     }
     func_ov002_020c7dd0(c, n8);
     _ZN13RaycastGroundC1Ev(rc);
-    tz = *(int*)(c + 0x64);
-    tx = *(int*)(c + 0x5c);
+    tz = mPosZ;
+    tx = mPosX;
     td = data_0209212c;
     pos.x = tx;
     pos.y = td;
@@ -173,8 +181,8 @@ Ld0:
         data_0209211c = 2;
         data_0209f200 = 0xe;
     }
-    if (StartWithFarCamera() != 0) *(u8*)(c + 0x715) = 1;
-    *(int*)(c + 0x684) = *(int*)(c + 0x60);
+    if (StartWithFarCamera() != 0) unk_715 = 1;
+    mPeakY = mPosY;
     _ZN13RaycastGroundD1Ev(rc);
     return 1;
 }
