@@ -109,6 +109,9 @@ struct WithMeshClsn : BgCh {
        sub-objects instead of touching this object's own BgCh base. */
     void StartDetectingWater();
     void StopDetectingWater();
+    void UpdateContinuous();
+    void UpdateContinuousNoLava();
+    void UpdateExtraContinous();  /* sic -- the ROM name is missing a 'u' */
     void UpdateDiscreteNoLava();
     void UpdateDiscreteNoLava_2();
 

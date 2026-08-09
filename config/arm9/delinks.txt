@@ -4977,11 +4977,11 @@ src/_ZN12WithMeshClsn20UpdateExtraContinousEv.cpp:
     complete
     .text start:0x020358ac end:0x02036318
 
-src/_ZN12WithMeshClsn22UpdateContinuousNoLavaEv.c:
+src/_ZN12WithMeshClsn22UpdateContinuousNoLavaEv.cpp:
     complete
     .text start:0x02036318 end:0x020366b4
 
-src/_ZN12WithMeshClsn16UpdateContinuousEv.c:
+src/_ZN12WithMeshClsn16UpdateContinuousEv.cpp:
     complete
     .text start:0x020366b4 end:0x02036acc
 

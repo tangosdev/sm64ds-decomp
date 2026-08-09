@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol _ZN12WithMeshClsn22UpdateContinuousNoLavaEv
 /* recovered: named members + shared header, declarations from a shared header */
@@ -10,7 +11,12 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct ClsnResult { char pad[0x28]; } ClsnResult;
 
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+/* extern "C" is required now this file is C++: every name below is already a
+   mangled ROM symbol, and without C linkage the compiler would mangle each a
+   SECOND time (_Z18_ZN10ClsnResultC1EvP10ClsnResult and friends), naming
+   symbols that exist nowhere. The file would still byte-match -- relocations
+   compare as wildcards -- so only check_references would ever see it. */
+extern "C" {
 extern void _ZN10ClsnResultC1Ev(ClsnResult* r);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, Vec3* a, Vec3* b, void* actor);
 extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
@@ -22,10 +28,12 @@ extern void _ZN10ClsnResultaSERKS_(void* self, ClsnResult* r);
 extern void func_02037888(void* dst, ClsnResult* src);
 extern void func_020356d4(void* self);
 extern void _ZN10ClsnResultD1Ev(ClsnResult* r);
+}
 
 #pragma opt_common_subs off
 
-void _ZN12WithMeshClsn22UpdateContinuousNoLavaEv(struct WithMeshClsn *self) {
+void WithMeshClsn::UpdateContinuousNoLava()
+{
     int floorFlag;
     int wallFlag;
     int height;
@@ -42,7 +50,7 @@ void _ZN12WithMeshClsn22UpdateContinuousNoLavaEv(struct WithMeshClsn *self) {
     Vec3 sphere;
 
     {
-        char* a = *(char**)((char*)&self->mActor);
+        char* a = *(char**)((char*)&mActor);
         pos = (int*)AT(a, 0x5c);
         prev = (int*)AT(a, 0x68);
     }
@@ -52,7 +60,7 @@ void _ZN12WithMeshClsn22UpdateContinuousNoLavaEv(struct WithMeshClsn *self) {
     wallFlag = 0;
     _ZN10ClsnResultC1Ev(&res1);
 
-    height = self->unk_01c;
+    height = unk_01c;
     {
         int tx = prev[0];
         int tz = prev[2];
@@ -69,12 +77,12 @@ void _ZN12WithMeshClsn22UpdateContinuousNoLavaEv(struct WithMeshClsn *self) {
         lineEnd.y = ty;
         lineEnd.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)self) + 0x134, &lineStart, &lineEnd, *(void**)((char*)&self->mActor));
-    if (func_0203859c((char*)&self->mRaycastLine))
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)this) + 0x134, &lineStart, &lineEnd, *(void**)((char*)&mActor));
+    if (func_0203859c((char*)&mRaycastLine))
     {
         int r;
-        _ZN11RaycastLine10GetClsnPosEv(&clsnPos, ((char*)self) + 0x134);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)self) + 0x148, &normal);
+        _ZN11RaycastLine10GetClsnPosEv(&clsnPos, ((char*)this) + 0x134);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)this) + 0x148, &normal);
         newStart.x = clsnPos.x + (normal.x >> 2);
         newStart.y = (normal.y >> 2) + clsnPos.y;
         newStart.z = clsnPos.z + (normal.z >> 2);
@@ -84,66 +92,66 @@ void _ZN12WithMeshClsn22UpdateContinuousNoLavaEv(struct WithMeshClsn *self) {
         r = func_02039794(normal.y);
         if (r == 1) {
             wallFlag = 1;
-            _ZNK10ClsnResult6CopyToERS_(((char*)self) + 0x144, &res1);
+            _ZNK10ClsnResult6CopyToERS_(((char*)this) + 0x144, &res1);
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)self) + 0x134, &newStart, &newEnd, *(void**)((char*)&self->mActor));
-        if (func_0203859c((char*)&self->mRaycastLine)) {
-            _ZN11RaycastLine10GetClsnPosEv(&clsnPos2, ((char*)self) + 0x134);
-            _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)self) + 0x148, &normal2);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)this) + 0x134, &newStart, &newEnd, *(void**)((char*)&mActor));
+        if (func_0203859c((char*)&mRaycastLine)) {
+            _ZN11RaycastLine10GetClsnPosEv(&clsnPos2, ((char*)this) + 0x134);
+            _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)this) + 0x148, &normal2);
             if (func_02039794(normal2.y) == 0) {
                 floorFlag = 1;
-                _ZNK10ClsnResult6CopyToERS_(((char*)self) + 0x144, &res0);
+                _ZNK10ClsnResult6CopyToERS_(((char*)this) + 0x144, &res0);
             }
-            if (_ZNK12WithMeshClsn15ShouldUpdatePosEv(((char*)self))) {
+            if (ShouldUpdatePos()) {
                 pos[0] = clsnPos2.x - (normal2.x >> 2);
                 pos[1] = clsnPos2.y - (normal2.y >> 2) - (height >> 1);
                 pos[2] = clsnPos2.z - (normal2.z >> 2);
             }
-        } else if (_ZNK12WithMeshClsn15ShouldUpdatePosEv(((char*)self))) {
+        } else if (ShouldUpdatePos()) {
             pos[0] = newStart.x;
             pos[1] = newStart.y - height;
             pos[2] = newStart.z;
         }
     }
 
-    onGround = _ZNK12WithMeshClsn10IsOnGroundEv(((char*)self));
-    _ZN12WithMeshClsn19ClearAllGroundFlagsEv(((char*)self));
+    onGround = IsOnGround();
+    ClearAllGroundFlags();
     handled = 0;
     sphere.x = pos[0];
     sphere.y = pos[1];
     sphere.z = pos[2];
     sphere.y += height;
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(((char*)self) + 0x20, &sphere, self->unk_018, *(void**)((char*)&self->mActor));
-    self->unk_128 = self->unk_1b8;
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
+    unk_128 = unk_1b8;
     if (pos[1] - prev[1] > 0)
-        *(u8*)AT(((char*)self), 0x90) |= 0x20;
+        *(u8*)AT(((char*)this), 0x90) |= 0x20;
     if (floorFlag != 0) {
-        *(u8*)AT(((char*)self), 0x90) |= 4;
-        _ZN10SphereClsn14SetFloorResultERK10ClsnResult(((char*)self) + 0x20, &res0);
-        *(u8*)AT(((char*)self), 0x90) |= 1;
-        _ZN10ClsnResultaSERKS_(((char*)self) + 0x30, &res0);
-        func_020371b0(((char*)self), onGround);
+        *(u8*)AT(((char*)this), 0x90) |= 4;
+        _ZN10SphereClsn14SetFloorResultERK10ClsnResult(((char*)this) + 0x20, &res0);
+        *(u8*)AT(((char*)this), 0x90) |= 1;
+        _ZN10ClsnResultaSERKS_(((char*)this) + 0x30, &res0);
+        func_020371b0(((char*)this), onGround);
         handled = 1;
     }
     if (wallFlag != 0) {
-        *(u8*)AT(((char*)self), 0x90) |= 8;
-        func_02037888(((char*)self) + 0x20, &res1);
-        *(u8*)AT(((char*)self), 0x90) |= 1;
-        _ZN10ClsnResultaSERKS_(((char*)self) + 0x30, &res1);
+        *(u8*)AT(((char*)this), 0x90) |= 8;
+        func_02037888(((char*)this) + 0x20, &res1);
+        *(u8*)AT(((char*)this), 0x90) |= 1;
+        _ZN10ClsnResultaSERKS_(((char*)this) + 0x30, &res1);
     }
-    if (func_02038a38((char*)&self->mSphereClsn)) {
-        prev = (int*)((char*)&self->unk_06c);
-        if ((self->mClsnFlags & 4) && handled == 0)
-            func_020371b0(((char*)self), onGround);
-        if (_ZNK12WithMeshClsn15ShouldUpdatePosEv(((char*)self))) {
+    if (func_02038a38((char*)&mSphereClsn)) {
+        prev = (int*)((char*)&unk_06c);
+        if ((mClsnFlags & 4) && handled == 0)
+            func_020371b0(((char*)this), onGround);
+        if (ShouldUpdatePos()) {
             pos[0] += prev[0];
-            if (_ZNK12WithMeshClsn16ShouldUpdatePosYEv(((char*)self)))
+            if (ShouldUpdatePosY())
                 *(int*)AT(pos, 4) += prev[1];
             *(int*)AT(pos, 8) += prev[2];
         }
     }
-    if (onGround && _ZNK12WithMeshClsn10IsOnGroundEv(((char*)self)) == 0)
-        func_020356d4(((char*)self));
+    if (onGround && IsOnGround() == 0)
+        func_020356d4(((char*)this));
     _ZN10ClsnResultD1Ev(&res1);
     _ZN10ClsnResultD1Ev(&res0);
 }

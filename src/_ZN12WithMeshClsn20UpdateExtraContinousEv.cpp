@@ -1,10 +1,11 @@
 //cpp
+// @symbol _ZN12WithMeshClsn20UpdateExtraContinousEv
+#include "WithMeshClsn.h"
 typedef int s32;
 typedef unsigned int u32;
 typedef short s16;
 typedef unsigned char u8;
 
-struct Vector3 { s32 x, y, z; };
 struct SurfaceInfo { s32 w0, w1, w2, w3, w4; };
 struct RaycastLine { Vector3 GetClsnPos(); };
 struct ClsnResult
@@ -30,7 +31,6 @@ extern u32 data_02099368[];
 #define LND32(a)   ((s32)(((long long)(int)(a))))
 #define V3C(v, p) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; (v).x = _x; (v).y = _y; (v).z = _z; }
 
-int  _ZNK12WithMeshClsn10IsOnGroundEv(void *);
 int  func_020355a0(void *);
 void *func_02037938(void *);
 void func_02038324(void *, Vector3 *, void *, void *);
@@ -44,7 +44,6 @@ int  _ZN11RaycastLine10DetectClsnEv(void *);
 int  func_02039794(s32);
 void _ZNK10ClsnResult6CopyToERS_(const ClsnResult *, ClsnResult *);
 Vector3 *func_02037dc4(SurfaceInfo *);
-void _ZN12WithMeshClsn19ClearAllGroundFlagsEv(void *);
 void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void *, const Vector3 *, s32, void *);
 int  func_02035764(void *);
 void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void *, const ClsnResult *);
@@ -53,14 +52,15 @@ void func_020371b0(void *, s32);
 void func_02037888(void *, const ClsnResult *);
 void func_0203782c(void *, const ClsnResult *);
 int  _ZN10SphereClsn10DetectClsnEv(void *);
-int  _ZNK12WithMeshClsn16ShouldUpdatePosYEv(void *);
 int  func_020355dc(void *);
 ClsnResult *func_020378dc(void *);
 void func_020356d4(void *);
 
-void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *thiz)
+}  /* end extern "C" -- the definition below is a member, not a C symbol */
+
+void WithMeshClsn::UpdateExtraContinous()
 {
-    char *t = (char *)thiz;
+    char *t = (char *)this;
     s32 f0, f1, f2, vo, wasOnGround, didHit;
     Vector3 *pos, *prev;
     char *ac;
@@ -69,7 +69,7 @@ void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *thiz)
     pos = (Vector3 *)(ac + 0x5c);
     prev = (Vector3 *)(ac + 0x68);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(t) && func_020355a0(t))
+    if (IsOnGround() && func_020355a0(t))
         func_02038324(func_02037938(t + 0x20), pos,
                       *(void **)(t + 0x12c), *(void **)(t + 0x130));
 
@@ -205,8 +205,8 @@ void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *thiz)
             }
         }
 
-        wasOnGround = _ZNK12WithMeshClsn10IsOnGroundEv(t);
-        _ZN12WithMeshClsn19ClearAllGroundFlagsEv(t);
+        wasOnGround = IsOnGround();
+        ClearAllGroundFlags();
         didHit = 0;
 
         Vector3 v124;
@@ -255,7 +255,7 @@ void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *thiz)
                 didHit = 1;
             }
             pos->x = pos->x + pb->x;
-            if (_ZNK12WithMeshClsn16ShouldUpdatePosYEv(t))
+            if (ShouldUpdatePosY())
                 *LNDR(s32, (char *)pos + 4) = *LNDR(s32, (char *)pos + 4) + pb->y;
             *LNDR(s32, (char *)pos + 8) = *LNDR(s32, (char *)pos + 8) + pb->z;
 
@@ -387,13 +387,11 @@ void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *thiz)
             }
         }
 
-        if (wasOnGround && !_ZNK12WithMeshClsn10IsOnGroundEv(t))
+        if (wasOnGround && !IsOnGround())
             func_020356d4(t);
 
         _ZN10ClsnResultD1Ev(&res2);
         _ZN10ClsnResultD1Ev(&res1);
         _ZN10ClsnResultD1Ev(&res0);
     }
-}
-
 }
