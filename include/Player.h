@@ -415,7 +415,6 @@ struct Player : Actor {
                                            Actor::OnYoshiTryEat and CW rejects a
                                            mismatched return type on an override */
 
-    int * TryExitCharacterDoorWithIntro();
     int Burn();
     int CanEnterDoor(unsigned char door);
     int CanPause();
@@ -639,12 +638,8 @@ struct Player : Actor {
     void OpenBigDoor();
     void PlayMammaMiaSound();
     void RegisterEggCoinCount(unsigned int count, bool b2, bool b3);
-    void ST_WAIT();
     void SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3);
     void SetRealCharacter(unsigned int chr_);
-    void St_EndingFly_Main();
-    void St_InYoshiMouth_Cleanup();
-    void St_WallJump_Init();
     void TurnOffToonShading(unsigned int j);
     void Unk_020ca488();
 };
@@ -677,11 +672,56 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
  *     throughout this overlay.
  *
  *     This is the failure mode described in notes/overlay-ambiguous-references.md.
- *     Fixing it means moving the symbol, not typing these offsets. Until then,
- *     treat the St_WallJump_Init() declaration below as unverified.
+ *     Fixing it means moving the symbol, not typing these offsets.
+ *
+ *     CORROBORATED, and the reading above is now stronger than "almost
+ *     certainly". config/arm9/overlays/ov002/relocs.txt carries TWO
+ *     `kind:load to:0x020e17f8 module:overlay(2)` entries, from 0x0210a33c and
+ *     0x0210a3ec. Those two addresses sit in a run of ov002 data symbols with
+ *     an EIGHT-BYTE stride -- which is the {ptr, adj} shape of a
+ *     pointer-to-member documented at the top of this header, i.e. the
+ *     Player::State tables. ov006's only reference to the same address is a
+ *     `kind:arm_call ... module:overlay(6)` from ov006 code. And
+ *     src/func_ov002_020e17f8.c, the ov002 draft, names its shadow struct
+ *     `Player` and touches nothing above 0x71b -- inside this object, where
+ *     the ov006 file's 0x4eb0 is 0x4700 bytes past its end.
+ *
+ *   St_Null_Init is the SAME DEFECT, found the same way. ov006 carries
+ *     _ZN6Player12St_Null_InitEv at 0x020cac30 size 0x6c and ov002 carries an
+ *     unnamed func_ov002_020cac30 of size 0x8 at the same address. ov002
+ *     reaches it by `kind:load ... module:overlay(2)` from 0x0210a17c -- the
+ *     same pointer-to-member region as above -- while ov006 reaches its own
+ *     copy by two direct arm_calls. An eight-byte body is exactly what a state
+ *     called Null should be. Expect more of these: the whole 0x0210a1xx-0x0210a3xx
+ *     table is Player state pointers, and any ov006 symbol its loads land on
+ *     is a candidate.
  *
  *   0x62ad, 0x62af  -- still unexplained; source not yet traced. Needs semantic
  *     review before they can be typed.
+ */
+
+/* WHY FIVE NAMES ARE NOT DECLARED IN THIS CLASS.
+ *
+ * ST_WAIT, St_EndingFly_Main, St_InYoshiMouth_Cleanup, St_WallJump_Init and
+ * TryExitCharacterDoorWithIntro were declared here until this commit, while
+ * each of their sources already said, in terms, "NOT a Player method" and
+ * "detached from Player.h". The header was the last thing still making the
+ * claim. Nothing called them through the declaration -- every caller in the
+ * tree spells the mangled name in its own `extern` -- so removing them is
+ * codegen-neutral, and the eligible name list is unchanged by it.
+ *
+ * ST_WAIT is a separate and still-open question rather than a settled
+ * misattribution, and it is NOT declared here for that reason. Three sources
+ * disagree about what it even is: this header called it `void ST_WAIT()`,
+ * ov006/symbols.txt calls it `kind:function(size=0x68)` at 0x02110154, and
+ * four migrated Player methods -- CanWarp, TryTalkToDoor, TryTalkToKeyDoor,
+ * St_WaitQuicksand_Main -- use `_ZN6Player7ST_WAITE` as a Player::State
+ * OBJECT, passing its address to Player::IsState alongside
+ * data_ov002_0211013c. 0x02110154 is 0x0211013c + 0x18, exactly one State
+ * apart. Do not resolve this from the arithmetic: ov002 and ov006 share that
+ * RAM window, the byte compare wildcards every relocated word, so both
+ * spellings match whichever is right. It needs the module question answered
+ * first.
  */
 
 #endif
