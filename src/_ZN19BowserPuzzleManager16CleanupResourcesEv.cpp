@@ -7,6 +7,7 @@
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern void *data_ov064_0211adc8[];
+extern void *data_ov064_0211c800;
 
 int BowserPuzzleManager::CleanupResources()
 {
@@ -14,6 +15,6 @@ int BowserPuzzleManager::CleanupResources()
     ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
     idx = *(unsigned char *)((char *)&unk_337);
     ((SharedFilePtr *)(data_ov064_0211adc8[idx]))->Release();
-    ((SharedFilePtr *)(&data_ov075_0211c800))->Release();
+    ((SharedFilePtr *)(&data_ov064_0211c800))->Release();
     return 1;
 }
