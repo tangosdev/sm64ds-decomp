@@ -16,6 +16,9 @@ struct dScMgCoin_c {
     u8  pad_51d8[0x2];
     u8  unk_51da;           /* 0x51da */
     u8  unk_51db;           /* 0x51db */
+#ifdef __cplusplus
+    int Render();
+#endif
 };
 
 #endif

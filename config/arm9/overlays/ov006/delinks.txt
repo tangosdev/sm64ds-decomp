@@ -2115,7 +2115,7 @@ src/func_ov006_020de5b0.c:
     complete
     .text start:0x020de5b0 end:0x020de63c
 
-src/func_ov006_020de63c.c:
+src/_ZN11dScMgCoin_c6RenderEv.cpp:
     complete
     .text start:0x020de63c end:0x020de69c
 
