@@ -87,11 +87,12 @@ int Player::St_BurnFire_Main()
     switch (mStateStep) {
     case 0:
         if (_ZN6Player6IsAnimEj(this, 0x53) != 0) {
-            /* This one launder keeps its raw offset ON PURPOSE. The other
-               increment above is byte-identical written as `&mStateWork`,
-               but this one is not: its add happens INSIDE the integer cast
-               ((int)this + 0x6e5, not (int)(this + 0x6e5)), and spelling it
-               through the field costs 4 bytes. Measured both ways. */
+            /* The raw offset here is deliberate, not un-recovered. The
+               matching increment above is byte-identical when written as
+               &mStateWork; this one is not. Its add happens INSIDE the
+               integer cast -- (int)this + 0x6e5, rather than
+               (int)((char*)this + 0x6e5) -- and naming the field costs 4
+               bytes. Both spellings were built and compared. */
             *(u8 *)(((long long)((int)this + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
         }
         if (mIsAirborne == 0) {
