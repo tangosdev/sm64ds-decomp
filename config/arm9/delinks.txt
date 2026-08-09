@@ -532,11 +532,11 @@ src/_ZN6Camera25SaveCameraStateBeforeTalkEv.cpp:
     complete
     .text start:0x0200cc5c end:0x0200ccac
 
-src/_ZN6Camera6SetPosERK7Vector3.c:
+src/_ZN6Camera6SetPosERK7Vector3.cpp:
     complete
     .text start:0x0200ccac end:0x0200ccc8
 
-src/_ZN6Camera9SetLookAtERK7Vector3.c:
+src/_ZN6Camera9SetLookAtERK7Vector3.cpp:
     complete
     .text start:0x0200ccc8 end:0x0200cce4
 
@@ -656,7 +656,7 @@ src/func_0200d858.c:
     complete
     .text start:0x0200d858 end:0x0200d890
 
-src/_ZNK6Camera12IsUnderwaterEv.c:
+src/_ZNK6Camera12IsUnderwaterEv.cpp:
     complete
     .text start:0x0200d890 end:0x0200d89c
 
@@ -676,7 +676,7 @@ src/func_0200d954.c:
     complete
     .text start:0x0200d954 end:0x0200d9d0
 
-src/_ZN6Camera16CleanupResourcesEv.c:
+src/_ZN6Camera16CleanupResourcesEv.cpp:
     complete
     .text start:0x0200d9d0 end:0x0200da00
 

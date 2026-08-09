@@ -20,9 +20,9 @@ void Camera::GoBehindPlayer(unsigned int j)
         return;
 
     /* different launder spellings to defeat CSE across the call */
-    *(unsigned int *)(((int)&unk_154)) &= 0xfffffaf7u;
+    *(unsigned int *)(((int)&mFlags)) &= 0xfffffaf7u;
     func_0200cb58((void *)((int)this), 0xa);
-    *(unsigned int *)(((long long)(int)((int)&unk_154))) |= 4u;
+    *(unsigned int *)(((long long)(int)((int)&mFlags))) |= 4u;
 
     slot4 = unk_13c;
     slotc = 0;
