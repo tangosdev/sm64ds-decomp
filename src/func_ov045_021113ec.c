@@ -15,6 +15,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393d4(void *p, int v);
 extern void func_020393c4(void *p, int v);
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern void func_ov045_021114c8(void*, int);
 int func_ov045_021113ec(char *c){
     struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
   int f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_02113188);
@@ -25,7 +26,7 @@ int func_ov045_021113ec(char *c){
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     c+0x124, f, c+0x2ec, 0x199, self->unk_08e, data_ov045_021125d0);
   func_020393d4(c+0x124, (int)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-  func_020393c4(c+0x124, (int)data_ov059_021114c8);
+  func_020393c4(c+0x124, (int)func_ov045_021114c8);
   *(short*)(c+0x300+0x24) = 0;
   self->unk_327 = 0;
   self->unk_320 = self->unk_060;
