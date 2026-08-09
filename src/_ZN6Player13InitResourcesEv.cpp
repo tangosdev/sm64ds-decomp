@@ -36,18 +36,18 @@ extern "C" {
     void func_020072c0(void);
     void func_0203d384(void);
 
-    u8 data_0209f2d8;
-    s8 data_0209f2f8;
-    u8 data_0209f254;
-    s8 data_02092114;
-    u8 data_02092128[];
-    CAA0 data_0209caa0;
-    int data_0209fc48;
-    u8 data_0209f250;
-    u8 data_0209f2fc;
-    int data_0209212c;
-    u8 data_0209211c;
-    u8 data_0209f200;
+    extern u8 data_0209f2d8;
+    extern s8 data_0209f2f8;
+    extern u8 data_0209f254;
+    extern s8 data_02092114;
+    extern u8 data_02092128[];
+    extern CAA0 data_0209caa0;
+    extern int data_0209fc48;
+    extern u8 data_0209f250;
+    extern u8 data_0209f2fc;
+    extern int data_0209212c;
+    extern u8 data_0209211c;
+    extern u8 data_0209f200;
 }
 
 struct V3 { int x, y, z; };

@@ -31,12 +31,12 @@ void func_ov006_020d3668(void *sb);
 void _ZN3G2x13SetBlendAlphaEPVttttt(void *reg, unsigned short a, unsigned short b, unsigned short c, unsigned short d);
 void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
-int data_0209d4b8;
-char data_ov006_0212e1a8[];
-char data_ov006_0212e1ac[];
-char data_ov006_0212e1b0[];
-char data_ov006_0212e1b4[];
-char data_ov006_0212e1b8[];
+extern int data_0209d4b8;
+extern char data_ov006_0212e1a8[];
+extern char data_ov006_0212e1ac[];
+extern char data_ov006_0212e1b0[];
+extern char data_ov006_0212e1b4[];
+extern char data_ov006_0212e1b8[];
 }
 namespace G2S { char *GetBG0CharPtr(void); }
 

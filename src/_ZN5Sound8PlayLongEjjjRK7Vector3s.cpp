@@ -55,7 +55,7 @@ extern "C" {
     void* func_02011934(int* table, u32 handle);    /* find an existing slot */
     void  func_020123c8(char* params, u32 a, u32 b, const Vector3& pos);
     int   func_0201179c(int* table, u32 a, u32 b, const Vector3& pos, short e);
-    int   data_0209b53c[];                          /* the long-sound table */
+    extern int data_0209b53c[];                     /* the long-sound table */
 }
 
 int PlayLong(u32 handle, u32 a, u32 b, const Vector3& pos, s16 e)
