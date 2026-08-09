@@ -392,15 +392,15 @@ src/func_ov002_020b0a0c.c:
     complete
     .text start:0x020b0a0c end:0x020b0a70
 
-src/_ZN11VirtualDoor16CleanupResourcesEv.c:
+src/_ZN11VirtualDoor16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b0a70 end:0x020b0a78
 
-src/_ZN11VirtualDoor16OnPendingDestroyEv.c:
+src/_ZN11VirtualDoor16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b0a78 end:0x020b0a7c
 
-src/_ZN11VirtualDoor6RenderEv.c:
+src/_ZN11VirtualDoor6RenderEv.cpp:
     complete
     .text start:0x020b0a7c end:0x020b0a84
 
