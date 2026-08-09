@@ -119,15 +119,15 @@ src/func_ov062_02116edc.cpp:
     complete
     .text start:0x02116edc end:0x02116fc0
 
-src/_ZN7Chuckya16CleanupResourcesEv.c:
+src/_ZN7Chuckya16CleanupResourcesEv.cpp:
     complete
     .text start:0x02116fc0 end:0x02117020
 
-src/_ZN7Chuckya16OnPendingDestroyEv.c:
+src/_ZN7Chuckya16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02117020 end:0x02117024
 
-src/_ZN7Chuckya6RenderEv.c:
+src/_ZN7Chuckya6RenderEv.cpp:
     complete
     .text start:0x02117024 end:0x0211707c
 
@@ -135,7 +135,7 @@ src/_ZN7Chuckya8BehaviorEv.cpp:
     complete
     .text start:0x0211707c end:0x02117334
 
-src/_ZN7Chuckya13InitResourcesEv.c:
+src/_ZN7Chuckya13InitResourcesEv.cpp:
     complete
     .text start:0x02117334 end:0x02117470
 
