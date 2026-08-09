@@ -340,10 +340,52 @@ struct Actor : ActorDerived {
     Actor *UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                                const Vector3 &spawnPos, u8 howToSpawnStar);
 
+    /* The spawn-and-reward group, 0x02010044..0x02010929. All three are
+       members and all three dereference `this`: SpawnNumber and GivePlayerCoins
+       for a field (mAreaId at 0xcc, mCamSpacePos at 0x74), ClosestWithActorID
+       for the position it measures from.
+
+       SpawnNumber puts up actor 0x14a, the floating score/count popup, and
+       hands it to a helper that makes it follow `owner`. packLowNibble is a
+       `bool` in the mangled name and arrives in r3, where `cmp r3, #0` cannot
+       tell bool from int -- the name is the authority, and the bytes do not
+       contradict it. What it selects IS visible: `and #0xf` then `orr #0x10`,
+       so the value is squeezed into a nibble and tagged. delay is `ldrh` --
+       u16 -- and is written to the popup's own 0x14c; callers pass 0 or 0x15.
+
+       GivePlayerCoins takes Player BY REFERENCE and then tests it against
+       null, which the ROM does plainly (`movs r5, r1` into the argument, then
+       a conditional return). That is not a contradiction to resolve away: the
+       mangled name says R6Player, and the null test is real, so the source has
+       to say both. count is `h` (u8) and coinKind is `j` compared `cmp #3` with
+       an UNSIGNED `hs` branch, which is what makes it u32 rather than int.
+
+       ClosestWithActorID walks FindWithActorID and keeps the nearest, skipping
+       `this` itself; the sentinel is `mvn r5, #0x80000000` = 0x7fffffff. */
+    Actor *SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
+                       u16 delay, Actor *owner);
+    void   GivePlayerCoins(Player &player, u8 count, u32 coinKind);
+    Actor *ClosestWithActorID(u32 actorID);
+
     /* Static: builds an actor from an ID rather than acting on an instance --
        r0 carries actorID, not `this`, at 0x02010e2c's only in-tree call site.
        Declared here so callers mangle it; still defined as an extern "C" free
-       function under its mangled name. */
+       function under its mangled name.
+
+       THE LAST TWO PARAMETERS ARE WRONG HERE, DELIBERATELY, AND THE SYMBOL IS
+       WHY. The definition at 0x02010e2c reads them `ldrsb r2, [sp, #0x10]` and
+       `ldrsh r3, [sp, #0x14]` -- s8 and s16 -- but the imported symbol spells
+       them `ii`. Declared (s8, s16) the body reproduces all 0x4c bytes and the
+       compiler emits `..._16as`; declared (s32, s32) it compiles to 0x5c and
+       misses. Both were built; this is measured, not inferred.
+
+       So the symbol needs the same correction UntrackAndSpawnStar got, and it
+       is not done here because 162 files spell this name -- that is its own
+       change, with its own byte gate. Until then this declaration matches the
+       attested symbol rather than the ROM's parameter widths, which is safe
+       for callers: every argument is passed as a full word either way, so no
+       caller's bytes depend on the difference. That is also exactly why no
+       caller could ever have caught it. */
     static Actor *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                         const Vector3_16 *rot, s32 areaID, s32 deathTableID);
 

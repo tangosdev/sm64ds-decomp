@@ -948,7 +948,7 @@ src/_ZN5Actor9TrackStarEjj.cpp:
     complete
     .text start:0x0200ff94 end:0x02010044
 
-src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.c:
+src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.cpp:
     complete
     .text start:0x02010044 end:0x020100dc
 
@@ -1060,7 +1060,7 @@ src/func_020105cc.c:
     complete
     .text start:0x020105cc end:0x0201061c
 
-src/_ZN5Actor15GivePlayerCoinsER6Playerhj.c:
+src/_ZN5Actor15GivePlayerCoinsER6Playerhj.cpp:
     complete
     .text start:0x0201061c end:0x02010714
 
@@ -1072,7 +1072,7 @@ src/func_02010844.c:
     complete
     .text start:0x02010844 end:0x020108c4
 
-src/_ZN5Actor18ClosestWithActorIDEj.c:
+src/_ZN5Actor18ClosestWithActorIDEj.cpp:
     complete
     .text start:0x020108c4 end:0x0201092c
 
