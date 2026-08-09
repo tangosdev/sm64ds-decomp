@@ -525,6 +525,9 @@ struct Player : Actor {
     int St_Jump_Init();
     int St_Jump_Main();
     int St_Land_Main();
+    /* ov002 0x020cac30, size 0x8: `return 1` and nothing else. Reached from
+       ov002's State pointer-to-member table -- see the relocation note below. */
+    int St_Null_Init();
     int St_LedgeGrab_Init();
     int St_LedgeGrab_Main();
     int St_LedgeHang_Cleanup();
@@ -604,6 +607,9 @@ struct Player : Actor {
     int St_Wait_Main();
     int St_Walk_Init();
     int St_Walk_Main();
+    /* ov002 0x020e17f8, size 0xb0, immediately after St_WallJump_Main. Its
+       source is still an unmatched draft, so nothing builds against this yet. */
+    int St_WallJump_Init();
     int St_WallJump_Main();
     int St_WallSlide_Init();
     int St_WallSlide_Main();
@@ -655,36 +661,43 @@ typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : 
 /* Offsets seen through this-pointer but far outside the object (sizeof(Player)
  * is 0x768). These are NOT Player fields and must not be typed as such.
  *
- *   0x4eb0, 0x4eb4, 0x4ee5  -- DIAGNOSED: overlay misattribution, not a
- *     different base object. These come from src/_ZN6Player16St_WallJump_InitEv.cpp.
- *     ov002 and ov006 overlap in address space (ov002 0x020AD660..0x0210D9A0,
- *     ov006 0x020BFEC0..0x02140260), and 0x020e17f8 falls inside both. The
- *     symbol _ZN6Player16St_WallJump_InitEv is currently attached to the ov006
- *     copy (size 0x5c, neighbours are all func_ov006_* placeholders), so that
- *     file decompiles unrelated ov006 code while claiming to be a Player method
- *     -- hence the nonsense offsets.
+ *   0x4eb0, 0x4eb4, 0x4ee5  -- FIXED. The symbol was moved, which is what the
+ *     earlier revision of this note said the repair had to be; the offsets were
+ *     never Player's to type. Kept as history because the diagnosis is reusable.
  *
- *     The real Player::St_WallJump_Init is almost certainly
- *     func_ov002_020e17f8 (size 0xb0), which sits in ov002 in a dense run of
- *     Player state methods, immediately after _ZN6Player16St_WallJump_MainEv
- *     (0x020e1714 +0xe4, ending exactly at 0x020e17f8) and immediately before
- *     _ZN6Player16St_BackFlip_InitEv (0x020e18a8). Init/Main pairs are adjacent
- *     throughout this overlay.
+ *     ov002 and ov006 overlap in address space (ov002 0x020AD660..0x0210D9A0,
+ *     ov006 0x020BFEC0..0x02140260), and 0x020e17f8 falls inside both.
+ *     _ZN6Player16St_WallJump_InitEv had been attached to the ov006 copy (size
+ *     0x5c), so that file decompiled unrelated ov006 code while claiming to be
+ *     a Player method -- hence the nonsense offsets. It now names the ov002
+ *     copy (size 0xb0), and the ov006 one is func_ov006_020e17f8 again.
+ *
+ *     FOUR INDEPENDENT LINES OF EVIDENCE agreed, which is what made the move
+ *     safe. (1) ov002/relocs.txt carries TWO `kind:load to:0x020e17f8
+ *     module:overlay(2)` entries, from 0x0210a33c and 0x0210a3ec, and those sit
+ *     in a run of ov002 data symbols with an EIGHT-BYTE stride -- the {ptr,adj}
+ *     shape of a pointer-to-member documented at the top of this header, i.e.
+ *     the State tables. ov006's only reference is a `kind:arm_call ...
+ *     module:overlay(6)`. (2) The ov002 function sits immediately after
+ *     St_WallJump_Main (0x020e1714 +0xe4, ending exactly at 0x020e17f8) and
+ *     immediately before St_BackFlip_Init; Init/Main pairs are adjacent
+ *     throughout this overlay. (3) Its draft names its own shadow struct
+ *     `Player` and touches nothing above 0x71b. (4) Its body adds 0x8000 --
+ *     half a turn -- to the facing angle, copies it to the previous angle, sets
+ *     anim 0x28 and a launch speed and plays a character voice. That is a wall
+ *     jump.
  *
  *     This is the failure mode described in notes/overlay-ambiguous-references.md.
- *     Fixing it means moving the symbol, not typing these offsets.
  *
- *     CORROBORATED, and the reading above is now stronger than "almost
- *     certainly". config/arm9/overlays/ov002/relocs.txt carries TWO
- *     `kind:load to:0x020e17f8 module:overlay(2)` entries, from 0x0210a33c and
- *     0x0210a3ec. Those two addresses sit in a run of ov002 data symbols with
- *     an EIGHT-BYTE stride -- which is the {ptr, adj} shape of a
- *     pointer-to-member documented at the top of this header, i.e. the
- *     Player::State tables. ov006's only reference to the same address is a
- *     `kind:arm_call ... module:overlay(6)` from ov006 code. And
- *     src/func_ov002_020e17f8.c, the ov002 draft, names its shadow struct
- *     `Player` and touches nothing above 0x71b -- inside this object, where
- *     the ov006 file's 0x4eb0 is 0x4700 bytes past its end.
+ *   St_Null_Init was the SAME defect and moved in the same commit: ov006 had it
+ *     at 0x020cac30 (size 0x6c), ov002 has an eight-byte `return 1` there,
+ *     reached by `kind:load ... module:overlay(2)` from 0x0210a17c -- the same
+ *     stride-8 table. A State whose Init only succeeds is exactly that long,
+ *     and unlike WallJump its ov002 source byte-matches, so it is now a real
+ *     method.
+ *
+ *     EXPECT MORE. The 0x0210a1xx-0x0210a3xx table is Player state pointers;
+ *     any ov006 symbol its loads land on is a candidate for the same repair.
  *
  *   St_Null_Init is the SAME DEFECT, found the same way. ov006 carries
  *     _ZN6Player12St_Null_InitEv at 0x020cac30 size 0x6c and ov002 carries an

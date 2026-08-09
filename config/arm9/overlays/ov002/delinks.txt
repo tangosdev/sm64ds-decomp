@@ -2649,7 +2649,7 @@ src/_ZN6Player12St_Null_MainEv.cpp:
     complete
     .text start:0x020cac28 end:0x020cac30
 
-src/func_ov002_020cac30.c:
+src/_ZN6Player12St_Null_InitEv.cpp:
     complete
     .text start:0x020cac30 end:0x020cac38
 
@@ -3909,7 +3909,7 @@ src/_ZN6Player16St_WallJump_MainEv.cpp:
     complete
     .text start:0x020e1714 end:0x020e17f8
 
-src/func_ov002_020e17f8.c:
+src/_ZN6Player16St_WallJump_InitEv.c:
     .text start:0x020e17f8 end:0x020e18a8
 
 src/_ZN6Player16St_BackFlip_InitEv.cpp:

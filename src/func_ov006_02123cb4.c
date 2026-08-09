@@ -20,7 +20,7 @@ extern SpawnDef data_ov006_0212f2b0[];
 
 extern void func_ov006_020d0ac0(void);
 extern void func_ov006_020cedf0(void);
-extern void _ZN6Player12St_Null_InitEv(void);
+extern void func_ov006_020cac30(void);
 extern int _Z14ApproachLinearRiii(int *v, int step, int rate);
 extern void func_ov006_020cad3c(int a);
 extern void func_ov006_02123c78(char *c);
@@ -41,7 +41,7 @@ void func_ov006_02123cb4(char *c)
     old = data_ov006_02140818;
     func_ov006_020d0ac0();
     func_ov006_020cedf0();
-    _ZN6Player12St_Null_InitEv();
+    func_ov006_020cac30();
     if (old < data_ov006_02140818) {
         int n = data_ov006_02140818 - old;
         int i;
