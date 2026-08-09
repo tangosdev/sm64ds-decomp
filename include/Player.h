@@ -268,7 +268,15 @@ struct Player : Actor {
     u8  unk_6bc;            /* 0x6bc */
     u8  pad_6bd[0x1];
     u16 unk_6be;            /* 0x6be */
-    s16 unk_6c0;            /* 0x6c0 */
+    /* u16, not s16: every READ of this slot in the ROM is an ldrh --
+       func_ov002_020e4bb8 tests `< 0x3f` and `& 1`, Behavior passes it to
+       DecIfAbove0_Short(u16*), St_Balloon_Main tests `== 0`. Only the stores
+       use short, and a store cannot distinguish the two. Declared signed,
+       St_Balloon_Main misses by one word. Same defect as mJumpComboTimer.
+       Named for what those five uses do: InitBalloonMario sets it to 0x258,
+       Behavior counts it down, St_Balloon_Main exits when it reaches 0, and
+       020e4bb8 blinks the balloon below 0x3f. */
+    u16 mBalloonTimer;            /* 0x6c0 */
     u8  unk_6c2;            /* 0x6c2 */
     u8  pad_6c3[0x1];
     u8  unk_6c4;            /* 0x6c4 */
@@ -442,6 +450,7 @@ struct Player : Actor {
     int St_BackFlip_Init();
     int St_Balloon_Cleanup();
     int St_Balloon_Init();
+    s32 St_Balloon_Main();
     int St_Bonk_Init();
     int St_Bonk_Main();
     int St_BowserEarthquake_Init();
@@ -548,6 +557,7 @@ struct Player : Actor {
     int St_SmallLaunchUp_Main();
     int St_Spin_Cleanup();
     int St_Spin_Init();
+    int St_Spin_Main();
     int St_Squish_Cleanup();
     int St_Squish_Init();
     int St_Squish_Main();

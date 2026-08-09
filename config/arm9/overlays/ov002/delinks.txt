@@ -3858,7 +3858,7 @@ src/_ZN6Player15St_Spin_CleanupEv.cpp:
     complete
     .text start:0x020e10d4 end:0x020e10ec
 
-src/_ZN6Player12St_Spin_MainEv.c:
+src/_ZN6Player12St_Spin_MainEv.cpp:
     complete
     .text start:0x020e10ec end:0x020e119c
 

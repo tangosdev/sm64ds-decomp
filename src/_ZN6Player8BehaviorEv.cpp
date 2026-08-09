@@ -139,7 +139,7 @@ after_player_slot:
         data_0209f284 = 0;
 
     if (mIsControlDisabled == 0) {
-        DecIfAbove0_Short((u16 *)((char *)&unk_6c0));
+        DecIfAbove0_Short((u16 *)((char *)&mBalloonTimer));
         if (DecIfAbove0_Short((u16 *)((char *)&unk_6be)) == 0)
             func_ov002_020d80d0(((char *)this));
         if (DecIfAbove0_Short((u16 *)((char *)&unk_6ae)) == 0) {
