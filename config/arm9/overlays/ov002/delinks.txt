@@ -326,23 +326,23 @@ src/_ZN13InvisiblePoleD0Ev.c:
     complete
     .text start:0x020b076c end:0x020b07a4
 
-src/_ZN13InvisiblePole16CleanupResourcesEv.c:
+src/_ZN13InvisiblePole16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b07a4 end:0x020b07ac
 
-src/_ZN13InvisiblePole16OnPendingDestroyEv.c:
+src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b07ac end:0x020b07b0
 
-src/_ZN13InvisiblePole6RenderEv.c:
+src/_ZN13InvisiblePole6RenderEv.cpp:
     complete
     .text start:0x020b07b0 end:0x020b07b8
 
-src/_ZN13InvisiblePole8BehaviorEv.c:
+src/_ZN13InvisiblePole8BehaviorEv.cpp:
     complete
     .text start:0x020b07b8 end:0x020b07c0
 
-src/_ZN13InvisiblePole13InitResourcesEv.c:
+src/_ZN13InvisiblePole13InitResourcesEv.cpp:
     complete
     .text start:0x020b07c0 end:0x020b07c8
 
