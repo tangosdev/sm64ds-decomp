@@ -48,6 +48,7 @@ from elftools.elf.elffile import ELFFile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import build_pin as BP  # noqa: E402
+import objisolate as OI  # noqa: E402
 from enroll import candidates, CONFIG, REPO  # noqa: E402
 
 MW = REPO / "tools" / "mwccarm"
@@ -87,7 +88,7 @@ def defined_symbols():
 
 
 def classify(job):
-    rel, name, addr, size, sec, known, version = job
+    rel, name, addr, size, sec, known, version, isolate = job
     src = REPO / rel
     obj = BUILD / pathlib.Path(rel).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
@@ -115,7 +116,25 @@ def classify(job):
     if sec not in (".text", ".init"):
         return rel, name, f"lives in {sec}, not .text", []
 
+    # A C++ destructor cannot be compiled alone: mwcc emits D0/D1/D2 plus the class
+    # vtable and its RTTI into one object, because the Itanium ABI puts the vtable in
+    # the TU defining the key function. That object is not placeable -- the lcf's
+    # `File.o(.text)` matches all three code sections -- so it is reduced to the one
+    # function this file declares before being judged. See tools/objisolate.py; 81
+    # enrolled files sat at "extra sections: .data" for exactly this reason.
+    #
+    # Isolating HERE and in rombuild.compile_one both, from the same module, because a
+    # classifier that judges a different object than the build compiles is worse than
+    # no classifier: it passes files the build then breaks on. Same reason CFLAGS is
+    # imported from rombuild rather than copied.
     try:
+        # Inside the try: a malformed object -- a corrupt cache entry, a compiler that
+        # emitted something unparseable -- must be one file's verdict, not a traceback
+        # that ends the whole classification run.
+        plan = OI.isolate(obj, name) if isolate else {}
+        if plan.get("error") and plan.get("kind") != OI.NOT_A_FUNCTION:
+            return rel, name, f"isolate: {plan['error']}", []
+
         elf = ELFFile(io.BytesIO(obj.read_bytes()))
         content = []
         for s in elf.iter_sections():
@@ -162,7 +181,21 @@ def classify(job):
             return rel, name, f"size 0x{dsize:x} != declared 0x{size:x}", []
         if other_defined:
             return rel, name, "defines non-function globals: " + ",".join(other_defined[:3]), []
-        missing = sorted(set(undefined) - known)
+        # Only the imports the kept function actually reaches. Isolation leaves dead
+        # ones behind -- `_ZN4CoinD2Ev` (the ROM has no D2 variant at all) and the
+        # `abi::__class_type_info` vtables the dropped RTTI records referenced -- and
+        # rule 5's hazard is a weak gap-object import binding to 0, which needs a live
+        # reference to bind. Nothing names these, so nothing can bind to them.
+        # `live` is already "undefined AND reached by the kept function", so it is
+        # used directly rather than intersected with `undefined`. The intersection
+        # silently dropped the case that matters: `undefined` is collected from the
+        # STB_GLOBAL/STB_WEAK loop above, so an isolated function-local static --
+        # `table$8` and its guard in func_ov002_020bd664, both STB_LOCAL -- was never
+        # in it, and the file passed rule 5 while referencing a symbol no ROM module
+        # defines. It linked, and wrote the address of the function itself.
+        live = (OI.referenced_undefined(obj.read_bytes(), name) if isolate
+                else set(undefined))
+        missing = sorted(live - known)
         if missing:
             # `reason` is truncated for the histogram a human reads; `missing` is the
             # complete list, because a consumer that acts on it needs all of them. A
@@ -177,6 +210,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("-j", "--jobs", type=int, default=os.cpu_count() or 8)
+    # A/B switch for the isolation step, so its effect on the pass list is a
+    # measurement rather than a claim. Not a build option: rombuild always
+    # isolates, so classifying without it describes an object the build will
+    # not produce.
+    ap.add_argument("--no-isolate", action="store_true",
+                    help="classify raw objects (comparison only, not what rombuild builds)")
     args = ap.parse_args()
 
     known = defined_symbols()
@@ -186,7 +225,8 @@ def main():
     # compiler the build would not use for it whenever the two spellings differ. They
     # coincide today, which is exactly why the divergence would go unnoticed until the
     # day they did not.
-    jobs = [(rel, name, addr, size, sec, known, BP.version_for(rel, name) or VERSION)
+    jobs = [(rel, name, addr, size, sec, known, BP.version_for(rel, name) or VERSION,
+             not args.no_isolate)
             for (_d, name, rel, addr, size, sec) in cands]
     print(f"classifying {len(jobs)} enrolled functions with -j{args.jobs} ...")
 

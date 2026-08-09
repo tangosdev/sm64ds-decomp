@@ -49,6 +49,7 @@ INCLUDE = REPO / "include"
 CONFIG_ROOT = REPO / "config" / "arm9"
 BUILD = REPO / "build"
 sys.path.insert(0, str(REPO / "tools"))
+import objisolate as OI  # noqa: E402
 import rombuild_cache as RBK  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
 import layout_check as LAY  # noqa: E402
@@ -221,6 +222,55 @@ def init_section_sources():
     return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
 
 
+def _isolate(obj, rel, syms):
+    """Reduce a compiled `src/` object to its declared function. Returns an error or None.
+
+    `mods/` is deliberately exempt. A mod is not a recovered ROM function: it may
+    legitimately define helpers and data alongside its entry point, and isolation
+    would strip them and externalise their symbols, which weak gap-object imports
+    then bind to 0 at runtime. Silently producing a mod that jumps through null is
+    far worse than a mod that fails to link, so mods keep the whole object.
+    """
+    if not rel.replace("\\", "/").startswith("src/"):
+        return None
+    plan = OI.isolate(obj, (syms or {}).get(rel, pathlib.Path(rel).stem))
+    if plan.get("kind") == OI.NOT_A_FUNCTION:
+        return None          # nothing to reduce; other gates judge this file
+    return plan.get("error")
+
+
+def _retarget(obj, rel, init_srcs):
+    """retarget_text_section as a per-file verdict. Returns an error or None.
+
+    The helper raises, which is right for a helper -- but these calls run under
+    `ex.map`, where a raise escapes the result loop and ends the whole build with a
+    traceback instead of failing the one file that provoked it. A malformed object
+    is one source's problem; `eligible.py` reaches the same conclusion for the same
+    reason, and the two now agree.
+    """
+    if not (init_srcs and rel in init_srcs):
+        return None
+    try:
+        retarget_text_section(obj)
+    except RuntimeError as e:
+        return str(e)
+    return None
+
+
+def enrolled_symbols():
+    """{rel: symbol} for enrolled sources.
+
+    objisolate needs the symbol to keep, and the file stem is NOT it -- not as a
+    rule. The two coincide for all 11,160 candidates today, which is exactly the
+    condition under which keying on the stem goes unnoticed until it does not; the
+    same divergence build_pin's version lookup already carries. Keying on the
+    enrolled symbol costs one dict and cannot drift.
+    """
+    import enroll as E
+    cands, _ = E.candidates()
+    return {rel: name for (_d, name, rel, _addr, _size, _sec) in cands}
+
+
 def retarget_text_section(obj, section=".init"):
     """Rename an object's `.text` section header to `section`, in place.
 
@@ -245,6 +295,14 @@ def retarget_text_section(obj, section=".init"):
     names = [s.name for s in elf.iter_sections()]
     if section in names:
         return False                          # already retargeted
+    # Renaming the FIRST .text and returning is only correct while there is exactly
+    # one. A multi-.text object -- any C++ destructor -- would get an arbitrary one
+    # renamed, and dsd's `File.o(.init)` selector would then place whichever section
+    # that happened to be. No .init candidate compiles to more than one .text today;
+    # this fails loudly on the day one does rather than mislinking it.
+    if len([n for n in names if n == ".text"]) > 1:
+        raise RuntimeError(f"{obj}: {names.count('.text')} .text sections; "
+                           f"cannot retarget to {section} unambiguously")
     base = elf.get_section(elf["e_shstrndx"]).header["sh_offset"]
     want = b".text\x00"
     for s in elf.iter_sections():
@@ -259,7 +317,7 @@ def retarget_text_section(obj, section=".init"):
     return False
 
 
-def compile_one(rel, vers=None, cache=None, init_srcs=None):
+def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
@@ -285,8 +343,12 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None):
     if key is not None:
         deps = cache.manifest(key)
         if deps is not None and cache.fetch(cache.object_key(key, deps), obj):
-            if init_srcs and rel in init_srcs:
-                retarget_text_section(obj)
+            err = _retarget(obj, rel, init_srcs)
+            if err:
+                return rel, f"retarget: {err}", "error"
+            err = _isolate(obj, rel, syms)
+            if err:
+                return rel, f"isolate: {err}", "error"
             return rel, None, "hit"
 
     # -MD makes mwccarm write out the headers it actually read, which is what lets the
@@ -314,15 +376,23 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None):
             return rel, detail[:400], "error"
         # Before caching, so the stored object already carries the right section name
         # and a later hit needs no fixup.
-        if init_srcs and rel in init_srcs:
-            retarget_text_section(obj)
+        err = _retarget(obj, rel, init_srcs)
+        if err:
+            return rel, f"retarget: {err}", "error"
         if key is None:
-            return rel, None, "miss"
+            err = _isolate(obj, rel, syms)
+            return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
         deps = cache.deps_from(scratch)
         if deps is None:
-            return rel, None, "uncacheable"
+            err = _isolate(obj, rel, syms)
+            return (rel, f"isolate: {err}", "error") if err else (rel, None, "uncacheable")
+        # Cache the RAW object, then isolate the working copy. Storing the reduced
+        # form instead would bake this transformation into every entry, so any later
+        # fix to it would be masked by isolate()'s own idempotence -- which is exactly
+        # how the STB_LOPROC bug survived a rebuild and forced SCHEMA 2.
         cache.put(key, deps, obj)
-        return rel, None, "miss"
+        err = _isolate(obj, rel, syms)
+        return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
     finally:
         if scratch:
             shutil.rmtree(scratch, ignore_errors=True)
@@ -418,6 +488,7 @@ def main():
         cache = RBK.ObjectCache(args.cache_dir or (BUILD / "objcache"), REPO,
                                 enabled=not args.no_cache)
         init_srcs = init_section_sources()
+        syms = enrolled_symbols()
         print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
               + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
         failures = []
@@ -425,7 +496,7 @@ def main():
         if srcs:
             with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
                 for rel, err, outcome in ex.map(
-                        lambda s: compile_one(s, vers, cache, init_srcs), srcs):
+                        lambda s: compile_one(s, vers, cache, init_srcs, syms), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
                     if err:
                         failures.append((rel, err))
