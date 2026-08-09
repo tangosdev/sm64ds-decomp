@@ -4,12 +4,20 @@
  * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
  *
  * Player derives from Actor: ActorBase -> ActorDerived -> Actor -> Player.
- * See notes/actor-vtables.md. That is not yet expressed here -- 0x000..0x0cf
- * still duplicates Actor's layout inline rather than inheriting it, and the
- * 31-slot vtable (_ZTV6Player, 0x0210a83c in ov002) is unrepresented. Fields
- * below 0x0d0 are being reconciled with Actor.h/ActorBase.h so that the switch
- * to real inheritance becomes a header change rather than a rewrite of 197
- * files.
+ * See notes/actor-vtables.md. That IS expressed here now: `struct Player :
+ * Actor` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
+ * vtable (_ZTV6Player, 0x0210a83c in ov002) has seven of its overrides
+ * declared -- the destructor pair plus slots 0, 3, 6, 9, 12 and 18. See the
+ * vtable block above the method list; the key-function rule documented there
+ * is load-bearing, not advisory.
+ *
+ * This header is C++ only. The old #ifndef __cplusplus twin is gone, so a
+ * consumer that still needs the C spelling has none -- 201 files include it.
+ *
+ * NOT yet expressed: the nested type `Player::State`. Both
+ * _ZN6Player7IsStateERNS_5StateE and _ZN6Player11ChangeStateERNS_5StateE take
+ * a `State&`, and every St_*_Init/_Main/_Cleanup handler is reached through
+ * it, so it wants settling before those are migrated.
  *
  * sizeof(Player) is 0x768 -- _ZN6PlayerC3Ev asks operator new for exactly that.
  */
@@ -18,36 +26,14 @@
 #include "types.h"
 #include "Actor.h"
 
-/* fwd */
+/* fwd. Only these three are types. gen_header.py used to emit a `struct X;`
+   for every parameter NAME it could not resolve as well -- 26 of them, `struct
+   a;` through `struct x;` -- which declared nothing any declaration below
+   refers to. Removed; none was used as a type anywhere in src/ or include/. */
 struct Actor;
 struct ActorBase;
 struct Vector3;
-struct a;
-struct a_;
-struct actor_;
-struct amt;
-struct arg_;
-struct b;
-struct b2;
-struct b3;
-struct b_;
-struct c_;
-struct chr_;
-struct count;
-struct d_;
-struct e_;
-struct h;
-struct j;
-struct kind;
-struct msg;
-struct p1;
-struct p2;
-struct p3;
-struct pos;
-struct pos_;
-struct v;
-struct v_;
-struct x;
+
 struct Player : Actor {
     /* 0x000..0x0cf is Actor's, inherited rather than duplicated. It used to be
        written out inline here -- mParam at 0x008 was ActorBase's param1, mPosX
