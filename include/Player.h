@@ -411,6 +411,9 @@ struct Player : Actor {
     int IsInsideOfCannon();
     int IsOnShell();
     int IsOpeningDoorWithStar();
+    /* Pointer identity against mState. bool, not int: the ROM normalises with
+       a moveq #1 / movne #0 pair rather than returning a raw value. */
+    bool IsState(State &state);
     int IsStateEnteringLevel();
     int JumpIntoBooCage(Vector3 & v_);
     int LostGrabbedObject();

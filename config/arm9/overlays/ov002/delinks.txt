@@ -3980,7 +3980,7 @@ src/func_ov002_020e3078.c:
     complete
     .text start:0x020e3078 end:0x020e308c
 
-src/_ZN6Player7IsStateERNS_5StateE.c:
+src/_ZN6Player7IsStateERNS_5StateE.cpp:
     complete
     .text start:0x020e308c end:0x020e30a0
 
