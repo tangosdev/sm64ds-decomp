@@ -16,8 +16,10 @@ struct MgBounceAndPounce {
     u8  unk_5000;           /* 0x5000 */
 #ifdef __cplusplus
     /* methods */
+    int AfterInitResources(unsigned int result);
     int BeforeBehavior();
     int BeforeInitResources();
+    int BeforeRender();
     void AfterCleanupResources(unsigned int b_);
     void AfterRender(unsigned int arg);
 #endif

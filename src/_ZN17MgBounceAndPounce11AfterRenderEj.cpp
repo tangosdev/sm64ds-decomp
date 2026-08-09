@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN17MgBounceAndPounce11AfterRenderEj
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MgBounceAndPounce.h"
+
+extern "C" void _ZN5Scene11AfterRenderEj(void *self, unsigned int result);
 
 void MgBounceAndPounce::AfterRender(unsigned int arg)
 {
@@ -15,5 +15,5 @@ void MgBounceAndPounce::AfterRender(unsigned int arg)
         }
     }
 
-    Scene_AfterRender(((void *)this), arg);
+    _ZN5Scene11AfterRenderEj(this, arg);
 }
