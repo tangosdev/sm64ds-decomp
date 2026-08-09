@@ -42,18 +42,36 @@ model -- keep the two separate, matching overlay_residency.py's numbering.
 Own-overlay attribution (which overlay a src file belongs to) tries, in
 order:
 
-    1. filename convention -- func_ovNNN_*.c(pp), data_ovNNN_*.c(pp),
+    1. config/arm9/overlays/*/delinks.txt -- ground truth. Each overlay's
+       delinks.txt lists the exact src/ paths linked into it (`src/PATH:`
+       lines). A prior audit (wave-3 sample review,
+       C:/Users/bmanu/.claude/orchestration/runs/port-gates-0808b/review/
+       wave3-sample.md) confirmed zero files are claimed by two overlays'
+       delinks.txt, so a hit here is authoritative. Files that appear in
+       config/arm9/delinks.txt instead (no overlays/ in the path) are
+       shared arm9 code, not overlay-owned at all -- reported as such, no
+       overlay is guessed for them.
+    2. filename convention -- func_ovNNN_*.c(pp), data_ovNNN_*.c(pp),
        __sinit_ovNNN_*.c(pp) (static-initializer files; an earlier draft's
        filename regex required the file to START with func_/data_ and never
-       matched __sinit_, silently skipping all ~278 of them)
-    2. a `// @symbol NAME` header comment, resolved against every overlay's
-       symbols.txt
-    3. sibling-file inference: for a mangled class-method file (_ZN...Ev.cpp)
-       with no @symbol tag, find another file for the SAME class (by the
-       mangled class-name prefix) that resolves via (1) or (2), and borrow
-       its overlay. This is what catches SkiLift::CleanupResources off the
-       back of SkiLift::InitResources, for example -- a class's methods all
-       live in the same overlay.
+       matched __sinit_, silently skipping all ~278 of them) -- cross-check
+       only; disagreement with delinks.txt is reported, not guessed at.
+    3. a `// @symbol NAME` header comment, resolved against every overlay's
+       symbols.txt -- also a cross-check only, same disagreement rule.
+    4. sibling-file inference: for a mangled class-method file (_ZN...Ev.cpp)
+       absent from EVERY delinks.txt (the file itself isn't in src/ yet, or
+       the sweep is being run against a tree where delinks hasn't been
+       regenerated), find other files for the SAME class (by the mangled
+       class-name prefix) that resolve via delinks.txt, filename, or
+       @symbol, and only borrow their overlay if ALL such siblings agree
+       unanimously. Split classes (Player: 240 files in ov002, 6 in ov006,
+       1 in ov007; Enemy: base methods in ov002 despite override methods
+       living in instance overlays like ov004) are exactly why this no
+       longer fires on majority or first-match -- see the wave-3 sample
+       review above, which found the old first-alphabetical-sibling
+       fallback misattributed 8 of 13 sibling-sourced files (62%). This
+       step also refuses to fire for any sibling found only in
+       config/arm9/delinks.txt (shared arm9, no single overlay to borrow).
 
 Read-only. `scan` mode prints a summary and writes the full candidate list to
 a JSON file. `report` mode reformats a previous scan's JSON as a readable
@@ -165,6 +183,37 @@ def addr_to_name_size(ov_syms, ov, addr):
     return None
 
 
+# --------------------------------------------------------------------- delinks.txt (ground truth)
+DELINKS_SRC_RE = re.compile(r"^src/(\S+\.c(?:pp)?):$")
+
+
+def parse_delinks_ownership():
+    """path_to_ov: {'src/FOO.c': 'ov006', ...} for every file claimed by an
+    overlay's delinks.txt, plus shared_arm9: {'src/FOO.c', ...} for files
+    claimed only by the top-level config/arm9/delinks.txt (not overlay-owned).
+    A prior audit confirmed no path is claimed by two overlays' delinks.txt."""
+    path_to_ov = {}
+    for d in sorted(CFG_OV.glob("ov*")):
+        p = d / "delinks.txt"
+        if not p.is_file():
+            continue
+        ov = d.name
+        for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+            m = DELINKS_SRC_RE.match(line.strip())
+            if m:
+                path_to_ov[m.group(1)] = ov
+
+    shared_arm9 = set()
+    top = REPO / "config" / "arm9" / "delinks.txt"
+    if top.is_file():
+        for line in top.read_text(encoding="utf-8", errors="ignore").splitlines():
+            m = DELINKS_SRC_RE.match(line.strip())
+            if m:
+                shared_arm9.add(m.group(1))
+
+    return path_to_ov, shared_arm9
+
+
 # --------------------------------------------------------------------- own-overlay of a src file
 REF_RE = re.compile(r"\b(data|func)_ov(\d{3})_([0-9a-fA-F]{6,8})\b")
 SYMBOL_TAG_RE = re.compile(r"^//\s*@symbol\s+(\S+)", re.MULTILINE)
@@ -183,17 +232,50 @@ def mangled_class_prefix(name):
 
 
 class Attributor:
-    """Resolves which overlay owns a src file, with a sibling-file fallback for
-    mangled class-method files that carry no filename or @symbol evidence of
-    their own (own_overlay() alone can't see these; a sibling method file for
-    the same class usually can)."""
+    """Resolves which overlay owns a src file.
 
-    def __init__(self, name_to_ov):
+    delinks.txt (config/arm9/overlays/*/delinks.txt) is the PRIMARY source --
+    it is ground truth for what's actually linked into each overlay. Filename
+    convention and `// @symbol` tags are cross-checks only: if either
+    disagrees with delinks.txt, that's reported (own_overlay_source carries
+    a "delinks+mismatch:..." tag) rather than silently trusted, but
+    delinks.txt still wins since it's authoritative.
+
+    Files present only in the top-level config/arm9/delinks.txt are shared
+    arm9 code, not owned by any single overlay -- these resolve to
+    ("SHARED_ARM9", None) and are never candidates.
+
+    The old sibling-file fallback (borrow a same-class file's overlay) is
+    kept ONLY for files absent from every delinks.txt, and only fires when
+    ALL directly-resolvable siblings (via delinks.txt/filename/@symbol, not
+    another sibling guess) unanimously agree on one overlay. Split classes
+    (Player, Enemy, PathLift, ...) made the old first-match version wrong
+    62% of the time (wave-3 sample review); unanimous-agreement-or-bail
+    closes that. Siblings that only resolve to SHARED_ARM9 are excluded
+    from the vote (no overlay to borrow); if that leaves zero siblings, or
+    the survivors disagree, resolution bails to (None, "ambiguous")."""
+
+    def __init__(self, name_to_ov, path_to_ov, shared_arm9):
         self.name_to_ov = name_to_ov
-        self._class_cache = {}   # class prefix -> ov (or None), filled lazily
+        self.path_to_ov = path_to_ov          # 'src/FOO.c' -> 'ovNNN', from delinks.txt
+        self.shared_arm9 = shared_arm9        # {'src/FOO.c', ...}
+        self._class_cache = {}   # class prefix -> (ov or "AMBIGUOUS" or None), filled lazily
 
-    def direct(self, fpath, text):
-        """Attribution from this file alone: filename, then @symbol tag."""
+    def delinks_owner(self, fpath):
+        """('ovNNN', True) | ('SHARED_ARM9', True) | (None, False) -- the
+        bool is whether delinks.txt has an opinion at all. path_to_ov and
+        shared_arm9 are keyed WITHOUT the 'src/' prefix (DELINKS_SRC_RE's
+        capture group starts after it) -- match that convention here."""
+        rel = str(fpath.relative_to(SRC)).replace("\\", "/")
+        if rel in self.path_to_ov:
+            return self.path_to_ov[rel], True
+        if rel in self.shared_arm9:
+            return "SHARED_ARM9", True
+        return None, False
+
+    def filename_or_symbol(self, fpath, text):
+        """Cross-check attribution from this file alone: filename, then
+        @symbol tag. Independent of delinks.txt."""
         m = FILENAME_OV_RE.match(fpath.name)
         if m:
             return f"ov{m.group(1)}"
@@ -211,31 +293,63 @@ class Attributor:
         return None
 
     def resolve(self, fpath, text, all_files_text):
-        own = self.direct(fpath, text)
-        if own is not None:
-            return own, "direct"
-        # sibling-file fallback for mangled class methods
+        dl_own, dl_present = self.delinks_owner(fpath)
+        if dl_present:
+            if dl_own == "SHARED_ARM9":
+                return "SHARED_ARM9", "delinks-shared"
+            cross = self.filename_or_symbol(fpath, text)
+            if isinstance(cross, str) and cross != dl_own:
+                return ("AMBIGUOUS", (dl_own, cross)), "delinks-mismatch"
+            return dl_own, "delinks"
+
+        # not in any delinks.txt -- fall back to filename/@symbol directly
+        cross = self.filename_or_symbol(fpath, text)
+        if isinstance(cross, str):
+            return cross, "direct"
+        if isinstance(cross, tuple):
+            return cross, "direct-ambiguous"
+
+        # last resort: unanimous sibling agreement for mangled class methods
         cls = mangled_class_prefix(fpath.stem)
         if cls is None:
             return None, None
         if cls not in self._class_cache:
             self._class_cache[cls] = self._resolve_class(cls, all_files_text)
         ov = self._class_cache[cls]
-        return (ov, "sibling") if ov is not None else (None, None)
+        if ov is None:
+            return None, None
+        if ov == "AMBIGUOUS":
+            return ("AMBIGUOUS", (cls,)), "sibling-disagreement"
+        return ov, "sibling"
 
     def _resolve_class(self, cls, all_files_text):
+        """Unanimous vote across every directly-resolvable sibling (via
+        delinks.txt, filename, or @symbol -- never another sibling guess).
+        Returns an overlay string only if every sibling that resolves to a
+        single overlay agrees; "AMBIGUOUS" if they disagree; None if no
+        sibling resolves at all (or all resolve to SHARED_ARM9, which
+        doesn't name a borrowable overlay)."""
+        votes = set()
         for f2, text2 in all_files_text:
             if f2.stem == cls or not f2.stem.startswith(cls):
                 continue
-            # only treat it as a same-class sibling if the mangled length tag matches
-            # (avoids "_ZN7SkiLift" prefix-matching "_ZN7SkiLifts..." style false hits)
-            rest = f2.stem[len(cls):]
-            if rest and not re.match(r"^\d", rest) and not rest[0].isupper():
-                pass  # method names/dtor tags follow the class name; accept
-            d = self.direct(f2, text2)
-            if isinstance(d, str):
-                return d
-        return None
+            dl_own, dl_present = self.delinks_owner(f2)
+            if dl_present:
+                if dl_own == "SHARED_ARM9":
+                    continue  # no overlay to borrow from this sibling
+                cross = self.filename_or_symbol(f2, text2)
+                if isinstance(cross, str) and cross != dl_own:
+                    continue  # this sibling itself is inconsistent; skip its vote
+                votes.add(dl_own)
+                continue
+            cross = self.filename_or_symbol(f2, text2)
+            if isinstance(cross, str):
+                votes.add(cross)
+        if not votes:
+            return None
+        if len(votes) > 1:
+            return "AMBIGUOUS"
+        return next(iter(votes))
 
 
 # --------------------------------------------------------------------- sweep
@@ -256,8 +370,10 @@ def load_context():
         for name in syms:
             name_to_ov.setdefault(name, set()).add(ov)
 
+    path_to_ov, shared_arm9 = parse_delinks_ownership()
+
     return {"rng": rng, "siblings": siblings, "calls": calls, "ov_syms": ov_syms,
-            "name_to_ov": name_to_ov}
+            "name_to_ov": name_to_ov, "path_to_ov": path_to_ov, "shared_arm9": shared_arm9}
 
 
 def is_e3_cleared(own, ref_ov):
@@ -270,13 +386,13 @@ def scan():
     ctx = load_context()
     siblings, calls, ov_syms, name_to_ov = (
         ctx["siblings"], ctx["calls"], ctx["ov_syms"], ctx["name_to_ov"])
-    attributor = Attributor(name_to_ov)
+    attributor = Attributor(name_to_ov, ctx["path_to_ov"], ctx["shared_arm9"])
 
     files = [f for f in sorted(SRC.rglob("*"))
              if f.is_file() and f.suffix in (".c", ".cpp")]
     all_files_text = [(f, f.read_text(encoding="utf-8", errors="ignore")) for f in files]
 
-    candidates, e3_cleared, e5_cleared = [], [], []
+    candidates, e3_cleared, e5_cleared, ambiguous = [], [], [], []
     scanned = files_with_refs = 0
 
     for f, text in all_files_text:
@@ -286,6 +402,14 @@ def scan():
             continue
         files_with_refs += 1
         own, how = attributor.resolve(f, text, all_files_text)
+
+        if not isinstance(own, str) and own is not None:
+            # AMBIGUOUS: (tag, detail) tuple -- report, don't guess
+            ambiguous.append({
+                "file": str(f.relative_to(REPO)).replace("\\", "/"),
+                "own_overlay_source": how,
+                "detail": own[1] if isinstance(own, tuple) else None,
+            })
 
         seen = set()
         for m in refs:
@@ -330,15 +454,20 @@ def scan():
     print(f"cleared by E5 (proven co-resident CALL relocation): {len(e5_cleared)}",
           file=sys.stderr)
     print(f"real candidates: {len(candidates)}", file=sys.stderr)
+    print(f"ambiguous attribution (reported, not guessed): {len(ambiguous)} files",
+          file=sys.stderr)
 
     e3_pairs = Counter((r["own_overlay"], r["wrong_overlay"]) for r in e3_cleared)
     e5_pairs = Counter((r["own_overlay"], r["wrong_overlay"]) for r in e5_cleared)
     print("pairs cleared by E3:", dict(e3_pairs), file=sys.stderr)
     print("pairs cleared by E5:", dict(e5_pairs), file=sys.stderr)
+    src_counter = Counter(r["own_overlay_source"] for r in candidates)
+    print("candidate own_overlay_source breakdown:", dict(src_counter), file=sys.stderr)
 
     return {
         "num_overlays": len(ctx["rng"]),
         "candidates": candidates,
+        "ambiguous": ambiguous,
         "e3_cleared_pairs": {f"{a}->{b}": n for (a, b), n in e3_pairs.items()},
         "e5_cleared_pairs": {f"{a}->{b}": n for (a, b), n in e5_pairs.items()},
     }
@@ -372,6 +501,10 @@ def cmd_report(args):
     if args.all:
         print("e3_cleared_pairs:", data.get("e3_cleared_pairs"))
         print("e5_cleared_pairs:", data.get("e5_cleared_pairs"))
+        ambiguous = data.get("ambiguous", [])
+        print(f"\nambiguous attribution ({len(ambiguous)}):")
+        for a in ambiguous:
+            print(f"    {a['file']}  ({a['own_overlay_source']})  detail={a.get('detail')}")
     return 0
 
 
