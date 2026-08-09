@@ -40,6 +40,12 @@ struct Minimap {
     u8  unk_255;            /* 0x255 */
 #ifdef __cplusplus
     /* methods */
+    int Behavior();
+    /* STATIC -- no `this`. The ROM keeps r0 (the Vector3) in r4 and clobbers r1
+       before any use, so the only incoming pointer is the argument. Staticness
+       is not part of the mangling, so the symbol is unchanged either way; the
+       evidence is the register use. */
+    static void FixTHIPaintingRoomPos(Vector3 & v_);
     int InitResources();
     s32 CleanupResources();
     void OnPendingDestroy();
