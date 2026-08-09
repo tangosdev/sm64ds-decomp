@@ -129,11 +129,11 @@ src/func_ov090_02132b14.c:
     complete
     .text start:0x02132b14 end:0x02132c1c
 
-src/_ZN8MantaRay16CleanupResourcesEv.c:
+src/_ZN8MantaRay16CleanupResourcesEv.cpp:
     complete
     .text start:0x02132c1c end:0x02132c64
 
-src/_ZN8MantaRay16OnPendingDestroyEv.c:
+src/_ZN8MantaRay16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02132c64 end:0x02132c68
 

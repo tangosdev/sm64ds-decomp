@@ -1,8 +1,29 @@
 //cpp
+// @symbol _ZN8MantaRay13InitResourcesEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Loads the model and animation, unpacks the spawn word, caches the path, and
+ * places the ray on it.
+ *
+ * mParam is TWO fields in one word: the low byte is the path ID and bits 12-15
+ * are unk_388. The path ID is clamped at zero afterwards -- a signed read of a
+ * masked byte cannot go negative, so that test is dead as written and kept as
+ * the ROM has it.
+ *
+ * unk_380 caches the node count once here; Behavior wraps mPathNode against it
+ * every frame rather than re-asking the path. The ray is then STARTED AT NODE
+ * 1, not 0, and its position comes from the path rather than the spawn point.
+ *
+ * Two of the four files it claims live in ov002, not this overlay -- shared
+ * assets it still has to release itself (see CleanupResources).
+ *
+ * One level (data_0209f2d8 == 2) overrides all of it: node 3, a fixed heading,
+ * and a hardcoded position. That is a scripted placement, not a spawn.
+ */
+#include "MantaRay.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct Actor;
-struct Vector3 { int x, y, z; };
 
 struct PathPtr {
     char pad[8];
@@ -28,52 +49,53 @@ extern int data_ov090_0213454c;
 extern unsigned char data_0209f2d8;
 }
 
-extern "C" int _ZN8MantaRay13InitResourcesEv(unsigned char* thiz)
+int MantaRay::InitResources()
 {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(thiz + 0x30c, _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134524), 1, -1);
+    unsigned char* thiz = (unsigned char*)this;
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134524), 1, -1);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da10);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_0213452c);
 
-    *(int*)(thiz + 0x37c) = *(int*)(thiz + 8) & 0xff;
-    *(int*)(thiz + 0x388) = (*(unsigned int*)(thiz + 8) >> 0xc) & 0xf;
-    if (*(int*)(thiz + 0x37c) < 0) *(int*)(thiz + 0x37c) = 0;
+    unk_37c = mParam & 0xff;
+    unk_388 = (*(unsigned int*)&mParam >> 0xc) & 0xf;
+    if (unk_37c < 0) unk_37c = 0;
 
     {
         PathPtr pp;
-        pp.FromID(*(unsigned int*)(thiz + 0x37c));
-        *(int*)(thiz + 0x380) = pp.NumNodes();
+        pp.FromID(*(unsigned int*)&unk_37c);
+        unk_380 = pp.NumNodes();
     }
 
-    *(int*)(thiz + 0xa0) = -0x3c000;
+    unk_0a0 = -0x3c000;
 
     {
         Vector3 v;
         v.x = data_ov090_02134200.x;
         v.y = data_ov090_02134200.y;
         v.z = data_ov090_02134200.z;
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(thiz + 0x110, (Actor*)thiz, v,
+        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (Actor*)thiz, v,
             0x150000, 0xc8000, 0x200004, 0);
     }
 
     {
         PathPtr pp;
-        pp.FromID(*(unsigned int*)(thiz + 0x37c));
-        *(int*)(thiz + 0x384) = 1;
-        pp.GetNode(*(Vector3*)(thiz + 0x5c), *(unsigned int*)(thiz + 0x384));
+        pp.FromID(*(unsigned int*)&unk_37c);
+        mPathNode = 1;
+        pp.GetNode(*(Vector3*)&mPosX, *(unsigned int*)&mPathNode);
     }
 
     {
         int b = (int)(data_0209f2d8 == 2);
         if (b != 0) {
-            *(int*)(thiz + 0x384) = 3;
-            *(short*)(thiz + 0x92) = (short)0xf303;
-            *(short*)(thiz + 0x94) = 0xb50;
-            *(short*)(thiz + 0x96) = 0;
-            *(int*)(thiz + 0x5c) = (int)0xfdfb8000;
-            *(int*)(thiz + 0x60) = (int)0xff8f8000;
-            *(int*)(thiz + 0x64) = 0x29a000;
-            *(int*)(thiz + 0xb0) = 0;
+            mPathNode = 3;
+            mPrevAngleX = (short)0xf303;
+            mPrevAngleY = 0xb50;
+            mPrevAngleZ = 0;
+            mPosX = (int)0xfdfb8000;
+            mPosY = (int)0xff8f8000;
+            mPosZ = 0x29a000;
+            unk_0b0 = 0;
         }
     }
 
