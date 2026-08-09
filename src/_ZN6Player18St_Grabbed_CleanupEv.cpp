@@ -1,37 +1,33 @@
 //cpp
-#include "types.h"
-/* Player::St_Grabbed_Cleanup — clear flag bit1 at +0x2ec; if a held actor
- * (+0x35c) exists with actorID 0xbf, drop it and clear the slot. Returns 1.
- * Callee: _ZN6Player9DropActorEv (called with the held actor as arg).
+// @symbol _ZN6Player18St_Grabbed_CleanupEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Clears bit 1 of the body-collision flags, then if something is holding the
+ * player at +0x35c and its actorID is 0xbf, tells it to drop and clears the
+ * slot. Note the callee is _ZN6Player9DropActorEv -- Player::DropActor() --
+ * invoked with THAT actor as its this, not the player's: whatever occupies
+ * 0x35c is itself a Player. Kept as an extern "C" call rather than a method
+ * call so the source does not assert a type this function cannot evidence.
+ *
+ * 0x35c is unk_35c, NOT mHeldObj at 0x358 -- those are different slots; the
+ * object the player holds and the actor holding the player.
  */
+#include "Player.h"
 extern "C" {
-struct Actor {
-    char _pad0[0xc];
-    u16 actorID;          /* 0xc */
-};
+extern void _ZN6Player9DropActorEv(void* a);
+}
 
-struct Player {
-    char _pad0[0x2ec];
-    u32 unk2EC;           /* 0x2ec */
-    char _pad1[0x35c - 0x2f0];
-    struct Actor* held;   /* 0x35c */
-};
-
-extern void _ZN6Player9DropActorEv(struct Actor* a);
-
-int _ZN6Player18St_Grabbed_CleanupEv(struct Player* this_)
+int Player::St_Grabbed_Cleanup()
 {
-    struct Actor* a;
-    *(u32*)(((long long)(int)((char*)this_ + 0x2ec))) &= ~2;
-    a = this_->held;
+    void* a;
+    *(u32*)&mBodyClsnFlags &= ~2;
+    a = (void*)unk_35c;
     if (a) {
-        int isBob = a->actorID == 0xbf;
+        int isBob = *(u16*)((char*)a + 0xc) == 0xbf;
         if (isBob) {
             _ZN6Player9DropActorEv(a);
-            this_->held = 0;
+            unk_35c = 0;
         }
     }
     return 1;
-}
-
 }

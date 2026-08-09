@@ -1,50 +1,48 @@
 //cpp
-struct Player;
-extern "C" void Player_DisableInteraction(Player*);
-extern "C" void func_02035860(void*, void*);
-extern "C" void func_0200cf40(char*);
+// @symbol _ZN6Player15St_Respawn_InitEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Restores the spawn point saved by Player::InitResources, lifts the player
+ * 0x3e8000 above it, re-seats the mesh collider at the new position, then
+ * resets speed/angle state and starts the respawn animation.
+ */
+#include "Player.h"
+extern "C" {
+extern void Player_DisableInteraction(Player*);
+extern void func_02035860(void*, void*);
+extern void func_0200cf40(char*);
+/* SetAnim's ROM name carries by-value class parameters (Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true types
+   breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern unsigned int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsigned int);
+}
 extern unsigned char data_0209f250;
 extern char* data_0209f318;
 
-struct Player {
-    int dummy;
-    unsigned int SetAnim(unsigned int, int, int, unsigned int);
-};
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" unsigned int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
-
-
-extern "C" int _ZN6Player15St_Respawn_InitEv(Player* thiz);
-int _ZN6Player15St_Respawn_InitEv(Player* thiz) {
-    char* self = (char*)thiz;
-    int* ptr_60 = (int*)(self + 0x60);
-    int* ptr_380 = (int*)(self + 0x380);
-    int* ptr_5c = (int*)(self + 0x5c);
-    Player_DisableInteraction(thiz);
-    *(int*)(self + 0x5c) = *(int*)(self + 0x53c);
-    *(int*)(self + 0x60) = *(int*)(self + 0x540);
-    *(int*)(self + 0x64) = *(int*)(self + 0x544);
-    *(int*)(((int)ptr_60)) += 0x3e8000;
-    func_02035860(((void*)(((int)ptr_380))), ((void*)(((int)ptr_5c))));
-    *(int*)(self + 0x68) = *(int*)(self + 0x5c);
-    *(int*)(self + 0x6c) = *(int*)(self + 0x60);
-    *(int*)(self + 0x70) = *(int*)(self + 0x64);
-    *(short*)(self + 0x94) = *(short*)(self + 0x698);
-    *(short*)(self + 0x8e) = *(short*)(self + 0x94);
-    *(unsigned char*)(self + 0x713) = 1;
-    *(unsigned char*)(self + 0x716) = 0;
-    if (*(unsigned char*)(self + 0x6d8) == data_0209f250) {
+int Player::St_Respawn_Init()
+{
+    Player_DisableInteraction(this);
+    mPosX = mSpawnPosX;
+    mPosY = mSpawnPosY;
+    mPosZ = mSpawnPosZ;
+    mPosY += 0x3e8000;
+    func_02035860(&mMeshClsn, &mPosX);
+    unk_068 = mPosX;
+    unk_06c = mPosY;
+    unk_070 = mPosZ;
+    mPrevAngleY = mSpawnAngleY;
+    mAngleY = mPrevAngleY;
+    mIsBodyClsnEnabled = 1;
+    unk_716 = 0;
+    if (mPlayerNo == data_0209f250) {
         func_0200cf40(*(char**)((int)&data_0209f318));
     }
-    _ZN6Player7SetAnimEji5Fix12IiEj(thiz, 0x54, 0x40000000, 0x1000, 0);
-    *(unsigned char*)(self + 0x6e3) = 0;
-    *(int*)(self + 0x684) = *(int*)(self + 0x60);
-    *(int*)(self + 0x98) = 0;
-    *(int*)(self + 0xa8) = *(int*)(self + 0x98);
-    *(int*)(self + 0x9c) = 0;
-    *(short*)(self + 0x6a4) = 0xa;
+    _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x54, 0x40000000, 0x1000, 0);
+    mStateStep = 0;
+    mPeakY = mPosY;
+    mHorzSpeed = 0;
+    mVertSpeed = mHorzSpeed;
+    mVertAccel = 0;
+    mStateTimer = 0xa;
     return 1;
 }

@@ -153,7 +153,15 @@ struct Player : Actor {
     u8  unk_37c;            /* 0x37c */
     u8  pad_37d[0x3];
     u8  mMeshClsn;            /* 0x380 */
-    u8  pad_381[0x1c7];
+    u8  pad_381[0x1bb];
+    /* The spawn point, saved once and restored on death. Player::InitResources
+       writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
+       mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.
+       Two functions, opposite directions, the same four slots -- which is what
+       makes these names evidenced rather than guessed. */
+    s32 mSpawnPosX;            /* 0x53c */
+    s32 mSpawnPosY;            /* 0x540 */
+    s32 mSpawnPosZ;            /* 0x544 */
     s32 unk_548;            /* 0x548 */
     s32 unk_54c;            /* 0x54c */
     s32 unk_550;            /* 0x550 */
@@ -223,7 +231,7 @@ struct Player : Actor {
     s32 mSinkDepth;            /* 0x68c */
     s32 unk_690;            /* 0x690 */
     s32 unk_694;            /* 0x694 */
-    u8  pad_698[0x2];
+    s16 mSpawnAngleY;            /* 0x698 */
     /* Downhill direction of the current floor, binary angle (0x10000 per turn).
      * Player::SetFloorSurfaceInfo computes it as cstd::atan2(mFloorNormalX,
      * mFloorNormalZ) and stores it with a 16-bit strh at 0x020c178c (written
@@ -338,7 +346,7 @@ struct Player : Actor {
     u8  unk_722;            /* 0x722 */
     u8  unk_723;            /* 0x723 */
     u8  unk_724;            /* 0x724 */
-    u8  pad_725[0x1];
+    u8  unk_725;            /* 0x725  latch: St_Talk_Cleanup reloads music layer 1 when set */
     s8  unk_726;            /* 0x726 */
     u8  unk_727;            /* 0x727 */
     u8  unk_728;            /* 0x728 */
@@ -468,6 +476,7 @@ struct Player : Actor {
     int St_GrabBowserTail_Cleanup();
     int St_GrabBowserTail_Init();
     int St_GrabBowserTail_Main();
+    int St_Grabbed_Cleanup();
     int St_Grabbed_Init();
     int St_Grabbed_Main();
     int St_GroundPound_Cleanup();
@@ -515,6 +524,7 @@ struct Player : Actor {
     int St_Owl_Main();
     int St_PunchKick_Init();
     int St_PunchKick_Main();
+    int St_Respawn_Init();
     int St_Respawn_Main();
     int St_Shell_Cleanup();
     int St_Shell_Init();
@@ -545,6 +555,7 @@ struct Player : Actor {
     int St_Swim_Init();
     int St_SwingPlayer_Cleanup();
     int St_SwingPlayer_Init();
+    int St_Talk_Cleanup();
     int St_Talk_Init();
     int St_Talk_Main();
     int St_Teleport_Init();
