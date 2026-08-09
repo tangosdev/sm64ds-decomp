@@ -9,9 +9,10 @@ extern int data_020a0eac[];
 void __destroy_arr(void*, int, int, void*);
 void _ZN5ActorD2Ev(void*);
 void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
+void func_ov027_02112158(void*);
 void* _ZN13SnowmanBreathD0Ev(char* c){
   *(int*)c = (int)RotatingPlatformRr_SpawnInfo;
-  __destroy_arr(c+0xd4, 0x32, 0x60, (void*)data_ov056_02112158);
+  __destroy_arr(c+0xd4, 0x32, 0x60, (void*)func_ov027_02112158);
   _ZN5ActorD2Ev(c);
   _ZN6Memory10DeallocateEPvP4Heap(c, (void*)data_020a0eac[0]);
   return c;
