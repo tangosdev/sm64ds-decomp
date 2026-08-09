@@ -62,15 +62,24 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 int  _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(char *thisp, Vector3 *v,
                                                     int radius, u8 *out);
 
-u32       data_0209b458;   /* nearest-player cache, cleared each frame */
-int       data_0209fc68;   /* nonzero forces the actor to think anyway */
-Matrix4x3 data_0209b3ec;   /* world -> camera */
-char      data_0209f43c;   /* the Clipper instance */
-u8        data_0209f274;   /* doubles the far-away threshold when set */
-u8        data_0209f2c4;
-u8        data_0209f20c;
-u8        data_0209f294;
-u32       data_0209b464;   /* flag mask that forces thinking; 0 means "any" */
+/* `extern` on every one of these, and it is load-bearing. Inside
+   `extern "C" { ... }` a variable declaration WITHOUT `extern` is a
+   DEFINITION in C++ -- C's tentative-definition rule does not apply -- so the
+   object would define these nine alongside the ROM's gap object. The same
+   shape in Actor::HorzAngleToFPlayer produced
+   `Multiply-defined: "data_0209b450" ... Previously defined in
+   _dsd_gap@main_40.o` and aborted the link. It did not abort here, which is
+   luck about how mwcc emits each type, not correctness. Function declarations
+   above need no `extern`; only the objects do. */
+extern u32       data_0209b458;   /* nearest-player cache, cleared each frame */
+extern int       data_0209fc68;   /* nonzero forces the actor to think anyway */
+extern Matrix4x3 data_0209b3ec;   /* world -> camera */
+extern char      data_0209f43c;   /* the Clipper instance */
+extern u8        data_0209f274;   /* doubles the far-away threshold when set */
+extern u8        data_0209f2c4;
+extern u8        data_0209f20c;
+extern u8        data_0209f294;
+extern u32       data_0209b464;   /* flag mask that forces thinking; 0 means "any" */
 
 }
 
