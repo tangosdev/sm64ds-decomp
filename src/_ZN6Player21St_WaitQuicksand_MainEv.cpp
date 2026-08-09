@@ -6,7 +6,7 @@ extern "C" {
 extern int _ZN6Player7ST_WAITE;
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
-extern int func_ov007_020c5dec(void*,int);
+extern int func_ov002_020c5dec(void*,int);
 extern int func_ov002_020d22ec(void*,int);
 extern int Player_AdvanceAnims(void*);
 }
@@ -22,7 +22,7 @@ int Player::St_WaitQuicksand_Main()
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x82,0,0x1000,0);
   }
   if(mSinkDepth>=0xb4000){
-    if(func_ov007_020c5dec(((char*)this),3)) return 1;
+    if(func_ov002_020c5dec(((char*)this),3)) return 1;
   }
   func_ov002_020d22ec(((char*)this),0);
   Player_AdvanceAnims(((char*)this));

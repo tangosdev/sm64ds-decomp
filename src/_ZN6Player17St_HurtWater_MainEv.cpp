@@ -9,7 +9,7 @@ extern int func_ov002_020ceaf4(void*);
 extern int _ZN6Player12FinishedAnimEv(void*);
 extern int _ZN6Player9GetHealthEv(void*);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
-extern void func_ov007_020c5dec(void*,int);
+extern void func_ov002_020c5dec(void*,int);
 extern int func_ov002_020ceb7c(void*);
 extern int Player_AdvanceAnims(void*);
 extern int data_ov002_0211067c[];
@@ -37,7 +37,7 @@ int Player::St_HurtWater_Main()
       if(mHurtDamage)
         mInvincibleTimer=0x24;
     }else{
-      func_ov007_020c5dec(((char*)this),8);
+      func_ov002_020c5dec(((char*)this),8);
       return 1;
     }
   }
