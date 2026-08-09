@@ -38,7 +38,7 @@ int func_ov065_021165d8(char*c){
   ApproachAngle(c+0x94,*(short*)(c+0x3e0),1,0x500,0x500);
   ApproachAngle(c+0x92,r4,1,0x500,0x500);
   if(*(unsigned short*)(c+0x100)==0)
-    func_ov065_0211691c(c,data_ov075_0211d650);
+    func_ov065_0211691c(c,data_ov065_0211d650);
   return 1;
 }
 }
