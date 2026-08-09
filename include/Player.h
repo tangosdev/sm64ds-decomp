@@ -521,6 +521,10 @@ struct Player : Actor {
     int St_Hurt_Cleanup();
     int St_Hurt_Init();
     int St_Hurt_Main();
+    /* ov002 0x020d6084, immediately before St_InYoshiMouth_Main. `int`, not
+       `void`: ChangeState TESTS a cleanup's result and a 0 vetoes the
+       transition, so this return value is load-bearing. */
+    int St_InYoshiMouth_Cleanup();
     int St_InYoshiMouth_Init();
     int St_InYoshiMouth_Main();
     int St_JumpQuicksand_Init();

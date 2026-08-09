@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6Player23St_InYoshiMouth_CleanupEv
+// @symbol func_ov006_020d6084
 /* NOT a Player method, despite the name. ov006, 0x020d6084.
  *
  * sizeof(Player) is 0x768 (its allocating constructor _ZN6PlayerC3Ev asks
@@ -12,7 +12,7 @@
  * header. Kept under the mangled name because renaming the symbol is a config
  * change; this commit is src-only.
  */
-extern "C" void _ZN6Player23St_InYoshiMouth_CleanupEv(char *self)
+extern "C" void func_ov006_020d6084(char *self)
 {
     *(char *)(self + 0x62ad) = 0;
     *(char *)(self + 0x62af) = 0;

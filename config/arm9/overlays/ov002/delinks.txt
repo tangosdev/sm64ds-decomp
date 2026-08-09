@@ -3203,7 +3203,7 @@ src/func_ov002_020d6048.cpp:
     complete
     .text start:0x020d6048 end:0x020d6084
 
-src/func_ov002_020d6084.c:
+src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp:
     complete
     .text start:0x020d6084 end:0x020d60b8
 

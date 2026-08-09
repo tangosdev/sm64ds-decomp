@@ -1521,7 +1521,7 @@ src/func_ov006_020d604c.c:
     complete
     .text start:0x020d604c end:0x020d6084
 
-src/_ZN6Player23St_InYoshiMouth_CleanupEv.cpp:
+src/func_ov006_020d6084.cpp:
     complete
     .text start:0x020d6084 end:0x020d6098
 
