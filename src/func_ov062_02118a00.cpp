@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-    extern void func_ov065_02117994(void *, int);
+    extern void func_ov062_02117994(void *, int);
     extern void func_ov062_021175c0(void *);
 }
 
@@ -17,6 +17,6 @@ extern "C" void func_ov062_02118a00(void *c) {
     } else {
         *(int *)((char *)c + 0x38c) = 2;
     }
-    func_ov065_02117994(c, 0);
+    func_ov062_02117994(c, 0);
     func_ov062_021175c0(c);
 }

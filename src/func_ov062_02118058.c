@@ -1,7 +1,7 @@
 typedef int Fix12i;
 extern Fix12i Vec3_Dist(const void*, const void*);
 extern int _ZN5Actor14GetSubtractionEss(void*, short, short);
-extern int func_ov065_02117994(void*, int);
+extern int func_ov062_02117994(void*, int);
 int func_ov062_02118058(char *c){
   void *o=*(void**)(c+0x3b4);
   int d=*(int*)(c+0x3b8);
@@ -11,5 +11,5 @@ int func_ov062_02118058(char *c){
   if(s>=0x3000) return s;
   if(*(int*)(c+0x390)==1) *(int*)(c+0x38c)=1;
   else *(int*)(c+0x38c)=3;
-  return func_ov065_02117994(c, 3);
+  return func_ov062_02117994(c, 3);
 }
