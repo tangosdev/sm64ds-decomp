@@ -2107,7 +2107,7 @@ src/func_ov002_020c3cf0.c:
     complete
     .text start:0x020c3cf0 end:0x020c3d1c
 
-src/func_ov002_020c3d1c.c:
+src/_ZN6Player17St_EndingFly_MainEv.cpp:
     complete
     .text start:0x020c3d1c end:0x020c3d6c
 

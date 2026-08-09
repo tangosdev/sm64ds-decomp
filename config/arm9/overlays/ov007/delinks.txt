@@ -1459,7 +1459,7 @@ src/func_ov007_020c3ce4.cpp:
     complete
     .text start:0x020c3ce4 end:0x020c3d1c
 
-src/_ZN6Player17St_EndingFly_MainEv.cpp:
+src/func_ov007_020c3d1c.cpp:
     complete
     .text start:0x020c3d1c end:0x020c3d40
 

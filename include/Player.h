@@ -493,6 +493,9 @@ struct Player : Actor {
     int St_Electrocute_Init();
     int St_Electrocute_Main();
     int St_EndingFly_Init();
+    /* ov002 0x020c3d1c, immediately before St_EndingFly_Init. `int`, not the
+       `void` this header used to declare: the ROM body returns 1. */
+    int St_EndingFly_Main();
     int St_Fall_Init();
     int St_Fall_Main();
     int St_Fly_Init();
