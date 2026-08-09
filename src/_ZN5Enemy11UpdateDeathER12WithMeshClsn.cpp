@@ -15,7 +15,7 @@
 extern int (Enemy::*data_ov002_0210dbc0[])(WithMeshClsn &);
 
 extern "C" {
-extern void DecIfAbove0_Short(short *p);
+extern void DecIfAbove0_Short(unsigned short *p);
 extern int _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 extern int _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, WithMeshClsn *clsn, u32 sel);
 }
@@ -24,10 +24,10 @@ int Enemy::UpdateDeath(WithMeshClsn & clsn_)
 {
     WithMeshClsn *clsn = &clsn_;
     int ret;
-    if (unk_10c == 0)
+    if (mDeathState == 0)
         return 0;
-    DecIfAbove0_Short(&unk_102);
-    ret = (this->*data_ov002_0210dbc0[unk_10c - 1])(*clsn);
+    DecIfAbove0_Short(&mDeathTimer);
+    ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(*clsn);
     _ZN5Actor9UpdatePosEP12CylinderClsn(this, 0);
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(this, clsn, 0);
     return ret;

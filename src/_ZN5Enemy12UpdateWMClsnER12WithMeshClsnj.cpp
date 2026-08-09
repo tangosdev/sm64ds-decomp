@@ -53,7 +53,7 @@ void Enemy::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
                 long long b = (long long)nz * vz + 0x800;
                 int num = (int)(a >> 12) + (int)(b >> 12);
                 int q = _ZN4cstd4fdivEii(num, dz);
-                unk_0a8 = -(q + 0x8000);
+                mVertSpeed = -(q + 0x8000);
             }
         }
     }

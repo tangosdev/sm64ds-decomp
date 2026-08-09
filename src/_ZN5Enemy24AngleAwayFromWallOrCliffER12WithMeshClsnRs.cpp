@@ -26,7 +26,7 @@ int Enemy::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_)
         *outAngle = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (unk_106) {
-        *outAngle = (short)(unk_094 + 0x8000);
+        *outAngle = (short)(mPrevAngleY + 0x8000);
     } else {
         return 0;
     }
