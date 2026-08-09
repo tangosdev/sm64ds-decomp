@@ -40,7 +40,7 @@ extern void func_ov002_020bf340(void* c, s32* p, s32 delta, s32 limit);
 extern void func_ov002_020cb400(void* c);
 extern void func_ov002_020cb474(void* c);
 extern int func_ov002_020cbea8(void* c);
-extern void func_ov002_020bedd4(void* c);
+extern void Player_AdvanceAnims(void* c);
 extern void* data_0209f318;
 extern u8 data_020a0e40;
 extern u16 data_0209f49e[];
@@ -254,6 +254,6 @@ tail:
     if (*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18) == 0) {
         *(u8*)(c + 0x6e5) = 1;
     }
-    func_ov002_020bedd4(c);
+    Player_AdvanceAnims(c);
     return 1;
 }
