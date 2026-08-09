@@ -15,7 +15,7 @@ void func_ov078_02125c24(void* c, int a);
 void func_0200fa8c(int* t, int a);
 int _ZN6Player9StartTalkER9ActorBaseb(void* self, ActorBase& a, bool b);
 void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int fix);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, ActorBase& a, unsigned int b, const Vector3* v, unsigned int d, unsigned int e);
+int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, ActorBase& a, unsigned int b, const Vector3* v, unsigned int d, unsigned int e);
 
 extern int data_ov078_0212705c;
 extern unsigned char data_0209f220;
@@ -56,7 +56,7 @@ extern "C" int func_ov078_02124cf4(unsigned char* thiz)
         msg = 0x95;
     }
 
-    if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(other, *(ActorBase*)thiz, (unsigned)(int)msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
+    if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(other, *(ActorBase*)thiz, (unsigned)(int)msg, (Vector3*)(thiz + 0x5c), 0, 0) == 0) goto done;
     func_02012694(0x12a, (int*)(thiz + 0x74));
     KingBobOmb_SetState(thiz, &data_ov078_0212705c);
 done:

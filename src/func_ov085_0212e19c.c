@@ -6,7 +6,7 @@
 #include "common.h"
 extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);
 extern void func_02012790(int x);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 
@@ -24,7 +24,7 @@ int func_ov085_0212e19c(char* c)
             u16* m = (u16*)AT(*(char**)(c + 0x2a0), 0x6ce);
             *m = *m | 0x400;
         }
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                 *(void**)(c + 0x2a0), c, 0x182, (struct Vector3*)(c + 0x5c), 1, 0) == 1) {
             *(int*)AT(c, 0x2d8) += 1;
         }

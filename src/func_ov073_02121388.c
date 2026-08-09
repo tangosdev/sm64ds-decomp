@@ -10,7 +10,7 @@ extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void _Z14ApproachLinearRsss(short* p, short a, short b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void* p);
 extern int ChiefChilly_ChangeState(void* c, void* p);
 
@@ -70,7 +70,7 @@ int func_ov073_02121388(char* c) {
             *(unsigned char*)(c + 0x4c8) = 0;
         }
 
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
             func_02012694(0x12a, c + 0x74);
             ChiefChilly_ChangeState(c, &data_ov073_02123350);
         }

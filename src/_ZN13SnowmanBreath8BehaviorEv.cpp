@@ -10,12 +10,18 @@ extern u8 data_0209f2d8[];
 
 extern "C" {
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);
-}
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *actor,
+/* Moved INSIDE the extern "C" block. A bare `extern` on a mangled name in a
+   //cpp file mangles it a second time -- this one was reaching the linker as
+   _Z48_ZN6Player11ShowMessage... and sat in the unresolved baseline. Byte
+   gates cannot see it, because relocations compare as wildcards; only
+   check_references does. (_ZN5Sound8PlayLongEjjjRK7Vector3s below has the
+   same defect and is left for whoever owns that symbol.) */
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *actor,
                                                             unsigned int msg,
                                                             const Vector3 *pos,
                                                             unsigned int a,
                                                             unsigned int b);
+}
 extern "C" {
 extern int _ZN6Player12GetTalkStateEv(void *self);
 }
@@ -60,7 +66,7 @@ int SnowmanBreath::Behavior()
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                     *(void **)((char *)&unk_13c4), ((char *)this), 0xbb, &pos, zero, zero) == 0) {
                 break;
             }

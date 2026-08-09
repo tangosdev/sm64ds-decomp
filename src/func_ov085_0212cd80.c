@@ -13,7 +13,7 @@ extern void func_02012790(int a);
 extern void StartMinigameMenu(unsigned char a);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const void* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* pos, unsigned int a, unsigned int b);
 
 extern unsigned char data_0209d684;
 extern unsigned char data_0209d660;
@@ -83,7 +83,7 @@ int func_ov085_0212cd80(char* self)
     case 4:
         {
             int r;
-            r = _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x18c), self, 0x18b, 0, 1, 0);
+            r = _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x18c), self, 0x18b, 0, 1, 0);
             if (r == 1) {
                 *(int*)(self + 0x198) = 1;
                 *(int*)(self + 0x194) = 0;

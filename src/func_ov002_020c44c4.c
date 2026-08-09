@@ -13,7 +13,7 @@ extern void func_020072c0(void);
 
 extern void func_020731dc(int a, int b, void** node);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, short angle, int* src);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int id, const void* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* player, void* actor, unsigned int id, const void* pos, unsigned int a, unsigned int b);
 extern void func_02012694(unsigned int id, const struct Vector3* v);
 extern unsigned int func_02012790(unsigned int a);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* thiz, unsigned int a, int b, int fix, unsigned int d);
@@ -62,7 +62,7 @@ cont:
                 data_ov002_0210e14c |= 1;
             }
             Vec3_RotateYAndTranslate((int*)&pos, (int*)(self + 0x5c), *(s16*)(self + 0x8e), (int*)&data_ov002_0210f3b0);
-            _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(self, self, 0x177, &pos, 2, 2);
+            _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(self, self, 0x177, &pos, 2, 2);
             func_ov100_02145070(0x1e);
             func_ov100_02145014();
             func_02012694(0xb8, (struct Vector3*)(self + 0x74));

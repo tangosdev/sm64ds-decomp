@@ -11,7 +11,7 @@ extern "C" {
 int _ZN6Player12GetTalkStateEv(void* self);
 int _Z14ApproachLinearRsss(short* cur, short target, short step);
 void _ZN7Message11PrepareTalkEv(void);
-void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
+void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
 void func_02012790(int a);
 int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
@@ -59,7 +59,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
             if (_Z14ApproachLinearRsss((short*)(target + 0x8e), cur, 0x800) != 0) {
                 *(u16*)(self + 0x21a) = 0xb09;
                 _ZN7Message11PrepareTalkEv();
-                _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+                _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(
                     target, self, *(s16*)(self + 0x21a), 0, 1, 0);
             }
             break;

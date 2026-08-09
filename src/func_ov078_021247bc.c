@@ -15,7 +15,7 @@ extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *thiz, void 
 extern void func_02012694(int a, void *p);
 extern void func_ov078_02125c24(void *c, int a);
 extern void func_0200fa8c(void *c, int a);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc);
 extern void _ZN6Camera9SetFlag_3Ev(void *thiz);
 
 extern char data_020a0e68;
@@ -113,7 +113,7 @@ int func_ov078_021247bc(void *thiz)
             E.y += 0xc8000;
             m = *(unsigned short *)(pl2 + 0x6ce) & 0x800;
             if (m == 0) {
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl2, c, 0x94, &E, 0, 0) != 0) {
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(pl2, c, 0x94, &E, 0, 0) != 0) {
                     _ZN6Camera9SetFlag_3Ev(*(void **)&data_0209f318);
                     func_02012694(0x12a, c + 0x74);
                     KingBobOmb_SetState(c, &data_ov078_021270dc);

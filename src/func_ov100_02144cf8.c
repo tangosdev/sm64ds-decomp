@@ -1,7 +1,7 @@
 extern int func_ov100_021452e4(char* a, char* b);
 extern unsigned char NumStars(void);
 extern int func_ov100_02144f84(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* thisp, void* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thisp, void* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
 extern int func_ov100_021453d8(void* c, void* p, void* b);
 extern int _ZN6Player13TryTalkToDoorEh(void* thisp, unsigned char x);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
@@ -26,7 +26,7 @@ int func_ov100_02144cf8(char* a, char* b) {
             if (data_0209caa0.flags & (0x8000 << entry[0xa])) goto L240;
             if (NumStars() < entry[8]) {
                 if (func_ov100_02144f84() == 0) return 1;
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(b, a, *(short*)(entry + 0xc), a + 0xa4, 0, 2) == 0) goto L240;
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(b, a, *(short*)(entry + 0xc), a + 0xa4, 0, 2) == 0) goto L240;
                 func_ov100_021453d8(a, data_ov100_021488c4, b);
                 return 1;
             } else {
@@ -55,7 +55,7 @@ int func_ov100_02144cf8(char* a, char* b) {
                     }
                     msg = sel ? *(short*)(entry + 0xc) : 0x17;
                 }
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(b, a, (short)msg, a + 0xa4, 0, 2) == 0) goto L240;
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(b, a, (short)msg, a + 0xa4, 0, 2) == 0) goto L240;
             }
             func_ov100_021453d8(a, data_ov100_021488c4, b);
             if (entry[9] == 5)

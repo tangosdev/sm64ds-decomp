@@ -24,7 +24,7 @@ extern void _ZN7Message11PrepareTalkEv(void);
 extern int func_02013890(int a, int b);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12 d, int e);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player12GetTalkStateEv(void* c);
 extern void _ZN6Player9DropActorEv(void* c);
@@ -113,7 +113,7 @@ int _ZN6Rabbit8BehaviorEv(void* arg0)
                             var_r2 = 0x13b; var_r6 = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(temp_r4, c, var_r2, 0, 0, 0) == 1) {
+                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
                             func_02012694(var_r6, c + 0x74);
                             *(u8*)(c + 0x427) = 1;
                         }

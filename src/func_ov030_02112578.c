@@ -9,7 +9,7 @@ int _Z14ApproachLinearRsss(s16 *v, s16 target, s16 step);
 s32 Vec3_Dist(const void *a, const void *b);
 int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int b);
 void func_ov030_02111908(void *c);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
+int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
 void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
 void func_0201267c(int a, void *b);
 int _ZN6Player12GetTalkStateEv(void);
@@ -65,7 +65,7 @@ int func_ov030_02112578(void *arg0)
         sp[1] = *(s32 *)(c + 0x60);
         sp[2] = *(s32 *)(c + 0x64);
         sp[1] += 0x50000;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(r6, arg0, 0xbd, sp, 1, 0) != 0) {
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(r6, arg0, 0xbd, sp, 1, 0) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115cf8[1], 0, 0x1000, 0);
             _ZN9Animation8SetFlagsEi(c + 0x124, 0);
             func_0201267c(0xd1, c + 0x74);

@@ -5,7 +5,7 @@
 #include "common.h"
 extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 extern int ApproachAngle(void *p, int from, int start, int speed, int max);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *thiz, void *actor, unsigned int msg, const struct Vector3 *vec, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *thiz, void *actor, unsigned int msg, const struct Vector3 *vec, unsigned int a, unsigned int b);
 extern void func_02012790(int a);
 extern void _ZN7Message7EndTalkEv(void);
 extern void func_ov085_0212bc78(void *c, void *p);
@@ -34,7 +34,7 @@ int func_ov085_0212a904(void *thiz)
     state = *(int *)(self + 0x41c);
     switch (state) {
     case 0:
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(r4, self, 0x148, &vec, 0, 0)) {
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(r4, self, 0x148, &vec, 0, 0)) {
             func_02012790(0xa);
             {
                 int *p = (int *)(((int)self + 0x41c));

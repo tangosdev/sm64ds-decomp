@@ -5,7 +5,7 @@ extern void *_ZN5Actor13ClosestPlayerEv(void *o);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *pl, void *a, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned a, int fx);
 extern int _ZN6Player12GetTalkStateEv(void *pl);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *pl, void *a, unsigned m, void *v, unsigned d, unsigned e);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *pl, void *a, unsigned m, void *v, unsigned d, unsigned e);
 extern void func_0201277c(int a);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
@@ -49,7 +49,7 @@ void func_ov063_02117b0c(char *c)
         {
             void *pl = *(void **)(c + 0x488);
             unsigned m = (unsigned)(int)data_ov063_0211e1c8[*(int *)((char *)pl + 8)];
-            if (!_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+            if (!_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                     *(void **)(c + 0x484), c, m, v, 0, 2))
                 return;
             func_0201277c(0x151);

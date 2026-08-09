@@ -419,8 +419,12 @@ struct Player : Actor {
     int LostGrabbedObject();
     int SetNoControlState(unsigned char a_, int b, unsigned char c_);
     int Shock(unsigned int j);
-    int ShowMessage(ActorBase & a_, unsigned int b, const Vector3 * v, unsigned int d_, unsigned int e_);
-    int ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned int d_, unsigned int e_);
+    /* The last two are unsigned char, not unsigned int: both functions read
+       their stack-passed arguments with ldrb, and mwcc never fuses a
+       narrowing cast into a narrower load. The symbols were imported ending
+       jj and are corrected to hh in this commit. */
+    int ShowMessage(ActorBase & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
+    int ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
     int St_BackFlip_Init();
     int St_Balloon_Cleanup();
     int St_Balloon_Init();

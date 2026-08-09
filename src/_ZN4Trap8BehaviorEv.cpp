@@ -12,7 +12,7 @@ extern void MulVec3Mat4x3(const Vector3* v, const Matrix4x3* m, Vector3* res);
 extern void Vec3_Add(Vector3* out, const Vector3* a, const Vector3* b);
 extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
-extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
+extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
 extern void _ZN7Message7EndTalkEv(void);
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
@@ -66,7 +66,7 @@ int Trap::Behavior()
         case 0:
             if (_Z14ApproachLinearRsss((s16*)((char*)p + 0x8e), ((Obj*)this)->angle_8e + 0x8000, 0x800)) {
                 _ZN7Message11PrepareTalkEv();
-                _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(p, ((Obj*)this), 0x192, &vRes, 0, 0);
+                _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(p, ((Obj*)this), 0x192, &vRes, 0, 0);
             }
             break;
         case 1:

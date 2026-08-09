@@ -1,7 +1,7 @@
 #include "types.h"
 extern int _ZN5Actor13ClosestPlayerEv(void* thiz);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* thiz, void* ab, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* thiz, void* ab, u32 a, const void* v, u32 c, u32 d);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* ab, u32 a, const void* v, u32 c, u32 d);
 extern int func_02012694(int a, void* b);
 extern int func_ov094_02136188(void* c, void* p);
 extern int Vec3_Dist(const void* a, const void* b);
@@ -35,7 +35,7 @@ int func_ov094_02135c28(void* thiz)
             if (player != 0) {
                 if ((u16)(*(u16*)((char*)player + 0x6ce) & 0x800) == 0) {
                     if (_ZN6Player9StartTalkER9ActorBaseb(player, c, 1) != 0) {
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3d0), c, 0xa2, (const void*)(c + 0x5c), 0, 0) == 1) {
+                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3d0), c, 0xa2, (const void*)(c + 0x5c), 0, 0) == 1) {
                             func_02012694(0x176, (void*)(c + 0x74));
                             *(u8*)(c + 0x3d4) = 1;
                             func_ov094_02136188(c, data_ov094_02136b50);

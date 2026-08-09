@@ -15,7 +15,7 @@ extern int _ZN9Animation8FinishedEv(void* c);
 extern void func_ov074_02121a4c(char* c, int idx);
 extern void func_ov074_0211f154(char* c);
 extern int _ZN6Player12GetTalkStateEv(void* p);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* p, void* actor, u32 id, const Vector3* v, u32 a, u32 b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* p, void* actor, u32 id, const Vector3* v, u32 a, u32 b);
 extern void func_0201277c(u32 a);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
@@ -71,7 +71,7 @@ extern "C" void func_ov074_0211f5b8(char* c)
                     goto inc603;
                 return;
             }
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(player, c, (s16)msgId, &vmsg, 1, 2) == 0)
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(player, c, (s16)msgId, &vmsg, 1, 2) == 0)
                 return;
             func_0201277c(0x15a);
         }

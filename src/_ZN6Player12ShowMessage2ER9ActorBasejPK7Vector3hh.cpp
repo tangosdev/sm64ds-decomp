@@ -29,7 +29,7 @@ void func_020731dc(void *a, void *b, void *node);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, int angle, const Vector3 *src);
 void _ZN6Camera9SetFlag_3Ev(void *self);
 
-int _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(char *thiz, ActorBase *actor, unsigned int msg, const Vector3 *pos, u8 d, u8 e)
+int _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(char *thiz, ActorBase *actor, unsigned int msg, const Vector3 *pos, u8 d, u8 e)
 {
     int r7;
 

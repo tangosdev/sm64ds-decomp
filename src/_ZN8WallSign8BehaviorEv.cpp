@@ -11,7 +11,7 @@ extern s16 Vec3_HorzAngle(Vector3 *a, Vector3 *b);
 extern int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
 extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
-extern void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(void *actor, void *self, unsigned int a, Vector3 *pos, unsigned int b, unsigned int c);
+extern void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(void *actor, void *self, unsigned int a, Vector3 *pos, unsigned int b, unsigned int c);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int AngleDiff(int a, int b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *actor, void *self, int b);
@@ -68,7 +68,7 @@ int WallSign::Behavior()
                     *(s16 *)(self + 0x366) = 0;
                     if (*(int *)(self + 8) != 0xffff)
                         *(s16 *)(self + 0x366) = (s16)*(int *)(self + 8);
-                    _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3jj(
+                    _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(
                         tgt, self, (unsigned int)*(s16 *)(self + 0x366), &mine, 0, 1);
                     *(u8 *)(self + 0x364) = 0;
                 }

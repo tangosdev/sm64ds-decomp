@@ -1,7 +1,7 @@
 #include "types.h"
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int flag);
 extern int _ZN6Player12GetTalkStateEv(void *player);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *player, void *actor, unsigned int msg, void *pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *player, void *actor, unsigned int msg, void *pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void *v);
 extern int func_ov060_02111f08(void *self);
 extern s16 data_02082214[];
@@ -68,7 +68,7 @@ void func_ov060_02115518(char *self)
       pos[1] = y2;
       pos[2] = (((s16) sz) * ((s16) scale)) + z;
       msg = (s16) msgs[*((u8 *) (self + 0x414))];
-      if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*((void **) (self + 0x3a0)), self, msg, pos, zero, zero) == 0)
+      if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*((void **) (self + 0x3a0)), self, msg, pos, zero, zero) == 0)
       {
         return;
       }

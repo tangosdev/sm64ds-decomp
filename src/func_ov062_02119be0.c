@@ -6,7 +6,7 @@ extern int Vec3_Dist(Vec3* a, Vec3* b);
 extern short Vec3_HorzAngle(Vec3* a, Vec3* b);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int flag);
 extern int _ZN6Player12GetTalkStateEv(void* player);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int idx, int speed, unsigned int flags);
 extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
 extern void func_0201277c(unsigned int id);
@@ -92,7 +92,7 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 3:
@@ -155,7 +155,7 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 8:

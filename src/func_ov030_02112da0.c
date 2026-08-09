@@ -1,7 +1,7 @@
 #include "types.h"
 extern void func_ov030_021141a8(void *a, int m);
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *a, void *self, unsigned int, void *, unsigned int, unsigned int);
 extern void func_0201267c(int, void *);
 extern int _ZN6Player12GetTalkStateEv(void *p);
 extern void _ZN6Player9DropActorEv(void *p);
@@ -51,7 +51,7 @@ int func_ov030_02112da0(char *a) {
         case 1:
             if (Vec3_Dist(a + 0x380, a + 0x5c) < 0x514000 &&
                 *(int *)(a + 0x60) > *(int *)(a + 0x384) - 0x12c000) {
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(char **)(a + 0x3a8), a, 0xc1, 0, 0, 0) != 0) {
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(char **)(a + 0x3a8), a, 0xc1, 0, 0, 0) != 0) {
                     func_0201267c(0xd1, a + 0x74);
                     (*(u8 *)(((int)a + 0x3c7)))++;
                 }

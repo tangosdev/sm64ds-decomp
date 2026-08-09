@@ -1,5 +1,5 @@
 extern void func_ov072_02121d50(void *thiz, int a);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *actor, unsigned int msg, const void *pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *actor, unsigned int msg, const void *pos, unsigned int a, unsigned int b);
 extern int func_0201267c(unsigned int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *self);
 extern void _ZN6Player9DropActorEv(void *self);
@@ -28,7 +28,7 @@ int func_ov072_021214dc(void *thiz)
     case 1:
     {
         unsigned int a, b;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x360), c, 0xb2, 0, a = 0, b = 0)) {
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void **)(c + 0x360), c, 0xb2, 0, a = 0, b = 0)) {
             func_0201267c(0xf2, c + 0x74);
             (*(volatile unsigned char *)(((int)c + 0x36e)))++;
         }

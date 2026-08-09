@@ -5,7 +5,7 @@ extern int _ZN6Player9StartTalkER9ActorBaseb(void *actor, void *self, int b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
 extern int _ZN6Player12GetTalkStateEv(void *actor);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
 extern int _ZN6Player18HasFinishedTalkingEv(void *actor);
@@ -52,7 +52,7 @@ int func_ov019_02111558(void *thiz)
                 else
                     id = 0xa8;
             }
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x378), c, id, &v, 1, 2) != 0) {
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void **)(c + 0x378), c, id, &v, 1, 2) != 0) {
                 func_0201267c(0xdf, c + 0x74);
                 LB(0x38f) = LB(0x38f) + 1;
             }

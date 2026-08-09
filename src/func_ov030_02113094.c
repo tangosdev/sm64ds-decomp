@@ -8,7 +8,7 @@ struct Actor;
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char* self, int a);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
 extern void func_0201267c(u32 id, char* p);
 extern int _ZN6Player12GetTalkStateEv(char* p);
 extern void _ZN6Player9DropActorEv(char* p);
@@ -48,7 +48,7 @@ int func_ov030_02113094(char* self)
     }
     case 1: {
         int msg = (*(u8*)(self + 0x3c8) != 0) ? 0xc2 : 0xc3;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(char**)(self + 0x3a8), self, (s16)msg, 0, 0, 0) != 0) {
+        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(char**)(self + 0x3a8), self, (s16)msg, 0, 0, 0) != 0) {
             func_0201267c(0xd1, self + 0x74);
             (*(u8*)(((int)self + 0x3c7)))++;
         }

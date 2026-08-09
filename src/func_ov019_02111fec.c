@@ -4,7 +4,7 @@
 short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int _Z14ApproachLinearRsss(short* dst, short target, short step);
 unsigned char NumStars(void);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* thiz, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
+int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 int _ZN6Player12GetTalkStateEv(void* p);
 void func_02012790(int x);
 void func_ov019_021122dc(void* c, int n);
@@ -33,7 +33,7 @@ int func_ov019_02111fec(char* c) {
             pos.y = y + 0x190000;
             eq = (int)(NumStars() == 0x96);
             if (eq != 0) msg = 0xab; else msg = 0xa7;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                     *(void**)(c + 0x378), c, (unsigned int)(short)msg, &pos, 1, 2) != 0) {
                 LB(0x38f) = LB(0x38f) + 1;
             }

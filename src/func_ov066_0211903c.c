@@ -9,7 +9,7 @@ extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern void _ZN6Player17SetNoControlStateEhih(void* self, unsigned char a, int b, unsigned char c);
 extern void func_020092c4(void* cam, void* out, void* target);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, struct Vector3* v, unsigned int d, unsigned int e);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, struct Vector3* v, unsigned int d, unsigned int e);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void _ZN7Message7EndTalkEv(void);
@@ -78,7 +78,7 @@ int func_ov066_0211903c(char* self) {
 
             *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce)) |= 0x400;
             _ZN7Message11PrepareTalkEv();
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
                 *(int*)(self + 0x498) = 1;
                 func_02012694(0x145, self + 0x74);
             }

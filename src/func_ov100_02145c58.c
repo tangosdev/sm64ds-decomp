@@ -9,7 +9,7 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov100).
  */
 extern unsigned char NumStars(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(char* p, char* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(char* p, char* actor, unsigned int msg, void* vec, unsigned int e, unsigned int two);
 extern void _ZN6Player11OpenBigDoorEv(char* p);
 extern int func_ov100_02145f68(char* c, void* p, char* b);
 
@@ -45,7 +45,7 @@ int func_ov100_02145c58(char* a, char* b) {
         if (!(r6 && !s5 && !lt)) {
             if (func_ov100_02144f84() == 0) return 1;
             msg = r6 ? *(short*)(entry + 2) : *(short*)(entry + 4);
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(b, a, msg, vec, 0, 2) == 0) goto e10;
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(b, a, msg, vec, 0, 2) == 0) goto e10;
             if (s5) _ZN6Player11OpenBigDoorEv(b);
             func_ov100_02145f68(a, data_ov100_02148984, b);
             return 1;

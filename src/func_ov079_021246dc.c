@@ -2,7 +2,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern int _ZN6Player12GetTalkStateEv(void *player);
 extern int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *player, void *actor, unsigned int msg, const Vec3 *pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *player, void *actor, unsigned int msg, const Vec3 *pos, unsigned int a, unsigned int b);
 extern short Vec3_HorzAngle(const Vec3 *a, const Vec3 *b);
 extern void func_0201267c(unsigned int id, void *p);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
@@ -53,7 +53,7 @@ void func_ov079_021246dc(void *thiz)
                 pos.y += 0x32000;
                 pos.x = data_02082214[i * 2] * mag + pos.x;
                 pos.z = data_02082214[i * 2 + 1] * mag + pos.z;
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void **)(c + 0x3ac), c, 0xa5, &pos, 0, 0) == 0)
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void **)(c + 0x3ac), c, 0xa5, &pos, 0, 0) == 0)
                     return;
                 (*(unsigned char *)(((int)c + 0x40c)))++;
                 func_0201267c(0x133, c + 0x74);

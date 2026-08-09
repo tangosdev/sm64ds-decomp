@@ -17,7 +17,7 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
     void *self, void *actor, unsigned int msgId, const Vector3 *pos,
     unsigned int d, unsigned int e);
 extern void func_0201267c(int a, void *b);
@@ -106,7 +106,7 @@ int func_ov030_021136b0(char *c)
             msgPos.y = my;
             msgPos.z = mz;
             msgPos.y = *(int *)(c + 0x60) + 0x64000;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                     *(void **)(c + 0x3a8), c, msgArg, &msgPos, 0, 2) != 0) {
                 func_0201267c(0xd1, c + 0x74);
                 {

@@ -14,7 +14,7 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int i, 
 void func_0201267c(int a, void* p);
 void func_02012790(int a);
 int _ZN6Player12GetTalkStateEv(void* self);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const Vector3* v, unsigned int a, unsigned int b);
+int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const Vector3* v, unsigned int a, unsigned int b);
 int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN5Timer10ResetTimerEv(void* self);
 }
@@ -60,7 +60,7 @@ extern "C" void func_ov062_0211a740(char* c)
                 v.y = y;
                 v.z = z;
             }
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x398), c, msg, &v, 1, 0) != 0)
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x398), c, msg, &v, 1, 0) != 0)
                 *(u8*)((((long long)(int)(c + 0x390)))) += 1;
         }
         return;

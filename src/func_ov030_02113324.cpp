@@ -10,7 +10,7 @@ extern "C" short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern "C" void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Mtx43* m, short angY);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);
-extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
+extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
 extern "C" int func_0201267c(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* self);
 extern "C" void _ZN6Player9DropActorEv(void* self);
@@ -89,7 +89,7 @@ skip_raycast:
                 msgPos.z = data_020a0e68.a[11];
                 msgPos.y = *(int*)(c + 0x60) + 0x64000;
 
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
+                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
                     func_0201267c(0xd1, c + 0x74);
                     {
                         unsigned char *p = (unsigned char*)(c + 0x3c7);

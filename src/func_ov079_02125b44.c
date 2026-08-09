@@ -6,7 +6,7 @@ extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
 extern int _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern s16 Vec3_HorzAngle(const void* a, const void* b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const void* v, unsigned int d, unsigned int e);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* v, unsigned int d, unsigned int e);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void func_0201267c(unsigned int id, void* p);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
@@ -75,7 +75,7 @@ void func_ov079_02125b44(char* c)
             pos[0] = data_02082214[i * 2] * 0xd7 + pos[0];
             pos[2] = data_02082214[i * 2 + 1] * 0xd7 + pos[2];
             pos[1] = y;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(
+            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
                     *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c),
                     c, 0xa4, pos, 0, 0) != 0) {
                 u8 *st = (u8 *)(((int)c + 0x40c));

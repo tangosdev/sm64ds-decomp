@@ -13,7 +13,7 @@ int _ZN6Player12GetTalkStateEv(void* self);
 int _ZN9Animation8FinishedEv(void* self);
 void _ZN9Animation7AdvanceEv(void* self);
 void _ZN7Message11PrepareTalkEv(void);
-void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
+void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
 void _ZN7Message13DisplaySavingEt(unsigned short a);
 int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
@@ -49,7 +49,7 @@ extern "C" int _ZN14QuestionSwitch8BehaviorEv(char* self)
                 *(u16*)(self + 0x71c) = 0x4b;
                 if (_ZN9Animation8FinishedEv(self + 0x704) != 0) {
                     _ZN7Message11PrepareTalkEv();
-                    _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(player, self, 0x183, 0, 1, 2);
+                    _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(player, self, 0x183, 0, 1, 2);
                 }
                 break;
             case 1:

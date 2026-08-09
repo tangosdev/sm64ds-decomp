@@ -16,7 +16,7 @@ extern int func_02013890(int a, int b);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12 d, int e);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *ab, u32 id, const Vector3 *pos, u32 e, u32 f);
+extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *ab, u32 id, const Vector3 *pos, u32 e, u32 f);
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *p);
 extern void _ZN6Player9DropActorEv(void *p);
@@ -150,7 +150,7 @@ int func_ov085_0212ae08(char *c)
                         int zero = 0;
                         y = y + 0x64000;
                         pos.y = y;
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl, c, (u32)msg, &pos, zero, zero) == 1) {
+                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
                             *(s32 *)(c + 0x41c) = 1;
                             if (r4 != 0)
                                 func_02012694(r4, c + 0x74);
