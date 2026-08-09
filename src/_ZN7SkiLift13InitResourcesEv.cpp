@@ -18,22 +18,24 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void 
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void func_ov018_02111d28(char *c, int r1);
 extern void _ZN13RaycastGroundD1Ev(void *self);
+extern int data_ov018_02113c00[];
+extern int data_ov018_02112c04[];
 }
 
 int SkiLift::InitResources()
 {
-    void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_02113c00);
+    void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113c00);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this)+0xd4, m, 1, 1);
     for (int i = 0; i < 2; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {
-        void *t = (void*)data_ov056_02112c04[i];
+        void *t = (void*)data_ov018_02112c04[i];
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(t);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void*)data_ov036_02113c00[1], (void*)((int*)t)[1]);
+        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void*)data_ov018_02113c00[1], (void*)((int*)t)[1]);
     }
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);
-    func_ov022_021123d0((int*)((char *)this), 0);
+    func_ov018_021123d0((char *)this, 0);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
     mScaleX = 0x1000;
