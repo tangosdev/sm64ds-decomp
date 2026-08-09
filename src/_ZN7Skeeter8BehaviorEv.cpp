@@ -1,14 +1,30 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef int s32;
-typedef unsigned int u32;
+// @symbol _ZN7Skeeter8BehaviorEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * One frame of the skeeter -- the water strider -- in four mutually exclusive
+ * branches, each returning 1 on its own: in Yoshi's mouth, killed by a mega
+ * character, dying, or the ordinary tail.
+ *
+ * unk_3ac is the WATER LINE, found once in InitResources by raycasting down.
+ * The ordinary path clamps mPosY UP to it every frame, so the skeeter floats
+ * rather than falls. The death branch reuses the same value as a TEST instead:
+ * dying below the line is what pays out coins, so drowning and being squashed
+ * on the surface end differently.
+ *
+ * Two branches share the same trigger check verbatim -- level 0x15, unk_0cc
+ * == 1, and the mesh reporting water -- and both respond by zeroing the four
+ * motion words and setting unk_10c = 1, the knocked-into-water state.
+ *
+ * The final cylinder Update is gated on the closest player's +0x6fb, so the
+ * skeeter stops colliding while that player is in some state of their own.
+ */
+#include "Skeeter.h"
 
-struct Vector3 { s32 x, y, z; };
+struct CoinVec3 { s32 x, y, z; };
 
-class Actor {};
-typedef void (Actor::*ActorFn)();
+class ActorC {};
+typedef void (ActorC::*ActorFn)();
 struct PmfNode { char pad[8]; ActorFn fn; };
 
 extern "C" {
@@ -36,43 +52,43 @@ void func_ov090_021310b4(void* c);
 extern signed char data_0209f2f8;
 }
 
-extern "C" int _ZN7Skeeter8BehaviorEv(void* self)
+int Skeeter::Behavior()
 {
-    char* c = (char*)self;
+    char* c = (char*)this;
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x150)) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(u8*)(c + 0x107) != 0 && *(u16*)(c + 0x104) == 0)
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn)) {
+        _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
+        if (unk_107 != 0 && unk_104 == 0)
+            _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
         func_ov090_02131e50(c);
         return 1;
     }
 
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x150, c + 0x30c, 3))
+    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mWithMeshClsn, &mModelAnim, 3))
         return 1;
 
-    if (*(s32*)(c + 0x10c) != 0) {
-        func_02035684((int*)(c + 0x150), 0xd2000);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
-        if (_ZN5Enemy11UpdateDeathER12WithMeshClsn(c, c + 0x150))
+    if (unk_10c != 0) {
+        func_02035684((int*)(&mWithMeshClsn), 0xd2000);
+        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
+        if (_ZN5Enemy11UpdateDeathER12WithMeshClsn(c, &mWithMeshClsn))
             return 1;
         func_ov090_02131378(c);
         func_ov090_02131e50(c);
-        if (*(s32*)(c + 0x10c) == 0)
+        if (unk_10c == 0)
             _ZN5Actor8PoofDustEv(c);
-        if (*(u8*)(c + 0x3a1) == 3) {
-            _Z14ApproachLinearRsss((s16*)(c + 0x8c), -32767, 0x500);
-            if (AngleDiff(*(s16*)(c + 0x8c), -32767) < 0x1000) {
-                s16* p8e = (s16*)(((int)c + 0x8e));
+        if (unk_3a1 == 3) {
+            _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
+            if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
+                s16* p8e = &mAngleY;
                 *p8e += 0x1000;
             }
         }
-        if (*(s32*)(c + 0x10c) != 1 && *(s32*)(c + 0x60) <= *(s32*)(c + 0x3ac)) {
-            Vector3 v;
-            v.x = *(s32*)(c + 0x5c);
-            v.y = *(s32*)(c + 0x60);
-            v.z = *(s32*)(c + 0x64);
-            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, *(u8*)(c + 0x10a) + 1, 0xa000, 0);
+        if (unk_10c != 1 && mPosY <= unk_3ac) {
+            CoinVec3 v;
+            v.x = mPosX;
+            v.y = mPosY;
+            v.z = mPosZ;
+            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, unk_10a + 1, 0xa000, 0);
             _ZN5Actor8PoofDustEv(c);
             _ZN5Actor24KillAndTrackInDeathTableEv(c);
         }
@@ -80,19 +96,19 @@ extern "C" int _ZN7Skeeter8BehaviorEv(void* self)
     }
 
     {
-    int flag = (*(s32*)(c + 0xb0) & 8) != 0;
+    int flag = (mFlags & 8) != 0;
     if (flag) {
-        *(s32*)(c + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
+        unk_098 = 0;
+        _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
         func_ov090_02131378(c);
-        if (data_0209f2f8 == 0x15 && *(signed char*)(c + 0xcc) == 1) {
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
-            if (func_02035638((u8*)(c + 0x150))) {
-                *(s32*)(c + 0x9c) = 0;
-                *(s32*)(c + 0xa4) = 0;
-                *(s32*)(c + 0xa8) = 0;
-                *(s32*)(c + 0xac) = 0;
-                *(s32*)(c + 0x10c) = 1;
+        if (data_0209f2f8 == 0x15 && unk_0cc == 1) {
+            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
+            if (func_02035638((u8*)(&mWithMeshClsn))) {
+                unk_09c = 0;
+                unk_0a4 = 0;
+                unk_0a8 = 0;
+                unk_0ac = 0;
+                unk_10c = 1;
                 func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
                 return 1;
             }
@@ -101,40 +117,46 @@ extern "C" int _ZN7Skeeter8BehaviorEv(void* self)
     }
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
+    _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
     func_ov090_02131378(c);
-    DecIfAbove0_Short((u16*)(c + 0x100));
-    DecIfAbove0_Short((u16*)(c + 0x394));
-    DecIfAbove0_Short((u16*)(c + 0x396));
-    DecIfAbove0_Short((u16*)(c + 0x398));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
-    if (*(s32*)(c + 0x60) <= *(s32*)(c + 0x3ac))
-        *(s32*)(c + 0x60) = *(s32*)(c + 0x3ac);
-    if (data_0209f2f8 == 0x15 && *(signed char*)(c + 0xcc) == 1 && func_02035638((u8*)(c + 0x150))) {
-        *(s32*)(c + 0x9c) = 0;
-        *(s32*)(c + 0xa4) = 0;
-        *(s32*)(c + 0xa8) = 0;
-        *(s32*)(c + 0xac) = 0;
-        *(s32*)(c + 0x10c) = 1;
+    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short(&unk_394);
+    DecIfAbove0_Short(&unk_396);
+    DecIfAbove0_Short(&unk_398);
+    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
+    if (mPosY <= unk_3ac)
+        mPosY = unk_3ac;
+    if (data_0209f2f8 == 0x15 && unk_0cc == 1 && func_02035638((u8*)(&mWithMeshClsn))) {
+        unk_09c = 0;
+        unk_0a4 = 0;
+        unk_0a8 = 0;
+        unk_0ac = 0;
+        unk_10c = 1;
         func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
         return 1;
     }
 
     {
-        PmfNode* n = *(PmfNode**)(c + 0x370);
+        PmfNode* n = (PmfNode*)mState;
         if (n->fn)
-            (((Actor*)c)->*(n->fn))();
+            (((ActorC*)c)->*(n->fn))();
     }
-    *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
+    mAngleY = mPrevAngleY;
+    /* MEASURED: these two reach inside mModelAnim (0x368 and 0x35c are its
+       +0x5c and +0x50) and they are the ONLY spelling in this function that is
+       not free. Writing them as `(char*)&mModelAnim + 0x5c` costs bytes --
+       greedy-tested alone against build_pin, everything else here substituted
+       for free. Offsetting from a typed sub-object's address is not the same
+       to mwcc as offsetting from `this`, so these stay as they are. */
     *(s32*)(c + 0x368) = *(s32*)(c + 0x3a4);
     _ZN9Animation7AdvanceEv(c + 0x35c);
     func_ov090_02131e50(c);
     func_ov090_021310b4(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
     {
         void* p = _ZN5Actor13ClosestPlayerEv(c);
         if (p != 0 && *(u8*)((char*)p + 0x6fb) == 0)
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+            _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
     }
     return 1;
 }

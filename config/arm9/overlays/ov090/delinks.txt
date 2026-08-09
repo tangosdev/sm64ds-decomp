@@ -66,11 +66,11 @@ src/func_ov090_02131e50.c:
     complete
     .text start:0x02131e50 end:0x02131edc
 
-src/_ZN7Skeeter16CleanupResourcesEv.c:
+src/_ZN7Skeeter16CleanupResourcesEv.cpp:
     complete
     .text start:0x02131edc end:0x02131f30
 
-src/_ZN7Skeeter16OnPendingDestroyEv.c:
+src/_ZN7Skeeter16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02131f30 end:0x02131f34
 
