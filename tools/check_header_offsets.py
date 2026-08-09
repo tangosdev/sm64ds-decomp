@@ -108,7 +108,7 @@ for path in sys.argv[1:]:
     txt = pathlib.Path(path).read_text(errors="replace")
     off, bad, n, skipped, pending = 0, 0, 0, [], []
     trusted = True
-    started = in_comment = unmodelled = False
+    started = in_comment = unmodelled = nested = False
     unknown_base = derived_from = None
     for lineno, line in enumerate(txt.splitlines(), 1):
         if not started:
@@ -134,6 +134,24 @@ for path in sys.argv[1:]:
         if in_comment:
             if "*/" in line:
                 in_comment = False
+            continue
+        # A NESTED type definition -- `struct State { ... };` inside Player -- is a
+        # type, not a field: it occupies no space and advances no offset. Consume it
+        # whole, before the checks below can misread it.
+        #
+        # Two of those checks would, and both fail silently. Its closing `};` matches
+        # the outer-struct terminator on the next line, and a pointer-to-member
+        # declaration (`int (Player::*mInit)();`) matches the member-function pattern
+        # that ends the field list. Either way the walk stopped at the nested type,
+        # and for Player.h that meant "0 commented fields ... struct spans 0xd0" --
+        # the base's size, no fields checked, exit status 0. A header with 177
+        # checkable fields reported exactly like a clean pass.
+        if nested:
+            if re.match(r"^\s*\};", line):
+                nested = False
+            continue
+        if re.match(r"^\s*struct \w+\s*(?::\s*(?:public\s+)?\w+\s*)?\{", line):
+            nested = True
             continue
         if re.match(r"^\s*(#|\}|/\* methods)", line):
             break

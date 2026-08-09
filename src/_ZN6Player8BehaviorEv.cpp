@@ -7,11 +7,6 @@
 #include "Player.h"
 struct C3;
 typedef int (C3::*PMF)();
-struct State {
-    PMF onEnter;
-    PMF main;
-    PMF onExit;
-};
 struct G_ee90 {
     char pad[0x26c];
     s32 flag26c;
@@ -26,8 +21,8 @@ extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 charID, u32 soundID, const Vector3 *pos);
-extern int _ZN6Player11ChangeStateERNS_5StateE(void *self, State *s);
-extern int _ZN6Player7IsStateERNS_5StateE(void *self, State *s);
+extern int _ZN6Player11ChangeStateERNS_5StateE(void *self, Player::State *s);
+extern int _ZN6Player7IsStateERNS_5StateE(void *self, Player::State *s);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern void func_02035684(void *p, s32 v);
 extern void func_0203568c(void *p, s32 v);
@@ -45,19 +40,19 @@ extern s32 data_0209fc68;
 extern u8 data_020a0e40;
 extern G_ee90 data_0209ee90;
 
-extern State data_ov002_0210ffec;
-extern State data_ov002_021101b4;
-extern State data_ov002_0211031c;
-extern State data_ov002_02110334;
-extern State data_ov002_02110454;
-extern State data_ov002_021104b4;
-extern State data_ov002_021104e4;
-extern State data_ov002_021104fc;
-extern State data_ov002_02110514;
-extern State data_ov002_021105bc;
-extern State data_ov002_0211061c;
-extern State data_ov002_02110634;
-extern State data_ov002_021106f4;
+extern Player::State data_ov002_0210ffec;
+extern Player::State data_ov002_021101b4;
+extern Player::State data_ov002_0211031c;
+extern Player::State data_ov002_02110334;
+extern Player::State data_ov002_02110454;
+extern Player::State data_ov002_021104b4;
+extern Player::State data_ov002_021104e4;
+extern Player::State data_ov002_021104fc;
+extern Player::State data_ov002_02110514;
+extern Player::State data_ov002_021105bc;
+extern Player::State data_ov002_0211061c;
+extern Player::State data_ov002_02110634;
+extern Player::State data_ov002_021106f4;
 }
 
 int Player::Behavior()
@@ -184,9 +179,9 @@ after_player_slot:
     func_ov002_020d8158(((char *)this));
 
     {
-        State *st = *(State **)((char *)&unk_370);
-        if (*(void **)&st->main != 0)
-            (((C3 *)((char *)this))->*(st->main))();
+        State *st = mState;
+        if (*(void **)&st->mMain != 0)
+            (this->*(st->mMain))();
     }
 
     if ((u16)(mStateFlags & 0x80) != 0) {

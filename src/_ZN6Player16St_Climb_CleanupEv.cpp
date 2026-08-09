@@ -11,7 +11,7 @@ extern int data_ov002_021106f4[];
 
 int Player::St_Climb_Cleanup()
 {
-  int v = *(int*)((char*)&unk_378);
+  int v = *(int*)((char*)&mRequestedState);
   if(v != (int)data_ov002_021106dc && v != (int)data_ov002_021106f4){
     func_ov002_020caf68(((void *)this));
     *(unsigned short*)((char*)((void *)this)+0x600+0xb6)=8;

@@ -40,6 +40,52 @@ struct Player : Actor {
        at 0x05c was Actor's, and so on. The names were reconciled first so that
        deleting the block is all that happens here. sizeof(Actor) is 0xd0, so
        Player's own fields start exactly where the base ends. */
+
+    /* One entry of the player state machine. _ZN6Player7IsStateERNS_5StateE
+       and _ZN6Player11ChangeStateERNS_5StateE both take a State&, so the type
+       is nested in Player and is named State; the mangling fixes both facts.
+
+       Each member is a POINTER TO MEMBER FUNCTION, not a plain function
+       pointer. Both callers use the ARM/Itanium pmf sequence verbatim --
+       ChangeState at 0x020e30d4:
+
+           add   r3, r1, #0x10        ; &state->mCleanup
+           ldr   r1, [r3, #4]         ; the adjustment word
+           add   r0, r5, r1, asr #1   ; this + (adj >> 1)
+           ands  r1, r1, #1           ; virtual bit lives in the ADJUSTMENT
+           ldrne r2, [r0]             ; ...virtual: load the vtable
+           ldrne r1, [r3]
+           ldrne r1, [r2, r1]         ; ...and index it by the ptr word
+           ldreq r1, [r3]             ; ...non-virtual: ptr IS the address
+           blx   r1
+
+       so each member occupies two words, {ptr, adj}, and the offsets below
+       are the ptr word. A plain function pointer cannot produce that shape.
+
+       Who calls what, and when:
+         mInit     ChangeState, LAST, on the state being entered (+0x00)
+         mMain     Player::Behavior, per tick, at 0x020e5118       (+0x08)
+         mCleanup  ChangeState, FIRST, on the state being left     (+0x10)
+
+       mCleanup is a veto, not a notification: ChangeState tests its result
+       and returns 0 without transitioning when it is 0. Each of the three is
+       null-checked on its ptr word before the call, so all three are
+       optional -- which is why the symbol table has _Init/_Main/_Cleanup for
+       some states and only _Init/_Main for most.
+
+       The State objects themselves live in ov002's .bss (0x0211013c,
+       0x0211022c, 0x02110364, 0x0211067c, 0x021106ac are the five ChangeState
+       names directly), populated by ov002's static constructors. NOTE: ov006
+       carries _ZN6Player7ST_WAITE and _ZN6Player6ST_OWLE at addresses in the
+       same 0x0211xxxx range. Those are NOT these -- overlays 2 and 6 share
+       that RAM window. relocs.txt tags every ChangeState literal-pool load
+       module:overlay(2), which is what settles it. */
+    struct State {
+        int (Player::*mInit)();       /* 0x00 */
+        int (Player::*mMain)();       /* 0x08 */
+        int (Player::*mCleanup)();    /* 0x10 */
+    };
+
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x8];
     u8  mBodyModels;            /* 0x0dc */
@@ -94,12 +140,16 @@ struct Player : Actor {
     s32 mAttachedActor;            /* 0x364 */
     u8  mTalkActor;            /* 0x368 */
     u8  pad_369[0x7];
-    u8  unk_370;            /* 0x370 */
-    u8  pad_371[0x3];
-    u8  unk_374;            /* 0x374 */
-    u8  pad_375[0x3];
-    u8  unk_378;            /* 0x378 */
-    u8  pad_379[0x3];
+    /* IsState compares this pointer for identity and nothing else:
+       ldr r0,[r0,#0x370] / cmp r0,r1 / moveq #1 / movne #0. */
+    State *mState;            /* 0x370 */
+    /* ChangeState saves the outgoing mState here (ldr ip,[r5,#0x370] then
+       str ip,[r5,#0x374]) immediately before overwriting it. */
+    State *mPrevState;            /* 0x374 */
+    /* Written from the argument on ENTRY to ChangeState, before the cleanup
+       veto can abort the transition -- so it records what was asked for, not
+       what was taken. */
+    State *mRequestedState;            /* 0x378 */
     u8  unk_37c;            /* 0x37c */
     u8  pad_37d[0x3];
     u8  mMeshClsn;            /* 0x380 */
@@ -548,6 +598,14 @@ struct Player : Actor {
     void TurnOffToonShading(unsigned int j);
     void Unk_020ca488();
 };
+
+/* Hold both claims with the compiler rather than a comment. State's 0x18 is
+   the load-bearing one: it is three pointers-to-member at 8 bytes each, and
+   if this toolchain represented a pmf any other way the offsets above --
+   +0x00, +0x08, +0x10, read straight off ChangeState and Behavior -- would
+   not line up and this would refuse to compile. */
+typedef char Player_size_must_be_0x768[sizeof(struct Player) == 0x768 ? 1 : -1];
+typedef char Player_State_size_must_be_0x18[sizeof(Player::State) == 0x18 ? 1 : -1];
 
 /* Offsets seen through this-pointer but far outside the object (sizeof(Player)
  * is 0x768). These are NOT Player fields and must not be typed as such.

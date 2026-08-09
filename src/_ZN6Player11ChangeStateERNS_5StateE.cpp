@@ -27,12 +27,12 @@ extern State data_ov002_02110364;
 }
 
 extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *newState) {
-    *(State**)((char *)&self->unk_378) = newState;
+    *(State**)((char *)&self->mRequestedState) = newState;
 
     {
         State *cur;
         int ok;
-        cur = *(State**)((char *)&self->unk_370);
+        cur = *(State**)((char *)&self->mState);
         if (cur == 0) { ok = 1; goto check_ok; }
         if (*(int*)((char*)cur+0x10) == 0) { ok = 1; goto check_ok; }
         ok = (((C3*)((char *)self))->*(cur->onExit))();
@@ -40,7 +40,7 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
         if (!ok) return 0;
     }
 
-    if (*(State**)((char *)&self->unk_370) == &data_ov002_0211022c
+    if (*(State**)((char *)&self->mState) == &data_ov002_0211022c
         && (unsigned short)(self->mStateFlags & 0x400) == 0
         && self->mIsNoControl != 0
         && newState != &data_ov002_0211013c
@@ -66,8 +66,8 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
     self->mParticle2 = self->unk_630;
     self->unk_628 = self->mParticle2;
 
-    *(State**)((char *)&self->unk_374) = *(State**)((char *)&self->unk_370);
-    *(State**)((char *)&self->unk_370) = newState;
+    *(State**)((char *)&self->mPrevState) = *(State**)((char *)&self->mState);
+    *(State**)((char *)&self->mState) = newState;
 
     self->unk_717 = 0;
     self->mIsBodyClsnEnabled = 1;
@@ -111,7 +111,7 @@ extern "C" int _ZN6Player11ChangeStateERNS_5StateE(struct Player *self, State *n
     }
 
     {
-        State *s = *(State**)((char *)&self->unk_370);
+        State *s = *(State**)((char *)&self->mState);
         if (*(int*)s == 0) return 1;
         return (((C3*)((char *)self))->*(s->onEnter))();
     }
