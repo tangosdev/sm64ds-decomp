@@ -19,6 +19,11 @@ struct flags;
 struct mm_;
 struct outAngle_;
 struct ww_;
+/* The actor heap and its deallocator, for the inline operator delete below.
+   Spelt exactly as include/decl_common.h spells it -- see the note in Actor.h. */
+extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void *data_020a0eac;
+
 struct Enemy {
     /* 0x00 is the vptr, placed implicitly by the virtual destructor declared
        below. The 0x5c of padding that used to start at 0x00 therefore starts
@@ -101,6 +106,14 @@ struct Enemy {
     s32 mDeathState;            /* 0x10c */
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~Enemy();                   /* slots 0 (D1), 1 (D0) */
+
+    /* Enemy's own copy of Actor's inline operator delete, and it has to be its
+       own: Enemy is still a flattened struct here rather than `Enemy : Actor`,
+       so Actor's copy is not in scope for anything under Enemy, and mwcc only
+       inlines the operator when it is found in the class or its immediate base.
+       See the long comment in Actor.h for why an inline member is what the ROM
+       shows. Delete this one when Enemy gains its real base. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_);

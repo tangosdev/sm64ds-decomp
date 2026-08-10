@@ -1,7 +1,28 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Platform: 9 matched functions, 24 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Seeded from matched-function evidence by tools/gen_header.py, then given its
+ * real base and real member types by hand.
+ *
+ * class Platform: 9 matched functions. The base of a large family -- DonutBlock,
+ * PyramidTop, RickshawBs, ShutterBob, ShutterHmc, SlidingIce and others -- whose
+ * destructors all inline this one's body, which is why it is declared inline
+ * below.
+ *
+ * Two sub-objects, each checked twice -- once by that class's own size assertion,
+ * once by closing exactly on the next named field:
+ *
+ *     Actor               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     Model               0x0d4 + 0x050 = 0x124   -> mMeshCollider
+ *     MovingMeshCollider  0x124 + 0x1c8 = 0x2ec   -> padding, then unk_310
+ *
+ * FOUR OF THE GENERATED HEADER'S FIELDS WERE THE Model'S OWN INSIDES and are gone
+ * from this half: unk_0f0 (0x0d4 + 0x1c) and unk_114 / unk_118 / unk_11c
+ * (0x0d4 + 0x40 / +0x44 / +0x48). They were declared as siblings of a `u8 mModel`
+ * marker whose pad stopped short of the real object.
+ *
+ * sizeof is 0x324, and the evidence is the derived classes: BowserFireSeaArena's
+ * own first member sits at 0x324, and its destructor reproduces the ROM only if
+ * this class ends exactly there.
+ *
+ * Field NAMES for the unk_ entries are placeholders. */
 #ifndef PLATFORM_H
 #define PLATFORM_H
 #include "types.h"
@@ -9,6 +30,66 @@
 /* fwd */
 struct Player;
 struct player_;
+#ifdef __cplusplus
+
+/* FIRST, AND THE ORDER MATTERS. Matrix4x3 has two guarded spellings that share the
+   0x30 bytes -- common.h's flat `s32 m[12]` and math/Matrix.h's `{Matrix3x3 r;
+   Vector3 t;}` -- and whichever a translation unit sees first stands (see the note
+   in common.h). Model.h pulls in the second one, so without this line Platform's
+   TUs would get `.r`/`.t`.
+
+   The ROM says it was the flat one here: UpdateClsnPosAndRot copies mModel.mat4x3
+   into mClsnMat as THREE ldm/stm pairs of four registers -- twelve flat words. The
+   `{r, t}` spelling copies the two members separately, 9 words then 3, and the
+   function comes out 0x74 against the ROM's 0x64. Both were built. */
+#include "common.h"
+
+#include "Actor.h"
+#include "Model.h"
+#include "MovingMeshCollider.h"
+
+struct Platform : Actor {
+    u8  pad_0d0[0x4];
+    /* Named by the class's own destructor calling Model's D1 at +0x0d4 and
+       MovingMeshCollider's at +0x124 -- relocations the ROM build checks. */
+    Model mModel;                           /* 0x0d4 */
+    MovingMeshCollider mMeshCollider;       /* 0x124 */
+    /* 0x2ec: a Matrix4x3, and the generated header's unk_310 / unk_314 / unk_318
+       were its translation row -- m[9], m[10], m[11], at +0x24/+0x28/+0x2c.
+       UpdateClsnPosAndRot copies mModel.mat4x3 in here and then overwrites exactly
+       those three words with the actor's position, which is what a
+       position-and-rotation matrix update IS. Naming them separately described the
+       same bytes twice. */
+    Matrix4x3 mClsnMat;     /* 0x2ec */
+    u8  unk_31c;            /* 0x31c */
+    u8  unk_31d;            /* 0x31d */
+    /* 0x31e..0x324: evidenced from BowserFireSeaArena, which reads all three and
+       whose own first member starts at 0x324. They are Platform's, not its. */
+    s16 unk_31e;            /* 0x31e */
+    s16 unk_320;            /* 0x320 */
+    s16 unk_322;            /* 0x322 */
+
+    /* --- vtable, in ROM order. Do not reorder. --- */
+    /* INLINE ON PURPOSE. Every Platform subclass's destructor inlines this body
+       rather than calling _ZN8PlatformD1Ev (which does exist, at ov002
+       0x020ee42c, for the times it is called out of line). An out-of-line
+       declaration here would make each subclass emit a `bl` the ROM does not
+       have. Being inline also keeps Platform without a key function, so no
+       translation unit that merely includes this header emits _ZTV8Platform. */
+    virtual ~Platform() {}
+
+    /* --- non-virtual --- */
+    void KillByMegaChar(Player &player_);
+    void UpdateClsnPosAndRot();
+    void UpdateModelPosAndRotY();
+};
+
+typedef char Platform_size_must_be_0x324[sizeof(Platform) == 0x324 ? 1 : -1];
+
+#else
+
+/* The same object for a C translation unit, which has no base class to inherit
+   Actor's fields from and so spells the whole layout flat. */
 struct Platform {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
@@ -47,18 +128,18 @@ struct Platform {
     s32 unk_11c;            /* 0x11c */
     u8  pad_120[0x4];
     u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1eb];
-    s32 unk_310;            /* 0x310 */
-    s32 unk_314;            /* 0x314 */
-    s32 unk_318;            /* 0x318 */
+    u8  pad_125[0x1c7];
+    struct Matrix4x3 mClsnMat;    /* 0x2ec */
     u8  unk_31c;            /* 0x31c */
     u8  unk_31d;            /* 0x31d */
-#ifdef __cplusplus
-    /* methods */
-    void KillByMegaChar(Player & player_);
-    void UpdateClsnPosAndRot();
-    void UpdateModelPosAndRotY();
-#endif
+    /* 0x31e..0x324: evidenced from BowserFireSeaArena, which reads all three and
+       whose own first member starts at 0x324. They are Platform's, not its. */
+    s16 unk_31e;            /* 0x31e */
+    s16 unk_320;            /* 0x320 */
+    s16 unk_322;            /* 0x322 */
 };
+
+#endif /* __cplusplus */
+
 
 #endif

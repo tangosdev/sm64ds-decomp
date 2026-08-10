@@ -8,7 +8,7 @@ src/_ZN6BowserD1Ev.cpp:
     complete
     .text start:0x02111900 end:0x02111950
 
-src/_ZN6BowserD0Ev.c:
+src/_ZN6BowserD0Ev.cpp:
     complete
     .text start:0x02111950 end:0x021119b4
 
@@ -16,7 +16,7 @@ src/_ZN10BowserTailD1Ev.cpp:
     complete
     .text start:0x021119b4 end:0x021119e4
 
-src/_ZN10BowserTailD0Ev.c:
+src/_ZN10BowserTailD0Ev.cpp:
     complete
     .text start:0x021119e4 end:0x02111a28
 
@@ -328,7 +328,7 @@ src/_ZN10BowserFireD1Ev.cpp:
     complete
     .text start:0x02116484 end:0x021164c4
 
-src/_ZN10BowserFireD0Ev.c:
+src/_ZN10BowserFireD0Ev.cpp:
     complete
     .text start:0x021164c4 end:0x02116518
 
@@ -432,11 +432,11 @@ src/BowserFire_Spawn.c:
     complete
     .text start:0x02117938 end:0x02117980
 
-src/_ZN18BowserFireSeaArenaD1Ev.c:
+src/_ZN18BowserFireSeaArenaD1Ev.cpp:
     complete
     .text start:0x02117980 end:0x021179d4
 
-src/_ZN18BowserFireSeaArenaD0Ev.c:
+src/_ZN18BowserFireSeaArenaD0Ev.cpp:
     complete
     .text start:0x021179d4 end:0x02117a3c
 
@@ -522,7 +522,7 @@ src/_ZN17BowserSkyPlatformD1Ev.cpp:
     complete
     .text start:0x02118438 end:0x02118470
 
-src/_ZN17BowserSkyPlatformD0Ev.c:
+src/_ZN17BowserSkyPlatformD0Ev.cpp:
     complete
     .text start:0x02118470 end:0x021184bc
 
@@ -582,11 +582,11 @@ src/SpikeBomb_Spawn.c:
     complete
     .text start:0x02118cbc end:0x02118cfc
 
-src/_ZN16BowserShockwavesD1Ev.c:
+src/_ZN16BowserShockwavesD1Ev.cpp:
     complete
     .text start:0x02118cfc end:0x02118d64
 
-src/_ZN16BowserShockwavesD0Ev.c:
+src/_ZN16BowserShockwavesD0Ev.cpp:
     complete
     .text start:0x02118d64 end:0x02118de0
 

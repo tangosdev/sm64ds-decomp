@@ -1,11 +1,67 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BowserSkyPlatform: 5 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Seeded from matched-function evidence by tools/gen_header.py, then given its
+ * real base and real member types by hand.
+ *
+ * class BowserSkyPlatform: 5 matched functions.
+ *
+ * Two sub-objects, each checked twice -- once by that class's own size assertion,
+ * once by closing exactly on the next named field:
+ *
+ *     Actor                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     Model                      0x0d4 + 0x050 = 0x124   -> mMovingCylinderClsnWithPos
+ *     MovingCylinderClsnWithPos  0x124 + 0x040 = 0x164   -> padding, then unk_170
+ *
+ * mMovingCylinderClsnWithPos was a `u8` marker with 0x4b bytes of pad behind it.
+ * The pad was the object: the class's own destructor calls
+ * MovingCylinderClsnWithPos's D1 at +0x124, and 0x40 lands exactly where the next
+ * declared field starts.
+ *
+ * sizeof is 0x32c, which is not inferred from the fields: BowserSkyPlatform_Spawn
+ * asks ActorBase::operator new for 812 bytes.
+ *
+ * Field NAMES for the unk_ entries are placeholders. */
 #ifndef BOWSERSKYPLATFORM_H
 #define BOWSERSKYPLATFORM_H
 #include "types.h"
 #include "Model.h"
+#include "MovingCylinderClsnWithPos.h"
+
+#ifdef __cplusplus
+
+#include "Actor.h"
+
+struct BowserSkyPlatform : Actor {
+    u8  pad_0d0[0x4];
+    /* Named by the class's own destructor calling Model's D1 at +0x0d4 -- a
+       relocation the ROM build checks. */
+    Model mModel;                                               /* 0x0d4 */
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;       /* 0x124 */
+    u8  pad_164[0xc];
+    s32 unk_170;            /* 0x170 */
+    s32 unk_174;            /* 0x174 */
+    s32 unk_178;            /* 0x178 */
+    s32 unk_17c;            /* 0x17c */
+    s32 unk_180;            /* 0x180 */
+    s32 unk_184;            /* 0x184 */
+    u8  pad_188[0x20];
+    s32 unk_1a8;            /* 0x1a8 */
+    u8  pad_1ac[0x2];
+    u8  unk_1ae;            /* 0x1ae */
+    u8  pad_1af[0x17d];
+
+    /* --- vtable, in ROM order. Do not reorder. --- */
+    virtual ~BowserSkyPlatform();       /* slots 16 (D1), 17 (D0) */
+
+    /* --- non-virtual --- */
+    int CleanupResources();
+    int Behavior();
+    int InitResources();
+    int Render();
+};
+
+typedef char BowserSkyPlatform_size_must_be_0x32c[
+    sizeof(BowserSkyPlatform) == 0x32c ? 1 : -1];
+
+#else
 
 struct BowserSkyPlatform {
     u8  pad_000[0x5c];
@@ -21,8 +77,8 @@ struct BowserSkyPlatform {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN17BowserSkyPlatformD0Ev.c] */
     Model mModel;            /* 0x0d4 */
-    u8  mMovingCylinderClsnWithPos;            /* 0x124 */
-    u8  pad_125[0x4b];
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;       /* 0x124 */
+    u8  pad_164[0xc];
     s32 unk_170;            /* 0x170 */
     s32 unk_174;            /* 0x174 */
     s32 unk_178;            /* 0x178 */
@@ -33,13 +89,9 @@ struct BowserSkyPlatform {
     s32 unk_1a8;            /* 0x1a8 */
     u8  pad_1ac[0x2];
     u8  unk_1ae;            /* 0x1ae */
-#ifdef __cplusplus
-    /* methods */
-    int CleanupResources();
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+    u8  pad_1af[0x17d];
 };
+
+#endif /* __cplusplus */
 
 #endif

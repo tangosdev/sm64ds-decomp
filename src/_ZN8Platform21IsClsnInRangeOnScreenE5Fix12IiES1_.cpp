@@ -9,7 +9,7 @@ extern "C" {
 extern void* _ZN5Actor13ClosestPlayerEv(void*);
 extern int Vec3_Dist(void*, void*);
 int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(struct Platform *self, int a, int b) {
-  int on = (self->unk_0b0 & 8) != 0;
+  int on = (self->mFlags & 8) != 0;
   if (on) {
     if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
       ((MeshColliderBase *)((char*)&self->mMeshCollider))->Disable();

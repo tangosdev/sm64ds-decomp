@@ -1,17 +1,14 @@
 //cpp
 // @symbol _ZN10BowserTailD1Ev
-
-struct Actor {
-    char pad[0xd0];
-    virtual ~Actor();
-};
-
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
-
-struct BowserTail : Actor {
-    MovingCylinderClsn m0;   /* 0xd4 */
-    virtual ~BowserTail();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * The stand-in structs this file used to carry (`struct Actor { char pad[0xd0]; }`,
+ * `struct MovingCylinderClsn { char pad[0x4]; }`) were sized to make the offsets
+ * come out, not to describe anything. They are gone: the base is the real Actor and
+ * the member is the real MovingCylinderClsn, whose own size assertion pins the
+ * 0x0d4 the ROM destroys.
+ */
+#include "BowserTail.h"
 
 BowserTail::~BowserTail()
 {

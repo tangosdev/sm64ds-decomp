@@ -1,11 +1,110 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Bowser: 5 matched functions, 44 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Seeded from matched-function evidence by tools/gen_header.py, then given its
+ * real base and real member types by hand.
+ *
+ * class Bowser: 5 matched functions.
+ *
+ * Five sub-objects, and every one's asserted size closes EXACTLY on the next named
+ * field -- five independent confirmations of one layout:
+ *
+ *     Actor                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     ModelAnim                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
+ *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
+ *     WithMeshClsn               0x14c + 0x1bc = 0x308   -> mShadowModel
+ *     ShadowModel                0x308 + 0x028 = 0x330   -> padding
+ *     MovingCylinderClsnWithPos  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
+ *
+ * TWO OF THE GENERATED HEADER'S FIELDS WERE THE ModelAnim'S OWN INSIDES and are
+ * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the Animation base
+ * inside ModelAnim, and `unk_130` at 0x130 is 0x0d4 + 0x5c. Both were declared as
+ * siblings of a `u8 mModelAnim` marker whose pad stopped short of the real object.
+ * Same shape as Player's two ModelAnims.
+ *
+ * sizeof is 0x454, which is not inferred from the fields: Bowser_Spawn asks
+ * ActorBase::operator new for 1108 bytes -- and the last declared field, unk_450,
+ * happens to end there too.
+ *
+ * Field NAMES for the unk_ entries are placeholders. */
 #ifndef BOWSER_H
 #define BOWSER_H
 #include "types.h"
+#include "ModelAnim.h"
+#include "TextureSequence.h"
+#include "WithMeshClsn.h"
+#include "ShadowModel.h"
+#include "MovingCylinderClsnWithPos.h"
 
+#ifdef __cplusplus
+
+#include "Actor.h"
+
+struct Bowser : Actor {
+    u8  pad_0d0[0x4];
+    ModelAnim mModelAnim;                                   /* 0x0d4 */
+    TextureSequence mTextureSequence;                       /* 0x138 */
+    WithMeshClsn mWithMeshClsn;                             /* 0x14c */
+    ShadowModel mShadowModel;                               /* 0x308 */
+    u8  pad_330[0x30];
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
+    s32 mTargetPlayer;      /* 0x3a0 */
+    u8  pad_3a4[0x4];
+    s32 unk_3a8;            /* 0x3a8 */
+    u8  pad_3ac[0x4];
+    s32 unk_3b0;            /* 0x3b0 */
+    s32 unk_3b4;            /* 0x3b4 */
+    s32 unk_3b8;            /* 0x3b8 */
+    u8  pad_3bc[0x30];
+    s32 unk_3ec;            /* 0x3ec */
+    u8  pad_3f0[0x8];
+    s32 unk_3f8;            /* 0x3f8 */
+    s16 unk_3fc;            /* 0x3fc */
+    u8  pad_3fe[0x8];
+    s16 unk_406;            /* 0x406 */
+    u8  pad_408[0x4];
+    s32 unk_40c;            /* 0x40c */
+    u8  pad_410[0x4];
+    s8  unk_414;            /* 0x414 */
+    u8  pad_415[0x1];
+    s8  unk_416;            /* 0x416 */
+    u8  pad_417[0x5];
+    u8  unk_41c;            /* 0x41c */
+    u8  pad_41d[0x6];
+    s8  unk_423;            /* 0x423 */
+    s8  unk_424;            /* 0x424 */
+    u8  pad_425[0x1];
+    s8  unk_426;            /* 0x426 */
+    s8  unk_427;            /* 0x427 */
+    u8  pad_428[0x1];
+    s8  unk_429;            /* 0x429 */
+    s8  unk_42a;            /* 0x42a */
+    u8  unk_42b;            /* 0x42b */
+    u8  pad_42c[0x18];
+    s8  unk_444;            /* 0x444 */
+    u8  pad_445[0x1];
+    s8  unk_446;            /* 0x446 */
+    u8  pad_447[0x1];
+    s32 unk_448;            /* 0x448 */
+    s32 unk_44c;            /* 0x44c */
+    s32 unk_450;            /* 0x450 */
+
+    /* --- vtable, in ROM order. Do not reorder. --- */
+    virtual ~Bowser();                  /* slots 16 (D1), 17 (D0) */
+
+    /* --- non-virtual --- */
+    int InitResources();
+    int CleanupResources();
+    void OnPendingDestroy();
+    int Behavior();
+    int Render();
+};
+
+typedef char Bowser_size_must_be_0x454[sizeof(Bowser) == 0x454 ? 1 : -1];
+
+#else
+
+/* The same object for a C translation unit, which has no base class to inherit
+   Actor's fields from and so spells the whole layout flat. Every current includer
+   is a .cpp; this half is kept so that a future C one gets the right offsets
+   rather than a parse error. */
 struct Bowser {
     u8  pad_000[0x4];
     s32 unk_004;            /* 0x004 */
@@ -28,20 +127,12 @@ struct Bowser {
     u8  pad_0a4[0x28];
     s8  unk_0cc;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0xb];
-    s32 unk_130;            /* 0x130 */
-    u8  pad_134[0x4];
-    u8  mTextureSequence;            /* 0x138 */
-    u8  pad_139[0x13];
-    u8  mWithMeshClsn;            /* 0x14c */
-    u8  pad_14d[0x1bb];
-    u8  mShadowModel;            /* 0x308 */
-    u8  pad_309[0x57];
-    u8  mMovingCylinderClsnWithPos;            /* 0x360 */
-    u8  pad_361[0x3f];
+    ModelAnim mModelAnim;                                   /* 0x0d4 */
+    TextureSequence mTextureSequence;                       /* 0x138 */
+    WithMeshClsn mWithMeshClsn;                             /* 0x14c */
+    ShadowModel mShadowModel;                               /* 0x308 */
+    u8  pad_330[0x30];
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
     s32 mTargetPlayer;            /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
@@ -82,14 +173,8 @@ struct Bowser {
     s32 unk_448;            /* 0x448 */
     s32 unk_44c;            /* 0x44c */
     s32 unk_450;            /* 0x450 */
-#ifdef __cplusplus
-    /* methods */
-    int InitResources();
-    int CleanupResources();
-    void OnPendingDestroy();
-    int Behavior();
-    int Render();
-#endif
 };
+
+#endif /* __cplusplus */
 
 #endif

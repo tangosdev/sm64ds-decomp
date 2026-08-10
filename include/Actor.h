@@ -59,6 +59,21 @@ struct Vector3;
 struct Vector3_16;
 struct CylinderClsn;
 
+/* The actor heap and its deallocator, for the inline operator delete at the end of
+   the class. `data_020a0eac` is the heap every actor is allocated from -- the same
+   one ActorBase::operator new (src/_ZN9ActorBasenwEj.cpp) passes to
+   Memory::Allocate.
+
+   SPELT EXACTLY AS include/decl_common.h SPELLS IT, deliberately. The mangled name
+   says the second parameter is a `Heap*`, and decl_common.h says `void*`; declaring
+   the honest type here instead makes two incompatible `extern "C"` declarations of
+   one name visible in the same translation unit, which mwcc rejects as "illegal
+   function overloading". That cost 105 files their eligibility when it was tried.
+   Correcting the parameter type is worth doing -- in decl_common.h, once, for every
+   caller at the same time. */
+extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void *data_020a0eac;
+
 struct Actor : ActorDerived {
     s32 unk_050;            /* 0x050 */
     s32 unk_054;            /* 0x054 */
@@ -392,6 +407,32 @@ struct Actor : ActorDerived {
        parameters to the stack, costing +0x14, so those keep extern "C"
        definitions with scalar args. A true-signature declaration for callers is
        fine and is tracked separately. */
+
+    /* THE COUNTERPART OF ActorBase::operator new, AND WHAT LETS A REAL `~Class()`
+       REPRODUCE THE ROM'S DELETING DESTRUCTOR.
+
+       The compiler generates D0 -- the deleting destructor, vtable slot 17 -- as
+       "run the destructor body, then call operator delete on the class". Without
+       this declaration it emits a call to the global `_ZdlPv`, which exists nowhere
+       in this image, and D0 comes out three instructions short of the ROM's.
+
+       Inline, and that is not a style choice, it is what the ROM shows.
+       ActorBase::operator new is a real function at 0x02043444, but NO operator
+       delete symbol exists anywhere in the image, and every deleting destructor
+       ends with the same two instructions -- load the actor heap, call
+       Memory::Deallocate -- rather than a call to a shared helper. Only an inline
+       member produces that.
+
+       DECLARED HERE AND NOT ON ActorBase, and the difference is load-bearing: mwcc
+       inlines it only when it is found in the class itself or its IMMEDIATE base.
+       On ActorBase, every Actor-derived D0 emits an out-of-line call instead and
+       misses. Enemy carries its own copy for the same reason -- it is a flattened
+       struct that does not derive from Actor in these headers, so this one is not
+       even in scope for the classes under it.
+
+       No layout effect: an inline non-virtual member adds no field and no vtable
+       slot, and Actor's 0xd0 assertion still holds. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 };
 
 #else

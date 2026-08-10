@@ -1,25 +1,19 @@
 //cpp
 // @symbol _ZN6BowserD1Ev
-
-struct Actor {
-    char pad[0xd0];
-    virtual ~Actor();
-};
-
-struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
-struct TextureSequence { char pad[0x14]; ~TextureSequence(); };
-struct WithMeshClsn { char pad[0x1bc]; ~WithMeshClsn(); };
-struct ShadowModel { char pad[0x58]; ~ShadowModel(); };
-struct MovingCylinderClsnWithPos { char pad[0x4]; ~MovingCylinderClsnWithPos(); };
-
-struct Bowser : Actor {
-    ModelAnim m0;   /* 0xd4 */
-    TextureSequence m1;   /* 0x138 */
-    WithMeshClsn m2;   /* 0x14c */
-    ShadowModel m3;   /* 0x308 */
-    MovingCylinderClsnWithPos m4;   /* 0x360 */
-    virtual ~Bowser();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * The stand-in structs this file used to carry -- `struct Actor { char pad[0xd0]; }`
+ * and five members sized 0x64, 0x14, 0x1bc, 0x58, 0x4 -- are gone. The base is the
+ * real Actor and every member is its real class, each pinned by its own size
+ * assertion. One of those stand-ins was also wrong: ShadowModel is 0x28, not the
+ * 0x58 this file claimed, and it only worked because nothing downstream of it was
+ * being computed.
+ *
+ * The ROM destroys 0x360, 0x308, 0x14c, 0x138, 0x0d4 -- exactly reverse declaration
+ * order -- then chains to Actor. That order is the evidence the declaration order
+ * is right.
+ */
+#include "Bowser.h"
 
 Bowser::~Bowser()
 {

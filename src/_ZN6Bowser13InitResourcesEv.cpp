@@ -15,9 +15,13 @@
  * `Vector3 pos` was a local shadow typedef; it is the real types.h Vector3
  * here, which is layout-identical (Fix12i is s32) and costs nothing.
  *
- * 0x0cc is newly evidenced by this function alone: it is read as a signed char
- * and passed as Actor::Spawn's `signed char` parameter. It was inside pad_0a4
- * before, so the padding is split rather than any field moving.
+ * The fields this used to spell as unk_ are the base classes' and are named now:
+ * unk_09c / unk_0a0 are Actor::mVertAccel and Actor::mTerminalVelocity -- and the
+ * values written here, -0x2000 and -0x3c000, are fix12 gravity and terminal
+ * velocity, which is the same evidence Actor.h cites from BooCage and MadPiano.
+ * mParam is ActorBase::param1, unk_004 is ActorBase::uniqueID, and unk_0cc is
+ * Actor::mAreaId -- which is why it is read as a signed char and handed straight
+ * to Actor::Spawn's areaID parameter.
  *
  * The early `return 0` when ShadowModel::InitCylinder fails is the ROM's -- the
  * only failure path in the function.
@@ -90,16 +94,16 @@ int Bowser::InitResources()
     this->unk_3b0 = this->mPosX;
     this->unk_3b4 = this->mPosY;
     this->unk_3b8 = this->mPosZ;
-    this->unk_09c = -0x2000;
-    this->unk_0a0 = -0x3c000;
+    this->mVertAccel = -0x2000;
+    this->mTerminalVelocity = -0x3c000;
     this->mTargetPlayer = 0;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
         &this->mWithMeshClsn, this, 0x50000, 0x50000, 0, 0);
     _ZN12WithMeshClsn13SetLimMovFlagEv(&this->mWithMeshClsn);
 
     this->unk_40c = 0;
-    this->unk_414 = (char)(this->mParam & 3);
-    this->unk_416 = (char)(((unsigned int)this->mParam >> 2) & 1);
+    this->unk_414 = (char)(this->param1 & 3);
+    this->unk_416 = (char)(((unsigned int)this->param1 >> 2) & 1);
     this->unk_3fc = 0;
     this->unk_423 = 0;
     this->unk_426 = 1;
@@ -115,13 +119,13 @@ int Bowser::InitResources()
     this->unk_444 = 0;
 
     a1 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0x118, 0, &this->mPosX, 0, this->unk_0cc, -1);
-    *(int *)((char *)a1 + 0x2cc) = this->unk_004;
+        0x118, 0, &this->mPosX, 0, this->mAreaId, -1);
+    *(int *)((char *)a1 + 0x2cc) = this->uniqueID;
 
     a2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0x116, 0, &this->mPosX, 0, this->unk_0cc, -1);
+        0x116, 0, &this->mPosX, 0, this->mAreaId, -1);
     this->unk_3a8 = *(int *)((char *)a2 + 4);
-    *(int *)((char *)a2 + 0x108) = this->unk_004;
+    *(int *)((char *)a2 + 0x108) = this->uniqueID;
     this->unk_42a = 5;
     this->unk_42b = 0;
     this->unk_448 = 0;
