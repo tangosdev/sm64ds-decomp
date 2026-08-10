@@ -20,7 +20,20 @@ struct mm_;
 struct outAngle_;
 struct ww_;
 struct Enemy {
-    u8  pad_000[0x5c];
+    /* 0x00 is the vptr, placed implicitly by the virtual destructor declared
+       below. The 0x5c of padding that used to start at 0x00 therefore starts
+       at 0x04 and is four bytes shorter -- Enemy's 0x110 span always counted
+       the vptr, it just was not declared. Adding a virtual WITHOUT taking the
+       four bytes back pushes every field, and every member of every derived
+       class, four bytes late.
+
+       Enemy really inherits this vptr from ActorBase via Actor -- the fields
+       below 0x0d0 duplicate Actor's, as the notes in this file already say.
+       Declaring the destructor here is true but incomplete; `Enemy : Actor`
+       is the real fix and is its own slice. */
+    u8  pad_004[0x4];
+    s32 mParam;            /* 0x008 */
+    u8  pad_00c[0x50];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
@@ -38,7 +51,9 @@ struct Enemy {
        load, which is the one thing no source pass can settle -- and 27 derived
        headers already declare it s16. Was a bare u8 marker. */
     s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0xe];
+    u8  pad_096[0x6];
+    s32 unk_09c;            /* 0x09c */
+    s32 unk_0a0;            /* 0x0a0 */
     s32 unk_0a4;            /* 0x0a4 */
     /* 0x0a8 is Actor.h:99 mVertSpeed; 10 derived headers agree, both evidence
        passes see 4-byte accesses. */
@@ -84,8 +99,10 @@ struct Enemy {
        ROM two. This is the last field, so widening it grows sizeof(Enemy) by 3 --
        the only site here that is not offset-neutral. */
     s32 mDeathState;            /* 0x10c */
-#ifdef __cplusplus
-    /* methods */
+    /* --- vtable, in ROM order. Do not reorder. --- */
+    virtual ~Enemy();                   /* slots 0 (D1), 1 (D0) */
+
+    /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_);
     int UpdateDeath(WithMeshClsn & clsn_);
     void UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel);
@@ -111,7 +128,11 @@ struct Enemy {
            The ov002 callee ignores r3, so the trailing parameter is accepted
            and dropped. A two-reference prototype cannot emit those moves. */
     void KillByInvincibleChar(const Vector3_16 & a1_, Player & a2_);
-#endif
 };
+
+/* Makes Enemy's size a claim the compiler enforces, and makes every header
+   that derives from Enemy checkable by tools/check_header_offsets.py -- which
+   otherwise skips a derived class whose base asserts no size. */
+typedef char Enemy_size_must_be_0x110[sizeof(Enemy) == 0x110 ? 1 : -1];
 
 #endif

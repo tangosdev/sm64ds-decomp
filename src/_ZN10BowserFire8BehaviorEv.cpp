@@ -10,7 +10,6 @@ struct Entry { PMF pmf; };
 extern "C" Entry data_ov060_0211afb4[];
 extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
-struct CylinderClsn { void Clear(); void Update(); };
 
 int BowserFire::Behavior()
 {
@@ -22,14 +21,14 @@ int BowserFire::Behavior()
         WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
         if (unk_35c != 4) {
             if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
-                unk_0a8 = 0;
+                mVertSpeed = 0;
                 unk_09c = 0;
             }
         }
     }
     func_ov060_02116740(((char *)this));
     func_ov060_02117624(((char *)this));
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Clear();
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Update();
+    mMovingCylinderClsn.Clear();
+    mMovingCylinderClsn.Update();
     return 1;
 }

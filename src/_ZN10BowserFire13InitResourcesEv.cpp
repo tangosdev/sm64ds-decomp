@@ -23,8 +23,12 @@
  * with one of an empty class. Under the pin it does: swapping the empty
  * stand-in for the real Actor is byte-identical.
  *
- * 0x2e8 is newly evidenced here: the only access anywhere is this `|= 1`. It
- * sat inside pad_2d1, so the padding is split and no field moves.
+ * The `|= 1` at 0x2e8 was briefly named as a BowserFire field of its own. It
+ * is not one. 0x2d0 + 0x18 lands inside mMovingCylinderClsn, and
+ * CylinderClsn::flags is at 0x18, documented as "bit 0 makes Update bail" --
+ * which is precisely what setting bit 0 does, and precisely what this branch
+ * wants when unk_35c is zero. Same mistake, and same correction, as Player's
+ * `mBodyClsnFlags`.
  *
  * The doubled write to pos.y is the ROM's own shape and is kept verbatim: the
  * seed is read into a local, stored, then overwritten with seed + 0x32000.
@@ -70,7 +74,7 @@ int BowserFire::InitResources()
     this->unk_36c = 0;
     this->unk_378 = ((unsigned int)this->mParam >> 4) & 3;
     if (this->unk_35c == 0)
-        this->unk_2e8 |= 1;
+        this->mMovingCylinderClsn.flags |= 1;
     this->unk_360 = 0x2000;
     this->unk_380 = 0;
     this->unk_37c = this->unk_380;
