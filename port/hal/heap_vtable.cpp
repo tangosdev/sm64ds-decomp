@@ -172,20 +172,45 @@ extern "C" void *_ZN4Heap8AllocateEj(void *self, u32 size)
 //
 // Slots the port has not yet had a caller for still trap by name; the table
 // being the right SHAPE is what stops a dispatch running off the end of it.
-static void *__fastcall slot_alloc(void *self, void *, u32 size, int align)
+// Vtable-slot calling convention. On MSVC a C++ virtual dispatch is __thiscall
+// (this in ecx), so the shims are __fastcall and eat a dummy edx to line the one
+// real arg up on the stack. GCC on i386 does NOT use ecx for `this` -- it pushes
+// `this` on the stack as the ordinary first argument (verified: Heap::Allocate
+// emits `push this; call *slot`). So on GCC the shim must be a plain cdecl
+// function whose FIRST parameter is `self`, with NO dummy edx slot. Getting this
+// wrong reads `self` out of a garbage register and crashes AllocateForwards with
+// a null `this` during the first heap dispatch of boot (Stage::Stage's
+// ActorBase::operator new). VT_SELF expands to the right leading parameter list.
+#if defined(__GNUC__) && !defined(_MSC_VER)
+#define VT_CC
+#define VT_SELF(t)  t self
+#else
+#define VT_CC __fastcall
+#define VT_SELF(t)  t self, void *
+#endif
+
+static void *VT_CC slot_alloc(VT_SELF(void *), u32 size, int align)
 { return ((ExpandingHeap *)self)->VAllocate(size, align); }
-static int __fastcall slot_dealloc(void *self, void *, void *p)
+static int VT_CC slot_dealloc(VT_SELF(void *), void *p)
 { return ((ExpandingHeap *)self)->VDeallocate(p); }
-static void *__fastcall slot_realloc(void *self, void *, void *p, u32 size)
+static void *VT_CC slot_realloc(VT_SELF(void *), void *p, u32 size)
 { return ((ExpandingHeap *)self)->VReallocate(p, size); }
-static u32 __fastcall slot_sizeof(void *self, void *, void *p)
+static u32 VT_CC slot_sizeof(VT_SELF(void *), void *p)
 { return ((ExpandingHeap *)self)->VSizeof(p); }
 
+#if defined(__GNUC__) && !defined(_MSC_VER)
+#define TRAP(n) \
+    static void slot_trap##n(void *) { \
+        fprintf(stderr, "FATAL: ExpandingHeap vtable slot %d dispatched " \
+                        "with no caller evidence (see heap_vtable.cpp)\n", n); \
+        abort(); }
+#else
 #define TRAP(n) \
     static void __fastcall slot_trap##n(void *, void *) { \
         fprintf(stderr, "FATAL: ExpandingHeap vtable slot %d dispatched " \
                         "with no caller evidence (see heap_vtable.cpp)\n", n); \
         abort(); }
+#endif
 TRAP(0) TRAP(1) TRAP(2) TRAP(5) TRAP(6) TRAP(7)
 TRAP(10) TRAP(11) TRAP(12) TRAP(13) TRAP(14) TRAP(15)
 

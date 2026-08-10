@@ -51,12 +51,22 @@ struct SharedFilePtr {
     void ReallocateModelFile();
     void Release();
 };
+/* LINUX CRITICAL: `SharedFilePtr::LoadFile()` mangles to
+   _ZN13SharedFilePtr8LoadFileEv -- the very extern-C name this body calls -- so
+   on GCC the two are ONE symbol and the bridge self-recurses (a stack-overflow
+   SIGSEGV the moment the first asset loads, right after Stage::Stage). Same for
+   Release. On MSVC the C++ method and the extern-C name mangle differently so
+   the bridge is a real converter. On Linux the real src/ definitions
+   (src/_ZN13SharedFilePtr8LoadFileEv.c and the Release .c) already carry these
+   exact names with the correct ABI, so omit the host copies. */
+#ifdef _WIN32
 void SharedFilePtr::LoadFile() { _ZN13SharedFilePtr8LoadFileEv(this); }
 /* Release is a C-form definition in src (a .c file), but the cleanup paths
    main rewrote as real methods -- ArrowSignRight's, the water's, the net's --
    reach it through include/SharedFilePtr.h as a method. Same direction as
    LoadFile above. */
 void SharedFilePtr::Release() { _ZN13SharedFilePtr7ReleaseEv(this); }
+#endif /* _WIN32 -- Linux binds callers straight to the real src/ methods */
 // Shrinks the file image to its post-parse size on the DS (a heap-space
 // optimization). Skipped on host: the image simply stays at load size.
 void SharedFilePtr::ReallocateModelFile() {}
