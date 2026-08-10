@@ -4,7 +4,7 @@
     .ctor       start:0x021373b4 end:0x021373bc kind:rodata align:4
     .data       start:0x021373c0 end:0x02137780 kind:data align:32
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
-src/_ZN9SeesawBobD1Ev.c:
+src/_ZN9SeesawBobD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135744
 

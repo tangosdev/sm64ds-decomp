@@ -32,7 +32,7 @@ src/func_ov052_02111410.c:
     complete
     .text start:0x02111410 end:0x02111440
 
-src/_ZN14SquarePathLiftD1Ev.c:
+src/_ZN14SquarePathLiftD1Ev.cpp:
     complete
     .text start:0x02111440 end:0x02111484
 

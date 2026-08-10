@@ -54,7 +54,7 @@ src/Spindrift_Spawn.c:
     complete
     .text start:0x02124040 end:0x02124090
 
-src/_ZN10MrBlizzardD1Ev.c:
+src/_ZN10MrBlizzardD1Ev.cpp:
     complete
     .text start:0x02124090 end:0x021240d8
 
@@ -391,7 +391,7 @@ src/Moneybag_Spawn.c:
     complete
     .text start:0x02127adc end:0x02127b34
 
-src/_ZN8IceBlockD1Ev.c:
+src/_ZN8IceBlockD1Ev.cpp:
     complete
     .text start:0x02127b34 end:0x02127b80
 

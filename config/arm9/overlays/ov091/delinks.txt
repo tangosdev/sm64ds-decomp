@@ -114,7 +114,7 @@ src/ArrowPathLift_Spawn.c:
     complete
     .text start:0x021323cc end:0x02132404
 
-src/_ZN17SlidingPlatformWfD1Ev.c:
+src/_ZN17SlidingPlatformWfD1Ev.cpp:
     complete
     .text start:0x02132404 end:0x02132448
 
@@ -286,7 +286,7 @@ src/Stump_Spawn.c:
     complete
     .text start:0x02133938 end:0x02133968
 
-src/_ZN5StumpD1Ev.c:
+src/_ZN5StumpD1Ev.cpp:
     complete
     .text start:0x02133968 end:0x021339a8
 

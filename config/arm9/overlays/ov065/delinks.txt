@@ -450,7 +450,7 @@ src/TTC_MovingBar_Spawn.c:
     complete
     .text start:0x0211b328 end:0x0211b360
 
-src/_ZN13TTC_MovingBarD1Ev.c:
+src/_ZN13TTC_MovingBarD1Ev.cpp:
     complete
     .text start:0x0211b360 end:0x0211b3ac
 
@@ -485,7 +485,7 @@ src/TtcRotatingGear_Spawn.c:
     complete
     .text start:0x0211b7b8 end:0x0211b7f0
 
-src/_ZN15TtcRotatingGearD1Ev.c:
+src/_ZN15TtcRotatingGearD1Ev.cpp:
     complete
     .text start:0x0211b7f0 end:0x0211b834
 
@@ -516,7 +516,7 @@ src/TtcMovingCubeA_Spawn.c:
     complete
     .text start:0x0211bbac end:0x0211bbdc
 
-src/_ZN14TtcMovingCubeAD1Ev.c:
+src/_ZN14TtcMovingCubeAD1Ev.cpp:
     complete
     .text start:0x0211bbdc end:0x0211bc28
 

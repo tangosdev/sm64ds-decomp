@@ -156,7 +156,7 @@ src/PowerStarCreate_Spawn.c:
     complete
     .text start:0x0211278c end:0x021127bc
 
-src/_ZN8IceSheetD1Ev.c:
+src/_ZN8IceSheetD1Ev.cpp:
     complete
     .text start:0x021127bc end:0x02112800
 

@@ -147,7 +147,7 @@ src/Whomp_Spawn.c:
     complete
     .text start:0x021265e8 end:0x02126648
 
-src/_ZN10BulletBillD1Ev.c:
+src/_ZN10BulletBillD1Ev.cpp:
     complete
     .text start:0x02126648 end:0x02126698
 

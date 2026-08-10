@@ -4,7 +4,7 @@
     .ctor       start:0x02111b14 end:0x02111b18 kind:rodata align:4
     .data       start:0x02111b20 end:0x02112080 kind:data align:32
     .bss        start:0x02112080 end:0x021120c0 kind:bss align:32
-src/_ZN8SquasherD1Ev.c:
+src/_ZN8SquasherD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111ec
 

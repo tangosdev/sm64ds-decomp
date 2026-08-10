@@ -3,7 +3,7 @@
     .ctor       start:0x02126cd4 end:0x02126cd8 kind:rodata align:4
     .data       start:0x02126ce0 end:0x02126ee0 kind:data align:32
     .bss        start:0x02126ee0 end:0x02127140 kind:bss align:32
-src/_ZN10KingBobOmbD1Ev.c:
+src/_ZN10KingBobOmbD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 

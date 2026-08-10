@@ -168,7 +168,7 @@ src/RotatingPlatformWdw_Spawn.c:
     complete
     .text start:0x02112168 end:0x021121a4
 
-src/_ZN19RotatingPlatformWdwD1Ev.c:
+src/_ZN19RotatingPlatformWdwD1Ev.cpp:
     complete
     .text start:0x021121a4 end:0x021121f0
 
