@@ -447,8 +447,16 @@ extern "C" void _ZN5Model17UpdateFileOffsetsER8BMD_File(BMD_File *f);  /* Linux:
    three engine globals rather than declaring them), so the slot-5 thunks that
    call the method need the method to exist. */
 extern "C" void _ZN9ActorBase21AfterCleanupResourcesEj(void *self, unsigned a);
+#ifdef _WIN32
 void ActorBase::AfterCleanupResources(u32 a)
 { _ZN9ActorBase21AfterCleanupResourcesEj(this, a); }
+#endif /* _WIN32: on GCC the C++ method ActorBase::AfterCleanupResources mangles
+   to the SAME _ZN9ActorBase21AfterCleanupResourcesEj this face forwards to, so
+   the face is a self-forwarding stub that (winning the link by order under
+   --allow-multiple-definition) shadowed the real host copy in
+   unmatched/ActorBase_AfterCleanupResources.cpp -> infinite recursion on the
+   frame-1 actor teardown pass. Drop it on Linux: the slot-5 thunks' C++-method
+   call binds straight to the host copy's real _ZN9ActorBase21..Ej definition. */
 
 extern "C" int _ZN4Heap7_SizeofEPv(void *self, void *p)
 { return ((Heap *)self)->Heap::Sizeof(p); }
