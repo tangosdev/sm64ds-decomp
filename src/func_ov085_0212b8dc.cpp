@@ -3,15 +3,11 @@
 /* Rabbit (daMip_c, ov085) state Main -- the closest-Player flee/idle machine.
    Reached via the Rabbit state table at data_ov085_02130044 (state struct
    data_ov085_021306cc). VERIFIED byte-exact + link-verified at mwccarm 2004/b56.
-   Self-contained decls (shared-header integration changes codegen; re-verify if
-   folding into decl_common.h/common.h). */
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef int s32;
-typedef int Fix12i;
-struct Vector3 { int x, y, z; };
+
+   The scalar typedefs and Vector3 come from types.h rather than being respelled
+   here: the local copies were a shadow declaration the langmode ratchet counts,
+   and the header was built both ways -- all 0x338 bytes are identical. */
+#include "types.h"
 
 extern "C" {
     char* _ZN5Actor13ClosestPlayerEv();

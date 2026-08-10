@@ -233,6 +233,10 @@ src/func_ov085_0212b8a0.c:
     complete
     .text start:0x0212b8a0 end:0x0212b8dc
 
+src/func_ov085_0212b8dc.cpp:
+    complete
+    .text start:0x0212b8dc end:0x0212bc14
+
 src/func_ov085_0212bc14.c:
     complete
     .text start:0x0212bc14 end:0x0212bc78
