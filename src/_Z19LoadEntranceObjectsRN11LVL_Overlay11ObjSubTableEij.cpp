@@ -1,30 +1,22 @@
-enum Bool { false = 0, true = 1 };
-typedef int Fix12i;
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-typedef unsigned int u32;
+//cpp
+// @symbol _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij
+/* LoadEntranceObjects(LVL_Overlay::ObjSubTable&, int, u32) at ov002:0x020fe6c8
+ * -- spawn entrance actors and the entrance-controller ActorDerived.
+ *
+ * A free function taking a nested LVL_Overlay::ObjSubTable reference. Each
+ * StandardEntry is 0x10 bytes: raw id index, s16 position, Vector3s rotation,
+ * u16 param. Positions shift left by 12 into Fix12 on the way to Actor::Spawn.
+ *
+ * The third argument is an entry index offset into the table (not a free
+ * parameter like the sibling loaders' unused `param'): the walk starts at
+ * `entries + p3' and runs for `data_0209f21c' iterations, not `tbl.count'.
+ *
+ * The file this replaces declared its own Entry/ObjSubTable/Vector3 types and
+ * took the table by pointer rather than reference. */
+#include "types.h"
+#include "LVL_Overlay.h"
 
-typedef struct { Fix12i x, y, z; } Vector3;
-typedef struct { s16 x, y, z; } Vector3_16;
-
-struct Entry {
-    u16 raw;        /* 0 */
-    s16 x;          /* 2 */
-    s16 y;          /* 4 */
-    s16 z;          /* 6 */
-    Vector3_16 rot; /* 8 */
-    u16 param;      /* 0xe */
-};
-
-struct ObjSubTable {
-    u8 pad0;
-    u8 count;
-    u8 pad2[2];
-    struct Entry* entries;
-};
-
+extern "C" {
 extern u8 data_0209f21c;
 extern u8 data_0209caa0[];
 extern u8 data_0209f2d8;
@@ -35,18 +27,20 @@ extern void* data_0209f394[];
 extern u8 data_0209f250;
 extern void* data_0209f5c0;
 extern void* data_0209f318;
-extern signed char data_ov002_0210cb5c[];
+extern s8 data_ov002_0210cb5c[];
 
-void func_0202b0e0(struct Entry* e, int count);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, const Vector3* pos, const Vector3_16* rot, s32 area, s32 death);
+void func_0202b0e0(LVL_Overlay::StandardEntry* e, int count);
+void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+    u32 id, u32 flags, const Vector3* pos, const Vector3s* rot, s32 area, s32 death);
 void* _ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 id, void* base, int a, int b);
 void StartEntranceFaderWipe(void);
+}
 
-void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* tbl, int p2, u32 p3)
+void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
 {
     u32 sl;
-    struct Entry* e = tbl->entries;
-    func_0202b0e0(e, tbl->count);
+    LVL_Overlay::StandardEntry* e = (LVL_Overlay::StandardEntry*)tbl.entries;
+    func_0202b0e0(e, tbl.count);
     e += p3;
     sl = 0;
 
@@ -68,16 +62,16 @@ void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* 
 
             int f2 = data_0209caa0[0x41];
             int f1 = data_02092128[i];
-            enum Bool cond = (enum Bool)(data_0209f2d8 == 1);
-            if (cond != false) {
+            int cond = (data_0209f2d8 == 1);
+            if (cond != 0) {
                 f2 = 3;
                 f1 = 3;
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
                 data_ov002_0210cbf4[e->raw], flags, &pos, &e->rot,
-                (signed char)(param & 7), -1);
+                (s8)(param & 7), -1);
 
             if (data_0209fc5c[i] == 0)
                 data_0209f394[i] = 0;
@@ -96,7 +90,7 @@ void _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(struct ObjSubTable* 
 
     int t = data_0209f2d8;
     t = t == 2;
-    if (t != false)
+    if (t != 0)
         return;
 
     if (sl >= 0x13)

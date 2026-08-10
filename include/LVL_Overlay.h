@@ -93,6 +93,29 @@ struct LVL_Overlay {
         s16 z;                  /* 0x04 */
         u16 param;              /* 0x06 */
     };
+
+    /* 0x10 bytes. LoadStandardObjects (ov002:0x020fe8ac) and
+       LoadEntranceObjects (ov002:0x020fe6c8). `raw' indexes
+       data_ov002_0210cbf4 for the actor id; positions are s16 world units
+       shifted left by 12 into Fix12 on spawn, same as every other loader. */
+    struct StandardEntry {
+        u16      raw;           /* 0x00 -- object id index */
+        s16      x;             /* 0x02 */
+        s16      y;             /* 0x04 */
+        s16      z;             /* 0x06 */
+        Vector3s rot;           /* 0x08 */
+        u16      param;         /* 0x0e */
+    };
+
+    /* 8 bytes. LoadSimpleObjects (ov002:0x020fe960). No rotation field: spawn
+       passes NULL for it. `raw' packs a 9-bit actor index and a parameter in
+       the high bits; 0x1ff is the special minimap-change sentinel. */
+    struct SimpleEntry {
+        u16 raw;                /* 0x00 -- low 9 bits: actor index; high: param */
+        s16 x;                  /* 0x02 */
+        s16 y;                  /* 0x04 */
+        s16 z;                  /* 0x06 */
+    };
 #endif
 };
 
@@ -118,6 +141,10 @@ typedef char LVL_Overlay_ExitEntry_size_must_be_0xe[
     sizeof(LVL_Overlay::ExitEntry) == 0xe ? 1 : -1];
 typedef char LVL_Overlay_TeleportSourceEntry_size_must_be_0x8[
     sizeof(LVL_Overlay::TeleportSourceEntry) == 0x8 ? 1 : -1];
+typedef char LVL_Overlay_StandardEntry_size_must_be_0x10[
+    sizeof(LVL_Overlay::StandardEntry) == 0x10 ? 1 : -1];
+typedef char LVL_Overlay_SimpleEntry_size_must_be_0x8[
+    sizeof(LVL_Overlay::SimpleEntry) == 0x8 ? 1 : -1];
 #endif
 
 #endif
