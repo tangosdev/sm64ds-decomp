@@ -17,7 +17,10 @@ struct Toad {
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x24];
     s16 mAngleX;            /* 0x08c */
-    u8  pad_08e[0x3e];
+    /* Behavior turns toward the player with ApproachLinear on this and
+       measures AngleDiff against it, which is what pins it as the yaw. */
+    s16 mAngleY;            /* 0x08e */
+    u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
     /* MovingCylinderClsn member, named by the class's own destructor calling
@@ -30,7 +33,15 @@ struct Toad {
     u8  mShadowModel;            /* 0x16c */
     u8  pad_16d[0x87];
     s32 unk_1f4;            /* 0x1f4 */
-    u8  pad_1f8[0x10];
+    u8  pad_1f8[0x8];
+    /* Two ApproachLinear pairs: 0x200 chases 0x202 and 0x204 chases 0x206,
+       at different rates. The targets are written from the player's
+       direction each frame and the current values are what actually get
+       used, which is what makes this a smoothed head-turn. */
+    s16 mHeadYaw;            /* 0x200 */
+    s16 mHeadYawTarget;            /* 0x202 */
+    s16 mHeadPitch;            /* 0x204 */
+    s16 mHeadPitchTarget;            /* 0x206 */
     u16 unk_208;            /* 0x208 */
     u8  pad_20a[0x1];
     u8  unk_20b;            /* 0x20b */
@@ -40,6 +51,7 @@ struct Toad {
     u8  unk_20f;            /* 0x20f */
 #ifdef __cplusplus
     /* methods */
+    int Behavior();
     int CleanupResources();
     int Render();
 #endif
