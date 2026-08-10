@@ -65,12 +65,17 @@ struct Enemy : Actor {
 
     virtual ~Enemy();                   /* slots 0 (D1), 1 (D0) */
 
-    /* Enemy's own copy of Actor's inline operator delete, and it has to be its
-       own: Enemy is still a flattened struct here rather than `Enemy : Actor`,
-       so Actor's copy is not in scope for anything under Enemy, and mwcc only
-       inlines the operator when it is found in the class or its immediate base.
-       See the long comment in Actor.h for why an inline member is what the ROM
-       shows. Delete this one when Enemy gains its real base. */
+    /* Enemy's own copy of Actor's inline operator delete, and it MUST STAY even
+       though Enemy now derives from Actor. mwcc inlines the operator only when it
+       finds it in the class itself or its IMMEDIATE base, and for a subclass of
+       Enemy the immediate base is Enemy -- Actor is the grandparent, so Actor's
+       copy is out of reach. Deleting this costs every Enemy subclass its D0.
+
+       An earlier revision of this comment said the opposite: that Enemy was "still
+       a flattened struct" and this copy should go once Enemy gained its real base.
+       Enemy gained it, and following that instruction would have broken the D0
+       route for 51 subclasses. See the long comment in Actor.h for why an inline
+       member is what the ROM shows. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
     /* --- non-virtual --- */
