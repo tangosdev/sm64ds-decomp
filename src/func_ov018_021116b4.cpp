@@ -42,7 +42,7 @@ int func_ov018_021116b4(char* c){
   self->unk_328 = self->unk_060;
   self->unk_32c = self->unk_064;
   {
-    short* ang = (short*)((long long)(int)(c + 0x8e));
+    short* ang = (short*)(c + 0x8e);
     *ang = *ang - 0x4000;
   }
   _ZN7PathPtrC1Ev(&p);
@@ -50,7 +50,7 @@ int func_ov018_021116b4(char* c){
   self->unk_338 = _ZNK7PathPtr8NumNodesEv(&p);
   self->unk_34c = 1;
   {
-    int* ip = (int*)((long long)(int)(c + 0x33c));
+    int* ip = (int*)(c + 0x33c);
     *ip = *ip + self->unk_34c;
   }
   self->unk_320 = 0;

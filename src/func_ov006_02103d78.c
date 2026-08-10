@@ -53,7 +53,7 @@ s32 func_ov006_02103d78(char *c)
         func_ov006_020fff84(c);
         func_ov006_021001ac(c);
         if (*(u16 *)(c + 0x566e) != 0) {
-            *(u16 *)(u32)(unsigned long long)(u32)(c + 0x566e) -= 1;
+            *(u16 *)(u32)(c + 0x566e) -= 1;
             if (*(s16 *)(c + 0x566e) <= 0) {
                 func_ov004_020b0a54((void *)0x10);
                 *(u8 *)(c + 0xc3) = 0;

@@ -16,7 +16,7 @@ int func_ov022_02111ad0(char* c)
     struct daObjFl_London_c *self = (struct daObjFl_London_c *)(void *)c;
     if (DecIfAbove0_Byte((unsigned char*)c + 0x31e) == 0) {
         if (self->unk_31f == 0) {
-            short* p = (short*)((long long)(int)(c + 0x96));
+            short* p = (short*)(c + 0x96);
             *p = *p - 0x100;
             if (self->unk_096 <= -0x2000) {
                 self->unk_096 = -0x2000;
@@ -24,7 +24,7 @@ int func_ov022_02111ad0(char* c)
                 self->unk_31f = 1;
             }
         } else {
-            short* p = (short*)((long long)(int)(c + 0x96));
+            short* p = (short*)(c + 0x96);
             *p = *p + 0x100;
             if (self->unk_096 >= 0) {
                 self->unk_096 = 0;

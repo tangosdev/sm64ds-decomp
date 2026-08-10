@@ -3,7 +3,7 @@ extern short data_ov004_020bf9e4;
 
 void func_ov006_020f6488(char *c) {
     if (*((unsigned short *)(c + 0x5300 + 0xE2)) != 0) {
-        unsigned short *ptr = (unsigned short *)((((int)c) + 0x53E2) & 0xFFFFFFFFFFFFFFFFULL);
+        unsigned short *ptr = (unsigned short *)(((int)c) + 0x53E2);
         *ptr = *ptr - 1;
         if (*((unsigned short *)(c + 0x5300 + 0xE2)) != 0) {
             return;

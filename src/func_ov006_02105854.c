@@ -6,7 +6,7 @@ extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 void func_ov006_02105854(char *c)
 {
     if (*(u16 *)(c + 0x4ec4) != 0) {
-        (*(u16 *)(int)(((long long)(int)(c + 0x4ec4))))--;
+        (*(u16 *)(int)(c + 0x4ec4))--;
         if (*(s16 *)(c + 0x4ec4) < 0)
             *(u16 *)(c + 0x4ec4) = 0;
         return;
@@ -34,7 +34,7 @@ void func_ov006_02105854(char *c)
         return;
     }
 
-    (*(u8 *)(int)(((long long)(int)(c + 0x4fe4))))--;
+    (*(u8 *)(int)(c + 0x4fe4))--;
 
     if (*(u8 *)(c + 0x4fe4) == 0xff) {
         *(u8 *)(c + 0x4fe4) = 0;
@@ -69,7 +69,7 @@ void func_ov006_02105854(char *c)
             for (x = x0; x < wq; x++) {
                 int cell = *(int *)(c + 0x4cbc) * (row + y) + (col + x);
                 *(u8 *)(c + cell + 0x4efa) = 1;
-                (*(u8 *)(int)(((long long)(int)(c + cell + 0x4f1e)))) ^= 1;
+                (*(u8 *)(int)(c + cell + 0x4f1e)) ^= 1;
                 *(u16 *)(c + cell * 2 + 0x4e78) = 8;
                 *(u8 *)(c + cell + 0x4f8a) = 1;
             }

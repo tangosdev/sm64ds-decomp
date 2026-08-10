@@ -60,7 +60,7 @@ void func_ov006_02123cb4(char *c)
         unsigned int v;
         func_ov006_020ca8e0();
         {
-            int *p = (int *)(((int)c + 0xbc) & 0xFFFFFFFFFFFFFFFFLL);
+            int *p = (int *)((int)c + 0xbc);
             *p = *p + 1;
         }
         if (*(unsigned int *)(c + 0xbc) > 0x270e)

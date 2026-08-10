@@ -1,4 +1,4 @@
-#define A(p) ((unsigned char *)(int)(((long long)(int)(p))))
+#define A(p) ((unsigned char *)(int)(p))
 
 void func_ov006_0211e4e0(char *base)
 {

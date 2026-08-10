@@ -1,5 +1,5 @@
-#define LI(i) ((int)(((long long)(i))) * 0x10)
-#define A(p) ((int)(((long long)(int)(p))))
+#define LI(i) ((int)((long long)(i)) * 0x10)
+#define A(p) ((int)(p))
 
 void func_ov006_0211e184(char *base)
 {

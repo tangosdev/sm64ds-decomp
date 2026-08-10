@@ -27,8 +27,8 @@ extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 
-#define LB(p) ((int)((unsigned long long)(u32)(int)(p) & 0xffffffffffffffffULL))
-#define LA(p) ((int)((long long)(int)(p) & 0xffffffffffffffffLL))
+#define LB(p) ((int)((int)(p)))
+#define LA(p) ((int)(p))
 
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off

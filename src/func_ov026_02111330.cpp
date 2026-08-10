@@ -66,14 +66,14 @@ extern "C" int func_ov026_02111330(void* self)
         }
 
         if (moved) {
-            *(volatile s32*)(((s32)c + 0x170) & 0xFFFFFFFFFFFFFFFFull) += *(s32*)(c + 0x180);
+            *(volatile s32*)((s32)c + 0x170) += *(s32*)(c + 0x180);
             if (*(s32*)(c + 0x170) < 0) {
                 if (_ZNK7PathPtr5LoopsEv(c + 0x164) != 0) {
                     *(s32*)(c + 0x170) = *(s32*)(c + 0x16c) - 1;
                 } else {
                     *(s16*)(c + 0x184) = 0x3c;
                     *(s32*)(c + 0x180) = 1;
-                    *(volatile s32*)(((s32)(c + 0x170)) & 0xFFFFFFFFFFFFFFFFull) += *(s32*)(c + 0x180) << 1;
+                    *(volatile s32*)((s32)(c + 0x170)) += *(s32*)(c + 0x180) << 1;
                 }
             }
             if (*(s32*)(c + 0x170) >= *(s32*)(c + 0x16c)) {
@@ -82,7 +82,7 @@ extern "C" int func_ov026_02111330(void* self)
                 } else {
                     *(s16*)(c + 0x184) = 0x3c;
                     *(s32*)(c + 0x180) = -1;
-                    *(volatile s32*)(((s32)(c + 0x170)) & 0xFFFFFFFFFFFFFFFFull) += *(s32*)(c + 0x180) << 1;
+                    *(volatile s32*)((s32)(c + 0x170)) += *(s32*)(c + 0x180) << 1;
                 }
             }
         }

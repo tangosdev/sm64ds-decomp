@@ -4,7 +4,7 @@ void func_ov006_02102ef4(unsigned char *r0) {
     r0[0x5679] = 0;
     r0[0x567a] = 1;
     {
-        unsigned char *p = (unsigned char *)(((long long)(int)(r0 + 0x5678)));
+        unsigned char *p = (unsigned char *)(r0 + 0x5678);
         *p += 1;
     }
 }

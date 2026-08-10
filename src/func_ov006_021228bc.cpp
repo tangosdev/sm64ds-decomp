@@ -42,15 +42,15 @@ void func_ov006_021228bc(char* r0, int r1) {
     *(int*)(r5 + 0x6c) = r1_9;
     *(int*)(r5 + 0x70) = 0;
     unsigned int rnd2 = (unsigned int)RandomIntInternal(data_0209e650);
-    int* p1 = (int*)(((unsigned long long)(unsigned int)(r5 + 0x5c)) & 0xffffffffffffffffULL);
+    int* p1 = (int*)(r5 + 0x5c);
     int v1 = *p1 + ((((rnd2 & 0x7fffffff) >> 0x13) - 0x800) * 0x40);
     *p1 = v1;
     int rnd3 = RandomIntInternal(data_0209e650);
-    int* p2 = (int*)(((unsigned long long)(unsigned int)(r5 + 0x68)) & 0xffffffffffffffffULL);
+    int* p2 = (int*)(r5 + 0x68);
     int adj3 = (int)(((unsigned int)rnd3 & 0x7fffffff) >> 0x13);
     *p2 -= adj3 >> 1;
     int rnd4 = RandomIntInternal(data_0209e650);
-    int* p3 = (int*)(((unsigned long long)(unsigned int)(r5 + 0x6c)) & 0xffffffffffffffffULL);
+    int* p3 = (int*)(r5 + 0x6c);
     int adj4 = (int)(((unsigned int)rnd4 & 0x7fffffff) >> 0x13);
     *p3 -= adj4 >> 1;
     func_02016a14(r5, 0);

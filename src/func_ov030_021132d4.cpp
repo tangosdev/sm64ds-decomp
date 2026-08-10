@@ -3,7 +3,7 @@ extern "C" {
 extern int _ZN12CylinderClsn5ClearEv(void*);
 extern int _ZN12WithMeshClsn15ClearGroundFlagEv(void*);
 int func_ov030_021132d4(char* c) {
-    int* p = (int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFULL);
+    int* p = (int*)((int)c + 0xb0);
     int tmp = *p;
     *p = tmp & ~0x80000;
     *(unsigned char*)(c + 0x3c7) = 0;

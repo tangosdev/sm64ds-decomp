@@ -25,9 +25,9 @@ void func_ov006_0210b314(char *c, int mode)
         func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
     } else if (mode == 4) {
         if (*(int *)(c + 0x5004) < 5) {
-            *(int *)(int)(((long long)(int)(c + 0x5004))) += 1;
+            *(int *)(int)(c + 0x5004) += 1;
         }
-        *(int *)(int)(((long long)(int)(c + 0xbc))) += 1;
+        *(int *)(int)(c + 0xbc) += 1;
         if (*(u32 *)(c + 0xbc) > 0x270e) {
             *(int *)(c + 0xbc) = 0x270e;
         }

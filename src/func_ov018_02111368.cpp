@@ -108,7 +108,7 @@ extern "C" int func_ov018_02111368(char* self)
         }
 
         if (reached) {
-            int* pIdx = (int*)((long long)(int)(self + 0x33c));
+            int* pIdx = (int*)(self + 0x33c);
             *pIdx = *pIdx + *(int*)(self + 0x34c);
             if (*(int*)(self + 0x33c) < 0) {
                 if (_ZNK7PathPtr5LoopsEv(&path) != 0) {
@@ -117,7 +117,7 @@ extern "C" int func_ov018_02111368(char* self)
                     *(u8*)(self + 0x331) = 0x3c;
                     *(u8*)(self + 0x330) = 0;
                     *(int*)(self + 0x34c) = 1;
-                    int* pIdx2 = (int*)((long long)(unsigned int)(self + 0x33c));
+                    int* pIdx2 = (int*)(self + 0x33c);
                     *pIdx2 = *pIdx2 + (*(int*)(self + 0x34c) * 2);
                 }
             }
@@ -128,7 +128,7 @@ extern "C" int func_ov018_02111368(char* self)
                     *(u8*)(self + 0x331) = 0x3c;
                     *(u8*)(self + 0x330) = 0;
                     *(int*)(self + 0x34c) = -1;
-                    int* pIdx3 = (int*)((long long)(int)((unsigned)(int)self + 0x33c));
+                    int* pIdx3 = (int*)((unsigned)(int)self + 0x33c);
                     *pIdx3 = *pIdx3 + (*(int*)(self + 0x34c) * 2);
                 }
             }

@@ -21,7 +21,7 @@ extern unsigned char data_0209f220;
 extern int data_020a0e68[];
 
 #pragma opt_propagation off
-#define LA(p) ((int*)(unsigned long)(((long long)(int)(unsigned long)(p))))
+#define LA(p) ((int*)(unsigned long)((unsigned long)(p)))
 
 int func_ov016_021119ec(char* c)
 {

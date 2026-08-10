@@ -7,7 +7,7 @@ extern void func_ov063_0211cae8(void *found, unsigned int mask);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
 extern u8 data_ov020_02114828[];
 
-#define LDR(p) ((int)((((long long)(int)(p)))))
+#define LDR(p) ((int)(p))
 
 void func_ov020_0211174c(char *c)
 {

@@ -22,7 +22,7 @@ int func_ov006_02127d10(char *c)
     int m[3];
     int vecArr[3];
 
-    *(int*)(((long long)(int)(c + 0xb9d8))) = *(int*)(((long long)(int)(c + 0xb9d8))) + 1;
+    *(int*)((long long)(int)(c + 0xb9d8)) = *(int*)((long long)(int)(c + 0xb9d8)) + 1;
     if (self->unk_b9d8 >= 0x20) {
         self->unk_b9d8 = 0;
     }
@@ -51,7 +51,7 @@ int func_ov006_02127d10(char *c)
         vecArr[1] = t;
         vecArr[2] = t;
         if (self->unk_aba0 > 0) {
-            void *self = (void*)(((long long)(int)(c + 0xaba4)));
+            void *self = (void*)(c + 0xaba4);
             void (*fn)(void*, int*) = *(void(**)(void*, int*))((char*)(*(void**)self) + 0x14);
             fn(self, vecArr);
         }
@@ -63,7 +63,7 @@ int func_ov006_02127d10(char *c)
         char *p = c + i1;
         if (*(u8*)(p + 0xac58) == 1) {
             int t6 = self->unk_ab6c;
-            int t5 = *(int*)(((long long)(int)(c + i1 * 8 + 0xacdc)));
+            int t5 = *(int*)((long long)(int)(c + i1 * 8 + 0xacdc));
             if (t5 >= t6 - 0x20000 && t5 < t6 + 0x1a0000 + (func_ov004_020b04c0() << 0xc)) {
                 if (*(int*)(c + i1 * 4 + 0xb0d8) == 1) {
                     int cnt = self->unk_b9d8;
@@ -84,7 +84,7 @@ int func_ov006_02127d10(char *c)
     for (int i2 = 0; i2 < 0x80; i2++) {
         if (*(u8*)(c + i2 + 0xb358) == 1) {
             int t7 = self->unk_ab6c;
-            int t6 = *(int*)(((long long)(int)(c + i2 * 8 + 0xb5dc)));
+            int t6 = *(int*)((long long)(int)(c + i2 * 8 + 0xb5dc));
             if (t6 >= t7 - 0x40000 && t6 < t7 + 0x1c0000 + (func_ov004_020b04c0() << 0xc)) {
                 switch (*(int*)(c + i2 * 4 + 0xb3d8)) {
                 case 0:

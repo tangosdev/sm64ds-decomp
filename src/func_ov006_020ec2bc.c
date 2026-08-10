@@ -59,7 +59,7 @@ void func_ov006_020ec2bc(struct C* c)
     g.y = -0x10000;
     c->s7a[0] = (s16)(c->s7a[1] + (((c->s7a[1] - c->s7a[2]) << 14) >> 16));
     func_0203d388(&g, c->s7a[0]);
-    func_0203d704(&h, (V2*)((long long)(int)c->v18) + 1, &g);
+    func_0203d704(&h, (V2*)(c->v18) + 1, &g);
     c->v18[0].x = h.x;
     c->v18[0].y = h.y;
 }

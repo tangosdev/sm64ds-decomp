@@ -19,7 +19,7 @@ int func_ov006_0212aacc(char* self)
     int (*iarr)[8] = (int (*)[8])self;
     u16 (*harr)[0x10] = (u16 (*)[0x10])self;
 
-    *(u16*)(((long long)(int)(self + 0x5ff4))) += 0xc0;
+    *(u16*)(self + 0x5ff4) += 0xc0;
     {
         int v = data_02082214[(*(u16*)(self + 0x5ff4) >> 4) << 1];
         int t = v + 0x80;

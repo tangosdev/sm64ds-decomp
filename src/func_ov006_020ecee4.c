@@ -13,8 +13,8 @@ extern void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int 
 
 typedef struct { int a; int b; } Pair;
 
-#define PAIR0(s) ((Pair *)(int)(((long long)(int)((char *)(s) + 0x4660)) & 0xFFFFFFFFFFFFFFFFLL))
-#define PAIR1(s) ((Pair *)(int)(((unsigned long long)(unsigned int)((char *)(s) + 0x4660)) & 0xFFFFFFFFFFFFFFFFULL))
+#define PAIR0(s) ((Pair *)(int)((char *)(s) + 0x4660))
+#define PAIR1(s) ((Pair *)(int)((char *)(s) + 0x4660))
 
 extern Pair data_ov006_0213c9ac;
 extern Pair data_ov006_0213c994;

@@ -38,5 +38,5 @@ void func_ov006_02124fd8(char *c)
 after_loop:
   if (fp < 2)
     return;
-  (*(int *)(((int)c + 0x51b8) & 0xFFFFFFFFFFFFFFFFULL))++;
+  (*(int *)((int)c + 0x51b8))++;
 }

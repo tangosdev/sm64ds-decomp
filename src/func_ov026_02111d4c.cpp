@@ -31,7 +31,7 @@ extern "C" int func_ov026_02111d4c(char* c)
     Player* pl = ((Actor*)c)->ClosestPlayer();
     if (pl != 0) {
         Vector3 v;
-        Vector3* p0 = (Vector3*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+        Vector3* p0 = (Vector3*)((int)pl + 0x5c);
         v = *p0;
 
         if (Vec3_HorzDist((Vector3*)(c + 0x1a8), &v) <= 0x12c000) {
@@ -64,7 +64,7 @@ extern "C" int func_ov026_02111d4c(char* c)
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
                 MulVec3Mat4x3(&m, &data_020a0e68, &out);
 
-                Vector3* p1 = (Vector3*)(((int)(((int)pl) & 0xFFFFFFFFFFFFFFFFull) + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+                Vector3* p1 = (Vector3*)((int)((int)pl) + 0x5c);
                 m = *p1;
                 m.x += out.x;
                 m.y += out.y;

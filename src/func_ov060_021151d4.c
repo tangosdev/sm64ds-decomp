@@ -39,7 +39,7 @@ setE:
     *(int *)(a + 0x40c) = 0xe;
 tail:
     {
-        unsigned char *p = (unsigned char *)(((long long)(int)(a + 0x415)));
+        unsigned char *p = (unsigned char *)(a + 0x415);
         *p = *p + 1;
     }
     return;

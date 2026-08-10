@@ -24,7 +24,7 @@ void func_ov034_02112688(char *sl)
         type = *(u16 *)(a + 0xc);
         { int t = (int)(type == 0xbf); flag = t ? one : zero; }
         if (flag == 0) continue;
-        src = (struct Vector3 *)(((long long)(int)(a + 0x5c)));
+        src = (struct Vector3 *)(a + 0x5c);
         v0.x = src->x; v0.y = src->y; v0.z = src->z;
         if (func_ov034_02112650(sl, p, a) != 0) {
             _ZN6Player6BounceE5Fix12IiE(a, 0x28000);

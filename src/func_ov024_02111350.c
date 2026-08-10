@@ -1,5 +1,5 @@
 #include "types.h"
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int c, int d, int e, void* v, void* cb);

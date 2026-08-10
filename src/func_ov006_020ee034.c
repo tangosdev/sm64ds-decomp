@@ -82,7 +82,7 @@ int func_ov006_020ee034(void *self)
         *(int *)((char *)p + 0x18) = *(int *)(c + 0x500c);
 
         {
-            void *obj2 = (void *)(((long long)(int)(c + 0x501c)));
+            void *obj2 = (void *)(c + 0x501c);
             ((void (**)(void *, void *))(*(int *)obj2))[5](obj2, &t);
         }
     }

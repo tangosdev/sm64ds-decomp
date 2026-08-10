@@ -15,7 +15,7 @@ extern int func_ov018_021123d0(void *c, int b);
 extern void func_ov018_02111a48(void *c, void *p);
 extern char data_020a0e68[];
 
-#define U8P(base, off) ((u8 *)(((unsigned int)(base) + (off)) & 0xFFFFFFFFFFFFFFFFULL))
+#define U8P(base, off) ((u8 *)((unsigned int)(base) + (off)))
 
 int func_ov018_02111fac(char *c)
 {

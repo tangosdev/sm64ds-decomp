@@ -22,7 +22,7 @@ void func_ov006_02106bc0(char *c) {
         fn(thisp, i);
     }
     if (*(unsigned short *)(c + 0x4ec0) == 0) return;
-    *(unsigned short *)(((long long)(int)(c + 0x4ec0))) -= 1;
+    *(unsigned short *)(c + 0x4ec0) -= 1;
     if (*(short *)(c + 0x4ec0) > 0) return;
     *(unsigned short *)(c + 0x4ec0) = 0;
     func_ov004_020b0a54(0x12);

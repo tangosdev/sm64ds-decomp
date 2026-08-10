@@ -20,7 +20,7 @@ int *func_ov007_020ccad0(void)
         _ZN9ActorBaseC1Ev(p);
         p[0] = (int)data_0208e4b8;
         p[0] = (int)_ZTV5Scene;
-        f = (unsigned char *)((long long)(int)((char *)p + 0x13));
+        f = (unsigned char *)((char *)p + 0x13);
         *f |= 1;
         *f |= 4;
         p[0] = (int)data_ov007_021032e8;

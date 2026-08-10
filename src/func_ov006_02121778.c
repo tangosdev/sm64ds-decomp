@@ -8,7 +8,7 @@ extern int data_ov006_0213faa8[];
 void func_ov006_02121778(char *c)
 {
     int idx, b;
-    *(int *)(((long long)(int)(c + 0x5d90))) -= 1;
+    *(int *)(c + 0x5d90) -= 1;
     if (*(int *)(c + 0x5000 + 0xd90) != 0)
     {
         idx = data_020a0e40[0];

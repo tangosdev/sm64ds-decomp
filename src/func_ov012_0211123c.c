@@ -10,7 +10,7 @@ void func_ov012_0211123c(char* c) {
     int* q;
     char* p;
     if (*(unsigned char*)(c+0x31e)) return;
-    q = (int*)(((long long)(int)(c + 0x60)));
+    q = (int*)(c + 0x60);
     *q -= 0x64000;
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);

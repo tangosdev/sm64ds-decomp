@@ -17,7 +17,7 @@ void func_ov060_021135fc(char *c)
     py = py + 0x32000;
     base.y = py;
 
-    *(int*)(int)(((long long)(int)(c+0x378))) |= 1;
+    *(int*)(int)(c+0x378) |= 1;
 
     if (*(unsigned char*)(c+0x414) == 2) {
         Vector3 pos;

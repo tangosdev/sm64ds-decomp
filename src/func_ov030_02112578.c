@@ -46,7 +46,7 @@ int func_ov030_02112578(void *arg0)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115cd0[1], 0, 0x1000, 0);
             *(s32 *)(c + 0x130) = 0x1000;
             *(s32 *)(c + 0x98) = 0;
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         func_ov030_02111890(arg0);
         break;
@@ -54,7 +54,7 @@ int func_ov030_02112578(void *arg0)
         _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle(c + 0x5c, (u8 *)r6 + 0x5c), 0x300);
         if (Vec3_Dist(c + 0x5c, (u8 *)r6 + 0x5c) < 0x96000) {
             if (_ZN6Player9StartTalkER9ActorBaseb(r6, arg0, 1) != 0) {
-                { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+                { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
             }
         }
         func_ov030_02111908(arg0);
@@ -69,7 +69,7 @@ int func_ov030_02112578(void *arg0)
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115cf8[1], 0, 0x1000, 0);
             _ZN9Animation8SetFlagsEi(c + 0x124, 0);
             func_0201267c(0xd1, c + 0x74);
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
     }
@@ -77,7 +77,7 @@ int func_ov030_02112578(void *arg0)
         if (_ZN6Player12GetTalkStateEv() == 2) {
             _ZN6Player18HasFinishedTalkingEv(r6);
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d18[1], 0, 0x1000, 0);
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
     case 4:
@@ -87,14 +87,14 @@ int func_ov030_02112578(void *arg0)
             *(s32 *)(c + 0x98) = 0xf000;
             *(s32 *)(c + 0xa8) = 0x2f000;
             func_0201267c(0xf1, c + 0x74);
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
     case 5:
         if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x194) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d10[1], 0x40000000, 0x1000, 0);
             *(s32 *)(c + 0x98) = 0;
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
     case 6:
@@ -104,28 +104,28 @@ int func_ov030_02112578(void *arg0)
             *(s32 *)((u8 *)r4 + 0x98) = 0x400;
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
             c[0x3c6] = 0x78;
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         /* fallthrough */
     case 7: {
-        s32 *pp = (s32 *)(((unsigned int)c + 0x3bc) & 0xFFFFFFFFFFFFFFFFULL);
+        s32 *pp = (s32 *)((unsigned int)c + 0x3bc);
         *pp = *pp + 0x400;
         if (*(s32 *)(c + 0x3bc) > 0x17ffd) {
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
     }
         /* fallthrough */
     case 8:
-        if (DecIfAbove0_Byte((u8 *)(((unsigned int)c + 0x3c6) & 0xFFFFFFFFFFFFFFFFULL)) == 0) {
+        if (DecIfAbove0_Byte((u8 *)((unsigned int)c + 0x3c6)) == 0) {
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x15666, 0);
-            { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+            { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         }
         break;
     case 9:
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d08[1], 0x40000000, 0x1000, 0);
         *(s32 *)((u8 *)r4 + 0x9c) = -0x2000;
         *(s32 *)((u8 *)r4 + 0xa0) = -0x3c000;
-        { u8 *p = (u8 *)(((unsigned int)c + 0x3c7) & 0xFFFFFFFFFFFFFFFFULL); *p = *p + 1; }
+        { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         break;
     case 10:
         if (_ZN5Actor15FindWithActorIDEjPS_(0x67, 0) == 0) {
