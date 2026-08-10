@@ -349,3 +349,28 @@ CLSNSCRATCH(".mmcray$0002", data_020a0d60, 0x24);
 
 #undef CLSNSCRATCH
 
+
+#ifndef _WIN32
+/* ARM tail-call VENEER passthrough (Linux/x86 fix, no src edit).
+ *
+ * Several matched TUs are one-instruction ARM veneers: `ldr ip,[pc]; bx ip;
+ * .word <target>` -- a transparent tail-branch that leaves r0 (this) untouched,
+ * so the caller's `this` flows straight into the target. Their byte-matched C
+ * form is `void veneer(void){ target(); }`, which is correct on ARM (bx keeps
+ * r0) but BREAKS on x86/GCC: the C function establishes its own frame and does
+ * NOT forward the caller's stack `this`, so the target reads garbage (SIGSEGV
+ * in the first frame's Player continuous-collision, func_020383e4 -> garbage
+ * this -> WithMeshClsn::UpdateExtraContinous).
+ *
+ * These strong definitions take the `this` the caller actually passes and
+ * tail-forward it. They win over the src TU by link order (hal/ links before
+ * src/, and the port links with --allow-multiple-definition). Windows is
+ * unaffected: guarded !_WIN32, and on MSVC the src veneers work as-is.
+ */
+extern "C" {
+void _ZN12WithMeshClsn20UpdateExtraContinousEv(void *self);
+void _ZN12WithMeshClsn16UpdateContinuousEv(void *self);
+void func_020383e4(void *self)               { _ZN12WithMeshClsn20UpdateExtraContinousEv(self); }
+void WithMeshClsn_UpdateContinuous_Veneer(void *self) { _ZN12WithMeshClsn16UpdateContinuousEv(self); }
+}
+#endif
