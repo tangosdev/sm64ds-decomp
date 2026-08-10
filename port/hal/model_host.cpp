@@ -305,6 +305,9 @@ extern "C" int hal_tex_log(void)
     return on;
 }
 
+#ifdef _WIN32
+/* MSVC: the extern-C name and the namespace `GX::LoadTex` (from src/) mangle
+   differently, so this is a real logging shim in front of the src upload. */
 extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
 {
     if (hal_tex_log())
@@ -312,6 +315,9 @@ extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
                z, data_020a4bc8, data_020a4be8, data_020a4be0, data_020a4bdc);
     GX::LoadTex(s, o, z);
 }
+#endif /* _WIN32 -- on GCC `GX::LoadTex` IS _ZN2GX7LoadTexEPKvjj, so this shim
+   would call itself. On Linux the callers bind straight to the real src/ upload
+   (the SM64DS_TEX_LOG texel line is Windows-only as a result). */
 
 // DMA fallback DMASyncWordTransfer uses; same synchronous copy semantics.
 // PORT_HOST_ABI: DS DMA register poke (0x040000b0 + 2-cycle barrier reads),

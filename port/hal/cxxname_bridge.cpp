@@ -401,8 +401,12 @@ void hal_fill_shadow_vtable(void)
 }
 
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file)
 { return Model::AddToCommonModelDataArr(*(BMD_File *)file); }
+#else
+void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file);
+#endif
 void *func_0203cc0c(unsigned size);
 void _ZN6Memory10DeallocateEPv(void *p);
 /* the DS global operator new/delete route through the Memory layer */

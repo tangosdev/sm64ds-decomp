@@ -19,6 +19,18 @@ if(NOT MSVC)
     # contiguous 0x400 struct (the MSVC build gets this from $-suffix section
     # grouping). Keeping the flag global is harmless for the rest of the tree.
     add_compile_options(-m32 -fno-omit-frame-pointer -fno-toplevel-reorder)
+    # -fno-strict-aliasing: the byte-locked src/ rebases file-relative offsets in
+    # place by type-punning the same slot as int and as a pointer -- e.g.
+    # Model::UpdateFileOffsets does `*(int*)(m+4) += base;` and then reads the same
+    # word back as `*(char**)(m+4)`. That is exactly what the ROM's mwcc build does
+    # and it relies on the store being observed by the very next load. At -O3 with
+    # strict aliasing GCC treats the int store and the char* load as non-aliasing,
+    # keeps the STALE raw offset in a register, and dereferences it (a 0x44 file
+    # offset used as a pointer -> SIGSEGV on the castle-grounds BMD load). MSVC does
+    # not reorder across such a store, so Windows is byte-identical and unaffected.
+    # The flag restores that ordering for GCC across every type-punned reloc site in
+    # the tree at once, with no edit to the matched source.
+    add_compile_options(-fno-strict-aliasing)
     # -fpermissive: the byte-locked src/ tree is C that mwcc/MSVC accept but g++
     # (in C++ mode, which the port compiles several .c files as) rejects as hard
     # errors -- a goto that jumps over a trivially-initialized local, a
