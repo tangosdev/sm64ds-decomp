@@ -14,7 +14,7 @@ extern void* data_ov063_0211ee20;
 extern void* data_ov063_0211edfc;
 extern void* data_ov063_0211ee08;
 extern int data_0209e650;
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern void func_020731dc(struct Vec3* a, void (*b)(void), void** node);
 extern u8 NumStars(void);
@@ -35,20 +35,20 @@ void func_ov063_0211ab68(char* obj) {
         data_ov063_0211ee74.x = 0;
         data_ov063_0211ee74.y = 0x32000;
         data_ov063_0211ee74.z = 0;
-        func_020731dc(&data_ov063_0211ee74, func_020072c0, &data_ov063_0211ee20);
+        func_020731dc(&data_ov063_0211ee74, _ZN7Vector3D1Ev, &data_ov063_0211ee20);
 
         /* second/third: volatile so stores interleave before arg loads, r3 holds shared xz */
         p = (volatile int *)&data_ov063_0211ee80;
         p[0] = 0xd2000;
         p[1] = 0x6e000;
         p[2] = 0xd2000;
-        func_020731dc(&data_ov063_0211ee80, func_020072c0, &data_ov063_0211edfc);
+        func_020731dc(&data_ov063_0211ee80, _ZN7Vector3D1Ev, &data_ov063_0211edfc);
 
         p = (volatile int *)&data_ov063_0211ee8c;
         p[0] = -0xd2000;
         p[1] = 0x46000;
         p[2] = -0xd2000;
-        func_020731dc(&data_ov063_0211ee8c, func_020072c0, &data_ov063_0211ee08);
+        func_020731dc(&data_ov063_0211ee8c, _ZN7Vector3D1Ev, &data_ov063_0211ee08);
         data_ov063_0211edc0 |= 1;
     }
 

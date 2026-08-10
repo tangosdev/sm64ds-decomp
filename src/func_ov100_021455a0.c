@@ -20,7 +20,7 @@ struct Entry {
 
 extern int data_ov100_02148710;
 extern Vec3 data_ov100_021487c0;
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern void *data_ov100_021487b4;
 extern void func_020731dc(void *a, void *b, void **node);
 extern void Vec3_RotateYAndTranslate(void *d, void *s, short ang, void *t);
@@ -70,7 +70,7 @@ int func_ov100_021455a0(char *c)
         data_ov100_021487c0.x = 0x4b000;
         data_ov100_021487c0.y = 0;
         data_ov100_021487c0.z = 0;
-        func_020731dc(&data_ov100_021487c0, (void *)func_020072c0, &data_ov100_021487b4);
+        func_020731dc(&data_ov100_021487c0, (void *)_ZN7Vector3D1Ev, &data_ov100_021487b4);
         data_ov100_02148710 |= 1;
     }
 

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern char data_ov100_02148204[];
 
 extern void _ZN6Player11OpenBigDoorEv(void* p);
@@ -25,7 +25,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_02148880.x = 0x4b000;
         data_ov100_02148880.y = 0;
         data_ov100_02148880.z = 0x6e000;
-        func_020731dc((int)&data_ov100_02148880, (int)func_020072c0, &data_ov100_02148850);
+        func_020731dc((int)&data_ov100_02148880, (int)_ZN7Vector3D1Ev, &data_ov100_02148850);
         data_ov100_02148720 |= 1;
     }
 
@@ -33,7 +33,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_0214879c.x = 0x4b000;
         data_ov100_0214879c.y = 0;
         data_ov100_0214879c.z = -0x6e000;
-        func_020731dc((int)&data_ov100_0214879c, (int)func_020072c0, &data_ov100_02148790);
+        func_020731dc((int)&data_ov100_0214879c, (int)_ZN7Vector3D1Ev, &data_ov100_02148790);
         data_ov100_02148718 |= 1;
     }
 
@@ -43,7 +43,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_021487f0.x = -0x4c000;
         data_ov100_021487f0.y = 0;
         data_ov100_021487f0.z = 0x6d000;
-        func_020731dc((int)&data_ov100_021487f0, (int)func_020072c0, &data_ov100_021487d8);
+        func_020731dc((int)&data_ov100_021487f0, (int)_ZN7Vector3D1Ev, &data_ov100_021487d8);
         data_ov100_0214871c |= 1;
     }
 

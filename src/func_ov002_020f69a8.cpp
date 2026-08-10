@@ -2,7 +2,7 @@
 #include "SharedFilePtr.h"
 extern "C" {
 extern int data_ov002_0210bae4[];
-extern int func_020072c0[];
+extern int _ZN7Vector3D1Ev[];
 void _ZN5ModelD2Ev(void*);
 void __destroy_arr(void*, int, int, void*);
 void _ZN6Memory16operator_delete2EPv(void*);
@@ -14,7 +14,7 @@ void* func_ov002_020f69a8(char* c){
     ((SharedFilePtr *)(p))->Release();
   }
   _ZN5ModelD2Ev(c);
-  __destroy_arr(c+0x50, 1, 0xc, (void*)func_020072c0);
+  __destroy_arr(c+0x50, 1, 0xc, (void*)_ZN7Vector3D1Ev);
   _ZN6Memory16operator_delete2EPv(c);
   return c;
 }

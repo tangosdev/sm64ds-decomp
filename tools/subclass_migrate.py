@@ -69,7 +69,14 @@ def chain_ranges():
 
 
 def base_data_size(base):
-    """End of the base's last declared field -- where a subclass's own start."""
+    """End of the base's last declared field -- where a subclass's own start.
+
+    A class that declares NO fields of its own (ActorDerived exists to carry one
+    overridden vtable slot) has no last field, and returning 0 for it puts every
+    subclass field at the wrong offset -- the size assertion then fails as
+    "illegal constant expression" and the whole class is refused. Fall back to
+    its sizeof, which for such a class is exactly its base's.
+    """
     h = REPO / "include" / f"{base}.h"
     last = 0
     for ty, star, nm, arr, off in FIELD.findall(h.read_text(errors="replace")):
@@ -78,7 +85,25 @@ def base_data_size(base):
         w = 4 if star else W.get(ty, 4)
         n = int(arr.strip("[]"), 0) if arr else 1
         last = max(last, int(off, 16) + w * n)
-    return last
+    return last or class_sizes().get(base, 0)
+
+
+def base_virtuals():
+    """method name -> the base chain's own declaration of it.
+
+    A generated header spells these from the disassembly and guesses `int`,
+    but ActorBase declares `virtual s32 InitResources()` and s32 is not int to
+    C++ -- so the override is rejected as "differs from virtual base
+    'ActorBase::InitResources()' in return type only". The base's spelling is
+    the correct one by definition: an override cannot differ from it.
+    """
+    out = {}
+    for h, _, _ in chain_ranges():
+        for m in re.finditer(r"^\s*virtual\s+([\w:<>]+)\s+(\**\w+)\s*\(([^)]*)\)\s*(?:=\s*0\s*)?;",
+                             (REPO / h).read_text(errors="replace"), re.M):
+            ret, name, args = m.group(1), m.group(2).lstrip("*"), m.group(3)
+            out.setdefault(name, f"virtual {ret} {name}({args})")
+    return out
 
 
 def base_member_offsets(base):
@@ -164,35 +189,59 @@ def build_header(cls, old, sizes=None):
     """(text, size, own-field-count) for the rewritten header."""
     sizes = sizes or {}
     dtor_members = members_from_destructor(cls, sizes)
-    own = sorted((int(o, 16), ty, star, nm)
+    # `arr` is carried through: the offset walk always used the array length,
+    # but the emitted declaration dropped the `[N]`, so every class with an
+    # array field got a struct whose fields were right only until the first one
+    # -- and the source then failed on `illegal operands 'int' [ 'int'` where it
+    # subscripted what had silently become a scalar.
+    own = sorted((int(o, 16), ty, star, nm, arr)
                  for ty, star, nm, arr, o in FIELD.findall(old)
                  if int(o, 16) >= BASE_DSIZE[0] and not nm.startswith("pad_"))
     covered = set()
     for o, (ty, sz) in dtor_members.items():
         covered.update(range(o, o + sz))
     SWALLOWED.clear()
-    for o, ty, star, nm in own:
+    for o, ty, star, nm, arr in own:
         if o in covered:
             base_off = max(b for b in dtor_members if b <= o)
             SWALLOWED[nm] = (f"m{dtor_members[base_off][0]}", o - base_off, ty)
     own = [f for f in own if f[0] not in covered]
     seen = set()
     for o, (ty, sz) in sorted(dtor_members.items()):
-        own.append((o, ty, "", f"m{ty}" if ty not in seen else f"m{ty}_{o:03x}"))
+        own.append((o, ty, "", f"m{ty}" if ty not in seen else f"m{ty}_{o:03x}", ""))
         seen.add(ty)
     own.sort()
     lines, cur = [], BASE_DSIZE[0]
-    for o, ty, star, nm in own:
+    for o, ty, star, nm, arr in own:
         if o > cur:
             lines.append(f"    u8  pad_{cur:03x}[0x{o - cur:x}];")
-        lines.append(f"    {ty} {star}{nm};".ljust(38) + f"/* 0x{o:03x} */")
-        cur = o + (4 if star else sizes.get(ty) or W.get(ty, 4))
-    size = max(0x320, (cur + 3) & ~3)
-    meths = re.findall(r"^\s{4}([A-Za-z_][\w:<>]*\s+\**\w+\([^)]*\));", old, re.M)
+        lines.append(f"    {ty} {star}{nm}{arr};".ljust(38) + f"/* 0x{o:03x} */")
+        n = int(arr.strip("[]"), 0) if arr else 1
+        cur = o + (4 if star else sizes.get(ty) or W.get(ty, 4)) * n
+    # The floor is the BASE's sizeof, not a constant -- this read 0x320,
+    # Platform's, left behind when the tool was generalised. For any other
+    # base it asserted a size the class does not have and every source
+    # failed with "illegal constant expression".
+    size = max(sizes.get(BASE[0], BASE_DSIZE[0]), (cur + 3) & ~3)
+    # `static void FixTHIPaintingRoomPos(Vector3 &)` has two words before the
+    # name; a pattern demanding exactly `type name(...)` drops it silently and
+    # the class then fails on "undefined identifier" in its own source.
+    meths = re.findall(r"^\s{4}((?:static\s+|virtual\s+|const\s+)*"
+                       r"[A-Za-z_][\w:<>]*\s+\**\w+\([^)]*\));", old, re.M)
+    # An override must match the base's declaration exactly, so take the base's
+    # spelling wherever the name is one of its virtuals -- see base_virtuals().
+    bv = base_virtuals()
+    meths = [bv.get(re.search(r"(\w+)\s*\(", m).group(1), m) for m in meths]
     guard = cls.upper() + "_H"
+    # Every member type needs its declaration, not just the ones the destructor
+    # named. A generated header can declare `BlendModelAnim mBlendModelAnim;`
+    # for a class whose destructor is never called here, and regenerating
+    # without the include leaves that field as "undefined identifier".
+    member_types = {t2 for _, (t2, _) in dtor_members.items()}
+    member_types |= {f[1] for f in own if not f[2] and f[1] not in W}
     incs = "".join('#include "%s.h"\n' % ty
-                   for ty in sorted({t2 for _, (t2, _) in dtor_members.items()})
-                   if (REPO / "include" / f"{ty}.h").exists())
+                   for ty in sorted(member_types)
+                   if ty != cls and (REPO / "include" / f"{ty}.h").exists())
     body = "\n".join(lines) if lines else "    /* no fields of its own */"
     tail = "".join(f"\n    {m};" for m in meths)
 
@@ -207,14 +256,25 @@ def build_header(cls, old, sizes=None):
     cbody = re.sub(r"#ifdef __cplusplus.*?#endif\n", "", cbody, flags=re.S)
     cbody = re.sub(r"\n\s*/\* methods \*/\n", "\n", cbody)
 
+    # A CLASS-TYPED MEMBER BECOMES BYTES ON THE C SIDE. That side exists because
+    # the D0 file is a C translation unit, and it cannot see a C++ class -- the
+    # member includes are inside the guard, where they belong. Spelling the
+    # member as a byte array of its asserted size keeps every later offset right
+    # and says exactly what a C reader can know about it.
+    def _flatten(m):
+        ty, nm = m.group(1), m.group(2)
+        sz = sizes.get(ty)
+        return (f"    u8  {nm}[0x{sz:x}];" if sz else m.group(0))
+
+    cbody = re.sub(r"^\s*([A-Z]\w+)\s+(\w+)\s*;", _flatten, cbody, flags=re.M)
+
     base = BASE[0]
     bdsize = BASE_DSIZE[0]
     return f"""#ifndef {guard}
 #define {guard}
 
 #include "types.h"
-#include "{base}.h"
-{incs}
+
 /* Derives from {base}: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x{bdsize:x} belonged to the
@@ -226,6 +286,14 @@ def build_header(cls, old, sizes=None):
 
 #ifdef __cplusplus
 
+/* THE BASE INCLUDE BELONGS INSIDE THIS GUARD. A subclass's D0 is a C
+   translation unit that includes this header for the flat struct below, and
+   pulling the base in unconditionally hands a C compiler `extern "C"` and
+   `struct X : Y` -- include/Enemy.h carries both and has no guard of its own,
+   so it answered with "declaration syntax error" on four lines at once. The C
+   side needs no base: it spells the whole layout flat. */
+#include "{base}.h"
+{incs}
 struct {cls} : {base} {{
 {body}
 
@@ -249,7 +317,7 @@ typedef char {cls}_size_must_be_0x{size:x}[sizeof({cls}) == 0x{size:x} ? 1 : -1]
 """
 
 
-def patch_source(text, oldmap, names, types=None, itypes=None):
+def patch_source(text, oldmap, names, types=None, itypes=None, cls=None):
     """Repoint one source at the names Actor and Platform already give it.
 
     The width-cast branch below is a leftover safety net. It fired when Platform
@@ -258,6 +326,16 @@ def patch_source(text, oldmap, names, types=None, itypes=None):
     fields again and nothing should reach it.
     """
     types, itypes = types or {}, itypes or {}
+    # If the header took the base's spelling for an override (see
+    # base_virtuals), the DEFINITION has to agree or mwcc reports the method
+    # "redeclared ... was declared as 'int ()', now declared as 'void ()'".
+    # The generated headers guessed these return types; the base's is the one an
+    # override is allowed to have.
+    if cls:
+        for name, decl in base_virtuals().items():
+            ret = decl.split()[1]
+            text = re.sub(r"^[A-Za-z_][\w:<>]*\s+(\**)" + re.escape(f"{cls}::{name}") + r"\s*\(",
+                          lambda m, r=ret: f"{r} {m.group(1)}{cls}::{name}(", text, flags=re.M)
     # A marker the generated header declared INSIDE a member the destructor
     # typed is not a field of its own -- it is bytes of that member. The header
     # no longer declares it, so its uses have to reach into the member instead.
@@ -284,17 +362,38 @@ def patch_source(text, oldmap, names, types=None, itypes=None):
     # and mwcc answers some of them with an internal compiler error rather than
     # a diagnostic. Drop any single-line placeholder whose name the tree really
     # declares; anything it does NOT declare is a genuine local type and stays.
+    dropped = []
+
     def _drop_placeholder(m):
         name = m.group(1)
-        return "" if (REPO / "include" / f"{name}.h").exists() else m.group(0)
+        if (REPO / "include" / f"{name}.h").exists():
+            dropped.append(name)
+            return ""
+        return m.group(0)
 
-    text = re.sub(r"^struct (\w+) \{[^{}]*\};[ \t]*\n", _drop_placeholder, text, flags=re.M)
+    text = re.sub(r"^struct (\w+) \{[^{}]*?\};[ \t]*\n", _drop_placeholder,
+                  text, flags=re.M | re.S)
+    # Deleting the placeholder leaves the name only forward-declared, so bring in
+    # the real declaration too -- otherwise the source trades a redefinition for
+    # "illegal use of incomplete struct". RollingRock's
+    # `struct SharedFilePtr { void *file; void *bmd; };` is the live case.
+    if dropped and cls:
+        anchor = '#include "%s.h"\n' % cls
+        if anchor in text:
+            text = text.replace(
+                anchor,
+                anchor + "".join('#include "%s.h"\n' % d for d in dict.fromkeys(dropped)),
+                1)
 
-    # A local `typedef int Fix12` shadows the real Fix12 template the moment
-    # Platform.h makes it visible.
-    text = text.replace("typedef int Fix12;\n", "")
-    text = re.sub(r"\bFix12\s+(\w+)(?=\s*[,)])", r"int \1", text)
-    text = re.sub(r"\bFix12(?=\s*[,)])", "int", text)
+    # A local `typedef int Fix12` shadows the real Fix12 template the moment the
+    # base header makes it visible. Deleting it means EVERY use of the alias has
+    # to go too, not just the ones in parameter lists -- a return type
+    # (`extern Fix12 _ZN4cstd4fdivEii(...)`) and a local declaration were both
+    # left behind as "undefined identifier". `\b` keeps this away from the
+    # mangled names containing `5Fix12IiE`, where the token follows a digit.
+    if "typedef int Fix12;\n" in text:
+        text = text.replace("typedef int Fix12;\n", "")
+        text = re.sub(r"\bFix12\b", "int", text)
     # `&mModel` reads better than `(char *)&mModel` and is what most sources
     # want. But plenty of the extern declarations these files carry were written
     # against the raw offset and take `char *`, and C++ will not convert a
@@ -347,7 +446,7 @@ def main():
         hpath.write_text(build_header(cls, old, sizes))
         for p in srcs:
             if p.suffix == ".cpp":
-                p.write_text(patch_source(saved[p], oldmap, names, oldtypes, itypes))
+                p.write_text(patch_source(saved[p], oldmap, names, oldtypes, itypes, cls))
 
         d1 = REPO / "src" / f"_ZN{len(cls)}{cls}D1Ev.cpp"
         d1c = REPO / "src" / f"_ZN{len(cls)}{cls}D1Ev.c"

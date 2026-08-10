@@ -2,12 +2,6 @@
 #define KINGBOBOMB_H
 
 #include "types.h"
-#include "Enemy.h"
-#include "BlendModelAnim.h"
-#include "CommonModel.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "ShadowModel.h"
-#include "WithMeshClsn.h"
 
 /* Derives from Enemy: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
@@ -19,6 +13,13 @@
  */
 
 #ifdef __cplusplus
+
+#include "Enemy.h"
+#include "BlendModelAnim.h"
+#include "CommonModel.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
 
 struct KingBobOmb : Enemy {
     WithMeshClsn mWithMeshClsn;       /* 0x110 */

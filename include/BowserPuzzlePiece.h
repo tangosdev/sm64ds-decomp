@@ -1,11 +1,47 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BowserPuzzlePiece: 4 matched functions, 12 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BOWSERPUZZLEPIECE_H
 #define BOWSERPUZZLEPIECE_H
+
 #include "types.h"
 
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+#include "Enemy.h"
+#include "MovingCylinderClsn.h"
+#include "WithMeshClsn.h"
+
+struct BowserPuzzlePiece : Enemy {
+    MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
+    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    u8  pad_300[0x14];
+    s32 unk_314;                      /* 0x314 */
+    s32 unk_318;                      /* 0x318 */
+
+    /* --- vtable --- */
+    virtual ~BowserPuzzlePiece();
+
+    virtual s32 Behavior();
+    virtual s32 CleanupResources();
+    virtual s32 InitResources();
+    virtual void OnPendingDestroy();
+    virtual s32 Render();
+};
+
+typedef char BowserPuzzlePiece_size_must_be_0x31c[sizeof(BowserPuzzlePiece) == 0x31c ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct BowserPuzzlePiece {
     u8  pad_000[0x8];
     u32 unk_008;            /* 0x008 */
@@ -48,14 +84,8 @@ struct BowserPuzzlePiece {
     u8  pad_145[0x1cf];
     s32 unk_314;            /* 0x314 */
     s32 unk_318;            /* 0x318 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    void OnPendingDestroy();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* BOWSERPUZZLEPIECE_H */

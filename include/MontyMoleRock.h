@@ -1,14 +1,45 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MontyMoleRock: 5 matched functions, 10 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MONTYMOLEROCK_H
 #define MONTYMOLEROCK_H
+
 #include "types.h"
+
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+#include "Enemy.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
+struct MontyMoleRock : Enemy {
+    Model mModel;                     /* 0x110 */
+    MovingCylinderClsn mMovingCylinderClsn;/* 0x160 */
+    WithMeshClsn mWithMeshClsn;       /* 0x194 */
+    u8 unk_350;                       /* 0x350 */
+
+    /* --- vtable --- */
+    virtual ~MontyMoleRock();
+
+    virtual s32 Behavior();
+    virtual s32 InitResources();
+    virtual s32 Render();
+};
+
+typedef char MontyMoleRock_size_must_be_0x354[sizeof(MontyMoleRock) == 0x354 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MontyMoleRock {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
@@ -32,12 +63,8 @@ struct MontyMoleRock {
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x194 */
     u8  unk_350;            /* 0x350 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* MONTYMOLEROCK_H */

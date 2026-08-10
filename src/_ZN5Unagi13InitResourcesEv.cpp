@@ -46,9 +46,9 @@ int Unagi::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov016_02114d30);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov016_02114d28);
 
-    mPathID = mParam & 0xff;
-    mVariant = (mParam >> 8) & 0xf;
-    unk_414 = (mParam >> 0xc) & 0xf;
+    mPathID = param1 & 0xff;
+    mVariant = (param1 >> 8) & 0xf;
+    unk_414 = (param1 >> 0xc) & 0xf;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)
@@ -61,7 +61,7 @@ int Unagi::InitResources()
     unk_3f0 = mPosX;
     unk_3f4 = mPosY;
     unk_3f8 = mPosZ;
-    unk_0a0 = -0x1e000;
+    mTerminalVelocity = -0x1e000;
     v1 = data_ov016_02114d4c;
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x110, ((char*)this), &v1, 0x32000, 0x50000, 0x200004, 0);
@@ -73,7 +73,7 @@ int Unagi::InitResources()
     _ZN7PathPtr6FromIDEj(&path2, mPathID);
     unk_410 = 1;
     mStarUniqueID = 0;
-    unk_3ac = 0x1000;
+    (*(s32 *)((char *)&mBlendModelAnim + 0x5c)) = 0x1000;
 
     if (data_0209f220 == 1)
         goto check_param2;

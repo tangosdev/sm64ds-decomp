@@ -23,7 +23,6 @@
  *                    The header's u16 says the same thing without the casts.
  */
 #include "Minimap.h"
-typedef int Fix12;
 
 struct Obj {
     char pad0[0x5c];
@@ -82,10 +81,10 @@ extern s32  _ZN6Player12Unk_020ca8f8Ev(Obj *p);
 extern void SetSubBg2Offset(s32 a, s32 b);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern s32  SublevelToLevel(s32 i);
-extern Fix12 _ZN4cstd4fdivEii(s32 a, s32 b);
+extern int _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(Vector3 *v);
-extern void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, Fix12 c, s16 d, Vector3 *e);
-extern void _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, Fix12 c, s16 d, Vector3 *e);
+extern void _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
+extern void _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_(Vector3 *a, Vector3 *b, int c, s16 d, Vector3 *e);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32  GetMinimapID(Obj *obj, s32 arg);

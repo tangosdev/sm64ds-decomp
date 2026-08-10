@@ -2,9 +2,6 @@
 #define QUESTIONBLOCK_H
 
 #include "types.h"
-#include "Platform.h"
-#include "ModelAnim.h"
-#include "ShadowModel.h"
 
 /* Derives from Platform: the destructor stores this class's vtable, then
  * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
@@ -17,6 +14,10 @@
  */
 
 #ifdef __cplusplus
+
+#include "Platform.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
 
 struct QuestionBlock : Platform {
     u8  pad_31e[0x2];

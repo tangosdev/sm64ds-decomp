@@ -12,16 +12,16 @@ extern "C" void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern "C" int _ZN5EnemyD2Ev(int* x);
 
 extern int _ZTV14UnchainedChomp;
-extern "C" void func_02011508(void);
-extern "C" void func_020072c0(void);
+extern "C" void _ZN8Vector3sD1Ev(void);
+extern "C" void _ZN7Vector3D1Ev(void);
 
 extern "C" void* _ZN14UnchainedChompD1Ev(char* thiz)
 {
     char* c = thiz;
     *(void**)c = &_ZTV14UnchainedChomp;
-    __destroy_arr(c + 0x768, 6, 6, (void*)&func_02011508);
-    __destroy_arr(c + 0x720, 6, 0xc, (void*)&func_020072c0);
-    __destroy_arr(c + 0x6d8, 6, 0xc, (void*)&func_020072c0);
+    __destroy_arr(c + 0x768, 6, 6, (void*)&_ZN8Vector3sD1Ev);
+    __destroy_arr(c + 0x720, 6, 0xc, (void*)&_ZN7Vector3D1Ev);
+    __destroy_arr(c + 0x6d8, 6, 0xc, (void*)&_ZN7Vector3D1Ev);
     _ZN11ShadowModelD1Ev(c + 0x640);
     __destroy_arr(c + 0x550, 6, 0x28, (void*)&_ZN11ShadowModelD1Ev);
     __destroy_arr(c + 0x370, 6, 0x50, (void*)&_ZN5ModelD1Ev);

@@ -8,7 +8,7 @@
  */
 #include "BowserPuzzlePiece.h"
 
-int BowserPuzzlePiece::Render()
+s32 BowserPuzzlePiece::Render()
 {
     return 1;
 }

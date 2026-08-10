@@ -7,12 +7,12 @@ extern int _ZN18MovingMeshColliderD1Ev(void *p);
 extern int _ZN5ActorD2Ev(void *p);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void *p, void *h);
 extern int _ZTV11PyramidLift[];
-extern int func_020072c0[];
+extern int _ZN7Vector3D1Ev[];
 extern int _ZTV8Platform[];
 extern int *data_020a0eac;
 int _ZN11PyramidLiftD0Ev(struct PyramidLift *self) {
     *(int**)(((char *)self)) = _ZTV11PyramidLift;
-    __destroy_arr(((char *)self)+0x37c, 0xa, 0xc, func_020072c0);
+    __destroy_arr(((char *)self)+0x37c, 0xa, 0xc, _ZN7Vector3D1Ev);
     _ZN5ModelD1Ev((char *)&self->mModel2);
     *(int**)(((char *)self)) = _ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)&self->mMeshCollider);

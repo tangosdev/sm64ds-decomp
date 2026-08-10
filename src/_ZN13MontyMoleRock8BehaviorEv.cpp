@@ -9,7 +9,7 @@ extern "C" int RandomIntInternal(int *seed);
 
 extern int data_0209e650;
 
-int MontyMoleRock::Behavior()
+s32 MontyMoleRock::Behavior()
 {
     unsigned char *c = (unsigned char *)((void *)this);
     unsigned char *o;

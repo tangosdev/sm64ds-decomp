@@ -4,7 +4,7 @@
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
     .data       start:0x02113ae0 end:0x02114d20 kind:data align:32
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
-src/_ZN5UnagiD1Ev.c:
+src/_ZN5UnagiD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x02111208
 

@@ -89,7 +89,12 @@ struct ModelBase {
     virtual int DoSetFile(char *file, int a, int b) = 0;  /* slot 2, null here */
 
     /* --- non-virtual --- */
-    void SetFile(BMD_File *file, int a, int b);      /* dispatches DoSetFile */
+    /* RETURNS int, not void. The definition at 0x02016fd4 is eight
+       instructions: load the vtable, `blx` slot 2 (DoSetFile, which returns
+       int), then the epilogue -- r0 is never touched after the call, so it
+       flows straight out. Callers corroborate: KoopaShell::InitResources tests
+       the result and bails on 0. */
+    int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
     void ApplyOpacity(u32 a);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.

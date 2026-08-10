@@ -10,7 +10,7 @@ extern int _ZTV10ChainChomp[];
 extern void _ZN5ModelD1Ev();
 extern void _ZN5ModelC1Ev();
 extern void _ZN11ShadowModelD1Ev();
-extern void func_020072c0();
+extern void _ZN7Vector3D1Ev();
 extern void func_0203d384();
 void* ChainChomp_Spawn(void){
   char* c = (char*)_ZN9ActorBasenwEj(0x620);
@@ -22,8 +22,8 @@ void* ChainChomp_Spawn(void){
     _ZN11ShadowModelC1Ev(c+0x1b4);
     func_020733a8(c+0x1dc, 7, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
     func_020733a8(c+0x40c, 7, 0x28, (void*)_ZN11ShadowModelC1Ev, (void*)_ZN11ShadowModelD1Ev);
-    func_020733a8(c+0x524, 7, 0xc, (void*)func_0203d384, (void*)func_020072c0);
-    func_020733a8(c+0x578, 7, 0xc, (void*)func_0203d384, (void*)func_020072c0);
+    func_020733a8(c+0x524, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
+    func_020733a8(c+0x578, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
   }
   return c;
 }

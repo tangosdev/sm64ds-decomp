@@ -17,7 +17,7 @@
  * and null-checked before the call -- a null tick reads as "keep going", and
  * any state returning 0 ends the frame early.
  *
- * Terrain only matters while mSpeed is non-zero. Hitting a wall in the spat-out
+ * Terrain only matters while mVertAccel is non-zero. Hitting a wall in the spat-out
  * state kills the shell (and returns 0, the one non-1 exit); landing in the
  * rolling state zeroes both speeds. Two other states are exempt from the
  * on-ground call entirely.
@@ -102,7 +102,7 @@ int KoopaShell::Behavior()
 
     func_ov102_0214cbec(c);
 
-    if (mSpeed != 0) {
+    if (mVertAccel != 0) {
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char *)&mCylinderClsn);
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (char *)&mMeshClsn, 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mMeshClsn) != 0 ||
@@ -116,7 +116,7 @@ int KoopaShell::Behavior()
             }
             if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mMeshClsn) != 0) {
                 if (mState == (void *)&data_ov102_0214ea68) {
-                    mSpeed = 0;
+                    mVertAccel = 0;
                     mVertSpeed = 0;
                 }
                 if (mState != (void *)&data_ov102_0214ea48 &&

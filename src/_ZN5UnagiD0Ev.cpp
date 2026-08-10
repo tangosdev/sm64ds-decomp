@@ -1,26 +1,18 @@
 //cpp
 // @symbol _ZN5UnagiD0Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_BlendModelAnim.h"
-#include "decl_WithMeshClsn.h"
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body
+ *
+ * Destroy through Unagi and Enemy, then hand the object back through Actor's
+ * inline operator delete, which is why nothing here mentions a heap. The array
+ * cleanup at 0x448 is Vector3[7]; see the note in the D1 file.
+ *
+ * The hand-written version declared its own `extern void *data_020a0eac[]`,
+ * which collides with the `void *` Actor.h supplies for that same heap once the
+ * real header is in scope. Declaring the destructor is enough; the compiler
+ * writes the rest.
+ */
 #include "Unagi.h"
-extern "C" {
-extern int __destroy_arr(void*,int,int,void*);
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-extern int _ZN5EnemyD2Ev(int*);
-extern void func_020072c0(void);
-extern void* data_020a0eac[];
-void* _ZN5UnagiD0Ev(struct Unagi *self) {
-  *(int**)((char*)self) = _ZTV5Unagi;
-  __destroy_arr(((char*)self)+0x448, 7, 0xc, (void*)func_020072c0);
-  _ZN14BlendModelAnimD1Ev((char*)&self->mBlendModelAnim);
-  _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos2);
-  _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos1);
-  _ZN5EnemyD2Ev((int*)((char*)self));
-  _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac[0]);
-  return ((char*)self);
-}
+
+Unagi::~Unagi()
+{
 }

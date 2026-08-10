@@ -16,7 +16,7 @@ struct Sub {
 
 int Goomboss::Render()
 {
-  if(mParam==0x1111) return func_ov074_021222e0(((char*)this));
+  if(param1==0x1111) return func_ov074_021222e0(((char*)this));
   if(unk_60a==0) return 1;
   Sub* s = (Sub*)((char*)&mModelAnim);
   s->m((char*)&mScaleX);

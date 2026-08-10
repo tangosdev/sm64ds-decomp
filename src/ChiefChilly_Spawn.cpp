@@ -8,7 +8,7 @@ extern "C" void _ZN11ShadowModelC1Ev(void*);
 extern "C" void func_020733a8(void* p, int a, int b, void* f1, void* f2);
 
 extern int _ZTV11ChiefChilly;
-extern "C" void func_020072c0(void);
+extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" void func_0203d384(void);
 
 extern "C" void* ChiefChilly_Spawn(void)
@@ -21,9 +21,9 @@ extern "C" void* ChiefChilly_Spawn(void)
         _ZN12WithMeshClsnC1Ev(p + 0x150);
         _ZN14BlendModelAnimC1Ev(p + 0x30c);
         _ZN11ShadowModelC1Ev(p + 0x380);
-        func_020733a8(p + 0x3e8, 8, 0xc, (void*)&func_0203d384, (void*)&func_020072c0);
-        func_020733a8(p + 0x448, 8, 0xc, (void*)&func_0203d384, (void*)&func_020072c0);
-        func_020733a8(p + 0x4d4, 2, 0xc, (void*)&func_0203d384, (void*)&func_020072c0);
+        func_020733a8(p + 0x3e8, 8, 0xc, (void*)&func_0203d384, (void*)&_ZN7Vector3D1Ev);
+        func_020733a8(p + 0x448, 8, 0xc, (void*)&func_0203d384, (void*)&_ZN7Vector3D1Ev);
+        func_020733a8(p + 0x4d4, 2, 0xc, (void*)&func_0203d384, (void*)&_ZN7Vector3D1Ev);
     }
     return p;
 }

@@ -135,7 +135,7 @@ src/func_020071e0.c:
     complete
     .text start:0x020071e0 end:0x020072c0
 
-src/func_020072c0.c:
+src/_ZN7Vector3D1Ev.cpp:
     complete
     .text start:0x020072c0 end:0x020072c4
 
@@ -1201,7 +1201,7 @@ src/_ZN5ActorC1Ev.cpp:
     complete
     .text start:0x020113c0 end:0x02011508
 
-src/func_02011508.c:
+src/_ZN8Vector3sD1Ev.cpp:
     complete
     .text start:0x02011508 end:0x0201150c
 

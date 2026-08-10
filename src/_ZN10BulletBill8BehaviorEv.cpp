@@ -5,7 +5,7 @@
  * One frame of the bullet: move, run the current state's tick out of the pmf
  * table, then resolve whatever the cylinder hit.
  *
- * unk_134 is the ID of whatever it collided with, and unk_130 the flags of that
+ * (*(u32 *)((char *)&mMovingCylinderClsnWithPos + 0x24)) is the ID of whatever it collided with, and (*(s32 *)((char *)&mMovingCylinderClsnWithPos + 0x20)) the flags of that
  * hit -- three outcomes in priority order:
  *   0x10      hit by a mega character: the bullet dies, credits the kill, and
  *             spawns particle 0x8f at its own position
@@ -68,9 +68,9 @@ int BulletBill::Behavior()
         (((Klass *)c)->*(m->pmf))();
     }
 
-    id = unk_134;
+    id = (*(u32 *)((char *)&mMovingCylinderClsnWithPos + 0x24));
     if (id != 0) {
-        flags = unk_130;
+        flags = (*(s32 *)((char *)&mMovingCylinderClsnWithPos + 0x20));
         if (flags & 0x10) {
             _ZN5Actor10FindWithIDEj(id);
             _ZN6Player16IncMegaKillCountEv();

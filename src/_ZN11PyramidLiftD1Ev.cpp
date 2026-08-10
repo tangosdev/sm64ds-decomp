@@ -9,12 +9,12 @@
 #include "PyramidLift.h"
 extern "C" {
 extern void __destroy_arr(void*,int,int,void*);
-extern int func_020072c0();
+extern int _ZN7Vector3D1Ev();
 extern int _ZTV8Platform[];
 extern int _ZTV11PyramidLift[];
 void* _ZN11PyramidLiftD1Ev(struct PyramidLift *self) {
   *(int**)((char*)self) = _ZTV11PyramidLift;
-  __destroy_arr(((char*)self)+0x37c, 0xa, 0xc, (void*)func_020072c0);
+  __destroy_arr(((char*)self)+0x37c, 0xa, 0xc, (void*)_ZN7Vector3D1Ev);
   _ZN5ModelD1Ev((char*)&self->mModel2);
   *(int**)((char*)self) = _ZTV8Platform;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);

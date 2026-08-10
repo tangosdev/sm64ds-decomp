@@ -34,7 +34,7 @@ int RotatingFirebar::InitResources()
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124,
         _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov064_0211adbc[1]),
-        ((char*)this) + 0x2ec, 0x199, unk_08e, data_ov064_0211adbc[2]);
+        ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov064_0211adbc[2]);
     func_020393d4((int*)((char*)&mMeshCollider),
         (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;

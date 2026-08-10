@@ -2,7 +2,6 @@
 #define DONUTBLOCK_H
 
 #include "types.h"
-#include "Platform.h"
 
 /* A donut lift: stands still until ridden, then shakes, falls and respawns.
  *
@@ -19,6 +18,8 @@
  */
 
 #ifdef __cplusplus
+
+#include "Platform.h"
 
 struct DonutBlock : Platform {
     s16 unk_31e;            /* 0x31e - per-frame yaw step; see InitResources */

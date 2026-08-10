@@ -50,8 +50,8 @@ int ChiefChilly::InitResources()
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov073_02123298);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x30c, f, 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
-    unk_09c = -0x3000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x3000;
+    mTerminalVelocity = -0x3c000;
     v.x = data_ov073_02123040.x;
     v.y = data_ov073_02123040.y;
     v.z = data_ov073_02123040.z;

@@ -1,13 +1,57 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class HUD: 11 matched functions, 4 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef HUD_H
 #define HUD_H
-#include "types.h"
 
-/* fwd */
-struct value;
+#include "types.h"
+#include "ActorDerived.h"
+
+/* Derives from ActorDerived: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x50 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct HUD : ActorDerived {
+    u8  pad_050[0x10];
+    u16 mVsTimer;                     /* 0x060 */
+    u8  pad_062[0x4];
+    u16 mVsTimerY;                    /* 0x066 */
+    s16 mHealthMeterY;                /* 0x068 */
+    u16 mHealthMeterHoldTimer;        /* 0x06a */
+    u16 mHealthTickTimer;             /* 0x06c */
+    u8  pad_06e[0x2];
+    s16 mStarCountX;                  /* 0x070 */
+    u8  pad_072[0x1];
+    u8 mHealthMeterState;             /* 0x073 */
+    s8 mDigits[3];                    /* 0x074 */
+
+    /* --- vtable --- */
+    virtual ~HUD();
+
+    int Render();
+    s32 CleanupResources();
+    void CalculateDigits(unsigned short value);
+    void OnPendingDestroy();
+    void RenderHealthMeter();
+    void RenderRedCoins();
+    void RenderSilverStars();
+    void RenderStarCount();
+    void RenderTimeTimer();
+    void RenderVsTimer();
+    void UpdateHealthMeter();
+};
+
+typedef char HUD_size_must_be_0x78[sizeof(HUD) == 0x78 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct HUD {
     u8  pad_000[0x60];
     /* Seconds left on the VS-mode clock. RenderVsTimer splits it /10 and %10
@@ -38,20 +82,8 @@ struct HUD {
        RenderCoinCount reaches the same bytes through a `char pad[0x74]`
        shadow; that file is a separate slice. */
     s8  mDigits[3];            /* 0x074 */
-#ifdef __cplusplus
-    /* methods */
-    int Render();
-    s32 CleanupResources();
-    void CalculateDigits(unsigned short value);
-    void OnPendingDestroy();
-    void RenderHealthMeter();
-    void RenderRedCoins();
-    void RenderSilverStars();
-    void RenderStarCount();
-    void RenderTimeTimer();
-    void RenderVsTimer();
-    void UpdateHealthMeter();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* HUD_H */
