@@ -15,12 +15,8 @@
  * match -- notes/mwccarm-codegen.md 6az.
  */
 #include "Chuckya.h"
+#include "SharedFilePtr.h"
 
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
-typedef struct { short x,y,z; } Vector3_16;
-typedef struct BMD_File BMD_File;
-typedef struct Actor Actor;
 typedef struct PMF PMF;
 
 extern "C" {
@@ -35,8 +31,8 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int Chuckya_ChangeState(void* c, PMF* p);
 }
 
@@ -49,10 +45,10 @@ int Chuckya::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211de00);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211de08);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov062_0211ddf8);
-    mSpeed = -0x3000;
-    unk_0a0 = -0x1e000;
+    mVertAccel = -0x3000;
+    mTerminalVelocity = -0x1e000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mCylinderClsn, (Actor*)this, 0xc8000, 0xfa000, 0x200004, 0x3010);
-    unk_35c = 0x1000;
+    mModel.speed = 0x1000;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mMeshClsn, (Actor*)this, 0x118000, 0x118000, 0, 0);
     mHomePosX = mPosX;
     mHomePosY = mPosY;

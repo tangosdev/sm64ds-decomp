@@ -12,7 +12,7 @@
  *   0211ded0/dee0/de90/df00        additionally call func_ov062_02116010
  *
  * The cliff check is how Chuckya refuses to walk off an edge, and it rewinds
- * rather than stops: on a trip it zeroes unk_098, sets unk_3e4, and restores
+ * rather than stops: on a trip it zeroes mHorzSpeed, sets unk_3e4, and restores
  * mPos from mPrevPos -- last frame's position, republished at the end of every
  * frame that runs terrain. Two hard bounds sit alongside it, selected by the
  * level in data_0209f2f8 (0x16 tests X, 0x15 tests Z), so a level can fence
@@ -29,8 +29,6 @@
  */
 #include "Chuckya.h"
 
-typedef short s16;
-typedef int Fix12;
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct CylinderClsn;
@@ -40,7 +38,7 @@ extern "C" {
 int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, Fix12 a, s16 b, int c, int d, void* e);
+int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
 void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
 void func_ov062_02116010(void* self);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
@@ -66,7 +64,7 @@ int Chuckya::Behavior()
     if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
         return 1;
 
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short((unsigned short *)&unk_100);
     DecIfAbove0_Short(&unk_3e6);
     DecIfAbove0_Short(&unk_3e8);
 
@@ -76,9 +74,9 @@ int Chuckya::Behavior()
             (((Klass*)c)->*(m->pmf))();
     }
 
-    mAngleX = unk_092;
-    mAngleY = unk_094;
-    mAngleZ = unk_096;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
 
     if (mState != (void*)data_ov062_0211dea0) {
@@ -94,10 +92,10 @@ int Chuckya::Behavior()
                     r2 = 1;
             }
             if (r2 != 0
-                || (unk_098 != 0
+                || (mHorzSpeed != 0
                     && _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
                            c, (WithMeshClsn*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
-                unk_098 = 0;
+                mHorzSpeed = 0;
                 unk_3e4 = 1;
                 mPosX = mPrevPosX;
                 mPosY = mPrevPosY;
@@ -121,7 +119,7 @@ int Chuckya::Behavior()
     }
 
     _ZN12CylinderClsn5ClearEv((CylinderClsn*)&mCylinderClsn);
-    _ZN9Animation7AdvanceEv(&mAnimation);
+    mModel.Advance();
 
     {
         char* o = (char*)(((int)c + 0x300));

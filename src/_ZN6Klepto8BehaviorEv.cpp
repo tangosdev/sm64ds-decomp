@@ -35,14 +35,14 @@ int Klepto::Behavior()
         (((Klass *)((char *)this))->*(m->pmf))();
 
     {
-        int accum = unk_0a8;
-        int a0 = unk_09c;
-        int lim = unk_0a0;
+        int accum = mVertSpeed;
+        int a0 = mVertAccel;
+        int lim = mTerminalVelocity;
         int sum = accum + a0;
         if (sum >= lim)
             lim = sum;
         int t = unk_0ac;
-        unk_0a8 = lim;
+        mVertSpeed = lim;
         unk_0ac = t;
     }
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn1));
@@ -84,7 +84,7 @@ int Klepto::Behavior()
     }
 
     if (mCarriedItem == 1 && unk_448 != 2) {
-        b = (unk_0b0 & 8) != 0;
+        b = (mFlags & 8) != 0;
         if (b != 0) {
             _ZN9ActorBase18MarkForDestructionEv(((char *)this));
         }

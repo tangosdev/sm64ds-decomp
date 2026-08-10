@@ -2,12 +2,9 @@
 // @symbol _ZN5Koopa13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
+#include "SharedFilePtr.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Koopa.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
-typedef struct BMD_File BMD_File;
-typedef struct Actor Actor;
 
 extern SharedFilePtr* data_ov062_0211cee8[9];
 extern SharedFilePtr* data_ov062_0211ced8[2];
@@ -18,8 +15,8 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Fix12 q);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, int r, int h, Vector3_16* p, int q);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
 extern void LoadBlueCoinModel(void* c);
 }
@@ -27,12 +24,12 @@ extern void LoadBlueCoinModel(void* c);
 int Koopa::InitResources()
 {
     int i;
-    Fix12 r, h;
+    int r, h;
     int kind;
     BMD_File* f;
     unsigned int isSpecial;
 
-    kind = mParam & 1;
+    kind = param1 & 1;
     mModelIndex = kind;
 
     for (i = 0; i < 9; i++)
@@ -45,7 +42,7 @@ int Koopa::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
 
-    isSpecial = mActorID == 0xcc;
+    isSpecial = actorID == 0xcc;
     if (isSpecial)
     {
         mKoopaVariant = 2;
@@ -80,8 +77,8 @@ int Koopa::InitResources()
     unk_39c = mPosX;
     unk_3a0 = mPosY;
     unk_3a4 = mPosZ;
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (Actor*)((char*)this), 0x32000, 0x32000, 0, 0);
 
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);

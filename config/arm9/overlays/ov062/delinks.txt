@@ -4,11 +4,11 @@
     .ctor       start:0x0211d8cc end:0x0211d8e0 kind:rodata align:4
     .data       start:0x0211d900 end:0x0211dde0 kind:data align:32
     .bss        start:0x0211dde0 end:0x0211e1a0 kind:bss align:32
-src/_ZN7ChuckyaD1Ev.c:
+src/_ZN7ChuckyaD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f28
 
-src/_ZN7ChuckyaD0Ev.c:
+src/_ZN7ChuckyaD0Ev.cpp:
     complete
     .text start:0x02115f28 end:0x02115f84
 
@@ -147,11 +147,11 @@ src/Chuckya_Spawn.c:
     complete
     .text start:0x02117478 end:0x021174cc
 
-src/_ZN5KoopaD1Ev.c:
+src/_ZN5KoopaD1Ev.cpp:
     complete
     .text start:0x021174cc end:0x02117514
 
-src/_ZN5KoopaD0Ev.c:
+src/_ZN5KoopaD0Ev.cpp:
     complete
     .text start:0x02117514 end:0x02117570
 
@@ -262,7 +262,7 @@ src/_ZN5Koopa16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118f04 end:0x02118f80
 
-src/_ZN5Koopa16OnPendingDestroyEv.c:
+src/_ZN5Koopa16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02118f80 end:0x02118f84
 
@@ -298,11 +298,11 @@ src/Koopa_Spawn.c:
     complete
     .text start:0x0211970c end:0x0211975c
 
-src/_ZN13KoopaTheQuickD1Ev.c:
+src/_ZN13KoopaTheQuickD1Ev.cpp:
     complete
     .text start:0x0211975c end:0x021197a4
 
-src/_ZN13KoopaTheQuickD0Ev.c:
+src/_ZN13KoopaTheQuickD0Ev.cpp:
     complete
     .text start:0x021197a4 end:0x02119800
 
@@ -402,11 +402,11 @@ src/KoopaFlag_Spawn.c:
     complete
     .text start:0x0211b208 end:0x0211b248
 
-src/_ZN6KleptoD1Ev.c:
+src/_ZN6KleptoD1Ev.cpp:
     complete
     .text start:0x0211b248 end:0x0211b298
 
-src/_ZN6KleptoD0Ev.c:
+src/_ZN6KleptoD0Ev.cpp:
     complete
     .text start:0x0211b298 end:0x0211b2fc
 
@@ -470,11 +470,11 @@ src/func_ov062_0211c6a8.c:
     complete
     .text start:0x0211c6a8 end:0x0211c8b0
 
-src/_ZN6Klepto16CleanupResourcesEv.c:
+src/_ZN6Klepto16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211c8b0 end:0x0211c91c
 
-src/_ZN6Klepto16OnPendingDestroyEv.c:
+src/_ZN6Klepto16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211c91c end:0x0211c920
 

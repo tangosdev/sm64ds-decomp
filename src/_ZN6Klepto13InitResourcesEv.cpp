@@ -57,9 +57,9 @@ int Klepto::InitResources()
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
 
-    mPathId = mParam & 0xff;
-    mCarriedItem = (mParam >> 8) & 0xf;
-    unk_46c = (mParam >> 0xc) & 0xf;
+    mPathId = param1 & 0xff;
+    mCarriedItem = (param1 >> 8) & 0xf;
+    unk_46c = (param1 >> 0xc) & 0xf;
     if (mPathId < 0)
         mPathId = 0;
     if (mCarriedItem == 0xff)
@@ -72,7 +72,7 @@ int Klepto::InitResources()
     _ZN7PathPtrC1Ev(path1);
     _ZN7PathPtr6FromIDEj(path1, mPathId);
     unk_470 = 4;
-    unk_0a0 = -0x1e000;
+    mTerminalVelocity = -0x1e000;
     unk_484 = mPosX;
     unk_488 = mPosY;
     unk_48c = mPosZ;

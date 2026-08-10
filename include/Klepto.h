@@ -1,89 +1,77 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Klepto: 5 matched functions, 42 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef KLEPTO_H
 #define KLEPTO_H
+
 #include "types.h"
+
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN6KleptoD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another, and Enemy's own 0x110 closes
+ * exactly on the first. Member NAMES are the ones this header already used --
+ * a rebase should not also rename things its callers spell:
+ *
+ *     0x110 MovingCylinderClsn       0x34   -> 0x144
+ *     0x144 MovingCylinderClsn       0x34   -> 0x178
+ *     0x178 WithMeshClsn             0x1bc  -> 0x334
+ *     0x334 BlendModelAnim           0x70   -> 0x3a4
+ *     0x3a4 ShadowModel              0x28   -> 0x3cc
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
 #include "BlendModelAnim.h"
+#include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
+#include "PathPtr.h"
+#include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct Klepto {
-    u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    s16 mPrevAngleZ;            /* 0x096 */
-    u8  pad_098[0x4];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x33];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN6KleptoD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn1;            /* 0x110 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x144 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN6KleptoD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn2;            /* 0x144 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x178 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN6KleptoD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x178 */
-    /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x334 -- a relocation
-       the ROM build checks. D1 and not D2, so it is this type and not an inlined base. The
-       marker's pad stopped short of the object, so the member also takes over unk_390
-       (+0x5c = speed), which the header declared separately inside it. */
-    BlendModelAnim mBlendModelAnim;            /* 0x334 */
-    u8  mShadowModel;            /* 0x3a4 */
-    u8  pad_3a5[0x87];
-    s32 unk_42c;            /* 0x42c */
-    s32 unk_430;            /* 0x430 */
-    s32 unk_434;            /* 0x434 */
-    s32 unk_438;            /* 0x438 */
+struct Klepto : Enemy {
+    MovingCylinderClsn           mMovingCylinderClsn1;  /* 0x110 */
+    MovingCylinderClsn           mMovingCylinderClsn2;  /* 0x144 */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x178 */
+    BlendModelAnim               mBlendModelAnim;       /* 0x334 */
+    ShadowModel                  mShadowModel;          /* 0x3a4 */
+    u8  pad_3cc[0x60];
+    s32                          unk_42c;               /* 0x42c */
+    s32                          unk_430;               /* 0x430 */
+    s32                          unk_434;               /* 0x434 */
+    s32                          unk_438;               /* 0x438 */
     u8  pad_43c[0x8];
-    s16 unk_444;            /* 0x444 */
+    s16                          unk_444;               /* 0x444 */
     u8  pad_446[0x2];
-    u8  unk_448;            /* 0x448 */
+    u8                           unk_448;               /* 0x448 */
     u8  pad_449[0x1];
-    s16 unk_44a;            /* 0x44a */
-    s32 mHeldActorID;            /* 0x44c */
-    s32 unk_450;            /* 0x450 */
-    s32 unk_454;            /* 0x454 */
-    s32 unk_458;            /* 0x458 */
+    s16                          unk_44a;               /* 0x44a */
+    s32                          mHeldActorID;          /* 0x44c */
+    s32                          unk_450;               /* 0x450 */
+    s32                          unk_454;               /* 0x454 */
+    s32                          unk_458;               /* 0x458 */
     u8  pad_45c[0x8];
-    s32 mPathId;            /* 0x464 */
-    s32 mCarriedItem;            /* 0x468 */
-    s32 unk_46c;            /* 0x46c */
-    s32 unk_470;            /* 0x470 */
-    u32 unk_474;            /* 0x474 */
+    s32                          mPathId;               /* 0x464 */
+    s32                          mCarriedItem;          /* 0x468 */
+    s32                          unk_46c;               /* 0x46c */
+    s32                          unk_470;               /* 0x470 */
+    u32                          unk_474;               /* 0x474 */
     u8  pad_478[0xc];
-    s32 unk_484;            /* 0x484 */
-    s32 unk_488;            /* 0x488 */
-    s32 unk_48c;            /* 0x48c */
-#ifdef __cplusplus
-    /* methods */
+    s32                          unk_484;               /* 0x484 */
+    s32                          unk_488;               /* 0x488 */
+    s32                          unk_48c;               /* 0x48c */
+
+    /* --- vtable --- */
+    virtual ~Klepto();
+
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
-#endif
 };
 
-#endif
+typedef char Klepto_size_must_be_0x490[sizeof(Klepto) == 0x490 ? 1 : -1];
+
+#endif /* KLEPTO_H */
