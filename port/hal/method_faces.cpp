@@ -270,8 +270,12 @@ int _ZN9ActorBase14BeforeBehaviorEv(void *self)
 int _ZN9ActorBase14BeforeBehaviorEv(void *self);  /* Linux: real symbol from src/_ZN9ActorBase14BeforeBehaviorEv */
 #endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the const method it forwards to -> self-recurse on GCC. On Linux bind to the real src/ TU. */
 unsigned _ZNK7PathPtr8NumNodesEv(const void *self)
 { return ((const PathPtr *)self)->PathPtr::NumNodes(); }
+#else
+unsigned _ZNK7PathPtr8NumNodesEv(const void *self);
+#endif /* _WIN32 */
 
 
 }  /* extern "C" */

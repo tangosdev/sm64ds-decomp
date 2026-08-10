@@ -295,8 +295,12 @@ void _ZN6Camera25SaveCameraStateBeforeTalkEv(void)
         ((Camera *)data_0209f318)->Camera::SaveCameraStateBeforeTalk();
 }
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the const method it forwards to -> self-recurse on GCC. On Linux bind to the real src/ TU. */
 int _ZNK7PathPtr5LoopsEv(void *self)
 { return ((PathPtr *)self)->PathPtr::Loops() ? 1 : 0; }
+#else
+int _ZNK7PathPtr5LoopsEv(void *self);
+#endif /* _WIN32 */
 
 int hal_camera_behavior(void *cam) { return _ZN6Camera8BehaviorEv(cam); }
 int hal_camera_render(void *cam) { return _ZN6Camera6RenderEv(cam); }
