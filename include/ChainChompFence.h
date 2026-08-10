@@ -1,12 +1,40 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ChainChompFence: 6 matched functions, 4 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef CHAINCHOMPFENCE_H
 #define CHAINCHOMPFENCE_H
-#include "types.h"
-#include "Model.h"
 
+#include "types.h"
+#include "Platform.h"
+
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct ChainChompFence : Platform {
+    u8 unk_31e;                       /* 0x31e */
+
+    /* --- vtable --- */
+    virtual ~ChainChompFence();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char ChainChompFence_size_must_be_0x320[sizeof(ChainChompFence) == 0x320 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct ChainChompFence {
     u8  pad_000[0x8e];
     s16 unk_08e;            /* 0x08e */
@@ -17,13 +45,8 @@ struct ChainChompFence {
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1f9];
     u8  unk_31e;            /* 0x31e */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* CHAINCHOMPFENCE_H */

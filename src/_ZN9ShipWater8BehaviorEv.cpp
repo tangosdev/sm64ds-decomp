@@ -35,8 +35,8 @@ int ShipWater::Behavior()
             *q -= 0x5000;
         }
     }
-    unk_32c = 0x1000;
-    _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
+    (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
+    _ZN9Animation7AdvanceEv((char*)&(*(u8 *)&mTextureTransformer));
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
     return 1;

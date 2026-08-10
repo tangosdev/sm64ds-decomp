@@ -15,7 +15,7 @@ struct Obj {
 
 int CannonHatch::Render()
 {
-  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)&mParam) & 0xff) == 1)
+  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)&param1) & 0xff) == 1)
     return 1;
   if (*(unsigned char*)((char*)&unk_32e) != 0)
     return 1;

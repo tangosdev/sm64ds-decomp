@@ -16,10 +16,10 @@ extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned i
 
 int SlidingIce::Behavior()
 {
-  int isType = (mActorID == 0x5d);
+  int isType = (actorID == 0x5d);
   if(isType){
     if(DecIfAbove0_Short((char *)&unk_31e) == 0){
-      _Z14ApproachLinearRiii((int*)((char *)&unk_098), 0, 0x3000);
+      _Z14ApproachLinearRiii((int*)((char *)&mHorzSpeed), 0, 0x3000);
       if(_Z14ApproachLinearRiii((int*)((char *)&mPosY), unk_324, 0xa000) != 0){
         _ZN9ActorBase18MarkForDestructionEv(((char *)this));
       }

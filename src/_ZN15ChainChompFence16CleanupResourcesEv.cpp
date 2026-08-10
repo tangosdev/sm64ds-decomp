@@ -11,8 +11,8 @@ extern int data_ov014_021149c0[];
 
 int ChainChompFence::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov014_021149c0))->Release();
     ((SharedFilePtr *)(data_ov014_021149b8))->Release();

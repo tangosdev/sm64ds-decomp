@@ -11,8 +11,8 @@ extern int IceSheet_ModelFile[];
 
 int IceSheet::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(IceSheet_ModelFile))->Release();
     ((SharedFilePtr *)(IceSheet_ClsnFile))->Release();

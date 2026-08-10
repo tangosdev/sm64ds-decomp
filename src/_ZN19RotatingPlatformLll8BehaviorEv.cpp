@@ -8,7 +8,7 @@ extern void func_020393a4(int* p, int v);
 
 int RotatingPlatformLll::Behavior()
 {
-    func_020393a4((int*)((char*)&mMeshCollider), 0x150000);
+    func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x150000);
     if (unk_324) {
         int* py = (int*)(((int)((char*)this) + 0x60));
         *py = *py - 0x2000;

@@ -23,7 +23,7 @@ int StarSwitch::Behavior()
     int v;
 
     if (IsAreaShowing(unk_353) == 0) {
-        mAreaId = unk_353;
+        (*(u8 *)&mAreaId) = unk_353;
         unk_338 = 1;
         func_ov002_020ba01c(((char *)this), 2, 1, 0x333, 0x1000);
         func_ov002_020ba4d8(((char *)this), 0);
@@ -57,7 +57,7 @@ int StarSwitch::Behavior()
         }
         if (_ZN5Actor10FindWithIDEj(id344) == 0) {
             mTargetActorID = 0;
-            mAreaId = unk_353;
+            (*(u8 *)&mAreaId) = unk_353;
             return 1;
         }
     }

@@ -11,8 +11,8 @@ extern int FloatingFloorLllBig_ModelFile[];
 
 int FloatingFloorLllBig::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(FloatingFloorLllBig_ModelFile))->Release();
     ((SharedFilePtr *)(FloatingFloorLllBig_ClsnFile))->Release();

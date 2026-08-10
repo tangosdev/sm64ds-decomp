@@ -11,8 +11,8 @@ extern int PoleBillboard_ModelFile[];
 
 int PoleBillboard::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(PoleBillboard_ModelFile))->Release();
     ((SharedFilePtr *)(PoleBillboard_ClsnFile))->Release();

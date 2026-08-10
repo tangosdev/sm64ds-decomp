@@ -10,8 +10,8 @@ extern char data_ov098_0213c380[];
 
 int ArrowSignRight::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov098_0213c380 + (unsigned char)((char *)this)[0x37c]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov098_0213c384 + (unsigned char)((char *)this)[0x37c]*0xc)))->Release();
   return 1;

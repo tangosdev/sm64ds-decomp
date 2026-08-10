@@ -63,16 +63,16 @@ int BowserFire::InitResources()
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
         &this->mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
 
-    this->unk_09c = -0x4000;
-    this->unk_0a0 = -0x1e000;
-    this->unk_35c = this->mParam & 7;
+    this->mVertAccel = -0x4000;
+    this->mTerminalVelocity = -0x1e000;
+    this->unk_35c = this->param1 & 7;
     this->unk_374 = 0;
     if (this->unk_35c == 0)
         this->unk_379 = 0;
     else
         this->unk_379 = 1;
     this->unk_36c = 0;
-    this->unk_378 = ((unsigned int)this->mParam >> 4) & 3;
+    this->unk_378 = ((unsigned int)this->param1 >> 4) & 3;
     if (this->unk_35c == 0)
         this->mMovingCylinderClsn.flags |= 1;
     this->unk_360 = 0x2000;

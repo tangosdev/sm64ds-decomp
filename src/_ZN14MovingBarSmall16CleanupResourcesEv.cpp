@@ -11,8 +11,8 @@ extern int MovingBarSmall_ModelFile[];
 
 int MovingBarSmall::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(MovingBarSmall_ModelFile))->Release();
     ((SharedFilePtr *)(MovingBarSmall_ClsnFile))->Release();

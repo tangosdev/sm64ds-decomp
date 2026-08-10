@@ -20,7 +20,7 @@ struct Base {
 int BlueCoinSwitch::Render()
 {
     if (mPosY > unk_320) {
-        Base *bp = (Base *)&mModel;
+        Base *bp = (Base *)&(*(u8 *)&mModel);
         bp->m(0);
     }
     return 1;

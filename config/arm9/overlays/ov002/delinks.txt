@@ -115,11 +115,11 @@ src/_ZN5EnemyD2Ev.c:
     complete
     .text start:0x020aed18 end:0x020aed3c
 
-src/_ZN5EnemyD0Ev.c:
+src/_ZN5EnemyD0Ev.cpp:
     complete
     .text start:0x020aed3c end:0x020aed74
 
-src/_ZN5EnemyD1Ev.c:
+src/_ZN5EnemyD1Ev.cpp:
     complete
     .text start:0x020aed74 end:0x020aed98
 
@@ -3248,6 +3248,7 @@ src/func_ov002_020d6998.cpp:
     .text start:0x020d6998 end:0x020d6c60
 
 src/func_ov002_020d6c60.cpp:
+    complete
     .text start:0x020d6c60 end:0x020d6dac
 
 src/func_ov002_020d6dac.c:
@@ -4651,7 +4652,7 @@ src/_ZN8PlatformD1Ev.cpp:
     complete
     .text start:0x020ee42c end:0x020ee464
 
-src/_ZN8PlatformD0Ev.c:
+src/_ZN8PlatformD0Ev.cpp:
     complete
     .text start:0x020ee464 end:0x020ee4b0
 

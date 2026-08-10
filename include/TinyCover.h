@@ -1,13 +1,45 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class TinyCover: 6 matched functions, 8 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef TINYCOVER_H
 #define TINYCOVER_H
+
 #include "types.h"
-#include "Model.h"
+#include "Platform.h"
 #include "TextureTransformer.h"
 
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct TinyCover : Platform {
+    u8  pad_31e[0x2];
+    TextureTransformer mTextureTransformer;/* 0x320 */
+    s32 unk_334;                      /* 0x334 */
+    u8  pad_338[0x4];
+    u8 unk_33c;                       /* 0x33c */
+
+    /* --- vtable --- */
+    virtual ~TinyCover();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char TinyCover_size_must_be_0x340[sizeof(TinyCover) == 0x340 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct TinyCover {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
@@ -28,13 +60,8 @@ struct TinyCover {
     s32 unk_334;            /* 0x334 */
     u8  pad_338[0x4];
     u8  unk_33c;            /* 0x33c */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* TINYCOVER_H */

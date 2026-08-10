@@ -78,18 +78,18 @@ int IceBlock::Behavior()
         return 1;
     }
 
-    if (unk_344 != 0) {
-        if ((unk_340 & 0x40000) != 0) {
+    if ((*(s32 *)((char *)&mMovingCylinderClsn + 0x24)) != 0) {
+        if (((*(s32 *)((char *)&mMovingCylinderClsn + 0x20)) & 0x40000) != 0) {
             unk_354 = 0x1e;
             func_02012694(0x7a, ((char*)this) + 0x74);
             func_ov081_02127be0(((char*)this));
         }
-        if ((unk_340 & 0x4000) != 0) {
+        if (((*(s32 *)((char *)&mMovingCylinderClsn + 0x20)) & 0x4000) != 0) {
             ((VObj*)((char*)this))->OnHit();
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    _ZN12CylinderClsn5ClearEv((char*)&(*(u8 *)&mMovingCylinderClsn));
+    _ZN12CylinderClsn6UpdateEv((char*)&(*(u8 *)&mMovingCylinderClsn));
     return 1;
 }

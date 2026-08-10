@@ -29,26 +29,26 @@ int RotatingCogSmall::InitResources()
 {
     int b;
 
-    b = (int)(unk_00c == 0x77);
+    b = (int)(actorID == 0x77);
     if (b != 0) {
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4,
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov035_02112c78), 1, -1);
         _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
         _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x124,
+            &mMeshCollider,
             _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov035_02112c68),
-            ((char *)this) + 0x2ec, 0x1000, unk_08e, data_ov035_021121d8);
-        func_020396c0(((char *)this) + 0x124, 0);
-        func_020393d4(((char *)this) + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+            &mClsnMat, 0x1000, mAngleY, data_ov035_021121d8);
+        func_020396c0(&mMeshCollider, 0);
+        func_020393d4(&mMeshCollider, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
         mRotationState = 0;
     } else {
-        b = (int)(unk_00c == 0x79);
+        b = (int)(actorID == 0x79);
         if (b != 0) {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4,
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
                 _ZN5Model8LoadFileER13SharedFilePtr(data_ov035_02112c70), 1, -1);
         } else {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4,
+            _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
                 _ZN5Model8LoadFileER13SharedFilePtr(data_ov035_02112c60), 1, -1);
         }
         _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));

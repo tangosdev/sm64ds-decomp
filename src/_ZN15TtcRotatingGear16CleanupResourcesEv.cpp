@@ -11,8 +11,8 @@ extern int TtcRotatingGear_ModelFile[];
 
 int TtcRotatingGear::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(TtcRotatingGear_ModelFile))->Release();
     ((SharedFilePtr *)(TtcRotatingGear_ClsnFile))->Release();

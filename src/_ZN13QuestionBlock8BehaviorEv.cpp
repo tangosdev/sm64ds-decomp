@@ -25,20 +25,20 @@ int QuestionBlock::Behavior()
         func_ov102_02149ff0(((char*)this));
         func_ov102_02149ea4(((char*)this));
     }
-    func_020393a4((int*)((char*)&mMeshCollider), 0x8c000);
-    func_02039394((int*)((char*)&mMeshCollider), 0x46000);
+    func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x8c000);
+    func_02039394((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x46000);
     if (unk_3e8 != 0) {
-        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
-            ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
+        if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
+            ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         }
         goto end;
     }
     if ((data_0209caa0[1] & 0x80000000) == 0) {
-        int b = (int)(mActorId == 0x14);
+        int b = (int)(actorID == 0x14);
         if (b != 0) {
             _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
-            if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
-                ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
+            if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
+                ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
             }
             goto end;
         }
@@ -46,8 +46,8 @@ int QuestionBlock::Behavior()
     {
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) {
-            if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0) {
-                ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
+            if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
+                ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
             }
             goto end;
         }

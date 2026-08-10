@@ -1,13 +1,53 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class QuestionBlock: 6 matched functions, 20 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef QUESTIONBLOCK_H
 #define QUESTIONBLOCK_H
+
 #include "types.h"
+#include "Platform.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct QuestionBlock : Platform {
+    u8  pad_31e[0x2];
+    ModelAnim mModelAnim;             /* 0x320 */
+    ShadowModel mShadowModel;         /* 0x384 */
+    u8 unk_3ac;                       /* 0x3ac */
+    u8  pad_3ad[0x33];
+    s32 unk_3e0;                      /* 0x3e0 */
+    u8  pad_3e4[0x4];
+    s32 unk_3e8;                      /* 0x3e8 */
+    u8  pad_3ec[0x4];
+    u8 unk_3f0;                       /* 0x3f0 */
+    u8 unk_3f1;                       /* 0x3f1 */
+    u8  pad_3f2[0x1];
+    u8 unk_3f3;                       /* 0x3f3 */
+
+    /* --- vtable --- */
+    virtual ~QuestionBlock();
+
+    int Behavior();
+    int CleanupResources();
+    int Render();
+};
+
+typedef char QuestionBlock_size_must_be_0x3f4[sizeof(QuestionBlock) == 0x3f4 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct QuestionBlock {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
@@ -48,12 +88,8 @@ struct QuestionBlock {
     u8  unk_3f1;            /* 0x3f1 */
     u8  pad_3f2[0x1];
     u8  unk_3f3;            /* 0x3f3 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* QUESTIONBLOCK_H */

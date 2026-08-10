@@ -1,12 +1,43 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class TTC_MovingBar: 5 matched functions, 10 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef TTC_MOVINGBAR_H
 #define TTC_MOVINGBAR_H
-#include "types.h"
-#include "Model.h"
 
+#include "types.h"
+#include "Platform.h"
+#include "ShadowModel.h"
+
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct TTC_MovingBar : Platform {
+    u8 unk_31e;                       /* 0x31e */
+    u8  pad_31f[0x1];
+    s32 unk_320;                      /* 0x320 */
+    ShadowModel mShadowModel;         /* 0x324 */
+
+    /* --- vtable --- */
+    virtual ~TTC_MovingBar();
+
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char TTC_MovingBar_size_must_be_0x34c[sizeof(TTC_MovingBar) == 0x34c ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct TTC_MovingBar {
     u8  pad_000[0xc];
     u16 mActorID;            /* 0x00c */
@@ -26,12 +57,8 @@ struct TTC_MovingBar {
     u8  pad_31f[0x1];
     s32 unk_320;            /* 0x320 */
     u8  mShadowModel;            /* 0x324 */
-#ifdef __cplusplus
-    /* methods */
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* TTC_MOVINGBAR_H */

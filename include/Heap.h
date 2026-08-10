@@ -138,6 +138,8 @@ struct Heap {
     u32   flags;                    /* 0x10 */
 };
 #else
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct Heap {
     void* heapStart;                /* 0x04 -- first byte of the arena this heap
                                        hands out; for a root heap it is the heap
@@ -250,6 +252,20 @@ struct Heap {
        0x30 bytes for the solid one, 0x4c for the expanding one. */
     static struct SolidHeapAllocator*     CreateSolidHeapAllocator(void* address, u32 size, u32 flags);
     static struct ExpandingHeapAllocator* CreateExpandingHeapAllocator(void* address, u32 size, u32 flags);
+
+    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
+       Without it the compiler emits the global `_ZdlPv`, which exists nowhere
+       in this image, and D0 comes out one relocated word different from the
+       ROM -- a difference build_pin.verify CANNOT SEE, because it wildcards
+       relocated words. Only the link catches it.
+
+       This family deallocates through Memory::operator_delete2; Actor's copy of
+       this member calls Memory::Deallocate instead, which is why each family
+       needs its own. Inline and in the IMMEDIATE base: mwcc inlines it only
+       when it finds it in the class or one level up (see include/Actor.h).
+       No layout effect. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 #endif
 

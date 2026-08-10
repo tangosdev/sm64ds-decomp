@@ -34,23 +34,23 @@ int CheepCheep::InitResources()
     struct Vector3 v;
 
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134564);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii((void *)((char *)&mModelAnim), bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((void *)((char *)&(*(u8 *)&mModelAnim)), bmd, 1, -1);
 
     _ZN9Animation8LoadFileER13SharedFilePtr(*(struct SharedFilePtr *)&data_ov090_0213455c);
 
     v = data_ov090_021342d8;
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-        (void *)((char *)&mMovingCylinderClsnWithPos), (struct Actor *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
+        (void *)((char *)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos)), (struct Actor *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
     unk_374 = mPosX;
     unk_378 = mPosY;
     unk_37c = mPosZ;
     mAngleY = mPrevAngleY;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-        (void *)((char *)&mWithMeshClsn), (struct Actor *)((char *)this), 0x1e000, 0x1e000, 0, 0);
+        (void *)((char *)&(*(WithMeshClsn *)&mWithMeshClsn)), (struct Actor *)((char *)this), 0x1e000, 0x1e000, 0, 0);
 
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
-        (void *)((char *)&mModelAnim), data_ov090_0213455c.file, 0, 0x1000, 0);
+        (void *)((char *)&(*(u8 *)&mModelAnim)), data_ov090_0213455c.file, 0, 0x1000, 0);
 
     func_ov090_021332e8(((char *)this), &data_ov090_02134594);
     return 1;

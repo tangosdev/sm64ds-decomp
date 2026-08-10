@@ -1,15 +1,67 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class KingBobOmb: 5 matched functions, 27 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef KINGBOBOMB_H
 #define KINGBOBOMB_H
-#include "types.h"
-#include "BlendModelAnim.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "CommonModel.h"
 
+#include "types.h"
+#include "Enemy.h"
+#include "BlendModelAnim.h"
+#include "CommonModel.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct KingBobOmb : Enemy {
+    WithMeshClsn mWithMeshClsn;       /* 0x110 */
+    BlendModelAnim mBlendModelAnim;   /* 0x2cc */
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x33c */
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos_37c;/* 0x37c */
+    CommonModel mCommonModel;         /* 0x3bc */
+    ShadowModel mShadowModel;         /* 0x3f8 */
+    u8  pad_420[0x74];
+    s32 unk_494;                      /* 0x494 */
+    u8 unk_498;                       /* 0x498 */
+    u8  pad_499[0x7];
+    s32 unk_4a0;                      /* 0x4a0 */
+    u8  pad_4a4[0x30];
+    s32 unk_4d4;                      /* 0x4d4 */
+    s32 unk_4d8;                      /* 0x4d8 */
+    s32 unk_4dc;                      /* 0x4dc */
+    s32 unk_4e0;                      /* 0x4e0 */
+    s32 unk_4e4;                      /* 0x4e4 */
+    s32 unk_4e8;                      /* 0x4e8 */
+    u8  pad_4ec[0x10];
+    s32 unk_4fc;                      /* 0x4fc */
+    s32 unk_500;                      /* 0x500 */
+    u8  pad_504[0x3];
+    u8 unk_507;                       /* 0x507 */
+    u8  pad_508[0x1];
+    u8 unk_509;                       /* 0x509 */
+
+    /* --- vtable --- */
+    virtual ~KingBobOmb();
+
+    int Behavior();
+    int InitResources();
+    int Render();
+};
+
+typedef char KingBobOmb_size_must_be_0x50c[sizeof(KingBobOmb) == 0x50c ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct KingBobOmb {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
@@ -75,12 +127,8 @@ struct KingBobOmb {
     u8  unk_507;            /* 0x507 */
     u8  pad_508[0x1];
     u8  unk_509;            /* 0x509 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* KINGBOBOMB_H */

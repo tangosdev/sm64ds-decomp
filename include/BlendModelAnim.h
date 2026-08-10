@@ -24,6 +24,8 @@
 
 #ifdef __cplusplus
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct BlendModelAnim : ModelAnim {
     Fix12i blendWeight;        /* 0x64 - 0x1000 is 1.0 */
     Fix12i blendStep;          /* 0x68 - per-frame increment */
@@ -41,6 +43,16 @@ struct BlendModelAnim : ModelAnim {
     void Advance();
     void SetAnim(BCA_File &animFile, int numBlendFrames, int flags,
                  Fix12<int> speed, u16 startFrame);  /* free function, wall 6az */
+
+    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. ModelAnim
+       derives from Model (so ModelBase) and from Animation, and both bases
+       declare operator delete, so an inherited one is "ambiguous access to
+       name found: ModelBase::operator delete and Animation::operator delete".
+       Declaring it here picks the same deallocator both bases name, and also
+       satisfies the rule in include/Actor.h that mwcc only inlines the member
+       when it is in the class or its immediate base. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
 typedef char BlendModelAnim_size_must_be_0x70[sizeof(BlendModelAnim) == 0x70 ? 1 : -1];

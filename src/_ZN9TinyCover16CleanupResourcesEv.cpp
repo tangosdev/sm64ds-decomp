@@ -10,8 +10,8 @@ extern int data_ov033_021124f0[];
 
 int TinyCover::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov033_021124f0))->Release();
     ((SharedFilePtr *)(data_ov033_021124e8))->Release();

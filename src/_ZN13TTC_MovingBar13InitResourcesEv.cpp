@@ -32,8 +32,8 @@ int TTC_MovingBar::InitResources()
     char raycast[0x50];
     int i;
 
-    if (mActorID != 0x72) {
-        if (mActorID == 0x73)
+    if (actorID != 0x72) {
+        if (actorID == 0x73)
             unk_31e = 1;
     } else {
         unk_31e = 0;
@@ -41,7 +41,7 @@ int TTC_MovingBar::InitResources()
 
     i = unk_31e;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(
-        ((char *)this) + 0xd4,
+        &mModel,
         _ZN5Model8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d35c + i * 0xc)),
         1, -1);
 
@@ -51,14 +51,14 @@ int TTC_MovingBar::InitResources()
 
     i = unk_31e;
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124,
+        &mMeshCollider,
         _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d360 + i * 0xc)),
-        ((char *)this) + 0x2ec,
+        &mClsnMat,
         0x199,
         mAngleY,
         *(void **)(data_ov065_0211d364 + i * 0xc));
 
-    func_020393d4((int *)((char *)&mMeshCollider), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     pos.x = mPosX;
     pos.y = mPosY;

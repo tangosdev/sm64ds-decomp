@@ -64,6 +64,8 @@
 
 #ifdef __cplusplus
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct ModelAnim : Model, Animation {
     BCA_File *file;            /* 0x60 */
 
@@ -78,6 +80,16 @@ struct ModelAnim : Model, Animation {
     void SetAnim(BCA_File *animFile, int flags, Fix12<int> speed,
                  u32 startFrame);         /* defined as a free function, wall 6az */
     void Copy(const ModelAnim &src, char *newFile);
+
+    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. ModelAnim
+       derives from Model (so ModelBase) and from Animation, and both bases
+       declare operator delete, so an inherited one is "ambiguous access to
+       name found: ModelBase::operator delete and Animation::operator delete".
+       Declaring it here picks the same deallocator both bases name, and also
+       satisfies the rule in include/Actor.h that mwcc only inlines the member
+       when it is in the class or its immediate base. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
 typedef char ModelAnim_size_must_be_0x64[sizeof(ModelAnim) == 0x64 ? 1 : -1];

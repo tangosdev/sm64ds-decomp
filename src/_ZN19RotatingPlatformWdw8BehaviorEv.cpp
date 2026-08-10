@@ -25,11 +25,11 @@ int RotatingPlatformWdw::Behavior()
     /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40] */
     if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
         mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
-        if (((MeshColliderBase *)((u8 *)&mMeshCollider))->IsEnabled() != 0) {
-            ((MeshColliderBase *)((u8 *)&mMeshCollider))->Disable();
+        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
+            ((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
         }
     } else {
-        if (((MeshColliderBase *)((u8 *)&mMeshCollider))->IsEnabled() == 0) {
+        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
             ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((Actor *)(((u8 *)this)));
         }
     }
@@ -65,7 +65,7 @@ int RotatingPlatformWdw::Behavior()
     data_0209f32c = unk_344;
     func_ov029_021122b4(((u8 *)this));
     func_ov029_02112250(((u8 *)this));
-    unk_32c = 0x1000;
-    _ZN9Animation7AdvanceEv((u8 *)&mTextureTransformer);
+    (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
+    _ZN9Animation7AdvanceEv((u8 *)&(*(u8 *)&mTextureTransformer));
     return 1;
 }

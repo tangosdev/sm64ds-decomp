@@ -16,12 +16,12 @@ extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEs
 int IceBlock::InitResources()
 {
   void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov081_02128fd8);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, 0x17);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii((char *)&mModel, m, 1, 0x17);
   _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x320, ((char*)this), 0xc8000, 0x12c000, 0x800002, 0x44000);
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   void* k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov081_02128fd0);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, k, ((char*)this)+0x2ec, 0x1000, mAngleY, data_ov002_0210d8d4);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char *)&mMeshCollider, k, (char *)&mClsnMat, 0x1000, mAngleY, data_ov002_0210d8d4);
   mScale = 0x1000;
   return 1;
 }

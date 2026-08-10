@@ -26,17 +26,17 @@ extern char data_ov102_0214e7d0[];
 int QuestionBlock::CleanupResources()
 {
     int b, b2, b3;
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
 
-    b = (int)(mActorId == 0x16);
+    b = (int)(actorID == 0x16);
     if (b)
         ((SharedFilePtr *)(data_ov002_0210da58))->Release();
 
-    b2 = (int)(mActorId == 0x14);
+    b2 = (int)(actorID == 0x14);
     if (b2)
         goto dosw;
-    b3 = (int)(mActorId == 0x15);
+    b3 = (int)(actorID == 0x15);
     if (b3) {
     dosw:
         switch (unk_3f3) {
@@ -69,7 +69,7 @@ int QuestionBlock::CleanupResources()
         }
     }
 
-    switch (mActorId - 0x14) {
+    switch (actorID - 0x14) {
     case 0:
         ((SharedFilePtr *)(data_ov102_0214e7e8))->Release();
         ((SharedFilePtr *)(data_ov102_0214e808))->Release();

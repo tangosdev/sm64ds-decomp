@@ -294,9 +294,6 @@ src/_ZN5StumpD0Ev.c:
     complete
     .text start:0x021339a8 end:0x021339fc
 
-src/func_ov091_021339fc.c:
-    .text start:0x021339fc end:0x02133c6c
-
 src/func_ov091_02133c6c.cpp:
     complete
     .text start:0x02133c6c end:0x02133d1c

@@ -22,26 +22,26 @@ extern char data_ov091_021356d0[];
 
 int Stump::InitResources()
 {
-    mVariant = unk_008 & 0xff;
-    unk_0a0 = -0x1e000;
+    mVariant = (*(s32 *)&param1) & 0xff;
+    mTerminalVelocity = -0x1e000;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mVariant == 1) {
         _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x3c000, 0x14000, 0x200002, 0);
         func_ov091_02134044(((char *)this), data_ov091_021356c0);
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x14000, 0, 0, 0);
-        unk_0b0 = 0;
+        (*(s32 *)&mFlags) = 0;
         return 1;
     }
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200002, 0x4a010);
-    unk_0b0 = 0x10000000;
+    (*(s32 *)&mFlags) = 0x10000000;
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9c0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x300, _ZN5Model8LoadFileER13SharedFilePtr(data_ov091_02135674), 1, -1);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov091_0213567c);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov091_02135684);
-    unk_35c = 0x1000;
+    (*(s32 *)((char *)&mModelAnim + 0x5c)) = 0x1000;
     func_ov091_02134044(((char *)this), data_ov091_021356d0);
     return 1;
 }

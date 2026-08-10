@@ -7,7 +7,7 @@
  * Loads the model and collision mesh, unpacks the spawn word, and computes how
  * far the switch will sink.
  *
- * mParam carries two fields: bits 0-3 are the event bit to set when the switch
+ * param1 carries two fields: bits 0-3 are the event bit to set when the switch
  * bottoms out, bits 8-15 are the countdown seed. That seed is stored in TENTHS
  * -- it is multiplied by 10 here -- and a byte of 0 or 0xff means "use the
  * default 0xfa" instead.
@@ -63,18 +63,18 @@ int BlueCoinSwitch::InitResources()
     unsigned short* p;
 
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_02110acc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&(*(u8 *)&mModel), bmd, 1, -1);
 
-    unk_32d = (int)mParam & 0xf;
+    unk_32d = (int)param1 & 0xf;
     _ZN8Platform21UpdateModelPosAndRotYEv(c);
     _ZN8Platform19UpdateClsnPosAndRotEv(c);
 
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_02110ac4);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, kcl, &mMatrix, 0x199, mAngleY,
+        &(*(u8 *)&mMeshCollider), kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov002_0210d6f4);
 
-    func_020393c4(&mMeshCollider, (void*)&func_ov002_020f15b8);
+    func_020393c4(&(*(u8 *)&mMeshCollider), (void*)&func_ov002_020f15b8);
 
     unk_32c = 0;
 
@@ -82,7 +82,7 @@ int BlueCoinSwitch::InitResources()
        and so set_fa rematerializes add r0,r4,#0x300 after ldrh clobbers r0. */
     y = mPosY;
     unk_320 = y - 0x64000;
-    x = mParam;
+    x = param1;
     unk_32a = (x >> 8) & 0xff;
     unk_32e = mAreaId;
     val = unk_32a;

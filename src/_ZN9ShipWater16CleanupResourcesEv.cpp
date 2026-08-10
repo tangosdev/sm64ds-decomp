@@ -11,8 +11,8 @@ extern int data_ov017_02111c88[];
 
 int ShipWater::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov017_02111c88))->Release();
     ((SharedFilePtr *)(data_ov017_02111c80))->Release();

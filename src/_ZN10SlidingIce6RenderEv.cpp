@@ -17,7 +17,7 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 
 int SlidingIce::Render()
 {
-  int x = mActorID==0x5d;
+  int x = actorID==0x5d;
   if(x){
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));

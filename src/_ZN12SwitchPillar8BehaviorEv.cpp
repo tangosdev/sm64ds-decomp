@@ -21,7 +21,7 @@ int SwitchPillar::Behavior()
         mPosY = mLoweredY;
     } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {
         unk_338 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-            unk_338, 3, 0x96, (void*)((char*)&unk_074), 0);
+            unk_338, 3, 0x96, (void*)((char*)&mCamSpacePosX), 0);
         *(int*)((char*)&mPosY) -= 0x5000;
         unk_33e = 1;
         if (mPosY <= mLoweredY) {
@@ -32,7 +32,7 @@ int SwitchPillar::Behavior()
     *(int*)&data_0209f32c = mPosY;
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
     _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-    unk_32c = 0x1000;
-    _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
+    (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
+    _ZN9Animation7AdvanceEv((char*)&(*(u8 *)&mTextureTransformer));
     return 1;
 }

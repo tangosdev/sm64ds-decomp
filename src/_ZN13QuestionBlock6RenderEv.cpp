@@ -20,7 +20,7 @@ int QuestionBlock::Render()
     if (unk_3e8 == 2)
         goto done;
     if ((*(int*)((char*)&data_0209caa0 + 4) & 0x80000000) == 0) {
-        int b = (mActorId == 0x14);
+        int b = (actorID == 0x14);
         if (b != 0) {
             Sub* s = (Sub*)((char*)&mModelAnim);
             s->m(0);
@@ -28,7 +28,7 @@ int QuestionBlock::Render()
         }
     }
     {
-        Sub* s2 = (Sub*)((char*)&mModel);
+        Sub* s2 = (Sub*)((char*)&(*(u8 *)&mModel));
         s2->m((int)((char*)&mScaleX));
     }
 done:

@@ -2,7 +2,6 @@
 // @symbol _ZN5Stump16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Stump.h"
-struct SharedFilePtr { unsigned int data[4]; };
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 }

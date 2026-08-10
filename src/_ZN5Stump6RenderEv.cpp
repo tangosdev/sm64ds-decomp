@@ -9,8 +9,8 @@ struct V { virtual void m0(); virtual void m1(); virtual void m2(); virtual void
 int Stump::Render()
 {
     if (mVariant == 1) return 1;
-    int b = (unk_0b0 & 0x40000) != 0;
+    int b = ((*(s32 *)&mFlags) & 0x40000) != 0;
     if (b) return 1;
-    ((V*)((char *)&mModelAnim))->m5(0);
+    ((V*)((char *)&(*(u8 *)&mModelAnim)))->m5(0);
     return 1;
 }

@@ -11,7 +11,7 @@ extern int data_ov025_02113ab8[];
 
 int PyramidStep::CleanupResources()
 {
-    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     ((SharedFilePtr *)(data_ov025_02113ab8))->Release();
     ((SharedFilePtr *)(data_ov025_02113ab0))->Release();
     return 1;

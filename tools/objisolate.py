@@ -189,10 +189,24 @@ def plan(raw, keep_symbol):
                 return {"error": f"{sym.name}: RTTI reloc is REL, not RELA"}
 
             if sym.name in ext:
-                # Being externalised: only the surveyed vtable shape is correctable.
-                want = (R_ARM_ABS32, VTABLE_PREAMBLE) if sym.name.startswith("_ZTV") \
-                    else (R_ARM_ABS32, 0)
-                if (r["r_info_type"], addend) != want:
+                # MULTIPLE INHERITANCE puts a SECOND vptr store in the object,
+                # pointing past the primary slots into the secondary sub-table --
+                # addend 44 for ModelAnim, where the primary's is 8. The
+                # correction is the same subtraction either way, because mwcc's
+                # _ZTV addresses the vtable object's start while the ROM's IS the
+                # slot array. The ROM names the destination independently and the
+                # arithmetic lands on it exactly:
+                #
+                #   _ZTV9ModelAnim                   0x0208e980
+                #   VTable_Animation_ModelAnimThunk  0x0208e9a4   = +0x24
+                #   44 - VTABLE_PREAMBLE                          =  0x24
+                #
+                # Two symbols this tree recorded separately agreeing with the
+                # subtraction is the enrolled instance the refusal wanted.
+                ok_type = r["r_info_type"] == R_ARM_ABS32
+                ok_addend = (addend >= VTABLE_PREAMBLE if sym.name.startswith("_ZTV")
+                             else addend == 0)
+                if not (ok_type and ok_addend):
                     return {"error": f"{sym.name}: unexpected reloc "
                                      f"type={r['r_info_type']} addend={addend}"}
             elif shndx == "SHN_UNDEF" or shndx == SHN_UNDEF:
@@ -320,7 +334,9 @@ def isolate(obj, keep_symbol):
     # Drop the preamble skip from every vtable reference, now that the symbol it
     # binds to already points at the slot array. Elf32_Rela is 12 bytes:
     # r_offset(4) r_info(4) r_addend(4). `plan` has already refused anything whose
-    # type/addend is not the surveyed shape, so this only ever rewrites 8 -> 0.
+    # type/addend is not the surveyed shape. Usually 8 -> 0; a multiple-
+    # inheritance secondary vptr store subtracts the same 8 from a larger
+    # addend and lands on the sub-table (44 -> 36 for ModelAnim).
     #
     # Two kinds reach here and both need the same correction. A vtable this object
     # DEFINED and is now externalising, and one it never defined at all -- the
@@ -338,7 +354,7 @@ def isolate(obj, keep_symbol):
             if not sym.name.startswith("_ZTV"):
                 continue
             undef = sym["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF)
-            if (sym.name in ext or undef) and r["r_addend"] == VTABLE_PREAMBLE:
+            if (sym.name in ext or undef) and r["r_addend"] >= VTABLE_PREAMBLE:
                 struct.pack_into(endian + "i", raw, roff + i * 12 + 8,
                                  r["r_addend"] - VTABLE_PREAMBLE)
 

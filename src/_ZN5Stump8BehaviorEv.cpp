@@ -20,7 +20,6 @@ extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *
 extern void _ZN9Animation7AdvanceEv(void *thiz);
 }
 
-struct Enemy { char pad[0x800]; };
 
 int Stump::Behavior()
 {

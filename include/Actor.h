@@ -112,9 +112,14 @@ struct Actor : ActorDerived {
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c -- fix12, negative (gravity) */
     s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
-    u8  pad_0a4[0x4];       /* likely the same physics block; unproven */
+    /* 0x0a4 and 0x0ac were padding "likely the same physics block; unproven".
+       They are real, and Enemy is the evidence: its generated header declared
+       both as s32 and its sources read them, so once `Enemy : Actor` they have
+       to exist here. Still unnamed -- what they mean is not evidenced, only
+       that they are Actor's and four bytes wide. */
+    s32 unk_0a4;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
-    u8  pad_0ac[0x4];       /* likely the same physics block; unproven */
+    s32 unk_0ac;            /* 0x0ac */
     u32 mFlags;             /* 0x0b0 -- bit 0x10000 suppresses behaviour */
     s32 unk_0b4;            /* 0x0b4 */
     s32 unk_0b8;            /* 0x0b8 -- clip radius; 0 skips the camera transform */

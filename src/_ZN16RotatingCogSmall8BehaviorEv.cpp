@@ -24,7 +24,7 @@ int RotatingCogSmall::Behavior()
         return 1;
     }
 
-    if (_Z14ApproachLinearRsss((short*)((char*)&unk_08e), unk_322, 0xc8) != 0 &&
+    if (_Z14ApproachLinearRsss((short*)((char*)&mAngleY), unk_322, 0xc8) != 0 &&
         DecIfAbove0_Short((unsigned short*)((char*)&unk_31e)) == 0) {
         short* p = (short*)(((int)((char*)this) + 0x322));
         *p = *p + unk_324;

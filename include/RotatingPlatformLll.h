@@ -1,12 +1,42 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RotatingPlatformLll: 6 matched functions, 6 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROTATINGPLATFORMLLL_H
 #define ROTATINGPLATFORMLLL_H
-#include "types.h"
-#include "Model.h"
 
+#include "types.h"
+#include "Platform.h"
+
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct RotatingPlatformLll : Platform {
+    u8  pad_31e[0x2];
+    s32 unk_320;                      /* 0x320 */
+    u8 unk_324;                       /* 0x324 */
+
+    /* --- vtable --- */
+    virtual ~RotatingPlatformLll();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char RotatingPlatformLll_size_must_be_0x328[sizeof(RotatingPlatformLll) == 0x328 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct RotatingPlatformLll {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
@@ -20,13 +50,8 @@ struct RotatingPlatformLll {
     u8  pad_125[0x1fb];
     s32 unk_320;            /* 0x320 */
     u8  unk_324;            /* 0x324 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* ROTATINGPLATFORMLLL_H */

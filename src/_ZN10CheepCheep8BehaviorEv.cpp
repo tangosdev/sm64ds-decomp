@@ -21,7 +21,6 @@ extern void _ZN9Animation7AdvanceEv(void *thiz);
 extern char *_ZN5Actor13ClosestPlayerEv(Enemy *thiz);
 }
 
-struct Enemy { char pad[0x800]; };
 
 int CheepCheep::Behavior()
 {

@@ -11,8 +11,8 @@ extern int data_ov009_02113e90[];
 
 int MetalNet::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov009_02113e90))->Release();
     ((SharedFilePtr *)(data_ov009_02113e88))->Release();

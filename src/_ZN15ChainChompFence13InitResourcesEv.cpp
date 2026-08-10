@@ -23,10 +23,10 @@ extern int data_ov014_021149c0[];
 int ChainChompFence::InitResources()
 {
   int m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov014_021149c0);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)((char*)this)+0xd4, m, 1, -1);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)&mModel, m, 1, -1);
   _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov014_021149b8);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)((char*)this)+0x124, k, (char*)((char*)this)+0x2ec, 0x1000, unk_08e, (void*)data_ov014_02114558);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)&mMeshCollider, k, (char*)&mClsnMat, 0x1000, mAngleY, (void*)data_ov014_02114558);
   return 1;
 }

@@ -15,10 +15,10 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
 
 int SeesawBob::Behavior()
 {
-    int b = (int)((unk_0b0 & 8) != 0);
+    int b = (int)(((*(s32 *)&mFlags) & 8) != 0);
     if (b != 0) {
-        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled()) {
-            ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
+        if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+            ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         }
         return 1;
     }
@@ -33,8 +33,8 @@ int SeesawBob::Behavior()
                 unk_320, 3, 0x8b, ((char*)this) + 0x74, 0);
         }
     }
-    if (unk_08c > 0x2000) unk_08c = 0x2000;
-    if (unk_08c < -0x2000) unk_08c = -0x2000;
+    if (mAngleX > 0x2000) mAngleX = 0x2000;
+    if (mAngleX < -0x2000) mAngleX = -0x2000;
     func_ov095_0213597c(((char*)this));
     if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
         _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));

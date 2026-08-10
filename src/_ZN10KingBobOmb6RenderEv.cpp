@@ -12,7 +12,7 @@ int KingBobOmb::Render()
 {
     void *r1 = (void*)*(int*)((char*)&unk_494);
     if (r1 != 0) {
-        int r0 = *(int*)((char*)&unk_0b0);
+        int r0 = *(int*)((char*)&mFlags);
         int flag = (r0 & 0x4000) ? 1 : 0;
         if (flag != 0) {
             if (*(int*)((char*)r1 + 0xc8) != 0) {

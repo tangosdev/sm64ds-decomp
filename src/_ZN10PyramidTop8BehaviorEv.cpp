@@ -22,13 +22,13 @@ int PyramidTop::Behavior()
     case 1:
         _ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (void*)((char*)&unk_3b4));
         if (unk_3b2 == 0) {
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x4b, (void*)((char*)&unk_074));
+            _ZN5Sound9PlayBank3EjRK7Vector3(0x4b, (void*)((char*)&mCamSpacePosX));
         }
         func_ov024_02111350(((char*)this));
         break;
     case 2:
         if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (void*)((char*)&unk_3b4))) {
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x4c, (void*)((char*)&unk_074));
+            _ZN5Sound9PlayBank3EjRK7Vector3(0x4c, (void*)((char*)&mCamSpacePosX));
             func_ov024_021112c0(((char*)this));
         } else {
             func_ov024_02111350(((char*)this));

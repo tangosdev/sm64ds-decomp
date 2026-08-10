@@ -46,7 +46,7 @@ int KingBobOmb::InitResources()
     int i;
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov078_02126f38);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x2cc, f, 1, 1);
-    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
+    _ZN11ShadowModel12InitCylinderEv((char*)&(*(u8 *)&mShadowModel));
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126f00);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126f20);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126f10);
@@ -59,8 +59,8 @@ int KingBobOmb::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126ee8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126f28);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov078_02126ef8);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     v0.x = data_ov078_02126e00.x;
     v0.y = data_ov078_02126e00.y;
     v0.z = data_ov078_02126e00.z;
@@ -77,10 +77,10 @@ int KingBobOmb::InitResources()
     unk_4d8 = 0x1060000;
     unk_4dc = 0xfee15000;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (Actor*)((char*)this), 0x190000, 0x190000, 0, 0);
-    func_02035550((char*)&mWithMeshClsn);
+    func_02035550((char*)&(*(WithMeshClsn *)&mWithMeshClsn));
     unk_4fc = 1;
     unk_500 = 3;
-    unk_509 = mParam & 0xf;
+    unk_509 = (*(s32 *)&param1) & 0xf;
     unk_507 = _ZN5Actor9TrackStarEjj(((char*)this), unk_509, 2);
 #pragma opt_strength_reduction off
     {

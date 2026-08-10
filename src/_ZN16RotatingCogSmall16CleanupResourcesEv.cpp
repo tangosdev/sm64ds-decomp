@@ -15,12 +15,12 @@ extern char data_ov035_02112c60[];
 int RotatingCogSmall::CleanupResources()
 {
   if(mRotationState==0){
-    if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
-      ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+      ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     ((SharedFilePtr *)(data_ov035_02112c78))->Release();
     ((SharedFilePtr *)(data_ov035_02112c68))->Release();
   } else {
-    int on = (unk_00c==0x79);
+    int on = (actorID==0x79);
     if(on)
       ((SharedFilePtr *)(data_ov035_02112c70))->Release();
     else

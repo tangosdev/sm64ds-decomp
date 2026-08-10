@@ -17,8 +17,8 @@ extern char data_ov002_0211092c;
 int StarSwitch::CleanupResources()
 {
     int t;
-    if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(*(void**)(&data_ov002_021098e8 + unk_34c * 0xc)))->Release();
     ((SharedFilePtr *)(*(void**)(&data_ov002_021098ec + unk_34c * 0xc)))->Release();

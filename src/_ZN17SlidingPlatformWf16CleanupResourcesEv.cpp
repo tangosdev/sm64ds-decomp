@@ -9,8 +9,8 @@
 
 int SlidingPlatformWf::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov091_02135024 + (unsigned char)((char *)this)[0x322]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov091_02135028 + (unsigned char)((char *)this)[0x322]*0xc)))->Release();
   return 1;

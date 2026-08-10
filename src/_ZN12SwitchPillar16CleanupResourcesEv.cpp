@@ -10,8 +10,8 @@ extern int data_ov012_021124d0[];
 
 int SwitchPillar::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov012_021124d0))->Release();
     ((SharedFilePtr *)(data_ov012_021124c8))->Release();

@@ -10,8 +10,8 @@ extern int data_ov022_02114558[];
 
 int RotatingPlatformLll::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov022_02114558))->Release();
     ((SharedFilePtr *)(data_ov022_02114550))->Release();

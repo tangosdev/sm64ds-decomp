@@ -10,8 +10,8 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
 
 int HugeCover::Behavior()
 {
-    unk_32c = 4096;
-    _ZN9Animation7AdvanceEv((char *)&mTextureTransformer);
+    (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 4096;
+    _ZN9Animation7AdvanceEv((char *)&(*(u8 *)&mTextureTransformer));
     _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
     _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
     return 1;

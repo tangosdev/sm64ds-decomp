@@ -43,15 +43,15 @@ int MrBlizzard::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x30c,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov081_02128db0), 1, -1);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov081_02128d90);
-    _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
+    _ZN11ShadowModel12InitCylinderEv((char *)&(*(u8 *)&mShadowModel));
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov081_02128d98);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov081_02128db8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov081_02128da8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov081_02128d88);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov081_02128da0);
 
-    mPathId = mParam & 0xff;
-    mType = (mParam & 0xff00) >> 8;
+    mPathId = (*(s32 *)&param1) & 0xff;
+    mType = ((*(s32 *)&param1) & 0xff00) >> 8;
     if (mPathId == 0xff)
         mPathId = 0;
     if (mType == 0xff)
@@ -88,7 +88,7 @@ int MrBlizzard::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    unk_0a0 = -0xc8000;
+    mTerminalVelocity = -0xc8000;
 
     v.x = data_ov081_02128998.x;
     v.y = data_ov081_02128998.y;
@@ -110,8 +110,8 @@ int MrBlizzard::InitResources()
         _ZN7PathPtr6FromIDEj(pp, mPathId);
         _ZNK7PathPtr7GetNodeER7Vector3j(pp, ((char *)this) + 0x5c, unk_424);
         unk_424 = 1;
-        unk_09c = -0x2000;
-        unk_0b0 = 0x10000000;
+        mVertAccel = -0x2000;
+        (*(s32 *)&mFlags) = 0x10000000;
         func_ov081_02125488(((char *)this), &data_ov081_02128e54);
     } else {
         *(s32 *)(((int)((char *)this) + 0x60)) -= 0x118000;
@@ -119,12 +119,12 @@ int MrBlizzard::InitResources()
         if (mType == 3) {
             unk_108 = 0;
             unk_10a = 0;
-            unk_0b0 = 2;
+            (*(s32 *)&mFlags) = 2;
         }
         if (mType == 2)
-            unk_0b0 = 0x8000002;
+            (*(s32 *)&mFlags) = 0x8000002;
         else
-            unk_0b0 = 3;
+            (*(s32 *)&mFlags) = 3;
     }
 
     return 1;

@@ -27,7 +27,7 @@ int CannonHatch::InitResources()
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov002_0210e124);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&unk_2ec), 0x199,
+            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x199,
             mAngleY, data_ov002_0210d7f4);
     }
     unk_320 = mPosX;

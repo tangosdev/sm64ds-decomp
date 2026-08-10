@@ -17,12 +17,12 @@ int BowserFire::Behavior()
     *(int*)(((int)((char *)this) + 0x370)) += 1;
     (self->*data_ov060_0211afb4[unk_35c].pmf)();
     *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
-    if (unk_09c != 0) {
+    if (mVertAccel != 0) {
         WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
         if (unk_35c != 4) {
             if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
                 mVertSpeed = 0;
-                unk_09c = 0;
+                mVertAccel = 0;
             }
         }
     }

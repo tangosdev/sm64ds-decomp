@@ -11,8 +11,8 @@ extern char data_ov002_02108ab4[];
 
 int BigBrickBlock::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov002_02108ab0 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov002_02108ab4 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
   return 1;

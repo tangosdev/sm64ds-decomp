@@ -11,8 +11,8 @@ extern int TowerStep_ModelFile[];
 
 int TowerStep::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(TowerStep_ModelFile))->Release();
     ((SharedFilePtr *)(TowerStep_ClsnFile))->Release();

@@ -29,10 +29,10 @@ int MetalNet::InitResources()
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113e88);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&unk_2ec), 0x1000,
-            unk_08e, data_ov009_02112bf8);
+            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x1000,
+            mAngleY, data_ov009_02112bf8);
     }
-    if ((unk_008 & 0xff) == 0xff) {
+    if (((*(s32 *)&param1) & 0xff) == 0xff) {
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) goto ret1;
         if ((*(int*)((char*)&data_0209caa0 + 8) & 0x80000) == 0) goto ret1;

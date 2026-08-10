@@ -10,7 +10,7 @@ extern int data_ov045_021131b0[];
 
 int FireSeaElevator::CleanupResources()
 {
-    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     ((SharedFilePtr *)(data_ov045_021131b0))->Release();
     ((SharedFilePtr *)(data_ov045_021131a8))->Release();
     return 1;

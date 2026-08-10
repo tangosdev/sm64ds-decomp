@@ -1,24 +1,47 @@
-/* Hand-written from matched-function evidence:
- * class BlueCoinSwitch, ov002 0x020f11b0-0x020f15fc (9 functions, no other
- * class in the TU -- tu_map.py).
- *
- * Two names again, as with CastleWater. The symbols mangle from
- * `BlueCoinSwitch`, so the struct is spelled that way; the RTTI record calls it
- * `daObjBC_Switch_c` and include/daObjBC_Switch_c.h is the generated view under
- * that name. Same object, and this is the header methods are defined against.
- *
- * It is a Platform -- Behavior and InitResources both call
- * Platform::UpdateModelPosAndRotY and Platform::UpdateClsnPosAndRot on it -- so
- * mPos and mAngleY sit at Actor's offsets. Written FLAT with the inherited
- * slots restated, as every other generated header here is.
- *
- * Field NAMES are placeholders - renaming cannot change codegen.
- */
 #ifndef BLUECOINSWITCH_H
 #define BLUECOINSWITCH_H
-#include "types.h"
-#include "math/Matrix.h"
 
+#include "types.h"
+#include "Platform.h"
+
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's, and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct BlueCoinSwitch : Platform {
+    u8  pad_31e[0x2];
+    s32 unk_320;                      /* 0x320 */
+    s32 unk_324;                      /* 0x324 */
+    u16 unk_328;                      /* 0x328 */
+    u16 unk_32a;                      /* 0x32a */
+    u8 unk_32c;                       /* 0x32c */
+    u8 unk_32d;                       /* 0x32d */
+    u8 unk_32e;                       /* 0x32e */
+
+    /* --- vtable --- */
+    virtual ~BlueCoinSwitch();
+
+    s32 Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char BlueCoinSwitch_size_must_be_0x330[sizeof(BlueCoinSwitch) == 0x330 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct BlueCoinSwitch {
     u8  pad_000[0x8];
     /* Spawn word, unpacked into two fields by InitResources: bits 0-3 become
@@ -63,13 +86,8 @@ struct BlueCoinSwitch {
     u8  unk_32c;            /* 0x32c */
     u8  unk_32d;            /* 0x32d */
     u8  unk_32e;            /* 0x32e */
-#ifdef __cplusplus
-    /* methods */
-    s32 Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* BLUECOINSWITCH_H */

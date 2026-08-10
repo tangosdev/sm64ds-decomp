@@ -9,8 +9,8 @@
 
 int SeesawBob::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov095_021374a0 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov095_021374a4 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
   return 1;

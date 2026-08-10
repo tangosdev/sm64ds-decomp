@@ -28,14 +28,14 @@ int PyramidStep::InitResources()
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov025_02113ab0);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((char *)&unk_374), 0x1000,
-            unk_08e, data_ov025_02112ce8);
+            &mMeshCollider, kcl, *(struct Matrix4x3 *)((char *)&unk_374), 0x1000,
+            mAngleY, data_ov025_02112ce8);
     }
-    func_020393d4((int *)((char *)&mMovingMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     {
         int v = 0x5000;
-        int k = unk_008 & 3;
-        unk_0a8 = -v;
+        int k = (*(s32 *)&param1) & 3;
+        mVertSpeed = -v;
         unk_372 = 0;
         unk_370 = 0;
         switch (k) {
@@ -48,7 +48,7 @@ int PyramidStep::InitResources()
         case 2:
             *(int*)(((int)((char *)this) + 0x60)) -= 0x1f4000;
             unk_372 = 1;
-            unk_0a8 = v;
+            mVertSpeed = v;
             break;
         }
     }

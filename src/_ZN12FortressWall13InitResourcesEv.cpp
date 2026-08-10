@@ -20,7 +20,7 @@ int FortressWall::InitResources()
     int b = (int)(actorID == 0x30);
     if (b != 0) {
         unk_31e = 0;
-        unk_31f = (unsigned char)param1;
+        unk_31f = (unsigned char)(*(s32 *)&param1);
         if (unk_31f == 0xff)
             unk_31f = 0;
     } else {

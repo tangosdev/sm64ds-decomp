@@ -11,8 +11,7 @@
  *
  * Two sub-objects of its own, on top of Platform's two:
  *
- *     Platform            data ends 0x31e         -> unk_31e
- *     three s16                     = 0x324        -> mModel2
+ *     Platform            0x000 + 0x324 = 0x324   -> mModel2
  *     Model               0x324 + 0x050 = 0x374   -> mMovingMeshCollider2
  *     MovingMeshCollider  0x374 + 0x1c8 = 0x53c   -> padding, then unk_56c
  *
@@ -34,10 +33,9 @@
 #include "Platform.h"
 
 struct BowserFireSeaArena : Platform {
-    /* Platform's data ends at 0x31e, so this class's own fields start there --
-       these three, and only then mModel2 at 0x324. They were briefly declared as
-       Platform's; that reproduced this class either way and made StarSwitch, whose
-       own first s32 sits at 0x320, impossible. */
+    /* THIS CLASS'S OWN, not Platform's -- Platform ends at 0x31e. They are what
+       push mModel2 from 0x320 to 0x324, and the first two sit in the base's
+       tail padding. */
     s16 unk_31e;                                /* 0x31e */
     s16 unk_320;                                /* 0x320 */
     s16 unk_322;                                /* 0x322 */

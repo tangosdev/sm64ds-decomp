@@ -19,7 +19,7 @@ int MetalNet::Behavior()
     _ZN8Platform19UpdateClsnPosAndRotEv(((void*)this));
     b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
-        if (((MeshColliderBase *)((char*)&mMovingMeshCollider))->IsEnabled() == 0)
+        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0)
             ((MeshColliderBase *)((char*)((void*)this)+0x124))->Enable((Actor *)(((void*)this)));
     } else {
         _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((void*)this), 0, 0);

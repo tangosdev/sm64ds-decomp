@@ -8,7 +8,7 @@ extern "C" {
 
 int IceSheet::Behavior()
 {
-  if (!((MeshColliderBase *)((char*)&mMovingMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
+  if (!((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
   return 1;
 }

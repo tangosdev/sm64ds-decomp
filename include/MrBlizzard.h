@@ -1,14 +1,59 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MrBlizzard: 5 matched functions, 29 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MRBLIZZARD_H
 #define MRBLIZZARD_H
-#include "types.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
-#include "ModelAnim.h"
 
+#include "types.h"
+#include "Enemy.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct MrBlizzard : Enemy {
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
+    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    ModelAnim mModelAnim;             /* 0x30c */
+    ShadowModel mShadowModel;         /* 0x370 */
+    u8  pad_398[0x64];
+    s32 unk_3fc;                      /* 0x3fc */
+    s32 unk_400;                      /* 0x400 */
+    u8  pad_404[0x10];
+    s16 unk_414;                      /* 0x414 */
+    u8  pad_416[0x2];
+    s32 mPathId;                      /* 0x418 */
+    s32 mType;                        /* 0x41c */
+    s32 unk_420;                      /* 0x420 */
+    s32 unk_424;                      /* 0x424 */
+    u8  pad_428[0x24];
+    s32 unk_44c;                      /* 0x44c */
+    s32 unk_450;                      /* 0x450 */
+    s32 unk_454;                      /* 0x454 */
+
+    /* --- vtable --- */
+    virtual ~MrBlizzard();
+
+    int Behavior();
+    int InitResources();
+    int Render();
+};
+
+typedef char MrBlizzard_size_must_be_0x458[sizeof(MrBlizzard) == 0x458 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MrBlizzard {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
@@ -63,12 +108,8 @@ struct MrBlizzard {
     s32 unk_44c;            /* 0x44c */
     s32 unk_450;            /* 0x450 */
     s32 unk_454;            /* 0x454 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* MRBLIZZARD_H */

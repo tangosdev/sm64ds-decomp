@@ -11,8 +11,8 @@ extern char data_ov102_0214e18c[];
 
 int FortressTower::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov102_0214e188 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov102_0214e18c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
   return 1;

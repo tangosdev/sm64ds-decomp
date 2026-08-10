@@ -1,13 +1,46 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Stump: 6 matched functions, 8 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef STUMP_H
 #define STUMP_H
+
 #include "types.h"
+#include "Enemy.h"
+#include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+struct Stump : Enemy {
+    MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
+    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    ModelAnim mModelAnim;             /* 0x300 */
+    u8  pad_364[0x10];
+    s32 mVariant;                     /* 0x374 */
+
+    /* --- vtable --- */
+    virtual ~Stump();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+typedef char Stump_size_must_be_0x378[sizeof(Stump) == 0x378 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct Stump {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
@@ -29,13 +62,8 @@ struct Stump {
     s32 unk_35c;            /* 0x35c */
     u8  pad_360[0x14];
     s32 mVariant;            /* 0x374 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* STUMP_H */

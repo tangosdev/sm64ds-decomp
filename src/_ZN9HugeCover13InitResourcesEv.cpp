@@ -6,9 +6,6 @@
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
 /* Model and ModelBase are the real classes now, through HugeCover.h. */
-struct TextureTransformer { int d; };
-struct MeshCollider { int d; };
-struct MovingMeshCollider { int d; };
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);

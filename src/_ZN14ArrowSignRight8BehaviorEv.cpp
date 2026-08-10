@@ -14,8 +14,8 @@ int ArrowSignRight::Behavior()
 {
     if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(((char*)this), -0x2000, 0, 0, 0x96000))
         return 1;
-    func_02039394((int*)((char*)&mMeshCollider), 0xc0000);
-    func_020393a4((int*)((char*)&mMeshCollider), 0xe0000);
+    func_02039394((int*)((char*)&(*(u8 *)&mMeshCollider)), 0xc0000);
+    func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0xe0000);
     _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         ((char*)this), (void*)((char*)&mShadowModel), (void*)((char*)&unk_348), 0x10e000, 0x64000, 0x46000, 0xf);
     _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0x600000, 0);

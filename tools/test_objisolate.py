@@ -135,20 +135,41 @@ class Isolate(unittest.TestCase):
         OI.isolate(obj, "_ZN1DD1Ev")
         self.assertEqual(sorted(set(self._vtable_addends(obj, "_ZN1DD1Ev"))), [0])
 
-    def test_still_refuses_an_unsurveyed_vtable_addend(self):
-        """Only the preamble skip of 8 is correctable; anything else is refused.
+    def test_corrects_a_multiple_inheritance_secondary_vptr(self):
+        """A second base means a second vptr store, further into the vtable.
 
-        Multiple inheritance produces a secondary vptr store pointing into the
-        middle of the vtable object -- addend 44 for `ModelAnim` -- and there is no
-        enrolled instance to verify that correction against. Fail-closed costs one
-        function; fail-open corrupts a module."""
+        Multiple inheritance stores the secondary sub-table's address as well as
+        the primary's, so the addend is past the primary slots -- 44 for
+        `ModelAnim` where the primary's is 8. The correction is the same
+        subtraction, because mwcc's `_ZTV` addresses the vtable object's start
+        while the ROM's IS the slot array, and the ROM names the destination
+        independently: `_ZTV9ModelAnim` 0x0208e980 and
+        `VTable_Animation_ModelAnimThunk` 0x0208e9a4 differ by 0x24, which is
+        exactly 44 - 8.
+
+        This was refused while no enrolled instance existed to check the
+        arithmetic against. Both stores now drop by the preamble."""
         obj = self.build("struct B1 { int p[4]; virtual ~B1(){} virtual void f(); };\n"
                          "struct B2 { int q[4]; virtual ~B2(){} virtual void g(); };\n"
                          "struct M : B1, B2 { virtual ~M(); };\n"
                          "M::~M(){}\n")
-        err = OI.plan(obj.read_bytes(), "_ZN1MD1Ev")["error"]
-        self.assertIsNotNone(err)
-        self.assertIn("_ZTV", err)
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1MD1Ev")["error"])
+        before = sorted(set(self._vtable_addends(obj, "_ZN1MD1Ev")))
+        OI.isolate(obj, "_ZN1MD1Ev")
+        after = sorted(set(self._vtable_addends(obj, "_ZN1MD1Ev")))
+        self.assertEqual(after, [a - 8 for a in before])
+        self.assertIn(0, after)          # the primary landed on the slot array
+
+    def test_still_refuses_a_vtable_addend_below_the_preamble(self):
+        """Correctable means "past the preamble". An addend under it is not.
+
+        Nothing in the tree produces one, and a negative result after the
+        subtraction would point before the slot array -- fail-closed costs a
+        function, fail-open corrupts a module."""
+        obj = self.build("struct V { int p[4]; virtual ~V(); virtual void f(); };\n"
+                         "V::~V(){}\n")
+        raw = bytearray(obj.read_bytes())
+        self.assertIsNone(OI.plan(bytes(raw), "_ZN1VD1Ev")["error"])
 
     def test_local_static_is_reported_not_silently_dropped(self):
         """A function-local static cannot be isolated away.

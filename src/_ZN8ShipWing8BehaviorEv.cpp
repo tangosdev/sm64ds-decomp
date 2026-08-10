@@ -34,7 +34,7 @@ int ShipWing::Behavior()
             if (_ZN5Actor13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
         _ZN5Actor14TriplePoofDustEv(((char*)this));
-        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
+        if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         mPosX = unk_4dc;
         mPosY = unk_4e0;
         mPosZ = unk_4e4;
@@ -44,7 +44,7 @@ int ShipWing::Behavior()
         int d = _ZN5Actor13DistToCPlayerEv(((char*)this));
         if (d <= 0x3e8000) break;
         if (d < 0x7d0000) {
-            unk_0a8 = 0;
+            mVertSpeed = 0;
             unk_4e9 = 0;
             unk_4e8 = 0;
             mState = 0;

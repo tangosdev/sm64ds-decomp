@@ -9,8 +9,8 @@ extern char data_ov027_02113be0[];
 
 int SlidingIce::CleanupResources()
 {
-  unsigned char ok = (mActorID==0x5d);
-  if(ok){ ((MeshColliderBase *)((char *)&mMeshCollider))->Disable(); }
+  unsigned char ok = (actorID==0x5d);
+  if(ok){ ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable(); }
   ((SharedFilePtr *)(data_ov027_02113be8))->Release();
   ((SharedFilePtr *)(data_ov027_02113be0))->Release();
   return 1;

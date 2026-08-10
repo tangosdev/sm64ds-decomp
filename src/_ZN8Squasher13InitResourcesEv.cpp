@@ -20,14 +20,14 @@ extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResul
 int Squasher::InitResources()
 {
   int bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov023_02112088);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, bmd, 1, -1);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
   _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
   func_ov023_02111308(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
   int kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&_ZN32FloatOnWaterPlatformWdwRectangleD1Ev);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, kcl, (struct Matrix4x3*)((char*)&unk_2ec), 0x1000, mAngleY, &data_ov064_0211ba4c);
+  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, (struct Matrix4x3*)((char*)&(*(u8 *)&mClsnMat)), 0x1000, (*(u16 *)&mAngleY), &data_ov064_0211ba4c);
   func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-  ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
+  ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
   unk_31e = 0;
   unk_320 = 0;
   unk_322 = 0;

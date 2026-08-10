@@ -10,8 +10,8 @@ extern int data_ov081_02128fd8[];
 
 int IceBlock::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov081_02128fd8))->Release();
     ((SharedFilePtr *)(data_ov081_02128fd0))->Release();
