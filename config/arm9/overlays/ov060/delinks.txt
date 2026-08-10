@@ -308,7 +308,7 @@ src/_ZN10BowserTail8BehaviorEv.cpp:
     complete
     .text start:0x02116078 end:0x02116130
 
-src/_ZN6Bowser13InitResourcesEv.c:
+src/_ZN6Bowser13InitResourcesEv.cpp:
     complete
     .text start:0x02116130 end:0x021163b4
 

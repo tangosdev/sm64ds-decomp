@@ -25,7 +25,9 @@ struct Bowser {
     u8  pad_096[0x6];
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x30];
+    u8  pad_0a4[0x28];
+    s8  unk_0cc;            /* 0x0cc */
+    u8  pad_0cd[0x7];
     u8  mModelAnim;            /* 0x0d4 */
     u8  pad_0d5[0x4f];
     u8  mAnimation;            /* 0x124 */
@@ -82,6 +84,7 @@ struct Bowser {
     s32 unk_450;            /* 0x450 */
 #ifdef __cplusplus
     /* methods */
+    int InitResources();
     int CleanupResources();
     void OnPendingDestroy();
     int Behavior();
