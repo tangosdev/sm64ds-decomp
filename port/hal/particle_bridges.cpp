@@ -154,10 +154,17 @@ void func_0205256c(int *m, int s, int c)
 
 /* the method face named above: CheckLavaCallback's own SpawnParticles calls
    this on its base, and the host copy is what actually runs */
+#ifdef _WIN32
 void Particle::SimpleCallback::SpawnParticles(System &sys)
 {
     _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(this, &sys);
 }
+#endif /* _WIN32: on GCC this C++ method mangles to the SAME
+   _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE it forwards to, so
+   the face is a self-forwarding stub that shadows the real host copy in
+   unmatched/Particle_RideThroughs.cpp by link order -> infinite recursion when a
+   landing-dust particle spawns (~frame 46). On Linux the base-method call binds
+   straight to the host copy. */
 
 // ---- the lifecycle seams ---------------------------------------------------
 //
