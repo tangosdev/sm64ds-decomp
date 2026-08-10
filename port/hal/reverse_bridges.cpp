@@ -91,12 +91,19 @@ struct Player {
 };
 int Player::ChangeState(::State &s)
 { return _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
-void Player::ChangeState(State &s)
-{ _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
 int Player::IsState(::State &s)
 { return _ZN6Player7IsStateERNS_5StateE(this, &s); }
+#ifdef _WIN32 /* LINUX: the nested-State overloads mangle to exactly the extern-C
+   names they forward to (_ZN6Player11ChangeStateERNS_5StateE /
+   _ZN6Player7IsStateERNS_5StateE) -> self-recurse on GCC. The real src TUs
+   (src/_ZN6Player11ChangeStateERNS_5StateE.cpp, src/_ZN6Player7IsStateERNS_5StateE.c)
+   own those symbols; every nested-State caller binds straight to them. The
+   ::State (global) overloads above mangle differently and stay real bridges. */
+void Player::ChangeState(State &s)
+{ _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
 int Player::IsState(State &s)
 { return _ZN6Player7IsStateERNS_5StateE(this, &s); }
+#endif /* _WIN32 */
 extern "C" int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned, int, int,
                                                unsigned);
 void Player::SetAnim(unsigned a, int b, int f, unsigned d)

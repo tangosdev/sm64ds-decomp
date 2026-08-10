@@ -41,5 +41,10 @@ void _ZN6Camera10LookAtExitER5Actor(void *self, void *actor);  /* Linux: real sy
 /* the reverse shim: method-form callers (LookAtExit's own body enters the
    exit-look state with this->ChangeState(...)) onto the C-linkage dispatcher
    the port hosts in hal/camera_bridges.cpp. */
+#ifdef _WIN32 /* LINUX: this method IS _ZN6Camera11ChangeStateEPNS_5StateE (its
+   own Itanium mangling), so it forwards to itself -> infinite recursion. The
+   real src/_ZN6Camera11ChangeStateEPNS_5StateE TU owns the symbol on Linux and
+   every this->ChangeState(...) caller binds to it. */
 void Camera::ChangeState(State *st)
 { _ZN6Camera11ChangeStateEPNS_5StateE(this, st); }
+#endif /* _WIN32 */
