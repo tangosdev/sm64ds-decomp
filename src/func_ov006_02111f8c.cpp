@@ -1,5 +1,5 @@
 //cpp
-extern "C" int _ZN6Player6ST_OWLE(int* a, int* b);
+extern "C" int func_ov006_02110244(int* a, int* b);
 
 extern "C" int func_ov006_02111f8c(char* c, int* arg){
     int buf[2];
@@ -12,7 +12,7 @@ extern "C" int func_ov006_02111f8c(char* c, int* arg){
         buf[1] = arg[1];
         base = *(char**)(c+4);
         p = (i >= *(int*)(base + 0x4000 + 0x67c)) ? zero : ((int**)(base + 0x4000 + 0x764))[i];
-        if (_ZN6Player6ST_OWLE(p, buf)) return 1;
+        if (func_ov006_02110244(p, buf)) return 1;
         i++;
     }
     return 0;

@@ -3,7 +3,6 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern int _ZN6Player7ST_WAITE;
 extern int _ZN6Player11ChangeStateERNS_5StateE(void*,void*);
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int func_ov002_020c5dec(void*,int);
@@ -15,7 +14,7 @@ int Player::St_WaitQuicksand_Main()
 {
   int v=mSinkDepth;
   if(v<0x1e000){
-    _ZN6Player11ChangeStateERNS_5StateE(((char*)this),&_ZN6Player7ST_WAITE);
+    _ZN6Player11ChangeStateERNS_5StateE(((char*)this),&ST_WAIT);
     return 1;
   }
   if(v>=0x46000){

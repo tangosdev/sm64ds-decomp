@@ -75,11 +75,26 @@ struct Player : Actor {
 
        The State objects themselves live in ov002's .bss (0x0211013c,
        0x0211022c, 0x02110364, 0x0211067c, 0x021106ac are the five ChangeState
-       names directly), populated by ov002's static constructors. NOTE: ov006
-       carries _ZN6Player7ST_WAITE and _ZN6Player6ST_OWLE at addresses in the
-       same 0x0211xxxx range. Those are NOT these -- overlays 2 and 6 share
-       that RAM window. relocs.txt tags every ChangeState literal-pool load
-       module:overlay(2), which is what settles it. */
+       names directly), populated by ov002's static constructors.
+
+       CORRECTION, and it reverses what this note used to say. It used to warn
+       that ov006's _ZN6Player7ST_WAITE and _ZN6Player6ST_OWLE, at addresses in
+       the same 0x0211xxxx window, were NOT these -- that overlays 2 and 6
+       share the window and the coincidence meant nothing. The first half is
+       true and the conclusion was backwards: those two symbols ARE these, and
+       it was ov006's claim on them that was the coincidence.
+
+       ov002 has kind:bss data at both 0x02110154 and 0x02110244, inside an
+       unbroken 0x18-stride run that starts at 0x0211013c -- 0x18 being exactly
+       sizeof(State). ov002 loads 0x02110154 twenty times and 0x02110244 five
+       times, every one module:overlay(2). __sinit_ov002_021019d0 fills
+       0x02110154's three slots from 0x0210a25c, 0x02109e14 and 0x02109f84, all
+       inside ov002's pointer-to-member constant pool: a State being built
+       member by member. And Player::CanEnterDoor already cast the raw address
+       to State& to hand it to IsState.
+
+       The two symbols were registered as ov006 FUNCTIONS. They are now ov002
+       objects, declared below as the static members whose mangling they match. */
     struct State {
         int (Player::*mInit)();       /* 0x00 */
         int (Player::*mMain)();       /* 0x08 */
@@ -390,6 +405,26 @@ struct Player : Actor {
     u8  pad_765[0x1];
     s16 unk_766;            /* 0x766 */
     /* methods */
+    /* Two of the State objects, as the static members they are. `ST_WAIT`
+       mangles to _ZN6Player7ST_WAITE and `ST_OWL` to _ZN6Player6ST_OWLE --
+       which is what those two symbols always were, and the reason they read
+       as ALL_CAPS constants rather than St_Foo_Bar handlers.
+
+       Both live in ov002 .bss at 0x02110154 and 0x02110244, inside the same
+       unbroken 0x18-stride run as the five this header already names from
+       ChangeState. __sinit_ov002_021019d0 fills 0x02110154's three slots from
+       0x0210a25c, 0x02109e14 and 0x02109f84 -- all inside ov002's
+       pointer-to-member constant pool -- which is a State being constructed,
+       member by member, in front of you.
+
+       They are DECLARED and never defined here: the objects are the ROM's,
+       carved out into the gap, so a definition in any translation unit would
+       be a duplicate. Referencing them emits the undefined symbol the gap
+       supplies, which is what the four Player methods below already did by
+       hand. */
+    static State ST_WAIT;
+    static State ST_OWL;
+
     /* --- vtable. _ZTV6Player (0x0210a83c, ov002) is Actor's 31 slots with
            eight overridden and NO new virtuals; see notes/actor-vtables.md.
 

@@ -11,7 +11,7 @@ struct P {
   char pad[2];
   int F78,F7c,F80,F84;
 };
-void _ZN6Player7ST_WAITE(void* c){
+void func_ov006_02110154(void* c){
   struct P* r4=(struct P*)c;
   func_ov006_02114738();
   for(int i=0;i<3;i++){

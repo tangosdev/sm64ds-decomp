@@ -5523,7 +5523,7 @@ src/func_ov006_021100a8.c:
     complete
     .text start:0x021100a8 end:0x02110154
 
-src/_ZN6Player7ST_WAITE.cpp:
+src/func_ov006_02110154.cpp:
     complete
     .text start:0x02110154 end:0x021101bc
 
@@ -5531,7 +5531,7 @@ src/func_ov006_021101bc.cpp:
     complete
     .text start:0x021101bc end:0x02110244
 
-src/_ZN6Player6ST_OWLE.c:
+src/func_ov006_02110244.c:
     complete
     .text start:0x02110244 end:0x021104c0
 

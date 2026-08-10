@@ -1,4 +1,4 @@
-// @symbol _ZN6Player6ST_OWLE
+// @symbol func_ov006_02110244
 /* NOT a Player method, despite the name. ov006, 0x02110244.
  *
  * This is the file that contaminated include/Player.h. It reads 0x08 and 0x0c
@@ -36,7 +36,7 @@ struct S { int a, b; };
 
 extern int func_ov006_02114590(void *a0, struct S *p, struct S *q0, struct S *q1, struct S *q2);
 
-int _ZN6Player6ST_OWLE(struct Owl *self, struct S *v) {
+int func_ov006_02110244(struct Owl *self, struct S *v) {
     struct S d;
     struct S p, t1, t2, t3;
     struct S p2, t4, t5, t6;
