@@ -134,6 +134,7 @@ extern "C" void port_door_callbacks_seat(void)
    something dispatched a non-code pointer (arena address, playlog
    play_20260807_232848). Until that write is found, refuse to call anything
    outside the image and name the node instead of wild-calling. */
+#ifdef _WIN32
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 static int port_door_fn_in_image(unsigned fn)
 {
@@ -156,6 +157,36 @@ static int port_door_fn_in_image(unsigned fn)
     }
     return (char *)(size_t)fn >= lo && (char *)(size_t)fn < hi;
 }
+#else
+/* Linux: the Win32 PE .text-bounds guard against dispatching a stomped non-code
+   pointer maps to a /proc/self/maps r-xp scan. Parsed once, cached. Falls open
+   (accept) if maps is unreadable, which matches the pre-hardening behavior. */
+#include <cstdio>
+static int port_door_fn_in_image(unsigned fn)
+{
+    static int inited;
+    static unsigned long lo, hi;   /* union span of all r-xp ranges */
+    if (!inited) {
+        inited = 1;
+        FILE *m = std::fopen("/proc/self/maps", "r");
+        if (m) {
+            char line[512];
+            while (std::fgets(line, sizeof line, m)) {
+                unsigned long a, b;
+                char perms[8];
+                if (std::sscanf(line, "%lx-%lx %7s", &a, &b, perms) == 3 &&
+                    perms[2] == 'x') {
+                    if (!lo || a < lo) lo = a;
+                    if (b > hi) hi = b;
+                }
+            }
+            std::fclose(m);
+        }
+    }
+    if (!lo) return 1;   /* maps unreadable: fall open */
+    return (unsigned long)fn >= lo && (unsigned long)fn < hi;
+}
+#endif
 
 /* Per-door snapshot of the seated node and its two pairs, so the frame the
    contents change is named instead of inferred. Four doors is plenty. */
