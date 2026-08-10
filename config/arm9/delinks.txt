@@ -1749,7 +1749,7 @@ src/func_02013e64.c:
     complete
     .text start:0x02013e64 end:0x02013e80
 
-src/_ZN12ActorDerivedD1Ev.c:
+src/_ZN12ActorDerivedD1Ev.cpp:
     complete
     .text start:0x02013e80 end:0x02013ea4
 
@@ -1825,7 +1825,7 @@ src/_ZN19CylinderClsnWithPosD0Ev.c:
     complete
     .text start:0x02014828 end:0x02014854
 
-src/_ZN19CylinderClsnWithPosD1Ev.c:
+src/_ZN19CylinderClsnWithPosD1Ev.cpp:
     complete
     .text start:0x02014854 end:0x02014878
 
@@ -1861,7 +1861,7 @@ src/_ZN18MovingCylinderClsnD0Ev.c:
     complete
     .text start:0x02014978 end:0x020149a4
 
-src/_ZN18MovingCylinderClsnD1Ev.c:
+src/_ZN18MovingCylinderClsnD1Ev.cpp:
     complete
     .text start:0x020149a4 end:0x020149c8
 
@@ -1885,7 +1885,7 @@ src/_ZN25MovingCylinderClsnWithPosD0Ev.c:
     complete
     .text start:0x02014a34 end:0x02014a60
 
-src/_ZN25MovingCylinderClsnWithPosD1Ev.c:
+src/_ZN25MovingCylinderClsnWithPosD1Ev.cpp:
     complete
     .text start:0x02014a60 end:0x02014a84
 
@@ -1979,7 +1979,7 @@ src/_ZN15MaterialChangerD0Ev.c:
     complete
     .text start:0x02015800 end:0x0201582c
 
-src/_ZN15MaterialChangerD1Ev.c:
+src/_ZN15MaterialChangerD1Ev.cpp:
     complete
     .text start:0x0201582c end:0x02015850
 
@@ -2003,7 +2003,7 @@ src/_ZN18TextureTransformerD0Ev.c:
     complete
     .text start:0x02015900 end:0x0201592c
 
-src/_ZN18TextureTransformerD1Ev.c:
+src/_ZN18TextureTransformerD1Ev.cpp:
     complete
     .text start:0x0201592c end:0x02015950
 
@@ -2027,7 +2027,7 @@ src/_ZN15TextureSequenceD0Ev.c:
     complete
     .text start:0x02015a00 end:0x02015a2c
 
-src/_ZN15TextureSequenceD1Ev.c:
+src/_ZN15TextureSequenceD1Ev.cpp:
     complete
     .text start:0x02015a2c end:0x02015a50
 
@@ -2107,7 +2107,7 @@ src/_ZN11ShadowModelD0Ev.c:
     complete
     .text start:0x02015f80 end:0x02015ff8
 
-src/_ZN11ShadowModelD1Ev.c:
+src/_ZN11ShadowModelD1Ev.cpp:
     complete
     .text start:0x02015ff8 end:0x02016068
 
@@ -2135,7 +2135,7 @@ src/_ZN11CommonModelD0Ev.c:
     complete
     .text start:0x020161b4 end:0x020161e0
 
-src/_ZN11CommonModelD1Ev.c:
+src/_ZN11CommonModelD1Ev.cpp:
     complete
     .text start:0x020161e0 end:0x02016204
 
@@ -5708,7 +5708,7 @@ src/_ZN18MovingMeshColliderD0Ev.c:
     complete
     .text start:0x0203a444 end:0x0203a470
 
-src/_ZN18MovingMeshColliderD1Ev.c:
+src/_ZN18MovingMeshColliderD1Ev.cpp:
     complete
     .text start:0x0203a470 end:0x0203a494
 
@@ -5764,7 +5764,7 @@ src/_ZN21ExtendingMeshColliderD0Ev.c:
     complete
     .text start:0x0203ab3c end:0x0203ab68
 
-src/_ZN21ExtendingMeshColliderD1Ev.c:
+src/_ZN21ExtendingMeshColliderD1Ev.cpp:
     complete
     .text start:0x0203ab68 end:0x0203ab8c
 

@@ -17,8 +17,9 @@
  * its components from the shared pool via func_02016e70 instead of building
  * them in place, which is the whole difference from Model.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. D0/D1 stay C files.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- the
+ * key-function arrangement from include/ModelBase.h, and the objisolate
+ * exemption to it recorded there. D0 and D2 stay C files.
  *
  * LAYOUT evidence: C1 calls ModelBase::C1, stores the vptr, zeroes the
  * data pointer at +0x8 and copies mat4x3 from data_02082128 to +0xc. The

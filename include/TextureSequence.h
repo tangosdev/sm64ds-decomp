@@ -9,8 +9,9 @@
  * two slots, the destructor pair, nothing else. Update and Prepare are
  * plain methods.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h. The structors stay self-contained C files.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 stays a C file.
  *
  * Prepare's ROM body is a 0xc tail-call veneer into func_02046d50, which is the
  * real (still unnamed) implementation taking (this, &model, &file).

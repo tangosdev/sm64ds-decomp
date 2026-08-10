@@ -22,14 +22,30 @@
  * dispatches vtable+0x8 on a ModelBase*; every derived vtable (CommonModel,
  * Model) carries its DoSetFile override in that slot.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD. It is the
- * first virtual, which makes it the key function, and CW 1.2 emits the class
- * vtable into whichever TU defines the key function -- colliding with the
- * copy the module's gap object already supplies from ROM data. The D0/D1/D2
- * bodies stay C translation units (src/_ZN9ModelBaseD*Ev.c) that never see
- * this class, so no TU ever defines the key function and no vtable is ever
- * emitted. Same arrangement as ActorBase::InitResources, see
+ * THE KEY-FUNCTION RULE, AND WHY IT NO LONGER FORBIDS A REAL D1. The
+ * destructor is declared first, which makes it the key function, and CW 1.2
+ * emits the class vtable into whichever TU defines the key function --
+ * colliding with the copy the module's gap object already supplies from ROM
+ * data. That is why the D0/D1/D2 bodies in this family were all C translation
+ * units that never saw the class: no TU defined the key function, so no vtable
+ * was ever emitted. Same arrangement as ActorBase::InitResources, see
  * include/ActorBase.h and PR #974.
+ *
+ * tools/objisolate.py retired that constraint. It keeps the declared
+ * function's .text, drops the vtable and typeinfo the TU emitted alongside it,
+ * and rebinds the reference to the ROM's own carved-out _ZTV symbol, so a
+ * key-function TU is eligible after all. The rule was real and not imagined:
+ * run `python tools/eligible.py --no-isolate` and every D1 in this family that
+ * has since become a real method drops straight back out of the eligible set.
+ *
+ * So D1 may be a real method wherever the layout is known. D2 stays a C file,
+ * and D0 stays one for a different and permanent reason -- it is the deleting
+ * destructor, which the compiler generates and nobody can write by hand, so
+ * renaming it .cpp would change the extension without migrating anything.
+ * ModelBase's own three are still C files; the derived classes have moved.
+ *
+ * What has NOT changed is the declaration order. The destructor stays first,
+ * because for a root class vtable slot order IS declaration order.
  *
  * LAYOUT evidence: ModelBase::C1 stores the vptr at +0x0 and zeroes +0x4;
  * the destructors Deallocate +0x4 when set; Model::LoadAndSetFile stores the

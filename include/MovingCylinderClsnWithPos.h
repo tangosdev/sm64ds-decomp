@@ -26,8 +26,9 @@
  * deliberately NOT redeclared below. Declaring it would invent an override
  * the ROM does not have.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 stays a C file.
  *
  * LAYOUT: MovingCylinderClsn is 0x34 and pos starts at exactly 0x34, so the
  * object is 0x40.
