@@ -94,7 +94,12 @@ void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp)
     if (((unsigned char *)fp)[2] == 1 && filePtr != 0) {
         if (trace) fprintf(stderr, "    fixups buf=%p\n", filePtr);
         Model::UpdateFileOffsets(*(BMD_File *)filePtr);
-        if (trace) fprintf(stderr, "    offsets ok\n");
+        if (trace) {
+            unsigned *h = (unsigned *)filePtr;
+            fprintf(stderr, "    offsets ok  numBones=%u bones=%x numTex=%u tex=%x "
+                    "numPal=%u pal=%x numMat=%u mat=%x\n",
+                    h[1], h[2], h[5], h[6], h[7], h[8], h[9], h[10]);
+        }
         Model::AddToCommonModelDataArr(*(BMD_File *)filePtr);
         if (trace) fprintf(stderr, "    common-arr ok\n");
     }
@@ -259,6 +264,11 @@ static void mv_box(const Model *m, size_t before)
            mny, mxy, mxy - mny);
 }
 
+/* No-op dtor thunk for the two Itanium dtor slots (D1/D0). Only dispatched on
+   model teardown, which the reached boot/frame path does not hit; a real
+   ~Model runs non-virtually by name at the sites that own a Model. Mirrors the
+   MSVC build, which leaves _ZTV5Model[0] unfilled for the same reason. */
+static void __fastcall mv_dtor(void *, void *) {}
 static void __fastcall mv_updateverts(void *self, void *)
 { ((Model *)self)->Model::UpdateVerts(); }
 static void __fastcall mv_virtual10(void *self, void *, void *m)
@@ -306,10 +316,36 @@ static void __fastcall mv_render(void *self, void *, const void *s)
     }
     m->Model::Render((const Vector3 *)s);
 }
+
+#ifndef _WIN32
+/* Itanium/GCC dispatches C++ virtuals through the SysV cdecl convention: the
+   compiled ModelBase::SetFile tail-jumps vtable[+8] with `this` as the FIRST
+   STACK argument (objdump: mov 0x8(%ebp),%eax; jmp *(%eax+8)). The MSVC shims
+   above are __fastcall (this in ecx, a dummy 2nd arg), which does NOT match --
+   it reads a garbage this from ecx. So on Linux the slots need plain-cdecl
+   thunks that take `this` as the first ordinary argument. Same signatures the
+   ROM virtuals have, minus the MSVC thiscall dummy. */
+static void mvL_dtor(void *) {}
+static int  mvL_dosetfile(void *self, char *f, int a, int b)
+{
+    if (getenv("PORT_TRACE_SETFILE"))
+        fprintf(stderr, "  dosetfile self=%p f=%p a=%d b=%d\n", self, f, a, b);
+    return ((Model *)self)->Model::DoSetFile(f, a, b);
+}
+static void mvL_updateverts(void *self) { ((Model *)self)->Model::UpdateVerts(); }
+static void mvL_virtual10(void *self, void *m)
+{ ((Model *)self)->Model::Virtual10(*(Matrix4x3 *)m); }
+static void mvL_render(void *self, const void *s)
+{ mv_render(self, 0, s); }
+#endif
+
 extern "C" {
 extern void *_ZTV5Model[8];
 void hal_fill_model_vtable(void)
 {
+#ifdef _WIN32
+    /* MSVC folds the two Itanium dtor slots (D1/D0) into ONE, so DoSetFile
+       is slot 1, UpdateVerts slot 2, ... */
     _ZTV5Model[1] = (void *)mv_dosetfile;
     _ZTV5Model[2] = (void *)mv_updateverts;
     _ZTV5Model[3] = (void *)mv_virtual10;
@@ -318,6 +354,20 @@ void hal_fill_model_vtable(void)
        ROM/Itanium numbering (two dtor slots), which lands Render at 5.
        Model.h-compiled TUs land it at 4. The object serves both. */
     _ZTV5Model[5] = (void *)mv_render;
+#else
+    /* Itanium/GCC keeps TWO dtor slots (D1 at 0, D0 at 1), matching the ROM
+       vtable at 0x0208e90c: [2]=DoSetFile (0x02016bf8), [3]=UpdateVerts
+       (0x02016c98), [4]=Virtual10, [5]=Render. ModelBase::SetFile dispatches
+       vtable+0x8 == slot 2, so DoSetFile MUST live at [2] here. Leaving the
+       MSVC numbering shifted everything up by one and made SetFile call
+       UpdateVerts on an un-initialised model (garbage data.modelFile). */
+    _ZTV5Model[0] = (void *)mvL_dtor;
+    _ZTV5Model[1] = (void *)mvL_dtor;
+    _ZTV5Model[2] = (void *)mvL_dosetfile;
+    _ZTV5Model[3] = (void *)mvL_updateverts;
+    _ZTV5Model[4] = (void *)mvL_virtual10;
+    _ZTV5Model[5] = (void *)mvL_render;
+#endif
 }
 }
 
@@ -338,6 +388,19 @@ static void __fastcall ma2_render(void *self, void *, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Render((const Vector3 *)s); }
 static void __fastcall ma2_virtual18(void *self, void *, unsigned m, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Virtual18(m, (const Vector3 *)s); }
+#ifndef _WIN32
+/* Linux/SysV cdecl thunks -- `this` is the first ordinary arg (see the note by
+   mvL_* above; ModelBase::SetFile tail-jumps DoSetFile the same way for a
+   ModelAnim2). DoSetFile is inherited Model::DoSetFile, so reuse mvL_dosetfile. */
+static void ma2L_dtor(void *) {}
+static void ma2L_updateverts(void *self) { ((ModelAnim *)self)->ModelAnim::UpdateVerts(); }
+static void ma2L_virtual10(void *self, void *m)
+{ ((ModelAnim *)self)->ModelAnim::Virtual10(*(Matrix4x3 *)m); }
+static void ma2L_render(void *self, const void *s)
+{ ((ModelAnim *)self)->ModelAnim::Render((const Vector3 *)s); }
+static void ma2L_virtual18(void *self, unsigned m, const void *s)
+{ ((ModelAnim *)self)->ModelAnim::Virtual18(m, (const Vector3 *)s); }
+#endif
 extern "C" {
 extern void *_ZTV10ModelAnim2[12];
 extern void *VTable_Animation_ModelAnim2Thunk[12];
@@ -345,15 +408,15 @@ extern void *_ZTV9ModelAnim[10];
 extern void *VTable_Animation_ModelAnimThunk[8];
 void hal_fill_modelanim2_vtable(void)
 {
+#ifdef _WIN32
+    /* MSVC order (one folded dtor slot): dtor 0, DoSetFile 1, UpdateVerts 2,
+       Virtual10 3, Render 4, Virtual18 5. */
     _ZTV10ModelAnim2[0] = (void *)ma2_dtor;
     _ZTV10ModelAnim2[1] = (void *)mv_dosetfile;
     _ZTV10ModelAnim2[2] = (void *)ma2_updateverts;
     _ZTV10ModelAnim2[3] = (void *)ma2_virtual10;
     _ZTV10ModelAnim2[4] = (void *)ma2_render;
     _ZTV10ModelAnim2[5] = (void *)ma2_virtual18;
-    /* the Animation-base secondary table only ever destructs */
-    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
-    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
     /* plain ModelAnim (the Player's head models) shares every slot */
     _ZTV9ModelAnim[0] = (void *)ma2_dtor;
     _ZTV9ModelAnim[1] = (void *)mv_dosetfile;
@@ -361,6 +424,30 @@ void hal_fill_modelanim2_vtable(void)
     _ZTV9ModelAnim[3] = (void *)ma2_virtual10;
     _ZTV9ModelAnim[4] = (void *)ma2_render;
     _ZTV9ModelAnim[5] = (void *)ma2_virtual18;
+#else
+    /* Itanium/GCC keeps TWO dtor slots (D1 at 0, D0 at 1), matching the ROM
+       vtable at 0x0208e9b4: [2]=DoSetFile (0x02016bf8 Model::DoSetFile),
+       [3]=UpdateVerts (0x0201686c ModelAnim::UpdateVerts), [4]=Virtual10,
+       [5]=Render, [6]=Virtual18. ModelBase::SetFile dispatches vtable+0x8 ==
+       slot 2, so DoSetFile MUST be at [2]. */
+    _ZTV10ModelAnim2[0] = (void *)ma2L_dtor;
+    _ZTV10ModelAnim2[1] = (void *)ma2L_dtor;
+    _ZTV10ModelAnim2[2] = (void *)mvL_dosetfile;
+    _ZTV10ModelAnim2[3] = (void *)ma2L_updateverts;
+    _ZTV10ModelAnim2[4] = (void *)ma2L_virtual10;
+    _ZTV10ModelAnim2[5] = (void *)ma2L_render;
+    _ZTV10ModelAnim2[6] = (void *)ma2L_virtual18;
+    _ZTV9ModelAnim[0] = (void *)ma2L_dtor;
+    _ZTV9ModelAnim[1] = (void *)ma2L_dtor;
+    _ZTV9ModelAnim[2] = (void *)mvL_dosetfile;
+    _ZTV9ModelAnim[3] = (void *)ma2L_updateverts;
+    _ZTV9ModelAnim[4] = (void *)ma2L_virtual10;
+    _ZTV9ModelAnim[5] = (void *)ma2L_render;
+    _ZTV9ModelAnim[6] = (void *)ma2L_virtual18;
+#endif
+    /* the Animation-base secondary table only ever destructs */
+    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
+    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
     VTable_Animation_ModelAnimThunk[0] = (void *)ma2_dtor;
     VTable_Animation_ModelAnimThunk[1] = (void *)ma2_dtor;
 }

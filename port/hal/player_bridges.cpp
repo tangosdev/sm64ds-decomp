@@ -44,8 +44,14 @@ extern "C" int _ZN9Animation8GetFlagsEv(void *self);  /* Linux: real symbol from
 void _ZN6Player4HealEi(Player *p, int amt)
 { p->Player::Heal(amt); }
 
+#ifdef _WIN32 /* LINUX: this method IS _ZNK6Player14GetBodyModelIDEjb (its own
+   Itanium mangling), so the body forwards to itself -> infinite recursion. On
+   MSVC the two mangle differently (this converts __cdecl->__thiscall); on Linux
+   the real src/_ZNK6Player14GetBodyModelIDEjb TU owns the symbol and every
+   `this->GetBodyModelID(...)` caller binds straight to it. */
 unsigned int Player::GetBodyModelID(unsigned int a, bool b_) const
 { return _ZNK6Player14GetBodyModelIDEjb((char *)this, a, b_ ? 1 : 0); }
+#endif /* _WIN32 */
 
 extern "C" {
 /* gate-10 smoke drives the state machine directly (the ChangeState PMF
