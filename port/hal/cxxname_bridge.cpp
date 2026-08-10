@@ -114,8 +114,12 @@ void *data_020a0c80[24];        /* the collision actor registry (gate 8) */
 #include "MeshCollider.h"
 #include "ModelBase.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS MeshCollider::LoadFile(SharedFilePtr&)'s own Itanium mangling -> self-recurse on GCC. On Linux bind to the real src/_ZN12MeshCollider8LoadFileER13SharedFilePtr TU. */
 void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp)
 { return MeshCollider::LoadFile(*(SharedFilePtr *)fp); }
+#else
+void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
+#endif
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to (self=this, args match) -> self-recurse on GCC. On Linux bind to the real src/ TU (the PORT_TRACE_SETFILE trace is Windows-only). */
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 {

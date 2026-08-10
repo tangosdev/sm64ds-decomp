@@ -268,8 +268,12 @@ extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self)
 struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(const void *self,
                                                           Vector3 *v);
+#ifdef _WIN32 /* LINUX: this method IS _ZNK11SurfaceInfo12CopyNormalToER7Vector3
+   (its own mangling) -> self-recurse. The matched src TU owns the symbol on
+   Linux; every method-form caller binds straight to it. */
 void SurfaceInfo::CopyNormalTo(Vector3 &v) const
 { _ZNK11SurfaceInfo12CopyNormalToER7Vector3(this, &v); }
+#endif /* _WIN32 */
 
 struct SphereClsn { int DetectClsn(); };
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */

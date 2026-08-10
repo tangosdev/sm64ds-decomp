@@ -908,8 +908,12 @@ int _ZN4Fish16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_Z
    before it will loop, and one of the fish's states does the same. */
 #include "Animation.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. On Linux bind to the real src/_ZNK9Animation13GetFrameCountEv TU. */
 unsigned _ZNK9Animation13GetFrameCountEv(const void *self)
 { return ((const Animation *)self)->GetFrameCount(); }
+#else
+unsigned _ZNK9Animation13GetFrameCountEv(const void *self);
+#endif /* _WIN32 */
 }
 
 /* ---- gate 23: ov102's QUESTION_BLOCK -------------------------------------
