@@ -9,9 +9,9 @@
  * one and ignores it, which measured byte-free.
  */
 #include "HootTheOwl.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int data_ov094_02136ae0[];
 extern int data_ov094_02136af8[];
 extern int data_ov094_02136ae8[];
@@ -20,9 +20,9 @@ extern int data_ov094_02136af0[];
 
 int HootTheOwl::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136ae0);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136af8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136ae8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov094_02136af0);
+    ((SharedFilePtr *)data_ov094_02136ae0)->Release();
+    ((SharedFilePtr *)data_ov094_02136af8)->Release();
+    ((SharedFilePtr *)data_ov094_02136ae8)->Release();
+    ((SharedFilePtr *)data_ov094_02136af0)->Release();
     return 1;
 }

@@ -40,12 +40,22 @@
 #include "WithMeshClsn.h"
 
 struct HootTheOwl : Enemy {
+    /* What mCurrentState points at. The field was declared `s32` and every one
+       of its six uses immediately cast it to a pointer, which is the whole
+       evidence for the type: Behavior compares it against four objects in
+       ov094's data and calls the handler at +0x08 through it.
+       Only that handler is evidenced -- nothing reads the first eight bytes. */
+    struct State {
+        u8  pad_00[0x8];
+        void (HootTheOwl::*mMain)();  /* 0x08 */
+    };
+
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos; /* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     ShadowModel mShadowModel;         /* 0x370 */
     u8  pad_398[0x30];
-    s32 mCurrentState;                /* 0x3c8 */
+    State *mCurrentState;             /* 0x3c8 */
     s32 unk_3cc;                      /* 0x3cc */
     u8  pad_3d0[0x4];
     u8  unk_3d4;                      /* 0x3d4 */
