@@ -261,10 +261,15 @@ extern "C" int _ZN11RaycastLine10DetectClsnEv(void *self)
 #else
 extern "C" int _ZN11RaycastLine10DetectClsnEv(void *self);  /* Linux: real symbol from src/_ZN11RaycastLine10DetectClsnEv */
 #endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: these extern-C names ARE the Itanium manglings of the const methods they forward to -> self-recurse on GCC. On Linux bind to the real src/ TUs. */
 extern "C" int _ZNK12WithMeshClsn13GetWallResultEv(const void *self)
 { return ((const WithMeshClsn *)self)->GetWallResult(); }
 extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self)
 { return ((const WithMeshClsn *)self)->GetFloorResult(); }
+#else
+extern "C" int _ZNK12WithMeshClsn13GetWallResultEv(const void *self);
+extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self);
+#endif /* _WIN32 */
 
 /* gate 172: func_ov098_021390ec (Crate's state helper) declares a local
    `struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; }` and calls it as
