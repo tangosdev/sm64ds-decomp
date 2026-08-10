@@ -15,7 +15,7 @@
 extern char data_ov002_0210da10;
 extern char data_ov002_0210d9a8;
 
-int BowserPuzzlePiece::CleanupResources()
+s32 BowserPuzzlePiece::CleanupResources()
 {
     ((SharedFilePtr *)(&data_ov002_0210da10))->Release();
     ((SharedFilePtr *)(&data_ov002_0210d9a8))->Release();

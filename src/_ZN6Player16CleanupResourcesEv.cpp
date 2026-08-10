@@ -19,7 +19,7 @@ void func_ov002_020bdef0(char *c);
 void func_ov002_020bdd9c(char *c);
 void func_ov002_020e032c(char *c);
 void func_0203cbc0(int p);
-void func_020072c0(void);
+void _ZN7Vector3D1Ev(void);
 void func_02073244(int p, int a, int b, void (*f)(void));
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
@@ -94,7 +94,7 @@ int Player::CleanupResources()
     {
         int q = unk_578;
         if (q != 0)
-            func_02073244(q, 0xc, 8, func_020072c0);
+            func_02073244(q, 0xc, 8, _ZN7Vector3D1Ev);
         q = unk_57c;
         if (q != 0)
             func_0203cbc0(q);

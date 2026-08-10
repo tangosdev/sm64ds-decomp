@@ -60,7 +60,9 @@ struct ShadowModel : ModelBase {
     /* --- non-virtual --- */
     void InitModel(Matrix4x3 *m, Fix12<int> sx, Fix12<int> sy, Fix12<int> sz,
                    u32 opacity);   /* defined as a free function, see above */
-    void InitCylinder();
+    /* RETURNS int, not void: 0x02015ebc ends in `bx ip`, a tail call, so the
+       callee's r0 is this function's. Same evidence as ModelBase::SetFile. */
+    int InitCylinder();
     void InitCuboid();
 
     /* --- static --- */

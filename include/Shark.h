@@ -1,14 +1,52 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Shark: 5 matched functions, 24 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SHARK_H
 #define SHARK_H
+
 #include "types.h"
+
+/* Derives from Enemy: the destructor stores this class's vtable, then the
+ * base's, then destroys whatever the base owns before chaining further up.
+ * Everything this header used to restate below 0x110 belonged to the
+ * chain above and is inherited now.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#ifdef __cplusplus
+
+#include "Enemy.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
+struct Shark : Enemy {
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
+    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    ModelAnim mModelAnim;             /* 0x30c */
+    s32 unk_370;                      /* 0x370 */
+    s32 unk_374;                      /* 0x374 */
+    s32 unk_378;                      /* 0x378 */
+    s32 unk_37c;                      /* 0x37c */
+    u8  pad_380[0x8];
+    s32 mPathID;                      /* 0x388 */
+    s32 unk_38c;                      /* 0x38c */
+    s32 mPathNodeIdx;                 /* 0x390 */
+
+    /* --- vtable --- */
+    virtual ~Shark();
+
+    int Behavior();
+    int InitResources();
+    int Render();
+};
+
+typedef char Shark_size_must_be_0x394[sizeof(Shark) == 0x394 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file is a C
+   translation unit that reads these fields, and D0 is compiler-generated so it
+   can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct Shark {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
@@ -62,12 +100,8 @@ struct Shark {
     s32 mPathID;            /* 0x388 */
     s32 unk_38c;            /* 0x38c */
     s32 mPathNodeIdx;            /* 0x390 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* SHARK_H */

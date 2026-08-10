@@ -43,7 +43,7 @@ int RotatingFirebar::Behavior()
 
     *(s16*)AT(((char*)this), 0x8e) = *(s16*)AT(((char*)this), 0x8e) - 0x100;
 
-    b = ((unk_0b0 & 8) != 0) ? 1 : 0;
+    b = ((mFlags & 8) != 0) ? 1 : 0;
     if (b) {
         if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() != 0) {
             ((MeshColliderBase *)((char*)&mMeshCollider))->Disable();
@@ -52,7 +52,7 @@ int RotatingFirebar::Behavior()
     }
 
     _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    Matrix4x3_FromRotationY(data_020a0e68, unk_08e);
+    Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
 
     w = ((char*)this);
     cyl = ((char*)this) + 0x360;

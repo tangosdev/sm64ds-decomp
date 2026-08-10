@@ -14,15 +14,15 @@ struct C {
   Obj* obj;
 };
 
-int BowserPuzzlePiece::Behavior()
+s32 BowserPuzzlePiece::Behavior()
 {
-  DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+  DecIfAbove0_Short((unsigned short*)((char*)&(*(u8 *)&unk_100)));
   if(((C*)this)->obj->pmf){
     (((C*)this)->*(((C*)this)->obj->pmf))();
   }
-  *(short*)((char*)&unk_08c) = *(short*)((char*)&unk_092);
-  *(short*)((char*)&unk_08e) = *(short*)((char*)&unk_094);
-  *(short*)((char*)&unk_090) = *(short*)((char*)&unk_096);
+  *(short*)((char*)&mAngleX) = *(short*)((char*)&mPrevAngleX);
+  *(short*)((char*)&mAngleY) = *(short*)((char*)&mPrevAngleY);
+  *(short*)((char*)&mAngleZ) = *(short*)((char*)&mPrevAngleZ);
   func_ov064_0211987c(((C*)this));
   return 1;
 }

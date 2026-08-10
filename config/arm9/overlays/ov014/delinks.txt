@@ -27,7 +27,7 @@ src/ShutterBob_Spawn.c:
     complete
     .text start:0x021112cc end:0x02111308
 
-src/_ZN10ChainChompD1Ev.c:
+src/_ZN10ChainChompD1Ev.cpp:
     complete
     .text start:0x02111308 end:0x021113bc
 

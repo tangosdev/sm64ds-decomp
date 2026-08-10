@@ -1,14 +1,52 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BulletBill: 5 matched functions, 20 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BULLETBILL_H
 #define BULLETBILL_H
-#include "types.h"
-#include "Model.h"
-#include "WithMeshClsn.h"
-#include "ShadowModel.h"
 
+#include "types.h"
+
+/* Five boundaries close on sizes other headers assert:
+ *
+ *     Enemy                     ends 0x110
+ *     MovingCylinderClsnWithPos 0x110 + 0x040 = 0x150  -> WithMeshClsn
+ *     WithMeshClsn              0x150 + 0x1bc = 0x30c  -> the first Model
+ *     Model                     0x30c + 0x050 = 0x35c  -> the second
+ *     Model                     0x35c + 0x050 = 0x3ac  -> the shadow
+ *     (0x28 of shadow)          0x3ac + 0x028 = 0x3d4  -> mState
+ *
+ * The ShadowModel at 0x3ac is destroyed like the rest, and 0x3ac + 0x28 closes
+ * exactly on mState.
+ *
+ * unk_130 and unk_134 are gone: both fall inside the MovingCylinderClsnWithPos
+ * at 0x110 (+0x20 and +0x24).
+ */
+
+#ifdef __cplusplus
+
+#include "Enemy.h"
+#include "Model.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+#include "MovingCylinderClsnWithPos.h"
+
+struct BulletBill : Enemy {
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
+    WithMeshClsn mWithMeshClsn;                            /* 0x150 */
+    Model mModel1;                                         /* 0x30c */
+    Model mModel2;                                         /* 0x35c */
+    ShadowModel mShadowModel;                              /* 0x3ac */
+    s32 mState;            /* 0x3d4 */
+    s32 unk_3d8;            /* 0x3d8 */
+
+    virtual ~BulletBill();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+};
+
+#else
+
+/* The same object for a C translation unit, flat. */
 struct BulletBill {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
@@ -44,26 +82,21 @@ struct BulletBill {
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10BulletBillD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x150 */
+    u8  mWithMeshClsn[0x1bc];            /* 0x150 */
     /* Model member, named by _ZN5ModelD1Ev at +0x30c -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel1;            /* 0x30c */
+    u8  mModel1[0x50];            /* 0x30c */
     /* Model member, named by _ZN5ModelD1Ev at +0x35c -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel2;            /* 0x35c */
+    u8  mModel2[0x50];            /* 0x35c */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x3ac -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10BulletBillD1Ev.c] */
-    ShadowModel mShadowModel;            /* 0x3ac */
+    u8  mShadowModel[0x28];            /* 0x3ac */
     s32 mState;            /* 0x3d4 */
     s32 unk_3d8;            /* 0x3d8 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* BULLETBILL_H */

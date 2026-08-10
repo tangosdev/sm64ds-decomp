@@ -15,7 +15,7 @@ extern Player::State data_ov002_0211043c;   /* crouch */
 extern int data_ov002_0210e164;
 extern int data_ov002_0210f344[3];
 extern int data_ov002_0210f308;
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern int _ZN6Player17SetNoControlStateEhih(void *c, unsigned char a, int b, unsigned char d);
 extern void func_020731dc(int a, int b, void **node);
@@ -39,7 +39,7 @@ int Player::TryEnterStarDoor(Vector3 & pos_, short kind)
                 data_ov002_0210f344[0] = 0;
                 data_ov002_0210f344[1] = 0;
                 data_ov002_0210f344[2] = 0x64000;
-                func_020731dc((int)data_ov002_0210f344, (int)func_020072c0, (void **)&data_ov002_0210f308);
+                func_020731dc((int)data_ov002_0210f344, (int)_ZN7Vector3D1Ev, (void **)&data_ov002_0210f308);
                 data_ov002_0210e164 |= 1;
             }
             Vec3_RotateYAndTranslate(&unk_744, &unk_750, unk_69e, data_ov002_0210f344);

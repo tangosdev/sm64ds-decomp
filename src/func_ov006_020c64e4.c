@@ -3,7 +3,7 @@ typedef struct { int a, b; } W2;
 
 extern void func_020731dc(int a, int b, void **node);
 extern void Vec3_Add(Vec3 *out, Vec3 *a, Vec3 *b);
-extern int func_020072c0(void);
+extern int _ZN7Vector3D1Ev(void);
 
 extern int data_ov006_0213af70[2];
 extern int data_ov006_0213afc0[2];
@@ -39,14 +39,14 @@ void func_ov006_020c64e4(char *c)
         data_ov006_021403d0.x = -0x100000;
         data_ov006_021403d0.y = 0;
         data_ov006_021403d0.z = 0;
-        func_020731dc((int)&data_ov006_021403d0, (int)&func_020072c0, &data_ov006_021403c4);
+        func_020731dc((int)&data_ov006_021403d0, (int)&_ZN7Vector3D1Ev, &data_ov006_021403c4);
         data_ov006_02140300 |= 1;
     }
     if ((data_ov006_0214030c & 1) == 0) {
         data_ov006_021403e8.x = 0x100000;
         data_ov006_021403e8.y = 0;
         data_ov006_021403e8.z = 0;
-        func_020731dc((int)&data_ov006_021403e8, (int)&func_020072c0, &data_ov006_021403dc);
+        func_020731dc((int)&data_ov006_021403e8, (int)&_ZN7Vector3D1Ev, &data_ov006_021403dc);
         data_ov006_0214030c |= 1;
     }
 

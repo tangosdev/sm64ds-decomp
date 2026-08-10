@@ -20,7 +20,7 @@ extern "C" {
 extern int _ZN6Player12FinishedAnimEv(Player *);
 }
 extern "C" void func_020731dc(void *a, void *b, void *node);
-extern "C" void func_020072c0(void);
+extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" {
 extern void Vec3_RotateYAndTranslate(Vector3 *, void *, int, void *);
 extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(Player *, ActorBase &, unsigned int, Vector3 const *, unsigned int, unsigned int);
@@ -45,7 +45,7 @@ extern "C" int func_ov002_020c8b78(char *self) {
             data_ov002_0210f824[0] = 0;
             data_ov002_0210f824[1] = 0x96000;
             data_ov002_0210f824[2] = 0x64000;
-            func_020731dc(data_ov002_0210f824, (void *)func_020072c0, data_ov002_0210f7f4);
+            func_020731dc(data_ov002_0210f824, (void *)_ZN7Vector3D1Ev, data_ov002_0210f7f4);
             data_ov002_0210e154 |= 1;
         }
         Vec3_RotateYAndTranslate(&v, self + 0x5c, *(s16 *)(self + 0x8e), data_ov002_0210f824);

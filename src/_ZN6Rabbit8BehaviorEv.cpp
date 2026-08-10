@@ -45,6 +45,14 @@
  * it wants its own slice.
  */
 #include "Rabbit.h"
+
+/* A LOCAL COORDINATE TRIPLE, NOT A Vector3 OBJECT. Vector3 declares a
+   destructor (see include/types.h -- the ROM's __destroy_arr calls prove the
+   type has one), so a Vector3 local would be destroyed at scope exit and this
+   function would come out 8 bytes long. The ROM emits no cleanup for either of
+   these, which is itself the evidence that they were never Vector3s: they are
+   scratch x/y/z the code fills and reads back. */
+typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
 typedef s32 Fix12;
 
 
@@ -108,7 +116,7 @@ int Rabbit::Behavior()
         data_0209f33c = c;
 
     if (unk_429 != 0) {
-        volatile Vector3 pv;
+        Vec3Scratch pv;
         pv.x = mPosX;
         pv.y = mPosY;
         pv.z = mPosZ;
@@ -125,7 +133,7 @@ int Rabbit::Behavior()
                 void* temp_r4 = *(void**)&unk_45c;
                 if (temp_r4 != 0) {
                     if (temp_r1 == 0) {
-                        volatile Vector3 pos;
+                        Vec3Scratch pos;
                         int var_r6;
                         int var_r2;
                         int t;

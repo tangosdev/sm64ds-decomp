@@ -2238,6 +2238,7 @@ _ZTI16dPathLiftActor_c kind:data(any) addr:0x0210af0c
 _ZTS16dPathLiftActor_c kind:data(any) addr:0x0210af18
 data_ov002_0210af2c kind:data(any) addr:0x0210af2c
 data_ov002_0210af70 kind:data(any) addr:0x0210af70
+_ZTV8PathLift kind:data(any) addr:0x0210af70
 _ZTS9daSCoin_c kind:data(any) addr:0x0210aff4
 _ZTI9daSCoin_c kind:data(any) addr:0x0210b000
 InvisibleSecret_SpawnInfo kind:data(any) addr:0x0210b00c

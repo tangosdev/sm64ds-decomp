@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Shark.h"
+#include "PathPtr.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* file, int a, int b);
@@ -17,7 +18,6 @@ extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* thiz, void* out, unsigned int 
 
 extern char data_ov090_021345ac[];
 
-struct PathPtr { int a; int b; };
 }
 
 int Shark::InitResources()
@@ -27,12 +27,12 @@ int Shark::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x30c,
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_021345a4), 1, -1);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_021345ac);
-    mPathID = mParam & 0xff;
+    mPathID = (*(s32 *)&param1) & 0xff;
     if (mPathID < 0) mPathID = 0;
     _ZN7PathPtrC1Ev(&p1);
     _ZN7PathPtr6FromIDEj(&p1, mPathID);
     unk_38c = _ZNK7PathPtr8NumNodesEv(&p1);
-    unk_0a0 = -0x3c000;
+    mTerminalVelocity = -0x3c000;
     unk_374 = 0;
     unk_378 = 0;
     unk_37c = 0;

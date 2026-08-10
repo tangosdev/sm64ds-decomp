@@ -2,7 +2,6 @@
 #define ICESHEET_H
 
 #include "types.h"
-#include "Platform.h"
 
 /* Derives from Platform: the destructor stores this class's vtable, then
  * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
@@ -15,6 +14,8 @@
  */
 
 #ifdef __cplusplus
+
+#include "Platform.h"
 
 struct IceSheet : Platform {
     /* no fields of its own */

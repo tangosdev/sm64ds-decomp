@@ -12,11 +12,11 @@ extern void _ZN15TextureSequenceD1Ev(void* p);
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void* p);
 extern int __destroy_arr(void* p, int a, int b, void* fn);
 extern int _ZTV8Platform[];
-extern int func_020072c0[];
+extern int _ZN7Vector3D1Ev[];
 void* _ZN6EyerokD1Ev(struct Eyerok *self) {
     *(void**)((char*)self) = _ZTV6Eyerok;
     _ZN18MovingMeshColliderD1Ev((char*)&self->unk_674);
-    __destroy_arr(((char*)self)+0x4dc, 0x14, 0xc, func_020072c0);
+    __destroy_arr(((char*)self)+0x4dc, 0x14, 0xc, _ZN7Vector3D1Ev);
     _ZN15TextureSequenceD1Ev((char*)&self->mTextureSequence);
     _ZN11ShadowModelD1Ev((char*)&self->mShadowModel);
     _ZN5ModelD1Ev((char*)&self->mModel2);

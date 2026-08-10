@@ -9,7 +9,11 @@ struct Player { unsigned int SetAnim(unsigned int, int, int, unsigned int); };
 extern "C" short Vec3_HorzAngle(const Vector3*, const Vector3*);
 extern "C" void func_020731dc(void*, void*, void*);
 extern "C" void Vec3_RotateYAndTranslate(Vector3*, const Vector3*, int, const Vector3*);
-extern void func_020072c0(void);
+/* extern "C": this is the ROM symbol's own name. A bare `extern` in a //cpp file
+   makes the compiler mangle it AGAIN, into _Z15_ZN7Vector3D1Evv, which exists
+   nowhere -- and the byte gate cannot see it, because relocated words are
+   wildcarded. Only check_references does. */
+extern "C" void _ZN7Vector3D1Ev(void);
 
 extern "C" int func_ov002_020c8a4c(char* self);
 int func_ov002_020c8a4c(char* self) {
@@ -25,7 +29,7 @@ int func_ov002_020c8a4c(char* self) {
                 data_ov002_0210f8cc[0] = 0;
                 data_ov002_0210f8cc[1] = 0;
                 data_ov002_0210f8cc[2] = 0x12c000;
-                func_020731dc(data_ov002_0210f8cc, (void*)func_020072c0, &data_ov002_0210f89c);
+                func_020731dc(data_ov002_0210f8cc, (void*)_ZN7Vector3D1Ev, &data_ov002_0210f89c);
                 data_ov002_0210e150 |= 1;
             }
             Vec3_RotateYAndTranslate((Vector3*)(self + 0x744), (Vector3*)(self + 0x750), *(short*)(self + 0x69e), (Vector3*)data_ov002_0210f8cc);

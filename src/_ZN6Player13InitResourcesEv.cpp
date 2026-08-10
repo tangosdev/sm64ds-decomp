@@ -37,7 +37,7 @@ extern "C" {
     void _ZN4BgCh19StartDetectingWaterEv(void* p);
     int StartWithFarCamera(void);
     void _ZN13RaycastGroundD1Ev(void* p);
-    void func_020072c0(void);
+    void _ZN7Vector3D1Ev(void);
     void func_0203d384(void);
 
     extern u8 data_0209f2d8;
@@ -117,7 +117,7 @@ Lac:
 Ld0:
     func_ov002_020e5948(c);
     if (changed != 0) func_ov002_020beabc(c);
-    *(void**)(&unk_578) = func_02073470(0x32, 0xc, 8, (void*)func_0203d384, (void*)func_020072c0);
+    *(void**)(&unk_578) = func_02073470(0x32, 0xc, 8, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
     *(void**)(&unk_57c) = _ZN6Memory13operator_new2Ej(0x32);
     *(void**)(&mHeldObjQueue) = _ZN6Memory13operator_new2Ej(0x14);
     q = *(u8**)(&mHeldObjQueue);

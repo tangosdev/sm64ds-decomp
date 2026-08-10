@@ -13,7 +13,7 @@ extern V3 data_ov026_02113f4c;
 int WaterSuction::InitResources()
 {
     V3 vec;
-    unk_314 = unk_008 & 0xff;
+    unk_314 = (*(s32 *)&param1) & 0xff;
     vec = data_ov026_02113f4c;
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this) + 0x110, ((char*)this), &vec, 0x64000, 0xa4000, 0x800006, 0);
     func_ov026_021122d4(((char*)this), &data_ov026_02113f58);

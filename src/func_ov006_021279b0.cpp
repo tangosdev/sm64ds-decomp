@@ -30,7 +30,7 @@ extern void func_020731dc(void *, void *, void **);
 extern void func_0203ce80(s32 *, s32 *);
 extern void Quaternion_FromVector3(s32 *, s32 *, s32 *);
 extern void Quaternion_Normalize(s32 *);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern void func_ov006_02126948(char *);
 extern void func_ov006_0212a3c0(char *);
 extern void func_ov006_02125994(char *);
@@ -110,7 +110,7 @@ extern "C" void func_ov006_021279b0(char *c)
         data_ov006_02143014[0] = 0;
         data_ov006_02143014[1] = 0x1000;
         data_ov006_02143014[2] = 0;
-        func_020731dc(data_ov006_02143014, (void *)&func_020072c0,
+        func_020731dc(data_ov006_02143014, (void *)&_ZN7Vector3D1Ev,
                       &data_ov006_02143008);
         data_ov006_02143004 |= 1;
     }

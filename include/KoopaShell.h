@@ -1,22 +1,70 @@
-/* Hand-written from matched-function evidence, not gen_header.py output:
- * class KoopaShell, 5 matched functions in one clean TU (ov102
- * 0x0214c748-0x0214d70c, 24 functions, no other class in it -- tu_map.py).
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- *
- * KoopaShell derives from Enemy -- Behavior calls Enemy::UpdateYoshiEat and
- * Enemy::UpdateWMClsn on itself, and Enemy spans exactly 0x110, which is where
- * this class's own sub-objects start. It is written FLAT anyway, with the
- * inherited slots restated as padding and named fields, because that is what
- * every other generated header in this tree does and because Enemy.h asserts
- * no size for a derived struct to build on. Restating a base is a known cost;
- * re-basing the whole family is its own slice.
- *
- * Field NAMES are placeholders - renaming cannot change codegen.
- */
 #ifndef KOOPASHELL_H
 #define KOOPASHELL_H
+
 #include "types.h"
 
+/* Six boundaries close on sizes other headers assert:
+ *
+ *     Enemy              ends 0x110
+ *     MovingCylinderClsn 0x110 + 0x034 = 0x144  -> WithMeshClsn
+ *     WithMeshClsn       0x144 + 0x1bc = 0x300  -> Model
+ *     Model              0x300 + 0x050 = 0x350  -> ShadowModel
+ *     ShadowModel        0x350 + 0x028 = 0x378  -> the second cylinder
+ *     MovingCylinderClsn 0x378 + 0x034 = 0x3ac  -> mState
+ *
+ * Two cylinder collisions, one at each end of the shell.
+ */
+
+#ifdef __cplusplus
+
+#include "Enemy.h"
+#include "Model.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+#include "MovingCylinderClsn.h"
+
+struct KoopaShell : Enemy {
+    MovingCylinderClsn mCylinderClsn;        /* 0x110 */
+    WithMeshClsn mMeshClsn;                  /* 0x144 */
+    Model mModel;                            /* 0x300 */
+    ShadowModel mShadowModel;                /* 0x350 */
+    MovingCylinderClsn mCylinderClsn2;       /* 0x378 */
+    void* mState;            /* 0x3ac */
+    /* Where it was spawned: InitResources copies mPos here verbatim, and
+       Behavior stashes mPrevAngleY into mSpawnAngleY when the shell is spat
+       back out of Yoshi's mouth. */
+    s32 mSpawnPosX;            /* 0x3b0 */
+    s32 mSpawnPosY;            /* 0x3b4 */
+    s32 mSpawnPosZ;            /* 0x3b8 */
+    s16 mSpawnAngleY;            /* 0x3bc */
+    u8  pad_3be[0x2];
+    s32 unk_3c0;            /* 0x3c0 */
+    /* Model index, 0 or 1, off bit 0 of mSpawnParam. Behavior gives index 0 a
+       per-frame call the other does not get. */
+    u8  mModelIndex;            /* 0x3c4 */
+    u8  unk_3c5;            /* 0x3c5 */
+    /* Despawn countdown, and it only runs in one state. Render blinks the
+       shell while it is below 0x2d by skipping odd values, so the shell
+       flashes out rather than vanishing. */
+    u8  mDespawnTimer;            /* 0x3c6 */
+    u8  pad_3c7[0x1];
+    s32 unk_3c8;            /* 0x3c8 */
+    s32 unk_3cc;            /* 0x3cc */
+    s32 unk_3d0;            /* 0x3d0 */
+    s32 unk_3d4;            /* 0x3d4 */
+
+    virtual ~KoopaShell();
+
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    void OnPendingDestroy();
+    int Render();
+};
+
+#else
+
+/* The same object for a C translation unit, flat. */
 struct KoopaShell {
     u8  pad_000[0x8];
     /* Spawn parameter word. InitResources takes bit 0 as the model index into
@@ -80,14 +128,8 @@ struct KoopaShell {
     s32 unk_3cc;            /* 0x3cc */
     s32 unk_3d0;            /* 0x3d0 */
     s32 unk_3d4;            /* 0x3d4 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    void OnPendingDestroy();
-    int Render();
-#endif
 };
 
-#endif
+#endif /* __cplusplus */
+
+#endif /* KOOPASHELL_H */

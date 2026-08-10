@@ -14,7 +14,7 @@ void PathLift::AfterClsn()
     if (func_ov002_020efedc(((char *)this)) != 0 &&
         unk_44c == 0 &&
         DecIfAbove0_Byte((char *)&unk_42b) == 0) {
-        int b = unk_00c == 0x1f;
+        int b = actorID == 0x1f;
         if (b) {
             func_02012694(0x6f, ((char *)this) + 0x74);
         }

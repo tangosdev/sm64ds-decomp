@@ -9,7 +9,7 @@ extern u8 data_0209f2d8;
 extern int data_0209caa0[];
 extern s8 data_0209f2f8;
 extern u8 data_0209f264;
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern void func_020731dc(int a, int b, void** node);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, short angle, int* src);
@@ -58,7 +58,7 @@ cont:
                 data_ov002_0210f3b0.x = 0;
                 data_ov002_0210f3b0.y = 0x96000;
                 data_ov002_0210f3b0.z = 0x64000;
-                func_020731dc((int)&data_ov002_0210f3b0, (int)func_020072c0, &data_ov002_0210f350);
+                func_020731dc((int)&data_ov002_0210f3b0, (int)_ZN7Vector3D1Ev, &data_ov002_0210f350);
                 data_ov002_0210e14c |= 1;
             }
             Vec3_RotateYAndTranslate((int*)&pos, (int*)(self + 0x5c), *(s16*)(self + 0x8e), (int*)&data_ov002_0210f3b0);

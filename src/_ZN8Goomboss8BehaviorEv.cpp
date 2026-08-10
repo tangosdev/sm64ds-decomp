@@ -25,7 +25,7 @@ int Goomboss::Behavior()
     int u;
     int quake;
 
-    if (mParam == 0x1111) {
+    if (param1 == 0x1111) {
         return func_ov074_021223bc(((char *)this));
     }
 
@@ -60,23 +60,23 @@ int Goomboss::Behavior()
         if (unk_5fe != 0) {
             if (mSizeIndex >= 2) {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
+                v.x = unk_3ac[2].x;
+                v.y = unk_3ac[2].y;
+                v.z = unk_3ac[2].z;
                 _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
+                v.x = unk_3ac[2].x;
+                v.y = unk_3ac[2].y;
+                v.z = unk_3ac[2].z;
                 _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
             func_02012694(0x15e, ((char *)this) + 0x74);
             {
                 Vector3 v;
-                v.x = unk_3c4;
-                v.y = unk_3c8;
-                v.z = unk_3cc;
+                v.x = unk_3ac[2].x;
+                v.y = unk_3ac[2].y;
+                v.z = unk_3ac[2].z;
                 _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }
@@ -84,23 +84,23 @@ int Goomboss::Behavior()
         if (unk_5ff != 0) {
             if (mSizeIndex >= 2) {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
+                v.x = unk_3ac[1].x;
+                v.y = unk_3ac[1].y;
+                v.z = unk_3ac[1].z;
                 _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
+                v.x = unk_3ac[1].x;
+                v.y = unk_3ac[1].y;
+                v.z = unk_3ac[1].z;
                 _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
             func_02012694(0x15e, ((char *)this) + 0x74);
             {
                 Vector3 v;
-                v.x = unk_3b8;
-                v.y = unk_3bc;
-                v.z = unk_3c0;
+                v.x = unk_3ac[1].x;
+                v.y = unk_3ac[1].y;
+                v.z = unk_3ac[1].z;
                 _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }

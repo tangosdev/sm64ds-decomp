@@ -3,7 +3,7 @@ extern void func_020731dc(void*, void*, void**);
 extern int _ZN13SharedFilePtr9ConstructEj(void*, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
 
 extern void* data_ov085_021305d8;
@@ -74,16 +74,16 @@ void __sinit_ov085_0212f5ec(void)
     data_ov085_021306ec.x = 0x1c000;
     data_ov085_021306ec.y = -0x2a000;
     data_ov085_021306ec.z = 0x18000;
-    func_020731dc(&data_ov085_021306ec, (void*)&func_020072c0, (void**)&data_ov085_0213063c);
+    func_020731dc(&data_ov085_021306ec, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov085_0213063c);
 
     { volatile V3* p = (volatile V3*)&data_ov085_021306f8; p->x = 0x1c000; p->y = -0x14000; p->z = 0x32000; }
-    func_020731dc(&data_ov085_021306f8, (void*)&func_020072c0, (void**)&data_ov085_02130648);
+    func_020731dc(&data_ov085_021306f8, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov085_02130648);
 
     { volatile V3* p = (volatile V3*)&data_ov085_02130704; p->x = 0x2b000; p->y = -0x2a000; p->z = 0x18000; }
-    func_020731dc(&data_ov085_02130704, (void*)&func_020072c0, (void**)&data_ov085_02130654);
+    func_020731dc(&data_ov085_02130704, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov085_02130654);
 
     { volatile V3* p = (volatile V3*)&data_ov085_02130710; p->x = 0x30000; p->y = -0xa000; p->z = 0x32000; }
-    func_020731dc(&data_ov085_02130710, (void*)&func_020072c0, (void**)&data_ov085_02130660);
+    func_020731dc(&data_ov085_02130710, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov085_02130660);
 
     data_ov085_021306cc.a = data_ov085_02130074;
     data_ov085_021306cc.b = data_ov085_02130044;

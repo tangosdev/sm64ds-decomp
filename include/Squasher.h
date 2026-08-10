@@ -2,8 +2,6 @@
 #define SQUASHER_H
 
 #include "types.h"
-#include "Platform.h"
-#include "ShadowModel.h"
 
 /* Derives from Platform: the destructor stores this class's vtable, then
  * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
@@ -16,6 +14,9 @@
  */
 
 #ifdef __cplusplus
+
+#include "Platform.h"
+#include "ShadowModel.h"
 
 struct Squasher : Platform {
     s16 unk_31e;                      /* 0x31e */

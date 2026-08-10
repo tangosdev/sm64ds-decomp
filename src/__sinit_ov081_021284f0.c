@@ -3,7 +3,7 @@ extern void func_020731dc();
 extern void _ZN13SharedFilePtr9ConstructEj();
 extern void func_02017ab4();
 extern void SharedFilePtr_Destruct_Anim();
-extern void func_020072c0();
+extern void _ZN7Vector3D1Ev();
 
 typedef struct { int a, b; } S8;
 
@@ -65,5 +65,5 @@ void __sinit_ov081_021284f0(void)
     data_ov081_02128ef8.a = 0;
     data_ov081_02128ef8.b = 0x2000;
     data_ov081_02128ef8.c = 0;
-    func_020731dc(&data_ov081_02128ef8, func_020072c0, &data_ov081_02128eec);
+    func_020731dc(&data_ov081_02128ef8, _ZN7Vector3D1Ev, &data_ov081_02128eec);
 }

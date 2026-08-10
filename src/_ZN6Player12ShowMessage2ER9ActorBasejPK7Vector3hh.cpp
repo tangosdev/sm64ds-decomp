@@ -24,7 +24,7 @@ extern Player::State data_ov002_0211022c;
 extern int data_ov002_0210e15c;
 extern int data_ov002_0210f224[3];
 extern int data_ov002_0210f1ac;
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern void *data_0209f318;
 
 void _ZN6Player11ChangeStateERNS_5StateE(void *thiz, Player::State *st);
@@ -78,7 +78,7 @@ finish:
         data_ov002_0210f224[0] = 0;
         data_ov002_0210f224[1] = 0x64000;
         data_ov002_0210f224[2] = 0x64000;
-        func_020731dc(data_ov002_0210f224, (void *)func_020072c0, &data_ov002_0210f1ac);
+        func_020731dc(data_ov002_0210f224, (void *)_ZN7Vector3D1Ev, &data_ov002_0210f1ac);
         data_ov002_0210e15c |= 1;
     }
 

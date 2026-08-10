@@ -7,8 +7,8 @@
  * gates five separate things rather than one:
  *
  *   three states       use UpdatePosWithOnlySpeed instead of UpdatePos, and
- *                      apply gravity by hand first: unk_0a8 becomes
- *                      max(unk_0a0, unk_0a8 + unk_09c)
+ *                      apply gravity by hand first: mVertSpeed becomes
+ *                      max(mTerminalVelocity, mVertSpeed + mVertAccel)
  *   two states         at animation frame 7, build a world matrix from the
  *                      model's own bone and spawn the landing dust there --
  *                      the impact is tied to the ANIMATION, not to contact
@@ -92,7 +92,11 @@ int ChiefChilly::Behavior()
     int line[0x1f];
 
     *(C **)((char *)data_0209f318 + 0x114) = c;
-    DecIfAbove0_Short(&unk_100);
+    /* Enemy declares unk_100 as s16 -- 28 of its subclasses' generated headers
+       say so -- while this file's own extern for the helper says u16*. Both are
+       recovered guesses and nothing here settles which; the cast reproduces the
+       ROM without asserting either. */
+    DecIfAbove0_Short((unsigned short *)&unk_100);
 
     if (*(void **)((char *)c->pp + 8) != 0) {
         PMF *p = c->pp + 1;
@@ -104,11 +108,11 @@ int ChiefChilly::Behavior()
         && (char *)c->pp != data_ov073_02123340) {
         _ZN5Actor9UpdatePosEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     } else {
-        int sum = unk_0a8 + unk_09c;
-        int m = unk_0a0;
+        int sum = mVertSpeed + mVertAccel;
+        int m = mTerminalVelocity;
         int ac = unk_0ac;
         if (sum >= m) m = sum;
-        unk_0a8 = m;
+        mVertSpeed = m;
         unk_0ac = ac;
         _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     }
@@ -172,7 +176,7 @@ int ChiefChilly::Behavior()
         }
         _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(line, &rp.start, &rp.end, self);
         if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
-            if (unk_098 > 0xa000) {
+            if (mHorzSpeed > 0xa000) {
                 unk_4c9 = 1;
             }
             unk_4ec = mPosX;
@@ -182,7 +186,7 @@ int ChiefChilly::Behavior()
                 mPosX = unk_068;
                 mPosY = unk_06c;
                 mPosZ = unk_070;
-                unk_098 = 0;
+                mHorzSpeed = 0;
             }
         } else {
             unk_4c9 = 0;
