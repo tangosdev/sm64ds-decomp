@@ -223,7 +223,7 @@ int hal_wipe_index(const void *self)
    colour into +0xc, which is where HalFaderWipe's `color` sits. Placement-new
    rather than a plain C++ definition because the storage has to keep its C
    name and its address. */
-extern "C" __declspec(align(8)) unsigned char
+extern "C" PORT_ALIGN(8) unsigned char
     data_0209f5e8[sizeof(HalFaderWipe)] = {0};
 
 namespace {

@@ -1315,7 +1315,10 @@ extern "C" void *port_stage_object(void);
    place (the ovdata contract: callers patch code pointers at runtime); the
    rest trap by name rather than jumping into the overlay image. */
 extern "C" {
-unsigned char data_ov002_0210a83c[];
+/* defined by the ov002 whole-image mount (build/host-src/ov002_data.c); this is
+   a DECLARATION. MSVC accepts the unsized tentative form; GCC needs the explicit
+   `extern` on an incomplete array. */
+extern unsigned char data_ov002_0210a83c[];
 int _ZN6Player13InitResourcesEv(void *self);
 int _ZN5Actor19BeforeInitResourcesEv(void *self);
 void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned r);
