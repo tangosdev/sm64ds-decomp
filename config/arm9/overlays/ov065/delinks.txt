@@ -4,11 +4,11 @@
     .ctor       start:0x0211cae0 end:0x0211cb08 kind:rodata align:4
     .data       start:0x0211cb20 end:0x0211d600 kind:data align:32
     .bss        start:0x0211d600 end:0x0211da00 kind:bss align:32
-src/_ZN6SnufitD1Ev.c:
+src/_ZN6SnufitD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f28
 
-src/_ZN6SnufitD0Ev.c:
+src/_ZN6SnufitD0Ev.cpp:
     complete
     .text start:0x02115f28 end:0x02115f84
 
@@ -59,11 +59,11 @@ src/func_ov065_0211696c.c:
     complete
     .text start:0x0211696c end:0x02116ae8
 
-src/_ZN6Snufit16CleanupResourcesEv.c:
+src/_ZN6Snufit16CleanupResourcesEv.cpp:
     complete
     .text start:0x02116ae8 end:0x02116b30
 
-src/_ZN6Snufit16OnPendingDestroyEv.c:
+src/_ZN6Snufit16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02116b30 end:0x02116b34
 
@@ -95,11 +95,11 @@ src/Snufit_Spawn.c:
     complete
     .text start:0x02116f48 end:0x02116f98
 
-src/_ZN5SwoopD1Ev.c:
+src/_ZN5SwoopD1Ev.cpp:
     complete
     .text start:0x02116f98 end:0x02116fe8
 
-src/_ZN5SwoopD0Ev.c:
+src/_ZN5SwoopD0Ev.cpp:
     complete
     .text start:0x02116fe8 end:0x0211704c
 
@@ -146,11 +146,11 @@ src/func_ov065_02117994.c:
     complete
     .text start:0x02117994 end:0x02117aa4
 
-src/_ZN5Swoop16CleanupResourcesEv.c:
+src/_ZN5Swoop16CleanupResourcesEv.cpp:
     complete
     .text start:0x02117aa4 end:0x02117aec
 
-src/_ZN5Swoop16OnPendingDestroyEv.c:
+src/_ZN5Swoop16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02117aec end:0x02117af0
 

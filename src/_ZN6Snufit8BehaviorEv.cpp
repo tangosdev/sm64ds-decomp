@@ -4,111 +4,107 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Snufit.h"
-struct WithMeshClsn;
-struct ModelAnim;
-struct Enemy;
-typedef void (Enemy::*PMF)();
-struct Holder { char pad[8]; PMF fn; };
 
+/* This file used to open with `struct Enemy { char pad[0x800]; };` and work a
+ * `char *c` through raw offsets. Snufit.h now supplies the real chain, so the
+ * stand-in is gone and every offset below is a named field.
+ *
+ * Enemy::UpdateYoshiEat is still reached by its mangled name -- unlike
+ * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
+ * in Enemy.h yet.
+ */
 extern "C" {
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
-extern int func_ov065_0211691c(void *c, void *p);
-extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(Enemy *thiz, WithMeshClsn *wm, ModelAnim *ma, unsigned int j);
 extern int ApproachAngle(short *target, short from, short start, short speed, short max);
-extern void _ZN5Enemy11UpdateDeathER12WithMeshClsn(Enemy *thiz, WithMeshClsn *wm);
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(Enemy *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *wm, unsigned int j);
-extern char *_ZN5Actor13ClosestPlayerEv(Enemy *thiz);
-extern void _ZN9Animation7AdvanceEv(void *thiz);
+extern int func_ov065_0211691c(void *c, void *p);
+extern unsigned short DecIfAbove0_Short(unsigned short *p);
 
 extern short data_02082214[];
 extern int data_ov065_0211d670[];
 }
 
-struct Enemy { char pad[0x800]; };
-
-struct ActorOv065 {
-    char pad[0x3d8];
-    int ang;
-};
-
 int Snufit::Behavior()
 {
-    char *c = (char *)((Enemy *)this);
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(unsigned char *)(c + 0x107) != 0) {
-            if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+        mMovingCylinderClsn.Clear();
+        if (unk_107 != 0) {
+            if (unk_104 == 0) {
+                mMovingCylinderClsn.Update();
             }
         }
-        func_ov065_0211696c(c);
-        *(int *)(c + 0x3cc) = *(int *)(c + 0x5c);
-        *(int *)(c + 0x3d0) = *(int *)(c + 0x60);
-        *(int *)(c + 0x3d4) = *(int *)(c + 0x64);
-        func_ov065_0211691c(c, data_ov065_0211d670);
+        func_ov065_0211696c((char *)this);
+        mHomePosX = mPosX;
+        mHomePosY = mPosY;
+        mHomePosZ = mPosZ;
+        func_ov065_0211691c(this, data_ov065_0211d670);
         return 1;
     }
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), (ModelAnim *)(c + 0x300), 3) != 0) {
+    if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3) != 0) {
         return 1;
     }
-    if (*(int *)(c + 0x10c) != 0) {
-        ApproachAngle((short *)(c + 0x8c), -0x4000, 0xa, 0x200, 0x100);
-        _ZN5Enemy11UpdateDeathER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144));
-        func_ov065_0211696c(c);
+    if (mDeathState != 0) {
+        ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
+        UpdateDeath(mWithMeshClsn);
+        func_ov065_0211696c((char *)this);
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
+    DecIfAbove0_Short((unsigned short *)&unk_100);
     {
-        Holder *q = *(Holder **)(c + 0x3bc);
-        if (q->fn != 0) {
-            (((Enemy *)this)->*(q->fn))();
+        State *q = mCurrentState;
+        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
+           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
+           whole 8-byte pmf. Reading one to CALL it is free. */
+        if (*(int *)((char *)q + 8) != 0) {
+            (this->*(q->mMain))();
         }
     }
     {
-        int v = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int hi = *(int *)(c + 0xa0);
-        if (v >= hi) {
-            hi = v;
+        /* Gravity, clamped at terminal velocity. unk_0ac is read and written
+           back unchanged -- the ROM really does reload and restore it here. */
+        int fallSpeed = mVertSpeed + mVertAccel;
+        int clamped = mTerminalVelocity;
+        if (fallSpeed >= clamped) {
+            clamped = fallSpeed;
         }
-        int tmp = *(int *)(c + 0xac);
-        *(int *)(c + 0xa8) = hi;
-        *(int *)(c + 0xac) = tmp;
+        int keep = unk_0ac;
+        mVertSpeed = clamped;
+        unk_0ac = keep;
     }
-    if (*(char **)(c + 0x3bc) != data_ov065_0211d650) {
-        int *p3d8;
+    if (mCurrentState != (State *)data_ov065_0211d650) {
+        int *pAngle;
         int ang;
         int idx;
         short tbl;
         int result;
-        p3d8 = (int *)(((int)c + 0x3d8));
-        *p3d8 += 0x200;
-        ang = *(int *)(c + 0x3d8);
+        /* The add sits INSIDE the integer cast, which is load-bearing here:
+           `(int)this + 0x3d8` is not interchangeable with `&unk_3d8`. */
+        pAngle = (int *)(((int)this + 0x3d8));
+        *pAngle += 0x200;
+        ang = unk_3d8;
+        /* The shift must be LOGICAL so the angle wraps -- writing it on the
+           signed s16 would read the wrong table entry for negative angles. */
         idx = ((unsigned short)(short)ang >> 4) * 2;
         tbl = data_02082214[idx];
         result = (int)(((long long)tbl * 0x46000 + 0x800) >> 12);
-        _Z14ApproachLinearRiii((int *)(void *)(c + 0x60), *(int *)(c + 0x3d0) + (result + 0xb4000), 0x3000);
+        _Z14ApproachLinearRiii(&mPosY, mHomePosY + (result + 0xb4000), 0x3000);
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Enemy *)this), (void *)(c + 0x110));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
-    func_ov065_0211696c(c);
-    if (*(char **)(c + 0x3bc) != data_ov065_0211d660) {
-        *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        *(short *)(c + 0x90) = *(short *)(c + 0x96);
-        func_ov065_02115ff0(c);
+    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    func_ov065_0211696c((char *)this);
+    if (mCurrentState != (State *)data_ov065_0211d660) {
+        mAngleX = mPrevAngleX;
+        mAngleY = mPrevAngleY;
+        mAngleZ = mPrevAngleZ;
+        func_ov065_02115ff0((char *)this);
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    mMovingCylinderClsn.Clear();
     {
-        char *p = _ZN5Actor13ClosestPlayerEv(((Enemy *)this));
+        char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+            mMovingCylinderClsn.Update();
         }
     }
-    _ZN9Animation7AdvanceEv(c + 0x350);
+    mModelAnim.Advance();
     return 1;
 }

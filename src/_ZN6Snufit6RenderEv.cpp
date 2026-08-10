@@ -1,21 +1,16 @@
 //cpp
 // @symbol _ZN6Snufit6RenderEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The six-slot `struct Obj` this file used to cast mModelAnim to was ModelAnim's
+ * own vtable, and the slot it called is Render.
+ */
 #include "Snufit.h"
-struct Obj {
-    virtual void m0();
-    virtual void m1();
-    virtual void m2();
-    virtual void m3();
-    virtual void m4();
-    virtual void Target(int);
-};
 
 int Snufit::Render()
 {
-    int b = ((unk_0b0 & 0x40000) != 0);
+    int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
-    Obj *o = (Obj*)((char *)&mModelAnim);
-    o->Target(0);
+    mModelAnim.Render(0);
     return 1;
 }

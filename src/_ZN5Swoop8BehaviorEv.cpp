@@ -5,95 +5,98 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Swoop.h"
-struct WithMeshClsn;
-struct ModelAnim;
-struct Enemy;
-typedef void (Enemy::*PMF)();
-struct Holder { char pad[8]; PMF fn; };
 
+/* This file used to open with `struct Enemy { char pad[0x800]; };` and work a
+ * `char *c` through raw offsets. Swoop.h now supplies the real chain, so the
+ * stand-in is gone and every offset below is a named field.
+ *
+ * The two ModelAnims are what the tail is choosing between: `c + 0x350` and
+ * `c + 0x3b4` are each one's Animation base (+0x50), so the branch advances
+ * mModelAnim1 or mModelAnim2.
+ *
+ * Enemy::UpdateYoshiEat is still reached by its mangled name -- unlike
+ * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
+ * in Enemy.h yet.
+ */
 extern "C" {
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
-extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(Enemy *thiz, WithMeshClsn *wm, ModelAnim *ma, unsigned int j);
-extern void _ZN5Enemy11UpdateDeathER12WithMeshClsn(Enemy *thiz, WithMeshClsn *wm);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void func_02012694(int, void *);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(Enemy *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *wm, unsigned int j);
-extern char *_ZN5Actor13ClosestPlayerEv(Enemy *thiz);
-extern void _ZN9Animation7AdvanceEv(void *thiz);
 
 extern char data_ov065_0211d6f0[];
 }
 
-struct Enemy { char pad[0x800]; };
-
 int Swoop::Behavior()
 {
-    char *c = (char *)((Enemy *)this);
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(unsigned char *)(c + 0x107) != 0) {
-            if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+        mMovingCylinderClsn.Clear();
+        if (unk_107 != 0) {
+            if (unk_104 == 0) {
+                mMovingCylinderClsn.Update();
             }
         }
-        func_ov065_02117994(c);
+        func_ov065_02117994((char *)this);
         return 1;
     }
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), (ModelAnim *)(c + 0x300), 3) != 0) {
+    if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim1, 3) != 0) {
         return 1;
     }
-    if (*(int *)(c + 0x10c) != 0) {
-        _ZN5Enemy11UpdateDeathER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144));
-        func_ov065_02117994(c);
+    if (mDeathState != 0) {
+        UpdateDeath(mWithMeshClsn);
+        func_ov065_02117994((char *)this);
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
+    DecIfAbove0_Short((unsigned short *)&unk_100);
     {
-        Holder *q = *(Holder **)(c + 0x420);
-        if (q->fn != 0) (((Enemy *)this)->*(q->fn))();
+        State *q = mCurrentState;
+        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
+           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
+           whole 8-byte pmf. Reading one to CALL it is free. */
+        if (*(int *)((char *)q + 8) != 0) (this->*(q->mMain))();
     }
     {
-        char *m = *(char **)(c + 0x420);
-        if (m == data_ov065_0211d6e0 || m == data_ov065_0211d6f0) {
-            if (_ZNK9Animation12WillHitFrameEi(c + 0x350, 3) != 0 ||
-                _ZNK9Animation12WillHitFrameEi(c + 0x350, 0xf) != 0 ||
-                _ZNK9Animation12WillHitFrameEi(c + 0x350, 0x1b) != 0) {
-                func_02012694(0xe1, c + 0x74);
+        State *m = mCurrentState;
+        if (m == (State *)data_ov065_0211d6e0 || m == (State *)data_ov065_0211d6f0) {
+            /* Three wingbeat frames, one flap sound, at the camera-space
+               position. */
+            if (mModelAnim1.WillHitFrame(3) != 0 ||
+                mModelAnim1.WillHitFrame(0xf) != 0 ||
+                mModelAnim1.WillHitFrame(0x1b) != 0) {
+                func_02012694(0xe1, &mCamSpacePosX);
             }
         }
     }
     {
-        int v = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int hi = *(int *)(c + 0xa0);
-        if (v >= hi)
-            hi = v;
-        int tmp = *(int *)(c + 0xac);
-        *(int *)(c + 0xa8) = hi;
-        *(int *)(c + 0xac) = tmp;
+        /* Gravity, clamped at terminal velocity. unk_0ac is read and written
+           back unchanged -- the ROM really does reload and restore it here. */
+        int fallSpeed = mVertSpeed + mVertAccel;
+        int clamped = mTerminalVelocity;
+        if (fallSpeed >= clamped)
+            clamped = fallSpeed;
+        int keep = unk_0ac;
+        mVertSpeed = clamped;
+        unk_0ac = keep;
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Enemy *)this), (void *)(c + 0x110));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    func_ov065_02117994(c);
-    if (*(unsigned char *)(c + 0x43c) == 1) {
-        func_ov065_0211704c(c);
+    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
+    func_ov065_02117994((char *)this);
+    if (unk_43c == 1) {
+        func_ov065_0211704c((char *)this);
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    mMovingCylinderClsn.Clear();
     {
-        char *p = _ZN5Actor13ClosestPlayerEv(((Enemy *)this));
+        char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+            mMovingCylinderClsn.Update();
         }
     }
-    if (*(unsigned char *)(c + 0x43c) == 1) {
-        _ZN9Animation7AdvanceEv(c + 0x350);
+    if (unk_43c == 1) {
+        mModelAnim1.Advance();
     } else {
-        _ZN9Animation7AdvanceEv(c + 0x3b4);
+        mModelAnim2.Advance();
     }
     return 1;
 }

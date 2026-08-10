@@ -1,48 +1,53 @@
 //cpp
 // @symbol _ZN5Swoop13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The stand-in typedefs this file used to carry (`typedef int Fix12;`, a
+ * two-word SharedFilePtr, a three-short Vector3_16, opaque Actor/BMD_File)
+ * all name real types now that Swoop.h pulls in the Enemy chain, so they are
+ * gone. Both ModelAnims are loaded here, which is the other half of the
+ * evidence that 0x300 and 0x364 are two members and not one and a gap.
+ *
+ * MovingCylinderClsn::Init and WithMeshClsn::Init are still reached through
+ * their mangled names because neither is declared as a method yet.
+ */
 #include "Swoop.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
-typedef struct { short x,y,z; } Vector3_16;
-typedef struct BMD_File BMD_File;
-typedef struct Actor Actor;
-typedef struct PMF PMF;
+#include "SharedFilePtr.h"
+
+struct PMF;
+
 extern SharedFilePtr data_ov065_0211d698;
 extern SharedFilePtr data_ov065_0211d6a8;
 extern SharedFilePtr data_ov065_0211d690;
 extern SharedFilePtr data_ov065_0211d6a0;
 extern PMF data_ov065_0211d700;
+
 extern "C" {
-extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_02117944(void* c, PMF* p);
 }
 
 int Swoop::InitResources()
 {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d698), 1, -1);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x364, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d6a8), 1, -1);
-    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d690);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d6a0);
-    unk_0a0 = -0xa000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x110, (Actor*)((char*)this), 0x28000, 0x28000, 0x200000, 0x7eff0);
+    mModelAnim1.SetFile((BMD_File *)Model::LoadFile(data_ov065_0211d698), 1, -1);
+    mModelAnim2.SetFile((BMD_File *)Model::LoadFile(data_ov065_0211d6a8), 1, -1);
+    mShadowModel.InitCylinder();
+    Animation::LoadFile(data_ov065_0211d690);
+    Animation::LoadFile(data_ov065_0211d6a0);
+    mTerminalVelocity = -0xa000;
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mMovingCylinderClsn, this, 0x28000, 0x28000, 0x200000, 0x7eff0);
     mAngleY = mPrevAngleY;
     mPrevAngleX = -0x8000;
     mAngleX = mPrevAngleX;
     unk_43c = 0;
-    unk_35c = 0x1000;
-    unk_3c0 = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (Actor*)((char*)this), 0x28000, 0x1e000, 0, 0);
-    unk_424 = mPosX;
-    unk_428 = mPosY;
-    unk_42c = mPosZ;
+    mModelAnim1.speed = 0x1000;
+    mModelAnim2.speed = 0x1000;
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x28000, 0x1e000, 0, 0);
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     unk_108 = 1;
-    func_ov065_02117944(((char*)this), &data_ov065_0211d700);
+    func_ov065_02117944(this, &data_ov065_0211d700);
     return 1;
 }
