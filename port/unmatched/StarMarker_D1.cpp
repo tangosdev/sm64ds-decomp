@@ -13,6 +13,7 @@
  * in hal/actor_classes.cpp reaches it as a plain extern-C call and no __thiscall
  * dtor mangling enters.
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 extern "C" {
 extern void *_ZTV12daStarBase_c[];   /* == _ZTV10StarMarker, 0x0210aab8 */
 void _ZN11ShadowModelD1Ev(void *self);

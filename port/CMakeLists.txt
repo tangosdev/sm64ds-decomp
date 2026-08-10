@@ -19,6 +19,13 @@ if(NOT MSVC)
     # contiguous 0x400 struct (the MSVC build gets this from $-suffix section
     # grouping). Keeping the flag global is harmless for the rest of the tree.
     add_compile_options(-m32 -fno-omit-frame-pointer -fno-toplevel-reorder)
+    # -fpermissive: the byte-locked src/ tree is C that mwcc/MSVC accept but g++
+    # (in C++ mode, which the port compiles several .c files as) rejects as hard
+    # errors -- a goto that jumps over a trivially-initialized local, a
+    # function-pointer implicitly converted to void*, `extern "C" { extern ... }`.
+    # These are all well-defined and match the ROM; -fpermissive downgrades them
+    # to warnings so the byte-identical source stays unedited. MSVC is unaffected.
+    add_compile_options(-fpermissive)
     add_link_options(-m32)
     # Force-include the MSVC-keyword shims into every TU so the HAL's __fastcall
     # vtable-slot shims and __thiscall/__stdcall casts compile on GCC/Clang

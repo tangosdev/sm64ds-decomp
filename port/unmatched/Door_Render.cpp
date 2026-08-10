@@ -32,6 +32,7 @@
  * The body is the matched source's control flow line for line; only the three
  * dispatches are spelled as the qualified methods the ROM means.
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 #include "Model.h"
 #include "ModelAnim.h"
 #include "daDoor_c.h"

@@ -24,6 +24,7 @@
  * seated cell by the time this runs. This is the "enter" half (pp+0); the
  * "tick" half (pp+1) is port/unmatched/BabyPenguin_StateTick.cpp.
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 extern "C" {
 struct PortBabyPenguinPair { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
 typedef void (*PortBpFn)(void *);

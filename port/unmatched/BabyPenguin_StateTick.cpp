@@ -6,6 +6,7 @@
  * (matched src, stays in the slice -- it only calls this function by
  * name, it does not dispatch the PMF itself).
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 extern "C" {
 struct PortBabyPenguinPair { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
 typedef void (*PortBpFn)(void *);

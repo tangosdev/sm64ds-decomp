@@ -19,6 +19,7 @@
  * `cell->tick_fn != 0` -- the identical byte offset, read through the real
  * type instead of a raw pointer.
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 #include "MrBlizzard.h"

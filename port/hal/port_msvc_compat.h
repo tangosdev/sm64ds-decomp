@@ -24,10 +24,12 @@
 #define __fastcall __attribute__((fastcall))
 #define __thiscall __attribute__((thiscall))
 #define __stdcall  __attribute__((stdcall))
+#define __cdecl    __attribute__((cdecl))
 #else
 #define __fastcall
 #define __thiscall
 #define __stdcall
+#define __cdecl
 #endif
 /* __debugbreak(): MSVC intrinsic for an immediate trap. GCC/Clang spell it
    __builtin_trap(). Used by the unreached-stub bodies (ARMRestoreContext etc.). */
