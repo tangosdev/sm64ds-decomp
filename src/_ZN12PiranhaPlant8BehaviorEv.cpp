@@ -10,7 +10,6 @@ extern PMF data_ov084_02130e80[];
 extern "C" {
 extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void*, void*, void*, unsigned int);
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
-extern void _ZN9Animation7AdvanceEv(void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void*, void*);
@@ -36,7 +35,7 @@ int PiranhaPlant::Behavior()
         return 1;
     }
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x380);
-    _ZN9Animation7AdvanceEv((char*)&mAnimation);
+    mModelAnim.Advance();
     func_ov084_0212f204(((char*)this));
     old = mState;
     (((Cls*)((char*)this))->*data_ov084_02130e80[old])();
@@ -47,7 +46,7 @@ int PiranhaPlant::Behavior()
     cur = mState;
     if (old != cur) {
         if (cur == 5) {
-            int* pb0 = (int*)((char*)&unk_0b0);
+            int* pb0 = (int*)((char*)&mFlags);
             *pb0 = *pb0 & ~0x10000000;
         }
         unk_100 = 0;

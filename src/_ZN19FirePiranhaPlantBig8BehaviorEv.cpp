@@ -6,7 +6,6 @@
 #include "FirePiranhaPlantBig.h"
 extern "C" {
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(char *thiz, char *clsn);
-extern void _ZN9Animation7AdvanceEv(char *thiz);
 extern void _ZN12CylinderClsn5ClearEv(char *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(char *thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *thiz, char *v);
@@ -15,12 +14,12 @@ extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(cha
 int FirePiranhaPlantBig::Behavior()
 {
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x174);
-    int b = (unk_0b0 & 0x60000) != 0;
+    int b = (mFlags & 0x60000) != 0;
     if (b != 0) {
         func_ov084_0212d564(((char *)this));
         return 1;
     }
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    mModelAnim.Advance();
     int s = mState;
     switch (s) {
     case 0:
@@ -47,11 +46,11 @@ int FirePiranhaPlantBig::Behavior()
     func_ov084_0212d86c(((char *)this));
     func_ov084_0212d564(((char *)this));
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    unk_178 = mScale * unk_208;
-    unk_17c = mScale * unk_20c;
+    mMovingCylinderClsn.radius = mScale * unk_208;
+    mMovingCylinderClsn.height = mScale * unk_20c;
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
-    int b2 = unk_00c == 0xfc;
+    int b2 = actorID == 0xfc;
     if (b2 == 0
         && (unsigned int)(mState - 2) <= 1
         && mScale == unk_210) {

@@ -230,11 +230,11 @@ src/BobOmbBuddy_Spawn.c:
     complete
     .text start:0x0212d200 end:0x0212d248
 
-src/_ZN19FirePiranhaPlantBigD1Ev.c:
+src/_ZN19FirePiranhaPlantBigD1Ev.cpp:
     complete
     .text start:0x0212d248 end:0x0212d288
 
-src/_ZN19FirePiranhaPlantBigD0Ev.c:
+src/_ZN19FirePiranhaPlantBigD0Ev.cpp:
     complete
     .text start:0x0212d288 end:0x0212d2dc
 
@@ -314,11 +314,11 @@ src/FirePiranhaPlantBig_Spawn.c:
     complete
     .text start:0x0212eaa8 end:0x0212eaf0
 
-src/_ZN12PiranhaPlantD1Ev.c:
+src/_ZN12PiranhaPlantD1Ev.cpp:
     complete
     .text start:0x0212eaf0 end:0x0212eb48
 
-src/_ZN12PiranhaPlantD0Ev.c:
+src/_ZN12PiranhaPlantD0Ev.cpp:
     complete
     .text start:0x0212eb48 end:0x0212ebb4
 
@@ -390,7 +390,7 @@ src/_ZN12PiranhaPlant16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212fc84 end:0x0212fcd8
 
-src/_ZN12PiranhaPlant16OnPendingDestroyEv.c:
+src/_ZN12PiranhaPlant16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212fcd8 end:0x0212fcdc
 
