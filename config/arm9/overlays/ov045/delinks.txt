@@ -44,7 +44,7 @@ src/_ZN15FireSeaElevatorD1Ev.cpp:
     complete
     .text start:0x0211150c end:0x02111558
 
-src/_ZN15FireSeaElevatorD0Ev.c:
+src/_ZN15FireSeaElevatorD0Ev.cpp:
     complete
     .text start:0x02111558 end:0x021115b8
 

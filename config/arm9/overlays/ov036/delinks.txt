@@ -91,7 +91,7 @@ src/_ZN8ShipWingD1Ev.cpp:
     complete
     .text start:0x0211193c end:0x02111988
 
-src/_ZN8ShipWingD0Ev.c:
+src/_ZN8ShipWingD0Ev.cpp:
     complete
     .text start:0x02111988 end:0x021119e8
 
@@ -131,7 +131,7 @@ src/_ZN10DonutBlockD1Ev.cpp:
     complete
     .text start:0x02111d14 end:0x02111d58
 
-src/_ZN10DonutBlockD0Ev.c:
+src/_ZN10DonutBlockD0Ev.cpp:
     complete
     .text start:0x02111d58 end:0x02111db0
 

@@ -8,7 +8,7 @@ src/_ZN14ArrowSignRightD1Ev.cpp:
     complete
     .text start:0x02137be0 end:0x02137c2c
 
-src/_ZN14ArrowSignRightD0Ev.c:
+src/_ZN14ArrowSignRightD0Ev.cpp:
     complete
     .text start:0x02137c2c end:0x02137c8c
 

@@ -40,7 +40,7 @@ src/_ZN9TinyCoverD1Ev.cpp:
     complete
     .text start:0x021113d4 end:0x02111420
 
-src/_ZN9TinyCoverD0Ev.c:
+src/_ZN9TinyCoverD0Ev.cpp:
     complete
     .text start:0x02111420 end:0x02111480
 

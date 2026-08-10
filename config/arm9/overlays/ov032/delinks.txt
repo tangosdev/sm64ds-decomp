@@ -132,7 +132,7 @@ src/_ZN9HugeCoverD1Ev.cpp:
     complete
     .text start:0x02112698 end:0x021126e4
 
-src/_ZN9HugeCoverD0Ev.c:
+src/_ZN9HugeCoverD0Ev.cpp:
     complete
     .text start:0x021126e4 end:0x02112744
 

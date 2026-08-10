@@ -7,7 +7,7 @@ src/_ZN10KingBobOmbD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN10KingBobOmbD0Ev.c:
+src/_ZN10KingBobOmbD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 

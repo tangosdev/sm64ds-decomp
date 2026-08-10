@@ -36,7 +36,7 @@ src/_ZN13PoleBillboardD1Ev.cpp:
     complete
     .text start:0x02111314 end:0x02111360
 
-src/_ZN13PoleBillboardD0Ev.c:
+src/_ZN13PoleBillboardD0Ev.cpp:
     complete
     .text start:0x02111360 end:0x021113c0
 
@@ -80,7 +80,7 @@ src/_ZN14KnockDownPlankD1Ev.cpp:
     complete
     .text start:0x02111ba0 end:0x02111be4
 
-src/_ZN14KnockDownPlankD0Ev.c:
+src/_ZN14KnockDownPlankD0Ev.cpp:
     complete
     .text start:0x02111be4 end:0x02111c3c
 
@@ -180,7 +180,7 @@ src/_ZN14MovingBarSmallD1Ev.cpp:
     complete
     .text start:0x02112290 end:0x021122dc
 
-src/_ZN14MovingBarSmallD0Ev.c:
+src/_ZN14MovingBarSmallD0Ev.cpp:
     complete
     .text start:0x021122dc end:0x0211233c
 
@@ -224,7 +224,7 @@ src/_ZN9TowerStepD1Ev.cpp:
     complete
     .text start:0x02112944 end:0x02112988
 
-src/_ZN9TowerStepD0Ev.c:
+src/_ZN9TowerStepD0Ev.cpp:
     complete
     .text start:0x02112988 end:0x021129e0
 

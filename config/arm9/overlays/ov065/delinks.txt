@@ -454,7 +454,7 @@ src/_ZN13TTC_MovingBarD1Ev.cpp:
     complete
     .text start:0x0211b360 end:0x0211b3ac
 
-src/_ZN13TTC_MovingBarD0Ev.c:
+src/_ZN13TTC_MovingBarD0Ev.cpp:
     complete
     .text start:0x0211b3ac end:0x0211b40c
 
@@ -489,7 +489,7 @@ src/_ZN15TtcRotatingGearD1Ev.cpp:
     complete
     .text start:0x0211b7f0 end:0x0211b834
 
-src/_ZN15TtcRotatingGearD0Ev.c:
+src/_ZN15TtcRotatingGearD0Ev.cpp:
     complete
     .text start:0x0211b834 end:0x0211b88c
 
@@ -520,7 +520,7 @@ src/_ZN14TtcMovingCubeAD1Ev.cpp:
     complete
     .text start:0x0211bbdc end:0x0211bc28
 
-src/_ZN14TtcMovingCubeAD0Ev.c:
+src/_ZN14TtcMovingCubeAD0Ev.cpp:
     complete
     .text start:0x0211bc28 end:0x0211bc88
 

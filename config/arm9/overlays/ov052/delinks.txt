@@ -36,7 +36,7 @@ src/_ZN14SquarePathLiftD1Ev.cpp:
     complete
     .text start:0x02111440 end:0x02111484
 
-src/_ZN14SquarePathLiftD0Ev.c:
+src/_ZN14SquarePathLiftD0Ev.cpp:
     complete
     .text start:0x02111484 end:0x021114dc
 

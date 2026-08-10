@@ -152,7 +152,7 @@ src/_ZN12WaterSuctionD1Ev.cpp:
     complete
     .text start:0x021121fc end:0x02112234
 
-src/_ZN12WaterSuctionD0Ev.c:
+src/_ZN12WaterSuctionD0Ev.cpp:
     complete
     .text start:0x02112234 end:0x02112280
 

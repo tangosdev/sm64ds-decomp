@@ -1821,7 +1821,7 @@ src/_ZN19CylinderClsnWithPos6GetPosEv.c:
     complete
     .text start:0x02014820 end:0x02014828
 
-src/_ZN19CylinderClsnWithPosD0Ev.c:
+src/_ZN19CylinderClsnWithPosD0Ev.cpp:
     complete
     .text start:0x02014828 end:0x02014854
 
@@ -1857,7 +1857,7 @@ src/_ZN18MovingCylinderClsnD2Ev.c:
     complete
     .text start:0x02014954 end:0x02014978
 
-src/_ZN18MovingCylinderClsnD0Ev.c:
+src/_ZN18MovingCylinderClsnD0Ev.cpp:
     complete
     .text start:0x02014978 end:0x020149a4
 
@@ -1881,7 +1881,7 @@ src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c:
     complete
     .text start:0x02014a2c end:0x02014a34
 
-src/_ZN25MovingCylinderClsnWithPosD0Ev.c:
+src/_ZN25MovingCylinderClsnWithPosD0Ev.cpp:
     complete
     .text start:0x02014a34 end:0x02014a60
 
@@ -1975,7 +1975,7 @@ src/_ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj.c:
     complete
     .text start:0x020157ac end:0x02015800
 
-src/_ZN15MaterialChangerD0Ev.c:
+src/_ZN15MaterialChangerD0Ev.cpp:
     complete
     .text start:0x02015800 end:0x0201582c
 
@@ -1999,7 +1999,7 @@ src/_ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj.c:
     complete
     .text start:0x020158ac end:0x02015900
 
-src/_ZN18TextureTransformerD0Ev.c:
+src/_ZN18TextureTransformerD0Ev.cpp:
     complete
     .text start:0x02015900 end:0x0201592c
 
@@ -2023,7 +2023,7 @@ src/_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj.c:
     complete
     .text start:0x020159ac end:0x02015a00
 
-src/_ZN15TextureSequenceD0Ev.c:
+src/_ZN15TextureSequenceD0Ev.cpp:
     complete
     .text start:0x02015a00 end:0x02015a2c
 
@@ -2131,7 +2131,7 @@ src/_ZN11CommonModel9DoSetFileEPcii.cpp:
     complete
     .text start:0x02016144 end:0x020161b4
 
-src/_ZN11CommonModelD0Ev.c:
+src/_ZN11CommonModelD0Ev.cpp:
     complete
     .text start:0x020161b4 end:0x020161e0
 
@@ -2159,7 +2159,7 @@ src/_ZN10ModelAnim213Func_020162C4Eji5Fix12IiEt.c:
     complete
     .text start:0x020162c4 end:0x02016320
 
-src/_ZN10ModelAnim2D0Ev.c:
+src/_ZN10ModelAnim2D0Ev.cpp:
     complete
     .text start:0x02016320 end:0x02016364
 
@@ -5710,7 +5710,7 @@ src/_ZN18MovingMeshColliderD2Ev.c:
     complete
     .text start:0x0203a420 end:0x0203a444
 
-src/_ZN18MovingMeshColliderD0Ev.c:
+src/_ZN18MovingMeshColliderD0Ev.cpp:
     complete
     .text start:0x0203a444 end:0x0203a470
 
@@ -5766,7 +5766,7 @@ src/_ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_B
     complete
     .text start:0x0203ab04 end:0x0203ab3c
 
-src/_ZN21ExtendingMeshColliderD0Ev.c:
+src/_ZN21ExtendingMeshColliderD0Ev.cpp:
     complete
     .text start:0x0203ab3c end:0x0203ab68
 
@@ -6304,7 +6304,7 @@ src/_ZN4Heap14CreateRootHeapEPvj.cpp:
     complete
     .text start:0x0203c8e8 end:0x0203c970
 
-src/_ZN9SolidHeapD0Ev.c:
+src/_ZN9SolidHeapD0Ev.cpp:
     complete
     .text start:0x0203c970 end:0x0203c99c
 
@@ -6312,7 +6312,7 @@ src/_ZN9SolidHeapD1Ev.c:
     complete
     .text start:0x0203c99c end:0x0203c9c0
 
-src/_ZN13ExpandingHeapD0Ev.c:
+src/_ZN13ExpandingHeapD0Ev.cpp:
     complete
     .text start:0x0203c9c0 end:0x0203c9ec
 
