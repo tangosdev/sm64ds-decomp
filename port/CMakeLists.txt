@@ -1636,6 +1636,12 @@ list(APPEND SLICE10_CAM_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
 
+# Linux: gate10 carries _ZN11ShadowModel12InitCylinderEv.cpp, a byte-locked src
+# with the MSVC-only `extern "C" extern TYPE x;` idiom g++ rejects. Route it
+# through the same hostgen fixup gate4b already uses (no-op on MSVC; the
+# byte-locked src is never edited). Must run after the full list is assembled.
+port_lin_fixup(SLICE10_CAM_SOURCES)
+
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
     hal/sdat/sdat.cpp
