@@ -1226,6 +1226,11 @@ list(APPEND SLICE18_SOURCES
 # slice_gate18.txt.
 list(APPEND SLICE18_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/RabbitKey_StateSeat.cpp")
+# r0-passthrough: func_ov085_0212e4a4 (a LakituBro state) calls Actor::ClosestPlayer()
+# with no argument, relying on `this` riding ARM r0. Host copy passes `self`; src line
+# commented out in slice_gate18.txt. (frame-0 castle-grounds crash fix)
+list(APPEND SLICE18_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_ClosestPlayer_e4a4.cpp")
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate19.txt" SLICE19_LINES)
 set(SLICE19_SOURCES "")

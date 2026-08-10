@@ -29,8 +29,15 @@ extern "C++" int ApproachLinear2(short &x, short target, short step);
 
 extern "C" {
 
+#ifdef _WIN32 /* LINUX: `_Z15ApproachLinear2Rsss` IS the GCC Itanium mangling of the
+   very `ApproachLinear2(short&,short,short)` this forwards to (src/_Z15ApproachLinear2Rsss.cpp),
+   so on GCC this extern-C shim self-recurses infinitely. On MSVC the C++ name mangles
+   differently, so the __cdecl(short*) -> C++(short&) adapter is needed and safe. On
+   Linux the callers' `_Z15ApproachLinear2Rsss(short*,...)` binds straight to the real
+   src TU (reference == pointer at the ABI), so drop the shim. */
 int _Z15ApproachLinear2Rsss(short *x, short target, short step)
 { return ApproachLinear2(*x, target, step); }
+#endif
 
 /* Actor::SpawnSoundObj: a method since main rewrote its src file, while its
    nine callers across ov002/ov030/ov084/ov085 all still spell the Itanium

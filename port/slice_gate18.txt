@@ -186,7 +186,10 @@ src/func_ov085_0212e19c.c
 src/func_ov085_0212e2ec.c
 src/func_ov085_0212e310.cpp
 src/func_ov085_0212e480.c
-src/func_ov085_0212e4a4.c
+# func_ov085_0212e4a4: HOST COPY at unmatched/Ov085_ClosestPlayer_e4a4.cpp (wired in
+# CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument and relies
+# on `this` riding ARM r0; the host copy passes `self` explicitly. r0-passthrough class.
+# src/func_ov085_0212e4a4.c
 src/func_ov085_0212e59c.c
 src/func_ov085_0212e5ac.c
 src/func_ov085_0212e720.c
