@@ -362,9 +362,18 @@ void _ZN5ModelD1Ev(void *self);              /* Model member at +0xd4 */
 void _ZN15TextureSequenceD1Ev(void *self);   /* TextureSequence member at +0x124 */
 void *OneUpLogo_Spawn(void);                 /* installs _ZTV9OneUpLogo itself */
 int _ZTV9OneUpLogo[31];
+#ifdef _WIN32
 int _ZTV14daObj1UpLogo_c[];   /* RTTI alias, ONE speller (_ZN9OneUpLogoD0Ev),
-                                  not a shared placeholder -- aliased below. */
+                                  not a shared placeholder -- aliased below via
+                                  /alternatename. */
+#endif
 }
+#ifndef _WIN32
+/* Linux: /alternatename has no GCC analog; a real weak symbol alias onto the
+   defined table gives the one RTTI speller its target. */
+extern "C" int _ZTV14daObj1UpLogo_c[31]
+    __attribute__((weak, alias("_ZTV9OneUpLogo")));
+#endif
 
 /* IceSheet::CleanupResources (carried from main post-#1083) reads the same
    bss pair InitResources does (data_ov018_02113c84/c7c, mounted in

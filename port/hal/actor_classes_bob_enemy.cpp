@@ -706,7 +706,8 @@ extern "C" void hal_fill_blendmodelanim_vtable(void);
    of the two fills won and why, is in the comment above
    port_fill_common_model_vtable there. This gate keeps only the reference. */
 extern "C" {
-void *_ZTV11CommonModel[];
+/* DEFINED as [8] in hal/actor_classes_bob_world.cpp; this is a DECLARATION. */
+extern void *_ZTV11CommonModel[];
 void port_fill_common_model_vtable(void);
 }
 

@@ -814,8 +814,11 @@ extern "C" void hal_fill_cylinder_withpos_vtable(void)
 // is a 12-byte interworking veneer onto the parent's GetOwnerID, so the port
 // installs the parent's shim there rather than inventing an override.
 extern "C" {
-void *_ZTV18MovingCylinderClsn[];
-void *_ZTV25MovingCylinderClsnWithPos[];
+/* both vtables are DEFINED as bare zeroed arrays in hal/actor_vtables.cpp (see
+   the note above); these are DECLARATIONS. Explicit extern for GCC (the unsized
+   incomplete-array tentative form MSVC accepts is an error in C++). */
+extern void *_ZTV18MovingCylinderClsn[];
+extern void *_ZTV25MovingCylinderClsnWithPos[];
 void *_ZN18MovingCylinderClsnD1Ev(void *self);
 void *_ZN18MovingCylinderClsnD0Ev(void *self);
 void *_ZN25MovingCylinderClsnWithPosD0Ev(void *self);
