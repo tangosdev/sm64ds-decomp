@@ -269,7 +269,7 @@ src/func_ov085_0212c150.cpp:
     complete
     .text start:0x0212c150 end:0x0212c230
 
-src/_ZN6Rabbit8BehaviorEv.c:
+src/_ZN6Rabbit8BehaviorEv.cpp:
     complete
     .text start:0x0212c230 end:0x0212c7fc
 
