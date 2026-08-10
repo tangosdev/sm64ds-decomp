@@ -41,6 +41,7 @@ import re
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 
 CALL_RE = re.compile(r'\b(func_(?:ov\d+_)?[0-9a-f]{8})\s*\(')
@@ -110,7 +111,7 @@ def matched_sources(repo):
             text = path.read_text(encoding='utf-8', errors='ignore')
         except OSError:
             continue
-        if 'NONMATCHING' in text[:400]:
+        if asm_policy.has_draft_banner(text):
             continue                      # not authoritative -- does not reproduce the ROM
         yield path.stem, strip_comments(text)
 

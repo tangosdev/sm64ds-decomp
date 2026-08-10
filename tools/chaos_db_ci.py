@@ -389,7 +389,8 @@ def main():
             text = f.read_text(errors="ignore") if f else ""
             head = text[:200]
             cls = asm_policy.classify(text) if src_path else None
-            matched = bool(src_path) and "NONMATCHING" not in head and cls != "transcribed"
+            matched = (bool(src_path) and not asm_policy.has_draft_banner(text)
+                       and cls != "transcribed")
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,
                    "addr": addr, "size": size, "matched": matched}

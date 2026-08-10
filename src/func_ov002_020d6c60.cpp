@@ -12,7 +12,12 @@ extern "C" void func_ov002_020d71ec(void* c, int x);
 
 
 
-extern "C" int func_ov002_020d6c60(char* p0, char* p1){
+/* Second parameter is void* to agree with decl_common.h:1443. It was char*, which in a
+ * C++ TU is a different overload rather than a redeclaration, so this file has not
+ * compiled since #866 -- silently, because a file that fails to build is graded NO-SYM,
+ * and NO-SYM could not fail the PR gate. */
+extern "C" int func_ov002_020d6c60(char* p0, void* p1v){
+  char* p1 = (char*)p1v;
   Vector3 v;
   int b;
   int y;

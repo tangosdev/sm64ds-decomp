@@ -310,7 +310,15 @@ def main():
     # unbannered dcd transcription byte-matches vacuously (the dcd words ARE the
     # ROM bytes re-spelled), so its VERIFIED slots prove nothing and the file is
     # rejected on policy — see notes/asm-policy.md and tools/asm_policy.py.
-    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM"}
+    #
+    # NO-SYM is the fourth, and it was missing. A file that does not compile, or compiles
+    # without emitting its symbol, is graded NO-SYM — and NO-SYM was not in this set, so
+    # the worst possible outcome scored as a pass. src/func_ov002_020d6c60.cpp has been
+    # unbuildable since #866 (`illegal function overloading`, its local declaration
+    # disagreeing with decl_common.h), carries no NONMATCHING banner, and was edited by a
+    # merged PR while broken. A gate that cannot fail the file it could not even build is
+    # not gating; a self-declared draft still gets the DRAFT pass below.
+    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM", "NO-SYM"}
     reports, bad = [], []
     for path, rep in zip(files, checked):
         reports.append(rep)
@@ -331,7 +339,7 @@ def main():
             text = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             pass
-        if w == "NO-REPRO" and "NONMATCHING" in text[:200]:
+        if w == "NO-REPRO" and asm_policy.has_draft_banner(text):
             rep["worst"] = w = "DRAFT"
         # The draft downgrade cannot collide with this: a transcription has no banner
         # by definition (a NONMATCHING banner reclassifies it as an honest draft).

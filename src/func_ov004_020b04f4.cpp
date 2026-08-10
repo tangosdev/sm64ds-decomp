@@ -7,9 +7,11 @@
 // recovered name: dScMgBase_c_BeforeRender
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeRender - recovered from vtable slot identity */
-// NONMATCHING: register allocation (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+/* The banner this carried was true of the compiler it named and stale for the one the
+ * build uses. It claimed "not byte-matchable from C at mwccarm 1.2/sp2p3"; the pin is
+ * 2004/b56, and under that pin the function reproduces exactly -- bytes and relocation
+ * destinations both. It is enrolled and it ships in the ROM, so the byte gate has in
+ * fact been checking it all along, against a file that told readers not to trust it. */
 typedef short s16;
 
 struct Scene;

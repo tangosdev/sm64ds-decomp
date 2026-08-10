@@ -25,6 +25,7 @@ Usage:
 """
 import argparse, difflib, json, pathlib, sys, time
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import asm_policy  # noqa: E402
 import swarm as S
 import relocs as R
 import modules as MOD
@@ -96,7 +97,7 @@ def build_corpus():
             # A committed src file is only an example-eligible byte-match if it is NOT a
             # "// NONMATCHING" hatch (a decompiled-but-unmatchable draft). The banner is in the
             # committed src, so this is portable and does not need nonmatching.jsonl.
-            hatch = src is not None and "// NONMATCHING" in src[:200]
+            hatch = src is not None and asm_policy.has_draft_banner(src)
             if src is not None and not hatch:
                 rec["src"] = src
                 matched.append(rec)

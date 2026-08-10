@@ -33,13 +33,13 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import affected_src as A  # noqa: E402
 
 # Fail closed. WRONG/NO-REPRO are false matches; ERROR means we could not get a verdict at
 # all, and a gate that waves through what it could not check is not a gate. BLIND and NO-SYM
 # stay warnings: those are symbol-coverage gaps, not evidence the bytes are wrong.
 BLOCKING = {"WRONG", "NO-REPRO", "ERROR"}
-NONMATCHING_WINDOW = 400  # bytes of head to scan for the draft banner
 
 
 def _load_symbol(name):
@@ -75,7 +75,7 @@ def is_draft(path):
     p = REPO / path
     if not p.exists():
         return False
-    return "NONMATCHING" in p.read_text(errors="ignore")[:NONMATCHING_WINDOW]
+    return asm_policy.has_draft_banner(p.read_text(errors="ignore"))
 
 
 def _run_linkcheck(module, name, addr, size):

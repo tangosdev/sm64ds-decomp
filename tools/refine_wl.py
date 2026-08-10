@@ -22,6 +22,7 @@ permuter / hand-fix tiers).
 import argparse, json, pathlib, sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import categorize_misses as CAT
 import knowledge as KB
 import ledger as L
@@ -81,7 +82,7 @@ def main():
         # a src file only disqualifies a candidate if it is a real byte-match;
         # a "// NONMATCHING" hatch (PR #84 draft bank) is still fair game
         text = WL.read_src_text(name)
-        return text is None or "NONMATCHING" in text[:200]
+        return text is None or asm_policy.has_draft_banner(text)
 
     pool = [r for r in rows
             if r.get("divergences") and 0 < r["divergences"] <= args.max_div

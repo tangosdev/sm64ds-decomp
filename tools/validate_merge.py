@@ -95,7 +95,7 @@ def function_snapshot(rev):
     # Match progress.py and the rest of the repo's established hatch rule: the
     # marker is a source header and is recognized in the first 200 characters.
     nonmatching = {path for path in candidates
-                   if "NONMATCHING" in git_text(rev, path)[:200]}
+                   if asm_policy.has_draft_banner(git_text(rev, path))}
     # An unbannered dcd transcription byte-matches vacuously (it IS the ROM words
     # re-spelled), so it never counts as matched -- see tools/asm_policy.py. Built
     # the same revision-based way as ``nonmatching``: a cheap fixed-string grep

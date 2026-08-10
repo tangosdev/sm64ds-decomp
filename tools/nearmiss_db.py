@@ -35,6 +35,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import match as M
 import swarm as S
 import ledger as L
@@ -191,7 +192,7 @@ def ingest(args):
         # symbol (see tools/names.py). Keying the src-file check by the stored name
         # missed renamed matches, resurrecting ghosts prune-matched had dropped.
         stext = WL.read_src_text(NM.name_at(mod, addr) or name)
-        if stext is not None and "NONMATCHING" not in stext[:400]:
+        if stext is not None and not asm_policy.has_draft_banner(stext):
             # matched in committed src/ -- the local matched ledger is stale on
             # multi-contributor checkouts, so without this check a seeds file
             # generated before someone else's match RESURRECTS a ghost entry
@@ -343,7 +344,7 @@ def prune_matched(args):
     db = load_db()
     ghosts = [key for key, r in db.items()
               for text in [WL.read_src_text(NM.name_at(r["module"], r["addr"]) or r["name"])]
-              if text is not None and "NONMATCHING" not in text[:400]]
+              if text is not None and not asm_policy.has_draft_banner(text)]
     if args.dry_run:
         for key in ghosts:
             r = db[key]

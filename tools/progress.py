@@ -18,6 +18,7 @@ fresh checkout with no ROM and no local state - which is what the hosted
 update-progress.yml workflow needs.
 """
 import json
+import asm_policy  # noqa: E402
 import pathlib
 import re
 import sys
@@ -80,7 +81,7 @@ def synced_from_src():
             if f is not None:
                 # a "// NONMATCHING" hatch has a src file but is NOT a byte-match;
                 # do not count it toward matched progress
-                if "NONMATCHING" not in f.read_text(errors="ignore")[:200]:
+                if not asm_policy.has_draft_banner(f.read_text(errors="ignore")):
                     done_n += 1
                     done_b += sz
     return done_n, done_b, n, total_bytes

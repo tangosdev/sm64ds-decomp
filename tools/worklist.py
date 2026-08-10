@@ -20,6 +20,7 @@ exact oracle / regperm-oracle code.
 """
 import argparse
 import json
+import asm_policy  # noqa: E402
 import pathlib
 import random
 import re
@@ -72,7 +73,7 @@ def read_src_text(name):
     # match over a NONMATCHING draft when both exist.
     texts = [p.read_text(encoding="utf-8") for p in SP.paths_for(name)]
     for t in texts:
-        if "// NONMATCHING" not in t[:200]:
+        if not asm_policy.has_draft_banner(t):
             return t
     return texts[0] if texts else None
 

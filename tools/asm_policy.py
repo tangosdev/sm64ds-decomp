@@ -44,6 +44,42 @@ import re
 HAND_BANNER = "HAND-ASM PRIMITIVE"
 DRAFT_BANNER = "NONMATCHING"
 
+
+def header_region(text):
+    """The file's leading banner block: everything before the first line of real code.
+
+    Comments, blank lines and preprocessor directives are all still "header"; the region
+    ends at the first declaration or definition. Banners live there by convention, after
+    the includes and the `recovered:` provenance lines.
+    """
+    out = []
+    for line in text.splitlines(True):
+        s = line.strip()
+        if s and not s.startswith(("//", "/*", "*", "*/", "#")):
+            break
+        out.append(line)
+    return "".join(out)
+
+
+def has_draft_banner(text):
+    """Does this file declare itself a non-match? THE one rule, because there were three.
+
+    Callers scanned `text[:200]` (chaos_db_ci, cluster_targets, coddog, enroll,
+    pr_linkcheck), `text[:400]` (nearmiss_db, prepush_linkcheck), or the whole file
+    (classify, below). So one file could be a draft to one gate and matched to another,
+    which is exactly what happened: src/func_ov091_021339fc.c says "does NOT count as
+    matched" at byte 246 -- past the 200-byte window -- and the progress bar counted it
+    as matched regardless of what its author wrote.
+
+    A fixed byte count was always going to rot, because the banner did not move; the
+    recovery comments above it grew. The header region is stable against that. Measured
+    when this landed: 200 bytes found 72 files, 400 found 73, header region and whole
+    file both found 74 -- so this is not looser than a whole-file scan, it just also
+    cannot be fooled by the word appearing deep inside a function body.
+    """
+    return DRAFT_BANNER in header_region(text)
+
+
 # A dcd word is raw ROM data re-spelled; one is enough to make the file suspect.
 _DCD_RE = re.compile(r"\bdcd\s+0x[0-9a-fA-F]")
 

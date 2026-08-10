@@ -25,7 +25,8 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
 SRC = REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
-import srcpath as SP  # noqa: E402
+import srcpath as SP
+import asm_policy  # noqa: E402  # noqa: E402
 import relocs as RL  # noqa: E402
 MATCHED = REPO / "progress" / "matched.jsonl"
 
@@ -49,7 +50,7 @@ def main():
             # so never let the first extension found decide it (chaos_db_ci.py has the
             # same .c-first blind spot -- see tools/rebuild_ledger).
             srcs = SP.paths_for(name)
-            if not any("NONMATCHING" not in f.read_text(errors="ignore")[:200]
+            if not any(not asm_policy.has_draft_banner(f.read_text(errors="ignore"))
                        for f in srcs):
                 continue
             key = (label, addr)

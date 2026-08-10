@@ -34,6 +34,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG, SRC = REPO / "config", REPO / "src"
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 # An intentional divergence from the ROM lives in mods/<symbol>.c and takes precedence
 # over src/<symbol>.c for that one function. Keeping it a file-existence rule (rather
@@ -143,7 +144,8 @@ def candidates():
             # A mod is *meant* to diverge, so the not-a-byte-match hatch does not apply
             # to it; every structural rule still does, because a mod that changes size
             # or emits data would shift the module just as badly as a bad match would.
-            if not is_mod and "NONMATCHING" in f.read_text(encoding="utf-8", errors="ignore")[:200]:
+            if not is_mod and asm_policy.has_draft_banner(
+                    f.read_text(encoding="utf-8", errors="ignore")):
                 skipped["NONMATCHING hatch"] += 1
                 continue
             if len(name_mods[name]) > 1:
