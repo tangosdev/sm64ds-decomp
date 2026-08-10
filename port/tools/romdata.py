@@ -446,6 +446,22 @@ def main():
     if romblob_common.ROM_CLEAN:
         # --rom-clean zeroes the arrays; the bytes load from romdata.bin.
         lines.append("#include <string.h>")   # for the apply memcpy
+    # Portable alignment + grouped-section placement (MSVC __declspec vs GCC
+    # __attribute__). PORT_RD_ALIGN(n) is a standalone alignment; PORT_RD_SEC
+    # places a grouped-run symbol (MSVC $-suffix section, GCC one base section +
+    # declaration order under -fno-toplevel-reorder). Same layout on both.
+    lines += [
+        "#if defined(_MSC_VER)",
+        "#define PORT_RD_ALIGN(n) __declspec(align(n))",
+        "#define PORT_RD_SEC(fullsec, basesec, algn) \\",
+        "    __pragma(section(fullsec, read, write)) \\",
+        "    __declspec(allocate(fullsec)) __declspec(align(algn))",
+        "#else",
+        "#define PORT_RD_ALIGN(n) __attribute__((aligned(n)))",
+        "#define PORT_RD_SEC(fullsec, basesec, algn) \\",
+        "    __attribute__((section(basesec), aligned(algn), used))",
+        "#endif",
+    ]
     lines.append("")
     for addr, length, ctype in TABLES:
         off = addr - BASE
@@ -487,7 +503,7 @@ def main():
         if addr + size > BSS_START:
             size = BSS_START - addr
         blob = data[addr - BASE:addr - BASE + size]
-        lines.append(f"__declspec(align(8)) unsigned char {name}[{size}] = "
+        lines.append(f"PORT_RD_ALIGN(8) unsigned char {name}[{size}] = "
                      f"{collect(name, blob)};")
     lines.append("")
 
@@ -499,10 +515,8 @@ def main():
                      f"(align {align}) */")
         for i, (name, addr, size) in enumerate(members):
             sec = f".{tag}${i:04d}"
-            lines.append(f'#pragma section("{sec}", read, write)')
             blob = data[addr - BASE:addr - BASE + size]
-            lines.append(f'__declspec(allocate("{sec}")) '
-                         f'__declspec(align({align})) '
+            lines.append(f'PORT_RD_SEC("{sec}", ".{tag}", {align}) '
                          f"unsigned char {name}[{size}] = {collect(name, blob)};")
         first, last = members[0], members[-1]
         lines.append(f"unsigned {tag}_run_base = (unsigned)&{first[0]}[0];")

@@ -515,6 +515,22 @@ def main():
     if romblob_common.ROM_CLEAN:
         lines.append("#include <string.h>")
     lines += ["typedef unsigned char u8;", ""]
+    # PORT_OVSEC(fullsec, basesec, algn): place a packed symbol so the run keeps
+    # its ROM spacing. MSVC uses $-suffix section grouping (__pragma(section) +
+    # __declspec(allocate)); GCC/Clang use one base section + declaration order
+    # (the build passes -fno-toplevel-reorder), with per-symbol alignment. Same
+    # contiguous layout on both; the emitted *_check() verifies the offsets.
+    lines += [
+        "#if defined(_MSC_VER)",
+        "#define PORT_OVSEC(fullsec, basesec, algn) \\",
+        "    __pragma(section(fullsec, read, write)) \\",
+        "    __declspec(allocate(fullsec)) __declspec(align(algn))",
+        "#else",
+        "#define PORT_OVSEC(fullsec, basesec, algn) \\",
+        "    __attribute__((section(basesec), aligned(algn), used))",
+        "#endif",
+        "",
+    ]
     # --pack: THE SYMBOLS KEEP THEIR ROM SPACING.
     #
     # dsd names a symbol wherever code happened to reference one, so a single
@@ -586,16 +602,13 @@ def main():
                 # only to pad the run so the named symbols keep their ROM
                 # spacing, and its bytes are never read directly.
                 lines.append(
-                    f'__pragma(section(".{tag}${slot:04d}", read, write))'
-                    f' __declspec(allocate(".{tag}${slot:04d}"))'
-                    f' __declspec(align({rom_align(prev_end)}))'
+                    f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}",'
+                    f' {rom_align(prev_end)})'
                     f' static u8 {tag}_gap_{prev_end:08x}'
                     f'[{gap}] = {{ 0 }};')
                 slot += 1
             lines.append(
-                f'__pragma(section(".{tag}${slot:04d}", read, write))'
-                f' __declspec(allocate(".{tag}${slot:04d}"))'
-                f' __declspec(align({rom_align(a)}))'
+                f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}", {rom_align(a)})'
                 f' u8 {name}[{size}] = '
                 f'{{ {romblob_common.init_body(blob_of[name])} }};')
             slot += 1
