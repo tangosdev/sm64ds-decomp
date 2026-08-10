@@ -733,8 +733,15 @@ void _ZN6Player16InitWingFeathersEb(void *self, unsigned char b_)
 void _ZN6Player16InitWingFeathersEb(void *self, unsigned char b_);  /* Linux: real symbol from src/_ZN6Player16InitWingFeathersEb */
 #endif /* _WIN32 */
 extern "C++" int ApproachLinear(int &ref, int target, int step);
+#ifdef _WIN32 /* LINUX: `_Z14ApproachLinearRiii` IS the GCC Itanium mangling of the
+   `ApproachLinear(int&,int,int)` this forwards to (src/_Z14ApproachLinearRiii.cpp),
+   so on GCC this extern-C shim self-recurses infinitely. On MSVC the C++ name mangles
+   differently, so the (int*) -> (int&) adapter is real and needed. On Linux the
+   callers' `_Z14ApproachLinearRiii(int*,...)` bind straight to the real src TU
+   (reference == pointer at the ABI). */
 int _Z14ApproachLinearRiii(int *ref, int target, int step)
 { return ApproachLinear(*ref, target, step); }
+#endif
 int hal_anim_willhit(void *self, int f)
 { return ((Animation *)self)->Animation::WillHitFrame(f) ? 1 : 0; }
 int hal_nhi_next(void *self, void *h)
