@@ -22,7 +22,7 @@ int StarSwitch::CleanupResources()
     }
     ((SharedFilePtr *)(*(void**)(&data_ov002_021098e8 + unk_34c * 0xc)))->Release();
     ((SharedFilePtr *)(*(void**)(&data_ov002_021098ec + unk_34c * 0xc)))->Release();
-    t = mActorID == 0xc;
+    t = actorID == 0xc;
     if (t != false) {
         UnloadSilverStarAndNumber();
         ((SharedFilePtr *)(&data_ov002_0211092c))->Release();

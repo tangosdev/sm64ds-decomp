@@ -34,7 +34,7 @@ int StarSwitch::Behavior()
     }
 
     {
-        int isType = (int)(mActorID == 0xc);
+        int isType = (int)(actorID == 0xc);
         if (isType != 0) {
             if (func_ov002_020b9f00(((char *)this)) != 0) {
                 a = _ZN5Actor10FindWithIDEj(mTargetActorID);
@@ -45,7 +45,7 @@ int StarSwitch::Behavior()
         }
     }
 
-    if ((int)(mActorID == 0xc) != 0) {
+    if ((int)(actorID == 0xc) != 0) {
         id344 = mTargetActorID;
         if (id344 == 0) {
             func_ov002_020ba01c(((char *)this), 2, 3, 0x333, 0x1000);

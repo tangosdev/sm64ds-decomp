@@ -182,7 +182,7 @@ src/FloatingFloorLllBig_Spawn.c:
     complete
     .text start:0x021120f4 end:0x02112130
 
-src/_ZN19FloatingFloorLllBigD1Ev.c:
+src/_ZN19FloatingFloorLllBigD1Ev.cpp:
     complete
     .text start:0x02112130 end:0x02112174
 
