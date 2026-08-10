@@ -35,6 +35,7 @@ struct BowserSkyPlatform {
     u8  unk_1ae;            /* 0x1ae */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
     int Behavior();
     int InitResources();
     int Render();

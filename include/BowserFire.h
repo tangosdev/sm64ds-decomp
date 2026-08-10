@@ -43,6 +43,8 @@ struct BowserFire {
     s32 unk_388;            /* 0x388 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    int Render();
     int Behavior();
 #endif
 };

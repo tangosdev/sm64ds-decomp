@@ -82,6 +82,8 @@ struct Bowser {
     s32 unk_450;            /* 0x450 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    void OnPendingDestroy();
     int Behavior();
     int Render();
 #endif

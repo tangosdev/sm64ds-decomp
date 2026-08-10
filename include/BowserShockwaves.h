@@ -55,6 +55,8 @@ struct BowserShockwaves {
     s16 unk_214;            /* 0x214 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    int Render();
     int Behavior();
     int InitResources();
 #endif

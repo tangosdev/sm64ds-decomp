@@ -280,15 +280,15 @@ src/func_ov060_02115d68.cpp:
     complete
     .text start:0x02115d68 end:0x02115e80
 
-src/_ZN6Bowser16CleanupResourcesEv.c:
+src/_ZN6Bowser16CleanupResourcesEv.cpp:
     complete
     .text start:0x02115e80 end:0x02115f00
 
-src/_ZN10BowserTail16CleanupResourcesEv.c:
+src/_ZN10BowserTail16CleanupResourcesEv.cpp:
     complete
     .text start:0x02115f00 end:0x02115f08
 
-src/_ZN6Bowser16OnPendingDestroyEv.c:
+src/_ZN6Bowser16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02115f08 end:0x02115f0c
 
@@ -296,7 +296,7 @@ src/_ZN6Bowser6RenderEv.cpp:
     complete
     .text start:0x02115f0c end:0x02115f5c
 
-src/_ZN10BowserTail6RenderEv.c:
+src/_ZN10BowserTail6RenderEv.cpp:
     complete
     .text start:0x02115f5c end:0x02115f64
 
@@ -412,11 +412,11 @@ src/func_ov060_02117624.cpp:
     complete
     .text start:0x02117624 end:0x021176c4
 
-src/_ZN10BowserFire16CleanupResourcesEv.c:
+src/_ZN10BowserFire16CleanupResourcesEv.cpp:
     complete
     .text start:0x021176c4 end:0x021176cc
 
-src/_ZN10BowserFire6RenderEv.c:
+src/_ZN10BowserFire6RenderEv.cpp:
     complete
     .text start:0x021176cc end:0x021176d4
 
@@ -562,7 +562,7 @@ src/func_ov060_02118970.c:
     complete
     .text start:0x02118970 end:0x02118ab0
 
-src/_ZN17BowserSkyPlatform16CleanupResourcesEv.c:
+src/_ZN17BowserSkyPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118ab0 end:0x02118ad4
 
@@ -590,7 +590,7 @@ src/_ZN16BowserShockwavesD0Ev.c:
     complete
     .text start:0x02118d64 end:0x02118de0
 
-src/_ZN16BowserShockwaves16CleanupResourcesEv.c:
+src/_ZN16BowserShockwaves16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118de0 end:0x02118e1c
 

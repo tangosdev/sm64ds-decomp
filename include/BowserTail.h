@@ -20,6 +20,8 @@ struct BowserTail {
     u32 unk_108;            /* 0x108 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    int Render();
     int Behavior();
     int InitResources();
 #endif
