@@ -1,47 +1,44 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BigBrickBlock: 6 matched functions, 7 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BIGBRICKBLOCK_H
 #define BIGBRICKBLOCK_H
+
 #include "types.h"
-#include "Model.h"
+#include "Platform.h"
 
-/* Actor is only ever pointed at from here, so a declaration is enough --
- * no definition is pulled in. The typedef keeps the member spelled the
- * same in C and in C++; the guard is common.h's idiom for the same job. */
-#ifndef ACTOR_FWD_DECLARED
-#define ACTOR_FWD_DECLARED
-struct Actor;
-typedef struct Actor Actor;
-#endif
+/* Derives from Platform: the destructor stores this class's vtable, then
+ * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three are Platform's.
+ * Everything this header used to restate below 0x31e was Actor's and
+ * Platform's.
+ *
+ * THE FIELDS AT 0x31e/0x31f ARE IN PLATFORM'S TAIL PADDING. Platform's last
+ * field ends at 0x31e and its size rounds to 0x320; the Itanium ABI lets a
+ * derived class use a non-POD base's tail padding, and the ROM does. The bytes
+ * settle it -- code here reads this+0x31e and reproduces.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
 
-struct BigBrickBlock {
-    u8  pad_000[0xc];
-    u16 mActorId;            /* 0x00c */
-    u8  pad_00e[0xc6];
-    /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13BigBrickBlockD1Ev.c] */
-    Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1f9];
-    u8  unk_31e;            /* 0x31e */
-    u8  unk_31f;            /* 0x31f */
-    u8  mEventID;            /* 0x320 */
-    u8  pad_321[0x3];
-    /* Actor * -- the ROM loads this WORD and passes it to _ZN5Actor15FindWithActorIDEjPS_
-       as that function's `this`, which is an object address, so the word is a Actor *. It
-       says nothing about the rest of the marker's span, which stays explicit padding. Was
-       a u8 marker. */
-    Actor *mSwitch;            /* 0x324 */
 #ifdef __cplusplus
-    /* methods */
+
+struct BigBrickBlock : Platform {
+    u8  unk_31e;                      /* 0x31e - in Platform's tail padding */
+    u8  unk_31f;                      /* 0x31f */
+    u8  mEventID;                     /* 0x320 */
+    u8  pad_321[0x3];
+    Actor *mSwitch;                   /* 0x324 */
+
+    /* --- vtable --- */
+    virtual ~BigBrickBlock();
+
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
-#endif
 };
 
-#endif
+typedef char BigBrickBlock_size_must_be_0x328[sizeof(BigBrickBlock) == 0x328 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* BIGBRICKBLOCK_H */

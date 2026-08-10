@@ -14,7 +14,7 @@ extern "C" void _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int
 
 int BigBrickBlock::Behavior()
 {
-    int is13 = (int)(mActorId == 0x13);
+    int is13 = (int)(actorID == 0x13);
     if (is13 != 0) {
         if (unk_31f != _ZN5Event6GetBitEj(mEventID))
             unk_31e = 0;
@@ -42,9 +42,9 @@ int BigBrickBlock::Behavior()
         int v1 = 0x15e000;
         int v5 = 0x64000;
         int t;
-        if ((t = (int)(mActorId == 0x10)) != 0 ||
-            (t = (int)(mActorId == 0x11)) != 0 ||
-            (t = (int)(mActorId == 0x2e)) != 0) {
+        if ((t = (int)(actorID == 0x10)) != 0 ||
+            (t = (int)(actorID == 0x11)) != 0 ||
+            (t = (int)(actorID == 0x2e)) != 0) {
             v1 = 0x1c2000;
             v5 = 0x96000;
         }

@@ -127,7 +127,7 @@ src/DonutBlock_Spawn.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 
-src/_ZN10DonutBlockD1Ev.c:
+src/_ZN10DonutBlockD1Ev.cpp:
     complete
     .text start:0x02111d14 end:0x02111d58
 

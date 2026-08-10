@@ -103,6 +103,47 @@ for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob(
         CLASS_SIZES[_m.group(1)] = int(_m.group(2), 16)
 SZ.update(CLASS_SIZES)
 
+# A derived class's own fields start at the base's DATA SIZE, not its sizeof.
+#
+# The Itanium ABI lets a derived class place members in a non-POD base's TAIL
+# PADDING, and this tree's classes do it: Platform's last field ends at 0x31e
+# and its size rounds to 0x320, so DonutBlock's s16 lands at 0x31e -- confirmed
+# by the bytes, since DonutBlock::Behavior reads this+0x31e and reproduces the
+# ROM. Starting at sizeof reported every field of such a class as mismatched
+# and exited 1.
+#
+# Starting at the data size is right for BOTH cases, because the walk below
+# already aligns each field: a class whose first own field is a 4-byte value
+# still gets 0x31e rounded up to 0x320. So this is not a special case for tail
+# padding, it is the correct start offset that sizeof was approximating.
+#
+# The data size is read off the LAST COMMENTED FIELD -- the ROM evidence -- not
+# recomputed, so this cannot drift from the walk below. A class with no
+# commented fields falls back to sizeof.
+DATA_SIZE = {}
+for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob("*.h"):
+    _txt = _h.read_text(errors="replace")
+    for _cm in re.finditer(r"^\s*struct (\w+)\s*(?::\s*(?:public\s+)?\w+\s*)?\{",
+                           _txt, re.M):
+        _cls = _cm.group(1)
+        _body = _txt[_cm.end():]
+        _end = _body.find("\n};")
+        if _end != -1:
+            _body = _body[:_end]
+        _last = None
+        for _fm in re.finditer(r"^\s*(?:(?:struct|union|class|enum)\s+)?([A-Za-z_]\w*)"
+                               r"\s*(\**)\s*(\w+)\s*(?:\[\s*(0x[0-9a-fA-F]+|\d+)\s*\])?\s*;"
+                               r"\s*/\*\s*(0x[0-9a-fA-F]+)", _body, re.M):
+            _ty, _star, _nm, _arr, _off = _fm.groups()
+            _w = 4 if _star else SZ.get(_ty)
+            if _w is None:
+                _last = None
+                break
+            _n = int(_arr, 0) if _arr else 1
+            _last = int(_off, 16) + _w * _n
+        if _last is not None and _cls not in DATA_SIZE:
+            DATA_SIZE[_cls] = _last
+
 rc = 0
 for path in sys.argv[1:]:
     txt = pathlib.Path(path).read_text(errors="replace")
@@ -128,7 +169,10 @@ for path in sys.argv[1:]:
                     if base not in SZ:
                         unknown_base = base
                         break
-                    off = SZ[base]
+                    # Data size, not sizeof -- see DATA_SIZE above. Each field is
+                    # aligned below, so a base whose padding is unused still puts
+                    # the first own field exactly where sizeof would have.
+                    off = DATA_SIZE.get(base, SZ[base])
                     derived_from = base
             continue
         if in_comment:

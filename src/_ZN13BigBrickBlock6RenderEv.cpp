@@ -18,7 +18,7 @@ struct Sub {
 
 int BigBrickBlock::Render()
 {
-  int b = (mActorId == 0x13);
+  int b = (actorID == 0x13);
   if (b != 0) {
     if (!(_ZN5Event6GetBitEj(mEventID) != 0 && unk_31e == 0)) {
       return 1;
@@ -32,7 +32,7 @@ int BigBrickBlock::Render()
       }
     }
   }
-  int b2 = (mActorId == 0x10);
+  int b2 = (actorID == 0x10);
   if (b2 != 0) {
     V3 v = data_ov002_021089e0;
     ((Sub*)((char*)&mModel))->m(&v);
