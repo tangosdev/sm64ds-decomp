@@ -29,6 +29,8 @@
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 #include "ModelAnim.h"
+#include "TextureSequence.h"
+#include "MaterialChanger.h"
 
 /* fwd. Only these three are types. gen_header.py used to emit a `struct X;`
    for every parameter NAME it could not resolve as well -- 26 of them, `struct
@@ -129,11 +131,14 @@ struct Player : Actor {
        exactly at unk_1d8; mAnimation2 at 0x1c4 was its Animation base. */
     ModelAnim mModelAnim4;            /* 0x174 */
     u8  unk_1d8;            /* 0x1d8 */
-    u8  pad_1d9[0x83];
-    s32 unk_25c;            /* 0x25c */
-    u8  pad_260[0x10];
-    s32 unk_270;            /* 0x270 */
-    u8  pad_274[0x8];
+    u8  pad_1d9[0x3];
+    /* The three __destroy_arr calls in ~Player, in the order it makes them
+       (last array first). Both element types assert 0x14, which is exactly
+       the stride the destructor passes. unk_25c and unk_270 were the
+       currFrame of mTexSeqPlayer[0] and [1] -- +0x08 into each element. */
+    TextureSequence mTexSeqBody[4];            /* 0x1dc */
+    MaterialChanger mMatChanger[2];            /* 0x22c */
+    TextureSequence mTexSeqPlayer[2];            /* 0x254 */
     u8  unk_27c;            /* 0x27c */
     u8  pad_27d[0xf];
     u8  unk_28c;            /* 0x28c */
@@ -141,15 +146,15 @@ struct Player : Actor {
     /* ~Player calls _ZN11ShadowModelD1Ev on this, and ShadowModel asserts
        0x28 -- which closes exactly at mMovingCylinderClsnWithPos. */
     ShadowModel mShadowModel;            /* 0x2ac */
-    u8  mMovingCylinderClsnWithPos;            /* 0x2d4 */
-    u8  pad_2d5[0x3];
-    s32 unk_2d8;            /* 0x2d8 */
-    s32 unk_2dc;            /* 0x2dc */
-    u8  pad_2e0[0xc];
-    u8  mBodyClsnFlags;            /* 0x2ec */
-    u8  pad_2ed[0x3];
-    u8  unk_2f0;            /* 0x2f0 */
-    u8  pad_2f1[0x23];
+    /* ~Player calls _ZN25MovingCylinderClsnWithPosD1Ev on this too, and the
+       0x40 it asserts closes exactly at mAttackClsn. The four markers it
+       absorbs are all CylinderClsn's own, reached through the base:
+       unk_2d8 = radius (+0x04), unk_2dc = height (+0x08),
+       mBodyClsnFlags = flags (+0x18), unk_2f0 = vulnFlags (+0x1c).
+       mBodyClsnFlags in particular was never a Player field -- it is the
+       body collider's flags word, which is why thirteen Player methods
+       set and clear bits in it. */
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x2d4 */
     /* ~Player calls _ZN25MovingCylinderClsnWithPosD1Ev on this, and that
        type asserts 0x40 -- which closes exactly at mRidingShell. */
     MovingCylinderClsnWithPos mAttackClsn;            /* 0x314 */

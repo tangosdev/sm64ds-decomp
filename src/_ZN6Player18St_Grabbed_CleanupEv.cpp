@@ -20,7 +20,7 @@ extern void _ZN6Player9DropActorEv(void* a);
 int Player::St_Grabbed_Cleanup()
 {
     void* a;
-    *(u32*)&mBodyClsnFlags &= ~2;
+    *(u32*)&mMovingCylinderClsnWithPos.flags &= ~2;
     a = (void*)unk_35c;
     if (a) {
         int isBob = *(u16*)((char*)a + 0xc) == 0xbf;

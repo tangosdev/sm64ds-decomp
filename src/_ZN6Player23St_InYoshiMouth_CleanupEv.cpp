@@ -9,10 +9,12 @@
  * state being left, and TESTS the result -- a 0 vetoes the transition. So this
  * handler's return value is what lets the player leave Yoshi's mouth at all.
  *
- * mBodyClsnFlags at 0x2ec was already in Player.h, named from other evidence,
- * and this function clearing 0x2000 and 0x2 in it is what a cleanup of a
- * carried state looks like. The other two writes are still unnamed offsets --
- * 0x713 and 0x6f5 -- and are left as such rather than guessed at.
+ * The word at 0x2ec used to be a Player field called mBodyClsnFlags. It is
+ * not one: it is the body collider's own `flags` -- CylinderClsn's, at +0x18
+ * -- reached through mMovingCylinderClsnWithPos now that the member has its
+ * real type. Clearing 0x2000 and 0x2 in it is what a cleanup of a carried
+ * state looks like. The other two writes are still unnamed offsets -- 0x713
+ * and 0x6f5 -- and are left as such rather than guessed at.
  *
  * THE TWO CLEARS DO NOT MERGE. `*p &= ~0x2002` is one instruction shorter and
  * changes the size, so the ROM really does mask twice; measured, not assumed.
@@ -26,7 +28,7 @@
 
 int Player::St_InYoshiMouth_Cleanup()
 {
-    unsigned int *p = (unsigned int *)&mBodyClsnFlags;
+    unsigned int *p = (unsigned int *)&mMovingCylinderClsnWithPos.flags;
     *p &= ~0x2000;
     *p &= ~2;
     *(unsigned char *)((char *)this + 0x713) = 1;

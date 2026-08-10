@@ -11,7 +11,7 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*, unsigned int, int, int, unsign
 int Player::St_Grabbed_Init()
 {
   func_ov002_020da9d4(((char*)this));
-  *(int*)(int)(((unsigned long long)(int)((char*)&mBodyClsnFlags)) & 0xFFFFFFFFFFFFFFFFull) |= 2;
+  *(int*)(int)(((unsigned long long)(int)((char*)&mMovingCylinderClsnWithPos.flags)) & 0xFFFFFFFFFFFFFFFFull) |= 2;
   mIsBodyClsnEnabled = 0;
   unk_716 = 1;
   _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 6, (void*)((char*)&mCamSpacePosX));

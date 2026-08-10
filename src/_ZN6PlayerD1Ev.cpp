@@ -1,6 +1,37 @@
 //cpp
 // @symbol _ZN6PlayerD1Ev
-/* recovered: named members + shared header */
+/* A REAL `Player::~Player() {}` DOES NOT REPRODUCE THIS FUNCTION, and the way
+ * it fails is worth more than the attempt. It is a FAKEMATCH: byte-comparison
+ * reports 39 words, 0 mismatches, and the two functions still call different
+ * code.
+ *
+ * The compiler-generated destructor is right about everything structural. All
+ * nine destructible members now have real types (see include/Player.h), so it
+ * emits the whole sequence by itself, in reverse declaration order, with an
+ * empty body -- the same instruction encodings, the same registers, the same
+ * three array calls with the 0x14 stride.
+ *
+ * But it calls __cxa_vec_cleanup where the ROM calls __destroy_arr. Three times
+ * each, and zero the other way; read off the compiled object's own relocation
+ * table, not guessed. The ROM was built against a runtime whose array-cleanup
+ * helper is __destroy_arr (0x0207328c); this compiler configuration emits the
+ * Itanium ABI's __cxa_vec_cleanup, which exists nowhere in the ROM.
+ *
+ * WHY THE BYTE CHECK MISSED IT: those three calls are `bl` instructions, so
+ * they are relocated words, and match.compare wildcards every relocated word.
+ * tools/fdiff.py and tools/build_pin.py both said match=True. Only the link
+ * would have caught it -- and the file was never enrolled, so the link never
+ * ran. eligible.py DID catch it, from the other direction, by refusing a file
+ * that references a symbol no symbols.txt defines. That refusal was correct and
+ * is not an objisolate defect; isolation already drops dropped sections'
+ * relocation sections, and this reference is in D1's OWN .text.
+ *
+ * SO THE STRUCTOR BLOCKER IS A RUNTIME-HELPER MISMATCH, and it is specific to
+ * classes with ARRAY members -- which is why objisolate's 69 destructors, none
+ * of which have any, were unaffected. Player has three. Until something
+ * reconciles __destroy_arr with __cxa_vec_cleanup, this file stays the
+ * hand-spelt free function it has always been.
+ */
 #include "Player.h"
 extern "C" {
 extern int _ZN12WithMeshClsnD1Ev(void*);

@@ -48,7 +48,7 @@ int Player::St_Cannon_Main()
         mStateStep = 2;
         mOpacity = 0x1f;
         mIsBodyClsnEnabled = 1;
-        *(int*)(((long long)(int)((char*)&mBodyClsnFlags))) |= 0x20;
+        *(int*)(((long long)(int)((char*)&mMovingCylinderClsnWithPos.flags))) |= 0x20;
         func_0200d6f0(p, mPlayerNo);
         func_02012694(0x14f, ((char*)this) + 0x74);
         _ZN5Sound9PlayBank0EjRK7Vector3(0xb9, ((char*)this) + 0x74);

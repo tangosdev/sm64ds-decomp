@@ -66,7 +66,7 @@ int Player::St_InYoshiMouth_Main()
         }
     case 2:
         if (mStateTimer == 0)
-            *(int *)(((long long)(int)((char *)&mBodyClsnFlags))) |= 0x2000;
+            *(int *)(((long long)(int)((char *)&mMovingCylinderClsnWithPos.flags))) |= 0x2000;
         if (_ZN6Player12FinishedAnimEv(((char *)this))) {
             mStateStep = 3;
             mHurtDamage = 1;

@@ -79,7 +79,7 @@ int Player::Render()
             _ZN5Model6RenderEPK7Vector3(bodyMdl, ((char*)this) + 0x80);
             if (param1 == 1) {
                 _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x254, *(char**)((char*)&unk_0e0) + 8);
-                unk_25c = unk_6fc << 12;
+                mTexSeqPlayer[0].currFrame = unk_6fc << 12;
             }
             func_ov002_020e3e00(bodyMdl, ((char*)this) + 0x80, mOpacity);
             if (unk_700 != 0) {
@@ -128,7 +128,7 @@ int Player::Render()
                 }
                 if (param1 == 1) {
                     _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x268, *(char**)((char*)&unk_158) + 8);
-                    unk_270 = unk_6fc << 12;
+                    mTexSeqPlayer[1].currFrame = unk_6fc << 12;
                 }
                 if (func_ov002_020bea7c(((char*)this)) == 0) {
                     _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x1dc + unk_6db * 0x14, *(char**)(((char*)this) + 0x154 + i * 4) + 8);

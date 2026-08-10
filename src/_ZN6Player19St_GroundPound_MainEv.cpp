@@ -68,7 +68,7 @@ int Player::St_GroundPound_Main()
                 func_ov002_020c2f64(this);
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x42, 0x40000000, 0x1000, 0);
                 mStateStep = 0xff;
-                *(u32*)&mBodyClsnFlags &= ~0x20;
+                *(u32*)&mMovingCylinderClsnWithPos.flags &= ~0x20;
             }
             {
                 u16 f = mStateFlags & 1;

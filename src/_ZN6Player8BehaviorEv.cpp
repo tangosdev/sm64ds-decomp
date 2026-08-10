@@ -85,7 +85,7 @@ int Player::Behavior()
     temp = (s32)(((s64)r2 * 0x32000 + 0x800) >> 12);
     func_0203568c(((char *)this) + 0x380, temp);
     func_02035684(((char *)this) + 0x380, temp);
-    unk_2d8 = scale * 0x28;
+    mMovingCylinderClsnWithPos.radius = scale * 0x28;
     mul = 0x96;
     if (_ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_021104e4)
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110514)
@@ -96,12 +96,12 @@ int Player::Behavior()
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110634)) {
         mul = 0x5a;
     }
-    unk_2dc = mul * scale;
+    mMovingCylinderClsnWithPos.height = mul * scale;
 
     if (mIsMega != 0)
-        *(u32 *)LAU((char *)&mBodyClsnFlags) |= 0x10;
+        *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.flags) |= 0x10;
     else
-        *(u32 *)LAU((char *)&mBodyClsnFlags) &= ~0x10;
+        *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.flags) &= ~0x10;
 
     if (data_0209fc68 == 0) {
         if (data_0209fc48 != 0)
@@ -270,9 +270,9 @@ after_player_slot:
         u16 t = mInvincibleTimer;
         if (t != 0) {
             if (t == 1)
-                *(u32 *)LAU((char *)&unk_2f0) |= 0x10000000;
+                *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x10000000;
             else
-                *(u32 *)LAU((char *)&unk_2f0) &= ~0x10000000;
+                *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.vulnFlags) &= ~0x10000000;
         }
     }
 
