@@ -124,8 +124,10 @@ struct WithMeshClsn {
     int GetWallResult() const;
     int GetFloorResult() const;
 };
+#ifdef _WIN32 /* LINUX: method IS its own mangling (_ZNK12WithMeshClsn10IsOnGroundEv) -> self-recurse; real src TU owns it. */
 int WithMeshClsn::IsOnGround() const
 { return _ZNK12WithMeshClsn10IsOnGroundEv(this); }
+#endif
 
 struct CylinderClsn;
 struct ShadowModel;
@@ -156,10 +158,12 @@ extern "C" Matrix4x3 *_ZN5Actor11UpdateCarryER6PlayerRK7Vector3(
     void *self, void *player, const void *vec)
 { return ((Actor *)self)->UpdateCarry(*(Player *)player,
                                       *(const Vector3 *)vec); }
+#ifdef _WIN32 /* LINUX: these methods ARE their own manglings -> self-recurse; the real src TUs own the symbols. */
 Player *Actor::ClosestPlayer()
 { return (Player *)_ZN5Actor13ClosestPlayerEv(this); }
 short Actor::HorzAngleToCPlayer()
 { return _ZN5Actor18HorzAngleToCPlayerEv(this); }
+#endif
 void Actor::DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &m, int rad, int h,
                                 unsigned f)
 { _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -174,10 +178,12 @@ struct OAM {
                        int pri, Fix12<int> sx, Fix12<int> sy, int rot,
                        int mode);
 };
+#ifdef _WIN32 /* LINUX: these methods ARE their own manglings -> self-recurse; real src TUs own them. */
 unsigned char OAM::GetObjWidth(int a, int b)
 { return _ZN3OAM11GetObjWidthEii(a, b); }
 unsigned char OAM::GetObjHeight(int a, int b)
 { return _ZN3OAM12GetObjHeightEii(a, b); }
+#endif
 int OAM::LoadAffineParams(OamAttr *attr, int *p, Matrix2x2 *m)
 { return _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(attr, p, m); }
 
