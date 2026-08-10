@@ -222,6 +222,41 @@ static int __fastcall slot_sphere(void *self, void *, void *sph)
         abort(); }
 TRAP(0) TRAP(1) TRAP(6) TRAP(8) TRAP(10) TRAP(11) TRAP(12)
 
+#ifndef _WIN32
+/* Linux/Itanium: the collision vtable is dispatched by GCC virtual calls
+   (RaycastGround::DetectClsn does o->v6(this)), which use the SysV cdecl
+   convention -- `this` is the FIRST STACK argument, not ecx -- and the ROM
+   vtable keeps TWO dtor slots (D1/D0). The __fastcall slots above expect this
+   in ecx, so a GCC dispatch handed slot_ground a garbage this from ecx and it
+   walked a garbage octree. These plain-cdecl thunks take `this` first, and the
+   Linux table below is laid out in ROM/Itanium slot order (see the map next to
+   the array). */
+static void slotL_dtor(void *) {}
+static void slotL_v08(void *self)
+{ ((MeshCollider *)self)->MeshCollider::Virtual08(); }
+static void slotL_surf(void *self, s16 tri, SurfaceInfo *res)
+{ ((MeshCollider *)self)->MeshCollider::GetSurfaceInfo(tri, *res); }
+static void slotL_norm(void *self, s16 tri, Vector3 *res)
+{ ((MeshCollider *)self)->MeshCollider::GetNormal(tri, *res); }
+static void slotL_orig(void *self, s16 tri, Vector3 *res)
+{ ((MeshCollider *)self)->MeshCollider::GetTriangleOrigin(tri, *res); }
+static int  slotL_ray(void *self, RaycastLine *ray)
+{ return ((MeshCollider *)self)->MeshCollider::DetectClsn(*ray); }
+static int  slotL_ground(void *self, unsigned char *g)
+{ return slot_ground(self, 0, g); }        /* reuse the ground->line adapter */
+static int  slotL_sphere(void *self, void *sph)
+{ return slot_sphere(self, 0, sph); }
+static void slotL_beforeclsn(void *self, ClsnResult *res, Actor *actor,
+                             Vector3 *pos, Vector3_16 *motionAng, Vector3_16 *ang)
+{
+    MeshColliderBase *base = (MeshColliderBase *)self;
+    base->beforeClsnCallback(base, actor, res, pos, motionAng, ang);
+}
+static void slotL_trap(void *)
+{ fprintf(stderr, "FATAL: MeshCollider vtable trap slot dispatched "
+                  "(clsn_vtable.cpp, Linux)\n"); abort(); }
+#endif
+
 // SLOT ORDER IS MSVC'S, NOT THE ROM'S. The dispatching code here is
 // MSVC-compiled against include/MeshCollider.h, and MSVC lays the table
 // with a ONE-slot destructor (the ROM's Itanium layout spends two). Filling
@@ -230,6 +265,7 @@ TRAP(0) TRAP(1) TRAP(6) TRAP(8) TRAP(10) TRAP(11) TRAP(12)
 // the exact D1/D0-vs-scalar-dtor skew the earlier gates dodged by never
 // dispatching. One more MSVC quirk pinned here: adjacent overloads
 // (the DetectClsn trio) are emitted in REVERSE declaration order.
+#ifdef _WIN32
 extern "C" void *_ZTV12MeshCollider[13] = {
     (void *)slot_trap0,         /* 0: scalar deleting dtor */
     (void *)slot_v08,           /* 1: Virtual08 */
@@ -244,6 +280,27 @@ extern "C" void *_ZTV12MeshCollider[13] = {
     (void *)slot_trap10,
     (void *)slot_trap11, (void *)slot_trap12,
 };
+#else
+/* Linux/Itanium slot order (ROM vtable 0x020993dc, two dtor slots), cdecl
+   thunks. Confirmed from config relocs: [0]=D1 [1]=D0 [2]=Virtual08
+   [3]=GetSurfaceInfo [4]=GetNormal [5]=GetTriangleOrigin
+   [6]=DetectClsn(RaycastGround) [7]=DetectClsn(RaycastLine)
+   [8]=DetectClsn(SphereClsn) [9]=BeforeClsn. */
+extern "C" void *_ZTV12MeshCollider[13] = {
+    (void *)slotL_dtor,         /* 0: ~MeshCollider D1 */
+    (void *)slotL_dtor,         /* 1: ~MeshCollider D0 */
+    (void *)slotL_v08,          /* 2: Virtual08 */
+    (void *)slotL_surf,         /* 3: GetSurfaceInfo */
+    (void *)slotL_norm,         /* 4: GetNormal */
+    (void *)slotL_orig,         /* 5: GetTriangleOrigin */
+    (void *)slotL_ground,       /* 6: DetectClsn(RaycastGround) */
+    (void *)slotL_ray,          /* 7: DetectClsn(RaycastLine) */
+    (void *)slotL_sphere,       /* 8: DetectClsn(SphereClsn) */
+    (void *)slotL_beforeclsn,   /* 9: BeforeClsn */
+    (void *)slotL_trap,
+    (void *)slotL_trap, (void *)slotL_trap,
+};
+#endif
 
 // MovingMeshCollider inherits the surface queries; its table starts as a copy
 // of MeshCollider's, which is all the binaries that stop at gate 8/9 need --
