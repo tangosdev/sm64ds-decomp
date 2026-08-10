@@ -199,12 +199,27 @@ struct Sound {
    loop never calls sdat_host_tick, and the table walkers read
    data_020a5bb8 + 0x84 unconditionally. Idempotent. */
 void sd_consumer_init(void);
+/* PlaySub is a REAL adapter on every target: callers declare the 4th arg as a
+   plain int, so `Sound::PlaySub(...,int,bool)` mangles to _ZN5Sound7PlaySubEjjjib
+   -- a DIFFERENT symbol from the src body's _ZN5Sound7PlaySubEjjj5Fix12IiEb
+   (Fix12<int>). It does not self-recurse on GCC and must stay to bridge the two
+   manglings. */
 int Sound::PlaySub(unsigned a, unsigned b, unsigned c, int d, bool e)
 { sd_consumer_init(); return _ZN5Sound7PlaySubEjjj5Fix12IiEb(a, b, c, d, e ? 1 : 0); }
+#ifdef _WIN32
+/* MSVC: the `Sound::` method mangling differs from the extern-C name, so these
+   two wrappers really forward and get one free sd_consumer_init before the src
+   body walks the SDAT root. */
 void Sound::Play2D(unsigned a, unsigned b)
 { sd_consumer_init(); _ZN5Sound6Play2DEjj(a, b); }
 void Sound::LoadAndSetMusic_Layer1(int a)
 { sd_consumer_init(); _ZN5Sound22LoadAndSetMusic_Layer1Ei(a); }
+#endif /* _WIN32 -- on GCC `Sound::Play2D`/`LoadAndSetMusic_Layer1` ARE the
+   _ZN5Sound...  symbols they forward to (same arg types), so the wrapper calls
+   itself. On Linux the callers bind straight to the real src/ bodies;
+   sd_consumer_init is already run during sound init (hal/sdat/consumer.cpp seats
+   the SDAT root before any layer walks it) and is idempotent, so the per-call
+   seat these two wrappers added is not needed. */
 
 struct Scene {
     static void SetAndStopColorFader();
