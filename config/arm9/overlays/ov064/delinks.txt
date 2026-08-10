@@ -251,7 +251,7 @@ src/TiltingPlatformLll_Spawn.c:
     complete
     .text start:0x021180fc end:0x02118138
 
-src/_ZN15RotatingFirebarD1Ev.c:
+src/_ZN15RotatingFirebarD1Ev.cpp:
     complete
     .text start:0x02118138 end:0x02118194
 
@@ -435,7 +435,7 @@ src/BowserPuzzlePiece_Spawn.c:
     complete
     .text start:0x02119300 end:0x02119330
 
-src/_ZN17BowserPuzzlePieceD1Ev.c:
+src/_ZN17BowserPuzzlePieceD1Ev.cpp:
     complete
     .text start:0x02119330 end:0x02119368
 

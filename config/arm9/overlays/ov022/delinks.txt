@@ -59,7 +59,7 @@ src/RotatingPlatformLll_Spawn.c:
     complete
     .text start:0x02111688 end:0x021116c4
 
-src/_ZN19RotatingPlatformLllD1Ev.c:
+src/_ZN19RotatingPlatformLllD1Ev.cpp:
     complete
     .text start:0x021116c4 end:0x02111708
 

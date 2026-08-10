@@ -153,7 +153,7 @@ src/MantaRay_Spawn.c:
     complete
     .text start:0x02132fe8 end:0x02133034
 
-src/_ZN10CheepCheepD1Ev.c:
+src/_ZN10CheepCheepD1Ev.cpp:
     complete
     .text start:0x02133034 end:0x02133074
 
@@ -212,7 +212,7 @@ src/CheepCheep_Spawn.c:
     complete
     .text start:0x02133634 end:0x0213367c
 
-src/_ZN5SharkD1Ev.c:
+src/_ZN5SharkD1Ev.cpp:
     complete
     .text start:0x0213367c end:0x021336bc
 

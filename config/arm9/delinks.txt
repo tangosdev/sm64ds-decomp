@@ -2163,7 +2163,7 @@ src/_ZN10ModelAnim2D0Ev.c:
     complete
     .text start:0x02016320 end:0x02016364
 
-src/_ZN10ModelAnim2D1Ev.c:
+src/_ZN10ModelAnim2D1Ev.cpp:
     complete
     .text start:0x02016364 end:0x020163a0
 
@@ -2247,7 +2247,7 @@ src/_ZN9ModelAnimD0Ev.c:
     complete
     .text start:0x020168d8 end:0x0201691c
 
-src/_ZN9ModelAnimD1Ev.c:
+src/_ZN9ModelAnimD1Ev.cpp:
     complete
     .text start:0x0201691c end:0x02016958
 

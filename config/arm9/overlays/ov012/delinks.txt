@@ -36,7 +36,7 @@ src/SwitchPillar_Spawn.c:
     complete
     .text start:0x02111420 end:0x02111450
 
-src/_ZN12SwitchPillarD1Ev.c:
+src/_ZN12SwitchPillarD1Ev.cpp:
     complete
     .text start:0x02111450 end:0x0211149c
 

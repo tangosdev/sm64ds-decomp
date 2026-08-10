@@ -128,7 +128,7 @@ src/HugeCover_Spawn.c:
     complete
     .text start:0x02112668 end:0x02112698
 
-src/_ZN9HugeCoverD1Ev.c:
+src/_ZN9HugeCoverD1Ev.cpp:
     complete
     .text start:0x02112698 end:0x021126e4
 

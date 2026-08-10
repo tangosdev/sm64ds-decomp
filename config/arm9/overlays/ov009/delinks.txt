@@ -84,7 +84,7 @@ src/CastleWater_Spawn.c:
     complete
     .text start:0x02111d8c end:0x02111dc4
 
-src/_ZN8MetalNetD1Ev.c:
+src/_ZN8MetalNetD1Ev.cpp:
     complete
     .text start:0x02111dc4 end:0x02111e08
 
