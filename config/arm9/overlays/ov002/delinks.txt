@@ -4647,7 +4647,7 @@ src/YoshiEgg_Spawn.c:
     complete
     .text start:0x020ee3d8 end:0x020ee42c
 
-src/_ZN8PlatformD1Ev.c:
+src/_ZN8PlatformD1Ev.cpp:
     complete
     .text start:0x020ee42c end:0x020ee464
 
