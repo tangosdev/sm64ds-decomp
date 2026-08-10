@@ -30,8 +30,12 @@ extern "C" unsigned func_ov002_020becf4(char *self, unsigned j, int b);
 extern "C" int _ZN6Player13InitResourcesEv(void *);
 
 /* C++-linkage globals some slice TUs call under Itanium-style names */
+#ifdef _WIN32
 int _ZNK9Animation12WillHitFrameEi(void *self, int f)
 { return ((Animation *)self)->Animation::WillHitFrame(f) ? 1 : 0; }
+#endif /* _WIN32: on GCC Animation::WillHitFrame(int)const mangles to the SAME
+   _ZNK9Animation12WillHitFrameEi this defines, so it self-recurses. The real
+   impl is src/_ZNK9Animation12WillHitFrameEi.cpp (gate10); Linux binds to it. */
 /* GetFlags is C linkage now: main's mangled-declaration sweep gave the Player
    state TUs an extern "C" declaration, so they call the plain name. The alias
    at the head of hal/cxx_aliases.cpp still serves the old C++ mangling. */

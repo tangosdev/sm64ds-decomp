@@ -185,8 +185,13 @@ void func_02071644(unsigned char *obj, int len)
 /* C-linkage face of Animation::WillHitFrame (C++ face lives in
    player_bridges; one TU cannot name both linkages) */
 int hal_anim_willhit(void *self, int f);
+#ifdef _WIN32
 int _ZNK9Animation12WillHitFrameEi(void *self, int f)
 { return hal_anim_willhit(self, f); }
+#endif /* _WIN32: this face + player_bridges' both define _ZNK9Animation12WillHitFrameEi,
+   and on GCC hal_anim_willhit's C++-method call resolves to that same symbol, so the
+   two mutually recurse. The real impl is src/_ZNK9Animation12WillHitFrameEi.cpp (gate10);
+   Linux binds callers straight to it. */
 
 /* SharedFilePtr construct veneers: on the DS these pass fileID in r1
    through a tail call the C decl never names (the ride-through catalog).
