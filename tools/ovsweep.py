@@ -88,6 +88,9 @@ import re
 import sys
 from collections import Counter
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import delaunder  # noqa: E402  -- for code_mask; comments are not references
+
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CFG_OV = REPO / "config" / "arm9" / "overlays"
 SRC = REPO / "src"
@@ -397,7 +400,13 @@ def scan():
 
     for f, text in all_files_text:
         scanned += 1
-        refs = list(REF_RE.finditer(text))
+        # Comments and string literals are not references. A file that merely NAMES a
+        # sibling overlay's symbol in prose -- "see func_ov006_020d6084.cpp" -- reaches
+        # nothing at runtime, and reporting it as a mislabel sends a reviewer hunting a
+        # defect that is not there. Same mistake the langmode metric made by scanning
+        # source text rather than code.
+        keep = delaunder.code_mask(text)
+        refs = [m for m in REF_RE.finditer(text) if keep[m.start()]]
         if not refs:
             continue
         files_with_refs += 1
