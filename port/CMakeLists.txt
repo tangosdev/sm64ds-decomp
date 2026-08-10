@@ -9,6 +9,34 @@ add_compile_options(/Oy-)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+# ---- Linux port (Phase 1 Lane A): the SDL2 host window/input/blit backend ----
+# On Windows this stays OFF and nothing about the build changes -- the MSVC
+# walk_window path is byte-for-byte the Win32 GDI/user32 one. On a non-MSVC
+# (Linux/g++) build the platform seam in walk_window.cpp compiles the SDL2
+# backend instead, and this wires SDL2 in. Default follows the platform: ON when
+# not MSVC, OFF on MSVC. See port/hal/host_platform_linux.{h,cpp}.
+if(MSVC)
+    option(PORT_ENABLE_SDL2 "Build the SDL2 host backend (Linux port)" OFF)
+else()
+    option(PORT_ENABLE_SDL2 "Build the SDL2 host backend (Linux port)" ON)
+endif()
+if(PORT_ENABLE_SDL2 AND NOT MSVC)
+    find_package(SDL2 REQUIRED)
+    message(STATUS "PORT_ENABLE_SDL2: SDL2 found (${SDL2_LIBRARIES})")
+    # The interactive-window targets (walk_window, walk_window_hires) get the
+    # SDL2 backend TU + link. Applied where those targets are defined below via
+    # port_enable_sdl2(<target>).
+    function(port_enable_sdl2 tgt)
+        target_sources(${tgt} PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/hal/host_platform_linux.cpp")
+        target_include_directories(${tgt} PRIVATE ${SDL2_INCLUDE_DIRS})
+        target_link_libraries(${tgt} PRIVATE ${SDL2_LIBRARIES})
+    endfunction()
+else()
+    function(port_enable_sdl2 tgt)
+    endfunction()
+endif()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
 set(SLICE_SOURCES "")
 foreach(line IN LISTS SLICE_LINES)
@@ -2491,6 +2519,7 @@ endif()
 if(MSVC)
     target_compile_options(walk_window PRIVATE /wd4311 /wd4312 /wd4068 /wd4576)
 endif()
+port_enable_sdl2(walk_window)
 
 # hires clone for screenshot sessions (4x resolution, ~1/16 the fps)
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
@@ -2556,6 +2585,7 @@ endif()
 if(MSVC)
     target_compile_options(walk_window_hires PRIVATE /wd4311 /wd4312 /wd4068 /wd4576)
 endif()
+port_enable_sdl2(walk_window_hires)
 
 
 # The SDAT player on its own: parser, sequencer and mixer with no game code

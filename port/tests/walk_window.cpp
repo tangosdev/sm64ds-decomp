@@ -107,9 +107,27 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <process.h>   /* _execl: the debug menu's level row relaunches */
+#endif
+
+#ifndef _WIN32
+/* ===== LINUX PLATFORM SEAM (Phase 1 Lane A) ===============================
+   On Linux the whole Win32 window/input/blit surface below is replaced by the
+   SDL2 + POSIX shim. The header supplies the Windows types, VK_* constants, the
+   `WinApi` function-pointer table (SDL-backed), and QPC/Sleep. The Win32
+   dynamic-loader block that follows is compiled ONLY on _WIN32. */
+#include "hal/host_platform_linux.h"
+static WinApi W;
+/* XInput has no SDL analog wired in this lane; keyboard is the input floor.
+   A null pad pointer makes every `XInputGetState_ && ...` guard fall through. */
+static DWORD (*XInputGetState_)(DWORD, void *) = nullptr;
+struct XPad { unsigned long packet; unsigned short buttons;
+              unsigned char lt, rt; short lx, ly, rx, ry; };
+static bool winapi_load(void) { return port_lin_winapi_load(&W); }
+#else
 
 /* user32/gdi32 are loaded DYNAMICALLY after io_init: a static import chain
    initializes the desktop heap before main, and on 32-bit that mapping can
@@ -218,6 +236,7 @@ static bool winapi_load(void)
     return W.RegisterClassA_ && W.CreateWindowExA_ && W.DefWindowProcA_ &&
            W.PeekMessageA_ && W.StretchDIBits_ && W.GetAsyncKeyState_;
 }
+#endif /* _WIN32 (Win32 dynamic-loader block) */
 
 #include "ntr/gx.h"
 #include "ntr/mmio.h"
@@ -1420,13 +1439,23 @@ int main(void)
        session to see what led into a glitch. SM64DS_NO_PLAYLOG=1
        keeps stderr on the console instead. */
     if (!getenv("SM64DS_NO_PLAYLOG") && !getenv("SM64DS_WINDOW_SELFTEST")) {
-        CreateDirectoryA("playlog", NULL);
         char *logname = g_playlog;
+#ifdef _WIN32
+        CreateDirectoryA("playlog", NULL);
         SYSTEMTIME st_;
         GetLocalTime(&st_);
         snprintf(logname, sizeof g_playlog,
                  "playlog/play_%04u%02u%02u_%02u%02u%02u.log", st_.wYear,
                  st_.wMonth, st_.wDay, st_.wHour, st_.wMinute, st_.wSecond);
+#else
+        mkdir("playlog", 0755);
+        time_t t_ = time(nullptr);
+        struct tm tm_; localtime_r(&t_, &tm_);
+        snprintf(logname, sizeof g_playlog,
+                 "playlog/play_%04d%02d%02d_%02d%02d%02d.log",
+                 tm_.tm_year + 1900, tm_.tm_mon + 1, tm_.tm_mday,
+                 tm_.tm_hour, tm_.tm_min, tm_.tm_sec);
+#endif
         if (freopen(logname, "w", stderr)) {
             setvbuf(stderr, NULL, _IONBF, 0);
             printf("flight recorder: %s\n", logname);
@@ -1932,6 +1961,17 @@ int main(void)
         port_course_seat();
 
     /* window */
+    /* THE TITLE BAR IS THE CONTROLS CARD. There is nowhere else to put them
+       that does not cost a keypress to read: the F3 overlay is timings, the
+       F5 menu is state, and both of those you have to already know how to
+       open. The bar is the one surface that is legible before you touch
+       anything, so the keys live there. */
+    const char *k_title =
+        "SM64DS   |   WASD move   Shift dash   Space jump"
+        "   X punch   Ctrl crouch   |   Q/E turn   R/F"
+        " tilt   |   F1 camera   F3 stats   F5 menu"
+        "   Tab panel   Esc quit";
+#ifdef _WIN32
     WNDCLASSA wc = {};
     wc.lpfnWndProc = wndproc;
     wc.hInstance = GetModuleHandleA(0);
@@ -1940,22 +1980,21 @@ int main(void)
     W.RegisterClassA_(&wc);
     RECT r = {0, 0, ntr::SCREEN_W * ZOOM, ntr::SCREEN_H * ZOOM};
     W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME, FALSE);
-    /* THE TITLE BAR IS THE CONTROLS CARD. There is nowhere else to put them
-       that does not cost a keypress to read: the F3 overlay is timings, the
-       F5 menu is state, and both of those you have to already know how to
-       open. The bar is the one surface that is legible before you touch
-       anything, so the keys live there. */
-    HWND hwnd = W.CreateWindowExA_(0, "sm64ds_walk",
-                              "SM64DS   |   WASD move   Shift dash   Space jump"
-                              "   X punch   Ctrl crouch   |   Q/E turn   R/F"
-                              " tilt   |   F1 camera   F3 stats   F5 menu"
-                              "   Tab panel   Esc quit",
+    HWND hwnd = W.CreateWindowExA_(0, "sm64ds_walk", k_title,
                               (WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME) |
                                   WS_VISIBLE,
                               CW_USEDEFAULT, CW_USEDEFAULT,
                               r.right - r.left, r.bottom - r.top, 0, 0,
                               wc.hInstance, 0);
     HDC hdc = W.GetDC_(hwnd);
+#else
+    /* Linux: SDL owns the window; hand it the wndproc so the SDL event pump can
+       reuse the mouse-look/touch/wheel handler verbatim. */
+    port_lin_set_wndproc(wndproc);
+    port_lin_create_window(ntr::SCREEN_W, ntr::SCREEN_H, ZOOM, k_title);
+    HWND hwnd = (HWND)1;   /* opaque; the sub-screen touch bridge takes it */
+    HDC  hdc  = (HDC)0;    /* unused by the SDL blit */
+#endif
     BITMAPINFO bi = {};
     bi.bmiHeader.biSize = sizeof bi.bmiHeader;
     bi.bmiHeader.biWidth = ntr::SCREEN_W;

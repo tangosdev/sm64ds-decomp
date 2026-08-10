@@ -3,14 +3,32 @@
 #ifndef PORT_FAULT_PROBE_H
 #define PORT_FAULT_PROBE_H
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+/* Linux: crash forensics (VEH, detours, debug registers, CreateFileA dumps) is
+   a later lane. This side only needs the header to COMPILE and to hand the rest
+   of the port the same external symbols/macros, as no-op or minimal-POSIX
+   stubs. Pull in the HAL shim for the Win32-alias types this header still names
+   in its signatures (MAX_PATH, HANDLE, DWORD, ...). It is include-guarded
+   (PORT_HOST_PLATFORM_LINUX_H) so a double-include with walk_window.cpp is
+   safe. */
+#include "../hal/host_platform_linux.h"
+/* EXCEPTION_POINTERS is a raw-Win32 type the exported seams' signatures name;
+   forward-declare a dummy so the prototypes are valid on Linux. */
+#ifndef _EXCEPTION_POINTERS
+struct _EXCEPTION_POINTERS;
+typedef struct _EXCEPTION_POINTERS EXCEPTION_POINTERS;
+#endif
+#endif
 #include <stdio.h>
 
 /* The ROM's list walker (func_02043fdc) parks the node it is processing in
    data_020a4b68 before every callback, so at fault time node[2] names the
    actor whose phase code was running -- the question every actor-phase crash
    asks first. Weak so the probe still links in TUs without the engine. */
+#ifdef _WIN32
 #ifdef __cplusplus
 extern "C" int *data_020a4b68;
 extern "C" __declspec(selectany) int *port_fault_no_walker = 0;
@@ -19,7 +37,16 @@ extern int *data_020a4b68;
 __declspec(selectany) int *port_fault_no_walker = 0;
 #endif
 #pragma comment(linker, "/alternatename:_data_020a4b68=_port_fault_no_walker")
+#else /* Linux/g++: a plain extern decl plus a weak fallback definition, so a
+         TU that never defines the real symbol still links against the weak 0. */
+#ifdef __cplusplus
+extern "C" int *data_020a4b68 __attribute__((weak)) = 0;
+#else
+int *data_020a4b68 __attribute__((weak)) = 0;
+#endif
+#endif
 
+#ifdef _WIN32
 static LONG WINAPI port_fault_probe(EXCEPTION_POINTERS *ep)
 {
     char *base = (char *)GetModuleHandleA(0);
@@ -93,6 +120,7 @@ static void port_crash_hex(char *dst, unsigned v)
     for (i = 0; i < 8; ++i)
         dst[i] = h[(v >> (28 - 4 * i)) & 0xf];
 }
+#endif /* _WIN32 (port_fault_probe .. port_crash_hex) */
 
 /* ---- rotating rich dump: %TEMP%\sm64ds-crashes\crash-<ts>-<pid>.txt ---------
    crash.txt/exit.txt above stay exactly as they were -- one file next to the
@@ -113,6 +141,7 @@ static void port_crash_hex(char *dst, unsigned v)
 
    The context globals are weak like the walker/frame pointers so a TU that does
    not define them (a bare smoke) still links against the fallbacks. */
+#ifdef _WIN32
 #ifdef __cplusplus
 extern "C" signed char data_0209f2f8;                      /* current level */
 extern "C" __declspec(selectany) signed char port_fault_no_level = -1;
@@ -145,29 +174,65 @@ __declspec(selectany) const char *port_fault_no_playlog = 0;
 #pragma comment(linker, "/alternatename:_data_0209f250=_port_fault_no_pidx")
 #pragma comment(linker, "/alternatename:_port_build_gittip=_port_fault_no_gittip")
 #pragma comment(linker, "/alternatename:_port_playlog_path=_port_fault_no_playlog")
+#else /* Linux/g++: weak fallback definitions so a bare-smoke TU that never
+         defines the real engine symbol still links against these zeros. */
+#ifdef __cplusplus
+extern "C" signed char data_0209f2f8 __attribute__((weak)) = -1;
+extern "C" void *data_0209f394[8] __attribute__((weak)) = {0};
+extern "C" unsigned char data_0209f250 __attribute__((weak)) = 0;
+extern "C" const char port_build_gittip[] __attribute__((weak)) = "unknown";
+extern "C" const char *port_playlog_path __attribute__((weak)) = 0;
+#else
+signed char data_0209f2f8 __attribute__((weak)) = -1;
+void *data_0209f394[8] __attribute__((weak)) = {0};
+unsigned char data_0209f250 __attribute__((weak)) = 0;
+const char port_build_gittip[] __attribute__((weak)) = "unknown";
+const char *port_playlog_path __attribute__((weak)) = 0;
+#endif
+#endif
 /* Class-name resolution goes through a weak DATA function pointer, not a direct
    call. walk_window (which links hal/actor_registry.cpp) sets it to the real
    port_actor_class_name; the bare smokes -- which install the probe but do NOT
    link that HAL -- leave it null and the dump prints "?". A __declspec(selectany)
    pointer defaulting to 0 is legal (data, external linkage, one deduped body)
    and needs no alternatename gymnastics. hal/actor_registry.cpp's
-   port_actor_registry_install wires it up. */
+   port_actor_registry_install wires it up. On Linux the same shape is a weak
+   definition defaulting to 0. */
 typedef const char *(*port_classname_fn)(unsigned id);
+#ifdef _WIN32
 #ifdef __cplusplus
 extern "C" __declspec(selectany) port_classname_fn port_classname_resolver = 0;
 #else
 __declspec(selectany) port_classname_fn port_classname_resolver = 0;
 #endif
+#else /* Linux/g++ */
+#ifdef __cplusplus
+extern "C" port_classname_fn port_classname_resolver __attribute__((weak)) = 0;
+#else
+port_classname_fn port_classname_resolver __attribute__((weak)) = 0;
+#endif
+#endif
 
 /* port_last_frame is declared with its weak fallback later (the exit.txt
    block); the rich dump above uses it, so hoist just the DECLARATION here. The
-   alternatename that gives it a weak body stays in the one place, below. */
+   alternatename that gives it a weak body stays in the one place, below (Win32).
+   On Linux the weak fallback definition lives HERE (the exit.txt block below is
+   entirely inside #ifdef _WIN32), so a bare-smoke TU still links. */
+#ifdef _WIN32
 #ifdef __cplusplus
 extern "C" int port_last_frame;
 #else
 extern int port_last_frame;
 #endif
+#else /* Linux/g++ */
+#ifdef __cplusplus
+extern "C" int port_last_frame __attribute__((weak)) = -1;
+#else
+int port_last_frame __attribute__((weak)) = -1;
+#endif
+#endif
 
+#ifdef _WIN32
 /* The crash-dump directory, resolved once at boot from %TEMP%. */
 static char port_crash_dir[MAX_PATH];
 
@@ -717,10 +782,14 @@ static void port_install_exit_probe(void)
     VirtualProtect(fn, 5, old, &old);
     FlushInstructionCache(GetCurrentProcess(), fn, 5);
 }
+#endif /* _WIN32 (port_crash_dir .. port_install_exit_probe) */
 
 /* Redirected stdio is fully buffered under the MSVC CRT, so a hard death
    loses every line since the last flush; the two setvbuf calls make captures
-   loss-free. Harmless on a console. */
+   loss-free. Harmless on a console. The setvbuf pair is portable, so it runs on
+   both platforms; the VEH/detour/crash-dir install is Win32-only and is a later
+   lane on Linux, so it is guarded out (the macro becomes a no-op past setvbuf). */
+#ifdef _WIN32
 #define PORT_INSTALL_FAULT_PROBE() do { \
         setvbuf(stderr, NULL, _IONBF, 0); \
         setvbuf(stdout, NULL, _IONBF, 0); \
@@ -729,7 +798,14 @@ static void port_install_exit_probe(void)
         SetUnhandledExceptionFilter(port_fault_probe_with_file); \
         port_install_exit_probe(); \
     } while (0)
+#else /* Linux: portable setvbuf only; crash forensics is a later lane. */
+#define PORT_INSTALL_FAULT_PROBE() do { \
+        setvbuf(stderr, NULL, _IONBF, 0); \
+        setvbuf(stdout, NULL, _IONBF, 0); \
+    } while (0)
+#endif
 
+#ifdef _WIN32
 /* Hang watchdog (PORT_WATCHDOG=<seconds>): a helper thread suspends the
    main thread after the deadline and prints its EIP plus a raw stack
    sample, module-relative, resolvable against the /MAP file. For loops
@@ -844,6 +920,12 @@ static void port_install_watchdog(void)
     if (!a.secs) a.secs = 10;
     CreateThread(0, 0, port_watchdog_thread, &a, 0, 0);
 }
+#else /* Linux: the debug-register watch and the suspend-thread watchdog are
+         both later lanes; walk_window.cpp still references these names, so
+         provide inert no-op stubs so it compiles and links. */
+static void port_watch_words(void * /*addr*/, int /*nwords*/) {}
+static void port_install_watchdog(void) {}
+#endif
 
 /* ---- external seams for the quarantine walker -----------------------------
    port/unmatched/func_02043fdc.cpp catches per-actor faults but must not
@@ -854,6 +936,7 @@ static void port_install_watchdog(void)
    that includes this header leaves them out, so there is exactly one
    definition. The walker weak-links against them. */
 #ifdef PORT_FAULT_PROBE_DEFINE_EXPORTS
+#ifdef _WIN32
 extern "C" void port_rich_dump_ex(EXCEPTION_POINTERS *ep, unsigned code,
                                   const char *reason)
 {
@@ -865,6 +948,18 @@ extern "C" const char *port_crash_dir_get(void)
         port_crash_dir_boot();
     return port_crash_dir;
 }
+#else /* Linux: crash dumps are a later lane. The rich dump is a no-op, and the
+         crash dir is %TEMP% -> /tmp. Signatures kept so the walker's weak-link
+         seams resolve. */
+extern "C" void port_rich_dump_ex(EXCEPTION_POINTERS * /*ep*/, unsigned /*code*/,
+                                  const char * /*reason*/)
+{
+}
+extern "C" const char *port_crash_dir_get(void)
+{
+    return "/tmp";
+}
+#endif
 #endif
 
 #endif

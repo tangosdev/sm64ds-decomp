@@ -28,8 +28,20 @@ extern int data_020a4b68[];        /* the walk's published cursor
 
 void port_scene_canary(const char *where);
 }
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+/* Linux: the HAL shim supplies BOOL/HANDLE/DWORD and GetModuleHandleA (returns
+   nullptr, so the module base is null and offsets read as absolute -- fine for
+   this lane, the offsets feed the crash-dump forensics which is a later lane). */
+#include "../hal/host_platform_linux.h"
+/* IsBadReadPtr is a Win32-only pointer-validity probe; a real probe is a later
+   lane, so on Linux assume readable. Arity matches the call sites below,
+   IsBadReadPtr(ptr, size). */
+static inline int IsBadReadPtr(const void *, unsigned long) { return 0; }
+#include <ctime>   /* port_q_log fills the SYSTEMTIME fields from localtime_r */
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -179,6 +191,7 @@ extern "C" const char *port_crash_dir_get(void);
    any binary, so a single definition never collides. selectany is illegal on
    functions in MSVC; the alternatename directive supplies the fallback only
    when the real export (from walk_window) is absent. */
+#ifdef _WIN32
 extern "C"
 void port_rich_dump_ex_stub(struct _EXCEPTION_POINTERS *, unsigned,
                             const char *) {}
@@ -188,6 +201,16 @@ extern "C" const char *port_crash_dir_get_stub(void)
 { return ""; }
 #pragma comment(linker, \
     "/alternatename:_port_crash_dir_get=_port_crash_dir_get_stub")
+#else
+/* Linux/g++: alternatename is MSVC-only. The gcc equivalent of "fallback used
+   only when the real export is absent" is a WEAK definition of the real symbol:
+   walk_window's strong PORT_FAULT_PROBE_DEFINE_EXPORTS definitions override
+   these, a bare smoke links against them. */
+extern "C" __attribute__((weak))
+void port_rich_dump_ex(struct _EXCEPTION_POINTERS *, unsigned, const char *) {}
+extern "C" __attribute__((weak)) const char *port_crash_dir_get(void)
+{ return ""; }
+#endif
 
 /* --- the freeze set + class rate limit ------------------------------------ */
 #define PORT_Q_MAX     256      /* frozen instances this level (bounded leak) */
@@ -220,9 +243,17 @@ extern "C" void port_actor_slot_decline(const char *what)
     std::fprintf(stderr, "  (quarantining actor: %s)\n",
                  what ? what : "actor decline");
     std::fflush(stderr);
+#ifdef _WIN32
     /* raise a catchable AV; the enclosing port_dispatch_guarded __except sees
        it, writes the dump, freezes the actor, and the walk continues. */
     RaiseException(EXCEPTION_ACCESS_VIOLATION, 0, 0, 0);
+#else
+    /* TODO(linux-port): no SEH to catch a raised exception, and the enclosing
+       port_dispatch_guarded is a PASSTHROUGH on Linux for Phase 1 -- there is
+       nothing to quarantine the actor. Just log and return so the caller can
+       continue if it can; real signal/setjmp containment is a later lane. Do
+       NOT abort here: a passthrough should not turn a soft decline fatal. */
+#endif
 }
 
 static int port_faults_fatal(void)
@@ -285,13 +316,32 @@ static void port_q_log(void *actor, unsigned id, unsigned code, unsigned off)
     static char path[300];
     const char *dir = port_crash_dir_get();
     FILE *f;
+#ifdef _WIN32
     SYSTEMTIME st;
+#else
+    /* Linux: mirror SYSTEMTIME's fields so the fprintf below is byte-identical. */
+    struct { unsigned short wYear, wMonth, wDay, wHour, wMinute, wSecond; } st;
+#endif
     if (!dir || !dir[0])
         return;
     std::snprintf(path, sizeof path, "%s\\quarantine.log", dir);
     f = std::fopen(path, "a");
     if (!f) return;
+#ifdef _WIN32
     GetLocalTime(&st);
+#else
+    {
+        time_t t = time(0);
+        struct tm tmv;
+        localtime_r(&t, &tmv);
+        st.wYear   = (unsigned short)(tmv.tm_year + 1900);
+        st.wMonth  = (unsigned short)(tmv.tm_mon + 1);
+        st.wDay    = (unsigned short)tmv.tm_mday;
+        st.wHour   = (unsigned short)tmv.tm_hour;
+        st.wMinute = (unsigned short)tmv.tm_min;
+        st.wSecond = (unsigned short)tmv.tm_sec;
+    }
+#endif
     std::fprintf(f,
         "%04u-%02u-%02u %02u:%02u:%02u level %d actor %p id %u (%s) "
         "code %08x off +%08x\n",
@@ -338,6 +388,7 @@ static void port_quarantine_actor(void *actor, unsigned code, unsigned off)
    whether to swallow the fault. Under SM64DS_FAULTS_FATAL it declines so the
    fault propagates to the UEF and the process dies. It records the code and
    module-relative offset into the out params for the log line. */
+#ifdef _WIN32
 static int port_q_filter(EXCEPTION_POINTERS *ep, unsigned *code, unsigned *off)
 {
     char *base = (char *)GetModuleHandleA(0);
@@ -352,6 +403,20 @@ static int port_q_filter(EXCEPTION_POINTERS *ep, unsigned *code, unsigned *off)
         return EXCEPTION_CONTINUE_SEARCH;   /* let it die hard */
     return EXCEPTION_EXECUTE_HANDLER;       /* swallow -> quarantine + continue */
 }
+#else
+/* Linux: the filter has no SEH to run in this lane (port_dispatch_guarded is a
+   passthrough). Kept as a never-called stub so references still resolve; a real
+   signal-based filter is a later lane. Use the forward-declared
+   `struct _EXCEPTION_POINTERS *` (line 185) rather than the bare typedef, which
+   this TU does not define on Linux; the body never dereferences it anyway. */
+static int port_q_filter(struct _EXCEPTION_POINTERS *, unsigned *code,
+                         unsigned *off)
+{
+    if (code) *code = 0;
+    if (off)  *off = 0;
+    return 0;
+}
+#endif
 
 /* Dispatch one actor's phase callback under the quarantine net. Kept in its own
    function because MSVC forbids __try/__except in a function that also needs
@@ -362,6 +427,7 @@ static int port_dispatch_guarded(PortListFn fn, void *actor)
     unsigned code = 0, off = 0;
     if (port_q_is_frozen(actor))
         return 1;               /* frozen: never dispatch again (leak until exit) */
+#ifdef _WIN32
     __try {
         fn(actor);
     } __except (port_q_filter(GetExceptionInformation(), &code, &off)) {
@@ -370,6 +436,21 @@ static int port_dispatch_guarded(PortListFn fn, void *actor)
         return 1;
     }
     return 0;
+#else
+    /* TODO(linux-port): the SEH quarantine is a PASSTHROUGH on Linux for Phase 1
+       -- a bad actor's fault in fn(actor) takes the whole process down, with no
+       per-actor containment. The real translation (a SIGSEGV/SIGBUS handler that
+       longjmp()s back here, freezes the actor, and continues the walk) is a
+       SEPARATE later lane. For now the game boots and runs; a faulting actor is
+       fatal instead of frozen. */
+    (void)code; (void)off; (void)port_q_filter; (void)port_quarantine_actor;
+    static int said;
+    if (!said++)
+        std::fprintf(stderr, "[quarantine] Linux passthrough: per-actor fault "
+                             "containment is OFF (later lane)\n");
+    fn(actor);
+    return 0;
+#endif
 }
 
 /* Public: clear the freeze set + class latches at level exit, so a leaked
