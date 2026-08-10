@@ -42,6 +42,8 @@ struct RabbitKey {
     s32 unk_19c;            /* 0x19c */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    void OnPendingDestroy();
     int Behavior();
     int InitResources();
     int Render();

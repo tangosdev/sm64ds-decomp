@@ -61,6 +61,8 @@ struct Rabbit {
     s32 unk_468;            /* 0x468 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    void OnPendingDestroy();
     int Behavior();
     int InitResources();
     int Render();

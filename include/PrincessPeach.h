@@ -23,6 +23,9 @@ struct PrincessPeach {
     s32 unk_354;            /* 0x354 */
 #ifdef __cplusplus
     /* methods */
+    int Render();
+    int CleanupResources();
+    void OnPendingDestroy();
     int Behavior();
     int InitResources();
 #endif

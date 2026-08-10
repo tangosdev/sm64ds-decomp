@@ -27,6 +27,8 @@ struct LakituBro {
     u8  unk_2dc;            /* 0x2dc */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
+    void OnPendingDestroy();
     int Behavior();
     int InitResources();
     int Render();

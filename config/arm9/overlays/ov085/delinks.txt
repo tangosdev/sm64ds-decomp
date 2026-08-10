@@ -138,11 +138,11 @@ src/func_ov085_0212a4a4.c:
     complete
     .text start:0x0212a4a4 end:0x0212a4c0
 
-src/_ZN13PrincessPeach16CleanupResourcesEv.c:
+src/_ZN13PrincessPeach16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212a4c0 end:0x0212a504
 
-src/_ZN13PrincessPeach16OnPendingDestroyEv.c:
+src/_ZN13PrincessPeach16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212a504 end:0x0212a508
 
@@ -253,11 +253,11 @@ src/func_ov085_0212bedc.cpp:
     complete
     .text start:0x0212bedc end:0x0212c004
 
-src/_ZN6Rabbit16CleanupResourcesEv.c:
+src/_ZN6Rabbit16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212c004 end:0x0212c070
 
-src/_ZN6Rabbit16OnPendingDestroyEv.c:
+src/_ZN6Rabbit16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212c070 end:0x0212c074
 
@@ -321,11 +321,11 @@ src/func_ov085_0212d2b8.cpp:
     complete
     .text start:0x0212d2b8 end:0x0212d374
 
-src/_ZN9RabbitKey16CleanupResourcesEv.c:
+src/_ZN9RabbitKey16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212d374 end:0x0212d398
 
-src/_ZN9RabbitKey16OnPendingDestroyEv.c:
+src/_ZN9RabbitKey16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212d398 end:0x0212d39c
 
@@ -452,11 +452,11 @@ src/func_ov085_0212e858.c:
     complete
     .text start:0x0212e858 end:0x0212ea90
 
-src/_ZN9LakituBro16CleanupResourcesEv.c:
+src/_ZN9LakituBro16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212ea90 end:0x0212eacc
 
-src/_ZN9LakituBro16OnPendingDestroyEv.c:
+src/_ZN9LakituBro16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212eacc end:0x0212ead0
 
@@ -484,7 +484,7 @@ src/_ZN8WallSignD0Ev.c:
     complete
     .text start:0x0212edf8 end:0x0212ee58
 
-src/_ZN8WallSign16CleanupResourcesEv.c:
+src/_ZN8WallSign16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212ee58 end:0x0212ee7c
 

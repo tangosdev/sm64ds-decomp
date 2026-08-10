@@ -17,6 +17,7 @@ struct WallSign {
     u8  mMovingCylinderClsnWithPos;            /* 0x320 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();
     int InitResources();
     int Behavior();
     int Render();
