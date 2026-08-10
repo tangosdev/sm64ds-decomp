@@ -48,6 +48,17 @@ int data_02099d90;     /* heap bring-up state flag */
 }
 
 // ---- allocator methods -> the C-linkage definitions from gate 2 ----------
+// LINUX: every bridge in this block forwards a C++ METHOD to an extern "C" NAME
+// that is that method's own Itanium mangling (e.g. ExpandingHeapAllocator::
+// Allocate(u32,int) mangles to _ZN22ExpandingHeapAllocator8AllocateEji, the very
+// name the body calls). On GCC the two are ONE symbol, so each bridge is a
+// self-call -> infinite recursion (smoke_roots died in Memory::Allocate). On MSVC
+// the manglings differ and the bridge is real. Every target symbol here has a
+// real src/ definition (verified), which on GCC already carries the exact name
+// the C++ callers reference, so these method<->name bridges are redundant on
+// Linux and are guarded out. (The `class Heap` shadow and the one-arg
+// Heap::Allocate(u32) veneer below are NOT self-colliding and stay on both.)
+#ifdef _WIN32
 extern "C" {
 void *_ZN22ExpandingHeapAllocator8AllocateEji(void *self, u32 size, int align);
 int _ZN22ExpandingHeapAllocator10DeallocateEPv(void *self, void *p);
@@ -73,15 +84,18 @@ void *ExpandingHeapAllocator::Reallocate(void *p, u32 size)
 extern "C" int _ZN13ExpandingHeap11VDeallocateEPv(void *self, void *p);
 int ExpandingHeap::VDeallocate(void *p)
 { return _ZN13ExpandingHeap11VDeallocateEPv(this, p); }
+#endif /* _WIN32 -- Linux binds callers straight to the real src/ symbols */
 
 // C references to Heap::Allocate/Deallocate -> the MSVC method definitions.
 // The src/ TUs declare `class Heap` (mangles PAV); a struct shadow here would
-// mangle PAU and miss, so the method shadow must be a class too.
+// mangle PAU and miss, so the method shadow must be a class too. This shadow is
+// needed on BOTH platforms (the one-arg veneer below calls through it).
 class Heap {
 public:
     int Allocate(u32 size, int align);
     void Deallocate(void *p);
 };
+#ifdef _WIN32
 extern "C" {
 int _ZN4Heap8AllocateEji(void *self, u32 size, int align)
 { return ((Heap *)self)->Allocate(size, align); }
@@ -95,6 +109,7 @@ namespace Memory {
 void *Allocate(u32 size, int align, Heap *heap)
 { return _ZN6Memory8AllocateEjiP4Heap(size, align, heap); }
 }
+#endif /* _WIN32 -- Linux binds callers straight to the real src/ symbols */
 
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
