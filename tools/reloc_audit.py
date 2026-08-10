@@ -164,6 +164,48 @@ def object_reloc_dests(obj, func, name_index):
     return dests, size
 
 
+def _as_the_build_links_it(obj, name):
+    """Apply objisolate, because the ROM build does and the destinations differ.
+
+    A gate that checks relocation DESTINATIONS has to check the object the linker
+    actually consumes. rombuild runs every enrolled object through objisolate, and
+    one of the things isolation does is correct the vtable addend: mwcc's `_ZTV<C>`
+    addresses the vtable OBJECT, so a vptr store carries an addend that skips the
+    offset-to-top and typeinfo words, while symbols.txt's `_ZTV<C>` IS the slot
+    array. Isolation subtracts that preamble.
+
+    Without this the gate reads the raw addend and resolves to whatever happens to
+    sit there. Observed: `_ZN10ModelAnim2D0Ev`'s secondary vptr store carries
+    addend 44, and `_ZTV10ModelAnim2` (0x0208e9b4) + 44 lands on `_ZTI8dFader_c`
+    (0x0208e9e0) -- an unrelated class's typeinfo, reported as WRONG-DEST on a file
+    whose linked bytes are exactly right. Isolation turns 8 -> 0 and 44 -> 36, which
+    is `_ZTV10ModelAnim2` itself and `VTable_Animation_ModelAnim2Thunk` (0x0208e9d8).
+
+    Multiple inheritance is what made this visible: the single-inheritance addend of
+    8 resolves to a word still inside the same vtable symbol, so it never looked
+    wrong. Fails open -- if isolation cannot plan this object, check it unisolated
+    rather than losing the verdict.
+    """
+    try:
+        import objisolate as OI
+        fd, tmp = tempfile.mkstemp(suffix=".o")
+        os.close(fd)
+        p = pathlib.Path(tmp)
+        try:
+            p.write_bytes(obj)
+            if OI.plan(obj, name).get("error"):
+                return obj
+            OI.isolate(p, name)
+            return p.read_bytes()
+        finally:
+            try:
+                p.unlink()
+            except OSError:
+                pass
+    except Exception:                                             # noqa: BLE001
+        return obj
+
+
 def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
     """Reproduce the match the way reverify does, but return the object that did it.
 
@@ -216,6 +258,7 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                     obj = M.compile_c(cfile, v, flags, include_dirs)
                     if obj is None:
                         continue
+                    obj = _as_the_build_links_it(obj, name)
                     import probe_versions as PV
                     try:
                         candidate_syms = list(PV.funcs_in(obj).keys())
