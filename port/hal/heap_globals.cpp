@@ -54,6 +54,18 @@ extern "C" char data_020a4d38[0x20]
 // /alternatename between those links fine and then reads garbage as `this`
 // at runtime. Real forwarders convert the convention.
 #include "NestedHeapIterator.h"
+// LINUX CRITICAL: on GCC/Itanium these `extern "C"` forwarder NAMES mangle
+// IDENTICALLY to the C++ methods they forward to (e.g.
+// _ZN18NestedHeapIterator4NextEP13HeapAllocator IS the Itanium mangling of
+// NestedHeapIterator::Next(HeapAllocator*)). So the forwarder body's `->Next(a)`
+// call resolves to the forwarder itself -> infinite recursion, a SIGSEGV in the
+// heap bring-up (seen in smoke_heap/smoke_roots/smoke_frames). On MSVC the two
+// manglings differ, so the forwarder is a real __cdecl->__thiscall converter.
+// On Linux the real src/ methods (src/_ZN18NestedHeapIterator4NextEP...cpp, in
+// slice_gate2) already PROVIDE these exact symbols with the correct this-first
+// ABI, so the forwarders are redundant AND harmful -- omit them and let the C
+// callers bind straight to the real methods.
+#ifdef _WIN32
 extern "C" {
 void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void *self, HeapAllocator *a)
 { ((NestedHeapIterator *)self)->AddLast(a); }
@@ -69,3 +81,4 @@ int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
 // too, or both callers go unresolved.
 extern "C" void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
 { ((NestedHeapIterator *)self)->Init((HeapAllocator *)a); }
+#endif /* _WIN32 -- Linux binds C callers straight to the real src/ methods */
