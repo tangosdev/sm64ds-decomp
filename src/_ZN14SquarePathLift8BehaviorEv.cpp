@@ -46,13 +46,13 @@ int SquarePathLift::Behavior()
         SubVec3(((char *)this) + 0x5c, &scaled2, ((char *)this) + 0x5c);
     }
     if (looped) {
-        *(int *)(((int)((char *)this) + 0x328)) += mPathDir;
+        *(int *)((int)((char *)this) + 0x328) += mPathDir;
         if (mNodeIndex < 0) {
             if (_ZNK7PathPtr5LoopsEv((char *)&mPath)) {
                 mNodeIndex = _ZNK7PathPtr8NumNodesEv((char *)&mPath) - 1;
             } else {
                 mPathDir = 1;
-                *(int *)(((unsigned)((char *)this) + 0x328)) += mPathDir * 2;
+                *(int *)((unsigned)((char *)this) + 0x328) += mPathDir * 2;
             }
         }
         if (mNodeIndex >= _ZNK7PathPtr8NumNodesEv((char *)&mPath)) {
@@ -60,7 +60,7 @@ int SquarePathLift::Behavior()
                 mNodeIndex = 0;
             } else {
                 mPathDir = -1;
-                *(int *)(((long long)(int)((char *)&mNodeIndex))) += mPathDir * 2;
+                *(int *)((char *)&mNodeIndex) += mPathDir * 2;
             }
         }
     }

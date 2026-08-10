@@ -19,7 +19,7 @@ void _ZN15TextureSequence6UpdateER15ModelComponents(void*, void*);
 int OneUpLogo::Render()
 {
     if (*(u16*)(((char*)this) + 0x100 + 0x4c) != 0) {
-        *(u16*)(((long long)(int)((char*)&unk_14c))) -= 1;
+        *(u16*)((char*)&unk_14c) -= 1;
         return 1;
     }
     _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x124, ((char*)this) + 0xdc);

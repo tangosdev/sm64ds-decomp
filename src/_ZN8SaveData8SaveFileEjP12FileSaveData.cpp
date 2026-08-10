@@ -18,7 +18,7 @@
  */
 int SaveData::SaveFile(u32 fileID, FileSaveData* data)
 {
-    int* ip = (int*)(((long long)(int)((char*)data + 4)));
+    int* ip = (int*)((char*)data + 4);
     *ip = *ip | 1;
     if (SaveData::SaveDataToCart((char*)data, 0x44, fileID) == 0)
         return 1;

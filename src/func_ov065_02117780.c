@@ -7,7 +7,7 @@ extern int data_ov065_0211d6e0;
 int func_ov065_02117780(char *c) {
     int r2, v60;
     char *p;
-    *(short *)(int)(((long long)(int)(c + 0x94))) += 0x1000;
+    *(short *)(int)(c + 0x94) += 0x1000;
     p = _ZN5Actor13ClosestPlayerEv(c);
     v60 = *(int *)(c + 0x60);
     r2 = v60 - 0xc8000;

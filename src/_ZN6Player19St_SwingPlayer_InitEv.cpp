@@ -15,7 +15,7 @@ int Player::St_SwingPlayer_Init()
   {
     void* obj = *(void**)((char*)&mHeldObj);
     if (obj != 0)
-      *(int*)(((long long)(int)((char*)obj+0xb0))) |= 0x800;
+      *(int*)((char*)obj+0xb0) |= 0x800;
   }
   return 1;
 }

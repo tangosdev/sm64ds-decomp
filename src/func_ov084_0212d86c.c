@@ -44,8 +44,8 @@ void func_ov084_0212d86c(char *r5)
             *(u8 *)(r5 + 0x21d) = 0xa;
             *(u16 *)(r5 + 0x218) = 0x1f40;
             {
-                u32 *p18c = (u32 *)(((long long)(int)(r5 + 0x18c)));
-                u32 *pb0 = (u32 *)(((long long)(int)(r5 + 0xb0)));
+                u32 *p18c = (u32 *)(r5 + 0x18c);
+                u32 *pb0 = (u32 *)(r5 + 0xb0);
                 *p18c |= 1u;
                 *pb0 &= ~0x10000000u;
             }
@@ -119,8 +119,8 @@ second:
         *(u8 *)(r5 + 0x21d) = 0xa;
         *(u16 *)(r5 + 0x218) = 0x1f40;
         {
-            u32 *p18c = (u32 *)(((long long)(int)(r5 + 0x18c)));
-            u32 *pb0 = (u32 *)(((long long)(int)(r5 + 0xb0)));
+            u32 *p18c = (u32 *)(r5 + 0x18c);
+            u32 *pb0 = (u32 *)(r5 + 0xb0);
             *p18c |= 1u;
             *pb0 &= ~0x10000000u;
         }

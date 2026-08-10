@@ -19,10 +19,10 @@ extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
-#define LNDR(e) ((int)(((long long)(e))))
-#define C1 ((char*)(void*)(int)(((long long)(int)(c))))
-#define C2 ((char*)(void*)(int)(((long long)(int)(C1))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
+#define LNDR(e) ((int)((long long)(e)))
+#define C1 ((char*)(void*)(int)(c))
+#define C2 ((char*)(void*)(int)(C1))
 #define ATS(off) AT(C1,off)
 #define ATI(off) AT(C2,off)
 #define I(o) (*(int*)(c + (o)))
@@ -149,7 +149,7 @@ int func_ov006_021283a4(char *c) {
             I(0xaba0) = 0x37000;
         Vec2_Sub(s.b, (int*)AT(C1,0xab38), (int*)AT(c,0xab50));
         gate = (Vec2_Len(s.b) >= 0x30000) ? 1 : 0;
-        if ((int)(((long long)gate)) != 0) {
+        if ((int)((long long)gate) != 0) {
             I(0xab50) = I(0xab38);
             I(0xab54) = I(0xab3c);
             if (I(0xaba0) < 0x10000)

@@ -6,7 +6,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
 /* daMip_c::Kill - recovered from vtable slot identity */
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 extern int _Z14ApproachLinearRiii(int* ref, int target, int step);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int f, unsigned char g);
 extern void func_02012790(int a);

@@ -1,7 +1,7 @@
 // @symbol func_ov020_02111340
 /* recovered: shared common types */
 #include "common.h"
-#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off)))))
+#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 extern int RandomIntInternal(void *p);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);

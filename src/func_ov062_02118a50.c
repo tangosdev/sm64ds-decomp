@@ -26,7 +26,7 @@ void func_ov062_02118a50(char *c)
 
     {
         if (*(u16 *)(c + 0x3c6) != 0) {
-            u16 *p = (u16 *)(((long long)(int)(c + 0x3c6)));
+            u16 *p = (u16 *)(c + 0x3c6);
             *p = (u16)(*p - 1);
             if (*(u16 *)((c + 0x300) + 0xc6) != 0) return;
             func_ov062_02117994(c, 8); return;

@@ -186,7 +186,7 @@ int Player::St_Swim_Main()
         else var_r6 = 0;
         _Z14ApproachLinearRiii((int*)(&mPrevVertSpeed), func_ov002_020cedb0(this, 0x10000), var_r6);
         if (mStateTimer < 0xa && t4 == 0) {
-            *(unsigned char*)(((unsigned int)(char*)this + 0x6e5) & 0xFFFFFFFFFFFFFFFFULL) |= 1;
+            *(unsigned char*)((unsigned int)(char*)this + 0x6e5) |= 1;
         }
         if (mStateTimer == 0 && _ZN6Player6IsAnimEj(this, 0xa9) != 0 && _ZN6Player12FinishedAnimEv(this) != 0) {
             if (!(mStateWork & 1)) {
@@ -236,7 +236,7 @@ int Player::St_Swim_Main()
             if (has != 0) {
                 mStateStep = 8;
                 mStateTimer = 0xf0;
-                p = (int*)(((mHeldObj + 0xb0) & 0xFFFFFFFFFFFFFFFFULL));
+                p = (int*)(mHeldObj + 0xb0);
                 *p |= 0x4000;
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0xb0, 0, 0x1000, 0);
             } else {
@@ -255,7 +255,7 @@ int Player::St_Swim_Main()
             mStateStep = 8;
             mStateTimer = 0xf0;
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0xb0, 0, 0x1000, 0);
-            p = (int*)(((mHeldObj + 0xb0) & 0xFFFFFFFFFFFFFFFFULL));
+            p = (int*)(mHeldObj + 0xb0);
             *p |= 0x4000;
             func_ov002_020bd928(this, 0x33);
             unk_6f7 = 1;
@@ -294,7 +294,7 @@ int Player::St_Swim_Main()
 
     func_ov002_020cd218(this, mPrevVertSpeed, &mHorzSpeed, &mVertSpeed);
     {
-        int* pa8 = (int*)(((unsigned int)(&mVertSpeed)) & 0xFFFFFFFFFFFFFFFFULL);
+        int* pa8 = (int*)((unsigned int)(&mVertSpeed));
         *pa8 = *pa8 + func_ov002_020ceaf4(this);
     }
     if (func_ov002_020ce5f8(this) != 0) return 1;

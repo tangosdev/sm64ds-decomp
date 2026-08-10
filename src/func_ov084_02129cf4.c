@@ -24,7 +24,7 @@ void func_ov084_02129cf4(char *c, Fix12i distThresh)
     }
 
     {
-        int *ppos_src = (int *)(int)((long long)(int)(*(char **)(c + 0x438) + 0x5c));
+        int *ppos_src = (int *)(int)(*(char **)(c + 0x438) + 0x5c);
         ppos.x = ppos_src[0];
         ppos.y = ppos_src[1];
         ppos.z = ppos_src[2];

@@ -31,7 +31,7 @@ int func_ov073_02121388(char* c) {
     if (player == 0) return 1;
 
     {
-        int pv = (int)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+        int pv = (int)((int)player + 0x5c);
         vplayer.x = *(int*)pv;
         vplayer.y = *(int*)(pv + 4);
         vplayer.z = *(int*)(pv + 8);

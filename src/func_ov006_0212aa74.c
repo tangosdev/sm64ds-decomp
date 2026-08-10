@@ -20,7 +20,7 @@
 void func_ov006_0212aa74(char *self)
 {
     if (*(int *)(self + 0x5fe4) <= 0x14) {
-        (*(volatile int *)(((long long)(int)(self + 0x5fe4))))++;
+        (*(volatile int *)(self + 0x5fe4))++;
     } else {
         *(int *)(self + 0x5fe4) = 0;
     }

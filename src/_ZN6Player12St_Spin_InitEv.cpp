@@ -25,7 +25,7 @@ int Player::St_Spin_Init()
     mVertSpeed = 0x50000;
     func_ov002_020e25f0(((char*)this), 2);
   }
-  int* p = (int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFull);
+  int* p = (int*)((int)((char*)this) + 0x2ec);
   int old = *p;
   int** cam_ptr_ptr = &data_0209f318;
   *p = old | 0x20;

@@ -23,6 +23,6 @@ void _ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_(struct NestedHeapIterator
         *(char **)(nlink + 4) = at;
         *(char **)(prev + off + 4) = node;
         *(char **)(at + self->mLinkOffset) = node;
-        *(unsigned short *)(int)(((long long)(int)((char *)&self->unk_008))) += 1;
+        *(unsigned short *)(int)((char *)&self->unk_008) += 1;
     }
 }

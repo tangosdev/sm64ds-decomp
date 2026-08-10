@@ -21,6 +21,6 @@ void SolidHeapAllocator::ResetStart()
 
     begin = *(void **)((char *)this + 0x18);
     fl = (struct FreeList *)((char *)this + 0x24);
-    *(void **)(((long long)(int)fl)) = begin;
+    *(void **)(fl) = begin;
     fl->flags = 0;
 }

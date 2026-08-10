@@ -35,7 +35,7 @@ void func_ov060_02115c1c(char *self)
 
     if (*(short *)(r1 + 0x600 + 0x9c) != 0) goto set_default;
     if (*(u16 *)(self + 0x100 + 0x16) == 0) goto tail;
-    *(u16 *)(((long long)(int)(self + 0x116))) -= 1;
+    *(u16 *)(self + 0x116) -= 1;
     if (*(u16 *)(self + 0x100 + 0x16) != 0) goto tail;
 
 do_drop:
@@ -50,5 +50,5 @@ set_default:
     *(u16 *)(self + 0x100 + 0x16) = 0x96;
 
 tail:
-    *(int *)(((long long)(int)(self + 0xec))) |= 1;
+    *(int *)(self + 0xec) |= 1;
 }

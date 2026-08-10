@@ -20,9 +20,9 @@ int DorrieCap::Behavior()
     if(s != 0){
       *(int*)(s+0xd0) = mEatingPlayer;
       *(char**)(*(char**)((char*)&mEatingPlayer)+0x360) = s;
-      int* qs = (int*)(((int)s + 0xb0) & 0xFFFFFFFFFFFFFFFFull);
+      int* qs = (int*)((int)s + 0xb0);
       *qs = *qs | 0x20000;
-      int* qt = (int*)(((int)((char*)this) + 0xb0) & 0xFFFFFFFFFFFFFFFFull);
+      int* qt = (int*)((int)((char*)this) + 0xb0);
       *qt = *qt & ~0x20000;
       mEatingPlayer = 0;
       func_ov001_020ab110((char*)&unk_0d4);
@@ -30,7 +30,7 @@ int DorrieCap::Behavior()
     }
     return 1;
   }
-  p = (char*)(((int)p + 0xd8) & 0xFFFFFFFFFFFFFFFFull);
+  p = (char*)((int)p + 0xd8);
   mPosX = *(int*)p;
   mPosY = *(int*)(p+4);
   mPosZ = *(int*)(p+8);

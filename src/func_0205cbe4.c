@@ -32,7 +32,7 @@ void func_0205cbe4(Node *node)
     node->f0 = 0;
     node->prev = 0;
     node->next = node->prev;
-    *(u32 *)(((u32)node + 0x10) & 0xFFFFFFFFFFFFFFFFull) &= ~1u;
+    *(u32 *)((u32)node + 0x10) &= ~1u;
     if (data_020a804c.cur == node) {
         data_020a804c.c = 0;
         data_020a804c.b = 0;

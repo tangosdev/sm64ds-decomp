@@ -57,7 +57,7 @@ int func_ov078_02125448(char* c)
         ApproachAngle((short*)(c + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(c), 0xa, 0x200, 0x100);
         {
             s16 ang = *(s16*)(c + 0x94);
-            int* pf = (int*)(((long long)(int)(c + 0xb0)));
+            int* pf = (int*)(c + 0xb0);
             *(s16*)(c + 0x8e) = ang;
             *pf = *pf & ~0x80;
         }
@@ -71,7 +71,7 @@ int func_ov078_02125448(char* c)
                     if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) > 0x2800) {
                         if ((*(int*)(c + 0x39c) & 0x1000) != 0) {
                             {
-                                int* pf = (int*)(((long long)(unsigned)(c + 0xb0)));
+                                int* pf = (int*)(c + 0xb0);
                                 *pf = *pf | 0x80;
                             }
                             if (_ZN6Player7TryGrabER5Actor(a, c) != 0) {

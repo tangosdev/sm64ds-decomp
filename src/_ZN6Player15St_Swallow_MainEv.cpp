@@ -56,7 +56,7 @@ L653c:
         if (b_c2 || *(int*)((char*)data_0209ee90 + 0x238) != 0) {
             flag |= 1;
         }
-        *(unsigned char*)(((long long)(int)((char*)&mEggParams))) |= (flag + 1);
+        *(unsigned char*)((char*)&mEggParams) |= (flag + 1);
     }
     func_ov002_020d6368(((char*)this));
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0x100, ((char*)this) + 0x74);
@@ -65,7 +65,7 @@ L65e4:
     *(void**)((char*)&mObjInMouth) = 0;
 L65ec:
     if (mIsUnderwater != 0) {
-        *(int*)(((long long)(int)((char*)&mVertSpeed))) += func_ov002_020ceaf4(((char*)this));
+        *(int*)((char*)&mVertSpeed) += func_ov002_020ceaf4(((char*)this));
     }
     if (_ZN6Player12FinishedAnimEv(((char*)this))) {
         if (mIsUnderwater != 0) {

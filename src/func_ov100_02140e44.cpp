@@ -24,7 +24,7 @@ void _ZN12CylinderClsn6UpdateEv(void* c);
 
 extern s16 data_02082214[];
 
-#define L(p) ((int)(((s64)(int)(p))))
+#define L(p) ((int)(p))
 
 extern "C" void func_ov100_02140e44(char* c)
 {

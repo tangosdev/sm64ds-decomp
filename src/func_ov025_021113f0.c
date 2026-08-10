@@ -14,7 +14,7 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
     u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
 extern s16 data_02082214[];
 
-#define LAUNDER(p) ((long long)(int)(p))
+#define LAUNDER(p) (p)
 
 int func_ov025_021113f0(char *self)
 {

@@ -1,6 +1,6 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 extern void* _ZN5Actor13ClosestPlayerEv(void*);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);

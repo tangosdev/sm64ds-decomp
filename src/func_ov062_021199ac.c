@@ -48,7 +48,7 @@ int func_ov062_021199ac(char *self)
         fixed2 = (s32)(((long long)selfK * 0xb33 + 0x800) >> 12);
         if (fixed1 < fixed2)
             return 1;
-        *(s32 *)(((long long)(int)(self + 0x98))) -= 0x2000;
+        *(s32 *)(self + 0x98) -= 0x2000;
         goto ret0;
     } else {
         if (dist >= 0x12c000)

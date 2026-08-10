@@ -1,6 +1,6 @@
 #include "types.h"
 #pragma opt_common_subs off
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 
 void func_ov006_0211d924(char* p, int i)
 {

@@ -11,8 +11,9 @@
  * implementation; GetNormal re-normalizes after scaling x and z by
  * scaleY.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h. The structors stay C files.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 stays a C file.
  *
  * SetScaleY's mangled name carries Fix12<int> (wall 6az), and SetFile and
  * the DetectClsn triple are launder-heavy, so those definitions stay

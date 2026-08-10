@@ -4,8 +4,8 @@ extern s16 data_02082214[];
 void func_ov096_02136e54(void* c, int a)
 {
     char* cc = (char*)c;
-    s16* pang = (s16*)(((long long)(int)(cc + 0x35a)));
-    s16* pw = (s16*)(((long long)(int)(cc + 0x8e)));
+    s16* pang = (s16*)(cc + 0x35a);
+    s16* pw = (s16*)(cc + 0x8e);
 
     u16 idx = *(u16*)(cc + 0x35a);
     s16 d = data_02082214[(idx >> 4) * 2 + 1];
@@ -26,7 +26,7 @@ void func_ov096_02136e54(void* c, int a)
     *pw += 0x2c00;
     *(s32*)(cc + 0xd8) = *(s32*)(cc + 0x80) * 0x514;
     *(s32*)(cc + 0xdc) = *(s32*)(cc + 0x84) * 0xfa0;
-    *(s32*)(((long long)(int)(cc + 0x80))) <<= 1;
-    *(s32*)(((long long)(int)(cc + 0x84))) <<= 2;
-    *(s32*)(((long long)(int)(cc + 0x88))) <<= 1;
+    *(s32*)(cc + 0x80) <<= 1;
+    *(s32*)(cc + 0x84) <<= 2;
+    *(s32*)(cc + 0x88) <<= 1;
 }

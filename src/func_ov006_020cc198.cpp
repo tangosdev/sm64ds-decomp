@@ -35,7 +35,7 @@ extern "C" void func_ov006_020cc198(char *c)
     if (b > 0)
         *(int *)(c + 0x34) = -*(int *)(c + 0x34);
 
-    p38 = (int *)(((long long)(int)(c + 0x38)));
+    p38 = (int *)(c + 0x38);
     *p38 += (int)((((long long)data_ov006_02140578 << 11) + 0x800) >> 12);
 
     ((VtObj *)c)->m4();

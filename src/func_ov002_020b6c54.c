@@ -22,7 +22,7 @@ int func_ov002_020b6c54(char* sb, char** arg, unsigned int actorID){
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(sb+0x124, m, sb+0x2ec, 0x199, *(short*)(sb+0x8e), arg[2]);
   for(i = 0; i < 4; i++){
     char* sp;
-    *(int*)(sb + (int)((unsigned long long)i & 0xFFFFFFFFFFFFFFFFull)*4 + 0x320) = 0;
+    *(int*)(sb + (int)((unsigned long long)i)*4 + 0x320) = 0;
     sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(actorID, 0, (struct Vector3*)(sb+0x5c), 0, *(signed char*)(sb+0xcc), -1);
     if(sp != 0) *(int*)(sb + i*4 + 0x320) = *(int*)(sp+4);
   }

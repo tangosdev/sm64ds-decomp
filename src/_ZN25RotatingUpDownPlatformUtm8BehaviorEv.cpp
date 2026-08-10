@@ -163,7 +163,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         mPosY = sp4C.y;
         mPosZ = sp4C.z;
         {
-            s16 *r2 = (s16 *)(((long long)(int)((char *)&unk_3a2)));
+            s16 *r2 = (s16 *)((char *)&unk_3a2);
             s16 *b300 = (s16 *)((char *)&unk_300);
             r6 = 1;
             *r2 = (s16)(*r2 + *(s16 *)((char *)b300 + 0xa4));
@@ -174,7 +174,7 @@ int RotatingUpDownPlatformUtm::Behavior()
     }
 
     if (r6 != 0) {
-        u8 *p394 = (u8 *)(((long long)(int)((char *)&mWaypointIndex)));
+        u8 *p394 = (u8 *)((char *)&mWaypointIndex);
         *p394 = (u8)(*p394 + 1);
         if ((u32)mWaypointIndex >= 0xa) {
             mWaypointIndex = 0;

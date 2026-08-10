@@ -82,7 +82,7 @@ int Trap::Behavior()
             if (o) {
                 int b = (int)(*(u16*)((char*)o + 0xc) == 0xbf);
                 if (b) {
-                    Vector3* op = (Vector3*)(((int)o + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+                    Vector3* op = (Vector3*)((int)o + 0x5c);
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&((Obj*)this)->pos, &hv), ((Obj*)this)->angle_8e) < 0x4000) {
                         if (*(s32*)((char*)o + 0x664) == 0xd) {

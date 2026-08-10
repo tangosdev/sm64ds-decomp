@@ -17,7 +17,7 @@ struct VObj {
 
 typedef struct M34 { int m[12]; } M34;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 #pragma opt_common_subs off
 

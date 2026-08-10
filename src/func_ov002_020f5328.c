@@ -60,7 +60,7 @@ void func_ov002_020f5328(char *c, int i)
         return;
 
     {
-        int off2 = (int)((unsigned long long)i & 0xFFFFFFFFFFFFFFFFULL) * 0x4c;
+        int off2 = (int)((unsigned long long)i) * 0x4c;
         *(unsigned char *)(c + 0x47 + off2) += 1;
         *(unsigned short *)(c + 0x3c + off2) = 0;
         *(unsigned char *)(c + 0x48 + off) = 0;

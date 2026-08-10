@@ -11,8 +11,9 @@
  * this in turn. Overrides every slot except BeforeClsn (slot 9) and
  * GetSurfaceInfo (slot 3), both of which it inherits unchanged.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h. The structors stay C files.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 and D2 stay C files.
  *
  * SetFile and Transform keep extern-C free definitions for now: their
  * bodies are dominated by flat 12-word Matrix4x3 copies (the

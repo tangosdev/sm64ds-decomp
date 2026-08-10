@@ -19,8 +19,9 @@
  * ROM names this class dCcAc_c. C2 confirms it -- it calls CylinderClsn's C2,
  * stores this vtable, then nulls the owner.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 and D2 stay C files.
  *
  * LAYOUT: the base is 0x30 and owner sits at 0x30, so the object is 0x34 --
  * which is where MovingCylinderClsnWithPos starts its own field.

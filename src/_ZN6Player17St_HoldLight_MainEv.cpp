@@ -61,7 +61,7 @@ int Player::St_HoldLight_Main()
                 if (_ZNK9Animation12WillHitFrameEi(anim, 6)) {
                     int* light = *(int**)((char*)&mHeldObj);
                     if (light != 0) {
-                        int* p = (int*)(((long long)(int)((char*)light + 0xb0)));
+                        int* p = (int*)((char*)light + 0xb0);
                         *p |= 0x4000;
                     }
                 }

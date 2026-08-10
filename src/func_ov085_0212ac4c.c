@@ -30,7 +30,7 @@ int func_ov085_0212ac4c(char *c)
                 *(short *)(c + 0x94) = *(short *)(obj + 0x8e);
             }
         }
-        p128 = (int *)(((long long)(int)(c + 0x128)));
+        p128 = (int *)(c + 0x128);
         b = 0;
         *p128 = (*p128) & ~2;
         *(int *)(c + 0x45c) = b;

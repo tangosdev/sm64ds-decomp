@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 #define RND ((((u32)RandomIntInternal(&data_0209d4b8)) >> 16) & 0x7fff)
 
 struct O

@@ -27,7 +27,7 @@ struct Actor * CapEnemy::RespawnIfHasCap()
     *(int *)((char *)r + 0xf4) = *(int *)((char *)r + 0xb0);
     *(unsigned char *)((char *)r + 0x108) = 0;
     {
-        int *p = (int *)((unsigned long long)((char *)r + 0xb0) & 0xFFFFFFFFFFFFFFFFULL);
+        int *p = (int *)((unsigned long long)((char *)r + 0xb0));
         *p &= ~1;
         *p &= ~0x10000000;
     }

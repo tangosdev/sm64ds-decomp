@@ -32,7 +32,7 @@ int func_ov002_020bfec0(char* self)
         return 0;
     }
 
-    *(u8*)(((long long)(int)(self + 0x6eb))) |= 1;
+    *(u8*)(self + 0x6eb) |= 1;
 
     {
         int flag = *(int*)(self + 0x354);
@@ -62,15 +62,15 @@ int func_ov002_020bfec0(char* self)
 
     switch (state) {
     case 6:
-        *(int*)(((long long)(int)(self + 0x68c))) += inc;
+        *(int*)(self + 0x68c) += inc;
         if (*(int*)(self + 0x68c) >= 0xa000) *(int*)(self + 0x68c) = 0xa000;
         goto ret0;
     case 7:
-        *(int*)(((long long)(int)(self + 0x68c))) += inc;
+        *(int*)(self + 0x68c) += inc;
         if (*(int*)(self + 0x68c) >= 0x3c000) *(int*)(self + 0x68c) = 0x3c000;
         goto ret0;
     case 8:
-        *(int*)(((long long)(int)(self + 0x68c))) += inc;
+        *(int*)(self + 0x68c) += inc;
         if (*(int*)(self + 0x68c) < 0xa0000) goto ret0;
         /* fallthrough */
     case 9:

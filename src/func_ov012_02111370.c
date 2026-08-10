@@ -19,7 +19,7 @@ int func_ov012_02111370(char* c){
   mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124a8);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, mdl, 1, -1);
   if(data_0209caa0[2] & 0x80000){
-    *(int*)(((long long)(int)(c + 0x60))) -= 0x64000;
+    *(int*)(c + 0x60) -= 0x64000;
     *(char*)(c+0x31e) = 1;
   }
   _ZN8Platform21UpdateModelPosAndRotYEv(c);

@@ -60,7 +60,7 @@ end:
         int idx = *(unsigned char *)(self + 0x41c);
         *(int *)(self + (idx << 2) + 0x3fc) = *(int *)(found + 4);
         *(int *)(self + 0x410) = *(int *)(found + 4);
-        *(unsigned char *)(((long long)(int)(self + 0x41c))) += 1;
+        *(unsigned char *)(self + 0x41c) += 1;
     }
     return (int)found;
 }

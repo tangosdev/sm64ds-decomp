@@ -16,7 +16,7 @@ extern void func_ov006_02111e48(char *c);
 extern void func_ov006_021128fc(char *c);
 extern void func_ov006_02112ad8(char *c);
 
-#define LAUNDER(p) ((int)((long long)(int)(p)))
+#define LAUNDER(p) ((int)(p))
 
 void func_ov006_02113f1c(char *c)
 {

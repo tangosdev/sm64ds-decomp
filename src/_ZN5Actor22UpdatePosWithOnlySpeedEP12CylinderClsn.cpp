@@ -24,8 +24,8 @@ struct Actor {
 void Actor::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
     AddVec3(&pos, &speed, &pos);
     if (clsn != 0) {
-        *(s32 *)(((long long)(int)(&pos.x))) += clsn->dx;
-        *(s32 *)(((long long)(int)(&pos.z))) += clsn->dz;
+        *(s32 *)(&pos.x) += clsn->dx;
+        *(s32 *)(&pos.z) += clsn->dz;
     }
     func_02010da4((int *)this);
 }

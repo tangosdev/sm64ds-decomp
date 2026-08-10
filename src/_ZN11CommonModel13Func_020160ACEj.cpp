@@ -12,7 +12,7 @@ void CommonModel::Func_020160AC(u32 flags)
     for (i = 0; i < n; i++) {
         /* The (long long)(int) launder keeps the ROM's materialized
            address for the read-modify-write. */
-        u32 *f = (u32 *)(((long long)(int)&p->flags));
+        u32 *f = (u32 *)(&p->flags);
         *f |= flags;
         p++;
     }

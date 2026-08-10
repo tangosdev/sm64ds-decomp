@@ -6,7 +6,7 @@
 
 int Player::St_CameraZoom_Cleanup()
 {
-    *(unsigned short *)(((long long)(int)((char *)&mStateFlags))) &= ~4;
+    *(unsigned short *)((char *)&mStateFlags) &= ~4;
     unk_715 = 0;
     return 1;
 }

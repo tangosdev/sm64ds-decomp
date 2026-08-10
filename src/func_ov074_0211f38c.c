@@ -51,7 +51,7 @@ int func_ov074_0211f38c(u8* c){
         ang.x=Vec3_VertAngle(&p1, &p0);
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);
         {
-            u8* pc=(u8*)(((long long)(int)(c+0x602)));
+            u8* pc=(u8*)(c+0x602);
             *pc+=1;
         }
         *(short*)((c+0x500)+0xfc)=2;

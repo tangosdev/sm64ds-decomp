@@ -29,7 +29,7 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void func_02012790(int a);
 
-#define LADR(p) ((void *)(unsigned int)(((long long)(int)(p))))
+#define LADR(p) ((void *)(unsigned int)(p))
 
 #pragma opt_common_subs off
 

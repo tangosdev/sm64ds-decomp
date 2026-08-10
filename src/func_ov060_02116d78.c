@@ -6,8 +6,8 @@ extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int kind, uns
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern short data_02082214[];
 extern int data_0209e650;
-#define ML(p) ((int*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
-#define MLS(p) ((short*)(int)(((long long)(int)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+#define ML(p) ((int*)(int)(p))
+#define MLS(p) ((short*)(int)(p))
 void func_ov060_02116d78(char *c)
 {
 

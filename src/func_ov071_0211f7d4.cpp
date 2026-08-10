@@ -36,7 +36,7 @@ extern "C" int func_ov071_0211f7d4(Actor *self)
         WithMeshClsn *wm = (WithMeshClsn*)(s + 0x194);
         *(int*)(s + 0xa8) = 0;
         wm->ClearLimMovFlag();
-        *(int *)(((long long)(int)(s + 0xb0))) |= 1;
+        *(int *)(s + 0xb0) |= 1;
         short z = 0;
         short ang = *(short*)(s + 0x94);
         *(short*)(s + 0x8c) = z;

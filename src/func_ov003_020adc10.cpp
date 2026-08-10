@@ -14,7 +14,7 @@ void *func_ov003_020adc10(void) {
         _ZN9ActorBaseC1Ev(p);
         *(void **)p = (void *)data_0208e4b8;
         *(void **)p = (void *)_ZTV5Scene;
-        unsigned char *bytePtr = (unsigned char *)(int)((unsigned long long)((int)p + 0x13) & 0xFFFFFFFFFFFFFFFFULL);
+        unsigned char *bytePtr = (unsigned char *)(int)((unsigned long long)((int)p + 0x13));
         *bytePtr |= 1;
         *bytePtr |= 4;
         *(void **)p = (void *)data_ov003_020b1650;

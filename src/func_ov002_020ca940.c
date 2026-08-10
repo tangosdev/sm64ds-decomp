@@ -35,7 +35,7 @@ void func_ov002_020ca940(char* self)
     if (*(u16*)(data_0209f49e + (u8)data_020a0e40 * 0x18) & 0x8000) {
         old = *(u8*)(self + 0x715);
         h = data_0209f318;
-        (*(u8*)(((long long)(int)((int)self + 0x715))))++;
+        (*(u8*)((int)self + 0x715))++;
 
         if (*(u8*)(self + 0x715) > 2) {
             *(u8*)(self + 0x715) = 0;
@@ -53,7 +53,7 @@ void func_ov002_020ca940(char* self)
                     if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211013c) ||
                         _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211043c) ||
                         _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110154)) {
-                        *(u16*)(((long long)(int)((int)self + 0x6ce))) |= 4;
+                        *(u16*)((int)self + 0x6ce) |= 4;
                         break;
                     }
                 }
@@ -84,6 +84,6 @@ void func_ov002_020ca940(char* self)
     if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110664)) return;
 
     if ((u16)(*(u16*)(self + 0x6ce) & 4)) {
-        *(u16*)(((long long)(int)((int)self + 0x6ce))) &= ~4;
+        *(u16*)((int)self + 0x6ce) &= ~4;
     }
 }

@@ -160,7 +160,7 @@ int Rabbit::Behavior()
                     } else if (temp_r1 == 1 && _ZN6Player12GetTalkStateEv(temp_r4) == -1) {
                         _ZN6Player9DropActorEv(temp_r4);
                         unk_427 = 2;
-                        *(u16*)(((long long)(int)((char*)temp_r4 + 0x6ce))) |= 0x800;
+                        *(u16*)((char*)temp_r4 + 0x6ce) |= 0x800;
                     }
                 }
             }
@@ -176,7 +176,7 @@ int Rabbit::Behavior()
                 _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsn);
         }
         if (unk_107 == 1) {
-            *(u8*)(((long long)(int)(c + 0x42a))) = *(u8*)(((long long)(int)(c + 0x42a))) + 1;
+            *(u8*)((long long)(int)(c + 0x42a)) = *(u8*)((long long)(int)(c + 0x42a)) + 1;
             if (unk_42a > 0x96) {
                 unk_107 = 0;
                 unk_42a = 0;

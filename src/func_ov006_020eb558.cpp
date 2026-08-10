@@ -17,7 +17,7 @@ extern "C" void func_ov006_020eb558(int *thiz)
         }
     }
     {
-        short *p = (short*)(((int)thiz + 0x84) & 0xFFFFFFFFFFFFFFFFull);
+        short *p = (short*)((int)thiz + 0x84);
         *p = *p + *(short*)((char*)thiz + 0x86);
     }
 }

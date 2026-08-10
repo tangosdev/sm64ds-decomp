@@ -40,7 +40,7 @@ void func_ov006_020f5f0c(char *self, int idx)
     *(u8*)(self + 0x53ee + e) = *(u8*)(self + 0x51b8 + n);
     *(u8*)(self + 0x53f0 + *(u8*)(self + 0x5406)) = (u8)idx;
     {
-        u8 *pc = (u8*)((long long)(int)(self + 0x5406));
+        u8 *pc = (u8*)(self + 0x5406);
         *pc = *pc + 1;
     }
     *(u8*)(self + 0x51bc + n) = 3;
@@ -48,7 +48,7 @@ void func_ov006_020f5f0c(char *self, int idx)
 
     if (*(u8*)(self + 0x540c) != 0) return;
     {
-        u8 *pd = (u8*)((long long)(int)(self + 0x540c));
+        u8 *pd = (u8*)(self + 0x540c);
         *pd = *pd + 1;
     }
     func_ov004_020ad79c(*(int*)(self + 0xa8), *(int*)(self + 0xb4));

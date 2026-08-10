@@ -30,7 +30,7 @@ int func_ov078_021238ac(char *c)
     }
 
     {
-        int *f = (int *)(((long long)(int)((char *)cam + 0x154)));
+        int *f = (int *)((char *)cam + 0x154);
         *f &= ~8;
     }
     v.x = 0;

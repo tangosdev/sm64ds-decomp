@@ -11,14 +11,14 @@ int func_0200fc44(int a, Vector3* pos, int flag) {
     if (flag) {
         RaycastGround rg;
         _ZN13RaycastGroundC1Ev(&rg);
-        int* yp = (int*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFull);
+        int* yp = (int*)((int)pos + 4);
         *yp += 0x32000;
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rg))
             pos->y = rg.resultY;
         _ZN13RaycastGroundD1Ev(&rg);
     }
-    int* yp2 = (int*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFull);
+    int* yp2 = (int*)((int)pos + 4);
     *yp2 += 0x19000;
     return _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb3, pos->x, pos->y, pos->z);
 }

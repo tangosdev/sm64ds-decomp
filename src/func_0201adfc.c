@@ -1,5 +1,5 @@
 #include "types.h"
-#define LM(x) ((u32*)(long long)(int)(x))
+#define LM(x) ((u32*)(x))
 
 extern u8 data_0209d698;
 extern u8* data_0209d6f0;

@@ -27,7 +27,7 @@ void func_ov005_020c0878(char* sl)
         return;
 
     if (*(int*)(sl + 0xa0) > 0) {
-        int* pa0 = (int*)(((int)sl + 0xa0) & 0xFFFFFFFFFFFFFFFFULL);
+        int* pa0 = (int*)((int)sl + 0xa0);
         *pa0 = *pa0 - 1;
         if (*(int*)(sl + 0xa0) == 0) {
             int f58 = *(int*)(sl + 0x58);

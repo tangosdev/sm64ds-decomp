@@ -1,7 +1,7 @@
 // @symbol func_ov020_02112e94
 /* recovered: shared common types */
 #include "common.h"
-#define LAUNDER(p) ((long long)(int)(p))
+#define LAUNDER(p) (p)
 
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int Vec3_Dist(const void *a, const void *b);

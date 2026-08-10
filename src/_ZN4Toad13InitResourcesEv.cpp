@@ -102,7 +102,7 @@ int Toad::InitResources()
                 goto after_inc;
         }
         {
-            u16 *pm = (u16 *)(((long long)(int)((char *)&unk_208)));
+            u16 *pm = (u16 *)((char *)&unk_208);
             *pm = (u16)(*pm + 1);
         }
     after_inc: ;

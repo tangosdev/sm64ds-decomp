@@ -6,8 +6,8 @@ extern void func_ov006_020fbb2c(char *c, int idx, unsigned short val);
 
 /* Distinct 64-bit masks force independent RMW base materialization (add+pool).
  * Plain *(b+0x5960) for the compare/zero reloads folds to add #0x5900 + #0x60. */
-#define M1(a) (((long long)(int)(a)) & 0xFFFFFFFFFFFFFFFFLL)
-#define M2(a) (((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL)
+#define M1(a) (a)
+#define M2(a) (a)
 
 void func_ov006_020fb7e0(char *thiz)
 {

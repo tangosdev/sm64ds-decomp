@@ -20,7 +20,7 @@ void func_ov063_02117650(char *self)
     }
 
     {
-        int *pp = (int *)(((long long)(int)(p + 0x5c)));
+        int *pp = (int *)(p + 0x5c);
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];

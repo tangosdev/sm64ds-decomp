@@ -48,7 +48,7 @@ void func_ov064_02116220(char* c){
         *(int*)(c+0x398) = 4;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x110,
             *(BCA_File**)(*(int*)(*(int*)(c+0x330) + 4) + 4), 0, 0x1000, 0);
-        *(unsigned int *)(((long long)(int)(c + 0xb0))) &= ~1u;
+        *(unsigned int *)(c + 0xb0) &= ~1u;
         ((ActorV*)c)->m90();
         *(int*)(c+0x3a8) = *(int*)(c+0x5c);
         *(int*)(c+0x3ac) = *(int*)(c+0x60);

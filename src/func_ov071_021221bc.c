@@ -45,7 +45,7 @@ void func_ov071_021221bc(void* self) {
         void* pl = _ZN5Actor13ClosestPlayerEv(self);
         if (pl == 0)
             return;
-        plp = (Vector3*)(((int)pl + 0x5c) & 0xFFFFFFFFFFFFFFFFll);
+        plp = (Vector3*)((int)pl + 0x5c);
         pp.x = plp->x;
         pp.y = plp->y;
         pp.z = plp->z;

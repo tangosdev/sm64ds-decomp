@@ -58,19 +58,19 @@ L9c:
         int match = (*(u16*)((char*)p360 + 0xc) == 0xbf);
         if (match) {
             func_ov002_020d5cec((char*)p360);
-            *(u16*)(((long long)(int)((char*)&self->mStateFlags))) &= ~2;
+            *(u16*)((char*)&self->mStateFlags) &= ~2;
         }
         self->mUseAltBodyModel = 0;
         {
-            int* p = (int*)(((long long)(int)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0)));
+            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
             *p |= 0x80000;
         }
         {
-            int* p = (int*)(((long long)(int)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0)));
+            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
             *p &= ~0x40000;
         }
         {
-            int* p = (int*)(((long long)(int)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0)));
+            int* p = (int*)((char*)*(void**)((char*)&self->mObjInMouth) + 0xb0);
             *p &= ~0x20000;
         }
         *(void**)((char*)&self->mObjInMouth) = 0;
@@ -92,7 +92,7 @@ L9c:
 
     ang = Vec3_HorzAngle(((char*)self) + 0x5c, a);
     if (AngleDiff(self->mAngleY, ang) > 0x4000) {
-        *(u8*)(((long long)(int)((char*)&self->mStateStep))) += 1;
+        *(u8*)((char*)&self->mStateStep) += 1;
     }
     self->mPrevAngleY = ang + 0x8000;
     if (self->mStateStep & 1) {
@@ -109,7 +109,7 @@ L9c:
 
     if (arg5 != 0) {
         u8 t = arg5 - 1;
-        *(u8*)(((long long)(int)((char*)&self->mStateStep))) |= 0x10;
+        *(u8*)((char*)&self->mStateStep) |= 0x10;
         self->mStateWork = t;
     }
 
@@ -139,7 +139,7 @@ L9c:
 
         _ZN6Player11ChangeStateERNS_5StateE(((char*)self), &data_ov002_02110094);
         if (func_ov002_020d91e0(((char*)self), b << 8, 1) != 0) {
-            *(u8*)(((long long)(int)((char*)&self->mStateStep))) &= 1;
+            *(u8*)((char*)&self->mStateStep) &= 1;
             _ZN6Player11ChangeStateERNS_5StateE(((char*)self), &data_ov002_0211010c);
         }
     } else {

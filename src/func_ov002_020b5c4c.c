@@ -29,7 +29,7 @@ int func_ov002_020b5c4c(char *c)
     if (func_ov002_020b5ab4(c) != 0) {
         if (_Z14ApproachLinearRiii((int *)(c + 0x330),
                 *(void **)(c + 0x33c) != 0 ? -0x28000 : 0, 0x5000) != 0) {
-            short *ctr = (short *)((long long)(int)(c + 0x338));
+            short *ctr = (short *)(c + 0x338);
             short cval = *ctr;
             char *st = c + 0x300;
             *ctr = (short)(cval + 0xa00);
@@ -43,7 +43,7 @@ int func_ov002_020b5c4c(char *c)
             val1 = val2;
         } else {
             char *target = *(char **)(c + 0x33c);
-            struct Vector3 *tp = (struct Vector3 *)((long long)(int)(target + 0x5c));
+            struct Vector3 *tp = (struct Vector3 *)(target + 0x5c);
             tpos.x = tp->x;
             tpos.y = tp->y;
             tpos.z = tp->z;

@@ -14,7 +14,7 @@ void func_ov005_020c0140(char* c) {
     if (*(int*)(c + 0x98) > 0) return;
     if (data_0209b304[0] == 0) {
         if (*(int*)(c + 0x50) >= 0) {
-            *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFULL) -= 8;
+            *(int*)((int)c + 0x50) -= 8;
             if (*(int*)(c + 0x50) <= 0) {
                 *(int*)(c + 0x50) = 0;
                 *(unsigned char*)(c + 0x54) = 0;
@@ -22,7 +22,7 @@ void func_ov005_020c0140(char* c) {
         }
     } else {
         if (*(int*)(c + 0x50) <= 0xb0) {
-            *(int*)(((int)c + 0x50) & 0xFFFFFFFFFFFFFFFFULL) += 8;
+            *(int*)((int)c + 0x50) += 8;
             if (*(int*)(c + 0x50) >= 0xb0) {
                 *(int*)(c + 0x50) = 0xb0;
                 *(unsigned char*)(c + 0x54) = 0;

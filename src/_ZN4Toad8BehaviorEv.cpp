@@ -58,7 +58,7 @@ int Toad::Behavior()
         if (data_0209f2f8 == 0x32)
             threshold = 0x1f4000;
 
-        Vector3 *psrc = (Vector3 *)(((long long)(int)(p + 0x5c)));
+        Vector3 *psrc = (Vector3 *)(p + 0x5c);
         Vector3 v;
         v.x = psrc->x;
         v.y = psrc->y;

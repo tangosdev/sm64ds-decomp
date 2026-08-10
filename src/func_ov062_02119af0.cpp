@@ -39,7 +39,7 @@ extern "C" int func_ov062_02119af0(char *p) {
     int dot = (dxc >> 0xc) * (dx >> 0xc) + (dzc >> 0xc) * (dz >> 0xc);
     if (dot <= 0 || Vec3_Dist((Vector3 *)(p + 0x5c), (Vector3 *)(p + 0x3cc)) < (*(int *)(p + 0x98) >> 1)) {
         int v = *(int *)(p + 0x3cc);
-        int *cnt = (int *)(((long long)(int)(p + 0x3bc)));
+        int *cnt = (int *)(p + 0x3bc);
         *(int *)(p + 0x3c0) = v;
         *(int *)(p + 0x3c4) = *(int *)(p + 0x3d0);
         *(int *)(p + 0x3c8) = *(int *)(p + 0x3d4);

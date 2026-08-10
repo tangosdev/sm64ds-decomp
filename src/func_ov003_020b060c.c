@@ -21,20 +21,20 @@ case0:
     do {
         char *e = c + (i << 1);
         if (*(unsigned short *)(e + 0x70) != 0) {
-            *(unsigned short *)(((long long)(int)(e + 0x70))) =
-                (unsigned short)(*(unsigned short *)(((long long)(int)(e + 0x70))) - 1);
+            *(unsigned short *)((long long)(int)(e + 0x70)) =
+                (unsigned short)(*(unsigned short *)((long long)(int)(e + 0x70)) - 1);
         } else {
             short tgt = data_ov003_020b1774[i];
             if (*(short *)(e + 0x50) != tgt) {
                 if (i < 4) {
-                    short *q = (short *)(((long long)(int)(e + 0x50)));
+                    short *q = (short *)(e + 0x50);
                     *q = (short)(*q + 0xc);
                     if (*(short *)(e + 0x50) >= tgt) {
                         *(short *)(e + 0x50) = tgt;
                         *(unsigned short *)(e + 0x70) = (unsigned short)ip;
                     }
                 } else {
-                    short *q = (short *)(((long long)(int)(e + 0x50)));
+                    short *q = (short *)(e + 0x50);
                     *q = (short)(*q - 0xc);
                     if (*(short *)(e + 0x50) <= tgt) {
                         *(short *)(e + 0x50) = tgt;
@@ -51,7 +51,7 @@ case0:
 
 case1:
     if (*(unsigned short *)(c + 0x70) != 0) {
-        unsigned short *p = (unsigned short *)(((long long)(int)(c + 0x70)));
+        unsigned short *p = (unsigned short *)(c + 0x70);
         *p = (unsigned short)(*p - 1);
         return;
     }

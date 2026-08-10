@@ -35,14 +35,14 @@ extern "C" int func_ov006_0210bcb0(Obj *self) {
 
     (self->*data_ov006_02142bdc[self->idx])();
 
-    pc = (unsigned char *)(((long long)(int)((char *)self + 0x503f)));
+    pc = (unsigned char *)((char *)self + 0x503f);
     *pc = *pc + 1;
     func_ov006_020c2144((char *)self + 0x4f38);
 
     for (i = 0; i < 3; i++) {
         if (self->idx == 1) {
-            ph1 = (unsigned short *)(((long long)(int)((char *)self + 0x5018)));
-            ph2 = (unsigned short *)(((long long)(int)((char *)self + 0x501a)));
+            ph1 = (unsigned short *)((char *)self + 0x5018);
+            ph2 = (unsigned short *)((char *)self + 0x501a);
             *ph1 = *ph1 - 0x200;
             *ph2 = *ph2 - 0x400;
             break;

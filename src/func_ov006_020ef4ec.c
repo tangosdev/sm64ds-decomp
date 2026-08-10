@@ -11,7 +11,7 @@ struct G2
 extern struct G2 data_ov006_0213cc8c;
 void func_ov006_020ef4ec(char *c)
 {
-  int *p = (int *) (((unsigned long long) (c + 0x5a64)) & 0xFFFFFFFFFFFFFFFFULL);
+  int *p = (int *) ((unsigned long long) (c + 0x5a64));
   char *b = c + 0x5000;
   *p = (*p) + ((*((int *) (b + 0xa68))) >> 12);
   if ((*((int *) ((c + 0x5000) + 0xa64))) > 0x1000)

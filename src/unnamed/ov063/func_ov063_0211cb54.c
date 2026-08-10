@@ -11,7 +11,7 @@ struct Obj {
     char pad4[0x14c-0x13a];
     u16 f14c;
 };
-#define F8C(s) (*(s16 *)(((int)(s) + 0x8c) & 0xFFFFFFFFFFFFFFFFull))
+#define F8C(s) (*(s16 *)((int)(s) + 0x8c))
 void func_ov063_0211cb54(struct Obj* self)
 {
     if (self->f124 != 0) {

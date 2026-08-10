@@ -1,6 +1,6 @@
 #include "types.h"
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
-#define LI(v) ((int)(((long long)(v))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
+#define LI(v) ((int)((long long)(v)))
 
 extern char* _ZN5Actor13ClosestPlayerEv(void* self);
 extern short data_02082214[];

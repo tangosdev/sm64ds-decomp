@@ -17,7 +17,7 @@ int _ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb(char *self, char *sys, int
     int result;
 
     if (*(unsigned char *)(self + 4) == 0) {
-        *(int *)(((long long)(int)(sys + 0x1c))) |= 2;
+        *(int *)(sys + 0x1c) |= 2;
         node = *(char **)(sys + 8);
         while (node != 0) {
             *(unsigned short *)(node + 0x2e) = *(unsigned short *)(node + 0x2c);
@@ -25,7 +25,7 @@ int _ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb(char *self, char *sys, int
         }
         return 1;
     } else {
-        *(int *)(((long long)(int)(sys + 0x1c))) &= ~2;
+        *(int *)(sys + 0x1c) &= ~2;
         node = *(char **)(sys + 8);
         while (node != 0) {
             wp.x = *(int *)(node + 0x14) + *(int *)(node + 0x8);
@@ -45,9 +45,9 @@ int _ZN8Particle12ClipCallback8OnUpdateERNS_6SystemEb(char *self, char *sys, int
                         cv.x = (cv.x < 0) ? 0x20000 : -0x20000;
                     }
                     MulVec3Mat4x3(&cv, &data_0209b41c, &out);
-                    *(int *)(((long long)(int)(node + 0x14))) += out.x - wp.x;
-                    *(int *)(((long long)(int)(node + 0x18))) += out.y - wp.y;
-                    *(int *)(((long long)(int)(node + 0x1c))) += out.z - wp.z;
+                    *(int *)(node + 0x14) += out.x - wp.x;
+                    *(int *)(node + 0x18) += out.y - wp.y;
+                    *(int *)(node + 0x1c) += out.z - wp.z;
                 }
             }
             node = *(char **)node;

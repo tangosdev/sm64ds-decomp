@@ -15,7 +15,7 @@ int Player::St_OpeningWakeUp_Main()
     case 0:
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xb4, 0, 0x1000, 0);
-            *(u8*)(int)(((long long)(int)((char*)&mStateStep))) += 1;
+            *(u8*)(int)((char*)&mStateStep) += 1;
         }
         break;
     case 1:
@@ -23,7 +23,7 @@ int Player::St_OpeningWakeUp_Main()
     case 2:
         if (_ZN6Player12FinishedAnimEv(((char*)this))) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0xb5, 0, 0x1000, 0);
-            *(u8*)(int)(((long long)(int)((char*)&mStateStep))) += 1;
+            *(u8*)(int)((char*)&mStateStep) += 1;
         }
         break;
     case 3:

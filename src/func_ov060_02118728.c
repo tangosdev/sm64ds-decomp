@@ -26,7 +26,7 @@ void func_ov060_02118728(char *c)
     if (player == 0) return;
 
     {
-        struct Vector3 *pp = (struct Vector3 *)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
+        struct Vector3 *pp = (struct Vector3 *)((int)player + 0x5c);
         v.x = pp->x;
         v.y = pp->y;
         v.z = pp->z;

@@ -23,7 +23,7 @@ int func_ov006_0211c720(char *c)
         break;
     case 1:
         if (*(u16 *)(c + 0x5618) != 0) {
-            (*(u16 *)(int)(((long long)(int)(c + 0x5618))))--;
+            (*(u16 *)(int)(c + 0x5618))--;
             if (*(u16 *)(c + 0x5618) == 0) {
                 FreeGfxSlotsById(0x1d);
                 if (*(u8 *)(c + 0xc4) == 0) {
@@ -42,7 +42,7 @@ int func_ov006_0211c720(char *c)
         func_ov006_0211b954(c);
         func_ov006_0211b5e0(c);
         if (*(u16 *)(c + 0x5616) != 0) {
-            (*(u16 *)(int)(((long long)(int)(c + 0x5616))))--;
+            (*(u16 *)(int)(c + 0x5616))--;
             if (*(u16 *)(c + 0x5616) == 0) {
                 if (*(u8 *)(c + 0x5626) != 0) {
                     *(int *)(c + 0x50e0) = 0;
@@ -54,7 +54,7 @@ int func_ov006_0211c720(char *c)
                         char *g = data_ov004_020beb68;
                         if (g != 0) {
                             if (*(int *)(g + 0xb4) < 9999)
-                                (*(int *)(int)(((long long)(int)(g + 0xb4))))++;
+                                (*(int *)(int)(g + 0xb4))++;
                             if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
                                 *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                         }
@@ -78,7 +78,7 @@ int func_ov006_0211c720(char *c)
         func_ov006_0211b954(c);
         func_ov006_0211b5e0(c);
         if (*(u16 *)(c + 0x5616) != 0) {
-            (*(u16 *)(int)(((long long)(int)(c + 0x5616))))--;
+            (*(u16 *)(int)(c + 0x5616))--;
             if (*(s16 *)(c + 0x5616) <= 0) {
                 *(int *)(c + 0x50e0) = 0;
                 func_ov006_020c2440(c + 0x4f38);

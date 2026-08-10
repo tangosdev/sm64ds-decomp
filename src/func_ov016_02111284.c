@@ -11,7 +11,7 @@ extern unsigned char data_0209f220;
 extern int data_ov016_02114dbc;
 extern int data_020a0e68[];
 
-#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p))))
+#define LA(p) ((void*)(unsigned long)((unsigned long)(p)))
 
 void func_ov016_02111284(char* c)
 {

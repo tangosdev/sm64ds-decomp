@@ -38,7 +38,7 @@ int func_ov006_020ef148(char* self)
     }
     *(int*)((char*)p + 0x18) = *(int*)(self + 0x5a64);
     {
-        void** vobj = (void**)(((long long)(int)(self + 0x5a14)));
+        void** vobj = (void**)(self + 0x5a14);
         (*(void(**)(void*, void*))((char*)*vobj + 0x14))((void*)vobj, &local);
     }
 

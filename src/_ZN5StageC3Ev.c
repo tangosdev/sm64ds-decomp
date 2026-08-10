@@ -1,4 +1,4 @@
-#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off)))))
+#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 extern int _ZN9ActorBasenwEj(unsigned int);
 extern int _ZN9ActorBaseC1Ev(void *);
 extern int _ZN8Particle10SysTrackerC1Ev(void *);

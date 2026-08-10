@@ -28,7 +28,7 @@ void func_ov062_0211a9c4(char *c)
     if (*(void **)(c + 0x398) == 0)
         return;
 
-    sp = (struct Vec3 *)(((int)*(void **)(c + 0x398) + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
+    sp = (struct Vec3 *)((int)*(void **)(c + 0x398) + 0x5c);
     v.x = sp->x;
     v.y = sp->y;
     v.z = sp->z;

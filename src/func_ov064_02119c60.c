@@ -3,7 +3,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 
 int func_ov064_02119c60(char *c)
 {
-    unsigned char *p = (unsigned char*)(((long long)(int)(c+0x380)));
+    unsigned char *p = (unsigned char*)(c+0x380);
     *p -= 2;
     if (*(unsigned char*)(c+0x380) < 2)
         *(unsigned char*)(c+0x380) = 2;

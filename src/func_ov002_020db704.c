@@ -42,12 +42,12 @@ void func_ov002_020db704(Obj *self)
                 if (self->state == 1 || self->state == 6) {
                     self->timer = 10;
                 } else {
-                    (*(u8 *)(((int)self + 0x6f2) & 0xFFFFFFFFFFFFFFFFull))++;
+                    (*(u8 *)((int)self + 0x6f2))++;
                 }
             }
         } else if (self->timer == 1) {
             if (s == 1) {
-                (*(u8 *)(((int)self + 0x6f2) & 0xFFFFFFFFFFFFFFFFull))++;
+                (*(u8 *)((int)self + 0x6f2))++;
             } else {
                 self->state = 0;
                 self->timer = 0;

@@ -40,7 +40,7 @@ extern "C" void func_ov006_020c94e0(char *c)
     r4v = *(int *)(c + 0x14);
     if (r5v < 0) r5v = -r5v;
     {
-        int *src = (int *)(((long long)(int)(c + 4)));
+        int *src = (int *)(c + 4);
         tmp.x = src[0]; tmp.y = src[1]; tmp.z = src[2];
     }
 
@@ -75,7 +75,7 @@ extern "C" void func_ov006_020c94e0(char *c)
         vec16.x = (s16)x;
         vec16.y = (s16)y;
         char *bp = c + 0x70;
-        int *s = (int *)(((long long)(int)bp));
+        int *s = (int *)(bp);
         vec16.z = (s16)(z + (int)((unsigned)bp - (unsigned)bp));
         
         int *q = data_ov006_0213b1d4;

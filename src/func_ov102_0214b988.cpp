@@ -22,7 +22,7 @@ extern "C" void func_ov102_0214b988(void *thiz)
     if (!pl) return;
     if (Vec3_Dist((struct Vector3 *)(c + 0x5c), (struct Vector3 *)(pl + 0x5c)) > 0x190000) return;
     {
-        int *src = (int *)(((long long)(int)(pl + 0x5c)));
+        int *src = (int *)(pl + 0x5c);
         v.x = src[0];
         v.y = src[1];
         v.z = src[2];

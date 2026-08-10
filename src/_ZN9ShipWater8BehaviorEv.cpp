@@ -31,7 +31,7 @@ int ShipWater::Behavior()
         if (d < 0x92e000) {
             int* q;
             unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_33c, 3, 0x96, ((char*)this)+0x74, 0);
-            q = (int*)(((long long)(int)((char*)&mPosY)));
+            q = (int*)((char*)&mPosY);
             *q -= 0x5000;
         }
     }

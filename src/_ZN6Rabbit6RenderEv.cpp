@@ -32,7 +32,7 @@ int Rabbit::Render()
     unk_084 = unk_088;
 
     {
-        int** base = (int**)(((long long)(int)((char*)&unk_308)));
+        int** base = (int**)((char*)&unk_308);
         int* r3 = base[0];
         char* r1 = (char*)base[1];
         for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {

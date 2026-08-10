@@ -21,7 +21,7 @@ void func_ov064_02115f98(char* a0, char* a1)
     int* p1;
     int tmpy;
 
-    p1 = (int*)(((long long)(int)(a1 + 0x5c)));
+    p1 = (int*)(a1 + 0x5c);
     pos0[0] = *(int*)(a0 + 0x5c);
     y0 = *(int*)(a0 + 0x60);
     pos0[1] = y0;

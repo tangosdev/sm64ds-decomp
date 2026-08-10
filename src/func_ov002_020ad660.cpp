@@ -51,7 +51,7 @@ struct VB {
 
 
 
-#define LAUNDER(p) ((int)(((long long)(int)(p))))
+#define LAUNDER(p) ((int)(p))
 
 extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
 {

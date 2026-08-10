@@ -6,7 +6,7 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFll))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 
 extern void* data_0209f318;
 

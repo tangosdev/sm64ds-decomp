@@ -19,8 +19,9 @@
  * ROM's own name for this class is dCcPos_c. C1 confirms it from the other
  * side -- it calls CylinderClsn's C2 and then stores this vtable.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 and D2 stay C files.
  *
  * LAYOUT: the base is 0x30, and pos starts at exactly 0x30 (GetPos is
  * `add r0, r0, #0x30'), so the object is 0x3c.

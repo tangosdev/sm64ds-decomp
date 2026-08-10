@@ -1,5 +1,5 @@
 #include "types.h"
-#define LAUND(p) ((void*)((((long long)(int)(p)))))
+#define LAUND(p) ((void*)(p))
 
 extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actorBase, int isTalk);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);

@@ -27,7 +27,7 @@ int func_ov030_02113a80(char* c)
             *(unsigned char*)(c + 0x3c7) = 4;
         } else {
             *(unsigned char*)(c + 0x3c7) = 0;
-            unsigned char* f = (unsigned char*)(((unsigned long long)((int)(c) + 0x3c8)) & 0xFFFFFFFFFFFFFFFFULL);
+            unsigned char* f = (unsigned char*)((unsigned long long)((int)(c) + 0x3c8));
             *f ^= 1;
         }
     }

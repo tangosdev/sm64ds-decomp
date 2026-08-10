@@ -42,7 +42,7 @@ void WithMeshClsn::UpdateDiscreteNoLava()
         unk_018, *(void **)((char *)&mActor));
     unk_128 = unk_1b8;
     if (src->y - p68->y > 0) {
-        *(unsigned char *)(((long long)(int)((char *)&mClsnFlags))) |= 0x20;
+        *(unsigned char *)((char *)&mClsnFlags) |= 0x20;
     }
     if (_ZN10SphereClsn10DetectClsnEv((char *)&mSphereClsn)) {
         p6c = (struct Vector3 *)((char *)&unk_06c);
@@ -52,9 +52,9 @@ void WithMeshClsn::UpdateDiscreteNoLava()
         if (_ZNK12WithMeshClsn15ShouldUpdatePosEv(((char *)this))) {
             src->x += p6c->x;
             if (_ZNK12WithMeshClsn16ShouldUpdatePosYEv(((char *)this))) {
-                *(int *)(((long long)(int)((char *)src + 4))) += p6c->y;
+                *(int *)((char *)src + 4) += p6c->y;
             }
-            *(int *)(((long long)(int)((char *)src + 8))) += p6c->z;
+            *(int *)((char *)src + 8) += p6c->z;
         }
     }
     if (onGround == 0)

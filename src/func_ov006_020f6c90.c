@@ -18,7 +18,7 @@ void func_ov006_020f6c90(char *c)
             u32 idx = 1 + ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 8 >> 15);
             u8 *entry;
         check0:
-            entry = (u8 *)(((long long)(int)(c + idx + 0x53f2)));
+            entry = (u8 *)(c + idx + 0x53f2);
             if (*entry < 2) {
                 *(u8 *)(p + 0x51b8) = idx;
                 (*entry)++;
@@ -45,7 +45,7 @@ void func_ov006_020f6c90(char *c)
             u32 idx = 1 + ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 9 >> 15);
             u8 *entry;
         check1:
-            entry = (u8 *)(((long long)(int)(c + idx + 0x53f2)));
+            entry = (u8 *)(c + idx + 0x53f2);
             if (*entry < 2) {
                 *(u8 *)(p + 0x51b8) = idx;
                 (*entry)++;
@@ -72,7 +72,7 @@ void func_ov006_020f6c90(char *c)
             u32 idx = 1 + ((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 10 >> 15);
             u8 *entry;
         check2:
-            entry = (u8 *)(((long long)(int)(c + idx + 0x53f2)));
+            entry = (u8 *)(c + idx + 0x53f2);
             if (*entry < 2) {
                 *(u8 *)(p + 0x51b8) = idx;
                 (*entry)++;

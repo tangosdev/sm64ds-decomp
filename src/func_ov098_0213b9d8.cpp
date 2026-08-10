@@ -10,7 +10,7 @@ extern "C" s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern "C" Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32,u32,const Vector3*,const Vector3_16*,s32,s32);
 extern "C" void func_0201267c(u32 a, void *b, void *c, int d);
 extern s16 data_02082214[];
-#define M(x) ((long long)(int)(x))
+#define M(x) (x)
 
 extern "C" int func_ov098_0213b9d8(char *self)
 {

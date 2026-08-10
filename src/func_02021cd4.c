@@ -11,7 +11,7 @@ void func_02021cd4(char *self)
     *(unsigned short *)(elem + 0x28) = val;
 
     char *field = *(char **)(self + 0xc);
-    int *flagAddr = (int *)(((long long)(int)(field + 0x1c)));
+    int *flagAddr = (int *)(field + 0x1c);
     int v = *flagAddr;
     v &= ~1;
     v |= 1;

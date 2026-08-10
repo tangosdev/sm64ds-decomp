@@ -20,10 +20,10 @@ extern "C" void _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3(struct Par
     data_020a4d30 = s;
     amp = self->unk_002;
     r = s >> 23;
-    *(int*)(((long long)(int)(v + 1))) += (amp * r - (amp << 8)) >> 8;
+    *(int*)(v + 1) += (amp * r - (amp << 8)) >> 8;
     s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
     data_020a4d30 = s;
     amp = self->unk_004;
     r = s >> 23;
-    *(int*)(((long long)(int)(v + 2))) += (amp * r - (amp << 8)) >> 8;
+    *(int*)(v + 2) += (amp * r - (amp << 8)) >> 8;
 }

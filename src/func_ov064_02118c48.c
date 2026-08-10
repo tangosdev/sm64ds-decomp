@@ -22,5 +22,5 @@ void func_ov064_02118c48(char* r5)
     if (found == 0)
         return;
     *(int*)(spawned + 0xd4) = *(int*)(found + 4);
-    (*(unsigned char*)((long long)(int)(found + 0xd6))) += 1;
+    (*(unsigned char*)(found + 0xd6)) += 1;
 }

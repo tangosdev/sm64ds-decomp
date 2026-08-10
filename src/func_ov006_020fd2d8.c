@@ -5,8 +5,8 @@ typedef unsigned short u16;
 typedef int s32;
 typedef unsigned int u32;
 
-#define ATI(p, off) ((char *)(int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
-#define ATU(p, off) ((char *)(unsigned int)(((long long)(int)((char *)(p) + (off))) & 0xFFFFFFFFFFFFFFFFLL))
+#define ATI(p, off) ((char *)(int)((char *)(p) + (off)))
+#define ATU(p, off) ((char *)(unsigned int)((char *)(p) + (off)))
 
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
@@ -47,7 +47,7 @@ void func_ov006_020fd2d8(char *o, int i)
             *(unsigned char *)(o + idx + 0x4691) = 0;
         }
         *(unsigned short *)((ATI(o, 0) + idx) + 0x4688) =
-            (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3)) + 0x20;
+            ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3) + 0x20;
     }
     else
     {

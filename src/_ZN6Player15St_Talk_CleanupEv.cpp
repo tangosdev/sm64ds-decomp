@@ -23,12 +23,12 @@ int Player::St_Talk_Cleanup()
 {
     void* p = *(void**)((char*)&mTalkActor);
     if (p) {
-        *(u32*)(((long long)(int)((char*)p + 0xb0))) &= ~0x800000;
+        *(u32*)((char*)p + 0xb0) &= ~0x800000;
         *(void**)((char*)&mTalkActor) = 0;
     }
     mFlags &= ~0x800000;
     data_0209b454 &= ~0x800000;
-    *(u32*)(((long long)(int)((char*)data_0209f318 + 0x154))) &= ~8;
+    *(u32*)((char*)data_0209f318 + 0x154) &= ~8;
     if (unk_725) {
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x39);
         unk_725 = 0;

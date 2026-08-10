@@ -58,7 +58,7 @@ int Player::St_BurnFire_Main()
         }
     }
 
-    *(u8 *)(((long long)(int)&mStateWork) & 0xFFFFFFFFFFFFFFFFLL) += 2;
+    *(u8 *)(&mStateWork) += 2;
 
     {
         struct Info {
@@ -93,13 +93,13 @@ int Player::St_BurnFire_Main()
                integer cast -- (int)this + 0x6e5, rather than
                (int)((char*)this + 0x6e5) -- and naming the field costs 4
                bytes. Both spellings were built and compared. */
-            *(u8 *)(((long long)((int)this + 0x6e5)) & 0xFFFFFFFFFFFFFFFFLL) += 1;
+            *(u8 *)((long long)((int)this + 0x6e5)) += 1;
         }
         if (mIsAirborne == 0) {
             mStateStep = 1;
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
             {
-                char *anim = (char *)(((long long)(int)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50)) & 0xffffffffffffffffLL);
+                char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
                 *(int *)(anim + 0xc) = 0x4000;
             }
         }
@@ -125,7 +125,7 @@ int Player::St_BurnFire_Main()
         }
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
         {
-            char *anim = (char *)(((long long)(int)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50)) & 0xffffffffffffffffLL);
+            char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
             *(int *)(anim + 0xc) = 0x4000;
         }
         {

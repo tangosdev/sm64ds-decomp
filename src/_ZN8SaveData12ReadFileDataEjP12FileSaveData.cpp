@@ -34,7 +34,7 @@ int SaveData::ReadFileData(u32 fileID, FileSaveData* dest)
         return 0;
     }
     {
-        int* p = (int*)(((long long)(int)(r5 + 0xc)));
+        int* p = (int*)(r5 + 0xc);
         *p = *p & *(int*)((char*)&data_0209caa0 + 0x48);
     }
     return 1;

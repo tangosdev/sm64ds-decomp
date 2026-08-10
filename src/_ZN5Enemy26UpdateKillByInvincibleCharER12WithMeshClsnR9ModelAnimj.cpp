@@ -89,7 +89,7 @@ struct VB {
 
 struct M48 { int w[12]; };
 
-#define LAUNDER(p) ((int)(((long long)(int)(p))))
+#define LAUNDER(p) ((int)(p))
 
 int Enemy::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags)
 {

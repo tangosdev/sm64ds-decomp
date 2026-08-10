@@ -47,7 +47,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
         v2.x = *(int*)(self + 0x5c) + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)(self + 0x8e) >> 4) * 2] + 0x800) >> 12);
         v2.z = *(int*)(self + 0x64) + (int)(((s64)0x5a000 * data_02082214[(*(volatile u16*)(self + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         {
-            struct Vector3* tp = (struct Vector3*)(((int)target + 0x5c) & 0xffffffffffffffffull);
+            struct Vector3* tp = (struct Vector3*)((int)target + 0x5c);
             v3.x = tp->x;
             v3.y = tp->y;
             v3.z = tp->z;
@@ -109,7 +109,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
                 if (actor) {
                     int isMatch = (*(u16*)(actor + 0xc) == 0xbf);
                     if (isMatch != false) {
-                        struct Vector3* ap = (struct Vector3*)(((int)actor + 0x5c) & 0xffffffffffffffffull);
+                        struct Vector3* ap = (struct Vector3*)((int)actor + 0x5c);
                         short ang;
                         int diff;
                         apos.x = ap->x;

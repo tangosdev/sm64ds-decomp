@@ -13,7 +13,7 @@ void func_ov006_020f47d8(char *c)
   struct S5300 *s;
   if (((struct S5300 *) (c + 0x5300))->timer != 0)
   {
-    unsigned short *ptr = (unsigned short *) ((((int) c) + 0x5322) & 0xFFFFFFFFFFFFFFFFULL);
+    unsigned short *ptr = (unsigned short *) (((int) c) + 0x5322);
     *ptr = (*ptr) - 1;
     if (((struct S5300 *) (c + 0x5300))->timer != 0)
     {

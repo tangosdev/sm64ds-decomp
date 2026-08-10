@@ -31,7 +31,7 @@ void func_ov002_020e9af4(Obj* self)
     if (self->x43c == 9) {
         if (self->x4a1 < 0x78) {
             _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0, 0x7f000);
-            (*(u8*)(((int)self + 0x4a1) & 0xFFFFFFFFFFFFFFFFull))++;
+            (*(u8*)((int)self + 0x4a1))++;
         } else {
             _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xcb33);
         }
@@ -43,42 +43,42 @@ void func_ov002_020e9af4(Obj* self)
             u32 t = ((u32)self->x4a2 << 20) >> 30;
             if (t == 1) {
                 _ZN7Message13DisplaySavingEt(0x295);
-                (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull))++;
+                (*(u8*)((int)self + 0x49b))++;
                 {
-                    u16* p = (u16*)(((int)self->x438 + 0x6ce) & 0xFFFFFFFFFFFFFFFFull);
+                    u16* p = (u16*)((int)self->x438 + 0x6ce);
                     *p = *p | 0x800;
                 }
             } else if (t == 2) {
-                (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull)) += 2;
+                (*(u8*)((int)self + 0x49b)) += 2;
                 _ZN7Message7EndTalkEv();
             }
         }
         break;
     case 3:
         if (data_0209d660 == 0) {
-            (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull))++;
+            (*(u8*)((int)self + 0x49b))++;
         }
         break;
     case 4:
         if (func_ov002_020c6e14(self->x438) != 0) {
-            (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull))++;
+            (*(u8*)((int)self + 0x49b))++;
         } else {
-            (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull)) += 2;
+            (*(u8*)((int)self + 0x49b)) += 2;
         }
         break;
     case 5:
         if (data_0209d660 == 0) {
             _ZN7Message7EndTalkEv();
-            (*(u8*)(((int)self + 0x49b) & 0xFFFFFFFFFFFFFFFFull))++;
+            (*(u8*)((int)self + 0x49b))++;
         }
         break;
     case 6:
         {
-            u16* p = (u16*)(((int)self->x438 + 0x6ce) & 0xFFFFFFFFFFFFFFFFull);
+            u16* p = (u16*)((int)self->x438 + 0x6ce);
             *p = *p & ~0x800;
         }
         {
-            u16* q = (u16*)(((int)self + 0x4a2) & 0xFFFFFFFFFFFFFFFFull);
+            u16* q = (u16*)((int)self + 0x4a2);
             *q = *q & ~2;
         }
         func_ov002_020e8618((char*)self);

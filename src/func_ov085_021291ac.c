@@ -23,7 +23,7 @@ extern void func_ov085_02129524(char *c, int i);
 extern s8 data_0209f2f8;
 extern int data_0209caa0[];
 extern u8 data_ov085_0212f27c[];
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 void func_ov085_021291ac(char *c)
 {
     char *p;

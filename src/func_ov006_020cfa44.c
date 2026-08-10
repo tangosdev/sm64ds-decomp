@@ -1,7 +1,7 @@
 #include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
-#define LA(p) ((int)(((s64)(int)(p))))
+#define LA(p) ((int)(p))
 
 extern s16 data_02082214[];
 extern void func_ov006_020cfc74(char *o);

@@ -22,7 +22,7 @@ void func_ov002_020e84ec(char* self)
     } else if (*(void**)(self + 0xc8) != 0) {
         *(struct Matrix4x3*)(self + 0x328) = *(struct Matrix4x3*)(*(char**)(self + 0xc8));
     } else if (!((struct Flags*)(self + 0x4a2))->b0) {
-        ang = (s16*)((int)(((long long)(int)(self + 0x8e))));
+        ang = (s16*)((int)(self + 0x8e));
         t = *ang + 0xc00;
         *ang = t;
         Matrix4x3_FromRotationY(self + 0x328, *(s16*)(self + 0x8e));

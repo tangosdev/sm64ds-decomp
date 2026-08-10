@@ -15,7 +15,7 @@ void func_ov063_021189f4(char *c)
         if (*(u8 *)(c + 0x5cf) == 0xd) {
             if (*(u16 *)(c + 0x500 + 0xc6) < 0x4b) {
                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x6b000, 1);
-                *(u16 *)(((long long)(int)(c + 0x5c6))) += 1;
+                *(u16 *)(c + 0x5c6) += 1;
             } else {
                 int r = _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, *(s32 *)(c + 0x57c) >> 0xc, 0, 0x7f000, 1);
                 if (r != 0)

@@ -48,9 +48,9 @@ struct Actor *CapEnemy::ReleaseCap(const Vector3 & v_)
                 (const struct Vector3_16 *)&unk_08c,
                 mAreaId, -1);
             if (unk_110 != 0) {
-                *(unsigned char *)(((int)c + 0x113) & 0xFFFFFFFFFFFFFFFFull) |= 8;
+                *(unsigned char *)((int)c + 0x113) |= 8;
             } else {
-                *(unsigned char *)(((int)c + 0x113) & 0xFFFFFFFFFFFFFFFFull) |= 0x80;
+                *(unsigned char *)((int)c + 0x113) |= 0x80;
             }
         } else {
             ret = (struct Actor *)c;

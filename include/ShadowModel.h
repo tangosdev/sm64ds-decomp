@@ -18,9 +18,11 @@
  * (head data_0209cef4, freeze flag data_0209ceec): InitModel links in,
  * the destructor unlinks, RenderAll walks it and CleanAll empties it.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. D0/D1 stay C files,
- * which matters more than usual here because D1 carries the unlink logic.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- the
+ * key-function arrangement from include/ModelBase.h, and the objisolate
+ * exemption to it recorded there. That matters more than usual here, because
+ * D1 carries the unlink logic and is now the only place it is written.
+ * D0 and D2 stay C files.
  *
  * LAYOUT evidence: C1 calls ModelBase::C1, stores the vptr, zeroes mat,
  * prev and next; InitModel fills mat/scale/opacity and links; the D1

@@ -16,7 +16,7 @@ int PyramidTop::Behavior()
     switch (state) {
     case 0:
         if (unk_3b6 == 4) {
-            (*(u8*)(((long long)(int)((char*)&unk_3b7))))++;
+            (*(u8*)((char*)&unk_3b7))++;
         }
         break;
     case 1:
@@ -35,7 +35,7 @@ int PyramidTop::Behavior()
         }
         break;
     }
-    (*(u16*)(((long long)(int)((char*)&unk_3b2))))++;
+    (*(u16*)((char*)&unk_3b2))++;
     if (state != unk_3b7) {
         unk_3b2 = 0;
     }

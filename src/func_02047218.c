@@ -2,7 +2,7 @@ typedef int fx32;
 typedef long long fx64;
 
 #define FX(a, b) ((fx32)(((fx64)(a) * (b) + 0x800) >> 12))
-#define PTR(base, off) ((fx32*)(int)(((long long)(int)((char*)(base) + (off)))))
+#define PTR(base, off) ((fx32*)(int)((char*)(base) + (off)))
 
 void func_02047218(fx32 *m0, fx32 *m1, fx32 *dst, fx32 t)
 {

@@ -40,7 +40,7 @@ int FloatOnWaterPlatformWdwSquare::InitResources()
             0x199, *(short*)(c + 0x8e), data_ov029_0211302c);
     }
     {
-        short* p = (short*)(((unsigned long long)((int)c + 0x94)) & 0xFFFFFFFFFFFFFFFFULL);
+        short* p = (short*)((unsigned long long)((int)c + 0x94));
         short val = *p;
         int* arg0_1 = (int*)(c + 0x124);
         int arg1_1 = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;

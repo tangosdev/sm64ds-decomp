@@ -42,9 +42,9 @@ extern "C" int func_ov075_0211a2b8(Self *c)
     char *cc = (char *)c;
 
     if (c->f285 != 0) {
-        (*(u8 *)(((long long)(int)(cc + 0x284))))++;
+        (*(u8 *)(cc + 0x284))++;
         if ((c->f284 & 1) == 0) {
-            (*(u8 *)(((long long)(int)(cc + 0x283))))--;
+            (*(u8 *)(cc + 0x283))--;
             func_020551f0((void *)0x4001050, c->f283);
             if (c->f283 == 0) {
                 *(u16 *)0x4001050 = 0;

@@ -111,9 +111,9 @@ int Player::St_Climb_Main()
             s32 t = (u16)ang;
             s32 ti = (t >> 4) * 2;
             s16 cosv = data_02082214[ti];
-            *(s32*)(((long long)(int)(c + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL) += (s32)(((s64)cosv * 0x64000 + 0x800) >> 12);
+            *(s32*)(c + 0x5c) += (s32)(((s64)cosv * 0x64000 + 0x800) >> 12);
             s16 sinv = data_02082214[ti + 1];
-            *(s32*)(((long long)(int)(c + 0x64)) & 0xFFFFFFFFFFFFFFFFLL) += (s32)(((s64)sinv * 0x64000 + 0x800) >> 12);
+            *(s32*)(c + 0x64) += (s32)(((s64)sinv * 0x64000 + 0x800) >> 12);
             _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
             return 1;
         }
@@ -150,7 +150,7 @@ int Player::St_Climb_Main()
                     if (fx2 >= 0x4000) fx2 = 0x4000;
                     {
                         s32 modelIdx = GetBodyModelID((u8)(*(s32*)(c + 8)), 0);
-                        char* p2 = (char*)(((long long)(int)(*(char**)(c + modelIdx * 4 + 0xdc) + 0x50)) & 0xFFFFFFFFFFFFFFFFLL);
+                        char* p2 = (char*)((long long)(int)(*(char**)(c + modelIdx * 4 + 0xdc) + 0x50));
                         *(s32*)(p2 + 0xc) = fx2;
                     }
                     *(u8*)(c + 0x6e5) = 0;
@@ -171,7 +171,7 @@ int Player::St_Climb_Main()
                     s32 fx = (s32)(((s64)mag * val + 0x800) >> 12);
                     func_ov002_020bf340(c, (s32*)(c + 0xa8), -0x800, fx);
                 }
-                *(s16*)(((long long)(int)(c + 0x69c)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x40;
+                *(s16*)(c + 0x69c) -= 0x40;
                 {
                     u32 idx4 = (u32)data_020a0e40 * 0x18;
                     s16 av = *(s16*)((char*)data_0209f4a4 + idx4);
@@ -236,11 +236,11 @@ tail:
         func_ov002_020cb474(c);
     }
     {
-        s16* p8e = (s16*)(((long long)(int)(c + 0x8e)) & 0xFFFFFFFFFFFFFFFFLL);
+        s16* p8e = (s16*)(c + 0x8e);
         *p8e = (s16)(*p8e + *(s16*)(c + 0x69c));
     }
     {
-        s32* p688 = (s32*)(((long long)(int)(c + 0x688)) & 0xFFFFFFFFFFFFFFFFLL);
+        s32* p688 = (s32*)(c + 0x688);
         *p688 += *(s32*)(c + 0xa8);
     }
     if (func_ov002_020cbea8(c)) {

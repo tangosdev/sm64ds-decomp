@@ -18,7 +18,7 @@ void func_ov060_021125f0(char *c)
     *(unsigned char *)(c + 0x425) = 0;
     *(int *)(c + 0x410) = 0;
     {
-        int *q = (int *)(((long long)(int)(c + 0x378)));
+        int *q = (int *)(c + 0x378);
         *q &= ~1;
     }
     *(int *)(c + 0x40c) = 1;
@@ -35,13 +35,13 @@ void func_ov060_021125f0(char *c)
     if (a != 0) {
         *(int *)(a + 0x110) = 1;
         {
-            char *p = (char *)(((long long)(int)(a + 0x100)));
+            char *p = (char *)(a + 0x100);
             *(short *)(p + 0x14) = 0;
         }
     }
     *(short *)(c + 0x8c) = 0;
     {
-        char *p = (char *)(((long long)(int)(c + 0x300)));
+        char *p = (char *)(c + 0x300);
         *(short *)(p + 0xfc) = 0;
     }
     {

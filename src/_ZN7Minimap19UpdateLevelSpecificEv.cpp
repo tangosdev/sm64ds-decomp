@@ -163,7 +163,7 @@ void Minimap::UpdateLevelSpecific()
     case 0x19: {
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)(((int)G2S::GetBG3CharPtr() - 0x712) & 0xFFFFFFFFFFFFFFFFULL);
+        p = (u16*)((int)G2S::GetBG3CharPtr() - 0x712);
         p[0] = 0x3fe;
         p[1] = 0x3ff;
         break;

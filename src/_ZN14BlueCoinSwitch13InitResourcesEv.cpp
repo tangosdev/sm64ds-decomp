@@ -100,8 +100,8 @@ set_fa:
     goto done;
 
 multiply:
-    *(unsigned short*)(((int)c + 0x32a) & 0xFFFFFFFFFFFFFFFFULL) =
-        *(unsigned short*)(((int)c + 0x32a) & 0xFFFFFFFFFFFFFFFFULL) * 0xa;
+    *(unsigned short*)((int)c + 0x32a) =
+        *(unsigned short*)((int)c + 0x32a) * 0xa;
 
 done:
     return 1;

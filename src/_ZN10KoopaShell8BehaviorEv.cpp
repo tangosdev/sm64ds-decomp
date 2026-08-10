@@ -69,7 +69,7 @@ int KoopaShell::Behavior()
         if (unk_107 != 0) {
             mSpawnAngleY = mPrevAngleY;
             func_ov102_0214d1f8(c, &data_ov102_0214ea78);
-            *(u32 *)(int)(((long long)(int)((char *)&mFlags))) &= ~0x80000;
+            *(u32 *)(int)((char *)&mFlags) &= ~0x80000;
             unk_107 = 0;
         }
         func_ov102_0214ce60(c);

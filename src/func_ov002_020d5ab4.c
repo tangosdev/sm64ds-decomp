@@ -19,7 +19,7 @@ int func_ov002_020d5ab4(char *self)
         return 0;
     }
 
-    rp = (short *)(((long long)(int)(*(char **)(self + 0xd0) + 0x8c)));
+    rp = (short *)(*(char **)(self + 0xd0) + 0x8c);
     *(short *)(self + 0x8c) = rp[0];
     *(short *)(self + 0x8e) = rp[1];
     *(short *)(self + 0x90) = rp[2];
@@ -27,7 +27,7 @@ int func_ov002_020d5ab4(char *self)
     *(short *)(self + 0x94) = *(short *)(self + 0x8e);
     *(short *)(self + 0x96) = *(short *)(self + 0x90);
 
-    pp = (int *)(((long long)(int)(*(char **)(self + 0xd0) + 0x5c)));
+    pp = (int *)(*(char **)(self + 0xd0) + 0x5c);
     pos.x = pp[0];
     pos.y = pp[1];
     pos.z = pp[2];
@@ -45,7 +45,7 @@ int func_ov002_020d5ab4(char *self)
     *(char **)((char *)spawned + 0x38c) = self;
     *(unsigned char *)(self + 0x6f5) = 0;
     *(short *)(self + 0x6a4) = 0xd2;
-    *(int *)(((long long)(int)(self + 0x2ec))) &= ~2;
+    *(int *)(self + 0x2ec) &= ~2;
     *(unsigned char *)(self + 0x6e3) = 3;
     *(int *)(self + 0x640) = 0;
     *(int *)(self + 0xd0) = 0;

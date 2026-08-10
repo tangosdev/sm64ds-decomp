@@ -8,7 +8,7 @@ extern int Vec3_HorzLen(struct Vector3 *v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void _Z15ApproachLinear2Rsss(short *r, short a, short b);
 
-#define LA(p) ((int)(((long long)(int)(p))))
+#define LA(p) ((int)(p))
 
 void func_ov002_020c38a0(char *c)
 {

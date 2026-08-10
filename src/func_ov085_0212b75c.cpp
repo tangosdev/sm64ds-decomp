@@ -28,7 +28,7 @@ extern "C" int func_ov085_0212b75c(char *c)
   *(int *)(c + 0x41c) = 0;
   if (p)
   {
-    src = (struct Vector3 *)(((long long)(int)(p + 0x5c)));
+    src = (struct Vector3 *)(p + 0x5c);
     v = *src;
     _ZN7PathPtrC1Ev(pathptr);
     _ZN7PathPtr6FromIDEj(pathptr, *(int *)(c + 0x438));

@@ -27,7 +27,7 @@ extern "C" {
     extern void *data_ov014_02114980[];
 }
 static inline void inc604(u8 *self) {
-    u8 *p = (u8 *)(((long long)(int)(self + 0x604)));
+    u8 *p = (u8 *)(self + 0x604);
     *p = (u8)(*p + 1);
 }
 extern "C" void func_ov014_021115ec(u8 *self)
@@ -37,7 +37,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
     _ZN5Sound15PlaySecretSoundEP5ActorPt(self, (u16 *)(self + 0x5fe));
     r4 = (u8 *)_ZN5Actor10FindWithIDEj(*(unsigned *)(self + 0x60c));
     {
-        s32 *src = (s32 *)(((long long)(int)(r4 + 0x5c)));
+        s32 *src = (s32 *)(r4 + 0x5c);
         s32 fifth = 0x80;
         sp4.x = src[0];
         void *ap = self + 0x8c;
@@ -139,7 +139,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
     case 8:
         if (DecIfAbove0_Short(self + 0x5fc) == 0) {
             {
-                unsigned *flag = (unsigned *)(((long long)(int)(r8 + 0x154)));
+                unsigned *flag = (unsigned *)(r8 + 0x154);
                 *flag &= ~8u;
             }
             if (_ZN6Player12Unk_020ca150Eh(_ZN5Actor13ClosestPlayerEv(self), 4) != 0) {

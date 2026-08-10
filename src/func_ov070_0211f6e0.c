@@ -48,7 +48,7 @@ int func_ov070_0211f6e0(char* c)
         }
         if (*(s32*)(c + 0x3dc) == 1) {
             if (data_0209f2f8 != 0x16)
-                *(s32 *)(((long long)(s32)(c + 0x3c4))) += 0x12c000;
+                *(s32 *)(c + 0x3c4) += 0x12c000;
             *(s32*)(c + 0x3d8) = 0;
             *(u16*)(c + 0x3cc) = 0x5a;
             FlyGuy_ChangeState(c, &data_ov070_0212359c);
@@ -84,7 +84,7 @@ int func_ov070_0211f6e0(char* c)
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);
             *(s32*)(c + 0x3c8) = *(s32*)(c + 0x64);
-            *(s32 *)(((long long)(s32)(c + 0x3c4))) += 0xc8000;
+            *(s32 *)(c + 0x3c4) += 0xc8000;
         }
         *(s32*)(c + 0x5c) = *(s32*)(c + 0x68);
         *(s32*)(c + 0x60) = *(s32*)(c + 0x6c);

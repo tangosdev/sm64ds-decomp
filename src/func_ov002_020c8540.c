@@ -42,10 +42,10 @@ int func_ov002_020c8540(char* self)
         anim = (char*)((int*)(self + 0xdc))[id] + 0x50;
         if (_ZNK9Animation12WillHitFrameEi(anim, data_ov002_020ff110[s8])) {
             char* o;
-            { int* p = (int*)((long long)(int)(self + 0xb0)); *p |= 0x800000; }
+            { int* p = (int*)(self + 0xb0); *p |= 0x800000; }
             o = *(char**)(self + 0x368);
             if (o != 0) {
-                int* p = (int*)((long long)(int)(o + 0xb0));
+                int* p = (int*)(o + 0xb0);
                 *p &= ~0x800000;
             }
             data_0209b454 |= 0x800000;
@@ -57,10 +57,10 @@ int func_ov002_020c8540(char* self)
         char* o;
         if (data_0209d660 != 0) return 1;
         data_0209b454 &= ~0x800000;
-        { int* p = (int*)((long long)(int)(self + 0xb0)); *p &= ~0x800000; }
+        { int* p = (int*)(self + 0xb0); *p &= ~0x800000; }
         o = *(char**)(self + 0x368);
         if (o != 0) {
-            int* p = (int*)((long long)(int)(o + 0xb0));
+            int* p = (int*)(o + 0xb0);
             *p |= 0x800000;
             *(char**)(self + 0x368) = 0;
         }

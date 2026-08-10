@@ -57,7 +57,7 @@ int LavaBubble::Behavior()
                         _ZN6Player4BurnEv(a);
                 }
             } else {
-                *(int*)(((long long)(int)((char*)&unk_128))) |= 1;
+                *(int*)((char*)&unk_128) |= 1;
             }
         }
     }

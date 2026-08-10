@@ -50,7 +50,7 @@ int func_ov002_020cec2c(char *self)
     }
 
     {
-        u16 *p = (u16 *)(((long long)(int)(self + 0x6ca)));
+        u16 *p = (u16 *)(self + 0x6ca);
         *p = *p + 1;
     }
 

@@ -32,7 +32,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
         func_ov060_02111cc0(r4, 0x19, 0);
         *(int *)(r4 + 0x98) = 0x2a000;
         if (Bowser_IsAnimAtLastFrame(r4) != 0) {
-            u16 *p = (u16 *)(((long long)(int)(r4 + 0x3fe)));
+            u16 *p = (u16 *)(r4 + 0x3fe);
             *p = *p + 1;
             if (*(u16 *)((r4 + 0x300) + 0xfe) > 0xa)
                 *(u8 *)(r4 + 0x423) = 3;
@@ -65,7 +65,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
                 *(int *)(r4 + 0x3f8) = 0x1000;
             }
             {
-                u16 *p = (u16 *)(((long long)(int)(r4 + 0x3fe)));
+                u16 *p = (u16 *)(r4 + 0x3fe);
                 *p = *p + 1;
             }
         }

@@ -24,7 +24,7 @@ void func_ov006_020f6230(char *p)
     func_ov006_020f5694(p);
 
     if (*(unsigned short *)(p + 0x53e2) != 0) {
-        q = (unsigned short *)(unsigned int)(unsigned long long)(unsigned int)(p + 0x53e2);
+        q = (unsigned short *)(unsigned int)(p + 0x53e2);
         *q = *q - 1;
         return;
     }

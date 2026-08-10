@@ -6,5 +6,5 @@
 
 void BgCh::StopDetectingWater()
 {
-    *(unsigned char *)(((long long)(int)((char *)&unk_004))) &= ~2;
+    *(unsigned char *)((char *)&unk_004) &= ~2;
 }

@@ -48,7 +48,7 @@ int Player::St_Headstand_Main()
         }
         func_ov002_020cc05c(((char*)this), mag);
         {
-            s16* p = (s16*)((((long long)(int)((char*)&mAngleY))));
+            s16* p = (s16*)((char*)&mAngleY);
             *p = *p + mAngleYSpeed;
         }
         if (*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2) {

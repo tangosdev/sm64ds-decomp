@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "SharedFilePtr.h"
-#define LAUNDER16(p) ((u16 *)(int)(((long long)(int)(p))))
+#define LAUNDER16(p) ((u16 *)(int)(p))
 extern "C" {
 extern u8 data_0209f2d8;
 extern void *data_ov002_020ff480[];

@@ -55,7 +55,7 @@ void func_ov085_0212e858(char *c)
     off.x = 0;
     off.y = 0;
     off.z = 0;
-    ps = (struct Vector3*)(((long long)(int)(pl + 0x5c)));
+    ps = (struct Vector3*)(pl + 0x5c);
     pp.x = ps->x;
     pp.y = ps->y;
     pp.z = ps->z;

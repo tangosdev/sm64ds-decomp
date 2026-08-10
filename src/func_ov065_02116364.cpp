@@ -33,7 +33,7 @@ extern "C" int func_ov065_02116364(void* self)
     struct { Vector3 pp; Vector3 spv; Vector3 sout; Vector3 d; Vector3 tgt; } L;
     u8* pl = (u8*)_ZN5Actor22ClosestNonVanishPlayerEv(self);
     if (pl != 0) {
-        *(V3A*)(int)(((long long)(int)&L.pp)) = *(V3A*)(int)(((long long)(int)(pl + 0x5c)));
+        *(V3A*)(int)(&L.pp) = *(V3A*)(int)(pl + 0x5c);
         L.tgt = L.pp;
         *(s16*)(c+0x3e0) = Vec3_HorzAngle((void*)(c+0x5c), &L.tgt);
         ApproachAngle((void*)(c+0x94), *(s16*)(c+0x3e0), 1, 0x500, 0x500);
@@ -56,7 +56,7 @@ extern "C" int func_ov065_02116364(void* self)
                 *(s32*)(sp2+0xa4) = L.sout.x;
                 *(s32*)(sp2+0xa8) = L.sout.y;
                 *(s32*)(sp2+0xac) = L.sout.z;
-                *(s32*)(int)(((long long)(int)(c + 0x3dc))) += 1;
+                *(s32*)(int)(c + 0x3dc) += 1;
                 *(u16*)(c+0x100) = 4;
             }
         }
@@ -64,7 +64,7 @@ extern "C" int func_ov065_02116364(void* self)
 
     if (_ZN9Animation8FinishedEv((void*)(c+0x350)) != 0) {
         if (pl != 0) {
-            s32* dsrc = (s32*)(int)(((long long)(int)(pl + 0x5c)));
+            s32* dsrc = (s32*)(int)(pl + 0x5c);
             L.d.x = dsrc[0];
             L.d.y = dsrc[1];
             L.d.z = dsrc[2];

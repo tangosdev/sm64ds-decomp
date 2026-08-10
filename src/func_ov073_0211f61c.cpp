@@ -115,13 +115,13 @@ extern "C" s32 func_ov073_0211f61c(char* c)
                     void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x120, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                     if (actor != 0) {
                         rnd = RandomIntInternal(&data_0209e650);
-                        shortY = ((s32)(((((u32)rnd >> 8) & 0xf) << 0x1c))) >> 0x10;
+                        shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
                         *(s16*)((char*)actor + 0x92) = 0;
                         *(s16*)((char*)actor + 0x94) = (s16)shortY;
                         *(s16*)((char*)actor + 0x96) = 0;
                         *(s32*)((char*)actor + 0x98) = 0xa000;
                         if (_ZN8SaveData19IsCharacterUnlockedEj(2) != 0) {
-                            *(s32*)(void*)(int)(((long long)(int)(c + 0x4c0)) & 0xFFFFFFFFFFFFFFFFll) += 1;
+                            *(s32*)(void*)(int)(c + 0x4c0) += 1;
                             if (*(s32*)(c + 0x4c0) > 0x1e) {
                                 void* actor2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                                 if (actor2 != 0) {
@@ -156,7 +156,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
             goto done0;
     }
     {
-        s32* pv = (s32*)(((u32)r5 + 0x5c) & 0xFFFFFFFFFFFFFFFF);
+        s32* pv = (s32*)((u32)r5 + 0x5c);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8a, pv[0], pv[1], pv[2]);
     }
     if (*(void**)(c + 0x37c) == &data_ov073_021233d0) {
@@ -164,7 +164,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
         return 1;
     }
     {
-        s16* py = (s16*)(((u32)c + 0x94) & 0xFFFFFFFFFFFFFFFF);
+        s16* py = (s16*)((u32)c + 0x94);
         *py = (s16)(*py + 0x8000);
     }
     func_02012694(0x16a, c + 0x74);

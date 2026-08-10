@@ -53,7 +53,7 @@ int CapEnemy::GetCapState() {
     }
 
     field_111 = 0;
-    field_b0 = *(int *)(((long long)(int)&field_f4) & 0xFFFFFFFFFFFFFFFFLL);
-    *(unsigned char *)(((int)this + 0x113) & 0xFFFFFFFFFFFFFFFFULL) &= 7;
+    field_b0 = *(int *)((long long)(int)&field_f4);
+    *(unsigned char *)((int)this + 0x113) &= 7;
     return 1;
 }

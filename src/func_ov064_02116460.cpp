@@ -18,7 +18,7 @@ extern "C" void func_ov064_02116460(char *self)
         int lim = b ? 0x14 : 0xa;
         if (*(unsigned char *)(self + 0x3f9) < 2) {
             if (((WithMeshClsn *)(self + 0x174))->IsOnGround()) {
-                unsigned char *p = (unsigned char *)(((long long)(int)(self + 0x3f9)));
+                unsigned char *p = (unsigned char *)(self + 0x3f9);
                 *(int *)(self + 0xa8) = 0xf000;
                 *p = *p + 1;
             }

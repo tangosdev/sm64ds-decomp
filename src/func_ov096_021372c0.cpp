@@ -7,7 +7,7 @@ extern void func_ov096_02136e54(void *self, int n);
 void func_ov096_021372c0(void *self);
 }
 
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 
 void func_ov096_021372c0(void *self)
 {

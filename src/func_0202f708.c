@@ -48,7 +48,7 @@ int func_0202f708(struct MyFader *self, u32 frames)
             t = (self->type == 0) ? 0x2d : 0x3c;
             self->speed1 = -0x200000 / t;
             self->speed2 = (-self->speed1 << 1) / t;
-            p = (int *)(((int)self + 0x20) & 0xFFFFFFFFFFFFFFFFULL);
+            p = (int *)((int)self + 0x20);
             *p = *p << 1;
         }
 

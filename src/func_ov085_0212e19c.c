@@ -13,7 +13,7 @@ extern int _ZN6Player12GetTalkStateEv(void* self);
 extern unsigned char data_0209d6bc;
 extern unsigned char data_0209f284;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 int func_ov085_0212e19c(char* c)
 {

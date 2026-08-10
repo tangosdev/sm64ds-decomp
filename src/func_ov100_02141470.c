@@ -15,7 +15,7 @@ void func_ov100_02141470(char *c)
         Vec3_VertAngle(c + 0x5c, c + 0x3d4), 0x50);
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
 
-    p = (int *)(((long long)(int)(c + 0x60)));
+    p = (int *)(c + 0x60);
     *p = *p - ((int)(((long long)*(int *)(c + 0x98)
         * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
         + (short)data_02082214[
@@ -23,7 +23,7 @@ void func_ov100_02141470(char *c)
         * (short)20 / 4);
 
     {
-        int *cnt = (int *)(((long long)(int)(c + 0x3e8)));
+        int *cnt = (int *)(c + 0x3e8);
         *cnt = *cnt + 1;
         if (*(int *)(c + 0x3e8) > 100)
             *(int *)(c + 0x3e8) = 0;

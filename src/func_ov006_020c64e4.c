@@ -22,14 +22,14 @@ void func_ov006_020c64e4(char *c)
     volatile int *q;
     unsigned base;
 
-    v = (int *)(((long long)(int)(c + 0x30)));
+    v = (int *)(c + 0x30);
     q = (volatile int *)data_ov006_0213af70;
     if (v[0] == data_ov006_0213af70[0]
         && (v[1] == q[1] || *(int *)(c + 0x30) == 0))
         return;
 
     base = (unsigned)(int)c;
-    v = (int *)(((long long)(int)(base + 0x30)));
+    v = (int *)(base + 0x30);
     q = (volatile int *)data_ov006_0213afc0;
     if (v[0] == data_ov006_0213afc0[0]
         && (v[1] == q[1] || *(int *)(c + 0x30) == 0))

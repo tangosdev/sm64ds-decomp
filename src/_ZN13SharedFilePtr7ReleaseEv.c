@@ -10,7 +10,7 @@ void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self)
     if (self->numRefs == 0)
         return;
 
-    *(unsigned char *)(((long long)(int)((char *)self + 2))) -= 1;
+    *(unsigned char *)((char *)self + 2) -= 1;
 
     if (self->numRefs != 0)
         return;

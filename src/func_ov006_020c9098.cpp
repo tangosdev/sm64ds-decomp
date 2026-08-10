@@ -25,7 +25,7 @@ extern "C" void func_ov006_020c9098(char *c)
     int *p;
     int *d;
 
-    p = (int *)(((long long)(int)(c + 0x70)));
+    p = (int *)(c + 0x70);
     d = data_ov006_0213b214;
     if (p[0] == d[0]) {
         if (p[1] != d[1]) {
@@ -35,7 +35,7 @@ extern "C" void func_ov006_020c9098(char *c)
         return;
     }
 check2:
-    p = (int *)(((long long)(unsigned)(c + 0x70)));
+    p = (int *)(c + 0x70);
     d = data_ov006_0213b0fc;
     if (p[0] == d[0]) {
         if (p[1] != d[1]) {

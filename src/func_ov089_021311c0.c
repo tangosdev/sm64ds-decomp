@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-#define L(p) ((long long)(int)(p))
+#define L(p) (p)
 
 
 

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__Manager.h"
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 
 int _ZN8Particle7Manager9AddSystemEiR7Vector3(struct Particle__Manager *self, int idx, void* v) {
@@ -20,9 +20,9 @@ int _ZN8Particle7Manager9AddSystemEiR7Vector3(struct Particle__Manager *self, in
         p = (u32*)AT(sys, 0x74);
         *p = (*p & ~0x3fu) | (self->unk_02c & 0x3f);
         *p = (*p & ~0xfc0u) | ((self->unk_02e & 0x3f) << 6);
-        lo = (u32)(((long long)(int)(*(u32*)(sys + 0x74) << 26)));
+        lo = (u32)(*(u32*)(sys + 0x74) << 26);
         lo = lo >> 26;
-        *p = (*p & ~0x3f000u) | (((u32)(((long long)(int)lo)) & 0x3f) << 12);
+        *p = (*p & ~0x3f000u) | (((u32)(lo) & 0x3f) << 12);
         *p = *p & 0x3ffff;
         func_0204d9a0(((char*)self) + 4, sys);
         if ((***(u32***)(sys + 0x18) << 17) >> 31) r4 = 0;

@@ -16,25 +16,25 @@ int func_ov006_021096c8(char *self)
     case 5:
         FreeGfxSlotsById(0x1d);
         if (func_ov006_02107a6c() != 0)
-            (*(s16 *)(((long long)(int)(self + 0x53e6))))++;
+            (*(s16 *)(self + 0x53e6))++;
         break;
     case 6:
         if (func_ov006_020c1718(self + 0x4f38) != 0) {
             *(u16 *)(self + 0x53e8) = 0x3c;
             *(int *)(self + 0x53f8) = 0;
-            (*(s16 *)(((long long)(int)(self + 0x53e6))))++;
+            (*(s16 *)(self + 0x53e6))++;
         }
         break;
     case 7:
-        (*(s16 *)(((long long)(int)(self + 0x53e8))))--;
+        (*(s16 *)(self + 0x53e8))--;
         if (*(s16 *)(self + 0x53e8) == 0) {
             if (*(s16 *)(self + 0x53f2) != 0)
                 func_ov004_020b56c8();
-            (*(s16 *)(((long long)(int)(self + 0x53e6))))++;
+            (*(s16 *)(self + 0x53e6))++;
         }
         break;
     case 8:
-        (*(s16 *)(((long long)(int)(self + 0x53e6))))++;
+        (*(s16 *)(self + 0x53e6))++;
         /* fall through */
     case 9:
     default:

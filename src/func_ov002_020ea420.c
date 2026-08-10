@@ -34,16 +34,16 @@ void func_ov002_020ea420(char *c) {
         }
         if (en != 0) {
             if (*(int *)(c + 0x80) != 0x1000 && (data_0209b454 & 0x4000000) == 0) {
-                *(int *)(((long long)(int)(c + 0xb0))) |= 0x4000000;
+                *(int *)(c + 0xb0) |= 0x4000000;
                 data_0209b454 |= 0x4000000;
             } else if (*(int *)(c + 0x80) == 0x1000) {
                 *(u16 *)(c + 0x492) = lim + 0xb;
-                *(u16 *)(((long long)(int)(c + 0x4a2))) |= 0x200;
+                *(u16 *)(c + 0x4a2) |= 0x200;
                 _ZN9PowerStar13AddStarMarkerEv(c);
-                *(int *)(((long long)(int)(c + 0x128))) &= ~1;
+                *(int *)(c + 0x128) &= ~1;
             }
             if (*(u16 *)(c + 0x492) < (unsigned int)lim) {
-                *(u16 *)(((long long)(int)(c + 0x492))) += 1;
+                *(u16 *)(c + 0x492) += 1;
                 if (*(u16 *)(c + 0x492) == lim) {
                     if (*(u16 *)(c + 0x496) == 0xffff)
                         *(u16 *)(c + 0x496) = 0x64;
@@ -53,10 +53,10 @@ void func_ov002_020ea420(char *c) {
                 if (*(u16 *)(c + 0x492) >= lim + 0xa) {
                     if (_Z14ApproachLinearRiii(&spd, 0x1000, step) != 0) {
                         _ZN9PowerStar13AddStarMarkerEv(c);
-                        *(int *)(((long long)(int)(c + 0x128))) &= ~1;
+                        *(int *)(c + 0x128) &= ~1;
                     }
                 } else {
-                    *(u16 *)(((long long)(int)(c + 0x492))) += 1;
+                    *(u16 *)(c + 0x492) += 1;
                 }
                 {
                     int v = spd;
@@ -72,14 +72,14 @@ void func_ov002_020ea420(char *c) {
             }
             if (*(u16 *)(c + 0x492) >= lim + 0xa &&
                 (unsigned int)(*(u16 *)(c + 0x4a2) << 22) >> 31 == 0) {
-                *(u16 *)(((long long)(int)(c + 0x4a2))) |= 0x200;
+                *(u16 *)(c + 0x4a2) |= 0x200;
                 func_02012790(0x41);
             }
             *(u16 *)(c + 0x100) = 0;
         } else {
-            *(int *)(((long long)(int)(c + 0x128))) |= 1;
+            *(int *)(c + 0x128) |= 1;
             if (*(u16 *)(c + 0x492) != 0) {
-                *(u16 *)(((unsigned long long)(unsigned int)(c + 0x492))) -= 1;
+                *(u16 *)(c + 0x492) -= 1;
             } else if (*(int *)(c + 0x80) != 0) {
                 int step2;
                 if (*(u16 *)(c + 0x100) == 0)
@@ -92,7 +92,7 @@ void func_ov002_020ea420(char *c) {
                     step2 = 0x100;
                 }
                 if (_Z14ApproachLinearRiii(&spd2, 0, step2) != 0) {
-                    *(u16 *)(((unsigned long long)(unsigned int)(c + 0x4a2))) &= ~0x200;
+                    *(u16 *)(c + 0x4a2) &= ~0x200;
                     _ZN5Actor11UntrackStarERa(c, c + 0x498);
                 }
                 {
@@ -102,7 +102,7 @@ void func_ov002_020ea420(char *c) {
                     *(int *)(c + 0x88) = v2;
                 }
                 if ((data_0209b454 & 0x4000000) == 0) {
-                    *(int *)(((long long)(int)(c + 0xb0))) |= 0x4000000;
+                    *(int *)(c + 0xb0) |= 0x4000000;
                     data_0209b454 |= 0x4000000;
                     *(u16 *)(c + 0x496) = 0x64;
                 }

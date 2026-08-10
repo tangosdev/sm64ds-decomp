@@ -16,7 +16,7 @@ void func_ov006_0211944c(char *c, int mode)
         return;
 
     for (int i = 0; i < 0xd; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4688)));
+        int **slot = (int **)(c + i * 4 + 0x4688);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -30,7 +30,7 @@ void func_ov006_0211944c(char *c, int mode)
     *(int *)(c + 0x4000 + 0x668) = 0;
 
     for (int i = 0; i < 0x19; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x46bc)));
+        int **slot = (int **)(c + i * 4 + 0x46bc);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -44,7 +44,7 @@ void func_ov006_0211944c(char *c, int mode)
     *(int *)(c + 0x4000 + 0x670) = 0;
 
     for (int i = 0; i < 8; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4720)));
+        int **slot = (int **)(c + i * 4 + 0x4720);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -70,7 +70,7 @@ void func_ov006_0211944c(char *c, int mode)
     }
 
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4740)));
+        int **slot = (int **)(c + i * 4 + 0x4740);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -83,7 +83,7 @@ void func_ov006_0211944c(char *c, int mode)
     }
 
     for (int i = 0; i < 6; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x474c)));
+        int **slot = (int **)(c + i * 4 + 0x474c);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -97,7 +97,7 @@ void func_ov006_0211944c(char *c, int mode)
     *(int *)(c + 0x4000 + 0x678) = 0;
 
     for (int i = 0; i < 3; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4764)));
+        int **slot = (int **)(c + i * 4 + 0x4764);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
@@ -111,7 +111,7 @@ void func_ov006_0211944c(char *c, int mode)
     *(int *)(c + 0x4000 + 0x67c) = 0;
 
     for (int i = 0; i < 2; i++) {
-        int **slot = (int **)(((long long)(int)(c + i * 4 + 0x4770)));
+        int **slot = (int **)(c + i * 4 + 0x4770);
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {

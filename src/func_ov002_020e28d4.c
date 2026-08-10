@@ -62,5 +62,5 @@ void func_ov002_020e28d4(char* c, int a, int b)
         return;
 
     if (*(int*)(c + 0x98) >= 0x10000)
-        *(int*)(((long long)(int)(c + 0x98))) -= 0x2000;
+        *(int*)(c + 0x98) -= 0x2000;
 }

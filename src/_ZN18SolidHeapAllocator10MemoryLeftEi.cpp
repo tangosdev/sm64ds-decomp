@@ -36,8 +36,8 @@ int SolidHeapAllocator::MemoryLeft(int align)
 
     a = (u32)_ZN4cstd3absEi(align);
     mask = a - 1u;
-    fb = (int *)(((long long)(int)((char *)this + 0x24)));
-    aligned = (mask + (u32)*(int *)(((long long)(int)((char *)this + 0x24)))) & ~(a - 1u);
+    fb = (int *)((char *)this + 0x24);
+    aligned = (mask + (u32)*(int *)((long long)(int)((char *)this + 0x24))) & ~(a - 1u);
     end = (u32)fb[1];
     if (!(a - 1u)) {
     }
@@ -48,5 +48,5 @@ int SolidHeapAllocator::MemoryLeft(int align)
     new_var2 = (char *)this;
     new_var3 = &fb;
     fb = *new_var3;
-    return (int)(end - ((mask + (u32)*(int *)(((long long)(int)(new_var2 + 0x24)))) & ~(a - 1u)));
+    return (int)(end - ((mask + (u32)*(int *)((long long)(int)(new_var2 + 0x24))) & ~(a - 1u)));
 }

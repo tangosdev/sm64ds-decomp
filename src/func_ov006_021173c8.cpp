@@ -50,7 +50,7 @@ extern int data_ov006_02138a88[];
 
 #define I(off) (*(int *)(g + (off)))
 #define UC(off) (*(unsigned char *)(g + (off)))
-#define LP(e) ((int *)(((long long)(int)(e)) & 0xFFFFFFFFFFFFFFFFLL))
+#define LP(e) ((int *)(e))
 
 extern "C" int func_ov006_021173c8(void *this_)
 {
@@ -142,7 +142,7 @@ extern "C" int func_ov006_021173c8(void *this_)
         /* Loop G: rows with per-row multiplier */
         limG = col * 0x14;
         for (j = 0; j < 3; j++) {
-            slot[1] = (int *)(((long long)(int)(g + j * 4 + 0x5988)) & 0xFFFFFFFFFFFFFFFFLL);
+            slot[1] = (int *)(g + j * 4 + 0x5988);
             if (*slot[1] > 0 && I(0x5960) >= limG) {
                 int mult;
                 switch (j) {
@@ -247,7 +247,7 @@ extern "C" int func_ov006_021173c8(void *this_)
                     int *px = LP(g + sb * 8 + 0x47c8);
                     func_ov004_020b1ea4((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    u = (unsigned int)*(int *)(((int)g + sb * 4 + 0x478c) & 0xFFFFFFFFFFFFFFFFLL);
+                    u = (unsigned int)*(int *)((int)g + sb * 4 + 0x478c);
                     if (u != 0) {
                         do {
                             u /= 10;

@@ -22,10 +22,10 @@ void func_ov006_0210e014(Obj* self) {
     self->x14 = self->xc;
     if (self->x44 != 1 && self->x40 > 0) {
         if (self->x32 < 0x3000) {
-            (*(s16*)(((long long)(int)((char*)self + 0x32)))) += 0x200;
+            (*(s16*)((char*)self + 0x32)) += 0x200;
             if (self->x32 >= 0x3000) self->x32 = 0x3000;
         } else {
-            (*(s16*)(((unsigned long long)(unsigned int)((char*)self + 0x32)))) -= 0x200;
+            (*(s16*)((char*)self + 0x32)) -= 0x200;
             if (self->x32 < 0x3000) self->x32 = 0x3000;
         }
     }

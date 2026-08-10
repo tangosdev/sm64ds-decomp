@@ -20,7 +20,7 @@ extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(
 
 extern int data_020a0e68;
 
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 
 int func_ov064_021193b4(char *c)
 {

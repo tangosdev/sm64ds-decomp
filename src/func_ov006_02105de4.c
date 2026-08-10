@@ -58,7 +58,7 @@ void func_ov006_02105de4(char *c)
             int w, col, row;
 
             *(u8 *)(c + *(u8 *)(c + 0x4fe4) + 0x4fce) = i;
-            (*(u8 *)(int)(((long long)(int)(c + 0x4fe4))))++;
+            (*(u8 *)(int)(c + 0x4fe4))++;
             w = *(int *)(c + 0x4cbc);
             col = i % w;
             row = i / w;
@@ -81,7 +81,7 @@ void func_ov006_02105de4(char *c)
                     for (x = x0; x < wq; x++) {
                         int idx = *(int *)(c + 0x4cbc) * (row + y) + (col + x);
                         *(u8 *)(c + idx + 0x4efa) = 1;
-                        (*(u8 *)(int)(((long long)(int)(c + idx + 0x4f1e)))) ^= 1;
+                        (*(u8 *)(int)(c + idx + 0x4f1e)) ^= 1;
                         *(u16 *)(c + idx * 2 + 0x4e78) = 8;
                     }
                 }
@@ -89,7 +89,7 @@ void func_ov006_02105de4(char *c)
 
             *(u16 *)(c + i * 2 + 0x4e78) = 0;
             *(u8 *)(c + 0x4feb) = 0x28;
-            (*(u8 *)(int)(((long long)(int)(c + 0x4fe1))))++;
+            (*(u8 *)(int)(c + 0x4fe1))++;
             _ZN5Sound12PlayBank2_2DEj(0x1fa);
             func_ov006_02104e80(c);
             return;

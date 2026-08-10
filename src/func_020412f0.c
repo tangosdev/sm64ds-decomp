@@ -76,7 +76,7 @@ void func_020412f0(char *thiz)
         char *base = data_020a2400;
         int kind;
 
-        *(int *)(base + r6) = *(int *)((Msg *)((int)m & 0xFFFFFFFFFFFFFFFF));
+        *(int *)(base + r6) = *(int *)((Msg *)((int)m));
         *(int *)(data_020a2404 + r6) = m->w1;
         data_020a2408[r6] = m->b8;
         {
@@ -90,7 +90,7 @@ void func_020412f0(char *thiz)
             d9[2] = m->bb;
         }
 
-        kind = ((Msg *)((int)m & 0xFFFFFFFFFFFFFFFF))->f0;
+        kind = ((Msg *)((int)m))->f0;
 
         switch (kind) {
         case 0: {
@@ -101,21 +101,21 @@ void func_020412f0(char *thiz)
             if (*(int *)(base + 0x2720) != 0 ||
                 val != *(int *)(data_020a1fc0 + 0x28)) {
                 *(int *)(base + 0x2720) = 1;
-                *(int *)(((int)base + 0x2728) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
-                *(int *)(((int)base + 0x271c) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
+                *(int *)((int)base + 0x2728) |= (1 << sb);
+                *(int *)((int)base + 0x271c) |= (1 << sb);
             } else {
                 void *p = func_02041ce0(base, unk18v, nib1);
 
                 if (p != 0) {
-                    *(int *)(((int)base + 0x270c) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
+                    *(int *)((int)base + 0x270c) |= (1 << sb);
                     *(int *)(base + r6 + 4) = *(int *)((char *)p + 0x88);
-                    *(int *)(((int)p + 0x80) & 0xFFFFFFFFFFFFFFFF) += 1;
+                    *(int *)((int)p + 0x80) += 1;
                 } else {
                     void *q = func_02041c64(base, unk18v, nib1);
-                    *(int *)(((int)q + 0x84) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
+                    *(int *)((int)q + 0x84) |= (1 << sb);
                 }
 
-                *(int *)(((int)base + 0x271c) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
+                *(int *)((int)base + 0x271c) |= (1 << sb);
             }
             break;
         }
@@ -123,11 +123,11 @@ void func_020412f0(char *thiz)
             u32 saved = _ZN3IRQ7DisableEv();
             void *p;
 
-            *(int *)(((int)base + 0x270c) & 0xFFFFFFFFFFFFFFFF) |= (1 << sb);
+            *(int *)((int)base + 0x270c) |= (1 << sb);
             p = func_02041c2c(base, m->w1);
 
             if (p != 0) {
-                *(int *)(((int)p + 0x80) & 0xFFFFFFFFFFFFFFFF) -= 1;
+                *(int *)((int)p + 0x80) -= 1;
                 if (*(int *)((char *)p + 0x80) <= 0) {
                     *(int *)((char *)p + 0x84) = 0;
                     func_020657fc(m->w1);

@@ -1,6 +1,6 @@
 extern char *func_ov010_0211139c(char *c);
 
-#define LAUNDER_ADDR(x) ((int)(((long long)(int)(x))))
+#define LAUNDER_ADDR(x) ((int)(x))
 
 void func_ov010_021112b4(char *c)
 {

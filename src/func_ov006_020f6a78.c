@@ -31,7 +31,7 @@ void func_ov006_020f6a78(char* c)
     if (w->ready < 3)
         return;
     w->slots[w->total * 2 - 1 - w->count].done = 1;
-    (*(short*)((long long)(int)(c + 0x53e8)))++;
+    (*(short*)(c + 0x53e8))++;
     mode = w->mode;
     if (w->count < data_ov006_0212e93c[mode])
         return;

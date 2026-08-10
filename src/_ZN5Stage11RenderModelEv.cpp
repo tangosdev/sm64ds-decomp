@@ -47,7 +47,7 @@ extern "C" void _ZN18TextureTransformer6UpdateER15ModelComponents(void *transfor
 
 void Stage::RenderModel()
 {
-    ModelComponents *mc = (ModelComponents *)(((long long)(int)((char *)&unk_874)));
+    ModelComponents *mc = (ModelComponents *)((char *)&unk_874);
     Inner *inner = *(Inner **)((char *)mc->sub + 8);
     Slot *slot = (Slot *)((char *)&unk_8bc);
     int i;
@@ -64,10 +64,10 @@ void Stage::RenderModel()
                 idx++;
                 u32 flagsTest = *(volatile u32 *)&comp->flags;
                 if ((flagsTest & 0x1f0000) == 0x1f0000) {
-                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)));
+                    u32 *p = (u32 *)((char *)comp + 0x24);
                     *p &= ~0x80000000;
                 } else {
-                    u32 *p = (u32 *)(((long long)(int)((char *)comp + 0x24)));
+                    u32 *p = (u32 *)((char *)comp + 0x24);
                     *p |= 0x80000000;
                 }
             }
@@ -78,7 +78,7 @@ void Stage::RenderModel()
             for (j = 0; j < inner->count; j++) {
                 u8 id = *idx;
                 Component *comp = (Component *)((char *)mc->components + id * 0x30);
-                *(u32 *)(((long long)(int)((char *)comp + 0x24))) |= 0x80000000;
+                *(u32 *)((char *)comp + 0x24) |= 0x80000000;
                 idx++;
             }
         }

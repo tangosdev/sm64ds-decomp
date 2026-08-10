@@ -96,25 +96,25 @@ int MovingMeshCollider::DetectClsn(SphereClsn & sphere_)
         d[11] = FMUL(d[5], *(int*)&scale);
         func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
         _ZN10ClsnResultaSERKS_(&sphere->unk_010, loc.result);
-        *(u8*)(((s64)(int)&sphere->flags)) |= 1;
+        *(u8*)(&sphere->flags) |= 1;
         if (loc.flags & 4) {
             if (sphere->flags & 4) {
                 r &= ~1;
             } else {
                 sphere->SetFloorResult(*(ClsnResult*)loc.floorRes);
             }
-            *(u8*)(((s64)(int)&sphere->flags)) |= 4;
+            *(u8*)(&sphere->flags) |= 4;
             if (sphere->unk_100 < loc.f_100) {
                 func_0203794c(sphere, &loc.f_fc);
             }
         }
         if (loc.flags & 8) {
             func_02037888(sphere, loc.wallRes);
-            *(u8*)(((s64)(int)&sphere->flags)) |= 8;
+            *(u8*)(&sphere->flags) |= 8;
         }
         if (loc.flags & 0x10) {
             func_0203782c(sphere, loc.undRes);
-            *(u8*)(((s64)(int)&sphere->flags)) |= 0x10;
+            *(u8*)(&sphere->flags) |= 0x10;
         }
     }
     _ZN10SphereClsnD1Ev(&loc);

@@ -28,7 +28,7 @@ void func_0205dc7c(u32* q) {
         collected = 0;
         r6 = q[1];
         r5 = q[1] + q[2];
-        r4 = r5 + (u32)((int)(((long long)(int)(q[2] + q[3]))) - q[2]);
+        r4 = r5 + (u32)((int)(q[2] + q[3]) - q[2]);
         tail = 0;
         saved = _ZN3IRQ7DisableEv();
         prev = 0;

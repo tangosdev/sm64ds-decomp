@@ -6,5 +6,5 @@
 
 void BgCh::StartDetectingToxic()
 {
-    *(unsigned char *)(((long long)(int)((char *)&unk_004))) |= 8;
+    *(unsigned char *)((char *)&unk_004) |= 8;
 }

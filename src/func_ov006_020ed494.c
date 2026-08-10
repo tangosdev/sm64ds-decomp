@@ -48,7 +48,7 @@ void func_ov006_020ed494(char *c)
         a.x = data_020a0dea[(unsigned int)idx * 4] << 12;
         a.y = data_020a0deb[(unsigned int)idx * 4] << 12;
         p = *(Thing **)(c + 0x4f60);
-        src = (V2 *)(int)(((long long)(int)((char *)p + 0x18)));
+        src = (V2 *)(int)((char *)p + 0x18);
         vec[0] = src->x;
         vec[1] = src->y;
 
@@ -116,7 +116,7 @@ void func_ov006_020ed494(char *c)
                         ptr2 = (Thing *)(c + 0x4678);
                         do
                         {
-                            V2 *s2 = (V2 *)(int)(((long long)(int)((char *)ptr2 + 0x18)));
+                            V2 *s2 = (V2 *)(int)((char *)ptr2 + 0x18);
                             vec[0] = s2->x;
                             vec[1] = s2->y;
                             func_ov006_020eb9dc(ptr2, func_0203d5dc(vec, &a));
@@ -129,7 +129,7 @@ void func_ov006_020ed494(char *c)
 
                 func_02012790(0xe);
                 {
-                    V2 *s3 = (V2 *)(int)(((long long)(int)((char *)sel + 0x18)));
+                    V2 *s3 = (V2 *)(int)((char *)sel + 0x18);
                     vec[2] = s3->x;
                     vec[3] = s3->y;
                 }

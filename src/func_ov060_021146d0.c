@@ -18,7 +18,7 @@ void func_ov060_021146d0(char *c) {
         func_02012694(0xb1, c + 0x74);
     } else {
         if (*(u16*)(c + 0x8c) > 0xc00) {
-            s16 *p8c = (s16*)(((long long)(int)((char*)c + 0x8c)));
+            s16 *p8c = (s16*)((char*)c + 0x8c);
             *p8c = *p8c - 0xc00;
         } else {
             *(u16*)(c + 0x8c) = 0;
@@ -29,7 +29,7 @@ void func_ov060_021146d0(char *c) {
         if (st == 0) {
             func_ov060_02111cc0(c, 1, 0x40000000);
             {
-                u8 *p = (u8*)(((long long)(int)((char*)c + 0x423)));
+                u8 *p = (u8*)((char*)c + 0x423);
                 *p = *p + 1;
             }
             *(u16*)(c + 0x300 + 0xfe) = 0;
@@ -43,7 +43,7 @@ void func_ov060_021146d0(char *c) {
             *(int*)(c + 0xa8) = 0;
             *(int*)(c + 0x98) = 0;
             {
-                u8 *p = (u8*)(((long long)(int)((char*)c + 0x423)));
+                u8 *p = (u8*)((char*)c + 0x423);
                 *p = *p + 1;
             }
             return;

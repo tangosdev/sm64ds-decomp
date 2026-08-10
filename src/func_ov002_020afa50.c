@@ -6,6 +6,6 @@
 /* dCapEnemy_c::Kill - recovered from vtable slot identity */
 
 void func_ov002_020afa50(char *self) {
-    *(short *)(int)(((long long)(int)(self + 0x8e))) += 0xc00;
+    *(short *)(int)(self + 0x8e) += 0xc00;
     func_ov002_020afa6c(self);
 }

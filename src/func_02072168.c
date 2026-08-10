@@ -55,7 +55,7 @@ void func_02072168(char *c, char *s, char *end) {
         case 1: {
             int v0;
             ReadSignedVarInt(p + 1, &v0);
-            (*(int *)(((long long)(int)(s + 8)) & 0xFFFFFFFFFFFFFFFFLL)) += v0;
+            (*(int *)(s + 8)) += v0;
             break;
         }
         case 2: {

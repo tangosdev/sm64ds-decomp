@@ -21,7 +21,7 @@ void func_ov006_020ef5ac(char *self0)
     s16 flag;
     char *self = self0;
     int saved = data_ov006_02140308;
-    int *vp = (int *)(((int)self + 0x5a64) & 0xFFFFFFFFFFFFFFFFLL);
+    int *vp = (int *)((int)self + 0x5a64);
     int c;
 
     *vp += *(int *)(self + 0x5a68) >> 12;

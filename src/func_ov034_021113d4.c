@@ -38,7 +38,7 @@ i = 0;
             func_ov034_021125b8(thiz, 4);
     }
     {
-        unsigned char *t = (unsigned char *)(void *)(unsigned long long)(unsigned)(thiz + 0x8da);
+        unsigned char *t = (unsigned char *)(void *)(thiz + 0x8da);
         *t = (unsigned char)(*t + 1);
     }
     if (*(unsigned char *)(thiz + 0x8da) > 0xc)

@@ -88,11 +88,11 @@ extern "C" void func_ov006_020d122c(char *self, int arg1)
             do {
                 for (i = 0; i < 4; i++) {
                     t = RandomIntInternal(&data_0209d4b8);
-                    pi = (int *)(((long long)(int)(self + (i << 2) + off)) & 0xFFFFFFFFFFFFFFFFLL);
+                    pi = (int *)(self + (i << 2) + off);
                     j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
                     t = *pi;
                     {
-                        int *pjx = (int *)(((long long)(int)(self + (j << 2) + off)) & 0xFFFFFFFFFFFFFFFFLL);
+                        int *pjx = (int *)(self + (j << 2) + off);
                         u = *pjx;
                         *pi = u;
                         *pjx = t;
@@ -117,11 +117,11 @@ extern "C" void func_ov006_020d122c(char *self, int arg1)
             int off = 0x4714;
             for (i = 0; i < 4; i++) {
                 t = RandomIntInternal(&data_0209d4b8);
-                pi = (int *)(((long long)(int)(self + (i << 2) + off)) & 0xFFFFFFFFFFFFFFFFLL);
+                pi = (int *)(self + (i << 2) + off);
                 j = ((u32)(((u32)t >> 16) & 0x7fff) * 4) >> 15;
                 t = *pi;
                 {
-                    int *pjx = (int *)(((long long)(int)(self + (j << 2) + off)) & 0xFFFFFFFFFFFFFFFFLL);
+                    int *pjx = (int *)(self + (j << 2) + off);
                     u = *pjx;
                     *pi = u;
                     *pjx = t;

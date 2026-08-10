@@ -14,7 +14,7 @@ void Stage::LoadModel() {
     unsigned int i;
     char* p;
 
-    p = (char*)(((long long)(int)(self + 0x874)));
+    p = (char*)(self + 0x874);
     list = ((char**)p)[0];
     node = ((char**)p)[1];
     count = *(unsigned int*)(list + 0x24);
