@@ -12,7 +12,7 @@ struct G_ee90 {
     s32 flag26c;
 };
 
-#define LAU(p) ((long long)(int)(p))
+#define LAU(p) (p)
 
 extern "C" {
 extern u16 DecIfAbove0_Short(u16 *p);

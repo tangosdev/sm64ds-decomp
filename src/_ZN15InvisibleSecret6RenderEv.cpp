@@ -35,7 +35,7 @@ int InvisibleSecret::Render()
     }
 
     if (unk_14c != 0) {
-        u16* p = (u16*)(int)(((long long)(int)((char*)&unk_14c)));
+        u16* p = (u16*)(int)((char*)&unk_14c);
         *p = *p - 1;
         return 1;
     }

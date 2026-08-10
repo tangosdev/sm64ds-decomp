@@ -31,7 +31,7 @@ int UnknownVsEntry::Behavior()
         for (; i < 4; i++, base += 0x158, p += 0x158, g += 1) {
             func_ov075_02114cd8(base);
             if (*(u8*)(p + 0xa75)) {
-                int* q = (int*)(int)(((long long)(int)(base + 0x118)));
+                int* q = (int*)(int)(base + 0x118);
                 int v[3];
                 v[0] = q[0]; v[1] = q[1]; v[2] = q[2];
                 func_ov075_0211ab38(ee, v);

@@ -37,7 +37,7 @@ int Player::St_PunchKick_Main()
             u8 idx = data_020a0e40;
             u16 flags = *(u16*)((char*)data_0209f49e + idx * 0x18);
             if ((flags & 1) != 0 && mPunchKickStep < 2) {
-                u8* p = (u8*)(((long long)(int)((char*)&mPunchKickStep)));
+                u8* p = (u8*)((char*)&mPunchKickStep);
                 (*p)++;
                 _ZN6Player17St_PunchKick_InitEv(((char*)this));
                 return 1;

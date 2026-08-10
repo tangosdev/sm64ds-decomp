@@ -70,8 +70,8 @@ void CylinderClsn::Process()
 
             if (sharedFlags & 0x4000000)
             {
-                u32* pf1 = (u32*)((unsigned long long)(unsigned int)((char*)other + 0x20) & 0xFFFFFFFFFFFFFFFFULL);
-                u32* pf0 = (u32*)((unsigned long long)(unsigned int)((char*)data_0209cee8 + 0x20) & 0xFFFFFFFFFFFFFFFFULL);
+                u32* pf1 = (u32*)((char*)other + 0x20);
+                u32* pf0 = (u32*)((char*)data_0209cee8 + 0x20);
                 *pf0 |= 0x8000000;
                 overlap -= 0x50000;
                 *pf1 |= 0x8000000;

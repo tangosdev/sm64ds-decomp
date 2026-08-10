@@ -35,7 +35,7 @@ int Koopa::Behavior()
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x110);
 
     if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char *)this), ((char *)this) + 0x144) != 0) {
-        int *pb0 = (int *)(((long long)(int)((char *)&unk_0b0)));
+        int *pb0 = (int *)((char *)&unk_0b0);
         *pb0 = *pb0 & ~0x10000000;
         if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(((char *)this), ((char *)this) + 0x110) != 0) {
             _ZN5Actor8PoofDustEv(((char *)this));
@@ -67,7 +67,7 @@ int Koopa::Behavior()
         {
             int *pb0 = (int *)((char *)&unk_0b0);
             if (unk_3ce != 0)
-                *(u8 *)(((long long)(int)((char *)&unk_3ce))) -= 1;
+                *(u8 *)((char *)&unk_3ce) -= 1;
             *pb0 = *pb0 | 0x10000000;
         }
         func_ov062_02118258(((char *)this), 0x3e8000);
@@ -91,7 +91,7 @@ int Koopa::Behavior()
             int ang = mPrevAngleY;
             mAngleY = (s16)ang;
             {
-                u16 *p100 = (u16 *)(((long long)(int)((char *)&unk_100)));
+                u16 *p100 = (u16 *)((char *)&unk_100);
                 *p100 = (u16)(*p100 + 1);
             }
         }
@@ -122,7 +122,7 @@ int Koopa::Behavior()
             if (unk_3ca == 0) {
                 _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
             } else {
-                *(u16 *)(((long long)(int)((char *)&unk_3ca))) -= 1;
+                *(u16 *)((char *)&unk_3ca) -= 1;
             }
         }
     } else {

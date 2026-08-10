@@ -24,7 +24,7 @@ struct Disp { int unused[2]; PMF pmf; };
 extern "C" unsigned char data_0209f220;
 extern void* data_ov016_02114dbc;
 
-#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p))))
+#define LA(p) ((void*)(unsigned long)((unsigned long)(p)))
 
 int Unagi::Behavior()
 {

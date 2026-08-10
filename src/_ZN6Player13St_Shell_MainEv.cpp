@@ -87,14 +87,14 @@ int Player::St_Shell_Main()
         }
         func_ov002_020c04e0(((char*)this));
         if (mIsAirborne != 0) {
-            (*(u8*)(((long long)(int)((char*)&mStateStep))))++;
+            (*(u8*)((char*)&mStateStep))++;
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
         }
         {
             int off = data_020a0e40 * 0x18;
             if (*(u16*)((char*)data_0209f49e + off) & 2) {
-                (*(u8*)(((long long)(int)((char*)&mStateStep))))++;
+                (*(u8*)((char*)&mStateStep))++;
                 mVertSpeed = (mHorzSpeed >> 2) + 0x2a000;
                 mIsAirborne = 1;
                 mLandSoundPlayed = 0;

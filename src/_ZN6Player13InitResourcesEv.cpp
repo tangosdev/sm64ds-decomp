@@ -157,7 +157,7 @@ Ld0:
             if ((f254 & 0x80) != 0) {
                 if ((mLoadedResourceFlags & 1) == 0) {
                     LoadSilverStarAndNumber();
-                    *(u8*)((int)(((long long)(int)(&mLoadedResourceFlags)) & 0xFFFFFFFFFFFFFFFFLL)) |= 1;
+                    *(u8*)((int)(&mLoadedResourceFlags)) |= 1;
                 }
             }
         }

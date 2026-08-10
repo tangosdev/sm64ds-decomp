@@ -12,7 +12,7 @@ struct ToxBox {
     int state;
 };
 
-#define LA(p) (((long long)(int)(p)))
+#define LA(p) (p)
 
 extern "C" {
 void func_ov092_02131aec(void* c);

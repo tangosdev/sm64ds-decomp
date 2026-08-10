@@ -27,7 +27,7 @@ int BowserPuzzleManager::Behavior() {
     if (id != 0)
         p = _ZN5Actor10FindWithIDEj(id);
     if (p == 0 || *(unsigned char*)(p + 0xd6) == 0) {
-        unsigned short* ctr = (unsigned short*)(int)(((long long)(int)(cc + 0x334)));
+        unsigned short* ctr = (unsigned short*)(int)(cc + 0x334);
         *ctr = *ctr + 1;
     }
     func_ov064_02119010(cc);

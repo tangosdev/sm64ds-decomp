@@ -19,7 +19,7 @@ int Cannon::InitResources()
     *(int*)(c + 0x194) = *(int*)(*(int*)(c + 0xe4) + 0x58);
     *(u8*)(c + 0x184) = *(int*)(c + 8) & 3;
     *(int*)(c + 0x174) = 0;
-    *(int*)(((long long)(int)(c + 0x60))) -= 0x50000;
+    *(int*)(c + 0x60) -= 0x50000;
     *(int*)(c + 0x15c) = *(int*)(c + 0x5c);
     *(int*)(c + 0x160) = *(int*)(c + 0x60);
     *(int*)(c + 0x164) = *(int*)(c + 0x64);
@@ -34,11 +34,11 @@ int Cannon::InitResources()
         func_ov098_0213b15c(((void *)this));
         _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x124, ((void *)this), 0xa0000, 0x12c000, 0x800004, 0);
     } else {
-        *(int*)(((long long)(int)(c + 0x60))) -= 0x190000;
+        *(int*)(c + 0x60) -= 0x190000;
         *(short*)(c + 0x17a) = *(short*)(c + 0x90);
         *(short*)(c + 0x178) = 0x2000;
         *(int*)(c + 0x180) = 2;
-        *(int*)(((long long)(int)(c + 0xb0))) &= ~1;
+        *(int*)(c + 0xb0) &= ~1;
         _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x124, ((void *)this), 0x50000, 0x12c000, 0x800004, 0);
     }
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov098_0213c91c);

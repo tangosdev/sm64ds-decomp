@@ -13,7 +13,7 @@ int BowserTail::Behavior()
     if (!a) return 1;
 
     int ang = *(short*)((char*)a + 0x94);
-    a = (Actor*)(((int)a + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+    a = (Actor*)((int)a + 0x5c);
     int x = *(int*)a;
     volatile int v[3];
     v[0] = x;

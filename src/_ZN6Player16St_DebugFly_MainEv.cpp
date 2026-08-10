@@ -30,9 +30,9 @@ int Player::St_DebugFly_Main()
     idx = data_020a0e40;
     flags = *(u16 *)(data_0209f49c + idx * 0x18);
     if (flags & 2) {
-        *(int *)(((long long)(int)((char *)&mPosY))) += 0x28000;
+        *(int *)((char *)&mPosY) += 0x28000;
     } else if (flags & 1) {
-        *(int *)(((long long)(int)((char *)&mPosY))) -= 0x28000;
+        *(int *)((char *)&mPosY) -= 0x28000;
     }
 
     if (*(u16 *)(data_020a0e5a + idx * 4) & 0x400) {

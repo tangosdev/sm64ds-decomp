@@ -8,6 +8,6 @@ int _ZN13RollingLogLll16CleanupResourcesEv(struct RollingLogLll *self)
 {
     char *p = self->sub;
     if (p)
-        *(u16 *)(((long long)(int)(p + 0x324))) -= 1;
+        *(u16 *)(p + 0x324) -= 1;
     return 1;
 }

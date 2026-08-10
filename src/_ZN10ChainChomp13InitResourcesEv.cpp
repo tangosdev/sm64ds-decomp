@@ -90,11 +90,11 @@ int ChainChomp::InitResources()
     *(unsigned char *)((unsigned char *)spawned + 0x320) = (unsigned char)one;
     *(int *)(c + 0x60c) = 0;
 
-    px = (int *)(((long long)(int)(c + 0x5c)));
+    px = (int *)(c + 0x5c);
     *px = *px + 0xc8000;
-    py = (int *)(((long long)(int)(c + 0x60)));
+    py = (int *)(c + 0x60);
     *py = *py + 0xc8000;
-    pz = (int *)(((long long)(int)(c + 0x64)));
+    pz = (int *)(c + 0x64);
     *pz = *pz + 0xc8000;
 
     *(int *)(c + 0x5f8) = 0x50000;

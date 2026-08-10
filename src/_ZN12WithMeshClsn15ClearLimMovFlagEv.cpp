@@ -6,5 +6,5 @@
 
 void WithMeshClsn::ClearLimMovFlag()
 {
-    *(unsigned int *)(((long long)(int)((char *)&mFlags))) &= ~0x80;
+    *(unsigned int *)((char *)&mFlags) &= ~0x80;
 }

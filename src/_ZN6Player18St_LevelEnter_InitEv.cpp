@@ -100,12 +100,12 @@ int Player::St_LevelEnter_Init()
         s32 idx;
         s16 cosv, sinv;
         if (func_ov002_020c7cbc(((char*)this)) != 0) mStateStep = 0x12;
-        *(int*)(((long long)(int)((char*)&mPosY))) += 0x64000;
+        *(int*)((char*)&mPosY) += 0x64000;
         idx = ((s32)(u16)(s16)(mAngleY + 0x8000) >> 4) * 2;
         cosv = data_02082214[idx];
         sinv = data_02082214[idx + 1];
-        *(int*)(((long long)(int)((char*)&mPosX))) += (int)(((s64)0xa0000 * cosv + 0x800) >> 12);
-        *(int*)(((long long)(int)((char*)&mPosZ))) += (int)(((s64)0xa0000 * sinv + 0x800) >> 12);
+        *(int*)((char*)&mPosX) += (int)(((s64)0xa0000 * cosv + 0x800) >> 12);
+        *(int*)((char*)&mPosZ) += (int)(((s64)0xa0000 * sinv + 0x800) >> 12);
         mStateTimer = 0x20;
         mStateArg = 1;
         mVertAccel = 0;

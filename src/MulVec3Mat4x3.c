@@ -6,8 +6,8 @@ void MulVec3Mat4x3(Vector3* v, Matrix4x3* m, Vector3* dst)
     int y = v->y;
     int x = v->x;
     int z = v->z;
-    int* py = (int*)(int)(((long long)(int)((char*)dst + 4)));
-    int* pz = (int*)(int)(((long long)(int)((char*)dst + 8)));
+    int* py = (int*)(int)((char*)dst + 4);
+    int* pz = (int*)(int)((char*)dst + 8);
 
     dst->x = (int)(((long long)x * m->m[0] + (long long)y * m->m[3] + (long long)z * m->m[6]) >> 12);
     dst->x += m->m[9];

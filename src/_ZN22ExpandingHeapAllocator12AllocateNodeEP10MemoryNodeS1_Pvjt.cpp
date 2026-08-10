@@ -101,7 +101,7 @@ void* ExpandingHeapAllocator::AllocateNode(MemoryNode* c, MemoryNode* node, void
     t2.end = t1.start;
     void* allocNode = _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(&t2, 0x5544);
 
-    unsigned short* flagsPtr = (unsigned short*)((long long)(int)((char*)allocNode + 2));
+    unsigned short* flagsPtr = (unsigned short*)((char*)allocNode + 2);
     void* usedList = (char*)c + 8;
     *flagsPtr &= ~0x8000;
     *flagsPtr |= (z & 1) << 15;

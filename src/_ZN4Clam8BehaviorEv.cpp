@@ -107,7 +107,7 @@ int Clam::Behavior()
     if (unk_15c != 0) {
         char *touched = _ZN5Actor10FindWithIDEj(unk_15c);
         if (touched != 0) {
-            int isPlayer = (int)(((long long)(int)(*(u16 *)(touched + 0xc) == 0xbf)));
+            int isPlayer = (int)(*(u16 *)(touched + 0xc) == 0xbf);
             if (isPlayer != 0) {
                 u.hurtFrom[0] = mPosX;
                 u.hurtFrom[1] = mPosY;

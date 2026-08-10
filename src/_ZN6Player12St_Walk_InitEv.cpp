@@ -71,7 +71,7 @@ merge:
     if (mHorzSpeed > Player_ScaleByCharFactor(((char *)this), 0x24000)) {
         mStateArg = 1;
     }
-    *(unsigned short *)(((long long)(int)((char *)&mStateFlags))) &= ~0x100;
+    *(unsigned short *)((char *)&mStateFlags) &= ~0x100;
     mIsUnderwater = 0;
     func_ov002_020d4540(((char *)this));
 

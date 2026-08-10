@@ -94,7 +94,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
 
     data_0209d6c0 = 1;
     {
-        StarEntry* e = (StarEntry*)(int)(((long long)(int)((char*)data_0209d708 + 0x1470)));
+        StarEntry* e = (StarEntry*)(int)((char*)data_0209d708 + 0x1470);
         data_0209d6f0 = e;
         sum = data_0209d6fc + 0x28;
         sum += data_0209d70c[1];

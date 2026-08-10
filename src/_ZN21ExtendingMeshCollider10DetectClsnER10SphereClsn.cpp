@@ -74,25 +74,25 @@ extern "C" int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(char* self, 
         d[11] = FMUL(d[5], *(int*)(self + 0x50));
         func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
         _ZN10ClsnResultaSERKS_(sphere + 0x10, loc.result);
-        *(u8*)(((s64)(int)(sphere + 0x70))) |= 1;
+        *(u8*)(sphere + 0x70) |= 1;
         if (loc.flags & 4) {
             if (*(u8*)(sphere + 0x70) & 4) {
                 r &= ~1;
             } else {
                 _ZN10SphereClsn14SetFloorResultERK10ClsnResult(sphere, func_02037938(&loc));
             }
-            *(u8*)(((s64)(int)(sphere + 0x70))) |= 4;
+            *(u8*)(sphere + 0x70) |= 4;
             if (*(int*)(sphere + 0x100) < loc.f_100) {
                 func_0203794c(sphere, &loc.f_fc);
             }
         }
         if (loc.flags & 8) {
             func_02037888(sphere, func_020378dc(&loc));
-            *(u8*)(((s64)(int)(sphere + 0x70))) |= 8;
+            *(u8*)(sphere + 0x70) |= 8;
         }
         if (loc.flags & 0x10) {
             func_0203782c(sphere, func_02037880(&loc));
-            *(u8*)(((s64)(int)(sphere + 0x70))) |= 0x10;
+            *(u8*)(sphere + 0x70) |= 0x10;
         }
     }
     _ZN10SphereClsnD1Ev(&loc);

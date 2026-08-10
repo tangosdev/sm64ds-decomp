@@ -37,12 +37,12 @@ int BowserSkyPlatform::InitResources()
     z.y = 0;
     z.z = 0;
     Vec3_HorzAngle(&z, (const Vector3 *)((char *)&mPosX));
-    p178 = (int *)(((long long)(int)((char *)&unk_178)));
+    p178 = (int *)((char *)&unk_178);
     unk_184 = 0x2ee000;
     t = mPosX;
     /* materialize r0 = ((char *)this)+0x5c between load and store */
     {
-        Vector3 *pos = (Vector3 *)(((long long)(int)((char *)&mPosX)));
+        Vector3 *pos = (Vector3 *)((char *)&mPosX);
         (void)pos;
     }
     unk_174 = t;

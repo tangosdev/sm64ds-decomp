@@ -22,7 +22,7 @@ int SwitchPillar::Behavior()
     } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {
         unk_338 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             unk_338, 3, 0x96, (void*)((char*)&unk_074), 0);
-        *(int*)(((long long)(int)((char*)&mPosY))) -= 0x5000;
+        *(int*)((char*)&mPosY) -= 0x5000;
         unk_33e = 1;
         if (mPosY <= mLoweredY) {
             mPosY = mLoweredY;

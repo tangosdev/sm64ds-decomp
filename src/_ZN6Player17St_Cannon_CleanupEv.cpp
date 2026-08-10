@@ -8,6 +8,6 @@
 
 int Player::St_Cannon_Cleanup()
 {
-    *(unsigned int *)(((long long)(int)((char *)&mMovingCylinderClsnWithPos.flags))) &= ~0x20;
+    *(unsigned int *)((char *)&mMovingCylinderClsnWithPos.flags) &= ~0x20;
     return 1;
 }

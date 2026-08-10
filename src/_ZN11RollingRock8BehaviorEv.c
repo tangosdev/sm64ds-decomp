@@ -36,7 +36,7 @@ int _ZN11RollingRock8BehaviorEv(char *c)
         if (*(u8*)(c + 0x3be) != 4) {
             s16 *p8c;
             func_ov021_021127b4(c);
-            p8c = (s16 *)(int)(((long long)(int)(c + 0x8c)));
+            p8c = (s16 *)(int)(c + 0x8c);
             *p8c = (s16)(*p8c + (*(int*)(c + 0x98) >> 12) * 0x43);
             *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
             func_ov021_02112544(c);
@@ -80,7 +80,7 @@ int _ZN11RollingRock8BehaviorEv(char *c)
                 struct Vector3_16 v16;
                 u32 rnd;
                 u8 *p3bf;
-                p3bf = (u8 *)(int)(((long long)(int)(c + 0x3bf)));
+                p3bf = (u8 *)(int)(c + 0x3bf);
                 *p3bf = (u8)(*p3bf + 1);
                 *(u16*)(c + 0x100) = 0;
                 v16 = *(struct Vector3_16*)(c + 0x92);
@@ -100,7 +100,7 @@ int _ZN11RollingRock8BehaviorEv(char *c)
             }
         }
         {
-            u16 *p100 = (u16 *)(int)(((long long)(int)(c + 0x100)));
+            u16 *p100 = (u16 *)(int)(c + 0x100);
             *p100 = (u16)(*p100 + 1);
         }
     }

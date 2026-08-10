@@ -44,12 +44,12 @@ int MirrorLuigi::Render()
     player = data_0209f394[data_0209f250];
     r8res = func_ov002_020e496c(player);
 
-    q = (char*)(int)(((long long)(int)((char*)&unk_0dc)));
+    q = (char*)(int)((char*)&unk_0dc);
     comp = *(char**)q;
     dst = *(Mtx**)(q + 0xc);
     src = *(Mtx**)(r8res + 0x14);
     for (i = 0; i < *(unsigned int*)(comp + 4); i++) {
-        *(Mtx*)(int)(((long long)(int)dst)) = *src;
+        *(Mtx*)(int)((long long)(int)dst) = *src;
         src++;
         dst++;
     }

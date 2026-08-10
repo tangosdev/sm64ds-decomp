@@ -14,7 +14,7 @@ extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(char* c, char* clsn);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
 extern void _ZN12CylinderClsn6UpdateEv(char* c);
 extern PMF data_ov002_0210dc00[];
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 }
 
 int OneUpMushroom::Behavior()

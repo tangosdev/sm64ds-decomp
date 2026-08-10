@@ -6,5 +6,5 @@
 
 void BgCh::StopDetectingOrdinary()
 {
-    *(unsigned char *)(((long long)(int)((char *)&unk_004))) &= ~1;
+    *(unsigned char *)((char *)&unk_004) &= ~1;
 }

@@ -24,11 +24,11 @@ void *_ZN22ExpandingHeapAllocatorC1EPvj(struct ExpandingHeapAllocator *self, voi
     _ZN13HeapAllocatorC1EjPvPvj(((char *)self), 0x45585048, inner + 0x14, start, size);
     *(u16 *)(inner + 0x10) = 0;
     *(u16 *)(inner + 0x12) = 0;
-    (*(u16 *)((long long)(int)(inner + 0x12))) &= ~1;
+    (*(u16 *)(inner + 0x12)) &= ~1;
     t.start = *(void **)((char *)&self->unk_018);
     t.end = *(void **)((char *)&self->unk_01c);
     node = _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(&t, 0x4652);
-    *(MemoryNode **)((long long)(int)inner) = node;
+    *(MemoryNode **)(inner) = node;
     *(MemoryNode **)(inner + 4) = node;
     *(u32 *)(inner + 8) = 0;
     *(u32 *)(inner + 0xc) = 0;

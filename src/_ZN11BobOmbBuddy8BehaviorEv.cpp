@@ -20,7 +20,7 @@ int BobOmbBuddy::Behavior()
     func_ov084_0212c9a8(((char *)this));
     p = (char*)_ZN5Actor13ClosestPlayerEv(((char *)this));
     if (p != 0) {
-        Vector3 *ps = (Vector3 *)(((unsigned long long)(unsigned)(p + 0x5c)) & 0xFFFFFFFFFFFFFFFFULL);
+        Vector3 *ps = (Vector3 *)(p + 0x5c);
         v = *ps;
         if (Vec3_HorzDist((Vector3*)((char *)&mPosX), &v) < 0x12c000) {
             short ang = Vec3_HorzAngle((Vector3*)((char *)&mPosX), &v);

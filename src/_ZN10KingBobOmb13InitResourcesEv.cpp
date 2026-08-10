@@ -92,7 +92,7 @@ int KingBobOmb::InitResources()
     }
     unk_4a0 = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
     {
-        int *p = (int*)(((long long)(int)((char*)&unk_4a0)));
+        int *p = (int*)((char*)&unk_4a0);
         *p = *p + 1;
     }
     *(short*)(((char*)this)+0x400+0xf8) = mAngleY;

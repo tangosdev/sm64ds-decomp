@@ -49,7 +49,7 @@ int Player::St_DeadPit_Main()
     case 3: {
         func_ov002_020c0108(((char*)this), 0);
         u32 snd = _ZN5Sound8PlayLongEjjjRK7Vector3s(mLoopingSoundHandle, 0, 0x10a, (int*)((char*)&mCamSpacePosX), 0);
-        int* p = (int*)(((long long)(int)((char*)&mSinkDepth)));
+        int* p = (int*)((char*)&mSinkDepth);
         mLoopingSoundHandle = snd;
         *p += 0x5000;
         if (mStateWork == 0) {

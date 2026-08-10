@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "NestedHeapIterator.h"
 struct HeapAllocator;
-#define AT(p, off) ((void *)(int)(((long long)(int)((char *)(p) + (off)))))
+#define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 struct HeapAllocator;
 
 void NestedHeapIterator::AddFirst(HeapAllocator * a_)

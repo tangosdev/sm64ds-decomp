@@ -23,7 +23,7 @@ int LavaBubble::InitResources()
     unk_308 = mPosY;
     unk_30c = mPosZ;
     if (unk_310 == 0) {
-        *(int *)(((long long)(int)((char*)&unk_0b0))) |= 1;
+        *(int *)((char*)&unk_0b0) |= 1;
     } else {
         unk_09c = -0x4000;
         unk_0a0 = -0x3c000;

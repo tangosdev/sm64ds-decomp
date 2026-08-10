@@ -18,7 +18,7 @@ extern void _ZN9ActorBase18MarkForDestructionEv(void*);
 extern void* data_ov094_02136b40;
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
-#define LA(p) ((int*)(unsigned)(((long long)(unsigned)(unsigned)(p))))
+#define LA(p) ((int*)(unsigned)((unsigned)(p)))
 
 int HootTheOwl::InitResources()
 {

@@ -15,7 +15,7 @@ int _ZN15BookShotSpawner8BehaviorEv(char *c)
         if (p != 0) {
 
             Vector3 tmp;
-            Vector3 *ps = (Vector3 *)(((unsigned long long)(unsigned)(p + 0x5c)) & 0xFFFFFFFFFFFFFFFFULL);
+            Vector3 *ps = (Vector3 *)(p + 0x5c);
             tmp = *ps;
 
             if (Vec3_HorzDist((Vector3 *)(c + 0x5c), &tmp) < 0x258000) {
@@ -30,7 +30,7 @@ int _ZN15BookShotSpawner8BehaviorEv(char *c)
             }
         }
     } else {
-        unsigned short *pt = (unsigned short *)(((int)c + 0xd4) & 0xFFFFFFFFFFFFFFFFULL);
+        unsigned short *pt = (unsigned short *)((int)c + 0xd4);
         *pt = *pt + 1;
     }
     return 1;

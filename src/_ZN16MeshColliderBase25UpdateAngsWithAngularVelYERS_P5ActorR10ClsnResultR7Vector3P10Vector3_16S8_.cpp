@@ -8,11 +8,11 @@ void MeshColliderBase::UpdateAngsWithAngularVelY(MeshColliderBase &clsn, Actor *
 {
     int angY = clsn.GetAngularVelY();
     if (ang) {
-        short *py = (short *)(((long long)(int)&ang->y));
+        short *py = (short *)(&ang->y);
         *py = *py + angY;
     }
     if (motionAng) {
-        short *py = (short *)(((long long)(int)&motionAng->y));
+        short *py = (short *)(&motionAng->y);
         *py = *py + angY;
     }
 }

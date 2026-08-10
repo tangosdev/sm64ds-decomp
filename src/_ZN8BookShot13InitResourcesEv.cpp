@@ -22,7 +22,7 @@ extern SharedFilePtr data_ov020_02114ab8;
 extern SharedFilePtr data_ov020_02114aa8;
 extern SharedFilePtr data_ov020_02114ab0;
 
-#define LDR(p) ((((long long)(int)(p))))
+#define LDR(p) (p)
 
 struct M48 { int w[12]; };
 extern struct M48 data_02082128;

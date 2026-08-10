@@ -41,13 +41,13 @@ int PiranhaPlant::Behavior()
     old = mState;
     (((Cls*)((char*)this))->*data_ov084_02130e80[old])();
     {
-        unsigned short* p100 = (unsigned short*)(((long long)(int)((char*)&unk_100)));
+        unsigned short* p100 = (unsigned short*)((char*)&unk_100);
         *p100 = (unsigned short)(*p100 + 1);
     }
     cur = mState;
     if (old != cur) {
         if (cur == 5) {
-            int* pb0 = (int*)(((long long)(int)((char*)&unk_0b0)));
+            int* pb0 = (int*)((char*)&unk_0b0);
             *pb0 = *pb0 & ~0x10000000;
         }
         unk_100 = 0;

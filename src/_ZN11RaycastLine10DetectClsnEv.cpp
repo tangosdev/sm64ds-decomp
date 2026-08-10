@@ -73,7 +73,7 @@ int RaycastLine::DetectClsn()
             int active = (info->pB0 & 2) ? 1 : 0;
             if (active != 0) {
                 Vec3 v;
-                Vec3 *src = (Vec3 *)((unsigned long long)(unsigned int)((char *)info + 0x5c) & 0xFFFFFFFFFFFFFFFFULL);
+                Vec3 *src = (Vec3 *)((char *)info + 0x5c);
                 v.x = src->x;
                 v.y = src->y;
                 v.z = src->z;

@@ -135,7 +135,7 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
 
         {
             int o4d4 = 0x4d4;
-            u16 *p = (u16 *)(((long long)(int)(c + o4d4)));
+            u16 *p = (u16 *)(c + o4d4);
             u16 v = *p;
             char *c400 = c + 0x400;
             *p = (u16)(v + 1);

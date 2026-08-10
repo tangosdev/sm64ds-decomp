@@ -32,7 +32,7 @@ extern "C" int _ZN10StarSwitch13InitResourcesEv(char *c) {
         int b = 0;
         if (*(u16*)(c + 0xc) == 0xc) b = 1;
         if (b) {
-            *(int*)(((long long)(int)(c + 0xb0))) |= 0x4000000;
+            *(int*)(c + 0xb0) |= 0x4000000;
             *(int*)(c + 0x33c) = 2;
             *(u8*)(c + 0x351) = *(unsigned int*)(c + 8);
             if (*(u8*)(c + 0x351) == 0xff)
@@ -68,10 +68,10 @@ extern "C" int _ZN10StarSwitch13InitResourcesEv(char *c) {
         if (h == 0xff || h == 0)
             *(u16*)(c + 0x300 + 0x3a) = 0x190;
         else
-            *(u16*)(((long long)(int)(c + 0x33a))) *= 0xa;
+            *(u16*)(c + 0x33a) *= 0xa;
     }
     *(u8*)(c + 0x34f) = 5;
-    *(int*)(((long long)(int)(c + 0x60))) += 0x5000;
+    *(int*)(c + 0x60) += 0x5000;
     *(u8*)(c + 0x34d) = 1;
     return 1;
 }

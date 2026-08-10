@@ -17,7 +17,7 @@ int Player::St_InYoshiMouth_Init()
     r3 = 0;
     mStateWork = (unsigned char)r3;
     unk_6e6 = (unsigned char)r3;
-    slot = (char *)(((long long)(int)((char *)&mMovingCylinderClsnWithPos.flags)));
+    slot = (char *)((char *)&mMovingCylinderClsnWithPos.flags);
     r1 = *(unsigned int *)slot;
     r1 |= 2u;
     *(unsigned int *)slot = r1;

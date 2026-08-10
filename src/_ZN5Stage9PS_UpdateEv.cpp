@@ -108,7 +108,7 @@ extern u8 data_020a0de9[]; /* touch: pressed  [slot*4]   */
 extern volatile u8 data_020a0dea[]; /* touch: x        [slot*4]   */
 extern volatile u8 data_020a0deb[]; /* touch: y        [slot*4]   */
 
-#define DE8P(off) ((u8 *)((long long)(int)(data_020a0de8 + (off))))
+#define DE8P(off) ((u8 *)(data_020a0de8 + (off)))
 #define REG16(a) (*(volatile u16 *)(a))
 #define REG32(a) (*(volatile u32 *)(a))
 

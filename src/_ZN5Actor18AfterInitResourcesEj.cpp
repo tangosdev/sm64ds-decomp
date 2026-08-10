@@ -18,5 +18,5 @@ void Actor::AfterInitResources(u32 vfSuccess)
        ROM materialises the address into a register first (`add r1,r4,#0xb0`)
        and then does the read-modify-write through it. Writing `mFlags |= 0x38`
        folds the offset into the ldr/str and comes out 4 bytes short. */
-    *(u32 *)(long long)(int)&mFlags |= 0x38;
+    *(u32 *)&mFlags |= 0x38;
 }

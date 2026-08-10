@@ -50,7 +50,7 @@ int Player::St_HoldHeavy_Main()
                 if (_ZNK9Animation12WillHitFrameEi(animPtr, 6)) {
                     int* heavy = *(int**)((char*)&mHeldObj);
                     if (heavy != 0) {
-                        *(int*)(((long long)(int)((char*)heavy + 0xb0))) |= 0x4000;
+                        *(int*)((char*)heavy + 0xb0) |= 0x4000;
                     }
                 }
             }

@@ -82,7 +82,7 @@ int Player::St_YoshiPower_Main()
             int t4 = (*(int*)((char*)*(void**)(&unk_160) + 0x58) >> 0xc) << 0x10;
             int id0 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
             dp = (char*)*(void**)(c + (id0<<2) + 0xdc);
-            dp = (char*)(((long long)(int)(dp + 0x50)));
+            dp = (char*)(dp + 0x50);
             *(unsigned int*)(dp + 8) = (unsigned int)t4 >> 4;
             mStateArg = 1;
         }
@@ -117,7 +117,7 @@ int Player::St_YoshiPower_Main()
             }
             int id2 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
             if (_ZNK9Animation12WillHitFrameEi((char*)*(void**)(c + (id2<<2) + 0xdc) + 0x50, 0xa) != 0) {
-                Vec3* src = (Vec3*)(((int)c + 0x5c));
+                Vec3* src = (Vec3*)((int)c + 0x5c);
                 dp = (char*)*(void**)(&mObjInMouth);
                 *(int*)(dp+0x5c) = src->x;
                 *(int*)(dp+0x60) = src->y;
@@ -125,13 +125,13 @@ int Player::St_YoshiPower_Main()
                 Obj* o = *(Obj**)(&mObjInMouth);
                 int cond = (*(unsigned short*)((char*)o+0xc) == 0xbf);
                 if (cond != 0) {
-                    *(int*)(((int)o + 0xb0)) &= ~0x20000;
+                    *(int*)((int)o + 0xb0) &= ~0x20000;
                     if (func_ov002_020d5ed0(*(void**)(&mObjInMouth)) == 0) {
                         func_ov002_020d718c(c);
                     }
                 } else {
-                    *(int*)(((int)o + 0xb0)) |= 0x40000;
-                    *(int*)(((int)*(void**)(&mObjInMouth) + 0xb0)) &= ~0x20000;
+                    *(int*)((int)o + 0xb0) |= 0x40000;
+                    *(int*)((int)*(void**)(&mObjInMouth) + 0xb0) &= ~0x20000;
                     if ((*(Obj**)(&mObjInMouth))->v18() == 4 || (*(Obj**)(&mObjInMouth))->v18() == 2) {
                         mStateStep = 3;
                         int f2 = 1;
@@ -189,7 +189,7 @@ int Player::St_YoshiPower_Main()
             return 1;
         }
         int id4 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
-        int* a50b = (int*)(((long long)(int)((char*)*(void**)(c + (id4<<2) + 0xdc) + 0x50)));
+        int* a50b = (int*)((long long)(int)((char*)*(void**)(c + (id4<<2) + 0xdc) + 0x50));
         if ((unsigned short)(a50b[2] >> 0xc) == 0) {
             if (mIsAirborne != 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
@@ -223,7 +223,7 @@ int Player::St_YoshiPower_Main()
             mUseAltBodyModel = z;
             if (mUseAltBodyModel == 0) {
                 int id6 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z);
-                int* a50c = (int*)(((long long)(int)((char*)*(void**)(c + (id6<<2) + 0xdc) + 0x50)));
+                int* a50c = (int*)((long long)(int)((char*)*(void**)(c + (id6<<2) + 0xdc) + 0x50));
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(&unk_160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50c[2] << 4) >> 0x10);
             }
         }
@@ -234,10 +234,10 @@ int Player::St_YoshiPower_Main()
                 int cond3 = (*(unsigned short*)((char*)obj0+0xc) == 0xbf);
                 if (cond3 != 0) {
                     func_ov002_020d5cec(obj0);
-                    *(unsigned short*)(((int)c + 0x6ce)) &= ~2;
+                    *(unsigned short*)((int)c + 0x6ce) &= ~2;
                 } else {
-                    *(int*)(((int)obj0 + 0xb0)) |= 0x80000;
-                    *(int*)(((int)*(void**)(&mObjInMouth) + 0xb0)) &= ~0x40000;
+                    *(int*)((int)obj0 + 0xb0) |= 0x80000;
+                    *(int*)((int)*(void**)(&mObjInMouth) + 0xb0) &= ~0x40000;
                 }
             }
             *(void**)(&mObjInMouth) = 0;
@@ -253,7 +253,7 @@ int Player::St_YoshiPower_Main()
     case 5: {
         if (mStateTimer != 0) {
             int id8 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
-            int* a50d = (int*)(((long long)(int)((char*)*(void**)(c + (id8<<2) + 0xdc) + 0x50)));
+            int* a50d = (int*)((long long)(int)((char*)*(void**)(c + (id8<<2) + 0xdc) + 0x50));
             if (((unsigned int)(a50d[2] << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)&mAngleY >> 4) * 2;
                 short* tbl = data_02082214;
@@ -265,7 +265,7 @@ int Player::St_YoshiPower_Main()
                 dir.x = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2];
                 dir.y = 0;
                 dir.z = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2 + 1];
-                *(void**)(&unk_628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&unk_628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)(((int)&dir)), 0);
+                *(void**)(&unk_628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&unk_628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)((int)&dir), 0);
                 *(void**)(&mParticle2) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&mParticle2), 0x13d, pos.x, pos.y, pos.z, &dir, 0);
                 func_ov002_020dc09c(c);
                 _ZN12CylinderClsn5ClearEv(&mAttackClsn);
@@ -274,7 +274,7 @@ int Player::St_YoshiPower_Main()
                     int z2 = 0;
                     mUseAltBodyModel = z2;
                     int id9 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z2);
-                    int* a50e = (int*)(((long long)(int)((char*)*(void**)(c + (id9<<2) + 0xdc) + 0x50)));
+                    int* a50e = (int*)((long long)(int)((char*)*(void**)(c + (id9<<2) + 0xdc) + 0x50));
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(&unk_160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50e[2] << 4) >> 0x10);
                 }
                 return 1;

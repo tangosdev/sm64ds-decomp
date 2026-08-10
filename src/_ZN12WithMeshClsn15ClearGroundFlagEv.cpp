@@ -6,5 +6,5 @@
 
 void WithMeshClsn::ClearGroundFlag()
 {
-    *(unsigned int *)(((long long)(int)((char *)&mFlags))) &= ~0x10;
+    *(unsigned int *)((char *)&mFlags) &= ~0x10;
 }

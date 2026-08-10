@@ -19,7 +19,7 @@ void _ZN13HeapAllocatorC1EjPvPvj(struct HeapAllocator *self, u32 magic, void* a,
     *(void**)((char*)&self->unk_01c) = b;
     self->unk_020 = 0;
     {
-        u32* p = (u32*)(((long long)(int)((char*)&self->unk_020)));
+        u32* p = (u32*)((char*)&self->unk_020);
         *p &= ~0xffu;
         *p |= (size & 0xffu);
     }

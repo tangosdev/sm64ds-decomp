@@ -22,7 +22,7 @@ int _ZN4Coin16CleanupResourcesEv(char* c)
         int b2 = (int)(*(unsigned short*)(o + 0xc) == 0x4f);
         if (b2 != 0) {
             if (*(unsigned char*)(o + 0xd6) != 0) {
-                unsigned char *p = (unsigned char*)(((int)o + 0xd6) & 0xFFFFFFFFFFFFFFFFULL);
+                unsigned char *p = (unsigned char*)((int)o + 0xd6);
                 *p = *p - 1;
             }
         }

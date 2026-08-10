@@ -14,6 +14,6 @@ int Player::St_Squish_Cleanup()
     mScaleY = val;
     mScaleZ = val;
 
-    *(int *)(((long long)(int)((char *)&mMovingCylinderClsnWithPos.flags))) &= ~4;
+    *(int *)((char *)&mMovingCylinderClsnWithPos.flags) &= ~4;
     return 1;
 }

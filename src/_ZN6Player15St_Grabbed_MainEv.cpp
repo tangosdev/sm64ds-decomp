@@ -25,7 +25,7 @@ int Player::St_Grabbed_Main()
         if (isBob != 0) {
             ret = func_ov002_020beb38(((char*)this));
             if (ret != 0) {
-                p = (u8*)(int)(((long long)(int)((char*)&mStateStep)));
+                p = (u8*)(int)((char*)&mStateStep);
                 *p = (u8)(*p + ret);
                 mStateTimer = 6;
                 if ((s16)(mStateStep - ret) < 0) {

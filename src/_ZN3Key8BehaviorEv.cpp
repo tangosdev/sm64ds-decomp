@@ -29,7 +29,7 @@ extern int data_ov089_02132b40[];
 extern int data_ov089_02132ca4[];
 }
 
-#define LAUNDER(p) ((long long)(int)(p))
+#define LAUNDER(p) (p)
 struct C { virtual void dummy(); };
 typedef void (C::*PMF)();
 struct PmfEntry { PMF pmf; };

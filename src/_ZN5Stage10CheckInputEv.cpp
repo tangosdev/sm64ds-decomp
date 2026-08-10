@@ -183,9 +183,9 @@ main_part:
                         j++;
                     } while (j < 0x10);
                     if (p->mode != 2 && (p->held & 0x300) == 0x300) {
-                        *(u16*)(((int)p + 4) & 0xFFFFFFFFFFFFFFFFull) |= 0x4000;
+                        *(u16*)((int)p + 4) |= 0x4000;
                         if (p->pressed & 0x300) {
-                            *(u16*)(((int)p + 6) & 0xFFFFFFFFFFFFFFFFull) |= 0x4000;
+                            *(u16*)((int)p + 6) |= 0x4000;
                         }
                     }
                 }

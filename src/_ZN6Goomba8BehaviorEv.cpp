@@ -47,7 +47,7 @@ int Goomba::Behavior()
     if (r == 0)
         return 1;
     if (r == 1) {
-        *(u32*)(((long long)(int)((char*)&unk_0b0))) |= 0x10000000;
+        *(u32*)((char*)&unk_0b0) |= 0x10000000;
         _ZN5Actor8PoofDustEv(((char*)this));
     }
     if (mGoombaType != 3 && mState != 3 &&
@@ -168,7 +168,7 @@ int Goomba::Behavior()
         int b = (unk_0b0 & 8) ? 1 : 0;
         if (b == 0) {
             if (Vec3_Dist((Vector3*)((char*)&mPosX), (Vector3*)((char*)&unk_428)) < 0xa000) {
-                *(u16*)(((long long)(int)((char*)&mStuckTimer))) += 1;
+                *(u16*)((char*)&mStuckTimer) += 1;
                 if (unk_113 < 6 && mStuckTimer == 0x1e) {
                     func_ov084_02129c9c(((char*)this));
                     unk_458 = 0x5a;

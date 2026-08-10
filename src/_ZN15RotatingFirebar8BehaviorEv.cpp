@@ -9,8 +9,8 @@
 #include "MeshColliderBase.h"
 #pragma opt_propagation off
 #pragma opt_dead_assignments off
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
-#define LI(v) ((int)(((long long)(v))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
+#define LI(v) ((int)((long long)(v)))
 
 
 extern "C" {

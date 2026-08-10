@@ -63,7 +63,7 @@ int StarSwitch::Behavior()
     }
 
     if ((data_0209b454 & 0x4000000) == 0) {
-        unsigned short *p = (unsigned short *)(((long long)(int)((char *)&unk_338)));
+        unsigned short *p = (unsigned short *)((char *)&unk_338);
         *p = *p + 1;
     }
     func_ov002_020ba520(((char *)this));

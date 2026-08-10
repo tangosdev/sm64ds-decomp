@@ -39,7 +39,7 @@ int SolidHeapAllocator::SaveState(u32 arg)
     int *p;
 
     fb = inline_fn(this);
-    saved = *(void **)(((long long)(int)fb));
+    saved = *(void **)(fb);
     p = (int *)AllocateForwards(fb, 0x10, 4);
     if (!p)
         return 0;

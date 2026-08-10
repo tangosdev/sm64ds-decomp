@@ -40,7 +40,7 @@ int Player::St_StomachSlide_Main()
 {
     void* light0 = *(void**)((char*)&mHeldObj);
     if (light0 != 0) {
-        int* p = (int*)(((long long)(int)((char*)light0 + 0xb0)));
+        int* p = (int*)((char*)light0 + 0xb0);
         *p |= 0x4000;
     }
 
@@ -74,7 +74,7 @@ int Player::St_StomachSlide_Main()
                 goto end;
             }
             {
-                u8* p = (u8*)(((long long)(int)((char*)&mSlideStoppedTimer)));
+                u8* p = (u8*)((char*)&mSlideStoppedTimer);
                 *p = (u8)(*p + 1);
             }
             if (mSlideStoppedTimer >= 0x1e) {
@@ -133,7 +133,7 @@ int Player::St_StomachSlide_Main()
         }
         func_ov002_020dc560(((char*)this));
         {
-            u8* p = (u8*)(((long long)(int)((char*)&mStateStep)));
+            u8* p = (u8*)((char*)&mStateStep);
             *p = (u8)(*p + 1);
         }
         if (mStateStep <= 0x1e) goto end;
@@ -165,7 +165,7 @@ int Player::St_StomachSlide_Main()
             }
             mPrevAngleY = mAngleY;
             {
-                u8* p = (u8*)(((long long)(int)((char*)&mStateStep)));
+                u8* p = (u8*)((char*)&mStateStep);
                 *p = (u8)(*p + 1);
             }
             goto end;

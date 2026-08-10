@@ -31,7 +31,7 @@ int Player::St_InYoshiMouth_Main()
                     return 1;
             }
             {
-                int *p = (int *)(int)(((long long)(int)(r4 + 0x5c)));
+                int *p = (int *)(int)(r4 + 0x5c);
                 mPosX = p[0];
                 mPosY = p[1];
                 mPosZ = p[2];
@@ -40,7 +40,7 @@ int Player::St_InYoshiMouth_Main()
             t = *(u16 *)(r4 + 0x6c6);
             if (*(u8 *)(r4 + 0x709) == 0 && *(u8 *)(r4 + 0x708) == 0) {
                 t = (u16)(t - d);
-                *(u8 *)(((long long)(int)((char *)&unk_6e6))) += d;
+                *(u8 *)((char *)&unk_6e6) += d;
                 if ((s16)t < 0)
                     t = 0;
             }
@@ -66,7 +66,7 @@ int Player::St_InYoshiMouth_Main()
         }
     case 2:
         if (mStateTimer == 0)
-            *(int *)(((long long)(int)((char *)&mMovingCylinderClsnWithPos.flags))) |= 0x2000;
+            *(int *)((char *)&mMovingCylinderClsnWithPos.flags) |= 0x2000;
         if (_ZN6Player12FinishedAnimEv(((char *)this))) {
             mStateStep = 3;
             mHurtDamage = 1;
@@ -76,7 +76,7 @@ int Player::St_InYoshiMouth_Main()
     case 3:
         {
             int d = func_ov002_020beb38(((char *)this));
-            *(u16 *)(((long long)(int)((char *)&mStateTimer))) -= (d << 2);
+            *(u16 *)((char *)&mStateTimer) -= (d << 2);
             mStateWork = d;
             if ((s16)mStateTimer <= 0) {
                 mStateTimer = 0;

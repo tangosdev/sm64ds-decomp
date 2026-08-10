@@ -17,7 +17,7 @@ void CapEnemy::Unk_02005d94()
         b2 = (q[0] == 1) ? 1 : 0;
         if (b2 == 0) return;
     }
-    *(unsigned char *)(((int)((unsigned char *)this) + 0x113) & 0xFFFFFFFFFFFFFFFFULL) &= 7;
+    *(unsigned char *)((int)((unsigned char *)this) + 0x113) &= 7;
     if (func_02005e28(((unsigned char *)this)))
-        *(unsigned char *)(((int)((unsigned char *)&mCapId)) & 0xFFFFFFFFFFFFFFFFULL) |= 0x80;
+        *(unsigned char *)((int)((unsigned char *)&mCapId)) |= 0x80;
 }

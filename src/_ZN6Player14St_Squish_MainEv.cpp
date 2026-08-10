@@ -51,13 +51,13 @@ int Player::St_Squish_Main()
                 }
             } else {
                 mStateTimer = 0xa;
-                (*(u8 *)(int)(((long long)(int)((char *)&mStateStep))))++;
+                (*(u8 *)(int)((char *)&mStateStep))++;
             }
         }
         break;
     case 1:
         if (mStateTimer != 0) {
-            (*(int *)(int)(((long long)(int)((char *)&mScaleY)))) += 0x100;
+            (*(int *)(int)((char *)&mScaleY)) += 0x100;
             if (mScaleY > 0x1000)
                 mScaleY = 0x1000;
         } else {
@@ -73,7 +73,7 @@ int Player::St_Squish_Main()
                 func_ov002_020db8bc(((char *)this), 1);
                 _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_0211013c);
             } else {
-                (*(u8 *)(int)(((long long)(int)((char *)&mStateStep))))++;
+                (*(u8 *)(int)((char *)&mStateStep))++;
                 mStateArg = 0;
             }
         }
@@ -92,7 +92,7 @@ int Player::St_Squish_Main()
         if (data_ov002_0211117c != 0)
             break;
         KillPlayer();
-        (*(u8 *)(int)(((long long)(int)((char *)&mStateArg))))++;
+        (*(u8 *)(int)((char *)&mStateArg))++;
         break;
     case 4:
         if (mStateTimer != 0)

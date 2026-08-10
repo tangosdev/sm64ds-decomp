@@ -17,8 +17,8 @@ int Player::St_MetalWaterGround_Init()
             int b2 = (h == 0x10b);
             if (!b2) goto tail;
         }
-        *(int*)(int)(((long long)(int)((char*)p+0xb0))) &= ~0x4000;
-        *(int*)(int)(((long long)(int)((char*)*(int**)((char*)&mHeldObj)+0xb0))) &= ~0x100;
+        *(int*)(int)((char*)p+0xb0) &= ~0x4000;
+        *(int*)(int)((char*)*(int**)((char*)&mHeldObj)+0xb0) &= ~0x100;
         *(int**)((char*)&mHeldObj) = 0;
     }
 tail:

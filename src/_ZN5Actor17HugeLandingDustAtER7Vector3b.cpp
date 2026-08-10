@@ -23,11 +23,11 @@ extern "C" void _ZN5Actor17HugeLandingDustAtER7Vector3b(Actor *self, Vector3 *po
 {
     if (b) {
         RaycastGround rc;
-        *(Fix12i*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFULL) += 0x32000;
+        *(Fix12i*)((int)pos + 4) += 0x32000;
         rc.SetObjAndPos(*pos, 0);
         if (rc.DetectClsn())
             pos->y = *(Fix12i*)((char*)&rc + 0x44);
     }
-    *(Fix12i*)(((int)pos + 4) & 0xFFFFFFFFFFFFFFFFULL) += 0x28000;
+    *(Fix12i*)((int)pos + 4) += 0x28000;
     Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb2, pos->x, pos->y, pos->z);
 }

@@ -25,10 +25,10 @@ extern u32 data_02099368[];
 #pragma opt_common_subs off
 
 #define V3D(v, p, dy) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; _y = _y + (dy); (v).x = _x; (v).y = _y; (v).z = _z; }
-#define FLAGP (*(u8 *)(((long long)(int)(t + 0x90))))
+#define FLAGP (*(u8 *)(t + 0x90))
 #define FLAGQ (*(u8 *)(((long long)(int)(t + 0x90)) | 0LL))
-#define LNDR(T, a) ((T *)(((long long)(int)(a))))
-#define LND32(a)   ((s32)(((long long)(int)(a))))
+#define LNDR(T, a) ((T *)(a))
+#define LND32(a)   ((s32)((long long)(int)(a)))
 #define V3C(v, p) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; (v).x = _x; (v).y = _y; (v).z = _z; }
 
 int  func_020355a0(void *);

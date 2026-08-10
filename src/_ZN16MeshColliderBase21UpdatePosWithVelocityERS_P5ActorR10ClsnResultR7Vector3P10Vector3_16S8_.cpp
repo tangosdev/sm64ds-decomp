@@ -11,11 +11,11 @@ void MeshColliderBase::UpdatePosWithVelocity(MeshColliderBase &clsn, Actor *clsn
     pos.x = pos.x + vel.x;
     {
         /* launder: the ROM re-reads through the materialized addresses */
-        int *py = (int *)(((long long)(int)&pos.y));
+        int *py = (int *)(&pos.y);
         *py = *py + vel.y;
     }
     {
-        int *pz = (int *)(((long long)(int)&pos.z));
+        int *pz = (int *)(&pos.z);
         *pz = *pz + vel.z;
     }
 }
