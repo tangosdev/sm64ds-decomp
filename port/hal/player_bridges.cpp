@@ -809,7 +809,7 @@ int data_0209cdd0, data_0209cdd4, data_0209cdd8, data_0209cddc, data_0209cde0;
 int data_0209f220[8], data_0209f264[8], data_020a0d90[8], data_020a0f38[8];
 int data_020a4b58[4], data_020a4b68[4], data_020a60f4[4];
 /* DTCM scratch the timer list walker anchors at */
-__declspec(align(8)) unsigned char data_023c0000[64];
+PORT_ALIGN(8) unsigned char data_023c0000[64];
 int data_02099e94[4], data_02099ebc[4], data_02099ec4[4], data_02099fcc[4];
 int data_020a6084[4], data_020a6088[2], data_020a8114[4];
 

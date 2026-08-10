@@ -359,7 +359,7 @@ unsigned char data_02092128[0x40];
    class is an Actor subclass, so 0x400 covers it with room.
    Verified regression-free: the eight walk probes come back
    byte-identical with this non-null. */
-__declspec(align(8)) static unsigned char HAL_CAMERA[0x400];
+PORT_ALIGN(8) static unsigned char HAL_CAMERA[0x400];
 void *data_0209f318 = HAL_CAMERA;
 unsigned short data_0209f49c, data_0209f49e, data_0209f4a0;
 unsigned char data_0209f4ab;

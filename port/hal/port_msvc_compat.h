@@ -29,7 +29,19 @@
 #define __thiscall
 #define __stdcall
 #endif
+/* __debugbreak(): MSVC intrinsic for an immediate trap. GCC/Clang spell it
+   __builtin_trap(). Used by the unreached-stub bodies (ARMRestoreContext etc.). */
+#define __debugbreak() __builtin_trap()
 #endif /* !_MSC_VER */
+
+/* PORT_ALIGN(n): a standalone alignment specifier (not the grouped-section case).
+   MSVC __declspec(align(n)) vs GCC/Clang __attribute__((aligned(n))). Both go
+   before the declaration. */
+#ifdef _MSC_VER
+#define PORT_ALIGN(n) __declspec(align(n))
+#else
+#define PORT_ALIGN(n) __attribute__((aligned(n)))
+#endif
 
 /* ---- grouped-section placement -------------------------------------------
  * Several HAL TUs split one ROM struct across its ROM-named symbols and place
