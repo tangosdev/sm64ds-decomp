@@ -218,7 +218,7 @@ after_player_slot:
     *(u16 *)LAU((char *)&mStateFlags) &= ~0x440;
 
     if (mHasWings != 0)
-        _ZN9Animation7AdvanceEv((char *)&mAnimation2);
+        mModelAnim4.Advance();
 
     unk_548 = mPosX;
     unk_54c = mPosY;

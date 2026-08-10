@@ -25,6 +25,10 @@
 #define PLAYER_H
 #include "types.h"
 #include "Actor.h"
+#include "ShadowModel.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "WithMeshClsn.h"
+#include "ModelAnim.h"
 
 /* fwd. Only these three are types. gen_header.py used to emit a `struct X;`
    for every parameter NAME it could not resolve as well -- 26 of them, `struct
@@ -109,22 +113,21 @@ struct Player : Actor {
     u8  pad_0e1[0xb];
     u8  unk_0ec;            /* 0x0ec */
     u8  pad_0ed[0x3];
-    u8  mModelAnim3;            /* 0x0f0 */
-    u8  pad_0f1[0x4f];
-    u8  mAnimation1;            /* 0x140 */
-    u8  pad_141[0x7];
-    s32 unk_148;            /* 0x148 */
-    u8  pad_14c[0x8];
+    /* ~Player calls _ZN9ModelAnimD1Ev on this LAST of the two, and ModelAnim
+       asserts 0x64 -- 0x0f0..0x154, closing exactly at unk_154. The markers
+       this replaces are its own sub-objects: mAnimation1 at 0x140 was the
+       Animation base (+0x50) and unk_148 at 0x148 was that base's currFrame
+       (+0x58). Both are reachable through the member now. */
+    ModelAnim mModelAnim3;            /* 0x0f0 */
     u8  unk_154;            /* 0x154 */
     u8  pad_155[0x3];
     u8  unk_158;            /* 0x158 */
     u8  pad_159[0x7];
     u8  unk_160;            /* 0x160 */
     u8  pad_161[0x13];
-    u8  mModelAnim4;            /* 0x174 */
-    u8  pad_175[0x4f];
-    u8  mAnimation2;            /* 0x1c4 */
-    u8  pad_1c5[0x13];
+    /* The other ModelAnim, destroyed FIRST of the two. 0x174..0x1d8, closing
+       exactly at unk_1d8; mAnimation2 at 0x1c4 was its Animation base. */
+    ModelAnim mModelAnim4;            /* 0x174 */
     u8  unk_1d8;            /* 0x1d8 */
     u8  pad_1d9[0x83];
     s32 unk_25c;            /* 0x25c */
@@ -135,8 +138,9 @@ struct Player : Actor {
     u8  pad_27d[0xf];
     u8  unk_28c;            /* 0x28c */
     u8  pad_28d[0x1f];
-    u8  mShadowModel;            /* 0x2ac */
-    u8  pad_2ad[0x27];
+    /* ~Player calls _ZN11ShadowModelD1Ev on this, and ShadowModel asserts
+       0x28 -- which closes exactly at mMovingCylinderClsnWithPos. */
+    ShadowModel mShadowModel;            /* 0x2ac */
     u8  mMovingCylinderClsnWithPos;            /* 0x2d4 */
     u8  pad_2d5[0x3];
     s32 unk_2d8;            /* 0x2d8 */
@@ -146,8 +150,9 @@ struct Player : Actor {
     u8  pad_2ed[0x3];
     u8  unk_2f0;            /* 0x2f0 */
     u8  pad_2f1[0x23];
-    u8  mAttackClsn;            /* 0x314 */
-    u8  pad_315[0x3f];
+    /* ~Player calls _ZN25MovingCylinderClsnWithPosD1Ev on this, and that
+       type asserts 0x40 -- which closes exactly at mRidingShell. */
+    MovingCylinderClsnWithPos mAttackClsn;            /* 0x314 */
     s32 mRidingShell;            /* 0x354 */
     s32 mHeldObj;            /* 0x358 */
     s32 unk_35c;            /* 0x35c */
@@ -167,8 +172,9 @@ struct Player : Actor {
     State *mRequestedState;            /* 0x378 */
     u8  unk_37c;            /* 0x37c */
     u8  pad_37d[0x3];
-    u8  mMeshClsn;            /* 0x380 */
-    u8  pad_381[0x1bb];
+    /* ~Player calls _ZN12WithMeshClsnD1Ev on this FIRST, and WithMeshClsn
+       asserts 0x1bc -- which closes exactly at mSpawnPosX. */
+    WithMeshClsn mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. Player::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.

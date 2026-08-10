@@ -122,6 +122,6 @@ s32 Player::St_Balloon_Main()
     func_ov002_020de3d0(this, &mAngleZ, &mAngleYSpeed);
     func_ov002_020de3d0(this, &mAngleX, &unk_69e);
     mPrevVertSpeed = mVertSpeed;
-    _ZN9Animation7AdvanceEv(&mAnimation1);
+    mModelAnim3.Advance();
     return 1;
 }
