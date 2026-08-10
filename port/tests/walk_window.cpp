@@ -1385,7 +1385,12 @@ int main(void)
        the .map file resolves. The _with_file form also writes crash.txt next
        to the exe with raw Win32, so a run without a captured stderr still
        leaves the address behind. */
+#ifdef _WIN32
     SetUnhandledExceptionFilter(port_fault_probe_with_file);
+#endif
+    /* Linux: the SEH-based crash probe is a later lane (signal/sigaction
+       translation). The frame-context globals (port_last_frame, port_playlog_path)
+       are still maintained; only the arming call is Windows-only for now. */
     /* world = KCL file x64. Default spawn: north end of the stone
        bridge (deck ~892), facing the walk south across it -- the shot
        that calibrates against real-game footage. Roof surface = 4916,

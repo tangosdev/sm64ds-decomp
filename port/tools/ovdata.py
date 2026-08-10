@@ -234,10 +234,20 @@ def whole_mode(root, ov, ovid, base, data, out_path):
     lines += [
         "typedef unsigned char u8;",
         "",
+        "/* 8-byte alignment for the whole-image object. MSVC spells it"
+        " __declspec(align),",
+        " * GCC/Clang (the Linux port) spell it __attribute__((aligned)); this"
+        " macro picks. */",
+        "#if defined(_MSC_VER)",
+        "#define PORT_ALIGN8 __declspec(align(8))",
+        "#else",
+        "#define PORT_ALIGN8 __attribute__((aligned(8)))",
+        "#endif",
+        "",
         f"/* {len(data):#x} bytes of image + {bss:#x} of bss, one object so the"
         " game's",
         " * table walks stay inside it however far past a symbol they step. */",
-        f"__declspec(align(8)) u8 {tag}_image[{total}] = "
+        f"PORT_ALIGN8 u8 {tag}_image[{total}] = "
         f"{{ {romblob_common.init_body(data)} }};",
         f"const unsigned {tag}_ds_base = {base:#010x}u;",
         f"const unsigned {tag}_ds_end = {base + total:#010x}u;",

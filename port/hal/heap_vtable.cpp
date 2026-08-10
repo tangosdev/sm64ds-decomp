@@ -17,8 +17,10 @@
 // hybrid's gates existed to catch, and the port has no gate to catch it.
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#endif
 
 typedef unsigned int u32;
 

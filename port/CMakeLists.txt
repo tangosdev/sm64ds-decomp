@@ -14,7 +14,11 @@ endif()
 # -m32 to every C/C++ compile and to the link. Applied globally here so every
 # gate target and the ntr libs are 32-bit. Windows/MSVC never enters this block.
 if(NOT MSVC)
-    add_compile_options(-m32 -fno-omit-frame-pointer)
+    # -fno-toplevel-reorder: hal/model_host.cpp lays the three OAM-shadow arrays
+    # in one section and relies on declaration order to reproduce the ROM's
+    # contiguous 0x400 struct (the MSVC build gets this from $-suffix section
+    # grouping). Keeping the flag global is harmless for the rest of the tree.
+    add_compile_options(-m32 -fno-omit-frame-pointer -fno-toplevel-reorder)
     add_link_options(-m32)
 endif()
 

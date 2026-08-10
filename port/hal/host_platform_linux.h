@@ -72,6 +72,24 @@ typedef char          *LPSTR;
 #define CALLBACK
 #endif
 
+/* MSVC calling-convention keywords the loop spells on a couple of raw
+   function-pointer casts (a diagnostic vtable-slot call uses __fastcall to put
+   `this` in the first integer register). On a 32-bit x86 GCC/Clang build the
+   equivalent attribute is __attribute__((fastcall)); on any other arch there is
+   no such convention, so it degrades to nothing (the diagnostic still calls the
+   slot, just with the platform default convention). __thiscall/__stdcall are
+   given the same treatment for any future raw-pointer casts. The Windows build
+   never reaches here -- these keep their real MSVC meaning there. */
+#if defined(__GNUC__) && defined(__i386__)
+#define __fastcall __attribute__((fastcall))
+#define __thiscall __attribute__((thiscall))
+#define __stdcall  __attribute__((stdcall))
+#else
+#define __fastcall
+#define __thiscall
+#define __stdcall
+#endif
+
 typedef unsigned long  SIZE_T;
 typedef struct { long x, y; } POINT;
 typedef struct { long left, top, right, bottom; } RECT;
