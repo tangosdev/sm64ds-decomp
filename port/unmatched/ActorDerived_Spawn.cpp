@@ -20,6 +20,8 @@
  * behaviour -- null parent means no spawn, the SceneNode is parent + 0x14 --
  * is the matched source's, unchanged.
  */
+#include <cstddef>   /* size_t (the pointer-width cast below) */
+
 extern "C" {
 
 int func_02043098(unsigned id, void *node, unsigned param1, int flags);

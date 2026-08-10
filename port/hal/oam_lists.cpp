@@ -34,7 +34,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
 extern "C" {
 
@@ -166,6 +168,19 @@ extern "C" int hal_oam_templates_check(void)
  *               and the walk leaves the page.
  *
  * Returns 0 when both halves behave as described. */
+#ifndef _WIN32
+/* Linux: this probe characterizes an intermittent OAM off-screen walk fault
+   using Win32 guard pages (VirtualAlloc/VirtualQuery) and SEH (__try/__except).
+   Both are Windows-only; the real signal/mprotect translation is a later lane.
+   The probe is a DIAGNOSTIC, not a boot prerequisite, so it is a no-op that
+   reports clean here -- the frame loop runs identically without it. */
+extern "C" int hal_oam_walk_probe(void)
+{
+    std::fprintf(stderr, "  [oam] walk probe: skipped on Linux "
+                 "(Win32 guard-page/SEH diagnostic; later lane)\n");
+    return 0;
+}
+#else
 extern "C" int hal_oam_walk_probe(void)
 {
     const int kEntries = 4096 / 8;
@@ -296,3 +311,4 @@ extern "C" int hal_oam_walk_probe(void)
     std::fprintf(stderr, "  [oam] walk probe: %s\n", bad ? "UNEXPECTED" : "as described");
     return bad;
 }
+#endif /* _WIN32 */
