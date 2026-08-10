@@ -115,6 +115,30 @@ def resolve_candidate(symname, name_index):
     return None
 
 
+def rel_section_for(elf, shndx):
+    """The relocation section that applies to section `shndx`, matched by sh_info.
+
+    Do NOT look this up by name. mwccarm emits ONE section per function and names them
+    all ".text", so ".rela.text" is ambiguous and pyelftools' name lookup answers with
+    the LAST section of that name -- one fixed function's relocations, whichever
+    function was asked about.
+
+    A destructor TU always defines three functions, emitted D2, D0, D1, so the last
+    table is D1's. D1 therefore got its own by luck and D0 and D2 got D1's. That is
+    exactly backwards from useful: the D0 route is the one this tree has not migrated
+    yet, and it was the one being checked against another function's table.
+
+    The byte compare cannot cover for it. Relocated words are wildcarded, which is the
+    whole reason this destination check exists.
+
+    tools/linkcheck.py hit the same hazard first and documented it; this is the shared
+    copy, and linkcheck imports it rather than keeping a second one."""
+    for sec in elf.iter_sections():
+        if sec.header["sh_type"] in ("SHT_REL", "SHT_RELA") and sec.header["sh_info"] == shndx:
+            return sec
+    return None
+
+
 def object_reloc_dests(obj, func, name_index):
     """[(offset, symname, resolved_module, resolved_addr)] for relocs inside func.
 
@@ -125,9 +149,8 @@ def object_reloc_dests(obj, func, name_index):
     sym = next((s for s in syms if s.name == func), None)
     if sym is None:
         return None, "func-not-in-obj"
-    sec = elf.get_section(sym["st_shndx"])
     start, size = sym["st_value"], sym["st_size"]
-    rel = elf.get_section_by_name(".rel" + sec.name) or elf.get_section_by_name(".rela" + sec.name)
+    rel = rel_section_for(elf, sym["st_shndx"])
     dests = []
     if rel is not None:
         for r in rel.iter_relocations():

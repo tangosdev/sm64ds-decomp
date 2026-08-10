@@ -53,19 +53,16 @@ import match as M            # noqa: E402
 import reloc_audit as RA     # noqa: E402
 import modules as MOD        # noqa: E402
 
-def _rel_section_for(elf, shndx):
-    """The relocation section that applies to section `shndx`, matched by sh_info.
-
-    Do NOT look this up by name. mwccarm emits ONE section per function and names them all
-    ".text", so `get_section_by_name(".rel.text")` returns whichever came first in the file -
-    some other function's relocations. Any TU that defines several functions (a C++ class with
-    D0/D1/D2 plus its this-adjusting thunks emits five) then gets its slots resolved against
-    the wrong table, which reads as a confident WRONG on a source that is actually correct.
-    sh_info is the only reliable link from a reloc section to the section it patches."""
-    for sec in elf.iter_sections():
-        if sec.header["sh_type"] in ("SHT_REL", "SHT_RELA") and sec.header["sh_info"] == shndx:
-            return sec
-    return None
+# The relocation section that applies to a given section index, matched by sh_info.
+# Do NOT look this up by name: mwccarm emits ONE section per function and names them all
+# ".text", so ".rel.text" is ambiguous and the name lookup answers with the last section
+# of that name -- one fixed function's relocations, whichever function was asked about.
+# Any TU that defines several functions (a C++ class with D0/D1/D2 plus its this-adjusting
+# thunks emits five) then gets its slots resolved against another function's table, which
+# reads as a confident WRONG on a source that is actually correct.
+# sh_info is the only reliable link from a reloc section to the section it patches.
+# Lived here first; now shared with reloc_audit, which had the by-name bug.
+_rel_section_for = RA.rel_section_for
 
 
 # ARM relocation types we know how to link.
