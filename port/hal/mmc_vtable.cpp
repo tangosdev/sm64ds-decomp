@@ -111,8 +111,49 @@ static void __fastcall mmc_beforeclsn(void *s, void *, ClsnResult *res,
     _ZTV18MovingMeshCollider[9] = saved9;
 }
 
+#ifndef _WIN32
+/* Linux/Itanium: GCC dispatches the collision virtuals SysV-cdecl (`this` on
+   the stack, not ecx) over a TWO-dtor-slot vtable. Straight ROM slot order,
+   NO MSVC carry-slot skew: the matched MeshColliderBase carry callbacks are
+   GCC-compiled here too, so they call TransformPos/GetAngularVelY/GetVelocity
+   through the SAME Itanium indices (10/11/12) the ROM vtable uses. ROM layout
+   (0x02099434): [2]Virtual08 [3]GetSurfaceInfo [4]GetNormal [5]GetTriangleOrigin
+   [6]DetectClsn(RaycastGround) [7](RaycastLine) [8](SphereClsn) [9]BeforeClsn
+   [10]TransformPos [11]GetAngularVelY [12]GetVelocity. */
+static void mmcL_v08(void *s) { ((MMC *)s)->MMC::Virtual08(); }
+static void mmcL_norm(void *s, s16 tri, Vector3 *res) { ((MMC *)s)->MMC::GetNormal(tri, *res); }
+static void mmcL_orig(void *s, s16 tri, Vector3 *res) { ((MMC *)s)->MMC::GetTriangleOrigin(tri, *res); }
+static int  mmcL_ground(void *s, void *g) { return _ZN18MovingMeshCollider10DetectClsnER13RaycastGround(s, g); }
+static int  mmcL_line(void *s, void *r) { return _ZN18MovingMeshCollider10DetectClsnER11RaycastLine(s, r); }
+static int  mmcL_sphere(void *s, void *sp) { return _ZN18MovingMeshCollider10DetectClsnER10SphereClsn(s, sp); }
+static int  mmcL_tpos(void *s, const Vector3 *p, Vector3 *r) { return ((MMC *)s)->MMC::TransformPos(*p, *r); }
+static s16  mmcL_angvel(void *s) { return ((MMC *)s)->MMC::GetAngularVelY(); }
+static void mmcL_vel(void *s, Vector3 *r) { ((MMC *)s)->MMC::GetVelocity(*r); }
+static void mmcL_beforeclsn(void *s, ClsnResult *res, Actor *actor, Vector3 *pos,
+                            Vector3_16 *motionAng, Vector3_16 *ang)
+{
+    MeshColliderBase *base = (MeshColliderBase *)s;
+    base->beforeClsnCallback(base, actor, res, pos, motionAng, ang);
+}
+#endif
+
 extern "C" void hal_fill_moving_mesh_collider_vtable(void)
 {
+#ifndef _WIN32
+    _ZTV18MovingMeshCollider[2]  = (void *)mmcL_v08;
+    /* [3] GetSurfaceInfo is NOT overridden by MovingMeshCollider -- the seed
+       copy from _ZTV12MeshCollider already carries MeshCollider's, leave it. */
+    _ZTV18MovingMeshCollider[4]  = (void *)mmcL_norm;
+    _ZTV18MovingMeshCollider[5]  = (void *)mmcL_orig;
+    _ZTV18MovingMeshCollider[6]  = (void *)mmcL_ground;
+    _ZTV18MovingMeshCollider[7]  = (void *)mmcL_line;
+    _ZTV18MovingMeshCollider[8]  = (void *)mmcL_sphere;
+    _ZTV18MovingMeshCollider[9]  = (void *)mmcL_beforeclsn;
+    _ZTV18MovingMeshCollider[10] = (void *)mmcL_tpos;
+    _ZTV18MovingMeshCollider[11] = (void *)mmcL_angvel;
+    _ZTV18MovingMeshCollider[12] = (void *)mmcL_vel;
+    return;
+#endif
     _ZTV18MovingMeshCollider[2] = (void *)mmc_v08;
     _ZTV18MovingMeshCollider[3] = (void *)mmc_norm;
     _ZTV18MovingMeshCollider[4] = (void *)mmc_orig;
