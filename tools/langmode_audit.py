@@ -67,6 +67,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import delaunder  # noqa: E402
 import demangle as D  # noqa: E402
 
 # A mangled basename, with or without the .c/.cpp extension.
@@ -125,7 +126,8 @@ LOCAL_BODY = re.compile(r"^\s*(?:struct|class)\s+\w+\s*(?::[^;{]*)?\{", re.M)
 PROJECT_INCLUDE = re.compile(r'^\s*#\s*include\s*"', re.M)
 PAD_LAYOUT = re.compile(r"char\s+pad\[0x", re.M)
 INLINE_ASM = re.compile(r"__asm|(?<![A-Za-z0-9_])asm\s*[({]")
-LAUNDER = re.compile(r"launder|force.*(?:reg|codegen)|codegen.*force", re.I)
+# (The launder metric used to live here as a regex over prose. It now comes from
+#  delaunder.find_sites, which reads code. See the call site for why.)
 
 
 def tracked_sources():
@@ -408,6 +410,7 @@ def audit():
     # one Phase 4 of the plan retires, so a single tree-wide number hides the trend.
     z = lambda: {"c": 0, "cpp": 0}
     local_body, no_include, pad, asm_files, launder = z(), z(), z(), z(), z()
+    launder_sites = z()
     for p in srcs:
         try:
             t = (REPO / p).read_text(errors="ignore")
@@ -422,8 +425,20 @@ def audit():
             pad[k] += 1
         if INLINE_ASM.search(t):
             asm_files[k] += 1
-        if LAUNDER.search(t):
+        # Counted from CODE, not prose. The old rule was LAUNDER.search(t) over whole
+        # file text, which meant a comment *explaining* an idiom scored exactly like the
+        # idiom, deleting an idiom scored nothing while its comment survived, and the
+        # cheapest way to improve the number was to reword -- which a merged file
+        # (_ZN14BlueCoinSwitch13InitResourcesEv.cpp) documents doing on purpose.
+        # delaunder.find_sites masks comments and string literals and locates the real
+        # idiom, so this number now moves only when code does.
+        # The launder kinds only. delaunder's default kind set also carries PARENS,
+        # which is a cosmetic tidy for the parentheses a removal exposes, not a codegen
+        # hack -- counting it here would inflate this number by thousands.
+        sites = delaunder.find_sites(t, ("MASK", "ROUNDTRIP", "WIDEN"))
+        if sites:
             launder[k] += 1
+            launder_sites[k] += len(sites)
 
     tot = lambda d: d["c"] + d["cpp"]
     r["shadow_decls"] = {
@@ -434,7 +449,8 @@ def audit():
         "pad_layout": tot(pad),
     }
     r["codegen_hacks"] = {"inline_asm": tot(asm_files),
-                          "launder_or_forced": tot(launder)}
+                          "launder_or_forced": tot(launder),
+                          "launder_sites": tot(launder_sites)}
     return r
 
 
@@ -467,6 +483,7 @@ RATCHET = [
     ("shadow_decls", "pad_layout"),
     ("codegen_hacks", "inline_asm"),
     ("codegen_hacks", "launder_or_forced"),
+    ("codegen_hacks", "launder_sites"),
 ]
 
 
@@ -512,7 +529,8 @@ def summary(r):
     out.append("")
     out.append("codegen hacks")
     out.append(f"    inline asm               {ch['inline_asm']:6d}")
-    out.append(f"    launder / forced         {ch['launder_or_forced']:6d}")
+    out.append(f"    launder / forced         {ch['launder_or_forced']:6d}"
+               f"   ({ch['launder_sites']} site(s) in code)")
     return "\n".join(out)
 
 

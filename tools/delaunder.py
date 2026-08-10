@@ -47,11 +47,31 @@ import threading
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-import build_pin as BP           # noqa: E402
-import enroll                    # noqa: E402
-import reloc_audit as RA         # noqa: E402
-import relocs as RL              # noqa: E402
-import rombuild_check as RC      # noqa: E402
+# The sweep needs the compiler and the extracted ROM; find_sites() and code_mask()
+# need neither -- they are regex over text. langmode_audit.py imports this module for
+# find_sites alone and runs in a CI job that installs no build dependencies, so a hard
+# import here would make a static metric fail on `No module named 'elftools'`. Import
+# what the sweep needs when the sweep actually runs.
+try:
+    import build_pin as BP           # noqa: E402
+    import enroll                    # noqa: E402
+    import reloc_audit as RA         # noqa: E402
+    import relocs as RL              # noqa: E402
+    import rombuild_check as RC      # noqa: E402
+except ImportError as exc:           # pragma: no cover - exercised by the ratchet job
+    BP = enroll = RA = RL = RC = None
+    _SWEEP_IMPORT_ERROR = exc
+else:
+    _SWEEP_IMPORT_ERROR = None
+
+
+def require_sweep_deps():
+    """Fail loudly, and only for the paths that genuinely need a build environment."""
+    if _SWEEP_IMPORT_ERROR is not None:
+        raise SystemExit(
+            f"tools/delaunder.py needs the build-side modules to sweep: "
+            f"{_SWEEP_IMPORT_ERROR}. find_sites() alone does not."
+        )
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CONFIG = REPO / "config"
@@ -354,6 +374,7 @@ def sweep_file(rel, meta, kinds, strict, tidy=True):
 
 
 def main():
+    require_sweep_deps()
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     g = ap.add_mutually_exclusive_group(required=True)
