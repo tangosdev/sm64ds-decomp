@@ -76,6 +76,57 @@ else()
     endfunction()
 endif()
 
+# ---- Linux: hostgen-fixup for byte-locked src/ files with MSVC-only idioms ----
+# A few //cpp-marked src files spell `extern "C" extern TYPE x;` (redundant extern
+# in a linkage spec) that mwcc/MSVC accept but g++ rejects. hostgen.py rewrites it
+# to the identical `extern "C" TYPE x;`. On non-MSVC we generate a fixed copy of
+# each into build/host-src and REPLACE the original path wherever it appears in a
+# source list, so the byte-locked tree stays untouched and Windows is unaffected.
+# port_lin_fixup(<list-var>) transforms a source list in place.
+set(PORT_LIN_FIXUP_SYMS
+    _ZN11ShadowModel12InitCylinderEv
+    _ZN5Model17LoadTextureToVramEPcj
+    _ZN15CommonModelClsn12InitCylinderEv)
+if(NOT MSVC)
+    set(PORT_LIN_FIXUP_MAP "")
+    foreach(sym IN LISTS PORT_LIN_FIXUP_SYMS)
+        # resolve the src path (.cpp or .c)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.cpp")
+            set(_orig "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.cpp")
+        else()
+            set(_orig "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.c")
+        endif()
+        set(_fixed "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${_fixed}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${_orig}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen-fixup ${sym}")
+        list(APPEND PORT_LIN_FIXUP_MAP "${_orig}=${_fixed}")
+    endforeach()
+    function(port_lin_fixup listvar)
+        set(_out "")
+        foreach(s IN LISTS ${listvar})
+            set(_repl "${s}")
+            foreach(pair IN LISTS PORT_LIN_FIXUP_MAP)
+                string(REPLACE "=" ";" _kv "${pair}")
+                list(GET _kv 0 _k)
+                list(GET _kv 1 _v)
+                get_filename_component(_sabs "${s}" ABSOLUTE)
+                get_filename_component(_kabs "${_k}" ABSOLUTE)
+                if(_sabs STREQUAL _kabs)
+                    set(_repl "${_v}")
+                endif()
+            endforeach()
+            list(APPEND _out "${_repl}")
+        endforeach()
+        set(${listvar} "${_out}" PARENT_SCOPE)
+    endfunction()
+else()
+    function(port_lin_fixup listvar)
+    endfunction()
+endif()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
 set(SLICE_SOURCES "")
 foreach(line IN LISTS SLICE_LINES)
@@ -277,6 +328,8 @@ foreach(line IN LISTS SLICE4B_LINES)
     endif()
     list(APPEND SLICE4B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# Linux: swap byte-locked MSVC-idiom src files for hostgen-fixed copies.
+port_lin_fixup(SLICE4B_SOURCES)
 
 # ROM constants (sine table, default matrices): generated locally from the
 # extracted arm9 image so Nintendo bytes never enter the repo.

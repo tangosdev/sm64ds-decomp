@@ -152,7 +152,11 @@ int main(void)
         memcpy(g_fit, m, sizeof m);
     }
 
+#ifdef _WIN32
     CreateDirectoryA("frames", NULL);
+#else
+    { int r = system("mkdir -p frames"); (void)r; }
+#endif
     const uint64_t frames = ntr::rt_run(game_main, frame_hook, FRAMES);
     printf("  frames completed through the fiber loop: %llu\n",
            (unsigned long long)frames);

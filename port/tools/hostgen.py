@@ -207,9 +207,18 @@ EXTERN_DATA = re.compile(
 CBOOL = re.compile(r"\b_Bool\b")
 
 
+# `extern "C" extern TYPE name;` -- MSVC and mwcc accept the redundant `extern`
+# inside a linkage spec; g++ rejects it ("invalid use of extern in linkage
+# specification"). Dropping the second `extern` is semantically identical and
+# valid on every compiler. (Three //cpp src files spell it: ShadowModel::
+# InitCylinder, Model::LoadTextureToVram, and one more.)
+EXTERN_C_EXTERN = re.compile(r'(extern\s+"C"\s+)extern\b')
+
+
 def transform(text, extern_data=False):
     """Return (new_text, n_rewrites)."""
     text, n3 = ATTRIBUTE.subn("", text)
+    text, n7 = EXTERN_C_EXTERN.subn(r"\1", text)
     text, n2 = VOIDPP_ARITH.subn(voidpp_char, text)
     text, n1 = MMIO_DEREF.subn(lambda m: f"NTR_MMIO({m.group(2).strip()}, {m.group(3)})", text)
     text, n5 = mmio_ptr(text)
@@ -217,7 +226,7 @@ def transform(text, extern_data=False):
     n4 = 0
     if extern_data:
         text, n4 = EXTERN_DATA.subn(r"\1extern \2\3\4;", text)
-    return text, n1 + n2 + n3 + n4 + n5 + n6
+    return text, n1 + n2 + n3 + n4 + n5 + n6 + n7
 
 
 # ~110 files in the decomp are ARM assembly blocks -- CP15 cache ops, the CRT0,
