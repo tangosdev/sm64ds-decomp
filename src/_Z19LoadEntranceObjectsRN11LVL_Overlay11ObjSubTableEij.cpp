@@ -30,7 +30,9 @@ extern void* data_0209f318;
 extern s8 data_ov002_0210cb5c[];
 
 void func_0202b0e0(LVL_Overlay::StandardEntry* e, int count);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+/* Real symbol ends in `as` (s8 area, s16 deathTable) -- not `ii`. Call-site
+   bytes are insensitive to the declared widths; the linker is not. */
+void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 flags, const Vector3* pos, const Vector3s* rot, s32 area, s32 death);
 void* _ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 id, void* base, int a, int b);
 void StartEntranceFaderWipe(void);
@@ -69,7 +71,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[e->raw], flags, &pos, &e->rot,
                 (s8)(param & 7), -1);
 

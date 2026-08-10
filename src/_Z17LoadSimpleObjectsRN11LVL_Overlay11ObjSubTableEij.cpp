@@ -21,7 +21,9 @@ extern s16 data_ov002_0211118c;
 extern u16 data_ov002_0210cbf4[];
 
 void _Z23LoadMinimapChangeObjecti5Fix12IiEh(int a, Fix12i b, s8 h);
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+/* Real symbol ends in `as` (s8 area, s16 deathTable) -- not `ii`. Call-site
+   bytes are insensitive to the declared widths; the linker is not. */
+void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
     s32 areaID, s32 deathTableID);
 }
@@ -49,7 +51,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         } else {
             s16 old = data_ov002_0211118c;
             data_ov002_0211118c = (s16)(old + 1);
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[masked], actorParam, &v, 0, areaID, old);
         }
     }
