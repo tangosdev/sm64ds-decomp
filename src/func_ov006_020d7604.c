@@ -23,13 +23,13 @@ void func_ov006_020d7604(void *a)
                     q = 0;
                     *(unsigned short *)(p + 0x4690) = (unsigned short)(cc * 8);
                     while (v >= 5) { v -= 5; q++; }
-                    ((unsigned char *)(int)(((long long)(int)(base + i * 64))))[0x469c] = (unsigned char)(q * 10 + v);
+                    ((unsigned char *)(int)(base + i * 64))[0x469c] = (unsigned char)(q * 10 + v);
                     ca++;
                     cc++;
                 } else {
                     int v;
                     int q;
-                    unsigned char *d = (unsigned char *)(int)(((long long)(int)(p + 0x469c)));
+                    unsigned char *d = (unsigned char *)(int)(p + 0x469c);
                     *d = (unsigned char)cb;
                     p[0x469b] = 3;
                     v = cb;

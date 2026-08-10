@@ -31,19 +31,19 @@ int func_ov005_020c14a0(char* c) {
     RandomIntInternal(&data_0209e650);
 
     if (self->unk_090 > 0) {
-        *(int*)(((int)c + 0x90) & 0xFFFFFFFFFFFFFFFFULL) -= 1;
+        *(int*)((int)c + 0x90) -= 1;
         if (self->unk_090 == 0) {
             data_0209b304 = 0;
             self->unk_054 = 1;
         }
     } else if (self->unk_094 > 0) {
-        *(int*)(((int)c + 0x94) & 0xFFFFFFFFFFFFFFFFULL) -= 1;
+        *(int*)((int)c + 0x94) -= 1;
         if (self->unk_094 == 0) {
             data_0209b304 = 1;
             self->unk_054 = 1;
         }
     } else if (self->unk_098 > 1) {
-        *(int*)(((int)c + 0x98) & 0xFFFFFFFFFFFFFFFFULL) -= 1;
+        *(int*)((int)c + 0x98) -= 1;
         if (self->unk_098 == 1) {
             _ZN5Scene20SetAndStopColorFaderEv();
             ExitMinigameMenu();
@@ -52,9 +52,9 @@ int func_ov005_020c14a0(char* c) {
             return 1;
         }
     } else {
-        *(int*)(((int)c + 0x8c) & 0xFFFFFFFFFFFFFFFFULL) += 1;
+        *(int*)((int)c + 0x8c) += 1;
         if (self->unk_08c >= 0x40) self->unk_08c = 0;
-        *(int*)(((int)c + 0x9c) & 0xFFFFFFFFFFFFFFFFULL) += 1;
+        *(int*)((int)c + 0x9c) += 1;
         if (self->unk_09c >= 0x40) self->unk_09c = 0;
     }
     func_ov005_020c0878(c);

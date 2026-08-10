@@ -28,7 +28,7 @@ void func_ov002_020e86ec(char* self) {
             if (_ZNK12WithMeshClsn12TouchesWaterEv(self + 0x150) == 0) return;
         }
         if (((struct Flags*)(self + 0x4a2))->fld == 0) {
-            ((struct Flags*)((int)(((long long)(int)(self + 0x4a2)) & 0xFFFFFFFFFFFFFFFFLL)))->fld = 1;
+            ((struct Flags*)((int)(self + 0x4a2)))->fld = 1;
             *(int*)(self + 0x60) = *(int*)(self + 0x6c);
             _ZN12WithMeshClsn15ClearGroundFlagEv(self + 0x150);
             _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(self + 0x150);
@@ -49,7 +49,7 @@ void func_ov002_020e86ec(char* self) {
                 *(int*)(self + 0x488) = *(int*)(rc + 0x44);
                 data_0209f32c = *(int*)(self + 0x488);
                 if (*(int*)(self + 0x488) >= *(int*)(self + 0x60) + 0x3c000) {
-                    ((struct Flags*)((int)(((unsigned long long)(unsigned)(self + 0x4a2)) & 0xFFFFFFFFFFFFFFFFULL)))->fld = 2;
+                    ((struct Flags*)((int)(self + 0x4a2)))->fld = 2;
                     *(int*)(self + 0x9c) = -0x700;
                     *(int*)(self + 0xa0) = -0x10000;
                     *(int*)(self + 0x98) = 0xc000;

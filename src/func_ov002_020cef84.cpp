@@ -87,7 +87,7 @@ extern "C" int func_ov002_020cef84(char *self)
                 int *dst = &tmp.f04;
                 int w0, w1;
                 *(int *)(self + 0xa8) = -0x1000;
-                *(unsigned char *)(((long long)(int)(self + 0x6e9))) |= 8;
+                *(unsigned char *)(self + 0x6e9) |= 8;
                 w0 = *(int *)(rl + 0x14);
                 w1 = *(int *)(rl + 0x18);
                 dst[0] = w1 ? w0 : w0;

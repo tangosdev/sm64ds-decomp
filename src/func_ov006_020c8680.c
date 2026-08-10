@@ -11,7 +11,7 @@ void func_ov006_020c8680(char* self)
     unsigned int r;
     int r5;
 
-    *(short*)(((long long)(int)(self + 0x32))) -= 1;
+    *(short*)(self + 0x32) -= 1;
     if (*(short*)(self + 0x32) == 0) {
         *(int*)(self + 0x18) = 0x100000;
         r = ((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13;

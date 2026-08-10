@@ -36,7 +36,7 @@ extern "C" void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Cal
 
 extern "C" int func_ov002_020d91e0(char *thiz, int damage, int doPre);
 
-#define LAUNDER(p) ((unsigned char *)(int)(((long long)(int)(p))))
+#define LAUNDER(p) ((unsigned char *)(int)(p))
 
 struct Obj {
     char pad0[0x5c];

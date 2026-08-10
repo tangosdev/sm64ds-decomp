@@ -23,7 +23,7 @@ void func_ov002_020c133c(char *a)
     if (_ZN6Player9GetHealthEv(a) <= 2)
         *(unsigned int *)(a + 0x624) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int *)(a + 0x624), 2, 0x27, (Vector3 *)(a + 0x74), 0);
     if (*(u8 *)(a + 0x71d) != 0) {
-        u8 *p = (u8 *)(((long long)(int)(a + 0x71d)));
+        u8 *p = (u8 *)(a + 0x71d);
         *p = *p - 1;
         return;
     }

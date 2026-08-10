@@ -12,7 +12,7 @@ void func_ov002_020e8e80(char* c, int a)
 
     *(int*)(c + 0x438) = a;
     func_ov002_020e9464(c);
-    p = (int*)(((long long)(int)(c + 0xb0)));
+    p = (int*)(c + 0xb0);
     *p = *p & ~0x40000;
     func_ov002_020e8ef0(c, a);
 }

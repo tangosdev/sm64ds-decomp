@@ -9,7 +9,7 @@ extern void func_ov002_020cd448(char* self);
 
 /* the += / -= on 0x92 go through a materialized base (add r1,c,#0x92;
    ldrsh/strh [r1]); the (long long)-mask launder stops mwcc folding it. */
-#define LS16(p) (*(short*)(int)(((long long)(int)(p))))
+#define LS16(p) (*(short*)(int)(p))
 
 void func_ov002_020cd550(char* c)
 {

@@ -29,7 +29,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
 
     _ZN11RaycastLineC1Ev(rl);
 
-    Vector3 *pos = (Vector3 *)(((long long)(int)(actor + 0x5c)));
+    Vector3 *pos = (Vector3 *)(actor + 0x5c);
     int x = pos->x;
     v1.x = x;
     int y = pos->y;

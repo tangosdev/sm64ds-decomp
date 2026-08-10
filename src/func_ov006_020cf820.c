@@ -5,7 +5,7 @@ extern void func_ov006_020cf124(char *c);
 extern int data_020a0db0;
 extern s16 data_02082214[];
 
-#define LA(p) ((int)(((s64)(int)(p))))
+#define LA(p) ((int)(p))
 
 void func_ov006_020cf820(char *c)
 {

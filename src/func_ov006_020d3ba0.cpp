@@ -89,7 +89,7 @@ extern "C" void func_ov006_020d3ba0(char *sb)
     {
         u32 t = *(u32 *)(sb + 0xbc);
         if (t >= 0x13) {
-            int *p5368 = (int *)(((int)sb + 0x5368) & 0xFFFFFFFFFFFFFFFFLL);
+            int *p5368 = (int *)((int)sb + 0x5368);
             *p5368 = (int)((t / 10 - 1) * 5) + *p5368;
             if (*(s32 *)(sb + 0x5368) > 0x64) {
                 *(s32 *)(sb + 0x5368) = 0x64;
@@ -161,7 +161,7 @@ extern "C" void func_ov006_020d3ba0(char *sb)
         func_ov004_020ae5c4(sb, 0xe0, -0xd4, 0xe0, *(s32 *)(sb + 0x4700), *(s32 *)(sb + 0x53e4), 1);
     }
 
-    (*(u8 *)(((int)sb + 0x470a) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(u8 *)((int)sb + 0x470a))++;
     {
         typedef struct { Pair e[11]; } Blk88;
         *(Blk88 *)sp3C = *(Blk88 *)data_ov006_0213b8b8;
@@ -263,7 +263,7 @@ extern "C" void func_ov006_020d3ba0(char *sb)
         }
     }
 
-    (*(u8 *)(((unsigned int)sb + 0x470au) & 0xFFFFFFFFFFFFFFFFuLL))++;
+    (*(u8 *)((unsigned int)sb + 0x470au))++;
     if (VCALL90(sb) == 0) {
         int v = *(int *)(data_ov006_0212e1b8 + *(s32 *)(sb + 0x53d4) * 0x1c);
         if (v != 0 && v == 1) {
@@ -274,7 +274,7 @@ extern "C" void func_ov006_020d3ba0(char *sb)
     }
 
     *(u8 *)(sb + 0x4707) = 0;
-    (*(u8 *)(((long long)(int)(sb + 0x470a)) & 0xFFFFFFFFFFFFFFFFLL))++;
+    (*(u8 *)(sb + 0x470a))++;
     {
         int i, j, off;
         for (i = 0, off = 0; i < 0x100; i++, off += 0x158) {

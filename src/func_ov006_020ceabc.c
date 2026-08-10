@@ -27,7 +27,7 @@ void func_ov006_020ceabc(char *self, int *v1, int *v2, int a3, short a4)
     *(int *)(self + 0x3c) = v2[1];
     *(int *)(self + 0x40) = v2[2];
     {
-        int *p38 = (int *)(int)(((long long)(int)(self + 0x38)));
+        int *p38 = (int *)(int)(self + 0x38);
         *(int *)(self + 0x44) = p38[0];
         *(int *)(self + 0x48) = p38[1];
         *(int *)(self + 0x4c) = p38[2];
@@ -37,7 +37,7 @@ void func_ov006_020ceabc(char *self, int *v1, int *v2, int a3, short a4)
     *(int *)(self + 0x18) = *(int *)(self + 0xc);
     *(int *)(self + 0x1c) = *(int *)(self + 0x10);
     {
-        int *p14 = (int *)(int)(((long long)(int)(self + 0x14)));
+        int *p14 = (int *)(int)(self + 0x14);
         *(int *)(self + 0x20) = p14[0];
         *(int *)(self + 0x24) = p14[1];
         *(int *)(self + 0x28) = p14[2];

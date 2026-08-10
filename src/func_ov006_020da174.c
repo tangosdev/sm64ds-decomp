@@ -37,7 +37,7 @@ int func_ov006_020da174(Struct30 *base)
   s32 max_idx;
   s32 second_idx;
   max_val = 0;
-  h = (s16 *) ((u32) (((u64) ((u32) hist)) & 0xFFFFFFFFFFFFFFFFULL));
+  h = (s16 *) ((u32) ((u64) ((u32) hist)));
   h[0] = max_val;
   h[1] = max_val;
   h[2] = max_val;

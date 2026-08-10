@@ -17,7 +17,7 @@ int func_ov002_020c7cbc(char* self)
 
         if (*(signed char*)(self + 0x719) >= 0) {
             LoadKeyModels(*(signed char*)(self + 0x719));
-            *(u8*)(((long long)(int)(self + 0x718))) |= 0x10;
+            *(u8*)(self + 0x718) |= 0x10;
             _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x53, 0x40000000, 0x1000, 0);
             return 1;
         }

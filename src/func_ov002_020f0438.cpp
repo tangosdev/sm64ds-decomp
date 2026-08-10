@@ -27,7 +27,7 @@ void func_ov002_020f0438(Actor* thiz)
   if (!o) return;
   if (thiz->b10e != 0xf && thiz->b10e != o->b110) return;
   func_02012790(0x25);
-  (*(unsigned char*)(((int)o + 0x110) & 0xFFFFFFFFFFFFFFFFULL))++;
+  (*(unsigned char*)((int)o + 0x110))++;
   {
     Vector3 v;
     v.x = thiz->pos.x;
@@ -35,7 +35,7 @@ void func_ov002_020f0438(Actor* thiz)
     v.z = thiz->pos.z;
     _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(thiz, v, o->b110, false, 0, 0);
   }
-  *(int*)(((int)thiz + 0xec) & 0xFFFFFFFFFFFFFFFFULL) |= 1;
+  *(int*)((int)thiz + 0xec) |= 1;
   if (o->b110 == 5) { thiz->b113 = 0x1e; return; }
   if (thiz->b10f != 2) return;
   _ZN9ActorBase18MarkForDestructionEv(thiz);

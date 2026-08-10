@@ -78,7 +78,7 @@ void func_ov002_020d8a50(char* self, int which)
             return;
     }
 
-    *(u16*)((long long)(int)(self + 0x6ce)) &= ~0x20;
+    *(u16*)(self + 0x6ce) &= ~0x20;
     _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, (struct Vector3*)(self + 0x74));
 
     {

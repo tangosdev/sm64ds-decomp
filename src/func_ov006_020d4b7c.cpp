@@ -67,7 +67,7 @@ struct VtObj {
     virtual int m36();
 };
 
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))&0xFFFFFFFFFFFFFFFFLL))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 #define I(o)  (*(int*)(c+(o)))
 #define B(o)  (*(u8*)(c+(o)))
 #define H(o)  (*(short*)(c+(o)))
@@ -260,7 +260,7 @@ extern "C" int func_ov006_020d4b7c(char *c)
                             z = c + j * 8;
                             IAP(WP, 0x4768) += IP(z, 0x4724);
                             IAP(WP, 0x476c) += IP(z, 0x4728);
-                            IP(WP, 0x4770) = MULFX(cosB, (int)((0x1000LL * (int)(((s64)(int)cA) & 0xFFFFFFFFFFFFFFFFLL) + 0x800) >> 12));
+                            IP(WP, 0x4770) = MULFX(cosB, (int)((0x1000LL * (int)(cA) + 0x800) >> 12));
                             IAP(WP, 0x4774) = MULFX(cosB, (int)((0x1000LL * sinA + 0x800) >> 12));
                         }
                         IAP(WP, 0x4774) -= 0x400;

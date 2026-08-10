@@ -4,8 +4,8 @@ extern s16 data_0209f4a2[];
 void func_ov002_020cc05c(char *self)
 {
     int idx = data_020a0e40 * 0x18;
-    s16 curval = *(s16*)(((int)self + 0x69c) & 0xFFFFFFFFFFFFFFFFull);
-    *(s16*)(((int)self + 0x69c) & 0xFFFFFFFFFFFFFFFFull) = curval + (s16)(int)(((s64)*(s16*)((char*)data_0209f4a2 + idx) * 0x80 + 0x800) >> 12);
+    s16 curval = *(s16*)((int)self + 0x69c);
+    *(s16*)((int)self + 0x69c) = curval + (s16)(int)(((s64)*(s16*)((char*)data_0209f4a2 + idx) * 0x80 + 0x800) >> 12);
     {
         s16 tv2 = *(s16*)((char*)data_0209f4a2 + idx);
     {

@@ -26,7 +26,7 @@ void func_ov002_020e88a8(char* self) {
     int r;
 
     if (((struct Flags*)(self + 0x4a2))->b3) {
-        ((struct Flags*)((int)(((long long)(int)(self + 0x4a2)))))->b3 = 0;
+        ((struct Flags*)((int)(self + 0x4a2)))->b3 = 0;
         *(unsigned short*)(self + 0x100) = 0;
     }
     func_02012694(0x55, self + 0x74);
@@ -56,7 +56,7 @@ void func_ov002_020e88a8(char* self) {
     p = _ZN5Actor13ClosestPlayerEv(self);
     if (p == 0) return;
     {
-        int* s = (int*)((int)(((long long)(int)(p + 0x5c))));
+        int* s = (int*)((int)(p + 0x5c));
         v.x = s[0];
         v.y = s[1];
         v.z = s[2];

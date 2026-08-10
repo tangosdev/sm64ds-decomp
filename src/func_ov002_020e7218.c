@@ -11,7 +11,7 @@ void func_ov002_020e7218(char* c, char* a, int gate) {
         struct Vector3 pos[2];
         int b;
         int* v;
-        v = (int*)((int)(((long long)(int)(a + 0x5c))));
+        v = (int*)((int)(a + 0x5c));
         pos[0].x = v[0];
         pos[0].y = v[1];
         pos[0].z = v[2];
@@ -23,6 +23,6 @@ void func_ov002_020e7218(char* c, char* a, int gate) {
         pos[1].y = pos[0].y;
         _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &pos[1], data_0209f310[*(unsigned char*)(a + 0x6d8)], b, 0x15, a);
     }
-    *(unsigned short*)((int)(((long long)(int)(c + 0x4a2)))) |= 0x40;
+    *(unsigned short*)((int)(c + 0x4a2)) |= 0x40;
     func_ov002_020e7554(c);
 }

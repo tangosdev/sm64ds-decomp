@@ -5,14 +5,14 @@ void func_ov006_020dce3c(char* c)
     if (*(unsigned short*)(c + 0x4d08) == *(unsigned short*)(c + 0x4d0a))
         return;
     {
-        unsigned short* e = (unsigned short*)(((long long)(int)(c + 0x4d0c)));
+        unsigned short* e = (unsigned short*)(c + 0x4d0c);
         *e = *e + 1;
     }
     if (*(unsigned short*)(c + 0x4d0c) < 8)
         return;
     *(unsigned short*)(c + 0x4d0c) = 0;
     {
-        unsigned short* p = (unsigned short*)(((long long)(int)(c + 0x4d0a)));
+        unsigned short* p = (unsigned short*)(c + 0x4d0a);
         *p = *p + 1;
     }
 }

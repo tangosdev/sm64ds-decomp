@@ -36,7 +36,7 @@ void func_ov002_020ea9d0(void *arg0)
             return;
         }
     }
-    *(u32 *)((int)(((long long)(int)(c + 0xb0)))) |= 0x4000000;
+    *(u32 *)((int)(c + 0xb0)) |= 0x4000000;
     data_0209b454 |= 0x4000000;
     *(u16 *)(c + 0x496) = 0;
     func_02012694(0x57, c + 0x74);
@@ -49,7 +49,7 @@ void func_ov002_020ea9d0(void *arg0)
             *(s32 *)(c + 0x440) = 3;
         } else {
             *(s32 *)(c + 0x440) = 2;
-            op = (struct Vector3 *)((int)(((long long)(int)(other + 0x5c))));
+            op = (struct Vector3 *)((int)(other + 0x5c));
             *(struct Vec1 *)&v0.x = *(struct Vec1 *)&op->x;
             *(struct Vec1 *)&v0.y = *(struct Vec1 *)&op->y;
             *(struct Vec1 *)&v0.z = *(struct Vec1 *)&op->z;

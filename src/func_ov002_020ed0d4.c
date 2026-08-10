@@ -36,7 +36,7 @@ void func_ov002_020ed0d4(char* self)
 
     com = *(char**)(self + 0x38c);
     *(int*)(self + 0x3f4) = -0x68000;
-    p = (int*)((((long long)(int)(com + 0xa4))));
+    p = (int*)(com + 0xa4);
     *(int*)(self + 0xa4) = p[0];
     *(int*)(self + 0xa8) = p[1];
     *(int*)(self + 0xac) = p[2];
@@ -56,8 +56,8 @@ void func_ov002_020ed0d4(char* self)
             if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
                 *(short*)(self + 0x3e4) = *(short*)(*(char**)(self + 0x38c) + 0x8c);
                 *(short*)(self + 0x3e8) = *(short*)(*(char**)(self + 0x38c) + 0x90);
-                pt1 = (int*)((((long long)(int)(com + 0x68))));
-                pt2 = (int*)((((long long)(int)(com + 0x5c))));
+                pt1 = (int*)(com + 0x68);
+                pt2 = (int*)(com + 0x5c);
                 t1.x = pt1[0];
                 t1.y = pt1[1];
                 t1.z = pt1[2];
@@ -79,8 +79,8 @@ void func_ov002_020ed0d4(char* self)
         } else {
             *(short*)(self + 0x3e4) = *(short*)(com + 0x8c);
             *(short*)(self + 0x3e8) = *(short*)(com + 0x90);
-            pv1 = (int*)((((long long)(int)(com + 0x68))));
-            pv2 = (int*)((((long long)(int)(com + 0x5c))));
+            pv1 = (int*)(com + 0x68);
+            pv2 = (int*)(com + 0x5c);
             v1.x = pv1[0];
             v1.y = pv1[1];
             v1.z = pv1[2];

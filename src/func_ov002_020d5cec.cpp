@@ -30,7 +30,7 @@ extern "C" int func_ov002_020d5cec(char* c)
     _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x56, 0x40000000, 0x1000, 0);
 
     d0 = *(char**)(c + 0xd0);
-    m = (short*)(int)(((long long)(int)(d0 + 0x8c)));
+    m = (short*)(int)(d0 + 0x8c);
     *(short*)(c + 0x92) = m[0];
     *(short*)(c + 0x94) = m[1];
     *(short*)(c + 0x96) = m[2];
@@ -38,7 +38,7 @@ extern "C" int func_ov002_020d5cec(char* c)
     *(int*)(c + 0x98) = 0x18000;
     *(int*)(c + 0xa8) = 0x18000;
 
-    p = (char*)(int)(((long long)(int)(*(char**)(c + 0xd0) + 0x5c)));
+    p = (char*)(int)(*(char**)(c + 0xd0) + 0x5c);
     v1.x = *(int*)p;
     y1 = *(int*)(p + 4);
     v1.y = y1;
@@ -63,7 +63,7 @@ extern "C" int func_ov002_020d5cec(char* c)
         *(int*)(c + 0x64) = v2.z;
     }
     *(unsigned char*)(c + 0x6f5) = 0x1f;
-    *(int*)(int)(((long long)(int)(c + 0x2ec))) &= ~2;
+    *(int*)(int)(c + 0x2ec) &= ~2;
     *(unsigned char*)(c + 0x6e3) = 2;
     *(unsigned short*)(c + 0x6a4) = 4;
     *(unsigned char*)(c + 0x708) = 1;

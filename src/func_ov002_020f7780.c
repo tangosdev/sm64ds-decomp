@@ -33,7 +33,7 @@ int func_ov002_020f7780(char *self, void *unused, int mode)
 
             idx = *(volatile unsigned char *)&data_0209f250;
             {
-                char *p = (char *)(((long long)(int)data_0209f394) & 0xFFFFFFFFFFFFFFFFLL);
+                char *p = (char *)(data_0209f394);
                 short ang = *(short *)(*(void **)(p + (idx << 2)) + 0x8e);
 
                 Vec3_RotateYAndTranslate((int *)(c + 0x5c), (int *)(r4 + 0x8c), (short)(ang + 0x8000), v);
@@ -49,8 +49,8 @@ int func_ov002_020f7780(char *self, void *unused, int mode)
         if (state <= 0x6a) {
             if (state > 0x3c) {
                 Math_Function_0203b0fc((int *)(c + 0xf4), -0xa000, 0xcc, 0x7fffffff);
-                short *p94 = (short *)(((long long)(int)(c + 0x94)) & 0xFFFFFFFFFFFFFFFFLL);
-                short *p92 = (short *)(((unsigned long long)(unsigned int)(c + 0x92)) & 0xFFFFFFFFFFFFFFFFULL);
+                short *p94 = (short *)(c + 0x94);
+                short *p92 = (short *)(c + 0x92);
                 *p94 = *p94 + 0x78;
                 *p92 = *p92 + 0x40;
 
@@ -90,7 +90,7 @@ int func_ov002_020f7780(char *self, void *unused, int mode)
     }
 
     {
-        short *pfc = (short *)(((long long)(unsigned int)(c + 0xfc)) & 0xFFFFFFFFFFFFFFFFLL);
+        short *pfc = (short *)(c + 0xfc);
         *pfc = *pfc + 1;
     }
 

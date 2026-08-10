@@ -38,7 +38,7 @@ void func_ov002_020bbb14(char* self)
     unsigned id;
 
     {
-        s16* pa = (s16*)((long long)(int)(self + 0x8c));
+        s16* pa = (s16*)(self + 0x8c);
         *pa = *pa + 0x2000;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);

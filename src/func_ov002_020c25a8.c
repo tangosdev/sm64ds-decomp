@@ -127,13 +127,13 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x380);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
-        *(unsigned char*)(((long long)(int)(c + 0x6e9))) |= 1;
+        *(unsigned char*)(c + 0x6e9) |= 1;
 
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x380))
-        *(unsigned char*)(((long long)(int)(c + 0x6e9))) |= 2;
+        *(unsigned char*)(c + 0x6e9) |= 2;
 
     if (func_02035638(c + 0x380))
-        *(unsigned char*)(((long long)(int)(c + 0x6e9))) |= 4;
+        *(unsigned char*)(c + 0x6e9) |= 4;
 
     if (*(unsigned char*)(c + 0x706) == 0)
         func_020371fc(c + 0x380);
@@ -184,7 +184,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
     }
 
     if (arg1 != 0) {
-        *(unsigned char*)(((long long)(int)(c + 0x6e9))) |= 1;
+        *(unsigned char*)(c + 0x6e9) |= 1;
         *(unsigned char*)(c + 0x6de) = 0;
         *(unsigned char*)(c + 0x712) = 0;
     }
@@ -201,8 +201,8 @@ int func_ov002_020c25a8(void *arg0, int arg1)
     *(int*)(c + 0x568) = wn.z;
 
     if (*(unsigned char*)(c + 0x706) == 0) {
-        *(int*)(((long long)(int)(c + 0x5c))) -= *(int*)(c + 0x560) * 2;
-        *(int*)(((long long)(int)(c + 0x64))) -= *(int*)(c + 0x568) * 2;
+        *(int*)(c + 0x5c) -= *(int*)(c + 0x560) * 2;
+        *(int*)(c + 0x64) -= *(int*)(c + 0x568) * 2;
     }
 
     ret = func_ov002_020d0580(c);

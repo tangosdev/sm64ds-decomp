@@ -24,7 +24,7 @@ extern "C" void func_ov004_020b3b38(char* c) {
             buf._11 = v;
             t = 0x1000 - t;
             do {
-                s16 f = (s16)((((unsigned int)(*(int*)e << 7)) >> 23) & 0xFFFFFFFFFFFFFFFFull);
+                s16 f = (s16)(((unsigned int)(*(int*)e << 7)) >> 23);
                 int off;
                 if (f > 0x100) f -= 0x200;
                 off = f * t;
