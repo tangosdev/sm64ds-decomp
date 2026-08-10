@@ -969,6 +969,9 @@ void *LoadFile(int handle)
        the cache key above matches only when both agree; keep the handle. */
     ++used;
     s->fileID = (unsigned short)handle;
+    if (getenv("PORT_TRACE_LOADFILE"))
+        std::fprintf(stderr, "  ::LoadFile(handle=%d/0x%x) -> filePtr=%p\n",
+                     handle, handle, s->filePtr);
     return s->filePtr;
 }
 

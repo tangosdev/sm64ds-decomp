@@ -336,6 +336,13 @@ static int  mvL_dosetfile(void *self, char *f, int a, int b)
         fprintf(stderr, "  dosetfile self=%p f=%p a=%d b=%d\n", self, f, a, b);
     return ((Model *)self)->Model::DoSetFile(f, a, b);
 }
+/* func_02016ff4's matched `Thing` shadow dispatches DoSetFile at Itanium slot 1
+   with a THISCALL shape (this in ecx, file/a/b on the stack) -- GCC compiled
+   that TU's virtual call as `mov this,%ecx; call *(vptr+4)`. ModelBase::SetFile
+   uses the SysV shape (this on the stack) at slot 2. The two callers need
+   different-shaped thunks, so slot 1 gets this __thiscall (ecx) version. */
+static int __thiscall mvL_dosetfile_tc(void *self, char *f, int a, int b)
+{ return ((Model *)self)->Model::DoSetFile(f, a, b); }
 static void mvL_updateverts(void *self) { ((Model *)self)->Model::UpdateVerts(); }
 static void mvL_virtual10(void *self, void *m)
 { ((Model *)self)->Model::Virtual10(*(Matrix4x3 *)m); }
@@ -366,7 +373,18 @@ void hal_fill_model_vtable(void)
        MSVC numbering shifted everything up by one and made SetFile call
        UpdateVerts on an un-initialised model (garbage data.modelFile). */
     _ZTV5Model[0] = (void *)mvL_dtor;
-    _ZTV5Model[1] = (void *)mvL_dtor;
+    /* Slot 1 dual-fills DoSetFile as well as the D0 dtor: func_02016ff4's
+       matched `Thing` shadow (3 virtuals) compiles self->v2 (DoSetFile) to
+       vtable INDEX 1 on this GCC/x86 build (objdump: call *0x4(%eax)), one slot
+       below ModelBase::SetFile's index-2 dispatch. Stage::LoadModel reaches
+       DoSetFile only through func_02016ff4, so without this the stage model's
+       DoSetFile is skipped and ModelComponents.modelFile stays 0. The D0 dtor
+       is never virtually dispatched on the reached path (Models destruct by
+       name), so parking DoSetFile here is safe -- same dual-fill idea the
+       Render slot uses on the MSVC side. The slot-1 caller (func_02016ff4)
+       passes this in ecx, so slot 1 gets the __thiscall thunk; slot 2's caller
+       (ModelBase::SetFile) passes this on the stack, so slot 2 stays cdecl. */
+    _ZTV5Model[1] = (void *)mvL_dosetfile_tc;
     _ZTV5Model[2] = (void *)mvL_dosetfile;
     _ZTV5Model[3] = (void *)mvL_updateverts;
     _ZTV5Model[4] = (void *)mvL_virtual10;

@@ -1772,6 +1772,12 @@ int main(void)
         int hit = _ZN13RaycastGround10DetectClsnEv(rg);
         printf("ground probe at spawn: hit=%d ground_y=%d (%.1f units)\n",
                hit, *(int *)(rg + 0x3c), *(int *)(rg + 0x3c) / 4096.0f);
+#ifdef _WIN32 /* LINUX: this diagnostic hand-dispatches vtable slot 6 with a
+   hardcoded __fastcall (ecx-this) cast, which is the MSVC collision-vtable ABI.
+   On Linux the slot is a SysV-cdecl thunk (see hal/clsn_vtable.cpp slotL_ground),
+   so the fastcall cast hands it a garbage this. The real ground probe above
+   (RaycastGround::DetectClsn) already ran and printed the hit; this extra
+   direct-slot diagnostic is Windows-only. */
         {
             extern void *data_020a0c80[];
             int direct = ((int(__fastcall *)(void *, void *, void *))(
@@ -1792,6 +1798,7 @@ int main(void)
                 printf("manual filter(rg, p)=%d p2=%p\n", f, p2);
             }
         }
+#endif /* _WIN32 (direct-slot6 fastcall diagnostic) */
         /* floor map: direct line walks over a coarse grid */
         for (int gz = -400; gz <= 400; gz += 200) {
             char row[64] = {0};
