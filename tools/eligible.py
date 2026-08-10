@@ -64,6 +64,19 @@ ANYSYM = re.compile(r"^(\S+)\s+kind:")
 IGNORE_SECTIONS = (".comment", ".debug", ".line", ".note")
 
 
+def module_label(module_dir):
+    """Stable public module label for an enroll.candidates() config directory."""
+    rel = pathlib.Path(module_dir).relative_to(CONFIG)
+    parts = rel.parts
+    if parts == ("arm9",):
+        return "arm9"
+    if len(parts) == 2 and parts[0] == "arm9":
+        return parts[1]              # itcm / dtcm
+    if len(parts) == 3 and parts[:2] == ("arm9", "overlays"):
+        return parts[2]              # ovNNN
+    return "/".join(parts)
+
+
 def load_report(path=None):
     """The eligibility report, as (entries, commit, dirty).
 
@@ -228,13 +241,20 @@ def main():
     jobs = [(rel, name, addr, size, sec, known, BP.version_for(rel, name) or VERSION,
              not args.no_isolate)
             for (_d, name, rel, addr, size, sec) in cands]
+    # Do not key this by symbol alone. Overlays occupy the same address window and
+    # may legitimately repeat a symbol spelling; the enrolled source path is the
+    # disambiguator already carried through classify().
+    identities = {(rel, name): (module_label(d), addr)
+                  for (d, name, rel, addr, _size, _sec) in cands}
     print(f"classifying {len(jobs)} enrolled functions with -j{args.jobs} ...")
 
     results, reasons = [], collections.Counter()
     done = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
         for rel, name, reason, missing in ex.map(classify, jobs):
-            results.append({"file": rel, "name": name, "reason": reason,
+            module, addr = identities[(rel, name)]
+            results.append({"file": rel, "name": name, "module": module,
+                            "addr": f"0x{addr:08x}", "reason": reason,
                             "missing": missing})
             reasons["ELIGIBLE" if reason is None else reason.split(":")[0]] += 1
             done += 1
