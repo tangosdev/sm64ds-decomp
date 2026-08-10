@@ -56,7 +56,7 @@ src/_ZN4Toad8BehaviorEv.cpp:
     complete
     .text start:0x02129878 end:0x02129a7c
 
-src/_ZN4Toad13InitResourcesEv.c:
+src/_ZN4Toad13InitResourcesEv.cpp:
     complete
     .text start:0x02129a7c end:0x02129cd0
 
