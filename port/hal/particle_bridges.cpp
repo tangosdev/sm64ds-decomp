@@ -107,7 +107,11 @@ unsigned _ZN5Model13GetVramOffsetEj(unsigned size)
 unsigned _ZN5Model13GetVramOffsetEj(unsigned size);  /* Linux: real symbol from src/_ZN5Model13GetVramOffsetEj */
 #endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of Memory::Allocate(unsigned) -> self-recurse on GCC. On Linux bind to the real src/_ZN6Memory8AllocateEj.cpp. */
 void *_ZN6Memory8AllocateEj(unsigned size) { return Memory::Allocate(size); }
+#else
+void *_ZN6Memory8AllocateEj(unsigned size);
+#endif /* _WIN32 */
 
 /* cstd::div wears its pre-naming address in func_0204dab4, the effect VM's
    scale ramp: `0x1000 - func_02052f4c(f2e << 12, f2c)`. 0x02052f4c IS
