@@ -610,8 +610,7 @@ struct Player : Actor {
     int St_Wait_Main();
     int St_Walk_Init();
     int St_Walk_Main();
-    /* ov002 0x020e17f8, size 0xb0, immediately after St_WallJump_Main. Its
-       source is still an unmatched draft, so nothing builds against this yet. */
+    /* ov002 0x020e17f8, size 0xb0, immediately after St_WallJump_Main. */
     int St_WallJump_Init();
     int St_WallJump_Main();
     int St_WallSlide_Init();
