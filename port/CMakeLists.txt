@@ -26,7 +26,13 @@ if(NOT MSVC)
     # These are all well-defined and match the ROM; -fpermissive downgrades them
     # to warnings so the byte-identical source stays unedited. MSVC is unaffected.
     add_compile_options(-fpermissive)
-    add_link_options(-m32)
+    # MSVC's linker resolves a duplicate symbol by taking the first definition and
+    # dropping the rest (the port relies on this: several ROM bodies exist both in
+    # a byte-locked src TU and as a HAL host copy that supersedes it). GNU ld
+    # errors by default; --allow-multiple-definition matches the MSVC behavior so
+    # the same source set links. The HAL copy (linked first) is the one kept, which
+    # is the intended one.
+    add_link_options(-m32 "-Wl,--allow-multiple-definition")
     # Force-include the MSVC-keyword shims into every TU so the HAL's __fastcall
     # vtable-slot shims and __thiscall/__stdcall casts compile on GCC/Clang
     # without editing each file's include list. MSVC never sees this.
