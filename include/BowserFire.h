@@ -23,7 +23,9 @@ struct BowserFire {
     u8  pad_111[0x1bb];
     s32 unk_2cc;            /* 0x2cc */
     u8  mMovingCylinderClsn;            /* 0x2d0 */
-    u8  pad_2d1[0x33];
+    u8  pad_2d1[0x17];
+    s32 unk_2e8;            /* 0x2e8 */
+    u8  pad_2ec[0x18];
     u8  mShadowModel;            /* 0x304 */
     u8  pad_305[0x57];
     s32 unk_35c;            /* 0x35c */
@@ -43,6 +45,7 @@ struct BowserFire {
     s32 unk_388;            /* 0x388 */
 #ifdef __cplusplus
     /* methods */
+    int InitResources();
     int CleanupResources();
     int Render();
     int Behavior();
