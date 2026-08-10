@@ -98,6 +98,12 @@ void *Allocate(u32 size, int align, Heap *heap)
 
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
+#ifndef _WIN32
+/* Linux: alias the C++ name Memory::defaultHeapPtr onto the C storage (weak,
+   data-only). Restores the DS by-address identity /alternatename gives on MSVC. */
+extern "C" void *_ZN6Memory14defaultHeapPtrE
+    __attribute__((weak, alias("data_020a0ea0")));
+#endif
 
 // Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.

@@ -36,6 +36,14 @@ void MultiStore_Int(int val, int *dst, int len)
 #pragma comment(linker, "/alternatename:_data_020a4d38=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory16rootHeapIteratorE@@3DA=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+#ifndef _WIN32
+/* Linux: /alternatename has no GCC analog. The by-address identity the DS gets
+   for free (one storage, C name data_020a4d38 == C++ name
+   Memory::rootHeapIterator) is restored with a weak symbol alias onto the one
+   storage above. Data only (no calling convention), so this is exactly safe. */
+extern "C" char data_020a4d38[0x20]
+    __attribute__((weak, alias("_ZN6Memory16rootHeapIteratorE")));
+#endif
 // FUNCTION alias only where the conventions MATCH: this reference and the C
 // definition are both __cdecl free functions.
 #pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
