@@ -384,10 +384,22 @@ extern "C" void hal_fill_koopa_vtable(void)
 // Behavior/ChangeState are host copies (extern "C" in the StateDispatch file).
 #include "Koopa.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Koopa13InitResourcesEv(void *self)
 { return ((Koopa *)self)->Koopa::InitResources(); }
+#else
+int _ZN5Koopa13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Koopa13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Koopa16CleanupResourcesEv(void *self)
 { return ((Koopa *)self)->Koopa::CleanupResources(); }
+#else
+int _ZN5Koopa16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Koopa16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Koopa8BehaviorEv(void *self)
 { return ((Koopa *)self)->Koopa::Behavior(); }
+#else
+int _ZN5Koopa8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN5Koopa8BehaviorEv */
+#endif /* _WIN32 */
 }

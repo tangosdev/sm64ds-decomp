@@ -593,16 +593,40 @@ extern "C" void *port_factory_float_on_water_jrb(void)
 #include "FloatOnWaterPlatformJrb.h"
 #include "Unagi.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6ShipUp13InitResourcesEv(void *self)
 { return ((ShipUp *)self)->ShipUp::InitResources(); }
+#else
+int _ZN6ShipUp13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6ShipUp13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6ShipUp16CleanupResourcesEv(void *self)
 { return ((ShipUp *)self)->ShipUp::CleanupResources(); }
+#else
+int _ZN6ShipUp16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6ShipUp16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6ShipUp8BehaviorEv(void *self)
 { return ((ShipUp *)self)->ShipUp::Behavior(); }
+#else
+int _ZN6ShipUp8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN6ShipUp8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN23FloatOnWaterPlatformJrb13InitResourcesEv(void *self)
 { return ((FloatOnWaterPlatformJrb *)self)->FloatOnWaterPlatformJrb::InitResources(); }
+#else
+int _ZN23FloatOnWaterPlatformJrb13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv(void *self)
 { return ((FloatOnWaterPlatformJrb *)self)->FloatOnWaterPlatformJrb::CleanupResources(); }
+#else
+int _ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Unagi13InitResourcesEv(void *self)
 { return ((Unagi *)self)->Unagi::InitResources(); }
+#else
+int _ZN5Unagi13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Unagi13InitResourcesEv */
+#endif /* _WIN32 */
 }

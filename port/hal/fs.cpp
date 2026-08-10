@@ -99,7 +99,11 @@ void *Allocate(u32 size);
 void *Allocate(u32 size, int align);
 void Deallocate(void *p);
 }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN6Memory10DeallocateEPv(void *p) { Memory::Deallocate(p); }
+#else
+extern "C" void _ZN6Memory10DeallocateEPv(void *p);  /* Linux: real symbol from src/_ZN6Memory10DeallocateEPv */
+#endif /* _WIN32 */
 
 extern "C" {
 u32 data_0209d3bc; /* last fileID touched; the game's FS breadcrumb */

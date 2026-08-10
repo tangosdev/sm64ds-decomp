@@ -424,10 +424,22 @@ extern "C" void hal_fill_bowser_puzzle_pair_vtables(void)
 #include "BowserPuzzleManager.h"
 #include "BowserPuzzlePiece.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN19BowserPuzzleManager13InitResourcesEv(void *self)
 { ((BowserPuzzleManager *)self)->BowserPuzzleManager::InitResources(); return 1; }
+#else
+int _ZN19BowserPuzzleManager13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN19BowserPuzzleManager13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN19BowserPuzzleManager16CleanupResourcesEv(void *self)
 { return ((BowserPuzzleManager *)self)->BowserPuzzleManager::CleanupResources(); }
+#else
+int _ZN19BowserPuzzleManager16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN19BowserPuzzleManager16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN17BowserPuzzlePiece13InitResourcesEv(void *self)
 { return ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::InitResources(); }
+#else
+int _ZN17BowserPuzzlePiece13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN17BowserPuzzlePiece13InitResourcesEv */
+#endif /* _WIN32 */
 }

@@ -688,18 +688,42 @@ extern "C" void hal_fill_sound_object_vtable(void)
 #include "IceSheet.h"
 #include "OneUpLogo.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceSheet13InitResourcesEv(void *self)
 { return ((IceSheet *)self)->IceSheet::InitResources(); }
+#else
+int _ZN8IceSheet13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8IceSheet13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceSheet16CleanupResourcesEv(void *self)
 { return ((IceSheet *)self)->IceSheet::CleanupResources(); }
+#else
+int _ZN8IceSheet16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8IceSheet16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceSheet8BehaviorEv(void *self)
 { return ((IceSheet *)self)->IceSheet::Behavior(); }
+#else
+int _ZN8IceSheet8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN8IceSheet8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceSheet6RenderEv(void *self)
 { return ((IceSheet *)self)->IceSheet::Render(); }
+#else
+int _ZN8IceSheet6RenderEv(void *self);  /* Linux: real symbol from src/_ZN8IceSheet6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9OneUpLogo13InitResourcesEv(void *self)
 { return ((OneUpLogo *)self)->OneUpLogo::InitResources(); }
+#else
+int _ZN9OneUpLogo13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9OneUpLogo13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9OneUpLogo6RenderEv(void *self)
 { return ((OneUpLogo *)self)->OneUpLogo::Render(); }
+#else
+int _ZN9OneUpLogo6RenderEv(void *self);  /* Linux: real symbol from src/_ZN9OneUpLogo6RenderEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -909,8 +933,16 @@ extern "C" void hal_fill_mother_penguin_vtable(void)
 // copy), not matched src -- this face still applies unchanged, it just
 // resolves to the host copy's definition.
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN7SkiLift13InitResourcesEv(void *self)
 { return ((SkiLift *)self)->SkiLift::InitResources(); }
+#else
+int _ZN7SkiLift13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN7SkiLift13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN7SkiLift8BehaviorEv(void *self)
 { return ((SkiLift *)self)->SkiLift::Behavior(); }
+#else
+int _ZN7SkiLift8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN7SkiLift8BehaviorEv */
+#endif /* _WIN32 */
 }

@@ -34,14 +34,30 @@ void *_ZN6CameraC1Ev(void *self);
 
 /* method faces (the definitions are MSVC methods; every caller and the
    vtable want C names) */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera13InitResourcesEv(void *self)
 { return ((Camera *)self)->Camera::InitResources(); }
+#else
+int _ZN6Camera13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6Camera13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera8BehaviorEv(void *self)
 { return ((Camera *)self)->Camera::Behavior(); }
+#else
+int _ZN6Camera8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN6Camera8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera6RenderEv(void *self)
 { return ((Camera *)self)->Camera::Render(); }
+#else
+int _ZN6Camera6RenderEv(void *self);  /* Linux: real symbol from src/_ZN6Camera6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN6Camera16OnPendingDestroyEv(void *self)
 { ((Camera *)self)->Camera::OnPendingDestroy(); }
+#else
+void _ZN6Camera16OnPendingDestroyEv(void *self);  /* Linux: real symbol from src/_ZN6Camera16OnPendingDestroyEv */
+#endif /* _WIN32 */
 
 /* ---- the vtable -------------------------------------------------------
    ROM SLOT ORDER, the ArrowSignRight layout (hal/actor_vtables.cpp): the

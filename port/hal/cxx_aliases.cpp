@@ -70,8 +70,12 @@ void *data_020992a4[4], *data_020992b4[4];
 namespace cstd { int strcmp(const char *a, const char *b);
                 char *strchr(const char *s, char ch); }
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b)
 { return cstd::strcmp(a, b); }
+#else
+int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b);  /* Linux: real symbol from src/_ZN4cstd6strcmpEPKcS1_ */
+#endif /* _WIN32 */
 char *_ZN4cstd6strchrEPKcc(const char *s, char ch)
 { return cstd::strchr(s, ch); }
 
@@ -340,8 +344,12 @@ int data_0209a61c[4], data_020a6128, data_020a6134[4];
 /* Scene::ResetHardwareRegisters is defined against this exact local shadow
    in its own TU; mirror it so the manglings agree. */
 struct Scene { void ResetHardwareRegisters(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Scene22ResetHardwareRegistersEv(void *s)
 { ((Scene *)s)->Scene::ResetHardwareRegisters(); }
+#else
+extern "C" void _ZN5Scene22ResetHardwareRegistersEv(void *s);  /* Linux: real symbol from src/_ZN5Scene22ResetHardwareRegistersEv */
+#endif /* _WIN32 */
 
 #pragma comment(linker, "/alternatename:?data_020a0e98@@3EA=_data_020a0e98")
 #pragma comment(linker, "/alternatename:?data_020a4d6c@@3PAEA=_data_020a4d6c")
@@ -423,8 +431,12 @@ void Heap::_Deallocate(void *ptr) { _ZN4Heap10DeallocateEPv(this, ptr); }
 /* RaycastGround::DetectClsn is defined against a local shadow in its own
    TU; mirror the shadow (no real header here) so the manglings agree. */
 class RaycastGround { public: int DetectClsn(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 { return ((RaycastGround *)self)->DetectClsn(); }
+#else
+extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);  /* Linux: real symbol from src/_ZN13RaycastGround10DetectClsnEv */
+#endif /* _WIN32 */
 #pragma comment(linker, "/alternatename:?data_0209f254@@3EA=_data_0209f254")
 #pragma comment(linker, "/alternatename:?data_0209f4a6@@3FA=_data_0209f4a6")
 #pragma comment(linker, "/alternatename:?func_ov002_020bdd9c@@YAXPAX@Z=_func_ov002_020bdd9c")

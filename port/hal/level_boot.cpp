@@ -974,8 +974,12 @@ void *LoadFile(int handle)
 
 /* Method faces: the three MeshCollider helpers the boot calls by their
    Itanium names while their definitions are real MSVC members. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file)
 { MeshCollider::UpdateFileOffsets(*(KCL_File *)file); }
+#else
+void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file);  /* Linux: real symbol from src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File */
+#endif /* _WIN32 */
 int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self)
 { return ((const MeshCollider *)self)->MeshCollider::GetOctreeOriginY(); }
 int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self)
@@ -1333,8 +1337,12 @@ int func_02043288(void *self);         /* port/unmatched: the behaviour Process 
    the body an ecx that never held `this`. */
 #include "ActorBase.h"
 #include "Actor.h"
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN9ActorBase19BeforeInitResourcesEv(void *self)
 { return ((ActorBase *)self)->ActorBase::BeforeInitResources() ? 1 : 0; }
+#else
+extern "C" int _ZN9ActorBase19BeforeInitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9ActorBase19BeforeInitResourcesEv */
+#endif /* _WIN32 */
 
 
 static int __fastcall ps_init(void *s, void *)

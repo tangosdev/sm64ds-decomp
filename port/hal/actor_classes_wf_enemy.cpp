@@ -414,21 +414,45 @@ extern "C" void hal_fill_fortress_wall_vtable_c(void) { hal_fill_fortress_wall_v
 #include "BulletBill.h"
 #include "FortressWall.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Whomp13InitResourcesEv(void *self)
 { return ((Whomp *)self)->Whomp::InitResources(); }
+#else
+int _ZN5Whomp13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Whomp13InitResourcesEv */
+#endif /* _WIN32 */
 /* Whomp::Render is NOT faced here: it dispatches ModelAnim slot 5 through a
    local six-virtual shadow (the ROM Render), which the host _ZTV9ModelAnim
    array numbers as Virtual18. src/_ZN5Whomp6RenderEv.cpp is dropped from
    slice_gate64.txt and _ZN5Whomp6RenderEv is the host copy in
    port/unmatched/ModelAnim_Renders.cpp, the Butterfly/Fish/QuestionBlock case. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Whomp16CleanupResourcesEv(void *self)
 { return ((Whomp *)self)->Whomp::CleanupResources(); }
+#else
+int _ZN5Whomp16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Whomp16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10BulletBill6RenderEv(void *self)
 { return ((BulletBill *)self)->BulletBill::Render(); }
+#else
+int _ZN10BulletBill6RenderEv(void *self);  /* Linux: real symbol from src/_ZN10BulletBill6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12FortressWall13InitResourcesEv(void *self)
 { return ((FortressWall *)self)->FortressWall::InitResources(); }
+#else
+int _ZN12FortressWall13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12FortressWall13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12FortressWall6RenderEv(void *self)
 { return ((FortressWall *)self)->FortressWall::Render(); }
+#else
+int _ZN12FortressWall6RenderEv(void *self);  /* Linux: real symbol from src/_ZN12FortressWall6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12FortressWall16CleanupResourcesEv(void *self)
 { return ((FortressWall *)self)->FortressWall::CleanupResources(); }
+#else
+int _ZN12FortressWall16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12FortressWall16CleanupResourcesEv */
+#endif /* _WIN32 */
 }

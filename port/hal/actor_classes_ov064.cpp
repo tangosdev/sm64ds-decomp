@@ -443,25 +443,53 @@ extern "C" void hal_fill_rotating_firebar_vtable(void)
 #include "BigBully.h"
 #include "RotatingFirebar.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Bully13InitResourcesEv(void *self)
 { ((Bully *)self)->Bully::InitResources(); return 1; }
+#else
+int _ZN5Bully13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Bully13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN5Bully16CleanupResourcesEv(void *self)
 { return ((Bully *)self)->Bully::CleanupResources(); }
+#else
+int _ZN5Bully16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN5Bully16CleanupResourcesEv */
+#endif /* _WIN32 */
 /* The three Renders are NOT faced here: each dispatches its model's slot 5
    through a ROM-order local shadow (the Whomp/Scuttlebug case), so the C
    names are host copies in port/unmatched/ModelAnim_Renders.cpp and the
    matched TUs are dropped from slice_gate177.txt. */
 int _ZN5Bully6RenderEv(void *self);
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8BigBully13InitResourcesEv(void *self)
 { return ((BigBully *)self)->BigBully::InitResources(); }
+#else
+int _ZN8BigBully13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8BigBully13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8BigBully8BehaviorEv(void *self)
 { return ((BigBully *)self)->BigBully::Behavior(); }
+#else
+int _ZN8BigBully8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN8BigBully8BehaviorEv */
+#endif /* _WIN32 */
 int _ZN8BigBully6RenderEv(void *self);
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15RotatingFirebar13InitResourcesEv(void *self)
 { return ((RotatingFirebar *)self)->RotatingFirebar::InitResources(); }
+#else
+int _ZN15RotatingFirebar13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN15RotatingFirebar13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15RotatingFirebar16CleanupResourcesEv(void *self)
 { return ((RotatingFirebar *)self)->RotatingFirebar::CleanupResources(); }
+#else
+int _ZN15RotatingFirebar16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN15RotatingFirebar16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15RotatingFirebar8BehaviorEv(void *self)
 { return ((RotatingFirebar *)self)->RotatingFirebar::Behavior(); }
+#else
+int _ZN15RotatingFirebar8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN15RotatingFirebar8BehaviorEv */
+#endif /* _WIN32 */
 int _ZN15RotatingFirebar6RenderEv(void *self);
 }

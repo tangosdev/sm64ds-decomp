@@ -144,8 +144,12 @@ struct Minimap {
 /* UpdateLevelSpecific is the reverse shape: its own TU defines a real MSVC
    member and InitResources calls it by the Itanium C name, so it needs a face
    the way HUD::RenderCoinCount and friends do. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void)
 { Minimap::UpdateLevelSpecific(); }
+#else
+extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void);  /* Linux: real symbol from src/_ZN7Minimap19UpdateLevelSpecificEv */
+#endif /* _WIN32 */
 
 // ---- the arm9 bss the Minimap reads ----------------------------------------
 //
@@ -295,7 +299,11 @@ HUD_FACE(_ZN3HUD17UpdateHealthMeterEv, UpdateHealthMeter)
 /* RenderCameraButtons is a STATIC member (no `this` at all -- it draws the two
    arrows and the zoom button from OAM's own templates), so its face takes and
    passes nothing. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *) { HUD::RenderCameraButtons(); }
+#else
+extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *);  /* Linux: real symbol from src/_ZN3HUD19RenderCameraButtonsEv */
+#endif /* _WIN32 */
 
 /* Player::IsInsideOfCannon is a real MSVC member, and HUD::RenderHealthMeter
    reaches it as a free function taking void*. That was a C++ free function
@@ -304,15 +312,23 @@ extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *) { HUD::RenderCameraButton
    name and the face follows it. The alias keeps the older C++ spelling
    resolvable, the same shape as the other faces in this family. */
 struct Player { int IsInsideOfCannon(); int Unk_020ca8f8(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player16IsInsideOfCannonEv(void *s)
 { return ((Player *)s)->Player::IsInsideOfCannon(); }
+#else
+extern "C" int _ZN6Player16IsInsideOfCannonEv(void *s);  /* Linux: real symbol from src/_ZN6Player16IsInsideOfCannonEv */
+#endif /* _WIN32 */
 #pragma comment(linker, "/alternatename:?_ZN6Player16IsInsideOfCannonEv@@YAHPAX@Z=__ZN6Player16IsInsideOfCannonEv")
 
 /* Minimap::Behavior reaches the same class the same way: it calls
    Player::Unk_020ca8f8 -- "is he in a state that hides the minimap" -- as a
    free C function while its own TU defines a real MSVC member. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player12Unk_020ca8f8Ev(void *s)
 { return ((Player *)s)->Player::Unk_020ca8f8(); }
+#else
+extern "C" int _ZN6Player12Unk_020ca8f8Ev(void *s);  /* Linux: real symbol from src/_ZN6Player12Unk_020ca8f8Ev */
+#endif /* _WIN32 */
 
 /* Stage::RenderBouncingArrows draws from an OamAttr template at ov001
    0x020abd88 that config does not name, and nothing in emitted DATA points at

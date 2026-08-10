@@ -231,12 +231,24 @@ extern "C" void hal_fill_haunted_chair_vtable(void)
 // the face bridges cdecl to __thiscall. Clean and D0 are already C-linkage in
 // their .c src, so they get no face.
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12HauntedChair13InitResourcesEv(void *self)
 { return ((HauntedChair *)self)->HauntedChair::InitResources(); }
+#else
+int _ZN12HauntedChair13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12HauntedChair13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12HauntedChair8BehaviorEv(void *self)
 { return ((HauntedChair *)self)->HauntedChair::Behavior(); }
+#else
+int _ZN12HauntedChair8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN12HauntedChair8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12HauntedChair6RenderEv(void *self)
 { return ((HauntedChair *)self)->HauntedChair::Render(); }
+#else
+int _ZN12HauntedChair6RenderEv(void *self);  /* Linux: real symbol from src/_ZN12HauntedChair6RenderEv */
+#endif /* _WIN32 */
 }
 
 /* _ZTV9daChair_c is the RTTI base spelling dsd names at _ZTV12HauntedChair's

@@ -24,10 +24,18 @@ extern "C" {
 void _ZN6Camera11ChangeStateEPNS_5StateE(void *self, void *st);
 
 /* cdecl entry faces onto the __thiscall method definitions */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN6Camera14GoBehindPlayerEj(void *self, unsigned int j)
 { ((Camera *)self)->GoBehindPlayer(j); }
+#else
+void _ZN6Camera14GoBehindPlayerEj(void *self, unsigned int j);  /* Linux: real symbol from src/_ZN6Camera14GoBehindPlayerEj */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN6Camera10LookAtExitER5Actor(void *self, void *actor)
 { ((Camera *)self)->LookAtExit(*(Actor *)actor); }
+#else
+void _ZN6Camera10LookAtExitER5Actor(void *self, void *actor);  /* Linux: real symbol from src/_ZN6Camera10LookAtExitER5Actor */
+#endif /* _WIN32 */
 }  /* extern "C" */
 
 /* the reverse shim: method-form callers (LookAtExit's own body enters the

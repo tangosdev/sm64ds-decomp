@@ -285,10 +285,18 @@ extern "C" void hal_fill_power_star_vtable(void)
 // C-named free functions in their own TUs.
 #include "PowerStar.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9PowerStar13InitResourcesEv(void *self)
 { return ((PowerStar *)self)->PowerStar::InitResources(); }
+#else
+int _ZN9PowerStar13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9PowerStar13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9PowerStar16CleanupResourcesEv(void *self)
 { return ((PowerStar *)self)->PowerStar::CleanupResources(); }
+#else
+int _ZN9PowerStar16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9PowerStar16CleanupResourcesEv */
+#endif /* _WIN32 */
 /* PowerStar::Render is NOT faced here: it dispatches ModelAnim slot 5 through a
    local six-virtual shadow (sub.m5(&arg80), the ROM Render), which the host
    _ZTV9ModelAnim array numbers as Virtual18 (MSVC folds the two dtor slots into

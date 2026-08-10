@@ -43,14 +43,26 @@ struct Actor {
     void LandingDust(bool b);
 };
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN8CapEnemy11GetCapStateEv(void *self)
 { return ((CapEnemy *)self)->CapEnemy::GetCapState(); }
+#else
+extern "C" int _ZN8CapEnemy11GetCapStateEv(void *self);  /* Linux: real symbol from src/_ZN8CapEnemy11GetCapStateEv */
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN12WithMeshClsn12Unk_0203589cEv(void *self)
 { ((WithMeshClsn *)self)->WithMeshClsn::Unk_0203589c(); }
+#else
+extern "C" void _ZN12WithMeshClsn12Unk_0203589cEv(void *self);  /* Linux: real symbol from src/_ZN12WithMeshClsn12Unk_0203589cEv */
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Actor19UntrackInDeathTableEv(void *self)
 { ((Actor *)self)->Actor::UntrackInDeathTable(); }
+#else
+extern "C" void _ZN5Actor19UntrackInDeathTableEv(void *self);  /* Linux: real symbol from src/_ZN5Actor19UntrackInDeathTableEv */
+#endif /* _WIN32 */
 
 void CapEnemy::UpdateCapPos(const Vector3 &pos, const Vector3_16_local &rot)
 { UpdateCapPos(pos, *(const Vector3_16 *)&rot); }
@@ -142,7 +154,15 @@ void Sound::PlayBank3(unsigned id, const Vector3 &v)
 void *Particle::System::NewSimple(unsigned t, int x, int y, int z)
 { return _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(t, x, y, z); }
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned musicId)
 { Sound::LoadAndSetMusic_Layer3(musicId); }
+#else
+extern "C" void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned musicId);  /* Linux: real symbol from src/_ZN5Sound22LoadAndSetMusic_Layer3Ej */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Sound13Func_02048eb4Ev(void)
 { Sound::Func_02048eb4(); }
+#else
+extern "C" void _ZN5Sound13Func_02048eb4Ev(void);  /* Linux: real symbol from src/_ZN5Sound13Func_02048eb4Ev */
+#endif /* _WIN32 */

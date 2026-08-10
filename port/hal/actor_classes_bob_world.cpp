@@ -211,11 +211,15 @@ static void hal_fill_common_model_vtable(void)
    declared it extern "C", so the reference is cdecl and the definition is a
    real MSVC __thiscall method. A forwarding face, never an alias. The ROM's
    Render returns void and every caller ignores the result. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN11CommonModel6RenderEPK7Vector3(void *self, const void *scale)
 {
     ((CommonModel *)self)->CommonModel::Render((const Vector3 *)scale);
     return 1;
 }
+#else
+extern "C" int _ZN11CommonModel6RenderEPK7Vector3(void *self, const void *scale);  /* Linux: real symbol from src/_ZN11CommonModel6RenderEPK7Vector3 */
+#endif /* _WIN32 */
 
 /* The coin's collect path reaches the red-coin star by C name from
    func_ov002_020b10a0, and the definition is a real MSVC method. The shadow

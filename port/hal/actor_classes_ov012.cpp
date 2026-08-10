@@ -299,10 +299,22 @@ extern "C" void hal_fill_basement_water_vtable(void)
 // port/unmatched/ModelAnim_Renders.cpp), declared extern "C" above.
 #include "SwitchPillar.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12SwitchPillar13InitResourcesEv(void *self)
 { return ((SwitchPillar *)self)->SwitchPillar::InitResources(); }
+#else
+int _ZN12SwitchPillar13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12SwitchPillar13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12SwitchPillar16CleanupResourcesEv(void *self)
 { return ((SwitchPillar *)self)->SwitchPillar::CleanupResources(); }
+#else
+int _ZN12SwitchPillar16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12SwitchPillar16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12SwitchPillar8BehaviorEv(void *self)
 { return ((SwitchPillar *)self)->SwitchPillar::Behavior(); }
+#else
+int _ZN12SwitchPillar8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN12SwitchPillar8BehaviorEv */
+#endif /* _WIN32 */
 }

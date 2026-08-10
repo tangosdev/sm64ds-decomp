@@ -253,8 +253,12 @@ extern "C" void hal_fill_bob_omb_vtable(void)
    a C-named free function in its own TU. */
 #include "BobOmb.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6BobOmb13InitResourcesEv(void *self)
 { return ((BobOmb *)self)->BobOmb::InitResources(); }
+#else
+int _ZN6BobOmb13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6BobOmb13InitResourcesEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -409,14 +413,30 @@ extern "C" void hal_fill_bob_omb_buddy_vtable(void)
 #include "Goomba.h"
 #include "BobOmbBuddy.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Goomba8BehaviorEv(void *self)
 { return ((Goomba *)self)->Goomba::Behavior(); }
+#else
+int _ZN6Goomba8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN6Goomba8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Goomba16CleanupResourcesEv(void *self)
 { return ((Goomba *)self)->Goomba::CleanupResources(); }
+#else
+int _ZN6Goomba16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6Goomba16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN11BobOmbBuddy13InitResourcesEv(void *self)
 { return ((BobOmbBuddy *)self)->BobOmbBuddy::InitResources(); }
+#else
+int _ZN11BobOmbBuddy13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN11BobOmbBuddy13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN11BobOmbBuddy8BehaviorEv(void *self)
 { return ((BobOmbBuddy *)self)->BobOmbBuddy::Behavior(); }
+#else
+int _ZN11BobOmbBuddy8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN11BobOmbBuddy8BehaviorEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -796,34 +816,82 @@ extern "C" void hal_fill_koopa_flag_vtable(void)
 #include "ChainChompFence.h"
 #include "KoopaTheQuick.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10ChainChomp13InitResourcesEv(void *self)
 { return ((ChainChomp *)self)->ChainChomp::InitResources(); }
+#else
+int _ZN10ChainChomp13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN10ChainChomp13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10ChainChomp8BehaviorEv(void *self)
 { return ((ChainChomp *)self)->ChainChomp::Behavior(); }
+#else
+int _ZN10ChainChomp8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN10ChainChomp8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15ChainChompFence13InitResourcesEv(void *self)
 { return ((ChainChompFence *)self)->ChainChompFence::InitResources(); }
+#else
+int _ZN15ChainChompFence13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN15ChainChompFence13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15ChainChompFence8BehaviorEv(void *self)
 { return ((ChainChompFence *)self)->ChainChompFence::Behavior(); }
+#else
+int _ZN15ChainChompFence8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN15ChainChompFence8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN15ChainChompFence16CleanupResourcesEv(void *self)
 { return ((ChainChompFence *)self)->ChainChompFence::CleanupResources(); }
+#else
+int _ZN15ChainChompFence16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN15ChainChompFence16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN13KoopaTheQuick13InitResourcesEv(void *self)
 { return ((KoopaTheQuick *)self)->KoopaTheQuick::InitResources(); }
+#else
+int _ZN13KoopaTheQuick13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN13KoopaTheQuick13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN13KoopaTheQuick8BehaviorEv(void *self)
 { return ((KoopaTheQuick *)self)->KoopaTheQuick::Behavior(); }
+#else
+int _ZN13KoopaTheQuick8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN13KoopaTheQuick8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN13KoopaTheQuick16CleanupResourcesEv(void *self)
 { return ((KoopaTheQuick *)self)->KoopaTheQuick::CleanupResources(); }
+#else
+int _ZN13KoopaTheQuick16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN13KoopaTheQuick16CleanupResourcesEv */
+#endif /* _WIN32 */
 }
 #include "KoopaFlag.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9KoopaFlag13InitResourcesEv(void *self)
 { return ((KoopaFlag *)self)->KoopaFlag::InitResources(); }
+#else
+int _ZN9KoopaFlag13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9KoopaFlag13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9KoopaFlag8BehaviorEv(void *self)
 { return ((KoopaFlag *)self)->KoopaFlag::Behavior(); }
+#else
+int _ZN9KoopaFlag8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN9KoopaFlag8BehaviorEv */
+#endif /* _WIN32 */
 }
 #include "KingBobOmb.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10KingBobOmb13InitResourcesEv(void *self)
 { return ((KingBobOmb *)self)->KingBobOmb::InitResources(); }
+#else
+int _ZN10KingBobOmb13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN10KingBobOmb13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10KingBobOmb6RenderEv(void *self)
 { return ((KingBobOmb *)self)->KingBobOmb::Render(); }
+#else
+int _ZN10KingBobOmb6RenderEv(void *self);  /* Linux: real symbol from src/_ZN10KingBobOmb6RenderEv */
+#endif /* _WIN32 */
 }

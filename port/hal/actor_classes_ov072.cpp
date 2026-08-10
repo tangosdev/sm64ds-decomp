@@ -376,8 +376,16 @@ extern "C" void hal_fill_baby_penguin_vtable(void)
 // host copy in port/unmatched/ModelAnim_Renders.cpp, the Whomp/Butterfly/
 // Fish/QuestionBlock case (see this file's own header).
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN11BabyPenguin13InitResourcesEv(void *self)
 { return ((BabyPenguin *)self)->BabyPenguin::InitResources(); }
+#else
+int _ZN11BabyPenguin13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN11BabyPenguin13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN11BabyPenguin8BehaviorEv(void *self)
 { return ((BabyPenguin *)self)->BabyPenguin::Behavior(); }
+#else
+int _ZN11BabyPenguin8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN11BabyPenguin8BehaviorEv */
+#endif /* _WIN32 */
 }

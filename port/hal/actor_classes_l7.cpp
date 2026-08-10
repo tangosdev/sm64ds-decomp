@@ -242,14 +242,30 @@ extern "C" void hal_fill_thwomp_vtable(void)
 /* ---- method faces ---------------------------------------------------------
    Thwomp's Init/Clean/Behavior/Render are real MSVC methods against include/. */
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Thwomp13InitResourcesEv(void *self)
 { return ((Thwomp *)self)->Thwomp::InitResources(); }
+#else
+int _ZN6Thwomp13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6Thwomp13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Thwomp16CleanupResourcesEv(void *self)
 { return ((Thwomp *)self)->Thwomp::CleanupResources(); }
+#else
+int _ZN6Thwomp16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6Thwomp16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Thwomp8BehaviorEv(void *self)
 { return ((Thwomp *)self)->Thwomp::Behavior(); }
+#else
+int _ZN6Thwomp8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN6Thwomp8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Thwomp6RenderEv(void *self)
 { return ((Thwomp *)self)->Thwomp::Render(); }
+#else
+int _ZN6Thwomp6RenderEv(void *self);  /* Linux: real symbol from src/_ZN6Thwomp6RenderEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -307,14 +323,30 @@ extern "C" void hal_fill_sliding_platform_wf_vtable(void)
 }
 
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN17SlidingPlatformWf13InitResourcesEv(void *self)
 { return ((SlidingPlatformWf *)self)->SlidingPlatformWf::InitResources(); }
+#else
+int _ZN17SlidingPlatformWf13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN17SlidingPlatformWf13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN17SlidingPlatformWf16CleanupResourcesEv(void *self)
 { return ((SlidingPlatformWf *)self)->SlidingPlatformWf::CleanupResources(); }
+#else
+int _ZN17SlidingPlatformWf16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN17SlidingPlatformWf16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN17SlidingPlatformWf8BehaviorEv(void *self)
 { return ((SlidingPlatformWf *)self)->SlidingPlatformWf::Behavior(); }
+#else
+int _ZN17SlidingPlatformWf8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN17SlidingPlatformWf8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN17SlidingPlatformWf6RenderEv(void *self)
 { return ((SlidingPlatformWf *)self)->SlidingPlatformWf::Render(); }
+#else
+int _ZN17SlidingPlatformWf6RenderEv(void *self);  /* Linux: real symbol from src/_ZN17SlidingPlatformWf6RenderEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -420,14 +452,30 @@ extern "C" void hal_fill_rotating_up_down_platform_vtable(void)
 }
 
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN25RotatingUpDownPlatformUtm13InitResourcesEv(void *self)
 { return ((RotatingUpDownPlatformUtm *)self)->RotatingUpDownPlatformUtm::InitResources(); }
+#else
+int _ZN25RotatingUpDownPlatformUtm13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN25RotatingUpDownPlatformUtm13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv(void *self)
 { return ((RotatingUpDownPlatformUtm *)self)->RotatingUpDownPlatformUtm::CleanupResources(); }
+#else
+int _ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN25RotatingUpDownPlatformUtm8BehaviorEv(void *self)
 { return ((RotatingUpDownPlatformUtm *)self)->RotatingUpDownPlatformUtm::Behavior(); }
+#else
+int _ZN25RotatingUpDownPlatformUtm8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN25RotatingUpDownPlatformUtm8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN25RotatingUpDownPlatformUtm6RenderEv(void *self)
 { return ((RotatingUpDownPlatformUtm *)self)->RotatingUpDownPlatformUtm::Render(); }
+#else
+int _ZN25RotatingUpDownPlatformUtm6RenderEv(void *self);  /* Linux: real symbol from src/_ZN25RotatingUpDownPlatformUtm6RenderEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -505,10 +553,18 @@ extern "C" void hal_fill_fire_piranha_plant_vtable(void)
    CleanupResources are real MSVC methods that need a face. */
 #include "FirePiranhaPlantBig.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN19FirePiranhaPlantBig16CleanupResourcesEv(void *self)
 { return ((FirePiranhaPlantBig *)self)->FirePiranhaPlantBig::CleanupResources(); }
+#else
+int _ZN19FirePiranhaPlantBig16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN19FirePiranhaPlantBig16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN19FirePiranhaPlantBig8BehaviorEv(void *self)
 { return ((FirePiranhaPlantBig *)self)->FirePiranhaPlantBig::Behavior(); }
+#else
+int _ZN19FirePiranhaPlantBig8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN19FirePiranhaPlantBig8BehaviorEv */
+#endif /* _WIN32 */
 }
 
 // ============================================================================
@@ -582,6 +638,10 @@ extern "C" void hal_fill_piranha_plant_vtable(void)
    method that needs a face. Behavior and Render are host copies. */
 #include "PiranhaPlant.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN12PiranhaPlant16CleanupResourcesEv(void *self)
 { return ((PiranhaPlant *)self)->PiranhaPlant::CleanupResources(); }
+#else
+int _ZN12PiranhaPlant16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN12PiranhaPlant16CleanupResourcesEv */
+#endif /* _WIN32 */
 }

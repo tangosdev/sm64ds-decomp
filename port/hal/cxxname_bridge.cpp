@@ -17,14 +17,22 @@ void _ZN13SharedFilePtr7ReleaseEv(void *self)
 {
     hal_fileptr_release(self);
 }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self)
 {
     return ((MeshColliderBase *)self)->MeshColliderBase::IsEnabled();
 }
+#else
+int _ZN16MeshColliderBase9IsEnabledEv(void *self);  /* Linux: real symbol from src/_ZN16MeshColliderBase9IsEnabledEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN16MeshColliderBase7DisableEv(void *self)
 {
     ((MeshColliderBase *)self)->MeshColliderBase::Disable();
 }
+#else
+void _ZN16MeshColliderBase7DisableEv(void *self);  /* Linux: real symbol from src/_ZN16MeshColliderBase7DisableEv */
+#endif /* _WIN32 */
 
 // The ov098 file table's second column is addressed through its own symbol
 // (base+4 on the DS -- an offset alias). The harness used to fake it with a
@@ -38,10 +46,18 @@ void _ZN16MeshColliderBase7DisableEv(void *self)
 #include "ShadowModel.h"
 #include "Model.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8Platform19UpdateClsnPosAndRotEv(void *self)
 { ((Platform *)self)->Platform::UpdateClsnPosAndRot(); }
+#else
+void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);  /* Linux: real symbol from src/_ZN8Platform19UpdateClsnPosAndRotEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8Platform21UpdateModelPosAndRotYEv(void *self)
 { ((Platform *)self)->Platform::UpdateModelPosAndRotY(); }
+#else
+void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);  /* Linux: real symbol from src/_ZN8Platform21UpdateModelPosAndRotYEv */
+#endif /* _WIN32 */
 /* SHADOW SYSTEM DEFERRED (cosmetic). The cause recorded here was WRONG and is
    corrected: the cuboid template BMD at data_020ad524 is NOT built at runtime.
    It is static .data in OVERLAY 1 (ov001 .data spans 0x020ab800..0x020ad620),
@@ -112,12 +128,17 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
     void *self, void *kcl, void *clps)
 {
     ((MeshCollider *)self)->MeshCollider::SetFile((KCL_File *)kcl,
                                                   *(CLPS_Block *)clps);
 }
+#else
+extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
+    void *self, void *kcl, void *clps);  /* Linux: real symbol from src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block */
+#endif /* _WIN32 */
 
 // operator new support: the game heap pointer for actors (the smoke seeds
 // it with the root heap), and the zero-fill veneer -- its DS chain rides
@@ -142,10 +163,14 @@ extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 
 #include "MeshColliderBase.h"
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor)
 {
     return ((MeshColliderBase *)self)->MeshColliderBase::Enable((Actor *)actor);
 }
+#else
+extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor);  /* Linux: real symbol from src/_ZN16MeshColliderBase6EnableEP5Actor */
+#endif /* _WIN32 */
 extern "C" {
 /* player-list globals ClosestPlayer scans: empty world -> null result */
 int data_0208e37c[2];
