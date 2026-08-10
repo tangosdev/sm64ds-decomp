@@ -356,12 +356,23 @@ extern "C" void _ZN5Scene22ResetHardwareRegistersEv(void *s);  /* Linux: real sy
 
 /* A slice TU sees NestedHeapIterator::Next through a local shadow returning
    unsigned char*; the real definition returns int against the shared header.
-   Mirror the shadow and hop through the C-named helper in player_bridges. */
+   Mirror the shadow and hop through the C-named helper in player_bridges.
+   LINUX CRITICAL: this out-of-line `NestedHeapIterator::Next` mangles to the
+   SAME Itanium symbol as the real src/ method (slice_gate2) AND as
+   player_bridges' hal_nhi_next target -- and hal_nhi_next calls
+   `->NestedHeapIterator::Next(...)`, so on GCC this definition + hal_nhi_next
+   form an infinite recursion (a stack-overflow SIGSEGV in Heap::SetupRootHeap
+   during boot). On MSVC the C++ method and the extern-C forwarder mangle
+   differently, so the hop is a real convention converter. On Linux the real
+   src/ method already provides the symbol with the correct ABI, so omit this
+   host copy and let hal_nhi_next bind straight to it. */
+#ifdef _WIN32
 struct HeapAllocator;
 struct NestedHeapIterator { unsigned char *Next(HeapAllocator *h); };
 extern "C" int hal_nhi_next(void *self, void *h);
 unsigned char *NestedHeapIterator::Next(HeapAllocator *h)
 { return (unsigned char *)(size_t)hal_nhi_next(this, h); }
+#endif /* _WIN32 -- Linux binds hal_nhi_next to the real src/ method */
 #pragma comment(linker, "/alternatename:?GiveHealth@@YAHHH@Z=_GiveHealth")
 #pragma comment(linker, "/alternatename:?data_0209caa0@@3PAHA=_data_0209caa0")
 #pragma comment(linker, "/alternatename:?data_0209f2d8@@3EA=_data_0209f2d8")
