@@ -72,7 +72,7 @@ int PushBlock::InitResources()
     } else {
         func_ov002_020b9704(((char *)this), 0);
     }
-    angp = (short *)(int)(((long long)(int)((char *)&unk_08e)));
+    angp = (short *)(int)((char *)&unk_08e);
     *angp = *angp - 0x4000;
     _ZN13RaycastGroundD1Ev(ray);
     return 1;

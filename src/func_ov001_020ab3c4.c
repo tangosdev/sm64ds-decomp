@@ -6,6 +6,6 @@ void *func_ov001_020ab3c4(void *r0) {
     *(int *)(ptr + 0xc) = 0;
     *(int *)(ptr + 0x10) = 0;
 
-    *(unsigned char *)(int)(((long long)(int)(ptr + 0x1b))) |= 4;
+    *(unsigned char *)(int)(ptr + 0x1b) |= 4;
     return r0;
 }

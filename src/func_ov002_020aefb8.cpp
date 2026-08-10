@@ -27,9 +27,9 @@ void func_ov002_020aefb8(char* self) {
     int *pz;
     ((Actor*)self)->UpdatePosWithHorzSpeedAndAng();
     if (((WithMeshClsn*)(self + 0x144))->IsOnGround()) {
-        px = (int*)(int)(((long long)(int)(self + 0xa4)));
+        px = (int*)(int)(self + 0xa4);
         *px += *(int*)(self + 0xd4) * 0xa;
-        pz = (int*)(int)(((long long)(int)(self + 0xac)));
+        pz = (int*)(int)(self + 0xac);
         *pz += *(int*)(self + 0xdc) * 0xa;
         if (((WithMeshClsn*)(self + 0x144))->JustHitGround()) {
             *(int*)(self + 0xa8) = -(*(int*)(self + 0xa8) << 2) / 10;

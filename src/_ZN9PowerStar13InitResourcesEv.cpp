@@ -57,8 +57,8 @@ extern s32 _ZN9PowerStar13InitResourcesEv(void *arg0);
 #define S8(o) (*(s8 *)(t + (o)))
 #define U16(o) (*(u16 *)(t + (o)))
 #define S32(o) (*(s32 *)(t + (o)))
-#define LU32(o) (*(u32 *)((int)(((long long)(int)(t + (o))))))
-#define LU16(o) (*(u16 *)((int)(((long long)(int)(t + (o))))))
+#define LU32(o) (*(u32 *)((int)(t + (o))))
+#define LU16(o) (*(u16 *)((int)(t + (o))))
 
 s32 PowerStar::InitResources()
 {
@@ -208,7 +208,7 @@ s32 PowerStar::InitResources()
     S32(0x448) = S32(0x5c);
     S32(0x44c) = S32(0x60);
     S32(0x450) = S32(0x64);
-    q = (s32 *)((int)(((long long)(int)(t + 0x448))));
+    q = (s32 *)((int)(t + 0x448));
     S32(0x454) = q[0];
     S32(0x458) = q[1];
     S32(0x45c) = q[2];

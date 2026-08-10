@@ -22,7 +22,7 @@ void func_ov002_020b18f0(char* c)
     if (SublevelToLevel(data_0209f2f8) >= 0xf) return;
     if (c == 0) return;
     if (data_0209f358[*(unsigned char*)(c + 0x6d8)] < 0x64) return;
-    p = (struct Vector3*)(((long long)(int)(c + 0x5c)));
+    p = (struct Vector3*)(c + 0x5c);
     vec.x = p->x;
     y = p->y;
     vec.y = y;

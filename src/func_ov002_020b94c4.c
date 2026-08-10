@@ -47,9 +47,9 @@ void func_ov002_020b94c4(char* c)
     if (X > 0)
         delta += X;
     if (a > 0)
-        *(s16*)(((long long)(int)(c + 0x8e))) += delta;
+        *(s16*)(c + 0x8e) += delta;
     else
-        *(s16*)(((long long)(int)(c + 0x8e))) -= delta;
+        *(s16*)(c + 0x8e) -= delta;
 
     func_0203568c((int*)(c + 0x200), 0x3c000);
     func_02035684((int*)(c + 0x200), 0x3c000);

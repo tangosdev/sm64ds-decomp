@@ -16,13 +16,13 @@ void *func_020352b4(void)
         *(int **)p = data_0208e4b8;
         *(int **)p = _ZTV5Scene;
         {
-            u8 *bp = (u8 *)(((int)p + 0x13) & 0xFFFFFFFFFFFFFFFFULL);
+            u8 *bp = (u8 *)((int)p + 0x13);
             *bp |= 1;
             *bp |= 4;
         }
         *(int **)p = data_020943c4;
         {
-            int *fp = (int *)(((int)p + 0x50) & 0xFFFFFFFFFFFFFFFFULL);
+            int *fp = (int *)((int)p + 0x50);
             fp[0] = (int)data_0208eafc;
             fp[0] = (int)data_0208eacc;
             fp[1] = 0x1000;

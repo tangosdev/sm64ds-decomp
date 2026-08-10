@@ -1,4 +1,4 @@
 void func_02035468(char *self)
 {
-    *(unsigned char *)(((long long)(int)(self + 4))) |= 4;
+    *(unsigned char *)(self + 4) |= 4;
 }

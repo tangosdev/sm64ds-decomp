@@ -14,7 +14,7 @@ void func_ov002_020b4714(char* a) {
             struct Vector3 v;
             struct Vector3* p;
             char* spawned;
-            p = (struct Vector3*)(((long long)(int)(b + 0x5c)));
+            p = (struct Vector3*)(b + 0x5c);
             v.x = p->x;
             v.y = p->y;
             v.z = p->z;

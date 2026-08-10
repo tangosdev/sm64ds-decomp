@@ -1,5 +1,5 @@
 #include "types.h"
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct ClsnResult { char pad[0x28]; } ClsnResult;

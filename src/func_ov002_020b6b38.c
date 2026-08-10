@@ -33,7 +33,7 @@ int func_ov002_020b6b38(struct Obj* c)
     int i;
     Vector3 mid;
     Vector3 res;
-    short* rzp = (short*)((long long)(int)((char*)c + 0x90));
+    short* rzp = (short*)((char*)c + 0x90);
     *rzp = *rzp + 0x100;
     {
         int b = (int)((c->flags & 8) != 0);

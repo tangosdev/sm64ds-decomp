@@ -11,8 +11,8 @@ int func_ov002_020b7200(char* c)
 
     if (*(int*)(c + 0x3f0) == 0xa || *(int*)(c + 0x3f0) == 0xf) {
         if (*(int*)(c + 0x3c0) != 0) {
-            sp = (short*)((long long)(int)(
-                (char*)*(int*)(c + 0x3c0) + 0x8c));
+            sp = (short*)(
+                (char*)*(int*)(c + 0x3c0) + 0x8c);
             *(short*)(c + 0x92) = sp[0];
             *(short*)(c + 0x94) = sp[1];
             *(short*)(c + 0x96) = sp[2];
@@ -20,8 +20,8 @@ int func_ov002_020b7200(char* c)
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
             *(short*)(c + 0x90) = *(short*)(c + 0x96);
 
-            ip = (int*)((long long)(int)(
-                (char*)*(int*)(c + 0x3c0) + 0x5c));
+            ip = (int*)(
+                (char*)*(int*)(c + 0x3c0) + 0x5c);
             *(int*)(c + 0x5c) = ip[0];
             *(int*)(c + 0x60) = ip[1];
             *(int*)(c + 0x64) = ip[2];

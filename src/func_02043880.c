@@ -40,8 +40,8 @@ extern int data_020a4b98;
 extern int data_020a4b88;
 extern int data_020a4ba8;
 
-#define FLAGP(o) ((u8*)(((unsigned long long)(int)((char*)(o) + 0x13)) & 0xFFFFFFFFFFFFFFFFULL))
-#define NODEP(o, OFF) ((Node*)(((unsigned long long)(int)((char*)(o) + (OFF))) & 0xFFFFFFFFFFFFFFFFULL))
+#define FLAGP(o) ((u8*)((char*)(o) + 0x13))
+#define NODEP(o, OFF) ((Node*)((char*)(o) + (OFF)))
 
 
 #pragma opt_common_subs off

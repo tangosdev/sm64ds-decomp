@@ -27,7 +27,7 @@ int func_ov002_020b7b70(char* c)
         *(u16*)(c + 0x404) = *(u16*)(c + 0x100);
     }
 
-    p = (int *)((unsigned long long)(c + 0x12c) & 0xFFFFFFFFFFFFFFFFULL);
+    p = (int *)((unsigned long long)(c + 0x12c));
     val = *p;
     ret = 1;
     val |= 0x8000;

@@ -8,8 +8,8 @@ extern unsigned int (*data_02086758[])(char*);
    plain (u32*)(r + off) straight into the ldr/str addressing mode; the ROM
    instead materialises the address into a scratch register first.  Widening
    the address through a 64-bit value forces that explicit base add. */
-#define REG(x) ((unsigned int*)(((long long)(int)(x))))
-#define REGU(x) ((unsigned int*)(long long)(unsigned)(x))
+#define REG(x) ((unsigned int*)(x))
+#define REGU(x) ((unsigned int*)(x))
 
 int func_0205c5e4(char* self, int idx) {
     char* r;

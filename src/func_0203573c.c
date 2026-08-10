@@ -1,4 +1,4 @@
 void func_0203573c(char *self)
 {
-    *(unsigned int *)(((long long)(int)(self + 0x10))) |= 0x20;
+    *(unsigned int *)(self + 0x10) |= 0x20;
 }

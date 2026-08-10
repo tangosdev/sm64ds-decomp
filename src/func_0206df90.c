@@ -24,7 +24,7 @@ int func_0206df90(char *thiz, int *out)
       return r;
     }
     new_var = thiz + 0x18;
-    *(int *)(((unsigned long long)(int)new_var) & 0xFFFFFFFFFFFFFFFFULL) += *((int *) (thiz + 0x28));
+    *(int *)(new_var) += *((int *) (thiz + 0x28));
   }
   func_0206e030(thiz);
   return 0;

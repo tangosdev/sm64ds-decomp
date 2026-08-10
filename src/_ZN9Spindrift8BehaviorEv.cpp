@@ -51,7 +51,7 @@ int Spindrift::Behavior()
             _Z14ApproachLinearRiii(((char *)this) + 0x98, 0x4000, 0x1000);
             void *cp = _ZN5Actor13ClosestPlayerEv(((char *)this));
             if (cp != 0) {
-                int *src = (int *)(((int)cp + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+                int *src = (int *)((int)cp + 0x5c);
                 int v3[3];
                 v3[0] = src[0];
                 v3[1] = src[1];
@@ -70,8 +70,8 @@ int Spindrift::Behavior()
         }
         break;
     case 1:
-        *(unsigned short *)(((int)((char *)this) + 0x100) & 0xFFFFFFFFFFFFFFFFull) += 1;
-        if (*(unsigned short *)(((int)((char *)this) + 0x100) & 0xFFFFFFFFFFFFFFFFull) >= 0x14)
+        *(unsigned short *)((int)((char *)this) + 0x100) += 1;
+        if (*(unsigned short *)((int)((char *)this) + 0x100) >= 0x14)
             unk_39a = 0;
         break;
     }

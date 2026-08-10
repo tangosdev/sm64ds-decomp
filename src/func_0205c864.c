@@ -15,13 +15,13 @@ int func_0205c864(int *thiz)
         if (b == 0) {
             goto setflag;
         }
-        *(int *)(((long long)(int)((char*)thiz + 0x10))) |= 0x40;
+        *(int *)((char*)thiz + 0x10) |= 0x40;
         do {
             OS_SleepThread((char*)thiz + 0xe);
         } while ((*(int*)((char*)thiz + 0x10) & 0x40) ? 1 : 0);
         goto done;
     setflag:
-        *(int *)(((long long)(int)((char*)thiz + 0x10))) |= 8;
+        *(int *)((char*)thiz + 0x10) |= 8;
     done:
         ;
     }

@@ -11,7 +11,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
 /* The ROM materializes `self + off` into a scratch register instead of folding the
    offset into the ldr/str. The 64-bit identity mask launders the address so mwccarm
    emits `add rN, self, #off` + `ldr/str [rN]`. */
-#define LD(p) ((int)(((long long)(int)(p))))
+#define LD(p) ((int)(p))
 
 void func_ov002_020bb27c(char* self, char* arg){
   if (*(u8*)(self+0x58e) == 0) return;

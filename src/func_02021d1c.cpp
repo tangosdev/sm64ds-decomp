@@ -29,7 +29,7 @@ int func_02021d1c(char *self, int a1, int id, void *pos, Vec3s *p5, Callback *p6
     if (id == 0x52 || id == 0x50) {
         if (((struct Bf74 *)((char *)e + 0x74))->a <= 5) {
             if (((struct Bf74 *)((char *)e + 0x74))->b >= 5) {
-                int *cw = (int *)(((unsigned long long)((char *)e + 0x74)) & 0xFFFFFFFFFFFFFFFFULL);
+                int *cw = (int *)((unsigned long long)((char *)e + 0x74));
                 *cw = (*cw & ~0x3f000) | 0x5000;
             }
         }
