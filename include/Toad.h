@@ -51,6 +51,7 @@ struct Toad {
     u8  unk_20f;            /* 0x20f */
 #ifdef __cplusplus
     /* methods */
+    int InitResources();
     int Behavior();
     int CleanupResources();
     int Render();
