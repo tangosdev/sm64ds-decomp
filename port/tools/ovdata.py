@@ -614,6 +614,21 @@ def main():
             slot += 1
             prev_end = a + size
             checks.append((name, a - first))
+        # Tail guard: dsd sizes the LAST packed symbol by its next-symbol delta,
+        # so the section ends exactly at that symbol. But a sinit that views a
+        # symbol as a struct array can legitimately write a few bytes PAST the
+        # last named symbol -- on the DS those bytes are the overlay's own
+        # contiguous tail; on the host the next overlay's .pkNNN section starts
+        # there and the write stomps it. (ov072's __sinit_02122414 writes
+        # data_ov072_02122d6c as S16[6] = 96 bytes though the packed run only
+        # reserves 92, clobbering ov094's data_ov094_021369c0.) Reserving 16
+        # bytes of zeroed slack keeps any such struct-view spill inside the
+        # overlay's own section. It is never read directly (no symbol names it)
+        # and it matches the ROM, whose overlay data ran on past the last symbol.
+        lines.append(
+            f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}", 4)'
+            f' static u8 {tag}_tail_guard[16] = {{ 0 }};')
+        slot += 1
         lines.append("")
         lines.append("#include <stdio.h>")
         lines.append(f"void port_{ov}_pack_check(void)")
