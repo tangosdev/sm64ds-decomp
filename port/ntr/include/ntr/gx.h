@@ -18,6 +18,7 @@
 #ifndef NTR_GX_H
 #define NTR_GX_H
 
+#include <stddef.h>   // size_t (MSVC's STL leaks it transitively; libstdc++/g++ does not)
 #include <stdint.h>
 
 #include "ntr/ppu.h"

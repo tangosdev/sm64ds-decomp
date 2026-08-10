@@ -1,7 +1,22 @@
 cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
-add_compile_options(/Oy-)
+# These two are MSVC-only codegen/link flags (a .map file, no frame-pointer
+# omission). On a non-MSVC (Linux/g++) build they are not valid options, so
+# guard them; the Linux port gets the equivalent -m32 / -fno-omit-frame-pointer
+# from PORT_LINUX_M32 below. The Windows build is byte-for-byte unchanged.
+if(MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
+    add_compile_options(/Oy-)
+endif()
+
+# ---- Linux port: force a 32-bit host build (the port is 32-bit only) --------
+# platform.h enforces 4-byte pointers at compile time; on Linux we must pass
+# -m32 to every C/C++ compile and to the link. Applied globally here so every
+# gate target and the ntr libs are 32-bit. Windows/MSVC never enters this block.
+if(NOT MSVC)
+    add_compile_options(-m32 -fno-omit-frame-pointer)
+    add_link_options(-m32)
+endif()
 
 # Gate 1: compile the manifest slice out of ../src plus the HAL, link the
 # smoke runner. 32-bit host only -- platform.h enforces it at compile time.
@@ -21,6 +36,15 @@ else()
     option(PORT_ENABLE_SDL2 "Build the SDL2 host backend (Linux port)" ON)
 endif()
 if(PORT_ENABLE_SDL2 AND NOT MSVC)
+    # This is a 32-bit (-m32) build, so we need the i386 multiarch SDL2, whose
+    # CMake config Debian/Ubuntu ships under /usr/lib/i386-linux-gnu/cmake/SDL2.
+    # find_package's default search does not look there on a 64-bit host, so hint
+    # it explicitly (a no-op if the caller already passed SDL2_DIR / a prefix, and
+    # harmless on non-Debian layouts where the dir simply does not exist).
+    if(NOT SDL2_DIR AND EXISTS "/usr/lib/i386-linux-gnu/cmake/SDL2")
+        set(SDL2_DIR "/usr/lib/i386-linux-gnu/cmake/SDL2" CACHE PATH
+            "i386 SDL2 CMake config dir (32-bit multiarch)")
+    endif()
     find_package(SDL2 REQUIRED)
     message(STATUS "PORT_ENABLE_SDL2: SDL2 found (${SDL2_LIBRARIES})")
     # The interactive-window targets (walk_window, walk_window_hires) get the
