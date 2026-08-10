@@ -53,10 +53,12 @@ struct RaycastGround {
     ~RaycastGround();
     void SetObjAndPos(const Vector3 &v, Actor *a);
 };
+#ifdef _WIN32 /* LINUX: each method-shadow's mangling IS the extern-C name it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ bodies. */
 RaycastGround::RaycastGround() { _ZN13RaycastGroundC1Ev(this); }
 RaycastGround::~RaycastGround() { _ZN13RaycastGroundD1Ev(this); }
 void RaycastGround::SetObjAndPos(const Vector3 &v, Actor *a)
 { _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(this, &v, a); }
+#endif /* _WIN32 */
 
 struct RaycastLine {
     RaycastLine();
@@ -65,6 +67,7 @@ struct RaycastLine {
     void SetObjAndLine(const Vector3 &a, const Vector3 &b, Actor *actor);
     Vector3 GetClsnPos();
 };
+#ifdef _WIN32 /* LINUX: each method-shadow's mangling IS the extern-C name it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ bodies. */
 RaycastLine::RaycastLine() { _ZN11RaycastLineC1Ev(this); }
 RaycastLine::~RaycastLine() { _ZN11RaycastLineD1Ev(this); }
 void RaycastLine::SetObjAndLine(const Vector3 &a, const Vector3 &b,
@@ -76,6 +79,7 @@ Vector3 RaycastLine::GetClsnPos()
     _ZN11RaycastLine10GetClsnPosEv(&tmp, this);
     return tmp;
 }
+#endif /* _WIN32 */
 
 struct Player {
     struct State;

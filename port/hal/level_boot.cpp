@@ -980,10 +980,15 @@ void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file)
 #else
 void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file);  /* Linux: real symbol from src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File */
 #endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: these extern-C names ARE the Itanium manglings of the const methods they forward to -> self-recurse on GCC. On Linux bind to the real src/ TUs. */
 int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self)
 { return ((const MeshCollider *)self)->MeshCollider::GetOctreeOriginY(); }
 int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self)
 { return ((const MeshCollider *)self)->MeshCollider::GetUnkOctreeY(); }
+#else
+int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self);
+int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self);
+#endif /* _WIN32 */
 
 // ---- the globals the sub-loaders store through -----------------------------
 //
