@@ -167,10 +167,9 @@ extern "C" void hal_camera_slots_harness_owned(void)
    them back in ROM order -- see CONTIG in port/tools/romdata.py for the
    mechanism; sizes here are the symbol deltas, all even, so align(2) packs
    with no interior padding. */
+#include "port_msvc_compat.h"
 #define COMM(sec, name, size) \
-    __pragma(section(sec, read, write))                          \
-    extern "C" __declspec(allocate(sec)) __declspec(align(2))    \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL_A(sec, ".camcomm", 2) unsigned char name[size] = {0}
 
 /* 0x020a1040 .. 0x020a1064: the local record (0x24) */
 COMM(".camcomm$0000", data_020a1040, 4);

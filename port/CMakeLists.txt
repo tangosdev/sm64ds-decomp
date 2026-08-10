@@ -20,6 +20,10 @@ if(NOT MSVC)
     # grouping). Keeping the flag global is harmless for the rest of the tree.
     add_compile_options(-m32 -fno-omit-frame-pointer -fno-toplevel-reorder)
     add_link_options(-m32)
+    # Force-include the MSVC-keyword shims into every TU so the HAL's __fastcall
+    # vtable-slot shims and __thiscall/__stdcall casts compile on GCC/Clang
+    # without editing each file's include list. MSVC never sees this.
+    add_compile_options(-include "${CMAKE_CURRENT_SOURCE_DIR}/hal/port_msvc_compat.h")
 endif()
 
 # Gate 1: compile the manifest slice out of ../src plus the HAL, link the

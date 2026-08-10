@@ -80,14 +80,15 @@ void MultiCopy32Bytes(int *src, int *dst, int len)
 // the save block in hal/level_boot.cpp uses. align(4) is load-bearing: MSVC
 // aligns arrays of 16 bytes or more to 16 by default, which would push
 // data_0209e67c off +8. hal_oam_layout_check() reads the result back.
-#ifdef _MSC_VER
-/* MSVC: force the three symbols into consecutive, name-ordered sections so the
-   linker lays them out contiguously (.oamsh$0000, $0001, $0002 merge in order
-   within .oamsh). align(4) is load-bearing (see the note above). */
+/* Force the three ROM symbols into one contiguous, declaration-ordered section
+   so their addresses land at the ROM offsets (+0x00 / +0x08 / +0x20). MSVC uses
+   $-suffix section grouping; GCC uses one .oamsh section + -fno-toplevel-reorder.
+   They MUST stay real arrays (other TUs reference them as arrays -- a pointer
+   would be an ODR/type mismatch). align(4) is load-bearing (see the note above).
+   hal_oam_layout_check() verifies the result. */
+#include "port_msvc_compat.h"
 #define OAMSHADOW(sec, name, type, count)                        \
-    __pragma(section(sec, read, write))                          \
-    __declspec(allocate(sec)) __declspec(align(4))               \
-    type name[count]
+    PORT_GROUPED_DECL(sec, ".oamsh") type name[count]
 
 unsigned char data_0209e660 = 1;
 int data_0209e664, data_0209e668, data_0209e66c, data_0209e670;
@@ -98,29 +99,6 @@ OAMSHADOW(".oamsh$0002", data_0209e694, int, 0xf8);            /* +0x020 */
 unsigned int data_0209ea74[0x100];   /* sub OAM shadow, its own 0x400 */
 
 #undef OAMSHADOW
-#else
-/* Linux/GCC: there is no __declspec(allocate). But these three symbols are
-   referenced as ARRAYS from other TUs (OAM::Load/Flush/Reset/Render, sub_screen),
-   so they MUST stay real arrays -- a pointer would be an ODR/type mismatch that
-   silently reads one indirection wrong. Their sizes exactly fill the ROM gaps
-   ([2]u32=8B, then [6]i32=24B, landing +0x08 and +0x20), so placing all three in
-   one custom section, in declaration order, reproduces the ROM's contiguous
-   0x400 struct. -fno-toplevel-reorder (added for this file in CMake) keeps GCC
-   from reordering them within the section. hal_oam_layout_check() verifies it. */
-#define OAMSHADOW(sec, name, type, count)                        \
-    __attribute__((section(".oamsh"), aligned(4), used))         \
-    type name[count]
-
-unsigned char data_0209e660 = 1;
-int data_0209e664, data_0209e668, data_0209e66c, data_0209e670;
-/* main OAM shadow, 0x400 bytes, spelled as the ROM's three symbols */
-OAMSHADOW(".oamsh$0000", data_0209e674, unsigned int, 2);      /* +0x000 */
-OAMSHADOW(".oamsh$0001", data_0209e67c, int, 6);               /* +0x008 */
-OAMSHADOW(".oamsh$0002", data_0209e694, int, 0xf8);            /* +0x020 */
-unsigned int data_0209ea74[0x100];   /* sub OAM shadow, its own 0x400 */
-
-#undef OAMSHADOW
-#endif
 
 /* Reads the section trick back. Returns nonzero when the three symbols came
    out at the ROM's offsets, which is the precondition for dual-OAM mode. */

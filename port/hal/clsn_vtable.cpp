@@ -282,10 +282,9 @@ void hal_fill_mmc_vtable(void)
 // mechanism hal/level_boot.cpp uses for the save block and romdata.py for the
 // camera-mode table: MSVC sorts by the part after the `$`, and every delta
 // here equals the symbol's own size.
+#include "port_msvc_compat.h"
 #define CLSNSCRATCH(sec, name, size) \
-    __pragma(section(sec, read, write))                          \
-    extern "C" __declspec(allocate(sec)) __declspec(align(4))    \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL(sec, ".mmcray") unsigned char name[size] = {0}
 
 CLSNSCRATCH(".mmcray$0000", data_020a0d0c, 0x10);
 CLSNSCRATCH(".mmcray$0001", data_020a0d1c, 0x44);

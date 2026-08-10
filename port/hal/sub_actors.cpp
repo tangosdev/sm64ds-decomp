@@ -157,10 +157,9 @@ extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void)
 // and the run has to be contiguous, the mechanism hal/level_boot.cpp uses for
 // the save block. Sizes are each symbol's own delta in config/arm9/symbols.txt:
 // f3a4 +0x20, f3c4 +4, f3c8 +0x20, f3e8 +0x24.
+#include "port_msvc_compat.h"
 #define MMBLK(sec, name, size)                                    \
-    __pragma(section(sec, read, write))                           \
-    extern "C" __declspec(allocate(sec)) __declspec(align(4))     \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL(sec, ".mmblk") unsigned char name[size] = {0}
 
 MMBLK(".mmblk$0000", data_0209f3a4, 0x20);   /* 8 Obj* -- the red-coin markers */
 MMBLK(".mmblk$0001", data_0209f3c4, 0x04);

@@ -1016,10 +1016,9 @@ extern unsigned char *data_0209f340;
 // Grouped sections put them back in ROM order, the mechanism romdata.py uses
 // for the camera-mode table. Every delta here equals the symbol's own size
 // and all four are even, so align(2) packs with no interior padding.
+#include "port_msvc_compat.h"
 #define SAVEBLK(sec, name, size) \
-    __pragma(section(sec, read, write))                          \
-    extern "C" __declspec(allocate(sec)) __declspec(align(2))    \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL_A(sec, ".savblk", 2) unsigned char name[size] = {0}
 
 SAVEBLK(".savblk$0000", data_0209caa0, 0x14);
 SAVEBLK(".savblk$0001", data_0209cab4, 0x1e);
