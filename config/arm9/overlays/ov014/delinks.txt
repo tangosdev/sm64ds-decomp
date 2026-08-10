@@ -146,7 +146,7 @@ src/_ZN15ChainChompFenceD1Ev.cpp:
     complete
     .text start:0x02112e0c end:0x02112e50
 
-src/_ZN15ChainChompFenceD0Ev.c:
+src/_ZN15ChainChompFenceD0Ev.cpp:
     complete
     .text start:0x02112e50 end:0x02112ea8
 

@@ -8,7 +8,7 @@ src/_ZN9SeesawBobD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135744
 
-src/_ZN9SeesawBobD0Ev.c:
+src/_ZN9SeesawBobD0Ev.cpp:
     complete
     .text start:0x02135744 end:0x0213579c
 

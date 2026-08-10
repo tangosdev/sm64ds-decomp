@@ -16,7 +16,7 @@ src/_ZN13MontyMoleRockD1Ev.cpp:
     complete
     .text start:0x021237c4 end:0x02123804
 
-src/_ZN13MontyMoleRockD0Ev.c:
+src/_ZN13MontyMoleRockD0Ev.cpp:
     complete
     .text start:0x02123804 end:0x02123858
 

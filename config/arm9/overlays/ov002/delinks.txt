@@ -607,7 +607,7 @@ src/_ZN13BigBrickBlockD1Ev.cpp:
     complete
     .text start:0x020b35a0 end:0x020b35e4
 
-src/_ZN13BigBrickBlockD0Ev.c:
+src/_ZN13BigBrickBlockD0Ev.cpp:
     complete
     .text start:0x020b35e4 end:0x020b363c
 
@@ -1338,7 +1338,7 @@ src/_ZN10StarSwitchD1Ev.cpp:
     complete
     .text start:0x020b9e64 end:0x020b9ea8
 
-src/_ZN10StarSwitchD0Ev.c:
+src/_ZN10StarSwitchD0Ev.cpp:
     complete
     .text start:0x020b9ea8 end:0x020b9f00
 
@@ -1633,7 +1633,7 @@ src/_ZN11CannonHatchD1Ev.cpp:
     complete
     .text start:0x020bc8f4 end:0x020bc938
 
-src/_ZN11CannonHatchD0Ev.c:
+src/_ZN11CannonHatchD0Ev.cpp:
     complete
     .text start:0x020bc938 end:0x020bc990
 
@@ -4728,7 +4728,7 @@ src/func_ov002_020ef2a4.cpp:
     complete
     .text start:0x020ef2a4 end:0x020ef320
 
-src/_ZN8PathLiftD0Ev.c:
+src/_ZN8PathLiftD0Ev.cpp:
     complete
     .text start:0x020ef320 end:0x020ef390
 
@@ -4935,7 +4935,7 @@ src/_ZN14BlueCoinSwitchD1Ev.cpp:
     complete
     .text start:0x020f11b0 end:0x020f11f4
 
-src/_ZN14BlueCoinSwitchD0Ev.c:
+src/_ZN14BlueCoinSwitchD0Ev.cpp:
     complete
     .text start:0x020f11f4 end:0x020f124c
 

@@ -118,7 +118,7 @@ src/_ZN17SlidingPlatformWfD1Ev.cpp:
     complete
     .text start:0x02132404 end:0x02132448
 
-src/_ZN17SlidingPlatformWfD0Ev.c:
+src/_ZN17SlidingPlatformWfD0Ev.cpp:
     complete
     .text start:0x02132448 end:0x021324a0
 
@@ -290,7 +290,7 @@ src/_ZN5StumpD1Ev.cpp:
     complete
     .text start:0x02133968 end:0x021339a8
 
-src/_ZN5StumpD0Ev.c:
+src/_ZN5StumpD0Ev.cpp:
     complete
     .text start:0x021339a8 end:0x021339fc
 

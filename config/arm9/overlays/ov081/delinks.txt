@@ -58,7 +58,7 @@ src/_ZN10MrBlizzardD1Ev.cpp:
     complete
     .text start:0x02124090 end:0x021240d8
 
-src/_ZN10MrBlizzardD0Ev.c:
+src/_ZN10MrBlizzardD0Ev.cpp:
     complete
     .text start:0x021240d8 end:0x02124134
 
@@ -395,7 +395,7 @@ src/_ZN8IceBlockD1Ev.cpp:
     complete
     .text start:0x02127b34 end:0x02127b80
 
-src/_ZN8IceBlockD0Ev.c:
+src/_ZN8IceBlockD0Ev.cpp:
     complete
     .text start:0x02127b80 end:0x02127be0
 

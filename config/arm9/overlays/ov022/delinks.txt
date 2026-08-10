@@ -63,7 +63,7 @@ src/_ZN19RotatingPlatformLllD1Ev.cpp:
     complete
     .text start:0x021116c4 end:0x02111708
 
-src/_ZN19RotatingPlatformLllD0Ev.c:
+src/_ZN19RotatingPlatformLllD0Ev.cpp:
     complete
     .text start:0x02111708 end:0x02111760
 
@@ -186,7 +186,7 @@ src/_ZN19FloatingFloorLllBigD1Ev.cpp:
     complete
     .text start:0x02112130 end:0x02112174
 
-src/_ZN19FloatingFloorLllBigD0Ev.c:
+src/_ZN19FloatingFloorLllBigD0Ev.cpp:
     complete
     .text start:0x02112174 end:0x021121cc
 

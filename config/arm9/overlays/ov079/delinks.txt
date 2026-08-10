@@ -151,7 +151,7 @@ src/_ZN10BulletBillD1Ev.cpp:
     complete
     .text start:0x02126648 end:0x02126698
 
-src/_ZN10BulletBillD0Ev.c:
+src/_ZN10BulletBillD0Ev.cpp:
     complete
     .text start:0x02126698 end:0x021266fc
 
@@ -231,7 +231,7 @@ src/_ZN12FortressWallD1Ev.cpp:
     complete
     .text start:0x021271e4 end:0x02127228
 
-src/_ZN12FortressWallD0Ev.c:
+src/_ZN12FortressWallD0Ev.cpp:
     complete
     .text start:0x02127228 end:0x02127280
 

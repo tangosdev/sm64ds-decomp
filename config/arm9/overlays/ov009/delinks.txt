@@ -88,7 +88,7 @@ src/_ZN8MetalNetD1Ev.cpp:
     complete
     .text start:0x02111dc4 end:0x02111e08
 
-src/_ZN8MetalNetD0Ev.c:
+src/_ZN8MetalNetD0Ev.cpp:
     complete
     .text start:0x02111e08 end:0x02111e60
 

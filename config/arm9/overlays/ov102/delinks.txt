@@ -8,7 +8,7 @@ src/_ZN13FortressTowerD1Ev.cpp:
     complete
     .text start:0x02148a80 end:0x02148ac4
 
-src/_ZN13FortressTowerD0Ev.c:
+src/_ZN13FortressTowerD0Ev.cpp:
     complete
     .text start:0x02148ac4 end:0x02148b1c
 
@@ -55,7 +55,7 @@ src/_ZN13QuestionBlockD1Ev.cpp:
     complete
     .text start:0x02148fbc end:0x02149010
 
-src/_ZN13QuestionBlockD0Ev.c:
+src/_ZN13QuestionBlockD0Ev.cpp:
     complete
     .text start:0x02149010 end:0x02149078
 
@@ -353,7 +353,7 @@ src/_ZN10KoopaShellD1Ev.cpp:
     complete
     .text start:0x0214c748 end:0x0214c798
 
-src/_ZN10KoopaShellD0Ev.c:
+src/_ZN10KoopaShellD0Ev.cpp:
     complete
     .text start:0x0214c798 end:0x0214c7fc
 

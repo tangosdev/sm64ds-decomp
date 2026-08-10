@@ -160,7 +160,7 @@ src/_ZN8IceSheetD1Ev.cpp:
     complete
     .text start:0x021127bc end:0x02112800
 
-src/_ZN8IceSheetD0Ev.c:
+src/_ZN8IceSheetD0Ev.cpp:
     complete
     .text start:0x02112800 end:0x02112858
 
