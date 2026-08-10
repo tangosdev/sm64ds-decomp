@@ -747,6 +747,7 @@ int _ZN9Animation8FinishedEv(void *self)
 #else
 int _ZN9Animation8FinishedEv(void *self);  /* Linux: real symbol from src/_ZN9Animation8FinishedEv */
 #endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ TU (the host NULL-fp log is Windows-only as a result). */
 char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp)
 {
     if (!fp) {
@@ -755,6 +756,9 @@ char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp)
     }
     return Animation::LoadFile(*(SharedFilePtr *)fp);
 }
+#else
+char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
+#endif /* _WIN32 */
 
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player6IsAnimEj(void *self, unsigned a)
@@ -816,8 +820,12 @@ void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
 void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
                                                        void *btp);  /* Linux: real symbol from src/_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File */
 #endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to -> self-recurse on GCC. On Linux bind to the real src/ TU. */
 void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *fp)
 { return TextureSequence::LoadFile(*(SharedFilePtr *)fp); }
+#else
+void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *fp);
+#endif /* _WIN32 */
 
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(void *self, void *node)
