@@ -18,9 +18,12 @@
  * (0x0d4 + 0x40 / +0x44 / +0x48). They were declared as siblings of a `u8 mModel`
  * marker whose pad stopped short of the real object.
  *
- * sizeof is 0x324, and the evidence is the derived classes: BowserFireSeaArena's
- * own first member sits at 0x324, and its destructor reproduces the ROM only if
- * this class ends exactly there.
+ * The class's DATA ends at 0x31e, and that is not the same as its sizeof. A
+ * derived class's fields start at the base's data size rounded to their own
+ * alignment, so StarSwitch's first s32 lands at 0x320 and BowserFireSeaArena's
+ * first s16 lands at 0x31e. Claiming 0x31e..0x324 for Platform reproduces
+ * BowserFireSeaArena (its three s16 sit at the same addresses either way) and
+ * makes StarSwitch impossible, which is how the error was caught.
  *
  * Field NAMES for the unk_ entries are placeholders. */
 #ifndef PLATFORM_H
@@ -63,11 +66,6 @@ struct Platform : Actor {
     Matrix4x3 mClsnMat;     /* 0x2ec */
     u8  unk_31c;            /* 0x31c */
     u8  unk_31d;            /* 0x31d */
-    /* 0x31e..0x324: evidenced from BowserFireSeaArena, which reads all three and
-       whose own first member starts at 0x324. They are Platform's, not its. */
-    s16 unk_31e;            /* 0x31e */
-    s16 unk_320;            /* 0x320 */
-    s16 unk_322;            /* 0x322 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* INLINE ON PURPOSE. Every Platform subclass's destructor inlines this body
@@ -84,7 +82,10 @@ struct Platform : Actor {
     void UpdateModelPosAndRotY();
 };
 
-typedef char Platform_size_must_be_0x324[sizeof(Platform) == 0x324 ? 1 : -1];
+/* 0x320, not 0x324: the last field ends at 0x31e and the class rounds up to its
+   4-byte alignment. The DATA size is 0x31e, and that is what a derived class's
+   fields start from -- see the note above. */
+typedef char Platform_size_must_be_0x320[sizeof(Platform) == 0x320 ? 1 : -1];
 
 #else
 
