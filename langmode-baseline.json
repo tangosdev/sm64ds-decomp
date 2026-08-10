@@ -31,8 +31,8 @@
       },
       "D1": {
         "draft": 0,
-        "migrated": 72,
-        "unmigrated": 194
+        "migrated": 73,
+        "unmigrated": 193
       },
       "D2": {
         "draft": 0,
@@ -45,12 +45,12 @@
         "unmigrated": 374
       }
     },
-    "cpp_still_handspelled": 155,
+    "cpp_still_handspelled": 154,
     "mangled_c": 745,
     "mangled_cpp": 1780,
     "mangled_total": 2525,
     "nonmatching_drafts": 9,
-    "unmigrated_total": 900
+    "unmigrated_total": 899
   },
   "shadow_decls": {
     "local_body_no_include": 1542,
