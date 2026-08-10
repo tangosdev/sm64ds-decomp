@@ -31,22 +31,22 @@ int HootTheOwl::Behavior()
         }
     }
     if (*(char**)((char *)&mCurrentState) == data_ov094_02136b40) return 1;
-    unk_368 = unk_3f0;
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    mModelAnim.speed = mAnimSpeed;
+    mModelAnim.Advance();
     {
         char *m = *(char**)((char *)&mCurrentState);
         if ((m == data_ov094_02136b50 || m == data_ov094_02136b60 ||
              m == data_ov094_02136b30) &&
-            (unsigned short)(unk_364 >> 0xc) == 0) {
+            (unsigned short)(mModelAnim.currFrame >> 0xc) == 0) {
             func_02012694(0x139, ((char *)this)+0x74);
         }
     }
     if (*(char**)((char *)&mCurrentState) == data_ov094_02136b70) {
         if (*(char**)((char *)&mCurrentState) == data_ov094_02136b70) {
             func_ov094_021362e0(((char *)this));
-            unk_08c = unk_092;
-            unk_08e = unk_094;
-            unk_090 = unk_096;
+            mAngleX = mPrevAngleX;
+            mAngleY = mPrevAngleY;
+            mAngleZ = mPrevAngleZ;
             _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this)+0x150, 0);
         } else {
             func_ov094_021361d8(((char *)this));
@@ -54,17 +54,17 @@ int HootTheOwl::Behavior()
         return 1;
     }
     {
-        int s = unk_0a8 + unk_09c;
-        int m2 = unk_0a0;
+        int s = mVertSpeed + mVertAccel;
+        int m2 = mTerminalVelocity;
         int ac = unk_0ac;
         if (s >= m2) m2 = s;
-        unk_0a8 = m2;
+        mVertSpeed = m2;
         unk_0ac = ac;
     }
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), ((char *)this)+0x110);
-    unk_08c = unk_092;
-    unk_08e = unk_094;
-    unk_090 = unk_096;
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
     func_ov094_021361d8(((char *)this));
     if (*(char**)((char *)&mCurrentState) == data_ov094_02136b60 && unk_3d4 == 2) {
         func_ov094_021357a4(((char *)this));

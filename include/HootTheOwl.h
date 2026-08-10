@@ -1,60 +1,69 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class HootTheOwl: 5 matched functions, 24 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef HOOTTHEOWL_H
 #define HOOTTHEOWL_H
+
 #include "types.h"
+
+/* Derives from Enemy, and the class's own destructor is what proves it:
+ * `_ZN10HootTheOwlD1Ev` stores this vtable, destroys the four members below in
+ * reverse declaration order, then calls `Enemy::~Enemy`. Everything this header
+ * used to restate below 0x110 belongs to that chain and is inherited now --
+ * nine of those markers turned out to be named Actor/Enemy fields (mAngleX,
+ * mPrevAngleX, mVertAccel, mTerminalVelocity, mVertSpeed, ...).
+ *
+ * THE FOUR MEMBERS CLOSE EXACTLY ON EACH OTHER, which is four independent
+ * confirmations of one layout rather than four guesses:
+ *
+ *     0x110 MovingCylinderClsnWithPos  0x40   -> 0x150
+ *     0x150 WithMeshClsn               0x1bc  -> 0x30c
+ *     0x30c ModelAnim                  0x64   -> 0x370
+ *     0x370 ShadowModel                0x28   -> 0x398
+ *
+ * and Enemy's own 0x110 closes exactly on the first of them.
+ *
+ * Typing them absorbed four markers that were their insides, each corroborated
+ * by what the code does with it:
+ *   - unk_128 = mMovingCylinderClsnWithPos.flags  (CylinderClsn +0x18)
+ *   - mAnimation = the ModelAnim's Animation base (+0x50)
+ *   - unk_364 = that Animation's currFrame (+0x08); Behavior reads it as
+ *     `>> 12`, i.e. the integer frame of a 20.12 fixed-point count
+ *   - unk_368 = that Animation's speed (+0x0c); Behavior copies mAnimSpeed
+ *     into it, and InitResources sets mAnimSpeed to 0x1000, which is 1.0
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct HootTheOwl {
-    u8  pad_000[0x8c];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
-    s16 unk_092;            /* 0x092 */
-    s16 unk_094;            /* 0x094 */
-    s16 unk_096;            /* 0x096 */
-    u8  pad_098[0x4];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
-    u8  pad_0b0[0x50];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  mMovingCylinderClsnWithPos;            /* 0x110 */
-    u8  pad_111[0x17];
-    u8  unk_128;            /* 0x128 */
-    u8  pad_129[0x27];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN10HootTheOwlD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x150 */
-    u8  mModelAnim;            /* 0x30c */
-    u8  pad_30d[0x4f];
-    u8  mAnimation;            /* 0x35c */
-    u8  pad_35d[0x7];
-    s32 unk_364;            /* 0x364 */
-    s32 unk_368;            /* 0x368 */
-    u8  pad_36c[0x4];
-    u8  mShadowModel;            /* 0x370 */
-    u8  pad_371[0x57];
-    s32 mCurrentState;            /* 0x3c8 */
-    s32 unk_3cc;            /* 0x3cc */
+struct HootTheOwl : Enemy {
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos; /* 0x110 */
+    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    ModelAnim mModelAnim;             /* 0x30c */
+    ShadowModel mShadowModel;         /* 0x370 */
+    u8  pad_398[0x30];
+    s32 mCurrentState;                /* 0x3c8 */
+    s32 unk_3cc;                      /* 0x3cc */
     u8  pad_3d0[0x4];
-    u8  unk_3d4;            /* 0x3d4 */
+    u8  unk_3d4;                      /* 0x3d4 */
     u8  pad_3d5[0xf];
-    u8  unk_3e4;            /* 0x3e4 */
+    u8  unk_3e4;                      /* 0x3e4 */
     u8  pad_3e5[0xb];
-    s32 unk_3f0;            /* 0x3f0 */
-#ifdef __cplusplus
-    /* methods */
+    Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mModelAnim.speed */
+
+    /* --- vtable --- */
+    virtual ~HootTheOwl();
+
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
-#endif
 };
 
-#endif
+typedef char HootTheOwl_size_must_be_0x3f4[sizeof(HootTheOwl) == 0x3f4 ? 1 : -1];
+
+#endif /* HOOTTHEOWL_H */

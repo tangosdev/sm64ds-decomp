@@ -40,13 +40,13 @@ int HootTheOwl::InitResources()
     _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this)+0x110, ((char*)this), v0, 0x64000, 0x64000, 0x800004, 0);
 
     unk_3cc = zero;
-    fl = LA((char*)&unk_128);
+    fl = LA((char*)&mMovingCylinderClsnWithPos.flags);
     {
         int t = *fl;
         *fl = t | 2;
     }
-    unk_0a0 = -grav;
-    unk_3f0 = 0x1000;
+    mTerminalVelocity = -grav;
+    mAnimSpeed = 0x1000;
     unk_3e4 = 0x1f;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x150, ((char*)this), 0x50000, 0x64000, (void*)zero, zero);
     func_ov094_02136188(((char*)this), &data_ov094_02136b40);

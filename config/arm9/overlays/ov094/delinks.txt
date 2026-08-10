@@ -3,11 +3,11 @@
     .ctor       start:0x021369b8 end:0x021369bc kind:rodata align:4
     .data       start:0x021369c0 end:0x02136ae0 kind:data align:32
     .bss        start:0x02136ae0 end:0x02136b80 kind:bss align:32
-src/_ZN10HootTheOwlD1Ev.c:
+src/_ZN10HootTheOwlD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135748
 
-src/_ZN10HootTheOwlD0Ev.c:
+src/_ZN10HootTheOwlD0Ev.cpp:
     complete
     .text start:0x02135748 end:0x021357a4
 
@@ -67,11 +67,11 @@ src/func_ov094_021362e0.c:
     complete
     .text start:0x021362e0 end:0x021363e0
 
-src/_ZN10HootTheOwl16CleanupResourcesEv.c:
+src/_ZN10HootTheOwl16CleanupResourcesEv.cpp:
     complete
     .text start:0x021363e0 end:0x02136428
 
-src/_ZN10HootTheOwl16OnPendingDestroyEv.c:
+src/_ZN10HootTheOwl16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02136428 end:0x0213642c
 
