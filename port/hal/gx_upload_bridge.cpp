@@ -84,15 +84,17 @@ struct ModelComponents {
     void UpdateVertsUsingBones();
     void UpdateBones(BCA_File *file, int frame);
 };
+extern "C" void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(void *, void *, int);
+#ifdef _WIN32 /* LINUX: each `ModelComponents::X` IS the _ZN15ModelComponents...X symbol it forwards to (this=self, args match) -> self-recurse on GCC. On Linux bind to the real src/ TUs. */
 void ModelComponents::UpdateVertsUsingBones()
 {
     _ZN15ModelComponents21UpdateVertsUsingBonesEv(this);
 }
-extern "C" void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(void *, void *, int);
 void ModelComponents::UpdateBones(BCA_File *file, int frame)
 {
     _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(this, file, frame);
 }
+#endif /* _WIN32 */
 
 
 // The compressed-texture loader keeps its C-named terminal-floor definition.

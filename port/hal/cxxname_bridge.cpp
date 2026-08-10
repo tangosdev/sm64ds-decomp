@@ -111,6 +111,7 @@ void *data_020a0c80[24];        /* the collision actor registry (gate 8) */
 extern "C" {
 void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp)
 { return MeshCollider::LoadFile(*(SharedFilePtr *)fp); }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to (self=this, args match) -> self-recurse on GCC. On Linux bind to the real src/ TU (the PORT_TRACE_SETFILE trace is Windows-only). */
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 {
     if (getenv("PORT_TRACE_SETFILE")) {
@@ -124,6 +125,9 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
     }
     ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b);
 }
+#else
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
+#endif /* _WIN32 */
 }
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
