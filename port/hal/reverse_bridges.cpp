@@ -323,6 +323,17 @@ extern "C" void _ZN7Message7AddCharEc(char ch);  /* Linux: real symbol from src/
    skipped sprite and, more usefully, prints the address of the table that is
    missing it -- which is the actual bug, some sprite table not being seated.
    The bound is generous: the biggest real list here is well under 256. */
+#ifndef _WIN32
+/* LINUX: this extern-C name IS the GCC Itanium mangling of the very OAM::Render
+   member it forwards to at line ~348 (src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp),
+   so on GCC this wrapper self-recurses. On MSVC the C++ member decorates
+   differently, so the wrapper (with its terminator-safety check) is a distinct
+   symbol and callers get the guarded version. On Linux, callers of this Itanium
+   name bind straight to the real src member (the safety check is MSVC-only). */
+extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+    int sub, void *attr, int x, int y, int pal, int pri,
+    int sx, int sy, int rot, int mode);
+#else
 extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     int sub, void *attr, int x, int y, int pal, int pri,
     int sx, int sy, int rot, int mode)
@@ -349,6 +360,7 @@ extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
                 mode);
     return 0;
 }
+#endif /* _WIN32 (OAM::Render safety wrapper; Linux binds to the real member) */
 
 /* shadow-defined in their own TUs (struct CylinderClsn / struct Camera) */
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */

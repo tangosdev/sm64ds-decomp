@@ -354,10 +354,15 @@ extern "C" void _ZN5Stage20RenderBouncingArrowsEv(void)
 /* ...and the reverse. CalculateDigits' TU is a .c file, so it defines the C
    name, while RenderCoinCount and RenderLifeCount call it as a member. */
 extern "C" void _ZN3HUD15CalculateDigitsEt(void *self, unsigned short n);
+#ifdef _WIN32
 void HUD::CalculateDigits(unsigned short n)
 {
     _ZN3HUD15CalculateDigitsEt(this, n);
 }
+#endif /* _WIN32: on GCC the C++ method HUD::CalculateDigits mangles to the SAME
+   _ZN3HUD15CalculateDigitsEt as the src .c def, so both the method-form and
+   C-name-form callers bind straight to src/_ZN3HUD15CalculateDigitsEt.c; this
+   face would self-recurse. */
 
 namespace {
 
