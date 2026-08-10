@@ -280,8 +280,16 @@ unsigned char data_0209f4a9[0x60];
 // __thiscall member. A linker alias would hand a __thiscall body an ecx that
 // never held `this`, so each needs a real face. Same mechanism as
 // hal/method_faces.cpp.
+#ifdef _WIN32
 #define HUD_FACE(sym, meth)                                                   \
     extern "C" void sym(void *s) { ((HUD *)s)->HUD::meth(); }
+#else
+/* LINUX: on GCC each face name IS the Itanium mangling of the HUD::meth() it
+   forwards to (src/<sym>.cpp defines that same _ZN3HUD..Ev symbol), so the face
+   self-recurses. HUD::Render already spells the call `sym((void*)this)`, which
+   binds straight to the real src member (this == first arg). Declare, don't define. */
+#define HUD_FACE(sym, meth) extern "C" void sym(void *s);
+#endif
 
 /* Only the leaves whose own TU defines a __thiscall MEMBER. The other four --
    RenderStarCount, RenderSilverStars, RenderRedCoins, RenderVsTimer -- define

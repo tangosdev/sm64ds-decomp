@@ -17,12 +17,19 @@
    `struct View`); src defines the function at C linkage. Same shape as the
    method faces in method_faces.cpp, kept here because the local View has no
    header. */
+extern "C" int _ZN4View6RenderEv(void *self);
+#ifdef _WIN32
+/* MSVC decorates View::Render() (?Render@View@@...) differently from the src's
+   C-linkage _ZN4View6RenderEv, so this face bridges the method call to it. */
 struct View {
     int render();
     int Render();
 };
-extern "C" int _ZN4View6RenderEv(void *self);
 int View::Render() { return _ZN4View6RenderEv(this); }
+#endif /* _WIN32: on GCC the C++ method View::Render() mangles to the SAME
+   _ZN4View6RenderEv as the src C-linkage def, so Camera::Render's view->Render()
+   binds straight to src/_ZN4View6RenderEv.c (self==this). This face would
+   self-recurse. */
 
 extern "C" {
 

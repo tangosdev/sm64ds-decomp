@@ -288,8 +288,19 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
     char *neck = *(char **)((char *)ma + 0x14) + 0x2d0;
     if (neck)
         m43_mul((const int *)neck, scene, (int *)(head + 0x1c));
+#ifdef _WIN32
+    /* MSVC folds the two Itanium dtor slots into one, so Model::Render is slot 4,
+       and the object's own vtable thunks are __fastcall (this in ecx). */
     ((void(__fastcall *)(void *, void *, const void *))(
         ((void ***)head)[0][4]))(head, 0, 0);
+#else
+    /* Linux/Itanium keeps TWO dtor slots (D1@0,D0@1), so Model::Render is slot 5
+       (slot 4 is Virtual10 -- dispatching 4 here handed Virtual10 a head model and
+       faulted). The Linux Model vtable is filled with plain cdecl thunks
+       (mvL_render, this on the stack), so call slot 5 cdecl, not __fastcall. */
+    ((void(*)(void *, const void *))(
+        ((void ***)head)[0][5]))(head, 0);
+#endif
 }
 
 void hal_render_player_world(void *player)
