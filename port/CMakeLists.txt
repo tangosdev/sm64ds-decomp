@@ -92,7 +92,14 @@ endif()
 set(PORT_LIN_FIXUP_SYMS
     _ZN11ShadowModel12InitCylinderEv
     _ZN5Model17LoadTextureToVramEPcj
-    _ZN15CommonModelClsn12InitCylinderEv)
+    _ZN15CommonModelClsn12InitCylinderEv
+    # goto-crosses-initialization (//cpp src): mwcc/MSVC accept a goto that jumps
+    # over a scalar local's init; g++ in C++ mode makes it a hard error and
+    # -fpermissive does NOT downgrade it. hostgen.py splits `T x = e;` into
+    # `T x; x = e;` in the GCC host copy (byte-identical program, legal to jump
+    # over). src/ is untouched; the mwcc byte-match is unaffected.
+    func_ov002_020e2ea0
+    _ZN6Player17St_HoldLight_MainEv)
 if(NOT MSVC)
     set(PORT_LIN_FIXUP_MAP "")
     foreach(sym IN LISTS PORT_LIN_FIXUP_SYMS)

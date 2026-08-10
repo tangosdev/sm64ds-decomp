@@ -215,6 +215,40 @@ CBOOL = re.compile(r"\b_Bool\b")
 EXTERN_C_EXTERN = re.compile(r'(extern\s+"C"\s+)extern\b')
 
 
+# `goto` that jumps over a local variable's INITIALIZATION. mwcc/MSVC accept it
+# (the ROM code does exactly this), and so does C -- but g++ in C++ mode makes
+# it a hard error ("jump to label ... crosses initialization of ..."), and
+# -fpermissive does NOT downgrade it for scalars. Splitting the crossed
+# declaration `T name = expr;` into a bare declaration plus a separate
+# assignment `T name; name = expr;` is byte-for-byte the same program (a POD/
+# scalar local, no constructor) and is legal to jump over. We only do this in a
+# TU that actually contains a `goto`, and only for a single-declarator scalar/
+# pointer initialization inside a function body (indented; not a top-level
+# extern/typedef/static/const, not a multi-declarator, not brace/paren init).
+# The byte-locked src file is untouched -- this rewrites only the GCC host copy.
+_TYPE = r"(?:unsigned\s+|signed\s+)?(?:char|short|int|long|float|double|" \
+        r"u8|u16|u32|u64|s8|s16|s32|s64|bool|Fix12|[A-Za-z_]\w*)"
+GOTO_SPLIT = re.compile(
+    r"^(?P<ind>[ \t]+)"                      # indented (inside a function)
+    r"(?P<decl>" + _TYPE + r"(?:\s*\*+\s*|\s+)"  # type, optional pointer stars
+    r"(?P<name>[A-Za-z_]\w*))\s*=\s*"        # single identifier declarator
+    r"(?P<init>[^;{}]+);[ \t]*$",            # scalar initializer, no brace/comma-list
+    re.MULTILINE)
+
+
+def _goto_split_line(m):
+    # Skip declarations we must not touch: multi-declarator (comma), storage
+    # qualifiers, and anything that is really an assignment to an existing var
+    # (handled by the type match already excluding bare identifiers on LHS).
+    init = m.group("init")
+    decl = m.group("decl")
+    if "," in init or "," in decl:
+        return m.group(0)
+    if re.search(r"\b(static|const|register|extern|typedef|return)\b", decl):
+        return m.group(0)
+    return f"{m.group('ind')}{decl}; {m.group('name')} = {init};"
+
+
 def transform(text, extern_data=False):
     """Return (new_text, n_rewrites)."""
     text, n3 = ATTRIBUTE.subn("", text)
@@ -223,10 +257,13 @@ def transform(text, extern_data=False):
     text, n1 = MMIO_DEREF.subn(lambda m: f"NTR_MMIO({m.group(2).strip()}, {m.group(3)})", text)
     text, n5 = mmio_ptr(text)
     text, n6 = CBOOL.subn("bool", text)
+    n8 = 0
+    if re.search(r"\bgoto\b", text):
+        text, n8 = GOTO_SPLIT.subn(_goto_split_line, text)
     n4 = 0
     if extern_data:
         text, n4 = EXTERN_DATA.subn(r"\1extern \2\3\4;", text)
-    return text, n1 + n2 + n3 + n4 + n5 + n6 + n7
+    return text, n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8
 
 
 # ~110 files in the decomp are ARM assembly blocks -- CP15 cache ops, the CRT0,
