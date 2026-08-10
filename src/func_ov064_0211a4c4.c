@@ -38,7 +38,7 @@ void func_ov064_0211a4c4(char *sl)
         int t = *(u16 *)(fp + 0xc);
         t = t == 0xbf;
         if (t != false) {
-            Vector3 *psrc = (Vector3 *)(((long long)(int)(fp + 0x5c)));
+            Vector3 *psrc = (Vector3 *)(fp + 0x5c);
             Vector3 v;
             v.x = psrc->x;
             v.y = psrc->y;

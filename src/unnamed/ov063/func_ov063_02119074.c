@@ -41,7 +41,7 @@ void func_ov063_02119074(char *self)
         char *r;
         s32 scale;
 
-        *(u16 *)(((long long)(int)(self + 0x5d4))) |= 8;
+        *(u16 *)(self + 0x5d4) |= 8;
         *(unsigned char *)(self + 0x5ca) = 3;
         *(int *)(self + 0x584) =
             data_ov063_0211e1d0[*(unsigned char *)(self + 0x5cf) - 0xc];
@@ -59,7 +59,7 @@ void func_ov063_02119074(char *self)
                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f,
                                                  0x6b000, 1);
                 *(u16 *)(self + 0x500 + 0xc6) = 1;
-                *(u16 *)(((int)self + 0x5d4)) |= 0x200;
+                *(u16 *)((int)self + 0x5d4) |= 0x200;
             }
 
             *(int *)(self + 0x98) = 0x800;
@@ -81,10 +81,10 @@ void func_ov063_02119074(char *self)
             *(int *)(self + 0x590) * *(int *)(self + 0x584);
         *(int *)(self + 0x18c) =
             *(int *)(self + 0x594) * *(int *)(self + 0x584);
-        *(int *)(((long long)(int)(self + 0x19c))) &= ~1;
+        *(int *)(self + 0x19c) &= ~1;
     } else {
-        *(u16 *)(((long long)((int)self + 0x5d4))) &= ~8;
-        *(int *)(((int)self + 0x19c)) |= 1;
+        *(u16 *)((long long)((int)self + 0x5d4)) &= ~8;
+        *(int *)((int)self + 0x19c) |= 1;
         func_ov063_0211adfc(self);
     }
 }

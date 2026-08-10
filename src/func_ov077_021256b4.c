@@ -6,7 +6,7 @@
 #include "common.h"
 extern s16 data_02082214[];
 extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
-#define LA(p) ((int)(((s64)(int)(p))))
+#define LA(p) ((int)(p))
 int func_ov077_021256b4(char *o)
 {
     char *d0;

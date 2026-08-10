@@ -36,7 +36,7 @@ int func_ov062_021165e8(char* c)
     if (player == 0)
         return 1;
 
-    pp = (struct Vector3*)(int)(((long long)(int)(player + 0x5c)));
+    pp = (struct Vector3*)(int)(player + 0x5c);
     pos.x = pp->x;
     pos.y = pp->y;
     pos.z = pp->z;

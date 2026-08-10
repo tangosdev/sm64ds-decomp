@@ -8,7 +8,7 @@ int func_ov064_0211616c(char* c) {
         _ZN9ActorBase18MarkForDestructionEv(c);
         return 1;
     }
-    int *p = (int*)((((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFULL));
+    int *p = (int*)((int)c + 0x60);
     *p = *p - 0x5000;
     *(void**)(c + 0x334) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         *(u32*)(c + 0x334),

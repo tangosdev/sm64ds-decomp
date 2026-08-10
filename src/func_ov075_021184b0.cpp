@@ -12,7 +12,7 @@ extern OamAttr data_ov075_0211cb84;
 extern OamAttr *data_ov075_0211c9f4[];
 extern OamAttr *data_ov075_0211c9e0[];
 
-#define LADR(p) ((int *)(unsigned int)(((long long)(int)(p))))
+#define LADR(p) ((int *)(unsigned int)(p))
 
 extern "C" void func_ov075_021184b0(char *sl)
 {

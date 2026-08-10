@@ -71,21 +71,21 @@ extern "C" void func_ov084_0212d564(char* c)
     sx = data_02082214[((u16)locals.acc[0] >> 4) * 2] * 0x32;
     sy = data_02082214[((u16)locals.acc[1] >> 4) * 2];
 
-    px = (int*)(int)(((long long)(int)(c + 0x1f8)));
+    px = (int*)(int)(c + 0x1f8);
     *px = *px + (int)(((s64)sx * sy + 0x800) >> 12);
 
     flag = (*(u16*)(c + 0xc) == 0xfb);
     if (flag != false) {
-        py = (int*)(int)(((long long)(int)(c + 0x1fc)));
+        py = (int*)(int)(c + 0x1fc);
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         *py = *py - (0x19000 - v);
     } else {
-        py = (int*)(int)(((long long)(int)(c + 0x1fc)));
+        py = (int*)(int)(c + 0x1fc);
         v = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         *py = *py - (0x32000 - v);
     }
 
-    pz = (int*)(int)(((long long)(int)(c + 0x200)));
+    pz = (int*)(int)(c + 0x200);
     sz = data_02082214[((u16)locals.acc[1] >> 4) * 2 + 1];
     *pz = *pz + (int)(((s64)sx * sz + 0x800) >> 12);
 

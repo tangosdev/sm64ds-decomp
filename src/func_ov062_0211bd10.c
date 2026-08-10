@@ -74,10 +74,10 @@ int func_ov062_0211bd10(char *c)
     ApproachAngle((s16 *)(c + 0x96), angD, 0xa, 0x200, 0x100);
 
     if (data_0209f2f8 == 0x10 || *(u8 *)(c + 0x448) == 2) {
-        p94 = (s16 *)(((long long)(int)(c + 0x94)) & 0xFFFFFFFFFFFFFFFFLL);
+        p94 = (s16 *)(c + 0x94);
         *p94 = (s16)(*p94 - 0x200);
     } else {
-        p94 = (s16 *)(((long long)(int)(c + 0x94)) & 0xFFFFFFFFFFFFFFFFLL);
+        p94 = (s16 *)(c + 0x94);
         *p94 = (s16)(*p94 - 0x400);
     }
 
@@ -136,12 +136,12 @@ int func_ov062_0211bd10(char *c)
     } else if (*(int *)(c + 0x43c) == 0) {
         _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
             c + 0x334, (void *)data_ov062_0211e114.w[1], 4, 0, 0x1000, 0);
-        p43c = (int *)(((long long)(int)(c + 0x43c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p43c = (int *)(c + 0x43c);
         *p43c = *p43c + 1;
     }
 
     if (*(int *)(c + 0x43c) >= 2) {
-        p43c = (int *)(((long long)(int)(c + 0x43c)) & 0xFFFFFFFFFFFFFFFFLL);
+        p43c = (int *)(c + 0x43c);
         *p43c = *p43c + 1;
         if (*(int *)(c + 0x43c) > 0x18) {
             *(int *)(c + 0x43c) = 0;

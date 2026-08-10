@@ -39,7 +39,7 @@ extern "C" int func_ov073_02120c7c(C* c)
         } while (i < 2);
     }
     if (c->field_4c9 == 1) {
-        *(unsigned char*)(((int)c + 0x4cb) & 0xFFFFFFFFFFFFFFFFull) -= 1;
+        *(unsigned char*)((int)c + 0x4cb) -= 1;
         if (c->field_4cb != 0)
             ChiefChilly_ChangeState(c, &data_ov073_021233c0);
         else

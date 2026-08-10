@@ -32,7 +32,7 @@ extern "C" void func_ov063_021162c8(char *self)
                 if (*(unsigned short*)(self + 0x4a0) == 0x121)
                     *(unsigned short*)((char*)a + 0x3a8) = 0;
             }
-            unsigned short *ip = (unsigned short *)(((long long)(int)(self + 0x5d4)));
+            unsigned short *ip = (unsigned short *)(self + 0x5d4);
             *ip = (unsigned short)(*ip & ~2);
         }
     }

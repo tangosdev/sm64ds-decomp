@@ -19,7 +19,7 @@ extern void* data_0209f318;
 extern int data_0209caa0[];
 extern int data_ov085_021307e0;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 extern "C" int func_ov085_0212d5dc(char* c) {
   Range r;

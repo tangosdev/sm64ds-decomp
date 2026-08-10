@@ -65,7 +65,7 @@ flags:
             *(short*)(c + 0x8e) = t;
         }
         {
-            int* p354 = (int*)(((long long)(int)(c + 0x354)));
+            int* p354 = (int*)(c + 0x354);
             *p354 = *p354 & ~2;
         }
         KingBobOmb_SetState(c, &data_ov078_0212708c);

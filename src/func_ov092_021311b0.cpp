@@ -4,7 +4,7 @@
 #include "common.h"
 
 typedef short s16;
-#define LA(p) (((long long)(int)(p)))
+#define LA(p) (p)
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);

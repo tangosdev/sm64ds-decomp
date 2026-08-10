@@ -44,7 +44,7 @@ void func_ov075_02117fe4(char *c)
                 p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zT, data_ov075_0211c8b0, yT,
                                                             xbase + xoff, eight, minus1, sz, zT);
                 if (p != 0) {
-                    int *q = (int *)(int)(((long long)(int)(p + 1)));
+                    int *q = (int *)(int)(p + 1);
                     int val = *q;
                     *q = (val & ~0x3ff) | ((tens + ((u32)(val << 22) >> 22)) & 0x3ff);
                 }
@@ -52,19 +52,19 @@ void func_ov075_02117fe4(char *c)
             p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zO, data_ov075_0211c8b0, yO,
                                                         xbase + xoff, eight, minus1, sz, zO);
             if (p != 0) {
-                int *q = (int *)(int)(((long long)(int)(p + 1)));
+                int *q = (int *)(int)(p + 1);
                 int val = *q;
                 *q = (val & ~0x3ff) | ((((u32)(val << 22) >> 22) + n % 10) & 0x3ff);
             }
         } while (xoff += stride, ++i < count);
     }
 
-    (*(int *)(int)(((long long)(int)(c + 0x268))))++;
+    (*(int *)(int)(c + 0x268))++;
     if (*(int *)(c + 0x268) < 3)
         return;
 
     *(int *)(c + 0x268) = 0;
-    *(int *)(int)(((long long)(int)(c + 0x26c))) ^= 1;
+    *(int *)(int)(c + 0x26c) ^= 1;
 
     if (count <= 0)
         return;

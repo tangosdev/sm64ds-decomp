@@ -6,7 +6,7 @@
 // LandingDustAt bool-arg mov above the stores, exactly as the ROM has it.
 struct Vector3 { int x, y, z; };
 typedef short s16;
-#define LA(p) (((long long)(int)(p)))
+#define LA(p) (p)
 extern "C" {
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int func_ov002_020de328(void);

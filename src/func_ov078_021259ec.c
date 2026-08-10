@@ -25,7 +25,7 @@ int func_ov078_021259ec(char* c)
     unsigned int b;
 
     if (*(unsigned char*)(c + 0x506) == 1) {
-        unsigned char *p = (unsigned char*)(((long long)(int)(c + 0x50a)));
+        unsigned char *p = (unsigned char*)(c + 0x50a);
         *p += 1;
         if (*(unsigned char*)(c + 0x50a) > 0xc8) {
             *(int*)(c + 0xb0) = 0x10000003;

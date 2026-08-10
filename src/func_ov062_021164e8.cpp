@@ -35,7 +35,7 @@ do_block:
     {
         void *m = *(void **)(c + 0x3f8);
         *(u16 *)(c + 0x94) = *(s16 *)((char *)m + 0x8e);
-        *(int *)((long long)(int)(c + 0x128)) |= 2;
+        *(int *)(c + 0x128) |= 2;
         Chuckya_ChangeState(c, &data_ov062_0211dec0);
         if (*(int *)((char *)*(void **)(c + 0x3f8) + 8) == 2) {
             *(int *)(c + 0xa8) = 0x50000;

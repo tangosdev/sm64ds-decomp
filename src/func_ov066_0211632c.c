@@ -2,7 +2,7 @@ extern int data_ov066_0211ad18[];
 
 void func_ov066_0211632c(char *self)
 {
-    int *p338 = (int *)(((long long)(int)(self + 0x338)));
+    int *p338 = (int *)(self + 0x338);
     *p338 &= ~2;
     *(int *)(self + 0x324) = 0x9c000;
     *(int *)(self + 0x328) = 0x164000;

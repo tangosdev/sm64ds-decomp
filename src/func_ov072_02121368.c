@@ -8,7 +8,7 @@
 extern s16 data_02082214[];
 extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 
-#define M(p) ((s64)(int)(p))
+#define M(p) (p)
 
 int func_ov072_02121368(char *self)
 {

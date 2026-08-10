@@ -29,8 +29,8 @@ extern "C" void func_ov080_02123ecc(Actor *self)
         Actor *p2 = self->ClosestPlayer();
         *(short*)(s + 0x8e) = Vec3_HorzAngle(s + 0x5c, (char*)p2 + 0x5c);
         {
-            int *a = (int*)(((int)s + 0x150) & 0xFFFFFFFFFFFFFFFFull);
-            int *b = (int*)(((int)s + 0xb0) & 0xFFFFFFFFFFFFFFFFull);
+            int *a = (int*)((int)s + 0x150);
+            int *b = (int*)((int)s + 0xb0);
             *(short*)(s + 0x94) = *(short*)(s + 0x8e);
             *a = *a & ~1;
             *b = *b | 0x10000000;

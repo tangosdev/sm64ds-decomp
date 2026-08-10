@@ -3,7 +3,7 @@
 // @symbol func_ov091_02133d30
 /* recovered: shared common types */
 #include "common.h"
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 
 extern "C" {
 void func_02012694(u32 id, void *pos);

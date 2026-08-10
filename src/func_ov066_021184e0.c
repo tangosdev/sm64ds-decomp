@@ -16,7 +16,7 @@ int func_ov066_021184e0(char *c)
     switch (*(int *)(c + 0x4a0)) {
     case 0:
         if (data_ov066_0211ae0c == *(int *)(c + 0x49c)) {
-            int *p = (int *)((long long)(int)(c + 0x4a0));
+            int *p = (int *)(c + 0x4a0);
             *(int *)(c + 0x9c) = -0x14000;
             *(int *)(c + 0xa8) = 0x64000;
             *p = *p + 1;

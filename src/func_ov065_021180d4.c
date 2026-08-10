@@ -41,7 +41,7 @@ int func_ov065_021180d4(char* self)
         int idx;
         int speed;
 
-        pv = (struct Vector3*)(((long long)(int)((char*)actor + 0x5c)));
+        pv = (struct Vector3*)((char*)actor + 0x5c);
         vec.x = pv->x;
         vec.y = pv->y;
         vec.z = pv->z;

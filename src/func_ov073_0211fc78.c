@@ -33,7 +33,7 @@ int func_ov073_0211fc78(char* c) {
     func_ov073_0211f144(c);
 
     {
-        int pv = (int)(((int)player + 0x5c) & 0xFFFFFFFFFFFFFFFFull);
+        int pv = (int)((int)player + 0x5c);
         msgpos[0].x = *(int*)pv;
         msgpos[0].y = *(int*)(pv + 4);
         msgpos[0].z = *(int*)(pv + 8);

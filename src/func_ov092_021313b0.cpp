@@ -3,7 +3,7 @@
 // @symbol func_ov092_021313b0
 /* recovered: shared common types */
 #include "common.h"
-#define LA(p) (((long long)(int)(p)))
+#define LA(p) (p)
 
 struct PathPtr {
     int GetNode(Vector3 &v, unsigned int i) const;

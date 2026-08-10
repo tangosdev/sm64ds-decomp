@@ -47,12 +47,12 @@ void func_ov098_0213aa28(char* c)
 
     switch (*(unsigned char*)(c + 0x185)) {
     case 0:
-        p60 = (int*)(((long long)(int)(c + 0x60)));
+        p60 = (int*)(c + 0x60);
         *p60 = *p60 + 0xa000;
         if (*(int*)(c + 0x60) < *(int*)(c + 0x160))
             goto end;
         *(int*)(c + 0x60) = *(int*)(c + 0x160);
-        state = (unsigned char*)(((long long)(int)(c + 0x185)));
+        state = (unsigned char*)(c + 0x185);
         (*state)++;
         *(int*)(c + 0x174) = 0;
         vs[1].x = *(int*)(c + 0x5c);
@@ -67,7 +67,7 @@ void func_ov098_0213aa28(char* c)
             goto end;
         if (!_Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x17a), 0x200))
             goto end;
-        state = (unsigned char*)(((long long)(int)(c + 0x185)));
+        state = (unsigned char*)(c + 0x185);
         (*state)++;
         *(int*)(c + 0x174) = 0;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x14d, (struct Vector3*)(c + 0x74));
@@ -82,7 +82,7 @@ void func_ov098_0213aa28(char* c)
             goto end;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x14e, (struct Vector3*)(c + 0x74));
         *(int*)(c + 0x174) = 0;
-        state = (unsigned char*)(((long long)(int)(c + 0x185)));
+        state = (unsigned char*)(c + 0x185);
         (*state)++;
         break;
 
@@ -90,7 +90,7 @@ void func_ov098_0213aa28(char* c)
         *(short*)(c + 0x8e) = GetAngleToCamera(*(unsigned char*)(*(char**)(c + 0x158) + 0x6d8)) + 0x4000;
         if (!_ZN6Player22IsBeingShotOutOfCannonEv(*(char**)(c + 0x158)))
             goto end;
-        state = (unsigned char*)(((long long)(int)(c + 0x185)));
+        state = (unsigned char*)(c + 0x185);
         (*state)++;
         *(int*)(c + 0x174) = 0;
         break;
@@ -98,7 +98,7 @@ void func_ov098_0213aa28(char* c)
     case 4:
     {
         unsigned char cnt = 0;
-        p60 = (int*)(((long long)(int)(c + 0x60)));
+        p60 = (int*)(c + 0x60);
         *p60 = *p60 - 0x32000;
         if (_Z14ApproachLinearRsss((short*)(c + 0x8c), 0, 0x800))
             cnt++;
@@ -109,7 +109,7 @@ void func_ov098_0213aa28(char* c)
         if (*(int*)(c + 0x60) > *(int*)(c + 0x160) - 0x190000)
             goto end;
         *(int*)(c + 0x180) = 2;
-        p13c = (int*)(((long long)(int)(c + 0x13c)));
+        p13c = (int*)(c + 0x13c);
         *p13c = *p13c & ~1;
         *(int*)(c + 0x60) = *(int*)(c + 0x160) - 0x190000;
         *(int*)(c + 0x158) = 0;
@@ -119,6 +119,6 @@ void func_ov098_0213aa28(char* c)
     }
     }
 end:
-    p174 = (int*)(((long long)(int)(c + 0x174)));
+    p174 = (int*)(c + 0x174);
     (*p174)++;
 }

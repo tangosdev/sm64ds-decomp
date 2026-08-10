@@ -34,7 +34,7 @@ extern "C" void func_ov064_02117220(char* self) {
     }
     Actor* f = Actor::FindWithID(*(unsigned*)(self + 0x3fc));
     if (f) {
-        u8* p = (u8*)(((long long)(int)((char*)f + 0x3fe)));
+        u8* p = (u8*)((char*)f + 0x3fe);
         *p = (u8)(*p + 1);
     }
 }

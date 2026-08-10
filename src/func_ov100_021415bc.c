@@ -2,7 +2,7 @@
 /* recovered: shared common types */
 #include "common.h"
 #pragma opt_common_subs off
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern void Vec3_Sub(struct Vector3 *out, void *a, void *b);
@@ -64,13 +64,13 @@ void func_ov100_021415bc(char *c)
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
 
         {
-        int *p = (int *)(((long long)(int)(c + 0x60)));
+        int *p = (int *)(c + 0x60);
         *p = *p - ((int)(((long long)*(int *)(c + 0x98)
             * data_02082214[(*(unsigned short *)(c + 0x92) >> 4) * 2] + 0x800) >> 12)
             + (short)data_02082214[
             ((unsigned short)(short)((*(int *)(c + 0x3e8) << 16) / 100) >> 4) * 2 + 1]
             * (short)20 / 4);
-        int *cnt = (int *)(((long long)(int)(c + 0x3e8)));
+        int *cnt = (int *)(c + 0x3e8);
         *cnt = *cnt + 1;
         if (*(int *)(c + 0x3e8) > 100)
             *(int *)(c + 0x3e8) = 0;

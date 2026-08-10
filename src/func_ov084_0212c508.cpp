@@ -31,7 +31,7 @@ extern "C" void func_ov084_0212c508(char *self)
     if (t != 0xffff)
         r4 = (u16)t;
     {
-        int *p = (int *)(unsigned)((unsigned long long)(unsigned)(r5 + 0x5c));
+        int *p = (int *)(unsigned)(r5 + 0x5c);
         int a = p[0];
         pv.x = a;
         int b = p[1];
@@ -111,7 +111,7 @@ extern "C" void func_ov084_0212c508(char *self)
                 goto skip_inc;
         do_inc:
             {
-                u8 *p = (u8 *)(((long long)(int)(self + 0x1eb)));
+                u8 *p = (u8 *)(self + 0x1eb);
                 *p = (u8)(*p + 1);
             }
         skip_inc:

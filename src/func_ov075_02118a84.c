@@ -38,7 +38,7 @@ void func_ov075_02118a84(char *r4)
             *(unsigned char *)(r4 + 0x282) = 2;
     }
     if (*(int *)(r4 + 0x264) > 0) {
-        int *p = (int *)(((long long)(int)(r4 + 0x264)));
+        int *p = (int *)(r4 + 0x264);
         *p = *p - data_0208ee44;
     }
     if (*(unsigned char *)(r4 + 0x282) < 2)

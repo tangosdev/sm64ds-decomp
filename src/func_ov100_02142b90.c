@@ -26,7 +26,7 @@ void func_ov100_02142b90(char* c)
     if (pl == 0) return;
 
     {
-        struct Vector3* pp = (struct Vector3*)(((long long)(int)((char*)pl + 0x5c)));
+        struct Vector3* pp = (struct Vector3*)((char*)pl + 0x5c);
         pos.x = pp->x;
         pos.y = pp->y;
         pos.z = pp->z;
@@ -56,7 +56,7 @@ void func_ov100_02142b90(char* c)
             (struct Vector3*)(c + 0x5c), (const void*)(c + 0x92), cc, -1);
         if (a == 0) return;
         {
-            u8* cnt = (u8*)(((long long)(int)(c + 0x3d2)));
+            u8* cnt = (u8*)(c + 0x3d2);
             *cnt = *cnt + 1;
         }
         *(int*)((char*)a + 0x3a8) = (int)c;

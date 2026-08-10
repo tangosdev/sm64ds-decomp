@@ -76,7 +76,7 @@ void func_ov100_02146828(char* self)
                 0x158, kind, &pos, &rot, *(signed char*)(self + 0xcc), -1);
             if (a != 0) {
                 func_ov100_0214629c(a, *(int*)(self + 4));
-                (*(u8*)(((long long)(int)(self + 0x158))))++;
+                (*(u8*)(self + 0x158))++;
             }
         }
     }

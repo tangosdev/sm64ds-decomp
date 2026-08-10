@@ -19,7 +19,7 @@ void func_ov071_02120580(char* a, void* p) {
     _ZN6Player20RegisterEggCoinCountEjbb(p, *(unsigned char*)(a + 0x3aa), 0, 0);
   if (*(int*)(a + 8) != 0) {
     a[0x3aa] = 0;
-    bp = (int *)(((int)(a) + 0xb0) & 0xFFFFFFFFFFFFFFFFULL);
+    bp = (int *)((int)(a) + 0xb0);
     t = *bp;
     t &= ~0x40000;
     *bp = t;

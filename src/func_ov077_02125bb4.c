@@ -75,7 +75,7 @@ int func_ov077_02125bb4(char *c)
             *(short *)(c + 0x8e) = *(short *)(c + 0x94);
             *(short *)(c + 0x90) = *(short *)(c + 0x96);
             _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1e4);
-            *(unsigned int *)(((long long)(int)(c + 0xb0))) |= 0x10000000u;
+            *(unsigned int *)(c + 0xb0) |= 0x10000000u;
             func_ov077_02125e94(c, 1);
         } else {
             x = *(int *)(c + 0x5c);

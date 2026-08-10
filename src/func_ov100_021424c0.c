@@ -53,7 +53,7 @@ int func_ov100_021424c0(char *c)
         *(u8 *)(c + 0x3d0) = 3;
         if (*(u8 *)(c + 0x3d0) != 4 && _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
             *(int *)(c + 0xa8) = 0;
-            *(int *)(int)(((long long)(int)(c + 0x60))) += 0xf000;
+            *(int *)(int)(c + 0x60) += 0xf000;
         } else {
             func_ov100_02142130(c);
         }
@@ -82,8 +82,8 @@ int func_ov100_021424c0(char *c)
             } else if (*(u8 *)(c + 0x3d0) == 4) {
                 _Z14ApproachLinearRiii(c + 0x98, 0x23000, 0x400);
             } else {
-                *(int *)(int)(((long long)(int)(c + 0xa4))) += *(int *)(c + 0xd4);
-                *(int *)(int)(((long long)(int)(c + 0xac))) += *(int *)(c + 0xdc);
+                *(int *)(int)(c + 0xa4) += *(int *)(c + 0xd4);
+                *(int *)(int)(c + 0xac) += *(int *)(c + 0xdc);
                 *(int *)(c + 0x98) = Vec3_HorzLen(c + 0xa4);
             }
         }

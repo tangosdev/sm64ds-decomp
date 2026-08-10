@@ -9,7 +9,7 @@ extern s16 data_02082214[];
 int func_ov081_02126e28(char* c) {
   int* pf; Vector3 v; char* player; char* src; int zero; s16 ang; int idx; s16 s;
 
-  pf = (int*)(((int)c + 0xb0));
+  pf = (int*)((int)c + 0xb0);
   *pf = *pf & ~0x80000;
   zero = 0;
   player = *(char**)(c + 0xd0);
@@ -21,22 +21,22 @@ int func_ov081_02126e28(char* c) {
   *(s16*)(c + 0x94) = *(s16*)(c + 0x8e);
 
   player = *(char**)(c + 0xd0);
-  src = (char*)(((long long)(int)(player + 0x5c)));
+  src = (char*)(player + 0x5c);
   *(int*)(c + 0x5c) = *(int*)src;
   *(int*)(c + 0x60) = *(int*)(src+4);
   *(int*)(c + 0x64) = *(int*)(src+8);
 
   idx = (*(u16*)(c + 0x8e) >> 4);
   s = *(s16*)((char*)data_02082214 + (idx << 2));
-  *(int*)(((int)c + 0x5c)) =
-    *(int*)(((int)c + 0x5c))
+  *(int*)((int)c + 0x5c) =
+    *(int*)((int)c + 0x5c)
     + (int)(((s64)s * 0x50000 + 0x800) >> 12);
-  *(int*)(((int)c + 0x60)) =
-    *(int*)(((int)c + 0x60)) + 0x50000;
+  *(int*)((int)c + 0x60) =
+    *(int*)((int)c + 0x60) + 0x50000;
   idx = (*(u16*)(c + 0x8e) >> 4);
   s = *(s16*)((char*)data_02082214 + ((idx * 2 + 1) << 1));
-  *(int*)(((int)c + 0x64)) =
-    *(int*)(((int)c + 0x64))
+  *(int*)((int)c + 0x64) =
+    *(int*)((int)c + 0x64)
     + (int)(((s64)s * 0x50000 + 0x800) >> 12);
 
   player = *(char**)(c + 0xd0);

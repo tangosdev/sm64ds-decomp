@@ -22,7 +22,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     int bestDist;
 
     {
-        int *ctr = (int *)(((long long)(int)(sl + 0x460)));
+        int *ctr = (int *)(sl + 0x460);
         *ctr = *ctr + 1;
         *ctr = *ctr & 7;
     }
@@ -38,7 +38,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     best.x = bestIdx; best.y = bestIdx; best.z = bestIdx;
 
     if (player != 0) {
-        int *pp = (int *)(((long long)(int)(player + 0x5c)));
+        int *pp = (int *)(player + 0x5c);
         ppos.x = *pp;
         i = bestIdx;
         ppos.y = pp[1];

@@ -28,9 +28,9 @@ void func_ov090_02132b14(char* self){
     MulMat4x3Mat4x3((struct Mtx43*)(*(char**)(self + 0x320) + 0x90),
         &data_020a0e68, &data_020a0e68);
     {
-        int* p9 = (int*)(((unsigned long long)((int)(self) + 0x39c)) & 0xFFFFFFFFFFFFFFFFULL);
-        int* p10 = (int*)(((unsigned long long)((int)(self) + 0x3a0)) & 0xFFFFFFFFFFFFFFFFULL);
-        int* p11 = (int*)(((unsigned long long)((int)(self) + 0x3a4)) & 0xFFFFFFFFFFFFFFFFULL);
+        int* p9 = (int*)((unsigned long long)((int)(self) + 0x39c));
+        int* p10 = (int*)((unsigned long long)((int)(self) + 0x3a0));
+        int* p11 = (int*)((unsigned long long)((int)(self) + 0x3a4));
         *(int*)(self + 0x39c) = data_020a0e68.a[9];
         *(int*)(self + 0x3a0) = data_020a0e68.a[10];
         *(int*)(self + 0x3a4) = data_020a0e68.a[11];

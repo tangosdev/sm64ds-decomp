@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50 - 0x14 - 0x30]; };
-#define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
+#define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 struct WithMeshClsn;
 struct CylinderClsn;
 struct ShadowModel;

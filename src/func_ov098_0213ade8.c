@@ -20,7 +20,7 @@ void func_ov098_0213ade8(char* self)
     int closest;
 
     if (*(int*)(self + 0x174) != 0) {
-        int *p = (int*)(int)(((long long)(int)(self + 0x174)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int*)(int)(self + 0x174);
         *p = *p - 1;
     }
 
@@ -80,7 +80,7 @@ void func_ov098_0213ade8(char* self)
         _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
 
         {
-            int *vp = (int*)(int)(((long long)(int)(a + 0xa4)) & 0xFFFFFFFFFFFFFFFFLL);
+            int *vp = (int*)(int)(a + 0xa4);
             int vx = *vp;
             int px = pos.x;
             vel[0] = vx;
@@ -114,8 +114,8 @@ void func_ov098_0213ade8(char* self)
     }
 
     {
-        int *p188 = (int*)(int)(((long long)(int)(self + 0x188)) & 0xFFFFFFFFFFFFFFFFLL);
-        int *p18c = (int*)(int)(((long long)(int)(self + 0x18c)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p188 = (int*)(int)(self + 0x188);
+        int *p18c = (int*)(int)(self + 0x18c);
         *p188 = *p188 + *(int*)(self + 0x18c);
         *p18c = *p18c + 0xc00;
     }

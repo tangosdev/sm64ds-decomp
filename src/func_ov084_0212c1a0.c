@@ -17,7 +17,7 @@ extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern char* data_0209f318;
 extern signed char data_0209f2f8;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 void func_ov084_0212c1a0(char* c)
 {

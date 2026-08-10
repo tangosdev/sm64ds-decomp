@@ -7,7 +7,7 @@ extern void* data_ov075_0211d41c[];
 extern short data_02082214[];
 }
 static inline int* L(void* p) {
-    return (int*)(int)((long long)(int)p);
+    return (int*)(int)(p);
 }
 extern "C" void func_ov075_02114560(char* c)
 {

@@ -49,10 +49,10 @@ body:
         vB.z = ez;
     }
     {
-        int *pF = (int *)(unsigned)((unsigned long long)(unsigned)(cam + 0x80));
+        int *pF = (int *)(unsigned)(cam + 0x80);
         vF.x = pF[0];
         {
-            int *pG = (int *)(unsigned)((unsigned long long)(unsigned)(cam + 0x8c));
+            int *pG = (int *)(unsigned)(cam + 0x8c);
             vF.y = pF[1]; vF.z = pF[2];
             vG.x = pG[0]; vG.y = pG[1]; vG.z = pG[2];
         }

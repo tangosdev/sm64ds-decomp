@@ -92,7 +92,7 @@ extern "C" int func_ov090_02131648(C *c)
             ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
             sh = (rnd & 3) << 0xc;
             *(s16 *)((self + 0x300) + 0x9a) = ha;
-            p39a = (s16 *)(((int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
+            p39a = (s16 *)((int)self + 0x39a);
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
@@ -123,7 +123,7 @@ extern "C" int func_ov090_02131648(C *c)
             ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
             sh = (rnd & 3) << 0xc;
             *(s16 *)((self + 0x300) + 0x9a) = ha;
-            p39a = (s16 *)(((unsigned int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
+            p39a = (s16 *)((unsigned int)self + 0x39a);
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
@@ -137,7 +137,7 @@ extern "C" int func_ov090_02131648(C *c)
 
     if (*(u16 *)((self + 0x300) + 0x98) == 0 && *(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
         *(u16 *)((self + 0x300) + 0x98) = (u16)((rnd + 0x32) & 0x3f);
-        p39a = (s16 *)(((long long)(int)(self + 0x39a)) & 0xFFFFFFFFFFFFFFFFll);
+        p39a = (s16 *)(self + 0x39a);
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
@@ -163,7 +163,7 @@ extern "C" int func_ov090_02131648(C *c)
     }
 
     if (((u32)((*(u32 *)(self + 0x364)) << 4) >> 0x10) >= 0x10) {
-        p390 = (int *)(((int)self + 0x390) & 0xFFFFFFFFFFFFFFFF);
+        p390 = (int *)((int)self + 0x390);
         *p390 = *p390 + 1;
     }
 

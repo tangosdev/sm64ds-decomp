@@ -11,7 +11,7 @@ short Vec3_HorzAngle(const Vec3* a, const Vec3* b);
 int func_ov094_02136188(void* c, PMF* p);
 extern char data_020a0e68[];
 extern PMF data_ov094_02136b60;
-#define LA(p) ((char*)(unsigned)(((long long)(unsigned)(unsigned)(p))))
+#define LA(p) ((char*)(unsigned)((unsigned)(p)))
 
 int func_ov094_02136024(char* c){
   char* p = _ZN5Actor13ClosestPlayerEv();

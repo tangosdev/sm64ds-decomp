@@ -1,6 +1,6 @@
 #include "types.h"
 extern s16 data_02082214[];
-#define LA(p) ((int)(((s64)(int)(p))))
+#define LA(p) ((int)(p))
 
 int func_ov077_021241ac(char *o)
 {

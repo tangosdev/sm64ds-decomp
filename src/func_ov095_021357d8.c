@@ -25,7 +25,7 @@ void func_ov095_021357d8(char *a, char *b)
     prod = (int)(((s64)dist * n + 0x800) >> 12);
     idx = idx + 1;
 
-    p = (s16 *)(((s64)(int)(a + 0x8c)));
+    p = (s16 *)(a + 0x8c);
     cur = *p;
     v = (int)(((s64)prod * data_02082214[idx] + 0x800) >> 12);
     v = (v + ((unsigned)(v >> 11) >> 20)) << 4;
