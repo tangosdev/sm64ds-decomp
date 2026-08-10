@@ -20,6 +20,8 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+#include <execinfo.h>   /* backtrace, backtrace_symbols_fd (glibc) */
 #endif
 
 typedef unsigned int u32;
@@ -104,12 +106,20 @@ void *Allocate(u32 size, int align, Heap *heap)
 extern "C" void Crash(void)
 {
     fprintf(stderr, "FATAL: game Crash() reached\n");
+#ifdef _WIN32
     void *frames[12];
     unsigned n = CaptureStackBackTrace(0, 12, frames, 0);
     char *base = (char *)GetModuleHandleA(0);
     for (unsigned i = 0; i < n; ++i)
         fprintf(stderr, "  frame %u: +0x%08x\n", i,
                 (unsigned)((char *)frames[i] - base));
+#else
+    /* Linux: glibc backtrace prints symbol+offset lines the addr2line/.map path
+       resolves, the same role the Win32 module-relative frames play. */
+    void *frames[12];
+    int n = backtrace(frames, 12);
+    backtrace_symbols_fd(frames, n, 2 /* stderr */);
+#endif
     abort();
 }
 #pragma comment(linker, "/alternatename:?Crash@@YAXXZ=_Crash")

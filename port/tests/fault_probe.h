@@ -176,18 +176,29 @@ __declspec(selectany) const char *port_fault_no_playlog = 0;
 #pragma comment(linker, "/alternatename:_port_playlog_path=_port_fault_no_playlog")
 #else /* Linux/g++: weak fallback definitions so a bare-smoke TU that never
          defines the real engine symbol still links against these zeros. */
+/* PORT_FAULT_PROBE_STRONG_GLOBALS: a TU that defines port_playlog_path /
+   port_last_frame STRONGLY itself (walk_window: the real g_playlog pointer and
+   the live frame counter) sets this before including, so the header does NOT
+   also emit its weak fallback for those two -- two definitions in one TU is a
+   GCC redefinition error, unlike Windows where the header only declares them for
+   that TU. Every other symbol keeps its weak fallback, and bare smokes (no macro)
+   still get all the weak fallbacks including these two. */
 #ifdef __cplusplus
 extern "C" signed char data_0209f2f8 __attribute__((weak)) = -1;
 extern "C" void *data_0209f394[8] __attribute__((weak)) = {0};
 extern "C" unsigned char data_0209f250 __attribute__((weak)) = 0;
 extern "C" const char port_build_gittip[] __attribute__((weak)) = "unknown";
+#ifndef PORT_FAULT_PROBE_STRONG_GLOBALS
 extern "C" const char *port_playlog_path __attribute__((weak)) = 0;
+#endif
 #else
 signed char data_0209f2f8 __attribute__((weak)) = -1;
 void *data_0209f394[8] __attribute__((weak)) = {0};
 unsigned char data_0209f250 __attribute__((weak)) = 0;
 const char port_build_gittip[] __attribute__((weak)) = "unknown";
+#ifndef PORT_FAULT_PROBE_STRONG_GLOBALS
 const char *port_playlog_path __attribute__((weak)) = 0;
+#endif
 #endif
 #endif
 /* Class-name resolution goes through a weak DATA function pointer, not a direct
@@ -225,10 +236,18 @@ extern "C" int port_last_frame;
 extern int port_last_frame;
 #endif
 #else /* Linux/g++ */
+#ifndef PORT_FAULT_PROBE_STRONG_GLOBALS
 #ifdef __cplusplus
 extern "C" int port_last_frame __attribute__((weak)) = -1;
 #else
 int port_last_frame __attribute__((weak)) = -1;
+#endif
+#else /* the strong-globals TU declares it; it defines it itself */
+#ifdef __cplusplus
+extern "C" int port_last_frame;
+#else
+extern int port_last_frame;
+#endif
 #endif
 #endif
 

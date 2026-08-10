@@ -246,6 +246,10 @@ static bool winapi_load(void)
    external seams (port_rich_dump_ex, port_crash_dir_get) the quarantine walker
    in port/unmatched/func_02043fdc.cpp weak-links against. */
 #define PORT_FAULT_PROBE_DEFINE_EXPORTS
+/* walk_window defines port_playlog_path (= g_playlog) and port_last_frame
+   strongly below, so on Linux tell fault_probe.h not to also emit its weak
+   fallbacks for those two (two defs in one TU is a GCC error). No-op on Win32. */
+#define PORT_FAULT_PROBE_STRONG_GLOBALS
 #include "fault_probe.h"
 #include "overlay_font.h"
 
