@@ -20,8 +20,8 @@ int BookShot::Behavior()
             unk_428 = mState;
             mState = 5;
             unk_107 = 0;
-            unk_0a8 = 0;
-            unk_098 = 0x8000;
+            mVertSpeed = 0;
+            mHorzSpeed = 0x8000;
         }
         func_ov020_0211216c(((char*)this));
         return 1;

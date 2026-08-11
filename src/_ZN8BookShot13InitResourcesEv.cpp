@@ -59,11 +59,11 @@ int BookShot::InitResources()
 
     *(struct M48*)((char*)&unk_1ec) = data_02082128;
     unk_450 = 0;
-    *(short*)(int)LDR((char*)&unk_08e) = *(short*)(int)LDR((char*)&unk_08e) + 0x8000;
+    *(short*)(int)LDR((char*)&mAngleY) = *(short*)(int)LDR((char*)&mAngleY) + 0x8000;
     unk_44c = 0x800;
 
     {
-        unsigned short id = mActorID;
+        unsigned short id = actorID;
         unsigned int match1 = (id == 0x145);
 
         if (match1)
@@ -71,7 +71,7 @@ int BookShot::InitResources()
             unk_420 = 0;
             mState = 4;
             unk_108 = 0;
-            *(int*)(int)LDR((char*)&unk_238) |= 0x26fe0;
+            *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x26fe0;
             goto success;
         }
         {
@@ -81,7 +81,7 @@ int BookShot::InitResources()
                 unk_420 = 0;
                 mState = 0;
                 unk_108 = 3;
-                *(int*)(int)LDR((char*)&unk_238) |= 0x2efe0;
+                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x2efe0;
                 goto success;
             }
         }
@@ -92,8 +92,8 @@ int BookShot::InitResources()
                 unk_420 = 1;
                 mState = 6;
                 unk_108 = 0;
-                *(int*)(int)LDR((char*)&unk_234) |= 4;
-                *(int*)(int)LDR((char*)&unk_238) |= 0x3c0;
+                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.flags) |= 4;
+                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x3c0;
                 mScaleX = 0x1000;
                 mScaleY = 0x800;
                 mScaleZ = 0x800;

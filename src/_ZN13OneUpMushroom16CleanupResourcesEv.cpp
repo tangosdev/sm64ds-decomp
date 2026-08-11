@@ -13,7 +13,7 @@ int OneUpMushroom::CleanupResources()
 {
   int s = mMushroomType;
   if (s != 0xb && s != 0xc){
-    int b = (mActorID == 0x114);
+    int b = (actorID == 0x114);
     if (b != 0) ((SharedFilePtr *)(&data_ov002_0210d9d8))->Release();
     else ((SharedFilePtr *)(&data_ov002_0210da30))->Release();
   }

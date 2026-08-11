@@ -1,88 +1,70 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BookShot: 6 matched functions, 35 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BOOKSHOT_H
 #define BOOKSHOT_H
+
 #include "types.h"
-#include "ModelAnim.h"
+
+/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout: the
+ * class's own destructor `_ZN8BookShotD1Ev` destroys each member, and
+ * `BookShot_Spawn` constructs the same types at the same offsets before
+ * storing `_ZTV8BookShot`. Everything this header used to restate below 0x110
+ * belongs to Enemy and Actor and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a reading
+ * rather than a guess:
+ *
+ *     0x110 ModelAnim                  0x64    -> 0x174
+ *     0x174 Model                      0x50    -> 0x1c4
+ *     0x1c4 ShadowModel                0x28    -> 0x1ec
+ *     0x21c MovingCylinderClsnWithPos  0x40    -> 0x25c
+ *     0x25c WithMeshClsn               0x1bc   -> 0x418
+ *
+ * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `ActorBase::operator new(1108)`
+ * -- 0x454 -- and stores this class's vtable, so that literal IS this
+ * class's sizeof.
+ *
+ * The ROM's RTTI names this class daBook_c.
+ */
+
+#include "Enemy.h"
 #include "Model.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct BookShot {
-    u8  pad_000[0xc];
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x2];
-    /* 0x08e..0x098 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_08e;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0xc];
-    s32 unk_0a8;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x50];
-    u16 unk_104;            /* 0x104 */
-    u8  pad_106[0x1];
-    u8  unk_107;            /* 0x107 */
-    u8  unk_108;            /* 0x108 */
-    u8  pad_109[0x7];
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x110 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    ModelAnim mModelAnim;            /* 0x110 */
-    /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x174 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8BookShotD1Ev.c] */
-    Model mModel;            /* 0x174 */
-    /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x1c4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8BookShotD1Ev.c] */
-    ShadowModel mShadowModel;            /* 0x1c4 */
-    u8  unk_1ec;            /* 0x1ec */
+struct BookShot : Enemy {
+    ModelAnim                    mModelAnim;            /* 0x110 */
+    Model                        mModel;                /* 0x174 */
+    ShadowModel                  mShadowModel;          /* 0x1c4 */
+    u8                           unk_1ec;               /* 0x1ec */
     u8  pad_1ed[0x2f];
-    u8  mMovingCylinderClsnWithPos;            /* 0x21c */
-    u8  pad_21d[0x17];
-    u8  unk_234;            /* 0x234 */
-    u8  pad_235[0x3];
-    u8  unk_238;            /* 0x238 */
-    u8  pad_239[0x23];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x25c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8BookShotD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x25c */
-    s32 unk_418;            /* 0x418 */
-    s32 unk_41c;            /* 0x41c */
-    s32 unk_420;            /* 0x420 */
-    s32 mState;            /* 0x424 */
-    s32 unk_428;            /* 0x428 */
-    s32 unk_42c;            /* 0x42c */
-    s32 unk_430;            /* 0x430 */
-    s32 unk_434;            /* 0x434 */
-    s32 unk_438;            /* 0x438 */
-    s32 unk_43c;            /* 0x43c */
-    s32 unk_440;            /* 0x440 */
+    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x21c */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x25c */
+    s32                          unk_418;               /* 0x418 */
+    s32                          unk_41c;               /* 0x41c */
+    s32                          unk_420;               /* 0x420 */
+    s32                          mState;                /* 0x424 */
+    s32                          unk_428;               /* 0x428 */
+    s32                          unk_42c;               /* 0x42c */
+    s32                          unk_430;               /* 0x430 */
+    s32                          unk_434;               /* 0x434 */
+    s32                          unk_438;               /* 0x438 */
+    s32                          unk_43c;               /* 0x43c */
+    s32                          unk_440;               /* 0x440 */
     u8  pad_444[0x8];
-    s32 unk_44c;            /* 0x44c */
-    s8  unk_450;            /* 0x450 */
-#ifdef __cplusplus
-    /* methods */
+    s32                          unk_44c;               /* 0x44c */
+    s8                           unk_450;               /* 0x450 */
+    u8  pad_451[0x3];
+
+    /* --- vtable --- */
+    virtual ~BookShot();
+
+    /* --- non-virtual --- */
     int Behavior();
     int CleanupResources();
     int InitResources();
-#endif
 };
 
-#endif
+typedef char BookShot_size_must_be_0x454[sizeof(BookShot) == 0x454 ? 1 : -1];
+
+#endif /* BOOKSHOT_H */

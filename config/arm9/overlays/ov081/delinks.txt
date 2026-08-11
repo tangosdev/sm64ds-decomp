@@ -4,7 +4,7 @@
     .ctor       start:0x02128824 end:0x02128838 kind:rodata align:4
     .data       start:0x02128840 end:0x02128d60 kind:data align:32
     .bss        start:0x02128d60 end:0x02129000 kind:bss align:32
-src/_ZN9SpindriftD1Ev.c:
+src/_ZN9SpindriftD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123788
 
@@ -40,6 +40,7 @@ src/_ZN9Spindrift8BehaviorEv.cpp:
     .text start:0x02123c6c end:0x02123ed0
 
 src/_ZN9Spindrift13InitResourcesEv.cpp:
+    complete
     .text start:0x02123ed0 end:0x02123fd8
 
 src/func_ov081_02123fd8.cpp:

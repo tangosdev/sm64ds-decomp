@@ -4,7 +4,7 @@
     .ctor       start:0x02113768 end:0x02113770 kind:rodata align:4
     .data       start:0x02113780 end:0x02114aa0 kind:data align:32
     .bss        start:0x02114aa0 end:0x02114b20 kind:bss align:32
-src/_ZN8BookShotD1Ev.c:
+src/_ZN8BookShotD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 

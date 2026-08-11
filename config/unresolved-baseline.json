@@ -1,5 +1,5 @@
 {
- "eligible": 10814,
+ "eligible": 10817,
  "unresolved": {
   "arm9:0x020063b0": {
    "name": "_ZN8CapEnemy6AddCapEj",
@@ -1491,16 +1491,6 @@
     "Enemy_UpdateWMClsn",
     "Player_Hurt",
     "WithMeshClsn_IsOnGround"
-   ]
-  },
-  "ov081:0x02123ed0": {
-   "name": "_ZN9Spindrift13InitResourcesEv",
-   "missing": [
-    "AnimLoadFile",
-    "ModelLoadFile",
-    "_ZN12WithMeshClsn4InitEP5ActoriiPvi",
-    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
-    "_ZN9ModelAnim7SetAnimEP8BCA_Fileiij"
    ]
   },
   "ov081:0x021243cc": {

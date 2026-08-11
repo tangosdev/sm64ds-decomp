@@ -135,7 +135,7 @@ src/_ZN8CapEnemyD0Ev.c:
     complete
     .text start:0x020aedf4 end:0x020aee40
 
-src/_ZN13OneUpMushroomD1Ev.c:
+src/_ZN13OneUpMushroomD1Ev.cpp:
     complete
     .text start:0x020aee40 end:0x020aee88
 

@@ -36,9 +36,9 @@ int Spindrift::Behavior()
         if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(((char *)this), ((char *)this) + 0x19c) != 0)
             func_ov081_021237ec(((char *)this));
         func_ov081_02123b20(((char *)this));
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
         if (unk_107 != 0 && unk_104 == 0) {
-            _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+            _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
         }
         return 1;
     }
@@ -76,7 +76,7 @@ int Spindrift::Behavior()
         break;
     }
 
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x1d0, 0);
 
@@ -86,7 +86,7 @@ int Spindrift::Behavior()
         mPosZ = unk_070;
     }
     func_ov081_02123b20(((char *)this));
-    _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
+    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
     return 1;
 }
