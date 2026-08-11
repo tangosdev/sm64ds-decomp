@@ -188,7 +188,17 @@ for path in sys.argv[1:]:
             m0 = re.match(r"^\s*struct (\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{", line)
             if m0:
                 if m0.group(1) != expected:
-                    skip_other = True
+                    # `struct BMA_File { u16 numFrames; };` -- opens AND closes on
+                    # the same line. Setting skip_other here and never checking
+                    # THIS line for the closing brace left it permanently stuck:
+                    # the real target struct's own opening line was then read
+                    # while still "skipping", so it was silently swallowed whole
+                    # -- MaterialChanger.h and TextureTransformer.h went from an
+                    # honest UNPARSED failure to a hollow "0 fields, 0 unparsed"
+                    # pass, checking nothing at all. Only skip forward if this
+                    # line's own body does NOT already close it.
+                    if not re.search(r"\};", line):
+                        skip_other = True
                     continue
                 started = True
                 base = m0.group(2)
