@@ -252,6 +252,33 @@ def warm_shared_indexes():
     RV.mod_for("arm9")
 
 
+def source_policy(worst, text):
+    """Apply the two source-text overrides to a link verdict.
+
+    A file whose head declares "// NONMATCHING" is a self-declared draft: it makes no
+    claim to reproduce the ROM and chaos-db counts it as unmatched, so a NO-REPRO
+    verdict on it is expected, not a gate failure. The gate exists to stop files that
+    CLAIM to be matches from landing red; a declared draft cannot inflate any count.
+    WRONG (a resolvable reloc pointing at the wrong symbol) still fails -- a draft's
+    call graph must be honest even if its bytes differ.
+
+    The draft downgrade cannot collide with the transcription check: a transcription
+    has no banner by definition, because a NONMATCHING banner reclassifies it as an
+    honest draft (asm_policy.classify returns None for it).
+
+    This lives outside main() because it is only reachable when a file FAILS, which is
+    the one path a green CI run never exercises. `asm_policy.has_draft_banner` was
+    spelled against the unaliased module name from #1367 until a PR finally produced a
+    NO-REPRO -- and then the validator died on a NameError mid-loop, reporting "worker
+    error" instead of grading the file. Untestable because inline, so untested.
+    """
+    if worst == "NO-REPRO" and AP.has_draft_banner(text):
+        return "DRAFT"
+    if AP.classify(text) == "transcribed":
+        return "RAW-ASM"
+    return worst
+
+
 def main():
     global _NAME_INDEX
     ap = argparse.ArgumentParser(description=__doc__,
@@ -328,23 +355,12 @@ def main():
             continue
         w = worst(rep["results"])
         rep["worst"] = w
-        # A file whose head declares "// NONMATCHING" is a self-declared draft: it makes
-        # no claim to reproduce the ROM and chaos-db counts it as unmatched, so a
-        # NO-REPRO verdict on it is expected, not a gate failure. The gate exists to
-        # stop files that CLAIM to be matches from landing red; a declared draft cannot
-        # inflate any count. WRONG (a resolvable reloc pointing at the wrong symbol)
-        # still fails -- a draft's call graph must be honest even if its bytes differ.
         text = ""
         try:
             text = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             pass
-        if w == "NO-REPRO" and asm_policy.has_draft_banner(text):
-            rep["worst"] = w = "DRAFT"
-        # The draft downgrade cannot collide with this: a transcription has no banner
-        # by definition (a NONMATCHING banner reclassifies it as an honest draft).
-        if AP.classify(text) == "transcribed":
-            rep["worst"] = w = "RAW-ASM"
+        rep["worst"] = w = source_policy(w, text)
         if w in FAIL:
             bad.append((path, w))
         mark = {"WRONG": "WRONG  ", "NO-REPRO": "NOREPRO", "BENIGN": "ok(ben)",
