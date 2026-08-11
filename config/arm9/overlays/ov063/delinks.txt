@@ -12,7 +12,7 @@ src/actors/Boo/_ZN3BooD0Ev.c:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
-src/actors/BooCage/_ZN7BooCageD1Ev.c:
+src/actors/BooCage/_ZN7BooCageD1Ev.cpp:
     complete
     .text start:0x02115fc4 end:0x0211600c
 
