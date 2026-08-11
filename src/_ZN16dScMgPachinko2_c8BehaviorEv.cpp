@@ -1,4 +1,9 @@
-#include "types.h"
+//cpp
+// @symbol _ZN16dScMgPachinko2_c8BehaviorEv
+// recovered name: dScMgPachinko2_c_Behavior
+#include "dScMgPachinko2_c.h"
+/* dScMgPachinko2_c::Behavior - recovered from vtable slot identity */
+extern "C" {
 extern void func_ov006_02100084(void *c);
 extern void func_ov006_021024e0(void *c);
 extern void func_ov006_020fffec(void *c);
@@ -13,9 +18,12 @@ extern void func_ov006_0210258c(void *c);
 extern void func_ov006_02100554(void *c);
 extern void func_ov006_021001ac(void *c);
 extern void func_ov004_020b0a54(void *c);
+}
 
-s32 func_ov006_02103d78(char *c)
+s32 dScMgPachinko2_c::Behavior()
 {
+    char *c = (char *)this;
+
     switch (*(s32 *)(c + 0x5660)) {
     case 0:
         func_ov006_02100084(c);

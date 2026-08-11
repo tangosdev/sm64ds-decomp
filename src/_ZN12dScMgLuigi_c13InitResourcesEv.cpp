@@ -1,10 +1,11 @@
-#include "types.h"
-// @symbol func_ov006_020f3460
+//cpp
+// @symbol _ZN12dScMgLuigi_c13InitResourcesEv
 // recovered name: dScMgLuigi_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
+#include "dScMgLuigi_c.h"
 /* dScMgLuigi_c::InitResources - recovered from vtable slot identity */
+extern "C" {
 extern int func_020adc74(void* p);
 extern void DecompressLZ16(int src, void* dst);
 extern int LoadFile(int handle);
@@ -21,10 +22,12 @@ extern void func_ov006_020f2ec0(void* c);
 extern void Ov004_Deallocate(int a);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_020f3460(void* arg0) {
-    char* c = (char*)arg0;
-    char* b;
+s32 dScMgLuigi_c::InitResources()
+{
+    char *c = (char *)this;
+    char *b;
     volatile u16 sp8;
     volatile u16 spA;
     int r6;
@@ -107,7 +110,7 @@ int func_ov006_020f3460(void* arg0) {
     Deallocate((void*)f);
 
     *(u8*)(c + 0x5000 + 0x457) = 0;
-    func_ov006_020f2ec0(arg0);
+    func_ov006_020f2ec0((void*)this);
     *(volatile u16*)(c + 0x5100 + 0x74) = 0xff;
     func_ov006_020f2e20(c);
 

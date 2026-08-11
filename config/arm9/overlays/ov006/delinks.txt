@@ -3443,15 +3443,15 @@ src/func_ov006_020efc08.c:
     complete
     .text start:0x020efc08 end:0x020efc0c
 
-src/func_ov006_020efc0c.c:
+src/_ZN12dScMgLuigi_cD1Ev.cpp:
     complete
     .text start:0x020efc0c end:0x020efc30
 
-src/func_ov006_020efc30.c:
+src/_ZN12dScMgLuigi_cD0Ev.cpp:
     complete
     .text start:0x020efc30 end:0x020efc68
 
-src/func_ov006_020efc68.c:
+src/_ZN12dScMgLuigi_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x020efc68 end:0x020efcf8
 
@@ -3637,15 +3637,15 @@ src/func_ov006_020f3260.c:
 src/func_ov006_020f3294.c:
     .text start:0x020f3294 end:0x020f33c0
 
-src/func_ov006_020f33c0.c:
+src/_ZN12dScMgLuigi_c6RenderEv.cpp:
     complete
     .text start:0x020f33c0 end:0x020f3414
 
-src/func_ov006_020f3414.cpp:
+src/_ZN12dScMgLuigi_c8BehaviorEv.cpp:
     complete
     .text start:0x020f3414 end:0x020f3460
 
-src/func_ov006_020f3460.c:
+src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp:
     .text start:0x020f3460 end:0x020f3800
 
 src/MgWanted_Spawn.c:
@@ -4497,11 +4497,11 @@ src/MgBobOmbSquad_Spawn.c:
     complete
     .text start:0x020ff3ec end:0x020ff420
 
-src/func_ov006_020ff420.c:
+src/_ZN16dScMgPachinko2_cD1Ev.cpp:
     complete
     .text start:0x020ff420 end:0x020ff444
 
-src/func_ov006_020ff444.c:
+src/_ZN16dScMgPachinko2_cD0Ev.cpp:
     complete
     .text start:0x020ff444 end:0x020ff47c
 
@@ -4767,15 +4767,15 @@ src/func_ov006_02103bfc.c:
 src/func_ov006_02103cbc.c:
     .text start:0x02103cbc end:0x02103d28
 
-src/func_ov006_02103d28.c:
+src/_ZN16dScMgPachinko2_c6RenderEv.cpp:
     complete
     .text start:0x02103d28 end:0x02103d78
 
-src/func_ov006_02103d78.c:
+src/_ZN16dScMgPachinko2_c8BehaviorEv.cpp:
     complete
     .text start:0x02103d78 end:0x02103ed0
 
-src/func_ov006_02103ed0.c:
+src/_ZN16dScMgPachinko2_c13InitResourcesEv.cpp:
     complete
     .text start:0x02103ed0 end:0x02104258
 
