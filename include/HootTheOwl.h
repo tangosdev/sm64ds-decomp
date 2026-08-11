@@ -29,8 +29,10 @@
  *   - unk_368 = that Animation's speed (+0x0c); Behavior copies mAnimSpeed
  *     into it, and InitResources sets mAnimSpeed to 0x1000, which is 1.0
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HootTheOwl_Spawn` calls
+ * `ActorBase::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3f4; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -63,6 +65,7 @@ struct HootTheOwl : Enemy {
     u8  unk_3e4;                      /* 0x3e4 */
     u8  pad_3e5[0xb];
     Fix12i mAnimSpeed;                /* 0x3f0 -- copied into mModelAnim.speed */
+    u8  pad_3f4[0x4];
 
     /* --- vtable --- */
     virtual ~HootTheOwl();
@@ -74,6 +77,6 @@ struct HootTheOwl : Enemy {
     int Render();
 };
 
-typedef char HootTheOwl_size_must_be_0x3f4[sizeof(HootTheOwl) == 0x3f4 ? 1 : -1];
+typedef char HootTheOwl_size_must_be_0x3f8[sizeof(HootTheOwl) == 0x3f8 ? 1 : -1];
 
 #endif /* HOOTTHEOWL_H */

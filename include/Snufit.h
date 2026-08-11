@@ -25,8 +25,10 @@
  * `speed` of its Animation base (base at +0x50, speed at +0x0c). Same shape as
  * HootTheOwl's.
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `Snufit_Spawn` calls
+ * `ActorBase::operator new(996)` -- 0x3e4 -- and stores `_ZTV6Snufit`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3dc; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -58,6 +60,7 @@ struct Snufit : Enemy {
     s32 mHomePosY;                    /* 0x3d0 */
     s32 mHomePosZ;                    /* 0x3d4 */
     s32 unk_3d8;                      /* 0x3d8 -- advanced by 0x200 a frame */
+    u8  pad_3dc[0x8];
 
     /* --- vtable --- */
     virtual ~Snufit();
@@ -69,6 +72,6 @@ struct Snufit : Enemy {
     int Render();
 };
 
-typedef char Snufit_size_must_be_0x3dc[sizeof(Snufit) == 0x3dc ? 1 : -1];
+typedef char Snufit_size_must_be_0x3e4[sizeof(Snufit) == 0x3e4 ? 1 : -1];
 
 #endif /* SNUFIT_H */
