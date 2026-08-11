@@ -1399,7 +1399,6 @@
     "_Z39_ZN9Animation8LoadFileER13SharedFilePtrPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
     "_Z46_ZN15TextureSequence8LoadFileER13SharedFilePtrPv",
-    "_Z49_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_Fileii",
     "_Z67_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jjPvS_P7Vector3iijj",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPviS_isS_",
     "func_02112c08",
@@ -1477,7 +1476,6 @@
   "ov079:0x02126164": {
    "name": "_ZN5Whomp13InitResourcesEv",
    "missing": [
-    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_021135d4"
    ]
   },
