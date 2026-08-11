@@ -164,6 +164,7 @@ for path in sys.argv[1:]:
     off, bad, n, skipped, pending = 0, 0, 0, [], []
     trusted = True
     started = in_comment = unmodelled = nested = skip_other = False
+    skip_body = 0
     unknown_base = derived_from = None
     expected = pathlib.Path(path).stem
     for lineno, line in enumerate(txt.splitlines(), 1):
@@ -219,6 +220,15 @@ for path in sys.argv[1:]:
             if "*/" in line:
                 in_comment = False
             continue
+        # An inline method BODY (`virtual ~dScMgBase_c() { ...; }`), being
+        # skipped over by the methods-declared-first branch below. Track brace
+        # depth across lines the same way `nested`/`in_comment` already do,
+        # rather than assuming a method is always one line -- an unbalanced
+        # line here would otherwise fall through to DECL parsing and get
+        # reported UNPARSED against the tool's own skipped-method text.
+        if skip_body:
+            skip_body += line.count("{") - line.count("}")
+            continue
         # A NESTED type definition -- `struct State { ... };` inside Player -- is a
         # type, not a field: it occupies no space and advances no offset. Consume it
         # whole, before the checks below can misread it.
@@ -271,6 +281,23 @@ for path in sys.argv[1:]:
             # so the member functions merely end the field list.
             if derived_from is None:
                 unmodelled = True
+                break
+            # A derived class can ALSO declare its destructor/overrides FIRST
+            # (Scene.h's KEY FUNCTION convention -- "the destructor is declared
+            # first, which is safe for a derived class"). Before any real field
+            # has been seen, a method line doesn't end the list, it's still the
+            # header's front matter -- without this, dScMgBase_c.h (destructor +
+            # 8 overrides, THEN ~30 fields) reported "0 commented fields ...
+            # struct spans 0x50", the exact same silent-no-op shape as every
+            # other bug this file documents, just arrived at from the opposite
+            # direction. Once a field HAS been seen, a method line ends the
+            # list as before -- that's the generated-header convention
+            # (Stage.h: fields, then methods).
+            if n == 0:
+                depth = line.count("{") - line.count("}")
+                if depth > 0:
+                    skip_body = depth
+                continue
             break
         # A declaration can carry a trailing comment that runs onto later lines:
         #     u8 unk_010;   /* 0x010 - first byte of the 0x28-byte ClsnResult
