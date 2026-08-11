@@ -1,7 +1,7 @@
+#include "TextureSequence.h"
 //cpp
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *o, void *f, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *o, void *f, int a, int fx, unsigned j);

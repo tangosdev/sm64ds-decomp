@@ -1,11 +1,10 @@
+#include "MaterialChanger.h"
 //cpp
-typedef int Fix12;
 
 struct SharedFilePtr { int id; void* file; };
 
 struct BMD_File;
 struct BMA_File;
-struct MaterialChanger { static void Prepare(BMD_File &model, BMA_File &animFile); };
 extern "C" {
 int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 void LoadSilverStarAndNumber(void);

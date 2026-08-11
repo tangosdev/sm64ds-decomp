@@ -3,11 +3,11 @@
 // recovered name: daPgDfdr_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
+#include "TextureSequence.h"
 /* recovered: renamed to Class_Method */
 /* daPgDfdr_c::InitResources - recovered from vtable slot identity */
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *o, void *f, int a, int b);

@@ -1,3 +1,4 @@
+#include "TextureSequence.h"
 //cpp
 // NONMATCHING: constant / value (div=6). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
@@ -11,7 +12,6 @@ struct SharedFilePtr { void *hdr; void *ptr; };
 
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" void LoadBlueCoinModel(void);
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);

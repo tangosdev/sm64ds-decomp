@@ -1,3 +1,5 @@
+#include "MaterialChanger.h"
+#include "TextureSequence.h"
 //cpp
 #include "types.h"
 struct SharedFilePtr;
@@ -12,9 +14,7 @@ struct Vector3_16;
 
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 struct BMA_File;
-struct MaterialChanger { static void Prepare(BMD_File &model, BMA_File &animFile); };
 extern "C" {
     void func_ov074_02122634(char *self);
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);

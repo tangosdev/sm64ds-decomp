@@ -1,19 +1,18 @@
+#include "TextureSequence.h"
 //cpp
 // @symbol _ZN15InvisibleSecret13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "InvisibleSecret.h"
-typedef int Fix12;
 
 struct SharedFilePtr { void* p; void* file; };
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 
 extern "C" {
     void _ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr& f);
     void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& f);
     int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
-    void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* self, void* btp, int a, Fix12 b, unsigned int c);
+    void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* self, void* btp, int a, int b, unsigned int c);
 }
 
 extern SharedFilePtr data_ov002_0210da08;

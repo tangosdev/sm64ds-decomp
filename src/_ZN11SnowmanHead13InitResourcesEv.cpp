@@ -2,20 +2,19 @@
 // @symbol _ZN11SnowmanHead13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
+#include "TextureSequence.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanHead.h"
-typedef int Fix12;
 
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *base, void *file, int a, int b);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *ref);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *t, void *a, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, Fix12 b, Fix12 c, void *d, void *e);
+extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
+extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, int b, int c, void *d, void *e);
 extern void _ZN13RaycastGroundC1Ev(void *t);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *t, const struct Vector3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *t);

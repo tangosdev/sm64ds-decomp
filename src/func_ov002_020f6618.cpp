@@ -1,7 +1,7 @@
+#include "TextureSequence.h"
 //cpp
 struct BMD_File;
 struct BTP_File;
-struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 struct SharedFilePtr { int a, file; };
 void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& f);
