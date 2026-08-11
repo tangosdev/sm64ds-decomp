@@ -1,10 +1,11 @@
-#include "types.h"
-// @symbol func_ov006_021073b0
+//cpp
+// @symbol _ZN12dScMgPanel_c13InitResourcesEv
 // recovered name: dScMgPanel_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
+#include "dScMgPanel_c.h"
 /* dScMgPanel_c::InitResources - recovered from vtable slot identity */
+extern "C" {
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -21,10 +22,11 @@ extern void func_ov006_02106168(void *p);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_021073b0(void *arg0)
+s32 dScMgPanel_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
     char *b;
     volatile u16 sp8;
     volatile u16 spA;
@@ -127,15 +129,15 @@ int func_ov006_021073b0(void *arg0)
     Deallocate((void *)f);
 
     FreeGfxSlotsById(0x1d);
-    func_ov006_021067a4(arg0);
+    func_ov006_021067a4(c);
     func_ov006_02106758(c);
 
     *(int *)(c + 0x4cb0) = 0;
     *(u8 *)(c + 0x4fea) = 0;
     *(int *)(c + 0x4cb4) = 0xff;
 
-    func_ov006_021063a0(arg0);
-    func_ov006_02106168(arg0);
+    func_ov006_021063a0(c);
+    func_ov006_02106168(c);
     func_ov006_02105118(c);
     func_ov006_02104b24(c);
 

@@ -366,8 +366,8 @@ func_ov006_020d5384 kind:function(arm,size=0x5a0) addr:0x020d5384
 func_ov006_020d5924 kind:function(arm,size=0x50) addr:0x020d5924
 func_ov006_020d5974 kind:function(arm,size=0xdc) addr:0x020d5974
 func_ov006_020d5a50 kind:function(arm,size=0x4) addr:0x020d5a50
-func_ov006_020d5a54 kind:function(arm,size=0x24) addr:0x020d5a54
-func_ov006_020d5a78 kind:function(arm,size=0x38) addr:0x020d5a78
+_ZN14dScMgBomroom_cD1Ev kind:function(arm,size=0x24) addr:0x020d5a54
+_ZN14dScMgBomroom_cD0Ev kind:function(arm,size=0x38) addr:0x020d5a78
 func_ov006_020d5ab0 kind:function(arm,size=0x50) addr:0x020d5ab0
 func_ov006_020d5b00 kind:function(arm,size=0x10) addr:0x020d5b00
 func_ov006_020d5b10 kind:function(arm,size=0x150) addr:0x020d5b10
@@ -443,9 +443,9 @@ func_ov006_020d9020 kind:function(arm,size=0x2c) addr:0x020d9020
 func_ov006_020d904c kind:function(arm,size=0x30) addr:0x020d904c
 func_ov006_020d907c kind:function(arm,size=0x88) addr:0x020d907c
 func_ov006_020d9104 kind:function(arm,size=0x5c) addr:0x020d9104
-func_ov006_020d9160 kind:function(arm,size=0x50) addr:0x020d9160
-func_ov006_020d91b0 kind:function(arm,size=0x94) addr:0x020d91b0
-func_ov006_020d9244 kind:function(arm,size=0x330) addr:0x020d9244
+_ZN14dScMgBomroom_c6RenderEv kind:function(arm,size=0x50) addr:0x020d9160
+_ZN14dScMgBomroom_c8BehaviorEv kind:function(arm,size=0x94) addr:0x020d91b0
+_ZN14dScMgBomroom_c13InitResourcesEv kind:function(arm,size=0x330) addr:0x020d9244
 MgSortOrSplode_Spawn kind:function(arm,size=0x30) addr:0x020d9574
 func_ov006_020d95a4 kind:function(arm,size=0x94) addr:0x020d95a4
 func_ov006_020d9638 kind:function(arm,size=0xa8) addr:0x020d9638
@@ -1243,8 +1243,8 @@ func_ov006_02103d28 kind:function(arm,size=0x50) addr:0x02103d28
 func_ov006_02103d78 kind:function(arm,size=0x158) addr:0x02103d78
 func_ov006_02103ed0 kind:function(arm,size=0x388) addr:0x02103ed0
 MgLakituLaunch_Spawn kind:function(arm,size=0x34) addr:0x02104258
-func_ov006_0210428c kind:function(arm,size=0x24) addr:0x0210428c
-func_ov006_021042b0 kind:function(arm,size=0x38) addr:0x021042b0
+_ZN12dScMgPanel_cD1Ev kind:function(arm,size=0x24) addr:0x0210428c
+_ZN12dScMgPanel_cD0Ev kind:function(arm,size=0x38) addr:0x021042b0
 func_ov006_021042e8 kind:function(arm,size=0x6c) addr:0x021042e8
 func_ov006_02104354 kind:function(arm,size=0x118) addr:0x02104354
 func_ov006_0210446c kind:function(arm,size=0xec) addr:0x0210446c
@@ -1311,9 +1311,9 @@ func_ov006_0210709c kind:function(arm,size=0xa0) addr:0x0210709c
 func_ov006_0210713c kind:function(arm,size=0x98) addr:0x0210713c
 func_ov006_021071d4 kind:function(arm,size=0x28) addr:0x021071d4
 func_ov006_021071fc kind:function(arm,size=0x110) addr:0x021071fc
-func_ov006_0210730c kind:function(arm,size=0x4c) addr:0x0210730c
-func_ov006_02107358 kind:function(arm,size=0x58) addr:0x02107358
-func_ov006_021073b0 kind:function(arm,size=0x4a8) addr:0x021073b0
+_ZN12dScMgPanel_c6RenderEv kind:function(arm,size=0x4c) addr:0x0210730c
+_ZN12dScMgPanel_c8BehaviorEv kind:function(arm,size=0x58) addr:0x02107358
+_ZN12dScMgPanel_c13InitResourcesEv kind:function(arm,size=0x4a8) addr:0x021073b0
 MgPuzzlePanelPuzzlePanic_Spawn kind:function(arm,size=0x34) addr:0x02107858
 func_ov006_0210788c kind:function(arm,size=0x94) addr:0x0210788c
 func_ov006_02107920 kind:function(arm,size=0xa8) addr:0x02107920
@@ -3452,6 +3452,7 @@ data_ov006_0213bb28 kind:data(any) addr:0x0213bb28
 _ZTS14dScMgBomroom_c kind:data(any) addr:0x0213bb38
 data_ov006_0213bb4c kind:data(any) addr:0x0213bb4c
 data_ov006_0213bbb4 kind:data(any) addr:0x0213bbb4
+_ZTV14dScMgBomroom_c kind:data(any) addr:0x0213bbb4
 data_ov006_0213bc44 kind:data(any) addr:0x0213bc44
 _ZTI12dMgCardObj_c kind:data(any) addr:0x0213bc48
 MgPicturePoker_SpawnInfo kind:data(any) addr:0x0213bc50
@@ -4000,6 +4001,7 @@ data_ov006_0213e174 kind:data(any) addr:0x0213e174
 data_ov006_0213e1b4 kind:data(any) addr:0x0213e1b4
 data_ov006_0213e1fc kind:data(any) addr:0x0213e1fc
 data_ov006_0213e24c kind:data(any) addr:0x0213e24c
+_ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 data_ov006_0213e2dc kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
 data_ov006_0213e2e8 kind:data(any) addr:0x0213e2e8

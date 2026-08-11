@@ -1,10 +1,11 @@
-#include "types.h"
-// @symbol func_ov006_020d9244
+//cpp
+// @symbol _ZN14dScMgBomroom_c13InitResourcesEv
 // recovered name: dScMgBomroom_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
+#include "dScMgBomroom_c.h"
 /* dScMgBomroom_c::InitResources - recovered from vtable slot identity */
+extern "C" {
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -18,10 +19,11 @@ extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_020d9244(void *arg0)
+s32 dScMgBomroom_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
     char *b;
     volatile u16 sp4;
     int f;

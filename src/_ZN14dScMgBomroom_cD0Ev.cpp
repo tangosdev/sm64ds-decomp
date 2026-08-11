@@ -1,15 +1,9 @@
-// @symbol func_ov006_020d5a78
-// recovered name: dScMgBomroom_c_OnYoshiTryEat
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-extern void* data_020a0eac;
-extern int data_ov006_0213bbb4[];
-/* recovered: renamed to Class_Method */
-/* dScMgBomroom_c::OnYoshiTryEat - recovered from vtable slot identity */
-int *func_ov006_020d5a78(int *t)
+//cpp
+// @symbol _ZN14dScMgBomroom_cD0Ev
+#include "dScMgBomroom_c.h"
+/* dScMgBomroom_c::~dScMgBomroom_c (D0, deleting destructor) -- dScMgBase_c's
+   own operator delete (its immediate base) covers this; no per-class copy
+   needed. */
+dScMgBomroom_c::~dScMgBomroom_c()
 {
-    t[0] = (int)data_ov006_0213bbb4;
-    _ZN11dScMgBase_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }

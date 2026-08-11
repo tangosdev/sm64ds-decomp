@@ -1,2 +1,10 @@
-extern int data_ov006_0213e24c[]; extern int _ZN11dScMgBase_cD2Ev();
-int func_ov006_0210428c(int *x) { x[0] = (int)data_ov006_0213e24c; _ZN11dScMgBase_cD2Ev(x); return (int)x; }
+//cpp
+// @symbol _ZN12dScMgPanel_cD1Ev
+#include "dScMgPanel_c.h"
+/* dScMgPanel_c::~dScMgPanel_c (D1, complete-object destructor) -- no
+   members need explicit destruction, so an empty body relies entirely on
+   the compiler-generated own-vtable-write + base-D2-call, same as
+   dScMgCurling_c's. */
+dScMgPanel_c::~dScMgPanel_c()
+{
+}

@@ -1443,11 +1443,11 @@ src/func_ov006_020d5a50.c:
     complete
     .text start:0x020d5a50 end:0x020d5a54
 
-src/func_ov006_020d5a54.c:
+src/_ZN14dScMgBomroom_cD1Ev.cpp:
     complete
     .text start:0x020d5a54 end:0x020d5a78
 
-src/func_ov006_020d5a78.c:
+src/_ZN14dScMgBomroom_cD0Ev.cpp:
     complete
     .text start:0x020d5a78 end:0x020d5ab0
 
@@ -1736,15 +1736,15 @@ src/func_ov006_020d9104.c:
     complete
     .text start:0x020d9104 end:0x020d9160
 
-src/func_ov006_020d9160.c:
+src/_ZN14dScMgBomroom_c6RenderEv.cpp:
     complete
     .text start:0x020d9160 end:0x020d91b0
 
-src/func_ov006_020d91b0.cpp:
+src/_ZN14dScMgBomroom_c8BehaviorEv.cpp:
     complete
     .text start:0x020d91b0 end:0x020d9244
 
-src/func_ov006_020d9244.c:
+src/_ZN14dScMgBomroom_c13InitResourcesEv.cpp:
     complete
     .text start:0x020d9244 end:0x020d9574
 
@@ -4783,11 +4783,11 @@ src/MgLakituLaunch_Spawn.c:
     complete
     .text start:0x02104258 end:0x0210428c
 
-src/func_ov006_0210428c.c:
+src/_ZN12dScMgPanel_cD1Ev.cpp:
     complete
     .text start:0x0210428c end:0x021042b0
 
-src/func_ov006_021042b0.c:
+src/_ZN12dScMgPanel_cD0Ev.cpp:
     complete
     .text start:0x021042b0 end:0x021042e8
 
@@ -5034,15 +5034,15 @@ src/func_ov006_021071d4.c:
 src/func_ov006_021071fc.c:
     .text start:0x021071fc end:0x0210730c
 
-src/func_ov006_0210730c.c:
+src/_ZN12dScMgPanel_c6RenderEv.cpp:
     complete
     .text start:0x0210730c end:0x02107358
 
-src/func_ov006_02107358.cpp:
+src/_ZN12dScMgPanel_c8BehaviorEv.cpp:
     complete
     .text start:0x02107358 end:0x021073b0
 
-src/func_ov006_021073b0.c:
+src/_ZN12dScMgPanel_c13InitResourcesEv.cpp:
     complete
     .text start:0x021073b0 end:0x02107858
 
