@@ -1,30 +1,33 @@
-#include "types.h"
-// @symbol func_ov006_020e3578
+//cpp
+// @symbol _ZN14dScMgCurling_c13InitResourcesEv
 // recovered name: dScMgCurling_c_InitResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
+#include "dScMgCurling_c.h"
 /* dScMgCurling_c::InitResources - recovered from vtable slot identity */
-extern char* func_020adc74(void* p);
-extern void* _ZN2G213GetBG2CharPtrEv(void);
-extern void DecompressLZ16(const void* src, void* dst);
-extern void* LoadFile(int handle);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void Ov004_Deallocate(void* p);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
-extern void func_ov006_020e3388(char* self);
-extern void func_ov006_020e3250(char* c);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
-extern int func_ov004_020adc1c(void);
+extern "C" {
+char* func_020adc74(void* p);
+void* _ZN2G213GetBG2CharPtrEv(void);
+void DecompressLZ16(const void* src, void* dst);
+void* LoadFile(int handle);
+void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
+unsigned _ZN3G2S13GetBG2CharPtrEv(void);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
+void Ov004_Deallocate(void* p);
+void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
+void func_ov006_020e3388(char* self);
+void func_ov006_020e3250(char* c);
+void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
+int func_ov004_020adc1c(void);
 
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
+}
 
-int func_ov006_020e3578(char* self)
+s32 dScMgCurling_c::InitResources()
 {
+    char *self = (char *)this;
     char* a = func_020adc74(&data_ov006_0213c394);
     char* b = func_020adc74(&data_ov006_0213c3b4);
     void* f;

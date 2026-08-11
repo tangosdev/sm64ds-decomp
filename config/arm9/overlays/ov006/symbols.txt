@@ -579,8 +579,8 @@ func_ov006_020e0204 kind:function(arm,size=0x104) addr:0x020e0204
 func_ov006_020e0308 kind:function(arm,size=0x26c) addr:0x020e0308
 func_ov006_020e0574 kind:function(arm,size=0xc0) addr:0x020e0574
 func_ov006_020e0634 kind:function(arm,size=0x4) addr:0x020e0634
-func_ov006_020e0638 kind:function(arm,size=0x24) addr:0x020e0638
-func_ov006_020e065c kind:function(arm,size=0x38) addr:0x020e065c
+_ZN14dScMgCurling_cD1Ev kind:function(arm,size=0x24) addr:0x020e0638
+_ZN14dScMgCurling_cD0Ev kind:function(arm,size=0x38) addr:0x020e065c
 func_ov006_020e0694 kind:function(arm,size=0x88) addr:0x020e0694
 func_ov006_020e071c kind:function(arm,size=0x94) addr:0x020e071c
 func_ov006_020e07b0 kind:function(arm,size=0xd4) addr:0x020e07b0
@@ -622,12 +622,12 @@ func_ov006_020e3250 kind:function(arm,size=0x128) addr:0x020e3250
 func_ov006_020e3378 kind:function(arm,size=0x10) addr:0x020e3378
 func_ov006_020e3388 kind:function(arm,size=0xe8) addr:0x020e3388
 func_ov006_020e3470 kind:function(arm,size=0x7c) addr:0x020e3470
-func_ov006_020e34ec kind:function(arm,size=0x3c) addr:0x020e34ec
-func_ov006_020e3528 kind:function(arm,size=0x50) addr:0x020e3528
-func_ov006_020e3578 kind:function(arm,size=0x2a8) addr:0x020e3578
+_ZN14dScMgCurling_c6RenderEv kind:function(arm,size=0x3c) addr:0x020e34ec
+_ZN14dScMgCurling_c8BehaviorEv kind:function(arm,size=0x50) addr:0x020e3528
+_ZN14dScMgCurling_c13InitResourcesEv kind:function(arm,size=0x2a8) addr:0x020e3578
 MgShuffleShell_Spawn kind:function(arm,size=0x34) addr:0x020e3820
-func_ov006_020e3854 kind:function(arm,size=0x24) addr:0x020e3854
-func_ov006_020e3878 kind:function(arm,size=0x38) addr:0x020e3878
+_ZN15dScMgCurling2_cD1Ev kind:function(arm,size=0x24) addr:0x020e3854
+_ZN15dScMgCurling2_cD0Ev kind:function(arm,size=0x38) addr:0x020e3878
 func_ov006_020e38b0 kind:function(arm,size=0x98) addr:0x020e38b0
 func_ov006_020e3948 kind:function(arm,size=0x98) addr:0x020e3948
 func_ov006_020e39e0 kind:function(arm,size=0x1bc) addr:0x020e39e0
@@ -675,9 +675,9 @@ func_ov006_020e6528 kind:function(arm,size=0x154) addr:0x020e6528
 func_ov006_020e667c kind:function(arm,size=0x10) addr:0x020e667c
 func_ov006_020e668c kind:function(arm,size=0xe8) addr:0x020e668c
 func_ov006_020e6774 kind:function(arm,size=0x7c) addr:0x020e6774
-func_ov006_020e67f0 kind:function(arm,size=0x4c) addr:0x020e67f0
-func_ov006_020e683c kind:function(arm,size=0x58) addr:0x020e683c
-func_ov006_020e6894 kind:function(arm,size=0x360) addr:0x020e6894
+_ZN15dScMgCurling2_c6RenderEv kind:function(arm,size=0x4c) addr:0x020e67f0
+_ZN15dScMgCurling2_c8BehaviorEv kind:function(arm,size=0x58) addr:0x020e683c
+_ZN15dScMgCurling2_c13InitResourcesEv kind:function(arm,size=0x360) addr:0x020e6894
 func_ov006_020e6bf4 kind:function(arm,size=0x34) addr:0x020e6bf4
 _ZN17MgBounceAndPounceD1Ev kind:function(arm,size=0x38) addr:0x020e6c28
 _ZN17MgBounceAndPounceD0Ev kind:function(arm,size=0x4c) addr:0x020e6c60
@@ -3561,6 +3561,7 @@ _ZTI14dScMgCurling_c kind:data(any) addr:0x0213c2c4
 _ZTS14dScMgCurling_c kind:data(any) addr:0x0213c2d0
 data_ov006_0213c2e4 kind:data(any) addr:0x0213c2e4
 data_ov006_0213c304 kind:data(any) addr:0x0213c304
+_ZTV14dScMgCurling_c kind:data(any) addr:0x0213c304
 data_ov006_0213c394 kind:data(any) addr:0x0213c394
 data_ov006_0213c398 kind:data(any) addr:0x0213c398 ambiguous
 data_ov006_0213c3b4 kind:data(any) addr:0x0213c3b4
@@ -3598,6 +3599,7 @@ _ZTS15dScMgCurling2_c kind:data(any) addr:0x0213c4c8
 data_ov006_0213c4dc kind:data(any) addr:0x0213c4dc
 data_ov006_0213c4f0 kind:data(any) addr:0x0213c4f0
 data_ov006_0213c510 kind:data(any) addr:0x0213c510
+_ZTV15dScMgCurling2_c kind:data(any) addr:0x0213c510
 data_ov006_0213c5a0 kind:data(any) addr:0x0213c5a0
 data_ov006_0213c5bc kind:data(any) addr:0x0213c5bc ambiguous
 _ZTI14dScMgD3DBase_c kind:data(any) addr:0x0213c5c8

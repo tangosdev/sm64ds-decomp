@@ -2259,11 +2259,11 @@ src/func_ov006_020e0634.c:
     complete
     .text start:0x020e0634 end:0x020e0638
 
-src/func_ov006_020e0638.c:
+src/_ZN14dScMgCurling_cD1Ev.cpp:
     complete
     .text start:0x020e0638 end:0x020e065c
 
-src/func_ov006_020e065c.c:
+src/_ZN14dScMgCurling_cD0Ev.cpp:
     complete
     .text start:0x020e065c end:0x020e0694
 
@@ -2414,30 +2414,30 @@ src/func_ov006_020e3388.c:
     complete
     .text start:0x020e3388 end:0x020e3470
 
-src/func_ov006_020e3470.c:
+src/func_ov006_020e3470.cpp:
     complete
     .text start:0x020e3470 end:0x020e34ec
 
-src/func_ov006_020e34ec.c:
+src/_ZN14dScMgCurling_c6RenderEv.cpp:
     complete
     .text start:0x020e34ec end:0x020e3528
 
-src/func_ov006_020e3528.cpp:
+src/_ZN14dScMgCurling_c8BehaviorEv.cpp:
     complete
     .text start:0x020e3528 end:0x020e3578
 
-src/func_ov006_020e3578.c:
+src/_ZN14dScMgCurling_c13InitResourcesEv.cpp:
     .text start:0x020e3578 end:0x020e3820
 
 src/MgShuffleShell_Spawn.c:
     complete
     .text start:0x020e3820 end:0x020e3854
 
-src/func_ov006_020e3854.c:
+src/_ZN15dScMgCurling2_cD1Ev.cpp:
     complete
     .text start:0x020e3854 end:0x020e3878
 
-src/func_ov006_020e3878.c:
+src/_ZN15dScMgCurling2_cD0Ev.cpp:
     complete
     .text start:0x020e3878 end:0x020e38b0
 
@@ -2612,19 +2612,19 @@ src/func_ov006_020e668c.c:
     complete
     .text start:0x020e668c end:0x020e6774
 
-src/func_ov006_020e6774.c:
+src/func_ov006_020e6774.cpp:
     complete
     .text start:0x020e6774 end:0x020e67f0
 
-src/func_ov006_020e67f0.c:
+src/_ZN15dScMgCurling2_c6RenderEv.cpp:
     complete
     .text start:0x020e67f0 end:0x020e683c
 
-src/func_ov006_020e683c.cpp:
+src/_ZN15dScMgCurling2_c8BehaviorEv.cpp:
     complete
     .text start:0x020e683c end:0x020e6894
 
-src/func_ov006_020e6894.c:
+src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp:
     .text start:0x020e6894 end:0x020e6bf4
 
 src/func_ov006_020e6bf4.c:
