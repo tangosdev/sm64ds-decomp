@@ -18,9 +18,9 @@ struct Actor * CapEnemy::RespawnIfHasCap()
     func_02005ed8(((unsigned char *)this));
     if ((((unsigned char *)this)[0x113] & 0xf) >= 6) return 0;
     r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-        mActorID, mParam,
-        (const struct Vector3 *)((unsigned char *)&unk_05c),
-        (const struct Vector3_16 *)((unsigned char *)&unk_08c),
+        actorID, param1,
+        (const struct Vector3 *)((unsigned char *)&mPosX),
+        (const struct Vector3_16 *)((unsigned char *)&mAngleX),
         mAreaId, -1);
     if (!r) return r;
     *(unsigned char *)((char *)r + 0x111) = 1;

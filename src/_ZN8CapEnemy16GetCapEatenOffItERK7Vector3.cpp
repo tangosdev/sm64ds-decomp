@@ -42,7 +42,7 @@ int CapEnemy::GetCapEatenOffIt(const Vector3 & v_)
         mEatingPlayer = 0;
         if (unk_110 == 0) {
             idx = mCapId & 7;
-            func_ov001_020ab228(&unk_164, c, idx, 0, 0);
+            func_ov001_020ab228((unsigned char *)&mCapIcon, c, idx, 0, 0);
         }
         return 1;
     }

@@ -63,6 +63,13 @@ struct Enemy : Actor {
     u8  pad_10b[0x1];
     s32 mDeathState;              /* 0x10c */
 
+    /* DECLARED, NEVER DEFINED HERE. Without it the compiler synthesises a
+       constructor and inlines it into every subclass that has one, turning a
+       single `bl _ZN5EnemyC2Ev` into the whole Actor/ActorBase vtable-store
+       chain written out in place. The ROM calls it at 0x020aed98. Same
+       reasoning as the note on Model(); see include/Model.h. */
+    Enemy();
+
     virtual ~Enemy();                   /* slots 0 (D1), 1 (D0) */
 
     /* Enemy's own copy of Actor's inline operator delete, and it MUST STAY even

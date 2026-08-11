@@ -45,6 +45,13 @@ struct Model : ModelBase {
     Matrix4x3 mat4x3;          /* 0x1c */
     void *transformsBuf;       /* 0x4c - owned; sized by func_02046564(file) */
 
+    /* DECLARED, NEVER DEFINED HERE, and that is the point. Left undeclared, the
+       compiler synthesises a constructor and INLINES it into every class that
+       holds a Model, emitting the base-chain vtable stores straight into the
+       holder. The ROM calls _ZN5ModelC1Ev (0x02016d58) out of line instead, so
+       the declaration is what makes a holder's constructor reproduce. */
+    Model();
+
     /* --- vtable, in _ZTV5Model order. Do not reorder. --- */
     virtual ~Model();                                 /* slots 0 (D1), 1 (D0) */
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */

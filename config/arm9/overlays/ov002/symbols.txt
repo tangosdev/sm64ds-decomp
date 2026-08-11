@@ -1671,6 +1671,7 @@ _ZTV5Enemy kind:data(any) addr:0x021081e4
 _ZTI11dCapEnemy_c kind:data(any) addr:0x02108260
 _ZTS11dCapEnemy_c kind:data(any) addr:0x0210826c
 data_ov002_02108284 kind:data(any) addr:0x02108284
+_ZTV8CapEnemy kind:data(any) addr:0x02108284
 data_ov002_02108300 kind:data(any) addr:0x02108300
 data_ov002_02108308 kind:data(any) addr:0x02108308
 data_ov002_02108310 kind:data(any) addr:0x02108310
