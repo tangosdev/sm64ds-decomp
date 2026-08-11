@@ -11,7 +11,7 @@ void CapEnemy::Unk_02005d94()
     int b1;
     int b2;
     if (!(((unsigned char *)this)[0x113] & 0x80)) return;
-    b1 = (unk_0b0 & 8) ? 1 : 0;
+    b1 = (mFlags & 8) ? 1 : 0;
     if (b1 == 0) {
         volatile unsigned char *q = &data_0209f2d8;
         b2 = (q[0] == 1) ? 1 : 0;

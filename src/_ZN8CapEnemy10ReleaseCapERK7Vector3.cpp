@@ -42,10 +42,10 @@ struct Actor *CapEnemy::ReleaseCap(const Vector3 & v_)
         func_02005ed8(c);
         if (mCapId < 6u) {
             struct Vector3 out;
-            Vec3_Add(&out, (const struct Vector3 *)&unk_05c, v);
+            Vec3_Add(&out, (const struct Vector3 *)&mPosX, v);
             ret = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, 0x1012 | (mCapId << 8), &out,
-                (const struct Vector3_16 *)&unk_08c,
+                (const struct Vector3_16 *)&mAngleX,
                 mAreaId, -1);
             if (unk_110 != 0) {
                 *(unsigned char *)((int)c + 0x113) |= 8;

@@ -51,7 +51,7 @@ int CapEnemy::AddCap(unsigned int param)
     }
 
     *(int *)(((long long)(int)((char *)this + 0xb0))) &= ~1;
-    func_ov001_020ab228((char *)&unk_164, (char *)this, mCapId, unk_112, unk_110 != 0);
+    func_ov001_020ab228((char *)&mCapIcon, (char *)this, mCapId, unk_112, unk_110 != 0);
 
     int result = func_02005e28((unsigned char *)this);
     if (result != 0) {

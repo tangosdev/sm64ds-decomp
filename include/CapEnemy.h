@@ -1,82 +1,53 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class CapEnemy: 11 matched functions, 10 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef CAPENEMY_H
 #define CAPENEMY_H
+
 #include "types.h"
+
+/* THE INTERMEDIATE CLASS BETWEEN Enemy AND THE ENEMIES THAT CAN WEAR MARIO'S
+ * CAP. It was hiding in plain sight: this header restated Actor's layout and
+ * stopped at a one-byte marker for 0x164, so it never reached 0x180 and nothing
+ * could derive from it.
+ *
+ * The ROM's own name is `dCapEnemy_c` (`_ZTI11dCapEnemy_c`, ov002 0x02108260),
+ * and the extracted RTTI graph records `dCapEnemy_c -> dEnemyBase_c` -- Enemy.
+ * EXACTLY TWO classes derive from it in that graph: `daKrb_c` (Goomba) and
+ * `daTrs_c` (Teresa, this tree's Boo). Their destructors agree: both chain to
+ * the same function rather than to Enemy::~Enemy directly.
+ *
+ * The layout closes exactly, which is what makes 0x180 a fact rather than a
+ * rounding:
+ *
+ *     0x000 Enemy                            -> 0x110
+ *     0x110 four bytes of its own (mCapId at 0x113)
+ *     0x114 Model    mModel      0x50        -> 0x164
+ *     0x164 CapIcon  mCapIcon    0x1c        -> 0x180
+ *
+ * and Goomba's first own member is at 0x180, with Goomba_Spawn calling
+ * `_ZN8CapEnemyC2Ev(p)` and then constructing at `p + 0x180`.
+ *
+ * NONE OF THIS IS NEW EVIDENCE -- it was already written down twice, in the
+ * local shadow structs of `_ZN8CapEnemyC2Ev.c` and `_ZN8CapEnemyD2Ev.c`, the
+ * latter's comment even saying "CapEnemy : Enemy. Members: capModel (Model)
+ * @0x114, capIcon (CapIcon) @0x164". It just never reached a shared header,
+ * so no subclass could use it.
+ */
+
+#include "CapIcon.h"
+#include "Enemy.h"
 #include "Model.h"
 
-/* fwd */
-struct Vector3;
-struct v;
-struct v_;
-struct CapEnemy {
-    u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    /* 0x05c: NOT a scalar, and deliberately left as a marker. Both evidence passes
-       see only its address taken, never a sized load, and Actor.h:65 puts
-       mPosX/mPosY/mPosZ here -- so this stands over the position triple. One derived
-       header declares s32 at this offset, which describes the X component alone;
-       adopting that would trade an unknown for a narrower wrong answer. */
-    /* 0x05c..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_05c;                 /* 0x05c */
-    s32 mPosY;                   /* 0x060 */
-    s32 mPosZ;                   /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
-    s32 mCamSpacePosX;           /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    /* 0x08c: same shape -- address-only evidence, and Actor.h:89 puts
-       mAngleX/mAngleY/mAngleZ here. Stands over the rotation triple. */
-    /* 0x08c..0x0b0 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_08c;                 /* 0x08c */
-    s16 mAngleY;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 mHorzSpeed;              /* 0x098 */
-    s32 mVertAccel;              /* 0x09c */
-    s32 mTerminalVelocity;       /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;              /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    u32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x3];
-    s32 mEatingPlayer;            /* 0x0d0 */
-    u8  pad_0d4[0x3c];
-    /* Which BANK of caps this enemy draws from. AddCap sets it when the spawn
-       param is >= 3, and both ReleaseCap and GetCapEatenOffIt branch on it --
-       a set flag releases the cap differently and skips the model re-bind. */
-    u8  unk_110;            /* 0x110 */
-    u8  unk_111;            /* 0x111 */
-    /* Latched to 1 the first time a bank-1 cap is added, and never cleared;
-       passed straight through to func_ov001_020ab228. */
-    u8  unk_112;            /* 0x112 */
-    /* The cap, packed. Low 3 bits index the six-entry model table and 6 means
-       "no cap" -- AddCap writes param % 3 and falls back to 6 on any failure,
-       and UnloadCapModel/ReleaseCap both mask with & 7 before indexing.
-       Bit 3 and bit 7 are set by ReleaseCap as release markers, which is why
-       the reads mask and the writes OR. */
-    u8  mCapId;            /* 0x113 */
-    /* Model member, named by _ZN5ModelD1Ev at +0x114 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x114 */
-    u8  unk_164;            /* 0x164 */
-#ifdef __cplusplus
-    /* methods */
+struct CapEnemy : Enemy {
+    u8  unk_110;                      /* 0x110 */
+    u8  unk_111;                      /* 0x111 */
+    u8  unk_112;                      /* 0x112 */
+    u8  mCapId;                       /* 0x113 */
+    Model mModel;                     /* 0x114 */
+    CapIcon mCapIcon;                 /* 0x164 */
+
+    /* --- vtable --- */
+    virtual ~CapEnemy();
+
+    /* --- non-virtual --- */
     int AddCap(unsigned int param);
     int DestroyIfCapNotNeeded();
     int GetCapEatenOffIt(const Vector3 & v_);
@@ -85,7 +56,8 @@ struct CapEnemy {
     void RenderCapModel(const Vector3 * v);
     void UnloadCapModel();
     void Unk_02005d94();
-#endif
 };
 
-#endif
+typedef char CapEnemy_size_must_be_0x180[sizeof(CapEnemy) == 0x180 ? 1 : -1];
+
+#endif /* CAPENEMY_H */
