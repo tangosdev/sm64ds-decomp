@@ -1,23 +1,12 @@
 //cpp
-extern int data_ov004_020bc0c0[];
-extern int data_ov004_020beb68[];
-extern int _ZTV5Scene[];
-extern int data_0208e4b8[];
-extern "C" {
-extern void func_ov004_020b929c(void *);
-/* The ROM calls the base-object destructor D2. The explicit destructor call
-   this replaces compiled to the complete-object destructor D1 instead --
-   0x02043dbc where the ROM branches to 0x02043d48. Same shape as the sibling
-   func_ov004_020b2a18. */
-extern void _ZN9ActorBaseD2Ev(void *);
-}
-
-extern "C" void *func_ov004_020b2a84(void *c) {
-    *(int *)c = (int)data_ov004_020bc0c0;
-    *(int *)data_ov004_020beb68 = 0;
-    func_ov004_020b929c((char *)c + 0xf4);
-    *(int *)c = (int)_ZTV5Scene;
-    *(int *)c = (int)data_0208e4b8;
-    _ZN9ActorBaseD2Ev(c);
-    return c;
+// @symbol _ZN11dScMgBase_cD1Ev
+/* Forces the complete-object destructor out-of-line. ~dScMgBase_c() is
+   defined inline in dScMgBase_c.h (its 32 descendants need to inline it the
+   same way Stage inlines Scene's) -- a bare include emits nothing here, and
+   the definition can no longer live in this file directly. See
+   src/_ZN5SceneD1Ev.cpp for the identical pattern one level up. */
+#include "dScMgBase_c.h"
+void dScMgBase_c_EmitDestructor(dScMgBase_c *p)
+{
+    p->~dScMgBase_c();
 }

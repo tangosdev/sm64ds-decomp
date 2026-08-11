@@ -1,3 +1,4 @@
+//cpp
 // @symbol func_ov004_020af27c
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -5,9 +6,10 @@
 #include "dScMgBase_c.h"
 // recovered name: dScMgBase_c_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* dScMgBase_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* dScMgBase_c::OnHitByMegaChar - recovered from vtable slot identity.
+   Converted from .c to .cpp -- see func_ov004_020ae128.cpp's banner. */
 
-void func_ov004_020af27c(void *c)
+extern "C" void func_ov004_020af27c(void *c)
 {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
     if (self->unk_4630 != 0) return;

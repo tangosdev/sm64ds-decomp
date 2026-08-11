@@ -1,8 +1,9 @@
-// @symbol func_ov004_020b04ec
+//cpp
+// @symbol _ZN11dScMgBase_c6RenderEv
+#include "dScMgBase_c.h"
 // recovered name: dScMgBase_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgBase_c::Render - recovered from vtable slot identity */
-int func_ov004_020b04ec(void)
+/* dScMgBase_c::Render - recovered from vtable slot identity. */
+s32 dScMgBase_c::Render()
 {
     return 1;
 }

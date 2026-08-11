@@ -1,13 +1,15 @@
 //cpp
-// @symbol func_ov004_020b0930
+// @symbol _ZN11dScMgBase_c19BeforeInitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-#include "decl_Scene.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
 // recovered name: dScMgBase_c_BeforeInitResources
-/* recovered: renamed to Class_Method */
-/* dScMgBase_c::BeforeInitResources - recovered from vtable slot identity */
+/* dScMgBase_c::BeforeInitResources - recovered from vtable slot identity.
+   Body unchanged from the recovered free function -- only the signature
+   became a real member. v26/v31/v33 are three of the still-undeclared
+   slots 18-35 (see dScMgBase_c.h); this keeps calling them through the
+   same local fake-vtable stand-in used before, by slot number, since their
+   real names/signatures aren't reconstructed yet. */
 struct Obj {
     virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
     virtual void v4();  virtual void v5();  virtual void v6();  virtual void v7();
@@ -25,15 +27,16 @@ extern void Enable3dEngines(void);
 
 extern char data_0209b308[];
 extern void* data_ov004_020beb60;
-extern char* data_ov004_020beb68;
 extern char data_0209f61c[];
 extern unsigned char data_0209d460[];
 extern unsigned char data_0209d458[];
+}
 
-int func_ov004_020b0930(char* c)
+bool dScMgBase_c::BeforeInitResources()
 {
-    struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
-    if (_ZN5Scene19BeforeInitResourcesEv(c) == 0) return 0;
+    char *c = (char *)this;
+    struct dScMgBase_c *self = this;
+    if (Scene::BeforeInitResources() == 0) return 0;
     if (((Obj*)c)->v26() == 0)
         func_02019028();
     else
@@ -42,18 +45,17 @@ int func_ov004_020b0930(char* c)
     if (data_ov004_020beb60 == 0)
         data_ov004_020beb60 = _ZN6Memory13operator_new2Ej(0x4000);
     if (data_ov004_020beb68 != 0)
-        *(int*)(data_ov004_020beb68 + 0xb0) = 0;
+        *(int*)((char*)data_ov004_020beb68 + 0xb0) = 0;
     self->unk_0b4 = 0;
     self->unk_0b8 = 0;
     self->unk_465c = 0;
     func_ov004_020b8a8c(c + 0x4000);
     ((Obj*)c)->v33();
     func_ov004_020b2cb8();
-    _ZN5Scene9SetFadersEP15FaderBrightness(data_0209f61c);
+    Scene::SetFaders((FaderBrightness *)data_0209f61c);
     func_0202ec9c(data_0209f61c, 0);
     data_0209d460[0] = 0;
     data_0209d458[0] = 0;
     ((Obj*)c)->v31();
     return 1;
-}
 }

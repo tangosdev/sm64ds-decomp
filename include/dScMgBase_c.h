@@ -7,6 +7,27 @@
  * class dScMgBase_c, recovered from ROM RTTI + vtable slot identity.
  * Offsets/widths are observed. Names are placeholders.
  *
+ * dScMgBase_c : Scene, confirmed by tools/rtti_extract.py (single base,
+ * dScMgBase_c's __si_class_type_info at ov004:0x020bbf6c points at dScene_c
+ * arm9:0x020914d4, offset 0) -- same edge include/Scene.h's own census
+ * documents. dScMgBase_c is ALSO a second hierarchy root: 15 direct RTTI
+ * children, 32 transitive descendants (the minigame family --
+ * notes/dscene-c-siblings-census.md section 2). Its own fields therefore
+ * start at file-relative offset 0 == ROM offset 0x50 (sizeof(Scene)), same
+ * as every other dScene_c child.
+ *
+ * THE DESTRUCTOR CASCADES ONE MORE LEVEL, same shape as Scene's own fix
+ * (include/Scene.h's KEY FUNCTION note). dScMgBase_c has 32 descendants, so
+ * its own D2/D1 must be DEFINED INLINE for them to inline it the way Stage
+ * inlines Scene's -- a merely declared destructor can't be. Its own copy of
+ * operator delete is for the same reason: mwcc only inlines a D0 route
+ * through the class itself or its IMMEDIATE base, and for dScMgBase_c's
+ * children that immediate base is dScMgBase_c, not Scene -- Scene's own copy
+ * (which already covers dScMgBase_c's own D0, Scene being ITS immediate
+ * base) is out of reach two levels down. See include/Actor.h and
+ * include/Scene.h for the full mechanics; this is the same rule applied one
+ * level further from the root.
+ *
  * 0x0f4 IS hand-verified, from _ZN11dScMgBase_cD2Ev (src/_ZN11dScMgBase_cD2Ev.cpp):
  * it calls func_ov004_020b929c(c + 0xf4), which is
  *     __destroy_arr(p, count=8, elem_size=0x24, func_ov004_020b9280)
@@ -19,14 +40,65 @@
  * offset 0, and both destructors are trivial enough to fully inline into vtable
  * writes. So 0x0f4 is 8 contiguous dMgPsOpt_c::TouchIcon_c, each 0x24 bytes,
  * spanning 0x0f4..0x214. Neither TouchIcon_c nor dThIcon_c has a header yet, so
- * the array is left as raw bytes rather than an unverified struct type.
- * 0x214..0x21c (8 bytes) has no matched access yet and stays padding. */
+ * the array stays raw bytes rather than an unverified struct type -- the
+ * destructor below calls func_ov004_020b929c on it explicitly instead of
+ * relying on member-wise auto-destruction, which is exactly what the ROM's
+ * own D2 does and keeps this slice from having to invent two more classes'
+ * worth of vtables to get dScMgBase_c's own destructor byte-correct.
+ * 0x214..0x21c (8 bytes) has no matched access yet and stays padding.
+ *
+ * data_ov004_020beb68 is a global singleton pointer to the active
+ * dScMgBase_c instance -- 60+ files across ov004/ov006 read it, each having
+ * invented its own local type (Base*, Obj*, G*, char*, void*...). Retyping
+ * it tree-wide is its own slice; this file only clears it, matching the D2's
+ * own `*(int*)data_ov004_020beb68 = 0`, which -- since that file declared it
+ * `extern int data_ov004_020beb68[]` -- writes 0 into the GLOBAL'S OWN
+ * storage (arrays decay to their own address), not through a pointer it
+ * holds. i.e. it is a plain global pointer being nulled, not a target being
+ * zeroed through it. */
 #ifndef DSCMGBASE_C_H
 #define DSCMGBASE_C_H
-#include "types.h"
+#include "Scene.h"
 
-struct dScMgBase_c {
-    u8  pad_000[0x5c];
+extern "C" void func_ov004_020b929c(void *);
+extern "C" void *data_ov004_020beb68;
+
+struct dScMgBase_c : Scene {
+    /* Declared first, deliberately -- see include/Scene.h's KEY FUNCTION
+       note for why. Overrides slots 16 (D1) and 17 (D0). DEFINED INLINE so
+       every one of the 32 descendants below can inline it, the same way
+       Stage inlines Scene's. The body replaces the ROM's manual
+       `func_ov004_020b929c(c + 0xf4)` call -- see the file banner for why
+       that stays an explicit call instead of member auto-destruction. */
+    virtual ~dScMgBase_c() {
+        data_ov004_020beb68 = 0;
+        func_ov004_020b929c((char *)this + 0xf4);
+    }
+
+    /* dScMgBase_c's own copy, for the same reason Scene has one -- see the
+       file banner. Unlocks D0 for all 32 descendants below. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+
+    /* --- overrides of Scene's own virtuals, same signature, in _ZTV order.
+           1, 2, 5, 7, 10 re-override slots Scene already gave a body;
+           6, 9, 12 are the first override below ActorBase's own default. --- */
+    virtual bool BeforeInitResources();                /* slot  1 */
+    virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
+    virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
+    virtual s32  Behavior();                           /* slot  6 */
+    virtual int  BeforeBehavior();                     /* slot  7 */
+    virtual s32  Render();                             /* slot  9 */
+    virtual int  BeforeRender();                       /* slot 10 */
+    virtual void OnPendingDestroy();                   /* slot 12 */
+
+    /* Slots 18-35: eighteen further virtuals new at this class, same shape
+       as Actor's own 13 new slots over ActorBase. All 18 target addresses
+       are already matched source (func_ov004_* under arm9/ov004) -- see
+       notes/dscene-c-siblings-census.md section 2 -- but their signatures
+       are not yet reconstructed from the bodies, so they are left
+       undeclared here rather than guessed. Naming a subset is fine. */
+
+    u8  pad_050[0xc];
     s32 unk_05c;            /* 0x05c */
     u8  pad_060[0x44];
     s32 unk_0a4;            /* 0x0a4 */

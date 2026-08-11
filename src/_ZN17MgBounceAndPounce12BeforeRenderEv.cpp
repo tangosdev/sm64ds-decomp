@@ -4,11 +4,11 @@
 #include "decl_Particle.h"
 #include "MgBounceAndPounce.h"
 
-extern "C" int func_ov004_020b04f4(void *self);
+extern "C" int _ZN11dScMgBase_c12BeforeRenderEv(void *self);
 
 int MgBounceAndPounce::BeforeRender()
 {
-    if (func_ov004_020b04f4(this) == 0) {
+    if (_ZN11dScMgBase_c12BeforeRenderEv(this) == 0) {
         return 0;
     }
 

@@ -11,7 +11,7 @@ int _ZN8Particle10SysTracker6UpdateEv(void*);
 
 int MgBounceAndPounce::BeforeBehavior()
 {
-  if(func_ov004_020b0620(((void*)this))==0) return 0;
+  if(_ZN11dScMgBase_c14BeforeBehaviorEv(((void*)this))==0) return 0;
   if(data_020a0db0 & 1)
     _ZN8Particle10SysTracker6UpdateEv((char*)&unk_47e4);
   return 1;

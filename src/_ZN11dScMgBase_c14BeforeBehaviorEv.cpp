@@ -1,11 +1,16 @@
 //cpp
-// @symbol func_ov004_020b0620
-// recovered name: dScMgBase_c_BeforeBehavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_Scene.h"
+// @symbol _ZN11dScMgBase_c14BeforeBehaviorEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgBase_c::BeforeBehavior - recovered from vtable slot identity */
+#include "dScMgBase_c.h"
+// recovered name: dScMgBase_c_BeforeBehavior
+/* dScMgBase_c::BeforeBehavior - recovered from vtable slot identity.
+   data_0209f5bc points at some OTHER active Scene-family object, not this
+   one -- SceneVCall6 is a reduced 6-slot stand-in reaching its real slot 5
+   by position, same trick the recovered source already used under the name
+   "Scene" (renamed here only to not collide with the real one now included
+   via dScMgBase_c.h). m6c/m70 (real vtable slots 27/28) are two more of the
+   still-undeclared slots 18-35 (see dScMgBase_c.h), reached the same way
+   through this object's own vtable. */
 extern "C" {
 int func_ov004_020b8ee0(char *p);
 void func_ov004_020aeb24(char *c);
@@ -15,7 +20,7 @@ void func_ov004_020adf2c(char *c);
 void _Z14ApproachLinearRiii(int *p, int a, int b);
 }
 
-struct Scene {
+struct SceneVCall6 {
     virtual int f00();
     virtual int f01();
     virtual int f02();
@@ -36,7 +41,7 @@ struct Self {
     virtual void m70();  /* index 28 = 0x70 */
 };
 
-extern Scene *data_0209f5bc;
+extern SceneVCall6 *data_0209f5bc;
 extern unsigned char data_020a0e40;
 extern unsigned short data_020a0e5a[];
 extern unsigned char data_020a0de8[];
@@ -44,15 +49,16 @@ extern int data_0208ee44;
 
 
 #pragma opt_strength_reduction off
-extern "C" int func_ov004_020b0620(char *self)
+int dScMgBase_c::BeforeBehavior()
 {
+    char *self = (char *)this;
     int mode;
     unsigned short flags;
 
-    if (_ZN5Scene14BeforeBehaviorEv() == 0)
+    if (Scene::BeforeBehavior() == 0)
         return 0;
 
-    if (((Scene *)data_0209f5bc)->f05()) {
+    if (data_0209f5bc->f05()) {
         mode = data_020a0e40;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -99,7 +105,7 @@ extern "C" int func_ov004_020b0620(char *self)
     }
 
     if (*(int *)(self + 0xa4) == 0) {
-        if (((Scene *)data_0209f5bc)->f05() == 0)
+        if (data_0209f5bc->f05() == 0)
             return 0;
     }
 

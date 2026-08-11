@@ -8,7 +8,7 @@
 extern "C" {
 int _ZN8Particle10SysTracker10InitialiseEv(void*);
 int func_ov006_0210a6e4(void* c){
-  func_ov004_020b08f0(c);
+  _ZN11dScMgBase_c18AfterInitResourcesEj(c);
   return _ZN8Particle10SysTracker10InitialiseEv((char*)c+0x471c);
 }
 }

@@ -139,7 +139,7 @@ src/func_ov004_020ae104.c:
     complete
     .text start:0x020ae104 end:0x020ae128
 
-src/func_ov004_020ae128.c:
+src/func_ov004_020ae128.cpp:
     complete
     .text start:0x020ae128 end:0x020ae140
 
@@ -213,7 +213,7 @@ src/func_ov004_020af04c.cpp:
 src/func_ov004_020af094.cpp:
     .text start:0x020af094 end:0x020af27c
 
-src/func_ov004_020af27c.c:
+src/func_ov004_020af27c.cpp:
     complete
     .text start:0x020af27c end:0x020af2f8
 
@@ -289,34 +289,34 @@ src/func_ov004_020b04e0.c:
     complete
     .text start:0x020b04e0 end:0x020b04e8
 
-src/func_ov004_020b04e8.c:
+src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b04e8 end:0x020b04ec
 
-src/func_ov004_020b04ec.c:
+src/_ZN11dScMgBase_c6RenderEv.cpp:
     complete
     .text start:0x020b04ec end:0x020b04f4
 
-src/func_ov004_020b04f4.cpp:
+src/_ZN11dScMgBase_c12BeforeRenderEv.cpp:
     complete
     .text start:0x020b04f4 end:0x020b0618
 
-src/func_ov004_020b0618.c:
+src/_ZN11dScMgBase_c8BehaviorEv.cpp:
     complete
     .text start:0x020b0618 end:0x020b0620
 
-src/func_ov004_020b0620.cpp:
+src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp:
     .text start:0x020b0620 end:0x020b0840
 
-src/func_ov004_020b0840.c:
+src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x020b0840 end:0x020b08f0
 
-src/func_ov004_020b08f0.cpp:
+src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x020b08f0 end:0x020b0930
 
-src/func_ov004_020b0930.cpp:
+src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp:
     .text start:0x020b0930 end:0x020b0a38
 
 src/func_ov004_020b0a38.c:
@@ -474,11 +474,11 @@ src/_ZN11dScMgBase_cD2Ev.cpp:
     complete
     .text start:0x020b29c0 end:0x020b2a18
 
-src/func_ov004_020b2a18.cpp:
+src/_ZN11dScMgBase_cD0Ev.cpp:
     complete
     .text start:0x020b2a18 end:0x020b2a84
 
-src/func_ov004_020b2a84.cpp:
+src/_ZN11dScMgBase_cD1Ev.cpp:
     complete
     .text start:0x020b2a84 end:0x020b2adc
 

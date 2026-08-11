@@ -1,27 +1,10 @@
 //cpp
-// @symbol func_ov004_020b2a18
-// recovered name: dScMgBase_c_OnYoshiTryEat_020b2a18
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgBase_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern "C" {
-typedef struct Heap Heap;
-void* func_ov004_020b929c(void* self);
-void _ZN9ActorBaseD2Ev(void* t);
-extern void* data_ov004_020beb68;
-extern void* _ZTV5Scene[];
-extern void* data_0208e4b8;
-extern Heap* data_020a0eac;
-void* func_ov004_020b2a18(void* self){
-  char* t=(char*)self;
-  *(void**)t = &data_ov004_020bc0c0;
-  *(void**)&data_ov004_020beb68 = 0;
-  func_ov004_020b929c(t+0xf4);
-  *(void**)t = (void*)_ZTV5Scene;
-  *(void**)t = &data_0208e4b8;
-  _ZN9ActorBaseD2Ev(t);
-  _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-  return t;
-}
+// @symbol _ZN11dScMgBase_cD0Ev
+/* Forces the deleting destructor out-of-line. Same reasoning as
+   _ZN11dScMgBase_cD1Ev.cpp; see src/_ZN5SceneD0Ev.cpp for the identical
+   pattern one level up. */
+#include "dScMgBase_c.h"
+void dScMgBase_c_EmitDeletingDestructor(dScMgBase_c *p)
+{
+    delete p;
 }

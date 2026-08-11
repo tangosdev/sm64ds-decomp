@@ -8,7 +8,7 @@
 
 extern void __destroy_arr(void *p, int a, int b, void *cb);
 extern void NullDestructor_0203d47c(void);
-extern void func_ov004_020b0840(char *c, int arg);
+extern void _ZN11dScMgBase_c21AfterCleanupResourcesEj(char *c, int arg);
 
 void func_ov006_0211944c(char *c, int mode)
 {
@@ -160,5 +160,5 @@ void func_ov006_0211944c(char *c, int mode)
         }
     }
 
-    func_ov004_020b0840(c, mode);
+    _ZN11dScMgBase_c21AfterCleanupResourcesEj(c, mode);
 }

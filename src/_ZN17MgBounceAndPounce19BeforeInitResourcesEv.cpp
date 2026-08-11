@@ -7,7 +7,7 @@
 
 int MgBounceAndPounce::BeforeInitResources()
 {
-  if(func_ov004_020b0930(((void*)this))==0) return 0;
+  if(_ZN11dScMgBase_c19BeforeInitResourcesEv(((void*)this))==0) return 0;
   *(int*)((char*)&unk_5000)=0;
   return 1;
 }
