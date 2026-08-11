@@ -92,9 +92,15 @@ learn_aggregates(REPO / "include" / "types.h")
 # below it. The type is still looked up by its bare final segment (SZ has no
 # way to record a qualified name), which is exactly what a
 # `Name_size_must_be_0xN` assertion of the same class also has to do.
+# `u8 touchIcon_0f4[8][0x24];` -- a 2-D array (dScMgBase_c's __destroy_arr
+# element block). One `(?:\[...\])?` group only ever captured the FIRST
+# dimension and left `[0x24];` dangling after what should have been the
+# terminating `;`, so the whole match failed. Capture every bracket group as
+# one blob instead and multiply the dimensions in ARR_DIMS below.
 DECL = re.compile(r"^\s*(?:(?:struct|union|class|enum)\s+)?((?:\w+::)*[A-Za-z_]\w*)\s*(\**)\s*(\w+)\s*"
-                  r"(?:\[\s*(0x[0-9a-fA-F]+|\d+)\s*\])?\s*;"
+                  r"((?:\[\s*(?:0x[0-9a-fA-F]+|\d+)\s*\])*)\s*;"
                   r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
+ARR_DIMS = re.compile(r"\[\s*(0x[0-9a-fA-F]+|\d+)\s*\]")
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 
@@ -302,7 +308,10 @@ for path in sys.argv[1:]:
                 pending.append(f"  MISMATCH {path}:{lineno} {name}: comment {decl}, "
                                f"computed 0x{off:03x}")
                 bad += 1
-        off += w * (int(arr, 0) if arr else 1)
+        arr_n = 1
+        for d in ARR_DIMS.findall(arr):
+            arr_n *= int(d, 0)
+        off += w * arr_n
     if unknown_base:
         # Not a pass and not a failure: a statement of what is missing. Adding
         # `typedef char X_size_must_be_0xN[sizeof(X) == 0xN ? 1 : -1];` to the
