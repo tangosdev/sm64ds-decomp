@@ -90,26 +90,52 @@ family, 24 of which already have generated headers waiting in `include/`:
 `dScMgHanachan_c`, `dScMgLuigi_c`, `dScMgPachinko_c`/`_2`, `dScMgPanel_c`,
 `dScMgSlot1_c`, `dScMgSmartball_c`, `dScMgTeresa_c`, `dScMgBomroom_c`, plus two
 abstract intermediates `dScMgD3DBase_c`/`dScMgSingle3DBase_c`) with 17 further
-grandchildren under those two. One direct child already has a COINED name from
-an earlier, separate pass -- `MgBounceAndPounce` (`include/MgBounceAndPounce.h`,
-still Rung 0/flat, calls dScMgBase_c's base methods as plain functions the way
-the ROM's own `bl` sequence does) -- so "32 unnamed" is the RTTI count, not
-literally every one being untouched.
+grandchildren under those two.
 
-**Naming the class itself (PR #1396) is done; naming the 32 descendants is
-still the next slice**, and the groundwork PR #1396 laid down is exactly what
-unlocks it: `dScMgBase_c` now has its own inline D2/D1 and its own
-`operator delete`, which per the same cascading rule Scene's fix documents is
-what a descendant's IMMEDIATE base must carry for the descendant's own D0/D1
-to inline. Before this PR, no child of dScMgBase_c could get a real
-destructor; now they can, the same way Stage/BootScene could only get theirs
-once Scene's was fixed. `include/dScMgBase_c.h` still leaves 18 of its own 28
-override/new-slots undeclared (slots 18-35, ~18 new virtuals beyond
-Scene/ActorBase) -- their targets are matched source but their signatures
-aren't reconstructed; three of the migrated methods reach them through the
-same local by-vtable-position stand-in the recovered sources always used.
-Reconstructing those 18 signatures is likely needed before any descendant's
-OWN overrides of the same slots can become real methods too.
+**Update (2026-08-11, PR #1398): `MgBounceAndPounce` IS `dScMgD3DBase_c`,
+one of the two abstract intermediates above -- NOT a fifteenth direct
+child, as an earlier draft of this note said.** Its coined English name
+predates understanding the hierarchy: whoever named it thought "Bounce and
+Pounce" (a real minigame) when the class it actually names is the shared
+3D-physics base for FOUR minigames (`dScMgJump_c`, `dScMgJump2_c`,
+`dScMgTrampoline_c`, `dScMgTrampoline2_c`). Confirmed two ways:
+`tools/rtti_vtables.py --own` for all 15 TRUE direct children found no
+match for its D1/D0 addresses (it isn't one of them); its own vtable
+address (ov006:0x0213c62c) matches `dScMgD3DBase_c`'s RTTI record exactly,
+and `MgBounceAndPounce_Spawn.cpp`'s construction order corroborates it
+independently -- it writes its OWN vtable mid-construction, then
+`dScMgJump_c`'s vtable (one of its four children) at the very end,
+exactly the base-then-derived order a real constructor produces. **A
+coined name can name the wrong LEVEL of a hierarchy, not just imply the
+wrong class -- don't trust one without an RTTI cross-check, even when it
+already has real matched functions.**
+
+`MgBounceAndPounce`/`dScMgD3DBase_c` is now itself real: `: dScMgBase_c`
+base, real D0/D1, own `operator delete` (unlocking D0 for its own four
+children). See [[destructor-migration-unlocks]] for a real correction
+found doing this -- dScMgBase_c's destructor had to move from
+inline-defined to declared-only-with-real-out-of-line-bodies, because
+mwcc does NOT always inline a non-trivial base destructor into a
+descendant the way it does Scene's trivial one. **This means "inline the
+base's D2/D1" is not a rule to apply blindly at the NEXT level down
+either -- check empirically each time**, the same way this correction had
+to be made for dScMgBase_c itself after Scene's fix suggested it would
+just work.
+
+**Naming the class itself (PR #1396 for dScMgBase_c, PR #1398 for
+dScMgD3DBase_c/MgBounceAndPounce) is done for two of the family; naming
+the other 30 descendants is still the open slice.** `include/dScMgBase_c.h`
+still leaves 18 of its own 28 override/new-slots undeclared (slots 18-35,
+~18 new virtuals beyond Scene/ActorBase) -- their targets are matched
+source but their signatures aren't reconstructed; three of the migrated
+methods reach them through the same local by-vtable-position stand-in the
+recovered sources always used. Reconstructing those 18 signatures is
+likely needed before any descendant's OWN overrides of the same slots can
+become real methods too. `MgBounceAndPounce`/`dScMgD3DBase_c` has its own
+9 undeclared override slots (24-31, 33) for the same reason, one level
+down. Its four real children (`dScMgJump_c` etc.) are untouched but their
+own D0/D1 already exist as matched addresses per the vtable dump -- the
+natural next slice.
 
 ## 3. A tree-wide comment defect, found here, not yet fixed anywhere
 
