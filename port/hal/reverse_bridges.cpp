@@ -183,9 +183,9 @@ unsigned char OAM::GetObjWidth(int a, int b)
 { return _ZN3OAM11GetObjWidthEii(a, b); }
 unsigned char OAM::GetObjHeight(int a, int b)
 { return _ZN3OAM12GetObjHeightEii(a, b); }
-#endif
 int OAM::LoadAffineParams(OamAttr *attr, int *p, Matrix2x2 *m)
 { return _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(attr, p, m); }
+#endif
 
 struct SaveData { static int IsCharacterUnlocked(unsigned ch); };
 int SaveData::IsCharacterUnlocked(unsigned ch)
