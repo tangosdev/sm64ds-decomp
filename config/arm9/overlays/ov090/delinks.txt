@@ -3,11 +3,11 @@
     .ctor       start:0x021340c4 end:0x021340d4 kind:rodata align:4
     .data       start:0x021340e0 end:0x02134480 kind:data align:32
     .bss        start:0x02134480 end:0x021345e0 kind:bss align:32
-src/_ZN7SkeeterD1Ev.c:
+src/_ZN7SkeeterD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f40
 
-src/_ZN7SkeeterD0Ev.c:
+src/_ZN7SkeeterD0Ev.cpp:
     complete
     .text start:0x02130f40 end:0x02130f94
 
@@ -101,11 +101,11 @@ src/Skeeter_Spawn.c:
     complete
     .text start:0x02132654 end:0x0213269c
 
-src/_ZN8MantaRayD1Ev.c:
+src/_ZN8MantaRayD1Ev.cpp:
     complete
     .text start:0x0213269c end:0x021326dc
 
-src/_ZN8MantaRayD0Ev.c:
+src/_ZN8MantaRayD0Ev.cpp:
     complete
     .text start:0x021326dc end:0x02132730
 

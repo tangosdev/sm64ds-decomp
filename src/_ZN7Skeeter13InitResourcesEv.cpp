@@ -80,7 +80,7 @@ int Skeeter::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov090_02134490);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov090_02134498);
 
-    unk_0a0 = -0x3c000;
+    mTerminalVelocity = -0x3c000;
 
     v.x = data_ov090_0213412c.x;
     v.y = data_ov090_0213412c.y;
@@ -97,7 +97,7 @@ int Skeeter::InitResources()
 
     unk_108 = 1;
     unk_10a = 2;
-    unk_09c = -0x3000;
+    mVertAccel = -0x3000;
 
     {
         int b = 1;

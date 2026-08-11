@@ -40,8 +40,8 @@
  * NOT DONE HERE, but the evidence is now in the header: mModelAnim is almost
  * certainly a real ModelAnim. ModelAnim::SetAnim is called on +0x300, its
  * Animation base is used at +0x350 = +0x50, and 0x300 + sizeof(ModelAnim) is
- * 0x364 -- exactly where unk_364 begins. Typing it would absorb unk_308,
- * unk_30c and unk_35c, which Rabbit::Render and Rabbit::InitResources use, so
+ * 0x364 -- exactly where unk_364 begins. Typing it would absorb mModelAnim.data.modelFile,
+ * mModelAnim.data.materials and mModelAnim.speed, which Rabbit::Render and Rabbit::InitResources use, so
  * it wants its own slice.
  */
 #include "Rabbit.h"
@@ -53,7 +53,6 @@
    these, which is itself the evidence that they were never Vector3s: they are
    scratch x/y/z the code fills and reads back. */
 typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;
-typedef s32 Fix12;
 
 
 extern "C" s8 data_0209f2f8;
@@ -67,10 +66,10 @@ extern "C" char data_ov085_021306bc;
 extern "C" char data_ov085_021306dc;
 
 extern "C" void* _ZN5Actor13ClosestPlayerEv(void* c);
-extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, void* f, void* g);
+extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" void _ZN7Message11PrepareTalkEv(void);
 extern "C" int func_02013890(int a, int b);
-extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12 d, int e);
+extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12i d, int e);
 extern "C" int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
 extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
 extern "C" void func_02012694(int a, void* b);
@@ -81,7 +80,7 @@ extern "C" void _ZN12CylinderClsn5ClearEv(void* c);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
 extern "C" void func_ov085_0212bcc8(void* c);
 extern "C" void func_ov085_0212bc78(void*, void*);
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* c, void* f, int i, Fix12 fx, u32 j);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* c, void* f, int i, Fix12i fx, u32 j);
 extern "C" u16 DecIfAbove0_Short(void* p);
 extern "C" void _ZN9Animation7AdvanceEv(void* c);
 extern "C" void func_ov085_0212bdbc(void* c);
@@ -128,7 +127,7 @@ int Rabbit::Behavior()
     {
         u32 temp_r1 = unk_427;
         if (temp_r1 < 2) {
-            int v = (unk_0b0 & 0x40000) ? 1 : 0;
+            int v = (mFlags & 0x40000) ? 1 : 0;
             if (v == 1) {
                 void* temp_r4 = *(void**)&unk_45c;
                 if (temp_r4 != 0) {
@@ -229,7 +228,7 @@ int Rabbit::Behavior()
     _ZN9Animation7AdvanceEv(c + 0x350);
 
     {
-        int v = (unk_0b0 & 0x4000) ? 1 : 0;
+        int v = (mFlags & 0x4000) ? 1 : 0;
         if (v != 0)
             func_ov085_0212bdbc(c);
         else
@@ -240,7 +239,7 @@ int Rabbit::Behavior()
         func_ov085_0212bedc(c);
 
     {
-        int v = (unk_0b0 & 0x4000) ? 1 : 0;
+        int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac || unk_426 != 0)
                 _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);

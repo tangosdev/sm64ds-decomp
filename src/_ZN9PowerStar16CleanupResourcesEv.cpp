@@ -14,7 +14,7 @@ extern char data_ov002_02110934;
 
 int PowerStar::CleanupResources()
 {
-    int b = (unk_00c == 0xb2);
+    int b = (actorID == 0xb2);
     if (b) {
         int v = unk_43c;
         if (v != 8) {

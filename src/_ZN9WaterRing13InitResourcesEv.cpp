@@ -27,7 +27,7 @@ int WaterRing::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x30c, f, 1, -1) == 0)
         return 0;
 
-    unk_37c = unk_008 & 0xff;
+    unk_37c = param1 & 0xff;
     if (unk_37c > 2 || unk_37c == 0xff)
     {
         unk_37c = 0;
@@ -36,10 +36,10 @@ int WaterRing::InitResources()
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(struct BMD_File**)(data_ov002_0210da10 + 4), (struct BTA_File*)data_ov002_0210d6dc);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char*)this) + 0x35c, (struct BTA_File*)data_ov002_0210d6dc, 0, 0x1000, 0);
 
-    unk_368 = 0x1000;
-    unk_080 = 0x1000;
-    unk_084 = 0x1000;
-    unk_088 = 0x1000;
+    mTextureTransformer.speed = 0x1000;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
 
     int* src = data_ov064_0211c3d0;
     Vector3 v;

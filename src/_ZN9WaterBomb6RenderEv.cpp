@@ -15,7 +15,7 @@ int WaterBomb::Render()
 {
     if (unk_3c8 != 0) {
         Obj *o = (Obj *)((char *)&mModel);
-        o->m((char *)&unk_080);
+        o->m((char *)&mScaleX);
     }
     return 1;
 }

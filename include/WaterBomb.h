@@ -1,62 +1,61 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class WaterBomb: 6 matched functions, 8 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef WATERBOMB_H
 #define WATERBOMB_H
-#include "types.h"
-#include "Model.h"
 
-struct WaterBomb {
-    u8  pad_000[0x80];
-    /* 0x080..0x100 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_080;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 mHorzSpeed;              /* 0x098 */
-    s32 mVertAccel;              /* 0x09c */
-    s32 mTerminalVelocity;       /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;              /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    u32 mFlags;                  /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
-    u8  pad_0c5[0x7];
-    s8  mAreaId;                 /* 0x0cc */
-    u8  pad_0cd[0x1];
-    s16 unk_0ce;                 /* 0x0ce */
-    u8  pad_0d0[0x30];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  mMovingCylinderClsn;            /* 0x110 */
-    u8  pad_111[0x33];
-    u8  mWithMeshClsn;            /* 0x144 */
-    u8  pad_145[0x1bb];
-    /* Model member, named by _ZN5ModelD1Ev at +0x300 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x300 */
-    u8  mShadowModel;            /* 0x350 */
-    u8  pad_351[0x73];
-    s32 unk_3c4;            /* 0x3c4 */
-    s32 unk_3c8;            /* 0x3c8 */
-#ifdef __cplusplus
-    /* methods */
+#include "types.h"
+
+/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+ * the class's own destructor `_ZN9WaterBombD1Ev` destroys each member, and
+ * `WaterBomb_Spawn` constructs the same types at the same offsets before
+ * storing `_ZTV9WaterBomb`. Everything this header used to restate below
+ * 0x110 belongs to Enemy and Actor and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a
+ * reading rather than a guess:
+ *
+ *     0x110 MovingCylinderClsn         0x34    -> 0x144
+ *     0x144 WithMeshClsn               0x1bc   -> 0x300
+ *     0x300 Model                      0x50    -> 0x350
+ *     0x350 ShadowModel                0x28    -> 0x378
+ *
+ * SIZE IS THE ROM'S OWN: `WaterBomb_Spawn` calls
+ * `ActorBase::operator new(972)` -- 0x3cc -- and stores this class's
+ * vtable, so that literal IS this class's sizeof.
+ */
+
+#include "Enemy.h"
+#include "Model.h"
+#include "MovingCylinderClsn.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+
+struct WaterBomb : Enemy {
+    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    Model                        mModel;                /* 0x300 */
+    ShadowModel                  mShadowModel;          /* 0x350 */
+    u8  pad_378[0x30];
+    /* Reachable only through the shadow struct InitResources used to cast
+       `this` to, so gen_header.py never saw them. 0x3b4 is the one that source
+       spelled `+ 0x300 + 0xb4`: it folds to 0x3b4, which is past mModel's end
+       at 0x3a0, so it is this class's field and not something inside the Model. */
+    s32                          unk_3a8;               /* 0x3a8 */
+    s32                          unk_3ac;               /* 0x3ac */
+    s32                          unk_3b0;               /* 0x3b0 */
+    s16                          unk_3b4;               /* 0x3b4 */
+    u8                           unk_3b6;               /* 0x3b6 */
+    u8  pad_3b7[0xd];
+    s32                          unk_3c4;               /* 0x3c4 */
+    s32                          unk_3c8;               /* 0x3c8 */
+
+    /* --- vtable --- */
+    virtual ~WaterBomb();
+
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
-#endif
 };
 
-#endif
+typedef char WaterBomb_size_must_be_0x3cc[sizeof(WaterBomb) == 0x3cc ? 1 : -1];
+
+#endif /* WATERBOMB_H */

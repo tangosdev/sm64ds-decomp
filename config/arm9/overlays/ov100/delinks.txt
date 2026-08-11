@@ -67,11 +67,11 @@ src/Butterfly_Spawn.c:
     complete
     .text start:0x02141ea4 end:0x02141f04
 
-src/_ZN15RollingIronBallD1Ev.c:
+src/_ZN15RollingIronBallD1Ev.cpp:
     complete
     .text start:0x02141f04 end:0x02141f4c
 
-src/_ZN15RollingIronBallD0Ev.c:
+src/_ZN15RollingIronBallD0Ev.cpp:
     complete
     .text start:0x02141f4c end:0x02141fa8
 

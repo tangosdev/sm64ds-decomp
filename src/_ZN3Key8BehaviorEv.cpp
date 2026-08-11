@@ -7,7 +7,6 @@
 typedef void (*VoidFn)();
 
 extern "C" {
-extern int _ZN9Animation8FinishedEv(void* a);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, int ang);
 extern void MulMat4x3Mat4x3(void* d, void* a, void* b);
@@ -15,7 +14,6 @@ extern void SubVec3(void* d, void* a, void* b);
 extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(void* d, void* a, void* b);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
-extern void _ZN9Animation7AdvanceEv(void* a);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
@@ -59,10 +57,10 @@ int Key::Behavior()
                     }
                 }
             }
-            if (_ZN9Animation8FinishedEv((char*)&mAnimation) == 0) {
+            if (mModelAnim.Finished() == 0) {
                 Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
                 Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-                MulMat4x3Mat4x3(*(void**)((char*)&unk_128), &data_020a0e68, &data_020a0e68);
+                MulMat4x3Mat4x3(mModelAnim.data.transforms, &data_020a0e68, &data_020a0e68);
                 {
                     char* m = &data_020a0e68;
                     int t0 = *(int*)(m + 0x24);
@@ -75,19 +73,19 @@ int Key::Behavior()
                 SubVec3(vec, ((char*)this) + 0x5c, vec);
                 Vec3_LslInPlace(vec, 3);
                 AddVec3(vec, ((char*)this) + 0x5c, vec);
-                vec[1] = *(int*)(*(char**)((char*)&unk_124) + 0xc) * 0x23 + vec[1];
+                vec[1] = *(int*)((char*)mModelAnim.data.bones + 0xc) * 0x23 + vec[1];
                 vec[1] = vec[1] - 0x48000;
                 *(void**)((char*)&unk_464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_464, 0x82, vec[0], vec[1], vec[2], 0, 0);
                 *(void**)((char*)&unk_468) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_468, 0x83, vec[0], vec[1], vec[2], 0, 0);
             }
         }
 
-        _ZN9Animation7AdvanceEv((char*)&mAnimation);
+        mModelAnim.Advance();
         func_ov089_02131f54(((char*)this));
-        if (_ZN9Animation8FinishedEv((char*)&mAnimation)) {
-            int b = (mActorID == 0x11a);
+        if (mModelAnim.Finished()) {
+            int b = (actorID == 0x11a);
             if (b != 0) {
-                if (unk_174 != data_ov089_02132c40[1])
+                if (mModelAnim.file != (BCA_File *)data_ov089_02132c40[1])
                     _ZN9ActorBase18MarkForDestructionEv(((char*)this));
             }
         }

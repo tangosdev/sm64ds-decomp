@@ -29,14 +29,14 @@ int RollingIronBall::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_02148668), 1, -1);
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
         return 0;
-    unk_09c = -0x4000;
-    unk_0a0 = -0x46000;
-    unk_3d0 = mParam & 0xf;
-    mParam = mParam >> 4;
+    mVertAccel = -0x4000;
+    mTerminalVelocity = -0x46000;
+    unk_3d0 = param1 & 0xf;
+    param1 = param1 >> 4;
     kind = unk_3d0;
 
     if (kind == 2 || kind == 4) {
-        _ZN7PathPtr6FromIDEj(((char *)this) + 0x3f4, mParam & 0xf);
+        _ZN7PathPtr6FromIDEj(((char *)this) + 0x3f4, param1 & 0xf);
         unk_3d4 = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
         unk_3d8 = 0;
         unk_3dc = mPosX;

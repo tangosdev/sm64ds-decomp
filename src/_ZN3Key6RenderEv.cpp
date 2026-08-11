@@ -9,7 +9,7 @@ extern char data_ov089_021328b4[];
 
 int Key::Render()
 {
-  int b = (int)((unk_0b0 & 0x40000) != 0);
+  int b = (int)((mFlags & 0x40000) != 0);
   if (b) return 1;
   if (unk_448 != 0) {
     ((Sub*)((char*)&mModelAnim))->m(0);

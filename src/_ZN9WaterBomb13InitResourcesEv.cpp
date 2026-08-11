@@ -1,128 +1,92 @@
 //cpp
 // @symbol _ZN9WaterBomb13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The local `Obj` shadow struct this file used to cast `this` to is gone --
+ * `struct WaterBomb : Enemy` types every offset it restated. Its tail fields
+ * (0x3a8..0x3b6) moved into the header, since the shadow was the only place
+ * they were ever written down.
+ */
 #include "WaterBomb.h"
-typedef int Fix12;
-struct BMD_File;
-struct SharedFilePtr { int h; };
-struct Actor;
-struct Vector3_16;
+#include "SharedFilePtr.h"
 
 /* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what its
    own matched definition compiles as -- but the ROM leaves DoSetFile's int in r0
    and this call site reads it, so the value-returning entry keeps the mangled
    spelling until that signature is settled. */
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
-struct ShadowModel {
-    int InitCylinder();
-};
-struct MovingCylinderClsn {
-    void Init(Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
-};
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
 
-struct WithMeshClsn {
-    void Init(Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
-};
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+/* Signatures deliberately kept as the local declarations: the ROM names carry
+   by-value class parameters (Fix12<int>), which mwccarm passes differently at
+   the call site, so declaring the true types breaks the byte match.
+   See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, s32 r, s32 h, unsigned int d, unsigned int e);
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, s32 b, s32 c, Vector3_16* d, s32 e);
 
-
-extern SharedFilePtr data_ov002_0210da38;
-extern SharedFilePtr data_ov098_0213c91c;
-
-struct Obj {
-    char p0[8];
-    unsigned int f8;        /* 0x8 */
-    char gc[0x5c - 0xc];
-    int f5c, f60, f64;      /* 5c,60,64 */
-    char g68[0x80 - 0x68];
-    int f80, f84, f88;      /* 80,84,88 */
-    char g8c[0x9c - 0x8c];
-    int f9c, fa0;           /* 9c, a0 */
-    char ga4[0x100 - 0xa4];
-    short f100;             /* 0x100 */
-    char g102[0x110 - 0x102];
-    char f110[0x144 - 0x110];   /* MovingCylinderClsn at 0x110 */
-    char f144[0x300 - 0x144];   /* WithMeshClsn at 0x144 */
-    char f300[0x350 - 0x300];
-    char f350[0x3a8 - 0x350];   /* ShadowModel at 0x350 */
-    int f3a8, f3ac, f3b0;   /* 3a8,3ac,3b0 */
-    char g3b4[0x3b6 - 0x3b4];
-    unsigned char f3b6;     /* 0x3b6 */
-    char g3b7[0x3c4 - 0x3b7];
-    int f3c4;                /* 0x3c4 */
-    int f3c8;                /* 0x3c8 */
-};
+extern char data_ov002_0210da38[];
+extern char data_ov098_0213c91c[];
 
 int WaterBomb::InitResources()
 {
     BMD_File* bmd;
     int kind;
 
-    kind = ((Obj*)this)->f8 & 0xf;
-    ((Obj*)this)->f3c8 = kind;
+    kind = param1 & 0xf;
+    unk_3c8 = kind;
 
-    if (((Obj*)this)->f3c8 == 2)
+    if (unk_3c8 == 2)
     {
-        bmd = (BMD_File*)Model::LoadFile(data_ov002_0210da38);
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&((Obj*)this)->f300, bmd, 1, 0x16) == 0)
+        bmd = (BMD_File*)Model::LoadFile(*(SharedFilePtr*)data_ov002_0210da38);
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, 0x16) == 0)
             return 0;
     }
     else
     {
-        Model::LoadFile(data_ov002_0210da38);
-        bmd = (BMD_File*)Model::LoadFile(data_ov098_0213c91c);
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&((Obj*)this)->f300, bmd, 1, 0x16) == 0)
+        Model::LoadFile(*(SharedFilePtr*)data_ov002_0210da38);
+        bmd = (BMD_File*)Model::LoadFile(*(SharedFilePtr*)data_ov098_0213c91c);
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, 0x16) == 0)
             return 0;
     }
 
-    if (((ShadowModel*)&((Obj*)this)->f350)->InitCylinder() == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    if (((Obj*)this)->f3c8 == 0)
-        ((Obj*)this)->f3c4 = 0;
+    if (unk_3c8 == 0)
+        unk_3c4 = 0;
     else
-        ((Obj*)this)->f3c4 = 1;
+        unk_3c4 = 1;
 
-    if (((Obj*)this)->f3c8 != 0)
+    if (unk_3c8 != 0)
     {
-        if (((Obj*)this)->f3c8 == 2)
+        if (unk_3c8 == 2)
         {
-            ((Obj*)this)->f80 = 0x800;
-            ((Obj*)this)->f84 = 0x800;
-            ((Obj*)this)->f88 = 0x800;
-            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&((Obj*)this)->f110, (Actor*)((Obj*)this), 0x14000, 0x28000, 0x200004, 0);
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&((Obj*)this)->f144, (Actor*)((Obj*)this), 0x1e000, 0x1e000, 0, 0);
+            mScaleX = 0x800;
+            mScaleY = 0x800;
+            mScaleZ = 0x800;
+            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mMovingCylinderClsn, (Actor*)this, 0x14000, 0x28000, 0x200004, 0);
+            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (Actor*)this, 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
-            ((Obj*)this)->f80 = 0x1000;
-            ((Obj*)this)->f84 = 0x1000;
-            ((Obj*)this)->f88 = 0x1000;
-            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&((Obj*)this)->f110, (Actor*)((Obj*)this), 0x28000, 0x50000, 0x204004, 0);
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&((Obj*)this)->f144, (Actor*)((Obj*)this), 0x32000, 0x32000, 0, 0);
+            mScaleX = 0x1000;
+            mScaleY = 0x1000;
+            mScaleZ = 0x1000;
+            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mMovingCylinderClsn, (Actor*)this, 0x28000, 0x50000, 0x204004, 0);
+            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (Actor*)this, 0x32000, 0x32000, 0, 0);
         }
     }
 
-    ((Obj*)this)->f100 = 0;
-    ((Obj*)this)->f3b6 = 0;
-    *(short*)((char*)((Obj*)this) + 0x300 + 0xb4) = 0;
-    ((Obj*)this)->f3a8 = ((Obj*)this)->f5c;
-    ((Obj*)this)->f3ac = ((Obj*)this)->f60;
-    ((Obj*)this)->f3b0 = ((Obj*)this)->f64;
+    unk_100 = 0;
+    unk_3b6 = 0;
+    unk_3b4 = 0;
+    unk_3a8 = mPosX;
+    unk_3ac = mPosY;
+    unk_3b0 = mPosZ;
 
-    if ((unsigned int)(((Obj*)this)->f3c8 - 1) <= 1)
+    if ((unsigned int)(unk_3c8 - 1) <= 1)
     {
-        ((Obj*)this)->f9c = -0x3000;
-        ((Obj*)this)->fa0 = -0x50000;
+        mVertAccel = -0x3000;
+        mTerminalVelocity = -0x50000;
     }
 
     return 1;

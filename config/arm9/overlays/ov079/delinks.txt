@@ -4,11 +4,11 @@
     .ctor       start:0x02127b88 end:0x02127b98 kind:rodata align:4
     .data       start:0x02127ba0 end:0x02128140 kind:data align:32
     .bss        start:0x02128140 end:0x021283a0 kind:bss align:32
-src/_ZN5WhompD1Ev.c:
+src/_ZN5WhompD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN5WhompD0Ev.c:
+src/_ZN5WhompD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 

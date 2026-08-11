@@ -23,16 +23,16 @@ int Rabbit::Render()
     if (unk_428 == 1) return 1;
 
     {
-        int b = (unk_0b0 & 0x40000) != 0;
+        int b = (mFlags & 0x40000) != 0;
         if (b) return 1;
     }
 
-    mScale = 0x1500;
-    unk_088 = mScale;
-    unk_084 = unk_088;
+    mScaleX = 0x1500;
+    mScaleZ = mScaleX;
+    mScaleY = mScaleZ;
 
     {
-        int** base = (int**)((char*)&unk_308);
+        int** base = (int**)&mModelAnim.data;
         int* r3 = base[0];
         char* r1 = (char*)base[1];
         for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {
@@ -45,6 +45,6 @@ int Rabbit::Render()
         func_ov085_0212c150(((char*)this));
     }
 
-    ((VObj*)((char*)&mModelAnim))->m14((char*)&mScale);
+    ((VObj*)((char*)&mModelAnim))->m14((char*)&mScaleX);
     return 1;
 }

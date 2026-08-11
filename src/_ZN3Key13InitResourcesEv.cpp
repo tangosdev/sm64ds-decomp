@@ -32,7 +32,7 @@ int Key::InitResources()
 {
     int v[3];
     int v2[3];
-    int kind = mParam & 7;
+    int kind = param1 & 7;
     mState = kind;
     LoadKeyModels(mState);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov002_02110964);
@@ -50,7 +50,7 @@ int Key::InitResources()
         _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this) + 0x220, ((char*)this), v, 0x50000, 0xfa000, 0x800003, 0x8000);
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x260, ((char*)this), 0xa0000, 0, 0, 0);
         mSpinSpeed = 0x400;
-        unk_09c = 0;
+        mVertAccel = 0;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x57, ((char*)this) + 0x74);
     } else {
         _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov089_02132c60);
@@ -70,13 +70,13 @@ int Key::InitResources()
         mScaleX = 0x3000;
         mScaleY = 0x3000;
         mScaleZ = 0x3000;
-        unk_0a8 = 0x23000;
+        mVertSpeed = 0x23000;
         v2[0] = *(int*)(&data_ov089_02132ca4);
         v2[1] = *(int*)(&data_ov089_02132ca4 + 4);
         v2[2] = *(int*)(&data_ov089_02132ca4 + 8);
         _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this) + 0x220, ((char*)this), v2, 0x50000, 0x64000, 0x800003, 0x8000);
         _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x260, ((char*)this), 0x48000, 0, 0, 0);
-        unk_09c = -0x2000;
+        mVertAccel = -0x2000;
         mSpinSpeed = 0;
     }
 
@@ -89,7 +89,7 @@ int Key::InitResources()
     unk_100 = 0;
     unk_442 = 0;
     unk_443 = 0;
-    unk_0a0 = -0x32000;
+    mTerminalVelocity = -0x32000;
     unk_448 = 0;
     unk_110 = 0;
     unk_46c = 0;

@@ -4131,11 +4131,11 @@ src/_ZN6PlayerC3Ev.cpp:
     complete
     .text start:0x020e6c0c end:0x020e6c40
 
-src/_ZN9PowerStarD1Ev.c:
+src/_ZN9PowerStarD1Ev.cpp:
     complete
     .text start:0x020e6c40 end:0x020e6c90
 
-src/_ZN9PowerStarD0Ev.c:
+src/_ZN9PowerStarD0Ev.cpp:
     complete
     .text start:0x020e6c90 end:0x020e6cf4
 

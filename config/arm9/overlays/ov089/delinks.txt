@@ -4,11 +4,11 @@
     .ctor       start:0x02132af4 end:0x02132af8 kind:rodata align:4
     .data       start:0x02132b00 end:0x02132c40 kind:data align:32
     .bss        start:0x02132c40 end:0x02132d40 kind:bss align:32
-src/_ZN3KeyD1Ev.c:
+src/_ZN3KeyD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f50
 
-src/_ZN3KeyD0Ev.c:
+src/_ZN3KeyD0Ev.cpp:
     complete
     .text start:0x02130f50 end:0x02130fb4
 

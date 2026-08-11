@@ -279,11 +279,11 @@ src/RotatingFirebar_Spawn.cpp:
     complete
     .text start:0x02118564 end:0x021185c0
 
-src/_ZN10LavaBubbleD1Ev.c:
+src/_ZN10LavaBubbleD1Ev.cpp:
     complete
     .text start:0x021185c0 end:0x021185f8
 
-src/_ZN10LavaBubbleD0Ev.c:
+src/_ZN10LavaBubbleD0Ev.cpp:
     complete
     .text start:0x021185f8 end:0x02118644
 
@@ -483,11 +483,11 @@ src/JetStream_Spawn.c:
     complete
     .text start:0x02119a18 end:0x02119a58
 
-src/_ZN9WaterRingD1Ev.c:
+src/_ZN9WaterRingD1Ev.cpp:
     complete
     .text start:0x02119a58 end:0x02119aa0
 
-src/_ZN9WaterRingD0Ev.c:
+src/_ZN9WaterRingD0Ev.cpp:
     complete
     .text start:0x02119aa0 end:0x02119afc
 

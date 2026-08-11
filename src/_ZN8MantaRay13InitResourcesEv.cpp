@@ -5,7 +5,7 @@
  * Loads the model and animation, unpacks the spawn word, caches the path, and
  * places the ray on it.
  *
- * mParam is TWO fields in one word: the low byte is the path ID and bits 12-15
+ * param1 is TWO fields in one word: the low byte is the path ID and bits 12-15
  * are unk_388. The path ID is clamped at zero afterwards -- a signed read of a
  * masked byte cannot go negative, so that test is dead as written and kept as
  * the ROM has it.
@@ -57,8 +57,8 @@ int MantaRay::InitResources()
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
     _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_0213452c);
 
-    unk_37c = mParam & 0xff;
-    unk_388 = (*(unsigned int*)&mParam >> 0xc) & 0xf;
+    unk_37c = param1 & 0xff;
+    unk_388 = (*(unsigned int*)&param1 >> 0xc) & 0xf;
     if (unk_37c < 0) unk_37c = 0;
 
     {
@@ -67,7 +67,7 @@ int MantaRay::InitResources()
         unk_380 = pp.NumNodes();
     }
 
-    unk_0a0 = -0x3c000;
+    mTerminalVelocity = -0x3c000;
 
     {
         Vector3 v;
@@ -95,7 +95,7 @@ int MantaRay::InitResources()
             mPosX = (int)0xfdfb8000;
             mPosY = (int)0xff8f8000;
             mPosZ = 0x29a000;
-            unk_0b0 = 0;
+            mFlags = 0;
         }
     }
 

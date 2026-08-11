@@ -161,11 +161,11 @@ src/PrincessPeach_Spawn.c:
     complete
     .text start:0x0212a684 end:0x0212a6d4
 
-src/_ZN6RabbitD1Ev.c:
+src/_ZN6RabbitD1Ev.cpp:
     complete
     .text start:0x0212a6d4 end:0x0212a724
 
-src/_ZN6RabbitD0Ev.c:
+src/_ZN6RabbitD0Ev.cpp:
     complete
     .text start:0x0212a724 end:0x0212a788
 
@@ -289,11 +289,11 @@ src/Rabbit_Spawn.c:
     complete
     .text start:0x0212cc2c end:0x0212cc88
 
-src/_ZN9RabbitKeyD1Ev.c:
+src/_ZN9RabbitKeyD1Ev.cpp:
     complete
     .text start:0x0212cc88 end:0x0212ccc0
 
-src/_ZN9RabbitKeyD0Ev.c:
+src/_ZN9RabbitKeyD0Ev.cpp:
     complete
     .text start:0x0212ccc0 end:0x0212cd0c
 
@@ -349,11 +349,11 @@ src/RabbitKey_Spawn.c:
     complete
     .text start:0x0212d4e8 end:0x0212d528
 
-src/_ZN9LakituBroD1Ev.c:
+src/_ZN9LakituBroD1Ev.cpp:
     complete
     .text start:0x0212d528 end:0x0212d578
 
-src/_ZN9LakituBroD0Ev.c:
+src/_ZN9LakituBroD0Ev.cpp:
     complete
     .text start:0x0212d578 end:0x0212d5dc
 

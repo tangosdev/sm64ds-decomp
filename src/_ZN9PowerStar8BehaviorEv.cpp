@@ -36,13 +36,13 @@ int PowerStar::Behavior()
         if (state >= 5 && state <= 7 && *(void **)((char *)&mEatingPlayer) != 0) {
             func_ov002_020d718c(*(void **)((char *)&mEatingPlayer));
             mEatingPlayer = 0;
-            *(int *)((int)((char *)&unk_0b0)) &= ~0xe0000;
+            *(int *)((int)((char *)&mFlags)) &= ~0xe0000;
             func_ov002_020e84ec(((char *)this));
             _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
             return 1;
         }
         if ((data_0209b454 & 0x4000000) != 0) {
-            if ((int)((unk_0b0 & 0x4000000) != 0) != 0) {
+            if ((int)((mFlags & 0x4000000) != 0) != 0) {
                 char *p = *(char **)((char *)&mEatingPlayer);
                 if (p != 0)
                     *(int *)((int)(p + 0xb0)) |= 0x4000000;

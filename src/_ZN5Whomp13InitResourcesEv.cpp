@@ -34,8 +34,6 @@ extern "C" {
         void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
     void func_01ffb0bc(void *self);
     void func_020393d4(void *p, void *v);
-    void func_01ffb07c(void *self, s32 *sp);
-    void func_020396d0(void *self, int v);
     void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
     int IsStarCollectedInCurLevel(int a);
@@ -73,7 +71,7 @@ int Whomp::InitResources()
     void *anim;
     int i;
 
-    id = mActorID;
+    id = actorID;
     int b = (id == 0xa5);
     if (b) {
         mIsKing = 1;
@@ -112,9 +110,9 @@ int Whomp::InitResources()
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
             ((char *)this) + 0x330, data_ov079_02128178.unk4, 0, 0x1000, 0);
         _ZN9Animation8SetFlagsEi(((char *)this) + 0x330, 0x40000000);
-        unk_33c = 0x1000;
-        unk_338 = 0;
-        unk_409 = (u8)(mParam & 0xf);
+        mTextureSequence.speed = 0x1000;
+        mTextureSequence.currFrame = 0;
+        unk_409 = (u8)(param1 & 0xf);
         unk_408 = _ZN5Actor9TrackStarEjj(((char *)this), unk_409, 2);
     } else {
         unk_401 = 1;
@@ -142,10 +140,10 @@ int Whomp::InitResources()
         sp[0] = 0;
         sp[1] = 0;
         sp[2] = 0x1000;
-        func_01ffb07c(((char *)this) + 0x418, sp);
+        func_01ffb07c(&mMovingMeshCollider, sp);
     }
 
-    func_020396d0(((char *)this) + 0x418, 0xb50);
+    func_020396d0((int *)&mMovingMeshCollider, 0xb50);
 
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
 
@@ -166,11 +164,11 @@ int Whomp::InitResources()
     *(s16 *)(((char *)this) + 0x300 + 0xea) = mAngleZ;
 
     if (mIsKing != 0) {
-        unk_09c = -0x8000;
+        mVertAccel = -0x8000;
     } else {
-        unk_09c = -0x4800;
+        mVertAccel = -0x4800;
     }
-    unk_0a0 = -0x31000;
+    mTerminalVelocity = -0x31000;
 
     unk_402 = 0;
     unk_403 = 0;

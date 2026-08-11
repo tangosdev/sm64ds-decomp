@@ -24,9 +24,9 @@ int WaterRing::Behavior()
     (c->**p)();
   }
   _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
-  unk_08c = unk_092;
-  unk_08e = unk_094;
-  unk_090 = unk_096;
+  mAngleX = mPrevAngleX;
+  mAngleY = mPrevAngleY;
+  mAngleZ = mPrevAngleZ;
   func_ov064_02119f1c(((char*)this));
   _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
   _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);

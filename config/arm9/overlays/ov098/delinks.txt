@@ -310,11 +310,11 @@ src/Cannon_Spawn.c:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
-src/_ZN9WaterBombD1Ev.c:
+src/_ZN9WaterBombD1Ev.cpp:
     complete
     .text start:0x0213b47c end:0x0213b4c4
 
-src/_ZN9WaterBombD0Ev.c:
+src/_ZN9WaterBombD0Ev.cpp:
     complete
     .text start:0x0213b4c4 end:0x0213b520
 

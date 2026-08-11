@@ -16,7 +16,7 @@
  * Motion falls out of the heading rather than being tracked separately. A
  * matrix built from the eased yaw and pitch turns a fixed 0xa000 forward vector
  * into a velocity written across 0x0a4..0x0b0 -- and only then is gravity
- * applied to its y, as max(unk_0a0, unk_0a8 + unk_09c). See MantaRay.h: those
+ * applied to its y, as max(mTerminalVelocity, mVertSpeed + mVertAccel). See MantaRay.h: those
  * are Actor's speed slots, repurposed as a vector.
  */
 #include "MantaRay.h"
@@ -52,7 +52,7 @@ void ApproachLinear(short& v, short target, short step);
 int MantaRay::Behavior()
 {
     char* c = (char*)this;
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short((unsigned short*)&unk_100);
     {
         Obj* o = *(Obj**)&unk_370;
         if (*(int*)((char*)o + 8) != 0) {
@@ -87,11 +87,11 @@ int MantaRay::Behavior()
         MulVec3Mat4x3(&v, data_020a0e68, (Vector3*)&unk_0a4);
     }
     {
-        int s = unk_0a8 + unk_09c;
-        int m2 = unk_0a0;
+        int s = mVertSpeed + mVertAccel;
+        int m2 = mTerminalVelocity;
         int ac = unk_0ac;
         if (s >= m2) m2 = s;
-        unk_0a8 = m2;
+        mVertSpeed = m2;
         unk_0ac = ac;
     }
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);

@@ -12,9 +12,9 @@
  * dying below the line is what pays out coins, so drowning and being squashed
  * on the surface end differently.
  *
- * Two branches share the same trigger check verbatim -- level 0x15, unk_0cc
+ * Two branches share the same trigger check verbatim -- level 0x15, mAreaId
  * == 1, and the mesh reporting water -- and both respond by zeroing the four
- * motion words and setting unk_10c = 1, the knocked-into-water state.
+ * motion words and setting mDeathState = 1, the knocked-into-water state.
  *
  * The final cylinder Update is gated on the closest player's +0x6fb, so the
  * skeeter stops colliding while that player is in some state of their own.
@@ -67,14 +67,14 @@ int Skeeter::Behavior()
     if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mWithMeshClsn, &mModelAnim, 3))
         return 1;
 
-    if (unk_10c != 0) {
+    if (mDeathState != 0) {
         func_02035684((int*)(&mWithMeshClsn), 0xd2000);
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
         if (_ZN5Enemy11UpdateDeathER12WithMeshClsn(c, &mWithMeshClsn))
             return 1;
         func_ov090_02131378(c);
         func_ov090_02131e50(c);
-        if (unk_10c == 0)
+        if (mDeathState == 0)
             _ZN5Actor8PoofDustEv(c);
         if (unk_3a1 == 3) {
             _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
@@ -83,7 +83,7 @@ int Skeeter::Behavior()
                 *p8e += 0x1000;
             }
         }
-        if (unk_10c != 1 && mPosY <= unk_3ac) {
+        if (mDeathState != 1 && mPosY <= unk_3ac) {
             CoinVec3 v;
             v.x = mPosX;
             v.y = mPosY;
@@ -98,17 +98,17 @@ int Skeeter::Behavior()
     {
     int flag = (mFlags & 8) != 0;
     if (flag) {
-        unk_098 = 0;
+        mHorzSpeed = 0;
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
         func_ov090_02131378(c);
-        if (data_0209f2f8 == 0x15 && unk_0cc == 1) {
+        if (data_0209f2f8 == 0x15 && mAreaId == 1) {
             _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
             if (func_02035638((u8*)(&mWithMeshClsn))) {
-                unk_09c = 0;
+                mVertAccel = 0;
                 unk_0a4 = 0;
-                unk_0a8 = 0;
+                mVertSpeed = 0;
                 unk_0ac = 0;
-                unk_10c = 1;
+                mDeathState = 1;
                 func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
                 return 1;
             }
@@ -119,19 +119,19 @@ int Skeeter::Behavior()
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
     func_ov090_02131378(c);
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short((u16 *)&unk_100);
     DecIfAbove0_Short(&unk_394);
     DecIfAbove0_Short(&unk_396);
     DecIfAbove0_Short(&unk_398);
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
     if (mPosY <= unk_3ac)
         mPosY = unk_3ac;
-    if (data_0209f2f8 == 0x15 && unk_0cc == 1 && func_02035638((u8*)(&mWithMeshClsn))) {
-        unk_09c = 0;
+    if (data_0209f2f8 == 0x15 && mAreaId == 1 && func_02035638((u8*)(&mWithMeshClsn))) {
+        mVertAccel = 0;
         unk_0a4 = 0;
-        unk_0a8 = 0;
+        mVertSpeed = 0;
         unk_0ac = 0;
-        unk_10c = 1;
+        mDeathState = 1;
         func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
         return 1;
     }

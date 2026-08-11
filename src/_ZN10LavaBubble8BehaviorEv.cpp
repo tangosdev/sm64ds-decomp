@@ -22,7 +22,7 @@ void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
 
 int LavaBubble::Behavior()
 {
-    int flags = unk_0b0;
+    int flags = mFlags;
     int b20 = (flags & 0x20000) != 0;
 
     if (b20) {
@@ -47,9 +47,9 @@ int LavaBubble::Behavior()
     DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
 
     {
-        unsigned int id = unk_134;
+        unsigned int id = mMovingCylinderClsn.otherOwner;
         if (id != 0) {
-            if ((unk_130 & 0x8000) == 0) {
+            if ((mMovingCylinderClsn.hitFlags & 0x8000) == 0) {
                 char* a = (char*)_ZN5Actor10FindWithIDEj(id);
                 if (a != 0) {
                     int hit = (*(u16*)(a + 0xc) == 0xbf);
@@ -57,7 +57,7 @@ int LavaBubble::Behavior()
                         _ZN6Player4BurnEv(a);
                 }
             } else {
-                *(int*)((char*)&unk_128) |= 1;
+                mMovingCylinderClsn.flags |= 1;
             }
         }
     }
@@ -70,7 +70,7 @@ int LavaBubble::Behavior()
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
 
-    if (unk_09c != 0)
+    if (mVertAccel != 0)
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), (WithMeshClsn*)((char*)&mWithMeshClsn), 0);
 
     _ZN12CylinderClsn5ClearEv((CylinderClsn*)((char*)&mMovingCylinderClsn));

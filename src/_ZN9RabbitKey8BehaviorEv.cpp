@@ -20,11 +20,11 @@ int RabbitKey::Behavior()
     else fn=*(void**)base;
     ((void(*)(char*))fn)(self);
   }
-  int s = unk_0a8 + unk_09c;
-  int lim = unk_0a0;
+  int s = mVertSpeed + mVertAccel;
+  int lim = mTerminalVelocity;
   if(s >= lim) lim = s;
   int t = unk_0ac;
-  unk_0a8 = lim;
+  mVertSpeed = lim;
   unk_0ac = t;
   _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), 0);
   return 1;

@@ -13,7 +13,7 @@ extern char data_ov064_0211c7b8[];
 
 int LavaBubble::InitResources()
 {
-    unk_310 = (mParam & 1) ^ 1;
+    unk_310 = (param1 & 1) ^ 1;
     if (unk_310 == 0) {
         _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0, 0, 1, 0);
     } else {
@@ -23,10 +23,10 @@ int LavaBubble::InitResources()
     unk_308 = mPosY;
     unk_30c = mPosZ;
     if (unk_310 == 0) {
-        *(int *)((char*)&unk_0b0) |= 1;
+        *(int *)((char*)&mFlags) |= 1;
     } else {
-        unk_09c = -0x4000;
-        unk_0a0 = -0x3c000;
+        mVertAccel = -0x4000;
+        mTerminalVelocity = -0x3c000;
     }
     unk_100 = 0;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);

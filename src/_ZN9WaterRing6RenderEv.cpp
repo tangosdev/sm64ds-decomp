@@ -23,6 +23,6 @@
 int WaterRing::Render()
 {
     ((TextureTransformer *)&mTextureTransformer)->Update(mModel.data);
-    mModel.Render((const Vector3 *)&unk_080);
+    mModel.Render((const Vector3 *)&mScaleX);
     return 1;
 }

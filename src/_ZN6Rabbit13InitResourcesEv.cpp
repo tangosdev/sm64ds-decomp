@@ -5,15 +5,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Rabbit.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef unsigned char u8;
-
-typedef s32 Fix12;
-
 extern char data_ov085_021305d0;
 extern int data_0209caa0[];
 extern s8 data_0209f2f8;
@@ -53,15 +44,19 @@ int Rabbit::InitResources()
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel2);
 
-    unk_438 = unk_008 & 0xff;
+    unk_438 = param1 & 0xff;
     if (unk_438 == 0xff)
         unk_438 = 0;
 
-    mRabbitId = (unk_008 & 0xf00) >> 8;
+    /* Actor declares param1 u32, but the ROM shifts these two with ASR, not
+       LSR -- so this call site reads it signed. Without the casts the function
+       comes out two words different; the flat header called 0x008 an s32,
+       which is why this was invisible before the rebase. */
+    mRabbitId = ((s32)param1 & 0xf00) >> 8;
     if (mRabbitId == 0xff)
         mRabbitId = 0;
 
-    mCharacterId = (unk_008 & 0xf000) >> 0xc;
+    mCharacterId = ((s32)param1 & 0xf000) >> 0xc;
     if (mCharacterId == 0xf)
         mCharacterId = 0;
 
@@ -85,11 +80,11 @@ check18:
         return 0;
 
 skip17:
-    unk_09c = -0x1000;
-    unk_0a0 = -0x1e000;
+    mVertAccel = -0x1000;
+    mTerminalVelocity = -0x1e000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
     unk_45c = 0;
-    unk_35c = 0x1000;
+    mModelAnim.speed = 0x1000;
     _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN7PathPtrC1Ev(sp8);
     _ZN7PathPtr6FromIDEj(sp8, unk_438);
@@ -97,10 +92,10 @@ skip17:
     _ZNK7PathPtr7GetNodeER7Vector3j(sp8, ((char*)this) + 0x5c, unk_448);
     unk_444 = _ZNK7PathPtr8NumNodesEv(sp8);
     func_ov085_0212bcc8(((char*)this));
-    unk_0d0 = 0;
-    mScale = 0x1000;
-    unk_088 = mScale;
-    unk_084 = unk_088;
+    mEatingPlayer = 0;
+    mScaleX = 0x1000;
+    mScaleZ = mScaleX;
+    mScaleY = mScaleZ;
 
     if (mRabbitId == 7) {
         if (data_0209caa0[1] & 0x40)
@@ -164,10 +159,10 @@ block_26:
 
 block_out:
     if (data_0209f2f8 == 5) {
-        if (unk_0cc == 3)
-            unk_0b0 = 0x8280;
+        if (mAreaId == 3)
+            mFlags = 0x8280;
     }
-    unk_468 = (mColorVariant << 1) + *(s32*)(*(char**)((char*)&unk_30c) + 0x20);
+    unk_468 = (mColorVariant << 1) + *(s32*)((char*)mModelAnim.data.materials + 0x20);
     func_ov085_0212bc78(((char*)this), &data_ov085_021306cc);
     return 1;
 }
