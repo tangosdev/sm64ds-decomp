@@ -6,15 +6,31 @@
 #include "math/Fix12.h"
 
 /* Animation child that drives BTP-file playback, vtable _ZTV15TextureSequence at 0x0208e7d4:
- * two slots, the destructor pair, nothing else. Update and Prepare are
- * plain methods.
+ * two slots, the destructor pair, nothing else. Update is a plain method;
+ * Prepare is static, for the reason set out below.
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
  * include/ModelBase.h for the key-function rule and the objisolate exemption
  * to it. D0 stays a C file.
  *
- * Prepare's ROM body is a 0xc tail-call veneer into func_02046d50, which is the
- * real (still unnamed) implementation taking (this, &model, &file).
+ * PREPARE IS STATIC. Its ROM body is a 0xc long-call veneer (ldr ip, [pc];
+ * bx ip; .word func_02046d50) that shuffles no arguments, so the real body's
+ * register use IS the call surface -- and func_02046d50 reads only r0 and r1:
+ *
+ *     push {r4-r7,lr} / sub sp,sp,#4
+ *     mov  r6, r1      <- ldrh [r6,#2], ldr [r6,#4], ldrh [r6,#8],
+ *     mov  r7, r0         ldr [r6,#0xc], ldrh [r6,#0x1c], ldr [r6,#0x20]
+ *
+ * r2 is never touched, which rules out three arguments; and the offsets r1 is
+ * read at are exactly BTP_File's fields below, so r1 is the ANIMATION file --
+ * the second argument, not the third. r0 is the BMD, forwarded to the three
+ * name-lookup helpers. Two arguments and no this. The veneer body is a pure
+ * tail jump that reproduces under either signature, so the definition file
+ * never constrained this; the callee and the callers do, and they agree.
+ *
+ * A static member mangles identically, so the symbol is unchanged. This is the
+ * same correction already applied to the sibling TextureTransformer, whose
+ * header names this veneer and MaterialChanger's as called the same way.
  * SetFile's definition stays a mangled free function (wall 6az,
  * Fix12<int> in the signature); the declaration below is the real one.
  */
@@ -47,12 +63,12 @@ struct TextureSequence : Animation {
     virtual ~TextureSequence();                       /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
-    void Prepare(BMD_File &model, BTP_File &animFile);
     void Update(ModelComponents &model);
     void SetFile(BTP_File &animFile, int flags, Fix12<int> speed,
                  u32 startFrame);        /* free function, wall 6az */
 
     /* --- static --- */
+    static void Prepare(BMD_File &model, BTP_File &animFile);
     static void *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(BTP_File &file);
 };

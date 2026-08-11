@@ -6,11 +6,14 @@
 #include "SnowmanHead.h"
 typedef int Fix12;
 
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
+
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *base, void *file, int a, int b);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *ref);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *t, void *a, Fix12 b, Fix12 c, unsigned int d, unsigned int e);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, Fix12 b, Fix12 c, void *d, void *e);
 extern void _ZN13RaycastGroundC1Ev(void *t);
@@ -33,8 +36,8 @@ int SnowmanHead::InitResources()
     for (i = 0; i < 2; i++) {
         void *tex = (&data_ov072_02121ffc)[i];
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(tex);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
-            ((void **)&data_ov072_02122bc4)[1], ((void **)tex)[1]);
+        TextureSequence::Prepare(*(BMD_File *)((void **)&data_ov072_02122bc4)[1],
+                                 *(BTP_File *)((void **)tex)[1]);
     }
 
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x138, ((char *)this), 0x96000, 0x12c000, 0x800004, 0);

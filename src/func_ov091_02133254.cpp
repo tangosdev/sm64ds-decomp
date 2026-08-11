@@ -3,10 +3,10 @@
 /* recovered: shared common types */
 #include "common.h"
 #include "MeshColliderBase.h"
+#include "TextureSequence.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
-struct BTP_File;
 
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
@@ -17,7 +17,6 @@ extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEs
     void *self, KCL_File *k, void *m, int fix, short s, void *clps);
 extern "C" void func_020393d4(int *p, int v);
 extern "C" BTP_File *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File &b, BTP_File &t);
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, BTP_File *f, int a, int fix, unsigned int u);
 extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
 
@@ -59,7 +58,7 @@ extern "C" int func_ov091_02133254(char *self)
     {
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(*(SharedFilePtr *)tp);
         p320 = *(void ***)(self + 0x320);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
+        TextureSequence::Prepare(
             *(BMD_File *)*(void **)((char *)*p320 + 4),
             *(BTP_File *)*(void **)((char *)*(p320 + 3) + 4));
         p320 = *(void ***)(self + 0x320);

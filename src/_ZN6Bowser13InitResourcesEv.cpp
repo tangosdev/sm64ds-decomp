@@ -27,13 +27,13 @@
  * only failure path in the function.
  */
 #include "Bowser.h"
+#include "TextureSequence.h"
 
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int b, unsigned int d);
 extern void _ZN9Animation8SetFlagsEi(void *self, int flags);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -77,8 +77,8 @@ int Bowser::InitResources()
 
     func_ov060_02111cc0(this, 0x10, 0);
 
-    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
-        (void *)data_ov060_0211ac78[1], (void *)data_ov060_0211ac28[1]);
+    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211ac78[1],
+                             *(BTP_File *)data_ov060_0211ac28[1]);
 
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
         &this->mTextureSequence, (void *)data_ov060_0211ac28[1], 0, 0x1000, 0);

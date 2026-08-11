@@ -3,6 +3,9 @@ typedef int Fix12;
 
 struct SharedFilePtr { int id; void* file; };
 
+struct BMD_File;
+struct BMA_File;
+struct MaterialChanger { static void Prepare(BMD_File &model, BMA_File &animFile); };
 extern "C" {
 int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 void LoadSilverStarAndNumber(void);
@@ -12,7 +15,6 @@ void _ZN8CapEnemy6AddCapEj(void* self, unsigned int x);
 int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void* self);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
-void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void* bmd, void* bma);
 void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12 b, unsigned int cc);
 void LoadBlueCoinModel(void* c);
 void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
@@ -68,7 +70,7 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x3d4) == 0)
         return 0;
 
-    _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(data_ov084_02130cf8.file, &data_ov084_0213089c);
+    MaterialChanger::Prepare(*(BMD_File*)data_ov084_02130cf8.file, *(BMA_File*)&data_ov084_0213089c);
     _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(c + 0x3fc, &data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     *(unsigned char*)(c + 0x108) = 1;

@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Wiggler.h"
+#include "TextureSequence.h"
 extern "C" {
 extern int _ZN5Actor9TrackStarEjj(void *self, u32 a, u32 b);
 extern void _ZN5Model8LoadFileER13SharedFilePtr(void *shared);
@@ -12,7 +13,6 @@ extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *ma, void *bca, int i, int fix, u32 j);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *ts, void *btp, int i, int fix, u32 j);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *dst, void *mtx, void *src);
@@ -93,7 +93,7 @@ int Wiggler::InitResources()
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov034_021138b0[i]);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(r8p, *(void **)((char *)sp18 + 4), sp2C, sp30);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(r8p, *(void **)((char *)sp1C + 4), sp34, 0x1000, sp34);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(*(void **)((char *)sp18 + 4), *(void **)((char *)sp20 + 4));
+        TextureSequence::Prepare(**(BMD_File **)((char *)sp18 + 4), **(BTP_File **)((char *)sp20 + 4));
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(fpp, *(void **)((char *)sp20 + 4), sp38, 0x1000, sp38);
         *(s32 *)(spC + 0x374) = sp3C;
         if (i == 0) {

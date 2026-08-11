@@ -1,9 +1,11 @@
 //cpp
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *o, void *f, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *o, void *f, int a, int fx, unsigned j);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *o, void *f, int a, int b, int fx, unsigned short t);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *a, void *b);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *o, void *f, int a, int fx, unsigned j);
 extern int RandomIntInternal(void *seed);
 extern int _ZNK9Animation13GetFrameCountEv(void *o);
@@ -38,7 +40,7 @@ extern "C" int func_ov075_02114ddc(void *cc, int r6, int r5, int r4)
         *(int*)(c + 0x110) = 7;
     }
 
-    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(*(void**)(&data_ov075_0211d3c4 + 4), tex);
+    TextureSequence::Prepare(**(BMD_File**)(&data_ov075_0211d3c4 + 4), *(BTP_File*)tex);
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0xd4, tex, 0, 0x1000, 0);
 
     {

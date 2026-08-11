@@ -10,6 +10,11 @@ struct Vector3;
 struct Actor;
 struct Vector3_16;
 
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
+struct BMA_File;
+struct MaterialChanger { static void Prepare(BMD_File &model, BMA_File &animFile); };
 extern "C" {
     void func_ov074_02122634(char *self);
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
@@ -22,8 +27,6 @@ extern "C" {
     void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
         void *self, void *actor, void *pos, s32 fx, s32 fy, u32 a, u32 b);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
-    void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
-    void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma);
     void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void *bta);
     void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
@@ -121,8 +124,10 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     } while (k < 4);
 
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x210, *((void **)&data_ov074_02123030 + 1), 0, 0x1000, 0);
-    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(*((void **)&data_ov074_02123000 + 1), *((void **)&data_ov074_02123040 + 1));
-    _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(*((void **)&data_ov074_02123000 + 1), &func_021123f4);
+    TextureSequence::Prepare(**(BMD_File **)((void **)&data_ov074_02123000 + 1),
+                             **(BTP_File **)((void **)&data_ov074_02123040 + 1));
+    MaterialChanger::Prepare(**(BMD_File **)((void **)&data_ov074_02123000 + 1),
+                             *(BMA_File *)&func_021123f4);
 
     i = 0;
     do {

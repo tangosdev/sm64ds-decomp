@@ -1,8 +1,10 @@
 //cpp
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 extern int RandomIntInternal(void*);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*,void*,int,int,int,unsigned short);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void*,void*);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*,void*,int,int,unsigned int);
 extern int _ZNK9Animation13GetFrameCountEv(void*);
 extern long long __aeabi_uidiv(unsigned int,int);
@@ -30,7 +32,7 @@ void func_ov075_021143e4(char*c){
     *(int*)(c+0x110)=9;
     data_ov075_0211d380[0]>>=2;
   }
-  _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void*)data_ov075_0211d3c4[1],r4);
+  TextureSequence::Prepare(*(BMD_File*)data_ov075_0211d3c4[1],*(BTP_File*)r4);
   _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c+0xd4,r4,0,0x1000,0);
   {
     unsigned int rv=(unsigned int)RandomIntInternal(data_0209e650);

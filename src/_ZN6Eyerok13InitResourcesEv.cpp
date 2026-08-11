@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
+#include "TextureSequence.h"
 #include "MeshColliderBase.h"
 extern int data_ov066_0211ae6c[];
 extern int data_ov066_0211ae4c[];
@@ -39,7 +40,6 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int 
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(int bmd, int btp);
 extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
 /* extern "C" is load-bearing here: without it the name mangles a SECOND time,
@@ -94,14 +94,14 @@ int Eyerok::InitResources()
     case 1:
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x360, (void*)data_ov066_0211ae4c[1], 1, -1) == 0)
             return 0;
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(data_ov066_0211ae4c[1], data_ov066_0211aebc[1]);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(data_ov066_0211ae4c[1], data_ov066_0211ae9c[1]);
+        TextureSequence::Prepare(*(BMD_File*)data_ov066_0211ae4c[1], *(BTP_File*)data_ov066_0211aebc[1]);
+        TextureSequence::Prepare(*(BMD_File*)data_ov066_0211ae4c[1], *(BTP_File*)data_ov066_0211ae9c[1]);
         break;
     case 2:
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x360, (void*)data_ov066_0211aeb4[1], 1, -1) == 0)
             return 0;
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(data_ov066_0211aeb4[1], data_ov066_0211ae3c[1]);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(data_ov066_0211aeb4[1], data_ov066_0211ae2c[1]);
+        TextureSequence::Prepare(*(BMD_File*)data_ov066_0211aeb4[1], *(BTP_File*)data_ov066_0211ae3c[1]);
+        TextureSequence::Prepare(*(BMD_File*)data_ov066_0211aeb4[1], *(BTP_File*)data_ov066_0211ae2c[1]);
         break;
     }
 

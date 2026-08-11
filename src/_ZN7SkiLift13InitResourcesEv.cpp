@@ -4,12 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SkiLift.h"
+#include "TextureSequence.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
@@ -31,7 +31,7 @@ int SkiLift::InitResources()
     for (int i = 0; i < 2; i++) {
         void *t = (void*)data_ov018_02112c04[i];
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(t);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void*)data_ov018_02113c00[1], (void*)((int*)t)[1]);
+        TextureSequence::Prepare(*(BMD_File *)data_ov018_02113c00[1], *(BTP_File *)((int*)t)[1]);
     }
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);

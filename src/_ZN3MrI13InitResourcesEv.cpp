@@ -9,11 +9,13 @@ struct Actor;
 struct Vector3 { int x, y, z; };
 struct SharedFilePtr { void *hdr; void *ptr; };
 
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" void LoadBlueCoinModel(void);
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(BMD_File &a, BTP_File &b);
 extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, Actor *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
@@ -52,7 +54,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(*seq);
         BMD_File *bmd2 = *(BMD_File **)((char *)&data_ov071_02123050 + 4);
         BTP_File *btp = *(BTP_File **)((char *)seq + 4);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(*bmd2, *btp);
+        TextureSequence::Prepare(*bmd2, *btp);
     }
 
     _ZN9Animation8LoadFileER13SharedFilePtr(**(SharedFilePtr **)&data_ov071_021226a0);

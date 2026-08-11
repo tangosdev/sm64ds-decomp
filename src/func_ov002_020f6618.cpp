@@ -1,4 +1,7 @@
 //cpp
+struct BMD_File;
+struct BTP_File;
+struct TextureSequence { static void Prepare(BMD_File &model, BTP_File &animFile); };
 extern "C" {
 struct SharedFilePtr { int a, file; };
 void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& f);
@@ -8,7 +11,6 @@ void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, int
 void* _Znwj(unsigned int sz);
 void* _ZN15TextureSequenceC1Ev(void* self);
 void* _ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr& f);
-void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void* bmd, void* btp);
 void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void* self, void* btp, int a, int fx, unsigned int e);
 
 int func_ov002_020f6618(char* self, SharedFilePtr* mdl, int nAnims, SharedFilePtr** anims,
@@ -38,7 +40,7 @@ int func_ov002_020f6618(char* self, SharedFilePtr* mdl, int nAnims, SharedFilePt
         for (i = 0; i < *(unsigned char*)(self + 0x81); i++) {
             void* bmd = (void*)(*(SharedFilePtr**)(self + 0x70))->file;
             void* btp = _ZN15TextureSequence8LoadFileER13SharedFilePtr(*(*(SharedFilePtr***)(self + 0x78))[i]);
-            _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(bmd, btp);
+            TextureSequence::Prepare(*(BMD_File*)bmd, *(BTP_File*)btp);
         }
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(*(void**)(self + 0x7c),
             (void*)(*(*(SharedFilePtr***)(self + 0x78))[0]).file, 0, 0x1000, 0);
