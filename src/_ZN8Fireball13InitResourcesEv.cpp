@@ -20,13 +20,13 @@ int Fireball::InitResources()
     unk_36a = 0;
     unk_360 = 0;
     unk_364 = 0x5dc000;
-    unk_36d = unk_008 & 7;
+    unk_36d = param1 & 7;
     unk_370 = 0;
     unk_374 = 0;
     {
         unsigned char v = unk_36d;
         if (v != 0 && v != 4) {
-            *(unsigned int*)(((int)((char*)&unk_12c))) |= 0x8000;
+            *(unsigned int*)(((int)((char*)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
         }
     }
     return 1;

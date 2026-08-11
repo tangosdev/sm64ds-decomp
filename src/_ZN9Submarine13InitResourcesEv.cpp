@@ -33,7 +33,9 @@ int Submarine::InitResources()
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*(struct BMD_File *)data_ov026_02113f0c.file, data_ov026_02112f40);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char *)this) + 0x178, data_ov026_02112f40, 0, 0x1000, 0);
 
-    unk_184 = 0x1000;
+    /* +0x0c inside the TextureTransformer, which names only `file` at +0x10;
+       reached through the member rather than absorbed into it. */
+    *(Fix12i *)((char *)&mTextureTransformer + 0xc) = 0x1000;
     mModelAnim.speed = 0x1000;
 
     unk_1a8 = mPosX;

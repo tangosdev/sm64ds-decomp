@@ -4,93 +4,89 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FlyGuy.h"
-struct WithMeshClsn;
-struct Enemy;
-typedef void (Enemy::*PMF)();
-struct Holder { char pad[8]; PMF fn; };
 
+/* This file used to open with `struct Enemy { char pad[0x800]; };` and work a
+ * `char *c` through raw offsets. FlyGuy.h now supplies the real chain, so the
+ * stand-in is gone and every offset is a named field.
+ *
+ * Enemy::UpdateYoshiEat is still reached by its mangled name -- unlike
+ * UpdateDeath and UpdateWMClsn, it is not declared in Enemy.h yet.
+ */
 extern "C" {
 extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
-extern void _ZN5Enemy11UpdateDeathER12WithMeshClsn(Enemy *thiz, WithMeshClsn *wm);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(Enemy *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *wm, unsigned int j);
-extern char *_ZN5Actor13ClosestPlayerEv(Enemy *thiz);
-extern void _ZN9Animation7AdvanceEv(void *thiz);
-
 }
-
-struct Enemy { char pad[0x800]; };
 
 int FlyGuy::Behavior()
 {
-    char *c = (char *)((Enemy *)this);
-
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(unsigned char *)(c + 0x107) != 0) {
-            if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+        mMovingCylinderClsn.Clear();
+        if (unk_107 != 0) {
+            if (unk_104 == 0) {
+                mMovingCylinderClsn.Update();
             }
         }
-        func_ov070_02120070(c);
+        func_ov070_02120070((char *)this);
         return 1;
     }
 
-    if (*(int *)(c + 0x10c) != 0) {
-        _ZN5Enemy11UpdateDeathER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144));
-        func_ov070_02120070(c);
+    if (mDeathState != 0) {
+        UpdateDeath(mWithMeshClsn);
+        func_ov070_02120070((char *)this);
         return 1;
     }
 
-    if (*(char **)(c + 0x3bc) != data_ov070_021235cc) {
-        DecIfAbove0_Short((unsigned short *)(c + 0x100));
+    if (mCurrentState != (State *)data_ov070_021235cc) {
+        DecIfAbove0_Short((unsigned short *)&unk_100);
     }
-    DecIfAbove0_Short((unsigned short *)(c + 0x3cc));
+    DecIfAbove0_Short(&unk_3cc);
 
     {
-        Holder *q = *(Holder **)(c + 0x3bc);
-        if (q->fn != 0) {
-            (((Enemy *)this)->*(q->fn))();
+        State *q = mCurrentState;
+        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
+           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
+           whole 8-byte pmf. Reading one to CALL it is free. */
+        if (*(int *)((char *)q + 8) != 0) {
+            (this->*(q->mMain))();
         }
     }
 
     {
-        int v = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int hi = *(int *)(c + 0xa0);
+        /* Gravity, clamped at terminal velocity. unk_0ac is read and written
+           back unchanged -- the ROM really does reload and restore it here. */
+        int v = mVertSpeed + mVertAccel;
+        int hi = mTerminalVelocity;
         if (v >= hi) {
             hi = v;
         }
-        int tmp = *(int *)(c + 0xac);
-        *(int *)(c + 0xa8) = hi;
-        *(int *)(c + 0xac) = tmp;
+        int tmp = unk_0ac;
+        mVertSpeed = hi;
+        unk_0ac = tmp;
     }
 
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Enemy *)this), (void *)(c + 0x110));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
+    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdateWMClsn(mWithMeshClsn, 0);
 
-    if (*(char **)(c + 0x3bc) != data_ov070_021235bc) {
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        *(short *)(c + 0x90) = *(short *)(c + 0x96);
+    if (mCurrentState != (State *)data_ov070_021235bc) {
+        mAngleY = mPrevAngleY;
+        mAngleZ = mPrevAngleZ;
     }
 
-    func_ov070_02120070(c);
+    func_ov070_02120070((char *)this);
 
-    if (*(char **)(c + 0x3bc) != data_ov070_021235bc) {
-        func_ov070_0211f100(c);
+    if (mCurrentState != (State *)data_ov070_021235bc) {
+        func_ov070_0211f100((char *)this);
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    mMovingCylinderClsn.Clear();
     {
-        char *p = _ZN5Actor13ClosestPlayerEv(((Enemy *)this));
+        char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+            mMovingCylinderClsn.Update();
         }
     }
 
-    *(int *)(c + 0x35c) = 0x1000;
-    _ZN9Animation7AdvanceEv(c + 0x350);
+    mModelAnim.speed = 0x1000;
+    mModelAnim.Advance();
     return 1;
 }

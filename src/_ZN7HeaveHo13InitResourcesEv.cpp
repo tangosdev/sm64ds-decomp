@@ -25,8 +25,8 @@ int HeaveHo::InitResources()
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127ca0);
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127c90);
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127c98);
-  unk_09c = -0x1000;
-  unk_0a0 = -0x1e000;
+  mVertAccel = -0x1000;
+  mTerminalVelocity = -0x1e000;
   _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x52000, 0x52000, 0x800004, 0);
   v.x = data_ov077_02127a5c.x;
   v.y = data_ov077_02127a5c.y;
@@ -38,7 +38,7 @@ int HeaveHo::InitResources()
   unk_404 = mPosX;
   unk_408 = mPosY;
   unk_40c = mPosZ;
-  unk_39c = 0x1000;
+  mModelAnim.speed = 0x1000;
   unk_410 = mPosX;
   unk_414 = mPosY;
   unk_418 = mPosZ;

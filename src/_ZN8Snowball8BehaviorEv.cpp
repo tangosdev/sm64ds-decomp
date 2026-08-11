@@ -21,12 +21,12 @@ int Snowball::Behavior()
     M *m = *(M **)((char *)&unk_378);
     if (m->pmf != 0)
         (((Klass *)((char *)this))->*(m->pmf))();
-    int v = unk_0a8 + unk_09c;
-    int hi = unk_0a0;
+    int v = mVertSpeed + mVertAccel;
+    int hi = mTerminalVelocity;
     if (v >= hi)
         hi = v;
     int tmp = unk_0ac;
-    unk_0a8 = hi;
+    mVertSpeed = hi;
     unk_0ac = tmp;
     _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn));
     _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);

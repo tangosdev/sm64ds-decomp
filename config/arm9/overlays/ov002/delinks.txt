@@ -5651,11 +5651,11 @@ src/CutsceneObject_Spawn.c:
     complete
     .text start:0x020f8808 end:0x020f8838
 
-src/_ZN8FireballD1Ev.c:
+src/_ZN8FireballD1Ev.cpp:
     complete
     .text start:0x020f8858 end:0x020f8898
 
-src/_ZN8FireballD0Ev.c:
+src/_ZN8FireballD0Ev.cpp:
     complete
     .text start:0x020f8898 end:0x020f88ec
 
@@ -5671,7 +5671,7 @@ src/func_ov002_020f8b24.c:
     complete
     .text start:0x020f8b24 end:0x020f8c8c
 
-src/_ZN8Fireball6RenderEv.c:
+src/_ZN8Fireball6RenderEv.cpp:
     complete
     .text start:0x020f8c8c end:0x020f8c94
 
@@ -5927,11 +5927,11 @@ src/func_ov002_020feab8.c:
     complete
     .text start:0x020feab8 end:0x020feabc
 
-src/_ZN6BulletD1Ev.c:
+src/_ZN6BulletD1Ev.cpp:
     complete
     .text start:0x020feabc end:0x020feafc
 
-src/_ZN6BulletD0Ev.c:
+src/_ZN6BulletD0Ev.cpp:
     complete
     .text start:0x020feafc end:0x020feb50
 
@@ -5955,11 +5955,11 @@ src/func_ov002_020fed7c.c:
     complete
     .text start:0x020fed7c end:0x020fedf0
 
-src/_ZN6Bullet16CleanupResourcesEv.c:
+src/_ZN6Bullet16CleanupResourcesEv.cpp:
     complete
     .text start:0x020fedf0 end:0x020fee14
 
-src/_ZN6Bullet16OnPendingDestroyEv.c:
+src/_ZN6Bullet16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020fee14 end:0x020fee18
 

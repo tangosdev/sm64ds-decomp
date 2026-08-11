@@ -192,11 +192,11 @@ src/MrBlizzard_Spawn.c:
     complete
     .text start:0x02125ec0 end:0x02125f14
 
-src/_ZN8SnowballD1Ev.c:
+src/_ZN8SnowballD1Ev.cpp:
     complete
     .text start:0x02125f14 end:0x02125f5c
 
-src/_ZN8SnowballD0Ev.c:
+src/_ZN8SnowballD0Ev.cpp:
     complete
     .text start:0x02125f5c end:0x02125fb8
 
@@ -220,11 +220,11 @@ src/func_ov081_02126224.c:
     complete
     .text start:0x02126224 end:0x02126298
 
-src/_ZN8Snowball16CleanupResourcesEv.c:
+src/_ZN8Snowball16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126298 end:0x021262bc
 
-src/_ZN8Snowball16OnPendingDestroyEv.c:
+src/_ZN8Snowball16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021262bc end:0x021262c0
 

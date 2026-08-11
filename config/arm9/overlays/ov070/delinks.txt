@@ -4,11 +4,11 @@
     .ctor       start:0x021230a4 end:0x021230b4 kind:rodata align:4
     .data       start:0x021230c0 end:0x02123500 kind:data align:32
     .bss        start:0x02123500 end:0x02123720 kind:bss align:32
-src/_ZN6FlyGuyD1Ev.c:
+src/_ZN6FlyGuyD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f048
 
-src/_ZN6FlyGuyD0Ev.c:
+src/_ZN6FlyGuyD0Ev.cpp:
     complete
     .text start:0x0211f048 end:0x0211f0a4
 
@@ -75,11 +75,11 @@ src/func_ov070_02120070.cpp:
     complete
     .text start:0x02120070 end:0x02120150
 
-src/_ZN6FlyGuy16CleanupResourcesEv.c:
+src/_ZN6FlyGuy16CleanupResourcesEv.cpp:
     complete
     .text start:0x02120150 end:0x021201bc
 
-src/_ZN6FlyGuy16OnPendingDestroyEv.c:
+src/_ZN6FlyGuy16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021201bc end:0x021201c0
 

@@ -1,47 +1,62 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Bullet: 5 matched functions, 12 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BULLET_H
 #define BULLET_H
-#include "types.h"
-#include "Model.h"
 
-struct Bullet {
-    u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
-    u8  pad_00c[0x82];
-    s16 unk_08e;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
-    u8  pad_096[0x6];
-    /* Actor::mVertAccel -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    /* Actor::mVertSpeed -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_0a8;            /* 0x0a8 */
-    u8  unk_0ac;            /* 0x0ac */
-    u8  pad_0ad[0x53];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  mMovingCylinderClsn;            /* 0x110 */
-    u8  pad_111[0x33];
-    u8  mWithMeshClsn;            /* 0x144 */
-    u8  pad_145[0x1bb];
-    /* Model member, named by _ZN5ModelD1Ev at +0x300 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. The marker's pad ran 0x8
-       bytes PAST the end of the object; that space is not evidenced and stays explicit
-       padding rather than being folded into the member. */
-    Model mModel;            /* 0x300 */
-    u8  pad_350[0x8];
-    s32 unk_358;            /* 0x358 */
-#ifdef __cplusplus
-    /* methods */
+#include "types.h"
+
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN6BulletD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x110 MovingCylinderClsn         0x34   -> 0x144
+ *     0x144 WithMeshClsn               0x1bc  -> 0x300
+ *     0x300 Model                      0x50   -> 0x350
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsn.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
+#include "WithMeshClsn.h"
+
+struct Bullet : Enemy {
+    /* What mCurrentState points at. Behavior calls the handler at +0x08
+       through it; only that handler is evidenced. The field was reachable only
+       through the `struct Actor { char pad[0x350]; Holder* h; }` stand-in that
+       file used to carry, so the generated header never had it. */
+    struct State {
+        u8  pad_00[0x8];
+        void (Bullet::*mMain)();      /* 0x08 */
+    };
+
+    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    Model                        mModel;                /* 0x300 */
+    State                       *mCurrentState;         /* 0x350 */
+    u8  pad_354[0x4];
+    s32                          unk_358;               /* 0x358 */
+
+    /* --- vtable --- */
+    virtual ~Bullet();
+
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
-#endif
 };
 
-#endif
+typedef char Bullet_size_must_be_0x35c[sizeof(Bullet) == 0x35c ? 1 : -1];
+
+#endif /* BULLET_H */

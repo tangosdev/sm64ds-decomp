@@ -15,11 +15,11 @@ int BobOmb::Render()
 {
     int result = 1;
     if (unk_3f3 != 0) {
-        int flags = unk_0b0;
+        int flags = mFlags;
         int b = (flags & 0x40000) != 0;
         if (!b) {
             VBase *obj = (VBase*)((char *)&mModelAnim);
-            obj->method5((char *)&unk_080);
+            obj->method5((char *)&mScaleX);
         }
     }
     return result;

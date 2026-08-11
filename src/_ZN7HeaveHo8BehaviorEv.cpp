@@ -83,6 +83,6 @@ writeback:
     _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
     _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
 
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    mModelAnim.Advance();
     return 1;
 }

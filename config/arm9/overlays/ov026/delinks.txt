@@ -92,11 +92,11 @@ src/Submarine_Spawn.c:
     complete
     .text start:0x02111a70 end:0x02111aa0
 
-src/_ZN9SubmarineD1Ev.c:
+src/_ZN9SubmarineD1Ev.cpp:
     complete
     .text start:0x02111aa0 end:0x02111ad8
 
-src/_ZN9SubmarineD0Ev.c:
+src/_ZN9SubmarineD0Ev.cpp:
     complete
     .text start:0x02111ad8 end:0x02111b24
 
@@ -124,11 +124,11 @@ src/func_ov026_02111f30.c:
     complete
     .text start:0x02111f30 end:0x02111fa4
 
-src/_ZN9Submarine16CleanupResourcesEv.c:
+src/_ZN9Submarine16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111fa4 end:0x02111fd4
 
-src/_ZN9Submarine16OnPendingDestroyEv.c:
+src/_ZN9Submarine16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111fd4 end:0x02111fd8
 

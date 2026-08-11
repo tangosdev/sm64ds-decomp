@@ -13,7 +13,7 @@ struct Obj {
 
 int FlyGuy::Render()
 {
-    int b = ((unk_0b0 & 0x40000) != 0);
+    int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
     Obj *o = (Obj*)((char *)&mModelAnim);
     o->Target(0);

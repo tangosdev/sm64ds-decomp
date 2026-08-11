@@ -1,63 +1,60 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RollingRock: 5 matched functions, 22 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROLLINGROCK_H
 #define ROLLINGROCK_H
+
 #include "types.h"
+
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN11RollingRockD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x110 Model                      0x50   -> 0x160
+ *     0x160 ShadowModel                0x28   -> 0x188
+ *     0x1b8 MovingCylinderClsnWithPos  0x40   -> 0x1f8
+ *     0x1f8 WithMeshClsn               0x1bc  -> 0x3b4
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
 #include "Model.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsn.h"
 #include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct RollingRock {
-    u8  pad_000[0x4];
-    u32 unk_004;            /* 0x004 */
-    u8  pad_008[0x54];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    /* Actor::mAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_08c;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x2];
-    /* Actor::mPrevAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_092;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0x30];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x33];
-    u16 unk_100;            /* 0x100 */
-    u8  pad_102[0xa];
-    s32 unk_10c;            /* 0x10c */
-    /* Model member, named by _ZN5ModelD1Ev at +0x110 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x110 */
-    u8  mShadowModel;            /* 0x160 */
-    u8  pad_161[0x57];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x1b8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11RollingRockD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x1b8 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x1f8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11RollingRockD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x1f8 */
-    u32 unk_3b4;            /* 0x3b4 */
+struct RollingRock : Enemy {
+    Model                        mModel;                /* 0x110 */
+    ShadowModel                  mShadowModel;          /* 0x160 */
+    u8  pad_188[0x30];
+    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x1b8 */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x1f8 */
+    u32                          unk_3b4;               /* 0x3b4 */
     u8  pad_3b8[0x6];
-    u8  mType;            /* 0x3be */
-    u8  unk_3bf;            /* 0x3bf */
-    u8  unk_3c0;            /* 0x3c0 */
-    u8  unk_3c1;            /* 0x3c1 */
-    u8  unk_3c2;            /* 0x3c2 */
-#ifdef __cplusplus
-    /* methods */
+    u8                           mType;                 /* 0x3be */
+    u8                           unk_3bf;               /* 0x3bf */
+    u8                           unk_3c0;               /* 0x3c0 */
+    u8                           unk_3c1;               /* 0x3c1 */
+    u8                           unk_3c2;               /* 0x3c2 */
+    u8  pad_3c3[0x1];
+
+    /* --- vtable --- */
+    virtual ~RollingRock();
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
 };
 
-#endif
+typedef char RollingRock_size_must_be_0x3c4[sizeof(RollingRock) == 0x3c4 ? 1 : -1];
+
+#endif /* ROLLINGROCK_H */

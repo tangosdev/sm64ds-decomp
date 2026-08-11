@@ -18,8 +18,8 @@ int Snowball::InitResources()
 
     _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
 
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x40010);
 
     unk_37c = mPosX;

@@ -71,11 +71,11 @@ src/WorkElevator_Spawn.cpp:
     complete
     .text start:0x02112168 end:0x021121e8
 
-src/_ZN11RollingRockD1Ev.c:
+src/_ZN11RollingRockD1Ev.cpp:
     complete
     .text start:0x021121e8 end:0x02112230
 
-src/_ZN11RollingRockD0Ev.c:
+src/_ZN11RollingRockD0Ev.cpp:
     complete
     .text start:0x02112230 end:0x0211228c
 
@@ -103,7 +103,7 @@ src/func_ov021_021127b4.c:
     complete
     .text start:0x021127b4 end:0x021127f8
 
-src/_ZN11RollingRock16CleanupResourcesEv.c:
+src/_ZN11RollingRock16CleanupResourcesEv.cpp:
     complete
     .text start:0x021127f8 end:0x0211281c
 

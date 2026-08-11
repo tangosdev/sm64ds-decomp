@@ -1,49 +1,59 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Submarine: 5 matched functions, 21 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SUBMARINE_H
 #define SUBMARINE_H
-#include "types.h"
-#include "ModelAnim.h"
 
-struct Submarine {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    s16 mPrevAngleZ;            /* 0x096 */
-    u8  pad_098[0x68];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    s32 unk_110;            /* 0x110 */
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x114 -- a relocation the ROM build
-       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
-       stopped short of the object, so the member also takes over unk_11c (+0x8 = data),
-       mAnimation (+0x50 = the Animation base), unk_170 (+0x5c = speed), which the header
-       declared separately inside it. */
-    ModelAnim mModelAnim;            /* 0x114 */
-    u8  mTextureTransformer;            /* 0x178 */
-    u8  pad_179[0xb];
-    s32 unk_184;            /* 0x184 */
-    u8  pad_188[0x20];
-    s32 unk_1a8;            /* 0x1a8 */
-    s32 unk_1ac;            /* 0x1ac */
-    s32 unk_1b0;            /* 0x1b0 */
+#include "types.h"
+
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN9SubmarineD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x114 ModelAnim                  0x64   -> 0x178
+ *     0x178 TextureTransformer         0x14   -> 0x18c
+ *
+ * Typing them absorbed these markers, which were a member's insides:
+ *   - 0x184 unk_184      = mTextureTransformer + 0x0c
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsn.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
+#include "WithMeshClsn.h"
+
+struct Submarine : Enemy {
+    s32                          unk_110;               /* 0x110 */
+    ModelAnim                    mModelAnim;            /* 0x114 */
+    TextureTransformer           mTextureTransformer;   /* 0x178 */
+    u8  pad_18c[0x1c];
+    s32                          unk_1a8;               /* 0x1a8 */
+    s32                          unk_1ac;               /* 0x1ac */
+    s32                          unk_1b0;               /* 0x1b0 */
     u8  pad_1b4[0x4];
-    u8  unk_1b8;            /* 0x1b8 */
-#ifdef __cplusplus
-    /* methods */
+    u8                           unk_1b8;               /* 0x1b8 */
+    u8  pad_1b9[0x3];
+
+    /* --- vtable --- */
+    virtual ~Submarine();
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
+    void OnPendingDestroy();
 };
 
-#endif
+typedef char Submarine_size_must_be_0x1bc[sizeof(Submarine) == 0x1bc ? 1 : -1];
+
+#endif /* SUBMARINE_H */

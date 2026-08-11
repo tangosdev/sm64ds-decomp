@@ -1,58 +1,56 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Snowball: 5 matched functions, 18 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SNOWBALL_H
 #define SNOWBALL_H
-#include "types.h"
-#include "Model.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
-#include "ShadowModel.h"
 
-struct Snowball {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
-    u8  pad_0b0[0x50];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8SnowballD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x110 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x144 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8SnowballD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x144 */
-    /* Model member, named by _ZN5ModelD1Ev at +0x300 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x300 */
-    /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x350 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8SnowballD1Ev.c] */
-    ShadowModel mShadowModel;            /* 0x350 */
-    s32 unk_378;            /* 0x378 */
-    s32 unk_37c;            /* 0x37c */
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-#ifdef __cplusplus
-    /* methods */
+#include "types.h"
+
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN8SnowballD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x110 MovingCylinderClsn         0x34   -> 0x144
+ *     0x144 WithMeshClsn               0x1bc  -> 0x300
+ *     0x300 Model                      0x50   -> 0x350
+ *     0x350 ShadowModel                0x28   -> 0x378
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
+ * is not independent evidence about the ROM.
+ */
+
+#include "Enemy.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "MovingCylinderClsn.h"
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
+#include "WithMeshClsn.h"
+
+struct Snowball : Enemy {
+    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
+    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    Model                        mModel;                /* 0x300 */
+    ShadowModel                  mShadowModel;          /* 0x350 */
+    s32                          unk_378;               /* 0x378 */
+    s32                          unk_37c;               /* 0x37c */
+    s32                          unk_380;               /* 0x380 */
+    s32                          unk_384;               /* 0x384 */
+
+    /* --- vtable --- */
+    virtual ~Snowball();
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
+    void OnPendingDestroy();
 };
 
-#endif
+typedef char Snowball_size_must_be_0x388[sizeof(Snowball) == 0x388 ? 1 : -1];
+
+#endif /* SNOWBALL_H */

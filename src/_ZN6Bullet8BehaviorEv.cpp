@@ -4,59 +4,43 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Bullet.h"
-extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 
-struct CylinderClsn { int dummy; };
-struct WithMeshClsn { int dummy; };
-
-struct Holder;
-
-struct Actor {
-    char pad[0x350];
-    Holder* h;
-};
-
-typedef void (Actor::*PMF)();
-
-struct Holder {
-    void* a0;
-    void* a4;
-    PMF pmf;   // function-pointer word at offset 8
-};
-
-
-struct CC {
-    void Clear();
-    void Update();
-};
-
-extern "C" void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(Actor* a, CylinderClsn* c);
-extern "C" void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Actor* a, WithMeshClsn* w, unsigned int n);
-extern "C" void _ZN12CylinderClsn5ClearEv(void* c);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
+/* This file used to carry `struct Actor { char pad[0x350]; Holder* h; }` and
+ * cast `this` to it. That stand-in was how the state pointer at 0x350 was
+ * reached; Bullet.h declares it now, so the cast and the three dummy structs
+ * are gone.
+ */
+extern "C" {
+extern unsigned short DecIfAbove0_Short(unsigned short* p);
+}
 
 int Bullet::Behavior()
 {
-    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
-    Holder* h = ((Actor*)this)->h;
-    if (h->pmf != 0) {
-        (((Actor*)this)->*(h->pmf))();
+    DecIfAbove0_Short((unsigned short*)&unk_100);
+    State* h = mCurrentState;
+    /* Reads the handler's pointer word directly rather than as `&h->mMain`:
+       taking the ADDRESS of a pointer-to-member makes mwcc materialise the
+       whole 8-byte pmf. Reading one to CALL it is free. */
+    if (*(int*)((char*)h + 8) != 0) {
+        (this->*(h->mMain))();
     }
     {
-        int spd = *(int*)((char*)&unk_0a8);
-        int pos = *(int*)((char*)&unk_09c);
-        int lim = *(int*)((char*)&unk_0a0);
-        int ac = *(int*)((char*)&unk_0ac);
+        /* Gravity, clamped at terminal velocity. unk_0ac is read and written
+           back unchanged -- the ROM really does reload and restore it here. */
+        int spd = mVertSpeed;
+        int pos = mVertAccel;
+        int lim = mTerminalVelocity;
+        int ac = unk_0ac;
         int np = spd + pos;
         if (np >= lim) lim = np;
-        *(int*)((char*)&unk_0a8) = lim;
-        *(int*)((char*)&unk_0ac) = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Actor*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
+        mVertSpeed = lim;
+        unk_0ac = ac;
+        UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
     }
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Actor*)this), (WithMeshClsn*)((char*)&mWithMeshClsn), 0);
-    *(short*)((char*)&unk_08e) = *(short*)((char*)&unk_094);
-    func_ov002_020fed7c((char*)((Actor*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    mAngleY = mPrevAngleY;
+    func_ov002_020fed7c((char*)this);
+    mMovingCylinderClsn.Clear();
+    mMovingCylinderClsn.Update();
     return 1;
 }

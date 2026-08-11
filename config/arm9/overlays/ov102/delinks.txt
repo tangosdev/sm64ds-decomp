@@ -215,11 +215,11 @@ src/ExclamationBlockVs_Spawn.c:
     complete
     .text start:0x0214a92c end:0x0214a96c
 
-src/_ZN6BobOmbD1Ev.c:
+src/_ZN6BobOmbD1Ev.cpp:
     complete
     .text start:0x0214a96c end:0x0214a9b4
 
-src/_ZN6BobOmbD0Ev.c:
+src/_ZN6BobOmbD0Ev.cpp:
     complete
     .text start:0x0214a9b4 end:0x0214aa10
 
@@ -326,7 +326,7 @@ src/func_ov102_0214c0b8.c:
     complete
     .text start:0x0214c0b8 end:0x0214c12c
 
-src/_ZN6BobOmb16CleanupResourcesEv.c:
+src/_ZN6BobOmb16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214c12c end:0x0214c168
 
@@ -334,7 +334,7 @@ src/_ZN6BobOmb6RenderEv.cpp:
     complete
     .text start:0x0214c168 end:0x0214c1bc
 
-src/_ZN6BobOmb8BehaviorEv.c:
+src/_ZN6BobOmb8BehaviorEv.cpp:
     .text start:0x0214c1bc end:0x0214c510
 
 src/_ZN6BobOmb13InitResourcesEv.cpp:
