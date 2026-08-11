@@ -137,6 +137,31 @@ down. Its four real children (`dScMgJump_c` etc.) are untouched but their
 own D0/D1 already exist as matched addresses per the vtable dump -- the
 natural next slice.
 
+**Update (2026-08-11, PR #1400): four of the 13 direct leaf children are now
+real** -- `dScMgCurling_c`, `dScMgCurling2_c`, `dScMgPanel_c`,
+`dScMgBomroom_c`, all the same shape: `: dScMgBase_c`, D1/D0 declared with
+empty bodies (no members need explicit destruction, so the compiler-generated
+own-vtable-write + base-D2-call is the whole story), InitResources/Behavior/
+Render as real methods. **Own fields are drawn ONLY from what those three
+methods directly touch** -- each class also has a pile of non-virtual helper
+functions (still raw `extern "C"` calls taking a bare pointer, not migrated)
+that touch many more fields nobody has typed yet; those stay inside a leading
+pad rather than being guessed at. Two real bugs found and fixed along the
+way, both now in [[double-mangling-defect]]: bare `extern` declarations
+silently C++-mangling once a file becomes `.cpp` (invisible to loose
+`build_pin.verify`, only `eligible.py` catches it), and `decl_common.h`
+declaring several ov006 helpers with empty `()` C-style "unspecified args"
+prototypes that become "exactly zero args" in C++ once a real method calls
+them with `this` -- fixed by declaring the real signature locally instead of
+including `decl_common.h` in that file at all. **Nine leaf children remain**
+(`dScMgAmida_c`, `dScMgCoin_c`, `dScMgHanachan_c`, `dScMgLuigi_c`,
+`dScMgPachinko_c`/`_2`, `dScMgSlot1_c`, `dScMgSmartball_c`, `dScMgTeresa_c`),
+plus `dScMgSingle3DBase_c` (second intermediate base, 13 further
+grandchildren) and `dScMgD3DBase_c`'s own 4 real children. `dScMgHanachan_c`,
+`dScMgSlot1_c`, `dScMgCoin_c` were deliberately skipped this batch and the
+one before it (field layout ambiguity / odd slot naming / already-partial
+state) -- worth a closer look before including them in a future slice.
+
 ## 3. A tree-wide comment defect, found here, not yet fixed anywhere
 
 **Every slot-17 (D0, the deleting destructor) "recovered name" comment across
