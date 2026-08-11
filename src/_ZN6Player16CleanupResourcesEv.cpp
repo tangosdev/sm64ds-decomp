@@ -14,13 +14,15 @@ struct VB { virtual void v0(); virtual void v1(); };
 #pragma opt_strength_reduction off
 
 extern "C" {
-void func_ov002_020bdd2c(char *c);
-void func_ov002_020bdef0(char *c);
-void func_ov002_020bdd9c(char *c);
-void func_ov002_020e032c(char *c);
+/* func_ov002_020bdd2c, _020bdef0, _020bdd9c, _020e032c and func_02073244 come from
+   decl_common.h above. Declaring them again here with `char *` where that header
+   says `void *` is not a redeclaration but an attempt to overload a C-linkage
+   name, which mwccarm rejects outright -- so this file has not compiled since it
+   gained that include. Nothing caught it: a file that will not compile is never
+   enrolled, so every byte gate skips it and the ROM keeps the original bytes for
+   this range. Declare only what decl_common.h does not. */
 void func_0203cbc0(int p);
-void _ZN7Vector3D1Ev(void);
-void func_02073244(int p, int a, int b, void (*f)(void));
+void _ZN7Vector3D1Ev(void *self);
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
 void UnloadKeyModels(int n);
@@ -94,7 +96,7 @@ int Player::CleanupResources()
     {
         int q = unk_578;
         if (q != 0)
-            func_02073244(q, 0xc, 8, _ZN7Vector3D1Ev);
+            func_02073244((void *)q, 0xc, 8, _ZN7Vector3D1Ev);
         q = unk_57c;
         if (q != 0)
             func_0203cbc0(q);

@@ -4010,6 +4010,7 @@ src/_ZN6Player11ChangeStateERNS_5StateE.cpp:
     .text start:0x020e30a0 end:0x020e32d4
 
 src/_ZN6Player16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020e32d4 end:0x020e3a04
 
 src/_ZN6Player16OnPendingDestroyEv.cpp:
