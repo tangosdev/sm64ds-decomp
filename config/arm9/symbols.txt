@@ -4147,6 +4147,7 @@ _ZTI9dScBoot_c kind:data(any) addr:0x020914c8
 _ZTI8dScene_c kind:data(any) addr:0x020914d4
 data_020914e0 kind:data(any) addr:0x020914e0
 data_02091528 kind:data(any) addr:0x02091528
+_ZTV9BootScene kind:data(any) addr:0x02091528
 data_02091570 kind:data(any) addr:0x02091570
 data_020916d8 kind:data(any) addr:0x020916d8
 data_020918c4 kind:data(any) addr:0x020918c4

@@ -3750,11 +3750,11 @@ src/func_02023544.c:
     complete
     .text start:0x02023544 end:0x02023598
 
-src/_ZN9BootSceneD1Ev.c:
+src/_ZN9BootSceneD1Ev.cpp:
     complete
     .text start:0x02023598 end:0x020235d4
 
-src/_ZN9BootSceneD0Ev.c:
+src/_ZN9BootSceneD0Ev.cpp:
     complete
     .text start:0x020235d4 end:0x02023624
 
