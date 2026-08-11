@@ -97,6 +97,7 @@ src/_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
     .text start:0x020062b8 end:0x020063b0
 
 src/_ZN8CapEnemy6AddCapEj.cpp:
+    complete
     .text start:0x020063b0 end:0x020064e0
 
 src/_ZN8CapEnemy14UnloadCapModelEv.cpp:

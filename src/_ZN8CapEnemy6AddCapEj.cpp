@@ -12,7 +12,7 @@
  * never cleared.
  *
  * The failure path is worth noting: on a SetFile failure it sets mCapId = 6
- * and then releases `func_020ff028[6]` -- index SIX of a six-entry table, one
+ * and then releases `data_ov002_020ff028[6]` -- index SIX of a six-entry table, one
  * past the end. That is the ROM's own behaviour, reproduced as-is.
  */
 #include "CapEnemy.h"
@@ -23,7 +23,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *this_, void *file, int a, in
 extern int _ZN13SharedFilePtr7ReleaseEv(void *sfp);
 extern void func_ov001_020ab228(char *c, char *a1, int idx, int a3, int a5);
 extern int func_02005e28(unsigned char *self);
-extern void *func_020ff028[];
+extern void *data_ov002_020ff028[];
 }
 
 int CapEnemy::AddCap(unsigned int param)
@@ -43,11 +43,11 @@ int CapEnemy::AddCap(unsigned int param)
         unk_110 = 0;
     }
 
-    void *file = _ZN5Model8LoadFileER13SharedFilePtr(func_020ff028[mCapId]);
+    void *file = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_020ff028[mCapId]);
     int ok = _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, file, 1, -1);
     if (ok == 0) {
         mCapId = 6;
-        return _ZN13SharedFilePtr7ReleaseEv(func_020ff028[mCapId]);
+        return _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff028[mCapId]);
     }
 
     *(int *)(((long long)(int)((char *)this + 0xb0))) &= ~1;
