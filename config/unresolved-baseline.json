@@ -1,5 +1,5 @@
 {
- "eligible": 10805,
+ "eligible": 10814,
  "unresolved": {
   "arm9:0x020063b0": {
    "name": "_ZN8CapEnemy6AddCapEj",
@@ -245,7 +245,8 @@
   "arm9:0x02057410": {
    "name": "func_02057410",
    "missing": [
-    "_ll_mod"
+    "_ll_udiv",
+    "_ull_mod"
    ]
   },
   "arm9:0x02058308": {
@@ -356,7 +357,6 @@
   "ov002:0x020c8a4c": {
    "name": "func_ov002_020c8a4c",
    "missing": [
-    "_Z13func_020072c0v",
     "_ZN6Player7SetAnimEjiij"
    ]
   },
@@ -1474,6 +1474,13 @@
     "overlay_66"
    ]
   },
+  "ov079:0x02126164": {
+   "name": "_ZN5Whomp13InitResourcesEv",
+   "missing": [
+    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
+    "func_021135d4"
+   ]
+  },
   "ov080:0x0212459c": {
    "name": "_ZN13MontyMoleRock8BehaviorEv",
    "missing": [
@@ -1594,12 +1601,6 @@
     "_Z35_ZN8Platform19UpdateClsnPosAndRotEvPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
-   ]
-  },
-  "ov091:0x021339fc": {
-   "name": "func_ov091_021339fc",
-   "missing": [
-    "func_020aea30"
    ]
   },
   "ov096:0x02137564": {
