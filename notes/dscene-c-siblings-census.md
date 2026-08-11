@@ -7,6 +7,19 @@ single function named in this tree.
 branch `cpp/stage-slices`) and wanting to know what's left in the family before
 starting the next slice.
 
+**Update (2026-08-11, branch `cpp/dscmgbase-family`, PR #1396):** `dScMgBase_c`
+itself is now real -- `: Scene` base, D0/D1/D2 verified byte-exact (D2 stays the
+hand-written free function it already was; D0/D1 are real, inline-cascading,
+forcing-TU-emitted), and its 8 overridden slots (1, 2, 5, 6, 7, 9, 10, 12) are
+real methods. Its own D0 no longer carries the OnYoshiTryEat mislabel from §3
+below -- the file was rewritten from scratch, not patched. Its 15 direct / 32
+transitive descendants are NOT yet named; that's still open, see §2's own note
+on scope. `tools/check_header_offsets.py` gained a real fix in the same PR:
+it had never seen a header that declares its destructor/overrides BEFORE its
+fields (Scene.h's own convention) and silently reported "0 commented fields"
+for exactly that shape -- dScMgBase_c.h's ~30 real fields were invisible to it
+until fixed.
+
 ---
 
 ## 0. The ten, and where each one stands
@@ -22,7 +35,7 @@ cross-checked against `include/Scene.h`'s own census comment):
 | `dScTitle_c` | 0x020b1650 | ov003 | unnamed, 0 attributed functions |
 | `dScStarSel_c` | 0x020b1704 | ov003 | unnamed, 0 attributed functions |
 | `dScGameOver_c` | 0x020b179c | ov003 | unnamed, 0 attributed functions |
-| `dScMgBase_c` | 0x020bc0c0 | ov004 | one real field (0xf4, `include/dScMgBase_c.h`); still Rung 0 otherwise |
+| `dScMgBase_c` | 0x020bc0c0 | ov004 | **class itself done** (PR #1396) — `: Scene`, real D0/D1/D2, 8/28 own-slots real. 32 descendants unnamed |
 | `dScMiniGm_c` | 0x020c2490 | ov005 | unnamed, 0 attributed functions (has a generated header, no named methods) |
 | `dScDSMT_c` | 0x021032e8 | ov007 | unnamed, 0 attributed functions |
 | `dScEntry_c` | 0x0211d304 | ov075 | unnamed, 0 attributed functions (has a generated header, no named methods) |
@@ -77,15 +90,26 @@ family, 24 of which already have generated headers waiting in `include/`:
 `dScMgHanachan_c`, `dScMgLuigi_c`, `dScMgPachinko_c`/`_2`, `dScMgPanel_c`,
 `dScMgSlot1_c`, `dScMgSmartball_c`, `dScMgTeresa_c`, `dScMgBomroom_c`, plus two
 abstract intermediates `dScMgD3DBase_c`/`dScMgSingle3DBase_c`) with 17 further
-grandchildren under those two. **This makes dScMgBase_c the strongest lead for
-the next naming pass** -- most evidence already gathered, and naming it
-unlocks attribution groundwork for the whole family at once. See
-the inline-base-destructor discussion in `include/Scene.h` and
-`include/ActorDerived.h` for why its own D2 (`src/_ZN11dScMgBase_cD2Ev.cpp`)
-is real but the class can't get a real destructor yet: the header is still
-Rung 0 (flat struct, no `: Scene` base, none of the 36 slots declared as real
-overrides) -- that's the actual size of "name dScMgBase_c properly", not a
-quick slice.
+grandchildren under those two. One direct child already has a COINED name from
+an earlier, separate pass -- `MgBounceAndPounce` (`include/MgBounceAndPounce.h`,
+still Rung 0/flat, calls dScMgBase_c's base methods as plain functions the way
+the ROM's own `bl` sequence does) -- so "32 unnamed" is the RTTI count, not
+literally every one being untouched.
+
+**Naming the class itself (PR #1396) is done; naming the 32 descendants is
+still the next slice**, and the groundwork PR #1396 laid down is exactly what
+unlocks it: `dScMgBase_c` now has its own inline D2/D1 and its own
+`operator delete`, which per the same cascading rule Scene's fix documents is
+what a descendant's IMMEDIATE base must carry for the descendant's own D0/D1
+to inline. Before this PR, no child of dScMgBase_c could get a real
+destructor; now they can, the same way Stage/BootScene could only get theirs
+once Scene's was fixed. `include/dScMgBase_c.h` still leaves 18 of its own 28
+override/new-slots undeclared (slots 18-35, ~18 new virtuals beyond
+Scene/ActorBase) -- their targets are matched source but their signatures
+aren't reconstructed; three of the migrated methods reach them through the
+same local by-vtable-position stand-in the recovered sources always used.
+Reconstructing those 18 signatures is likely needed before any descendant's
+OWN overrides of the same slots can become real methods too.
 
 ## 3. A tree-wide comment defect, found here, not yet fixed anywhere
 
@@ -98,6 +122,11 @@ actual disassembled bodies directly, not by trusting the comments, in
 `dScMB_c`, `dScTitle_c`, `dScStarSel_c`, `dScGameOver_c`, `dScMgBase_c`,
 `dScMiniGm_c`, `dScDSMT_c`, `dScEntry_c` -- eight for eight. Slot-16 (D1)
 comments on the same files are accurate.
+
+`dScMgBase_c`'s own instance of this is now moot, incidentally rather than by
+design: PR #1396 rewrote its D0 file from scratch as a forcing-TU stub (see
+`include/Scene.h`'s own D0/D1 files for the pattern), which carries no
+"recovered name" comment at all. The other seven still have the mislabel.
 
 This is almost certainly not scoped to just these eight -- the "recovered
 name" comment layer covers roughly 700 files tree-wide (untooled, unattributed
