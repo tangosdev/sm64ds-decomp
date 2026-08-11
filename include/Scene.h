@@ -123,10 +123,26 @@
  */
 struct FaderBrightness;
 
+/* The actor heap and its deallocator, for the inline operator delete below.
+   Spelt exactly as include/decl_common.h spells it -- see the note in Actor.h. */
+extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void *data_020a0eac;
+
 struct Scene : ActorDerived {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
        16 (D1) and 17 (D0); the position in this list does not affect that. */
     virtual ~Scene();
+
+    /* Scene's own copy of Actor's inline operator delete. mwcc inlines the
+       operator only when it finds it in the class itself or its IMMEDIATE
+       base, and Scene's immediate base is ActorDerived, which has none --
+       ActorBase's copy (declared on Actor, not ActorBase) is out of reach
+       from this branch of the hierarchy entirely. This copy is also what
+       every one of Scene's ten direct subclasses (Stage, BootScene, and the
+       rest -- see the census above) will find as ITS immediate base, so it
+       unlocks their D0s too. See the long comment in Actor.h for why an
+       inline member is what the ROM shows. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
     /* --- overrides, in _ZTV5Scene order. Signatures must match ActorBase's
            declarations exactly or these become new slots instead of overrides. --- */

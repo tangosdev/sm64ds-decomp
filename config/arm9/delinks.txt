@@ -4251,7 +4251,7 @@ src/_ZN5SceneD1Ev.cpp:
     complete
     .text start:0x0202e140 end:0x0202e170
 
-src/_ZN5SceneD0Ev.c:
+src/_ZN5SceneD0Ev.cpp:
     complete
     .text start:0x0202e170 end:0x0202e1b4
 
