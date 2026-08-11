@@ -183,6 +183,7 @@ __sinit_ov064_0211b698 kind:function(arm,size=0x94) addr:0x0211b698
 .p__sinit_ov064_0211b59c kind:data(word) addr:0x0211b750
 .p__sinit_ov064_0211b698 kind:data(word) addr:0x0211b754
 data_ov064_0211b768 kind:data(any) addr:0x0211b768
+_ZTV7daOts_c kind:data(any) addr:0x0211b768
 _ZTI11daDonketu_c kind:data(any) addr:0x0211b7fc
 _ZTS11daDonketu_c kind:data(any) addr:0x0211b808
 Bully_SpawnInfo kind:data(any) addr:0x0211b818

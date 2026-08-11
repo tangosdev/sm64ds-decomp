@@ -99,7 +99,7 @@ src/func_ov064_02116ec0.cpp:
     complete
     .text start:0x02116ec0 end:0x02117070
 
-src/_ZN5BullyD1Ev.c:
+src/_ZN5BullyD1Ev.cpp:
     complete
     .text start:0x02117070 end:0x021170c4
 
@@ -143,7 +143,7 @@ src/Bully_Spawn.c:
     complete
     .text start:0x02117444 end:0x021174a0
 
-src/_ZN8BigBullyD1Ev.c:
+src/_ZN8BigBullyD1Ev.cpp:
     complete
     .text start:0x021174a0 end:0x021174f4
 

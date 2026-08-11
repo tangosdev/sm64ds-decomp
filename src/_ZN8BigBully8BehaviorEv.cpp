@@ -28,12 +28,12 @@ int BigBully::Behavior()
         int* p;
         if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
             mSecretSoundCounter = 0;
-        t = unk_0a8 + unk_09c;
-        m = unk_0a0;
+        t = mVertSpeed + mVertAccel;
+        m = mTerminalVelocity;
         if (t >= m) m = t;
-        unk_0a8 = m;
+        mVertSpeed = m;
         p = (int*)(((int)((char*)this) + 0x60));
-        *p = *p + unk_0a8;
+        *p = *p + mVertSpeed;
         _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x174, 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
             u8* q;

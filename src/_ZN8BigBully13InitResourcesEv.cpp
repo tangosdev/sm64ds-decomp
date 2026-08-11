@@ -23,13 +23,13 @@ int BigBully::InitResources()
 {
     int saved;
 
-    *(void**)((char*)&unk_330) = &data_ov064_0211b93c;
+    *(void**)((char*)&mFileTable) = &data_ov064_0211b93c;
     saved = func_ov064_02116ec0(((char*)this));
-    unk_3fc = mParam & 0xf;
+    unk_3fc = param1 & 0xf;
     unk_3fd = (u8)_ZN5Actor9TrackStarEjj((Actor*)((char*)this), unk_3fc, 2);
     mSecretSoundCounter = 0;
 
-    if ((mParam & 0xff00) == 0x100) {
+    if ((param1 & 0xff00) == 0x100) {
         RaycastGround rg;
         Vector3 pos;
         Vector3 v;
@@ -64,7 +64,7 @@ int BigBully::InitResources()
 
             spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd7, -1, &pos, (Vector3_16*)0, mAreaId, -1);
             if (spawned != 0) {
-                *(int*)((char*)spawned + 0x3fc) = unk_004;
+                *(int*)((char*)spawned + 0x3fc) = uniqueID;
             } else {
                 _ZN13RaycastGroundD1Ev(&rg);
                 return 0;
