@@ -11,10 +11,11 @@
  * parameter like the sibling loaders' unused `param'): the walk starts at
  * `entries + p3' and runs for `data_0209f21c' iterations, not `tbl.count'.
  *
- * The file this replaces declared its own Entry/ObjSubTable/Vector3 types and
- * took the table by pointer rather than reference. */
+ * Actor::Spawn and ActorDerived::Spawn are real static methods; mwccarm mangles
+ * the call relocs (including Actor::Spawn's s8/s16 trailing args). */
 #include "types.h"
 #include "LVL_Overlay.h"
+#include "Actor.h"
 
 extern "C" {
 extern u8 data_0209f21c;
@@ -30,11 +31,6 @@ extern void* data_0209f318;
 extern s8 data_ov002_0210cb5c[];
 
 void func_0202b0e0(LVL_Overlay::StandardEntry* e, int count);
-/* Real symbol ends in `as` (s8 area, s16 deathTable) -- not `ii`. Call-site
-   bytes are insensitive to the declared widths; the linker is not. */
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 id, u32 flags, const Vector3* pos, const Vector3s* rot, s32 area, s32 death);
-void* _ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 id, void* base, int a, int b);
 void StartEntranceFaderWipe(void);
 }
 
@@ -71,9 +67,9 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-                data_ov002_0210cbf4[e->raw], flags, &pos, &e->rot,
-                (s8)(param & 7), -1);
+            void* a = Actor::Spawn(
+                data_ov002_0210cbf4[e->raw], flags, pos,
+                (const Vector3_16*)&e->rot, (s8)(param & 7), -1);
 
             if (data_0209fc5c[i] == 0)
                 data_0209f394[i] = 0;
@@ -88,7 +84,8 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
         }
     }
 
-    data_0209f318 = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = ActorDerived::Spawn(
+        0x14c, (ActorBase*)data_0209f5c0, entranceId, 0);
 
     int t = data_0209f2d8;
     t = t == 2;

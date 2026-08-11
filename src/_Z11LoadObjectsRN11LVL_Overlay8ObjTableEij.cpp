@@ -13,11 +13,7 @@
  * is 8 bytes; byte 0 packs a filter in the top three bits and a handler index
  * in the low five. The entry is skipped unless the filter is 0 or equal to the
  * global byte at data_0209f220. The handler is then looked up and called if
- * non-null.
- *
- * The file this replaces reached the table through `char* t' with
- * `*(unsigned short*)t' for the count and `*(unsigned char**)(t + 4)' for the
- * entries. */
+ * non-null. */
 #include "types.h"
 #include "LVL_Overlay.h"
 

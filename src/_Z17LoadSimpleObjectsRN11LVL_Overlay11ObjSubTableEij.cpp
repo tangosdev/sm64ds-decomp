@@ -11,20 +11,22 @@
  *
  * The third parameter is part of the shared loader signature and unused here.
  *
- * The file this replaces declared its own Entry/ObjSubTable/Vec types and
- * hand-spelled the mangled symbol inside an extern "C" block. */
+ * Callees stay hand-spelled: Actor::Spawn's true header uses s8/s16 trailing
+ * args and calling it as a method inserts truncates that grow this function;
+ * LoadMinimapChangeObject takes by-value Fix12<int>, a runbook §7 dead end for
+ * a real declaration at the call site. The linker still binds the true names. */
 #include "types.h"
 #include "LVL_Overlay.h"
+
+struct Vector3_16 { s16 x, y, z; };
 
 extern "C" {
 extern s16 data_ov002_0211118c;
 extern u16 data_ov002_0210cbf4[];
 
 void _Z23LoadMinimapChangeObjecti5Fix12IiEh(int a, Fix12i b, s8 h);
-/* Real symbol ends in `as` (s8 area, s16 deathTable) -- not `ii`. Call-site
-   bytes are insensitive to the declared widths; the linker is not. */
-void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 actorID, u32 param1, const Vector3* pos, const Vector3s* rot,
+void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+    u32 actorID, u32 param1, const Vector3 *pos, const Vector3_16 *rot,
     s32 areaID, s32 deathTableID);
 }
 

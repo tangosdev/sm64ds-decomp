@@ -1,20 +1,25 @@
+//cpp
+// @symbol _ZN6Memory8AllocateEjiP4Heap
+//
+// Language-mode flip: Memory::Allocate(u32, int, Heap*) — compiler mangles the
+// name. Body shape preserved (null heap falls back to defaultHeapPtr, then
+// Heap::Allocate). Sibling overloads already migrated the same way.
 #include "types.h"
-// Memory::Allocate(u32 size, s32 align, Heap* heap)
-// Address: 0x0203c210
-// If heap is NULL, uses Memory::defaultHeapPtr. Then calls Heap::Allocate.
-struct Heap {
-    void* heapStart;  // 0x00
-    u32   heapSize;   // 0x04
-    void* parentHeap; // 0x08
-    u32   flags;      // 0x0c
+
+class Heap
+{
+public:
+    void* Allocate(u32 size, int align);
 };
 
-extern void* _ZN4Heap8AllocateEji(struct Heap* self, u32 size, s32 align);
-extern struct Heap* data_020a0ea0;
+namespace Memory
+{
+    extern Heap* defaultHeapPtr; /* 0x020a0ea0 / _ZN6Memory14defaultHeapPtrE */
 
-void* _ZN6Memory8AllocateEjiP4Heap(u32 size, s32 align, struct Heap* heap) {
-    if (!heap) {
-        heap = data_020a0ea0;
+    void* Allocate(u32 size, int align, Heap* heap)
+    {
+        if (!heap)
+            heap = defaultHeapPtr;
+        return heap->Allocate(size, align);
     }
-    return _ZN4Heap8AllocateEji(heap, size, align);
 }

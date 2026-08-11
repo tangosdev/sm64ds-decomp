@@ -1,22 +1,22 @@
-#include "types.h"
-struct BMD_File {
-    u32 scaleShift;  /* 0x00 */
-    u32 numBones;    /* 0x04 */
-    void* bones;     /* 0x08 */
-};
+//cpp
+// @symbol _ZN15ModelComponents21UpdateVertsUsingBonesEv
+/* ModelComponents::UpdateVertsUsingBones() at 0x0204504c -- reset the per-bone
+ * transform array to identity, then rebuild vertex positions from the BMD
+ * bone list via func_02045074.
+ *
+ * Language-mode migration: real method so mwccarm mangles the symbol. Layout
+ * comes from include/ModelBase.h (modelFile @0x00, transforms @0x0c). The
+ * bones pointer passed to the helper is modelFile->bones (BMD_File @0x08), not
+ * the ModelComponents::bones field. */
+#include "ModelBase.h"
 
-struct ModelComponents {
-    struct BMD_File* modelFile; /* 0x00 */
-    void* materials;            /* 0x04 */
-    void* bones;                /* 0x08 */
-    void* transforms;           /* 0x0c */
-    void* unk10;
-};
+extern "C" {
+void Matrix4x3_LoadIdentity(Matrix4x3* m);
+void func_02045074(ModelComponents* self, BMD_Bone* bones);
+}
 
-extern void Matrix4x3_LoadIdentity(void*);
-extern void func_02045074(struct ModelComponents*, void*);
-
-void _ZN15ModelComponents21UpdateVertsUsingBonesEv(struct ModelComponents* this) {
-    Matrix4x3_LoadIdentity(this->transforms);
-    func_02045074(this, this->modelFile->bones);
+void ModelComponents::UpdateVertsUsingBones()
+{
+    Matrix4x3_LoadIdentity(transforms);
+    func_02045074(this, modelFile->bones);
 }
