@@ -6,8 +6,8 @@
 
 extern "C" int _ZN8Particle10SysTracker10InitialiseEv(void *self);
 
-int MgBounceAndPounce::AfterInitResources(unsigned int)
+void MgBounceAndPounce::AfterInitResources(unsigned int)
 {
     _ZN11dScMgBase_c18AfterInitResourcesEj(this);
-    return _ZN8Particle10SysTracker10InitialiseEv(&unk_47e4);
+    _ZN8Particle10SysTracker10InitialiseEv(&mSysTracker);
 }

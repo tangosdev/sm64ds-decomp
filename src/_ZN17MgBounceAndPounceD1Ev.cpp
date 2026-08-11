@@ -1,15 +1,13 @@
 //cpp
 // @symbol _ZN17MgBounceAndPounceD1Ev
-/* recovered: named members + shared header */
+/* Forces the complete-object destructor out-of-line. ~MgBounceAndPounce()
+   is defined inline in MgBounceAndPounce.h (its four descendants need to
+   inline it the same way Stage inlines Scene's) -- a bare include emits
+   nothing here, and the definition can no longer live in this file
+   directly. See src/_ZN5SceneD1Ev.cpp / _ZN11dScMgBase_cD1Ev.cpp for the
+   identical pattern one and two levels up. */
 #include "MgBounceAndPounce.h"
-extern "C" {
-extern int _ZN8Particle10SysTrackerD1Ev(void*);
-extern int _ZN11dScMgBase_cD2Ev(void*);
-extern int _ZTV17MgBounceAndPounce[];
-int _ZN17MgBounceAndPounceD1Ev(struct MgBounceAndPounce *self) {
-  *(int*)((char*)self)=(int)_ZTV17MgBounceAndPounce;
-  _ZN8Particle10SysTrackerD1Ev((char*)&self->unk_47e4);
-  _ZN11dScMgBase_cD2Ev(((char*)self));
-  return (int)((char*)self);
-}
+void MgBounceAndPounce_EmitDestructor(MgBounceAndPounce *p)
+{
+    p->~MgBounceAndPounce();
 }

@@ -65,15 +65,20 @@ extern "C" void *data_ov004_020beb68;
 
 struct dScMgBase_c : Scene {
     /* Declared first, deliberately -- see include/Scene.h's KEY FUNCTION
-       note for why. Overrides slots 16 (D1) and 17 (D0). DEFINED INLINE so
-       every one of the 32 descendants below can inline it, the same way
-       Stage inlines Scene's. The body replaces the ROM's manual
-       `func_ov004_020b929c(c + 0xf4)` call -- see the file banner for why
-       that stays an explicit call instead of member auto-destruction. */
-    virtual ~dScMgBase_c() {
-        data_ov004_020beb68 = 0;
-        func_ov004_020b929c((char *)this + 0xf4);
-    }
+       note for why. Overrides slots 16 (D1) and 17 (D0).
+       NOT DEFINED INLINE -- unlike Scene's, which is trivial (an empty
+       body) and unconditionally inlined by every child. This body has
+       real work (a global write, a function call), and measured against
+       MgBounceAndPounce -- the first real descendant -- mwcc does NOT
+       inline it: the ROM's own MgBounceAndPounce D1 (0x38 bytes) calls
+       `_ZN11dScMgBase_cD2Ev` as a real `bl`, not a fully-inlined 0x84-byte
+       body (measured directly: compiling MgBounceAndPounce's destructor
+       against an INLINE-defined dScMgBase_c dtor produced exactly 0x84
+       bytes, `999 word(s) differ` against the ROM's 0x38). Defined for
+       real in src/_ZN11dScMgBase_cD1Ev.cpp and .../_D0Ev.cpp instead --
+       same shape Stage.h documents for a leaf, except dScMgBase_c is not
+       a leaf; its descendants simply don't inline a body this size. */
+    virtual ~dScMgBase_c();
 
     /* dScMgBase_c's own copy, for the same reason Scene has one -- see the
        file banner. Unlocks D0 for all 32 descendants below. */
@@ -135,5 +140,16 @@ struct dScMgBase_c : Scene {
     u8  pad_4648[0x14];
     u8  unk_465c;           /* 0x465c */
 };
+
+/* NOT a claim that the object ends here -- dScMgBase_c has 32 RTTI
+   descendants (notes/dscene-c-siblings-census.md), and MgBounceAndPounce
+   (one of them, real ROM class dScMgD3DBase_c) is the first to need a
+   number to start its own fields at. 0x465c is the last field any matched
+   function has observed; asserting its rounded size (0x4660, 4-byte
+   alignment) is the minimum claim that unblocks a derived class -- if it
+   is short, MgBounceAndPounce's own fields would land on the wrong bytes
+   and build_pin would catch it immediately, the same safety net
+   check_header_offsets.py's own DATA_SIZE comment describes. */
+typedef char dScMgBase_c_size_must_be_0x4660[sizeof(dScMgBase_c) == 0x4660 ? 1 : -1];
 
 #endif

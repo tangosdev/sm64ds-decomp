@@ -1,10 +1,10 @@
 //cpp
 // @symbol _ZN11dScMgBase_cD0Ev
-/* Forces the deleting destructor out-of-line. Same reasoning as
-   _ZN11dScMgBase_cD1Ev.cpp; see src/_ZN5SceneD0Ev.cpp for the identical
-   pattern one level up. */
+/* Real out-of-line definition, identical body to _ZN11dScMgBase_cD1Ev.cpp
+   -- see that file's note and dScMgBase_c.h's own note. */
 #include "dScMgBase_c.h"
-void dScMgBase_c_EmitDeletingDestructor(dScMgBase_c *p)
+dScMgBase_c::~dScMgBase_c()
 {
-    delete p;
+    data_ov004_020beb68 = 0;
+    func_ov004_020b929c((char *)this + 0xf4);
 }
