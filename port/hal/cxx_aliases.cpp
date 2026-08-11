@@ -434,8 +434,10 @@ extern "C" SeqEntry *_ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned id);
 struct Sound {
     struct InfoSequenceEntry { static SeqEntry *GetWithID(unsigned id); };
 };
+#ifdef _WIN32 /* LINUX: this method's own Itanium mangling IS the extern-C name it forwards to -> infinite self-recurse (SIGSEGV) at level-load BGM lookup. On GCC the real src/ body owns the symbol; do not define the face. */
 SeqEntry *Sound::InfoSequenceEntry::GetWithID(unsigned id)
 { return _ZN5Sound17InfoSequenceEntry9GetWithIDEj(id); }
+#endif
 
 /* Heap::_Deallocate is a DS tail-call veneer to Deallocate; operator delete
    dispatches it as a method. Same-shadow definition forwarding to the HAL
