@@ -68,13 +68,30 @@
  *
  * SLOT ORDER is ActorBase's, unchanged -- Scene adds no virtual of its own. It
  * overrides eight of them functionally, plus the destructor pair at 16/17, which
- * is where the ten in reading 1 comes from. The destructor is declared FIRST, which is
- * safe for a derived class (an override takes its base's slot wherever it is
- * declared) and is deliberate: it makes ~Scene the key function, and ~Scene is
- * only ever defined as an extern "C" free function in _ZN5SceneD0Ev.c and
- * _ZN5SceneD1Ev.c. No translation unit defines the key function, so CW 1.2 emits
- * no vtable group, and the copy the module's gap object supplies from ROM data
- * stands alone. This is the same arrangement include/ActorDerived.h documents.
+ * is where the ten in reading 1 comes from. The destructor is declared FIRST,
+ * which is safe for a derived class (an override takes its base's slot
+ * wherever it is declared).
+ *
+ * ~Scene() IS NOW DEFINED INLINE, and per include/ActorDerived.h that key-
+ * function worry is moot -- objisolate makes a key-function TU eligible
+ * regardless, by dropping the vtable it emits and rebinding to the ROM's own
+ * _ZTV. What forced the inline move instead: Stage::~Stage (and every one of
+ * Scene's other nine direct children) INLINES Scene's own D2 the same way
+ * Scene inlines ActorDerived's -- the ROM's Stage destructor stores Stage's
+ * vptr, then Scene's, then ActorDerived's, then calls ActorBase's D2 directly,
+ * with no call to a separate Scene::~Scene(). A merely declared
+ * `virtual ~Scene();` can't be inlined -- the compiler has no body to see --
+ * and emits `bl _ZN5SceneD2Ev` where the ROM has none (measured on a Stage
+ * trial: 80 bytes with the call vs the ROM's 104 with none). Scene had been
+ * defined out-of-line since the previous slice; that blocked every child's
+ * own destructor migration the same way an out-of-line ~ActorDerived() would
+ * have blocked Scene's.
+ *
+ * The cost is what ActorDerived already pays: src/_ZN5SceneD1Ev.cpp and
+ * _ZN5SceneD0Ev.cpp can no longer DEFINE ~Scene() (that would be a
+ * redefinition of the inline body below) and a bare include emits nothing --
+ * `_ZN5SceneD1Ev is not in the object`. Both now carry a forcing call
+ * instead; see the note in each file.
  *
  * LAYOUT. Scene declares no fields, and that is a claim, so here is its basis.
  *
@@ -130,8 +147,11 @@ extern "C" void *data_020a0eac;
 
 struct Scene : ActorDerived {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
-       16 (D1) and 17 (D0); the position in this list does not affect that. */
-    virtual ~Scene();
+       16 (D1) and 17 (D0); the position in this list does not affect that.
+       DEFINED INLINE on purpose: subclass destructors inline it, the same
+       way ActorDerived's is inline for Scene's own sake. See the long note
+       above. */
+    virtual ~Scene() {}
 
     /* Scene's own copy of Actor's inline operator delete. mwcc inlines the
        operator only when it finds it in the class itself or its IMMEDIATE

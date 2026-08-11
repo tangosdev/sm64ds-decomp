@@ -1,16 +1,25 @@
 //cpp
 // @symbol _ZN5SceneD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
+/* recovered: real C++ destructor, defined inline in the header
  *
- * The two vptr stores the hand-written version spelled out are one class each:
- * Scene's own, and then ActorDerived's, which the compiler inlines because
- * that destructor is defined in its class body. Then ActorBase's subobject
- * destructor, called rather than inlined because ActorBase's is not.
+ * ~Scene is defined in the class body rather than here, and that is not a
+ * style choice -- Stage::~Stage and every one of Scene's other nine direct
+ * children inline this destructor's vptr store, which the compiler can only
+ * do from a visible body. include/Scene.h records the measurement.
  *
- * Scene adds no members with destructors, so there is nothing between them.
+ * So this file cannot define it: that would be a redefinition. But the
+ * vtable points at an out-of-line copy, and a TU that merely includes the
+ * header emits nothing at all -- `_ZN5SceneD1Ev is not in the object`. The
+ * explicit destructor call below is what forces the copy into existence.
+ *
+ * It is never called. mwcc emits the destructor group when it sees the call,
+ * objisolate keeps the one this file declares and drops the rest, and the
+ * bytes at 0x0202e140 come out exactly as the ROM has them.
  */
 #include "Scene.h"
 
-Scene::~Scene()
+/* Not called. Forces the out-of-line copy of the inline destructor above. */
+void Scene_EmitDestructor(Scene *p)
 {
+    p->~Scene();
 }
