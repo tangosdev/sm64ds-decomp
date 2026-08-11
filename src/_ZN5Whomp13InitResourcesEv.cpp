@@ -45,7 +45,11 @@ extern SFP data_ov079_02128168;
 extern SFP data_ov079_02128178;
 extern void *data_ov079_02128170[];
 extern void *data_ov079_021275ec[];
-extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+/* extern "C" is load-bearing: this sits OUTSIDE the extern "C" block above, so a
+   bare `extern` mangles the already-mangled name a second time and the address
+   taken below points at a _Z88_ZN16... that does not exist. The byte gate cannot
+   see it -- relocated words are wildcards -- only check_references can. */
+extern "C" void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f21c;
 extern s32 data_0209f394[];
 extern signed char data_0209f2f8;
