@@ -99,9 +99,9 @@ int Stage::CleanupResources()
     func_02073244(data_0209f324, 0x60, 8, _ZN9FaderWipeD1Ev);
     data_0209f324 = 0;
     CleanCommonModelDataArr();
-    ((MeshColliderBase *)((char *)&unk_91c))->Disable();
+    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     _ZN5Stage18ResetMeshCollidersEv();
-    func_01ffb0c8((char *)&unk_91c);
+    func_01ffb0c8((char *)&mMeshCollider);
     Deallocate();
     _Z19UnloadLevelOverlaysi(data_0209f2f8);
     if (data_0209f2f8 == 1)

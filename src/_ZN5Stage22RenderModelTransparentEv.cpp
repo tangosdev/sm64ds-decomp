@@ -38,5 +38,5 @@ void Stage::RenderModelTransparent()
             }
         }
     }
-    ((VBase *)((char *)&unk_86c))->m5(&data_020755d4);
+    ((VBase *)((char *)&mModel))->m5(&data_020755d4);
 }

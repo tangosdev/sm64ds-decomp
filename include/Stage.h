@@ -2,11 +2,102 @@
 #define STAGE_H
 
 #include "Scene.h"
+#include "Model.h"
+#include "MeshCollider.h"
 
-struct Model;
 struct SceneRelated;
 struct LVL_Overlay;
-struct MeshCollider;
+
+/* Particle::SysTracker, embedded at Stage+0x50. Not its own header yet --
+ * include/Particle.h and include/Particle__SysTracker.h are two SEPARATE
+ * gen_header.py shadows of this SAME class (confirmed by
+ * src/_ZN8Particle10SysTrackerC1Ev.c, which writes fields through
+ * `struct Particle *self` up to unk_818, and
+ * src/_ZN8Particle10SysTracker10InitialiseEv.cpp / 6UpdateEv.c, which read
+ * unk_004/unk_008 through `struct Particle__SysTracker *self` -- the same
+ * offsets Particle.h also carries). Their union is what is declared here:
+ * Particle.h's full 34-field layout, last field unk_818 (1 byte, ends
+ * 0x819), padded to 0x81c for 4-byte alignment -- which is exactly the gap
+ * Stage's own D1/D0 give this member (0x50..0x86c). Declared locally
+ * rather than merging the two real headers because neither Stage source
+ * file includes them and a merge is its own change with its own blast
+ * radius across every other file that already casts through one shadow or
+ * the other.
+ *
+ * The destructor is declared, never defined here -- src/_ZN8Particle10SysTrackerD1Ev.cpp
+ * already supplies _ZN8Particle10SysTrackerD1Ev as an extern "C" free
+ * function; this declaration only lets Stage's implicit destructor find it
+ * by name. Not virtual: dtor_variant_audit.py already established
+ * Particle::SysTracker has no RTTI record and no _ZTV, so it is not
+ * polymorphic and must not gain a vtable pointer here. */
+namespace Particle {
+struct SysTracker {
+    u8  pad_000[0x4];
+    s32 unk_004;            /* 0x004 */
+    u8  unk_008;            /* 0x008 */
+    u8  pad_009[0x747];
+    s32 unk_750;            /* 0x750 */
+    u8  mParticle1;          /* 0x754 */
+    u8  pad_755[0x7];
+    s32 unk_75c;            /* 0x75c */
+    u8  mParticle2;          /* 0x760 */
+    u8  pad_761[0x7];
+    s32 unk_768;            /* 0x768 */
+    u8  unk_76c;            /* 0x76c */
+    u8  pad_76d[0x7];
+    s32 unk_774;            /* 0x774 */
+    u8  unk_778;            /* 0x778 */
+    u8  pad_779[0x7];
+    s32 unk_780;            /* 0x780 */
+    u8  unk_784;            /* 0x784 */
+    u8  pad_785[0x7];
+    s32 unk_78c;            /* 0x78c */
+    u8  unk_790;            /* 0x790 */
+    u8  pad_791[0x7];
+    s32 unk_798;            /* 0x798 */
+    u8  mParticle3;          /* 0x79c */
+    u8  pad_79d[0x7];
+    s32 unk_7a4;            /* 0x7a4 */
+    u8  mParticle4;          /* 0x7a8 */
+    u8  pad_7a9[0x7];
+    s32 unk_7b0;            /* 0x7b0 */
+    u8  unk_7b4;            /* 0x7b4 */
+    u8  pad_7b5[0xb];
+    s32 unk_7c0;            /* 0x7c0 */
+    u8  unk_7c4;            /* 0x7c4 */
+    u8  pad_7c5[0xf];
+    u8  unk_7d4;            /* 0x7d4 */
+    u8  pad_7d5[0xf];
+    u8  unk_7e4;            /* 0x7e4 */
+    u8  pad_7e5[0xb];
+    u8  unk_7f0;            /* 0x7f0 */
+    u8  pad_7f1[0x3];
+    u8  unk_7f4;            /* 0x7f4 */
+    u8  pad_7f5[0x3];
+    u8  unk_7f8;            /* 0x7f8 */
+    u8  pad_7f9[0x3];
+    s32 unk_7fc;            /* 0x7fc */
+    u8  unk_800;            /* 0x800 */
+    u8  pad_801[0x3];
+    s32 unk_804;            /* 0x804 */
+    u8  unk_808;            /* 0x808 */
+    u8  pad_809[0x7];
+    u8  unk_810;            /* 0x810 */
+    u8  pad_811[0x3];
+    u8  unk_814;            /* 0x814 */
+    u8  pad_815[0x3];
+    u8  unk_818;            /* 0x818 */
+    u8  pad_819[0x3];       /* rounds 0x819 up to the 0x81c alignment boundary */
+
+    ~SysTracker();
+};
+
+/* Deterministic from the field list above (0x819 + the explicit 3-byte pad),
+   not from compiler struct-alignment rounding -- and it is also exactly the
+   gap Stage's own D1/D0 give this member, a second independent check on the
+   same number. */
+typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
+}
 
 /* The playable level: ActorBase -> ActorDerived -> Scene -> Stage.
  *
@@ -35,8 +126,15 @@ struct MeshCollider;
  * TU that DEFINES it -- colliding with the copy the module's gap object supplies
  * from ROM data. The destructor is declared first, which is free for a derived
  * class (an override takes its base's slot wherever it is written) and pins the
- * role to ~Stage, which is only ever defined as an extern "C" free function in
- * _ZN5StageD0Ev.c and _ZN5StageD1Ev.c.
+ * role to ~Stage. tools/objisolate.py makes that TU eligible anyway (see
+ * include/ActorDerived.h and include/Scene.h), so ~Stage is now a real method,
+ * defined identically -- `Stage::~Stage() {}` -- in both src/_ZN5StageD1Ev.cpp
+ * and src/_ZN5StageD0Ev.cpp. Unlike Scene, Stage does NOT need to define it
+ * inline in the class body: Stage is a leaf (no record in the image names
+ * dScStage_c as a base, per DERIVATION above), so nothing derives from it that
+ * would need to inline ITS destructor in turn. Stage's own destructor inlining
+ * Scene's (and Scene inlining ActorDerived's) is what required Scene.h's move;
+ * see the note there.
  *
  * SIZE IS DELIBERATELY NOT ASSERTED, unlike the three headers above this one.
  * The last field here is the last one any matched function has been observed to
@@ -50,16 +148,10 @@ struct MeshCollider;
  * observed.
  */
 struct Stage : Scene {
-    u8  unk_050;            /* 0x050 */
-    u8  pad_051[0x81b];
-    u8  unk_86c;            /* 0x86c */
-    u8  pad_86d[0x7];
-    u8  unk_874;            /* 0x874 */
-    u8  pad_875[0x47];
-    u8  unk_8bc;            /* 0x8bc */
-    u8  pad_8bd[0x5f];
-    u8  unk_91c;            /* 0x91c */
-    u8  pad_91d[0x4f];
+    Particle::SysTracker mSysTracker;  /* 0x050 */
+    Model mModel;             /* 0x86c */
+    u8  pad_8bc[0x60];       /* Model ends 0x8bc; MeshCollider does not start until 0x91c */
+    MeshCollider mMeshCollider; /* 0x91c */
     u8  unk_96c;            /* 0x96c */
     u8  pad_96d[0x1f];
     u8  unk_98c;            /* 0x98c */
@@ -115,16 +207,20 @@ struct Stage : Scene {
     static void VE_Init();
     static void VE_Update();
     static void LC_Render();
-    /* PS_Init is deliberately NOT declared here. src/_ZN5Stage7PS_InitEv.c
-       still hand-spells it, because the tree contains a SECOND file for the same
-       symbol -- src/_ZN5Stage7PS_InitEv.cpp -- which delinks.txt does not name
-       and nothing has ever compiled. That .cpp is not simply the migrated
-       version waiting to be enrolled: it only reproduces the bytes because its
-       private `struct G2x` declares SetBlendBrightness's middle parameter as
-       `int`, which mangles to _ZN3G2x18SetBlendBrightnessEPVtis and resolves to
-       nothing. Correct the type to match the real symbol (...EPVtts) and the
-       function stops matching. Deciding which of the two is right needs its own
-       change; see the PR. */
+    /* PS_Init is deliberately NOT declared here, even though it is now real
+       C++: src/_ZN5Stage7PS_InitEv.cpp defines Stage::PS_Init() and is
+       byte-verified and enrolled. It uses its own LOCAL shadow `class Stage`
+       (the same pattern src/_ZN5Stage8BehaviorEv.cpp already used) instead of
+       including this header, on purpose -- a once-real landmine lived at this
+       exact filename: an untracked, un-enrolled second .cpp for this symbol
+       whose private `struct G2x` declared SetBlendBrightness's middle
+       parameter as `int`, mangling to _ZN3G2x18SetBlendBrightnessEPVtis,
+       which resolves to nothing and would silently NOT be what byte-matches.
+       The surviving file never declares a G2x type at all -- it calls the
+       correctly-mangled _ZN3G2x18SetBlendBrightnessEPVtts symbol directly, as
+       the .c file it replaced did -- so the landmine cannot recur through it.
+       Wiring PS_Init to this header instead is a separate, low-risk change
+       that does not need to happen in the same slice that fixed D0/D1. */
     static void PS_Cleanup();
     static void PS_UpdateSaveMenu(bool held);
     static void UpdateMenuButtons(bool held);
