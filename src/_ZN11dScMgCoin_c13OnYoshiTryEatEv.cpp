@@ -19,7 +19,7 @@ int dScMgCoin_c::OnYoshiTryEat()
         self->unk_51da = 0;
     }
     self->unk_0a8 = 0;
-    self->unk_0ac = self->unk_0a8;
+    *(s32 *)((char *)self + 0xac) = self->unk_0a8;
     func_ov006_020ddf9c((char *)self);
     FreeGfxSlotsById(0x1d);
     func_ov006_020dd334((char *)self);

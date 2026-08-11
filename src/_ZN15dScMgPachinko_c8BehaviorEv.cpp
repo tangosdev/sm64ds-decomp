@@ -1,4 +1,9 @@
-#include "types.h"
+//cpp
+// @symbol _ZN15dScMgPachinko_c8BehaviorEv
+// recovered name: dScMgPachinko_c_Behavior
+#include "dScMgPachinko_c.h"
+/* dScMgPachinko_c::Behavior - recovered from vtable slot identity */
+extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern void func_ov006_020feba8(void *c);
 extern void func_ov006_020fc844(u8 *c);
@@ -16,9 +21,12 @@ extern void func_ov006_020fbad4(char *c);
 extern void func_ov006_020fb97c(char *c);
 extern void func_ov004_020b0a54(void *c);
 extern void func_ov006_020fad34(char *c);
+}
 
-s32 func_ov006_020fee24(char *c)
+s32 dScMgPachinko_c::Behavior()
 {
+    char *c = (char *)this;
+
     switch (*(s32 *)(c + 0x5c10)) {
     case 0:
         FreeGfxSlotsById(0x1d);

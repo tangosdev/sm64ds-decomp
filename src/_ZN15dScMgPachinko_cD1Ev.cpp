@@ -1,2 +1,10 @@
-extern int data_ov006_0213d9cc[]; extern int _ZN11dScMgBase_cD2Ev();
-int func_ov006_020fa75c(int *x) { x[0] = (int)data_ov006_0213d9cc; _ZN11dScMgBase_cD2Ev(x); return (int)x; }
+//cpp
+// @symbol _ZN15dScMgPachinko_cD1Ev
+#include "dScMgPachinko_c.h"
+/* dScMgPachinko_c::~dScMgPachinko_c (D1, complete-object destructor) -- no
+   members need explicit destruction, so an empty body relies entirely on
+   the compiler-generated own-vtable-write + base-D2-call, same as
+   dScMgCurling_c's. */
+dScMgPachinko_c::~dScMgPachinko_c()
+{
+}

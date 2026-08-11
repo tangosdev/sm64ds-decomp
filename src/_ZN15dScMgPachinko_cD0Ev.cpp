@@ -1,15 +1,9 @@
-// @symbol func_ov006_020fa780
-// recovered name: dScMgPachinko_c_OnYoshiTryEat
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-extern void* data_020a0eac;
-extern int data_ov006_0213d9cc[];
-/* recovered: renamed to Class_Method */
-/* dScMgPachinko_c::OnYoshiTryEat - recovered from vtable slot identity */
-int *func_ov006_020fa780(int *t)
+//cpp
+// @symbol _ZN15dScMgPachinko_cD0Ev
+#include "dScMgPachinko_c.h"
+/* dScMgPachinko_c::~dScMgPachinko_c (D0, deleting destructor) --
+   dScMgBase_c's own operator delete (its immediate base) covers this; no
+   per-class copy needed. */
+dScMgPachinko_c::~dScMgPachinko_c()
 {
-    t[0] = (int)data_ov006_0213d9cc;
-    _ZN11dScMgBase_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }

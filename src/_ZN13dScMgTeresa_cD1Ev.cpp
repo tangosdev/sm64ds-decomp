@@ -1,2 +1,10 @@
-extern int data_ov006_0213fa0c[]; extern int _ZN11dScMgBase_cD2Ev();
-int func_ov006_0211cbd0(int *x) { x[0] = (int)data_ov006_0213fa0c; _ZN11dScMgBase_cD2Ev(x); return (int)x; }
+//cpp
+// @symbol _ZN13dScMgTeresa_cD1Ev
+#include "dScMgTeresa_c.h"
+/* dScMgTeresa_c::~dScMgTeresa_c (D1, complete-object destructor) -- no
+   members need explicit destruction, so an empty body relies entirely on
+   the compiler-generated own-vtable-write + base-D2-call, same as
+   dScMgCurling_c's. */
+dScMgTeresa_c::~dScMgTeresa_c()
+{
+}

@@ -484,8 +484,8 @@ func_ov006_020dbaf0 kind:function(arm,size=0x264) addr:0x020dbaf0
 MgPicturePoker_Spawn kind:function(arm,size=0xc0) addr:0x020dbd54
 func_ov006_020dbe14 kind:function(arm,size=0x1c) addr:0x020dbe14
 func_ov006_020dbe30 kind:function(arm,size=0x10) addr:0x020dbe30
-func_ov006_020dbe40 kind:function(arm,size=0x24) addr:0x020dbe40
-func_ov006_020dbe64 kind:function(arm,size=0x38) addr:0x020dbe64
+_ZN11dScMgCoin_cD1Ev kind:function(arm,size=0x24) addr:0x020dbe40
+_ZN11dScMgCoin_cD0Ev kind:function(arm,size=0x38) addr:0x020dbe64
 func_ov006_020dbe9c kind:function(arm,size=0xe0) addr:0x020dbe9c
 func_ov006_020dbf7c kind:function(arm,size=0x1d8) addr:0x020dbf7c
 func_ov006_020dc154 kind:function(arm,size=0x70) addr:0x020dc154
@@ -1093,8 +1093,8 @@ func_ov006_020fa4d4 kind:function(arm,size=0x98) addr:0x020fa4d4
 func_ov006_020fa56c kind:function(arm,size=0x140) addr:0x020fa56c
 MgPairAGoneAndOn_Spawn kind:function(arm,size=0x94) addr:0x020fa6ac
 func_ov006_020fa740 kind:function(arm,size=0x1c) addr:0x020fa740
-func_ov006_020fa75c kind:function(arm,size=0x24) addr:0x020fa75c
-func_ov006_020fa780 kind:function(arm,size=0x38) addr:0x020fa780
+_ZN15dScMgPachinko_cD1Ev kind:function(arm,size=0x24) addr:0x020fa75c
+_ZN15dScMgPachinko_cD0Ev kind:function(arm,size=0x38) addr:0x020fa780
 func_ov006_020fa7b8 kind:function(arm,size=0x8c) addr:0x020fa7b8
 func_ov006_020fa844 kind:function(arm,size=0xe0) addr:0x020fa844
 func_ov006_020fa924 kind:function(arm,size=0x7c) addr:0x020fa924
@@ -1165,9 +1165,9 @@ func_ov006_020fea54 kind:function(arm,size=0x1c) addr:0x020fea54
 func_ov006_020fea70 kind:function(arm,size=0x138) addr:0x020fea70
 func_ov006_020feba8 kind:function(arm,size=0x1b0) addr:0x020feba8
 func_ov006_020fed58 kind:function(arm,size=0x6c) addr:0x020fed58
-func_ov006_020fedc4 kind:function(arm,size=0x60) addr:0x020fedc4
-func_ov006_020fee24 kind:function(arm,size=0x19c) addr:0x020fee24
-func_ov006_020fefc0 kind:function(arm,size=0x42c) addr:0x020fefc0
+_ZN15dScMgPachinko_c6RenderEv kind:function(arm,size=0x60) addr:0x020fedc4
+_ZN15dScMgPachinko_c8BehaviorEv kind:function(arm,size=0x19c) addr:0x020fee24
+_ZN15dScMgPachinko_c13InitResourcesEv kind:function(arm,size=0x42c) addr:0x020fefc0
 MgBobOmbSquad_Spawn kind:function(arm,size=0x34) addr:0x020ff3ec
 _ZN16dScMgPachinko2_cD1Ev kind:function(arm,size=0x24) addr:0x020ff420
 _ZN16dScMgPachinko2_cD0Ev kind:function(arm,size=0x38) addr:0x020ff444
@@ -1622,8 +1622,8 @@ func_ov006_0211c6c4 kind:function(arm,size=0x5c) addr:0x0211c6c4
 func_ov006_0211c720 kind:function(arm,size=0x264) addr:0x0211c720
 func_ov006_0211c984 kind:function(arm,size=0x1ec) addr:0x0211c984
 MgBoomBox_Spawn kind:function(arm,size=0x60) addr:0x0211cb70
-func_ov006_0211cbd0 kind:function(arm,size=0x24) addr:0x0211cbd0
-func_ov006_0211cbf4 kind:function(arm,size=0x38) addr:0x0211cbf4
+_ZN13dScMgTeresa_cD1Ev kind:function(arm,size=0x24) addr:0x0211cbd0
+_ZN13dScMgTeresa_cD0Ev kind:function(arm,size=0x38) addr:0x0211cbf4
 func_ov006_0211cc2c kind:function(arm,size=0x64) addr:0x0211cc2c
 func_ov006_0211cc90 kind:function(arm,size=0x18) addr:0x0211cc90
 func_ov006_0211cca8 kind:function(arm,size=0x7c) addr:0x0211cca8
@@ -1700,9 +1700,9 @@ func_ov006_021200cc kind:function(arm,size=0x10) addr:0x021200cc
 func_ov006_021200dc kind:function(arm,size=0x15c) addr:0x021200dc
 func_ov006_02120238 kind:function(arm,size=0x10) addr:0x02120238
 func_ov006_02120248 kind:function(arm,size=0x100) addr:0x02120248
-func_ov006_02120348 kind:function(arm,size=0x64) addr:0x02120348
-func_ov006_021203ac kind:function(arm,size=0x50) addr:0x021203ac
-func_ov006_021203fc kind:function(arm,size=0x3ac) addr:0x021203fc
+_ZN13dScMgTeresa_c6RenderEv kind:function(arm,size=0x64) addr:0x02120348
+_ZN13dScMgTeresa_c8BehaviorEv kind:function(arm,size=0x50) addr:0x021203ac
+_ZN13dScMgTeresa_c13InitResourcesEv kind:function(arm,size=0x3ac) addr:0x021203fc
 MgHideAndBooSeek_Spawn kind:function(arm,size=0x34) addr:0x021207a8
 func_ov006_021207dc kind:function(arm,size=0xa4) addr:0x021207dc
 func_ov006_02120880 kind:function(arm,size=0xb8) addr:0x02120880
@@ -3502,6 +3502,7 @@ _ZTI11dScMgCoin_c kind:data(any) addr:0x0213bf18
 _ZTS11dScMgCoin_c kind:data(any) addr:0x0213bf24
 data_ov006_0213bf34 kind:data(any) addr:0x0213bf34
 data_ov006_0213bf50 kind:data(any) addr:0x0213bf50
+_ZTV11dScMgCoin_c kind:data(any) addr:0x0213bf50
 data_ov006_0213bfe0 kind:data(any) addr:0x0213bfe0
 data_ov006_0213bfe8 kind:data(any) addr:0x0213bfe8
 data_ov006_0213bff0 kind:data(any) addr:0x0213bff0
@@ -3894,6 +3895,7 @@ data_ov006_0213d954 kind:data(any) addr:0x0213d954
 _ZTS15dScMgPachinko_c kind:data(any) addr:0x0213d960
 data_ov006_0213d974 kind:data(any) addr:0x0213d974
 data_ov006_0213d9cc kind:data(any) addr:0x0213d9cc
+_ZTV15dScMgPachinko_c kind:data(any) addr:0x0213d9cc
 data_ov006_0213da5c kind:data(any) addr:0x0213da5c
 MgLakituLaunch_SpawnInfo kind:data(any) addr:0x0213da64 ambiguous
 data_ov006_0213da6c kind:data(any) addr:0x0213da6c
@@ -4271,6 +4273,7 @@ _ZTS13dScMgTeresa_c kind:data(any) addr:0x0213f9c0
 data_ov006_0213f9d0 kind:data(any) addr:0x0213f9d0
 data_ov006_0213f9e4 kind:data(any) addr:0x0213f9e4
 data_ov006_0213fa0c kind:data(any) addr:0x0213fa0c
+_ZTV13dScMgTeresa_c kind:data(any) addr:0x0213fa0c
 data_ov006_0213fa9c kind:data(any) addr:0x0213fa9c
 data_ov006_0213faa0 kind:data(any) addr:0x0213faa0
 data_ov006_0213faa8 kind:data(any) addr:0x0213faa8

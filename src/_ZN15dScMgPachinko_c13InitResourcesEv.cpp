@@ -1,6 +1,11 @@
-#include "types.h"
+//cpp
+// @symbol _ZN15dScMgPachinko_c13InitResourcesEv
+// recovered name: dScMgPachinko_c_InitResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-
+#include "dScMgPachinko_c.h"
+/* dScMgPachinko_c::InitResources - recovered from vtable slot identity */
+extern "C" {
 extern int LoadFile(int handle);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -18,10 +23,11 @@ extern void func_ov006_020fae90(char *c);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_020fefc0(void *arg0)
+s32 dScMgPachinko_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
     char *b;
     char *dst;
     volatile u16 fillScr;

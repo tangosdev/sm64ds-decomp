@@ -1,15 +1,9 @@
-// @symbol func_ov006_0211cbf4
-// recovered name: dScMgTeresa_c_OnYoshiTryEat
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-extern void* data_020a0eac;
-extern int data_ov006_0213fa0c[];
-/* recovered: renamed to Class_Method */
-/* dScMgTeresa_c::OnYoshiTryEat - recovered from vtable slot identity */
-int *func_ov006_0211cbf4(int *t)
+//cpp
+// @symbol _ZN13dScMgTeresa_cD0Ev
+#include "dScMgTeresa_c.h"
+/* dScMgTeresa_c::~dScMgTeresa_c (D0, deleting destructor) -- dScMgBase_c's
+   own operator delete (its immediate base) covers this; no per-class copy
+   needed. */
+dScMgTeresa_c::~dScMgTeresa_c()
 {
-    t[0] = (int)data_ov006_0213fa0c;
-    _ZN11dScMgBase_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }

@@ -1893,11 +1893,11 @@ src/func_ov006_020dbe30.c:
     complete
     .text start:0x020dbe30 end:0x020dbe40
 
-src/func_ov006_020dbe40.c:
+src/_ZN11dScMgCoin_cD1Ev.cpp:
     complete
     .text start:0x020dbe40 end:0x020dbe64
 
-src/func_ov006_020dbe64.c:
+src/_ZN11dScMgCoin_cD0Ev.cpp:
     complete
     .text start:0x020dbe64 end:0x020dbe9c
 
@@ -4219,11 +4219,11 @@ src/func_ov006_020fa740.c:
     complete
     .text start:0x020fa740 end:0x020fa75c
 
-src/func_ov006_020fa75c.c:
+src/_ZN15dScMgPachinko_cD1Ev.cpp:
     complete
     .text start:0x020fa75c end:0x020fa780
 
-src/func_ov006_020fa780.c:
+src/_ZN15dScMgPachinko_cD0Ev.cpp:
     complete
     .text start:0x020fa780 end:0x020fa7b8
 
@@ -4481,15 +4481,15 @@ src/func_ov006_020feba8.c:
 src/func_ov006_020fed58.c:
     .text start:0x020fed58 end:0x020fedc4
 
-src/func_ov006_020fedc4.c:
+src/_ZN15dScMgPachinko_c6RenderEv.cpp:
     complete
     .text start:0x020fedc4 end:0x020fee24
 
-src/func_ov006_020fee24.c:
+src/_ZN15dScMgPachinko_c8BehaviorEv.cpp:
     complete
     .text start:0x020fee24 end:0x020fefc0
 
-src/func_ov006_020fefc0.c:
+src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp:
     complete
     .text start:0x020fefc0 end:0x020ff3ec
 
@@ -6231,11 +6231,11 @@ src/MgBoomBox_Spawn.cpp:
     complete
     .text start:0x0211cb70 end:0x0211cbd0
 
-src/func_ov006_0211cbd0.c:
+src/_ZN13dScMgTeresa_cD1Ev.cpp:
     complete
     .text start:0x0211cbd0 end:0x0211cbf4
 
-src/func_ov006_0211cbf4.c:
+src/_ZN13dScMgTeresa_cD0Ev.cpp:
     complete
     .text start:0x0211cbf4 end:0x0211cc2c
 
@@ -6528,15 +6528,15 @@ src/func_ov006_02120238.c:
 src/func_ov006_02120248.cpp:
     .text start:0x02120248 end:0x02120348
 
-src/func_ov006_02120348.c:
+src/_ZN13dScMgTeresa_c6RenderEv.cpp:
     complete
     .text start:0x02120348 end:0x021203ac
 
-src/func_ov006_021203ac.cpp:
+src/_ZN13dScMgTeresa_c8BehaviorEv.cpp:
     complete
     .text start:0x021203ac end:0x021203fc
 
-src/func_ov006_021203fc.c:
+src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp:
     .text start:0x021203fc end:0x021207a8
 
 src/MgHideAndBooSeek_Spawn.c:

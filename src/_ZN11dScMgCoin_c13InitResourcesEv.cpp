@@ -66,7 +66,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate((void*)a);
 
     self->unk_0a8 = 0;
-    self->unk_0ac = self->unk_0a8;
+    *(s32 *)(c + 0xac) = self->unk_0a8;
     data_0208ee44 = 1;
     func_ov006_020ddf9c(c);
     func_ov006_020dd334(c);
