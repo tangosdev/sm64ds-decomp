@@ -1,12 +1,6 @@
 {
- "eligible": 10814,
+ "eligible": 10817,
  "unresolved": {
-  "arm9:0x020063b0": {
-   "name": "_ZN8CapEnemy6AddCapEj",
-   "missing": [
-    "func_020ff028"
-   ]
-  },
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
    "missing": [
