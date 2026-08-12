@@ -234,10 +234,20 @@ def whole_mode(root, ov, ovid, base, data, out_path):
     lines += [
         "typedef unsigned char u8;",
         "",
+        "/* 8-byte alignment for the whole-image object. MSVC spells it"
+        " __declspec(align),",
+        " * GCC/Clang (the Linux port) spell it __attribute__((aligned)); this"
+        " macro picks. */",
+        "#if defined(_MSC_VER)",
+        "#define PORT_ALIGN8 __declspec(align(8))",
+        "#else",
+        "#define PORT_ALIGN8 __attribute__((aligned(8)))",
+        "#endif",
+        "",
         f"/* {len(data):#x} bytes of image + {bss:#x} of bss, one object so the"
         " game's",
         " * table walks stay inside it however far past a symbol they step. */",
-        f"__declspec(align(8)) u8 {tag}_image[{total}] = "
+        f"PORT_ALIGN8 u8 {tag}_image[{total}] = "
         f"{{ {romblob_common.init_body(data)} }};",
         f"const unsigned {tag}_ds_base = {base:#010x}u;",
         f"const unsigned {tag}_ds_end = {base + total:#010x}u;",
@@ -505,6 +515,22 @@ def main():
     if romblob_common.ROM_CLEAN:
         lines.append("#include <string.h>")
     lines += ["typedef unsigned char u8;", ""]
+    # PORT_OVSEC(fullsec, basesec, algn): place a packed symbol so the run keeps
+    # its ROM spacing. MSVC uses $-suffix section grouping (__pragma(section) +
+    # __declspec(allocate)); GCC/Clang use one base section + declaration order
+    # (the build passes -fno-toplevel-reorder), with per-symbol alignment. Same
+    # contiguous layout on both; the emitted *_check() verifies the offsets.
+    lines += [
+        "#if defined(_MSC_VER)",
+        "#define PORT_OVSEC(fullsec, basesec, algn) \\",
+        "    __pragma(section(fullsec, read, write)) \\",
+        "    __declspec(allocate(fullsec)) __declspec(align(algn))",
+        "#else",
+        "#define PORT_OVSEC(fullsec, basesec, algn) \\",
+        "    __attribute__((section(basesec), aligned(algn), used))",
+        "#endif",
+        "",
+    ]
     # --pack: THE SYMBOLS KEEP THEIR ROM SPACING.
     #
     # dsd names a symbol wherever code happened to reference one, so a single
@@ -576,21 +602,33 @@ def main():
                 # only to pad the run so the named symbols keep their ROM
                 # spacing, and its bytes are never read directly.
                 lines.append(
-                    f'__pragma(section(".{tag}${slot:04d}", read, write))'
-                    f' __declspec(allocate(".{tag}${slot:04d}"))'
-                    f' __declspec(align({rom_align(prev_end)}))'
+                    f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}",'
+                    f' {rom_align(prev_end)})'
                     f' static u8 {tag}_gap_{prev_end:08x}'
                     f'[{gap}] = {{ 0 }};')
                 slot += 1
             lines.append(
-                f'__pragma(section(".{tag}${slot:04d}", read, write))'
-                f' __declspec(allocate(".{tag}${slot:04d}"))'
-                f' __declspec(align({rom_align(a)}))'
+                f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}", {rom_align(a)})'
                 f' u8 {name}[{size}] = '
                 f'{{ {romblob_common.init_body(blob_of[name])} }};')
             slot += 1
             prev_end = a + size
             checks.append((name, a - first))
+        # Tail guard: dsd sizes the LAST packed symbol by its next-symbol delta,
+        # so the section ends exactly at that symbol. But a sinit that views a
+        # symbol as a struct array can legitimately write a few bytes PAST the
+        # last named symbol -- on the DS those bytes are the overlay's own
+        # contiguous tail; on the host the next overlay's .pkNNN section starts
+        # there and the write stomps it. (ov072's __sinit_02122414 writes
+        # data_ov072_02122d6c as S16[6] = 96 bytes though the packed run only
+        # reserves 92, clobbering ov094's data_ov094_021369c0.) Reserving 16
+        # bytes of zeroed slack keeps any such struct-view spill inside the
+        # overlay's own section. It is never read directly (no symbol names it)
+        # and it matches the ROM, whose overlay data ran on past the last symbol.
+        lines.append(
+            f'PORT_OVSEC(".{tag}${slot:04d}", ".{tag}", 4)'
+            f' static u8 {tag}_tail_guard[16] = {{ 0 }};')
+        slot += 1
         lines.append("")
         lines.append("#include <stdio.h>")
         lines.append(f"void port_{ov}_pack_check(void)")

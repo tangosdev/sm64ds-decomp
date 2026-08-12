@@ -17,14 +17,22 @@ void _ZN13SharedFilePtr7ReleaseEv(void *self)
 {
     hal_fileptr_release(self);
 }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self)
 {
     return ((MeshColliderBase *)self)->MeshColliderBase::IsEnabled();
 }
+#else
+int _ZN16MeshColliderBase9IsEnabledEv(void *self);  /* Linux: real symbol from src/_ZN16MeshColliderBase9IsEnabledEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN16MeshColliderBase7DisableEv(void *self)
 {
     ((MeshColliderBase *)self)->MeshColliderBase::Disable();
 }
+#else
+void _ZN16MeshColliderBase7DisableEv(void *self);  /* Linux: real symbol from src/_ZN16MeshColliderBase7DisableEv */
+#endif /* _WIN32 */
 
 // The ov098 file table's second column is addressed through its own symbol
 // (base+4 on the DS -- an offset alias). The harness used to fake it with a
@@ -38,10 +46,18 @@ void _ZN16MeshColliderBase7DisableEv(void *self)
 #include "ShadowModel.h"
 #include "Model.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8Platform19UpdateClsnPosAndRotEv(void *self)
 { ((Platform *)self)->Platform::UpdateClsnPosAndRot(); }
+#else
+void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);  /* Linux: real symbol from src/_ZN8Platform19UpdateClsnPosAndRotEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8Platform21UpdateModelPosAndRotYEv(void *self)
 { ((Platform *)self)->Platform::UpdateModelPosAndRotY(); }
+#else
+void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);  /* Linux: real symbol from src/_ZN8Platform21UpdateModelPosAndRotYEv */
+#endif /* _WIN32 */
 /* SHADOW SYSTEM DEFERRED (cosmetic). The cause recorded here was WRONG and is
    corrected: the cuboid template BMD at data_020ad524 is NOT built at runtime.
    It is static .data in OVERLAY 1 (ov001 .data spans 0x020ab800..0x020ad620),
@@ -78,7 +94,12 @@ void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp)
     if (((unsigned char *)fp)[2] == 1 && filePtr != 0) {
         if (trace) fprintf(stderr, "    fixups buf=%p\n", filePtr);
         Model::UpdateFileOffsets(*(BMD_File *)filePtr);
-        if (trace) fprintf(stderr, "    offsets ok\n");
+        if (trace) {
+            unsigned *h = (unsigned *)filePtr;
+            fprintf(stderr, "    offsets ok  numBones=%u bones=%x numTex=%u tex=%x "
+                    "numPal=%u pal=%x numMat=%u mat=%x\n",
+                    h[1], h[2], h[5], h[6], h[7], h[8], h[9], h[10]);
+        }
         Model::AddToCommonModelDataArr(*(BMD_File *)filePtr);
         if (trace) fprintf(stderr, "    common-arr ok\n");
     }
@@ -93,8 +114,13 @@ void *data_020a0c80[24];        /* the collision actor registry (gate 8) */
 #include "MeshCollider.h"
 #include "ModelBase.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS MeshCollider::LoadFile(SharedFilePtr&)'s own Itanium mangling -> self-recurse on GCC. On Linux bind to the real src/_ZN12MeshCollider8LoadFileER13SharedFilePtr TU. */
 void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp)
 { return MeshCollider::LoadFile(*(SharedFilePtr *)fp); }
+#else
+void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
+#endif
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to (self=this, args match) -> self-recurse on GCC. On Linux bind to the real src/ TU (the PORT_TRACE_SETFILE trace is Windows-only). */
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 {
     if (getenv("PORT_TRACE_SETFILE")) {
@@ -108,16 +134,24 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
     }
     ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b);
 }
+#else
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
+#endif /* _WIN32 */
 }
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
     void *self, void *kcl, void *clps)
 {
     ((MeshCollider *)self)->MeshCollider::SetFile((KCL_File *)kcl,
                                                   *(CLPS_Block *)clps);
 }
+#else
+extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
+    void *self, void *kcl, void *clps);  /* Linux: real symbol from src/_ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block */
+#endif /* _WIN32 */
 
 // operator new support: the game heap pointer for actors (the smoke seeds
 // it with the root heap), and the zero-fill veneer -- its DS chain rides
@@ -142,10 +176,14 @@ extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 
 #include "MeshColliderBase.h"
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor)
 {
     return ((MeshColliderBase *)self)->MeshColliderBase::Enable((Actor *)actor);
 }
+#else
+extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor);  /* Linux: real symbol from src/_ZN16MeshColliderBase6EnableEP5Actor */
+#endif /* _WIN32 */
 extern "C" {
 /* player-list globals ClosestPlayer scans: empty world -> null result */
 int data_0208e37c[2];
@@ -230,6 +268,11 @@ static void mv_box(const Model *m, size_t before)
            mny, mxy, mxy - mny);
 }
 
+/* No-op dtor thunk for the two Itanium dtor slots (D1/D0). Only dispatched on
+   model teardown, which the reached boot/frame path does not hit; a real
+   ~Model runs non-virtually by name at the sites that own a Model. Mirrors the
+   MSVC build, which leaves _ZTV5Model[0] unfilled for the same reason. */
+static void __fastcall mv_dtor(void *, void *) {}
 static void __fastcall mv_updateverts(void *self, void *)
 { ((Model *)self)->Model::UpdateVerts(); }
 static void __fastcall mv_virtual10(void *self, void *, void *m)
@@ -277,10 +320,43 @@ static void __fastcall mv_render(void *self, void *, const void *s)
     }
     m->Model::Render((const Vector3 *)s);
 }
+
+#ifndef _WIN32
+/* Itanium/GCC dispatches C++ virtuals through the SysV cdecl convention: the
+   compiled ModelBase::SetFile tail-jumps vtable[+8] with `this` as the FIRST
+   STACK argument (objdump: mov 0x8(%ebp),%eax; jmp *(%eax+8)). The MSVC shims
+   above are __fastcall (this in ecx, a dummy 2nd arg), which does NOT match --
+   it reads a garbage this from ecx. So on Linux the slots need plain-cdecl
+   thunks that take `this` as the first ordinary argument. Same signatures the
+   ROM virtuals have, minus the MSVC thiscall dummy. */
+static void mvL_dtor(void *) {}
+static int  mvL_dosetfile(void *self, char *f, int a, int b)
+{
+    if (getenv("PORT_TRACE_SETFILE"))
+        fprintf(stderr, "  dosetfile self=%p f=%p a=%d b=%d\n", self, f, a, b);
+    return ((Model *)self)->Model::DoSetFile(f, a, b);
+}
+/* func_02016ff4's matched `Thing` shadow dispatches DoSetFile at Itanium slot 1
+   with a THISCALL shape (this in ecx, file/a/b on the stack) -- GCC compiled
+   that TU's virtual call as `mov this,%ecx; call *(vptr+4)`. ModelBase::SetFile
+   uses the SysV shape (this on the stack) at slot 2. The two callers need
+   different-shaped thunks, so slot 1 gets this __thiscall (ecx) version. */
+static int __thiscall mvL_dosetfile_tc(void *self, char *f, int a, int b)
+{ return ((Model *)self)->Model::DoSetFile(f, a, b); }
+static void mvL_updateverts(void *self) { ((Model *)self)->Model::UpdateVerts(); }
+static void mvL_virtual10(void *self, void *m)
+{ ((Model *)self)->Model::Virtual10(*(Matrix4x3 *)m); }
+static void mvL_render(void *self, const void *s)
+{ mv_render(self, 0, s); }
+#endif
+
 extern "C" {
 extern void *_ZTV5Model[8];
 void hal_fill_model_vtable(void)
 {
+#ifdef _WIN32
+    /* MSVC folds the two Itanium dtor slots (D1/D0) into ONE, so DoSetFile
+       is slot 1, UpdateVerts slot 2, ... */
     _ZTV5Model[1] = (void *)mv_dosetfile;
     _ZTV5Model[2] = (void *)mv_updateverts;
     _ZTV5Model[3] = (void *)mv_virtual10;
@@ -289,6 +365,31 @@ void hal_fill_model_vtable(void)
        ROM/Itanium numbering (two dtor slots), which lands Render at 5.
        Model.h-compiled TUs land it at 4. The object serves both. */
     _ZTV5Model[5] = (void *)mv_render;
+#else
+    /* Itanium/GCC keeps TWO dtor slots (D1 at 0, D0 at 1), matching the ROM
+       vtable at 0x0208e90c: [2]=DoSetFile (0x02016bf8), [3]=UpdateVerts
+       (0x02016c98), [4]=Virtual10, [5]=Render. ModelBase::SetFile dispatches
+       vtable+0x8 == slot 2, so DoSetFile MUST live at [2] here. Leaving the
+       MSVC numbering shifted everything up by one and made SetFile call
+       UpdateVerts on an un-initialised model (garbage data.modelFile). */
+    _ZTV5Model[0] = (void *)mvL_dtor;
+    /* Slot 1 dual-fills DoSetFile as well as the D0 dtor: func_02016ff4's
+       matched `Thing` shadow (3 virtuals) compiles self->v2 (DoSetFile) to
+       vtable INDEX 1 on this GCC/x86 build (objdump: call *0x4(%eax)), one slot
+       below ModelBase::SetFile's index-2 dispatch. Stage::LoadModel reaches
+       DoSetFile only through func_02016ff4, so without this the stage model's
+       DoSetFile is skipped and ModelComponents.modelFile stays 0. The D0 dtor
+       is never virtually dispatched on the reached path (Models destruct by
+       name), so parking DoSetFile here is safe -- same dual-fill idea the
+       Render slot uses on the MSVC side. The slot-1 caller (func_02016ff4)
+       passes this in ecx, so slot 1 gets the __thiscall thunk; slot 2's caller
+       (ModelBase::SetFile) passes this on the stack, so slot 2 stays cdecl. */
+    _ZTV5Model[1] = (void *)mvL_dosetfile_tc;
+    _ZTV5Model[2] = (void *)mvL_dosetfile;
+    _ZTV5Model[3] = (void *)mvL_updateverts;
+    _ZTV5Model[4] = (void *)mvL_virtual10;
+    _ZTV5Model[5] = (void *)mvL_render;
+#endif
 }
 }
 
@@ -309,6 +410,19 @@ static void __fastcall ma2_render(void *self, void *, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Render((const Vector3 *)s); }
 static void __fastcall ma2_virtual18(void *self, void *, unsigned m, const void *s)
 { ((ModelAnim *)self)->ModelAnim::Virtual18(m, (const Vector3 *)s); }
+#ifndef _WIN32
+/* Linux/SysV cdecl thunks -- `this` is the first ordinary arg (see the note by
+   mvL_* above; ModelBase::SetFile tail-jumps DoSetFile the same way for a
+   ModelAnim2). DoSetFile is inherited Model::DoSetFile, so reuse mvL_dosetfile. */
+static void ma2L_dtor(void *) {}
+static void ma2L_updateverts(void *self) { ((ModelAnim *)self)->ModelAnim::UpdateVerts(); }
+static void ma2L_virtual10(void *self, void *m)
+{ ((ModelAnim *)self)->ModelAnim::Virtual10(*(Matrix4x3 *)m); }
+static void ma2L_render(void *self, const void *s)
+{ ((ModelAnim *)self)->ModelAnim::Render((const Vector3 *)s); }
+static void ma2L_virtual18(void *self, unsigned m, const void *s)
+{ ((ModelAnim *)self)->ModelAnim::Virtual18(m, (const Vector3 *)s); }
+#endif
 extern "C" {
 extern void *_ZTV10ModelAnim2[12];
 extern void *VTable_Animation_ModelAnim2Thunk[12];
@@ -316,15 +430,15 @@ extern void *_ZTV9ModelAnim[10];
 extern void *VTable_Animation_ModelAnimThunk[8];
 void hal_fill_modelanim2_vtable(void)
 {
+#ifdef _WIN32
+    /* MSVC order (one folded dtor slot): dtor 0, DoSetFile 1, UpdateVerts 2,
+       Virtual10 3, Render 4, Virtual18 5. */
     _ZTV10ModelAnim2[0] = (void *)ma2_dtor;
     _ZTV10ModelAnim2[1] = (void *)mv_dosetfile;
     _ZTV10ModelAnim2[2] = (void *)ma2_updateverts;
     _ZTV10ModelAnim2[3] = (void *)ma2_virtual10;
     _ZTV10ModelAnim2[4] = (void *)ma2_render;
     _ZTV10ModelAnim2[5] = (void *)ma2_virtual18;
-    /* the Animation-base secondary table only ever destructs */
-    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
-    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
     /* plain ModelAnim (the Player's head models) shares every slot */
     _ZTV9ModelAnim[0] = (void *)ma2_dtor;
     _ZTV9ModelAnim[1] = (void *)mv_dosetfile;
@@ -332,6 +446,30 @@ void hal_fill_modelanim2_vtable(void)
     _ZTV9ModelAnim[3] = (void *)ma2_virtual10;
     _ZTV9ModelAnim[4] = (void *)ma2_render;
     _ZTV9ModelAnim[5] = (void *)ma2_virtual18;
+#else
+    /* Itanium/GCC keeps TWO dtor slots (D1 at 0, D0 at 1), matching the ROM
+       vtable at 0x0208e9b4: [2]=DoSetFile (0x02016bf8 Model::DoSetFile),
+       [3]=UpdateVerts (0x0201686c ModelAnim::UpdateVerts), [4]=Virtual10,
+       [5]=Render, [6]=Virtual18. ModelBase::SetFile dispatches vtable+0x8 ==
+       slot 2, so DoSetFile MUST be at [2]. */
+    _ZTV10ModelAnim2[0] = (void *)ma2L_dtor;
+    _ZTV10ModelAnim2[1] = (void *)ma2L_dtor;
+    _ZTV10ModelAnim2[2] = (void *)mvL_dosetfile;
+    _ZTV10ModelAnim2[3] = (void *)ma2L_updateverts;
+    _ZTV10ModelAnim2[4] = (void *)ma2L_virtual10;
+    _ZTV10ModelAnim2[5] = (void *)ma2L_render;
+    _ZTV10ModelAnim2[6] = (void *)ma2L_virtual18;
+    _ZTV9ModelAnim[0] = (void *)ma2L_dtor;
+    _ZTV9ModelAnim[1] = (void *)ma2L_dtor;
+    _ZTV9ModelAnim[2] = (void *)mvL_dosetfile;
+    _ZTV9ModelAnim[3] = (void *)ma2L_updateverts;
+    _ZTV9ModelAnim[4] = (void *)ma2L_virtual10;
+    _ZTV9ModelAnim[5] = (void *)ma2L_render;
+    _ZTV9ModelAnim[6] = (void *)ma2L_virtual18;
+#endif
+    /* the Animation-base secondary table only ever destructs */
+    VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
+    VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
     VTable_Animation_ModelAnimThunk[0] = (void *)ma2_dtor;
     VTable_Animation_ModelAnimThunk[1] = (void *)ma2_dtor;
 }
@@ -376,8 +514,12 @@ void hal_fill_shadow_vtable(void)
 }
 
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file)
 { return Model::AddToCommonModelDataArr(*(BMD_File *)file); }
+#else
+void *_ZN5Model23AddToCommonModelDataArrER8BMD_File(void *file);
+#endif
 void *func_0203cc0c(unsigned size);
 void _ZN6Memory10DeallocateEPv(void *p);
 /* the DS global operator new/delete route through the Memory layer */

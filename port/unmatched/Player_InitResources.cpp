@@ -48,7 +48,7 @@ extern "C" {
     s8 data_0209f2f8;
     u8 data_0209f254;
     s8 data_02092114;
-    u8 data_02092128[];
+    extern u8 data_02092128[];   /* defined in a HAL TU; DECLARATION here */
     /* the save block: storage moved to hal/level_boot.cpp, where it is
        one grouped-section run with its four sibling symbols (the
        entrance loader reads byte 0x41, past this symbol's 0x14) */

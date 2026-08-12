@@ -35,7 +35,11 @@
 #include <cstdio>
 #include <cstdlib>
 
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include "host_platform_linux.h"
+#endif
 
 #include "ntr/ppu.h"
 
@@ -104,10 +108,26 @@ int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
 int g_zoom = 1;
 HWND g_hwnd;
 
+#ifdef _WIN32
 BOOL(WINAPI *GetCursorPos_)(POINT *);
 BOOL(WINAPI *ScreenToClient_)(HWND, POINT *);
 SHORT(WINAPI *GetAsyncKeyState_)(int);
 HWND(WINAPI *GetForegroundWindow_)(void);
+#else
+/* Linux: bound to the SDL-backed shim. ScreenToClient is identity because SDL
+   reports the cursor in window (client) coordinates already. */
+static BOOL  (*GetCursorPos_)(POINT *)    = port_lin_GetCursorPos;
+static BOOL   ScreenToClient_lin(HWND, POINT *) { return TRUE; }
+static BOOL  (*ScreenToClient_)(HWND, POINT *) = ScreenToClient_lin;
+static short (*GetAsyncKeyState_)(int)    = port_lin_GetAsyncKeyState;
+/* No focus gate on Linux yet: SDL reports focus through its own event
+   stream, not a user32 call. Left null deliberately so
+   hal_window_focused takes its documented fail-open path (`!Get
+   ForegroundWindow_ -> return 1`) and the Linux window never locks
+   itself out of its own input. */
+static HWND (*GetForegroundWindow_)(void) = 0;
+typedef short SHORT;
+#endif
 
 ntr::SubFramebuffer g_sub;
 
@@ -185,6 +205,7 @@ void hal_sub_screen_init(void *hwnd, int zoom)
     g_headless = std::getenv("SM64DS_WINDOW_SELFTEST") != 0;
     g_nofocusgate = std::getenv("SM64DS_INPUT_NOFOCUSGATE") != 0;
 
+#ifdef _WIN32
     if (HMODULE u = LoadLibraryA("user32.dll")) {
         GetCursorPos_ = (decltype(GetCursorPos_))GetProcAddress(u, "GetCursorPos");
         ScreenToClient_ = (decltype(ScreenToClient_))GetProcAddress(u, "ScreenToClient");
@@ -193,6 +214,8 @@ void hal_sub_screen_init(void *hwnd, int zoom)
         GetForegroundWindow_ =
             (decltype(GetForegroundWindow_))GetProcAddress(u, "GetForegroundWindow");
     }
+#endif
+    /* Linux: the three pointers are already bound to the SDL shim at file scope. */
 
     /* POWCNT1 bit 15: main engine drives the top screen. OAM::Load reads this
        bit to pick which shadow goes to which engine's OAM, and Scene::Reset-

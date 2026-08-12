@@ -1002,6 +1002,9 @@ void *LoadFile(int handle)
        the cache key above matches only when both agree; keep the handle. */
     ++used;
     s->fileID = (unsigned short)handle;
+    if (getenv("PORT_TRACE_LOADFILE"))
+        std::fprintf(stderr, "  ::LoadFile(handle=%d/0x%x) -> filePtr=%p\n",
+                     handle, handle, s->filePtr);
     return s->filePtr;
 }
 
@@ -1024,12 +1027,21 @@ void port_loadfile_pin_persistent(int handle)
 
 /* Method faces: the three MeshCollider helpers the boot calls by their
    Itanium names while their definitions are real MSVC members. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file)
 { MeshCollider::UpdateFileOffsets(*(KCL_File *)file); }
+#else
+void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file);  /* Linux: real symbol from src/_ZN12MeshCollider17UpdateFileOffsetsER8KCL_File */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: these extern-C names ARE the Itanium manglings of the const methods they forward to -> self-recurse on GCC. On Linux bind to the real src/ TUs. */
 int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self)
 { return ((const MeshCollider *)self)->MeshCollider::GetOctreeOriginY(); }
 int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self)
 { return ((const MeshCollider *)self)->MeshCollider::GetUnkOctreeY(); }
+#else
+int _ZNK12MeshCollider16GetOctreeOriginYEv(const void *self);
+int _ZNK12MeshCollider13GetUnkOctreeYEv(const void *self);
+#endif /* _WIN32 */
 
 // ---- the globals the sub-loaders store through -----------------------------
 //
@@ -1066,10 +1078,9 @@ extern unsigned char *data_0209f340;
 // Grouped sections put them back in ROM order, the mechanism romdata.py uses
 // for the camera-mode table. Every delta here equals the symbol's own size
 // and all four are even, so align(2) packs with no interior padding.
+#include "port_msvc_compat.h"
 #define SAVEBLK(sec, name, size) \
-    __pragma(section(sec, read, write))                          \
-    extern "C" __declspec(allocate(sec)) __declspec(align(2))    \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL_A(sec, ".savblk", 2) unsigned char name[size] = {0}
 
 SAVEBLK(".savblk$0000", data_0209caa0, 0x14);
 SAVEBLK(".savblk$0001", data_0209cab4, 0x1e);
@@ -1159,10 +1170,29 @@ extern "C" void port_message_archive_seat(void);
    note in walk_window.cpp has the measurements). A handful of QPC reads per
    level entry, nothing per frame. QPC hand-declared so this file stays out
    of windows.h. */
+#ifdef _WIN32
 extern "C" __declspec(dllimport) int __stdcall
 QueryPerformanceCounter(long long *);
 extern "C" __declspec(dllimport) int __stdcall
 QueryPerformanceFrequency(long long *);
+#else
+/* Linux: CLOCK_MONOTONIC, presented through the same two-call shape so
+   port_lvlperf_now below is identical on both platforms. Counting in
+   nanoseconds makes the frequency a constant, and monotonic is the right clock
+   for a span measurement -- a wall-clock step would make a level entry look
+   arbitrarily fast or slow. Declared here for the same reason the Win32 pair
+   is: to keep this file out of a platform header. */
+#include <ctime>
+static inline int QueryPerformanceFrequency(long long *f)
+{ *f = 1000000000LL; return 1; }
+static inline int QueryPerformanceCounter(long long *c)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    *c = (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
+    return 1;
+}
+#endif
 
 static double g_lvlperf_ms[4];   /* teardown, boot, census, print */
 
@@ -1429,7 +1459,10 @@ extern "C" void *port_stage_object(void);
    place (the ovdata contract: callers patch code pointers at runtime); the
    rest trap by name rather than jumping into the overlay image. */
 extern "C" {
-unsigned char data_ov002_0210a83c[];
+/* defined by the ov002 whole-image mount (build/host-src/ov002_data.c); this is
+   a DECLARATION. MSVC accepts the unsized tentative form; GCC needs the explicit
+   `extern` on an incomplete array. */
+extern unsigned char data_ov002_0210a83c[];
 int _ZN6Player13InitResourcesEv(void *self);
 int _ZN5Actor19BeforeInitResourcesEv(void *self);
 void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned r);
@@ -1444,8 +1477,12 @@ int func_02043288(void *self);         /* port/unmatched: the behaviour Process 
    the body an ecx that never held `this`. */
 #include "ActorBase.h"
 #include "Actor.h"
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN9ActorBase19BeforeInitResourcesEv(void *self)
 { return ((ActorBase *)self)->ActorBase::BeforeInitResources() ? 1 : 0; }
+#else
+extern "C" int _ZN9ActorBase19BeforeInitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9ActorBase19BeforeInitResourcesEv */
+#endif /* _WIN32 */
 
 
 static int __fastcall ps_init(void *s, void *)

@@ -26,6 +26,8 @@
  *     After(code);
  *     return r;
  */
+#include <cstddef>   /* size_t (pointer-width casts below) */
+
 extern "C" {
 
 typedef int(__fastcall *ActorSlot0)(void *self, void *dummy);

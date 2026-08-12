@@ -80,10 +80,15 @@ void MultiCopy32Bytes(int *src, int *dst, int len)
 // the save block in hal/level_boot.cpp uses. align(4) is load-bearing: MSVC
 // aligns arrays of 16 bytes or more to 16 by default, which would push
 // data_0209e67c off +8. hal_oam_layout_check() reads the result back.
+/* Force the three ROM symbols into one contiguous, declaration-ordered section
+   so their addresses land at the ROM offsets (+0x00 / +0x08 / +0x20). MSVC uses
+   $-suffix section grouping; GCC uses one .oamsh section + -fno-toplevel-reorder.
+   They MUST stay real arrays (other TUs reference them as arrays -- a pointer
+   would be an ODR/type mismatch). align(4) is load-bearing (see the note above).
+   hal_oam_layout_check() verifies the result. */
+#include "port_msvc_compat.h"
 #define OAMSHADOW(sec, name, type, count)                        \
-    __pragma(section(sec, read, write))                          \
-    __declspec(allocate(sec)) __declspec(align(4))               \
-    type name[count]
+    PORT_GROUPED_DECL(sec, ".oamsh") type name[count]
 
 unsigned char data_0209e660 = 1;
 int data_0209e664, data_0209e668, data_0209e66c, data_0209e670;
@@ -307,6 +312,9 @@ extern "C" int hal_tex_log(void)
     return on;
 }
 
+#ifdef _WIN32
+/* MSVC: the extern-C name and the namespace `GX::LoadTex` (from src/) mangle
+   differently, so this is a real logging shim in front of the src upload. */
 extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
 {
     if (hal_tex_log())
@@ -314,6 +322,9 @@ extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
                z, data_020a4bc8, data_020a4be8, data_020a4be0, data_020a4bdc);
     GX::LoadTex(s, o, z);
 }
+#endif /* _WIN32 -- on GCC `GX::LoadTex` IS _ZN2GX7LoadTexEPKvjj, so this shim
+   would call itself. On Linux the callers bind straight to the real src/ upload
+   (the SM64DS_TEX_LOG texel line is Windows-only as a result). */
 
 // DMA fallback DMASyncWordTransfer uses; same synchronous copy semantics.
 // PORT_HOST_ABI: DS DMA register poke (0x040000b0 + 2-cycle barrier reads),

@@ -376,6 +376,10 @@ extern "C" void hal_fill_lava_bubble_vtable(void)
 // func_ov064_* C bodies -- no face. func_ov064_02117cfc (Render) is a host copy.
 #include "LavaBubble.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10LavaBubble13InitResourcesEv(void *self)
 { return ((LavaBubble *)self)->LavaBubble::InitResources(); }
+#else
+int _ZN10LavaBubble13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN10LavaBubble13InitResourcesEv */
+#endif /* _WIN32 */
 }

@@ -70,8 +70,12 @@ void *data_020992a4[4], *data_020992b4[4];
 namespace cstd { int strcmp(const char *a, const char *b);
                 char *strchr(const char *s, char ch); }
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b)
 { return cstd::strcmp(a, b); }
+#else
+int _ZN4cstd6strcmpEPKcS1_(const char *a, const char *b);  /* Linux: real symbol from src/_ZN4cstd6strcmpEPKcS1_ */
+#endif /* _WIN32 */
 char *_ZN4cstd6strchrEPKcc(const char *s, char ch)
 { return cstd::strchr(s, ch); }
 
@@ -181,8 +185,13 @@ void func_02071644(unsigned char *obj, int len)
 /* C-linkage face of Animation::WillHitFrame (C++ face lives in
    player_bridges; one TU cannot name both linkages) */
 int hal_anim_willhit(void *self, int f);
+#ifdef _WIN32
 int _ZNK9Animation12WillHitFrameEi(void *self, int f)
 { return hal_anim_willhit(self, f); }
+#endif /* _WIN32: this face + player_bridges' both define _ZNK9Animation12WillHitFrameEi,
+   and on GCC hal_anim_willhit's C++-method call resolves to that same symbol, so the
+   two mutually recurse. The real impl is src/_ZNK9Animation12WillHitFrameEi.cpp (gate10);
+   Linux binds callers straight to it. */
 
 /* SharedFilePtr construct veneers: on the DS these pass fileID in r1
    through a tail call the C decl never names (the ride-through catalog).
@@ -340,20 +349,35 @@ int data_0209a61c[4], data_020a6128, data_020a6134[4];
 /* Scene::ResetHardwareRegisters is defined against this exact local shadow
    in its own TU; mirror it so the manglings agree. */
 struct Scene { void ResetHardwareRegisters(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Scene22ResetHardwareRegistersEv(void *s)
 { ((Scene *)s)->Scene::ResetHardwareRegisters(); }
+#else
+extern "C" void _ZN5Scene22ResetHardwareRegistersEv(void *s);  /* Linux: real symbol from src/_ZN5Scene22ResetHardwareRegistersEv */
+#endif /* _WIN32 */
 
 #pragma comment(linker, "/alternatename:?data_020a0e98@@3EA=_data_020a0e98")
 #pragma comment(linker, "/alternatename:?data_020a4d6c@@3PAEA=_data_020a4d6c")
 
 /* A slice TU sees NestedHeapIterator::Next through a local shadow returning
    unsigned char*; the real definition returns int against the shared header.
-   Mirror the shadow and hop through the C-named helper in player_bridges. */
+   Mirror the shadow and hop through the C-named helper in player_bridges.
+   LINUX CRITICAL: this out-of-line `NestedHeapIterator::Next` mangles to the
+   SAME Itanium symbol as the real src/ method (slice_gate2) AND as
+   player_bridges' hal_nhi_next target -- and hal_nhi_next calls
+   `->NestedHeapIterator::Next(...)`, so on GCC this definition + hal_nhi_next
+   form an infinite recursion (a stack-overflow SIGSEGV in Heap::SetupRootHeap
+   during boot). On MSVC the C++ method and the extern-C forwarder mangle
+   differently, so the hop is a real convention converter. On Linux the real
+   src/ method already provides the symbol with the correct ABI, so omit this
+   host copy and let hal_nhi_next bind straight to it. */
+#ifdef _WIN32
 struct HeapAllocator;
 struct NestedHeapIterator { unsigned char *Next(HeapAllocator *h); };
 extern "C" int hal_nhi_next(void *self, void *h);
 unsigned char *NestedHeapIterator::Next(HeapAllocator *h)
 { return (unsigned char *)(size_t)hal_nhi_next(this, h); }
+#endif /* _WIN32 -- Linux binds hal_nhi_next to the real src/ method */
 #pragma comment(linker, "/alternatename:?GiveHealth@@YAHHH@Z=_GiveHealth")
 #pragma comment(linker, "/alternatename:?data_0209caa0@@3PAHA=_data_0209caa0")
 #pragma comment(linker, "/alternatename:?data_0209f2d8@@3EA=_data_0209f2d8")
@@ -410,8 +434,10 @@ extern "C" SeqEntry *_ZN5Sound17InfoSequenceEntry9GetWithIDEj(unsigned id);
 struct Sound {
     struct InfoSequenceEntry { static SeqEntry *GetWithID(unsigned id); };
 };
+#ifdef _WIN32 /* LINUX: this method's own Itanium mangling IS the extern-C name it forwards to -> infinite self-recurse (SIGSEGV) at level-load BGM lookup. On GCC the real src/ body owns the symbol; do not define the face. */
 SeqEntry *Sound::InfoSequenceEntry::GetWithID(unsigned id)
 { return _ZN5Sound17InfoSequenceEntry9GetWithIDEj(id); }
+#endif
 
 /* Heap::_Deallocate is a DS tail-call veneer to Deallocate; operator delete
    dispatches it as a method. Same-shadow definition forwarding to the HAL
@@ -423,8 +449,12 @@ void Heap::_Deallocate(void *ptr) { _ZN4Heap10DeallocateEPv(this, ptr); }
 /* RaycastGround::DetectClsn is defined against a local shadow in its own
    TU; mirror the shadow (no real header here) so the manglings agree. */
 class RaycastGround { public: int DetectClsn(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 { return ((RaycastGround *)self)->DetectClsn(); }
+#else
+extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);  /* Linux: real symbol from src/_ZN13RaycastGround10DetectClsnEv */
+#endif /* _WIN32 */
 #pragma comment(linker, "/alternatename:?data_0209f254@@3EA=_data_0209f254")
 #pragma comment(linker, "/alternatename:?data_0209f4a6@@3FA=_data_0209f4a6")
 #pragma comment(linker, "/alternatename:?func_ov002_020bdd9c@@YAXPAX@Z=_func_ov002_020bdd9c")

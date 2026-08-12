@@ -144,8 +144,12 @@ struct Minimap {
 /* UpdateLevelSpecific is the reverse shape: its own TU defines a real MSVC
    member and InitResources calls it by the Itanium C name, so it needs a face
    the way HUD::RenderCoinCount and friends do. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void)
 { Minimap::UpdateLevelSpecific(); }
+#else
+extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void);  /* Linux: real symbol from src/_ZN7Minimap19UpdateLevelSpecificEv */
+#endif /* _WIN32 */
 
 // ---- the arm9 bss the Minimap reads ----------------------------------------
 //
@@ -157,10 +161,9 @@ extern "C" void _ZN7Minimap19UpdateLevelSpecificEv(void)
 // and the run has to be contiguous, the mechanism hal/level_boot.cpp uses for
 // the save block. Sizes are each symbol's own delta in config/arm9/symbols.txt:
 // f3a4 +0x20, f3c4 +4, f3c8 +0x20, f3e8 +0x24.
+#include "port_msvc_compat.h"
 #define MMBLK(sec, name, size)                                    \
-    __pragma(section(sec, read, write))                           \
-    extern "C" __declspec(allocate(sec)) __declspec(align(4))     \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL(sec, ".mmblk") unsigned char name[size] = {0}
 
 MMBLK(".mmblk$0000", data_0209f3a4, 0x20);   /* 8 Obj* -- the red-coin markers */
 MMBLK(".mmblk$0001", data_0209f3c4, 0x04);
@@ -277,8 +280,16 @@ unsigned char data_0209f4a9[0x60];
 // __thiscall member. A linker alias would hand a __thiscall body an ecx that
 // never held `this`, so each needs a real face. Same mechanism as
 // hal/method_faces.cpp.
+#ifdef _WIN32
 #define HUD_FACE(sym, meth)                                                   \
     extern "C" void sym(void *s) { ((HUD *)s)->HUD::meth(); }
+#else
+/* LINUX: on GCC each face name IS the Itanium mangling of the HUD::meth() it
+   forwards to (src/<sym>.cpp defines that same _ZN3HUD..Ev symbol), so the face
+   self-recurses. HUD::Render already spells the call `sym((void*)this)`, which
+   binds straight to the real src member (this == first arg). Declare, don't define. */
+#define HUD_FACE(sym, meth) extern "C" void sym(void *s);
+#endif
 
 /* Only the leaves whose own TU defines a __thiscall MEMBER. The other four --
    RenderStarCount, RenderSilverStars, RenderRedCoins, RenderVsTimer -- define
@@ -296,7 +307,11 @@ HUD_FACE(_ZN3HUD17UpdateHealthMeterEv, UpdateHealthMeter)
 /* RenderCameraButtons is a STATIC member (no `this` at all -- it draws the two
    arrows and the zoom button from OAM's own templates), so its face takes and
    passes nothing. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *) { HUD::RenderCameraButtons(); }
+#else
+extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *);  /* Linux: real symbol from src/_ZN3HUD19RenderCameraButtonsEv */
+#endif /* _WIN32 */
 
 /* Player::IsInsideOfCannon is a real MSVC member, and HUD::RenderHealthMeter
    reaches it as a free function taking void*. That was a C++ free function
@@ -305,15 +320,23 @@ extern "C" void _ZN3HUD19RenderCameraButtonsEv(void *) { HUD::RenderCameraButton
    name and the face follows it. The alias keeps the older C++ spelling
    resolvable, the same shape as the other faces in this family. */
 struct Player { int IsInsideOfCannon(); int Unk_020ca8f8(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player16IsInsideOfCannonEv(void *s)
 { return ((Player *)s)->Player::IsInsideOfCannon(); }
+#else
+extern "C" int _ZN6Player16IsInsideOfCannonEv(void *s);  /* Linux: real symbol from src/_ZN6Player16IsInsideOfCannonEv */
+#endif /* _WIN32 */
 #pragma comment(linker, "/alternatename:?_ZN6Player16IsInsideOfCannonEv@@YAHPAX@Z=__ZN6Player16IsInsideOfCannonEv")
 
 /* Minimap::Behavior reaches the same class the same way: it calls
    Player::Unk_020ca8f8 -- "is he in a state that hides the minimap" -- as a
    free C function while its own TU defines a real MSVC member. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player12Unk_020ca8f8Ev(void *s)
 { return ((Player *)s)->Player::Unk_020ca8f8(); }
+#else
+extern "C" int _ZN6Player12Unk_020ca8f8Ev(void *s);  /* Linux: real symbol from src/_ZN6Player12Unk_020ca8f8Ev */
+#endif /* _WIN32 */
 
 /* Stage::RenderBouncingArrows draws from an OamAttr template at ov001
    0x020abd88 that config does not name, and nothing in emitted DATA points at
@@ -331,10 +354,15 @@ extern "C" void _ZN5Stage20RenderBouncingArrowsEv(void)
 /* ...and the reverse. CalculateDigits' TU is a .c file, so it defines the C
    name, while RenderCoinCount and RenderLifeCount call it as a member. */
 extern "C" void _ZN3HUD15CalculateDigitsEt(void *self, unsigned short n);
+#ifdef _WIN32
 void HUD::CalculateDigits(unsigned short n)
 {
     _ZN3HUD15CalculateDigitsEt(this, n);
 }
+#endif /* _WIN32: on GCC the C++ method HUD::CalculateDigits mangles to the SAME
+   _ZN3HUD15CalculateDigitsEt as the src .c def, so both the method-form and
+   C-name-form callers bind straight to src/_ZN3HUD15CalculateDigitsEt.c; this
+   face would self-recurse. */
 
 namespace {
 

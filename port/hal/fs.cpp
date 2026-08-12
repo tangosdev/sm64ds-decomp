@@ -99,7 +99,11 @@ void *Allocate(u32 size);
 void *Allocate(u32 size, int align);
 void Deallocate(void *p);
 }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN6Memory10DeallocateEPv(void *p) { Memory::Deallocate(p); }
+#else
+extern "C" void _ZN6Memory10DeallocateEPv(void *p);  /* Linux: real symbol from src/_ZN6Memory10DeallocateEPv */
+#endif /* _WIN32 */
 
 extern "C" {
 u32 data_0209d3bc; /* last fileID touched; the game's FS breadcrumb */
@@ -342,10 +346,16 @@ static void fs_cache_report(void)
    QueryPerformanceCounter is declared by hand rather than by including
    windows.h: this file defines u8/u16/u32 and carries DS-shaped structs, and
    the Windows headers collide with several of them. */
+#ifdef _WIN32
 extern "C" __declspec(dllimport) int __stdcall
     QueryPerformanceCounter(long long *);
 extern "C" __declspec(dllimport) int __stdcall
     QueryPerformanceFrequency(long long *);
+#else
+/* Linux: clock_gettime gives the same wall-time counter without pulling in the
+   Windows headers this file deliberately avoids. */
+#include <time.h>
+#endif
 
 extern "C" {
 unsigned long port_fs_loads;     /* SharedFilePtr::Load calls */
@@ -356,11 +366,17 @@ double port_fs_ms;               /* wall time inside Load */
 
 static double fs_now_ms(void)
 {
+#ifdef _WIN32
     static long long qpf;
     long long n;
     if (!qpf) QueryPerformanceFrequency(&qpf);
     QueryPerformanceCounter(&n);
     return (double)n * 1000.0 / (double)qpf;
+#else
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
+#endif
 }
 
 /* read + decompress a loose FAT file into e's master copy. 1 on success. */

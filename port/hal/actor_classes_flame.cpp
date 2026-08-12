@@ -86,8 +86,12 @@ int _ZTV9BlueFlame[31];
 
 /* Player::Burn's face: BlueFlame's Behavior (a .c TU) spells the C name; the
    matched body is the real MSVC method in the slice. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player4BurnEv(void *self)
 { return ((Player *)self)->Player::Burn(); }
+#else
+extern "C" int _ZN6Player4BurnEv(void *self);  /* Linux: real symbol from src/_ZN6Player4BurnEv */
+#endif /* _WIN32 */
 
 // ---- the trap --------------------------------------------------------------
 static void fl_trap_report(void *self, int slot)

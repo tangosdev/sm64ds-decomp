@@ -304,12 +304,28 @@ extern "C" void hal_fill_mugen_bgm_vtable(void)
 #include "PushBlock.h"
 #include "MugenBgm.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9PushBlock13InitResourcesEv(void *self)
 { return ((PushBlock *)self)->PushBlock::InitResources(); }
+#else
+int _ZN9PushBlock13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9PushBlock13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9PushBlock8BehaviorEv(void *self)
 { return ((PushBlock *)self)->PushBlock::Behavior(); }
+#else
+int _ZN9PushBlock8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN9PushBlock8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8MugenBgm13InitResourcesEv(void *self)
 { return ((MugenBgm *)self)->MugenBgm::InitResources(); }
+#else
+int _ZN8MugenBgm13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8MugenBgm13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8MugenBgm8BehaviorEv(void *self)
 { return ((MugenBgm *)self)->MugenBgm::Behavior(); }
+#else
+int _ZN8MugenBgm8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN8MugenBgm8BehaviorEv */
+#endif /* _WIN32 */
 }

@@ -15,6 +15,14 @@
 #include <windows.h>
 #else
 #include <sys/mman.h>
+/* The reservation diagnostics below size a name buffer with MAX_PATH, which is
+   a windows.h constant. Same spelling and purpose as the one in
+   hal/host_platform_linux.h, defined locally rather than including that header
+   so this library keeps not depending on the HAL. Sized for a host path rather
+   than Windows' 260, since that is what the buffer holds. */
+#ifndef MAX_PATH
+#define MAX_PATH 4096
+#endif
 #endif
 
 namespace ntr {

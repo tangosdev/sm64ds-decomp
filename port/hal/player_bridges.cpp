@@ -4,6 +4,13 @@
 // defining TUs compile them as real methods against the shared headers.
 // Same hop as gate 9 (cxxname_bridge.cpp), split into its own TU because
 // Player.h drags a wider include surface than the gate-9 file wants.
+/* PORT_ALIGN / PORT_GROUPED_DECL live here. The Linux build force-includes
+   this header from CMake, so a TU using those macros compiles there without
+   naming it -- but MSVC never gets the force-include, so the include has to
+   be explicit or the Windows build fails on an undefined macro. The header is
+   include-guarded and its keyword shims are inside #ifndef _MSC_VER, so this
+   is inert on Windows beyond the two macro definitions. */
+#include "port_msvc_compat.h"
 #include <cstdio>
 #include <cstdlib>
 
@@ -30,18 +37,32 @@ extern "C" unsigned func_ov002_020becf4(char *self, unsigned j, int b);
 extern "C" int _ZN6Player13InitResourcesEv(void *);
 
 /* C++-linkage globals some slice TUs call under Itanium-style names */
+#ifdef _WIN32
 int _ZNK9Animation12WillHitFrameEi(void *self, int f)
 { return ((Animation *)self)->Animation::WillHitFrame(f) ? 1 : 0; }
+#endif /* _WIN32: on GCC Animation::WillHitFrame(int)const mangles to the SAME
+   _ZNK9Animation12WillHitFrameEi this defines, so it self-recurses. The real
+   impl is src/_ZNK9Animation12WillHitFrameEi.cpp (gate10); Linux binds to it. */
 /* GetFlags is C linkage now: main's mangled-declaration sweep gave the Player
    state TUs an extern "C" declaration, so they call the plain name. The alias
    at the head of hal/cxx_aliases.cpp still serves the old C++ mangling. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN9Animation8GetFlagsEv(void *self)
 { return ((Animation *)self)->Animation::GetFlags(); }
+#else
+extern "C" int _ZN9Animation8GetFlagsEv(void *self);  /* Linux: real symbol from src/_ZN9Animation8GetFlagsEv */
+#endif /* _WIN32 */
 void _ZN6Player4HealEi(Player *p, int amt)
 { p->Player::Heal(amt); }
 
+#ifdef _WIN32 /* LINUX: this method IS _ZNK6Player14GetBodyModelIDEjb (its own
+   Itanium mangling), so the body forwards to itself -> infinite recursion. On
+   MSVC the two mangle differently (this converts __cdecl->__thiscall); on Linux
+   the real src/_ZNK6Player14GetBodyModelIDEjb TU owns the symbol and every
+   `this->GetBodyModelID(...)` caller binds straight to it. */
 unsigned int Player::GetBodyModelID(unsigned int a, bool b_) const
 { return _ZNK6Player14GetBodyModelIDEjb((char *)this, a, b_ ? 1 : 0); }
+#endif /* _WIN32 */
 
 extern "C" {
 /* gate-10 smoke drives the state machine directly (the ChangeState PMF
@@ -278,8 +299,19 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
     char *neck = *(char **)((char *)ma + 0x14) + 0x2d0;
     if (neck)
         m43_mul((const int *)neck, scene, (int *)(head + 0x1c));
+#ifdef _WIN32
+    /* MSVC folds the two Itanium dtor slots into one, so Model::Render is slot 4,
+       and the object's own vtable thunks are __fastcall (this in ecx). */
     ((void(__fastcall *)(void *, void *, const void *))(
         ((void ***)head)[0][4]))(head, 0, 0);
+#else
+    /* Linux/Itanium keeps TWO dtor slots (D1@0,D0@1), so Model::Render is slot 5
+       (slot 4 is Virtual10 -- dispatching 4 here handed Virtual10 a head model and
+       faulted). The Linux Model vtable is filled with plain cdecl thunks
+       (mvL_render, this on the stack), so call slot 5 cdecl, not __fastcall. */
+    ((void(*)(void *, const void *))(
+        ((void ***)head)[0][5]))(head, 0);
+#endif
 }
 
 void hal_render_player_world(void *player)
@@ -716,21 +748,41 @@ static int port_door_swap(char *c, int chr)
 int port_set_character(int chr)
 { return port_door_swap((char *)data_0209f394[0], chr); }
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN6Player16InitWingFeathersEb(void *self, unsigned char b_)
 { ((Player *)self)->Player::InitWingFeathers(b_ != 0); }
+#else
+void _ZN6Player16InitWingFeathersEb(void *self, unsigned char b_);  /* Linux: real symbol from src/_ZN6Player16InitWingFeathersEb */
+#endif /* _WIN32 */
 extern "C++" int ApproachLinear(int &ref, int target, int step);
+#ifdef _WIN32 /* LINUX: `_Z14ApproachLinearRiii` IS the GCC Itanium mangling of the
+   `ApproachLinear(int&,int,int)` this forwards to (src/_Z14ApproachLinearRiii.cpp),
+   so on GCC this extern-C shim self-recurses infinitely. On MSVC the C++ name mangles
+   differently, so the (int*) -> (int&) adapter is real and needed. On Linux the
+   callers' `_Z14ApproachLinearRiii(int*,...)` bind straight to the real src TU
+   (reference == pointer at the ABI). */
 int _Z14ApproachLinearRiii(int *ref, int target, int step)
 { return ApproachLinear(*ref, target, step); }
+#endif
 int hal_anim_willhit(void *self, int f)
 { return ((Animation *)self)->Animation::WillHitFrame(f) ? 1 : 0; }
 int hal_nhi_next(void *self, void *h)
 { return ((NestedHeapIterator *)self)->NestedHeapIterator::Next(
       (HeapAllocator *)h); }
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN9Animation7AdvanceEv(void *self)
 { ((Animation *)self)->Animation::Advance(); }
+#else
+void _ZN9Animation7AdvanceEv(void *self);  /* Linux: real symbol from src/_ZN9Animation7AdvanceEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9Animation8FinishedEv(void *self)
 { return ((Animation *)self)->Animation::Finished(); }
+#else
+int _ZN9Animation8FinishedEv(void *self);  /* Linux: real symbol from src/_ZN9Animation8FinishedEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ TU (the host NULL-fp log is Windows-only as a result). */
 char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp)
 {
     if (!fp) {
@@ -739,21 +791,49 @@ char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp)
     }
     return Animation::LoadFile(*(SharedFilePtr *)fp);
 }
+#else
+char *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player6IsAnimEj(void *self, unsigned a)
 { return ((Player *)self)->Player::IsAnim(a); }
+#else
+int _ZN6Player6IsAnimEj(void *self, unsigned a);  /* Linux: real symbol from src/_ZN6Player6IsAnimEj */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player12FinishedAnimEv(void *self)
 { return ((Player *)self)->Player::FinishedAnim(); }
+#else
+int _ZN6Player12FinishedAnimEv(void *self);  /* Linux: real symbol from src/_ZN6Player12FinishedAnimEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player17SetNoControlStateEhih(void *self, unsigned char a, int b,
                                       unsigned char c)
 { return ((Player *)self)->Player::SetNoControlState(a, b, c); }
+#else
+int _ZN6Player17SetNoControlStateEhih(void *self, unsigned char a, int b,
+                                      unsigned char c);  /* Linux: real symbol from src/_ZN6Player17SetNoControlStateEhih */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player8HasNoCapEv(void *self)
 { return ((Player *)self)->Player::HasNoCap(); }
+#else
+int _ZN6Player8HasNoCapEv(void *self);  /* Linux: real symbol from src/_ZN6Player8HasNoCapEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Player9GetHealthEv(void *self)
 { return ((Player *)self)->Player::GetHealth(); }
+#else
+int _ZN6Player9GetHealthEv(void *self);  /* Linux: real symbol from src/_ZN6Player9GetHealthEv */
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN4BgCh19StartDetectingWaterEv(void *self)
 { ((BgCh *)self)->BgCh::StartDetectingWater(); }
+#else
+void _ZN4BgCh19StartDetectingWaterEv(void *self);  /* Linux: real symbol from src/_ZN4BgCh19StartDetectingWaterEv */
+#endif /* _WIN32 */
 
 /* SHADOW SYSTEM DEFERRED (matches InitCuboid, cxxname_bridge.cpp, which now
    carries the full writeup). The template BMD at data_020ad560 is NOT
@@ -766,26 +846,55 @@ void _ZN4BgCh19StartDetectingWaterEv(void *self)
    the ROM record is 0x3c bytes, 0x020ad560 to the bone at 0x020ad59c. */
 void _ZN11ShadowModel12InitCylinderEv(void *) {}
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
                                                        void *btp)
 { ((TextureSequence *)self)->TextureSequence::Prepare(*(BMD_File *)bmd,
                                                       *(BTP_File *)btp); }
+#else
+void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
+                                                       void *btp);  /* Linux: real symbol from src/_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the method it forwards to -> self-recurse on GCC. On Linux bind to the real src/ TU. */
 void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *fp)
 { return TextureSequence::LoadFile(*(SharedFilePtr *)fp); }
+#else
+void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *fp);
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(void *self, void *node)
 { ((NestedHeapIterator *)self)->NestedHeapIterator::Remove(
       (HeapAllocator *)node); }
+#else
+void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(void *self, void *node);  /* Linux: real symbol from src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN18NestedHeapIterator8PreviousEP13HeapAllocator(void *self, void *h)
 { return ((NestedHeapIterator *)self)->NestedHeapIterator::Previous(
       (HeapAllocator *)h); }
+#else
+int _ZN18NestedHeapIterator8PreviousEP13HeapAllocator(void *self, void *h);  /* Linux: real symbol from src/_ZN18NestedHeapIterator8PreviousEP13HeapAllocator */
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN4Heap6RescueEv(void *self)
 { return ((Heap *)self)->Heap::Rescue(); }
+#else
+int _ZN4Heap6RescueEv(void *self);  /* Linux: real symbol from src/_ZN4Heap6RescueEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN4Heap21MaxAllocationUnitSizeEv(void *self)
 { return ((Heap *)self)->Heap::MaxAllocationUnitSize(); }
+#else
+int _ZN4Heap21MaxAllocationUnitSizeEv(void *self);  /* Linux: real symbol from src/_ZN4Heap21MaxAllocationUnitSizeEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN4Heap6IntactEv(void *self)
 { return ((Heap *)self)->Heap::Intact() ? 1 : 0; }
+#else
+int _ZN4Heap6IntactEv(void *self);  /* Linux: real symbol from src/_ZN4Heap6IntactEv */
+#endif /* _WIN32 */
 
 /* gate-10 BSS, second ring */
 /* data_0209b44c is NOT here: it is the one-byte area id, hosted in
@@ -809,7 +918,7 @@ int data_0209cdd0, data_0209cdd4, data_0209cdd8, data_0209cddc, data_0209cde0;
 int data_0209f220[8], data_0209f264[8], data_020a0d90[8], data_020a0f38[8];
 int data_020a4b58[4], data_020a4b68[4], data_020a60f4[4];
 /* DTCM scratch the timer list walker anchors at */
-__declspec(align(8)) unsigned char data_023c0000[64];
+PORT_ALIGN(8) unsigned char data_023c0000[64];
 int data_02099e94[4], data_02099ebc[4], data_02099ec4[4], data_02099fcc[4];
 int data_020a6084[4], data_020a6088[2], data_020a8114[4];
 

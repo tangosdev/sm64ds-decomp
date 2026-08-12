@@ -168,10 +168,15 @@ int ShadowModelFace::InitCylinder()
    .cpp), so this is a face, not an alias. */
 struct Vector3;
 extern "C" void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale);
+#ifdef _WIN32
 struct ModelRenderFace { void Render(const Vector3 *scale); };
 #pragma comment(linker, "/alternatename:?Render@ModelRenderFace@@QAEXPBUVector3@@@Z=?Render@Model@@UAEXPBUVector3@@@Z")
 extern "C" void _ZN5Model6RenderEPK7Vector3(void *self, const void *scale)
 { ((ModelRenderFace *)self)->Render((const Vector3 *)scale); }
+#endif /* _WIN32: on GCC the ModelRenderFace::Render alias name IS the Itanium
+   mangling of Model::Render, so this face self-recurses. Linux binds callers
+   straight to the real src/_ZN5Model6RenderEPK7Vector3.cpp (in the build since
+   gate 4b/33). */
 
 /* Player::CanWarp -- the warp's own gate. src/_ZN6Player7CanWarpEv.cpp defines
    it against include/Player.h, where it returns int; func_ov002_020ec410

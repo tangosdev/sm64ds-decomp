@@ -53,10 +53,12 @@ struct RaycastGround {
     ~RaycastGround();
     void SetObjAndPos(const Vector3 &v, Actor *a);
 };
+#ifdef _WIN32 /* LINUX: each method-shadow's mangling IS the extern-C name it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ bodies. */
 RaycastGround::RaycastGround() { _ZN13RaycastGroundC1Ev(this); }
 RaycastGround::~RaycastGround() { _ZN13RaycastGroundD1Ev(this); }
 void RaycastGround::SetObjAndPos(const Vector3 &v, Actor *a)
 { _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(this, &v, a); }
+#endif /* _WIN32 */
 
 struct RaycastLine {
     RaycastLine();
@@ -65,6 +67,7 @@ struct RaycastLine {
     void SetObjAndLine(const Vector3 &a, const Vector3 &b, Actor *actor);
     Vector3 GetClsnPos();
 };
+#ifdef _WIN32 /* LINUX: each method-shadow's mangling IS the extern-C name it forwards to -> self-recurse on GCC. On Linux the callers bind to the real src/ bodies. */
 RaycastLine::RaycastLine() { _ZN11RaycastLineC1Ev(this); }
 RaycastLine::~RaycastLine() { _ZN11RaycastLineD1Ev(this); }
 void RaycastLine::SetObjAndLine(const Vector3 &a, const Vector3 &b,
@@ -76,6 +79,7 @@ Vector3 RaycastLine::GetClsnPos()
     _ZN11RaycastLine10GetClsnPosEv(&tmp, this);
     return tmp;
 }
+#endif /* _WIN32 */
 
 struct Player {
     struct State;
@@ -87,27 +91,43 @@ struct Player {
 };
 int Player::ChangeState(::State &s)
 { return _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
-void Player::ChangeState(State &s)
-{ _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
 int Player::IsState(::State &s)
 { return _ZN6Player7IsStateERNS_5StateE(this, &s); }
+#ifdef _WIN32 /* LINUX: the nested-State overloads mangle to exactly the extern-C
+   names they forward to (_ZN6Player11ChangeStateERNS_5StateE /
+   _ZN6Player7IsStateERNS_5StateE) -> self-recurse on GCC. The real src TUs
+   (src/_ZN6Player11ChangeStateERNS_5StateE.cpp, src/_ZN6Player7IsStateERNS_5StateE.c)
+   own those symbols; every nested-State caller binds straight to them. The
+   ::State (global) overloads above mangle differently and stay real bridges. */
+void Player::ChangeState(State &s)
+{ _ZN6Player11ChangeStateERNS_5StateE(this, &s); }
 int Player::IsState(State &s)
 { return _ZN6Player7IsStateERNS_5StateE(this, &s); }
+#endif /* _WIN32 */
 extern "C" int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned, int, int,
                                                unsigned);
 void Player::SetAnim(unsigned a, int b, int f, unsigned d)
 { _ZN6Player7SetAnimEji5Fix12IiEj(this, a, b, f, d); }
 
 struct ClsnResult { int GetClsnID() const; };
+#ifdef _WIN32 /* LINUX: ClsnResult::GetClsnID() const mangles to
+   _ZNK10ClsnResult9GetClsnIDEv, which the extern-C REAL BODY below also
+   defines -> "symbol already defined" on GCC. On MSVC the two manglings
+   differ so the method shadow forwards to the C body; on Linux they are ONE
+   symbol, so the real body IS ClsnResult::GetClsnID and this shadow is a
+   redundant duplicate. Guard it out; C++ callers bind to the real body. */
 int ClsnResult::GetClsnID() const { return _ZNK10ClsnResult9GetClsnIDEv(this); }
+#endif /* _WIN32 */
 
 struct WithMeshClsn {
     int IsOnGround() const;
     int GetWallResult() const;
     int GetFloorResult() const;
 };
+#ifdef _WIN32 /* LINUX: method IS its own mangling (_ZNK12WithMeshClsn10IsOnGroundEv) -> self-recurse; real src TU owns it. */
 int WithMeshClsn::IsOnGround() const
 { return _ZNK12WithMeshClsn10IsOnGroundEv(this); }
+#endif
 
 struct CylinderClsn;
 struct ShadowModel;
@@ -138,10 +158,12 @@ extern "C" Matrix4x3 *_ZN5Actor11UpdateCarryER6PlayerRK7Vector3(
     void *self, void *player, const void *vec)
 { return ((Actor *)self)->UpdateCarry(*(Player *)player,
                                       *(const Vector3 *)vec); }
+#ifdef _WIN32 /* LINUX: these methods ARE their own manglings -> self-recurse; the real src TUs own the symbols. */
 Player *Actor::ClosestPlayer()
 { return (Player *)_ZN5Actor13ClosestPlayerEv(this); }
 short Actor::HorzAngleToCPlayer()
 { return _ZN5Actor18HorzAngleToCPlayerEv(this); }
+#endif
 void Actor::DropShadowRadHeight(ShadowModel &sm, Matrix4x3 &m, int rad, int h,
                                 unsigned f)
 { _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
@@ -156,12 +178,14 @@ struct OAM {
                        int pri, Fix12<int> sx, Fix12<int> sy, int rot,
                        int mode);
 };
+#ifdef _WIN32 /* LINUX: these methods ARE their own manglings -> self-recurse; real src TUs own them. */
 unsigned char OAM::GetObjWidth(int a, int b)
 { return _ZN3OAM11GetObjWidthEii(a, b); }
 unsigned char OAM::GetObjHeight(int a, int b)
 { return _ZN3OAM12GetObjHeightEii(a, b); }
 int OAM::LoadAffineParams(OamAttr *attr, int *p, Matrix2x2 *m)
 { return _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(attr, p, m); }
+#endif
 
 struct SaveData { static int IsCharacterUnlocked(unsigned ch); };
 int SaveData::IsCharacterUnlocked(unsigned ch)
@@ -192,12 +216,27 @@ struct Sound {
    loop never calls sdat_host_tick, and the table walkers read
    data_020a5bb8 + 0x84 unconditionally. Idempotent. */
 void sd_consumer_init(void);
+/* PlaySub is a REAL adapter on every target: callers declare the 4th arg as a
+   plain int, so `Sound::PlaySub(...,int,bool)` mangles to _ZN5Sound7PlaySubEjjjib
+   -- a DIFFERENT symbol from the src body's _ZN5Sound7PlaySubEjjj5Fix12IiEb
+   (Fix12<int>). It does not self-recurse on GCC and must stay to bridge the two
+   manglings. */
 int Sound::PlaySub(unsigned a, unsigned b, unsigned c, int d, bool e)
 { sd_consumer_init(); return _ZN5Sound7PlaySubEjjj5Fix12IiEb(a, b, c, d, e ? 1 : 0); }
+#ifdef _WIN32
+/* MSVC: the `Sound::` method mangling differs from the extern-C name, so these
+   two wrappers really forward and get one free sd_consumer_init before the src
+   body walks the SDAT root. */
 void Sound::Play2D(unsigned a, unsigned b)
 { sd_consumer_init(); _ZN5Sound6Play2DEjj(a, b); }
 void Sound::LoadAndSetMusic_Layer1(int a)
 { sd_consumer_init(); _ZN5Sound22LoadAndSetMusic_Layer1Ei(a); }
+#endif /* _WIN32 -- on GCC `Sound::Play2D`/`LoadAndSetMusic_Layer1` ARE the
+   _ZN5Sound...  symbols they forward to (same arg types), so the wrapper calls
+   itself. On Linux the callers bind straight to the real src/ bodies;
+   sd_consumer_init is already run during sound init (hal/sdat/consumer.cpp seats
+   the SDAT root before any layer walks it) and is idempotent, so the per-call
+   seat these two wrappers added is not needed. */
 
 struct Scene {
     static void SetAndStopColorFader();
@@ -216,12 +255,21 @@ void Scene::StartSceneFade(unsigned, unsigned, unsigned short) {}
    bodies, carried by slice_gate29.txt over a real SysTracker; the
    MSVC-mangled C++ faces are aliased onto them in hal/cxx_aliases.cpp. */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN11RaycastLine10DetectClsnEv(void *self)
 { return ((RaycastLine *)self)->DetectClsn(); }
+#else
+extern "C" int _ZN11RaycastLine10DetectClsnEv(void *self);  /* Linux: real symbol from src/_ZN11RaycastLine10DetectClsnEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: these extern-C names ARE the Itanium manglings of the const methods they forward to -> self-recurse on GCC. On Linux bind to the real src/ TUs. */
 extern "C" int _ZNK12WithMeshClsn13GetWallResultEv(const void *self)
 { return ((const WithMeshClsn *)self)->GetWallResult(); }
 extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self)
 { return ((const WithMeshClsn *)self)->GetFloorResult(); }
+#else
+extern "C" int _ZNK12WithMeshClsn13GetWallResultEv(const void *self);
+extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self);
+#endif /* _WIN32 */
 
 /* gate 172: func_ov098_021390ec (Crate's state helper) declares a local
    `struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; }` and calls it as
@@ -231,18 +279,34 @@ extern "C" int _ZNK12WithMeshClsn14GetFloorResultEv(const void *self)
 struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(const void *self,
                                                           Vector3 *v);
+#ifdef _WIN32 /* LINUX: this method IS _ZNK11SurfaceInfo12CopyNormalToER7Vector3
+   (its own mangling) -> self-recurse. The matched src TU owns the symbol on
+   Linux; every method-form caller binds straight to it. */
 void SurfaceInfo::CopyNormalTo(Vector3 &v) const
 { _ZNK11SurfaceInfo12CopyNormalToER7Vector3(this, &v); }
+#endif /* _WIN32 */
 
 struct SphereClsn { int DetectClsn(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN10SphereClsn10DetectClsnEv(void *self)
 { return ((SphereClsn *)self)->DetectClsn(); }
+#else
+extern "C" int _ZN10SphereClsn10DetectClsnEv(void *self);  /* Linux: real symbol from src/_ZN10SphereClsn10DetectClsnEv */
+#endif /* _WIN32 */
 
 struct Message { void Update(); static void AddChar(char c); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN7Message6UpdateEv(void *self)
 { ((Message *)self)->Update(); }
+#else
+extern "C" void _ZN7Message6UpdateEv(void *self);  /* Linux: real symbol from src/_ZN7Message6UpdateEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN7Message7AddCharEc(char ch)
 { Message::AddChar(ch); }
+#else
+extern "C" void _ZN7Message7AddCharEc(char ch);  /* Linux: real symbol from src/_ZN7Message7AddCharEc */
+#endif /* _WIN32 */
 
 
 /* THE SPRITE LIST HAS TO BE TERMINATED, and OAM::Render trusts that it is.
@@ -259,6 +323,17 @@ extern "C" void _ZN7Message7AddCharEc(char ch)
    skipped sprite and, more usefully, prints the address of the table that is
    missing it -- which is the actual bug, some sprite table not being seated.
    The bound is generous: the biggest real list here is well under 256. */
+#ifndef _WIN32
+/* LINUX: this extern-C name IS the GCC Itanium mangling of the very OAM::Render
+   member it forwards to at line ~348 (src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp),
+   so on GCC this wrapper self-recurses. On MSVC the C++ member decorates
+   differently, so the wrapper (with its terminator-safety check) is a distinct
+   symbol and callers get the guarded version. On Linux, callers of this Itanium
+   name bind straight to the real src member (the safety check is MSVC-only). */
+extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+    int sub, void *attr, int x, int y, int pal, int pri,
+    int sx, int sy, int rot, int mode);
+#else
 extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     int sub, void *attr, int x, int y, int pal, int pri,
     int sx, int sy, int rot, int mode)
@@ -285,14 +360,24 @@ extern "C" void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
                 mode);
     return 0;
 }
+#endif /* _WIN32 (OAM::Render safety wrapper; Linux binds to the real member) */
 
 /* shadow-defined in their own TUs (struct CylinderClsn / struct Camera) */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self,
                                                                   void *cl)
 { ((Actor *)self)->UpdatePosWithOnlySpeed((CylinderClsn *)cl); }
+#else
+extern "C" void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self,
+                                                                  void *cl);  /* Linux: real symbol from src/_ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn */
+#endif /* _WIN32 */
 struct Camera { void SetFlag_3(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN6Camera9SetFlag_3Ev(void *self)
 { ((Camera *)self)->SetFlag_3(); }
+#else
+extern "C" void _ZN6Camera9SetFlag_3Ev(void *self);  /* Linux: real symbol from src/_ZN6Camera9SetFlag_3Ev */
+#endif /* _WIN32 */
 
 /* REAL BODY here, not a hop back to the method: the method shadow above
    already forwards to this C name, and forwarding back made a mutual

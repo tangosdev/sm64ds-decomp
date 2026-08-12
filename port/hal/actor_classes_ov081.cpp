@@ -480,26 +480,62 @@ extern "C" void hal_fill_ice_block_vtable(void)
 #include "MrBlizzard.h"
 #include "IceBlock.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9Spindrift13InitResourcesEv(void *self)
 { return ((Spindrift *)self)->Spindrift::InitResources(); }
+#else
+int _ZN9Spindrift13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN9Spindrift13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN9Spindrift8BehaviorEv(void *self)
 { return ((Spindrift *)self)->Spindrift::Behavior(); }
+#else
+int _ZN9Spindrift8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN9Spindrift8BehaviorEv */
+#endif /* _WIN32 */
 /* _ZN9Spindrift6RenderEv is NOT faced here -- the ModelAnim slot-5 collision.
    The matched Spindrift::Render dispatches ROM slot 5 through a six-virtual
    shadow off mModelAnim (+0x110); host copy in
    port/unmatched/ModelAnim_Renders.cpp spells it as qualified ModelAnim::Render. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10MrBlizzard13InitResourcesEv(void *self)
 { return ((MrBlizzard *)self)->MrBlizzard::InitResources(); }
+#else
+int _ZN10MrBlizzard13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN10MrBlizzard13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10MrBlizzard8BehaviorEv(void *self)
 { return ((MrBlizzard *)self)->MrBlizzard::Behavior(); }
+#else
+int _ZN10MrBlizzard8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN10MrBlizzard8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN10MrBlizzard6RenderEv(void *self)
 { return ((MrBlizzard *)self)->MrBlizzard::Render(); }
+#else
+int _ZN10MrBlizzard6RenderEv(void *self);  /* Linux: real symbol from src/_ZN10MrBlizzard6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceBlock13InitResourcesEv(void *self)
 { return ((IceBlock *)self)->IceBlock::InitResources(); }
+#else
+int _ZN8IceBlock13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8IceBlock13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceBlock16CleanupResourcesEv(void *self)
 { return ((IceBlock *)self)->IceBlock::CleanupResources(); }
+#else
+int _ZN8IceBlock16CleanupResourcesEv(void *self);  /* Linux: real symbol from src/_ZN8IceBlock16CleanupResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceBlock8BehaviorEv(void *self)
 { return ((IceBlock *)self)->IceBlock::Behavior(); }
+#else
+int _ZN8IceBlock8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN8IceBlock8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8IceBlock6RenderEv(void *self)
 { return ((IceBlock *)self)->IceBlock::Render(); }
+#else
+int _ZN8IceBlock6RenderEv(void *self);  /* Linux: real symbol from src/_ZN8IceBlock6RenderEv */
+#endif /* _WIN32 */
 }

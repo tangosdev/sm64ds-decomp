@@ -119,9 +119,30 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <process.h>   /* _execl: the debug menu's level row relaunches */
+#endif
+
+#ifndef _WIN32
+/* ===== LINUX PLATFORM SEAM (Phase 1 Lane A) ===============================
+   On Linux the whole Win32 window/input/blit surface below is replaced by the
+   SDL2 + POSIX shim. The header supplies the Windows types, VK_* constants, the
+   `WinApi` function-pointer table (SDL-backed), and QPC/Sleep. The Win32
+   dynamic-loader block that follows is compiled ONLY on _WIN32. */
+#include "hal/host_platform_linux.h"
+/* readlink("/proc/self/exe") in port_startup_error_path, the stand-in for
+   GetModuleFileNameA. */
+#include <unistd.h>
+static WinApi W;
+/* XInput has no SDL analog wired in this lane; keyboard is the input floor.
+   A null pad pointer makes every `XInputGetState_ && ...` guard fall through. */
+static DWORD (*XInputGetState_)(DWORD, void *) = nullptr;
+struct XPad { unsigned long packet; unsigned short buttons;
+              unsigned char lt, rt; short lx, ly, rx, ry; };
+static bool winapi_load(void) { return port_lin_winapi_load(&W); }
+#else
 
 /* user32/gdi32 are loaded DYNAMICALLY after io_init: a static import chain
    initializes the desktop heap before main, and on 32-bit that mapping can
@@ -230,6 +251,7 @@ static bool winapi_load(void)
     return W.RegisterClassA_ && W.CreateWindowExA_ && W.DefWindowProcA_ &&
            W.PeekMessageA_ && W.StretchDIBits_ && W.GetAsyncKeyState_;
 }
+#endif /* _WIN32 (Win32 dynamic-loader block) */
 
 #include "ntr/gx.h"
 #include "ntr/mmio.h"
@@ -239,6 +261,10 @@ static bool winapi_load(void)
    external seams (port_rich_dump_ex, port_crash_dir_get) the quarantine walker
    in port/unmatched/func_02043fdc.cpp weak-links against. */
 #define PORT_FAULT_PROBE_DEFINE_EXPORTS
+/* walk_window defines port_playlog_path (= g_playlog) and port_last_frame
+   strongly below, so on Linux tell fault_probe.h not to also emit its weak
+   fallbacks for those two (two defs in one TU is a GCC error). No-op on Win32. */
+#define PORT_FAULT_PROBE_STRONG_GLOBALS
 #include "fault_probe.h"
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
@@ -1505,24 +1531,44 @@ static void stdout_flush_atexit(void) { fflush(stdout); }
    known to be in trouble. */
 static void port_startup_error_path(char *path, unsigned cap)
 {
+#ifdef _WIN32
     DWORD n = GetModuleFileNameA(0, path, cap);
     while (n && path[n - 1] != 92 /* '\\' */)
         --n;
     lstrcpynA(path + n, "startup_error.txt", (int)(cap - n));
+#else
+    /* Same contract: the file sits next to the executable, so the launcher
+       finds it without being told where. /proc/self/exe is the Linux answer to
+       GetModuleFileNameA. If the readlink fails there is no exe directory to
+       speak of, so fall back to the working directory rather than write into
+       whatever partial path was left in the buffer. */
+    ssize_t n = readlink("/proc/self/exe", path, cap - 1);
+    if (n <= 0)
+        n = 0;
+    path[n] = 0;
+    while (n && path[n - 1] != '/')
+        --n;
+    snprintf(path + n, cap - (unsigned)n, "startup_error.txt");
+#endif
 }
 
 static void port_startup_error_clear(void)
 {
     char path[MAX_PATH + 32];
     port_startup_error_path(path, sizeof path);
+#ifdef _WIN32
     DeleteFileA(path);
+#else
+    remove(path);
+#endif
 }
 
 static void port_startup_error_write(const char *text)
 {
     char path[MAX_PATH + 32];
-    HANDLE f;
     port_startup_error_path(path, sizeof path);
+#ifdef _WIN32
+    HANDLE f;
     f = CreateFileA(path, GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS,
                     FILE_ATTRIBUTE_NORMAL, 0);
     if (f != INVALID_HANDLE_VALUE) {
@@ -1531,6 +1577,19 @@ static void port_startup_error_write(const char *text)
         FlushFileBuffers(f);
         CloseHandle(f);
     }
+#else
+    /* Linux: plain stdio rather than five more Win32 stubs in the platform
+       shim. The raw-Win32 discipline the comment above describes is about
+       staying off the CRT on a process already in trouble on Windows, where
+       the CRT may be the thing that is broken; on Linux fopen is the base
+       layer, so there is nothing lower to drop to. Same file, same place. */
+    FILE *f = fopen(path, "wb");
+    if (f) {
+        fwrite(text, 1, strlen(text), f);
+        fflush(f);
+        fclose(f);
+    }
+#endif
 }
 
 /* Also say it on screen, for the player who double-clicked the exe instead of
@@ -1542,10 +1601,11 @@ static void port_startup_error_write(const char *text)
    block on a modal nobody is there to dismiss. */
 static void port_startup_error_show(const char *text)
 {
-    HMODULE u32;
-    int (WINAPI *mb)(HWND, LPCSTR, LPCSTR, UINT);
     if (getenv("SM64DS_NO_DIALOG") || getenv("SM64DS_WINDOW_SELFTEST"))
         return;
+#ifdef _WIN32
+    HMODULE u32;
+    int (WINAPI *mb)(HWND, LPCSTR, LPCSTR, UINT);
     u32 = LoadLibraryA("user32.dll");
     if (!u32)
         return;
@@ -1553,6 +1613,13 @@ static void port_startup_error_show(const char *text)
          GetProcAddress(u32, "MessageBoxA");
     if (mb)
         mb(0, text, "Super Mario 64 DS could not start", 0x10 /* MB_ICONERROR */);
+#else
+    /* Linux: no user32, and nothing to raise a modal with. The reason still has
+       to reach the player, and a startup failure means there is no window to
+       print into, so stderr is the whole channel. The env guards above are
+       checked first so an automated run stays silent on both platforms. */
+    fprintf(stderr, "Super Mario 64 DS could not start: %s\n", text);
+#endif
 }
 
 /* PORT_HOST_ABI: the host program entry point (window + ntr bring-up + frame
@@ -1569,7 +1636,12 @@ int main(void)
        the .map file resolves. The _with_file form also writes crash.txt next
        to the exe with raw Win32, so a run without a captured stderr still
        leaves the address behind. */
+#ifdef _WIN32
     SetUnhandledExceptionFilter(port_fault_probe_with_file);
+#endif
+    /* Linux: the SEH-based crash probe is a later lane (signal/sigaction
+       translation). The frame-context globals (port_last_frame, port_playlog_path)
+       are still maintained; only the arming call is Windows-only for now. */
     /* world = KCL file x64. Default spawn: north end of the stone
        bridge (deck ~892), facing the walk south across it -- the shot
        that calibrates against real-game footage. Roof surface = 4916,
@@ -1642,13 +1714,23 @@ int main(void)
        session to see what led into a glitch. SM64DS_NO_PLAYLOG=1
        keeps stderr on the console instead. */
     if (!getenv("SM64DS_NO_PLAYLOG") && !getenv("SM64DS_WINDOW_SELFTEST")) {
-        CreateDirectoryA("playlog", NULL);
         char *logname = g_playlog;
+#ifdef _WIN32
+        CreateDirectoryA("playlog", NULL);
         SYSTEMTIME st_;
         GetLocalTime(&st_);
         snprintf(logname, sizeof g_playlog,
                  "playlog/play_%04u%02u%02u_%02u%02u%02u.log", st_.wYear,
                  st_.wMonth, st_.wDay, st_.wHour, st_.wMinute, st_.wSecond);
+#else
+        mkdir("playlog", 0755);
+        time_t t_ = time(nullptr);
+        struct tm tm_; localtime_r(&t_, &tm_);
+        snprintf(logname, sizeof g_playlog,
+                 "playlog/play_%04d%02d%02d_%02d%02d%02d.log",
+                 tm_.tm_year + 1900, tm_.tm_mon + 1, tm_.tm_mday,
+                 tm_.tm_hour, tm_.tm_min, tm_.tm_sec);
+#endif
         if (freopen(logname, "w", stderr)) {
             setvbuf(stderr, NULL, _IONBF, 0);
             printf("flight recorder: %s\n", logname);
@@ -2005,6 +2087,12 @@ int main(void)
         int hit = _ZN13RaycastGround10DetectClsnEv(rg);
         printf("ground probe at spawn: hit=%d ground_y=%d (%.1f units)\n",
                hit, *(int *)(rg + 0x3c), *(int *)(rg + 0x3c) / 4096.0f);
+#ifdef _WIN32 /* LINUX: this diagnostic hand-dispatches vtable slot 6 with a
+   hardcoded __fastcall (ecx-this) cast, which is the MSVC collision-vtable ABI.
+   On Linux the slot is a SysV-cdecl thunk (see hal/clsn_vtable.cpp slotL_ground),
+   so the fastcall cast hands it a garbage this. The real ground probe above
+   (RaycastGround::DetectClsn) already ran and printed the hit; this extra
+   direct-slot diagnostic is Windows-only. */
         {
             extern void *data_020a0c80[];
             int direct = ((int(__fastcall *)(void *, void *, void *))(
@@ -2025,6 +2113,7 @@ int main(void)
                 printf("manual filter(rg, p)=%d p2=%p\n", f, p2);
             }
         }
+#endif /* _WIN32 (direct-slot6 fastcall diagnostic) */
         /* floor map: direct line walks over a coarse grid */
         for (int gz = -400; gz <= 400; gz += 200) {
             char row[64] = {0};
@@ -2203,6 +2292,17 @@ int main(void)
         port_course_seat();
 
     /* window */
+    /* THE TITLE BAR IS THE CONTROLS CARD. There is nowhere else to put them
+       that does not cost a keypress to read: the F3 overlay is timings, the
+       F5 menu is state, and both of those you have to already know how to
+       open. The bar is the one surface that is legible before you touch
+       anything, so the keys live there. */
+    const char *k_title =
+        "SM64DS   |   WASD move   Shift dash   Space jump"
+        "   X punch   Ctrl crouch   |   Q/E turn   R/F"
+        " tilt   |   F1 camera   F3 stats   F5 menu"
+        "   Tab panel   Esc quit";
+#ifdef _WIN32
     WNDCLASSA wc = {};
     wc.lpfnWndProc = wndproc;
     wc.hInstance = GetModuleHandleA(0);
@@ -2211,22 +2311,21 @@ int main(void)
     W.RegisterClassA_(&wc);
     RECT r = {0, 0, ntr::SCREEN_W * ZOOM, ntr::SCREEN_H * ZOOM};
     W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME, FALSE);
-    /* THE TITLE BAR IS THE CONTROLS CARD. There is nowhere else to put them
-       that does not cost a keypress to read: the F3 overlay is timings, the
-       F5 menu is state, and both of those you have to already know how to
-       open. The bar is the one surface that is legible before you touch
-       anything, so the keys live there. */
-    HWND hwnd = W.CreateWindowExA_(0, "sm64ds_walk",
-                              "SM64DS   |   WASD move   Shift dash   Space jump"
-                              "   X punch   Ctrl crouch   |   Q/E turn   R/F"
-                              " tilt   |   F1 camera   F3 stats   F5 menu"
-                              "   Tab panel   Esc quit",
+    HWND hwnd = W.CreateWindowExA_(0, "sm64ds_walk", k_title,
                               (WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME) |
                                   WS_VISIBLE,
                               CW_USEDEFAULT, CW_USEDEFAULT,
                               r.right - r.left, r.bottom - r.top, 0, 0,
                               wc.hInstance, 0);
     HDC hdc = W.GetDC_(hwnd);
+#else
+    /* Linux: SDL owns the window; hand it the wndproc so the SDL event pump can
+       reuse the mouse-look/touch/wheel handler verbatim. */
+    port_lin_set_wndproc(wndproc);
+    port_lin_create_window(ntr::SCREEN_W, ntr::SCREEN_H, ZOOM, k_title);
+    HWND hwnd = (HWND)1;   /* opaque; the sub-screen touch bridge takes it */
+    HDC  hdc  = (HDC)0;    /* unused by the SDL blit */
+#endif
     BITMAPINFO bi = {};
     bi.bmiHeader.biSize = sizeof bi.bmiHeader;
     bi.bmiHeader.biWidth = ntr::SCREEN_W;

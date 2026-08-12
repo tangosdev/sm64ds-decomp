@@ -88,18 +88,31 @@ struct Enemy {
     void SpawnCoin();
     void SpawnMegaCharParticles(Actor &a, char *p);
 };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Enemy9SpawnCoinEv(void *self)
 { ((Enemy *)self)->Enemy::SpawnCoin(); }
+#else
+extern "C" void _ZN5Enemy9SpawnCoinEv(void *self);  /* Linux: real symbol from src/_ZN5Enemy9SpawnCoinEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(void *self,
                                                             void *a, char *p)
 { ((Enemy *)self)->Enemy::SpawnMegaCharParticles(*(Actor *)a, p); }
+#else
+extern "C" void _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(void *self,
+                                                            void *a, char *p);  /* Linux: real symbol from src/_ZN5Enemy22SpawnMegaCharParticlesER5ActorPc */
+#endif /* _WIN32 */
 
 /* Player::IncMegaKillCount, which the knockback at ov002 0x020ada40 runs when
    a mega-form Mario is the one that hit the enemy. Its own TU defines it
    against include/Player.h; the caller spells the C name. */
 struct Player { void IncMegaKillCount(); };
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" void _ZN6Player16IncMegaKillCountEv(void *self)
 { ((Player *)self)->Player::IncMegaKillCount(); }
+#else
+extern "C" void _ZN6Player16IncMegaKillCountEv(void *self);  /* Linux: real symbol from src/_ZN6Player16IncMegaKillCountEv */
+#endif /* _WIN32 */
 
 // ---- the two RIDE-THROUGH returns ------------------------------------------
 //
@@ -163,12 +176,21 @@ int ShadowModel::InitCylinder() { return 1; }
 extern "C" {
 /* MaterialChanger: two of its three are methods (SetFile already defines the
    C name in its own TU). */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *self, void *bmd,
                                                        void *bma)
 { ((MaterialChanger *)self)->MaterialChanger::Prepare(*(BMD_File *)bmd,
                                                       *(BMA_File *)bma); }
+#else
+void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *self, void *bmd,
+                                                       void *bma);  /* Linux: real symbol from src/_ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN15MaterialChanger6UpdateER15ModelComponents(void *self, void *model)
 { ((MaterialChanger *)self)->MaterialChanger::Update(*(ModelComponents *)model); }
+#else
+void _ZN15MaterialChanger6UpdateER15ModelComponents(void *self, void *model);  /* Linux: real symbol from src/_ZN15MaterialChanger6UpdateER15ModelComponents */
+#endif /* _WIN32 */
 }
 
 /* func_ov084_02129238 builds a RaycastGround on its own stack and arms it
@@ -199,14 +221,26 @@ void RaycastGround::StopDetectingOrdinary()
    while every caller in ov084 spells the Itanium C name. */
 #include "CapEnemy.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void *self)
 { return ((CapEnemy *)self)->CapEnemy::DestroyIfCapNotNeeded(); }
+#else
+int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void *self);  /* Linux: real symbol from src/_ZN8CapEnemy21DestroyIfCapNotNeededEv */
+#endif /* _WIN32 */
 void *_ZN8CapEnemy15RespawnIfHasCapEv(void *self)
 { return ((CapEnemy *)self)->CapEnemy::RespawnIfHasCap(); }
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8CapEnemy12Unk_02005d94Ev(void *self)
 { ((CapEnemy *)self)->CapEnemy::Unk_02005d94(); }
+#else
+void _ZN8CapEnemy12Unk_02005d94Ev(void *self);  /* Linux: real symbol from src/_ZN8CapEnemy12Unk_02005d94Ev */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8CapEnemy14RenderCapModelEPK7Vector3(void *self, const void *v)
 { ((CapEnemy *)self)->CapEnemy::RenderCapModel((const Vector3 *)v); }
+#else
+void _ZN8CapEnemy14RenderCapModelEPK7Vector3(void *self, const void *v);  /* Linux: real symbol from src/_ZN8CapEnemy14RenderCapModelEPK7Vector3 */
+#endif /* _WIN32 */
 }
 
 /* WithMeshClsn's flag helper. Its sibling Unk_0203589c is NOT declared in
@@ -214,8 +248,12 @@ void _ZN8CapEnemy14RenderCapModelEPK7Vector3(void *self, const void *v)
    is in hal/bob_enemy_shadow_faces.cpp with the other two of its kind. */
 #include "WithMeshClsn.h"
 extern "C" {
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void *self)
 { ((WithMeshClsn *)self)->WithMeshClsn::ClearJustHitGroundFlag(); }
+#else
+void _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(void *self);  /* Linux: real symbol from src/_ZN12WithMeshClsn22ClearJustHitGroundFlagEv */
+#endif /* _WIN32 */
 }
 
 /* ---- three more names spelled without their overlay, or with the wrong one -

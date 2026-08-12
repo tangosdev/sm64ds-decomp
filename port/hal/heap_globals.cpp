@@ -36,6 +36,14 @@ void MultiStore_Int(int val, int *dst, int len)
 #pragma comment(linker, "/alternatename:_data_020a4d38=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory16rootHeapIteratorE@@3DA=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+#ifndef _WIN32
+/* Linux: /alternatename has no GCC analog. The by-address identity the DS gets
+   for free (one storage, C name data_020a4d38 == C++ name
+   Memory::rootHeapIterator) is restored with a weak symbol alias onto the one
+   storage above. Data only (no calling convention), so this is exactly safe. */
+extern "C" char data_020a4d38[0x20]
+    __attribute__((weak, alias("_ZN6Memory16rootHeapIteratorE")));
+#endif
 // FUNCTION alias only where the conventions MATCH: this reference and the C
 // definition are both __cdecl free functions.
 #pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
@@ -46,6 +54,18 @@ void MultiStore_Int(int val, int *dst, int len)
 // /alternatename between those links fine and then reads garbage as `this`
 // at runtime. Real forwarders convert the convention.
 #include "NestedHeapIterator.h"
+// LINUX CRITICAL: on GCC/Itanium these `extern "C"` forwarder NAMES mangle
+// IDENTICALLY to the C++ methods they forward to (e.g.
+// _ZN18NestedHeapIterator4NextEP13HeapAllocator IS the Itanium mangling of
+// NestedHeapIterator::Next(HeapAllocator*)). So the forwarder body's `->Next(a)`
+// call resolves to the forwarder itself -> infinite recursion, a SIGSEGV in the
+// heap bring-up (seen in smoke_heap/smoke_roots/smoke_frames). On MSVC the two
+// manglings differ, so the forwarder is a real __cdecl->__thiscall converter.
+// On Linux the real src/ methods (src/_ZN18NestedHeapIterator4NextEP...cpp, in
+// slice_gate2) already PROVIDE these exact symbols with the correct this-first
+// ABI, so the forwarders are redundant AND harmful -- omit them and let the C
+// callers bind straight to the real methods.
+#ifdef _WIN32
 extern "C" {
 void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void *self, HeapAllocator *a)
 { ((NestedHeapIterator *)self)->AddLast(a); }
@@ -61,3 +81,4 @@ int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
 // too, or both callers go unresolved.
 extern "C" void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
 { ((NestedHeapIterator *)self)->Init((HeapAllocator *)a); }
+#endif /* _WIN32 -- Linux binds C callers straight to the real src/ methods */

@@ -100,8 +100,17 @@
    and the scene-tree drop). It is the same guard port_q_is_frozen and
    port_q_actor_id in port/unmatched/func_02043fdc.cpp have carried since
    playlog 041729, and this file needs it for the same reason. */
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+/* Linux: the same shape port/unmatched/func_02043fdc.cpp already uses. A real
+   pointer-validity probe belongs to the deferred crash-forensics lane, so
+   assume readable; the call sites below then behave as they did before this
+   guard was added on Windows. */
+#include "host_platform_linux.h"
+static inline int IsBadReadPtr(const void *, unsigned long) { return 0; }
+#endif
 
 extern "C" {
 

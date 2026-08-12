@@ -17,12 +17,19 @@
    `struct View`); src defines the function at C linkage. Same shape as the
    method faces in method_faces.cpp, kept here because the local View has no
    header. */
+extern "C" int _ZN4View6RenderEv(void *self);
+#ifdef _WIN32
+/* MSVC decorates View::Render() (?Render@View@@...) differently from the src's
+   C-linkage _ZN4View6RenderEv, so this face bridges the method call to it. */
 struct View {
     int render();
     int Render();
 };
-extern "C" int _ZN4View6RenderEv(void *self);
 int View::Render() { return _ZN4View6RenderEv(this); }
+#endif /* _WIN32: on GCC the C++ method View::Render() mangles to the SAME
+   _ZN4View6RenderEv as the src C-linkage def, so Camera::Render's view->Render()
+   binds straight to src/_ZN4View6RenderEv.c (self==this). This face would
+   self-recurse. */
 
 extern "C" {
 
@@ -34,14 +41,30 @@ void *_ZN6CameraC1Ev(void *self);
 
 /* method faces (the definitions are MSVC methods; every caller and the
    vtable want C names) */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera13InitResourcesEv(void *self)
 { return ((Camera *)self)->Camera::InitResources(); }
+#else
+int _ZN6Camera13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN6Camera13InitResourcesEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera8BehaviorEv(void *self)
 { return ((Camera *)self)->Camera::Behavior(); }
+#else
+int _ZN6Camera8BehaviorEv(void *self);  /* Linux: real symbol from src/_ZN6Camera8BehaviorEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN6Camera6RenderEv(void *self)
 { return ((Camera *)self)->Camera::Render(); }
+#else
+int _ZN6Camera6RenderEv(void *self);  /* Linux: real symbol from src/_ZN6Camera6RenderEv */
+#endif /* _WIN32 */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN6Camera16OnPendingDestroyEv(void *self)
 { ((Camera *)self)->Camera::OnPendingDestroy(); }
+#else
+void _ZN6Camera16OnPendingDestroyEv(void *self);  /* Linux: real symbol from src/_ZN6Camera16OnPendingDestroyEv */
+#endif /* _WIN32 */
 
 /* ---- the vtable -------------------------------------------------------
    ROM SLOT ORDER, the ArrowSignRight layout (hal/actor_vtables.cpp): the
@@ -167,10 +190,9 @@ extern "C" void hal_camera_slots_harness_owned(void)
    them back in ROM order -- see CONTIG in port/tools/romdata.py for the
    mechanism; sizes here are the symbol deltas, all even, so align(2) packs
    with no interior padding. */
+#include "port_msvc_compat.h"
 #define COMM(sec, name, size) \
-    __pragma(section(sec, read, write))                          \
-    extern "C" __declspec(allocate(sec)) __declspec(align(2))    \
-    unsigned char name[size] = {0}
+    extern "C" PORT_GROUPED_DECL_A(sec, ".camcomm", 2) unsigned char name[size] = {0}
 
 /* 0x020a1040 .. 0x020a1064: the local record (0x24) */
 COMM(".camcomm$0000", data_020a1040, 4);
@@ -280,8 +302,12 @@ void _ZN6Camera25SaveCameraStateBeforeTalkEv(void)
         ((Camera *)data_0209f318)->Camera::SaveCameraStateBeforeTalk();
 }
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the const method it forwards to -> self-recurse on GCC. On Linux bind to the real src/ TU. */
 int _ZNK7PathPtr5LoopsEv(void *self)
 { return ((PathPtr *)self)->PathPtr::Loops() ? 1 : 0; }
+#else
+int _ZNK7PathPtr5LoopsEv(void *self);
+#endif /* _WIN32 */
 
 int hal_camera_behavior(void *cam) { return _ZN6Camera8BehaviorEv(cam); }
 int hal_camera_render(void *cam) { return _ZN6Camera6RenderEv(cam); }

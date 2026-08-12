@@ -51,14 +51,20 @@ void _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(void *, void *);
    METHOD face for it is below, outside this extern "C" block. */
 
 /* slot 0 of the CheckLavaCallback vtable */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 void _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE(void *self,
                                                                   void *sys)
 {
     ((Particle::CheckLavaCallback *)self)
         ->SpawnParticles(*(Particle::System *)sys);
 }
+#else
+void _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE(void *self,
+                                                                  void *sys);  /* Linux: real symbol from src/_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE */
+#endif /* _WIN32 */
 
 /* slot 1 of the CleanParticleCallback vtable */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *self,
                                                                void *sys,
                                                                int done)
@@ -66,8 +72,14 @@ int _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *self,
     return ((Particle::CleanParticleCallback *)self)
         ->OnUpdate(*(Particle::System *)sys, done != 0);
 }
+#else
+int _ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb(void *self,
+                                                               void *sys,
+                                                               int done);  /* Linux: real symbol from src/_ZN8Particle21CleanParticleCallback8OnUpdateERNS_6SystemEb */
+#endif /* _WIN32 */
 
 /* slot 1 of the CheckWaterRippleCallback vtable */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 int _ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb(void *self,
                                                                   void *sys,
                                                                   int b)
@@ -77,16 +89,29 @@ int _ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb(void *self,
                ? 1
                : 0;
 }
+#else
+int _ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb(void *self,
+                                                                  void *sys,
+                                                                  int b);  /* Linux: real symbol from src/_ZN8Particle24CheckWaterRippleCallback8OnUpdateERNS_6SystemEb */
+#endif /* _WIN32 */
 
 /* Both are static/namespace-scope and therefore already cdecl, but the
    defining TUs are C++ so the Itanium name the particle sources spell has
    nothing behind it. Two-line faces beat guessing a decorated name. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 unsigned _ZN5Model13GetVramOffsetEj(unsigned size)
 {
     return Model::GetVramOffset(size);
 }
+#else
+unsigned _ZN5Model13GetVramOffsetEj(unsigned size);  /* Linux: real symbol from src/_ZN5Model13GetVramOffsetEj */
+#endif /* _WIN32 */
 
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of Memory::Allocate(unsigned) -> self-recurse on GCC. On Linux bind to the real src/_ZN6Memory8AllocateEj.cpp. */
 void *_ZN6Memory8AllocateEj(unsigned size) { return Memory::Allocate(size); }
+#else
+void *_ZN6Memory8AllocateEj(unsigned size);
+#endif /* _WIN32 */
 
 /* cstd::div wears its pre-naming address in func_0204dab4, the effect VM's
    scale ramp: `0x1000 - func_02052f4c(f2e << 12, f2c)`. 0x02052f4c IS
@@ -129,10 +154,17 @@ void func_0205256c(int *m, int s, int c)
 
 /* the method face named above: CheckLavaCallback's own SpawnParticles calls
    this on its base, and the host copy is what actually runs */
+#ifdef _WIN32
 void Particle::SimpleCallback::SpawnParticles(System &sys)
 {
     _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE(this, &sys);
 }
+#endif /* _WIN32: on GCC this C++ method mangles to the SAME
+   _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE it forwards to, so
+   the face is a self-forwarding stub that shadows the real host copy in
+   unmatched/Particle_RideThroughs.cpp by link order -> infinite recursion when a
+   landing-dust particle spawns (~frame 46). On Linux the base-method call binds
+   straight to the host copy. */
 
 // ---- the lifecycle seams ---------------------------------------------------
 //

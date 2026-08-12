@@ -67,14 +67,18 @@ struct Actor {
     short ReflectAngle(int a, int b, short c);
     int DistToCPlayer();          /* gate 42: PeachPainting::Behavior */
 };
+#ifdef _WIN32 /* LINUX: these methods ARE their own manglings -> self-recurse; real src TUs own the symbols. (ReflectAngle stays -- it forwards to the DIFFERENTLY-mangled Fix12 template symbol, a real bridge on both.) */
 void Actor::UpdatePos(CylinderClsn *clsn)
 { _ZN5Actor9UpdatePosEP12CylinderClsn(this, clsn); }
 void Actor::UpdatePosWithHorzSpeedAndAng()
 { _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(this); }
+#endif
 short Actor::ReflectAngle(int a, int b, short c)
 { return _ZN5Actor12ReflectAngleE5Fix12IiES1_s(this, a, b, c); }
+#ifdef _WIN32 /* LINUX: DistToCPlayer IS its own mangling -> self-recurse. */
 int Actor::DistToCPlayer()
 { return _ZN5Actor13DistToCPlayerEv(this); }
+#endif
 
 /* gate 42: PeachPainting's Behavior/Render call ModelBase::ApplyOpacity with a
    second argument (?ApplyOpacity@ModelBase@@QAEXIH@Z); the ROM body takes one,
@@ -116,10 +120,12 @@ struct WithMeshClsn {
     int IsOnWall() const;
     int JustHitGround() const;
 };
+#ifdef _WIN32 /* LINUX: these const methods ARE their own manglings -> self-recurse; real src TUs own them. */
 int WithMeshClsn::IsOnWall() const
 { return _ZNK12WithMeshClsn8IsOnWallEv((void *)this); }
 int WithMeshClsn::JustHitGround() const
 { return _ZNK12WithMeshClsn13JustHitGroundEv((void *)this); }
+#endif
 void WithMeshClsn::Init(Actor *actor, int radius, int height, Vector3_16 *v,
                         int t)
 { _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(this, actor,

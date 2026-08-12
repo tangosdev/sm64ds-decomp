@@ -1,18 +1,66 @@
 cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
-# Link the static CRT so shipped exes never depend on the VC++ redist (CMP0091).
-# Release 0.1.6 shipped dynamically linked because nothing pinned this and CMake
-# defaults to the DLL runtime, so a player without the redist could not start the
-# game at all, and that failure produces no crash dump and never reaches intake.
-# This must stay GLOBAL and stay above the targets: a per-target property on the
-# shipped exe alone would leave the test harnesses on the dynamic default, and a
-# harness linked differently from the shipped artifact resolves addresses that do
-# not match what players run. The generator expression keeps the debug CRT for
-# Debug builds, so heap and iterator assertions still fire while chasing
-# allocator bugs; plain "MultiThreaded" would silently link the release CRT there.
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
-add_compile_options(/Oy-)
+# These two are MSVC-only codegen/link flags (a .map file, no frame-pointer
+# omission). On a non-MSVC (Linux/g++) build they are not valid options, so
+# guard them; the Linux port gets the equivalent -m32 / -fno-omit-frame-pointer
+# from PORT_LINUX_M32 below. The Windows build is byte-for-byte unchanged.
+if(MSVC)
+    # Link the static CRT so shipped exes never depend on the VC++ redist (CMP0091).
+    # Release 0.1.6 shipped dynamically linked because nothing pinned this and CMake
+    # defaults to the DLL runtime, so a player without the redist could not start the
+    # game at all, and that failure produces no crash dump and never reaches intake.
+    # This must stay GLOBAL and stay above the targets: a per-target property on the
+    # shipped exe alone would leave the test harnesses on the dynamic default, and a
+    # harness linked differently from the shipped artifact resolves addresses that do
+    # not match what players run. The generator expression keeps the debug CRT for
+    # Debug builds, so heap and iterator assertions still fire while chasing
+    # allocator bugs; plain "MultiThreaded" would silently link the release CRT there.
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
+    add_compile_options(/Oy-)
+endif()
+
+# ---- Linux port: force a 32-bit host build (the port is 32-bit only) --------
+# platform.h enforces 4-byte pointers at compile time; on Linux we must pass
+# -m32 to every C/C++ compile and to the link. Applied globally here so every
+# gate target and the ntr libs are 32-bit. Windows/MSVC never enters this block.
+if(NOT MSVC)
+    # -fno-toplevel-reorder: hal/model_host.cpp lays the three OAM-shadow arrays
+    # in one section and relies on declaration order to reproduce the ROM's
+    # contiguous 0x400 struct (the MSVC build gets this from $-suffix section
+    # grouping). Keeping the flag global is harmless for the rest of the tree.
+    add_compile_options(-m32 -fno-omit-frame-pointer -fno-toplevel-reorder)
+    # -fno-strict-aliasing: the byte-locked src/ rebases file-relative offsets in
+    # place by type-punning the same slot as int and as a pointer -- e.g.
+    # Model::UpdateFileOffsets does `*(int*)(m+4) += base;` and then reads the same
+    # word back as `*(char**)(m+4)`. That is exactly what the ROM's mwcc build does
+    # and it relies on the store being observed by the very next load. At -O3 with
+    # strict aliasing GCC treats the int store and the char* load as non-aliasing,
+    # keeps the STALE raw offset in a register, and dereferences it (a 0x44 file
+    # offset used as a pointer -> SIGSEGV on the castle-grounds BMD load). MSVC does
+    # not reorder across such a store, so Windows is byte-identical and unaffected.
+    # The flag restores that ordering for GCC across every type-punned reloc site in
+    # the tree at once, with no edit to the matched source.
+    add_compile_options(-fno-strict-aliasing)
+    # -fpermissive: the byte-locked src/ tree is C that mwcc/MSVC accept but g++
+    # (in C++ mode, which the port compiles several .c files as) rejects as hard
+    # errors -- a goto that jumps over a trivially-initialized local, a
+    # function-pointer implicitly converted to void*, `extern "C" { extern ... }`.
+    # These are all well-defined and match the ROM; -fpermissive downgrades them
+    # to warnings so the byte-identical source stays unedited. MSVC is unaffected.
+    add_compile_options(-fpermissive)
+    # MSVC's linker resolves a duplicate symbol by taking the first definition and
+    # dropping the rest (the port relies on this: several ROM bodies exist both in
+    # a byte-locked src TU and as a HAL host copy that supersedes it). GNU ld
+    # errors by default; --allow-multiple-definition matches the MSVC behavior so
+    # the same source set links. The HAL copy (linked first) is the one kept, which
+    # is the intended one.
+    add_link_options(-m32 "-Wl,--allow-multiple-definition")
+    # Force-include the MSVC-keyword shims into every TU so the HAL's __fastcall
+    # vtable-slot shims and __thiscall/__stdcall casts compile on GCC/Clang
+    # without editing each file's include list. MSVC never sees this.
+    add_compile_options(-include "${CMAKE_CURRENT_SOURCE_DIR}/hal/port_msvc_compat.h")
+endif()
 
 # Test-only fault injection: SM64DS_TEST_QUARANTINE, the hook in
 # port/unmatched/func_02043fdc.cpp that force-freezes an actor by raising the
@@ -43,6 +91,101 @@ endif()
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+
+# ---- Linux port (Phase 1 Lane A): the SDL2 host window/input/blit backend ----
+# On Windows this stays OFF and nothing about the build changes -- the MSVC
+# walk_window path is byte-for-byte the Win32 GDI/user32 one. On a non-MSVC
+# (Linux/g++) build the platform seam in walk_window.cpp compiles the SDL2
+# backend instead, and this wires SDL2 in. Default follows the platform: ON when
+# not MSVC, OFF on MSVC. See port/hal/host_platform_linux.{h,cpp}.
+if(MSVC)
+    option(PORT_ENABLE_SDL2 "Build the SDL2 host backend (Linux port)" OFF)
+else()
+    option(PORT_ENABLE_SDL2 "Build the SDL2 host backend (Linux port)" ON)
+endif()
+if(PORT_ENABLE_SDL2 AND NOT MSVC)
+    # This is a 32-bit (-m32) build, so we need the i386 multiarch SDL2, whose
+    # CMake config Debian/Ubuntu ships under /usr/lib/i386-linux-gnu/cmake/SDL2.
+    # find_package's default search does not look there on a 64-bit host, so hint
+    # it explicitly (a no-op if the caller already passed SDL2_DIR / a prefix, and
+    # harmless on non-Debian layouts where the dir simply does not exist).
+    if(NOT SDL2_DIR AND EXISTS "/usr/lib/i386-linux-gnu/cmake/SDL2")
+        set(SDL2_DIR "/usr/lib/i386-linux-gnu/cmake/SDL2" CACHE PATH
+            "i386 SDL2 CMake config dir (32-bit multiarch)")
+    endif()
+    find_package(SDL2 REQUIRED)
+    message(STATUS "PORT_ENABLE_SDL2: SDL2 found (${SDL2_LIBRARIES})")
+    # The interactive-window targets (walk_window, walk_window_hires) get the
+    # SDL2 backend TU + link. Applied where those targets are defined below via
+    # port_enable_sdl2(<target>).
+    function(port_enable_sdl2 tgt)
+        target_sources(${tgt} PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/hal/host_platform_linux.cpp")
+        target_include_directories(${tgt} PRIVATE ${SDL2_INCLUDE_DIRS})
+        target_link_libraries(${tgt} PRIVATE ${SDL2_LIBRARIES})
+    endfunction()
+else()
+    function(port_enable_sdl2 tgt)
+    endfunction()
+endif()
+
+# ---- Linux: hostgen-fixup for byte-locked src/ files with MSVC-only idioms ----
+# A few //cpp-marked src files spell `extern "C" extern TYPE x;` (redundant extern
+# in a linkage spec) that mwcc/MSVC accept but g++ rejects. hostgen.py rewrites it
+# to the identical `extern "C" TYPE x;`. On non-MSVC we generate a fixed copy of
+# each into build/host-src and REPLACE the original path wherever it appears in a
+# source list, so the byte-locked tree stays untouched and Windows is unaffected.
+# port_lin_fixup(<list-var>) transforms a source list in place.
+set(PORT_LIN_FIXUP_SYMS
+    _ZN11ShadowModel12InitCylinderEv
+    _ZN5Model17LoadTextureToVramEPcj
+    _ZN15CommonModelClsn12InitCylinderEv
+    # goto-crosses-initialization (//cpp src): mwcc/MSVC accept a goto that jumps
+    # over a scalar local's init; g++ in C++ mode makes it a hard error and
+    # -fpermissive does NOT downgrade it. hostgen.py splits `T x = e;` into
+    # `T x; x = e;` in the GCC host copy (byte-identical program, legal to jump
+    # over). src/ is untouched; the mwcc byte-match is unaffected.
+    func_ov002_020e2ea0
+    _ZN6Player17St_HoldLight_MainEv)
+if(NOT MSVC)
+    set(PORT_LIN_FIXUP_MAP "")
+    foreach(sym IN LISTS PORT_LIN_FIXUP_SYMS)
+        # resolve the src path (.cpp or .c)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.cpp")
+            set(_orig "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.cpp")
+        else()
+            set(_orig "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.c")
+        endif()
+        set(_fixed "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${_fixed}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${_orig}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen-fixup ${sym}")
+        list(APPEND PORT_LIN_FIXUP_MAP "${_orig}=${_fixed}")
+    endforeach()
+    function(port_lin_fixup listvar)
+        set(_out "")
+        foreach(s IN LISTS ${listvar})
+            set(_repl "${s}")
+            foreach(pair IN LISTS PORT_LIN_FIXUP_MAP)
+                string(REPLACE "=" ";" _kv "${pair}")
+                list(GET _kv 0 _k)
+                list(GET _kv 1 _v)
+                get_filename_component(_sabs "${s}" ABSOLUTE)
+                get_filename_component(_kabs "${_k}" ABSOLUTE)
+                if(_sabs STREQUAL _kabs)
+                    set(_repl "${_v}")
+                endif()
+            endforeach()
+            list(APPEND _out "${_repl}")
+        endforeach()
+        set(${listvar} "${_out}" PARENT_SCOPE)
+    endfunction()
+else()
+    function(port_lin_fixup listvar)
+    endfunction()
+endif()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
 set(SLICE_SOURCES "")
@@ -245,6 +388,8 @@ foreach(line IN LISTS SLICE4B_LINES)
     endif()
     list(APPEND SLICE4B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# Linux: swap byte-locked MSVC-idiom src files for hostgen-fixed copies.
+port_lin_fixup(SLICE4B_SOURCES)
 
 # ROM constants (sine table, default matrices): generated locally from the
 # extracted arm9 image so Nintendo bytes never enter the repo.
@@ -1610,6 +1755,12 @@ list(APPEND SLICE10_CAM_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
 
+# Linux: gate10 carries _ZN11ShadowModel12InitCylinderEv.cpp, a byte-locked src
+# with the MSVC-only `extern "C" extern TYPE x;` idiom g++ rejects. Route it
+# through the same hostgen fixup gate4b already uses (no-op on MSVC; the
+# byte-locked src is never edited). Must run after the full list is assembled.
+port_lin_fixup(SLICE10_CAM_SOURCES)
+
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
     hal/sdat/sdat.cpp
@@ -2636,6 +2787,24 @@ endif()
 if(MSVC)
     target_compile_options(walk_window PRIVATE /wd4311 /wd4312 /wd4068 /wd4576)
 endif()
+port_enable_sdl2(walk_window)
+
+# ---- Linux link glue: alternatename aliases + PMF/fader devirt shims --------
+# On MSVC the port's ~1.2k `/alternatename` pragmas (in the hal/unmatched TUs)
+# resolve a large class of reference-here-defined-there symbols at link. GCC/ld
+# has no /alternatename; the equivalent is `--defsym ALIAS=TARGET`. The list is
+# generated by port/tools/gcc_aliases.py and checked in as port/linux_defsyms.txt
+# (regenerate with tools/regen_linux_defsyms.sh when the slice/pragma set moves).
+# The devirt shim supplies weak bodies for the handful of placeholder-virtual
+# direct calls GCC devirtualizes (Foo::M5 / Base::M / Base::vfunc) and the
+# FaderBrightness direct entry points, dispatching through the object's real
+# vtable. All Linux/GCC-only; MSVC never sees any of it and its bytes are
+# unchanged.
+if(NOT MSVC)
+    target_sources(walk_window PRIVATE hal/pmf_devirt_shims.cpp)
+    file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/linux_defsyms.txt" PORT_DEFSYMS)
+    target_link_options(walk_window PRIVATE ${PORT_DEFSYMS})
+endif()
 
 # hires clone for screenshot sessions (4x resolution, ~1/16 the fps)
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
@@ -2706,6 +2875,7 @@ endif()
 if(MSVC)
     target_compile_options(walk_window_hires PRIVATE /wd4311 /wd4312 /wd4068 /wd4576)
 endif()
+port_enable_sdl2(walk_window_hires)
 
 
 # The SDAT player on its own: parser, sequencer and mixer with no game code

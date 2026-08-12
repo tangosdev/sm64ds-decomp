@@ -195,7 +195,10 @@ src/func_ov085_0212e19c.c
 src/func_ov085_0212e2ec.c
 # src/func_ov085_0212e310.cpp  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
 src/func_ov085_0212e480.c
-# src/func_ov085_0212e4a4.c  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
+# src/func_ov085_0212e4a4.c  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp,
+# which covers this body and three sibling LakituBro states. The linux lane
+# wrote its own copy of the same fix for this one body; dropped in favour of
+# this one so only one definition of func_ov085_0212e4a4 links.)
 src/func_ov085_0212e59c.c
 src/func_ov085_0212e5ac.c
 src/func_ov085_0212e720.c

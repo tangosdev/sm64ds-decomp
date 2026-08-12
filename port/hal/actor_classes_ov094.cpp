@@ -220,5 +220,9 @@ extern "C" void hal_fill_hoot_the_owl_vtable(void)
 // faced here, the BabyPenguin/IceSheet/OneUpLogo recipe. Behavior and
 // Render are NOT faced: both are host copies (port/unmatched/
 // HootTheOwl_StateDispatch.cpp and port/unmatched/ModelAnim_Renders.cpp).
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN10HootTheOwl13InitResourcesEv(void *self)
 { return ((HootTheOwl *)self)->HootTheOwl::InitResources(); }
+#else
+extern "C" int _ZN10HootTheOwl13InitResourcesEv(void *self);  /* Linux: real symbol from src/_ZN10HootTheOwl13InitResourcesEv */
+#endif /* _WIN32 */

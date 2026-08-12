@@ -17,6 +17,7 @@
  * struct layout the seat already establishes
  * (hal/actor_classes_ov081.cpp's PortMrBlizzardPair).
  */
+#include <cstddef>   /* size_t (pointer-width casts) */
 extern "C" {
 struct PortMrBlizzardPair { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
 typedef int (*PortMbFn)(void *);

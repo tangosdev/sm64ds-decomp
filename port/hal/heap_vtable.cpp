@@ -17,8 +17,12 @@
 // hybrid's gates existed to catch, and the port has no gate to catch it.
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+#include <execinfo.h>   /* backtrace, backtrace_symbols_fd (glibc) */
+#endif
 
 typedef unsigned int u32;
 
@@ -57,6 +61,17 @@ int data_02099d90;     /* heap bring-up state flag */
 }
 
 // ---- allocator methods -> the C-linkage definitions from gate 2 ----------
+// LINUX: every bridge in this block forwards a C++ METHOD to an extern "C" NAME
+// that is that method's own Itanium mangling (e.g. ExpandingHeapAllocator::
+// Allocate(u32,int) mangles to _ZN22ExpandingHeapAllocator8AllocateEji, the very
+// name the body calls). On GCC the two are ONE symbol, so each bridge is a
+// self-call -> infinite recursion (smoke_roots died in Memory::Allocate). On MSVC
+// the manglings differ and the bridge is real. Every target symbol here has a
+// real src/ definition (verified), which on GCC already carries the exact name
+// the C++ callers reference, so these method<->name bridges are redundant on
+// Linux and are guarded out. (The `class Heap` shadow and the one-arg
+// Heap::Allocate(u32) veneer below are NOT self-colliding and stay on both.)
+#ifdef _WIN32
 extern "C" {
 void *_ZN22ExpandingHeapAllocator8AllocateEji(void *self, u32 size, int align);
 int _ZN22ExpandingHeapAllocator10DeallocateEPv(void *self, void *p);
@@ -92,15 +107,18 @@ void *ExpandingHeapAllocator::Reallocate(void *p, u32 size)
 extern "C" int _ZN13ExpandingHeap11VDeallocateEPv(void *self, void *p);
 int ExpandingHeap::VDeallocate(void *p)
 { return _ZN13ExpandingHeap11VDeallocateEPv(this, p); }
+#endif /* _WIN32 -- Linux binds callers straight to the real src/ symbols */
 
 // C references to Heap::Allocate/Deallocate -> the MSVC method definitions.
 // The src/ TUs declare `class Heap` (mangles PAV); a struct shadow here would
-// mangle PAU and miss, so the method shadow must be a class too.
+// mangle PAU and miss, so the method shadow must be a class too. This shadow is
+// needed on BOTH platforms (the one-arg veneer below calls through it).
 class Heap {
 public:
     int Allocate(u32 size, int align);
     void Deallocate(void *p);
 };
+#ifdef _WIN32
 extern "C" {
 int _ZN4Heap8AllocateEji(void *self, u32 size, int align)
 { return ((Heap *)self)->Allocate(size, align); }
@@ -114,9 +132,16 @@ namespace Memory {
 void *Allocate(u32 size, int align, Heap *heap)
 { return _ZN6Memory8AllocateEjiP4Heap(size, align, heap); }
 }
+#endif /* _WIN32 -- Linux binds callers straight to the real src/ symbols */
 
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
+#ifndef _WIN32
+/* Linux: alias the C++ name Memory::defaultHeapPtr onto the C storage (weak,
+   data-only). Restores the DS by-address identity /alternatename gives on MSVC. */
+extern "C" void *_ZN6Memory14defaultHeapPtrE
+    __attribute__((weak, alias("data_020a0ea0")));
+#endif
 
 // Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.
@@ -125,12 +150,20 @@ void *Allocate(u32 size, int align, Heap *heap)
 extern "C" void Crash(void)
 {
     fprintf(stderr, "FATAL: game Crash() reached\n");
+#ifdef _WIN32
     void *frames[12];
     unsigned n = CaptureStackBackTrace(0, 12, frames, 0);
     char *base = (char *)GetModuleHandleA(0);
     for (unsigned i = 0; i < n; ++i)
         fprintf(stderr, "  frame %u: +0x%08x\n", i,
                 (unsigned)((char *)frames[i] - base));
+#else
+    /* Linux: glibc backtrace prints symbol+offset lines the addr2line/.map path
+       resolves, the same role the Win32 module-relative frames play. */
+    void *frames[12];
+    int n = backtrace(frames, 12);
+    backtrace_symbols_fd(frames, n, 2 /* stderr */);
+#endif
     abort();
 }
 #pragma comment(linker, "/alternatename:?Crash@@YAXXZ=_Crash")
@@ -162,13 +195,30 @@ extern "C" void *_ZN4Heap8AllocateEj(void *self, u32 size)
 //
 // Slots the port has not yet had a caller for still trap by name; the table
 // being the right SHAPE is what stops a dispatch running off the end of it.
-static void *__fastcall slot_alloc(void *self, void *, u32 size, int align)
+// Vtable-slot calling convention. On MSVC a C++ virtual dispatch is __thiscall
+// (this in ecx), so the shims are __fastcall and eat a dummy edx to line the one
+// real arg up on the stack. GCC on i386 does NOT use ecx for `this` -- it pushes
+// `this` on the stack as the ordinary first argument (verified: Heap::Allocate
+// emits `push this; call *slot`). So on GCC the shim must be a plain cdecl
+// function whose FIRST parameter is `self`, with NO dummy edx slot. Getting this
+// wrong reads `self` out of a garbage register and crashes AllocateForwards with
+// a null `this` during the first heap dispatch of boot (Stage::Stage's
+// ActorBase::operator new). VT_SELF expands to the right leading parameter list.
+#if defined(__GNUC__) && !defined(_MSC_VER)
+#define VT_CC
+#define VT_SELF(t)  t self
+#else
+#define VT_CC __fastcall
+#define VT_SELF(t)  t self, void *
+#endif
+
+static void *VT_CC slot_alloc(VT_SELF(void *), u32 size, int align)
 { return ((ExpandingHeap *)self)->VAllocate(size, align); }
-static int __fastcall slot_dealloc(void *self, void *, void *p)
+static int VT_CC slot_dealloc(VT_SELF(void *), void *p)
 { return ((ExpandingHeap *)self)->VDeallocate(p); }
-static void *__fastcall slot_realloc(void *self, void *, void *p, u32 size)
+static void *VT_CC slot_realloc(VT_SELF(void *), void *p, u32 size)
 { return ((ExpandingHeap *)self)->VReallocate(p, size); }
-static u32 __fastcall slot_sizeof(void *self, void *, void *p)
+static u32 VT_CC slot_sizeof(VT_SELF(void *), void *p)
 { return ((ExpandingHeap *)self)->VSizeof(p); }
 /* LINKAGE SEAT: slots 6/7/15 get the class's own matched bodies (arm9
    0x0203c65c VIntact, 0x0203c630 VRescue, 0x0203c388 VResizeToFit, all
@@ -189,11 +239,19 @@ static void __fastcall slot_setnodeid(void *self, void *, u32 id)
 static u32 __fastcall slot_getnodeid(void *self, void *)
 { return ((ExpandingHeap *)self)->VGetNodeID(); }
 
+#if defined(__GNUC__) && !defined(_MSC_VER)
+#define TRAP(n) \
+    static void slot_trap##n(void *) { \
+        fprintf(stderr, "FATAL: ExpandingHeap vtable slot %d dispatched " \
+                        "with no caller evidence (see heap_vtable.cpp)\n", n); \
+        abort(); }
+#else
 #define TRAP(n) \
     static void __fastcall slot_trap##n(void *, void *) { \
         fprintf(stderr, "FATAL: ExpandingHeap vtable slot %d dispatched " \
                         "with no caller evidence (see heap_vtable.cpp)\n", n); \
         abort(); }
+#endif
 TRAP(0) TRAP(1) TRAP(2) TRAP(5)
 TRAP(10) TRAP(11) TRAP(12)
 

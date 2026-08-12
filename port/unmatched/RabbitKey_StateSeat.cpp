@@ -38,6 +38,7 @@
  * Callers (both matched, both cdecl): RabbitKey::InitResources seats the
  * initial State 0213071c; func_ov085_0212d108 seats the caught State 0213072c
  * the frame the key reaches the player. */
+#include <cstddef>   /* size_t (pointer-width casts) */
 
 // PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
 extern "C" int func_ov085_0212d268(char *c, int *p)

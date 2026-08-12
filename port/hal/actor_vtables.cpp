@@ -7,6 +7,13 @@
 //
 // Base-class vtable symbols the ctor chain installs and then overwrites
 // (never dispatched between installs) are plain storage.
+/* PORT_ALIGN / PORT_GROUPED_DECL live here. The Linux build force-includes
+   this header from CMake, so a TU using those macros compiles there without
+   naming it -- but MSVC never gets the force-include, so the include has to
+   be explicit or the Windows build fails on an undefined macro. The header is
+   include-guarded and its keyword shims are inside #ifndef _MSC_VER, so this
+   is inert on Windows beyond the two macro definitions. */
+#include "port_msvc_compat.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -385,7 +392,7 @@ unsigned char data_02092128[0x40];
    class is an Actor subclass, so 0x400 covers it with room.
    Verified regression-free: the eight walk probes come back
    byte-identical with this non-null. */
-__declspec(align(8)) static unsigned char HAL_CAMERA[0x400];
+PORT_ALIGN(8) static unsigned char HAL_CAMERA[0x400];
 void *data_0209f318 = HAL_CAMERA;
 unsigned short data_0209f49c, data_0209f49e, data_0209f4a0;
 unsigned char data_0209f4ab;
