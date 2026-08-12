@@ -1,7 +1,9 @@
-// @symbol func_ov102_0214d6a0
+//cpp
+// @symbol _ZN10KoopaShell13OnYoshiTryEatEv
+#include "KoopaShell.h"
 /* recovered: renamed to Class_Method */
 /* daShl_c::OnYoshiTryEat - recovered from vtable slot identity */
-int func_ov102_0214d6a0(unsigned char *p)
-{
+s32 KoopaShell::OnYoshiTryEat() {
+    unsigned char * p = (unsigned char *)this;
     return p[0x3c4] == 0 ? 6 : 5;
 }

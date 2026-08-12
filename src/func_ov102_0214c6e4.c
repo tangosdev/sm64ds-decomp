@@ -1,7 +1,9 @@
-// @symbol func_ov102_0214c6e4
+//cpp
+// @symbol _ZN6BobOmb13OnYoshiTryEatEv
+#include "BobOmb.h"
 /* recovered: renamed to Class_Method */
 /* daBmb_c::OnYoshiTryEat - recovered from vtable slot identity */
-int func_ov102_0214c6e4(unsigned char *p)
-{
+s32 BobOmb::OnYoshiTryEat() {
+    unsigned char * p = (unsigned char *)this;
     return p[263] == 0;
 }

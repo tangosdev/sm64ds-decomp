@@ -50,6 +50,9 @@ struct Skeeter : Enemy {
     /* --- vtable --- */
     virtual ~Skeeter();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

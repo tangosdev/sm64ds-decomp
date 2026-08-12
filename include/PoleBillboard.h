@@ -22,6 +22,9 @@ struct PoleBillboard : Actor {
     Model                  mModel;       /* 0x0d4 */
 
     virtual ~PoleBillboard();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char PoleBillboard_size_must_be_0x124[sizeof(PoleBillboard) == 0x124 ? 1 : -1];

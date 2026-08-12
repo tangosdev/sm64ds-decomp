@@ -51,6 +51,8 @@ struct KingBobOmb : Enemy {
     /* --- vtable --- */
     virtual ~KingBobOmb();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();

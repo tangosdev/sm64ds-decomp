@@ -43,6 +43,9 @@ struct Spindrift : Enemy {
     /* --- vtable --- */
     virtual ~Spindrift();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     /* --- non-virtual --- */
     int Behavior();
     int InitResources();

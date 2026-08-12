@@ -1,14 +1,20 @@
-// @symbol func_ov079_02126f04
+//cpp
+// @symbol _ZN11BillBlaster16CleanupResourcesEv
+#include "BillBlaster.h"
 // recovered name: daObjBkKillerdai_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjBkKillerdai_c::CleanupResources - recovered from vtable slot identity */
+extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern void* data_ov079_02127f64[];
 extern void* data_ov079_02128300;
 extern void* data_ov079_021282f0;
-int func_ov079_02126f04(char *t){
+}
+
+s32 BillBlaster::CleanupResources() {
+    char * t = (char *)this;
   if(_ZN16MeshColliderBase9IsEnabledEv(t+0x124))
     _ZN16MeshColliderBase7DisableEv(t+0x124);
   _ZN13SharedFilePtr7ReleaseEv(data_ov079_02127f64[0]);

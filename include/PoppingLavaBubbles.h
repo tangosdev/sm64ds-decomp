@@ -20,6 +20,8 @@ struct PoppingLavaBubbles : Actor {
     u8  pad_0d0[0x8];
 
     virtual ~PoppingLavaBubbles();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
 };
 
 typedef char PoppingLavaBubbles_size_must_be_0xd8[sizeof(PoppingLavaBubbles) == 0xd8 ? 1 : -1];

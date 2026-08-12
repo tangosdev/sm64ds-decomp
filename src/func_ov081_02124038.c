@@ -1,7 +1,8 @@
-// @symbol func_ov081_02124038
+//cpp
+// @symbol _ZN9Spindrift13OnYoshiTryEatEv
+#include "Spindrift.h"
 /* recovered: renamed to Class_Method */
 /* daHuwa_c::OnYoshiTryEat - recovered from vtable slot identity */
-int func_ov081_02124038(void)
-{
+s32 Spindrift::OnYoshiTryEat() {
     return 6;
 }

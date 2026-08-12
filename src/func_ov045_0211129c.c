@@ -1,14 +1,19 @@
-// @symbol func_ov045_0211129c
+//cpp
+// @symbol _ZN15FireSeaElevator8BehaviorEv
+#include "FireSeaElevator.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjKm2_Agaru_c.h"
 // recovered name: daObjKm2_Agaru_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjKm2_Agaru_c::Behavior - recovered from vtable slot identity */
+extern "C" {
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
-int func_ov045_0211129c(char *c)
-{
+}
+
+s32 FireSeaElevator::Behavior() {
+    char * c = (char *)this;
     struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
     switch (self->unk_327) {
     case 0:

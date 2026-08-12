@@ -1,7 +1,8 @@
-// @symbol func_ov002_020af3a0
+//cpp
+// @symbol _ZN13OneUpMushroom13OnYoshiTryEatEv
+#include "OneUpMushroom.h"
 /* recovered: renamed to Class_Method */
 /* da1up_c::OnYoshiTryEat - recovered from vtable slot identity */
-int func_ov002_020af3a0(void)
-{
+s32 OneUpMushroom::OnYoshiTryEat() {
     return 4;
 }
