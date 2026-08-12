@@ -1,18 +1,18 @@
-// @symbol _ZN11RickshawBdwD0Ev
+// @symbol _ZN19RickshawPlatformBdwD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int _ZTV11RickshawBdw[];
+extern int _ZTV19RickshawPlatformBdw[];
 extern int data_ov002_02109278[];
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV11RickshawBdw; VT1 = data_ov002_02109278 */
+/* vtable identified: VT0 = _ZTV19RickshawPlatformBdw; VT1 = data_ov002_02109278 */
 extern void *data_020a0eac;
-int *_ZN11RickshawBdwD0Ev(int *t)
+int *_ZN19RickshawPlatformBdwD0Ev(int *t)
 {
-    t[0] = (int)_ZTV11RickshawBdw;
+    t[0] = (int)_ZTV19RickshawPlatformBdw;
     t[0] = (int)data_ov002_02109278;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
