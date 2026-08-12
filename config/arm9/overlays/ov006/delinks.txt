@@ -2737,11 +2737,11 @@ src/func_ov006_020e759c.c:
     complete
     .text start:0x020e759c end:0x020e7660
 
-src/func_ov006_020e7660.cpp:
+src/_ZN12dScMg3DEsp_cD1Ev.cpp:
     complete
     .text start:0x020e7660 end:0x020e76e4
 
-src/func_ov006_020e76e4.c:
+src/_ZN12dScMg3DEsp_cD0Ev.cpp:
     complete
     .text start:0x020e76e4 end:0x020e777c
 
