@@ -146,7 +146,8 @@ def extract_func(obj: bytes, func: str):
     import io
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
-    sym = next((s for s in symtab.iter_symbols() if s.name == func), None)
+    sym = next((s for s in symtab.iter_symbols()
+                if s.name == func and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
     if sym is None:
         return None, None
     sec = elf.get_section(sym["st_shndx"])

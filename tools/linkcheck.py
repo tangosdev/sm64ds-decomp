@@ -160,7 +160,8 @@ def func_relocs_typed(obj, func, name_index):
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
     syms = list(symtab.iter_symbols())
-    sym = next((s for s in syms if s.name == func), None)
+    sym = next((s for s in syms if s.name == func
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
     if sym is None:
         return None
     sec = elf.get_section(sym["st_shndx"])
