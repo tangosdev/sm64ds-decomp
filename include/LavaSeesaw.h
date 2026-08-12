@@ -20,6 +20,9 @@ struct LavaSeesaw : Platform {
     u8  pad_320[0x4];
 
     virtual ~LavaSeesaw();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char LavaSeesaw_size_must_be_0x324[sizeof(LavaSeesaw) == 0x324 ? 1 : -1];

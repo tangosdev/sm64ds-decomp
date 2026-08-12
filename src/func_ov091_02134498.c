@@ -1,6 +1,7 @@
-// @symbol func_ov091_02134498
+//cpp
+// @symbol _ZN6Fwoosh13OnYoshiTryEatEv
+#include "Fwoosh.h"
 /* recovered: renamed to Class_Method */
-int func_ov091_02134498(void)
-{
+s32 Fwoosh::OnYoshiTryEat() {
     return 4;
 }

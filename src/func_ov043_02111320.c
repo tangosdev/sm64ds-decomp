@@ -1,4 +1,6 @@
-// @symbol func_ov043_02111320
+//cpp
+// @symbol _ZN11DiamondLift13InitResourcesEv
+#include "DiamondLift.h"
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -6,6 +8,7 @@
 // recovered name: daObjKm1_Ukishima_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjKm1_Ukishima_c::InitResources - recovered from vtable slot identity */
+extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *p, int file, int a, int b);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *p);
@@ -16,7 +19,10 @@ extern void func_020393d4(void *p, int v);
 extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
 extern int data_ov043_021125e8[];
 extern int data_ov043_021125e0[];
-int func_ov043_02111320(char *c){
+}
+
+s32 DiamondLift::InitResources() {
+    char * c = (char *)this;
     struct daObjKm1_Ukishima_c *self = (struct daObjKm1_Ukishima_c *)(void *)c;
   int f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov043_021125e8);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);

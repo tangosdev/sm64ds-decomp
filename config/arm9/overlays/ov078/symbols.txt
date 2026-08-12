@@ -48,7 +48,7 @@ _ZN10KingBobOmb16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021260a8
 _ZN10KingBobOmb6RenderEv kind:function(arm,size=0x58) addr:0x021260ac
 _ZN10KingBobOmb8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
 _ZN10KingBobOmb13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
-func_ov078_021265f4 kind:function(arm,size=0x8) addr:0x021265f4
+_ZN10KingBobOmb16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
 KingBobOmb_Spawn kind:function(arm,size=0x64) addr:0x021265fc
 __sinit_ov078_02126660 kind:function(arm,size=0x674) addr:0x02126660
 .p__sinit_ov078_02126660 kind:data(word) addr:0x02126cd4

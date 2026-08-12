@@ -19,6 +19,11 @@
 struct BowserShutter : Platform {
 
     virtual ~BowserShutter();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char BowserShutter_size_must_be_0x320[sizeof(BowserShutter) == 0x320 ? 1 : -1];

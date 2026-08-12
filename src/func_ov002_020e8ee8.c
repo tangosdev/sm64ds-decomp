@@ -1,6 +1,7 @@
-// @symbol func_ov002_020e8ee8
+//cpp
+// @symbol _ZN9PowerStar13OnYoshiTryEatEv
+#include "PowerStar.h"
 /* recovered: renamed to Class_Method */
-int func_ov002_020e8ee8(void)
-{
+s32 PowerStar::OnYoshiTryEat() {
     return 4;
 }

@@ -1,5 +1,6 @@
 //cpp
-// @symbol func_ov043_021112a8
+// @symbol _ZN11DiamondLift8BehaviorEv
+#include "DiamondLift.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjKm1_Ukishima_c.h"
 // recovered name: daObjKm1_Ukishima_c_Behavior
@@ -11,8 +12,8 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
-int func_ov043_021112a8(char *c)
-{
+s32 DiamondLift::Behavior() {
+    char * c = (char *)this;
     struct daObjKm1_Ukishima_c *self = (struct daObjKm1_Ukishima_c *)(void *)c;
     if (!DecIfAbove0_Byte((unsigned char *)(c + 0x31e))) {
         self->unk_31e = 0x3c;

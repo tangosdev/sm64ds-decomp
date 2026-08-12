@@ -20,6 +20,11 @@ struct FireSeaElevator : Platform {
     u8  pad_320[0x8];
 
     virtual ~FireSeaElevator();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char FireSeaElevator_size_must_be_0x328[sizeof(FireSeaElevator) == 0x328 ? 1 : -1];

@@ -1,4 +1,6 @@
-// @symbol func_ov022_02111ad0
+//cpp
+// @symbol _ZN10LavaBridge8BehaviorEv
+#include "LavaBridge.h"
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -6,13 +8,15 @@
 // recovered name: daObjFl_London_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjFl_London_c::Behavior - recovered from vtable slot identity */
+extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* t);
+}
 
-int func_ov022_02111ad0(char* c)
-{
+s32 LavaBridge::Behavior() {
+    char* c = (char*)this;
     struct daObjFl_London_c *self = (struct daObjFl_London_c *)(void *)c;
     if (DecIfAbove0_Byte((unsigned char*)c + 0x31e) == 0) {
         if (self->unk_31f == 0) {
