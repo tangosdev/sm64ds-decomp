@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_020db9dc
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
@@ -10,15 +11,15 @@
    OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
-extern void func_ov006_020c1604(char *c, int unused, short a2, int a3);
-extern void func_ov004_020b66d4(void);
+extern "C" void func_ov006_020c1604(char *c, int unused, short a2, int a3);
+extern "C" void func_ov004_020b66d4(void);
 extern int data_ov006_0214176c;
 extern int data_ov006_02141768;
 extern int data_ov006_02141770;
 
-void func_ov006_020db9dc(char *c)
+extern "C" void func_ov006_020db9dc(char *c)
 {
-    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
+    dScMgCard_c *self = (dScMgCard_c *)(void *)c;
     int i;
     char *p1, *p2;
 

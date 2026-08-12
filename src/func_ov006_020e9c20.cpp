@@ -1,3 +1,4 @@
+//cpp
 // @symbol func_ov006_020e9c20
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -11,9 +12,9 @@
    does any of that. */
 extern char* func_020beb68;
 
-void func_ov006_020e9c20(char* c, int a)
+extern "C" void func_ov006_020e9c20(char* c, int a)
 {
-    struct dScMg3DEsp_c *self = (struct dScMg3DEsp_c *)(void *)c;
+    dScMg3DEsp_c *self = (dScMg3DEsp_c *)(void *)c;
     func_ov006_020e984c(c);
     self->unk_553c = 0;
     if (a == 0) {

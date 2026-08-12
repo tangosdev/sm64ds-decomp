@@ -1,3 +1,4 @@
+//cpp
 // @symbol func_ov006_021095cc
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -9,23 +10,23 @@
    OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
-extern void func_ov004_020b66d4(void);
+extern "C" void func_ov004_020b66d4(void);
 extern int *func_020beb68;
 
-void func_ov006_021095cc(char *this)
+extern "C" void func_ov006_021095cc(char *c)
 {
-    struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)this;
+    dScMgRoulette_c *self = (dScMgRoulette_c *)(void *)c;
     int i;
     int *e;
     int n;
 
     func_ov006_02107b14();
-    func_ov006_020c0e8c((int *)(this + 0x4f38));
+    func_ov006_020c0e8c((int *)(c + 0x4f38));
 
     self->unk_53f2 = 0;
     self->unk_53e8 = 0xa;
 
-    e = (int *)(this + 0x51a8);
+    e = (int *)(c + 0x51a8);
     for (i = 0; i < 5; i++) {
         func_ov006_021092a0(e);
         e = (int *)((char *)e + 0x34);
@@ -38,7 +39,7 @@ void func_ov006_021095cc(char *this)
     if (n >= 5) n = 5;
     self->unk_53fc = n;
 
-    func_ov006_02108524(this + 0x530c);
+    func_ov006_02108524(c + 0x530c);
 
     data_ov006_021428c8 = 0;
     self->unk_53e4 = 0;
