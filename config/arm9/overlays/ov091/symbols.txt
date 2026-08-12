@@ -58,8 +58,8 @@ func_ov091_02133098 kind:function(arm,size=0x120) addr:0x02133098
 _ZN6Thwomp16CleanupResourcesEv kind:function(arm,size=0x58) addr:0x021331b8
 _ZN6Thwomp6RenderEv kind:function(arm,size=0x44) addr:0x02133210
 func_ov091_02133254 kind:function(arm,size=0x1a8) addr:0x02133254
-func_ov091_021333fc kind:function(arm,size=0x44) addr:0x021333fc
-func_ov091_02133440 kind:function(arm,size=0x58) addr:0x02133440
+_ZN5StumpD1Ev kind:function(arm,size=0x44) addr:0x021333fc
+_ZN5StumpD0Ev kind:function(arm,size=0x58) addr:0x02133440
 func_ov091_02133498 kind:function(arm,size=0x20) addr:0x02133498
 func_ov091_021334b8 kind:function(arm,size=0x11c) addr:0x021334b8
 func_ov091_021335d4 kind:function(arm,size=0x74) addr:0x021335d4
@@ -154,7 +154,7 @@ data_ov091_021351fc kind:data(any) addr:0x021351fc
 _ZTI11daObjPile_c kind:data(any) addr:0x0213527c
 _ZTS11daObjPile_c kind:data(any) addr:0x02135288
 Stump_SpawnInfo kind:data(any) addr:0x02135298 ambiguous
-data_ov091_021352bc kind:data(any) addr:0x021352bc
+_ZTV5Stump kind:data(any) addr:0x021352bc
 data_ov091_0213533c kind:data(any) addr:0x0213533c
 data_ov091_02135344 kind:data(any) addr:0x02135344
 data_ov091_0213534c kind:data(any) addr:0x0213534c

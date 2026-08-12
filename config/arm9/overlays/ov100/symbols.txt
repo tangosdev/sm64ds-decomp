@@ -47,8 +47,8 @@ _ZN14UnchainedChomp8BehaviorEv kind:function(arm,size=0x324) addr:0x02143d64
 _ZN14UnchainedChomp13InitResourcesEv kind:function(arm,size=0x24c) addr:0x02144088
 func_ov100_021442d4 kind:function(arm,size=0x8) addr:0x021442d4
 UnchainedChomp_Spawn kind:function(arm,size=0x118) addr:0x021442dc
-func_ov100_021443f4 kind:function(arm,size=0x30) addr:0x021443f4
-func_ov100_02144424 kind:function(arm,size=0x44) addr:0x02144424
+_ZN4DoorD1Ev kind:function(arm,size=0x30) addr:0x021443f4
+_ZN4DoorD0Ev kind:function(arm,size=0x44) addr:0x02144424
 func_ov100_02144468 kind:function(arm,size=0x80) addr:0x02144468
 func_ov100_021444e8 kind:function(arm,size=0x40) addr:0x021444e8
 func_ov100_02144528 kind:function(arm,size=0x1d0) addr:0x02144528
@@ -191,7 +191,7 @@ data_ov100_02148144 kind:data(any) addr:0x02148144
 _ZTS8daDoor_c kind:data(any) addr:0x0214814c
 _ZTI8daDoor_c kind:data(any) addr:0x02148158
 Door_SpawnInfo kind:data(any) addr:0x02148164
-data_ov100_02148188 kind:data(any) addr:0x02148188
+_ZTV4Door kind:data(any) addr:0x02148188
 data_ov100_02148204 kind:data(any) addr:0x02148204
 data_ov100_02148334 kind:data(any) addr:0x02148334
 data_ov100_0214833c kind:data(any) addr:0x0214833c

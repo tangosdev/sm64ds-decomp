@@ -1,5 +1,5 @@
-func_ov045_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov045_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN15FireSeaElevatorD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN15FireSeaElevatorD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov045_0211123c kind:function(arm,size=0x38) addr:0x0211123c
 func_ov045_02111274 kind:function(arm,size=0x28) addr:0x02111274
 func_ov045_0211129c kind:function(arm,size=0x150) addr:0x0211129c
@@ -24,8 +24,8 @@ _ZN17ExtendingPlatform6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
 _ZN17ExtendingPlatform8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
 _ZN17ExtendingPlatform13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
 ExtendingPlatform_Spawn kind:function(arm,size=0x40) addr:0x02111ad4
-func_ov045_02111b14 kind:function(arm,size=0x50) addr:0x02111b14
-func_ov045_02111b64 kind:function(arm,size=0x64) addr:0x02111b64
+_ZN16FloatingFloorBfsD1Ev kind:function(arm,size=0x50) addr:0x02111b14
+_ZN16FloatingFloorBfsD0Ev kind:function(arm,size=0x64) addr:0x02111b64
 func_ov045_02111bc8 kind:function(arm,size=0x14) addr:0x02111bc8
 func_ov045_02111bdc kind:function(arm,size=0x18) addr:0x02111bdc
 FloatingFloorBfs_Spawn kind:function(arm,size=0x3c) addr:0x02111bf4
@@ -126,7 +126,7 @@ data_ov045_02112cb0 kind:data(any) addr:0x02112cb0
 _ZTS16daObjKm2_Agaru_c kind:data(any) addr:0x02112cbc
 data_ov045_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
 FireSeaElevator_SpawnInfo kind:data(any) addr:0x02112cd0 ambiguous
-data_ov045_02112cf4 kind:data(any) addr:0x02112cf4
+_ZTV15FireSeaElevator kind:data(any) addr:0x02112cf4
 data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
 _ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74
 _ZTS18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d80
@@ -142,7 +142,7 @@ _ZTI19daObjKm2_Ukishima_c kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
 _ZTS19daObjKm2_Ukishima_c kind:data(any) addr:0x02112f14
 FloatingFloorBfs_SpawnInfo kind:data(any) addr:0x02112f2c ambiguous
-data_ov045_02112f50 kind:data(any) addr:0x02112f50
+_ZTV16FloatingFloorBfs kind:data(any) addr:0x02112f50
 data_ov045_02112f58 kind:data(any) addr:0x02112f58 ambiguous
 data_ov045_02112f7c kind:data(any) addr:0x02112f7c ambiguous
 _ZTI15daObjKm2_Gura_c kind:data(any) addr:0x02112fd0

@@ -1,12 +1,12 @@
-func_ov043_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov043_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN11DiamondLiftD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN11DiamondLiftD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov043_0211123c kind:function(arm,size=0x44) addr:0x0211123c
 func_ov043_02111280 kind:function(arm,size=0x28) addr:0x02111280
 func_ov043_021112a8 kind:function(arm,size=0x78) addr:0x021112a8
 func_ov043_02111320 kind:function(arm,size=0xac) addr:0x02111320
 DiamondLift_Spawn kind:function(arm,size=0x30) addr:0x021113cc
-func_ov043_021113fc kind:function(arm,size=0x50) addr:0x021113fc
-func_ov043_0211144c kind:function(arm,size=0x64) addr:0x0211144c
+_ZN11RickshawBdwD1Ev kind:function(arm,size=0x50) addr:0x021113fc
+_ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x0211144c
 func_ov043_021114b0 kind:function(arm,size=0x14) addr:0x021114b0
 func_ov043_021114c4 kind:function(arm,size=0x18) addr:0x021114c4
 RickshawBdw_Spawn kind:function(arm,size=0x3c) addr:0x021114dc
@@ -81,14 +81,14 @@ _ZTI19daObjKm1_Ukishima_c kind:data(any) addr:0x02112270
 _ZTS19daObjKm1_Ukishima_c kind:data(any) addr:0x0211227c
 DiamondLift_SpawnInfo kind:data(any) addr:0x02112294 ambiguous
 data_ov043_0211229c kind:data(any) addr:0x0211229c ambiguous
-data_ov043_021122b8 kind:data(any) addr:0x021122b8
+_ZTV11DiamondLift kind:data(any) addr:0x021122b8
 data_ov043_02112320 kind:data(any) addr:0x02112320 ambiguous
 _ZTI21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112338
 data_ov043_02112344 kind:data(any) addr:0x02112344
 _ZTS21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112350
 data_ov043_02112358 kind:data(any) addr:0x02112358 ambiguous
 RickshawBdw_SpawnInfo kind:data(any) addr:0x02112368 ambiguous
-data_ov043_0211238c kind:data(any) addr:0x0211238c
+_ZTV11RickshawBdw kind:data(any) addr:0x0211238c
 data_ov043_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov043_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov043_02112404 kind:data(any) addr:0x02112404 ambiguous
