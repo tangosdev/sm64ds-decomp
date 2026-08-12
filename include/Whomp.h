@@ -68,6 +68,8 @@ struct Whomp : Enemy {
     /* --- vtable --- */
     virtual ~Whomp();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

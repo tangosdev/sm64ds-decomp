@@ -20,6 +20,10 @@ struct SkiLift : Platform {
     u8  pad_320[0x34];
 
     virtual ~SkiLift();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char SkiLift_size_must_be_0x354[sizeof(SkiLift) == 0x354 ? 1 : -1];

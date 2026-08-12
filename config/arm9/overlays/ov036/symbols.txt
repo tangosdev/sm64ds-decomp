@@ -1,9 +1,9 @@
 _ZN16SwingingPlatformD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN16SwingingPlatformD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov036_0211123c kind:function(arm,size=0x48) addr:0x0211123c
-func_ov036_02111284 kind:function(arm,size=0x44) addr:0x02111284
-func_ov036_021112c8 kind:function(arm,size=0x28) addr:0x021112c8
-func_ov036_021112f0 kind:function(arm,size=0x8c) addr:0x021112f0
+_ZN16SwingingPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111284
+_ZN16SwingingPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021112c8
+_ZN16SwingingPlatform8BehaviorEv kind:function(arm,size=0x8c) addr:0x021112f0
 func_ov036_0211137c kind:function(arm,size=0x98) addr:0x0211137c
 SwingingPlatform_Spawn kind:function(arm,size=0x30) addr:0x02111414
 _ZN18RotatingPlatformRrD1Ev kind:function(arm,size=0x50) addr:0x02111444
