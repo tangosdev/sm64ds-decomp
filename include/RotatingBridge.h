@@ -1,5 +1,5 @@
-#ifndef TOWERSTEP_H
-#define TOWERSTEP_H
+#ifndef ROTATINGBRIDGE_H
+#define ROTATINGBRIDGE_H
 
 #include "types.h"
 
@@ -17,13 +17,13 @@
 
 #include "Platform.h"
 
-struct TowerStep : Platform {
+struct RotatingBridge : Platform {
     s8 unk_31e;                       /* 0x31e */
     u8  pad_31f[0x1];
     s32 unk_320;                      /* 0x320 */
 
     /* --- vtable --- */
-    virtual ~TowerStep();
+    virtual ~RotatingBridge();
 
     int Behavior();
     int CleanupResources();
@@ -31,14 +31,14 @@ struct TowerStep : Platform {
     int Render();
 };
 
-typedef char TowerStep_size_must_be_0x324[sizeof(TowerStep) == 0x324 ? 1 : -1];
+typedef char TowerStep_size_must_be_0x324[sizeof(RotatingBridge) == 0x324 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct TowerStep {
+struct RotatingBridge {
     u8  pad_000[0x74];
     /* 0x074..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -65,4 +65,4 @@ struct TowerStep {
 
 #endif /* __cplusplus */
 
-#endif /* TOWERSTEP_H */
+#endif /* ROTATINGBRIDGE_H */

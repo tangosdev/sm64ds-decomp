@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9TowerStep8BehaviorEv
+// @symbol _ZN14RotatingBridge8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "TowerStep.h"
+#include "RotatingBridge.h"
 extern "C" {
 extern int DecIfAbove0_Byte(void*);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned,unsigned,unsigned,void*,unsigned);
@@ -11,7 +11,7 @@ extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*,int,int);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 }
 
-int TowerStep::Behavior()
+int RotatingBridge::Behavior()
 {
   if (DecIfAbove0_Byte((char*)&unk_31e) == 0) {
     short* p = (short*)(((int)((char*)this) + 0x94));
