@@ -96,7 +96,7 @@ src/WaterDiamond_Spawn.c:
     complete
     .text start:0x02111a84 end:0x02111ac4
 
-src/_ZN8CageLiftD1Ev.c:
+src/_ZN8CageLiftD1Ev.cpp:
     complete
     .text start:0x02111ac4 end:0x02111b08
 

@@ -120,7 +120,7 @@ src/ShipDown_Spawn.c:
     complete
     .text start:0x021129d0 end:0x02112a00
 
-src/_ZN10RockPillarD1Ev.c:
+src/_ZN10RockPillarD1Ev.cpp:
     complete
     .text start:0x02112a00 end:0x02112a44
 

@@ -1,17 +1,8 @@
 //cpp
 // @symbol _ZN9BlueFlameD1Ev
-
-struct Actor {
-    char pad[0xe0];
-    virtual ~Actor();
-};
-
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
-
-struct BlueFlame : Actor {
-    MovingCylinderClsn m0;   /* 0xe4 */
-    virtual ~BlueFlame();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body.
+ * Vtable slot 16: one vtable store, the members in reverse, then ~Actor. */
+#include "BlueFlame.h"
 
 BlueFlame::~BlueFlame()
 {

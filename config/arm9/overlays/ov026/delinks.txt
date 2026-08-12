@@ -40,7 +40,7 @@ src/func_ov026_02111678.c:
     complete
     .text start:0x02111678 end:0x021116c8
 
-src/_ZN13BowserShutterD1Ev.c:
+src/_ZN13BowserShutterD1Ev.cpp:
     complete
     .text start:0x021116c8 end:0x0211170c
 
@@ -68,7 +68,7 @@ src/BowserShutter_Spawn.c:
     complete
     .text start:0x02111888 end:0x021118b8
 
-src/_ZN9SubmarineD1Ev.c:
+src/_ZN9SubmarineD1Ev.cpp:
     complete
     .text start:0x021118b8 end:0x021118fc
 
