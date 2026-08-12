@@ -12,19 +12,19 @@ src/_ZN15FireSeaElevatorD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov045_0211123c.c:
+src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111274
 
-src/func_ov045_02111274.cpp:
+src/_ZN15FireSeaElevator6RenderEv.cpp:
     complete
     .text start:0x02111274 end:0x0211129c
 
-src/func_ov045_0211129c.c:
+src/_ZN15FireSeaElevator8BehaviorEv.cpp:
     complete
     .text start:0x0211129c end:0x021113ec
 
-src/func_ov045_021113ec.c:
+src/_ZN15FireSeaElevator13InitResourcesEv.cpp:
     complete
     .text start:0x021113ec end:0x021114a8
 

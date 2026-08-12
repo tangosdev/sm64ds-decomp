@@ -20,11 +20,11 @@ src/func_ov018_02111278.cpp:
     complete
     .text start:0x02111278 end:0x021112fc
 
-src/func_ov018_021112fc.c:
+src/_ZN7SkiLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021112fc end:0x02111340
 
-src/func_ov018_02111340.cpp:
+src/_ZN7SkiLift6RenderEv.cpp:
     complete
     .text start:0x02111340 end:0x02111368
 
@@ -32,7 +32,7 @@ src/func_ov018_02111368.cpp:
     complete
     .text start:0x02111368 end:0x021116b4
 
-src/func_ov018_021116b4.cpp:
+src/_ZN7SkiLift13InitResourcesEv.cpp:
     complete
     .text start:0x021116b4 end:0x021117e8
 

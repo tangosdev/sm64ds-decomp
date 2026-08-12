@@ -155,7 +155,7 @@ src/_ZN10BulletBillD0Ev.cpp:
     complete
     .text start:0x02126698 end:0x021266fc
 
-src/func_ov079_021266fc.c:
+src/_ZN10BulletBill16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021266fc end:0x02126704
 
@@ -207,11 +207,11 @@ src/func_ov079_02126ecc.cpp:
     complete
     .text start:0x02126ecc end:0x02126f04
 
-src/func_ov079_02126f04.c:
+src/_ZN11BillBlaster16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126f04 end:0x02126f64
 
-src/func_ov079_02126f64.cpp:
+src/_ZN11BillBlaster6RenderEv.cpp:
     complete
     .text start:0x02126f64 end:0x02126f8c
 
@@ -219,7 +219,7 @@ src/func_ov079_02126f8c.cpp:
     complete
     .text start:0x02126f8c end:0x02127090
 
-src/func_ov079_02127090.cpp:
+src/_ZN11BillBlaster13InitResourcesEv.cpp:
     complete
     .text start:0x02127090 end:0x021271b4
 

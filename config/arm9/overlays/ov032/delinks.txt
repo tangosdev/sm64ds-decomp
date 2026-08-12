@@ -108,19 +108,19 @@ src/_ZN9HugeCoverD0Ev.c:
     complete
     .text start:0x021124ec end:0x02112544
 
-src/func_ov032_02112544.c:
+src/_ZN9HugeCover16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112544 end:0x02112588
 
-src/func_ov032_02112588.cpp:
+src/_ZN9HugeCover6RenderEv.cpp:
     complete
     .text start:0x02112588 end:0x021125b0
 
-src/func_ov032_021125b0.cpp:
+src/_ZN9HugeCover8BehaviorEv.cpp:
     complete
     .text start:0x021125b0 end:0x021125d4
 
-src/func_ov032_021125d4.cpp:
+src/_ZN9HugeCover13InitResourcesEv.cpp:
     complete
     .text start:0x021125d4 end:0x02112668
 
