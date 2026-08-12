@@ -32,7 +32,7 @@ int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 int IsStarCollectedInCurLevel(void);
 void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 
-int _ZN13PoleBillboard13InitResourcesEv(char* self)
+int _ZN14KnockDownPlank13InitResourcesEv(char* self)
 {
     RaycastGround rg;
     Vec3 a;

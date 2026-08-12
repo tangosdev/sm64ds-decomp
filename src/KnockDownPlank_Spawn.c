@@ -5,13 +5,13 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV13PoleBillboard */
+/* resolved: VT0 = _ZTV14KnockDownPlank */
 int *KnockDownPlank_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(924);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)_ZTV13PoleBillboard;
+        p[0] = (int)_ZTV14KnockDownPlank;
         _ZN11ShadowModelC1Ev((char *)p + 0x320);
     }
     return p;
