@@ -32,6 +32,45 @@ by module.
 For an interactive version where you can hover any function for its name, address,
 size, and status, see the [progress treemap on GitHub Pages](https://tangosdev.github.io/sm64ds-decomp/).
 
+## The three tiers
+
+The bar above measures one thing: whether the C compiles to the ROM's exact bytes.
+That is the hardest guarantee to earn and the one the project is named for, but on
+its own it overstates how finished the game is. "Done" means three separate things
+here, and they move independently.
+
+<!-- tiers:start -->
+```
+MATCHED    ██████████████████████████████  98.4%   11,209 / 11,394 functions
+CONVERTED  █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   3.8%   426 / 11,282 files
+LINKED     ████████░░░░░░░░░░░░░░░░░░░░░░  26.5%   2,975 / 11,237 matched TUs
+```
+<!-- tiers:end -->
+
+- **MATCHED** is byte-exact C, verified against the ROM. This is the bar above and
+  the treemap.
+- **CONVERTED** is code a person can read without the ROM open beside them. Matching
+  does not require readable code, so this tier does not move on its own and is by far
+  the furthest behind.
+- **LINKED** is matched code that actually reaches the [PC port](port/)'s binary,
+  replacing the host stand-in that stood there before.
+
+They are not stages of one pipeline. A function can be matched and linked while still
+being unreadable, and converting a file never changes its matched bytes.
+
+CONVERTED is strict on purpose. A file counts only if it passes all five of: a real
+function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, and
+no calls through mangled names. Most of the tree is partway there rather than nowhere
+near it, which the headline alone hides: 39% of files pass three of the five, and 26%
+pass four. Run `python tools/tiers.py` for the full breakdown and two softer readings
+of the same tree.
+
+LINKED is a stamped measurement, not a live counter. It needs an MSVC build of the
+port, which CI on this branch cannot produce, so it is measured by hand and recorded
+in [config/port_linkage.json](config/port_linkage.json) with the branch and commit it
+came from. Because the port branches are not merged, it is the best single branch and
+so a floor. Reproduce it with `python port/tools/linkage.py` against a port build.
+
 ## What "matching" means
 
 The goal is source code that, when compiled with the original toolchain, produces a

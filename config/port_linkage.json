@@ -1,0 +1,25 @@
+{
+  "_comment": [
+    "The stamped LINKED tier: how many matched translation units actually reach the",
+    "PC port's binary. This is a STAMP, not a live counter, and it cannot be anything",
+    "else from main: port/tools/linkage.py reads build/port/walk_window.map, which only",
+    "exists after an MSVC build of the port, and CI on main has no such build.",
+    "",
+    "To refresh: build the port, run `python port/tools/linkage.py`, and update the",
+    "numbers below together with branch, commit and measuredAt. Never update the count",
+    "without also moving the provenance fields - tools/tiers.py drops a stamp that is",
+    "missing any of them, which is the intended behaviour for a number nobody can trace.",
+    "",
+    "basis records what the figure is a measurement OF. The port branches are not merged,",
+    "so this is the best single branch rather than a combined total: port-w4-whomp079 and",
+    "port-w4-l7cleanup sit within ~25 TUs of it with mostly DIFFERENT actors linked. The",
+    "published number is therefore a floor, and the direction of the error is known."
+  ],
+  "linkedTus": 2975,
+  "matchedTus": 11237,
+  "measuredAt": "2026-08-07",
+  "branch": "port-infra-consolidated",
+  "commit": "8dc378dcd",
+  "stale": false,
+  "basis": "single-branch floor; port branches unmerged, combined figure is higher"
+}

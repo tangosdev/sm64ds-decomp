@@ -34,6 +34,43 @@ sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
+import tiers as TIERS  # noqa: E402
+
+
+def tier_stats():
+    """The CONVERTED and LINKED tiers, flattened for the stats block.
+
+    Flat rather than nested because the two consumers downstream are a shell
+    script's python one-liner and a C# record, and neither gains anything from
+    nesting. MATCHED is not repeated here; it is already the block above.
+
+    Never raises. This runs inside the generator whose output pays the coin
+    ledger, and a readability scan is not worth killing a refresh over -- a run
+    that dies here would leave contributions.json unmoved and every match landed
+    since the last refresh uncredited. On failure the key is simply absent, and
+    the site falls back to showing MATCHED alone.
+    """
+    try:
+        c = TIERS.converted()
+        k = TIERS.linked()
+    except Exception as e:  # noqa: BLE001 - see docstring
+        print(f"  tiers: SKIPPED ({e})")
+        return None
+    out = {
+        "converted": c["converted"],
+        "convertedOf": c["files"],
+        "convertedPct": c["pct"],
+    }
+    if k:
+        out.update({
+            "linked": k["linked"],
+            "linkedOf": k["matchedTus"],
+            "linkedPct": k["pct"],
+            "linkedMeasuredAt": k["measuredAt"],
+            "linkedBranch": k["branch"],
+            "linkedCommit": k["commit"],
+        })
+    return out
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
@@ -446,6 +483,13 @@ def main():
             "totalBytes": total_b,
             "matchedBytes": matched_b,
             "moduleCount": len({f["module"] for f in functions}),
+            # The other two tiers ride along here so every consumer reads ONE file.
+            # romstats-sync.sh on the VPS fetches this db and nothing else, and the
+            # backend stores what it is told rather than walking any repository, so a
+            # tier that is not in this block does not reach the site at all. Both are
+            # computed from committed source with no ROM and no build, which is what
+            # keeps this generator CI-safe.
+            "tiers": tier_stats(),
         },
         "functions": functions,
     }

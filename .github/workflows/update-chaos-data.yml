@@ -21,6 +21,10 @@ on:
       - "tools/chaos_db_ci.py"
       - "tools/chaosviewer.config.json"
       - "tools/langmode_audit.py"
+      # tiers.py holds the pinned CONVERTED criteria, so editing it moves a published
+      # percentage and must republish. The LINKED stamp needs no line of its own:
+      # config/** already covers config/port_linkage.json.
+      - "tools/tiers.py"
       - "attribution.json"
       # include/** and tools/langmode_audit.py are here for the langmode re-bank below,
       # which reads both; neither feeds chaos-db. The baseline itself is not listed
@@ -141,6 +145,13 @@ jobs:
         run: python tools/nearmiss_db.py dedupe
       - name: Refresh README progress bar
         run: python tools/progress.py --write-readme --from-db _chaos_data/chaos-db.json
+      - name: Refresh README tier block
+        # MATCHED here reads the same db the bar just used, so the two blocks cannot
+        # drift apart. CONVERTED is rescanned from src/. LINKED is read from the stamp
+        # in config/port_linkage.json and is deliberately NOT recomputed: it needs an
+        # MSVC port build this runner does not have. README.md is already in the
+        # refresh commit's file list below, so that needs no change.
+        run: python tools/tiers.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
       - name: Commit progress refresh if changed
