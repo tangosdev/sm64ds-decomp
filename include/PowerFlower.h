@@ -1,15 +1,15 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class PushBlock: 5 matched functions, 19 evidenced fields.
+ * class PowerFlower: 5 matched functions, 19 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef PUSHBLOCK_H
-#define PUSHBLOCK_H
+#ifndef POWERFLOWER_H
+#define POWERFLOWER_H
 #include "types.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct PushBlock {
+struct PowerFlower {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
@@ -39,17 +39,17 @@ struct PushBlock {
     Model mModel1;            /* 0x0d4 */
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9PushBlockD0Ev.c] */
+       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
     Model mModel2;            /* 0x124 */
     u8  mShadowModel;            /* 0x174 */
     u8  pad_175[0x57];
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x1cc -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9PushBlockD0Ev.c] */
+       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x1cc */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x200 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9PushBlockD0Ev.c] */
+       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x200 */
     s32 unk_3bc;            /* 0x3bc */
     s32 unk_3c0;            /* 0x3c0 */

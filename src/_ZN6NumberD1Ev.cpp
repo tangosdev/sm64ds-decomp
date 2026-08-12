@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN15InvisibleSecretD1Ev
+// @symbol _ZN6NumberD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -9,12 +9,12 @@ struct Actor {
 struct Model { char pad[0x50]; ~Model(); };
 struct TextureSequence { char pad[0x4]; ~TextureSequence(); };
 
-struct InvisibleSecret : Actor {
+struct Number : Actor {
     Model m0;   /* 0xd4 */
     TextureSequence m1;   /* 0x124 */
-    virtual ~InvisibleSecret();
+    virtual ~Number();
 };
 
-InvisibleSecret::~InvisibleSecret()
+Number::~Number()
 {
 }

@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN15InvisibleSecret8BehaviorEv
+// @symbol _ZN6Number8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "InvisibleSecret.h"
+#include "Number.h"
 struct V3 { int x, y, z; };
 
 extern "C" {
@@ -12,7 +12,7 @@ extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 }
 
-int InvisibleSecret::Behavior()
+int Number::Behavior()
 {
     struct V3 pos;
 

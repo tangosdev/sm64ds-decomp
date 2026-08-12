@@ -1,9 +1,9 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class SkiLift: 5 matched functions, 19 evidenced fields.
+ * class MotherPenguin: 5 matched functions, 19 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef SKILIFT_H
-#define SKILIFT_H
+#ifndef MOTHERPENGUIN_H
+#define MOTHERPENGUIN_H
 #include "types.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
@@ -11,7 +11,7 @@
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct SkiLift {
+struct MotherPenguin {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -32,19 +32,19 @@ struct SkiLift {
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* TextureSequence member, named by the class's own destructor calling
        TextureSequence's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN7SkiLiftD0Ev.c] */
+       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     TextureSequence mTextureSequence;            /* 0x138 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x14c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN7SkiLiftD0Ev.c] */
+       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x14c */
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x174 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN7SkiLiftD0Ev.c] */
+       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x174 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x1a8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN7SkiLiftD0Ev.c] */
+       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x1a8 */
     s32 unk_364;            /* 0x364 */
     s32 unk_368;            /* 0x368 */

@@ -1,4 +1,4 @@
-// @symbol _ZN9PushBlockD0Ev
+// @symbol _ZN11PowerFlowerD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -9,7 +9,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV18daObjPowerUpItem_c */
 extern void *data_020a0eac;
-int *_ZN9PushBlockD0Ev(int *t)
+int *_ZN11PowerFlowerD0Ev(int *t)
 {
     t[0] = (int)_ZTV18daObjPowerUpItem_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x200);

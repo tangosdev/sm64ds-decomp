@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN23FloatOnWaterPlatformJrb13InitResourcesEv
+// @symbol _ZN10SlidingBox13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnWaterPlatformJrb.h"
+#include "SlidingBox.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
@@ -15,7 +15,7 @@ extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thi
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
-int FloatOnWaterPlatformJrb::InitResources()
+int SlidingBox::InitResources()
 {
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_02114e74);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);

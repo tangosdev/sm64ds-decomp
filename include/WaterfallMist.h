@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class PoppingLavaBubbles: 4 matched functions, 5 evidenced fields.
+ * class WaterfallMist: 4 matched functions, 5 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef POPPINGLAVABUBBLES_H
-#define POPPINGLAVABUBBLES_H
+#ifndef WATERFALLMIST_H
+#define WATERFALLMIST_H
 #include "types.h"
 
-struct PoppingLavaBubbles {
+struct WaterfallMist {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */

@@ -12,7 +12,7 @@ extern void _ZN9Animation7AdvanceEv(char* a);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
 extern void _ZN12CylinderClsn6UpdateEv(char* c);
 
-int _ZN7Seaweed8BehaviorEv(char* self)
+int _ZN12HealingHeart8BehaviorEv(char* self)
 {
     int spin = 0x1000;
     DecIfAbove0_Byte((u8*)(self + 0x170));

@@ -1,14 +1,14 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class FloatOnWaterPlatformJrb: 6 matched functions, 23 evidenced fields.
+ * class SlidingBox: 6 matched functions, 23 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef FLOATONWATERPLATFORMJRB_H
-#define FLOATONWATERPLATFORMJRB_H
+#ifndef SLIDINGBOX_H
+#define SLIDINGBOX_H
 #include "types.h"
 #include "Model.h"
 #include "WithMeshClsn.h"
 
-struct FloatOnWaterPlatformJrb {
+struct SlidingBox {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -35,7 +35,7 @@ struct FloatOnWaterPlatformJrb {
     s32 unk_320;            /* 0x320 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x324 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN23FloatOnWaterPlatformJrbD1Ev.c] */
+       checks. Was a u8 marker. [_ZN10SlidingBoxD1Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x324 */
     s32 unk_4e0;            /* 0x4e0 */
     s32 unk_4e4;            /* 0x4e4 */

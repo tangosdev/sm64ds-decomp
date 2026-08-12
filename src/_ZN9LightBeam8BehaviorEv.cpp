@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN4Trap8BehaviorEv
+// @symbol _ZN9LightBeam8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_Message.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Trap.h"
+#include "LightBeam.h"
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(const Vector3* v, const Matrix4x3* m, Vector3* res);
@@ -40,7 +40,7 @@ struct Obj {
     u16 arr_168[4];     /* 0x168 */
 };
 
-int Trap::Behavior()
+int LightBeam::Behavior()
 {
     Vector3 vIn, vMid, vRes;
     Vector3 hv;

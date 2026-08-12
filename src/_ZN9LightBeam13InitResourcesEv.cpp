@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN4Trap13InitResourcesEv
+// @symbol _ZN9LightBeam13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Trap.h"
+#include "LightBeam.h"
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern unsigned char NumStars(void);
@@ -12,7 +12,7 @@ extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
 }
 extern int data_0209caa0[];
 
-int Trap::InitResources()
+int LightBeam::InitResources()
 {
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov010_02112d50);
     if (NumStars() < 0xe) return 0;

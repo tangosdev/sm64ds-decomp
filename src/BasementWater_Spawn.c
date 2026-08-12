@@ -5,13 +5,13 @@
 #include "decl_TextureTransformer.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV12SwitchPillar */
+/* resolved: VT0 = _ZTV13BasementWater */
 int *BasementWater_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(832);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)_ZTV12SwitchPillar;
+        p[0] = (int)_ZTV13BasementWater;
         _ZN18TextureTransformerC1Ev((char *)p + 0x320);
     }
     return p;

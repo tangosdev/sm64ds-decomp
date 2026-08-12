@@ -1,4 +1,4 @@
-// @symbol _ZN15InvisibleSecretD0Ev
+// @symbol _ZN6NumberD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -7,7 +7,7 @@
 /* vtable identified: VT0 = _ZTV13daObjNumber_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
-int *_ZN15InvisibleSecretD0Ev(int *t)
+int *_ZN6NumberD0Ev(int *t)
 {
     t[0] = (int)_ZTV13daObjNumber_c;
     _ZN15TextureSequenceD1Ev((char *)t + 0x124);

@@ -9,13 +9,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV7SkiLift */
+/* resolved: VT0 = _ZTV13MotherPenguin */
 int *MotherPenguin_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(908);
     if (p) {
         _ZN5ActorC2Ev(p);
-        p[0] = (int)_ZTV7SkiLift;
+        p[0] = (int)_ZTV13MotherPenguin;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);
         _ZN11ShadowModelC1Ev((char *)p + 0x14c);

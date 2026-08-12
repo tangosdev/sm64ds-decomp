@@ -1,3 +1,3 @@
-void _ZN7SkiLift16OnPendingDestroyEv(void)
+void _ZN13MotherPenguin16OnPendingDestroyEv(void)
 {
 }

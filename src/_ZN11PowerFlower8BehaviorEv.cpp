@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9PushBlock8BehaviorEv
+// @symbol _ZN11PowerFlower8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PushBlock.h"
+#include "PowerFlower.h"
 extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(char* t);
 extern void _ZN12CylinderClsn6UpdateEv(char* t);
@@ -12,7 +12,7 @@ extern void _ZN5Actor13SmallPoofDustEv(char* c);
 extern void _ZN9ActorBase18MarkForDestructionEv(char* c);
 }
 
-int PushBlock::Behavior()
+int PowerFlower::Behavior()
 {
     int b = (int)((unk_0b0 & 0x40000) != 0);
     if (b != 0) return 1;

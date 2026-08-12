@@ -39,8 +39,8 @@
  * and stores the vtable at 0x021094a0, whose RTTI record is daObjWaterfall_c. For that
  * class the name is apt, so it stays. The defect was one name serving two classes.
  *
- * A SEPARATE DEFECT FOUND ON THE WAY, recorded here and not fixed: _ZTV18PoppingLavaBubbles
- * is attached to 0x021094a0, which is daObjWaterfall_c's table. PoppingLavaBubbles' own
+ * A SEPARATE DEFECT FOUND ON THE WAY, recorded here and not fixed: _ZTV13WaterfallMist
+ * is attached to 0x021094a0, which is daObjWaterfall_c's table. WaterfallMist' own
  * vtable is 0x021093e0 (RTTI: daObjLava_c) and carries no _ZTV name at all --
  * PoppingLavaBubbles_Spawn stores it as the unnamed data_ov002_021093e0. So that symbol
  * names the wrong table, one entry along.

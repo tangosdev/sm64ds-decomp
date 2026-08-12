@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9PushBlock6RenderEv
+// @symbol _ZN11PowerFlower6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "PushBlock.h"
+#include "PowerFlower.h"
 struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual void g5(void*); };
 
-int PushBlock::Render()
+int PowerFlower::Render()
 {
   int f = (int)((unk_0b0 & 0x40000) != 0);
   if (f != 0) return 1;

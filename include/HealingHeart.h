@@ -1,13 +1,13 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Seaweed: 5 matched functions, 9 evidenced fields.
+ * class HealingHeart: 5 matched functions, 9 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef SEAWEED_H
-#define SEAWEED_H
+#ifndef HEALINGHEART_H
+#define HEALINGHEART_H
 #include "types.h"
 #include "ModelAnim.h"
 
-struct Seaweed {
+struct HealingHeart {
     u8  pad_000[0x74];
     /* 0x074..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */

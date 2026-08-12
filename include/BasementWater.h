@@ -1,5 +1,5 @@
-#ifndef SWITCHPILLAR_H
-#define SWITCHPILLAR_H
+#ifndef BASEMENTWATER_H
+#define BASEMENTWATER_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "TextureTransformer.h"
 
-struct SwitchPillar : Platform {
+struct BasementWater : Platform {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mLoweredY;                    /* 0x334 */
@@ -28,7 +28,7 @@ struct SwitchPillar : Platform {
     u8 unk_33e;                       /* 0x33e */
 
     /* --- vtable --- */
-    virtual ~SwitchPillar();
+    virtual ~BasementWater();
 
     int Behavior();
     int CleanupResources();
@@ -36,14 +36,14 @@ struct SwitchPillar : Platform {
     int Render();
 };
 
-typedef char SwitchPillar_size_must_be_0x340[sizeof(SwitchPillar) == 0x340 ? 1 : -1];
+typedef char SwitchPillar_size_must_be_0x340[sizeof(BasementWater) == 0x340 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct SwitchPillar {
+struct BasementWater {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x10];
@@ -78,4 +78,4 @@ struct SwitchPillar {
 
 #endif /* __cplusplus */
 
-#endif /* SWITCHPILLAR_H */
+#endif /* BASEMENTWATER_H */

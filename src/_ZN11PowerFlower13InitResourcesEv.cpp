@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9PushBlock13InitResourcesEv
+// @symbol _ZN11PowerFlower13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PushBlock.h"
+#include "PowerFlower.h"
 typedef int Fix12;
 
 extern "C" {
@@ -24,7 +24,7 @@ extern void _ZN13RaycastGroundD1Ev(void *self);
 extern void *data_ov002_0210d9d0[];
 extern void *data_ov002_0210d9b0[];
 
-int PushBlock::InitResources()
+int PowerFlower::InitResources()
 {
     struct Vector3 pos;
     char ray[0x54];

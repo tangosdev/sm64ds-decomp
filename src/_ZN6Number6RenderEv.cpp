@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN15InvisibleSecret6RenderEv
+// @symbol _ZN6Number6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "InvisibleSecret.h"
+#include "Number.h"
 extern "C" {
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
@@ -19,7 +19,7 @@ struct Obj {
     virtual void m(int a);
 };
 
-int InvisibleSecret::Render()
+int Number::Render()
 {
     if (data_0209b454 & 0x4000000) {
         void* a = 0;

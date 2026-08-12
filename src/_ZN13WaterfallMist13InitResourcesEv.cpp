@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN18PoppingLavaBubbles13InitResourcesEv
+// @symbol _ZN13WaterfallMist13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "PoppingLavaBubbles.h"
+#include "WaterfallMist.h"
 extern signed char data_0209f2f8;
 
-int PoppingLavaBubbles::InitResources()
+int WaterfallMist::InitResources()
 {
     signed char v;
     unk_0d4 = 0x24;

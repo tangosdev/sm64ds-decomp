@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN18PoppingLavaBubblesD1Ev
+// @symbol _ZN13WaterfallMistD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct PoppingLavaBubbles : Actor {
-    virtual ~PoppingLavaBubbles();
+struct WaterfallMist : Actor {
+    virtual ~WaterfallMist();
 };
 
-PoppingLavaBubbles::~PoppingLavaBubbles()
+WaterfallMist::~WaterfallMist()
 {
 }

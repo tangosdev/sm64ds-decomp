@@ -4,10 +4,10 @@
 #include "decl_ActorBase.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV18PoppingLavaBubbles */
+/* resolved: VT = _ZTV13WaterfallMist */
 int *WaterfallMist_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(220);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV18PoppingLavaBubbles; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV13WaterfallMist; }
     return p;
 }

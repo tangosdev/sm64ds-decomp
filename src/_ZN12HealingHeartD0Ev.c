@@ -1,4 +1,4 @@
-// @symbol _ZN7SeaweedD0Ev
+// @symbol _ZN12HealingHeartD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
@@ -7,7 +7,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV12daObjHeart_c */
 extern void *data_020a0eac;
-int *_ZN7SeaweedD0Ev(int *t)
+int *_ZN12HealingHeartD0Ev(int *t)
 {
     t[0] = (int)_ZTV12daObjHeart_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x138);

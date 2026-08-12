@@ -6,13 +6,13 @@
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV15InvisibleSecret */
+/* resolved: VT0 = _ZTV6Number */
 int *Number_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(336);
     if (p) {
         _ZN5ActorC2Ev(p);
-        p[0] = (int)_ZTV15InvisibleSecret;
+        p[0] = (int)_ZTV6Number;
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x124);
     }

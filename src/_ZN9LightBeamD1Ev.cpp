@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN4TrapD1Ev
+// @symbol _ZN9LightBeamD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -9,12 +9,12 @@ struct Actor {
 struct Model { char pad[0x50]; ~Model(); };
 struct MovingCylinderClsnWithPos { char pad[0x4]; ~MovingCylinderClsnWithPos(); };
 
-struct Trap : Actor {
+struct LightBeam : Actor {
     Model m0;   /* 0xd4 */
     MovingCylinderClsnWithPos m1;   /* 0x124 */
-    virtual ~Trap();
+    virtual ~LightBeam();
 };
 
-Trap::~Trap()
+LightBeam::~LightBeam()
 {
 }

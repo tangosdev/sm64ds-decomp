@@ -1,8 +1,8 @@
 #include "TextureSequence.h"
 //cpp
-// @symbol _ZN15InvisibleSecret13InitResourcesEv
+// @symbol _ZN6Number13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "InvisibleSecret.h"
+#include "Number.h"
 
 struct SharedFilePtr { void* p; void* file; };
 struct BMD_File;
@@ -20,7 +20,7 @@ extern SharedFilePtr data_ov002_0210da28;
 extern SharedFilePtr data_ov002_0210d9e8;
 extern SharedFilePtr data_ov002_0210d9a8;
 
-int InvisibleSecret::InitResources()
+int Number::InitResources()
 {
     if (mParam & 0x10) {
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov002_0210da08);

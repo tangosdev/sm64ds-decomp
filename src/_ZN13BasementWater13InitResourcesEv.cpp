@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN12SwitchPillar13InitResourcesEv
+// @symbol _ZN13BasementWater13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "SwitchPillar.h"
+#include "BasementWater.h"
 #include "MeshColliderBase.h"
 extern "C" {
 int _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -17,7 +17,7 @@ int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 extern int data_0209caa0[];
 }
 
-int SwitchPillar::InitResources()
+int BasementWater::InitResources()
 {
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov012_021124d0);
   _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov012_021124c8);

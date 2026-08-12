@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12SwitchPillar8BehaviorEv
+// @symbol _ZN13BasementWater8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "SwitchPillar.h"
+#include "BasementWater.h"
 extern "C" {
 extern void _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* p);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
@@ -13,7 +13,7 @@ extern void _ZN9Animation7AdvanceEv(void* thiz);
 extern int data_0209caa0[];
 extern int data_0209f32c;
 
-int SwitchPillar::Behavior()
+int BasementWater::Behavior()
 {
     if (unk_33e != 0)
         _ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (unsigned short*)((char*)&unk_33c));

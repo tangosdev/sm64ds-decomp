@@ -1,4 +1,4 @@
-// @symbol _ZN4TrapD0Ev
+// @symbol _ZN9LightBeamD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -7,7 +7,7 @@
 /* vtable identified: VT0 = _ZTV15daObjC1Hikari_c */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void *data_020a0eac;
-int *_ZN4TrapD0Ev(int *t)
+int *_ZN9LightBeamD0Ev(int *t)
 {
     t[0] = (int)_ZTV15daObjC1Hikari_c;
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x124);

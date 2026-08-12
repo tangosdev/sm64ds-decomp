@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class InvisibleSecret: 6 matched functions, 18 evidenced fields.
+ * class Number: 6 matched functions, 18 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef INVISIBLESECRET_H
-#define INVISIBLESECRET_H
+#ifndef NUMBER_H
+#define NUMBER_H
 #include "types.h"
 
-struct InvisibleSecret {
+struct Number {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];

@@ -1,4 +1,4 @@
-// @symbol _ZN7SkiLiftD0Ev
+// @symbol _ZN13MotherPenguinD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
@@ -10,7 +10,7 @@
 /* vtable identified: VT0 = _ZTV10daPgMthr_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
-int *_ZN7SkiLiftD0Ev(int *t)
+int *_ZN13MotherPenguinD0Ev(int *t)
 {
     t[0] = (int)_ZTV10daPgMthr_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x1a8);

@@ -6,7 +6,7 @@ void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 extern struct SharedFilePtr data_ov018_02113c00;
 extern struct SharedFilePtr* data_ov018_02112c0c[2];
 extern struct SharedFilePtr* data_ov018_02112c04[2];
-int _ZN7SkiLift16CleanupResourcesEv(void){
+int _ZN13MotherPenguin16CleanupResourcesEv(void){
   int i;
   _ZN13SharedFilePtr7ReleaseEv(&data_ov018_02113c00);
   for(i=0;i<2;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov018_02112c0c[i]);

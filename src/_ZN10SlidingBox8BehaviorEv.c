@@ -20,7 +20,7 @@ extern void func_ov016_021130a4(char *t);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 
-int _ZN23FloatOnWaterPlatformJrb8BehaviorEv(char *a)
+int _ZN10SlidingBox8BehaviorEv(char *a)
 {
     struct Vector3 normal;
 
