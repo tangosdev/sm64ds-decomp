@@ -192,6 +192,7 @@ src/func_ov100_021442d4.c:
     .text start:0x021442d4 end:0x021442dc
 
 src/UnchainedChomp_Spawn.c:
+    complete
     .text start:0x021442dc end:0x021443f4
 
 src/func_ov100_021443f4.c:

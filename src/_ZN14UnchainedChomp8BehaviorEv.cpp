@@ -5,8 +5,16 @@
 /* recovered: named members + shared header, real C++ method */
 #include "UnchainedChomp.h"
 struct CylinderClsn;
-struct Actor;
-typedef void (Actor::*PMF)();
+/* NOT the real Actor, and deliberately not named one. This stand-in exists
+   solely to give the pointer-to-member below a representation: a PMF on a
+   non-polymorphic, single-base class is laid out differently from one on the
+   real Actor, so the shape here is codegen, not decoration. Naming it Actor
+   used to work only because this file included no header that defined the
+   real one; with UnchainedChomp.h in scope that became a redefinition, and
+   letting the PMF bind to the real Actor makes mwccarm abort with an
+   internal compiler error rather than a diagnostic. */
+struct ChompPmfSelf;
+typedef void (ChompPmfSelf::*PMF)();
 struct Holder { char pad[8]; PMF fn; };
 
 extern "C" {
@@ -30,11 +38,11 @@ extern void ApproachAngle(short *cur, short target, int step, int a, int b);
 extern unsigned char data_0209f2d8[];
 }
 
-struct Actor { char pad[0x800]; };
+struct ChompPmfSelf { char pad[0x800]; };
 
 int UnchainedChomp::Behavior()
 {
-    char *c = (char *)((Actor *)this);
+    char *c = (char *)((ChompPmfSelf *)this);
     DecIfAbove0_Short((unsigned short *)(c + 0x6ca));
     DecIfAbove0_Short((unsigned short *)(c + 0x6a8));
     if (DecIfAbove0_Short((unsigned short *)(c + 0x6a6)) != 0) {
@@ -57,7 +65,7 @@ int UnchainedChomp::Behavior()
     {
         Holder *q = *(Holder **)(c + 0x668);
         if (q->fn != 0) {
-            (((Actor *)this)->*(q->fn))();
+            (((ChompPmfSelf *)this)->*(q->fn))();
         }
     }
 

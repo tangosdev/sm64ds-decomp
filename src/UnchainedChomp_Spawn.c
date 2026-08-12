@@ -1,5 +1,5 @@
 extern void *_ZN9ActorBasenwEj(unsigned int);
-extern void func_020aed98(void);
+extern void _ZN5EnemyC2Ev(void *);
 extern void _ZN25MovingCylinderClsnWithPosC1Ev(void *);
 extern void _ZN12WithMeshClsnC1Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
@@ -18,7 +18,7 @@ void *UnchainedChomp_Spawn(void)
 {
     char *p = (char *)_ZN9ActorBasenwEj(0x7a4);
     if (p) {
-        func_020aed98();
+        _ZN5EnemyC2Ev(p);
         *(int *)p = (int)&_ZTV14UnchainedChomp;
         _ZN25MovingCylinderClsnWithPosC1Ev(p + 0x110);
         _ZN12WithMeshClsnC1Ev(p + 0x150);
