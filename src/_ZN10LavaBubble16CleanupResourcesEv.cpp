@@ -4,7 +4,7 @@
  *
  * `return 1` with no release calls, which is the finding rather than a stub:
  * every other class in this overlay releases at least one SharedFilePtr here
- * (Clam 3, TreasureChest 4, BowserPuzzlePiece 2, WaterRing 1). LavaBubble
+ * (Clam 3, TreasureChest 4, JetStream 2, WaterRing 1). LavaBubble
  * holds none, so it has nothing to give back.
  */
 #include "LavaBubble.h"

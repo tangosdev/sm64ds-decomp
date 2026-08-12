@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN17BowserPuzzlePiece16CleanupResourcesEv
+// @symbol _ZN9JetStream16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Gives back the two shared files the piece renders from. Both live in ov002,
@@ -9,13 +9,13 @@
  * `SharedFilePtr::Release` is now spelt as the member call it is, so the
  * compiler emits _ZN13SharedFilePtr7ReleaseEv itself.
  */
-#include "BowserPuzzlePiece.h"
+#include "JetStream.h"
 #include "SharedFilePtr.h"
 
 extern char data_ov002_0210da10;
 extern char data_ov002_0210d9a8;
 
-s32 BowserPuzzlePiece::CleanupResources()
+s32 JetStream::CleanupResources()
 {
     ((SharedFilePtr *)(&data_ov002_0210da10))->Release();
     ((SharedFilePtr *)(&data_ov002_0210d9a8))->Release();

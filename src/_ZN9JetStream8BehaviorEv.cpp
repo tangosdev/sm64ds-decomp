@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN17BowserPuzzlePiece8BehaviorEv
+// @symbol _ZN9JetStream8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "BowserPuzzlePiece.h"
+#include "JetStream.h"
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void func_ov064_0211987c(void* c);
@@ -14,7 +14,7 @@ struct C {
   Obj* obj;
 };
 
-s32 BowserPuzzlePiece::Behavior()
+s32 JetStream::Behavior()
 {
   DecIfAbove0_Short((unsigned short*)((char*)&(*(u8 *)&unk_100)));
   if(((C*)this)->obj->pmf){
