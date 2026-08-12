@@ -1,16 +1,16 @@
 //cpp
-// @symbol _ZN9ArrowLift13InitResourcesEv
+// @symbol _ZN12WaterDiamond13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ArrowLift.h"
+#include "WaterDiamond.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, int fix, int t, unsigned int u, unsigned int v);
 }
 
-int ArrowLift::InitResources()
+int WaterDiamond::InitResources()
 {
   void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114270);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, -1);
