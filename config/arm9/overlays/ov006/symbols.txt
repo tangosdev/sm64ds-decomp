@@ -1068,8 +1068,8 @@ func_ov006_020f8c68 kind:function(arm,size=0xa0) addr:0x020f8c68
 func_ov006_020f8d08 kind:function(arm,size=0x13c) addr:0x020f8d08
 func_ov006_020f8e44 kind:function(arm,size=0x94) addr:0x020f8e44
 func_ov006_020f8ed8 kind:function(arm,size=0x1c) addr:0x020f8ed8
-func_ov006_020f8ef4 kind:function(arm,size=0x74) addr:0x020f8ef4
-func_ov006_020f8f68 kind:function(arm,size=0x88) addr:0x020f8f68
+_ZN14dScMgMCarlo2_cD1Ev kind:function(arm,size=0x74) addr:0x020f8ef4
+_ZN14dScMgMCarlo2_cD0Ev kind:function(arm,size=0x88) addr:0x020f8f68
 func_ov006_020f8ff0 kind:function(arm,size=0x10) addr:0x020f8ff0
 func_ov006_020f9000 kind:function(arm,size=0x4f4) addr:0x020f9000
 func_ov006_020f94f4 kind:function(arm,size=0x6c) addr:0x020f94f4
@@ -3865,7 +3865,7 @@ _ZTS14dScMgMCarlo2_c kind:data(any) addr:0x0213d730
 data_ov006_0213d744 kind:data(any) addr:0x0213d744
 _ZTS19dMgMCarlo2CardObj_c kind:data(any) addr:0x0213d758
 data_ov006_0213d770 kind:data(any) addr:0x0213d770
-data_ov006_0213d7e8 kind:data(any) addr:0x0213d7e8
+_ZTV14dScMgMCarlo2_c kind:data(any) addr:0x0213d7e8
 data_ov006_0213d878 kind:data(any) addr:0x0213d878
 data_ov006_0213d880 kind:data(any) addr:0x0213d880
 data_ov006_0213d888 kind:data(any) addr:0x0213d888
