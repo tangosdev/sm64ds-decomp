@@ -4,10 +4,7 @@
 #include "decl_TextureTransformer.h"
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
+/* dScMg3DEsp_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern void _ZN8Particle10SysTrackerD1Ev(void*);
 extern int data_ov006_0213e448;
 extern void* data_020a0eac;

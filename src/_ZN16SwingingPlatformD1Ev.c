@@ -1,16 +1,16 @@
-// @symbol func_ov036_021111a0
+// @symbol _ZN16SwingingPlatformD1Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int data_ov036_02113a98[];
+extern int _ZTV16SwingingPlatform[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov036_02113a98; VT1 = _ZTV8Platform */
-int *func_ov036_021111a0(int *t)
+/* vtable identified: VT0 = _ZTV16SwingingPlatform; VT1 = _ZTV8Platform */
+int *_ZN16SwingingPlatformD1Ev(int *t)
 {
-    t[0] = (int)data_ov036_02113a98;
+    t[0] = (int)_ZTV16SwingingPlatform;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

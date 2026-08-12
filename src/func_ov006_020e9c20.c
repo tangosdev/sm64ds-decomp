@@ -5,10 +5,7 @@
 #include "dScMg3DEsp_c.h"
 // recovered name: dScMg3DEsp_c_OnYoshiTryEat_020e9c20
 /* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
+/* dScMg3DEsp_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern char* func_020beb68;
 
 void func_ov006_020e9c20(char* c, int a)

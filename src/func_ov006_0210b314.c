@@ -4,10 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
+/* dScMgSlot3_c::OnYoshiTryEat - recovered from vtable slot identity */
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 extern void func_02012790(unsigned int id);

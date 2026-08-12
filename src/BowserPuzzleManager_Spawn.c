@@ -1,9 +1,9 @@
 extern void *_ZN9ActorBasenwEj(unsigned);
 extern void _ZN5ActorC2Ev(void *);
-extern int data_ov064_0211c1d8[];
+extern int _ZTV19BowserPuzzleManager[];
 int *BowserPuzzleManager_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(216);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)data_ov064_0211c1d8; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV19BowserPuzzleManager; }
     return p;
 }
