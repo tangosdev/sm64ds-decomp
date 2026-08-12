@@ -1,6 +1,5 @@
 //cpp
 // @symbol func_ov006_020edf54
-// recovered name: dScMgJump_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_Player.h"

@@ -1,5 +1,4 @@
 // @symbol func_ov080_02125428
-// recovered name: daPicGate_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"

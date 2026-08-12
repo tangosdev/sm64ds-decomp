@@ -1,5 +1,4 @@
 // @symbol func_ov006_020e76e4
-// recovered name: dScMg3DEsp_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_TextureTransformer.h"

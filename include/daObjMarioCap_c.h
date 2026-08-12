@@ -42,7 +42,7 @@
  * A SEPARATE DEFECT FOUND ON THE WAY, recorded here and not fixed: _ZTV13WaterfallMist
  * is attached to 0x021094a0, which is daObjWaterfall_c's table. WaterfallMist' own
  * vtable is 0x021093e0 (RTTI: daObjLava_c) and carries no _ZTV name at all --
- * PoppingLavaBubbles_Spawn stores it as the unnamed data_ov002_021093e0. So that symbol
+ * PoppingLavaBubbles_Spawn stores it as the unnamed _ZTV18PoppingLavaBubbles. So that symbol
  * names the wrong table, one entry along.
  */
 struct daObjMarioCap_c : Enemy {

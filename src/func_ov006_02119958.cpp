@@ -1,6 +1,5 @@
 //cpp
 // @symbol func_ov006_02119958
-// recovered name: dScMgSound_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */

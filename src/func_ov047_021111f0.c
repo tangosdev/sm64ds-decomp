@@ -1,5 +1,4 @@
 // @symbol func_ov047_021111f0
-// recovered name: daObjKm3_Kurumajiku_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"

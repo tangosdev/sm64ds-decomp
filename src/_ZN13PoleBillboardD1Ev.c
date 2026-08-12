@@ -1,14 +1,14 @@
-// @symbol func_ov015_021111a0
+// @symbol _ZN13PoleBillboardD1Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_common.h"
-extern int data_ov015_02114360[];
+extern int _ZTV13PoleBillboard[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov015_02114360 */
-int *func_ov015_021111a0(int *t)
+/* vtable identified: VT0 = _ZTV13PoleBillboard */
+int *_ZN13PoleBillboardD1Ev(int *t)
 {
-    t[0] = (int)data_ov015_02114360;
+    t[0] = (int)_ZTV13PoleBillboard;
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
     return t;
