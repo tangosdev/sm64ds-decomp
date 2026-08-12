@@ -32,7 +32,7 @@ extern u8 data_0209f220;
 struct V3 { int x, y, z; };
 struct RG { char b[0x4c]; };
 
-extern "C" int _ZN14MovingBarSmall13InitResourcesEv(char* self) {
+extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
   RG rc;
   V3 v;
   int r2;
