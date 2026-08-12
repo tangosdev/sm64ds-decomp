@@ -127,27 +127,27 @@ src/DonutBlock_Spawn.c:
     complete
     .text start:0x02111cd8 end:0x02111d14
 
-src/_ZN10DonutBlockD1Ev.cpp:
+src/_ZN21ArmedRotatingPlatformD1Ev.cpp:
     complete
     .text start:0x02111d14 end:0x02111d58
 
-src/_ZN10DonutBlockD0Ev.cpp:
+src/_ZN21ArmedRotatingPlatformD0Ev.cpp:
     complete
     .text start:0x02111d58 end:0x02111db0
 
-src/_ZN10DonutBlock16CleanupResourcesEv.cpp:
+src/_ZN21ArmedRotatingPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111db0 end:0x02111df8
 
-src/_ZN10DonutBlock6RenderEv.cpp:
+src/_ZN21ArmedRotatingPlatform6RenderEv.cpp:
     complete
     .text start:0x02111df8 end:0x02111e20
 
-src/_ZN10DonutBlock8BehaviorEv.cpp:
+src/_ZN21ArmedRotatingPlatform8BehaviorEv.cpp:
     complete
     .text start:0x02111e20 end:0x02111eb0
 
-src/_ZN10DonutBlock13InitResourcesEv.cpp:
+src/_ZN21ArmedRotatingPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x02111eb0 end:0x02111f5c
 
