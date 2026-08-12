@@ -3,11 +3,11 @@
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
     .data       start:0x02112a00 end:0x02114020 kind:data align:32
     .bss        start:0x02114020 end:0x021141e0 kind:bss align:32
-src/func_ov036_021111a0.c:
+src/_ZN16SwingingPlatformD1Ev.c:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/func_ov036_021111e4.c:
+src/_ZN16SwingingPlatformD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
@@ -35,11 +35,11 @@ src/SwingingPlatform_Spawn.c:
     complete
     .text start:0x02111414 end:0x02111444
 
-src/func_ov036_02111444.c:
+src/_ZN18RotatingPlatformRrD1Ev.c:
     complete
     .text start:0x02111444 end:0x02111494
 
-src/func_ov036_02111494.c:
+src/_ZN18RotatingPlatformRrD0Ev.c:
     complete
     .text start:0x02111494 end:0x021114f8
 

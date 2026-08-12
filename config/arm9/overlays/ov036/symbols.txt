@@ -1,13 +1,13 @@
-func_ov036_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov036_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN16SwingingPlatformD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN16SwingingPlatformD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov036_0211123c kind:function(arm,size=0x48) addr:0x0211123c
 func_ov036_02111284 kind:function(arm,size=0x44) addr:0x02111284
 func_ov036_021112c8 kind:function(arm,size=0x28) addr:0x021112c8
 func_ov036_021112f0 kind:function(arm,size=0x8c) addr:0x021112f0
 func_ov036_0211137c kind:function(arm,size=0x98) addr:0x0211137c
 SwingingPlatform_Spawn kind:function(arm,size=0x30) addr:0x02111414
-func_ov036_02111444 kind:function(arm,size=0x50) addr:0x02111444
-func_ov036_02111494 kind:function(arm,size=0x64) addr:0x02111494
+_ZN18RotatingPlatformRrD1Ev kind:function(arm,size=0x50) addr:0x02111444
+_ZN18RotatingPlatformRrD0Ev kind:function(arm,size=0x64) addr:0x02111494
 func_ov036_021114f8 kind:function(arm,size=0x14) addr:0x021114f8
 func_ov036_0211150c kind:function(arm,size=0x38) addr:0x0211150c
 RotatingPlatformRr_Spawn kind:function(arm,size=0x3c) addr:0x02111544
@@ -155,7 +155,7 @@ data_ov036_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 _ZTI16daObjRcBuranko_c kind:data(any) addr:0x02113a54
 data_ov036_02113a60 kind:data(any) addr:0x02113a60
 SwingingPlatform_SpawnInfo kind:data(any) addr:0x02113a74 ambiguous
-data_ov036_02113a98 kind:data(any) addr:0x02113a98
+_ZTV16SwingingPlatform kind:data(any) addr:0x02113a98
 data_ov036_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov036_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov036_02113b10 kind:data(any) addr:0x02113b10 ambiguous
@@ -165,7 +165,7 @@ _ZTI19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b20
 data_ov036_02113b2c kind:data(any) addr:0x02113b2c
 _ZTS19daObjRc_Kaitendai_c kind:data(any) addr:0x02113b38
 RotatingPlatformRr_SpawnInfo kind:data(any) addr:0x02113b50 ambiguous
-data_ov036_02113b74 kind:data(any) addr:0x02113b74
+_ZTV18RotatingPlatformRr kind:data(any) addr:0x02113b74
 data_ov036_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 data_ov036_02113b80 kind:data(any) addr:0x02113b80 ambiguous
 data_ov036_02113b90 kind:data(any) addr:0x02113b90 ambiguous

@@ -41,8 +41,8 @@ _ZN8BigBully6RenderEv kind:function(arm,size=0x38) addr:0x0211764c
 _ZN8BigBully8BehaviorEv kind:function(arm,size=0x100) addr:0x02117684
 _ZN8BigBully13InitResourcesEv kind:function(arm,size=0x198) addr:0x02117784
 BigBully_Spawn kind:function(arm,size=0x5c) addr:0x0211791c
-func_ov064_02117978 kind:function(arm,size=0x44) addr:0x02117978
-func_ov064_021179bc kind:function(arm,size=0x58) addr:0x021179bc
+_ZN12MetalNetLiftD1Ev kind:function(arm,size=0x44) addr:0x02117978
+_ZN12MetalNetLiftD0Ev kind:function(arm,size=0x58) addr:0x021179bc
 func_ov064_02117a14 kind:function(arm,size=0x30) addr:0x02117a14
 func_ov064_02117a44 kind:function(arm,size=0x148) addr:0x02117a44
 func_ov064_02117b8c kind:function(arm,size=0x50) addr:0x02117b8c
@@ -83,8 +83,8 @@ func_ov064_02118b08 kind:function(arm,size=0x8) addr:0x02118b08
 LavaBubble_Spawn kind:function(arm,size=0x40) addr:0x02118b10
 _ZN17BowserPuzzlePieceD1Ev kind:function(arm,size=0x44) addr:0x02118b50
 _ZN17BowserPuzzlePieceD0Ev kind:function(arm,size=0x58) addr:0x02118b94
-func_ov064_02118bec kind:function(arm,size=0x24) addr:0x02118bec
-func_ov064_02118c10 kind:function(arm,size=0x38) addr:0x02118c10
+_ZN19BowserPuzzleManagerD1Ev kind:function(arm,size=0x24) addr:0x02118bec
+_ZN19BowserPuzzleManagerD0Ev kind:function(arm,size=0x38) addr:0x02118c10
 func_ov064_02118c48 kind:function(arm,size=0x8c) addr:0x02118c48
 func_ov064_02118cd4 kind:function(arm,size=0x18) addr:0x02118cd4
 func_ov064_02118cec kind:function(arm,size=0x1c) addr:0x02118cec
@@ -216,7 +216,7 @@ data_ov064_0211bc1c kind:data(any) addr:0x0211bc1c
 _ZTI17daObjFl_Amilift_c kind:data(any) addr:0x0211bc24
 _ZTS17daObjFl_Amilift_c kind:data(any) addr:0x0211bc30
 MetalNetLift_SpawnInfo kind:data(any) addr:0x0211bc44
-data_ov064_0211bc68 kind:data(any) addr:0x0211bc68
+_ZTV12MetalNetLift kind:data(any) addr:0x0211bc68
 _ZTI14daObjFl_Gura_c kind:data(any) addr:0x0211bce8
 _ZTS14daObjFl_Gura_c kind:data(any) addr:0x0211bcf4
 TiltingPlatformLll_SpawnInfo kind:data(any) addr:0x0211bd08
@@ -262,7 +262,7 @@ data_ov064_0211c144 kind:data(any) addr:0x0211c144
 BowserPuzzlePiece_SpawnInfo kind:data(any) addr:0x0211c160
 BowserPuzzleManager_SpawnInfo kind:data(any) addr:0x0211c17c
 data_ov064_0211c198 kind:data(any) addr:0x0211c198
-data_ov064_0211c1d8 kind:data(any) addr:0x0211c1d8
+_ZTV19BowserPuzzleManager kind:data(any) addr:0x0211c1d8
 _ZTV17BowserPuzzlePiece kind:data(any) addr:0x0211c25c
 data_ov064_0211c2dc kind:data(any) addr:0x0211c2dc
 data_ov064_0211c2e4 kind:data(any) addr:0x0211c2e4
