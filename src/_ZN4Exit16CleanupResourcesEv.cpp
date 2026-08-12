@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN11VirtualDoor16CleanupResourcesEv
+// @symbol _ZN4Exit16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
- * `return 1`. VirtualDoor claims no files -- it is a trigger volume with no
+ * `return 1`. Exit claims no files -- it is a trigger volume with no
  * model -- so there is nothing to release and the override just reports
  * success.
  */
-#include "VirtualDoor.h"
+#include "Exit.h"
 
-int VirtualDoor::CleanupResources()
+int Exit::CleanupResources()
 {
     return 1;
 }

@@ -4,10 +4,10 @@
 #include "decl_ActorBase.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV11VirtualDoor */
+/* resolved: VT = _ZTV4Exit */
 int *Exit_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(260);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV11VirtualDoor; }
+    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV4Exit; }
     return p;
 }

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN11VirtualDoor13InitResourcesEv
+// @symbol _ZN4Exit13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * Sizes the trigger box and builds the world -> door-local matrix everything
@@ -30,7 +30,7 @@
  * this file into the codegen-hacks bucket and fail the ratchet on a change
  * that REMOVED six of them. It did, once, before this wording.)
  */
-#include "VirtualDoor.h"
+#include "Exit.h"
 
 extern "C" {
 extern signed char data_0209f2f8;
@@ -42,7 +42,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern void InvMat4x3(void* out, void* in);
 }
 
-int VirtualDoor::InitResources()
+int Exit::InitResources()
 {
     if (data_0209f2f8 == 8 && data_0209f220 != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0) return 0;
