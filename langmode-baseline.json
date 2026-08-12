@@ -27,12 +27,12 @@
       },
       "D0": {
         "draft": 0,
-        "migrated": 122,
+        "migrated": 123,
         "unmigrated": 155
       },
       "D1": {
         "draft": 0,
-        "migrated": 208,
+        "migrated": 209,
         "unmigrated": 76
       },
       "D2": {
@@ -48,8 +48,8 @@
     },
     "cpp_still_handspelled": 140,
     "mangled_c": 495,
-    "mangled_cpp": 2118,
-    "mangled_total": 2613,
+    "mangled_cpp": 2120,
+    "mangled_total": 2615,
     "nonmatching_drafts": 9,
     "unmigrated_total": 635
   },
