@@ -1,4 +1,4 @@
-// @symbol _ZN9UkikiCageD1Ev
+// @symbol _ZN13RollingLogTtmD1Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -7,7 +7,7 @@
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV15daObjHmMaruta_c; VT1 = _ZTV10dBgActor_c */
-int *_ZN9UkikiCageD1Ev(int *t)
+int *_ZN13RollingLogTtmD1Ev(int *t)
 {
     t[0] = (int)_ZTV15daObjHmMaruta_c;
     t[0] = (int)_ZTV10dBgActor_c;

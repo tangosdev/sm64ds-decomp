@@ -5,7 +5,7 @@
 extern int func_ov080_0212714c(void *thisp, void *data);
 extern char data_ov030_021159f4[];
 
-int _ZN9UkikiCage8BehaviorEv(void *thisp)
+int _ZN13RollingLogTtm8BehaviorEv(void *thisp)
 {
     return func_ov080_0212714c(thisp, data_ov030_021159f4);
 }
