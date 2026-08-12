@@ -61,15 +61,15 @@ _ZN12FallBlockLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021125
 _ZN12FallBlockLll8BehaviorEv kind:function(arm,size=0x30) addr:0x02112560
 _ZN12FallBlockLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112590
 RollingLogLll_Spawn kind:function(arm,size=0x3c) addr:0x021125a4
-_ZN13RollingLogLllD1Ev kind:function(arm,size=0x30) addr:0x021125e0
-_ZN13RollingLogLllD0Ev kind:function(arm,size=0x44) addr:0x02112610
+_ZN11VolcanoFireD1Ev kind:function(arm,size=0x30) addr:0x021125e0
+_ZN11VolcanoFireD0Ev kind:function(arm,size=0x44) addr:0x02112610
 func_ov022_02112654 kind:function(arm,size=0x58) addr:0x02112654
 func_ov022_021126ac kind:function(arm,size=0x64) addr:0x021126ac
 func_ov022_02112710 kind:function(arm,size=0x80) addr:0x02112710
 func_ov022_02112790 kind:function(arm,size=0x50) addr:0x02112790
-_ZN13RollingLogLll16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
-_ZN13RollingLogLll8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
-_ZN13RollingLogLll13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
+_ZN11VolcanoFire16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
+_ZN11VolcanoFire8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
+_ZN11VolcanoFire13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
 VolcanoFire_Spawn kind:function(arm,size=0x38) addr:0x02112918
 data_ov022_02112950 kind:data(any) addr:0x02112950
 data_ov022_02112954 kind:data(any) addr:0x02112954
@@ -251,7 +251,7 @@ data_ov022_0211442c kind:data(any) addr:0x0211442c
 _ZTI21daObj_volcanoCannon_c kind:data(any) addr:0x02114434
 _ZTS21daObj_volcanoCannon_c kind:data(any) addr:0x02114440
 VolcanoFire_SpawnInfo kind:data(any) addr:0x02114458 ambiguous
-_ZTV13RollingLogLll kind:data(any) addr:0x0211447c
+_ZTV11VolcanoFire kind:data(any) addr:0x0211447c
 _ZTV21daObj_volcanoCannon_c kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous
 data_ov022_02114500 kind:bss addr:0x02114500
