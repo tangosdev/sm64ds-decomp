@@ -191,7 +191,7 @@ src/BulletBill_Spawn.c:
     complete
     .text start:0x02126d64 end:0x02126dbc
 
-src/_ZN11BillBlasterD1Ev.c:
+src/_ZN11BillBlasterD1Ev.cpp:
     complete
     .text start:0x02126dbc end:0x02126e00
 

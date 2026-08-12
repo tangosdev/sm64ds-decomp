@@ -100,7 +100,7 @@ src/func_ov032_0211244c.c:
     complete
     .text start:0x0211244c end:0x021124a8
 
-src/_ZN9HugeCoverD1Ev.c:
+src/_ZN9HugeCoverD1Ev.cpp:
     complete
     .text start:0x021124a8 end:0x021124ec
 
