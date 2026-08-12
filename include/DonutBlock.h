@@ -1,5 +1,5 @@
-#ifndef SHIPWING_H
-#define SHIPWING_H
+#ifndef DONUTBLOCK_H
+#define DONUTBLOCK_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "WithMeshClsn.h"
 
-struct ShipWing : Platform {
+struct DonutBlock : Platform {
     u8  pad_31e[0x2];
     WithMeshClsn mWithMeshClsn;       /* 0x320 */
     s32 unk_4dc;                      /* 0x4dc */
@@ -29,7 +29,7 @@ struct ShipWing : Platform {
     u8 mState;                        /* 0x4ea */
 
     /* --- vtable --- */
-    virtual ~ShipWing();
+    virtual ~DonutBlock();
 
     int Behavior();
     int CleanupResources();
@@ -37,14 +37,14 @@ struct ShipWing : Platform {
     int Render();
 };
 
-typedef char ShipWing_size_must_be_0x4ec[sizeof(ShipWing) == 0x4ec ? 1 : -1];
+typedef char ShipWing_size_must_be_0x4ec[sizeof(DonutBlock) == 0x4ec ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct ShipWing {
+struct DonutBlock {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -64,7 +64,7 @@ struct ShipWing {
     u8  pad_125[0x1fb];
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8ShipWingD1Ev.c] */
+       checks. Was a u8 marker. [_ZN10DonutBlockD1Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x320 */
     s32 unk_4dc;            /* 0x4dc */
     s32 unk_4e0;            /* 0x4e0 */
@@ -76,4 +76,4 @@ struct ShipWing {
 
 #endif /* __cplusplus */
 
-#endif /* SHIPWING_H */
+#endif /* DONUTBLOCK_H */

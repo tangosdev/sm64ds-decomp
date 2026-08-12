@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN8ShipWing16CleanupResourcesEv
+// @symbol _ZN10DonutBlock16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ShipWing.h"
+#include "DonutBlock.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern int data_ov036_0211408c[];
 
-int ShipWing::CleanupResources()
+int DonutBlock::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();

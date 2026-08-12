@@ -779,7 +779,7 @@ extern int _ZTV8MantaRay[];
 extern int _ZTV8Moneybag[];
 extern int _ZTV14CutsceneObject[];
 extern int _ZTV8PoleLift[];
-extern int _ZTV8ShipWing[];
+extern int _ZTV10DonutBlock[];
 extern int _ZTV8SignPost[];
 extern int _ZTV8Snowball[];
 extern int _ZTV8Squasher[];
