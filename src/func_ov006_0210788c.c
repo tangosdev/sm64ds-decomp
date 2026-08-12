@@ -4,7 +4,7 @@ extern void func_ov006_020c1c64(void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void*);
 extern void _ZN11dScMgBase_cD2Ev(void*);
 extern int data_ov006_0213e39c;
-extern int data_ov006_0213e448;
+extern int _ZTV19dScMgSingle3DBase_c;
 extern void func_ov006_021079c8(void);
 void* func_ov006_0210788c(char* p){
   *(int*)p = (int)&data_ov006_0213e39c;
@@ -12,7 +12,7 @@ void* func_ov006_0210788c(char* p){
   _ZN5ModelD1Ev(p + 0x531c);
   __destroy_arr(p + 0x51a8, 5, 0x34, (void*)func_ov006_021079c8);
   func_ov006_020c1c64(p + 0x4f38);
-  *(int*)p = (int)&data_ov006_0213e448;
+  *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
   _ZN8Particle10SysTrackerD1Ev(p + 0x471c);
   _ZN11dScMgBase_cD2Ev(p);
   return p;

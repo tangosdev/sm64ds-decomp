@@ -1357,8 +1357,8 @@ func_ov006_02109aac kind:function(arm,size=0x6e8) addr:0x02109aac
 func_ov006_0210a194 kind:function(arm,size=0x26c) addr:0x0210a194
 MgMushroomRoulette_Spawn kind:function(arm,size=0xac) addr:0x0210a400
 func_ov006_0210a4ac kind:function(arm,size=0x4) addr:0x0210a4ac
-func_ov006_0210a4b0 kind:function(arm,size=0x38) addr:0x0210a4b0
-func_ov006_0210a4e8 kind:function(arm,size=0x4c) addr:0x0210a4e8
+_ZN19dScMgSingle3DBase_cD1Ev kind:function(arm,size=0x38) addr:0x0210a4b0
+_ZN19dScMgSingle3DBase_cD0Ev kind:function(arm,size=0x4c) addr:0x0210a4e8
 func_ov006_0210a534 kind:function(arm,size=0xcc) addr:0x0210a534
 func_ov006_0210a600 kind:function(arm,size=0x8) addr:0x0210a600
 func_ov006_0210a608 kind:function(arm,size=0x5c) addr:0x0210a608
@@ -4025,7 +4025,7 @@ data_ov006_0213e374 kind:data(any) addr:0x0213e374
 data_ov006_0213e378 kind:data(any) addr:0x0213e378
 data_ov006_0213e39c kind:data(any) addr:0x0213e39c
 data_ov006_0213e42c kind:data(any) addr:0x0213e42c
-data_ov006_0213e448 kind:data(any) addr:0x0213e448
+_ZTV19dScMgSingle3DBase_c kind:data(any) addr:0x0213e448
 data_ov006_0213e4d8 kind:data(any) addr:0x0213e4d8
 data_ov006_0213e4e0 kind:data(any) addr:0x0213e4e0
 data_ov006_0213e4e8 kind:data(any) addr:0x0213e4e8

@@ -5211,11 +5211,11 @@ src/func_ov006_0210a4ac.c:
     complete
     .text start:0x0210a4ac end:0x0210a4b0
 
-src/func_ov006_0210a4b0.cpp:
+src/_ZN19dScMgSingle3DBase_cD1Ev.cpp:
     complete
     .text start:0x0210a4b0 end:0x0210a4e8
 
-src/func_ov006_0210a4e8.cpp:
+src/_ZN19dScMgSingle3DBase_cD0Ev.cpp:
     complete
     .text start:0x0210a4e8 end:0x0210a534
 

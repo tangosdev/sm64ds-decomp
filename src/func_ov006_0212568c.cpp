@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void *data_ov006_0214000c;
-extern void *data_ov006_0213e448;
+extern void *_ZTV19dScMgSingle3DBase_c;
 extern void __destroy_arr(void *, int, int, void *);
 void func_ov006_02125800(void);
 void NullDestructor_0203d47c(void);
@@ -15,7 +15,7 @@ void *func_ov006_0212568c(char *c)
     __destroy_arr(c + 0xb5d8, 0x80, 8, (void *)NullDestructor_0203d47c);
     __destroy_arr(c + 0xacd8, 0x80, 8, (void *)NullDestructor_0203d47c);
     _ZN5ModelD1Ev(c + 0xaba4);
-    *(void **)c = &data_ov006_0213e448;
+    *(void **)c = &_ZTV19dScMgSingle3DBase_c;
     _ZN8Particle10SysTrackerD1Ev(c + 0x471c);
     _ZN11dScMgBase_cD2Ev(c);
     return c;
