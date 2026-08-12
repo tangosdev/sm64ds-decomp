@@ -1,17 +1,17 @@
-// @symbol func_ov016_02112ef4
+// @symbol _ZN23FloatOnWaterPlatformJrbD1Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int data_ov016_02114bcc[];
+extern int _ZTV23FloatOnWaterPlatformJrb[];
 extern int data_ov002_02108fdc[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov016_02114bcc; VT1 = data_ov002_02108fdc */
-int *func_ov016_02112ef4(int *t)
+/* vtable identified: VT0 = _ZTV23FloatOnWaterPlatformJrb; VT1 = data_ov002_02108fdc */
+int *_ZN23FloatOnWaterPlatformJrbD1Ev(int *t)
 {
-    t[0] = (int)data_ov016_02114bcc;
+    t[0] = (int)_ZTV23FloatOnWaterPlatformJrb;
     t[0] = (int)data_ov002_02108fdc;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

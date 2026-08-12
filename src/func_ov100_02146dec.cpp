@@ -1,6 +1,5 @@
 //cpp
 // @symbol func_ov100_02146dec
-// recovered name: daObjPathLift_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"

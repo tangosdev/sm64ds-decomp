@@ -1,5 +1,4 @@
 // @symbol func_ov003_020ade54
-// recovered name: dScStarSel_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Model.h"
 #include "decl_common.h"

@@ -1,18 +1,20 @@
-// @symbol func_ov010_021111ec
-// recovered name: daObjC1_Trap_c_OnYoshiTryEat
+// @symbol _ZN4TrapD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int data_ov010_02112ae4[];
+extern int _ZTV4Trap[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified, renamed to Class_Method */
-/* daObjC1_Trap_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern void *data_020a0eac;
-int *func_ov010_021111ec(int *t)
+int *_ZN4TrapD0Ev(int *t)
 {
-    t[0] = (int)data_ov010_02112ae4;
+    t[0] = (int)_ZTV4Trap;
     _ZN5ModelD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

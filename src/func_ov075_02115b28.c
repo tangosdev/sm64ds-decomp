@@ -1,5 +1,4 @@
 // @symbol func_ov075_02115b28
-// recovered name: dScEntry_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */

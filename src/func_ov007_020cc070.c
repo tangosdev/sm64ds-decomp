@@ -1,5 +1,4 @@
 // @symbol func_ov007_020cc070
-// recovered name: dScDSMT_c_OnYoshiTryEat
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */

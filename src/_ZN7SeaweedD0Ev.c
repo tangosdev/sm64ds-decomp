@@ -1,16 +1,18 @@
-// @symbol func_ov002_020bc444
-// recovered name: daObjWakame_c_OnYoshiTryEat
+// @symbol _ZN7SeaweedD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
 #include "decl_common.h"
-extern int data_ov002_02109bb8[];
+extern int _ZTV7Seaweed[];
 /* recovered: vtable identified, renamed to Class_Method */
-/* daObjWakame_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern void *data_020a0eac;
-int *func_ov002_020bc444(int *t)
+int *_ZN7SeaweedD0Ev(int *t)
 {
-    t[0] = (int)data_ov002_02109bb8;
+    t[0] = (int)_ZTV7Seaweed;
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);

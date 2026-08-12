@@ -1,5 +1,4 @@
 // @symbol func_02034ac0
-// recovered name: dScMB_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method */
 /* dScMB_c::OnYoshiTryEat - recovered from vtable slot identity */
 struct MultiBootScene { void **vtable; };

@@ -1,6 +1,5 @@
 //cpp
 // @symbol func_ov006_021226b0
-// recovered name: dScMgTrampoline2_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
