@@ -1,5 +1,5 @@
 {
- "eligible": 10819,
+ "eligible": 10821,
  "unresolved": {
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
@@ -604,7 +604,7 @@
    ]
   },
   "ov006:0x020f3834": {
-   "name": "func_ov006_020f3834",
+   "name": "_ZN13MgMemoryMatchD1Ev",
    "missing": [
     "_ZN10SysTrackerD1Ev"
    ]
@@ -629,7 +629,7 @@
    ]
   },
   "ov006:0x020f5564": {
-   "name": "func_ov006_020f5564",
+   "name": "_ZN14MgMemoryMasterD1Ev",
    "missing": [
     "_ZN10SysTrackerD1Ev"
    ]
@@ -687,12 +687,6 @@
    "name": "func_ov006_020f8d08",
    "missing": [
     "func_020beb68"
-   ]
-  },
-  "ov006:0x020f8ef4": {
-   "name": "func_ov006_020f8ef4",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
    ]
   },
   "ov006:0x021071fc": {
@@ -779,12 +773,6 @@
    "missing": [
     "func_020bc864",
     "func_020bc888"
-   ]
-  },
-  "ov006:0x02119904": {
-   "name": "func_ov006_02119904",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
    ]
   },
   "ov006:0x0211fd44": {
@@ -978,7 +966,7 @@
    ]
   },
   "ov022:0x021117cc": {
-   "name": "_ZN19RotatingPlatformLll8BehaviorEv",
+   "name": "_ZN19FloatOnLavaPlatform8BehaviorEv",
    "missing": [
     "Platform_IsClsnInRange",
     "Platform_UpdateClsnPosAndRot",
@@ -1012,21 +1000,21 @@
    ]
   },
   "ov022:0x02112498": {
-   "name": "_ZN12FallBlockLllD1Ev",
+   "name": "_ZN13RollingLogLllD1Ev",
    "missing": [
     "_ZTV10dBgActor_c",
     "_ZTV15daObjFlMaruta_c"
    ]
   },
   "ov022:0x021124e8": {
-   "name": "_ZN12FallBlockLllD0Ev",
+   "name": "_ZN13RollingLogLllD0Ev",
    "missing": [
     "_ZTV10dBgActor_c",
     "_ZTV15daObjFlMaruta_c"
    ]
   },
   "ov022:0x0211254c": {
-   "name": "_ZN12FallBlockLll16CleanupResourcesEv",
+   "name": "_ZN13RollingLogLll16CleanupResourcesEv",
    "missing": [
     "func_021270dc"
    ]
@@ -1066,20 +1054,20 @@
    ]
   },
   "ov029:0x021124d0": {
-   "name": "_ZN19RotatingPlatformWdw13InitResourcesEv",
+   "name": "_ZN9WDW_Water13InitResourcesEv",
    "missing": [
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
    ]
   },
   "ov030:0x0211155c": {
-   "name": "_ZN9UkikiCageD1Ev",
+   "name": "_ZN13RollingLogTtmD1Ev",
    "missing": [
     "_ZTV10dBgActor_c",
     "_ZTV15daObjHmMaruta_c"
    ]
   },
   "ov030:0x021115ac": {
-   "name": "_ZN9UkikiCageD0Ev",
+   "name": "_ZN13RollingLogTtmD0Ev",
    "missing": [
     "_ZTV10dBgActor_c",
     "_ZTV15daObjHmMaruta_c"
@@ -1111,7 +1099,7 @@
    ]
   },
   "ov035:0x02111a98": {
-   "name": "_ZN17RotatingClockHand13InitResourcesEv",
+   "name": "_ZN16SpinningPlatform13InitResourcesEv",
    "missing": [
     "MeshColliderLoadFile",
     "ModelLoadFile",
@@ -1145,13 +1133,13 @@
    ]
   },
   "ov045:0x02111ce4": {
-   "name": "_ZN16FloatingFloorBfs16CleanupResourcesEv",
+   "name": "_ZN18TiltingPlatformBfs16CleanupResourcesEv",
    "missing": [
     "func_020b60fc"
    ]
   },
   "ov045:0x02111cf8": {
-   "name": "_ZN16FloatingFloorBfs13InitResourcesEv",
+   "name": "_ZN18TiltingPlatformBfs13InitResourcesEv",
    "missing": [
     "func_020b6244"
    ]
@@ -1327,7 +1315,7 @@
    ]
   },
   "ov065:0x0211bf04": {
-   "name": "_ZN14TtcMovingCubeA13InitResourcesEv",
+   "name": "_ZN14TTC_MovingBeam13InitResourcesEv",
    "missing": [
     "func_02112118"
    ]
