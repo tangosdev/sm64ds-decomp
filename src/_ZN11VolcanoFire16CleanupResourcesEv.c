@@ -1,10 +1,10 @@
 #include "types.h"
-struct RollingLogLll {
+struct VolcanoFire {
     char pad[0x10c];
     char *sub;
 };
 
-int _ZN13RollingLogLll16CleanupResourcesEv(struct RollingLogLll *self)
+int _ZN11VolcanoFire16CleanupResourcesEv(struct VolcanoFire *self)
 {
     char *p = self->sub;
     if (p)
